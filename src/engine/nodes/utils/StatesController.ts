@@ -1,10 +1,10 @@
 import {BaseNodeType} from '../_Base';
 
 import {TimeDependentState} from './states/TimeDependent';
-import {ErrorState} from './states/Error';
+import {NodeErrorState} from './states/Error';
 
 export class StatesController {
 	time_dependent = new TimeDependentState(this.node);
-	error = new ErrorState(this.node);
+	error = new NodeErrorState(this.node);
 	constructor(protected node: BaseNodeType) {}
 }

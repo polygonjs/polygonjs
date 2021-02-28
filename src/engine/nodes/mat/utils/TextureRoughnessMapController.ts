@@ -18,8 +18,8 @@ export function TextureRoughnessMapParamConfig<TBase extends Constructor>(Base: 
 		/** @param toggle if you want to use a roughness map */
 		useRoughnessMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureRoughnessMapController));
 		/** @param specify the roughness map COP node */
-		roughnessMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		roughnessMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureRoughnessMapController, 'useRoughnessMap')
 		);
 		/** @param roughness. When set to 0, reflections from environment maps will be very sharp, or blurred when 1. Any value between 0 and 1 can help modulate this. */

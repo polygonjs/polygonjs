@@ -17,8 +17,8 @@ export function TextureSpecularMapParamConfig<TBase extends Constructor>(Base: T
 		/** @param toggle if you want to use a specular map */
 		useSpecularMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureSpecularMapController));
 		/** @param specify the specular map COP node */
-		specularMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		specularMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureSpecularMapController, 'useSpecularMap')
 		);
 	};

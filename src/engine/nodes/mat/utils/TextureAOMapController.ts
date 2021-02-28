@@ -17,8 +17,8 @@ export function TextureAOMapParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle if you want to use an ambient occlusion map */
 		useAOMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureAOMapController));
 		/** @param specify the AO map COP node */
-		aoMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		aoMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureAOMapController, 'useAOMap')
 		);
 		/** @param ambient occlusion intensity */

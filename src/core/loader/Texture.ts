@@ -69,7 +69,7 @@ export class CoreTextureLoader {
 
 		if (url.substring(0, 3) == 'op:') {
 			const node_path = url.substring(3);
-			found_node = CoreWalker.find_node(this._node, node_path);
+			found_node = CoreWalker.findNode(this._node, node_path);
 			if (found_node) {
 				if (found_node instanceof BaseCopNodeClass) {
 					const container: TextureContainer = await found_node.requestContainer();

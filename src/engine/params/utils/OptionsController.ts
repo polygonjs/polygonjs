@@ -433,13 +433,13 @@ export class OptionsController {
 	node_selection_options() {
 		return this._options[NODE_SELECTION];
 	}
-	node_selection_context() {
+	nodeSelectionContext() {
 		const options = this.node_selection_options();
 		if (options) {
 			return options[NODE_SELECTION_CONTEXT];
 		}
 	}
-	node_selection_types() {
+	nodeSelectionTypes() {
 		const options = this.node_selection_options();
 		if (options) {
 			return options[NODE_SELECTION_TYPES];

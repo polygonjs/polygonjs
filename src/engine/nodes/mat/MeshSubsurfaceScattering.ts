@@ -25,7 +25,7 @@ import {BaseCopNodeType} from '../cop/_Base';
 import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
 import {FogController, FogParamConfig} from './utils/FogController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {OperatorPathParam} from '../../params/OperatorPath';
+import {NodePathParam} from '../../params/NodePath';
 import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 import {Constructor} from '../../../types/GlobalTypes';
 
@@ -83,7 +83,7 @@ export function SubsurfaceParamConfig<TBase extends Constructor>(Base: TBase) {
 		shininess = ParamConfig.FLOAT(1, {
 			range: [0, 1000],
 		});
-		thicknessMap = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
+		thicknessMap = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {
 			nodeSelection: {context: NodeContext.COP},
 			...ParamOptionsFactoryTexture('thicknessMap'),
 		});
@@ -221,18 +221,15 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		param: BaseParamType,
 		uniform_name: string
 	) {
-		node.update_map(param as OperatorPathParam, uniform_name);
+		node.update_map(param as NodePathParam, uniform_name);
 	}
-	async update_map(param: OperatorPathParam, uniform_name: string) {
-		const node = param.found_node();
-		if (node) {
-			if (node.nodeContext() == NodeContext.COP) {
-				const texture_node = node as BaseCopNodeType;
-				const container = await texture_node.requestContainer();
-				this.material.uniforms[uniform_name].value = container.texture();
-				return;
-			}
+	async update_map(param: NodePathParam, uniform_name: string) {
+		const node = param.value.nodeWithContext(NodeContext.COP);
+		if (!node) {
+			this.material.uniforms[uniform_name].value = null;
 		}
-		this.material.uniforms[uniform_name].value = null;
+		const texture_node = node as BaseCopNodeType;
+		const container = await texture_node.requestContainer();
+		this.material.uniforms[uniform_name].value = container.texture();
 	}
 }

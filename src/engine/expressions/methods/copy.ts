@@ -57,7 +57,7 @@ export class CopyExpression extends BaseMethod {
 				const attribute_name = args[2];
 
 				const current_node = this.node();
-				const node = current_node ? CoreWalker.find_node(current_node, path) : null;
+				const node = current_node ? CoreWalker.findNode(current_node, path) : null;
 
 				let value;
 				if (node && node.type() == CopySopNode.type()) {

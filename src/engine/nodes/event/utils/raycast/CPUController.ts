@@ -279,7 +279,7 @@ export class RaycastCPUController {
 		TypeAssert.unreachable(targetType);
 	}
 	private _update_target_from_node() {
-		const node = this._node.p.targetNode.value.ensureNodeContext(NodeContext.OBJ) as BaseObjNodeType;
+		const node = this._node.p.targetNode.value.nodeWithContext(NodeContext.OBJ) as BaseObjNodeType;
 		if (node) {
 			const found_obj = isBooleanTrue(this._node.pv.traverseChildren)
 				? node.object

@@ -69,7 +69,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 		this.scene().referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
 		if (path_non_empty) {
-			param = CoreWalker.find_param(this.node, path, this.decomposed_path);
+			param = CoreWalker.findParam(this.node, path, this.decomposed_path);
 		}
 
 		const current_found_entity = this._value.param();

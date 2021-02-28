@@ -17,7 +17,7 @@ export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param toggle on to use a map affecting color */
 		useMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
 		/** @param texture map affecting color */
-		map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, OperatorPathOptions(TextureMapController, 'useMap'));
+		map = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, OperatorPathOptions(TextureMapController, 'useMap'));
 	};
 }
 class TextureMapMaterial extends Material {

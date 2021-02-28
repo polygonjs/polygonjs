@@ -18,8 +18,8 @@ export function TextureMetalnessMapParamConfig<TBase extends Constructor>(Base: 
 		/** @param toggle if you want to use a metalness map */
 		useMetalnessMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMetalnessMapController));
 		/** @param specify the metalness map COP node */
-		metalnessMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		metalnessMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureMetalnessMapController, 'useMetalnessMap')
 		);
 		/** @param metalness. It's recommended to either set this value to 0 or to 1, as objects are either metallic or not. Any value in between tends to look like an alien plastic */

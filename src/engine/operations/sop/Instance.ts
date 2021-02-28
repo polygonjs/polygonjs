@@ -67,7 +67,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 
 	private async _get_material(params: InstanceSopParams) {
 		if (isBooleanTrue(params.applyMaterial)) {
-			const material_node = params.material.ensureNodeContext(NodeContext.MAT, this.states?.error);
+			const material_node = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
 			if (material_node) {
 				this._globals_handler = this._globals_handler || new GlobalsGeometryHandler();
 				const mat_builder_node = material_node as BaseBuilderMatNodeType;

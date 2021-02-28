@@ -2,12 +2,13 @@ import {BaseNodeType} from '../engine/nodes/_Base';
 import {BaseParamType} from '../engine/params/_Base';
 import {DecomposedPath} from './DecomposedPath';
 import {NodeContext, BaseNodeByContextMap} from '../engine/poly/NodeContext';
-import {ErrorState} from '../engine/nodes/utils/states/Error';
+import {NodeErrorState} from '../engine/nodes/utils/states/Error';
 
 type NodeOrParam = BaseNodeType | BaseParamType;
 
 export const NODE_PATH_DEFAULT = {
 	NODE: {
+		EMPTY: '',
 		UV: '/COP/imageUv',
 		ENV_MAP: '/COP/envMap',
 		CUBE_MAP: '/COP/cubeCamera',
@@ -31,7 +32,7 @@ export class TypedNodePathParamValue {
 	}
 
 	resolve(node_start: BaseNodeType) {
-		this._node = CoreWalker.find_node(node_start, this._path);
+		this._node = CoreWalker.findNode(node_start, this._path);
 	}
 
 	clone() {
@@ -40,9 +41,9 @@ export class TypedNodePathParamValue {
 		return cloned;
 	}
 
-	ensureNodeContext<N extends NodeContext>(
+	nodeWithContext<N extends NodeContext>(
 		context: N,
-		error_state?: ErrorState
+		error_state?: NodeErrorState
 	): BaseNodeByContextMap[N] | undefined {
 		const found_node = this.node();
 		if (!found_node) {
@@ -76,7 +77,7 @@ export class TypedParamPathParamValue {
 	}
 
 	resolve(node_start: BaseNodeType) {
-		this._param = CoreWalker.find_param(node_start, this._path);
+		this._param = CoreWalker.findParam(node_start, this._path);
 	}
 
 	clone() {
@@ -102,7 +103,7 @@ export class CoreWalker {
 		return {parent: parent_path, child: child_path};
 	}
 
-	static find_node(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseNodeType | null {
+	static findNode(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseNodeType | null {
 		if (!node_src) {
 			return null;
 		}
@@ -113,7 +114,7 @@ export class CoreWalker {
 		let next_node: BaseNodeType | null = null;
 		if (path[0] === CoreWalker.SEPARATOR) {
 			const path_from_root = path.substr(1);
-			next_node = this.find_node(node_src.root(), path_from_root, decomposed_path);
+			next_node = this.findNode(node_src.root(), path_from_root, decomposed_path);
 		} else {
 			switch (first_element) {
 				case CoreWalker.PARENT:
@@ -141,7 +142,7 @@ export class CoreWalker {
 
 			if (next_node != null && elements.length > 1) {
 				const remainder = elements.slice(1).join(CoreWalker.SEPARATOR);
-				next_node = this.find_node(next_node, remainder, decomposed_path);
+				next_node = this.findNode(next_node, remainder, decomposed_path);
 			}
 			return next_node;
 		}
@@ -149,7 +150,7 @@ export class CoreWalker {
 		return next_node;
 	}
 
-	static find_param(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
+	static findParam(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
 		if (!node_src) {
 			return null;
 		}
@@ -160,7 +161,7 @@ export class CoreWalker {
 			return node_src.params.get(elements[0]);
 		} else {
 			const node_path = elements.slice(0, +(elements.length - 2) + 1 || undefined).join(CoreWalker.SEPARATOR);
-			const node = this.find_node(node_src, node_path, decomposed_path);
+			const node = this.findNode(node_src, node_path, decomposed_path);
 			if (node != null) {
 				const param_name = elements[elements.length - 1];
 				const param = node.params.get(param_name);
@@ -175,7 +176,7 @@ export class CoreWalker {
 		}
 	}
 	static relativePath(src_graph_node: Readonly<BaseNodeType>, dest_graph_node: Readonly<BaseNodeType>): string {
-		const parent = this.closest_common_parent(src_graph_node, dest_graph_node);
+		const parent = this.closestCommonParent(src_graph_node, dest_graph_node);
 		if (!parent) {
 			return dest_graph_node.fullPath();
 		} else {
@@ -211,7 +212,7 @@ export class CoreWalker {
 		}
 	}
 
-	static closest_common_parent(
+	static closestCommonParent(
 		graph_node1: Readonly<BaseNodeType>,
 		graph_node2: Readonly<BaseNodeType>
 	): Readonly<BaseNodeType> | null {
@@ -252,7 +253,7 @@ export class CoreWalker {
 		}
 	}
 
-	static make_absolute_path(node_src: BaseNodeType | BaseParamType, path: string): string | null {
+	static makeAbsolutePath(node_src: BaseNodeType | BaseParamType, path: string): string | null {
 		if (path[0] == CoreWalker.SEPARATOR) {
 			return path;
 		}
@@ -265,13 +266,13 @@ export class CoreWalker {
 				case '..': {
 					const parent = node_src.parent();
 					if (parent) {
-						return this.make_absolute_path(parent, path_elements.join(CoreWalker.SEPARATOR));
+						return this.makeAbsolutePath(parent, path_elements.join(CoreWalker.SEPARATOR));
 					} else {
 						return null;
 					}
 				}
 				case '.': {
-					return this.make_absolute_path(node_src, path_elements.join(CoreWalker.SEPARATOR));
+					return this.makeAbsolutePath(node_src, path_elements.join(CoreWalker.SEPARATOR));
 				}
 				default: {
 					return [node_src.fullPath(), path].join(CoreWalker.SEPARATOR);

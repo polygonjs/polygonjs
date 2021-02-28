@@ -45,7 +45,7 @@ export class CubeCameraCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	}
 
 	async cook() {
-		const cubeCameraNode = this.pv.cubeCamera.ensureNodeContext(NodeContext.OBJ, this.states.error);
+		const cubeCameraNode = this.pv.cubeCamera.nodeWithContext(NodeContext.OBJ, this.states.error);
 		if (!cubeCameraNode) {
 			this.states.error.set(`cubeCamera not found at '${this.pv.cubeCamera.path()}'`);
 			return this.cookController.endCook();

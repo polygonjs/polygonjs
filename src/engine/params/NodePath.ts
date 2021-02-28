@@ -50,15 +50,15 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	protected processRawInput() {
 		if (this._value.path() != this._raw_input) {
 			this._value.set_path(this._raw_input);
-			this.find_target();
+			this._findTarget();
 			this.setDirty();
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
 	protected async process_computation() {
-		this.find_target();
+		this._findTarget();
 	}
-	private find_target() {
+	private _findTarget() {
 		if (!this.node) {
 			return;
 		}
@@ -69,7 +69,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		this.scene().referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
 		if (path_non_empty) {
-			node = CoreWalker.find_node(this.node, path, this.decomposed_path);
+			node = CoreWalker.findNode(this.node, path, this.decomposed_path);
 		}
 
 		const current_found_entity = this._value.node();
@@ -100,13 +100,20 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 
 			this.options.execute_callback();
 		}
+		if (path_non_empty && !node && this.scene().loadingController.loaded()) {
+			if (path_non_empty) {
+				this.states.error.set(`no node found at path '${path}'`);
+			}
+		}
+
 		this.removeDirtyState();
 	}
 
 	private _assign_found_node(node: BaseNodeType) {
 		const dependent_on_found_node = this.options.dependent_on_found_node();
-		if (this._is_node_expected_context(node)) {
+		if (this._isNodeExpectedContext(node)) {
 			if (this._is_node_expected_type(node)) {
+				this.states.error.clear();
 				this._value.set_node(node);
 				if (dependent_on_found_node) {
 					this.addGraphInput(node);
@@ -120,16 +127,16 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			}
 		} else {
 			this.states.error.set(
-				`node context is ${node.nodeContext()} but the params expects a ${this._expected_context()}`
+				`node context is ${node.nodeContext()} but the params expects a ${this._expectedContext()}`
 			);
 		}
 	}
 
-	private _expected_context() {
-		return this.options.node_selection_context();
+	private _expectedContext() {
+		return this.options.nodeSelectionContext();
 	}
-	private _is_node_expected_context(node: BaseNodeType) {
-		const expected_context = this._expected_context();
+	private _isNodeExpectedContext(node: BaseNodeType) {
+		const expected_context = this._expectedContext();
 		if (expected_context == null) {
 			return true;
 		}
@@ -137,7 +144,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		return expected_context == node_context;
 	}
 	private _expected_node_types() {
-		return this.options.node_selection_types();
+		return this.options.nodeSelectionTypes();
 	}
 
 	private _is_node_expected_type(node: BaseNodeType) {

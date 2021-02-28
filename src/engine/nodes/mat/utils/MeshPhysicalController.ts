@@ -19,15 +19,15 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle if you want to use a roughness map */
 		useClearCoatMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
-		clearcoatMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		clearcoatMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(MeshPhysicalController, 'useClearCoatMap')
 		);
 		/** @param toggle if you want to use a roughness map */
 		useClearCoatNormalMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
-		clearcoatNormalMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		clearcoatNormalMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(MeshPhysicalController, 'useClearCoatNormalMap')
 		);
 		/** @param How much the normal map affects the material. Typical ranges are 0-1 */
@@ -37,8 +37,8 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle if you want to use a roughness map */
 		useClearCoatRoughnessMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
-		clearcoatRoughnessMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		clearcoatRoughnessMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(MeshPhysicalController, 'useClearCoatRoughnessMap')
 		);
 		/** @param Index-of-refraction for non-metallic materials, from 1.0 to 2.333 */
@@ -67,7 +67,7 @@ When transmission is non-zero, opacity should be set to 1.  */
 		/** @param toggle if you want to use a roughness map */
 		useTransmissionMap = ParamConfig.BOOLEAN(0);
 		/** @param specify the roughness map COP node */
-		transmissionMap = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {visibleIf: {useTransmissionMap: 1}});
+		transmissionMap = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {visibleIf: {useTransmissionMap: 1}});
 	};
 }
 

@@ -2,7 +2,7 @@ import {NodeEvent} from '../../../poly/NodeEvent';
 import {BaseState} from './Base';
 import {Poly} from '../../../Poly';
 
-export class ErrorState extends BaseState {
+export class NodeErrorState extends BaseState {
 	private _message: string | undefined;
 
 	set(message: string | undefined) {

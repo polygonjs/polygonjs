@@ -16,7 +16,7 @@ export function TextureBumpMapParamConfig<TBase extends Constructor>(Base: TBase
 		/** @param toggle if you want to use a bump map */
 		useBumpMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureBumpMapController));
 		/** @param specify the bump map COP node */
-		bumpMap = ParamConfig.OPERATOR_PATH('', OperatorPathOptions(TextureBumpMapController, 'useBumpMap'));
+		bumpMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureBumpMapController, 'useBumpMap'));
 		/** @param bump scale */
 		bumpScale = ParamConfig.FLOAT(1, {
 			range: [0, 1],

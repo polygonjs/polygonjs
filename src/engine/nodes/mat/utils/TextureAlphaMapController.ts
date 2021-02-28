@@ -16,8 +16,8 @@ export function TextureAlphaMapParamConfig<TBase extends Constructor>(Base: TBas
 		/** @param toggle if you want to use an alpha map */
 		useAlphaMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureAlphaMapController));
 		/** @param specify the alpha map COP node */
-		alphaMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		alphaMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureAlphaMapController, 'useAlphaMap')
 		);
 	};

@@ -16,7 +16,7 @@ export function TextureDisplacementMapParamConfig<TBase extends Constructor>(Bas
 		/** @param toggle if you want to use a displacement map */
 		useDisplacementMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureDisplacementMapController));
 		/** @param specify the displacement map COP node */
-		displacementMap = ParamConfig.OPERATOR_PATH(
+		displacementMap = ParamConfig.NODE_PATH(
 			'',
 			OperatorPathOptions(TextureDisplacementMapController, 'useDisplacementMap')
 		);

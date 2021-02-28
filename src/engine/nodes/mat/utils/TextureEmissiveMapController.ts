@@ -20,8 +20,8 @@ export function TextureEmissiveMapParamConfig<TBase extends Constructor>(Base: T
 		/** @param toggle if you want to use a emissive map */
 		useEmissiveMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEmissiveMapController));
 		/** @param specify the emissive map COP node */
-		emissiveMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		emissiveMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureEmissiveMapController, 'useEmissiveMap')
 		);
 		/** @param emissive intensity */

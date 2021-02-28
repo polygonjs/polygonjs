@@ -30,8 +30,8 @@ export function TextureNormalMapParamConfig<TBase extends Constructor>(Base: TBa
 		/** @param toggle if you want to use a normal map */
 		useNormalMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureNormalMapController));
 		/** @param specify the normal map COP node */
-		normalMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		normalMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureNormalMapController, 'useNormalMap')
 		);
 		/** @param type of normal map being used */

@@ -5,7 +5,7 @@ export class MissingExpressionReference {
 	constructor(private param: BaseParamType, public readonly path: string) {}
 
 	absolute_path() {
-		return CoreWalker.make_absolute_path(this.param.node, this.path);
+		return CoreWalker.makeAbsolutePath(this.param.node, this.path);
 	}
 	matches_path(path: string): boolean {
 		return this.absolute_path() == path;

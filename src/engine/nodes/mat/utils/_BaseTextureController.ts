@@ -5,8 +5,7 @@ import {Texture} from 'three/src/textures/Texture';
 import {BaseMatNodeType} from '../_Base';
 import {ParamConfig} from '../../utils/params/ParamsConfig';
 import {NodeContext} from '../../../poly/NodeContext';
-import {BaseCopNodeType} from '../../cop/_Base';
-import {OperatorPathParam} from '../../../params/OperatorPath';
+import {NodePathParam} from '../../../params/NodePath';
 import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
@@ -18,7 +17,7 @@ import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		useMap = ParamConfig.BOOLEAN(0);
-		map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {visibleIf: {useMap: 1}});
+		map = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {visibleIf: {useMap: 1}});
 	};
 }
 // class TextureMapMaterial<T extends string> extends Material {
@@ -98,7 +97,7 @@ export class BaseTextureMapController extends BaseController {
 		// }
 	}
 
-	protected add_hooks(use_map_param: BooleanParam, path_param: OperatorPathParam) {
+	protected add_hooks(use_map_param: BooleanParam, path_param: NodePathParam) {
 		use_map_param.addPostDirtyHook('TextureController', () => {
 			this.update();
 		});
@@ -112,7 +111,7 @@ export class BaseTextureMapController extends BaseController {
 		material: M,
 		mat_attrib_name: string,
 		use_map_param: BooleanParam,
-		path_param: OperatorPathParam
+		path_param: NodePathParam
 	) {
 		if (this._update_options.uniforms) {
 			const shader_material = material as ShaderMaterial;
@@ -135,7 +134,7 @@ export class BaseTextureMapController extends BaseController {
 		material: ShaderMaterial,
 		mat_attrib_name: keyof SubType<O, Texture | null>,
 		use_map_param: BooleanParam,
-		path_param: OperatorPathParam
+		path_param: NodePathParam
 	) {
 		this._update_required_attribute(
 			material,
@@ -211,7 +210,7 @@ export class BaseTextureMapController extends BaseController {
 		material: M,
 		mat_attrib_name: keyof SubType<M, Texture | null>,
 		use_map_param: BooleanParam,
-		path_param: OperatorPathParam
+		path_param: NodePathParam
 	) {
 		this._update_required_attribute(
 			material,
@@ -263,7 +262,7 @@ export class BaseTextureMapController extends BaseController {
 		texture_owner: O,
 		mat_attrib_name: keyof SubType<O, Texture | null>,
 		use_map_param: BooleanParam,
-		path_param: OperatorPathParam,
+		path_param: NodePathParam,
 		update_callback: TextureUpdateCallback<O>,
 		remove_callback: TextureRemoveCallback<O>
 	) {
@@ -277,27 +276,15 @@ export class BaseTextureMapController extends BaseController {
 				await path_param.compute();
 			}
 
-			const found_node = path_param.found_node();
-			if (found_node) {
-				if (found_node.nodeContext() == NodeContext.COP) {
-					const texture_node = found_node as BaseCopNodeType;
+			const texture_node = path_param.value.nodeWithContext(NodeContext.COP);
+			if (texture_node) {
+				const container = await texture_node.requestContainer();
+				const texture = container.texture();
 
-					const container = await texture_node.requestContainer();
-					const texture = container.texture();
-
-					if (texture) {
-						update_callback(material, texture_owner, mat_attrib_name, texture);
-						return;
-					} else {
-						this.node.states.error.set(`${path_param.fullPath()}: found node has no texture`);
-					}
-				} else {
-					this.node.states.error.set(`${path_param.fullPath()}: found map node is not a COP node`);
+				if (texture) {
+					update_callback(material, texture_owner, mat_attrib_name, texture);
+					return;
 				}
-			} else {
-				this.node.states.error.set(
-					`could not find map node '${path_param.name()}' with path '${path_param.value}'`
-				);
 			}
 		}
 		// this is not wrapped in an else clause after the "if (use_map) {"

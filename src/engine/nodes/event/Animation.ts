@@ -80,7 +80,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		if (param.isDirty()) {
 			await param.compute();
 		}
-		const node = param.value.ensureNodeContext(NodeContext.ANIM);
+		const node = param.value.nodeWithContext(NodeContext.ANIM);
 		if (!node) {
 			return;
 		}

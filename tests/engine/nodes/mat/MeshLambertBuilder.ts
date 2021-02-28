@@ -27,7 +27,7 @@ QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
-	await AssemblersUtils.with_unregistered_assembler(mesh_lambert1.usedAssembler(), async () => {
+	await AssemblersUtils.withUnregisteredAssembler(mesh_lambert1.usedAssembler(), async () => {
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();

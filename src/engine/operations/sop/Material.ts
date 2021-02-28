@@ -61,7 +61,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 			return;
 		}
 
-		const material_node = params.material.ensureNodeContext(NodeContext.MAT, this.states?.error);
+		const material_node = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
 		if (material_node) {
 			const material = material_node.material;
 			const assembler_controller = (material_node as BaseBuilderMatNodeType).assemblerController;

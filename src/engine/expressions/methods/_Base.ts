@@ -72,7 +72,7 @@ export class BaseMethod {
 	get_referenced_param(path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
 		const node = this.node();
 		if (node) {
-			return CoreWalker.find_param(node, path, decomposed_path);
+			return CoreWalker.findParam(node, path, decomposed_path);
 		}
 
 		// if (referenced_param != null) {
@@ -123,7 +123,7 @@ export class BaseMethod {
 		if (CoreType.isString(index_or_path)) {
 			if (current_node) {
 				const path = index_or_path;
-				node = CoreWalker.find_node(current_node, path, decomposed_path);
+				node = CoreWalker.findNode(current_node, path, decomposed_path);
 			}
 		} else {
 			if (current_node) {

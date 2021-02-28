@@ -31,8 +31,8 @@ export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase)
 		/** @param toggle if you want to use an environment map */
 		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
 		/** @param specify the environment map COP node. Note that this only works with CubeCamera */
-		envMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.CUBE_MAP,
+		envMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureEnvMapController, 'useEnvMap', {types: [CopType.CUBE_CAMERA]})
 		);
 		/** @param defines how the env map is combined with the color */

@@ -77,7 +77,7 @@ export class HierarchyParentController {
 					return null;
 				}
 			} else {
-				return CoreWalker.find_node(this.node, path);
+				return CoreWalker.findNode(this.node, path);
 			}
 		} else {
 			console.error('unexpected path given:', path);

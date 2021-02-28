@@ -4,14 +4,14 @@ QUnit.test('walker from a box', (assert) => {
 	const scene = window.scene;
 	const box1 = window.geo1.createNode('box');
 
-	assert.equal(CoreWalker.find_node(box1, '..'), window.geo1);
-	assert.equal(CoreWalker.find_node(box1, '.'), box1);
-	assert.equal(CoreWalker.find_node(box1, './'), box1);
-	assert.equal(CoreWalker.find_node(box1, '/geo1'), window.geo1);
-	// assert.equal Core.Walker.find_node(box1, '/'), box1.root # not sure why that doesn't work, but that's not needed
-	assert.notOk(CoreWalker.find_node(box1, 'test'));
-	assert.notOk(CoreWalker.find_node(box1, '/test'));
-	assert.notEqual(CoreWalker.find_node(box1, '/size'), box1.p.size);
+	assert.equal(CoreWalker.findNode(box1, '..'), window.geo1);
+	assert.equal(CoreWalker.findNode(box1, '.'), box1);
+	assert.equal(CoreWalker.findNode(box1, './'), box1);
+	assert.equal(CoreWalker.findNode(box1, '/geo1'), window.geo1);
+	// assert.equal Core.Walker.findNode(box1, '/'), box1.root # not sure why that doesn't work, but that's not needed
+	assert.notOk(CoreWalker.findNode(box1, 'test'));
+	assert.notOk(CoreWalker.findNode(box1, '/test'));
+	assert.notEqual(CoreWalker.findNode(box1, '/size'), box1.p.size);
 
 	assert.equal(window.scene.root().node('/geo1'), window.geo1);
 	assert.equal(window.scene.root().node('.'), window.scene.root());

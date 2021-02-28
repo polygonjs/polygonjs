@@ -17,8 +17,8 @@ export function TextureMatcapMapParamConfig<TBase extends Constructor>(Base: TBa
 		/** @param toggle if you want to use a matcap map */
 		useMatcapMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMatcapMapController));
 		/** @param specify the matcap map COP node */
-		matcapMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		matcapMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureMatcapMapController, 'useMatcapMap')
 		);
 	};

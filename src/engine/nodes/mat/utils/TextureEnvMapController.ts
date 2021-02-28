@@ -16,8 +16,8 @@ export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase)
 		/** @param toggle if you want to use an environment map */
 		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
 		/** @param specify the environment map COP node */
-		envMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.ENV_MAP,
+		envMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureEnvMapController, 'useEnvMap')
 		);
 		/** @param environment intensity */

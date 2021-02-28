@@ -19,7 +19,7 @@ import {ParamConfig} from '../../../utils/params/ParamsConfig';
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		doPostProcess = ParamConfig.BOOLEAN(0);
-		postProcessNode = ParamConfig.NODE_PATH('./postProcess1', {
+		postProcessNode = ParamConfig.NODE_PATH('', {
 			visibleIf: {
 				doPostProcess: 1,
 			},

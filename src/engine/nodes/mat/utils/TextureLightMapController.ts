@@ -18,8 +18,8 @@ export function TextureLightMapParamConfig<TBase extends Constructor>(Base: TBas
 		/** @param toggle if you want to use a light map */
 		useLightMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureLightMapController));
 		/** @param specify the light map COP node */
-		lightMap = ParamConfig.OPERATOR_PATH(
-			NODE_PATH_DEFAULT.NODE.UV,
+		lightMap = ParamConfig.NODE_PATH(
+			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(TextureLightMapController, 'useLightMap')
 		);
 		/** @param light. When set to 0, reflections from environment maps will be very sharp, or blurred when 1. Any value between 0 and 1 can help modulate this. */

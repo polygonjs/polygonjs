@@ -81,9 +81,9 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		this.decomposed_path.reset();
 		if (path_non_empty) {
 			if (mode == OperatorPathMode.PARAM) {
-				param = CoreWalker.find_param(this.node, path, this.decomposed_path);
+				param = CoreWalker.findParam(this.node, path, this.decomposed_path);
 			} else {
-				node = CoreWalker.find_node(this.node, path, this.decomposed_path);
+				node = CoreWalker.findNode(this.node, path, this.decomposed_path);
 			}
 		}
 
@@ -213,7 +213,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return this._found_node_with_expected_type;
 	}
 	private _expected_context() {
-		return this.options.node_selection_context();
+		return this.options.nodeSelectionContext();
 	}
 	private _is_node_expected_context(node: BaseNodeType) {
 		const expected_context = this._expected_context();
@@ -224,7 +224,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return expected_context == node_context;
 	}
 	private _expected_node_types() {
-		return this.options.node_selection_types();
+		return this.options.nodeSelectionTypes();
 	}
 	private _expected_param_type() {
 		return this.options.param_selection_type();

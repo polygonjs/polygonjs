@@ -1,7 +1,7 @@
 import {BaseParamType} from '../../_Base';
 import {ParamEvent} from '../../../poly/ParamEvent';
 
-export class ErrorState {
+export class ParamErrorState {
 	private _message: string | undefined;
 	constructor(private param: BaseParamType) {}
 

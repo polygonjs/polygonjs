@@ -27,7 +27,7 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
-	await AssemblersUtils.with_unregistered_assembler(mesh_standard1.usedAssembler(), async () => {
+	await AssemblersUtils.withUnregisteredAssembler(mesh_standard1.usedAssembler(), async () => {
 		console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
@@ -35,15 +35,17 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 		const new_mesh_standard1 = scene2.node('/MAT/meshStandardBuilder1') as BaseBuilderMatNodeType;
 		assert.notOk(new_mesh_standard1.assemblerController);
 		assert.ok(new_mesh_standard1.persisted_config);
+		console.log(new_mesh_standard1.params.all.map((p) => p.name()).sort());
 		const float_param = new_mesh_standard1.params.get('float_param') as FloatParam;
 		const vec3_param = new_mesh_standard1.params.get('vec3_param') as Vector3Param;
-		assert.ok(float_param);
-		assert.ok(vec3_param);
+		assert.ok(float_param, 'float_param exists');
+		assert.ok(vec3_param, 'vec3_param exists');
 		const material = new_mesh_standard1.material;
-		assert.equal(material.fragmentShader, mesh_standard1.material.fragmentShader);
-		assert.equal(material.vertexShader, mesh_standard1.material.vertexShader);
+		assert.equal(material.fragmentShader, mesh_standard1.material.fragmentShader, 'fragment shader is as expected');
+		assert.equal(material.vertexShader, mesh_standard1.material.vertexShader, 'vertex shader is as expected');
 
 		// float param callback
+		console.log(material.uniforms);
 		assert.equal(material.uniforms.v_POLY_param1_val.value, 0);
 		float_param.set(2);
 		assert.equal(material.uniforms.v_POLY_param1_val.value, 2);
