@@ -23,7 +23,7 @@ export interface ObjectWithCustomMaterials extends Mesh {
 	customDepthDOFMaterial?: Material;
 }
 export interface ShaderMaterialWithCustomMaterials extends ShaderMaterial {
-	custom_materials: {
+	customMaterials: {
 		[key in CustomMaterialName]?: ShaderMaterial;
 	};
 }
@@ -120,29 +120,29 @@ export class CoreMaterial {
 		object.onBeforeRender = EMPTY_RENDER_HOOK;
 	}
 
-	static apply_custom_materials(object: Object3D, material: Material) {
+	static applyCustomMaterials(object: Object3D, material: Material) {
 		const material_with_custom = material as ShaderMaterialWithCustomMaterials;
-		if (material_with_custom.custom_materials) {
-			for (let name of Object.keys(material_with_custom.custom_materials)) {
+		if (material_with_custom.customMaterials) {
+			for (let name of Object.keys(material_with_custom.customMaterials)) {
 				const mat_name = name as CustomMaterialName;
 				// http://blog.edankwan.com/post/three-js-advanced-tips-shadow
-				const custom_material = material_with_custom.custom_materials[mat_name];
+				const custom_material = material_with_custom.customMaterials[mat_name];
 				if (custom_material) {
 					(object as ObjectWithCustomMaterials)[mat_name] = custom_material;
 					custom_material.needsUpdate = true;
 				}
 			}
-			// object.material = material.custom_materials.customDepthDOFMaterial
-			// object.material = material.custom_materials.customDepthMaterial
-			// object.material = material.custom_materials.customDistanceMaterial
+			// object.material = material.customMaterials.customDepthDOFMaterial
+			// object.material = material.customMaterials.customDepthMaterial
+			// object.material = material.customMaterials.customDistanceMaterial
 		}
 	}
 	static assign_custom_uniforms(mat: Material, uniform_name: string, uniform_value: any) {
 		const material = mat as ShaderMaterialWithCustomMaterials;
-		if (material.custom_materials) {
-			for (let name of Object.keys(material.custom_materials)) {
+		if (material.customMaterials) {
+			for (let name of Object.keys(material.customMaterials)) {
 				const mat_name = name as CustomMaterialName;
-				const custom_material = material.custom_materials[mat_name];
+				const custom_material = material.customMaterials[mat_name];
 				if (custom_material) {
 					custom_material.uniforms[uniform_name].value = uniform_value;
 				}
@@ -151,10 +151,10 @@ export class CoreMaterial {
 	}
 	static init_custom_material_uniforms(mat: Material, uniform_name: string, uniform_value: any) {
 		const material = mat as ShaderMaterialWithCustomMaterials;
-		if (material.custom_materials) {
-			for (let name of Object.keys(material.custom_materials)) {
+		if (material.customMaterials) {
+			for (let name of Object.keys(material.customMaterials)) {
 				const mat_name = name as CustomMaterialName;
-				const custom_material = material.custom_materials[mat_name];
+				const custom_material = material.customMaterials[mat_name];
 				if (custom_material) {
 					custom_material.uniforms[uniform_name] = custom_material.uniforms[uniform_name] || uniform_value;
 				}

@@ -23,7 +23,7 @@ export class ShaderAssemblerLambert extends ShaderAssemblerMesh {
 			vertexShader: template_shader.vertexShader,
 			fragmentShader: template_shader.fragmentShader,
 		});
-		this._add_custom_materials(material);
+		this._addCustomMaterials(material);
 		return material;
 	}
 }

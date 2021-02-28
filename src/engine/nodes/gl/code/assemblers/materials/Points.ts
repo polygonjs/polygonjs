@@ -62,7 +62,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 			vertexShader: template_shader.vertexShader,
 			fragmentShader: template_shader.fragmentShader,
 		});
-		this._add_custom_materials(material);
+		this._addCustomMaterials(material);
 		return material;
 	}
 	// protected insert_body_after(shader_name){

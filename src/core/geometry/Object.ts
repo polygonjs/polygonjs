@@ -289,7 +289,7 @@ export class CoreObject extends CoreEntity {
 			}
 			if (mesh_node.material) {
 				mesh_node.material = src_node.material;
-				CoreMaterial.apply_custom_materials(node, mesh_node.material as ShaderMaterialWithCustomMaterials);
+				CoreMaterial.applyCustomMaterials(node, mesh_node.material as ShaderMaterialWithCustomMaterials);
 
 				// prevents crashes for linesegments with shader material such as the line dashed instance
 				// TODO: test

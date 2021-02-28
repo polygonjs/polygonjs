@@ -59,7 +59,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 				roughnessmap_fragment
 			);
 		};
-		this._add_custom_materials(material);
+		this._addCustomMaterials(material);
 		return material;
 	}
 

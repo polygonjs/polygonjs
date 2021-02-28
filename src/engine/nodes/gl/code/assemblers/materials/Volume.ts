@@ -45,7 +45,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 
 		CoreMaterial.add_user_data_render_hook(material, VolumeController.render_hook.bind(VolumeController));
 
-		this._add_custom_materials(material);
+		this._addCustomMaterials(material);
 		return material;
 	}
 

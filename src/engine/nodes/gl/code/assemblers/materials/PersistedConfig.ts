@@ -12,7 +12,7 @@ export interface PersistedConfigBaseMaterialData {
 	param_uniform_pairs: [string, string][];
 	uniforms_time_dependent?: boolean;
 	uniforms_resolution_dependent?: boolean;
-	custom_materials?: PolyDictionary<object>;
+	customMaterials?: PolyDictionary<object>;
 }
 
 // potential bug with Material Loader
@@ -32,16 +32,19 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		}
 
 		// custom materials
-		const custom_materials_data: PolyDictionary<object> = {};
-		const custom_materials = this.node.material.custom_materials;
-		if (custom_materials) {
-			const custom_material_names: CustomMaterialName[] = Object.keys(custom_materials) as CustomMaterialName[];
-			for (let name of custom_material_names) {
-				const custom_material = custom_materials[name];
+		const customMaterialsData: PolyDictionary<object> = {};
+		const customMaterials = this.node.material.customMaterials;
+		if (customMaterials) {
+			const customMaterialNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
+			for (let customMaterialName of customMaterialNames) {
+				const custom_material = customMaterials[customMaterialName];
 				if (custom_material) {
-					const material_data = this._material_to_json(custom_material);
+					const material_data = this._materialToJson(custom_material, {
+						node: this.node,
+						suffix: customMaterialName,
+					});
 					if (material_data) {
-						custom_materials_data[name] = material_data;
+						customMaterialsData[customMaterialName] = material_data;
 					}
 				}
 			}
@@ -54,7 +57,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			param_uniform_pairs.push([param_config.name(), param_config.uniform_name]);
 		}
 
-		const material_data = this._material_to_json(this.node.material);
+		const material_data = this._materialToJson(this.node.material, {node: this.node, suffix: 'main'});
 		if (!material_data) {
 			console.warn('failed to save material from node', this.node.fullPath());
 		}
@@ -64,7 +67,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			uniforms_time_dependent: assemblerController.assembler.uniforms_time_dependent(),
 			uniforms_resolution_dependent: assemblerController.assembler.resolution_dependent(),
 			param_uniform_pairs: param_uniform_pairs,
-			custom_materials: custom_materials_data,
+			customMaterials: customMaterialsData,
 		};
 		return data;
 	}
@@ -74,14 +77,14 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 
-		this._material.custom_materials = this._material.custom_materials || {};
-		if (data.custom_materials) {
-			const names: CustomMaterialName[] = Object.keys(data.custom_materials) as CustomMaterialName[];
+		this._material.customMaterials = this._material.customMaterials || {};
+		if (data.customMaterials) {
+			const names: CustomMaterialName[] = Object.keys(data.customMaterials) as CustomMaterialName[];
 			for (let name of names) {
-				const custom_mat_data = data.custom_materials[name];
+				const custom_mat_data = data.customMaterials[name];
 				const custom_mat = this._load_material(custom_mat_data);
 				if (custom_mat) {
-					this._material.custom_materials[name] = custom_mat;
+					this._material.customMaterials[name] = custom_mat;
 				}
 			}
 		}

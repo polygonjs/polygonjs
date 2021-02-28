@@ -41,7 +41,7 @@ export class ParticlesSystemGpuRenderController {
 			const object = object3d as Mesh;
 			if (object.geometry) {
 				object.material = this._render_material;
-				CoreMaterial.apply_custom_materials(object, this._render_material as ShaderMaterialWithCustomMaterials);
+				CoreMaterial.applyCustomMaterials(object, this._render_material as ShaderMaterialWithCustomMaterials);
 				object.matrixAutoUpdate = false;
 				object.updateMatrix();
 			}

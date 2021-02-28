@@ -22,7 +22,7 @@ export class ShaderAssemblerBasic extends ShaderAssemblerMesh {
 			fragmentShader: template_shader.fragmentShader,
 		});
 
-		this._add_custom_materials(material);
+		this._addCustomMaterials(material);
 		return material;
 	}
 }

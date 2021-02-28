@@ -43,7 +43,10 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			uniforms_owner.uniforms[param_config.uniform_name] = param_config.uniform;
 		}
 
-		const material_data = this._material_to_json(uniforms_owner);
+		const material_data = this._materialToJson(uniforms_owner, {
+			node: this.node,
+			suffix: 'main',
+		});
 
 		return {
 			shaders_by_name: shaders_by_name,

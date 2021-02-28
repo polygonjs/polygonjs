@@ -85,7 +85,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 
 	async _applyMaterial(object: Mesh, material: Material) {
 		object.material = material;
-		CoreMaterial.apply_custom_materials(object, material);
+		CoreMaterial.applyCustomMaterials(object, material);
 	}
 
 	private _create_instance(

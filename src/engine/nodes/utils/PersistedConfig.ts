@@ -5,12 +5,16 @@ import {Matrix3} from 'three/src/math/Matrix3';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {MaterialLoader} from 'three/src/loaders/MaterialLoader';
+import {Material} from 'three/src/materials/Material';
 interface MaterialData {
 	color?: boolean;
 	lights?: boolean;
 }
 
-const POSSIBLE_MAP_NAMES = ['map', 'alphaMap', 'envMap'];
+interface ToJsonOptions {
+	node: BaseNodeType;
+	suffix: string;
+}
 export class BasePersistedConfig {
 	constructor(protected node: BaseNodeType) {}
 	toJSON(): object | void {}
@@ -21,7 +25,7 @@ export class BasePersistedConfig {
 	// SAVE MAT
 	//
 	//
-	protected _material_to_json(material: ShaderMaterial): object | undefined {
+	protected _materialToJson(material: ShaderMaterial, options: ToJsonOptions): object | undefined {
 		this._unassign_textures(material);
 
 		let material_data: object | undefined = undefined;
@@ -33,6 +37,11 @@ export class BasePersistedConfig {
 		}
 		if (material_data && material.lights != null) {
 			(material_data as any).lights = material.lights;
+		}
+		if (material_data) {
+			// here we force the uuid to an expected value,
+			// so that it does not get overriden at each load/save
+			(material_data as any).uuid = `${options.node.fullPath()}-${options.suffix}`;
 		}
 
 		this._reassign_textures(material);
@@ -49,22 +58,24 @@ export class BasePersistedConfig {
 		this._found_param_texture_by_id.clear();
 		this._found_param_textures_id_by_uniform_name.clear();
 		const uniforms = material.uniforms;
-		const names = Object.keys(uniforms);
-		for (let name of names) {
-			const value = uniforms[name].value;
+		const uniformNames = Object.keys(uniforms);
+		for (let uniformName of uniformNames) {
+			const value = uniforms[uniformName].value;
 			if (value && value.uuid) {
 				const texture = value as Texture;
 				this._found_uniform_texture_by_id.set(texture.uuid, value);
-				this._found_uniform_textures_id_by_uniform_name.set(name, texture.uuid);
-				uniforms[name].value = null;
+				this._found_uniform_textures_id_by_uniform_name.set(uniformName, texture.uuid);
+				uniforms[uniformName].value = null;
 			}
 		}
-		for (let name of POSSIBLE_MAP_NAMES) {
-			const texture = (material as any)[name] as Texture;
-			if (texture) {
+		const matPropertyNames = Object.keys(material) as Array<keyof Material>;
+		for (let matPropertyName of matPropertyNames) {
+			const propertyValue = material[matPropertyName];
+			if (propertyValue && propertyValue.uuid) {
+				const texture = propertyValue;
 				this._found_param_texture_by_id.set(texture.uuid, texture);
-				this._found_param_textures_id_by_uniform_name.set(name, texture.uuid);
-				(material as any)[name] = null;
+				this._found_param_textures_id_by_uniform_name.set(matPropertyName, texture.uuid);
+				(material as any)[matPropertyName] = null;
 			}
 		}
 	}

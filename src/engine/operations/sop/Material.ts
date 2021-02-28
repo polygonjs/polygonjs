@@ -144,7 +144,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		object_with_material.material = used_material;
 
 		CoreMaterial.apply_render_hook(object, used_material);
-		CoreMaterial.apply_custom_materials(object, used_material);
+		CoreMaterial.applyCustomMaterials(object, used_material);
 	}
 
 	private _swap_texture(target_mat: Material, params: MaterialSopParams) {

@@ -63,7 +63,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		return undefined;
 	}
 
-	protected _add_custom_materials(material: ShaderMaterial) {
+	protected _addCustomMaterials(material: ShaderMaterial) {
 		const class_by_custom_name = this.custom_assembler_class_by_custom_name();
 		if (class_by_custom_name) {
 			class_by_custom_name.forEach(
@@ -87,11 +87,11 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			custom_assembler = new assembler_class(this._gl_parent_node);
 			this._assemblers_by_custom_name.set(custom_name, custom_assembler);
 		}
-		material.custom_materials = material.custom_materials || {};
-		material.custom_materials[custom_name] = custom_assembler.createMaterial();
+		material.customMaterials = material.customMaterials || {};
+		material.customMaterials[custom_name] = custom_assembler.createMaterial();
 	}
 
-	compile_custom_materials(material: ShaderMaterialWithCustomMaterials) {
+	compileCustomMaterials(material: ShaderMaterialWithCustomMaterials) {
 		// const custom_materials_by_name: Map<CustomMaterialName, ShaderMaterial> = new Map();
 		// this._assemblers_by_custom_name.clear();
 
@@ -113,7 +113,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 						assembler.set_shader_configs(this.shader_configs);
 						assembler.set_variable_configs(this.variable_configs());
 
-						const custom_material = material.custom_materials[custom_name];
+						const custom_material = material.customMaterials[custom_name];
 						if (custom_material) {
 							assembler.compile_material(custom_material);
 						}
@@ -180,8 +180,8 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// this._shaders_by_name.set(ShaderName.FRAGMENT, this._template_shader!.fragmentShader!);
 
 		// assign custom materials
-		if ((material as ShaderMaterialWithCustomMaterials).custom_materials) {
-			this.compile_custom_materials(material as ShaderMaterialWithCustomMaterials);
+		if ((material as ShaderMaterialWithCustomMaterials).customMaterials) {
+			this.compileCustomMaterials(material as ShaderMaterialWithCustomMaterials);
 		}
 		// const custom_materials = await this.get_custom_materials();
 		// const material_with_custom_materials = material as ShaderMaterialWithCustomMaterials;

@@ -38,7 +38,7 @@ export class CoreScene {
 			if (object.material) {
 				const geometry = object.geometry as BufferGeometry;
 				if (geometry) {
-					// console.log(object, object.custom_materials)
+					// console.log(object, object.customMaterials)
 					const custom_dof_material = object.customDepthDOFMaterial;
 					if (custom_dof_material) {
 						assigned_material = custom_dof_material as MaterialWithUniforms;

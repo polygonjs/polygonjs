@@ -527,7 +527,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		}
 	}
 
-	get_custom_materials(): Map<CustomMaterialName, ShaderMaterial> {
+	getCustomMaterials(): Map<CustomMaterialName, ShaderMaterial> {
 		return new Map<CustomMaterialName, ShaderMaterial>();
 	}
 
