@@ -15,6 +15,7 @@ import {MeshPhysicalMatNode} from '../../../nodes/mat/MeshPhysical';
 import {MeshStandardMatNode} from '../../../nodes/mat/MeshStandard';
 import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder';
 import {MeshSubsurfaceScatteringMatNode} from '../../../nodes/mat/MeshSubsurfaceScattering';
+import {MeshToonMatNode} from '../../../nodes/mat/MeshToon';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
 import {PostProcessMatNode} from '../../../nodes/mat/PostProcess';
@@ -36,6 +37,7 @@ export interface MatNodeChildrenMap {
 	meshStandard: MeshStandardMatNode;
 	meshStandardBuilder: MeshStandardBuilderMatNode;
 	meshSubsurfaceScattering: MeshSubsurfaceScatteringMatNode;
+	meshToon: MeshToonMatNode;
 	points: PointsMatNode;
 	pointsBuilder: PointsBuilderMatNode;
 	shadow: ShadowMatNode;
@@ -65,6 +67,7 @@ export class MatRegister {
 		poly.registerNode(MeshStandardMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(MeshStandardBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(MeshSubsurfaceScatteringMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshToonMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(PointsMatNode, CATEGORY_MAT.POINTS);
 		poly.registerNode(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(ShadowMatNode, CATEGORY_MAT.ADVANCED);

@@ -23,7 +23,9 @@ export function TextureLightMapParamConfig<TBase extends Constructor>(Base: TBas
 			OperatorPathOptions(TextureLightMapController, 'useLightMap')
 		);
 		/** @param light. When set to 0, reflections from environment maps will be very sharp, or blurred when 1. Any value between 0 and 1 can help modulate this. */
-		lightMapIntensity = ParamConfig.FLOAT(1);
+		lightMapIntensity = ParamConfig.FLOAT(1, {
+			visibleIf: {useLightMap: 1},
+		});
 	};
 }
 
