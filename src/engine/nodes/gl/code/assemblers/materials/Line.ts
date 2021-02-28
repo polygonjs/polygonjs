@@ -28,7 +28,7 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 
 export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'diffuseColor' }
-	get _template_shader() {
+	templateShader() {
 		const template = ShaderLib.dashed;
 		return {
 			vertexShader: template.vertexShader, //TemplateVertex,
@@ -37,7 +37,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 		};
 	}
 	createMaterial() {
-		const template_shader = this._template_shader;
+		const template_shader = this.templateShader();
 
 		// const uniforms = UniformsUtils.clone( template_shader.uniforms )
 		// uniforms.size.value = 10

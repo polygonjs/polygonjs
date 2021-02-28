@@ -14,12 +14,12 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {GlConnectionPoint, GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
-	is_physical() {
+	isPhysical() {
 		return false;
 	}
 
-	get _template_shader() {
-		const template = this.is_physical() ? ShaderLib.physical : ShaderLib.standard;
+	templateShader() {
+		const template = this.isPhysical() ? ShaderLib.physical : ShaderLib.standard;
 		return {
 			vertexShader: template.vertexShader, //TemplateVertex,
 			fragmentShader: template.fragmentShader, //TemplateFragment,
@@ -28,7 +28,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	}
 
 	createMaterial() {
-		const template_shader = this._template_shader;
+		const template_shader = this.templateShader();
 
 		const options = {
 			lights: true,
@@ -40,7 +40,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 			vertexShader: template_shader.vertexShader,
 			fragmentShader: template_shader.fragmentShader,
 		};
-		// if(this.constructor.is_physical()){
+		// if(this.constructor.isPhysical()){
 		// 	options['defines'] = {
 		// 		PHYSICAL: 1
 		// 	}
@@ -64,7 +64,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	}
 
 	// static convert_material_to_gltf_supported(material: ShaderMaterial): Material {
-	// 	const gltf_constructor = this.is_physical() ? MeshPhysicalMaterial : MeshStandardMaterial;
+	// 	const gltf_constructor = this.isPhysical() ? MeshPhysicalMaterial : MeshStandardMaterial;
 	// 	const options = {};
 	// 	this._match_uniform('color', options, material, 'diffuse');
 	// 	this._match_uniform('map', options, material);

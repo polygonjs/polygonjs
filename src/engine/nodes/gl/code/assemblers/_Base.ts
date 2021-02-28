@@ -81,9 +81,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	protected _template_shader_for_shader_name(shader_name: ShaderName): string | undefined {
 		switch (shader_name) {
 			case ShaderName.VERTEX:
-				return this._template_shader?.vertexShader;
+				return this.templateShader()?.vertexShader;
 			case ShaderName.FRAGMENT:
-				return this._template_shader?.fragmentShader;
+				return this.templateShader()?.fragmentShader;
 		}
 	}
 
@@ -117,7 +117,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	set_root_nodes(root_nodes: BaseGlNodeType[]) {
 		this._root_nodes = root_nodes;
 	}
-	protected get _template_shader(): ITemplateShader | undefined {
+	protected templateShader(): ITemplateShader | undefined {
 		return undefined;
 	}
 
@@ -555,7 +555,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	//
 	//
 	// static convert_material_to_gltf_supported(material: ShaderMaterial): Material{
-	// 	const gltf_constructor = this.is_physical() ? MeshPhysicalMaterial : MeshStandardMaterial
+	// 	const gltf_constructor = this.isPhysical() ? MeshPhysicalMaterial : MeshStandardMaterial
 	// 	const options = {}
 	// 	this._match_uniform('color', options, material, 'diffuse')
 	// 	this._match_uniform('map', options, material)

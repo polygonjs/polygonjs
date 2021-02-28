@@ -26,7 +26,7 @@ import {NodeContext} from '../../../../../poly/NodeContext';
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _texture_allocations_controller: TextureAllocationsController | undefined;
 
-	get _template_shader() {
+	templateShader() {
 		return undefined;
 	}
 	protected _template_shader_for_shader_name(shader_name: ShaderName) {

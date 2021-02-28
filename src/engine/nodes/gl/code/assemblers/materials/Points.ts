@@ -30,7 +30,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 		return CUSTOM_ASSEMBLER_MAP;
 	}
 
-	get _template_shader() {
+	templateShader() {
 		const template = ShaderLib.points;
 		return {
 			vertexShader: template.vertexShader,
@@ -39,7 +39,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 		};
 	}
 	createMaterial() {
-		const template_shader = this._template_shader;
+		const template_shader = this.templateShader();
 
 		// const uniforms = UniformsUtils.clone( template_shader.uniforms )
 		// uniforms.size.value = 10

@@ -11,6 +11,8 @@ import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/Advan
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {TextureMapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
+import {TextureBumpMapController, TextureBumpMapParamConfig} from './utils/TextureBumpMapController';
+import {TextureEmissiveMapController, TextureEmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
 import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapController';
 import {TextureAOMapController, TextureAOMapParamConfig} from './utils/TextureAOMapController';
 import {TextureNormalMapController, TextureNormalMapParamConfig} from './utils/TextureNormalMapController';
@@ -38,7 +40,9 @@ interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
+	bumpMap: TextureBumpMapController;
 	displacementMap: TextureDisplacementMapController;
+	emissiveMap: TextureEmissiveMapController;
 	envMap: TextureEnvMapController;
 	lightMap: TextureLightMapController;
 	map: TextureMapController;
@@ -57,13 +61,19 @@ class MeshStandardMatParamsConfig extends FogParamConfig(
 							TextureEnvMapParamConfig(
 								TextureLightMapParamConfig(
 									TextureNormalMapParamConfig(
-										TextureDisplacementMapParamConfig(
-											TextureAOMapParamConfig(
-												TextureAlphaMapParamConfig(
-													TextureMapParamConfig(
-														/* textures */
-														TexturesFolderParamConfig(
-															ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+										TextureBumpMapParamConfig(
+											TextureDisplacementMapParamConfig(
+												TextureAOMapParamConfig(
+													TextureEmissiveMapParamConfig(
+														TextureAlphaMapParamConfig(
+															TextureMapParamConfig(
+																/* textures */
+																TexturesFolderParamConfig(
+																	ColorParamConfig(
+																		DefaultFolderParamConfig(NodeParamsConfig)
+																	)
+																)
+															)
 														)
 													)
 												)
@@ -99,7 +109,9 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
 		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
+		bumpMap: new TextureBumpMapController(this, CONTROLLER_OPTIONS),
 		displacementMap: new TextureDisplacementMapController(this, CONTROLLER_OPTIONS),
+		emissiveMap: new TextureEmissiveMapController(this, CONTROLLER_OPTIONS),
 		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
 		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),

@@ -16,7 +16,7 @@ import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	private _uniforms: IUniforms | undefined;
 
-	get _template_shader() {
+	templateShader() {
 		return {
 			fragmentShader: TemplateDefault,
 			vertexShader: undefined,
@@ -37,7 +37,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		this._shaders_by_name = new Map();
 		for (let shader_name of this.shader_names) {
 			if (shader_name == ShaderName.FRAGMENT) {
-				const template = this._template_shader.fragmentShader;
+				const template = this.templateShader().fragmentShader;
 				this._lines.set(shader_name, template.split('\n'));
 			}
 		}

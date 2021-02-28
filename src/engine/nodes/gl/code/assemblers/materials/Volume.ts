@@ -25,7 +25,7 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([[ShaderName.FRAGMENT, []]]);
 
 export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
-	get _template_shader() {
+	templateShader() {
 		return {
 			vertexShader: VERTEX,
 			fragmentShader: FRAGMENT,
@@ -33,7 +33,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 		};
 	}
 	createMaterial() {
-		const template_shader = this._template_shader;
+		const template_shader = this.templateShader();
 		const material = new ShaderMaterial({
 			vertexShader: template_shader.vertexShader,
 			fragmentShader: template_shader.fragmentShader,

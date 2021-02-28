@@ -185,6 +185,13 @@ export class BaseTextureMapController extends BaseController {
 		uniforms: U,
 		mat_attrib_name: keyof SubType<U, Texture | null>
 	) {
+		if (!uniforms[mat_attrib_name]) {
+			console.warn(
+				`'${mat_attrib_name}' uniform not found. existing uniforms are:`,
+				Object.keys(uniforms).sort()
+			);
+			return;
+		}
 		if (uniforms[mat_attrib_name].value) {
 			uniforms[mat_attrib_name].value = null;
 			// if (this._do_update_define()) {
