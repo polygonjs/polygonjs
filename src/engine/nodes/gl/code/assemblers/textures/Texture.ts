@@ -145,7 +145,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 						body_line = `diffuseColor.a = ${ThreeToGl.any(gl_var)}`;
 					}
 					if (body_line) {
-						shaders_collection_controller.add_body_lines(output_node, [body_line]);
+						shaders_collection_controller.addBodyLines(output_node, [body_line]);
 					}
 				}
 			}
@@ -162,7 +162,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		const definitions: UniformGLDefinition[] = [];
 
 		for (let output_name of globals_node.io.outputs.used_output_names()) {
-			const var_name = globals_node.gl_var_name(output_name);
+			const var_name = globals_node.glVarName(output_name);
 
 			switch (output_name) {
 				case 'time':
@@ -179,7 +179,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			}
 		}
 
-		shaders_collection_controller.add_definitions(globals_node, definitions, shader_name);
-		shaders_collection_controller.add_body_lines(globals_node, body_lines);
+		shaders_collection_controller.addDefinitions(globals_node, definitions, shader_name);
+		shaders_collection_controller.addBodyLines(globals_node, body_lines);
 	}
 }

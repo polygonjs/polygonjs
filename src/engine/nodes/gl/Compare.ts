@@ -99,10 +99,10 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		return [type, type];
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines: string[] = [];
 
-		const value = this.gl_var_name(OUTPUT_NAME);
+		const value = this.glVarName(OUTPUT_NAME);
 		const operator = TEST_OPERATIONS_FLOAT[this.pv.test];
 		const value0 = ThreeToGl.any(this.variable_for_input(this._gl_input_name(0)));
 		const value1 = ThreeToGl.any(this.variable_for_input(this._gl_input_name(1)));
@@ -119,7 +119,7 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 			// instead, comparing components one by one
 			let tmp_values: string[] = [];
 			for (let i = 0; i < components_count; i++) {
-				const tmp_value = this.gl_var_name(`tmp_value_${i}`);
+				const tmp_value = this.glVarName(`tmp_value_${i}`);
 				const component = COMPONENTS[i];
 				tmp_values.push(tmp_value);
 				body_lines.push(`bool ${tmp_value} = (${value0}.${component} ${operator} ${value1}.${component})`);
@@ -129,6 +129,6 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 			body_lines.push(`bool ${value} = (${value0} ${operator} ${value1})`);
 		}
 
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }

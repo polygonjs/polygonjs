@@ -66,7 +66,7 @@ export class CodeFormatter {
 			return 1;
 		} else {
 			// we do not have an offset of 1 for subnet_input and subnet_output
-			// so that those nodes can control the tabs themselves in set_lines()
+			// so that those nodes can control the tabs themselves in setLines()
 			let offset = 1;
 			if (node.type() == NetworkChildNodeType.INPUT || node.type() == NetworkChildNodeType.OUTPUT) {
 				offset = 0;

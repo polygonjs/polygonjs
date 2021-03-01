@@ -55,16 +55,16 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 		return VaryingReadGlNode.OUTPUT_NAME;
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		if (shaders_collection_controller.current_shader_name == ShaderName.FRAGMENT) {
 			const varying_name = this.pv.name;
 			const definition = new VaryingGLDefinition(this, this.gl_type(), varying_name);
 
 			// add fragment lines
-			const out_value = this.gl_var_name(VaryingReadGlNode.OUTPUT_NAME);
+			const out_value = this.glVarName(VaryingReadGlNode.OUTPUT_NAME);
 			const body_line = `${this.gl_type()} ${out_value} = ${varying_name}`;
-			shaders_collection_controller.add_definitions(this, [definition]);
-			shaders_collection_controller.add_body_lines(this, [body_line]);
+			shaders_collection_controller.addDefinitions(this, [definition]);
+			shaders_collection_controller.addBodyLines(this, [body_line]);
 		}
 	}
 

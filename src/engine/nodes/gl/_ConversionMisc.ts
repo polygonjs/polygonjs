@@ -26,12 +26,12 @@ export class FloatToIntGlNode extends TypedGlNode<FloatToIntGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const float = this.variable_for_input('float');
 
-		const int = this.gl_var_name('int');
+		const int = this.glVarName('int');
 		const body_line = `int ${int} = int(${ThreeToGl.float(float)})`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }
 
@@ -57,11 +57,11 @@ export class IntToFloatGlNode extends TypedGlNode<IntToFloatGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const int = this.variable_for_input('int');
 
-		const float = this.gl_var_name('float');
+		const float = this.glVarName('float');
 		const body_line = `float ${float} = float(${ThreeToGl.int(int)})`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }

@@ -38,7 +38,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 		const function_declaration_lines = [];
 
@@ -70,8 +70,8 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 			? ThreeToGl.float(this.variable_for_input(this.p.instanceScale.name()))
 			: this._default_input_instanceScale(shaders_collection_controller);
 
-		const result_position = this.gl_var_name(this.gl_output_name_position());
-		const result_normal = this.gl_var_name(this.gl_output_name_normal());
+		const result_position = this.glVarName(this.gl_output_name_position());
+		const result_normal = this.glVarName(this.gl_output_name_normal());
 		body_lines.push(`vec3 ${result_position} = vec3(${position})`);
 		body_lines.push(`${result_position} *= ${instanceScale}`);
 		body_lines.push(`${result_position} = rotateWithQuat( ${result_position}, ${instanceOrientation} )`);
@@ -79,8 +79,8 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		body_lines.push(`vec3 ${result_normal} = vec3(${normal})`);
 		body_lines.push(`${result_normal} = rotateWithQuat( ${result_normal}, ${instanceOrientation} )`);
 
-		shaders_collection_controller.add_body_lines(this, body_lines);
-		shaders_collection_controller.add_definitions(this, function_declaration_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
+		shaders_collection_controller.addDefinitions(this, function_declaration_lines);
 	}
 	gl_output_name_position() {
 		return 'position';

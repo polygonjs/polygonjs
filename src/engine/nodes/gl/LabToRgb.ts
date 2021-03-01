@@ -26,7 +26,7 @@ export class LabToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const function_declaration_lines = [];
 		const body_lines = [];
 
@@ -34,12 +34,12 @@ export class LabToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
 
 		const value = ThreeToGl.vector3(this.variable_for_input(this.p.lab.name()));
 
-		const rgb = this.gl_var_name(OUTPUT_NAME);
+		const rgb = this.glVarName(OUTPUT_NAME);
 		// body_lines.push(
 		// 	`vec3 ${rgb} = labToRgb(vec3(${value}.x*100.0, (${value}.y-0.5)*(2.0*128.0), (${value}.z-0.5)*(2.0*128.0) ))`
 		// );
 		body_lines.push(`vec3 ${rgb} = labToRgb(vec3(${value}.x*100.0, -128.0, 128.0 ))`);
-		shaders_collection_controller.add_definitions(this, function_declaration_lines);
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addDefinitions(this, function_declaration_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }

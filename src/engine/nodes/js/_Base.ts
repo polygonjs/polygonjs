@@ -74,11 +74,11 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// ADDED LINES
 	//
 	//
-	set_lines(lines_controller: LinesController) {}
+	setLines(lines_controller: LinesController) {}
 
 	reset_code() {
 		this._param_configs_controller?.reset();
-		// this.reset_lines();
+		// this.resetLines();
 	}
 
 	//
@@ -86,7 +86,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// PARAM CONFIGS
 	//
 	//
-	public set_param_configs() {}
+	public setParamConfigs() {}
 	param_configs() {
 		return this._param_configs_controller?.list;
 	}

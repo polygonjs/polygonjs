@@ -24,12 +24,12 @@ export class ModelViewMatrixMultGlNode extends TypedGlNode<ModelViewMatrixMultGl
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		if (shaders_collection_controller.current_shader_name == ShaderName.VERTEX) {
 			const input = ThreeToGl.vector3(this.variable_for_input('vector'));
-			const out_value = this.gl_var_name(OUTPUT_NAME);
+			const out_value = this.glVarName(OUTPUT_NAME);
 			const body_line = `vec4 ${out_value} = modelViewMatrix * vec4(${input}, 1.0)`;
-			shaders_collection_controller.add_body_lines(this, [body_line], ShaderName.VERTEX);
+			shaders_collection_controller.addBodyLines(this, [body_line], ShaderName.VERTEX);
 		}
 	}
 }

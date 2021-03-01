@@ -95,7 +95,7 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		return [new FunctionGLDefinition(this, Quaternion)];
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type();
 		const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 			const name = connection.name();
@@ -103,9 +103,9 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		});
 		const joined_args = args.join(', ');
 
-		const sum = this.gl_var_name(this.io.connection_points.output_name(0));
+		const sum = this.glVarName(this.io.connection_points.output_name(0));
 		const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
-		shaders_collection_controller.add_definitions(this, this.gl_function_definitions());
+		shaders_collection_controller.addBodyLines(this, [body_line]);
+		shaders_collection_controller.addDefinitions(this, this.gl_function_definitions());
 	}
 }

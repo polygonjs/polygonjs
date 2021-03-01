@@ -47,7 +47,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		}
 
 		const connection_point = globals_node.io.outputs.named_output_connection_points_by_name(output_name);
-		const var_name = globals_node.gl_var_name(output_name);
+		const var_name = globals_node.glVarName(output_name);
 
 		const variable = this._texture_allocations_controller.variable(output_name);
 
@@ -55,7 +55,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 			const gl_type = connection_point.type();
 			const new_value = this.read_attribute(globals_node, gl_type, output_name, shaders_collection_controller);
 			const body_line = `${gl_type} ${var_name} = ${new_value}`;
-			shaders_collection_controller.add_body_lines(globals_node, [body_line]);
+			shaders_collection_controller.addBodyLines(globals_node, [body_line]);
 		} else {
 			this.globals_geometry_handler = this.globals_geometry_handler || new GlobalsGeometryHandler();
 			this.globals_geometry_handler.handle_globals_node(
@@ -174,7 +174,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 				);
 				// definitions_by_shader_name[shader_name].push(texture_definition)
 
-				shaders_collection_controller.add_definitions(node, [texture_definition]);
+				shaders_collection_controller.addDefinitions(node, [texture_definition]);
 
 				// const particles_sim_uv_definition = new Definition.Attribute(globals_node, 'vec2', 'particles_sim_uv')
 				// definitions_by_shader_name['vertex'].push(particles_sim_uv_definition)
@@ -207,14 +207,14 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 			GlobalsTextureHandler.UV_VARYING
 		);
 
-		shaders_collection_controller.add_definitions(
+		shaders_collection_controller.addDefinitions(
 			node,
 			[particles_sim_uv_attrib_definition, particles_sim_uv_varying_definition],
 			ShaderName.VERTEX
 		);
-		shaders_collection_controller.add_definitions(node, [particles_sim_uv_varying_definition], ShaderName.FRAGMENT);
+		shaders_collection_controller.addDefinitions(node, [particles_sim_uv_varying_definition], ShaderName.FRAGMENT);
 
-		shaders_collection_controller.add_body_lines(
+		shaders_collection_controller.addBodyLines(
 			node,
 			[`${GlobalsTextureHandler.UV_VARYING} = ${GlobalsTextureHandler.UV_ATTRIB}`],
 			ShaderName.VERTEX

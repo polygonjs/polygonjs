@@ -28,16 +28,16 @@ export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const position = ThreeToGl.vector2(this.variable_for_input('position'));
 		const center = ThreeToGl.vector2(this.variable_for_input('center'));
 		const radius = ThreeToGl.float(this.variable_for_input('radius'));
 		const feather = ThreeToGl.float(this.variable_for_input('feather'));
 
-		const float = this.gl_var_name('float');
+		const float = this.glVarName('float');
 		const body_line = `float ${float} = disk2d(${position}, ${center}, ${radius}, ${feather})`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 
-		shaders_collection_controller.add_definitions(this, [new FunctionGLDefinition(this, DiskMethods)]);
+		shaders_collection_controller.addDefinitions(this, [new FunctionGLDefinition(this, DiskMethods)]);
 	}
 }

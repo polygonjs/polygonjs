@@ -19,7 +19,7 @@ export class ShadersCollectionController {
 	// 		for (let node of definition_nodes) {
 	// 			const definitions = shaders_collection_controller.definitions(shader_name, node);
 	// 			if (definitions) {
-	// 				this.add_definitions(node, definitions, shader_name);
+	// 				this.addDefinitions(node, definitions, shader_name);
 	// 			}
 	// 		}
 
@@ -30,7 +30,7 @@ export class ShadersCollectionController {
 	// 			const body_lines = shaders_collection_controller.body_lines(shader_name, node);
 	// 			console.log(node.fullPath(), body_lines);
 	// 			if (body_lines) {
-	// 				this.add_body_lines(node, body_lines, shader_name);
+	// 				this.addBodyLines(node, body_lines, shader_name);
 	// 			}
 	// 		}
 	// 	}
@@ -47,14 +47,14 @@ export class ShadersCollectionController {
 		return this._current_shader_name;
 	}
 
-	add_definitions(node: BaseGlNodeType, definitions: BaseGLDefinition[], shader_name?: ShaderName) {
+	addDefinitions(node: BaseGlNodeType, definitions: BaseGLDefinition[], shader_name?: ShaderName) {
 		if (definitions.length == 0) {
 			return;
 		}
 		shader_name = shader_name || this._current_shader_name;
 		const lines_controller = this._lines_controller_by_shader_name.get(shader_name);
 		if (lines_controller) {
-			lines_controller.add_definitions(node, definitions);
+			lines_controller.addDefinitions(node, definitions);
 		}
 	}
 	definitions(shader_name: ShaderName, node: BaseGlNodeType) {
@@ -67,14 +67,14 @@ export class ShadersCollectionController {
 	// 	return this._lines_controller_by_shader_name.get(shader_name)?.all_definition_nodes(scene) || [];
 	// }
 
-	add_body_lines(node: BaseGlNodeType, lines: string[], shader_name?: ShaderName) {
+	addBodyLines(node: BaseGlNodeType, lines: string[], shader_name?: ShaderName) {
 		if (lines.length == 0) {
 			return;
 		}
 		shader_name = shader_name || this._current_shader_name;
 		const lines_controller = this._lines_controller_by_shader_name.get(shader_name);
 		if (lines_controller) {
-			lines_controller.add_body_lines(node, lines);
+			lines_controller.addBodyLines(node, lines);
 		}
 	}
 	body_lines(shader_name: ShaderName, node: BaseGlNodeType) {

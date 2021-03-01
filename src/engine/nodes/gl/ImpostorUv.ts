@@ -32,10 +32,10 @@ export class ImpostorUvGlNode extends TypedGlNode<ImpostorUvGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines: string[] = [];
 
-		shaders_collection_controller.add_definitions(this, [
+		shaders_collection_controller.addDefinitions(this, [
 			new FunctionGLDefinition(this, Quaternion),
 			new FunctionGLDefinition(this, Impostor),
 		]);
@@ -46,10 +46,10 @@ export class ImpostorUvGlNode extends TypedGlNode<ImpostorUvGlParamsConfig> {
 		const tilesCount = ThreeToGl.float(this.variable_for_input(this.p.tilesCount.name()));
 		const offset = ThreeToGl.float(this.variable_for_input(this.p.offset.name()));
 
-		const impostor_uv = this.gl_var_name(OUTPUT_NAME);
+		const impostor_uv = this.glVarName(OUTPUT_NAME);
 		const args = [center, cameraPos, uv, tilesCount, offset].join(', ');
 		body_lines.push(`vec2 ${impostor_uv} = impostor_uv(${args})`);
 
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }

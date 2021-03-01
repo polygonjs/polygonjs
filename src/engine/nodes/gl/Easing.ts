@@ -174,7 +174,7 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const ease_name = EASE_NAMES[this.pv.type];
 		const method_name = METHOD_NAMES_BY_EASE_NAME[ease_name];
 		const glsl_function_code = IMPORT_BY_EASE_NAME[ease_name];
@@ -191,10 +191,10 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 		// })
 
 		const in_value = ThreeToGl.float(this.variable_for_input('input'));
-		const out_value = this.gl_var_name(OUTPUT_NAME);
+		const out_value = this.glVarName(OUTPUT_NAME);
 
 		const body_line = `float ${out_value} = ${method_name}(${in_value})`;
-		shaders_collection_controller.add_definitions(this, ease_functions);
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addDefinitions(this, ease_functions);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }

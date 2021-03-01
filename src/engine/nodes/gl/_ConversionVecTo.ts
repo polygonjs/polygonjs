@@ -35,16 +35,16 @@ function VecToGlFactory(type: string, options: VecToGlOptions) {
 			this.addParam(param_type, 'vec', components.map((c) => 0) as Number2);
 		}
 
-		set_lines(shaders_collection_controller: ShadersCollectionController) {
+		setLines(shaders_collection_controller: ShadersCollectionController) {
 			const body_lines: string[] = [];
 
 			const vec = this.variable_for_input('vec');
 
 			this.io.outputs.used_output_names().forEach((c) => {
-				const var_name = this.gl_var_name(c);
+				const var_name = this.glVarName(c);
 				body_lines.push(`float ${var_name} = ${vec}.${c}`);
 			});
-			shaders_collection_controller.add_body_lines(this, body_lines);
+			shaders_collection_controller.addBodyLines(this, body_lines);
 		}
 	};
 }
@@ -84,7 +84,7 @@ export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 		this.addParam(ParamType.VECTOR4, Vec4ToVec3GlNode.INPUT_NAME_VEC4, components_v4.map((c) => 0) as Number4);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
 		const in_vec4 = Vec4ToVec3GlNode.INPUT_NAME_VEC4;
@@ -95,14 +95,14 @@ export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 		const used_output_names = this.io.outputs.used_output_names();
 
 		if (used_output_names.indexOf(out_vec3) >= 0) {
-			const var_name = this.gl_var_name(out_vec3);
+			const var_name = this.glVarName(out_vec3);
 			body_lines.push(`vec3 ${var_name} = ${vec}.xyz`);
 		}
 		if (used_output_names.indexOf(out_w) >= 0) {
-			const var_name = this.gl_var_name(out_w);
+			const var_name = this.glVarName(out_w);
 			body_lines.push(`float ${var_name} = ${vec}.w`);
 		}
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }
 
@@ -124,7 +124,7 @@ export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 		this.addParam(ParamType.VECTOR3, Vec3ToVec2GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
 		const in_vec3 = Vec3ToVec2GlNode.INPUT_NAME_VEC3;
@@ -135,14 +135,14 @@ export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 		const used_output_names = this.io.outputs.used_output_names();
 
 		if (used_output_names.indexOf(out_vec2) >= 0) {
-			const var_name = this.gl_var_name(out_vec2);
+			const var_name = this.glVarName(out_vec2);
 			body_lines.push(`vec2 ${var_name} = ${vec}.xy`);
 		}
 		if (used_output_names.indexOf(out_z) >= 0) {
-			const var_name = this.gl_var_name(out_z);
+			const var_name = this.glVarName(out_z);
 			body_lines.push(`float ${var_name} = ${vec}.z`);
 		}
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }
 export class Vec2ToVec3GlNode extends BaseVecToGlNode {
@@ -163,7 +163,7 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 		this.addParam(ParamType.FLOAT, Vec2ToVec3GlNode.INPUT_NAME_Z, 0);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
 		const in_vec2 = Vec2ToVec3GlNode.INPUT_NAME_VEC2;
@@ -172,9 +172,9 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 		const vec2 = this.variable_for_input(in_vec2);
 		const z = this.variable_for_input(in_z);
 
-		const var_name = this.gl_var_name(out_vec3);
+		const var_name = this.glVarName(out_vec3);
 		body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }
 export class Vec3ToVec4GlNode extends BaseVecToGlNode {
@@ -195,7 +195,7 @@ export class Vec3ToVec4GlNode extends BaseVecToGlNode {
 		this.addParam(ParamType.FLOAT, Vec3ToVec4GlNode.INPUT_NAME_W, 0);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
 		const in_vec3 = Vec3ToVec4GlNode.INPUT_NAME_VEC3;
@@ -204,8 +204,8 @@ export class Vec3ToVec4GlNode extends BaseVecToGlNode {
 		const vec3 = this.variable_for_input(in_vec3);
 		const w = this.variable_for_input(in_w);
 
-		const var_name = this.gl_var_name(out_vec4);
+		const var_name = this.glVarName(out_vec4);
 		body_lines.push(`vec4 ${var_name} = vec4(${vec3}.xyz, ${w})`);
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }

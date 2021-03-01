@@ -240,7 +240,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 					const component = texture_variable.component;
 
 					const line = `gl_FragColor.${component} = ${new_var}`;
-					shaders_collection_controller.add_body_lines(export_node, [line], shader_name);
+					shaders_collection_controller.addBodyLines(export_node, [line], shader_name);
 				}
 			}
 		}
@@ -285,9 +285,9 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				attribute_name,
 				shaders_collection_controller
 			);
-			const var_name = attribute_node.gl_var_name(attribute_node.output_name);
+			const var_name = attribute_node.glVarName(attribute_node.output_name);
 			const body_line = `${gl_type} ${var_name} = ${new_value}`;
-			shaders_collection_controller.add_body_lines(attribute_node, [body_line]);
+			shaders_collection_controller.addBodyLines(attribute_node, [body_line]);
 
 			// re-export to ensure it is available on next frame
 			const texture_variable = this.texture_allocations_controller.variable(attribute_name);
@@ -297,7 +297,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				if (variable) {
 					const component = variable.component;
 					const body_line = `gl_FragColor.${component} = ${var_name}`;
-					shaders_collection_controller.add_body_lines(attribute_node, [body_line]);
+					shaders_collection_controller.addBodyLines(attribute_node, [body_line]);
 				}
 			}
 
@@ -341,11 +341,11 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		shaders_collection_controller: ShadersCollectionController
 	) {
 		const definition = new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name);
-		shaders_collection_controller.add_definitions(globals_node, [definition]);
+		shaders_collection_controller.addDefinitions(globals_node, [definition]);
 
-		const var_name = globals_node.gl_var_name(output_name);
+		const var_name = globals_node.glVarName(output_name);
 		const body_line = `float ${var_name} = ${output_name}`;
-		shaders_collection_controller.add_body_lines(globals_node, [body_line]);
+		shaders_collection_controller.addBodyLines(globals_node, [body_line]);
 		this.set_uniforms_time_dependent();
 	}
 
@@ -365,9 +365,9 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				shaders_collection_controller
 			);
 			if (attrib_read) {
-				const var_name = globals_node.gl_var_name(output_name);
+				const var_name = globals_node.glVarName(output_name);
 				const body_line = `${gl_type} ${var_name} = ${attrib_read}`;
-				shaders_collection_controller.add_body_lines(globals_node, [body_line]);
+				shaders_collection_controller.addBodyLines(globals_node, [body_line]);
 			}
 		}
 	}

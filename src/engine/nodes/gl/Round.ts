@@ -20,7 +20,7 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// 	this.add_param(ParamType.FLOAT, 'value', 1);
 	// }
 	// https://hub.jmonkeyengine.org/t/round-with-glsl/8186/6
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		// const function_declaration_lines = []
 
 		// 		function_declaration_lines.push(`highp float round(float num){
@@ -30,7 +30,7 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		const value = ThreeToGl.vector2(this.variable_for_input(input_connection.name()));
 
 		const output_connection = this.io.outputs.named_output_connection_points[0];
-		const var_name = this.gl_var_name(output_connection.name());
+		const var_name = this.glVarName(output_connection.name());
 
 		const body_lines: string[] = [];
 		const lines_count = GlConnectionPointComponentsCountMap[output_connection.type()];
@@ -44,7 +44,7 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 				`${output_connection.type()} ${var_name} = ${output_connection.type()}(${simple_lines.join(',')})`
 			);
 		}
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 
 	private _simple_line(value: string) {

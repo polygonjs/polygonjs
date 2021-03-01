@@ -27,13 +27,13 @@ export class FloatToVec2GlNode extends TypedGlNode<FloatToVec2GlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const x = this.variable_for_input('x');
 		const y = this.variable_for_input('y');
 
-		const vec = this.gl_var_name(FloatToVec2GlNode.OUTPUT_NAME);
+		const vec = this.glVarName(FloatToVec2GlNode.OUTPUT_NAME);
 		const body_line = `vec2 ${vec} = ${ThreeToGl.float2(x, y)}`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }
 
@@ -61,14 +61,14 @@ export class FloatToVec3GlNode extends TypedGlNode<FloatToVec3GlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const x = this.variable_for_input('x');
 		const y = this.variable_for_input('y');
 		const z = this.variable_for_input('z');
 
-		const vec = this.gl_var_name(FloatToVec3GlNode.OUTPUT_NAME);
+		const vec = this.glVarName(FloatToVec3GlNode.OUTPUT_NAME);
 		const body_line = `vec3 ${vec} = ${ThreeToGl.float3(x, y, z)}`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }
 
@@ -97,14 +97,14 @@ export class FloatToVec4GlNode extends TypedGlNode<FloatToVec4GlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const x = this.variable_for_input('x');
 		const y = this.variable_for_input('y');
 		const z = this.variable_for_input('z');
 		const w = this.variable_for_input('w');
 
-		const vec = this.gl_var_name(FloatToVec4GlNode.OUTPUT_NAME);
+		const vec = this.glVarName(FloatToVec4GlNode.OUTPUT_NAME);
 		const body_line = `vec4 ${vec} = ${ThreeToGl.float4(x, y, z, w)}`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }

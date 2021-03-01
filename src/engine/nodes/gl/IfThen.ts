@@ -97,7 +97,7 @@ export class IfThenGlNode extends SubnetGlNode {
 		for (let i = 1; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
 			const gl_type = connection_point.type();
-			const out = this.gl_var_name(connection_point.name());
+			const out = this.glVarName(connection_point.name());
 			const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
 			const body_line = `${gl_type} ${out} = ${in_value}`;
 			body_lines.push(body_line);
@@ -115,15 +115,15 @@ export class IfThenGlNode extends SubnetGlNode {
 						const connection_point = connection.dest_connection_point();
 						const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
 						const gl_type = connection_point.type();
-						const out = child_node.gl_var_name(connection_point.name());
+						const out = child_node.glVarName(connection_point.name());
 						const body_line = `	${gl_type} ${out} = ${in_value}`;
 						body_lines.push(body_line);
 					}
 				}
 			}
 		}
-		shaders_collection_controller.add_body_lines(child_node, body_lines);
+		shaders_collection_controller.addBodyLines(child_node, body_lines);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {}
+	setLines(shaders_collection_controller: ShadersCollectionController) {}
 }

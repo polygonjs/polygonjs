@@ -30,15 +30,15 @@ export class FogGlNode extends TypedGlNode<FogGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		if (shaders_collection_controller.current_shader_name == ShaderName.FRAGMENT) {
-			const varying_name = this.gl_var_name(this.name());
+			const varying_name = this.glVarName(this.name());
 			const definition = new VaryingGLDefinition(this, GlConnectionPointType.VEC4, varying_name);
 			const vertex_body_line = `${varying_name} = modelViewMatrix * vec4(position, 1.0)`;
 
 			// vertex
-			shaders_collection_controller.add_definitions(this, [definition], ShaderName.VERTEX);
-			shaders_collection_controller.add_body_lines(this, [vertex_body_line], ShaderName.VERTEX);
+			shaders_collection_controller.addDefinitions(this, [definition], ShaderName.VERTEX);
+			shaders_collection_controller.addBodyLines(this, [vertex_body_line], ShaderName.VERTEX);
 
 			// fragment
 			const function_definition = new FunctionGLDefinition(this, FogGlsl);
@@ -47,11 +47,11 @@ export class FogGlNode extends TypedGlNode<FogGlParamsConfig> {
 			const fogColor = ThreeToGl.vector3(this.variable_for_input('fogColor'));
 			const near = ThreeToGl.vector3(this.variable_for_input('near'));
 			const far = ThreeToGl.vector3(this.variable_for_input('far'));
-			const out_value = this.gl_var_name(OUTPUT_NAME);
+			const out_value = this.glVarName(OUTPUT_NAME);
 			const args = [mvPosition, baseColor, fogColor, near, far].join(', ');
 			const body_line = `vec3 ${out_value} = compute_fog(${args})`;
-			shaders_collection_controller.add_definitions(this, [definition, function_definition]);
-			shaders_collection_controller.add_body_lines(this, [body_line]);
+			shaders_collection_controller.addDefinitions(this, [definition, function_definition]);
+			shaders_collection_controller.addBodyLines(this, [body_line]);
 		}
 	}
 }

@@ -47,10 +47,10 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		return [type];
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines: string[] = [];
 
-		const value = this.gl_var_name(OUTPUT_NAME);
+		const value = this.glVarName(OUTPUT_NAME);
 		const condition = ThreeToGl.bool(this.variable_for_input(InputName.CONDITION));
 		const ifTrue = ThreeToGl.any(this.variable_for_input(InputName.IF_TRUE));
 		const ifFalse = ThreeToGl.any(this.variable_for_input(InputName.IF_FALSE));
@@ -63,6 +63,6 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		// TODO: why is this second line skipped, if both the true and false lines are the same?
 		body_lines.push(`${value} = ${ifFalse}`);
 		body_lines.push(`}`);
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }

@@ -32,7 +32,7 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		});
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		// if (lines_controller.shader_name) {
 		this.material_node?.assemblerController?.assembler.set_node_lines_globals(this, shaders_collection_controller);
 		// }
@@ -57,7 +57,7 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		// let definition
 		// let body_line
 		// for(let output_name of this.used_output_names()){
-		// 	const var_name = this.gl_var_name(output_name)
+		// 	const var_name = this.glVarName(output_name)
 
 		// 	switch (output_name){
 		// 		case 'frame':
@@ -109,12 +109,12 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		// 	this.set_definitions(definitions_by_shader_name[shader_name], shader_name)
 		// }
 		// for(let shader_name of Object.keys(body_lines_by_shader_name)){
-		// 	this.add_body_lines(body_lines_by_shader_name[shader_name], shader_name)
+		// 	this.addBodyLines(body_lines_by_shader_name[shader_name], shader_name)
 		// }
-		// // this.add_definitions(definitions)
+		// // this.addDefinitions(definitions)
 		// // this.set_vertex_body_lines(vertex_body_lines)
 		// // this.set_fragment_body_lines(fragment_body_lines)
 
-		// this.add_body_lines(body_lines)
+		// this.addBodyLines(body_lines)
 	}
 }

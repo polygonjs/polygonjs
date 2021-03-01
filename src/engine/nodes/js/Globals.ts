@@ -15,7 +15,7 @@ export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
 		this.function_node?.assembler_controller.add_globals_outputs(this);
 	}
 
-	set_lines(lines_controller: LinesController) {
+	setLines(lines_controller: LinesController) {
 		this.function_node?.assembler_controller?.assembler.set_node_lines_globals(this, lines_controller);
 	}
 }

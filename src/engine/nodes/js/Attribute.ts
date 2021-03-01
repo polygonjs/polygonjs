@@ -72,7 +72,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	// 	}
 	// }
 
-	set_lines(lines_controller: LinesController) {
+	setLines(lines_controller: LinesController) {
 		// if (lines_controller.shader_name) {
 		this.function_node?.assembler_controller.assembler.set_node_lines_attribute(this, lines_controller);
 		// }

@@ -46,16 +46,16 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [JS_CONNECTION_POINT_TYPES[this.pv.type]]);
 	}
 
-	set_lines(lines_controller: LinesController) {
+	setLines(lines_controller: LinesController) {
 		const definitions = [];
 
 		const gl_type = JS_CONNECTION_POINT_TYPES[this.pv.type];
 		const var_name = this.uniform_name();
 
 		definitions.push(new UniformJsDefinition(this, gl_type, var_name));
-		lines_controller.add_definitions(this, definitions);
+		lines_controller.addDefinitions(this, definitions);
 	}
-	set_param_configs() {
+	setParamConfigs() {
 		const gl_type = JS_CONNECTION_POINT_TYPES[this.pv.type];
 		const default_value = JsConnectionPointInitValueMap[gl_type];
 		let param_type = JsConnectionPointTypeToParamTypeMap[gl_type];

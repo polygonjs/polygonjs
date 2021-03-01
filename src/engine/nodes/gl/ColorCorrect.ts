@@ -59,10 +59,10 @@ export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const from = TYPES[this.pv.from];
 		const to = TYPES[this.pv.to];
-		const out = this.gl_var_name(ColorCorrectGlNode.OUTPUT_NAME);
+		const out = this.glVarName(ColorCorrectGlNode.OUTPUT_NAME);
 		const arg_in = ThreeToGl.any(this.variable_for_input(ColorCorrectGlNode.INPUT_NAME));
 		const body_lines: string[] = [];
 		if (from != to) {
@@ -79,6 +79,6 @@ export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
 		} else {
 			body_lines.push(`vec4 ${out} = ${arg_in}`);
 		}
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }

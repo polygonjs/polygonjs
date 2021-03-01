@@ -27,7 +27,7 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 			this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 		}
-		set_lines(shaders_collection_controller: ShadersCollectionController) {
+		setLines(shaders_collection_controller: ShadersCollectionController) {
 			const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type();
 			const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 				const name = connection.name();
@@ -38,9 +38,9 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			});
 			const joined_args = args.join(` ${this.gl_operation()} `);
 
-			const sum = this.gl_var_name(this.io.connection_points.output_name(0));
+			const sum = this.glVarName(this.io.connection_points.output_name(0));
 			const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
-			shaders_collection_controller.add_body_lines(this, [body_line]);
+			shaders_collection_controller.addBodyLines(this, [body_line]);
 		}
 		_gl_input_name(index: number): string {
 			return `${in_prefix}${index}`;

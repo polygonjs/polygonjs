@@ -50,7 +50,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// VARIABLES
 	//
 	//
-	gl_var_name(name: string) {
+	glVarName(name: string) {
 		const path_sanitized = this.fullPath(this.material_node).replace(REGEX_PATH_SANITIZE, '_');
 		return `v_POLY_${path_sanitized}_${name}`;
 	}
@@ -64,7 +64,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 				input_node.io.outputs.named_output_connection_points[connection.output_index];
 			if (output_connection_point) {
 				const output_name = output_connection_point.name();
-				return input_node.gl_var_name(output_name);
+				return input_node.glVarName(output_name);
 			} else {
 				console.warn(`no output called '${name}' for gl node ${input_node.fullPath()}`);
 				throw 'variable_for_input ERROR';
@@ -84,11 +84,11 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// ADDED LINES
 	//
 	//
-	set_lines(shaders_collection_controller: ShadersCollectionController) {}
+	setLines(shaders_collection_controller: ShadersCollectionController) {}
 
 	reset_code() {
 		this._param_configs_controller?.reset();
-		// this.reset_lines();
+		// this.resetLines();
 	}
 
 	//
@@ -96,7 +96,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// PARAM CONFIGS
 	//
 	//
-	public set_param_configs() {}
+	public setParamConfigs() {}
 	param_configs() {
 		return this._param_configs_controller?.list;
 	}

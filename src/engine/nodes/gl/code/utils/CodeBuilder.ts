@@ -86,16 +86,16 @@ export class CodeBuilder {
 			this._shaders_collection_controller.set_current_shader_name(shader_name);
 			if (nodes) {
 				for (let node of nodes) {
-					node.set_lines(this._shaders_collection_controller);
+					node.setLines(this._shaders_collection_controller);
 				}
 			}
 		}
 		// set param configs
 		if (this._param_configs_set_allowed) {
 			for (let param_node of param_nodes) {
-				param_node.set_param_configs();
+				param_node.setParamConfigs();
 			}
-			this.set_param_configs(param_nodes);
+			this.setParamConfigs(param_nodes);
 		}
 
 		// finalize
@@ -134,7 +134,7 @@ export class CodeBuilder {
 		return this._lines;
 	}
 
-	set_param_configs(nodes: BaseGlNodeType[]) {
+	setParamConfigs(nodes: BaseGlNodeType[]) {
 		this._param_configs_controller.reset();
 		for (let node of nodes) {
 			const param_configs = node.param_configs();
@@ -155,15 +155,15 @@ export class CodeBuilder {
 	}
 
 	add_code_lines(nodes: BaseGlNodeType[], shader_name: ShaderName) {
-		this.add_definitions(nodes, shader_name, GLDefinitionType.FUNCTION, LineType.FUNCTION_DECLARATION);
-		this.add_definitions(nodes, shader_name, GLDefinitionType.UNIFORM, LineType.DEFINE);
-		this.add_definitions(nodes, shader_name, GLDefinitionType.VARYING, LineType.DEFINE);
-		this.add_definitions(nodes, shader_name, GLDefinitionType.ATTRIBUTE, LineType.DEFINE);
+		this.addDefinitions(nodes, shader_name, GLDefinitionType.FUNCTION, LineType.FUNCTION_DECLARATION);
+		this.addDefinitions(nodes, shader_name, GLDefinitionType.UNIFORM, LineType.DEFINE);
+		this.addDefinitions(nodes, shader_name, GLDefinitionType.VARYING, LineType.DEFINE);
+		this.addDefinitions(nodes, shader_name, GLDefinitionType.ATTRIBUTE, LineType.DEFINE);
 
 		this.add_code_line_for_nodes_and_line_type(nodes, shader_name, LineType.BODY);
 	}
 
-	private add_definitions(
+	private addDefinitions(
 		nodes: BaseGlNodeType[],
 		shader_name: ShaderName,
 		definition_type: GLDefinitionType,

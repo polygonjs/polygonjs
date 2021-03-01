@@ -23,12 +23,12 @@ export class LuminanceGlNode extends TypedGlNode<LuminanceGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const value = ThreeToGl.vector3(this.variable_for_input('color'));
 
-		const lum = this.gl_var_name('lum');
+		const lum = this.glVarName('lum');
 		// linearToRelativeLuminance is declared in threejs common.glsl.js
 		const body_line = `float ${lum} = linearToRelativeLuminance(${value})`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }

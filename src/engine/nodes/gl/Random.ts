@@ -24,7 +24,7 @@ export class RandomGlNode extends TypedGlNode<RandomGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		// const function_declaration_lines = []
 
 		// http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
@@ -40,9 +40,9 @@ export class RandomGlNode extends TypedGlNode<RandomGlParamsConfig> {
 		const input_name = this.io.inputs.named_input_connection_points[0].name();
 		const value = ThreeToGl.vector2(this.variable_for_input(input_name));
 
-		const float = this.gl_var_name(OUTPUT_NAME);
+		const float = this.glVarName(OUTPUT_NAME);
 		const body_line = `float ${float} = rand(${value})`;
 		// this.set_function_declaration_lines(function_declaration_lines)
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }

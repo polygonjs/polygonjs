@@ -117,7 +117,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 		let definition;
 		let body_line;
 		for (let output_name of globals_node.io.outputs.used_output_names()) {
-			const var_name = globals_node.gl_var_name(output_name);
+			const var_name = globals_node.glVarName(output_name);
 			const globals_shader_name = shaders_collection_controller.current_shader_name;
 
 			switch (output_name) {
@@ -155,12 +155,12 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 			}
 		}
 		definitions_by_shader_name.forEach((definitions, shader_name) => {
-			shaders_collection_controller.add_definitions(globals_node, definitions, shader_name);
+			shaders_collection_controller.addDefinitions(globals_node, definitions, shader_name);
 		});
 		body_lines_by_shader_name.forEach((body_lines, shader_name) => {
-			shaders_collection_controller.add_body_lines(globals_node, body_lines, shader_name);
+			shaders_collection_controller.addBodyLines(globals_node, body_lines, shader_name);
 		});
 
-		shaders_collection_controller.add_body_lines(globals_node, body_lines);
+		shaders_collection_controller.addBodyLines(globals_node, body_lines);
 	}
 }

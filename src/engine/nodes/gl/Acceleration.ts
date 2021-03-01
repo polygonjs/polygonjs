@@ -79,18 +79,18 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 	param_default_value(name: string) {
 		return INPUT_DEFAULT_VALUE[name];
 	}
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const var_type = this.io.outputs.named_output_connection_points[0].type();
 		const delta_definition = new UniformGLDefinition(this, GlConnectionPointType.FLOAT, GlConstant.DELTA_TIME);
 		const function_definition = new FunctionGLDefinition(this, Physics);
-		shaders_collection_controller.add_definitions(this, [delta_definition, function_definition]);
+		shaders_collection_controller.addDefinitions(this, [delta_definition, function_definition]);
 
 		const input_position = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.POSITION));
 		const input_velocity = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.VELOCITY));
 		const input_mass = ThreeToGl.float(this.variable_for_input(AccelerationGlInput.MASS));
 		const input_force = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.FORCE));
-		const position_result = this.gl_var_name(AccelerationGlOutput.POSITION);
-		const velocity_result = this.gl_var_name(AccelerationGlOutput.VELOCITY);
+		const position_result = this.glVarName(AccelerationGlOutput.POSITION);
+		const velocity_result = this.glVarName(AccelerationGlOutput.VELOCITY);
 
 		const velocity_args = [input_velocity, input_force, input_mass, GlConstant.DELTA_TIME].join(', ');
 		const velocity_body_line = `${var_type} ${velocity_result} = compute_velocity_from_acceleration(${velocity_args})`;
@@ -98,6 +98,6 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 		const position_args = [input_position, velocity_result, GlConstant.DELTA_TIME].join(', ');
 		const position_body_line = `${var_type} ${position_result} = compute_position_from_velocity(${position_args})`;
 
-		shaders_collection_controller.add_body_lines(this, [velocity_body_line, position_body_line]);
+		shaders_collection_controller.addBodyLines(this, [velocity_body_line, position_body_line]);
 	}
 }

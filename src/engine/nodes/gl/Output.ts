@@ -29,7 +29,7 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 		});
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		// if (shaders_collection_controller.shader_name) {
 		this.material_node?.assemblerController?.assembler.set_node_lines_output(this, shaders_collection_controller);
 		// }

@@ -129,7 +129,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		for (let i = OFFSET; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
 			const gl_type = connection_point.type();
-			const out = this.gl_var_name(connection_point.name());
+			const out = this.glVarName(connection_point.name());
 			const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
 			const body_line = `${gl_type} ${out} = ${in_value}`;
 			body_lines.push(body_line);
@@ -142,7 +142,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 						const connection_point = connection.dest_connection_point();
 						const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
 						const gl_type = connection_point.type();
-						const out = this.gl_var_name(connection_point.name());
+						const out = this.glVarName(connection_point.name());
 						const body_line = `${gl_type} ${out} = ${in_value}`;
 						body_lines.push(body_line);
 					}
@@ -156,12 +156,12 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		const start_str = ThreeToGl.float(start);
 		const max_str = ThreeToGl.float(max);
 		const step_str = ThreeToGl.float(step);
-		const iterator_name = this.gl_var_name('i');
+		const iterator_name = this.glVarName('i');
 		const open_for_loop_line = `for(float ${iterator_name} = ${start_str}; ${iterator_name} < ${max_str}; ${iterator_name}+= ${step_str}){`;
 		body_lines.push(open_for_loop_line);
 
 		// i
-		const out = child_node.gl_var_name(ForLoopInput.START_INDEX);
+		const out = child_node.glVarName(ForLoopInput.START_INDEX);
 		const body_line = `	float ${out} = ${iterator_name}`;
 		body_lines.push(body_line);
 
@@ -170,17 +170,17 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 				if (connection) {
 					if (connection.input_index >= OFFSET) {
 						const connection_point = connection.dest_connection_point();
-						const in_value = this.gl_var_name(connection_point.name());
+						const in_value = this.glVarName(connection_point.name());
 						const gl_type = connection_point.type();
-						const out = child_node.gl_var_name(connection_point.name());
+						const out = child_node.glVarName(connection_point.name());
 						const body_line = `	${gl_type} ${out} = ${in_value}`;
 						body_lines.push(body_line);
 					}
 				}
 			}
 		}
-		shaders_collection_controller.add_body_lines(child_node, body_lines);
+		shaders_collection_controller.addBodyLines(child_node, body_lines);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {}
+	setLines(shaders_collection_controller: ShadersCollectionController) {}
 }

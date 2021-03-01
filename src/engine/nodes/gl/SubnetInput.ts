@@ -43,7 +43,7 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 	// 	}
 	// }
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const parent = this.parent();
 		if (!parent) {
 			return;

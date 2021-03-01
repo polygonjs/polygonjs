@@ -20,15 +20,15 @@ export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGl
 
 	abstract boolean_operation(): string;
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const args = this.io.inputs.named_input_connection_points.map((named_input, i) => {
 			const name = named_input.name();
 			return ThreeToGl.any(this.variable_for_input(name));
 		});
 		const joined_args = args.join(` ${this.boolean_operation()} `);
 
-		const sum = this.gl_var_name(this.io.connection_points.output_name(0));
+		const sum = this.glVarName(this.io.connection_points.output_name(0));
 		const body_line = `bool ${sum} = ${joined_args}`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }

@@ -37,19 +37,19 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		});
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const gl_type = GlConnectionPointType.FLOAT;
 		const texture_name = this._uniform_name();
-		const var_name = this.gl_var_name(OUTPUT_NAME);
+		const var_name = this.glVarName(OUTPUT_NAME);
 
 		const definition = new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, texture_name);
-		shaders_collection_controller.add_definitions(this, [definition]);
+		shaders_collection_controller.addDefinitions(this, [definition]);
 
 		const input_val = this.variable_for_input(this.p.input.name());
 		const body_line = `${gl_type} ${var_name} = texture2D(${this._uniform_name()}, vec2(${input_val}, 0.0)).x`;
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
-	set_param_configs() {
+	setParamConfigs() {
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
 		this._param_configs_controller.reset();
 		const param_config = new GlParamConfig(
@@ -61,6 +61,6 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		this._param_configs_controller.push(param_config);
 	}
 	private _uniform_name() {
-		return 'ramp_texture_' + this.gl_var_name(OUTPUT_NAME);
+		return 'ramp_texture_' + this.glVarName(OUTPUT_NAME);
 	}
 }

@@ -261,7 +261,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			// const definition_configs = variable_config.required_definitions() || []
 			// for(let definition_config of definition_configs){
 			// 	const definition = definition_config.create_definition(output_node)
-			// 	output_node.add_definitions([definition])
+			// 	output_node.addDefinitions([definition])
 			// }
 		}
 		if (new_var) {
@@ -269,11 +269,11 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			const suffix = variable_config.suffix();
 			const if_condition = variable_config.if_condition();
 			if (if_condition) {
-				shaders_collection_controller.add_body_lines(output_node, [`#if ${if_condition}`]);
+				shaders_collection_controller.addBodyLines(output_node, [`#if ${if_condition}`]);
 			}
-			shaders_collection_controller.add_body_lines(output_node, [`${prefix}${new_var}${suffix}`]);
+			shaders_collection_controller.addBodyLines(output_node, [`${prefix}${new_var}${suffix}`]);
 			if (if_condition) {
-				shaders_collection_controller.add_body_lines(output_node, [`#endif`]);
+				shaders_collection_controller.addBodyLines(output_node, [`#endif`]);
 			}
 		}
 	}
@@ -304,8 +304,8 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			attribute_node.attribute_name,
 			shaders_collection_controller
 		);
-		const var_name = attribute_node.gl_var_name(attribute_node.output_name);
-		shaders_collection_controller.add_body_lines(attribute_node, [`${gl_type} ${var_name} = ${new_var}`]);
+		const var_name = attribute_node.glVarName(attribute_node.output_name);
+		shaders_collection_controller.addBodyLines(attribute_node, [`${gl_type} ${var_name} = ${new_var}`]);
 		// this.add_output_body_line(
 		// 	attribute_node,
 		// 	shader_name,
@@ -318,7 +318,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// const named_output = attribute_node.named_outputs()[0]
 		// const gl_type = named_output.type()
-		// const var_name = attribute_node.gl_var_name(named_output.name())
+		// const var_name = attribute_node.glVarName(named_output.name())
 
 		// const attribute_name = attribute_node.attribute_name()
 		// // TODO: I should probably raise an error in the node
@@ -336,7 +336,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// attribute_node.set_definitions(vertex_definitions, 'vertex')
 		// attribute_node.set_definitions(fragment_definitions, 'fragment')
-		// attribute_node.add_body_lines(vertex_body_lines, 'vertex')
+		// attribute_node.addBodyLines(vertex_body_lines, 'vertex')
 	}
 
 	handle_globals_output_name(options: HandleGlobalsOutputOptions) {
@@ -423,9 +423,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			const shaders_collection_controller = options.shaders_collection_controller;
 			const definition = new VaryingGLDefinition(globals_node, GlConnectionPointType.VEC4, options.var_name);
 			const vertex_body_line = `${options.var_name} = modelViewMatrix * vec4(position, 1.0)`;
-			shaders_collection_controller.add_definitions(globals_node, [definition], ShaderName.VERTEX);
-			shaders_collection_controller.add_body_lines(globals_node, [vertex_body_line], ShaderName.VERTEX);
-			shaders_collection_controller.add_definitions(globals_node, [definition]);
+			shaders_collection_controller.addDefinitions(globals_node, [definition], ShaderName.VERTEX);
+			shaders_collection_controller.addBodyLines(globals_node, [vertex_body_line], ShaderName.VERTEX);
+			shaders_collection_controller.addDefinitions(globals_node, [definition]);
 		}
 	}
 	handle_gl_Position(options: HandleGlobalsOutputOptions) {
@@ -435,10 +435,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			const definition = new VaryingGLDefinition(globals_node, GlConnectionPointType.VEC4, options.var_name);
 			const vertex_body_line = `${options.var_name} = projectionMatrix * modelViewMatrix * vec4(position, 1.0)`;
 			// const fragment_body_line = `vec4 ${options.var_name} = gl_FragCoord`;
-			shaders_collection_controller.add_definitions(globals_node, [definition], ShaderName.VERTEX);
-			shaders_collection_controller.add_body_lines(globals_node, [vertex_body_line], ShaderName.VERTEX);
-			shaders_collection_controller.add_definitions(globals_node, [definition]);
-			// shaders_collection_controller.add_body_lines(globals_node, [fragment_body_line]);
+			shaders_collection_controller.addDefinitions(globals_node, [definition], ShaderName.VERTEX);
+			shaders_collection_controller.addBodyLines(globals_node, [vertex_body_line], ShaderName.VERTEX);
+			shaders_collection_controller.addDefinitions(globals_node, [definition]);
+			// shaders_collection_controller.addBodyLines(globals_node, [fragment_body_line]);
 		}
 	}
 	handle_gl_FragCoord(options: HandleGlobalsOutputOptions) {
@@ -468,7 +468,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		const used_output_names = this.used_output_names_for_shader(globals_node, shader_name);
 
 		for (let output_name of used_output_names) {
-			const var_name = globals_node.gl_var_name(output_name);
+			const var_name = globals_node.glVarName(output_name);
 			const globals_shader_name = shaders_collection_controller.current_shader_name;
 
 			const options: HandleGlobalsOutputOptions = {
@@ -487,13 +487,13 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			this.handle_globals_output_name(options);
 		}
 		definitions_by_shader_name.forEach((definitions, shader_name) => {
-			shaders_collection_controller.add_definitions(globals_node, definitions, shader_name);
+			shaders_collection_controller.addDefinitions(globals_node, definitions, shader_name);
 		});
 		body_lines_by_shader_name.forEach((body_lines, shader_name) => {
-			shaders_collection_controller.add_body_lines(globals_node, body_lines, shader_name);
+			shaders_collection_controller.addBodyLines(globals_node, body_lines, shader_name);
 		});
 
-		shaders_collection_controller.add_body_lines(globals_node, body_lines);
+		shaders_collection_controller.addBodyLines(globals_node, body_lines);
 	}
 
 	private used_output_names_for_shader(globals_node: GlobalsGlNode, shader_name: ShaderName) {

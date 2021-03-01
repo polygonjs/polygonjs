@@ -56,7 +56,7 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 		return VaryingWriteGlNode.INPUT_NAME;
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		if (shaders_collection_controller.current_shader_name == ShaderName.VERTEX) {
 			const gl_type = this.gl_type();
 			if (!gl_type) {
@@ -68,8 +68,8 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 			// add vertex lines
 			const input = ThreeToGl.any(this.variable_for_input(VaryingWriteGlNode.INPUT_NAME));
 			const vertex_body_line = `${varying_name} = ${input}`;
-			shaders_collection_controller.add_definitions(this, [definition], ShaderName.VERTEX);
-			shaders_collection_controller.add_body_lines(this, [vertex_body_line], ShaderName.VERTEX);
+			shaders_collection_controller.addDefinitions(this, [definition], ShaderName.VERTEX);
+			shaders_collection_controller.addBodyLines(this, [vertex_body_line], ShaderName.VERTEX);
 		}
 	}
 

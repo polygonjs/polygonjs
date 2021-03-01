@@ -36,18 +36,18 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		});
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const uv = ThreeToGl.vector2(this.variable_for_input(this.p.uv.name()));
 
-		const rgba = this.gl_var_name(TextureGlNode.OUTPUT_NAME);
+		const rgba = this.glVarName(TextureGlNode.OUTPUT_NAME);
 		const map = this._uniform_name();
 		const definition = new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, map);
 		const body_line = `vec4 ${rgba} = texture2D(${map}, ${uv})`;
-		shaders_collection_controller.add_definitions(this, [definition]);
-		shaders_collection_controller.add_body_lines(this, [body_line]);
+		shaders_collection_controller.addDefinitions(this, [definition]);
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 
-	set_param_configs() {
+	setParamConfigs() {
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
 		this._param_configs_controller.reset();
 
@@ -60,6 +60,6 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		this._param_configs_controller.push(param_config);
 	}
 	private _uniform_name() {
-		return this.gl_var_name(this.pv.paramName);
+		return this.glVarName(this.pv.paramName);
 	}
 }

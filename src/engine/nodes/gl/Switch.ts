@@ -52,12 +52,12 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 		return [type];
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type();
-		const out = this.gl_var_name(this.io.connection_points.output_name(0));
+		const out = this.glVarName(this.io.connection_points.output_name(0));
 		const index_point_name = this.io.connection_points.input_name(0);
 		const arg_index = ThreeToGl.int(this.variable_for_input(index_point_name));
-		const switch_index_var_name = this.gl_var_name('index');
+		const switch_index_var_name = this.glVarName('index');
 		const body_lines: string[] = [`${var_type} ${out};`, `int ${switch_index_var_name} = ${arg_index}`];
 
 		const lines_count = this._expected_input_types().length - 1;
@@ -69,6 +69,6 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 			const body_line = `${if_else}(${condition}){${assignment}}`;
 			body_lines.push(body_line);
 		}
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }

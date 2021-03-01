@@ -52,12 +52,12 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 			return;
 		}
 
-		const var_name = globals_node.gl_var_name(output_name);
+		const var_name = globals_node.glVarName(output_name);
 		const gl_type = connection_point.type();
 		const definition = new VaryingGLDefinition(globals_node, gl_type, var_name);
 
 		// MapUtils.push_on_array_at_entry(definitions_by_shader_name, shader_name, definition);
-		shaders_collection_controller.add_definitions(globals_node, [definition]);
+		shaders_collection_controller.addDefinitions(globals_node, [definition]);
 		// definitions_by_shader_name.get(shader_name)!.push(definition);
 		const assembler = globals_node.material_node?.assemblerController?.assembler;
 		if (!assembler) {
@@ -73,12 +73,12 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		for (let dependency of dependencies) {
 			// MapUtils.push_on_array_at_entry(definitions_by_shader_name, dependency, definition);
 			// MapUtils.push_on_array_at_entry(body_lines_by_shader_name, dependency, body_line);
-			shaders_collection_controller.add_definitions(globals_node, [definition], dependency);
-			shaders_collection_controller.add_body_lines(globals_node, [body_line], dependency);
+			shaders_collection_controller.addDefinitions(globals_node, [definition], dependency);
+			shaders_collection_controller.addBodyLines(globals_node, [body_line], dependency);
 		}
 		if (dependencies.length == 0) {
 			// body_lines.push(body_line);
-			shaders_collection_controller.add_body_lines(globals_node, [body_line]);
+			shaders_collection_controller.addBodyLines(globals_node, [body_line]);
 		}
 	}
 
@@ -107,7 +107,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		shaders_collection_controller: ShadersCollectionController
 	): string | undefined {
 		if (GlobalsGeometryHandler.PRE_DEFINED_ATTRIBUTES.indexOf(attrib_name) < 0) {
-			shaders_collection_controller.add_definitions(
+			shaders_collection_controller.addDefinitions(
 				node,
 				[new AttributeGLDefinition(node, gl_type, attrib_name)],
 				ShaderName.VERTEX
@@ -117,7 +117,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 			// if(if_rule){
 			// 	const definition = new Definition.Attribute(node, gl_type, attrib_name)
 			// 	definition.set_if_rule(if_rule)
-			// 	node.add_definitions([definition])
+			// 	node.addDefinitions([definition])
 			// }
 		}
 
@@ -135,7 +135,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 					return;
 				}
 
-				const var_name = 'varying_' + node.gl_var_name(node.output_name);
+				const var_name = 'varying_' + node.glVarName(node.output_name);
 				const varying_definition = new VaryingGLDefinition(node, gl_type, var_name);
 
 				const definitions_by_shader_name: Map<ShaderName, VaryingGLDefinition[]> = new Map();
@@ -160,10 +160,10 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 						MapUtils.push_on_array_at_entry(body_lines_by_shader_name, dependency, set_varying_body_line);
 					}
 					definitions_by_shader_name.forEach((definitions, shader_name) => {
-						shaders_collection_controller.add_definitions(node, definitions, shader_name);
+						shaders_collection_controller.addDefinitions(node, definitions, shader_name);
 					});
 					body_lines_by_shader_name.forEach((body_lines, shader_name) => {
-						shaders_collection_controller.add_body_lines(node, body_lines, shader_name);
+						shaders_collection_controller.addBodyLines(node, body_lines, shader_name);
 					});
 				}
 
@@ -185,15 +185,15 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		// }
 		// // if(dependencies.length == 0){
 		// 	// body_lines.push(body_line)
-		// 	node.add_body_lines([body_line])
+		// 	node.addBodyLines([body_line])
 		// // }
 		// for(let shader_name of Object.keys(definitions_by_shader_name)){
-		// 	node.add_definitions(definitions_by_shader_name[shader_name], shader_name)
+		// 	node.addDefinitions(definitions_by_shader_name[shader_name], shader_name)
 		// }
 		// for(let shader_name of Object.keys(body_lines_by_shader_name)){
-		// 	node.add_body_lines(body_lines_by_shader_name[shader_name], shader_name)
+		// 	node.addBodyLines(body_lines_by_shader_name[shader_name], shader_name)
 		// }
-		// node.add_body_lines(body_lines)
+		// node.addBodyLines(body_lines)
 	}
 	handle_attribute_node(
 		node: AttributeGlNode,

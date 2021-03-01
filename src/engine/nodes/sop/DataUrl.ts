@@ -93,7 +93,21 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	static type() {
 		return 'dataUrl';
 	}
-
+	initializeNode() {
+		this.scene().dispatchController.onAddListener(() => {
+			this.params.onParamsCreated('params_label', () => {
+				this.params.label.init([this.p.url], () => {
+					const url = this.p.url.rawInput();
+					if (url) {
+						const elements = url.split('/');
+						return elements[elements.length - 1];
+					} else {
+						return '';
+					}
+				});
+			});
+		});
+	}
 	async cook() {
 		switch (DATA_TYPES[this.pv.dataType]) {
 			case DataType.JSON:

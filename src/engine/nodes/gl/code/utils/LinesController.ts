@@ -14,7 +14,7 @@ export class LinesController {
 		return this._shader_name;
 	}
 
-	add_definitions(node: BaseGlNodeType, definitions: BaseGLDefinition[]) {
+	addDefinitions(node: BaseGlNodeType, definitions: BaseGLDefinition[]) {
 		for (let definition of definitions) {
 			MapUtils.push_on_array_at_entry(this._definitions_by_node_id, node.graphNodeId(), definition);
 		}
@@ -31,7 +31,7 @@ export class LinesController {
 	// 	return nodes;
 	// }
 
-	add_body_lines(node: BaseGlNodeType, lines: string[]) {
+	addBodyLines(node: BaseGlNodeType, lines: string[]) {
 		for (let line of lines) {
 			MapUtils.push_on_array_at_entry(this._body_lines_by_node_id, node.graphNodeId(), line);
 		}

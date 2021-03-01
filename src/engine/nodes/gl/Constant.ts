@@ -48,14 +48,14 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [this._current_connection_type]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const param = this._current_param;
 		if (param) {
 			const connection_type = this._current_connection_type;
 			const value = ThreeToGl.any(param.value);
 			const var_value = this._current_var_name;
 			const body_line = `${connection_type} ${var_value} = ${value}`;
-			shaders_collection_controller.add_body_lines(this, [body_line]);
+			shaders_collection_controller.addBodyLines(this, [body_line]);
 		} else {
 			console.warn(`no param found for constant node for type '${this.pv.type}'`);
 		}
@@ -87,7 +87,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return this._params_by_type.get(connection_type)!;
 	}
 	private get _current_var_name(): string {
-		return this.gl_var_name(ConstantGlNode.OUTPUT_NAME);
+		return this.glVarName(ConstantGlNode.OUTPUT_NAME);
 	}
 
 	set_gl_type(type: GlConnectionPointType) {

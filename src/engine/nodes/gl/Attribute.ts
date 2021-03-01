@@ -101,7 +101,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 	}
 	// }
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		this.material_node?.assemblerController?.assembler.set_node_lines_attribute(
 			this,
 			shaders_collection_controller

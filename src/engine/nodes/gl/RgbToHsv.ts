@@ -24,7 +24,7 @@ export class RgbToHsvGlNode extends TypedGlNode<RgbToHsvGlParamsConfig> {
 		]);
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const function_declaration_lines = [];
 		const body_lines = [];
 
@@ -32,9 +32,9 @@ export class RgbToHsvGlNode extends TypedGlNode<RgbToHsvGlParamsConfig> {
 
 		const rgb = ThreeToGl.vector3(this.variable_for_input('rgb'));
 
-		const hsv = this.gl_var_name('hsv');
+		const hsv = this.glVarName('hsv');
 		body_lines.push(`vec3 ${hsv} = rgb2hsv(${rgb})`);
-		shaders_collection_controller.add_definitions(this, function_declaration_lines);
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addDefinitions(this, function_declaration_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 }

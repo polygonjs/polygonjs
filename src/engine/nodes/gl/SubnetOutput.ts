@@ -37,7 +37,7 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 		return parent?.child_expected_output_connection_point_types() || [];
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const parent = this.parent();
 		if (!parent) {
 			return;
@@ -52,7 +52,7 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 
 					const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
 					// const gl_type = connection_point.type;
-					const out = (parent as BaseGlNodeType).gl_var_name(connection_point.name());
+					const out = (parent as BaseGlNodeType).glVarName(connection_point.name());
 					// const body_line = `${gl_type} ${out} = ${in_value}`;
 					// do not use the type, to avoid re-defining a variable that should be defined in the parent node
 					const body_line = `	${out} = ${in_value}`;
@@ -61,7 +61,7 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 			}
 		}
 
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 		parent.set_lines_block_end(shaders_collection_controller, this);
 	}
 }

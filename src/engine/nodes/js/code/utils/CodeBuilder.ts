@@ -78,15 +78,15 @@ export class JsCodeBuilder {
 				for (let node of nodes) {
 					// node.set_shader_name(shader_name);
 					if (this._param_configs_set_allowed) {
-						node.set_param_configs();
+						node.setParamConfigs();
 					}
-					node.set_lines(this._lines_controller);
+					node.setLines(this._lines_controller);
 				}
 			}
 		}
 
 		if (this._param_configs_set_allowed) {
-			this.set_param_configs(sorted_nodes);
+			this.setParamConfigs(sorted_nodes);
 		}
 		this.set_code_lines(sorted_nodes);
 	}
@@ -124,7 +124,7 @@ export class JsCodeBuilder {
 		return this._lines;
 	}
 
-	set_param_configs(nodes: BaseJsNodeType[]) {
+	setParamConfigs(nodes: BaseJsNodeType[]) {
 		this._param_configs_controller.reset();
 		for (let node of nodes) {
 			const param_configs = node.param_configs();
@@ -145,14 +145,14 @@ export class JsCodeBuilder {
 	}
 
 	add_code_lines(nodes: BaseJsNodeType[]) {
-		this.add_definitions(nodes, JsDefinitionType.FUNCTION, JsLineType.FUNCTION_DECLARATION);
-		this.add_definitions(nodes, JsDefinitionType.UNIFORM, JsLineType.DEFINE);
-		this.add_definitions(nodes, JsDefinitionType.ATTRIBUTE, JsLineType.DEFINE);
+		this.addDefinitions(nodes, JsDefinitionType.FUNCTION, JsLineType.FUNCTION_DECLARATION);
+		this.addDefinitions(nodes, JsDefinitionType.UNIFORM, JsLineType.DEFINE);
+		this.addDefinitions(nodes, JsDefinitionType.ATTRIBUTE, JsLineType.DEFINE);
 
 		this.add_code_line_for_nodes_and_line_type(nodes, JsLineType.BODY);
 	}
 
-	private add_definitions(nodes: BaseJsNodeType[], definition_type: JsDefinitionType, line_type: JsLineType) {
+	private addDefinitions(nodes: BaseJsNodeType[], definition_type: JsDefinitionType, line_type: JsLineType) {
 		if (!this._lines_controller) {
 			return;
 		}

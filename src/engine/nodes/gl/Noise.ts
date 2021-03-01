@@ -215,7 +215,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		}
 	}
 
-	set_lines(shaders_collection_controller: ShadersCollectionController) {
+	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const function_declaration_lines = [];
 		const body_lines = [];
 
@@ -246,7 +246,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 			// } else {
 			const lines_count_required = requested_components_count;
 			const assembly_args: string[] = [];
-			const noise = this.gl_var_name('noise');
+			const noise = this.glVarName('noise');
 			for (let i = 0; i < lines_count_required; i++) {
 				const component = ALL_COMPONENTS[i];
 				assembly_args.push(`${noise}${component}`);
@@ -270,8 +270,8 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 			// }
 		}
 
-		shaders_collection_controller.add_definitions(this, function_declaration_lines);
-		shaders_collection_controller.add_body_lines(this, body_lines);
+		shaders_collection_controller.addDefinitions(this, function_declaration_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 
 	private fbm_method_name() {
@@ -344,7 +344,7 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 
 		// let output_type = OUTPUT_TYPE_BY_NOISE_NAME[noise_name]
 
-		const noise = this.gl_var_name(OUTPUT_NAME);
+		const noise = this.glVarName(OUTPUT_NAME);
 		const right_hand = `${amp}*${method_name}(${joined_args})`;
 		if (component) {
 			return `float ${noise}${output_name_suffix} = (${right_hand}).${component}`;

@@ -1,5 +1,6 @@
 import {BaseParamType} from '../../_Base';
 import {ParamEvent} from '../../../poly/ParamEvent';
+import {Poly} from '../../../Poly';
 
 export class ParamErrorState {
 	private _message: string | undefined;
@@ -9,7 +10,7 @@ export class ParamErrorState {
 		if (this._message != message) {
 			this._message = message;
 			if (this._message) {
-				console.warn(this.param.fullPath(), this._message);
+				Poly.warn(this.param.fullPath(), this._message);
 			}
 			this.param.emitController.emit(ParamEvent.ERROR_UPDATED);
 		}

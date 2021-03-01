@@ -9,7 +9,7 @@ export class LinesController {
 
 	constructor() {}
 
-	add_definitions(node: BaseJsNodeType, definitions: BaseJsDefinition[]) {
+	addDefinitions(node: BaseJsNodeType, definitions: BaseJsDefinition[]) {
 		for (let definition of definitions) {
 			MapUtils.push_on_array_at_entry(this._definitions_by_node_id, node.graphNodeId(), definition);
 		}
@@ -18,7 +18,7 @@ export class LinesController {
 		return this._definitions_by_node_id.get(node.graphNodeId());
 	}
 
-	add_body_lines(node: BaseJsNodeType, lines: string[]) {
+	addBodyLines(node: BaseJsNodeType, lines: string[]) {
 		for (let line of lines) {
 			MapUtils.push_on_array_at_entry(this._body_lines_by_node_id, node.graphNodeId(), line);
 		}
