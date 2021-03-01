@@ -24,8 +24,8 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			SceneEventNode.PARAM_CALLBACK_update_register(node as SceneEventNode);
 		},
+		separatorAfter: true,
 	});
-	sep = ParamConfig.SEPARATOR(null, {visibleIf: {active: true}});
 	/** @param toggle on to trigger an event when the scene has loaded. This can be useful to initialize other nodes */
 	sceneLoaded = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to trigger an event when the scene starts playing */
@@ -33,8 +33,10 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to trigger an event when the scene pauses */
 	pause = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to trigger an event on every tick */
-	tick = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
-	sep0 = ParamConfig.SEPARATOR();
+	tick = ParamConfig.BOOLEAN(1, {
+		separatorAfter: true,
+		...EVENT_PARAM_OPTIONS,
+	});
 	/** @param toggle on to trigger an event on every tick */
 	treachedTime = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType) => {
@@ -45,8 +47,8 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	reachedTime = ParamConfig.INTEGER(10, {
 		visibleIf: {treachedTime: 1},
 		range: [0, 100],
+		separatorAfter: true,
 	});
-	sep1 = ParamConfig.SEPARATOR();
 	/** @param frame to set */
 	setFrameValue = ParamConfig.INTEGER(1, {
 		range: [0, 100],

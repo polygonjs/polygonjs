@@ -14,8 +14,8 @@ class PointerEventParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType) => {
 			PointerEventNode.PARAM_CALLBACK_update_register(node as PointerEventNode);
 		},
+		separatorAfter: true,
 	});
-	sep = ParamConfig.SEPARATOR(null, {visibleIf: {active: true}});
 	/** @param toggle on to listen to click events */
 	pointerdown = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to listen to pointermove events */

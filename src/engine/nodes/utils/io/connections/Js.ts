@@ -75,7 +75,6 @@ export interface IJsParamTypeToConnectionPointTypeMap extends JsParamTypeToConne
 	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
-	[ParamType.SEPARATOR]: undefined;
 	[ParamType.STRING]: undefined;
 }
 export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointTypeMap = {
@@ -92,7 +91,6 @@ export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointT
 	[ParamType.PARAM_PATH]: undefined,
 	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,
-	[ParamType.SEPARATOR]: undefined,
 	[ParamType.STRING]: undefined,
 };
 

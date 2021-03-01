@@ -165,8 +165,10 @@ class NoiseGlParamsConfig extends NodeParamsConfig {
 	});
 	octaves = ParamConfig.INTEGER(3, {range: [1, 10], rangeLocked: [true, false]});
 	ampAttenuation = ParamConfig.FLOAT(0.5, {range: [0, 1]});
-	freqIncrease = ParamConfig.FLOAT(2, {range: [0, 10]});
-	separator = ParamConfig.SEPARATOR();
+	freqIncrease = ParamConfig.FLOAT(2, {
+		range: [0, 10],
+		separatorAfter: true,
+	});
 }
 const ParamsConfig = new NoiseGlParamsConfig();
 export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {

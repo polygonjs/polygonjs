@@ -33,7 +33,9 @@ function visible_for_count(count: number): ParamOptions {
 			count: i,
 		});
 	}
-	return {visibleIf: list};
+	return {
+		visibleIf: list,
+	};
 }
 
 type VectorNumberParamPair = [Vector3Param, IntegerParam];
@@ -59,55 +61,61 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 		range: [0, max_transform_count],
 		rangeLocked: [true, true],
 	});
+
 	// 0
-	sep0 = ParamConfig.SEPARATOR(null, {...visible_for_count(0)});
 	/** @param transform 0 rotation order */
 	rotationOrder0 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+		separatorBefore: true,
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(0),
 	});
 	/** @param rotation 0 */
 	r0 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(0)});
+
 	// 1
-	sep1 = ParamConfig.SEPARATOR(null, {...visible_for_count(1)});
 	/** @param transform 1 rotation order */
 	rotationOrder1 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+		separatorBefore: true,
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(1),
 	});
 	/** @param rotation 1 */
 	r1 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(1)});
+
 	// 2
-	sep2 = ParamConfig.SEPARATOR(null, {...visible_for_count(2)});
 	/** @param transform 2 rotation order */
 	rotationOrder2 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+		separatorBefore: true,
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(2),
 	});
 	/** @param rotation 2 */
 	r2 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(2)});
+
 	// 3
-	sep3 = ParamConfig.SEPARATOR(null, {...visible_for_count(3)});
 	/** @param transform 3 rotation order */
 	rotationOrder3 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+		separatorBefore: true,
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(3),
 	});
 	/** @param rotation 3 */
 	r3 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(3)});
+
 	// 4
-	sep4 = ParamConfig.SEPARATOR(null, {...visible_for_count(4)});
 	/** @param transform 4 rotation order */
 	rotationOrder4 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+		separatorBefore: true,
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(4),
 	});
 	/** @param rotation 4 */
 	r4 = ParamConfig.VECTOR3([0, 0, 0], {...visible_for_count(4)});
+
 	// 5
-	sep5 = ParamConfig.SEPARATOR(null, {...visible_for_count(5)});
 	/** @param transform 5 rotation order */
 	rotationOrder5 = ParamConfig.INTEGER(ROT_ORDER_DEFAULT, {
+		separatorBefore: true,
 		...ROT_ORDER_MENU_ENTRIES,
 		...visible_for_count(5),
 	});

@@ -27,7 +27,6 @@ export interface ParamInitValueSerializedTypeMap /*extends ParamInitValueSeriali
 	[ParamType.NODE_PATH]: ParamInitValuesTypeMap[ParamType.NODE_PATH];
 	[ParamType.PARAM_PATH]: ParamInitValuesTypeMap[ParamType.PARAM_PATH];
 	[ParamType.RAMP]: RampValueJson;
-	[ParamType.SEPARATOR]: ParamInitValuesTypeMap[ParamType.SEPARATOR];
 	[ParamType.STRING]: ParamInitValuesTypeMap[ParamType.STRING];
 	[ParamType.VECTOR2]: StringOrNumber2;
 	[ParamType.VECTOR3]: StringOrNumber3;

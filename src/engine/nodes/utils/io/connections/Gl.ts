@@ -155,7 +155,6 @@ export interface IGLParamTypeToConnectionPointTypeMap extends GLParamTypeToConne
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
-	[ParamType.SEPARATOR]: undefined;
 	[ParamType.STRING]: undefined;
 }
 export const GLParamTypeToConnectionPointTypeMap: IGLParamTypeToConnectionPointTypeMap = {
@@ -178,7 +177,6 @@ export const GLParamTypeToConnectionPointTypeMap: IGLParamTypeToConnectionPointT
 	[ParamType.PARAM_PATH]: undefined,
 	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,
-	[ParamType.SEPARATOR]: undefined,
 	[ParamType.STRING]: undefined,
 };
 

@@ -178,9 +178,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 					};
 				}),
 			},
-		});
-		wrapSep = ParamConfig.SEPARATOR(null, {
-			visibleIf: {twrap: 1},
+			separatorAfter: true,
 		});
 		/** @param toggle on to allow updating the texture min filter */
 		tminFilter = ParamConfig.BOOLEAN(0);
@@ -215,9 +213,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param TBD */
 		useCameraRenderer = ParamConfig.BOOLEAN(0, {
 			visibleIf: {tanisotropy: 1, useRendererMaxAnisotropy: 1},
-		});
-		anisotropySep = ParamConfig.SEPARATOR(null, {
-			visibleIf: {tanisotropy: 1},
+			separatorAfter: true,
 		});
 		/** @param Toggle on to update the flipY */
 		tflipY = ParamConfig.BOOLEAN(0);

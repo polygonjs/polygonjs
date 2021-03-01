@@ -16,7 +16,6 @@ import {
 	IntegerParamOptions,
 	OperatorPathParamOptions,
 	RampParamOptions,
-	SeparatorParamOptions,
 	StringParamOptions,
 	Vector2ParamOptions,
 	Vector3ParamOptions,
@@ -35,7 +34,6 @@ export interface ParamOptionsByTypeMap extends ParamOptionsByTypeMapGeneric {
 	[ParamType.NODE_PATH]: OperatorPathParamOptions;
 	[ParamType.PARAM_PATH]: OperatorPathParamOptions;
 	[ParamType.RAMP]: RampParamOptions;
-	[ParamType.SEPARATOR]: SeparatorParamOptions;
 	[ParamType.STRING]: StringParamOptions;
 	[ParamType.VECTOR2]: Vector2ParamOptions;
 	[ParamType.VECTOR3]: Vector3ParamOptions;

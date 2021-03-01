@@ -208,9 +208,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
 		...visible_for_cpu_geometry(),
-	});
-	sep = ParamConfig.SEPARATOR(null, {
-		...visible_for_cpu_geometry(),
+		separatorAfter: true,
 	});
 
 	//

@@ -8,7 +8,6 @@ import {OperatorPathParam} from '../OperatorPath';
 import {ParamPathParam} from '../ParamPath';
 import {NodePathParam} from '../NodePath';
 import {RampParam} from '../Ramp';
-import {SeparatorParam} from '../Separator';
 import {StringParam} from '../String';
 import {Vector2Param} from '../Vector2';
 import {Vector3Param} from '../Vector3';
@@ -28,7 +27,6 @@ export const ParamConstructorByType: ParamClassMapType = {
 	[ParamType.PARAM_PATH]: ParamPathParam,
 	[ParamType.NODE_PATH]: NodePathParam,
 	[ParamType.RAMP]: RampParam,
-	[ParamType.SEPARATOR]: SeparatorParam,
 	[ParamType.STRING]: StringParam,
 	[ParamType.VECTOR2]: Vector2Param,
 	[ParamType.VECTOR3]: Vector3Param,

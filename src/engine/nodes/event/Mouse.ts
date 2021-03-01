@@ -14,8 +14,8 @@ class MouseEventParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType) => {
 			MouseEventNode.PARAM_CALLBACK_update_register(node as MouseEventNode);
 		},
+		separatorAfter: true,
 	});
-	sep = ParamConfig.SEPARATOR(null, {visibleIf: {active: true}});
 	/** @param toggle on to listen to auxclick events */
 	auxclick = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to listen to click events */

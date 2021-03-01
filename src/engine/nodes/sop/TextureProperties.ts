@@ -14,8 +14,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TexturePropertiesSopOperation.DEFAULT_PARAMS;
 class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if this node should search through the materials inside the whole hierarchy */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren);
-	separator = ParamConfig.SEPARATOR();
+	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
 	// anisotropy
 	/** @param toggle on to update the anisotropy */
 	tanisotropy = ParamConfig.BOOLEAN(DEFAULT.tanisotropy);

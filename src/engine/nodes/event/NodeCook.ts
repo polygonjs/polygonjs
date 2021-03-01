@@ -37,8 +37,10 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param batch size */
-	batchSize = ParamConfig.INTEGER(1, {visibleIf: {cookMode: COOK_MODES.indexOf(CookMode.BATCH)}});
-	sep = ParamConfig.SEPARATOR();
+	batchSize = ParamConfig.INTEGER(1, {
+		visibleIf: {cookMode: COOK_MODES.indexOf(CookMode.BATCH)},
+		separatorAfter: true,
+	});
 	/** @param updates the list of nodes from the mask parameter. This can be useful if nodes are added or removed from the scene */
 	updateResolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {

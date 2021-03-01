@@ -45,6 +45,9 @@ const FIELD_OPTION = 'field';
 const VISIBLE_IF_OPTION = 'visibleIf';
 const COLOR_CONVERSION = 'conversion';
 
+const SEPARATOR_BEFORE_OPTION = 'separatorBefore';
+const SEPARATOR_AFTER_OPTION = 'separatorAfter';
+
 export interface NumericParamOptionsMenuEntry {
 	name: string;
 	value: number;
@@ -88,6 +91,9 @@ interface BaseParamOptions {
 	// show_label?: boolean;
 	field?: boolean;
 	visibleIf?: VisibleIfParamOptions | VisibleIfParamOptions[];
+	// separator
+	separatorBefore?: boolean;
+	separatorAfter?: boolean;
 }
 
 interface ExpressionParamOptions {
@@ -378,6 +384,14 @@ export class OptionsController {
 		}
 	}
 
+	// separator
+	separatorBefore() {
+		return this._options[SEPARATOR_BEFORE_OPTION];
+	}
+	separatorAfter() {
+		return this._options[SEPARATOR_AFTER_OPTION];
+	}
+
 	// expression
 	// get displays_expression_only() {
 	// 	return this._options[EXPRESSION_ONLY_OPTION] === true;
@@ -546,9 +560,7 @@ export class OptionsController {
 		const type = this.param().type();
 		return (
 			// this._options[SHOW_LABEL_OPTION] === false ||
-			type === ParamType.BUTTON ||
-			type === ParamType.SEPARATOR ||
-			(type === ParamType.BOOLEAN && this.is_field_hidden())
+			type === ParamType.BUTTON || (type === ParamType.BOOLEAN && this.is_field_hidden())
 		);
 	}
 	is_field_hidden(): boolean {

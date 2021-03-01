@@ -15,8 +15,8 @@ class KeyboardEventParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			KeyboardEventNode.PARAM_CALLBACK_update_register(node as KeyboardEventNode);
 		},
+		separatorAfter: true,
 	});
-	sep = ParamConfig.SEPARATOR(null, {visibleIf: {active: true}});
 	/** @param toggle on to listen to keydown events */
 	keydown = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to listen to keypress events */

@@ -161,12 +161,7 @@ export class ParamConfig {
 	) {
 		return new ParamTemplate<ParamType.RAMP>(ParamType.RAMP, init_value, options);
 	}
-	static SEPARATOR(
-		init_value: ParamInitValuesTypeMap[ParamType.SEPARATOR] = null,
-		options?: ParamOptionsByTypeMap[ParamType.SEPARATOR]
-	) {
-		return new ParamTemplate<ParamType.SEPARATOR>(ParamType.SEPARATOR, init_value, options);
-	}
+
 	static STRING(
 		init_value: ParamInitValuesTypeMap[ParamType.STRING] = '',
 		options?: ParamOptionsByTypeMap[ParamType.STRING]

@@ -9,7 +9,6 @@ export enum ParamType {
 	PARAM_PATH = 'param_path',
 	NODE_PATH = 'node_path',
 	RAMP = 'ramp',
-	SEPARATOR = 'separator',
 	STRING = 'string',
 	VECTOR2 = 'vector2',
 	VECTOR3 = 'vector3',

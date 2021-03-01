@@ -26,7 +26,6 @@ export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {
 	[ParamType.PARAM_PATH]: TypedParamPathParamValue;
 	[ParamType.NODE_PATH]: TypedNodePathParamValue;
 	[ParamType.RAMP]: RampValue;
-	[ParamType.SEPARATOR]: null;
 	[ParamType.STRING]: string;
 	[ParamType.VECTOR2]: Vector2;
 	[ParamType.VECTOR3]: Vector3;

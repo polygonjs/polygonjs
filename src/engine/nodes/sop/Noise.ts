@@ -60,8 +60,10 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param frequency increase for higher octaves */
 	freqIncrease = ParamConfig.FLOAT(2, {range: [0, 10]});
 	/** @param noise seed */
-	seed = ParamConfig.INTEGER(0, {range: [0, 100]});
-	separator = ParamConfig.SEPARATOR();
+	seed = ParamConfig.INTEGER(0, {
+		range: [0, 100],
+		separatorAfter: true,
+	});
 	/** @param toggle on to have the noise be multiplied by the normal */
 	useNormals = ParamConfig.BOOLEAN(0);
 	/** @param set which attribute will be affected by the noise */

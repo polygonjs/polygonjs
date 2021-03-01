@@ -66,9 +66,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT),
 			byObjectType: true,
 		},
-	});
-	separatorObjectType = ParamConfig.SEPARATOR(null, {
-		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
+		separatorAfter: true,
 	});
 
 	// byExpression
@@ -78,8 +76,8 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	expression = ParamConfig.BOOLEAN('@ptnum==0', {
 		visibleIf: {byExpression: true},
 		expression: {forEntities: true},
+		separatorAfter: true,
 	});
-	separatorExpression = ParamConfig.SEPARATOR();
 
 	// byAttrib
 	/** @param deletes objects by an attribute */
@@ -132,11 +130,11 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	attribString = ParamConfig.STRING('', {
 		visibleIf: {byAttrib: 1, attribType: ATTRIBUTE_TYPES.indexOf(AttribType.STRING)},
 	});
-	separatorAttrib = ParamConfig.SEPARATOR();
 
 	// byBbox
 	/** @param deletes objects that are inside a bounding box */
 	byBbox = ParamConfig.BOOLEAN(0, {
+		separatorBefore: true,
 		visibleIf: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		},
@@ -154,11 +152,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 			byBbox: true,
 		},
-	});
-	separatorBbox = ParamConfig.SEPARATOR(null, {
-		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
-		},
+		separatorAfter: true,
 	});
 	//this.add_param( ParamType.STRING, 'index_mode', Core.Geometry.Geometry.INDEX_MODE_FACES )
 

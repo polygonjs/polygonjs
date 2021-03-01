@@ -22,8 +22,7 @@ const FLAG_UPDATE_MODES: FlagUpdateMode[] = [FlagUpdateMode.SET, FlagUpdateMode.
 
 class SetFlagParamsConfig extends NodeParamsConfig {
 	/** @param mask to select which nodes this can change the flags of */
-	mask = ParamConfig.STRING('/geo*', {});
-	sep0 = ParamConfig.SEPARATOR();
+	mask = ParamConfig.STRING('/geo*', {separatorAfter: true});
 	/** @param toggle on to update the display flag */
 	tdisplay = ParamConfig.BOOLEAN(0);
 	/** @param sets how the display flag will be updated (set to a value or toggle) */
@@ -38,8 +37,8 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 	/** @param new display flag state */
 	display = ParamConfig.BOOLEAN(0, {
 		visibleIf: {tdisplay: 1, displayMode: FLAG_UPDATE_MODES.indexOf(FlagUpdateMode.SET)},
+		separatorAfter: true,
 	});
-	sep1 = ParamConfig.SEPARATOR();
 	/** @param toggle on to update the bypass flag */
 	tbypass = ParamConfig.BOOLEAN(0);
 	/** @param sets how the bypass flag will be updated (set to a value or toggle) */

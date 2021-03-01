@@ -40,8 +40,6 @@ export class JsParamConfig<T extends ParamType> extends ParamConfig<T> {
 			// case ParamType.STRING: return {type: 't', value: null} // new Texture()}
 			case ParamType.RAMP:
 				return {value: null}; // new Texture()}
-			case ParamType.SEPARATOR:
-				return {value: 0};
 			case ParamType.STRING:
 				return {value: null};
 			case ParamType.VECTOR2:
