@@ -2,7 +2,7 @@
  * Creates a Points Material
  *
  * @remarks
- * This material only emits a color and does not react to light. It is therefore the less resource intensive material.
+ * This material can be added to points.
  *
  */
 import {Constructor} from '../../../types/GlobalTypes';
