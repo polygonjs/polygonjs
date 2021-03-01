@@ -3,8 +3,10 @@ import {CoreString} from '../../../../core/String';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';
 import {TimeController} from '../../../scene/utils/TimeController';
-import {Poly} from '../../../Poly';
 
+interface Versions {
+	polygonjs: string;
+}
 export interface SceneJsonExporterDataProperties {
 	frame: number;
 	maxFrame: number;
@@ -12,9 +14,7 @@ export interface SceneJsonExporterDataProperties {
 	realtimeState: boolean;
 	// fps: number;
 	masterCameraNodePath: string | null;
-	versions: {
-		polygonjs: string;
-	};
+	versions?: Versions;
 }
 export interface SceneJsonExporterData {
 	properties?: SceneJsonExporterDataProperties;
@@ -26,7 +26,7 @@ export class SceneJsonExporter {
 	private _data: SceneJsonExporterData = {};
 	constructor(private _scene: PolyScene) {}
 
-	data(): SceneJsonExporterData {
+	data(versions?: Versions): SceneJsonExporterData {
 		this._scene.nodesController.reset_node_context_signatures();
 		const root_exporter = JsonExportDispatcher.dispatch_node(this._scene.root());
 		const nodes_data = root_exporter.data();
@@ -42,9 +42,7 @@ export class SceneJsonExporter {
 				realtimeState: this._scene.timeController.realtimeState(),
 				// fps: this._scene.time_controller.fps,
 				masterCameraNodePath: this._scene.camerasController.masterCameraNodePath(),
-				versions: {
-					polygonjs: Poly.version(),
-				},
+				versions: versions,
 			},
 			root: nodes_data,
 			ui: ui_data,
