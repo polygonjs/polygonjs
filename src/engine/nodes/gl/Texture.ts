@@ -46,6 +46,9 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		shaders_collection_controller.addDefinitions(this, [definition]);
 		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
+	paramsGenerating() {
+		return true;
+	}
 
 	setParamConfigs() {
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();

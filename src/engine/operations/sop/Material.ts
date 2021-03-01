@@ -31,7 +31,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: MaterialSopParams = {
 		group: '',
 		assignMat: true,
-		material: new TypedNodePathParamValue('/MAT/mesh_standard1'),
+		material: new TypedNodePathParamValue(''),
 		applyToChildren: true,
 		cloneMat: false,
 		shareUniforms: true,

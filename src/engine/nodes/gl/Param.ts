@@ -77,6 +77,9 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		definitions.push(new UniformGLDefinition(this, gl_type, var_name));
 		shaders_collection_controller.addDefinitions(this, definitions);
 	}
+	paramsGenerating() {
+		return true;
+	}
 	setParamConfigs() {
 		const gl_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
 		const default_value = GlConnectionPointInitValueMap[gl_type];

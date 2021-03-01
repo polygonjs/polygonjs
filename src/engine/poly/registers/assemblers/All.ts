@@ -2,6 +2,7 @@ import {AssemblerName, ControllerAssemblerPair} from './_BaseRegister';
 import {GlAssemblerController} from '../../../nodes/gl/code/Controller';
 import {ShaderAssemblerBasic} from '../../../nodes/gl/code/assemblers/materials/Basic';
 import {ShaderAssemblerLambert} from '../../../nodes/gl/code/assemblers/materials/Lambert';
+import {ShaderAssemblerPhong} from '../../../nodes/gl/code/assemblers/materials/Phong';
 import {ShaderAssemblerStandard} from '../../../nodes/gl/code/assemblers/materials/Standard';
 import {ShaderAssemblerPhysical} from '../../../nodes/gl/code/assemblers/materials/Physical';
 import {ShaderAssemblerPoints} from '../../../nodes/gl/code/assemblers/materials/Points';
@@ -17,6 +18,10 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	[AssemblerName.GL_MESH_LAMBERT]: {
 		controller: GlAssemblerController<ShaderAssemblerLambert>;
 		assembler: typeof ShaderAssemblerLambert;
+	};
+	[AssemblerName.GL_MESH_PHONG]: {
+		controller: GlAssemblerController<ShaderAssemblerPhong>;
+		assembler: typeof ShaderAssemblerPhong;
 	};
 	[AssemblerName.GL_MESH_STANDARD]: {
 		controller: GlAssemblerController<ShaderAssemblerStandard>;
@@ -50,6 +55,7 @@ export class AllAssemblersRegister {
 	static run(poly: PolyEngine) {
 		poly.assemblersRegister.register(AssemblerName.GL_MESH_BASIC, GlAssemblerController, ShaderAssemblerBasic);
 		poly.assemblersRegister.register(AssemblerName.GL_MESH_LAMBERT, GlAssemblerController, ShaderAssemblerLambert);
+		poly.assemblersRegister.register(AssemblerName.GL_MESH_PHONG, GlAssemblerController, ShaderAssemblerPhong);
 		poly.assemblersRegister.register(
 			AssemblerName.GL_MESH_STANDARD,
 			GlAssemblerController,

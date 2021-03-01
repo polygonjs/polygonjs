@@ -11,6 +11,7 @@ import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
 import {MeshLambertBuilderMatNode} from '../../../nodes/mat/MeshLambertBuilder';
 import {MeshMatcapMatNode} from '../../../nodes/mat/MeshMatcap';
 import {MeshPhongMatNode} from '../../../nodes/mat/MeshPhong';
+import {MeshPhongBuilderMatNode} from '../../../nodes/mat/MeshPhongBuilder';
 import {MeshPhysicalMatNode} from '../../../nodes/mat/MeshPhysical';
 import {MeshPhysicalBuilderMatNode} from '../../../nodes/mat/MeshPhysicalBuilder';
 import {MeshStandardMatNode} from '../../../nodes/mat/MeshStandard';
@@ -34,6 +35,7 @@ export interface MatNodeChildrenMap {
 	meshLambertBuilder: MeshLambertBuilderMatNode;
 	meshMatcap: MeshMatcapMatNode;
 	meshPhong: MeshPhongMatNode;
+	meshPhongBuilder: MeshPhongBuilderMatNode;
 	meshPhysical: MeshPhysicalMatNode;
 	meshPhysicalBuilder: MeshPhysicalBuilderMatNode;
 	meshStandard: MeshStandardMatNode;
@@ -65,8 +67,9 @@ export class MatRegister {
 		poly.registerNode(MeshLambertBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(MeshMatcapMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(MeshPhongMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshPhongBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(MeshPhysicalMatNode, CATEGORY_MAT.MESH);
-		poly.registerNode(MeshPhysicalBuilderMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshPhysicalBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(MeshStandardMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(MeshStandardBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(MeshSubsurfaceScatteringMatNode, CATEGORY_MAT.MESH);

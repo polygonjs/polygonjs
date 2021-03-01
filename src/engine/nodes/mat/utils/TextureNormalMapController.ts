@@ -78,9 +78,11 @@ export class TextureNormalMapController extends BaseTextureMapController {
 			// mat.uniforms.normalMapType.value = normalMapType; // not present in uniforms
 			mat.uniforms.normalScale.value.copy(this.node.pv.normalScale);
 		}
+		const mat = this.node.material as MeshPhongMaterial;
+		// normalMapType is set for uniforms AND directParams
+		// to ensure that the USE_* defines are set
+		mat.normalMapType = normalMapType;
 		if (this._update_options.directParams) {
-			const mat = this.node.material as MeshPhongMaterial;
-			mat.normalMapType = normalMapType;
 			mat.normalScale.copy(this.node.pv.normalScale);
 		}
 	}
