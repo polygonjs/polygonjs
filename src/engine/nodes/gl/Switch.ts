@@ -56,7 +56,7 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 		const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type();
 		const out = this.glVarName(this.io.connection_points.output_name(0));
 		const index_point_name = this.io.connection_points.input_name(0);
-		const arg_index = ThreeToGl.int(this.variable_for_input(index_point_name));
+		const arg_index = ThreeToGl.int(this.variableForInput(index_point_name));
 		const switch_index_var_name = this.glVarName('index');
 		const body_lines: string[] = [`${var_type} ${out};`, `int ${switch_index_var_name} = ${arg_index}`];
 
@@ -65,7 +65,7 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 			const if_else = i == 0 ? 'if' : 'else if';
 			const condition = `${switch_index_var_name} == ${i}`;
 			const connection_point_name = this.io.connection_points.input_name(i + 1);
-			const assignment = `${out} = ${ThreeToGl.any(this.variable_for_input(connection_point_name))};`;
+			const assignment = `${out} = ${ThreeToGl.any(this.variableForInput(connection_point_name))};`;
 			const body_line = `${if_else}(${condition}){${assignment}}`;
 			body_lines.push(body_line);
 		}

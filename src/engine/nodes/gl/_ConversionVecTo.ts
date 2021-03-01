@@ -38,7 +38,7 @@ function VecToGlFactory(type: string, options: VecToGlOptions) {
 		setLines(shaders_collection_controller: ShadersCollectionController) {
 			const body_lines: string[] = [];
 
-			const vec = this.variable_for_input('vec');
+			const vec = this.variableForInput('vec');
 
 			this.io.outputs.used_output_names().forEach((c) => {
 				const var_name = this.glVarName(c);
@@ -90,7 +90,7 @@ export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 		const in_vec4 = Vec4ToVec3GlNode.INPUT_NAME_VEC4;
 		const out_vec3 = Vec4ToVec3GlNode.OUTPUT_NAME_VEC3;
 		const out_w = Vec4ToVec3GlNode.OUTPUT_NAME_W;
-		const vec = this.variable_for_input(in_vec4);
+		const vec = this.variableForInput(in_vec4);
 
 		const used_output_names = this.io.outputs.used_output_names();
 
@@ -130,7 +130,7 @@ export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 		const in_vec3 = Vec3ToVec2GlNode.INPUT_NAME_VEC3;
 		const out_vec2 = Vec3ToVec2GlNode.OUTPUT_NAME_VEC2;
 		const out_z = Vec3ToVec2GlNode.OUTPUT_NAME_Z;
-		const vec = this.variable_for_input(in_vec3);
+		const vec = this.variableForInput(in_vec3);
 
 		const used_output_names = this.io.outputs.used_output_names();
 
@@ -169,8 +169,8 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 		const in_vec2 = Vec2ToVec3GlNode.INPUT_NAME_VEC2;
 		const in_z = Vec2ToVec3GlNode.INPUT_NAME_Z;
 		const out_vec3 = Vec2ToVec3GlNode.OUTPUT_NAME_VEC3;
-		const vec2 = this.variable_for_input(in_vec2);
-		const z = this.variable_for_input(in_z);
+		const vec2 = this.variableForInput(in_vec2);
+		const z = this.variableForInput(in_z);
 
 		const var_name = this.glVarName(out_vec3);
 		body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
@@ -201,8 +201,8 @@ export class Vec3ToVec4GlNode extends BaseVecToGlNode {
 		const in_vec3 = Vec3ToVec4GlNode.INPUT_NAME_VEC3;
 		const in_w = Vec3ToVec4GlNode.INPUT_NAME_W;
 		const out_vec4 = Vec3ToVec4GlNode.OUTPUT_NAME_VEC4;
-		const vec3 = this.variable_for_input(in_vec3);
-		const w = this.variable_for_input(in_w);
+		const vec3 = this.variableForInput(in_vec3);
+		const w = this.variableForInput(in_w);
 
 		const var_name = this.glVarName(out_vec4);
 		body_lines.push(`vec4 ${var_name} = vec4(${vec3}.xyz, ${w})`);

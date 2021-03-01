@@ -31,7 +31,7 @@ function MathFunctionArg2OperationFactory(type: string, options: MathArg2Operati
 			const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type();
 			const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 				const name = connection.name();
-				const variable = this.variable_for_input(name);
+				const variable = this.variableForInput(name);
 				if (variable) {
 					return ThreeToGl.any(variable);
 				}

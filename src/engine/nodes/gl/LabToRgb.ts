@@ -32,7 +32,7 @@ export class LabToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
 
 		function_declaration_lines.push(new FunctionGLDefinition(this, ColorGlslLib));
 
-		const value = ThreeToGl.vector3(this.variable_for_input(this.p.lab.name()));
+		const value = ThreeToGl.vector3(this.variableForInputParam(this.p.lab));
 
 		const rgb = this.glVarName(OUTPUT_NAME);
 		// body_lines.push(

@@ -50,7 +50,7 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 				if (connection) {
 					const connection_point = connection.dest_connection_point();
 
-					const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
+					const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
 					// const gl_type = connection_point.type;
 					const out = (parent as BaseGlNodeType).glVarName(connection_point.name());
 					// const body_line = `${gl_type} ${out} = ${in_value}`;

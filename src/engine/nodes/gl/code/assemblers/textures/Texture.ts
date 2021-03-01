@@ -135,7 +135,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 				const input = output_node.io.inputs.named_input(input_name);
 
 				if (input) {
-					const gl_var = output_node.variable_for_input(input_name);
+					const gl_var = output_node.variableForInput(input_name);
 
 					let body_line: string | undefined;
 					if (input_name == 'color') {

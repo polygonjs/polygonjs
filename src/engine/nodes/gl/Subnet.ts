@@ -128,7 +128,7 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 			const connection_point = connection_points[i];
 			const gl_type = connection_point.type();
 			const out = this.glVarName(connection_point.name());
-			const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
+			const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
 			const body_line = `${gl_type} ${out} = ${in_value}`;
 			body_lines.push(body_line);
 		}
@@ -140,7 +140,7 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 			for (let connection of connections) {
 				if (connection) {
 					const connection_point = connection.dest_connection_point();
-					const in_value = ThreeToGl.any(this.variable_for_input(connection_point.name()));
+					const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
 					const gl_type = connection_point.type();
 					const out = child_node.glVarName(connection_point.name());
 					const body_line = `	${gl_type} ${out} = ${in_value}`;

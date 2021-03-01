@@ -42,11 +42,11 @@ export class FogGlNode extends TypedGlNode<FogGlParamsConfig> {
 
 			// fragment
 			const function_definition = new FunctionGLDefinition(this, FogGlsl);
-			const mvPosition = ThreeToGl.vector4(this.variable_for_input('mvPosition'));
-			const baseColor = ThreeToGl.vector3(this.variable_for_input('baseColor'));
-			const fogColor = ThreeToGl.vector3(this.variable_for_input('fogColor'));
-			const near = ThreeToGl.vector3(this.variable_for_input('near'));
-			const far = ThreeToGl.vector3(this.variable_for_input('far'));
+			const mvPosition = ThreeToGl.vector4(this.variableForInputParam(this.p.mvPosition));
+			const baseColor = ThreeToGl.vector3(this.variableForInputParam(this.p.baseColor));
+			const fogColor = ThreeToGl.vector3(this.variableForInputParam(this.p.fogColor));
+			const near = ThreeToGl.vector3(this.variableForInputParam(this.p.near));
+			const far = ThreeToGl.vector3(this.variableForInputParam(this.p.far));
 			const out_value = this.glVarName(OUTPUT_NAME);
 			const args = [mvPosition, baseColor, fogColor, near, far].join(', ');
 			const body_line = `vec3 ${out_value} = compute_fog(${args})`;

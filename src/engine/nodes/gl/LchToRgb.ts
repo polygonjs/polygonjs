@@ -32,7 +32,7 @@ export class LchToRgbGlNode extends TypedGlNode<LchToRgbGlParamsConfig> {
 
 		function_declaration_lines.push(new FunctionGLDefinition(this, ColorGlslLib));
 
-		const value = ThreeToGl.vector3(this.variable_for_input(this.p.lch.name()));
+		const value = ThreeToGl.vector3(this.variableForInputParam(this.p.lch));
 
 		const rgb = this.glVarName(OUTPUT_NAME);
 		body_lines.push(`vec3 ${rgb} = lchToRgb(${value})`);

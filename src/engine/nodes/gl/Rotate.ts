@@ -99,7 +99,7 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type();
 		const args = this.io.inputs.named_input_connection_points.map((connection, i) => {
 			const name = connection.name();
-			return ThreeToGl.any(this.variable_for_input(name));
+			return ThreeToGl.any(this.variableForInput(name));
 		});
 		const joined_args = args.join(', ');
 

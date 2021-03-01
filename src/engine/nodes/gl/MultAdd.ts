@@ -27,10 +27,10 @@ export class MultAddGlNode extends BaseNodeGlMathFunctionArg4GlNode {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const value = ThreeToGl.any(this.variable_for_input(InputName.VALUE));
-		const preAdd = ThreeToGl.any(this.variable_for_input(InputName.PRE_ADD));
-		const mult = ThreeToGl.any(this.variable_for_input(InputName.MULT));
-		const postAdd = ThreeToGl.any(this.variable_for_input(InputName.POST_ADD));
+		const value = ThreeToGl.any(this.variableForInput(InputName.VALUE));
+		const preAdd = ThreeToGl.any(this.variableForInput(InputName.PRE_ADD));
+		const mult = ThreeToGl.any(this.variableForInput(InputName.MULT));
+		const postAdd = ThreeToGl.any(this.variableForInput(InputName.POST_ADD));
 
 		const gl_type = this._expected_output_types()[0];
 		const out_name = this.io.outputs.named_output_connection_points[0].name();

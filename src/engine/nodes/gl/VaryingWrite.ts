@@ -66,7 +66,7 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 			const definition = new VaryingGLDefinition(this, gl_type, varying_name);
 
 			// add vertex lines
-			const input = ThreeToGl.any(this.variable_for_input(VaryingWriteGlNode.INPUT_NAME));
+			const input = ThreeToGl.any(this.variableForInput(VaryingWriteGlNode.INPUT_NAME));
 			const vertex_body_line = `${varying_name} = ${input}`;
 			shaders_collection_controller.addDefinitions(this, [definition], ShaderName.VERTEX);
 			shaders_collection_controller.addBodyLines(this, [vertex_body_line], ShaderName.VERTEX);

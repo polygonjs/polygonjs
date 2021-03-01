@@ -190,7 +190,7 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 		// 	function_declaration_lines.push(ease_function)
 		// })
 
-		const in_value = ThreeToGl.float(this.variable_for_input('input'));
+		const in_value = ThreeToGl.float(this.variableForInputParam(this.p.input));
 		const out_value = this.glVarName(OUTPUT_NAME);
 
 		const body_line = `float ${out_value} = ${method_name}(${in_value})`;

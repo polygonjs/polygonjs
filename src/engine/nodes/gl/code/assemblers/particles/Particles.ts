@@ -229,7 +229,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		shaders_collection_controller: ShadersCollectionController
 	) {
 		if (input) {
-			const var_input = export_node.variable_for_input(input_name);
+			const var_input = export_node.variableForInput(input_name);
 			const new_var = ThreeToGl.vector3(var_input);
 			if (new_var) {
 				const texture_variable = this.texture_allocations_controller.variable(variable_name);

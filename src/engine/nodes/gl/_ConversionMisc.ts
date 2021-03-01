@@ -27,7 +27,7 @@ export class FloatToIntGlNode extends TypedGlNode<FloatToIntGlParamsConfig> {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const float = this.variable_for_input('float');
+		const float = this.variableForInputParam(this.p.float);
 
 		const int = this.glVarName('int');
 		const body_line = `int ${int} = int(${ThreeToGl.float(float)})`;
@@ -58,7 +58,7 @@ export class IntToFloatGlNode extends TypedGlNode<IntToFloatGlParamsConfig> {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const int = this.variable_for_input('int');
+		const int = this.variableForInputParam(this.p.int);
 
 		const float = this.glVarName('float');
 		const body_line = `float ${float} = float(${ThreeToGl.int(int)})`;

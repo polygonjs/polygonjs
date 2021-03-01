@@ -50,7 +50,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		return `v_POLY_${this.name()}_${name}`;
 	}
 
-	variable_for_input(name: string): string {
+	variableForInput(name: string): string {
 		const input_index = this.io.inputs.get_input_index(name);
 		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {

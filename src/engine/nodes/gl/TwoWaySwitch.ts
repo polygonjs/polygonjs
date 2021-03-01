@@ -51,9 +51,9 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		const body_lines: string[] = [];
 
 		const value = this.glVarName(OUTPUT_NAME);
-		const condition = ThreeToGl.bool(this.variable_for_input(InputName.CONDITION));
-		const ifTrue = ThreeToGl.any(this.variable_for_input(InputName.IF_TRUE));
-		const ifFalse = ThreeToGl.any(this.variable_for_input(InputName.IF_FALSE));
+		const condition = ThreeToGl.bool(this.variableForInput(InputName.CONDITION));
+		const ifTrue = ThreeToGl.any(this.variableForInput(InputName.IF_TRUE));
+		const ifFalse = ThreeToGl.any(this.variableForInput(InputName.IF_FALSE));
 
 		const gl_type = this._expected_output_types()[0];
 		body_lines.push(`${gl_type} ${value}`);

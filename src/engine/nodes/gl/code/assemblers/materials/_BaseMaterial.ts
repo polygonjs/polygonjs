@@ -229,7 +229,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		input_name: string
 	) {
 		const input = output_node.io.inputs.named_input(input_name);
-		const var_input = output_node.variable_for_input(input_name);
+		const var_input = output_node.variableForInput(input_name);
 		const variable_config = this.variable_config(input_name);
 
 		let new_var: string | null = null;

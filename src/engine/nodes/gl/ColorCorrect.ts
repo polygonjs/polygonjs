@@ -63,7 +63,7 @@ export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
 		const from = TYPES[this.pv.from];
 		const to = TYPES[this.pv.to];
 		const out = this.glVarName(ColorCorrectGlNode.OUTPUT_NAME);
-		const arg_in = ThreeToGl.any(this.variable_for_input(ColorCorrectGlNode.INPUT_NAME));
+		const arg_in = ThreeToGl.any(this.variableForInput(ColorCorrectGlNode.INPUT_NAME));
 		const body_lines: string[] = [];
 		if (from != to) {
 			const method_name = `${from}To${to}`;
@@ -71,7 +71,7 @@ export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
 			args.push(arg_in);
 
 			if (from == ColorCorrectType.GAMMA || to == ColorCorrectType.GAMMA) {
-				const arg_gamma_factor = ThreeToGl.any(this.variable_for_input(ColorCorrectGlNode.INPUT_GAMMA_FACTOR));
+				const arg_gamma_factor = ThreeToGl.any(this.variableForInputParam(this.p.gammaFactor));
 				args.push(arg_gamma_factor);
 			}
 

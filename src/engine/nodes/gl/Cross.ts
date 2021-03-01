@@ -26,8 +26,8 @@ export class CrossGlNode extends TypedGlNode<CrossGlParamsConfig> {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const x = ThreeToGl.float(this.variable_for_input('x'));
-		const y = ThreeToGl.float(this.variable_for_input('y'));
+		const x = ThreeToGl.float(this.variableForInputParam(this.p.x));
+		const y = ThreeToGl.float(this.variableForInputParam(this.p.y));
 
 		const result = this.glVarName(OUTPUT_NAME);
 		const body_line = `vec3 ${result} = cross(${x}, ${y})`;

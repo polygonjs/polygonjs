@@ -305,10 +305,10 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 		// const method_name = METHOD_NAMES_BY_NOISE_NAME[noise_name]
 		const method_name = this.fbm_method_name();
 
-		const amp = ThreeToGl.any(this.variable_for_input(InputName.AMP));
-		const position = ThreeToGl.any(this.variable_for_input(InputName.POSITION));
-		const freq = ThreeToGl.any(this.variable_for_input(InputName.FREQ));
-		let offset = ThreeToGl.any(this.variable_for_input(InputName.OFFSET));
+		const amp = ThreeToGl.any(this.variableForInput(InputName.AMP));
+		const position = ThreeToGl.any(this.variableForInput(InputName.POSITION));
+		const freq = ThreeToGl.any(this.variableForInput(InputName.FREQ));
+		let offset = ThreeToGl.any(this.variableForInput(InputName.OFFSET));
 		if (offset2) {
 			offset = `(${offset}+${offset2})`;
 		}
@@ -336,7 +336,7 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 		// 	properties.shift(); // remove position
 		// 	properties.forEach((property) => {
 		// 		const arg_name = Object.keys(property)[0];
-		// 		const arg = ThreeToGl.any(this.variable_for_input(arg_name));
+		// 		const arg = ThreeToGl.any(this.variableForInput(arg_name));
 		// 		args.push(arg);
 		// 	});
 		// }

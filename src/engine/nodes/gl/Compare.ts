@@ -104,8 +104,8 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 
 		const value = this.glVarName(OUTPUT_NAME);
 		const operator = TEST_OPERATIONS_FLOAT[this.pv.test];
-		const value0 = ThreeToGl.any(this.variable_for_input(this._gl_input_name(0)));
-		const value1 = ThreeToGl.any(this.variable_for_input(this._gl_input_name(1)));
+		const value0 = ThreeToGl.any(this.variableForInput(this._gl_input_name(0)));
+		const value1 = ThreeToGl.any(this.variableForInput(this._gl_input_name(1)));
 
 		const first_connection = this.io.inputs.named_input_connection_points[0];
 		let components_count = 1;

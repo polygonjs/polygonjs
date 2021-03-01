@@ -85,10 +85,10 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 		const function_definition = new FunctionGLDefinition(this, Physics);
 		shaders_collection_controller.addDefinitions(this, [delta_definition, function_definition]);
 
-		const input_position = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.POSITION));
-		const input_velocity = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.VELOCITY));
-		const input_mass = ThreeToGl.float(this.variable_for_input(AccelerationGlInput.MASS));
-		const input_force = ThreeToGl.any(this.variable_for_input(AccelerationGlInput.FORCE));
+		const input_position = ThreeToGl.any(this.variableForInput(AccelerationGlInput.POSITION));
+		const input_velocity = ThreeToGl.any(this.variableForInput(AccelerationGlInput.VELOCITY));
+		const input_mass = ThreeToGl.float(this.variableForInput(AccelerationGlInput.MASS));
+		const input_force = ThreeToGl.any(this.variableForInput(AccelerationGlInput.FORCE));
 		const position_result = this.glVarName(AccelerationGlOutput.POSITION);
 		const velocity_result = this.glVarName(AccelerationGlOutput.VELOCITY);
 

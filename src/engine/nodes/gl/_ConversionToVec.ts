@@ -28,8 +28,8 @@ export class FloatToVec2GlNode extends TypedGlNode<FloatToVec2GlParamsConfig> {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const x = this.variable_for_input('x');
-		const y = this.variable_for_input('y');
+		const x = this.variableForInputParam(this.p.x);
+		const y = this.variableForInputParam(this.p.y);
 
 		const vec = this.glVarName(FloatToVec2GlNode.OUTPUT_NAME);
 		const body_line = `vec2 ${vec} = ${ThreeToGl.float2(x, y)}`;
@@ -62,9 +62,9 @@ export class FloatToVec3GlNode extends TypedGlNode<FloatToVec3GlParamsConfig> {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const x = this.variable_for_input('x');
-		const y = this.variable_for_input('y');
-		const z = this.variable_for_input('z');
+		const x = this.variableForInputParam(this.p.x);
+		const y = this.variableForInputParam(this.p.y);
+		const z = this.variableForInputParam(this.p.z);
 
 		const vec = this.glVarName(FloatToVec3GlNode.OUTPUT_NAME);
 		const body_line = `vec3 ${vec} = ${ThreeToGl.float3(x, y, z)}`;
@@ -98,10 +98,10 @@ export class FloatToVec4GlNode extends TypedGlNode<FloatToVec4GlParamsConfig> {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const x = this.variable_for_input('x');
-		const y = this.variable_for_input('y');
-		const z = this.variable_for_input('z');
-		const w = this.variable_for_input('w');
+		const x = this.variableForInputParam(this.p.x);
+		const y = this.variableForInputParam(this.p.y);
+		const z = this.variableForInputParam(this.p.z);
+		const w = this.variableForInputParam(this.p.w);
 
 		const vec = this.glVarName(FloatToVec4GlNode.OUTPUT_NAME);
 		const body_line = `vec4 ${vec} = ${ThreeToGl.float4(x, y, z, w)}`;

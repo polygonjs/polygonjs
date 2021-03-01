@@ -9,6 +9,12 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 import {GlParamConfig} from './code/utils/ParamConfig';
 import {ParamType} from '../../poly/ParamType';
+import {IntegerParam} from '../../params/Integer';
+import {FloatParam} from '../../params/Float';
+import {Vector2Param} from '../../params/Vector2';
+import {Vector3Param} from '../../params/Vector3';
+import {Vector4Param} from '../../params/Vector4';
+import {ColorParam} from '../../params/Color';
 
 const REGEX_PATH_SANITIZE = /\/+/g;
 
@@ -55,7 +61,11 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		return `v_POLY_${path_sanitized}_${name}`;
 	}
 
-	variable_for_input(name: string): string {
+	variableForInputParam(param: IntegerParam | FloatParam | Vector2Param | Vector3Param | Vector4Param | ColorParam) {
+		return this.variableForInput(param.name());
+	}
+
+	variableForInput(name: string): string {
 		const input_index = this.io.inputs.get_input_index(name);
 		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {
