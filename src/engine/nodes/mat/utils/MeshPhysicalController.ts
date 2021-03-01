@@ -15,7 +15,7 @@ import {Color} from 'three/src/math/Color';
 export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param Represents the thickness of the clear coat layer, from 0.0 to 1.0 */
-		clearcoat = ParamConfig.FLOAT(0);
+		clearcoat = ParamConfig.FLOAT(0, {separatorBefore: true});
 		/** @param toggle if you want to use a roughness map */
 		useClearCoatMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
@@ -43,6 +43,7 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		);
 		/** @param Index-of-refraction for non-metallic materials, from 1.0 to 2.333 */
 		ior = ParamConfig.FLOAT(1.5, {
+			separatorBefore: true,
 			range: [1, 2.333],
 			rangeLocked: [true, true],
 		});

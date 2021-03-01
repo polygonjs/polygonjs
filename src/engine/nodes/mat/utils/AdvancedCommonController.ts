@@ -22,7 +22,7 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 		/** @param defines if the material is double sided or not */
 		doubleSided = ParamConfig.BOOLEAN(0);
 		/** @param if the material is not double sided, it can be front sided, or back sided */
-		front = ParamConfig.BOOLEAN(1, {visibleIf: {doubleSided: false}});
+		front = ParamConfig.BOOLEAN(1, {visibleIf: {doubleSided: false}, separatorAfter: true});
 		/** @param defines if the objects using this material will be rendered in the color buffer. Setting it to false can have those objects occlude the ones behind */
 		colorWrite = ParamConfig.BOOLEAN(1, {
 			cook: false,
@@ -44,6 +44,10 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 				AdvancedCommonController.update(node as AdvancedCommonMapMatNode);
 			},
 		});
+		/** @param premultipliedAlpha */
+		premultipliedAlpha = ParamConfig.BOOLEAN(false, {
+			separatorAfter: true,
+		});
 		/** @param blending */
 		blending = ParamConfig.INTEGER(NormalBlending, {
 			menu: {
@@ -52,6 +56,10 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 				}),
 			},
 		});
+		/** @param activate polygon offset */
+		polygonOffset = ParamConfig.BOOLEAN(false, {separatorBefore: true});
+		polygonOffsetFactor = ParamConfig.INTEGER(0, {range: [0, 1000], visibleIf: {polygonOffset: 1}});
+		polygonOffsetUnits = ParamConfig.INTEGER(0, {range: [0, 1000], visibleIf: {polygonOffset: 1}});
 	};
 }
 
@@ -74,16 +82,24 @@ export class AdvancedCommonController extends BaseController {
 	async update() {
 		const single_side = isBooleanTrue(this.node.pv.front) ? FrontSide : BackSide;
 		const new_side = isBooleanTrue(this.node.pv.doubleSided) ? DoubleSide : single_side;
+		const pv = this.node.pv;
 		const mat = this.node.material;
 		if (new_side != mat.side) {
 			mat.side = new_side;
 			mat.needsUpdate = true;
 		}
 
-		this.node.material.colorWrite = this.node.pv.colorWrite;
-		this.node.material.depthWrite = this.node.pv.depthWrite;
-		this.node.material.depthTest = this.node.pv.depthTest;
-		this.node.material.blending = this.node.pv.blending;
+		mat.colorWrite = pv.colorWrite;
+		mat.depthWrite = pv.depthWrite;
+		mat.depthTest = pv.depthTest;
+		mat.blending = pv.blending;
+		mat.premultipliedAlpha = pv.premultipliedAlpha;
+		mat.polygonOffset = pv.polygonOffset;
+		if (mat.polygonOffset) {
+			mat.polygonOffsetFactor = pv.polygonOffsetFactor;
+			mat.polygonOffsetUnits = pv.polygonOffsetUnits;
+			mat.needsUpdate = true;
+		}
 	}
 	static async update(node: AdvancedCommonMapMatNode) {
 		node.controllers.advancedCommon.update();

@@ -12,7 +12,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 
-export function TextureSpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a specular map */
 		useSpecularMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureSpecularMapController));
@@ -28,7 +28,7 @@ class TextureSpecularMaterial extends Material {
 	specularMap!: Texture | null;
 }
 type CurrentMaterial = TextureSpecularMaterial | ShaderMaterial;
-class TextureSpecularMapParamsConfig extends TextureSpecularMapParamConfig(NodeParamsConfig) {}
+class TextureSpecularMapParamsConfig extends SpecularMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	specularMap: TextureSpecularMapController;
 }

@@ -11,10 +11,13 @@ import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
-export function TextureDisplacementMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a displacement map */
-		useDisplacementMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureDisplacementMapController));
+		useDisplacementMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			...BooleanParamOptions(TextureDisplacementMapController),
+		});
 		/** @param specify the displacement map COP node */
 		displacementMap = ParamConfig.NODE_PATH(
 			'',
@@ -40,7 +43,7 @@ class TextureDisplacementMaterial extends Material {
 	displacementBias!: number;
 }
 type CurrentMaterial = TextureDisplacementMaterial | ShaderMaterial;
-class TextureDisplacementMapParamsConfig extends TextureDisplacementMapParamConfig(NodeParamsConfig) {}
+class TextureDisplacementMapParamsConfig extends DisplacementMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	displacementMap: TextureDisplacementMapController;
 }

@@ -7,7 +7,7 @@ import {isBooleanTrue} from '../../../../core/BooleanValue';
 export function SkinningParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param activates skinning for objects animated via a skeleton */
-		skinning = ParamConfig.BOOLEAN(0);
+		skinning = ParamConfig.BOOLEAN(0, {separatorBefore: true});
 	};
 }
 

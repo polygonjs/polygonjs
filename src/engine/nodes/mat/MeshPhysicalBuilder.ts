@@ -9,21 +9,18 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
-import {TextureMapParamConfig, TextureMapController} from './utils/TextureMapController';
-import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
-import {TextureBumpMapController, TextureBumpMapParamConfig} from './utils/TextureBumpMapController';
-import {TextureEmissiveMapController, TextureEmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
-import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapController';
-import {TextureAOMapController, TextureAOMapParamConfig} from './utils/TextureAOMapController';
-import {TextureNormalMapController, TextureNormalMapParamConfig} from './utils/TextureNormalMapController';
-import {TextureRoughnessMapController, TextureRoughnessMapParamConfig} from './utils/TextureRoughnessMapController';
-import {TextureMetalnessMapController, TextureMetalnessMapParamConfig} from './utils/TextureMetalnessMapController';
-import {TextureLightMapController, TextureLightMapParamConfig} from './utils/TextureLightMapController';
+import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
+import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
+import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
+import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
+import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapController';
+import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
+import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
+import {TextureRoughnessMapController, RoughnessMapParamConfig} from './utils/TextureRoughnessMapController';
+import {TextureMetalnessMapController, MetalnessMapParamConfig} from './utils/TextureMetalnessMapController';
+import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
 import {MeshPhysicalController, MeshPhysicalParamConfig} from './utils/MeshPhysicalController';
-import {
-	TextureDisplacementMapController,
-	TextureDisplacementMapParamConfig,
-} from './utils/TextureDisplacementMapController';
+import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerPhysical} from '../gl/code/assemblers/materials/Physical';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
@@ -59,17 +56,17 @@ class MeshPhysicalMatParamsConfig extends FogParamConfig(
 				/* advanced */
 				AdvancedFolderParamConfig(
 					MeshPhysicalParamConfig(
-						TextureMetalnessMapParamConfig(
-							TextureRoughnessMapParamConfig(
-								TextureEnvMapParamConfig(
-									TextureLightMapParamConfig(
-										TextureNormalMapParamConfig(
-											TextureBumpMapParamConfig(
-												TextureDisplacementMapParamConfig(
-													TextureAOMapParamConfig(
-														TextureEmissiveMapParamConfig(
-															TextureAlphaMapParamConfig(
-																TextureMapParamConfig(
+						MetalnessMapParamConfig(
+							RoughnessMapParamConfig(
+								NormalMapParamConfig(
+									LightMapParamConfig(
+										EnvMapParamConfig(
+											EmissiveMapParamConfig(
+												DisplacementMapParamConfig(
+													BumpMapParamConfig(
+														AOMapParamConfig(
+															AlphaMapParamConfig(
+																MapParamConfig(
 																	/* textures */
 																	TexturesFolderParamConfig(
 																		ColorParamConfig(

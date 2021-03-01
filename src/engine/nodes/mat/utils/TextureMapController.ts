@@ -12,7 +12,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
-export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function MapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to use a map affecting color */
 		useMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
@@ -24,7 +24,7 @@ class TextureMapMaterial extends Material {
 	map!: Texture | null;
 }
 type CurrentMaterial = TextureMapMaterial | ShaderMaterial;
-class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
+class TextureMapParamsConfig extends MapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	map: TextureMapController;
 }

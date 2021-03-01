@@ -13,10 +13,13 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 
-export function TextureLightMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a light map */
-		useLightMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureLightMapController));
+		useLightMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			...BooleanParamOptions(TextureLightMapController),
+		});
 		/** @param specify the light map COP node */
 		lightMap = ParamConfig.NODE_PATH(
 			NODE_PATH_DEFAULT.NODE.EMPTY,
@@ -34,7 +37,7 @@ class TextureLightMaterial extends Material {
 	lightMapIntensity!: number;
 }
 type CurrentMaterial = TextureLightMaterial | ShaderMaterial;
-class TextureLightMapParamsConfig extends TextureLightMapParamConfig(NodeParamsConfig) {}
+class TextureLightMapParamsConfig extends LightMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	lightMap: TextureLightMapController;
 }

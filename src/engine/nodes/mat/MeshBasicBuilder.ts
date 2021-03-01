@@ -10,16 +10,16 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
 import {AdvancedCommonParamConfig, AdvancedCommonController} from './utils/AdvancedCommonController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
-import {TextureMapParamConfig, TextureMapController} from './utils/TextureMapController';
-import {TextureAlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
+import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
+import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerBasic} from '../gl/code/assemblers/materials/Basic';
 import {TypedBuilderMatNode} from './_BaseBuilder';
 import {Poly} from '../../Poly';
-import {TextureAOMapController, TextureAOMapParamConfig} from './utils/TextureAOMapController';
+import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
-import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
+import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
@@ -39,10 +39,10 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 			AdvancedCommonParamConfig(
 				/* advanced */
 				AdvancedFolderParamConfig(
-					TextureEnvMapParamConfig(
-						TextureAOMapParamConfig(
-							TextureAlphaMapParamConfig(
-								TextureMapParamConfig(
+					EnvMapParamConfig(
+						AOMapParamConfig(
+							AlphaMapParamConfig(
+								MapParamConfig(
 									/* textures */
 									TexturesFolderParamConfig(
 										ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))

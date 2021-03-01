@@ -12,7 +12,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 
-export function TextureMatcapMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function MatcapMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a matcap map */
 		useMatcapMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMatcapMapController));
@@ -28,7 +28,7 @@ class TextureMatcapMaterial extends Material {
 	matcap!: Texture | null;
 }
 type CurrentMaterial = TextureMatcapMaterial | ShaderMaterial;
-class TextureMatcapMapParamsConfig extends TextureMatcapMapParamConfig(NodeParamsConfig) {}
+class TextureMatcapMapParamsConfig extends MatcapMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	matcap: TextureMatcapMapController;
 }

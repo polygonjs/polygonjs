@@ -14,12 +14,12 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
-import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
-import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
-import {TextureLightMapController, TextureLightMapParamConfig} from './utils/TextureLightMapController';
-import {TextureEmissiveMapController, TextureEmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
-import {TextureAOMapController, TextureAOMapParamConfig} from './utils/TextureAOMapController';
+import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
+import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
+import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
+import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
+import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
+import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
 import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
 import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
@@ -44,12 +44,12 @@ class MeshLambertMatParamsConfig extends FogParamConfig(
 			AdvancedCommonParamConfig(
 				/* advanced */
 				AdvancedFolderParamConfig(
-					TextureEnvMapParamConfig(
-						TextureLightMapParamConfig(
-							TextureAOMapParamConfig(
-								TextureEmissiveMapParamConfig(
-									TextureAlphaMapParamConfig(
-										TextureMapParamConfig(
+					LightMapParamConfig(
+						EnvMapParamConfig(
+							EmissiveMapParamConfig(
+								AOMapParamConfig(
+									AlphaMapParamConfig(
+										MapParamConfig(
 											/* textures */
 											TexturesFolderParamConfig(
 												ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))

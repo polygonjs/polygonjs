@@ -13,10 +13,10 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {Color} from 'three/src/math/Color';
 
-export function TextureEmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param emissive color */
-		emissive = ParamConfig.COLOR([0, 0, 0]);
+		emissive = ParamConfig.COLOR([0, 0, 0], {separatorBefore: true});
 		/** @param toggle if you want to use a emissive map */
 		useEmissiveMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEmissiveMapController));
 		/** @param specify the emissive map COP node */
@@ -35,7 +35,7 @@ class TextureEmissiveMaterial extends Material {
 	emissiveIntensity!: number;
 }
 type CurrentMaterial = TextureEmissiveMaterial | ShaderMaterial;
-class TextureEmissiveMapParamsConfig extends TextureEmissiveMapParamConfig(NodeParamsConfig) {}
+class TextureEmissiveMapParamsConfig extends EmissiveMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	emissiveMap: TextureEmissiveMapController;
 }

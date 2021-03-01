@@ -10,9 +10,9 @@ import {TypedMatNode} from './_Base';
 import {SubsurfaceScatteringShader} from '../../../modules/three/examples/jsm/shaders/SubsurfaceScatteringShader';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
-import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
+import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
+import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
@@ -115,8 +115,9 @@ class MeshSubsurfaceScatteringMatParamsConfig extends FogParamConfig(
 			AdvancedCommonParamConfig(
 				/* advanced */
 				AdvancedFolderParamConfig(
-					TextureMapParamConfig(
-						TextureAlphaMapParamConfig(
+					AlphaMapParamConfig(
+						MapParamConfig(
+							/* textures */
 							TexturesFolderParamConfig(SubsurfaceParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
 						)
 					)

@@ -12,7 +12,7 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param material color */
 		color = ParamConfig.COLOR([1, 1, 1]);
 		/** @param defines if the color attribute on the geometry is used */
-		useVertexColors = ParamConfig.BOOLEAN(0);
+		useVertexColors = ParamConfig.BOOLEAN(0, {separatorAfter: true});
 		/** @param sets the material to transparent */
 		transparent = ParamConfig.BOOLEAN(0);
 		/** @param sets the material opacity */

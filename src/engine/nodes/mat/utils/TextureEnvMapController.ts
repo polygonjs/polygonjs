@@ -11,10 +11,13 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an environment map */
-		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
+		useEnvMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			...BooleanParamOptions(TextureEnvMapController),
+		});
 		/** @param specify the environment map COP node */
 		envMap = ParamConfig.NODE_PATH(
 			NODE_PATH_DEFAULT.NODE.EMPTY,
@@ -35,7 +38,7 @@ export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase)
 // 	envMapIntensity!: number;
 // }
 type CurrentMaterial = MeshStandardMaterial | ShaderMaterial;
-class TextureEnvMapParamsConfig extends TextureEnvMapParamConfig(NodeParamsConfig) {}
+class TextureEnvMapParamsConfig extends EnvMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	envMap: TextureEnvMapController;
 }

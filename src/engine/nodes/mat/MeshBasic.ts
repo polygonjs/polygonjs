@@ -15,10 +15,10 @@ import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {FogController, FogParamConfig} from './utils/FogController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
-import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
-import {TextureAOMapController, TextureAOMapParamConfig} from './utils/TextureAOMapController';
-import {TextureEnvMapController, TextureEnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
+import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
+import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
+import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
+import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
 import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -40,10 +40,10 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 			AdvancedCommonParamConfig(
 				/* advanced */
 				AdvancedFolderParamConfig(
-					TextureEnvMapParamConfig(
-						TextureAOMapParamConfig(
-							TextureAlphaMapParamConfig(
-								TextureMapParamConfig(
+					EnvMapParamConfig(
+						AOMapParamConfig(
+							AlphaMapParamConfig(
+								MapParamConfig(
 									/* textures */
 									TexturesFolderParamConfig(
 										ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))

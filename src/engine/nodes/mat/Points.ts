@@ -12,8 +12,8 @@ import {TypedMatNode} from './_Base';
 
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
+import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
+import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -42,8 +42,8 @@ class PointsMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
 		/* advanced */
 		AdvancedFolderParamConfig(
-			TextureAlphaMapParamConfig(
-				TextureMapParamConfig(
+			AlphaMapParamConfig(
+				MapParamConfig(
 					/* textures */
 					TexturesFolderParamConfig(
 						ColorParamConfig(PointsParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))

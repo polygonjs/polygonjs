@@ -26,7 +26,7 @@ const OperationByName = {
 	[CombineOperation.MIX]: MixOperation,
 };
 
-export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an environment map */
 		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
@@ -59,7 +59,7 @@ export function TextureEnvMapParamConfig<TBase extends Constructor>(Base: TBase)
 // 	envMapIntensity!: number;
 // }
 type CurrentMaterial = MeshBasicMaterial | ShaderMaterial;
-class TextureEnvMapParamsConfig extends TextureEnvMapParamConfig(NodeParamsConfig) {}
+class TextureEnvMapParamsConfig extends EnvMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	envMap: TextureEnvMapController;
 }

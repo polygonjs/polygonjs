@@ -13,10 +13,13 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 
-export function TextureRoughnessMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function RoughnessMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a roughness map */
-		useRoughnessMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureRoughnessMapController));
+		useRoughnessMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			...BooleanParamOptions(TextureRoughnessMapController),
+		});
 		/** @param specify the roughness map COP node */
 		roughnessMap = ParamConfig.NODE_PATH(
 			NODE_PATH_DEFAULT.NODE.EMPTY,
@@ -32,7 +35,7 @@ class TextureRoughnessMaterial extends Material {
 	roughness!: number;
 }
 type CurrentMaterial = TextureRoughnessMaterial | ShaderMaterial;
-class TextureRoughnessMapParamsConfig extends TextureRoughnessMapParamConfig(NodeParamsConfig) {}
+class TextureRoughnessMapParamsConfig extends RoughnessMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	roughnessMap: TextureRoughnessMapController;
 }

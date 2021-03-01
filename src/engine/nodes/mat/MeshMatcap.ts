@@ -13,15 +13,12 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
-import {TextureMapController, TextureMapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, TextureAlphaMapParamConfig} from './utils/TextureAlphaMapController';
-import {TextureBumpMapController, TextureBumpMapParamConfig} from './utils/TextureBumpMapController';
-import {TextureNormalMapController, TextureNormalMapParamConfig} from './utils/TextureNormalMapController';
-import {
-	TextureDisplacementMapController,
-	TextureDisplacementMapParamConfig,
-} from './utils/TextureDisplacementMapController';
-import {TextureMatcapMapController, TextureMatcapMapParamConfig} from './utils/TextureMatcapMapController';
+import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
+import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
+import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
+import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
+import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
+import {TextureMatcapMapController, MatcapMapParamConfig} from './utils/TextureMatcapMapController';
 import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -45,12 +42,12 @@ class MeshStandardMatParamsConfig extends FogParamConfig(
 		AdvancedCommonParamConfig(
 			/* advanced */
 			AdvancedFolderParamConfig(
-				TextureNormalMapParamConfig(
-					TextureBumpMapParamConfig(
-						TextureDisplacementMapParamConfig(
-							TextureAlphaMapParamConfig(
-								TextureMapParamConfig(
-									TextureMatcapMapParamConfig(
+				NormalMapParamConfig(
+					DisplacementMapParamConfig(
+						BumpMapParamConfig(
+							AlphaMapParamConfig(
+								MapParamConfig(
+									MatcapMapParamConfig(
 										/* textures */
 										TexturesFolderParamConfig(
 											ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))

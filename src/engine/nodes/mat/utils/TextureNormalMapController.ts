@@ -25,10 +25,13 @@ const NormalMapModeByName = {
 	[NormalMapMode.OBJECT]: ObjectSpaceNormalMap,
 };
 
-export function TextureNormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function NormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a normal map */
-		useNormalMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureNormalMapController));
+		useNormalMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			...BooleanParamOptions(TextureNormalMapController),
+		});
 		/** @param specify the normal map COP node */
 		normalMap = ParamConfig.NODE_PATH(
 			NODE_PATH_DEFAULT.NODE.EMPTY,
@@ -54,7 +57,7 @@ class TextureNormalMaterial extends Material {
 	normalScale!: Vector2;
 }
 type CurrentMaterial = TextureNormalMaterial | ShaderMaterial;
-class TextureNormalMapParamsConfig extends TextureNormalMapParamConfig(NodeParamsConfig) {}
+class TextureNormalMapParamsConfig extends NormalMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	normalMap: TextureNormalMapController;
 }

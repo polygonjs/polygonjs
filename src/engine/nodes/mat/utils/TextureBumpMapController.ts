@@ -11,10 +11,13 @@ import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
-export function TextureBumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a bump map */
-		useBumpMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureBumpMapController));
+		useBumpMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			...BooleanParamOptions(TextureBumpMapController),
+		});
 		/** @param specify the bump map COP node */
 		bumpMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureBumpMapController, 'useBumpMap'));
 		/** @param bump scale */
@@ -36,7 +39,7 @@ class TextureBumpMaterial extends Material {
 	bumpScale!: number;
 }
 type CurrentMaterial = TextureBumpMaterial | ShaderMaterial;
-class TextureBumpMapParamsConfig extends TextureBumpMapParamConfig(NodeParamsConfig) {}
+class TextureBumpMapParamsConfig extends BumpMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	bumpMap: TextureBumpMapController;
 }

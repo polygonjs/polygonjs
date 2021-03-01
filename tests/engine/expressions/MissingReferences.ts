@@ -236,16 +236,16 @@ QUnit.test(
 		assert.notOk(param_operator_path_param.value.param());
 
 		const init_params_count = mesh_basic_builder1.params.all.length;
-		assert.equal(init_params_count, 27);
+		assert.equal(init_params_count, 31);
 		const param1 = mesh_basic_builder1.createNode('param');
 		await mesh_basic_builder1.requestContainer();
-		assert.equal(mesh_basic_builder1.params.all.length, 28);
-		assert.equal(mesh_basic_builder1.params.all[27].name(), 'param1');
+		assert.equal(mesh_basic_builder1.params.all.length, 32);
+		assert.equal(mesh_basic_builder1.params.all[31].name(), 'param1');
 		assert.notOk(param_operator_path_param.value.param());
 
 		param1.p.name.set('test_param');
 		await mesh_basic_builder1.requestContainer();
-		assert.equal(mesh_basic_builder1.params.all[27].name(), 'test_param', 'last param is called test_param');
+		assert.equal(mesh_basic_builder1.params.all[31].name(), 'test_param', 'last param is called test_param');
 		assert.ok(param_operator_path_param.value.param(), 'a param is found');
 		assert.equal(
 			param_operator_path_param.value.param()!.graphNodeId(),

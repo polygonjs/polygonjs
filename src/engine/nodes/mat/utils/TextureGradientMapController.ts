@@ -12,7 +12,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 
-export function TextureGradientMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function GradientMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a gradient map */
 		useGradientMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureGradientMapController));
@@ -28,7 +28,7 @@ class TextureGradientMaterial extends Material {
 	gradientMap!: Texture | null;
 }
 type CurrentMaterial = TextureGradientMaterial | ShaderMaterial;
-class TextureGradientMapParamsConfig extends TextureGradientMapParamConfig(NodeParamsConfig) {}
+class TextureGradientMapParamsConfig extends GradientMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	gradientMap: TextureGradientMapController;
 }

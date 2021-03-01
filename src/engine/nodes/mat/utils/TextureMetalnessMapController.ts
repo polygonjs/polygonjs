@@ -13,10 +13,13 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 
-export function TextureMetalnessMapParamConfig<TBase extends Constructor>(Base: TBase) {
+export function MetalnessMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a metalness map */
-		useMetalnessMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMetalnessMapController));
+		useMetalnessMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			...BooleanParamOptions(TextureMetalnessMapController),
+		});
 		/** @param specify the metalness map COP node */
 		metalnessMap = ParamConfig.NODE_PATH(
 			NODE_PATH_DEFAULT.NODE.EMPTY,
@@ -32,7 +35,7 @@ class TextureMetalnessMaterial extends Material {
 	metalness!: number;
 }
 type CurrentMaterial = TextureMetalnessMaterial | ShaderMaterial;
-class TextureMetalnessMapParamsConfig extends TextureMetalnessMapParamConfig(NodeParamsConfig) {}
+class TextureMetalnessMapParamsConfig extends MetalnessMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	metalnessMap: TextureMetalnessMapController;
 }

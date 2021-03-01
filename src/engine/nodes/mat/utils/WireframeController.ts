@@ -23,7 +23,7 @@ const LINE_JOIN_TYPES: LineJoinType[] = [LineJoinType.ROUND, LineJoinType.BEVEL,
 export function WireframeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to set material to wireframe */
-		wireframe = ParamConfig.BOOLEAN(0);
+		wireframe = ParamConfig.BOOLEAN(0, {separatorBefore: true});
 		/** @param define appearance of line ends */
 		wireframeLinecap = ParamConfig.INTEGER(0, {
 			menu: {
