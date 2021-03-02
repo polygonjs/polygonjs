@@ -161,10 +161,10 @@ export const DEFAULT_SHADOW_MAP_TYPE = ShadowMapTypeValue.PCFSoft as number;
 
 // TODO: set debug.checkShaderErrors to false in prod
 const DEFAULT_PARAMS: WebGLRendererParameters = {
-	alpha: true,
+	alpha: false,
 	precision: RendererPrecision.highp,
 	premultipliedAlpha: true,
-	antialias: true,
+	antialias: false,
 	stencil: true,
 	preserveDrawingBuffer: false,
 	powerPreference: PowerPreference.DEFAULT,
