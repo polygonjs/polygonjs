@@ -6,7 +6,7 @@
  *
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
+import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
@@ -23,7 +23,9 @@ interface Controllers {
 class PointsMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
 		AdvancedCommonParamConfig(
-			/* advanced */ AdvancedFolderParamConfig(ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+			/* advanced */ AdvancedFolderParamConfig(
+				TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+			)
 		)
 	)
 ) {}
@@ -58,7 +60,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 			this.controllers[controllerName].update();
 		}
 
-		ColorsController.update(this);
+		TransparencyController.update(this);
 		FogController.update(this);
 		SkinningController.update(this);
 

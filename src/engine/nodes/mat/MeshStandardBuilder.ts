@@ -6,7 +6,7 @@
  *
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ColorParamConfig, ColorsController} from './utils/UniformsColorsController';
+import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
@@ -66,7 +66,7 @@ class MeshStandardMatParamsConfig extends FogParamConfig(
 															MapParamConfig(
 																/* textures */
 																TexturesFolderParamConfig(
-																	ColorParamConfig(
+																	TransparencyParamConfig(
 																		DefaultFolderParamConfig(NodeParamsConfig)
 																	)
 																)
@@ -132,7 +132,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
-		ColorsController.update(this);
+		TransparencyController.update(this);
 		FogController.update(this);
 		SkinningController.update(this);
 		WireframeController.update(this);

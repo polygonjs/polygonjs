@@ -11,8 +11,9 @@ import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {IUniforms} from '../../../../core/geometry/Material';
+import {IUniforms, ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
+import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
 
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -161,7 +162,11 @@ export class BaseTextureMapController extends BaseController {
 			}
 		}
 		if (!has_texture || new_texture_is_different) {
-			uniforms[mat_attrib_name].value = texture as any;
+			const uniform = uniforms[mat_attrib_name];
+			// check as the uniform may not exist on a customMaterial
+			if (uniform) {
+				uniforms[mat_attrib_name].value = texture as any;
+			}
 			// currently removing the settings of defines USE_MAP or USE_UV
 			// as this seems to conflict with setting .map on the material itself.
 			// ideally I should test if .alphaMap and .envMap still work
@@ -178,6 +183,22 @@ export class BaseTextureMapController extends BaseController {
 			// }
 			this._apply_texture_on_material(material, material, mat_attrib_name as any, texture);
 			material.needsUpdate = true;
+
+			const customMaterials = (material as ShaderMaterialWithCustomMaterials).customMaterials;
+			if (customMaterials) {
+				const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
+				for (let customName of customNames) {
+					const customMaterial = customMaterials[customName];
+					if (customMaterial) {
+						this._apply_texture_on_uniforms(
+							customMaterial,
+							customMaterial.uniforms as O,
+							mat_attrib_name,
+							texture
+						);
+					}
+				}
+			}
 		}
 	}
 	private _remove_texture_from_uniforms<U extends IUniforms>(
@@ -202,6 +223,21 @@ export class BaseTextureMapController extends BaseController {
 			// }
 			this._remove_texture_from_material(material, material, mat_attrib_name as any);
 			material.needsUpdate = true;
+
+			const customMaterials = (material as ShaderMaterialWithCustomMaterials).customMaterials;
+			if (customMaterials) {
+				const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
+				for (let customName of customNames) {
+					const customMaterial = customMaterials[customName];
+					if (customMaterial) {
+						this._remove_texture_from_uniforms(
+							customMaterial,
+							customMaterial.uniforms as U,
+							mat_attrib_name
+						);
+					}
+				}
+			}
 		}
 	}
 	// private _define_name(mat_attrib_name: string): string {

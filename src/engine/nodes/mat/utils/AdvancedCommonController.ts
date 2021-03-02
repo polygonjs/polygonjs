@@ -8,6 +8,9 @@ import {BaseParamType} from '../../../params/_Base';
 import {DoubleSide, BackSide, FrontSide} from 'three/src/constants';
 import {NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending} from 'three/src/constants';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
+import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
+import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
 const BLENDING_VALUES = {
 	NoBlending,
 	NormalBlending,
@@ -22,9 +25,16 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 		/** @param defines if the material is double sided or not */
 		doubleSided = ParamConfig.BOOLEAN(0);
 		/** @param if the material is not double sided, it can be front sided, or back sided */
-		front = ParamConfig.BOOLEAN(1, {visibleIf: {doubleSided: false}, separatorAfter: true});
+		front = ParamConfig.BOOLEAN(1, {visibleIf: {doubleSided: false}});
+		/** @param override the default shadowSide behavior */
+		overrideShadowSide = ParamConfig.BOOLEAN(0);
+		/** @param defines which side(s) are used when rendering shadows */
+		shadowDoubleSided = ParamConfig.BOOLEAN(0, {visibleIf: {overrideShadowSide: true}});
+		/** @param if the material is not double sided, it can be front sided, or back sided, when computing shadows */
+		shadowFront = ParamConfig.BOOLEAN(1, {visibleIf: {overrideShadowSide: true, shadowDoubleSided: false}});
 		/** @param defines if the objects using this material will be rendered in the color buffer. Setting it to false can have those objects occlude the ones behind */
 		colorWrite = ParamConfig.BOOLEAN(1, {
+			separatorBefore: true,
 			cook: false,
 			callback: (node: BaseNodeType, param: BaseParamType) => {
 				AdvancedCommonController.update(node as AdvancedCommonMapMatNode);
@@ -80,14 +90,9 @@ export class AdvancedCommonController extends BaseController {
 	initializeNode() {}
 
 	async update() {
-		const single_side = isBooleanTrue(this.node.pv.front) ? FrontSide : BackSide;
-		const new_side = isBooleanTrue(this.node.pv.doubleSided) ? DoubleSide : single_side;
-		const pv = this.node.pv;
 		const mat = this.node.material;
-		if (new_side != mat.side) {
-			mat.side = new_side;
-			mat.needsUpdate = true;
-		}
+		const pv = this.node.pv;
+		this._updateSides(mat, pv);
 
 		mat.colorWrite = pv.colorWrite;
 		mat.depthWrite = pv.depthWrite;
@@ -101,6 +106,40 @@ export class AdvancedCommonController extends BaseController {
 			mat.needsUpdate = true;
 		}
 	}
+	private _updateSides(mat: Material, pv: ParamsValueAccessorType<AdvancedCommonParamsConfig>) {
+		// normal render
+		const singleSide = isBooleanTrue(pv.front) ? FrontSide : BackSide;
+		const newSide = isBooleanTrue(pv.doubleSided) ? DoubleSide : singleSide;
+		if (newSide != mat.side) {
+			mat.side = newSide;
+			mat.needsUpdate = true;
+		}
+		// shadow render
+		if (isBooleanTrue(pv.overrideShadowSide)) {
+			const singleSide = isBooleanTrue(pv.shadowFront) ? FrontSide : BackSide;
+			const newSide = isBooleanTrue(pv.shadowDoubleSided) ? DoubleSide : singleSide;
+			const mat = this.node.material;
+			if (newSide != mat.shadowSide) {
+				mat.shadowSide = newSide;
+				mat.needsUpdate = true;
+			}
+		} else {
+			/* TODO: update types */
+			(mat as any).shadowSide = null;
+		}
+
+		const customMaterials = (mat as ShaderMaterialWithCustomMaterials).customMaterials;
+		if (customMaterials) {
+			const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
+			for (let customName of customNames) {
+				const customMaterial = customMaterials[customName];
+				if (customMaterial) {
+					this._updateSides(customMaterial, pv);
+				}
+			}
+		}
+	}
+
 	static async update(node: AdvancedCommonMapMatNode) {
 		node.controllers.advancedCommon.update();
 	}

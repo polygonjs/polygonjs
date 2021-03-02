@@ -6,6 +6,7 @@ import {IUniformsWithTime, IUniformsWithResolution} from '../../../../../scene/u
 import {GlParamConfig} from '../../utils/ParamConfig';
 import {Poly} from '../../../../../Poly';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
+import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 
 export interface PersistedConfigBaseMaterialData {
 	material: object;
@@ -79,12 +80,34 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 
 		this._material.customMaterials = this._material.customMaterials || {};
 		if (data.customMaterials) {
-			const names: CustomMaterialName[] = Object.keys(data.customMaterials) as CustomMaterialName[];
-			for (let name of names) {
-				const custom_mat_data = data.customMaterials[name];
+			const customMatNames: CustomMaterialName[] = Object.keys(data.customMaterials) as CustomMaterialName[];
+			for (let customMatName of customMatNames) {
+				const custom_mat_data = data.customMaterials[customMatName];
 				const custom_mat = this._load_material(custom_mat_data);
 				if (custom_mat) {
-					this._material.customMaterials[name] = custom_mat;
+					this._material.customMaterials[customMatName] = custom_mat;
+
+					// console.log('=============', customMatName);
+					// We could link the customMaterial's uniform here
+					// and get them in sync,
+					// but this seems to have unexpected side-effects
+					// and some assigned textures do not get assigned as expected.
+					// Therefore, the syncing is done later in this method,
+					// when setting the param callback
+					// const uniformNames = Object.keys(this._material.uniforms);
+					// for (let uniformName of uniformNames) {
+					// 	const customMatUniform = custom_mat.uniforms[uniformName];
+					// 	if (customMatUniform) {
+					// 		console.log(
+					// 			uniformName,
+					// 			custom_mat.uniforms[uniformName].value,
+					// 			this._material.uniforms[uniformName].value
+					// 		);
+					// 		// if the uniform exists in the customMat, replace it completely (not just its value)
+					// 		// so that it is garantied to be in sync with the parent material
+					// 		// custom_mat.uniforms[uniformName] = this._material.uniforms[uniformName];
+					// 	}
+					// }
 				}
 			}
 		}
@@ -107,11 +130,34 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		}
 		if (data.param_uniform_pairs) {
 			for (let pair of data.param_uniform_pairs) {
-				const param = this.node.params.get(pair[0]);
-				const uniform = this._material.uniforms[pair[1]];
-				if (param && uniform) {
+				const paramName = pair[0];
+				const uniformName = pair[1];
+				const param = this.node.params.get(paramName);
+				const uniform = this._material.uniforms[uniformName];
+
+				const customMatNames: CustomMaterialName[] = Object.keys(
+					this._material.customMaterials
+				) as CustomMaterialName[];
+				let customUniforms: IUniform[] | undefined;
+				for (let customMatName of customMatNames) {
+					const customMat = this._material.customMaterials[customMatName];
+					const customUniform = customMat?.uniforms[uniformName];
+					if (customUniform) {
+						customUniforms = customUniforms || [];
+						customUniforms.push(customUniform);
+					}
+				}
+
+				if (param && (uniform || customUniforms)) {
 					param.options.set_option('callback', () => {
-						GlParamConfig.callback(param, uniform);
+						if (uniform) {
+							GlParamConfig.callback(param, uniform);
+						}
+						if (customUniforms) {
+							for (let customUniform of customUniforms) {
+								GlParamConfig.callback(param, customUniform);
+							}
+						}
 					});
 				}
 			}

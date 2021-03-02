@@ -88,7 +88,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			this._assemblers_by_custom_name.set(custom_name, custom_assembler);
 		}
 		material.customMaterials = material.customMaterials || {};
-		material.customMaterials[custom_name] = custom_assembler.createMaterial();
+		const mat = custom_assembler.createMaterial();
+		mat.name = custom_name;
+		material.customMaterials[custom_name] = mat;
 	}
 
 	compileCustomMaterials(material: ShaderMaterialWithCustomMaterials) {
