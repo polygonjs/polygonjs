@@ -61,6 +61,7 @@ export class TransparencyController extends BaseController {
 		if (mat.uniforms.opacity) {
 			mat.uniforms.opacity.value = pv.opacity;
 		}
+		mat.opacity = pv.opacity;
 
 		mat.alphaTest = pv.alphaTest;
 

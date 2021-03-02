@@ -531,7 +531,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return new Map<CustomMaterialName, ShaderMaterial>();
 	}
 
-	protected expand_shader(shader_string: string) {
+	static expandShader(shader_string: string) {
 		function parseIncludes(string: string) {
 			var pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
 			function replace(match: string, include: string): string {

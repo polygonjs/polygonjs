@@ -14,6 +14,7 @@ import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {IUniforms, ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
+import {Poly} from '../../../Poly';
 
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -207,10 +208,7 @@ export class BaseTextureMapController extends BaseController {
 		mat_attrib_name: keyof SubType<U, Texture | null>
 	) {
 		if (!uniforms[mat_attrib_name]) {
-			console.warn(
-				`'${mat_attrib_name}' uniform not found. existing uniforms are:`,
-				Object.keys(uniforms).sort()
-			);
+			Poly.warn(`'${mat_attrib_name}' uniform not found. existing uniforms are:`, Object.keys(uniforms).sort());
 			return;
 		}
 		if (uniforms[mat_attrib_name].value) {

@@ -45,15 +45,14 @@ export class ColorsController extends BaseController {
 		const pv = node.pv;
 
 		material.color.copy(pv.color);
-		const newVertexColor = isBooleanTrue(pv.useVertexColors); // ? VertexColors : NoColors;
+		const newVertexColor = isBooleanTrue(pv.useVertexColors);
 		if (newVertexColor != material.vertexColors) {
 			material.vertexColors = newVertexColor;
 			material.needsUpdate = true;
 		}
 
 		material.opacity = pv.opacity;
-		material.transparent = isBooleanTrue(pv.transparent) || pv.opacity < 1;
-		material.depthTest = true;
+		material.transparent = pv.transparent;
 		material.alphaTest = pv.alphaTest;
 	}
 }
