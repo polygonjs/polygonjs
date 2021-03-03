@@ -8,15 +8,22 @@ export class CookController {
 	private _resolves: Callback[] = [];
 	constructor() {}
 
-	add_node(node: BaseNodeType) {
+	addNode(node: BaseNodeType) {
 		this._cooking_nodes_by_id.set(node.graphNodeId(), node);
 	}
-	remove_node(node: BaseNodeType) {
+	removeNode(node: BaseNodeType) {
 		this._cooking_nodes_by_id.delete(node.graphNodeId());
 
 		if (this._cooking_nodes_by_id.size == 0) {
 			this.flush();
 		}
+	}
+	cookingNodes() {
+		const list: BaseNodeType[] = [];
+		this._cooking_nodes_by_id.forEach((node, id) => {
+			list.push(node);
+		});
+		return list;
 	}
 
 	private flush() {

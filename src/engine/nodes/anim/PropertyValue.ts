@@ -26,6 +26,7 @@ const PROPERTY_VALUE_MODE_FROM_NODE = PROPERTY_VALUE_MODES.indexOf(PropertyValue
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseNodeType} from '../_Base';
 class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 	/** @param mode */
 	mode = ParamConfig.INTEGER(PROPERTY_VALUE_MODE_CUSTOM, {
@@ -42,6 +43,13 @@ class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 	/** @param if set to a THREE object, this is a mask to find the objects */
 	objectMask = ParamConfig.STRING('/geo1', {
 		visibleIf: {mode: PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH},
+	});
+	/** @param print the object matching the objectMask, to help debugging */
+	printResolve = ParamConfig.BUTTON(null, {
+		visibleIf: {mode: PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH},
+		callback: (node: BaseNodeType) => {
+			PropertyValueAnimNode.PARAM_CALLBACK_print_resolve(node as PropertyValueAnimNode);
+		},
 	});
 	overridePropertyName = ParamConfig.BOOLEAN(0, {
 		visibleIf: [{mode: PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH}, {mode: PROPERTY_VALUE_MODE_FROM_NODE}],
@@ -125,7 +133,7 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 			return;
 		}
 
-		const found_object = this.scene().findObjectByMask(this.pv.objectMask);
+		const found_object = this._foundObjectFromSceneGraph();
 		if (found_object) {
 			const value: any = found_object[property_name as keyof Object3D];
 			if (value) {
@@ -160,5 +168,16 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 				timeline_builder.setPropertyValue(value);
 			}
 		}
+	}
+
+	static PARAM_CALLBACK_print_resolve(node: PropertyValueAnimNode) {
+		node.printResolve();
+	}
+	private _foundObjectFromSceneGraph() {
+		return this.scene().findObjectByMask(this.pv.objectMask);
+	}
+	private printResolve() {
+		const found_object = this._foundObjectFromSceneGraph();
+		console.log(found_object);
 	}
 }

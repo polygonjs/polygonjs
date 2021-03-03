@@ -87,7 +87,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		while ((callback = this._callbacks_tmp.pop())) {
 			callback(container);
 		}
-		this.node.scene().cookController.remove_node(this.node);
+		this.node.scene().cookController.removeNode(this.node);
 	}
 }
 
