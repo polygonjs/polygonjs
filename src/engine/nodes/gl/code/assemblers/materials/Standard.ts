@@ -13,7 +13,12 @@ import {OutputGlNode} from '../../../Output';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {GlConnectionPoint, GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 
+import sss_default from '../../../gl/sss/init.glsl';
+import sss_declaration_fragment from '../../../gl/sss/declaration.glsl';
+import sss_injected_fragment from '../../../gl/sss/injected.glsl';
+
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
+	static USE_SSS = true;
 	isPhysical() {
 		return false;
 	}
@@ -58,6 +63,25 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 				'#include <roughnessmap_fragment>',
 				roughnessmap_fragment
 			);
+
+			if (ShaderAssemblerStandard.USE_SSS) {
+				//
+				// add SSS
+				//
+				shader.fragmentShader = shader.fragmentShader.replace(
+					'void main() {',
+					`${sss_declaration_fragment}
+
+void main(){`
+				);
+
+				shader.fragmentShader = shader.fragmentShader.replace(
+					'#include <lights_fragment_begin>',
+					`#include <lights_fragment_begin>
+${sss_injected_fragment}
+`
+				);
+			}
 		};
 		this._addCustomMaterials(material);
 		return material;
@@ -81,6 +105,9 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		const list = BaseGlShaderAssembler.output_input_connection_points();
 		list.push(new GlConnectionPoint('metalness', GlConnectionPointType.FLOAT, 1));
 		list.push(new GlConnectionPoint('roughness', GlConnectionPointType.FLOAT, 1));
+		if (ShaderAssemblerStandard.USE_SSS) {
+			list.push(new GlConnectionPoint('SSSModel', GlConnectionPointType.SSS_MODEL, sss_default));
+		}
 		output_child.io.inputs.setNamedInputConnectionPoints(list);
 		// those defaults should be 1. If they were 0, using the params
 		// at the material level would appear not to work
@@ -96,19 +123,35 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	create_shader_configs() {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv'], []),
-			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha', 'metalness', 'roughness'], [ShaderName.VERTEX]),
+			new ShaderConfig(
+				ShaderName.FRAGMENT,
+				['color', 'alpha', 'metalness', 'roughness', 'SSSModel'],
+				[ShaderName.VERTEX]
+			),
 		];
 	}
 	create_variable_configs() {
-		return BaseGlShaderAssembler.create_variable_configs().concat([
+		const list = BaseGlShaderAssembler.create_variable_configs();
+		list.push(
 			new VariableConfig('metalness', {
 				default: '1.0',
 				prefix: 'float POLY_metalness = ',
-			}),
+			})
+		);
+		list.push(
 			new VariableConfig('roughness', {
 				default: '1.0',
 				prefix: 'float POLY_roughness = ',
-			}),
-		]);
+			})
+		);
+		if (ShaderAssemblerStandard.USE_SSS) {
+			list.push(
+				new VariableConfig('SSSModel', {
+					default: sss_default,
+					prefix: 'SSSModel POLY_SSSModel = ',
+				})
+			);
+		}
+		return list;
 	}
 }

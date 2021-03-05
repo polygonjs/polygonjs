@@ -28,6 +28,7 @@ export const CATEGORY_GL = {
 	DYNAMICS: 'dynamics',
 	GEOMETRY: 'geometry',
 	GLOBALS: 'globals',
+	LIGHTING: 'lighting',
 	LOGIC: 'logic',
 	MATH: 'math',
 	PHYSICS: 'physics',

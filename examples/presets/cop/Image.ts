@@ -6,6 +6,9 @@ export function ImageCopNodePresets() {
 		asphalt: function (node: ImageCopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/textures/asphalt.jpg`);
 		},
+		bunny_sss_thickness: function (node: ImageCopNode) {
+			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/fbx/bunny_thickness.jpg`);
+		},
 		disk: function (node: ImageCopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/textures/disk.png`);
 		},

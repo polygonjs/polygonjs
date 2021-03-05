@@ -265,7 +265,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	static output_input_connection_points() {
+	static output_input_connection_points(): GlConnectionPoint<GlConnectionPointType>[] {
 		return [
 			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('normal', GlConnectionPointType.VEC3),

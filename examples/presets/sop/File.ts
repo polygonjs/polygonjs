@@ -3,8 +3,11 @@ import {FileSopNode} from '../../../src/engine/nodes/sop/File';
 
 export function FileSopNodePresets() {
 	return {
-		bunny: function (node: FileSopNode) {
-			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/stanford-bunny.fbx`);
+		bunny_drc: function (node: FileSopNode) {
+			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/bunny.drc`);
+		},
+		bunny_fbx: function (node: FileSopNode) {
+			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/fbx/stanford-bunny.fbx`);
 		},
 		deer_obj: function (node: FileSopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/deer.obj`);

@@ -31,6 +31,7 @@ export enum GlConnectionPointType {
 	// MAT3 = 'mat3',
 	// MAT4 = 'mat4',
 	SAMPLER_2D = 'sampler2D',
+	SSS_MODEL = 'SSSModel',
 }
 // interface IGlConnectionPointType {
 // 	[EnumGlConnectionPointType.BOOL]: Readonly<'bool'>;
@@ -127,6 +128,7 @@ export const GlConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParamTyp
 	[GlConnectionPointType.VEC4]: ParamType.VECTOR4,
 
 	[GlConnectionPointType.SAMPLER_2D]: ParamType.RAMP,
+	[GlConnectionPointType.SSS_MODEL]: ParamType.STRING,
 };
 
 //
@@ -203,6 +205,7 @@ export const GlConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 	[GlConnectionPointType.VEC4]: [0, 0, 0, 0],
 
 	[GlConnectionPointType.SAMPLER_2D]: RampParam.DEFAULT_VALUE_JSON,
+	[GlConnectionPointType.SSS_MODEL]: 'SSSModel()',
 };
 
 //
@@ -227,6 +230,7 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[GlConnectionPointType.VEC3]: 3,
 	[GlConnectionPointType.VEC4]: 4,
 	[GlConnectionPointType.SAMPLER_2D]: 1,
+	[GlConnectionPointType.SSS_MODEL]: 1,
 };
 
 // import {

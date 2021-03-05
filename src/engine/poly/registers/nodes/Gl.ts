@@ -85,6 +85,7 @@ import {NullGlNode} from '../../../nodes/gl/Null';
 import {OutputGlNode} from '../../../nodes/gl/Output';
 import {ParamGlNode} from '../../../nodes/gl/Param';
 import {RefractGlNode} from '../../../nodes/gl/Refract';
+import {SSSModelGlNode} from '../../../nodes/gl/SSSModel';
 import {QuatMultGlNode} from '../../../nodes/gl/QuatMult';
 import {QuatFromAxisAngleGlNode} from '../../../nodes/gl/QuatFromAxisAngle';
 import {QuatToAngleGlNode} from '../../../nodes/gl/QuatToAngle';
@@ -193,6 +194,7 @@ export interface GlNodeChildrenMap {
 	smoothstep: SmoothstepGlNode;
 	sphere: SphereGlNode;
 	sqrt: SqrtGlNode;
+	SSSModel: SSSModelGlNode;
 	step: StepGlNode;
 	subnet: SubnetGlNode;
 	subnetInput: SubnetInputGlNode;
@@ -313,6 +315,7 @@ export class GlRegister {
 		poly.registerNode(SmoothstepGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(SphereGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(SqrtGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(SSSModelGlNode, CATEGORY_GL.LIGHTING);
 		poly.registerNode(StepGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(SubnetGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(SubnetInputGlNode, CATEGORY_GL.LOGIC, SUBNET_CHILD_OPTION);
