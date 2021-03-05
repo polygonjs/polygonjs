@@ -66,6 +66,8 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 				}),
 			},
 		});
+		/** @param dithering, which can be useful when using postprocessing and banding appears on some objects */
+		dithering = ParamConfig.BOOLEAN(0);
 		/** @param activate polygon offset */
 		polygonOffset = ParamConfig.BOOLEAN(false, {separatorBefore: true});
 		polygonOffsetFactor = ParamConfig.INTEGER(0, {range: [0, 1000], visibleIf: {polygonOffset: 1}});
@@ -99,6 +101,7 @@ export class AdvancedCommonController extends BaseController {
 		mat.depthTest = pv.depthTest;
 		mat.blending = pv.blending;
 		mat.premultipliedAlpha = pv.premultipliedAlpha;
+		mat.dithering = pv.dithering;
 		mat.polygonOffset = pv.polygonOffset;
 		if (mat.polygonOffset) {
 			mat.polygonOffsetFactor = pv.polygonOffsetFactor;

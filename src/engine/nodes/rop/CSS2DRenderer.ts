@@ -55,7 +55,10 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 		renderer.domElement.style.top = '0px';
 		renderer.domElement.style.left = '0px';
 		renderer.domElement.style.pointerEvents = 'none';
-		renderer.setSize(canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+
+		const rect = canvas.getBoundingClientRect();
+
+		renderer.setSize(rect.width, rect.height);
 		this._update_renderer(renderer);
 		return renderer;
 	}
