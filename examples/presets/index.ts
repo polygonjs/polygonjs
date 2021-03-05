@@ -10,6 +10,7 @@ import {AttributeGlNodePresets} from './gl/Attribute';
 import {ColorSopNodePresets} from './sop/Color';
 import {DataUrlSopNodePresets} from './sop/DataUrl';
 import {DataSopNodePresets} from './sop/Data';
+import {CSS2DObjectSopNodePresets} from './sop/CSS2DObject';
 import {DataUrlSopNode} from '../../src/engine/nodes/sop/DataUrl';
 import {FileSopNodePresets} from './sop/File';
 import {FileSopNode} from '../../src/engine/nodes/sop/File';
@@ -19,6 +20,7 @@ import {TextSopNodePresets} from './sop/Text';
 import {TransformSopNodePresets} from './sop/Transform';
 import {MeshSubsurfaceScatteringMatNodePresets} from './mat/MeshSubsurfaceScattering';
 import {MeshSubsurfaceScatteringMatNode} from '../../src/engine/nodes/mat/MeshSubsurfaceScattering';
+import {CSS2DObjectSopNode} from '../../src/engine/nodes/sop/CSS2DObject';
 
 // TODO: it may be easier when there are many presets
 // to use a BasePreset class that knows how to register itself
@@ -36,6 +38,7 @@ export const presetsLibrary = {
 	},
 	[NodeContext.SOP]: {
 		[ColorSopNode.type()]: ColorSopNodePresets,
+		[CSS2DObjectSopNode.type()]: CSS2DObjectSopNodePresets,
 		[DataSopNode.type()]: DataSopNodePresets,
 		[DataUrlSopNode.type()]: DataUrlSopNodePresets,
 		[FileSopNode.type()]: FileSopNodePresets,

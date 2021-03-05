@@ -41,10 +41,22 @@ export class ParsedTree {
 				if (i % 2 == 1) {
 					node = jsep(element);
 				} else {
+					// if the expression is like:
+					//
+					// <div style='will-change: transform, opacity;'>`@ptnum`</div>
+					//
+					// then the first element here will be:
+					//
+					// <div style='will-change: transform, opacity;'>
+					//
+					// and if we surround it by single quotes (')
+					// the the quotes already inside the element will create a parsing error.
+					// We therefore need to escape them first.
+					const sanitizedElement = element.replace(/\'/g, "\\'");
 					node = {
 						type: JSEP_LITERAL,
-						value: `'${element}'`,
-						raw: `'${element}'`,
+						value: `'${sanitizedElement}'`,
+						raw: `'${sanitizedElement}'`,
 					};
 				}
 				nodes.push(node);

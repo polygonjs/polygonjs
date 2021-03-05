@@ -403,4 +403,13 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				return this.p.string.hasExpression();
 		}
 	}
+
+	//
+	//
+	// API UTILS
+	//
+	//
+	setType(type: AttribType) {
+		this.p.type.set(ATTRIBUTE_TYPES.indexOf(type));
+	}
 }
