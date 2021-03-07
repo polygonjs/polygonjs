@@ -19,6 +19,7 @@ import {
 	SceneMaterialOverrideController,
 } from '../manager/utils/Scene/MaterialOverride';
 
+export const ROOT_NODE_NAME = 'RootNode';
 class ObjectsManagerParamsConfig extends SceneMaterialOverrideParamConfig(
 	SceneEnvParamConfig(SceneFogParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig))))
 ) {}

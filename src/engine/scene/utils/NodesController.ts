@@ -1,6 +1,6 @@
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {PolyScene} from '../PolyScene';
-import {ObjectsManagerNode} from '../../nodes/manager/ObjectsManager';
+import {ObjectsManagerNode, ROOT_NODE_NAME} from '../../nodes/manager/ObjectsManager';
 import {CoreString} from '../../../core/String';
 import {BaseNodeType} from '../../nodes/_Base';
 import {NodeContext} from '../../poly/NodeContext';
@@ -16,8 +16,8 @@ export class NodesController {
 	init() {
 		this._root = new ObjectsManagerNode(this.scene);
 		this._root.initialize_base_and_node();
-		// this._root.setScene(this.scene);
 		this._root.params.init();
+		this._root._set_core_name(ROOT_NODE_NAME);
 	}
 
 	root() {
