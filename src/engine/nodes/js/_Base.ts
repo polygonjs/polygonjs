@@ -55,8 +55,9 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseJsNodeType;
-			const output_connection_point =
-				input_node.io.outputs.named_output_connection_points[connection.output_index];
+			const output_connection_point = input_node.io.outputs.namedOutputConnectionPoints()[
+				connection.output_index
+			];
 			if (output_connection_point) {
 				const output_name = output_connection_point.name();
 				return input_node.js_var_name(output_name);

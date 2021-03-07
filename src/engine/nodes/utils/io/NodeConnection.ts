@@ -49,12 +49,12 @@ export class TypedNodeConnection<NC extends NodeContext> {
 	src_connection_point(): ConnectionPointTypeMap[NC] {
 		const node_src = this._node_src;
 		const output_index = this._output_index;
-		return node_src.io.outputs.named_output_connection_points[output_index];
+		return node_src.io.outputs.namedOutputConnectionPoints()[output_index];
 	}
 	dest_connection_point(): ConnectionPointTypeMap[NC] {
 		const node_dest = this._node_dest;
 		const input_index = this._input_index;
-		return node_dest.io.inputs.named_input_connection_points[input_index];
+		return node_dest.io.inputs.namedInputConnectionPoints()[input_index];
 	}
 
 	disconnect(options: DisconnectionOptions = {}) {

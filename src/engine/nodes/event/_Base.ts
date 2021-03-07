@@ -60,14 +60,14 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	//
 	protected async dispatch_event_to_output(output_name: string, event_context: EventContext<Event>) {
 		this.run_on_dispatch_hook(output_name, event_context);
-		const index = this.io.outputs.get_output_index(output_name);
+		const index = this.io.outputs.getOutputIndex(output_name);
 		if (index >= 0) {
 			const connections = this.io.connections.outputConnections();
 			const current_connections = connections.filter((connection) => connection.output_index == index);
 			let dest_node: BaseEventNodeType;
 			for (let connection of current_connections) {
 				dest_node = connection.node_dest;
-				const connection_point = dest_node.io.inputs.named_input_connection_points[connection.input_index];
+				const connection_point = dest_node.io.inputs.namedInputConnectionPoints()[connection.input_index];
 				dest_node.process_event_via_connection_point(event_context, connection_point);
 			}
 			// const nodes = current_connections.map((connection) => connection.node_dest);

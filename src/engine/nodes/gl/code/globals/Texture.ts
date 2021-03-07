@@ -46,7 +46,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 			return;
 		}
 
-		const connection_point = globals_node.io.outputs.named_output_connection_points_by_name(output_name);
+		const connection_point = globals_node.io.outputs.namedOutputConnectionPointsByName(output_name);
 		const var_name = globals_node.glVarName(output_name);
 
 		const variable = this._texture_allocations_controller.variable(output_name);

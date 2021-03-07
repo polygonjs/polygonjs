@@ -54,9 +54,9 @@ export class NodeSerializer {
 			children: this.childrenIds(),
 			maxInputsCount: this.maxInputsCount(),
 			inputs: this.inputIds(),
-			input_connection_output_indices: this.input_connection_output_indices(),
-			named_input_connection_points: this.named_input_connection_points(),
-			named_output_connection_points: this.named_output_connection_points(),
+			input_connection_output_indices: this.inputConnectionOutputIndices(),
+			named_input_connection_points: this.namedInputConnectionPoints(),
+			named_output_connection_points: this.namedOutputConnectionPoints(),
 			param_ids: this.to_json_params(include_param_components),
 			// spare_params: this.to_json_spare_params(include_param_components),
 			override_cloned_state_allowed: this.node.io.inputs.overrideClonedStateAllowed(),
@@ -89,16 +89,16 @@ export class NodeSerializer {
 		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graphNodeId() : undefined));
 	}
 
-	input_connection_output_indices() {
+	inputConnectionOutputIndices() {
 		return this.node.io.connections
 			.inputConnections()
 			?.map((connection) => (connection != null ? connection.output_index : undefined));
 	}
-	named_input_connection_points() {
-		return this.node.io.inputs.named_input_connection_points.map((i) => i.toJSON());
+	namedInputConnectionPoints() {
+		return this.node.io.inputs.namedInputConnectionPoints().map((i) => i.toJSON());
 	}
-	named_output_connection_points() {
-		return this.node.io.outputs.named_output_connection_points.map((o) => o.toJSON());
+	namedOutputConnectionPoints() {
+		return this.node.io.outputs.namedOutputConnectionPoints().map((o) => o.toJSON());
 	}
 
 	to_json_params_from_names(param_names: string[], include_components: boolean = false) {

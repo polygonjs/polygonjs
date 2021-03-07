@@ -11,12 +11,12 @@ QUnit.test('gl rotate has his input updated when mode changes', async (assert) =
 	const rotate1 = material_basic_builder1.createNode('rotate');
 
 	rotate1.set_signature(GlRotateMode.AXIS);
-	assert.equal(rotate1.io.inputs.named_input_connection_points.length, 3);
+	assert.equal(rotate1.io.inputs.namedInputConnectionPoints().length, 3);
 	rotate1.set_signature(GlRotateMode.QUAT);
-	assert.equal(rotate1.io.inputs.named_input_connection_points.length, 2);
+	assert.equal(rotate1.io.inputs.namedInputConnectionPoints().length, 2);
 
 	rotate1.set_signature(GlRotateMode.AXIS);
-	assert.equal(rotate1.io.inputs.named_input_connection_points.length, 3);
+	assert.equal(rotate1.io.inputs.namedInputConnectionPoints().length, 3);
 
 	rotate1.setInput(2, constant1);
 	assert.ok(rotate1.io.inputs.input(2));

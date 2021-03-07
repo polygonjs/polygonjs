@@ -354,7 +354,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		output_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	) {
-		const output_connection_point = globals_node.io.outputs.named_output_connection_points_by_name(output_name);
+		const output_connection_point = globals_node.io.outputs.namedOutputConnectionPointsByName(output_name);
 		if (output_connection_point) {
 			const gl_type = output_connection_point.type();
 

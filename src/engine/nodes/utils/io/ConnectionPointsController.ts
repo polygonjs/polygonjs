@@ -88,7 +88,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	initializeNode() {
 		// I don't want this check here, as I should refactor to have the has_named_inputs
 		// be initialized from here
-		// if (!this.node.io.inputs.has_named_inputs) {
+		// if (!this.node.io.inputs.hasNamedInputs()) {
 		// 	return;
 		// }
 
@@ -191,8 +191,8 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 
 	protected _connections_match_inputs(): boolean {
-		const current_input_types = this.node.io.inputs.named_input_connection_points.map((c) => c?.type());
-		const current_output_types = this.node.io.outputs.named_output_connection_points.map((c) => c?.type());
+		const current_input_types = this.node.io.inputs.namedInputConnectionPoints().map((c) => c?.type());
+		const current_output_types = this.node.io.outputs.namedOutputConnectionPoints().map((c) => c?.type());
 		const expected_input_types = this._wrapped_expected_input_types_function();
 		const expected_output_types = this._wrapped_expected_output_types_function();
 
@@ -286,12 +286,12 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	// input_connection_point_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointTypeMap[NC] {
 	// 	const node_dest = connection.node_dest;
 	// 	const output_index = connection.output_index;
-	// 	return node_dest.io.outputs.named_output_connection_points[output_index] as ConnectionPointTypeMap[NC];
+	// 	return node_dest.io.outputs.namedOutputConnectionPoints()[output_index] as ConnectionPointTypeMap[NC];
 	// }
 	// output_connection_point_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointTypeMap[NC] {
 	// 	const node_src = connection.node_src;
 	// 	const output_index = connection.output_index;
-	// 	return node_src.io.outputs.named_output_connection_points[output_index] as ConnectionPointTypeMap[NC];
+	// 	return node_src.io.outputs.namedOutputConnectionPoints()[output_index] as ConnectionPointTypeMap[NC];
 	// }
 	// connection_point_type_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointEnumMap[NC] {
 	// 	return connection.dest_connection_point()?.type as ConnectionPointEnumMap[NC];

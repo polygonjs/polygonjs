@@ -102,7 +102,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		}
 	}
 	uniform_name() {
-		const output_connection_point = this.io.outputs.named_output_connection_points[0];
+		const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
 		const var_name = this.glVarName(output_connection_point.name());
 		return var_name;
 	}

@@ -77,7 +77,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		}
 	}
 	uniform_name() {
-		const output_connection_point = this.io.outputs.named_output_connection_points[0];
+		const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
 		const var_name = this.js_var_name(output_connection_point.name());
 		return var_name;
 	}

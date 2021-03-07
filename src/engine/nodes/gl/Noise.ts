@@ -352,7 +352,7 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 			return `float ${noise}${output_name_suffix} = (${right_hand}).${component}`;
 		} else {
 			// it looks like we never go here with the current set of noises
-			const output_type = this.io.outputs.named_output_connection_points[0].type();
+			const output_type = this.io.outputs.namedOutputConnectionPoints()[0].type();
 			return `${output_type} ${noise} = ${right_hand}`;
 		}
 	}

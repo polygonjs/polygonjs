@@ -18,25 +18,25 @@ export class OutputsController<NC extends NodeContext> {
 		this._has_outputs = false;
 	}
 
-	get has_outputs() {
+	hasOutputs() {
 		return this._has_outputs;
 	}
-	get has_named_outputs() {
+	hasNamedOutputs() {
 		return this._has_named_outputs;
 	}
-	has_named_output(name: string): boolean {
-		return this.get_named_output_index(name) >= 0;
+	hasNamedOutput(name: string): boolean {
+		return this.getNamedOutputIndex(name) >= 0;
 	}
-	get named_output_connection_points(): ConnectionPointTypeMap[NC][] {
+	namedOutputConnectionPoints(): ConnectionPointTypeMap[NC][] {
 		return this._named_output_connection_points || [];
 	}
-	named_output_connection(index: number): ConnectionPointTypeMap[NC] | undefined {
+	namedOutputConnection(index: number): ConnectionPointTypeMap[NC] | undefined {
 		if (this._named_output_connection_points) {
 			return this._named_output_connection_points[index];
 		}
 	}
 
-	get_named_output_index(name: string): number {
+	getNamedOutputIndex(name: string): number {
 		if (this._named_output_connection_points) {
 			for (let i = 0; i < this._named_output_connection_points.length; i++) {
 				if (this._named_output_connection_points[i]?.name() == name) {
@@ -46,11 +46,11 @@ export class OutputsController<NC extends NodeContext> {
 		}
 		return -1;
 	}
-	get_output_index(output_index_or_name: number | string): number {
+	getOutputIndex(output_index_or_name: number | string): number {
 		if (output_index_or_name != null) {
 			if (CoreType.isString(output_index_or_name)) {
-				if (this.has_named_outputs) {
-					return this.get_named_output_index(output_index_or_name);
+				if (this.hasNamedOutputs()) {
+					return this.getNamedOutputIndex(output_index_or_name);
 				} else {
 					console.warn(`node ${this.node.fullPath()} has no named outputs`);
 					return -1;
@@ -62,7 +62,7 @@ export class OutputsController<NC extends NodeContext> {
 		return -1;
 	}
 
-	named_output_connection_points_by_name(name: string): ConnectionPointTypeMap[NC] | undefined {
+	namedOutputConnectionPointsByName(name: string): ConnectionPointTypeMap[NC] | undefined {
 		if (this._named_output_connection_points) {
 			for (let connection_point of this._named_output_connection_points) {
 				if (connection_point?.name() == name) {
@@ -112,7 +112,7 @@ export class OutputsController<NC extends NodeContext> {
 			});
 			const used_output_names: string[] = [];
 			for (let index of used_output_indices) {
-				const name = this.named_output_connection_points[index]?.name();
+				const name = this.namedOutputConnectionPoints()[index]?.name();
 				if (name) {
 					used_output_names.push(name);
 				}

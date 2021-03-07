@@ -81,7 +81,7 @@
 // 			}
 // 		}
 
-// 		for (let connection_point of this.node.io.inputs.named_input_connection_points) {
+// 		for (let connection_point of this.node.io.inputs.namedInputConnectionPoints()) {
 // 			const param_name = connection_point.name;
 // 			const param_type: ParamType = connection_point.param_type;
 // 			let init_value = connection_point.init_value;

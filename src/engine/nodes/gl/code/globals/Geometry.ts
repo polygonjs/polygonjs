@@ -47,7 +47,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		// dependencies: ShaderName[],
 		// shader_name: ShaderName
 	): void {
-		const connection_point = globals_node.io.outputs.named_output_connection_points_by_name(output_name);
+		const connection_point = globals_node.io.outputs.namedOutputConnectionPointsByName(output_name);
 		if (!connection_point) {
 			return;
 		}

@@ -108,7 +108,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			}
 		}
 
-		for (let connection_point of this.node.io.inputs.named_input_connection_points) {
+		for (let connection_point of this.node.io.inputs.namedInputConnectionPoints()) {
 			if (connection_point) {
 				const param_name = connection_point.name();
 				const param_type: ParamType = connection_point.param_type;

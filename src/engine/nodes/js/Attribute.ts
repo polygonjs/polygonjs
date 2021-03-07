@@ -92,7 +92,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		return this.pv.name.trim();
 	}
 	gl_type() {
-		return this.io.outputs.named_output_connection_points[0].type();
+		return this.io.outputs.namedOutputConnectionPoints()[0].type();
 	}
 	set_gl_type(type: JsConnectionPointType) {
 		this.p.type.set(ATTRIBUTE_NODE_AVAILABLE_JS_TYPES.indexOf(type));
@@ -115,8 +115,8 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	// 	}
 	// }
 	output_connection_point(): BaseJsConnectionPoint | undefined {
-		// if (this.io.inputs.has_named_inputs) {
-		return this.io.outputs.named_output_connection_points_by_name(this.input_name);
+		// if (this.io.inputs.hasNamedInputs()) {
+		return this.io.outputs.namedOutputConnectionPointsByName(this.input_name);
 		// }
 	}
 	// connected_output(): NamedConnection {

@@ -21,7 +21,7 @@ export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGl
 	abstract boolean_operation(): string;
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const args = this.io.inputs.named_input_connection_points.map((named_input, i) => {
+		const args = this.io.inputs.namedInputConnectionPoints().map((named_input, i) => {
 			const name = named_input.name();
 			return ThreeToGl.any(this.variableForInput(name));
 		});

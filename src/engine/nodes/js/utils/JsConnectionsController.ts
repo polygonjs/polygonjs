@@ -107,8 +107,8 @@
 // 	}
 
 // 	protected _connections_match_inputs(): boolean {
-// 		const current_input_types = this.node.io.inputs.named_input_connection_points.map((c) => c.type);
-// 		const current_output_types = this.node.io.outputs.named_output_connection_points.map((c) => c.type);
+// 		const current_input_types = this.node.io.inputs.namedInputConnectionPoints().map((c) => c.type);
+// 		const current_output_types = this.node.io.outputs.namedOutputConnectionPoints().map((c) => c.type);
 // 		const expected_input_types = this._expected_input_types_function();
 // 		const expected_output_types = this._expected_output_types_function();
 
@@ -152,7 +152,7 @@
 // 	connection_point_type_from_connection(connection: TypedNodeConnection<NodeContext.JS>): JsConnectionPointType {
 // 		const node_src = connection.node_src;
 // 		const output_index = connection.output_index;
-// 		const node_src_output_connection = node_src.io.outputs.named_output_connection_points[output_index];
+// 		const node_src_output_connection = node_src.io.outputs.namedOutputConnectionPoints()[output_index];
 // 		return node_src_output_connection.type;
 // 	}
 // }

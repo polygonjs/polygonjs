@@ -70,8 +70,9 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseGlNodeType;
-			const output_connection_point =
-				input_node.io.outputs.named_output_connection_points[connection.output_index];
+			const output_connection_point = input_node.io.outputs.namedOutputConnectionPoints()[
+				connection.output_index
+			];
 			if (output_connection_point) {
 				const output_name = output_connection_point.name();
 				return input_node.glVarName(output_name);
@@ -83,7 +84,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 			if (this.params.has(name)) {
 				return ThreeToGl.any(this.params.get(name)?.value);
 			} else {
-				const connection_point = this.io.inputs.named_input_connection_points[input_index];
+				const connection_point = this.io.inputs.namedInputConnectionPoints()[input_index];
 				return ThreeToGl.any(connection_point.init_value);
 			}
 		}

@@ -26,10 +26,10 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 		// 		function_declaration_lines.push(`highp float round(float num){
 		// 	return floor(num)-fract(num);
 		// }`)
-		const input_connection = this.io.inputs.named_input_connection_points[0];
+		const input_connection = this.io.inputs.namedInputConnectionPoints()[0];
 		const value = ThreeToGl.vector2(this.variableForInput(input_connection.name()));
 
-		const output_connection = this.io.outputs.named_output_connection_points[0];
+		const output_connection = this.io.outputs.namedOutputConnectionPoints()[0];
 		const var_name = this.glVarName(output_connection.name());
 
 		const body_lines: string[] = [];

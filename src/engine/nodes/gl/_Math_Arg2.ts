@@ -58,7 +58,7 @@ export function MathFunctionArg2Factory(type: string, options: MathArg2Options =
 				if (!allowed_in_types.includes(first_input_type)) {
 					// if the first input type is not allowed, either leave the connection point as is,
 					// or use the default if there is none
-					const first_connection = this.io.inputs.named_input_connection_points[0];
+					const first_connection = this.io.inputs.namedInputConnectionPoints()[0];
 					if (first_connection) {
 						first_input_type = first_connection.type();
 					} else {

@@ -56,7 +56,7 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 	process_event(event_context: EventContext<Event>) {
 		const count = this.pv.outputsCount;
 		for (let i = 0; i < count; i++) {
-			const connection_point = this.io.outputs.named_output_connection_points[i];
+			const connection_point = this.io.outputs.namedOutputConnectionPoints()[i];
 			this.dispatch_event_to_output(connection_point.name(), event_context);
 		}
 	}

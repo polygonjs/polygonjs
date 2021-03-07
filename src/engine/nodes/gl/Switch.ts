@@ -53,7 +53,7 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		const var_type: GlConnectionPointType = this.io.outputs.named_output_connection_points[0].type();
+		const var_type: GlConnectionPointType = this.io.outputs.namedOutputConnectionPoints()[0].type();
 		const out = this.glVarName(this.io.connection_points.output_name(0));
 		const index_point_name = this.io.connection_points.input_name(0);
 		const arg_index = ThreeToGl.int(this.variableForInput(index_point_name));

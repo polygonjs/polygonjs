@@ -208,10 +208,10 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		this._node.io.inputs.inputs().forEach((input, input_index) => {
 			if (input) {
 				const connection = this._node.io.connections.inputConnection(input_index)!;
-				if (this._node.io.inputs.has_named_inputs) {
-					// const input_name = this._node.io.inputs.named_input_connection_points[input_index].name;
+				if (this._node.io.inputs.hasNamedInputs()) {
+					// const input_name = this._node.io.inputs.namedInputConnectionPoints()[input_index].name;
 					const output_index = connection.output_index;
-					const output_name = input.io.outputs.named_output_connection_points[output_index]?.name();
+					const output_name = input.io.outputs.namedOutputConnectionPoints()[output_index]?.name();
 					if (output_name) {
 						data[input_index] = {
 							index: input_index,
@@ -236,19 +236,19 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			return;
 		}
 
-		if (this._node.io.inputs.has_named_inputs || this._node.io.outputs.has_named_outputs) {
+		if (this._node.io.inputs.hasNamedInputs() || this._node.io.outputs.hasNamedOutputs()) {
 			const data: IoConnectionPointsData = {};
-			if (this._node.io.inputs.has_named_inputs) {
+			if (this._node.io.inputs.hasNamedInputs()) {
 				data['in'] = [];
-				for (let cp of this._node.io.inputs.named_input_connection_points) {
+				for (let cp of this._node.io.inputs.namedInputConnectionPoints()) {
 					if (cp) {
 						data['in'].push(cp.toJSON());
 					}
 				}
 			}
-			if (this._node.io.outputs.has_named_outputs) {
+			if (this._node.io.outputs.hasNamedOutputs()) {
 				data['out'] = [];
-				for (let cp of this._node.io.outputs.named_output_connection_points) {
+				for (let cp of this._node.io.outputs.namedOutputConnectionPoints()) {
 					if (cp) {
 						data['out'].push(cp.toJSON());
 					}

@@ -13,12 +13,12 @@ QUnit.test('gl attribute updates its output type correctly when created', async 
 	const attribute1 = material_basic_builder1.createNode('attribute');
 	assert.equal(attribute1.pv.name, 'attribute1');
 
-	assert.equal(attribute1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(attribute1.io.outputs.named_output_connection_points[0].type(), GlConnectionPointType.FLOAT);
+	assert.equal(attribute1.io.outputs.namedOutputConnectionPoints().length, 1);
+	assert.equal(attribute1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.FLOAT);
 
 	attribute1.p.type.set(attribute1.pv.type + 1);
-	assert.equal(attribute1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(attribute1.io.outputs.named_output_connection_points[0].type(), GlConnectionPointType.VEC2);
+	assert.equal(attribute1.io.outputs.namedOutputConnectionPoints().length, 1);
+	assert.equal(attribute1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
 
 QUnit.test('gl attribute updates its output type correctly when scene is loaded', async (assert) => {
@@ -43,8 +43,8 @@ QUnit.test('gl attribute updates its output type correctly when scene is loaded'
 	const attribute2 = material_basic_builder1.node('attribute1')!;
 	assert.ok(attribute2);
 	assert.equal(attribute2.pv.type, 1);
-	assert.equal(attribute1.io.outputs.named_output_connection_points.length, 1);
-	assert.equal(attribute1.io.outputs.named_output_connection_points[0].type(), GlConnectionPointType.VEC2);
+	assert.equal(attribute1.io.outputs.namedOutputConnectionPoints().length, 1);
+	assert.equal(attribute1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
 
 QUnit.skip(

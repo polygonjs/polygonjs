@@ -123,7 +123,7 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	//
 	set_lines_block_start(shaders_collection_controller: ShadersCollectionController, child_node: SubnetInputGlNode) {
 		const body_lines: string[] = [];
-		const connection_points = this.io.inputs.named_input_connection_points;
+		const connection_points = this.io.inputs.namedInputConnectionPoints();
 		for (let i = 0; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
 			const gl_type = connection_point.type();

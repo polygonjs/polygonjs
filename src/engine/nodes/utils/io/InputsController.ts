@@ -66,7 +66,7 @@ export class InputsController<NC extends NodeContext> {
 		this.init_graph_node_inputs();
 	}
 
-	named_input_connection_points_by_name(name: string): ConnectionPointTypeMap[NC] | undefined {
+	namedInputConnectionPointsByName(name: string): ConnectionPointTypeMap[NC] | undefined {
 		if (this._named_input_connection_points) {
 			for (let connection_point of this._named_input_connection_points) {
 				if (connection_point && connection_point.name() == name) {
@@ -123,10 +123,10 @@ export class InputsController<NC extends NodeContext> {
 	// 	return false;
 	// }
 
-	get has_named_inputs() {
+	hasNamedInputs() {
 		return this._has_named_inputs;
 	}
-	get named_input_connection_points(): ConnectionPointTypeMap[NC][] {
+	namedInputConnectionPoints(): ConnectionPointTypeMap[NC][] {
 		return this._named_input_connection_points || [];
 	}
 	private init_graph_node_inputs() {
@@ -279,7 +279,7 @@ export class InputsController<NC extends NodeContext> {
 	}
 	get_input_index(input_index_or_name: number | string): number {
 		if (CoreType.isString(input_index_or_name)) {
-			if (this.has_named_inputs) {
+			if (this.hasNamedInputs()) {
 				return this.get_named_input_index(input_index_or_name);
 			} else {
 				throw new Error(`node ${this.node.fullPath()} has no named inputs`);
@@ -303,10 +303,10 @@ export class InputsController<NC extends NodeContext> {
 
 		let output_index = 0;
 		if (node) {
-			if (node.io.outputs.has_named_outputs) {
-				output_index = node.io.outputs.get_output_index(output_index_or_name);
+			if (node.io.outputs.hasNamedOutputs()) {
+				output_index = node.io.outputs.getOutputIndex(output_index_or_name);
 				if (output_index == null || output_index < 0) {
-					const connection_points = node.io.outputs.named_output_connection_points as BaseConnectionPoint[];
+					const connection_points = node.io.outputs.namedOutputConnectionPoints() as BaseConnectionPoint[];
 					const names = connection_points.map((cp) => cp.name());
 					console.warn(
 						`node ${node.fullPath()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
@@ -402,7 +402,7 @@ export class InputsController<NC extends NodeContext> {
 		return this._inputs[input_index];
 	}
 	named_input(input_name: string): NodeTypeMap[NC] | null {
-		if (this.has_named_inputs) {
+		if (this.hasNamedInputs()) {
 			const input_index = this.get_input_index(input_name);
 			return this._inputs[input_index];
 		} else {
@@ -410,7 +410,7 @@ export class InputsController<NC extends NodeContext> {
 		}
 	}
 	named_input_connection_point(input_name: string): ConnectionPointTypeMap[NC] | undefined {
-		if (this.has_named_inputs && this._named_input_connection_points) {
+		if (this.hasNamedInputs() && this._named_input_connection_points) {
 			const input_index = this.get_input_index(input_name);
 			return this._named_input_connection_points[input_index];
 		}

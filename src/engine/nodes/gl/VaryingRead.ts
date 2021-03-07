@@ -72,7 +72,7 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 		return this.pv.name.trim();
 	}
 	gl_type(): GlConnectionPointType {
-		return this.io.outputs.named_output_connection_points[0].type();
+		return this.io.outputs.namedOutputConnectionPoints()[0].type();
 	}
 	set_gl_type(type: GlConnectionPointType) {
 		this.p.type.set(VARYING_NODE_AVAILABLE_GL_TYPES.indexOf(type));

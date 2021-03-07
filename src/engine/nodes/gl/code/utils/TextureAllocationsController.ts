@@ -29,7 +29,7 @@ export class TextureAllocationsController {
 			const node_id = node.graphNodeId();
 			switch (node.type()) {
 				case OutputGlNode.type(): {
-					for (let connection_point of node.io.inputs.named_input_connection_points) {
+					for (let connection_point of node.io.inputs.namedInputConnectionPoints()) {
 						const input = node.io.inputs.named_input(connection_point.name());
 						if (input) {
 							// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
@@ -75,7 +75,7 @@ export class TextureAllocationsController {
 						const is_attribute = OUTPUT_NAME_ATTRIBUTES.includes(output_name);
 
 						if (is_attribute) {
-							const connection_point = globals_node.io.outputs.named_output_connection_points_by_name(
+							const connection_point = globals_node.io.outputs.namedOutputConnectionPointsByName(
 								output_name
 							);
 							if (connection_point) {
