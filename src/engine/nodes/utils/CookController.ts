@@ -70,7 +70,7 @@ export class NodeCookController<NC extends NodeContext> {
 		} else {
 			input_contents = [];
 		}
-		if (this.node.params.params_eval_required()) {
+		if (this.node.params.paramsEvalRequired()) {
 			await this._evaluate_params();
 		}
 		this._start_cook_if_no_errors(input_contents);
@@ -88,7 +88,7 @@ export class NodeCookController<NC extends NodeContext> {
 		this._init_cooking_state();
 		this.node.states.error.clear();
 
-		if (this.node.params.params_eval_required()) {
+		if (this.node.params.paramsEvalRequired()) {
 			await this._evaluate_params();
 		}
 		this._start_cook_if_no_errors([]);
@@ -148,7 +148,7 @@ export class NodeCookController<NC extends NodeContext> {
 	}
 	private async _evaluate_params() {
 		this._performance_controller.record_params_start();
-		await this.node.params.eval_all();
+		await this.node.params.evalAll();
 		this._performance_controller.record_params_end();
 	}
 

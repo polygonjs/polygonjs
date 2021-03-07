@@ -67,7 +67,7 @@ export class JsCodeBuilder {
 			node.reset_code();
 		}
 		for (let node of sorted_nodes) {
-			await node.params.eval_all();
+			await node.params.evalAll();
 		}
 
 		this._lines_controller = new LinesController();

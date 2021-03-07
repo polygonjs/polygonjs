@@ -89,7 +89,7 @@ QUnit.test(
 		const geo1 = window.geo1;
 		const color1 = geo1.createNode('color');
 		const param1 = color1.addParam(ParamType.COLOR, 'color2', [0, 0, 0], {spare: true})!;
-		color1.params.post_create_spare_params();
+		color1.params.postCreateSpareParams();
 
 		assert.ok(param1.options.color_conversion() == null);
 		param1.options.set_option('conversion', ColorConversion.LINEAR_TO_GAMMA);

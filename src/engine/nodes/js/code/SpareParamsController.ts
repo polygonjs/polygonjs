@@ -88,7 +88,7 @@ export class JsAssemblerNodeSpareParamsController {
 			}
 		}
 
-		this._node.params.update_params(params_update_options);
+		this._node.params.updateParams(params_update_options);
 		this._created_spare_param_names = params_update_options.to_add?.map((o) => o.name) || [];
 	}
 

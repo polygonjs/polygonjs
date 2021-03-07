@@ -164,7 +164,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			}
 		}
 		// if (!this.node.scene.loading_controller.isLoading()) {
-		this.node.params.update_params(params_update_options);
+		this.node.params.updateParams(params_update_options);
 
 		for (let spare_param of this.node.params.spare) {
 			if (!spare_param.parent_param) {

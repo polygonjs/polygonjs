@@ -68,7 +68,6 @@ QUnit.test('gl add updates its output type correctly when scene is loaded', asyn
 	add1.params.get('add1')!.set([1, 2, 3]);
 
 	const data = new SceneJsonExporter(scene).data();
-	console.log(data);
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 

@@ -261,7 +261,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		const params_add_required = params_update_options.to_add && params_update_options.to_add.length > 0;
 
 		if (params_delete_required || params_add_required) {
-			this._node.params.update_params(params_update_options);
+			this._node.params.updateParams(params_update_options);
 			// update them based on the imported data
 			for (let spare_param of this._node.params.spare) {
 				const param_data = data[spare_param.name()] as ComplexParamJsonExporterData<ParamType>;
