@@ -1,5 +1,5 @@
 struct SSSModel {
-	bool SSSModelActive;
+	bool isActive;
 	vec3 color;
 	float thickness;
 	float power;

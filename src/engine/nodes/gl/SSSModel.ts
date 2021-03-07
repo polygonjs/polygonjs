@@ -9,11 +9,10 @@ import {ColorParam} from '../../params/Color';
 const OUTPUT = {
 	SSS_MODEL: 'SSSModel',
 };
-
 class VATDataGlParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([1, 1, 1]);
 	thickness = ParamConfig.FLOAT(0.1);
-	power = ParamConfig.FLOAT(0.1);
+	power = ParamConfig.FLOAT(2.0);
 	scale = ParamConfig.FLOAT(16.0);
 	distortion = ParamConfig.FLOAT(0.1);
 	ambient = ParamConfig.FLOAT(0.4);
@@ -36,7 +35,7 @@ export class SSSModelGlNode extends TypedGlNode<VATDataGlParamsConfig> {
 		const body_lines = [];
 		const outSSModel = this.glVarName(OUTPUT.SSS_MODEL);
 		body_lines.push(`SSSModel ${outSSModel}`);
-		body_lines.push(`${outSSModel}.SSSModelActive = true;`);
+		body_lines.push(`${outSSModel}.isActive = true;`);
 		body_lines.push(this._paramLineFloat(outSSModel, this.p.color));
 		body_lines.push(this._paramLineFloat(outSSModel, this.p.thickness));
 		body_lines.push(this._paramLineFloat(outSSModel, this.p.power));

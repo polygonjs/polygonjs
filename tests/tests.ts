@@ -99,6 +99,7 @@ QUnit.module('mat');
 import './engine/nodes/mat/MeshBasicBuilder';
 import './engine/nodes/mat/MeshLambertBuilder';
 import './engine/nodes/mat/MeshStandardBuilder';
+import './engine/nodes/mat/MeshPhysicalBuilder';
 import './engine/nodes/mat/PointsBuilder';
 import './engine/nodes/mat/SpareParams';
 import './engine/nodes/mat/Sky';

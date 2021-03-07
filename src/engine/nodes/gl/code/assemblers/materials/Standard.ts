@@ -32,6 +32,28 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		};
 	}
 
+	static onBeforeCompileFragment(fragmentShader: string) {
+		fragmentShader = fragmentShader.replace('#include <metalnessmap_fragment>', metalnessmap_fragment);
+		fragmentShader = fragmentShader.replace('#include <roughnessmap_fragment>', roughnessmap_fragment);
+
+		if (ShaderAssemblerStandard.USE_SSS) {
+			fragmentShader = fragmentShader.replace(
+				'void main() {',
+				`${sss_declaration_fragment}
+
+void main(){`
+			);
+
+			fragmentShader = fragmentShader.replace(
+				'#include <lights_fragment_begin>',
+				`#include <lights_fragment_begin>
+${sss_injected_fragment}
+`
+			);
+		}
+		return fragmentShader;
+	}
+
 	createMaterial() {
 		const template_shader = this.templateShader();
 
@@ -55,33 +77,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 
 		// replace some shader chunks
 		material.onBeforeCompile = function (shader) {
-			shader.fragmentShader = shader.fragmentShader.replace(
-				'#include <metalnessmap_fragment>',
-				metalnessmap_fragment
-			);
-			shader.fragmentShader = shader.fragmentShader.replace(
-				'#include <roughnessmap_fragment>',
-				roughnessmap_fragment
-			);
-
-			if (ShaderAssemblerStandard.USE_SSS) {
-				//
-				// add SSS
-				//
-				shader.fragmentShader = shader.fragmentShader.replace(
-					'void main() {',
-					`${sss_declaration_fragment}
-
-void main(){`
-				);
-
-				shader.fragmentShader = shader.fragmentShader.replace(
-					'#include <lights_fragment_begin>',
-					`#include <lights_fragment_begin>
-${sss_injected_fragment}
-`
-				);
-			}
+			shader.fragmentShader = ShaderAssemblerStandard.onBeforeCompileFragment(shader.fragmentShader);
 		};
 		this._addCustomMaterials(material);
 		return material;

@@ -31,6 +31,13 @@ export class BasePersistedConfig {
 		let material_data: object | undefined = undefined;
 		try {
 			material_data = material.toJSON({});
+			if (material_data) {
+				// those properties are currently not handled in three.js
+				// TODO: wait for https://github.com/mrdoob/three.js/pull/21428
+				// to be merged
+				(material_data as any).shadowSide = material.shadowSide;
+				(material_data as any).colorWrite = material.colorWrite;
+			}
 		} catch (err) {
 			console.error('failed to save material data');
 			console.log(material);
@@ -115,16 +122,17 @@ export class BasePersistedConfig {
 	//
 	//
 	protected _load_material(data: MaterialData): ShaderMaterialWithCustomMaterials | undefined {
-		// if (2 > 1) {
-		// 	return;
-		// }
-
 		// hack fix for properties that are assumed to be on normal materials
 		// but are not on ShaderMaterial
 		data.color = undefined;
 
 		const loader = new MaterialLoader();
 		const material = loader.parse(data) as ShaderMaterialWithCustomMaterials;
+		// TODO: wait for https://github.com/mrdoob/three.js/pull/21428
+		// to be merged
+		if ((data as any).shadowSide) {
+			material.shadowSide = (data as any).shadowSide;
+		}
 
 		// compensates for lights not being saved (and therefore cannot be loaded correctly)
 		if (data.lights != null) {
