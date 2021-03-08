@@ -6,7 +6,6 @@ import {FloatParam} from '../../../../src/engine/params/Float';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {DoubleSide} from 'three/src/constants';
-import {ShaderAssemblerStandard} from '../../../../src/engine/nodes/gl/code/assemblers/materials/Standard';
 
 import BasicDefaultVertex from './templates/meshPhysicalBuilder/Physical.default.vert.glsl';
 import BasicDefaultFragment from './templates/meshPhysicalBuilder/Physical.default.frag.glsl';
@@ -162,15 +161,12 @@ QUnit.test('mesh physical builder SSS Model', async (assert) => {
 	const material = mesh_physical1.material;
 
 	assert.equal(material.vertexShader, TEST_SHADER_LIB_DEFAULT.vert);
-	assert.equal(
-		ShaderAssemblerStandard.onBeforeCompileFragment(material.fragmentShader),
-		TEST_SHADER_LIB_DEFAULT.frag
-	);
+	assert.equal(material.fragmentShader, TEST_SHADER_LIB_DEFAULT.frag);
 
 	const SSSModel = mesh_physical1.createNode('SSSModel');
 	output1.setInput('SSSModel', SSSModel);
 	await mesh_physical1.requestContainer();
 
 	assert.equal(material.vertexShader, TEST_SHADER_LIB_SSS.vert);
-	assert.equal(ShaderAssemblerStandard.onBeforeCompileFragment(material.fragmentShader), TEST_SHADER_LIB_SSS.frag);
+	assert.equal(material.fragmentShader, TEST_SHADER_LIB_SSS.frag);
 });

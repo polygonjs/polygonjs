@@ -98,19 +98,17 @@ struct SSSModel {
 
 void RE_Direct_Scattering(
 	const in IncidentLight directLight,
-	const in vec2 uv,
 	const in GeometricContext geometry,
 	const in SSSModel sssModel,
 	inout ReflectedLight reflectedLight
 	){
-	// vec3 thickness = sssModel.thickness; //vec3(0.6,0.6,0.6);//thicknessColor * texture2D(thicknessMap, uv).r;
 	vec3 scatteringHalf = normalize(directLight.direction + (geometry.normal * sssModel.distortion));
 	float scatteringDot = pow(saturate(dot(geometry.viewDir, -scatteringHalf)), sssModel.power) * sssModel.scale;
 	vec3 scatteringIllu = (scatteringDot + sssModel.ambient) * (sssModel.color * sssModel.thickness);
 	reflectedLight.directDiffuse += scatteringIllu * sssModel.attenuation * directLight.color;
 }
 
-void main(){
+void main() {
 
 	#include <clipping_planes_fragment>
 
@@ -177,7 +175,7 @@ void main(){
 	#include <lights_physical_fragment>
 	#include <lights_fragment_begin>
 if(POLY_SSSModel.isActive){
-	RE_Direct_Scattering(directLight, vUv, geometry, POLY_SSSModel, reflectedLight);
+	RE_Direct_Scattering(directLight, geometry, POLY_SSSModel, reflectedLight);
 }
 
 

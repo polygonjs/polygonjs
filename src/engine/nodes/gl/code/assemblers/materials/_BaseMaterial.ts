@@ -51,7 +51,7 @@ interface HandleGlobalsOutputOptions {
 	dependencies: ShaderName[];
 	body_lines_by_shader_name: Map<ShaderName, string[]>;
 }
-
+type FilterShaderMethod = (s: string) => string;
 export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerMaterial> = new Map();
 
@@ -117,7 +117,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 						const custom_material = material.customMaterials[custom_name];
 						if (custom_material) {
+							assembler.setFilterFragmentShaderMethod(this.filterFragmentShader);
 							assembler.compile_material(custom_material);
+							assembler.setFilterFragmentShaderMethod(undefined);
 						}
 						// if (material) {
 						// 	// add needsUpdate = true, as we always get the same material
@@ -137,6 +139,22 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// return custom_materials_by_name;
 	}
+
+	private _filterFragmentShaderMethod: FilterShaderMethod | undefined;
+	setFilterFragmentShaderMethod(method: FilterShaderMethod | undefined) {
+		this._filterFragmentShaderMethod = method;
+	}
+	filterFragmentShader(fragmentShader: string) {
+		return fragmentShader;
+	}
+	processFilterFragmentShader(fragmentShader: string) {
+		if (this._filterFragmentShaderMethod) {
+			return this._filterFragmentShaderMethod(fragmentShader);
+		} else {
+			return this.filterFragmentShader(fragmentShader);
+		}
+	}
+
 	compile_material(material: ShaderMaterial) {
 		// no need to compile if the globals handler has not been declared
 		if (!this.compile_allowed()) {
@@ -156,7 +174,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		const new_fragment_shader = this._shaders_by_name.get(ShaderName.FRAGMENT);
 		if (new_vertex_shader && new_fragment_shader) {
 			material.vertexShader = new_vertex_shader;
-			material.fragmentShader = new_fragment_shader;
+			material.fragmentShader = this.processFilterFragmentShader(new_fragment_shader);
 			this.add_uniforms(material.uniforms);
 			material.needsUpdate = true;
 		}
