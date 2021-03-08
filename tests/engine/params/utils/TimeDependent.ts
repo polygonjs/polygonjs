@@ -1,4 +1,4 @@
-QUnit.skip('a param sets its node to timedependent and back', (assert) => {});
+QUnit.skip('a param sets its node to timedependent and back', async (assert) => {});
 
 // assert !geo1.is_time_dependent()
 

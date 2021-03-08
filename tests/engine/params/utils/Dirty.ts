@@ -1,4 +1,4 @@
-QUnit.skip('a geo node getting dirty gets evaluated on request', (assert) => {});
+QUnit.skip('a geo node getting dirty gets evaluated on request', async (assert) => {});
 
 // assert geo1.isDirty()()
 // tx = geo1.param('tx')

@@ -48,6 +48,13 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 			return raw_input.clone();
 		} else {
 			const new_array: StringOrNumber2 = [raw_input[0], raw_input[1]];
+			// in case array elements are undefined
+			if (new_array[0] == null) {
+				new_array[0] = new_array[0] || 0;
+			}
+			if (new_array[1] == null) {
+				new_array[1] = new_array[1] || new_array[0];
+			}
 			return new_array;
 		}
 	}

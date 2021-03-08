@@ -53,6 +53,19 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 			return raw_input.clone();
 		} else {
 			const new_array: StringOrNumber4 = [raw_input[0], raw_input[1], raw_input[2], raw_input[3]];
+			// in case array elements are undefined
+			if (new_array[0] == null) {
+				new_array[0] = new_array[0] || 0;
+			}
+			if (new_array[1] == null) {
+				new_array[1] = new_array[1] || new_array[0];
+			}
+			if (new_array[2] == null) {
+				new_array[2] = new_array[2] || new_array[1];
+			}
+			if (new_array[3] == null) {
+				new_array[3] = new_array[3] || new_array[2];
+			}
 			return new_array;
 		}
 	}

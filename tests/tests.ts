@@ -41,6 +41,13 @@ import './engine/expressions/Evaluator';
 import './engine/expressions/GlobalVariables';
 import './engine/expressions/MissingReferences';
 
+QUnit.module('params utils');
+import './engine/params/utils/DefaultValues';
+import './engine/params/utils/Dirty';
+import './engine/params/utils/Expression';
+import './engine/params/utils/ReferencedAssets';
+import './engine/params/utils/TimeDependent';
+
 QUnit.module('params');
 import './engine/params/_Base';
 import './engine/params/Boolean';

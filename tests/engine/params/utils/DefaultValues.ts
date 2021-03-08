@@ -1,6 +1,10 @@
 import {ParamType} from '../../../../src/engine/poly/ParamType';
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
+import {Color} from 'three/src/math/Color';
 
-function ensure_default_value<T extends ParamType>(
+async function ensure_default_value<T extends ParamType>(
 	assert: Assert,
 	param_type: T,
 	given_default_value: any,
@@ -16,44 +20,66 @@ function ensure_default_value<T extends ParamType>(
 
 	const param = geo1.addParam(param_type, 'test', given_default_value, options);
 	if (param) {
+		await param.compute();
 		assert.deepEqual(param.defaultValue(), expected_default_value);
 		assert.deepEqual(param.value, expected_value);
-		geo1.params.update_params({names_to_delete: ['test']});
+		geo1.params.updateParams({names_to_delete: ['test']});
 	} else {
 		assert.notOk(true, 'param should have been created');
 	}
 }
 
-QUnit.skip('params convert their default values to one they can handle', (assert) => {
-	ensure_default_value(assert, ParamType.BOOLEAN, 0, false);
-	ensure_default_value(assert, ParamType.BOOLEAN, 1, true);
-	ensure_default_value(assert, ParamType.BOOLEAN, [1, 2, 3, 4], true);
-	ensure_default_value(assert, ParamType.BOOLEAN, [1, 2, 3], true);
-	ensure_default_value(assert, ParamType.BOOLEAN, [2, 1], true);
-	ensure_default_value(assert, ParamType.BOOLEAN, '1', '1');
+QUnit.test('params convert their default values to one they can handle', async (assert) => {
+	await ensure_default_value(assert, ParamType.BOOLEAN, 0, 0, false);
+	await ensure_default_value(assert, ParamType.BOOLEAN, 1, 1, true);
+	await ensure_default_value(assert, ParamType.BOOLEAN, [1, 2, 3, 4], 1, true);
+	await ensure_default_value(assert, ParamType.BOOLEAN, [1, 2, 3], 1, true);
+	await ensure_default_value(assert, ParamType.BOOLEAN, [2, 1], 2, true);
+	await ensure_default_value(assert, ParamType.BOOLEAN, '1', '1', true);
 
-	ensure_default_value(assert, ParamType.FLOAT, 1, 1);
-	ensure_default_value(assert, ParamType.FLOAT, [1, 2], 1);
-	ensure_default_value(assert, ParamType.FLOAT, [2, 1], 2);
-	ensure_default_value(assert, ParamType.FLOAT, '1', '1', '1');
-	ensure_default_value(assert, ParamType.FLOAT, '$PI', '$PI', '$PI');
+	await ensure_default_value(assert, ParamType.FLOAT, 1, 1);
+	await ensure_default_value(assert, ParamType.FLOAT, [1, 2], 1);
+	await ensure_default_value(assert, ParamType.FLOAT, [2, 1], 2);
+	await ensure_default_value(assert, ParamType.FLOAT, '1', 1, 1);
+	await ensure_default_value(assert, ParamType.FLOAT, 'round($PI)', 'round($PI)', Math.round(Math.PI));
 
-	ensure_default_value(assert, ParamType.VECTOR2, 1, [1, 1]);
-	ensure_default_value(assert, ParamType.VECTOR2, [1, 2, 3], [1, 2]);
-	ensure_default_value(assert, ParamType.VECTOR2, [2, 1], [2, 1]);
-	ensure_default_value(assert, ParamType.VECTOR2, '1', [1, 1]);
-	ensure_default_value(assert, ParamType.VECTOR2, [0, '$PI'], [0, '$PI']);
-	ensure_default_value(assert, ParamType.VECTOR2, ['$PI', '$PI*2'], ['$PI', '$PI*2']);
+	await ensure_default_value(assert, ParamType.VECTOR2, 1, [1, 1], new Vector2(1, 1));
+	await ensure_default_value(assert, ParamType.VECTOR2, [1, 2, 3], [1, 2], new Vector2(1, 2));
+	await ensure_default_value(assert, ParamType.VECTOR2, [2, 1], [2, 1], new Vector2(2, 1));
+	await ensure_default_value(assert, ParamType.VECTOR2, [2], [2, 2], new Vector2(2, 2));
+	await ensure_default_value(assert, ParamType.VECTOR2, '1', ['1', '1'], new Vector2(1, 1));
+	await ensure_default_value(
+		assert,
+		ParamType.VECTOR2,
+		[0, 'round($PI)'],
+		[0, 'round($PI)'],
+		new Vector2(0, Math.round(Math.PI))
+	);
+	await ensure_default_value(
+		assert,
+		ParamType.VECTOR2,
+		['round($PI)', 'round($PI*2)'],
+		['round($PI)', 'round($PI*2)'],
+		new Vector2(Math.round(Math.PI), Math.round(2 * Math.PI))
+	);
 
-	ensure_default_value(assert, ParamType.VECTOR3, 1, [1, 1, 1]);
-	ensure_default_value(assert, ParamType.VECTOR3, [1, 2, 3, 4], [1, 2, 3]);
-	ensure_default_value(assert, ParamType.VECTOR3, [1, 2, 3], [1, 2, 3]);
-	ensure_default_value(assert, ParamType.VECTOR3, [2, 1], [2, 1, 1]);
-	ensure_default_value(assert, ParamType.VECTOR3, '1', [1, 1, 1]);
+	await ensure_default_value(assert, ParamType.VECTOR3, 1, [1, 1, 1], new Vector3(1, 1, 1));
+	await ensure_default_value(assert, ParamType.VECTOR3, [1, 2, 3, 4], [1, 2, 3], new Vector3(1, 2, 3));
+	await ensure_default_value(assert, ParamType.VECTOR3, [1, 2, 3], [1, 2, 3], new Vector3(1, 2, 3));
+	await ensure_default_value(assert, ParamType.VECTOR3, [2, 1], [2, 1, 1], new Vector3(2, 1, 1));
+	await ensure_default_value(assert, ParamType.VECTOR3, '1+2', ['1+2', '1+2', '1+2'], new Vector3(3, 3, 3));
 
-	ensure_default_value(assert, ParamType.VECTOR4, 1, [1, 1, 1, 1]);
-	ensure_default_value(assert, ParamType.VECTOR4, [1, 2, 3, 4], [1, 2, 3, 4]);
-	ensure_default_value(assert, ParamType.VECTOR4, [1, 2, 3], [1, 2, 3, 3]);
-	ensure_default_value(assert, ParamType.VECTOR4, [2, 1], [2, 1, 1, 1]);
-	ensure_default_value(assert, ParamType.VECTOR4, '1', [1, 1, 1, 1]);
+	ensure_default_value(assert, ParamType.VECTOR4, 1, [1, 1, 1, 1], new Vector4(1, 1, 1, 1));
+	ensure_default_value(assert, ParamType.VECTOR4, [1, 2, 3, 4], [1, 2, 3, 4], new Vector4(1, 2, 3, 4));
+	ensure_default_value(assert, ParamType.VECTOR4, [1, 2, 3], [1, 2, 3, 3], new Vector4(1, 2, 3, 3));
+	ensure_default_value(assert, ParamType.VECTOR4, [2, 1], [2, 1, 1, 1], new Vector4(2, 1, 1, 1));
+	ensure_default_value(assert, ParamType.VECTOR4, [2], [2, 2, 2, 2], new Vector4(2, 2, 2, 2));
+	ensure_default_value(assert, ParamType.VECTOR4, '1', ['1', '1', '1', '1'], new Vector4(1, 1, 1, 1));
+
+	ensure_default_value(assert, ParamType.COLOR, 1, [1, 1, 1], new Color(1, 1, 1));
+	ensure_default_value(assert, ParamType.COLOR, [1, 2, 3, 4], [1, 2, 3], new Color(1, 2, 3));
+	ensure_default_value(assert, ParamType.COLOR, [1, 2, 3], [1, 2, 3], new Color(1, 2, 3));
+	ensure_default_value(assert, ParamType.COLOR, [2, 1], [2, 1, 1], new Color(2, 1, 1));
+	ensure_default_value(assert, ParamType.COLOR, [2], [2, 2, 2], new Color(2, 2, 2));
+	ensure_default_value(assert, ParamType.COLOR, '1+2', ['1+2', '1+2', '1+2'], new Color(3, 3, 3));
 });
