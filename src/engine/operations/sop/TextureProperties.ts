@@ -7,10 +7,22 @@ import {Texture} from 'three/src/textures/Texture';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Poly} from '../../../engine/Poly';
 
+import {LinearEncoding, UVMapping, RepeatWrapping} from 'three/src/constants';
+
 import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/ConstantFilter';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 interface TexturePropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
+	// encoding
+	tencoding: boolean;
+	encoding: number;
+	// mapping
+	tmapping: boolean;
+	mapping: number;
+	// wrap
+	twrap: boolean;
+	wrapS: number;
+	wrapT: number;
 	// anisotropy
 	tanisotropy: boolean;
 	useRendererMaxAnisotropy: boolean;
@@ -25,6 +37,16 @@ interface TexturePropertiesSopParams extends DefaultOperationParams {
 export class TexturePropertiesSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: TexturePropertiesSopParams = {
 		applyToChildren: false,
+		// anisotropy
+		tencoding: false,
+		encoding: LinearEncoding,
+		// mapping
+		tmapping: false,
+		mapping: UVMapping,
+		// wrap
+		twrap: false,
+		wrapS: RepeatWrapping,
+		wrapT: RepeatWrapping,
 		// anisotropy
 		tanisotropy: false,
 		useRendererMaxAnisotropy: false,
@@ -60,6 +82,9 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 	private async _update_object(object: Mesh, params: TexturePropertiesSopParams) {
 		const material = object.material as Material;
 		if (material) {
+			// TODO: a problem with this node,
+			// is that when it cooks, the material may not already have a texture assigned
+			// so it will appear to have no effect
 			await this._update_material(material, params);
 		}
 	}
@@ -70,15 +95,36 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		}
 	}
 	private async _update_texture(texture: Texture, params: TexturePropertiesSopParams) {
-		if (isBooleanTrue(params.tanisotropy)) {
-			await this._update_anisotropy(texture, params);
+		this._updateEncoding(texture, params);
+		this._updateMapping(texture, params);
+		this._updateWrap(texture, params);
+		await this._updateAnisotropy(texture, params);
+		this._updateFilter(texture, params);
+	}
+
+	private _updateEncoding(texture: Texture, pv: TexturePropertiesSopParams) {
+		if (!isBooleanTrue(pv.tencoding)) {
+			return;
 		}
-		if (isBooleanTrue(params.tminFilter) || isBooleanTrue(params.tmagFilter)) {
-			this._update_filter(texture, params);
+		texture.encoding = pv.encoding;
+		texture.needsUpdate = true;
+	}
+	private _updateMapping(texture: Texture, pv: TexturePropertiesSopParams) {
+		if (isBooleanTrue(pv.tmapping)) {
+			texture.mapping = pv.mapping;
+		}
+	}
+	private _updateWrap(texture: Texture, pv: TexturePropertiesSopParams) {
+		if (isBooleanTrue(pv.twrap)) {
+			texture.wrapS = pv.wrapS;
+			texture.wrapT = pv.wrapT;
 		}
 	}
 
-	private async _update_anisotropy(texture: Texture, params: TexturePropertiesSopParams) {
+	private async _updateAnisotropy(texture: Texture, params: TexturePropertiesSopParams) {
+		if (!isBooleanTrue(params.tanisotropy)) {
+			return;
+		}
 		if (isBooleanTrue(params.useRendererMaxAnisotropy)) {
 			const renderer = await Poly.renderersController.firstRenderer();
 			if (renderer) {
@@ -88,7 +134,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 			texture.anisotropy = params.anisotropy;
 		}
 	}
-	private _update_filter(texture: Texture, params: TexturePropertiesSopParams) {
+	private _updateFilter(texture: Texture, params: TexturePropertiesSopParams) {
 		if (isBooleanTrue(params.tminFilter)) {
 			texture.minFilter = params.minFilter;
 		}

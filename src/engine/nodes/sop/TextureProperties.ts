@@ -10,11 +10,72 @@ import {TexturePropertiesSopOperation} from '../../operations/sop/TexturePropert
 
 import {MAG_FILTER_MENU_ENTRIES, MIN_FILTER_MENU_ENTRIES} from '../../../core/cop/ConstantFilter';
 
+import {ENCODINGS, MAPPINGS, WRAPPINGS} from '../cop/utils/TextureParamsController';
+
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TexturePropertiesSopOperation.DEFAULT_PARAMS;
 class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if this node should search through the materials inside the whole hierarchy */
 	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
+
+	/** @param toggle on to allow updating the texture encoding */
+	tencoding = ParamConfig.BOOLEAN(DEFAULT.tencoding);
+	/** @param sets the texture encoding */
+	encoding = ParamConfig.INTEGER(DEFAULT.encoding, {
+		visibleIf: {tencoding: 1},
+		menu: {
+			entries: ENCODINGS.map((m) => {
+				return {
+					name: Object.keys(m)[0],
+					value: Object.values(m)[0] as number,
+				};
+			}),
+		},
+	});
+
+	/** @param toggle on to allow updating the texture mapping */
+	tmapping = ParamConfig.BOOLEAN(DEFAULT.tmapping);
+	/** @param sets the texture mapping */
+	mapping = ParamConfig.INTEGER(DEFAULT.mapping, {
+		visibleIf: {tmapping: 1},
+		menu: {
+			entries: MAPPINGS.map((m) => {
+				return {
+					name: Object.keys(m)[0],
+					value: Object.values(m)[0] as number,
+				};
+			}),
+		},
+	});
+
+	/** @param toggle on to allow updating the texture wrap */
+	twrap = ParamConfig.BOOLEAN(DEFAULT.twrap);
+	/** @param sets the texture wrapS */
+	wrapS = ParamConfig.INTEGER(DEFAULT.wrapS, {
+		visibleIf: {twrap: 1},
+		menu: {
+			entries: WRAPPINGS.map((m) => {
+				return {
+					name: Object.keys(m)[0],
+					value: Object.values(m)[0] as number,
+				};
+			}),
+		},
+	});
+	/** @param sets the texture wrapT */
+	wrapT = ParamConfig.INTEGER(DEFAULT.wrapT, {
+		visibleIf: {twrap: 1},
+		menu: {
+			entries: WRAPPINGS.map((m) => {
+				return {
+					name: Object.keys(m)[0],
+					value: Object.values(m)[0] as number,
+				};
+			}),
+		},
+		separatorAfter: true,
+	});
+
 	// anisotropy
 	/** @param toggle on to update the anisotropy */
 	tanisotropy = ParamConfig.BOOLEAN(DEFAULT.tanisotropy);
@@ -28,6 +89,7 @@ class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
 		range: [0, 32],
 		rangeLocked: [true, false],
 	});
+
 	// filters
 	/** @param toggle on to update min filter */
 	tminFilter = ParamConfig.BOOLEAN(0);

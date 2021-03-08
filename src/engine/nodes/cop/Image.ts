@@ -78,7 +78,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		const texture = await this._load_texture(this.pv.url);
 
 		if (texture) {
-			this.texture_params_controller.update(texture);
+			await this.texture_params_controller.update(texture);
 			this.setTexture(texture);
 		} else {
 			this.clear_texture();

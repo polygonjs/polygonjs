@@ -93,7 +93,7 @@ const TYPES = [
 	{UnsignedInt248Type},
 ];
 
-const MAPPINGS = [
+export const MAPPINGS = [
 	{UVMapping},
 	{CubeReflectionMapping},
 	{CubeRefractionMapping},
@@ -103,7 +103,7 @@ const MAPPINGS = [
 	{CubeUVRefractionMapping},
 ];
 
-const ENCODINGS = [
+export const ENCODINGS = [
 	{LinearEncoding},
 	{sRGBEncoding},
 	{GammaEncoding},
@@ -115,12 +115,13 @@ const ENCODINGS = [
 	{BasicDepthPacking},
 	{RGBADepthPacking},
 ];
-const WRAPPINGS: PolyDictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapping}, {MirroredRepeatWrapping}];
+export const WRAPPINGS: PolyDictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapping}, {MirroredRepeatWrapping}];
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {CopRendererController} from './RendererController';
 import {BaseNodeType} from '../../_Base';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
 
 export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -156,7 +157,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param toggle on to allow updating the texture wrap */
 		twrap = ParamConfig.BOOLEAN(0);
 		/** @param sets the texture wrapS */
-		wrapS = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
+		wrapS = ParamConfig.INTEGER(RepeatWrapping, {
 			visibleIf: {twrap: 1},
 			menu: {
 				entries: WRAPPINGS.map((m) => {
@@ -168,7 +169,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 			},
 		});
 		/** @param sets the texture wrapT */
-		wrapT = ParamConfig.INTEGER(Object.values(WRAPPINGS[0])[0], {
+		wrapT = ParamConfig.INTEGER(RepeatWrapping, {
 			visibleIf: {twrap: 1},
 			menu: {
 				entries: WRAPPINGS.map((m) => {
@@ -303,11 +304,23 @@ class TextureCopNode extends TypedCopNode<TextureParamsConfig> {
 
 export class TextureParamsController {
 	constructor(protected node: TextureCopNode) {}
-	update(texture: Texture) {
+	async update(texture: Texture) {
 		const pv = this.node.pv;
+		this._updateEncoding(texture, pv);
+		this._updateAdvanced(texture, pv);
+		this._updateMapping(texture, pv);
+		this._updateWrap(texture, pv);
+		this._updateFilter(texture, pv);
+		this._updateFlip(texture, pv);
+		await this._update_anisotropy(texture, pv);
+		this._updateTransform(texture);
+	}
+	private _updateEncoding(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
 		if (isBooleanTrue(pv.tencoding)) {
 			texture.encoding = pv.encoding;
 		}
+	}
+	private _updateAdvanced(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
 		if (isBooleanTrue(pv.tadvanced)) {
 			if (isBooleanTrue(pv.tformat)) {
 				texture.format = pv.format;
@@ -316,30 +329,35 @@ export class TextureParamsController {
 				texture.type = pv.type;
 			}
 		}
+	}
+	private _updateMapping(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
 		if (isBooleanTrue(pv.tmapping)) {
 			texture.mapping = pv.mapping;
 		}
+	}
+	private _updateWrap(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
 		if (isBooleanTrue(pv.twrap)) {
 			texture.wrapS = pv.wrapS;
 			texture.wrapT = pv.wrapT;
 		}
+	}
+	private _updateFilter(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
 		if (isBooleanTrue(pv.tminFilter)) {
 			texture.minFilter = pv.minFilter;
 		}
 		if (isBooleanTrue(pv.tminFilter)) {
 			texture.magFilter = pv.magFilter;
 		}
-		this._update_anisotropy(texture);
-
+	}
+	private _updateFlip(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
 		// do not have this in an if block,
 		// as to be sure this is set to false in case it is set to true
 		// by the texture loader
 		texture.flipY = pv.tflipY && pv.flipY;
-		this._update_texture_transform(texture);
 	}
+
 	private _renderer_controller: CopRendererController | undefined;
-	private async _update_anisotropy(texture: Texture) {
-		const pv = this.node.pv;
+	private async _update_anisotropy(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
 		if (!isBooleanTrue(pv.tanisotropy)) {
 			return;
 		}
@@ -354,35 +372,35 @@ export class TextureParamsController {
 		}
 	}
 
-	private _update_texture_transform(texture: Texture) {
+	private _updateTransform(texture: Texture) {
 		if (!isBooleanTrue(this.node.pv.ttransform)) {
 			return;
 		}
-		this._update_offset(texture, false);
-		this._update_repeat(texture, false);
-		this._update_rotation(texture, false);
-		this._update_center(texture, false);
+		this._updateTransformOffset(texture, false);
+		this._updateTransformRepeat(texture, false);
+		this._updateTransformRotation(texture, false);
+		this._updateTransformCenter(texture, false);
 		texture.updateMatrix();
 	}
-	private _update_offset(texture: Texture, update_matrix: boolean) {
+	private _updateTransformOffset(texture: Texture, update_matrix: boolean) {
 		texture.offset.copy(this.node.pv.offset);
 		if (update_matrix) {
 			texture.updateMatrix();
 		}
 	}
-	private _update_repeat(texture: Texture, update_matrix: boolean) {
+	private _updateTransformRepeat(texture: Texture, update_matrix: boolean) {
 		texture.repeat.copy(this.node.pv.repeat);
 		if (update_matrix) {
 			texture.updateMatrix();
 		}
 	}
-	private _update_rotation(texture: Texture, update_matrix: boolean) {
+	private _updateTransformRotation(texture: Texture, update_matrix: boolean) {
 		texture.rotation = this.node.pv.rotation;
 		if (update_matrix) {
 			texture.updateMatrix();
 		}
 	}
-	private _update_center(texture: Texture, update_matrix: boolean) {
+	private _updateTransformCenter(texture: Texture, update_matrix: boolean) {
 		texture.center.copy(this.node.pv.center);
 		if (update_matrix) {
 			texture.updateMatrix();
@@ -390,18 +408,18 @@ export class TextureParamsController {
 	}
 	static PARAM_CALLBACK_update_offset(node: TextureCopNode) {
 		const texture = node.containerController.container.texture();
-		node.texture_params_controller._update_offset(texture, true);
+		node.texture_params_controller._updateTransformOffset(texture, true);
 	}
 	static PARAM_CALLBACK_update_repeat(node: TextureCopNode) {
 		const texture = node.containerController.container.texture();
-		node.texture_params_controller._update_repeat(texture, true);
+		node.texture_params_controller._updateTransformRepeat(texture, true);
 	}
 	static PARAM_CALLBACK_update_rotation(node: TextureCopNode) {
 		const texture = node.containerController.container.texture();
-		node.texture_params_controller._update_rotation(texture, true);
+		node.texture_params_controller._updateTransformRotation(texture, true);
 	}
 	static PARAM_CALLBACK_update_center(node: TextureCopNode) {
 		const texture = node.containerController.container.texture();
-		node.texture_params_controller._update_center(texture, true);
+		node.texture_params_controller._updateTransformCenter(texture, true);
 	}
 }

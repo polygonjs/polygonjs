@@ -129,7 +129,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			this.video_update_muted();
 			this.video_update_play();
 			this.video_update_time();
-			this.texture_params_controller.update(texture);
+			await this.texture_params_controller.update(texture);
 			this.setTexture(texture);
 		} else {
 			this.cookController.endCook();
