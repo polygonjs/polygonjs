@@ -35,7 +35,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 
 		if (ShaderAssemblerStandard.USE_SSS) {
 			fragmentShader = fragmentShader.replace(
-				'void main() {',
+				/void main\s?\(\) {/,
 				`${sss_declaration_fragment}
 
 void main() {`

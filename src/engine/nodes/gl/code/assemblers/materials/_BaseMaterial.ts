@@ -51,7 +51,6 @@ interface HandleGlobalsOutputOptions {
 	dependencies: ShaderName[];
 	body_lines_by_shader_name: Map<ShaderName, string[]>;
 }
-type FilterShaderMethod = (s: string) => string;
 export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerMaterial> = new Map();
 
@@ -117,9 +116,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 						const custom_material = material.customMaterials[custom_name];
 						if (custom_material) {
-							assembler.setFilterFragmentShaderMethod(this.filterFragmentShader);
+							assembler.setFilterFragmentShaderMethodOwner(this);
 							assembler.compile_material(custom_material);
-							assembler.setFilterFragmentShaderMethod(undefined);
+							assembler.setFilterFragmentShaderMethodOwner(undefined);
 						}
 						// if (material) {
 						// 	// add needsUpdate = true, as we always get the same material
@@ -140,16 +139,16 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// return custom_materials_by_name;
 	}
 
-	private _filterFragmentShaderMethod: FilterShaderMethod | undefined;
-	setFilterFragmentShaderMethod(method: FilterShaderMethod | undefined) {
-		this._filterFragmentShaderMethod = method;
+	private _filterFragmentShaderMethodOwner: ShaderAssemblerMaterial | undefined;
+	setFilterFragmentShaderMethodOwner(owner: ShaderAssemblerMaterial | undefined) {
+		this._filterFragmentShaderMethodOwner = owner;
 	}
 	filterFragmentShader(fragmentShader: string) {
 		return fragmentShader;
 	}
 	processFilterFragmentShader(fragmentShader: string) {
-		if (this._filterFragmentShaderMethod) {
-			return this._filterFragmentShaderMethod(fragmentShader);
+		if (this._filterFragmentShaderMethodOwner) {
+			return this._filterFragmentShaderMethodOwner.filterFragmentShader(fragmentShader);
 		} else {
 			return this.filterFragmentShader(fragmentShader);
 		}
