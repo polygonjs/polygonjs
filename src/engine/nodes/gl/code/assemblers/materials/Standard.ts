@@ -67,6 +67,10 @@ ${sss_injected_fragment}
 
 		const material = new ShaderMaterial(options);
 
+		if (this.isPhysical()) {
+			material.defines.PHYSICAL = true;
+		}
+
 		this._addCustomMaterials(material);
 		return material;
 	}

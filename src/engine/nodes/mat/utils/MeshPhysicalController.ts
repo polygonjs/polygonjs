@@ -11,6 +11,7 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {Color} from 'three/src/math/Color';
+import {isBooleanTrue} from '../../../../core/BooleanValue';
 
 export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -42,11 +43,11 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 			OperatorPathOptions(MeshPhysicalController, 'useClearCoatRoughnessMap')
 		);
 		/** @param Index-of-refraction for non-metallic materials, from 1.0 to 2.333 */
-		ior = ParamConfig.FLOAT(1.5, {
-			separatorBefore: true,
-			range: [1, 2.333],
-			rangeLocked: [true, true],
-		});
+		// ior = ParamConfig.FLOAT(1.5, {
+		// 	separatorBefore: true,
+		// 	range: [1, 2.333],
+		// 	rangeLocked: [true, true],
+		// });
 		/** @param Degree of reflectivity, from 0.0 to 1.0. Default is 0.5, which corresponds to an index-of-refraction of 1.5.
 This models the reflectivity of non-metallic materials. It has no effect when metalness is 1.0 */
 		reflectivity = ParamConfig.FLOAT(0.5, {
@@ -115,16 +116,33 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.roughness.value = this.node.pv.roughness;
+			mat.uniforms.clearcoat.value = this.node.pv.clearcoat;
+			mat.uniforms.clearcoatNormalScale.value.copy(this.node.pv.clearcoatNormalScale);
+			mat.uniforms.clearcoatRoughness.value = this.node.pv.clearcoatRoughness;
+			// ior is currently a getter/setter wrapper to set reflectivity, so is not currently present in uniforms
+			// mat.uniforms.ior.value = this.node.pv.ior;
+			mat.uniforms.reflectivity.value = this.node.pv.reflectivity;
+			mat.uniforms.transmission.value = this.node.pv.transmission;
+			if (isBooleanTrue(this.node.pv.useSheen)) {
+				this._sheenClone.copy(this.node.pv.sheen);
+				mat.uniforms.sheen.value = this._sheenClone;
+			} else {
+				mat.uniforms.sheen.value = null;
+			}
+
+			// mat.defines['CLEARCOAT'] = isBooleanTrue(this.node.pv.useClearCoatNormalMap);
+			// mat.defines['USE_CLEARCOAT_ROUGHNESSMAP'] = isBooleanTrue(this.node.pv.useClearCoatRoughnessMap);
+			// mat.defines['TRANSMISSION'] = isBooleanTrue(this.node.pv.useTransmissionMap);
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshPhysicalMaterial;
 			mat.clearcoat = this.node.pv.clearcoat;
 			mat.clearcoatNormalScale.copy(this.node.pv.clearcoatNormalScale);
 			mat.clearcoatRoughness = this.node.pv.clearcoatRoughness;
-			mat.ior = this.node.pv.ior;
 			mat.reflectivity = this.node.pv.reflectivity;
-			if (this.node.pv.useSheen) {
+			// ior is currently a getter/setter wrapper to set reflectivity, so currently conflicts with 'mat.reflectivity ='
+			// mat.ior = this.node.pv.ior;
+			if (isBooleanTrue(this.node.pv.useSheen)) {
 				this._sheenClone.copy(this.node.pv.sheen);
 				mat.sheen = this._sheenClone;
 			} else {
