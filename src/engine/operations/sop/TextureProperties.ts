@@ -50,7 +50,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		// anisotropy
 		tanisotropy: false,
 		useRendererMaxAnisotropy: false,
-		anisotropy: 1,
+		anisotropy: 2,
 		// filters
 		tminFilter: false,
 		minFilter: MIN_FILTER_DEFAULT_VALUE,

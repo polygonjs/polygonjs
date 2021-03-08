@@ -42,18 +42,13 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 			NODE_PATH_DEFAULT.NODE.EMPTY,
 			OperatorPathOptions(MeshPhysicalController, 'useClearCoatRoughnessMap')
 		);
-		/** @param Index-of-refraction for non-metallic materials, from 1.0 to 2.333 */
-		// ior = ParamConfig.FLOAT(1.5, {
-		// 	separatorBefore: true,
-		// 	range: [1, 2.333],
-		// 	rangeLocked: [true, true],
-		// });
-		/** @param Degree of reflectivity, from 0.0 to 1.0. Default is 0.5, which corresponds to an index-of-refraction of 1.5.
-This models the reflectivity of non-metallic materials. It has no effect when metalness is 1.0 */
+
+		/** @param Degree of reflectivity, from 0.0 to 1.0. Default is 0.5, which corresponds to an index-of-refraction of 1.5. This models the reflectivity of non-metallic materials. It has no effect when metalness is 1.0 */
 		reflectivity = ParamConfig.FLOAT(0.5, {
 			range: [0, 1],
 			rangeLocked: [true, true],
 		});
+
 		/** @param toggle if you want to use a roughness map */
 		useSheen = ParamConfig.BOOLEAN(0);
 		/** @param If a color is assigned to this property, the material will use a special sheen BRDF intended for rendering cloth materials such as velvet. The sheen color provides the ability to create two-tone specular materials. null by default */

@@ -202,11 +202,11 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param toggle on to allow updating the texture anisotropy */
 		tanisotropy = ParamConfig.BOOLEAN(0);
 		/** @param sets the anisotropy from the max value allowed by the renderer */
-		useRendererMaxAnisotropy = ParamConfig.BOOLEAN(1, {
+		useRendererMaxAnisotropy = ParamConfig.BOOLEAN(0, {
 			visibleIf: {tanisotropy: 1},
 		});
 		/** @param sets the anisotropy manually */
-		anisotropy = ParamConfig.INTEGER(1, {
+		anisotropy = ParamConfig.INTEGER(2, {
 			visibleIf: {tanisotropy: 1, useRendererMaxAnisotropy: 0},
 			range: [0, 32],
 			rangeLocked: [true, false],
