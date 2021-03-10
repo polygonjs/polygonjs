@@ -22,7 +22,7 @@ enum MapMode {
 const MAP_MODES: MapMode[] = [MapMode.REFLECTION, MapMode.REFRACTION];
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	/** @param cube camera OBJ node */
-	cubeCamera = ParamConfig.NODE_PATH('/cubeCamera1', {
+	cubeCamera = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: [ObjType.CUBE_CAMERA],

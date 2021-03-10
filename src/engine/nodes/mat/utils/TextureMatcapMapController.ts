@@ -45,7 +45,7 @@ export class TextureMatcapMapController extends BaseTextureMapController {
 		this.add_hooks(this.node.p.useMatcapMap, this.node.p.matcapMap);
 	}
 	async update() {
-		this._update(this.node.material, 'matcapMap', this.node.p.useMatcapMap, this.node.p.matcapMap);
+		this._update(this.node.material, 'matcap', this.node.p.useMatcapMap, this.node.p.matcapMap);
 	}
 	static async update(node: TextureMatcapMapMatNode) {
 		node.controllers.matcap.update();
