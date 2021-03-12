@@ -104,7 +104,7 @@ void RE_Direct_Scattering(
 	){
 	vec3 scatteringHalf = normalize(directLight.direction + (geometry.normal * sssModel.distortion));
 	float scatteringDot = pow(saturate(dot(geometry.viewDir, -scatteringHalf)), sssModel.power) * sssModel.scale;
-	vec3 scatteringIllu = (scatteringDot + sssModel.ambient) * (sssModel.color * sssModel.thickness);
+	vec3 scatteringIllu = (scatteringDot + sssModel.ambient) * (sssModel.color * (1.0-sssModel.thickness));
 	reflectedLight.directDiffuse += scatteringIllu * sssModel.attenuation * directLight.color;
 }
 

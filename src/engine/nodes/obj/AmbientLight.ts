@@ -27,7 +27,7 @@ export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, Ambient
 		return 'ambientLight';
 	}
 
-	create_light() {
+	createLight() {
 		const light = new AmbientLight();
 		light.matrixAutoUpdate = false;
 		return light;
@@ -36,7 +36,7 @@ export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, Ambient
 		this.io.inputs.setCount(0, 1);
 	}
 
-	update_light_params() {
+	protected updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 	}

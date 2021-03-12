@@ -1,7 +1,7 @@
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {Texture} from 'three/src/textures/Texture';
-import {CoreTextureLoader} from '../../../../src/core/loader/Texture';
+import {CoreLoaderTexture} from '../../../../src/core/loader/Texture';
 
 QUnit.test('texture_properties simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -14,7 +14,7 @@ QUnit.test('texture_properties simple', async (assert) => {
 	const material1 = geo1.createNode('material');
 
 	// setup scene
-	file1.p.url.set(CoreTextureLoader.PARAM_DEFAULT);
+	file1.p.url.set(CoreLoaderTexture.PARAM_DEFAULT);
 	file1.p.tanisotropy.set(0);
 	basic_material1.p.useMap.set(1);
 	await file1.requestContainer();

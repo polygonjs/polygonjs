@@ -1,127 +1,24 @@
-import {Constructor, PolyDictionary} from '../../../../types/GlobalTypes';
+import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedCopNode} from '../_Base';
 import {Texture} from 'three/src/textures/Texture';
-import {
-	// formats
-	AlphaFormat,
-	RedFormat,
-	RedIntegerFormat,
-	RGFormat,
-	RGIntegerFormat,
-	RGBFormat,
-	RGBIntegerFormat,
-	RGBAFormat,
-	RGBAIntegerFormat,
-	LuminanceFormat,
-	LuminanceAlphaFormat,
-	// RGBEFormat, //  removing as it is set to same value as RGBAFormat, so can be confusing
-	DepthFormat,
-	DepthStencilFormat,
-
-	// types
-	UnsignedByteType,
-	ByteType,
-	ShortType,
-	UnsignedShortType,
-	IntType,
-	UnsignedIntType,
-	FloatType,
-	HalfFloatType,
-	UnsignedShort4444Type,
-	UnsignedShort5551Type,
-	UnsignedShort565Type,
-	UnsignedInt248Type,
-
-	// encodings
-	LinearEncoding,
-	sRGBEncoding,
-	GammaEncoding,
-	RGBEEncoding,
-	LogLuvEncoding,
-	RGBM7Encoding,
-	RGBM16Encoding,
-	RGBDEncoding,
-	BasicDepthPacking,
-	RGBADepthPacking,
-	// other
-	UVMapping,
-	CubeReflectionMapping,
-	CubeRefractionMapping,
-	EquirectangularReflectionMapping,
-	EquirectangularRefractionMapping,
-	CubeUVReflectionMapping,
-	CubeUVRefractionMapping,
-	ClampToEdgeWrapping,
-	RepeatWrapping,
-	MirroredRepeatWrapping,
-} from 'three/src/constants';
+import {RGBAFormat, UnsignedByteType, LinearEncoding, UVMapping, RepeatWrapping} from 'three/src/constants';
 import {
 	MAG_FILTER_DEFAULT_VALUE,
 	MAG_FILTER_MENU_ENTRIES,
 	MIN_FILTER_DEFAULT_VALUE,
 	MIN_FILTER_MENU_ENTRIES,
-} from '../../../../core/cop/ConstantFilter';
-
-const FORMATS = [
-	{AlphaFormat},
-	{RedFormat},
-	{RedIntegerFormat},
-	{RGFormat},
-	{RGIntegerFormat},
-	{RGBFormat},
-	{RGBIntegerFormat},
-	{RGBAFormat},
-	{RGBAIntegerFormat},
-	{LuminanceFormat},
-	{LuminanceAlphaFormat},
-	// {RGBEFormat},
-	{DepthFormat},
-	{DepthStencilFormat},
-];
-const TYPES = [
-	{UnsignedByteType},
-	{ByteType},
-	{ShortType},
-	{UnsignedShortType},
-	{IntType},
-	{UnsignedIntType},
-	{FloatType},
-	{HalfFloatType},
-	{UnsignedShort4444Type},
-	{UnsignedShort5551Type},
-	{UnsignedShort565Type},
-	{UnsignedInt248Type},
-];
-
-export const MAPPINGS = [
-	{UVMapping},
-	{CubeReflectionMapping},
-	{CubeRefractionMapping},
-	{EquirectangularReflectionMapping},
-	{EquirectangularRefractionMapping},
-	{CubeUVReflectionMapping},
-	{CubeUVRefractionMapping},
-];
-
-export const ENCODINGS = [
-	{LinearEncoding},
-	{sRGBEncoding},
-	{GammaEncoding},
-	{RGBEEncoding},
-	{LogLuvEncoding},
-	{RGBM7Encoding},
-	{RGBM16Encoding},
-	{RGBDEncoding},
-	{BasicDepthPacking},
-	{RGBADepthPacking},
-];
-export const WRAPPINGS: PolyDictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapping}, {MirroredRepeatWrapping}];
+} from '../../../../core/cop/Filter';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {CopRendererController} from './RendererController';
 import {BaseNodeType} from '../../_Base';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
+import {ENCODINGS} from '../../../../core/cop/Encoding';
+import {WRAPPINGS} from '../../../../core/cop/Wrapping';
+import {MAPPINGS} from '../../../../core/cop/Mapping';
+import {TEXTURE_TYPES} from '../../../../core/cop/Type';
+import {TEXTURE_FORMATS} from '../../../../core/cop/Format';
 
 export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -267,7 +164,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		format = ParamConfig.INTEGER(RGBAFormat, {
 			visibleIf: {tadvanced: 1, tformat: 1},
 			menu: {
-				entries: FORMATS.map((m) => {
+				entries: TEXTURE_FORMATS.map((m) => {
 					return {
 						name: Object.keys(m)[0],
 						value: Object.values(m)[0] as number,
@@ -284,7 +181,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		type = ParamConfig.INTEGER(UnsignedByteType, {
 			visibleIf: {tadvanced: 1, ttype: 1},
 			menu: {
-				entries: TYPES.map((m) => {
+				entries: TEXTURE_TYPES.map((m) => {
 					return {
 						name: Object.keys(m)[0],
 						value: Object.values(m)[0] as number,
@@ -345,7 +242,7 @@ export class TextureParamsController {
 		if (isBooleanTrue(pv.tminFilter)) {
 			texture.minFilter = pv.minFilter;
 		}
-		if (isBooleanTrue(pv.tminFilter)) {
+		if (isBooleanTrue(pv.tmagFilter)) {
 			texture.magFilter = pv.magFilter;
 		}
 	}

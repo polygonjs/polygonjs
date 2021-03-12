@@ -52,7 +52,7 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 		this._helper_controller.initializeNode();
 	}
 
-	create_light() {
+	createLight() {
 		const light = new RectAreaLight(0xffffff, 1, 1, 1);
 		light.matrixAutoUpdate = false;
 
@@ -64,7 +64,7 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 		return light;
 	}
 
-	update_light_params() {
+	protected updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.width = this.pv.width;

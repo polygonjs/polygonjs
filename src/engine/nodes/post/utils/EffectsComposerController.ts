@@ -20,7 +20,7 @@ import {
 	MAG_FILTER_MENU_ENTRIES,
 	MIN_FILTER_DEFAULT_VALUE,
 	MIN_FILTER_MENU_ENTRIES,
-} from '../../../../core/cop/ConstantFilter';
+} from '../../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 export class PostProcessNetworkParamsConfig extends NodeParamsConfig {
 	prependRenderPass = ParamConfig.BOOLEAN(1);

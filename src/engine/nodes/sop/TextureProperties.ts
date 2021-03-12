@@ -8,9 +8,11 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TexturePropertiesSopOperation} from '../../operations/sop/TextureProperties';
 
-import {MAG_FILTER_MENU_ENTRIES, MIN_FILTER_MENU_ENTRIES} from '../../../core/cop/ConstantFilter';
+import {MAG_FILTER_MENU_ENTRIES, MIN_FILTER_MENU_ENTRIES} from '../../../core/cop/Filter';
 
-import {ENCODINGS, MAPPINGS, WRAPPINGS} from '../cop/utils/TextureParamsController';
+import {ENCODINGS} from '../../../core/cop/Encoding';
+import {MAPPINGS} from '../../../core/cop/Mapping';
+import {WRAPPINGS} from '../../../core/cop/Wrapping';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TexturePropertiesSopOperation.DEFAULT_PARAMS;

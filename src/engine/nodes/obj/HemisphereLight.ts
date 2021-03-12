@@ -48,7 +48,7 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 		'HemisphereLightHelper'
 	);
 
-	create_light() {
+	createLight() {
 		const light = new HemisphereLight();
 		light.matrixAutoUpdate = false;
 		// make sure the light is initialized with same defaults as the node parameters
@@ -61,7 +61,7 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 		this._helper_controller.initializeNode();
 	}
 
-	update_light_params() {
+	protected updateLightParams() {
 		this.light.color = this.pv.skyColor;
 		this.light.groundColor = this.pv.groundColor;
 		this.light.position.copy(this.pv.position);

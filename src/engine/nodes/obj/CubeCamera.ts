@@ -21,9 +21,21 @@ import {Poly} from '../../Poly';
 import {BaseNodeType} from '../_Base';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
 import {AxesHelper} from 'three/src/helpers/AxesHelper';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {HierarchyController} from './utils/HierarchyController';
+import {FlagsControllerD} from '../utils/FlagsController';
+import {
+	MAG_FILTER_DEFAULT_VALUE,
+	MAG_FILTER_MENU_ENTRIES,
+	MIN_FILTER_DEFAULT_VALUE,
+	MIN_FILTER_MENU_ENTRIES,
+} from '../../../core/cop/Filter';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {ENCODINGS} from '../../../core/cop/Encoding';
 
 export function CubeCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		main = ParamConfig.FOLDER();
 		/** @param render resolution of each of the 6 faces */
 		resolution = ParamConfig.INTEGER(256);
 		/** @param objects to exclude in the render */
@@ -38,18 +50,50 @@ export function CubeCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 		near = ParamConfig.FLOAT(1);
 		/** @param camera far */
 		far = ParamConfig.FLOAT(100);
+
 		/** @param render button */
 		render = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {
 				CubeCameraObjNode.PARAM_CALLBACK_render(node as CubeCameraObjNode);
 			},
 		});
+
+		renderTarget = ParamConfig.FOLDER();
+		/** @param toggle on to allow updating the texture encoding */
+		tencoding = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture encoding */
+		encoding = ParamConfig.INTEGER(sRGBEncoding, {
+			visibleIf: {tencoding: 1},
+			menu: {
+				entries: ENCODINGS.map((m) => {
+					return {
+						name: Object.keys(m)[0],
+						value: Object.values(m)[0] as number,
+					};
+				}),
+			},
+		});
+
+		/** @param toggle on to allow updating the texture min filter */
+		tminFilter = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture min filter. Nearest is currently recommended to be supported on all devices. */
+		minFilter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
+			visibleIf: {tminFilter: 1},
+			menu: {
+				entries: MIN_FILTER_MENU_ENTRIES,
+			},
+		});
+		/** @param toggle on to allow updating the texture mag filter */
+		tmagFilter = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture mag filter. Nearest is currently recommended to be supported on all devices. */
+		magFilter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
+			visibleIf: {tmagFilter: 1},
+			menu: {
+				entries: MAG_FILTER_MENU_ENTRIES,
+			},
+		});
 	};
 }
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {HierarchyController} from './utils/HierarchyController';
-import {FlagsControllerD} from '../utils/FlagsController';
 
 class CubeCameraObjParamsConfig extends CubeCameraParamConfig(TransformedParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new CubeCameraObjParamsConfig();
@@ -125,7 +169,11 @@ export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsCo
 	}
 
 	private _createCubeCamera() {
-		const renderTarget = new WebGLCubeRenderTarget(this.pv.resolution, {encoding: sRGBEncoding});
+		const renderTarget = new WebGLCubeRenderTarget(this.pv.resolution, {
+			encoding: isBooleanTrue(this.pv.tencoding) ? this.pv.encoding : sRGBEncoding,
+			minFilter: isBooleanTrue(this.pv.tminFilter) ? this.pv.minFilter : undefined,
+			magFilter: isBooleanTrue(this.pv.tmagFilter) ? this.pv.magFilter : undefined,
+		});
 		this._cubeCamera = new CubeCamera(this.pv.near, this.pv.far, renderTarget);
 		this._cubeCamera.matrixAutoUpdate = true;
 		this.object.add(this._cubeCamera);

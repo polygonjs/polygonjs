@@ -1,0 +1,4 @@
+import {ClampToEdgeWrapping, RepeatWrapping, MirroredRepeatWrapping} from 'three/src/constants';
+import {PolyDictionary} from '../../types/GlobalTypes';
+
+export const WRAPPINGS: PolyDictionary<number>[] = [{ClampToEdgeWrapping}, {RepeatWrapping}, {MirroredRepeatWrapping}];

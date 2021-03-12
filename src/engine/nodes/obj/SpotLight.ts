@@ -60,14 +60,22 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 		range: [-0.01, 0.01],
 		rangeLocked: [false, false],
 	});
+	/** @param shadows near */
 	shadowNear = ParamConfig.FLOAT(0.1, {
 		visibleIf: {castShadow: 1},
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
+	/** @param shadows far */
 	shadowFar = ParamConfig.FLOAT(100, {
 		visibleIf: {castShadow: 1},
 		range: [0, 100],
+		rangeLocked: [true, false],
+	});
+	/** @param shadows radius. This only has effect when setting the ROP/WebGLRenderer's shadowMapType to VSM */
+	shadowRadius = ParamConfig.FLOAT(0, {
+		visibleIf: {castShadow: 1},
+		range: [0, 10],
 		rangeLocked: [true, false],
 	});
 }
@@ -89,7 +97,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		this._helper_controller.initializeNode();
 	}
 
-	create_light() {
+	createLight() {
 		const light = new SpotLight();
 		light.matrixAutoUpdate = false;
 
@@ -108,7 +116,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		return light;
 	}
 
-	update_light_params() {
+	protected updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.angle = this.pv.angle * (Math.PI / 180);
@@ -121,7 +129,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 
 		this._helper_controller.update();
 	}
-	update_shadow_params() {
+	protected updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadow);
 		this.light.shadow.autoUpdate = isBooleanTrue(this.pv.shadowAutoUpdate);
 		this.light.shadow.needsUpdate = isBooleanTrue(this.pv.shadowUpdateOnNextRender);
@@ -131,5 +139,6 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		this.light.shadow.camera.near = this.pv.shadowNear;
 		this.light.shadow.camera.far = this.pv.shadowFar;
 		this.light.shadow.bias = this.pv.shadowBias;
+		this.light.shadow.radius = this.pv.shadowRadius;
 	}
 }

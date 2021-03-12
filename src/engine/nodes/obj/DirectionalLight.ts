@@ -18,12 +18,6 @@ import {LightType} from '../../poly/registers/nodes/types/Light';
 
 export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		// transform = ParamConfig.FOLDER();
-		// directional
-		// position = ParamConfig.VECTOR3([0, 1, 0]);
-		// target = ParamConfig.VECTOR3([0, 0, 0]);
-		// lookat = ParamConfig.OPERATOR_PATH('', {dependentOnFoundNode: false});
-
 		light = ParamConfig.FOLDER();
 		/** @param light color */
 		color = ParamConfig.COLOR([1, 1, 1], {
@@ -33,13 +27,25 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		intensity = ParamConfig.FLOAT(1);
 		/** @param light distance */
 		distance = ParamConfig.FLOAT(100, {range: [0, 100]});
+
 		// shadows
+		shadow = ParamConfig.FOLDER();
 		/** @param toggle on to cast shadows */
-		castShadows = ParamConfig.BOOLEAN(1);
+		castShadow = ParamConfig.BOOLEAN(1);
 		/** @param shadow resolution */
-		shadowRes = ParamConfig.VECTOR2([1024, 1024]);
+		shadowRes = ParamConfig.VECTOR2([1024, 1024], {
+			visibleIf: {castShadow: true},
+		});
 		/** @param shadow bias */
-		shadowBias = ParamConfig.FLOAT(0.001);
+		shadowBias = ParamConfig.FLOAT(0.001, {
+			visibleIf: {castShadow: true},
+		});
+		/** @param shadows radius. This only has effect when setting the ROP/WebGLRenderer's shadowMapType to VSM */
+		shadowRadius = ParamConfig.FLOAT(0, {
+			visibleIf: {castShadow: 1},
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 
 		// helper
 		/** @param toggle to show helper */
@@ -73,7 +79,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		this._helper_controller.initializeNode();
 	}
 
-	create_light() {
+	createLight() {
 		const light = new DirectionalLight();
 		light.matrixAutoUpdate = false;
 
@@ -101,7 +107,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 	// 	}
 	// }
 
-	update_light_params() {
+	protected updateLightParams() {
 		// this.light.position.copy(this.pv.t);
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
@@ -109,12 +115,13 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 
 		this._helper_controller.update();
 	}
-	update_shadow_params() {
-		this.light.castShadow = isBooleanTrue(this.pv.castShadows);
+	protected updateShadowParams() {
+		this.light.castShadow = isBooleanTrue(this.pv.castShadow);
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		// object.shadow.camera.near = this.pv.shadow_near
 		// object.shadow.camera.far = this.pv.shadow_far
 		this.light.shadow.bias = this.pv.shadowBias;
+		this.light.shadow.radius = this.pv.shadowRadius;
 
 		// updating the camera matrix is not necessary for point light
 		// so probably should not for this

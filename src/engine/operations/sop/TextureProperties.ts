@@ -9,7 +9,7 @@ import {Poly} from '../../../engine/Poly';
 
 import {LinearEncoding, UVMapping, RepeatWrapping} from 'three/src/constants';
 
-import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/ConstantFilter';
+import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 interface TexturePropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;

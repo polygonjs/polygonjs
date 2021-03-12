@@ -38,7 +38,7 @@ interface PdbObject {
 	geometryAtoms: BufferGeometry;
 	geometryBonds: BufferGeometry;
 }
-
+type MaxConcurrentLoadsCountMethod = () => number;
 export class CoreLoaderGeometry {
 	public readonly ext: string;
 
@@ -319,7 +319,14 @@ export class CoreLoaderGeometry {
 	private static CONCURRENT_LOADS_DELAY: number = CoreLoaderGeometry._init_concurrent_loads_delay();
 	private static in_progress_loads_count: number = 0;
 	private static _queue: Array<() => void> = [];
+	private static _maxConcurrentLoadsCountMethod: MaxConcurrentLoadsCountMethod | undefined;
+	public static setMaxConcurrentLoadsCount(method: MaxConcurrentLoadsCountMethod | undefined) {
+		this._maxConcurrentLoadsCountMethod = method;
+	}
 	private static _init_max_concurrent_loads_count(): number {
+		if (this._maxConcurrentLoadsCountMethod) {
+			return this._maxConcurrentLoadsCountMethod();
+		}
 		return CoreUserAgent.isChrome() ? 4 : 1;
 		// const parser = new UAParser();
 		// const name = parser.getBrowser().name;
@@ -356,9 +363,9 @@ export class CoreLoaderGeometry {
 		// }
 		// return 10;
 	}
-	public static override_max_concurrent_loads_count(count: number) {
-		this.MAX_CONCURRENT_LOADS_COUNT = count;
-	}
+	// public static override_max_concurrent_loads_count(count: number) {
+	// 	this.MAX_CONCURRENT_LOADS_COUNT = count;
+	// }
 
 	private static increment_in_progress_loads_count() {
 		this.in_progress_loads_count++;

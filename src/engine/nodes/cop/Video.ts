@@ -16,7 +16,7 @@ import {Constructor} from '../../../types/GlobalTypes';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedCopNode} from './_Base';
-import {CoreTextureLoader} from '../../../core/loader/Texture';
+import {CoreLoaderTexture} from '../../../core/loader/Texture';
 
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
@@ -29,7 +29,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the video from */
-		url = ParamConfig.STRING(CoreTextureLoader.PARAM_DEFAULT, {
+		url = ParamConfig.STRING(CoreLoaderTexture.PARAM_DEFAULT, {
 			fileBrowse: {type: [FileType.TEXTURE_VIDEO]},
 		});
 		/** @param reload the video */
@@ -87,13 +87,13 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}
-		const ext = CoreTextureLoader.get_extension(this.pv.url || '');
-		return CoreTextureLoader.module_names(ext);
+		const ext = CoreLoaderTexture.get_extension(this.pv.url || '');
+		return CoreLoaderTexture.module_names(ext);
 	}
 
 	private _video: HTMLVideoElement | undefined;
 	// private _data_texture_controller: DataTextureController | undefined;
-	private _texture_loader: CoreTextureLoader | undefined;
+	private _texture_loader: CoreLoaderTexture | undefined;
 	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
 
 	initializeNode() {
@@ -198,7 +198,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	private async _load_texture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
 		const url_param = this.p.url;
-		this._texture_loader = this._texture_loader || new CoreTextureLoader(this, url_param);
+		this._texture_loader = this._texture_loader || new CoreLoaderTexture(this, url_param);
 		try {
 			texture = await this._texture_loader.load_texture_from_url_or_op(url, {
 				tdataType: this.pv.ttype && this.pv.tadvanced,

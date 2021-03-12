@@ -59,7 +59,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 		this._helper_controller.initializeNode();
 	}
 
-	create_light() {
+	createLight() {
 		const light = new PointLight();
 		light.matrixAutoUpdate = false;
 
@@ -72,7 +72,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 		return light;
 	}
 
-	update_light_params() {
+	protected updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.decay = this.pv.decay;
@@ -81,7 +81,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 
 		this._helper_controller.update();
 	}
-	update_shadow_params() {
+	protected updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadows);
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		this.light.shadow.camera.near = this.pv.shadowNear;
