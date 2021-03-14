@@ -54,6 +54,9 @@ void main() {
 	// /MAT/meshPhysicalBuilder1/output1
 	vec3 transformed = v_POLY_param2_val;
 	vec3 objectNormal = normal;
+	#ifdef USE_TANGENT
+		vec3 objectTangent = vec3( tangent.xyz );
+	#endif
 
 
 

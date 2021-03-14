@@ -359,7 +359,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			new VariableConfig('normal', {
 				default_from_attribute: true,
 				prefix: 'vec3 objectNormal = ',
-				// post_lines: ['#ifdef USE_TANGENT', 'vec3 objectTangent = vec3( tangent.xyz );', '#endif'],
+				postLines: ['#ifdef USE_TANGENT', '	vec3 objectTangent = vec3( tangent.xyz );', '#endif'],
 			}),
 			new VariableConfig('color', {
 				prefix: 'diffuseColor.xyz = ',

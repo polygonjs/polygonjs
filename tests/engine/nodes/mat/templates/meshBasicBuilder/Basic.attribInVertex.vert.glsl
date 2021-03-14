@@ -31,6 +31,9 @@ void main() {
 	// /MAT/meshBasicBuilder1/output1
 	vec3 transformed = v_POLY_floatToVec3_1_vec3;
 	vec3 objectNormal = normal;
+	#ifdef USE_TANGENT
+		vec3 objectTangent = vec3( tangent.xyz );
+	#endif
 
 
 

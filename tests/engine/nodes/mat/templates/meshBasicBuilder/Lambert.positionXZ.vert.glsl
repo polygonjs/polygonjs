@@ -33,6 +33,9 @@ void main() {
 	// /MAT/mesh_basic1/output1
 	vec3 transformed = position;
 	vec3 objectNormal = normal;
+	#ifdef USE_TANGENT
+		vec3 objectTangent = vec3( tangent.xyz );
+	#endif
 
 
 

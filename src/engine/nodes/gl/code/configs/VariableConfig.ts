@@ -5,6 +5,7 @@ interface VariableConfigOptions {
 	if?: string;
 	prefix?: string;
 	suffix?: string;
+	postLines?: string[];
 }
 
 export class VariableConfig {
@@ -30,5 +31,8 @@ export class VariableConfig {
 	}
 	suffix() {
 		return this._options['suffix'] || '';
+	}
+	postLines() {
+		return this._options.postLines;
 	}
 }

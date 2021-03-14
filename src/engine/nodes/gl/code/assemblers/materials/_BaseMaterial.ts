@@ -291,6 +291,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				shaders_collection_controller.addBodyLines(output_node, [`#if ${if_condition}`]);
 			}
 			shaders_collection_controller.addBodyLines(output_node, [`${prefix}${new_var}${suffix}`]);
+			const postLines = variable_config.postLines();
+			if (postLines) {
+				shaders_collection_controller.addBodyLines(output_node, postLines);
+			}
 			if (if_condition) {
 				shaders_collection_controller.addBodyLines(output_node, [`#endif`]);
 			}
