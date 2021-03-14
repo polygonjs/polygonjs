@@ -23,6 +23,8 @@ import {ParamsInitData} from '../utils/io/IOController';
 import {Raycaster} from 'three/src/core/Raycaster';
 import {Vector2} from 'three/src/math/Vector2';
 import {CoreType} from '../../../core/Type';
+import {CameraHelper} from './utils/helpers/CameraHelper';
+
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -49,6 +51,7 @@ export const UPDATE_FROM_CONTROLS_MODES: UpdateFromControlsMode[] = [
 ];
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -111,6 +114,8 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 		// look_at = ParamConfig.OPERATOR_PATH('');
 		/** @param display */
 		display = ParamConfig.BOOLEAN(1);
+		/** @param show helper */
+		showHelper = ParamConfig.BOOLEAN(0);
 	};
 }
 
@@ -212,6 +217,7 @@ export class TypedThreejsCameraObjNode<
 		this.transformController.initializeNode();
 
 		this.childrenDisplayController.initializeNode();
+		this.initHelperHook();
 	}
 
 	createNode<S extends keyof GeoNodeChildrenMap>(
@@ -244,10 +250,11 @@ export class TypedThreejsCameraObjNode<
 		this.layers_controller.update();
 		// await this.background_controller.update();
 
-		this.update_near_far();
+		this.updateNearFar();
 
 		this.renderController.update();
 		this.update_camera();
+		this._updateHelper();
 		this.controls_controller.update_controls();
 
 		// TODO: ideally the update transform and update camera
@@ -259,13 +266,14 @@ export class TypedThreejsCameraObjNode<
 	}
 
 	static PARAM_CALLBACK_update_near_far_from_param(node: BaseThreejsCameraObjNodeType, param: BaseParamType) {
-		node.update_near_far();
+		node.updateNearFar();
 	}
-	update_near_far() {
+	updateNearFar() {
 		if (this._object.near != this.pv.near || this._object.far != this.pv.far) {
 			this._object.near = this.pv.near;
 			this._object.far = this.pv.far;
 			this._object.updateProjectionMatrix();
+			this._updateHelper();
 		}
 	}
 
@@ -284,6 +292,45 @@ export class TypedThreejsCameraObjNode<
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
 		node.postProcessController.reset();
+	}
+
+	//
+	//
+	// HELPER
+	//
+	//
+	private _helper: CameraHelper | undefined;
+
+	initHelperHook() {
+		this.flags.display.onUpdate(() => {
+			this._updateHelper();
+		});
+	}
+
+	helperVisible() {
+		return this.flags.display.active() && isBooleanTrue(this.pv.showHelper);
+	}
+
+	private _createHelper(): CameraHelper {
+		const helper = new CameraHelper(this.object);
+		helper.update();
+		return helper;
+	}
+
+	_updateHelper() {
+		if (this.helperVisible()) {
+			if (!this._helper) {
+				this._helper = this._createHelper();
+			}
+			if (this._helper) {
+				this.object.add(this._helper);
+				this._helper.update();
+			}
+		} else {
+			if (this._helper) {
+				this.object.remove(this._helper);
+			}
+		}
 	}
 }
 
