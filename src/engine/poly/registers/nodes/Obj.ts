@@ -15,6 +15,7 @@ import {PostProcessObjNode} from '../../../nodes/obj/PostProcess';
 import {RenderersObjNode} from '../../../nodes/obj/Renderers';
 
 import {BlendObjNode} from '../../../nodes/obj/Blend';
+import {ContactShadowObjNode} from '../../../nodes/obj/ContactShadow';
 import {GeoObjNode} from '../../../nodes/obj/Geo';
 import {NullObjNode} from '../../../nodes/obj/Null';
 import {PolarTransformObjNode} from '../../../nodes/obj/PolarTransform';
@@ -31,6 +32,7 @@ export interface ObjNodeChildrenMap {
 	ambientLight: AmbientLightObjNode;
 	areaLight: AreaLightObjNode;
 	blend: BlendObjNode;
+	contactShadow: ContactShadowObjNode;
 	cubeCamera: CubeCameraObjNode;
 	directionalLight: DirectionalLightObjNode;
 	geo: GeoObjNode;
@@ -64,6 +66,7 @@ export class ObjRegister {
 		poly.registerNode(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
 
 		poly.registerNode(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
+		poly.registerNode(ContactShadowObjNode, CATEGORY_OBJ.ADVANCED);
 		poly.registerNode(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
 		poly.registerNode(NullObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.registerNode(PolarTransformObjNode, CATEGORY_OBJ.TRANSFORM);
