@@ -87,10 +87,15 @@ export class CoreLoaderGeometry {
 		return new Promise(async (resolve, reject) => {
 			// do not add '?' here. Let the requester do it if necessary
 			let url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
-			if (url[0] != 'h') {
-				const assets_root = this.scene.assets.root();
-				if (assets_root) {
-					url = `${assets_root}${url}`;
+			const blobUrl = Poly.blobs.blobUrl(url);
+			if (blobUrl) {
+				url = blobUrl;
+			} else {
+				if (url[0] != 'h') {
+					const assets_root = this.scene.assets.root();
+					if (assets_root) {
+						url = `${assets_root}${url}`;
+					}
 				}
 			}
 
@@ -245,8 +250,14 @@ export class CoreLoaderGeometry {
 		if (module) {
 			const draco_loader = new module.DRACOLoader();
 			const root = Poly.libs.root();
-			const decoder_path = `${root}/draco/`;
-			draco_loader.setDecoderPath(decoder_path);
+			const DRACOPath = Poly.libs.DRACOPath();
+			if (root || DRACOPath) {
+				const decoder_path = `${root || ''}${DRACOPath || ''}/`;
+				draco_loader.setDecoderPath(decoder_path);
+			} else {
+				(draco_loader as any).setDecoderPath(undefined);
+			}
+
 			draco_loader.setDecoderConfig({type: 'js'});
 			return draco_loader;
 		}
@@ -273,8 +284,13 @@ export class CoreLoaderGeometry {
 			this.gltf_loader = this.gltf_loader || new gltf_module.GLTFLoader();
 			this.draco_loader = this.draco_loader || new draco_module.DRACOLoader();
 			const root = Poly.libs.root();
-			const decoder_path = `${root}/draco/gltf/`;
-			this.draco_loader.setDecoderPath(decoder_path);
+			const DRACOGLTFPath = Poly.libs.DRACOGLTFPath();
+			if (root || DRACOGLTFPath) {
+				const decoder_path = `${root || ''}${DRACOGLTFPath || ''}/`;
+				this.draco_loader.setDecoderPath(decoder_path);
+			} else {
+				(this.draco_loader as any).setDecoderPath(undefined);
+			}
 			// not having this uses wasm if the relevant libraries are found
 			// draco_loader.setDecoderConfig({type: 'js'});
 			this.gltf_loader.setDRACOLoader(this.draco_loader);

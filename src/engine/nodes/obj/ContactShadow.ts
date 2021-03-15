@@ -42,26 +42,36 @@ const UPDATE_MODES: ContactShadowUpdateMode[] = [ContactShadowUpdateMode.ON_REND
 
 class ContactShadowObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	shadow = ParamConfig.FOLDER();
+	/** @param distance from the ground up to which shadows are visible */
 	dist = ParamConfig.FLOAT(1, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 	});
+	/** @param size of the plane on which shadows are rendered */
 	planeSize = ParamConfig.VECTOR2([1, 1]);
+	/** @param shadow resolution */
 	shadowRes = ParamConfig.VECTOR2([256, 256]);
+	/** @param blur amount */
 	blur = ParamConfig.FLOAT(1, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 	});
+	/** @param toggle on to add a secondary blur, which may be useful to get rid of artefacts */
 	tblur2 = ParamConfig.BOOLEAN(1);
+	/** @param secondary blur amount */
 	blur2 = ParamConfig.FLOAT(1, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 		visibleIf: {tblur2: 1},
 	});
+	/** @param shadow darkness */
 	darkness = ParamConfig.FLOAT(1);
+	/** @param shadow opacity */
 	opacity = ParamConfig.FLOAT(1);
+	/** @param show helper */
 	showHelper = ParamConfig.BOOLEAN(0);
 
+	/** @param set update mode, which can be to update on every frame, or manually only */
 	updateMode = ParamConfig.INTEGER(UPDATE_MODES.indexOf(ContactShadowUpdateMode.ON_RENDER), {
 		callback: (node: BaseNodeType) => {
 			ContactShadowObjNode.PARAM_CALLBACK_update_updateMode(node as ContactShadowObjNode);
@@ -72,6 +82,7 @@ class ContactShadowObjParamConfig extends TransformedParamConfig(NodeParamsConfi
 			}),
 		},
 	});
+	/** @param click to update shadow, when mode is manual */
 	update = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			ContactShadowObjNode.PARAM_CALLBACK_updateManual(node as ContactShadowObjNode);

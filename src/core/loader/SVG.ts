@@ -8,6 +8,7 @@ import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
 import {ShapePath} from 'three/src/extras/core/ShapePath';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {isBooleanTrue} from '../BooleanValue';
+import {Poly} from '../../engine/Poly';
 
 interface CoreSVGLoaderOptions {
 	// fill
@@ -36,10 +37,15 @@ export class CoreSVGLoader {
 			const loader = new SVGLoader();
 
 			let url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
-			if (url[0] != 'h') {
-				const assets_root = this.scene.assets.root();
-				if (assets_root) {
-					url = `${assets_root}${url}`;
+			const blobUrl = Poly.blobs.blobUrl(url);
+			if (blobUrl) {
+				url = blobUrl;
+			} else {
+				if (url[0] != 'h') {
+					const assets_root = this.scene.assets.root();
+					if (assets_root) {
+						url = `${assets_root}${url}`;
+					}
 				}
 			}
 

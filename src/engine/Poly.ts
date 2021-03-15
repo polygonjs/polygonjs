@@ -18,6 +18,7 @@ import {PluginsRegister} from './poly/registers/plugins/PluginsRegister';
 import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
 import {PolyPlugin} from './poly/registers/plugins/Plugin';
 import {PolyDictionary} from '../types/GlobalTypes';
+import {BlobsController} from './poly/BlobsController';
 
 declare global {
 	interface Window {
@@ -39,6 +40,7 @@ export class PolyEngine {
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
+	public readonly blobs: BlobsController = new BlobsController();
 	scenesByUuid: PolyDictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _player_mode: boolean = true;

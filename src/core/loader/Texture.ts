@@ -112,10 +112,15 @@ export class CoreLoaderTexture {
 		return new Promise(async (resolve, reject) => {
 			// url = this._resolve_url(url)
 			const ext = CoreLoaderTexture.get_extension(url);
-			if (url[0] != 'h') {
-				const assets_root = this._node.scene().assets.root();
-				if (assets_root) {
-					url = `${assets_root}${url}`;
+			const blobUrl = Poly.blobs.blobUrl(url);
+			if (blobUrl) {
+				url = blobUrl;
+			} else {
+				if (url[0] != 'h') {
+					const assets_root = this._node.scene().assets.root();
+					if (assets_root) {
+						url = `${assets_root}${url}`;
+					}
 				}
 			}
 
@@ -198,15 +203,23 @@ export class CoreLoaderTexture {
 	private async _basis_loader() {
 		const module = await Poly.modulesRegister.module(ModuleName.BasisTextureLoader);
 		if (module) {
-			const loader = new module.BasisTextureLoader();
-			loader.setTranscoderPath('/three/js/libs/basis/');
+			const BASISLoader = new module.BasisTextureLoader();
+			const root = Poly.libs.root();
+			const BASISPath = Poly.libs.BASISPath();
+			if (root || BASISPath) {
+				const decoder_path = `${root || ''}${BASISPath || ''}/`;
+				BASISLoader.setTranscoderPath(decoder_path);
+			} else {
+				(BASISLoader as any).setTranscoderPath(undefined);
+			}
+			// BASISLoader.setTranscoderPath('/three/js/libs/basis/');
 			const renderer = await Poly.renderersController.waitForRenderer();
 			if (renderer) {
-				loader.detectSupport(renderer);
+				BASISLoader.detectSupport(renderer);
 			} else {
 				Poly.warn('texture loader found no renderer for basis texture loader');
 			}
-			return loader;
+			return BASISLoader;
 		}
 	}
 

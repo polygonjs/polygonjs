@@ -2,14 +2,12 @@ import {StringParam} from '../../params/String';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
 export class SceneAssetsController {
-	private _params_by_id: Map<CoreGraphNodeId, StringParam> = new Map();
-	private _assets_root: string | null = null;
-
 	//
 	//
 	// REGISTER PARAMS
 	//
 	//
+	private _params_by_id: Map<CoreGraphNodeId, StringParam> = new Map();
 	register_param(param: StringParam) {
 		this._params_by_id.set(param.graphNodeId(), param);
 	}
@@ -29,6 +27,7 @@ export class SceneAssetsController {
 	// ASSETS ROOT
 	//
 	//
+	private _assets_root: string | null = null;
 	root() {
 		return this._assets_root;
 	}

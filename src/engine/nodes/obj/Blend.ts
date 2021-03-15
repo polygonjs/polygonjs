@@ -22,16 +22,19 @@ const BLEND_MODES: BlendMode[] = [BlendMode.TOGETHER, BlendMode.SEPARATELY];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
 class BlendObjParamConfig extends NodeParamsConfig {
+	/** @param object to blend transform from */
 	object0 = ParamConfig.OPERATOR_PATH('/geo1', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
 	});
+	/** @param object to blend transform to */
 	object1 = ParamConfig.OPERATOR_PATH('/geo2', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
 	});
+	/** @param blend mode */
 	mode = ParamConfig.INTEGER(BLEND_MODES.indexOf(BlendMode.TOGETHER), {
 		menu: {
 			entries: BLEND_MODES.map((name, value) => {
@@ -39,16 +42,19 @@ class BlendObjParamConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param blend value */
 	blend = ParamConfig.FLOAT(0, {
 		visibleIf: {mode: BLEND_MODES.indexOf(BlendMode.TOGETHER)},
 		range: [0, 1],
 		rangeLocked: [false, false],
 	});
+	/** @param blend translation value */
 	blendT = ParamConfig.FLOAT(0, {
 		visibleIf: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
 		range: [0, 1],
 		rangeLocked: [false, false],
 	});
+	/** @param blend rotation value */
 	blendR = ParamConfig.FLOAT(0, {
 		visibleIf: {mode: BLEND_MODES.indexOf(BlendMode.SEPARATELY)},
 		range: [0, 1],
