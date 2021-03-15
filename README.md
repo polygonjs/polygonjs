@@ -50,7 +50,7 @@ Let's now look at an example that demonstrates how powerful a node-based engine 
 ```javascript
 import {PolyScene} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
 // create a scene
-const scene = new POLY.PolyScene();
+const scene = new PolyScene();
 const rootNode = scene.root();
 
 // create a geo node to add the geometry nodes we will need
@@ -177,7 +177,7 @@ For this, you can directly access the threejs objects. There are 2 ways to do so
 -   **From the scene**
 
 ```javascript
-const scene = new POLY.PolyScene();
+const scene = new PolyScene();
 const threejsScene = scene.threejsScene();
 ```
 
