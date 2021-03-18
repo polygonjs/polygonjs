@@ -137,12 +137,13 @@ void main() {
 	diffuseColor.xyz = v_POLY_floatToVec3_1_vec3;
 	float POLY_metalness = 1.0;
 	float POLY_roughness = 1.0;
+	vec3 POLY_emissive = vec3(1.0, 1.0, 1.0);
 	SSSModel POLY_SSSModel = v_POLY_SSSModel1_SSSModel;
 
 
 
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-	vec3 totalEmissiveRadiance = emissive;
+	vec3 totalEmissiveRadiance = emissive * POLY_emissive;
 
 	#ifdef TRANSMISSION
 		float totalTransmission = transmission;

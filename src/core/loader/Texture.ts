@@ -108,24 +108,24 @@ export class CoreLoaderTexture {
 		return texture;
 	}
 
-	async load_url(url: string, options: TextureLoadOptions): Promise<Texture> {
+	async load_url(paramUrl: string, options: TextureLoadOptions): Promise<Texture> {
 		return new Promise(async (resolve, reject) => {
-			// url = this._resolve_url(url)
-			const ext = CoreLoaderTexture.get_extension(url);
-			const blobUrl = Poly.blobs.blobUrl(url);
+			let resolvedUrl = paramUrl;
+			const ext = CoreLoaderTexture.get_extension(resolvedUrl);
+			const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
 			if (blobUrl) {
-				url = blobUrl;
+				resolvedUrl = blobUrl;
 			} else {
-				if (url[0] != 'h') {
+				if (resolvedUrl[0] != 'h') {
 					const assets_root = this._node.scene().assets.root();
 					if (assets_root) {
-						url = `${assets_root}${url}`;
+						resolvedUrl = `${assets_root}${resolvedUrl}`;
 					}
 				}
 			}
 
 			if (CoreLoaderTexture.VIDEO_EXTENSIONS.includes(ext)) {
-				const texture: VideoTexture = await this._load_as_video(url);
+				const texture: VideoTexture = await this._load_as_video(resolvedUrl);
 				resolve(texture);
 			} else {
 				this.loader_for_ext(ext, options).then(async (loader) => {
@@ -133,8 +133,9 @@ export class CoreLoaderTexture {
 						CoreLoaderTexture.increment_in_progress_loads_count();
 						await CoreLoaderTexture.wait_for_max_concurrent_loads_queue_freed();
 						loader.load(
-							url,
+							resolvedUrl,
 							(texture: Texture) => {
+								Poly.blobs.fetchBlob({paramUrl, resolvedUrl});
 								CoreLoaderTexture.decrement_in_progress_loads_count();
 								resolve(texture);
 							},
@@ -351,13 +352,6 @@ export class CoreLoaderTexture {
 		url_elements.push(new_extension);
 		return [url_elements.join('.'), elements[1]].join('?');
 	}
-	// static private _resolve_url(url: string):string{
-	// 	if(url[0] == '/'){
-	// 		const root_url = POLY.env_is_production() ? 'https://polygonjs.com' : 'http://localhost:5000'
-	// 		url = `${root_url}${url}`
-	// 	}
-	// 	return url
-	// }
 
 	static set_texture_for_mapping(texture: Texture) {
 		// let val = texture['wrapS']

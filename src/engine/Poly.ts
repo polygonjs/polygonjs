@@ -19,6 +19,7 @@ import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
 import {PolyPlugin} from './poly/registers/plugins/Plugin';
 import {PolyDictionary} from '../types/GlobalTypes';
 import {BlobsController} from './poly/BlobsController';
+import {SelfContainedScenesLoader} from './poly/SelfContainedSceneLoader';
 
 declare global {
 	interface Window {
@@ -41,6 +42,7 @@ export class PolyEngine {
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
 	public readonly blobs: BlobsController = new BlobsController();
+	public readonly selfContainedScenesLoader: SelfContainedScenesLoader = new SelfContainedScenesLoader();
 	scenesByUuid: PolyDictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _player_mode: boolean = true;

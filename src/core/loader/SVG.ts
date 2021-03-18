@@ -36,21 +36,23 @@ export class CoreSVGLoader {
 		return new Promise((resolve, reject) => {
 			const loader = new SVGLoader();
 
-			let url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
-			const blobUrl = Poly.blobs.blobUrl(url);
+			let resolvedUrl = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+			const paramUrl = this.url;
+			const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
 			if (blobUrl) {
-				url = blobUrl;
+				resolvedUrl = blobUrl;
 			} else {
-				if (url[0] != 'h') {
+				if (resolvedUrl[0] != 'h') {
 					const assets_root = this.scene.assets.root();
 					if (assets_root) {
-						url = `${assets_root}${url}`;
+						resolvedUrl = `${assets_root}${resolvedUrl}`;
 					}
 				}
 			}
 
-			loader.load(url, (data) => {
+			loader.load(resolvedUrl, (data) => {
 				try {
+					Poly.blobs.fetchBlob({paramUrl, resolvedUrl});
 					const group = this._onLoaded(data, options);
 					resolve(group);
 				} catch (err) {

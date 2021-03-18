@@ -32,6 +32,10 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	filterFragmentShader(fragmentShader: string) {
 		fragmentShader = fragmentShader.replace('#include <metalnessmap_fragment>', metalnessmap_fragment);
 		fragmentShader = fragmentShader.replace('#include <roughnessmap_fragment>', roughnessmap_fragment);
+		fragmentShader = fragmentShader.replace(
+			'vec3 totalEmissiveRadiance = emissive;',
+			'vec3 totalEmissiveRadiance = emissive * POLY_emissive;'
+		);
 
 		if (ShaderAssemblerStandard.USE_SSS) {
 			fragmentShader = fragmentShader.replace(
@@ -80,6 +84,7 @@ ${sss_injected_fragment}
 		const list = BaseGlShaderAssembler.output_input_connection_points();
 		list.push(new GlConnectionPoint('metalness', GlConnectionPointType.FLOAT, 1));
 		list.push(new GlConnectionPoint('roughness', GlConnectionPointType.FLOAT, 1));
+		list.push(new GlConnectionPoint('emissive', GlConnectionPointType.VEC3, [1, 1, 1]));
 		if (ShaderAssemblerStandard.USE_SSS) {
 			list.push(new GlConnectionPoint('SSSModel', GlConnectionPointType.SSS_MODEL, sss_default));
 		}
@@ -91,7 +96,7 @@ ${sss_injected_fragment}
 			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv'], []),
 			new ShaderConfig(
 				ShaderName.FRAGMENT,
-				['color', 'alpha', 'metalness', 'roughness', 'SSSModel'],
+				['color', 'alpha', 'metalness', 'roughness', 'emissive', 'SSSModel'],
 				[ShaderName.VERTEX]
 			),
 		];
@@ -108,6 +113,12 @@ ${sss_injected_fragment}
 			new VariableConfig('roughness', {
 				default: '1.0',
 				prefix: 'float POLY_roughness = ',
+			})
+		);
+		list.push(
+			new VariableConfig('emissive', {
+				default: 'vec3(1.0, 1.0, 1.0)',
+				prefix: 'vec3 POLY_emissive = ',
 			})
 		);
 		if (ShaderAssemblerStandard.USE_SSS) {

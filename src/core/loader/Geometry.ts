@@ -86,15 +86,16 @@ export class CoreLoaderGeometry {
 	private load_auto(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			// do not add '?' here. Let the requester do it if necessary
-			let url = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
-			const blobUrl = Poly.blobs.blobUrl(url);
+			let resolvedUrl = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+			const paramUrl = this.url;
+			const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
 			if (blobUrl) {
-				url = blobUrl;
+				resolvedUrl = blobUrl;
 			} else {
-				if (url[0] != 'h') {
+				if (resolvedUrl[0] != 'h') {
 					const assets_root = this.scene.assets.root();
 					if (assets_root) {
-						url = `${assets_root}${url}`;
+						resolvedUrl = `${assets_root}${resolvedUrl}`;
 					}
 				}
 			}
@@ -102,11 +103,12 @@ export class CoreLoaderGeometry {
 			if (this.ext == 'json') {
 				CoreLoaderGeometry.increment_in_progress_loads_count();
 				await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
-				fetch(url)
+				fetch(resolvedUrl)
 					.then(async (response) => {
 						const data = await response.json();
 						const obj_loader = new ObjectLoader();
 						obj_loader.parse(data, (obj) => {
+							Poly.blobs.fetchBlob({paramUrl, resolvedUrl});
 							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							resolve(this.on_load_success(obj.children[0]));
 						});
@@ -121,16 +123,17 @@ export class CoreLoaderGeometry {
 					CoreLoaderGeometry.increment_in_progress_loads_count();
 					await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 					loader.load(
-						url,
+						resolvedUrl,
 						(object: any) => {
 							this.on_load_success(object).then((object2) => {
+								Poly.blobs.fetchBlob({paramUrl, resolvedUrl});
 								CoreLoaderGeometry.decrement_in_progress_loads_count();
 								resolve(object2);
 							});
 						},
 						undefined,
 						(error_message: ErrorEvent) => {
-							Poly.warn('error loading', url, error_message);
+							Poly.warn('error loading', resolvedUrl, error_message);
 							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							reject(error_message);
 						}

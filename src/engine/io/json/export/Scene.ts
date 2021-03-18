@@ -12,7 +12,6 @@ export interface SceneJsonExporterDataProperties {
 	maxFrame: number;
 	maxFrameLocked: boolean;
 	realtimeState: boolean;
-	// fps: number;
 	masterCameraNodePath: string | null;
 	versions?: Versions;
 }
@@ -33,14 +32,11 @@ export class SceneJsonExporter {
 		const ui_data = root_exporter.ui_data();
 
 		this._data = {
-			// __js_version: this._scene.js_version(),
 			properties: {
-				// name: this._scene.name(), // this conflicts with saving the name from the admin page
 				frame: this._scene.frame() || TimeController.START_FRAME,
 				maxFrame: this._scene.maxFrame(),
 				maxFrameLocked: this._scene.timeController.maxFrameLocked(),
 				realtimeState: this._scene.timeController.realtimeState(),
-				// fps: this._scene.time_controller.fps,
 				masterCameraNodePath: this._scene.camerasController.masterCameraNodePath(),
 				versions: versions,
 			},

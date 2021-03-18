@@ -1,7 +1,7 @@
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter, SceneJsonExporterData} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
-import {PolyScene} from '../../../../src/engine/index_all';
+import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
 QUnit.test('gl add updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
