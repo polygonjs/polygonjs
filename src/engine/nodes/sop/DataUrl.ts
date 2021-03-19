@@ -15,6 +15,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {FileType} from '../../params/utils/OptionsController';
 
 export enum DataType {
 	JSON = 'json',
@@ -36,7 +37,9 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param the url to fetch the data from */
-	url = ParamConfig.STRING(DEFAULT_URL);
+	url = ParamConfig.STRING(DEFAULT_URL, {
+		fileBrowse: {type: [FileType.JSON]},
+	});
 
 	//
 	// JSON params

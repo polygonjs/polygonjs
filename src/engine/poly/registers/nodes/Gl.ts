@@ -101,6 +101,7 @@ import {SubnetInputGlNode} from '../../../nodes/gl/SubnetInput';
 import {SubnetOutputGlNode} from '../../../nodes/gl/SubnetOutput';
 import {SwitchGlNode} from '../../../nodes/gl/Switch';
 import {TextureGlNode} from '../../../nodes/gl/Texture';
+import {ToWorldSpaceGlNode} from '../../../nodes/gl/ToWorldSpace';
 import {TwoWaySwitchGlNode} from '../../../nodes/gl/TwoWaySwitch';
 import {VaryingWriteGlNode} from '../../../nodes/gl/VaryingWrite';
 import {VaryingReadGlNode} from '../../../nodes/gl/VaryingRead';
@@ -203,6 +204,7 @@ export interface GlNodeChildrenMap {
 	switch: SwitchGlNode;
 	tan: TanGlNode;
 	texture: TextureGlNode;
+	toWorldSpace: ToWorldSpaceGlNode;
 	twoWaySwitch: TwoWaySwitchGlNode;
 	varyingWrite: VaryingWriteGlNode;
 	varyingRead: VaryingReadGlNode;
@@ -324,6 +326,7 @@ export class GlRegister {
 		poly.registerNode(SwitchGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(TanGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(TextureGlNode, CATEGORY_GL.COLOR);
+		poly.registerNode(ToWorldSpaceGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(TwoWaySwitchGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(VaryingWriteGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(VaryingReadGlNode, CATEGORY_GL.GLOBALS);

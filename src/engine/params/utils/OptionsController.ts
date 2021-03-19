@@ -78,6 +78,7 @@ export enum FileType {
 	GEOMETRY = 'geometry',
 	FONT = 'font',
 	SVG = 'svg',
+	JSON = 'json',
 }
 
 export type VisibleIfParamOptions = PolyDictionary<number | boolean>;

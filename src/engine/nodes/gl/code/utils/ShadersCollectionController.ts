@@ -51,6 +51,7 @@ export class ShadersCollectionController {
 		if (definitions.length == 0) {
 			return;
 		}
+
 		shader_name = shader_name || this._current_shader_name;
 		const lines_controller = this._lines_controller_by_shader_name.get(shader_name);
 		if (lines_controller) {

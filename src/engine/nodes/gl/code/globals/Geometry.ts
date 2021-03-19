@@ -69,16 +69,37 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		}
 		const dependencies = shader_config.dependencies();
 
-		const body_line = `${var_name} = ${gl_type}(${output_name})`;
+		const body_lines: string[] = [];
+		const worldPositionLine = `${var_name} = modelMatrix * vec4( position, 1.0 )`;
+		const worldNormalLine = `${var_name} = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal )`;
+		// const ILine = `${var_name} = worldPosition.xyz - cameraPosition`;
+		switch (output_name) {
+			case 'worldPosition': {
+				body_lines.push(worldPositionLine);
+				break;
+			}
+			case 'worldNormal': {
+				body_lines.push(worldNormalLine);
+				break;
+			}
+			// case 'I': {
+			// 	body_lines.push(worldPositionLine);
+			// 	body_lines.push(ILine);
+			// 	break;
+			// }
+			default: {
+				body_lines.push(`${var_name} = ${gl_type}(${output_name})`);
+			}
+		}
 		for (let dependency of dependencies) {
 			// MapUtils.push_on_array_at_entry(definitions_by_shader_name, dependency, definition);
 			// MapUtils.push_on_array_at_entry(body_lines_by_shader_name, dependency, body_line);
 			shaders_collection_controller.addDefinitions(globals_node, [definition], dependency);
-			shaders_collection_controller.addBodyLines(globals_node, [body_line], dependency);
+			shaders_collection_controller.addBodyLines(globals_node, body_lines, dependency);
 		}
 		if (dependencies.length == 0) {
 			// body_lines.push(body_line);
-			shaders_collection_controller.addBodyLines(globals_node, [body_line]);
+			shaders_collection_controller.addBodyLines(globals_node, body_lines);
 		}
 	}
 
