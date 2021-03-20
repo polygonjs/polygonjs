@@ -172,7 +172,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		if (this.isDirty()) {
 			if (!this._is_computing) {
 				this._is_computing = true;
-				await this.process_computation();
+				await this.processComputation();
 				this._is_computing = false;
 
 				if (this._compute_resolves) {
@@ -189,7 +189,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 			}
 		}
 	}
-	protected async process_computation(): Promise<void> {}
+	protected async processComputation(): Promise<void> {}
 	// set_default_value(default_value: ParamValuesTypeMap[T]) {
 	// 	this._default_value = default_value;
 	// }

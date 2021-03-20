@@ -14,7 +14,10 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 class TimerEventParamsConfig extends NodeParamsConfig {
 	/** @param delay before dispatching */
-	delay = ParamConfig.INTEGER(1000);
+	delay = ParamConfig.INTEGER(1000, {
+		range: [0, 1000],
+		rangeLocked: [true, false],
+	});
 }
 const ParamsConfig = new TimerEventParamsConfig();
 

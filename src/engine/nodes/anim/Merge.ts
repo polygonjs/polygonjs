@@ -63,7 +63,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 					this._update_timeline_builder(timeline_builder);
 				}
 
-				merged_timeline_builder.add_timeline_builder(timeline_builder);
+				merged_timeline_builder.addTimelineBuilder(timeline_builder);
 				i++;
 			}
 		}
@@ -85,9 +85,9 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 		let position = timeline_builder.position();
 		if (!position || isBooleanTrue(this.pv.overridePositions)) {
 			position = new AnimationPosition();
-			position.set_mode(AnimationPositionMode.RELATIVE);
-			position.set_relative_to(AnimationPositionRelativeTo.START);
-			position.set_offset(this.pv.offset);
+			position.setMode(AnimationPositionMode.RELATIVE);
+			position.setRelativeTo(AnimationPositionRelativeTo.START);
+			position.setOffset(this.pv.offset);
 			timeline_builder.setPosition(position);
 		}
 	}
@@ -95,9 +95,9 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 		let position = timeline_builder.position();
 		if (!position || isBooleanTrue(this.pv.overridePositions)) {
 			position = new AnimationPosition();
-			position.set_mode(AnimationPositionMode.RELATIVE);
-			position.set_relative_to(AnimationPositionRelativeTo.END);
-			position.set_offset(this.pv.offset);
+			position.setMode(AnimationPositionMode.RELATIVE);
+			position.setRelativeTo(AnimationPositionRelativeTo.END);
+			position.setOffset(this.pv.offset);
 			timeline_builder.setPosition(position);
 		}
 	}

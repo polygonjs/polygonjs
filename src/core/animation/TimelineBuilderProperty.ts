@@ -91,7 +91,7 @@ export class TimelineBuilderProperty {
 			return;
 		}
 		const operation = timeline_builder.operation();
-		const update_callback = timeline_builder.update_callback();
+		const update_callback = timeline_builder.updateCallback();
 
 		for (let object3d of objects) {
 			// const target_property = (object3d as any)[this._property_name as any] as TargetValue;
@@ -102,7 +102,7 @@ export class TimelineBuilderProperty {
 				const vars = this._common_vars(timeline_builder);
 
 				// add update_matrix
-				if (update_callback && update_callback.update_matrix()) {
+				if (update_callback && update_callback.updateMatrix()) {
 					const old_matrix_auto_update = object3d.matrixAutoUpdate;
 					vars.onStart = () => {
 						object3d.matrixAutoUpdate = true;
@@ -330,7 +330,7 @@ export class TimelineBuilderProperty {
 		}
 
 		// repeat
-		const repeat_params = timeline_builder.repeat_params();
+		const repeat_params = timeline_builder.repeatParams();
 		if (repeat_params) {
 			vars.repeat = repeat_params.count;
 			vars.repeatDelay = repeat_params.delay;
@@ -346,7 +346,7 @@ export class TimelineBuilderProperty {
 		target: object
 	) {
 		const position = timeline_builder.position();
-		const position_param = position ? position.to_parameter() : undefined;
+		const position_param = position ? position.toParameter() : undefined;
 		timeline.to(target, vars, position_param);
 	}
 }

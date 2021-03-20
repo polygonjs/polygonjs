@@ -47,7 +47,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 			}
 		}
 	}
-	protected async process_computation(): Promise<void> {
+	protected async processComputation(): Promise<void> {
 		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
 			const expression_result = await this.expressionController.compute_expression();
 			if (this.expressionController.is_errored()) {

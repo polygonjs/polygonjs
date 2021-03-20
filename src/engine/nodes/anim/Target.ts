@@ -6,11 +6,13 @@
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
-enum TargetType {
+export enum AnimTargetNodeTargetType {
 	SCENE_GRAPH = 'scene graph',
 	NODE = 'node',
 }
-const TARGET_TYPES: TargetType[] = [TargetType.SCENE_GRAPH, TargetType.NODE];
+const TARGET_TYPES: AnimTargetNodeTargetType[] = [AnimTargetNodeTargetType.SCENE_GRAPH, AnimTargetNodeTargetType.NODE];
+const TARGET_TYPE_SCENE_GRAPH = TARGET_TYPES.indexOf(AnimTargetNodeTargetType.SCENE_GRAPH);
+const TARGET_TYPE_NODE = TARGET_TYPES.indexOf(AnimTargetNodeTargetType.NODE);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
@@ -21,7 +23,7 @@ import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 class TargetAnimParamsConfig extends NodeParamsConfig {
 	/** @param sets if the target is a Polygonjs node, or a THREE object */
-	type = ParamConfig.INTEGER(0, {
+	type = ParamConfig.INTEGER(TARGET_TYPE_SCENE_GRAPH, {
 		menu: {
 			entries: TARGET_TYPES.map((name, value) => {
 				return {name, value};
@@ -29,16 +31,16 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param if set to a Polygonjs node, this is the node path */
-	nodePath = ParamConfig.OPERATOR_PATH('/geo1', {
-		visibleIf: {type: TARGET_TYPES.indexOf(TargetType.NODE)},
+	nodePath = ParamConfig.OPERATOR_PATH('', {
+		visibleIf: {type: TARGET_TYPE_NODE},
 	});
 	/** @param if set to a THREE object, this is a mask to find the objects */
 	objectMask = ParamConfig.STRING('/geo*', {
-		visibleIf: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
+		visibleIf: {type: TARGET_TYPE_SCENE_GRAPH},
 	});
 	/** @param sets if the matrix should be updated as the animation progresses */
 	updateMatrix = ParamConfig.BOOLEAN(0, {
-		visibleIf: {type: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)},
+		visibleIf: {type: TARGET_TYPE_SCENE_GRAPH},
 	});
 	/** @param prints which objects are targeted by this node, for debugging */
 	printResolve = ParamConfig.BUTTON(null, {
@@ -63,9 +65,9 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 				this.params.label.init([this.p.type, this.p.nodePath, this.p.objectMask], () => {
 					const type = TARGET_TYPES[this.pv.type];
 					switch (type) {
-						case TargetType.NODE:
+						case AnimTargetNodeTargetType.NODE:
 							return this.pv.nodePath;
-						case TargetType.SCENE_GRAPH:
+						case AnimTargetNodeTargetType.SCENE_GRAPH:
 							return this.pv.objectMask;
 					}
 					TypeAssert.unreachable(type);
@@ -78,20 +80,23 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		const target = this._create_target(timeline_builder);
-		timeline_builder.set_target(target);
+		timeline_builder.setTarget(target);
 		this._set_update_callback(timeline_builder);
 
 		this.set_timeline_builder(timeline_builder);
+	}
+	setTargetType(targetType: AnimTargetNodeTargetType) {
+		this.p.type.set(TARGET_TYPES.indexOf(targetType));
 	}
 	private _create_target(timeline_builder: TimelineBuilder) {
 		const type = TARGET_TYPES[this.pv.type];
 		const property_target = new PropertyTarget();
 		switch (type) {
-			case TargetType.NODE: {
+			case AnimTargetNodeTargetType.NODE: {
 				property_target.setNodePath(this.pv.nodePath);
 				return property_target;
 			}
-			case TargetType.SCENE_GRAPH: {
+			case AnimTargetNodeTargetType.SCENE_GRAPH: {
 				property_target.setObjectMask(this.pv.objectMask);
 				return property_target;
 			}
@@ -100,16 +105,16 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 	}
 	private _set_update_callback(timeline_builder: TimelineBuilder) {
 		const type = TARGET_TYPES[this.pv.type];
-		let update_callback = timeline_builder.update_callback();
+		let update_callback = timeline_builder.updateCallback();
 		switch (type) {
-			case TargetType.NODE: {
+			case AnimTargetNodeTargetType.NODE: {
 				return;
 			}
-			case TargetType.SCENE_GRAPH: {
+			case AnimTargetNodeTargetType.SCENE_GRAPH: {
 				if (isBooleanTrue(this.pv.updateMatrix)) {
 					update_callback = update_callback || new AnimationUpdateCallback();
-					update_callback.set_update_matrix(this.pv.updateMatrix);
-					timeline_builder.set_update_callback(update_callback);
+					update_callback.setUpdateMatrix(this.pv.updateMatrix);
+					timeline_builder.setUpdateCallback(update_callback);
 				}
 				return;
 			}
@@ -125,10 +130,10 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		const timeline_builder = new TimelineBuilder();
 		const target = this._create_target(timeline_builder);
 		switch (type) {
-			case TargetType.NODE: {
+			case AnimTargetNodeTargetType.NODE: {
 				return console.log(target.node(this.scene()));
 			}
-			case TargetType.SCENE_GRAPH: {
+			case AnimTargetNodeTargetType.SCENE_GRAPH: {
 				return console.log(target.objects(this.scene()));
 			}
 		}

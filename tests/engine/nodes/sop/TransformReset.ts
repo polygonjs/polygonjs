@@ -1,5 +1,6 @@
-import {TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../../src/core/Transform';
+import {TransformTargetType} from '../../../../src/core/Transform';
 import {Matrix4} from 'three/src/math/Matrix4';
+import {TransformObjectMode} from '../../../../src/engine/operations/sop/Transform';
 
 QUnit.test('transform reset simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -12,7 +13,8 @@ QUnit.test('transform reset simple', async (assert) => {
 	transform1.setInput(0, box1);
 	transform_reset1.setInput(0, transform1);
 
-	transform1.p.applyOn.set(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS));
+	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setObjectMode(TransformObjectMode.UPDATE_MATRIX);
 	transform1.p.t.x.set(2);
 	transform1.p.r.y.set(Math.PI);
 

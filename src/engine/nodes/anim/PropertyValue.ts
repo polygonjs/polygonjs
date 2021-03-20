@@ -10,19 +10,19 @@ import {TypeAssert} from '../../poly/Assert';
 import {Object3D} from 'three/src/core/Object3D';
 import {Quaternion} from 'three/src/math/Quaternion';
 
-enum PropertyValueMode {
+export enum AnimPropertyValueNodeMode {
 	CUSTOM = 'custom',
 	FROM_SCENE_GRAPH = 'from scene graph',
 	FROM_NODE = 'from node',
 }
-const PROPERTY_VALUE_MODES: PropertyValueMode[] = [
-	PropertyValueMode.CUSTOM,
-	PropertyValueMode.FROM_SCENE_GRAPH,
-	PropertyValueMode.FROM_NODE,
+const PROPERTY_VALUE_MODES: AnimPropertyValueNodeMode[] = [
+	AnimPropertyValueNodeMode.CUSTOM,
+	AnimPropertyValueNodeMode.FROM_SCENE_GRAPH,
+	AnimPropertyValueNodeMode.FROM_NODE,
 ];
-const PROPERTY_VALUE_MODE_CUSTOM = PROPERTY_VALUE_MODES.indexOf(PropertyValueMode.CUSTOM);
-const PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH = PROPERTY_VALUE_MODES.indexOf(PropertyValueMode.FROM_SCENE_GRAPH);
-const PROPERTY_VALUE_MODE_FROM_NODE = PROPERTY_VALUE_MODES.indexOf(PropertyValueMode.FROM_NODE);
+const PROPERTY_VALUE_MODE_CUSTOM = PROPERTY_VALUE_MODES.indexOf(AnimPropertyValueNodeMode.CUSTOM);
+const PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH = PROPERTY_VALUE_MODES.indexOf(AnimPropertyValueNodeMode.FROM_SCENE_GRAPH);
+const PROPERTY_VALUE_MODE_FROM_NODE = PROPERTY_VALUE_MODES.indexOf(AnimPropertyValueNodeMode.FROM_NODE);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -37,11 +37,11 @@ class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param if set to a Polygonjs node, this is the node path */
-	nodePath = ParamConfig.NODE_PATH('/geo1', {
+	nodePath = ParamConfig.NODE_PATH('', {
 		visibleIf: {mode: PROPERTY_VALUE_MODE_FROM_NODE},
 	});
 	/** @param if set to a THREE object, this is a mask to find the objects */
-	objectMask = ParamConfig.STRING('/geo1', {
+	objectMask = ParamConfig.STRING('*geo1', {
 		visibleIf: {mode: PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH},
 	});
 	/** @param print the object matching the objectMask, to help debugging */
@@ -101,17 +101,20 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		await this._prepare_timeline_builder(timeline_builder);
 		this.set_timeline_builder(timeline_builder);
 	}
+	setMode(targetType: AnimPropertyValueNodeMode) {
+		this.p.mode.set(PROPERTY_VALUE_MODES.indexOf(targetType));
+	}
 
 	private async _prepare_timeline_builder(timeline_builder: TimelineBuilder) {
 		const mode = PROPERTY_VALUE_MODES[this.pv.mode];
 		switch (mode) {
-			case PropertyValueMode.CUSTOM: {
+			case AnimPropertyValueNodeMode.CUSTOM: {
 				return this._prepare_timebuilder_custom(timeline_builder);
 			}
-			case PropertyValueMode.FROM_SCENE_GRAPH: {
+			case AnimPropertyValueNodeMode.FROM_SCENE_GRAPH: {
 				return this._prepare_timebuilder_from_scene_graph(timeline_builder);
 			}
-			case PropertyValueMode.FROM_NODE: {
+			case AnimPropertyValueNodeMode.FROM_NODE: {
 				return await this._prepare_timebuilder_from_node(timeline_builder);
 			}
 		}

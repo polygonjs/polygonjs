@@ -60,7 +60,7 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		const easing_full_name = this.easing_full_name();
-		timeline_builder.set_easing(easing_full_name);
+		timeline_builder.setEasing(easing_full_name);
 
 		this.set_timeline_builder(timeline_builder);
 	}

@@ -31,11 +31,11 @@ export class TimelineBuilder {
 	private _property: TimelineBuilderProperty | undefined;
 	private _update_callback: AnimationUpdateCallback | undefined;
 
-	add_timeline_builder(timeline_builder: TimelineBuilder) {
+	addTimelineBuilder(timeline_builder: TimelineBuilder) {
 		this._timeline_builders.push(timeline_builder);
 		timeline_builder.setParent(this);
 	}
-	timeline_builders() {
+	timelineBuilders() {
 		return this._timeline_builders;
 	}
 	setParent(parent: TimelineBuilder) {
@@ -45,57 +45,57 @@ export class TimelineBuilder {
 		return this._parent;
 	}
 
-	set_target(target: PropertyTarget) {
+	setTarget(target: PropertyTarget) {
 		this._target = target;
 		for (let builder of this._timeline_builders) {
-			builder.set_target(target);
+			builder.setTarget(target);
 		}
 	}
 	target() {
 		return this._target;
 	}
-	set_duration(duration: number) {
+	setDuration(duration: number) {
 		if (duration >= 0) {
 			this._duration = duration;
 			for (let builder of this._timeline_builders) {
-				builder.set_duration(duration);
+				builder.setDuration(duration);
 			}
 		}
 	}
 	duration() {
 		return this._duration;
 	}
-	set_easing(easing: string) {
+	setEasing(easing: string) {
 		this._easing = easing;
 		for (let builder of this._timeline_builders) {
-			builder.set_easing(easing);
+			builder.setEasing(easing);
 		}
 	}
 	easing() {
 		return this._easing;
 	}
-	set_operation(operation: Operation) {
+	setOperation(operation: Operation) {
 		this._operation = operation;
 		for (let builder of this._timeline_builders) {
-			builder.set_operation(operation);
+			builder.setOperation(operation);
 		}
 	}
 	operation() {
 		return this._operation;
 	}
-	set_repeat_params(repeat_params: AnimationRepeatParams) {
+	setRepeatParams(repeat_params: AnimationRepeatParams) {
 		this._repeat_params = repeat_params;
 		for (let builder of this._timeline_builders) {
-			builder.set_repeat_params(repeat_params);
+			builder.setRepeatParams(repeat_params);
 		}
 	}
-	repeat_params() {
+	repeatParams() {
 		return this._repeat_params;
 	}
-	set_delay(delay: number) {
+	setDelay(delay: number) {
 		this._delay = delay;
 		for (let builder of this._timeline_builders) {
-			builder.set_delay(delay);
+			builder.setDelay(delay);
 		}
 	}
 	delay() {
@@ -112,10 +112,10 @@ export class TimelineBuilder {
 	position() {
 		return this._position;
 	}
-	set_update_callback(update_callback: AnimationUpdateCallback) {
+	setUpdateCallback(update_callback: AnimationUpdateCallback) {
 		this._update_callback = update_callback;
 	}
-	update_callback() {
+	updateCallback() {
 		return this._update_callback;
 	}
 	// merge(timeline_builder?: TimelineBuilder) {
@@ -125,24 +125,24 @@ export class TimelineBuilder {
 	// }
 	clone() {
 		const new_timeline_builder = new TimelineBuilder();
-		new_timeline_builder.set_duration(this._duration);
-		new_timeline_builder.set_operation(this._operation);
-		new_timeline_builder.set_delay(this._delay);
+		new_timeline_builder.setDuration(this._duration);
+		new_timeline_builder.setOperation(this._operation);
+		new_timeline_builder.setDelay(this._delay);
 
 		if (this._target) {
-			new_timeline_builder.set_target(this._target.clone());
+			new_timeline_builder.setTarget(this._target.clone());
 		}
 		if (this._easing) {
-			new_timeline_builder.set_easing(this._easing);
+			new_timeline_builder.setEasing(this._easing);
 		}
 		if (this._delay) {
-			new_timeline_builder.set_delay(this._delay);
+			new_timeline_builder.setDelay(this._delay);
 		}
 		if (this._update_callback) {
-			new_timeline_builder.set_update_callback(this._update_callback.clone());
+			new_timeline_builder.setUpdateCallback(this._update_callback.clone());
 		}
 		if (this._repeat_params) {
-			new_timeline_builder.set_repeat_params({
+			new_timeline_builder.setRepeatParams({
 				count: this._repeat_params.count,
 				delay: this._repeat_params.delay,
 				yoyo: this._repeat_params.yoyo,
@@ -163,7 +163,7 @@ export class TimelineBuilder {
 		}
 		for (let child_timeline_builder of this._timeline_builders) {
 			const new_child_timeline_builder = child_timeline_builder.clone();
-			new_timeline_builder.add_timeline_builder(new_child_timeline_builder);
+			new_timeline_builder.addTimelineBuilder(new_child_timeline_builder);
 		}
 		return new_timeline_builder;
 	}
@@ -186,7 +186,7 @@ export class TimelineBuilder {
 			const sub_timeline = gsap.timeline();
 			timeline_builder.populate(sub_timeline, scene);
 
-			const position_param = timeline_builder.position()?.to_parameter() || undefined;
+			const position_param = timeline_builder.position()?.toParameter() || undefined;
 			timeline.add(sub_timeline, position_param);
 		}
 

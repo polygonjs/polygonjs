@@ -1,7 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
-import {Matrix4} from 'three/src/math/Matrix4';
 import {Object3D} from 'three/src/core/Object3D';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {DefaultOperationParams} from '../_Base';
@@ -15,8 +14,18 @@ import {
 } from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
+export enum TransformObjectMode {
+	SET_PARAMS = 'set params',
+	UPDATE_MATRIX = 'update matrix',
+}
+export const TRANSFORM_OBJECT_MODES: TransformObjectMode[] = [
+	TransformObjectMode.SET_PARAMS,
+	TransformObjectMode.UPDATE_MATRIX,
+];
+
 interface TransformSopParams extends DefaultOperationParams {
 	applyOn: number;
+	objectMode: number;
 	group: string;
 	rotationOrder: number;
 	t: Vector3;
@@ -29,6 +38,7 @@ interface TransformSopParams extends DefaultOperationParams {
 export class TransformSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: TransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES),
+		objectMode: TRANSFORM_OBJECT_MODES.indexOf(TransformObjectMode.SET_PARAMS),
 		group: '',
 		rotationOrder: ROTATION_ORDERS.indexOf(RotationOrder.XYZ),
 		t: new Vector3(0, 0, 0),
@@ -45,33 +55,28 @@ export class TransformSopOperation extends BaseSopOperation {
 	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[], params: TransformSopParams) {
 		const objects = input_contents[0].objects();
-		const matrix = this._core_transform.matrix(
-			params.t,
-			params.r,
-			params.s,
-			params.scale,
-			ROTATION_ORDERS[params.rotationOrder]
-		);
 
-		this._apply_transform(objects, params, matrix);
+		this._apply_transform(objects, params);
 
 		return input_contents[0];
 	}
-	private _apply_transform(objects: Object3D[], params: TransformSopParams, matrix: Matrix4) {
+	private _apply_transform(objects: Object3D[], params: TransformSopParams) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
 			case TransformTargetType.GEOMETRIES: {
-				return this._apply_matrix_to_geometries(objects, params, matrix);
+				return this._update_geometries(objects, params);
 			}
 			case TransformTargetType.OBJECTS: {
-				return this._apply_matrix_to_objects(objects, matrix);
+				return this._update_objects(objects, params);
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
 
 	private _point_pos = new Vector3();
-	private _apply_matrix_to_geometries(objects: Object3D[], params: TransformSopParams, matrix: Matrix4) {
+	private _update_geometries(objects: Object3D[], params: TransformSopParams) {
+		const matrix = this._matrix(params);
+
 		if (params.group.trim() === '') {
 			for (let object of objects) {
 				const geometry = (object as Object3DWithGeometry).geometry;
@@ -91,8 +96,35 @@ export class TransformSopOperation extends BaseSopOperation {
 			}
 		}
 	}
+
+	private _update_objects(objects: Object3D[], params: TransformSopParams) {
+		const objectMode = TRANSFORM_OBJECT_MODES[params.objectMode];
+		switch (objectMode) {
+			case TransformObjectMode.SET_PARAMS: {
+				return this._update_objects_params(objects, params);
+			}
+			case TransformObjectMode.UPDATE_MATRIX: {
+				return this._update_objects_matrix(objects, params);
+			}
+		}
+		TypeAssert.unreachable(objectMode);
+	}
+
+	private _object_scale = new Vector3();
+	private _update_objects_params(objects: Object3D[], params: TransformSopParams) {
+		for (let object of objects) {
+			object.position.copy(params.t);
+			const order = ROTATION_ORDERS[params.rotationOrder];
+			object.rotation.set(params.r.x, params.r.y, params.r.z, order);
+			this._object_scale.copy(params.s).multiplyScalar(params.scale);
+			object.scale.copy(this._object_scale);
+			object.updateMatrix();
+		}
+	}
+
 	private _object_position = new Vector3();
-	private _apply_matrix_to_objects(objects: Object3D[], matrix: Matrix4) {
+	private _update_objects_matrix(objects: Object3D[], params: TransformSopParams) {
+		const matrix = this._matrix(params);
 		for (let object of objects) {
 			// center to origin
 			this._object_position.copy(object.position);
@@ -104,5 +136,15 @@ export class TransformSopOperation extends BaseSopOperation {
 			object.position.add(this._object_position);
 			object.updateMatrix();
 		}
+	}
+
+	private _matrix(params: TransformSopParams) {
+		return this._core_transform.matrix(
+			params.t,
+			params.r,
+			params.s,
+			params.scale,
+			ROTATION_ORDERS[params.rotationOrder]
+		);
 	}
 }

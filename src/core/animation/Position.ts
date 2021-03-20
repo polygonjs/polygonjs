@@ -18,57 +18,58 @@ export const ANIMATION_POSITION_RELATIVE_TOS: AnimationPositionRelativeTo[] = [
 // https://greensock.com/docs/v3/GSAP/Timeline
 export class AnimationPosition {
 	private _mode = AnimationPositionMode.RELATIVE;
-	private _relative_to: AnimationPositionRelativeTo = AnimationPositionRelativeTo.END;
+	private _relativeTo: AnimationPositionRelativeTo = AnimationPositionRelativeTo.END;
 	private _offset: number = 0;
 
 	clone() {
 		const new_position = new AnimationPosition();
-		new_position.set_mode(this._mode);
-		new_position.set_relative_to(this._relative_to);
-		new_position.set_offset(this._offset);
+		new_position.setMode(this._mode);
+		new_position.setRelativeTo(this._relativeTo);
+		new_position.setOffset(this._offset);
 		return new_position;
 	}
 
-	set_mode(mode: AnimationPositionMode) {
+	setMode(mode: AnimationPositionMode) {
 		this._mode = mode;
 	}
 	mode() {
 		return this._mode;
 	}
-	set_relative_to(relative_to: AnimationPositionRelativeTo) {
-		this._relative_to = relative_to;
+	setRelativeTo(relative_to: AnimationPositionRelativeTo) {
+		this._relativeTo = relative_to;
 	}
-	relative_to() {
-		return this._relative_to;
+	relativeTo() {
+		return this._relativeTo;
 	}
-	set_offset(offset: number) {
+	setOffset(offset: number) {
 		this._offset = offset;
 	}
 	offset() {
 		return this._offset;
 	}
 
-	to_parameter() {
+	toParameter() {
 		switch (this._mode) {
 			case AnimationPositionMode.RELATIVE:
 				return this._relative_position_param();
 			case AnimationPositionMode.ABSOLUTE:
-				return this._absolute_position_param();
+				return this._absolutePositionParam();
 		}
 		TypeAssert.unreachable(this._mode);
 	}
 	private _relative_position_param() {
-		switch (this._relative_to) {
+		switch (this._relativeTo) {
 			case AnimationPositionRelativeTo.END:
-				return this._offset_string();
+				return this._offsetString();
 			case AnimationPositionRelativeTo.START:
 				return `<${this._offset}`;
 		}
+		TypeAssert.unreachable(this._relativeTo);
 	}
-	private _absolute_position_param() {
+	private _absolutePositionParam() {
 		return this._offset;
 	}
-	private _offset_string() {
+	private _offsetString() {
 		if (this._offset > 0) {
 			return `+=${this._offset}`;
 		} else {

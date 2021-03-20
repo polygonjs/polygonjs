@@ -30,7 +30,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 			if (container) {
 				const stamped_builder = container.coreContentCloned();
 				if (stamped_builder) {
-					builder.add_timeline_builder(stamped_builder);
+					builder.addTimelineBuilder(stamped_builder);
 				}
 			}
 		}

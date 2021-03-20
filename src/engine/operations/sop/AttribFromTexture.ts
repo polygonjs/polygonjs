@@ -19,7 +19,7 @@ interface AttribFromTextureSopParams extends DefaultOperationParams {
 
 export class AttribFromTextureSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: AttribFromTextureSopParams = {
-		texture: new TypedNodePathParamValue(NODE_PATH_DEFAULT.NODE.UV),
+		texture: new TypedNodePathParamValue(NODE_PATH_DEFAULT.NODE.EMPTY),
 		uvAttrib: 'uv',
 		attrib: 'pscale',
 		attribSize: 1,

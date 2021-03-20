@@ -35,7 +35,7 @@ export class DurationAnimNode extends TypedAnimNode<DurationAnimParamsConfig> {
 	cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
-		timeline_builder.set_duration(this.pv.duration);
+		timeline_builder.setDuration(this.pv.duration);
 
 		this.set_timeline_builder(timeline_builder);
 	}

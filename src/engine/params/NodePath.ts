@@ -55,7 +55,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
-	protected async process_computation() {
+	protected async processComputation() {
 		this._findTarget();
 	}
 	private _findTarget() {

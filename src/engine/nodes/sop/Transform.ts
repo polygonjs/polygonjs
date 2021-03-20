@@ -7,7 +7,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ROTATION_ORDERS, TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
-import {TransformSopOperation} from '../../operations/sop/Transform';
+import {TransformSopOperation, TRANSFORM_OBJECT_MODES, TransformObjectMode} from '../../operations/sop/Transform';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = TransformSopOperation.DEFAULT_PARAMS;
@@ -15,8 +15,17 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
 	applyOn = ParamConfig.INTEGER(DEFAULT.applyOn, {
 		menu: {
-			entries: TRANSFORM_TARGET_TYPES.map((target_type, i) => {
-				return {name: target_type, value: i};
+			entries: TRANSFORM_TARGET_TYPES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+	});
+	/** @param if applyOn is set to object, the transform can then be applied in 2 different ways on those objects. Either the .position, .rotation and .scale attributes are set, or the matrix is set directly. */
+	objectMode = ParamConfig.INTEGER(DEFAULT.objectMode, {
+		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS)},
+		menu: {
+			entries: TRANSFORM_OBJECT_MODES.map((name, value) => {
+				return {name, value};
 			}),
 		},
 	});
@@ -73,6 +82,13 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 				});
 			});
 		});
+	}
+
+	setApplyOn(type: TransformTargetType) {
+		this.p.applyOn.set(TRANSFORM_TARGET_TYPES.indexOf(type));
+	}
+	setObjectMode(mode: TransformObjectMode) {
+		this.p.objectMode.set(TRANSFORM_OBJECT_MODES.indexOf(mode));
 	}
 
 	private _operation: TransformSopOperation | undefined;

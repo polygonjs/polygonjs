@@ -53,7 +53,7 @@ export class RepeatAnimNode extends TypedAnimNode<RepeatAnimParamsConfig> {
 	cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
-		timeline_builder.set_repeat_params(this._repeat_params());
+		timeline_builder.setRepeatParams(this._repeat_params());
 
 		this.set_timeline_builder(timeline_builder);
 	}

@@ -46,7 +46,7 @@ export class OperationAnimNode extends TypedAnimNode<OperationAnimParamsConfig> 
 	cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
-		timeline_builder.set_operation(OPERATIONS[this.pv.operation]);
+		timeline_builder.setOperation(OPERATIONS[this.pv.operation]);
 
 		this.set_timeline_builder(timeline_builder);
 	}

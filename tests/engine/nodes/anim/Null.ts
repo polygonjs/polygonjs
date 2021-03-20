@@ -1,12 +1,45 @@
-// QUnit.test('anim null simple', async (assert) => {
-// 	const ANIM = window.scene.root.createNode('animations');
-// 	const track1 = ANIM.createNode('track');
-// 	const null1 = ANIM.createNode('null');
+import {AnimTargetNodeTargetType} from '../../../../src/engine/nodes/anim/Target';
+import {AnimPropertyValueNodeMode} from '../../../../src/engine/nodes/anim/PropertyValue';
+import {CoreSleep} from '../../../../src/core/Sleep';
 
-// 	track1.p.name.set('test1');
-// 	null1.setInput(0, track1);
+QUnit.test('anim null simple', async (assert) => {
+	// setup objects
+	const geo = window.geo1;
+	const box = geo.createNode('box');
+	const objectProperties = geo.createNode('objectProperties');
+	objectProperties.setInput(0, box);
+	objectProperties.p.tname.set(true);
+	objectProperties.p.name.set('test');
+	objectProperties.flags.display.set(true);
 
-// 	const container = await null1.requestContainer();
-// 	const core_group = container.coreContent()!;
-// 	assert.equal(core_group.tracks.length, 1);
-// });
+	// we wait to ensure that the created objects
+	// are attached to the scene.
+	// otherwise the anim nodes will not find them.
+	await CoreSleep.sleep(100);
+
+	const object = (await objectProperties.requestContainer()).coreContent()?.objects()[0]!;
+	assert.equal(object.name, 'test');
+
+	// setup anim
+	const ANIM = window.scene.root().createNode('animations');
+	const target = ANIM.createNode('target');
+	target.setTargetType(AnimTargetNodeTargetType.SCENE_GRAPH);
+	target.p.objectMask.set('*test');
+	target.p.updateMatrix.set(true);
+
+	const propertyName = ANIM.createNode('propertyName');
+	propertyName.setInput(0, target);
+	propertyName.p.name.set('position');
+
+	const propertyValue = ANIM.createNode('propertyValue');
+	propertyValue.setInput(0, propertyName);
+	propertyValue.setMode(AnimPropertyValueNodeMode.CUSTOM);
+	propertyValue.p.size.set(3);
+	propertyValue.p.value3.set([3, 4, 7]);
+	const null1 = ANIM.createNode('null');
+	null1.setInput(0, propertyValue);
+
+	assert.deepEqual(object.position.toArray(), [0, 0, 0]);
+	await null1.play();
+	assert.deepEqual(object.position.toArray(), [3, 4, 7]);
+});

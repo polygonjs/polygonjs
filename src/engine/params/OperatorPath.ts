@@ -62,7 +62,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
-	protected async process_computation() {
+	protected async processComputation() {
 		this.find_target();
 	}
 	find_target() {

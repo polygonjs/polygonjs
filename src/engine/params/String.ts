@@ -74,7 +74,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 			}
 		}
 	}
-	protected async process_computation(): Promise<void> {
+	protected async processComputation(): Promise<void> {
 		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
 			const expression_result = await this.expressionController.compute_expression();
 			if (this.expressionController.is_errored()) {

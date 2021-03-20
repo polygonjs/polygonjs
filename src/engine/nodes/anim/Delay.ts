@@ -32,7 +32,7 @@ export class DelayAnimNode extends TypedAnimNode<DelayAnimParamsConfig> {
 	cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
-		timeline_builder.set_delay(this.pv.delay);
+		timeline_builder.setDelay(this.pv.delay);
 
 		this.set_timeline_builder(timeline_builder);
 	}

@@ -55,7 +55,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
-	protected async process_computation() {
+	protected async processComputation() {
 		this.find_target();
 	}
 	private find_target() {

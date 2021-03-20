@@ -67,7 +67,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		// this.compute();
 	}
 
-	protected async process_computation(): Promise<void> {
+	protected async processComputation(): Promise<void> {
 		await this.compute_components();
 		this.set_value_from_components();
 	}

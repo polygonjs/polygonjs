@@ -24,7 +24,7 @@ export enum AnimationEventOutput {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AnimationEventParamsConfig extends NodeParamsConfig {
 	/** @parm animation node */
-	animation = ParamConfig.NODE_PATH('/ANIM/OUT', {
+	animation = ParamConfig.NODE_PATH('', {
 		nodeSelection: {context: NodeContext.ANIM},
 		dependentOnFoundNode: false,
 	});
