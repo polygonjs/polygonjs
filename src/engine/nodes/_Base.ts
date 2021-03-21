@@ -45,7 +45,7 @@ import {ParamType} from '../poly/ParamType';
 import {DisplayNodeController} from './utils/DisplayNodeController';
 import {NodeTypeMap} from '../containers/utils/ContainerMap';
 import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
-import {ModuleName} from '../poly/registers/modules/_BaseRegister';
+import {ModuleName} from '../poly/registers/modules/Common';
 import {BasePersistedConfig} from './utils/PersistedConfig';
 import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
 import {PolyNodeController} from './utils/poly/PolyNodeController';

@@ -20,25 +20,25 @@ export class SelfContainedScenesLoader {
 		sceneJsonImporterContructor: SceneJsonImporterContructor
 	) {
 		const {sceneData, assetsManifest, unzippedData} = viewerData;
-		const originalUrls = Object.keys(assetsManifest);
-		for (let originalUrl of originalUrls) {
-			const assetUrl = assetsManifest[originalUrl];
+		const storedUrls = Object.keys(assetsManifest);
+		for (let storedUrl of storedUrls) {
+			const assetUrl = assetsManifest[storedUrl];
 			const assetUintArray = unzippedData[`assets/${assetUrl}`];
 			if (!assetUintArray) {
-				console.error(originalUrl, assetUintArray);
+				console.error(storedUrl, assetUintArray);
 				return;
 			}
 			const assetBlob = new Blob([assetUintArray]);
-			var urlCreator = window.URL || window.webkitURL;
-			const blobUrl = urlCreator.createObjectURL(assetBlob);
+			const blobUrl = Poly.blobs.createBlobUrl(assetBlob);
 			const blobUrlData: BlobUrlData = {
-				originalUrl,
+				storedUrl,
 				blobUrl,
 			};
 			Poly.blobs.registerBlobUrl(blobUrlData);
 		}
+		Poly.setPlayerMode(true);
 		Poly.libs.setRoot(null);
-		Poly.libs.setDRACOGLTFPath(null);
+		// Poly.libs.setDRACOGLTFPath(null);
 		await this._loadScene(element, sceneData, sceneJsonImporterContructor);
 	}
 	private async _loadScene(

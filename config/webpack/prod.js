@@ -24,6 +24,25 @@ const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 module.exports = (env) => {
 	const common_options = common(env);
 
+	const MODULES = [
+		'BasisTextureLoader',
+		'DRACOLoader',
+		'EXRLoader',
+		'FBXLoader',
+		'GLTFLoader',
+		'OBJLoader',
+		'PDBLoader',
+		'PLYLoader',
+		'RGBELoader',
+		'SVGLoader',
+		'STLLoader',
+		'TTFLoader',
+	];
+	for (let module of MODULES) {
+		common_options.entry[`modules/${module}`] = `./src/engine/poly/registers/modules/entry_points/${module}.ts`;
+	}
+	common_options.entry[`viewer`] = './src/engine/index_self_contained_importer.ts';
+
 	if (ONE_ENTRY_PER_NODE) {
 		delete common_options.entry['all'];
 		common_options.entry['engine/Poly'] = './src/engine/Poly.ts';
@@ -105,39 +124,39 @@ module.exports = (env) => {
 			// Therefore they remain named 0.js, 1.js...
 			chunkIds: 'named',
 			// { automaticNameDelimiter?, automaticNameMaxLength?, cacheGroups?, chunks?, enforceSizeThreshold?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxInitialRequests?, maxSize?, minChunks?, minSize?, name? }
-			splitChunks: {
-				chunks: 'async', // if chunks is 'all', it seems that the first chunks, like vendors, need to be included manually, which isn't great.
-				minSize: 20000,
-				// minRemainingSize: 0,
-				maxSize: 0,
-				minChunks: 1,
-				maxAsyncRequests: 30000,
-				maxInitialRequests: 30000,
-				automaticNameDelimiter: '~',
-				enforceSizeThreshold: 50000,
-				cacheGroups: {
-					gsap: {
-						test: /[\\/]node_modules[\\/]gsap-core[\\/]/,
-						priority: -1,
-						reuseExistingChunk: true,
-					},
-					defaultVendors: {
-						test: /[\\/]node_modules[\\/]/,
-						priority: -20,
-						reuseExistingChunk: true,
-					},
-					// nodes: {
-					// 	test: /[\\/]nodes[\\/]/,
-					// 	priority: -10,
-					// 	reuseExistingChunk: true,
-					// },
-					default: {
-						minChunks: 2,
-						priority: -20,
-						reuseExistingChunk: true,
-					},
-				},
-			},
+			// splitChunks: {
+			// 	chunks: 'async', // if chunks is 'all', it seems that the first chunks, like vendors, need to be included manually, which isn't great.
+			// 	minSize: 20000,
+			// 	// minRemainingSize: 0,
+			// 	maxSize: 0,
+			// 	minChunks: 1,
+			// 	maxAsyncRequests: 30000,
+			// 	maxInitialRequests: 30000,
+			// 	automaticNameDelimiter: '~',
+			// 	enforceSizeThreshold: 50000,
+			// 	cacheGroups: {
+			// 		gsap: {
+			// 			test: /[\\/]node_modules[\\/]gsap-core[\\/]/,
+			// 			priority: -1,
+			// 			reuseExistingChunk: true,
+			// 		},
+			// 		defaultVendors: {
+			// 			test: /[\\/]node_modules[\\/]/,
+			// 			priority: -20,
+			// 			reuseExistingChunk: true,
+			// 		},
+			// 		// nodes: {
+			// 		// 	test: /[\\/]nodes[\\/]/,
+			// 		// 	priority: -10,
+			// 		// 	reuseExistingChunk: true,
+			// 		// },
+			// 		default: {
+			// 			minChunks: 2,
+			// 			priority: -20,
+			// 			reuseExistingChunk: true,
+			// 		},
+			// 	},
+			// },
 
 			minimize: MINIFY,
 			minimizer: [

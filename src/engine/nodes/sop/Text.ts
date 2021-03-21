@@ -17,7 +17,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
 import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
-import {ModuleName} from '../../poly/registers/modules/_BaseRegister';
+import {ModuleName} from '../../poly/registers/modules/Common';
 import {Poly} from '../../Poly';
 import {DEMO_ASSETS_ROOT_URL} from '../../../core/Assets';
 
@@ -319,15 +319,15 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	}
 
 	private async _load_ttf_loader() {
-		const module = await Poly.modulesRegister.module(ModuleName.TTFLoader);
-		if (module) {
-			return new module.TTFLoader();
+		const TTFLoader = await Poly.modulesRegister.module(ModuleName.TTFLoader);
+		if (TTFLoader) {
+			return new TTFLoader();
 		}
 	}
 	private async _load_svg_loader() {
-		const module = await Poly.modulesRegister.module(ModuleName.SVGLoader);
-		if (module) {
-			return module.SVGLoader;
+		const SVGLoader = await Poly.modulesRegister.module(ModuleName.SVGLoader);
+		if (SVGLoader) {
+			return SVGLoader;
 		}
 	}
 }

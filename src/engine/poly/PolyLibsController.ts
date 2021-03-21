@@ -13,9 +13,9 @@ export class PolyLibsController {
 	//
 	//
 	private _BASISPath: string | null = '/basis';
-	setBASISPath(path: string | null) {
-		this._BASISPath = path;
-	}
+	// setBASISPath(path: string | null) {
+	// 	this._BASISPath = path;
+	// }
 	BASISPath() {
 		return this._BASISPath;
 	}
@@ -25,9 +25,9 @@ export class PolyLibsController {
 	//
 	//
 	private _DRACOPath: string | null = '/draco';
-	setDRACOPath(path: string | null) {
-		this._DRACOPath = path;
-	}
+	// setDRACOPath(path: string | null) {
+	// 	this._DRACOPath = path;
+	// }
 	DRACOPath() {
 		return this._DRACOPath;
 	}
@@ -37,9 +37,9 @@ export class PolyLibsController {
 	//
 	//
 	private _DRACOGLTFPath: string | null = '/draco/gltf';
-	setDRACOGLTFPath(path: string | null) {
-		this._DRACOGLTFPath = path;
-	}
+	// setDRACOGLTFPath(path: string | null) {
+	// 	this._DRACOGLTFPath = path;
+	// }
 	DRACOGLTFPath() {
 		return this._DRACOGLTFPath;
 	}

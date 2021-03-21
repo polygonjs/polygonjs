@@ -1,15 +1,10 @@
-// import {Core} from '../../_Module';
-import {Points} from 'three/src/objects/Points';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-const THREE = {BufferGeometry, Float32BufferAttribute, Points};
-
 import {CoreString} from '../../String';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
-import {Poly} from '../../../engine/Poly';
 import {CoreType} from '../../Type';
 import {PolyDictionary, StringOrNumber} from '../../../types/GlobalTypes';
 
@@ -22,9 +17,9 @@ export interface JsonDataLoaderOptions {
 	convertToNumeric?: string;
 }
 
-export class JsonDataLoader {
-	_json: any[] | undefined;
-	_attribute_datas_by_name: PolyDictionary<CoreAttributeData> = {};
+export class JSONDataParser {
+	private _json: any[] | undefined;
+	private _attribute_datas_by_name: PolyDictionary<CoreAttributeData> = {};
 	private _options: JsonDataLoaderOptions = {};
 
 	constructor(options: JsonDataLoaderOptions = {}) {
@@ -33,34 +28,9 @@ export class JsonDataLoader {
 		this._options.doConvert = options.doConvert || false;
 		this._options.convertToNumeric = options.convertToNumeric;
 	}
-	//
 
-	load(
-		url: string,
-		success_callback: (geometry: BufferGeometry) => void,
-		progress_callback: (() => void) | undefined,
-		error_callback: (error: ErrorEvent) => void | undefined
-	) {
-		// const url_loader = new UrlLoader();
-		// const start_time = performance.now();
-		// const config = {
-		// 	crossdomain: true
-		// }
-		fetch(url)
-			.then(async (response) => {
-				// const end_time = performance.now();
-
-				this._json = await response.json();
-				if (this._options.dataKeysPrefix != null && this._options.dataKeysPrefix != '') {
-					this._json = this.get_prefixed_json(this._json, this._options.dataKeysPrefix.split('.'));
-				}
-				const object = this.createObject();
-				success_callback(object);
-			})
-			.catch((error: ErrorEvent) => {
-				Poly.error('error', error);
-				error_callback(error);
-			});
+	dataKeysPrefix() {
+		return this._options.dataKeysPrefix;
 	}
 
 	get_prefixed_json(json: any, prefixes: string[]): any[] {
@@ -75,12 +45,12 @@ export class JsonDataLoader {
 		return [];
 	}
 
-	set_json(json: any) {
+	setJSON(json: any) {
 		return (this._json = json);
 	}
 
 	createObject() {
-		const geometry = new THREE.BufferGeometry();
+		const geometry = new BufferGeometry();
 		const core_geo = new CoreGeometry(geometry);
 
 		if (this._json != null) {
@@ -88,10 +58,6 @@ export class JsonDataLoader {
 			core_geo.initPositionAttribute(points_count);
 
 			this._find_attributes();
-			// for(let attrib_name of Object.keys(this._attribute_names)){
-			// 	const attrib_data = this._attribute_datas_by_name[attrib_name];
-			// 	return core_geo.addAttribute(attrib_name, attrib_data);
-			// }
 
 			const convert_to_numeric_masks = CoreString.attribNames(this._options.convertToNumeric || '');
 
@@ -104,10 +70,6 @@ export class JsonDataLoader {
 				const size = data.size();
 
 				if (data.type() === AttribType.STRING) {
-					// const index_data = CoreAttribute.array_to_indexed_arrays(
-					// 	attrib_values as string[]
-					// )
-
 					if (this._options.doConvert && CoreString.matchesOneMask(attrib_name, convert_to_numeric_masks)) {
 						const numerical_attrib_values: number[] = attrib_values.map((v) => {
 							if (CoreType.isString(v)) {
@@ -118,7 +80,7 @@ export class JsonDataLoader {
 						});
 						geometry.setAttribute(
 							geo_attrib_name,
-							new THREE.Float32BufferAttribute(numerical_attrib_values, size)
+							new Float32BufferAttribute(numerical_attrib_values, size)
 						);
 					} else {
 						const index_data = CoreAttribute.array_to_indexed_arrays(attrib_values as string[]);
@@ -126,15 +88,11 @@ export class JsonDataLoader {
 					}
 				} else {
 					const numerical_attrib_values = attrib_values as number[];
-					geometry.setAttribute(
-						geo_attrib_name,
-						new THREE.Float32BufferAttribute(numerical_attrib_values, size)
-					);
+					geometry.setAttribute(geo_attrib_name, new Float32BufferAttribute(numerical_attrib_values, size));
 				}
 			}
 		}
 		return geometry;
-		// return new THREE.Points(geometry, CoreConstant.MATERIALS[THREE.Points.name]);
 	}
 
 	private _find_attributes() {

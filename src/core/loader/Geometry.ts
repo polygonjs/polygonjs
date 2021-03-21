@@ -2,7 +2,7 @@ import {ObjectLoader} from 'three/src/loaders/ObjectLoader';
 import {Object3D} from 'three/src/core/Object3D';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Poly} from '../../engine/Poly';
-import {ModuleName} from '../../engine/poly/registers/modules/_BaseRegister';
+import {ModuleName} from '../../engine/poly/registers/modules/Common';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Points} from 'three/src/objects/Points';
@@ -13,6 +13,7 @@ import {PolyScene} from '../../engine/scene/PolyScene';
 import {DRACOLoader} from '../../modules/three/examples/jsm/loaders/DRACOLoader';
 import {GLTFLoader} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
 import {CoreUserAgent} from '../UserAgent';
+import {CoreBaseLoader} from './_Base';
 
 enum GeometryExtension {
 	DRC = 'drc',
@@ -39,14 +40,15 @@ interface PdbObject {
 	geometryBonds: BufferGeometry;
 }
 type MaxConcurrentLoadsCountMethod = () => number;
-export class CoreLoaderGeometry {
+export class CoreLoaderGeometry extends CoreBaseLoader {
 	public readonly ext: string;
 
 	private static _default_mat_mesh = new MeshLambertMaterial();
 	private static _default_mat_point = new PointsMaterial();
 	private static _default_mat_line = new LineBasicMaterial();
 
-	constructor(private url: string, private scene: PolyScene) {
+	constructor(url: string, scene: PolyScene) {
+		super(url, scene);
 		this.ext = CoreLoaderGeometry.get_extension(url);
 	}
 
@@ -85,30 +87,16 @@ export class CoreLoaderGeometry {
 
 	private load_auto(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			// do not add '?' here. Let the requester do it if necessary
-			let resolvedUrl = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
-			const paramUrl = this.url;
-			const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
-			if (blobUrl) {
-				resolvedUrl = blobUrl;
-			} else {
-				if (resolvedUrl[0] != 'h') {
-					const assets_root = this.scene.assets.root();
-					if (assets_root) {
-						resolvedUrl = `${assets_root}${resolvedUrl}`;
-					}
-				}
-			}
+			const url = await this._urlToLoad();
 
 			if (this.ext == 'json') {
 				CoreLoaderGeometry.increment_in_progress_loads_count();
 				await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
-				fetch(resolvedUrl)
+				fetch(url)
 					.then(async (response) => {
 						const data = await response.json();
-						const obj_loader = new ObjectLoader();
+						const obj_loader = new ObjectLoader(this.loadingManager);
 						obj_loader.parse(data, (obj) => {
-							Poly.blobs.fetchBlob({paramUrl, resolvedUrl});
 							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							resolve(this.on_load_success(obj.children[0]));
 						});
@@ -118,22 +106,21 @@ export class CoreLoaderGeometry {
 						reject(error);
 					});
 			} else {
-				const loader = await this.loader_for_ext();
+				const loader = this.loader_for_ext();
 				if (loader) {
 					CoreLoaderGeometry.increment_in_progress_loads_count();
 					await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 					loader.load(
-						resolvedUrl,
+						url,
 						(object: any) => {
 							this.on_load_success(object).then((object2) => {
-								Poly.blobs.fetchBlob({paramUrl, resolvedUrl});
 								CoreLoaderGeometry.decrement_in_progress_loads_count();
 								resolve(object2);
 							});
 						},
 						undefined,
 						(error_message: ErrorEvent) => {
-							Poly.warn('error loading', resolvedUrl, error_message);
+							Poly.warn('error loading', url, error_message);
 							CoreLoaderGeometry.decrement_in_progress_loads_count();
 							reject(error_message);
 						}
@@ -228,7 +215,7 @@ export class CoreLoaderGeometry {
 		}
 	}
 
-	async loader_for_ext() {
+	loader_for_ext() {
 		switch (this.ext.toLowerCase()) {
 			case GeometryExtension.DRC:
 				return this.loader_for_drc();
@@ -248,14 +235,34 @@ export class CoreLoaderGeometry {
 				return this.loader_for_stl();
 		}
 	}
-	async loader_for_drc() {
-		const module = await Poly.modulesRegister.module(ModuleName.DRACOLoader);
-		if (module) {
-			const draco_loader = new module.DRACOLoader();
+	loader_for_fbx() {
+		const FBXLoader = Poly.modulesRegister.module(ModuleName.FBXLoader);
+		if (FBXLoader) {
+			return new FBXLoader(this.loadingManager);
+		}
+	}
+	loader_for_gltf() {
+		const GLTFLoader = Poly.modulesRegister.module(ModuleName.GLTFLoader);
+		if (GLTFLoader) {
+			return new GLTFLoader(this.loadingManager);
+		}
+	}
+	loader_for_drc() {
+		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
+		if (DRACOLoader) {
+			const draco_loader = new DRACOLoader(this.loadingManager);
 			const root = Poly.libs.root();
 			const DRACOPath = Poly.libs.DRACOPath();
 			if (root || DRACOPath) {
 				const decoder_path = `${root || ''}${DRACOPath || ''}/`;
+
+				const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+				for (let file of files) {
+					const storedUrl = `${DRACOPath}/${file}`;
+					const fullUrl = `${decoder_path}${file}`;
+					Poly.blobs.fetchBlob({storedUrl, fullUrl});
+				}
+
 				draco_loader.setDecoderPath(decoder_path);
 			} else {
 				(draco_loader as any).setDecoderPath(undefined);
@@ -265,31 +272,27 @@ export class CoreLoaderGeometry {
 			return draco_loader;
 		}
 	}
-	async loader_for_fbx() {
-		const module = await Poly.modulesRegister.module(ModuleName.FBXLoader);
-		if (module) {
-			return new module.FBXLoader();
-		}
-	}
-	async loader_for_gltf() {
-		const module = await Poly.modulesRegister.module(ModuleName.GLTFLoader);
-		if (module) {
-			return new module.GLTFLoader();
-		}
-	}
 
 	private static gltf_loader: GLTFLoader | undefined;
 	private static draco_loader: DRACOLoader | undefined;
-	static async loader_for_glb() {
-		const gltf_module = await Poly.modulesRegister.module(ModuleName.GLTFLoader);
-		const draco_module = await Poly.modulesRegister.module(ModuleName.DRACOLoader);
-		if (gltf_module && draco_module) {
-			this.gltf_loader = this.gltf_loader || new gltf_module.GLTFLoader();
-			this.draco_loader = this.draco_loader || new draco_module.DRACOLoader();
+	static loader_for_glb() {
+		const GLTFLoader = Poly.modulesRegister.module(ModuleName.GLTFLoader);
+		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
+		if (GLTFLoader && DRACOLoader) {
+			this.gltf_loader = this.gltf_loader || new GLTFLoader(this.loadingManager);
+			this.draco_loader = this.draco_loader || new DRACOLoader(this.loadingManager);
 			const root = Poly.libs.root();
 			const DRACOGLTFPath = Poly.libs.DRACOGLTFPath();
 			if (root || DRACOGLTFPath) {
 				const decoder_path = `${root || ''}${DRACOGLTFPath || ''}/`;
+
+				const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+				for (let file of files) {
+					const storedUrl = `${DRACOGLTFPath}/${file}`;
+					const fullUrl = `${decoder_path}${file}`;
+					Poly.blobs.fetchBlob({storedUrl, fullUrl});
+				}
+
 				this.draco_loader.setDecoderPath(decoder_path);
 			} else {
 				(this.draco_loader as any).setDecoderPath(undefined);
@@ -300,32 +303,32 @@ export class CoreLoaderGeometry {
 			return this.gltf_loader;
 		}
 	}
-	async loader_for_glb() {
+	loader_for_glb() {
 		return CoreLoaderGeometry.loader_for_glb();
 	}
 
-	async loader_for_obj() {
-		const module = await Poly.modulesRegister.module(ModuleName.OBJLoader);
-		if (module) {
-			return new module.OBJLoader();
+	loader_for_obj() {
+		const OBJLoader = Poly.modulesRegister.module(ModuleName.OBJLoader);
+		if (OBJLoader) {
+			return new OBJLoader(this.loadingManager);
 		}
 	}
-	async loader_for_pdb() {
-		const module = await Poly.modulesRegister.module(ModuleName.PDBLoader);
-		if (module) {
-			return new module.PDBLoader();
+	loader_for_pdb() {
+		const PDBLoader = Poly.modulesRegister.module(ModuleName.PDBLoader);
+		if (PDBLoader) {
+			return new PDBLoader(this.loadingManager);
 		}
 	}
-	async loader_for_ply() {
-		const module = await Poly.modulesRegister.module(ModuleName.PLYLoader);
-		if (module) {
-			return new module.PLYLoader();
+	loader_for_ply() {
+		const PLYLoader = Poly.modulesRegister.module(ModuleName.PLYLoader);
+		if (PLYLoader) {
+			return new PLYLoader(this.loadingManager);
 		}
 	}
-	async loader_for_stl() {
-		const module = await Poly.modulesRegister.module(ModuleName.STLLoader);
-		if (module) {
-			return new module.STLLoader();
+	loader_for_stl() {
+		const STLLoader = Poly.modulesRegister.module(ModuleName.STLLoader);
+		if (STLLoader) {
+			return new STLLoader(this.loadingManager);
 		}
 	}
 

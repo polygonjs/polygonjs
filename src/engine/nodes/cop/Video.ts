@@ -198,9 +198,9 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	private async _load_texture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
 		const url_param = this.p.url;
-		this._texture_loader = this._texture_loader || new CoreLoaderTexture(this, url_param);
+		this._texture_loader = this._texture_loader || new CoreLoaderTexture(this, url_param, url, this.scene());
 		try {
-			texture = await this._texture_loader.load_texture_from_url_or_op(url, {
+			texture = await this._texture_loader.load_texture_from_url_or_op({
 				tdataType: this.pv.ttype && this.pv.tadvanced,
 				dataType: this.pv.type,
 			});

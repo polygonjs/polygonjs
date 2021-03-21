@@ -6,7 +6,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {JsonDataLoader} from '../../../core/loader/geometry/JsonData';
+import {JsonDataLoader} from '../../../core/loader/geometry/JSONDataLoader';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
@@ -133,14 +133,14 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	//
 	//
 	private _load_json() {
-		const loader = new JsonDataLoader({
+		const loader = new JsonDataLoader(this._url(), this.scene(), {
 			dataKeysPrefix: this.pv.jsonDataKeysPrefix,
 			skipEntries: this.pv.skipEntries,
 			doConvert: isBooleanTrue(this.pv.convert),
 			convertToNumeric: this.pv.convertToNumeric,
 		});
 
-		loader.load(this._url(), this._on_load.bind(this), undefined, this._on_error.bind(this));
+		loader.load(this._on_load.bind(this), undefined, this._on_error.bind(this));
 	}
 
 	_on_load(geometry: BufferGeometry) {

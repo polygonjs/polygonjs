@@ -77,6 +77,7 @@ export class PolyEngine {
 	registerOperation(operation: typeof BaseOperation) {
 		this.operationsRegister.register(operation);
 	}
+
 	registerCamera(node: BaseNodeConstructor) {
 		this.camerasRegister.register(node);
 	}

@@ -18,5 +18,8 @@ export function ImageCopNodePresets() {
 		uv: function (node: ImageCopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/textures/uv.jpg`);
 		},
+		PavingStones_basis: function (node: ImageCopNode) {
+			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/textures/PavingStones.basis`);
+		},
 	};
 }

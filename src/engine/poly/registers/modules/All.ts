@@ -1,82 +1,31 @@
-import {ModuleName} from './_BaseRegister';
-
-import {BasisTextureLoader} from '../../../../modules/three/examples/jsm/loaders/BasisTextureLoader';
-import {DRACOLoader} from '../../../../modules/three/examples/jsm/loaders/DRACOLoader';
-import {EXRLoader} from '../../../../modules/three/examples/jsm/loaders/EXRLoader';
-import {FBXLoader} from '../../../../modules/three/examples/jsm/loaders/FBXLoader';
-import {GLTFLoader} from '../../../../modules/three/examples/jsm/loaders/GLTFLoader';
-import {OBJLoader} from '../../../../modules/three/examples/jsm/loaders/OBJLoader';
-import {PDBLoader} from '../../../../modules/three/examples/jsm/loaders/PDBLoader';
-import {PLYLoader} from '../../../../modules/three/examples/jsm/loaders/PLYLoader';
-import {RGBELoader} from '../../../../modules/three/examples/jsm/loaders/RGBELoader';
-import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
-import {STLLoader} from '../../../../modules/three/examples/jsm/loaders/STLLoader';
-import {TTFLoader} from '../../../../modules/core/loaders/TTFLoader';
-
-export interface ModulesMap extends PolyDictionary<any> {
-	[ModuleName.BasisTextureLoader]: {BasisTextureLoader: typeof BasisTextureLoader};
-	[ModuleName.DRACOLoader]: {DRACOLoader: typeof DRACOLoader};
-	[ModuleName.EXRLoader]: {EXRLoader: typeof EXRLoader};
-	[ModuleName.FBXLoader]: {FBXLoader: typeof FBXLoader};
-	[ModuleName.GLTFLoader]: {GLTFLoader: typeof GLTFLoader};
-	[ModuleName.OBJLoader]: {OBJLoader: typeof OBJLoader};
-	[ModuleName.PDBLoader]: {PDBLoader: typeof PDBLoader};
-	[ModuleName.PLYLoader]: {PLYLoader: typeof PLYLoader};
-	[ModuleName.RGBELoader]: {RGBELoader: typeof RGBELoader};
-	[ModuleName.SVGLoader]: {SVGLoader: typeof SVGLoader};
-	[ModuleName.STLLoader]: {STLLoader: typeof STLLoader};
-	[ModuleName.TTFLoader]: {TTFLoader: typeof TTFLoader};
-}
-
+import {ModuleName} from './Common';
 import {PolyEngine} from '../../../Poly';
-import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {BasisTextureLoader} from './entry_points/BasisTextureLoader';
+import {DRACOLoader} from './entry_points/DRACOLoader';
+import {EXRLoader} from './entry_points/EXRLoader';
+import {FBXLoader} from './entry_points/FBXLoader';
+import {GLTFLoader} from './entry_points/GLTFLoader';
+import {OBJLoader} from './entry_points/OBJLoader';
+import {PDBLoader} from './entry_points/PDBLoader';
+import {PLYLoader} from './entry_points/PLYLoader';
+import {RGBELoader} from './entry_points/RGBELoader';
+import {SVGLoader} from './entry_points/SVGLoader';
+import {STLLoader} from './entry_points/STLLoader';
+import {TTFLoader} from './entry_points/TTFLoader';
+
 export class AllModulesRegister {
-	// paths are not dynamic for esbuild
 	static run(poly: PolyEngine) {
-		poly.modulesRegister.register(
-			ModuleName.BasisTextureLoader,
-			import('../../../../modules/three/examples/jsm/loaders/BasisTextureLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.DRACOLoader,
-			import('../../../../modules/three/examples/jsm/loaders/DRACOLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.EXRLoader,
-			import('../../../../modules/three/examples/jsm/loaders/EXRLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.FBXLoader,
-			import('../../../../modules/three/examples/jsm/loaders/FBXLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.GLTFLoader,
-			import('../../../../modules/three/examples/jsm/loaders/GLTFLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.OBJLoader,
-			import('../../../../modules/three/examples/jsm/loaders/OBJLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.PDBLoader,
-			import('../../../../modules/three/examples/jsm/loaders/PDBLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.PLYLoader,
-			import('../../../../modules/three/examples/jsm/loaders/PLYLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.RGBELoader,
-			import('../../../../modules/three/examples/jsm/loaders/RGBELoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.SVGLoader,
-			import('../../../../modules/three/examples/jsm/loaders/SVGLoader')
-		);
-		poly.modulesRegister.register(
-			ModuleName.STLLoader,
-			import('../../../../modules/three/examples/jsm/loaders/STLLoader')
-		);
-		poly.modulesRegister.register(ModuleName.TTFLoader, import('../../../../modules/core/loaders/TTFLoader'));
+		poly.modulesRegister.register(ModuleName.BasisTextureLoader, BasisTextureLoader);
+		poly.modulesRegister.register(ModuleName.DRACOLoader, DRACOLoader);
+		poly.modulesRegister.register(ModuleName.EXRLoader, EXRLoader);
+		poly.modulesRegister.register(ModuleName.FBXLoader, FBXLoader);
+		poly.modulesRegister.register(ModuleName.GLTFLoader, GLTFLoader);
+		poly.modulesRegister.register(ModuleName.OBJLoader, OBJLoader);
+		poly.modulesRegister.register(ModuleName.PDBLoader, PDBLoader);
+		poly.modulesRegister.register(ModuleName.PLYLoader, PLYLoader);
+		poly.modulesRegister.register(ModuleName.RGBELoader, RGBELoader);
+		poly.modulesRegister.register(ModuleName.SVGLoader, SVGLoader);
+		poly.modulesRegister.register(ModuleName.STLLoader, STLLoader);
+		poly.modulesRegister.register(ModuleName.TTFLoader, TTFLoader);
 	}
 }

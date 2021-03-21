@@ -12,7 +12,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {JsonDataLoader} from '../../../core/loader/geometry/JsonData';
+import {JSONDataParser} from '../../../core/loader/geometry/JSONDataParser';
 
 const DEFAULT_DATA = [
 	{value: -40},
@@ -55,8 +55,8 @@ export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
 
 		if (json) {
 			try {
-				const loader = new JsonDataLoader();
-				loader.set_json(json);
+				const loader = new JSONDataParser();
+				loader.setJSON(json);
 				const geometry = loader.createObject();
 				this.setGeometry(geometry, ObjectType.POINTS);
 			} catch (e) {

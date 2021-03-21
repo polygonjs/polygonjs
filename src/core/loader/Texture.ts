@@ -7,9 +7,11 @@ import {BaseParamType} from '../../engine/params/_Base';
 import {BaseCopNodeClass} from '../../engine/nodes/cop/_Base';
 import {TextureContainer} from '../../engine/containers/Texture';
 import {Poly} from '../../engine/Poly';
-import {ModuleName} from '../../engine/poly/registers/modules/_BaseRegister';
+import {ModuleName} from '../../engine/poly/registers/modules/Common';
 import {CoreUserAgent} from '../UserAgent';
 import {ASSETS_ROOT} from './AssetsUtils';
+import {PolyScene} from '../../engine/index_all';
+import {CoreBaseLoader} from './_Base';
 interface VideoSourceTypeByExt {
 	ogg: string;
 	ogv: string;
@@ -48,7 +50,7 @@ interface TextureLoadOptions {
 	dataType: number;
 }
 type MaxConcurrentLoadsCountMethod = () => number;
-export class CoreLoaderTexture {
+export class CoreLoaderTexture extends CoreBaseLoader {
 	static PARAM_DEFAULT = `${ASSETS_ROOT}/textures/uv.jpg`;
 	static PARAM_ENV_DEFAULT = `${ASSETS_ROOT}/textures/piz_compressed.exr`;
 
@@ -59,17 +61,16 @@ export class CoreLoaderTexture {
 		mp4: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
 	};
 
-	constructor(private _node: BaseNodeType, private _param: BaseParamType) {}
+	constructor(private _node: BaseNodeType, private _param: BaseParamType, url: string, scene: PolyScene) {
+		super(url, scene);
+	}
 
-	async load_texture_from_url_or_op(
-		url: string,
-		options: TextureLoadOptions
-	): Promise<Texture | VideoTexture | null> {
+	async load_texture_from_url_or_op(options: TextureLoadOptions): Promise<Texture | VideoTexture | null> {
 		let texture: Texture | null = null;
 		let found_node;
 
-		if (url.substring(0, 3) == 'op:') {
-			const node_path = url.substring(3);
+		if (this.url.substring(0, 3) == 'op:') {
+			const node_path = this.url.substring(3);
 			found_node = CoreWalker.findNode(this._node, node_path);
 			if (found_node) {
 				if (found_node instanceof BaseCopNodeClass) {
@@ -84,7 +85,7 @@ export class CoreLoaderTexture {
 				this._node.states.error.set(`no node found in path '${node_path}'`);
 			}
 		} else {
-			texture = await this.load_url(url, options);
+			texture = await this.load_url(options);
 			if (texture) {
 				// param.mark_as_referencing_asset(url)
 				if (this._param.options.texture_as_env()) {
@@ -93,7 +94,7 @@ export class CoreLoaderTexture {
 					texture = CoreLoaderTexture.set_texture_for_mapping(texture);
 				}
 			} else {
-				this._node.states.error.set(`could not load texture ${url}`);
+				this._node.states.error.set(`could not load texture ${this.url}`);
 			}
 		}
 
@@ -108,24 +109,26 @@ export class CoreLoaderTexture {
 		return texture;
 	}
 
-	async load_url(paramUrl: string, options: TextureLoadOptions): Promise<Texture> {
+	async load_url(options: TextureLoadOptions): Promise<Texture> {
 		return new Promise(async (resolve, reject) => {
-			let resolvedUrl = paramUrl;
-			const ext = CoreLoaderTexture.get_extension(resolvedUrl);
-			const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
-			if (blobUrl) {
-				resolvedUrl = blobUrl;
-			} else {
-				if (resolvedUrl[0] != 'h') {
-					const assets_root = this._node.scene().assets.root();
-					if (assets_root) {
-						resolvedUrl = `${assets_root}${resolvedUrl}`;
-					}
-				}
-			}
+			// let resolvedUrl = paramUrl;
+			// const ext = CoreLoaderTexture.get_extension(resolvedUrl);
+			// const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
+			// if (blobUrl) {
+			// 	resolvedUrl = blobUrl;
+			// } else {
+			// 	if (resolvedUrl[0] != 'h') {
+			// 		const assets_root = this._node.scene().assets.root();
+			// 		if (assets_root) {
+			// 			resolvedUrl = `${assets_root}${resolvedUrl}`;
+			// 		}
+			// 	}
+			// }
+			const ext = CoreLoaderTexture.get_extension(this.url);
+			const url = await this._urlToLoad();
 
 			if (CoreLoaderTexture.VIDEO_EXTENSIONS.includes(ext)) {
-				const texture: VideoTexture = await this._load_as_video(resolvedUrl);
+				const texture: VideoTexture = await this._load_as_video(url);
 				resolve(texture);
 			} else {
 				this.loader_for_ext(ext, options).then(async (loader) => {
@@ -133,9 +136,8 @@ export class CoreLoaderTexture {
 						CoreLoaderTexture.increment_in_progress_loads_count();
 						await CoreLoaderTexture.wait_for_max_concurrent_loads_queue_freed();
 						loader.load(
-							resolvedUrl,
+							url,
 							(texture: Texture) => {
-								Poly.blobs.fetchBlob({paramUrl, resolvedUrl});
 								CoreLoaderTexture.decrement_in_progress_loads_count();
 								resolve(texture);
 							},
@@ -178,13 +180,13 @@ export class CoreLoaderTexture {
 				return await this._basis_loader();
 			}
 		}
-		return new TextureLoader();
+		return new TextureLoader(this.loadingManager);
 	}
 
 	private async _exr_loader(options: TextureLoadOptions) {
-		const module = await Poly.modulesRegister.module(ModuleName.EXRLoader);
-		if (module) {
-			const loader = new module.EXRLoader();
+		const EXRLoader = await Poly.modulesRegister.module(ModuleName.EXRLoader);
+		if (EXRLoader) {
+			const loader = new EXRLoader(this.loadingManager);
 			if (options.tdataType) {
 				loader.setDataType(options.dataType);
 			}
@@ -192,9 +194,9 @@ export class CoreLoaderTexture {
 		}
 	}
 	private async _hdr_loader(options: TextureLoadOptions) {
-		const module = await Poly.modulesRegister.module(ModuleName.RGBELoader);
-		if (module) {
-			const loader = new module.RGBELoader();
+		const RGBELoader = await Poly.modulesRegister.module(ModuleName.RGBELoader);
+		if (RGBELoader) {
+			const loader = new RGBELoader(this.loadingManager);
 			if (options.tdataType) {
 				loader.setDataType(options.dataType);
 			}
@@ -202,13 +204,26 @@ export class CoreLoaderTexture {
 		}
 	}
 	private async _basis_loader() {
-		const module = await Poly.modulesRegister.module(ModuleName.BasisTextureLoader);
-		if (module) {
-			const BASISLoader = new module.BasisTextureLoader();
+		const BasisTextureLoader = await Poly.modulesRegister.module(ModuleName.BasisTextureLoader);
+		if (BasisTextureLoader) {
+			const BASISLoader = new BasisTextureLoader(this.loadingManager);
 			const root = Poly.libs.root();
 			const BASISPath = Poly.libs.BASISPath();
 			if (root || BASISPath) {
 				const decoder_path = `${root || ''}${BASISPath || ''}/`;
+
+				const files = [
+					'basis_transcoder.js',
+					'basis_transcoder.wasm',
+					'msc_basis_transcoder.js',
+					'msc_basis_transcoder.wasm',
+				];
+				for (let file of files) {
+					const storedUrl = `${BASISPath}/${file}`;
+					const fullUrl = `${decoder_path}${file}`;
+					Poly.blobs.fetchBlob({storedUrl, fullUrl});
+				}
+
 				BASISLoader.setTranscoderPath(decoder_path);
 			} else {
 				(BASISLoader as any).setTranscoderPath(undefined);

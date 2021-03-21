@@ -178,7 +178,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param node whose objects to test hit against, when testing against geometries */
-	targetNode = ParamConfig.NODE_PATH('/geo1', {
+	targetNode = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},

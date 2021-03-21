@@ -147,7 +147,7 @@ The nodes are grouped in contexts, each for a specific type of task:
 
 ## Plugins
 
-Polygonjs is designed to be extensible. You can create your own plugins to add custom nodes. There are currently 3 official plugins:
+Polygonjs is designed to be extensible. You can create your own plugins to add custom nodes. There are currently 4 official plugins:
 
 -   [Mapbox](https://github.com/polygonjs/polygonjs-plugin-mapbox) to add 3D objects to Mapbox maps.
 -   [Occlusion](https://github.com/polygonjs/polygonjs-plugin-occlusion) to calculate occlusion on a geometry and get more pleasant lighting.

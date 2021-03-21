@@ -11,7 +11,9 @@ import {Poly} from '../../src/engine/Poly';
 
 // register
 import {AllRegister} from '../../src/engine/poly/registers/All';
+import {AllModulesRegister} from '../../src/engine/poly/registers/modules/All';
 AllRegister.run();
+AllModulesRegister.run(Poly);
 
 // window.create_renderer_if_none = () => {
 // 	const first_renderer = POLY.renderers_controller.first_renderer();
