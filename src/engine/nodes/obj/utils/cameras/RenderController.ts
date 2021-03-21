@@ -187,7 +187,7 @@ export class RenderController {
 		if (isBooleanTrue(this.node.pv.setRenderer)) {
 			this.update_renderer();
 			if (this._resolved_renderer_rop) {
-				renderer = this._resolved_renderer_rop.create_renderer(canvas, gl);
+				renderer = this._resolved_renderer_rop.createRenderer(canvas, gl);
 			}
 		}
 		if (!renderer) {
@@ -225,10 +225,10 @@ export class RenderController {
 		const params: WebGLRendererParameters = {
 			canvas: canvas,
 			antialias: false, // no anti alias with a pixel ratio of 2 is more performant
-			alpha: true,
+			alpha: false,
 			context: gl,
 		};
-		const renderer = new WebGLRenderer(params);
+		const renderer = Poly.renderersController.createWebGLRenderer(params)
 		const pixelRatio = this.defaultPixelRatio();
 		renderer.setPixelRatio(pixelRatio);
 

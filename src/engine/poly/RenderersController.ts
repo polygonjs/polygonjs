@@ -1,22 +1,15 @@
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Texture} from 'three/src/textures/Texture';
+import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
 import {WebGLMultisampleRenderTarget} from 'three/src/renderers/WebGLMultisampleRenderTarget';
-
-interface RendererByString {
-	[propName: string]: WebGLRenderer;
-}
-interface TextureByString {
-	[propName: string]: Texture;
-}
+import {PolyDictionary} from '../../types/GlobalTypes';
 
 interface POLYWebGLRenderer extends WebGLRenderer {
 	_polygon_id: number;
 }
 
 const CONTEXT_OPTIONS = {
-	// antialias: false, // leave that to the renderer node
-	// preserveDrawingBuffer: true, // this could only be useful to capture static images
+	antialias: false, // leave that to the renderer node
+	preserveDrawingBuffer: true, // this could only be useful to capture static images
 };
 
 type Callback = (value: WebGLRenderer) => void;
@@ -29,14 +22,14 @@ enum WebGLContext {
 }
 
 export class RenderersController {
-	_next_renderer_id: number = 0;
-	_next_env_map_id: number = 0;
-	_renderers: RendererByString = {};
-	_env_maps: TextureByString = {};
-	_printDebug = false;
+	private _next_renderer_id: number = 0;
+	private _renderers: PolyDictionary<WebGLRenderer> = {};
+	private _printDebug = false;
 	private _require_webgl2: boolean = false;
 	private _resolves: Callback[] = [];
 	private _webgl2_available: boolean | undefined;
+	// private _env_maps: TextureByString = {};
+	// private _next_env_map_id: number = 0;
 
 	constructor() {}
 
@@ -67,6 +60,10 @@ export class RenderersController {
 	private _set_webgl2_available() {
 		const canvas = document.createElement('canvas');
 		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
+	}
+
+	createWebGLRenderer(params: WebGLRendererParameters) {
+		return new WebGLRenderer(params);
 	}
 
 	renderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {

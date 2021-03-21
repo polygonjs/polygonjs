@@ -19,7 +19,7 @@ export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsCon
 	}
 
 	private _renderers_by_canvas_id: PolyDictionary<CSS3DRenderer> = {};
-	create_renderer(canvas: HTMLCanvasElement) {
+	createRenderer(canvas: HTMLCanvasElement) {
 		const renderer = new CSS3DRenderer();
 		this._renderers_by_canvas_id[canvas.id] = renderer;
 		const parent = canvas.parentElement;
@@ -35,7 +35,7 @@ export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsCon
 		return renderer;
 	}
 	renderer(canvas: HTMLCanvasElement) {
-		return this._renderers_by_canvas_id[canvas.id] || this.create_renderer(canvas);
+		return this._renderers_by_canvas_id[canvas.id] || this.createRenderer(canvas);
 	}
 	// remove_renderer_element(canvas: HTMLCanvasElement) {
 	// 	// not ideal, because I could not re-add it back

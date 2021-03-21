@@ -245,7 +245,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	}
 
 	private _renderers_by_canvas_id: PolyDictionary<WebGLRenderer> = {};
-	create_renderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
+	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<
 			keyof WebGLRendererParameters
@@ -259,7 +259,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		params.canvas = canvas;
 		params.context = gl;
 		// (params as WebGLRendererParameters).preserveDrawingBuffer = this.pv.preserve_drawing_buffer;
-		const renderer = new WebGLRenderer(params);
+		const renderer = Poly.renderersController.createWebGLRenderer(params);
 
 		if (Poly.renderersController.printDebug()) {
 			Poly.renderersController.printDebugMessage(`create renderer from node '${this.fullPath()}'`);

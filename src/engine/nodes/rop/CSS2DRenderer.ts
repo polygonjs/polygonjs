@@ -43,7 +43,7 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 	}
 
 	private _renderers_by_canvas_id: Map<string, CSS2DRenderer> = new Map();
-	create_renderer(canvas: HTMLCanvasElement) {
+	createRenderer(canvas: HTMLCanvasElement) {
 		const renderer = new CSS2DRenderer();
 		this._renderers_by_canvas_id.set(canvas.id, renderer);
 		const parent = canvas.parentElement;
@@ -63,7 +63,7 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 		return renderer;
 	}
 	renderer(canvas: HTMLCanvasElement) {
-		return this._renderers_by_canvas_id.get(canvas.id) || this.create_renderer(canvas);
+		return this._renderers_by_canvas_id.get(canvas.id) || this.createRenderer(canvas);
 	}
 	// remove_renderer_element(canvas: HTMLCanvasElement) {
 	// 	// not ideal, because I could not re-add it back

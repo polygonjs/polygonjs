@@ -9,7 +9,6 @@ export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	public readonly flags: FlagsController = new FlagsController(this);
-	// protected _renderer: R = this._create_renderer();
 
 	initializeBaseNode() {
 		this.dirtyController.addPostDirtyHook('cook_immediately', () => {
@@ -17,19 +16,10 @@ export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		});
 	}
 
-	// protected abstract _create_renderer(): R;
-	// renderer() {
-	// 	return this._renderer;
-	// }
-
 	cook() {
 		this.cookController.endCook();
 	}
 }
 
 export type BaseRopNodeType = TypedRopNode<NodeParamsConfig>;
-export class BaseRopNodeClass extends TypedRopNode<NodeParamsConfig> {
-	// protected _create_renderer() {
-	// 	return {};
-	// }
-}
+export class BaseRopNodeClass extends TypedRopNode<NodeParamsConfig> {}

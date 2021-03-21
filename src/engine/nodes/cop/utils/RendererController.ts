@@ -22,7 +22,7 @@ export class CopRendererController {
 		if (isBooleanTrue(this.node.pv.useCameraRenderer)) {
 			return await this.camera_renderer();
 		} else {
-			return (this._renderer = this._renderer || this._create_renderer());
+			return (this._renderer = this._renderer || this._createRenderer());
 		}
 	}
 	reset() {
@@ -62,8 +62,8 @@ export class CopRendererController {
 		// renderer.autoClear = prev_auto_clear;
 	}
 
-	private _create_renderer() {
-		const renderer = new WebGLRenderer();
+	private _createRenderer() {
+		const renderer = Poly.renderersController.createWebGLRenderer({});
 		renderer.toneMapping = LinearToneMapping;
 		renderer.setPixelRatio(1);
 		return renderer;

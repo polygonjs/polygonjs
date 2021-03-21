@@ -54,6 +54,7 @@ export class SelfContainedScenesLoader {
 			return;
 		}
 		const viewer = cameraNode.createViewer(element);
+		scene.play();
 
 		// we attach scene and viewer to the element
 		// to allow easy js API access for customization.

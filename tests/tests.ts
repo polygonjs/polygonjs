@@ -205,5 +205,6 @@ import './engine/nodes/sop/Tube';
 import './engine/nodes/sop/UvProject';
 
 QUnit.module('viewer');
+import './engine/viewers/Callbacks';
 import './engine/viewers/Controls';
 import './engine/viewers/Events';
