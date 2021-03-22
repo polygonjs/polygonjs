@@ -8,8 +8,8 @@ interface POLYWebGLRenderer extends WebGLRenderer {
 }
 
 const CONTEXT_OPTIONS = {
-	antialias: false, // leave that to the renderer node
-	preserveDrawingBuffer: true, // this could only be useful to capture static images
+	// antialias: false, // leave that to the renderer node
+	// preserveDrawingBuffer: true, // this could only be useful to capture static images
 };
 
 type Callback = (value: WebGLRenderer) => void;

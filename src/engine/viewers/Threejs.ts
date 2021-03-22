@@ -17,22 +17,9 @@ export interface ThreejsViewerProperties {
 	autoRender: boolean;
 }
 
-type onTimeTickHook = () => void;
-type onRenderHook = () => void;
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _request_animation_frame_id: number | undefined;
 	private _do_render: boolean = true;
-
-	// tick callbacks
-	private _onBeforeTickCallbackNames: string[] | undefined;
-	private _onAfterTickCallbackNames: string[] | undefined;
-	private _onBeforeTickCallbacks: onTimeTickHook[] | undefined;
-	private _onAfterTickCallbacks: onTimeTickHook[] | undefined;
-	// render callbacks
-	private _onBeforeRenderCallbackNames: string[] | undefined;
-	private _onAfterRenderCallbackNames: string[] | undefined;
-	private _onBeforeRenderCallbacks: onRenderHook[] | undefined;
-	private _onAfterRenderCallbacks: onRenderHook[] | undefined;
 
 	private _animate_method: () => void = this.animate.bind(this);
 
@@ -197,91 +184,5 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		if (this._canvas) {
 			return this._camera_node.renderController.renderer(this._canvas);
 		}
-	}
-
-	//
-	//
-	// CALLBACKS
-	//
-	//
-	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook) {
-		this._onBeforeTickCallbacks = this._onBeforeTickCallbacks || [];
-		this._onBeforeTickCallbackNames = this._onBeforeTickCallbackNames || [];
-		this._onBeforeTickCallbacks.push(callback);
-		this._onBeforeTickCallbackNames.push(callbackName);
-	}
-	unRegisterOnBeforeTick(callbackName: string) {
-		if (!this._onBeforeTickCallbackNames) {
-			return;
-		}
-		if (!this._onBeforeTickCallbacks) {
-			return;
-		}
-		const index = this._onBeforeTickCallbackNames.indexOf(callbackName);
-		this._onBeforeTickCallbackNames.splice(index, 1);
-		this._onBeforeTickCallbacks.splice(index, 1);
-	}
-	registeredBeforeTickCallbackNames() {
-		return this._onBeforeTickCallbackNames;
-	}
-	registerOnAfterTick(callbackName: string, callback: onTimeTickHook) {
-		this._onAfterTickCallbacks = this._onAfterTickCallbacks || [];
-		this._onAfterTickCallbackNames = this._onAfterTickCallbackNames || [];
-		this._onAfterTickCallbacks.push(callback);
-		this._onAfterTickCallbackNames.push(callbackName);
-	}
-	unRegisterOnAfterTick(callbackName: string) {
-		if (!this._onAfterTickCallbackNames) {
-			return;
-		}
-		if (!this._onAfterTickCallbacks) {
-			return;
-		}
-		const index = this._onAfterTickCallbackNames.indexOf(callbackName);
-		this._onAfterTickCallbackNames.splice(index, 1);
-		this._onAfterTickCallbacks.splice(index, 1);
-	}
-	registeredAfterTickCallbackNames() {
-		return this._onAfterTickCallbackNames;
-	}
-	registerOnBeforeRender(callbackName: string, callback: onRenderHook) {
-		this._onBeforeRenderCallbacks = this._onBeforeRenderCallbacks || [];
-		this._onBeforeRenderCallbackNames = this._onBeforeRenderCallbackNames || [];
-		this._onBeforeRenderCallbacks.push(callback);
-		this._onBeforeRenderCallbackNames.push(callbackName);
-	}
-	unRegisterOnBeforeRender(callbackName: string) {
-		if (!this._onBeforeRenderCallbackNames) {
-			return;
-		}
-		if (!this._onBeforeRenderCallbacks) {
-			return;
-		}
-		const index = this._onBeforeRenderCallbackNames.indexOf(callbackName);
-		this._onBeforeRenderCallbackNames.splice(index, 1);
-		this._onBeforeRenderCallbacks.splice(index, 1);
-	}
-	registeredBeforeRenderCallbackNames() {
-		return this._onBeforeRenderCallbackNames;
-	}
-	registerOnAfterRender(callbackName: string, callback: onRenderHook) {
-		this._onAfterRenderCallbacks = this._onAfterRenderCallbacks || [];
-		this._onAfterRenderCallbackNames = this._onAfterRenderCallbackNames || [];
-		this._onAfterRenderCallbacks.push(callback);
-		this._onAfterRenderCallbackNames.push(callbackName);
-	}
-	unRegisterOnAfterRender(callbackName: string) {
-		if (!this._onAfterRenderCallbackNames) {
-			return;
-		}
-		if (!this._onAfterRenderCallbacks) {
-			return;
-		}
-		const index = this._onAfterRenderCallbackNames.indexOf(callbackName);
-		this._onAfterRenderCallbackNames.splice(index, 1);
-		this._onAfterRenderCallbacks.splice(index, 1);
-	}
-	registeredAfterRenderCallbackNames() {
-		return this._onAfterRenderCallbackNames;
 	}
 }

@@ -3,16 +3,34 @@ import {SceneJsonExporterData} from '../io/json/export/Scene';
 import {Poly} from '../Poly';
 import {BlobUrlData} from './BlobsController';
 import {ViewerData, ViewerDataByElement} from './Common';
+import {DomEffects} from '../../core/DomEffects';
 
 type SceneJsonImporterContructor = typeof SceneJsonImporter;
 
 export class SelfContainedScenesLoader {
+	private _sceneJsonImporterContructor: SceneJsonImporterContructor | undefined;
+	markAsLoaded(callback: () => void, sceneJsonImporterContructor: SceneJsonImporterContructor) {
+		this._sceneJsonImporterContructor = sceneJsonImporterContructor;
+		callback();
+	}
+
 	// the SceneJsonImporterContructor is required here.
 	// if it is not given, the whole js will fail to load with a circular loading type of error
-	load(map: ViewerDataByElement, sceneJsonImporterContructor: SceneJsonImporterContructor) {
+	load(map: ViewerDataByElement) {
+		if (!this._sceneJsonImporterContructor) {
+			return;
+		}
+		const elements: HTMLElement[] = [];
 		map.forEach((data, element) => {
-			this._loadElement(element, data, sceneJsonImporterContructor);
+			elements.push(element);
 		});
+		for (let element of elements) {
+			const data = map.get(element);
+			if (data) {
+				this._loadElement(element, data, this._sceneJsonImporterContructor);
+				map.delete(element);
+			}
+		}
 	}
 	private async _loadElement(
 		element: HTMLElement,
@@ -38,14 +56,17 @@ export class SelfContainedScenesLoader {
 		}
 		Poly.setPlayerMode(true);
 		Poly.libs.setRoot(null);
-		// Poly.libs.setDRACOGLTFPath(null);
-		await this._loadScene(element, sceneData, sceneJsonImporterContructor);
+
+		this._loadScene(element, sceneData, sceneJsonImporterContructor);
 	}
+
 	private async _loadScene(
 		element: HTMLElement,
 		sceneData: SceneJsonExporterData,
 		sceneJsonImporterContructor: SceneJsonImporterContructor
 	) {
+		this._fadeOutPoster(element);
+
 		const importer = new sceneJsonImporterContructor(sceneData);
 		const scene = await importer.scene();
 		const cameraNode = scene.masterCameraNode();
@@ -60,5 +81,15 @@ export class SelfContainedScenesLoader {
 		// to allow easy js API access for customization.
 		(element as any).scene = scene;
 		(element as any).viewer = viewer;
+	}
+
+	private _fadeOutPoster(element: HTMLElement) {
+		const posterElement = element.firstElementChild as HTMLElement;
+		if (posterElement) {
+			posterElement.style.pointerEvents = 'none';
+			DomEffects.fadeOut(posterElement).then(() => {
+				element.removeChild(posterElement);
+			});
+		}
 	}
 }

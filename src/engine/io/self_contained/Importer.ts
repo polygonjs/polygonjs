@@ -2,20 +2,30 @@ import {unzipSync, strFromU8, Unzipped} from 'fflate';
 import {JsFilesManifest, SelfContainedFileName} from './Common';
 import {ViewerDataByElement} from '../../poly/Common';
 import {ModuleName} from '../../poly/registers/modules/Common';
+import {DomEffects} from '../../../core/DomEffects';
+import {PolyEngine} from '../../Poly';
 declare global {
 	interface Window {
-		__POLYGONJS_VIEWER_LOAD_DATA__: ViewerDataByElement;
+		__POLYGONJS_SELF_CONTAINED___MARK_AS_LOADED_CALLBACK__: () => void;
+		__POLYGONJS_SELF_CONTAINED___POLY__: PolyEngine;
 	}
 }
 
 const url = new URL(window.location.href);
 const DEBUG = url.searchParams.get('POLY_DEBUG') == '1';
 
+enum LoadingMode {
+	LAZY = 'lazy',
+	EAGER = 'eager',
+}
+
 export class SelfContainedSceneImporter {
 	private _viewerDataByElement: ViewerDataByElement = new Map();
 	private _firstPolygonjsVersionFound: string | undefined;
 
 	async load() {
+		window.__POLYGONJS_SELF_CONTAINED___MARK_AS_LOADED_CALLBACK__ = this.markPolygonjsAsLoaded.bind(this);
+
 		const elements = document.getElementsByTagName('polygonjs-viewer');
 		// 1 - ensure that all scenes need the same polygonjs engine.
 		// 2 - only display a warning if not
@@ -30,19 +40,41 @@ export class SelfContainedSceneImporter {
 		let firstUnzippedData: Unzipped | undefined;
 		const requiredModules: Set<ModuleName> = new Set();
 		for (let i = 0; i < elements.length; i++) {
-			const element = elements[i];
-			// we need await here, to make sure that we only create one script tag at a time
-			// to load polygonjs
-			const unzippedData = await this._getElementViewerData(element as HTMLElement, requiredModules);
-			if (!firstUnzippedData && unzippedData) {
-				firstUnzippedData = unzippedData;
+			const element = elements[i] as HTMLElement;
+			const loadingMode = this._loadingMode(element);
+
+			switch (loadingMode) {
+				case LoadingMode.EAGER: {
+					// we need await here, to make sure that we only create one script tag at a time
+					// to load polygonjs
+					const unzippedData = await this._getElementViewerData(element as HTMLElement, requiredModules);
+					if (!firstUnzippedData && unzippedData) {
+						firstUnzippedData = unzippedData;
+					}
+					break;
+				}
+				case LoadingMode.LAZY: {
+					const onInteraction = async () => {
+						const unzippedData = await this._getElementViewerData(element as HTMLElement, requiredModules);
+						if (unzippedData) {
+							await this.loadPolygonjs(unzippedData, requiredModules);
+						}
+
+						element.removeEventListener('click', onInteraction);
+					};
+					element.addEventListener('click', onInteraction);
+				}
 			}
 		}
 
 		if (firstUnzippedData) {
-			window.__POLYGONJS_VIEWER_LOAD_DATA__ = this._viewerDataByElement;
 			await this.loadPolygonjs(firstUnzippedData, requiredModules);
 		}
+	}
+	private _loadingMode(element: HTMLElement) {
+		let loadingMode = element.getAttribute('loading') as LoadingMode | null;
+		loadingMode = loadingMode || LoadingMode.EAGER;
+		return loadingMode;
 	}
 
 	private _prepareElement(element: HTMLElement) {
@@ -105,7 +137,18 @@ export class SelfContainedSceneImporter {
 		return unzippedData;
 	}
 
+	private _POLYGONJS_LOADED = false;
+	markPolygonjsAsLoaded() {
+		this._POLYGONJS_LOADED = true;
+		window.__POLYGONJS_SELF_CONTAINED___POLY__.selfContainedScenesLoader.load(this._viewerDataByElement);
+	}
+
 	private async loadPolygonjs(unzippedData: Unzipped, requiredModuleNames: Set<ModuleName>) {
+		if (this._POLYGONJS_LOADED) {
+			window.__POLYGONJS_SELF_CONTAINED___POLY__.selfContainedScenesLoader.load(this._viewerDataByElement);
+			return;
+		}
+
 		const polygonjsVersion = this._firstPolygonjsVersionFound;
 		if (!polygonjsVersion) {
 			console.warn('no version found, polygonjs will not be loaded');
@@ -132,7 +175,11 @@ export class SelfContainedSceneImporter {
 			lines.push(`Poly.modulesRegister.register('${moduleName}', ${moduleName});`);
 		});
 
-		lines.push(`Poly.selfContainedScenesLoader.load(window.__POLYGONJS_VIEWER_LOAD_DATA__, SceneJsonImporter);`);
+		// lines.push(`Poly.selfContainedScenesLoader.load(window.__POLYGONJS_VIEWER_LOAD_DATA__, SceneJsonImporter);`);
+		lines.push(`window.__POLYGONJS_SELF_CONTAINED___POLY__ = Poly;`);
+		lines.push(
+			`Poly.selfContainedScenesLoader.markAsLoaded(window.__POLYGONJS_SELF_CONTAINED___MARK_AS_LOADED_CALLBACK__, SceneJsonImporter)`
+		);
 
 		if (!script) {
 			script = document.createElement('script') as HTMLScriptElement;
@@ -218,19 +265,9 @@ export class SelfContainedSceneImporter {
 		progressBarContainer.parentElement?.removeChild(progressBarContainer);
 	}
 	private _fadeOutProgressBar(progressBarContainer: HTMLElement) {
-		const fadeTarget = progressBarContainer;
-		const fadeEffect = setInterval(() => {
-			if (!fadeTarget.style.opacity) {
-				fadeTarget.style.opacity = '1';
-			}
-			const opacity = parseFloat(fadeTarget.style.opacity);
-			if (opacity > 0) {
-				fadeTarget.style.opacity = `${opacity - 0.05}`;
-			} else {
-				this._removeProgressBar(progressBarContainer);
-				clearInterval(fadeEffect);
-			}
-		}, 20);
+		DomEffects.fadeOut(progressBarContainer).then(() => {
+			this._removeProgressBar(progressBarContainer);
+		});
 	}
 
 	private _createJsBlob(array: Uint8Array, filename: string) {
@@ -245,6 +282,24 @@ export class SelfContainedSceneImporter {
 		if (!posterUrl) {
 			return;
 		}
-		element.style.backgroundImage = `url('${posterUrl}')`;
+		const posterElement = document.createElement('div');
+		element.append(posterElement);
+
+		const loadingMode = this._loadingMode(element);
+
+		posterElement.setAttribute('data-polygonjs-poster', 'true');
+		const style = posterElement.style;
+		if (loadingMode == LoadingMode.LAZY) {
+			style.cursor = 'pointer';
+		}
+
+		style.position = 'absolute';
+		style.top = '0px';
+		style.left = '0px';
+		style.height = '100%';
+		style.width = '100%';
+		style.backgroundImage = `url('${posterUrl}')`;
+		style.backgroundSize = 'cover';
+		style.backgroundPosition = 'center center';
 	}
 }

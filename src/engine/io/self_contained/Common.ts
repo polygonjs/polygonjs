@@ -6,6 +6,7 @@ export enum SelfContainedFileName {
 	ASSETS = 'assets.json',
 	POLYGONJS = 'js/all.js',
 	JS_FILES = 'js_files.json',
+	POSTER = 'poster.png',
 }
 export type JsFilesManifest = {
 	modules: ModuleName[];
