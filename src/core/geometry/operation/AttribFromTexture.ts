@@ -66,7 +66,7 @@ export class AttribFromTexture {
 			}
 		}
 
-		const attribName = CoreAttribute.remap_name(params.targetAttribName);
+		const attribName = CoreAttribute.remapName(params.targetAttribName);
 		const array = new Float32Array(values);
 		geometry.setAttribute(attribName, new BufferAttribute(array, targetAttribSize));
 	}

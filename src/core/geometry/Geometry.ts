@@ -80,11 +80,11 @@ export class CoreGeometry {
 		return Object.keys(this.userDataAttribs() || {});
 	}
 	userDataAttrib(name: string) {
-		name = CoreAttribute.remap_name(name);
+		name = CoreAttribute.remapName(name);
 		return this.userDataAttribs()[name];
 	}
 	isAttribIndexed(name: string): boolean {
-		name = CoreAttribute.remap_name(name);
+		name = CoreAttribute.remapName(name);
 		return this.userDataAttrib(name) != null;
 	}
 
@@ -92,7 +92,7 @@ export class CoreGeometry {
 		if (name === 'ptnum') {
 			return true;
 		}
-		name = CoreAttribute.remap_name(name);
+		name = CoreAttribute.remapName(name);
 		return this._geometry.attributes[name] != null;
 	}
 	attribType(name: string) {
@@ -133,7 +133,7 @@ export class CoreGeometry {
 	}
 	attribSize(name: string): number {
 		let attrib;
-		name = CoreAttribute.remap_name(name);
+		name = CoreAttribute.remapName(name);
 		if ((attrib = this._geometry.attributes[name]) != null) {
 			return attrib.itemSize;
 		} else {

@@ -57,12 +57,12 @@ export class CorePoint extends CoreEntity {
 	}
 
 	attribSize(name: string): number {
-		name = CoreAttribute.remap_name(name);
+		name = CoreAttribute.remapName(name);
 		return this._geometry.getAttribute(name).itemSize;
 	}
 
 	hasAttrib(name: string): boolean {
-		const remapped_name = CoreAttribute.remap_name(name);
+		const remapped_name = CoreAttribute.remapName(name);
 		return this._core_geometry.hasAttrib(remapped_name);
 	}
 
@@ -77,7 +77,7 @@ export class CorePoint extends CoreEntity {
 				component_index = COMPONENT_INDICES[component_name];
 				name = name.substring(0, name.length - 2);
 			}
-			const remaped_name = CoreAttribute.remap_name(name);
+			const remaped_name = CoreAttribute.remapName(name);
 
 			const attrib = this._geometry.getAttribute(remaped_name);
 			if (attrib) {

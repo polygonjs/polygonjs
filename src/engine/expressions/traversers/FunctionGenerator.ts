@@ -450,7 +450,7 @@ export class FunctionGenerator extends BaseTraverser {
 			// param.entity_attrib_value(${QUOTE}${attrib_node.name}${QUOTE}, param.entity_attrib_values.position);
 			// `
 			if (attribute_name) {
-				attribute_name = CoreAttribute.remap_name(attribute_name);
+				attribute_name = CoreAttribute.remapName(attribute_name);
 				if (attribute_name == 'ptnum') {
 					return '((entity != null) ? entity.index() : 0)';
 				} else {

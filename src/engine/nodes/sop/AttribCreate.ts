@@ -345,7 +345,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			// no need to do work here, as this will be done in the operation
 		}
 
-		const index_data = CoreAttribute.array_to_indexed_arrays(string_values);
+		const index_data = CoreAttribute.arrayToIndexedArrays(string_values);
 		const geometry = core_object.coreGeometry();
 		if (geometry) {
 			geometry.setIndexedAttribute(this.pv.name, index_data['values'], index_data['indices']);

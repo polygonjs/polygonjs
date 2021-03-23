@@ -19,11 +19,11 @@ const ATTRIB_NAME_MAP: PolyDictionary<string> = {
 };
 
 export class CoreAttribute {
-	static remap_name(name: string): string {
+	static remapName(name: string): string {
 		return ATTRIB_NAME_MAP[name] || name;
 	}
 
-	static array_to_indexed_arrays(array: string[]) {
+	static arrayToIndexedArrays(array: string[]) {
 		const index_by_value: PolyDictionary<number> = {};
 		let current_index = 0;
 		const indices = [];

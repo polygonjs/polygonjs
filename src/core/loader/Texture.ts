@@ -50,6 +50,7 @@ interface TextureLoadOptions {
 	dataType: number;
 }
 type MaxConcurrentLoadsCountMethod = () => number;
+type OnTextureLoadedCallback = (url: string, texture: Texture) => void;
 export class CoreLoaderTexture extends CoreBaseLoader {
 	static PARAM_DEFAULT = `${ASSETS_ROOT}/textures/uv.jpg`;
 	static PARAM_ENV_DEFAULT = `${ASSETS_ROOT}/textures/piz_compressed.exr`;
@@ -63,6 +64,11 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 
 	constructor(private _node: BaseNodeType, private _param: BaseParamType, url: string, scene: PolyScene) {
 		super(url, scene);
+	}
+
+	static _onTextureLoadedCallback: OnTextureLoadedCallback | undefined;
+	static onTextureLoaded(callback: OnTextureLoadedCallback | undefined) {
+		this._onTextureLoadedCallback = callback;
 	}
 
 	async load_texture_from_url_or_op(options: TextureLoadOptions): Promise<Texture | VideoTexture | null> {
@@ -139,6 +145,12 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 							url,
 							(texture: Texture) => {
 								CoreLoaderTexture.decrement_in_progress_loads_count();
+
+								const callback = CoreLoaderTexture._onTextureLoadedCallback;
+								if (callback) {
+									callback(this.url, texture);
+								}
+
 								resolve(texture);
 							},
 							undefined,

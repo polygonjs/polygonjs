@@ -121,7 +121,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 			string_values[i] = value;
 		}
 
-		const index_data = CoreAttribute.array_to_indexed_arrays(string_values);
+		const index_data = CoreAttribute.arrayToIndexedArrays(string_values);
 		const geometry = core_object.coreGeometry();
 		if (geometry) {
 			geometry.setIndexedAttribute(params.name, index_data['values'], index_data['indices']);

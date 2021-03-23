@@ -52,7 +52,7 @@ export class CsvLoader {
 		if (!this.attribute_names) {
 			this.attribute_names = this.lines[0].split(CsvLoader.SEPARATOR);
 		}
-		this.attribute_names = this.attribute_names.map((name) => CoreAttribute.remap_name(name));
+		this.attribute_names = this.attribute_names.map((name) => CoreAttribute.remapName(name));
 		for (let attribute_name of this.attribute_names) {
 			this.attribute_values_by_name[attribute_name] = [];
 		}
@@ -129,7 +129,7 @@ export class CsvLoader {
 			const size = this.attribute_data_by_name[attribute_name].size();
 			const type = this.attribute_data_by_name[attribute_name].type();
 			if (type == AttribType.STRING) {
-				const index_data = CoreAttribute.array_to_indexed_arrays(attribute_values as string[]);
+				const index_data = CoreAttribute.arrayToIndexedArrays(attribute_values as string[]);
 				core_geometry.setIndexedAttribute(attribute_name, index_data['values'], index_data['indices']);
 			} else {
 				geometry.setAttribute(attribute_name, new Float32BufferAttribute(attribute_values as number[], size));

@@ -53,7 +53,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		} else {
 			for (let i = 0; i < dest_objects.length; i++) {
 				const dest_geometry = dest_objects[i].geometry;
-				const src_geometry = dest_objects[i].geometry;
+				const src_geometry = src_objects[i].geometry;
 				this.copy_vertex_attribute_between_geometries(dest_geometry, src_geometry, attrib_name, params);
 			}
 		}

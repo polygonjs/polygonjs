@@ -8,37 +8,48 @@ Polygonjs is a node-based 3D Webgl engine. [Learn more](https://polygonjs.com/).
 
 ![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.002.png?v=2)
 
-Install: `npm install @polygonjs/polygonjs` or `yarn add @polygonjs/polygonjs`.
+Install:
 
-Or use from the CDN: `https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js`.
+`npm install @polygonjs/polygonjs`
+
+or
+
+`yarn add @polygonjs/polygonjs`
+
+You can also load it from the CDN:
+
+`https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js`.
 
 The API is designed to be very simple. Here is how you create a minimal scene with a box:
 
-```javascript
-// import from the CDN
-import {PolyScene} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
-// or from the npm module
-// import {PolyScene} from '@polygonjs/polygonjs/dist/src/engine/scene/PolyScene';
+```html
+<script type="module">
+	// import from the CDN
+	import {PolyScene} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
+	// or import from the npm module
+	// import {PolyScene} from '@polygonjs/polygonjs/dist/src/engine/scene/PolyScene';
 
-// create a scene
-const scene = new PolyScene();
+	// create a scene
+	const scene = new PolyScene();
+	const rootNode = scene.root();
 
-// create a box
-const geo = rootNode.createNode('geo');
-const box = geo.createNode('box');
+	// create a box
+	const geo = rootNode.createNode('geo');
+	const box = geo.createNode('box');
 
-// add a light
-rootNode.createNode('hemisphereLight');
+	// add a light
+	rootNode.createNode('hemisphereLight');
 
-// create a camera
-const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
-perspectiveCamera1.p.t.set([5, 5, 5]);
-// add OrbitControls
-const events1 = perspectiveCamera1.createNode('events');
-const orbitsControls = events1.createNode('cameraOrbitControls');
-perspectiveCamera1.p.controls.setNode(orbitsControls);
+	// create a camera
+	const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
+	perspectiveCamera1.p.t.set([5, 5, 5]);
+	// add OrbitControls
+	const events1 = perspectiveCamera1.createNode('events');
+	const orbitsControls = events1.createNode('cameraOrbitControls');
+	perspectiveCamera1.p.controls.setNode(orbitsControls);
 
-perspectiveCamera1.createViewer(document.getElementById('app'));
+	perspectiveCamera1.createViewer(document.getElementById('app'));
+</script>
 ```
 
 which should give you this (you can try it on [this page](https://polygonjs.com/examples/start.html)):

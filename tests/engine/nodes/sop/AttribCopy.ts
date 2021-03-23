@@ -1,3 +1,5 @@
+import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+
 QUnit.test('attribcopy latitude to position', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
@@ -71,4 +73,45 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	assert.equal(array[2], 1);
 	assert.equal(array[5], 3);
 	assert.equal(array[8], 5);
+});
+
+async function requestAttribArray(node: BaseSopNodeType, attribName: string) {
+	let container = await node.requestContainer();
+	let core_group = container.coreContent()!;
+	let geometry = core_group.objectsWithGeo()[0].geometry;
+	return geometry.getAttribute(attribName).array;
+}
+
+QUnit.test('attribcopy from input 2', async (assert) => {
+	const geo1 = window.geo1;
+	const box = geo1.createNode('box');
+	box.p.size.set(1.1); // non integer to allow the noise to have any effect
+	const noise = geo1.createNode('noise');
+	const attribCopy = geo1.createNode('attribCopy');
+	noise.setInput(0, box);
+	noise.p.amplitude.set(5);
+
+	attribCopy.setInput(0, box);
+	attribCopy.setInput(1, noise);
+	attribCopy.p.name.set('P');
+
+	const boxP = await requestAttribArray(box, 'position');
+	const noiseP = await requestAttribArray(noise, 'position');
+
+	//
+	// 1. we test that the attrib is copied to the dest with same name
+	//
+	let attribCopyP = await requestAttribArray(attribCopy, 'position');
+	assert.deepEqual(attribCopyP, noiseP);
+
+	//
+	// 2. we test that the attrib is copied to the dest with a different name
+	//
+	attribCopy.p.tnewName.set(true);
+	attribCopy.p.newName.set('P2');
+
+	attribCopyP = await requestAttribArray(attribCopy, 'position');
+	const attribCopyP2 = await requestAttribArray(attribCopy, 'P2');
+	assert.deepEqual(attribCopyP2, noiseP);
+	assert.deepEqual(attribCopyP, boxP);
 });

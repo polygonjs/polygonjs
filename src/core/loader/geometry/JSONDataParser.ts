@@ -63,7 +63,7 @@ export class JSONDataParser {
 
 			// set values
 			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
-				const geo_attrib_name = CoreAttribute.remap_name(attrib_name);
+				const geo_attrib_name = CoreAttribute.remapName(attrib_name);
 				let attrib_values = this._attribute_values_for_name(attrib_name).flat();
 
 				const data = this._attribute_datas_by_name[attrib_name];
@@ -83,7 +83,7 @@ export class JSONDataParser {
 							new Float32BufferAttribute(numerical_attrib_values, size)
 						);
 					} else {
-						const index_data = CoreAttribute.array_to_indexed_arrays(attrib_values as string[]);
+						const index_data = CoreAttribute.arrayToIndexedArrays(attrib_values as string[]);
 						core_geo.setIndexedAttribute(geo_attrib_name, index_data['values'], index_data['indices']);
 					}
 				} else {

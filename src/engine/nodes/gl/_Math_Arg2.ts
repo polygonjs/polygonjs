@@ -89,6 +89,11 @@ export class ModGlNode extends MathFunctionArg2Factory('mod') {
 	param_default_value(name: string) {
 		return ({in1: 1} as PolyDictionary<number>)[name];
 	}
+	// mod can only take floats
+	_expected_input_types() {
+		const type = GlConnectionPointType.FLOAT;
+		return [type, type];
+	}
 }
 export class PowGlNode extends MathFunctionArg2Factory('pow', {in: ['x', 'y']}) {}
 export class ReflectGlNode extends MathFunctionArg2Factory('reflect', {

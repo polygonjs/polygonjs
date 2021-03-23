@@ -406,6 +406,11 @@ export class CoreGroup {
 			for (let mask of masks) {
 				if (CoreString.matchMask(attrib_name, mask)) {
 					matching_attrib_names.push(attrib_name);
+				} else {
+					const remapped = CoreAttribute.remapName(mask);
+					if (attrib_name == remapped) {
+						matching_attrib_names.push(attrib_name);
+					}
 				}
 			}
 		}
