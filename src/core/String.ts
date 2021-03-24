@@ -167,6 +167,9 @@ export class CoreString {
 			return `${num_as_string}.0`;
 		}
 	}
+	static ensureInteger(num: number): string {
+		return `${Math.floor(num)}`;
+	}
 
 	// https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438
 	static matchMask(word: string, mask: string) {

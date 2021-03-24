@@ -72,6 +72,19 @@ export class ConnectionsController<NC extends NodeContext> {
 	inputConnections() {
 		return this._input_connections;
 	}
+	existingInputConnections() {
+		const current_connections = this._input_connections;
+		if (current_connections) {
+			// remove the last one if it is undefined
+			while (
+				current_connections.length > 1 &&
+				current_connections[current_connections.length - 1] === undefined
+			) {
+				current_connections.pop();
+			}
+		}
+		return current_connections;
+	}
 
 	//
 	//

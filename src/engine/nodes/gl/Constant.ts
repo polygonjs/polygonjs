@@ -16,6 +16,7 @@ function typed_visible_options(type: GlConnectionPointType) {
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {CoreType} from '../../../core/Type';
 // import {GlConnectionsController} from './utils/GLConnectionsController';
 
 class ConstantGlParamsConfig extends NodeParamsConfig {
@@ -52,7 +53,15 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		const param = this._current_param;
 		if (param) {
 			const connection_type = this._current_connection_type;
-			const value = ThreeToGl.any(param.value);
+
+			let value = ThreeToGl.any(param.value);
+			// ensure that it is an integer when needed
+			// as ThreeToGl.any can only detect if this is a number for now
+			// and therefore does not make the distinction between float and int
+			if (param.name() == this.p.int.name() && CoreType.isNumber(param.value)) {
+				value = ThreeToGl.integer(param.value);
+			}
+
 			const var_value = this._current_var_name;
 			const body_line = `${connection_type} ${var_value} = ${value}`;
 			shaders_collection_controller.addBodyLines(this, [body_line]);

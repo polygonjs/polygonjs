@@ -115,6 +115,12 @@ export class ThreeToGl {
 		}
 		return `${x}`;
 	}
+	static integer(x: number | string) {
+		if (!CoreType.isString(x)) {
+			return CoreString.ensureInteger(x);
+		}
+		return `${parseInt(x)}`;
+	}
 	static int(x: number | string) {
 		return `${x}`;
 	}
