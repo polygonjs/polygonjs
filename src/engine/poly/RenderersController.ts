@@ -43,7 +43,7 @@ export class RenderersController {
 		if (!this._printDebug) {
 			return;
 		}
-		console.log('[Poly debug]', message);
+		console.warn('[Poly debug]', message);
 	}
 
 	setRequireWebGL2() {
@@ -63,19 +63,21 @@ export class RenderersController {
 	}
 
 	createWebGLRenderer(params: WebGLRendererParameters) {
-		return new WebGLRenderer(params);
+		const renderer = new WebGLRenderer(params);
+		this.printDebugMessage([`create renderer:`, params]);
+		return renderer;
 	}
 
-	renderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
+	createRenderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
 		let gl: WebGLRenderingContext | null = null;
 		if (this._require_webgl2) {
-			gl = this._rendering_context_webgl(canvas, true);
+			gl = this._getRenderingContextWebgl(canvas, true);
 			if (!gl) {
 				console.warn('failed to create webgl2 context');
 			}
 		}
 		if (!gl) {
-			gl = this._rendering_context_webgl(canvas, false);
+			gl = this._getRenderingContextWebgl(canvas, false);
 		}
 
 		// gl.getExtension('OES_standard_derivatives') // for derivative normals, but it cannot work at the moment (see node Gl/DerivativeNormals)
@@ -85,7 +87,7 @@ export class RenderersController {
 
 		return gl;
 	}
-	private _rendering_context_webgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext | null {
+	private _getRenderingContextWebgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext | null {
 		let context_name: WebGLContext;
 		if (this.webgl2Available()) {
 			context_name = WebGLContext.WEBGL2;

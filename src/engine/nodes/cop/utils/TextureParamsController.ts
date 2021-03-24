@@ -258,15 +258,26 @@ export class TextureParamsController {
 		if (!isBooleanTrue(pv.tanisotropy)) {
 			return;
 		}
+
+		if (isBooleanTrue(pv.useRendererMaxAnisotropy)) {
+			texture.anisotropy = await this._maxRendererAnisotropy();
+		} else {
+			const anisotropy = pv.anisotropy;
+			// if the requested anisotropy is 2 or less,
+			// we can assume that the current renderer can provide it,
+			// without having to wait for it to be created
+			if (anisotropy <= 2) {
+				texture.anisotropy;
+			} else {
+				texture.anisotropy = Math.min(pv.anisotropy, await this._maxRendererAnisotropy());
+			}
+		}
+	}
+	private async _maxRendererAnisotropy() {
 		this._renderer_controller = this._renderer_controller || new CopRendererController(this.node);
 		const renderer = await this._renderer_controller.renderer();
 		const max_anisotropy = renderer.capabilities.getMaxAnisotropy();
-
-		if (isBooleanTrue(pv.useRendererMaxAnisotropy)) {
-			texture.anisotropy = max_anisotropy;
-		} else {
-			texture.anisotropy = Math.min(pv.anisotropy, max_anisotropy);
-		}
+		return max_anisotropy;
 	}
 
 	private _updateTransform(texture: Texture) {

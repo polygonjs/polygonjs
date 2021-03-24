@@ -177,7 +177,7 @@ export class RenderController {
 
 	private _super_sampling_size = new Vector2();
 	createRenderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer | undefined {
-		const gl = Poly.renderersController.renderingContext(canvas);
+		const gl = Poly.renderersController.createRenderingContext(canvas);
 		if (!gl) {
 			console.error('failed to create webgl context');
 			return;
@@ -228,7 +228,7 @@ export class RenderController {
 			alpha: false,
 			context: gl,
 		};
-		const renderer = Poly.renderersController.createWebGLRenderer(params)
+		const renderer = Poly.renderersController.createWebGLRenderer(params);
 		const pixelRatio = this.defaultPixelRatio();
 		renderer.setPixelRatio(pixelRatio);
 

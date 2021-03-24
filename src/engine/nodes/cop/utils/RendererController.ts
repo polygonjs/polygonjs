@@ -1,10 +1,9 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {LinearToneMapping} from 'three/src/constants';
 import {TypedCopNode} from '../_Base';
-
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Poly} from '../../../Poly';
-import {isBooleanTrue} from '../../../../core/BooleanValue';
+// import {LinearToneMapping} from 'three/src/constants';
+// import {isBooleanTrue} from '../../../../core/BooleanValue';
 class BaseCopRendererCopParamsConfig extends NodeParamsConfig {
 	useCameraRenderer = ParamConfig.BOOLEAN(0);
 }
@@ -16,21 +15,25 @@ export class BaseCopRendererCopNode extends TypedCopNode<BaseCopRendererCopParam
 export class CopRendererController {
 	private _renderer: WebGLRenderer | undefined;
 
-	constructor(private node: BaseCopRendererCopNode) {}
+	constructor(protected node: BaseCopRendererCopNode) {}
 
 	async renderer() {
-		if (isBooleanTrue(this.node.pv.useCameraRenderer)) {
-			return await this.camera_renderer();
-		} else {
-			return (this._renderer = this._renderer || this._createRenderer());
-		}
+		// if a renderer is created when we do not need to check the current renderer limit,
+		// this means that each texture node which has useCameraRenderer = false
+		// will create one.
+		// This will lead to a loss of WebGL Content on scene load
+		// if (isBooleanTrue(this.node.pv.useCameraRenderer)) {
+		return await this.cameraRenderer();
+		// } else {
+		// 	return (this._renderer = this._renderer || this._createRenderer());
+		// }
 	}
 	reset() {
 		this._renderer?.dispose();
 		this._renderer = undefined;
 	}
 
-	async camera_renderer() {
+	async cameraRenderer() {
 		let renderer = Poly.renderersController.firstRenderer();
 		if (renderer) {
 			return renderer;
@@ -62,10 +65,10 @@ export class CopRendererController {
 		// renderer.autoClear = prev_auto_clear;
 	}
 
-	private _createRenderer() {
-		const renderer = Poly.renderersController.createWebGLRenderer({});
-		renderer.toneMapping = LinearToneMapping;
-		renderer.setPixelRatio(1);
-		return renderer;
-	}
+	// private _createRenderer() {
+	// 	const renderer = Poly.renderersController.createWebGLRenderer({});
+	// 	renderer.toneMapping = LinearToneMapping;
+	// 	renderer.setPixelRatio(1);
+	// 	return renderer;
+	// }
 }
