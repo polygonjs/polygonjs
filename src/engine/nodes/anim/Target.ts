@@ -90,15 +90,17 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 	}
 	private _create_target(timeline_builder: TimelineBuilder) {
 		const type = TARGET_TYPES[this.pv.type];
-		const property_target = new PropertyTarget();
 		switch (type) {
 			case AnimTargetNodeTargetType.NODE: {
-				property_target.setNodePath(this.pv.nodePath);
-				return property_target;
+				return new PropertyTarget(this.scene(), {
+					node: {
+						path: this.pv.nodePath,
+						relativeTo: this,
+					},
+				});
 			}
 			case AnimTargetNodeTargetType.SCENE_GRAPH: {
-				property_target.setObjectMask(this.pv.objectMask);
-				return property_target;
+				return new PropertyTarget(this.scene(), {objectMask: this.pv.objectMask});
 			}
 		}
 		TypeAssert.unreachable(type);
@@ -131,10 +133,10 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		const target = this._create_target(timeline_builder);
 		switch (type) {
 			case AnimTargetNodeTargetType.NODE: {
-				return console.log(target.node(this.scene()));
+				return console.log(target.node());
 			}
 			case AnimTargetNodeTargetType.SCENE_GRAPH: {
-				return console.log(target.objects(this.scene()));
+				return console.log(target.objects());
 			}
 		}
 	}

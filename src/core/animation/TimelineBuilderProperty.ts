@@ -67,11 +67,11 @@ export class TimelineBuilderProperty {
 		timeline: gsap.core.Timeline,
 		target: PropertyTarget
 	) {
-		const objects = target.objects(scene);
+		const objects = target.objects();
 		if (objects) {
 			this._populate_with_objects(objects, timeline_builder, timeline);
 		} else {
-			const node = target.node(scene);
+			const node = target.node();
 			if (node) {
 				this._populate_with_node(node, timeline_builder, timeline);
 			}

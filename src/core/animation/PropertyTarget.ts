@@ -1,37 +1,34 @@
+import {BaseNodeType} from '../../engine/nodes/_Base';
 import {PolyScene} from '../../engine/scene/PolyScene';
 
+interface PropertyTargetOptions {
+	node?: {
+		path: string;
+		relativeTo: BaseNodeType;
+	};
+	objectMask?: string;
+}
 export class PropertyTarget {
-	private _node_path: string | undefined;
-	private _object_mask: string | undefined;
+	constructor(private _scene: PolyScene, private _options: PropertyTargetOptions) {}
 
 	clone() {
-		const property_target = new PropertyTarget();
-		if (this._node_path) {
-			property_target.setNodePath(this._node_path);
-		}
-		if (this._object_mask) {
-			property_target.setObjectMask(this._object_mask);
-		}
+		const property_target = new PropertyTarget(this._scene, this._options);
 		return property_target;
 	}
 
-	setNodePath(node_path: string) {
-		this._node_path = node_path;
-	}
-	setObjectMask(object_mask: string) {
-		this._object_mask = object_mask;
-	}
-	objects(scene: PolyScene) {
-		const mask = this._object_mask;
+	objects() {
+		const mask = this._options.objectMask;
 		if (!mask) {
 			return;
 		}
-		return scene.objectsByMask(mask);
+		return this._scene.objectsByMask(mask);
 	}
-	node(scene: PolyScene) {
-		if (!this._node_path) {
+
+	node() {
+		if (!this._options.node) {
 			return;
 		}
-		return scene.node(this._node_path);
+		const options = this._options.node;
+		return options.relativeTo.node(options.path);
 	}
 }
