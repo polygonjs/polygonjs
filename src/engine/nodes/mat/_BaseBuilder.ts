@@ -1,7 +1,7 @@
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedMatNode} from './_Base';
 import {GlAssemblerController} from '../gl/code/Controller';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderAssemblerMaterial} from '../gl/code/assemblers/materials/_BaseMaterial';
 import {MaterialPersistedConfig} from '../gl/code/assemblers/materials/PersistedConfig';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
@@ -9,10 +9,32 @@ import {BaseGlNodeType} from '../gl/_Base';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../poly/NodeContext';
 import {ParamsInitData} from '../utils/io/IOController';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseNodeType} from '../_Base';
+
+export function BaseBuilderParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param if toggled on, the shader will be built from the gl nodes of another material. This can be useful to have multiple materials use the same gl network, but still set the uniforms differently */
+		setBuilderNode = ParamConfig.BOOLEAN(0, {
+			callback: (node: BaseNodeType) => {
+				TypedBuilderMatNode.PARAM_CALLBACK_setCompileRequired(node as BaseBuilderMatNodeType);
+			},
+		});
+		/** @param builder node */
+		builderNode = ParamConfig.NODE_PATH('', {
+			visibleIf: {setBuilderNode: true},
+			callback: (node: BaseNodeType) => {
+				TypedBuilderMatNode.PARAM_CALLBACK_setCompileRequired(node as BaseBuilderMatNodeType);
+			},
+		});
+	};
+}
+
+class MatBuilderParamsConfig extends BaseBuilderParamConfig(NodeParamsConfig) {}
 
 export abstract class TypedBuilderMatNode<
 	A extends ShaderAssemblerMaterial,
-	K extends NodeParamsConfig
+	K extends MatBuilderParamsConfig
 > extends TypedMatNode<ShaderMaterialWithCustomMaterials, K> {
 	protected _assembler_controller: GlAssemblerController<A> | undefined;
 	protected _children_controller_context = NodeContext.GL;
@@ -93,10 +115,42 @@ export abstract class TypedBuilderMatNode<
 	protected _compile() {
 		const assemblerController = this.assemblerController;
 		if (this.material && assemblerController) {
+			assemblerController.assembler.setGlParentNode(this);
+			this._setAssemblerGlParentNode(assemblerController);
 			assemblerController.assembler.compile_material(this.material);
 			assemblerController.post_compile();
 		}
 	}
+	private _setAssemblerGlParentNode(assemblerController: GlAssemblerController<A>) {
+		if (!isBooleanTrue(this.pv.setBuilderNode)) {
+			return;
+		}
+		const resolvedNode = this.pv.builderNode.nodeWithContext(NodeContext.MAT);
+		if (!resolvedNode) {
+			return;
+		}
+
+		const resolvedBuilderNode = resolvedNode as BaseBuilderMatNodeType;
+		if (!resolvedBuilderNode.assemblerController) {
+			this.states.error.set(`resolved node '${resolvedNode.fullPath()}' is not a builder node`);
+			return;
+		}
+		if (resolvedBuilderNode.type() != this.type()) {
+			this.states.error.set(
+				`resolved node '${resolvedNode.fullPath()}' does not have the same type '${resolvedNode.type()}' as current node '${this.type()}'`
+			);
+			return;
+		}
+
+		assemblerController.assembler.setGlParentNode(resolvedBuilderNode);
+	}
+
+	static PARAM_CALLBACK_setCompileRequired(node: BaseBuilderMatNodeType) {
+		node.PARAM_CALLBACK_setCompileRequired();
+	}
+	private PARAM_CALLBACK_setCompileRequired() {
+		this.assemblerController?.setCompilationRequired(true);
+	}
 }
 
-export type BaseBuilderMatNodeType = TypedBuilderMatNode<ShaderAssemblerMaterial, NodeParamsConfig>;
+export type BaseBuilderMatNodeType = TypedBuilderMatNode<ShaderAssemblerMaterial, MatBuilderParamsConfig>;

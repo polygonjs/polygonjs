@@ -11,8 +11,10 @@ import BasicDefaultVertex from './templates/meshPhysicalBuilder/Physical.default
 import BasicDefaultFragment from './templates/meshPhysicalBuilder/Physical.default.frag.glsl';
 import BasicSSSVertex from './templates/meshPhysicalBuilder/Physical.sss.vert.glsl';
 import BasicSSSFragment from './templates/meshPhysicalBuilder/Physical.sss.frag.glsl';
+import BasicSetBuilderNodeVertex from './templates/meshPhysicalBuilder/Physical.setBuilderNode.vert.glsl';
 const TEST_SHADER_LIB_DEFAULT = {vert: BasicDefaultVertex, frag: BasicDefaultFragment};
 const TEST_SHADER_LIB_SSS = {vert: BasicSSSVertex, frag: BasicSSSFragment};
+const TEST_SHADER_LIB_SET_BUILDER_NODE = {vert: BasicSetBuilderNodeVertex};
 
 QUnit.test('mesh physical builder persisted_config', async (assert) => {
 	const MAT = window.MAT;
@@ -169,4 +171,31 @@ QUnit.test('mesh physical builder SSS Model', async (assert) => {
 
 	assert.equal(material.vertexShader, TEST_SHADER_LIB_SSS.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB_SSS.frag);
+});
+
+QUnit.test('mesh physical builder can compile from another node', async (assert) => {
+	const MAT = window.MAT;
+	const mesh_physical_SRC = MAT.createNode('meshPhysicalBuilder');
+	const mesh_physical_DEST = MAT.createNode('meshPhysicalBuilder');
+	mesh_physical_SRC.createNode('output');
+	mesh_physical_SRC.createNode('globals');
+	const noise = mesh_physical_SRC.createNode('noise');
+	const output1 = mesh_physical_SRC.nodesByType('output')[0];
+	const globals1 = mesh_physical_SRC.nodesByType('globals')[0];
+
+	noise.setInput('position', globals1, 'position');
+	output1.setInput('position', noise);
+
+	await mesh_physical_SRC.requestContainer();
+	await mesh_physical_DEST.requestContainer();
+	const mat_SRC = mesh_physical_SRC.material;
+	const mat_DEST = mesh_physical_DEST.material;
+
+	assert.equal(mat_SRC.vertexShader, TEST_SHADER_LIB_SET_BUILDER_NODE.vert);
+	assert.notEqual(mat_SRC.vertexShader, mat_DEST.vertexShader);
+
+	mesh_physical_DEST.p.setBuilderNode.set(true);
+	mesh_physical_DEST.p.builderNode.setNode(mesh_physical_SRC);
+	await mesh_physical_DEST.requestContainer();
+	assert.equal(mat_SRC.vertexShader, mat_DEST.vertexShader);
 });

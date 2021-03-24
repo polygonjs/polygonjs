@@ -211,8 +211,12 @@ export class OptionsController {
 		// this._options = lodash_cloneDeep(this._default_options);
 	}
 	dispose() {
-		this._options[CALLBACK_OPTION] = undefined;
-		this._options[CALLBACK_STRING_OPTION] = undefined;
+		try {
+			// there is a bug where the _options is just a string
+			// for builder params. And accessing generates an error
+			this._options[CALLBACK_OPTION] = undefined;
+			this._options[CALLBACK_STRING_OPTION] = undefined;
+		} catch (err) {}
 		this._visibility_graph_node?.dispose();
 	}
 

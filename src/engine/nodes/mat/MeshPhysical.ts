@@ -19,8 +19,10 @@ import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapC
 import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
 import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
 import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
-import {TextureRoughnessMapController, RoughnessMapParamConfig} from './utils/TextureRoughnessMapController';
-import {TextureMetalnessMapController, MetalnessMapParamConfig} from './utils/TextureMetalnessMapController';
+import {
+	TextureMetalnessRoughnessMapController,
+	MetalnessRoughnessMapParamConfig,
+} from './utils/TextureMetalnessRoughnessMapController';
 import {MeshPhysicalController, MeshPhysicalParamConfig} from './utils/MeshPhysicalController';
 import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
 import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
@@ -44,10 +46,9 @@ interface Controllers {
 	envMap: TextureEnvMapController;
 	lightMap: TextureLightMapController;
 	map: TextureMapController;
-	metalnessMap: TextureMetalnessMapController;
+	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
 	normalMap: TextureNormalMapController;
 	physical: MeshPhysicalController;
-	roughnessMap: TextureRoughnessMapController;
 }
 class MeshPhysicalMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
@@ -56,22 +57,20 @@ class MeshPhysicalMatParamsConfig extends FogParamConfig(
 				/* advanced */
 				AdvancedFolderParamConfig(
 					MeshPhysicalParamConfig(
-						MetalnessMapParamConfig(
-							RoughnessMapParamConfig(
-								NormalMapParamConfig(
-									LightMapParamConfig(
-										EnvMapParamConfig(
-											EmissiveMapParamConfig(
-												DisplacementMapParamConfig(
-													BumpMapParamConfig(
-														AOMapParamConfig(
-															AlphaMapParamConfig(
-																MapParamConfig(
-																	/* textures */
-																	TexturesFolderParamConfig(
-																		ColorParamConfig(
-																			DefaultFolderParamConfig(NodeParamsConfig)
-																		)
+						MetalnessRoughnessMapParamConfig(
+							NormalMapParamConfig(
+								LightMapParamConfig(
+									EnvMapParamConfig(
+										EmissiveMapParamConfig(
+											DisplacementMapParamConfig(
+												BumpMapParamConfig(
+													AOMapParamConfig(
+														AlphaMapParamConfig(
+															MapParamConfig(
+																/* textures */
+																TexturesFolderParamConfig(
+																	ColorParamConfig(
+																		DefaultFolderParamConfig(NodeParamsConfig)
 																	)
 																)
 															)
@@ -119,10 +118,9 @@ export class MeshPhysicalMatNode extends TypedMatNode<MeshPhysicalMaterial, Mesh
 		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
 		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
-		metalnessMap: new TextureMetalnessMapController(this, CONTROLLER_OPTIONS),
+		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this, CONTROLLER_OPTIONS),
 		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
 		physical: new MeshPhysicalController(this, CONTROLLER_OPTIONS),
-		roughnessMap: new TextureRoughnessMapController(this, CONTROLLER_OPTIONS),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 	initializeNode() {

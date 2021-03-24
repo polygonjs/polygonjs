@@ -93,7 +93,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	}
 	setup_shader_names_and_variables() {
 		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(
-			this._gl_parent_node,
+			this.currentGlParentNode(),
 			this.shader_names,
 			(root_node, shader_name) => {
 				return this.input_names_for_shader_name(root_node, shader_name);

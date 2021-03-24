@@ -57,7 +57,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		}
 
 		BuilderCopNode.handle_dependencies(
-			this._gl_parent_node as BuilderCopNode,
+			this.currentGlParentNode() as BuilderCopNode,
 			this.uniforms_time_dependent(),
 			this._uniforms as IUniformsWithTime
 		);

@@ -74,11 +74,11 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		return this._assembler.allow_attribute_exports();
 	}
 
-	set_compilation_required(new_state = true) {
+	setCompilationRequired(new_state = true) {
 		this._compile_required = new_state;
 	}
 	set_compilation_required_and_dirty(trigger_node?: BaseGlNodeType) {
-		this.set_compilation_required();
+		this.setCompilationRequired();
 		this.node.setDirty(trigger_node);
 	}
 	compile_required(): boolean {
@@ -87,7 +87,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 
 	post_compile() {
 		this.create_spare_parameters();
-		this.set_compilation_required(false);
+		this.setCompilationRequired(false);
 	}
 
 	//

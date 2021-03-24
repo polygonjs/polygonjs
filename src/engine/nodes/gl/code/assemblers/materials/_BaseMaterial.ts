@@ -83,7 +83,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	) {
 		let custom_assembler: ShaderAssemblerMaterial | undefined = this._assemblers_by_custom_name.get(custom_name);
 		if (!custom_assembler) {
-			custom_assembler = new assembler_class(this._gl_parent_node);
+			custom_assembler = new assembler_class(this.currentGlParentNode());
 			this._assemblers_by_custom_name.set(custom_name, custom_assembler);
 		}
 		material.customMaterials = material.customMaterials || {};
@@ -105,7 +105,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 							custom_name
 						);
 						if (!assembler) {
-							assembler = new assembler_class(this._gl_parent_node);
+							assembler = new assembler_class(this.currentGlParentNode());
 							this._assemblers_by_custom_name.set(custom_name, assembler);
 						}
 
@@ -132,7 +132,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// for (let custom_name of Object.keys(class_by_custom_name)) {
 		// 	const assembler_class = class_by_custom_name[custom_name];
-		// 	// const assembler = new assembler_class(this._gl_parent_node)
+		// 	// const assembler = new assembler_class(this.currentGlParentNode())
 
 		// }
 
@@ -159,12 +159,11 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (!this.compile_allowed()) {
 			return;
 		}
-
-		const output_nodes: BaseGlNodeType[] = GlNodeFinder.find_output_nodes(this._gl_parent_node);
+		const output_nodes: BaseGlNodeType[] = GlNodeFinder.find_output_nodes(this.currentGlParentNode());
 		if (output_nodes.length > 1) {
-			this._gl_parent_node.states.error.set('only one output node allowed');
+			this.currentGlParentNode().states.error.set('only one output node allowed');
 		}
-		const varying_nodes = GlNodeFinder.find_varying_nodes(this._gl_parent_node);
+		const varying_nodes = GlNodeFinder.find_varying_nodes(this.currentGlParentNode());
 		const root_nodes = output_nodes.concat(varying_nodes);
 		this.set_root_nodes(root_nodes);
 		this._update_shaders();
@@ -178,9 +177,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			material.needsUpdate = true;
 		}
 
-		const scene = this._gl_parent_node.scene();
+		const scene = this.currentGlParentNode().scene();
 		if (this.uniforms_time_dependent()) {
-			// make sure not to use this._gl_parent_node.graphNodeId() as the id,
+			// make sure not to use this.currentGlParentNode().graphNodeId() as the id,
 			// as we need several materials:
 			// - the visible one
 			// - the multiple shadow ones

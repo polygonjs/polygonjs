@@ -67,6 +67,14 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		super();
 	}
 
+	protected _overriden_gl_parent_node: AssemblerControllerNode | undefined;
+	setGlParentNode(gl_parent_node: AssemblerControllerNode) {
+		this._overriden_gl_parent_node = gl_parent_node;
+	}
+	currentGlParentNode() {
+		return this._overriden_gl_parent_node || this._gl_parent_node;
+	}
+
 	compile() {}
 
 	// private get material() {
@@ -88,10 +96,10 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 
 	get globals_handler(): GlobalsBaseController | undefined {
-		return this._gl_parent_node.assemblerController?.globals_handler;
+		return this.currentGlParentNode().assemblerController?.globals_handler;
 	}
 	compile_allowed(): boolean {
-		return this._gl_parent_node.assemblerController?.globals_handler != null;
+		return this.currentGlParentNode().assemblerController?.globals_handler != null;
 	}
 	shaders_by_name() {
 		return this._shaders_by_name;
@@ -129,7 +137,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		if (this.uniforms_time_dependent()) {
 			current_uniforms['time'] = {
 				// type: '1f',
-				value: this._gl_parent_node.scene().time(),
+				value: this.currentGlParentNode().scene().time(),
 			};
 		}
 		if (this.resolution_dependent()) {
@@ -218,7 +226,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 	private _create_code_builder() {
 		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(
-			this._gl_parent_node,
+			this.currentGlParentNode(),
 			this.shader_names,
 			(root_node, shader_name) => {
 				return this.input_names_for_shader_name(root_node, shader_name);
@@ -229,7 +237,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		});
 	}
 	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
-		const param_nodes = GlNodeFinder.find_param_generating_nodes(this._gl_parent_node);
+		const param_nodes = GlNodeFinder.find_param_generating_nodes(this.currentGlParentNode());
 		this.code_builder.build_from_nodes(root_nodes, param_nodes);
 	}
 	allow_new_param_configs() {
@@ -441,7 +449,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		const body = this.builder_lines(shader_name, LineType.BODY);
 
 		let template_lines = template.split('\n');
-		// const scene = this._gl_parent_node.scene;
+		// const scene = this.currentGlParentNode().scene;
 		const new_lines = [
 			// `#define FPS ${ThreeToGl.float(scene.time_controller.fps)}`,
 			// `#define TIME_INCREMENT (1.0/${ThreeToGl.float(scene.time_controller.fps)})`,

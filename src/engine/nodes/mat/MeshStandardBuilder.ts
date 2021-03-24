@@ -16,11 +16,13 @@ import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/Text
 import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapController';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
 import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
-import {TextureRoughnessMapController, RoughnessMapParamConfig} from './utils/TextureRoughnessMapController';
-import {TextureMetalnessMapController, MetalnessMapParamConfig} from './utils/TextureMetalnessMapController';
+import {
+	TextureMetalnessRoughnessMapController,
+	MetalnessRoughnessMapParamConfig,
+} from './utils/TextureMetalnessRoughnessMapController';
 import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
 import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
-import {TypedBuilderMatNode} from './_BaseBuilder';
+import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerStandard} from '../gl/code/assemblers/materials/Standard';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
@@ -43,18 +45,17 @@ interface Controllers {
 	envMap: TextureEnvMapController;
 	lightMap: TextureLightMapController;
 	map: TextureMapController;
-	metalnessMap: TextureMetalnessMapController;
+	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
 	normalMap: TextureNormalMapController;
-	roughnessMap: TextureRoughnessMapController;
 }
 class MeshStandardMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
 		WireframeParamConfig(
 			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					MetalnessMapParamConfig(
-						RoughnessMapParamConfig(
+				BaseBuilderParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						MetalnessRoughnessMapParamConfig(
 							NormalMapParamConfig(
 								LightMapParamConfig(
 									EnvMapParamConfig(
@@ -112,9 +113,8 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
 		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
-		metalnessMap: new TextureMetalnessMapController(this, CONTROLLER_OPTIONS),
+		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this, CONTROLLER_OPTIONS),
 		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
-		roughnessMap: new TextureRoughnessMapController(this, CONTROLLER_OPTIONS),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 

@@ -13,7 +13,7 @@ import {SkinningParamConfig, SkinningController} from './utils/SkinningControlle
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerBasic} from '../gl/code/assemblers/materials/Basic';
-import {TypedBuilderMatNode} from './_BaseBuilder';
+import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {Poly} from '../../Poly';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
@@ -37,15 +37,17 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
 		WireframeParamConfig(
 			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					EnvMapParamConfig(
-						AOMapParamConfig(
-							AlphaMapParamConfig(
-								MapParamConfig(
-									/* textures */
-									TexturesFolderParamConfig(
-										TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+				BaseBuilderParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						EnvMapParamConfig(
+							AOMapParamConfig(
+								AlphaMapParamConfig(
+									MapParamConfig(
+										/* textures */
+										TexturesFolderParamConfig(
+											TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+										)
 									)
 								)
 							)

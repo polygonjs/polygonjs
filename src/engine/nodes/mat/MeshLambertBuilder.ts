@@ -11,7 +11,7 @@ import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/Advan
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
-import {TypedBuilderMatNode} from './_BaseBuilder';
+import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerLambert} from '../gl/code/assemblers/materials/Lambert';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
@@ -42,17 +42,19 @@ class MeshLambertMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
 		WireframeParamConfig(
 			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					LightMapParamConfig(
-						EnvMapParamConfig(
-							EmissiveMapParamConfig(
-								AOMapParamConfig(
-									AlphaMapParamConfig(
-										MapParamConfig(
-											/* textures */
-											TexturesFolderParamConfig(
-												TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+				BaseBuilderParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						LightMapParamConfig(
+							EnvMapParamConfig(
+								EmissiveMapParamConfig(
+									AOMapParamConfig(
+										AlphaMapParamConfig(
+											MapParamConfig(
+												/* textures */
+												TexturesFolderParamConfig(
+													TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+												)
 											)
 										)
 									)

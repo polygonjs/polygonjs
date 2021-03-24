@@ -11,7 +11,7 @@ import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/Advan
 import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
-import {TypedBuilderMatNode} from './_BaseBuilder';
+import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerPhong} from '../gl/code/assemblers/materials/Phong';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
@@ -50,22 +50,24 @@ class MeshPhongMatParamsConfig extends FogParamConfig(
 	SkinningParamConfig(
 		WireframeParamConfig(
 			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					SpecularMapParamConfig(
-						NormalMapParamConfig(
-							LightMapParamConfig(
-								EnvMapParamConfig(
-									EmissiveMapParamConfig(
-										DisplacementMapParamConfig(
-											BumpMapParamConfig(
-												AOMapParamConfig(
-													AlphaMapParamConfig(
-														MapParamConfig(
-															/* textures */
-															TexturesFolderParamConfig(
-																TransparencyParamConfig(
-																	DefaultFolderParamConfig(NodeParamsConfig)
+				BaseBuilderParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						SpecularMapParamConfig(
+							NormalMapParamConfig(
+								LightMapParamConfig(
+									EnvMapParamConfig(
+										EmissiveMapParamConfig(
+											DisplacementMapParamConfig(
+												BumpMapParamConfig(
+													AOMapParamConfig(
+														AlphaMapParamConfig(
+															MapParamConfig(
+																/* textures */
+																TexturesFolderParamConfig(
+																	TransparencyParamConfig(
+																		DefaultFolderParamConfig(NodeParamsConfig)
+																	)
 																)
 															)
 														)
