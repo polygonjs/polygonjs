@@ -28,6 +28,12 @@ export class BlobsController {
 		}
 
 		try {
+			const existingBlob = this._blobsByUrl.get(options.storedUrl);
+			// no need to fetch if we already have it
+			if (existingBlob) {
+				return;
+			}
+
 			const response = await fetch(options.fullUrl);
 			const blob = await response.blob();
 			this._blobsByUrl.set(options.storedUrl, blob);

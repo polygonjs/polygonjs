@@ -13,6 +13,7 @@ import {
 	TRANSFORM_TARGET_TYPES,
 } from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {MathUtils} from 'three/src/math/MathUtils';
 
 export enum TransformObjectMode {
 	SET_PARAMS = 'set params',
@@ -111,11 +112,13 @@ export class TransformSopOperation extends BaseSopOperation {
 	}
 
 	private _object_scale = new Vector3();
+	private _r = new Vector3();
 	private _update_objects_params(objects: Object3D[], params: TransformSopParams) {
 		for (let object of objects) {
 			object.position.copy(params.t);
 			const order = ROTATION_ORDERS[params.rotationOrder];
-			object.rotation.set(params.r.x, params.r.y, params.r.z, order);
+			this._r.copy(params.r).multiplyScalar(MathUtils.DEG2RAD);
+			object.rotation.set(this._r.x, this._r.y, this._r.z, order);
 			this._object_scale.copy(params.s).multiplyScalar(params.scale);
 			object.scale.copy(this._object_scale);
 			object.updateMatrix();

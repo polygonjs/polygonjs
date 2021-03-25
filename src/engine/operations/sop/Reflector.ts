@@ -1,30 +1,23 @@
 import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
 import {Color} from 'three/src/math/Color';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-// import {Reflector} from '../../../modules/three/examples/jsm/objects/Reflector';
 import {Reflector} from '../../../modules/core/objects/Reflector';
-import {CoreTransform} from '../../../core/Transform';
 import {Poly} from '../../Poly';
-
 interface ReflectorSopParams extends DefaultOperationParams {
+	active: boolean;
 	clipBias: number;
 	color: Color;
-	active: boolean;
 	tblur: boolean;
 	blur: number;
 }
 
-const DEFAULT_DIR = new Vector3(0, 0, 1);
-
 export class ReflectorSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ReflectorSopParams = {
+		active: true,
 		clipBias: 0.003,
 		color: new Color(1, 1, 1),
-		direction: new Vector3(0, 0, 1),
-		active: true,
 		tblur: false,
 		blur: 1,
 	};
@@ -32,7 +25,6 @@ export class ReflectorSopOperation extends BaseSopOperation {
 	static type(): Readonly<'reflector'> {
 		return 'reflector';
 	}
-	private _core_transform = new CoreTransform();
 	async cook(input_contents: CoreGroup[], params: ReflectorSopParams) {
 		const input_core_group = input_contents[0];
 
@@ -62,7 +54,6 @@ export class ReflectorSopOperation extends BaseSopOperation {
 			reflector.scale.copy(object.scale);
 			reflector.updateMatrix();
 			reflectors.push(reflector);
-			if (0 + 0) this._core_transform.rotate_geometry(object.geometry, DEFAULT_DIR, new Vector3(0, 1, 0));
 		}
 
 		return this.create_core_group_from_objects(reflectors);

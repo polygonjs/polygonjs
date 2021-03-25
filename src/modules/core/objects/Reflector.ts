@@ -24,7 +24,7 @@ import {Scene} from 'three/src/scenes/Scene';
 import VERTEX from './reflector/vert.glsl';
 import FRAGMENT from './reflector/frag.glsl';
 import {CoreRenderBlur} from '../../../core/render/Blur';
-import {Vector2} from 'three';
+import {Vector2} from 'three/src/math/Vector2';
 
 const ReflectorShader = {
 	uniforms: {
