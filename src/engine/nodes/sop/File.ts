@@ -67,9 +67,9 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	}
 
 	static PARAM_CALLBACK_reload(node: FileSopNode) {
-		node.param_callback_reload();
+		node._paramCallbackReload();
 	}
-	private param_callback_reload() {
+	private _paramCallbackReload() {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		this.p.url.setDirty();
 		// this.setDirty()

@@ -33,6 +33,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
+import {Object3D} from 'three/src/core/Object3D';
 
 enum ContactShadowUpdateMode {
 	ON_RENDER = 'On Every Render',
@@ -89,6 +90,20 @@ class ContactShadowObjParamConfig extends TransformedParamConfig(NodeParamsConfi
 		},
 		visibleIf: {updateMode: UPDATE_MODES.indexOf(ContactShadowUpdateMode.MANUAL)},
 	});
+
+	scene = ParamConfig.FOLDER();
+	include = ParamConfig.STRING('');
+	exclude = ParamConfig.STRING('');
+	updateObjectsList = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			ContactShadowObjNode.PARAM_CALLBACK_updateObjectsList(node as ContactShadowObjNode);
+		},
+	});
+	printResolveObjectsList = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			ContactShadowObjNode.PARAM_CALLBACK_printResolveObjectsList(node as ContactShadowObjNode);
+		},
+	});
 }
 const ParamsConfig = new ContactShadowObjParamConfig();
 
@@ -120,6 +135,11 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 	private _blurPlane: Mesh | undefined;
 	private _planeMaterial: MeshBasicMaterial | undefined;
 	// private _fillPlaneMaterial: MeshBasicMaterial | undefined;
+
+	private _includedObjects: Object3D[] = [];
+	private _includedAncestors: Object3D[] = [];
+	private _excludedObjects: Object3D[] = [];
+
 	createObject() {
 		const group = new Group();
 		this._shadowGroup = new Group();
@@ -187,6 +207,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		this.transformController.update();
 		this._updateRenderHook();
 		this._updateHelperVisibility();
+		this._updateObjectsList();
 
 		if (this._planeMaterial) {
 			this._planeMaterial.opacity = this.pv.opacity;
@@ -304,6 +325,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 
 		this._blurPlane.visible = false;
 	}
+	private _emptyOnBeforeRender = () => {};
 	private _renderShadow(renderer: WebGLRenderer, scene: Scene) {
 		if (!this._helper) {
 			return;
@@ -328,9 +350,10 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 
 		// prepare scene
 		scene.background = null;
-		this._plane.onBeforeRender = () => {};
+		this._plane.onBeforeRender = this._emptyOnBeforeRender;
 		this._helper.visible = false;
 		scene.overrideMaterial = this._depthMaterial;
+		this._initVisibility(scene);
 
 		// render to the render target to get the depths
 		renderer.setRenderTarget(this._renderTarget);
@@ -343,6 +366,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		}
 
 		// reset and render the normal scene
+		this._restoreVisibility(scene);
 		scene.overrideMaterial = null;
 		this._helper.visible = helperVisible;
 		renderer.setRenderTarget(null);
@@ -444,5 +468,105 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 	//
 	static PARAM_CALLBACK_updateManual(node: ContactShadowObjNode) {
 		node._updateManual();
+	}
+
+	//
+	//
+	// UPDATE OBJECTS LIST
+	//
+	//
+	static PARAM_CALLBACK_updateObjectsList(node: ContactShadowObjNode) {
+		node._updateObjectsList();
+	}
+	private _updateObjectsList() {
+		if (this.pv.include != '') {
+			this._includedObjects = this.scene().objectsByMask(this.pv.include);
+		} else {
+			this._includedObjects = [];
+		}
+		// we also need to add the parents of this._includedObjects,
+		// as otherwise those will be hidden, indirectly hidding this._includedObjects
+		const parentsMap: Map<string, Object3D> = new Map();
+		for (let object of this._includedObjects) {
+			object.traverseAncestors((parent) => {
+				parentsMap.set(parent.uuid, parent);
+			});
+		}
+		this._includedAncestors = [];
+		parentsMap.forEach((parent, uuid) => {
+			this._includedAncestors.push(parent);
+		});
+
+		// add excluded
+		if (this.pv.exclude != '') {
+			this._excludedObjects = this.scene().objectsByMask(this.pv.exclude);
+		} else {
+			this._excludedObjects = [];
+		}
+	}
+
+	static PARAM_CALLBACK_printResolveObjectsList(node: ContactShadowObjNode) {
+		node._printResolveObjectsList();
+	}
+	private _printResolveObjectsList() {
+		console.log('included objects:');
+		console.log(this._includedObjects);
+		console.log('included parents:');
+		console.log(this._includedAncestors);
+		console.log('excluded objects:');
+		console.log(this._excludedObjects);
+	}
+
+	private _initialVisibilityState: WeakMap<Object3D, boolean> = new WeakMap();
+	private _initVisibility(scene: Scene) {
+		// if at least one object is included,
+		// this means those which are not are to be hidden.
+		// Therefore, we then have to traverse the whole scene.
+		// If none is specified in included, we do not need to traverse
+		if (this._includedObjects.length > 0) {
+			scene.traverse((object) => {
+				this._initialVisibilityState.set(object, object.visible);
+				object.visible = false;
+			});
+		} else {
+			this._storeObjectsVisibility(this._includedObjects);
+			this._storeObjectsVisibility(this._includedAncestors);
+			this._storeObjectsVisibility(this._excludedObjects);
+		}
+
+		this._setObjectsVisibility(this._includedObjects, true);
+		this._setObjectsVisibility(this._includedAncestors, true);
+		this._setObjectsVisibility(this._excludedObjects, false);
+	}
+	private _storeObjectsVisibility(objects: Object3D[]) {
+		for (let object of objects) {
+			this._initialVisibilityState.set(object, object.visible);
+		}
+	}
+	private _setObjectsVisibility(objects: Object3D[], visible: boolean) {
+		for (let object of objects) {
+			object.visible = visible;
+		}
+	}
+
+	private _restoreVisibility(scene: Scene) {
+		if (this._includedObjects.length > 0) {
+			scene.traverse((object) => {
+				const state = this._initialVisibilityState.get(object);
+				if (state) object.visible = state;
+			});
+		} else {
+			this._restoreObjectsVisibility(this._includedObjects);
+			this._restoreObjectsVisibility(this._includedAncestors);
+			this._restoreObjectsVisibility(this._excludedObjects);
+		}
+	}
+	private _restoreObjectsVisibility(objects: Object3D[]) {
+		for (let object of objects) {
+			const state = this._initialVisibilityState.get(object);
+			if (state) {
+				object.visible = state;
+			}
+		}
 	}
 }
