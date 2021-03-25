@@ -6,7 +6,6 @@ import {Quaternion} from 'three/src/math/Quaternion';
 import {Object3D} from 'three/src/core/Object3D';
 import {TimelineBuilder, Operation} from './TimelineBuilder';
 import {PropertyTarget} from './PropertyTarget';
-import {PolyScene} from '../../engine/scene/PolyScene';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {BaseParamType} from '../../engine/params/_Base';
 import {ParamType} from '../../engine/poly/ParamType';
@@ -36,14 +35,25 @@ export class TimelineBuilderProperty {
 	setName(name: string) {
 		this._property_name = name;
 	}
-	set_target_value(value: AnimPropertyTargetValue) {
+	setTargetValue(value: AnimPropertyTargetValue) {
 		this._target_value = value;
 	}
 	name() {
 		return this._property_name;
 	}
-	target_value() {
+	targetValue() {
 		return this._target_value;
+	}
+
+	private _debug = false;
+	setDebug(debug: boolean) {
+		this._debug = debug;
+	}
+	private _printDebug(message: any) {
+		if (!this._debug) {
+			return;
+		}
+		console.log(message);
 	}
 
 	clone() {
@@ -55,33 +65,24 @@ export class TimelineBuilderProperty {
 			const new_target_value = CoreType.isNumber(this._target_value)
 				? this._target_value
 				: this._target_value.clone();
-			cloned.set_target_value(new_target_value);
+			cloned.setTargetValue(new_target_value);
 		}
 
 		return cloned;
 	}
 
-	add_to_timeline(
-		timeline_builder: TimelineBuilder,
-		scene: PolyScene,
-		timeline: gsap.core.Timeline,
-		target: PropertyTarget
-	) {
+	addToTimeline(timeline_builder: TimelineBuilder, timeline: gsap.core.Timeline, target: PropertyTarget) {
 		const objects = target.objects();
 		if (objects) {
-			this._populate_with_objects(objects, timeline_builder, timeline);
-		} else {
-			const node = target.node();
-			if (node) {
-				this._populate_with_node(node, timeline_builder, timeline);
-			}
+			this._populateWithObjects(objects, timeline_builder, timeline);
+		}
+		const node = target.node();
+		if (node) {
+			this._populateWithNode(node, timeline_builder, timeline);
 		}
 	}
-	private _populate_with_objects(
-		objects: Object3D[],
-		timeline_builder: TimelineBuilder,
-		timeline: gsap.core.Timeline
-	) {
+	private _populateWithObjects(objects: Object3D[], timeline_builder: TimelineBuilder, timeline: gsap.core.Timeline) {
+		this._printDebug(['_populateWithObjects', objects]);
 		if (!this._property_name) {
 			Poly.warn('no property name given');
 			return;
@@ -96,10 +97,10 @@ export class TimelineBuilderProperty {
 		for (let object3d of objects) {
 			// const target_property = (object3d as any)[this._property_name as any] as TargetValue;
 			// let to_target: object | null = null;
-			const props = this._scene_graph_props(object3d, this._property_name);
+			const props = this._sceneGraphProps(object3d, this._property_name);
 			if (props) {
 				let {target_property, to_target, property_names} = props;
-				const vars = this._common_vars(timeline_builder);
+				const vars = this._commonVars(timeline_builder);
 
 				// add update_matrix
 				if (update_callback && update_callback.updateMatrix()) {
@@ -109,6 +110,14 @@ export class TimelineBuilderProperty {
 					};
 					vars.onComplete = () => {
 						object3d.matrixAutoUpdate = old_matrix_auto_update;
+						// we still need to update the matrix manually here,
+						// as (it is specially noticeable on short animations)
+						// the last step of the timeline will not have the matrix updated
+						// and the object will therefore look like it has not fully completed
+						// its animation.
+						if (!object3d.matrixAutoUpdate) {
+							object3d.updateMatrix();
+						}
 					};
 				}
 				// handle quaternions as a special case
@@ -127,13 +136,13 @@ export class TimelineBuilderProperty {
 				if (CoreType.isNumber(this._target_value)) {
 					if (CoreType.isNumber(target_property)) {
 						for (let property_name of property_names) {
-							vars[property_name] = this.with_op(target_property, this._target_value, operation);
+							vars[property_name] = this.withOp(target_property, this._target_value, operation);
 						}
 					}
 				} else {
 					if (!CoreType.isNumber(target_property)) {
 						for (let property_name of property_names) {
-							vars[property_name] = this.with_op(
+							vars[property_name] = this.withOp(
 								target_property[property_name as 'x'],
 								this._target_value[property_name as 'x'],
 								operation
@@ -143,19 +152,19 @@ export class TimelineBuilderProperty {
 				}
 
 				if (to_target) {
-					this._start_timeline(timeline_builder, timeline, vars, to_target);
+					this._startTimeline(timeline_builder, timeline, vars, to_target);
 				}
 			}
 		}
 	}
-	private _scene_graph_props(object: object, property_name: string): Object3DProps | undefined {
+	private _sceneGraphProps(object: object, property_name: string): Object3DProps | undefined {
 		const elements = property_name.split(PROPERTY_SEPARATOR);
 		if (elements.length > 1) {
 			const first_element = elements.shift() as string;
 			const sub_object = (object as any)[first_element as any] as object;
 			if (sub_object) {
 				const sub_property_name = elements.join(PROPERTY_SEPARATOR);
-				return this._scene_graph_props(sub_object, sub_property_name);
+				return this._sceneGraphProps(sub_object, sub_property_name);
 			}
 		} else {
 			const target_property = (object as any)[property_name as any] as AnimPropertyTargetValue;
@@ -187,39 +196,46 @@ export class TimelineBuilderProperty {
 		}
 	}
 
-	private _populate_with_node(node: BaseNodeType, timeline_builder: TimelineBuilder, timeline: gsap.core.Timeline) {
+	private _populateWithNode(node: BaseNodeType, timeline_builder: TimelineBuilder, timeline: gsap.core.Timeline) {
+		this._printDebug(['_populateWithNode', node]);
 		const target_param = node.p[this._property_name as any] as BaseParamType;
+		this._printDebug(['target_param', target_param]);
 		if (!target_param) {
 			Poly.warn(`${this._property_name} not found on node ${node.fullPath()}`);
 			return;
 		}
 
 		if (target_param) {
-			this._populate_vars_for_param(target_param, timeline_builder, timeline);
+			this._populateVarsForParam(target_param, timeline_builder, timeline);
 		}
 	}
 
-	private _populate_vars_for_param(
+	private _populateVarsForParam(
 		param: BaseParamType,
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
 	) {
+		this._printDebug(['_populateVarsForParam', param]);
 		switch (param.type()) {
+			case ParamType.INTEGER: {
+				return this._populateVarsForParamInteger(param as FloatParam, timeline_builder, timeline);
+			}
 			case ParamType.FLOAT: {
-				this._populate_vars_for_param_float(param as FloatParam, timeline_builder, timeline);
+				return this._populateVarsForParamFloat(param as FloatParam, timeline_builder, timeline);
 			}
 			case ParamType.VECTOR2: {
-				this._populate_vars_for_param_vector2(param as Vector2Param, timeline_builder, timeline);
+				return this._populateVarsForParamVector2(param as Vector2Param, timeline_builder, timeline);
 			}
 			case ParamType.VECTOR3: {
-				this._populate_vars_for_param_vector3(param as Vector3Param, timeline_builder, timeline);
+				return this._populateVarsForParamVector3(param as Vector3Param, timeline_builder, timeline);
 			}
 			case ParamType.VECTOR4: {
-				this._populate_vars_for_param_vector4(param as Vector4Param, timeline_builder, timeline);
+				return this._populateVarsForParamVector4(param as Vector4Param, timeline_builder, timeline);
 			}
 		}
+		this._printDebug(`param type cannot be animated (yet): '${param.type()}' '${param.fullPath()}'`);
 	}
-	private _populate_vars_for_param_float(
+	private _populateVarsForParamInteger(
 		param: FloatParam,
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
@@ -228,16 +244,34 @@ export class TimelineBuilderProperty {
 			Poly.warn('value is not a numbber', this._target_value);
 			return;
 		}
-		const vars = this._common_vars(timeline_builder);
+		const vars = this._commonVars(timeline_builder);
 		const proxy = {num: param.value};
 		vars.onUpdate = () => {
 			param.set(proxy.num);
 		};
 		const operation = timeline_builder.operation();
-		vars.num = this.with_op(param.value, this._target_value, operation);
-		this._start_timeline(timeline_builder, timeline, vars, proxy);
+		vars.num = this.withOp(param.value, this._target_value, operation);
+		this._startTimeline(timeline_builder, timeline, vars, proxy);
 	}
-	private _populate_vars_for_param_vector2(
+	private _populateVarsForParamFloat(
+		param: FloatParam,
+		timeline_builder: TimelineBuilder,
+		timeline: gsap.core.Timeline
+	) {
+		if (!CoreType.isNumber(this._target_value)) {
+			Poly.warn('value is not a numbber', this._target_value);
+			return;
+		}
+		const vars = this._commonVars(timeline_builder);
+		const proxy = {num: param.value};
+		vars.onUpdate = () => {
+			param.set(proxy.num);
+		};
+		const operation = timeline_builder.operation();
+		vars.num = this.withOp(param.value, this._target_value, operation);
+		this._startTimeline(timeline_builder, timeline, vars, proxy);
+	}
+	private _populateVarsForParamVector2(
 		param: Vector2Param,
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
@@ -245,7 +279,7 @@ export class TimelineBuilderProperty {
 		if (!(this._target_value instanceof Vector2)) {
 			return;
 		}
-		const vars = this._common_vars(timeline_builder);
+		const vars = this._commonVars(timeline_builder);
 		const proxy = param.value.clone();
 		const proxy_array: Number2 = [0, 0];
 		vars.onUpdate = () => {
@@ -253,11 +287,11 @@ export class TimelineBuilderProperty {
 			param.set(proxy_array);
 		};
 		const operation = timeline_builder.operation();
-		vars.x = this.with_op(param.value.x, this._target_value.x, operation);
-		vars.y = this.with_op(param.value.y, this._target_value.y, operation);
-		this._start_timeline(timeline_builder, timeline, vars, proxy);
+		vars.x = this.withOp(param.value.x, this._target_value.x, operation);
+		vars.y = this.withOp(param.value.y, this._target_value.y, operation);
+		this._startTimeline(timeline_builder, timeline, vars, proxy);
 	}
-	private _populate_vars_for_param_vector3(
+	private _populateVarsForParamVector3(
 		param: Vector3Param,
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
@@ -265,7 +299,7 @@ export class TimelineBuilderProperty {
 		if (!(this._target_value instanceof Vector3)) {
 			return;
 		}
-		const vars = this._common_vars(timeline_builder);
+		const vars = this._commonVars(timeline_builder);
 		const proxy = param.value.clone();
 		const proxy_array: Number3 = [0, 0, 0];
 		vars.onUpdate = () => {
@@ -273,13 +307,13 @@ export class TimelineBuilderProperty {
 			param.set(proxy_array);
 		};
 		const operation = timeline_builder.operation();
-		vars.x = this.with_op(param.value.x, this._target_value.x, operation);
-		vars.y = this.with_op(param.value.y, this._target_value.y, operation);
-		vars.z = this.with_op(param.value.z, this._target_value.z, operation);
-		this._start_timeline(timeline_builder, timeline, vars, proxy);
+		vars.x = this.withOp(param.value.x, this._target_value.x, operation);
+		vars.y = this.withOp(param.value.y, this._target_value.y, operation);
+		vars.z = this.withOp(param.value.z, this._target_value.z, operation);
+		this._startTimeline(timeline_builder, timeline, vars, proxy);
 	}
 
-	private _populate_vars_for_param_vector4(
+	private _populateVarsForParamVector4(
 		param: Vector4Param,
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline
@@ -287,7 +321,7 @@ export class TimelineBuilderProperty {
 		if (!(this._target_value instanceof Vector4)) {
 			return;
 		}
-		const vars = this._common_vars(timeline_builder);
+		const vars = this._commonVars(timeline_builder);
 		const proxy = param.value.clone();
 		const proxy_array: Number4 = [0, 0, 0, 0];
 		vars.onUpdate = () => {
@@ -295,14 +329,14 @@ export class TimelineBuilderProperty {
 			param.set(proxy_array);
 		};
 		const operation = timeline_builder.operation();
-		vars.x = this.with_op(param.value.x, this._target_value.x, operation);
-		vars.y = this.with_op(param.value.y, this._target_value.y, operation);
-		vars.z = this.with_op(param.value.z, this._target_value.z, operation);
-		vars.w = this.with_op(param.value.w, this._target_value.w, operation);
-		this._start_timeline(timeline_builder, timeline, vars, proxy);
+		vars.x = this.withOp(param.value.x, this._target_value.x, operation);
+		vars.y = this.withOp(param.value.y, this._target_value.y, operation);
+		vars.z = this.withOp(param.value.z, this._target_value.z, operation);
+		vars.w = this.withOp(param.value.w, this._target_value.w, operation);
+		this._startTimeline(timeline_builder, timeline, vars, proxy);
 	}
 
-	private with_op(current_value: number, value: number, operation: Operation) {
+	private withOp(current_value: number, value: number, operation: Operation) {
 		switch (operation) {
 			case Operation.SET:
 				return value;
@@ -313,7 +347,7 @@ export class TimelineBuilderProperty {
 		}
 		TypeAssert.unreachable(operation);
 	}
-	private _common_vars(timeline_builder: TimelineBuilder) {
+	private _commonVars(timeline_builder: TimelineBuilder) {
 		const duration = timeline_builder.duration();
 		const vars: gsap.TweenVars = {duration: duration};
 
@@ -339,7 +373,7 @@ export class TimelineBuilderProperty {
 
 		return vars;
 	}
-	private _start_timeline(
+	private _startTimeline(
 		timeline_builder: TimelineBuilder,
 		timeline: gsap.core.Timeline,
 		vars: gsap.TweenVars,

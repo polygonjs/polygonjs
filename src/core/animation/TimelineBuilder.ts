@@ -1,5 +1,4 @@
 import {TimelineBuilderProperty, AnimPropertyTargetValue} from './TimelineBuilderProperty';
-import {PolyScene} from '../../engine/scene/PolyScene';
 import {PropertyTarget} from './PropertyTarget';
 import {AnimationPosition} from './Position';
 import {AnimationUpdateCallback} from './UpdateCallback';
@@ -30,6 +29,17 @@ export class TimelineBuilder {
 	private _position: AnimationPosition | undefined;
 	private _property: TimelineBuilderProperty | undefined;
 	private _update_callback: AnimationUpdateCallback | undefined;
+
+	private _debug = false;
+	setDebug(debug: boolean) {
+		this._debug = true;
+	}
+	private _printDebug(message: any) {
+		if (!this._debug) {
+			return;
+		}
+		console.log(message);
+	}
 
 	addTimelineBuilder(timeline_builder: TimelineBuilder) {
 		this._timeline_builders.push(timeline_builder);
@@ -153,7 +163,7 @@ export class TimelineBuilder {
 			if (name) {
 				new_timeline_builder.setPropertyName(name);
 			}
-			const target_value = this._property.target_value();
+			const target_value = this._property.targetValue();
 			if (target_value != null) {
 				new_timeline_builder.setPropertyValue(target_value);
 			}
@@ -178,20 +188,23 @@ export class TimelineBuilder {
 		return this.property().name();
 	}
 	setPropertyValue(value: AnimPropertyTargetValue) {
-		this.property().set_target_value(value);
+		this.property().setTargetValue(value);
 	}
 
-	populate(timeline: gsap.core.Timeline, scene: PolyScene) {
+	populate(timeline: gsap.core.Timeline) {
+		this._printDebug(['populate', this, timeline]);
 		for (let timeline_builder of this._timeline_builders) {
 			const sub_timeline = gsap.timeline();
-			timeline_builder.populate(sub_timeline, scene);
+			timeline_builder.setDebug(this._debug);
+			timeline_builder.populate(sub_timeline);
 
 			const position_param = timeline_builder.position()?.toParameter() || undefined;
 			timeline.add(sub_timeline, position_param);
 		}
 
 		if (this._property && this._target) {
-			this._property.add_to_timeline(this, scene, timeline, this._target);
+			this._property.setDebug(this._debug);
+			this._property.addToTimeline(this, timeline, this._target);
 		}
 	}
 }

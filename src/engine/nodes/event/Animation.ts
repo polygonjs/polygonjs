@@ -97,7 +97,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		}
 		this._timeline = gsap.timeline();
 
-		this._timeline_builder.populate(this._timeline, this.scene());
+		this._timeline_builder.populate(this._timeline);
 
 		this._timeline.vars.onStart = () => {
 			this.trigger_animation_started(event_context);

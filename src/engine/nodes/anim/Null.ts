@@ -9,6 +9,7 @@ import gsap from 'gsap';
 import {BaseNodeType} from '../_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class NullAnimParamsConfig extends NodeParamsConfig {
 	/** @param play the animations */
 	play = ParamConfig.BUTTON(null, {
@@ -22,6 +23,8 @@ class NullAnimParamsConfig extends NodeParamsConfig {
 			NullAnimNode.PARAM_CALLBACK_pause(node as NullAnimNode);
 		},
 	});
+	/** @param toggle to see debug infos printed in the console */
+	debug = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new NullAnimParamsConfig();
 
@@ -58,7 +61,12 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 			}
 			this._timeline = gsap.timeline({onComplete: resolve});
 
-			this._timeline_builder.populate(this._timeline, this.scene());
+			if (isBooleanTrue(this.pv.debug)) {
+				console.log(`play from '${this.fullPath()}'`);
+			}
+
+			this._timeline_builder.setDebug(isBooleanTrue(this.pv.debug));
+			this._timeline_builder.populate(this._timeline);
 		});
 	}
 	async pause() {
