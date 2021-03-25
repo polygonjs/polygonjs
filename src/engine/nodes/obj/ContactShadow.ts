@@ -21,19 +21,17 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {RenderHook} from '../../../core/geometry/Material';
 import {TypeAssert} from '../../poly/Assert';
 import {CameraHelper} from './utils/helpers/CameraHelper';
-import {HorizontalBlurShader} from '../../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
-import {VerticalBlurShader} from '../../../modules/three/examples/jsm/shaders/VerticalBlurShader';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {Vector2} from 'three/src/math/Vector2';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
 import {Object3D} from 'three/src/core/Object3D';
+import {CoreRenderBlur} from '../../../core/render/Blur';
 
 enum ContactShadowUpdateMode {
 	ON_RENDER = 'On Every Render',
@@ -123,16 +121,18 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 	private _helper: CameraHelper | undefined;
 
 	private _renderTarget = this._createRenderTarget(DEFAULT_RENDER_TARGET_RES);
-	private _renderTargetBlur = this._createRenderTarget(DEFAULT_RENDER_TARGET_RES);
+	private _coreRenderBlur: CoreRenderBlur = this._createCoreRenderBlur(DEFAULT_RENDER_TARGET_RES);
 	private _createRenderTarget(res: Vector2) {
 		const renderTarget = new WebGLRenderTarget(res.x, res.y);
 		renderTarget.texture.generateMipmaps = false;
 		return renderTarget;
 	}
+	private _createCoreRenderBlur(res: Vector2) {
+		return new CoreRenderBlur(res);
+	}
 
 	private _shadowGroup: Group | undefined;
 	private _plane: Mesh | undefined;
-	private _blurPlane: Mesh | undefined;
 	private _planeMaterial: MeshBasicMaterial | undefined;
 	// private _fillPlaneMaterial: MeshBasicMaterial | undefined;
 
@@ -167,13 +167,6 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 
 		this._plane.matrixAutoUpdate = false;
 		this._shadowGroup.add(this._plane);
-
-		// the plane onto which to blur the texture
-		this._blurPlane = new Mesh(planeGeometry);
-		this._blurPlane.visible = false;
-		this._blurPlane.rotateX(Math.PI);
-		this._blurPlane.position.y = 0.01;
-		this._shadowGroup.add(this._blurPlane);
 
 		// the plane with the color of the ground
 		// this._fillPlaneMaterial = new MeshBasicMaterial({
@@ -215,13 +208,10 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		this._darknessUniform.value = this.pv.darkness;
 
 		// update planes size
-		if (this._plane && this._blurPlane && this._shadowCamera && this._helper) {
+		if (this._plane && this._shadowCamera && this._helper) {
 			this._plane.scale.x = this.pv.planeSize.x;
 			this._plane.scale.z = this.pv.planeSize.y;
 			this._plane.updateMatrix();
-			this._blurPlane.scale.x = this.pv.planeSize.x;
-			this._blurPlane.scale.z = this.pv.planeSize.y;
-			this._blurPlane.updateMatrix();
 
 			this._shadowCamera.left = -this.pv.planeSize.x / 2;
 			this._shadowCamera.right = this.pv.planeSize.x / 2;
@@ -235,7 +225,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		if (this._renderTarget.width != this.pv.shadowRes.x || this._renderTarget.height != this.pv.shadowRes.y) {
 			if (this._planeMaterial) {
 				this._renderTarget = this._createRenderTarget(this.pv.shadowRes);
-				this._renderTargetBlur = this._createRenderTarget(this.pv.shadowRes);
+				this._coreRenderBlur = this._createCoreRenderBlur(this.pv.shadowRes);
 				this._planeMaterial.map = this._renderTarget.texture;
 			}
 		}
@@ -265,8 +255,6 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 	}
 
 	private _depthMaterial: MeshDepthMaterial | undefined;
-	private _horizontalBlurMaterial: ShaderMaterial | undefined;
-	private _verticalBlurMaterial: ShaderMaterial | undefined;
 	private _darknessUniform = {value: DARKNESS};
 	private _createMaterials() {
 		// like MeshDepthMaterial, but goes from black to transparent
@@ -283,48 +271,8 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		};
 		this._depthMaterial.depthTest = false;
 		this._depthMaterial.depthWrite = false;
-
-		this._horizontalBlurMaterial = new ShaderMaterial(HorizontalBlurShader);
-		this._horizontalBlurMaterial.depthTest = false;
-
-		this._verticalBlurMaterial = new ShaderMaterial(VerticalBlurShader);
-		this._verticalBlurMaterial.depthTest = false;
 	}
 
-	protected _blurShadow(renderer: WebGLRenderer, amount: number) {
-		if (!this._blurPlane) {
-			return;
-		}
-		if (!this._shadowCamera) {
-			return;
-		}
-		if (!this._horizontalBlurMaterial) {
-			return;
-		}
-		if (!this._verticalBlurMaterial) {
-			return;
-		}
-
-		this._blurPlane.visible = true;
-
-		// blur horizontally and draw in the renderTargetBlur
-		this._horizontalBlurMaterial.uniforms.tDiffuse.value = this._renderTarget.texture;
-		this._horizontalBlurMaterial.uniforms.h.value = (amount * 1) / 256;
-		this._blurPlane.material = this._horizontalBlurMaterial;
-
-		renderer.setRenderTarget(this._renderTargetBlur);
-		renderer.render(this._blurPlane, this._shadowCamera);
-
-		// blur vertically and draw in the main renderTarget
-		this._verticalBlurMaterial.uniforms.tDiffuse.value = this._renderTargetBlur.texture;
-		this._verticalBlurMaterial.uniforms.v.value = (amount * 1) / 256;
-		this._blurPlane.material = this._verticalBlurMaterial;
-
-		renderer.setRenderTarget(this._renderTarget);
-		renderer.render(this._blurPlane, this._shadowCamera);
-
-		this._blurPlane.visible = false;
-	}
 	private _emptyOnBeforeRender = () => {};
 	private _renderShadow(renderer: WebGLRenderer, scene: Scene) {
 		if (!this._helper) {
@@ -359,10 +307,10 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		renderer.setRenderTarget(this._renderTarget);
 		renderer.render(scene, this._shadowCamera);
 
-		this._blurShadow(renderer, this.pv.blur);
+		this._coreRenderBlur.applyBlur(this._renderTarget, renderer, this.pv.blur);
 
 		if (isBooleanTrue(this.pv.tblur2)) {
-			this._blurShadow(renderer, this.pv.blur2);
+			this._coreRenderBlur.applyBlur(this._renderTarget, renderer, this.pv.blur2);
 		}
 
 		// reset and render the normal scene

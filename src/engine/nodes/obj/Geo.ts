@@ -55,10 +55,10 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 
 	protected _children_controller_context = NodeContext.SOP;
 
-	private _on_child_add_bound = this._on_child_add.bind(this);
+	private _onChildAddBound = this._onChildAdd.bind(this);
 	initializeNode() {
 		// this.lifecycle.add_on_create_hook(this._on_create_bound);
-		this.lifecycle.add_on_child_add_hook(this._on_child_add_bound);
+		this.lifecycle.add_on_child_add_hook(this._onChildAddBound);
 
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
@@ -101,8 +101,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	// HOOK
 	//
 	//
-
-	_on_child_add(node: BaseNodeType) {
+	private _onChildAdd(node: BaseNodeType) {
 		if (this.scene().loadingController.loaded()) {
 			if (this.children().length == 1) {
 				node.flags?.display?.set(true);
