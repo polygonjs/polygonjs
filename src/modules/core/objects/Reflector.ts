@@ -20,11 +20,11 @@ import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Camera} from 'three/src/cameras/Camera';
 import {Scene} from 'three/src/scenes/Scene';
+import {CoreRenderBlur} from '../../../core/render/Blur';
+import {Vector2} from 'three/src/math/Vector2';
 
 import VERTEX from './reflector/vert.glsl';
 import FRAGMENT from './reflector/frag.glsl';
-import {CoreRenderBlur} from '../../../core/render/Blur';
-import {Vector2} from 'three/src/math/Vector2';
 
 const ReflectorShader = {
 	uniforms: {
