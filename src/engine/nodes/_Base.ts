@@ -278,7 +278,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return this.childrenController?.children() || [];
 	}
 	node(path: string) {
-		return this.parentController?.find_node(path) || null;
+		return this.parentController?.findNode(path) || null;
 	}
 	nodeSibbling(name: string): NodeTypeMap[NC] | null {
 		const parent = this.parent();

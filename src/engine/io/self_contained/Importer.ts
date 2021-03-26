@@ -159,10 +159,10 @@ export class SelfContainedSceneImporter {
 			console.log('loading polygonjsVersion version:', polygonjsVersion);
 		}
 		const polygonjsUrl = this._createJsBlob(unzippedData[SelfContainedFileName.POLYGONJS], 'polygonjs');
-
 		if (DEBUG) {
 			console.log('loading polygonjsUrl', polygonjsUrl);
 		}
+
 		const elementId = `polygonjs-module-viewer-script`;
 		let script = document.getElementById(elementId);
 

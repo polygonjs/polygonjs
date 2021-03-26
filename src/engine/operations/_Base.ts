@@ -31,7 +31,9 @@ export class BaseOperation {
 	static readonly DEFAULT_PARAMS: DefaultOperationParams = {};
 	static readonly INPUT_CLONED_STATE: InputCloneMode | InputCloneMode[] = [];
 
-	constructor(protected scene: PolyScene, protected states?: StatesController) {}
-
+	constructor(protected _scene: PolyScene, protected states?: StatesController) {}
+	scene() {
+		return this._scene;
+	}
 	cook(input_contents: any[], params: object): any {}
 }

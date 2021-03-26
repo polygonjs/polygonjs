@@ -30,6 +30,10 @@ export class CoreRenderBlur {
 		this._verticalBlurMaterial = new ShaderMaterial(VerticalBlurShader);
 		this._verticalBlurMaterial.depthTest = false;
 	}
+	setSize(w: number, h: number) {
+		this._renderTargetBlur.setSize(w, h);
+	}
+
 	private _createRenderTarget(res: Vector2) {
 		const renderTarget = new WebGLRenderTarget(res.x, res.y);
 		renderTarget.texture.generateMipmaps = false;

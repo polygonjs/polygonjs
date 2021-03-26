@@ -31,7 +31,7 @@ export class SvgSopOperation extends BaseSopOperation {
 	}
 
 	cook(input_contents: CoreGroup[], params: SvgSopParams): Promise<CoreGroup> {
-		const loader = new CoreSVGLoader(params.url, this.scene);
+		const loader = new CoreSVGLoader(params.url, this.scene());
 
 		return new Promise(async (resolve) => {
 			const group = await loader.load(params);

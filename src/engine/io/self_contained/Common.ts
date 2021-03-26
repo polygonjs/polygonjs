@@ -5,6 +5,7 @@ export enum SelfContainedFileName {
 	EDITOR = 'editor.json',
 	ASSETS = 'assets.json',
 	POLYGONJS = 'js/all.js',
+	POLY_CONFIG = 'js/polyConfig.js',
 	JS_FILES = 'js_files.json',
 	POSTER = 'poster.png',
 }

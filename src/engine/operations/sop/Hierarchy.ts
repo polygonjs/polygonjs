@@ -178,7 +178,7 @@ export class HierarchySopOperation extends BaseSopOperation {
 	private _findObjectsByMaskFromObjects(mask: string, objects: Object3D[]) {
 		const list: Object3D[] = [];
 		for (let object of objects) {
-			this.scene.objectsController.objectsByMaskInObject(mask, object, list);
+			this.scene().objectsController.objectsByMaskInObject(mask, object, list);
 		}
 		return list;
 	}

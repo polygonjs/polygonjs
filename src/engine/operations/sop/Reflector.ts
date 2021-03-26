@@ -9,6 +9,7 @@ interface ReflectorSopParams extends DefaultOperationParams {
 	active: boolean;
 	clipBias: number;
 	color: Color;
+	pixelRatio: number;
 	tblur: boolean;
 	blur: number;
 }
@@ -18,6 +19,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		active: true,
 		clipBias: 0.003,
 		color: new Color(1, 1, 1),
+		pixelRatio: 1,
 		tblur: false,
 		blur: 1,
 	};
@@ -25,6 +27,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 	static type(): Readonly<'reflector'> {
 		return 'reflector';
 	}
+
 	async cook(input_contents: CoreGroup[], params: ReflectorSopParams) {
 		const input_core_group = input_contents[0];
 
@@ -33,17 +36,15 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		if (!renderer) {
 			return this.create_core_group_from_objects(reflectors);
 		}
-		const canvas = renderer.domElement;
-		const w = canvas.width;
-		const h = canvas.height;
 
 		const objects = input_core_group.objectsWithGeo();
 
 		for (let object of objects) {
 			const reflector = new Reflector(object.geometry, {
 				clipBias: params.clipBias,
-				textureWidth: w,
-				textureHeight: h,
+				renderer,
+				scene: this.scene().threejsScene(),
+				pixelRatio: params.pixelRatio,
 				color: params.color,
 				active: params.active,
 				tblur: params.tblur,

@@ -10,15 +10,13 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {TextBufferGeometry} from 'three/src/geometries/TextGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
-import {FontLoader} from 'three/src/loaders/FontLoader';
 import {Font} from 'three/src/extras/core/Font';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
 import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
-import {ModuleName} from '../../poly/registers/modules/Common';
-import {Poly} from '../../Poly';
+
 import {DEMO_ASSETS_ROOT_URL} from '../../../core/Assets';
 
 const DEFAULT_FONT_URL = `${DEMO_ASSETS_ROOT_URL}/fonts/droid_sans_regular.typeface.json`;
@@ -39,6 +37,7 @@ const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove som
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {FileType} from '../../params/utils/OptionsController';
+import {CoreLoaderFont} from '../../../core/loader/Font';
 class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font used */
 	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
@@ -92,7 +91,6 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		return 'text';
 	}
 
-	private _font_loader: FontLoader = new FontLoader();
 	private _loaded_fonts: FontByUrl = {};
 
 	initializeNode() {
@@ -107,7 +105,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 
 	async cook() {
 		try {
-			this._loaded_fonts[this.pv.font] = this._loaded_fonts[this.pv.font] || (await this._load_url());
+			this._loaded_fonts[this.pv.font] = this._loaded_fonts[this.pv.font] || (await this._loadFont());
 		} catch (err) {
 			this.states.error.set(`count not load font (${this.pv.font})`);
 			return;
@@ -189,7 +187,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	private async _create_geometry_from_type_stroke(font: Font) {
 		const shapes = this.shapes_from_font(font);
 		if (shapes) {
-			const loader = await this._load_svg_loader();
+			const loader = await CoreLoaderFont.loadSVGLoader();
 			if (!loader) {
 				return;
 			}
@@ -248,86 +246,14 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		return this.pv.text || '';
 	}
 
-	private _load_url() {
-		const url = `${this.pv.font}?${Date.now()}`;
-		const ext = this.get_extension();
-		switch (ext) {
-			case 'ttf': {
-				return this._load_ttf(url);
-			}
-			case 'json': {
-				return this._load_json(url);
-			}
-			default: {
-				return null;
-			}
-		}
+	private _loadFont() {
+		const loader = new CoreLoaderFont(this.pv.font, this.scene());
+		return loader.load();
 	}
 	async requiredModules() {
 		if (this.p.font.isDirty()) {
 			await this.p.font.compute();
 		}
-		const ext = this.get_extension();
-		switch (ext) {
-			case 'ttf': {
-				return [ModuleName.TTFLoader];
-			}
-			case 'json': {
-				return [ModuleName.SVGLoader];
-			}
-		}
-	}
-	private get_extension() {
-		const url = this.pv.font;
-		const elements1 = url.split('?')[0];
-		const elements2 = elements1.split('.');
-		return elements2[elements2.length - 1];
-	}
-
-	private _load_ttf(url: string): Promise<Font> {
-		return new Promise(async (resolve, reject) => {
-			const loaded_module = await this._load_ttf_loader();
-			if (!loaded_module) {
-				return;
-			}
-			loaded_module.load(
-				url,
-				(fnt: object) => {
-					const parsed = this._font_loader.parse(fnt);
-					resolve(parsed);
-				},
-				undefined,
-				() => {
-					reject();
-				}
-			);
-		});
-	}
-	private _load_json(url: string): Promise<Font> {
-		return new Promise((resolve, reject) => {
-			this._font_loader.load(
-				url,
-				(font) => {
-					resolve(font);
-				},
-				undefined,
-				() => {
-					reject();
-				}
-			);
-		});
-	}
-
-	private async _load_ttf_loader() {
-		const TTFLoader = await Poly.modulesRegister.module(ModuleName.TTFLoader);
-		if (TTFLoader) {
-			return new TTFLoader();
-		}
-	}
-	private async _load_svg_loader() {
-		const SVGLoader = await Poly.modulesRegister.module(ModuleName.SVGLoader);
-		if (SVGLoader) {
-			return SVGLoader;
-		}
+		return CoreLoaderFont.requiredModules(this.pv.font);
 	}
 }

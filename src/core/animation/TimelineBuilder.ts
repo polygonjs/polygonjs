@@ -32,7 +32,7 @@ export class TimelineBuilder {
 
 	private _debug = false;
 	setDebug(debug: boolean) {
-		this._debug = true;
+		this._debug = debug;
 	}
 	private _printDebug(message: any) {
 		if (!this._debug) {

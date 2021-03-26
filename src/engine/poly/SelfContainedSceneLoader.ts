@@ -2,10 +2,28 @@ import {SceneJsonImporter} from '../io/json/import/Scene';
 import {SceneJsonExporterData} from '../io/json/export/Scene';
 import {Poly} from '../Poly';
 import {BlobUrlData} from './BlobsController';
-import {ViewerData, ViewerDataByElement} from './Common';
+import {ViewerData, ViewerDataByElement, UnzippedData} from './Common';
 import {DomEffects} from '../../core/DomEffects';
+import {SelfContainedFileName} from '../io/self_contained/Common';
+import {PolyScene} from '../index_all';
 
 type SceneJsonImporterContructor = typeof SceneJsonImporter;
+
+interface PolyConfigIds {
+	Poly: string;
+	scriptElementId: string;
+	loadSceneArgs: string;
+}
+interface LoadSceneArgs {
+	method: (
+		element: HTMLElement,
+		sceneData: SceneJsonExporterData,
+		sceneJsonImporterContructor: typeof SceneJsonImporter
+	) => Promise<void>;
+	element: HTMLElement;
+	sceneData: SceneJsonExporterData;
+	sceneJsonImporterContructor: SceneJsonImporterContructor;
+}
 
 export class SelfContainedScenesLoader {
 	private _sceneJsonImporterContructor: SceneJsonImporterContructor | undefined;
@@ -57,18 +75,74 @@ export class SelfContainedScenesLoader {
 		Poly.setPlayerMode(true);
 		Poly.libs.setRoot(null);
 
+		const polyConfigId = `${Math.random()}`.replace('.', '_');
+		const ids: PolyConfigIds = {
+			Poly: `___POLY_polyConfig_configurePolygonjs_${polyConfigId}`,
+			scriptElementId: `___POLY_polyConfig_scriptElement_${polyConfigId}`,
+			loadSceneArgs: `___POLY_polyConfig_loadSceneArgs_${polyConfigId}`,
+		};
+		(window as any)[ids.Poly] = Poly;
+		const method = this._loadScene.bind(this);
+		const loadSceneArgs: LoadSceneArgs = {
+			method,
+			element,
+			sceneData,
+			sceneJsonImporterContructor,
+		};
+		(window as any)[ids.loadSceneArgs] = loadSceneArgs;
+
+		// if polyConfig is loaded,
+		// the scene will be loaded from _loadPolyConfig.
+		// if it is not, the scene will be loaded in this function
+		const polyConfigLoaded = this._loadPolyConfig(ids, unzippedData);
+		if (polyConfigLoaded) {
+			return;
+		}
 		this._loadScene(element, sceneData, sceneJsonImporterContructor);
+	}
+
+	private _loadPolyConfig(ids: PolyConfigIds, unzippedData: UnzippedData) {
+		const polyConfigArray = unzippedData[SelfContainedFileName.POLY_CONFIG];
+		if (!polyConfigArray) {
+			return false;
+		}
+		const polyConfigUrl = this._createJsBlob(polyConfigArray, 'polyConfig');
+		console.log('loading polyConfigUrl', polyConfigUrl);
+
+		let script = document.getElementById(ids.scriptElementId);
+
+		const lines: string[] = [];
+		lines.push(`import {configurePolygonjs, configureScene} from '${polyConfigUrl}';`);
+		lines.push(`configurePolygonjs(window.${ids.Poly});`);
+		lines.push(
+			`window.${ids.loadSceneArgs}.method(window.${ids.loadSceneArgs}.element, window.${ids.loadSceneArgs}.sceneData, window.${ids.loadSceneArgs}.sceneJsonImporterContructor, configureScene);`
+		);
+		lines.push(`delete window.${ids.loadSceneArgs};`);
+
+		if (!script) {
+			script = document.createElement('script') as HTMLScriptElement;
+			script.setAttribute('type', 'module');
+			(script as any).text = lines.join('\n');
+			document.body.append(script);
+		}
+		return true;
 	}
 
 	private async _loadScene(
 		element: HTMLElement,
 		sceneData: SceneJsonExporterData,
-		sceneJsonImporterContructor: SceneJsonImporterContructor
+		sceneJsonImporterContructor: SceneJsonImporterContructor,
+		configureScene?: (scene: PolyScene) => void
 	) {
 		this._fadeOutPoster(element);
 
 		const importer = new sceneJsonImporterContructor(sceneData);
 		const scene = await importer.scene();
+
+		if (configureScene) {
+			configureScene(scene);
+		}
+
 		const cameraNode = scene.masterCameraNode();
 		if (!cameraNode) {
 			console.warn('no master camera found');
@@ -91,5 +165,12 @@ export class SelfContainedScenesLoader {
 				element.removeChild(posterElement);
 			});
 		}
+	}
+
+	private _createJsBlob(array: Uint8Array, filename: string) {
+		const blob = new Blob([array]);
+		const file = new File([blob], `${filename}.js`, {type: 'application/javascript'});
+		var urlCreator = window.URL || window.webkitURL;
+		return urlCreator.createObjectURL(file);
 	}
 }

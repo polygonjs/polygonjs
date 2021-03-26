@@ -44,3 +44,18 @@ QUnit.test('CoreWalker.relativePath', (assert) => {
 
 	assert.equal(CoreWalker.relativePath(material, meshBasic), '../materials1/meshBasic1');
 });
+
+QUnit.test('node.node() relative and absolute', (assert) => {
+	const geo1 = window.geo1;
+	const material = geo1.createNode('material');
+
+	const root = window.scene.root();
+	const geo2 = root.createNode('geo');
+	assert.equal(geo2.node('.')?.graphNodeId(), geo2.graphNodeId());
+	assert.equal(geo2.node('..')?.graphNodeId(), root.graphNodeId());
+	assert.equal(geo2.node('../')?.graphNodeId(), root.graphNodeId());
+	assert.equal(geo2.node('../geo1')?.graphNodeId(), geo1.graphNodeId());
+	assert.equal(geo2.node('/')?.graphNodeId(), root.graphNodeId());
+	assert.equal(geo2.node('/geo1')?.graphNodeId(), geo1.graphNodeId());
+	assert.equal(geo2.node('/geo1/material1')?.graphNodeId(), material.graphNodeId());
+});

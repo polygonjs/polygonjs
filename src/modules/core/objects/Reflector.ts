@@ -46,12 +46,13 @@ const ReflectorShader = {
 
 interface ReflectorOptions {
 	color: Color;
-	textureWidth: number;
-	textureHeight: number;
+	renderer: WebGLRenderer;
+	pixelRatio: number;
 	clipBias: number;
 	active: boolean;
 	tblur: boolean;
 	blur: number;
+	scene: Scene;
 }
 
 const renderTargetParams = {
@@ -87,14 +88,13 @@ export class Reflector extends Mesh {
 	constructor(public geometry: BufferGeometry, private _options: ReflectorOptions) {
 		super();
 
-		this.renderTarget = new WebGLRenderTarget(_options.textureWidth, _options.textureHeight, renderTargetParams);
-		if (
-			!MathUtils.isPowerOfTwo(this._options.textureWidth) ||
-			!MathUtils.isPowerOfTwo(this._options.textureHeight)
-		) {
+		const {width, height} = this._getRendererSize(this._options.renderer);
+
+		this.renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
+		if (!MathUtils.isPowerOfTwo(width) || !MathUtils.isPowerOfTwo(height)) {
 			this.renderTarget.texture.generateMipmaps = false;
 		}
-		this._coreRenderBlur = new CoreRenderBlur(new Vector2(_options.textureWidth, _options.textureHeight));
+		this._coreRenderBlur = new CoreRenderBlur(new Vector2(width, height));
 
 		this.material = new ShaderMaterial({
 			uniforms: UniformsUtils.clone(ReflectorShader.uniforms),
@@ -104,6 +104,39 @@ export class Reflector extends Mesh {
 		this.material.uniforms['tDiffuse'].value = this.renderTarget.texture;
 		this.material.uniforms['color'].value = this._options.color;
 		this.material.uniforms['textureMatrix'].value = this.textureMatrix;
+
+		this._addWindowResizeEvent();
+	}
+
+	private _onWindowResizeBound = this._onWindowResize.bind(this);
+	private _addWindowResizeEvent() {
+		window.addEventListener('resize', this._onWindowResizeBound.bind(this), false);
+	}
+	private _removeWindowResizeEvent() {
+		window.removeEventListener('resize', this._onWindowResizeBound.bind(this), false);
+	}
+
+	private _onWindowResize() {
+		// if the object has been detached, we remove the event
+		this.traverseAncestors((object) => {
+			if (!object.parent) {
+				if (object.uuid != this._options.scene.uuid) {
+					this._removeWindowResizeEvent();
+				}
+			}
+		});
+
+		const {width, height} = this._getRendererSize(this._options.renderer);
+
+		this.renderTarget.setSize(width, height);
+		this._coreRenderBlur.setSize(width, height);
+	}
+
+	private _getRendererSize(renderer: WebGLRenderer) {
+		const canvas = renderer.domElement;
+		const width = canvas.width * this._options.pixelRatio;
+		const height = canvas.height * this._options.pixelRatio;
+		return {width, height};
 	}
 
 	private _onBeforeRender(

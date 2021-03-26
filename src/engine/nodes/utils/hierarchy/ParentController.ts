@@ -50,7 +50,7 @@ export class HierarchyParentController {
 			}
 		}
 	}
-	find_node(path: string | null): BaseNodeType | null {
+	findNode(path: string | null): BaseNodeType | null {
 		if (path == null) {
 			return null;
 		}
@@ -62,8 +62,12 @@ export class HierarchyParentController {
 		}
 
 		const separator = CoreWalker.SEPARATOR;
+		if (path === separator) {
+			return this.node.scene().root();
+		}
 		if (path[0] === separator) {
 			path = path.substring(1, path.length);
+			return this.node.scene().root().node(path);
 		}
 
 		// check that path is a string, since there has been errors where it wasn't the case

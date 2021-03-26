@@ -17,8 +17,13 @@ class ReflectorSopParamsConfig extends NodeParamsConfig {
 	active = ParamConfig.BOOLEAN(DEFAULT.active);
 	/** @param bias to ensure the mirror does not reflect itself */
 	clipBias = ParamConfig.FLOAT(DEFAULT.clipBias);
-	/** @param center of the geometry */
+	/** @param color */
 	color = ParamConfig.COLOR(DEFAULT.color.toArray() as Number3);
+	/** @param pixelRatio */
+	pixelRatio = ParamConfig.INTEGER(DEFAULT.pixelRatio, {
+		range: [1, 4],
+		rangeLocked: [true, false],
+	});
 	/** @param toggle to activate blur */
 	tblur = ParamConfig.BOOLEAN(DEFAULT.tblur);
 	/** @param blur */
