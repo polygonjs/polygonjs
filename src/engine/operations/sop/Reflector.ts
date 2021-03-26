@@ -12,6 +12,8 @@ interface ReflectorSopParams extends DefaultOperationParams {
 	pixelRatio: number;
 	tblur: boolean;
 	blur: number;
+	tblur2: boolean;
+	blur2: number;
 }
 
 export class ReflectorSopOperation extends BaseSopOperation {
@@ -22,6 +24,8 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		pixelRatio: 1,
 		tblur: false,
 		blur: 1,
+		tblur2: false,
+		blur2: 1,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static type(): Readonly<'reflector'> {
@@ -49,6 +53,8 @@ export class ReflectorSopOperation extends BaseSopOperation {
 				active: params.active,
 				tblur: params.tblur,
 				blur: params.blur,
+				tblur2: params.tblur2,
+				blur2: params.blur2,
 			});
 			reflector.position.copy(object.position);
 			reflector.rotation.copy(object.rotation);

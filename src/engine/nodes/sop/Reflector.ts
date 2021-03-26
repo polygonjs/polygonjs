@@ -26,9 +26,17 @@ class ReflectorSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param toggle to activate blur */
 	tblur = ParamConfig.BOOLEAN(DEFAULT.tblur);
-	/** @param blur */
+	/** @param blur amount */
 	blur = ParamConfig.FLOAT(DEFAULT.blur, {
 		visibleIf: {tblur: 1},
+	});
+	/** @param toggle to activate a second blur, which can be useful to reduce artefacts */
+	tblur2 = ParamConfig.BOOLEAN(DEFAULT.tblur2, {
+		visibleIf: {tblur: 1},
+	});
+	/** @param blur2 amount */
+	blur2 = ParamConfig.FLOAT(DEFAULT.blur2, {
+		visibleIf: {tblur: 1, tblur2: 1},
 	});
 }
 const ParamsConfig = new ReflectorSopParamsConfig();

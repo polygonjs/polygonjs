@@ -52,6 +52,8 @@ interface ReflectorOptions {
 	active: boolean;
 	tblur: boolean;
 	blur: number;
+	tblur2: boolean;
+	blur2: number;
 	scene: Scene;
 }
 
@@ -118,6 +120,7 @@ export class Reflector extends Mesh {
 
 	private _onWindowResize() {
 		// if the object has been detached, we remove the event
+		// TODO: it should be added back when the object is added to the hierarchy
 		this.traverseAncestors((object) => {
 			if (!object.parent) {
 				if (object.uuid != this._options.scene.uuid) {
@@ -246,7 +249,12 @@ export class Reflector extends Mesh {
 		renderer.render(scene, this.virtualCamera);
 
 		if (this._options.tblur) {
-			this._coreRenderBlur.applyBlur(this.renderTarget, renderer, this._options.blur);
+			const blurAmount = this._options.blur * this._options.pixelRatio;
+			this._coreRenderBlur.applyBlur(this.renderTarget, renderer, blurAmount);
+			if (this._options.tblur2) {
+				const blurAmount2 = this._options.blur2 * this._options.pixelRatio;
+				this._coreRenderBlur.applyBlur(this.renderTarget, renderer, blurAmount2);
+			}
 		}
 
 		renderer.xr.enabled = currentXrEnabled;
