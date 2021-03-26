@@ -7,7 +7,7 @@ import {EventContext} from './events/_BaseEventsController';
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
-
+export type onTimeTickHook = () => void;
 export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;
@@ -75,6 +75,12 @@ export class TimeController {
 		if (time != this._time) {
 			this._time = time;
 
+			if (this._onBeforeTickCallbacks) {
+				for (let callback of this._onBeforeTickCallbacks) {
+					callback();
+				}
+			}
+
 			if (update_frame) {
 				const new_frame = Math.floor(this._time * FPS);
 				const bounded_frame = this._ensureFrameWithinBounds(new_frame);
@@ -96,6 +102,12 @@ export class TimeController {
 
 			// dispatch events after nodes have cooked
 			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.TICK_EVENT_CONTEXT);
+
+			if (this._onAfterTickCallbacks) {
+				for (let callback of this._onAfterTickCallbacks) {
+					callback();
+				}
+			}
 		}
 	}
 
@@ -172,5 +184,60 @@ export class TimeController {
 		} else {
 			this.play();
 		}
+	}
+
+	//
+	//
+	// CALLBACKS
+	//
+	//
+	private _onBeforeTickCallbackNames: string[] | undefined;
+	private _onAfterTickCallbackNames: string[] | undefined;
+	protected _onBeforeTickCallbacks: onTimeTickHook[] | undefined;
+	protected _onAfterTickCallbacks: onTimeTickHook[] | undefined;
+
+	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook) {
+		this._onBeforeTickCallbackNames = this._onBeforeTickCallbackNames || [];
+		this._onBeforeTickCallbacks = this._onBeforeTickCallbacks || [];
+		this._registerCallback(callbackName, callback, this._onBeforeTickCallbackNames, this._onBeforeTickCallbacks);
+	}
+	unRegisterOnBeforeTick(callbackName: string) {
+		this._unregisterCallback(callbackName, this._onBeforeTickCallbackNames, this._onBeforeTickCallbacks);
+	}
+	registeredBeforeTickCallbackNames() {
+		return this._onBeforeTickCallbackNames;
+	}
+	registerOnAfterTick(callbackName: string, callback: onTimeTickHook) {
+		this._onAfterTickCallbacks = this._onAfterTickCallbacks || [];
+		this._onAfterTickCallbackNames = this._onAfterTickCallbackNames || [];
+		this._registerCallback(callbackName, callback, this._onAfterTickCallbackNames, this._onAfterTickCallbacks);
+	}
+	unRegisterOnAfterTick(callbackName: string) {
+		this._unregisterCallback(callbackName, this._onAfterTickCallbackNames, this._onAfterTickCallbacks);
+	}
+	registeredAfterTickCallbackNames() {
+		return this._onAfterTickCallbackNames;
+	}
+
+	private _registerCallback<C extends onTimeTickHook>(
+		callbackName: string,
+		callback: C,
+		names: string[],
+		callbacks: C[]
+	) {
+		if (names?.includes(callbackName)) {
+			console.warn(`callback ${callbackName} already registered`);
+			return;
+		}
+		callbacks.push(callback);
+		names.push(callbackName);
+	}
+	private _unregisterCallback(callbackName: string, names?: string[], hooks?: onTimeTickHook[]) {
+		if (!(names && hooks)) {
+			return;
+		}
+		const index = names.indexOf(callbackName);
+		names.splice(index, 1);
+		hooks.splice(index, 1);
 	}
 }

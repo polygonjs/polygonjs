@@ -18,6 +18,7 @@ import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/Contro
 const HOVERED_CLASS_NAME = 'hovered';
 type onTimeTickHook = () => void;
 type onRenderHook = () => void;
+type ViewerHook = onTimeTickHook | onRenderHook;
 
 export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// protected _display_scene: Scene;
@@ -116,100 +117,74 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	protected _onAfterRenderCallbacks: onRenderHook[] | undefined;
 
 	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook) {
-		if (this._onBeforeTickCallbackNames?.includes(callbackName)) {
-			console.warn(`callback ${callbackName} already registered`);
-			return;
-		}
-		this._onBeforeTickCallbacks = this._onBeforeTickCallbacks || [];
 		this._onBeforeTickCallbackNames = this._onBeforeTickCallbackNames || [];
-		this._onBeforeTickCallbacks.push(callback);
-		this._onBeforeTickCallbackNames.push(callbackName);
+		this._onBeforeTickCallbacks = this._onBeforeTickCallbacks || [];
+		this._registerCallback(callbackName, callback, this._onBeforeTickCallbackNames, this._onBeforeTickCallbacks);
 	}
 	unRegisterOnBeforeTick(callbackName: string) {
-		if (!this._onBeforeTickCallbackNames) {
-			return;
-		}
-		if (!this._onBeforeTickCallbacks) {
-			return;
-		}
-		const index = this._onBeforeTickCallbackNames.indexOf(callbackName);
-		this._onBeforeTickCallbackNames.splice(index, 1);
-		this._onBeforeTickCallbacks.splice(index, 1);
+		this._unregisterCallback(callbackName, this._onBeforeTickCallbackNames, this._onBeforeTickCallbacks);
 	}
 	registeredBeforeTickCallbackNames() {
 		return this._onBeforeTickCallbackNames;
 	}
 	registerOnAfterTick(callbackName: string, callback: onTimeTickHook) {
-		if (this._onAfterTickCallbackNames?.includes(callbackName)) {
-			console.warn(`callback ${callbackName} already registered`);
-			return;
-		}
 		this._onAfterTickCallbacks = this._onAfterTickCallbacks || [];
 		this._onAfterTickCallbackNames = this._onAfterTickCallbackNames || [];
-		this._onAfterTickCallbacks.push(callback);
-		this._onAfterTickCallbackNames.push(callbackName);
+		this._registerCallback(callbackName, callback, this._onAfterTickCallbackNames, this._onAfterTickCallbacks);
 	}
 	unRegisterOnAfterTick(callbackName: string) {
-		if (!this._onAfterTickCallbackNames) {
-			return;
-		}
-		if (!this._onAfterTickCallbacks) {
-			return;
-		}
-		const index = this._onAfterTickCallbackNames.indexOf(callbackName);
-		this._onAfterTickCallbackNames.splice(index, 1);
-		this._onAfterTickCallbacks.splice(index, 1);
+		this._unregisterCallback(callbackName, this._onAfterTickCallbackNames, this._onAfterTickCallbacks);
 	}
 	registeredAfterTickCallbackNames() {
 		return this._onAfterTickCallbackNames;
 	}
 	registerOnBeforeRender(callbackName: string, callback: onRenderHook) {
-		if (this._onBeforeRenderCallbackNames?.includes(callbackName)) {
-			console.warn(`callback ${callbackName} already registered`);
-			return;
-		}
-		this._onBeforeRenderCallbacks = this._onBeforeRenderCallbacks || [];
 		this._onBeforeRenderCallbackNames = this._onBeforeRenderCallbackNames || [];
-		this._onBeforeRenderCallbacks.push(callback);
-		this._onBeforeRenderCallbackNames.push(callbackName);
+		this._onBeforeRenderCallbacks = this._onBeforeRenderCallbacks || [];
+		this._registerCallback(
+			callbackName,
+			callback,
+			this._onBeforeRenderCallbackNames,
+			this._onBeforeRenderCallbacks
+		);
 	}
 	unRegisterOnBeforeRender(callbackName: string) {
-		if (!this._onBeforeRenderCallbackNames) {
-			return;
-		}
-		if (!this._onBeforeRenderCallbacks) {
-			return;
-		}
-		const index = this._onBeforeRenderCallbackNames.indexOf(callbackName);
-		this._onBeforeRenderCallbackNames.splice(index, 1);
-		this._onBeforeRenderCallbacks.splice(index, 1);
+		this._unregisterCallback(callbackName, this._onBeforeRenderCallbackNames, this._onBeforeRenderCallbacks);
 	}
 	registeredBeforeRenderCallbackNames() {
 		return this._onBeforeRenderCallbackNames;
 	}
 	registerOnAfterRender(callbackName: string, callback: onRenderHook) {
-		if (this._onAfterRenderCallbackNames?.includes(callbackName)) {
-			console.warn(`callback ${callbackName} already registered`);
-			return;
-		}
-		this._onAfterRenderCallbacks = this._onAfterRenderCallbacks || [];
 		this._onAfterRenderCallbackNames = this._onAfterRenderCallbackNames || [];
-		this._onAfterRenderCallbacks.push(callback);
-		this._onAfterRenderCallbackNames.push(callbackName);
+		this._onAfterRenderCallbacks = this._onAfterRenderCallbacks || [];
+		this._registerCallback(callbackName, callback, this._onAfterRenderCallbackNames, this._onAfterRenderCallbacks);
 	}
 	unRegisterOnAfterRender(callbackName: string) {
-		if (!this._onAfterRenderCallbackNames) {
-			return;
-		}
-		if (!this._onAfterRenderCallbacks) {
-			return;
-		}
-		const index = this._onAfterRenderCallbackNames.indexOf(callbackName);
-		this._onAfterRenderCallbackNames.splice(index, 1);
-		this._onAfterRenderCallbacks.splice(index, 1);
+		this._unregisterCallback(callbackName, this._onAfterRenderCallbackNames, this._onAfterRenderCallbacks);
 	}
 	registeredAfterRenderCallbackNames() {
 		return this._onAfterRenderCallbackNames;
+	}
+	private _registerCallback<C extends ViewerHook>(
+		callbackName: string,
+		callback: C,
+		names: string[],
+		callbacks: C[]
+	) {
+		if (names?.includes(callbackName)) {
+			console.warn(`callback ${callbackName} already registered`);
+			return;
+		}
+		callbacks.push(callback);
+		names.push(callbackName);
+	}
+	private _unregisterCallback(callbackName: string, names?: string[], hooks?: ViewerHook[]) {
+		if (!(names && hooks)) {
+			return;
+		}
+		const index = names.indexOf(callbackName);
+		names.splice(index, 1);
+		hooks.splice(index, 1);
 	}
 }
 

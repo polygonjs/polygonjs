@@ -13,7 +13,7 @@ import {PolySceneSerializer} from './utils/Serializer';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
 import {ObjectsController} from './utils/ObjectsController';
 import {ReferencesController} from './utils/ReferencesController';
-import {TimeController} from './utils/TimeController';
+import {onTimeTickHook, TimeController} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
 import {ViewersRegister} from './utils/ViewersRegister';
 import {WebGLController} from './utils/WebGLController';
@@ -266,5 +266,29 @@ export class PolyScene {
 	}
 	root() {
 		return this.nodesController.root();
+	}
+
+	//
+	//
+	// CALLBACKS
+	//
+	//
+	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook) {
+		this.timeController.registerOnBeforeTick(callbackName, callback);
+	}
+	unRegisterOnBeforeTick(callbackName: string) {
+		this.timeController.unRegisterOnBeforeTick(callbackName);
+	}
+	registeredBeforeTickCallbackNames() {
+		return this.timeController.registeredBeforeTickCallbackNames();
+	}
+	registerOnAfterTick(callbackName: string, callback: onTimeTickHook) {
+		this.timeController.registerOnAfterTick(callbackName, callback);
+	}
+	unRegisterOnAfterTick(callbackName: string) {
+		this.timeController.unRegisterOnAfterTick(callbackName);
+	}
+	registeredAfterTickCallbackNames() {
+		return this.timeController.registeredAfterTickCallbackNames();
 	}
 }

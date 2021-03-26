@@ -14,6 +14,7 @@ QUnit.module('scene');
 import './engine/scene/Serializer';
 import './engine/scene/ObjectsController';
 import './engine/scene/OptimizedNodes';
+import './engine/scene/TimeController';
 
 QUnit.module('expressions');
 import './engine/expressions/methods/abs';
