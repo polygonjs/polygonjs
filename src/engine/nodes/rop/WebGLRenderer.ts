@@ -34,18 +34,6 @@ import {
 	VSMShadowMap,
 } from 'three/src/constants';
 
-enum RendererPrecision {
-	lowp = 'lowp',
-	mediump = 'mediump',
-	highp = 'highp',
-}
-
-enum PowerPreference {
-	HIGH = 'high-performance',
-	LOW = 'low-power',
-	DEFAULT = 'default',
-}
-
 enum EncodingName {
 	Linear = 'Linear',
 	sRGB = 'sRGB',
@@ -132,6 +120,24 @@ const TONE_MAPPING_MENU_ENTRIES = TONE_MAPPING_NAMES.map((name, i) => {
 	};
 });
 
+enum RendererPrecision {
+	HIGH = 'highp',
+	MEDIUM = 'mediump',
+	LOW = 'lowp',
+}
+
+const RENDERER_PRECISIONS: RendererPrecision[] = [
+	RendererPrecision.HIGH,
+	RendererPrecision.MEDIUM,
+	RendererPrecision.LOW,
+];
+enum PowerPreference {
+	HIGH = 'high-performance',
+	LOW = 'low-power',
+	DEFAULT = 'default',
+}
+const POWER_PREFERENCES: PowerPreference[] = [PowerPreference.HIGH, PowerPreference.LOW, PowerPreference.DEFAULT];
+
 enum ShadowMapTypeName {
 	Basic = 'Basic',
 	PCF = 'PCF',
@@ -162,7 +168,7 @@ export const DEFAULT_SHADOW_MAP_TYPE = ShadowMapTypeValue.PCFSoft as number;
 // TODO: set debug.checkShaderErrors to false in prod
 const DEFAULT_PARAMS: WebGLRendererParameters = {
 	alpha: false,
-	precision: RendererPrecision.highp,
+	precision: RendererPrecision.HIGH,
 	premultipliedAlpha: true,
 	antialias: false,
 	stencil: true,
@@ -177,11 +183,42 @@ import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {RenderController} from '../obj/utils/cameras/RenderController';
 import {Poly} from '../../Poly';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class WebGLRendererRopParamsConfig extends NodeParamsConfig {
+	/** @param toggle on to set the precision */
+	tprecision = ParamConfig.BOOLEAN(0);
+	/** @param set the precision */
+	precision = ParamConfig.INTEGER(RENDERER_PRECISIONS.indexOf(RendererPrecision.HIGH), {
+		visibleIf: {tprecision: 1},
+		menu: {
+			entries: RENDERER_PRECISIONS.map((name, value) => {
+				return {value, name};
+			}),
+		},
+	});
+	/** @param toggle on to set the power preferenc */
+	tpowerPreference = ParamConfig.BOOLEAN(0);
+	/** @param set the precision */
+	powerPreference = ParamConfig.INTEGER(POWER_PREFERENCES.indexOf(PowerPreference.DEFAULT), {
+		visibleIf: {tpowerPreference: 1},
+		menu: {
+			entries: POWER_PREFERENCES.map((name, value) => {
+				return {value, name};
+			}),
+		},
+	});
 	/** @param toggle on to have alpha on (change requires page reload) */
 	alpha = ParamConfig.BOOLEAN(1);
+	/** @param premultipliedAlpha */
+	premultipliedAlpha = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to have antialias on (change requires page reload) */
 	antialias = ParamConfig.BOOLEAN(1);
+	/** @param stencil */
+	stencil = ParamConfig.BOOLEAN(1);
+	/** @param depth */
+	depth = ParamConfig.BOOLEAN(1);
+	/** @param logarithmicDepthBuffer */
+	logarithmicDepthBuffer = ParamConfig.BOOLEAN(0);
 	/** @param tone mapping */
 	toneMapping = ParamConfig.INTEGER(DEFAULT_TONE_MAPPING, {
 		menu: {
@@ -254,10 +291,24 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		for (k of keys) {
 			(params[k] as any) = DEFAULT_PARAMS[k];
 		}
-		params.antialias = this.pv.antialias;
-		params.alpha = this.pv.alpha;
+		if (isBooleanTrue(this.pv.tprecision)) {
+			const precision = RENDERER_PRECISIONS[this.pv.precision];
+			params.precision = precision;
+		}
+		if (isBooleanTrue(this.pv.tpowerPreference)) {
+			const powerPreference = POWER_PREFERENCES[this.pv.powerPreference];
+			params.powerPreference = powerPreference;
+		}
+		params.antialias = isBooleanTrue(this.pv.antialias);
+		params.antialias = isBooleanTrue(this.pv.antialias);
+		params.alpha = isBooleanTrue(this.pv.alpha);
+		params.premultipliedAlpha = isBooleanTrue(this.pv.premultipliedAlpha);
+		params.depth = isBooleanTrue(this.pv.depth);
+		params.stencil = isBooleanTrue(this.pv.stencil);
+		params.logarithmicDepthBuffer = isBooleanTrue(this.pv.logarithmicDepthBuffer);
 		params.canvas = canvas;
 		params.context = gl;
+		console.log(params);
 		// (params as WebGLRendererParameters).preserveDrawingBuffer = this.pv.preserve_drawing_buffer;
 		const renderer = Poly.renderersController.createWebGLRenderer(params);
 
