@@ -9,6 +9,7 @@ import {ShapePath} from 'three/src/extras/core/ShapePath';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {isBooleanTrue} from '../BooleanValue';
 import {CoreBaseLoader} from './_Base';
+import {BaseNodeType} from '../../engine/nodes/_Base';
 
 interface CoreSVGLoaderOptions {
 	// fill
@@ -30,8 +31,8 @@ interface SVGPathUserData {
 }
 
 export class CoreSVGLoader extends CoreBaseLoader {
-	constructor(url: string, scene: PolyScene) {
-		super(url, scene);
+	constructor(url: string, scene: PolyScene, _node?: BaseNodeType) {
+		super(url, scene, _node);
 	}
 
 	load(options: CoreSVGLoaderOptions): Promise<Group> {

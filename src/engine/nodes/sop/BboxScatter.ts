@@ -40,9 +40,9 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 		const max = bbox.max;
 
 		const positions: number[] = [];
-		for (let x = min.x; x < max.x; x += stepSize) {
-			for (let y = min.x; y < max.y; y += stepSize) {
-				for (let z = min.x; z < max.z; z += stepSize) {
+		for (let x = min.x; x <= max.x; x += stepSize) {
+			for (let y = min.y; y <= max.y; y += stepSize) {
+				for (let z = min.z; z <= max.z; z += stepSize) {
 					positions.push(x);
 					positions.push(y);
 					positions.push(z);

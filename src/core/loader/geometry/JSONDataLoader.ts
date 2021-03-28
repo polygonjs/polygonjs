@@ -1,8 +1,9 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Poly} from '../../../engine/Poly';
 import {CoreBaseLoader} from '../_Base';
-import {PolyScene} from '../../../engine/index_all';
+import {PolyScene} from '../../../engine/scene/PolyScene';
 import {JSONDataParser} from './JSONDataParser';
+import {BaseNodeType} from '../../../engine/nodes/_Base';
 
 export interface JsonDataLoaderOptions {
 	dataKeysPrefix?: string;
@@ -14,8 +15,8 @@ export interface JsonDataLoaderOptions {
 export class JsonDataLoader extends CoreBaseLoader {
 	private _parser: JSONDataParser;
 
-	constructor(url: string, scene: PolyScene, options: JsonDataLoaderOptions = {}) {
-		super(url, scene);
+	constructor(url: string, scene: PolyScene, options: JsonDataLoaderOptions = {}, protected _node?: BaseNodeType) {
+		super(url, scene, _node);
 		this._parser = new JSONDataParser(options);
 	}
 

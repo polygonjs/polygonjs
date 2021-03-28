@@ -5,6 +5,7 @@ import {StatesController} from '../../engine/nodes/utils/StatesController';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {InputCloneMode} from '../../engine/poly/InputCloneMode';
 import {PolyDictionary} from '../../types/GlobalTypes';
+import {BaseNodeType} from '../nodes/_Base';
 
 export type DefaultOperationParam<T extends ParamType> = ParamValuesTypeMap[T];
 export type DefaultOperationParams = PolyDictionary<DefaultOperationParam<ParamType>>;
@@ -31,7 +32,7 @@ export class BaseOperation {
 	static readonly DEFAULT_PARAMS: DefaultOperationParams = {};
 	static readonly INPUT_CLONED_STATE: InputCloneMode | InputCloneMode[] = [];
 
-	constructor(protected _scene: PolyScene, protected states?: StatesController) {}
+	constructor(protected _scene: PolyScene, protected states?: StatesController, protected _node?: BaseNodeType) {}
 	scene() {
 		return this._scene;
 	}

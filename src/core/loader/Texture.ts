@@ -10,7 +10,7 @@ import {Poly} from '../../engine/Poly';
 import {ModuleName} from '../../engine/poly/registers/modules/Common';
 import {CoreUserAgent} from '../UserAgent';
 import {ASSETS_ROOT} from './AssetsUtils';
-import {PolyScene} from '../../engine/index_all';
+import {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreBaseLoader} from './_Base';
 interface VideoSourceTypeByExt {
 	ogg: string;
@@ -62,8 +62,13 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		mp4: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
 	};
 
-	constructor(private _node: BaseNodeType, private _param: BaseParamType, url: string, scene: PolyScene) {
-		super(url, scene);
+	constructor(
+		_url: string,
+		private _param: BaseParamType,
+		protected _node: BaseNodeType,
+		protected _scene: PolyScene
+	) {
+		super(_url, _scene, _node);
 	}
 
 	static _onTextureLoadedCallback: OnTextureLoadedCallback | undefined;
@@ -75,8 +80,8 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		let texture: Texture | null = null;
 		let found_node;
 
-		if (this.url.substring(0, 3) == 'op:') {
-			const node_path = this.url.substring(3);
+		if (this._url.substring(0, 3) == 'op:') {
+			const node_path = this._url.substring(3);
 			found_node = CoreWalker.findNode(this._node, node_path);
 			if (found_node) {
 				if (found_node instanceof BaseCopNodeClass) {
@@ -91,16 +96,10 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 				this._node.states.error.set(`no node found in path '${node_path}'`);
 			}
 		} else {
-			texture = await this.load_url(options);
+			texture = await this._loadUrl(options);
 			if (texture) {
-				// param.mark_as_referencing_asset(url)
-				if (this._param.options.texture_as_env()) {
-					// texture = await CoreTextureLoader.set_texture_for_env(texture, this._node);
-				} else {
-					texture = CoreLoaderTexture.set_texture_for_mapping(texture);
-				}
 			} else {
-				this._node.states.error.set(`could not load texture ${this.url}`);
+				this._node.states.error.set(`could not load texture ${this._url}`);
 			}
 		}
 
@@ -115,7 +114,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		return texture;
 	}
 
-	async load_url(options: TextureLoadOptions): Promise<Texture> {
+	private async _loadUrl(options: TextureLoadOptions): Promise<Texture> {
 		return new Promise(async (resolve, reject) => {
 			// let resolvedUrl = paramUrl;
 			// const ext = CoreLoaderTexture.get_extension(resolvedUrl);
@@ -130,7 +129,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			// 		}
 			// 	}
 			// }
-			const ext = CoreLoaderTexture.get_extension(this.url);
+			const ext = this.extension();
 			const url = await this._urlToLoad();
 
 			if (CoreLoaderTexture.VIDEO_EXTENSIONS.includes(ext)) {
@@ -148,7 +147,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 
 								const callback = CoreLoaderTexture._onTextureLoadedCallback;
 								if (callback) {
-									callback(this.url, texture);
+									callback(url, texture);
 								}
 
 								resolve(texture);
@@ -224,16 +223,19 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			if (root || BASISPath) {
 				const decoder_path = `${root || ''}${BASISPath || ''}/`;
 
-				const files = [
-					'basis_transcoder.js',
-					'basis_transcoder.wasm',
-					'msc_basis_transcoder.js',
-					'msc_basis_transcoder.wasm',
-				];
-				for (let file of files) {
-					const storedUrl = `${BASISPath}/${file}`;
-					const fullUrl = `${decoder_path}${file}`;
-					Poly.blobs.fetchBlob({storedUrl, fullUrl});
+				const node = this._node;
+				if (node) {
+					const files = [
+						'basis_transcoder.js',
+						'basis_transcoder.wasm',
+						'msc_basis_transcoder.js',
+						'msc_basis_transcoder.wasm',
+					];
+					for (let file of files) {
+						const storedUrl = `${BASISPath}/${file}`;
+						const fullUrl = `${decoder_path}${file}`;
+						Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
+					}
 				}
 
 				BASISLoader.setTranscoderPath(decoder_path);
@@ -271,7 +273,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 
 			// add source as is
 			const original_source = document.createElement('source');
-			const original_ext = CoreLoaderTexture.get_extension(url) as keyof VideoSourceTypeByExt;
+			const original_ext = CoreBaseLoader.extension(url) as keyof VideoSourceTypeByExt;
 			let type: string = CoreLoaderTexture.VIDEO_SOURCE_TYPE_BY_EXT[original_ext];
 			type = type || CoreLoaderTexture._default_video_source_type(url);
 			original_source.setAttribute('type', type);
@@ -282,13 +284,13 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			let secondary_url = url;
 			if (original_ext == 'mp4') {
 				// add ogv
-				secondary_url = CoreLoaderTexture.replace_extension(url, 'ogv');
+				secondary_url = CoreLoaderTexture.replaceExtension(url, 'ogv');
 			} else {
 				// add mp4
-				secondary_url = CoreLoaderTexture.replace_extension(url, 'mp4');
+				secondary_url = CoreLoaderTexture.replaceExtension(url, 'mp4');
 			}
 			const secondary_source = document.createElement('source');
-			const secondary_ext = CoreLoaderTexture.get_extension(secondary_url) as keyof VideoSourceTypeByExt;
+			const secondary_ext = CoreBaseLoader.extension(secondary_url) as keyof VideoSourceTypeByExt;
 			type = CoreLoaderTexture.VIDEO_SOURCE_TYPE_BY_EXT[secondary_ext];
 			type = type || CoreLoaderTexture._default_video_source_type(url);
 			secondary_source.setAttribute('type', type);
@@ -297,7 +299,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		});
 	}
 	static _default_video_source_type(url: string) {
-		const ext = this.get_extension(url);
+		const ext = CoreBaseLoader.extension(url);
 		return `video/${ext}`;
 	}
 
@@ -366,12 +368,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 	// 	attrib.needsUpdate = true;
 	// }
 
-	static get_extension(url: string) {
-		const url_without_params = url.split('?')[0];
-		const elements = url_without_params.split('.');
-		return elements[elements.length - 1].toLowerCase();
-	}
-	static replace_extension(url: string, new_extension: string) {
+	static replaceExtension(url: string, new_extension: string) {
 		const elements = url.split('?');
 		const url_without_params = elements[0];
 		const url_elements = url_without_params.split('.');
@@ -379,30 +376,6 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		url_elements.push(new_extension);
 		return [url_elements.join('.'), elements[1]].join('?');
 	}
-
-	static set_texture_for_mapping(texture: Texture) {
-		// let val = texture['wrapS']
-		// Object.defineProperty(texture, 'wrapS', {
-		// 	get () {
-		// 		return val // Simply return the cached value
-		// 	},
-		// 	set (newVal) {
-		// 		val = newVal // Save the newVal
-		// 	}
-		// })
-
-		// texture.wrapS = RepeatWrapping
-		// texture.wrapT = RepeatWrapping
-		return texture;
-	}
-
-	// static async set_texture_for_env(texture: Texture, registerer: BaseNode) {
-	// 	if (registerer._registered_env_map) {
-	// 		POLY.renderers_controller.deregister_env_map(registerer._registered_env_map);
-	// 	}
-	// 	registerer._registered_env_map = await POLY.renderers_controller.register_env_map(texture);
-	// 	return registerer._registered_env_map;
-	// }
 
 	//
 	//

@@ -55,7 +55,7 @@ export class Cooker {
 		// }
 	}
 	private _process_item(original_trigger_graph_node: CoreGraphNode | undefined, id: CoreGraphNodeId) {
-		const node = this._scene.graph.node_from_id(id);
+		const node = this._scene.graph.nodeFromId(id);
 		if (node) {
 			this._queue.delete(id);
 			node.dirtyController.run_post_dirty_hooks(original_trigger_graph_node);

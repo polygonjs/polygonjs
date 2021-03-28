@@ -25,6 +25,7 @@ import {FileType} from '../../params/utils/OptionsController';
 import {CopFileTypeController} from './utils/FileTypeController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {CoreBaseLoader} from '../../../core/loader/_Base';
 
 export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -87,7 +88,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}
-		const ext = CoreLoaderTexture.get_extension(this.pv.url || '');
+		const ext = CoreBaseLoader.extension(this.pv.url || '');
 		return CoreLoaderTexture.module_names(ext);
 	}
 
@@ -198,7 +199,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	private async _load_texture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
 		const url_param = this.p.url;
-		this._texture_loader = this._texture_loader || new CoreLoaderTexture(this, url_param, url, this.scene());
+		this._texture_loader = this._texture_loader || new CoreLoaderTexture(url, url_param, this, this.scene());
 		try {
 			texture = await this._texture_loader.load_texture_from_url_or_op({
 				tdataType: this.pv.ttype && this.pv.tadvanced,

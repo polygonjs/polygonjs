@@ -247,7 +247,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	}
 
 	private _loadFont() {
-		const loader = new CoreLoaderFont(this.pv.font, this.scene());
+		const loader = new CoreLoaderFont(this.pv.font, this.scene(), this);
 		return loader.load();
 	}
 	async requiredModules() {

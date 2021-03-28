@@ -59,7 +59,7 @@ export class TextureVariable {
 		const names: string[] = [];
 		if (this._graph_node_ids) {
 			this._graph_node_ids.forEach((boolean, node_id) => {
-				const name = scene.graph.node_from_id(node_id)?.name();
+				const name = scene.graph.nodeFromId(node_id)?.name();
 				if (name) {
 					names.push(name);
 				}

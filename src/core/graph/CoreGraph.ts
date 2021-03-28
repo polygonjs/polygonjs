@@ -34,35 +34,35 @@ export class CoreGraph {
 		return this._scene;
 	}
 
-	next_id(): CoreGraphNodeId {
+	nextId(): CoreGraphNodeId {
 		this._next_id += 1;
 		return this._next_id;
 	}
 
-	nodes_from_ids(ids: number[]) {
+	nodesFromIds(ids: number[]) {
 		const nodes: CoreGraphNode[] = [];
 		for (let id of ids) {
-			const node = this.node_from_id(id);
+			const node = this.nodeFromId(id);
 			if (node) {
 				nodes.push(node);
 			}
 		}
 		return nodes;
 	}
-	node_from_id(id: number): CoreGraphNode | undefined {
+	nodeFromId(id: number): CoreGraphNode | undefined {
 		return this._nodes_by_id.get(id);
 	}
-	has_node(node: CoreGraphNode): boolean {
+	hasNode(node: CoreGraphNode): boolean {
 		return this._nodes_by_id.get(node.graphNodeId()) != null;
 	}
-	add_node(node: CoreGraphNode) {
+	addNode(node: CoreGraphNode) {
 		this._nodes_by_id.set(node.graphNodeId(), node);
 		this._nodesCount += 1;
 		if (this._debugging) {
 			this._addedNodesDuringDebugging.set(node.graphNodeId(), node);
 		}
 	}
-	remove_node(node: CoreGraphNode) {
+	removeNode(node: CoreGraphNode) {
 		this._nodes_by_id.delete(node.graphNodeId());
 		this._successors.delete(node.graphNodeId());
 		this._predecessors.delete(node.graphNodeId());
@@ -79,7 +79,7 @@ export class CoreGraph {
 		const src_id = src.graphNodeId();
 		const dest_id = dest.graphNodeId();
 
-		if (this.has_node(src) && this.has_node(dest)) {
+		if (this.hasNode(src) && this.hasNode(dest)) {
 			// this._graph.setEdge(src_id, dest_id);
 
 			// if check_if_graph_may_have_cycle is passed as false, that means we never check.
@@ -92,14 +92,14 @@ export class CoreGraph {
 			let graph_would_have_cycle = false;
 			if (check_if_graph_may_have_cycle) {
 				// graph_has_cycle = !alg.isAcyclic(this._graph);
-				graph_would_have_cycle = this._has_predecessor(src_id, dest_id);
+				graph_would_have_cycle = this._hasPredecessor(src_id, dest_id);
 			}
 
 			if (graph_would_have_cycle) {
 				// this._graph.removeEdge(src_id, dest_id);
 				return false;
 			} else {
-				this._create_connection(src_id, dest_id);
+				this._createConnection(src_id, dest_id);
 				src.dirtyController.clear_successors_cache_with_predecessors();
 
 				return true;
@@ -118,20 +118,20 @@ export class CoreGraph {
 
 		src.dirtyController.clear_successors_cache_with_predecessors();
 	}
-	disconnect_predecessors(node: CoreGraphNode) {
+	disconnectPredecessors(node: CoreGraphNode) {
 		const predecessors = this.predecessors(node);
 		for (let predecessor of predecessors) {
 			this.disconnect(predecessor, node);
 		}
 	}
-	disconnect_successors(node: CoreGraphNode) {
+	disconnectSuccessors(node: CoreGraphNode) {
 		const successors = this.successors(node);
 		for (let successor of successors) {
 			this.disconnect(node, successor);
 		}
 	}
 
-	predecessor_ids(id: CoreGraphNodeId): CoreGraphNodeId[] {
+	predecessorIds(id: CoreGraphNodeId): CoreGraphNodeId[] {
 		const map = this._predecessors.get(id);
 		if (map) {
 			const ids: CoreGraphNodeId[] = [];
@@ -143,10 +143,10 @@ export class CoreGraph {
 		return [];
 	}
 	predecessors(node: CoreGraphNode) {
-		const ids = this.predecessor_ids(node.graphNodeId());
-		return this.nodes_from_ids(ids);
+		const ids = this.predecessorIds(node.graphNodeId());
+		return this.nodesFromIds(ids);
 	}
-	successor_ids(id: CoreGraphNodeId): CoreGraphNodeId[] {
+	successorIds(id: CoreGraphNodeId): CoreGraphNodeId[] {
 		const map = this._successors.get(id);
 		if (map) {
 			const ids: CoreGraphNodeId[] = [];
@@ -158,24 +158,24 @@ export class CoreGraph {
 		return [];
 	}
 	successors(node: CoreGraphNode): CoreGraphNode[] {
-		const ids = this.successor_ids(node.graphNodeId()) || [];
-		return this.nodes_from_ids(ids);
+		const ids = this.successorIds(node.graphNodeId()) || [];
+		return this.nodesFromIds(ids);
 	}
-	all_predecessor_ids(node: CoreGraphNode): CoreGraphNodeId[] {
-		return this.all_next_ids(node, 'predecessor_ids');
+	allPredecessorIds(node: CoreGraphNode): CoreGraphNodeId[] {
+		return this.allNextIds(node, 'predecessorIds');
 	}
-	all_successor_ids(node: CoreGraphNode): CoreGraphNodeId[] {
-		return this.all_next_ids(node, 'successor_ids');
+	allSuccessorIds(node: CoreGraphNode): CoreGraphNodeId[] {
+		return this.allNextIds(node, 'successorIds');
 	}
-	all_predecessors(node: CoreGraphNode): CoreGraphNode[] {
-		const ids = this.all_predecessor_ids(node);
-		return this.nodes_from_ids(ids);
+	allPredecessors(node: CoreGraphNode): CoreGraphNode[] {
+		const ids = this.allPredecessorIds(node);
+		return this.nodesFromIds(ids);
 	}
-	all_successors(node: CoreGraphNode): CoreGraphNode[] {
-		const ids = this.all_successor_ids(node);
-		return this.nodes_from_ids(ids);
+	allSuccessors(node: CoreGraphNode): CoreGraphNode[] {
+		const ids = this.allSuccessorIds(node);
+		return this.nodesFromIds(ids);
 	}
-	private _create_connection(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId) {
+	private _createConnection(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId) {
 		// set successors
 		let node_successors = this._successors.get(src_id);
 		if (!node_successors) {
@@ -214,7 +214,7 @@ export class CoreGraph {
 		}
 	}
 
-	private all_next_ids(node: CoreGraphNode, method: 'successor_ids' | 'predecessor_ids'): CoreGraphNodeId[] {
+	private allNextIds(node: CoreGraphNode, method: 'successorIds' | 'predecessorIds'): CoreGraphNodeId[] {
 		const ids_by_id: Map<CoreGraphNodeId, boolean> = new Map();
 		const ids: CoreGraphNodeId[] = [];
 		let next_ids = this[method](node.graphNodeId());
@@ -241,14 +241,14 @@ export class CoreGraph {
 		return ids;
 	}
 
-	private _has_predecessor(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId): boolean {
-		const ids = this.predecessor_ids(src_id);
+	private _hasPredecessor(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId): boolean {
+		const ids = this.predecessorIds(src_id);
 		if (ids) {
 			if (ids.includes(dest_id)) {
 				return true;
 			} else {
 				for (let id of ids) {
-					return this._has_predecessor(id, dest_id);
+					return this._hasPredecessor(id, dest_id);
 				}
 			}
 		}

@@ -7,8 +7,8 @@ export class CoreGraphNode {
 	private _graph_node_id: CoreGraphNodeId;
 	private _dirty_controller: DirtyController = new DirtyController(this);
 	constructor(protected _scene: PolyScene, protected _name: string) {
-		this._graph_node_id = _scene.graph.next_id();
-		_scene.graph.add_node(this);
+		this._graph_node_id = _scene.graph.nextId();
+		_scene.graph.addNode(this);
 		this._graph = _scene.graph;
 	}
 
@@ -66,7 +66,7 @@ export class CoreGraphNode {
 	//
 
 	graphRemove() {
-		this._graph.remove_node(this);
+		this._graph.removeNode(this);
 	}
 
 	addGraphInput(src: CoreGraphNode, check_if_graph_has_cycle = true): boolean {
@@ -77,14 +77,14 @@ export class CoreGraphNode {
 	}
 
 	graphDisconnectPredecessors() {
-		this._graph.disconnect_predecessors(this);
+		this._graph.disconnectPredecessors(this);
 	}
 	graphDisconnectSuccessors() {
-		this._graph.disconnect_successors(this);
+		this._graph.disconnectSuccessors(this);
 	}
 
 	graphPredecessorIds(): CoreGraphNodeId[] {
-		return this._graph.predecessor_ids(this._graph_node_id) || [];
+		return this._graph.predecessorIds(this._graph_node_id) || [];
 	}
 	graphPredecessors(): CoreGraphNode[] {
 		return this._graph.predecessors(this);
@@ -93,9 +93,9 @@ export class CoreGraphNode {
 		return this._graph.successors(this);
 	}
 	graphAllPredecessors(): CoreGraphNode[] {
-		return this._graph.all_predecessors(this);
+		return this._graph.allPredecessors(this);
 	}
 	graphAllSuccessors(): CoreGraphNode[] {
-		return this._graph.all_successors(this);
+		return this._graph.allSuccessors(this);
 	}
 }

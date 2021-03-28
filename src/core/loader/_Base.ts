@@ -1,5 +1,6 @@
 import {LoadingManager} from 'three/src/loaders/LoadingManager';
-import {PolyScene} from '../../engine/index_all';
+import {PolyScene} from '../../engine/scene/PolyScene';
+import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
 
 const LOADING_MANAGER = new LoadingManager();
@@ -12,23 +13,51 @@ export class CoreBaseLoader {
 	static readonly loadingManager = LOADING_MANAGER;
 	public readonly loadingManager = LOADING_MANAGER;
 
-	constructor(protected url: string, protected scene: PolyScene) {}
+	constructor(protected _url: string, protected _scene: PolyScene, protected _node?: BaseNodeType) {}
+
+	static extension(url: string) {
+		let ext: string | null = null;
+
+		try {
+			const _url = new URL(url);
+			ext = _url.searchParams.get('ext');
+		} catch (e) {}
+		// the loader checks first an 'ext' in the query params
+		// for urls such as http://domain.com/file?path=geometry.obj&t=aaa&ext=obj
+		// to know what extension it is, since it may not be before the '?'.
+		// But if there is not, the part before the '?' is used
+		if (!ext) {
+			const url_without_params = url.split('?')[0];
+			const elements = url_without_params.split('.');
+			ext = elements[elements.length - 1].toLowerCase();
+			// if (this.ext === 'zip') {
+			// 	this.ext = elements[elements.length - 2];
+			// }
+		}
+		return ext;
+	}
+
+	extension() {
+		return CoreBaseLoader.extension(this._url);
+	}
 
 	protected async _urlToLoad(): Promise<string> {
-		let fullUrl = this.url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
-		const storedUrl = this.url.split('?')[0];
+		let fullUrl = this._url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+		const storedUrl = this._url.split('?')[0];
 		// const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
 		// if (blobUrl) {
 		// 	resolvedUrl = blobUrl;
 		// } else {
 		if (fullUrl[0] != 'h') {
-			const assets_root = this.scene.assets.root();
+			const assets_root = this._scene.assets.root();
 			if (assets_root) {
 				fullUrl = `${assets_root}${fullUrl}`;
 			}
 		}
 		// }
-		await Poly.blobs.fetchBlob({storedUrl, fullUrl});
+		if (this._node) {
+			await Poly.blobs.fetchBlob({storedUrl, fullUrl, node: this._node});
+		}
 		const blobUrl = Poly.blobs.blobUrl(storedUrl);
 		return blobUrl || fullUrl;
 	}

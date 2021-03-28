@@ -14,6 +14,7 @@ import {FileSopOperation} from '../../operations/sop/File';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreBaseLoader} from '../../../core/loader/_Base';
 const DEFAULT = FileSopOperation.DEFAULT_PARAMS;
 class FileSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
@@ -38,7 +39,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}
-		const ext = CoreLoaderGeometry.get_extension(this.pv.url || '');
+		const ext = CoreBaseLoader.extension(this.pv.url || '');
 		return CoreLoaderGeometry.module_names(ext);
 	}
 
@@ -61,7 +62,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: FileSopOperation | undefined;
 	async cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new FileSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new FileSopOperation(this.scene(), this.states, this);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

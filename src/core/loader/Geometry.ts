@@ -9,11 +9,11 @@ import {Points} from 'three/src/objects/Points';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
-import {PolyScene} from '../../engine/scene/PolyScene';
 import {DRACOLoader} from '../../modules/three/examples/jsm/loaders/DRACOLoader';
 import {GLTFLoader} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
 import {CoreUserAgent} from '../UserAgent';
 import {CoreBaseLoader} from './_Base';
+import {BaseNodeType} from '../../engine/nodes/_Base';
 
 enum GeometryExtension {
 	DRC = 'drc',
@@ -41,39 +41,9 @@ interface PdbObject {
 }
 type MaxConcurrentLoadsCountMethod = () => number;
 export class CoreLoaderGeometry extends CoreBaseLoader {
-	public readonly ext: string;
-
 	private static _default_mat_mesh = new MeshLambertMaterial();
 	private static _default_mat_point = new PointsMaterial();
 	private static _default_mat_line = new LineBasicMaterial();
-
-	constructor(url: string, scene: PolyScene) {
-		super(url, scene);
-		this.ext = CoreLoaderGeometry.get_extension(url);
-	}
-
-	static get_extension(url: string) {
-		let _url: URL;
-		let ext: string | null = null;
-
-		try {
-			_url = new URL(url);
-			ext = _url.searchParams.get('ext');
-		} catch (e) {}
-		// the loader checks first an 'ext' in the query params
-		// for urls such as http://domain.com/file?path=geometry.obj&t=aaa&ext=obj
-		// to know what extension it is, since it may not be before the '?'.
-		// But if there is not, the part before the '?' is used
-		if (!ext) {
-			const url_without_params = url.split('?')[0];
-			const elements = url_without_params.split('.');
-			ext = elements[elements.length - 1].toLowerCase();
-			// if (this.ext === 'zip') {
-			// 	this.ext = elements[elements.length - 2];
-			// }
-		}
-		return ext;
-	}
 
 	load(on_success: (objects: Object3D[]) => void, on_error: (error: string) => void) {
 		this.load_auto()
@@ -88,8 +58,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	private load_auto(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			const url = await this._urlToLoad();
-
-			if (this.ext == 'json') {
+			const ext = this.extension();
+			if (ext == 'json') {
 				CoreLoaderGeometry.increment_in_progress_loads_count();
 				await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 				fetch(url)
@@ -126,7 +96,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 						}
 					);
 				} else {
-					const error_message = `format not supported (${this.ext})`;
+					const error_message = `format not supported (${ext})`;
 					reject(error_message);
 				}
 			}
@@ -137,8 +107,10 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		// if(object.animations){
 		// 	await CoreScriptLoader.load('/three/js/utils/SkeletonUtils')
 		// }
+		const ext = this.extension();
+
 		if (object instanceof Object3D) {
-			switch (this.ext) {
+			switch (ext) {
 				case GeometryExtension.GLTF:
 					return this.on_load_succes_gltf(object);
 				case GeometryExtension.GLB:
@@ -154,7 +126,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			}
 		}
 		if (object instanceof BufferGeometry) {
-			switch (this.ext) {
+			switch (ext) {
 				case GeometryExtension.DRC:
 					return this.on_load_succes_drc(object);
 				default:
@@ -163,7 +135,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		}
 
 		// if it's an object, such as returned by glb or pdb
-		switch (this.ext) {
+		switch (ext) {
 			case GeometryExtension.GLTF:
 				return this.on_load_succes_gltf(object);
 			case GeometryExtension.GLB:
@@ -216,7 +188,9 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	}
 
 	loader_for_ext() {
-		switch (this.ext.toLowerCase()) {
+		const ext = this.extension();
+
+		switch (ext.toLowerCase()) {
 			case GeometryExtension.DRC:
 				return this.loader_for_drc();
 			case GeometryExtension.FBX:
@@ -256,11 +230,15 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			if (root || DRACOPath) {
 				const decoder_path = `${root || ''}${DRACOPath || ''}/`;
 
-				const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
-				for (let file of files) {
-					const storedUrl = `${DRACOPath}/${file}`;
-					const fullUrl = `${decoder_path}${file}`;
-					Poly.blobs.fetchBlob({storedUrl, fullUrl});
+				const node = this._node;
+				if (node) {
+					const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+					for (let file of files) {
+						const storedUrl = `${DRACOPath}/${file}`;
+						const fullUrl = `${decoder_path}${file}`;
+
+						Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
+					}
 				}
 
 				draco_loader.setDecoderPath(decoder_path);
@@ -275,7 +253,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 
 	private static gltf_loader: GLTFLoader | undefined;
 	private static draco_loader: DRACOLoader | undefined;
-	static loader_for_glb() {
+	static loader_for_glb(node?: BaseNodeType) {
 		const GLTFLoader = Poly.modulesRegister.module(ModuleName.GLTFLoader);
 		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (GLTFLoader && DRACOLoader) {
@@ -286,11 +264,13 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			if (root || DRACOGLTFPath) {
 				const decoder_path = `${root || ''}${DRACOGLTFPath || ''}/`;
 
-				const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
-				for (let file of files) {
-					const storedUrl = `${DRACOGLTFPath}/${file}`;
-					const fullUrl = `${decoder_path}${file}`;
-					Poly.blobs.fetchBlob({storedUrl, fullUrl});
+				if (node) {
+					const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+					for (let file of files) {
+						const storedUrl = `${DRACOGLTFPath}/${file}`;
+						const fullUrl = `${decoder_path}${file}`;
+						Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
+					}
 				}
 
 				this.draco_loader.setDecoderPath(decoder_path);

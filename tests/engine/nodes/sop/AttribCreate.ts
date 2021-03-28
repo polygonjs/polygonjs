@@ -352,7 +352,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	let container;
 	container = await bbox_scatter1.requestContainer();
 	let core_group = container.coreContent()!;
-	assert.equal(core_group.points().length, 8);
+	assert.equal(core_group.points().length, 27);
 	assert.less_than(bbox_scatter1.cookController.cook_time, 20);
 
 	container = await attrib_create1.requestContainer();
@@ -365,7 +365,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	bbox_scatter1.p.stepSize.set(0.1);
 	container = await attrib_create1.requestContainer();
 	core_group = container.coreContent()!;
-	assert.equal(core_group.points().length, 1000);
+	assert.equal(core_group.points().length, 1331);
 
 	assert.less_than(attrib_create1.cookController.cook_time, 80);
 
@@ -380,7 +380,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	const attrib_create2 = scene2.node(attrib_create1.fullPath()) as AttribCreateSopNode;
 	container = await attrib_create2.requestContainer();
 	core_group = container.coreContent()!;
-	assert.equal(core_group.points().length, 1000);
+	assert.equal(core_group.points().length, 1331);
 });
 
 QUnit.test('attrib create for string on vertices with expr', async (assert) => {

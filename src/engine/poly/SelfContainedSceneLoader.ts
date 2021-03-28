@@ -5,7 +5,7 @@ import {BlobUrlData} from './BlobsController';
 import {ViewerData, ViewerDataByElement, UnzippedData} from './Common';
 import {DomEffects} from '../../core/DomEffects';
 import {SelfContainedFileName} from '../io/self_contained/Common';
-import {PolyScene} from '../index_all';
+import {PolyScene} from '../scene/PolyScene';
 
 type SceneJsonImporterContructor = typeof SceneJsonImporter;
 

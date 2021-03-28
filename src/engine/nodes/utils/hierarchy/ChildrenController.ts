@@ -318,7 +318,7 @@ export class HierarchyChildrenController {
 		const graph = this.node.scene().graph;
 		const nodes: BaseNodeType[] = [];
 		for (let node_id of node_ids) {
-			const node = graph.node_from_id(node_id) as BaseNodeType;
+			const node = graph.nodeFromId(node_id) as BaseNodeType;
 			if (node) {
 				nodes.push(node);
 			}

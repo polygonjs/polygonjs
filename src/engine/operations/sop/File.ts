@@ -21,7 +21,7 @@ export class FileSopOperation extends BaseSopOperation {
 	}
 
 	cook(input_contents: CoreGroup[], params: FileSopParams): Promise<CoreGroup> {
-		const loader = new CoreLoaderGeometry(params.url, this.scene());
+		const loader = new CoreLoaderGeometry(params.url, this.scene(), this._node);
 
 		return new Promise((resolve) => {
 			loader.load(

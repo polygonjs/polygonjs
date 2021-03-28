@@ -308,7 +308,6 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		params.logarithmicDepthBuffer = isBooleanTrue(this.pv.logarithmicDepthBuffer);
 		params.canvas = canvas;
 		params.context = gl;
-		console.log(params);
 		// (params as WebGLRendererParameters).preserveDrawingBuffer = this.pv.preserve_drawing_buffer;
 		const renderer = Poly.renderersController.createWebGLRenderer(params);
 

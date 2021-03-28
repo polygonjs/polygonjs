@@ -61,6 +61,7 @@ export const CATEGORY_MAT = {
 };
 export const CATEGORY_OBJ = {
 	ADVANCED: 'advanced',
+	AUDIO: 'audio',
 	CAMERA: 'cameras',
 	GEOMETRY: 'geometries',
 	LIGHT: 'lights',

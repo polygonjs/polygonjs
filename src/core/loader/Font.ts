@@ -4,20 +4,19 @@ import {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreBaseLoader} from './_Base';
 import {Font} from 'three/src/extras/core/Font';
 import {FontLoader} from 'three/src/loaders/FontLoader';
+import {BaseNodeType} from '../../engine/nodes/_Base';
 
 export class CoreLoaderFont extends CoreBaseLoader {
-	public readonly ext: string;
 	private _font_loader: FontLoader;
 
-	constructor(url: string, scene: PolyScene) {
-		super(url, scene);
+	constructor(url: string, scene: PolyScene, _node?: BaseNodeType) {
+		super(url, scene, _node);
 
-		this.ext = CoreLoaderFont.getExtension(url);
 		this._font_loader = new FontLoader(this.loadingManager);
 	}
 
 	async load() {
-		const ext = CoreLoaderFont.getExtension(this.url);
+		const ext = this.extension();
 		const url = await this._urlToLoad();
 		switch (ext) {
 			case 'ttf': {
@@ -31,14 +30,8 @@ export class CoreLoaderFont extends CoreBaseLoader {
 			}
 		}
 	}
-
-	static getExtension(url: string) {
-		const elements1 = url.split('?')[0];
-		const elements2 = elements1.split('.');
-		return elements2[elements2.length - 1];
-	}
 	static requiredModules(url: string) {
-		const ext = CoreLoaderFont.getExtension(url);
+		const ext = this.extension(url);
 		switch (ext) {
 			case 'ttf': {
 				return [ModuleName.TTFLoader];

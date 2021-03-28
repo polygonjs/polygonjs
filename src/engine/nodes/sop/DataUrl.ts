@@ -133,12 +133,17 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	//
 	//
 	private _load_json() {
-		const loader = new JsonDataLoader(this._url(), this.scene(), {
-			dataKeysPrefix: this.pv.jsonDataKeysPrefix,
-			skipEntries: this.pv.skipEntries,
-			doConvert: isBooleanTrue(this.pv.convert),
-			convertToNumeric: this.pv.convertToNumeric,
-		});
+		const loader = new JsonDataLoader(
+			this._url(),
+			this.scene(),
+			{
+				dataKeysPrefix: this.pv.jsonDataKeysPrefix,
+				skipEntries: this.pv.skipEntries,
+				doConvert: isBooleanTrue(this.pv.convert),
+				convertToNumeric: this.pv.convertToNumeric,
+			},
+			this
+		);
 
 		loader.load(this._on_load.bind(this), undefined, this._on_error.bind(this));
 	}

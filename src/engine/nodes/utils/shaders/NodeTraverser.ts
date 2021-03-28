@@ -93,7 +93,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		this._leaves_graph_id.get(this._shader_name)?.forEach((value: boolean, key: CoreGraphNodeId) => {
 			node_ids.push(key);
 		});
-		return this._graph.nodes_from_ids(node_ids) as NodeTypeMap[NC][];
+		return this._graph.nodesFromIds(node_ids) as NodeTypeMap[NC][];
 	}
 
 	nodes_for_shader_name(shader_name: ShaderName) {
@@ -110,7 +110,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 				graph_ids_for_depth.forEach((graph_id: CoreGraphNodeId) => {
 					const is_present = this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id);
 					if (is_present) {
-						const node = this._graph.node_from_id(graph_id) as NodeTypeMap[NC];
+						const node = this._graph.nodeFromId(graph_id) as NodeTypeMap[NC];
 
 						this.add_nodes_with_children(node, node_id_used_state, nodes, shader_name);
 					}
@@ -131,7 +131,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
 				for (let graph_id of graph_ids_for_depth) {
-					const node = this._graph.node_from_id(graph_id) as NodeTypeMap[NC];
+					const node = this._graph.nodeFromId(graph_id) as NodeTypeMap[NC];
 					if (node) {
 						this.add_nodes_with_children(node, node_id_used_state, nodes);
 					}
@@ -183,7 +183,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 						? this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id)
 						: true;
 					if (is_present) {
-						const node = this._graph.node_from_id(graph_id) as NodeTypeMap[NC];
+						const node = this._graph.nodeFromId(graph_id) as NodeTypeMap[NC];
 						if (node.parent() == parent) {
 							nodes.push(node);
 						}
@@ -228,9 +228,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		const inputs = this._find_inputs_or_children(node) as NodeTypeMap[NC][];
 		const compact_inputs: NodeTypeMap[NC][] = ArrayUtils.compact(inputs);
 		const input_graph_ids = ArrayUtils.uniq(compact_inputs.map((n) => n.graphNodeId()));
-		const unique_inputs = input_graph_ids.map((graph_id) =>
-			this._graph.node_from_id(graph_id)
-		) as NodeTypeMap[NC][];
+		const unique_inputs = input_graph_ids.map((graph_id) => this._graph.nodeFromId(graph_id)) as NodeTypeMap[NC][];
 		if (unique_inputs.length > 0) {
 			for (let input of unique_inputs) {
 				MapUtils.push_on_array_at_entry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
