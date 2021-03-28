@@ -21,7 +21,7 @@ class MessageParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MessageParamsConfig();
 
 export class MessageEventNode extends TypedEventNode<MessageParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'message';

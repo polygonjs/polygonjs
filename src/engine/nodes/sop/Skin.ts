@@ -17,7 +17,7 @@ class SkinSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SkinSopParamsConfig();
 
 export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'skin';
 	}

@@ -35,7 +35,7 @@ class AttribFromTextureSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribFromTextureSopParamsConfig();
 
 export class AttribFromTextureSopNode extends TypedSopNode<AttribFromTextureSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribFromTexture';
 	}

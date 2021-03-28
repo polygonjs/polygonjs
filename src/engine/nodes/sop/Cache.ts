@@ -26,7 +26,7 @@ class CacheSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CacheSopParamsConfig();
 
 export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'cache';
 	}

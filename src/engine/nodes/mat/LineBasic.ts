@@ -24,7 +24,7 @@ class LineBasicMatParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfi
 const ParamsConfig = new LineBasicMatParamsConfig();
 
 export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'lineBasic';
 	}

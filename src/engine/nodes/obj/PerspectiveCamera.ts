@@ -51,7 +51,7 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 	PerspectiveCamera,
 	PerspectiveCameraObjParamConfig
 > {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<CameraNodeType.PERSPECTIVE> {
 		return CameraNodeType.PERSPECTIVE;
 	}

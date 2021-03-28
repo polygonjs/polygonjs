@@ -44,7 +44,7 @@ class TransformResetSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new TransformResetSopParamConfig();
 
 export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'transformReset';
 	}

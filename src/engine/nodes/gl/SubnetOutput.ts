@@ -8,7 +8,7 @@ class SubnetOutputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputGlParamsConfig();
 
 export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<NetworkChildNodeType.OUTPUT> {
 		return NetworkChildNodeType.OUTPUT;
 	}

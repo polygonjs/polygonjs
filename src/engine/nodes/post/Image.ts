@@ -38,7 +38,7 @@ class ImagePostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ImagePostParamsConfig();
 export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'image';
 	}

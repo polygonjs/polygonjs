@@ -39,7 +39,7 @@ class HierarchySopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new HierarchySopParamsConfig();
 
 export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'hierarchy';
 	}

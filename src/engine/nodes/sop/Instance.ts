@@ -30,7 +30,7 @@ class InstanceSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new InstanceSopParamsConfig();
 
 export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'instance';
 	}

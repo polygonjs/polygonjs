@@ -32,7 +32,7 @@ class TorusSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TorusSopParamsConfig();
 
 export class TorusSopNode extends TypedSopNode<TorusSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'torus';
 	}

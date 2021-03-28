@@ -88,7 +88,7 @@ class MeshStandardMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshStandardMatParamsConfig();
 
 export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, MeshStandardMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshStandard';
 	}

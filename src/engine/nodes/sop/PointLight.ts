@@ -41,7 +41,7 @@ class PointLightSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PointLightSopParamsConfig();
 
 export class PointLightSopNode extends TypedSopNode<PointLightSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'pointLight';
 	}

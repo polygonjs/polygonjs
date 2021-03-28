@@ -22,7 +22,7 @@ class TimerEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TimerEventParamsConfig();
 
 export class DelayEventNode extends TypedEventNode<TimerEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'delay';
 	}

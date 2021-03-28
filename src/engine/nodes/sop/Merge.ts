@@ -33,13 +33,16 @@ class MergeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MergeSopParamsConfig();
 
 export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'merge';
 	}
 
 	static displayedInputNames(): string[] {
 		return [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
+	}
+	setCompactMode(compact: boolean) {
+		this.p.compact.set(compact);
 	}
 
 	initializeNode() {

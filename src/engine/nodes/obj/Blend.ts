@@ -64,7 +64,7 @@ class BlendObjParamConfig extends NodeParamsConfig {
 const ParamsConfig = new BlendObjParamConfig();
 
 export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'blend';
 	}

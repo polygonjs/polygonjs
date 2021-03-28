@@ -78,7 +78,7 @@ class RivetObjParamConfig extends NodeParamsConfig {
 const ParamsConfig = new RivetObjParamConfig();
 
 export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'rivet'> {
 		return 'rivet';
 	}

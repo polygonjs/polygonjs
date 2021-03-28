@@ -19,7 +19,7 @@ class CameraDeviceOrientationControlsEventParamsConfig extends NodeParamsConfig 
 const ParamsConfig = new CameraDeviceOrientationControlsEventParamsConfig();
 
 export class CameraDeviceOrientationControlsEventNode extends TypedCameraControlsEventNode<CameraDeviceOrientationControlsEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return CameraControlsNodeType.DEVICE_ORIENTATION;
 	}

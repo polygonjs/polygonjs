@@ -33,7 +33,7 @@ class HexagonsSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new HexagonsSopParamsConfig();
 
 export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'hexagons';
 	}

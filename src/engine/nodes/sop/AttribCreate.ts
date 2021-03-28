@@ -91,7 +91,7 @@ class AttribCreateSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new AttribCreateSopParamsConfig();
 export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribCreate';
 	}

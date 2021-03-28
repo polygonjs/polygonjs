@@ -36,7 +36,7 @@ class PositionAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PositionAnimParamsConfig();
 
 export class PositionAnimNode extends TypedAnimNode<PositionAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'position';
 	}

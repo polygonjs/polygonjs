@@ -27,7 +27,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 	const ParamsConfig = new PolyObjParamConfig();
 
 	class BasePolyObjNode extends TypedObjNode<Group, PolyObjParamConfig> {
-		params_config = ParamsConfig;
+		paramsConfig = ParamsConfig;
 		static type() {
 			return node_type;
 		}

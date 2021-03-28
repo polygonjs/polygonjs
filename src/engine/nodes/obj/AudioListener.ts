@@ -16,7 +16,7 @@ class AudioListenerParamConfig extends TransformedParamConfig(NodeParamsConfig) 
 const ParamsConfig = new AudioListenerParamConfig();
 
 export class AudioListenerObjNode extends TypedObjNode<AudioListener, AudioListenerParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return ObjType.AUDIO_LISTENER;
 	}

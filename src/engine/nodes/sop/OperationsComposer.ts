@@ -16,7 +16,7 @@ export interface OperationContainerInputConfig {
 }
 
 export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSopParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return OPERATIONS_COMPOSER_NODE_TYPE;
 	}

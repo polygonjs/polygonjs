@@ -82,7 +82,7 @@ class LayerPass extends Pass {
 class LayerPostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new LayerPostParamsConfig();
 export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'layer';
 	}

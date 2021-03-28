@@ -63,7 +63,7 @@
 // const ParamsConfig = new CodeEventParamsConfig();
 
 // export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
-// 	params_config = ParamsConfig;
+// 	paramsConfig = ParamsConfig;
 
 // 	private _last_compiled_code: string | undefined;
 // 	private _processor: BaseCodeEventProcessor | undefined;

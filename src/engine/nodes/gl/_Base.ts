@@ -131,5 +131,5 @@ export class BaseGlNodeClass extends TypedGlNode<NodeParamsConfig> {}
 class ParamlessParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ParamlessParamsConfig();
 export class ParamlessTypedGlNode extends TypedGlNode<ParamlessParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 }

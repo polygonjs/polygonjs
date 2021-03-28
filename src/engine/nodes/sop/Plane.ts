@@ -31,7 +31,7 @@ class PlaneSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PlaneSopParamsConfig();
 
 export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'plane';
 	}

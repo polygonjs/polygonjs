@@ -26,7 +26,7 @@ class UnrealBloomPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new UnrealBloomPostParamsConfig();
 export class UnrealBloomPostNode extends TypedPostProcessNode<UnrealBloomPass, UnrealBloomPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'unrealBloom';
 	}

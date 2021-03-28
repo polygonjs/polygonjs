@@ -23,7 +23,7 @@ class SubnetInputSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SubnetInputSopParamsConfig();
 
 export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return NetworkChildNodeType.INPUT;
 	}

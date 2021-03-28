@@ -59,7 +59,7 @@ class SphereSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SphereSopParamsConfig();
 
 export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'sphere';
 	}

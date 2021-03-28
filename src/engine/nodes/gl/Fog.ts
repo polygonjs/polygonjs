@@ -17,7 +17,7 @@ class FogGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new FogGlParamsConfig();
 export class FogGlNode extends TypedGlNode<FogGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'fog';
 	}

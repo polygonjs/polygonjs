@@ -20,7 +20,7 @@ class ImpostorUvGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ImpostorUvGlParamsConfig();
 export class ImpostorUvGlNode extends TypedGlNode<ImpostorUvGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'impostorUv';
 	}

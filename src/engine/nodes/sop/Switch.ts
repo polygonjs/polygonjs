@@ -21,7 +21,7 @@ class SwitchSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SwitchSopParamsConfig();
 
 export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'switch';
 	}

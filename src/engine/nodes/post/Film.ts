@@ -45,7 +45,7 @@ class FilmPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new FilmPostParamsConfig();
 export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'film';
 	}

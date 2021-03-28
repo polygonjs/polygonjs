@@ -295,7 +295,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new RaycastParamsConfig();
 
 export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'raycast';

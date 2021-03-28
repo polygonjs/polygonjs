@@ -36,7 +36,7 @@ class CSS3DObjectSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CSS3DObjectSopParamsConfig();
 
 export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'CSS3DObject';
 	}

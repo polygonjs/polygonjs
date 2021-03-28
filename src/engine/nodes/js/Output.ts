@@ -10,7 +10,7 @@ class OutputJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OutputJsParamsConfig();
 
 export class OutputJsNode extends TypedJsNode<OutputJsParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'output';
 	}

@@ -32,7 +32,7 @@ class RaySopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new RaySopParamsConfig();
 
 export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'ray';
 	}

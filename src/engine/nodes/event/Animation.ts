@@ -44,7 +44,7 @@ class AnimationEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AnimationEventParamsConfig();
 
 export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'animation';
 	}

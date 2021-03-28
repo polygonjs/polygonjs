@@ -12,7 +12,7 @@ class CrossGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new CrossGlParamsConfig();
 export class CrossGlNode extends TypedGlNode<CrossGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'cross';
 	}

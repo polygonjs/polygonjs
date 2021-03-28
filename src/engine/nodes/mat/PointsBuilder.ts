@@ -34,7 +34,7 @@ class PointsMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoints, PointsMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'pointsBuilder';
 	}

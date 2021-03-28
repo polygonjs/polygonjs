@@ -16,7 +16,7 @@ class NullObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new NullObjParamConfig();
 
 export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'null';
 	}

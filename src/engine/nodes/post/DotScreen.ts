@@ -34,7 +34,7 @@ class DotScreenPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new DotScreenPostParamsConfig();
 export class DotScreenPostNode extends TypedPostProcessNode<ShaderPass, DotScreenPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'dotScreen';
 	}

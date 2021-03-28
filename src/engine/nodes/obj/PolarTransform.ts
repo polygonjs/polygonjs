@@ -40,7 +40,7 @@ const AXIS_VERTICAL = new Vector3(0, 1, 0);
 const AXIS_HORIZONTAL = new Vector3(-1, 0, 0);
 
 export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObjParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'polarTransform';
 	}

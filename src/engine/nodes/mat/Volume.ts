@@ -21,7 +21,7 @@ class VolumeMatParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new VolumeMatParamsConfig();
 
 export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'volume';
 	}

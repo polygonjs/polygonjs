@@ -24,7 +24,7 @@ class TetrahedronSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TetrahedronSopParamsConfig();
 
 export class TetrahedronSopNode extends TypedSopNode<TetrahedronSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'tetrahedron';
 	}

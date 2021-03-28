@@ -82,7 +82,7 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 const ParamsConfig = new SpotLightObjParamsConfig();
 
 export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, SpotLightObjParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return LightType.SPOT;
 	}

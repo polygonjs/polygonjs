@@ -27,7 +27,7 @@ class FuseSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FuseSopParamsConfig();
 
 export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'fuse';
 	}

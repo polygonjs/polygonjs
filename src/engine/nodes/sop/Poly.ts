@@ -15,7 +15,7 @@ export function createPolySopNode(node_type: string, definition: PolyNodeDefinit
 	}
 	const ParamsConfig = new PolySopParamsConfig();
 	class BasePolySopNode extends SubnetSopNodeLike<PolySopParamsConfig> {
-		params_config = ParamsConfig;
+		paramsConfig = ParamsConfig;
 		static type() {
 			return node_type;
 		}

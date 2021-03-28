@@ -93,7 +93,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	ShaderAssemblerStandard,
 	MeshStandardMatParamsConfig
 > {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshStandardBuilder';
 	}

@@ -97,7 +97,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	ShaderAssemblerPhysical,
 	MeshPhysicalMatParamsConfig
 > {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshPhysicalBuilder';
 	}

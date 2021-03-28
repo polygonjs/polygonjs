@@ -24,7 +24,7 @@ class LineSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new LineSopParamsConfig();
 
 export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'line';
 	}

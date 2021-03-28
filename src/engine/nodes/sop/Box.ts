@@ -26,7 +26,7 @@ class BoxSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BoxSopParamsConfig();
 
 export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'box';
 	}

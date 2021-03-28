@@ -26,7 +26,7 @@ class OperationAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new OperationAnimParamsConfig();
 
 export class OperationAnimNode extends TypedAnimNode<OperationAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'operation';
 	}

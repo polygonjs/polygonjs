@@ -21,7 +21,7 @@ class PeakSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PeakSopParamsConfig();
 
 export class PeakSopNode extends TypedSopNode<PeakSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'peak';
 	}

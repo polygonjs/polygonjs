@@ -172,7 +172,7 @@ class NoiseGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new NoiseGlParamsConfig();
 export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'noise';

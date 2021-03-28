@@ -18,7 +18,7 @@ class LayerSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new LayerSopParamsConfig();
 
 export class LayerSopNode extends TypedSopNode<LayerSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'layer';
 	}

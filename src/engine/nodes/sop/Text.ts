@@ -86,7 +86,7 @@ class TextSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TextSopParamsConfig();
 
 export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'text';
 	}

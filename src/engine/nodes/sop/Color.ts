@@ -47,7 +47,7 @@ class ColorSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ColorSopParamsConfig();
 
 export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'color';
 	}

@@ -39,7 +39,7 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new OutlinePostParamsConfig();
 export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'outline';
 	}

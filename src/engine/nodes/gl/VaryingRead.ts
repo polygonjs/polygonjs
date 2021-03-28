@@ -24,7 +24,7 @@ class VaryingReadGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new VaryingReadGlParamsConfig();
 export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'varyingRead'> {
 		return 'varyingRead';
 	}

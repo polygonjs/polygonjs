@@ -147,7 +147,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 	ShaderMaterialWithUniforms,
 	MeshSubsurfaceScatteringMatParamsConfig
 > {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshSubsurfaceScattering';
 	}

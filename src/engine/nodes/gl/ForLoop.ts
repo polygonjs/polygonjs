@@ -29,7 +29,7 @@ class ForLoopGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ForLoopGlParamsConfig();
 
 export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'forLoop';
 	}

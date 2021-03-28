@@ -13,7 +13,7 @@ class Css3DRendererRopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new Css3DRendererRopParamsConfig();
 
 export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<RopType.CSS3D> {
 		return RopType.CSS3D;
 	}

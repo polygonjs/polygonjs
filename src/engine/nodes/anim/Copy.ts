@@ -11,7 +11,7 @@ class CopyAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CopyAnimParamsConfig();
 
 export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'copy';
 	}

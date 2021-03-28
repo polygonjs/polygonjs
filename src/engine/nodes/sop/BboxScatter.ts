@@ -19,7 +19,7 @@ class BboxScatterSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BboxScatterSopParamsConfig();
 
 export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'bboxScatter';
 	}

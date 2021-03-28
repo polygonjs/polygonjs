@@ -159,7 +159,7 @@ class EasingGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new EasingGlParamsConfig();
 export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'easing';
 	}

@@ -162,7 +162,7 @@ class SubnetGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetGlParamsConfig();
 
 export class SubnetGlNode extends TypedSubnetGlNode<SubnetGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'subnet';
 	}

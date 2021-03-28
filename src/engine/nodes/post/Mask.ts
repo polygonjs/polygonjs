@@ -42,7 +42,7 @@ class MaskPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new MaskPostParamsConfig();
 export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, MaskPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'mask';
 	}

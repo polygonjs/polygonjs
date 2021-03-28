@@ -51,7 +51,7 @@ class PointSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PointSopParamsConfig();
 
 export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'point';
 	}

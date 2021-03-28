@@ -57,7 +57,7 @@ export class AdaptiveToneMappingPostNode extends TypedPostProcessNode<
 	AdaptiveToneMappingPass,
 	AdaptiveToneMappingPostParamsConfig
 > {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'adaptiveToneMapping';
 	}

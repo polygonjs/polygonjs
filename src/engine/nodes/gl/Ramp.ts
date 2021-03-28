@@ -17,7 +17,7 @@ class RampGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new RampGlParamsConfig();
 export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'ramp'> {
 		return 'ramp';
 	}

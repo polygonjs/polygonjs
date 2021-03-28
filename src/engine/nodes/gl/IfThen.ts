@@ -11,7 +11,7 @@ class IfThenGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new IfThenGlParamsConfig();
 
 export class IfThenGlNode extends SubnetGlNode {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'ifThen'> {
 		return 'ifThen';
 	}

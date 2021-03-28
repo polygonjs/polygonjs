@@ -25,7 +25,7 @@ class VaryingWriteGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new VaryingWriteGlParamsConfig();
 export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'varyingWrite'> {
 		return 'varyingWrite';
 	}

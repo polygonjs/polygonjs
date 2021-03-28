@@ -14,7 +14,7 @@ class DelayAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DelayAnimParamsConfig();
 
 export class DelayAnimNode extends TypedAnimNode<DelayAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'delay';
 	}

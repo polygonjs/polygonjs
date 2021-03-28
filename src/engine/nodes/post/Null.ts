@@ -10,7 +10,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class NullPostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullPostParamsConfig();
 export class NullPostNode extends TypedPostProcessNode<Pass, NullPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'null';
 	}

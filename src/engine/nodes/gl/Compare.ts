@@ -71,7 +71,7 @@ class CompareGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new CompareGlParamsConfig();
 export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'compare';
 	}

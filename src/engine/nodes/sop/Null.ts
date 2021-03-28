@@ -14,7 +14,7 @@ class NullSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullSopParamsConfig();
 
 export class NullSopNode extends TypedSopNode<NullSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'null';
 	}

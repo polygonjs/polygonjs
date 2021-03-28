@@ -50,7 +50,7 @@
 // }
 // const ParamsConfig = new CodeSopParamsConfig();
 // export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
-// 	params_config = ParamsConfig;
+// 	paramsConfig = ParamsConfig;
 
 // 	private _last_compiled_code: string | undefined;
 // 	private _processor: BaseCodeSopProcessor | undefined;

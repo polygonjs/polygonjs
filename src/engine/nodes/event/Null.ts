@@ -19,7 +19,7 @@ class NullEventParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullEventParamsConfig();
 
 export class NullEventNode extends TypedEventNode<NullEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'null';
 	}

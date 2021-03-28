@@ -32,7 +32,7 @@ class TubeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TubeSopParamsConfig();
 
 export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'tube';
 	}

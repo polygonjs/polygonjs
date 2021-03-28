@@ -57,7 +57,7 @@ class NormalsSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new NormalsSopParamsConfig();
 
 export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'normals';
 	}

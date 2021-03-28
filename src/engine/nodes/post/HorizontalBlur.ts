@@ -27,7 +27,7 @@ class HorizontalBlurPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new HorizontalBlurPostParamsConfig();
 export class HorizontalBlurPostNode extends TypedPostProcessNode<ShaderPass, HorizontalBlurPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'horizontalBlur';
 	}

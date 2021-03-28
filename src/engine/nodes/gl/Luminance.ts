@@ -10,7 +10,7 @@ class LuminanceGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new LuminanceGlParamsConfig();
 export class LuminanceGlNode extends TypedGlNode<LuminanceGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'luminance';
 	}

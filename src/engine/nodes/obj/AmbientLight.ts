@@ -21,7 +21,7 @@ class AmbientLightObjParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AmbientLightObjParamsConfig();
 
 export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, AmbientLightObjParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'ambientLight';

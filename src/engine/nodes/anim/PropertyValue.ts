@@ -86,7 +86,7 @@ class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PropertyValueAnimParamsConfig();
 
 export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'propertyValue';
 	}

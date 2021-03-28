@@ -25,7 +25,7 @@ class HeightMapSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new HeightMapSopParamsConfig();
 
 export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'heightMap';
 	}

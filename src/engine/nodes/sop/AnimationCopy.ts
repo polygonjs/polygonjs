@@ -14,7 +14,7 @@ class AnimationCopySopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new AnimationCopySopParamsConfig();
 
 export class AnimationCopySopNode extends TypedSopNode<AnimationCopySopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'animationCopy';
 	}

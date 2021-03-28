@@ -112,7 +112,7 @@ const DARKNESS = 1;
 const DEFAULT_RENDER_TARGET_RES = new Vector2(256, 256);
 
 export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'contactShadow'> {
 		return 'contactShadow';
 	}

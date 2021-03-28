@@ -36,7 +36,7 @@ class ConstantGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ConstantGlParamsConfig();
 export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'constant';
 	}

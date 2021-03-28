@@ -28,7 +28,7 @@ class AttribDeleteSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribDeleteSopParamsConfig();
 
 export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribDelete';
 	}

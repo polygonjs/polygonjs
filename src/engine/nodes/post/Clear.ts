@@ -10,7 +10,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class ClearPostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ClearPostParamsConfig();
 export class ClearPostNode extends TypedPostProcessNode<ClearPass, ClearPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'clear';
 	}

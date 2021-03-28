@@ -31,7 +31,7 @@ class FileSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FileSopParamsConfig();
 
 export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'file';
 	}

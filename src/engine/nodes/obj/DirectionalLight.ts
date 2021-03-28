@@ -62,7 +62,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 	DirectionalLight,
 	DirectionalLightObjParamsConfig
 > {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return LightType.DIRECTIONAL;
 	}

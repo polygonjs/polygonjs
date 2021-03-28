@@ -83,7 +83,7 @@ class MeshToonMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshToonMatParamsConfig();
 
 export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshToon';
 	}

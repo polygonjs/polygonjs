@@ -57,7 +57,7 @@ class BuilderCopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BuilderCopParamsConfig();
 
 export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'builder';
 	}

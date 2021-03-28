@@ -24,7 +24,7 @@ class AttribRenameSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribRenameSopParamsConfig();
 
 export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribRename';
 	}

@@ -76,7 +76,7 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ResampleSopParamsConfig();
 
 export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'resample';
 	}

@@ -37,7 +37,7 @@ class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CSS2DRendererRopParamsConfig();
 
 export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<RopType.CSS2D> {
 		return RopType.CSS2D;
 	}

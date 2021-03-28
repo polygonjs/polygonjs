@@ -31,7 +31,7 @@ class ParamJsParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ParamJsParamsConfig();
 
 export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'param';
 	}

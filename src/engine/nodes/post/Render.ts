@@ -38,7 +38,7 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new RenderPostParamsConfig();
 export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'render';
 	}

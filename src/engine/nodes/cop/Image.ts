@@ -37,7 +37,7 @@ class ImageCopParamsConfig extends TextureParamConfig(ImageCopParamConfig(NodePa
 const ParamsConfig = new ImageCopParamsConfig();
 
 export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'image';
 	}

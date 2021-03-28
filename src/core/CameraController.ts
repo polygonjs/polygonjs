@@ -8,77 +8,77 @@ enum EVENT {
 type CameraControllerCallback = (target: Object3D) => void;
 
 export class CameraController {
-	private _update_always: boolean = true;
+	private _updateAlways: boolean = true;
 	private _listener: any;
 	private _target: Object3D | undefined;
-	private _listener_added: boolean = false;
+	private _listenerAdded: boolean = false;
 
 	constructor(private _callback: CameraControllerCallback) {
-		this._listener = this._execute_callback.bind(this);
+		this._listener = this._executeCallback.bind(this);
 	}
 
-	remove_target() {
-		this.set_target(undefined);
+	removeTarget() {
+		this.setTarget(undefined);
 	}
-	set_target(target: Object3D | undefined) {
+	setTarget(target: Object3D | undefined) {
 		if (!target) {
-			this._remove_camera_event();
+			this._removeCameraEvent();
 		}
 
 		const old_target = this._target;
 		this._target = target;
 
 		if (this._target != null) {
-			this._execute_callback();
+			this._executeCallback();
 		}
 
 		if (
 			(this._target != null ? this._target.uuid : undefined) !==
 			(old_target != null ? old_target.uuid : undefined)
 		) {
-			this._add_camera_event();
+			this._addCameraEvent();
 		}
 	}
 
-	set_update_always(new_update_always: boolean) {
-		this._remove_camera_event();
+	setUpdateAlways(newUpdateAlways: boolean) {
+		this._removeCameraEvent();
 
-		this._update_always = new_update_always;
+		this._updateAlways = newUpdateAlways;
 
-		this._add_camera_event();
+		this._addCameraEvent();
 	}
 
-	private _current_event_name() {
-		if (this._update_always) {
+	private _currentEventName() {
+		if (this._updateAlways) {
 			return EVENT.CHANGE;
 		} else {
 			return EVENT.MOVEEND;
 		}
 	}
 
-	private _add_camera_event() {
-		if (this._listener_added) {
+	private _addCameraEvent() {
+		if (this._listenerAdded) {
 			return;
 		}
 
 		if (this._target != null) {
-			this._target.addEventListener(this._current_event_name(), this._listener);
-			this._listener_added = true;
+			this._target.addEventListener(this._currentEventName(), this._listener);
+			this._listenerAdded = true;
 		}
 	}
 
-	private _remove_camera_event() {
-		if (this._listener_added !== true) {
+	private _removeCameraEvent() {
+		if (this._listenerAdded !== true) {
 			return;
 		}
 
 		if (this._target != null) {
-			this._target.removeEventListener(this._current_event_name(), this._listener);
-			this._listener_added = false;
+			this._target.removeEventListener(this._currentEventName(), this._listener);
+			this._listenerAdded = false;
 		}
 	}
 
-	private _execute_callback() {
+	private _executeCallback() {
 		if (this._target != null) {
 			this._callback(this._target);
 		}

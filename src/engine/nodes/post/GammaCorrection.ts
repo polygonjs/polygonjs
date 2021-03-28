@@ -11,7 +11,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class GammaCorrectionPostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GammaCorrectionPostParamsConfig();
 export class GammaCorrectionPostNode extends TypedPostProcessNode<ShaderPass, GammaCorrectionPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'gammaCorrection';
 	}

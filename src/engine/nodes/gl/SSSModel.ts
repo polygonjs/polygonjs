@@ -20,7 +20,7 @@ class VATDataGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new VATDataGlParamsConfig();
 export class SSSModelGlNode extends TypedGlNode<VATDataGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'SSSModel';
 	}

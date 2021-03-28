@@ -13,7 +13,7 @@ import {ParamsInitData} from '../utils/io/IOController';
 class JsPointSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new JsPointSopParamsConfig();
 export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'jsPoint';
 	}

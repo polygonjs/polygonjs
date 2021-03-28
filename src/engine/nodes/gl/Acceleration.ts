@@ -42,7 +42,7 @@ class AccelerationGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AccelerationGlParamsConfig();
 
 export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'acceleration';
 	}

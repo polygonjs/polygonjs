@@ -56,7 +56,7 @@ class PointsMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'points';
 	}

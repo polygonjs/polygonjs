@@ -53,7 +53,7 @@ class TriangleBlurPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new TriangleBlurPostParamsConfig();
 export class TriangleBlurPostNode extends TypedPostProcessNode<ShaderPass, TriangleBlurPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'triangleBlur';
 	}

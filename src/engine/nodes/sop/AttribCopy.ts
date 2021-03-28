@@ -46,7 +46,7 @@ const ParamsConfig = new AttribCopySopParamsConfig();
 
 // TODO: attrib copy should handle string attributes
 export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribCopy';
 	}

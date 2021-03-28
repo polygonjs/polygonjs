@@ -45,7 +45,7 @@ class ColorCorrectParamsConfig extends NodeParamsConfig {
 
 const ParamsConfig = new ColorCorrectParamsConfig();
 export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'colorCorrect';
 	}

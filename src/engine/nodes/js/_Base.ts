@@ -108,5 +108,5 @@ export class BaseJsNodeClass extends TypedJsNode<NodeParamsConfig> {}
 class ParamlessParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ParamlessParamsConfig();
 export class ParamlessTypedJsNode extends TypedJsNode<ParamlessParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 }

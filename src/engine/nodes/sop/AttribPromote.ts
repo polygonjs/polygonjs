@@ -43,7 +43,7 @@ class AttribPromoteSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribPromoteSopParamsConfig();
 
 export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribPromote';
 	}

@@ -13,7 +13,7 @@ class CenterSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CenterSopParamsConfig();
 
 export class CenterSopNode extends TypedSopNode<CenterSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'center';
 	}

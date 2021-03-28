@@ -9,7 +9,7 @@ class SubnetSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetSopParamsConfig();
 
 export class SubnetSopNode extends SubnetSopNodeLike<SubnetSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'subnet';
 	}

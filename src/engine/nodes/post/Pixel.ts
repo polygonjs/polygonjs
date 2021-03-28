@@ -25,7 +25,7 @@ class PixelPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new PixelPostParamsConfig();
 export class PixelPostNode extends TypedPostProcessNode<ShaderPass, PixelPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'pixel';
 	}

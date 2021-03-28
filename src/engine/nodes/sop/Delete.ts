@@ -168,7 +168,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DeleteSopParamsConfig();
 
 export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'delete';
 	}

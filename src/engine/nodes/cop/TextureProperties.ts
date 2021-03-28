@@ -16,7 +16,7 @@ class TexturePropertiesCopParamsConfig extends TextureParamConfig(NodeParamsConf
 const ParamsConfig = new TexturePropertiesCopParamsConfig();
 
 export class TexturePropertiesCopNode extends TypedCopNode<TexturePropertiesCopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'textureProperties';
 	}

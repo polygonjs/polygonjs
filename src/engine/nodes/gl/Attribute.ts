@@ -35,7 +35,7 @@ class AttributeGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttributeGlParamsConfig();
 
 export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<GlNodeType.ATTRIBUTE> {
 		return GlNodeType.ATTRIBUTE;
 	}

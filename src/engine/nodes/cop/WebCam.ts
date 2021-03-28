@@ -19,7 +19,7 @@ class WebCamCopParamsConfig extends TextureParamConfig(WebCamCopParamConfig(Node
 const ParamsConfig = new WebCamCopParamsConfig();
 
 export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'webCam';
 	}

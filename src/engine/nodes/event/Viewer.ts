@@ -17,7 +17,7 @@ class ViewerParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ViewerParamsConfig();
 
 export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'viewer';

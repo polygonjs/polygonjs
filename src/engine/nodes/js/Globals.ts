@@ -6,7 +6,7 @@ class GlobalsJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsJsParamsConfig();
 
 export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'globals';
 	}

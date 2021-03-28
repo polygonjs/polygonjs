@@ -36,7 +36,7 @@ class PolywireSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PolywireSopParamsConfig();
 
 export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'polywire';
 	}

@@ -36,7 +36,7 @@ class ParamGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ParamGlParamsConfig();
 
 export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'param'> {
 		return 'param';
 	}

@@ -36,7 +36,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DeleteSopParamsConfig();
 
 export class SplitSopNode extends TypedSopNode<DeleteSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'split';
 	}

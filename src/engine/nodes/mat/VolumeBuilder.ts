@@ -16,7 +16,7 @@ class VolumeMatParamsConfig extends BaseBuilderParamConfig(VolumeParamConfig(Nod
 const ParamsConfig = new VolumeMatParamsConfig();
 
 export class VolumeBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerVolume, VolumeMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'volumeBuilder';
 	}

@@ -57,7 +57,7 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new NodeCookEventParamsConfig();
 
 export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'nodeCook'> {
 		return 'nodeCook';
 	}

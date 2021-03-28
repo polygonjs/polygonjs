@@ -6,7 +6,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class SequencePostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SequencePostParamsConfig();
 export class SequencePostNode extends TypedPostProcessNode<Pass, SequencePostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'sequence';
 	}

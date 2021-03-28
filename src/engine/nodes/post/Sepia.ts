@@ -18,7 +18,7 @@ class SepiaPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SepiaPostParamsConfig();
 export class SepiaPostNode extends TypedPostProcessNode<ShaderPass, SepiaPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'sepia';
 	}

@@ -22,7 +22,7 @@ class AfterImagePostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new AfterImagePostParamsConfig();
 export class AfterImagePostNode extends TypedPostProcessNode<AfterImagePassWithUniforms, AfterImagePostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'afterImage';
 	}

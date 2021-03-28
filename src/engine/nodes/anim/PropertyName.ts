@@ -14,7 +14,7 @@ class PropertyNameAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PropertyNameAnimParamsConfig();
 
 export class PropertyNameAnimNode extends TypedAnimNode<PropertyNameAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'propertyName';
 	}

@@ -31,7 +31,7 @@ class CircleSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CircleSopParamsConfig();
 
 export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'circle';
 	}

@@ -17,7 +17,7 @@ class SwitchAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SwitchAnimParamsConfig();
 
 export class SwitchAnimNode extends TypedAnimNode<SwitchAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'switch';
 	}

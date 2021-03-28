@@ -115,7 +115,7 @@ class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TexturePropertiesSopParamsConfig();
 
 export class TexturePropertiesSopNode extends TypedSopNode<TexturePropertiesSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'textureProperties';
 	}

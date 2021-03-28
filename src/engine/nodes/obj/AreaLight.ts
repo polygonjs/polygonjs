@@ -39,7 +39,7 @@ class AreaLightObjParamsConfig extends AreaLightParamConfig(TransformedParamConf
 const ParamsConfig = new AreaLightObjParamsConfig();
 
 export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight, AreaLightObjParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'areaLight';
 	}

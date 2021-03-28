@@ -68,7 +68,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	public readonly persisted_config: BasePersistedConfig | undefined;
 
 	private _params_controller: ParamsController | undefined;
-	readonly params_config: K | undefined;
+	readonly paramsConfig: K | undefined;
 	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>()) as ParamsValueAccessorType<K>;
 	// readonly pv: ParamsValueAccessor<K> = new ParamsValueAccessor<K>(this);
 	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>()) as ParamsAccessorType<K>;

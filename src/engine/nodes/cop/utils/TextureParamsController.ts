@@ -195,7 +195,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 class TextureParamsConfig extends TextureParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new TextureParamsConfig();
 class TextureCopNode extends TypedCopNode<TextureParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	public readonly texture_params_controller = new TextureParamsController(this);
 }
 

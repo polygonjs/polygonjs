@@ -64,7 +64,7 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SetFlagParamsConfig();
 
 export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'setFlag';
 	}

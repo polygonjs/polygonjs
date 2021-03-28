@@ -32,7 +32,7 @@ class AttribNormalizeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribNormalizeSopParamsConfig();
 
 export class AttribNormalizeSopNode extends TypedSopNode<AttribNormalizeSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribNormalize';
 	}

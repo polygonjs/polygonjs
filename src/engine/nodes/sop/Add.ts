@@ -32,7 +32,7 @@ class AddSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AddSopParamsConfig();
 
 export class AddSopNode extends TypedSopNode<AddSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'add';
 	}

@@ -85,7 +85,7 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new DepthOfFieldPostParamsConfig();
 export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, DepthOfFieldPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'depthOfField';

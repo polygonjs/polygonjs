@@ -54,7 +54,7 @@ export class RaycastCPUController {
 	}
 
 	process_event(context: EventContext<MouseEvent>) {
-		this._prepare_raycaster(context);
+		this._prepareRaycaster(context);
 
 		const type = CPU_INTERSECT_WITH_OPTIONS[this._node.pv.intersectWith];
 		switch (type) {
@@ -242,7 +242,7 @@ export class RaycastCPUController {
 		this.velocity_controller.process(hit_position);
 	}
 
-	private _prepare_raycaster(context: EventContext<MouseEvent>) {
+	private _prepareRaycaster(context: EventContext<MouseEvent>) {
 		const points_param = this._raycaster.params.Points;
 		if (points_param) {
 			points_param.threshold = this._node.pv.pointsThreshold;
@@ -262,7 +262,7 @@ export class RaycastCPUController {
 		}
 
 		if (camera_node && !isBooleanTrue(this._node.pv.overrideRay)) {
-			camera_node.prepare_raycaster(this._mouse, this._raycaster);
+			camera_node.prepareRaycaster(this._mouse, this._raycaster);
 		}
 	}
 

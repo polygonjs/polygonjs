@@ -11,7 +11,7 @@ class SwitchParamsConfig extends NodeParamsConfig {}
 
 const ParamsConfig = new SwitchParamsConfig();
 export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'switch';
 	}

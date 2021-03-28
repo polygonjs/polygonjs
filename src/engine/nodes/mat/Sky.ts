@@ -46,7 +46,7 @@ class SkyMatParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SkyMatParamsConfig();
 
 export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'sky';
 	}

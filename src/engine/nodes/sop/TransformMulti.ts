@@ -125,7 +125,7 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new TransformMultiSopParamConfig();
 
 export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'transformMulti';
 	}

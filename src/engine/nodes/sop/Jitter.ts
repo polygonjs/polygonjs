@@ -21,7 +21,7 @@ class JitterSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new JitterSopParamsConfig();
 
 export class JitterSopNode extends TypedSopNode<JitterSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'jitter';
 	}

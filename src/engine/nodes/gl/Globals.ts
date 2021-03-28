@@ -19,7 +19,7 @@ class GlobalsGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsGlParamsConfig();
 
 export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'globals';
 	}

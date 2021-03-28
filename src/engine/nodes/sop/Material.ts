@@ -44,7 +44,7 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MaterialSopParamsConfig();
 
 export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'material';
 	}

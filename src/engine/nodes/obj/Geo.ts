@@ -32,7 +32,7 @@ class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 const ParamsConfig = new GeoObjParamConfig();
 
 export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'geo';
 	}

@@ -12,7 +12,7 @@ import {EffectsComposerController, PostProcessNetworkParamsConfig} from '../post
 import {ParamsInitData} from '../utils/io/IOController';
 
 export class PostProcessPostNode extends BaseNetworkPostNode<PostProcessNetworkParamsConfig> {
-	params_config = new PostProcessNetworkParamsConfig();
+	paramsConfig = new PostProcessNetworkParamsConfig();
 	static type() {
 		return NetworkNodeType.POST;
 	}

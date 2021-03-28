@@ -35,7 +35,7 @@ class MergeAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MergeAnimParamsConfig();
 
 export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'merge';
 	}

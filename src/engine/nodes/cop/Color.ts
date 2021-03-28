@@ -21,7 +21,7 @@ class ColorCopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ColorCopParamsConfig();
 
 export class ColorCopNode extends TypedCopNode<ColorCopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'color';
 	}

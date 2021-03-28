@@ -34,7 +34,7 @@ class LimitEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new LimitEventParamsConfig();
 
 export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'limit';
 	}

@@ -27,7 +27,7 @@ class KeyboardEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new KeyboardEventParamsConfig();
 
 export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'keyboard';
 	}

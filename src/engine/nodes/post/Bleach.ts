@@ -25,7 +25,7 @@ class BleachPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new BleachPostParamsConfig();
 export class BleachPostNode extends TypedPostProcessNode<ShaderPass, BleachPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'bleach';

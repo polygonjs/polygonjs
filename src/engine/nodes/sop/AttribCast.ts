@@ -33,7 +33,7 @@ class IndexCastSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new IndexCastSopParamsConfig();
 
 export class AttribCastSopNode extends TypedSopNode<IndexCastSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribCast';
 	}

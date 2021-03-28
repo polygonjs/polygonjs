@@ -15,7 +15,7 @@ class DiskGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new DiskGlParamsConfig();
 export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'disk';
 	}

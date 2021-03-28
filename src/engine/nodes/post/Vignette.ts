@@ -32,7 +32,7 @@ class VignettePostParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new VignettePostParamsConfig();
 
 export class VignettePostNode extends TypedPostProcessNode<ShaderPass, VignettePostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'vignette';
 	}

@@ -52,7 +52,7 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TargetAnimParamsConfig();
 
 export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'target';
 	}

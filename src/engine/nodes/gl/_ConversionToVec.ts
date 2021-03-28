@@ -15,7 +15,7 @@ class FloatToVec2GlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig2 = new FloatToVec2GlParamsConfig();
 export class FloatToVec2GlNode extends TypedGlNode<FloatToVec2GlParamsConfig> {
-	params_config = ParamsConfig2;
+	paramsConfig = ParamsConfig2;
 	static type() {
 		return 'floatToVec2';
 	}
@@ -49,7 +49,7 @@ class FloatToVec3GlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig3 = new FloatToVec3GlParamsConfig();
 export class FloatToVec3GlNode extends TypedGlNode<FloatToVec3GlParamsConfig> {
-	params_config = ParamsConfig3;
+	paramsConfig = ParamsConfig3;
 	static type() {
 		return 'floatToVec3';
 	}
@@ -85,7 +85,7 @@ class FloatToVec4GlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig4 = new FloatToVec4GlParamsConfig();
 export class FloatToVec4GlNode extends TypedGlNode<FloatToVec4GlParamsConfig> {
-	params_config = ParamsConfig4;
+	paramsConfig = ParamsConfig4;
 	static type() {
 		return 'floatToVec4';
 	}

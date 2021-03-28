@@ -26,7 +26,7 @@ class TransformCopySopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new TransformCopySopParamConfig();
 
 export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'transformCopy';
 	}

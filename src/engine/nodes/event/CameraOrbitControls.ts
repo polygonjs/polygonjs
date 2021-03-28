@@ -104,7 +104,7 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CameraOrbitEventParamsConfig();
 
 export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<CameraOrbitEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return CameraControlsNodeType.ORBIT;
 	}

@@ -13,7 +13,7 @@ class HsvToRgbGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new HsvToRgbGlParamsConfig();
 export class HsvToRgbGlNode extends TypedGlNode<HsvToRgbGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'hsvToRgb';
 	}

@@ -27,7 +27,7 @@ class BlendSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BlendSopParamsConfig();
 
 export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'blend';
 	}

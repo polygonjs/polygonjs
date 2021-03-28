@@ -110,7 +110,7 @@ class SetParamParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SetParamParamsConfig();
 
 export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'setParam';
 	}

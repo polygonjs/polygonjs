@@ -24,7 +24,7 @@ class AnimationMixerSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AnimationMixerSopParamsConfig();
 
 export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'animationMixer';
 	}

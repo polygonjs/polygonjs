@@ -68,7 +68,7 @@ class MeshLambertMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshLambertMatParamsConfig();
 
 export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLambertMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshLambert';
 	}

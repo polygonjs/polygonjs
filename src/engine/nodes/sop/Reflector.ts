@@ -42,7 +42,7 @@ class ReflectorSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ReflectorSopParamsConfig();
 
 export class ReflectorSopNode extends TypedSopNode<ReflectorSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'reflector';
 	}

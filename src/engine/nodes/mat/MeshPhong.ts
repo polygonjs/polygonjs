@@ -89,7 +89,7 @@ class MeshPhongMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshPhongMatParamsConfig();
 
 export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshPhong';
 	}

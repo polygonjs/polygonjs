@@ -20,7 +20,7 @@ class FXAAPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new FXAAPostParamsConfig();
 export class FXAAPostNode extends TypedPostProcessNode<ShaderPass, FXAAPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'FXAA';
 	}

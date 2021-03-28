@@ -15,7 +15,7 @@ class OutputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OutputGlParamsConfig();
 
 export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'output';
 	}

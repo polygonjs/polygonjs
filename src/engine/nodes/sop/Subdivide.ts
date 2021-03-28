@@ -18,7 +18,7 @@ class SubdivideSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SubdivideSopParamsConfig();
 
 export class SubdivideSopNode extends TypedSopNode<SubdivideSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'subdivide';
 	}

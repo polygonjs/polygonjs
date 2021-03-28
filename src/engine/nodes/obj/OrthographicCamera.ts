@@ -52,7 +52,7 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 	OrthographicCamera,
 	OrthographicCameraObjParamConfig
 > {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	// protected get background_controller_constructor() {
 	// 	return OrthographicCameraBackgroundController;

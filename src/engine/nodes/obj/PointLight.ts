@@ -46,7 +46,7 @@ class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig)
 const ParamsConfig = new PointLightObjParamsConfig();
 
 export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, PointLightObjParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return LightType.POINT;
 	}

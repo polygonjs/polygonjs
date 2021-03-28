@@ -80,7 +80,7 @@ class VideoCopParamsConfig extends TextureParamConfig(VideoCopParamConfig(NodePa
 const ParamsConfig = new VideoCopParamsConfig();
 
 export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'video';
 	}

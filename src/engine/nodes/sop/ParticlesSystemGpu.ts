@@ -74,7 +74,7 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ParticlesSystemGpuSopParamsConfig();
 export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'particlesSystemGpu';
 	}

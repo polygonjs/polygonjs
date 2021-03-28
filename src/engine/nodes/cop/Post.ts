@@ -99,7 +99,7 @@ const ParamsConfig = new PostProcessCopNetworkParamsConfig();
 // when the params of the children post nodes are updated,
 // this node currently does not re-render
 export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'post';
 	}

@@ -26,7 +26,7 @@ class PointerEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PointerEventParamsConfig();
 
 export class PointerEventNode extends TypedInputEventNode<PointerEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'pointer';
 	}

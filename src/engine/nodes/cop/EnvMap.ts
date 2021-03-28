@@ -34,7 +34,7 @@ class EnvMapCopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'envMap';
 	}

@@ -13,7 +13,7 @@ class LchToRgbGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new LchToRgbGlParamsConfig();
 export class LchToRgbGlNode extends TypedGlNode<LchToRgbGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'lch_to_rgb';
 	}

@@ -52,7 +52,7 @@ class RotateParamsConfig extends NodeParamsConfig {
 
 const ParamsConfig = new RotateParamsConfig();
 export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'rotate';
 	}

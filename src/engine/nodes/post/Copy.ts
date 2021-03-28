@@ -19,7 +19,7 @@ class CopyPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new CopyPostParamsConfig();
 export class CopyPostNode extends TypedPostProcessNode<ShaderPass, CopyPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'copy';
 	}

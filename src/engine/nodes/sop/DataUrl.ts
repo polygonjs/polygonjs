@@ -92,7 +92,7 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DataUrlSopParamsConfig();
 
 export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'dataUrl';
 	}

@@ -10,7 +10,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const ParamsConfig = new NodeParamsConfig();
 export class NullCopNode extends TypedCopNode<NodeParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'null';
 	}

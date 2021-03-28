@@ -29,7 +29,7 @@ class NullAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new NullAnimParamsConfig();
 
 export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'null';
 	}

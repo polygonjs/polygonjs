@@ -15,7 +15,7 @@ class SphereGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SphereGlParamsConfig();
 export class SphereGlNode extends TypedGlNode<SphereGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'sphere';
 	}

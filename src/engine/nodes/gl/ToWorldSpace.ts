@@ -23,7 +23,7 @@ class ToWorldSpaceGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ToWorldSpaceGlParamsConfig();
 export class ToWorldSpaceGlNode extends TypedGlNode<ToWorldSpaceGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'toWorldSpace';
 	}

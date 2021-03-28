@@ -59,7 +59,7 @@ class CopySopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CopySopParamsConfig();
 
 export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'copy';
 	}

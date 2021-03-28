@@ -13,7 +13,7 @@ class LabToRgbGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new LabToRgbGlParamsConfig();
 export class LabToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'lab_to_rgb';
 	}

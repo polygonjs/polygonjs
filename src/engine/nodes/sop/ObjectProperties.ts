@@ -73,7 +73,7 @@ class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ObjectPropertiesSopParamsConfig();
 
 export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'objectProperties';
 	}

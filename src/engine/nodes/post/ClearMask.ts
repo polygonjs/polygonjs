@@ -5,7 +5,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class ClearMaskPostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ClearMaskPostParamsConfig();
 export class ClearMaskPostNode extends TypedPostProcessNode<ClearMaskPass, ClearMaskPostParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'clearMask';
 	}

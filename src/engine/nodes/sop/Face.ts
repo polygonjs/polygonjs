@@ -39,7 +39,7 @@ class FaceSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FaceSopParamsConfig();
 
 export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'face';
 	}

@@ -61,7 +61,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new TransformSopParamConfig();
 
 export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'transform';
 	}

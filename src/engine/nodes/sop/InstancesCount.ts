@@ -24,7 +24,7 @@ class InstancesCountSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new InstancesCountSopParamsConfig();
 
 export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'instancesCount';
 	}

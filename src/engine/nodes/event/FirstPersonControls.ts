@@ -42,7 +42,7 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FirstPersonEventParamsConfig();
 
 export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<FirstPersonEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return CameraControlsNodeType.FIRST_PERSON;
 	}

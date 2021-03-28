@@ -33,7 +33,7 @@ class AttribTransferSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribTransferSopParamsConfig();
 
 export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribTransfer';
 	}

@@ -36,7 +36,7 @@ class ConeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ConeSopParamsConfig();
 
 export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'cone';
 	}

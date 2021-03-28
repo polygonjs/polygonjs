@@ -29,7 +29,7 @@ class EasingAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new EasingAnimParamsConfig();
 
 export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'easing';
 	}

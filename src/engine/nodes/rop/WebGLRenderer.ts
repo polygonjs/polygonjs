@@ -276,7 +276,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new WebGLRendererRopParamsConfig();
 
 export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<RopType.WEBGL> {
 		return RopType.WEBGL;
 	}

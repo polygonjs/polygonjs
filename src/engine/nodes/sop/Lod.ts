@@ -36,7 +36,7 @@ class LODSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new LODSopParamsConfig();
 
 export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'lod';
 	}

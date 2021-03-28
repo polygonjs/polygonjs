@@ -24,7 +24,7 @@ class RepeatAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new RepeatAnimParamsConfig();
 
 export class RepeatAnimNode extends TypedAnimNode<RepeatAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'repeat';
 	}

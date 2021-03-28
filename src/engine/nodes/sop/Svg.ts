@@ -36,7 +36,7 @@ class SvgSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SvgSopParamsConfig();
 
 export class SvgSopNode extends TypedSopNode<SvgSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'svg';
 	}

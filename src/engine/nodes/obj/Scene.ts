@@ -30,7 +30,7 @@ class SceneObjParamConfig extends SceneMaterialOverrideParamConfig(
 const ParamsConfig = new SceneObjParamConfig();
 
 export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<'scene'> {
 		return 'scene';
 	}

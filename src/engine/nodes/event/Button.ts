@@ -26,7 +26,7 @@ class ButtonEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ButtonEventParamsConfig();
 
 export class ButtonEventNode extends TypedEventNode<ButtonEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'button';
 	}

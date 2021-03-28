@@ -41,7 +41,7 @@ class PolarTransformSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new PolarTransformSopParamConfig();
 
 export class PolarTransformSopNode extends TypedSopNode<PolarTransformSopParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'polarTransform';
 	}

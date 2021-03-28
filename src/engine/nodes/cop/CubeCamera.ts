@@ -39,7 +39,7 @@ class EnvMapCopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class CubeCameraCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return CopType.CUBE_CAMERA;
 	}

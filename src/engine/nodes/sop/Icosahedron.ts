@@ -25,7 +25,7 @@ class IcosahedronSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new IcosahedronSopParamsConfig();
 
 export class IcosahedronSopNode extends TypedSopNode<IcosahedronSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'icosahedron';
 	}

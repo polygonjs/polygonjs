@@ -19,7 +19,7 @@ class DelaySopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DelaySopParamsConfig();
 
 export class DelaySopNode extends TypedSopNode<DelaySopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'delay';
 	}

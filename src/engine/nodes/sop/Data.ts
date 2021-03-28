@@ -40,7 +40,7 @@ class DataSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DataSopParamsConfig();
 
 export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'data';
 	}

@@ -19,7 +19,7 @@ class BlockParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BlockParamsConfig();
 
 export class BlockEventNode extends TypedEventNode<BlockParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'block';

@@ -34,7 +34,7 @@ class ScatterSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ScatterSopParamsConfig();
 
 export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'scatter';
 	}

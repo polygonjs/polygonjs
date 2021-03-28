@@ -8,7 +8,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 class VecToParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new VecToParamsConfig();
 class BaseVecToGlNode extends TypedGlNode<VecToParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 }
 
 interface VecToGlOptions {

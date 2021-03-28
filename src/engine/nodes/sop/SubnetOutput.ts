@@ -14,7 +14,7 @@ class SubnetOutputSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputSopParamsConfig();
 
 export class SubnetOutputSopNode extends TypedSopNode<SubnetOutputSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type(): Readonly<NetworkChildNodeType.OUTPUT> {
 		return NetworkChildNodeType.OUTPUT;
 	}

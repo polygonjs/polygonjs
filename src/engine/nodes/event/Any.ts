@@ -25,7 +25,7 @@ class AnyEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AnyEventParamsConfig();
 
 export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'any';

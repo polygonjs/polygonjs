@@ -50,7 +50,7 @@ class MouseEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MouseEventParamsConfig();
 
 export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'mouse';
 	}

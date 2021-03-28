@@ -149,7 +149,7 @@ export abstract class TypedCameraObjNode<
 	on_create() {}
 	on_delete() {}
 
-	prepare_raycaster(mouse: Vector2, raycaster: Raycaster) {}
+	prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {}
 
 	camera() {
 		return this._object;
@@ -241,7 +241,7 @@ export class TypedThreejsCameraObjNode<
 		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
-	prepare_raycaster(mouse: Vector2, raycaster: Raycaster) {
+	prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {
 		raycaster.setFromCamera(mouse, this._object);
 	}
 

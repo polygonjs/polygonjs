@@ -24,7 +24,7 @@ class AttributeJsParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttributeJsParamsConfig();
 
 export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'attribute';
 	}

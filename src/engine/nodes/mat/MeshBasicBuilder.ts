@@ -61,7 +61,7 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
 export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerBasic, MeshBasicMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshBasicBuilder';
 	}

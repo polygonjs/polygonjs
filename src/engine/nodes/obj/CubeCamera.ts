@@ -98,7 +98,7 @@ export function CubeCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 class CubeCameraObjParamsConfig extends CubeCameraParamConfig(TransformedParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new CubeCameraObjParamsConfig();
 export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return ObjType.CUBE_CAMERA;
 	}

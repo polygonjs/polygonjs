@@ -26,7 +26,7 @@ class ObjectsManagerParamsConfig extends SceneMaterialOverrideParamConfig(
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
 export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'obj';
 	}

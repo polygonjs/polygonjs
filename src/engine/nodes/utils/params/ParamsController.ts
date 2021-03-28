@@ -172,11 +172,11 @@ export class ParamsController {
 	}
 
 	private _initFromParamsConfig() {
-		const params_config = this.node.params_config as NodeParamsConfig;
+		const paramsConfig = this.node.paramsConfig as NodeParamsConfig;
 		let init_values_used = false;
-		if (params_config) {
-			for (let name of Object.keys(params_config)) {
-				const config = params_config[name];
+		if (paramsConfig) {
+			for (let name of Object.keys(paramsConfig)) {
+				const config = paramsConfig[name];
 				let init_value: ParamInitData<ParamType> | undefined;
 				if (this.node.params_init_value_overrides) {
 					init_value = this.node.params_init_value_overrides[name];

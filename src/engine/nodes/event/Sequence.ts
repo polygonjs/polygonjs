@@ -24,7 +24,7 @@ class PassEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PassEventParamsConfig();
 
 export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 
 	static type() {
 		return 'sequence';

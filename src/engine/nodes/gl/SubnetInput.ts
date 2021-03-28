@@ -7,7 +7,7 @@ class SubnetInputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetInputGlParamsConfig();
 
 export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return NetworkChildNodeType.INPUT;
 	}

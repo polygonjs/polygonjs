@@ -17,7 +17,7 @@ class DurationAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DurationAnimParamsConfig();
 
 export class DurationAnimNode extends TypedAnimNode<DurationAnimParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'duration';
 	}

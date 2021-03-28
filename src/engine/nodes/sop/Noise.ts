@@ -91,7 +91,7 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new NoiseSopParamsConfig();
 
 export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'noise';
 	}

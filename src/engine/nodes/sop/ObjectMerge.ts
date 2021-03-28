@@ -23,7 +23,7 @@ class ObjectMergeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ObjectMergeSopParamsConfig();
 
 export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'objectMerge';
 	}

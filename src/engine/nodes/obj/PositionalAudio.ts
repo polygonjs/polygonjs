@@ -97,7 +97,7 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 const ParamsConfig = new PositionalAudioParamConfig();
 
 export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioParamConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return ObjType.POSITIONAL_AUDIO;
 	}

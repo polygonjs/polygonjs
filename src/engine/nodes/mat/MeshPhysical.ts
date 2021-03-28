@@ -92,7 +92,7 @@ class MeshPhysicalMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshPhysicalMatParamsConfig();
 
 export class MeshPhysicalMatNode extends TypedMatNode<MeshPhysicalMaterial, MeshPhysicalMatParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshPhysical';
 	}

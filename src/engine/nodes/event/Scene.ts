@@ -63,7 +63,7 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SceneEventParamsConfig();
 
 export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'scene';
 	}

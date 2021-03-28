@@ -43,7 +43,7 @@ class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CSS2DObjectSopParamsConfig();
 
 export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'CSS2DObject';
 	}

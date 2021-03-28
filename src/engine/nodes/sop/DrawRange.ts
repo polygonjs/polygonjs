@@ -30,7 +30,7 @@ class DrawRangeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DrawRangeSopParamsConfig();
 
 export class DrawRangeSopNode extends TypedSopNode<DrawRangeSopParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'drawRange';
 	}

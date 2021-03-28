@@ -11,7 +11,7 @@ class RandomGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new RandomGlParamsConfig();
 export class RandomGlNode extends TypedGlNode<RandomGlParamsConfig> {
-	params_config = ParamsConfig;
+	paramsConfig = ParamsConfig;
 	static type() {
 		return 'random';
 	}
