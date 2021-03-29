@@ -34,7 +34,7 @@ export class RestAttributesSopOperation extends BaseSopOperation {
 			this._create_rest_attribute(objects, params.normal, params.restN);
 		}
 
-		return this.create_core_group_from_objects(objects);
+		return this.createCoreGroupFromObjects(objects);
 	}
 	private _create_rest_attribute(objects: Object3DWithGeometry[], attrib_name: string, rest_attrib_name: string) {
 		for (let object of objects) {

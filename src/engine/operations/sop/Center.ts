@@ -37,6 +37,6 @@ export class CenterSopOperation extends BaseSopOperation {
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 		const object = this.createObject(geometry, ObjectType.POINTS);
-		return this.create_core_group_from_objects([object]);
+		return this.createCoreGroupFromObjects([object]);
 	}
 }

@@ -40,7 +40,7 @@ export class SvgSopOperation extends BaseSopOperation {
 				this._ensure_geometry_has_index(child);
 			}
 
-			resolve(this.create_core_group_from_objects(group.children));
+			resolve(this.createCoreGroupFromObjects(group.children));
 		});
 	}
 
@@ -48,7 +48,7 @@ export class SvgSopOperation extends BaseSopOperation {
 		const mesh = object as Mesh;
 		const geometry = mesh.geometry;
 		if (geometry) {
-			this.create_index_if_none(geometry as BufferGeometry);
+			this.createIndexIfNone(geometry as BufferGeometry);
 		}
 	}
 }

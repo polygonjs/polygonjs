@@ -61,7 +61,7 @@ export class SphereSopOperation extends BaseSopOperation {
 	private _cook_without_input(params: SphereSopParams) {
 		const geometry = this._create_required_geometry(params);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
-		return this.create_core_group_from_geometry(geometry);
+		return this.createCoreGroupFromGeometry(geometry);
 	}
 	private _cook_with_input(core_group: CoreGroup, params: SphereSopParams) {
 		const bbox = core_group.boundingBox();
@@ -72,7 +72,7 @@ export class SphereSopOperation extends BaseSopOperation {
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		geometry.translate(center.x, center.y, center.z);
 		geometry.scale(size.x, size.y, size.z);
-		return this.create_core_group_from_geometry(geometry);
+		return this.createCoreGroupFromGeometry(geometry);
 	}
 
 	private _create_required_geometry(params: SphereSopParams) {

@@ -17,7 +17,7 @@ export class NullSopOperation extends BaseSopOperation {
 		if (core_group) {
 			return core_group;
 		} else {
-			return this.create_core_group_from_objects([]);
+			return this.createCoreGroupFromObjects([]);
 		}
 	}
 }

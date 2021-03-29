@@ -30,10 +30,10 @@ export class IcosahedronSopOperation extends BaseSopOperation {
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		if (pointsOnly) {
 			const object = this.createObject(geometry, ObjectType.POINTS);
-			return this.create_core_group_from_objects([object]);
+			return this.createCoreGroupFromObjects([object]);
 		} else {
 			geometry.computeVertexNormals();
-			return this.create_core_group_from_geometry(geometry);
+			return this.createCoreGroupFromGeometry(geometry);
 		}
 	}
 }

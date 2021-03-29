@@ -1,9 +1,9 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import { ArrayUtils } from '../../ArrayUtils';
+import {ArrayUtils} from '../../ArrayUtils';
 
 const POSITION = 'position';
 export class CoreGeometryIndexBuilder {
-	static create_index_if_none(geometry: BufferGeometry) {
+	static createIndexIfNone(geometry: BufferGeometry) {
 		if (!geometry.index) {
 			const position = geometry.getAttribute(POSITION);
 			if (position) {

@@ -144,6 +144,7 @@ import './engine/nodes/sop/AttribRename';
 import './engine/nodes/sop/AttribTransfer';
 import './engine/nodes/sop/BboxScatter';
 import './engine/nodes/sop/Blend';
+import './engine/nodes/sop/Boolean';
 import './engine/nodes/sop/Box';
 import './engine/nodes/sop/Cache';
 import './engine/nodes/sop/Center';

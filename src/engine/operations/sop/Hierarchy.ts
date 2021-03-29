@@ -44,15 +44,15 @@ export class HierarchySopOperation extends BaseSopOperation {
 		switch (mode) {
 			case HierarchyMode.ADD_PARENT: {
 				const objects = this._add_parent_to_core_group(core_group, params);
-				return this.create_core_group_from_objects(objects);
+				return this.createCoreGroupFromObjects(objects);
 			}
 			case HierarchyMode.REMOVE_PARENT: {
 				const objects = this._remove_parent_from_core_group(core_group, params);
-				return this.create_core_group_from_objects(objects);
+				return this.createCoreGroupFromObjects(objects);
 			}
 			case HierarchyMode.ADD_CHILD: {
 				const objects = this._add_child_to_core_group(core_group, input_contents[1], params);
-				return this.create_core_group_from_objects(objects);
+				return this.createCoreGroupFromObjects(objects);
 			}
 		}
 		TypeAssert.unreachable(mode);

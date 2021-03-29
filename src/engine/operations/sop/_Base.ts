@@ -23,14 +23,14 @@ export class BaseSopOperation extends BaseOperation {
 	// UTILS
 	//
 	//
-	protected create_core_group_from_objects(objects: Object3D[]) {
+	protected createCoreGroupFromObjects(objects: Object3D[]) {
 		const core_group = new CoreGroup();
 		core_group.setObjects(objects);
 		return core_group;
 	}
-	protected create_core_group_from_geometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
+	protected createCoreGroupFromGeometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
 		const object = BaseSopOperation.createObject(geometry, type);
-		return this.create_core_group_from_objects([object]);
+		return this.createCoreGroupFromObjects([object]);
 	}
 	protected createObject<OT extends ObjectType>(
 		geometry: BufferGeometry,
@@ -45,7 +45,7 @@ export class BaseSopOperation extends BaseOperation {
 		material?: Material
 	): ObjectByObjectType[OT] {
 		// ensure it has an index
-		this.create_index_if_none(geometry);
+		this.createIndexIfNone(geometry);
 
 		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type] as any; //THREE[type];
 		material = material || CoreConstant.MATERIALS[type].clone();
@@ -57,10 +57,10 @@ export class BaseSopOperation extends BaseOperation {
 
 		return object as ObjectByObjectType[OT];
 	}
-	protected create_index_if_none(geometry: BufferGeometry) {
-		BaseSopOperation.create_index_if_none(geometry);
+	protected createIndexIfNone(geometry: BufferGeometry) {
+		BaseSopOperation.createIndexIfNone(geometry);
 	}
-	static create_index_if_none(geometry: BufferGeometry) {
-		CoreGeometryIndexBuilder.create_index_if_none(geometry);
+	static createIndexIfNone(geometry: BufferGeometry) {
+		CoreGeometryIndexBuilder.createIndexIfNone(geometry);
 	}
 }

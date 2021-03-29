@@ -358,6 +358,10 @@ export class CoreGeometry {
 		TypeAssert.unreachable(object_type);
 	}
 
+	static mergeGeometries(geometries: BufferGeometry[]) {
+		return CoreGeometryBuilderMerge.merge(geometries);
+	}
+	// legacy helper
 	static merge_geometries(geometries: BufferGeometry[]) {
 		return CoreGeometryBuilderMerge.merge(geometries);
 	}

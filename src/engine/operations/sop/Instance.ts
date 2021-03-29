@@ -59,10 +59,10 @@ export class InstanceSopOperation extends BaseSopOperation {
 					}
 				}
 
-				return this.create_core_group_from_objects([object]);
+				return this.createCoreGroupFromObjects([object]);
 			}
 		}
-		return this.create_core_group_from_objects([]);
+		return this.createCoreGroupFromObjects([]);
 	}
 
 	private async _get_material(params: InstanceSopParams) {

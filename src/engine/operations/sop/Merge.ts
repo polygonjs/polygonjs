@@ -55,7 +55,7 @@ export class MergeSopOperation extends BaseSopOperation {
 				o.matrixAutoUpdate = false;
 			});
 		}
-		return this.create_core_group_from_objects(all_objects);
+		return this.createCoreGroupFromObjects(all_objects);
 	}
 	_make_compact(all_objects: Object3D[]): Object3DWithGeometry[] {
 		const materials_by_object_type: Map<ObjectType, Material> = new Map();
@@ -101,7 +101,7 @@ export class MergeSopOperation extends BaseSopOperation {
 
 				// TODO: test that this works with geometries with same attributes
 				try {
-					const merged_geometry = CoreGeometry.merge_geometries(geometries);
+					const merged_geometry = CoreGeometry.mergeGeometries(geometries);
 					if (merged_geometry) {
 						const material = materials_by_object_type.get(object_type);
 						const object = this.createObject(merged_geometry, object_type, material);

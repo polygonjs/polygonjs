@@ -64,7 +64,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 			}
 		}
 
-		const merged_geometry = CoreGeometry.merge_geometries(this._geometries);
+		const merged_geometry = CoreGeometry.mergeGeometries(this._geometries);
 		for (let geometry of this._geometries) {
 			geometry.dispose();
 		}

@@ -42,7 +42,7 @@ export class CircleSopOperation extends BaseSopOperation {
 
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, params.direction);
 
-		return this.create_core_group_from_geometry(geometry, ObjectType.LINE_SEGMENTS);
+		return this.createCoreGroupFromGeometry(geometry, ObjectType.LINE_SEGMENTS);
 	}
 
 	private _create_disk(params: CircleSopParams) {
@@ -50,6 +50,6 @@ export class CircleSopOperation extends BaseSopOperation {
 
 		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, params.direction);
 
-		return this.create_core_group_from_geometry(geometry);
+		return this.createCoreGroupFromGeometry(geometry);
 	}
 }

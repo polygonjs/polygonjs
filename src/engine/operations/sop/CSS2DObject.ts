@@ -49,10 +49,10 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 		const core_group = input_contents[0];
 		if (core_group) {
 			const objects = this._create_objects_from_input_points(core_group, params);
-			return this.create_core_group_from_objects(objects);
+			return this.createCoreGroupFromObjects(objects);
 		} else {
 			const object = this._create_object_from_scratch(params);
-			return this.create_core_group_from_objects([object]);
+			return this.createCoreGroupFromObjects([object]);
 		}
 	}
 	private _create_objects_from_input_points(core_group: CoreGroup, params: CSS2DObjectSopParams) {

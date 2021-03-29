@@ -117,11 +117,11 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		return TypedSopNode.createObject(geometry, type, material);
 	}
 
-	static create_index_if_none(geometry: BufferGeometry) {
-		BaseSopOperation.create_index_if_none(geometry);
+	static createIndexIfNone(geometry: BufferGeometry) {
+		BaseSopOperation.createIndexIfNone(geometry);
 	}
-	protected _create_index_if_none(geometry: BufferGeometry) {
-		TypedSopNode.create_index_if_none(geometry);
+	protected _createIndexIfNone(geometry: BufferGeometry) {
+		TypedSopNode.createIndexIfNone(geometry);
 	}
 
 	// protected _set_object_attributes(object: Object3D) {

@@ -56,6 +56,6 @@ export class PointLightSopOperation extends BaseSopOperation {
 		light.shadow.camera.far = params.shadowFar;
 		light.shadow.bias = params.shadowBias;
 
-		return this.create_core_group_from_objects([light]);
+		return this.createCoreGroupFromObjects([light]);
 	}
 }

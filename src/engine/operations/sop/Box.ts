@@ -29,7 +29,7 @@ export class BoxSopOperation extends BaseSopOperation {
 			? this._cook_with_input(input_core_group, params)
 			: this._cook_without_input(params);
 
-		return this.create_core_group_from_geometry(geometry);
+		return this.createCoreGroupFromGeometry(geometry);
 	}
 	private _cook_without_input(params: BoxSopParams) {
 		const divisions = params.divisions;

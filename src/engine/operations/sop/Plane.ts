@@ -55,7 +55,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		const matrix = this._core_transform.translation_matrix(params.center);
 		geometry.applyMatrix4(matrix);
 
-		return this.create_core_group_from_geometry(geometry);
+		return this.createCoreGroupFromGeometry(geometry);
 	}
 	private _cook_with_input(core_group: CoreGroup, params: PlaneSopParams) {
 		const bbox = core_group.boundingBox();
@@ -73,7 +73,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		const matrix = this._core_transform.translation_matrix(center);
 		geometry.applyMatrix4(matrix);
 
-		return this.create_core_group_from_geometry(geometry);
+		return this.createCoreGroupFromGeometry(geometry);
 	}
 
 	private _create_plane(size: Vector2, params: PlaneSopParams) {

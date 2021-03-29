@@ -27,7 +27,7 @@ export class FileSopOperation extends BaseSopOperation {
 			loader.load(
 				(objects: Object3D[]) => {
 					const new_objects = this._on_load(objects);
-					resolve(this.create_core_group_from_objects(new_objects));
+					resolve(this.createCoreGroupFromObjects(new_objects));
 				},
 				(message: string) => {
 					this._on_error(message, params);
@@ -55,7 +55,7 @@ export class FileSopOperation extends BaseSopOperation {
 		const mesh = object as Mesh;
 		const geometry = mesh.geometry;
 		if (geometry) {
-			this.create_index_if_none(geometry as BufferGeometry);
+			this.createIndexIfNone(geometry as BufferGeometry);
 		}
 	}
 }

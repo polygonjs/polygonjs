@@ -14,7 +14,7 @@ export class CoreGeometryBuilderMerge {
 		// 1/4. add indices if none
 		//
 		for (let geometry of geometries) {
-			CoreGeometryIndexBuilder.create_index_if_none(geometry);
+			CoreGeometryIndexBuilder.createIndexIfNone(geometry);
 		}
 
 		//

@@ -40,6 +40,6 @@ export class TorusKnotSopOperation extends BaseSopOperation {
 
 		const geometry = new TorusKnotBufferGeometry(radius, radiusTube, segmentsRadial, segmentsTube, p, q);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
-		return this.create_core_group_from_geometry(geometry);
+		return this.createCoreGroupFromGeometry(geometry);
 	}
 }

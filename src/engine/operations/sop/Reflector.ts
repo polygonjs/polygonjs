@@ -38,7 +38,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		const reflectors: Reflector[] = [];
 		const renderer = await Poly.renderersController.firstRenderer();
 		if (!renderer) {
-			return this.create_core_group_from_objects(reflectors);
+			return this.createCoreGroupFromObjects(reflectors);
 		}
 
 		const objects = input_core_group.objectsWithGeo();
@@ -63,6 +63,6 @@ export class ReflectorSopOperation extends BaseSopOperation {
 			reflectors.push(reflector);
 		}
 
-		return this.create_core_group_from_objects(reflectors);
+		return this.createCoreGroupFromObjects(reflectors);
 	}
 }
