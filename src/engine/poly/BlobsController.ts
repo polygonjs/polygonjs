@@ -1,4 +1,4 @@
-import {PolyScene} from '../index_all';
+import {PolyScene} from '../scene/PolyScene';
 import {BaseNodeType} from '../nodes/_Base';
 import {Poly} from '../Poly';
 

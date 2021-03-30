@@ -1,4 +1,5 @@
-import {PolyScene, SceneJsonImporter} from '../../../../src/engine/index_all';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
+import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {SceneJsonExporter, SceneJsonExporterData} from '../../../../src/engine/io/json/export/Scene';
 import {
 	GL_CONNECTION_POINT_TYPES,
