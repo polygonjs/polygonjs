@@ -162,7 +162,7 @@ export class SelfContainedScenesLoader {
 		if (posterElement) {
 			posterElement.style.pointerEvents = 'none';
 			DomEffects.fadeOut(posterElement).then(() => {
-				element.removeChild(posterElement);
+				posterElement.parentElement?.removeChild(posterElement);
 			});
 		}
 	}
