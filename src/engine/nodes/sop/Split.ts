@@ -86,12 +86,12 @@ export class SplitSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				if (first_point.isAttribIndexed(attribName)) {
 					for (let point of points) {
 						val = point.indexedAttribValue(attribName);
-						MapUtils.push_on_array_at_entry(points_by_value, val, point);
+						MapUtils.pushOnArrayAtEntry(points_by_value, val, point);
 					}
 				} else {
 					for (let point of points) {
 						val = point.attribValue(attribName) as number;
-						MapUtils.push_on_array_at_entry(points_by_value, val, point);
+						MapUtils.pushOnArrayAtEntry(points_by_value, val, point);
 					}
 				}
 			}

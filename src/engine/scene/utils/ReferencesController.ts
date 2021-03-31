@@ -18,7 +18,7 @@ export class ReferencesController {
 
 	set_reference_from_param(src_param: BasePathParam, referenced_node: BaseNodeType | BaseParamType) {
 		this._referenced_nodes_by_src_param_id.set(src_param.graphNodeId(), referenced_node);
-		MapUtils.push_on_array_at_entry(
+		MapUtils.pushOnArrayAtEntry(
 			this._referencing_params_by_referenced_node_id,
 			referenced_node.graphNodeId(),
 			src_param
@@ -27,7 +27,7 @@ export class ReferencesController {
 	set_named_nodes_from_param(src_param: BasePathParam) {
 		const named_nodes: BaseNodeType[] = src_param.decomposed_path.named_nodes();
 		for (let named_node of named_nodes) {
-			MapUtils.push_on_array_at_entry(
+			MapUtils.pushOnArrayAtEntry(
 				this._referencing_params_by_all_named_node_ids,
 				named_node.graphNodeId(),
 				src_param
@@ -37,14 +37,14 @@ export class ReferencesController {
 	reset_reference_from_param(src_param: BasePathParam) {
 		const referenced_node = this._referenced_nodes_by_src_param_id.get(src_param.graphNodeId());
 		if (referenced_node) {
-			MapUtils.pop_from_array_at_entry(
+			MapUtils.popFromArrayAtEntry(
 				this._referencing_params_by_referenced_node_id,
 				referenced_node.graphNodeId(),
 				src_param
 			);
 			const named_nodes: BaseNodeType[] = src_param.decomposed_path.named_nodes();
 			for (let named_node of named_nodes) {
-				MapUtils.pop_from_array_at_entry(
+				MapUtils.popFromArrayAtEntry(
 					this._referencing_params_by_all_named_node_ids,
 					named_node.graphNodeId(),
 					src_param

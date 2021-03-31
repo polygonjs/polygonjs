@@ -11,7 +11,7 @@ export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
 		return 'globals';
 	}
 
-	create_params() {
+	createParams() {
 		this.function_node?.assembler_controller.add_globals_outputs(this);
 	}
 

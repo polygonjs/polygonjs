@@ -325,12 +325,12 @@ export class CoreGeometry {
 	}
 	pointsFromGeometry(): CorePoint[] {
 		const points = [];
-		const position_attrib = this._geometry.getAttribute(this.positionAttribName());
+		const positionAttrib = this._geometry.getAttribute(this.positionAttribName());
 
-		if (position_attrib != null) {
-			const points_count = position_attrib.array.length / 3;
-			for (let point_index = 0; point_index < points_count; point_index++) {
-				const point = new CorePoint(this, point_index);
+		if (positionAttrib != null) {
+			const count = positionAttrib.array.length / 3;
+			for (let i = 0; i < count; i++) {
+				const point = new CorePoint(this, i);
 
 				points.push(point);
 			}

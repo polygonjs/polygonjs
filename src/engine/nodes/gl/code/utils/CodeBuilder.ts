@@ -44,7 +44,7 @@ export class CodeBuilder {
 			const root_nodes_for_shader = this._root_nodes_for_shader_method(shader_name);
 
 			for (let root_node of root_nodes_for_shader) {
-				MapUtils.push_on_array_at_entry(nodes_by_shader_name, shader_name, root_node);
+				MapUtils.pushOnArrayAtEntry(nodes_by_shader_name, shader_name, root_node);
 			}
 		}
 
@@ -198,7 +198,7 @@ export class CodeBuilder {
 				if (!node_ids.has(node_id)) {
 					node_ids.set(node_id, true);
 				}
-				MapUtils.push_on_array_at_entry(definitions_by_node_id, node_id, definition);
+				MapUtils.pushOnArrayAtEntry(definitions_by_node_id, node_id, definition);
 			}
 			const lines_for_shader = this._lines.get(shader_name)!;
 			node_ids.forEach((_, node_id) => {
@@ -208,14 +208,14 @@ export class CodeBuilder {
 
 					if (first_definition) {
 						const comment = CodeFormatter.node_comment(first_definition.node, line_type);
-						MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
+						MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, comment);
 
 						for (let definition of definitions) {
 							const line = CodeFormatter.line_wrap(first_definition.node, definition.line, line_type);
-							MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
+							MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, line);
 						}
 						const separator = CodeFormatter.post_line_separator(line_type);
-						MapUtils.push_on_array_at_entry(lines_for_shader, line_type, separator);
+						MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, separator);
 					}
 				}
 			});
@@ -249,14 +249,14 @@ export class CodeBuilder {
 		if (lines && lines.length > 0) {
 			const lines_for_shader = this._lines.get(shader_name)!;
 			const comment = CodeFormatter.node_comment(node, line_type);
-			MapUtils.push_on_array_at_entry(lines_for_shader, line_type, comment);
+			MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, comment);
 			ArrayUtils.uniq(lines).forEach((line) => {
 				line = CodeFormatter.line_wrap(node, line, line_type);
-				MapUtils.push_on_array_at_entry(lines_for_shader, line_type, line);
+				MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, line);
 			});
 			if (!(line_type == LineType.BODY && is_last)) {
 				const separator = CodeFormatter.post_line_separator(line_type);
-				MapUtils.push_on_array_at_entry(lines_for_shader, line_type, separator);
+				MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, separator);
 			}
 		}
 	}

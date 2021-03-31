@@ -191,6 +191,7 @@ import './engine/nodes/sop/Resample';
 import './engine/nodes/sop/RoundedBox';
 import './engine/nodes/sop/Scatter';
 import './engine/nodes/sop/Skin';
+import './engine/nodes/sop/Sort';
 import './engine/nodes/sop/Sphere';
 import './engine/nodes/sop/Subdivide';
 import './engine/nodes/sop/Subnet';

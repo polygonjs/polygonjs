@@ -11,7 +11,7 @@ export class LinesController {
 
 	addDefinitions(node: BaseJsNodeType, definitions: BaseJsDefinition[]) {
 		for (let definition of definitions) {
-			MapUtils.push_on_array_at_entry(this._definitions_by_node_id, node.graphNodeId(), definition);
+			MapUtils.pushOnArrayAtEntry(this._definitions_by_node_id, node.graphNodeId(), definition);
 		}
 	}
 	definitions(node: BaseJsNodeType): BaseJsDefinition[] | undefined {
@@ -20,7 +20,7 @@ export class LinesController {
 
 	addBodyLines(node: BaseJsNodeType, lines: string[]) {
 		for (let line of lines) {
-			MapUtils.push_on_array_at_entry(this._body_lines_by_node_id, node.graphNodeId(), line);
+			MapUtils.pushOnArrayAtEntry(this._body_lines_by_node_id, node.graphNodeId(), line);
 		}
 	}
 	body_lines(node: BaseJsNodeType): string[] | undefined {

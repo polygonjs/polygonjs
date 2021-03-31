@@ -46,7 +46,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
-	create_params() {
+	createParams() {
 		if (this.function_node?.assembler_controller.allow_attribute_exports()) {
 			this.addParam(ParamType.BOOLEAN, 'export_when_connected', 0);
 		}

@@ -15,7 +15,7 @@ export class MissingReferencesController {
 	register(param: BaseParamType, jsep_node: jsep.Expression, path_argument: string): MissingExpressionReference {
 		const missing_expression_reference = new MissingExpressionReference(param, path_argument);
 
-		MapUtils.push_on_array_at_entry(this.references, param.graphNodeId(), missing_expression_reference);
+		MapUtils.pushOnArrayAtEntry(this.references, param.graphNodeId(), missing_expression_reference);
 
 		return missing_expression_reference;
 	}

@@ -83,7 +83,7 @@ export class MergeSopOperation extends BaseSopOperation {
 						if (!found_mat) {
 							materials_by_object_type.set(object_type, (object as Mesh).material as Material);
 						}
-						MapUtils.push_on_array_at_entry(objects_by_type, object_type, object);
+						MapUtils.pushOnArrayAtEntry(objects_by_type, object_type, object);
 					}
 				}
 			});

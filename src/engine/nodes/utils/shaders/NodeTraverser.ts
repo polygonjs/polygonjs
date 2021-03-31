@@ -76,7 +76,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			if (depth != null) {
 				// this._graph_id_by_depth.set(depth, this._graph_id_by_depth.get(depth) || []);
 				// this._graph_id_by_depth.get(depth)?.push(graph_id);
-				MapUtils.push_on_array_at_entry(this._graph_id_by_depth, depth, graph_id);
+				MapUtils.pushOnArrayAtEntry(this._graph_id_by_depth, depth, graph_id);
 			}
 		});
 	}
@@ -207,7 +207,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			for (let input_name of input_names) {
 				const input = root_node.io.inputs.named_input(input_name) as NodeTypeMap[NC];
 				if (input) {
-					MapUtils.push_on_array_at_entry(
+					MapUtils.pushOnArrayAtEntry(
 						this._outputs_by_graph_id,
 						input.graphNodeId(),
 						root_node.graphNodeId()
@@ -231,7 +231,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		const unique_inputs = input_graph_ids.map((graph_id) => this._graph.nodeFromId(graph_id)) as NodeTypeMap[NC][];
 		if (unique_inputs.length > 0) {
 			for (let input of unique_inputs) {
-				MapUtils.push_on_array_at_entry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
+				MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
 
 				this.find_leaves(input);
 			}

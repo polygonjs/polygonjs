@@ -124,13 +124,13 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 				case 'time':
 					definition = new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name);
 					if (globals_shader_name) {
-						MapUtils.push_on_array_at_entry(definitions_by_shader_name, globals_shader_name, definition);
+						MapUtils.pushOnArrayAtEntry(definitions_by_shader_name, globals_shader_name, definition);
 					}
 
 					body_line = `float ${var_name} = ${output_name}`;
 					for (let dependency of dependencies) {
-						MapUtils.push_on_array_at_entry(definitions_by_shader_name, dependency, definition);
-						MapUtils.push_on_array_at_entry(body_lines_by_shader_name, dependency, body_line);
+						MapUtils.pushOnArrayAtEntry(definitions_by_shader_name, dependency, definition);
+						MapUtils.pushOnArrayAtEntry(body_lines_by_shader_name, dependency, body_line);
 					}
 
 					body_lines.push(body_line);

@@ -31,7 +31,7 @@ function VecToGlFactory(type: string, options: VecToGlOptions) {
 				})
 			);
 		}
-		create_params() {
+		createParams() {
 			this.addParam(param_type, 'vec', components.map((c) => 0) as Number2);
 		}
 
@@ -80,7 +80,7 @@ export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 			new GlConnectionPoint(Vec4ToVec3GlNode.OUTPUT_NAME_W, GlConnectionPointType.FLOAT),
 		]);
 	}
-	create_params() {
+	createParams() {
 		this.addParam(ParamType.VECTOR4, Vec4ToVec3GlNode.INPUT_NAME_VEC4, components_v4.map((c) => 0) as Number4);
 	}
 
@@ -120,7 +120,7 @@ export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 			new GlConnectionPoint(Vec3ToVec2GlNode.OUTPUT_NAME_Z, GlConnectionPointType.FLOAT),
 		]);
 	}
-	create_params() {
+	createParams() {
 		this.addParam(ParamType.VECTOR3, Vec3ToVec2GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
 	}
 
@@ -158,7 +158,7 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 			new GlConnectionPoint(Vec2ToVec3GlNode.OUTPUT_NAME_VEC3, GlConnectionPointType.VEC3),
 		]);
 	}
-	create_params() {
+	createParams() {
 		this.addParam(ParamType.VECTOR2, Vec2ToVec3GlNode.INPUT_NAME_VEC2, components_v2.map((c) => 0) as Number2);
 		this.addParam(ParamType.FLOAT, Vec2ToVec3GlNode.INPUT_NAME_Z, 0);
 	}
@@ -190,7 +190,7 @@ export class Vec3ToVec4GlNode extends BaseVecToGlNode {
 			new GlConnectionPoint(Vec3ToVec4GlNode.OUTPUT_NAME_VEC4, GlConnectionPointType.VEC4),
 		]);
 	}
-	create_params() {
+	createParams() {
 		this.addParam(ParamType.VECTOR3, Vec3ToVec4GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
 		this.addParam(ParamType.FLOAT, Vec3ToVec4GlNode.INPUT_NAME_W, 0);
 	}

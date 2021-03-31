@@ -107,7 +107,7 @@ export class ParamsController {
 		this._param_create_mode = true;
 
 		this._initFromParamsConfig();
-		this.node.create_params();
+		this.node.createParams();
 		this._postCreateParams();
 	}
 	private _postCreateParams() {

@@ -414,17 +414,13 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			options.output_name
 		);
 		if (options.globals_shader_name) {
-			MapUtils.push_on_array_at_entry(
-				options.definitions_by_shader_name,
-				options.globals_shader_name,
-				definition
-			);
+			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, options.globals_shader_name, definition);
 		}
 
 		const body_line = `float ${options.var_name} = ${options.output_name}`;
 		for (let dependency of options.dependencies) {
-			MapUtils.push_on_array_at_entry(options.definitions_by_shader_name, dependency, definition);
-			MapUtils.push_on_array_at_entry(options.body_lines_by_shader_name, dependency, body_line);
+			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
+			MapUtils.pushOnArrayAtEntry(options.body_lines_by_shader_name, dependency, body_line);
 		}
 
 		options.body_lines.push(body_line);
@@ -440,14 +436,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			options.output_name
 		);
 		if (options.globals_shader_name) {
-			MapUtils.push_on_array_at_entry(
-				options.definitions_by_shader_name,
-				options.globals_shader_name,
-				definition
-			);
+			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, options.globals_shader_name, definition);
 		}
 		for (let dependency of options.dependencies) {
-			MapUtils.push_on_array_at_entry(options.definitions_by_shader_name, dependency, definition);
+			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
 		}
 
 		this.set_uniforms_resolution_dependent();

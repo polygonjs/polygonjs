@@ -151,12 +151,9 @@ export class CorePoint extends CoreEntity {
 	}
 
 	position() {
-		return this._position || (this._position = this._findPosition(new Vector3()));
+		return this._position || (this._position = this.getPosition(new Vector3()));
 	}
-	private _findPosition(target: Vector3): Vector3 {
-		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION);
-		return target.fromArray(array, this._index * 3);
-	}
+
 	getPosition(target: Vector3): Vector3 {
 		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION);
 		return target.fromArray(array, this._index * 3);
@@ -166,9 +163,11 @@ export class CorePoint extends CoreEntity {
 	}
 
 	normal(): Vector3 {
+		return (this._normal = this._normal || this.getNormal(new Vector3()));
+	}
+	getNormal(target: Vector3): Vector3 {
 		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.NORMAL);
-		this._normal = this._normal || new Vector3();
-		return this._normal.fromArray(array, this._index * 3);
+		return target.fromArray(array, this._index * 3);
 	}
 	setNormal(new_normal: Vector3) {
 		return this.setAttribValueVector3(ATTRIB_NAMES.NORMAL, new_normal);

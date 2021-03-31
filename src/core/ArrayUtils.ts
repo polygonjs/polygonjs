@@ -119,7 +119,7 @@ export class ArrayUtils {
 		for (let elem of array) {
 			const value: K = callback(elem);
 			valuesSet.add(value);
-			MapUtils.push_on_array_at_entry(elementsByValue, value, elem);
+			MapUtils.pushOnArrayAtEntry(elementsByValue, value, elem);
 		}
 		const values: K[] = new Array(valuesSet.size);
 		let i = 0;

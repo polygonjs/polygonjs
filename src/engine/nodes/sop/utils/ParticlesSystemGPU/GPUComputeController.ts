@@ -18,6 +18,7 @@ import {GlParamConfig} from '../../../gl/code/utils/ParamConfig';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {CoreGraphNode} from '../../../../../core/graph/CoreGraphNode';
 import {FloatType, HalfFloatType} from 'three/src/constants';
+import {isBooleanTrue} from '../../../../../core/BooleanValue';
 export enum ParticlesDataType {
 	FLOAT = 'float',
 	HALF_FLOAT = 'half',
@@ -130,7 +131,7 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	async create_gpu_compute() {
-		if (this.node.pv.auto_textures_size) {
+		if (isBooleanTrue(this.node.pv.autoTexturesSize)) {
 			const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(this._points.length));
 			this._used_textures_size.x = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.x);
 			this._used_textures_size.y = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.y);

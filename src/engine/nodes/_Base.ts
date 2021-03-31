@@ -205,7 +205,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// params
-	create_params() {}
+	createParams() {}
 	addParam<T extends ParamType>(
 		type: T,
 		name: string,

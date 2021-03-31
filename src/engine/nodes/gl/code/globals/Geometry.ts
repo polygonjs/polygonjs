@@ -169,7 +169,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 				const body_lines_by_shader_name: Map<ShaderName, string[]> = new Map();
 				// body_lines_by_shader_name.set(ShaderName.VERTEX, [])
 				body_lines_by_shader_name.set(ShaderName.FRAGMENT, []);
-				MapUtils.push_on_array_at_entry(definitions_by_shader_name, shader_name, varying_definition);
+				MapUtils.pushOnArrayAtEntry(definitions_by_shader_name, shader_name, varying_definition);
 
 				const set_varying_body_line = `${var_name} = ${gl_type}(${attrib_name})`;
 
@@ -177,8 +177,8 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 				if (shader_config) {
 					const dependencies = shader_config.dependencies();
 					for (let dependency of dependencies) {
-						MapUtils.push_on_array_at_entry(definitions_by_shader_name, dependency, varying_definition);
-						MapUtils.push_on_array_at_entry(body_lines_by_shader_name, dependency, set_varying_body_line);
+						MapUtils.pushOnArrayAtEntry(definitions_by_shader_name, dependency, varying_definition);
+						MapUtils.pushOnArrayAtEntry(body_lines_by_shader_name, dependency, set_varying_body_line);
 					}
 					definitions_by_shader_name.forEach((definitions, shader_name) => {
 						shaders_collection_controller.addDefinitions(node, definitions, shader_name);

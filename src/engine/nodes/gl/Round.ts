@@ -16,7 +16,7 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// 	this.set_named_outputs([new TypedConnectionFloat(v)]);
 	// }
 
-	// create_params() {
+	// createParams() {
 	// 	this.add_param(ParamType.FLOAT, 'value', 1);
 	// }
 	// https://hub.jmonkeyengine.org/t/round-with-glsl/8186/6

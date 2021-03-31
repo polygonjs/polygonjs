@@ -16,7 +16,7 @@ export class LinesController {
 
 	addDefinitions(node: BaseGlNodeType, definitions: BaseGLDefinition[]) {
 		for (let definition of definitions) {
-			MapUtils.push_on_array_at_entry(this._definitions_by_node_id, node.graphNodeId(), definition);
+			MapUtils.pushOnArrayAtEntry(this._definitions_by_node_id, node.graphNodeId(), definition);
 		}
 	}
 	definitions(node: BaseGlNodeType): BaseGLDefinition[] | undefined {
@@ -33,7 +33,7 @@ export class LinesController {
 
 	addBodyLines(node: BaseGlNodeType, lines: string[]) {
 		for (let line of lines) {
-			MapUtils.push_on_array_at_entry(this._body_lines_by_node_id, node.graphNodeId(), line);
+			MapUtils.pushOnArrayAtEntry(this._body_lines_by_node_id, node.graphNodeId(), line);
 		}
 	}
 	body_lines(node: BaseGlNodeType): string[] | undefined {

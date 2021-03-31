@@ -79,7 +79,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			}
 		});
 	}
-	// create_params() {}
+	// createParams() {}
 	// inputless_params_names(): string[] {
 	// 	return ['type'];
 	// }
