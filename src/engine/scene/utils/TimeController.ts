@@ -93,7 +93,7 @@ export class TimeController {
 
 			// update time dependents
 			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
-			this.scene.uniforms_controller.update_time_dependent_uniform_owners();
+			this.scene.uniformsController.updateTimeDependentUniformOwners();
 
 			// we block updates here, so that dependent nodes only cook once
 			this.scene.cooker.block();

@@ -216,9 +216,9 @@ export class PolyScene {
 	// uniforms
 	//
 	//
-	private _uniforms_controller: UniformsController | undefined;
-	get uniforms_controller() {
-		return (this._uniforms_controller = this._uniforms_controller || new UniformsController(this));
+	private _uniformsController: UniformsController | undefined;
+	get uniformsController() {
+		return (this._uniformsController = this._uniformsController || new UniformsController(this));
 	}
 
 	//

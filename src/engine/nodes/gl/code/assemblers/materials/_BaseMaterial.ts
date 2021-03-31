@@ -12,7 +12,7 @@ import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {GlNodeFinder} from '../../utils/NodeFinder';
-import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
+import {IUniformsWithResolution, IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {BaseGlNodeType} from '../../../_Base';
 // import {BaseNodeType} from '../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'
@@ -184,12 +184,25 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			// - the visible one
 			// - the multiple shadow ones
 			// - and possibly a depth one
-			scene.uniforms_controller.add_time_dependent_uniform_owner(
+			scene.uniformsController.addTimeDependentUniformOwner(
 				material.uuid,
 				material.uniforms as IUniformsWithTime
 			);
 		} else {
-			scene.uniforms_controller.remove_time_dependent_uniform_owner(material.uuid);
+			scene.uniformsController.removeTimeDependentUniformOwner(material.uuid);
+		}
+		if (this.uniforms_resolution_dependent()) {
+			// make sure not to use this.currentGlParentNode().graphNodeId() as the id,
+			// as we need several materials:
+			// - the visible one
+			// - the multiple shadow ones
+			// - and possibly a depth one
+			scene.uniformsController.addResolutionDependentUniformOwner(
+				material.uuid,
+				material.uniforms as IUniformsWithResolution
+			);
+		} else {
+			scene.uniformsController.removeResolutionDependentUniformOwner(material.uuid);
 		}
 
 		// const material = await this._assembler.get_material();
@@ -418,9 +431,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		this.set_uniforms_time_dependent();
 	}
 	handle_resolution(options: HandleGlobalsOutputOptions) {
-		if (options.shader_name == ShaderName.FRAGMENT) {
-			options.body_lines.push(`vec2 ${options.var_name} = resolution`);
-		}
+		// if (options.shader_name == ShaderName.FRAGMENT) {
+		options.body_lines.push(`vec2 ${options.var_name} = resolution`);
+		// }
 		const definition = new UniformGLDefinition(
 			options.globals_node,
 			GlConnectionPointType.VEC2,
@@ -437,7 +450,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			MapUtils.push_on_array_at_entry(options.definitions_by_shader_name, dependency, definition);
 		}
 
-		this.set_resolution_dependent();
+		this.set_uniforms_resolution_dependent();
 	}
 	handle_mvPosition(options: HandleGlobalsOutputOptions) {
 		if (options.shader_name == ShaderName.FRAGMENT) {

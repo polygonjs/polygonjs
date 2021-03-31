@@ -23,16 +23,16 @@ export class ViewerCamerasController {
 	}
 
 	computeSizeAndAspect() {
-		this._update_size();
-		this.cameraNode().scene().uniforms_controller.update_resolution_dependent_uniform_owners(this._size);
-		this._aspect = this._get_aspect();
+		this._updateSize();
+		this.cameraNode().scene().uniformsController.updateResolutionDependentUniformOwners(this._size);
+		this._aspect = this._getAspect();
 	}
 
-	private _update_size() {
+	private _updateSize() {
 		this._size.x = this._viewer.container().offsetWidth;
 		this._size.y = this._viewer.container().offsetHeight;
 	}
-	private _get_aspect(): number {
+	private _getAspect(): number {
 		return this._size.x / this._size.y;
 	}
 
@@ -42,10 +42,10 @@ export class ViewerCamerasController {
 
 	async prepareCurrentCamera() {
 		await this.cameraNode().requestContainer(); // ensure the camera is cooked
-		await this._update_from_camera_container(); //container, graph_node_id)
+		await this._updateFromCameraContainer(); //container, graph_node_id)
 	}
 
-	async _update_from_camera_container() {
+	async _updateFromCameraContainer() {
 		this.updateCameraAspect();
 		await this._viewer.controlsController?.create_controls();
 	}

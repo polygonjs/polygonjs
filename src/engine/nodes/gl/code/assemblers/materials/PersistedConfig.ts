@@ -66,7 +66,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		const data = {
 			material: material_data || {},
 			uniforms_time_dependent: assemblerController.assembler.uniforms_time_dependent(),
-			uniforms_resolution_dependent: assemblerController.assembler.resolution_dependent(),
+			uniforms_resolution_dependent: assemblerController.assembler.uniforms_resolution_dependent(),
 			param_uniform_pairs: param_uniform_pairs,
 			customMaterials: customMaterialsData,
 		};
@@ -115,7 +115,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		if (data.uniforms_time_dependent) {
 			this.node
 				.scene()
-				.uniforms_controller.add_time_dependent_uniform_owner(
+				.uniformsController.addTimeDependentUniformOwner(
 					this._material.uuid,
 					this._material.uniforms as IUniformsWithTime
 				);
@@ -123,7 +123,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		if (data.uniforms_resolution_dependent) {
 			this.node
 				.scene()
-				.uniforms_controller.add_resolution_dependent_uniform_owner(
+				.uniformsController.addResolutionDependentUniformOwner(
 					this._material.uuid,
 					this._material.uniforms as IUniformsWithResolution
 				);

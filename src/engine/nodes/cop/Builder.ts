@@ -222,11 +222,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			// the render target if it is .uniforms_time_dependent()
 			node.states.time_dependent.force_time_dependent();
 			if (uniforms) {
-				scene.uniforms_controller.add_time_dependent_uniform_owner(id_s, uniforms);
+				scene.uniformsController.addTimeDependentUniformOwner(id_s, uniforms);
 			}
 		} else {
 			node.states.time_dependent.unforce_time_dependent();
-			scene.uniforms_controller.remove_time_dependent_uniform_owner(id_s);
+			scene.uniformsController.removeTimeDependentUniformOwner(id_s);
 		}
 	}
 

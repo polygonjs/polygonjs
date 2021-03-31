@@ -61,7 +61,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	private _variable_configs: VariableConfig[] | undefined;
 
 	private _uniforms_time_dependent: boolean = false;
-	private _resolution_dependent: boolean = false;
+	private _uniforms_resolution_dependent: boolean = false;
 
 	constructor(protected _gl_parent_node: AssemblerControllerNode) {
 		super();
@@ -140,7 +140,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 				value: this.currentGlParentNode().scene().time(),
 			};
 		}
-		if (this.resolution_dependent()) {
+		if (this.uniforms_resolution_dependent()) {
 			current_uniforms['resolution'] = {
 				value: new Vector2(1000, 1000),
 			};
@@ -326,7 +326,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		this._reset_shader_configs();
 		this._reset_variable_configs();
 		this._reset_uniforms_time_dependency();
-		this._reset_resolution_dependency();
+		this._reset_uniforms_resolution_dependency();
 	}
 	get shader_configs() {
 		return (this._shader_configs = this._shader_configs || this.create_shader_configs());
@@ -411,14 +411,14 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return this._uniforms_time_dependent;
 	}
 	// resolution dependency
-	protected _reset_resolution_dependency() {
-		this._resolution_dependent = false;
+	protected _reset_uniforms_resolution_dependency() {
+		this._uniforms_resolution_dependent = false;
 	}
-	set_resolution_dependent() {
-		this._resolution_dependent = true;
+	set_uniforms_resolution_dependent() {
+		this._uniforms_resolution_dependent = true;
 	}
-	resolution_dependent(): boolean {
-		return this._resolution_dependent;
+	uniforms_resolution_dependent(): boolean {
+		return this._uniforms_resolution_dependent;
 	}
 
 	//
