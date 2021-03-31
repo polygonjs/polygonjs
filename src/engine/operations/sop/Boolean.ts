@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CSG} from './utils/Boolean/three-csg';
+import {CSG} from './utils/Boolean/csg';
 import {Mesh} from 'three/src/objects/Mesh';
 import {TypeAssert} from '../../poly/Assert';
 
@@ -35,14 +35,14 @@ export class BooleanSopOperation extends BaseSopOperation {
 		const meshB = input_contents[1].objectsWithGeo()[0] as Mesh;
 
 		const result = this._applyBooleaOperation(meshA, meshB, params);
-		const meshResult: Mesh = (CSG as any).toMesh(result, meshA.matrix, meshA.material);
+		const meshResult: Mesh = CSG.toMesh(result, meshA.matrix, meshA.material);
 		return this.createCoreGroupFromObjects([meshResult]);
 	}
 
 	private _applyBooleaOperation(meshA: Mesh, meshB: Mesh, params: BooleanSopParams) {
 		const operation = BOOLEAN_OPERATIONS[params.operation];
-		let bspA = (CSG as any).fromMesh(meshA);
-		let bspB = (CSG as any).fromMesh(meshB);
+		let bspA = CSG.fromMesh(meshA);
+		let bspB = CSG.fromMesh(meshB);
 		switch (operation) {
 			case BooleanOperation.INTERSECT: {
 				return bspA.intersect(bspB);
