@@ -52,7 +52,7 @@ const TYPE_STRING = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.STRING);
 const OUTPUT_NAME = 'output';
 class SetParamParamsConfig extends NodeParamsConfig {
 	/** @param the parameter to update */
-	param = ParamConfig.PARAM_PATH('/geo1/display', {
+	param = ParamConfig.PARAM_PATH('', {
 		paramSelection: true,
 		computeOnDirty: true,
 	});

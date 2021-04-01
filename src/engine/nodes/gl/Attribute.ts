@@ -16,6 +16,7 @@ export const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlNodeType} from '../../poly/NodeContext';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	/** @param attribute name */
 	name = ParamConfig.STRING('');
@@ -28,9 +29,9 @@ class AttributeGlParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param allows to export the attribute to a material (when used inside a particles system) */
-	texport_when_connected = ParamConfig.BOOLEAN(0, {hidden: true});
+	texportWhenConnected = ParamConfig.BOOLEAN(0, {hidden: true});
 	/** @param allows to export the attribute to a material (when used inside a particles system) */
-	export_when_connected = ParamConfig.BOOLEAN(0, {visibleIf: {texport_when_connected: 1}});
+	exportWhenConnected = ParamConfig.BOOLEAN(0, {visibleIf: {texportWhenConnected: 1}});
 }
 const ParamsConfig = new AttributeGlParamsConfig();
 
@@ -68,17 +69,21 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		// this.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name, this.p.export_when_connected], () => {
-					return this.pv.export_when_connected ? `${this.pv.name} (EXPORTED)` : this.pv.name;
+				this.params.label.init([this.p.name, this.p.exportWhenConnected], () => {
+					return this.pv.exportWhenConnected ? `${this.pv.name} (EXPORTED)` : this.pv.name;
 				});
 			});
 		});
-		this.params.addOnSceneLoadHook('prepare params', () => {
-			if (this.material_node?.assemblerController?.allow_attribute_exports()) {
-				this.p.texport_when_connected.set(1);
-			}
-		});
+		this.lifecycle.add_on_add_hook(this._bound_setExportWhenConnectedStatus);
+		this.params.addOnSceneLoadHook('prepare params', this._bound_setExportWhenConnectedStatus);
 	}
+	private _bound_setExportWhenConnectedStatus = this._setExportWhenConnectedStatus.bind(this);
+	private _setExportWhenConnectedStatus() {
+		if (this.material_node?.assemblerController?.allow_attribute_exports()) {
+			this.p.texportWhenConnected.set(1);
+		}
+	}
+
 	// createParams() {}
 	// inputless_params_names(): string[] {
 	// 	return ['type'];
@@ -161,7 +166,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		return this.io.outputs.used_output_names().length > 0; // TODO: ensure that we can check that the connected outputs are part of the nodes retrieved by the node traverser
 	}
 	get is_exporting(): boolean {
-		if (this.pv.export_when_connected) {
+		if (isBooleanTrue(this.pv.exportWhenConnected)) {
 			const input_node = this.io.inputs.named_input(AttributeGlNode.INPUT_NAME);
 			return input_node != null;
 		} else {

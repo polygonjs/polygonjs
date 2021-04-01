@@ -1,5 +1,4 @@
 import {TypedJsNode, BaseJsNodeType} from './_Base';
-import {ParamType} from '../../poly/ParamType';
 import {LinesController} from './code/utils/LinesController';
 import {JsConnectionPointType, BaseJsConnectionPoint} from '../utils/io/connections/Js';
 
@@ -34,7 +33,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initializeNode() {
-		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
+		// this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
 		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
 
@@ -46,11 +45,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
 	}
-	createParams() {
-		if (this.function_node?.assembler_controller.allow_attribute_exports()) {
-			this.addParam(ParamType.BOOLEAN, 'export_when_connected', 0);
-		}
-	}
+
 	// inputless_params_names(): string[] {
 	// 	return ['type'];
 	// }
@@ -128,19 +123,19 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	get is_importing(): boolean {
 		return this.io.outputs.used_output_names().length > 0; // TODO: ensure that we can check that the connected outputs are part of the nodes retrived by the node traverser
 	}
-	get is_exporting(): boolean {
-		if (this.pv.export_when_connected) {
-			const input_node = this.io.inputs.named_input(AttributeJsNode.INPUT_NAME);
-			return input_node != null;
-		} else {
-			return false;
-		}
-	}
-	private _set_mat_to_recompile_if_is_exporting() {
-		if (this.is_exporting) {
-			this._set_function_node_to_recompile();
-		}
-	}
+	// get is_exporting(): boolean {
+	// 	// if (isBooleanTrue(this.pv.export_when_connected)) {
+	// 	// 	const input_node = this.io.inputs.named_input(AttributeJsNode.INPUT_NAME);
+	// 	// 	return input_node != null;
+	// 	// } else {
+	// 	// 	return false;
+	// 	// }
+	// }
+	// private _set_mat_to_recompile_if_is_exporting() {
+	// 	if (this.is_exporting) {
+	// 		this._set_function_node_to_recompile();
+	// 	}
+	// }
 	//
 	//
 	// HOOKS
