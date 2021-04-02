@@ -39,10 +39,10 @@ QUnit.test('a param to another', (assert) => {
 QUnit.test('CoreWalker.relativePath', (assert) => {
 	const geo1 = window.geo1;
 	const material = geo1.createNode('material');
-	const materials = geo1.createNode('materials');
+	const materials = geo1.createNode('materialsNetwork');
 	const meshBasic = materials.createNode('meshBasic');
 
-	assert.equal(CoreWalker.relativePath(material, meshBasic), '../materials1/meshBasic1');
+	assert.equal(CoreWalker.relativePath(material, meshBasic), '../materialsNetwork1/meshBasic1');
 });
 
 QUnit.test('node.node() relative and absolute', (assert) => {

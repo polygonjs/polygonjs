@@ -15,12 +15,12 @@ export interface RopNodeChildrenMap {
 	CSS3DRenderer: Css3DRendererRopNode;
 	WebGLRenderer: WebGLRendererRopNode;
 	// networks
-	animations: AnimationsRopNode;
-	cop: CopRopNode;
-	events: EventsRopNode;
-	materials: MaterialsRopNode;
-	postProcess: PostProcessRopNode;
-	renderers: RenderersRopNode;
+	animationsNetwork: AnimationsRopNode;
+	copNetwork: CopRopNode;
+	eventsNetwork: EventsRopNode;
+	materialsNetwork: MaterialsRopNode;
+	postProcessNetwork: PostProcessRopNode;
+	renderersNetwork: RenderersRopNode;
 }
 
 import {PolyEngine} from '../../../Poly';

@@ -1,6 +1,7 @@
 import {TextureAllocation} from './TextureAllocation';
 import {PolyScene} from '../../../../scene/PolyScene';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
+import {BaseGlNodeType} from '../../_Base';
 
 export interface TextureVariableData {
 	name: string;
@@ -11,6 +12,7 @@ export interface TextureVariableData {
 export class TextureVariable {
 	private _allocation: TextureAllocation | undefined;
 	private _position: number = -1;
+	private _readonly = false;
 
 	private _graph_node_ids: Map<CoreGraphNodeId, boolean> | undefined;
 
@@ -20,38 +22,55 @@ export class TextureVariable {
 		}
 	}
 
-	set_allocation(allocation: TextureAllocation) {
+	merge(variable: TextureVariable) {
+		if (!variable.readonly()) {
+			this.setReadonly(false);
+		}
+
+		variable.graphNodeIds()?.forEach((boolean, graph_node_id) => {
+			this.addGraphNodeId(graph_node_id);
+		});
+	}
+
+	setReadonly(state: boolean) {
+		this._readonly = state;
+	}
+	readonly() {
+		return this._readonly;
+	}
+
+	setAllocation(allocation: TextureAllocation) {
 		this._allocation = allocation;
 	}
-	get allocation() {
+	allocation() {
 		return this._allocation;
 	}
 
-	get graph_node_ids() {
+	graphNodeIds() {
 		return this._graph_node_ids;
 	}
-	add_graph_node_id(id: CoreGraphNodeId) {
+	addGraphNodeId(id: CoreGraphNodeId) {
 		this._graph_node_ids = this._graph_node_ids || new Map();
 		this._graph_node_ids.set(id, true);
 	}
 	name() {
 		return this._name;
 	}
-	get size() {
+	size() {
 		return this._size;
 	}
 
 	setPosition(position: number) {
 		this._position = position;
 	}
-	get position() {
+	position() {
 		return this._position;
 	}
-	get component(): string {
+	component(): string {
 		return 'xyzw'.split('').splice(this._position, this._size).join('');
 	}
 
-	static from_json(data: TextureVariableData): TextureVariable {
+	static fromJSON(data: TextureVariableData): TextureVariable {
 		return new TextureVariable(data.name, data.size);
 	}
 
@@ -59,17 +78,20 @@ export class TextureVariable {
 		const names: string[] = [];
 		if (this._graph_node_ids) {
 			this._graph_node_ids.forEach((boolean, node_id) => {
-				const name = scene.graph.nodeFromId(node_id)?.name();
-				if (name) {
-					names.push(name);
+				const node = scene.graph.nodeFromId(node_id) as BaseGlNodeType;
+				if (node) {
+					const name = node.fullPath();
+					if (name) {
+						names.push(name);
+					}
 				}
 			});
 		}
 
 		return {
 			name: this.name(),
-			size: this.size,
-			nodes: names.sort(),
+			size: this.size(),
+			nodes: names,
 		};
 	}
 }

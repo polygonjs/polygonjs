@@ -3,6 +3,9 @@ import {BaseParamType} from '../engine/params/_Base';
 import {DecomposedPath} from './DecomposedPath';
 import {NodeContext, BaseNodeByContextMap} from '../engine/poly/NodeContext';
 import {NodeErrorState} from '../engine/nodes/utils/states/Error';
+import {ParamType} from '../engine/poly/ParamType';
+import {ParamErrorState} from '../engine/params/utils/states/Error';
+import {ParamConstructorMap} from '../engine/params/types/ParamConstructorMap';
 
 type NodeOrParam = BaseNodeType | BaseParamType;
 
@@ -84,6 +87,23 @@ export class TypedParamPathParamValue {
 		const cloned = new TypedParamPathParamValue(this._path);
 		cloned.set_param(this._param);
 		return cloned;
+	}
+
+	paramWithType<T extends ParamType>(
+		paramType: T,
+		error_state?: ParamErrorState
+	): ParamConstructorMap[T] | undefined {
+		const foundParam = this.param();
+		if (!foundParam) {
+			error_state?.set(`no param found at ${this.path()}`);
+			return;
+		}
+		if (foundParam.type() == paramType) {
+			return foundParam as ParamConstructorMap[T];
+		} else {
+			error_state?.set(`expected ${paramType} node, but got a ${foundParam.type()}`);
+			return;
+		}
 	}
 }
 

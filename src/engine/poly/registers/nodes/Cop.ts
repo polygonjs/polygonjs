@@ -31,12 +31,12 @@ export interface CopNodeChildrenMap {
 	video: VideoCopNode;
 	webCam: WebCamCopNode;
 	// networks
-	animations: AnimationsCopNode;
-	cop: CopCopNode;
-	events: EventsCopNode;
-	materials: MaterialsCopNode;
-	postProcess: PostProcessCopNode;
-	renderers: RenderersCopNode;
+	animationsNetwork: AnimationsCopNode;
+	copNetwork: CopCopNode;
+	eventsNetwork: EventsCopNode;
+	materialsNetwork: MaterialsCopNode;
+	postProcessNetwork: PostProcessCopNode;
+	renderersNetwork: RenderersCopNode;
 }
 
 import {PolyEngine} from '../../../Poly';

@@ -27,31 +27,40 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		const nonOptimizedNodes: BaseNodeTypeWithIO[] = [];
 		for (let node_name of non_optimized_names) {
 			const node_data = data[node_name];
-			let node_type = node_data['type'].toLowerCase();
+			const nodeType = node_data['type'].toLowerCase();
 			const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 
 			try {
 				// try with current type
-				const node = this._node.createNode(node_type, non_spare_params_data);
+				const node = this._node.createNode(nodeType, non_spare_params_data);
 				if (node) {
 					node.setName(node_name);
 					nonOptimizedNodes.push(node);
 				}
 			} catch (e) {
-				console.error(`error importing node: cannot create with type ${node_type}`, e);
-				const nodeType = CoreString.camelCase(node_type);
+				// try with camelCased type
+				console.error(`error importing node: cannot create with type ${nodeType}`, e);
+				const nodeTypeCamelCase = CoreString.camelCase(nodeType);
 				try {
-					// try with camelCased type
-					const node = this._node.createNode(nodeType, non_spare_params_data);
+					const node = this._node.createNode(nodeTypeCamelCase, non_spare_params_data);
 					if (node) {
 						node.setName(node_name);
 						nonOptimizedNodes.push(node);
 					}
 				} catch (e) {
-					scene_importer.report.add_warning(
-						`failed to create node with type '${node_type}' or '${nodeType}'`
-					);
-					Poly.warn('failed to create node with type', node_type, 'or', nodeType, e);
+					// add Network
+					const nodeTypeWithNetwork = `${nodeType}Network`;
+					try {
+						const node = this._node.createNode(nodeTypeWithNetwork, non_spare_params_data);
+						if (node) {
+							node.setName(node_name);
+							nonOptimizedNodes.push(node);
+						}
+					} catch (e) {
+						const message = `failed to create node with type '${nodeType}', '${nodeTypeCamelCase}' or '${nodeTypeWithNetwork}'`;
+						scene_importer.report.addWarning(message);
+						Poly.warn(message, e);
+					}
 				}
 			}
 		}

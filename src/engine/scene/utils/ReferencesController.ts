@@ -141,7 +141,7 @@ export class ReferencesController {
 		const referencing_params = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
 		if (referencing_params) {
 			for (let referencing_param of referencing_params) {
-				if (referencing_param.options.is_selecting_param()) {
+				if (referencing_param.options.isSelectingParam()) {
 					referencing_param.notify_target_param_owner_params_updated(node);
 				}
 			}

@@ -200,7 +200,7 @@ export class ParamsController {
 		current_names_in_accessor = Object.getOwnPropertyNames(this.node.pv);
 
 		for (let param of this.all) {
-			const is_spare: boolean = param.options.is_spare();
+			const is_spare: boolean = param.options.isSpare();
 
 			const param_not_yet_in_accessors = !current_names_in_accessor.includes(param.name());
 
@@ -432,7 +432,7 @@ export class ParamsController {
 				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attrib_create.
 				// Otherwise, as it would fail if the attribute was a vector
 				// since that attribute would have .value equal to {x: undefined, y: undefined, z:undefined}
-				if (param.options.is_expression_for_entities()) {
+				if (param.options.isExpressionForEntities()) {
 					param.set(default_value as never);
 				}
 				if (init_data.raw_input != null) {
@@ -452,7 +452,7 @@ export class ParamsController {
 							if (overriden_options != null) {
 								const keys = Object.keys(overriden_options);
 								for (let key of keys) {
-									param.options.set_option(key as keyof ParamOptions, overriden_options[key]);
+									param.options.setOption(key as keyof ParamOptions, overriden_options[key]);
 								}
 							}
 						}
@@ -479,13 +479,13 @@ export class ParamsController {
 	private _updateCaches() {
 		this._params_list = Object.values(this._params_by_name);
 		this._param_names = Object.keys(this._params_by_name);
-		this._non_spare_params = Object.values(this._params_by_name).filter((p) => !p.options.is_spare());
-		this._spare_params = Object.values(this._params_by_name).filter((p) => p.options.is_spare());
+		this._non_spare_params = Object.values(this._params_by_name).filter((p) => !p.options.isSpare());
+		this._spare_params = Object.values(this._params_by_name).filter((p) => p.options.isSpare());
 		this._non_spare_param_names = Object.values(this._params_by_name)
-			.filter((p) => !p.options.is_spare())
+			.filter((p) => !p.options.isSpare())
 			.map((p) => p.name());
 		this._spare_param_names = Object.values(this._params_by_name)
-			.filter((p) => p.options.is_spare())
+			.filter((p) => p.options.isSpare())
 			.map((p) => p.name());
 	}
 

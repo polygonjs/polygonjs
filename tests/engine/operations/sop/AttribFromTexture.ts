@@ -4,7 +4,7 @@ import {PointSopNode} from '../../../../src/engine/nodes/sop/Point';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
 function prepareCOP(scene: PolyScene) {
-	const cop = scene.root().createNode('cop');
+	const cop = scene.root().createNode('copNetwork');
 	const image = cop.createNode('image');
 	return image;
 }

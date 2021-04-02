@@ -49,12 +49,12 @@ export interface MatNodeChildrenMap {
 	volume: VolumeMatNode;
 	volumeBuilder: VolumeBuilderMatNode;
 	// networks
-	animations: AnimationsMatNode;
-	cop: CopMatNode;
-	events: EventsMatNode;
-	materials: MaterialsMatNode;
-	postProcess: PostProcessMatNode;
-	renderers: RenderersMatNode;
+	animationsNetwork: AnimationsMatNode;
+	copNetwork: CopMatNode;
+	eventsNetwork: EventsMatNode;
+	materialsNetwork: MaterialsMatNode;
+	postProcessNetwork: PostProcessMatNode;
+	renderersNetwork: RenderersMatNode;
 }
 
 import {PolyEngine} from '../../../Poly';

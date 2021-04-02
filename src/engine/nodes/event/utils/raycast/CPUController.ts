@@ -79,13 +79,19 @@ export class RaycastCPUController {
 		this._node.trigger_hit(context);
 	}
 
+	private _intersections: Intersection[] = [];
 	private _intersect_with_geometry(context: EventContext<MouseEvent>) {
 		if (!this._resolved_targets) {
 			this.update_target();
 		}
-
 		if (this._resolved_targets) {
-			const intersections = this._raycaster.intersectObjects(this._resolved_targets, true);
+			// clear array before
+			this._intersections.length = 0;
+			const intersections = this._raycaster.intersectObjects(
+				this._resolved_targets,
+				isBooleanTrue(this._node.pv.traverseChildren),
+				this._intersections
+			);
 			const intersection = intersections[0];
 			if (intersection) {
 				this._set_position_param(intersection.point);
@@ -223,14 +229,13 @@ export class RaycastCPUController {
 		if (isBooleanTrue(this._node.pv.tpositionTarget)) {
 			if (Poly.playerMode()) {
 				this._found_position_target_param =
-					this._found_position_target_param ||
-					this._node.p.positionTarget.found_param_with_type(ParamType.VECTOR3);
+					this._found_position_target_param || this._node.pv.positionTarget.paramWithType(ParamType.VECTOR3);
 			} else {
 				// Do not cache the param in the editor, but fetch it directly from the operator_path.
 				// The reason is that params are very prone to disappear and be re-generated,
 				// Such as spare params created by Gl Builders
-				const target_param = this._node.p.positionTarget;
-				this._found_position_target_param = target_param.found_param_with_type(ParamType.VECTOR3);
+				const target_param = this._node.pv.positionTarget;
+				this._found_position_target_param = target_param.paramWithType(ParamType.VECTOR3);
 			}
 			if (this._found_position_target_param) {
 				this._found_position_target_param.set(this._hit_position_array);

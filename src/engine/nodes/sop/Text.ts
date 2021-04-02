@@ -198,7 +198,6 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			for (let i = 0; i < shapes.length; i++) {
 				const shape = shapes[i];
 				const points = shape.getPoints();
-				// TODO: typescript: correct definition for points, arcDivisions, and minDistance
 				const arcDivisions = 12;
 				const minDistance = 0.001;
 				const geometry = loader.pointsToStroke(

@@ -29,7 +29,7 @@ export class JsCodeBuilder {
 	async build_from_nodes(root_nodes: BaseJsNodeType[]) {
 		const node_traverser = new TypedNodeTraverser<NodeContext.JS>(
 			this._gl_parent_node,
-			this._assembler.shader_names,
+			this._assembler.shaderNames(),
 			(root_node, shader_name) => {
 				return this._assembler.input_names_for_shader_name(root_node, shader_name);
 			}
@@ -37,12 +37,12 @@ export class JsCodeBuilder {
 		node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseJsNodeType[]> = new Map();
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			const nodes = node_traverser.nodes_for_shader_name(shader_name);
 			nodes_by_shader_name.set(shader_name, nodes);
 		}
 		const sorted_nodes = node_traverser.sorted_nodes();
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			const root_nodes_for_shader = this._assembler.root_nodes_by_shader_name(shader_name);
 
 			for (let root_node of root_nodes_for_shader) {
@@ -72,7 +72,7 @@ export class JsCodeBuilder {
 
 		this._lines_controller = new LinesController();
 		this.reset();
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			const nodes = ArrayUtils.uniq(nodes_by_shader_name.get(shader_name) || []);
 			if (nodes) {
 				for (let node of nodes) {
@@ -98,12 +98,12 @@ export class JsCodeBuilder {
 		this._param_configs_set_allowed = true;
 	}
 
-	shader_names() {
-		return this._assembler.shader_names;
+	shaderNames() {
+		return this._assembler.shaderNames();
 	}
 
 	private reset() {
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			const lines_map = new Map();
 			// for (let line_type of LINE_TYPES) {
 			// 	lines_map.set(line_type, []);

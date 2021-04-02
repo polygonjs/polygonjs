@@ -19,7 +19,7 @@ export class UIData extends CoreGraphNode {
 	}
 
 	update_visibility() {
-		this.param.options.update_visibility();
+		this.param.options.updateVisibility();
 	}
 
 	// set_folder_name(folder_name: string | undefined) {

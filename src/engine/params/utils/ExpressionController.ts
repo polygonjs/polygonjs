@@ -68,7 +68,7 @@ export class ExpressionController<T extends ParamType> {
 		return null;
 	}
 	requires_entities() {
-		return this.param.options.is_expression_for_entities();
+		return this.param.options.isExpressionForEntities();
 	}
 	// private reset() {
 	// 	this._manager?.clear_error();

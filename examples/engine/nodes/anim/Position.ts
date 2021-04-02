@@ -22,7 +22,7 @@ export function AnimPosition() {
 	copy.flags.display.set(true);
 
 	// setup the animation
-	const animations = root.createNode('animations');
+	const animations = root.createNode('animationsNetwork');
 	// set the target of the animation.
 	// In this case, we target all objects of the THREE scene graph
 	// which care called "anim_target" (which is how we call them with the objectProperties above)
@@ -68,7 +68,7 @@ export function AnimPosition() {
 	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
-	const events1 = perspectiveCamera1.createNode('events');
+	const events1 = perspectiveCamera1.createNode('eventsNetwork');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
 	perspectiveCamera1.p.controls.setNode(orbitsControls);
 

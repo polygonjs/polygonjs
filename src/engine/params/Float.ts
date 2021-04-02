@@ -59,7 +59,7 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
 		const result = FloatParam.convert(raw_val);
 		if (result) {
-			return this.options.ensure_in_range(result);
+			return this.options.ensureInRange(result);
 		} else {
 			return result;
 		}

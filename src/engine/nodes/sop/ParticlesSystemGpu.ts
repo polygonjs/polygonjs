@@ -81,7 +81,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	dispose() {
 		super.dispose();
-		this.gpu_controller.dispose();
+		this.gpuController.dispose();
 	}
 
 	get assemblerController() {
@@ -101,8 +101,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this._shaders_by_name;
 	}
 
-	public readonly gpu_controller = new ParticlesSystemGpuComputeController(this);
-	public readonly render_controller = new ParticlesSystemGpuRenderController(this);
+	public readonly gpuController = new ParticlesSystemGpuComputeController(this);
+	public readonly renderController = new ParticlesSystemGpuRenderController(this);
 
 	static require_webgl2() {
 		return true;
@@ -111,7 +111,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		node.PARAM_CALLBACK_reset();
 	}
 	PARAM_CALLBACK_reset() {
-		this.gpu_controller.reset_gpu_compute_and_set_dirty();
+		this.gpuController.reset_gpu_compute_and_set_dirty();
 	}
 
 	static displayedInputNames(): string[] {
@@ -159,9 +159,9 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	async _reset_material_if_dirty() {
 		if (this.p.material.isDirty()) {
-			this.render_controller.reset_render_material();
+			this.renderController.reset_render_material();
 			if (!this.is_on_frame_start()) {
-				await this.render_controller.init_render_material();
+				await this.renderController.init_render_material();
 			}
 		}
 	}
@@ -171,26 +171,26 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 
 	async cook(input_contents: CoreGroup[]) {
-		this.gpu_controller.set_restart_not_required();
+		this.gpuController.set_restart_not_required();
 		const core_group = input_contents[0];
 
 		this.compile_if_required();
 
 		if (this.is_on_frame_start()) {
-			this.gpu_controller.reset_particle_groups();
+			this.gpuController.reset_particle_groups();
 		}
 
-		if (!this.gpu_controller.initialized) {
-			await this.gpu_controller.init(core_group);
+		if (!this.gpuController.initialized()) {
+			await this.gpuController.init(core_group);
 		}
 
-		if (!this.render_controller.initialized) {
-			this.render_controller.init_core_group(core_group);
-			await this.render_controller.init_render_material();
+		if (!this.renderController.initialized()) {
+			this.renderController.init_core_group(core_group);
+			await this.renderController.init_render_material();
 		}
 
-		this.gpu_controller.restart_simulation_if_required();
-		this.gpu_controller.compute_similation_if_required();
+		this.gpuController.restart_simulation_if_required();
+		this.gpuController.compute_similation_if_required();
 
 		if (this.is_on_frame_start()) {
 			this.setCoreGroup(core_group);
@@ -219,31 +219,31 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 
 		const shaders_by_name = assemblerController.assembler.shaders_by_name();
-		this._set_shader_names(shaders_by_name);
+		this._setShaderNames(shaders_by_name);
 	}
 
-	private _set_shader_names(shaders_by_name: Map<ShaderName, string>) {
+	private _setShaderNames(shaders_by_name: Map<ShaderName, string>) {
 		this._shaders_by_name = shaders_by_name;
 
-		this.gpu_controller.set_shaders_by_name(this._shaders_by_name);
-		this.render_controller.set_shaders_by_name(this._shaders_by_name);
+		this.gpuController.setShadersByName(this._shaders_by_name);
+		this.renderController.setShadersByName(this._shaders_by_name);
 
-		this.gpu_controller.reset_gpu_compute();
-		this.gpu_controller.reset_particle_groups();
+		this.gpuController.reset_gpu_compute();
+		this.gpuController.reset_particle_groups();
 	}
 
 	init_with_persisted_config() {
 		const shaders_by_name = this.persisted_config.shaders_by_name();
 		const texture_allocations_controller = this.persisted_config.texture_allocations_controller();
 		if (shaders_by_name && texture_allocations_controller) {
-			this._set_shader_names(shaders_by_name);
-			this.gpu_controller.set_persisted_texture_allocation_controller(texture_allocations_controller);
+			this._setShaderNames(shaders_by_name);
+			this.gpuController.set_persisted_texture_allocation_controller(texture_allocations_controller);
 		}
 	}
 
 	private _find_export_nodes() {
-		const nodes: BaseGlNodeType[] = GlNodeFinder.find_attribute_export_nodes(this);
-		const output_nodes = GlNodeFinder.find_output_nodes(this);
+		const nodes: BaseGlNodeType[] = GlNodeFinder.findAttributeExportNodes(this);
+		const output_nodes = GlNodeFinder.findOutputNodes(this);
 		if (output_nodes.length > 1) {
 			this.states.error.set('only one output node is allowed');
 			return [];

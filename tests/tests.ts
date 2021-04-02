@@ -155,6 +155,7 @@ import './engine/nodes/sop/Cone';
 import './engine/nodes/sop/Copy';
 import './engine/nodes/sop/Data';
 import './engine/nodes/sop/DataUrl';
+import './engine/nodes/sop/Decal';
 import './engine/nodes/sop/Delay';
 import './engine/nodes/sop/Delete';
 import './engine/nodes/sop/DrawRange';

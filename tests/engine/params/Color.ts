@@ -67,10 +67,10 @@ QUnit.test(
 		const color1 = geo1.createNode('color');
 		const param1 = color1.p.color;
 
-		assert.ok(param1.options.color_conversion() == null);
-		param1.options.set_option('conversion', ColorConversion.LINEAR_TO_GAMMA);
-		assert.ok(param1.options.color_conversion());
-		assert.ok(param1.options.has_options_overridden);
+		assert.ok(param1.options.colorConversion() == null);
+		param1.options.setOption('conversion', ColorConversion.LINEAR_TO_GAMMA);
+		assert.ok(param1.options.colorConversion());
+		assert.ok(param1.options.hasOptionsOverridden());
 
 		const data = new SceneJsonExporter(scene).data();
 		console.log('************ LOAD **************');
@@ -78,7 +78,7 @@ QUnit.test(
 		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.fullPath()) as ColorSopNode;
 		const param2 = color2.p.color;
-		assert.equal(param2.options.color_conversion(), ColorConversion.LINEAR_TO_GAMMA);
+		assert.equal(param2.options.colorConversion(), ColorConversion.LINEAR_TO_GAMMA);
 	}
 );
 
@@ -91,10 +91,10 @@ QUnit.test(
 		const param1 = color1.addParam(ParamType.COLOR, 'color2', [0, 0, 0], {spare: true})!;
 		color1.params.postCreateSpareParams();
 
-		assert.ok(param1.options.color_conversion() == null);
-		param1.options.set_option('conversion', ColorConversion.LINEAR_TO_GAMMA);
-		assert.ok(param1.options.color_conversion());
-		assert.ok(param1.options.has_options_overridden);
+		assert.ok(param1.options.colorConversion() == null);
+		param1.options.setOption('conversion', ColorConversion.LINEAR_TO_GAMMA);
+		assert.ok(param1.options.colorConversion());
+		assert.ok(param1.options.hasOptionsOverridden());
 
 		const data = new SceneJsonExporter(scene).data();
 		console.log('************ LOAD **************');
@@ -102,6 +102,6 @@ QUnit.test(
 		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.fullPath()) as ColorSopNode;
 		const param2 = color2.params.get('color2')! as ColorParam;
-		assert.equal(param2.options.color_conversion(), ColorConversion.LINEAR_TO_GAMMA);
+		assert.equal(param2.options.colorConversion(), ColorConversion.LINEAR_TO_GAMMA);
 	}
 );

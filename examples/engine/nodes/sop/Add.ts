@@ -10,7 +10,7 @@ export function SopAdd() {
 	const add = geo.createNode('add');
 
 	// let's add a material so we can actually see the point
-	const materials = root.createNode('materials');
+	const materials = root.createNode('materialsNetwork');
 	const points = materials.createNode('points');
 	points.p.color.set([0, 0, 1]);
 	// assign the material
@@ -23,7 +23,7 @@ export function SopAdd() {
 	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
-	const events1 = perspectiveCamera1.createNode('events');
+	const events1 = perspectiveCamera1.createNode('eventsNetwork');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
 	perspectiveCamera1.p.controls.setNode(orbitsControls);
 

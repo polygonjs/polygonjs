@@ -28,19 +28,19 @@ export class CodeBuilder {
 		private _node_traverser: TypedNodeTraverser<NodeContext.GL>,
 		private _root_nodes_for_shader_method: RootNodesForShaderMethod
 	) {}
-	shader_names() {
-		return this._node_traverser.shader_names();
+	shaderNames() {
+		return this._node_traverser.shaderNames();
 	}
 	build_from_nodes(root_nodes: BaseGlNodeType[], param_nodes: BaseGlNodeType[]) {
 		this._node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			const nodes = this._node_traverser.nodes_for_shader_name(shader_name);
 			nodes_by_shader_name.set(shader_name, nodes);
 		}
 		const sorted_nodes = this._node_traverser.sorted_nodes();
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			const root_nodes_for_shader = this._root_nodes_for_shader_method(shader_name);
 
 			for (let root_node of root_nodes_for_shader) {
@@ -76,11 +76,11 @@ export class CodeBuilder {
 		// await Promise.all(param_promises)
 
 		this._shaders_collection_controller = new ShadersCollectionController(
-			this.shader_names(),
-			this.shader_names()[0]
+			this.shaderNames(),
+			this.shaderNames()[0]
 		);
 		this.reset();
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			let nodes = nodes_by_shader_name.get(shader_name) || [];
 			nodes = ArrayUtils.uniq(nodes);
 			this._shaders_collection_controller.set_current_shader_name(shader_name);
@@ -114,7 +114,7 @@ export class CodeBuilder {
 	}
 
 	private reset() {
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			const lines_map = new Map();
 			// for (let line_type of LINE_TYPES) {
 			// 	lines_map.set(line_type, []);
@@ -147,7 +147,7 @@ export class CodeBuilder {
 	}
 
 	set_code_lines(nodes: BaseGlNodeType[]) {
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			// nodes.forEach((node, i)=>{
 			this.add_code_lines(nodes, shader_name);
 			// })

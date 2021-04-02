@@ -227,7 +227,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		...visible_for_cpu({tpositionTarget: 0}),
 	});
 	/** @param this parameter will be set to the hit position */
-	positionTarget = ParamConfig.OPERATOR_PATH('', {
+	positionTarget = ParamConfig.PARAM_PATH('', {
 		cook: false,
 		...visible_for_cpu({tpositionTarget: 1}),
 		paramSelection: ParamType.VECTOR3,
@@ -251,7 +251,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		...visible_for_cpu({tvelocity: 1, tvelocityTarget: 0}),
 	});
 	/** @param this will be set to the mouse velocity */
-	velocityTarget = ParamConfig.OPERATOR_PATH('', {
+	velocityTarget = ParamConfig.PARAM_PATH('', {
 		cook: false,
 		...visible_for_cpu({tvelocity: 1, tvelocityTarget: 1}),
 		paramSelection: ParamType.VECTOR3,

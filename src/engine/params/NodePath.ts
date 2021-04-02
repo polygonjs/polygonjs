@@ -81,7 +81,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		}
 
 		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
-			const dependent_on_found_node = this.options.dependent_on_found_node();
+			const dependent_on_found_node = this.options.dependentOnFoundNode();
 
 			const previously_found_node = this._value.node();
 			if (previously_found_node) {
@@ -98,7 +98,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 				this._value.set_node(null);
 			}
 
-			this.options.execute_callback();
+			this.options.executeCallback();
 		}
 		if (path_non_empty && !node && this.scene().loadingController.loaded()) {
 			if (path_non_empty) {
@@ -110,7 +110,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	}
 
 	private _assign_found_node(node: BaseNodeType) {
-		const dependent_on_found_node = this.options.dependent_on_found_node();
+		const dependent_on_found_node = this.options.dependentOnFoundNode();
 		if (this._isNodeExpectedContext(node)) {
 			if (this._is_node_expected_type(node)) {
 				this.states.error.clear();

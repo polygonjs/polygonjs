@@ -176,7 +176,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		if (!assemblerController) {
 			return;
 		}
-		const output_nodes: BaseGlNodeType[] = GlNodeFinder.find_output_nodes(this);
+		const output_nodes: BaseGlNodeType[] = GlNodeFinder.findOutputNodes(this);
 		if (output_nodes.length > 1) {
 			this.states.error.set('only one output node allowed');
 			return;

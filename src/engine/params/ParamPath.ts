@@ -81,7 +81,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 		}
 
 		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
-			const dependent_on_found_node = this.options.dependent_on_found_node();
+			const dependent_on_found_node = this.options.dependentOnFoundNode();
 
 			const previously_found_node = this._value.param();
 			if (previously_found_node) {
@@ -98,13 +98,13 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 				this._value.set_param(null);
 			}
 
-			this.options.execute_callback();
+			this.options.executeCallback();
 		}
 		this.removeDirtyState();
 	}
 
 	private _assign_found_node(param: BaseParamType) {
-		const dependent_on_found_node = this.options.dependent_on_found_node();
+		const dependent_on_found_node = this.options.dependentOnFoundNode();
 		// if (this._is_node_expected_context(node)) {
 		// 	if (this._is_node_expected_type(node)) {
 		this._value.set_param(param);

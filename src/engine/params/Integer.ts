@@ -60,7 +60,7 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
 		const result = IntegerParam.convert(raw_val);
 		if (result) {
-			return this.options.ensure_in_range(result);
+			return this.options.ensureInRange(result);
 		} else {
 			return result;
 		}

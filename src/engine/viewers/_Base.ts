@@ -77,12 +77,6 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		return this._id;
 	}
 
-	// private async _init_from_scene(camera_node: BaseCameraObjNodeType) {
-	// 	// camera_node || this._scene.cameras_controller.masterCameraNode
-	// 	await this.con_controller?.set_camera_node(camera_node);
-	// 	// await this.update_picker_nodes(); // TODO: typescript
-	// }
-	// protected abstract _build(): void;
 	dispose() {
 		this._scene.viewersRegister.unregisterViewer(this);
 		this.eventsController.dispose();

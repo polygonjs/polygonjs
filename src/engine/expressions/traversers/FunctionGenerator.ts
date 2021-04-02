@@ -295,7 +295,7 @@ export class FunctionGenerator extends BaseTraverser {
 	}
 
 	function_body() {
-		if (this.param.options.is_expression_for_entities()) {
+		if (this.param.options.isExpressionForEntities()) {
 			return `
 			const entities = param.expressionController.entities();
 			if(entities){

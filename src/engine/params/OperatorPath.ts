@@ -73,7 +73,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		let node: BaseNodeType | null = null;
 		let param: BaseParamType | null = null;
 		const path_non_empty = path != null && path !== '';
-		const mode: OperatorPathMode = this.options.param_selection_options()
+		const mode: OperatorPathMode = this.options.paramSelectionOptions()
 			? OperatorPathMode.PARAM
 			: OperatorPathMode.NODE;
 
@@ -96,7 +96,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		}
 
 		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
-			const dependent_on_found_node = this.options.dependent_on_found_node();
+			const dependent_on_found_node = this.options.dependentOnFoundNode();
 
 			if (this._found_node) {
 				if (dependent_on_found_node) {
@@ -120,13 +120,13 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 				this._assign_found_param(param);
 			}
 
-			this.options.execute_callback();
+			this.options.executeCallback();
 		}
 		this.removeDirtyState();
 	}
 
 	private _assign_found_node(node: BaseNodeType) {
-		const dependent_on_found_node = this.options.dependent_on_found_node();
+		const dependent_on_found_node = this.options.dependentOnFoundNode();
 		if (this._is_node_expected_context(node)) {
 			if (this._is_node_expected_type(node)) {
 				this._found_node_with_expected_type = node;
@@ -227,7 +227,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return this.options.nodeSelectionTypes();
 	}
 	private _expected_param_type() {
-		return this.options.param_selection_type();
+		return this.options.paramSelectionType();
 	}
 	private _is_node_expected_type(node: BaseNodeType) {
 		const expected_types = this._expected_node_types();

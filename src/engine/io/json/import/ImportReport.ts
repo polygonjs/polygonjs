@@ -11,7 +11,7 @@ export class ImportReport {
 	reset() {
 		this._warnings = [];
 	}
-	add_warning(message: string) {
+	addWarning(message: string) {
 		this._warnings.push(message);
 	}
 }

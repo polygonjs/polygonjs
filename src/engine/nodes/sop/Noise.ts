@@ -16,15 +16,20 @@ import {TypeAssert} from '../../poly/Assert';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {SimplexNoise} from '../../../modules/three/examples/jsm/math/SimplexNoise';
 
-enum Operation {
+export enum NoiseOperation {
 	ADD = 'add',
 	SET = 'set',
 	MULT = 'mult',
 	SUBSTRACT = 'substract',
 	DIVIDE = 'divide',
 }
-type Operations = Array<Operation>;
-const Operations: Operations = [Operation.ADD, Operation.SET, Operation.MULT, Operation.SUBSTRACT, Operation.DIVIDE];
+const OPERATIONS: NoiseOperation[] = [
+	NoiseOperation.ADD,
+	NoiseOperation.SET,
+	NoiseOperation.MULT,
+	NoiseOperation.SUBSTRACT,
+	NoiseOperation.DIVIDE,
+];
 
 // const COMPONENT_OFFSETS = [
 // 	new Vector3(545, 125454, 2142),
@@ -39,6 +44,7 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {CoreType} from '../../../core/Type';
 import {NumericAttribValue} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {AttribType} from '../../../core/geometry/Constant';
 class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise amplitude */
 	amplitude = ParamConfig.FLOAT(1);
@@ -75,12 +81,12 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param name of rest normal */
 	restN = ParamConfig.STRING('restN', {visibleIf: {useRestAttributes: true}});
 	/** @param operation done when applying the noise (add, set, mult, substract, divide) */
-	operation = ParamConfig.INTEGER(Operations.indexOf(Operation.ADD), {
+	operation = ParamConfig.INTEGER(OPERATIONS.indexOf(NoiseOperation.ADD), {
 		menu: {
-			entries: Operations.map((operation) => {
+			entries: OPERATIONS.map((operation) => {
 				return {
 					name: operation,
-					value: Operations.indexOf(operation),
+					value: OPERATIONS.indexOf(operation),
 				};
 			}),
 		},
@@ -109,31 +115,47 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE]);
 	}
 
+	setOperation(operation: NoiseOperation) {
+		this.p.operation.set(OPERATIONS.indexOf(operation));
+	}
+
 	async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const dest_points = core_group.points();
+		const dest_attribName = this.pv.attribName;
+
+		if (!core_group.hasAttrib(dest_attribName)) {
+			this.states.error.set(`attribute ${dest_attribName} not found`);
+			this.cookController.endCook();
+			return;
+		}
+		const attribType = core_group.attribType(dest_attribName);
+		if (attribType != AttribType.NUMERIC) {
+			this.states.error.set(`attribute ${dest_attribName} is not a numeric attribute`);
+			this.cookController.endCook();
+			return;
+		}
 
 		const simplex = this._get_simplex();
 		const useNormals = isBooleanTrue(this.pv.useNormals) && core_group.hasAttrib(ATTRIB_NORMAL);
 		const target_attrib_size = core_group.attribSize(this.pv.attribName);
-		const operation = Operations[this.pv.operation];
-		const dest_attribName = this.pv.attribName;
+		const operation = OPERATIONS[this.pv.operation];
 		const useRestAttributes: boolean = isBooleanTrue(this.pv.useRestAttributes);
 		const base_amplitude: number = this.pv.amplitude;
 		const use_amplitudeAttrib: boolean = isBooleanTrue(this.pv.tamplitudeAttrib);
 
-		let restP: Vector3 | undefined;
+		let restP: Vector3 = new Vector3();
 		let restN: Vector3 | undefined;
-		let current_attrib_value: Vector3;
+		let currentAttribValue: NumericAttribValue;
 		for (let i = 0; i < dest_points.length; i++) {
 			const dest_point = dest_points[i];
+			currentAttribValue = dest_point.attribValue(dest_attribName) as NumericAttribValue;
 
-			current_attrib_value = dest_point.attribValue(dest_attribName) as Vector3;
 			if (useRestAttributes) {
 				restP = dest_point.attribValue(this.pv.restP) as Vector3;
 				restN = useNormals ? (dest_point.attribValue(this.pv.restN) as Vector3) : undefined;
-				current_attrib_value = restP;
 			} else {
+				dest_point.getPosition(restP);
 				restN = useNormals ? (dest_point.attribValue('normal') as Vector3) : undefined;
 			}
 
@@ -141,37 +163,37 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				? this._amplitude_from_attrib(dest_point, base_amplitude)
 				: base_amplitude;
 
-			const noise_result = this._noise_value(useNormals, simplex, amplitude, current_attrib_value, restN);
+			const noise_result = this._noise_value(useNormals, simplex, amplitude, restP, restN);
 			const noise_value = this._make_noise_value_correct_size(noise_result, target_attrib_size);
 
-			if (CoreType.isNumber(current_attrib_value) && CoreType.isNumber(noise_value)) {
+			if (CoreType.isNumber(currentAttribValue) && CoreType.isNumber(noise_value)) {
 				const new_attrib_value_f = this._new_attrib_value_from_float(
 					operation,
-					current_attrib_value,
+					currentAttribValue,
 					noise_value
 				);
 				dest_point.setAttribValue(dest_attribName, new_attrib_value_f);
 			} else {
-				if (current_attrib_value instanceof Vector2 && noise_value instanceof Vector2) {
+				if (currentAttribValue instanceof Vector2 && noise_value instanceof Vector2) {
 					const new_attrib_value_v = this._new_attrib_value_from_vector2(
 						operation,
-						current_attrib_value,
+						currentAttribValue,
 						noise_value
 					);
 					dest_point.setAttribValue(dest_attribName, new_attrib_value_v);
 				} else {
-					if (current_attrib_value instanceof Vector3 && noise_value instanceof Vector3) {
+					if (currentAttribValue instanceof Vector3 && noise_value instanceof Vector3) {
 						const new_attrib_value_v = this._new_attrib_value_from_vector3(
 							operation,
-							current_attrib_value,
+							currentAttribValue,
 							noise_value
 						);
 						dest_point.setAttribValue(dest_attribName, new_attrib_value_v);
 					} else {
-						if (current_attrib_value instanceof Vector4 && noise_value instanceof Vector4) {
+						if (currentAttribValue instanceof Vector4 && noise_value instanceof Vector4) {
 							const new_attrib_value_v = this._new_attrib_value_from_vector4(
 								operation,
-								current_attrib_value,
+								currentAttribValue,
 								noise_value
 							);
 							dest_point.setAttribValue(dest_attribName, new_attrib_value_v);
@@ -233,78 +255,78 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	}
 
 	private _new_attrib_value_from_float(
-		operation: Operation,
+		operation: NoiseOperation,
 		current_attrib_value: number,
 		noise_value: number
 	): number {
 		switch (operation) {
-			case Operation.ADD:
+			case NoiseOperation.ADD:
 				return current_attrib_value + noise_value;
-			case Operation.SET:
+			case NoiseOperation.SET:
 				return noise_value;
-			case Operation.MULT:
+			case NoiseOperation.MULT:
 				return current_attrib_value * noise_value;
-			case Operation.DIVIDE:
+			case NoiseOperation.DIVIDE:
 				return current_attrib_value / noise_value;
-			case Operation.SUBSTRACT:
+			case NoiseOperation.SUBSTRACT:
 				return current_attrib_value - noise_value;
 		}
 		TypeAssert.unreachable(operation);
 	}
 
 	private _new_attrib_value_from_vector2(
-		operation: Operation,
+		operation: NoiseOperation,
 		current_attrib_value: Vector2,
 		noise_value: Vector2
 	): Vector2 {
 		switch (operation) {
-			case Operation.ADD:
+			case NoiseOperation.ADD:
 				return current_attrib_value.add(noise_value);
-			case Operation.SET:
+			case NoiseOperation.SET:
 				return noise_value;
-			case Operation.MULT:
+			case NoiseOperation.MULT:
 				return current_attrib_value.multiply(noise_value);
-			case Operation.DIVIDE:
+			case NoiseOperation.DIVIDE:
 				return current_attrib_value.divide(noise_value);
-			case Operation.SUBSTRACT:
+			case NoiseOperation.SUBSTRACT:
 				return current_attrib_value.sub(noise_value);
 		}
 		TypeAssert.unreachable(operation);
 	}
 	private _new_attrib_value_from_vector3(
-		operation: Operation,
+		operation: NoiseOperation,
 		current_attrib_value: Vector3,
 		noise_value: Vector3
 	): Vector3 {
 		switch (operation) {
-			case Operation.ADD:
+			case NoiseOperation.ADD:
 				return current_attrib_value.add(noise_value);
-			case Operation.SET:
+			case NoiseOperation.SET:
 				return noise_value;
-			case Operation.MULT:
+			case NoiseOperation.MULT:
 				return current_attrib_value.multiply(noise_value);
-			case Operation.DIVIDE:
+			case NoiseOperation.DIVIDE:
 				return current_attrib_value.divide(noise_value);
-			case Operation.SUBSTRACT:
+			case NoiseOperation.SUBSTRACT:
 				return current_attrib_value.sub(noise_value);
 		}
 		TypeAssert.unreachable(operation);
 	}
 	private _new_attrib_value_from_vector4(
-		operation: Operation,
+		operation: NoiseOperation,
 		current_attrib_value: Vector4,
 		noise_value: Vector4
 	): Vector4 {
 		switch (operation) {
-			case Operation.ADD:
+			case NoiseOperation.ADD:
 				return current_attrib_value.add(noise_value);
-			case Operation.SET:
+			case NoiseOperation.SET:
 				return noise_value;
-			case Operation.MULT:
+			case NoiseOperation.MULT:
 				return current_attrib_value.multiplyScalar(noise_value.x);
-			case Operation.DIVIDE:
+			case NoiseOperation.DIVIDE:
 				return current_attrib_value.divideScalar(noise_value.x);
-			case Operation.SUBSTRACT:
+			case NoiseOperation.SUBSTRACT:
 				return current_attrib_value.sub(noise_value);
 		}
 		TypeAssert.unreachable(operation);

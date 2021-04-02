@@ -30,9 +30,9 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			shaders_by_name[shader_name] = shader;
 		});
 
-		const texture_allocations_data = assemblerController.assembler.texture_allocations_controller.toJSON(
-			this.node.scene()
-		);
+		const texture_allocations_data = assemblerController.assembler
+			.textureAllocationsController()
+			.toJSON(this.node.scene());
 
 		// params updating uniforms
 		const param_uniform_pairs: [string, string][] = [];
@@ -77,7 +77,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 	}
 	texture_allocations_controller() {
 		if (this._loaded_data) {
-			return TextureAllocationsController.from_json(this._loaded_data.texture_allocations);
+			return TextureAllocationsController.fromJSON(this._loaded_data.texture_allocations);
 		}
 	}
 	uniforms() {

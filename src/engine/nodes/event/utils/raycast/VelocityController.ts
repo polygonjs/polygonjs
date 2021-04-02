@@ -41,14 +41,13 @@ export class RaycastCPUVelocityController {
 		if (isBooleanTrue(this._node.pv.tvelocityTarget)) {
 			if (Poly.playerMode()) {
 				this._found_velocity_target_param =
-					this._found_velocity_target_param ||
-					this._node.p.velocityTarget.found_param_with_type(ParamType.VECTOR3);
+					this._found_velocity_target_param || this._node.pv.velocityTarget.paramWithType(ParamType.VECTOR3);
 			} else {
 				// Do not cache the param in the editor, but fetch it directly from the operator_path.
 				// The reason is that params are very prone to disappear and be re-generated,
 				// Such as spare params created by Gl Builders
-				const target_param = this._node.p.velocityTarget;
-				this._found_velocity_target_param = target_param.found_param_with_type(ParamType.VECTOR3);
+				const targetParamVal = this._node.pv.velocityTarget;
+				this._found_velocity_target_param = targetParamVal.paramWithType(ParamType.VECTOR3);
 			}
 			if (this._found_velocity_target_param) {
 				this._found_velocity_target_param.set(this._hit_velocity_array);

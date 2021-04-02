@@ -111,7 +111,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 						assembler.set_root_nodes(this._root_nodes);
 						assembler.set_param_configs_owner(this._code_builder);
-						assembler.set_shader_configs(this.shader_configs);
+						assembler.set_shader_configs(this.shaderConfigs());
 						assembler.set_variable_configs(this.variable_configs());
 
 						const custom_material = material.customMaterials[custom_name];
@@ -159,11 +159,11 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (!this.compile_allowed()) {
 			return;
 		}
-		const output_nodes: BaseGlNodeType[] = GlNodeFinder.find_output_nodes(this.currentGlParentNode());
+		const output_nodes: BaseGlNodeType[] = GlNodeFinder.findOutputNodes(this.currentGlParentNode());
 		if (output_nodes.length > 1) {
 			this.currentGlParentNode().states.error.set('only one output node allowed');
 		}
-		const varying_nodes = GlNodeFinder.find_varying_nodes(this.currentGlParentNode());
+		const varying_nodes = GlNodeFinder.findVaryingNodes(this.currentGlParentNode());
 		const root_nodes = output_nodes.concat(varying_nodes);
 		this.set_root_nodes(root_nodes);
 		this._update_shaders();
@@ -229,7 +229,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	private _update_shaders() {
 		this._shaders_by_name = new Map();
 		this._lines = new Map();
-		for (let shader_name of this.shader_names) {
+		for (let shader_name of this.shaderNames()) {
 			const template = this._template_shader_for_shader_name(shader_name);
 			if (template) {
 				this._lines.set(shader_name, template.split('\n'));
@@ -242,7 +242,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			this._build_lines();
 		}
 		// this._material.uniforms = this.build_uniforms(template_shader)
-		for (let shader_name of this.shader_names) {
+		for (let shader_name of this.shaderNames()) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
 				this._shaders_by_name.set(shader_name, lines.join('\n'));

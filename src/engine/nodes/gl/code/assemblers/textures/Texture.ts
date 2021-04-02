@@ -35,7 +35,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	update_fragment_shader() {
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
-		for (let shader_name of this.shader_names) {
+		for (let shader_name of this.shaderNames()) {
 			if (shader_name == ShaderName.FRAGMENT) {
 				const template = this.templateShader().fragmentShader;
 				this._lines.set(shader_name, template.split('\n'));
@@ -49,7 +49,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		this._uniforms = this._uniforms || {};
 		this.add_uniforms(this._uniforms);
 
-		for (let shader_name of this.shader_names) {
+		for (let shader_name of this.shaderNames()) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
 				this._shaders_by_name.set(shader_name, lines.join('\n'));

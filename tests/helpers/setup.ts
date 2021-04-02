@@ -47,11 +47,11 @@ QUnit.testStart(async () => {
 	window.root = root;
 	window.perspective_camera1 = root.createNode('perspectiveCamera');
 	window.geo1 = root.createNode('geo');
-	window.MAT = root.createNode('materials');
+	window.MAT = root.createNode('materialsNetwork');
 	window.MAT.setName('MAT');
-	window.POST = root.createNode('postProcess');
+	window.POST = root.createNode('postProcessNetwork');
 	window.POST.setName('POST');
-	window.COP = root.createNode('cop');
+	window.COP = root.createNode('copNetwork');
 	window.COP.setName('COP');
 
 	window.scene.loadingController.set_auto_update(true);

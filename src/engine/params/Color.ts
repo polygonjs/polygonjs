@@ -148,7 +148,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 
 		this._value.copy(this._value_pre_conversion);
 
-		const conversion = this.options.color_conversion();
+		const conversion = this.options.colorConversion();
 		if (conversion != null && conversion != ColorConversion.NONE) {
 			switch (conversion) {
 				case ColorConversion.GAMMA_TO_LINEAR: {

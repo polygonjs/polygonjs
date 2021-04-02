@@ -11,13 +11,13 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	constructor(protected _param: T) {}
 
 	required(): boolean {
-		const is_spare_and_not_component = this._param.options.is_spare() && !this._param.parent_param;
+		const is_spare_and_not_component = this._param.options.isSpare() && !this._param.parent_param;
 
 		// we should not need to check if it has an expression anymore,
 		// as it could have an expression AND be of default value
 		const value_changed = !this._param.isDefault(); //|| this._param.has_expression();
 		// const referencing_asset = this._param.is_referencing_asset()
-		return is_spare_and_not_component || value_changed || this._param.options.has_options_overridden();
+		return is_spare_and_not_component || value_changed || this._param.options.hasOptionsOverridden();
 	}
 
 	data() {
@@ -40,7 +40,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	private _data_complex() {
 		this._complex_data = {};
 
-		if (this._param.options.is_spare() && !this._param.parent_param) {
+		if (this._param.options.isSpare() && !this._param.parent_param) {
 			this._complex_data['type'] = this._param.type();
 			this._complex_data['default_value'] = this._param.defaultValueSerialized();
 			this._complex_data['options'] = this._param.options.current();
@@ -50,9 +50,9 @@ export class ParamJsonExporter<T extends BaseParamType> {
 			this._complex_data['raw_input'] = this._param.rawInputSerialized();
 		}
 
-		if (this._param.options.has_options_overridden()) {
+		if (this._param.options.hasOptionsOverridden()) {
 			const overridden_options: OverridenOptions = {};
-			const options_overridden = this._param.options.overridden_options();
+			const options_overridden = this._param.options.overriddenOptions();
 			for (let option_name of Object.keys(options_overridden)) {
 				const option_value = options_overridden[option_name as keyof ParamOptions];
 				if (CoreType.isString(option_value) || CoreType.isNumber(option_value)) {
@@ -67,10 +67,10 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	}
 
 	protected _require_data_complex() {
-		if (this._param.options.is_spare()) {
+		if (this._param.options.isSpare()) {
 			return true;
 		}
-		if (this._param.options.has_options_overridden()) {
+		if (this._param.options.hasOptionsOverridden()) {
 			return true;
 		}
 		return false;

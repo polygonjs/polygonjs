@@ -21,7 +21,7 @@ export class ParticlesSystemGpuRenderController {
 
 	constructor(private node: ParticlesSystemGpuSopNode) {}
 
-	set_shaders_by_name(shaders_by_name: Map<ShaderName, string>) {
+	setShadersByName(shaders_by_name: Map<ShaderName, string>) {
 		this._shaders_by_name = shaders_by_name;
 		this._all_shader_names = [];
 		this._all_uniform_names = [];
@@ -63,7 +63,7 @@ export class ParticlesSystemGpuRenderController {
 		for (let i = 0; i < this._all_shader_names.length; i++) {
 			shader_name = this._all_shader_names[i];
 			uniform_name = this._all_uniform_names[i];
-			const texture = this.node.gpu_controller.getCurrentRenderTarget(shader_name)?.texture;
+			const texture = this.node.gpuController.getCurrentRenderTarget(shader_name)?.texture;
 			if (texture) {
 				// Setting needsUpdate to true was an attempt at fixing the bug
 				// where a particle system with no output on scene load
@@ -80,10 +80,10 @@ export class ParticlesSystemGpuRenderController {
 		this._render_material = undefined;
 		this._particles_group_objects = [];
 	}
-	render_material() {
+	material() {
 		return this._render_material;
 	}
-	get initialized(): boolean {
+	initialized(): boolean {
 		return this._render_material != null;
 	}
 
@@ -106,13 +106,13 @@ export class ParticlesSystemGpuRenderController {
 
 		if (mat_node) {
 			if (assembler) {
-				const new_texture_allocations_json: TextureAllocationsControllerData = assembler.texture_allocations_controller.toJSON(
-					this.node.scene()
-				);
+				const new_texture_allocations_json: TextureAllocationsControllerData = assembler
+					.textureAllocationsController()
+					.toJSON(this.node.scene());
 
 				const matNodeAssemblerController = mat_node.assemblerController;
 				if (matNodeAssemblerController) {
-					this.globals_handler.set_texture_allocations_controller(assembler.texture_allocations_controller);
+					this.globals_handler.set_texture_allocations_controller(assembler.textureAllocationsController());
 					matNodeAssemblerController.set_assembler_globals_handler(this.globals_handler);
 				}
 

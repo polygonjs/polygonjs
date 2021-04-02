@@ -220,7 +220,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 			// so that the param does not trigger the node to recompute
 			// before all params are added
 			this.options.allowCallback();
-			if (this.options.makes_node_dirty_when_dirty() && !this.parent_param) {
+			if (this.options.makesNodeDirtyWhenDirty() && !this.parent_param) {
 				node.params.params_node?.addGraphInput(this, false);
 			}
 		}

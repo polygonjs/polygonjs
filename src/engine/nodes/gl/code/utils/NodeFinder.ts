@@ -4,11 +4,11 @@ import {VaryingWriteGlNode} from '../../VaryingWrite';
 import {AttributeGlNode} from '../../Attribute';
 
 export class GlNodeFinder {
-	static find_output_nodes(node: BaseGlParentNode) {
+	static findOutputNodes(node: BaseGlParentNode) {
 		const output_nodes = node.nodesByType('output');
 		return output_nodes;
 	}
-	static find_param_generating_nodes(node: BaseGlParentNode) {
+	static findParamGeneratingNodes(node: BaseGlParentNode) {
 		const list: BaseGlNodeType[] = [];
 		node.childrenController?.traverse_children((child) => {
 			const childGlNode = child as BaseGlNodeType;
@@ -19,16 +19,16 @@ export class GlNodeFinder {
 
 		return list;
 	}
-	static find_varying_nodes(node: BaseGlParentNode) {
+	static findVaryingNodes(node: BaseGlParentNode) {
 		const nodes = node.nodesByType(VaryingWriteGlNode.type());
 		return nodes;
 	}
-	static find_attribute_export_nodes(node: BaseGlParentNode) {
+	static findAttributeExportNodes(node: BaseGlParentNode) {
 		const nodes = node.nodesByType(AttributeGlNode.type());
 		return nodes.filter((node) => {
 			// do not use attributes that are used as an input, as export
 			// return (node.used_output_names().length == 0) &&
-			return node.is_exporting;
+			return node.isExporting();
 		});
 	}
 }

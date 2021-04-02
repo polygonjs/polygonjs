@@ -74,7 +74,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		if (this.parent_param) {
 			this.parent_param.set_value_from_components();
 		}
-		this.options.execute_callback();
+		this.options.executeCallback();
 		this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		this.removeDirtyState();
 	}

@@ -169,7 +169,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				}
 			}
 			case SetParamParamType.BUTTON: {
-				return param.options.execute_callback();
+				return param.options.executeCallback();
 			}
 			case SetParamParamType.NUMBER: {
 				await this._compute_params_if_dirty([this.p.increment, this.p.number]);

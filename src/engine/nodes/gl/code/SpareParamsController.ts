@@ -106,7 +106,7 @@ export class AssemblerNodeSpareParamsController {
 						if (param.isDirty()) {
 							await param.compute();
 						}
-						param.options.execute_callback();
+						param.options.executeCallback();
 					}, 200);
 				}
 			}

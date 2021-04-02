@@ -14,7 +14,7 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 
 	assert.deepEqual(viewer.eventsController.registeredEventTypes(), [], 'no events registered yet');
 
-	const events = scene.root().createNode('events');
+	const events = scene.root().createNode('eventsNetwork');
 	const mouse1 = events.createNode('mouse');
 	await mouse1.requestContainer();
 	CoreSleep.sleep(100);
@@ -96,7 +96,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 
 	assert.deepEqual(viewer.eventsController.registeredEventTypes(), [], 'no events registered yet');
 
-	const events = scene.root().createNode('events');
+	const events = scene.root().createNode('eventsNetwork');
 	const mouse1 = events.createNode('mouse');
 	await mouse1.requestContainer();
 	CoreSleep.sleep(100);
@@ -119,7 +119,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 	const element2 = document.createElement('div');
 	document.body.appendChild(element2);
 	const perspective_camera2 = scene2.root().nodesByType('perspectiveCamera')[0];
-	const events2 = scene2.root().nodesByType('events')[0];
+	const events2 = scene2.root().nodesByType('eventsNetwork')[0];
 	const mouse2 = events2.nodesByType('mouse')[0];
 	const viewer2 = perspective_camera2.createViewer(element);
 
@@ -159,7 +159,7 @@ QUnit.test('keyboard event nodes update the viewer event listeners', async (asse
 
 	assert.deepEqual(viewer.eventsController.registeredEventTypes(), []);
 
-	const events = scene.root().createNode('events');
+	const events = scene.root().createNode('eventsNetwork');
 	const keyboard1 = events.createNode('keyboard');
 	await keyboard1.requestContainer();
 	assert.deepEqual(viewer.eventsController.registeredEventTypes(), ['keydown']);
@@ -223,7 +223,7 @@ QUnit.test('scene event nodes do not add events to the viewer', async (assert) =
 
 	assert.deepEqual(viewer.eventsController.registeredEventTypes(), []);
 
-	const events = scene.root().createNode('events');
+	const events = scene.root().createNode('eventsNetwork');
 	const scene1 = events.createNode('scene');
 
 	assert.deepEqual(viewer.eventsController.registeredEventTypes(), []);

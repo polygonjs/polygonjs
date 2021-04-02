@@ -35,12 +35,12 @@ export interface AnimNodeChildrenMap {
 	switch: SwitchAnimNode;
 	target: TargetAnimNode;
 	// networks
-	animations: AnimationsAnimNode;
-	cop: CopAnimNode;
-	events: EventsAnimNode;
-	materials: MaterialsAnimNode;
-	postProcess: PostProcessAnimNode;
-	renderers: RenderersAnimNode;
+	animationsNetwork: AnimationsAnimNode;
+	copNetwork: CopAnimNode;
+	eventsNetwork: EventsAnimNode;
+	materialsNetwork: MaterialsAnimNode;
+	postProcessNetwork: PostProcessAnimNode;
+	renderersNetwork: RenderersAnimNode;
 }
 
 import {PolyEngine} from '../../../Poly';

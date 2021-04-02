@@ -109,7 +109,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// 	return undefined;
 	// }
 	protected _build_lines() {
-		for (let shader_name of this.shader_names) {
+		for (let shader_name of this.shaderNames()) {
 			const template = this._template_shader_for_shader_name(shader_name);
 			if (template) {
 				this._replace_template(template, shader_name);
@@ -221,13 +221,16 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	get code_builder() {
+	codeBuilder() {
 		return (this._code_builder = this._code_builder || this._create_code_builder());
+	}
+	protected _resetCodeBuilder() {
+		this._code_builder = undefined;
 	}
 	private _create_code_builder() {
 		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(
 			this.currentGlParentNode(),
-			this.shader_names,
+			this.shaderNames(),
 			(root_node, shader_name) => {
 				return this.input_names_for_shader_name(root_node, shader_name);
 			}
@@ -237,34 +240,34 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		});
 	}
 	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
-		const param_nodes = GlNodeFinder.find_param_generating_nodes(this.currentGlParentNode());
-		this.code_builder.build_from_nodes(root_nodes, param_nodes);
+		const param_nodes = GlNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
+		this.codeBuilder().build_from_nodes(root_nodes, param_nodes);
 	}
 	allow_new_param_configs() {
-		this.code_builder.allow_new_param_configs();
+		this.codeBuilder().allow_new_param_configs();
 	}
 	disallow_new_param_configs() {
-		this.code_builder.disallow_new_param_configs();
+		this.codeBuilder().disallow_new_param_configs();
 	}
 	builder_param_configs() {
-		return this.code_builder.param_configs();
+		return this.codeBuilder().param_configs();
 	}
 	builder_lines(shader_name: ShaderName, line_type: LineType) {
-		return this.code_builder.lines(shader_name, line_type);
+		return this.codeBuilder().lines(shader_name, line_type);
 	}
 	all_builder_lines() {
-		return this.code_builder.all_lines();
+		return this.codeBuilder().all_lines();
 	}
 	param_configs() {
-		const code_builder = this._param_config_owner || this.code_builder;
+		const code_builder = this._param_config_owner || this.codeBuilder();
 		return code_builder.param_configs();
 	}
 	set_param_configs_owner(param_config_owner: CodeBuilder) {
 		this._param_config_owner = param_config_owner;
 		if (this._param_config_owner) {
-			this.code_builder.disallow_new_param_configs();
+			this.codeBuilder().disallow_new_param_configs();
 		} else {
-			this.code_builder.allow_new_param_configs();
+			this.codeBuilder().allow_new_param_configs();
 		}
 	}
 
@@ -328,18 +331,17 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		this._reset_uniforms_time_dependency();
 		this._reset_uniforms_resolution_dependency();
 	}
-	get shader_configs() {
+	shaderConfigs() {
 		return (this._shader_configs = this._shader_configs || this.create_shader_configs());
 	}
 	set_shader_configs(shader_configs: ShaderConfig[]) {
 		this._shader_configs = shader_configs;
 	}
-	get shader_names(): ShaderName[] {
-		return this.shader_configs?.map((sc) => sc.name()) || [];
+	shaderNames(): ShaderName[] {
+		return this.shaderConfigs()?.map((sc) => sc.name()) || [];
 	}
 	protected _reset_shader_configs() {
 		this._shader_configs = undefined;
-		// this.shader_configs; // TODO: typescript - why do I need to re-initialize here?
 	}
 	create_shader_configs(): ShaderConfig[] {
 		return [
@@ -348,7 +350,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		];
 	}
 	shader_config(name: string): ShaderConfig | undefined {
-		return this.shader_configs?.filter((sc) => {
+		return this.shaderConfigs()?.filter((sc) => {
 			return sc.name() == name;
 		})[0];
 	}

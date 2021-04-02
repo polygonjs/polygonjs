@@ -1,9 +1,9 @@
 import {TextureVariable, TextureVariableData} from './TextureVariable';
 import {BaseGlNodeType} from '../../_Base';
 import {PolyScene} from '../../../../scene/PolyScene';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {AttributeGlNode} from '../../Attribute';
 import {GlNodeType} from '../../../../poly/NodeContext';
+import {ShaderName} from '../../../utils/shaders/ShaderName';
 export type TextureAllocationData = TextureVariableData[];
 
 const TEXTURE_PREFIX = 'texture_';
@@ -12,37 +12,37 @@ export class TextureAllocation {
 	private _variables: TextureVariable[] | undefined;
 	private _size: number = 0;
 
-	constructor(private _shader_name: ShaderName) {}
+	constructor(/*private _shader_name: ShaderName*/) {}
 
-	add_variable(variable: TextureVariable) {
+	addVariable(variable: TextureVariable) {
 		this._variables = this._variables || [];
 		this._variables.push(variable);
 		variable.setPosition(this._size);
-		variable.set_allocation(this);
-		this._size += variable.size;
+		variable.setAllocation(this);
+		this._size += variable.size();
 	}
 
-	has_space_for_variable(variable: TextureVariable): boolean {
-		return this._size + variable.size <= 4;
-	}
-	get size() {
-		return this._size;
-	}
-	get shader_name() {
-		return this._shader_name; //this._variables[0].name()
-	}
-	get texture_name(): string {
-		return `${TEXTURE_PREFIX}${this._shader_name}`;
+	hasSpaceForVariable(variable: TextureVariable): boolean {
+		return this._size + variable.size() <= 4;
 	}
 
-	get variables(): TextureVariable[] | undefined {
+	shaderName() {
+		// return this._shader_name; //this._variables[0].name()
+		const names = this.variables()?.map((v) => v.name()) || ['no_variables_allocated'];
+		return names.join('_SEPARATOR_') as ShaderName;
+	}
+	textureName(): string {
+		return `${TEXTURE_PREFIX}${this.shaderName()}`;
+	}
+
+	variables(): TextureVariable[] | undefined {
 		return this._variables;
 	}
-	variables_for_input_node(root_node: BaseGlNodeType): TextureVariable[] | undefined {
-		return this._variables?.filter((variable) => variable.graph_node_ids?.has(root_node.graphNodeId()) || false);
+	variablesForInputNode(root_node: BaseGlNodeType): TextureVariable[] | undefined {
+		return this._variables?.filter((variable) => variable.graphNodeIds()?.has(root_node.graphNodeId()) || false);
 	}
-	input_names_for_node(root_node: BaseGlNodeType): string[] | undefined {
-		const variables = this.variables_for_input_node(root_node);
+	inputNamesForNode(root_node: BaseGlNodeType): string[] | undefined {
+		const variables = this.variablesForInputNode(root_node);
 		if (variables) {
 			if (root_node.type() == GlNodeType.ATTRIBUTE) {
 				// if the AttributeGlNode exports an attribute called restP,
@@ -72,11 +72,11 @@ export class TextureAllocation {
 		}
 	}
 
-	static from_json(data: TextureAllocationData, shader_name: ShaderName): TextureAllocation {
-		const texture_allocation = new TextureAllocation(shader_name);
+	static fromJSON(data: TextureAllocationData): TextureAllocation {
+		const texture_allocation = new TextureAllocation();
 		for (let datum of data) {
-			const texture_variable = TextureVariable.from_json(datum);
-			texture_allocation.add_variable(texture_variable);
+			const texture_variable = TextureVariable.fromJSON(datum);
+			texture_allocation.addVariable(texture_variable);
 		}
 		return texture_allocation;
 	}

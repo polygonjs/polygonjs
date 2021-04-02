@@ -19,7 +19,7 @@ QUnit.test('event set_param simple', async (assert) => {
 	let container = await switch1.requestContainer();
 	assert.equal(container.pointsCount(), 24);
 
-	const events1 = scene.root().createNode('events');
+	const events1 = scene.root().createNode('eventsNetwork');
 	const set_param1 = events1.createNode('setParam');
 	set_param1.p.param.set(switch1.p.input.fullPath());
 	await set_param1.p.param.compute();

@@ -1,9 +1,6 @@
 /**
- * Sorts points
+ * Sorts vertices
  *
- * @remarks
- *
- * This node currently only works with Points. It cannot yet sorts the vertices of a Mesh or Line.
  *
  */
 import {TypedSopNode} from './_Base';

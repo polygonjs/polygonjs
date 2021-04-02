@@ -49,7 +49,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		});
 	}
 
-	shader_names() {
+	shaderNames() {
 		return this._shader_names;
 	}
 	input_names_for_shader_name(root_node: NodeTypeMap[NC], shader_name: ShaderName) {
@@ -59,11 +59,11 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	traverse(root_nodes: NodeTypeMap[NC][]) {
 		this.reset();
 
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			this._leaves_graph_id.set(shader_name, new Map());
 		}
 
-		for (let shader_name of this.shader_names()) {
+		for (let shader_name of this.shaderNames()) {
 			this._shader_name = shader_name;
 			for (let root_node of root_nodes) {
 				this.find_leaves_from_root_node(root_node);

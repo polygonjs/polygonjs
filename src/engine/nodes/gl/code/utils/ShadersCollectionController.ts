@@ -36,7 +36,7 @@ export class ShadersCollectionController {
 	// 	}
 	// }
 
-	get shader_names() {
+	shaderNames() {
 		return this._shader_names;
 	}
 

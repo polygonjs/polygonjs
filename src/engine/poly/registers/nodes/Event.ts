@@ -58,12 +58,12 @@ export interface EventNodeChildrenMap {
 	viewer: ViewerEventNode;
 
 	// networks
-	animations: AnimationsEventNode;
-	cop: CopEventNode;
-	events: EventsEventNode;
-	materials: MaterialsEventNode;
-	postProcess: PostProcessEventNode;
-	renderers: RenderersEventNode;
+	animationsNetwork: AnimationsEventNode;
+	copNetwork: CopEventNode;
+	eventsNetwork: EventsEventNode;
+	materialsNetwork: MaterialsEventNode;
+	postProcessNetwork: PostProcessEventNode;
+	renderersNetwork: RenderersEventNode;
 }
 
 import {PolyEngine} from '../../../Poly';

@@ -51,12 +51,12 @@ export interface ObjNodeChildrenMap {
 	scene: SceneObjNode;
 	spotLight: SpotLightObjNode;
 	// networks
-	animations: AnimationsObjNode;
-	cop: CopObjNode;
-	events: EventsObjNode;
-	materials: MaterialsObjNode;
-	postProcess: PostProcessObjNode;
-	renderers: RenderersObjNode;
+	animationsNetwork: AnimationsObjNode;
+	copNetwork: CopObjNode;
+	eventsNetwork: EventsObjNode;
+	materialsNetwork: MaterialsObjNode;
+	postProcessNetwork: PostProcessObjNode;
+	renderersNetwork: RenderersObjNode;
 }
 
 import {PolyEngine} from '../../../Poly';

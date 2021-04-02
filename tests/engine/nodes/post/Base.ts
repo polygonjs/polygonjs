@@ -15,7 +15,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 
 	// start test
 	const camera = scene.root().nodesByType('perspectiveCamera')[0];
-	const post_process1 = camera.createNode('postProcess');
+	const post_process1 = camera.createNode('postProcessNetwork');
 	const horizontal_blur1 = post_process1.createNode('horizontalBlur');
 
 	assert.ok(horizontal_blur1.flags?.display?.active(), 'first node created has display flag on');

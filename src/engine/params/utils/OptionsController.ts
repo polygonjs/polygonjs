@@ -230,16 +230,16 @@ export class OptionsController {
 		this._options = ObjectUtils.cloneDeep(options_controller.current());
 		this.post_set_options();
 	}
-	set_option<K extends keyof ParamOptions>(name: K, value: ParamOptions[K]) {
+	setOption<K extends keyof ParamOptions>(name: K, value: ParamOptions[K]) {
 		this._options[name] = value;
 		if (this._param.components) {
 			for (let component of this._param.components) {
-				component.options.set_option(name, value);
+				component.options.setOption(name, value);
 			}
 		}
 	}
 	private post_set_options() {
-		this._handle_computeOnDirty();
+		this._handleComputeOnDirty();
 	}
 	param() {
 		return this._param;
@@ -255,10 +255,10 @@ export class OptionsController {
 	}
 
 	// utils
-	has_options_overridden(): boolean {
+	hasOptionsOverridden(): boolean {
 		return !ObjectUtils.isEqual(this._options, this._default_options);
 	}
-	overridden_options(): ParamOptions {
+	overriddenOptions(): ParamOptions {
 		const overriden: ParamOptions = {};
 		const option_names = Object.keys(this._options) as Array<keyof ParamOptions>;
 		for (let option_name of option_names) {
@@ -269,8 +269,8 @@ export class OptionsController {
 		}
 		return overriden;
 	}
-	overridden_option_names(): Array<keyof ParamOptions> {
-		return Object.keys(this.overridden_options()) as Array<keyof ParamOptions>;
+	overriddenOptionNames(): Array<keyof ParamOptions> {
+		return Object.keys(this.overriddenOptions()) as Array<keyof ParamOptions>;
 	}
 
 	// compute on dirty
@@ -278,20 +278,20 @@ export class OptionsController {
 		return this._options[COMPUTE_ON_DIRTY] || false;
 	}
 	private _computeOnDirty_callback_added: boolean | undefined;
-	private _handle_computeOnDirty() {
+	private _handleComputeOnDirty() {
 		if (this.computeOnDirty()) {
 			if (!this._computeOnDirty_callback_added) {
-				this.param().addPostDirtyHook('computeOnDirty', this._compute_param.bind(this));
+				this.param().addPostDirtyHook('computeOnDirty', this._computeParam.bind(this));
 				this._computeOnDirty_callback_added = true;
 			}
 		}
 	}
-	private async _compute_param() {
+	private async _computeParam() {
 		await this.param().compute();
 	}
 
 	// callback
-	has_callback() {
+	hasCallback() {
 		return this._options[CALLBACK_OPTION] != null || this._options[CALLBACK_STRING_OPTION] != null;
 	}
 
@@ -300,7 +300,7 @@ export class OptionsController {
 		this._callbackAllowed = true;
 	}
 
-	execute_callback() {
+	executeCallback() {
 		if (!this._callbackAllowed) {
 			return;
 		}
@@ -313,7 +313,7 @@ export class OptionsController {
 		if (!this.node().scene().loadingController.loaded()) {
 			return;
 		}
-		const callback = this.get_callback();
+		const callback = this.getCallback();
 		if (callback != null) {
 			// not running the callback when a node is cooking prevents some event nodes from behaving as expected.
 			// It may also prevent files such as the sop/file to reload correctly if its reload callback was called while it loads a file
@@ -327,7 +327,7 @@ export class OptionsController {
 				// will be receiving a float. The reason is that the callback is created by the ParamConfig, and it is then passed down to the component unchanged.
 				// I could maybe find a way so that the param config creates callback for the multiple param
 				// and also for the components. But they would have to be assigned correctly by the multiple param
-				parent_param.options.execute_callback();
+				parent_param.options.executeCallback();
 			} else {
 				callback(this.node(), this.param());
 			}
@@ -336,13 +336,12 @@ export class OptionsController {
 			// }
 		}
 	}
-	private get_callback() {
-		if (this.has_callback()) {
-			return (this._options[CALLBACK_OPTION] =
-				this._options[CALLBACK_OPTION] || this.create_callback_from_string());
+	private getCallback() {
+		if (this.hasCallback()) {
+			return (this._options[CALLBACK_OPTION] = this._options[CALLBACK_OPTION] || this.createCallbackFromString());
 		}
 	}
-	private create_callback_from_string() {
+	private createCallbackFromString() {
 		const callbackString = this._options[CALLBACK_STRING_OPTION];
 		if (callbackString) {
 			const callback_function = new Function('node', 'scene', 'window', 'location', callbackString);
@@ -353,12 +352,12 @@ export class OptionsController {
 	}
 
 	// color
-	color_conversion() {
+	colorConversion() {
 		return this._options[COLOR_CONVERSION];
 	}
 
 	// cook
-	makes_node_dirty_when_dirty() {
+	makesNodeDirtyWhenDirty() {
 		let cook_options;
 
 		// false as the dirty state will go through the parent param
@@ -374,14 +373,14 @@ export class OptionsController {
 	}
 
 	// desktop
-	file_browse_option() {
+	fileBrowseOption() {
 		return this._options[FILE_BROWSE_OPTION];
 	}
-	file_browse_allowed(): boolean {
-		return this.file_browse_option() != null;
+	fileBrowseAllowed(): boolean {
+		return this.fileBrowseOption() != null;
 	}
-	file_browse_type(): FileType[] | null {
-		const option = this.file_browse_option();
+	fileBrowseType(): FileType[] | null {
+		const option = this.fileBrowseOption();
 		if (option) {
 			return option[FILE_TYPE_OPTION];
 		} else {
@@ -401,7 +400,7 @@ export class OptionsController {
 	// get displays_expression_only() {
 	// 	return this._options[EXPRESSION_ONLY_OPTION] === true;
 	// }
-	is_expression_for_entities(): boolean {
+	isExpressionForEntities(): boolean {
 		const expr_option = this._options[EXPRESSION];
 		if (expr_option) {
 			return expr_option[FOR_ENTITIES] || false;
@@ -415,11 +414,11 @@ export class OptionsController {
 	}
 
 	// menu
-	has_menu() {
-		return this.menu_options() != null;
+	hasMenu() {
+		return this.menuOptions() != null;
 	}
 
-	private menu_options() {
+	private menuOptions() {
 		return this._options[MENU];
 	}
 	// private get menu_type() {
@@ -428,8 +427,8 @@ export class OptionsController {
 	// 	}
 	// }
 
-	menu_entries() {
-		const options = this.menu_options();
+	menuEntries() {
+		const options = this.menuOptions();
 		if (options) {
 			return options[ENTRIES];
 		} else {
@@ -437,39 +436,39 @@ export class OptionsController {
 		}
 	}
 
-	has_menu_radio() {
-		return this.has_menu(); //&& this.menu_options[TYPE] === RADIO;
-	}
+	// hasMenuRadio() {
+	// 	return this.hasMenu(); //&& this.menu_options[TYPE] === RADIO;
+	// }
 
 	// multiline
-	is_multiline(): boolean {
+	isMultiline(): boolean {
 		return this._options[MULTILINE_OPTION] === true;
 	}
 	language(): StringParamLanguage | undefined {
 		return this._options[LANGUAGE_OPTION];
 	}
-	is_code(): boolean {
+	isCode(): boolean {
 		return this.language() != null;
 	}
 
 	// node selection
-	node_selection_options() {
+	nodeSelectionOptions() {
 		return this._options[NODE_SELECTION];
 	}
 	nodeSelectionContext() {
-		const options = this.node_selection_options();
+		const options = this.nodeSelectionOptions();
 		if (options) {
 			return options[NODE_SELECTION_CONTEXT];
 		}
 	}
 	nodeSelectionTypes() {
-		const options = this.node_selection_options();
+		const options = this.nodeSelectionOptions();
 		if (options) {
 			return options[NODE_SELECTION_TYPES];
 		}
 	}
 
-	dependent_on_found_node() {
+	dependentOnFoundNode() {
 		if (DEPENDENT_ON_FOUND_NODE in this._options) {
 			return this._options[DEPENDENT_ON_FOUND_NODE];
 		} else {
@@ -478,14 +477,14 @@ export class OptionsController {
 	}
 
 	// param selection
-	is_selecting_param() {
-		return this.param_selection_options() != null;
+	isSelectingParam() {
+		return this.paramSelectionOptions() != null;
 	}
-	param_selection_options() {
+	paramSelectionOptions() {
 		return this._options[PARAM_SELECTION];
 	}
-	param_selection_type() {
-		const options = this.param_selection_options();
+	paramSelectionType() {
+		const options = this.paramSelectionOptions();
 		if (options) {
 			const type_or_boolean = options;
 			if (!CoreType.isBoolean(type_or_boolean)) {
@@ -507,7 +506,7 @@ export class OptionsController {
 		return this._options[STEP_OPTION];
 	}
 
-	private range_locked(): Boolean2 {
+	private rangeLocked(): Boolean2 {
 		// if(this.self.has_menu() && this.self.menu_entries()){
 		// 	return [true, true]
 		// } else {
@@ -515,31 +514,31 @@ export class OptionsController {
 		// }
 	}
 
-	ensure_in_range(value: number): number {
+	ensureInRange(value: number): number {
 		const range = this.range();
 
 		if (value >= range[0] && value <= range[1]) {
 			return value;
 		} else {
 			if (value < range[0]) {
-				return this.range_locked()[0] === true ? range[0] : value;
+				return this.rangeLocked()[0] === true ? range[0] : value;
 			} else {
-				return this.range_locked()[1] === true ? range[1] : value;
+				return this.rangeLocked()[1] === true ? range[1] : value;
 			}
 		}
 	}
 
 	// spare
-	is_spare(): boolean {
+	isSpare(): boolean {
 		return this._options[SPARE_OPTION] || false;
 	}
 
 	// texture
-	texture_options() {
+	textureOptions() {
 		return this._options[TEXTURE_OPTION];
 	}
-	texture_as_env(): boolean {
-		const texture_options = this.texture_options();
+	textureAsEnv(): boolean {
+		const texture_options = this.textureOptions();
 		if (texture_options != null) {
 			return texture_options[ENV_OPTION] === true;
 		}
@@ -547,13 +546,13 @@ export class OptionsController {
 	}
 
 	// visible
-	is_hidden(): boolean {
+	isHidden(): boolean {
 		return this._options[HIDDEN_OPTION] === true || this._programatic_visible_state === false;
 	}
-	is_visible(): boolean {
-		return !this.is_hidden();
+	isVisible(): boolean {
+		return !this.isHidden();
 	}
-	set_visible_state(state: boolean) {
+	setVisibleState(state: boolean) {
 		this._options[HIDDEN_OPTION] = !state;
 		this.param().emit(ParamEvent.VISIBLE_UPDATED);
 	}
@@ -561,22 +560,22 @@ export class OptionsController {
 	label() {
 		return this._options[LABEL];
 	}
-	is_label_hidden(): boolean {
+	isLabelHidden(): boolean {
 		const type = this.param().type();
 		return (
 			// this._options[SHOW_LABEL_OPTION] === false ||
-			type === ParamType.BUTTON || (type === ParamType.BOOLEAN && this.is_field_hidden())
+			type === ParamType.BUTTON || (type === ParamType.BOOLEAN && this.isFieldHidden())
 		);
 	}
-	is_field_hidden(): boolean {
+	isFieldHidden(): boolean {
 		return this._options[FIELD_OPTION] === false;
 	}
 
 	// programatic visibility
-	ui_data_depends_on_other_params(): boolean {
+	uiDataDependsOnOtherParams(): boolean {
 		return VISIBLE_IF_OPTION in this._options;
 	}
-	visibility_predecessors() {
+	visibilityPredecessors() {
 		const visibility_options = this._options[VISIBLE_IF_OPTION];
 		if (!visibility_options) {
 			return [];
@@ -602,16 +601,16 @@ export class OptionsController {
 		);
 	}
 
-	private _update_visibility_and_remove_dirty_bound = this.update_visibility_and_remove_dirty.bind(this);
+	private _updateVisibilityAndRemoveDirtyBound = this.updateVisibilityAndRemoveDirty.bind(this);
 	private _visibility_graph_node: CoreGraphNode | undefined;
 	private _ui_data_dependency_set: boolean = false;
-	set_ui_data_dependency() {
+	setUiDataDependency() {
 		// currently this is only called on request on a per-param and therefore per-node basis, not on scene load for the whole scene
 		if (this._ui_data_dependency_set) {
 			return;
 		}
 		this._ui_data_dependency_set = true;
-		const predecessors = this.visibility_predecessors();
+		const predecessors = this.visibilityPredecessors();
 		if (predecessors.length > 0) {
 			this._visibility_graph_node = new CoreGraphNode(this.param().scene(), 'param_visibility');
 			for (let predecessor of predecessors) {
@@ -619,19 +618,19 @@ export class OptionsController {
 			}
 			this._visibility_graph_node.addPostDirtyHook(
 				'_update_visibility_and_remove_dirty',
-				this._update_visibility_and_remove_dirty_bound
+				this._updateVisibilityAndRemoveDirtyBound
 			);
 		}
 	}
-	private update_visibility_and_remove_dirty() {
-		this.update_visibility();
+	private updateVisibilityAndRemoveDirty() {
+		this.updateVisibility();
 		this.param().removeDirtyState();
 	}
 
-	async update_visibility() {
+	async updateVisibility() {
 		const options = this._options[VISIBLE_IF_OPTION];
 		if (options) {
-			const params = this.visibility_predecessors();
+			const params = this.visibilityPredecessors();
 			const promises = params.map((p) => {
 				if (p.isDirty()) {
 					return p.compute();

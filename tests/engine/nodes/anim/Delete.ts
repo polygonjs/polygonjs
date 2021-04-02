@@ -1,5 +1,5 @@
 // QUnit.test('anim merge simple', async (assert) => {
-// 	const ANIM = window.scene.root.createNode('animations');
+// 	const ANIM = window.scene.root.createNode('animationsNetwork');
 // 	const track1 = ANIM.createNode('track');
 // 	const track2 = ANIM.createNode('track');
 // 	const merge1 = ANIM.createNode('merge');

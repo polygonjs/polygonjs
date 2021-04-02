@@ -6,7 +6,7 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 	assert.ok(!scene.loadingController.isLoading());
 
 	const perspective_camera1 = window.perspective_camera1;
-	const events = scene.root().createNode('events');
+	const events = scene.root().createNode('eventsNetwork');
 	const camera_orbit_controls1 = events.createNode('cameraOrbitControls');
 	const camera_orbit_controls2 = events.createNode('cameraOrbitControls');
 

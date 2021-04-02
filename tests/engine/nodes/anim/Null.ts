@@ -21,7 +21,7 @@ QUnit.test('anim null simple', async (assert) => {
 	assert.equal(object.name, 'test');
 
 	// setup anim
-	const ANIM = window.scene.root().createNode('animations');
+	const ANIM = window.scene.root().createNode('animationsNetwork');
 	const target = ANIM.createNode('target');
 	target.setTargetType(AnimTargetNodeTargetType.SCENE_GRAPH);
 	target.p.objectMask.set('*test');

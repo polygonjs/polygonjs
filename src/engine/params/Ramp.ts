@@ -110,7 +110,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 
 		this._reset_ramp_interpolant();
 		this._update_ramp_texture();
-		this.options.execute_callback();
+		this.options.executeCallback();
 		this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		this.setSuccessorsDirty(this);
 	}

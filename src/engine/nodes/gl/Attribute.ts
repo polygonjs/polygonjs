@@ -83,6 +83,9 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			this.p.texportWhenConnected.set(1);
 		}
 	}
+	setAttribSize(size: number) {
+		this.p.type.set(size - 1);
+	}
 
 	// createParams() {}
 	// inputless_params_names(): string[] {
@@ -162,10 +165,10 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 		return output; //this.named_inputs().filter(ni=>ni.name() == Attribute.input_name())[0]
 	// 	}
 	// }
-	get is_importing(): boolean {
+	isImporting(): boolean {
 		return this.io.outputs.used_output_names().length > 0; // TODO: ensure that we can check that the connected outputs are part of the nodes retrieved by the node traverser
 	}
-	get is_exporting(): boolean {
+	isExporting(): boolean {
 		if (isBooleanTrue(this.pv.exportWhenConnected)) {
 			const input_node = this.io.inputs.named_input(AttributeGlNode.INPUT_NAME);
 			return input_node != null;
@@ -174,7 +177,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		}
 	}
 	private _set_mat_to_recompile_if_is_exporting() {
-		if (this.is_exporting) {
+		if (this.isExporting()) {
 			this._set_mat_to_recompile();
 		}
 	}

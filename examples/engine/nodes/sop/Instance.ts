@@ -41,7 +41,7 @@ export function SopInstance() {
 
 	// create a material to render the instance.
 	// We only have to extend the existing materials
-	const MAT = root.createNode('materials');
+	const MAT = root.createNode('materialsNetwork');
 	const material = MAT.createNode('meshLambertBuilder');
 	const output = material.createNode('output');
 	// all we have to do in the material is to plug an instanceTransform node into the output
@@ -57,7 +57,7 @@ export function SopInstance() {
 	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
-	const events1 = perspectiveCamera1.createNode('events');
+	const events1 = perspectiveCamera1.createNode('eventsNetwork');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
 	perspectiveCamera1.p.controls.setNode(orbitsControls);
 

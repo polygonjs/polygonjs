@@ -65,12 +65,12 @@ export interface PostNodeChildrenMap {
 	verticalBlur: VerticalBlurPostNode;
 	vignette: VignettePostNode;
 	// networks
-	animations: AnimationsPostNode;
-	cop: CopPostNode;
-	events: EventsPostNode;
-	materials: MaterialsPostNode;
-	postProcess: PostProcessPostNode;
-	renderers: RenderersPostNode;
+	animationsNetwork: AnimationsPostNode;
+	copNetwork: CopPostNode;
+	eventsNetwork: EventsPostNode;
+	materialsNetwork: MaterialsPostNode;
+	postProcessNetwork: PostProcessPostNode;
+	renderersNetwork: RenderersPostNode;
 }
 
 import {PolyEngine} from '../../../Poly';

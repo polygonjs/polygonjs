@@ -20,7 +20,7 @@ export function SopTetrahedron() {
 	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
-	const events1 = perspectiveCamera1.createNode('events');
+	const events1 = perspectiveCamera1.createNode('eventsNetwork');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
 	perspectiveCamera1.p.controls.setNode(orbitsControls);
 

@@ -30,7 +30,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 		super();
 	}
 
-	get shader_names() {
+	shaderNames() {
 		return [];
 	}
 	input_names_for_shader_name(node: NodeTypeMap[NodeContext.JS], shader_name: ShaderName): string[] {

@@ -32,7 +32,7 @@ export function SopAttribCreate() {
 	noise.p.computeNormals.set(false);
 
 	// add a material to see the line
-	const materials = root.createNode('materials');
+	const materials = root.createNode('materialsNetwork');
 	const lineBasic = materials.createNode('lineBasic');
 	lineBasic.p.color.set([0, 0, 1]);
 	// assign the material
@@ -45,7 +45,7 @@ export function SopAttribCreate() {
 	const perspectiveCamera1 = root.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add orbitControls
-	const events1 = perspectiveCamera1.createNode('events');
+	const events1 = perspectiveCamera1.createNode('eventsNetwork');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
 	perspectiveCamera1.p.controls.setNode(orbitsControls);
 

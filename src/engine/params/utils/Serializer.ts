@@ -64,6 +64,6 @@ export class ParamSerializer<T extends ParamType> {
 		return this.param.states.error.message();
 	}
 	is_visible() {
-		return this.param.options.is_visible();
+		return this.param.options.isVisible();
 	}
 }

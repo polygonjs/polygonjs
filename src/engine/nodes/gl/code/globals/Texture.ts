@@ -161,12 +161,12 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 			// 	console.error(`no tex var found for ${attrib_name}`)
 			// 	this._texture_allocations_controller.print(node.scene())
 			// }
-			const component = texture_variable.component;
-			const allocation = texture_variable.allocation;
+			const component = texture_variable.component();
+			const allocation = texture_variable.allocation();
 			if (allocation) {
 				// const definitions_by_shader_name = {}
 				// definitions_by_shader_name[shader_name] = []
-				const var_name_texture = allocation.texture_name;
+				const var_name_texture = allocation.textureName();
 				const texture_definition = new UniformGLDefinition(
 					node,
 					GlConnectionPointType.SAMPLER_2D,

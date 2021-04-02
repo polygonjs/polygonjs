@@ -49,12 +49,12 @@ export type NodeContextUnion =
 	| NodeContext.SOP;
 
 export enum NetworkNodeType {
-	ANIM = 'animations',
-	COP = 'cop',
-	EVENT = 'events',
-	MAT = 'materials',
-	POST = 'postProcess',
-	ROP = 'renderers',
+	ANIM = 'animationsNetwork',
+	COP = 'copNetwork',
+	EVENT = 'eventsNetwork',
+	MAT = 'materialsNetwork',
+	POST = 'postProcessNetwork',
+	ROP = 'renderersNetwork',
 }
 export enum NetworkChildNodeType {
 	INPUT = 'subnetInput',

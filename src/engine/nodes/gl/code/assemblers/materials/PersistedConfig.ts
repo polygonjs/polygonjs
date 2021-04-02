@@ -149,7 +149,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 				}
 
 				if (param && (uniform || customUniforms)) {
-					param.options.set_option('callback', () => {
+					param.options.setOption('callback', () => {
 						if (uniform) {
 							GlParamConfig.callback(param, uniform);
 						}

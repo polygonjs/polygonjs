@@ -37,6 +37,7 @@ import {CSS2DObjectSopNode} from '../../../nodes/sop/CSS2DObject';
 import {CSS3DObjectSopNode} from '../../../nodes/sop/CSS3DObject';
 import {DataSopNode} from '../../../nodes/sop/Data';
 import {DataUrlSopNode} from '../../../nodes/sop/DataUrl';
+import {DecalSopNode} from '../../../nodes/sop/Decal';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
@@ -106,7 +107,6 @@ export interface GeoNodeChildrenMap {
 	add: AddSopNode;
 	animationCopy: AnimationCopySopNode;
 	animationMixer: AnimationMixerSopNode;
-	animations: AnimationsSopNode;
 	attribAddMult: AttribAddMultSopNode;
 	attribCast: AttribCastSopNode;
 	attribCopy: AttribCopySopNode;
@@ -129,16 +129,15 @@ export interface GeoNodeChildrenMap {
 	// code: CodeSopNode;
 	color: ColorSopNode;
 	cone: ConeSopNode;
-	cop: CopSopNode;
 	copy: CopySopNode;
 	CSS2DObject: CSS2DObjectSopNode;
 	CSS3DObject: CSS3DObjectSopNode;
 	data: DataSopNode;
 	dataUrl: DataUrlSopNode;
+	decal: DecalSopNode;
 	delay: DelaySopNode;
 	delete: DeleteSopNode;
 	drawRange: DrawRangeSopNode;
-	events: EventsSopNode;
 	face: FaceSopNode;
 	file: FileSopNode;
 	fuse: FuseSopNode;
@@ -154,9 +153,7 @@ export interface GeoNodeChildrenMap {
 	line: LineSopNode;
 	lod: LodSopNode;
 	material: MaterialSopNode;
-	materials: MaterialsSopNode;
 	merge: MergeSopNode;
-	postProcess: PostProcessSopNode;
 	noise: NoiseSopNode;
 	normals: NormalsSopNode;
 	null: NullSopNode;
@@ -173,7 +170,6 @@ export interface GeoNodeChildrenMap {
 	polywire: PolywireSopNode;
 	ray: RaySopNode;
 	reflector: ReflectorSopNode;
-	renderers: RenderersSopNode;
 	resample: ResampleSopNode;
 	restAttributes: RestAttributesSopNode;
 	roundedBox: RoundedBoxSopNode;
@@ -199,6 +195,14 @@ export interface GeoNodeChildrenMap {
 	transformReset: TransformResetSopNode;
 	tube: TubeSopNode;
 	uvProject: UvProjectSopNode;
+
+	// networks
+	animationsNetwork: AnimationsSopNode;
+	copNetwork: CopSopNode;
+	eventsNetwork: EventsSopNode;
+	materialsNetwork: MaterialsSopNode;
+	postProcessNetwork: PostProcessSopNode;
+	renderersNetwork: RenderersSopNode;
 }
 
 import {AddSopOperation} from '../../../operations/sop/Add';
@@ -214,6 +218,7 @@ import {BoxSopOperation} from '../../../operations/sop/Box';
 import {CenterSopOperation} from '../../../operations/sop/Center';
 import {CircleSopOperation} from '../../../operations/sop/Circle';
 import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
+import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {FileSopOperation} from '../../../operations/sop/File';
 import {HierarchySopOperation} from '../../../operations/sop/Hierarchy';
 import {IcosahedronSopOperation} from '../../../operations/sop/Icosahedron';
@@ -257,6 +262,7 @@ export class SopRegister {
 		poly.registerOperation(CenterSopOperation);
 		poly.registerOperation(CircleSopOperation);
 		poly.registerOperation(CSS2DObjectSopOperation);
+		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(FileSopOperation);
 		poly.registerOperation(HierarchySopOperation);
 		poly.registerOperation(IcosahedronSopOperation);
@@ -314,6 +320,7 @@ export class SopRegister {
 		// poly.registerNode(Css3DObjectSopNode, CATEGORY_SOP.PRIMITIVES); // not working yet
 		poly.registerNode(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DataUrlSopNode, CATEGORY_SOP.INPUT);
+		poly.registerNode(DecalSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DelaySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DeleteSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);

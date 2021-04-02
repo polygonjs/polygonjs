@@ -136,7 +136,7 @@ QUnit.test('a relative path in a operator path param gets updated when ref chang
 QUnit.test('an absolute path in a operator path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
 	const geo = window.geo1;
-	const anim = scene.root().createNode('animations');
+	const anim = scene.root().createNode('animationsNetwork');
 	const target = anim.createNode('target');
 	const box = geo.createNode('box');
 	const param = target.p.nodePath;
@@ -178,7 +178,7 @@ QUnit.test('an absolute path in a operator path param gets updated when ref chan
 QUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root();
-	const event = root.createNode('events');
+	const event = root.createNode('eventsNetwork');
 	const orbit = event.createNode('cameraOrbitControls');
 	const camera = root.createNode('perspectiveCamera');
 	const controls_param = camera.p.controls;
@@ -189,19 +189,19 @@ QUnit.test('an absolute path in a node path param gets updated when ref changes 
 	controls_param.set(orbit.fullPath());
 
 	await controls_param.compute();
-	assert.equal(controls_param.value.path(), '/events1/cameraOrbitControls1');
+	assert.equal(controls_param.value.path(), '/eventsNetwork1/cameraOrbitControls1');
 
 	orbit.setName('new_name');
 	assert.ok(controls_param.isDirty(), 'is dirty on renamed 1');
 	await controls_param.compute();
 	assert.notOk(controls_param.isDirty());
-	assert.equal(controls_param.value.path(), '/events1/new_name');
+	assert.equal(controls_param.value.path(), '/eventsNetwork1/new_name');
 
 	orbit.setName('new_name2');
 	assert.ok(controls_param.isDirty(), 'is dirty on renamed 2');
 	await controls_param.compute();
 	assert.notOk(controls_param.isDirty());
-	assert.equal(controls_param.value.path(), '/events1/new_name2');
+	assert.equal(controls_param.value.path(), '/eventsNetwork1/new_name2');
 
 	event.setName('new_event');
 	assert.ok(controls_param.isDirty());
@@ -222,7 +222,7 @@ QUnit.test(
 		const scene = window.scene;
 		const root = scene.root();
 		const MAT = window.MAT;
-		const event = root.createNode('events');
+		const event = root.createNode('eventsNetwork');
 		const set_param1 = event.createNode('setParam');
 		const param_operator_path_param = set_param1.p.param;
 		const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder');
