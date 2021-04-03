@@ -57,7 +57,6 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 		});
 	}
 	async cook() {
-		this.compile_if_required();
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
@@ -65,6 +64,8 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 		TransparencyController.update(this);
 		FogController.update(this);
 		SkinningController.update(this);
+
+		this.compile_if_required();
 
 		this.setMaterial(this.material);
 	}

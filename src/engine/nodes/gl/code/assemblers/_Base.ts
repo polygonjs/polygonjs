@@ -544,6 +544,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		}
 	}
 
+	_addFilterFragmentShaderCallback(callbackName: string, callback: (s: string) => string) {}
+	_removeFilterFragmentShaderCallback(callbackName: string) {}
+
 	getCustomMaterials(): Map<CustomMaterialName, ShaderMaterial> {
 		return new Map<CustomMaterialName, ShaderMaterial>();
 	}

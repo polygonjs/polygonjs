@@ -3,7 +3,7 @@ import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 import {BaseController} from './_BaseController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {BaseNodeType} from '../../_Base';
+import {BaseNodeType, TypedNode} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {DoubleSide, BackSide, FrontSide} from 'three/src/constants';
 import {NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending} from 'three/src/constants';
@@ -11,6 +11,8 @@ import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
 import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
+import {PCSSController} from './shadows/pcss/PCSSController';
+import {BaseBuilderMatNodeType} from '../_BaseBuilder';
 const BLENDING_VALUES = {
 	NoBlending,
 	NormalBlending,
@@ -32,6 +34,12 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 		shadowDoubleSided = ParamConfig.BOOLEAN(0, {visibleIf: {overrideShadowSide: true}});
 		/** @param if the material is not double sided, it can be front sided, or back sided, when computing shadows */
 		shadowFront = ParamConfig.BOOLEAN(1, {visibleIf: {overrideShadowSide: true, shadowDoubleSided: false}});
+		/** @param if on, the material will blur shadows cast on this object */
+		shadowPCSS = ParamConfig.BOOLEAN(0, {
+			callback: (node: TypedNode<any, any>) => {
+				AdvancedCommonController.PARAM_CALLBACK_setRecompileRequired(node as any);
+			},
+		});
 		/** @param defines if the objects using this material will be rendered in the color buffer. Setting it to false can have those objects occlude the ones behind */
 		colorWrite = ParamConfig.BOOLEAN(1, {
 			separatorBefore: true,
@@ -108,7 +116,25 @@ export class AdvancedCommonController extends BaseController {
 			mat.polygonOffsetUnits = pv.polygonOffsetUnits;
 			mat.needsUpdate = true;
 		}
+		this._applyPCSS();
 	}
+	private _applyPCSS() {
+		const matNode = (<unknown>this.node) as BaseBuilderMatNodeType;
+		if (!matNode.assemblerController) {
+			return;
+		}
+		const pv = this.node.pv;
+		const callbackName = 'PCSS';
+		if (isBooleanTrue(pv.shadowPCSS)) {
+			matNode.assemblerController.addFilterFragmentShaderCallback(
+				callbackName,
+				PCSSController.filterFragmentShader
+			);
+		} else {
+			matNode.assemblerController.removeFilterFragmentShaderCallback(callbackName);
+		}
+	}
+
 	private _updateSides(mat: Material, pv: ParamsValueAccessorType<AdvancedCommonParamsConfig>) {
 		// normal render
 		const singleSide = isBooleanTrue(pv.front) ? FrontSide : BackSide;
@@ -145,5 +171,8 @@ export class AdvancedCommonController extends BaseController {
 
 	static async update(node: AdvancedCommonMapMatNode) {
 		node.controllers.advancedCommon.update();
+	}
+	static PARAM_CALLBACK_setRecompileRequired(node: AdvancedCommonMapMatNode) {
+		node.controllers.advancedCommon._applyPCSS();
 	}
 }

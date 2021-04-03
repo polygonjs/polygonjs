@@ -29,7 +29,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		};
 	}
 
-	filterFragmentShader(fragmentShader: string) {
+	static filterFragmentShader(fragmentShader: string) {
 		fragmentShader = fragmentShader.replace('#include <metalnessmap_fragment>', metalnessmap_fragment);
 		fragmentShader = fragmentShader.replace('#include <roughnessmap_fragment>', roughnessmap_fragment);
 		fragmentShader = fragmentShader.replace(
@@ -76,6 +76,12 @@ ${sss_injected_fragment}
 		}
 
 		this._addCustomMaterials(material);
+
+		this._addFilterFragmentShaderCallback(
+			'MeshStandardBuilderMatNode',
+			ShaderAssemblerStandard.filterFragmentShader
+		);
+
 		return material;
 	}
 

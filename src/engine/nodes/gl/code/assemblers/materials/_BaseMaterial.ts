@@ -38,6 +38,7 @@ const FRAGMENT_GLOBALS_OUTPUT = [
 	/*GlobalsOutput.GL_POSITION,*/ GlobalsOutput.GL_FRAGCOORD,
 	GlobalsOutput.GL_POINTCOORD,
 ];
+const COMPILE_CUSTOM_MATERIALS = true;
 
 interface HandleGlobalsOutputOptions {
 	globals_node: GlobalsGlNode;
@@ -51,6 +52,9 @@ interface HandleGlobalsOutputOptions {
 	dependencies: ShaderName[];
 	body_lines_by_shader_name: Map<ShaderName, string[]>;
 }
+
+type FragmentShaderFilterCallback = (s: string) => string;
+
 export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerMaterial> = new Map();
 
@@ -116,6 +120,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 						const custom_material = material.customMaterials[custom_name];
 						if (custom_material) {
+							// the custom material will use the fragment filtering from the parent assembler
 							assembler.setFilterFragmentShaderMethodOwner(this);
 							assembler.compile_material(custom_material);
 							assembler.setFilterFragmentShaderMethodOwner(undefined);
@@ -139,11 +144,24 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// return custom_materials_by_name;
 	}
 
+	private _filterFragmentShaderCallbacks: Map<string, FragmentShaderFilterCallback> = new Map();
+	protected _resetFilterFragmentShaderCallbacks() {
+		this._filterFragmentShaderCallbacks.clear();
+	}
+	_addFilterFragmentShaderCallback(callbackName: string, callback: (s: string) => string) {
+		this._filterFragmentShaderCallbacks.set(callbackName, callback);
+	}
+	_removeFilterFragmentShaderCallback(callbackName: string) {
+		this._filterFragmentShaderCallbacks.delete(callbackName);
+	}
 	private _filterFragmentShaderMethodOwner: ShaderAssemblerMaterial | undefined;
 	setFilterFragmentShaderMethodOwner(owner: ShaderAssemblerMaterial | undefined) {
 		this._filterFragmentShaderMethodOwner = owner;
 	}
 	filterFragmentShader(fragmentShader: string) {
+		this._filterFragmentShaderCallbacks.forEach((callback, callbackName) => {
+			fragmentShader = callback(fragmentShader);
+		});
 		return fragmentShader;
 	}
 	processFilterFragmentShader(fragmentShader: string) {
@@ -211,8 +229,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// this._shaders_by_name.set(ShaderName.FRAGMENT, this._template_shader!.fragmentShader!);
 
 		// assign custom materials
-		if ((material as ShaderMaterialWithCustomMaterials).customMaterials) {
-			this.compileCustomMaterials(material as ShaderMaterialWithCustomMaterials);
+		if (COMPILE_CUSTOM_MATERIALS) {
+			if ((material as ShaderMaterialWithCustomMaterials).customMaterials) {
+				this.compileCustomMaterials(material as ShaderMaterialWithCustomMaterials);
+			}
 		}
 		// const custom_materials = await this.get_custom_materials();
 		// const material_with_custom_materials = material as ShaderMaterialWithCustomMaterials;

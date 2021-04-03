@@ -127,8 +127,6 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	}
 
 	async cook() {
-		this.compile_if_required();
-
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
@@ -136,6 +134,8 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		FogController.update(this);
 		SkinningController.update(this);
 		WireframeController.update(this);
+
+		this.compile_if_required();
 
 		this.setMaterial(this.material);
 	}

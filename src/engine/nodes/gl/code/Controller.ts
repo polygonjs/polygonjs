@@ -96,6 +96,15 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	create_spare_parameters() {
 		this._spare_params_controller.create_spare_parameters();
 	}
+
+	addFilterFragmentShaderCallback(callbackName: string, callback: (s: string) => string) {
+		this.assembler._addFilterFragmentShaderCallback(callbackName, callback);
+		this.setCompilationRequired();
+	}
+	removeFilterFragmentShaderCallback(callbackName: string) {
+		this.assembler._removeFilterFragmentShaderCallback(callbackName);
+		this.setCompilationRequired();
+	}
 }
 
 export type GlAssemblerControllerType = GlAssemblerController<BaseGlShaderAssembler>;

@@ -89,8 +89,6 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 	}
 
 	async cook() {
-		this.compile_if_required();
-
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
@@ -98,6 +96,8 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		FogController.update(this);
 		SkinningController.update(this);
 		WireframeController.update(this);
+
+		this.compile_if_required();
 
 		this.setMaterial(this.material);
 	}
