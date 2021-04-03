@@ -1,10 +1,10 @@
 import {CATEGORY_MAT} from './Category';
 
-import {AnimationsMatNode} from '../../../nodes/mat/Animations';
-import {CopMatNode} from '../../../nodes/mat/Cop';
-import {EventsMatNode} from '../../../nodes/mat/Events';
+import {AnimationsNetworkMatNode} from '../../../nodes/mat/AnimationsNetwork';
+import {CopNetworkMatNode} from '../../../nodes/mat/CopNetwork';
+import {EventsNetworkMatNode} from '../../../nodes/mat/EventsNetwork';
 import {LineBasicMatNode} from '../../../nodes/mat/LineBasic';
-import {MaterialsMatNode} from '../../../nodes/mat/Materials';
+import {MaterialsNetworkMatNode} from '../../../nodes/mat/Materials';
 import {MeshBasicMatNode} from '../../../nodes/mat/MeshBasic';
 import {MeshBasicBuilderMatNode} from '../../../nodes/mat/MeshBasicBuilder';
 import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
@@ -20,8 +20,8 @@ import {MeshSubsurfaceScatteringMatNode} from '../../../nodes/mat/MeshSubsurface
 import {MeshToonMatNode} from '../../../nodes/mat/MeshToon';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
-import {PostProcessMatNode} from '../../../nodes/mat/PostProcess';
-import {RenderersMatNode} from '../../../nodes/mat/Renderers';
+import {PostProcessNetworkMatNode} from '../../../nodes/mat/PostProcessNetwork';
+import {RenderersNetworkMatNode} from '../../../nodes/mat/RenderersNetwork';
 import {ShadowMatNode} from '../../../nodes/mat/Shadow';
 import {SkyMatNode} from '../../../nodes/mat/Sky';
 import {VolumeMatNode} from '../../../nodes/mat/Volume';
@@ -49,12 +49,12 @@ export interface MatNodeChildrenMap {
 	volume: VolumeMatNode;
 	volumeBuilder: VolumeBuilderMatNode;
 	// networks
-	animationsNetwork: AnimationsMatNode;
-	copNetwork: CopMatNode;
-	eventsNetwork: EventsMatNode;
-	materialsNetwork: MaterialsMatNode;
-	postProcessNetwork: PostProcessMatNode;
-	renderersNetwork: RenderersMatNode;
+	animationsNetwork: AnimationsNetworkMatNode;
+	copNetwork: CopNetworkMatNode;
+	eventsNetwork: EventsNetworkMatNode;
+	materialsNetwork: MaterialsNetworkMatNode;
+	postProcessNetwork: PostProcessNetworkMatNode;
+	renderersNetwork: RenderersNetworkMatNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -81,11 +81,11 @@ export class MatRegister {
 		poly.registerNode(VolumeMatNode, CATEGORY_MAT.VOLUME);
 		poly.registerNode(VolumeBuilderMatNode, CATEGORY_MAT.VOLUME);
 		// networks
-		poly.registerNode(AnimationsMatNode, CATEGORY_MAT.NETWORK);
-		poly.registerNode(CopMatNode, CATEGORY_MAT.NETWORK);
-		poly.registerNode(EventsMatNode, CATEGORY_MAT.NETWORK);
-		poly.registerNode(MaterialsMatNode, CATEGORY_MAT.NETWORK);
-		poly.registerNode(PostProcessMatNode, CATEGORY_MAT.NETWORK);
-		poly.registerNode(RenderersMatNode, CATEGORY_MAT.NETWORK);
+		poly.registerNode(AnimationsNetworkMatNode, CATEGORY_MAT.NETWORK);
+		poly.registerNode(CopNetworkMatNode, CATEGORY_MAT.NETWORK);
+		poly.registerNode(EventsNetworkMatNode, CATEGORY_MAT.NETWORK);
+		poly.registerNode(MaterialsNetworkMatNode, CATEGORY_MAT.NETWORK);
+		poly.registerNode(PostProcessNetworkMatNode, CATEGORY_MAT.NETWORK);
+		poly.registerNode(RenderersNetworkMatNode, CATEGORY_MAT.NETWORK);
 	}
 }

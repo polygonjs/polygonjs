@@ -1,13 +1,13 @@
 import {CATEGORY_ROP} from './Category';
 
-import {AnimationsRopNode} from '../../../nodes/rop/Animations';
-import {CopRopNode} from '../../../nodes/rop/Cop';
+import {AnimationsNetworkRopNode} from '../../../nodes/rop/AnimationsNetwork';
+import {CopNetworkRopNode} from '../../../nodes/rop/CopNetwork';
 import {CSS2DRendererRopNode} from '../../../nodes/rop/CSS2DRenderer';
 import {Css3DRendererRopNode} from '../../../nodes/rop/CSS3DRenderer';
-import {EventsRopNode} from '../../../nodes/rop/Events';
-import {MaterialsRopNode} from '../../../nodes/rop/Materials';
-import {PostProcessRopNode} from '../../../nodes/rop/PostProcess';
-import {RenderersRopNode} from '../../../nodes/rop/Renderers';
+import {EventsNetworkRopNode} from '../../../nodes/rop/EventsNetwork';
+import {MaterialsNetworkRopNode} from '../../../nodes/rop/MaterialsNetwork';
+import {PostProcessNetworkRopNode} from '../../../nodes/rop/PostProcessNetwork';
+import {RenderersNetworkRopNode} from '../../../nodes/rop/RenderersNetwork';
 import {WebGLRendererRopNode} from '../../../nodes/rop/WebGLRenderer';
 
 export interface RopNodeChildrenMap {
@@ -15,12 +15,12 @@ export interface RopNodeChildrenMap {
 	CSS3DRenderer: Css3DRendererRopNode;
 	WebGLRenderer: WebGLRendererRopNode;
 	// networks
-	animationsNetwork: AnimationsRopNode;
-	copNetwork: CopRopNode;
-	eventsNetwork: EventsRopNode;
-	materialsNetwork: MaterialsRopNode;
-	postProcessNetwork: PostProcessRopNode;
-	renderersNetwork: RenderersRopNode;
+	animationsNetwork: AnimationsNetworkRopNode;
+	copNetwork: CopNetworkRopNode;
+	eventsNetwork: EventsNetworkRopNode;
+	materialsNetwork: MaterialsNetworkRopNode;
+	postProcessNetwork: PostProcessNetworkRopNode;
+	renderersNetwork: RenderersNetworkRopNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -30,11 +30,11 @@ export class RopRegister {
 		// poly.registerNode(Css3DRendererRopNode, CATEGORY_ROP.CSS); // not registering, since sop/css3d_object is not yet working
 		poly.registerNode(WebGLRendererRopNode, CATEGORY_ROP.WEBGL);
 		// networks
-		poly.registerNode(AnimationsRopNode, CATEGORY_ROP.NETWORK);
-		poly.registerNode(CopRopNode, CATEGORY_ROP.NETWORK);
-		poly.registerNode(EventsRopNode, CATEGORY_ROP.NETWORK);
-		poly.registerNode(MaterialsRopNode, CATEGORY_ROP.NETWORK);
-		poly.registerNode(PostProcessRopNode, CATEGORY_ROP.NETWORK);
-		poly.registerNode(RenderersRopNode, CATEGORY_ROP.NETWORK);
+		poly.registerNode(AnimationsNetworkRopNode, CATEGORY_ROP.NETWORK);
+		poly.registerNode(CopNetworkRopNode, CATEGORY_ROP.NETWORK);
+		poly.registerNode(EventsNetworkRopNode, CATEGORY_ROP.NETWORK);
+		poly.registerNode(MaterialsNetworkRopNode, CATEGORY_ROP.NETWORK);
+		poly.registerNode(PostProcessNetworkRopNode, CATEGORY_ROP.NETWORK);
+		poly.registerNode(RenderersNetworkRopNode, CATEGORY_ROP.NETWORK);
 	}
 }

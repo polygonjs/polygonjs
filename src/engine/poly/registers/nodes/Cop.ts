@@ -1,18 +1,18 @@
 import {CATEGORY_COP} from './Category';
 
-import {AnimationsCopNode} from '../../../nodes/cop/Animations';
+import {AnimationsNetworkCopNode} from '../../../nodes/cop/AnimationsNetwork';
 import {BuilderCopNode} from '../../../nodes/cop/Builder';
 import {ColorCopNode} from '../../../nodes/cop/Color';
-import {CopCopNode} from '../../../nodes/cop/Cop';
+import {CopNetworkCopNode} from '../../../nodes/cop/CopNetwork';
 import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
-import {EventsCopNode} from '../../../nodes/cop/Events';
+import {EventsNetworkCopNode} from '../../../nodes/cop/EventsNetwork';
 import {ImageCopNode} from '../../../nodes/cop/Image';
-import {MaterialsCopNode} from '../../../nodes/cop/Materials';
+import {MaterialsNetworkCopNode} from '../../../nodes/cop/MaterialsNetwork';
 import {NullCopNode} from '../../../nodes/cop/Null';
 import {PostCopNode} from '../../../nodes/cop/Post';
-import {PostProcessCopNode} from '../../../nodes/cop/PostProcess';
-import {RenderersCopNode} from '../../../nodes/cop/Renderers';
+import {PostProcessNetworkCopNode} from '../../../nodes/cop/PostProcessNetwork';
+import {RenderersNetworkCopNode} from '../../../nodes/cop/RenderersNetwork';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
 import {VideoCopNode} from '../../../nodes/cop/Video';
@@ -31,12 +31,12 @@ export interface CopNodeChildrenMap {
 	video: VideoCopNode;
 	webCam: WebCamCopNode;
 	// networks
-	animationsNetwork: AnimationsCopNode;
-	copNetwork: CopCopNode;
-	eventsNetwork: EventsCopNode;
-	materialsNetwork: MaterialsCopNode;
-	postProcessNetwork: PostProcessCopNode;
-	renderersNetwork: RenderersCopNode;
+	animationsNetwork: AnimationsNetworkCopNode;
+	copNetwork: CopNetworkCopNode;
+	eventsNetwork: EventsNetworkCopNode;
+	materialsNetwork: MaterialsNetworkCopNode;
+	postProcessNetwork: PostProcessNetworkCopNode;
+	renderersNetwork: RenderersNetworkCopNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -54,10 +54,11 @@ export class CopRegister {
 		poly.registerNode(VideoCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(WebCamCopNode, CATEGORY_COP.ADVANCED);
 		// networks
-		poly.registerNode(AnimationsCopNode, CATEGORY_COP.NETWORK);
-		poly.registerNode(CopCopNode, CATEGORY_COP.NETWORK);
-		poly.registerNode(EventsCopNode, CATEGORY_COP.NETWORK);
-		poly.registerNode(MaterialsCopNode, CATEGORY_COP.NETWORK);
-		poly.registerNode(RenderersCopNode, CATEGORY_COP.NETWORK);
+		poly.registerNode(AnimationsNetworkCopNode, CATEGORY_COP.NETWORK);
+		poly.registerNode(CopNetworkCopNode, CATEGORY_COP.NETWORK);
+		poly.registerNode(EventsNetworkCopNode, CATEGORY_COP.NETWORK);
+		poly.registerNode(MaterialsNetworkCopNode, CATEGORY_COP.NETWORK);
+		poly.registerNode(PostProcessNetworkCopNode, CATEGORY_COP.NETWORK);
+		poly.registerNode(RenderersNetworkCopNode, CATEGORY_COP.NETWORK);
 	}
 }

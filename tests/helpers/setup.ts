@@ -3,9 +3,9 @@ import {PolyScene} from '../../src/engine/scene/PolyScene';
 import {ObjectsManagerNode} from '../../src/engine/nodes/manager/ObjectsManager';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
 import {GeoObjNode} from '../../src/engine/nodes/obj/Geo';
-import {MaterialsObjNode} from '../../src/engine/nodes/obj/Materials';
-import {PostProcessObjNode} from '../../src/engine/nodes/obj/PostProcess';
-import {CopObjNode} from '../../src/engine/nodes/obj/Cop';
+import {MaterialsNetworkObjNode} from '../../src/engine/nodes/obj/MaterialsNetwork';
+import {PostProcessNetworkObjNode} from '../../src/engine/nodes/obj/PostProcessNetwork';
+import {CopNetworkObjNode} from '../../src/engine/nodes/obj/CopNetwork';
 
 import {Poly} from '../../src/engine/Poly';
 
@@ -29,9 +29,9 @@ declare global {
 		root: ObjectsManagerNode;
 		perspective_camera1: PerspectiveCameraObjNode;
 		geo1: GeoObjNode;
-		MAT: MaterialsObjNode;
-		POST: PostProcessObjNode;
-		COP: CopObjNode;
+		MAT: MaterialsNetworkObjNode;
+		POST: PostProcessNetworkObjNode;
+		COP: CopNetworkObjNode;
 	}
 }
 QUnit.testStart(async () => {

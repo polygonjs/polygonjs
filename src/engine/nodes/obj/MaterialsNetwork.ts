@@ -1,16 +1,19 @@
 /**
- * A subnet to create Material nodes
+ * Parent for Material nodes
+ *
  *
  */
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {ParamLessBaseNetworkMatNode} from './_BaseManager';
+import {ParamLessBaseManagerObjNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
+import {ObjNodeRenderOrder} from './_Base';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class MaterialsNetworkMatNode extends ParamLessBaseNetworkMatNode {
-	static type() {
+export class MaterialsNetworkObjNode extends ParamLessBaseManagerObjNode {
+	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
+	static type(): Readonly<NetworkNodeType.MAT> {
 		return NetworkNodeType.MAT;
 	}
 

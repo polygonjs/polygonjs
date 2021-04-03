@@ -8,7 +8,7 @@ import {CATEGORY_SOP} from './Category';
 import {AddSopNode} from '../../../nodes/sop/Add';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
-import {AnimationsSopNode} from '../../../nodes/sop/Animations';
+import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
 import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
 import {AttribCastSopNode} from '../../../nodes/sop/AttribCast';
 import {AttribCopySopNode} from '../../../nodes/sop/AttribCopy';
@@ -31,7 +31,7 @@ import {Circle3PointsSopNode} from '../../../nodes/sop/Circle3Points';
 // import {CodeSopNode} from '../../../nodes/sop/Code';
 import {ColorSopNode} from '../../../nodes/sop/Color';
 import {ConeSopNode} from '../../../nodes/sop/Cone';
-import {CopSopNode} from '../../../nodes/sop/Cop';
+import {CopNetworkSopNode} from '../../../nodes/sop/CopNetwork';
 import {CopySopNode} from '../../../nodes/sop/Copy';
 import {CSS2DObjectSopNode} from '../../../nodes/sop/CSS2DObject';
 import {CSS3DObjectSopNode} from '../../../nodes/sop/CSS3DObject';
@@ -41,7 +41,7 @@ import {DecalSopNode} from '../../../nodes/sop/Decal';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
-import {EventsSopNode} from '../../../nodes/sop/Events';
+import {EventsNetworkSopNode} from '../../../nodes/sop/EventsNetwork';
 import {FaceSopNode} from '../../../nodes/sop/Face';
 import {FileSopNode} from '../../../nodes/sop/File';
 import {FuseSopNode} from '../../../nodes/sop/Fuse';
@@ -57,7 +57,7 @@ import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LineSopNode} from '../../../nodes/sop/Line';
 import {LodSopNode} from '../../../nodes/sop/Lod';
 import {MaterialSopNode} from '../../../nodes/sop/Material';
-import {MaterialsSopNode} from '../../../nodes/sop/Materials';
+import {MaterialsNetworkSopNode} from '../../../nodes/sop/MaterialsNetwork';
 import {MergeSopNode} from '../../../nodes/sop/Merge';
 import {NoiseSopNode} from '../../../nodes/sop/Noise';
 import {NormalsSopNode} from '../../../nodes/sop/Normals';
@@ -73,10 +73,10 @@ import {PointLightSopNode} from '../../../nodes/sop/PointLight';
 import {PolarTransformSopNode} from '../../../nodes/sop/PolarTransform';
 import {PolySopNode} from '../../../nodes/sop/Poly';
 import {PolywireSopNode} from '../../../nodes/sop/Polywire';
-import {PostProcessSopNode} from '../../../nodes/sop/PostProcess';
+import {PostProcessNetworkSopNode} from '../../../nodes/sop/PostProcessNetwork';
 import {RaySopNode} from '../../../nodes/sop/Ray';
 import {ReflectorSopNode} from '../../../nodes/sop/Reflector';
-import {RenderersSopNode} from '../../../nodes/sop/Renderers';
+import {RenderersNetworkSopNode} from '../../../nodes/sop/RenderersNetwork';
 import {ResampleSopNode} from '../../../nodes/sop/Resample';
 import {RestAttributesSopNode} from '../../../nodes/sop/RestAttributes';
 import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
@@ -197,12 +197,12 @@ export interface GeoNodeChildrenMap {
 	uvProject: UvProjectSopNode;
 
 	// networks
-	animationsNetwork: AnimationsSopNode;
-	copNetwork: CopSopNode;
-	eventsNetwork: EventsSopNode;
-	materialsNetwork: MaterialsSopNode;
-	postProcessNetwork: PostProcessSopNode;
-	renderersNetwork: RenderersSopNode;
+	animationsNetwork: AnimationsNetworkSopNode;
+	copNetwork: CopNetworkSopNode;
+	eventsNetwork: EventsNetworkSopNode;
+	materialsNetwork: MaterialsNetworkSopNode;
+	postProcessNetwork: PostProcessNetworkSopNode;
+	renderersNetwork: RenderersNetworkSopNode;
 }
 
 import {AddSopOperation} from '../../../operations/sop/Add';
@@ -395,11 +395,11 @@ export class SopRegister {
 		poly.registerNode(TubeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
 		// networks
-		poly.registerNode(AnimationsSopNode, CATEGORY_SOP.NETWORK);
-		poly.registerNode(CopSopNode, CATEGORY_SOP.NETWORK);
-		poly.registerNode(EventsSopNode, CATEGORY_SOP.NETWORK);
-		poly.registerNode(MaterialsSopNode, CATEGORY_SOP.NETWORK);
-		poly.registerNode(PostProcessSopNode, CATEGORY_SOP.NETWORK);
-		poly.registerNode(RenderersSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(CopNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(EventsNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(MaterialsNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(PostProcessNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(RenderersNetworkSopNode, CATEGORY_SOP.NETWORK);
 	}
 }

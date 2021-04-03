@@ -7,12 +7,12 @@ import {HemisphereLightObjNode} from '../../../nodes/obj/HemisphereLight';
 import {PointLightObjNode} from '../../../nodes/obj/PointLight';
 import {SpotLightObjNode} from '../../../nodes/obj/SpotLight';
 
-import {AnimationsObjNode} from '../../../nodes/obj/Animations';
-import {CopObjNode} from '../../../nodes/obj/Cop';
-import {EventsObjNode} from '../../../nodes/obj/Events';
-import {MaterialsObjNode} from '../../../nodes/obj/Materials';
-import {PostProcessObjNode} from '../../../nodes/obj/PostProcess';
-import {RenderersObjNode} from '../../../nodes/obj/Renderers';
+import {AnimationsNetworkObjNode} from '../../../nodes/obj/AnimationsNetwork';
+import {CopNetworkObjNode} from '../../../nodes/obj/CopNetwork';
+import {EventsNetworkObjNode} from '../../../nodes/obj/EventsNetwork';
+import {MaterialsNetworkObjNode} from '../../../nodes/obj/MaterialsNetwork';
+import {PostProcessNetworkObjNode} from '../../../nodes/obj/PostProcessNetwork';
+import {RenderersNetworkObjNode} from '../../../nodes/obj/RenderersNetwork';
 
 import {AudioListenerObjNode} from '../../../nodes/obj/AudioListener';
 import {BlendObjNode} from '../../../nodes/obj/Blend';
@@ -51,12 +51,12 @@ export interface ObjNodeChildrenMap {
 	scene: SceneObjNode;
 	spotLight: SpotLightObjNode;
 	// networks
-	animationsNetwork: AnimationsObjNode;
-	copNetwork: CopObjNode;
-	eventsNetwork: EventsObjNode;
-	materialsNetwork: MaterialsObjNode;
-	postProcessNetwork: PostProcessObjNode;
-	renderersNetwork: RenderersObjNode;
+	animationsNetwork: AnimationsNetworkObjNode;
+	copNetwork: CopNetworkObjNode;
+	eventsNetwork: EventsNetworkObjNode;
+	materialsNetwork: MaterialsNetworkObjNode;
+	postProcessNetwork: PostProcessNetworkObjNode;
+	renderersNetwork: RenderersNetworkObjNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -88,11 +88,11 @@ export class ObjRegister {
 		poly.registerNode(CubeCameraObjNode, CATEGORY_OBJ.CAMERA);
 
 		// networks
-		poly.registerNode(AnimationsObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(CopObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(EventsObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(MaterialsObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(PostProcessObjNode, CATEGORY_OBJ.NETWORK);
-		poly.registerNode(RenderersObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(AnimationsNetworkObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(CopNetworkObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(EventsNetworkObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(MaterialsNetworkObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(PostProcessNetworkObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(RenderersNetworkObjNode, CATEGORY_OBJ.NETWORK);
 	}
 }

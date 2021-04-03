@@ -1,29 +1,29 @@
 import {CATEGORY_EVENT} from './Category';
 
 import {AnimationEventNode} from '../../../nodes/event/Animation';
-import {AnimationsEventNode} from '../../../nodes/event/Animations';
+import {AnimationsNetworkEventNode} from '../../../nodes/event/AnimationsNetwork';
 import {AnyEventNode} from '../../../nodes/event/Any';
 import {BlockEventNode} from '../../../nodes/event/Block';
 import {ButtonEventNode} from '../../../nodes/event/Button';
 import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
-import {CopEventNode} from '../../../nodes/event/Cop';
+import {CopNetworkEventNode} from '../../../nodes/event/CopNetwork';
 import {DelayEventNode} from '../../../nodes/event/Delay';
 // import {CodeEventNode} from '../../../nodes/event/Code';
-import {EventsEventNode} from '../../../nodes/event/Events';
+import {EventsNetworkEventNode} from '../../../nodes/event/EventsNetwork';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 import {LimitEventNode} from '../../../nodes/event/Limit';
-import {MaterialsEventNode} from '../../../nodes/event/Materials';
+import {MaterialsNetworkEventNode} from '../../../nodes/event/MaterialsNetwork';
 import {MessageEventNode} from '../../../nodes/event/Message';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {NodeCookEventNode} from '../../../nodes/event/NodeCook';
 import {NullEventNode} from '../../../nodes/event/Null';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {FirstPersonControlsEventNode} from '../../../nodes/event/FirstPersonControls';
-import {PostProcessEventNode} from '../../../nodes/event/PostProcess';
+import {PostProcessNetworkEventNode} from '../../../nodes/event/PostProcessNetwork';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
-import {RenderersEventNode} from '../../../nodes/event/Renderers';
+import {RenderersNetworkEventNode} from '../../../nodes/event/RenderersNetwork';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetFlagEventNode} from '../../../nodes/event/SetFlag';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
@@ -58,12 +58,12 @@ export interface EventNodeChildrenMap {
 	viewer: ViewerEventNode;
 
 	// networks
-	animationsNetwork: AnimationsEventNode;
-	copNetwork: CopEventNode;
-	eventsNetwork: EventsEventNode;
-	materialsNetwork: MaterialsEventNode;
-	postProcessNetwork: PostProcessEventNode;
-	renderersNetwork: RenderersEventNode;
+	animationsNetwork: AnimationsNetworkEventNode;
+	copNetwork: CopNetworkEventNode;
+	eventsNetwork: EventsNetworkEventNode;
+	materialsNetwork: MaterialsNetworkEventNode;
+	postProcessNetwork: PostProcessNetworkEventNode;
+	renderersNetwork: RenderersNetworkEventNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -94,10 +94,11 @@ export class EventRegister {
 		poly.registerNode(TimerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);
 		// networks
-		poly.registerNode(AnimationsEventNode, CATEGORY_EVENT.NETWORK);
-		poly.registerNode(CopEventNode, CATEGORY_EVENT.NETWORK);
-		poly.registerNode(EventsEventNode, CATEGORY_EVENT.NETWORK);
-		poly.registerNode(MaterialsEventNode, CATEGORY_EVENT.NETWORK);
-		poly.registerNode(PostProcessEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(AnimationsNetworkEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(CopNetworkEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(EventsNetworkEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(MaterialsNetworkEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(PostProcessNetworkEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(RenderersNetworkEventNode, CATEGORY_EVENT.NETWORK);
 	}
 }

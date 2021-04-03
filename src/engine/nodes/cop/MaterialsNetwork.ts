@@ -3,13 +3,13 @@
  *
  */
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {ParamLessBaseNetworkMatNode} from './_BaseManager';
+import {ParamLessBaseNetworkCopNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
 
-export class MaterialsNetworkMatNode extends ParamLessBaseNetworkMatNode {
+export class MaterialsNetworkCopNode extends ParamLessBaseNetworkCopNode {
 	static type() {
 		return NetworkNodeType.MAT;
 	}

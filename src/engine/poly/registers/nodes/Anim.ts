@@ -1,21 +1,21 @@
 import {CATEGORY_ANIM} from './Category';
 
-import {AnimationsAnimNode} from '../../../nodes/anim/Animations';
-import {CopAnimNode} from '../../../nodes/anim/Cop';
+import {AnimationsNetworkAnimNode} from '../../../nodes/anim/AnimationsNetwork';
+import {CopNetworkAnimNode} from '../../../nodes/anim/CopNetwork';
 import {CopyAnimNode} from '../../../nodes/anim/Copy';
 import {DelayAnimNode} from '../../../nodes/anim/Delay';
 import {DurationAnimNode} from '../../../nodes/anim/Duration';
 import {EasingAnimNode} from '../../../nodes/anim/Easing';
-import {EventsAnimNode} from '../../../nodes/anim/Events';
-import {MaterialsAnimNode} from '../../../nodes/anim/Materials';
+import {EventsNetworkAnimNode} from '../../../nodes/anim/EventsNetwork';
+import {MaterialsNetworkAnimNode} from '../../../nodes/anim/MaterialsNetwork';
 import {MergeAnimNode} from '../../../nodes/anim/Merge';
 import {NullAnimNode} from '../../../nodes/anim/Null';
 import {OperationAnimNode} from '../../../nodes/anim/Operation';
 import {PositionAnimNode} from '../../../nodes/anim/Position';
-import {PostProcessAnimNode} from '../../../nodes/anim/PostProcess';
+import {PostProcessNetworkAnimNode} from '../../../nodes/anim/PostProcessNetwork';
 import {PropertyNameAnimNode} from '../../../nodes/anim/PropertyName';
 import {PropertyValueAnimNode} from '../../../nodes/anim/PropertyValue';
-import {RenderersAnimNode} from '../../../nodes/anim/Renderers';
+import {RenderersNetworkAnimNode} from '../../../nodes/anim/RenderersNetwork';
 import {RepeatAnimNode} from '../../../nodes/anim/Repeat';
 import {SwitchAnimNode} from '../../../nodes/anim/Switch';
 import {TargetAnimNode} from '../../../nodes/anim/Target';
@@ -35,12 +35,12 @@ export interface AnimNodeChildrenMap {
 	switch: SwitchAnimNode;
 	target: TargetAnimNode;
 	// networks
-	animationsNetwork: AnimationsAnimNode;
-	copNetwork: CopAnimNode;
-	eventsNetwork: EventsAnimNode;
-	materialsNetwork: MaterialsAnimNode;
-	postProcessNetwork: PostProcessAnimNode;
-	renderersNetwork: RenderersAnimNode;
+	animationsNetwork: AnimationsNetworkAnimNode;
+	copNetwork: CopNetworkAnimNode;
+	eventsNetwork: EventsNetworkAnimNode;
+	materialsNetwork: MaterialsNetworkAnimNode;
+	postProcessNetwork: PostProcessNetworkAnimNode;
+	renderersNetwork: RenderersNetworkAnimNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -60,11 +60,11 @@ export class AnimRegister {
 		poly.registerNode(SwitchAnimNode, CATEGORY_ANIM.MISC);
 		poly.registerNode(TargetAnimNode, CATEGORY_ANIM.PROP);
 		// networks
-		poly.registerNode(AnimationsAnimNode, CATEGORY_ANIM.NETWORK);
-		poly.registerNode(CopAnimNode, CATEGORY_ANIM.NETWORK);
-		poly.registerNode(EventsAnimNode, CATEGORY_ANIM.NETWORK);
-		poly.registerNode(MaterialsAnimNode, CATEGORY_ANIM.NETWORK);
-		poly.registerNode(PostProcessAnimNode, CATEGORY_ANIM.NETWORK);
-		poly.registerNode(RenderersAnimNode, CATEGORY_ANIM.NETWORK);
+		poly.registerNode(AnimationsNetworkAnimNode, CATEGORY_ANIM.NETWORK);
+		poly.registerNode(CopNetworkAnimNode, CATEGORY_ANIM.NETWORK);
+		poly.registerNode(EventsNetworkAnimNode, CATEGORY_ANIM.NETWORK);
+		poly.registerNode(MaterialsNetworkAnimNode, CATEGORY_ANIM.NETWORK);
+		poly.registerNode(PostProcessNetworkAnimNode, CATEGORY_ANIM.NETWORK);
+		poly.registerNode(RenderersNetworkAnimNode, CATEGORY_ANIM.NETWORK);
 	}
 }
