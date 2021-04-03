@@ -23,6 +23,7 @@ import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
 import {ParamsInitData} from '../nodes/utils/io/IOController';
 import {Constructor, valueof} from '../../types/GlobalTypes';
 import {Scene} from 'three/src/scenes/Scene';
+import {CoreString} from '../../core/String';
 
 export class PolyScene {
 	threejsScene(): Scene {
@@ -36,8 +37,9 @@ export class PolyScene {
 		return this._uuid;
 	}
 	private _name: string | undefined;
-	setName(name: string) {
-		return (this._name = name);
+	setName(newName: string) {
+		newName = CoreString.sanitizeName(newName);
+		return (this._name = newName);
 	}
 	name() {
 		return this._name;

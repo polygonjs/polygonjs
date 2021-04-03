@@ -107,7 +107,6 @@ export class SelfContainedScenesLoader {
 			return false;
 		}
 		const polyConfigUrl = this._createJsBlob(polyConfigArray, 'polyConfig');
-		console.log('loading polyConfigUrl', polyConfigUrl);
 
 		let script = document.getElementById(ids.scriptElementId);
 

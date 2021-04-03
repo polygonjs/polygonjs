@@ -261,4 +261,9 @@ export class CoreString {
 	static escapeLineBreaks(word: string): string {
 		return word.replace(/(\r\n|\n|\r)/gm, '\\n');
 	}
+	static sanitizeName(name: string): string {
+		name = name.replace(/[^A-Za-z0-9]/g, '_');
+		name = name.replace(/^[0-9]/, '_'); // replace first char if not a letter
+		return name;
+	}
 }

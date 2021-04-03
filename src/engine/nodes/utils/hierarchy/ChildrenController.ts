@@ -60,8 +60,7 @@ export class HierarchyChildrenController {
 
 	set_child_name(node: BaseNodeType, new_name: string): void {
 		let current_child_with_name;
-		new_name = new_name.replace(/[^A-Za-z0-9]/g, '_');
-		new_name = new_name.replace(/^[0-9]/, '_'); // replace first char if not a letter
+		new_name = CoreString.sanitizeName(new_name);
 
 		if ((current_child_with_name = this._children[new_name]) != null) {
 			// only return if found node is same as argument node, and if new_name is same as current_name
