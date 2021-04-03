@@ -1,24 +1,19 @@
-import {
-	Object3D,
-	AnimationClip
-} from 'three';
+import { Object3D, AnimationClip } from 'three';
 
 export interface GLTFExporterOptions {
-	binary?: boolean;
-	trs?: boolean;
-	onlyVisible?: boolean;
-	truncateDrawRange?: boolean;
-	embedImages?: boolean;
-	animations?: AnimationClip[];
-	forceIndices?: boolean;
-	forcePowerOfTwoTextures?: boolean;
-	includeCustomExtensions?: boolean;
+    binary?: boolean;
+    trs?: boolean;
+    onlyVisible?: boolean;
+    truncateDrawRange?: boolean;
+    embedImages?: boolean;
+    animations?: AnimationClip[];
+    forceIndices?: boolean;
+    forcePowerOfTwoTextures?: boolean;
+    includeCustomExtensions?: boolean;
 }
 
 export class GLTFExporter {
+    constructor();
 
-	constructor();
-
-	parse( input: Object3D, onCompleted: ( gltf: object ) => void, options: GLTFExporterOptions ): void;
-
+    parse(input: Object3D, onCompleted: (gltf: object) => void, options: GLTFExporterOptions): void;
 }

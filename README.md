@@ -44,7 +44,7 @@ The API is designed to be very simple. Here is how you create a minimal scene wi
 	const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
 	perspectiveCamera1.p.t.set([5, 5, 5]);
 	// add OrbitControls
-	const events1 = perspectiveCamera1.createNode('events');
+	const events1 = perspectiveCamera1.createNode('eventsNetwork');
 	const orbitsControls = events1.createNode('cameraOrbitControls');
 	perspectiveCamera1.p.controls.setNode(orbitsControls);
 
@@ -110,7 +110,7 @@ rootNode.createNode('hemisphereLight');
 const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
 perspectiveCamera1.p.t.set([5, 5, 5]);
 // add OrbitControls
-const events1 = perspectiveCamera1.createNode('events');
+const events1 = perspectiveCamera1.createNode('eventsNetwork');
 const orbitsControls = events1.createNode('cameraOrbitControls');
 perspectiveCamera1.p.controls.setNode(orbitsControls);
 

@@ -1,16 +1,14 @@
-import {
-	Uniform
-} from 'three';
+import { Uniform } from 'three';
 
 export const ToneMapShader: {
-	uniforms: {
-		tDiffuse: Uniform;
-		averageLuminance: Uniform;
-		luminanceMap: Uniform;
-		maxLuminance: Uniform;
-		minLuminance: Uniform;
-		middleGrey: Uniform;
-	};
-	vertexShader: string;
-	fragmentShader: string;
+    uniforms: {
+        tDiffuse: Uniform;
+        averageLuminance: Uniform;
+        luminanceMap: Uniform;
+        maxLuminance: Uniform;
+        minLuminance: Uniform;
+        middleGrey: Uniform;
+    };
+    vertexShader: string;
+    fragmentShader: string;
 };

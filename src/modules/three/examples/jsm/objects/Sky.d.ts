@@ -1,16 +1,10 @@
-import {
-	BoxGeometry,
-	Mesh,
-	ShaderMaterial
-} from 'three';
+import { BoxGeometry, Mesh, ShaderMaterial } from 'three';
 
 export class Sky extends Mesh {
+    constructor();
 
-	constructor();
+    geometry: BoxGeometry;
+    material: ShaderMaterial;
 
-	geometry: BoxGeometry;
-	material: ShaderMaterial;
-
-	static SkyShader: object;
-
+    static SkyShader: object;
 }

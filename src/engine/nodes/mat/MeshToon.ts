@@ -8,8 +8,7 @@
 import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
@@ -22,9 +21,7 @@ import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureN
 import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
 import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
-
 import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
-import {isBooleanTrue} from '../../../core/BooleanValue';
 import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -77,9 +74,7 @@ class MeshToonMatParamsConfig extends FogParamConfig(
 			)
 		)
 	)
-) {
-	flatShading = ParamConfig.BOOLEAN(0);
-}
+) {}
 const ParamsConfig = new MeshToonMatParamsConfig();
 
 export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatParamsConfig> {
@@ -126,10 +121,6 @@ export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatP
 		SkinningController.update(this);
 		WireframeController.update(this);
 
-		if (this.material.flatShading != isBooleanTrue(this.pv.flatShading)) {
-			this.material.flatShading = isBooleanTrue(this.pv.flatShading);
-			this.material.needsUpdate = true;
-		}
 		this.setMaterial(this.material);
 	}
 }

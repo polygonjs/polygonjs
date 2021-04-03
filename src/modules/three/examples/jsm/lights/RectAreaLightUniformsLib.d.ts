@@ -1,5 +1,3 @@
 export namespace RectAreaLightUniformsLib {
-
-	export function init(): void;
-
+    function init(): void;
 }

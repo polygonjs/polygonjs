@@ -1,11 +1,9 @@
-import {
-	Uniform
-} from 'three';
+import { Uniform } from 'three';
 
 export const LuminosityShader: {
-	uniforms: {
-		tDiffuse: Uniform;
-	};
-	vertexShader: string;
-	fragmentShader: string;
+    uniforms: {
+        tDiffuse: Uniform;
+    };
+    vertexShader: string;
+    fragmentShader: string;
 };
