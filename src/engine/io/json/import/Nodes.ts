@@ -97,7 +97,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 						existingNodeNames.push(optimizedNode.name());
 					}
 					if (!existingNodeNames.includes(nodeNameWithDisplayFlag)) {
-						const parentFullPath = this._node.fullPath();
+						const parentFullPath = this._node.path();
 						const nodeFullPath = `${parentFullPath}/${nodeNameWithDisplayFlag}`;
 						const message = `node '${nodeFullPath}' with display flag has been optimized and does not exist in player mode`;
 						console.error(message);

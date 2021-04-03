@@ -44,7 +44,7 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		}
 		this._controls_by_viewer.set(viewer, controls);
 		const timestamp = performance.now();
-		controls.name = `${this.fullPath()}:${camera.name}:${timestamp}:${this.controls_id()}`;
+		controls.name = `${this.path()}:${camera.name}:${timestamp}:${this.controls_id()}`;
 		await this.params.evalAll();
 		this.setup_controls(controls);
 		return controls;

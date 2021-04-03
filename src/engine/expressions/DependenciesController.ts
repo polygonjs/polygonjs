@@ -53,7 +53,7 @@ export class DependenciesController {
 		// const jsep_nodes_by_missing_paths = function_generator.jsep_nodes_by_missing_paths
 
 		// if(jsep_dependencies.length > 0){
-		// 	console.log("connect_param_to_dependencies", this.param.fullPath())
+		// 	console.log("connect_param_to_dependencies", this.param.path())
 		// }
 
 		this.cyclic_graph_detected = false;

@@ -25,13 +25,13 @@ export class HierarchyParentController {
 	is_selected(): boolean {
 		return this.parent()?.childrenController?.selection?.contains(this.node) || false;
 	}
-	fullPath(relative_to_parent?: BaseNodeType): string {
+	path(relative_to_parent?: BaseNodeType): string {
 		const separator = CoreWalker.SEPARATOR;
 		if (this._parent != null) {
 			if (this._parent == relative_to_parent) {
 				return this.node.name();
 			} else {
-				const parent_fullPath = this._parent.fullPath(relative_to_parent);
+				const parent_fullPath = this._parent.path(relative_to_parent);
 				if (parent_fullPath === separator) {
 					return parent_fullPath + this.node.name();
 				} else {

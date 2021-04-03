@@ -18,8 +18,8 @@ QUnit.test('texture_properties simple', async (assert) => {
 	file1.p.tanisotropy.set(0);
 	basic_material1.p.useMap.set(1);
 	await file1.requestContainer();
-	basic_material1.p.map.set(file1.fullPath());
-	material1.p.material.set(basic_material1.fullPath());
+	basic_material1.p.map.set(file1.path());
+	material1.p.material.set(basic_material1.path());
 	material1.setInput(0, plane1);
 
 	let container = await material1.requestContainer();

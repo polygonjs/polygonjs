@@ -62,7 +62,7 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 			this._timeline = gsap.timeline({onComplete: resolve});
 
 			if (isBooleanTrue(this.pv.debug)) {
-				console.log(`play from '${this.fullPath()}'`);
+				console.log(`play from '${this.path()}'`);
 			}
 
 			this._timeline_builder.setDebug(isBooleanTrue(this.pv.debug));

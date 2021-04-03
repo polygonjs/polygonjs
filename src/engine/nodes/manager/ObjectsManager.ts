@@ -108,7 +108,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();
 		const paths: string[] = [];
 		this._queued_nodes_by_id.forEach((node, id) => {
-			const fullPath = `_____${node.renderOrder}__${node.fullPath()}`;
+			const fullPath = `_____${node.renderOrder}__${node.path()}`;
 			paths.push(fullPath);
 			queued_nodes_by_path.set(fullPath, node);
 		});

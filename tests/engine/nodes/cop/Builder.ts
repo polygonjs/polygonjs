@@ -32,7 +32,7 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	// currently use a mat to have the builder recook
 	// const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder')
 	// mesh_basic_builder1.p.use_map.set(1)
-	// mesh_basic_builder1.p.map.set(builder1.fullPath())
+	// mesh_basic_builder1.p.map.set(builder1.path())
 
 	let container = await builder1.requestContainer();
 	assert.ok(!builder1.states.error.message());
@@ -76,7 +76,7 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	// currently use a mat to have the builder recook
 	// const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder')
 	// mesh_basic_builder1.p.use_map.set(1)
-	// mesh_basic_builder1.p.map.set(builder1.fullPath())
+	// mesh_basic_builder1.p.map.set(builder1.path())
 
 	let container = await builder1.requestContainer();
 	assert.ok(!builder1.states.error.message());

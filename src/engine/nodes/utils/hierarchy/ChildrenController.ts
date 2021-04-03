@@ -107,7 +107,7 @@ export class HierarchyChildrenController {
 	// 	const node_class = this.available_children_classes()[node_type];
 
 	// 	if (node_class == null) {
-	// 		const message = `child node type '${node_type}' not found for node '${this.node.fullPath()}'. Available types are: ${Object.keys(
+	// 		const message = `child node type '${node_type}' not found for node '${this.node.path()}'. Available types are: ${Object.keys(
 	// 			this.available_children_classes()
 	// 		).join(', ')}, ${this._context}, ${this.node.type}`;
 	// 		console.error(message);
@@ -147,7 +147,7 @@ export class HierarchyChildrenController {
 		const node_class = this.available_children_classes()[node_type.toLowerCase()];
 
 		if (node_class == null) {
-			const message = `child node type '${node_type}' not found for node '${this.node.fullPath()}'. Available types are: ${Object.keys(
+			const message = `child node type '${node_type}' not found for node '${this.node.path()}'. Available types are: ${Object.keys(
 				this.available_children_classes()
 			).join(', ')}, ${this._context}, ${this.node.type()}`;
 			console.error(message);
@@ -206,7 +206,7 @@ export class HierarchyChildrenController {
 
 	removeNode(child_node: BaseNodeType): void {
 		if (child_node.parent() != this.node) {
-			return console.warn(`node ${child_node.name()} not under parent ${this.node.fullPath()}`);
+			return console.warn(`node ${child_node.name()} not under parent ${this.node.path()}`);
 		} else {
 			if (this.selection.contains(child_node)) {
 				this.selection.remove([child_node]);

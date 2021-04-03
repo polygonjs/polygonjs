@@ -67,7 +67,7 @@ export class PerformanceNode {
 
 	print_object(): PerformancePrintObject {
 		return {
-			fullPath: this._node.fullPath(),
+			fullPath: this._node.path(),
 			cooks_count: this.cooks_count(),
 			total_time: this.total_time(),
 			total_cook_time: this.total_cook_time(),

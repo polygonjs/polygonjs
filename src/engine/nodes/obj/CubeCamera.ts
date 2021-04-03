@@ -188,11 +188,11 @@ export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsCo
 	render() {
 		const renderer = Poly.renderersController.firstRenderer();
 		if (!renderer) {
-			console.warn(`no renderer found for ${this.fullPath()}`);
+			console.warn(`no renderer found for ${this.path()}`);
 			return;
 		}
 		if (!this._cubeCamera) {
-			console.warn(`no cubeCamera for ${this.fullPath()}`);
+			console.warn(`no cubeCamera for ${this.path()}`);
 			return;
 		}
 

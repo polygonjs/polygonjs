@@ -8,7 +8,7 @@ QUnit.test('height map simple', async (assert) => {
 	const height_map1 = geo1.createNode('heightMap');
 
 	height_map1.setInput(0, plane1);
-	height_map1.p.texture.set(file1.fullPath());
+	height_map1.p.texture.set(file1.path());
 	height_map1.p.mult.set(100);
 
 	let container = await height_map1.requestContainer();

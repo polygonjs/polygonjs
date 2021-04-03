@@ -252,7 +252,7 @@ export class FunctionGenerator extends BaseTraverser {
 					console.warn('no parsed_tree.node');
 				}
 			} catch (e) {
-				console.warn(`error in expression for param ${this.param.fullPath()}`);
+				console.warn(`error in expression for param ${this.param.path()}`);
 				console.warn(e);
 			}
 

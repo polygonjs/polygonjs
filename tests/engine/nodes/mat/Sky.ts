@@ -11,7 +11,7 @@ QUnit.test('mat sky simple', async (assert) => {
 	material1.setInput(0, sphere1);
 
 	sphere1.p.radius.set(100000);
-	material1.p.material.set(sky1.fullPath());
+	material1.p.material.set(sky1.path());
 
 	const container = await material1.requestContainer();
 	const core_group = container.coreContent()!;

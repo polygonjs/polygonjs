@@ -24,7 +24,7 @@ function create_required_nodes(particles1: ParticlesSystemGpuSopNode) {
 	const MAT = window.MAT;
 	const mat_node = MAT.createNode('pointsBuilder');
 	mat_node.createNode('output');
-	particles1.p.material.set(mat_node.fullPath());
+	particles1.p.material.set(mat_node.path());
 
 	return {output1, globals1};
 }

@@ -23,14 +23,14 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 	assert.ok(!viewer.controlsController.controls());
 
 	// set controls to the first camera_orbit_controls
-	perspective_camera1.p.controls.set(camera_orbit_controls1.fullPath());
+	perspective_camera1.p.controls.set(camera_orbit_controls1.path());
 	await CoreSleep.sleep(100);
 	assert.ok(viewer.controlsController.controls());
 	const id1 = viewer.controlsController.controls()?.name;
 	assert.ok(id1);
 
 	// change control node
-	perspective_camera1.p.controls.set(camera_orbit_controls2.fullPath());
+	perspective_camera1.p.controls.set(camera_orbit_controls2.path());
 	await CoreSleep.sleep(100);
 	assert.ok(viewer.controlsController.controls());
 	const id2 = viewer.controlsController.controls()?.name;

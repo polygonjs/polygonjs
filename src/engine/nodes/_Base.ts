@@ -200,8 +200,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	root() {
 		return this._scene.root();
 	}
-	fullPath(relative_to_parent?: BaseNodeType): string {
-		return this.parentController.fullPath(relative_to_parent);
+	path(relative_to_parent?: BaseNodeType): string {
+		return this.parentController.path(relative_to_parent);
 	}
 
 	// params
@@ -236,7 +236,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		this.containerController.container.set_content(content as never); //, this.self.cook_eval_key());
 		if (content != null) {
 			if (!(content as any).name) {
-				(content as any).name = this.fullPath();
+				(content as any).name = this.path();
 			}
 			if (!(content as any).node) {
 				(content as any).node = this;

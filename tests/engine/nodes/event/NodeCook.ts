@@ -34,9 +34,9 @@ QUnit.test('event node_cook simple', async (assert) => {
 
 	assert.ok(scene.loadingController.loaded());
 	node_cook1.p.mask.set('*scatter*');
-	set_param1.p.param.set(switch1.p.input.fullPath());
+	set_param1.p.param.set(switch1.p.input.path());
 	set_param1.p.number.set(1);
-	set_param2.p.param.set(switch2.p.input.fullPath());
+	set_param2.p.param.set(switch2.p.input.path());
 	set_param2.p.number.set(1);
 	set_param1.setInput(0, node_cook1, NodeCookEventNode.OUTPUT_FIRST_NODE);
 	set_param2.setInput(0, node_cook1, NodeCookEventNode.OUTPUT_ALL_NODES);
@@ -58,10 +58,10 @@ QUnit.test('event node_cook simple', async (assert) => {
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
-	const scatter1_2 = scene2.node(scatter1.fullPath()) as ScatterSopNode;
-	const merge1_2 = scene2.node(merge1.fullPath()) as MergeSopNode;
-	const switch1_2 = scene2.node(switch1.fullPath()) as SwitchSopNode;
-	const switch2_2 = scene2.node(switch2.fullPath()) as SwitchSopNode;
+	const scatter1_2 = scene2.node(scatter1.path()) as ScatterSopNode;
+	const merge1_2 = scene2.node(merge1.path()) as MergeSopNode;
+	const switch1_2 = scene2.node(switch1.path()) as SwitchSopNode;
+	const switch2_2 = scene2.node(switch2.path()) as SwitchSopNode;
 
 	assert.equal(switch1_2.p.input.value, 0);
 	await scatter1_2.requestContainer();

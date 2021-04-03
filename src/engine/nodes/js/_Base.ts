@@ -62,7 +62,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 				const output_name = output_connection_point.name();
 				return input_node.js_var_name(output_name);
 			} else {
-				console.warn(`no output called '${name}' for gl node ${input_node.fullPath()}`);
+				console.warn(`no output called '${name}' for gl node ${input_node.path()}`);
 				throw 'variable_for_input ERROR';
 			}
 		} else {

@@ -12,7 +12,7 @@ QUnit.test('scene save simple', async (assert) => {
 	scene.loadingController.markAsLoaded();
 
 	const perspective_camera1 = scene.root().createNode('perspectiveCamera');
-	scene.camerasController.setMasterCameraNodePath(perspective_camera1.fullPath());
+	scene.camerasController.setMasterCameraNodePath(perspective_camera1.path());
 	perspective_camera1.p.t.z.set(10);
 
 	const geo1 = scene.root().createNode('geo');

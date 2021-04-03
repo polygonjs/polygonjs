@@ -21,7 +21,7 @@ QUnit.test('event set_param simple', async (assert) => {
 
 	const events1 = scene.root().createNode('eventsNetwork');
 	const set_param1 = events1.createNode('setParam');
-	set_param1.p.param.set(switch1.p.input.fullPath());
+	set_param1.p.param.set(switch1.p.input.path());
 	await set_param1.p.param.compute();
 	set_param1.p.number.set(1);
 
@@ -52,6 +52,6 @@ QUnit.test('event set_param simple', async (assert) => {
 
 	await CoreSleep.sleep(100);
 
-	const switch2 = scene2.node(switch1.fullPath()) as SwitchSopNode;
+	const switch2 = scene2.node(switch1.path()) as SwitchSopNode;
 	assert.equal(switch2.pv.input, 1);
 });

@@ -30,7 +30,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 	private set_material_name() {
 		if (this._material) {
-			this._material.name = this.fullPath();
+			this._material.name = this.path();
 		}
 	}
 

@@ -10,7 +10,7 @@ export class ParamErrorState {
 		if (this._message != message) {
 			this._message = message;
 			if (this._message) {
-				Poly.warn(this.param.fullPath(), this._message);
+				Poly.warn(this.param.path(), this._message);
 			}
 			this.param.emitController.emit(ParamEvent.ERROR_UPDATED);
 		}

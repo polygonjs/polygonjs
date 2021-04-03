@@ -160,7 +160,7 @@ export abstract class TypedCameraObjNode<
 		node.set_as_master_camera();
 	}
 	set_as_master_camera() {
-		this.scene().camerasController.setMasterCameraNodePath(this.fullPath());
+		this.scene().camerasController.setMasterCameraNodePath(this.path());
 	}
 
 	setup_for_aspect_ratio(aspect: number) {}

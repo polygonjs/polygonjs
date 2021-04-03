@@ -92,7 +92,7 @@ export class NodesController {
 		const nodes = this.allNodes();
 		const matching_nodes: BaseNodeType[] = [];
 		for (let node of nodes) {
-			const path = node.fullPath();
+			const path = node.path();
 			if (CoreString.matchMask(path, mask)) {
 				matching_nodes.push(node);
 			}

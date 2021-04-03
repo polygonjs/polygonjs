@@ -77,7 +77,7 @@ export class MissingReferencesController {
 		this.references.forEach((missing_references, node_id) => {
 			let match_found = false;
 			for (let ref of missing_references) {
-				if (ref.matches_path(node.fullPath())) {
+				if (ref.matches_path(node.path())) {
 					match_found = true;
 					ref.resolve_missing_dependencies();
 				}
@@ -93,7 +93,7 @@ export class MissingReferencesController {
 		this.references.forEach((missing_references, node_id) => {
 			let match_found = false;
 			for (let ref of missing_references) {
-				if (ref.matches_path(param.fullPath())) {
+				if (ref.matches_path(param.path())) {
 					match_found = true;
 					ref.resolve_missing_dependencies();
 				}

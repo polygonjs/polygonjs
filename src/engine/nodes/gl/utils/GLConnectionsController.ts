@@ -103,7 +103,7 @@
 
 // 		this.node.io.inputs.setNamedInputConnectionPoints(named_input_connection_points);
 // 		console.log(
-// 			this.node.fullPath(),
+// 			this.node.path(),
 // 			named_output_connect_points.map((cp) => cp.name)
 // 		);
 // 		this.node.io.outputs.setNamedOutputConnectionPoints(named_output_connect_points, set_dirty);
@@ -160,7 +160,7 @@
 // 		if (this.node.scene.loading_controller.isLoading()) {
 // 			const out_data = this.node.io.saved_connection_points_data.out();
 // 			if (out_data) {
-// 				console.log('out_data', this.node.fullPath(), out_data);
+// 				console.log('out_data', this.node.path(), out_data);
 // 				return out_data.map((d) => d.type as GlConnectionPointType);
 // 			}
 // 		}

@@ -57,7 +57,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	//
 	//
 	glVarName(name: string) {
-		const path_sanitized = this.fullPath(this.material_node).replace(REGEX_PATH_SANITIZE, '_');
+		const path_sanitized = this.path(this.material_node).replace(REGEX_PATH_SANITIZE, '_');
 		return `v_POLY_${path_sanitized}_${name}`;
 	}
 
@@ -77,7 +77,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 				const output_name = output_connection_point.name();
 				return input_node.glVarName(output_name);
 			} else {
-				console.warn(`no output called '${name}' for gl node ${input_node.fullPath()}`);
+				console.warn(`no output called '${name}' for gl node ${input_node.path()}`);
 				throw 'variable_for_input ERROR';
 			}
 		} else {

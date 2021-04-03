@@ -37,15 +37,15 @@ QUnit.test('COP switch simple', async (assert) => {
 	null_env.setInput(0, switch_env);
 
 	const mesh_standard1 = MAT.createNode('meshStandard');
-	mesh_standard1.p.map.set(null_diffuse.fullPath());
+	mesh_standard1.p.map.set(null_diffuse.path());
 	mesh_standard1.p.useMap.set(1);
-	mesh_standard1.p.envMap.set(null_env.fullPath());
+	mesh_standard1.p.envMap.set(null_env.path());
 	mesh_standard1.p.useEnvMap.set(1);
 
 	// const sphere1 = geo1.createNode('sphere');
 	// const material1 = geo1.createNode('material');
 	// material1.setInput(0, sphere1);
-	// material1.p.material.set(mesh_standard1.fullPath());
+	// material1.p.material.set(mesh_standard1.path());
 
 	const material = mesh_standard1.material;
 

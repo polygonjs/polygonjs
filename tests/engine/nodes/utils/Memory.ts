@@ -10,7 +10,7 @@ QUnit.test('nodes can dispose themselves when removed by their parents', async (
 	const plane = geo.createNode('plane');
 	const scatter = geo.createNode('scatter');
 	scatter.setInput(0, plane);
-	scatter.p.pointsCount.set(`bbox('${box.fullPath()}')`);
+	scatter.p.pointsCount.set(`bbox('${box.path()}')`);
 
 	console.log(scatter.p.pointsCount.graphPredecessors());
 

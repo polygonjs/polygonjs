@@ -12,7 +12,7 @@ QUnit.test('expression object with float attr', async (assert) => {
 
 	const box = geo1.createNode('box');
 	const param = box.p.size;
-	param.set(`object('${attribCreate.fullPath()}', 'test', 0)`);
+	param.set(`object('${attribCreate.path()}', 'test', 0)`);
 	await param.compute();
 	assert.equal(param.value, 17.4);
 });
@@ -30,7 +30,7 @@ QUnit.test('expression object with vector attr', async (assert) => {
 
 	const box = geo1.createNode('box');
 	const param = box.p.size;
-	param.set(`object('${attribCreate.fullPath()}', 'test', 0).y`);
+	param.set(`object('${attribCreate.path()}', 'test', 0).y`);
 	await param.compute();
 	assert.equal(param.value, 5.12);
 });

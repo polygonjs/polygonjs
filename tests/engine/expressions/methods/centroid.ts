@@ -94,8 +94,8 @@ QUnit.test('expression centroid with input index still build dependency after sc
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
-	const text2 = scene2.node(text.fullPath()) as TextSopNode;
-	const transform2 = scene2.node(transform.fullPath()) as TransformSopNode;
+	const text2 = scene2.node(text.path()) as TextSopNode;
+	const transform2 = scene2.node(transform.path()) as TransformSopNode;
 	container = await transform2.requestContainer();
 	core_group = container.coreContent()!;
 	bbox = core_group.boundingBox();

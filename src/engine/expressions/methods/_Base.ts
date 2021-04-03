@@ -63,7 +63,7 @@ export class BaseMethod {
 					return container;
 				}
 			}
-			throw `referenced node invalid: ${referenced_node.fullPath()}`;
+			throw `referenced node invalid: ${referenced_node.path()}`;
 		} else {
 			throw `invalid input (${index_or_path})`;
 		}

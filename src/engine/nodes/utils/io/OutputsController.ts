@@ -52,7 +52,7 @@ export class OutputsController<NC extends NodeContext> {
 				if (this.hasNamedOutputs()) {
 					return this.getNamedOutputIndex(output_index_or_name);
 				} else {
-					console.warn(`node ${this.node.fullPath()} has no named outputs`);
+					console.warn(`node ${this.node.path()} has no named outputs`);
 					return -1;
 				}
 			} else {

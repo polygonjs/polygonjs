@@ -312,7 +312,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		const renderer = Poly.renderersController.createWebGLRenderer(params);
 
 		if (Poly.renderersController.printDebug()) {
-			Poly.renderersController.printDebugMessage(`create renderer from node '${this.fullPath()}'`);
+			Poly.renderersController.printDebugMessage(`create renderer from node '${this.path()}'`);
 			Poly.renderersController.printDebugMessage({
 				params: params,
 			});
@@ -353,7 +353,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : RenderController.defaultPixelRatio();
 
 		if (Poly.renderersController.printDebug()) {
-			Poly.renderersController.printDebugMessage(`set renderer pixelRatio from '${this.fullPath()}'`);
+			Poly.renderersController.printDebugMessage(`set renderer pixelRatio from '${this.path()}'`);
 			Poly.renderersController.printDebugMessage({
 				pixelRatio: pixelRatio,
 			});

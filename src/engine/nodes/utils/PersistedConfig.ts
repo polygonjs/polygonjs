@@ -48,7 +48,7 @@ export class BasePersistedConfig {
 		if (material_data) {
 			// here we force the uuid to an expected value,
 			// so that it does not get overriden at each load/save
-			(material_data as any).uuid = `${options.node.fullPath()}-${options.suffix}`;
+			(material_data as any).uuid = `${options.node.path()}-${options.suffix}`;
 		}
 
 		this._reassign_textures(material);

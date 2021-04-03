@@ -166,7 +166,7 @@ QUnit.test('expression pointsCount fails with bad input index 0', async (assert)
 
 // box1 = geo1.createNode('box')
 // box2 = geo1.createNode('box')
-// console.log(box1.fullPath(), box2.fullPath())
+// console.log(box1.path(), box2.path())
 
 // box2.p.size.set("pointsCount(0)")
 

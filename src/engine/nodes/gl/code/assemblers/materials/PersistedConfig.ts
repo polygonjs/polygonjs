@@ -60,7 +60,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 
 		const material_data = this._materialToJson(this.node.material, {node: this.node, suffix: 'main'});
 		if (!material_data) {
-			console.warn('failed to save material from node', this.node.fullPath());
+			console.warn('failed to save material from node', this.node.path());
 		}
 
 		const data = {

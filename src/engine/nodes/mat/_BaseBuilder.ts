@@ -132,12 +132,12 @@ export abstract class TypedBuilderMatNode<
 
 		const resolvedBuilderNode = resolvedNode as BaseBuilderMatNodeType;
 		if (!resolvedBuilderNode.assemblerController) {
-			this.states.error.set(`resolved node '${resolvedNode.fullPath()}' is not a builder node`);
+			this.states.error.set(`resolved node '${resolvedNode.path()}' is not a builder node`);
 			return;
 		}
 		if (resolvedBuilderNode.type() != this.type()) {
 			this.states.error.set(
-				`resolved node '${resolvedNode.fullPath()}' does not have the same type '${resolvedNode.type()}' as current node '${this.type()}'`
+				`resolved node '${resolvedNode.path()}' does not have the same type '${resolvedNode.type()}' as current node '${this.type()}'`
 			);
 			return;
 		}

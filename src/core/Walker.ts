@@ -198,7 +198,7 @@ export class CoreWalker {
 	static relativePath(src_graph_node: Readonly<BaseNodeType>, dest_graph_node: Readonly<BaseNodeType>): string {
 		const parent = this.closestCommonParent(src_graph_node, dest_graph_node);
 		if (!parent) {
-			return dest_graph_node.fullPath();
+			return dest_graph_node.path();
 		} else {
 			const distance = this.distanceToParent(src_graph_node, parent);
 			let up = '';
@@ -212,11 +212,11 @@ export class CoreWalker {
 			}
 
 			const parent_path_elements = parent
-				.fullPath()
+				.path()
 				.split(CoreWalker.SEPARATOR)
 				.filter((e) => e.length > 0);
 			const dest_path_elements = dest_graph_node
-				.fullPath()
+				.path()
 				.split(CoreWalker.SEPARATOR)
 				.filter((e) => e.length > 0);
 			const remaining_elements = [];
@@ -295,11 +295,11 @@ export class CoreWalker {
 					return this.makeAbsolutePath(node_src, path_elements.join(CoreWalker.SEPARATOR));
 				}
 				default: {
-					return [node_src.fullPath(), path].join(CoreWalker.SEPARATOR);
+					return [node_src.path(), path].join(CoreWalker.SEPARATOR);
 				}
 			}
 		} else {
-			return node_src.fullPath();
+			return node_src.path();
 		}
 	}
 }

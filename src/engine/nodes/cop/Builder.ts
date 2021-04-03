@@ -313,7 +313,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			stencilBuffer: false,
 			depthBuffer: false,
 		});
-		Poly.warn('created render target', this.fullPath(), width, height);
+		Poly.warn('created render target', this.path(), width, height);
 		return renderTarget;
 	}
 }

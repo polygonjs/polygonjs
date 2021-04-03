@@ -5,8 +5,8 @@ QUnit.test('object_merge simple', async (assert) => {
 	const plane1 = geo2.createNode('plane');
 	const object_merge1 = geo1.createNode('objectMerge');
 
-	console.log('plane1.fullPath()', plane1.fullPath());
-	object_merge1.p.geometry.set(plane1.fullPath());
+	console.log('plane1.path()', plane1.path());
+	object_merge1.p.geometry.set(plane1.path());
 	console.log(object_merge1.p.geometry.value);
 	console.log(object_merge1.pv.geometry);
 

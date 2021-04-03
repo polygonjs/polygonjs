@@ -166,7 +166,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	private _is_computing: boolean = false;
 	async compute(): Promise<void> {
 		if (this.scene().loadingController.isLoading()) {
-			console.warn(`param attempt to compute ${this.fullPath()}`);
+			console.warn(`param attempt to compute ${this.path()}`);
 		}
 
 		if (this.isDirty()) {
@@ -249,8 +249,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	has_parent_param(): boolean {
 		return this._parent_param != null;
 	}
-	fullPath(): string {
-		return this.node?.fullPath() + '/' + this.name();
+	path(): string {
+		return this.node?.path() + '/' + this.name();
 	}
 	pathRelativeTo(node: BaseNodeType): string {
 		const nodeRelativePath = CoreWalker.relativePath(node, this.node);

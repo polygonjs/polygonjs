@@ -39,7 +39,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 	protected set_object_name() {
 		super.set_object_name();
 		if (this._light) {
-			this._light.name = `${this.fullPath()}:light`;
+			this._light.name = `${this.path()}:light`;
 		}
 	}
 

@@ -22,7 +22,7 @@
 // 	const material1 = geo1.createNode('material')
 // 	material1.setInput(0, box1)
 // 	material1.set_display_flag()
-// 	material1.param('material').set(mesh_basic1.fullPath())
+// 	material1.param('material').set(mesh_basic1.path())
 
 // 	await material1.requestContainer_p()
 

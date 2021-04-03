@@ -181,7 +181,7 @@ QUnit.test('attrib create expression vector vertex', async (assert) => {
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
-	const attrib_create2 = scene2.node(attrib_create1.fullPath()) as AttribCreateSopNode;
+	const attrib_create2 = scene2.node(attrib_create1.path()) as AttribCreateSopNode;
 	container = await attrib_create2.requestContainer();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
@@ -377,7 +377,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
-	const attrib_create2 = scene2.node(attrib_create1.fullPath()) as AttribCreateSopNode;
+	const attrib_create2 = scene2.node(attrib_create1.path()) as AttribCreateSopNode;
 	container = await attrib_create2.requestContainer();
 	core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 1331);

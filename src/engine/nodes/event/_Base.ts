@@ -75,7 +75,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 			// 	node.process_event(event_context);
 			// }
 		} else {
-			console.warn(`requested output '${output_name}' does not exist on node '${this.fullPath()}'`);
+			console.warn(`requested output '${output_name}' does not exist on node '${this.path()}'`);
 		}
 	}
 

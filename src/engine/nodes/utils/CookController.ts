@@ -82,7 +82,7 @@ export class NodeCookController<NC extends NodeContext> {
 			// this seems to happen because when we flush the cooker queue,
 			// some graph nodes will trigger more updates, which will then make dependent nodes
 			// dirty again
-			Poly.warn('cook_main_without_inputs already cooking', this.node.fullPath());
+			Poly.warn('cook_main_without_inputs already cooking', this.node.path());
 			return;
 		}
 		this._init_cooking_state();
@@ -102,7 +102,7 @@ export class NodeCookController<NC extends NodeContext> {
 			this.node.removeDirtyState();
 			this._terminate_cook_process();
 		} else {
-			Poly.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.fullPath());
+			Poly.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.path());
 			this._cooking = false;
 			this.cook_main();
 		}

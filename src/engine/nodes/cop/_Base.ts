@@ -49,7 +49,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 
 	setTexture(texture: Texture) {
 		// this._copy_texture(texture);
-		texture.name = this.fullPath();
+		texture.name = this.path();
 		this.setContainer(texture);
 	}
 	clear_texture() {
@@ -86,7 +86,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	// 	// 	if (!this._texture) {
 	// 	// 		console.log('assign');
 	// 	// 		this._texture = texture.clone();
-	// 	// 		// this._texture.name = this.fullPath();
+	// 	// 		// this._texture.name = this.path();
 	// 	// 	} else {
 	// 	// 		console.log('copy');
 	// 	// 		const keys = Object.keys(texture) as Array<keyof Texture>;

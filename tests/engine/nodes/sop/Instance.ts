@@ -10,7 +10,7 @@ export function create_required_nodes(node: InstanceSopNode) {
 	output1.setInput('position', instance_transform1, 'position');
 	output1.setInput('normal', instance_transform1, 'normal');
 
-	node.p.material.set(mesh_mat.fullPath());
+	node.p.material.set(mesh_mat.path());
 
 	return {output1};
 }

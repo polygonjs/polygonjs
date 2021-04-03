@@ -21,7 +21,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	assert.ok(horizontal_blur1.flags?.display?.active(), 'first node created has display flag on');
 
 	camera.p.doPostProcess.set(1);
-	camera.p.postProcessNode.set(post_process1.fullPath());
+	camera.p.postProcessNode.set(post_process1.path());
 	await CoreSleep.sleep(20);
 
 	// 2 passes by default

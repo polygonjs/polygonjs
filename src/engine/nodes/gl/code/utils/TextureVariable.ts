@@ -80,7 +80,7 @@ export class TextureVariable {
 			this._graph_node_ids.forEach((boolean, node_id) => {
 				const node = scene.graph.nodeFromId(node_id) as BaseGlNodeType;
 				if (node) {
-					const name = node.fullPath();
+					const name = node.path();
 					if (name) {
 						names.push(name);
 					}

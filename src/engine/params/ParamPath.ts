@@ -45,7 +45,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 		return this._raw_input == this._default_value;
 	}
 	setParam(param: BaseParamType) {
-		this.set(param.fullPath());
+		this.set(param.path());
 	}
 	protected processRawInput() {
 		if (this._value.path() != this._raw_input) {

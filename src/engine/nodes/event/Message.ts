@@ -46,7 +46,7 @@ export class MessageEventNode extends TypedEventNode<MessageParamsConfig> {
 			alert(context);
 		}
 		if (isBooleanTrue(this.pv.console)) {
-			console.log(this.fullPath(), Date.now(), context);
+			console.log(this.path(), Date.now(), context);
 		}
 		this.trigger_output(context);
 	}

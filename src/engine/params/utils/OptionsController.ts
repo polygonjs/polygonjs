@@ -332,7 +332,7 @@ export class OptionsController {
 				callback(this.node(), this.param());
 			}
 			// } else {
-			// 	console.warn(`node ${this.node.fullPath()} cooking, not running callback`, this.param.name);
+			// 	console.warn(`node ${this.node.path()} cooking, not running callback`, this.param.name);
 			// }
 		}
 	}

@@ -53,7 +53,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return this._value == this._default_value;
 	}
 	setNode(node: BaseNodeType) {
-		this.set(node.fullPath());
+		this.set(node.path());
 	}
 	protected processRawInput() {
 		if (this._value != this._raw_input) {

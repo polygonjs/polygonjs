@@ -282,7 +282,7 @@ export class InputsController<NC extends NodeContext> {
 			if (this.hasNamedInputs()) {
 				return this.get_named_input_index(input_index_or_name);
 			} else {
-				throw new Error(`node ${this.node.fullPath()} has no named inputs`);
+				throw new Error(`node ${this.node.path()} has no named inputs`);
 			}
 		} else {
 			return input_index_or_name;
@@ -296,7 +296,7 @@ export class InputsController<NC extends NodeContext> {
 	) {
 		const input_index = this.get_input_index(input_index_or_name) || 0;
 		if (input_index < 0) {
-			const message = `invalid input (${input_index_or_name}) for node ${this.node.fullPath()}`;
+			const message = `invalid input (${input_index_or_name}) for node ${this.node.path()}`;
 			console.warn(message);
 			throw new Error(message);
 		}
@@ -309,7 +309,7 @@ export class InputsController<NC extends NodeContext> {
 					const connection_points = node.io.outputs.namedOutputConnectionPoints() as BaseConnectionPoint[];
 					const names = connection_points.map((cp) => cp.name());
 					console.warn(
-						`node ${node.fullPath()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
+						`node ${node.path()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
 							', '
 						)}`
 					);
@@ -368,7 +368,7 @@ export class InputsController<NC extends NodeContext> {
 						input_index
 					);
 				} else {
-					console.warn(`cannot connect ${node.fullPath()} to ${this.node.fullPath()}`);
+					console.warn(`cannot connect ${node.path()} to ${this.node.path()}`);
 				}
 			} else {
 				this._inputs[input_index] = null;

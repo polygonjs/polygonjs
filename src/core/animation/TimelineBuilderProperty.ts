@@ -201,7 +201,7 @@ export class TimelineBuilderProperty {
 		const target_param = node.p[this._property_name as any] as BaseParamType;
 		this._printDebug(['target_param', target_param]);
 		if (!target_param) {
-			Poly.warn(`${this._property_name} not found on node ${node.fullPath()}`);
+			Poly.warn(`${this._property_name} not found on node ${node.path()}`);
 			return;
 		}
 
@@ -233,7 +233,7 @@ export class TimelineBuilderProperty {
 				return this._populateVarsForParamVector4(param as Vector4Param, timeline_builder, timeline);
 			}
 		}
-		this._printDebug(`param type cannot be animated (yet): '${param.type()}' '${param.fullPath()}'`);
+		this._printDebug(`param type cannot be animated (yet): '${param.type()}' '${param.path()}'`);
 	}
 	private _populateVarsForParamInteger(
 		param: FloatParam,

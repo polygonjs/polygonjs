@@ -115,7 +115,7 @@ QUnit.test('a relative path in a operator path param gets updated when ref chang
 	const material_sop = geo1.createNode('material');
 	const material = MAT.createNode('meshBasic');
 	const path_param = material_sop.p.material;
-	path_param.set(material.fullPath());
+	path_param.set(material.path());
 
 	await path_param.compute();
 	assert.equal(path_param.value.path(), '/MAT/meshBasic1');
@@ -145,7 +145,7 @@ QUnit.test('an absolute path in a operator path param gets updated when ref chan
 
 	await scene.waitForCooksCompleted();
 
-	param.set(box.fullPath());
+	param.set(box.path());
 
 	await param.compute();
 	assert.equal(param.value, '/geo1/box1');
@@ -186,7 +186,7 @@ QUnit.test('an absolute path in a node path param gets updated when ref changes 
 
 	await scene.waitForCooksCompleted();
 
-	controls_param.set(orbit.fullPath());
+	controls_param.set(orbit.path());
 
 	await controls_param.compute();
 	assert.equal(controls_param.value.path(), '/eventsNetwork1/cameraOrbitControls1');
@@ -231,7 +231,7 @@ QUnit.test(
 
 		await scene.waitForCooksCompleted();
 
-		param_operator_path_param.set(`${mesh_basic_builder1.fullPath()}/test_param`);
+		param_operator_path_param.set(`${mesh_basic_builder1.path()}/test_param`);
 		await param_operator_path_param.compute();
 		assert.notOk(param_operator_path_param.value.param());
 

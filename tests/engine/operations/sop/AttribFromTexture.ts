@@ -43,7 +43,7 @@ QUnit.test('attribFromTexture with float - optimized', async (assert) => {
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
-	const point2 = scene2.node(point.fullPath()) as PointSopNode;
+	const point2 = scene2.node(point.path()) as PointSopNode;
 	await point2.requestContainer();
 	container = await point2.requestContainer();
 	core_group = container.coreContent()!;
@@ -89,7 +89,7 @@ QUnit.test('attribFromTexture with vector - optimized', async (assert) => {
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
-	const point2 = scene2.node(point.fullPath()) as PointSopNode;
+	const point2 = scene2.node(point.path()) as PointSopNode;
 	await point2.requestContainer();
 	container = await point2.requestContainer();
 	core_group = container.coreContent()!;

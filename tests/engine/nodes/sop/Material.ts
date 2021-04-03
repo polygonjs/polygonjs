@@ -10,7 +10,7 @@ QUnit.test('materials simple', async (assert) => {
 	const lambert1 = MAT.createNode('meshLambert');
 
 	material1.setInput(0, plane1);
-	material1.p.material.set(lambert1.fullPath());
+	material1.p.material.set(lambert1.path());
 
 	let container;
 
@@ -33,10 +33,10 @@ QUnit.test('materials clone', async (assert) => {
 	attrib_create1.setInput(0, plane1);
 	material1.setInput(0, attrib_create1);
 	copy1.setInput(0, material1);
-	material1.p.material.set(lambert1.fullPath());
+	material1.p.material.set(lambert1.path());
 
 	attrib_create1.p.name.set('id');
-	attrib_create1.p.value1.set(`copy('${copy1.fullPath()}', 0)`);
+	attrib_create1.p.value1.set(`copy('${copy1.path()}', 0)`);
 	material1.p.cloneMat.set(1);
 	copy1.p.count.set(2);
 	copy1.p.useCopyExpr.set(1);
