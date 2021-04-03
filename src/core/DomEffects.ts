@@ -1,5 +1,5 @@
 export class DomEffects {
-	static fadeOut(element: HTMLElement) {
+	static fadeOut(element: HTMLElement): Promise<void> {
 		return new Promise((resolve) => {
 			const fadeEffect = setInterval(() => {
 				if (!element.style.opacity) {

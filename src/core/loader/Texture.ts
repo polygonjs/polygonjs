@@ -448,7 +448,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		}
 	}
 
-	private static async wait_for_max_concurrent_loads_queue_freed() {
+	private static async wait_for_max_concurrent_loads_queue_freed(): Promise<void> {
 		if (this.in_progress_loads_count <= this.MAX_CONCURRENT_LOADS_COUNT) {
 			return;
 		} else {

@@ -106,7 +106,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 
 	private async _transfer_attributes(dest_points: CorePoint[]) {
 		const iterator = new CoreIterator();
-		await iterator.start_with_array(dest_points, this._transfer_attributes_for_point.bind(this));
+		await iterator.startWithArray(dest_points, this._transfer_attributes_for_point.bind(this));
 	}
 	private _transfer_attributes_for_point(dest_point: CorePoint) {
 		const total_dist = this.pv.distanceThreshold + this.pv.blendWidth;

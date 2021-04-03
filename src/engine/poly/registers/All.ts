@@ -1,6 +1,5 @@
 import {AllNodesRegister} from './nodes/All';
 import {AllExpressionsRegister} from './expressions/All';
-// import {AllModulesRegister} from './modules/All';
 import {AllAssemblersRegister} from './assemblers/All';
 import {AllCamerasRegister} from './cameras/All';
 
@@ -15,7 +14,9 @@ export class AllRegister {
 		AllNodesRegister.run(Poly);
 		AllCamerasRegister.run(Poly);
 		AllExpressionsRegister.run(Poly);
-		// AllModulesRegister.run(Poly);
 		AllAssemblersRegister.run(Poly);
+
+		// modules are not registered separately
+		// AllModulesRegister.run(Poly);
 	}
 }

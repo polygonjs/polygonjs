@@ -31,21 +31,21 @@ export class CoreIterator {
 		this._check_every_interations = options.check_every_interations || 100;
 	}
 
-	async start_with_count(count: number, iteratee_method: IterateeMethodCount) {
+	async startWithCount(count: number, iteratee_method: IterateeMethodCount): Promise<void> {
 		this._count = count;
 		this._current_count_index = 0;
 		this._iteratee_method_count = iteratee_method;
-		this._bound_next_with_count = this.next_with_count.bind(this);
+		this._bound_next_with_count = this.nextWithCount.bind(this);
 
 		if (this._resolve) {
 			throw 'an iterator cannot be started twice';
 		}
 		return new Promise((resolve: () => void, reject) => {
 			this._resolve = resolve;
-			this.next_with_count();
+			this.nextWithCount();
 		});
 	}
-	next_with_count() {
+	nextWithCount() {
 		const start_time = performance.now();
 
 		if (this._iteratee_method_count && this._bound_next_with_count) {
@@ -75,21 +75,21 @@ export class CoreIterator {
 	// ARRAY
 	//
 	//
-	async start_with_array(array: any[], iteratee_method: IterateeMethod) {
+	async startWithArray(array: any[], iteratee_method: IterateeMethod): Promise<void> {
 		this._array = array;
 		this._array_index = 0;
 		this._iteratee_method_array = iteratee_method;
-		this._bound_next_with_array = this.next_with_array.bind(this);
+		this._bound_next_with_array = this.nextWithArray.bind(this);
 
 		if (this._resolve) {
 			throw 'an iterator cannot be started twice';
 		}
 		return new Promise((resolve: () => void, reject) => {
 			this._resolve = resolve;
-			this.next_with_array();
+			this.nextWithArray();
 		});
 	}
-	next_with_array() {
+	nextWithArray() {
 		const start_time = performance.now();
 
 		if (this._iteratee_method_array && this._bound_next_with_array && this._array) {
