@@ -1,6 +1,7 @@
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Mesh} from 'three/src/objects/Mesh';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {PlaneGeometry} from 'three/src/geometries/PlaneGeometry';
 
 function Pass() {
 
@@ -39,7 +40,12 @@ Object.assign( Pass.prototype, {
 Pass.FullScreenQuad = ( function () {
 
 	var camera = new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
-	var geometry = new PlaneGeometry( 2, 2 );
+
+	// https://github.com/mrdoob/three.js/pull/21358
+
+	var geometry = new BufferGeometry();
+	geometry.setAttribute( 'position', new Float32BufferAttribute( [ - 1, 3, 0, - 1, - 1, 0, 3, - 1, 0 ], 3 ) );
+	geometry.setAttribute( 'uv', new Float32BufferAttribute( [ 0, 2, 0, 0, 2, 0 ], 2 ) );
 
 	var FullScreenQuad = function ( material ) {
 

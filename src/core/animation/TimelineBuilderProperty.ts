@@ -127,7 +127,7 @@ export class TimelineBuilderProperty {
 					const qStart = new Quaternion().copy(target_property);
 					const qEnd = this._target_value;
 					vars.onUpdate = () => {
-						Quaternion.slerp(qStart, qEnd, qTarget, proxy.value);
+						qTarget.slerpQuaternions(qStart, qEnd, proxy.value);
 					};
 					to_target = proxy;
 					vars.value = 1;

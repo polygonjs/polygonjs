@@ -1,4 +1,4 @@
-import { Loader, LoadingManager, ShapePath, BufferGeometry, Vector3 } from 'three';
+import { Loader, LoadingManager, ShapePath, BufferGeometry, Vector3, Shape } from 'three';
 
 export interface SVGResultPaths extends ShapePath {
     userData?: {
@@ -57,4 +57,5 @@ export class SVGLoader extends Loader {
         uvs?: number[],
         vertexOffset?: number,
     ): number;
+    static createShapes(shapePath: ShapePath): Shape[];
 }

@@ -1,7 +1,6 @@
 import jsep from 'jsep';
 import {CoreType} from '../../../core/Type';
 jsep.addUnaryOp('@');
-// self.jsep = jsep
 let precedence = 10;
 jsep.addBinaryOp('**', precedence);
 // precedence = 1
