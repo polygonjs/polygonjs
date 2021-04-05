@@ -21,13 +21,13 @@ export class AssemblerNodeSpareParamsController {
 		return this._controller.assembler;
 	}
 
-	create_spare_parameters() {
+	createSpareParameters() {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
 		const param_configs = this.assembler.param_configs();
 		const assembler_param_names = param_configs.map((c) => c.name());
 		const spare_param_names_to_add = ObjectUtils.clone(assembler_param_names);
-		const validation_result = this._validate_names(spare_param_names_to_add);
+		const validation_result = this._validateNames(spare_param_names_to_add);
 		if (validation_result == false) {
 			return;
 		}
@@ -52,8 +52,8 @@ export class AssemblerNodeSpareParamsController {
 				}
 			}
 
-			params_update_options.names_to_delete = params_update_options.names_to_delete || [];
-			params_update_options.names_to_delete.push(param_name);
+			params_update_options.namesToDelete = params_update_options.namesToDelete || [];
+			params_update_options.namesToDelete.push(param_name);
 		});
 
 		// this.within_param_folder('spare_params', () => {
@@ -77,8 +77,8 @@ export class AssemblerNodeSpareParamsController {
 					raw_input = param_config.default_value as any;
 				}
 
-				params_update_options.to_add = params_update_options.to_add || [];
-				params_update_options.to_add.push({
+				params_update_options.toAdd = params_update_options.toAdd || [];
+				params_update_options.toAdd.push({
 					name: param_config.name(),
 					type: param_config.type(),
 					init_value: init_value as any,
@@ -89,7 +89,7 @@ export class AssemblerNodeSpareParamsController {
 		}
 
 		this._node.params.updateParams(params_update_options);
-		this._created_spare_param_names = params_update_options.to_add?.map((o) => o.name) || [];
+		this._created_spare_param_names = params_update_options.toAdd?.map((o) => o.name) || [];
 
 		// We force the param configs to run their callbacks to ensure that the uniforms are up to date.
 		// This seems better than running the parameter options callback, since it would check
@@ -115,7 +115,7 @@ export class AssemblerNodeSpareParamsController {
 
 	// TODO: handle the case where a param created by user already exists.
 	// we may then change the name of the new spare param.
-	private _validate_names(spare_param_names_to_add: string[]): boolean {
+	private _validateNames(spare_param_names_to_add: string[]): boolean {
 		// check that param_names_to_add does not include any currently existing param names (that are not spare)
 		const current_param_names = ObjectUtils.clone(this._node.params.non_spare_names);
 		const spare_params_with_same_name_as_params = ArrayUtils.intersection(

@@ -29,6 +29,7 @@ import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpM
 import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
 import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
 import {TextureSpecularMapController, SpecularMapParamConfig} from './utils/TextureSpecularMapController';
+import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 
 const CONTROLLER_OPTIONS = {
 	uniforms: true,
@@ -45,28 +46,31 @@ interface Controllers {
 	map: TextureMapController;
 	normalMap: TextureNormalMapController;
 	specularMap: TextureSpecularMapController;
+	PCSS: PCSSController;
 }
-class MeshPhongMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				BaseBuilderParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						SpecularMapParamConfig(
-							NormalMapParamConfig(
-								LightMapParamConfig(
-									EnvMapParamConfig(
-										EmissiveMapParamConfig(
-											DisplacementMapParamConfig(
-												BumpMapParamConfig(
-													AOMapParamConfig(
-														AlphaMapParamConfig(
-															MapParamConfig(
-																/* textures */
-																TexturesFolderParamConfig(
-																	TransparencyParamConfig(
-																		DefaultFolderParamConfig(NodeParamsConfig)
+class MeshPhongMatParamsConfig extends PCSSParamConfig(
+	FogParamConfig(
+		SkinningParamConfig(
+			WireframeParamConfig(
+				AdvancedCommonParamConfig(
+					BaseBuilderParamConfig(
+						/* advanced */
+						AdvancedFolderParamConfig(
+							SpecularMapParamConfig(
+								NormalMapParamConfig(
+									LightMapParamConfig(
+										EnvMapParamConfig(
+											EmissiveMapParamConfig(
+												DisplacementMapParamConfig(
+													BumpMapParamConfig(
+														AOMapParamConfig(
+															AlphaMapParamConfig(
+																MapParamConfig(
+																	/* textures */
+																	TexturesFolderParamConfig(
+																		TransparencyParamConfig(
+																			DefaultFolderParamConfig(NodeParamsConfig)
+																		)
 																	)
 																)
 															)
@@ -110,6 +114,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
 		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
 		specularMap: new TextureSpecularMapController(this, CONTROLLER_OPTIONS),
+		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 	initializeNode() {
@@ -129,7 +134,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		SkinningController.update(this);
 		WireframeController.update(this);
 
-		this.compile_if_required();
+		this.compileIfRequired();
 
 		this.setMaterial(this.material);
 	}

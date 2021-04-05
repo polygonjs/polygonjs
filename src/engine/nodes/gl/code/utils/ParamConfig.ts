@@ -41,7 +41,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		GlParamConfig.callback(param, this.uniform);
 		// switch (param.type) {
 		// 	case ParamType.RAMP:
-		// 		this.uniform.value = (param as RampParam).ramp_texture();
+		// 		this.uniform.value = (param as RampParam).rampTexture();
 		// 		return;
 		// 	case ParamType.OPERATOR_PATH:
 		// 		GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, this.uniform);
@@ -54,7 +54,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	static callback(param: BaseParamType, uniform: IUniform) {
 		switch (param.type()) {
 			case ParamType.RAMP:
-				uniform.value = (param as RampParam).ramp_texture();
+				uniform.value = (param as RampParam).rampTexture();
 				return;
 			case ParamType.OPERATOR_PATH:
 				GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, uniform);
@@ -142,6 +142,6 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	}
 
 	set_uniform_value_from_ramp(param: RampParam, uniform: IUniform) {
-		uniform.value = param.ramp_texture();
+		uniform.value = param.rampTexture();
 	}
 }

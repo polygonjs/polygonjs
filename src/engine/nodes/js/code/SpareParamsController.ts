@@ -21,7 +21,7 @@ export class JsAssemblerNodeSpareParamsController {
 		return this._controller.assembler;
 	}
 
-	create_spare_parameters() {
+	createSpareParameters() {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
 		const param_configs = this.assembler.param_configs();
@@ -52,8 +52,8 @@ export class JsAssemblerNodeSpareParamsController {
 				}
 			}
 
-			params_update_options.names_to_delete = params_update_options.names_to_delete || [];
-			params_update_options.names_to_delete.push(param_name);
+			params_update_options.namesToDelete = params_update_options.namesToDelete || [];
+			params_update_options.namesToDelete.push(param_name);
 		});
 
 		// this.within_param_folder('spare_params', () => {
@@ -77,8 +77,8 @@ export class JsAssemblerNodeSpareParamsController {
 					raw_input = param_config.default_value as any;
 				}
 
-				params_update_options.to_add = params_update_options.to_add || [];
-				params_update_options.to_add.push({
+				params_update_options.toAdd = params_update_options.toAdd || [];
+				params_update_options.toAdd.push({
 					name: param_config.name(),
 					type: param_config.type(),
 					init_value: init_value as any,
@@ -89,7 +89,7 @@ export class JsAssemblerNodeSpareParamsController {
 		}
 
 		this._node.params.updateParams(params_update_options);
-		this._created_spare_param_names = params_update_options.to_add?.map((o) => o.name) || [];
+		this._created_spare_param_names = params_update_options.toAdd?.map((o) => o.name) || [];
 	}
 
 	// TODO: handle the case where a param created by user already exists.

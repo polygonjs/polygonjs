@@ -97,7 +97,7 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		SkinningController.update(this);
 		WireframeController.update(this);
 
-		this.compile_if_required();
+		this.compileIfRequired();
 
 		this.setMaterial(this.material);
 	}

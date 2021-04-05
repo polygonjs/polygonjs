@@ -230,10 +230,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 				// we check if it is currently exists with same type first.
 				// - if it is, we only update the value
 				// - if it's not, we delete it and add it again
-				params_update_options.names_to_delete = params_update_options.names_to_delete || [];
-				params_update_options.names_to_delete.push(param_name);
-				params_update_options.to_add = params_update_options.to_add || [];
-				params_update_options.to_add.push({
+				params_update_options.namesToDelete = params_update_options.namesToDelete || [];
+				params_update_options.namesToDelete.push(param_name);
+				params_update_options.toAdd = params_update_options.toAdd || [];
+				params_update_options.toAdd.push({
 					name: param_name,
 					type: param_type,
 					init_value: param_data['default_value'] as any,
@@ -257,8 +257,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		// delete and create the spare params we need to
 		const params_delete_required =
-			params_update_options.names_to_delete && params_update_options.names_to_delete.length > 0;
-		const params_add_required = params_update_options.to_add && params_update_options.to_add.length > 0;
+			params_update_options.namesToDelete && params_update_options.namesToDelete.length > 0;
+		const params_add_required = params_update_options.toAdd && params_update_options.toAdd.length > 0;
 
 		if (params_delete_required || params_add_required) {
 			this._node.params.updateParams(params_update_options);

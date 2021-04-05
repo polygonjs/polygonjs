@@ -13,11 +13,20 @@ import {GlConnectionPoint, GlConnectionPointType} from '../../../../utils/io/con
 import sss_default from '../../../gl/sss/init.glsl';
 import sss_declaration_fragment from '../../../gl/sss/declaration.glsl';
 import sss_injected_fragment from '../../../gl/sss/injected.glsl';
+import {AssemblerControllerNode} from '../../Controller';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	static USE_SSS: Readonly<boolean> = true;
 	isPhysical() {
 		return false;
+	}
+	constructor(protected _gl_parent_node: AssemblerControllerNode) {
+		super(_gl_parent_node);
+
+		this._addFilterFragmentShaderCallback(
+			'MeshStandardBuilderMatNode',
+			ShaderAssemblerStandard.filterFragmentShader
+		);
 	}
 
 	templateShader() {
@@ -76,11 +85,6 @@ ${sss_injected_fragment}
 		}
 
 		this._addCustomMaterials(material);
-
-		this._addFilterFragmentShaderCallback(
-			'MeshStandardBuilderMatNode',
-			ShaderAssemblerStandard.filterFragmentShader
-		);
 
 		return material;
 	}

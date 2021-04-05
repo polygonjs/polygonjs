@@ -53,7 +53,7 @@ export class PolyNodeController {
 			param_data.options = param_data.options || {};
 			param_data.options.spare = true;
 		}
-		this.node.params.updateParams({to_add: params_data});
+		this.node.params.updateParams({toAdd: params_data});
 	}
 
 	createChildNodesFromDefinition() {

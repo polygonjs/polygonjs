@@ -174,7 +174,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.gpuController.set_restart_not_required();
 		const core_group = input_contents[0];
 
-		this.compile_if_required();
+		this.compileIfRequired();
 
 		if (this.is_on_frame_start()) {
 			this.gpuController.reset_particle_groups();
@@ -198,8 +198,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			this.cookController.endCook();
 		}
 	}
-	async compile_if_required() {
-		if (this.assemblerController?.compile_required()) {
+	async compileIfRequired() {
+		if (this.assemblerController?.compileRequired()) {
 			await this.run_assembler();
 		}
 	}

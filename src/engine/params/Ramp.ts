@@ -109,7 +109,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		}
 
 		this._reset_ramp_interpolant();
-		this._update_ramp_texture();
+		this._update_rampTexture();
 		this.options.executeCallback();
 		this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		this.setSuccessorsDirty(this);
@@ -148,12 +148,12 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		this._ramp_interpolant = undefined;
 		// this._ramp_texture = undefined;
 	}
-	ramp_texture() {
+	rampTexture() {
 		return this._ramp_texture;
 	}
-	private _update_ramp_texture() {
+	private _update_rampTexture() {
 		this._update_ramp_texture_data();
-		this.ramp_texture().needsUpdate = true;
+		this.rampTexture().needsUpdate = true;
 	}
 	private _update_ramp_texture_data() {
 		let stride = 0;

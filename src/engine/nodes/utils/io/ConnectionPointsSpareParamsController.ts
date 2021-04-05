@@ -88,7 +88,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 	//
 	// Create spare params on gl nodes
 	//
-	create_spare_parameters() {
+	createSpareParameters() {
 		if (this.node.scene().loadingController.isLoading()) {
 			return;
 		}
@@ -102,8 +102,8 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 				if (param) {
 					this._raw_input_serialized_by_param_name.set(param_name, param.rawInputSerialized());
 					this._default_value_serialized_by_param_name.set(param_name, param.defaultValueSerialized());
-					params_update_options.names_to_delete = params_update_options.names_to_delete || [];
-					params_update_options.names_to_delete.push(param_name);
+					params_update_options.namesToDelete = params_update_options.namesToDelete || [];
+					params_update_options.namesToDelete.push(param_name);
 				}
 			}
 		}
@@ -149,8 +149,8 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 				}
 
 				if (init_value != null) {
-					params_update_options.to_add = params_update_options.to_add || [];
-					params_update_options.to_add.push({
+					params_update_options.toAdd = params_update_options.toAdd || [];
+					params_update_options.toAdd.push({
 						name: param_name,
 						type: param_type,
 						// TODO: I should really treat differently init_value and raw_input here

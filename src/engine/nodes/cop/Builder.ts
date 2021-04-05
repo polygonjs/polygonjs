@@ -156,7 +156,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	// }
 
 	async cook() {
-		this.compile_if_required();
+		this.compileIfRequired();
 		this.render_on_target();
 	}
 
@@ -166,8 +166,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		};
 	}
 
-	compile_if_required() {
-		if (this.assemblerController?.compile_required()) {
+	compileIfRequired() {
+		if (this.assemblerController?.compileRequired()) {
 			this.compile();
 		}
 	}

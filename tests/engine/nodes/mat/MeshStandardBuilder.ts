@@ -5,6 +5,9 @@ import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuil
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
+import {MeshStandardBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshStandardBuilder';
+import {CoreSleep} from '../../../../src/core/Sleep';
+import {Poly} from '../../../../src/engine/Poly';
 
 QUnit.test('mesh standard builder persisted_config', async (assert) => {
 	const MAT = window.MAT;
@@ -57,4 +60,78 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 		vec3_param.set([5, 6, 7]);
 		assert.deepEqual(material.uniforms.v_POLY_param2_val.value.toArray(), [5, 6, 7]);
 	});
+});
+
+QUnit.test('mesh standard builder persisted_config with no node', async (assert) => {
+	const MAT = window.MAT;
+	const mesh_standard1 = MAT.createNode('meshStandardBuilder');
+	mesh_standard1.createNode('output');
+	mesh_standard1.createNode('globals');
+	await mesh_standard1.compute();
+
+	assert.ok(mesh_standard1.material.fragmentShader.includes('struct SSSModel {'));
+
+	const scene = window.scene;
+	const data = new SceneJsonExporter(scene).data();
+	await AssemblersUtils.withUnregisteredAssembler(mesh_standard1.usedAssembler(), async () => {
+		Poly.setPlayerMode(true);
+
+		console.log('************ LOAD **************');
+		const scene2 = await SceneJsonImporter.loadData(data);
+		await scene2.waitForCooksCompleted();
+
+		const new_mesh_standard1 = scene2.node('/MAT/meshStandardBuilder1') as MeshStandardBuilderMatNode;
+		assert.notOk(new_mesh_standard1.assemblerController);
+		assert.ok(new_mesh_standard1.persisted_config);
+		const material = new_mesh_standard1.material;
+		assert.equal(material.fragmentShader, mesh_standard1.material.fragmentShader, 'fragment shader is as expected');
+		assert.equal(material.vertexShader, mesh_standard1.material.vertexShader, 'vertex shader is as expected');
+
+		// let's ensure that a recompile is not required
+		new_mesh_standard1.p.shadowPCSS.set(1);
+		new_mesh_standard1.p.shadowPCSS.set(0);
+		await CoreSleep.sleep(10);
+		assert.notOk(new_mesh_standard1.assemblerController?.compileRequired());
+		await new_mesh_standard1.compute();
+		await CoreSleep.sleep(100);
+		assert.equal(material.fragmentShader, mesh_standard1.material.fragmentShader, 'fragment shader is as expected');
+		assert.equal(material.vertexShader, mesh_standard1.material.vertexShader, 'vertex shader is as expected');
+		console.log('done');
+	});
+});
+
+QUnit.test('mesh standard builder persisted_config with no node but with assembler in player mode', async (assert) => {
+	const MAT = window.MAT;
+	const mesh_standard1 = MAT.createNode('meshStandardBuilder');
+	mesh_standard1.createNode('output');
+	mesh_standard1.createNode('globals');
+	await mesh_standard1.compute();
+
+	assert.ok(mesh_standard1.material.fragmentShader.includes('struct SSSModel {'));
+
+	const scene = window.scene;
+	const data = new SceneJsonExporter(scene).data();
+	Poly.setPlayerMode(true);
+
+	console.log('************ LOAD **************');
+	const scene2 = await SceneJsonImporter.loadData(data);
+	await scene2.waitForCooksCompleted();
+
+	const new_mesh_standard1 = scene2.node('/MAT/meshStandardBuilder1') as MeshStandardBuilderMatNode;
+	assert.ok(new_mesh_standard1.assemblerController);
+	assert.ok(new_mesh_standard1.persisted_config);
+	const material = new_mesh_standard1.material;
+	assert.equal(material.fragmentShader, mesh_standard1.material.fragmentShader, 'fragment shader is as expected');
+	assert.equal(material.vertexShader, mesh_standard1.material.vertexShader, 'vertex shader is as expected');
+
+	// let's ensure that a recompile is not required
+	new_mesh_standard1.p.shadowPCSS.set(1);
+	new_mesh_standard1.p.shadowPCSS.set(0);
+	assert.ok(new_mesh_standard1.assemblerController?.compileRequired());
+	await CoreSleep.sleep(10);
+	await new_mesh_standard1.compute();
+	await CoreSleep.sleep(100);
+	assert.equal(material.fragmentShader, mesh_standard1.material.fragmentShader, 'fragment shader is as expected');
+	assert.equal(material.vertexShader, mesh_standard1.material.vertexShader, 'vertex shader is as expected');
+	console.log('done');
 });

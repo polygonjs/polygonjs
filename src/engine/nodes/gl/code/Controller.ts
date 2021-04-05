@@ -81,20 +81,20 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 		this.setCompilationRequired();
 		this.node.setDirty(trigger_node);
 	}
-	compile_required(): boolean {
+	compileRequired(): boolean {
 		return this._compile_required;
 	}
 
 	post_compile() {
-		this.create_spare_parameters();
+		this.createSpareParameters();
 		this.setCompilationRequired(false);
 	}
 
 	//
 	// Create spare params on mat nodes
 	//
-	create_spare_parameters() {
-		this._spare_params_controller.create_spare_parameters();
+	createSpareParameters() {
+		this._spare_params_controller.createSpareParameters();
 	}
 
 	addFilterFragmentShaderCallback(callbackName: string, callback: (s: string) => string) {

@@ -31,6 +31,7 @@ import {WireframeController, WireframeParamConfig} from './utils/WireframeShader
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 
 const CONTROLLER_OPTIONS = {
 	uniforms: true,
@@ -47,28 +48,31 @@ interface Controllers {
 	map: TextureMapController;
 	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
 	normalMap: TextureNormalMapController;
+	PCSS: PCSSController;
 }
-class MeshStandardMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				BaseBuilderParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						MetalnessRoughnessMapParamConfig(
-							NormalMapParamConfig(
-								LightMapParamConfig(
-									EnvMapParamConfig(
-										EmissiveMapParamConfig(
-											DisplacementMapParamConfig(
-												BumpMapParamConfig(
-													AOMapParamConfig(
-														AlphaMapParamConfig(
-															MapParamConfig(
-																/* textures */
-																TexturesFolderParamConfig(
-																	TransparencyParamConfig(
-																		DefaultFolderParamConfig(NodeParamsConfig)
+class MeshStandardMatParamsConfig extends PCSSParamConfig(
+	FogParamConfig(
+		SkinningParamConfig(
+			WireframeParamConfig(
+				AdvancedCommonParamConfig(
+					BaseBuilderParamConfig(
+						/* advanced */
+						AdvancedFolderParamConfig(
+							MetalnessRoughnessMapParamConfig(
+								NormalMapParamConfig(
+									LightMapParamConfig(
+										EnvMapParamConfig(
+											EmissiveMapParamConfig(
+												DisplacementMapParamConfig(
+													BumpMapParamConfig(
+														AOMapParamConfig(
+															AlphaMapParamConfig(
+																MapParamConfig(
+																	/* textures */
+																	TexturesFolderParamConfig(
+																		TransparencyParamConfig(
+																			DefaultFolderParamConfig(NodeParamsConfig)
+																		)
 																	)
 																)
 															)
@@ -115,6 +119,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
 		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this, CONTROLLER_OPTIONS),
 		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
+		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
@@ -135,7 +140,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		SkinningController.update(this);
 		WireframeController.update(this);
 
-		this.compile_if_required();
+		this.compileIfRequired();
 
 		this.setMaterial(this.material);
 	}

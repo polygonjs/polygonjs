@@ -78,13 +78,13 @@
 // 	}
 
 // 	process_event(event_context: EventContext<Event>) {
-// 		this._compile_if_required();
+// 		this._compileIfRequired();
 
 // 		if (this._processor) {
 // 			this._processor.process_event(event_context);
 // 		}
 // 	}
-// 	private _compile_if_required() {
+// 	private _compileIfRequired() {
 // 		if (!this._processor || this._last_compiled_code != this.pv.code_javascript) {
 // 			this._compile();
 // 		}

@@ -73,7 +73,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		return data;
 	}
 	load(data: PersistedConfigBaseMaterialData) {
-		this._material = this._load_material(data.material);
+		this._material = this._loadMaterial(data.material);
 		if (!this._material) {
 			return;
 		}
@@ -83,7 +83,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			const customMatNames: CustomMaterialName[] = Object.keys(data.customMaterials) as CustomMaterialName[];
 			for (let customMatName of customMatNames) {
 				const custom_mat_data = data.customMaterials[customMatName];
-				const custom_mat = this._load_material(custom_mat_data);
+				const custom_mat = this._loadMaterial(custom_mat_data);
 				if (custom_mat) {
 					this._material.customMaterials[customMatName] = custom_mat;
 

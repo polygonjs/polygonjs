@@ -122,7 +122,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 						if (custom_material) {
 							// the custom material will use the fragment filtering from the parent assembler
 							assembler.setFilterFragmentShaderMethodOwner(this);
-							assembler.compile_material(custom_material);
+							assembler.compileMaterial(custom_material);
 							assembler.setFilterFragmentShaderMethodOwner(undefined);
 						}
 						// if (material) {
@@ -172,7 +172,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 	}
 
-	compile_material(material: ShaderMaterial) {
+	compileMaterial(material: ShaderMaterial) {
 		// no need to compile if the globals handler has not been declared
 		if (!this.compile_allowed()) {
 			return;
@@ -244,7 +244,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// material.needsUpdate = true;
 		// }
 
-		// this.create_spare_parameters();
+		// this.createSpareParameters();
 	}
 	private _update_shaders() {
 		this._shaders_by_name = new Map();

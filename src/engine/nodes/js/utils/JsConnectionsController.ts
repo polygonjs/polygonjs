@@ -103,7 +103,7 @@
 
 // 		this.node.io.inputs.setNamedInputConnectionPoints(named_input_connections);
 // 		this.node.io.outputs.setNamedOutputConnectionPoints(named_outputs, set_dirty);
-// 		this.node.spare_params_controller.create_spare_parameters();
+// 		this.node.spare_params_controller.createSpareParameters();
 // 	}
 
 // 	protected _connections_match_inputs(): boolean {

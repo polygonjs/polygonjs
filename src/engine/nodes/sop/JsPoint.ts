@@ -72,7 +72,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// this.gpu_controller.set_restart_not_required();
 		const core_group = input_contents[0];
 
-		this.compile_if_required();
+		this.compileIfRequired();
 
 		// if (!this.render_controller.initialized) {
 		// 	this.render_controller.init_core_group(core_group);
@@ -89,8 +89,8 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// }
 		this.setCoreGroup(core_group);
 	}
-	async compile_if_required() {
-		// if (this.assembler_controller.compile_required()) {
+	async compileIfRequired() {
+		// if (this.assembler_controller.compileRequired()) {
 		// 	await this.run_assembler();
 		// }
 	}

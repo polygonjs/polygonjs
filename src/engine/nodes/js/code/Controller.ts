@@ -73,20 +73,20 @@ export class JsAssemblerController<A extends BaseJsFunctionAssembler> {
 		this.set_compilation_required();
 		this.node.setDirty(trigger_node);
 	}
-	compile_required(): boolean {
+	compileRequired(): boolean {
 		return this._compile_required;
 	}
 
 	post_compile() {
-		this.create_spare_parameters();
+		this.createSpareParameters();
 		this.set_compilation_required(false);
 	}
 
 	//
 	// Create spare params on mat nodes
 	//
-	create_spare_parameters() {
-		this._spare_params_controller.create_spare_parameters();
+	createSpareParameters() {
+		this._spare_params_controller.createSpareParameters();
 	}
 }
 

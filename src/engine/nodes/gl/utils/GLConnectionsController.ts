@@ -107,7 +107,7 @@
 // 			named_output_connect_points.map((cp) => cp.name)
 // 		);
 // 		this.node.io.outputs.setNamedOutputConnectionPoints(named_output_connect_points, set_dirty);
-// 		this.node.spare_params_controller.create_spare_parameters();
+// 		this.node.spare_params_controller.createSpareParameters();
 // 	}
 
 // 	protected _connections_match_inputs(): boolean {

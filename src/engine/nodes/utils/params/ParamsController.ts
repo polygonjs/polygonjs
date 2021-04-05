@@ -34,8 +34,8 @@ export interface ParamOptionToAdd<T extends ParamType> {
 	options?: ParamOptions;
 }
 export interface ParamsUpdateOptions {
-	names_to_delete?: string[];
-	to_add?: ParamOptionToAdd<ParamType>[];
+	namesToDelete?: string[];
+	toAdd?: ParamOptionToAdd<ParamType>[];
 }
 
 export class ParamsController {
@@ -141,16 +141,16 @@ export class ParamsController {
 	updateParams(options: ParamsUpdateOptions) {
 		let has_created_a_param = false;
 		let has_deleted_a_param = false;
-		if (options.names_to_delete) {
-			for (let param_name of options.names_to_delete) {
+		if (options.namesToDelete) {
+			for (let param_name of options.namesToDelete) {
 				if (this.has(param_name)) {
 					this._deleteParam(param_name);
 					has_deleted_a_param = true;
 				}
 			}
 		}
-		if (options.to_add) {
-			for (let param_data of options.to_add) {
+		if (options.toAdd) {
+			for (let param_data of options.toAdd) {
 				const param = this.addParam(
 					param_data.type,
 					param_data.name,

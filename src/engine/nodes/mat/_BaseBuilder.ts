@@ -98,7 +98,7 @@ export abstract class TypedBuilderMatNode<
 	// COMPILATION
 	//
 	//
-	compile_if_required() {
+	compileIfRequired() {
 		/* if we recompile while in player mode, there will not be any children gl node created.
 		So any recompilation will be flawed. A quick way to realise this is with a time dependent material.
 		And while a scene export would not have an assembler and therefore not recompile,
@@ -108,7 +108,7 @@ export abstract class TypedBuilderMatNode<
 		// if (Poly.playerMode()) {
 		// 	return;
 		// }
-		if (this.assemblerController?.compile_required()) {
+		if (this.assemblerController?.compileRequired()) {
 			this._compile();
 		}
 	}
@@ -117,7 +117,7 @@ export abstract class TypedBuilderMatNode<
 		if (this.material && assemblerController) {
 			assemblerController.assembler.setGlParentNode(this);
 			this._setAssemblerGlParentNode(assemblerController);
-			assemblerController.assembler.compile_material(this.material);
+			assemblerController.assembler.compileMaterial(this.material);
 			assemblerController.post_compile();
 		}
 	}

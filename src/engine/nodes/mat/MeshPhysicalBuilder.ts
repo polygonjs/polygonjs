@@ -32,6 +32,8 @@ import {WireframeController, WireframeParamConfig} from './utils/WireframeShader
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
+import {Constructor} from '../../../types/GlobalTypes';
 
 const CONTROLLER_OPTIONS = {
 	uniforms: true,
@@ -49,33 +51,34 @@ interface Controllers {
 	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
 	normalMap: TextureNormalMapController;
 	physical: MeshPhysicalController;
+	PCSS: PCSSController;
 }
-class MeshPhysicalMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				BaseBuilderParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						MeshPhysicalParamConfig(
-							MetalnessRoughnessMapParamConfig(
-								NormalMapParamConfig(
-									LightMapParamConfig(
-										EnvMapParamConfig(
-											EmissiveMapParamConfig(
-												DisplacementMapParamConfig(
-													BumpMapParamConfig(
-														AOMapParamConfig(
-															AlphaMapParamConfig(
-																MapParamConfig(
-																	/* textures */
-																	TexturesFolderParamConfig(
-																		TransparencyParamConfig(
-																			DefaultFolderParamConfig(NodeParamsConfig)
-																		)
-																	)
-																)
-															)
+
+function AdvancedMeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends PCSSParamConfig(
+		FogParamConfig(
+			SkinningParamConfig(WireframeParamConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base))))
+		)
+	) {};
+}
+class MeshPhysicalMatParamsConfig extends AdvancedMeshPhysicalParamConfig(
+	/* advanced */
+	AdvancedFolderParamConfig(
+		MeshPhysicalParamConfig(
+			MetalnessRoughnessMapParamConfig(
+				NormalMapParamConfig(
+					LightMapParamConfig(
+						EnvMapParamConfig(
+							EmissiveMapParamConfig(
+								DisplacementMapParamConfig(
+									BumpMapParamConfig(
+										AOMapParamConfig(
+											AlphaMapParamConfig(
+												MapParamConfig(
+													/* textures */
+													TexturesFolderParamConfig(
+														TransparencyParamConfig(
+															DefaultFolderParamConfig(NodeParamsConfig)
 														)
 													)
 												)
@@ -120,6 +123,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this, CONTROLLER_OPTIONS),
 		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
 		physical: new MeshPhysicalController(this, CONTROLLER_OPTIONS),
+		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
@@ -140,7 +144,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 		SkinningController.update(this);
 		WireframeController.update(this);
 
-		this.compile_if_required();
+		this.compileIfRequired();
 
 		this.setMaterial(this.material);
 	}

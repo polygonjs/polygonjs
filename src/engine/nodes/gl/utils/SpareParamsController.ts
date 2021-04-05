@@ -68,7 +68,7 @@
 // 	//
 // 	// Create spare params on gl nodes
 // 	//
-// 	create_spare_parameters() {
+// 	createSpareParameters() {
 // 		const current_param_names: string[] = this.node.params.spare_names;
 // 		const params_update_options: ParamsUpdateOptions = {};
 

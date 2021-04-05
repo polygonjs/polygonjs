@@ -26,7 +26,7 @@ export class BasePersistedConfig {
 	//
 	//
 	protected _materialToJson(material: ShaderMaterial, options: ToJsonOptions): object | undefined {
-		this._unassign_textures(material);
+		this._unassignTextures(material);
 
 		let material_data: object | undefined = undefined;
 		try {
@@ -51,7 +51,7 @@ export class BasePersistedConfig {
 			(material_data as any).uuid = `${options.node.path()}-${options.suffix}`;
 		}
 
-		this._reassign_textures(material);
+		this._reassignTextures(material);
 		return material_data;
 	}
 
@@ -59,7 +59,7 @@ export class BasePersistedConfig {
 	private _found_uniform_textures_id_by_uniform_name: Map<string, string> = new Map();
 	private _found_param_texture_by_id: Map<string, Texture> = new Map();
 	private _found_param_textures_id_by_uniform_name: Map<string, string> = new Map();
-	private _unassign_textures(material: ShaderMaterial) {
+	private _unassignTextures(material: ShaderMaterial) {
 		this._found_uniform_texture_by_id.clear();
 		this._found_uniform_textures_id_by_uniform_name.clear();
 		this._found_param_texture_by_id.clear();
@@ -86,7 +86,7 @@ export class BasePersistedConfig {
 			}
 		}
 	}
-	private _reassign_textures(material: ShaderMaterial) {
+	private _reassignTextures(material: ShaderMaterial) {
 		const uniform_names_needing_reassignment: string[] = [];
 		const param_names_needing_reassignment: string[] = [];
 		this._found_uniform_textures_id_by_uniform_name.forEach((texture_id, name) => {
@@ -121,7 +121,7 @@ export class BasePersistedConfig {
 	// LOAD MAT
 	//
 	//
-	protected _load_material(data: MaterialData): ShaderMaterialWithCustomMaterials | undefined {
+	protected _loadMaterial(data: MaterialData): ShaderMaterialWithCustomMaterials | undefined {
 		// hack fix for properties that are assumed to be on normal materials
 		// but are not on ShaderMaterial
 		data.color = undefined;
@@ -134,7 +134,7 @@ export class BasePersistedConfig {
 			material.shadowSide = (data as any).shadowSide;
 		}
 
-		// compensates for lights not being saved (and therefore cannot be loaded correctly)
+		// TODO: compensates for lights not being saved (and therefore cannot be loaded correctly)
 		if (data.lights != null) {
 			material.lights = data.lights;
 		}
@@ -142,16 +142,15 @@ export class BasePersistedConfig {
 		// fix matrix that may be loaded as a mat4 instead of a mat3
 		const uv2Transform = material.uniforms.uv2Transform;
 		if (uv2Transform) {
-			this.mat4_to_mat3(uv2Transform);
+			this.mat4ToMat3(uv2Transform);
 		}
 		const uvTransform = material.uniforms.uvTransform;
 		if (uvTransform) {
-			this.mat4_to_mat3(uvTransform);
+			this.mat4ToMat3(uvTransform);
 		}
-
 		return material as ShaderMaterialWithCustomMaterials;
 	}
-	private mat4_to_mat3(uniform: IUniform) {
+	private mat4ToMat3(uniform: IUniform) {
 		const mat4 = uniform.value;
 		const last_element = mat4.elements[mat4.elements.length - 1];
 		if (last_element == null) {

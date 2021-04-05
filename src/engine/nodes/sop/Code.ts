@@ -70,7 +70,7 @@
 // 	}
 
 // 	cook(core_groups: CoreGroup[]) {
-// 		this._compile_if_required();
+// 		this._compileIfRequired();
 
 // 		if (this._processor) {
 // 			this._processor.cook(core_groups);
@@ -79,7 +79,7 @@
 // 		}
 // 	}
 
-// 	private _compile_if_required() {
+// 	private _compileIfRequired() {
 // 		if (!this._processor || this._last_compiled_code != this.pv.code_javascript) {
 // 			this._compile();
 // 		}

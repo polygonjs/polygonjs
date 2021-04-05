@@ -82,7 +82,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 	}
 	uniforms() {
 		if (this._loaded_data) {
-			const uniforms_owner = this._load_material(this._loaded_data.uniforms_owner);
+			const uniforms_owner = this._loadMaterial(this._loaded_data.uniforms_owner);
 			const uniforms = uniforms_owner?.uniforms || {};
 			return uniforms;
 		}

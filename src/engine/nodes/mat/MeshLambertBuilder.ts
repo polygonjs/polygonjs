@@ -21,7 +21,7 @@ import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapCont
 import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
 import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
 import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
-
+import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
@@ -37,23 +37,28 @@ interface Controllers {
 	envMap: TextureEnvMapController;
 	lightMap: TextureLightMapController;
 	map: TextureMapController;
+	PCSS: PCSSController;
 }
-class MeshLambertMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				BaseBuilderParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						LightMapParamConfig(
-							EnvMapParamConfig(
-								EmissiveMapParamConfig(
-									AOMapParamConfig(
-										AlphaMapParamConfig(
-											MapParamConfig(
-												/* textures */
-												TexturesFolderParamConfig(
-													TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+class MeshLambertMatParamsConfig extends PCSSParamConfig(
+	FogParamConfig(
+		SkinningParamConfig(
+			WireframeParamConfig(
+				AdvancedCommonParamConfig(
+					BaseBuilderParamConfig(
+						/* advanced */
+						AdvancedFolderParamConfig(
+							LightMapParamConfig(
+								EnvMapParamConfig(
+									EmissiveMapParamConfig(
+										AOMapParamConfig(
+											AlphaMapParamConfig(
+												MapParamConfig(
+													/* textures */
+													TexturesFolderParamConfig(
+														TransparencyParamConfig(
+															DefaultFolderParamConfig(NodeParamsConfig)
+														)
+													)
 												)
 											)
 										)
@@ -89,6 +94,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
 		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
+		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 	initializeNode() {
@@ -108,7 +114,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 		SkinningController.update(this);
 		WireframeController.update(this);
 
-		this.compile_if_required();
+		this.compileIfRequired();
 
 		this.setMaterial(this.material);
 	}

@@ -65,7 +65,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 		FogController.update(this);
 		SkinningController.update(this);
 
-		this.compile_if_required();
+		this.compileIfRequired();
 
 		this.setMaterial(this.material);
 	}
