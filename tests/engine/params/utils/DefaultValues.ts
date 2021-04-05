@@ -23,7 +23,7 @@ async function ensure_default_value<T extends ParamType>(
 		await param.compute();
 		assert.deepEqual(param.defaultValue(), expected_default_value);
 		assert.deepEqual(param.value, expected_value);
-		geo1.params.updateParams({names_to_delete: ['test']});
+		geo1.params.updateParams({namesToDelete: ['test']});
 	} else {
 		assert.notOk(true, 'param should have been created');
 	}
