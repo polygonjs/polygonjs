@@ -16,11 +16,11 @@ export class GammaCorrectionPostNode extends TypedPostProcessNode<ShaderPass, Ga
 		return 'gammaCorrection';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(GammaCorrectionShader);
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: ShaderPass) {}
+	updatePass(pass: ShaderPass) {}
 }

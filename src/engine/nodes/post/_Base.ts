@@ -24,7 +24,7 @@ export interface TypedPostNodeContext {
 }
 
 function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
-	TypedPostProcessNode.PARAM_CALLBACK_update_passes(node as BasePostProcessNodeType);
+	TypedPostProcessNode.PARAM_CALLBACK_updatePasses(node as BasePostProcessNodeType);
 }
 export const PostParamOptions: ParamOptions = {
 	cook: false,
@@ -59,19 +59,16 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this.io.outputs.setHasOneOutput();
 	}
 
-	set_render_pass(render_pass: any) {
-		this.setContainer(render_pass);
-	}
 	cook() {
 		this.cookController.endCook();
 	}
-	setup_composer(context: TypedPostNodeContext): void {
-		this._add_pass_from_input(0, context);
+	setupComposer(context: TypedPostNodeContext): void {
+		this._addPassFromInput(0, context);
 
 		if (!this.flags.bypass.active()) {
 			let pass = this._passes_by_requester_id.get(context.requester.graphNodeId());
 			if (!pass) {
-				pass = this._create_pass(context);
+				pass = this._createPass(context);
 				if (pass) {
 					this._passes_by_requester_id.set(context.requester.graphNodeId(), pass);
 				}
@@ -81,25 +78,25 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			}
 		}
 	}
-	protected _add_pass_from_input(index: number, context: TypedPostNodeContext) {
+	protected _addPassFromInput(index: number, context: TypedPostNodeContext) {
 		const input = this.io.inputs.input(index);
 		if (input) {
-			input.setup_composer(context);
+			input.setupComposer(context);
 		}
 	}
 
-	protected _create_pass(context: TypedPostNodeContext): P | undefined {
+	protected _createPass(context: TypedPostNodeContext): P | undefined {
 		return undefined;
 	}
 
-	static PARAM_CALLBACK_update_passes(node: BasePostProcessNodeType) {
-		node.update_passes();
+	static PARAM_CALLBACK_updatePasses(node: BasePostProcessNodeType) {
+		node._updatePasses();
 	}
-	private _update_pass_bound = this.update_pass.bind(this);
-	private update_passes() {
+	private _update_pass_bound = this.updatePass.bind(this);
+	private _updatePasses() {
 		this._passes_by_requester_id.forEach(this._update_pass_bound);
 	}
-	protected update_pass(pass: P) {}
+	protected updatePass(pass: P) {}
 }
 
 export type BasePostProcessNodeType = TypedPostProcessNode<Pass, NodeParamsConfig>;

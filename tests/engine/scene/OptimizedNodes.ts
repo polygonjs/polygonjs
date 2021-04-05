@@ -24,7 +24,7 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 	const box1_player = scene_player.node(box1.path()) as BoxSopNode;
 	assert.equal(box1_player.type(), OperationsComposerSopNode.type());
 
-	let container = await box1_player.requestContainer();
+	let container = await box1_player.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.equal(geometry?.getAttribute('position').array.length, 72);
@@ -53,7 +53,7 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 	const transform1_player = scene_player.node(transform1.path()) as TransformSopNode;
 	assert.equal(transform1_player.type(), OperationsComposerSopNode.type());
 
-	let container = await transform1_player.requestContainer();
+	let container = await transform1_player.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.equal(geometry?.getAttribute('position').array.length, 72);
@@ -105,7 +105,7 @@ QUnit.test(
 		const merge2_player = scene_player.node(merge2.path()) as TransformSopNode;
 		assert.equal(merge2_player.type(), OperationsComposerSopNode.type());
 
-		let container = await merge2_player.requestContainer();
+		let container = await merge2_player.compute();
 		const core_group = container.coreContent();
 		const geometry = core_group?.objectsWithGeo()[0].geometry;
 		assert.equal(geometry?.getAttribute('position').array.length, 2955);

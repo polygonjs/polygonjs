@@ -120,7 +120,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// INPUT
 	//
 	//
-	param_default_value(name: string): ParamInitValueSerialized {
+	paramDefaultValue(name: string): ParamInitValueSerialized {
 		return null;
 	}
 }

@@ -10,11 +10,11 @@ export class ClearMaskPostNode extends TypedPostProcessNode<ClearMaskPass, Clear
 		return 'clearMask';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ClearMaskPass();
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: ClearMaskPass) {}
+	updatePass(pass: ClearMaskPass) {}
 }

@@ -6,7 +6,7 @@ async function with_file(path: string) {
 	const svg1 = geo1.createNode('svg');
 	svg1.p.url.set(`${ASSETS_ROOT}/${path}`);
 
-	const container = await svg1.requestContainer();
+	const container = await svg1.compute();
 	return container;
 }
 

@@ -29,7 +29,7 @@ export class ButtonParam extends TypedParam<ParamType.BUTTON> {
 	async pressButton() {
 		// cook the node in case it requires it, since the callback will not be ran if the node is cooking
 		if (this.node.isDirty() || this.node.cookController.isCooking()) {
-			await this.node.requestContainer();
+			await this.node.compute();
 		}
 		this.options.executeCallback();
 	}

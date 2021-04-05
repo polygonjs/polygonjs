@@ -12,6 +12,6 @@ QUnit.test('object_merge simple', async (assert) => {
 
 	let container;
 
-	container = await object_merge1.requestContainer();
+	container = await object_merge1.compute();
 	assert.equal(container.pointsCount(), 4);
 });

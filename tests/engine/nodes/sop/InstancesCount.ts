@@ -3,7 +3,7 @@ import {InstancesCountSopNode} from '../../../../src/engine/nodes/sop/InstancesC
 import {create_required_nodes} from './Instance';
 
 async function get_first_geo(instances_count_node: InstancesCountSopNode) {
-	const container = await instances_count_node.requestContainer();
+	const container = await instances_count_node.compute();
 	const core_group = container.coreContent()!;
 	const objects = core_group.objectsWithGeo();
 	const first_object = objects[0];
@@ -25,7 +25,7 @@ QUnit.test('instances_count simple', async (assert) => {
 	instance1.setInput(1, plane1);
 	instances_count1.setInput(0, instance1);
 
-	let container = await instance1.requestContainer();
+	let container = await instance1.compute();
 	assert.equal(container.coreContent()!.points().length, 4);
 
 	let first_geo = await get_first_geo(instances_count1);

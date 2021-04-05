@@ -27,7 +27,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	// attrib_copy1.param('src_component').set(0);
 	// attrib_copy1.param('dest_component').set(0);
 
-	let container = await attrib_copy1.requestContainer();
+	let container = await attrib_copy1.compute();
 	assert.notOk(attrib_copy1.states.error.message(), 'no error');
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
@@ -57,7 +57,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	// attrib_copy2.param('src_component').set(0);
 	// attrib_copy2.param('dest_component').set(2);
 
-	container = await attrib_copy2.requestContainer();
+	container = await attrib_copy2.compute();
 	assert.notOk(attrib_copy2.states.error.message());
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
@@ -76,7 +76,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 });
 
 async function requestAttribArray(node: BaseSopNodeType, attribName: string) {
-	let container = await node.requestContainer();
+	let container = await node.compute();
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	return geometry.getAttribute(attribName).array;

@@ -12,7 +12,7 @@
 // 	merge1.setInput(1, track1);
 // 	delete1.setInput(0, merge1);
 
-// 	const container = await delete1.requestContainer();
+// 	const container = await delete1.compute();
 // 	const core_group = container.coreContent()!;
 // 	assert.equal(core_group.tracks.length, 1);
 // 	assert.equal(core_group.tracks[0].name, 'test1');

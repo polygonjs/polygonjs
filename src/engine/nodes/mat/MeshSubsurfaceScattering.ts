@@ -230,7 +230,7 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 			this.material.uniforms[uniform_name].value = null;
 		}
 		const texture_node = node as BaseCopNodeType;
-		const container = await texture_node.requestContainer();
+		const container = await texture_node.compute();
 		this.material.uniforms[uniform_name].value = container.texture();
 	}
 }

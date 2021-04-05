@@ -41,18 +41,9 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	//
 
 	setMaterial(material: Material) {
-		this.setContainer(material);
+		this._setContainer(material);
 	}
-
-	// add_update_method(method, arg?: any) {
-	// 	this._update_methods.push([method.bind(this), arg]);
-	// }
-
-	//run_update_methods: ->
-
-	// add_render_hook(object: Object3D) {}
 }
-//delete object.onBeforeRender
 
 export type BaseMatNodeType = TypedMatNode<Material, any>;
 export class BaseMatNodeClass extends TypedMatNode<Material, any> {

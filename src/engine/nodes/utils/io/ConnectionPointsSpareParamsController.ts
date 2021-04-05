@@ -115,7 +115,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 				let init_value = connection_point.init_value;
 
 				const last_param_init_value = this._default_value_serialized_by_param_name.get(param_name);
-				let default_value_from_name = this.node.param_default_value(param_name);
+				let default_value_from_name = this.node.paramDefaultValue(param_name);
 
 				if (default_value_from_name != null) {
 					init_value = default_value_from_name;

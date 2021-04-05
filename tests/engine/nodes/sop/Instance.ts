@@ -26,7 +26,7 @@ QUnit.test('instance simple', async (assert) => {
 	instance1.setInput(0, box1);
 	instance1.setInput(1, plane1);
 
-	let container = await instance1.requestContainer();
+	let container = await instance1.compute();
 	const core_group = container.coreContent()!;
 	const objects = core_group.objectsWithGeo();
 	const first_object = objects[0];

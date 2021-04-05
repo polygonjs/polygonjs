@@ -18,7 +18,7 @@ QUnit.test('expression points works with path', async (assert) => {
 	attrib_create2.p.name.set('t');
 	attrib_create2.p.value1.set('point("../attribCreate1", "h", 2)');
 
-	const container = await attrib_create2.requestContainer();
+	const container = await attrib_create2.compute();
 	const array = container.coreContent()!.objectsWithGeo()[0].geometry.attributes['t'].array as number[];
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
@@ -39,7 +39,7 @@ QUnit.test('expression points works with input index', async (assert) => {
 	attrib_create2.p.name.set('t');
 	attrib_create2.p.value1.set('point(0, "h", 2)');
 
-	const container = await attrib_create2.requestContainer();
+	const container = await attrib_create2.compute();
 	const array = container.coreContent()!.objectsWithGeo()[0].geometry.attributes['t'].array as number[];
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
@@ -56,7 +56,7 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	point1.p.updateY.set(1);
 	point1.p.y.set("(point(0, 'P', 0).y + point(0, 'P', 1).y) * 0.5");
 
-	let container = await point1.requestContainer();
+	let container = await point1.compute();
 	assert.notOk(point1.states.error.active());
 	let geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
 	let positions = geometry.getAttribute('position').array as number[];
@@ -69,7 +69,7 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	await scene2.waitForCooksCompleted();
 	const point2 = scene2.node(point1.path()) as PointSopNode;
 	console.log('loaded point2');
-	container = await point2.requestContainer();
+	container = await point2.compute();
 	console.log('container', container);
 	assert.notOk(point2.states.error.active());
 	geometry = container.coreContent()!.objectsWithGeo()[0].geometry;

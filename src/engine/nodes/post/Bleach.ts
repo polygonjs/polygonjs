@@ -31,13 +31,13 @@ export class BleachPostNode extends TypedPostProcessNode<ShaderPass, BleachPostP
 		return 'bleach';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(BleachBypassShader) as BleachPassWithUniforms;
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: BleachPassWithUniforms) {
+	updatePass(pass: BleachPassWithUniforms) {
 		pass.uniforms.opacity.value = this.pv.opacity;
 	}
 }

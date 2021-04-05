@@ -6,7 +6,7 @@ QUnit.test('transform simple', async (assert) => {
 	transform1.setInput(0, box1);
 
 	let container, core_group;
-	container = await transform1.requestContainer();
+	container = await transform1.compute();
 	core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
@@ -21,7 +21,7 @@ QUnit.test('transform simple', async (assert) => {
 	assert.ok(transform1.isDirty(), 'transform is dirty');
 	assert.ok(transform1.p.t.isDirty(), 'transform t is dirty');
 	assert.notOk(transform1.p.t.y.isDirty(), 'transform ty is not dirty');
-	container = await transform1.requestContainer();
+	container = await transform1.compute();
 	assert.equal(container.boundingBox().min.y, +1.5);
 	assert.equal(container.boundingBox().max.y, +2.5);
 	assert.notOk(transform1.isDirty());
@@ -34,7 +34,7 @@ QUnit.test('transform simple', async (assert) => {
 	assert.equal(container.boundingBox().min.y, +1.5);
 	assert.equal(container.boundingBox().max.y, +2.5);
 
-	container = await transform1.requestContainer();
+	container = await transform1.compute();
 	assert.equal(container.boundingBox().min.y, +1);
 	assert.equal(container.boundingBox().max.y, +3);
 });

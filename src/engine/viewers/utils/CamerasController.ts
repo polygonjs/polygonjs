@@ -41,7 +41,7 @@ export class ViewerCamerasController {
 	}
 
 	async prepareCurrentCamera() {
-		await this.cameraNode().requestContainer(); // ensure the camera is cooked
+		await this.cameraNode().compute(); // ensure the camera is cooked
 		await this._updateFromCameraContainer(); //container, graph_node_id)
 	}
 

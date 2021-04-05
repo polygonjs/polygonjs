@@ -38,7 +38,7 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		if (!texture_node) {
 			return core_group;
 		}
-		const container = await texture_node.requestContainer();
+		const container = await texture_node.compute();
 		const texture = container.texture();
 		for (let core_object of core_group.coreObjects()) {
 			this._set_position_from_data_texture(core_object, texture, params);

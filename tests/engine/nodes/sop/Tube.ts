@@ -3,7 +3,7 @@ QUnit.test('tube simple', async (assert) => {
 
 	const tube1 = geo1.createNode('tube');
 
-	let container = await tube1.requestContainer();
+	let container = await tube1.compute();
 	const core_group = container.coreContent()!;
 	const {geometry} = core_group.objectsWithGeo()[0];
 

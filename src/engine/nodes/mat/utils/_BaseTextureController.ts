@@ -319,7 +319,7 @@ export class BaseTextureMapController extends BaseController {
 
 			const texture_node = path_param.value.nodeWithContext(NodeContext.COP);
 			if (texture_node) {
-				const container = await texture_node.requestContainer();
+				const container = await texture_node.compute();
 				const texture = container.texture();
 
 				if (texture) {

@@ -132,7 +132,7 @@ export class ParticlesSystemGpuRenderController {
 					}
 				}
 			}
-			const container = await mat_node.requestContainer();
+			const container = await mat_node.compute();
 			this._render_material = container.material() as ShaderMaterial;
 		} else {
 			this.node.states.error.set('render material not valid');

@@ -17,7 +17,7 @@ QUnit.test('anim null simple', async (assert) => {
 	// otherwise the anim nodes will not find them.
 	await CoreSleep.sleep(100);
 
-	const object = (await objectProperties.requestContainer()).coreContent()?.objects()[0]!;
+	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
 	assert.equal(object.name, 'test');
 
 	// setup anim

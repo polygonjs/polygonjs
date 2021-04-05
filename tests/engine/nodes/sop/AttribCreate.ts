@@ -15,7 +15,7 @@ QUnit.test('attrib create simple float vertex', async (assert) => {
 	attrib_create1.p.value1.set(3.5);
 	attrib_create1.setInput(0, box1);
 
-	let container = await attrib_create1.requestContainer();
+	let container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -41,7 +41,7 @@ QUnit.test('attrib create expression float vertex', async (assert) => {
 	attrib_create1.p.value1.set('(@ptnum+1)*3');
 	attrib_create1.setInput(0, box1);
 
-	const container = await attrib_create1.requestContainer();
+	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -64,7 +64,7 @@ QUnit.test('attrib create expression float vertex from position', async (assert)
 	attrib_create1.p.value1.set('@P.y > 0');
 	attrib_create1.setInput(0, sphere1);
 
-	const container = await attrib_create1.requestContainer();
+	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -89,12 +89,12 @@ QUnit.test('attrib create expression from a non existing attribute', async (asse
 	attrib_create1.p.value1.set('@doesnotexist > 0');
 	attrib_create1.setInput(0, sphere1);
 
-	await attrib_create1.requestContainer();
+	await attrib_create1.compute();
 	assert.ok(attrib_create1.states.error.active());
 	assert.equal(attrib_create1.states.error.message(), 'expression evalution error: attribute not found');
 
 	attrib_create1.p.value1.set('@P.y > 0');
-	await attrib_create1.requestContainer();
+	await attrib_create1.compute();
 	assert.ok(!attrib_create1.states.error.active());
 });
 
@@ -108,7 +108,7 @@ QUnit.test('attrib create simple vector2 vertex', async (assert) => {
 	attrib_create1.p.value2.set([3.5, 5]);
 	attrib_create1.setInput(0, box1);
 
-	const container = await attrib_create1.requestContainer();
+	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -135,7 +135,7 @@ QUnit.test('attrib create simple vector vertex', async (assert) => {
 	attrib_create1.p.value3.set([3.5, 5, 8]);
 	attrib_create1.setInput(0, box1);
 
-	const container = await attrib_create1.requestContainer();
+	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -161,7 +161,7 @@ QUnit.test('attrib create expression vector vertex', async (assert) => {
 	attrib_create1.p.value3.x.set('@ptnum');
 	attrib_create1.setInput(0, plane1);
 
-	let container = await attrib_create1.requestContainer();
+	let container = await attrib_create1.compute();
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -182,7 +182,7 @@ QUnit.test('attrib create expression vector vertex', async (assert) => {
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const attrib_create2 = scene2.node(attrib_create1.path()) as AttribCreateSopNode;
-	container = await attrib_create2.requestContainer();
+	container = await attrib_create2.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -209,7 +209,7 @@ QUnit.test('attrib create on existing attrib vector2 uv', async (assert) => {
 	attrib_create1.setInput(0, plane1);
 
 	let container, core_group, geometry, array;
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	array = geometry.getAttribute('uv').array as number[];
@@ -221,7 +221,7 @@ QUnit.test('attrib create on existing attrib vector2 uv', async (assert) => {
 
 	attrib_create1.p.value2.x.set('@uv.y');
 	attrib_create1.p.value2.y.set('@uv.x');
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	array = geometry.getAttribute('uv').array as number[];
@@ -239,7 +239,7 @@ QUnit.test('attrib create simple float object', async (assert) => {
 	attrib_create1.p.value1.set(3.5);
 	attrib_create1.setInput(0, box1);
 
-	const container = await attrib_create1.requestContainer();
+	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
 	const object = core_group.objects()[0];
 	assert.ok(object);
@@ -259,7 +259,7 @@ QUnit.test('attrib create simple vector2 object', async (assert) => {
 	attrib_create1.p.value2.set([3.5, 12]);
 	attrib_create1.setInput(0, box1);
 
-	let container = await attrib_create1.requestContainer();
+	let container = await attrib_create1.compute();
 	let core_group = container.coreContent()!;
 	let object = core_group.objects()[0];
 	assert.ok(core_group);
@@ -272,7 +272,7 @@ QUnit.test('attrib create simple vector2 object', async (assert) => {
 	assert.ok(attrib_create1.p.value2.x.isDirty());
 	assert.ok(attrib_create1.p.value2.isDirty());
 	assert.ok(attrib_create1.isDirty());
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	object = core_group.objects()[0];
 	assert.deepEqual(object.userData, {attributes: {test: new Vector2(21.5, 12)}});
@@ -289,7 +289,7 @@ QUnit.test('attrib create simple vector object', async (assert) => {
 	attrib_create1.p.value3.set([3.5, 12, 17]);
 	attrib_create1.setInput(0, box1);
 
-	const container = await attrib_create1.requestContainer();
+	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
 	const object = core_group.objects()[0];
 	assert.ok(core_group);
@@ -312,7 +312,7 @@ QUnit.test('attrib create simple string object', async (assert) => {
 	attrib_create1.p.string.set('pt_`$F`');
 	attrib_create1.setInput(0, box1);
 
-	let container = await attrib_create1.requestContainer();
+	let container = await attrib_create1.compute();
 	let core_group = container.coreContent()!;
 	let object = core_group.objects()[0];
 	assert.ok(core_group);
@@ -321,13 +321,13 @@ QUnit.test('attrib create simple string object', async (assert) => {
 	assert.deepEqual(object.userData, {attributes: {test_string: 'pt_1'}});
 
 	scene.setFrame(12);
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	object = core_group.objects()[0];
 	assert.deepEqual(object.userData, {attributes: {test_string: 'pt_12'}});
 
 	attrib_create1.p.string.set('`$F*2`');
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	object = core_group.objects()[0];
 	assert.deepEqual(object.userData, {attributes: {test_string: '24'}});
@@ -350,12 +350,12 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	attrib_create1.p.value1.set('@ptnum');
 
 	let container;
-	container = await bbox_scatter1.requestContainer();
+	container = await bbox_scatter1.compute();
 	let core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 27);
 	assert.less_than(bbox_scatter1.cookController.cook_time, 20);
 
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	assert.less_than(attrib_create1.cookController.cook_time, 20);
 
@@ -363,7 +363,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	assert.equal(point.attribValue('ptid'), 3);
 
 	bbox_scatter1.p.stepSize.set(0.1);
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 1331);
 
@@ -378,7 +378,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const attrib_create2 = scene2.node(attrib_create1.path()) as AttribCreateSopNode;
-	container = await attrib_create2.requestContainer();
+	container = await attrib_create2.compute();
 	core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 1331);
 });
@@ -395,7 +395,7 @@ QUnit.test('attrib create for string on vertices with expr', async (assert) => {
 	attrib_create1.p.type.set(AttribType.STRING);
 	attrib_create1.p.string.set('pt_`@ptnum*2`');
 
-	let container = await attrib_create1.requestContainer();
+	let container = await attrib_create1.compute();
 	assert.equal(container.pointsCount(), 24, 'has 24 pts');
 	let points = container.coreContent()!.points();
 	assert.equal(points[0].attribValue('ids'), 'pt_0', 'pt 0 has pt_0');
@@ -403,14 +403,14 @@ QUnit.test('attrib create for string on vertices with expr', async (assert) => {
 	assert.equal(points[2].attribValue('ids'), 'pt_4', 'pt 2 has pt_4');
 
 	attrib_create1.p.string.set('`@ptnum*2`_pt');
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	points = container.coreContent()!.points();
 	assert.equal(points[0].attribValue('ids'), '0_pt', 'pt 0 has 0_pt');
 	assert.equal(points[1].attribValue('ids'), '2_pt', 'pt 1 has 2_pt');
 	assert.equal(points[2].attribValue('ids'), '4_pt', 'pt 2 has 4_pt');
 
 	attrib_create1.p.string.set('`@ptnum*2`');
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	points = container.coreContent()!.points();
 	assert.equal(points[0].attribValue('ids'), '0');
 	assert.equal(points[1].attribValue('ids'), '2');
@@ -429,7 +429,7 @@ QUnit.test('attrib create for string on vertices without expr', async (assert) =
 	attrib_create1.p.type.set(AttribType.STRING);
 	attrib_create1.p.string.set('test');
 
-	let container = await attrib_create1.requestContainer();
+	let container = await attrib_create1.compute();
 	assert.equal(container.pointsCount(), 24, 'has 24 pts');
 	let points = container.coreContent()!.points();
 	assert.equal(points[0].attribValue('ids'), 'test', 'pt 0 has pt_0');

@@ -76,7 +76,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 					matNodeAssemblerController.set_assembler_globals_handler(this._globals_handler);
 				}
 
-				const container = await material_node.requestContainer();
+				const container = await material_node.compute();
 				const material = container.material();
 				return material;
 			}

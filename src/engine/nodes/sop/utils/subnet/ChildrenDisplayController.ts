@@ -54,7 +54,7 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	async cook(input_contents: CoreGroup[]) {
 		const child_output_node = this.childrenDisplayController.output_node();
 		if (child_output_node) {
-			const container = await child_output_node.requestContainer();
+			const container = await child_output_node.compute();
 			const core_content = container.coreContent();
 			if (core_content) {
 				this.setCoreGroup(core_content);

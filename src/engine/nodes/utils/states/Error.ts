@@ -27,7 +27,7 @@ export class NodeErrorState extends BaseState {
 	protected on_update() {
 		if (this._message != null) {
 			// console.warn("new error", message, this.self.path())
-			this.node.setContainer(null, `from error '${this._message}'`);
+			this.node._setContainer(null, `from error '${this._message}'`);
 		}
 
 		this.node.emit(NodeEvent.ERROR_UPDATED);

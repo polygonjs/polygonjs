@@ -18,7 +18,7 @@ QUnit.test('transform copy simple', async (assert) => {
 	transform1.p.t.x.set(2);
 	transform1.p.r.y.set(Math.PI);
 
-	let container = await transform_copy1.requestContainer();
+	let container = await transform_copy1.compute();
 	let core_group = container.coreContent()!;
 	let elements = core_group.objects()[0].matrix.elements;
 	assert.in_delta(elements[0], 1, 0.01);

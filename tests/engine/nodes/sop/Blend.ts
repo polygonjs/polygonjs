@@ -11,7 +11,7 @@ QUnit.test('blend simple', async (assert) => {
 	blend1.setInput(1, transform1);
 	blend1.p.attribName.set('position');
 
-	let container = await blend1.requestContainer();
+	let container = await blend1.compute();
 	// const core_group = container.coreContent()!;
 	// const {geometry} = core_group.objects()[0];
 
@@ -19,6 +19,6 @@ QUnit.test('blend simple', async (assert) => {
 	assert.equal(container.boundingBox().min.y, 2);
 
 	blend1.p.blend.set(0.75);
-	container = await blend1.requestContainer();
+	container = await blend1.compute();
 	assert.equal(container.boundingBox().min.y, 3.25);
 });

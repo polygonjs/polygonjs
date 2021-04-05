@@ -13,18 +13,18 @@ QUnit.test('spot light helper does not get shown when turning light on and off',
 
 	// toggle show helper
 	spotLight1.p.showHelper.set(1);
-	await spotLight1.requestContainer();
+	await spotLight1.compute();
 	assert.equal(spotLight1.object.children.length, 3, '3 children');
 	assert.equal(spotLight1.light.children.length, 1, 'helper is added');
 
 	spotLight1.p.showHelper.set(0);
-	await spotLight1.requestContainer();
+	await spotLight1.compute();
 	assert.equal(spotLight1.object.children.length, 3, '3 children');
 	assert.equal(spotLight1.light.children.length, 0, 'no helper');
 
 	// toggle display flag while helper is visible
 	spotLight1.p.showHelper.set(1);
-	await spotLight1.requestContainer();
+	await spotLight1.compute();
 	assert.equal(spotLight1.light.children.length, 1, 'helper is added');
 	spotLight1.flags.display.set(false);
 	assert.equal(spotLight1.light.children.length, 0, 'no helper');
@@ -33,7 +33,7 @@ QUnit.test('spot light helper does not get shown when turning light on and off',
 
 	// toggle display flag while helper is not visible
 	spotLight1.p.showHelper.set(0);
-	await spotLight1.requestContainer();
+	await spotLight1.compute();
 	assert.equal(spotLight1.light.children.length, 0, 'no helper');
 	spotLight1.flags.display.set(false);
 	assert.equal(spotLight1.light.children.length, 0, 'no helper');

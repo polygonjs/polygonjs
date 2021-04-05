@@ -8,14 +8,14 @@ QUnit.test('peak simple', async (assert) => {
 
 	let container, size;
 
-	container = await peak1.requestContainer();
+	container = await peak1.compute();
 	size = container.size().toArray();
 	assert.equal(size[0], 3);
 	assert.equal(size[1], 3);
 	assert.equal(size[2], 3);
 
 	peak1.p.amount.set(0.5);
-	container = await peak1.requestContainer();
+	container = await peak1.compute();
 	size = container.size().toArray();
 	assert.equal(size[0], 2);
 	assert.equal(size[1], 2);

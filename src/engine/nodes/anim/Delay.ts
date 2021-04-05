@@ -34,6 +34,6 @@ export class DelayAnimNode extends TypedAnimNode<DelayAnimParamsConfig> {
 
 		timeline_builder.setDelay(this.pv.delay);
 
-		this.set_timeline_builder(timeline_builder);
+		this.setTimelineBuilder(timeline_builder);
 	}
 }

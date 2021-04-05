@@ -7,21 +7,21 @@ QUnit.test('cache static', async (assert) => {
 	const cache1 = geo1.createNode('cache');
 
 	cache1.setInput(0, sphere1);
-	container = await cache1.requestContainer();
+	container = await cache1.compute();
 	let core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 63);
 	// let json = core_group.objects().map((o) => o.toJSON());
 	// assert.equal(JSON.stringify(json).length, 8109);
 
 	cache1.setInput(0, plane1);
-	container = await cache1.requestContainer();
+	container = await cache1.compute();
 	core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 63); // still same points_count
 	// json = core_group.objects().map((o) => o.toJSON());
 	// assert.equal(JSON.stringify(json).length, 8109); // still same length
 
 	cache1.p.reset.pressButton();
-	container = await cache1.requestContainer();
+	container = await cache1.compute();
 	core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 4); // not same points_count anymore
 	// json = core_group.objects().map((o) => o.toJSON());

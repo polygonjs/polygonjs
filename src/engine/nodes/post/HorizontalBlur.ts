@@ -32,13 +32,13 @@ export class HorizontalBlurPostNode extends TypedPostProcessNode<ShaderPass, Hor
 		return 'horizontalBlur';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(HorizontalBlurShader) as HorizontalBlurPassWithUniforms;
 		pass.resolution_x = context.resolution.x;
-		this.update_pass(pass);
+		this.updatePass(pass);
 		return pass;
 	}
-	update_pass(pass: HorizontalBlurPassWithUniforms) {
+	updatePass(pass: HorizontalBlurPassWithUniforms) {
 		pass.uniforms.h.value = this.pv.amount / (pass.resolution_x * window.devicePixelRatio);
 		pass.material.transparent = this.pv.transparent;
 	}

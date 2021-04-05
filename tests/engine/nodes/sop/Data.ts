@@ -4,7 +4,7 @@ async function with_data(data_json?: object) {
 	if (data_json) {
 		data1.p.data.set(JSON.stringify(data_json));
 	}
-	const container = await data1.requestContainer();
+	const container = await data1.compute();
 	return container;
 }
 

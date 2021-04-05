@@ -13,6 +13,6 @@ QUnit.test('animation_copy simple', async (assert) => {
 	hierarchy1.p.mode.set(1); // remove parent
 	file1.p.url.set('/examples/models/soldier.glb');
 
-	let container = await animation_copy1.requestContainer();
+	let container = await animation_copy1.compute();
 	assert.equal(container.totalPointsCount(), 7434); // I should really do a better test
 });

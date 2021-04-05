@@ -7,7 +7,7 @@ QUnit.test('point without expressions', async (assert) => {
 	// transform1.setInput(0, plane1);
 	// transform1.param('rx').set(90);
 
-	let container = await plane1.requestContainer();
+	let container = await plane1.compute();
 	let bbox = container.boundingBox();
 	assert.vector3_in_delta(bbox.min, [-0.5, 0, -0.5]);
 	assert.vector3_in_delta(bbox.max, [0.5, 0, 0.5]);
@@ -21,7 +21,7 @@ QUnit.test('point without expressions', async (assert) => {
 	point1.p.y.set(1);
 	assert.equal(point1.dirtyController.dirtyCount(), 3);
 
-	container = await point1.requestContainer();
+	container = await point1.compute();
 
 	assert.equal(point1.dirtyController.dirtyCount(), 3);
 	// const core_group = container.coreContent()!;
@@ -45,7 +45,7 @@ QUnit.test('point with expression based on @P.x', async (assert) => {
 	point1.p.updateY.set(1);
 	point1.p.y.set('sin(@P.x)');
 
-	let container = await point1.requestContainer();
+	let container = await point1.compute();
 	// const core_group = container.coreContent();
 	// const {geometry} = core_group.objects()[0];
 
@@ -67,7 +67,7 @@ QUnit.test('point with inverting @P.x and @P.z', async (assert) => {
 	point1.setInput(0, plane1);
 
 	let container, bbox;
-	container = await point1.requestContainer();
+	container = await point1.compute();
 	bbox = container.boundingBox();
 	assert.deepEqual([bbox.min.x, bbox.max.x], [-2, 2]);
 	assert.deepEqual([bbox.min.z, bbox.max.z], [-0.5, 0.5]);
@@ -76,7 +76,7 @@ QUnit.test('point with inverting @P.x and @P.z', async (assert) => {
 	point1.p.updateZ.set(1);
 	point1.p.x.set('@P.z');
 	point1.p.z.set('@P.x');
-	container = await point1.requestContainer();
+	container = await point1.compute();
 	bbox = container.boundingBox();
 	assert.deepEqual([bbox.min.x, bbox.max.x], [-0.5, 0.5]);
 	assert.deepEqual([bbox.min.z, bbox.max.z], [-2, 2]);

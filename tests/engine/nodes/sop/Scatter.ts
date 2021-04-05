@@ -8,11 +8,11 @@ QUnit.test('scatter simple', async (assert) => {
 
 	let container;
 
-	container = await scatter1.requestContainer();
+	container = await scatter1.compute();
 	assert.equal(container.pointsCount(), 100);
 
 	scatter1.p.pointsCount.set(1000);
-	container = await scatter1.requestContainer();
+	container = await scatter1.compute();
 	assert.equal(container.pointsCount(), 1000);
 });
 
@@ -30,10 +30,10 @@ QUnit.test('scatter takes into account the transform of objects', async (assert)
 
 	let container;
 
-	container = await scatter1.requestContainer();
+	container = await scatter1.compute();
 	assert.in_delta(container.coreContent()!.points()[0].position().x, 0.026, 0.01);
 
 	add.p.position.x.set(5);
-	container = await scatter1.requestContainer();
+	container = await scatter1.compute();
 	assert.in_delta(container.coreContent()!.points()[0].position().x, 5.026, 0.01);
 });

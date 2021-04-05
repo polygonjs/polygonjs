@@ -67,7 +67,7 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 	private async _copy_from_found_node(target_objects: Object3D[]) {
 		const node = this.p.reference.found_node_with_context(NodeContext.SOP);
 		if (node) {
-			const container = await node.requestContainer();
+			const container = await node.compute();
 			const core_group = container.coreContent();
 			if (core_group) {
 				const src_objects = core_group.objects();

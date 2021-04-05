@@ -140,7 +140,7 @@ export class EffectsComposerController {
 
 		const post_node = this.node.displayNodeController.displayNode() as BasePostProcessNodeType;
 		if (post_node) {
-			post_node.setup_composer({
+			post_node.setupComposer({
 				composer: composer,
 				camera: options.camera,
 				resolution: options.resolution,

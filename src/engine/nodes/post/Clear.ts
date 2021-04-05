@@ -15,11 +15,11 @@ export class ClearPostNode extends TypedPostProcessNode<ClearPass, ClearPostPara
 		return 'clear';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ClearPass();
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: ClearPass) {}
+	updatePass(pass: ClearPass) {}
 }

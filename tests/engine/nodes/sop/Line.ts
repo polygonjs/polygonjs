@@ -5,6 +5,6 @@ QUnit.test('line simple', async (assert) => {
 
 	let container;
 
-	container = await line1.requestContainer();
+	container = await line1.compute();
 	assert.equal(container.pointsCount(), 2);
 });

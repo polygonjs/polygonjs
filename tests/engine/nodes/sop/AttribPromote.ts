@@ -18,7 +18,7 @@ QUnit.test('attrib promote vertex to vertex with min', async (assert) => {
 	attrib_promote1.p.mode.set(AttribPromoteMode.MIN);
 	attrib_promote1.p.name.set('test');
 
-	let container = await attrib_promote1.requestContainer();
+	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -47,7 +47,7 @@ QUnit.test('attrib promote vertex to vertex with max', async (assert) => {
 	attrib_promote1.p.mode.set(1); // max
 	attrib_promote1.p.name.set('test');
 
-	let container = await attrib_promote1.requestContainer();
+	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group);
@@ -76,7 +76,7 @@ QUnit.test('attrib promote vertex to object with max', async (assert) => {
 	attrib_promote1.p.mode.set(1); // max
 	attrib_promote1.p.name.set('test');
 
-	let container = await attrib_promote1.requestContainer();
+	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
 	const object = core_group.objects()[0];
 	assert.ok(core_group);
@@ -103,7 +103,7 @@ QUnit.test('attrib promote object to vertex with max', async (assert) => {
 	attrib_promote1.p.mode.set(1); // max
 	attrib_promote1.p.name.set('test');
 
-	let container = await attrib_promote1.requestContainer();
+	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
@@ -138,7 +138,7 @@ QUnit.test('attrib promote multiple attributes from objects to vertex', async (a
 	attrib_promote1.p.mode.set(1); // max
 	attrib_promote1.p.name.set('id role');
 
-	let container = await attrib_promote1.requestContainer();
+	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);

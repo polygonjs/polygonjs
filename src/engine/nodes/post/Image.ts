@@ -56,13 +56,13 @@ export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostPar
 		};
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(ImagePostNode._create_shader()) as ShaderPassWithRequiredUniforms;
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: ShaderPassWithRequiredUniforms) {
+	updatePass(pass: ShaderPassWithRequiredUniforms) {
 		pass.uniforms.darkness.value = this.pv.darkness;
 		pass.uniforms.offset.value = this.pv.offset;
 
@@ -76,7 +76,7 @@ export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostPar
 		if (found_node) {
 			if (found_node.nodeContext() == NodeContext.COP) {
 				const cop_node = found_node as BaseCopNodeType;
-				const map_container = await cop_node.requestContainer();
+				const map_container = await cop_node.compute();
 				const texture = map_container.coreContent();
 				pass.uniforms.map.value = texture;
 			} else {

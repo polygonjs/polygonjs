@@ -19,7 +19,7 @@ QUnit.test('subnet simple', async (assert) => {
 	assert.equal(subnet1.children().length, 2);
 
 	// if nothing inside yet
-	let container = await subnet1.requestContainer();
+	let container = await subnet1.compute();
 	let core_group = container.coreContent();
 	assert.notOk(core_group);
 
@@ -30,7 +30,7 @@ QUnit.test('subnet simple', async (assert) => {
 	// we have an error if the content is invalid
 	await CoreSleep.sleep(10);
 	scatter1.p.pointsCount.set(100);
-	container = await subnet1.requestContainer();
+	container = await subnet1.compute();
 	core_group = container.coreContent();
 	assert.notOk(core_group);
 	assert.equal(
@@ -41,14 +41,14 @@ QUnit.test('subnet simple', async (assert) => {
 	// by plugging the input
 	await CoreSleep.sleep(10);
 	subnet1.setInput(0, box1);
-	container = await subnet1.requestContainer();
+	container = await subnet1.compute();
 	core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 100);
 	assert.ok(!subnet1.states.error.message());
 
 	// and when we update the box, the content of the subnet updates
 	box1.p.size.set(30);
-	container = await subnet1.requestContainer();
+	container = await subnet1.compute();
 	core_group = container.coreContent()!;
 	const size = new Vector3();
 	core_group.boundingBox().getSize(size);
@@ -66,20 +66,20 @@ QUnit.test('subnet errors without subnetOutput child node', async (assert) => {
 	assert.equal(subnet1.children().length, 2);
 	subnet1.removeNode(subnetOutput1);
 
-	await subnet1.requestContainer();
+	await subnet1.compute();
 	assert.equal(subnet1.states.error.message(), 'no output node found inside subnet');
 
 	// and we add a subnetOutput again
 	await CoreSleep.sleep(10);
 	const subnetOutput2 = subnet1.createNode('subnetOutput');
-	await subnet1.requestContainer();
+	await subnet1.compute();
 	assert.equal(subnet1.states.error.message(), 'inputs are missing');
 
 	// and we add a box
 	const box1 = subnet1.createNode('box');
 	await CoreSleep.sleep(10);
 	subnetOutput2.setInput(0, box1);
-	let container = await subnet1.requestContainer();
+	let container = await subnet1.compute();
 	assert.ok(!subnet1.states.error.active());
 	let core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 24);
@@ -96,7 +96,7 @@ QUnit.test('subnet works without inputs', async (assert) => {
 	const box1 = subnet1.createNode('box');
 	subnetOutput1.setInput(0, box1);
 
-	let container = await subnet1.requestContainer();
+	let container = await subnet1.compute();
 	let core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 24);
 });

@@ -27,12 +27,12 @@ export class AfterImagePostNode extends TypedPostProcessNode<AfterImagePassWithU
 		return 'afterImage';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new AfterimagePass() as AfterImagePassWithUniforms;
-		this.update_pass(pass);
+		this.updatePass(pass);
 		return pass;
 	}
-	update_pass(pass: AfterImagePassWithUniforms) {
+	updatePass(pass: AfterImagePassWithUniforms) {
 		pass.uniforms.damp.value = this.pv.damp;
 	}
 }

@@ -32,14 +32,14 @@ export class VerticalBlurPostNode extends TypedPostProcessNode<ShaderPass, Verti
 		return 'verticalBlur';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(VerticalBlurShader) as VerticalBlurPassWithUniforms;
 		pass.resolution_y = context.resolution.y;
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: VerticalBlurPassWithUniforms) {
+	updatePass(pass: VerticalBlurPassWithUniforms) {
 		pass.uniforms.v.value = this.pv.amount / (pass.resolution_y * window.devicePixelRatio);
 		pass.material.transparent = this.pv.transparent;
 	}

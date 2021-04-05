@@ -53,7 +53,7 @@ export class BaseMethod {
 			// const time_start = performance.now();
 			let container: ContainerMap[NodeContext];
 			if (referenced_node.isDirty()) {
-				container = await referenced_node.requestContainer();
+				container = await referenced_node.compute();
 			} else {
 				container = referenced_node.containerController.container;
 			}

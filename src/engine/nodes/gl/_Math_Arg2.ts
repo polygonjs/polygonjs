@@ -86,7 +86,7 @@ export class DotGlNode extends MathFunctionArg2Factory('dot', {
 export class MaxGlNode extends MathFunctionArg2Factory('max') {}
 export class MinGlNode extends MathFunctionArg2Factory('min') {}
 export class ModGlNode extends MathFunctionArg2Factory('mod') {
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return ({in1: 1} as PolyDictionary<number>)[name];
 	}
 	// mod can only take floats

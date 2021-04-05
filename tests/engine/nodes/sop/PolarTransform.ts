@@ -6,7 +6,7 @@ QUnit.test('polarTransform simple', async (assert) => {
 	polarTransform1.setInput(0, add1);
 
 	let container, core_group;
-	container = await polarTransform1.requestContainer();
+	container = await polarTransform1.compute();
 	core_group = container.coreContent();
 	let geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
@@ -19,7 +19,7 @@ QUnit.test('polarTransform simple', async (assert) => {
 
 	polarTransform1.p.latitude.set(90);
 
-	container = await polarTransform1.requestContainer();
+	container = await polarTransform1.compute();
 	core_group = container.coreContent();
 	geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);

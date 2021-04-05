@@ -13,13 +13,13 @@ QUnit.test('attrib_rename simple', async (assert) => {
 	attrib_rename1.p.newName.set('test2');
 
 	let container, core_group, geometry;
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry.getAttribute('test'));
 	assert.notOk(geometry.getAttribute('test2'));
 
-	container = await attrib_rename1.requestContainer();
+	container = await attrib_rename1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.notOk(geometry.getAttribute('test'));

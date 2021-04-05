@@ -55,6 +55,6 @@ export class RepeatAnimNode extends TypedAnimNode<RepeatAnimParamsConfig> {
 
 		timeline_builder.setRepeatParams(this._repeat_params());
 
-		this.set_timeline_builder(timeline_builder);
+		this.setTimelineBuilder(timeline_builder);
 	}
 }

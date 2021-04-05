@@ -76,7 +76,7 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 	protected _gl_output_name(index: number) {
 		return OUTPUT_NAMES[index];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return INPUT_DEFAULT_VALUE[name];
 	}
 	setLines(shaders_collection_controller: ShadersCollectionController) {

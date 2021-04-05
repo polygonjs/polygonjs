@@ -24,7 +24,7 @@ export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
 	protected _gl_input_name(index: number): string {
 		return ['val', 'srcMin', 'srcMax', 'destMin', 'destMax'][index];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return FitDefaultValues[name];
 	}
 	protected gl_method_name(): string {
@@ -54,7 +54,7 @@ export class FitTo01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 	_gl_input_name(index: number): string {
 		return ['val', 'srcMin', 'srcMax'][index];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return FitTo01DefaultValues[name];
 	}
 	gl_method_name(): string {
@@ -84,7 +84,7 @@ export class FitFrom01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
 	_gl_input_name(index: number): string {
 		return ['val', 'destMin', 'destMax'][index];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return FitFrom01DefaultValues[name];
 	}
 	gl_method_name(): string {
@@ -114,7 +114,7 @@ export class FitFrom01ToVarianceGlNode extends BaseNodeGlMathFunctionArg3GlNode 
 	_gl_input_name(index: number): string {
 		return ['val', 'center', 'variance'][index];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return FitFrom01ToVarianceDefaultValues[name];
 	}
 	gl_method_name(): string {

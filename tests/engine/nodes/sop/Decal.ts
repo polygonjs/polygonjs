@@ -8,7 +8,7 @@ QUnit.test('decal simple', async (assert) => {
 	decal1.setInput(0, sphere1);
 	decal1.p.t.set([1, 0, 0]);
 
-	let container = await decal1.requestContainer();
+	let container = await decal1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
 	assert.equal(geometry?.getAttribute('position').array.length, 1602);

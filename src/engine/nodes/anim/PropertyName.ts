@@ -34,6 +34,6 @@ export class PropertyNameAnimNode extends TypedAnimNode<PropertyNameAnimParamsCo
 
 		timeline_builder.setPropertyName(this.pv.name);
 
-		this.set_timeline_builder(timeline_builder);
+		this.setTimelineBuilder(timeline_builder);
 	}
 }

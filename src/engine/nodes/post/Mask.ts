@@ -47,17 +47,17 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 		return 'mask';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new MaskPass(context.scene, context.camera) as MaskPassWithContext;
 		pass.context = {
 			scene: context.scene,
 			camera: context.camera,
 		};
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: MaskPassWithContext) {
+	updatePass(pass: MaskPassWithContext) {
 		pass.inverse = isBooleanTrue(this.pv.inverse);
 		this._update_scene(pass);
 		this._update_camera(pass);

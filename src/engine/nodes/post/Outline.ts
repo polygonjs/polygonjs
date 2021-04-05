@@ -44,17 +44,17 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 		return 'outline';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new OutlinePass(
 			new Vector2(context.resolution.x, context.resolution.y),
 			context.scene,
 			context.camera,
 			context.scene.children
 		);
-		this.update_pass(pass);
+		this.updatePass(pass);
 		return pass;
 	}
-	update_pass(pass: OutlinePass) {
+	updatePass(pass: OutlinePass) {
 		pass.edgeStrength = this.pv.edgeStrength;
 		pass.edgeThickness = this.pv.edgeThickness;
 		pass.edgeGlow = this.pv.edgeGlow;

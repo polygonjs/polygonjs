@@ -24,13 +24,13 @@ export class CopyPostNode extends TypedPostProcessNode<ShaderPass, CopyPostParam
 		return 'copy';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(CopyShader) as CopyPassWithUniforms;
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: CopyPassWithUniforms) {
+	updatePass(pass: CopyPassWithUniforms) {
 		pass.uniforms.opacity.value = this.pv.opacity;
 		pass.material.transparent = this.pv.transparent;
 	}

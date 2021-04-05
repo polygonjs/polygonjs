@@ -48,6 +48,6 @@ export class OperationAnimNode extends TypedAnimNode<OperationAnimParamsConfig> 
 
 		timeline_builder.setOperation(OPERATIONS[this.pv.operation]);
 
-		this.set_timeline_builder(timeline_builder);
+		this.setTimelineBuilder(timeline_builder);
 	}
 }

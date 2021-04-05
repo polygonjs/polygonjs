@@ -18,7 +18,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		return this._container;
 	}
 
-	async requestContainer(): Promise<ContainerMap[NC]> {
+	async compute(): Promise<ContainerMap[NC]> {
 		if (this.node.flags?.bypass?.active()) {
 			return (await this.requestInputContainer(0)) || this._container;
 		}
@@ -65,7 +65,7 @@ export class TypedContainerController<NC extends NodeContext> {
 	async requestInputContainer(input_index: number) {
 		const input_node = (<unknown>this.node.io.inputs.input(input_index)) as TypedNode<NC, any>;
 		if (input_node) {
-			return await input_node.requestContainer();
+			return await input_node.compute();
 		} else {
 			this.node.states.error.set(`input ${input_index} required`);
 			this.notify_requesters();

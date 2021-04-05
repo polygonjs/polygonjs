@@ -8,7 +8,7 @@ async function with_file(path: string) {
 	const file1 = geo1.createNode('file');
 	file1.p.url.set(`${ASSETS_ROOT}/${path}`);
 
-	const container = await file1.requestContainer();
+	const container = await file1.compute();
 	return container;
 }
 async function with_hierarchy() {
@@ -16,7 +16,7 @@ async function with_hierarchy() {
 	const file1 = window.geo1.nodesByType('file')[0];
 	hierarchy1.setInput(0, file1);
 	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
-	const container = await hierarchy1.requestContainer();
+	const container = await hierarchy1.compute();
 	return container;
 }
 
@@ -31,7 +31,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	// merge1.setInput(0, file1);
 
 	let container;
-	container = await file1.requestContainer();
+	container = await file1.compute();
 	assert.ok(!file1.isDirty());
 	// let core_group = container.coreContent()!;
 	// let {geometry} = core_group.objects()[0];
@@ -40,7 +40,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	file1.p.url.set(`${ASSETS_ROOT}/models/box.obj`);
 	assert.ok(file1.isDirty());
 
-	container = await file1.requestContainer();
+	container = await file1.compute();
 	assert.ok(!file1.isDirty());
 	// core_group = container.coreContent();
 	// ({geometry} = core_group.objects()[0]);
@@ -49,7 +49,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	// set error state
 	file1.p.url.set('/test/file_sop_doesnotexist.obj');
 	assert.ok(file1.isDirty());
-	container = await file1.requestContainer();
+	container = await file1.compute();
 	assert.ok(!file1.isDirty());
 	assert.ok(file1.states.error.active(), 'file sop to file_sop_doesnotexist is errored');
 
@@ -63,7 +63,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	// clear error state
 	file1.p.url.set(`${ASSETS_ROOT}/models/box.obj`);
 	assert.ok(file1.isDirty());
-	container = await file1.requestContainer();
+	container = await file1.compute();
 	assert.ok(!file1.isDirty());
 	assert.ok(!file1.states.error.active());
 	core_group = container.coreContent()!;

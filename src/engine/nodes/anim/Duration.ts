@@ -37,6 +37,6 @@ export class DurationAnimNode extends TypedAnimNode<DurationAnimParamsConfig> {
 
 		timeline_builder.setDuration(this.pv.duration);
 
-		this.set_timeline_builder(timeline_builder);
+		this.setTimelineBuilder(timeline_builder);
 	}
 }

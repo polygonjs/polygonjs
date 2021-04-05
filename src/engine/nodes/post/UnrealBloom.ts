@@ -31,7 +31,7 @@ export class UnrealBloomPostNode extends TypedPostProcessNode<UnrealBloomPass, U
 		return 'unrealBloom';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new UnrealBloomPass(
 			new Vector2(context.resolution.x, context.resolution.y),
 			this.pv.strength,
@@ -40,7 +40,7 @@ export class UnrealBloomPostNode extends TypedPostProcessNode<UnrealBloomPass, U
 		);
 		return pass;
 	}
-	update_pass(pass: UnrealBloomPass) {
+	updatePass(pass: UnrealBloomPass) {
 		pass.strength = this.pv.strength;
 		pass.radius = this.pv.radius;
 		pass.threshold = this.pv.threshold;

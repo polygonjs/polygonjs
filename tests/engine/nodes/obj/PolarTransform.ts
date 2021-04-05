@@ -4,13 +4,13 @@ QUnit.test('polarTransform obj simple', async (assert) => {
 	const polarTransform = root.createNode('polarTransform');
 	polarTransform.p.center.set([1, 2, 3]);
 	polarTransform.p.depth.set(1);
-	await polarTransform.requestContainer();
+	await polarTransform.compute();
 	assert.deepEqual(polarTransform.object.position.toArray(), [1, 2, 4]);
 	assert.deepEqual(polarTransform.object.rotation.toArray(), [0, 0, 0, 'XYZ']);
 
 	polarTransform.p.longitude.set(90);
 	polarTransform.p.depth.set(1);
-	await polarTransform.requestContainer();
+	await polarTransform.compute();
 	assert.deepEqual(polarTransform.object.position.toArray(), [2, 2, 3]);
 	assert.deepEqual(polarTransform.object.rotation.toArray(), [0, 0.5 * Math.PI, 0, 'XYZ']);
 });

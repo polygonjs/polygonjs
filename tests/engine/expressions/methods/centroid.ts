@@ -72,7 +72,7 @@ QUnit.test('expression centroid with input index still build dependency after sc
 		return (min.x + max.x) * 0.5;
 	}
 
-	let container = await transform.requestContainer();
+	let container = await transform.compute();
 	let core_group = container.coreContent()!;
 	let bbox = core_group.boundingBox();
 	assert.in_delta(bboxCenterX(bbox), 1, 0.1);
@@ -80,7 +80,7 @@ QUnit.test('expression centroid with input index still build dependency after sc
 	assert.in_delta(bbox.max.x, 1.8, 0.1);
 
 	transform.p.t.x.set('-centroid(0).x');
-	container = await transform.requestContainer();
+	container = await transform.compute();
 	core_group = container.coreContent()!;
 	bbox = core_group.boundingBox();
 	assert.equal(bboxCenterX(bbox), 0);
@@ -96,7 +96,7 @@ QUnit.test('expression centroid with input index still build dependency after sc
 
 	const text2 = scene2.node(text.path()) as TextSopNode;
 	const transform2 = scene2.node(transform.path()) as TransformSopNode;
-	container = await transform2.requestContainer();
+	container = await transform2.compute();
 	core_group = container.coreContent()!;
 	bbox = core_group.boundingBox();
 	assert.equal(bboxCenterX(bbox), 0);
@@ -106,7 +106,7 @@ QUnit.test('expression centroid with input index still build dependency after sc
 	// make a longer word
 	// and make sure that the transform still updates accordingly
 	text2.p.text.set('This is a much much longer word to test that transform updates');
-	container = await transform2.requestContainer();
+	container = await transform2.compute();
 	core_group = container.coreContent()!;
 	bbox = core_group.boundingBox();
 	assert.equal(bboxCenterX(bbox), 0);

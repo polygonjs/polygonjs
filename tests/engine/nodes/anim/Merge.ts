@@ -9,7 +9,7 @@
 // 	merge1.setInput(0, track1);
 // 	merge1.setInput(1, track1);
 
-// 	const container = await merge1.requestContainer();
+// 	const container = await merge1.compute();
 // 	const core_group = container.coreContent()!;
 // 	assert.equal(core_group.tracks.length, 2);
 // });

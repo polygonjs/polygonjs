@@ -85,7 +85,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			found_node = CoreWalker.findNode(this._node, node_path);
 			if (found_node) {
 				if (found_node instanceof BaseCopNodeClass) {
-					const container: TextureContainer = await found_node.requestContainer();
+					const container: TextureContainer = await found_node.compute();
 					texture = container.texture();
 				} else {
 					this._node.states.error.set(`found node is not a texture node`);

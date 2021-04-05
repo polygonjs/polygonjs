@@ -108,7 +108,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 
 	file1.flags.display.set(true);
 	await scene.waitForCooksCompleted();
-	await file1.requestContainer();
+	await file1.compute();
 	await CoreSleep.sleep(10);
 	assert.equal(obj.children.length, 2);
 	assert.equal(obj.children[1].children[0].children.length, 4);
@@ -120,7 +120,7 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	await scene.waitForCooksCompleted();
 	const geo1 = window.geo1;
 	assert.ok(geo1.isDirty(), 'geo1 is dirty');
-	await geo1.requestContainer();
+	await geo1.compute();
 	assert.notOk(geo1.isDirty(), 'geo1 is not dirty');
 	scene.setFrame(1);
 	scene.setFrame(3);
@@ -148,8 +148,8 @@ QUnit.test('geo obj: display node can update and still inherit geo transform', a
 	const box = geo1.createNode('box');
 
 	geo1.p.t.x.set(10);
-	await geo1.requestContainer();
-	await box.requestContainer();
+	await geo1.compute();
+	await box.compute();
 
 	await CoreSleep.sleep(100);
 

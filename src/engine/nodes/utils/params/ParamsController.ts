@@ -516,7 +516,7 @@ export class ParamsController {
 		await Promise.all(promises);
 
 		if (this.node.states.error.active()) {
-			this.node.setContainer(null);
+			this.node._setContainer(null);
 		}
 	}
 

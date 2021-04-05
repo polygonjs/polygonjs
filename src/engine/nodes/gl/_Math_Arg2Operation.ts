@@ -91,7 +91,7 @@ export class DivideGlNode extends MathFunctionArg2OperationFactory('divide', {
 	out: 'divide',
 	operation: '/',
 }) {
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return 1;
 	}
 }
@@ -109,7 +109,7 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 	static type() {
 		return 'mult';
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return 1;
 	}
 

@@ -6,7 +6,7 @@ QUnit.test('color simple', async (assert) => {
 	color1.setInput(0, box1);
 	color1.p.color.set([0.4, 0.5, 0.6]);
 
-	let container = await color1.requestContainer();
+	let container = await color1.compute();
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 
@@ -19,7 +19,7 @@ QUnit.test('color simple', async (assert) => {
 	assert.in_delta(array[2], 0.6, 0.001);
 
 	color1.p.color.set([1.5, 0.5, 0.75]);
-	container = await color1.requestContainer();
+	container = await color1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	({array} = geometry.getAttribute('color'));
@@ -40,7 +40,7 @@ QUnit.test('color with expression', async (assert) => {
 
 	color1.p.color.r.set('@ptnum+1');
 
-	let container = await color1.requestContainer();
+	let container = await color1.compute();
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 
@@ -137,7 +137,7 @@ QUnit.test('color with position', async (assert) => {
 	color1.p.color.b.set('@P.z');
 
 	let container, core_group, geometry, array;
-	container = await color1.requestContainer();
+	container = await color1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	array = geometry.getAttribute('color').array as number[];
@@ -223,7 +223,7 @@ QUnit.test('color with position', async (assert) => {
 	color1.p.color.g.set('@P.y');
 	color1.p.color.b.set('@P.x');
 
-	container = await color1.requestContainer();
+	container = await color1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	array = geometry.getAttribute('color').array as number[];

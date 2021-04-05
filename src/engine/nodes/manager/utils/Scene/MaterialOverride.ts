@@ -46,7 +46,7 @@ export class SceneMaterialOverrideController {
 		if (isBooleanTrue(pv.useOverrideMaterial)) {
 			const node = pv.overrideMaterial.nodeWithContext(NodeContext.MAT);
 			if (node) {
-				node.requestContainer().then((container) => {
+				node.compute().then((container) => {
 					scene.overrideMaterial = container.material();
 				});
 			} else {

@@ -70,7 +70,7 @@ export class SceneBackgroundController {
 			} else {
 				const node = pv.bgTexture.nodeWithContext(NodeContext.COP);
 				if (node) {
-					node.requestContainer().then((container) => {
+					node.compute().then((container) => {
 						scene.background = container.texture();
 					});
 				} else {

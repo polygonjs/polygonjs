@@ -129,8 +129,8 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	// display the box
 	box1.flags.display.set(true);
 	await scene.waitForCooksCompleted();
-	await box1.requestContainer();
-	await plane1.requestContainer();
+	await box1.compute();
+	await plane1.compute();
 	await CoreSleep.sleep(20);
 	assert.equal(obj.children.length, 2, 'obj has 2 children');
 	assert.deepEqual(

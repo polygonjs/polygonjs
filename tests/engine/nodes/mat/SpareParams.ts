@@ -24,7 +24,7 @@ QUnit.test(
 		assert.ok(mesh_basic1.assemblerController, 'assembler controller is present');
 		assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 
-		await mesh_basic1.requestContainer();
+		await mesh_basic1.compute();
 		assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
 		assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compile is not required');
 
@@ -37,7 +37,7 @@ QUnit.test(
 
 		assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 		CoreSleep.sleep(10);
-		await mesh_basic1.requestContainer();
+		await mesh_basic1.compute();
 		assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is NOT required');
 
 		// param should already exist, and also uniform on mat
@@ -46,18 +46,18 @@ QUnit.test(
 
 		// changing the param type updates the spare param type
 		param1.set_gl_type(GlConnectionPointType.INT);
-		await mesh_basic1.requestContainer();
+		await mesh_basic1.compute();
 		assert.equal(mesh_basic1.params.get(param_name)!.type(), ParamType.INTEGER);
 
 		// we revert back to float for the rest of the test
 		param1.set_gl_type(GlConnectionPointType.FLOAT);
-		await mesh_basic1.requestContainer();
+		await mesh_basic1.compute();
 		assert.equal(mesh_basic1.params.get(param_name)!.type(), ParamType.FLOAT);
 
 		// updating the param updates the uniform, without having to cook the material node
 		output1.setInput('alpha', param1);
 		assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
-		await mesh_basic1.requestContainer();
+		await mesh_basic1.compute();
 		assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compiled is required');
 		const uniform_name = param1.uniform_name();
 		assert.equal(mesh_basic1.params.get(param_name)!.value, 0);
@@ -96,7 +96,7 @@ QUnit.test(
 
 		// if I change the type of the param, the raw_input stays
 		param1.set_gl_type(GlConnectionPointType.INT);
-		await mesh_basic1.requestContainer();
+		await mesh_basic1.compute();
 		let spare_param = mesh_basic1.params.get(param_name)!;
 		assert.equal(spare_param.type(), ParamType.INTEGER);
 		await CoreSleep.sleep(10);
@@ -115,7 +115,7 @@ QUnit.test(
 
 		// we revert back to float for the rest of the test
 		param1.set_gl_type(GlConnectionPointType.FLOAT);
-		await mesh_basic1.requestContainer();
+		await mesh_basic1.compute();
 		spare_param = mesh_basic1.params.get(param_name)!;
 		assert.equal(spare_param.type(), ParamType.FLOAT);
 		assert.equal(mesh_basic1.params.get(param_name)!.rawInput(), '$F');
@@ -129,7 +129,7 @@ QUnit.test(
 		await scene2.waitForCooksCompleted();
 
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
-		await new_mesh_basic1.requestContainer();
+		await new_mesh_basic1.compute();
 		assert.ok(new_mesh_basic1.assemblerController, 'assembler_controller is present');
 		assert.notOk(new_mesh_basic1.assemblerController?.compile_required(), 'compile is not required');
 		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), [param_name], 'spare params has param_name');
@@ -165,7 +165,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 
 	await scene.waitForCooksCompleted();
 
-	await mesh_basic1.requestContainer();
+	await mesh_basic1.compute();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
 	assert.notOk(mesh_basic1.assemblerController?.compile_required());
 
@@ -246,7 +246,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	assert.ok(mesh_basic1.assemblerController?.compile_required(), 'compile required');
 
 	await scene.waitForCooksCompleted();
-	await mesh_basic1.requestContainer();
+	await mesh_basic1.compute();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), [], 'no spare params');
 	assert.notOk(mesh_basic1.assemblerController?.compile_required(), 'compile not required');
 
@@ -259,7 +259,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	const uniform_name = param1.uniform_name();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
 	param1.set_gl_type(GlConnectionPointType.FLOAT);
-	await mesh_basic1.requestContainer();
+	await mesh_basic1.compute();
 	const float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 	assert.equal(float_spare_param.type(), ParamType.FLOAT, 'param is float');
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0);
@@ -269,7 +269,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	// now change to vec3
 	param1.set_gl_type(GlConnectionPointType.VEC3);
 	param1.p.asColor.set(1);
-	await mesh_basic1.requestContainer();
+	await mesh_basic1.compute();
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as ColorParam;
 	assert.equal(vec3_spare_param.type(), ParamType.COLOR, 'param is color');
 	assert.deepEqual(vec3_spare_param.valueSerialized(), [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');

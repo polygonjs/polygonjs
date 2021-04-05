@@ -34,7 +34,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		return 'forLoop';
 	}
 
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return DEFAULT_VALUES[name];
 	}
 

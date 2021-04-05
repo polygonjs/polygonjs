@@ -25,7 +25,7 @@ export class MaxLengthGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	protected _gl_input_name(index: number): string {
 		return ['val', 'max'][index];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return MaxLengthDefaultValues[name];
 	}
 	protected gl_method_name(): string {

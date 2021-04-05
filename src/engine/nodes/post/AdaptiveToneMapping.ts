@@ -62,12 +62,12 @@ export class AdaptiveToneMappingPostNode extends TypedPostProcessNode<
 		return 'adaptiveToneMapping';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new AdaptiveToneMappingPass(this.pv.adaptive, context.resolution.x);
-		this.update_pass(pass);
+		this.updatePass(pass);
 		return pass;
 	}
-	update_pass(pass: AdaptiveToneMappingPass) {
+	updatePass(pass: AdaptiveToneMappingPass) {
 		pass.setMaxLuminance(this.pv.maxLuminance);
 		pass.setMiddleGrey(this.pv.midGrey);
 		pass.setAverageLuminance(this.pv.averageLuminance);

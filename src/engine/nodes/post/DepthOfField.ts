@@ -106,14 +106,14 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		return x * x * (3 - 2 * x);
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const camera = context.camera;
 		if ((camera as PerspectiveCamera).isPerspectiveCamera) {
 			const camera_node = context.camera_node as PerspectiveCameraObjNode;
 			if (camera_node) {
 				const pass = new BokehPass2(this, context.scene, camera_node.object, context.resolution);
 
-				this.update_pass(pass);
+				this.updatePass(pass);
 
 				// TODO: add a dispose to get rid of those connections when the node is deleted
 				// or when the camera is deleted
@@ -135,7 +135,7 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 	update_pass_from_camera_node(pass: BokehPass2, camera: PerspectiveCameraObjNode) {
 		pass.update_camera_uniforms_with_node(this, camera.object);
 	}
-	update_pass(pass: BokehPass2) {
+	updatePass(pass: BokehPass2) {
 		pass.bokeh_uniforms['fstop'].value = this.pv.fStep;
 		pass.bokeh_uniforms['maxblur'].value = this.pv.maxBlur;
 

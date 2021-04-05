@@ -4,7 +4,7 @@ QUnit.test('sphere simple', async (assert) => {
 
 	const sphere1 = geo1.createNode('sphere');
 
-	let container = await sphere1.requestContainer();
+	let container = await sphere1.compute();
 	let core_group = container.coreContent()!;
 	let geometry = core_group.geometries()[0];
 
@@ -15,7 +15,7 @@ QUnit.test('sphere simple', async (assert) => {
 	sphere1.p.resolution.set([50, 50]);
 	assert.ok(sphere1.isDirty(), 'sphere is dirty');
 
-	container = await sphere1.requestContainer();
+	container = await sphere1.compute();
 	assert.notOk(sphere1.isDirty(), 'sphere is not dirty');
 	core_group = container.coreContent()!;
 	geometry = core_group.geometries()[0];

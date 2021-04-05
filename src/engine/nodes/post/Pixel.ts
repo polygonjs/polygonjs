@@ -30,15 +30,15 @@ export class PixelPostNode extends TypedPostProcessNode<ShaderPass, PixelPostPar
 		return 'pixel';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(PixelShader) as PixelPassWithUniforms;
 		pass.uniforms.resolution.value = context.resolution;
 		pass.uniforms.resolution.value.multiplyScalar(window.devicePixelRatio);
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: PixelPassWithUniforms) {
+	updatePass(pass: PixelPassWithUniforms) {
 		pass.uniforms.pixelSize.value = this.pv.pixelSize;
 	}
 }

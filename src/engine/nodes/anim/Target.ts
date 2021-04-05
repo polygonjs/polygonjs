@@ -83,7 +83,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		timeline_builder.setTarget(target);
 		this._set_update_callback(timeline_builder);
 
-		this.set_timeline_builder(timeline_builder);
+		this.setTimelineBuilder(timeline_builder);
 	}
 	setTargetType(targetType: AnimTargetNodeTargetType) {
 		this.p.type.set(TARGET_TYPES.indexOf(targetType));

@@ -188,7 +188,7 @@ export class InputsController<NC extends NodeContext> {
 			const input_node = this._inputs[i];
 			let container: ContainerMap[NC] | undefined = undefined;
 			if (input_node) {
-				container = (await input_node.requestContainer()) as ContainerMap[NC];
+				container = (await input_node.compute()) as ContainerMap[NC];
 			}
 			containers.push(container);
 		}
@@ -248,7 +248,7 @@ export class InputsController<NC extends NodeContext> {
 		// 	this._graph_node_inputs[input_index].removeDirtyState();
 		// }
 		if (input_node) {
-			container = (await input_node.requestContainer()) as ContainerMap[NC];
+			container = (await input_node.compute()) as ContainerMap[NC];
 			this._graph_node_inputs[input_index].removeDirtyState();
 		}
 

@@ -39,7 +39,7 @@ export class AlignGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	// gl_input_name(index: number) {
 	// 	return InputNames[index];
 	// }
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return DefaultValues[name as InputName];
 	}
 	gl_method_name(): string {

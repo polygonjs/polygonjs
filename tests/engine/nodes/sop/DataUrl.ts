@@ -6,27 +6,27 @@ QUnit.test('data_url json', async (assert) => {
 	const data_url1 = geo1.createNode('dataUrl');
 
 	let container;
-	container = await data_url1.requestContainer();
+	container = await data_url1.compute();
 	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 
 	await window.scene.root().processQueue();
 
 	data_url1.p.url.set('/examples/sop/data_url/default.json');
-	container = await data_url1.requestContainer();
+	container = await data_url1.compute();
 
 	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 8);
 
 	data_url1.p.url.set('/examples/sop/data_url/basic.json');
-	container = await data_url1.requestContainer();
+	container = await data_url1.compute();
 
 	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 
 	// and a non existing
 	data_url1.p.url.set('/dataurl_doesnotexist.json');
-	container = await data_url1.requestContainer();
+	container = await data_url1.compute();
 
 	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 0);
@@ -37,7 +37,7 @@ QUnit.test('data_url json', async (assert) => {
 
 	// restore it with a good url
 	data_url1.p.url.set('/examples/sop/data_url/default.json');
-	container = await data_url1.requestContainer();
+	container = await data_url1.compute();
 	assert.equal(container.pointsCount(), 8);
 });
 
@@ -51,7 +51,7 @@ QUnit.test('data_url csv without reading names from file', async (assert) => {
 	data_url1.p.attribNames.set('attr1 attr2 attr3');
 
 	let container;
-	container = await data_url1.requestContainer();
+	container = await data_url1.compute();
 	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
@@ -78,7 +78,7 @@ QUnit.test('data_url csv with reading names from file', async (assert) => {
 	data_url1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
 	data_url1.p.readAttribNamesFromFile.set(1);
 
-	let container = await data_url1.requestContainer();
+	let container = await data_url1.compute();
 	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
@@ -108,7 +108,7 @@ QUnit.test('data_url csv with empty line', async (assert) => {
 	data_url1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
 	data_url1.p.readAttribNamesFromFile.set(1);
 
-	let container = await data_url1.requestContainer();
+	let container = await data_url1.compute();
 	assert.ok(!data_url1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;

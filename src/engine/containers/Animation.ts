@@ -7,7 +7,7 @@ export class AnimationContainer extends TypedContainer<NodeContext.ANIM> {
 	set_content(content: ContainableMap[NodeContext.ANIM]) {
 		super.set_content(content);
 	}
-	set_timeline_builder(timeline_builder: TimelineBuilder) {
+	setTimelineBuilder(timeline_builder: TimelineBuilder) {
 		return this.set_content(timeline_builder);
 	}
 	timeline_builder() {

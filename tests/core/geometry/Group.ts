@@ -14,7 +14,7 @@ QUnit.test('attrib_names_matching_mask', async (assert) => {
 	attrib_create_blend3.p.name.set('restP');
 	attrib_create_blend3.setInput(0, attrib_create_blend2);
 
-	const container = await attrib_create_blend3.requestContainer();
+	const container = await attrib_create_blend3.compute();
 	const core_group = container.coreContent()!;
 
 	assert.deepEqual(core_group.attribNames().sort(), ['position', 'normal', 'uv', 'blend', 'blend2', 'restP'].sort());

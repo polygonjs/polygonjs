@@ -30,7 +30,7 @@ QUnit.test('attribFromTexture with float - optimized', async (assert) => {
 	point.p.updateY.set(1);
 	point.p.y.set('@P.y+@height');
 
-	let container = await point.requestContainer();
+	let container = await point.compute();
 	let core_group = container.coreContent()!;
 	let bbox = core_group.boundingBox();
 	assert.in_delta(bbox.max.y, 0.5, 0.1);
@@ -44,8 +44,8 @@ QUnit.test('attribFromTexture with float - optimized', async (assert) => {
 	await scene2.waitForCooksCompleted();
 
 	const point2 = scene2.node(point.path()) as PointSopNode;
-	await point2.requestContainer();
-	container = await point2.requestContainer();
+	await point2.compute();
+	container = await point2.compute();
 	core_group = container.coreContent()!;
 	bbox = core_group.boundingBox();
 	assert.in_delta(bbox.max.y, 0.5, 0.1);
@@ -75,7 +75,7 @@ QUnit.test('attribFromTexture with vector - optimized', async (assert) => {
 	point.p.y.set('@P.y + @offset.y');
 	point.p.z.set('@P.z + @offset.z');
 
-	let container = await point.requestContainer();
+	let container = await point.compute();
 	let core_group = container.coreContent()!;
 	let bbox = core_group.boundingBox();
 	assert.in_delta(bbox.max.y, 1.4, 0.1);
@@ -90,8 +90,8 @@ QUnit.test('attribFromTexture with vector - optimized', async (assert) => {
 	await scene2.waitForCooksCompleted();
 
 	const point2 = scene2.node(point.path()) as PointSopNode;
-	await point2.requestContainer();
-	container = await point2.requestContainer();
+	await point2.compute();
+	container = await point2.compute();
 	core_group = container.coreContent()!;
 	bbox = core_group.boundingBox();
 	assert.in_delta(bbox.max.y, 1.4, 0.1);

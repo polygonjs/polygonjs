@@ -95,7 +95,7 @@
 // 			// if (last_param_raw_input != null && last_param_init_value != null) {
 // 			// init_value = ParamValueToDefaultConverter.from_value(param_type, last_param_raw_input);
 // 			// if (init_value == null) {
-// 			const default_value_from_name = this.node.param_default_value(param_name);
+// 			const default_value_from_name = this.node.paramDefaultValue(param_name);
 
 // 			// TODO: this should really store the largest set value
 // 			// (as in the ones with the most components)

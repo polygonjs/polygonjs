@@ -14,7 +14,7 @@ QUnit.test('materials simple', async (assert) => {
 
 	let container;
 
-	container = await material1.requestContainer();
+	container = await material1.compute();
 	const first_object = container.coreContent()!.objects()[0] as Mesh;
 	const material = first_object.material as Material;
 	assert.equal(material.uuid, lambert1.material.uuid);
@@ -43,7 +43,7 @@ QUnit.test('materials clone', async (assert) => {
 
 	let container;
 
-	container = await copy1.requestContainer();
+	container = await copy1.compute();
 	const objects = container.coreContent()!.objects() as Mesh[];
 	assert.equal(objects.length, 2);
 	const src_material = lambert1.material;

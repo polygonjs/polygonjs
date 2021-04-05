@@ -46,7 +46,7 @@ export class SceneEnvController {
 		if (isBooleanTrue(pv.useEnvironment)) {
 			const node = pv.environment.nodeWithContext(NodeContext.COP);
 			if (node) {
-				node.requestContainer().then((container) => {
+				node.compute().then((container) => {
 					scene.environment = container.texture();
 				});
 			} else {

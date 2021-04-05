@@ -19,10 +19,10 @@ QUnit.test('COP switch simple', async (assert) => {
 	file_diffuse2.p.url.set('/examples/textures/hardwood2_diffuse.jpg');
 	file_env1.p.url.set('/examples/textures/piz_compressed.exr');
 	file_env2.p.url.set('/examples/textures/equirectangular/quarry_01_1k.hdr');
-	const texture_diffuse1 = (await file_diffuse1.requestContainer()).texture();
-	const texture_diffuse2 = (await file_diffuse2.requestContainer()).texture();
-	const texture_env1 = (await file_env1.requestContainer()).texture();
-	const texture_env2 = (await file_env2.requestContainer()).texture();
+	const texture_diffuse1 = (await file_diffuse1.compute()).texture();
+	const texture_diffuse2 = (await file_diffuse2.compute()).texture();
+	const texture_env1 = (await file_env1.compute()).texture();
+	const texture_env2 = (await file_env2.compute()).texture();
 
 	const switch_diffuse = COP.createNode('switch');
 	const switch_env = COP.createNode('switch');
@@ -49,7 +49,7 @@ QUnit.test('COP switch simple', async (assert) => {
 
 	const material = mesh_standard1.material;
 
-	await mesh_standard1.requestContainer();
+	await mesh_standard1.compute();
 	await scene.waitForCooksCompleted();
 	assert.equal(mesh_standard1.cookController.cooks_count, 1);
 	assert.equal(material.map!.uuid, texture_diffuse1.uuid);
@@ -84,7 +84,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	const file_diffuse1_old_uuid = texture_diffuse1.uuid;
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
-	const texture_diffuse1B = (await file_diffuse1.requestContainer()).texture();
+	const texture_diffuse1B = (await file_diffuse1.compute()).texture();
 	assert.notEqual(file_diffuse1_old_uuid, texture_diffuse1B.uuid);
 	assert.equal(mesh_standard1.cookController.cooks_count, 1);
 	assert.equal(material.map!.uuid, texture_diffuse1B.uuid);
@@ -94,7 +94,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	const file_env1_old_uuid = texture_env1.uuid;
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
-	const texture_env1B = (await file_env1.requestContainer()).texture();
+	const texture_env1B = (await file_env1.compute()).texture();
 	assert.notEqual(file_env1_old_uuid, texture_env1B.uuid);
 	assert.equal(mesh_standard1.cookController.cooks_count, 1);
 	assert.equal(material.envMap!.uuid, texture_env1B.uuid);

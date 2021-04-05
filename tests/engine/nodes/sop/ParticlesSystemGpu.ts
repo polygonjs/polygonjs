@@ -58,7 +58,7 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	particles1.setInput(0, delete1);
 
 	scene.setFrame(1);
-	await particles1.requestContainer();
+	await particles1.compute();
 	const render_material = particles1.renderController.material()!;
 	const uniform = render_material.uniforms.texture_position;
 
@@ -124,12 +124,12 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	particles1.setInput(0, delete1);
 
 	scene.setFrame(1);
-	await particles1.requestContainer();
+	await particles1.compute();
 	const test_param = particles1.params.get('test_param')!;
 	assert.ok(test_param, 'test_param is created');
 	test_param.set([0, 1, 0]);
 	particles1.p.reset.pressButton();
-	await particles1.requestContainer();
+	await particles1.compute();
 
 	const render_material = particles1.renderController.material()!;
 	const uniform = render_material.uniforms.texture_position;
@@ -195,7 +195,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 		assert.deepEqual(test_param2.value.toArray(), [1, 0, 0], 'test param is read back with expected value');
 		assert.equal(scene2.frame(), 1);
 		new_particles1.p.reset.pressButton();
-		await new_particles1.requestContainer();
+		await new_particles1.compute();
 
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
@@ -253,7 +253,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	particles1.setInput(0, delete1);
 
 	// first we test when nothing is plugged into the output node
-	await particles1.requestContainer();
+	await particles1.compute();
 
 	let gpuMaterial = particles1.gpuController.materials()[0];
 	assert.notOk(gpuMaterial, 'no material created yet');
@@ -269,7 +269,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	add1.setInput(1, param1);
 	output1.setInput('position', add1);
 
-	await particles1.requestContainer();
+	await particles1.compute();
 	let test_param = particles1.params.get('test_param')!;
 	assert.ok(test_param, 'test_param is created');
 	test_param.set([0, 1, 0]);
@@ -301,7 +301,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	restPAttribute.setAttribSize(3);
 	add1.setInput(2, restPAttribute);
 
-	await particles1.requestContainer();
+	await particles1.compute();
 	test_param = particles1.params.get('test_param')!;
 	assert.ok(test_param, 'test_param is created');
 	test_param.set([0, 1, 0]);
@@ -386,7 +386,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		assert.deepEqual(test_param2.value.toArray(), [1, 0, 0], 'test param is read back with expected value');
 		assert.equal(scene2.frame(), 0);
 		new_particles1.p.reset.pressButton();
-		await new_particles1.requestContainer();
+		await new_particles1.compute();
 
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);

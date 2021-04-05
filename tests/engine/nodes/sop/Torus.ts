@@ -3,7 +3,7 @@ QUnit.test('torus simple', async (assert) => {
 
 	const torus1 = geo1.createNode('torus');
 
-	let container = await torus1.requestContainer();
+	let container = await torus1.compute();
 	const core_group = container.coreContent()!;
 	const {geometry} = core_group.objectsWithGeo()[0];
 

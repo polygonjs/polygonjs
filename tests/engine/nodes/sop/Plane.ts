@@ -3,7 +3,7 @@ QUnit.test('plane simple', async (assert) => {
 
 	const plane1 = geo1.createNode('plane');
 
-	let container = await plane1.requestContainer();
+	let container = await plane1.compute();
 	// const core_group = container.coreContent();
 	// const {geometry} = core_group.objects()[0];
 

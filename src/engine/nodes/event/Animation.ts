@@ -84,7 +84,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		if (!node) {
 			return;
 		}
-		const container = await node.requestContainer();
+		const container = await node.compute();
 		if (!container) {
 			return;
 		}

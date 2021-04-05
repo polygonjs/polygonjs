@@ -37,13 +37,13 @@ export class VignettePostNode extends TypedPostProcessNode<ShaderPass, VignetteP
 		return 'vignette';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(VignetteShader) as VignettePassWithUniforms;
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: VignettePassWithUniforms) {
+	updatePass(pass: VignettePassWithUniforms) {
 		pass.uniforms.offset.value = this.pv.offset;
 		pass.uniforms.darkness.value = this.pv.darkness;
 	}

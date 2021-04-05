@@ -19,17 +19,17 @@ QUnit.test('sort simple with mesh', async (assert) => {
 	delete1.p.expression.set('@ptnum>=$F');
 
 	window.scene.setFrame(1);
-	let coreGroup = (await delete1.requestContainer()).coreContent()!;
+	let coreGroup = (await delete1.compute()).coreContent()!;
 	assert.equal(coreGroup.boundingBox().min.y, Infinity);
 	assert.equal(coreGroup.boundingBox().max.y, -Infinity);
 
 	window.scene.setFrame(10);
-	coreGroup = (await delete1.requestContainer()).coreContent()!;
+	coreGroup = (await delete1.compute()).coreContent()!;
 	assert.in_delta(coreGroup.boundingBox().min.y, 0.35, 0.1);
 	assert.in_delta(coreGroup.boundingBox().max.y, 0.85, 0.1);
 
 	window.scene.setFrame(30);
-	coreGroup = (await delete1.requestContainer()).coreContent()!;
+	coreGroup = (await delete1.compute()).coreContent()!;
 	assert.in_delta(coreGroup.boundingBox().min.y, -0.85, 0.1);
 	assert.in_delta(coreGroup.boundingBox().max.y, 0.85, 0.1);
 });
@@ -55,27 +55,27 @@ QUnit.test('sort simple with points', async (assert) => {
 	delete1.p.expression.set('@ptnum>=$F');
 
 	window.scene.setFrame(1);
-	let coreGroup = (await delete1.requestContainer()).coreContent()!;
+	let coreGroup = (await delete1.compute()).coreContent()!;
 	assert.in_delta(coreGroup.boundingBox().min.y, 0.76, 0.1);
 	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
 
 	window.scene.setFrame(10);
-	coreGroup = (await delete1.requestContainer()).coreContent()!;
+	coreGroup = (await delete1.compute()).coreContent()!;
 	assert.in_delta(coreGroup.boundingBox().min.y, 0.59, 0.1);
 	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
 
 	window.scene.setFrame(30);
-	coreGroup = (await delete1.requestContainer()).coreContent()!;
+	coreGroup = (await delete1.compute()).coreContent()!;
 	assert.in_delta(coreGroup.boundingBox().min.y, 0.29, 0.1);
 	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
 
 	window.scene.setFrame(80);
-	coreGroup = (await delete1.requestContainer()).coreContent()!;
+	coreGroup = (await delete1.compute()).coreContent()!;
 	assert.in_delta(coreGroup.boundingBox().min.y, -0.3, 0.1);
 	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
 
 	window.scene.setFrame(100);
-	coreGroup = (await delete1.requestContainer()).coreContent()!;
+	coreGroup = (await delete1.compute()).coreContent()!;
 	assert.in_delta(coreGroup.boundingBox().min.y, -0.76, 0.1);
 	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
 });

@@ -21,7 +21,7 @@ export class VectorAlignGlNode extends MathFunctionArg3Factory('vectorAlign', {
 	protected _expected_output_types() {
 		return [GlConnectionPointType.VEC4];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 }

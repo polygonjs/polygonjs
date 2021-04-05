@@ -35,7 +35,7 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 		const geometry_node = this.p.geometry.found_node();
 		if (geometry_node) {
 			if (geometry_node.nodeContext() == NodeContext.SOP) {
-				const container = await geometry_node.requestContainer();
+				const container = await geometry_node.compute();
 				this.import_input(geometry_node as BaseSopNodeType, container);
 			} else {
 				this.states.error.set('found node is not a geometry');

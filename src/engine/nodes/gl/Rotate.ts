@@ -72,7 +72,7 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		const mode = Modes[this.pv.signature];
 		return InputNamesByMode[mode][index];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 	gl_method_name(): string {

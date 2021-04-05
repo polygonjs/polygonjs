@@ -33,7 +33,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	merge2.setInput(0, merge1);
 	merge2.setInput(1, attrib_create3);
 
-	let container = await merge2.requestContainer();
+	let container = await merge2.compute();
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
@@ -46,7 +46,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	attrib_normalize1.setInput(0, merge2);
 	attrib_normalize1.p.name.set('blend');
 
-	container = await attrib_normalize1.requestContainer();
+	container = await attrib_normalize1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
@@ -93,7 +93,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	merge2.setInput(0, merge1);
 	merge2.setInput(1, attrib_create3);
 
-	let container = await merge2.requestContainer();
+	let container = await merge2.compute();
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
@@ -146,7 +146,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	attrib_normalize1.setInput(0, merge2);
 	attrib_normalize1.p.name.set('blend');
 
-	container = await attrib_normalize1.requestContainer();
+	container = await attrib_normalize1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
@@ -199,7 +199,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	attrib_create2.p.value3.set([4, 2, 6]);
 	attrib_create3.p.value3.set([9, 6, 3]);
 
-	container = await attrib_normalize1.requestContainer();
+	container = await attrib_normalize1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
@@ -263,7 +263,7 @@ QUnit.test('attrib normalize vector length', async (assert) => {
 	transform1.p.scale.set(2);
 	attrib_normalize1.set_mode(NormalizeMode.VECTOR_TO_LENGTH_1);
 
-	let container = await attrib_normalize1.requestContainer();
+	let container = await attrib_normalize1.compute();
 	let geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
 	let array = geometry.getAttribute('position').array as number[];
 

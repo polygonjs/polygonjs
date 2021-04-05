@@ -20,7 +20,7 @@ export class VectorAngleGlNode extends MathFunctionArg2Factory('vectorAngle', {
 	_expected_output_types() {
 		return [GlConnectionPointType.FLOAT];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 }

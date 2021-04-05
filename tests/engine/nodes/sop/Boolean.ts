@@ -17,17 +17,17 @@ QUnit.test('SOP boolean simple', async (assert) => {
 	transformB.p.t.set([0.1, 0.1, 0.2]);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBSTRACT));
-	let coreGroup = (await boolean.requestContainer()).coreContent()!;
+	let coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 135);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT));
-	coreGroup = (await boolean.requestContainer()).coreContent()!;
+	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 60);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.UNION));
-	coreGroup = (await boolean.requestContainer()).coreContent()!;
+	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 210);
 
@@ -36,17 +36,17 @@ QUnit.test('SOP boolean simple', async (assert) => {
 	transformB.setInput(0, sphere);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBSTRACT));
-	coreGroup = (await boolean.requestContainer()).coreContent()!;
+	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 462);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT));
-	coreGroup = (await boolean.requestContainer()).coreContent()!;
+	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 192);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.UNION));
-	coreGroup = (await boolean.requestContainer()).coreContent()!;
+	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 7188);
 });

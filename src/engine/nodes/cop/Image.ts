@@ -82,7 +82,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 			await this.texture_params_controller.update(texture);
 			this.setTexture(texture);
 		} else {
-			this.clear_texture();
+			this._clearTexture();
 		}
 	}
 

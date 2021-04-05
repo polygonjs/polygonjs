@@ -35,12 +35,12 @@ export class ColorCorrectionPostNode extends TypedPostProcessNode<ShaderPass, Co
 		return 'colorCorrection';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(ColorCorrectionShader) as ColorCorrectionPassWithUniforms;
-		this.update_pass(pass);
+		this.updatePass(pass);
 		return pass;
 	}
-	update_pass(pass: ColorCorrectionPassWithUniforms) {
+	updatePass(pass: ColorCorrectionPassWithUniforms) {
 		pass.uniforms.powRGB.value.copy(this.pv.pow);
 		pass.uniforms.mulRGB.value.set(this.pv.mult.r, this.pv.mult.g, this.pv.mult.b);
 		pass.uniforms.addRGB.value.set(this.pv.add.r, this.pv.add.g, this.pv.add.b);

@@ -10,7 +10,7 @@ QUnit.test('copy sop simple', async (assert) => {
 	copy1.setInput(1, plane1);
 	plane1.p.direction.set([0, 0, 1]);
 
-	let container = await copy1.requestContainer();
+	let container = await copy1.compute();
 	// let core_group = container.coreContent()!;
 	// let {geometry} = core_group.objects()[0];
 
@@ -20,7 +20,7 @@ QUnit.test('copy sop simple', async (assert) => {
 	plane1.p.useSegmentsCount.set(1);
 	plane1.p.size.y.set(2);
 
-	container = await copy1.requestContainer();
+	container = await copy1.compute();
 	// core_group = container.coreContent()!;
 	// ({geometry} = core_group.objects()[0]);
 
@@ -49,14 +49,14 @@ QUnit.test('copy sop with template and stamp', async (assert) => {
 	switch1.p.input.set(`copy('../${copy1.name()}', 0)`);
 	assert.ok(switch1.graphAllPredecessors().includes(copy1.stamp_node));
 
-	let container = await copy1.requestContainer();
+	let container = await copy1.compute();
 	// let core_group = container.coreContent();
 	// let { geometry } = group.children[0];
 
 	assert.equal(container.pointsCount(), 8);
 
 	copy1.p.useCopyExpr.set(1);
-	container = await copy1.requestContainer();
+	container = await copy1.compute();
 	// core_group = container.coreContent();
 	// ({geometry} = core_group.objects()[0]);
 
@@ -82,14 +82,14 @@ QUnit.test('copy sop without template and stamp', async (assert) => {
 
 	switch1.p.input.set(`copy('../${copy1.name()}', 0) % 2`);
 
-	let container = await copy1.requestContainer();
+	let container = await copy1.compute();
 	// let core_group = container.coreContent();
 	// let {geometry} = core_group.objects()[0];
 
 	assert.equal(container.pointsCount(), 12);
 
 	copy1.p.useCopyExpr.set(1);
-	container = await copy1.requestContainer();
+	container = await copy1.compute();
 	// core_group = container.coreContent();
 	// ({geometry} = core_group.objects()[0]);
 
@@ -114,7 +114,7 @@ QUnit.test('copy sop objects with template and stamp', async (assert) => {
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set(`copy('../${copy1.name()}', 0)`);
 
-	let container = await copy1.requestContainer();
+	let container = await copy1.compute();
 	// let core_group = container.coreContent();
 	// let {geometry} = core_group.objects()[0];
 

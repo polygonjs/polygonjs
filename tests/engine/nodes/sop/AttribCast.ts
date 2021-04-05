@@ -15,7 +15,7 @@ QUnit.test('attrib cast simple', async (assert) => {
 	hierarchy.setInput(0, file1);
 	hierarchy.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
 
-	let container = await hierarchy.requestContainer();
+	let container = await hierarchy.compute();
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	let index = geometry.getIndex()!;
@@ -28,7 +28,7 @@ QUnit.test('attrib cast simple', async (assert) => {
 	attribCast.p.castIndex.set(1);
 	attribCast.p.type.set(ATTRIB_TYPES.indexOf(AttribType.Uint16BufferAttribute));
 
-	container = await attribCast.requestContainer();
+	container = await attribCast.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	index = geometry.getIndex()!;

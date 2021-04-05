@@ -214,7 +214,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	): ParamConstructorMap[T] | undefined {
 		return this._params_controller?.addParam(type, name, default_value, options);
 	}
-	param_default_value(name: string): ParamInitValueSerialized {
+	paramDefaultValue(name: string): ParamInitValueSerialized {
 		return null;
 	}
 
@@ -224,14 +224,14 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// container
-	async requestContainer() {
+	async compute() {
 		if (!this.isDirty()) {
 			return this.containerController.container;
 		} else {
-			return await this.containerController.requestContainer();
+			return await this.containerController.compute();
 		}
 	}
-	setContainer(content: ContainableMap[NC], message: string | null = null) {
+	_setContainer(content: ContainableMap[NC], message: string | null = null) {
 		// TODO: typescript: why is this a type of never
 		this.containerController.container.set_content(content as never); //, this.self.cook_eval_key());
 		if (content != null) {

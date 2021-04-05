@@ -42,7 +42,7 @@ QUnit.test('expression pointsCount updates when dependency changes', async (asse
 	assert.equal(box2.p.size.value, 24);
 
 	assert.ok(!box2.p.size.isDirty());
-	await box2.requestContainer();
+	await box2.compute();
 	assert.ok(!box2.isDirty(), 'box is dirty');
 
 	// check that bbox2 is set to dirty if box1 changes
@@ -59,7 +59,7 @@ QUnit.test('expression pointsCount updates when dependency changes', async (asse
 	assert.equal(graph_successor.graphNodeId(), box2.p.size.graphNodeId());
 	box2.p.size.set('1+1');
 	assert.ok(box2.isDirty());
-	await box2.requestContainer();
+	await box2.compute();
 	assert.ok(!box2.isDirty());
 	box1.p.divisions.set(3);
 
@@ -103,7 +103,7 @@ QUnit.test('expression pointsCount fails with bad path', async (assert) => {
 
 	await box2.p.size.compute();
 	assert.ok(!box2.states.error.active());
-	await box2.requestContainer();
+	await box2.compute();
 	assert.equal(
 		box2.states.error.message(),
 		"param 'size' error: expression error: \"pointsCount('../doesnotexist')\" (invalid input (../doesnotexist))"
@@ -122,7 +122,7 @@ QUnit.test('expression pointsCount fails with bad input index 1', async (assert)
 
 	await box2.p.size.compute();
 	assert.ok(!box2.states.error.active());
-	await box2.requestContainer();
+	await box2.compute();
 	assert.equal(
 		box2.states.error.message(),
 		'param \'size\' error: expression error: "pointsCount(1)" (invalid input (1))'
@@ -145,13 +145,13 @@ QUnit.test('expression pointsCount fails with bad input index 0', async (assert)
 	assert.equal(box2.p.size.value, 1);
 	assert.equal(box2.p.size.states.error.message(), 'expression error: "pointsCount(0)" (invalid input (0))');
 	assert.ok(!box2.states.error.active());
-	await box2.requestContainer();
+	await box2.compute();
 	assert.equal(
 		box2.states.error.message(),
 		'param \'size\' error: expression error: "pointsCount(0)" (invalid input (0))'
 	);
 
-	await box2.requestContainer();
+	await box2.compute();
 	await CoreSleep.sleep(10);
 
 	box2.setInput(0, box1);
@@ -160,7 +160,7 @@ QUnit.test('expression pointsCount fails with bad input index 0', async (assert)
 	assert.equal(box2.p.size.value, 24, 'param evaluates to 24');
 	assert.ok(!box2.p.size.states.error.message(), 'param has no error');
 	assert.ok(box2.states.error.active(), 'box is errored');
-	await box2.requestContainer();
+	await box2.compute();
 	assert.ok(!box2.states.error.message(), 'box has no error');
 });
 
@@ -203,7 +203,7 @@ QUnit.test('pointsCount: if dependent is deleted, node becomes dirty', async (as
 	assert.equal(box2.p.size.value, 24);
 
 	assert.ok(!box2.p.size.isDirty());
-	await box2.requestContainer();
+	await box2.compute();
 	assert.ok(!box2.isDirty());
 
 	assert.equal(box2.p.size.graphAllPredecessors().length, 10, 'has 10 predecessors');

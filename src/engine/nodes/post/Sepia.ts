@@ -23,14 +23,14 @@ export class SepiaPostNode extends TypedPostProcessNode<ShaderPass, SepiaPostPar
 		return 'sepia';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(SepiaShader) as SepiaPassWithUniforms;
 
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: SepiaPassWithUniforms) {
+	updatePass(pass: SepiaPassWithUniforms) {
 		pass.uniforms.amount.value = this.pv.amount;
 	}
 }

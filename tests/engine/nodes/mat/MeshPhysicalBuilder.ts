@@ -33,7 +33,7 @@ QUnit.test('mesh physical builder persisted_config', async (assert) => {
 	float_to_vec31.setInput(1, globals1, 'time');
 	output1.setInput('color', float_to_vec31);
 	output1.setInput('position', param2);
-	await mesh_physical1.requestContainer();
+	await mesh_physical1.compute();
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
@@ -94,7 +94,7 @@ QUnit.test('mesh physical builder persisted_config with advanced params', async 
 	mesh_physical1.p.overrideShadowSide.set(true);
 	mesh_physical1.p.shadowDoubleSided.set(true);
 
-	await mesh_physical1.requestContainer();
+	await mesh_physical1.compute();
 	const mesh_physical_mat = mesh_physical1.material;
 
 	assert.equal(mesh_physical_mat.shadowSide, DoubleSide);
@@ -159,7 +159,7 @@ QUnit.test('mesh physical builder SSS Model', async (assert) => {
 	mesh_physical1.p.overrideShadowSide.set(true);
 	mesh_physical1.p.shadowDoubleSided.set(true);
 
-	await mesh_physical1.requestContainer();
+	await mesh_physical1.compute();
 	const material = mesh_physical1.material;
 
 	assert.equal(material.vertexShader, TEST_SHADER_LIB_DEFAULT.vert);
@@ -167,7 +167,7 @@ QUnit.test('mesh physical builder SSS Model', async (assert) => {
 
 	const SSSModel = mesh_physical1.createNode('SSSModel');
 	output1.setInput('SSSModel', SSSModel);
-	await mesh_physical1.requestContainer();
+	await mesh_physical1.compute();
 
 	assert.equal(material.vertexShader, TEST_SHADER_LIB_SSS.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB_SSS.frag);
@@ -186,8 +186,8 @@ QUnit.test('mesh physical builder can compile from another node', async (assert)
 	noise.setInput('position', globals1, 'position');
 	output1.setInput('position', noise);
 
-	await mesh_physical_SRC.requestContainer();
-	await mesh_physical_DEST.requestContainer();
+	await mesh_physical_SRC.compute();
+	await mesh_physical_DEST.compute();
 	const mat_SRC = mesh_physical_SRC.material;
 	const mat_DEST = mesh_physical_DEST.material;
 
@@ -196,6 +196,6 @@ QUnit.test('mesh physical builder can compile from another node', async (assert)
 
 	mesh_physical_DEST.p.setBuilderNode.set(true);
 	mesh_physical_DEST.p.builderNode.setNode(mesh_physical_SRC);
-	await mesh_physical_DEST.requestContainer();
+	await mesh_physical_DEST.compute();
 	assert.equal(mat_SRC.vertexShader, mat_DEST.vertexShader);
 });

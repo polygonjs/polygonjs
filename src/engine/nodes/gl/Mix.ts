@@ -12,7 +12,7 @@ export class MixGlNode extends BaseGlMathFunctionGlNode {
 	protected gl_method_name() {
 		return 'mix';
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 

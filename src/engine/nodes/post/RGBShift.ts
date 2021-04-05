@@ -37,13 +37,13 @@ export class RGBShiftPostNode extends TypedPostProcessNode<ShaderPass, RGBShiftP
 		return 'RGBShift';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(RGBShiftShader) as RGBShiftPassWithUniforms;
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: RGBShiftPassWithUniforms) {
+	updatePass(pass: RGBShiftPassWithUniforms) {
 		pass.uniforms.amount.value = this.pv.amount;
 		pass.uniforms.angle.value = this.pv.angle;
 	}

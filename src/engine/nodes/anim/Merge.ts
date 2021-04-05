@@ -68,7 +68,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 			}
 		}
 
-		this.set_timeline_builder(merged_timeline_builder);
+		this.setTimelineBuilder(merged_timeline_builder);
 	}
 
 	private _update_timeline_builder(timeline_builder: TimelineBuilder) {

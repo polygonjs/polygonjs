@@ -201,7 +201,7 @@ const geo = rootNode.createNode('geo');
 const plane = geo.createNode('plane');
 
 // now let's get the content of the plane node
-const container = await plane.requestContainer();
+const container = await plane.compute();
 // the container is an envelope that contains a coreGroup
 const coreGroup = container.coreContent();
 // and we can now get an array of THREE.Object3D:

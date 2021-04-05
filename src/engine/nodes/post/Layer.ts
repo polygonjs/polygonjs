@@ -92,7 +92,7 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 		this.io.inputs.setCount(2);
 	}
 
-	setup_composer(context: TypedPostNodeContext): void {
+	setupComposer(context: TypedPostNodeContext): void {
 		const renderer = context.composer.renderer;
 
 		const parameters = {
@@ -122,13 +122,13 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 		const cloned_context2 = {...context};
 		cloned_context1.composer = composer1;
 		cloned_context2.composer = composer2;
-		this._add_pass_from_input(0, cloned_context1);
-		this._add_pass_from_input(1, cloned_context2);
+		this._addPassFromInput(0, cloned_context1);
+		this._addPassFromInput(1, cloned_context2);
 
 		const pass = new LayerPass(composer1, composer2);
-		this.update_pass(pass);
+		this.updatePass(pass);
 		context.composer.addPass(pass);
 	}
 
-	update_pass(pass: LayerPass) {}
+	updatePass(pass: LayerPass) {}
 }

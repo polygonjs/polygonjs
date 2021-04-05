@@ -9,7 +9,7 @@ QUnit.test('expression opdigits works', async (assert) => {
 	attrib_create1.p.value1.set('opdigits(".")');
 	attrib_create1.setInput(0, line1);
 
-	let container = await attrib_create1.requestContainer();
+	let container = await attrib_create1.compute();
 	assert.deepEqual(
 		container
 			.coreContent()!
@@ -19,7 +19,7 @@ QUnit.test('expression opdigits works', async (assert) => {
 	);
 
 	attrib_create1.setName('bla12');
-	container = await attrib_create1.requestContainer();
+	container = await attrib_create1.compute();
 	assert.deepEqual(
 		container
 			.coreContent()!

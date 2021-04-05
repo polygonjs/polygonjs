@@ -60,27 +60,19 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	setCoreGroup(core_group: CoreGroup) {
-		// const objects = core_group.objects();
-		// for (let object of objects) {
-		// 	this._set_object_attributes(object);
-		// }
-		this.setContainer(core_group, MESSAGE.FROM_SET_CORE_GROUP);
+		this._setContainer(core_group, MESSAGE.FROM_SET_CORE_GROUP);
 	}
 
 	setObject(object: Object3D) {
-		// this._set_object_attributes(object);
-		this.set_container_objects([object], MESSAGE.FROM_SET_OBJECT);
+		this._setContainerObjects([object], MESSAGE.FROM_SET_OBJECT);
 	}
 	setObjects(objects: Object3D[]) {
-		// for (let object of objects) {
-		// 	this._set_object_attributes(object);
-		// }
-		this.set_container_objects(objects, MESSAGE.FROM_SET_OBJECTS);
+		this._setContainerObjects(objects, MESSAGE.FROM_SET_OBJECTS);
 	}
 
 	setGeometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
 		const object = this.createObject(geometry, type);
-		this.set_container_objects([object], MESSAGE.FROM_SET_GEOMETRY);
+		this._setContainerObjects([object], MESSAGE.FROM_SET_GEOMETRY);
 	}
 
 	setGeometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
@@ -88,17 +80,16 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		let object;
 		for (let geometry of geometries) {
 			object = this.createObject(geometry, type);
-			// this._set_object_attributes(object);
 			objects.push(object);
 		}
-		this.set_container_objects(objects, MESSAGE.FROM_SET_GEOMETRIES);
+		this._setContainerObjects(objects, MESSAGE.FROM_SET_GEOMETRIES);
 	}
 
-	set_container_objects(objects: Object3D[], message: MESSAGE) {
+	private _setContainerObjects(objects: Object3D[], message: MESSAGE) {
 		const core_group = this.containerController.container.coreContent() || new CoreGroup();
 		core_group.setObjects(objects);
 		core_group.touch();
-		this.setContainer(core_group);
+		this._setContainer(core_group);
 	}
 
 	static createObject<OT extends ObjectType>(
@@ -122,32 +113,6 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 	protected _createIndexIfNone(geometry: BufferGeometry) {
 		TypedSopNode.createIndexIfNone(geometry);
-	}
-
-	// protected _set_object_attributes(object: Object3D) {
-	// 	const material: Material = (object as Mesh).material as Material;
-	// 	if (material) {
-	// 		if (!this.scene) {
-	// 			console.log('no scene');
-	// 			throw 'no scene';
-	// 		}
-	// 		// const material_node = CoreMaterial.node(this.scene, material) as BaseMatNodeType;
-	// 		// if (material_node) {
-	// 		// 	material_node.add_render_hook(object);
-	// 		// }
-	// 	}
-	// }
-
-	protected _add_index(geometry: BufferGeometry) {
-		const position_attrib = geometry.getAttribute('position');
-		const position_array = position_attrib.array;
-		const points_count = position_array.length / 3;
-		const indices: number[] = new Array(points_count);
-		for (let i = 0; i < points_count; i++) {
-			indices[i] = i;
-		}
-
-		geometry.setIndex(indices);
 	}
 }
 

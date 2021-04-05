@@ -8,6 +8,6 @@ QUnit.test('null simple', async (assert) => {
 
 	let container;
 
-	container = await null1.requestContainer();
+	container = await null1.compute();
 	assert.equal(container.pointsCount(), 4);
 });

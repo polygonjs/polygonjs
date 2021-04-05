@@ -50,18 +50,18 @@ export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsC
 		return 'film';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new FilmPass(
 			this.pv.noiseIntensity,
 			this.pv.scanlinesIntensity,
 			this.pv.scanlinesCount,
 			isBooleanTrue(this.pv.grayscale) ? 1 : 0
 		) as FilmPassWithUniforms;
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: FilmPassWithUniforms) {
+	updatePass(pass: FilmPassWithUniforms) {
 		pass.uniforms.nIntensity.value = this.pv.noiseIntensity;
 		pass.uniforms.sIntensity.value = this.pv.scanlinesIntensity;
 		pass.uniforms.sCount.value = this.pv.scanlinesCount;

@@ -36,7 +36,7 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass,
 		return 'brightnessContrast';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(BrightnessContrastShader) as BrightnessContrastPassWithUniforms;
 		// pass.clear = false;
 		// (pass as any).clearAlpha = false;
@@ -44,11 +44,11 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass,
 		// (pass as any).clearDepth = false;
 		console.log('brightness', pass);
 		(pass.fsQuad as any).material.transparent = true;
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: BrightnessContrastPassWithUniforms) {
+	updatePass(pass: BrightnessContrastPassWithUniforms) {
 		pass.uniforms.brightness.value = this.pv.brightness;
 		pass.uniforms.contrast.value = this.pv.contrast;
 		pass.material.transparent = this.pv.transparent;

@@ -197,7 +197,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	protected _gl_input_name(index: number) {
 		return [InputName.AMP, InputName.POSITION, InputName.FREQ, InputName.OFFSET][index];
 	}
-	param_default_value(name: string) {
+	paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 

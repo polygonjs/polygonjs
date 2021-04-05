@@ -34,7 +34,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 				}
 			}
 		}
-		this.set_timeline_builder(builder);
+		this.setTimelineBuilder(builder);
 	}
 
 	//

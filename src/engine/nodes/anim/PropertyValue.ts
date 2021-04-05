@@ -99,7 +99,7 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		await this._prepare_timeline_builder(timeline_builder);
-		this.set_timeline_builder(timeline_builder);
+		this.setTimelineBuilder(timeline_builder);
 	}
 	setMode(targetType: AnimPropertyValueNodeMode) {
 		this.p.mode.set(PROPERTY_VALUE_MODES.indexOf(targetType));

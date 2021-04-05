@@ -40,7 +40,7 @@ export function MathFunctionArg3Factory(type: string, options: MathArg3Options =
 		protected _expected_output_types() {
 			return [out_type];
 		}
-		param_default_value(name: string) {
+		paramDefaultValue(name: string) {
 			return param_default_values[name];
 		}
 		gl_function_definitions(): FunctionGLDefinition[] {

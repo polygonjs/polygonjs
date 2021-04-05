@@ -69,7 +69,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 				assembler_controller.set_assembler_globals_handler(this._globals_handler);
 			}
 
-			await material_node.requestContainer();
+			await material_node.compute();
 			if (material) {
 				if (isBooleanTrue(params.applyToChildren)) {
 					// if we apply to children, the group will be tested inside _apply_material

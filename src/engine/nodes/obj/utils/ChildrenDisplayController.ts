@@ -118,7 +118,7 @@ export class ChildrenDisplayController {
 		// TODO: there should be a wider refactor where deleted node cannot raise callbacks such as flags update
 		const display_node = this.node.displayNodeController.displayNode() as BaseSopNodeType;
 		if (display_node && display_node.parent()?.graphNodeId() == this.node.graphNodeId()) {
-			const container = await display_node.requestContainer();
+			const container = await display_node.compute();
 			const core_group = container.coreContent();
 			if (core_group) {
 				// check if the new objects are different

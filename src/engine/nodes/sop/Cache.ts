@@ -72,6 +72,6 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 	}
 	async param_callback_PARAM_CALLBACK_reset() {
 		this.p.cache.set('');
-		this.requestContainer();
+		this.compute();
 	}
 }

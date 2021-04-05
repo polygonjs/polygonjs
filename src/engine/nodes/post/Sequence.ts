@@ -16,10 +16,10 @@ export class SequencePostNode extends TypedPostProcessNode<Pass, SequencePostPar
 		this.io.inputs.setCount(0, 4);
 	}
 
-	setup_composer(context: TypedPostNodeContext): void {
-		this._add_pass_from_input(0, context);
-		this._add_pass_from_input(1, context);
-		this._add_pass_from_input(2, context);
-		this._add_pass_from_input(3, context);
+	setupComposer(context: TypedPostNodeContext): void {
+		this._addPassFromInput(0, context);
+		this._addPassFromInput(1, context);
+		this._addPassFromInput(2, context);
+		this._addPassFromInput(3, context);
 	}
 }

@@ -8,7 +8,7 @@ QUnit.test('expression ch refers to a node that is later added', async (assert) 
 	const param = transform1.p.t.x;
 	param.set("ch('../transform2/tx')");
 
-	await transform1.requestContainer();
+	await transform1.compute();
 	await param.compute();
 	assert.equal(param.value, 0);
 	assert.ok(param.states.error.active());
@@ -35,7 +35,7 @@ QUnit.test('expression point refers to a node that is later added', async (asser
 	const param = transform1.p.t.x;
 	param.set("0.1*point('../data1', 'value', 0)");
 
-	await transform1.requestContainer();
+	await transform1.compute();
 	await param.compute();
 	assert.equal(param.value, 0);
 	assert.ok(param.states.error.active());
@@ -63,7 +63,7 @@ QUnit.test('a node referenced in an expression gets renamed involves updating th
 	assert.equal(transform2.name(), 'transform2');
 
 	transform1.p.t.x.set("ch('../transform2/tx')");
-	await transform1.requestContainer();
+	await transform1.compute();
 
 	assert.includes(transform1.p.t.x.graphPredecessors(), transform2.p.t.x);
 
@@ -238,13 +238,13 @@ QUnit.test(
 		const init_params_count = mesh_basic_builder1.params.all.length;
 		assert.equal(init_params_count, 38);
 		const param1 = mesh_basic_builder1.createNode('param');
-		await mesh_basic_builder1.requestContainer();
+		await mesh_basic_builder1.compute();
 		assert.equal(mesh_basic_builder1.params.all.length, 39);
 		assert.equal(mesh_basic_builder1.params.all[38].name(), 'param1');
 		assert.notOk(param_operator_path_param.value.param());
 
 		param1.p.name.set('test_param');
-		await mesh_basic_builder1.requestContainer();
+		await mesh_basic_builder1.compute();
 		assert.equal(mesh_basic_builder1.params.all[38].name(), 'test_param', 'last param is called test_param');
 		assert.ok(param_operator_path_param.value.param(), 'a param is found');
 		assert.equal(

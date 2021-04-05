@@ -41,14 +41,14 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 
 	cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
-		this.set_timeline_builder(timeline_builder);
+		this.setTimelineBuilder(timeline_builder);
 	}
 
 	private _timeline_builder: TimelineBuilder | undefined;
 	private _timeline: gsap.core.Timeline | undefined;
 	async play() {
 		return new Promise(async (resolve) => {
-			const container = await this.requestContainer();
+			const container = await this.compute();
 			if (!container) {
 				return;
 			}

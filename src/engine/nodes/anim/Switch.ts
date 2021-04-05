@@ -29,7 +29,7 @@ export class SwitchAnimNode extends TypedAnimNode<SwitchAnimParamsConfig> {
 	cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[this.pv.input];
 		if (timeline_builder) {
-			this.set_timeline_builder(timeline_builder);
+			this.setTimelineBuilder(timeline_builder);
 		} else {
 			this.states.error.set(`input ${this.pv.input} is not valid`);
 		}

@@ -39,14 +39,14 @@ export class DotScreenPostNode extends TypedPostProcessNode<ShaderPass, DotScree
 		return 'dotScreen';
 	}
 
-	protected _create_pass(context: TypedPostNodeContext) {
+	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(DotScreenShader) as DotScreenPassWithUniforms;
 
-		this.update_pass(pass);
+		this.updatePass(pass);
 
 		return pass;
 	}
-	update_pass(pass: DotScreenPassWithUniforms) {
+	updatePass(pass: DotScreenPassWithUniforms) {
 		pass.uniforms.center.value = this.pv.center;
 		pass.uniforms.angle.value = this.pv.angle;
 		pass.uniforms.scale.value = this.pv.scale;
