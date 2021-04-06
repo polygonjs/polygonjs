@@ -58,7 +58,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		this._id = TypedViewer._next_viewer_id++;
 		this._scene.viewersRegister.registerViewer(this);
 	}
-	container() {
+	domElement() {
 		return this._container;
 	}
 	scene() {
@@ -88,10 +88,10 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 
 	// html container class
 	resetContainerClass() {
-		this.container().classList.remove(HOVERED_CLASS_NAME);
+		this.domElement().classList.remove(HOVERED_CLASS_NAME);
 	}
 	setContainerClassHovered() {
-		this.container().classList.add(HOVERED_CLASS_NAME);
+		this.domElement().classList.add(HOVERED_CLASS_NAME);
 	}
 
 	//

@@ -307,10 +307,10 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		renderer.setRenderTarget(this._renderTarget);
 		renderer.render(scene, this._shadowCamera);
 
-		this._coreRenderBlur.applyBlur(this._renderTarget, renderer, this.pv.blur);
+		this._coreRenderBlur.applyBlur(this._renderTarget, renderer, this.pv.blur, this.pv.blur);
 
 		if (isBooleanTrue(this.pv.tblur2)) {
-			this._coreRenderBlur.applyBlur(this._renderTarget, renderer, this.pv.blur2);
+			this._coreRenderBlur.applyBlur(this._renderTarget, renderer, this.pv.blur2, this.pv.blur2);
 		}
 
 		// reset and render the normal scene

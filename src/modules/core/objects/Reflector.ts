@@ -52,8 +52,10 @@ interface ReflectorOptions {
 	active: boolean;
 	tblur: boolean;
 	blur: number;
+	verticalBlurMult: number;
 	tblur2: boolean;
 	blur2: number;
+	verticalBlur2Mult: number;
 	scene: Scene;
 }
 
@@ -250,10 +252,12 @@ export class Reflector extends Mesh {
 
 		if (this._options.tblur) {
 			const blurAmount = this._options.blur * this._options.pixelRatio;
-			this._coreRenderBlur.applyBlur(this.renderTarget, renderer, blurAmount);
+			const verticalBlurAmount = blurAmount * this._options.verticalBlurMult;
+			this._coreRenderBlur.applyBlur(this.renderTarget, renderer, blurAmount, verticalBlurAmount);
 			if (this._options.tblur2) {
 				const blurAmount2 = this._options.blur2 * this._options.pixelRatio;
-				this._coreRenderBlur.applyBlur(this.renderTarget, renderer, blurAmount2);
+				const verticalBlurAmount2 = blurAmount2 * this._options.verticalBlur2Mult;
+				this._coreRenderBlur.applyBlur(this.renderTarget, renderer, blurAmount2, verticalBlurAmount2);
 			}
 		}
 

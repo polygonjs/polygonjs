@@ -30,12 +30,20 @@ class ReflectorSopParamsConfig extends NodeParamsConfig {
 	blur = ParamConfig.FLOAT(DEFAULT.blur, {
 		visibleIf: {tblur: 1},
 	});
+	/** @param vertical blur multiplier */
+	verticalBlurMult = ParamConfig.FLOAT(DEFAULT.verticalBlurMult, {
+		visibleIf: {tblur: 1},
+	});
 	/** @param toggle to activate a second blur, which can be useful to reduce artefacts */
 	tblur2 = ParamConfig.BOOLEAN(DEFAULT.tblur2, {
 		visibleIf: {tblur: 1},
 	});
 	/** @param blur2 amount */
 	blur2 = ParamConfig.FLOAT(DEFAULT.blur2, {
+		visibleIf: {tblur: 1, tblur2: 1},
+	});
+	/** @param vertical blur2 multiplier */
+	verticalBlur2Mult = ParamConfig.FLOAT(DEFAULT.verticalBlur2Mult, {
 		visibleIf: {tblur: 1, tblur2: 1},
 	});
 }

@@ -1,12 +1,12 @@
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {Mesh} from 'three/src/objects/Mesh';
-import {HorizontalBlurShader} from '../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
-import {VerticalBlurShader} from '../../modules/three/examples/jsm/shaders/VerticalBlurShader';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Vector2} from 'three/src/math/Vector2';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
+import {HorizontalBlurShader} from '../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
+import {VerticalBlurShader} from '../../modules/three/examples/jsm/shaders/VerticalBlurShader';
 
 const PLANE_WIDTH = 1;
 const PLANE_HEIGHT = 1;
@@ -58,10 +58,18 @@ export class CoreRenderBlur {
 		return plane;
 	}
 
-	applyBlur(renderTarget: WebGLRenderTarget, renderer: WebGLRenderer, amount: number) {
+	applyBlur(renderTarget: WebGLRenderTarget, renderer: WebGLRenderer, amountH: number, amountV: number) {
+		// in order to get similar amount of blur in vertical and horizontal axis,
+		// we need to use the same amount for each.
+		// We also use the renderTarget size to ensure that the blur remains consistent depending
+		// on the screen size, which is important for the reflector.
+		// A previous attempt was before to have a different amount for vertical and horizontal,
+		// based on height and width respectively, but that led to non-uniform blurs.
+		const mult = Math.max(this._renderTargetBlur.width, this._renderTargetBlur.height);
+
 		// blur horizontally and draw in the renderTargetBlur
 		this._horizontalBlurMaterial.uniforms.tDiffuse.value = renderTarget.texture;
-		this._horizontalBlurMaterial.uniforms.h.value = amount * this._renderTargetBlur.width * BLUR_MULT;
+		this._horizontalBlurMaterial.uniforms.h.value = amountH * mult * BLUR_MULT;
 		this._blurPlane.material = this._horizontalBlurMaterial;
 
 		renderer.setRenderTarget(this._renderTargetBlur);
@@ -69,7 +77,7 @@ export class CoreRenderBlur {
 
 		// blur vertically and draw in the main renderTarget
 		this._verticalBlurMaterial.uniforms.tDiffuse.value = this._renderTargetBlur.texture;
-		this._verticalBlurMaterial.uniforms.v.value = amount * this._renderTargetBlur.height * BLUR_MULT;
+		this._verticalBlurMaterial.uniforms.v.value = amountV * mult * BLUR_MULT;
 		this._blurPlane.material = this._verticalBlurMaterial;
 
 		renderer.setRenderTarget(renderTarget);

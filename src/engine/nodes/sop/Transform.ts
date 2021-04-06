@@ -10,6 +10,7 @@ import {ROTATION_ORDERS, TransformTargetType, TRANSFORM_TARGET_TYPES} from '../.
 import {TransformSopOperation, TRANSFORM_OBJECT_MODES, TransformObjectMode} from '../../operations/sop/Transform';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = TransformSopOperation.DEFAULT_PARAMS;
 class TransformSopParamConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
@@ -63,7 +64,7 @@ const ParamsConfig = new TransformSopParamConfig();
 export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
-		return 'transform';
+		return SopType.TRANSFORM;
 	}
 
 	static displayedInputNames(): string[] {
