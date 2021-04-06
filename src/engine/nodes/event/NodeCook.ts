@@ -176,17 +176,17 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		const event_context: EventContext<Event> = {value: {node: node}};
 		if (!this._dispatched_first_node_cooked) {
 			this._dispatched_first_node_cooked = true;
-			this.dispatch_event_to_output(NodeCookEventNode.OUTPUT_FIRST_NODE, event_context);
+			this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_FIRST_NODE, event_context);
 		}
 		if (!this._cook_state_by_node_id.get(node.graphNodeId())) {
-			this.dispatch_event_to_output(NodeCookEventNode.OUTPUT_EACH_NODE, event_context);
+			this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_EACH_NODE, event_context);
 		}
 		this._cook_state_by_node_id.set(node.graphNodeId(), true);
 
 		if (!this._dispatched_all_nodes_cooked) {
 			if (this._all_nodes_have_cooked()) {
 				this._dispatched_all_nodes_cooked = true;
-				this.dispatch_event_to_output(NodeCookEventNode.OUTPUT_ALL_NODES, {});
+				this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_ALL_NODES, {});
 			}
 		}
 	}

@@ -61,16 +61,16 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 		]);
 	}
 
-	process_event(event_context: EventContext<Event>) {}
+	processEvent(event_context: EventContext<Event>) {}
 
 	private process_event_trigger(event_context: EventContext<Event>) {
 		if (this._process_count < this.pv.maxCount) {
 			this._process_count += 1;
-			this.dispatch_event_to_output(LimitEventOutput.OUT, event_context);
+			this.dispatchEventToOutput(LimitEventOutput.OUT, event_context);
 		} else {
 			if (!this._last_dispatched) {
 				this._last_dispatched = true;
-				this.dispatch_event_to_output(LimitEventOutput.LAST, event_context);
+				this.dispatchEventToOutput(LimitEventOutput.LAST, event_context);
 			}
 		}
 	}

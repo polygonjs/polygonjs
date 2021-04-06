@@ -8,7 +8,7 @@ type EventListener = (e: Event) => void;
 type ListenerByEventType = Map<string, EventListener>;
 
 export class ViewerEventsController {
-	protected _bound_process_event = this.process_event.bind(this);
+	// protected _bound_process_event = this.processEvent.bind(this);
 	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();
 	// protected _registered_events: Map<string, EventCallback> = new Map();
 	// protected _bound_on_mousedown: MouseOrTouchEventCallback = this.process_event.bind(this);
@@ -34,7 +34,7 @@ export class ViewerEventsController {
 		map.clear();
 
 		const listener = (event: Event) => {
-			this.process_event(event, events_controller);
+			this.processEvent(event, events_controller);
 		};
 		for (let event_type of events_controller.activeEventTypes()) {
 			canvas.addEventListener(event_type, listener);
@@ -79,7 +79,7 @@ export class ViewerEventsController {
 		});
 	}
 
-	private process_event(event: Event, controller: BaseSceneEventsControllerType) {
+	private processEvent(event: Event, controller: BaseSceneEventsControllerType) {
 		const canvas = this.canvas();
 		if (!canvas) {
 			return;

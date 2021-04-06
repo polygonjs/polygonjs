@@ -22,7 +22,7 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			SceneEventNode.PARAM_CALLBACK_update_register(node as SceneEventNode);
+			SceneEventNode.PARAM_CALLBACK_updateRegister(node as SceneEventNode);
 		},
 		separatorAfter: true,
 	});
@@ -70,7 +70,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 
 	private graph_node: CoreGraphNode | undefined;
 
-	protected accepted_event_types() {
+	protected acceptedEventTypes() {
 		return ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`);
 	}
 
@@ -106,7 +106,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 
 	private on_frame_update() {
 		if (this.scene().time() >= this.pv.reachedTime) {
-			this.dispatch_event_to_output(SceneNodeOutput.TIME_REACHED, {});
+			this.dispatchEventToOutput(SceneNodeOutput.TIME_REACHED, {});
 		}
 	}
 	private update_time_dependency() {

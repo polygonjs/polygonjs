@@ -35,20 +35,20 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	cook() {
 		this.cookController.endCook();
 	}
-	// eval_params_and_process_event(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {
+	// eval_params_and_processEvent(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {
 	// 	// not evaluation params now, since we are evaluating them on dirty
 	// 	// this.params.eval_all().then(()=>{
-	// 		this.process_event(event_context, connection_point)
+	// 		this.processEvent(event_context, connection_point)
 	// 	// })
 	// }
 	process_event_via_connection_point(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {
 		if (connection_point.event_listener) {
 			connection_point.event_listener(event_context);
 		} else {
-			this.process_event(event_context);
+			this.processEvent(event_context);
 		}
 	}
-	process_event(event_context: EventContext<Event>) {}
+	processEvent(event_context: EventContext<Event>) {}
 
 	//
 	//
@@ -58,7 +58,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	// which may also be problematic. So for now, I use process_event
 	//
 	//
-	protected async dispatch_event_to_output(output_name: string, event_context: EventContext<Event>) {
+	protected async dispatchEventToOutput(output_name: string, event_context: EventContext<Event>) {
 		this.run_on_dispatch_hook(output_name, event_context);
 		const index = this.io.outputs.getOutputIndex(output_name);
 		if (index >= 0) {
@@ -72,7 +72,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 			}
 			// const nodes = current_connections.map((connection) => connection.node_dest);
 			// for (let node of nodes) {
-			// 	node.process_event(event_context);
+			// 	node.processEvent(event_context);
 			// }
 		} else {
 			console.warn(`requested output '${output_name}' does not exist on node '${this.path()}'`);

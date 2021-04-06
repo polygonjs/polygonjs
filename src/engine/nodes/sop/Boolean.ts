@@ -17,6 +17,8 @@ class BooleanSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param defines if only the material from the first input is used, or if the ones from both inputs should be used */
+	useBothMaterials = ParamConfig.BOOLEAN(DEFAULT.useBothMaterials);
 }
 const ParamsConfig = new BooleanSopParamsConfig();
 

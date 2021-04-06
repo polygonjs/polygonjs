@@ -73,7 +73,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
 	}
-	async process_event(event_context: EventContext<Event>) {
+	async processEvent(event_context: EventContext<Event>) {
 		let mask = this.pv.mask;
 		if (event_context.value) {
 			const node = event_context.value.node;
@@ -144,6 +144,6 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 	}
 
 	static PARAM_CALLBACK_execute(node: SetFlagEventNode) {
-		node.process_event({});
+		node.processEvent({});
 	}
 }

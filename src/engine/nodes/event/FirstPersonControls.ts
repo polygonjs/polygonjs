@@ -74,14 +74,14 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 	protected _bind_listeners_to_controls_instance(controls: PointerLockControls) {
 		controls.addEventListener(EVENT_LOCK, () => {
 			this._createKeysEvents(controls);
-			this.dispatch_event_to_output(EVENT_LOCK, {});
+			this.dispatchEventToOutput(EVENT_LOCK, {});
 		});
 		controls.addEventListener(EVENT_CHANGE, () => {
-			this.dispatch_event_to_output(EVENT_CHANGE, {});
+			this.dispatchEventToOutput(EVENT_CHANGE, {});
 		});
 		controls.addEventListener(EVENT_UNLOCK, () => {
 			this._removeKeysEvents();
-			this.dispatch_event_to_output(EVENT_UNLOCK, {});
+			this.dispatchEventToOutput(EVENT_UNLOCK, {});
 		});
 	}
 

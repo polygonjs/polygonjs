@@ -133,13 +133,13 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	}
 	protected _bind_listeners_to_controls_instance(controls: OrbitControls) {
 		controls.addEventListener('start', () => {
-			this.dispatch_event_to_output(OUTPUT_START, {});
+			this.dispatchEventToOutput(OUTPUT_START, {});
 		});
 		controls.addEventListener('change', () => {
-			this.dispatch_event_to_output(OUTPUT_CHANGE, {});
+			this.dispatchEventToOutput(OUTPUT_CHANGE, {});
 		});
 		controls.addEventListener('end', () => {
-			this.dispatch_event_to_output(OUTPUT_END, {});
+			this.dispatchEventToOutput(OUTPUT_END, {});
 		});
 	}
 

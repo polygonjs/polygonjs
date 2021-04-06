@@ -8,14 +8,17 @@ import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {TypeAssert} from '../../poly/Assert';
 import {AnimationPosition, AnimationPositionMode, AnimationPositionRelativeTo} from '../../../core/animation/Position';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseNodeType} from '../_Base';
+import {NodeEvent} from '../../poly/NodeEvent';
 
 enum MergeMode {
 	ALL_TOGETHER = 'play all together',
 	ONE_AT_A_TIME = 'play one at a time',
 }
 const MERGE_MODES: MergeMode[] = [MergeMode.ALL_TOGETHER, MergeMode.ONE_AT_A_TIME];
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/BooleanValue';
+const DEFAULT_INPUTS_COUNT = 4;
 class MergeAnimParamsConfig extends NodeParamsConfig {
 	/** @param mode (at the same time or one after the other) */
 	mode = ParamConfig.INTEGER(0, {
@@ -31,6 +34,14 @@ class MergeAnimParamsConfig extends NodeParamsConfig {
 	});
 	/** @param override the position */
 	overridePositions = ParamConfig.BOOLEAN(0);
+	/** @param number of inputs that this node can merge animations from */
+	inputsCount = ParamConfig.INTEGER(DEFAULT_INPUTS_COUNT, {
+		range: [1, 32],
+		rangeLocked: [true, false],
+		callback: (node: BaseNodeType) => {
+			MergeAnimNode.PARAM_CALLBACK_setInputsCount(node as MergeAnimNode);
+		},
+	});
 }
 const ParamsConfig = new MergeAnimParamsConfig();
 
@@ -49,6 +60,9 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 					const mode = MERGE_MODES[this.pv.mode];
 					return mode;
 				});
+			});
+			this.params.addOnSceneLoadHook('update inputs', () => {
+				this._callbackUpdateInputsCount();
 			});
 		});
 	}
@@ -100,5 +114,12 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 			position.setOffset(this.pv.offset);
 			timeline_builder.setPosition(position);
 		}
+	}
+	private _callbackUpdateInputsCount() {
+		this.io.inputs.setCount(1, this.pv.inputsCount);
+		this.emit(NodeEvent.INPUTS_UPDATED);
+	}
+	static PARAM_CALLBACK_setInputsCount(node: MergeAnimNode) {
+		node._callbackUpdateInputsCount();
 	}
 }

@@ -54,7 +54,7 @@ export class RaycastGPUController {
 		}
 	}
 
-	process_event(context: EventContext<MouseEvent>) {
+	processEvent(context: EventContext<MouseEvent>) {
 		const canvas = context.viewer?.canvas();
 		if (!(canvas && context.cameraNode)) {
 			return;

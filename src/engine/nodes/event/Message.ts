@@ -38,7 +38,7 @@ export class MessageEventNode extends TypedEventNode<MessageParamsConfig> {
 	}
 
 	private trigger_output(context: EventContext<MouseEvent>) {
-		this.dispatch_event_to_output(MessageEventNode.OUTPUT, context);
+		this.dispatchEventToOutput(MessageEventNode.OUTPUT, context);
 	}
 
 	private _process_trigger_event(context: EventContext<MouseEvent>) {

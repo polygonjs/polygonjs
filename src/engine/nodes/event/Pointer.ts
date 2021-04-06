@@ -8,11 +8,13 @@ import {ACCEPTED_POINTER_EVENT_TYPES} from '../../scene/utils/events/PointerEven
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 class PointerEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType) => {
-			PointerEventNode.PARAM_CALLBACK_update_register(node as PointerEventNode);
+			PointerEventNode.PARAM_CALLBACK_updateRegister(node as PointerEventNode);
 		},
 		separatorAfter: true,
 	});
@@ -22,6 +24,14 @@ class PointerEventParamsConfig extends NodeParamsConfig {
 	pointermove = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to listen to pointerup events */
 	pointerup = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
+	/** @param requires ctrlKey */
+	ctrlKey = ParamConfig.BOOLEAN(0, {...EVENT_PARAM_OPTIONS, separatorBefore: true});
+	/** @param requires altKey */
+	altKey = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
+	/** @param requires shiftKey */
+	shiftKey = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
+	/** @param requires metaKey */
+	metaKey = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
 }
 const ParamsConfig = new PointerEventParamsConfig();
 
@@ -30,7 +40,7 @@ export class PointerEventNode extends TypedInputEventNode<PointerEventParamsConf
 	static type() {
 		return 'pointer';
 	}
-	protected accepted_event_types() {
+	protected acceptedEventTypes() {
 		return ACCEPTED_POINTER_EVENT_TYPES.map((n) => `${n}`);
 	}
 	initializeNode() {
@@ -39,5 +49,41 @@ export class PointerEventNode extends TypedInputEventNode<PointerEventParamsConf
 				return new EventConnectionPoint(event_type, EventConnectionPointType.POINTER);
 			})
 		);
+		this.scene().dispatchController.onAddListener(() => {
+			this.params.onParamsCreated('params_label', () => {
+				const params = [this.p.pointerdown, this.p.pointermove, this.p.pointerup];
+				this.params.label.init(params, () => {
+					return params
+						.map((p) => {
+							return p.value ? p.name() : undefined;
+						})
+						.filter((v) => v)
+						.join(', ');
+				});
+			});
+		});
+	}
+	processEvent(event_context: EventContext<MouseEvent>) {
+		if (!this.pv.active) {
+			return;
+		}
+		if (!event_context.event) {
+			return;
+		}
+		const event = event_context.event;
+		if (event.ctrlKey != isBooleanTrue(this.pv.ctrlKey)) {
+			return;
+		}
+		if (event.shiftKey != isBooleanTrue(this.pv.shiftKey)) {
+			return;
+		}
+		if (event.altKey != isBooleanTrue(this.pv.altKey)) {
+			return;
+		}
+		if (event.metaKey != isBooleanTrue(this.pv.metaKey)) {
+			return;
+		}
+
+		this.dispatchEventToOutput(event_context.event.type, event_context);
 	}
 }

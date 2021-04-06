@@ -7,7 +7,7 @@ import {BaseNodeType} from '../_Base';
 export const EVENT_PARAM_OPTIONS: ParamOptions = {
 	visibleIf: {active: 1},
 	callback: (node: BaseNodeType) => {
-		BaseInputEventNodeClass.PARAM_CALLBACK_update_register(node as BaseInputEventNodeType);
+		BaseInputEventNodeClass.PARAM_CALLBACK_updateRegister(node as BaseInputEventNodeType);
 	},
 };
 
@@ -26,50 +26,50 @@ export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends Ty
 		this.lifecycle.add_delete_hook(unregister);
 
 		this.params.onParamsCreated('update_register', () => {
-			this._update_register();
+			this._updateRegister();
 		});
 	}
 
-	process_event(event_context: EventContext<Event>) {
+	processEvent(event_context: EventContext<Event>) {
 		if (!this.pv.active) {
 			return;
 		}
 		if (!event_context.event) {
 			return;
 		}
-		this.dispatch_event_to_output(event_context.event.type, event_context);
+		this.dispatchEventToOutput(event_context.event.type, event_context);
 	}
 
-	static PARAM_CALLBACK_update_register(node: BaseInputEventNodeType) {
-		node._update_register();
+	static PARAM_CALLBACK_updateRegister(node: BaseInputEventNodeType) {
+		node._updateRegister();
 	}
-	private _update_register() {
-		this._update_active_event_names();
+	private _updateRegister() {
+		this._updateActiveEventNames();
 		this.scene().eventsDispatcher.updateViewerEventListeners(this);
 	}
 
-	private _active_event_names: string[] = [];
-	private _update_active_event_names() {
-		this._active_event_names = [];
+	private _activeEventNames: string[] = [];
+	private _updateActiveEventNames() {
+		this._activeEventNames = [];
 		if (this.pv.active) {
-			const list = this.accepted_event_types();
+			const list = this.acceptedEventTypes();
 			for (let name of list) {
 				const param = this.params.get(name);
 				if (param && param.value) {
-					this._active_event_names.push(name);
+					this._activeEventNames.push(name);
 				}
 			}
 		}
 	}
-	protected abstract accepted_event_types(): string[];
-	active_event_names() {
-		return this._active_event_names;
+	protected abstract acceptedEventTypes(): string[];
+	activeEventNames() {
+		return this._activeEventNames;
 	}
 }
 
 export type BaseInputEventNodeType = TypedInputEventNode<any>;
 export class BaseInputEventNodeClass extends TypedInputEventNode<any> {
-	accepted_event_types() {
+	acceptedEventTypes() {
 		return [];
 	}
 }

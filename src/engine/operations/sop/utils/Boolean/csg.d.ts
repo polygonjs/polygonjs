@@ -8,6 +8,6 @@ export class CSGResult {
 	subtract(result: CSGResult): CSGResult;
 }
 export class CSG {
-	static fromMesh(mesh: Mesh): CSGResult;
+	static fromMesh(mesh: Mesh, objectIndex: number): CSGResult;
 	static toMesh(result: CSGResult, matrix: Matrix4, material: Material | Material[]): Mesh;
 }

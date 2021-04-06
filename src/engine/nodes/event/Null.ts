@@ -37,9 +37,9 @@ export class NullEventNode extends TypedEventNode<NullEventParamsConfig> {
 		]);
 	}
 
-	process_event(event_context: EventContext<Event>) {}
+	processEvent(event_context: EventContext<Event>) {}
 
 	private process_event_trigger(event_context: EventContext<Event>) {
-		this.dispatch_event_to_output(NullEventOutput.OUT, event_context);
+		this.dispatchEventToOutput(NullEventOutput.OUT, event_context);
 	}
 }

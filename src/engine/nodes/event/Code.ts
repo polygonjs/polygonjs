@@ -29,7 +29,7 @@
 // 	constructor(protected node: CodeEventNode) {
 // 		this.initialize_processor();
 // 	}
-// 	process_event(event_context: EventContext<Event>) {
+// 	processEvent(event_context: EventContext<Event>) {
 // 		if (event_context.event instanceof MouseEvent) {
 // 			this.process_mouse_event(event_context as EventContext<MouseEvent>);
 // 		} else if (event instanceof KeyboardEvent) {
@@ -77,11 +77,11 @@
 // 		]);
 // 	}
 
-// 	process_event(event_context: EventContext<Event>) {
+// 	processEvent(event_context: EventContext<Event>) {
 // 		this._compileIfRequired();
 
 // 		if (this._processor) {
-// 			this._processor.process_event(event_context);
+// 			this._processor.processEvent(event_context);
 // 		}
 // 	}
 // 	private _compileIfRequired() {

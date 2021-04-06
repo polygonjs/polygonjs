@@ -53,11 +53,11 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 		return `out${index}`;
 	}
 
-	process_event(event_context: EventContext<Event>) {
+	processEvent(event_context: EventContext<Event>) {
 		const count = this.pv.outputsCount;
 		for (let i = 0; i < count; i++) {
 			const connection_point = this.io.outputs.namedOutputConnectionPoints()[i];
-			this.dispatch_event_to_output(connection_point.name(), event_context);
+			this.dispatchEventToOutput(connection_point.name(), event_context);
 		}
 	}
 }

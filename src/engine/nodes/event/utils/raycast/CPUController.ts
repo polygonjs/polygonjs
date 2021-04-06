@@ -53,7 +53,7 @@ export class RaycastCPUController {
 		this._raycaster.setFromCamera(this._mouse, context.cameraNode.object);
 	}
 
-	process_event(context: EventContext<MouseEvent>) {
+	processEvent(context: EventContext<MouseEvent>) {
 		this._prepareRaycaster(context);
 
 		const type = CPU_INTERSECT_WITH_OPTIONS[this._node.pv.intersectWith];

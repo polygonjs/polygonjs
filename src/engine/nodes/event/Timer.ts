@@ -58,7 +58,7 @@ export class TimerEventNode extends TypedEventNode<TimerEventParamsConfig> {
 		setTimeout(() => {
 			if (this._timer_active) {
 				if (this.pv.count <= 0 || this._current_count < this.pv.count) {
-					this.dispatch_event_to_output(OUTPUT_NAME, event_context);
+					this.dispatchEventToOutput(OUTPUT_NAME, event_context);
 					this._current_count += 1;
 					this._run_timer(event_context);
 				} else {

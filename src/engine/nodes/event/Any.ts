@@ -45,12 +45,12 @@ export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 		return `trigger${index}`;
 	}
 
-	async process_event(event_context: EventContext<Event>) {
+	async processEvent(event_context: EventContext<Event>) {
 		if (this.p.active.isDirty()) {
 			await this.p.active.compute();
 		}
 		if (isBooleanTrue(this.pv.active)) {
-			this.dispatch_event_to_output(OUTPUT_NAME, event_context);
+			this.dispatchEventToOutput(OUTPUT_NAME, event_context);
 		}
 	}
 }

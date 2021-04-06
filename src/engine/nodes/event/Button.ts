@@ -37,10 +37,10 @@ export class ButtonEventNode extends TypedEventNode<ButtonEventParamsConfig> {
 		]);
 	}
 
-	process_event(event_context: EventContext<Event>) {}
+	processEvent(event_context: EventContext<Event>) {}
 
 	private process_event_execute(event_context: EventContext<Event>) {
-		this.dispatch_event_to_output(ButtonEventOutput.OUT, event_context);
+		this.dispatchEventToOutput(ButtonEventOutput.OUT, event_context);
 	}
 
 	static PARAM_CALLBACK_execute(node: ButtonEventNode) {

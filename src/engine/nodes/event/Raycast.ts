@@ -332,10 +332,10 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	}
 
 	trigger_hit(context: EventContext<MouseEvent>) {
-		this.dispatch_event_to_output(RaycastEventNode.OUTPUT_HIT, context);
+		this.dispatchEventToOutput(RaycastEventNode.OUTPUT_HIT, context);
 	}
 	trigger_miss(context: EventContext<MouseEvent>) {
-		this.dispatch_event_to_output(RaycastEventNode.OUTPUT_MISS, context);
+		this.dispatchEventToOutput(RaycastEventNode.OUTPUT_MISS, context);
 	}
 
 	private _process_mouse_event(context: EventContext<MouseEvent>) {
@@ -362,9 +362,9 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	}
 	private _process_trigger_event(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
-			this.cpu_controller.process_event(context);
+			this.cpu_controller.processEvent(context);
 		} else {
-			this.gpu_controller.process_event(context);
+			this.gpu_controller.processEvent(context);
 		}
 	}
 

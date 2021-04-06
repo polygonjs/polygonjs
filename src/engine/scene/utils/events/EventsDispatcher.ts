@@ -45,13 +45,13 @@ export class SceneEventsDispatcher {
 		}
 	}
 
-	// process_event(event_content: EventContext<Event>) {
+	// processEvent(event_content: EventContext<Event>) {
 	// 	if (!event_content.event) {
 	// 		return;
 	// 	}
 	// 	for (let controller of this._controllers) {
 	// 		if (controller.accepts_event(event_content.event)) {
-	// 			controller.process_event(event_content);
+	// 			controller.processEvent(event_content);
 	// 			return;
 	// 		}
 	// 	}

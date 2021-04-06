@@ -128,7 +128,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 			});
 		});
 	}
-	async process_event(event_context: EventContext<Event>) {
+	async processEvent(event_context: EventContext<Event>) {
 		if (this.p.param.isDirty()) {
 			// TODO: investigate occasions
 			// where the referenced param is recomputed
@@ -147,7 +147,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 			this.states.error.set('target param not found');
 		}
 
-		this.dispatch_event_to_output(OUTPUT_NAME, event_context);
+		this.dispatchEventToOutput(OUTPUT_NAME, event_context);
 	}
 
 	private _tmp_vector2 = new Vector2();
@@ -237,7 +237,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 	}
 
 	static PARAM_CALLBACK_execute(node: SetParamEventNode) {
-		node.process_event({});
+		node.processEvent({});
 	}
 
 	private async _compute_params_if_dirty(params: BaseParamType[]) {

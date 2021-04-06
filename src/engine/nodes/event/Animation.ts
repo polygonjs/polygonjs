@@ -62,10 +62,17 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 			new EventConnectionPoint(AnimationEventOutput.START, EventConnectionPointType.BASE),
 			new EventConnectionPoint(AnimationEventOutput.COMPLETE, EventConnectionPointType.BASE),
 		]);
+		this.scene().dispatchController.onAddListener(() => {
+			this.params.onParamsCreated('params_label', () => {
+				this.params.label.init([this.p.animation], () => {
+					return this.pv.animation.path();
+				});
+			});
+		});
 	}
 
-	process_event(event_context: EventContext<Event>) {
-		// this.dispatch_event_to_output(OUTPUT_NAME, event_context);
+	processEvent(event_context: EventContext<Event>) {
+		// this.dispatchEventToOutput(OUTPUT_NAME, event_context);
 	}
 
 	static PARAM_CALLBACK_play(node: AnimationEventNode) {
@@ -116,9 +123,9 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 	}
 
 	trigger_animation_started(event_context: EventContext<Event>) {
-		this.dispatch_event_to_output(AnimationEventOutput.START, event_context);
+		this.dispatchEventToOutput(AnimationEventOutput.START, event_context);
 	}
 	trigger_animation_completed(event_context: EventContext<Event>) {
-		this.dispatch_event_to_output(AnimationEventOutput.COMPLETE, event_context);
+		this.dispatchEventToOutput(AnimationEventOutput.COMPLETE, event_context);
 	}
 }

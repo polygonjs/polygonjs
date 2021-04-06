@@ -37,7 +37,7 @@ export class DelayEventNode extends TypedEventNode<TimerEventParamsConfig> {
 
 	private _process_input(event_context: EventContext<Event>) {
 		setTimeout(() => {
-			this.dispatch_event_to_output(OUTPUT_NAME, event_context);
+			this.dispatchEventToOutput(OUTPUT_NAME, event_context);
 		}, this.pv.delay);
 	}
 }

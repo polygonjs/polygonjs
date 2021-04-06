@@ -39,7 +39,7 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 		if (this._active_event_types.length == 0) {
 			return;
 		}
-		this._nodes_by_graph_node_id.forEach((node) => node.process_event(event_context));
+		this._nodes_by_graph_node_id.forEach((node) => node.processEvent(event_context));
 	}
 
 	updateViewerEventListeners() {
@@ -61,8 +61,8 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 
 		this._nodes_by_graph_node_id.forEach((node) => {
 			if (node.parent()) {
-				const node_active_event_names = node.active_event_names();
-				for (let name of node_active_event_names) {
+				const node_activeEventNames = node.activeEventNames();
+				for (let name of node_activeEventNames) {
 					active_node_event_types_state.set(name, true);
 				}
 			}

@@ -8,11 +8,13 @@ import {ACCEPTED_MOUSE_EVENT_TYPES} from '../../scene/utils/events/MouseEventsCo
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 class MouseEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType) => {
-			MouseEventNode.PARAM_CALLBACK_update_register(node as MouseEventNode);
+			MouseEventNode.PARAM_CALLBACK_updateRegister(node as MouseEventNode);
 		},
 		separatorAfter: true,
 	});
@@ -46,6 +48,14 @@ class MouseEventParamsConfig extends NodeParamsConfig {
 	select = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to listen to wheel events */
 	wheel = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
+	/** @param requires ctrlKey */
+	ctrlKey = ParamConfig.BOOLEAN(0, {...EVENT_PARAM_OPTIONS, separatorBefore: true});
+	/** @param requires altKey */
+	altKey = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
+	/** @param requires shiftKey */
+	shiftKey = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
+	/** @param requires metaKey */
+	metaKey = ParamConfig.BOOLEAN(0, EVENT_PARAM_OPTIONS);
 }
 const ParamsConfig = new MouseEventParamsConfig();
 
@@ -54,7 +64,7 @@ export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> 
 	static type() {
 		return 'mouse';
 	}
-	protected accepted_event_types() {
+	protected acceptedEventTypes() {
 		return ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`);
 	}
 	initializeNode() {
@@ -63,5 +73,56 @@ export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> 
 				return new EventConnectionPoint(event_type, EventConnectionPointType.MOUSE);
 			})
 		);
+		this.scene().dispatchController.onAddListener(() => {
+			this.params.onParamsCreated('params_label', () => {
+				const params = [
+					this.p.auxclick,
+					this.p.click,
+					this.p.dblclick,
+					this.p.mousedown,
+					this.p.mouseenter,
+					this.p.mouseleave,
+					this.p.mousemove,
+					this.p.mouseout,
+					this.p.mouseout,
+					this.p.mouseup,
+					this.p.pointerlockchange,
+					this.p.pointerlockerror,
+					this.p.select,
+					this.p.wheel,
+				];
+				this.params.label.init(params, () => {
+					return params
+						.map((p) => {
+							return p.value ? p.name() : undefined;
+						})
+						.filter((v) => v)
+						.join(', ');
+				});
+			});
+		});
+	}
+	processEvent(event_context: EventContext<MouseEvent>) {
+		if (!this.pv.active) {
+			return;
+		}
+		if (!event_context.event) {
+			return;
+		}
+		const event = event_context.event;
+		if (event.ctrlKey != isBooleanTrue(this.pv.ctrlKey)) {
+			return;
+		}
+		if (event.shiftKey != isBooleanTrue(this.pv.shiftKey)) {
+			return;
+		}
+		if (event.altKey != isBooleanTrue(this.pv.altKey)) {
+			return;
+		}
+		if (event.metaKey != isBooleanTrue(this.pv.metaKey)) {
+			return;
+		}
+
+		this.dispatchEventToOutput(event_context.event.type, event_context);
 	}
 }

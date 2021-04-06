@@ -44,7 +44,7 @@ export class BlockEventNode extends TypedEventNode<BlockParamsConfig> {
 	}
 
 	private trigger_output(context: EventContext<MouseEvent>) {
-		this.dispatch_event_to_output(BlockEventNode.OUTPUT, context);
+		this.dispatchEventToOutput(BlockEventNode.OUTPUT, context);
 	}
 
 	private _process_incoming_event(context: EventContext<MouseEvent>) {
