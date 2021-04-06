@@ -1,24 +1,25 @@
 import {CATEGORY_ANIM} from './Category';
 
-import {AnimationsNetworkAnimNode} from '../../../nodes/anim/AnimationsNetwork';
-import {CopNetworkAnimNode} from '../../../nodes/anim/CopNetwork';
 import {CopyAnimNode} from '../../../nodes/anim/Copy';
 import {DelayAnimNode} from '../../../nodes/anim/Delay';
 import {DurationAnimNode} from '../../../nodes/anim/Duration';
 import {EasingAnimNode} from '../../../nodes/anim/Easing';
-import {EventsNetworkAnimNode} from '../../../nodes/anim/EventsNetwork';
-import {MaterialsNetworkAnimNode} from '../../../nodes/anim/MaterialsNetwork';
 import {MergeAnimNode} from '../../../nodes/anim/Merge';
 import {NullAnimNode} from '../../../nodes/anim/Null';
 import {OperationAnimNode} from '../../../nodes/anim/Operation';
 import {PositionAnimNode} from '../../../nodes/anim/Position';
-import {PostProcessNetworkAnimNode} from '../../../nodes/anim/PostProcessNetwork';
 import {PropertyNameAnimNode} from '../../../nodes/anim/PropertyName';
 import {PropertyValueAnimNode} from '../../../nodes/anim/PropertyValue';
-import {RenderersNetworkAnimNode} from '../../../nodes/anim/RenderersNetwork';
 import {RepeatAnimNode} from '../../../nodes/anim/Repeat';
 import {SwitchAnimNode} from '../../../nodes/anim/Switch';
 import {TargetAnimNode} from '../../../nodes/anim/Target';
+// networks
+import {AnimationsNetworkAnimNode} from '../../../nodes/anim/AnimationsNetwork';
+import {CopNetworkAnimNode} from '../../../nodes/anim/CopNetwork';
+import {EventsNetworkAnimNode} from '../../../nodes/anim/EventsNetwork';
+import {MaterialsNetworkAnimNode} from '../../../nodes/anim/MaterialsNetwork';
+import {PostProcessNetworkAnimNode} from '../../../nodes/anim/PostProcessNetwork';
+import {RenderersNetworkAnimNode} from '../../../nodes/anim/RenderersNetwork';
 
 export interface AnimNodeChildrenMap {
 	copy: CopyAnimNode;

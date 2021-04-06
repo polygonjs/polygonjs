@@ -7,13 +7,6 @@ import {HemisphereLightObjNode} from '../../../nodes/obj/HemisphereLight';
 import {PointLightObjNode} from '../../../nodes/obj/PointLight';
 import {SpotLightObjNode} from '../../../nodes/obj/SpotLight';
 
-import {AnimationsNetworkObjNode} from '../../../nodes/obj/AnimationsNetwork';
-import {CopNetworkObjNode} from '../../../nodes/obj/CopNetwork';
-import {EventsNetworkObjNode} from '../../../nodes/obj/EventsNetwork';
-import {MaterialsNetworkObjNode} from '../../../nodes/obj/MaterialsNetwork';
-import {PostProcessNetworkObjNode} from '../../../nodes/obj/PostProcessNetwork';
-import {RenderersNetworkObjNode} from '../../../nodes/obj/RenderersNetwork';
-
 import {AudioListenerObjNode} from '../../../nodes/obj/AudioListener';
 import {BlendObjNode} from '../../../nodes/obj/Blend';
 import {ContactShadowObjNode} from '../../../nodes/obj/ContactShadow';
@@ -28,7 +21,14 @@ import {SceneObjNode} from '../../../nodes/obj/Scene';
 import {OrthographicCameraObjNode} from '../../../nodes/obj/OrthographicCamera';
 import {PerspectiveCameraObjNode} from '../../../nodes/obj/PerspectiveCamera';
 import {CubeCameraObjNode} from '../../../nodes/obj/CubeCamera';
-// import {CubeCameraObj} from '../../nodes/obj/CubeCamera';
+
+// networks
+import {AnimationsNetworkObjNode} from '../../../nodes/obj/AnimationsNetwork';
+import {CopNetworkObjNode} from '../../../nodes/obj/CopNetwork';
+import {EventsNetworkObjNode} from '../../../nodes/obj/EventsNetwork';
+import {MaterialsNetworkObjNode} from '../../../nodes/obj/MaterialsNetwork';
+import {PostProcessNetworkObjNode} from '../../../nodes/obj/PostProcessNetwork';
+import {RenderersNetworkObjNode} from '../../../nodes/obj/RenderersNetwork';
 
 export interface ObjNodeChildrenMap {
 	ambientLight: AmbientLightObjNode;

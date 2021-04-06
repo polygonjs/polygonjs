@@ -1,13 +1,14 @@
 /**
- * A subnet to create Material nodes
+ * A subnet to create material nodes
  *
  */
-import {Constructor, valueof} from '../../../types/GlobalTypes';
+
 import {ParamLessBaseNetworkMatNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
 import {ParamsInitData} from '../utils/io/IOController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 
 export class MaterialsNetworkMatNode extends ParamLessBaseNetworkMatNode {
 	static type() {

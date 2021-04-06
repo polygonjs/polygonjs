@@ -1,22 +1,23 @@
 import {CATEGORY_COP} from './Category';
 
-import {AnimationsNetworkCopNode} from '../../../nodes/cop/AnimationsNetwork';
 import {BuilderCopNode} from '../../../nodes/cop/Builder';
 import {ColorCopNode} from '../../../nodes/cop/Color';
-import {CopNetworkCopNode} from '../../../nodes/cop/CopNetwork';
 import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
-import {EventsNetworkCopNode} from '../../../nodes/cop/EventsNetwork';
 import {ImageCopNode} from '../../../nodes/cop/Image';
-import {MaterialsNetworkCopNode} from '../../../nodes/cop/MaterialsNetwork';
 import {NullCopNode} from '../../../nodes/cop/Null';
 import {PostCopNode} from '../../../nodes/cop/Post';
-import {PostProcessNetworkCopNode} from '../../../nodes/cop/PostProcessNetwork';
-import {RenderersNetworkCopNode} from '../../../nodes/cop/RenderersNetwork';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
 import {VideoCopNode} from '../../../nodes/cop/Video';
 import {WebCamCopNode} from '../../../nodes/cop/WebCam';
+// networks
+import {AnimationsNetworkCopNode} from '../../../nodes/cop/AnimationsNetwork';
+import {EventsNetworkCopNode} from '../../../nodes/cop/EventsNetwork';
+import {CopNetworkCopNode} from '../../../nodes/cop/CopNetwork';
+import {MaterialsNetworkCopNode} from '../../../nodes/cop/MaterialsNetwork';
+import {PostProcessNetworkCopNode} from '../../../nodes/cop/PostProcessNetwork';
+import {RenderersNetworkCopNode} from '../../../nodes/cop/RenderersNetwork';
 
 export interface CopNodeChildrenMap {
 	builder: BuilderCopNode;

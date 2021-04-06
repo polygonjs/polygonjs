@@ -2,17 +2,14 @@ import {CATEGORY_POST} from './Category';
 
 import {AdaptiveToneMappingPostNode} from '../../../nodes/post/AdaptiveToneMapping';
 import {AfterImagePostNode} from '../../../nodes/post/AfterImage';
-import {AnimationsNetworkPostNode} from '../../../nodes/post/AnimationsNetwork';
 import {BleachPostNode} from '../../../nodes/post/Bleach';
 import {BrightnessContrastPostNode} from '../../../nodes/post/BrightnessContrast';
 import {ClearPostNode} from '../../../nodes/post/Clear';
 import {ClearMaskPostNode} from '../../../nodes/post/ClearMask';
 import {ColorCorrectionPostNode} from '../../../nodes/post/ColorCorrection';
-import {CopNetworkPostNode} from '../../../nodes/post/CopNetwork';
 import {CopyPostNode} from '../../../nodes/post/Copy';
 import {DepthOfFieldPostNode} from '../../../nodes/post/DepthOfField';
 import {DotScreenPostNode} from '../../../nodes/post/DotScreen';
-import {EventsNetworkPostNode} from '../../../nodes/post/EventsNetwork';
 import {FilmPostNode} from '../../../nodes/post/Film';
 import {FXAAPostNode} from '../../../nodes/post/FXAA';
 import {GammaCorrectionPostNode} from '../../../nodes/post/GammaCorrection';
@@ -20,13 +17,10 @@ import {HorizontalBlurPostNode} from '../../../nodes/post/HorizontalBlur';
 import {ImagePostNode} from '../../../nodes/post/Image';
 import {LayerPostNode} from '../../../nodes/post/Layer';
 import {MaskPostNode} from '../../../nodes/post/Mask';
-import {MaterialsNetworkPostNode} from '../../../nodes/post/MaterialsNetwork';
 import {NullPostNode} from '../../../nodes/post/Null';
 import {OutlinePostNode} from '../../../nodes/post/Outline';
 import {PixelPostNode} from '../../../nodes/post/Pixel';
-import {PostProcessNetworkPostNode} from '../../../nodes/post/PostProcessNetwork';
 import {RenderPostNode} from '../../../nodes/post/Render';
-import {RenderersNetworkPostNode} from '../../../nodes/post/RenderersNetwork';
 import {RGBShiftPostNode} from '../../../nodes/post/RGBShift';
 import {SepiaPostNode} from '../../../nodes/post/Sepia';
 import {SequencePostNode} from '../../../nodes/post/Sequence';
@@ -34,6 +28,13 @@ import {TriangleBlurPostNode} from '../../../nodes/post/TriangleBlur';
 import {UnrealBloomPostNode} from '../../../nodes/post/UnrealBloom';
 import {VerticalBlurPostNode} from '../../../nodes/post/VerticalBlur';
 import {VignettePostNode} from '../../../nodes/post/Vignette';
+// networks
+import {AnimationsNetworkPostNode} from '../../../nodes/post/AnimationsNetwork';
+import {CopNetworkPostNode} from '../../../nodes/post/CopNetwork';
+import {EventsNetworkPostNode} from '../../../nodes/post/EventsNetwork';
+import {MaterialsNetworkPostNode} from '../../../nodes/post/MaterialsNetwork';
+import {PostProcessNetworkPostNode} from '../../../nodes/post/PostProcessNetwork';
+import {RenderersNetworkPostNode} from '../../../nodes/post/RenderersNetwork';
 
 export interface PostNodeChildrenMap {
 	adaptiveToneMapping: AdaptiveToneMappingPostNode;

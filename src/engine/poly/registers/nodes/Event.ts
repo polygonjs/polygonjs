@@ -1,35 +1,36 @@
 import {CATEGORY_EVENT} from './Category';
 
 import {AnimationEventNode} from '../../../nodes/event/Animation';
-import {AnimationsNetworkEventNode} from '../../../nodes/event/AnimationsNetwork';
 import {AnyEventNode} from '../../../nodes/event/Any';
 import {BlockEventNode} from '../../../nodes/event/Block';
 import {ButtonEventNode} from '../../../nodes/event/Button';
 import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
-import {CopNetworkEventNode} from '../../../nodes/event/CopNetwork';
 import {DelayEventNode} from '../../../nodes/event/Delay';
 // import {CodeEventNode} from '../../../nodes/event/Code';
-import {EventsNetworkEventNode} from '../../../nodes/event/EventsNetwork';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 import {LimitEventNode} from '../../../nodes/event/Limit';
-import {MaterialsNetworkEventNode} from '../../../nodes/event/MaterialsNetwork';
 import {MessageEventNode} from '../../../nodes/event/Message';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {NodeCookEventNode} from '../../../nodes/event/NodeCook';
 import {NullEventNode} from '../../../nodes/event/Null';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {FirstPersonControlsEventNode} from '../../../nodes/event/FirstPersonControls';
-import {PostProcessNetworkEventNode} from '../../../nodes/event/PostProcessNetwork';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
-import {RenderersNetworkEventNode} from '../../../nodes/event/RenderersNetwork';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetFlagEventNode} from '../../../nodes/event/SetFlag';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
 import {SequenceEventNode} from '../../../nodes/event/Sequence';
 import {TimerEventNode} from '../../../nodes/event/Timer';
 import {ViewerEventNode} from '../../../nodes/event/Viewer';
+// networks
+import {AnimationsNetworkEventNode} from '../../../nodes/event/AnimationsNetwork';
+import {CopNetworkEventNode} from '../../../nodes/event/CopNetwork';
+import {EventsNetworkEventNode} from '../../../nodes/event/EventsNetwork';
+import {MaterialsNetworkEventNode} from '../../../nodes/event/MaterialsNetwork';
+import {PostProcessNetworkEventNode} from '../../../nodes/event/PostProcessNetwork';
+import {RenderersNetworkEventNode} from '../../../nodes/event/RenderersNetwork';
 
 export interface EventNodeChildrenMap {
 	animation: AnimationEventNode;

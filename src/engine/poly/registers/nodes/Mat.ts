@@ -1,10 +1,6 @@
 import {CATEGORY_MAT} from './Category';
 
-import {AnimationsNetworkMatNode} from '../../../nodes/mat/AnimationsNetwork';
-import {CopNetworkMatNode} from '../../../nodes/mat/CopNetwork';
-import {EventsNetworkMatNode} from '../../../nodes/mat/EventsNetwork';
 import {LineBasicMatNode} from '../../../nodes/mat/LineBasic';
-import {MaterialsNetworkMatNode} from '../../../nodes/mat/Materials';
 import {MeshBasicMatNode} from '../../../nodes/mat/MeshBasic';
 import {MeshBasicBuilderMatNode} from '../../../nodes/mat/MeshBasicBuilder';
 import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
@@ -20,12 +16,18 @@ import {MeshSubsurfaceScatteringMatNode} from '../../../nodes/mat/MeshSubsurface
 import {MeshToonMatNode} from '../../../nodes/mat/MeshToon';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
-import {PostProcessNetworkMatNode} from '../../../nodes/mat/PostProcessNetwork';
-import {RenderersNetworkMatNode} from '../../../nodes/mat/RenderersNetwork';
 import {ShadowMatNode} from '../../../nodes/mat/Shadow';
 import {SkyMatNode} from '../../../nodes/mat/Sky';
 import {VolumeMatNode} from '../../../nodes/mat/Volume';
 import {VolumeBuilderMatNode} from '../../../nodes/mat/VolumeBuilder';
+
+// networks
+import {AnimationsNetworkMatNode} from '../../../nodes/mat/AnimationsNetwork';
+import {CopNetworkMatNode} from '../../../nodes/mat/CopNetwork';
+import {EventsNetworkMatNode} from '../../../nodes/mat/EventsNetwork';
+import {MaterialsNetworkMatNode} from '../../../nodes/mat/MaterialsNetwork';
+import {PostProcessNetworkMatNode} from '../../../nodes/mat/PostProcessNetwork';
+import {RenderersNetworkMatNode} from '../../../nodes/mat/RenderersNetwork';
 
 export interface MatNodeChildrenMap {
 	lineBasic: LineBasicMatNode;

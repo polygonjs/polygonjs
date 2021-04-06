@@ -1,9 +1,10 @@
 import {CATEGORY_ROP} from './Category';
 
-import {AnimationsNetworkRopNode} from '../../../nodes/rop/AnimationsNetwork';
 import {CopNetworkRopNode} from '../../../nodes/rop/CopNetwork';
 import {CSS2DRendererRopNode} from '../../../nodes/rop/CSS2DRenderer';
 import {Css3DRendererRopNode} from '../../../nodes/rop/CSS3DRenderer';
+// networks
+import {AnimationsNetworkRopNode} from '../../../nodes/rop/AnimationsNetwork';
 import {EventsNetworkRopNode} from '../../../nodes/rop/EventsNetwork';
 import {MaterialsNetworkRopNode} from '../../../nodes/rop/MaterialsNetwork';
 import {PostProcessNetworkRopNode} from '../../../nodes/rop/PostProcessNetwork';
