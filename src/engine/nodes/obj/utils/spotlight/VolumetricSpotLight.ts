@@ -58,6 +58,12 @@ export class VolumetricSpotLight {
 		const height = 1;
 		const radialSegments = 256;
 		const heightSegments = 1;
+		// TODO: consider using a tube instead of a cone, to allow:
+		// - to have base with non zero radius
+		// - possibly better normal interpolation
+		// TODO: refactor the attenuation and anglePower in glsl
+		// TODO: add a color ramp, or at least 2 colors, to allow for a brighter base
+		// TODO: attenuation should depend on light.distance, not just on world distance
 		const geometry = new ConeBufferGeometry(radius, height, radialSegments, heightSegments);
 		geometry.applyMatrix4(new Matrix4().makeTranslation(0, -0.5 * height, 0));
 		geometry.applyMatrix4(new Matrix4().makeRotationX(-Math.PI / 2));
