@@ -67,7 +67,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		return LightType.DIRECTIONAL;
 	}
 	private _target_target!: Object3D;
-	private _helper_controller = new HelperController<Mesh, DirectionalLight>(
+	private _helperController = new HelperController<Mesh, DirectionalLight>(
 		this,
 		(<unknown>DirectionalLightHelper) as HelperConstructor<Mesh, DirectionalLight>,
 		'DirectionalLightHelper'
@@ -76,7 +76,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		// this.io.inputs.setCount(0, 1);
 		// this.io.inputs.set_depends_on_inputs(false);
 
-		this._helper_controller.initializeNode();
+		this._helperController.initializeNode();
 	}
 
 	createLight() {
@@ -113,7 +113,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		this.light.intensity = this.pv.intensity;
 		this.light.shadow.camera.far = this.pv.distance;
 
-		this._helper_controller.update();
+		this._helperController.update();
 	}
 	protected updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadow);

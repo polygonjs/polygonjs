@@ -42,7 +42,7 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 	static type() {
 		return LightType.HEMISPHERE;
 	}
-	private _helper_controller = new HelperController<Mesh, HemisphereLight>(
+	private _helperController = new HelperController<Mesh, HemisphereLight>(
 		this,
 		(<unknown>HemisphereLightHelper) as HelperConstructor<Mesh, HemisphereLight>,
 		'HemisphereLightHelper'
@@ -58,7 +58,7 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 	}
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-		this._helper_controller.initializeNode();
+		this._helperController.initializeNode();
 	}
 
 	protected updateLightParams() {
@@ -67,6 +67,6 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 		this.light.position.copy(this.pv.position);
 		this.light.intensity = this.pv.intensity;
 
-		this._helper_controller.update();
+		this._helperController.update();
 	}
 }

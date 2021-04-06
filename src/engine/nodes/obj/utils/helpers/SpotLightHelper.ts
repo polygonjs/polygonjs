@@ -7,14 +7,21 @@ import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {Vector3} from 'three/src/math/Vector3';
 import {Mesh} from 'three/src/objects/Mesh';
+import {Object3D} from 'three/src/core/Object3D';
 
+interface UpdateConeObjectOptions {
+	sizeMult: number;
+	distance: number;
+	angle: number;
+}
 export class SpotLightHelper extends BaseLightHelper<Mesh, SpotLight, SpotLightObjNode> {
 	createObject() {
 		return new Mesh();
 	}
 	private _cone = new LineSegments();
 	private _line_material = new LineBasicMaterial({fog: false});
-	protected buildHelper() {
+
+	static buildConeGeometry() {
 		const geometry = new BufferGeometry();
 
 		const positions = [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, -1, 1];
@@ -27,26 +34,33 @@ export class SpotLightHelper extends BaseLightHelper<Mesh, SpotLight, SpotLightO
 		}
 
 		geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
-		this._cone.geometry = geometry;
+		return geometry;
+	}
+	private static _matrix_scale = new Vector3();
+	static updateConeObject(object: Object3D, options: UpdateConeObjectOptions) {
+		const coneLength = (options.distance ? options.distance : 1000) * options.sizeMult;
+		const coneWidth = coneLength * Math.tan(options.angle);
 
+		this._matrix_scale.set(coneWidth, coneWidth, coneLength);
+		object.matrix.identity();
+		object.matrix.makeRotationX(Math.PI * 0.5);
+		object.matrix.scale(this._matrix_scale);
+	}
+
+	protected buildHelper() {
+		this._cone.geometry = SpotLightHelper.buildConeGeometry();
 		this._cone.material = this._line_material;
-		// this._cone.rotateX(Math.PI * 0.5);
-		// this._cone.updateMatrix()
 		this._cone.matrixAutoUpdate = false;
 
 		this.object.add(this._cone);
 	}
 
-	private _matrix_scale = new Vector3();
 	update() {
-		const coneLength = (this.node.light.distance ? this.node.light.distance : 1000) * this.node.pv.helperSize;
-		const coneWidth = coneLength * Math.tan(this.node.light.angle);
-
-		this._matrix_scale.set(coneWidth, coneWidth, coneLength);
-		this._cone.matrix.identity();
-		this._cone.matrix.makeRotationX(Math.PI * 0.5);
-		this._cone.matrix.scale(this._matrix_scale);
-		// this._cone.scale.set(coneWidth, coneWidth, coneLength);
+		SpotLightHelper.updateConeObject(this._cone, {
+			sizeMult: this.node.pv.helperSize,
+			distance: this.node.light.distance,
+			angle: this.node.light.angle,
+		});
 
 		this._line_material.color.copy(this.node.light.color);
 	}

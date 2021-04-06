@@ -50,13 +50,13 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 	static type() {
 		return LightType.POINT;
 	}
-	private _helper_controller = new HelperController<Mesh, PointLight>(
+	private _helperController = new HelperController<Mesh, PointLight>(
 		this,
 		(<unknown>PointLightHelper) as HelperConstructor<Mesh, PointLight>,
 		'PointLightHelper'
 	);
 	initializeNode() {
-		this._helper_controller.initializeNode();
+		this._helperController.initializeNode();
 	}
 
 	createLight() {
@@ -79,7 +79,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 
 		this.light.distance = this.pv.distance;
 
-		this._helper_controller.update();
+		this._helperController.update();
 	}
 	protected updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadows);

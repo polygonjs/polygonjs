@@ -14,6 +14,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {ColorConversion} from '../../../core/Color';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {LightType} from '../../poly/registers/nodes/types/Light';
+import {VolumetricSpotLight} from './utils/spotlight/VolumetricSpotLight';
 class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
 	light = ParamConfig.FOLDER();
 	/** @param light color */
@@ -78,6 +79,21 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 		range: [0, 10],
 		rangeLocked: [true, false],
 	});
+
+	// shadows
+	volumetric = ParamConfig.FOLDER();
+	/** @param toggle on to add a volumetric effect to the spotlight */
+	tvolumetric = ParamConfig.BOOLEAN(0);
+	/** @param volumetric attenuation */
+	volAttenuation = ParamConfig.FLOAT(5, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+	});
+	/** @param volumetric angle power */
+	volAnglePower = ParamConfig.FLOAT(10, {
+		range: [0, 20],
+		rangeLocked: [true, false],
+	});
 }
 const ParamsConfig = new SpotLightObjParamsConfig();
 
@@ -87,14 +103,14 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		return LightType.SPOT;
 	}
 	private _target_target!: Object3D;
-	private _helper_controller = new HelperController<Mesh, SpotLight>(
+	private _helperController = new HelperController<Mesh, SpotLight>(
 		this,
 		(<unknown>SpotLightHelper) as HelperConstructor<Mesh, SpotLight>,
 		'SpotLightHelper'
 	);
+	private _volumetricController = new VolumetricSpotLight(this);
 	initializeNode() {
-		// this.io.inputs.setCount(0, 1);
-		this._helper_controller.initializeNode();
+		this._helperController.initializeNode();
 	}
 
 	createLight() {
@@ -127,7 +143,8 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		// (maybe it will need a setting to toggle physicallyCorrect, which would then show the power param)
 		// this.light.power = 1;
 
-		this._helper_controller.update();
+		this._helperController.update();
+		this._volumetricController.update();
 	}
 	protected updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadow);
@@ -135,7 +152,6 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		this.light.shadow.needsUpdate = isBooleanTrue(this.pv.shadowUpdateOnNextRender);
 
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
-		// near/far don't seem to have any effect
 		this.light.shadow.camera.near = this.pv.shadowNear;
 		this.light.shadow.camera.far = this.pv.shadowFar;
 		this.light.shadow.bias = this.pv.shadowBias;

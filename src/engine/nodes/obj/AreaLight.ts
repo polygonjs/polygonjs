@@ -43,13 +43,13 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 	static type() {
 		return 'areaLight';
 	}
-	private _helper_controller = new HelperController<RectAreaLightHelper, RectAreaLight>(
+	private _helperController = new HelperController<RectAreaLightHelper, RectAreaLight>(
 		this,
 		RectAreaLightObjNodeHelper as any,
 		'RectAreaLightObjNodeHelper'
 	);
 	initializeNode() {
-		this._helper_controller.initializeNode();
+		this._helperController.initializeNode();
 	}
 
 	createLight() {
@@ -70,6 +70,6 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 		this.light.width = this.pv.width;
 		this.light.height = this.pv.height;
 
-		this._helper_controller.update();
+		this._helperController.update();
 	}
 }
