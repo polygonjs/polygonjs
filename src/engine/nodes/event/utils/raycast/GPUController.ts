@@ -142,6 +142,6 @@ export class RaycastGPUController {
 	}
 
 	static PARAM_CALLBACK_update_material(node: RaycastEventNode) {
-		node.gpu_controller.update_material();
+		node.gpuController.update_material();
 	}
 }

@@ -303,8 +303,8 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	static readonly OUTPUT_HIT = 'hit';
 	static readonly OUTPUT_MISS = 'miss';
 
-	public readonly cpu_controller: RaycastCPUController = new RaycastCPUController(this);
-	public readonly gpu_controller: RaycastGPUController = new RaycastGPUController(this);
+	public readonly cpuController: RaycastCPUController = new RaycastCPUController(this);
+	public readonly gpuController: RaycastGPUController = new RaycastGPUController(this);
 
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
@@ -315,12 +315,12 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 			),
 			new EventConnectionPoint('mouse', EventConnectionPointType.MOUSE, this._process_mouse_event.bind(this)),
 			new EventConnectionPoint(
-				'update_objects',
+				'updateObjects',
 				EventConnectionPointType.BASE,
 				this._process_trigger_update_objects.bind(this)
 			),
 			new EventConnectionPoint(
-				'trigger_vel_reset',
+				'triggerVelReset',
 				EventConnectionPointType.BASE,
 				this._process_trigger_vel_reset.bind(this)
 			),
@@ -340,9 +340,9 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 
 	private _process_mouse_event(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
-			this.cpu_controller.update_mouse(context);
+			this.cpuController.update_mouse(context);
 		} else {
-			this.gpu_controller.update_mouse(context);
+			this.gpuController.update_mouse(context);
 		}
 	}
 
@@ -362,21 +362,21 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	}
 	private _process_trigger_event(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
-			this.cpu_controller.processEvent(context);
+			this.cpuController.processEvent(context);
 		} else {
-			this.gpu_controller.processEvent(context);
+			this.gpuController.processEvent(context);
 		}
 	}
 
 	private _process_trigger_update_objects(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
-			this.cpu_controller.update_target();
+			this.cpuController.update_target();
 		}
 	}
 
 	private _process_trigger_vel_reset(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
-			this.cpu_controller.velocity_controller.reset();
+			this.cpuController.velocity_controller.reset();
 		}
 	}
 }

@@ -313,14 +313,14 @@ export class RaycastCPUController {
 		}
 	}
 	static PARAM_CALLBACK_update_target(node: RaycastEventNode) {
-		node.cpu_controller.update_target();
+		node.cpuController.update_target();
 	}
 	// static PARAM_CALLBACK_update_position_target(node: RaycastEventNode) {
 	// 	node.cpu_controller.update_position_target();
 	// }
 
 	static PARAM_CALLBACK_print_resolve(node: RaycastEventNode) {
-		node.cpu_controller.print_resolve();
+		node.cpuController.print_resolve();
 	}
 	private print_resolve() {
 		this.update_target();
