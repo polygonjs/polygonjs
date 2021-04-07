@@ -9,6 +9,7 @@ interface ReflectorSopParams extends DefaultOperationParams {
 	active: boolean;
 	clipBias: number;
 	color: Color;
+	opacity: number;
 	pixelRatio: number;
 	tblur: boolean;
 	blur: number;
@@ -23,6 +24,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		active: true,
 		clipBias: 0.003,
 		color: new Color(1, 1, 1),
+		opacity: 1,
 		pixelRatio: 1,
 		tblur: false,
 		blur: 1,
@@ -54,6 +56,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 				scene: this.scene().threejsScene(),
 				pixelRatio: params.pixelRatio,
 				color: params.color,
+				opacity: params.opacity,
 				active: params.active,
 				tblur: params.tblur,
 				blur: params.blur,

@@ -21,23 +21,23 @@ import {TextureContainer} from '../../containers/Texture';
 
 export class CopResExpression extends BaseMethod {
 	protected _require_dependency = true;
-	static required_arguments() {
+	static requiredArguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'component_name: x or y'],
 		];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency | null {
-		return this.create_dependency_from_index_or_path(index_or_path);
+	findDependency(index_or_path: number | string): MethodDependency | null {
+		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	async process_arguments(args: any[]): Promise<number> {
+	async processArguments(args: any[]): Promise<number> {
 		let value = 0;
 		if (args.length == 2) {
 			const index_or_path = args[0];
 			const component_name = args[1];
-			const container = (await this.get_referenced_node_container(index_or_path)) as TextureContainer;
+			const container = (await this.getReferencedNodeContainer(index_or_path)) as TextureContainer;
 
 			if (container) {
 				const resolution = container.resolution();

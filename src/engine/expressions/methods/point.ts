@@ -22,7 +22,7 @@ import {GeometryContainer} from '../../containers/Geometry';
 const EXPECTED_ARGS_COUNT = 3;
 export class PointExpression extends BaseMethod {
 	protected _require_dependency = true;
-	static required_arguments() {
+	static requiredArguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'attribute name'],
@@ -30,11 +30,11 @@ export class PointExpression extends BaseMethod {
 		];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency | null {
-		return this.create_dependency_from_index_or_path(index_or_path);
+	findDependency(index_or_path: number | string): MethodDependency | null {
+		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	process_arguments(args: any[]): Promise<any> {
+	processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (args.length == EXPECTED_ARGS_COUNT) {
 				const index_or_path = args[0];
@@ -42,7 +42,7 @@ export class PointExpression extends BaseMethod {
 				const point_index = args[2];
 				let container: GeometryContainer | null = null;
 				try {
-					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;
+					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
 				} catch (e) {
 					reject(e);
 				}

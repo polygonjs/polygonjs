@@ -30,6 +30,7 @@ import './engine/expressions/methods/max';
 import './engine/expressions/methods/min';
 import './engine/expressions/methods/object';
 import './engine/expressions/methods/opdigits';
+import './engine/expressions/methods/opname';
 import './engine/expressions/methods/point';
 import './engine/expressions/methods/pointsCount';
 import './engine/expressions/methods/precision';

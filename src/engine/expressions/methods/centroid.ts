@@ -22,25 +22,25 @@ import {GeometryContainer} from '../../containers/Geometry';
 import {Vector3Like} from '../../../types/GlobalTypes';
 export class CentroidExpression extends BaseMethod {
 	protected _require_dependency = true;
-	static required_arguments() {
+	static requiredArguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'component_name, x,y or z'],
 		];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency | null {
-		return this.create_dependency_from_index_or_path(index_or_path);
+	findDependency(index_or_path: number | string): MethodDependency | null {
+		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	process_arguments(args: any[]): Promise<any> {
+	processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (args.length >= 1) {
 				const index_or_path = args[0];
 				const component_name: undefined | keyof Vector3Like = args[1];
 				let container: GeometryContainer | null = null;
 				try {
-					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;
+					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
 				} catch (e) {
 					reject(e);
 				}

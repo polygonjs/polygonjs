@@ -7,6 +7,7 @@ import {JsExpression} from '../../../expressions/methods/js';
 import {ObjectExpression} from '../../../expressions/methods/object';
 import {ObjectsCountExpression} from '../../../expressions/methods/objectsCount';
 import {OpdigitsExpression} from '../../../expressions/methods/opdigits';
+import {OpnameExpression} from '../../../expressions/methods/opname';
 import {PadzeroExpression} from '../../../expressions/methods/padzero';
 import {PointExpression} from '../../../expressions/methods/point';
 import {PointsCountExpression} from '../../../expressions/methods/pointsCount';
@@ -26,6 +27,7 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	object: typeof ObjectExpression;
 	objectsCount: typeof ObjectsCountExpression;
 	opdigits: typeof OpdigitsExpression;
+	opname: typeof OpnameExpression;
 	padzero: typeof PadzeroExpression;
 	point: typeof PointExpression;
 	pointsCount: typeof PointsCountExpression;
@@ -48,6 +50,7 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(ObjectExpression, 'object');
 		poly.expressionsRegister.register(ObjectsCountExpression, 'objectsCount');
 		poly.expressionsRegister.register(OpdigitsExpression, 'opdigits');
+		poly.expressionsRegister.register(OpnameExpression, 'opname');
 		poly.expressionsRegister.register(PadzeroExpression, 'padzero');
 		poly.expressionsRegister.register(PointExpression, 'point');
 		poly.expressionsRegister.register(PointsCountExpression, 'pointsCount');

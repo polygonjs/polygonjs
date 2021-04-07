@@ -31,13 +31,14 @@ const ReflectorShader = {
 		color: {
 			value: null,
 		},
-
 		tDiffuse: {
 			value: null,
 		},
-
 		textureMatrix: {
 			value: null,
+		},
+		opacity: {
+			value: 0.5,
 		},
 	},
 	vertexShader: VERTEX,
@@ -46,6 +47,7 @@ const ReflectorShader = {
 
 interface ReflectorOptions {
 	color: Color;
+	opacity: number;
 	renderer: WebGLRenderer;
 	pixelRatio: number;
 	clipBias: number;
@@ -108,6 +110,8 @@ export class Reflector extends Mesh {
 		this.material.uniforms['tDiffuse'].value = this.renderTarget.texture;
 		this.material.uniforms['color'].value = this._options.color;
 		this.material.uniforms['textureMatrix'].value = this.textureMatrix;
+		this.material.uniforms['opacity'].value = this._options.opacity;
+		this.material.transparent = this._options.opacity < 1;
 
 		this._addWindowResizeEvent();
 	}

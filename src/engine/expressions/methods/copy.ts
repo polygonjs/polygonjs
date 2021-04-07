@@ -23,23 +23,23 @@ import {BaseNodeType} from '../../nodes/_Base';
 
 export class CopyExpression extends BaseMethod {
 	protected _require_dependency = true;
-	static required_arguments() {
+	static requiredArguments() {
 		return [
 			['string', 'path to copy'],
 			['integer', 'default value'],
 		];
 	}
-	static optional_arguments() {
+	static optionalArguments() {
 		return [['string', 'attribute name (optional)']];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency | null {
-		const node = this.find_referenced_graph_node(index_or_path) as BaseNodeType;
+	findDependency(index_or_path: number | string): MethodDependency | null {
+		const node = this.findReferencedGraphNode(index_or_path) as BaseNodeType;
 		// I'd prefer testing with if(node instanceof CopySopNode)
 		// but tslib generates an error when doing so
 		if (node && node.type() == 'copy') {
 			const stamp_node = (node as CopySopNode).stamp_node;
-			return this.create_dependency(stamp_node, index_or_path);
+			return this.createDependency(stamp_node, index_or_path);
 		}
 		return null;
 	}
@@ -49,7 +49,7 @@ export class CopyExpression extends BaseMethod {
 	// 	return this.create_search_result(stamp_node, index_or_path)
 	// }
 
-	process_arguments(args: any[]): Promise<any> {
+	processArguments(args: any[]): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (args.length == 2 || args.length == 3) {
 				const path = args[0];
@@ -80,7 +80,7 @@ export class CopyExpression extends BaseMethod {
 	// 	return this.jsep_node()._graph_node.addGraphInput( this.copy_sop.stamp_node() );
 	// }
 
-	// process_arguments(args, callback){
+	// processArguments(args, callback){
 	// 	const path = args[0];
 	// 	const default_value = args[1];
 	// 	const attribute_name = args[2];

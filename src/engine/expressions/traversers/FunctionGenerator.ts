@@ -398,7 +398,7 @@ export class FunctionGenerator extends BaseTraverser {
 					// so we may not need to do it now
 				}
 				this._create_method_and_dependencies(method_name, path_argument, path_node);
-				return `(await methods[${this.method_index}].process_arguments([${arguments_joined}]))`;
+				return `(await methods[${this.method_index}].processArguments([${arguments_joined}]))`;
 			} else {
 				const available_methods = expressionRegister.availableMethods().join(', ');
 				const message = `method not found (${method_name}), available methods are: ${available_methods}`;
@@ -543,7 +543,7 @@ export class FunctionGenerator extends BaseTraverser {
 		const method_arguments = [0, `${QUOTE}${component}${QUOTE}`];
 		const arguments_joined = method_arguments.join(ARGUMENTS_SEPARATOR);
 		this._create_method_and_dependencies('centroid', 0);
-		return `(await methods[${this.method_index}].process_arguments([${arguments_joined}]))`;
+		return `(await methods[${this.method_index}].processArguments([${arguments_joined}]))`;
 	}
 
 	//
@@ -570,7 +570,7 @@ export class FunctionGenerator extends BaseTraverser {
 		this.methods[this.method_index] = method;
 
 		if (method.require_dependency()) {
-			const method_dependency = method.find_dependency(path_argument);
+			const method_dependency = method.findDependency(path_argument);
 			if (method_dependency) {
 				if (path_node) {
 					method_dependency.set_jsep_node(path_node);

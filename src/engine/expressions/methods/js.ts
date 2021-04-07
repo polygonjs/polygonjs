@@ -17,11 +17,11 @@ import {BaseMethod} from './_Base';
 export class JsExpression extends BaseMethod {
 	private _function: Function | undefined;
 
-	static required_arguments() {
+	static requiredArguments() {
 		return [['string', 'javascript expression']];
 	}
 
-	async process_arguments(args: any[]): Promise<any> {
+	async processArguments(args: any[]): Promise<any> {
 		let val: any = 0;
 		if (args.length == 1) {
 			const arg = args[0];

@@ -1,6 +1,7 @@
 uniform vec3 color;
 uniform sampler2D tDiffuse;
 varying vec4 vUv;
+uniform float opacity;
 
 float blendOverlay( float base, float blend ) {
 
@@ -17,6 +18,6 @@ vec3 blendOverlay( vec3 base, vec3 blend ) {
 void main() {
 
 	vec4 base = texture2DProj( tDiffuse, vUv );
-	gl_FragColor = vec4( blendOverlay( base.rgb, color ), 1.0 );
+	gl_FragColor = vec4( blendOverlay( base.rgb, color ), opacity );
 
 }

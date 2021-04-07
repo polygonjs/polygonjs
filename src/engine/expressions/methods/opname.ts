@@ -1,26 +1,25 @@
 /**
- * Returns the number at the end of a string
+ * Returns the name of the refered node
  *
  * @remarks
  * It takes 1 arguments.
  *
- * opdigits(<word\>)
+ * opname(<node_path\>)
  *
- * - **<word\>** returns the number at the end of word
+ * - **<node_path\>** path to referred node
  *
  * ## Usage
  *
- * - `opdigits('/geo1')` - returns 1
- * - `opdigits($OS)` - returns the number at the end of the name of the current node
+ * - `opnane('/geo1')` - returns 'geo1'
+ * - `opname('..')` - returns the name of the parent
  *
  */
 
 import {BaseMethod} from './_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
-import {CoreString} from '../../../core/String';
 
-export class OpdigitsExpression extends BaseMethod {
+export class OpnameExpression extends BaseMethod {
 	protected _require_dependency = true;
 	static requiredArguments() {
 		return [['string', 'path to node']];
@@ -45,8 +44,7 @@ export class OpdigitsExpression extends BaseMethod {
 				const node = this.getReferencedNode(index_or_path);
 				if (node) {
 					const name = node.name();
-					const value = CoreString.tailDigits(name);
-					resolve(value);
+					resolve(name);
 				} else {
 					resolve(0);
 				}

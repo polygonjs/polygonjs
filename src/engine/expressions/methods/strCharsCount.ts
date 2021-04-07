@@ -18,16 +18,16 @@ import {BaseMethod} from './_Base';
 
 export class StrCharsCountExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
-	static required_arguments() {
+	static requiredArguments() {
 		return [['string', 'string to count characters of']];
 	}
 
-	// find_dependency(index_or_path: number | string): null {
+	// findDependency(index_or_path: number | string): null {
 	// 	return null
-	// 	// return this.create_dependency_from_index_or_path(index_or_path)
+	// 	// return this.createDependencyFromIndexOrPath(index_or_path)
 	// }
 
-	async process_arguments(args: any[]): Promise<number> {
+	async processArguments(args: any[]): Promise<number> {
 		let value = 0;
 		if (args.length == 1) {
 			const string = args[0];

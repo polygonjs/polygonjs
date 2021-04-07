@@ -19,6 +19,8 @@ class ReflectorSopParamsConfig extends NodeParamsConfig {
 	clipBias = ParamConfig.FLOAT(DEFAULT.clipBias);
 	/** @param color */
 	color = ParamConfig.COLOR(DEFAULT.color.toArray() as Number3);
+	/** @param opacity */
+	opacity = ParamConfig.FLOAT(DEFAULT.opacity);
 	/** @param pixelRatio */
 	pixelRatio = ParamConfig.INTEGER(DEFAULT.pixelRatio, {
 		range: [1, 4],

@@ -21,25 +21,25 @@ import {MethodDependency} from '../MethodDependency';
 export class ChExpression extends BaseMethod {
 	protected _require_dependency = true;
 
-	static required_arguments() {
+	static requiredArguments() {
 		return [['string', 'path to param']];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency | null {
+	findDependency(index_or_path: number | string): MethodDependency | null {
 		const decomposed_path = new DecomposedPath();
-		const param = this.get_referenced_param(index_or_path as string, decomposed_path);
+		const param = this.getReferencedParam(index_or_path as string, decomposed_path);
 		if (param) {
-			return this.create_dependency(param, index_or_path, decomposed_path);
+			return this.createDependency(param, index_or_path, decomposed_path);
 		}
 		return null;
 	}
 
-	async process_arguments(args: any[]): Promise<any> {
+	async processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let val: any = 0;
 			if (args.length == 1) {
 				const path = args[0];
-				const ref = this.get_referenced_param(path);
+				const ref = this.getReferencedParam(path);
 				if (ref) {
 					if (ref.isDirty()) {
 						await ref.compute();

@@ -21,7 +21,7 @@ import {BaseMethod} from './_Base';
 
 export class StrSubExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
-	static required_arguments() {
+	static requiredArguments() {
 		return [
 			['string', 'string to get range from'],
 			['integer', 'range start'],
@@ -29,12 +29,12 @@ export class StrSubExpression extends BaseMethod {
 		];
 	}
 
-	// find_dependency(index_or_path: number | string): MethodDependency | null {
+	// findDependency(index_or_path: number | string): MethodDependency | null {
 	// 	return null;
-	// 	// return this.create_dependency_from_index_or_path(index_or_path)
+	// 	// return this.createDependencyFromIndexOrPath(index_or_path)
 	// }
 
-	async process_arguments(args: any[]): Promise<string> {
+	async processArguments(args: any[]): Promise<string> {
 		let value = '';
 		const string = args[0];
 		const range_start = args[1] || 0;

@@ -37,7 +37,7 @@ const COMPONENT_NAMES = ['x', 'y', 'z'];
 
 export class BboxExpression extends BaseMethod {
 	protected _require_dependency = true;
-	static required_arguments() {
+	static requiredArguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'vector name, min, max, size or center'],
@@ -45,11 +45,11 @@ export class BboxExpression extends BaseMethod {
 		];
 	}
 
-	find_dependency(index_or_path: number | string): MethodDependency | null {
-		return this.create_dependency_from_index_or_path(index_or_path);
+	findDependency(index_or_path: number | string): MethodDependency | null {
+		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	process_arguments(args: any[]): Promise<any> {
+	processArguments(args: any[]): Promise<any> {
 		let value: number | Vector3 | Box3 = 0;
 		return new Promise(async (resolve, reject) => {
 			if (args.length >= 1) {
@@ -59,7 +59,7 @@ export class BboxExpression extends BaseMethod {
 
 				let container: GeometryContainer | null = null;
 				try {
-					container = (await this.get_referenced_node_container(index_or_path)) as GeometryContainer;
+					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
 				} catch (e) {
 					reject(e);
 				}

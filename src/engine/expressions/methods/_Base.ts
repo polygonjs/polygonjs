@@ -25,29 +25,29 @@ export class BaseMethod {
 		return (this._node = this._node || this.param.node);
 	}
 
-	static required_arguments(): any[] {
+	static requiredArguments(): any[] {
 		console.warn('Expression.Method._Base.required_arguments virtual method call. Please override');
 		return [];
 	}
-	static optional_arguments(): any[] {
+	static optionalArguments(): any[] {
 		return [];
 	}
-	static min_allowed_arguments_count() {
-		return this.required_arguments().length;
+	static minAllowedArgumentsCount() {
+		return this.requiredArguments().length;
 	}
-	static max_allowed_arguments_count() {
-		return this.min_allowed_arguments_count() + this.optional_arguments().length;
+	static maxAllowedArgumentsCount() {
+		return this.minAllowedArgumentsCount() + this.optionalArguments().length;
 	}
-	static allowed_arguments_count(count: number) {
-		return count >= this.min_allowed_arguments_count() && count <= this.max_allowed_arguments_count();
+	static allowedArgumentsCount(count: number) {
+		return count >= this.minAllowedArgumentsCount() && count <= this.maxAllowedArgumentsCount();
 	}
 
-	process_arguments(args: any): Promise<any> {
+	processArguments(args: any): Promise<any> {
 		throw 'Expression.Method._Base.process_arguments virtual method call. Please override';
 	}
 
-	async get_referenced_node_container(index_or_path: number | string): Promise<BaseContainer> {
-		const referenced_node = this.get_referenced_node(index_or_path);
+	async getReferencedNodeContainer(index_or_path: number | string): Promise<BaseContainer> {
+		const referenced_node = this.getReferencedNode(index_or_path);
 
 		if (referenced_node) {
 			// const time_start = performance.now();
@@ -69,7 +69,7 @@ export class BaseMethod {
 		}
 	}
 
-	get_referenced_param(path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
+	getReferencedParam(path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
 		const node = this.node();
 		if (node) {
 			return CoreWalker.findParam(node, path, decomposed_path);
@@ -94,7 +94,7 @@ export class BaseMethod {
 		return null;
 	}
 
-	find_referenced_graph_node(index_or_path: number | string, decomposed_path?: DecomposedPath): CoreGraphNode | null {
+	findReferencedGraphNode(index_or_path: number | string, decomposed_path?: DecomposedPath): CoreGraphNode | null {
 		const is_index = CoreType.isNumber(index_or_path);
 		// let node
 		if (is_index) {
@@ -106,14 +106,14 @@ export class BaseMethod {
 			}
 		} else {
 			const path = index_or_path as string;
-			return this.get_referenced_node(path, decomposed_path);
+			return this.getReferencedNode(path, decomposed_path);
 		}
 		return null;
 	}
 	// caching the node by path here prevents having expressions such as points_count(0)
 	// evaluate to an error when the input is disconnected
 	// private _node_by_path: Map<string | number, BaseNodeType | null | undefined> = new Map();
-	get_referenced_node(index_or_path: string | number, decomposed_path?: DecomposedPath): BaseNodeType | null {
+	getReferencedNode(index_or_path: string | number, decomposed_path?: DecomposedPath): BaseNodeType | null {
 		// let node = this._node_by_path.get(index_or_path);
 		// if (node) {
 		// 	return node;
@@ -136,21 +136,21 @@ export class BaseMethod {
 		//}
 	}
 
-	find_dependency(args: any): MethodDependency | null {
+	findDependency(args: any): MethodDependency | null {
 		return null;
 	}
 
-	protected create_dependency_from_index_or_path(index_or_path: number | string): MethodDependency | null {
+	protected createDependencyFromIndexOrPath(index_or_path: number | string): MethodDependency | null {
 		const decomposed_path = new DecomposedPath();
-		const node = this.find_referenced_graph_node(index_or_path, decomposed_path);
+		const node = this.findReferencedGraphNode(index_or_path, decomposed_path);
 		if (node) {
-			return this.create_dependency(node, index_or_path, decomposed_path);
+			return this.createDependency(node, index_or_path, decomposed_path);
 		} else {
 			Poly.warn('node not found for path', index_or_path);
 		}
 		return null;
 	}
-	protected create_dependency(
+	protected createDependency(
 		node: CoreGraphNode,
 		index_or_path: number | string,
 		decomposed_path?: DecomposedPath
