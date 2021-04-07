@@ -4,24 +4,23 @@ import {Box3} from 'three/src/math/Box3';
 import {Vector3} from 'three/src/math/Vector3';
 
 export class ByBboxHelper {
-	private _bbox_cache: Box3 | undefined;
 	private _point_position = new Vector3();
 	constructor(private node: DeleteSopNode) {}
-	eval_for_points(points: CorePoint[]) {
+	evalForPoints(points: CorePoint[]) {
+		const bbox = this._createBbox();
+
 		for (let point of points) {
-			const in_bbox = this._bbox.containsPoint(point.getPosition(this._point_position));
+			const in_bbox = bbox.containsPoint(point.getPosition(this._point_position));
 
 			if (in_bbox) {
-				this.node.entity_selection_helper.select(point);
+				this.node.entitySelectionHelper.select(point);
 			}
 		}
 	}
-	private get _bbox() {
-		return this._bbox_cache != null
-			? this._bbox_cache
-			: (this._bbox_cache = new Box3(
-					this.node.pv.bboxCenter.clone().sub(this.node.pv.bboxSize.clone().multiplyScalar(0.5)),
-					this.node.pv.bboxCenter.clone().add(this.node.pv.bboxSize.clone().multiplyScalar(0.5))
-			  ));
+	private _createBbox() {
+		return new Box3(
+			this.node.pv.bboxCenter.clone().sub(this.node.pv.bboxSize.clone().multiplyScalar(0.5)),
+			this.node.pv.bboxCenter.clone().add(this.node.pv.bboxSize.clone().multiplyScalar(0.5))
+		);
 	}
 }

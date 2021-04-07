@@ -12,7 +12,7 @@ export class ByObjectTypeHelper {
 			const object = core_object.object();
 
 			if (objectTypeFromConstructor(object.constructor) == object_type) {
-				this.node.entity_selection_helper.select(core_object);
+				this.node.entitySelectionHelper.select(core_object);
 			}
 		}
 	}

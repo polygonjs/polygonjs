@@ -79,3 +79,22 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	assert.equal(core_object.coreObjects().length, 1);
 	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[0].object().constructor), ObjectType.MESH);
 });
+
+QUnit.test('SOP delete byBoundingObject', async (assert) => {
+	const geo1 = window.geo1;
+
+	const sphere = geo1.createNode('sphere');
+	const bboxScatter = geo1.createNode('bboxScatter');
+	bboxScatter.p.stepSize.set(0.2);
+	const delete1 = geo1.createNode('delete');
+	bboxScatter.setInput(0, sphere);
+	delete1.setInput(0, bboxScatter);
+	delete1.setInput(1, sphere);
+
+	let container = await delete1.compute();
+	assert.equal(container.pointsCount(), 1210);
+
+	delete1.p.byBoundingObject.set(1);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 719);
+});

@@ -4,14 +4,8 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Vector3} from 'three/src/math/Vector3';
 import {Raycaster, Intersection} from 'three/src/core/Raycaster';
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Material} from 'three/src/materials/Material';
-import {Side} from 'three/src/constants';
-
-import {DoubleSide} from 'three/src/constants';
-import {CoreType} from '../../../core/Type';
+import {MatDoubleSideTmpSetter} from '../../../core/render/MatDoubleSideTmpSetter';
 
 interface RaySopParams extends DefaultOperationParams {
 	useNormals: boolean;
@@ -30,9 +24,7 @@ export class RaySopOperation extends BaseSopOperation {
 		return 'ray';
 	}
 
-	private _bound_setMat = this._setObjectMaterialDoubleSided.bind(this);
-	private _bound_restoreMat = this._restoreObjectMaterialSide.bind(this);
-	private _sidePropertyByMaterial: WeakMap<Material, Side> = new WeakMap();
+	private _matDoubleSideTmpSetter = new MatDoubleSideTmpSetter();
 	private _raycaster = new Raycaster();
 
 	cook(input_contents: CoreGroup[], params: RaySopParams) {
@@ -46,7 +38,7 @@ export class RaySopOperation extends BaseSopOperation {
 	private _pointPos = new Vector3();
 	private _pointNormal = new Vector3();
 	private _ray(core_group: CoreGroup, core_group_collision: CoreGroup, params: RaySopParams) {
-		this._setCoreGroupMaterialDoubleSided(core_group_collision);
+		this._matDoubleSideTmpSetter.setCoreGroupMaterialDoubleSided(core_group_collision);
 
 		let direction: Vector3, first_intersect: Intersection;
 		const points = core_group.points();
@@ -66,51 +58,7 @@ export class RaySopOperation extends BaseSopOperation {
 				}
 			}
 		}
-		this._restoreMaterialSideProperty(core_group_collision);
+		this._matDoubleSideTmpSetter.restoreMaterialSideProperty(core_group_collision);
 		return core_group;
-	}
-
-	private _setCoreGroupMaterialDoubleSided(core_group: CoreGroup) {
-		const objects = core_group.objects();
-		for (let object of objects) {
-			object.traverse(this._bound_setMat);
-		}
-	}
-	private _restoreMaterialSideProperty(core_group: CoreGroup) {
-		const objects = core_group.objects();
-		for (let object of objects) {
-			object.traverse(this._bound_restoreMat);
-		}
-	}
-	private _setObjectMaterialDoubleSided(object: Object3D) {
-		const mat = (object as Mesh).material;
-		if (mat) {
-			if (CoreType.isArray(mat)) {
-				for (let mati of mat) {
-					this._setMaterialDoubleSided(mati);
-				}
-			} else {
-				this._setMaterialDoubleSided(mat);
-			}
-		}
-	}
-	private _restoreObjectMaterialSide(object: Object3D) {
-		const mat = (object as Mesh).material;
-		if (mat) {
-			if (CoreType.isArray(mat)) {
-				for (let mati of mat) {
-					this._restoreMaterialDoubleSided(mati);
-				}
-			} else {
-				this._restoreMaterialDoubleSided(mat);
-			}
-		}
-	}
-	private _setMaterialDoubleSided(mat: Material) {
-		this._sidePropertyByMaterial.set(mat, mat.side);
-		mat.side = DoubleSide;
-	}
-	private _restoreMaterialDoubleSided(mat: Material) {
-		mat.side = this._sidePropertyByMaterial.get(mat) || DoubleSide;
 	}
 }

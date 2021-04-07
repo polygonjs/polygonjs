@@ -52,7 +52,7 @@ export const ComparisonOperatorMenuEntries = COMPARISON_OPERATORS.map((name, val
 export class ByAttributeHelper {
 	constructor(private node: DeleteSopNode) {}
 
-	eval_for_entities(entities: CoreEntity[]) {
+	evalForEntities(entities: CoreEntity[]) {
 		const attribType = ATTRIBUTE_TYPES[this.node.pv.attribType];
 		switch (attribType) {
 			case AttribType.NUMERIC: {
@@ -71,7 +71,7 @@ export class ByAttributeHelper {
 		for (let entity of entities) {
 			value = entity.stringAttribValue(this.node.pv.attribName);
 			if (value == this.node.pv.attrib_string) {
-				this.node.entity_selection_helper.select(entity);
+				this.node.entitySelectionHelper.select(entity);
 			}
 		}
 	}
@@ -103,7 +103,7 @@ export class ByAttributeHelper {
 		for (let entity of entities) {
 			value = entity.attribValue(attribName) as number;
 			if (compare_method(value, compared_value)) {
-				this.node.entity_selection_helper.select(entity);
+				this.node.entitySelectionHelper.select(entity);
 			}
 		}
 	}
@@ -114,7 +114,7 @@ export class ByAttributeHelper {
 		for (let entity of entities) {
 			const value = entity.attribValue(attribName, target) as Vector2;
 			if (compared_value.equals(value)) {
-				this.node.entity_selection_helper.select(entity);
+				this.node.entitySelectionHelper.select(entity);
 			}
 		}
 	}
@@ -125,7 +125,7 @@ export class ByAttributeHelper {
 		for (let entity of entities) {
 			const value = entity.attribValue(attribName, target) as Vector3;
 			if (compared_value.equals(value)) {
-				this.node.entity_selection_helper.select(entity);
+				this.node.entitySelectionHelper.select(entity);
 			}
 		}
 	}
@@ -136,7 +136,7 @@ export class ByAttributeHelper {
 		for (let entity of entities) {
 			const value = entity.attribValue(attribName, target) as Vector4;
 			if (compared_value.equals(value)) {
-				this.node.entity_selection_helper.select(entity);
+				this.node.entitySelectionHelper.select(entity);
 			}
 		}
 	}
