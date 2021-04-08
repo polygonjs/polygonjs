@@ -1,3 +1,5 @@
+import {ArgExpression} from '../../../expressions/methods/arg';
+import {ArgcExpression} from '../../../expressions/methods/argc';
 import {BboxExpression} from '../../../expressions/methods/bbox';
 import {CentroidExpression} from '../../../expressions/methods/centroid';
 import {ChExpression} from '../../../expressions/methods/ch';
@@ -18,6 +20,8 @@ import {StrSubExpression} from '../../../expressions/methods/strSub';
 
 import {BaseMethod} from '../../../expressions/methods/_Base';
 export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
+	arg: typeof ArgExpression;
+	argc: typeof ArgcExpression;
 	bbox: typeof BboxExpression;
 	centroid: typeof CentroidExpression;
 	ch: typeof ChExpression;
@@ -41,6 +45,8 @@ import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 export class AllExpressionsRegister {
 	static run(poly: PolyEngine) {
+		poly.expressionsRegister.register(ArgExpression, 'arg');
+		poly.expressionsRegister.register(ArgcExpression, 'argc');
 		poly.expressionsRegister.register(BboxExpression, 'bbox');
 		poly.expressionsRegister.register(CentroidExpression, 'centroid');
 		poly.expressionsRegister.register(ChExpression, 'ch');

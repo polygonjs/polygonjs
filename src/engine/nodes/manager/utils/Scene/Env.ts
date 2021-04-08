@@ -29,7 +29,7 @@ export function SceneEnvParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 class SceneEnvParamsConfig extends SceneEnvParamConfig(NodeParamsConfig) {}
 abstract class SceneEnvNode extends TypedNode<any, SceneEnvParamsConfig> {
-	readonly SceneEnvController = new SceneEnvController(this);
+	readonly sceneEnvController = new SceneEnvController(this);
 	protected _object = new Scene();
 	get object() {
 		return this._object;
@@ -58,6 +58,6 @@ export class SceneEnvController {
 	}
 
 	static async update(node: SceneEnvNode) {
-		node.SceneEnvController.update();
+		node.sceneEnvController.update();
 	}
 }

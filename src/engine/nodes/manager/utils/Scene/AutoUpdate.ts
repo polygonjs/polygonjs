@@ -19,7 +19,7 @@ export function SceneAutoUpdateParamConfig<TBase extends Constructor>(Base: TBas
 }
 class SceneAutoUpdateParamsConfig extends SceneAutoUpdateParamConfig(NodeParamsConfig) {}
 abstract class SceneAutoUpdateNode extends TypedNode<any, SceneAutoUpdateParamsConfig> {
-	readonly SceneAutoUpdateController = new SceneAutoUpdateController(this);
+	readonly sceneAutoUpdateController = new SceneAutoUpdateController(this);
 	protected _object = new Scene();
 	get object() {
 		return this._object;
@@ -39,6 +39,6 @@ export class SceneAutoUpdateController {
 	}
 
 	static async update(node: SceneAutoUpdateNode) {
-		node.SceneAutoUpdateController.update();
+		node.sceneAutoUpdateController.update();
 	}
 }

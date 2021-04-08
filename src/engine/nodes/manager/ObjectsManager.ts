@@ -35,9 +35,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	private _queued_nodes_by_id: Map<number, BaseObjNodeType> = new Map();
 	// private _expected_geo_nodes: PolyDictionary<GeoObjNode> = {};
 	// private _process_queue_start: number = -1;
-	readonly SceneAutoUpdateController: SceneAutoUpdateController = new SceneAutoUpdateController(this as any);
+	readonly sceneAutoUpdateController: SceneAutoUpdateController = new SceneAutoUpdateController(this as any);
 	readonly sceneBackgroundController: SceneBackgroundController = new SceneBackgroundController(this as any);
-	readonly SceneEnvController: SceneEnvController = new SceneEnvController(this as any);
+	readonly sceneEnvController: SceneEnvController = new SceneEnvController(this as any);
 	readonly sceneFogController: SceneFogController = new SceneFogController(this as any);
 	readonly sceneMaterialOverrideController: SceneMaterialOverrideController = new SceneMaterialOverrideController(
 		this as any
@@ -87,9 +87,9 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	// 	return true;
 	// }
 	private _updateScene() {
-		this.SceneAutoUpdateController.update();
+		this.sceneAutoUpdateController.update();
 		this.sceneBackgroundController.update();
-		this.SceneEnvController.update();
+		this.sceneEnvController.update();
 		this.sceneFogController.update();
 		this.sceneMaterialOverrideController.update();
 	}

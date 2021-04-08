@@ -18,6 +18,8 @@ import './engine/scene/TimeController';
 
 QUnit.module('expressions');
 import './engine/expressions/methods/abs';
+import './engine/expressions/methods/arg';
+import './engine/expressions/methods/argc';
 import './engine/expressions/methods/bbox';
 import './engine/expressions/methods/ceil';
 import './engine/expressions/methods/centroid';

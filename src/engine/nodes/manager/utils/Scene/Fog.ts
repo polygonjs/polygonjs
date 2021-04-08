@@ -63,7 +63,7 @@ export function SceneFogParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 class SceneFogParamsConfig extends SceneFogParamConfig(NodeParamsConfig) {}
 abstract class SceneFogNode extends TypedNode<any, SceneFogParamsConfig> {
-	readonly SceneFogController = new SceneFogController(this);
+	readonly sceneFogController = new SceneFogController(this);
 	protected _object = new Scene();
 	get object() {
 		return this._object;
@@ -107,6 +107,6 @@ export class SceneFogController {
 	}
 
 	static async update(node: SceneFogNode) {
-		node.SceneFogController.update();
+		node.sceneFogController.update();
 	}
 }
