@@ -188,7 +188,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 				return await this._hdr_loader(options);
 			}
 			case Extension.BASIS: {
-				return await this._basis_loader();
+				return await CoreLoaderTexture._basis_loader(this._node);
 			}
 		}
 		return new TextureLoader(this.loadingManager);
@@ -214,7 +214,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			return loader;
 		}
 	}
-	private async _basis_loader() {
+	private static async _basis_loader(node: BaseNodeType) {
 		const BasisTextureLoader = await Poly.modulesRegister.module(ModuleName.BasisTextureLoader);
 		if (BasisTextureLoader) {
 			const BASISLoader = new BasisTextureLoader(this.loadingManager);
@@ -223,7 +223,6 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			if (root || BASISPath) {
 				const decoder_path = `${root || ''}${BASISPath || ''}/`;
 
-				const node = this._node;
 				if (node) {
 					const files = [
 						'basis_transcoder.js',
@@ -231,11 +230,16 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 						'msc_basis_transcoder.js',
 						'msc_basis_transcoder.wasm',
 					];
-					for (let file of files) {
-						const storedUrl = `${BASISPath}/${file}`;
-						const fullUrl = `${decoder_path}${file}`;
-						Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
-					}
+					await this._loadMultipleBlobGlobal({
+						files: files.map((file) => {
+							return {
+								storedUrl: `${BASISPath}/${file}`,
+								fullUrl: `${decoder_path}${file}`,
+							};
+						}),
+						node,
+						error: 'failed to load draco libraries. Make sure to install them to load .glb files',
+					});
 				}
 
 				BASISLoader.setTranscoderPath(decoder_path);

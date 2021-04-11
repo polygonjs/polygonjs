@@ -2,12 +2,23 @@ import {LoadingManager} from 'three/src/loaders/LoadingManager';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
+import {FetchBlobResponse} from '../../engine/poly/BlobsController';
 
 const LOADING_MANAGER = new LoadingManager();
 LOADING_MANAGER.setURLModifier((url) => {
 	const blobUrl = Poly.blobs.blobUrl(url);
 	return blobUrl || url;
 });
+
+interface MultipleDependenciesLoadFileOptions {
+	storedUrl: string;
+	fullUrl: string;
+}
+interface MultipleDependenciesLoadOptions {
+	files: MultipleDependenciesLoadFileOptions[];
+	error: string;
+	node: BaseNodeType;
+}
 
 export class CoreBaseLoader {
 	static readonly loadingManager = LOADING_MANAGER;
@@ -56,9 +67,25 @@ export class CoreBaseLoader {
 		}
 		// }
 		if (this._node) {
-			await Poly.blobs.fetchBlob({storedUrl, fullUrl, node: this._node});
+			await Poly.blobs.fetchBlobForNode({storedUrl, fullUrl, node: this._node});
 		}
 		const blobUrl = Poly.blobs.blobUrl(storedUrl);
 		return blobUrl || fullUrl;
+	}
+
+	protected static async _loadMultipleBlobGlobal(options: MultipleDependenciesLoadOptions) {
+		const promises: Promise<FetchBlobResponse>[] = [];
+		for (let file of options.files) {
+			const storedUrl = file.storedUrl;
+			const fullUrl = file.fullUrl;
+			const node = options.node;
+			promises.push(Poly.blobs.fetchBlobGlobal({storedUrl, fullUrl, node}));
+		}
+		const responses = await Promise.all(promises);
+		for (let response of responses) {
+			if (response.error) {
+				options.node.states.error.set(options.error);
+			}
+		}
 	}
 }

@@ -76,7 +76,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 						reject(error);
 					});
 			} else {
-				const loader = this.loader_for_ext();
+				const loader = await this.loader_for_ext();
 				if (loader) {
 					CoreLoaderGeometry.increment_in_progress_loads_count();
 					await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
@@ -187,18 +187,18 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		}
 	}
 
-	loader_for_ext() {
+	async loader_for_ext() {
 		const ext = this.extension();
 
 		switch (ext.toLowerCase()) {
 			case GeometryExtension.DRC:
-				return this.loader_for_drc();
+				return this.loader_for_drc(this._node);
 			case GeometryExtension.FBX:
 				return this.loader_for_fbx();
 			case GeometryExtension.GLTF:
 				return this.loader_for_gltf();
 			case GeometryExtension.GLB:
-				return this.loader_for_glb();
+				return this.loader_for_glb(this._node);
 			case GeometryExtension.OBJ:
 				return this.loader_for_obj();
 			case GeometryExtension.PDB:
@@ -221,7 +221,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			return new GLTFLoader(this.loadingManager);
 		}
 	}
-	loader_for_drc() {
+	static async loader_for_drc(node?: BaseNodeType) {
 		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (DRACOLoader) {
 			const draco_loader = new DRACOLoader(this.loadingManager);
@@ -230,15 +230,25 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			if (root || DRACOPath) {
 				const decoder_path = `${root || ''}${DRACOPath || ''}/`;
 
-				const node = this._node;
 				if (node) {
-					const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
-					for (let file of files) {
-						const storedUrl = `${DRACOPath}/${file}`;
-						const fullUrl = `${decoder_path}${file}`;
+					// const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+					// for (let file of files) {
+					// 	const storedUrl = `${DRACOPath}/${file}`;
+					// 	const fullUrl = `${decoder_path}${file}`;
 
-						Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
-					}
+					// 	Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
+					// }
+					const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+					await this._loadMultipleBlobGlobal({
+						files: files.map((file) => {
+							return {
+								storedUrl: `${DRACOPath}/${file}`,
+								fullUrl: `${decoder_path}${file}`,
+							};
+						}),
+						node,
+						error: 'failed to load draco libraries. Make sure to install them to load .glb files',
+					});
 				}
 
 				draco_loader.setDecoderPath(decoder_path);
@@ -250,10 +260,13 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			return draco_loader;
 		}
 	}
+	loader_for_drc(node?: BaseNodeType) {
+		return CoreLoaderGeometry.loader_for_drc(node);
+	}
 
 	private static gltf_loader: GLTFLoader | undefined;
 	private static draco_loader: DRACOLoader | undefined;
-	static loader_for_glb(node?: BaseNodeType) {
+	static async loader_for_glb(node?: BaseNodeType) {
 		const GLTFLoader = Poly.modulesRegister.module(ModuleName.GLTFLoader);
 		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (GLTFLoader && DRACOLoader) {
@@ -265,12 +278,23 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 				const decoder_path = `${root || ''}${DRACOGLTFPath || ''}/`;
 
 				if (node) {
+					// const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+					// for (let file of files) {
+					// 	const storedUrl = `${DRACOGLTFPath}/${file}`;
+					// 	const fullUrl = `${decoder_path}${file}`;
+					// 	Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
+					// }
 					const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
-					for (let file of files) {
-						const storedUrl = `${DRACOGLTFPath}/${file}`;
-						const fullUrl = `${decoder_path}${file}`;
-						Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
-					}
+					await this._loadMultipleBlobGlobal({
+						files: files.map((file) => {
+							return {
+								storedUrl: `${DRACOGLTFPath}/${file}`,
+								fullUrl: `${decoder_path}${file}`,
+							};
+						}),
+						node,
+						error: 'failed to load draco libraries. Make sure to install them to load .glb files',
+					});
 				}
 
 				this.draco_loader.setDecoderPath(decoder_path);
@@ -283,8 +307,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			return this.gltf_loader;
 		}
 	}
-	loader_for_glb() {
-		return CoreLoaderGeometry.loader_for_glb();
+	loader_for_glb(node?: BaseNodeType) {
+		return CoreLoaderGeometry.loader_for_glb(node);
 	}
 
 	loader_for_obj() {

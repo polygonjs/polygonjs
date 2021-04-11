@@ -9,6 +9,9 @@ export function FileSopNodePresets() {
 		bunny_fbx: function (node: FileSopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/fbx/stanford-bunny.fbx`);
 		},
+		car_glb: function (node: FileSopNode) {
+			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/car.glb`);
+		},
 		deer_obj: function (node: FileSopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/deer.obj`);
 		},
