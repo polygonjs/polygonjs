@@ -62,7 +62,7 @@ export class CodeFormatter {
 		if (!parent) {
 			return 0;
 		}
-		if (parent.nodeContext() != node.nodeContext()) {
+		if (parent.context() != node.context()) {
 			return 1;
 		} else {
 			// we do not have an offset of 1 for subnet_input and subnet_output

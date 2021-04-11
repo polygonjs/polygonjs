@@ -46,14 +46,14 @@ export class TypedNodePathParamValue {
 
 	nodeWithContext<N extends NodeContext>(
 		context: N,
-		error_state?: NodeErrorState
+		error_state?: NodeErrorState<N>
 	): BaseNodeByContextMap[N] | undefined {
 		const found_node = this.node();
 		if (!found_node) {
 			error_state?.set(`no node found at ${this.path()}`);
 			return;
 		}
-		const node_context = found_node.nodeContext();
+		const node_context = found_node.context();
 		if (node_context == context) {
 			return found_node as BaseNodeByContextMap[N];
 		} else {

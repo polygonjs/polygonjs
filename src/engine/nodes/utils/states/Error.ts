@@ -1,8 +1,9 @@
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {BaseState} from './Base';
 import {Poly} from '../../../Poly';
+import {NodeContext} from '../../../poly/NodeContext';
 
-export class NodeErrorState extends BaseState {
+export class NodeErrorState<NC extends NodeContext> extends BaseState<NC> {
 	private _message: string | undefined;
 
 	set(message: string | undefined) {
@@ -11,7 +12,7 @@ export class NodeErrorState extends BaseState {
 				Poly.warn(`[${this.node.path()}] error: '${message}'`);
 			}
 			this._message = message;
-			this.on_update();
+			this.onUpdate();
 		}
 	}
 	message() {
@@ -24,10 +25,10 @@ export class NodeErrorState extends BaseState {
 		return this._message != null;
 	}
 
-	protected on_update() {
+	protected onUpdate() {
 		if (this._message != null) {
 			// console.warn("new error", message, this.self.path())
-			this.node._setContainer(null, `from error '${this._message}'`);
+			this.node._setContainer(null as any, `from error '${this._message}'`);
 		}
 
 		this.node.emit(NodeEvent.ERROR_UPDATED);

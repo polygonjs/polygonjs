@@ -20,7 +20,7 @@ const EMPTY_DATA_TEXTURE = new DataTexture(data, size, 1, LuminanceFormat, HalfF
 export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.COP, K> {
 	public readonly flags: FlagsControllerBO = new FlagsControllerBO(this);
 
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.COP;
 	}
 	static displayedInputNames(): string[] {

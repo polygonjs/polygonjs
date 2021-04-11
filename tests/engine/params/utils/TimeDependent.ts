@@ -51,7 +51,7 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	const box1 = geo1.createNode('box');
 
 	const size = box1.p.size;
-	assert.ok(!size.states.time_dependent.active());
+	assert.ok(!size.states.timeDependent.active());
 
 	await box1.compute();
 

@@ -115,7 +115,7 @@ export class NodesController {
 	}
 
 	addToInstanciatedNode(node: BaseNodeType) {
-		const context = node.nodeContext();
+		const context = node.context();
 		const node_type = node.type();
 		this._instanciated_nodes_by_context_and_type[context] =
 			this._instanciated_nodes_by_context_and_type[context] || {};
@@ -125,7 +125,7 @@ export class NodesController {
 	}
 
 	removeFromInstanciatedNode(node: BaseNodeType) {
-		const context = node.nodeContext();
+		const context = node.context();
 		const node_type = node.type();
 		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graphNodeId()];
 	}

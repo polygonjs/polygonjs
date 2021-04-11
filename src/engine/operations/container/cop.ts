@@ -4,7 +4,7 @@ import {NodeContext} from '../../../engine/poly/NodeContext';
 import {ParamsInitData} from '../../../engine/nodes/utils/io/IOController';
 import {Texture} from 'three/src/textures/Texture';
 
-export class BaseCopOperation extends BaseOperation {
+export class BaseCopOperation extends BaseOperation<NodeContext.COP> {
 	static context() {
 		return NodeContext.COP;
 	}
@@ -13,7 +13,7 @@ export class BaseCopOperation extends BaseOperation {
 
 export type OperationInputsMap = WeakMap<CopOperationContainer, Map<number, number>>;
 
-export class CopOperationContainer extends BaseOperationContainer {
+export class CopOperationContainer extends BaseOperationContainer<NodeContext.COP> {
 	constructor(protected operation: BaseCopOperation, protected name: string, protected init_params: ParamsInitData) {
 		super(operation, name, init_params);
 	}

@@ -91,7 +91,7 @@ export class PolyNodeController {
 			const nodes_data = root_exporter.data({showPolyNodesData: true});
 			const ui_data = root_exporter.ui_data({showPolyNodesData: true});
 			const data: PolyNodeDefinition = {
-				nodeContext: node.nodeContext(),
+				nodeContext: node.context(),
 				inputs: [0, 0],
 				params: [],
 				nodes: nodes_data.nodes,

@@ -7,7 +7,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	NodeContext.MAT,
 	K
 > {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.MAT;
 	}
 

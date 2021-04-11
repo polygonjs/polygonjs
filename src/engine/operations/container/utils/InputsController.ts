@@ -1,9 +1,10 @@
 import {ClonedStatesController} from './inputs/ClonedStatesController';
 import {InputCloneMode} from '../../../../engine/poly/InputCloneMode';
 import {BaseOperationContainer} from '../_Base';
+import {NodeContext} from '../../../poly/NodeContext';
 
-export class InputsController {
-	constructor(private operation_container: BaseOperationContainer) {}
+export class InputsController<NC extends NodeContext> {
+	constructor(private operation_container: BaseOperationContainer<NC>) {}
 	inputs_count() {
 		return this.operation_container.inputs_count();
 	}
@@ -13,7 +14,7 @@ export class InputsController {
 	// CLONABLE STATES
 	//
 	//
-	private _cloned_states_controller: ClonedStatesController | undefined;
+	private _cloned_states_controller: ClonedStatesController<NC> | undefined;
 	init_inputs_cloned_state(states: InputCloneMode | InputCloneMode[]) {
 		if (!this._cloned_states_controller) {
 			this._cloned_states_controller = new ClonedStatesController(this);

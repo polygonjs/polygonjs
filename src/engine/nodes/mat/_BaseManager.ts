@@ -4,7 +4,7 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkMatParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkMatNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.MAT, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.MAT;
 	}
 	cook() {

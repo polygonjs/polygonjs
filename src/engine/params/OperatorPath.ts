@@ -142,7 +142,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 			}
 		} else {
 			this.states.error.set(
-				`node context is ${node.nodeContext()} but the params expects a ${this._expected_context()}`
+				`node context is ${node.context()} but the params expects a ${this._expected_context()}`
 			);
 		}
 	}

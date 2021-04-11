@@ -10,14 +10,15 @@ import {BaseOperation, DefaultOperationParams, DefaultOperationParam} from '../_
 import {ParamInitValueSerializedTypeMap} from '../../../engine/params/types/ParamInitValueSerializedTypeMap';
 import {InputsController} from './utils/InputsController';
 import {CoreType} from '../../../core/Type';
+import {NodeContext} from '../../poly/NodeContext';
 
 type SimpleParamJsonExporterData<T extends ParamType> = ParamInitValueSerializedTypeMap[T];
 
-export class BaseOperationContainer {
+export class BaseOperationContainer<NC extends NodeContext> {
 	protected params: DefaultOperationParams = {};
 	private _path_params: TypedNodePathParamValue[] | undefined;
 
-	constructor(protected operation: BaseOperation, protected name: string, init_params: ParamsInitData) {
+	constructor(protected operation: BaseOperation<NC>, protected name: string, init_params: ParamsInitData) {
 		this._apply_default_params();
 		this._apply_init_params(init_params);
 		this._init_cloned_states();
@@ -128,8 +129,8 @@ export class BaseOperationContainer {
 	// INPUTS
 	//
 	//
-	protected _inputs: BaseOperationContainer[] | undefined;
-	setInput(index: number, input: BaseOperationContainer) {
+	protected _inputs: BaseOperationContainer<NC>[] | undefined;
+	setInput(index: number, input: BaseOperationContainer<NC>) {
 		this._inputs = this._inputs || [];
 		this._inputs[index] = input;
 	}
@@ -141,13 +142,13 @@ export class BaseOperationContainer {
 		}
 	}
 
-	private _inputs_controller: InputsController | undefined;
-	protected inputs_controller() {
-		return (this._inputs_controller = this._inputs_controller || new InputsController(this));
+	private _inputs_controller: InputsController<NC> | undefined;
+	protected inputsController() {
+		return (this._inputs_controller = this._inputs_controller || new InputsController<NC>(this));
 	}
 	private _init_cloned_states() {
 		const default_cloned_states = (this.operation.constructor as typeof BaseOperation).INPUT_CLONED_STATE;
-		this.inputs_controller().init_inputs_cloned_state(default_cloned_states);
+		this.inputsController().init_inputs_cloned_state(default_cloned_states);
 	}
 	input_clone_required(index: number): boolean {
 		if (!this._inputs_controller) {
@@ -156,7 +157,7 @@ export class BaseOperationContainer {
 		return this._inputs_controller.clone_required(index);
 	}
 	override_input_clone_state(state: boolean) {
-		this.inputs_controller().override_cloned_state(state);
+		this.inputsController().override_cloned_state(state);
 	}
 
 	//

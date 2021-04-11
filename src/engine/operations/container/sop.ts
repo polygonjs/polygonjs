@@ -2,10 +2,11 @@ import {BaseOperationContainer} from './_Base';
 import {BaseSopOperation} from '../sop/_Base';
 import {ParamsInitData} from '../../../engine/nodes/utils/io/IOController';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {NodeContext} from '../../poly/NodeContext';
 
 export type OperationInputsMap = WeakMap<SopOperationContainer, Map<number, number>>;
 
-export class SopOperationContainer extends BaseOperationContainer {
+export class SopOperationContainer extends BaseOperationContainer<NodeContext.SOP> {
 	constructor(protected operation: BaseSopOperation, protected name: string, protected init_params: ParamsInitData) {
 		super(operation, name, init_params);
 	}

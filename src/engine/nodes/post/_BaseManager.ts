@@ -4,7 +4,7 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkPostParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkPostNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.POST;
 	}
 	cook() {

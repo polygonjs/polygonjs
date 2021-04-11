@@ -10,7 +10,7 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ANIM, K> {
 	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
 
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.ANIM;
 	}
 

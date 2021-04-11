@@ -4,7 +4,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsController} from '../utils/FlagsController';
 
 export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ROP, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.ROP;
 	}
 

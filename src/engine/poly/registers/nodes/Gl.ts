@@ -224,9 +224,9 @@ import {PolyEngine} from '../../../Poly';
 
 const SUBNET_CHILD_OPTION = {
 	only: [
-		`${IfThenGlNode.nodeContext()}/${IfThenGlNode.type()}`,
-		`${SubnetGlNode.nodeContext()}/${SubnetGlNode.type()}`,
-		`${ForLoopGlNode.nodeContext()}/${ForLoopGlNode.type()}`,
+		`${IfThenGlNode.context()}/${IfThenGlNode.type()}`,
+		`${SubnetGlNode.context()}/${SubnetGlNode.type()}`,
+		`${ForLoopGlNode.context()}/${ForLoopGlNode.type()}`,
 	],
 };
 export class GlRegister {

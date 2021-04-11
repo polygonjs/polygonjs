@@ -14,7 +14,7 @@ export class HelperController<O extends Object3D, L extends Light> {
 	private _helper: BaseLightHelper<O, L, BaseLightHelperObjNode<L>> | undefined;
 	constructor(
 		private node: BaseLightHelperObjNode<L>,
-		private _helper_constructor: HelperConstructor<O, L>,
+		private _helperConstructor: HelperConstructor<O, L>,
 		private _name: string
 	) {}
 
@@ -29,7 +29,7 @@ export class HelperController<O extends Object3D, L extends Light> {
 	}
 
 	private _createHelper(): BaseLightHelper<O, L, BaseLightHelperObjNode<L>> {
-		const helper = new this._helper_constructor(this.node, this._name);
+		const helper = new this._helperConstructor(this.node, this._name);
 		helper.build();
 		return helper;
 	}

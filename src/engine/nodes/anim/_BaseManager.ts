@@ -4,7 +4,7 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkAnimParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ANIM, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.ANIM;
 	}
 	cook() {

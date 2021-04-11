@@ -12,7 +12,7 @@ export type DefaultOperationParams = PolyDictionary<DefaultOperationParam<ParamT
 
 export const OPERATIONS_COMPOSER_NODE_TYPE: Readonly<string> = 'operationsComposer';
 
-export class BaseOperation {
+export class BaseOperation<NC extends NodeContext> {
 	static type(): string {
 		throw 'type to be overriden';
 	}
@@ -32,7 +32,7 @@ export class BaseOperation {
 	static readonly DEFAULT_PARAMS: DefaultOperationParams = {};
 	static readonly INPUT_CLONED_STATE: InputCloneMode | InputCloneMode[] = [];
 
-	constructor(protected _scene: PolyScene, protected states?: StatesController, protected _node?: BaseNodeType) {}
+	constructor(protected _scene: PolyScene, protected states?: StatesController<NC>, protected _node?: BaseNodeType) {}
 	scene() {
 		return this._scene;
 	}

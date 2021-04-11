@@ -90,7 +90,7 @@ export class HierarchyChildrenController {
 	}
 
 	node_context_signature() {
-		return `${this.node.nodeContext()}/${this.node.type()}`;
+		return `${this.node.context()}/${this.node.type()}`;
 	}
 
 	available_children_classes() {
@@ -158,7 +158,7 @@ export class HierarchyChildrenController {
 		operation_type: string,
 		operation_container_name: string,
 		params_init_value_overrides?: ParamsInitData
-	): BaseOperationContainer {
+	): BaseOperationContainer<any> {
 		const operation_class = Poly.registeredOperation(this._context, operation_type);
 
 		if (operation_class == null) {
@@ -284,7 +284,7 @@ export class HierarchyChildrenController {
 	}
 	add_to_children_and_grandchildren_by_context(node: BaseNodeType) {
 		const node_id = node.graphNodeId();
-		const type = node.nodeContext();
+		const type = node.context();
 		this._children_and_grandchildren_by_context[type] = this._children_and_grandchildren_by_context[type] || [];
 		if (!this._children_and_grandchildren_by_context[type].includes(node_id)) {
 			this._children_and_grandchildren_by_context[type].push(node_id);
@@ -296,7 +296,7 @@ export class HierarchyChildrenController {
 	}
 	remove_from_children_and_grandchildren_by_context(node: BaseNodeType) {
 		const node_id = node.graphNodeId();
-		const type = node.nodeContext();
+		const type = node.context();
 		if (this._children_and_grandchildren_by_context[type]) {
 			const index = this._children_and_grandchildren_by_context[type].indexOf(node_id);
 			if (index >= 0) {

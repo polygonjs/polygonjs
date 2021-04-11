@@ -19,7 +19,7 @@ import {ColorParam} from '../../params/Color';
 const REGEX_PATH_SANITIZE = /\/+/g;
 
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.GL, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.GL;
 	}
 
@@ -43,7 +43,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	get material_node(): AssemblerControllerNode | undefined {
 		const parent = this.parent();
 		if (parent) {
-			if (parent.nodeContext() == NodeContext.GL) {
+			if (parent.context() == NodeContext.GL) {
 				return (parent as BaseGlNodeType)?.material_node;
 			} else {
 				return parent as AssemblerControllerNode;

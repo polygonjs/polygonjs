@@ -81,7 +81,7 @@ export class IOController<NC extends NodeContext> {
 	//
 	get connection_points(): ConnectionPointsController<NC> {
 		return (this._connection_points =
-			this._connection_points || new ConnectionPointsController(this.node, this.node.nodeContext() as NC));
+			this._connection_points || new ConnectionPointsController(this.node, this.node.context() as NC));
 	}
 	get has_connection_points_controller(): boolean {
 		return this._connection_points != null;

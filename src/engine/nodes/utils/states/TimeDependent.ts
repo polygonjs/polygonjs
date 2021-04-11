@@ -1,6 +1,7 @@
+import {NodeContext} from '../../../poly/NodeContext';
 import {BaseState} from './Base';
 
-export class TimeDependentState extends BaseState {
+export class TimeDependentState<NC extends NodeContext> extends BaseState<NC> {
 	active() {
 		return this.paramsTimeDependent() || this.inputsTimeDependent();
 	}
@@ -9,7 +10,7 @@ export class TimeDependentState extends BaseState {
 		const param_names = this.node.params.names;
 		for (let param_name of param_names) {
 			const param = this.node.params.get(param_name);
-			if (param && param.states.time_dependent.active()) {
+			if (param && param.states.timeDependent.active()) {
 				return true;
 			}
 		}
@@ -19,7 +20,7 @@ export class TimeDependentState extends BaseState {
 	inputsTimeDependent(): boolean {
 		const inputs = this.node.io.inputs.inputs();
 		for (let input of inputs) {
-			if (input && input.states.time_dependent.active()) {
+			if (input && input.states.timeDependent.active()) {
 				return true;
 			}
 		}

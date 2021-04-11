@@ -30,8 +30,6 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		// helper
 		/** @param toggle to show helper */
 		showHelper = ParamConfig.BOOLEAN(0);
-		/** @param helper size */
-		helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 
 		// shadows
 		shadow = ParamConfig.FOLDER();
@@ -39,6 +37,10 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		castShadow = ParamConfig.BOOLEAN(1);
 		/** @param shadow resolution */
 		shadowRes = ParamConfig.VECTOR2([1024, 1024], {
+			visibleIf: {castShadow: true},
+		});
+		/** @param shadow size */
+		shadowSize = ParamConfig.VECTOR2([2, 2], {
 			visibleIf: {castShadow: true},
 		});
 		/** @param shadow bias */
@@ -94,20 +96,8 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 
 		return light;
 	}
-	// addObjectToParent(parent: Object3D) {
-	// 	super.addObjectToParent(parent);
-	// 	parent.add(this._target_target);
-	// }
-	// removeObjectFromParent() {
-	// 	super.removeObjectFromParent();
-	// 	const parent = this._target_target.parent;
-	// 	if (parent) {
-	// 		parent.remove(this._target_target);
-	// 	}
-	// }
 
 	protected updateLightParams() {
-		// this.light.position.copy(this.pv.t);
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.shadow.camera.far = this.pv.distance;
@@ -117,10 +107,18 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 	protected updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadow);
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
-		// object.shadow.camera.near = this.pv.shadow_near
-		// object.shadow.camera.far = this.pv.shadow_far
+
 		this.light.shadow.bias = this.pv.shadowBias;
 		this.light.shadow.radius = this.pv.shadowRadius;
+
+		const shadowCamera = this.light.shadow.camera;
+		const shadowSize = this.pv.shadowSize;
+		shadowCamera.left = -shadowSize.x * 0.5;
+		shadowCamera.right = shadowSize.x * 0.5;
+		shadowCamera.top = shadowSize.y * 0.5;
+		shadowCamera.bottom = -shadowSize.y * 0.5;
+		// object.shadow.camera.near = this.pv.shadow_near
+		// object.shadow.camera.far = this.pv.shadow_far
 
 		// updating the camera matrix is not necessary for point light
 		// so probably should not for this

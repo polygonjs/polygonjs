@@ -59,7 +59,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _ui_data: UIData | undefined;
 
-	private _states: StatesController | undefined;
+	private _states: StatesController<NC> | undefined;
 	private _lifecycle: LifeCycleController | undefined;
 	private _serializer: NodeSerializer | undefined;
 	private _cook_controller: NodeCookController<NC> | undefined;
@@ -111,7 +111,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return (this._ui_data = this._ui_data || new UIData(this));
 	}
 
-	get states(): StatesController {
+	get states(): StatesController<NC> {
 		return (this._states = this._states || new StatesController(this));
 	}
 	get lifecycle(): LifeCycleController {
@@ -174,13 +174,13 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		const c = this.constructor as typeof BaseNodeClass;
 		return c.type();
 	}
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		console.error('node has no node_context', this);
-		throw 'node_context requires override';
+		throw 'context requires override';
 	}
-	nodeContext(): NodeContext {
+	context(): NodeContext {
 		const c = this.constructor as typeof BaseNodeClass;
-		return c.nodeContext();
+		return c.context();
 	}
 
 	static require_webgl2(): boolean {

@@ -127,7 +127,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			}
 		} else {
 			this.states.error.set(
-				`node context is ${node.nodeContext()} but the params expects a ${this._expectedContext()}`
+				`node context is ${node.context()} but the params expects a ${this._expectedContext()}`
 			);
 		}
 	}

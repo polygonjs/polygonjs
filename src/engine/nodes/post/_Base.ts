@@ -33,7 +33,7 @@ export const PostParamOptions: ParamOptions = {
 };
 
 export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.POST;
 	}
 

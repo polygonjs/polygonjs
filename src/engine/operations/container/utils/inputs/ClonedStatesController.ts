@@ -2,14 +2,15 @@ import {InputsController} from '../InputsController';
 import {InputCloneMode} from '../../../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../../../engine/poly/Assert';
 import {CoreType} from '../../../../../core/Type';
+import {NodeContext} from '../../../../poly/NodeContext';
 
-export class ClonedStatesController {
+export class ClonedStatesController<NC extends NodeContext> {
 	private _cloned_states: InputCloneMode[] | undefined;
 	private _cloned_state: InputCloneMode | undefined;
 	private _clone_required_states: boolean[] = [];
 	private _overridden: boolean = false;
 
-	constructor(protected inputs_controller: InputsController) {}
+	constructor(protected inputs_controller: InputsController<NC>) {}
 	init_inputs_cloned_state(states: InputCloneMode | InputCloneMode[]) {
 		if (CoreType.isArray(states)) {
 			this._cloned_states = states;

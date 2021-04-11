@@ -7,6 +7,7 @@ import {BaseOperationContainer} from '../../operations/container/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeContext} from '../../poly/NodeContext';
 class OperationsComposerSopParamConfig extends NodeParamsConfig {}
 const ParamsConfig = new OperationsComposerSopParamConfig();
 
@@ -48,8 +49,10 @@ export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSo
 		existing_map.set(input_config.operation_input_index, input_config.node_input_index);
 	}
 
-	private _operation_containers_requiring_resolve: BaseOperationContainer[] | undefined;
-	add_operation_container_with_path_param_resolve_required(operation_container: BaseOperationContainer) {
+	private _operation_containers_requiring_resolve: BaseOperationContainer<NodeContext.SOP>[] | undefined;
+	add_operation_container_with_path_param_resolve_required(
+		operation_container: BaseOperationContainer<NodeContext.SOP>
+	) {
 		if (!this._operation_containers_requiring_resolve) {
 			this._operation_containers_requiring_resolve = [];
 		}

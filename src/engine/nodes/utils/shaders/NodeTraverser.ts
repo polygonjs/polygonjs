@@ -192,7 +192,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			}
 		});
 		const first_node = nodes[0];
-		if (parent.nodeContext() == first_node.nodeContext()) {
+		if (parent.context() == first_node.context()) {
 			nodes.push(parent as NodeTypeMap[NC]);
 		}
 

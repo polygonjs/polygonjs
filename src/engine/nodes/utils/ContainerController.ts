@@ -10,7 +10,7 @@ export class TypedContainerController<NC extends NodeContext> {
 	protected _container: ContainerMap[NC];
 
 	constructor(protected node: TypedNode<NC, any>) {
-		const container_class = ContainerClassMap[node.nodeContext()];
+		const container_class = ContainerClassMap[node.context()];
 		this._container = new container_class(this.node as any) as ContainerMap[NC];
 	}
 

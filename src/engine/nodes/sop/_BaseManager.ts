@@ -4,7 +4,7 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkSopParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.SOP;
 	}
 	// initializeBaseNode() {

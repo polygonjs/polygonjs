@@ -12,7 +12,7 @@ import {ParamType} from '../../poly/ParamType';
 // import {IOController} from '../utils/io/IOController';
 
 export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.JS, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.JS;
 	}
 

@@ -21,7 +21,7 @@ export enum ObjNodeRenderOrder {
 }
 
 export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<NodeContext.OBJ, K> {
-	static nodeContext(): NodeContext {
+	static context(): NodeContext {
 		return NodeContext.OBJ;
 	}
 	static displayedInputNames(): string[] {
