@@ -174,7 +174,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 	compileMaterial(material: ShaderMaterial) {
 		// no need to compile if the globals handler has not been declared
-		if (!this.compile_allowed()) {
+		if (!this.compileAllowed()) {
 			return;
 		}
 		const output_nodes: BaseGlNodeType[] = GlNodeFinder.findOutputNodes(this.currentGlParentNode());
@@ -191,12 +191,12 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (new_vertex_shader && new_fragment_shader) {
 			material.vertexShader = new_vertex_shader;
 			material.fragmentShader = this.processFilterFragmentShader(new_fragment_shader);
-			this.add_uniforms(material.uniforms);
+			this.addUniforms(material.uniforms);
 			material.needsUpdate = true;
 		}
 
 		const scene = this.currentGlParentNode().scene();
-		if (this.uniforms_time_dependent()) {
+		if (this.uniformsTimeDependent()) {
 			// make sure not to use this.currentGlParentNode().graphNodeId() as the id,
 			// as we need several materials:
 			// - the visible one
@@ -397,7 +397,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	handle_globals_output_name(options: HandleGlobalsOutputOptions) {
 		switch (options.output_name) {
 			case GlobalsOutput.TIME:
-				this.handle_time(options);
+				this.handleTime(options);
 				return;
 			case GlobalsOutput.RESOLUTION:
 				this.handle_resolution(options);
@@ -427,7 +427,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				);
 		}
 	}
-	handle_time(options: HandleGlobalsOutputOptions) {
+	handleTime(options: HandleGlobalsOutputOptions) {
 		const definition = new UniformGLDefinition(
 			options.globals_node,
 			GlConnectionPointType.FLOAT,
@@ -444,7 +444,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 
 		options.body_lines.push(body_line);
-		this.set_uniforms_time_dependent();
+		this.setUniformsTimeDependent();
 	}
 	handle_resolution(options: HandleGlobalsOutputOptions) {
 		// if (options.shader_name == ShaderName.FRAGMENT) {

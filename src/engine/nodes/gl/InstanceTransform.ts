@@ -6,6 +6,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 
 const VARS = {
 	position: 'position',
@@ -96,7 +97,8 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		return VARS.normal;
 	}
 	private _default_instancePosition(shaders_collection_controller: ShadersCollectionController): string | undefined {
-		return this.material_node?.assemblerController?.assembler.globals_handler?.read_attribute(
+		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
+		return assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC3,
 			VARS.instancePosition,
@@ -107,7 +109,8 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		// 	.read_attribute(this, 'vec3', VARS.instancePosition, this._shader_name);
 	}
 	private _default_input_instanceOrientation(shaders_collection_controller: ShadersCollectionController) {
-		return this.material_node?.assemblerController?.assembler.globals_handler?.read_attribute(
+		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
+		return assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC4,
 			VARS.instanceOrientation,
@@ -118,7 +121,8 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		// 	.read_attribute(this, 'vec4', VARS.instanceOrientation, this._shader_name);
 	}
 	private _default_input_instanceScale(shaders_collection_controller: ShadersCollectionController) {
-		return this.material_node?.assemblerController?.assembler.globals_handler?.read_attribute(
+		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
+		return assembler.globals_handler?.read_attribute(
 			this,
 			GlConnectionPointType.VEC3,
 			VARS.instanceScale,

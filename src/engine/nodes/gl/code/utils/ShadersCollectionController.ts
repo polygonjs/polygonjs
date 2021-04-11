@@ -2,14 +2,24 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGLDefinition} from '../../utils/GLDefinition';
 import {LinesController} from './LinesController';
 import {BaseGlNodeType} from '../../_Base';
+import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
+import {NodeContext} from '../../../../poly/NodeContext';
 
 export class ShadersCollectionController {
 	private _lines_controller_by_shader_name: Map<ShaderName, LinesController> = new Map();
 
-	constructor(private _shader_names: ShaderName[], private _current_shader_name: ShaderName) {
+	constructor(
+		private _shader_names: ShaderName[],
+		private _current_shader_name: ShaderName,
+		private _assembler: TypedAssembler<NodeContext.GL>
+	) {
 		for (let shader_name of this._shader_names) {
 			this._lines_controller_by_shader_name.set(shader_name, new LinesController(shader_name));
 		}
+	}
+
+	assembler() {
+		return this._assembler;
 	}
 
 	// merge(shaders_collection_controller: ShadersCollectionController, scene: PolyScene) {

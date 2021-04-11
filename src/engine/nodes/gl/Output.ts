@@ -11,6 +11,7 @@ import {TypedGlNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 class OutputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OutputGlParamsConfig();
 
@@ -31,7 +32,8 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
 		// if (shaders_collection_controller.shader_name) {
-		this.material_node?.assemblerController?.assembler.set_node_lines_output(this, shaders_collection_controller);
+		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
+		assembler.set_node_lines_output(this, shaders_collection_controller);
 		// }
 	}
 

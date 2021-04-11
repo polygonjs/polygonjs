@@ -27,6 +27,11 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		intensity = ParamConfig.FLOAT(1);
 		/** @param light distance */
 		distance = ParamConfig.FLOAT(100, {range: [0, 100]});
+		// helper
+		/** @param toggle to show helper */
+		showHelper = ParamConfig.BOOLEAN(0);
+		/** @param helper size */
+		helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 
 		// shadows
 		shadow = ParamConfig.FOLDER();
@@ -46,12 +51,6 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 			range: [0, 10],
 			rangeLocked: [true, false],
 		});
-
-		// helper
-		/** @param toggle to show helper */
-		showHelper = ParamConfig.BOOLEAN(0);
-		/** @param helper size */
-		helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 	};
 }
 

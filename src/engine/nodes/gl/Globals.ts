@@ -15,6 +15,7 @@ import {TypedGlNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 class GlobalsGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsGlParamsConfig();
 
@@ -34,7 +35,8 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
 		// if (lines_controller.shader_name) {
-		this.material_node?.assemblerController?.assembler.set_node_lines_globals(this, shaders_collection_controller);
+		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
+		assembler.set_node_lines_globals(this, shaders_collection_controller);
 		// }
 		// const vertex_definitions = []
 		// const fragment_definitions = []

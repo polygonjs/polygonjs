@@ -39,7 +39,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 
 	async compile() {}
 
-	compile_allowed(): boolean {
+	compileAllowed(): boolean {
 		return true;
 	}
 
@@ -205,7 +205,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	//
 	reset_configs() {
 		this._reset_variable_configs();
-		this._reset_uniforms_time_dependency();
+		this._resetUniformsTimeDependency();
 	}
 
 	variable_configs() {
@@ -239,13 +239,13 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	// }
 
 	// time dependency
-	protected _reset_uniforms_time_dependency() {
+	protected _resetUniformsTimeDependency() {
 		this._uniforms_time_dependent = false;
 	}
-	set_uniforms_time_dependent() {
+	setUniformsTimeDependent() {
 		this._uniforms_time_dependent = true;
 	}
-	uniforms_time_dependent(): boolean {
+	uniformsTimeDependent(): boolean {
 		return this._uniforms_time_dependent;
 	}
 }

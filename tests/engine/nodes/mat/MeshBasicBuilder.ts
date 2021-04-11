@@ -339,7 +339,43 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	});
 });
 
-QUnit.skip('mesh basic builder frame dependent', (assert) => {});
+QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) => {
+	const MAT = window.MAT;
+	const scene = window.scene;
+	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
+	mesh_basic1.createNode('output');
+	mesh_basic1.createNode('globals');
+	const output1 = mesh_basic1.nodesByType('output')[0];
+	const globals1 = mesh_basic1.nodesByType('globals')[0];
+
+	assert.notOk((mesh_basic1.material as any).uniforms.time);
+
+	output1.setInput('alpha', globals1, 'time');
+	await mesh_basic1.compute();
+	const customMat = mesh_basic1.material.customMaterials.customDepthDOFMaterial!;
+	assert.equal((mesh_basic1.material as any).uniforms.time.value, 0);
+	assert.equal(customMat.uniforms.time.value, 0);
+
+	scene.setFrame(60);
+	assert.equal((mesh_basic1.material as any).uniforms.time.value, 1);
+	assert.equal(customMat.uniforms.time.value, 1);
+
+	const data = new SceneJsonExporter(scene).data();
+	await AssemblersUtils.withUnregisteredAssembler(mesh_basic1.usedAssembler(), async () => {
+		console.log('************ LOAD **************');
+		const scene2 = await SceneJsonImporter.loadData(data);
+		await scene2.waitForCooksCompleted();
+
+		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
+		const mesh_basic2 = new_mesh_basic1;
+		const customMat2 = mesh_basic2.material.customMaterials.customDepthDOFMaterial!;
+		assert.equal((mesh_basic2.material as any).uniforms.time.value, 1);
+		assert.equal(customMat2.uniforms.time.value, 1);
+		scene.setFrame(120);
+		assert.equal((mesh_basic2.material as any).uniforms.time.value, 1);
+		assert.equal(customMat2.uniforms.time.value, 1);
+	});
+});
 
 QUnit.skip('mesh basic builder bbox dependent', (assert) => {});
 

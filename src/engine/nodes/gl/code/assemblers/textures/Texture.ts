@@ -47,7 +47,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		}
 
 		this._uniforms = this._uniforms || {};
-		this.add_uniforms(this._uniforms);
+		this.addUniforms(this._uniforms);
 
 		for (let shader_name of this.shaderNames()) {
 			const lines = this._lines.get(shader_name);
@@ -58,7 +58,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 
 		BuilderCopNode.handle_dependencies(
 			this.currentGlParentNode() as BuilderCopNode,
-			this.uniforms_time_dependent(),
+			this.uniformsTimeDependent(),
 			this._uniforms as IUniformsWithTime
 		);
 	}
@@ -170,7 +170,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 
 					body_lines.push(`float ${var_name} = ${output_name}`);
 
-					this.set_uniforms_time_dependent();
+					this.setUniformsTimeDependent();
 					break;
 
 				case 'gl_FragCoord':

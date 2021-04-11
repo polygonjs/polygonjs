@@ -349,7 +349,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		const var_name = globals_node.glVarName(output_name);
 		const body_line = `float ${var_name} = ${output_name}`;
 		shaders_collection_controller.addBodyLines(globals_node, [body_line]);
-		this.set_uniforms_time_dependent();
+		this.setUniformsTimeDependent();
 	}
 
 	private _handle_globals_default(

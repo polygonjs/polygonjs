@@ -65,7 +65,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 
 		const data = {
 			material: material_data || {},
-			uniforms_time_dependent: assemblerController.assembler.uniforms_time_dependent(),
+			uniforms_time_dependent: assemblerController.assembler.uniformsTimeDependent(),
 			uniforms_resolution_dependent: assemblerController.assembler.uniforms_resolution_dependent(),
 			param_uniform_pairs: param_uniform_pairs,
 			customMaterials: customMaterialsData,

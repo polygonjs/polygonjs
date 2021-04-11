@@ -98,7 +98,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	get globals_handler(): GlobalsBaseController | undefined {
 		return this.currentGlParentNode().assemblerController?.globals_handler;
 	}
-	compile_allowed(): boolean {
+	compileAllowed(): boolean {
 		return this.currentGlParentNode().assemblerController?.globals_handler != null;
 	}
 	shaders_by_name() {
@@ -129,12 +129,12 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return undefined;
 	}
 
-	protected add_uniforms(current_uniforms: IUniforms) {
+	protected addUniforms(current_uniforms: IUniforms) {
 		for (let param_config of this.param_configs()) {
 			current_uniforms[param_config.uniform_name] = param_config.uniform;
 		}
 
-		if (this.uniforms_time_dependent()) {
+		if (this.uniformsTimeDependent()) {
 			current_uniforms['time'] = {
 				// type: '1f',
 				value: this.currentGlParentNode().scene().time(),
@@ -235,13 +235,17 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 				return this.input_names_for_shader_name(root_node, shader_name);
 			}
 		);
-		return new CodeBuilder(node_traverser, (shader_name) => {
-			return this.root_nodes_by_shader_name(shader_name);
-		});
+		return new CodeBuilder(
+			node_traverser,
+			(shader_name) => {
+				return this.root_nodes_by_shader_name(shader_name);
+			},
+			this
+		);
 	}
 	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
 		const param_nodes = GlNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
-		this.codeBuilder().build_from_nodes(root_nodes, param_nodes);
+		this.codeBuilder().buildFromNodes(root_nodes, param_nodes);
 	}
 	allow_new_param_configs() {
 		this.codeBuilder().allow_new_param_configs();
@@ -328,7 +332,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	reset_configs() {
 		this._reset_shader_configs();
 		this._reset_variable_configs();
-		this._reset_uniforms_time_dependency();
+		this._resetUniformsTimeDependency();
 		this._reset_uniforms_resolution_dependency();
 	}
 	shaderConfigs() {
@@ -403,13 +407,13 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 
 	// time dependency
-	protected _reset_uniforms_time_dependency() {
+	protected _resetUniformsTimeDependency() {
 		this._uniforms_time_dependent = false;
 	}
-	set_uniforms_time_dependent() {
+	setUniformsTimeDependent() {
 		this._uniforms_time_dependent = true;
 	}
-	uniforms_time_dependent(): boolean {
+	uniformsTimeDependent(): boolean {
 		return this._uniforms_time_dependent;
 	}
 	// resolution dependency

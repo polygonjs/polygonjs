@@ -160,7 +160,7 @@ export class ParticlesSystemGpuComputeController {
 			this._used_textures_size.copy(this.node.pv.texturesSize);
 		}
 
-		this._force_time_dependent();
+		this._forceTimeDependent();
 		this._init_particles_uvs();
 		// we need to recreate the material if the texture allocation changes
 		this.node.renderController.reset_render_material();
@@ -235,7 +235,7 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	private _graph_node: CoreGraphNode | undefined;
-	private _force_time_dependent() {
+	private _forceTimeDependent() {
 		// using force_time_dependent would force the whole node to recook,
 		// but that would also trigger the obj geo node to update its display node.
 		// A better way is to just recompute the sim only, outside of the cook method.

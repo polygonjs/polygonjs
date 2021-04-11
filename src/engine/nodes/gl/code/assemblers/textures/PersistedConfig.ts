@@ -36,7 +36,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 			fragment_shader: this.node.texture_material.fragmentShader,
 			uniforms: this.node.texture_material.uniforms,
 			param_uniform_pairs: param_uniform_pairs,
-			uniforms_time_dependent: assemblerController.assembler.uniforms_time_dependent(),
+			uniforms_time_dependent: assemblerController.assembler.uniformsTimeDependent(),
 			uniforms_resolution_dependent: assemblerController.assembler.uniforms_resolution_dependent(),
 		};
 

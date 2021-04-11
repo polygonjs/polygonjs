@@ -2,10 +2,10 @@ import {BaseState} from './Base';
 
 export class TimeDependentState extends BaseState {
 	active() {
-		return this.are_params_time_dependent() || this.are_inputs_time_dependent();
+		return this.paramsTimeDependent() || this.inputsTimeDependent();
 	}
 
-	are_params_time_dependent(): boolean {
+	paramsTimeDependent(): boolean {
 		const param_names = this.node.params.names;
 		for (let param_name of param_names) {
 			const param = this.node.params.get(param_name);
@@ -16,7 +16,7 @@ export class TimeDependentState extends BaseState {
 		return false;
 	}
 
-	are_inputs_time_dependent(): boolean {
+	inputsTimeDependent(): boolean {
 		const inputs = this.node.io.inputs.inputs();
 		for (let input of inputs) {
 			if (input && input.states.time_dependent.active()) {
@@ -26,14 +26,14 @@ export class TimeDependentState extends BaseState {
 		return false;
 	}
 
-	force_time_dependent() {
+	forceTimeDependent() {
 		const predecessor_ids = this.node.graphPredecessors().map((n) => n.graphNodeId());
 		const frame_node = this.node.scene().timeController.graphNode;
 		if (!predecessor_ids.includes(frame_node.graphNodeId())) {
 			this.node.addGraphInput(frame_node, false);
 		}
 	}
-	unforce_time_dependent() {
+	unforceTimeDependent() {
 		const frame_node = this.node.scene().timeController.graphNode;
 		this.node.removeGraphInput(frame_node);
 	}

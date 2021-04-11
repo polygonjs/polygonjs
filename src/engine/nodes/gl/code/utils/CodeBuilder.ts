@@ -14,6 +14,7 @@ import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
+import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 
 type RootNodesForShaderMethod = (shader_name: ShaderName) => BaseGlNodeType[];
 export class CodeBuilder {
@@ -26,12 +27,13 @@ export class CodeBuilder {
 
 	constructor(
 		private _node_traverser: TypedNodeTraverser<NodeContext.GL>,
-		private _root_nodes_for_shader_method: RootNodesForShaderMethod
+		private _root_nodes_for_shader_method: RootNodesForShaderMethod,
+		private _assembler: TypedAssembler<NodeContext.GL>
 	) {}
 	shaderNames() {
 		return this._node_traverser.shaderNames();
 	}
-	build_from_nodes(root_nodes: BaseGlNodeType[], param_nodes: BaseGlNodeType[]) {
+	buildFromNodes(root_nodes: BaseGlNodeType[], param_nodes: BaseGlNodeType[]) {
 		this._node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
@@ -77,7 +79,8 @@ export class CodeBuilder {
 
 		this._shaders_collection_controller = new ShadersCollectionController(
 			this.shaderNames(),
-			this.shaderNames()[0]
+			this.shaderNames()[0],
+			this._assembler
 		);
 		this.reset();
 		for (let shader_name of this.shaderNames()) {

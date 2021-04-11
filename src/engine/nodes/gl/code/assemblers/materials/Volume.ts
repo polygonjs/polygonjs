@@ -134,7 +134,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 					}
 
 					body_lines.push(body_line);
-					this.set_uniforms_time_dependent();
+					this.setUniformsTimeDependent();
 					break;
 				// case 'gl_FragCoord':
 				// 	this.handle_gl_FragCoord(body_lines, shader_name, var_name);

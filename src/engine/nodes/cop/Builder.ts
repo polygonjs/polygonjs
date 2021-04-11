@@ -198,7 +198,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				this._uniforms = uniforms;
 			}
 
-			BuilderCopNode.handle_dependencies(this, assemblerController.assembler.uniforms_time_dependent());
+			BuilderCopNode.handle_dependencies(this, assemblerController.assembler.uniformsTimeDependent());
 		}
 
 		if (this._fragment_shader && this._uniforms) {
@@ -219,13 +219,13 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		const id_s = `${id}`;
 		if (time_dependent) {
 			// TODO: remove this once the scene knows how to re-render
-			// the render target if it is .uniforms_time_dependent()
-			node.states.time_dependent.force_time_dependent();
+			// the render target if it is .uniformsTimeDependent()
+			node.states.timeDependent.forceTimeDependent();
 			if (uniforms) {
 				scene.uniformsController.addTimeDependentUniformOwner(id_s, uniforms);
 			}
 		} else {
-			node.states.time_dependent.unforce_time_dependent();
+			node.states.timeDependent.unforceTimeDependent();
 			scene.uniformsController.removeTimeDependentUniformOwner(id_s);
 		}
 	}

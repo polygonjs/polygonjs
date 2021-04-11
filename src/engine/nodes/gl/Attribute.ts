@@ -17,6 +17,7 @@ export const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlNodeType} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	/** @param attribute name */
 	name = ParamConfig.STRING('');
@@ -110,10 +111,8 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
-		this.material_node?.assemblerController?.assembler.set_node_lines_attribute(
-			this,
-			shaders_collection_controller
-		);
+		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
+		assembler.set_node_lines_attribute(this, shaders_collection_controller);
 	}
 
 	// update_output_type(constructor) {
