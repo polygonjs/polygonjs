@@ -290,44 +290,56 @@ export class TextureParamsController {
 		this._updateTransformCenter(texture, false);
 		texture.updateMatrix();
 	}
-	private _updateTransformOffset(texture: Texture, update_matrix: boolean) {
+	private async _updateTransformOffset(texture: Texture, updateMatrix: boolean) {
 		texture.offset.copy(this.node.pv.offset);
-		if (update_matrix) {
+		if (updateMatrix) {
 			texture.updateMatrix();
 		}
 	}
-	private _updateTransformRepeat(texture: Texture, update_matrix: boolean) {
+	private async _updateTransformRepeat(texture: Texture, updateMatrix: boolean) {
 		texture.repeat.copy(this.node.pv.repeat);
-		if (update_matrix) {
+		if (updateMatrix) {
 			texture.updateMatrix();
 		}
 	}
-	private _updateTransformRotation(texture: Texture, update_matrix: boolean) {
+	private async _updateTransformRotation(texture: Texture, updateMatrix: boolean) {
 		texture.rotation = this.node.pv.rotation;
-		if (update_matrix) {
+		if (updateMatrix) {
 			texture.updateMatrix();
 		}
 	}
-	private _updateTransformCenter(texture: Texture, update_matrix: boolean) {
+	private async _updateTransformCenter(texture: Texture, updateMatrix: boolean) {
 		texture.center.copy(this.node.pv.center);
-		if (update_matrix) {
+		if (updateMatrix) {
 			texture.updateMatrix();
 		}
 	}
 	static PARAM_CALLBACK_update_offset(node: TextureCopNode) {
 		const texture = node.containerController.container.texture();
+		if (!texture) {
+			return;
+		}
 		node.texture_params_controller._updateTransformOffset(texture, true);
 	}
 	static PARAM_CALLBACK_update_repeat(node: TextureCopNode) {
 		const texture = node.containerController.container.texture();
+		if (!texture) {
+			return;
+		}
 		node.texture_params_controller._updateTransformRepeat(texture, true);
 	}
 	static PARAM_CALLBACK_update_rotation(node: TextureCopNode) {
 		const texture = node.containerController.container.texture();
+		if (!texture) {
+			return;
+		}
 		node.texture_params_controller._updateTransformRotation(texture, true);
 	}
 	static PARAM_CALLBACK_update_center(node: TextureCopNode) {
 		const texture = node.containerController.container.texture();
+		if (!texture) {
+			return;
+		}
 		node.texture_params_controller._updateTransformCenter(texture, true);
 	}
 }

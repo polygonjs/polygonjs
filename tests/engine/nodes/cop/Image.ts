@@ -1,5 +1,6 @@
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+import {CoreSleep} from '../../../../src/core/Sleep';
 
 QUnit.test('COP image simple default', async (assert) => {
 	const COP = window.COP;
@@ -79,6 +80,36 @@ QUnit.test('COP image simple hdr', async (assert) => {
 	texture = container.texture();
 	assert.equal(texture.image.width, 1024);
 	assert.equal(texture.image.height, 512);
+});
+
+QUnit.test('COP image transform param can be time dependent', async (assert) => {
+	const COP = window.COP;
+	const scene = window.scene;
+
+	const file1 = COP.createNode('image');
+	file1.p.url.set(`${ASSETS_ROOT}/textures/uv.jpg`);
+
+	let container = await file1.compute();
+	assert.ok(!file1.states.error.message());
+	let texture = container.texture();
+	assert.equal(texture.image.width, 512);
+	assert.equal(texture.image.height, 512);
+	assert.deepEqual(texture.offset.toArray(), [0, 0], 'offset is 0,0');
+
+	file1.p.ttransform.set(true);
+
+	file1.p.offset.set([0.1, 5]);
+	await CoreSleep.sleep(100);
+	assert.deepEqual(texture.offset.toArray(), [0.1, 5], 'A');
+
+	scene.setFrame(2);
+	file1.p.offset.set(['$F', '$F*2']);
+	await CoreSleep.sleep(100);
+	assert.deepEqual(texture.offset.toArray(), [2, 4], 'B');
+
+	scene.setFrame(4);
+	await CoreSleep.sleep(100);
+	assert.deepEqual(texture.offset.toArray(), [4, 8], 'C');
 });
 
 QUnit.skip('COP refers a path in another node', async (assert) => {

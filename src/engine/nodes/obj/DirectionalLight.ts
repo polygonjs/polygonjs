@@ -101,8 +101,6 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.shadow.camera.far = this.pv.distance;
-
-		this._helperController.update();
 	}
 	protected updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadow);
@@ -117,11 +115,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		shadowCamera.right = shadowSize.x * 0.5;
 		shadowCamera.top = shadowSize.y * 0.5;
 		shadowCamera.bottom = -shadowSize.y * 0.5;
-		// object.shadow.camera.near = this.pv.shadow_near
-		// object.shadow.camera.far = this.pv.shadow_far
-
-		// updating the camera matrix is not necessary for point light
-		// so probably should not for this
 		this.light.shadow.camera.updateProjectionMatrix();
+		this._helperController.update();
 	}
 }

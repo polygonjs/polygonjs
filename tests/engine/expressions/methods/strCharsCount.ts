@@ -5,12 +5,12 @@ QUnit.test('expression strCharsCount simple', async (assert) => {
 	const sizex_param = plane1.p.size.x;
 
 	sizex_param.set('strCharsCount( "test test" )');
-	await plane1.p.sizex.compute();
-	assert.equal(plane1.p.sizex.value, 9);
+	await sizex_param.compute();
+	assert.equal(sizex_param.value, 9);
 
 	sizex_param.set('strCharsCount( "test test12" )');
-	await plane1.p.sizex.compute();
-	assert.equal(plane1.p.sizex.value, 11);
+	await sizex_param.compute();
+	assert.equal(sizex_param.value, 11);
 
 	// create a text and apply expression to it's text attribute
 	const text1 = geo1.createNode('text');
@@ -19,10 +19,10 @@ QUnit.test('expression strCharsCount simple', async (assert) => {
 	sizex_param.set('strCharsCount( ch("../text1/text") )');
 
 	text1.p.text.set('demo');
-	await plane1.p.sizex.compute();
-	assert.equal(plane1.p.sizex.value, 4);
+	await sizex_param.compute();
+	assert.equal(sizex_param.value, 4);
 
 	text1.p.text.set('a much longer text');
-	await plane1.p.sizex.compute();
-	assert.equal(plane1.p.sizex.value, 18);
+	await sizex_param.compute();
+	assert.equal(sizex_param.value, 18);
 });

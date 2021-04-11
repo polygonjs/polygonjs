@@ -210,7 +210,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// }
 
 	// node
-	_setup_node_dependencies(node: BaseNodeType | null) {
+	_setupNodeDependencies(node: BaseNodeType | null) {
 		if (!node) {
 			if (this._node) {
 				this._node.params.params_node?.removeGraphInput(this);
@@ -220,14 +220,24 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 			// so that the param does not trigger the node to recompute
 			// before all params are added
 			this.options.allowCallback();
-			if (this.options.makesNodeDirtyWhenDirty() && !this.parent_param) {
-				node.params.params_node?.addGraphInput(this, false);
+
+			if (!this.parent_param) {
+				if (this.options.makesNodeDirtyWhenDirty()) {
+					node.params.params_node?.addGraphInput(this, false);
+				} else {
+					// if the param does not make the node cook when dirty,
+					// we still want it to run its attached callback when dirty
+					this.dirtyController.addPostDirtyHook('run callback', async () => {
+						await this.compute();
+						this.options.executeCallback();
+					});
+				}
 			}
 		}
 
 		if (this.components) {
 			for (let c of this.components) {
-				c._setup_node_dependencies(node);
+				c._setupNodeDependencies(node);
 			}
 		}
 	}

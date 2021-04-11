@@ -366,7 +366,7 @@ export class ParamsController {
 			if (this._params_node) {
 				this._params_node.removeGraphInput(this._params_by_name[param_name]);
 			}
-			param._setup_node_dependencies(null);
+			param._setupNodeDependencies(null);
 			delete this._params_by_name[param_name];
 			if (param.isMultiple() && param.components) {
 				for (let component of param.components) {
@@ -459,7 +459,7 @@ export class ParamsController {
 					}
 				}
 			}
-			param._setup_node_dependencies(this.node);
+			param._setupNodeDependencies(this.node);
 
 			this._params_by_name[param.name()] = param as BaseParamType;
 
