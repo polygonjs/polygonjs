@@ -16,6 +16,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {LOD} from 'three/src/objects/LOD';
+import {Poly} from '../../engine/Poly';
 
 interface MaterialsByString {
 	[propName: string]: Material;
@@ -69,7 +70,7 @@ export function objectTypeFromConstructor(constructor: Function) {
 		case LOD:
 			return ObjectType.LOD;
 		default:
-			console.warn('object type not supported', constructor);
+			Poly.warn('object type not supported', constructor);
 			return ObjectType.MESH;
 	}
 }
@@ -86,7 +87,7 @@ export function ObjectTypeByObject(object: Object3D): ObjectType | undefined {
 	// else if (object instanceof LOD) {
 	// 	return ObjectType.LOD;
 	// }
-	console.warn('ObjectTypeByObject received an unknown object type', object);
+	Poly.warn('ObjectTypeByObject received an unknown object type', object);
 }
 export const ObjectTypes = [ObjectType.MESH, ObjectType.POINTS, ObjectType.LINE_SEGMENTS];
 export const ObjectTypeMenuEntries = [
