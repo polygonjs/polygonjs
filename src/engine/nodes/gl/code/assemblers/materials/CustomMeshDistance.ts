@@ -15,6 +15,7 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 export class ShaderAssemblerCustomMeshDistance extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'vec4 diffuseColor' }
 	// _template_shader(){ return ShaderLib.standard }
+
 	templateShader() {
 		const template = ShaderLib.distanceRGBA;
 		return {

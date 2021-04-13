@@ -26,9 +26,13 @@ export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			// class
-			new EventConnectionPoint('set', EventConnectionPointType.BASE, this._process_trigger_setClass.bind(this)),
 			new EventConnectionPoint(
-				'unset',
+				'setCss',
+				EventConnectionPointType.BASE,
+				this._process_trigger_setClass.bind(this)
+			),
+			new EventConnectionPoint(
+				'unSetCss',
 				EventConnectionPointType.BASE,
 				this._process_trigger_unsetClass.bind(this)
 			),

@@ -19,6 +19,7 @@ import {AudioListenerObjNode} from './AudioListener';
 import {CoreLoaderAudio} from '../../../core/loader/Audio';
 import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {FileType} from '../../params/utils/OptionsController';
 
 enum DistanceModel {
 	LINEAR = 'linear',
@@ -37,7 +38,9 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 		},
 	});
 	/** @param url */
-	url = ParamConfig.STRING('');
+	url = ParamConfig.STRING('', {
+		fileBrowse: {type: [FileType.AUDIO]},
+	});
 
 	/** @param refDistance. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode/refDistance*/
 	refDistance = ParamConfig.FLOAT(10, {

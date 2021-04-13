@@ -106,6 +106,7 @@ QUnit.module('manager');
 import './engine/nodes/manager/ObjectsManager';
 
 QUnit.module('mat');
+import './engine/nodes/mat/LineBasicBuilder';
 import './engine/nodes/mat/MeshBasicBuilder';
 import './engine/nodes/mat/MeshLambertBuilder';
 import './engine/nodes/mat/MeshStandardBuilder';

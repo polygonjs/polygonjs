@@ -8,8 +8,8 @@ import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {GlobalsGeometryHandler} from '../../globals/Geometry';
 
-// import {ShaderAssemblerCustomMeshDepth} from './CustomMeshDepth'
-// import {ShaderAssemblerCustomMeshDistance} from './CustomMeshDistance'
+// import {ShaderAssemblerCustomMeshDepth} from './CustomMeshDepth';
+// import {ShaderAssemblerCustomMeshDistance} from './CustomMeshDistance';
 import {ShaderAssemblerCustomLineDepthDOF} from './CustomLineDepthDOF';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
@@ -20,9 +20,11 @@ const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth],
 	// [CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF],
 ]);
+// ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDepth);
+// ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDistance);
 ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomLineDepthDOF);
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
-	[ShaderName.VERTEX, ['#include <begin_vertex>', 'vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );']],
+	[ShaderName.VERTEX, ['#include <begin_vertex>', '#include <project_vertex>']],
 	[ShaderName.FRAGMENT, []],
 ]);
 
@@ -39,39 +41,22 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 	createMaterial() {
 		const template_shader = this.templateShader();
 
-		// const uniforms = UniformsUtils.clone( template_shader.uniforms )
-		// uniforms.size.value = 10
-
-		return new ShaderMaterial({
-			// vertexColors: VertexColors,
-			// side: FrontSide,
-			// transparent: true,
-			// fog: true,
-			// lights: false,
-
-			// size: 10,
-			// //vertexColors: VertexColors
-			// //blending: AdditiveBlending
+		const material = new ShaderMaterial({
 			depthTest: true,
 			alphaTest: 0.5,
-			linewidth: 100,
+			linewidth: 1,
 			// isLineBasicMaterial: true,
 
 			uniforms: UniformsUtils.clone(template_shader.uniforms),
 			vertexShader: template_shader.vertexShader,
 			fragmentShader: template_shader.fragmentShader,
 		});
-		// material.uniforms.size.value = 10
-		// return material
+		this._addCustomMaterials(material);
+		return material;
 	}
-
 	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
+		console.log('custom_assembler_class_by_custom_name', ASSEMBLER_MAP);
 		return ASSEMBLER_MAP;
-		// return {
-		// 	// customDepthMaterial: ShaderAssemblerCustomMeshDepth,
-		// 	// customDistanceMaterial: ShaderAssemblerCustomMeshDistance,
-		// 	customDepthDOFMaterial: ShaderAssemblerCustomLineDepthDOF,
-		// };
 	}
 	create_shader_configs() {
 		return [
@@ -117,7 +102,8 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 			new VariableConfig('position', {
 				default: 'vec3( position )',
 				prefix: 'vec3 transformed = ',
-				suffix: ';vec4 mvPosition = modelViewMatrix * vec4( transformed, 1.0 )',
+				suffix:
+					';vec4 mvPosition = vec4( transformed, 1.0 ); gl_Position = projectionMatrix * modelViewMatrix * mvPosition;',
 			}),
 			// new VariableConfig('normal', {
 			// 	prefix: 'objectNormal = '

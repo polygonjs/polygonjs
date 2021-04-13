@@ -73,6 +73,7 @@ export enum StringParamLanguage {
 }
 
 export enum FileType {
+	AUDIO = 'audio',
 	TEXTURE_IMAGE = 'texture_image',
 	TEXTURE_VIDEO = 'texture_video',
 	GEOMETRY = 'geometry',

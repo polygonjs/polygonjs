@@ -488,6 +488,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			}
 
 			let line_remove_required = false;
+
 			if (lines_to_remove) {
 				for (let line_to_remove of lines_to_remove) {
 					if (template_line.indexOf(line_to_remove) >= 0) {

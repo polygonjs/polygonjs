@@ -6,8 +6,8 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {ShaderAssemblerMaterial} from './_BaseMaterial';
 
-import TemplateVertex from '../templates/CustomLineDepthDOF.vert.glsl';
-import TemplateFragment from '../templates/CustomMeshDepthDOF.frag.glsl';
+import TemplateVertex from '../../templates/CustomLineDepthDOF.vert.glsl';
+import TemplateFragment from '../../templates/CustomMeshDepthDOF.frag.glsl';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([[ShaderName.VERTEX, '// INSERT DEFINES']]);
