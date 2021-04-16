@@ -32,7 +32,7 @@ interface ObjectPropertiesSopParams extends DefaultOperationParams {
 
 export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ObjectPropertiesSopParams = {
-		applyToChildren: false,
+		applyToChildren: true,
 		// name
 		tname: false,
 		name: '',

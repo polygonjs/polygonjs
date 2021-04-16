@@ -203,7 +203,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)}),
 	});
 	/** @param toggle to hit if tested against children */
-	traverseChildren = ParamConfig.BOOLEAN(0, {
+	traverseChildren = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
