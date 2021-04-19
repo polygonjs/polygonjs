@@ -194,12 +194,11 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 			}
 
 			this._positionalAudio.autoplay = isBooleanTrue(this.pv.autoplay);
-			if (isBooleanTrue(this.pv.autoplay)) {
-				if (!isBooleanTrue(this._positionalAudio.isPlaying)) {
-					console.log('play');
-					this._positionalAudio.play();
-				}
-			}
+			// if (isBooleanTrue(this.pv.autoplay)) {
+			// 	if (!isBooleanTrue(this._positionalAudio.isPlaying)) {
+			// 		this._positionalAudio.play();
+			// 	}
+			// }
 		}
 	}
 	private _createHelper(positionalAudio: PositionalAudio) {
@@ -236,7 +235,6 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		const buffer = await loader.load();
 		this._loadedUrl = this.pv.url;
 		this._positionalAudio.setBuffer(buffer);
-		this._positionalAudio.setLoopStart;
 
 		this.object.add(this._positionalAudio);
 	}
