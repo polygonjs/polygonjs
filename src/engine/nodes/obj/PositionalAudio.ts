@@ -41,6 +41,19 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 	url = ParamConfig.STRING('', {
 		fileBrowse: {type: [FileType.AUDIO]},
 	});
+	/** @param loop */
+	loop = ParamConfig.BOOLEAN(1, {
+		separatorBefore: true,
+	});
+	/** @param loopStart */
+	loopStart = ParamConfig.FLOAT(0, {
+		visibleIf: {loop: 1},
+	});
+	/** @param loopEnd */
+	loopEnd = ParamConfig.FLOAT(0, {
+		visibleIf: {loop: 1},
+		separatorAfter: true,
+	});
 
 	/** @param refDistance. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode/refDistance*/
 	refDistance = ParamConfig.FLOAT(10, {
@@ -154,6 +167,10 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		}
 
 		if (this._positionalAudio) {
+			this._positionalAudio.setLoop(isBooleanTrue(this.pv.loop));
+			this._positionalAudio.setLoopStart(this.pv.loopStart);
+			this._positionalAudio.setLoopEnd(this.pv.loopEnd);
+
 			this._positionalAudio.setRefDistance(this.pv.refDistance);
 			this._positionalAudio.setRolloffFactor(this.pv.rolloffFactor);
 			this._positionalAudio.setMaxDistance(this.pv.maxDistance);
@@ -173,6 +190,7 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 				this._helper.update();
 			}
 
+			this._positionalAudio.autoplay = isBooleanTrue(this.pv.autoplay);
 			if (isBooleanTrue(this.pv.autoplay)) {
 				if (!isBooleanTrue(this._positionalAudio.isPlaying)) {
 					console.log('play');
@@ -215,6 +233,7 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		const buffer = await loader.load();
 		this._loadedUrl = this.pv.url;
 		this._positionalAudio.setBuffer(buffer);
+		this._positionalAudio.setLoopStart;
 
 		this.object.add(this._positionalAudio);
 	}
