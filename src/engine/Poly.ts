@@ -19,6 +19,7 @@ import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
 import {PolyPlugin} from './poly/registers/plugins/Plugin';
 import {PolyDictionary} from '../types/GlobalTypes';
 import {BlobsController} from './poly/BlobsController';
+import {AssetUrlsController} from './poly/AssetUrlsController';
 import {SelfContainedScenesLoader} from './poly/SelfContainedSceneLoader';
 
 declare global {
@@ -42,6 +43,7 @@ export class PolyEngine {
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
 	public readonly blobs: BlobsController = new BlobsController();
+	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
 	public readonly selfContainedScenesLoader: SelfContainedScenesLoader = new SelfContainedScenesLoader();
 	scenesByUuid: PolyDictionary<PolyScene> = {};
 	_env: string | undefined;
