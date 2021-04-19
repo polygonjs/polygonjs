@@ -41,6 +41,8 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 	url = ParamConfig.STRING('', {
 		fileBrowse: {type: [FileType.AUDIO]},
 	});
+	/** @param volume */
+	volume = ParamConfig.FLOAT(1);
 	/** @param loop */
 	loop = ParamConfig.BOOLEAN(1, {
 		separatorBefore: true,
@@ -167,6 +169,7 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		}
 
 		if (this._positionalAudio) {
+			this._positionalAudio.setVolume(this.pv.volume);
 			this._positionalAudio.setLoop(isBooleanTrue(this.pv.loop));
 			this._positionalAudio.setLoopStart(this.pv.loopStart);
 			this._positionalAudio.setLoopEnd(this.pv.loopEnd);
