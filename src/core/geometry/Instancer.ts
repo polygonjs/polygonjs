@@ -30,6 +30,13 @@ const DEFAULT_UV = new Vector2(0, 0);
 const ATTRIB_NAME_UV = 'uv';
 const ATTRIB_NAME_COLOR = 'color';
 
+export enum InstanceAttrib {
+	POSITION = 'instancePosition',
+	SCALE = 'instanceScale',
+	ORIENTATION = 'instanceOrientation',
+	COLOR = 'instanceColor',
+	UV = 'instanceUv',
+}
 export class CoreInstancer {
 	private _is_pscale_present: boolean;
 	private _is_scale_present: boolean;
@@ -167,14 +174,14 @@ export class CoreInstancer {
 				const uv = has_uv ? (instance_pt.attribValue(ATTRIB_NAME_UV, this._point_uv) as Vector2) : DEFAULT_UV;
 				uv.toArray(uvs, index2);
 			});
-			geometry.setAttribute('instanceUv', new InstancedBufferAttribute(uvs, 2));
+			geometry.setAttribute(InstanceAttrib.UV, new InstancedBufferAttribute(uvs, 2));
 		}
 		// }
 
-		geometry.setAttribute('instancePosition', new InstancedBufferAttribute(positions, 3));
-		geometry.setAttribute('instanceScale', new InstancedBufferAttribute(scales, 3));
-		geometry.setAttribute('instanceOrientation', new InstancedBufferAttribute(orients, 4));
-		geometry.setAttribute('instanceColor', new InstancedBufferAttribute(colors, 3));
+		geometry.setAttribute(InstanceAttrib.POSITION, new InstancedBufferAttribute(positions, 3));
+		geometry.setAttribute(InstanceAttrib.SCALE, new InstancedBufferAttribute(scales, 3));
+		geometry.setAttribute(InstanceAttrib.ORIENTATION, new InstancedBufferAttribute(orients, 4));
+		geometry.setAttribute(InstanceAttrib.COLOR, new InstancedBufferAttribute(colors, 3));
 
 		const attrib_names = template_core_group.attribNamesMatchingMask(attributes_to_copy);
 

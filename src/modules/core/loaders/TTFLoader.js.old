@@ -2,6 +2,7 @@
 //
 // COPY of TTFLoader from three.js
 // in order to avoid the require calls from the opentype shipped with three.js
+// UPDATE: this may not be a problem anymore, so I've reverted to loading THREE's TTFLoader
 //
 //
 import {FileLoader} from 'three/src/loaders/FileLoader';

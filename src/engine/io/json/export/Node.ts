@@ -105,13 +105,13 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 
 		if (this._node.flags) {
 			const flags_data: FlagsData = {};
-			if (this._node.flags.has_bypass() || this._node.flags.has_display() || this._node.flags.has_optimize()) {
-				if (this._node.flags.has_bypass()) {
+			if (this._node.flags.hasBypass() || this._node.flags.hasDisplay() || this._node.flags.hasOptimize()) {
+				if (this._node.flags.hasBypass()) {
 					if (this._node.flags.bypass?.active()) {
 						flags_data['bypass'] = this._node.flags.bypass.active();
 					}
 				}
-				if (this._node.flags.has_display()) {
+				if (this._node.flags.hasDisplay()) {
 					// only save the display flag if it is true, or if the parent does not have a displayNodeController
 					// This will then always save it for OBJ
 					// And only if true for SOP
@@ -119,7 +119,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 						flags_data['display'] = this._node.flags.display?.active();
 					}
 				}
-				if (this._node.flags.has_optimize()) {
+				if (this._node.flags.hasOptimize()) {
 					if (this._node.flags.optimize?.active()) {
 						flags_data['optimize'] = this._node.flags.optimize?.active();
 					}

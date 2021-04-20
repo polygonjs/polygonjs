@@ -9,7 +9,7 @@ import {PLYLoader} from '../../../../modules/three/examples/jsm/loaders/PLYLoade
 import {RGBELoader} from '../../../../modules/three/examples/jsm/loaders/RGBELoader';
 import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
 import {STLLoader} from '../../../../modules/three/examples/jsm/loaders/STLLoader';
-import {TTFLoader} from '../../../../modules/core/loaders/TTFLoader';
+import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
 import {ModuleName} from './Common';
 
 export interface ModulesMap {

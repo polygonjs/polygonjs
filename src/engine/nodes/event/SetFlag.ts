@@ -98,7 +98,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		if (!isBooleanTrue(this.pv.tdisplay)) {
 			return;
 		}
-		if (!node.flags?.has_display()) {
+		if (!node.flags?.hasDisplay()) {
 			return;
 		}
 		const display_flag = node.flags.display;
@@ -122,7 +122,7 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		if (!isBooleanTrue(this.pv.tbypass)) {
 			return;
 		}
-		if (!node.flags?.has_bypass()) {
+		if (!node.flags?.hasBypass()) {
 			return;
 		}
 		const bypass_flag = node.flags.bypass;

@@ -1,4 +1,11 @@
-import {AttribValue, ColorLike, NumericAttribValue, Vector2Like, Vector3Like} from '../../types/GlobalTypes';
+import {
+	AttribValue,
+	ColorLike,
+	NumericAttribValue,
+	Vector2Like,
+	Vector3Like,
+	Vector4Like,
+} from '../../types/GlobalTypes';
 import {Vector4} from 'three/src/math/Vector4';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
@@ -215,6 +222,13 @@ export class CorePoint extends CoreEntity {
 					array[this._index * 3 + 1] = v3.y;
 					array[this._index * 3 + 2] = v3.z;
 				}
+				break;
+			case 4:
+				const v4 = value as Vector4Like;
+				array[this._index * 4 + 0] = v4.x;
+				array[this._index * 4 + 1] = v4.y;
+				array[this._index * 4 + 2] = v4.z;
+				array[this._index * 4 + 3] = v4.w;
 				break;
 			default:
 				console.warn(`Point.set_attrib_value does not yet allow attrib size ${attrib_size}`);
