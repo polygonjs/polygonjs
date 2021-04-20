@@ -11,6 +11,16 @@ export class AssetUrlsController {
 		if (!this._map) {
 			return;
 		}
-		return this._map[url];
+		const elements = url.split('?');
+		const preQuery = elements[0];
+		const query = elements[1];
+		const remapedUrl = this._map[preQuery];
+		if (remapedUrl) {
+			if (query) {
+				return `${remapedUrl}?${query}`;
+			} else {
+				return remapedUrl;
+			}
+		}
 	}
 }

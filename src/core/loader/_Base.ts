@@ -6,14 +6,14 @@ import {FetchBlobResponse} from '../../engine/poly/BlobsController';
 
 const LOADING_MANAGER = new LoadingManager();
 LOADING_MANAGER.setURLModifier((url) => {
-	const blobUrl = Poly.blobs.blobUrl(url);
-	if (blobUrl) {
-		return blobUrl;
-	}
-
 	const remapedUrl = Poly.assetUrls.remapedUrl(url);
 	if (remapedUrl) {
 		return remapedUrl;
+	}
+
+	const blobUrl = Poly.blobs.blobUrl(url);
+	if (blobUrl) {
+		return blobUrl;
 	}
 
 	return url;

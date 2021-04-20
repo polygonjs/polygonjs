@@ -67,7 +67,8 @@ export class BlobsController {
 				return {};
 			}
 
-			const response = await fetch(options.fullUrl);
+			const remapedUrl = Poly.assetUrls.remapedUrl(options.fullUrl);
+			const response = await fetch(remapedUrl || options.fullUrl);
 			if (response.ok) {
 				const blob = await response.blob();
 				this._blobsByStoredUrl.set(options.storedUrl, blob);
@@ -99,8 +100,8 @@ export class BlobsController {
 			if (existingBlob) {
 				return {};
 			}
-
-			const response = await fetch(options.fullUrl);
+			const remapedUrl = Poly.assetUrls.remapedUrl(options.fullUrl);
+			const response = await fetch(remapedUrl || options.fullUrl);
 			if (response.ok) {
 				const blob = await response.blob();
 				this._blobsByStoredUrl.set(options.storedUrl, blob);

@@ -114,7 +114,7 @@ export class JsCodeBuilder {
 	}
 
 	param_configs() {
-		return this._param_configs_controller.list || [];
+		return this._param_configs_controller.list() || [];
 	}
 	lines(line_type: JsLineType) {
 		const shader_name = ShaderName.VERTEX;

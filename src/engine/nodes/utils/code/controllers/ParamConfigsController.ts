@@ -24,7 +24,7 @@ export class ParamConfigsController<PC extends ParamConfig> {
 	// 	this._param_configs.push(param_config);
 	// }
 
-	get list(): Readonly<PC[]> {
+	list(): Readonly<PC[]> {
 		return this._param_configs;
 	}
 }

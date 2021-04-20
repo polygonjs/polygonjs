@@ -109,7 +109,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	//
 	public setParamConfigs() {}
 	param_configs() {
-		return this._param_configs_controller?.list;
+		return this._param_configs_controller?.list();
 	}
 	paramsGenerating() {
 		return false;
