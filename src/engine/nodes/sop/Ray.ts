@@ -16,8 +16,12 @@ class RaySopParamsConfig extends NodeParamsConfig {
 	direction = ParamConfig.VECTOR3(DEFAULT.direction.toArray(), {
 		visibleIf: {useNormals: 0},
 	});
+	/** @param moves the points or leaves them in place */
+	transformPoints = ParamConfig.BOOLEAN(DEFAULT.transformPoints);
 	/** @param copies the normals from the right geometry to the left one */
 	transferFaceNormals = ParamConfig.BOOLEAN(DEFAULT.transferFaceNormals);
+	/** @param adds an attribute with the distance to the hit position on the target geometry */
+	addDistAttribute = ParamConfig.BOOLEAN(DEFAULT.addDistAttribute);
 }
 const ParamsConfig = new RaySopParamsConfig();
 
