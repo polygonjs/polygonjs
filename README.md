@@ -70,41 +70,31 @@ const geo = rootNode.createNode('geo');
 // create a plane
 const plane = geo.createNode('plane');
 plane.p.size.set([10, 10]); // make the plane larger
-plane.p.stepSize.set(0.1); // increase the plane resolution
 
 // add noise to the plane
 const noise = geo.createNode('noise');
 noise.setInput(0, plane);
-noise.p.amplitude.set(0.25); // lower the noise amount
+noise.p.freq.set([0.1, 0.1, 0.1]);
+noise.p.amplitude.set(3); // lower the noise amount
 noise.p.useNormals.set(1); // have the noise in the direction of the normals
 
 // scatter points on the plane
 const scatter = geo.createNode('scatter');
 scatter.setInput(0, noise);
-scatter.p.pointsCount.set(10);
+scatter.p.pointsCount.set(1000);
 
 // copy boxes on the points
 const box = geo.createNode('box');
+box.p.size.set(0.1);
 const copy = geo.createNode('copy');
 copy.setInput(0, box);
 copy.setInput(1, scatter);
+copy.flags.display.set(true);
 
-// add a 2nd scatter to create points on the boxes
-const scatter2 = geo.createNode('scatter');
-scatter2.setInput(0, copy);
-scatter2.p.pointsCount.set(500);
-
-// copy spheres on those points
-const sphere = geo.createNode('sphere');
-sphere.p.resolution.set([8, 8]);
-sphere.p.radius.set(0.1);
-const copy2 = geo.createNode('copy');
-copy2.setInput(0, sphere);
-copy2.setInput(1, scatter2);
-copy2.flags.display.set(true);
-
-// add a light
-rootNode.createNode('hemisphereLight');
+// add an hemisphere light and a spotlight
+const hemisphereLight = rootNode.createNode('hemisphereLight');
+hemisphereLight.p.skyColor.set([0.5, 0.5, 0.5]);
+hemisphereLight.p.groundColor.set([0, 0, 0]);
 
 // create a camera
 const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
@@ -120,16 +110,16 @@ perspectiveCamera1.createViewer(document.getElementById('app'));
 And we can also create some html inputs:
 
 ```html
-<p>
-  <label>Box Size</label>
-  <input id='boxInput' type='range' min=0 max=2 step=0.01 value=1></input>
-</p>
+<div>
+	<label>Size</label>
+	<input id='box-size' type='range' min=0 max=2 step=0.01 value=0.1></input>
+</div>
 ```
 
 and add them some events:
 
 ```javascript
-document.getElementById('boxInput').addEventListener('input', function (event) {
+document.getElementById('box-size').addEventListener('input', function (event) {
 	box.p.size.set([event.target.value, event.target.value]);
 });
 ```
@@ -206,4 +196,8 @@ const container = await plane.compute();
 const coreGroup = container.coreContent();
 // and we can now get an array of THREE.Object3D:
 const objects = coreGroup.objects();
+// and we can use THREE Api:
+const object = objects[0];
+object.position.set(0, 1, 0);
+object.updateMatrix();
 ```

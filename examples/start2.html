@@ -11,32 +11,71 @@
 				margin: 0px;
 				height: 100%;
 				overflow: hidden;
+				background-color: darkgray;
 			}
 
 			canvas {
 				display: block;
 				height: 100%;
 			}
+			.section {
+				margin-bottom: 10px;
+				border-bottom: 1px solid #ddd;
+				font-size: 0.85rem;
+			}
+			.section .section-title {
+				font-size: 1rem;
+			}
 		</style>
 	</head>
 	<body>
 		<div style="position: fixed; top: 10px; left: 10px; padding:10px; border: 1px solid gray; border-radius: 3px;">
 			<p>
-				<label>Box Size</label>
-				<input id='boxInput' type='range' min=0 max=2 step=0.01 value=1></input>
+				<label>Displayed Node:</label>
+				<select id='displayedNodeInput'>
+					<option value='0'>Box</option>
+					<option value='1'>Plane</option>
+					<option value='2'>Noise</option>
+					<option value='3'>Scatter</option>
+					<option value='4' selected>Copy</option>
+				</select>
 			</p>
-			<p>
-				<label>Boxes Count</label>
-				<input id="boxesCountInput" type='range' min=0 max=100 step=1 value=10></input>
-			</p>
-			<p>
-				<label>Sphere Size</label>
-				<input id='sphereInput' type='range' min=0 max=0.5 step=0.01 value=0.1></input>
-			</p>
-			<p>
-				<label>Spheres Count</label>
-				<input id='spheresCountInput' type='range' min=0 max=1000 step=1 value=400></input>
-			</p>
+			<div class='section'>
+				<div class='section-title'>Box</div>
+				<div>
+					<label>Size</label>
+					<input id='box-size' type='range' min=0 max=2 step=0.01 value=0.1></input>
+				</div>
+			</div>
+			<div class='section'>
+				<div class='section-title'>Plane</div>
+				<div>
+					<label>Size</label>
+					<input id='plane-size' type='range' min=0 max=50 step=0.01 value=10></input>
+				</div>
+				<div>
+					<label>stepSize</label>
+					<input id='plane-stepSize' type='range' min=0.01 max=1 step=0.01 value=1></input>
+				</div>
+			</div>
+			<div class='section'>
+				<div class='section-title'>Noise</div>
+				<div>
+					<label>Amplitude</label>
+					<input id='noise-amplitude' type='range' min=0 max=4 step=0.01 value=3></input>
+				</div>
+				<div>
+					<label>Frequency</label>
+					<input id='noise-freq' type='range' min=0.1 max=1 step=0.01 value=0.1></input>
+				</div>
+			</div>
+			<div class='section'>
+				<div class='section-title'>Scatter</div>
+				<div>
+					<label>Points Count</label>
+					<input id="scatter-pointsCount" type='range' min=0 max=1000 step=1 value=1000></input>
+				</div>
+			</div>
 		</div>
 		<div id="app"></div>
 
@@ -52,41 +91,31 @@
 			// create a plane
 			const plane = geo.createNode('plane');
 			plane.p.size.set([10, 10]); // make the plane larger
-			plane.p.stepSize.set(0.1); // increase the plane resolution
 
 			// add noise to the plane
 			const noise = geo.createNode('noise');
 			noise.setInput(0, plane);
-			noise.p.amplitude.set(0.25); // lower the noise amount
+			noise.p.freq.set([0.1,0.1,0.1]);
+			noise.p.amplitude.set(3); // lower the noise amount
 			noise.p.useNormals.set(1); // have the noise in the direction of the normals
 
 			// scatter points on the plane
 			const scatter = geo.createNode('scatter');
 			scatter.setInput(0, noise);
-			scatter.p.pointsCount.set(10);
+			scatter.p.pointsCount.set(1000);
 
 			// copy boxes on the points
 			const box = geo.createNode('box');
+			box.p.size.set(0.1);
 			const copy = geo.createNode('copy');
 			copy.setInput(0, box);
 			copy.setInput(1, scatter);
+			copy.flags.display.set(true);
 
-			// add a 2nd scatter to create points on the boxes
-			const scatter2 = geo.createNode('scatter');
-			scatter2.setInput(0, copy);
-			scatter2.p.pointsCount.set(500);
-
-			// copy spheres on those points
-			const sphere = geo.createNode('sphere');
-			sphere.p.resolution.set([8, 8]);
-			sphere.p.radius.set(0.1);
-			const copy2 = geo.createNode('copy');
-			copy2.setInput(0, sphere);
-			copy2.setInput(1, scatter2);
-			copy2.flags.display.set(true);
-
-			// add a light
-			rootNode.createNode('hemisphereLight');
+			// add an hemisphere light and a spotlight
+			const hemisphereLight = rootNode.createNode('hemisphereLight');
+			hemisphereLight.p.skyColor.set([0.5,0.5,0.5]);
+			hemisphereLight.p.groundColor.set([0,0,0]);
 
 			// create a camera
 			const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
@@ -99,17 +128,27 @@
 			perspectiveCamera1.createViewer(document.getElementById('app'));
 
 			// add events to the inputs
-			document.getElementById('boxInput').addEventListener('input', function (event) {
+			document.getElementById('displayedNodeInput').addEventListener('input', function(event){
+				const node = [box, plane, noise, scatter, copy][event.target.value];
+				node.flags.display.set(true);
+			})
+			document.getElementById('box-size').addEventListener('input', function (event) {
 				box.p.size.set([event.target.value, event.target.value]);
 			});
-			document.getElementById('boxesCountInput').addEventListener('input', function (event) {
+			document.getElementById('plane-size').addEventListener('input', function (event) {
+				plane.p.size.set([event.target.value, event.target.value]);
+			});
+			document.getElementById('plane-stepSize').addEventListener('input', function (event) {
+				plane.p.stepSize.set(event.target.value);
+			});
+			document.getElementById('noise-amplitude').addEventListener('input', function (event) {
+				noise.p.amplitude.set(event.target.value);
+			});
+			document.getElementById('noise-freq').addEventListener('input', function (event) {
+				noise.p.freq.set(event.target.value);
+			});
+			document.getElementById('scatter-pointsCount').addEventListener('input', function (event) {
 				scatter.p.pointsCount.set(event.target.value);
-			});
-			document.getElementById('sphereInput').addEventListener('input', function (event) {
-				sphere.p.radius.set(event.target.value);
-			});
-			document.getElementById('spheresCountInput').addEventListener('input', function (event) {
-				scatter2.p.pointsCount.set(event.target.value);
 			});
 		</script>
 	</body>
