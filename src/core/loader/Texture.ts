@@ -227,8 +227,8 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 					const files = [
 						'basis_transcoder.js',
 						'basis_transcoder.wasm',
-						'msc_basis_transcoder.js',
-						'msc_basis_transcoder.wasm',
+						// 'msc_basis_transcoder.js',
+						// 'msc_basis_transcoder.wasm',
 					];
 					await this._loadMultipleBlobGlobal({
 						files: files.map((file) => {
