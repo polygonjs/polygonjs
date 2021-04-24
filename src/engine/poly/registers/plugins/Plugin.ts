@@ -14,12 +14,6 @@ export interface PolyPluginData {
 	libraryImportPath: string;
 }
 
-// export interface PolyPluginInterface {
-// 	name(): string;
-// 	libraryName(): string;
-// 	init(poly: PolyEngine): void;
-// 	toJSON(): PolyPluginData;
-// }
 export class PolyPlugin {
 	constructor(
 		protected _name: string,
@@ -46,3 +40,20 @@ export class PolyPlugin {
 		};
 	}
 }
+
+// at the moment, when saving with typescript from the editor
+// we are getting this error when registering a plugin:
+//
+// (alias) const polyPluginPhysics: PolyPlugin
+// import polyPluginPhysics
+// Argument of type 'import("/home/gui/work/web/nft/time_physics/node_modules/@polygonjs/polygonjs/dist/src/engine/poly/registers/plugins/Plugin").PolyPlugin' is not assignable to parameter of type 'import("/home/gui/work/web/nft/time_physics/node_modules/@polygonjs/polygonjs/src/engine/poly/registers/plugins/Plugin").PolyPlugin'.
+//   Property '_name' is protected but type 'PolyPlugin' is not a class derived from 'PolyPlugin'.ts(2345)
+//
+// and the current way to avoid this is to have the poly.registerPlugin method accepts an interface as argument instead of a plugin
+// export interface PolyPluginInterface {
+// 	name(): string;
+// 	libraryName(): string;
+// 	init(poly: PolyEngine): void;
+// 	toJSON(): PolyPluginData;
+// }
+export type PolyPluginInterface = Pick<PolyPlugin, 'name' | 'libraryName' | 'init' | 'toJSON'>;

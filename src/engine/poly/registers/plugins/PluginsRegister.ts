@@ -1,5 +1,5 @@
 import {PolyEngine} from '../../../Poly';
-import {PolyPluginData, PolyPlugin} from './Plugin';
+import {PolyPluginData, PolyPluginInterface} from './Plugin';
 import {BaseNodeConstructor, BaseOperationConstructor} from '../nodes/NodesRegister';
 import {NodeContext} from '../../NodeContext';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
@@ -11,14 +11,14 @@ export interface PluginsRegisterData {
 }
 
 export class PluginsRegister {
-	private _current_plugin: PolyPlugin | undefined;
-	private _plugins_by_name: Map<string, PolyPlugin> = new Map();
+	private _current_plugin: PolyPluginInterface | undefined;
+	private _plugins_by_name: Map<string, PolyPluginInterface> = new Map();
 	private _plugin_name_by_node_context_by_type: Map<NodeContext, Map<string, string>> = new Map();
 	private _plugin_name_by_operation_context_by_type: Map<NodeContext, Map<string, string>> = new Map();
 
 	constructor(private poly: PolyEngine) {}
 
-	register(plugin: PolyPlugin) {
+	register(plugin: PolyPluginInterface) {
 		this._current_plugin = plugin;
 		this._plugins_by_name.set(plugin.name(), plugin);
 		plugin.init(this.poly);
