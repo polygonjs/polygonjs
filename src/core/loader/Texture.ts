@@ -224,12 +224,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 				const decoder_path = `${root || ''}${BASISPath || ''}/`;
 
 				if (node) {
-					const files = [
-						'basis_transcoder.js',
-						'basis_transcoder.wasm',
-						// 'msc_basis_transcoder.js',
-						// 'msc_basis_transcoder.wasm',
-					];
+					const files = ['basis_transcoder.js', 'basis_transcoder.wasm'];
 					await this._loadMultipleBlobGlobal({
 						files: files.map((file) => {
 							return {
@@ -238,7 +233,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 							};
 						}),
 						node,
-						error: 'failed to load draco libraries. Make sure to install them to load .glb files',
+						error: 'failed to load basis libraries. Make sure to install them to load .basis files',
 					});
 				}
 
@@ -246,7 +241,6 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			} else {
 				(BASISLoader as any).setTranscoderPath(undefined);
 			}
-			// BASISLoader.setTranscoderPath('/three/js/libs/basis/');
 			const renderer = await Poly.renderersController.waitForRenderer();
 			if (renderer) {
 				BASISLoader.detectSupport(renderer);

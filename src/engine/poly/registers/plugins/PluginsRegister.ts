@@ -1,5 +1,5 @@
 import {PolyEngine} from '../../../Poly';
-import {PolyPlugin, PolyPluginData} from './Plugin';
+import {PolyPluginData, PolyPlugin} from './Plugin';
 import {BaseNodeConstructor, BaseOperationConstructor} from '../nodes/NodesRegister';
 import {NodeContext} from '../../NodeContext';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
