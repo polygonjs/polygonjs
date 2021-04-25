@@ -5,6 +5,7 @@ import {ColorCopNode} from '../../../nodes/cop/Color';
 import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
 import {ImageCopNode} from '../../../nodes/cop/Image';
+import {LightMapCopNode} from '../../../nodes/cop/LightMap';
 import {NullCopNode} from '../../../nodes/cop/Null';
 import {PostCopNode} from '../../../nodes/cop/Post';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
@@ -25,8 +26,9 @@ export interface CopNodeChildrenMap {
 	cubeCamera: CubeCameraCopNode;
 	envMap: EnvMapCopNode;
 	image: ImageCopNode;
-	post: PostCopNode;
+	lightMap: LightMapCopNode;
 	null: NullCopNode;
+	post: PostCopNode;
 	switch: SwitchCopNode;
 	textureProperties: TexturePropertiesCopNode;
 	video: VideoCopNode;
@@ -48,6 +50,7 @@ export class CopRegister {
 		poly.registerNode(CubeCameraCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ImageCopNode, CATEGORY_COP.INPUT);
+		poly.registerNode(LightMapCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(PostCopNode, CATEGORY_COP.FILTER);
 		poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);

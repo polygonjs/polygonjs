@@ -16,7 +16,7 @@ import {BaseCoreLogger} from '../core/logger/Base';
 import {BaseOperation} from './operations/_Base';
 import {PluginsRegister} from './poly/registers/plugins/PluginsRegister';
 import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
-import {PolyPlugin} from './poly/registers/plugins/Plugin';
+import {PolyPluginInterface} from './poly/registers/plugins/Plugin';
 import {PolyDictionary} from '../types/GlobalTypes';
 import {BlobsController} from './poly/BlobsController';
 import {AssetUrlsController} from './poly/AssetUrlsController';
@@ -83,7 +83,7 @@ export class PolyEngine {
 	registerCamera(node: BaseNodeConstructor) {
 		this.camerasRegister.register(node);
 	}
-	registerPlugin(plugin: PolyPlugin) {
+	registerPlugin(plugin: PolyPluginInterface) {
 		this.pluginsRegister.register(plugin);
 	}
 	registeredNodes(parent_context: NodeContext, type: string): PolyDictionary<typeof BaseNodeClass> {

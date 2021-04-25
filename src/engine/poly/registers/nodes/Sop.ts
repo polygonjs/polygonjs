@@ -95,7 +95,9 @@ import {TransformCopySopNode} from '../../../nodes/sop/TransformCopy';
 import {TransformMultiSopNode} from '../../../nodes/sop/TransformMulti';
 import {TransformResetSopNode} from '../../../nodes/sop/TransformReset';
 import {TubeSopNode} from '../../../nodes/sop/Tube';
+import {UvLayoutSopNode} from '../../../nodes/sop/UvLayout';
 import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
+import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 // networks
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
 import {CopNetworkSopNode} from '../../../nodes/sop/CopNetwork';
@@ -195,7 +197,9 @@ export interface GeoNodeChildrenMap {
 	transformMulti: TransformMultiSopNode;
 	transformReset: TransformResetSopNode;
 	tube: TubeSopNode;
+	uvLayout: UvProjectSopNode;
 	uvProject: UvProjectSopNode;
+	uvUnwrap: UvUnwrapSopNode;
 
 	// networks
 	animationsNetwork: AnimationsNetworkSopNode;
@@ -246,6 +250,8 @@ import {TexturePropertiesSopOperation} from '../../../operations/sop/TextureProp
 import {TorusSopOperation} from '../../../operations/sop/Torus';
 import {TorusKnotSopOperation} from '../../../operations/sop/TorusKnot';
 import {TransformSopOperation} from '../../../operations/sop/Transform';
+import {UvLayoutSopOperation} from '../../../operations/sop/UvLayout';
+import {UvUnwrapSopOperation} from '../../../operations/sop/UvUnwrap';
 
 import {PolyEngine} from '../../../Poly';
 export class SopRegister {
@@ -290,6 +296,8 @@ export class SopRegister {
 		poly.registerOperation(TorusSopOperation);
 		poly.registerOperation(TorusKnotSopOperation);
 		poly.registerOperation(TransformSopOperation);
+		poly.registerOperation(UvLayoutSopOperation);
+		poly.registerOperation(UvUnwrapSopOperation);
 
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
@@ -394,7 +402,9 @@ export class SopRegister {
 		poly.registerNode(TransformMultiSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(TransformResetSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(TubeSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(UvLayoutSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		// networks
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(CopNetworkSopNode, CATEGORY_SOP.NETWORK);

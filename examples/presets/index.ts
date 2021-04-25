@@ -25,8 +25,10 @@ import {CSS2DObjectSopNode} from '../../src/engine/nodes/sop/CSS2DObject';
 import {DataUrlSopNode} from '../../src/engine/nodes/sop/DataUrl';
 import {FileSopNodePresets} from './sop/File';
 import {FileSopNode} from '../../src/engine/nodes/sop/File';
+import {PointSopNode} from '../../src/engine/nodes/sop/Point';
 import {TextSopNode} from '../../src/engine/nodes/sop/Text';
 import {TransformSopNode} from '../../src/engine/nodes/sop/Transform';
+import {PointSopNodePresets} from './sop/Point';
 import {TextSopNodePresets} from './sop/Text';
 import {TransformSopNodePresets} from './sop/Transform';
 
@@ -53,6 +55,7 @@ export const presetsLibrary = {
 		[DataSopNode.type()]: DataSopNodePresets,
 		[DataUrlSopNode.type()]: DataUrlSopNodePresets,
 		[FileSopNode.type()]: FileSopNodePresets,
+		[PointSopNode.type()]: PointSopNodePresets,
 		[TextSopNode.type()]: TextSopNodePresets,
 		[TransformSopNode.type()]: TransformSopNodePresets,
 	},

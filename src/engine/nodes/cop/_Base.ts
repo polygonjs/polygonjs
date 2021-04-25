@@ -36,6 +36,7 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	setTexture(texture: Texture) {
+		console.log('set texture', this.path(), texture);
 		// this._copy_texture(texture);
 		texture.name = this.path();
 		this._setContainer(texture);
