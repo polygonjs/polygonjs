@@ -14,9 +14,7 @@ import {Texture} from 'three/src/textures/Texture';
 import {RenderTarget} from 'three/src/renderers/webgl/WebGLRenderLists';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Vector3} from 'three/src/math/Vector3';
-import {Vector2} from 'three/src/math/Vector2';
 import {Quaternion} from 'three/src/math/Quaternion';
-import {CoreRenderBlur} from '../../../../core/render/Blur';
 
 //
 // adapted from https://threejs.org/examples/?q=light#webgl_shadowmap_progressive
@@ -62,9 +60,9 @@ export class LightMapController {
 	private objectTargets: Mesh[] = [];
 	private lights: Light[] = [];
 	private scene = new Scene();
-	private tinyTarget = new WebGLRenderTarget(1, 1);
+	// private tinyTarget = new WebGLRenderTarget(1, 1);
 	private buffer1Active = false;
-	private firstUpdate = false;
+	// private firstUpdate = false;
 	private progressiveLightMap1: WebGLRenderTarget;
 	private progressiveLightMap2: WebGLRenderTarget;
 	private uvMat: MeshPhongMaterialWithUniforms;
@@ -82,7 +80,6 @@ export class LightMapController {
 		const format = /(Android|iPad|iPhone|iPod)/g.test(navigator.userAgent) ? HalfFloatType : FloatType;
 		this.progressiveLightMap1 = new WebGLRenderTarget(this.res, this.res, {type: format});
 		this.progressiveLightMap2 = new WebGLRenderTarget(this.res, this.res, {type: format});
-		this._coreRenderBlur = this._createCoreRenderBlur(new Vector2(this.res, this.res));
 
 		this.uvMat = this._createUVMat();
 	}
@@ -107,7 +104,7 @@ export class LightMapController {
 	 * @param {Object3D} objects An array of objects and lights to set up your lightmap.
 	 */
 	init(objects: Mesh[], lights: Light[]) {
-		this._reset();
+		// this._reset();
 		this._setObjects(objects);
 		this._setLights(lights);
 	}
@@ -140,9 +137,9 @@ export class LightMapController {
 	private _previousRenderTarget: RenderTarget | null = null;
 	private _lightHierarchyStateByLight: WeakMap<Light, LightHierarchyState> = new WeakMap();
 	private _lightMatrixStateByLight: WeakMap<Light, LightMatrixState> = new WeakMap();
-	private _reset() {
-		this.firstUpdate = false;
-	}
+	// private _reset() {
+	// 	this.firstUpdate = false;
+	// }
 	private _saveLightHierarchyState(light: Light) {
 		this._lightHierarchyStateByLight.set(light, {
 			parent: light.parent,
@@ -183,17 +180,13 @@ export class LightMapController {
 	}
 	private _moveLights() {
 		const lightRadius = this._params.lightRadius;
-		// const lightRotationVariation = this.pv.lightRotationVariation;
 		for (let light of this.lights) {
 			const state = this._lightMatrixStateByLight.get(light);
 			if (state) {
 				const position = state.position;
-				// const rotation = state.rotation;
-				light.position.x = lightRadius * position.x + (Math.random() - 0.5);
-				light.position.y = lightRadius * position.y + (Math.random() - 0.5);
-				light.position.z = lightRadius * position.z + (Math.random() - 0.5);
-				// light.rotation.y = lightRotationVariation * rotation.y + (Math.random() - 0.5);
-				// light.lookAt(new Vector3(0, 0, 0));
+				light.position.x = position.x + lightRadius * (Math.random() - 0.5);
+				light.position.y = position.y + lightRadius * (Math.random() - 0.5);
+				light.position.z = position.z + lightRadius * (Math.random() - 0.5);
 			}
 		}
 	}
@@ -243,30 +236,23 @@ export class LightMapController {
 		this.blurringPlane.visible = this._params.blur;
 		this.uvMat.uniforms.iterationBlend.value = this._params.iterationBlend;
 
+		this._clear(camera);
 		for (let i = 0; i < iterations; i++) {
 			this._moveLights();
 			this._update(camera);
 		}
+	}
 
-		if (0)
-			if (this._coreRenderBlur) {
-				this._coreRenderBlur.applyBlur(this._textureRenderTarget(), this.renderer, 0.1, 0.1);
-			}
+	private _clear(camera: Camera) {
+		this.scene.visible = false;
+		this._update(camera);
+		this._update(camera);
+		this.scene.visible = true;
 	}
 
 	private _update(camera: Camera) {
 		if (!this.blurMaterial) {
 			return;
-		}
-
-		const oldRenderTarget = this.renderer.getRenderTarget();
-		// The blurring plane applies blur to the seams of the lightmap
-
-		// Render once normally to initialize everything
-		if (this.firstUpdate && 0) {
-			this.renderer.setRenderTarget(this.tinyTarget); // Tiny for Speed
-			this.renderer.render(this.scene, camera);
-			this.firstUpdate = false;
 		}
 
 		// Ping-pong two surface buffers for reading/writing
@@ -279,8 +265,6 @@ export class LightMapController {
 		this.blurMaterial.uniforms.previousShadowMap.value = inactiveMap.texture;
 		this.buffer1Active = !this.buffer1Active;
 		this.renderer.render(this.scene, camera);
-
-		this.renderer.setRenderTarget(oldRenderTarget);
 	}
 
 	private _initializeBlurPlane(res: number, lightMap: WebGLRenderTarget) {
@@ -384,15 +368,5 @@ export class LightMapController {
 			mat.userData.shader = shader;
 		};
 		return mat;
-	}
-
-	//
-	//
-	// BLUR
-	//
-	//
-	private _coreRenderBlur: CoreRenderBlur | undefined;
-	private _createCoreRenderBlur(res: Vector2) {
-		return new CoreRenderBlur(res);
 	}
 }

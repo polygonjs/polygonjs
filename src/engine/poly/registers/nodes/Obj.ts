@@ -11,7 +11,6 @@ import {AudioListenerObjNode} from '../../../nodes/obj/AudioListener';
 import {BlendObjNode} from '../../../nodes/obj/Blend';
 import {ContactShadowObjNode} from '../../../nodes/obj/ContactShadow';
 import {GeoObjNode} from '../../../nodes/obj/Geo';
-import {LightMapObjNode} from '../../../nodes/obj/LightMap';
 import {NullObjNode} from '../../../nodes/obj/Null';
 import {PolarTransformObjNode} from '../../../nodes/obj/PolarTransform';
 import {PolyObjNode} from '../../../nodes/obj/Poly';
@@ -41,7 +40,6 @@ export interface ObjNodeChildrenMap {
 	directionalLight: DirectionalLightObjNode;
 	geo: GeoObjNode;
 	hemisphereLight: HemisphereLightObjNode;
-	lightMap: LightMapObjNode;
 	null: NullObjNode;
 	orthographicCamera: OrthographicCameraObjNode;
 	perspectiveCamera: PerspectiveCameraObjNode;
@@ -77,7 +75,6 @@ export class ObjRegister {
 		poly.registerNode(BlendObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.registerNode(ContactShadowObjNode, CATEGORY_OBJ.ADVANCED);
 		poly.registerNode(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
-		poly.registerNode(LightMapObjNode, CATEGORY_OBJ.ADVANCED);
 		poly.registerNode(NullObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.registerNode(PolarTransformObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.registerNode(PolyObjNode, CATEGORY_OBJ.ADVANCED);

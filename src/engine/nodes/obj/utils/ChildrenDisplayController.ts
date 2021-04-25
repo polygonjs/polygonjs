@@ -74,6 +74,7 @@ export class ChildrenDisplayController {
 			if (this.usedInScene()) {
 				sopGroup.visible = true;
 				this.node.object.add(sopGroup);
+				sopGroup.updateMatrix();
 			} else {
 				sopGroup.visible = false;
 				this.node.object.remove(sopGroup);

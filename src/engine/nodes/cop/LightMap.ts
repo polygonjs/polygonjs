@@ -14,37 +14,19 @@ import {Poly} from '../../Poly';
 import {LightMapController, DEFAULT_ITERATION_BLEND} from './utils/LightMapController';
 import {Mesh} from 'three/src/objects/Mesh';
 
-enum LightMapUpdateMode {
-	ON_RENDER = 'On Every Render',
-	MANUAL = 'Manual',
-}
-const UPDATE_MODES: LightMapUpdateMode[] = [LightMapUpdateMode.ON_RENDER, LightMapUpdateMode.MANUAL];
-
 class LightMapCopParamConfig extends NodeParamsConfig {
-	/** @param set update mode, which can be to update on every frame, or manually only */
-	updateMode = ParamConfig.INTEGER(UPDATE_MODES.indexOf(LightMapUpdateMode.ON_RENDER), {
-		callback: (node: BaseNodeType) => {
-			LightMapCopNode.PARAM_CALLBACK_update_updateMode(node as LightMapCopNode);
-		},
-		menu: {
-			entries: UPDATE_MODES.map((name, value) => {
-				return {name, value};
-			}),
-		},
-	});
 	/** @param click to update shadow, when mode is manual */
 	update = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			LightMapCopNode.PARAM_CALLBACK_updateManual(node as LightMapCopNode);
 		},
-		visibleIf: {updateMode: UPDATE_MODES.indexOf(LightMapUpdateMode.MANUAL)},
 	});
 	/** @param shadow resolution */
 	lightMapRes = ParamConfig.INTEGER(1024, {range: [1, 2048], rangeLocked: [true, false]});
 	/** @param iterations */
 	iterations = ParamConfig.INTEGER(512, {range: [1, 2048], rangeLocked: [true, false]});
 	/** @param blendWindow */
-	iterationBlend = ParamConfig.INTEGER(DEFAULT_ITERATION_BLEND, {
+	iterationBlend = ParamConfig.FLOAT(DEFAULT_ITERATION_BLEND, {
 		range: [0, 1],
 		rangeLocked: [true, true],
 	});
@@ -123,7 +105,6 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 		if (!masterCameraNode) {
 			return;
 		}
-		console.log('_updateManual');
 		this._updateObjectsAndLightsList();
 		this.lightMapController.init(this._includedObjects, this._includedLights);
 

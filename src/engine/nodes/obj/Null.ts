@@ -42,6 +42,7 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 	private _updateHelperHierarchy() {
 		if (this.flags.display.active()) {
 			this.object.add(this._helper);
+			this._helper.updateMatrix();
 		} else {
 			this.object.remove(this._helper);
 		}
