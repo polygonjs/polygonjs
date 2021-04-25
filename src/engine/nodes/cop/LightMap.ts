@@ -11,7 +11,7 @@ import {BaseNodeType} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {Light} from 'three/src/lights/Light';
 import {Poly} from '../../Poly';
-import {LightMapController} from './utils/LightMapController';
+import {LightMapController, DEFAULT_ITERATION_BLEND} from './utils/LightMapController';
 import {Mesh} from 'three/src/objects/Mesh';
 
 enum LightMapUpdateMode {
@@ -44,14 +44,20 @@ class LightMapCopParamConfig extends NodeParamsConfig {
 	/** @param iterations */
 	iterations = ParamConfig.INTEGER(512, {range: [1, 2048], rangeLocked: [true, false]});
 	/** @param blendWindow */
-	blendWindow = ParamConfig.INTEGER(200, {
-		range: [1, 500],
-		rangeLocked: [true, false],
+	iterationBlend = ParamConfig.INTEGER(DEFAULT_ITERATION_BLEND, {
+		range: [0, 1],
+		rangeLocked: [true, true],
 	});
 	/** @param blurEdges */
-	blurEdges = ParamConfig.BOOLEAN(1);
+	blur = ParamConfig.BOOLEAN(1);
+	/** @param blurAmount */
+	blurAmount = ParamConfig.FLOAT(1, {
+		visibleIf: {blur: 1},
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
 	/** @param lightPositionVariation */
-	lightPositionVariation = ParamConfig.FLOAT(1, {
+	lightRadius = ParamConfig.FLOAT(1, {
 		range: [0, 10],
 	});
 
@@ -120,15 +126,16 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 		console.log('_updateManual');
 		this._updateObjectsAndLightsList();
 		this.lightMapController.init(this._includedObjects, this._includedLights);
-		const blendWindow = this.pv.blendWindow;
-		const blurEdges = this.pv.blurEdges;
 
 		const camera = masterCameraNode.camera();
-		this.lightMapController.setParams({positionVariation: this.pv.lightPositionVariation});
-		const iterations = this.pv.iterations;
-		for (let i = 0; i < iterations; i++) {
-			await this.lightMapController.update(camera, blendWindow, blurEdges);
-		}
+		this.lightMapController.setParams({
+			lightRadius: this.pv.lightRadius,
+			iterations: this.pv.iterations,
+			iterationBlend: this.pv.iterationBlend,
+			blur: this.pv.blur,
+			blurAmount: this.pv.blurAmount,
+		});
+		this.lightMapController.runUpdates(camera);
 		this.lightMapController.restoreState();
 		// this.setTexture(this.lightMapController.progressiveLightMap1.texture);
 	}

@@ -14,7 +14,9 @@ import {Texture} from 'three/src/textures/Texture';
 import {RenderTarget} from 'three/src/renderers/webgl/WebGLRenderLists';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Vector3} from 'three/src/math/Vector3';
-import {Quaternion} from 'three';
+import {Vector2} from 'three/src/math/Vector2';
+import {Quaternion} from 'three/src/math/Quaternion';
+import {CoreRenderBlur} from '../../../../core/render/Blur';
 
 //
 // adapted from https://threejs.org/examples/?q=light#webgl_shadowmap_progressive
@@ -23,7 +25,7 @@ import {Quaternion} from 'three';
 interface MeshPhongMaterialWithUniforms extends MeshPhongMaterial {
 	uniforms: {
 		previousShadowMap: {value: Texture | null};
-		averagingWindow: {value: number};
+		iterationBlend: {value: number};
 	};
 }
 interface MeshBasicMaterialWithUniforms extends MeshBasicMaterial {
@@ -49,9 +51,13 @@ interface LightMatrixState {
 }
 
 interface Params {
-	positionVariation: number;
+	lightRadius: number;
+	iterations: number;
+	iterationBlend: number;
+	blur: boolean;
+	blurAmount: number;
 }
-
+export const DEFAULT_ITERATION_BLEND = 1 / 200;
 export class LightMapController {
 	private objectTargets: Mesh[] = [];
 	private lights: Light[] = [];
@@ -64,22 +70,36 @@ export class LightMapController {
 	private uvMat: MeshPhongMaterialWithUniforms;
 	private blurMaterial: MeshBasicMaterialWithUniforms | undefined;
 	private blurringPlane: Mesh | undefined;
-	private positionVariation: number = 0;
+	private _params: Params = {
+		lightRadius: 1,
+		iterations: 1,
+		iterationBlend: DEFAULT_ITERATION_BLEND,
+		blur: false,
+		blurAmount: 0,
+	};
 	constructor(private renderer: WebGLRenderer, private res: number = 1024) {
 		// Create the Progressive LightMap Texture
 		const format = /(Android|iPad|iPhone|iPod)/g.test(navigator.userAgent) ? HalfFloatType : FloatType;
 		this.progressiveLightMap1 = new WebGLRenderTarget(this.res, this.res, {type: format});
 		this.progressiveLightMap2 = new WebGLRenderTarget(this.res, this.res, {type: format});
+		this._coreRenderBlur = this._createCoreRenderBlur(new Vector2(this.res, this.res));
 
 		this.uvMat = this._createUVMat();
 	}
 
+	private _textureRenderTarget() {
+		return this.progressiveLightMap2;
+	}
 	texture() {
-		return this.progressiveLightMap2.texture;
+		return this._textureRenderTarget().texture;
 	}
 
 	setParams(params: Params) {
-		this.positionVariation = params.positionVariation;
+		this._params.lightRadius = params.lightRadius;
+		this._params.iterations = params.iterations;
+		this._params.iterationBlend = params.iterationBlend;
+		this._params.blur = params.blur;
+		this._params.blurAmount = params.blurAmount;
 	}
 
 	/**
@@ -113,7 +133,7 @@ export class LightMapController {
 	/**
 	 * This function renders each mesh one at a time into their respective surface maps
 	 * @param {Camera} camera Standard Rendering Camera
-	 * @param {number} blendWindow When >1, samples will accumulate over time.
+	 * @param {number} iterationBlend When >1, samples will accumulate over time.
 	 * @param {boolean} blurEdges  Whether to fix UV Edges via blurring
 	 */
 	private _objectStateByObject: WeakMap<Object3D, ObjectState> = new WeakMap();
@@ -162,16 +182,16 @@ export class LightMapController {
 		this._previousRenderTarget = this.renderer.getRenderTarget();
 	}
 	private _moveLights() {
-		const lightPositionVariation = this.positionVariation;
+		const lightRadius = this._params.lightRadius;
 		// const lightRotationVariation = this.pv.lightRotationVariation;
 		for (let light of this.lights) {
 			const state = this._lightMatrixStateByLight.get(light);
 			if (state) {
 				const position = state.position;
 				// const rotation = state.rotation;
-				light.position.x = lightPositionVariation * position.x + (Math.random() - 0.5);
-				light.position.y = lightPositionVariation * position.y + (Math.random() - 0.5);
-				light.position.z = lightPositionVariation * position.z + (Math.random() - 0.5);
+				light.position.x = lightRadius * position.x + (Math.random() - 0.5);
+				light.position.y = lightRadius * position.y + (Math.random() - 0.5);
+				light.position.z = lightRadius * position.z + (Math.random() - 0.5);
 				// light.rotation.y = lightRotationVariation * rotation.y + (Math.random() - 0.5);
 				// light.lookAt(new Vector3(0, 0, 0));
 			}
@@ -190,7 +210,6 @@ export class LightMapController {
 				object.castShadow = state.castShadow;
 				object.receiveShadow = state.receiveShadow;
 				object.material = state.material;
-				console.log((object.material as any).uniforms);
 				const parent = state.parent;
 				if (parent) {
 					parent.add(object);
@@ -212,17 +231,36 @@ export class LightMapController {
 		}
 	}
 
-	async update(camera: Camera, blendWindow: number, blurEdges: boolean) {
-		if (this.blurringPlane == null) {
-			return;
-		}
+	runUpdates(camera: Camera) {
 		if (!this.blurMaterial) {
 			return;
 		}
+		if (this.blurringPlane == null) {
+			return;
+		}
+		const iterations = this._params.iterations;
+		this.blurMaterial.uniforms.pixelOffset.value = this._params.blurAmount / this.res;
+		this.blurringPlane.visible = this._params.blur;
+		this.uvMat.uniforms.iterationBlend.value = this._params.iterationBlend;
+
+		for (let i = 0; i < iterations; i++) {
+			this._moveLights();
+			this._update(camera);
+		}
+
+		if (0)
+			if (this._coreRenderBlur) {
+				this._coreRenderBlur.applyBlur(this._textureRenderTarget(), this.renderer, 0.1, 0.1);
+			}
+	}
+
+	private _update(camera: Camera) {
+		if (!this.blurMaterial) {
+			return;
+		}
+
 		const oldRenderTarget = this.renderer.getRenderTarget();
-		this._moveLights();
 		// The blurring plane applies blur to the seams of the lightmap
-		this.blurringPlane.visible = blurEdges;
 
 		// Render once normally to initialize everything
 		if (this.firstUpdate && 0) {
@@ -230,8 +268,6 @@ export class LightMapController {
 			this.renderer.render(this.scene, camera);
 			this.firstUpdate = false;
 		}
-
-		this.uvMat.uniforms.averagingWindow.value = blendWindow;
 
 		// Ping-pong two surface buffers for reading/writing
 		const activeMap = this.buffer1Active ? this.progressiveLightMap1 : this.progressiveLightMap2;
@@ -312,7 +348,7 @@ export class LightMapController {
 		const mat = new MeshPhongMaterial() as MeshPhongMaterialWithUniforms;
 		mat.uniforms = {
 			previousShadowMap: {value: null},
-			averagingWindow: {value: 0},
+			iterationBlend: {value: DEFAULT_ITERATION_BLEND},
 		};
 		mat.name = 'uvMat';
 		mat.onBeforeCompile = (shader) => {
@@ -327,26 +363,36 @@ export class LightMapController {
 			shader.fragmentShader =
 				'varying vec2 vUv2;\n' +
 				shader.fragmentShader.slice(0, bodyStart) +
-				'	uniform sampler2D previousShadowMap;\n	uniform float averagingWindow;\n' +
+				'	uniform sampler2D previousShadowMap;\n	uniform float iterationBlend;\n' +
 				shader.fragmentShader.slice(bodyStart - 1, -2) +
 				`\nvec3 texelOld = texture2D(previousShadowMap, vUv2).rgb;
-				gl_FragColor.rgb = mix(texelOld, gl_FragColor.rgb, 1.0/averagingWindow);
+				gl_FragColor.rgb = mix(texelOld, gl_FragColor.rgb, iterationBlend);
 				// gl_FragColor.rgb = vec3(vUv2,1.0);
 			}`;
 
 			// Set the Previous Frame's Texture Buffer and Averaging Window
 			const uniforms = {
 				previousShadowMap: {value: this.progressiveLightMap1.texture},
-				averagingWindow: {value: 100},
+				iterationBlend: {value: DEFAULT_ITERATION_BLEND},
 			};
 			shader.uniforms.previousShadowMap = uniforms.previousShadowMap;
-			shader.uniforms.averagingWindow = uniforms.averagingWindow;
+			shader.uniforms.iterationBlend = uniforms.iterationBlend;
 			mat.uniforms.previousShadowMap = uniforms.previousShadowMap;
-			mat.uniforms.averagingWindow = uniforms.averagingWindow;
+			mat.uniforms.iterationBlend = uniforms.iterationBlend;
 
 			// Set the new Shader to this
 			mat.userData.shader = shader;
 		};
 		return mat;
+	}
+
+	//
+	//
+	// BLUR
+	//
+	//
+	private _coreRenderBlur: CoreRenderBlur | undefined;
+	private _createCoreRenderBlur(res: Vector2) {
+		return new CoreRenderBlur(res);
 	}
 }

@@ -139,7 +139,7 @@ class ProgressiveLightMap {
 		}
 
 		// Render once normally to initialize everything
-		if (this.firstUpdate && 0) {
+		if (this.firstUpdate) {
 			this.renderer.setRenderTarget(this.tinyTarget); // Tiny for Speed
 			this.renderer.render(this.scene, camera);
 			this.firstUpdate = false;
@@ -163,7 +163,7 @@ class ProgressiveLightMap {
 		this.blurringPlane.material.uniforms.previousShadowMap = {value: inactiveMap.texture};
 		this.buffer1Active = !this.buffer1Active;
 		this.renderer.render(this.scene, camera);
-		console.log(JSON.stringify(this.scene.toJSON(), null, 2));
+		// console.log(JSON.stringify(this.scene.toJSON(), null, 2));
 
 		// Restore the object's Real-time Material and add it back to the original world
 		for (let l = 0; l < this.lightMapContainers.length; l++) {
@@ -205,6 +205,7 @@ class ProgressiveLightMap {
 		}
 
 		this.labelMesh.visible = visible;
+		console.log('showed debug');
 	}
 
 	/**

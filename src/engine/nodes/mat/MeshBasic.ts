@@ -7,6 +7,12 @@
  */
 
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {Texture} from 'three/src/textures/Texture';
+interface MeshBasicMaterialWithLightMap extends MeshBasicMaterial {
+	lightMap: Texture | null;
+	lightMapIntensity: number;
+}
+
 import {FrontSide} from 'three/src/constants';
 import {TypedMatNode} from './_Base';
 
@@ -19,6 +25,7 @@ import {TextureMapController, MapParamConfig} from './utils/TextureMapController
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
 import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
+import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
 import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -32,6 +39,7 @@ interface Controllers {
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
 	envMap: TextureEnvMapController;
+	lightMap: TextureLightMapController;
 	map: TextureMapController;
 }
 class MeshBasicMatParamsConfig extends FogParamConfig(
@@ -40,13 +48,15 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 			AdvancedCommonParamConfig(
 				/* advanced */
 				AdvancedFolderParamConfig(
-					EnvMapParamConfig(
-						AOMapParamConfig(
-							AlphaMapParamConfig(
-								MapParamConfig(
-									/* textures */
-									TexturesFolderParamConfig(
-										ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+					LightMapParamConfig(
+						EnvMapParamConfig(
+							AOMapParamConfig(
+								AlphaMapParamConfig(
+									MapParamConfig(
+										/* textures */
+										TexturesFolderParamConfig(
+											ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+										)
 									)
 								)
 							)
@@ -59,7 +69,7 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 ) {}
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
-export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicMatParamsConfig> {
+export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterialWithLightMap, MeshBasicMatParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
 		return 'meshBasic';
@@ -71,7 +81,7 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 			side: FrontSide,
 			color: 0xffffff,
 			opacity: 1,
-		});
+		}) as MeshBasicMaterialWithLightMap;
 	}
 
 	readonly controllers: Controllers = {
@@ -79,6 +89,7 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterial, MeshBasicM
 		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
 		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
 		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
+		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;

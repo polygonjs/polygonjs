@@ -140,7 +140,7 @@ export class LightMapObjNode extends TypedObjNode<Group, LightMapObjParamConfig>
 	// UPDATE
 	//
 	//
-	private async _updateManual() {
+	private _updateManual() {
 		if (!this._progressiveLightMap) {
 			return;
 		}
@@ -158,7 +158,7 @@ export class LightMapObjNode extends TypedObjNode<Group, LightMapObjParamConfig>
 		const camera = masterCameraNode.camera();
 		for (let i = 0; i < this.pv.iterations; i++) {
 			this._moveLights();
-			await this._progressiveLightMap.update(camera, blendWindow, blurEdges);
+			this._progressiveLightMap.update(camera, blendWindow, blurEdges);
 			if (!isBooleanTrue(this._progressiveLightMap.firstUpdate)) {
 				this._progressiveLightMap.showDebugLightmap(true);
 			}
