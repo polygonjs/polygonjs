@@ -226,14 +226,14 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	// container
 	async compute() {
 		if (!this.isDirty()) {
-			return this.containerController.container;
+			return this.containerController.container();
 		} else {
 			return await this.containerController.compute();
 		}
 	}
 	_setContainer(content: ContainableMap[NC], message: string | null = null) {
 		// TODO: typescript: why is this a type of never
-		this.containerController.container.set_content(content as never); //, this.self.cook_eval_key());
+		this.containerController.container().set_content(content as never); //, this.self.cook_eval_key());
 		if (content != null) {
 			if (!(content as any).name) {
 				(content as any).name = this.path();

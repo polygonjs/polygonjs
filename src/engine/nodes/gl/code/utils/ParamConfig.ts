@@ -112,7 +112,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 					uniform.value = texture;
 				});
 			} else {
-				const container = found_node.containerController.container;
+				const container = found_node.containerController.container();
 				const texture = container.texture();
 				uniform.value = texture;
 			}
@@ -132,7 +132,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 					uniform.value = texture;
 				});
 			} else {
-				const container = node.containerController.container;
+				const container = node.containerController.container();
 				const texture = container.texture();
 				uniform.value = texture;
 			}

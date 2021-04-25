@@ -49,7 +49,6 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		return CoreLoaderTexture.module_names(ext);
 	}
 
-	private _texture_loader: CoreLoaderTexture | undefined;
 	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
 
 	initializeNode() {
@@ -107,9 +106,9 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	private async _load_texture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
 		const url_param = this.p.url;
-		this._texture_loader = this._texture_loader || new CoreLoaderTexture(url, url_param, this, this.scene());
+		const textureLoader = new CoreLoaderTexture(url, url_param, this, this.scene());
 		try {
-			texture = await this._texture_loader.load_texture_from_url_or_op({
+			texture = await textureLoader.load_texture_from_url_or_op({
 				tdataType: this.pv.ttype && this.pv.tadvanced,
 				dataType: this.pv.type,
 			});

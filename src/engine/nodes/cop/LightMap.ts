@@ -13,6 +13,9 @@ import {Light} from 'three/src/lights/Light';
 import {Poly} from '../../Poly';
 import {LightMapController, DEFAULT_ITERATION_BLEND} from './utils/LightMapController';
 import {Mesh} from 'three/src/objects/Mesh';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
+import {CopRendererController} from './utils/RendererController';
 
 class LightMapCopParamConfig extends NodeParamsConfig {
 	/** @param click to update shadow, when mode is manual */
@@ -21,6 +24,8 @@ class LightMapCopParamConfig extends NodeParamsConfig {
 			LightMapCopNode.PARAM_CALLBACK_updateManual(node as LightMapCopNode);
 		},
 	});
+	/** @param defines if the shader is rendered via the same camera used to render the scene */
+	useCameraRenderer = ParamConfig.BOOLEAN(1);
 	/** @param shadow resolution */
 	lightMapRes = ParamConfig.INTEGER(1024, {range: [1, 2048], rangeLocked: [true, false]});
 	/** @param iterations */
@@ -62,15 +67,11 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	private lightMapController: LightMapController | undefined;
 	private _includedObjects: Mesh[] = [];
 	private _includedLights: Light[] = [];
+	private _data_texture_controller: DataTextureController | undefined;
+	private _renderer_controller: CopRendererController | undefined;
 
 	async cook() {
-		this.lightMapController = this.lightMapController || (await this._createLightMapController());
-
-		if (this.lightMapController) {
-			this.setTexture(this.lightMapController.texture());
-		} else {
-			this.cookController.endCook();
-		}
+		this._updateManual();
 	}
 
 	private async _createLightMapController() {
@@ -98,6 +99,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	//
 	//
 	private async _updateManual() {
+		this.lightMapController = this.lightMapController || (await this._createLightMapController());
 		if (!this.lightMapController) {
 			return;
 		}
@@ -118,7 +120,20 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 		});
 		this.lightMapController.runUpdates(camera);
 		this.lightMapController.restoreState();
-		// this.setTexture(this.lightMapController.progressiveLightMap1.texture);
+		// this.setTexture();
+
+		const renderTarget = this.lightMapController.textureRenderTarget();
+		if (isBooleanTrue(this.pv.useCameraRenderer)) {
+			this.setTexture(renderTarget.texture);
+		} else {
+			this._data_texture_controller =
+				this._data_texture_controller ||
+				new DataTextureController(DataTextureControllerBufferType.Float32Array);
+			this._renderer_controller = this._renderer_controller || new CopRendererController(this);
+			const renderer = await this._renderer_controller.renderer();
+			const texture = this._data_texture_controller.from_render_target(renderer, renderTarget);
+			this.setTexture(texture);
+		}
 	}
 	static PARAM_CALLBACK_updateManual(node: LightMapCopNode) {
 		node._updateManual();

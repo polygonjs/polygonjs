@@ -86,7 +86,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 
 	private _setContainerObjects(objects: Object3D[], message: MESSAGE) {
-		const core_group = this.containerController.container.coreContent() || new CoreGroup();
+		const core_group = this.containerController.container().coreContent() || new CoreGroup();
 		core_group.setObjects(objects);
 		core_group.touch();
 		this._setContainer(core_group);

@@ -84,11 +84,11 @@ export class LightMapController {
 		this.uvMat = this._createUVMat();
 	}
 
-	private _textureRenderTarget() {
+	textureRenderTarget() {
 		return this.progressiveLightMap2;
 	}
 	texture() {
-		return this._textureRenderTarget().texture;
+		return this.textureRenderTarget().texture;
 	}
 
 	setParams(params: Params) {

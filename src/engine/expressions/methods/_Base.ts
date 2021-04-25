@@ -55,7 +55,7 @@ export class BaseMethod {
 			if (referenced_node.isDirty()) {
 				container = await referenced_node.compute();
 			} else {
-				container = referenced_node.containerController.container;
+				container = referenced_node.containerController.container();
 			}
 			if (container) {
 				const core_group = container.coreContent();

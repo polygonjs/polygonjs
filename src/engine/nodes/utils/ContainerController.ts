@@ -14,7 +14,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		this._container = new container_class(this.node as any) as ContainerMap[NC];
 	}
 
-	get container() {
+	container() {
 		return this._container;
 	}
 
@@ -81,7 +81,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		this._callbacks.splice(0, this._callbacks.length); // empty
 
 		if (!container) {
-			container = this.node.containerController.container;
+			container = this.node.containerController.container();
 		}
 		let callback: Callback<NC> | undefined;
 		while ((callback = this._callbacks_tmp.pop())) {

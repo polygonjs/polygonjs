@@ -315,28 +315,28 @@ export class TextureParamsController {
 		}
 	}
 	static PARAM_CALLBACK_update_offset(node: TextureCopNode) {
-		const texture = node.containerController.container.texture();
+		const texture = node.containerController.container().texture();
 		if (!texture) {
 			return;
 		}
 		node.texture_params_controller._updateTransformOffset(texture, true);
 	}
 	static PARAM_CALLBACK_update_repeat(node: TextureCopNode) {
-		const texture = node.containerController.container.texture();
+		const texture = node.containerController.container().texture();
 		if (!texture) {
 			return;
 		}
 		node.texture_params_controller._updateTransformRepeat(texture, true);
 	}
 	static PARAM_CALLBACK_update_rotation(node: TextureCopNode) {
-		const texture = node.containerController.container.texture();
+		const texture = node.containerController.container().texture();
 		if (!texture) {
 			return;
 		}
 		node.texture_params_controller._updateTransformRotation(texture, true);
 	}
 	static PARAM_CALLBACK_update_center(node: TextureCopNode) {
-		const texture = node.containerController.container.texture();
+		const texture = node.containerController.container().texture();
 		if (!texture) {
 			return;
 		}
