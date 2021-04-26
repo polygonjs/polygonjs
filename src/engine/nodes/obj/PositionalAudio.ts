@@ -165,7 +165,11 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 
 		const newUrl = this.pv.url;
 		if (this._loadedUrl != newUrl) {
-			this._createPositionalAudio();
+			try {
+				await this._createPositionalAudio();
+			} catch (e) {
+				this.states.error.set(`error when creating audio: ${e}`);
+			}
 		}
 
 		if (this._positionalAudio) {
@@ -192,13 +196,6 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 				this._helper.visible = isBooleanTrue(this.pv.showHelper);
 				this._helper.update();
 			}
-
-			this._positionalAudio.autoplay = isBooleanTrue(this.pv.autoplay);
-			// if (isBooleanTrue(this.pv.autoplay)) {
-			// 	if (!isBooleanTrue(this._positionalAudio.isPlaying)) {
-			// 		this._positionalAudio.play();
-			// 	}
-			// }
 		}
 	}
 	private _createHelper(positionalAudio: PositionalAudio) {
@@ -216,8 +213,8 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		const listener = node.object;
 
 		if (this._positionalAudio) {
-			this._positionalAudio.stop();
 			if (this._positionalAudio.source) {
+				this._positionalAudio.stop();
 				this._positionalAudio.disconnect();
 			}
 			this.object.remove(this._positionalAudio);
@@ -234,9 +231,16 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		const loader = new CoreLoaderAudio(this.pv.url, this.scene(), this);
 		const buffer = await loader.load();
 		this._loadedUrl = this.pv.url;
+		this._positionalAudio.autoplay = isBooleanTrue(this.pv.autoplay);
 		this._positionalAudio.setBuffer(buffer);
 
 		this.object.add(this._positionalAudio);
+	}
+	isPlaying() {
+		if (this._positionalAudio) {
+			return isBooleanTrue(this._positionalAudio.isPlaying);
+		}
+		return false;
 	}
 
 	static PARAM_CALLBACK_play(node: PositionalAudioObjNode) {
@@ -249,12 +253,16 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		if (!this._positionalAudio) {
 			return;
 		}
-		this._positionalAudio.play();
+		if (!this.isPlaying()) {
+			this._positionalAudio.play();
+		}
 	}
 	private PARAM_CALLBACK_pause() {
 		if (!this._positionalAudio) {
 			return;
 		}
-		this._positionalAudio.pause();
+		if (this.isPlaying()) {
+			this._positionalAudio.pause();
+		}
 	}
 }
