@@ -2,6 +2,7 @@ import {SVGLoader, SVGResult, StrokeStyle} from '../../modules/three/examples/js
 import {Color} from 'three/src/math/Color';
 import {Group} from 'three/src/objects/Group';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {DoubleSide} from 'three/src/constants';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
@@ -10,6 +11,7 @@ import {PolyScene} from '../../engine/scene/PolyScene';
 import {isBooleanTrue} from '../BooleanValue';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
+import {LineSegments} from 'three/src/objects/LineSegments';
 
 interface CoreSVGLoaderOptions {
 	// fill
@@ -64,6 +66,12 @@ export class CoreSVGLoader extends CoreBaseLoader {
 			});
 		});
 	}
+	parse(text: string, options: CoreSVGLoaderOptions) {
+		const loader = new SVGLoader(this.loadingManager);
+		const data = loader.parse(text);
+		const group = this._onLoaded(data, options);
+		return group;
+	}
 
 	private _onLoaded(data: SVGResult, options: CoreSVGLoaderOptions) {
 		const paths = data.paths;
@@ -114,24 +122,46 @@ export class CoreSVGLoader extends CoreBaseLoader {
 
 	private _drawStrokes(group: Group, path: ShapePath, options: CoreSVGLoaderOptions) {
 		const userData: SVGPathUserData = (path as any).userData;
-		const material = new MeshBasicMaterial({
-			color: new Color().setStyle(userData.style.stroke),
-			opacity: userData.style.strokeOpacity,
-			transparent: userData.style.strokeOpacity < 1,
-			side: DoubleSide,
-			depthWrite: false,
-			wireframe: options.strokesWireframe,
-		});
+		if (options.strokesWireframe) {
+			const material = new LineBasicMaterial({
+				color: new Color().setStyle(userData.style.stroke),
+				opacity: userData.style.strokeOpacity,
+				transparent: userData.style.strokeOpacity < 1,
+				side: DoubleSide,
+				depthWrite: false,
+			});
 
-		for (let j = 0, jl = path.subPaths.length; j < jl; j++) {
-			const subPath = path.subPaths[j];
+			for (let j = 0, jl = path.subPaths.length; j < jl; j++) {
+				const subPath = path.subPaths[j];
 
-			const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), userData.style);
+				const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), userData.style);
 
-			if (geometry) {
-				const mesh = new Mesh(geometry, material);
+				if (geometry) {
+					const mesh = new LineSegments(geometry, material);
 
-				group.add(mesh);
+					group.add(mesh);
+				}
+			}
+		} else {
+			const material = new MeshBasicMaterial({
+				color: new Color().setStyle(userData.style.stroke),
+				opacity: userData.style.strokeOpacity,
+				transparent: userData.style.strokeOpacity < 1,
+				side: DoubleSide,
+				depthWrite: false,
+				// wireframe: options.strokesWireframe,
+			});
+
+			for (let j = 0, jl = path.subPaths.length; j < jl; j++) {
+				const subPath = path.subPaths[j];
+
+				const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), userData.style);
+
+				if (geometry) {
+					const mesh = new Mesh(geometry, material);
+
+					group.add(mesh);
+				}
 			}
 		}
 	}
