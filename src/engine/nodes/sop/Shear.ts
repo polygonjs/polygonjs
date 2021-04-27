@@ -6,7 +6,13 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {ShearSopOperation, SHEAR_MODES, ShearMode} from '../../operations/sop/Shear';
+import {
+	ShearSopOperation,
+	SHEAR_MODES,
+	ShearMode,
+	SHEAR_CENTER_MODES,
+	ShearCenterMode,
+} from '../../operations/sop/Shear';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -24,6 +30,31 @@ class ShearSopParamConfig extends NodeParamsConfig {
 	matrixAmount = ParamConfig.VECTOR3(DEFAULT.matrixAmount.toArray(), {
 		visibleIf: {
 			mode: SHEAR_MODES.indexOf(ShearMode.MATRIX),
+		},
+	});
+	/** @param centerMode defines how the center of the shear in axis mode is computed */
+	centerMode = ParamConfig.INTEGER(DEFAULT.centerMode, {
+		visibleIf: {
+			mode: SHEAR_MODES.indexOf(ShearMode.AXIS),
+		},
+		menu: {
+			entries: SHEAR_CENTER_MODES.map((name, value) => {
+				return {name, value};
+			}),
+		},
+	});
+	/** @param centerOffset */
+	centerOffset = ParamConfig.VECTOR3(DEFAULT.centerOffset.toArray(), {
+		visibleIf: {
+			mode: SHEAR_MODES.indexOf(ShearMode.AXIS),
+			centerMode: SHEAR_CENTER_MODES.indexOf(ShearCenterMode.BBOX_CENTER_OFFSET),
+		},
+	});
+	/** @param center */
+	center = ParamConfig.VECTOR3(DEFAULT.center.toArray(), {
+		visibleIf: {
+			mode: SHEAR_MODES.indexOf(ShearMode.AXIS),
+			centerMode: SHEAR_CENTER_MODES.indexOf(ShearCenterMode.CUSTOM),
 		},
 	});
 	/** @param PlaneAxis */
