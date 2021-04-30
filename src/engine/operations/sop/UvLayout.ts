@@ -8,6 +8,7 @@ import {Potpack, PotPackBox, PotPackBoxResult} from '../../../core/libs/Potpack'
 
 interface UvLayoutSopParams extends DefaultOperationParams {
 	res: number;
+	padding: number;
 	uv: string;
 	uv2: string;
 }
@@ -15,6 +16,7 @@ interface UvLayoutSopParams extends DefaultOperationParams {
 export class UvLayoutSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: UvLayoutSopParams = {
 		res: 1024,
+		padding: 3,
 		uv: 'uv',
 		uv2: 'uv2',
 	};
@@ -41,7 +43,7 @@ export class UvLayoutSopOperation extends BaseSopOperation {
 	private _layoutUVs(meshes: Mesh[], params: UvLayoutSopParams) {
 		const uv_boxes: PotPackBox[] = [];
 		const objIndexByBox: WeakMap<PotPackBox, number> = new WeakMap();
-		const padding = 3 / params.res;
+		const padding = params.padding / params.res;
 
 		let index = 0;
 		for (let mesh of meshes) {

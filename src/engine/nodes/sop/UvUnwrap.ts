@@ -1,5 +1,5 @@
 /**
- * Unwraps UVs
+ * Unwraps UVs of each input geometry one by one
  *
  *
  *
@@ -11,6 +11,7 @@ import {UvUnwrapSopOperation} from '../../operations/sop/UvUnwrap';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 class UvUnwrapSopParamConfig extends NodeParamsConfig {
+	/** @param attribute to unwrap */
 	uv = ParamConfig.STRING('uv');
 }
 const ParamsConfig = new UvUnwrapSopParamConfig();

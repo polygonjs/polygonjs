@@ -1,7 +1,9 @@
 /**
  * Layout UVs of multiple objects so that they have no overlap
  *
+ * @remarks
  *
+ * Using the UvLayout node is very useful to prepare geometries which a lightmap will be applied onto.
  *
  */
 import {TypedSopNode} from './_Base';
@@ -11,8 +13,13 @@ import {UvLayoutSopOperation} from '../../operations/sop/UvLayout';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 class UvLayoutSopParamConfig extends NodeParamsConfig {
+	/** @param expected map resolution */
 	res = ParamConfig.INTEGER(1024);
+	/** @param padding between uv islands, in pixels */
+	padding = ParamConfig.INTEGER(3);
+	/** @param uv attribute to layout */
 	uv = ParamConfig.STRING('uv');
+	/** @param new uv attribute that will be set or created */
 	uv2 = ParamConfig.STRING('uv2');
 }
 const ParamsConfig = new UvLayoutSopParamConfig();

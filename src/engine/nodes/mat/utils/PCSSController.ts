@@ -9,6 +9,7 @@ import {BaseBuilderMatNodeType} from '../_BaseBuilder';
 import PCSS from './shadows/pcss/glsl/PCSS.glsl';
 import PCSSGetShadow from './shadows/pcss/glsl/PCSSGetShadow.glsl';
 import SHADOW_MAP_PARS_FRAGMENT from 'three/src/renderers/shaders/ShaderChunk/shadowmap_pars_fragment.glsl';
+import {ThreeToGl} from '../../../../core/ThreeToGl';
 
 export function PCSSParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -18,6 +19,18 @@ export function PCSSParamConfig<TBase extends Constructor>(Base: TBase) {
 				PCSSController.PARAM_CALLBACK_setRecompileRequired(node as PCSSMapMatNode);
 			},
 			separatorBefore: true,
+		});
+		/** @param shadowPCSSSamplesCount */
+		shadowPCSSSamplesCount = ParamConfig.INTEGER(16, {
+			visibleIf: {shadowPCSS: 1},
+			range: [0, 128],
+			rangeLocked: [true, false],
+		});
+		/** @param shadowPCSSFilterSize PCSS Shadow filter size */
+		shadowPCSSFilterSize = ParamConfig.FLOAT(1, {
+			visibleIf: {shadowPCSS: 1},
+			range: [0, 10],
+			rangeLocked: [true, false],
 		});
 	};
 }
@@ -38,12 +51,18 @@ export class PCSSController extends BaseController {
 
 	initializeNode() {}
 
-	static filterFragmentShader(fragmentShader: string) {
+	static filterFragmentShader(node: PCSSMapMatNode, fragmentShader: string) {
+		const PCSSWithDefines = `
+#define NUM_SAMPLES ${ThreeToGl.integer(node.pv.shadowPCSSSamplesCount)}
+#define PCSS_FILTER_SIZE ${ThreeToGl.float(node.pv.shadowPCSSFilterSize)}
+${PCSS}
+`;
+
 		let shadowParsFragmentModified = SHADOW_MAP_PARS_FRAGMENT;
 		shadowParsFragmentModified = shadowParsFragmentModified.replace(
 			'#ifdef USE_SHADOWMAP',
 			`#ifdef USE_SHADOWMAP
-${PCSS}
+${PCSSWithDefines}
 				`
 		);
 
@@ -66,9 +85,8 @@ ${PCSS}
 		}
 		const callbackName = 'PCSS';
 		if (isBooleanTrue(this.node.pv.shadowPCSS)) {
-			matNode.assemblerController.addFilterFragmentShaderCallback(
-				callbackName,
-				PCSSController.filterFragmentShader
+			matNode.assemblerController.addFilterFragmentShaderCallback(callbackName, (fragmentShader: string) =>
+				PCSSController.filterFragmentShader(this.node, fragmentShader)
 			);
 		} else {
 			matNode.assemblerController.removeFilterFragmentShaderCallback(callbackName);
