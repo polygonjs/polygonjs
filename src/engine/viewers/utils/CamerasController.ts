@@ -37,7 +37,7 @@ export class ViewerCamerasController {
 	}
 
 	updateCameraAspect() {
-		this.cameraNode().setup_for_aspect_ratio(this._aspect);
+		this.cameraNode().setupForAspectRatio(this._aspect);
 	}
 
 	async prepareCurrentCamera() {

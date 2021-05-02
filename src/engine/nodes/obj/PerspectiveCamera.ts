@@ -9,7 +9,10 @@ import {
 	TypedThreejsCameraObjNode,
 	BASE_CAMERA_DEFAULT,
 	ThreejsCameraTransformParamConfig,
+	ThreejsCameraFOVParamConfig,
 	CameraMasterCameraParamConfig,
+	FOV_ADJUST_MODES,
+	FOVAdjustMode,
 } from './_BaseCamera';
 
 const DEFAULT = {
@@ -23,22 +26,24 @@ import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessControlle
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
 import {CameraNodeType} from '../../poly/NodeContext';
+import {MathUtils} from 'three/src/math/MathUtils';
+import {TypeAssert} from '../../poly/Assert';
 
 export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param field of view */
 		fov = ParamConfig.FLOAT(DEFAULT.fov, {range: [0, 100]});
-		// vertical_fov_range = ParamConfig.VECTOR2([0, 100], {visibleIf: {lock_width: 1}});
-		// horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visibleIf: {lock_width: 0}});
 	};
 }
 class PerspectiveCameraObjParamConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
 		LayerParamConfig(
 			CameraMasterCameraParamConfig(
-				PerspectiveCameraObjParamConfigMixin(
-					ThreejsCameraTransformParamConfig(
-						TransformedParamConfig(NodeParamsConfig, {matrixAutoUpdate: true})
+				ThreejsCameraFOVParamConfig(
+					PerspectiveCameraObjParamConfigMixin(
+						ThreejsCameraTransformParamConfig(
+							TransformedParamConfig(NodeParamsConfig, {matrixAutoUpdate: true})
+						)
 					)
 				)
 			)
@@ -60,37 +65,63 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 		return new PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);
 	}
 
-	update_camera() {
+	updateCamera() {
 		if (this._object.fov != this.pv.fov) {
 			this._object.fov = this.pv.fov;
 			this._object.updateProjectionMatrix();
 		}
-		this._update_for_aspect_ratio();
+		this._updateForAspectRatio();
 	}
 
-	protected _update_for_aspect_ratio() {
+	protected _updateForAspectRatio() {
 		if (this._aspect) {
-			// let lock_width = true;//this.pv.lock_width;
-
 			this._object.aspect = this._aspect;
-			// if (lock_width) {
-			// 	const other_fov = this.pv.fov / this._aspect;
-			// 	this._object.zoom = this.get_zoom(this._aspect, other_fov, this.pv.vertical_fov_range);
-			// } else {
-			// 	this._object.zoom = 1;
-			// }
+			this._adjustFOVFromMode();
 			this._object.updateProjectionMatrix();
 		}
 	}
-	// private get_zoom(start_zoom: number, other_fov: number, range: Vector2) {
-	// 	let zoom = start_zoom;
-	// 	if (range) {
-	// 		if (other_fov < range.x || other_fov > range.y) {
-	// 			const new_other_fov = lodash_clamp(other_fov, range.x, range.y);
-	// 			zoom = start_zoom * (other_fov / new_other_fov);
-	// 			// zoom = Math.min(start_zoom, zoom)
-	// 		}
-	// 	}
-	// 	return zoom;
-	// }
+	private _adjustFOVFromMode() {
+		const mode: FOVAdjustMode = FOV_ADJUST_MODES[this.pv.fovAdjustMode];
+		switch (mode) {
+			case FOVAdjustMode.DEFAULT: {
+				return this._adjustFOVFromModeDefault();
+			}
+			case FOVAdjustMode.COVER: {
+				return this._adjustFOVFromModeCover();
+			}
+			case FOVAdjustMode.CONTAIN: {
+				return this._adjustFOVFromModeContain();
+			}
+		}
+		TypeAssert.unreachable(mode);
+	}
+	private _adjustFOVFromModeDefault() {
+		this._object.fov = this.pv.fov;
+	}
+	private _adjustFOVFromModeCover() {
+		// from
+		// https://discourse.threejs.org/t/keeping-an-object-scaled-based-on-the-bounds-of-the-canvas-really-battling-to-explain-this-one/17574/10
+		//
+		if (this._object.aspect > this.pv.expectedAspectRatio) {
+			// window too large
+			const cameraHeight = Math.tan(MathUtils.degToRad(this.pv.fov / 2));
+			const ratio = this._object.aspect / this.pv.expectedAspectRatio;
+			const newCameraHeight = cameraHeight / ratio;
+			this._object.fov = MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
+		} else {
+			this._object.fov = this.pv.fov;
+		}
+	}
+	private _adjustFOVFromModeContain() {
+		if (this._object.aspect > this.pv.expectedAspectRatio) {
+			// window too large
+			this._object.fov = this.pv.fov;
+		} else {
+			// window too narrow
+			const cameraHeight = Math.tan(MathUtils.degToRad(this.pv.fov / 2));
+			const ratio = this._object.aspect / this.pv.expectedAspectRatio;
+			const newCameraHeight = cameraHeight / ratio;
+			this._object.fov = MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
+		}
+	}
 }

@@ -9,7 +9,10 @@ import {
 	TypedThreejsCameraObjNode,
 	BASE_CAMERA_DEFAULT,
 	ThreejsCameraTransformParamConfig,
+	ThreejsCameraFOVParamConfig,
 	CameraMasterCameraParamConfig,
+	FOV_ADJUST_MODES,
+	FOVAdjustMode,
 } from './_BaseCamera';
 
 const DEFAULT = {
@@ -25,6 +28,7 @@ import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessControlle
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
 import {CameraNodeType} from '../../poly/NodeContext';
+import {TypeAssert} from '../../poly/Assert';
 export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		size = ParamConfig.FLOAT(1);
@@ -36,10 +40,12 @@ export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>
 class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
 		LayerParamConfig(
-			OrthographicCameraObjParamConfigMixin(
-				CameraMasterCameraParamConfig(
-					ThreejsCameraTransformParamConfig(
-						TransformedParamConfig(NodeParamsConfig, {matrixAutoUpdate: true})
+			CameraMasterCameraParamConfig(
+				ThreejsCameraFOVParamConfig(
+					OrthographicCameraObjParamConfigMixin(
+						ThreejsCameraTransformParamConfig(
+							TransformedParamConfig(NodeParamsConfig, {matrixAutoUpdate: true})
+						)
 					)
 				)
 			)
@@ -73,44 +79,62 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 		);
 	}
 
-	update_camera() {
-		this._update_for_aspect_ratio();
+	updateCamera() {
+		this._updateForAspectRatio();
 	}
 
-	protected _update_for_aspect_ratio() {
+	protected _updateForAspectRatio() {
 		if (this._aspect) {
-			const size = this.pv.size || 1;
-			// let lock_width = this.pv.lock_width;
-			// if (lock_width == null) {
-			// 	lock_width = true;
-			// }
-			// if (lock_width) {
-			// 	const vertical_size = size / this._aspect;
-			// 	const zoom = 1 //this.get_zoom(vertical_size, this.pv.vertical_size_range);
-			// 	this._object.left = DEFAULT.left * size * zoom;
-			// 	this._object.right = DEFAULT.right * size * zoom;
-			// 	this._object.top = DEFAULT.top * vertical_size * zoom;
-			// 	this._object.bottom = DEFAULT.bottom * vertical_size * zoom;
-			// } else {
-			const horizontal_size = size * this._aspect;
-			const zoom = 1; //this.get_zoom(horizontal_size, this.pv.horizontal_size_range);
-			this._object.left = DEFAULT.left * horizontal_size * zoom;
-			this._object.right = DEFAULT.right * horizontal_size * zoom;
-			this._object.top = DEFAULT.top * size * zoom;
-			this._object.bottom = DEFAULT.bottom * size * zoom;
-			// }
+			this._adjustFOVFromMode();
 			this._object.updateProjectionMatrix();
 		}
 	}
 
-	// private get_zoom(size: number, range: Vector2) {
-	// 	let zoom = 1;
-	// 	if (range) {
-	// 		if (size < range.x || size > range.y) {
-	// 			const new_size = lodash_clamp(size, range.x, range.y);
-	// 			zoom = new_size / size;
-	// 		}
-	// 	}
-	// 	return zoom;
-	// }
+	private _adjustFOVFromMode() {
+		const mode: FOVAdjustMode = FOV_ADJUST_MODES[this.pv.fovAdjustMode];
+		switch (mode) {
+			case FOVAdjustMode.DEFAULT: {
+				return this._adjustFOVFromModeDefault();
+			}
+			case FOVAdjustMode.COVER: {
+				return this._adjustFOVFromModeCover();
+			}
+			case FOVAdjustMode.CONTAIN: {
+				return this._adjustFOVFromModeContain();
+			}
+		}
+		TypeAssert.unreachable(mode);
+	}
+	private _adjustFOVFromModeDefault() {
+		this._adjustFOVFromSize(this.pv.size || 1);
+	}
+	private _adjustFOVFromModeCover() {
+		const size = this.pv.size || 1;
+		if (this._aspect > this.pv.expectedAspectRatio) {
+			// window too large
+			this._adjustFOVFromSize((this.pv.expectedAspectRatio * size) / this._aspect);
+		} else {
+			// window too narrow
+			this._adjustFOVFromSize(size);
+		}
+	}
+	private _adjustFOVFromModeContain() {
+		const size = this.pv.size || 1;
+		if (this._aspect > this.pv.expectedAspectRatio) {
+			// window too large
+			this._adjustFOVFromSize(size);
+		} else {
+			// window too narrow
+			this._adjustFOVFromSize((this.pv.expectedAspectRatio * size) / this._aspect);
+		}
+	}
+
+	private _adjustFOVFromSize(size: number) {
+		const horizontal_size = size * this._aspect;
+		const zoom = 1;
+		this._object.left = DEFAULT.left * horizontal_size * zoom;
+		this._object.right = DEFAULT.right * horizontal_size * zoom;
+		this._object.top = DEFAULT.top * size * zoom;
+		this._object.bottom = DEFAULT.bottom * size * zoom;
+	}
 }

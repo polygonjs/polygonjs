@@ -55,11 +55,11 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 	}
 
 	updatePass(pass: RenderPassWithContext) {
-		this._update_camera(pass);
+		this._updateCamera(pass);
 		this._update_scene(pass);
 	}
 
-	private async _update_camera(pass: RenderPassWithContext) {
+	private async _updateCamera(pass: RenderPassWithContext) {
 		if (isBooleanTrue(this.pv.overrideCamera)) {
 			if (this.p.camera.isDirty()) {
 				await this.p.camera.compute();

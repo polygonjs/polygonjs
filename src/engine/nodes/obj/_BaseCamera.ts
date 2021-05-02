@@ -119,6 +119,36 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 	};
 }
 
+export enum FOVAdjustMode {
+	DEFAULT = 'default',
+	COVER = 'cover',
+	CONTAIN = 'contain',
+}
+export const FOV_ADJUST_MODES: FOVAdjustMode[] = [FOVAdjustMode.DEFAULT, FOVAdjustMode.COVER, FOVAdjustMode.CONTAIN];
+export function ThreejsCameraFOVParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param fov adjust mode */
+		fovAdjustMode = ParamConfig.INTEGER(FOV_ADJUST_MODES.indexOf(FOVAdjustMode.DEFAULT), {
+			menu: {
+				entries: FOV_ADJUST_MODES.map((name, value) => {
+					return {name, value};
+				}),
+			},
+		});
+		/** @param expected aspect ratio */
+		expectedAspectRatio = ParamConfig.FLOAT('16/9', {
+			visibleIf: [
+				{fovAdjustMode: FOV_ADJUST_MODES.indexOf(FOVAdjustMode.COVER)},
+				{fovAdjustMode: FOV_ADJUST_MODES.indexOf(FOVAdjustMode.CONTAIN)},
+			],
+			range: [0, 2],
+			rangeLocked: [true, false],
+		});
+		// vertical_fov_range = ParamConfig.VECTOR2([0, 100], {visibleIf: {lock_width: 1}});
+		// horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visibleIf: {lock_width: 0}});
+	};
+}
+
 export class BaseCameraObjParamsConfig extends CameraMasterCameraParamConfig(NodeParamsConfig) {}
 export class BaseThreejsCameraObjParamsConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
@@ -141,7 +171,7 @@ export abstract class TypedCameraObjNode<
 	}
 
 	async cook() {
-		this.update_camera();
+		this.updateCamera();
 		this._object.dispatchEvent(EVENT_CHANGE);
 		this.cookController.endCook();
 	}
@@ -154,7 +184,7 @@ export abstract class TypedCameraObjNode<
 	camera() {
 		return this._object;
 	}
-	update_camera() {}
+	updateCamera() {}
 
 	static PARAM_CALLBACK_setMasterCamera(node: BaseCameraObjNodeType) {
 		node.set_as_master_camera();
@@ -163,8 +193,8 @@ export abstract class TypedCameraObjNode<
 		this.scene().camerasController.setMasterCameraNodePath(this.path());
 	}
 
-	setup_for_aspect_ratio(aspect: number) {}
-	protected _update_for_aspect_ratio(): void {}
+	setupForAspectRatio(aspect: number) {}
+	protected _updateForAspectRatio(): void {}
 
 	update_transform_params_from_object() {
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
@@ -253,7 +283,7 @@ export class TypedThreejsCameraObjNode<
 		this.updateNearFar();
 
 		this.renderController.update();
-		this.update_camera();
+		this.updateCamera();
 		this._updateHelper();
 		this.controls_controller.update_controls();
 
@@ -277,13 +307,13 @@ export class TypedThreejsCameraObjNode<
 		}
 	}
 
-	setup_for_aspect_ratio(aspect: number) {
+	setupForAspectRatio(aspect: number) {
 		if (CoreType.isNaN(aspect)) {
 			return;
 		}
 		if (aspect && this._aspect != aspect) {
 			this._aspect = aspect;
-			this._update_for_aspect_ratio();
+			this._updateForAspectRatio();
 		}
 	}
 

@@ -43,7 +43,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		// this._container.style.height = '100%'; // this should be app specific
 
 		this._build();
-		this._set_events();
+		this._setEvents();
 	}
 	get controlsController(): ViewerControlsController {
 		return (this._controls_controller = this._controls_controller || new ViewerControlsController(this));
@@ -57,6 +57,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	dispose() {
 		this._cancel_animate();
 		this.controlsController.dispose();
+		this._disposeEvents();
 		// TODO: also dispose the renderer
 		super.dispose();
 	}
@@ -64,14 +65,16 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		return this._camera_node.controls_controller;
 	}
 
-	private _set_events() {
+	private _setEvents() {
 		this.eventsController.init();
 		this.webglController.init();
 
-		window.onresize = () => {
-			this.onResize();
-		};
+		window.addEventListener('resize', this._onResizeBound.bind(this), false);
 	}
+	private _disposeEvents() {
+		window.removeEventListener('resize', this._onResizeBound.bind(this), false);
+	}
+	private _onResizeBound = this.onResize.bind(this);
 	onResize() {
 		const canvas = this.canvas();
 		if (!canvas) {

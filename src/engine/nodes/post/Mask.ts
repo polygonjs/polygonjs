@@ -60,7 +60,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 	updatePass(pass: MaskPassWithContext) {
 		pass.inverse = isBooleanTrue(this.pv.inverse);
 		this._update_scene(pass);
-		this._update_camera(pass);
+		this._updateCamera(pass);
 	}
 	private async _update_scene(pass: MaskPassWithContext) {
 		if (isBooleanTrue(this.pv.overrideScene)) {
@@ -75,7 +75,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 		}
 		pass.scene = pass.context.scene;
 	}
-	private async _update_camera(pass: MaskPassWithContext) {
+	private async _updateCamera(pass: MaskPassWithContext) {
 		if (isBooleanTrue(this.pv.overrideCamera)) {
 			if (this.p.camera.isDirty()) {
 				await this.p.camera.compute();
