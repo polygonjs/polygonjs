@@ -156,10 +156,12 @@ export async function mountScene(data: loadSceneData) {
 			console.warn('no element to mount the viewer onto');
 			return;
 		}
-		cameraNode.createViewer(container);
+		const viewer = cameraNode.createViewer(container);
+
+		return {scene, cameraNode, viewer};
 	}
 
 	const manifest = await loadManifest();
 	const sceneData = await loadSceneData(manifest);
-	await loadScene(sceneData);
+	return await loadScene(sceneData);
 }
