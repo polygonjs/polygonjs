@@ -52,7 +52,6 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			return;
 		}
 		const polyCount = indexArray.length / 3;
-		console.log('polyCount', polyCount);
 		for (let i = 0; i < polyCount; i++) {
 			boxes.push({w: 1, h: 1});
 		}
