@@ -1,7 +1,9 @@
 /**
- * Unwraps UVs of each input geometry one by one
+ * Unwraps UVs of each input geometries one by one
  *
+ * @remarks
  *
+ * This node uses a very basic unwrap algorithm, and works much better preceded with a sop/Face node that will make every face separate from its neighbours
  *
  */
 import {TypedSopNode} from './_Base';

@@ -3,7 +3,14 @@
  *
  * @remarks
  *
- * Using the UvLayout node is very useful to prepare geometries which a lightmap will be applied onto.
+ * lays out the UVs of input geometries so that they fit in a 1x1 square and do not overlap.
+ *
+ * @remarks
+ *
+ * This node can be very useful to prepare geometries to use a lightmap in their materials. A typical setup would be:
+ *
+ * input geometry -> sop/Face -> sop/UvUnwrap -> sop/UvLayout
+ *
  *
  */
 import {TypedSopNode} from './_Base';

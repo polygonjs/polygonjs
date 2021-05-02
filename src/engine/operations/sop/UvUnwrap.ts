@@ -52,27 +52,40 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			return;
 		}
 		const polyCount = indexArray.length / 3;
+		console.log('polyCount', polyCount);
 		for (let i = 0; i < polyCount; i++) {
 			boxes.push({w: 1, h: 1});
 		}
 
 		const result = Potpack(boxes);
 		const newUvValues = new Array(uvArray.length);
+		// function setnewValue(index: number, newValue: number) {
+		// 	// if (newUvValues[index] == null) {
+		// 	newUvValues[index] = newValue;
+		// 	// } else {
+		// 	// 	if (newUvValues[index] <= newValue) {
+		// 	// 		newUvValues[index] = newValue;
+		// 	// 	} else {
+		// 	// 		console.log(`${index} already has ${newUvValues[index]}, cannot be set to ${newValue}`);
+		// 	// 	}
+		// 	// }
+		// }
 		for (let i = 0; i < polyCount; i++) {
 			const box = boxes[i] as PotPackBoxResult;
 			const x = box.x / result.w;
 			const y = box.y / result.h;
 			const w = box.w / result.w;
 			const h = box.h / result.h;
-			const index0 = indexArray[i * 3 + 0];
-			const index1 = indexArray[i * 3 + 1];
-			const index2 = indexArray[i * 3 + 2];
-			newUvValues[index0 * 2] = x;
-			newUvValues[index0 * 2 + 1] = y;
-			newUvValues[index1 * 2] = x + w;
-			newUvValues[index1 * 2 + 1] = y;
-			newUvValues[index2 * 2] = x;
-			newUvValues[index2 * 2 + 1] = y + h;
+			const index0 = 2 * indexArray[i * 3 + 0];
+			const index1 = 2 * indexArray[i * 3 + 1];
+			const index2 = 2 * indexArray[i * 3 + 2];
+
+			newUvValues[index0] = x;
+			newUvValues[index0 + 1] = y;
+			newUvValues[index1] = x + w;
+			newUvValues[index1 + 1] = y;
+			newUvValues[index2] = x;
+			newUvValues[index2 + 1] = y + h;
 		}
 		geometry.setAttribute(params.uv, new Float32BufferAttribute(newUvValues, 2));
 	}
