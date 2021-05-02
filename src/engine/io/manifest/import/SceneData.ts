@@ -117,18 +117,26 @@ export class SceneDataManifestImporter {
 
 interface loadSceneData {
 	sceneName: string;
-	manifest: ManifestContent;
-	urlPrefix: string;
 	domElement: string | HTMLElement;
+	scenesSrcRoot?: string;
+	scenesDataRoot?: string;
 }
 
 export async function mountScene(data: loadSceneData) {
+	const scenesSrcRoot = data.scenesSrcRoot || '/src/polygonjs/scenes';
+	const scenesDataRoot = data.scenesSrcRoot || '/public/polygonjs/scenes';
 	const sceneName = data.sceneName;
 
-	async function loadSceneData() {
+	async function loadManifest(): Promise<ManifestContent> {
+		const response = await fetch(`${scenesSrcRoot}/${sceneName}/manifest.json`);
+		const json = await response.json();
+		return json;
+	}
+
+	async function loadSceneData(manifest: ManifestContent) {
 		return await SceneDataManifestImporter.importSceneData({
-			manifest: data.manifest,
-			urlPrefix: `${data.urlPrefix}/${sceneName}`,
+			manifest: manifest,
+			urlPrefix: `${scenesDataRoot}/${sceneName}`,
 		});
 	}
 
@@ -151,6 +159,7 @@ export async function mountScene(data: loadSceneData) {
 		cameraNode.createViewer(container);
 	}
 
-	const sceneData = await loadSceneData();
+	const manifest = await loadManifest();
+	const sceneData = await loadSceneData(manifest);
 	await loadScene(sceneData);
 }
