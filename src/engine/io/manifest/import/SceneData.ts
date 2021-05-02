@@ -1,4 +1,6 @@
+import {CoreType} from '../../../../core/Type';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {SceneJsonImporter} from '../../../index_all';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../json/export/Node';
 import {SceneJsonExporterData, SceneJsonExporterDataProperties} from '../../json/export/Scene';
 
@@ -111,4 +113,44 @@ export class SceneDataManifestImporter {
 			this.insert_child_data(parent_data, path_without_parent, json);
 		}
 	}
+}
+
+interface loadSceneData {
+	sceneName: string;
+	manifest: ManifestContent;
+	urlPrefix: string;
+	domElement: string | HTMLElement;
+}
+
+export async function mountScene(data: loadSceneData) {
+	const sceneName = data.sceneName;
+
+	async function loadSceneData() {
+		return await SceneDataManifestImporter.importSceneData({
+			manifest: data.manifest,
+			urlPrefix: `${data.urlPrefix}/${sceneName}`,
+		});
+	}
+
+	async function loadScene(sceneData: SceneJsonExporterData) {
+		const importer = new SceneJsonImporter(sceneData);
+		const scene = await importer.scene();
+
+		const cameraNode = scene.masterCameraNode();
+		if (!cameraNode) {
+			console.warn('no master camera found');
+			return;
+		}
+		const container = CoreType.isString(data.domElement)
+			? document.getElementById(data.domElement)
+			: data.domElement;
+		if (!container) {
+			console.warn('no element to mount the viewer onto');
+			return;
+		}
+		cameraNode.createViewer(container);
+	}
+
+	const sceneData = await loadSceneData();
+	await loadScene(sceneData);
 }
