@@ -7,7 +7,7 @@ import {HierarchyParentController} from './utils/hierarchy/ParentController';
 import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {TypedContainerController} from './utils/ContainerController';
-import {NodeCookController} from './utils/CookController';
+import {NodeCookController, OnCookCompleteHook} from './utils/CookController';
 import {NameController} from './utils/NameController';
 import {NodeSerializer, NodeSerializerData} from './utils/Serializer';
 import {ParamsController} from './utils/params/ParamsController';
@@ -221,6 +221,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	// cook
 	cook(input_contents: any[]): any {
 		return null;
+	}
+	onCookEnd(callbackName: string, callback: OnCookCompleteHook) {
+		this.cookController.registerOnCookEnd(callbackName, callback);
 	}
 
 	// container

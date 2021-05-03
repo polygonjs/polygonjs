@@ -6,7 +6,7 @@ import {NodeCookEventNode} from '../../../../src/engine/nodes/event/NodeCook';
 import {ScatterSopNode} from '../../../../src/engine/nodes/sop/Scatter';
 import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
 
-QUnit.test('event node_cook simple', async (assert) => {
+QUnit.test('event nodeCook simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	const events = scene.root().createNode('eventsNetwork');
@@ -21,7 +21,7 @@ QUnit.test('event node_cook simple', async (assert) => {
 
 	await scene.waitForCooksCompleted();
 
-	const node_cook1 = events.createNode('nodeCook');
+	const nodeCook1 = events.createNode('nodeCook');
 	const set_param1 = events.createNode('setParam');
 	const set_param2 = events.createNode('setParam');
 
@@ -33,13 +33,13 @@ QUnit.test('event node_cook simple', async (assert) => {
 	merge1.setInput(2, scatter3);
 
 	assert.ok(scene.loadingController.loaded());
-	node_cook1.p.mask.set('*scatter*');
+	nodeCook1.p.mask.set('*scatter*');
 	set_param1.p.param.set(switch1.p.input.path());
 	set_param1.p.number.set(1);
 	set_param2.p.param.set(switch2.p.input.path());
 	set_param2.p.number.set(1);
-	set_param1.setInput(0, node_cook1, NodeCookEventNode.OUTPUT_FIRST_NODE);
-	set_param2.setInput(0, node_cook1, NodeCookEventNode.OUTPUT_ALL_NODES);
+	set_param1.setInput(0, nodeCook1, NodeCookEventNode.OUTPUT_FIRST_NODE);
+	set_param2.setInput(0, nodeCook1, NodeCookEventNode.OUTPUT_ALL_NODES);
 
 	assert.equal(switch1.p.input.value, 0);
 	await scatter1.compute();
@@ -72,4 +72,8 @@ QUnit.test('event node_cook simple', async (assert) => {
 	await merge1_2.compute();
 	await CoreSleep.sleep(100);
 	assert.equal(switch2_2.p.input.value, 1);
+
+	assert.equal(scatter1.cookController.onCookEndCallbackNames()?.length, 1, 'one callback');
+	events.removeNode(nodeCook1);
+	assert.equal(scatter1.cookController.onCookEndCallbackNames()?.length, 0, 'zero callback');
 });

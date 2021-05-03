@@ -5,10 +5,8 @@ import {NodeCookPerformanceformanceController} from './cook/PerformanceControlle
 import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 import {ContainableMap} from '../../containers/utils/ContainableMap';
-import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
-import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
-export type OnCookCompleteHook = (node: BaseNodeType) => void;
+export type OnCookCompleteHook = () => void;
 export class NodeCookController<NC extends NodeContext> {
 	private _core_performance: CorePerformance;
 	private _cooking: boolean = false;
@@ -178,27 +176,30 @@ export class NodeCookController<NC extends NodeContext> {
 	// HOOK
 	//
 	//
-	private _on_cook_complete_hook_ids: CoreGraphNodeId[] | undefined;
+	private _on_cook_complete_hook_names: string[] | undefined;
 	private _on_cook_complete_hooks: OnCookCompleteHook[] | undefined;
-	add_on_cook_complete_hook(core_graph_node: CoreGraphNode, callback: OnCookCompleteHook) {
-		this._on_cook_complete_hook_ids = this._on_cook_complete_hook_ids || [];
+	registerOnCookEnd(callbackName: string, callback: OnCookCompleteHook) {
+		this._on_cook_complete_hook_names = this._on_cook_complete_hook_names || [];
 		this._on_cook_complete_hooks = this._on_cook_complete_hooks || [];
-		this._on_cook_complete_hook_ids.push(core_graph_node.graphNodeId());
+		this._on_cook_complete_hook_names.push(callbackName);
 		this._on_cook_complete_hooks.push(callback);
 	}
-	remove_on_cook_complete_hook(core_graph_node: CoreGraphNode) {
-		if (!this._on_cook_complete_hook_ids || !this._on_cook_complete_hooks) {
+	deregisterOnCookEnd(callbackName: string) {
+		if (!this._on_cook_complete_hook_names || !this._on_cook_complete_hooks) {
 			return;
 		}
-		const index = this._on_cook_complete_hook_ids?.indexOf(core_graph_node.graphNodeId());
-		this._on_cook_complete_hook_ids.splice(index, 1);
+		const index = this._on_cook_complete_hook_names?.indexOf(callbackName);
+		this._on_cook_complete_hook_names.splice(index, 1);
 		this._on_cook_complete_hooks.splice(index, 1);
 	}
 	private _run_on_cook_complete_hooks() {
 		if (this._on_cook_complete_hooks) {
 			for (let hook of this._on_cook_complete_hooks) {
-				hook(this.node);
+				hook();
 			}
 		}
+	}
+	onCookEndCallbackNames() {
+		return this._on_cook_complete_hook_names;
 	}
 }
