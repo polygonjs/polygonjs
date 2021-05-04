@@ -32,6 +32,11 @@ export const PostParamOptions: ParamOptions = {
 	computeOnDirty: true, // important if an expression drives a param
 };
 
+/**
+ * BasePostNode is the base class for all nodes that process post-processing passes.
+ *
+ */
+
 export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
 	static context(): NodeContext {
 		return NodeContext.POST;

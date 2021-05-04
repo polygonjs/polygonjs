@@ -17,6 +17,11 @@ for (var i = 0; i < size; i++) {
 }
 const EMPTY_DATA_TEXTURE = new DataTexture(data, size, 1, LuminanceFormat, HalfFloatType);
 
+/**
+ * BaseCopNode is the base class for all nodes that process textures.
+ *
+ */
+
 export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.COP, K> {
 	public readonly flags: FlagsControllerBO = new FlagsControllerBO(this);
 

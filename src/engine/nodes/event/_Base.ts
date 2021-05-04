@@ -7,6 +7,11 @@ import {MapUtils} from '../../../core/MapUtils';
 
 type DispatchHook = (event_context: EventContext<Event>) => void;
 
+/**
+ * BaseEventNode is the base class for all nodes that process events.
+ *
+ */
+
 export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.EVENT, K> {
 	static context(): NodeContext {
 		return NodeContext.EVENT;
@@ -80,9 +85,13 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	}
 
 	private _on_dispatch_hooks_by_output_name: Map<string, DispatchHook[]> | undefined;
-	public onDispatch(output_name: string, callback: DispatchHook) {
+	/**
+	 * onDispatch is called when an output triggers an event.
+	 *
+	 */
+	public onDispatch(outputName: string, callback: DispatchHook) {
 		this._on_dispatch_hooks_by_output_name = this._on_dispatch_hooks_by_output_name || new Map();
-		MapUtils.pushOnArrayAtEntry(this._on_dispatch_hooks_by_output_name, output_name, callback);
+		MapUtils.pushOnArrayAtEntry(this._on_dispatch_hooks_by_output_name, outputName, callback);
 	}
 	private run_on_dispatch_hook(output_name: string, event_context: EventContext<Event>) {
 		if (this._on_dispatch_hooks_by_output_name) {

@@ -3,6 +3,11 @@ import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsController} from '../utils/FlagsController';
 
+/**
+ * BaseRONode is the base class for all nodes that process outputs.
+ *
+ */
+
 export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ROP, K> {
 	static context(): NodeContext {
 		return NodeContext.ROP;

@@ -20,6 +20,10 @@ export enum ObjNodeRenderOrder {
 	LIGHT = 3,
 }
 
+/**
+ * BaseObjNode is the base class for all nodes that process objects and hierarchies.
+ *
+ */
 export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<NodeContext.OBJ, K> {
 	static context(): NodeContext {
 		return NodeContext.OBJ;

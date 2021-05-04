@@ -52,6 +52,10 @@ import {PolyNodeController} from './utils/poly/PolyNodeController';
 import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
 import {PolyDictionary} from '../../types/GlobalTypes';
 
+/**
+ * TypedNode is the base class that all nodes inherit from.
+ *
+ */
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
 	containerController: TypedContainerController<NC> = new TypedContainerController<NC>(this);
 
@@ -131,12 +135,17 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get nameController(): NameController {
 		return (this._name_controller = this._name_controller || new NameController(this));
 	}
+	/**
+	 * sets the name of a node. Note that if a sibbling node already has that name, it will be updated to be unique.
+	 *
+	 */
 	setName(name: string) {
 		this.nameController.setName(name);
 	}
 	_set_core_name(name: string) {
 		this._name = name;
 	}
+
 	get params(): ParamsController {
 		return (this._params_controller = this._params_controller || new ParamsController(this));
 	}
@@ -170,6 +179,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	static type(): string {
 		throw 'type to be overriden';
 	}
+	/**
+	 * returns the type of the node.
+	 *
+	 */
 	type() {
 		const c = this.constructor as typeof BaseNodeClass;
 		return c.type();
@@ -178,6 +191,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		console.error('node has no node_context', this);
 		throw 'context requires override';
 	}
+	/**
+	 * returns the context.
+	 *
+	 */
 	context(): NodeContext {
 		const c = this.constructor as typeof BaseNodeClass;
 		return c.context();
@@ -194,12 +211,19 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	setParent(parent: BaseNodeType | null) {
 		this.parentController.setParent(parent);
 	}
-	parent() {
+	/**
+	 * returns the parent.
+	 *
+	 */ parent() {
 		return this.parentController.parent();
 	}
 	root() {
 		return this._scene.root();
 	}
+	/**
+	 * returns the path.
+	 *
+	 */
 	path(relative_to_parent?: BaseNodeType): string {
 		return this.parentController.path(relative_to_parent);
 	}
@@ -222,11 +246,18 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	cook(input_contents: any[]): any {
 		return null;
 	}
+	/**
+	 * registers a callback that will be run every time the node finishes cooking.
+	 *
+	 */
 	onCookEnd(callbackName: string, callback: OnCookCompleteHook) {
 		this.cookController.registerOnCookEnd(callbackName, callback);
 	}
 
-	// container
+	/**
+	 * returns a promise that will be resolved when the node finishes cooking.
+	 *
+	 */
 	async compute() {
 		if (!this.isDirty()) {
 			return this.containerController.container();
@@ -248,9 +279,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		this.cookController.endCook(message);
 	}
 
-	// hierarchy
-	createNode(node_class: any, params_init_value_overrides?: ParamsInitData) {
-		return this.childrenController?.createNode(node_class, params_init_value_overrides);
+	/**
+	 * create a node.
+	 *
+	 */
+	createNode(nodeClass: any, params_init_value_overrides?: ParamsInitData) {
+		return this.childrenController?.createNode(nodeClass, params_init_value_overrides);
 	}
 	create_operation_container(
 		type: string,
@@ -263,6 +297,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 			params_init_value_overrides
 		);
 	}
+	/**
+	 * removes a child node
+	 *
+	 */
 	removeNode(node: BaseNodeType) {
 		this.childrenController?.removeNode(node);
 	}
@@ -277,12 +315,24 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		this.params.dispose();
 	}
 
+	/**
+	 * returns the list of children
+	 *
+	 */
 	children() {
 		return this.childrenController?.children() || [];
 	}
+	/**
+	 * returns a child node
+	 *
+	 */
 	node(path: string) {
 		return this.parentController?.findNode(path) || null;
 	}
+	/**
+	 * returns a sibbling node
+	 *
+	 */
 	nodeSibbling(name: string): NodeTypeMap[NC] | null {
 		const parent = this.parent();
 		if (parent) {
@@ -293,11 +343,18 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		}
 		return null;
 	}
+	/**
+	 * returns the children matching the type
+	 *
+	 */
 	nodesByType(type: string) {
 		return this.childrenController?.nodesByType(type) || [];
 	}
 
-	// inputs
+	/**
+	 * sets a node as input
+	 *
+	 */
 	setInput(
 		input_index_or_name: number | string,
 		node: NodeTypeMap[NC] | null,

@@ -24,10 +24,15 @@ import {ParamsInitData} from '../nodes/utils/io/IOController';
 import {Constructor, valueof} from '../../types/GlobalTypes';
 import {Scene} from 'three/src/scenes/Scene';
 import {CoreString} from '../../core/String';
+import {Object3D} from 'three/src/core/Object3D';
 
+/**
+ * PolyScene contains all nodes within a scene.
+ *
+ */
 export class PolyScene {
 	/**
-	 * Returns the THREE.Scene
+	 * Returns the THREE.Scene.
 	 *
 	 * @remarks
 	 *
@@ -84,7 +89,7 @@ export class PolyScene {
 	 * Returns a promise to wait for all nodes to have cooked when loading a scene.
 	 *
 	 */
-	async waitForCooksCompleted() {
+	async waitForCooksCompleted(): Promise<void> {
 		return this.cookController.waitForCooksCompleted();
 	}
 
@@ -126,31 +131,53 @@ export class PolyScene {
 	get nodesController() {
 		return this._nodes_controller;
 	}
+	/**
+	 * Creates a new node.
+	 *
+	 * nodeClass can be either a string or a node class. Both examples below work:
+	 *
+	 * - polyScene.createNode('box'): returns a BoxSopNode
+	 * - polyScene.createNode(boxSopNode): returns a BoxSopNode
+	 *
+	 */
 	createNode<S extends keyof ObjNodeChildrenMap>(
-		node_class: S,
+		nodeClass: S,
 		params_init_value_overrides?: ParamsInitData
 	): ObjNodeChildrenMap[S];
 	createNode<K extends valueof<ObjNodeChildrenMap>>(
-		node_class: Constructor<K>,
+		nodeClass: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
 	): K;
 	createNode<K extends valueof<ObjNodeChildrenMap>>(
-		node_class: Constructor<K>,
+		nodeClass: Constructor<K>,
 		params_init_value_overrides?: ParamsInitData
 	): K {
-		return this.root().createNode(node_class, params_init_value_overrides) as K;
+		return this.root().createNode(nodeClass, params_init_value_overrides) as K;
 	}
-	nodesByType(type: string) {
+	/**
+	 * returns all nodes with a given type
+	 *
+	 * - polyScene.nodesByType('box'): returns all BoxSopNodes
+	 */
+	nodesByType(type: string): BaseNodeType[] {
 		return this.nodesController.nodesByType(type);
 	}
 	protected _objects_controller = new ObjectsController(this);
 	get objectsController() {
 		return this._objects_controller;
 	}
-	findObjectByMask(mask: string) {
+	/**
+	 * returns a THREE.Object3D whose name matches the mask
+	 *
+	 */
+	findObjectByMask(mask: string): Object3D | undefined {
 		return this._objects_controller.findObjectByMask(mask);
 	}
-	objectsByMask(mask: string) {
+	/**
+	 * returns a list THREE.Object3Ds whose names matche the mask
+	 *
+	 */
+	objectsByMask(mask: string): Object3D[] {
 		return this._objects_controller.objectsByMask(mask);
 	}
 
@@ -178,6 +205,10 @@ export class PolyScene {
 	get timeController() {
 		return this._time_controller;
 	}
+	/**
+	 * sets the current frame
+	 *
+	 */
 	setFrame(frame: number) {
 		this.timeController.setFrame(frame);
 	}
@@ -185,18 +216,34 @@ export class PolyScene {
 		this.timeController.setFrameToStart();
 	}
 
-	frame() {
+	/**
+	 * returns the current frame
+	 *
+	 */
+	frame(): number {
 		return this.timeController.frame();
 	}
-	time() {
+	/**
+	 * returns the current time
+	 *
+	 */
+	time(): number {
 		return this.timeController.time();
 	}
 	maxFrame() {
 		return this.timeController.maxFrame();
 	}
+	/**
+	 * starts playing the scene
+	 *
+	 */
 	play() {
 		this.timeController.play();
 	}
+	/**
+	 * pauses the scene
+	 *
+	 */
 	pause() {
 		this.timeController.pause();
 	}
@@ -266,6 +313,10 @@ export class PolyScene {
 	// cooker
 	//
 	//
+	/**
+	 * batchUpdates can be useful to set multiple parameter values without triggering a recook for each update.
+	 *
+	 */
 	batchUpdates(callback: () => void) {
 		this._cooker.block();
 
@@ -279,9 +330,19 @@ export class PolyScene {
 	// nodes
 	//
 	//
+	/**
+	 * returns a node based on its path
+	 *
+	 * - polyScene.node('/geo1')
+	 *
+	 */
 	node(path: string) {
 		return this.nodesController.node(path);
 	}
+	/**
+	 * returns the root node
+	 *
+	 */
 	root() {
 		return this.nodesController.root();
 	}
@@ -291,22 +352,46 @@ export class PolyScene {
 	// CALLBACKS
 	//
 	//
-	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook) {
+	/**
+	 * registers a BeforeTick callback. BeforeTick callbacks are run before updating the frame (and therefore before any time dependent node has changed)
+	 *
+	 */
+	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook): void {
 		this.timeController.registerOnBeforeTick(callbackName, callback);
 	}
-	unRegisterOnBeforeTick(callbackName: string) {
+	/**
+	 * unregisters BeforeTick callback
+	 *
+	 */
+	unRegisterOnBeforeTick(callbackName: string): void {
 		this.timeController.unRegisterOnBeforeTick(callbackName);
 	}
-	registeredBeforeTickCallbackNames() {
+	/**
+	 * Returns the list registered BeforeTick callback names
+	 *
+	 */
+	registeredBeforeTickCallbackNames(): string[] | undefined {
 		return this.timeController.registeredBeforeTickCallbackNames();
 	}
-	registerOnAfterTick(callbackName: string, callback: onTimeTickHook) {
+	/**
+	 * registers AfterTick callback. AfterTick callbacks are run after updating the frame (and therefore after any time dependent node has changed)
+	 *
+	 */
+	registerOnAfterTick(callbackName: string, callback: onTimeTickHook): void {
 		this.timeController.registerOnAfterTick(callbackName, callback);
 	}
-	unRegisterOnAfterTick(callbackName: string) {
+	/**
+	 * unregisters AfterTick callback
+	 *
+	 */
+	unRegisterOnAfterTick(callbackName: string): void {
 		this.timeController.unRegisterOnAfterTick(callbackName);
 	}
-	registeredAfterTickCallbackNames() {
+	/**
+	 * Returns the list registered AfterTick callback names
+	 *
+	 */
+	registeredAfterTickCallbackNames(): string[] | undefined {
 		return this.timeController.registeredAfterTickCallbackNames();
 	}
 }

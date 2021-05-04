@@ -3,6 +3,10 @@ import {Material} from 'three/src/materials/Material';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
+/**
+ * BaseMatNode is the base class for all nodes that process materials.
+ *
+ */
 export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfig> extends TypedNode<
 	NodeContext.MAT,
 	K
