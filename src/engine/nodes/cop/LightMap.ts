@@ -103,14 +103,14 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 		if (!this.lightMapController) {
 			return;
 		}
-		const masterCameraNode = this.scene().masterCameraNode();
-		if (!masterCameraNode) {
+		const mainCameraNode = this.scene().mainCameraNode();
+		if (!mainCameraNode) {
 			return;
 		}
 		this._updateObjectsAndLightsList();
 		this.lightMapController.init(this._includedObjects, this._includedLights);
 
-		const camera = masterCameraNode.camera();
+		const camera = mainCameraNode.camera();
 		this.lightMapController.setParams({
 			lightRadius: this.pv.lightRadius,
 			iterations: this.pv.iterations,

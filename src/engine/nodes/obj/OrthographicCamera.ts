@@ -10,7 +10,7 @@ import {
 	BASE_CAMERA_DEFAULT,
 	ThreejsCameraTransformParamConfig,
 	ThreejsCameraFOVParamConfig,
-	CameraMasterCameraParamConfig,
+	CameraMainCameraParamConfig,
 	FOV_ADJUST_MODES,
 	FOVAdjustMode,
 } from './_BaseCamera';
@@ -40,7 +40,7 @@ export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>
 class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
 		LayerParamConfig(
-			CameraMasterCameraParamConfig(
+			CameraMainCameraParamConfig(
 				ThreejsCameraFOVParamConfig(
 					OrthographicCameraObjParamConfigMixin(
 						ThreejsCameraTransformParamConfig(

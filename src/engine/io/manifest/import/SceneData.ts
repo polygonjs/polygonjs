@@ -144,7 +144,7 @@ export async function mountScene(data: loadSceneData) {
 		const importer = new SceneJsonImporter(sceneData);
 		const scene = await importer.scene();
 
-		const cameraNode = scene.masterCameraNode();
+		const cameraNode = scene.mainCameraNode();
 		if (!cameraNode) {
 			console.warn('no master camera found');
 			return;

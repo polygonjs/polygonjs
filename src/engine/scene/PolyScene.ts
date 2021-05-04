@@ -26,6 +26,14 @@ import {Scene} from 'three/src/scenes/Scene';
 import {CoreString} from '../../core/String';
 
 export class PolyScene {
+	/**
+	 * Returns the THREE.Scene
+	 *
+	 * @remarks
+	 *
+	 * Read more about how to use a THREE.Scene on [THREE's documentation](https://threejs.org/docs/?q=scene#api/en/scenes/Scene)
+	 *
+	 */
 	threejsScene(): Scene {
 		return this.root().object;
 	}
@@ -49,8 +57,12 @@ export class PolyScene {
 	get camerasController() {
 		return this._cameras_controller;
 	}
-	masterCameraNode() {
-		return this.camerasController.masterCameraNode();
+	/**
+	 * Returns the cameraNode that has been set as main
+	 *
+	 */
+	mainCameraNode() {
+		return this.camerasController.mainCameraNode();
 	}
 
 	private _cooker = new Cooker(this);
@@ -68,6 +80,10 @@ export class PolyScene {
 	}
 
 	public readonly cookController = new CookController();
+	/**
+	 * Returns a promise to wait for all nodes to have cooked when loading a scene.
+	 *
+	 */
 	async waitForCooksCompleted() {
 		return this.cookController.waitForCooksCompleted();
 	}

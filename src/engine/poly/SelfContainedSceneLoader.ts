@@ -142,7 +142,7 @@ export class SelfContainedScenesLoader {
 			configureScene(scene);
 		}
 
-		const cameraNode = scene.masterCameraNode();
+		const cameraNode = scene.mainCameraNode();
 		if (!cameraNode) {
 			console.warn('no master camera found');
 			return;

@@ -4,24 +4,24 @@ import {BaseCameraObjNodeType} from '../../nodes/obj/_BaseCamera';
 export class CamerasController {
 	constructor(private scene: PolyScene) {}
 
-	_masterCameraNodePath: string | null = null;
+	_mainCameraNodePath: string | null = null;
 
-	setMasterCameraNodePath(camera_node_path: string) {
-		this._masterCameraNodePath = camera_node_path;
+	setMainCameraNodePath(camera_node_path: string) {
+		this._mainCameraNodePath = camera_node_path;
 	}
-	masterCameraNodePath() {
-		return this._masterCameraNodePath;
+	mainCameraNodePath() {
+		return this._mainCameraNodePath;
 	}
-	masterCameraNode(): BaseCameraObjNodeType | null {
-		if (this.masterCameraNodePath) {
-			const path = this.masterCameraNodePath();
+	mainCameraNode(): BaseCameraObjNodeType | null {
+		if (this.mainCameraNodePath) {
+			const path = this.mainCameraNodePath();
 			if (!path) {
 				return this._find_any_camera();
 			}
 			const camera_node = this.scene.node(path) as BaseCameraObjNodeType | null;
 			return camera_node;
 		} else {
-			console.warn('master camera node not found');
+			console.warn('main camera node not found');
 			return this._find_any_camera();
 		}
 	}

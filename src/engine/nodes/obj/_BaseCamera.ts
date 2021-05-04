@@ -53,7 +53,7 @@ export const UPDATE_FROM_CONTROLS_MODES: UpdateFromControlsMode[] = [
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
-export function CameraMasterCameraParamConfig<TBase extends Constructor>(Base: TBase) {
+export function CameraMainCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		setMasterCamera = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType, param: BaseParamType) => {
@@ -149,11 +149,11 @@ export function ThreejsCameraFOVParamConfig<TBase extends Constructor>(Base: TBa
 	};
 }
 
-export class BaseCameraObjParamsConfig extends CameraMasterCameraParamConfig(NodeParamsConfig) {}
+export class BaseCameraObjParamsConfig extends CameraMainCameraParamConfig(NodeParamsConfig) {}
 export class BaseThreejsCameraObjParamsConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
 		TransformedParamConfig(
-			LayerParamConfig(ThreejsCameraTransformParamConfig(CameraMasterCameraParamConfig(NodeParamsConfig)))
+			LayerParamConfig(ThreejsCameraTransformParamConfig(CameraMainCameraParamConfig(NodeParamsConfig)))
 		)
 	)
 ) {}
@@ -190,7 +190,7 @@ export abstract class TypedCameraObjNode<
 		node.set_as_master_camera();
 	}
 	set_as_master_camera() {
-		this.scene().camerasController.setMasterCameraNodePath(this.path());
+		this.scene().camerasController.setMainCameraNodePath(this.path());
 	}
 
 	setupForAspectRatio(aspect: number) {}

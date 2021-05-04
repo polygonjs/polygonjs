@@ -12,7 +12,7 @@ QUnit.test('scene save simple', async (assert) => {
 	scene.loadingController.markAsLoaded();
 
 	const perspective_camera1 = scene.root().createNode('perspectiveCamera');
-	scene.camerasController.setMasterCameraNodePath(perspective_camera1.path());
+	scene.camerasController.setMainCameraNodePath(perspective_camera1.path());
 	perspective_camera1.p.t.z.set(10);
 
 	const geo1 = scene.root().createNode('geo');
@@ -24,7 +24,7 @@ QUnit.test('scene save simple', async (assert) => {
 	const data = new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
-	const camera_node = scene2.camerasController.masterCameraNode() as PerspectiveCameraObjNode;
+	const camera_node = scene2.camerasController.mainCameraNode() as PerspectiveCameraObjNode;
 	assert.deepEqual(camera_node.pv.t.toArray(), [0, 0, 10]);
 	assert.ok(scene2.loadingController.loaded());
 
