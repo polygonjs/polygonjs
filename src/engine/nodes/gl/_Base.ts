@@ -19,7 +19,7 @@ import {ColorParam} from '../../params/Color';
 const REGEX_PATH_SANITIZE = /\/+/g;
 
 /**
- * BaseGlNode is the base class for all nodes that process GLSL code.
+ * BaseGlNode is the base class for all nodes that process GLSL code. This inherits from [BaseNode](/docs/api/BaseNode).
  *
  */
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.GL, K> {

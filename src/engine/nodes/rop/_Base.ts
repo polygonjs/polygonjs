@@ -4,7 +4,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsController} from '../utils/FlagsController';
 
 /**
- * BaseRONode is the base class for all nodes that process outputs.
+ * BaseRONode is the base class for all nodes that process outputs. This inherits from [BaseNode](/docs/api/BaseNode).
  *
  */
 

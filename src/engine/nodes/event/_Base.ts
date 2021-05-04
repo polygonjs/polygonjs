@@ -8,7 +8,7 @@ import {MapUtils} from '../../../core/MapUtils';
 type DispatchHook = (event_context: EventContext<Event>) => void;
 
 /**
- * BaseEventNode is the base class for all nodes that process events.
+ * BaseEventNode is the base class for all nodes that process events. This inherits from [BaseNode](/docs/api/BaseNode).
  *
  */
 

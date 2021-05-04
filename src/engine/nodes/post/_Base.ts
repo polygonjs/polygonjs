@@ -33,7 +33,7 @@ export const PostParamOptions: ParamOptions = {
 };
 
 /**
- * BasePostNode is the base class for all nodes that process post-processing passes.
+ * BasePostNode is the base class for all nodes that process post-processing passes. This inherits from [BaseNode](/docs/api/BaseNode).
  *
  */
 

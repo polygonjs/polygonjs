@@ -4,7 +4,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 /**
- * BaseMatNode is the base class for all nodes that process materials.
+ * BaseMatNode is the base class for all nodes that process materials. This inherits from [BaseNode](/docs/api/BaseNode).
  *
  */
 export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfig> extends TypedNode<

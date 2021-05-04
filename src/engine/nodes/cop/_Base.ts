@@ -18,7 +18,7 @@ for (var i = 0; i < size; i++) {
 const EMPTY_DATA_TEXTURE = new DataTexture(data, size, 1, LuminanceFormat, HalfFloatType);
 
 /**
- * BaseCopNode is the base class for all nodes that process textures.
+ * BaseCopNode is the base class for all nodes that process textures. This inherits from [BaseNode](/docs/api/BaseNode).
  *
  */
 

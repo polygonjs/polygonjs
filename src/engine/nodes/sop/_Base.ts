@@ -37,7 +37,7 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 // export class ParamLessBaseNetworkSopNode extends BaseNetworkSopNode<ParamLessNetworkSopParamsConfig> {}
 
 /**
- * BaseSopNode is the base class for all nodes that process geometries.
+ * BaseSopNode is the base class for all nodes that process geometries. This inherits from [BaseNode](/docs/api/BaseNode).
  *
  */
 export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {

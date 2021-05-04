@@ -55,7 +55,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 
 export function CameraMainCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		setMasterCamera = ParamConfig.BUTTON(null, {
+		setMainCamera = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType, param: BaseParamType) => {
 				BaseCameraObjNodeClass.PARAM_CALLBACK_setMasterCamera(node as BaseCameraObjNodeType);
 			},

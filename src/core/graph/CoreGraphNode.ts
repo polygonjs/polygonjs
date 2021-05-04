@@ -2,6 +2,10 @@ import {CoreGraph, CoreGraphNodeId} from './CoreGraph';
 import {DirtyController, PostDirtyHook} from './DirtyController';
 import {PolyScene} from '../../engine/scene/PolyScene';
 
+/**
+ * This is the base class for nodes and params, which are part of the same graph, and are connected to dependencies.
+ *
+ */
 export class CoreGraphNode {
 	private _graph: CoreGraph;
 	private _graph_node_id: CoreGraphNodeId;
@@ -17,19 +21,31 @@ export class CoreGraphNode {
 		this.graphRemove();
 	}
 
-	name() {
+	/**
+	 * returns the name
+	 *
+	 */
+	name(): string {
 		return this._name;
 	}
 	setName(name: string) {
 		this._name = name;
 	}
 
-	scene() {
+	/**
+	 * returns the scene
+	 *
+	 */
+	scene(): PolyScene {
 		return this._scene;
 	}
 	// graph() {
 	// 	return this._graph;
 	// }
+	/**
+	 * returns the id, which is unique for the scene
+	 *
+	 */
 	graphNodeId(): CoreGraphNodeId {
 		return this._graph_node_id;
 	}
@@ -42,19 +58,35 @@ export class CoreGraphNode {
 	get dirtyController() {
 		return this._dirty_controller;
 	}
+	/**
+	 * makes the graphNode dirty, which in turns makes its dependencies dirty
+	 *
+	 */
 	setDirty(trigger?: CoreGraphNode | null) {
 		trigger = trigger || this;
 		this._dirty_controller.set_dirty(trigger);
 	}
+	/**
+	 * makes dependencies dirty
+	 *
+	 */
 	setSuccessorsDirty(trigger?: CoreGraphNode) {
 		this._dirty_controller.set_successors_dirty(trigger);
 	}
+	/**
+	 * removes the dirty state
+	 *
+	 */
 	removeDirtyState() {
 		this._dirty_controller.removeDirtyState();
 	}
 	isDirty() {
 		return this._dirty_controller.isDirty();
 	}
+	/**
+	 * adds a callback that gets run when the graphNode is dirty
+	 *
+	 */
 	addPostDirtyHook(name: string, callback: PostDirtyHook) {
 		this._dirty_controller.addPostDirtyHook(name, callback);
 	}

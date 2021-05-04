@@ -53,7 +53,7 @@ import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
 import {PolyDictionary} from '../../types/GlobalTypes';
 
 /**
- * TypedNode is the base class that all nodes inherit from.
+ * TypedNode is the base class that all nodes inherit from. This inherits from [CoreGraphNode](/docs/api/CoreGraphNode).
  *
  */
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
