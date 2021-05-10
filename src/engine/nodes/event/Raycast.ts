@@ -49,6 +49,7 @@ export enum TargetType {
 export const TARGET_TYPES: TargetType[] = [TargetType.SCENE_GRAPH, TargetType.NODE];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Poly} from '../../Poly';
 
 class RaycastParamsConfig extends NodeParamsConfig {
 	/** @param defines if the ray detection is done on the CPU or GPU (GPU being currently experimental) */
@@ -346,9 +347,10 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 		}
 	}
 
-	private _last_event_processed_at = performance.now();
+	private _last_event_processed_at = -1;
 	private _process_trigger_event_throttled(context: EventContext<MouseEvent>) {
 		const previous = this._last_event_processed_at;
+		const performance = Poly.performance.performanceManager();
 		const now = performance.now();
 		this._last_event_processed_at = now;
 		const delta = now - previous;

@@ -100,7 +100,7 @@ export class CoreGraph {
 				return false;
 			} else {
 				this._createConnection(src_id, dest_id);
-				src.dirtyController.clear_successors_cache_with_predecessors();
+				src.dirtyController.clearSuccessorsCacheWithPredecessors();
 
 				return true;
 			}
@@ -116,7 +116,7 @@ export class CoreGraph {
 		// this._graph.removeEdge(src_id_s, dest_id_s);
 		this._remove_connection(src.graphNodeId(), dest.graphNodeId());
 
-		src.dirtyController.clear_successors_cache_with_predecessors();
+		src.dirtyController.clearSuccessorsCacheWithPredecessors();
 	}
 	disconnectPredecessors(node: CoreGraphNode) {
 		const predecessors = this.predecessors(node);

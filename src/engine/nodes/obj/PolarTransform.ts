@@ -56,7 +56,7 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 	initializeNode() {
 		this.hierarchyController.initializeNode();
 
-		if (!this.dirtyController.has_hook(HOOK_NAME)) {
+		if (!this.dirtyController.hasHook(HOOK_NAME)) {
 			this.dirtyController.addPostDirtyHook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);
 		}
 

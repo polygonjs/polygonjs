@@ -56,7 +56,7 @@ const parameters1 = {
 	minFilter: minFilter,
 	magFilter: magFilter,
 	format: RGBAFormat,
-	type: /(iPad|iPhone|iPod)/g.test(navigator.userAgent) ? HalfFloatType : FloatType,
+	type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
 	stencilBuffer: false,
 	depthBuffer: false,
 };
@@ -85,6 +85,7 @@ const OPTION_SET = OPTION_SETS.data2;
 import {ParamConfig} from '../utils/params/ParamsConfig';
 import {CopRendererController} from './utils/RendererController';
 import {ParamsInitData} from '../utils/io/IOController';
+import {CoreUserAgent} from '../../../core/UserAgent';
 // class PostCopParamsConfig extends NodeParamsConfig {
 // 	use_camera_renderer = ParamConfig.BOOLEAN(0);
 // }

@@ -50,7 +50,6 @@ export class BaseMethod {
 		const referenced_node = this.getReferencedNode(index_or_path);
 
 		if (referenced_node) {
-			// const time_start = performance.now();
 			let container: ContainerMap[NodeContext];
 			if (referenced_node.isDirty()) {
 				container = await referenced_node.compute();

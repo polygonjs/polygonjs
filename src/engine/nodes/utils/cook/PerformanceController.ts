@@ -1,3 +1,4 @@
+import {Poly} from '../../../Poly';
 import {NodeCookController} from '../CookController';
 
 export interface NodePerformanceData {
@@ -6,6 +7,7 @@ export interface NodePerformanceData {
 	cook_time: number;
 }
 
+const performance = Poly.performance.performanceManager();
 export class NodeCookPerformanceformanceController {
 	private _inputs_start: number = 0;
 	private _params_start: number = 0;

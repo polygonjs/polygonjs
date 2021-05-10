@@ -16,7 +16,7 @@ export class RaycastCPUVelocityController {
 	constructor(private _node: RaycastEventNode) {}
 
 	private _prev_position: Vector3 | undefined;
-	private _set_pos_timestamp = performance.now();
+	private _set_pos_timestamp = -1;
 	private _found_velocity_target_param: Vector3Param | undefined;
 	private _hit_velocity: Vector3 = new Vector3(0, 0, 0);
 	private _hit_velocity_array: Number3 = [0, 0, 0];
@@ -31,6 +31,7 @@ export class RaycastCPUVelocityController {
 			return;
 		}
 
+		const performance = Poly.performance.performanceManager();
 		const now = performance.now();
 		const delta = now - this._set_pos_timestamp;
 		this._set_pos_timestamp = now;

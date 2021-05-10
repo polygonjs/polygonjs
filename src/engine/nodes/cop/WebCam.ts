@@ -43,7 +43,7 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		const texture = new VideoTexture(this._video);
 		await this.texture_params_controller.update(texture);
 
-		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+		if (navigator && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 			const constraints = {video: {width: this.pv.res.x, height: this.pv.res.y, facingMode: 'user'}};
 
 			navigator.mediaDevices

@@ -1,5 +1,6 @@
 import {CoreGraphNode} from './CoreGraphNode';
 import {CoreGraphNodeId} from './CoreGraph';
+import {Poly} from '../../engine/Poly';
 
 export type PostDirtyHook = (caller?: CoreGraphNode) => void;
 
@@ -51,7 +52,7 @@ export class DirtyController {
 			}
 		}
 	}
-	has_hook(name: string): boolean {
+	hasHook(name: string): boolean {
 		if (this._post_dirty_hook_names) {
 			return this._post_dirty_hook_names.includes(name);
 		}
@@ -61,11 +62,11 @@ export class DirtyController {
 	removeDirtyState(): void {
 		this._dirty = false;
 	}
-	set_forbidden_trigger_nodes(nodes: CoreGraphNode[]) {
+	setForbiddenTriggerNodes(nodes: CoreGraphNode[]) {
 		this._forbidden_trigger_nodes = nodes.map((n) => n.graphNodeId());
 	}
 
-	set_dirty(original_trigger_graph_node?: CoreGraphNode | null, propagate?: boolean): void {
+	setDirty(original_trigger_graph_node?: CoreGraphNode | null, propagate?: boolean): void {
 		if (propagate == null) {
 			propagate = true;
 		}
@@ -82,17 +83,18 @@ export class DirtyController {
 		}
 
 		this._dirty = true;
+		const performance = Poly.performance.performanceManager();
 		this._dirty_timestamp = performance.now();
 		this._dirty_count += 1;
 
-		this.run_post_dirty_hooks(original_trigger_graph_node);
+		this.runPostDirtyHooks(original_trigger_graph_node);
 
 		if (propagate === true) {
-			this.set_successors_dirty(original_trigger_graph_node);
+			this.setSuccessorsDirty(original_trigger_graph_node);
 		}
 	}
 
-	run_post_dirty_hooks(original_trigger_graph_node?: CoreGraphNode) {
+	runPostDirtyHooks(original_trigger_graph_node?: CoreGraphNode) {
 		if (this._post_dirty_hooks) {
 			const cooker = this.node.scene().cooker;
 			if (cooker.blocked) {
@@ -105,22 +107,22 @@ export class DirtyController {
 		}
 	}
 
-	set_successors_dirty(original_trigger_graph_node?: CoreGraphNode): void {
+	setSuccessorsDirty(original_trigger_graph_node?: CoreGraphNode): void {
 		const propagate = false;
 		this._cached_successors = this._cached_successors || this.node.graphAllSuccessors();
 
 		for (let successor of this._cached_successors) {
-			successor.dirtyController.set_dirty(original_trigger_graph_node, propagate);
+			successor.dirtyController.setDirty(original_trigger_graph_node, propagate);
 		}
 	}
 
-	clear_successors_cache() {
+	clearSuccessorsCache() {
 		this._cached_successors = undefined;
 	}
-	clear_successors_cache_with_predecessors() {
-		this.clear_successors_cache();
+	clearSuccessorsCacheWithPredecessors() {
+		this.clearSuccessorsCache();
 		for (let predecessor of this.node.graphAllPredecessors()) {
-			predecessor.dirtyController.clear_successors_cache();
+			predecessor.dirtyController.clearSuccessorsCache();
 		}
 	}
 }

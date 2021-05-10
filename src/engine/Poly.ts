@@ -21,6 +21,7 @@ import {PolyDictionary} from '../types/GlobalTypes';
 import {BlobsController} from './poly/BlobsController';
 import {AssetUrlsController} from './poly/AssetUrlsController';
 import {SelfContainedScenesLoader} from './poly/SelfContainedSceneLoader';
+import {PolyPerformanceformanceController} from './poly/PerformanceController';
 
 declare global {
 	interface Window {
@@ -45,6 +46,7 @@ export class PolyEngine {
 	public readonly blobs: BlobsController = new BlobsController();
 	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
 	public readonly selfContainedScenesLoader: SelfContainedScenesLoader = new SelfContainedScenesLoader();
+	public readonly performance: PolyPerformanceformanceController = new PolyPerformanceformanceController();
 	scenesByUuid: PolyDictionary<PolyScene> = {};
 	_env: string | undefined;
 	private _player_mode: boolean = true;

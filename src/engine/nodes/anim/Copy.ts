@@ -50,7 +50,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 	}
 	private create_stamp_node() {
 		const stamp_node = new CopyStamp(this.scene());
-		this.dirtyController.set_forbidden_trigger_nodes([stamp_node]);
+		this.dirtyController.setForbiddenTriggerNodes([stamp_node]);
 		return stamp_node;
 	}
 }

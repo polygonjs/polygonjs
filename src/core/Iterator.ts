@@ -1,3 +1,5 @@
+import {Poly} from '../engine/Poly';
+
 type IterateeMethod = (element: any, index?: number) => void;
 type IterateeMethodArray = IterateeMethod; // TODO: check this, as the element may be an array
 type IterateeMethodCount = (index: number) => void;
@@ -46,6 +48,7 @@ export class CoreIterator {
 		});
 	}
 	nextWithCount() {
+		const performance = Poly.performance.performanceManager();
 		const start_time = performance.now();
 
 		if (this._iteratee_method_count && this._bound_next_with_count) {
@@ -90,6 +93,7 @@ export class CoreIterator {
 		});
 	}
 	nextWithArray() {
+		const performance = Poly.performance.performanceManager();
 		const start_time = performance.now();
 
 		if (this._iteratee_method_array && this._bound_next_with_array && this._array) {

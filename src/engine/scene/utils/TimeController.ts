@@ -3,11 +3,13 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {SceneEventType} from './events/SceneEventsController';
 import {EventContext} from './events/_BaseEventsController';
+import {Poly} from '../../Poly';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
 export type onTimeTickHook = () => void;
+const performance = Poly.performance.performanceManager();
 export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;

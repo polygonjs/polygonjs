@@ -6,6 +6,7 @@ import {TypedEventNode} from './_Base';
 // import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseViewerType} from '../../viewers/_Base';
+import {Poly} from '../../Poly';
 
 export interface CameraControls {
 	name?: string;
@@ -43,6 +44,7 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 			current_controls.dispose();
 		}
 		this._controls_by_viewer.set(viewer, controls);
+		const performance = Poly.performance.performanceManager();
 		const timestamp = performance.now();
 		controls.name = `${this.path()}:${camera.name}:${timestamp}:${this.controls_id()}`;
 		await this.params.evalAll();

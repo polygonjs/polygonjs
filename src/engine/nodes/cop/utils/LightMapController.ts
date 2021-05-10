@@ -15,6 +15,7 @@ import {RenderTarget} from 'three/src/renderers/webgl/WebGLRenderLists';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
+import {CoreUserAgent} from '../../../../core/UserAgent';
 
 //
 // adapted from https://threejs.org/examples/?q=light#webgl_shadowmap_progressive
@@ -77,7 +78,8 @@ export class LightMapController {
 	};
 	constructor(private renderer: WebGLRenderer, private res: number = 1024) {
 		// Create the Progressive LightMap Texture
-		const format = /(Android|iPad|iPhone|iPod)/g.test(navigator.userAgent) ? HalfFloatType : FloatType;
+		const isAndroidOriOS = CoreUserAgent.isAndroid() || CoreUserAgent.isiOS();
+		const format = isAndroidOriOS ? HalfFloatType : FloatType;
 		this.progressiveLightMap1 = new WebGLRenderTarget(this.res, this.res, {type: format});
 		this.progressiveLightMap2 = new WebGLRenderTarget(this.res, this.res, {type: format});
 

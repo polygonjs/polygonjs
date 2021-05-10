@@ -18,6 +18,7 @@ export class CoreStylesheetLoader {
 				stylesheet.type = 'text/css';
 				stylesheet.rel = 'stylesheet';
 
+				const performance = Poly.performance.performanceManager();
 				stylesheet.href = `${url}?${performance.now()}`;
 				stylesheet.id = id;
 				document.getElementsByTagName('head')[0].appendChild(stylesheet);

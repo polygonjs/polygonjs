@@ -64,14 +64,14 @@ export class CoreGraphNode {
 	 */
 	setDirty(trigger?: CoreGraphNode | null) {
 		trigger = trigger || this;
-		this._dirty_controller.set_dirty(trigger);
+		this._dirty_controller.setDirty(trigger);
 	}
 	/**
 	 * makes dependencies dirty
 	 *
 	 */
 	setSuccessorsDirty(trigger?: CoreGraphNode) {
-		this._dirty_controller.set_successors_dirty(trigger);
+		this._dirty_controller.setSuccessorsDirty(trigger);
 	}
 	/**
 	 * removes the dirty state

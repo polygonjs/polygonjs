@@ -69,7 +69,7 @@ export class TransformController {
 	constructor(private node: TransformedObjNode) {}
 
 	initializeNode() {
-		if (!this.node.dirtyController.has_hook(HOOK_NAME)) {
+		if (!this.node.dirtyController.hasHook(HOOK_NAME)) {
 			this.node.dirtyController.addPostDirtyHook(HOOK_NAME, this._cook_main_without_inputs_when_dirty_bound);
 		}
 	}

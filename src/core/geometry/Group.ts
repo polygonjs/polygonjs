@@ -15,6 +15,7 @@ import {CoreConstant, AttribClass, AttribSize, ObjectData, objectTypeFromConstru
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {CoreFace} from './Face';
+import {Poly} from '../../engine/Poly';
 export type GroupString = string;
 
 export interface Object3DWithGeometry extends Object3D {
@@ -50,6 +51,7 @@ export class CoreGroup {
 		return this._timestamp;
 	}
 	touch() {
+		const performance = Poly.performance.performanceManager();
 		this._timestamp = performance.now();
 		this.reset();
 	}

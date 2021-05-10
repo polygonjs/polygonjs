@@ -4,6 +4,7 @@ import {BaseNodeType} from '../../engine/nodes/_Base';
 import {ArrayUtils} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
 import {PolyDictionary} from '../../types/GlobalTypes';
+import {Poly} from '../../engine/Poly';
 
 export class CorePerformance {
 	private _started: boolean = false;
@@ -14,6 +15,7 @@ export class CorePerformance {
 	_durations_count_by_name: PolyDictionary<number> = {};
 
 	profile(name: string, method: (args?: any) => any) {
+		const performance = Poly.performance.performanceManager();
 		const start_time = performance.now();
 		method();
 		const total_time = performance.now() - start_time;
@@ -24,6 +26,7 @@ export class CorePerformance {
 		if (!this._started) {
 			this.reset();
 			this._started = true;
+			const performance = Poly.performance.performanceManager();
 			this._start_time = performance.now();
 			this._nodes_cook_data = {};
 			this._previous_timestamp = this._start_time;

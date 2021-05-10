@@ -46,6 +46,7 @@ import {TexturePersistedConfig} from '../gl/code/assemblers/textures/PersistedCo
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {ParamsInitData} from '../utils/io/IOController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {CoreUserAgent} from '../../../core/UserAgent';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */
@@ -309,7 +310,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			minFilter: minFilter,
 			magFilter: magFilter,
 			format: RGBAFormat,
-			type: /(iPad|iPhone|iPod)/g.test(navigator.userAgent) ? HalfFloatType : FloatType,
+			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
 			stencilBuffer: false,
 			depthBuffer: false,
 		});
