@@ -1,6 +1,6 @@
 import {CoreType} from '../../../../core/Type';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {SceneJsonImporter} from '../../../index_all';
+import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../json/export/Node';
 import {SceneJsonExporterData, SceneJsonExporterDataProperties} from '../../json/export/Scene';
 
