@@ -1,11 +1,11 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {TypedCopNode} from '../_Base';
-import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../../utils/params/ParamsConfig';
 import {Poly} from '../../../Poly';
 // import {LinearToneMapping} from 'three/src/constants';
 // import {isBooleanTrue} from '../../../../core/BooleanValue';
 class BaseCopRendererCopParamsConfig extends NodeParamsConfig {
-	useCameraRenderer = ParamConfig.BOOLEAN(0);
+	// useCameraRenderer = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new BaseCopRendererCopParamsConfig();
 export class BaseCopRendererCopNode extends TypedCopNode<BaseCopRendererCopParamsConfig> {

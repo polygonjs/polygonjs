@@ -1,46 +1,58 @@
+/**
+ * Creates a texture from a render
+ *
+ * @remarks
+ * This node can be useful when you want to use what a camera sees as a texture.
+ *
+ */
 import {Scene} from 'three/src/scenes/Scene';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {Camera} from 'three/src/cameras/Camera';
 import {
 	FloatType,
 	HalfFloatType,
-	RGBAFormat,
+	RGBFormat,
 	NearestFilter,
 	LinearFilter,
 	ClampToEdgeWrapping,
 } from 'three/src/constants';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {} from '../utils/code/configs/ParamConfig';
 import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {TypedCameraObjNode} from '../obj/_BaseCamera';
 import {CopRendererController} from './utils/RendererController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
+import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {Poly} from '../../Poly';
+import {Constructor} from '../../../types/GlobalTypes';
 
 const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
-class RenderCopParamConfig extends NodeParamsConfig {
-	/** @param camera to render from */
-	camera = ParamConfig.NODE_PATH('', {
-		nodeSelection: {
-			context: NodeContext.OBJ,
-			types: CAMERA_TYPES,
-		},
-	});
-	/** @param render resolution */
-	resolution = ParamConfig.VECTOR2([256, 256]);
-	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	useCameraRenderer = ParamConfig.BOOLEAN(0);
-	/** @param render button */
-	render = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			RenderCopNode.PARAM_CALLBACK_render(node as RenderCopNode);
-		},
-	});
+
+export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param camera to render from */
+		camera = ParamConfig.NODE_PATH('', {
+			nodeSelection: {
+				context: NodeContext.OBJ,
+				types: CAMERA_TYPES,
+			},
+		});
+		/** @param render resolution */
+		resolution = ParamConfig.VECTOR2([1024, 1024]);
+		/** @param defines if the shader is rendered via the same camera used to render the scene */
+		useCameraRenderer = ParamConfig.BOOLEAN(1);
+		/** @param render button */
+		render = ParamConfig.BUTTON(null, {
+			callback: (node: BaseNodeType) => {
+				RenderCopNode.PARAM_CALLBACK_render(node as RenderCopNode);
+			},
+		});
+	};
 }
+class RenderCopParamConfig extends TextureParamConfig(RenderCopNodeParamConfig(NodeParamsConfig)) {}
 
 const ParamsConfig = new RenderCopParamConfig();
 
@@ -49,6 +61,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	static type(): Readonly<'render'> {
 		return 'render';
 	}
+	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
 	private _texture_camera: Camera | undefined;
 	private _texture_scene: Scene | undefined;
@@ -78,7 +91,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	//
 	//
 	async renderOnTarget() {
-		this.createRenderTargetIfRequired();
+		await this.createRenderTargetIfRequired();
 		if (!(this._render_target && this._texture_scene && this._texture_camera)) {
 			return;
 		}
@@ -103,9 +116,9 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 				// this._data_texture.needsUpdate = true;
 				this._data_texture_controller =
 					this._data_texture_controller ||
-					new DataTextureController(DataTextureControllerBufferType.Float32Array);
+					new DataTextureController(DataTextureControllerBufferType.Uint8Array);
 				const data_texture = this._data_texture_controller.from_render_target(renderer, this._render_target);
-
+				await this.textureParamsController.update(data_texture);
 				this.setTexture(data_texture);
 			}
 		} else {
@@ -113,13 +126,13 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		}
 	}
 
-	// renderTarget() {
-	// 	return (this._render_target =
-	// 		this._render_target || this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y));
-	// }
-	private createRenderTargetIfRequired() {
+	async renderTarget() {
+		return (this._render_target =
+			this._render_target || (await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y)));
+	}
+	private async createRenderTargetIfRequired() {
 		if (!this._render_target || !this._renderTargetResolutionValid()) {
-			this._render_target = this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
+			this._render_target = await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
 			this._data_texture_controller?.reset();
 		}
 	}
@@ -136,7 +149,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		}
 	}
 
-	private _createRenderTarget(width: number, height: number) {
+	private async _createRenderTarget(width: number, height: number) {
 		if (this._render_target) {
 			const image = this._render_target.texture.image;
 			if (image.width == width && image.height == height) {
@@ -155,11 +168,13 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			wrapT: wrapT,
 			minFilter: minFilter,
 			magFilter: magFilter,
-			format: RGBAFormat,
+			format: RGBFormat,
+			generateMipmaps: true,
 			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
 			stencilBuffer: false,
 			depthBuffer: false,
 		});
+		await this.textureParamsController.update(renderTarget.texture);
 		Poly.warn('created render target', this.path(), width, height);
 		return renderTarget;
 	}

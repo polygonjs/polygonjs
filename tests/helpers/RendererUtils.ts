@@ -10,7 +10,7 @@ interface RendererConfig {
 export class RendererUtils {
 	private static _configs: RendererConfig[] = [];
 
-	static async wait_for_renderer(): Promise<RendererConfig> {
+	static async waitForRenderer(): Promise<RendererConfig> {
 		return new Promise(async (resolve) => {
 			const canvas = document.createElement('canvas');
 			document.body.appendChild(canvas);

@@ -7,7 +7,7 @@ import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
 import {ImageCopNode} from '../../../nodes/cop/Image';
 import {LightMapCopNode} from '../../../nodes/cop/LightMap';
 import {NullCopNode} from '../../../nodes/cop/Null';
-import {PostCopNode} from '../../../nodes/cop/Post';
+// import {PostCopNode} from '../../../nodes/cop/Post';
 import {RenderCopNode} from '../../../nodes/cop/Render';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
@@ -29,7 +29,7 @@ export interface CopNodeChildrenMap {
 	image: ImageCopNode;
 	lightMap: LightMapCopNode;
 	null: NullCopNode;
-	post: PostCopNode;
+	// post: PostCopNode;
 	render: RenderCopNode;
 	switch: SwitchCopNode;
 	textureProperties: TexturePropertiesCopNode;
@@ -54,7 +54,7 @@ export class CopRegister {
 		poly.registerNode(ImageCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(LightMapCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
-		poly.registerNode(PostCopNode, CATEGORY_COP.FILTER);
+		// poly.registerNode(PostCopNode, CATEGORY_COP.FILTER); // removed until usable
 		poly.registerNode(RenderCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);

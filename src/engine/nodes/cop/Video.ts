@@ -26,6 +26,7 @@ import {CopFileTypeController} from './utils/FileTypeController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -95,9 +96,13 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	private _video: HTMLVideoElement | undefined;
 	// private _data_texture_controller: DataTextureController | undefined;
 	private _texture_loader: CoreLoaderTexture | undefined;
-	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
-
+	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
+	static displayedInputNames(): string[] {
+		return ['optional texture to copy attributes from'];
+	}
 	initializeNode() {
+		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.url], () => {
@@ -112,33 +117,29 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			});
 		});
 	}
-	async cook() {
+	async cook(input_contents: Texture[]) {
 		if (CopFileTypeController.is_static_image_url(this.pv.url)) {
 			this.states.error.set('input is not a video');
 		} else {
-			await this.cook_for_video();
+			const texture = await this._load_texture(this.pv.url);
+
+			if (texture) {
+				this._video = texture.image;
+				const inputTexture = input_contents[0];
+				if (inputTexture) {
+					TextureParamsController.copyTextureAttributes(texture, inputTexture);
+				}
+
+				this.video_update_loop();
+				this.video_update_muted();
+				this.video_update_play();
+				this.video_update_time();
+				await this.textureParamsController.update(texture);
+				this.setTexture(texture);
+			} else {
+				this.cookController.endCook();
+			}
 		}
-	}
-
-	private async cook_for_video() {
-		const texture = await this._load_texture(this.pv.url);
-
-		if (texture) {
-			this._video = texture.image;
-
-			this.video_update_loop();
-			this.video_update_muted();
-			this.video_update_play();
-			this.video_update_time();
-			await this.texture_params_controller.update(texture);
-			this.setTexture(texture);
-		} else {
-			this.cookController.endCook();
-		}
-	}
-
-	resolved_url() {
-		return this.pv.url;
 	}
 
 	static PARAM_CALLBACK_video_update_time(node: VideoCopNode) {
@@ -188,9 +189,9 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	//
 	//
 	static PARAM_CALLBACK_reload(node: VideoCopNode, param: BaseParamType) {
-		node.param_callback_reload();
+		node.paramCallbackReload();
 	}
-	private param_callback_reload() {
+	private paramCallbackReload() {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
 		this.p.url.setDirty();

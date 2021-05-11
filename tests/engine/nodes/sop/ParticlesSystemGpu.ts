@@ -34,7 +34,7 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	const scene = window.scene;
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.wait_for_renderer();
+	const {renderer} = await RendererUtils.waitForRenderer();
 	assert.ok(renderer, 'renderer created');
 
 	const plane1 = geo1.createNode('plane');
@@ -98,7 +98,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	const scene = window.scene;
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.wait_for_renderer();
+	const {renderer} = await RendererUtils.waitForRenderer();
 	assert.ok(renderer, 'renderer created');
 
 	const plane1 = geo1.createNode('plane');
@@ -234,7 +234,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	scene.setFrame(0);
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.wait_for_renderer();
+	const {renderer} = await RendererUtils.waitForRenderer();
 	assert.ok(renderer, 'renderer created');
 
 	const plane1 = geo1.createNode('plane');

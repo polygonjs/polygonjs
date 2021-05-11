@@ -7,6 +7,8 @@ import {TypedCopNode} from './_Base';
 import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {Texture} from 'three/src/textures/Texture';
 
 export function WebCamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -25,8 +27,17 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 	}
 
 	private _video: HTMLVideoElement | undefined;
-	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
-	async cook() {
+	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
+
+	static displayedInputNames(): string[] {
+		return ['optional texture to copy attributes from'];
+	}
+	initializeNode() {
+		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
+	}
+
+	async cook(input_contents: Texture[]) {
 		if (this._video) {
 			document.body.removeChild(this._video);
 		}
@@ -41,7 +52,11 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		// this._video.style.display = 'none';
 		document.body.appendChild(video_container);
 		const texture = new VideoTexture(this._video);
-		await this.texture_params_controller.update(texture);
+		const inputTexture = input_contents[0];
+		if (inputTexture) {
+			TextureParamsController.copyTextureAttributes(texture, inputTexture);
+		}
+		await this.textureParamsController.update(texture);
 
 		if (navigator && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 			const constraints = {video: {width: this.pv.res.x, height: this.pv.res.y, facingMode: 'user'}};

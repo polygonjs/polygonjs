@@ -17,6 +17,7 @@ import {FileType} from '../../params/utils/OptionsController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {CopFileTypeController} from './utils/FileTypeController';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 
 export function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -49,9 +50,15 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		return CoreLoaderTexture.module_names(ext);
 	}
 
-	public readonly texture_params_controller: TextureParamsController = new TextureParamsController(this);
+	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
+
+	static displayedInputNames(): string[] {
+		return ['optional texture to copy attributes from'];
+	}
 
 	initializeNode() {
+		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
 				this.params.label.init([this.p.url], () => {
@@ -66,27 +73,24 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 			});
 		});
 	}
-	async cook() {
+	async cook(input_contents: Texture[]) {
 		if (CopFileTypeController.is_static_image_url(this.pv.url)) {
-			await this.cook_for_image();
+			const texture = await this._loadTexture(this.pv.url);
+
+			if (texture) {
+				const inputTexture = input_contents[0];
+				if (inputTexture) {
+					TextureParamsController.copyTextureAttributes(texture, inputTexture);
+				}
+
+				await this.textureParamsController.update(texture);
+				this.setTexture(texture);
+			} else {
+				this._clearTexture();
+			}
 		} else {
 			this.states.error.set('input is not an image');
 		}
-	}
-
-	private async cook_for_image() {
-		const texture = await this._load_texture(this.pv.url);
-
-		if (texture) {
-			await this.texture_params_controller.update(texture);
-			this.setTexture(texture);
-		} else {
-			this._clearTexture();
-		}
-	}
-
-	resolved_url() {
-		return this.pv.url;
 	}
 
 	//
@@ -95,15 +99,15 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	//
 	//
 	static PARAM_CALLBACK_reload(node: ImageCopNode, param: BaseParamType) {
-		node.param_callback_reload();
+		node.paramCallbackReload();
 	}
-	private param_callback_reload() {
+	private paramCallbackReload() {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
 		this.p.url.setDirty();
 	}
 
-	private async _load_texture(url: string) {
+	private async _loadTexture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
 		const url_param = this.p.url;
 		const textureLoader = new CoreLoaderTexture(url, url_param, this, this.scene());
