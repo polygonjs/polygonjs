@@ -314,6 +314,11 @@ export class TextureParamsController {
 			texture.updateMatrix();
 		}
 	}
+	//
+	//
+	// CALLBACK
+	//
+	//
 	static PARAM_CALLBACK_update_offset(node: TextureCopNode) {
 		const texture = node.containerController.container().texture();
 		if (!texture) {

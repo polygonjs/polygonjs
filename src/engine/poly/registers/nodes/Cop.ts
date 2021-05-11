@@ -8,6 +8,7 @@ import {ImageCopNode} from '../../../nodes/cop/Image';
 import {LightMapCopNode} from '../../../nodes/cop/LightMap';
 import {NullCopNode} from '../../../nodes/cop/Null';
 import {PostCopNode} from '../../../nodes/cop/Post';
+import {RenderCopNode} from '../../../nodes/cop/Render';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
 import {VideoCopNode} from '../../../nodes/cop/Video';
@@ -29,6 +30,7 @@ export interface CopNodeChildrenMap {
 	lightMap: LightMapCopNode;
 	null: NullCopNode;
 	post: PostCopNode;
+	render: RenderCopNode;
 	switch: SwitchCopNode;
 	textureProperties: TexturePropertiesCopNode;
 	video: VideoCopNode;
@@ -53,6 +55,7 @@ export class CopRegister {
 		poly.registerNode(LightMapCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(PostCopNode, CATEGORY_COP.FILTER);
+		poly.registerNode(RenderCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(VideoCopNode, CATEGORY_COP.INPUT);

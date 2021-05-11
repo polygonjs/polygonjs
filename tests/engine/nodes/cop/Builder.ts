@@ -40,7 +40,7 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	assert.equal(texture.image.width, 256);
 	assert.equal(texture.image.height, 256);
 
-	const render_target = builder1.render_target();
+	const render_target = builder1.renderTarget();
 	const buffer_width = 1;
 	const buffer_height = 1;
 	const pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);

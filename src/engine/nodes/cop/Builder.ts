@@ -158,7 +158,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	async cook() {
 		this.compileIfRequired();
-		this.render_on_target();
+		this.renderOnTarget();
 	}
 
 	shaders_by_name() {
@@ -231,8 +231,13 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 
-	async render_on_target() {
-		this.create_render_target_if_required();
+	//
+	//
+	// RENDER + RENDER TARGET
+	//
+	//
+	async renderOnTarget() {
+		this.createRenderTargetIfRequired();
 		if (!this._render_target) {
 			return;
 		}
@@ -267,17 +272,17 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 
-	render_target() {
+	renderTarget() {
 		return (this._render_target =
-			this._render_target || this._create_render_target(this.pv.resolution.x, this.pv.resolution.y));
+			this._render_target || this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y));
 	}
-	private create_render_target_if_required() {
-		if (!this._render_target || !this._render_target_resolution_valid()) {
-			this._render_target = this._create_render_target(this.pv.resolution.x, this.pv.resolution.y);
+	private createRenderTargetIfRequired() {
+		if (!this._render_target || !this._renderTargetResolutionValid()) {
+			this._render_target = this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
 			this._data_texture_controller?.reset();
 		}
 	}
-	private _render_target_resolution_valid() {
+	private _renderTargetResolutionValid() {
 		if (this._render_target) {
 			const image = this._render_target.texture.image;
 			if (image.width != this.pv.resolution.x || image.height != this.pv.resolution.y) {
@@ -290,7 +295,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 
-	private _create_render_target(width: number, height: number) {
+	private _createRenderTarget(width: number, height: number) {
 		if (this._render_target) {
 			const image = this._render_target.texture.image;
 			if (image.width == width && image.height == height) {

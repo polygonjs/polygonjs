@@ -1,174 +1,175 @@
-// import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
-// import { Vector2 } from "three/src/math/Vector2";
-// import { Texture } from "three/src/textures/Texture";
-// import { Scene } from "three/src/scenes/Scene";
-// import { RGBFormat } from "three/src/constants";
-// import { NearestFilter } from "three/src/constants";
-// import { DataTexture } from "three/src/textures/DataTexture";
-// import { Camera } from "three/src/cameras/Camera";
-// const THREE = {
-// 	Camera,
-// 	DataTexture,
-// 	NearestFilter,
-// 	RGBFormat,
-// 	Scene,
-// 	Texture,
-// 	Vector2,
-// 	WebGLRenderer
-// };
-// // import NodeBase from '../_Base'
+import {Scene} from 'three/src/scenes/Scene';
+import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {Camera} from 'three/src/cameras/Camera';
+import {
+	FloatType,
+	HalfFloatType,
+	RGBAFormat,
+	NearestFilter,
+	LinearFilter,
+	ClampToEdgeWrapping,
+} from 'three/src/constants';
+import {TypedCopNode} from './_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {} from '../utils/code/configs/ParamConfig';
+import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
+import {BaseNodeType} from '../_Base';
+import {TypedCameraObjNode} from '../obj/_BaseCamera';
+import {CopRendererController} from './utils/RendererController';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
+import {CoreUserAgent} from '../../../core/UserAgent';
+import {Poly} from '../../Poly';
 
-// // import Container from '../../Container/Texture'
+const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
+class RenderCopParamConfig extends NodeParamsConfig {
+	/** @param camera to render from */
+	camera = ParamConfig.NODE_PATH('', {
+		nodeSelection: {
+			context: NodeContext.OBJ,
+			types: CAMERA_TYPES,
+		},
+	});
+	/** @param render resolution */
+	resolution = ParamConfig.VECTOR2([256, 256]);
+	/** @param defines if the shader is rendered via the same camera used to render the scene */
+	useCameraRenderer = ParamConfig.BOOLEAN(0);
+	/** @param render button */
+	render = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			RenderCopNode.PARAM_CALLBACK_render(node as RenderCopNode);
+		},
+	});
+}
 
-// import { BaseNodeCop } from "./_Base";
-// import { BaseCameraNode } from "src/Engine/Node/Obj/_BaseCamera";
-// // import Walker from 'src/Core/Walker'
-// import { ParamType } from "src/Engine/Param/_Module";
+const ParamsConfig = new RenderCopParamConfig();
 
-// export class Render extends BaseNodeCop {
-// 	static type() {
-// 		return "render";
-// 	}
+export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
+	paramsConfig = ParamsConfig;
+	static type(): Readonly<'render'> {
+		return 'render';
+	}
 
-// 	private renderer: THREE.WebGLRenderer;
-// 	private texture: THREE.Texture = new THREE.Texture();
-// 	// private dpr: number = window.devicePixelRatio
-// 	private camera: THREE.Camera;
-// 	private do_render: boolean = true;
-// 	private request_animation_frame_id: number;
-// 	private animated_started: boolean = false;
-// 	private animate_method: () => void;
-// 	private previous_render_timestamp: number;
-// 	private fps_interval: number;
-// 	private _display_scene: THREE.Scene;
-// 	private _aspect: number;
-// 	private _camera_node: BaseCameraNode;
+	private _texture_camera: Camera | undefined;
+	private _texture_scene: Scene | undefined;
+	private _camera_node: TypedCameraObjNode<any, any> | undefined;
+	private _render_target: WebGLRenderTarget | undefined;
+	private _renderer_controller: CopRendererController | undefined;
+	private _data_texture_controller: DataTextureController | undefined;
 
-// 	initializeNode() {
+	async cook() {
+		this._texture_scene = this.scene().threejsScene();
 
-// 		this.set_inputs_count_to_zero(0);
+		this._camera_node = this.pv.camera.nodeWithContext(NodeContext.OBJ) as TypedCameraObjNode<any, any>;
+		// Walker.find_node(<unknown>this as Node, this._param_camera)
+		if (this._camera_node && CAMERA_TYPES.includes(this._camera_node.type() as CameraNodeType)) {
+			this._texture_camera = this._camera_node.object as Camera;
+			await this._camera_node.compute();
+			// this.start_animate();
+			this.renderOnTarget();
+		} else {
+			this._texture_camera = undefined;
+		}
+	}
 
-// 		this.animate_method = this.animate.bind(this);
-// 		this.fps_interval = 1000 / 30; //(30fps)
-// 	}
+	//
+	//
+	// RENDER + RENDER TARGET
+	//
+	//
+	async renderOnTarget() {
+		this.createRenderTargetIfRequired();
+		if (!(this._render_target && this._texture_scene && this._texture_camera)) {
+			return;
+		}
 
-// 	create_params() {
-// 		this.add_param(
-// 			ParamType.OPERATOR_PATH,
-// 			"camera",
-// 			"/perspective_camera1"
-// 		);
-// 		this.add_param(ParamType.VECTOR2, "resolution", [256, 256]);
-// 		this.add_param(ParamType.BUTTON, "update", "", {
-// 			callback: () => this.setDirty()
-// 		});
-// 	}
+		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
+		const renderer = await this._renderer_controller.renderer();
 
-// 	async cook() {
-// 		this._display_scene = this.scene().display_scene();
-// 		this.renderer = this.renderer || this.create_renderer();
-// 		// this.texture = this.texture || this.create_texture(this._param_resolution)
-// 		this._aspect = this._param_resolution.x / this._param_resolution.y;
-// 		this.renderer.setSize(
-// 			this._param_resolution.x,
-// 			this._param_resolution.y
-// 		);
+		const prev_target = renderer.getRenderTarget();
+		renderer.setRenderTarget(this._render_target);
+		renderer.clear();
+		renderer.render(this._texture_scene, this._texture_camera);
+		renderer.setRenderTarget(prev_target);
 
-// 		this._camera_node = this.param("camera").found_node();
-// 		// Walker.find_node(<unknown>this as Node, this._param_camera)
-// 		if (this._camera_node) {
-// 			this.camera = this._camera_node.object();
-// 			const container = await this._camera_node.requestContainer_p();
-// 			this.start_animate();
-// 		} else {
-// 			this.camera = null;
-// 		}
+		if (this._render_target.texture) {
+			if (isBooleanTrue(this.pv.useCameraRenderer)) {
+				this.setTexture(this._render_target.texture);
+			} else {
+				// const w = this.pv.resolution.x;
+				// const h = this.pv.resolution.y;
+				// this._data_texture = this._data_texture || this._create_data_texture(w, h);
+				// renderer.readRenderTargetPixels(this._render_target, 0, 0, w, h, this._data_texture.image.data);
+				// this._data_texture.needsUpdate = true;
+				this._data_texture_controller =
+					this._data_texture_controller ||
+					new DataTextureController(DataTextureControllerBufferType.Float32Array);
+				const data_texture = this._data_texture_controller.from_render_target(renderer, this._render_target);
 
-// 		this.set_texture(this.texture);
-// 	}
+				this.setTexture(data_texture);
+			}
+		} else {
+			this.cookController.endCook();
+		}
+	}
 
-// 	private start_animate() {
-// 		if (this.animated_started == false) {
-// 			this.animate();
-// 			this.animated_started = true;
-// 		}
-// 	}
+	// renderTarget() {
+	// 	return (this._render_target =
+	// 		this._render_target || this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y));
+	// }
+	private createRenderTargetIfRequired() {
+		if (!this._render_target || !this._renderTargetResolutionValid()) {
+			this._render_target = this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
+			this._data_texture_controller?.reset();
+		}
+	}
+	private _renderTargetResolutionValid() {
+		if (this._render_target) {
+			const image = this._render_target.texture.image;
+			if (image.width != this.pv.resolution.x || image.height != this.pv.resolution.y) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
+	}
 
-// 	private animate() {
-// 		if (this.do_render) {
-// 			this.request_animation_frame_id = requestAnimationFrame(
-// 				this.animate_method
-// 			);
+	private _createRenderTarget(width: number, height: number) {
+		if (this._render_target) {
+			const image = this._render_target.texture.image;
+			if (image.width == width && image.height == height) {
+				return this._render_target;
+			}
+		}
 
-// 			const now = Date.now();
-// 			const elapsed_time = now - this.previous_render_timestamp;
-// 			if (
-// 				this.previous_render_timestamp == null ||
-// 				elapsed_time > this.fps_interval
-// 			) {
-// 				this.render();
+		const wrapS = ClampToEdgeWrapping;
+		const wrapT = ClampToEdgeWrapping;
 
-// 				this.previous_render_timestamp = Date.now();
-// 			}
-// 		}
-// 	}
+		const minFilter = LinearFilter;
+		const magFilter = NearestFilter;
 
-// 	// TODO: add a before_destroy for nodes
-// 	private cancel_animate() {
-// 		this.do_render = false;
-// 		this.animated_started = false;
-// 		cancelAnimationFrame(this.request_animation_frame_id);
-// 		this.renderer.dispose();
-// 	}
+		var renderTarget = new WebGLRenderTarget(width, height, {
+			wrapS: wrapS,
+			wrapT: wrapT,
+			minFilter: minFilter,
+			magFilter: magFilter,
+			format: RGBAFormat,
+			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
+			stencilBuffer: false,
+			depthBuffer: false,
+		});
+		Poly.warn('created render target', this.path(), width, height);
+		return renderTarget;
+	}
 
-// 	private render() {
-// 		this.renderer.clear();
-// 		if (this.camera) {
-// 			this._camera_node.setup_for_aspect_ratio(this._aspect);
-// 			this.renderer.render(this._display_scene, this.camera);
-// 			this.update_texture_from_renderer();
-// 		}
-
-// 		// vector.x = ( window.innerWidth * dpr / 2 ) - ( textureSize / 2 );
-// 		// vector.y = ( window.innerHeight * dpr / 2 ) - ( textureSize / 2 )
-// 		// const vector = new THREE.Vector2(0, 0);
-// 		// const vector = new THREE.Vector2(resolution.x, resolution.y);
-// 		// const vector = new THREE.Vector2(
-// 		// 	( resolution.x * this.dpr / 2 ) - ( resolution.x * this.dpr / 2 ),
-// 		// 	( resolution.y * this.dpr / 2 ) - ( resolution.y * this.dpr / 2 )
-// 		// );
-// 		// console.log(vector)
-// 		// this.renderer.copyFramebufferToTexture( vector, this.texture );
-
-// 	}
-
-// 	private create_renderer() {
-// 		const renderer = new THREE.WebGLRenderer({ antialias: true });
-// 		renderer.setPixelRatio(window.devicePixelRatio);
-// 		// document.body.appendChild( renderer.domElement )
-// 		renderer.autoClear = false;
-
-// 		return renderer;
-// 	}
-
-// 	// private create_texture(resolution: THREE.Vector2){
-
-// 	// 	const data = new Uint8Array( (resolution.x*this.dpr) * (resolution.y*this.dpr) * 3 )
-
-// 	// 	const texture = new THREE.DataTexture( data, resolution.x, resolution.y, THREE.RGBFormat );
-// 	// 	texture.minFilter = THREE.NearestFilter;
-// 	// 	texture.magFilter = THREE.NearestFilter;
-// 	// 	texture.needsUpdate = true
-
-// 	// 	return texture
-// 	// }
-// 	private update_texture_from_renderer() {
-// 		const data_url = this.renderer.domElement.toDataURL();
-// 		const image = new Image();
-// 		this.texture.image = image;
-// 		image.onload = () => {
-// 			this.texture.needsUpdate = true;
-// 		};
-// 		image.src = data_url;
-// 	}
-// }
+	//
+	//
+	// CALLBACK
+	//
+	//
+	static PARAM_CALLBACK_render(node: RenderCopNode) {
+		node.renderOnTarget();
+	}
+}
