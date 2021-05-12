@@ -1,19 +1,10 @@
 import {BaseViewerType} from '../_Base';
 import {EventContext, BaseSceneEventsControllerType} from '../../scene/utils/events/_BaseEventsController';
-// import {SceneEventsDispatcher} from '../../scene/utils/events/EventsDispatcher';
-
-// type MouseOrTouchEvent = MouseEvent | TouchEvent;
-// type MouseOrTouchEventCallback = (e: MouseEvent) => void;
 type EventListener = (e: Event) => void;
 type ListenerByEventType = Map<string, EventListener>;
 
 export class ViewerEventsController {
-	// protected _bound_process_event = this.processEvent.bind(this);
 	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();
-	// protected _registered_events: Map<string, EventCallback> = new Map();
-	// protected _bound_on_mousedown: MouseOrTouchEventCallback = this.process_event.bind(this);
-	// protected _bound_on_mousemove: MouseOrTouchEventCallback = this.process_event.bind(this);
-	// protected _bound_on_mouseup: MouseOrTouchEventCallback = this.process_event.bind(this);
 
 	constructor(protected viewer: BaseViewerType) {}
 
@@ -29,7 +20,8 @@ export class ViewerEventsController {
 			this._bound_listener_map_by_event_controller_type.set(controller_type, map);
 		}
 		map.forEach((listener, event_type) => {
-			canvas.removeEventListener(event_type, listener);
+			const eventOwner = this._eventOwner(event_type, canvas);
+			eventOwner.removeEventListener(event_type, listener);
 		});
 		map.clear();
 
@@ -37,8 +29,16 @@ export class ViewerEventsController {
 			this.processEvent(event, events_controller);
 		};
 		for (let event_type of events_controller.activeEventTypes()) {
-			canvas.addEventListener(event_type, listener);
+			const eventOwner = this._eventOwner(event_type, canvas);
+			eventOwner.addEventListener(event_type, listener);
 			map.set(event_type, listener);
+		}
+	}
+	private _eventOwner(event_type: string, canvas: HTMLCanvasElement) {
+		if (event_type == 'resize') {
+			return window;
+		} else {
+			return canvas;
 		}
 	}
 

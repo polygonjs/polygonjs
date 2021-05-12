@@ -17,6 +17,7 @@ import {onTimeTickHook, TimeController} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
 import {ViewersRegister} from './utils/ViewersRegister';
 import {WebGLController} from './utils/WebGLController';
+import {WindowController} from './utils/WindowController';
 import {SceneAssetsController} from './utils/AssetsController';
 import {BaseNodeType} from '../nodes/_Base';
 import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
@@ -298,6 +299,16 @@ export class PolyScene {
 
 	//
 	//
+	// window
+	//
+	//
+	private _windowController: WindowController | undefined;
+	get windowController() {
+		return (this._windowController = this._windowController || new WindowController(this));
+	}
+
+	//
+	//
 	// constructor
 	//
 	//
@@ -306,6 +317,10 @@ export class PolyScene {
 		this._graph.setScene(this);
 		// this.time_controller.init();
 		this.nodesController.init();
+	}
+
+	dispose() {
+		this._windowController?.dispose();
 	}
 
 	//

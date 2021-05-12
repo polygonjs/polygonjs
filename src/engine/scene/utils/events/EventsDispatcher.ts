@@ -5,6 +5,7 @@ import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
+import {WindowEventNode} from '../../../nodes/event/Window';
 import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
 
 import {BaseSceneEventsController, BaseSceneEventsControllerClass} from './_BaseEventsController';
@@ -12,12 +13,14 @@ import {SceneEventsController} from './SceneEventsController';
 import {KeyboardEventsController} from './KeyboardEventsController';
 import {MouseEventsController} from './MouseEventsController';
 import {PointerEventsController} from './PointerEventsController';
+import {WindowEventsController} from './WindowEventsController';
 
 export class SceneEventsDispatcher {
 	private _keyboard_events_controller: KeyboardEventsController | undefined;
 	private _mouse_events_controller: MouseEventsController | undefined;
 	private _pointer_events_controller: PointerEventsController | undefined;
 	private _scene_events_controller: SceneEventsController | undefined;
+	private _window_events_controller: WindowEventsController | undefined;
 	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
@@ -69,6 +72,8 @@ export class SceneEventsDispatcher {
 				return this.pointerEventsController;
 			case SceneEventNode.type():
 				return this.sceneEventsController;
+			case WindowEventNode.type():
+				return this.windowEventsController;
 		}
 	}
 
@@ -87,6 +92,10 @@ export class SceneEventsDispatcher {
 	get sceneEventsController() {
 		return (this._scene_events_controller =
 			this._scene_events_controller || this._create_controller(SceneEventsController));
+	}
+	get windowEventsController() {
+		return (this._window_events_controller =
+			this._window_events_controller || this._create_controller(WindowEventsController));
 	}
 	private _create_controller<T extends BaseSceneEventsControllerClass>(event_constructor: Constructor<T>): T {
 		const controller = new event_constructor(this);

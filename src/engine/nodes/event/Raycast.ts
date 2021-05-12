@@ -177,6 +177,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 				return {name, value};
 			}),
 		},
+		...visible_for_cpu_geometry(),
 	});
 	/** @param node whose objects to test hit against, when testing against geometries */
 	targetNode = ParamConfig.NODE_PATH('', {

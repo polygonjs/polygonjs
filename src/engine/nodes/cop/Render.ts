@@ -7,7 +7,6 @@
  */
 import {Scene} from 'three/src/scenes/Scene';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {Camera} from 'three/src/cameras/Camera';
 import {
 	FloatType,
 	HalfFloatType,
@@ -28,6 +27,8 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {Poly} from '../../Poly';
 import {Constructor} from '../../../types/GlobalTypes';
+import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
+import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 
 const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
 
@@ -63,7 +64,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	private _texture_camera: Camera | undefined;
+	private _texture_camera: OrthographicCamera | PerspectiveCamera | undefined;
 	private _texture_scene: Scene | undefined;
 	private _camera_node: TypedCameraObjNode<any, any> | undefined;
 	private _render_target: WebGLRenderTarget | undefined;
@@ -76,7 +77,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		this._camera_node = this.pv.camera.nodeWithContext(NodeContext.OBJ) as TypedCameraObjNode<any, any>;
 		// Walker.find_node(<unknown>this as Node, this._param_camera)
 		if (this._camera_node && CAMERA_TYPES.includes(this._camera_node.type() as CameraNodeType)) {
-			this._texture_camera = this._camera_node.object as Camera;
+			this._texture_camera = this._camera_node.object as OrthographicCamera | PerspectiveCamera;
 			await this._camera_node.compute();
 			// this.start_animate();
 			this.renderOnTarget();
@@ -101,6 +102,11 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 
 		const prev_target = renderer.getRenderTarget();
 		renderer.setRenderTarget(this._render_target);
+		// this._texture_camera.updateMatrix();
+		// this._texture_camera.updateMatrixWorld();
+		// this._texture_camera.updateWorldMatrix(true, true);
+		// this._texture_camera.updateProjectionMatrix();
+		// this._texture_scene.updateWorldMatrix(true, true);
 		renderer.clear();
 		renderer.render(this._texture_scene, this._texture_camera);
 		renderer.setRenderTarget(prev_target);

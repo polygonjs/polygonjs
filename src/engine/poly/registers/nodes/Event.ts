@@ -24,6 +24,7 @@ import {SetParamEventNode} from '../../../nodes/event/SetParam';
 import {SequenceEventNode} from '../../../nodes/event/Sequence';
 import {TimerEventNode} from '../../../nodes/event/Timer';
 import {ViewerEventNode} from '../../../nodes/event/Viewer';
+import {WindowEventNode} from '../../../nodes/event/Window';
 // networks
 import {AnimationsNetworkEventNode} from '../../../nodes/event/AnimationsNetwork';
 import {CopNetworkEventNode} from '../../../nodes/event/CopNetwork';
@@ -57,6 +58,7 @@ export interface EventNodeChildrenMap {
 	sequence: SequenceEventNode;
 	timer: TimerEventNode;
 	viewer: ViewerEventNode;
+	window: WindowEventNode;
 
 	// networks
 	animationsNetwork: AnimationsNetworkEventNode;
@@ -94,6 +96,7 @@ export class EventRegister {
 		poly.registerNode(SequenceEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(TimerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(WindowEventNode, CATEGORY_EVENT.INPUT);
 		// networks
 		poly.registerNode(AnimationsNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(CopNetworkEventNode, CATEGORY_EVENT.NETWORK);
