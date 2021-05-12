@@ -29,7 +29,6 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	//
 
 	protected _children_controller_context = NodeContext.SOP;
-
 	createNode<S extends keyof GeoNodeChildrenMap>(
 		node_class: S,
 		params_init_value_overrides?: ParamsInitData
@@ -71,11 +70,20 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	}
 }
 
+interface SopSubnetChildrenDisplayControllerOptions {
+	dependsOnDisplayNode: boolean;
+}
+const DEFAULT_OPTIONS: SopSubnetChildrenDisplayControllerOptions = {
+	dependsOnDisplayNode: true,
+};
 export class SopSubnetChildrenDisplayController {
 	private _output_node_needs_update: boolean = true;
 	private _output_node: SubnetOutputSopNode | undefined;
 	private _graph_node: CoreGraphNode | undefined;
-	constructor(private node: SubnetSopNodeLike<any>) {}
+	constructor(
+		private node: SubnetSopNodeLike<any>,
+		private options: SopSubnetChildrenDisplayControllerOptions = DEFAULT_OPTIONS
+	) {}
 
 	dispose() {
 		this._graph_node?.dispose();
@@ -135,7 +143,7 @@ export class SopSubnetChildrenDisplayController {
 
 			this._output_node = found_node;
 
-			if (this._output_node) {
+			if (this._output_node && this.options.dependsOnDisplayNode) {
 				this._graph_node = this._graph_node || this._create_graph_node();
 
 				this._graph_node.addGraphInput(this._output_node);

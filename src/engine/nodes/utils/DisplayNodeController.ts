@@ -11,6 +11,12 @@ export interface DisplayNodeControllerCallbacks {
 /*
 handles callbacks when the children's display flag is updated
 */
+interface DisplayNodeControllerOptions {
+	dependsOnDisplayNode: boolean;
+}
+const DEFAULT_DISPLAY_NODE_CONTROLLER_OPTIONS: DisplayNodeControllerOptions = {
+	dependsOnDisplayNode: true,
+};
 export class DisplayNodeController {
 	private _initialized: boolean = false;
 	private _graph_node: CoreGraphNode;
@@ -22,7 +28,11 @@ export class DisplayNodeController {
 	// TODO: the node could be a different than BaseNodeType
 	// at least there should be a way to infer that it is a node
 	// with children that have a display flag. This would avoid all the flags?.display?... below
-	constructor(protected node: BaseNodeType, callbacks: DisplayNodeControllerCallbacks) {
+	constructor(
+		protected node: BaseNodeType,
+		callbacks: DisplayNodeControllerCallbacks,
+		private options: DisplayNodeControllerOptions = DEFAULT_DISPLAY_NODE_CONTROLLER_OPTIONS
+	) {
 		this._graph_node = new CoreGraphNode(node.scene(), 'DisplayNodeController');
 		(this._graph_node as any).node = node;
 		this._on_display_node_remove_callback = callbacks.onDisplayNodeRemove;
@@ -77,14 +87,18 @@ export class DisplayNodeController {
 			const old_display_node = this._display_node;
 			if (old_display_node) {
 				old_display_node.flags.display.set(false);
-				this._graph_node.removeGraphInput(old_display_node);
+				if (this.options.dependsOnDisplayNode) {
+					this._graph_node.removeGraphInput(old_display_node);
+				}
 				if (this._on_display_node_remove_callback) {
 					this._on_display_node_remove_callback();
 				}
 			}
 			this._display_node = new_display_node;
 			if (this._display_node) {
-				this._graph_node.addGraphInput(this._display_node);
+				if (this.options.dependsOnDisplayNode) {
+					this._graph_node.addGraphInput(this._display_node);
+				}
 				if (this._on_display_node_set_callback) {
 					this._on_display_node_set_callback();
 				}

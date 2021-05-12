@@ -3,7 +3,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {BooleanSopOperation, BOOLEAN_OPERATIONS} from '../../operations/sop/Boolean';
+import {BooleanOperation, BooleanSopOperation, BOOLEAN_OPERATIONS} from '../../operations/sop/Boolean';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -41,6 +41,9 @@ export class BooleanSopNode extends TypedSopNode<BooleanSopParamsConfig> {
 				});
 			});
 		});
+	}
+	setOperation(operation: BooleanOperation) {
+		this.p.operation.set(BOOLEAN_OPERATIONS.indexOf(operation));
 	}
 
 	private _operation: BooleanSopOperation | undefined;

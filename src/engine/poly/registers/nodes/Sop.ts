@@ -78,6 +78,8 @@ import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 import {ShearSopNode} from '../../../nodes/sop/Shear';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
 import {SortSopNode} from '../../../nodes/sop/Sort';
+import {SolverSopNode} from '../../../nodes/sop/Solver';
+import {SolverPreviousFrameSopNode} from '../../../nodes/sop/SolverPreviousFrame';
 import {SphereSopNode} from '../../../nodes/sop/Sphere';
 import {SplitSopNode} from '../../../nodes/sop/Split';
 import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
@@ -180,6 +182,8 @@ export interface GeoNodeChildrenMap {
 	scatter: ScatterSopNode;
 	shear: ShearSopNode;
 	skin: SkinSopNode;
+	solver: SolverSopNode;
+	solverPreviousFrame: SolverPreviousFrameSopNode;
 	sort: SortSopNode;
 	sphere: SphereSopNode;
 	split: SplitSopNode;
@@ -377,6 +381,8 @@ export class SopRegister {
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SkinSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ShearSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(SolverSopNode, CATEGORY_SOP.ADVANCED);
+		poly.registerNode(SolverPreviousFrameSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(SortSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(SplitSopNode, CATEGORY_SOP.MODIFIER);

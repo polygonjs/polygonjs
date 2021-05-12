@@ -199,6 +199,7 @@ import './engine/nodes/sop/RoundedBox';
 import './engine/nodes/sop/Scatter';
 import './engine/nodes/sop/Shear';
 import './engine/nodes/sop/Skin';
+import './engine/nodes/sop/Solver';
 import './engine/nodes/sop/Sort';
 import './engine/nodes/sop/Sphere';
 import './engine/nodes/sop/Subdivide';

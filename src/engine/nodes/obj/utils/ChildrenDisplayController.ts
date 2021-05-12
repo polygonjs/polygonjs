@@ -2,7 +2,6 @@ import {BaseObjNodeClass} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
 import {Group} from 'three/src/objects/Group';
-import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {BaseSopNodeType} from '../../sop/_Base';
 
 const DISPLAY_PARAM_NAME = 'display';
@@ -12,7 +11,7 @@ interface BaseObjNodeClassWithDisplayNode extends BaseObjNodeClass {
 }
 
 export class ChildrenDisplayController {
-	_children_uuids_dict: PolyDictionary<boolean> = {};
+	_children_uuids_dict: Map<string, boolean> = new Map();
 	_children_length: number = 0;
 	private _sop_group = this._create_sop_group();
 
@@ -110,7 +109,7 @@ export class ChildrenDisplayController {
 		while ((child = this._sop_group.children[0])) {
 			this._sop_group.remove(child);
 		}
-		this._children_uuids_dict = {};
+		this._children_uuids_dict.clear();
 		this._children_length = 0;
 	}
 
@@ -118,6 +117,7 @@ export class ChildrenDisplayController {
 		// we also check that the parent are the same, in case the node has been deleted
 		// TODO: there should be a wider refactor where deleted node cannot raise callbacks such as flags update
 		const display_node = this.node.displayNodeController.displayNode() as BaseSopNodeType;
+
 		if (display_node && display_node.parent()?.graphNodeId() == this.node.graphNodeId()) {
 			const container = await display_node.compute();
 			const core_group = container.coreContent();
@@ -127,7 +127,7 @@ export class ChildrenDisplayController {
 				let new_objects_are_different = new_objects.length != this._children_length;
 				if (!new_objects_are_different) {
 					for (let object of new_objects) {
-						if (!(object.uuid in this._children_uuids_dict)) {
+						if (!this._children_uuids_dict.get(object.uuid)) {
 							new_objects_are_different = true;
 						}
 					}
@@ -139,7 +139,7 @@ export class ChildrenDisplayController {
 						this._sop_group.add(object);
 						// ensure the matrix of the parent is used
 						object.updateMatrix();
-						this._children_uuids_dict[object.uuid] = true;
+						this._children_uuids_dict.set(object.uuid, true);
 					}
 					this._children_length = new_objects.length;
 				}
