@@ -1,6 +1,7 @@
 import {CATEGORY_COP} from './Category';
 
 import {BuilderCopNode} from '../../../nodes/cop/Builder';
+import {CanvasCopNode} from '../../../nodes/cop/Canvas';
 import {ColorCopNode} from '../../../nodes/cop/Color';
 import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
@@ -23,6 +24,7 @@ import {RenderersNetworkCopNode} from '../../../nodes/cop/RenderersNetwork';
 
 export interface CopNodeChildrenMap {
 	builder: BuilderCopNode;
+	canvas: CanvasCopNode;
 	color: ColorCopNode;
 	cubeCamera: CubeCameraCopNode;
 	envMap: EnvMapCopNode;
@@ -48,6 +50,7 @@ import {PolyEngine} from '../../../Poly';
 export class CopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(BuilderCopNode, CATEGORY_COP.ADVANCED);
+		poly.registerNode(CanvasCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(CubeCameraCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);

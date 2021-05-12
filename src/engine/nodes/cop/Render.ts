@@ -11,7 +11,7 @@ import {Camera} from 'three/src/cameras/Camera';
 import {
 	FloatType,
 	HalfFloatType,
-	RGBFormat,
+	RGBAFormat,
 	NearestFilter,
 	LinearFilter,
 	ClampToEdgeWrapping,
@@ -109,14 +109,9 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			if (isBooleanTrue(this.pv.useCameraRenderer)) {
 				this.setTexture(this._render_target.texture);
 			} else {
-				// const w = this.pv.resolution.x;
-				// const h = this.pv.resolution.y;
-				// this._data_texture = this._data_texture || this._create_data_texture(w, h);
-				// renderer.readRenderTargetPixels(this._render_target, 0, 0, w, h, this._data_texture.image.data);
-				// this._data_texture.needsUpdate = true;
 				this._data_texture_controller =
 					this._data_texture_controller ||
-					new DataTextureController(DataTextureControllerBufferType.Uint8Array);
+					new DataTextureController(DataTextureControllerBufferType.Float32Array);
 				const data_texture = this._data_texture_controller.from_render_target(renderer, this._render_target);
 				await this.textureParamsController.update(data_texture);
 				this.setTexture(data_texture);
@@ -168,7 +163,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			wrapT: wrapT,
 			minFilter: minFilter,
 			magFilter: magFilter,
-			format: RGBFormat,
+			format: RGBAFormat,
 			generateMipmaps: true,
 			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
 			stencilBuffer: false,
