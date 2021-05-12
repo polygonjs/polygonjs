@@ -132,6 +132,8 @@ QUnit.test('COP canvas simple', async (assert) => {
 	assert.in_delta(data[2], 0.54, 0.1);
 
 	canvas.parentElement?.removeChild(canvas);
+	renderer.domElement.parentElement?.removeChild(renderer.domElement);
+	renderer.dispose();
 	RendererUtils.dispose();
 	cancelAnimationFrame(requestId);
 });
