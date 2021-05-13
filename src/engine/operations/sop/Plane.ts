@@ -57,39 +57,39 @@ export class PlaneSopOperation extends BaseSopOperation {
 
 		return this.createCoreGroupFromGeometry(geometry);
 	}
+	private _size = new Vector3();
+	private _center = new Vector3();
 	private _cook_with_input(core_group: CoreGroup, params: PlaneSopParams) {
 		const bbox = core_group.boundingBox();
-		const size = new Vector3();
-		bbox.getSize(size);
-		const center = new Vector3();
-		bbox.getCenter(center);
+		bbox.getSize(this._size);
+		bbox.getCenter(this._center);
 
 		// TODO: rotate the input geo to get the accurate bbox
-		const size2d = new Vector2(size.x, size.z);
+		const size2d = new Vector2(this._size.x, this._size.z);
 		const geometry = this._create_plane(size2d, params);
 
 		this._core_transform.rotate_geometry(geometry, ROTATE_START, ROTATE_END);
 
-		const matrix = this._core_transform.translation_matrix(center);
+		const matrix = this._core_transform.translation_matrix(this._center);
 		geometry.applyMatrix4(matrix);
 
 		return this.createCoreGroupFromGeometry(geometry);
 	}
 
+	private _segmentsCount = new Vector2(1, 1);
 	private _create_plane(size: Vector2, params: PlaneSopParams) {
-		let segments_count = new Vector2(1, 1);
 		size = size.clone();
 		if (isBooleanTrue(params.useSegmentsCount)) {
-			segments_count.x = Math.floor(params.segments.x);
-			segments_count.y = Math.floor(params.segments.y);
+			this._segmentsCount.x = Math.floor(params.segments.x);
+			this._segmentsCount.y = Math.floor(params.segments.y);
 		} else {
 			if (params.stepSize > 0) {
-				segments_count.x = Math.floor(size.x / params.stepSize);
-				segments_count.y = Math.floor(size.y / params.stepSize);
-				size.x = segments_count.x * params.stepSize;
-				size.y = segments_count.y * params.stepSize;
+				this._segmentsCount.x = Math.floor(size.x / params.stepSize);
+				this._segmentsCount.y = Math.floor(size.y / params.stepSize);
+				size.x = this._segmentsCount.x * params.stepSize;
+				size.y = this._segmentsCount.y * params.stepSize;
 			}
 		}
-		return new PlaneBufferGeometry(size.x, size.y, segments_count.x, segments_count.y);
+		return new PlaneBufferGeometry(size.x, size.y, this._segmentsCount.x, this._segmentsCount.y);
 	}
 }

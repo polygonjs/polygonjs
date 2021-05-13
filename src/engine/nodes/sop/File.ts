@@ -7,7 +7,6 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
-import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {FileType} from '../../params/utils/OptionsController';
 import {FileSopOperation} from '../../operations/sop/File';
@@ -23,7 +22,7 @@ class FileSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType, param: BaseParamType) => {
+		callback: (node: BaseNodeType) => {
 			FileSopNode.PARAM_CALLBACK_reload(node as FileSopNode);
 		},
 	});

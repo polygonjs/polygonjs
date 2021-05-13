@@ -24,6 +24,7 @@ import {BlendSopNode} from '../../../nodes/sop/Blend';
 import {BooleanSopNode} from '../../../nodes/sop/Boolean';
 import {BoxSopNode} from '../../../nodes/sop/Box';
 import {CacheSopNode} from '../../../nodes/sop/Cache';
+import {CameraPlaneSopNode} from '../../../nodes/sop/CameraPlane';
 import {CenterSopNode} from '../../../nodes/sop/Center';
 import {CircleSopNode} from '../../../nodes/sop/Circle';
 import {Circle3PointsSopNode} from '../../../nodes/sop/Circle3Points';
@@ -129,6 +130,7 @@ export interface GeoNodeChildrenMap {
 	boolean: BooleanSopNode;
 	box: BoxSopNode;
 	cache: CacheSopNode;
+	cameraPlane: CameraPlaneSopNode;
 	center: CenterSopNode;
 	circle: CircleSopNode;
 	circle3Points: Circle3PointsSopNode;
@@ -326,6 +328,7 @@ export class SopRegister {
 		poly.registerNode(BooleanSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(BoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CacheSopNode, CATEGORY_SOP.MISC);
+		poly.registerNode(CameraPlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CenterSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CircleSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(Circle3PointsSopNode, CATEGORY_SOP.PRIMITIVES);
