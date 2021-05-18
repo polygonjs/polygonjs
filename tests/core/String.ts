@@ -138,9 +138,16 @@ QUnit.test('CoreString.camelCase', (assert) => {
 	assert.equal(CoreString.camelCase('fit_from_01'), 'fitFrom01');
 	assert.equal(CoreString.camelCase('fit_from_01_to_variance'), 'fitFrom01ToVariance');
 });
-// QUnit.test('CoreString.snake_case', (assert) => {
-// 	assert.equal(CoreString.snake_case('StringTorus'), 'spring_torus');
-// 	assert.equal(CoreString.snake_case('Spring_torus'), 'string_torus');
-// 	assert.equal(CoreString.snake_case('Abcde'), 'abcde');
-// 	assert.equal(CoreString.snake_case('1bcde'), '1bcde');
-// });
+QUnit.test('CoreString.ensureFloat', (assert) => {
+	assert.equal(CoreString.ensureFloat(2), '2.0');
+	assert.equal(CoreString.ensureFloat(10), '10.0');
+	assert.equal(CoreString.ensureFloat(1.6), '1.6');
+	assert.equal(CoreString.ensureFloat(-1.6), '-1.6');
+});
+
+QUnit.test('CoreString.ensureInteger', (assert) => {
+	assert.equal(CoreString.ensureInteger(2), '2');
+	assert.equal(CoreString.ensureInteger(10), '10');
+	assert.equal(CoreString.ensureInteger(1.6), '1');
+	assert.equal(CoreString.ensureInteger(-1.6), '-1');
+});

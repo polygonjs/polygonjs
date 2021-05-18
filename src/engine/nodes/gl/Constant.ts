@@ -54,7 +54,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		if (param) {
 			const connection_type = this._current_connection_type;
 
-			let value = ThreeToGl.any(param.value);
+			let value: string | number = ThreeToGl.any(param.value);
 			// ensure that it is an integer when needed
 			// as ThreeToGl.any can only detect if this is a number for now
 			// and therefore does not make the distinction between float and int

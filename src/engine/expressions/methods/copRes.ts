@@ -18,6 +18,7 @@
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {TextureContainer} from '../../containers/Texture';
+import {Vector2} from 'three/src/math/Vector2';
 
 export class CopResExpression extends BaseMethod {
 	protected _require_dependency = true;
@@ -32,24 +33,29 @@ export class CopResExpression extends BaseMethod {
 		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	async processArguments(args: any[]): Promise<number> {
-		let value = 0;
-		if (args.length == 2) {
+	private _resolution = new Vector2();
+	async processArguments(args: any[]): Promise<number | Vector2> {
+		if (args.length == 1 || args.length == 2) {
 			const index_or_path = args[0];
 			const component_name = args[1];
 			const container = (await this.getReferencedNodeContainer(index_or_path)) as TextureContainer;
 
 			if (container) {
 				const resolution = container.resolution();
-				if ([0, '0', 'x'].includes(component_name)) {
-					value = resolution[0];
-				} else {
-					if ([1, '1', 'y'].includes(component_name)) {
-						value = resolution[1];
+				if (component_name) {
+					if ([0, '0', 'x'].includes(component_name)) {
+						return resolution[0];
+					} else {
+						if ([1, '1', 'y'].includes(component_name)) {
+							return resolution[1];
+						}
 					}
+				} else {
+					this._resolution.set(resolution[0], resolution[1]);
+					return this._resolution;
 				}
 			}
 		}
-		return value;
+		return -1;
 	}
 }

@@ -1,6 +1,6 @@
 import {CATEGORY_GL} from './Category';
 
-import {FloatToIntGlNode, IntToFloatGlNode} from '../../../nodes/gl/_ConversionMisc';
+import {FloatToIntGlNode, IntToFloatGlNode, IntToBoolGlNode, BoolToIntGlNode} from '../../../nodes/gl/_ConversionMisc';
 import {FloatToVec2GlNode, FloatToVec3GlNode, FloatToVec4GlNode} from '../../../nodes/gl/_ConversionToVec';
 
 import {
@@ -118,6 +118,7 @@ export interface GlNodeChildrenMap {
 	asin: AsinGlNode;
 	atan: AtanGlNode;
 	attribute: AttributeGlNode;
+	boolToInt: BoolToIntGlNode;
 	ceil: CeilGlNode;
 	clamp: ClampGlNode;
 	colorCorrect: ColorCorrectGlNode;
@@ -153,7 +154,8 @@ export interface GlNodeChildrenMap {
 	hsvToRgb: HsvToRgbGlNode;
 	ifThen: IfThenGlNode;
 	impostorUv: ImpostorUvGlNode;
-	intToFloat: FloatToIntGlNode;
+	intToBool: IntToBoolGlNode;
+	intToFloat: IntToFloatGlNode;
 	inverseSqrt: InverseSqrtGlNode;
 	instanceTransform: InstanceTransformGlNode;
 	// lab_to_rgb: LabToRgbGlNode;
@@ -240,6 +242,7 @@ export class GlRegister {
 		poly.registerNode(AsinGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(AtanGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(AttributeGlNode, CATEGORY_GL.GLOBALS, {except: [`${NodeContext.COP}/builder`]});
+		poly.registerNode(BoolToIntGlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(CeilGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(ClampGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(ColorCorrectGlNode, CATEGORY_GL.COLOR);
@@ -275,6 +278,7 @@ export class GlRegister {
 		poly.registerNode(HsvToRgbGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(IfThenGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(ImpostorUvGlNode, CATEGORY_GL.UTIL);
+		poly.registerNode(IntToBoolGlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(IntToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(InverseSqrtGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(InstanceTransformGlNode, CATEGORY_GL.GEOMETRY);

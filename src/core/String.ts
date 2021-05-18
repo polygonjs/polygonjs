@@ -168,7 +168,13 @@ export class CoreString {
 		}
 	}
 	static ensureInteger(num: number): string {
-		return `${Math.floor(num)}`;
+		const num_as_string = `${num}`;
+		const dot_pos = num_as_string.indexOf('.');
+		if (dot_pos >= 0) {
+			return num_as_string.split('.')[0];
+		} else {
+			return num_as_string;
+		}
 	}
 
 	// https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438

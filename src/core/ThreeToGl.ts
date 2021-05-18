@@ -67,64 +67,78 @@ export class ThreeToGl {
 	}
 
 	static vector3_float(vec: Vector3 | string, num: number | string): string {
-		if (!CoreType.isString(num)) {
+		if (CoreType.isNumber(num)) {
 			num = CoreString.ensureFloat(num);
 		}
 		return `vec4(${this.vector3(vec)}, ${num})`;
 	}
 
 	static float4(x: number | string, y: number | string, z: number | string, w: number | string) {
-		if (!CoreType.isString(x)) {
+		if (CoreType.isNumber(x)) {
 			x = CoreString.ensureFloat(x);
 		}
-		if (!CoreType.isString(y)) {
+		if (CoreType.isNumber(y)) {
 			y = CoreString.ensureFloat(y);
 		}
-		if (!CoreType.isString(z)) {
+		if (CoreType.isNumber(z)) {
 			z = CoreString.ensureFloat(z);
 		}
-		if (!CoreType.isString(w)) {
+		if (CoreType.isNumber(w)) {
 			w = CoreString.ensureFloat(w);
 		}
 		return `vec4(${x}, ${y}, ${z}, ${w})`;
 	}
 	static float3(x: number | string, y: number | string, z: number | string) {
-		if (!CoreType.isString(x)) {
+		if (CoreType.isNumber(x)) {
 			x = CoreString.ensureFloat(x);
 		}
-		if (!CoreType.isString(y)) {
+		if (CoreType.isNumber(y)) {
 			y = CoreString.ensureFloat(y);
 		}
-		if (!CoreType.isString(z)) {
+		if (CoreType.isNumber(z)) {
 			z = CoreString.ensureFloat(z);
 		}
 		return `vec3(${x}, ${y}, ${z})`;
 	}
 	static float2(x: number | string, y: number | string) {
-		if (!CoreType.isString(x)) {
+		if (CoreType.isNumber(x)) {
 			x = CoreString.ensureFloat(x);
 		}
-		if (!CoreType.isString(y)) {
+		if (CoreType.isNumber(y)) {
 			y = CoreString.ensureFloat(y);
 		}
 		return `vec2(${x}, ${y})`;
 	}
-	static float(x: number | string) {
-		if (!CoreType.isString(x)) {
-			x = CoreString.ensureFloat(x);
+	static float(x: number | string): string {
+		if (CoreType.isNumber(x)) {
+			return CoreString.ensureFloat(x);
+		} else {
+			const converted = parseFloat(x);
+			if (CoreType.isNaN(converted)) {
+				return x;
+			} else {
+				return CoreString.ensureFloat(converted);
+			}
 		}
-		return `${x}`;
 	}
-	static integer(x: number | string) {
-		if (!CoreType.isString(x)) {
+	static integer(x: number | string): string {
+		if (CoreType.isNumber(x)) {
 			return CoreString.ensureInteger(x);
+		} else {
+			const converted = parseInt(x);
+			if (CoreType.isNaN(converted)) {
+				return x;
+			} else {
+				return CoreString.ensureInteger(converted);
+			}
 		}
-		return `${parseInt(x)}`;
 	}
-	static int(x: number | string) {
-		return `${x}`;
-	}
-	static bool(x: number | string) {
-		return `${x}`;
+
+	static bool(x: boolean | string) {
+		if (CoreType.isBoolean(x)) {
+			return `${x}`;
+		} else {
+			return x;
+		}
 	}
 }

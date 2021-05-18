@@ -292,7 +292,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 float ${this.fbm_method_name()} (in ${input_type} st) {
 	float value = 0.0;
 	float amplitude = 1.0;
-	for (int i = 0; i < ${ThreeToGl.int(this.pv.octaves)}; i++) {
+	for (int i = 0; i < ${ThreeToGl.integer(this.pv.octaves)}; i++) {
 		value += amplitude * ${method_name}(st);
 		st *= ${ThreeToGl.float(this.pv.freqIncrease)};
 		amplitude *= ${ThreeToGl.float(this.pv.ampAttenuation)};

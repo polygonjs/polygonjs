@@ -274,7 +274,6 @@ export class TextureAllocationsController {
 	}
 
 	static fromJSON(data: TextureAllocationsControllerData): TextureAllocationsController {
-		console.log('TextureAllocationsController.fromJSON');
 		const controller = new TextureAllocationsController();
 		for (let datum of data.writable) {
 			const shader_name = Object.keys(datum)[0] as ShaderName;
@@ -286,7 +285,6 @@ export class TextureAllocationsController {
 			const shader_name = Object.keys(datum)[0] as ShaderName;
 			const allocation_data = datum[shader_name];
 			const new_allocation = TextureAllocation.fromJSON(allocation_data);
-			console.log('add readonly');
 			controller._addReadonlyAllocation(new_allocation);
 		}
 		return controller;

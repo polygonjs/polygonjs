@@ -15,6 +15,7 @@ import {Vector2Param} from '../../params/Vector2';
 import {Vector3Param} from '../../params/Vector3';
 import {Vector4Param} from '../../params/Vector4';
 import {ColorParam} from '../../params/Color';
+import {BooleanParam} from '../../params/Boolean';
 
 const REGEX_PATH_SANITIZE = /\/+/g;
 
@@ -65,7 +66,9 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		return `v_POLY_${path_sanitized}_${name}`;
 	}
 
-	variableForInputParam(param: IntegerParam | FloatParam | Vector2Param | Vector3Param | Vector4Param | ColorParam) {
+	variableForInputParam(
+		param: IntegerParam | FloatParam | Vector2Param | Vector3Param | Vector4Param | ColorParam | BooleanParam
+	) {
 		return this.variableForInput(param.name());
 	}
 
