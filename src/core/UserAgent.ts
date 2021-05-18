@@ -15,4 +15,10 @@ export class CoreUserAgent {
 	static isAndroid(): boolean {
 		return /(Android)/g.test(navigator.userAgent);
 	}
+	static isTouchDevice(): boolean {
+		// https://stackoverflow.com/questions/6262584/how-to-determine-if-the-client-is-a-touch-device
+		var el = document.createElement('div');
+		el.setAttribute('ongesturestart', 'return;'); // or try "ontouchstart"
+		return typeof (el as any).ongesturestart === 'function';
+	}
 }

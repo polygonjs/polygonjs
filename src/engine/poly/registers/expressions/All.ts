@@ -5,6 +5,8 @@ import {CentroidExpression} from '../../../expressions/methods/centroid';
 import {ChExpression} from '../../../expressions/methods/ch';
 import {CopyExpression} from '../../../expressions/methods/copy';
 import {CopResExpression} from '../../../expressions/methods/copRes';
+import {isDeviceMobileExpression} from '../../../expressions/methods/isDeviceMobile';
+import {isDeviceTouchExpression} from '../../../expressions/methods/isDeviceTouch';
 import {JsExpression} from '../../../expressions/methods/js';
 import {ObjectExpression} from '../../../expressions/methods/object';
 import {ObjectsCountExpression} from '../../../expressions/methods/objectsCount';
@@ -28,6 +30,8 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	ch: typeof ChExpression;
 	copy: typeof CopyExpression;
 	copRes: typeof CopResExpression;
+	isDeviceMobile: typeof isDeviceMobileExpression;
+	isDeviceTouch: typeof isDeviceTouchExpression;
 	js: typeof JsExpression;
 	object: typeof ObjectExpression;
 	objectsCount: typeof ObjectsCountExpression;
@@ -54,6 +58,8 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(ChExpression, 'ch');
 		poly.expressionsRegister.register(CopyExpression, 'copy');
 		poly.expressionsRegister.register(CopResExpression, 'copRes');
+		poly.expressionsRegister.register(isDeviceMobileExpression, 'isDeviceMobile');
+		poly.expressionsRegister.register(isDeviceTouchExpression, 'isDeviceTouch');
 		poly.expressionsRegister.register(JsExpression, 'js');
 		poly.expressionsRegister.register(ObjectExpression, 'object');
 		poly.expressionsRegister.register(ObjectsCountExpression, 'objectsCount');
