@@ -27,6 +27,9 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 	}
 
 	private _video: HTMLVideoElement | undefined;
+	HTMLVideoElement() {
+		return this._video;
+	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
 	static displayedInputNames(): string[] {
@@ -37,20 +40,28 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	async cook(input_contents: Texture[]) {
+	private _createHTMLVideoElement() {
 		if (this._video) {
 			document.body.removeChild(this._video);
 		}
-		const video_element = '<video style="display:none" autoplay muted playsinline></video>';
-		const video_container = document.createElement('div');
-		video_container.innerHTML = video_element;
-		this._video = video_container.children[0] as HTMLVideoElement;
-		// this._video = document.createElement('video');
-		// this._video.autoplay = true;
-		// this._video.setAttribute('playsinline', 'true');
-		// this._video.setAttribute('muted', 'true');
-		// this._video.style.display = 'none';
-		document.body.appendChild(video_container);
+		const element = document.createElement('video');
+		element.style.display = 'none';
+		// make sure to call this during the cook method
+		// to ensure that res.x and res.y have a value
+		element.width = this.pv.res.x;
+		element.height = this.pv.res.y;
+		element.autoplay = true;
+		element.setAttribute('autoplay', 'true');
+		element.setAttribute('muted', 'true');
+		element.setAttribute('playsinline', 'true');
+		document.body.appendChild(element);
+
+		return element;
+	}
+
+	async cook(input_contents: Texture[]) {
+		this._video = this._createHTMLVideoElement();
+
 		const texture = new VideoTexture(this._video);
 		const inputTexture = input_contents[0];
 		if (inputTexture) {
