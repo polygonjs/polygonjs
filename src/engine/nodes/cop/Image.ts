@@ -61,11 +61,15 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.url], () => {
+				let params: BaseParamType[] = [this.p.url];
+				params = params.concat(this.textureParamsController.paramLabelsParams());
+				this.params.label.init(params, () => {
 					const url = this.p.url.rawInput();
 					if (url) {
 						const elements = url.split('/');
-						return elements[elements.length - 1];
+						const urlLabel = elements[elements.length - 1];
+						const textureLabels = this.textureParamsController.paramLabels();
+						return [urlLabel].concat(textureLabels);
 					} else {
 						return '';
 					}

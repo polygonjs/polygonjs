@@ -101,6 +101,7 @@ import {TransformResetSopNode} from '../../../nodes/sop/TransformReset';
 import {TubeSopNode} from '../../../nodes/sop/Tube';
 import {UvLayoutSopNode} from '../../../nodes/sop/UvLayout';
 import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
+import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 // networks
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
@@ -207,6 +208,7 @@ export interface GeoNodeChildrenMap {
 	tube: TubeSopNode;
 	uvLayout: UvProjectSopNode;
 	uvProject: UvProjectSopNode;
+	uvTransform: UvTransformSopNode;
 	uvUnwrap: UvUnwrapSopNode;
 
 	// networks
@@ -260,6 +262,7 @@ import {TorusSopOperation} from '../../../operations/sop/Torus';
 import {TorusKnotSopOperation} from '../../../operations/sop/TorusKnot';
 import {TransformSopOperation} from '../../../operations/sop/Transform';
 import {UvLayoutSopOperation} from '../../../operations/sop/UvLayout';
+import {UvTransformSopOperation} from '../../../operations/sop/UvTransform';
 import {UvUnwrapSopOperation} from '../../../operations/sop/UvUnwrap';
 
 import {PolyEngine} from '../../../Poly';
@@ -307,6 +310,7 @@ export class SopRegister {
 		poly.registerOperation(TorusKnotSopOperation);
 		poly.registerOperation(TransformSopOperation);
 		poly.registerOperation(UvLayoutSopOperation);
+		poly.registerOperation(UvTransformSopOperation);
 		poly.registerOperation(UvUnwrapSopOperation);
 
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
@@ -418,6 +422,7 @@ export class SopRegister {
 		poly.registerNode(TubeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(UvLayoutSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		// networks
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);

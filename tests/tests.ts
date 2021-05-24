@@ -218,6 +218,7 @@ import './engine/nodes/sop/TransformCopy';
 import './engine/nodes/sop/TransformReset';
 import './engine/nodes/sop/Tube';
 import './engine/nodes/sop/UvProject';
+import './engine/nodes/sop/UvTransform';
 import './engine/nodes/sop/UvUnwrap';
 
 QUnit.module('viewer');

@@ -10,8 +10,10 @@ import {
 	LinearFilter,
 } from 'three/src/constants';
 import {
+	MAG_FILTERS,
 	MAG_FILTER_DEFAULT_VALUE,
 	MAG_FILTER_MENU_ENTRIES,
+	MIN_FILTERS,
 	MIN_FILTER_DEFAULT_VALUE,
 	MIN_FILTER_MENU_ENTRIES,
 } from '../../../../core/cop/Filter';
@@ -530,5 +532,86 @@ export class TextureParamsController {
 		texture.type = inputTexture.type;
 		texture.format = inputTexture.format;
 		texture.needsUpdate = true;
+	}
+	paramLabelsParams() {
+		const p = this.node.p;
+		return [
+			// encoding
+			p.tencoding,
+			p.encoding,
+			// mapping
+			p.tmapping,
+			p.mapping,
+			// wrap
+			p.twrap,
+			p.wrapS,
+			p.wrapT,
+			// filter
+			p.tminFilter,
+			p.minFilter,
+			p.tmagFilter,
+			p.magFilter,
+			// flipY
+			p.tflipY,
+			p.flipY,
+		];
+	}
+	paramLabels() {
+		const labels: string[] = [];
+		const pv = this.node.pv;
+		if (isBooleanTrue(pv.tencoding)) {
+			for (let encoding of ENCODINGS) {
+				const encodingName = Object.keys(encoding)[0];
+				const encodingValue = (encoding as any)[encodingName];
+				if (encodingValue == pv.encoding) {
+					labels.push(`encoding: ${encodingName}`);
+				}
+			}
+		}
+		if (isBooleanTrue(pv.tmapping)) {
+			for (let mapping of MAPPINGS) {
+				const mappingName = Object.keys(mapping)[0];
+				const mappingValue = (mapping as any)[mappingName];
+				if (mappingValue == pv.mapping) {
+					labels.push(`mapping: ${mappingName}`);
+				}
+			}
+		}
+		if (isBooleanTrue(pv.twrap)) {
+			function setWrapping(wrappingAxis: 'wrapS' | 'wrapT') {
+				for (let wrapping of WRAPPINGS) {
+					const wrappingName = Object.keys(wrapping)[0];
+					const wrappingValue = (wrapping as any)[wrappingName];
+					if (wrappingValue == pv[wrappingAxis]) {
+						labels.push(`${wrappingAxis}: ${wrappingName}`);
+					}
+				}
+			}
+			setWrapping('wrapS');
+			setWrapping('wrapT');
+		}
+		if (isBooleanTrue(pv.tminFilter)) {
+			for (let minFilter of MIN_FILTERS) {
+				const minFilterName = Object.keys(minFilter)[0];
+				const minFilterValue = (minFilter as any)[minFilterName];
+				if (minFilterValue == pv.minFilter) {
+					labels.push(`minFilter: ${minFilterName}`);
+				}
+			}
+		}
+		if (isBooleanTrue(pv.tmagFilter)) {
+			for (let magFilter of MAG_FILTERS) {
+				const magFilterName = Object.keys(magFilter)[0];
+				const magFilterValue = (magFilter as any)[magFilterName];
+				if (magFilterValue == pv.magFilter) {
+					labels.push(`magFilter: ${magFilterName}`);
+				}
+			}
+		}
+		if (isBooleanTrue(pv.tflipY)) {
+			labels.push(`flipY: ${pv.flipY}`);
+		}
+
+		return labels;
 	}
 }

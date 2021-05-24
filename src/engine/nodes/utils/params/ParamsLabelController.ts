@@ -7,13 +7,11 @@ import {IntegerParam} from '../../../params/Integer';
 import {NodePathParam} from '../../../params/NodePath';
 import {ParamPathParam} from '../../../params/ParamPath';
 
-type LabelControllerCallback = () => string;
+type LabelControllerCallback = () => string | string[];
 
 export class ParamsLabelController {
 	private _callback: LabelControllerCallback | undefined;
 	private _params: BaseParamType[] | undefined;
-	// private _graph_node: CoreGraphNode | undefined;
-	constructor() {}
 
 	dispose() {
 		this._callback = undefined;
@@ -47,7 +45,6 @@ export class ParamsLabelController {
 					return this._handle_number_param(param as IntegerParam);
 			}
 		}
-		// this.graph_node.addGraphInput(this._param, false);
 	}
 
 	private _handle_string_param(param: StringParam) {
@@ -75,26 +72,4 @@ export class ParamsLabelController {
 			return `${param.value}`;
 		};
 	}
-
-	// set_callback(params: BaseParamType[], callback: LabelControllerCallback) {
-	// 	// for (let param of params) {
-	// 	// 	this.graph_node.addGraphInput(param, false);
-	// 	// }
-	// 	this._params = params
-	// 	this._callback = callback;
-	// }
-
-	// private get graph_node() {
-	// 	return (this._graph_node = this._graph_node || this._create_graph_node());
-	// }
-	// private _create_graph_node() {
-	// 	const graph_node = new CoreGraphNode(this.params_controller.node.scene, 'ParamsLabelController');
-	// 	graph_node.addPostDirtyHook('update_param_label', () => {
-	// 		console.log('dirty');
-	// 		if (this._callback) {
-	// 			console.log(this._callback());
-	// 		}
-	// 	});
-	// 	return graph_node;
-	// }
 }
