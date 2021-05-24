@@ -4,14 +4,19 @@ QUnit.test('UvTransform simple', async (assert) => {
 	const uvTransform = geo1.createNode('uvTransform');
 
 	uvTransform.setInput(0, plane);
-	uvTransform.p.s.set([0.5, 0.5]);
-	uvTransform.p.pivot.set([0.5, 0.5]);
 
-	let container = await uvTransform.compute();
-	let core_group = container.coreContent()!;
-	let geometry0 = core_group.objectsWithGeo()[0].geometry;
-	assert.deepEqual(
-		(geometry0.getAttribute('uv').array as number[]).join(','),
-		[-0.25, 0.25, 0.25, 0.25, -0.25, -0.25, 0.25, -0.25].join(',')
-	);
+	async function assertUv(array: number[]) {
+		let container = await uvTransform.compute();
+		let core_group = container.coreContent()!;
+		let geometry0 = core_group.objectsWithGeo()[0].geometry;
+		assert.deepEqual((geometry0.getAttribute('uv').array as number[]).join(','), array.join(','));
+	}
+
+	await assertUv([0, 1, 1, 1, 0, 0, 1, 0]);
+
+	uvTransform.p.pivot.set([0.5, 0.5]);
+	await assertUv([0, 1, 1, 1, 0, 0, 1, 0]);
+
+	uvTransform.p.s.set([0.5, 0.5]);
+	await assertUv([0.25, 0.75, 0.75, 0.75, 0.25, 0.25, 0.75, 0.25]);
 });

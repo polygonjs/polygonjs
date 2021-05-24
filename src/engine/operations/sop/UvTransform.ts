@@ -32,8 +32,8 @@ export class UvTransformSopOperation extends BaseSopOperation {
 			const array = attrib.array as number[];
 			const ptsCount = array.length / 2;
 			for (let i = 0; i < ptsCount; i++) {
-				array[i * 2 + 0] = params.s.x * (array[i * 2 + 0] - params.pivot.x + params.t.x);
-				array[i * 2 + 1] = params.s.y * (array[i * 2 + 1] - params.pivot.y + params.t.y);
+				array[i * 2 + 0] = params.t.x + params.pivot.x + params.s.x * (array[i * 2 + 0] - params.pivot.x);
+				array[i * 2 + 1] = params.t.y + params.pivot.y + params.s.y * (array[i * 2 + 1] - params.pivot.y);
 			}
 			attrib.needsUpdate = true;
 		}
