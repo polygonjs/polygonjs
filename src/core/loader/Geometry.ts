@@ -14,6 +14,33 @@ import {GLTFLoader} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
 import {CoreUserAgent} from '../UserAgent';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
+import {TypeAssert} from '../../engine/poly/Assert';
+import {PolyScene} from '../../engine/index_all';
+
+export enum GeometryFormat {
+	AUTO = 'auto',
+	DRC = 'drc',
+	FBX = 'fbx',
+	JSON = 'json',
+	GLTF = 'gltf',
+	GLTF_WITH_DRACO = 'gltf_with_draco',
+	OBJ = 'obj',
+	PDB = 'pdb',
+	PLY = 'ply',
+	STL = 'stl',
+}
+export const GEOMETRY_FORMATS: GeometryFormat[] = [
+	GeometryFormat.AUTO,
+	GeometryFormat.DRC,
+	GeometryFormat.FBX,
+	GeometryFormat.JSON,
+	GeometryFormat.GLTF,
+	GeometryFormat.GLTF_WITH_DRACO,
+	GeometryFormat.OBJ,
+	GeometryFormat.PDB,
+	GeometryFormat.PLY,
+	GeometryFormat.STL,
+];
 
 enum GeometryExtension {
 	DRC = 'drc',
@@ -40,13 +67,25 @@ interface PdbObject {
 	geometryBonds: BufferGeometry;
 }
 type MaxConcurrentLoadsCountMethod = () => number;
+interface CoreLoaderGeometryOptions {
+	url: string;
+	format: GeometryFormat;
+}
 export class CoreLoaderGeometry extends CoreBaseLoader {
 	private static _default_mat_mesh = new MeshLambertMaterial();
 	private static _default_mat_point = new PointsMaterial();
 	private static _default_mat_line = new LineBasicMaterial();
 
+	constructor(
+		protected _options: CoreLoaderGeometryOptions,
+		protected _scene: PolyScene,
+		protected _node?: BaseNodeType
+	) {
+		super(_options.url, _scene, _node);
+	}
+
 	load(on_success: (objects: Object3D[]) => void, on_error: (error: string) => void) {
-		this.load_auto()
+		this._load()
 			.then((object) => {
 				on_success(object);
 			})
@@ -55,11 +94,11 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			});
 	}
 
-	private load_auto(): Promise<any> {
+	private _load(): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			const url = await this._urlToLoad();
 			const ext = this.extension();
-			if (ext == 'json') {
+			if (ext == 'json' && this._options.format == GeometryFormat.AUTO) {
 				CoreLoaderGeometry.increment_in_progress_loads_count();
 				await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 				fetch(url)
@@ -76,7 +115,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 						reject(error);
 					});
 			} else {
-				const loader = await this.loader_for_ext();
+				const loader = await this._loaderForFormat();
 				if (loader) {
 					CoreLoaderGeometry.increment_in_progress_loads_count();
 					await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
@@ -165,8 +204,33 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 
 		return [atoms, bonds];
 	}
+	static moduleNamesFromFormat(format: GeometryFormat, ext: string): ModuleName[] | void {
+		switch (format) {
+			case GeometryFormat.AUTO:
+				return this.moduleNamesFromExt(ext);
+			case GeometryFormat.DRC:
+				return [ModuleName.DRACOLoader];
+			case GeometryFormat.FBX:
+				return [ModuleName.FBXLoader];
+			case GeometryFormat.JSON:
+				return [];
+			case GeometryFormat.GLTF:
+				return [ModuleName.GLTFLoader];
+			case GeometryFormat.GLTF_WITH_DRACO:
+				return [ModuleName.GLTFLoader, ModuleName.DRACOLoader];
+			case GeometryFormat.OBJ:
+				return [ModuleName.OBJLoader];
+			case GeometryFormat.PDB:
+				return [ModuleName.PDBLoader];
+			case GeometryFormat.PLY:
+				return [ModuleName.PLYLoader];
+			case GeometryFormat.STL:
+				return [ModuleName.STLLoader];
+		}
+		TypeAssert.unreachable(format);
+	}
 
-	static module_names(ext: string): ModuleName[] | void {
+	static moduleNamesFromExt(ext: string): ModuleName[] | void {
 		switch (ext) {
 			case GeometryExtension.DRC:
 				return [ModuleName.DRACOLoader];
@@ -186,8 +250,33 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 				return [ModuleName.STLLoader];
 		}
 	}
-
-	async loader_for_ext() {
+	private async _loaderForFormat() {
+		const format = this._options.format;
+		switch (format) {
+			case GeometryFormat.AUTO:
+				return this._loaderForExt();
+			case GeometryFormat.DRC:
+				return this.loader_for_drc(this._node);
+			case GeometryFormat.FBX:
+				return this.loader_for_fbx();
+			case GeometryFormat.JSON:
+				return;
+			case GeometryFormat.GLTF:
+				return this.loader_for_gltf();
+			case GeometryFormat.GLTF_WITH_DRACO:
+				return this.loader_for_glb(this._node);
+			case GeometryFormat.OBJ:
+				return this.loader_for_obj();
+			case GeometryFormat.PDB:
+				return this.loader_for_pdb();
+			case GeometryFormat.PLY:
+				return this.loader_for_ply();
+			case GeometryFormat.STL:
+				return this.loader_for_stl();
+		}
+		TypeAssert.unreachable(format);
+	}
+	private async _loaderForExt() {
 		const ext = this.extension();
 
 		switch (ext.toLowerCase()) {

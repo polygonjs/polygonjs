@@ -23,6 +23,7 @@ const FOR_ENTITIES = 'forEntities';
 const LABEL = 'label';
 const LEVEL = 'level';
 const MENU = 'menu';
+const MENU_STRING = 'menuString';
 const ENTRIES = 'entries';
 // const TYPE = 'type';
 // const RADIO = 'radio';
@@ -62,7 +63,7 @@ export interface MenuNumericParamOptions {
 	};
 }
 export interface MenuStringParamOptions {
-	menu?: {
+	menuString?: {
 		entries: StringParamOptionsMenuEntry[];
 	};
 }
@@ -173,6 +174,7 @@ export interface RampParamOptions extends BaseParamOptions {}
 export interface SeparatorParamOptions extends BaseParamOptions {}
 export interface StringParamOptions
 	extends BaseParamOptions,
+		MenuStringParamOptions,
 		FileParamOptions,
 		CallbackParamOptions,
 		ExpressionParamOptions {
@@ -414,30 +416,23 @@ export class OptionsController {
 
 	// menu
 	hasMenu() {
-		return this.menuOptions() != null;
+		return this.menuOptions() != null || this.menuStringOptions() != null;
 	}
 
 	private menuOptions() {
 		return this._options[MENU];
 	}
-	// private get menu_type() {
-	// 	if(this.menu_options){
-	// 		return this.menu_options[TYPE];
-	// 	}
-	// }
-
+	private menuStringOptions() {
+		return this._options[MENU_STRING];
+	}
 	menuEntries() {
-		const options = this.menuOptions();
+		const options = this.menuOptions() || this.menuStringOptions();
 		if (options) {
 			return options[ENTRIES];
 		} else {
 			return [];
 		}
 	}
-
-	// hasMenuRadio() {
-	// 	return this.hasMenu(); //&& this.menu_options[TYPE] === RADIO;
-	// }
 
 	// multiline
 	isMultiline(): boolean {

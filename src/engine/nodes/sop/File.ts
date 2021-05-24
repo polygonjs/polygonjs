@@ -6,7 +6,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
+import {CoreLoaderGeometry, GeometryFormat, GEOMETRY_FORMATS} from '../../../core/loader/Geometry';
 import {BaseNodeType} from '../_Base';
 import {FileType} from '../../params/utils/OptionsController';
 import {FileSopOperation} from '../../operations/sop/File';
@@ -19,6 +19,14 @@ class FileSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
 		fileBrowse: {type: [FileType.GEOMETRY]},
+	});
+	/** @param format */
+	format = ParamConfig.STRING(DEFAULT.format, {
+		menuString: {
+			entries: GEOMETRY_FORMATS.map((name) => {
+				return {name, value: name};
+			}),
+		},
 	});
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {
@@ -35,11 +43,14 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		return 'file';
 	}
 	async requiredModules() {
-		if (this.p.url.isDirty()) {
-			await this.p.url.compute();
+		for (let p of [this.p.url, this.p.format]) {
+			if (p.isDirty()) {
+				await p.compute();
+			}
 		}
 		const ext = CoreBaseLoader.extension(this.pv.url || '');
-		return CoreLoaderGeometry.module_names(ext);
+		const format = this.pv.format as GeometryFormat;
+		return CoreLoaderGeometry.moduleNamesFromFormat(format, ext);
 	}
 
 	initializeNode() {

@@ -4,24 +4,30 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
-import {CoreLoaderGeometry} from '../../../core/loader/Geometry';
+import {CoreLoaderGeometry, GeometryFormat} from '../../../core/loader/Geometry';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 
 interface FileSopParams extends DefaultOperationParams {
 	url: string;
+	format: string;
 }
 
 const DEFAULT_URL = `${ASSETS_ROOT}/models/wolf.obj`;
 export class FileSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: FileSopParams = {
 		url: DEFAULT_URL,
+		format: GeometryFormat.AUTO,
 	};
 	static type(): Readonly<'file'> {
 		return 'file';
 	}
 
 	cook(input_contents: CoreGroup[], params: FileSopParams): Promise<CoreGroup> {
-		const loader = new CoreLoaderGeometry(params.url, this.scene(), this._node);
+		const loader = new CoreLoaderGeometry(
+			{url: params.url, format: params.format as GeometryFormat},
+			this.scene(),
+			this._node
+		);
 
 		return new Promise((resolve) => {
 			loader.load(
