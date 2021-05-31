@@ -6,7 +6,6 @@
  * [https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491](https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491)
  */
 import {Constructor} from '../../../types/GlobalTypes';
-import {VideoTexture} from 'three/src/textures/VideoTexture';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedCopNode} from './_Base';
 import {CoreLoaderTexture} from '../../../core/loader/Texture';
@@ -78,7 +77,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		});
 	}
 	async cook(input_contents: Texture[]) {
-		if (CopFileTypeController.is_static_image_url(this.pv.url)) {
+		if (CopFileTypeController.isStaticImageUrl(this.pv.url)) {
 			const texture = await this._loadTexture(this.pv.url);
 
 			if (texture) {
@@ -112,7 +111,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	}
 
 	private async _loadTexture(url: string) {
-		let texture: Texture | VideoTexture | null = null;
+		let texture: Texture | null = null;
 		const url_param = this.p.url;
 		const textureLoader = new CoreLoaderTexture(url, url_param, this, this.scene());
 		try {

@@ -85,6 +85,7 @@ QUnit.module('cop');
 import './engine/nodes/cop/Builder';
 import './engine/nodes/cop/Canvas';
 import './engine/nodes/cop/EnvMap';
+import './engine/nodes/cop/Gif';
 import './engine/nodes/cop/Image';
 import './engine/nodes/cop/Render';
 import './engine/nodes/cop/Switch';

@@ -78,14 +78,14 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 
 	async load_texture_from_url_or_op(options: TextureLoadOptions): Promise<Texture | VideoTexture | null> {
 		let texture: Texture | null = null;
-		let found_node;
+		let foundNode: BaseNodeType | null = null;
 
 		if (this._url.substring(0, 3) == 'op:') {
 			const node_path = this._url.substring(3);
-			found_node = CoreWalker.findNode(this._node, node_path);
-			if (found_node) {
-				if (found_node instanceof BaseCopNodeClass) {
-					const container: TextureContainer = await found_node.compute();
+			foundNode = CoreWalker.findNode(this._node, node_path);
+			if (foundNode) {
+				if (foundNode instanceof BaseCopNodeClass) {
+					const container: TextureContainer = await foundNode.compute();
 					texture = container.texture();
 				} else {
 					this._node.states.error.set(`found node is not a texture node`);
@@ -103,11 +103,11 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			}
 		}
 
-		// NOTE: if this._param gets its value from an expression like `ch('/CONTROL/photo_url')`
+		// NOTE: if this._param gets its value from an expression like `ch('/CONTROL/photoUrl')`
 		// then found_node will be null, so the graph should not be changed
-		if (found_node && this._param.graphPredecessors()[0] != found_node) {
+		if (foundNode && this._param.graphPredecessors()[0] != foundNode) {
 			this._param.graphDisconnectPredecessors();
-			this._param.addGraphInput(found_node);
+			this._param.addGraphInput(foundNode);
 		}
 
 		// this._assign_texture(attrib, texture)

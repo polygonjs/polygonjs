@@ -5,6 +5,7 @@ import {CanvasCopNode} from '../../../nodes/cop/Canvas';
 import {ColorCopNode} from '../../../nodes/cop/Color';
 import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
+import {GifCopNode} from '../../../nodes/cop/Gif';
 import {ImageCopNode} from '../../../nodes/cop/Image';
 import {LightMapCopNode} from '../../../nodes/cop/LightMap';
 import {NullCopNode} from '../../../nodes/cop/Null';
@@ -28,6 +29,7 @@ export interface CopNodeChildrenMap {
 	color: ColorCopNode;
 	cubeCamera: CubeCameraCopNode;
 	envMap: EnvMapCopNode;
+	gif: GifCopNode;
 	image: ImageCopNode;
 	lightMap: LightMapCopNode;
 	null: NullCopNode;
@@ -54,6 +56,7 @@ export class CopRegister {
 		poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(CubeCameraCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);
+		poly.registerNode(GifCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ImageCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(LightMapCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
