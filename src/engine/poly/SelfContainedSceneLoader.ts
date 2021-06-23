@@ -6,6 +6,7 @@ import {ViewerData, ViewerDataByElement, UnzippedData} from './Common';
 import {DomEffects} from '../../core/DomEffects';
 import {SelfContainedFileName} from '../io/self_contained/Common';
 import {PolyScene} from '../scene/PolyScene';
+import {createObjectURL} from '../../core/BlobUtils';
 
 type SceneJsonImporterContructor = typeof SceneJsonImporter;
 
@@ -169,7 +170,6 @@ export class SelfContainedScenesLoader {
 	private _createJsBlob(array: Uint8Array, filename: string) {
 		const blob = new Blob([array]);
 		const file = new File([blob], `${filename}.js`, {type: 'application/javascript'});
-		var urlCreator = window.URL || window.webkitURL;
-		return urlCreator.createObjectURL(file);
+		return createObjectURL(file);
 	}
 }

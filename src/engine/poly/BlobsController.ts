@@ -1,7 +1,7 @@
 import {PolyScene} from '../scene/PolyScene';
 import {BaseNodeType} from '../nodes/_Base';
 import {Poly} from '../Poly';
-
+import {createObjectURL} from '../../core/BlobUtils';
 export interface BlobUrlData {
 	storedUrl: string;
 	blobUrl: string;
@@ -27,6 +27,7 @@ export class BlobsController {
 	private _globalBlobsByStoredUrl: Map<string, Blob> = new Map();
 	private _scene: PolyScene | undefined;
 	registerBlobUrl(data: BlobUrlData) {
+		console.log('registerBlobUrl', data, Poly.playerMode());
 		if (!Poly.playerMode()) {
 			return;
 		}
@@ -157,7 +158,6 @@ export class BlobsController {
 		});
 	}
 	createBlobUrl(blob: Blob) {
-		const urlCreator = window.URL || window.webkitURL;
-		return urlCreator.createObjectURL(blob);
+		return createObjectURL(blob);
 	}
 }

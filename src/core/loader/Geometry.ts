@@ -10,12 +10,13 @@ import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {DRACOLoader} from '../../modules/three/examples/jsm/loaders/DRACOLoader';
-import {GLTFLoader} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {GLTF, GLTFLoader} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
 import {CoreUserAgent} from '../UserAgent';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {PolyScene} from '../../engine/index_all';
+import {isBooleanTrue} from '../BooleanValue';
 
 export enum GeometryFormat {
 	AUTO = 'auto',
@@ -98,7 +99,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		return new Promise(async (resolve, reject) => {
 			const url = await this._urlToLoad();
 			const ext = this.extension();
-			if (ext == 'json' && this._options.format == GeometryFormat.AUTO) {
+			if (ext == GeometryFormat.JSON && this._options.format == GeometryFormat.AUTO) {
 				CoreLoaderGeometry.increment_in_progress_loads_count();
 				await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 				fetch(url)
@@ -119,9 +120,10 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 				if (loader) {
 					CoreLoaderGeometry.increment_in_progress_loads_count();
 					await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
+
 					loader.load(
 						url,
-						(object: any) => {
+						(object: Object3D | BufferGeometry | PdbObject | GLTF) => {
 							this.on_load_success(object).then((object2) => {
 								CoreLoaderGeometry.decrement_in_progress_loads_count();
 								resolve(object2);
@@ -142,48 +144,58 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		});
 	}
 
-	private async on_load_success(object: Object3D | BufferGeometry | object): Promise<Object3D[]> {
-		// if(object.animations){
-		// 	await CoreScriptLoader.load('/three/js/utils/SkeletonUtils')
-		// }
+	private async on_load_success(object: Object3D | BufferGeometry | PdbObject | GLTF): Promise<Object3D[]> {
 		const ext = this.extension();
 
-		if (object instanceof Object3D) {
+		if (ext == GeometryFormat.JSON) {
+			return [object as Object3D];
+		}
+
+		// WARNING
+		// when exporting with File->Export
+		// `object instanceof Object3D` returns false even if it is an Object3D.
+		// This needs to be investigated, but in the mean time, we test with .isObject3D
+		const obj = object as Object3D;
+		if (isBooleanTrue(obj.isObject3D)) {
 			switch (ext) {
-				case GeometryExtension.GLTF:
-					return this.on_load_succes_gltf(object);
-				case GeometryExtension.GLB:
-					return this.on_load_succes_gltf(object);
-				// case 'drc':
-				// 	return this.on_load_succes_drc(object);
+				case GeometryExtension.PDB:
+					return this.on_load_succes_pdb(object as PdbObject);
 				case GeometryExtension.OBJ:
-					return [object]; // [object] //.children
-				case 'json':
-					return [object]; // [object] //.children
+					return [obj]; // [object] //.children
 				default:
-					return [object];
+					return [obj];
 			}
 		}
-		if (object instanceof BufferGeometry) {
+		const geo = object as BufferGeometry;
+		if (geo.isBufferGeometry) {
 			switch (ext) {
 				case GeometryExtension.DRC:
-					return this.on_load_succes_drc(object);
+					return this.on_load_succes_drc(geo);
 				default:
-					return [new Mesh(object)];
+					return [new Mesh(geo)];
+			}
+		}
+		const gltf = object as GLTF;
+		if (gltf.scene != null) {
+			switch (ext) {
+				case GeometryExtension.GLTF:
+					return this.on_load_succes_gltf(gltf);
+				case GeometryExtension.GLB:
+					return this.on_load_succes_gltf(gltf);
+				default:
+					return [obj];
+			}
+		}
+		const pdbobject = object as PdbObject;
+		if (pdbobject.geometryAtoms || pdbobject.geometryBonds) {
+			switch (ext) {
+				case GeometryExtension.PDB:
+					return this.on_load_succes_pdb(pdbobject);
+				default:
+					return [];
 			}
 		}
 
-		// if it's an object, such as returned by glb or pdb
-		switch (ext) {
-			case GeometryExtension.GLTF:
-				return this.on_load_succes_gltf(object);
-			case GeometryExtension.GLB:
-				return this.on_load_succes_gltf(object);
-			case GeometryExtension.PDB:
-				return this.on_load_succes_pdb(object as PdbObject);
-			default:
-				return [];
-		}
 		return [];
 	}
 
@@ -192,7 +204,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 
 		return [mesh];
 	}
-	private on_load_succes_gltf(gltf: any): Object3D[] {
+	private on_load_succes_gltf(gltf: GLTF): Object3D[] {
 		const scene = gltf['scene'];
 		scene.animations = gltf.animations;
 

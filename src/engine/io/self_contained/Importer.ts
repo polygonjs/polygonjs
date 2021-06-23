@@ -4,6 +4,7 @@ import {ViewerDataByElement} from '../../poly/Common';
 import {ModuleName} from '../../poly/registers/modules/Common';
 import {DomEffects} from '../../../core/DomEffects';
 import {PolyEngine} from '../../Poly';
+import {createObjectURL} from '../../../core/BlobUtils';
 declare global {
 	interface Window {
 		__POLYGONJS_SELF_CONTAINED___MARK_AS_LOADED_CALLBACK__: () => void;
@@ -273,8 +274,7 @@ export class SelfContainedSceneImporter {
 	private _createJsBlob(array: Uint8Array, filename: string) {
 		const blob = new Blob([array]);
 		const file = new File([blob], `${filename}.js`, {type: 'application/javascript'});
-		var urlCreator = window.URL || window.webkitURL;
-		return urlCreator.createObjectURL(file);
+		return createObjectURL(file);
 	}
 
 	private _setupPoster(element: HTMLElement) {
