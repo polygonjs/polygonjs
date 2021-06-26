@@ -211,6 +211,7 @@ import './engine/nodes/sop/Subnet';
 import './engine/nodes/sop/Svg';
 import './engine/nodes/sop/Switch';
 import './engine/nodes/sop/Text';
+import './engine/nodes/sop/TextureCopy';
 import './engine/nodes/sop/TextureProperties';
 import './engine/nodes/sop/Torus';
 import './engine/nodes/sop/TorusKnot';

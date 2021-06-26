@@ -30,5 +30,8 @@ export function FileSopNodePresets() {
 		dolphin_obj: function (node: FileSopNode) {
 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/dolphin.obj`);
 		},
+		sphere_with_texture: function (node: FileSopNode) {
+			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/sphere_with_texture.glb`);
+		},
 	};
 }
