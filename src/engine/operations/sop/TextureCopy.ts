@@ -4,6 +4,8 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Texture} from 'three/src/textures/Texture';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {CoreType} from '../../../core/Type';
 interface TextureCopySopParams extends DefaultOperationParams {
 	textureName: string;
 }
@@ -26,8 +28,10 @@ export class TextureCopySopOperation extends BaseSopOperation {
 			object.traverse((child) => {
 				const mat = (child as Mesh).material;
 				if (mat) {
-					if (!texture) {
-						texture = (mat as any)[params.textureName] as Texture;
+					if (!CoreType.isArray(mat)) {
+						if (!texture) {
+							texture = (mat as any)[params.textureName] as Texture;
+						}
 					}
 				}
 			});
@@ -37,7 +41,17 @@ export class TextureCopySopOperation extends BaseSopOperation {
 				object.traverse((child) => {
 					const mat = (child as Mesh).material;
 					if (mat) {
-						(mat as any)[params.textureName] = texture;
+						if (!CoreType.isArray(mat)) {
+							(mat as any)[params.textureName] = texture;
+							const uniforms = (mat as ShaderMaterial).uniforms;
+							if (uniforms) {
+								const uniform = uniforms[params.textureName];
+								if (uniform) {
+									uniform.value = texture;
+								}
+							}
+							mat.needsUpdate = true;
+						}
 					}
 				});
 			}

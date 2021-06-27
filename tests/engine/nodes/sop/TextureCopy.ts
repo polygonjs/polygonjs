@@ -1,7 +1,22 @@
 import {Mesh} from 'three/src/objects/Mesh';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {Texture} from 'three/src/textures/Texture';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+
+async function findTexture(node: BaseSopNodeType, textureName: string) {
+	const container = await node.compute();
+	const coreGroup = container.coreContent()!;
+	let texture: Texture | undefined;
+	for (let object of coreGroup.objects() as Mesh[]) {
+		object.traverse((child) => {
+			const mat = (child as Mesh).material;
+			if (mat) {
+				texture = (mat as any)[textureName];
+			}
+		});
+	}
+	return texture;
+}
 
 QUnit.test('textureCopy simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -14,10 +29,14 @@ QUnit.test('textureCopy simple', async (assert) => {
 	textureCopy1.setInput(0, sphere1);
 	textureCopy1.setInput(1, file1);
 
-	const container = await textureCopy1.compute();
-	const coreGroup = container.coreContent()!;
-	const texture = ((coreGroup.objects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
+	const textureName = 'map';
+	const fileTexture = (await findTexture(file1, textureName))!;
+	const copiedTexture = (await findTexture(textureCopy1, textureName))!;
 
-	assert.equal(texture.image.width, 2048);
-	assert.equal(texture.image.height, 2048);
+	assert.ok(fileTexture);
+	assert.ok(copiedTexture);
+	assert.equal(fileTexture.uuid, copiedTexture.uuid);
+
+	assert.equal(copiedTexture.image.width, 2048);
+	assert.equal(copiedTexture.image.height, 2048);
 });
