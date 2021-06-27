@@ -9,6 +9,7 @@ import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
 import {DelayEventNode} from '../../../nodes/event/Delay';
 // import {CodeEventNode} from '../../../nodes/event/Code';
+import {DragEventNode} from '../../../nodes/event/Drag';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 import {LimitEventNode} from '../../../nodes/event/Limit';
 import {MessageEventNode} from '../../../nodes/event/Message';
@@ -42,6 +43,7 @@ export interface EventNodeChildrenMap {
 	cameraMapControls: CameraOrbitControlsEventNode;
 	cameraOrbitControls: CameraMapControlsEventNode;
 	delay: DelayEventNode;
+	drag: DragEventNode;
 	// code: CodeEventNode;
 	keyboard: KeyboardEventNode;
 	limit: LimitEventNode;
@@ -81,6 +83,7 @@ export class EventRegister {
 		poly.registerNode(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(DelayEventNode, CATEGORY_EVENT.MISC);
 		// poly.registerNode(CodeEventNode, CATEGORY_EVENT.ADVANCED);
+		poly.registerNode(DragEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(KeyboardEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(LimitEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(MessageEventNode, CATEGORY_EVENT.MISC);

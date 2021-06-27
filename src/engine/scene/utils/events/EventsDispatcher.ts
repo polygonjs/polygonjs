@@ -10,14 +10,17 @@ import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
 
 import {BaseSceneEventsController, BaseSceneEventsControllerClass} from './_BaseEventsController';
 import {SceneEventsController} from './SceneEventsController';
+import {DragEventsController} from './DragEventsController';
 import {KeyboardEventsController} from './KeyboardEventsController';
 import {MouseEventsController} from './MouseEventsController';
 import {PointerEventsController} from './PointerEventsController';
 import {WindowEventsController} from './WindowEventsController';
+import {DragEventNode} from '../../../nodes/event/Drag';
 
 export class SceneEventsDispatcher {
 	private _keyboard_events_controller: KeyboardEventsController | undefined;
 	private _mouse_events_controller: MouseEventsController | undefined;
+	private _drag_events_controller: DragEventsController | undefined;
 	private _pointer_events_controller: PointerEventsController | undefined;
 	private _scene_events_controller: SceneEventsController | undefined;
 	private _window_events_controller: WindowEventsController | undefined;
@@ -68,6 +71,8 @@ export class SceneEventsDispatcher {
 				return this.keyboardEventsController;
 			case MouseEventNode.type():
 				return this.mouseEventsController;
+			case DragEventNode.type():
+				return this.dragEventsController;
 			case PointerEventNode.type():
 				return this.pointerEventsController;
 			case SceneEventNode.type():
@@ -84,6 +89,10 @@ export class SceneEventsDispatcher {
 	get mouseEventsController() {
 		return (this._mouse_events_controller =
 			this._mouse_events_controller || this._create_controller(MouseEventsController));
+	}
+	get dragEventsController() {
+		return (this._drag_events_controller =
+			this._drag_events_controller || this._create_controller(DragEventsController));
 	}
 	get pointerEventsController() {
 		return (this._pointer_events_controller =

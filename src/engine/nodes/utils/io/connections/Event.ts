@@ -6,6 +6,7 @@
 
 export enum EventConnectionPointType {
 	BASE = 'base',
+	DRAG = 'drag',
 	KEYBOARD = 'keyboard',
 	MOUSE = 'mouse',
 	POINTER = 'pointer',

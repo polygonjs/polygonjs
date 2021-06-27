@@ -13,7 +13,7 @@ export function AttributeGlNodePresets() {
 		},
 		instanceOrientation: function (node: AttributeGlNode) {
 			node.p.name.set('instanceOrientation');
-			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));
+			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC4));
 		},
 		instancePosition: function (node: AttributeGlNode) {
 			node.p.name.set('instancePosition');
