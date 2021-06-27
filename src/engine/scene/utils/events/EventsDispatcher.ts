@@ -15,7 +15,9 @@ import {KeyboardEventsController} from './KeyboardEventsController';
 import {MouseEventsController} from './MouseEventsController';
 import {PointerEventsController} from './PointerEventsController';
 import {WindowEventsController} from './WindowEventsController';
+import {TouchEventsController} from './TouchEventsController';
 import {DragEventNode} from '../../../nodes/event/Drag';
+import {TouchEventNode} from '../../../nodes/event/Touch';
 
 export class SceneEventsDispatcher {
 	private _keyboard_events_controller: KeyboardEventsController | undefined;
@@ -24,6 +26,7 @@ export class SceneEventsDispatcher {
 	private _pointer_events_controller: PointerEventsController | undefined;
 	private _scene_events_controller: SceneEventsController | undefined;
 	private _window_events_controller: WindowEventsController | undefined;
+	private _touch_events_controller: TouchEventsController | undefined;
 	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
@@ -77,6 +80,8 @@ export class SceneEventsDispatcher {
 				return this.pointerEventsController;
 			case SceneEventNode.type():
 				return this.sceneEventsController;
+			case TouchEventNode.type():
+				return this.touchEventsController;
 			case WindowEventNode.type():
 				return this.windowEventsController;
 		}
@@ -105,6 +110,10 @@ export class SceneEventsDispatcher {
 	get windowEventsController() {
 		return (this._window_events_controller =
 			this._window_events_controller || this._create_controller(WindowEventsController));
+	}
+	get touchEventsController() {
+		return (this._touch_events_controller =
+			this._touch_events_controller || this._create_controller(TouchEventsController));
 	}
 	private _create_controller<T extends BaseSceneEventsControllerClass>(event_constructor: Constructor<T>): T {
 		const controller = new event_constructor(this);

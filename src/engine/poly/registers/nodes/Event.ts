@@ -24,6 +24,7 @@ import {SetFlagEventNode} from '../../../nodes/event/SetFlag';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
 import {SequenceEventNode} from '../../../nodes/event/Sequence';
 import {TimerEventNode} from '../../../nodes/event/Timer';
+import {TouchEventNode} from '../../../nodes/event/Touch';
 import {ViewerEventNode} from '../../../nodes/event/Viewer';
 import {WindowEventNode} from '../../../nodes/event/Window';
 // networks
@@ -59,6 +60,7 @@ export interface EventNodeChildrenMap {
 	setParam: SetParamEventNode;
 	sequence: SequenceEventNode;
 	timer: TimerEventNode;
+	touch: TouchEventNode;
 	viewer: ViewerEventNode;
 	window: WindowEventNode;
 
@@ -98,6 +100,7 @@ export class EventRegister {
 		poly.registerNode(SetParamEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(SequenceEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(TimerEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(TouchEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(WindowEventNode, CATEGORY_EVENT.INPUT);
 		// networks

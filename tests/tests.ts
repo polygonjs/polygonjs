@@ -96,6 +96,7 @@ import './engine/nodes/event/Drag';
 import './engine/nodes/event/NodeCook';
 import './engine/nodes/event/Pointer';
 import './engine/nodes/event/SetParam';
+import './engine/nodes/event/Touch';
 
 QUnit.module('gl');
 import './engine/nodes/gl/Add';

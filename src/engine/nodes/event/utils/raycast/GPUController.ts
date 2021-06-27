@@ -40,17 +40,23 @@ export class RaycastGPUController {
 	private _read = new Float32Array(4);
 	private _param_read: Number4 = [0, 0, 0, 0];
 	constructor(private _node: RaycastEventNode) {}
-	update_mouse(context: EventContext<MouseEvent>) {
+	updateMouse(context: EventContext<MouseEvent | DragEvent | PointerEvent>) {
 		const canvas = context.viewer?.canvas();
 		if (!(canvas && context.event)) {
 			return;
 		}
 
-		if (context.event instanceof MouseEvent) {
+		if (
+			context.event instanceof MouseEvent ||
+			context.event instanceof DragEvent ||
+			context.event instanceof PointerEvent
+		) {
 			this._mouse.x = context.event.offsetX / canvas.offsetWidth;
 			this._mouse.y = 1 - context.event.offsetY / canvas.offsetHeight;
 			this._mouse.toArray(this._mouse_array);
 			this._node.p.mouse.set(this._mouse_array);
+		} else {
+			console.warn('event type not implemented');
 		}
 	}
 
