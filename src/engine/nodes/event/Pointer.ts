@@ -10,11 +10,21 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
 class PointerEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType) => {
 			PointerEventNode.PARAM_CALLBACK_updateRegister(node as PointerEventNode);
+		},
+		separatorAfter: true,
+	});
+	/** @param set which element triggers the event */
+	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
+		menu: {
+			entries: EVENT_EMITTERS.map((name, value) => {
+				return {name, value};
+			}),
 		},
 		separatorAfter: true,
 	});

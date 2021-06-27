@@ -9,6 +9,7 @@ import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
 class TouchEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -17,6 +18,16 @@ class TouchEventParamsConfig extends NodeParamsConfig {
 		},
 		separatorAfter: true,
 	});
+	/** @param set which element triggers the event */
+	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
+		menu: {
+			entries: EVENT_EMITTERS.map((name, value) => {
+				return {name, value};
+			}),
+		},
+		separatorAfter: true,
+	});
+
 	/** @param toggle on to listen to touchstart events */
 	touchstart = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to listen to touchmove events */

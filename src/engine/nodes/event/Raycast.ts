@@ -302,6 +302,10 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	static type() {
 		return 'raycast';
 	}
+	static readonly INPUT_TRIGGER = 'trigger';
+	static readonly INPUT_MOUSE = 'mouse';
+	static readonly INPUT_UPDATE_OBJECTS = 'updateObjects';
+	static readonly INPUT_TRIGGER_VEL_RESET = 'triggerVelReset';
 	static readonly OUTPUT_HIT = 'hit';
 	static readonly OUTPUT_MISS = 'miss';
 
@@ -311,18 +315,22 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
-				'trigger',
+				RaycastEventNode.INPUT_TRIGGER,
 				EventConnectionPointType.BASE,
 				this._process_trigger_event_throttled.bind(this)
 			),
-			new EventConnectionPoint('mouse', EventConnectionPointType.MOUSE, this._process_mouse_event.bind(this)),
 			new EventConnectionPoint(
-				'updateObjects',
+				RaycastEventNode.INPUT_MOUSE,
+				EventConnectionPointType.MOUSE,
+				this._process_mouse_event.bind(this)
+			),
+			new EventConnectionPoint(
+				RaycastEventNode.INPUT_UPDATE_OBJECTS,
 				EventConnectionPointType.BASE,
 				this._process_trigger_update_objects.bind(this)
 			),
 			new EventConnectionPoint(
-				'triggerVelReset',
+				RaycastEventNode.INPUT_TRIGGER_VEL_RESET,
 				EventConnectionPointType.BASE,
 				this._process_trigger_vel_reset.bind(this)
 			),

@@ -28,11 +28,23 @@ import {CoreType} from '../../../../../core/Type';
 import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 
-interface Cursor {
+interface CursorOffset {
 	offsetX: number;
 	offsetY: number;
 }
+interface CursorPage {
+	pageX: number;
+	pageY: number;
+}
+
+function setEventOffset(cursorPage: CursorPage, canvas: HTMLCanvasElement, offset: CursorOffset) {
+	var rect = canvas.getBoundingClientRect();
+	offset.offsetX = cursorPage.pageX - rect.left;
+	offset.offsetY = cursorPage.pageY - rect.top;
+}
+
 export class RaycastCPUController {
+	private _offset: CursorOffset = {offsetX: 0, offsetY: 0};
 	private _mouse: Vector2 = new Vector2();
 	private _mouse_array: Number2 = [0, 0];
 	private _raycaster = new Raycaster();
@@ -45,35 +57,26 @@ export class RaycastCPUController {
 
 	updateMouse(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>) {
 		const canvas = context.viewer?.canvas();
-		if (!(canvas && context.cameraNode)) {
+		const cameraNode = context.cameraNode;
+		if (!(canvas && cameraNode)) {
 			return;
 		}
-		const updateFromCursor = (cursor: Cursor) => {
+		const updateFromCursor = (cursor: CursorOffset) => {
 			this._mouse.x = (cursor.offsetX / canvas.offsetWidth) * 2 - 1;
 			this._mouse.y = -(cursor.offsetY / canvas.offsetHeight) * 2 + 1;
 			this._mouse.toArray(this._mouse_array);
 			this._node.p.mouse.set(this._mouse_array);
 		};
-		if (
-			context.event instanceof MouseEvent ||
-			context.event instanceof DragEvent ||
-			context.event instanceof PointerEvent
-		) {
-			updateFromCursor(context.event);
+		const event = context.event;
+		if (event instanceof MouseEvent || event instanceof DragEvent || event instanceof PointerEvent) {
+			setEventOffset(event, canvas, this._offset);
 		}
-		if (context.event instanceof TouchEvent) {
-			function getTouchOffset(touch: Touch) {
-				const element = context.event!.target as HTMLElement;
-				var rect = element.getBoundingClientRect();
-				var x = touch.pageX - rect.left;
-				var y = touch.pageY - rect.top;
-				return {offsetX: x, offsetY: y};
-			}
-			const touch = context.event.touches[0];
-			const offset = getTouchOffset(touch);
-			updateFromCursor(offset);
+		if (event instanceof TouchEvent) {
+			const touch = event.touches[0];
+			setEventOffset(touch, canvas, this._offset);
 		}
-		this._raycaster.setFromCamera(this._mouse, context.cameraNode.object);
+		updateFromCursor(this._offset);
+		this._raycaster.setFromCamera(this._mouse, cameraNode.object);
 	}
 
 	processEvent(context: EventContext<MouseEvent>) {

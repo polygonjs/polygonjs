@@ -17,6 +17,10 @@ class WindowEventParamsConfig extends NodeParamsConfig {
 		},
 		separatorAfter: true,
 	});
+	/** @param set which element triggers the event */
+	element = ParamConfig.INTEGER(0, {
+		hidden: true,
+	});
 	/** @param toggle on to listen to resize events */
 	resize = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 }

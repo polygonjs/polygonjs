@@ -26,6 +26,10 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 		},
 		separatorAfter: true,
 	});
+	/** @param set which element triggers the event */
+	element = ParamConfig.INTEGER(0, {
+		hidden: true,
+	});
 	/** @param toggle on to trigger an event when the scene has loaded. This can be useful to initialize other nodes */
 	sceneLoaded = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to trigger an event when the scene starts playing */

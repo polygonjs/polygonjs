@@ -1,44 +1,54 @@
 import {BaseViewerType} from '../_Base';
 import {EventContext, BaseSceneEventsControllerType} from '../../scene/utils/events/_BaseEventsController';
+import {EventData} from '../../nodes/event/_BaseInput';
 type EventListener = (e: Event) => void;
-type ListenerByEventType = Map<string, EventListener>;
+interface EventListenerWithData {
+	listener: EventListener;
+	data: EventData;
+}
+type ListenerByEventType = Map<string, EventListenerWithData>;
 
+export enum CoreEventEmitter {
+	CANVAS = 'canvas',
+	DOCUMENT = 'document',
+}
+export const EVENT_EMITTERS: CoreEventEmitter[] = [CoreEventEmitter.CANVAS, CoreEventEmitter.DOCUMENT];
 export class ViewerEventsController {
 	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();
 
 	constructor(protected viewer: BaseViewerType) {}
 
-	updateEvents(events_controller: BaseSceneEventsControllerType) {
+	updateEvents(eventsController: BaseSceneEventsControllerType) {
 		const canvas = this.canvas();
 		if (!canvas) {
 			return;
 		}
-		const controller_type = events_controller.type();
-		let map = this._bound_listener_map_by_event_controller_type.get(controller_type);
+		const controllerType = eventsController.type();
+		let map = this._bound_listener_map_by_event_controller_type.get(controllerType);
 		if (!map) {
 			map = new Map();
-			this._bound_listener_map_by_event_controller_type.set(controller_type, map);
+			this._bound_listener_map_by_event_controller_type.set(controllerType, map);
 		}
-		map.forEach((listener, event_type) => {
-			const eventOwner = this._eventOwner(event_type, canvas);
-			eventOwner.removeEventListener(event_type, listener);
+		map.forEach((listenerWithData, eventType) => {
+			const eventOwner = this._eventOwner(listenerWithData.data, canvas);
+			eventOwner.removeEventListener(eventType, listenerWithData.listener);
 		});
 		map.clear();
 
 		const listener = (event: Event) => {
-			this.processEvent(event, events_controller);
+			this.processEvent(event, eventsController);
 		};
-		for (let event_type of events_controller.activeEventTypes()) {
-			const eventOwner = this._eventOwner(event_type, canvas);
-			eventOwner.addEventListener(event_type, listener);
-			map.set(event_type, listener);
+		for (let eventData of eventsController.activeEventDatas()) {
+			const eventOwner = this._eventOwner(eventData, canvas);
+			eventOwner.addEventListener(eventData.type, listener);
+			map.set(eventData.type, {listener, data: eventData});
 		}
 	}
-	private _eventOwner(event_type: string, canvas: HTMLCanvasElement) {
-		if (event_type == 'resize') {
+	private _eventOwner(eventData: EventData, canvas: HTMLCanvasElement) {
+		if (eventData.type == 'resize') {
 			return window;
 		} else {
-			return canvas;
+			return eventData.emitter == CoreEventEmitter.CANVAS ? canvas : document;
 		}
 	}
 
@@ -61,8 +71,8 @@ export class ViewerEventsController {
 	registeredEventTypes(): string[] {
 		const list: string[] = [];
 		this._bound_listener_map_by_event_controller_type.forEach((map) => {
-			map.forEach((listener, event_type) => {
-				list.push(event_type);
+			map.forEach((listener, eventType) => {
+				list.push(eventType);
 			});
 		});
 		return list;
@@ -72,8 +82,9 @@ export class ViewerEventsController {
 		const canvas = this.canvas();
 		this._bound_listener_map_by_event_controller_type.forEach((map) => {
 			if (canvas) {
-				map.forEach((listener, event_type) => {
-					canvas.removeEventListener(event_type, listener);
+				map.forEach((listenerWithData, eventType) => {
+					const eventOwner = this._eventOwner(listenerWithData.data, canvas);
+					eventOwner.removeEventListener(eventType, listenerWithData.listener);
 				});
 			}
 		});

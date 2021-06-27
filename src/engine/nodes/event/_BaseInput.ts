@@ -1,8 +1,14 @@
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNodeType} from '../_Base';
+import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
+
+export interface EventData {
+	type: string;
+	emitter: CoreEventEmitter;
+}
 
 export const EVENT_PARAM_OPTIONS: ParamOptions = {
 	visibleIf: {active: 1},
@@ -11,7 +17,7 @@ export const EVENT_PARAM_OPTIONS: ParamOptions = {
 	},
 };
 
-export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends TypedEventNode<K> {
+export abstract class TypedInputEventNode<K extends BaseInputEventParamsConfig> extends TypedEventNode<K> {
 	initializeBaseNode() {
 		super.initializeBaseNode();
 
@@ -44,31 +50,43 @@ export abstract class TypedInputEventNode<K extends NodeParamsConfig> extends Ty
 		node._updateRegister();
 	}
 	private _updateRegister() {
-		this._updateActiveEventNames();
+		this._updateActiveEventDatas();
 		this.scene().eventsDispatcher.updateViewerEventListeners(this);
 	}
 
-	private _activeEventNames: string[] = [];
-	private _updateActiveEventNames() {
-		this._activeEventNames = [];
+	private _activeEventDatas: EventData[] = [];
+	private _updateActiveEventDatas() {
+		this._activeEventDatas = [];
 		if (this.pv.active) {
 			const list = this.acceptedEventTypes();
 			for (let name of list) {
 				const param = this.params.get(name);
 				if (param && param.value) {
-					this._activeEventNames.push(name);
+					this._activeEventDatas.push({type: name, emitter: EVENT_EMITTERS[this.pv.element]});
 				}
 			}
 		}
 	}
 	protected abstract acceptedEventTypes(): string[];
-	activeEventNames() {
-		return this._activeEventNames;
+	activeEventDatas() {
+		return this._activeEventDatas;
 	}
 }
 
-export type BaseInputEventNodeType = TypedInputEventNode<any>;
-export class BaseInputEventNodeClass extends TypedInputEventNode<any> {
+class BaseInputEventParamsConfig extends NodeParamsConfig {
+	/** @param set which element triggers the event */
+	element = ParamConfig.INTEGER(0, {
+		menu: {
+			entries: EVENT_EMITTERS.map((name, value) => {
+				return {name, value};
+			}),
+		},
+		separatorAfter: true,
+	});
+}
+
+export type BaseInputEventNodeType = TypedInputEventNode<BaseInputEventParamsConfig>;
+export class BaseInputEventNodeClass extends TypedInputEventNode<BaseInputEventParamsConfig> {
 	acceptedEventTypes() {
 		return [];
 	}

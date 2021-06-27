@@ -46,7 +46,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	// 		this.processEvent(event_context, connection_point)
 	// 	// })
 	// }
-	process_event_via_connection_point(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {
+	processEventViaConnectionPoint(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {
 		if (connection_point.event_listener) {
 			connection_point.event_listener(event_context);
 		} else {
@@ -73,7 +73,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 			for (let connection of current_connections) {
 				dest_node = connection.node_dest;
 				const connection_point = dest_node.io.inputs.namedInputConnectionPoints()[connection.input_index];
-				dest_node.process_event_via_connection_point(event_context, connection_point);
+				dest_node.processEventViaConnectionPoint(event_context, connection_point);
 			}
 			// const nodes = current_connections.map((connection) => connection.node_dest);
 			// for (let node of nodes) {

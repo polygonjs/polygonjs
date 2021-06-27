@@ -11,6 +11,7 @@ import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {ACCEPTED_KEYBOARD_EVENT_TYPES} from '../../scene/utils/events/KeyboardEventsController';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
 class KeyboardEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -19,6 +20,16 @@ class KeyboardEventParamsConfig extends NodeParamsConfig {
 		},
 		separatorAfter: true,
 	});
+	/** @param set which element triggers the event */
+	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
+		menu: {
+			entries: EVENT_EMITTERS.map((name, value) => {
+				return {name, value};
+			}),
+		},
+		separatorAfter: true,
+	});
+
 	/** @param toggle on to listen to keydown events */
 	keydown = ParamConfig.BOOLEAN(1, EVENT_PARAM_OPTIONS);
 	/** @param toggle on to listen to keypress events */

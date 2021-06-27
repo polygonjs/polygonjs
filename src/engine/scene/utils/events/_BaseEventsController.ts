@@ -1,5 +1,5 @@
 import {BaseCameraObjNodeType} from '../../../nodes/obj/_BaseCamera';
-import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
+import {BaseInputEventNodeType, EventData} from '../../../nodes/event/_BaseInput';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
 import {Intersection} from 'three/src/core/Raycaster';
@@ -36,7 +36,7 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 	// abstract accepts_event(event: Event): boolean;
 
 	processEvent(event_context: EventContext<E>) {
-		if (this._active_event_types.length == 0) {
+		if (this._activeEventDatas.length == 0) {
 			return;
 		}
 		this._nodes_by_graph_node_id.forEach((node) => node.processEvent(event_context));
@@ -52,24 +52,24 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 		}
 	}
 
-	private _active_event_types: string[] = [];
-	activeEventTypes() {
-		return this._active_event_types;
+	private _activeEventDatas: EventData[] = [];
+	activeEventDatas() {
+		return this._activeEventDatas;
 	}
 	private _update_active_event_types() {
-		const active_node_event_types_state: Map<string, boolean> = new Map();
+		const active_node_event_types_state: Map<EventData, boolean> = new Map();
 
 		this._nodes_by_graph_node_id.forEach((node) => {
 			if (node.parent()) {
-				const node_activeEventNames = node.activeEventNames();
-				for (let name of node_activeEventNames) {
-					active_node_event_types_state.set(name, true);
+				const nodeActiveEventDatas = node.activeEventDatas();
+				for (let data of nodeActiveEventDatas) {
+					active_node_event_types_state.set(data, true);
 				}
 			}
 		});
-		this._active_event_types = [];
+		this._activeEventDatas = [];
 		active_node_event_types_state.forEach((state, name) => {
-			this._active_event_types.push(name);
+			this._activeEventDatas.push(name);
 		});
 	}
 }
