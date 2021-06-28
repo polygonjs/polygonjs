@@ -29,7 +29,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
-		await this.cookController.cook_main_without_inputs();
+		await this.cookController.cookMainWithoutInputs();
 	}
 
 	private set_material_name() {

@@ -15,7 +15,7 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 		super.initializeBaseNode();
 		this.childrenDisplayController.initializeNode();
 		// the inputs will be evaluated by the child input nodes
-		this.cookController.disallow_inputs_evaluation();
+		this.cookController.disallowInputsEvaluation();
 	}
 
 	// display_node and children_display controllers

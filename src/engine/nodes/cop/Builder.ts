@@ -147,7 +147,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
-		await this.cookController.cook_main_without_inputs();
+		await this.cookController.cookMainWithoutInputs();
 	}
 
 	// private _reset_if_resolution_changed(trigger?: CoreGraphNode) {

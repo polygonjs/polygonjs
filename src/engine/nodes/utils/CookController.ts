@@ -11,14 +11,14 @@ export class NodeCookController<NC extends NodeContext> {
 	private _core_performance: CorePerformance;
 	private _cooking: boolean = false;
 	private _cooking_dirty_timestamp: number | undefined;
-	private _performance_controller: NodeCookPerformanceformanceController = new NodeCookPerformanceformanceController(
+	private _performanceController: NodeCookPerformanceformanceController = new NodeCookPerformanceformanceController(
 		this
 	);
 
 	constructor(private node: BaseNodeType) {
 		this._core_performance = this.node.scene().performance;
 	}
-	get performance_record_started() {
+	performanceRecordStarted() {
 		return this._core_performance.started();
 	}
 
@@ -26,7 +26,7 @@ export class NodeCookController<NC extends NodeContext> {
 	// that should not evaluate all inputs, but only a single one, depending on a param value
 	// currently only for switch SOP and COP
 	private _inputs_evaluation_required: boolean = true;
-	disallow_inputs_evaluation() {
+	disallowInputsEvaluation() {
 		this._inputs_evaluation_required = false;
 	}
 
@@ -34,17 +34,12 @@ export class NodeCookController<NC extends NodeContext> {
 		return this._cooking === true;
 	}
 
-	private _init_cooking_state() {
-		this._cooking = true;
-		this._cooking_dirty_timestamp = this.node.dirtyController.dirtyTimestamp();
-	}
-
 	private _start_cook_if_no_errors(input_contents: ContainableMap[NC][]) {
 		if (this.node.states.error.active()) {
 			this.endCook();
 		} else {
 			try {
-				this._performance_controller.record_cook_start();
+				this._performanceController.recordCookStart();
 				this.node.cook(input_contents);
 			} catch (e) {
 				this.node.states.error.set(`node internal error: '${e}'.`);
@@ -54,26 +49,26 @@ export class NodeCookController<NC extends NodeContext> {
 		}
 	}
 
-	async cook_main() {
+	async cookMain() {
 		if (this.isCooking()) {
 			return;
 		}
-		this._init_cooking_state();
+		this._initCookingState();
 		this.node.states.error.clear();
 		this.node.scene().cookController.addNode(this.node);
 
 		let input_contents: ContainableMap[NC][];
 		if (this._inputs_evaluation_required) {
-			input_contents = await this._evaluate_inputs();
+			input_contents = await this._evaluateInputs();
 		} else {
 			input_contents = [];
 		}
 		if (this.node.params.paramsEvalRequired()) {
-			await this._evaluate_params();
+			await this._evaluateParams();
 		}
 		this._start_cook_if_no_errors(input_contents);
 	}
-	async cook_main_without_inputs() {
+	async cookMainWithoutInputs() {
 		this.node.scene().cookController.addNode(this.node);
 		if (this.isCooking()) {
 			// TODO:
@@ -83,40 +78,43 @@ export class NodeCookController<NC extends NodeContext> {
 			Poly.warn('cook_main_without_inputs already cooking', this.node.path());
 			return;
 		}
-		this._init_cooking_state();
+		this._initCookingState();
 		this.node.states.error.clear();
 
 		if (this.node.params.paramsEvalRequired()) {
-			await this._evaluate_params();
+			await this._evaluateParams();
 		}
 		this._start_cook_if_no_errors([]);
 	}
 
 	endCook(message?: string | null) {
-		this._finalize_cook_performance();
+		this._finalizeCookPerformance();
 
 		const dirty_timestamp = this.node.dirtyController.dirtyTimestamp();
 		if (dirty_timestamp == null || dirty_timestamp === this._cooking_dirty_timestamp) {
 			this.node.removeDirtyState();
-			this._terminate_cook_process();
+			this._terminateCookProcess();
 		} else {
 			Poly.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.path());
 			this._cooking = false;
-			this.cook_main();
+			this.cookMain();
 		}
 	}
-
-	private _terminate_cook_process() {
+	private _initCookingState() {
+		this._cooking = true;
+		this._cooking_dirty_timestamp = this.node.dirtyController.dirtyTimestamp();
+	}
+	private _terminateCookProcess() {
 		if (this.isCooking()) {
 			this._cooking = false;
-			// setTimeout(this.node.containerController.notify_requesters.bind(this.node.containerController), 0);
-			this.node.containerController.notify_requesters();
+			// setTimeout(this.node.containerController.notifyRequesters.bind(this.node.containerController), 0);
+			this.node.containerController.notifyRequesters();
 			this._run_on_cook_complete_hooks();
 		}
 	}
 
-	private async _evaluate_inputs(): Promise<ContainableMap[NC][]> {
-		this._performance_controller.record_inputs_start();
+	private async _evaluateInputs(): Promise<ContainableMap[NC][]> {
+		this._performanceController.recordInputsStart();
 
 		let input_containers: (ContainerMap[NC] | null)[] = [];
 		const io_inputs = this.node.io.inputs;
@@ -141,13 +139,13 @@ export class NodeCookController<NC extends NodeContext> {
 				}
 			}
 		}
-		this._performance_controller.record_inputs_end();
+		this._performanceController.recordInputsEnd();
 		return input_contents;
 	}
-	private async _evaluate_params() {
-		this._performance_controller.record_params_start();
+	private async _evaluateParams() {
+		this._performanceController.recordParamsStart();
 		await this.node.params.evalAll();
-		this._performance_controller.record_params_end();
+		this._performanceController.recordParamsEnd();
 	}
 
 	//
@@ -155,20 +153,20 @@ export class NodeCookController<NC extends NodeContext> {
 	// PERFORMANCE
 	//
 	//
-	get cooks_count(): number {
-		return this._performance_controller.cooks_count;
+	cooksCount(): number {
+		return this._performanceController.cooksCount();
 	}
-	get cook_time(): number {
-		return this._performance_controller.data.cook_time;
+	cookTime(): number {
+		return this._performanceController.data2().cookTime;
 	}
 
-	private _finalize_cook_performance() {
+	private _finalizeCookPerformance() {
 		if (!this._core_performance.started()) {
 			return;
 		}
-		this._performance_controller.record_cook_end();
+		this._performanceController.recordCookEnd();
 
-		this._core_performance.record_node_cook_data(this.node, this._performance_controller.data);
+		this._core_performance.record_node_cook_data(this.node, this._performanceController.data2());
 	}
 
 	//

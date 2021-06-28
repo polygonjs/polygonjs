@@ -119,7 +119,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// 	}, 0);
 		// });
 		this.addPostDirtyHook('rivet_on_dirty', () => {
-			this.cookController.cook_main_without_inputs();
+			this.cookController.cookMainWithoutInputs();
 		});
 		// this.params.set_post_create_params_hook(() => {
 		// 	this._update_render_hook();

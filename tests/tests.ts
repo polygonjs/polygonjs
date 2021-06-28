@@ -73,6 +73,7 @@ QUnit.module('operations');
 import './engine/operations/sop/AttribFromTexture';
 
 QUnit.module('nodes utils');
+import './engine/nodes/utils/Bypass';
 import './engine/nodes/utils/ChildrenContext';
 import './engine/nodes/utils/Memory';
 

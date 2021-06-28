@@ -13,11 +13,11 @@ QUnit.test('geo obj simple', async (assert) => {
 	assert.equal(geo1.object.uuid, obj.uuid);
 
 	window.scene.performance.start();
-	assert.equal(geo1.cookController.cooks_count, 0, 'should not have counted cooks yet');
+	assert.equal(geo1.cookController.cooksCount(), 0, 'should not have counted cooks yet');
 
 	geo1.p.t.x.set(12);
 	await scene.waitForCooksCompleted();
-	assert.equal(geo1.cookController.cooks_count, 1, 'should have cooked only once');
+	assert.equal(geo1.cookController.cooksCount(), 1, 'should have cooked only once');
 	assert.deepEqual(
 		obj.matrix.toArray(),
 		new Matrix4().makeTranslation(12, 0, 0).toArray(),
@@ -70,7 +70,7 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 
 	window.scene.performance.start();
 
-	assert.equal(geo1.cookController.cooks_count, 0);
+	assert.equal(geo1.cookController.cooksCount(), 0);
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
 	scene.batchUpdates(() => {
 		geo1.p.t.x.set(2);
@@ -83,7 +83,7 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 		new Matrix4().makeTranslation(2, 0, 0).multiply(new Matrix4().makeScale(1, 4, 1)).toArray(),
 		'matrix is not what we expect'
 	);
-	assert.equal(geo1.cookController.cooks_count, 1, 'cooks count should be 1');
+	assert.equal(geo1.cookController.cooksCount(), 1, 'cooks count should be 1');
 
 	window.scene.performance.stop();
 });
@@ -124,19 +124,19 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	assert.notOk(geo1.isDirty(), 'geo1 is not dirty');
 	scene.setFrame(1);
 	scene.setFrame(3);
-	assert.equal(geo1.cookController.cooks_count, 1);
+	assert.equal(geo1.cookController.cooksCount(), 1);
 	assert.notOk(geo1.isDirty(), 'geo1 is not dirty');
 	geo1.p.r.y.set('$F+10');
 
 	assert.ok(geo1.isDirty());
 	await scene.waitForCooksCompleted();
-	assert.equal(geo1.cookController.cooks_count, 2);
+	assert.equal(geo1.cookController.cooksCount(), 2);
 	assert.notOk(geo1.isDirty());
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 13, 0]);
 
 	scene.setFrame(37);
 	await scene.waitForCooksCompleted();
-	assert.equal(geo1.cookController.cooks_count, 3);
+	assert.equal(geo1.cookController.cooksCount(), 3);
 	assert.notOk(geo1.isDirty());
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 47, 0]);
 

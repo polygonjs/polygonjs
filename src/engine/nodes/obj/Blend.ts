@@ -82,7 +82,7 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 		this.io.inputs.setCount(0);
 
 		this.addPostDirtyHook('blend_on_dirty', () => {
-			this.cookController.cook_main_without_inputs();
+			this.cookController.cookMainWithoutInputs();
 		});
 
 		// helper

@@ -35,7 +35,7 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 		// this.uiData.set_icon('code-branch');
 
-		this.cookController.disallow_inputs_evaluation();
+		this.cookController.disallowInputsEvaluation();
 	}
 
 	async cook() {

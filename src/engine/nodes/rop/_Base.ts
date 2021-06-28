@@ -17,7 +17,7 @@ export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 
 	initializeBaseNode() {
 		this.dirtyController.addPostDirtyHook('cook_immediately', () => {
-			this.cookController.cook_main_without_inputs();
+			this.cookController.cookMainWithoutInputs();
 		});
 	}
 

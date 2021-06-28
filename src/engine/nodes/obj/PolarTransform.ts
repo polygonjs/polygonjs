@@ -78,7 +78,7 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 	// TODO: this will have to be checked via the parent, when I will have obj managers at lower levels than root
 	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
 	private async _cook_main_without_inputs_when_dirty() {
-		await this.cookController.cook_main_without_inputs();
+		await this.cookController.cookMainWithoutInputs();
 	}
 
 	private _centerMatrix = new Matrix4();

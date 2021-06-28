@@ -37,14 +37,14 @@ QUnit.test('hemisphere light simple', async (assert) => {
 
 	window.scene.performance.start();
 
-	assert.equal(hemisphere_light1.cookController.cooks_count, 0);
+	assert.equal(hemisphere_light1.cookController.cooksCount(), 0);
 	const light_object1 = main_group.children[2];
 	const light_from_light_object1 = light_object1.children[1];
 	hemisphere_light1.p.intensity.set(2);
 	await scene.waitForCooksCompleted();
 	assert.equal(light_from_light_object1.uuid, hemisphere_light1.light.uuid);
 	assert.equal(hemisphere_light1.light.intensity, 2, 'intensity should be 2');
-	assert.equal(hemisphere_light1.cookController.cooks_count, 2, 'cooks count should be 2');
+	assert.equal(hemisphere_light1.cookController.cooksCount(), 2, 'cooks count should be 2');
 
 	window.scene.performance.stop();
 });

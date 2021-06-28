@@ -20,12 +20,14 @@ export class TypedContainerController<NC extends NodeContext> {
 
 	async compute(): Promise<ContainerMap[NC]> {
 		if (this.node.flags?.bypass?.active()) {
-			return (await this.requestInputContainer(0)) || this._container;
+			const container = (await this.requestInputContainer(0)) || this._container;
+			this.node.cookController.endCook();
+			return container;
 		}
 		if (this.node.isDirty()) {
 			return new Promise((resolve, reject) => {
 				this._callbacks.push(resolve as () => ContainerMap[NC]);
-				this.node.cookController.cook_main();
+				this.node.cookController.cookMain();
 			});
 		}
 		return this._container;
@@ -63,16 +65,16 @@ export class TypedContainerController<NC extends NodeContext> {
 	// }
 
 	async requestInputContainer(input_index: number) {
-		const input_node = (<unknown>this.node.io.inputs.input(input_index)) as TypedNode<NC, any>;
-		if (input_node) {
-			return await input_node.compute();
+		const inputNode = (<unknown>this.node.io.inputs.input(input_index)) as TypedNode<NC, any>;
+		if (inputNode) {
+			return await inputNode.compute();
 		} else {
 			this.node.states.error.set(`input ${input_index} required`);
-			this.notify_requesters();
+			this.notifyRequesters();
 			return null;
 		}
 	}
-	notify_requesters(container?: ContainerMap[NC]) {
+	notifyRequesters(container?: ContainerMap[NC]) {
 		// make a copy of the callbacks first,
 		// to ensure that new ones are not added to this list
 		// in side effects from those callbacks

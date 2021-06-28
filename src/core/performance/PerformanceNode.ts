@@ -22,9 +22,9 @@ export class PerformanceNode {
 
 	update_cook_data(performance_data: NodePerformanceData): void {
 		this._cooks_count += 1;
-		this._total_cook_time += performance_data.cook_time;
-		this._total_inputs_time += performance_data.inputs_time;
-		this._total_params_time += performance_data.params_time;
+		this._total_cook_time += performance_data.cookTime;
+		this._total_inputs_time += performance_data.inputsTime;
+		this._total_params_time += performance_data.paramsTime;
 	}
 	total_time(): number {
 		return this._total_cook_time + this._total_inputs_time + this._total_params_time;

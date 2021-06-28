@@ -51,32 +51,32 @@ QUnit.test('COP switch simple', async (assert) => {
 
 	await mesh_standard1.compute();
 	await scene.waitForCooksCompleted();
-	assert.equal(mesh_standard1.cookController.cooks_count, 1);
+	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
 	assert.equal(material.map!.uuid, texture_diffuse1.uuid);
 	assert.equal(material.envMap!.uuid, texture_env1.uuid);
 
 	switch_diffuse.p.input.set(1);
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(500);
-	assert.equal(mesh_standard1.cookController.cooks_count, 1);
+	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
 	assert.equal(material.map!.uuid, texture_diffuse2.uuid);
 
 	switch_env.p.input.set(1);
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
-	assert.equal(mesh_standard1.cookController.cooks_count, 1);
+	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
 	assert.equal(material.envMap!.uuid, texture_env2.uuid);
 
 	switch_diffuse.p.input.set(0);
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
-	assert.equal(mesh_standard1.cookController.cooks_count, 1);
+	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
 	assert.equal(material.map!.uuid, texture_diffuse1.uuid);
 
 	switch_env.p.input.set(0);
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
-	assert.equal(mesh_standard1.cookController.cooks_count, 1);
+	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
 	assert.equal(material.envMap!.uuid, texture_env1.uuid);
 
 	// and finally change the path of a file node, to renew its texture completely
@@ -86,7 +86,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	await CoreSleep.sleep(100);
 	const texture_diffuse1B = (await file_diffuse1.compute()).texture();
 	assert.notEqual(file_diffuse1_old_uuid, texture_diffuse1B.uuid);
-	assert.equal(mesh_standard1.cookController.cooks_count, 1);
+	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
 	assert.equal(material.map!.uuid, texture_diffuse1B.uuid);
 
 	// and the env node
@@ -96,7 +96,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	await CoreSleep.sleep(100);
 	const texture_env1B = (await file_env1.compute()).texture();
 	assert.notEqual(file_env1_old_uuid, texture_env1B.uuid);
-	assert.equal(mesh_standard1.cookController.cooks_count, 1);
+	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
 	assert.equal(material.envMap!.uuid, texture_env1B.uuid);
 
 	window.scene.performance.stop();

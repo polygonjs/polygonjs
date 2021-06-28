@@ -259,10 +259,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	 *
 	 */
 	async compute() {
-		if (!this.isDirty()) {
-			return this.containerController.container();
-		} else {
+		if (this.isDirty() || this.flags?.bypass?.active()) {
 			return await this.containerController.compute();
+		} else {
+			return this.containerController.container();
 		}
 	}
 	_setContainer(content: ContainableMap[NC], message: string | null = null) {

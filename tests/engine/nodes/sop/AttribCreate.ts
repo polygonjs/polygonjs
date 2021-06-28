@@ -353,11 +353,11 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	container = await bbox_scatter1.compute();
 	let core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 27);
-	assert.less_than(bbox_scatter1.cookController.cook_time, 20);
+	assert.less_than(bbox_scatter1.cookController.cooksCount(), 20);
 
 	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
-	assert.less_than(attrib_create1.cookController.cook_time, 20);
+	assert.less_than(attrib_create1.cookController.cooksCount(), 20);
 
 	const point = core_group.points()[3];
 	assert.equal(point.attribValue('ptid'), 3);
@@ -367,7 +367,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 1331);
 
-	assert.less_than(attrib_create1.cookController.cook_time, 80);
+	assert.less_than(attrib_create1.cookController.cooksCount(), 80);
 
 	window.scene.performance.stop();
 

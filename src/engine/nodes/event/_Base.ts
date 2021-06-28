@@ -35,7 +35,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	// }
 	private _cook_without_inputs_bound = this._cook_without_inputs.bind(this);
 	_cook_without_inputs() {
-		this.cookController.cook_main_without_inputs();
+		this.cookController.cookMainWithoutInputs();
 	}
 	cook() {
 		this.cookController.endCook();
