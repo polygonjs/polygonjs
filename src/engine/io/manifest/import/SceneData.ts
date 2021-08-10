@@ -10,10 +10,17 @@ export interface ManifestContent {
 	root: string;
 	nodes: ManifestNodesData;
 }
+
+interface ProgressCallbackArgs {
+	count: number;
+	total: number;
+}
+type ProgressCallback = (args: ProgressCallbackArgs) => void;
 interface ImportData {
 	urlPrefix: string;
 	manifest: ManifestContent;
 	editorMode?: boolean;
+	onProgress?: ProgressCallback;
 }
 
 export interface SceneDataElements {
@@ -51,7 +58,16 @@ export class SceneDataManifestImporter {
 			all_urls.push(node_url);
 		}
 
-		const promises = all_urls.map((url) => fetch(url));
+		let count = 0;
+		const total = all_urls.length;
+		const promises = all_urls.map(async (url) => {
+			const response = await fetch(url);
+			if (import_data.onProgress) {
+				count++;
+				import_data.onProgress({count, total});
+			}
+			return response;
+		});
 		const responses = await Promise.all(promises);
 
 		const jsons = [];
