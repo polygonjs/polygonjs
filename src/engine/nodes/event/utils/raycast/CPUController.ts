@@ -71,7 +71,10 @@ export class RaycastCPUController {
 		if (event instanceof MouseEvent || event instanceof DragEvent || event instanceof PointerEvent) {
 			setEventOffset(event, canvas, this._offset);
 		}
-		if (event instanceof TouchEvent) {
+		if (
+			window.TouchEvent /* check first that TouchEvent is defined, since it does on firefox desktop */ &&
+			event instanceof TouchEvent
+		) {
 			const touch = event.touches[0];
 			setEventOffset(touch, canvas, this._offset);
 		}
