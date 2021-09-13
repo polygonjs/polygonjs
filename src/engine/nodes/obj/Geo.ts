@@ -20,6 +20,7 @@ import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {ObjType} from '../../poly/registers/nodes/types/Obj';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	/** @param toggle off to hide */
 	display = ParamConfig.BOOLEAN(1);
@@ -34,7 +35,7 @@ const ParamsConfig = new GeoObjParamConfig();
 export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
-		return 'geo';
+		return ObjType.GEO;
 	}
 	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	readonly transformController: TransformController = new TransformController(this);

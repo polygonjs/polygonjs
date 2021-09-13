@@ -10,8 +10,12 @@ import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {PointerLockControls} from '../../../modules/core/controls/PointerLockControls';
-import {CameraControlsNodeType} from '../../poly/NodeContext';
+import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
+import {ObjType} from '../../poly/registers/nodes/types/Obj';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {Capsule} from 'three/examples/jsm/math/Capsule';
+import {Vector3} from 'three/src/math/Vector3';
 
 const EVENT_LOCK = 'lock';
 const EVENT_CHANGE = 'change';
@@ -38,6 +42,31 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 	});
 	/** @param travel speed */
 	speed = ParamConfig.FLOAT(1);
+	/** @param detects collisions */
+	collideWithGeo = ParamConfig.BOOLEAN(0);
+	/** @param geometry to collide with */
+	collidingGeo = ParamConfig.NODE_PATH('', {
+		nodeSelection: {
+			context: NodeContext.OBJ,
+			types: [ObjType.GEO],
+		},
+		visibleIf: {collideWithGeo: true},
+	});
+	/** @param recompute colliding geo */
+	recomputeCollidingGeo = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			FirstPersonControlsEventNode.PARAM_CALLBACK_recomputeCollidingGeo(node as FirstPersonControlsEventNode);
+		},
+		visibleIf: {collideWithGeo: true},
+	});
+	/** @param capsule height range */
+	capsuleHeightRange = ParamConfig.VECTOR2([0.3, 1], {
+		visibleIf: {collideWithGeo: true},
+	});
+	/** @param capsule radius */
+	capsuleRadius = ParamConfig.FLOAT(0.3, {
+		visibleIf: {collideWithGeo: true},
+	});
 }
 const ParamsConfig = new FirstPersonEventParamsConfig();
 
@@ -52,7 +81,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
-			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE, this.lock_controls.bind(this)),
+			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE, this.lockControls.bind(this)),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE),
@@ -163,6 +192,28 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		controls.minPolarAngle = this.pv.minPolarAngle;
 		controls.maxPolarAngle = this.pv.maxPolarAngle;
 		controls.speed = this.pv.speed;
+
+		this._setupCollisionGeo(controls);
+	}
+	private async _setupCollisionGeo(controls: PointerLockControls) {
+		if (isBooleanTrue(this.pv.collideWithGeo)) {
+			const objNode = this.pv.collidingGeo.nodeWithContext(NodeContext.OBJ);
+			if (objNode) {
+				const displayNode = await objNode.displayNodeController?.displayNode();
+				displayNode?.compute();
+				const object = objNode.object;
+				controls.setCheckCollisions(object);
+				controls.setCollisionCapsule(
+					new Capsule(
+						new Vector3(0, this.pv.capsuleHeightRange.x, 0),
+						new Vector3(this.pv.capsuleHeightRange.y),
+						this.pv.capsuleRadius
+					)
+				);
+			}
+		} else {
+			controls.setCheckCollisions();
+		}
 	}
 
 	dispose_controls_for_html_element_id(html_element_id: string) {
@@ -172,7 +223,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		}
 	}
 
-	private lock_controls() {
+	private lockControls() {
 		let firstControls: PointerLockControls | undefined;
 		this._controls_by_element_id.forEach((controls, id) => {
 			firstControls = firstControls || controls;
@@ -183,6 +234,14 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		firstControls.lock();
 	}
 	static PARAM_CALLBACK_lock_controls(node: FirstPersonControlsEventNode) {
-		node.lock_controls();
+		node.lockControls();
+	}
+	static PARAM_CALLBACK_recomputeCollidingGeo(node: FirstPersonControlsEventNode) {
+		node._recomputeCollidingGeo();
+	}
+	private _recomputeCollidingGeo() {
+		this._controls_by_element_id.forEach((controls, id) => {
+			this._setupCollisionGeo(controls);
+		});
 	}
 }
