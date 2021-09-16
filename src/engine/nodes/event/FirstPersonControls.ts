@@ -24,19 +24,19 @@ const EVENT_UNLOCK = 'unlock';
 type PointerLockControlsMap = Map<string, PointerLockControls>;
 
 class FirstPersonEventParamsConfig extends NodeParamsConfig {
-	/** @param click to lick controls */
+	/** @param click to lock controls */
 	lock = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			FirstPersonControlsEventNode.PARAM_CALLBACK_lock_controls(node as FirstPersonControlsEventNode);
 		},
 	});
-	/** @param click to lick controls */
+	/** @param min rotation angle */
 	minPolarAngle = ParamConfig.FLOAT(0, {
 		range: [0, Math.PI],
 		rangeLocked: [true, true],
 	});
-	/** @param click to lick controls */
-	maxPolarAngle = ParamConfig.FLOAT(Math.PI, {
+	/** @param max rotation angle */
+	maxPolarAngle = ParamConfig.FLOAT('$PI', {
 		range: [0, Math.PI],
 		rangeLocked: [true, true],
 	});
@@ -114,6 +114,78 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		});
 	}
 
+	update_required() {
+		return true;
+	}
+
+	setup_controls(controls: PointerLockControls) {
+		controls.minPolarAngle = this.pv.minPolarAngle;
+		controls.maxPolarAngle = this.pv.maxPolarAngle;
+		controls.speed = this.pv.speed;
+
+		this._setupCollisionGeo(controls);
+	}
+	private async _setupCollisionGeo(controls: PointerLockControls) {
+		if (isBooleanTrue(this.pv.collideWithGeo)) {
+			const objNode = this.pv.collidingGeo.nodeWithContext(NodeContext.OBJ);
+			if (objNode) {
+				const displayNode = await objNode.displayNodeController?.displayNode();
+				displayNode?.compute();
+				const object = objNode.object;
+				controls.setCheckCollisions(object);
+				controls.setCollisionCapsule(
+					new Capsule(
+						new Vector3(0, this.pv.capsuleHeightRange.x, 0),
+						new Vector3(this.pv.capsuleHeightRange.y),
+						this.pv.capsuleRadius
+					)
+				);
+			}
+		} else {
+			controls.setCheckCollisions();
+		}
+	}
+
+	dispose_controls_for_html_element_id(html_element_id: string) {
+		const controls = this._controls_by_element_id.get(html_element_id);
+		if (controls) {
+			this._controls_by_element_id.delete(html_element_id);
+		}
+	}
+
+	static PARAM_CALLBACK_recomputeCollidingGeo(node: FirstPersonControlsEventNode) {
+		node._recomputeCollidingGeo();
+	}
+	private _recomputeCollidingGeo() {
+		this._controls_by_element_id.forEach((controls, id) => {
+			this._setupCollisionGeo(controls);
+		});
+	}
+
+	//
+	//
+	// LOCK
+	//
+	//
+	private lockControls() {
+		let firstControls: PointerLockControls | undefined;
+		this._controls_by_element_id.forEach((controls, id) => {
+			firstControls = firstControls || controls;
+		});
+		if (!firstControls) {
+			return;
+		}
+		firstControls.lock();
+	}
+	static PARAM_CALLBACK_lock_controls(node: FirstPersonControlsEventNode) {
+		node.lockControls();
+	}
+
+	//
+	//
+	// KEYBOARD
+	//
+	//
 	private _onKeyDown(event: KeyboardEvent, controls: PointerLockControls) {
 		switch (event.code) {
 			case 'ArrowUp':
@@ -182,66 +254,5 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 			document.removeEventListener('keydown', this._onKeyDownBound);
 			document.removeEventListener('keyup', this._onKeyUpBound);
 		}
-	}
-
-	update_required() {
-		return true;
-	}
-
-	setup_controls(controls: PointerLockControls) {
-		controls.minPolarAngle = this.pv.minPolarAngle;
-		controls.maxPolarAngle = this.pv.maxPolarAngle;
-		controls.speed = this.pv.speed;
-
-		this._setupCollisionGeo(controls);
-	}
-	private async _setupCollisionGeo(controls: PointerLockControls) {
-		if (isBooleanTrue(this.pv.collideWithGeo)) {
-			const objNode = this.pv.collidingGeo.nodeWithContext(NodeContext.OBJ);
-			if (objNode) {
-				const displayNode = await objNode.displayNodeController?.displayNode();
-				displayNode?.compute();
-				const object = objNode.object;
-				controls.setCheckCollisions(object);
-				controls.setCollisionCapsule(
-					new Capsule(
-						new Vector3(0, this.pv.capsuleHeightRange.x, 0),
-						new Vector3(this.pv.capsuleHeightRange.y),
-						this.pv.capsuleRadius
-					)
-				);
-			}
-		} else {
-			controls.setCheckCollisions();
-		}
-	}
-
-	dispose_controls_for_html_element_id(html_element_id: string) {
-		const controls = this._controls_by_element_id.get(html_element_id);
-		if (controls) {
-			this._controls_by_element_id.delete(html_element_id);
-		}
-	}
-
-	private lockControls() {
-		let firstControls: PointerLockControls | undefined;
-		this._controls_by_element_id.forEach((controls, id) => {
-			firstControls = firstControls || controls;
-		});
-		if (!firstControls) {
-			return;
-		}
-		firstControls.lock();
-	}
-	static PARAM_CALLBACK_lock_controls(node: FirstPersonControlsEventNode) {
-		node.lockControls();
-	}
-	static PARAM_CALLBACK_recomputeCollidingGeo(node: FirstPersonControlsEventNode) {
-		node._recomputeCollidingGeo();
-	}
-	private _recomputeCollidingGeo() {
-		this._controls_by_element_id.forEach((controls, id) => {
-			this._setupCollisionGeo(controls);
-		});
 	}
 }
