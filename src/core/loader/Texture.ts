@@ -254,8 +254,6 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 	_load_as_video(url: string): Promise<VideoTexture> {
 		return new Promise((resolve, reject) => {
 			const video = document.createElement('video');
-			// document.body.appendChild(video)
-			// video.id = 'video'
 			video.setAttribute('crossOrigin', 'anonymous');
 			video.setAttribute('autoplay', `${true}`); // to ensure it loads
 			video.setAttribute('loop', `${true}`);

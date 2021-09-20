@@ -49,6 +49,7 @@
 		"three": "0.127.0"
 	},
 	"devDependencies": {
+		"@mediapipe/face_mesh": "0.4.1629159166",
 		"@purtuga/esm-webpack-plugin": "1.5.0",
 		"@types/lodash": "4.14.168",
 		"@types/opentype.js": "1.3.1",

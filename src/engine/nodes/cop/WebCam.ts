@@ -9,6 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Texture} from 'three/src/textures/Texture';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 export function WebCamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -23,7 +24,7 @@ const ParamsConfig = new WebCamCopParamsConfig();
 export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
-		return 'webCam';
+		return CopType.WEB_CAM;
 	}
 
 	private _video: HTMLVideoElement | undefined;

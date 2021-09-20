@@ -27,6 +27,7 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -83,7 +84,7 @@ const ParamsConfig = new VideoCopParamsConfig();
 export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
-		return 'video';
+		return CopType.VIDEO;
 	}
 	async requiredModules() {
 		if (this.p.url.isDirty()) {
@@ -94,6 +95,9 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	}
 
 	private _video: HTMLVideoElement | undefined;
+	HTMLVideoElement() {
+		return this._video;
+	}
 	// private _data_texture_controller: DataTextureController | undefined;
 	private _texture_loader: CoreLoaderTexture | undefined;
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
@@ -125,6 +129,9 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 
 			if (texture) {
 				this._video = texture.image;
+				if (this._video) {
+					document.body.appendChild(this._video);
+				}
 				const inputTexture = input_contents[0];
 				if (inputTexture) {
 					TextureParamsController.copyTextureAttributes(texture, inputTexture);

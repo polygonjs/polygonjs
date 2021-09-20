@@ -8,6 +8,16 @@ import {ObjRegister, ObjNodeChildrenMap} from './Obj';
 import {PostRegister, PostNodeChildrenMap} from './Post';
 import {RopRegister, RopNodeChildrenMap} from './Rop';
 import {SopRegister, GeoNodeChildrenMap} from './Sop';
+// import {AnimRegister, AnimNodeChildrenMap} from './AnimMini';
+// import {CopRegister, CopNodeChildrenMap} from './CopMini';
+// import {EventRegister, EventNodeChildrenMap} from './EventMini';
+// import {GlRegister, GlNodeChildrenMap} from './GlMini';
+// import {JsRegister, JsNodeChildrenMap} from './JsMini';
+// import {MatRegister, MatNodeChildrenMap} from './MatMini';
+// import {ObjRegister, ObjNodeChildrenMap} from './ObjMini';
+// import {PostRegister, PostNodeChildrenMap} from './PostMini';
+// import {RopRegister, RopNodeChildrenMap} from './RopMini';
+// import {SopRegister, GeoNodeChildrenMap} from './SopMini';
 
 import {PolyEngine} from '../../../Poly';
 import {NodeContext} from '../../NodeContext';
