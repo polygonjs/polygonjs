@@ -1,19 +1,14 @@
 import {Euler} from 'three/src/math/Euler';
-import {EventDispatcher} from 'three/src/core/EventDispatcher';
 import {Vector3} from 'three/src/math/Vector3';
 import {Camera} from 'three/src/cameras/Camera';
-import {Object3D} from 'three/src/core/Object3D';
-import {PlayerCollisionController} from './collisions/PlayerCollisionsController';
-import {Object3DWithGeometry} from '../../../core/geometry/Group';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Capsule} from 'three/examples/jsm/math/Capsule';
+import {BaseCollisionHandler} from './BaseCollisionHandler';
 
 const changeEvent = {type: 'change'};
 const lockEvent = {type: 'lock'};
 const unlockEvent = {type: 'unlock'};
 const PI_2 = Math.PI / 2;
 
-export class PointerLockControls extends EventDispatcher {
+export class PointerLockControls extends BaseCollisionHandler {
 	private isLocked = false;
 	public minPolarAngle = 0; // radians
 	public maxPolarAngle = Math.PI; // radians
@@ -25,36 +20,11 @@ export class PointerLockControls extends EventDispatcher {
 		onPointerlockChange: this.onPointerlockChange.bind(this),
 		onPointerlockError: this.onPointerlockError.bind(this),
 	};
-	private _playerCollisionController: PlayerCollisionController | undefined;
 	private _cameraTmp: Camera = new Camera();
 
 	constructor(private camera: Camera, private domElement: HTMLElement) {
 		super();
 		this.connect();
-	}
-
-	setCheckCollisions(collisionObject?: Object3D) {
-		if (collisionObject) {
-			let objectWithGeo: Object3DWithGeometry | undefined;
-			collisionObject.traverse((child) => {
-				if (!objectWithGeo) {
-					const mesh = child as Mesh;
-					if (mesh.geometry) {
-						objectWithGeo = mesh;
-					}
-				}
-			});
-			if (objectWithGeo) {
-				this._playerCollisionController = new PlayerCollisionController(objectWithGeo);
-			} else {
-				console.error('no geo found in', collisionObject);
-			}
-		} else {
-			this._playerCollisionController = undefined;
-		}
-	}
-	setCollisionCapsule(capsule: Capsule) {
-		this._playerCollisionController?.setCapsule(capsule);
 	}
 
 	onMouseMove(event: MouseEvent) {

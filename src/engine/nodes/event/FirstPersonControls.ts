@@ -13,9 +13,7 @@ import {PointerLockControls} from '../../../modules/core/controls/PointerLockCon
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
-import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Capsule} from 'three/examples/jsm/math/Capsule';
-import {Vector3} from 'three/src/math/Vector3';
+import {setupCollision} from './collision/CollisionUtils';
 
 const EVENT_LOCK = 'lock';
 const EVENT_CHANGE = 'change';
@@ -90,7 +88,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		]);
 	}
 
-	private _controls_by_element_id: PointerLockControlsMap = new Map();
+	protected _controls_by_element_id: PointerLockControlsMap = new Map();
 
 	async create_controls_instance(camera: Camera, element: HTMLElement) {
 		const controls = new PointerLockControls(camera, element);
@@ -126,26 +124,8 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		this._setupCollisionGeo(controls);
 	}
 	private async _setupCollisionGeo(controls: PointerLockControls) {
-		if (isBooleanTrue(this.pv.collideWithGeo)) {
-			const objNode = this.pv.collidingGeo.nodeWithContext(NodeContext.OBJ);
-			if (objNode) {
-				const displayNode = await objNode.displayNodeController?.displayNode();
-				displayNode?.compute();
-				const object = objNode.object;
-				controls.setCheckCollisions(object);
-				controls.setCollisionCapsule(
-					new Capsule(
-						new Vector3(0, this.pv.capsuleHeightRange.x, 0),
-						new Vector3(this.pv.capsuleHeightRange.y),
-						this.pv.capsuleRadius
-					)
-				);
-			}
-		} else {
-			controls.setCheckCollisions();
-		}
+		setupCollision(controls, this);
 	}
-
 	dispose_controls_for_html_element_id(html_element_id: string) {
 		const controls = this._controls_by_element_id.get(html_element_id);
 		if (controls) {

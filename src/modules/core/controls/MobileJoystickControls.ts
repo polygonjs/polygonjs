@@ -1,15 +1,10 @@
 import {CoreMath} from '../../../core/math/_Module';
-import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Camera} from 'three/src/cameras/Camera';
-import {PlayerCollisionController} from './collisions/PlayerCollisionsController';
 import {CoreDomUtils} from '../../../core/DomUtils';
 import {Euler} from 'three/src/math/Euler';
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
-import {Capsule} from 'three/examples/jsm/math/Capsule';
-import {EventDispatcher} from 'three/src/core/EventDispatcher';
+import {BaseCollisionHandler} from './BaseCollisionHandler';
 
 interface TranslationData {
 	direction: {x: number; y: number};
@@ -36,7 +31,7 @@ export const DEFAULT_PARAMS: MobileJoystickControlsDefaultParams = {
 };
 const EVENT_CHANGE = {type: 'change'};
 
-export class MobileJoystickControls extends EventDispatcher {
+export class MobileJoystickControls extends BaseCollisionHandler {
 	private translationData: TranslationData = {
 		direction: {x: 0, y: 0},
 	};
@@ -55,7 +50,6 @@ export class MobileJoystickControls extends EventDispatcher {
 	private _startCameraRotation = new Euler();
 	private _velocity = new Vector3();
 	// private _element: HTMLElement;
-	private _playerCollisionController: PlayerCollisionController | undefined;
 	// private _translationSpeed = 4;
 	private _rotationSpeed = DEFAULT_PARAMS.rotationSpeed;
 	private _rotationRange: RotationRange = {
@@ -132,33 +126,6 @@ export class MobileJoystickControls extends EventDispatcher {
 	setTranslationSpeed(speed: number) {
 		this._translationSpeed = speed;
 		console.log('this._translationSpeed', this._translationSpeed);
-	}
-
-	// setPlayerCollisionController(playerCollisionController: PlayerCollisionController) {
-	// 	this._playerCollisionController = playerCollisionController;
-	// }
-	setCheckCollisions(collisionObject?: Object3D) {
-		if (collisionObject) {
-			let objectWithGeo: Object3DWithGeometry | undefined;
-			collisionObject.traverse((child) => {
-				if (!objectWithGeo) {
-					const mesh = child as Mesh;
-					if (mesh.geometry) {
-						objectWithGeo = mesh;
-					}
-				}
-			});
-			if (objectWithGeo) {
-				this._playerCollisionController = new PlayerCollisionController(objectWithGeo);
-			} else {
-				console.error('no geo found in', collisionObject);
-			}
-		} else {
-			this._playerCollisionController = undefined;
-		}
-	}
-	setCollisionCapsule(capsule: Capsule) {
-		this._playerCollisionController?.setCapsule(capsule);
 	}
 
 	//

@@ -15,9 +15,7 @@ import {MobileJoystickControls, DEFAULT_PARAMS} from '../../../modules/core/cont
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
-import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Capsule} from 'three/examples/jsm/math/Capsule';
-import {Vector3} from 'three/src/math/Vector3';
+import {setupCollision} from './collision/CollisionUtils';
 
 const EVENT_START = 'start';
 const EVENT_CHANGE = 'change';
@@ -120,24 +118,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		this._setupCollisionGeo(controls);
 	}
 	private async _setupCollisionGeo(controls: MobileJoystickControls) {
-		if (isBooleanTrue(this.pv.collideWithGeo)) {
-			const objNode = this.pv.collidingGeo.nodeWithContext(NodeContext.OBJ);
-			if (objNode) {
-				const displayNode = await objNode.displayNodeController?.displayNode();
-				displayNode?.compute();
-				const object = objNode.object;
-				controls.setCheckCollisions(object);
-				controls.setCollisionCapsule(
-					new Capsule(
-						new Vector3(0, this.pv.capsuleHeightRange.x, 0),
-						new Vector3(this.pv.capsuleHeightRange.y),
-						this.pv.capsuleRadius
-					)
-				);
-			}
-		} else {
-			controls.setCheckCollisions();
-		}
+		setupCollision(controls, this);
 	}
 
 	dispose_controls_for_html_element_id(html_element_id: string) {
