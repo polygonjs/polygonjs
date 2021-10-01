@@ -125,7 +125,6 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 	}
 	setTranslationSpeed(speed: number) {
 		this._translationSpeed = speed;
-		console.log('this._translationSpeed', this._translationSpeed);
 	}
 
 	//

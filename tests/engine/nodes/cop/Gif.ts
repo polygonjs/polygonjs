@@ -13,4 +13,5 @@ QUnit.test('COP gif simple', async (assert) => {
 	texture = container.texture();
 	assert.equal(texture.image.width, 402);
 	assert.equal(texture.image.height, 280);
+	assert.deepEqual(container.resolution(), [402, 280]);
 });

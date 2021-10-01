@@ -13,7 +13,7 @@ QUnit.test('COP image simple default', async (assert) => {
 	assert.ok(!file1.states.error.message());
 	texture = container.texture();
 	assert.equal(texture.image.width, 512);
-	assert.equal(texture.image.height, 512);
+	assert.deepEqual(container.resolution(), [512, 512]);
 });
 
 QUnit.test('COP image simple with bad path', async (assert) => {
@@ -44,6 +44,7 @@ QUnit.test('COP image simple exr', async (assert) => {
 	texture = container.texture();
 	assert.equal(texture.image.width, 1024);
 	assert.equal(texture.image.height, 512);
+	assert.deepEqual(container.resolution(), [1024, 512]);
 });
 
 QUnit.test('COP image simple basis', async (assert) => {

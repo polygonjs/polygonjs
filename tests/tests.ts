@@ -90,6 +90,7 @@ import './engine/nodes/cop/Gif';
 import './engine/nodes/cop/Image';
 import './engine/nodes/cop/Render';
 import './engine/nodes/cop/Switch';
+import './engine/nodes/cop/Video';
 
 QUnit.module('event');
 import './engine/nodes/event/Code';

@@ -1,19 +1,13 @@
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';
+import {Number2} from '../../types/GlobalTypes';
 
 export class TextureContainer extends TypedContainer<NodeContext.COP> {
-	// _content: Texture;
 	set_content(content: ContainableMap[NodeContext.COP]) {
 		super.set_content(content);
 	}
 
-	// set_texture(texture: Texture){
-	// 	if (this._content != null) {
-	// 		this._content.dispose();
-	// 	}
-	// 	this.set_content(texture);
-	// }
 	texture(): ContainableMap[NodeContext.COP] {
 		return this._content;
 	}
@@ -37,10 +31,23 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 			return [this._content];
 		}
 	}
-	resolution(): [number, number] {
+	resolution(): Number2 {
 		if (this._content) {
-			if (this._content.image) {
-				return [this._content.image.width, this._content.image.height];
+			const image = this._content.image;
+			if (image) {
+				// check if normal image
+				if (image instanceof HTMLImageElement || image instanceof Image || image instanceof ImageData) {
+					return [image.width, image.height];
+				}
+
+				// check if image data
+				if (image.data && image.width != null && image.height != null) {
+					return [image.width, image.height];
+				}
+
+				// check if video
+				const video = image as HTMLVideoElement;
+				return [video.videoWidth, video.videoHeight];
 			}
 		}
 		return [-1, -1];
