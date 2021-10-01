@@ -35,8 +35,13 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 		if (this._content) {
 			const image = this._content.image;
 			if (image) {
-				// check if normal image
-				if (image instanceof HTMLImageElement || image instanceof Image || image instanceof ImageData) {
+				// check if normal image or gif
+				if (
+					image instanceof HTMLImageElement ||
+					image instanceof Image ||
+					image instanceof ImageData ||
+					image instanceof HTMLCanvasElement // HTMLCanvasElement for gif
+				) {
 					return [image.width, image.height];
 				}
 

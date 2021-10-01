@@ -3,7 +3,7 @@ import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 QUnit.test('COP gif simple', async (assert) => {
 	const COP = window.COP;
 
-	const file1 = COP.createNode('image');
+	const file1 = COP.createNode('gif');
 	file1.p.url.set(`${ASSETS_ROOT}/textures/horses.gif`);
 
 	let container, texture;
