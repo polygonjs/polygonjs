@@ -40,6 +40,7 @@ import {DecalSopNode} from '../../../nodes/sop/Decal';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
+import {ExporterSopNode} from '../../../nodes/sop/Exporter';
 import {FaceSopNode} from '../../../nodes/sop/Face';
 import {FileSopNode} from '../../../nodes/sop/File';
 import {FuseSopNode} from '../../../nodes/sop/Fuse';
@@ -149,6 +150,7 @@ export interface GeoNodeChildrenMap {
 	delay: DelaySopNode;
 	delete: DeleteSopNode;
 	drawRange: DrawRangeSopNode;
+	exporter: ExporterSopNode;
 	face: FaceSopNode;
 	file: FileSopNode;
 	fuse: FuseSopNode;
@@ -354,6 +356,7 @@ export class SopRegister {
 		poly.registerNode(DelaySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DeleteSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(ExporterSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(FaceSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(FileSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FuseSopNode, CATEGORY_SOP.MODIFIER);

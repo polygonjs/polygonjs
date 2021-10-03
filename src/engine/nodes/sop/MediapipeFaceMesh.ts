@@ -161,9 +161,6 @@ export class MediapipeFaceMeshSopNode extends TypedSopNode<MediapipeFaceMeshSopP
 		canvasElement.height = videoElement.videoHeight;
 		const canvasCtx = canvasElement.getContext('2d')!;
 		canvasCtx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
-		document.body.append(canvasElement);
-		document.body.style.overflow = 'auto';
-		document.body.style.overflowY = 'auto';
 		return canvasElement;
 	}
 	private static _canvasToTexture(canvasElement: HTMLCanvasElement, index: number): Promise<TextureAndImage> {
