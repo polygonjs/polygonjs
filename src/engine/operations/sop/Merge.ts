@@ -110,7 +110,7 @@ export class MergeSopOperation extends BaseSopOperation {
 						this.states?.error.set('merge failed, check that input geometries have the same attributes');
 					}
 				} catch (e) {
-					this.states?.error.set(e);
+					this.states?.error.set((e as Error).message);
 				}
 			}
 		});

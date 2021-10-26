@@ -91,7 +91,7 @@ export class Reflector extends Mesh {
 	public onBeforeRender = this._onBeforeRender.bind(this);
 	private _coreRenderBlur: CoreRenderBlur;
 
-	constructor(public geometry: BufferGeometry, private _options: ReflectorOptions) {
+	constructor(public override geometry: BufferGeometry, private _options: ReflectorOptions) {
 		super();
 
 		const {width, height} = this._getRendererSize(this._options.renderer);

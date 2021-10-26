@@ -30,7 +30,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	rawInputSerialized() {
 		return this._components.map((c) => c.rawInputSerialized()) as ParamInitValueSerializedTypeMap[T];
 	}
-	protected _copy_value(param: TypedMultipleParam<T>) {
+	 protected _copy_value(param: TypedMultipleParam<T>) {
 		for (let i = 0; i < this.components.length; i++) {
 			const component = this.components[i];
 			const src_component = param.components[i];

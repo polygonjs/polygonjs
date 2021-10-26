@@ -212,7 +212,7 @@ export class CoreImage {
 				};
 				xhr.send();
 			} catch (err) {
-				reject(err.message);
+				reject((err as Error).message);
 			}
 		});
 	}
