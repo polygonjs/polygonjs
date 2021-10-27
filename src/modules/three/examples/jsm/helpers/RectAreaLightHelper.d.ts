@@ -1,10 +1,10 @@
-import { Color, Line, RectAreaLight } from 'three';
+import { Line, RectAreaLight, ColorRepresentation } from 'three';
 
 export class RectAreaLightHelper extends Line {
-    constructor(light: RectAreaLight, color?: Color | string | number);
+    constructor(light: RectAreaLight, color?: ColorRepresentation);
 
     light: RectAreaLight;
-    color: Color | string | number | undefined;
+    color: ColorRepresentation | undefined;
 
     dispose(): void;
 }

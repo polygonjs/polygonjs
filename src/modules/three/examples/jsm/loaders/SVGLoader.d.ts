@@ -1,9 +1,11 @@
 import { Loader, LoadingManager, ShapePath, BufferGeometry, Vector3, Shape } from 'three';
 
 export interface SVGResultPaths extends ShapePath {
-    userData?: {
-        [key: string]: any;
-    };
+    userData?:
+        | {
+              [key: string]: any;
+          }
+        | undefined;
 }
 
 export interface SVGResult {

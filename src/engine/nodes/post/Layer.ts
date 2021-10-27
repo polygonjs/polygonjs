@@ -4,7 +4,7 @@
  *
  */
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
-import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
+import {Pass, FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {EffectComposer} from '../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
@@ -46,7 +46,7 @@ const SHADER = {
 class LayerPass extends Pass {
 	private material: ShaderMaterial;
 	private uniforms: LayerUniforms;
-	private fsQuad: Pass.FullScreenQuad;
+	private fsQuad: FullScreenQuad;
 	constructor(private _composer1: EffectComposer, private _composer2: EffectComposer) {
 		super();
 
@@ -57,7 +57,7 @@ class LayerPass extends Pass {
 			fragmentShader: SHADER.fragmentShader,
 			transparent: true,
 		});
-		this.fsQuad = new Pass.FullScreenQuad(this.material);
+		this.fsQuad = new FullScreenQuad(this.material);
 	}
 	render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget) {
 		this._composer1.render();

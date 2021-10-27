@@ -3,7 +3,6 @@ import {Bone} from 'three/src/objects/Bone';
 import {Box3} from 'three/src/math/Box3';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {CanvasTexture} from 'three/src/textures/CanvasTexture';
 import {ClampToEdgeWrapping} from 'three/src/constants';
 import {Color} from 'three/src/math/Color';
 import {DirectionalLight} from 'three/src/lights/DirectionalLight';
@@ -53,6 +52,7 @@ import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
 import {Sphere} from 'three/src/math/Sphere';
 import {SpotLight} from 'three/src/lights/SpotLight';
 import {TangentSpaceNormalMap} from 'three/src/constants';
+import {Texture} from 'three/src/textures/Texture';
 import {TextureLoader} from 'three/src/loaders/TextureLoader';
 import {TriangleFanDrawMode} from 'three/src/constants';
 import {TriangleStripDrawMode} from 'three/src/constants';
@@ -2596,7 +2596,10 @@ class GLTFParser {
 
 					onLoad = function ( imageBitmap ) {
 
-						resolve( new CanvasTexture( imageBitmap ) );
+						const texture = new Texture( imageBitmap );
+						texture.needsUpdate = true;
+
+						resolve( texture );
 
 					};
 
@@ -2637,6 +2640,11 @@ class GLTFParser {
 			} );
 
 			return texture;
+
+		} ).catch( function () {
+
+			console.error( 'THREE.GLTFLoader: Couldn\'t load texture', sourceURI );
+			return null;
 
 		} );
 
