@@ -8,7 +8,6 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
 import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
@@ -57,7 +56,7 @@ interface Controllers {
 function AdvancedMeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends PCSSParamConfig(
 		FogParamConfig(
-			SkinningParamConfig(WireframeParamConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base))))
+			WireframeParamConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base)))
 		)
 	) {};
 }
@@ -141,7 +140,6 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 		}
 		TransparencyController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.compileIfRequired();

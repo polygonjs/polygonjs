@@ -26,7 +26,7 @@ import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessControlle
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
 import {CameraNodeType} from '../../poly/NodeContext';
-import {MathUtils} from 'three/src/math/MathUtils';
+import {radToDeg, degToRad} from 'three/src/math/MathUtils';
 import {TypeAssert} from '../../poly/Assert';
 
 export function PerspectiveCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
@@ -104,10 +104,10 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 		//
 		if (this._object.aspect > this.pv.expectedAspectRatio) {
 			// window too large
-			const cameraHeight = Math.tan(MathUtils.degToRad(this.pv.fov / 2));
+			const cameraHeight = Math.tan(degToRad(this.pv.fov / 2));
 			const ratio = this._object.aspect / this.pv.expectedAspectRatio;
 			const newCameraHeight = cameraHeight / ratio;
-			this._object.fov = MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
+			this._object.fov = radToDeg(Math.atan(newCameraHeight)) * 2;
 		} else {
 			this._object.fov = this.pv.fov;
 		}
@@ -118,10 +118,10 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 			this._object.fov = this.pv.fov;
 		} else {
 			// window too narrow
-			const cameraHeight = Math.tan(MathUtils.degToRad(this.pv.fov / 2));
+			const cameraHeight = Math.tan(degToRad(this.pv.fov / 2));
 			const ratio = this._object.aspect / this.pv.expectedAspectRatio;
 			const newCameraHeight = cameraHeight / ratio;
-			this._object.fov = MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
+			this._object.fov = radToDeg(Math.atan(newCameraHeight)) * 2;
 		}
 	}
 }

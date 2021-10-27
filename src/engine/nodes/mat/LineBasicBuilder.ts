@@ -8,7 +8,6 @@
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {ShaderAssemblerLine} from '../gl/code/assemblers/materials/Line';
 import {TypedBuilderMatNode, BaseBuilderParamConfig} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
@@ -21,12 +20,10 @@ interface Controllers {
 	advancedCommon: AdvancedCommonController;
 }
 class LineBasicMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		AdvancedCommonParamConfig(
-			BaseBuilderParamConfig(
-				/* advanced */ AdvancedFolderParamConfig(
-					TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-				)
+	AdvancedCommonParamConfig(
+		BaseBuilderParamConfig(
+			/* advanced */ AdvancedFolderParamConfig(
+				TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 			)
 		)
 	)
@@ -68,7 +65,6 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 
 		TransparencyController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 
 		this.compileIfRequired();
 

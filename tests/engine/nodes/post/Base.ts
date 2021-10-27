@@ -6,6 +6,10 @@ import {VerticalBlurShader} from '../../../../src/modules/three/examples/jsm/sha
 import {UnrealBloomPass} from '../../../../src/modules/three/examples/jsm/postprocessing/UnrealBloomPass';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
+function trimEmptySpace(word:string){
+	return word.replace(/\s|\t|\r\n|\n|\r/gm, '')
+}
+
 QUnit.test('Post nodes simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
@@ -66,8 +70,8 @@ QUnit.test('Post nodes simple', async (assert) => {
 	composer = camera.postProcessController.composer(canvas);
 	assert.equal(composer.passes.length, 1, 'composer has one pass');
 	assert.equal(
-		(composer.passes[0] as UnrealBloomPass).compositeMaterial.fragmentShader,
-		'varying vec2 vUv;				uniform sampler2D blurTexture1;				uniform sampler2D blurTexture2;				uniform sampler2D blurTexture3;				uniform sampler2D blurTexture4;				uniform sampler2D blurTexture5;				uniform sampler2D dirtTexture;				uniform float bloomStrength;				uniform float bloomRadius;				uniform float bloomFactors[NUM_MIPS];				uniform vec3 bloomTintColors[NUM_MIPS];								float lerpBloomFactor(const in float factor) { 					float mirrorFactor = 1.2 - factor;					return mix(factor, mirrorFactor, bloomRadius);				}								void main() {					gl_FragColor = bloomStrength * ( lerpBloomFactor(bloomFactors[0]) * vec4(bloomTintColors[0], 1.0) * texture2D(blurTexture1, vUv) + 													 lerpBloomFactor(bloomFactors[1]) * vec4(bloomTintColors[1], 1.0) * texture2D(blurTexture2, vUv) + 													 lerpBloomFactor(bloomFactors[2]) * vec4(bloomTintColors[2], 1.0) * texture2D(blurTexture3, vUv) + 													 lerpBloomFactor(bloomFactors[3]) * vec4(bloomTintColors[3], 1.0) * texture2D(blurTexture4, vUv) + 													 lerpBloomFactor(bloomFactors[4]) * vec4(bloomTintColors[4], 1.0) * texture2D(blurTexture5, vUv) );				}'
+		trimEmptySpace((composer.passes[0] as UnrealBloomPass).compositeMaterial.fragmentShader),
+		trimEmptySpace('varying vec2 vUv;				uniform sampler2D blurTexture1;				uniform sampler2D blurTexture2;				uniform sampler2D blurTexture3;				uniform sampler2D blurTexture4;				uniform sampler2D blurTexture5;				uniform sampler2D dirtTexture;				uniform float bloomStrength;				uniform float bloomRadius;				uniform float bloomFactors[NUM_MIPS];				uniform vec3 bloomTintColors[NUM_MIPS];								float lerpBloomFactor(const in float factor) { 					float mirrorFactor = 1.2 - factor;					return mix(factor, mirrorFactor, bloomRadius);				}								void main() {					gl_FragColor = bloomStrength * ( lerpBloomFactor(bloomFactors[0]) * vec4(bloomTintColors[0], 1.0) * texture2D(blurTexture1, vUv) + 													 lerpBloomFactor(bloomFactors[1]) * vec4(bloomTintColors[1], 1.0) * texture2D(blurTexture2, vUv) + 													 lerpBloomFactor(bloomFactors[2]) * vec4(bloomTintColors[2], 1.0) * texture2D(blurTexture3, vUv) + 													 lerpBloomFactor(bloomFactors[3]) * vec4(bloomTintColors[3], 1.0) * texture2D(blurTexture4, vUv) + 													 lerpBloomFactor(bloomFactors[4]) * vec4(bloomTintColors[4], 1.0) * texture2D(blurTexture5, vUv) );				}')
 	);
 
 	// change display flag again
@@ -75,8 +79,8 @@ QUnit.test('Post nodes simple', async (assert) => {
 	composer = camera.postProcessController.composer(canvas);
 	assert.equal(composer.passes.length, 1, 'composer has one pass');
 	assert.equal(
-		((composer.passes[0] as ShaderPass).material as ShaderMaterial).fragmentShader,
-		VerticalBlurShader.fragmentShader
+		trimEmptySpace(((composer.passes[0] as ShaderPass).material as ShaderMaterial).fragmentShader),
+		trimEmptySpace(VerticalBlurShader.fragmentShader)
 	);
 
 	// change display flag again
@@ -84,12 +88,12 @@ QUnit.test('Post nodes simple', async (assert) => {
 	composer = camera.postProcessController.composer(canvas);
 	assert.equal(composer.passes.length, 2, 'composer has two passes');
 	assert.equal(
-		((composer.passes[1] as ShaderPass).material as ShaderMaterial).fragmentShader,
-		HorizontalBlurShader.fragmentShader
+		trimEmptySpace(((composer.passes[1] as ShaderPass).material as ShaderMaterial).fragmentShader),
+		trimEmptySpace(HorizontalBlurShader.fragmentShader)
 	);
 	assert.equal(
-		((composer.passes[0] as ShaderPass).material as ShaderMaterial).fragmentShader,
-		VerticalBlurShader.fragmentShader
+		trimEmptySpace(((composer.passes[0] as ShaderPass).material as ShaderMaterial).fragmentShader),
+		trimEmptySpace(VerticalBlurShader.fragmentShader)
 	);
 
 	RendererUtils.dispose();

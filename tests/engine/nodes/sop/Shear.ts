@@ -26,13 +26,15 @@ QUnit.test('shear simple', async (assert) => {
 	let container = await shear.compute();
 	assert.deepEqual(getMinMaxPointYPos(container), {min: -0.5, max: 0.5});
 
-	shear.p.matrixAmount.set([1, 0, 0]);
+	shear.p.xy.set(1);
+	shear.p.xz.set(0);
 	container = await shear.compute();
 	assert.deepEqual(getMinMaxPointYPos(container), {min: -1, max: 1});
 
-	shear.p.matrixAmount.set([5, 5, 10]);
+	shear.p.xy.set(0);
+	shear.p.xz.set(4);	
 	container = await shear.compute();
-	assert.deepEqual(getMinMaxPointYPos(container), {min: -2, max: 8});
+	assert.deepEqual(getMinMaxPointYPos(container), {min: -0.5, max: 0.5});
 
 	// axis mode
 	shear.setMode(ShearMode.AXIS);

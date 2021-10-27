@@ -8,7 +8,6 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
 import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
@@ -50,27 +49,25 @@ interface Controllers {
 }
 class MeshPhongMatParamsConfig extends PCSSParamConfig(
 	FogParamConfig(
-		SkinningParamConfig(
-			WireframeParamConfig(
-				AdvancedCommonParamConfig(
-					BaseBuilderParamConfig(
-						/* advanced */
-						AdvancedFolderParamConfig(
-							SpecularMapParamConfig(
-								NormalMapParamConfig(
-									LightMapParamConfig(
-										EnvMapParamConfig(
-											EmissiveMapParamConfig(
-												DisplacementMapParamConfig(
-													BumpMapParamConfig(
-														AOMapParamConfig(
-															AlphaMapParamConfig(
-																MapParamConfig(
-																	/* textures */
-																	TexturesFolderParamConfig(
-																		TransparencyParamConfig(
-																			DefaultFolderParamConfig(NodeParamsConfig)
-																		)
+		WireframeParamConfig(
+			AdvancedCommonParamConfig(
+				BaseBuilderParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						SpecularMapParamConfig(
+							NormalMapParamConfig(
+								LightMapParamConfig(
+									EnvMapParamConfig(
+										EmissiveMapParamConfig(
+											DisplacementMapParamConfig(
+												BumpMapParamConfig(
+													AOMapParamConfig(
+														AlphaMapParamConfig(
+															MapParamConfig(
+																/* textures */
+																TexturesFolderParamConfig(
+																	TransparencyParamConfig(
+																		DefaultFolderParamConfig(NodeParamsConfig)
 																	)
 																)
 															)
@@ -131,7 +128,6 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		}
 		TransparencyController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.compileIfRequired();

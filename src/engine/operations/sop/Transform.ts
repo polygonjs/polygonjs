@@ -13,7 +13,7 @@ import {
 	TRANSFORM_TARGET_TYPES,
 } from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MathUtils} from 'three/src/math/MathUtils';
+import {DEG2RAD} from 'three/src/math/MathUtils';
 
 export enum TransformObjectMode {
 	SET_PARAMS = 'set params',
@@ -117,7 +117,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		for (let object of objects) {
 			object.position.copy(params.t);
 			const order = ROTATION_ORDERS[params.rotationOrder];
-			this._r.copy(params.r).multiplyScalar(MathUtils.DEG2RAD);
+			this._r.copy(params.r).multiplyScalar(DEG2RAD);
 			object.rotation.set(this._r.x, this._r.y, this._r.z, order);
 			this._object_scale.copy(params.s).multiplyScalar(params.scale);
 			object.scale.copy(this._object_scale);

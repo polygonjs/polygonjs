@@ -8,7 +8,6 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
 import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
@@ -41,23 +40,21 @@ interface Controllers {
 }
 class MeshLambertMatParamsConfig extends PCSSParamConfig(
 	FogParamConfig(
-		SkinningParamConfig(
-			WireframeParamConfig(
-				AdvancedCommonParamConfig(
-					BaseBuilderParamConfig(
-						/* advanced */
-						AdvancedFolderParamConfig(
-							LightMapParamConfig(
-								EnvMapParamConfig(
-									EmissiveMapParamConfig(
-										AOMapParamConfig(
-											AlphaMapParamConfig(
-												MapParamConfig(
-													/* textures */
-													TexturesFolderParamConfig(
-														TransparencyParamConfig(
-															DefaultFolderParamConfig(NodeParamsConfig)
-														)
+		WireframeParamConfig(
+			AdvancedCommonParamConfig(
+				BaseBuilderParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						LightMapParamConfig(
+							EnvMapParamConfig(
+								EmissiveMapParamConfig(
+									AOMapParamConfig(
+										AlphaMapParamConfig(
+											MapParamConfig(
+												/* textures */
+												TexturesFolderParamConfig(
+													TransparencyParamConfig(
+														DefaultFolderParamConfig(NodeParamsConfig)
 													)
 												)
 											)
@@ -111,7 +108,6 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 		}
 		TransparencyController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.compileIfRequired();

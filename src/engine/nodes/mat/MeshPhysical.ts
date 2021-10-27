@@ -12,7 +12,6 @@ import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapController';
@@ -51,27 +50,25 @@ interface Controllers {
 	physical: MeshPhysicalController;
 }
 class MeshPhysicalMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					MeshPhysicalParamConfig(
-						MetalnessRoughnessMapParamConfig(
-							NormalMapParamConfig(
-								LightMapParamConfig(
-									EnvMapParamConfig(
-										EmissiveMapParamConfig(
-											DisplacementMapParamConfig(
-												BumpMapParamConfig(
-													AOMapParamConfig(
-														AlphaMapParamConfig(
-															MapParamConfig(
-																/* textures */
-																TexturesFolderParamConfig(
-																	ColorParamConfig(
-																		DefaultFolderParamConfig(NodeParamsConfig)
-																	)
+	WireframeParamConfig(
+		AdvancedCommonParamConfig(
+			/* advanced */
+			AdvancedFolderParamConfig(
+				MeshPhysicalParamConfig(
+					MetalnessRoughnessMapParamConfig(
+						NormalMapParamConfig(
+							LightMapParamConfig(
+								EnvMapParamConfig(
+									EmissiveMapParamConfig(
+										DisplacementMapParamConfig(
+											BumpMapParamConfig(
+												AOMapParamConfig(
+													AlphaMapParamConfig(
+														MapParamConfig(
+															/* textures */
+															TexturesFolderParamConfig(
+																ColorParamConfig(
+																	DefaultFolderParamConfig(NodeParamsConfig)
 																)
 															)
 														)
@@ -137,7 +134,6 @@ export class MeshPhysicalMatNode extends TypedMatNode<MeshPhysicalMaterial, Mesh
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.setMaterial(this.material);

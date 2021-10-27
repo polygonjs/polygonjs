@@ -3,7 +3,7 @@
 
 import {Color} from 'three/src/math/Color';
 import {LinearFilter} from 'three/src/constants';
-import {MathUtils} from 'three/src/math/MathUtils';
+import {isPowerOfTwo} from 'three/src/math/MathUtils';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Plane} from 'three/src/math/Plane';
@@ -97,7 +97,7 @@ export class Reflector extends Mesh {
 		const {width, height} = this._getRendererSize(this._options.renderer);
 
 		this.renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
-		if (!MathUtils.isPowerOfTwo(width) || !MathUtils.isPowerOfTwo(height)) {
+		if (!isPowerOfTwo(width) || !isPowerOfTwo(height)) {
 			this.renderTarget.texture.generateMipmaps = false;
 		}
 		this._coreRenderBlur = new CoreRenderBlur(new Vector2(width, height));

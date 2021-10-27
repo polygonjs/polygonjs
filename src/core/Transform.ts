@@ -5,7 +5,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Euler} from 'three/src/math/Euler';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {MathUtils} from 'three/src/math/MathUtils';
+import {degToRad} from 'three/src/math/MathUtils';
 
 import {BaseNodeType} from '../engine/nodes/_Base';
 
@@ -110,9 +110,9 @@ export class CoreTransform {
 	private _matrix_s = new Vector3();
 	matrix(t: Vector3, r: Vector3, s: Vector3, scale: number, rotation_order: RotationOrder) {
 		this._matrix_euler.set(
-			MathUtils.degToRad(r.x),
-			MathUtils.degToRad(r.y),
-			MathUtils.degToRad(r.z),
+			degToRad(r.x),
+			degToRad(r.y),
+			degToRad(r.z),
 			rotation_order
 		);
 		this._matrix_q.setFromEuler(this._matrix_euler);

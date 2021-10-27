@@ -19,6 +19,8 @@ QUnit.test('attrib cast simple', async (assert) => {
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	let index = geometry.getIndex()!;
+	console.log(index.constructor)
+	console.log(BufferAttribute)
 	assert.ok(index instanceof BufferAttribute);
 	assert.notOk(index instanceof Uint16BufferAttribute);
 
@@ -32,6 +34,8 @@ QUnit.test('attrib cast simple', async (assert) => {
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	index = geometry.getIndex()!;
+	console.log(index.constructor)
+	console.log(Uint16BufferAttribute)
 	assert.ok(index instanceof BufferAttribute);
 	assert.ok(index instanceof Uint16BufferAttribute);
 });

@@ -11,7 +11,7 @@ import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
  * Limitations: ASCII decoding assumes file is UTF-8.
  *
  * Usage:
- *	var loader = new PLYLoader();
+ *	const loader = new PLYLoader();
  *	loader.load('./models/ply/ascii/dolphins.ply', function (geometry) {
  *
  *		scene.add( new THREE.Mesh( geometry ) );
@@ -31,23 +31,21 @@ import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
  */
 
 
-var PLYLoader = function ( manager ) {
+class PLYLoader extends Loader {
 
-	Loader.call( this, manager );
+	constructor( manager ) {
 
-	this.propertyNameMapping = {};
+		super( manager );
 
-};
+		this.propertyNameMapping = {};
 
-PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
+	}
 
-	constructor: PLYLoader,
+	load( url, onLoad, onProgress, onError ) {
 
-	load: function ( url, onLoad, onProgress, onError ) {
+		const scope = this;
 
-		var scope = this;
-
-		var loader = new FileLoader( this.manager );
+		const loader = new FileLoader( this.manager );
 		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( this.requestHeader );
@@ -76,22 +74,22 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		}, onProgress, onError );
 
-	},
+	}
 
-	setPropertyNameMapping: function ( mapping ) {
+	setPropertyNameMapping( mapping ) {
 
 		this.propertyNameMapping = mapping;
 
-	},
+	}
 
-	parse: function ( data ) {
+	parse( data ) {
 
 		function parseHeader( data ) {
 
-			var patternHeader = /ply([\s\S]*)end_header\r?\n/;
-			var headerText = '';
-			var headerLength = 0;
-			var result = patternHeader.exec( data );
+			const patternHeader = /ply([\s\S]*)end_header\r?\n/;
+			let headerText = '';
+			let headerLength = 0;
+			const result = patternHeader.exec( data );
 
 			if ( result !== null ) {
 
@@ -100,20 +98,19 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			}
 
-			var header = {
+			const header = {
 				comments: [],
 				elements: [],
 				headerLength: headerLength,
 				objInfo: ''
 			};
 
-			var lines = headerText.split( '\n' );
-			var currentElement;
-			var lineType, lineValues;
+			const lines = headerText.split( '\n' );
+			let currentElement;
 
 			function make_ply_element_property( propertValues, propertyNameMapping ) {
 
-				var property = { type: propertValues[ 0 ] };
+				const property = { type: propertValues[ 0 ] };
 
 				if ( property.type === 'list' ) {
 
@@ -137,15 +134,15 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			}
 
-			for ( var i = 0; i < lines.length; i ++ ) {
+			for ( let i = 0; i < lines.length; i ++ ) {
 
-				var line = lines[ i ];
+				let line = lines[ i ];
 				line = line.trim();
 
 				if ( line === '' ) continue;
 
-				lineValues = line.split( /\s+/ );
-				lineType = lineValues.shift();
+				const lineValues = line.split( /\s+/ );
+				const lineType = lineValues.shift();
 				line = lineValues.join( ' ' );
 
 				switch ( lineType ) {
@@ -228,18 +225,18 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		function parseASCIIElement( properties, line ) {
 
-			var values = line.split( /\s+/ );
+			const values = line.split( /\s+/ );
 
-			var element = {};
+			const element = {};
 
-			for ( var i = 0; i < properties.length; i ++ ) {
+			for ( let i = 0; i < properties.length; i ++ ) {
 
 				if ( properties[ i ].type === 'list' ) {
 
-					var list = [];
-					var n = parseASCIINumber( values.shift(), properties[ i ].countType );
+					const list = [];
+					const n = parseASCIINumber( values.shift(), properties[ i ].countType );
 
-					for ( var j = 0; j < n; j ++ ) {
+					for ( let j = 0; j < n; j ++ ) {
 
 						list.push( parseASCIINumber( values.shift(), properties[ i ].itemType ) );
 
@@ -263,7 +260,7 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			// PLY ascii format specification, as per http://en.wikipedia.org/wiki/PLY_(file_format)
 
-			var buffer = {
+			const buffer = {
 				indices: [],
 				vertices: [],
 				normals: [],
@@ -272,23 +269,23 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 				colors: []
 			};
 
-			var result;
+			let result;
 
-			var patternBody = /end_header\s([\s\S]*)$/;
-			var body = '';
+			const patternBody = /end_header\s([\s\S]*)$/;
+			let body = '';
 			if ( ( result = patternBody.exec( data ) ) !== null ) {
 
 				body = result[ 1 ];
 
 			}
 
-			var lines = body.split( '\n' );
-			var currentElement = 0;
-			var currentElementCount = 0;
+			const lines = body.split( '\n' );
+			let currentElement = 0;
+			let currentElementCount = 0;
 
-			for ( var i = 0; i < lines.length; i ++ ) {
+			for ( let i = 0; i < lines.length; i ++ ) {
 
-				var line = lines[ i ];
+				let line = lines[ i ];
 				line = line.trim();
 				if ( line === '' ) {
 
@@ -303,7 +300,7 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				}
 
-				var element = parseASCIIElement( header.elements[ currentElement ].properties, line );
+				const element = parseASCIIElement( header.elements[ currentElement ].properties, line );
 
 				handleElement( buffer, header.elements[ currentElement ].name, element );
 
@@ -317,7 +314,7 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		function postProcess( buffer ) {
 
-			var geometry = new BufferGeometry();
+			let geometry = new BufferGeometry();
 
 			// mandatory buffer data
 
@@ -388,8 +385,8 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			} else if ( elementName === 'face' ) {
 
-				var vertex_indices = element.vertex_indices || element.vertex_index; // issue #9338
-				var texcoord = element.texcoord;
+				const vertex_indices = element.vertex_indices || element.vertex_index; // issue #9338
+				const texcoord = element.texcoord;
 
 				if ( vertex_indices.length === 3 ) {
 
@@ -434,20 +431,20 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		function binaryReadElement( dataview, at, properties, little_endian ) {
 
-			var element = {};
-			var result, read = 0;
+			const element = {};
+			let result, read = 0;
 
-			for ( var i = 0; i < properties.length; i ++ ) {
+			for ( let i = 0; i < properties.length; i ++ ) {
 
 				if ( properties[ i ].type === 'list' ) {
 
-					var list = [];
+					const list = [];
 
 					result = binaryRead( dataview, at + read, properties[ i ].countType, little_endian );
-					var n = result[ 0 ];
+					const n = result[ 0 ];
 					read += result[ 1 ];
 
-					for ( var j = 0; j < n; j ++ ) {
+					for ( let j = 0; j < n; j ++ ) {
 
 						result = binaryRead( dataview, at + read, properties[ i ].itemType, little_endian );
 						list.push( result[ 0 ] );
@@ -473,7 +470,7 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		function parseBinary( data, header ) {
 
-			var buffer = {
+			const buffer = {
 				indices: [],
 				vertices: [],
 				normals: [],
@@ -482,17 +479,17 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 				colors: []
 			};
 
-			var little_endian = ( header.format === 'binary_little_endian' );
-			var body = new DataView( data, header.headerLength );
-			var result, loc = 0;
+			const little_endian = ( header.format === 'binary_little_endian' );
+			const body = new DataView( data, header.headerLength );
+			let result, loc = 0;
 
-			for ( var currentElement = 0; currentElement < header.elements.length; currentElement ++ ) {
+			for ( let currentElement = 0; currentElement < header.elements.length; currentElement ++ ) {
 
-				for ( var currentElementCount = 0; currentElementCount < header.elements[ currentElement ].count; currentElementCount ++ ) {
+				for ( let currentElementCount = 0; currentElementCount < header.elements[ currentElement ].count; currentElementCount ++ ) {
 
 					result = binaryReadElement( body, loc, header.elements[ currentElement ].properties, little_endian );
 					loc += result[ 1 ];
-					var element = result[ 0 ];
+					const element = result[ 0 ];
 
 					handleElement( buffer, header.elements[ currentElement ].name, element );
 
@@ -506,13 +503,13 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		//
 
-		var geometry;
-		var scope = this;
+		let geometry;
+		const scope = this;
 
 		if ( data instanceof ArrayBuffer ) {
 
-			var text = LoaderUtils.decodeText( new Uint8Array( data ) );
-			var header = parseHeader( text );
+			const text = LoaderUtils.decodeText( new Uint8Array( data ) );
+			const header = parseHeader( text );
 
 			geometry = header.format === 'ascii' ? parseASCII( text, header ) : parseBinary( data, header );
 
@@ -526,6 +523,6 @@ PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 	}
 
-} );
+}
 
 export { PLYLoader };

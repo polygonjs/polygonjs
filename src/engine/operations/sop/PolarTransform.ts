@@ -9,7 +9,7 @@ import {DefaultOperationParams} from '../_Base';
 import {TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Quaternion} from 'three/src/math/Quaternion';
-import {MathUtils} from 'three/src/math/MathUtils';
+import {degToRad} from 'three/src/math/MathUtils';
 
 const AXIS_VERTICAL = new Vector3(0, 1, 0);
 const AXIS_HORIZONTAL = new Vector3(-1, 0, 0);
@@ -90,8 +90,8 @@ export class PolarTransformSopOperation extends BaseSopOperation {
 		this._latitudeMatrix.identity();
 		this._depthMatrix.identity();
 		this._centerMatrix.makeTranslation(params.center.x, params.center.y, params.center.z);
-		this._longitudeMatrix.makeRotationAxis(AXIS_VERTICAL, MathUtils.degToRad(params.longitude));
-		this._latitudeMatrix.makeRotationAxis(AXIS_HORIZONTAL, MathUtils.degToRad(params.latitude));
+		this._longitudeMatrix.makeRotationAxis(AXIS_VERTICAL, degToRad(params.longitude));
+		this._latitudeMatrix.makeRotationAxis(AXIS_HORIZONTAL, degToRad(params.latitude));
 		this._depthMatrix.makeTranslation(0, 0, params.depth);
 		this._fullMatrix
 			.copy(this._centerMatrix)

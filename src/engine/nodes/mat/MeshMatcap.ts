@@ -12,7 +12,6 @@ import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
@@ -38,20 +37,18 @@ interface Controllers {
 }
 
 class MeshStandardMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		AdvancedCommonParamConfig(
-			/* advanced */
-			AdvancedFolderParamConfig(
-				NormalMapParamConfig(
-					DisplacementMapParamConfig(
-						BumpMapParamConfig(
-							AlphaMapParamConfig(
-								MapParamConfig(
-									MatcapMapParamConfig(
-										/* textures */
-										TexturesFolderParamConfig(
-											ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-										)
+	AdvancedCommonParamConfig(
+		/* advanced */
+		AdvancedFolderParamConfig(
+			NormalMapParamConfig(
+				DisplacementMapParamConfig(
+					BumpMapParamConfig(
+						AlphaMapParamConfig(
+							MapParamConfig(
+								MatcapMapParamConfig(
+									/* textures */
+									TexturesFolderParamConfig(
+										ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 									)
 								)
 							)
@@ -103,7 +100,6 @@ export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshStan
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 
 		this.setMaterial(this.material);
 	}

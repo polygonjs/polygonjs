@@ -10,7 +10,7 @@ import {RGBEEncoding} from 'three/src/constants';
 import {RGBEFormat} from 'three/src/constants';
 import {RGBFormat} from 'three/src/constants';
 import {UnsignedByteType} from 'three/src/constants';
-import * as fflate from '../libs/fflate.module.min.js';
+import * as fflate from '../libs/fflate.module.js';
 
 /**
  * OpenEXR loader currently supports uncompressed, ZIP(S), RLE, PIZ and DWA/B compression.
@@ -85,19 +85,17 @@ import * as fflate from '../libs/fflate.module.min.js';
 
 // // End of OpenEXR license -------------------------------------------------
 
-var EXRLoader = function ( manager ) {
+class EXRLoader extends DataTextureLoader {
 
-	DataTextureLoader.call( this, manager );
+	constructor( manager ) {
 
-	this.type = FloatType;
+		super( manager );
 
-};
+		this.type = FloatType;
 
-EXRLoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype ), {
+	}
 
-	constructor: EXRLoader,
-
-	parse: function ( buffer ) {
+	parse( buffer ) {
 
 		const USHORT_RANGE = ( 1 << 16 );
 		const BITMAP_SIZE = ( USHORT_RANGE >> 3 );
@@ -2364,16 +2362,16 @@ EXRLoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype 
 			type: this.type
 		};
 
-	},
+	}
 
-	setDataType: function ( value ) {
+	setDataType( value ) {
 
 		this.type = value;
 		return this;
 
-	},
+	}
 
-	load: function ( url, onLoad, onProgress, onError ) {
+	load( url, onLoad, onProgress, onError ) {
 
 		function onLoadCallback( texture, texData ) {
 
@@ -2404,10 +2402,10 @@ EXRLoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype 
 
 		}
 
-		return DataTextureLoader.prototype.load.call( this, url, onLoadCallback, onProgress, onError );
+		return super.load( url, onLoadCallback, onProgress, onError );
 
 	}
 
-} );
+}
 
 export { EXRLoader };

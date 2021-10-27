@@ -26,8 +26,38 @@ class ShearSopParamConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	/** @param matrixAmount */
-	matrixAmount = ParamConfig.VECTOR3(DEFAULT.matrixAmount.toArray(), {
+	/** @param matrixMode XY */
+	xy = ParamConfig.FLOAT(DEFAULT.xy, {
+		visibleIf: {
+			mode: SHEAR_MODES.indexOf(ShearMode.MATRIX),
+		},
+	});
+	/** @param matrixMode XZ */
+	xz = ParamConfig.FLOAT(DEFAULT.xz, {
+		visibleIf: {
+			mode: SHEAR_MODES.indexOf(ShearMode.MATRIX),
+		},
+	});
+	/** @param matrixMode YX */
+	yx = ParamConfig.FLOAT(DEFAULT.yx, {
+		visibleIf: {
+			mode: SHEAR_MODES.indexOf(ShearMode.MATRIX),
+		},
+	});
+	/** @param matrixMode YZ */
+	yz = ParamConfig.FLOAT(DEFAULT.yz, {
+		visibleIf: {
+			mode: SHEAR_MODES.indexOf(ShearMode.MATRIX),
+		},
+	});
+	/** @param matrixMode ZX */
+	zx = ParamConfig.FLOAT(DEFAULT.zx, {
+		visibleIf: {
+			mode: SHEAR_MODES.indexOf(ShearMode.MATRIX),
+		},
+	});
+	/** @param matrixMode ZY */
+	zy = ParamConfig.FLOAT(DEFAULT.zy, {
 		visibleIf: {
 			mode: SHEAR_MODES.indexOf(ShearMode.MATRIX),
 		},

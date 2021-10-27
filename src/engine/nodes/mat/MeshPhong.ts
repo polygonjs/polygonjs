@@ -12,7 +12,6 @@ import {TypedMatNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
@@ -48,26 +47,24 @@ interface Controllers {
 	specularMap: TextureSpecularMapController;
 }
 class MeshPhongMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					SpecularMapParamConfig(
-						NormalMapParamConfig(
-							LightMapParamConfig(
-								EnvMapParamConfig(
-									EmissiveMapParamConfig(
-										DisplacementMapParamConfig(
-											BumpMapParamConfig(
-												AOMapParamConfig(
-													AlphaMapParamConfig(
-														MapParamConfig(
-															/* textures */
-															TexturesFolderParamConfig(
-																ColorParamConfig(
-																	DefaultFolderParamConfig(NodeParamsConfig)
-																)
+	WireframeParamConfig(
+		AdvancedCommonParamConfig(
+			/* advanced */
+			AdvancedFolderParamConfig(
+				SpecularMapParamConfig(
+					NormalMapParamConfig(
+						LightMapParamConfig(
+							EnvMapParamConfig(
+								EmissiveMapParamConfig(
+									DisplacementMapParamConfig(
+										BumpMapParamConfig(
+											AOMapParamConfig(
+												AlphaMapParamConfig(
+													MapParamConfig(
+														/* textures */
+														TexturesFolderParamConfig(
+															ColorParamConfig(
+																DefaultFolderParamConfig(NodeParamsConfig)
 															)
 														)
 													)
@@ -130,7 +127,6 @@ export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongM
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		if (this.material.flatShading != isBooleanTrue(this.pv.flatShading)) {

@@ -13,7 +13,6 @@ import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
@@ -39,21 +38,19 @@ interface Controllers {
 	map: TextureMapController;
 }
 class MeshLambertMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					LightMapParamConfig(
-						EnvMapParamConfig(
-							EmissiveMapParamConfig(
-								AOMapParamConfig(
-									AlphaMapParamConfig(
-										MapParamConfig(
-											/* textures */
-											TexturesFolderParamConfig(
-												ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-											)
+	WireframeParamConfig(
+		AdvancedCommonParamConfig(
+			/* advanced */
+			AdvancedFolderParamConfig(
+				LightMapParamConfig(
+					EnvMapParamConfig(
+						EmissiveMapParamConfig(
+							AOMapParamConfig(
+								AlphaMapParamConfig(
+									MapParamConfig(
+										/* textures */
+										TexturesFolderParamConfig(
+											ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 										)
 									)
 								)
@@ -104,7 +101,6 @@ export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLa
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.setMaterial(this.material);

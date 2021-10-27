@@ -20,7 +20,6 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {FogController, FogParamConfig} from './utils/FogController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
@@ -43,20 +42,18 @@ interface Controllers {
 	map: TextureMapController;
 }
 class MeshBasicMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					LightMapParamConfig(
-						EnvMapParamConfig(
-							AOMapParamConfig(
-								AlphaMapParamConfig(
-									MapParamConfig(
-										/* textures */
-										TexturesFolderParamConfig(
-											ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-										)
+	WireframeParamConfig(
+		AdvancedCommonParamConfig(
+			/* advanced */
+			AdvancedFolderParamConfig(
+				LightMapParamConfig(
+					EnvMapParamConfig(
+						AOMapParamConfig(
+							AlphaMapParamConfig(
+								MapParamConfig(
+									/* textures */
+									TexturesFolderParamConfig(
+										ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 									)
 								)
 							)
@@ -107,7 +104,6 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterialWithLightMap
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.setMaterial(this.material);

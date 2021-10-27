@@ -9,7 +9,6 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {TypedMatNode} from './_Base';
 import {SubsurfaceScatteringShader} from '../../../modules/three/examples/jsm/shaders/SubsurfaceScatteringShader';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
@@ -110,16 +109,14 @@ export function SubsurfaceParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 class MeshSubsurfaceScatteringMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					AlphaMapParamConfig(
-						MapParamConfig(
-							/* textures */
-							TexturesFolderParamConfig(SubsurfaceParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
-						)
+	WireframeParamConfig(
+		AdvancedCommonParamConfig(
+			/* advanced */
+			AdvancedFolderParamConfig(
+				AlphaMapParamConfig(
+					MapParamConfig(
+						/* textures */
+						TexturesFolderParamConfig(SubsurfaceParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
 					)
 				)
 			)
@@ -181,7 +178,6 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 			this.controllers[controllerName].update();
 		}
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.update_map(this.p.thicknessMap, 'thicknessMap');

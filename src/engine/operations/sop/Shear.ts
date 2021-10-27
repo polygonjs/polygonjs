@@ -31,7 +31,12 @@ export const SHEAR_CENTER_MODES: ShearCenterMode[] = [
 interface ShearSopParams extends DefaultOperationParams {
 	mode: number;
 	// matrix mode
-	matrixAmount: Vector3;
+	xy: number;
+	xz: number;
+	yx: number;
+	yz: number;
+	zx: number;
+	zy: number;
 	// axis mode
 	centerMode: number;
 	centerOffset: Vector3;
@@ -45,7 +50,12 @@ export class ShearSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ShearSopParams = {
 		mode: SHEAR_MODES.indexOf(ShearMode.AXIS),
 		// matrix mode
-		matrixAmount: new Vector3(0, 0, 0),
+		xy: 0,
+		xz: 0,
+		yx: 0,
+		yz: 0,
+		zx: 0,
+		zy: 0,
 		// axis mode
 		centerMode: SHEAR_CENTER_MODES.indexOf(ShearCenterMode.BBOX_CENTER),
 		centerOffset: new Vector3(0, 0, 0),
@@ -82,7 +92,7 @@ export class ShearSopOperation extends BaseSopOperation {
 	}
 
 	private _applyMatrixShear(objects: Object3D[], params: ShearSopParams) {
-		(this._m4 as any).makeShear(params.matrixAmount.x, params.matrixAmount.y, params.matrixAmount.z);
+		this._m4.makeShear(params.xy, params.xz, params.yx, params.yz, params.zx, params.zy);
 		for (let object of objects) {
 			const mesh = object as Mesh;
 			const geometry = mesh.geometry;

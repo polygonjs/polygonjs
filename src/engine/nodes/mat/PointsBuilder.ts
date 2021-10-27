@@ -8,7 +8,6 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
 import {TypedBuilderMatNode, BaseBuilderParamConfig} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
@@ -21,12 +20,10 @@ interface Controllers {
 	advancedCommon: AdvancedCommonController;
 }
 class PointsMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		AdvancedCommonParamConfig(
-			BaseBuilderParamConfig(
-				/* advanced */ AdvancedFolderParamConfig(
-					TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-				)
+	AdvancedCommonParamConfig(
+		BaseBuilderParamConfig(
+			/* advanced */ AdvancedFolderParamConfig(
+				TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 			)
 		)
 	)
@@ -63,7 +60,6 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 
 		TransparencyController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 
 		this.compileIfRequired();
 

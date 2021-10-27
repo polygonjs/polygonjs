@@ -9,7 +9,6 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonParamConfig, AdvancedCommonController} from './utils/AdvancedCommonController';
-import {SkinningParamConfig, SkinningController} from './utils/SkinningController';
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerBasic} from '../gl/code/assemblers/materials/Basic';
@@ -34,20 +33,18 @@ interface Controllers {
 	map: TextureMapController;
 }
 class MeshBasicMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				BaseBuilderParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						EnvMapParamConfig(
-							AOMapParamConfig(
-								AlphaMapParamConfig(
-									MapParamConfig(
-										/* textures */
-										TexturesFolderParamConfig(
-											TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-										)
+	WireframeParamConfig(
+		AdvancedCommonParamConfig(
+			BaseBuilderParamConfig(
+				/* advanced */
+				AdvancedFolderParamConfig(
+					EnvMapParamConfig(
+						AOMapParamConfig(
+							AlphaMapParamConfig(
+								MapParamConfig(
+									/* textures */
+									TexturesFolderParamConfig(
+										TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 									)
 								)
 							)
@@ -94,7 +91,6 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		}
 		TransparencyController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.compileIfRequired();

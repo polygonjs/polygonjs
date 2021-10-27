@@ -16,6 +16,12 @@ varying vec3 vViewPosition;
 
 #endif
 
+#ifdef USE_TRANSMISSION
+
+	varying vec4 vWorldPosition;
+
+#endif
+
 #include <common>
 
 
@@ -255,4 +261,9 @@ void main() {
 	#include <shadowmap_vertex>
 	#include <fog_vertex>
 
+#ifdef USE_TRANSMISSION
+
+	vWorldPosition = worldPosition;
+
+#endif
 }

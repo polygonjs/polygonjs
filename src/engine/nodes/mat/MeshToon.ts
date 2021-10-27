@@ -11,7 +11,6 @@ import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {SkinningController, SkinningParamConfig} from './utils/SkinningController';
 import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
@@ -43,24 +42,22 @@ interface Controllers {
 	normalMap: TextureNormalMapController;
 }
 class MeshToonMatParamsConfig extends FogParamConfig(
-	SkinningParamConfig(
-		WireframeParamConfig(
-			AdvancedCommonParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					NormalMapParamConfig(
-						LightMapParamConfig(
-							GradientMapParamConfig(
-								EmissiveMapParamConfig(
-									DisplacementMapParamConfig(
-										BumpMapParamConfig(
-											AOMapParamConfig(
-												AlphaMapParamConfig(
-													MapParamConfig(
-														/* textures */
-														TexturesFolderParamConfig(
-															ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-														)
+	WireframeParamConfig(
+		AdvancedCommonParamConfig(
+			/* advanced */
+			AdvancedFolderParamConfig(
+				NormalMapParamConfig(
+					LightMapParamConfig(
+						GradientMapParamConfig(
+							EmissiveMapParamConfig(
+								DisplacementMapParamConfig(
+									BumpMapParamConfig(
+										AOMapParamConfig(
+											AlphaMapParamConfig(
+												MapParamConfig(
+													/* textures */
+													TexturesFolderParamConfig(
+														ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 													)
 												)
 											)
@@ -118,7 +115,6 @@ export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatP
 		}
 		ColorsController.update(this);
 		FogController.update(this);
-		SkinningController.update(this);
 		WireframeController.update(this);
 
 		this.setMaterial(this.material);
