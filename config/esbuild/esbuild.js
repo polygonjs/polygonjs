@@ -153,7 +153,7 @@ function start() {
                 case 0:
                     options = getOptions();
                     console.log('options', options);
-                    return [4 /*yield*/, esbuild_1.build(options)["catch"](function () {
+                    return [4 /*yield*/, (0, esbuild_1.build)(options)["catch"](function () {
                             console.log('IN CATCH');
                             process.exit(1);
                         })];
