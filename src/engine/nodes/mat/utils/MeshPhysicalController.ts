@@ -49,10 +49,10 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 			rangeLocked: [true, true],
 		});
 
-		/** @param toggle if you want to use a roughness map */
+		/** @param toggle if you want to use sheen */
 		useSheen = ParamConfig.BOOLEAN(0);
 		/** @param If a color is assigned to this property, the material will use a special sheen BRDF intended for rendering cloth materials such as velvet. The sheen color provides the ability to create two-tone specular materials. null by default */
-		sheen = ParamConfig.COLOR([1, 1, 1], {
+		sheenTint = ParamConfig.COLOR([1, 1, 1], {
 			visibleIf: {useSheen: 1},
 		});
 		/** @param Degree of transmission (or optical transparency), from 0.0 to 1.0. Default is 0.0.
@@ -88,7 +88,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		this.add_hooks(this.node.p.useClearCoatRoughnessMap, this.node.p.clearcoatRoughnessMap);
 		this.add_hooks(this.node.p.useTransmissionMap, this.node.p.transmissionMap);
 	}
-	private _sheenClone = new Color();
+	private _sheenTintClone = new Color();
 	async update() {
 		this._update(this.node.material, 'clearcoatMap', this.node.p.useClearCoatMap, this.node.p.clearcoatMap);
 		this._update(
@@ -119,10 +119,10 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			mat.uniforms.reflectivity.value = this.node.pv.reflectivity;
 			mat.uniforms.transmission.value = this.node.pv.transmission;
 			if (isBooleanTrue(this.node.pv.useSheen)) {
-				this._sheenClone.copy(this.node.pv.sheen);
-				mat.uniforms.sheen.value = this._sheenClone;
+				this._sheenTintClone.copy(this.node.pv.sheenTint);
+				mat.uniforms.sheenTint.value = this._sheenTintClone;
 			} else {
-				mat.uniforms.sheen.value = null;
+				mat.uniforms.sheenTint.value = null;
 			}
 
 			// mat.defines['CLEARCOAT'] = isBooleanTrue(this.node.pv.useClearCoatNormalMap);
@@ -138,10 +138,10 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			// ior is currently a getter/setter wrapper to set reflectivity, so currently conflicts with 'mat.reflectivity ='
 			// mat.ior = this.node.pv.ior;
 			if (isBooleanTrue(this.node.pv.useSheen)) {
-				this._sheenClone.copy(this.node.pv.sheen);
-				mat.sheen = this._sheenClone;
+				this._sheenTintClone.copy(this.node.pv.sheenTint);
+				mat.sheenTint = this._sheenTintClone;
 			} else {
-				mat.sheen = null;
+				mat.sheenTint = null;
 			}
 			mat.transmission = this.node.pv.transmission;
 		}

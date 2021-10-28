@@ -1,6 +1,6 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../Geometry';
-import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 import {CoreGeometryIndexBuilder} from '../util/IndexBuilder';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
@@ -53,7 +53,7 @@ export class CoreGeometryBuilderMerge {
 		//
 		// 3/4. merge the geos
 		//
-		const merged_geometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
+		const merged_geometry = mergeBufferGeometries(geometries);
 
 		//
 		// 4/4. add the index attrib values

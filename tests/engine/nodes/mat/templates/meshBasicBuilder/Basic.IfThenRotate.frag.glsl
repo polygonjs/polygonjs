@@ -122,7 +122,7 @@ vec4 vectorAlign(vec3 start, vec3 dest){
 
 	// if (cosTheta < -1 + 0.001f){
 	// 	// special case when vectors in opposite directions:
-	// 	// there is no "ideal" rotation axis
+	// 	// there is no ideal rotation axis
 	// 	// So guess one; any will do as long as it's perpendicular to start
 	// 	axis = cross(vec3(0.0f, 0.0f, 1.0f), start);
 	// 	if (length2(axis) < 0.01 ) // bad luck, they were parallel, try again!
@@ -154,7 +154,7 @@ vec4 vectorAlignWithUp(vec3 start, vec3 dest, vec3 up){
 	// up = normalize(cross(right, dest));
 
 	// Because of the 1rst rotation, the up is probably completely screwed up.
-	// Find the rotation between the "up" of the rotated object, and the desired up
+	// Find the rotation between the up of the rotated object, and the desired up
 	vec3 newUp = rotateWithQuat(vec3(0.0, 1.0, 0.0), rot1);//rot1 * vec3(0.0, 1.0, 0.0);
 	vec4 rot2 = vectorAlign(up, newUp);
 
@@ -192,7 +192,7 @@ vec4 align(vec3 dir, vec3 up){
 	up = normalize(cross(right, dir));
 
 	// Because of the 1rst rotation, the up is probably completely screwed up.
-	// Find the rotation between the "up" of the rotated object, and the desired up
+	// Find the rotation between the up of the rotated object, and the desired up
 	vec3 newUp = rotateWithQuat(start_up, rot1);//rot1 * vec3(0.0, 1.0, 0.0);
 	vec4 rot2 = vectorAlign(normalize(newUp), up);
 
@@ -220,6 +220,7 @@ varying vec3 v_POLY_globals1_position;
 #include <uv2_pars_fragment>
 #include <map_pars_fragment>
 #include <alphamap_pars_fragment>
+#include <alphatest_pars_fragment>
 #include <aomap_pars_fragment>
 #include <lightmap_pars_fragment>
 #include <envmap_common_pars_fragment>
@@ -274,7 +275,7 @@ void main() {
 
 	// accumulation (baked indirect lighting only)
 	#ifdef USE_LIGHTMAP
-	
+
 		vec4 lightMapTexel= texture2D( lightMap, vUv2 );
 		reflectedLight.indirectDiffuse += lightMapTexelToLinear( lightMapTexel ).rgb * lightMapIntensity;
 
@@ -293,8 +294,7 @@ void main() {
 
 	#include <envmap_fragment>
 
-	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
-
+	#include <output_fragment>
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
 	#include <fog_fragment>

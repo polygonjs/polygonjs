@@ -2,8 +2,7 @@
 #define STANDARD
 
 #ifdef PHYSICAL
-	#define REFLECTIVITY
-	#define CLEARCOAT
+	#define IOR
 	#define SPECULAR
 #endif
 
@@ -13,15 +12,8 @@ uniform float roughness;
 uniform float metalness;
 uniform float opacity;
 
-#ifdef USE_TRANSMISSION
-	uniform float transmission;
-	uniform float thickness;
-	uniform float attenuationDistance;
-	uniform vec3 attenuationTint;
-#endif
-
-#ifdef REFLECTIVITY
-	uniform float reflectivity;
+#ifdef IOR
+	uniform float ior;
 #endif
 
 #ifdef SPECULAR
@@ -37,29 +29,16 @@ uniform float opacity;
 	#endif
 #endif
 
-#ifdef CLEARCOAT
+#ifdef USE_CLEARCOAT
 	uniform float clearcoat;
 	uniform float clearcoatRoughness;
 #endif
 
 #ifdef USE_SHEEN
-	uniform vec3 sheen;
+	uniform vec3 sheenTint;
 #endif
 
 varying vec3 vViewPosition;
-
-#ifndef FLAT_SHADED
-
-	varying vec3 vNormal;
-
-	#ifdef USE_TANGENT
-
-		varying vec3 vTangent;
-		varying vec3 vBitangent;
-
-	#endif
-
-#endif
 
 #include <common>
 
@@ -81,17 +60,19 @@ uniform float time;
 #include <uv2_pars_fragment>
 #include <map_pars_fragment>
 #include <alphamap_pars_fragment>
+#include <alphatest_pars_fragment>
 #include <aomap_pars_fragment>
 #include <lightmap_pars_fragment>
 #include <emissivemap_pars_fragment>
 #include <bsdfs>
-#include <transmission_pars_fragment>
 #include <cube_uv_reflection_fragment>
 #include <envmap_common_pars_fragment>
 #include <envmap_physical_pars_fragment>
 #include <fog_pars_fragment>
 #include <lights_pars_begin>
+#include <normal_pars_fragment>
 #include <lights_physical_pars_fragment>
+#include <transmission_pars_fragment>
 #include <shadowmap_pars_fragment>
 #include <bumpmap_pars_fragment>
 #include <normalmap_pars_fragment>
@@ -215,8 +196,17 @@ if(POLY_SSSModel.isActive){
 
 	vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
 
-	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+	#ifdef USE_CLEARCOAT
 
+		float dotNVcc = saturate( dot( geometry.clearcoatNormal, geometry.viewDir ) );
+
+		vec3 Fcc = F_Schlick( material.clearcoatF0, material.clearcoatF90, dotNVcc );
+
+		outgoingLight = outgoingLight * ( 1.0 - clearcoat * Fcc ) + clearcoatSpecular * clearcoat;
+
+	#endif
+
+	#include <output_fragment>
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
 	#include <fog_fragment>

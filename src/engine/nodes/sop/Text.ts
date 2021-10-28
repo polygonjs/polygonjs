@@ -15,7 +15,7 @@ import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
-import {BufferGeometryUtils} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 
 import {DEMO_ASSETS_ROOT_URL} from '../../../core/Assets';
 
@@ -208,7 +208,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 				);
 				geometries.push(geometry);
 			}
-			const merged_geometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
+			const merged_geometry = mergeBufferGeometries(geometries);
 			this.setGeometry(merged_geometry); //, CoreConstant.OBJECT_TYPE.LINE_SEGMENTS);
 		}
 	}

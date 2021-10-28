@@ -24,6 +24,7 @@ varying vec2 varying_v_POLY_attribute1_val;
 #include <uv2_pars_fragment>
 #include <map_pars_fragment>
 #include <alphamap_pars_fragment>
+#include <alphatest_pars_fragment>
 #include <aomap_pars_fragment>
 #include <lightmap_pars_fragment>
 #include <envmap_common_pars_fragment>
@@ -69,7 +70,7 @@ void main() {
 
 	// accumulation (baked indirect lighting only)
 	#ifdef USE_LIGHTMAP
-	
+
 		vec4 lightMapTexel= texture2D( lightMap, vUv2 );
 		reflectedLight.indirectDiffuse += lightMapTexelToLinear( lightMapTexel ).rgb * lightMapIntensity;
 
@@ -88,8 +89,7 @@ void main() {
 
 	#include <envmap_fragment>
 
-	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
-
+	#include <output_fragment>
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
 	#include <fog_fragment>

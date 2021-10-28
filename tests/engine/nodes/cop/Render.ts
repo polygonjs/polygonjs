@@ -42,7 +42,7 @@ QUnit.test('COP render simple', async (assert) => {
 	const buffer_height = 16;
 	const pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
 	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
-	assert.in_delta(pixelBuffer[0], 0.76, 0.02);
+	assert.in_delta(pixelBuffer[0], 0.39, 0.02);
 
 	RendererUtils.dispose();
 });
