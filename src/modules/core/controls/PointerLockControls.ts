@@ -45,13 +45,13 @@ export class PointerLockControls extends BaseCollisionHandler {
 		this.dispatchEvent(changeEvent);
 	}
 	onPointerlockChange() {
+		this.velocity.set(0, 0, 0);
 		if (this.domElement.ownerDocument.pointerLockElement === this.domElement) {
 			this.dispatchEvent(lockEvent);
 
 			this.isLocked = true;
 		} else {
 			this.dispatchEvent(unlockEvent);
-
 			this.isLocked = false;
 		}
 	}

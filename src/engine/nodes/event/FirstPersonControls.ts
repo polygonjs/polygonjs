@@ -95,6 +95,47 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 
 		this._controls_by_element_id.set(element.id, controls);
 		this._bind_listeners_to_controls_instance(controls);
+
+		// function testOverlay(){
+		// 	const overlay = document.createElement('div');
+		// 	const overlayBody = document.createElement('div');
+		// 	const body = document.body;
+
+		// 	overlay.appendChild(overlayBody);
+		// 	overlay.style.position = 'absolute';
+		// 	overlay.style.top = '0px';
+		// 	overlay.style.left = '0px';
+		// 	overlay.style.width = '100%';
+		// 	overlay.style.height = '100%';
+		// 	overlay.style.padding = '50px';
+		// 	overlay.style.zIndex = '9999999';
+		// 	overlayBody.style.width = '100%';
+		// 	overlayBody.style.height = '100%';
+		// 	overlayBody.style.backgroundColor = 'white';
+		// 	overlayBody.innerText = 'overlay';
+		// 	let overlayActive = false;
+		// 	function toggleOverlay() {
+		// 		if (overlayActive) {
+		// 			console.log('remove');
+		// 			body.removeChild(overlay);
+		// 			controls.lock();
+		// 		} else {
+		// 			console.log('add');
+		// 			body.appendChild(overlay);
+		// 			controls.unlock();
+		// 		}
+		// 		overlayActive = !overlayActive;
+		// 	}
+		// 	toggleOverlay();
+		// 	document.addEventListener('keypress', (e) => {
+		// 		console.log(e.code, e.key);
+		// 		if (e.key == 'e') {
+		// 			toggleOverlay();
+		// 		}
+		// 	});
+		// }
+		// testOverlay()
+
 		return controls;
 	}
 
