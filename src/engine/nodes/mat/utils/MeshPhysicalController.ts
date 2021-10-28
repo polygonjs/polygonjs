@@ -12,6 +12,23 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {Color} from 'three/src/math/Color';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+import {IUniformColor, IUniformN, IUniformV2} from '../../utils/code/gl/Uniforms';
+
+interface MeshPhysicalWithUniforms extends ShaderMaterial {
+	uniforms: {
+		clearcoat: IUniformN;
+		clearcoatNormalScale: IUniformV2;
+		clearcoatRoughness: IUniformN;
+		reflectivity: IUniformN;
+		transmission: IUniformN;
+		thickness: IUniformN;
+		attenuationDistance: IUniformN;
+		attenuationTint: IUniformColor;
+		sheen: IUniformN;
+		sheenRoughness: IUniformN;
+		sheenTint: IUniformColor;
+	};
+}
 
 export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -58,7 +75,7 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 			visibleIf: {useSheen: 1},
 		});
 		/** @param If a color is assigned to this property, the material will use a special sheen BRDF intended for rendering cloth materials such as velvet. The sheen color provides the ability to create two-tone specular materials. null by default */
-		sheenTint = ParamConfig.COLOR([1, 1, 1], {
+		sheenColor = ParamConfig.COLOR([1, 1, 1], {
 			visibleIf: {useSheen: 1},
 		});
 		/** @param Degree of reflectivity, from 0.0 to 1.0. Default is 0.5, which corresponds to an index-of-refraction of 1.5. This models the reflectivity of non-metallic materials. It has no effect when metalness is 1.0 */
@@ -115,7 +132,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		this.add_hooks(this.node.p.useTransmissionMap, this.node.p.transmissionMap);
 		this.add_hooks(this.node.p.useThicknessMap, this.node.p.thicknessMap);
 	}
-	private _sheenTintClone = new Color();
+	private _sheenColorClone = new Color();
 	async update() {
 		this._update(this.node.material, 'clearcoatMap', this.node.p.useClearCoatMap, this.node.p.clearcoatMap);
 		this._update(
@@ -139,7 +156,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		this._update(this.node.material, 'thicknessMap', this.node.p.useThicknessMap, this.node.p.thicknessMap);
 		const pv = this.node.pv;
 		if (this._update_options.uniforms) {
-			const mat = this.node.material as ShaderMaterial;
+			const mat = this.node.material as MeshPhysicalWithUniforms;
 			mat.uniforms.clearcoat.value = pv.clearcoat;
 			mat.uniforms.clearcoatNormalScale.value.copy(pv.clearcoatNormalScale);
 			mat.uniforms.clearcoatRoughness.value = pv.clearcoatRoughness;
@@ -151,10 +168,10 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			mat.uniforms.attenuationDistance.value = pv.attenuationDistance;
 			mat.uniforms.attenuationTint.value = pv.attenuationColor;
 			if (isBooleanTrue(pv.useSheen)) {
-				this._sheenTintClone.copy(pv.sheenTint);
+				this._sheenColorClone.copy(pv.sheenColor);
 				mat.uniforms.sheen.value = pv.sheen;
 				mat.uniforms.sheenRoughness.value = pv.sheenRoughness;
-				mat.uniforms.sheenTint.value = this._sheenTintClone;
+				mat.uniforms.sheenTint.value = this._sheenColorClone;
 			} else {
 				mat.uniforms.sheen.value = 0;
 			}
@@ -172,10 +189,10 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			// ior is currently a getter/setter wrapper to set reflectivity, so currently conflicts with 'mat.reflectivity ='
 			// mat.ior = this.node.pv.ior;
 			if (isBooleanTrue(pv.useSheen)) {
-				this._sheenTintClone.copy(pv.sheenTint);
+				this._sheenColorClone.copy(pv.sheenColor);
 				mat.sheen = pv.sheen;
 				mat.sheenRoughness = pv.sheenRoughness;
-				mat.sheenTint = this._sheenTintClone;
+				mat.sheenTint = this._sheenColorClone;
 			} else {
 				mat.sheen = 0;
 			}
