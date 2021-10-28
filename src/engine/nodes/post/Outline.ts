@@ -3,12 +3,20 @@ import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_B
 import {OutlinePass} from '../../../modules/three/examples/jsm/postprocessing/OutlinePass';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {BaseNodeType} from '../_Base';
+import {Object3D} from 'three/src/core/Object3D';
 class OutlinePostParamsConfig extends NodeParamsConfig {
 	objectsMask = ParamConfig.STRING('*outlined*', {
 		...PostParamOptions,
 	});
 	refreshObjects = ParamConfig.BUTTON(null, {
 		...PostParamOptions,
+	});
+	printObjects = ParamConfig.BUTTON(null, {
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			OutlinePostNode.PARAM_CALLBACK_printResolve(node as OutlinePostNode);
+		},
 	});
 	edgeStrength = ParamConfig.FLOAT(3, {
 		range: [0, 10],
@@ -33,7 +41,7 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 	visibleEdgeColor = ParamConfig.COLOR([1, 1, 1], {
 		...PostParamOptions,
 	});
-	hiddenEdgeColor = ParamConfig.COLOR([0, 0, 0], {
+	hiddenEdgeColor = ParamConfig.COLOR([0.2, 0.1, 0.4], {
 		...PostParamOptions,
 	});
 }
@@ -43,6 +51,8 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 	static type() {
 		return 'outline';
 	}
+
+	private _resolvedObjects: Object3D[] = [];
 
 	protected _createPass(context: TypedPostNodeContext) {
 		const pass = new OutlinePass(
@@ -62,9 +72,16 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 		pass.visibleEdgeColor = this.pv.visibleEdgeColor;
 		pass.hiddenEdgeColor = this.pv.hiddenEdgeColor;
 
-		this._set_selected_objects(pass);
+		this._setSelectedObjects(pass);
 	}
-	private _set_selected_objects(pass: OutlinePass) {
-		pass.selectedObjects = this.scene().objectsByMask(this.pv.objectsMask);
+	private _setSelectedObjects(pass: OutlinePass) {
+		this._resolvedObjects = this.scene().objectsByMask(this.pv.objectsMask);
+		pass.selectedObjects = this._resolvedObjects;
+	}
+	static PARAM_CALLBACK_printResolve(node: OutlinePostNode) {
+		node.printResolve();
+	}
+	private printResolve() {
+		console.log(this._resolvedObjects);
 	}
 }
