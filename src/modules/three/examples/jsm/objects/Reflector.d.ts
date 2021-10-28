@@ -1,7 +1,7 @@
-import { Mesh, BufferGeometry, Color, TextureEncoding, WebGLRenderTarget } from 'three';
+import { Mesh, BufferGeometry, ColorRepresentation, TextureEncoding, WebGLRenderTarget } from 'three';
 
 export interface ReflectorOptions {
-    color?: Color;
+    color?: ColorRepresentation;
     textureWidth?: number;
     textureHeight?: number;
     clipBias?: number;

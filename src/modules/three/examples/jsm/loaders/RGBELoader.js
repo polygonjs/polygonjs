@@ -19,7 +19,7 @@ class RGBELoader extends DataTextureLoader {
 
 		super( manager );
 
-		this.type = UnsignedByteType;
+		this.type = HalfFloatType;
 
 	}
 

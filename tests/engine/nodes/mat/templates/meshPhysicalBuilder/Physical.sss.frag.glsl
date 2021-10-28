@@ -4,6 +4,7 @@
 #ifdef PHYSICAL
 	#define REFLECTIVITY
 	#define CLEARCOAT
+	#define SPECULAR
 #endif
 
 uniform vec3 diffuse;
@@ -15,12 +16,25 @@ uniform float opacity;
 #ifdef USE_TRANSMISSION
 	uniform float transmission;
 	uniform float thickness;
-	uniform vec3 attenuationColor;
 	uniform float attenuationDistance;
+	uniform vec3 attenuationTint;
 #endif
 
 #ifdef REFLECTIVITY
 	uniform float reflectivity;
+#endif
+
+#ifdef SPECULAR
+	uniform float specularIntensity;
+	uniform vec3 specularTint;
+
+	#ifdef USE_SPECULARINTENSITYMAP
+		uniform sampler2D specularIntensityMap;
+	#endif
+
+	#ifdef USE_SPECULARTINTMAP
+		uniform sampler2D specularTintMap;
+	#endif
 #endif
 
 #ifdef CLEARCOAT
