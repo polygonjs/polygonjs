@@ -7,10 +7,10 @@
 import {TypedSopNode} from './_Base';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {TextBufferGeometry} from 'three/src/geometries/TextGeometry';
+import {TextGeometry} from '../../../modules/three/examples/jsm/geometries/TextGeometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
-import {Font} from 'three/src/extras/core/Font';
+import {Font} from '../../../modules/three/examples/jsm/loaders/FontLoader';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
@@ -138,7 +138,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		};
 
 		try {
-			const geometry = new TextBufferGeometry(text, parameters);
+			const geometry = new TextGeometry(text, parameters);
 			if (!geometry.index) {
 				const position_array = geometry.getAttribute('position').array;
 				geometry.setIndex(ArrayUtils.range(position_array.length / 3));

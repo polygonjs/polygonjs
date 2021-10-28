@@ -2,8 +2,7 @@ import {Poly} from '../../engine/Poly';
 import {ModuleName} from '../../engine/poly/registers/modules/Common';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreBaseLoader} from './_Base';
-import {Font} from 'three/src/extras/core/Font';
-import {FontLoader} from 'three/src/loaders/FontLoader';
+import {FontLoader, Font} from '../../modules/three/examples/jsm/loaders/FontLoader';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 
 export class CoreLoaderFont extends CoreBaseLoader {
@@ -65,7 +64,7 @@ export class CoreLoaderFont extends CoreBaseLoader {
 		return new Promise((resolve, reject) => {
 			this._font_loader.load(
 				url,
-				(font) => {
+				(font: Font) => {
 					resolve(font);
 				},
 				undefined,
