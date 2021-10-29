@@ -23,7 +23,7 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
-	edgeThickness = ParamConfig.FLOAT(0, {
+	edgeThickness = ParamConfig.FLOAT(1.0, {
 		range: [0, 4],
 		rangeLocked: [true, false],
 		...PostParamOptions,
@@ -74,8 +74,27 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 
 		this._setSelectedObjects(pass);
 	}
+	private _map: Map<string, Object> = new Map();
 	private _setSelectedObjects(pass: OutlinePass) {
-		this._resolvedObjects = this.scene().objectsByMask(this.pv.objectsMask);
+		const foundObjects = this.scene().objectsByMask(this.pv.objectsMask);
+
+		// Ensure that we only give the top most parents to the pass.
+		// Meaning that if foundObjects contains a node A and one of its children B,
+		// only A is given.
+		this._map.clear();
+		for (let object of foundObjects) {
+			this._map.set(object.uuid, object);
+		}
+		const isAncestorNotInList = (object: Object3D) => {
+			let isAncestorInList = false;
+			object.traverseAncestors((ancestor) => {
+				if (this._map.has(ancestor.uuid)) {
+					isAncestorInList = true;
+				}
+			});
+			return !isAncestorInList;
+		};
+		this._resolvedObjects = foundObjects.filter(isAncestorNotInList);
 		pass.selectedObjects = this._resolvedObjects;
 	}
 	static PARAM_CALLBACK_printResolve(node: OutlinePostNode) {
