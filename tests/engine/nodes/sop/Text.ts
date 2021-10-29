@@ -1,5 +1,44 @@
 import {TEXT_TYPE, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
 
+type Callback = () => void;
+interface ConsoleHistory {
+	log: any[];
+	warn: any[];
+	error: any[];
+}
+async function checkConsolePrints(callback: Callback) {
+	// Save original console methods
+	var originalConsole = {
+		log: console.log,
+		warn: console.warn,
+		error: console.error,
+	};
+
+	const consoleHistory: ConsoleHistory = {
+		log: [],
+		warn: [],
+		error: [],
+	};
+
+	console.log = function () {
+		consoleHistory.log.push(arguments);
+		originalConsole.log.apply(window.console, arguments as any);
+	};
+	console.warn = function () {
+		consoleHistory.warn.push(arguments);
+		originalConsole.warn.apply(window.console, arguments as any);
+	};
+	console.error = function () {
+		consoleHistory.error.push(arguments);
+		originalConsole.error.apply(window.console, arguments as any);
+	};
+	await callback();
+	console.log = originalConsole.log;
+	console.warn = originalConsole.warn;
+	console.error = originalConsole.error;
+	return consoleHistory;
+}
+
 QUnit.test('text simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -19,6 +58,40 @@ QUnit.test('text simple', async (assert) => {
 
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 3792);
+});
+
+QUnit.test('text prints no warning', async (assert) => {
+	const geo1 = window.geo1;
+
+	const consoleHistory = await checkConsolePrints(async () => {
+		console.log('callback start');
+		const text1 = geo1.createNode('text');
+		const transform1 = geo1.createNode('transform');
+		const transform2 = geo1.createNode('transform');
+		transform1.setInput(0, text1);
+		transform2.setInput(0, transform1);
+
+		let container = await transform2.compute();
+		let core_group = container.coreContent();
+		let geometry = core_group?.objectsWithGeo()[0]?.geometry;
+
+		assert.ok(geometry);
+		assert.equal(container.pointsCount(), 3324);
+
+		text1.p.text.set('this is a test');
+		container = await transform2.compute();
+		core_group = container.coreContent();
+		geometry = core_group?.objectsWithGeo()[0]?.geometry;
+
+		assert.ok(geometry);
+		assert.equal(container.pointsCount(), 3792);
+		console.log('callback end');
+	});
+	assert.equal(consoleHistory.log[0][0], 'callback start');
+	assert.equal(consoleHistory.log[1][0], 'callback end');
+	assert.equal(consoleHistory.log.length, 2);
+	assert.equal(consoleHistory.warn.length, 0);
+	assert.equal(consoleHistory.error.length, 0);
 });
 
 QUnit.test('text with json font', async (assert) => {

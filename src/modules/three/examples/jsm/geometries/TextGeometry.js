@@ -22,7 +22,6 @@ class TextGeometry extends ExtrudeGeometry {
 		const font = parameters.font;
 
 		if (!(font && font.isFont)) {
-			console.error('THREE.TextGeometry: font parameter is not an instance of THREE.Font.');
 			return new BufferGeometry();
 		}
 
