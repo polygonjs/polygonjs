@@ -57,13 +57,39 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 		},
 		visibleIf: {collideWithGeo: true},
 	});
-	/** @param capsule height range */
-	capsuleHeightRange = ParamConfig.VECTOR2([0.3, 1], {
+	/** @param player height */
+	playerHeight = ParamConfig.FLOAT(1.8, {
 		visibleIf: {collideWithGeo: true},
 	});
-	/** @param capsule radius */
-	capsuleRadius = ParamConfig.FLOAT(0.3, {
+	/** @param player radius */
+	playerRadius = ParamConfig.FLOAT(0.3, {
 		visibleIf: {collideWithGeo: true},
+	});
+	/** @param player mass */
+	playerMass = ParamConfig.FLOAT(100, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+		visibleIf: {collideWithGeo: true},
+	});
+	/** @param jump Duration */
+	jumpDuration = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+		visibleIf: {collideWithGeo: true},
+	});
+	/** @param jump Force */
+	jumpForce = ParamConfig.FLOAT(100, {
+		range: [0, 1000],
+		rangeLocked: [true, false],
+		visibleIf: {collideWithGeo: true},
+	});
+	/** @param use Gravity */
+	useGravity = ParamConfig.BOOLEAN(1, {
+		visibleIf: {collideWithGeo: true},
+	});
+	/** @param gravity */
+	gravity = ParamConfig.VECTOR3([0, -9.8, 0], {
+		visibleIf: {collideWithGeo: true, useGravity: true},
 	});
 }
 const ParamsConfig = new FirstPersonEventParamsConfig();
@@ -227,6 +253,9 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 			case 'ArrowRight':
 			case 'KeyD':
 				controls.setMoveRight(true);
+				break;
+			case 'Space':
+				controls.jump();
 				break;
 
 			// case 'Space':

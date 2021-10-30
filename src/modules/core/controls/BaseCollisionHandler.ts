@@ -4,6 +4,12 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Capsule} from 'three/examples/jsm/math/Capsule';
 import {EventDispatcher} from 'three/src/core/EventDispatcher';
+import {Vector3} from 'three/src/math/Vector3';
+
+export interface JumpParams {
+	duration: number;
+	force: number;
+}
 
 export class BaseCollisionHandler extends EventDispatcher {
 	protected _playerCollisionController: PlayerCollisionController | undefined;
@@ -31,4 +37,7 @@ export class BaseCollisionHandler extends EventDispatcher {
 	setCollisionCapsule(capsule: Capsule) {
 		this._playerCollisionController?.setCapsule(capsule);
 	}
+	setJumpParams(params: JumpParams) {}
+	setGravity(gravity: Vector3) {}
+	setPlayerMass(mass: number) {}
 }

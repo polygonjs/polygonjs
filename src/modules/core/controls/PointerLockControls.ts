@@ -1,12 +1,13 @@
 import {Euler} from 'three/src/math/Euler';
 import {Vector3} from 'three/src/math/Vector3';
 import {Camera} from 'three/src/cameras/Camera';
-import {BaseCollisionHandler} from './BaseCollisionHandler';
+import {BaseCollisionHandler, JumpParams} from './BaseCollisionHandler';
 
 const changeEvent = {type: 'change'};
 const lockEvent = {type: 'lock'};
 const unlockEvent = {type: 'unlock'};
 const PI_2 = Math.PI / 2;
+const UP = new Vector3(0, 1, 0);
 
 export class PointerLockControls extends BaseCollisionHandler {
 	private isLocked = false;
@@ -15,6 +16,12 @@ export class PointerLockControls extends BaseCollisionHandler {
 	public speed = 1;
 	private euler = new Euler(0, 0, 0, 'YXZ');
 	private vec = new Vector3();
+	private _forces = {
+		gravity: new Vector3(0, -9.8, 0),
+		jump: new Vector3(0, 0, 0),
+		left: 0,
+		forward: 0,
+	};
 	private boundMethods = {
 		onMouseMove: this.onMouseMove.bind(this),
 		onPointerlockChange: this.onPointerlockChange.bind(this),
@@ -46,6 +53,7 @@ export class PointerLockControls extends BaseCollisionHandler {
 	}
 	onPointerlockChange() {
 		this.velocity.set(0, 0, 0);
+		this.prevTime = performance.now();
 		if (this.domElement.ownerDocument.pointerLockElement === this.domElement) {
 			this.dispatchEvent(lockEvent);
 
@@ -107,6 +115,9 @@ export class PointerLockControls extends BaseCollisionHandler {
 
 		camera.position.addScaledVector(this.vec, distance);
 	}
+	private moveUp(camera: Camera, distance: number) {
+		camera.position.addScaledVector(UP, distance);
+	}
 	private _copyToCameraTmp() {
 		this._cameraTmp.position.copy(this.camera.position);
 		this._cameraTmp.matrix.copy(this.camera.matrix);
@@ -128,6 +139,11 @@ export class PointerLockControls extends BaseCollisionHandler {
 	private _moveBackward = false;
 	private _moveLeft = false;
 	private _moveRight = false;
+	private _jump = false;
+	private _jumpStartTime = 0;
+	private _jumpDuration = 1000;
+	private _jumpForce = 100;
+	private _player = {mass: 100};
 	setMoveForward(state: boolean) {
 		this._moveForward = state;
 	}
@@ -140,7 +156,36 @@ export class PointerLockControls extends BaseCollisionHandler {
 	setMoveRight(state: boolean) {
 		this._moveRight = state;
 	}
+	jump() {
+		if (this._playerOnFloor) {
+			if (!this._jump) {
+				this._jump = true;
+				this._jumpStartTime = performance.now();
+			}
+		} else {
+			console.warn('not on floor');
+		}
+	}
+	setJumpParams(params: JumpParams) {
+		this._jumpDuration = params.duration * 1000;
+		this._jumpForce = params.force;
+	}
+	setGravity(gravity: Vector3) {
+		this._forces.gravity.copy(gravity);
+	}
+	setPlayerMass(mass: number) {
+		this._player.mass = mass;
+	}
 	private prevTime = 0;
+	private _currentAcceleration = new Vector3(0, 0, 0);
+	private _playerOnFloor = false;
+	private _setPlayerOnFloor(state: boolean) {
+		if (state != this._playerOnFloor) {
+			console.log('on floor:', state);
+		}
+		this._playerOnFloor = state;
+	}
+	// private _gravitySpeed = new Vector3(0, 0, 0);
 	update() {
 		const time = performance.now();
 
@@ -149,34 +194,70 @@ export class PointerLockControls extends BaseCollisionHandler {
 			this.velocity.x -= this.velocity.x * 10.0 * delta;
 			this.velocity.z -= this.velocity.z * 10.0 * delta;
 
-			this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+			// this._currentAcceleration.copy(this._gravity.forces.gravity).add(this._gravity.forces.jump);
+			// this._gravitySpeed.copy(this._currentAcceleration).multiplyScalar(this._gravity.characterMass * delta);
+			// console.log(this._currentAcceleration, this._gravitySpeed, delta);
+			// this.velocity.copy(this._gravitySpeed);
 
 			this.direction.z = Number(this._moveForward) - Number(this._moveBackward);
 			this.direction.x = Number(this._moveRight) - Number(this._moveLeft);
 			this.direction.normalize(); // this ensures consistent movements in all directions
 
-			if (this._moveForward || this._moveBackward)
-				this.velocity.z -= this.direction.z * 400.0 * delta * this.speed;
-			if (this._moveLeft || this._moveRight) this.velocity.x -= this.direction.x * 400.0 * delta * this.speed;
+			if (this._moveForward || this._moveBackward) {
+				this._forces.forward = -this.direction.z * this.speed * 100;
+				// this.velocity.z -= this.direction.z * 400.0 * delta * this.speed;
+			} else {
+				this._forces.forward = 0;
+			}
+			if (this._moveLeft || this._moveRight) {
+				this._forces.left = -this.direction.x * this.speed * 100;
+				// this.velocity.x -= this.direction.x * 400.0 * delta * this.speed;
+			} else {
+				this._forces.left = 0;
+			}
+			if (this._jump) {
+				this._forces.jump.y = this._jumpForce;
+				if (time - this._jumpStartTime > this._jumpDuration) {
+					this._jump = false;
+				}
+			} else {
+				this._forces.jump.y = 0;
+			}
 
-			if (this._playerCollisionController) {
+			this._currentAcceleration.copy(this._forces.jump);
+			this._currentAcceleration.x += this._forces.left;
+			this._currentAcceleration.z += this._forces.forward;
+			this._currentAcceleration.add(this._forces.gravity);
+			this.velocity.add(this._currentAcceleration.multiplyScalar(delta));
+
+			if (this._playerCollisionController && this.velocity.length() > 0.00001) {
 				this._copyToCameraTmp();
-				this.moveRight(this._cameraTmp, -this.velocity.x * delta);
-				this.moveForward(this._cameraTmp, -this.velocity.z * delta);
+				this._applyTmpVelocity(delta);
 				const result = this._playerCollisionController.testPosition(this._cameraTmp.position);
+				let playerOnFloor = false;
 				if (result) {
+					playerOnFloor = result.normal.y > 0;
+					this.velocity.y = 0;
 					this._cameraTmp.position.add(result.normal.multiplyScalar(result.depth));
 					this.camera.position.copy(this._cameraTmp.position);
 				} else {
 					this._applyVelocity(delta);
 				}
+				this._setPlayerOnFloor(playerOnFloor);
 			}
 			this._applyVelocity(delta);
 		}
 		this.prevTime = time;
 	}
+	private _applyTmpVelocity(delta: number) {
+		this._applyVelocityToCam(this._cameraTmp, delta);
+	}
 	private _applyVelocity(delta: number) {
-		this.moveRight(this.camera, -this.velocity.x * delta);
-		this.moveForward(this.camera, -this.velocity.z * delta);
+		this._applyVelocityToCam(this.camera, delta);
+	}
+	private _applyVelocityToCam(camera: Camera, delta: number) {
+		this.moveRight(camera, -this.velocity.x * delta);
+		this.moveForward(camera, -this.velocity.z * delta);
+		this.moveUp(camera, this.velocity.y * delta);
 	}
 }
