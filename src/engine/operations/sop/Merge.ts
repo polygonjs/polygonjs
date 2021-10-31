@@ -10,6 +10,7 @@ import {Group} from 'three/src/objects/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface MergeSopParams extends DefaultOperationParams {
 	compact: boolean;
@@ -48,7 +49,7 @@ export class MergeSopOperation extends BaseSopOperation {
 			}
 		}
 		if (isBooleanTrue(params.compact)) {
-			all_objects = this._make_compact(all_objects);
+			all_objects = this._makeCompact(all_objects);
 		}
 		for (let object of all_objects) {
 			object.traverse((o) => {
@@ -57,7 +58,7 @@ export class MergeSopOperation extends BaseSopOperation {
 		}
 		return this.createCoreGroupFromObjects(all_objects);
 	}
-	_make_compact(all_objects: Object3D[]): Object3DWithGeometry[] {
+	private _makeCompact(all_objects: Object3D[]): Object3DWithGeometry[] {
 		const materials_by_object_type: Map<ObjectType, Material> = new Map();
 		const objects_by_type: Map<ObjectType, Object3DWithGeometry[]> = new Map();
 		// objects_by_type.set(ObjectType.MESH, []);
@@ -92,7 +93,7 @@ export class MergeSopOperation extends BaseSopOperation {
 		ordered_object_types.forEach((object_type) => {
 			const objects = objects_by_type.get(object_type);
 			if (objects) {
-				const geometries = [];
+				const geometries: BufferGeometry[] = [];
 				for (let object of objects) {
 					const geometry = object.geometry;
 					geometry.applyMatrix4(object.matrix);

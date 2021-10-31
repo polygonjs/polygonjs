@@ -23,6 +23,8 @@ import {BboxScatterSopNode} from '../../../nodes/sop/BboxScatter';
 import {BlendSopNode} from '../../../nodes/sop/Blend';
 import {BooleanSopNode} from '../../../nodes/sop/Boolean';
 import {BoxSopNode} from '../../../nodes/sop/Box';
+import {BVHSopNode} from '../../../nodes/sop/BVH';
+import {BVHVisualizerSopNode} from '../../../nodes/sop/BVHVisualizer';
 import {CacheSopNode} from '../../../nodes/sop/Cache';
 import {CameraPlaneSopNode} from '../../../nodes/sop/CameraPlane';
 import {CenterSopNode} from '../../../nodes/sop/Center';
@@ -133,6 +135,8 @@ export interface GeoNodeChildrenMap {
 	blend: BlendSopNode;
 	boolean: BooleanSopNode;
 	box: BoxSopNode;
+	BVH: BVHSopNode;
+	BVHVisualizer: BVHVisualizerSopNode;
 	cache: CacheSopNode;
 	cameraPlane: CameraPlaneSopNode;
 	center: CenterSopNode;
@@ -236,6 +240,8 @@ import {AttribFromTextureSopOperation} from '../../../operations/sop/AttribFromT
 import {AttribPromoteSopOperation} from '../../../operations/sop/AttribPromote';
 import {BooleanSopOperation} from '../../../operations/sop/Boolean';
 import {BoxSopOperation} from '../../../operations/sop/Box';
+import {BVHSopOperation} from '../../../operations/sop/BVH';
+import {BVHVisualizerSopOperation} from '../../../operations/sop/BVHVisualizer';
 import {CenterSopOperation} from '../../../operations/sop/Center';
 import {CircleSopOperation} from '../../../operations/sop/Circle';
 import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
@@ -285,6 +291,8 @@ export class SopRegister {
 		poly.registerOperation(AttribPromoteSopOperation);
 		poly.registerOperation(BooleanSopOperation);
 		poly.registerOperation(BoxSopOperation);
+		poly.registerOperation(BVHSopOperation);
+		poly.registerOperation(BVHVisualizerSopOperation);
 		poly.registerOperation(CenterSopOperation);
 		poly.registerOperation(CircleSopOperation);
 		poly.registerOperation(CSS2DObjectSopOperation);
@@ -339,6 +347,8 @@ export class SopRegister {
 		poly.registerNode(BlendSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(BooleanSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(BoxSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(BVHSopNode, CATEGORY_SOP.ADVANCED);
+		poly.registerNode(BVHVisualizerSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(CacheSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(CameraPlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CenterSopNode, CATEGORY_SOP.PRIMITIVES);

@@ -10,3 +10,20 @@ export class CoreDomUtils {
 		document.removeEventListener('contextmenu', CONTEXT_MENU_DISABLER);
 	}
 }
+export function observeStyleChange(element: HTMLElement) {
+	const Observe = (element: HTMLElement, opt: any, cb: any) => {
+		const Obs = new MutationObserver((m) => [...m].forEach(cb));
+		Obs.observe(element, opt);
+	};
+	Observe(
+		element,
+		{
+			attributesList: ['style'], // Only the "style" attribute
+			attributeOldValue: true, // Report also the oldValue
+		},
+		(m: any) => {
+			console.log('m');
+			console.warn(m); // Mutation object
+		}
+	);
+}

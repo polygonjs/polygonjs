@@ -27,6 +27,7 @@ import {CoreType} from '../../../../../core/Type';
 
 import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
+import {RaycasterForBVH} from '../../../../operations/sop/utils/Bvh/three-mesh-bvh';
 
 interface CursorOffset {
 	offsetX: number;
@@ -42,12 +43,17 @@ function setEventOffset(cursorPage: CursorPage, canvas: HTMLCanvasElement, offse
 	offset.offsetX = cursorPage.pageX - rect.left;
 	offset.offsetY = cursorPage.pageY - rect.top;
 }
+function createRaycaster() {
+	const raycaster = new Raycaster() as RaycasterForBVH;
+	raycaster.firstHitOnly = true;
+	return raycaster;
+}
 
 export class RaycastCPUController {
 	private _offset: CursorOffset = {offsetX: 0, offsetY: 0};
 	private _mouse: Vector2 = new Vector2();
 	private _mouse_array: Number2 = [0, 0];
-	private _raycaster = new Raycaster();
+	private _raycaster = createRaycaster();
 	private _resolved_targets: Object3D[] | undefined;
 
 	public readonly velocity_controller: RaycastCPUVelocityController;
