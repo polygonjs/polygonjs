@@ -4,7 +4,6 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {RaySopOperation} from '../../operations/sop/Ray';
 const DEFAULT = RaySopOperation.DEFAULT_PARAMS;
@@ -37,10 +36,7 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 
 	initializeNode() {
 		this.io.inputs.setCount(2);
-		this.io.inputs.initInputsClonedState([
-			InputCloneMode.FROM_NODE,
-			InputCloneMode.ALWAYS, // to assign double sided mat
-		]);
+		this.io.inputs.initInputsClonedState(RaySopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: RaySopOperation | undefined;

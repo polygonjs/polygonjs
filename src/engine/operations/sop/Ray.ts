@@ -6,6 +6,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Raycaster, Intersection} from 'three/src/core/Raycaster';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MatDoubleSideTmpSetter} from '../../../core/render/MatDoubleSideTmpSetter';
+import {RaycasterForBVH} from './utils/Bvh/three-mesh-bvh';
 
 interface RaySopParams extends DefaultOperationParams {
 	useNormals: boolean;
@@ -17,6 +18,12 @@ interface RaySopParams extends DefaultOperationParams {
 
 const DIST_ATTRIB_NAME = 'dist';
 
+function createRaycaster() {
+	const raycaster = new Raycaster() as RaycasterForBVH;
+	raycaster.firstHitOnly = true;
+	return raycaster;
+}
+
 export class RaySopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: RaySopParams = {
 		useNormals: true,
@@ -25,13 +32,13 @@ export class RaySopOperation extends BaseSopOperation {
 		transferFaceNormals: true,
 		addDistAttribute: false,
 	};
-	static readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.ALWAYS];
+	static readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
 	static type(): Readonly<'ray'> {
 		return 'ray';
 	}
 
 	private _matDoubleSideTmpSetter = new MatDoubleSideTmpSetter();
-	private _raycaster = new Raycaster();
+	private _raycaster = createRaycaster();
 
 	cook(input_contents: CoreGroup[], params: RaySopParams) {
 		const coreGroupToRay = input_contents[0];

@@ -19,6 +19,7 @@ import {MaterialSopNode} from '../../../nodes/sop/Material';
 import {MergeSopNode} from '../../../nodes/sop/Merge';
 import {NullSopNode} from '../../../nodes/sop/Null';
 import {PlaneSopNode} from '../../../nodes/sop/Plane';
+// import {RaySopNode} from '../../../nodes/sop/Ray';
 import {SphereSopNode} from '../../../nodes/sop/Sphere';
 // import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TransformSopNode} from '../../../nodes/sop/Transform';
@@ -46,6 +47,7 @@ export interface GeoNodeChildrenMap {
 	merge: MergeSopNode;
 	null: NullSopNode;
 	plane: PlaneSopNode;
+	// ray: RaySopNode;
 	sphere: SphereSopNode;
 	// switch: SwitchSopNode;
 	// torus: TorusSopNode;
@@ -85,6 +87,7 @@ export class SopRegister {
 		poly.registerNode(NullSopNode, CATEGORY_SOP.MISC);
 
 		poly.registerNode(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
+		// poly.registerNode(RaySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
 
 		// poly.registerNode(SwitchSopNode, CATEGORY_SOP.MISC);
