@@ -3,7 +3,7 @@
  *
  *
  */
-import {ACCEPTED_SCENE_EVENT_TYPES} from '../../scene/utils/events/SceneEventsController';
+import {ACCEPTED_SCENE_EVENT_TYPES, SceneEventType} from '../../scene/utils/events/SceneEventsController';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {EventConnectionPoint, EventConnectionPointType, BaseEventConnectionPoint} from '../utils/io/connections/Event';
@@ -88,8 +88,10 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 			new EventConnectionPoint(
 				SceneNodeInput.SET_FRAME,
 				EventConnectionPointType.BASE,
-				this.onSetFrame.bind(this)
+				this._onSetFrame.bind(this)
 			),
+			new EventConnectionPoint(SceneEventType.PLAY, EventConnectionPointType.BASE, this._play.bind(this)),
+			new EventConnectionPoint(SceneEventType.PAUSE, EventConnectionPointType.BASE, this._pause.bind(this)),
 		]);
 		const out_connection_points: BaseEventConnectionPoint[] = ACCEPTED_SCENE_EVENT_TYPES.map((event_type) => {
 			return new EventConnectionPoint(event_type, EventConnectionPointType.BASE);
@@ -104,11 +106,17 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 		});
 	}
 
-	private onSetFrame(event_context: EventContext<Event>) {
+	private _onSetFrame(event_context: EventContext<Event>) {
 		this.scene().setFrame(this.pv.setFrameValue);
 	}
+	private _play(event_context: EventContext<Event>) {
+		this.scene().play();
+	}
+	private _pause(event_context: EventContext<Event>) {
+		this.scene().pause();
+	}
 
-	private on_frame_update() {
+	private _onFrameUpdate() {
 		if (this.scene().time() >= this.pv.reachedTime) {
 			this.dispatchEventToOutput(SceneNodeOutput.TIME_REACHED, {});
 		}
@@ -117,7 +125,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 		if (this.pv.treachedTime) {
 			this.graph_node = this.graph_node || new CoreGraphNode(this.scene(), 'scene_node_time_graph_node');
 			this.graph_node.addGraphInput(this.scene().timeController.graphNode);
-			this.graph_node.addPostDirtyHook('time_update', this.on_frame_update.bind(this));
+			this.graph_node.addPostDirtyHook('time_update', this._onFrameUpdate.bind(this));
 		} else {
 			if (this.graph_node) {
 				this.graph_node.graphDisconnectPredecessors();
@@ -125,7 +133,7 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 		}
 	}
 	static PARAM_CALLBACK_setFrame(node: SceneEventNode) {
-		node.onSetFrame({});
+		node._onSetFrame({});
 	}
 	static PARAM_CALLBACK_update_time_dependency(node: SceneEventNode) {
 		node.update_time_dependency();

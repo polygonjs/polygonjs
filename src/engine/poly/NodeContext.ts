@@ -73,6 +73,7 @@ export enum CameraControlsNodeType {
 	MAP = 'cameraMapControls',
 	ORBIT = 'cameraOrbitControls',
 	FIRST_PERSON = 'firstPersonControls',
+	PLAYER = 'playerControls',
 	MOBILE_JOYSTICK = 'mobileJoystickControls',
 }
 export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [

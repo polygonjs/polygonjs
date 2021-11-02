@@ -26,11 +26,13 @@ import {DataUrlSopNode} from '../../src/engine/nodes/sop/DataUrl';
 import {FileSopNodePresets} from './sop/File';
 import {FileSopNode} from '../../src/engine/nodes/sop/File';
 import {PointSopNode} from '../../src/engine/nodes/sop/Point';
+import {RoundedBoxSopNode} from '../../src/engine/nodes/sop/RoundedBox';
 import {TextSopNode} from '../../src/engine/nodes/sop/Text';
 import {TransformSopNode} from '../../src/engine/nodes/sop/Transform';
 import {PointSopNodePresets} from './sop/Point';
 import {TextSopNodePresets} from './sop/Text';
 import {TransformSopNodePresets} from './sop/Transform';
+import {RoundedBoxSopNodePresets} from './sop/RoundedBox';
 
 // TODO: it may be easier when there are many presets
 // to use a BasePreset class that knows how to register itself
@@ -56,6 +58,7 @@ export const presetsLibrary = {
 		[DataUrlSopNode.type()]: DataUrlSopNodePresets,
 		[FileSopNode.type()]: FileSopNodePresets,
 		[PointSopNode.type()]: PointSopNodePresets,
+		[RoundedBoxSopNode.type()]: RoundedBoxSopNodePresets,
 		[TextSopNode.type()]: TextSopNodePresets,
 		[TransformSopNode.type()]: TransformSopNodePresets,
 	},

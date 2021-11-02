@@ -1,4 +1,4 @@
-import {BufferGeometryWithBvh} from '../../../../src/engine/operations/sop/utils/Bvh/three-mesh-bvh';
+import {BufferGeometryWithBVH} from '../../../../src/engine/operations/sop/utils/Bvh/three-mesh-bvh';
 
 QUnit.test('BVH simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -11,5 +11,5 @@ QUnit.test('BVH simple', async (assert) => {
 	let container = await BVH1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry!;
-	assert.ok((geometry as BufferGeometryWithBvh).boundsTree);
+	assert.ok((geometry as BufferGeometryWithBVH).boundsTree);
 });

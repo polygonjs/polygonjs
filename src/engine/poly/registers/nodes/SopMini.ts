@@ -14,12 +14,16 @@ import {CopySopNode} from '../../../nodes/sop/Copy';
 // import {ExporterSopNode} from '../../../nodes/sop/Exporter';
 import {FileSopNode} from '../../../nodes/sop/File';
 // import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
+import {JitterSopNode} from '../../../nodes/sop/Jitter';
 // import {LineSopNode} from '../../../nodes/sop/Line';
 import {MaterialSopNode} from '../../../nodes/sop/Material';
 import {MergeSopNode} from '../../../nodes/sop/Merge';
+import {NormalsSopNode} from '../../../nodes/sop/Normals';
 import {NullSopNode} from '../../../nodes/sop/Null';
 import {PlaneSopNode} from '../../../nodes/sop/Plane';
+import {PlayerCapsuleSopNode} from '../../../nodes/sop/PlayerCapsule';
 // import {RaySopNode} from '../../../nodes/sop/Ray';
+import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
 import {SphereSopNode} from '../../../nodes/sop/Sphere';
 // import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TransformSopNode} from '../../../nodes/sop/Transform';
@@ -42,12 +46,16 @@ export interface GeoNodeChildrenMap {
 	file: FileSopNode;
 	// exporter: ExporterSopNode;
 	// hierarchy: HierarchySopNode;
+	jitter: JitterSopNode;
 	// line: LineSopNode;
 	material: MaterialSopNode;
 	merge: MergeSopNode;
+	normals: NormalsSopNode;
 	null: NullSopNode;
 	plane: PlaneSopNode;
+	playerCapsule: PlayerCapsuleSopNode;
 	// ray: RaySopNode;
+	roundedBox: RoundedBoxSopNode;
 	sphere: SphereSopNode;
 	// switch: SwitchSopNode;
 	// torus: TorusSopNode;
@@ -79,15 +87,19 @@ export class SopRegister {
 		poly.registerNode(FileSopNode, CATEGORY_SOP.INPUT);
 
 		// poly.registerNode(HierarchySopNode, CATEGORY_SOP.MISC);
+		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
 
 		// poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
 		// poly.registerNode(MediapipeFaceMeshSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.MISC);
+		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(NullSopNode, CATEGORY_SOP.MISC);
 
 		poly.registerNode(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(PlayerCapsuleSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(RaySopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
 
 		// poly.registerNode(SwitchSopNode, CATEGORY_SOP.MISC);

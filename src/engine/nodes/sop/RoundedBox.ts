@@ -8,9 +8,9 @@ import {RoundedBoxSopOperation} from '../../operations/sop/RoundedBox';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = RoundedBoxSopOperation.DEFAULT_PARAMS;
-class BoxSopParamsConfig extends NodeParamsConfig {
+class RoundedBoxSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the box */
-	size = ParamConfig.FLOAT(DEFAULT.size);
+	size = ParamConfig.VECTOR3(DEFAULT.size);
 	/** @param divisions count */
 	divisions = ParamConfig.INTEGER(DEFAULT.divisions, {
 		range: [1, 10],
@@ -24,9 +24,9 @@ class BoxSopParamsConfig extends NodeParamsConfig {
 	/** @param center of the box */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
-const ParamsConfig = new BoxSopParamsConfig();
+const ParamsConfig = new RoundedBoxSopParamsConfig();
 
-export class RoundedBoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
+export class RoundedBoxSopNode extends TypedSopNode<RoundedBoxSopParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
 		return 'roundedBox';

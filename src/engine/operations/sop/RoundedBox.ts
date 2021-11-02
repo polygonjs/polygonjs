@@ -7,7 +7,7 @@ import {RoundedBoxGeometry} from '../../../modules/three/examples/jsm/geometries
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
 interface RoundedBoxSopParams extends DefaultOperationParams {
-	size: number;
+	size: Vector3;
 	divisions: number;
 	bevel: number;
 	center: Vector3;
@@ -15,7 +15,7 @@ interface RoundedBoxSopParams extends DefaultOperationParams {
 
 export class RoundedBoxSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: RoundedBoxSopParams = {
-		size: 1,
+		size: new Vector3(1, 1, 1),
 		divisions: 2,
 		bevel: 0.1,
 		center: new Vector3(0, 0, 0),
@@ -35,7 +35,7 @@ export class RoundedBoxSopOperation extends BaseSopOperation {
 	}
 	private _cook_without_input(params: RoundedBoxSopParams) {
 		const size = params.size;
-		const geometry = new RoundedBoxGeometry(size, size, size, params.divisions, params.bevel);
+		const geometry = new RoundedBoxGeometry(size.x, size.y, size.z, params.divisions, params.bevel);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		geometry.computeVertexNormals();
 		return geometry;

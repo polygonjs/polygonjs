@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MeshBVH, acceleratedRaycast, BufferGeometryWithBvh} from './utils/Bvh/three-mesh-bvh';
+import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH} from './utils/Bvh/three-mesh-bvh';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -44,7 +44,7 @@ export class BVHSopOperation extends BaseSopOperation {
 			mergedMesh.matrixAutoUpdate = false;
 			mergedMesh.raycast = acceleratedRaycast;
 			const bhv = new MeshBVH(mergedMesh.geometry, {verbose: false});
-			(mergedMesh.geometry as BufferGeometryWithBvh).boundsTree = bhv;
+			(mergedMesh.geometry as BufferGeometryWithBVH).boundsTree = bhv;
 
 			return this.createCoreGroupFromObjects([mergedMesh]);
 		} else {

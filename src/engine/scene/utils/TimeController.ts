@@ -3,23 +3,26 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {SceneEventType} from './events/SceneEventsController';
 import {EventContext} from './events/_BaseEventsController';
-import {Poly} from '../../Poly';
+// import {Poly} from '../../Poly';
+import {Clock} from 'three/src/core/Clock';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
-export type onTimeTickHook = () => void;
-const performance = Poly.performance.performanceManager();
+export type onTimeTickHook = (delta: number) => void;
+// const performance = Poly.performance.performanceManager();
 export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;
 	private _time: number = 0;
-	private _prev_performance_now: number = 0;
+	// private _prev_performance_now: number = 0;
 	private _graph_node: CoreGraphNode;
 	private _realtimeState = true;
 	private _maxFrame = 600;
 	private _maxFrameLocked = false;
 	private _playing: boolean = false;
+	private _delta: number = 0;
+	private _clock = new Clock();
 
 	private _PLAY_EVENT_CONTEXT: EventContext<Event> | undefined;
 	private _PAUSE_EVENT_CONTEXT: EventContext<Event> | undefined;
@@ -79,7 +82,7 @@ export class TimeController {
 
 			if (this._onBeforeTickCallbacks) {
 				for (let callback of this._onBeforeTickCallbacks) {
-					callback();
+					callback(this._delta);
 				}
 			}
 
@@ -107,7 +110,7 @@ export class TimeController {
 
 			if (this._onAfterTickCallbacks) {
 				for (let callback of this._onAfterTickCallbacks) {
-					callback();
+					callback(this._delta);
 				}
 			}
 		}
@@ -136,10 +139,10 @@ export class TimeController {
 	}
 	incrementTime() {
 		if (this._realtimeState) {
-			const performance_now = performance.now();
-			const delta = (performance_now - this._prev_performance_now) / 1000.0;
-			const new_time = this._time + delta;
-			this._prev_performance_now = performance_now;
+			// const performance_now = performance.now();
+			this._delta = this._clock.getDelta();
+			const new_time = this._time + this._delta;
+			// this._prev_performance_now = performance_now;
 			this.setTime(new_time);
 		} else {
 			this.setFrame(this.frame() + 1);
@@ -175,7 +178,7 @@ export class TimeController {
 	play() {
 		if (this._playing !== true) {
 			this._playing = true;
-			this._prev_performance_now = performance.now();
+			// this._prev_performance_now = performance.now();
 			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
 			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.PLAY_EVENT_CONTEXT);
 		}
