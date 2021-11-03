@@ -112,7 +112,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 
 	private _controls_by_element_id: MobileJoystickControlsMap = new Map();
 
-	async create_controls_instance(camera: Camera, element: HTMLElement) {
+	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		const controls = new MobileJoystickControls(camera, element);
 
 		this._controls_by_element_id.set(element.id, controls);
@@ -132,11 +132,11 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		});
 	}
 
-	update_required() {
+	updateRequired() {
 		return true;
 	}
 
-	setup_controls(controls: MobileJoystickControls) {
+	setupControls(controls: MobileJoystickControls) {
 		controls.setRotationSpeed(this.pv.rotationSpeed);
 		controls.setRotationRange({min: this.pv.minPolarAngle, max: this.pv.maxPolarAngle});
 		controls.setTranslationSpeed(this.pv.translationSpeed);
@@ -147,7 +147,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		setupCollision(controls, this);
 	}
 
-	dispose_controls_for_html_element_id(html_element_id: string) {
+	disposeControlsForHtmlElementId(html_element_id: string) {
 		const controls = this._controls_by_element_id.get(html_element_id);
 		if (controls) {
 			this._controls_by_element_id.delete(html_element_id);

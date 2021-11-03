@@ -3,6 +3,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {ViewerControlsController} from './utils/ControlsController';
 import {TypedViewer} from './_Base';
 import {BaseThreejsCameraObjNodeType} from '../nodes/obj/_BaseCamera';
+import {Clock} from 'three/src/core/Clock';
 
 const CSS_CLASS = 'CoreThreejsViewer';
 
@@ -20,6 +21,8 @@ export interface ThreejsViewerProperties {
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _request_animation_frame_id: number | undefined;
 	private _do_render: boolean = true;
+	private _clock = new Clock();
+	private _delta: number = 0;
 
 	private _animate_method: () => void = this.animate.bind(this);
 
@@ -136,20 +139,21 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 	animate() {
 		if (this._do_render) {
+			this._delta = this._clock.getDelta();
 			this._request_animation_frame_id = requestAnimationFrame(this._animate_method);
 			if (this._onBeforeTickCallbacks) {
 				for (let callback of this._onBeforeTickCallbacks) {
-					callback();
+					callback(this._delta);
 				}
 			}
-			this._scene.timeController.incrementTimeIfPlaying();
+			this._scene.timeController.incrementTimeIfPlaying(this._delta);
 			if (this._onAfterTickCallbacks) {
 				for (let callback of this._onAfterTickCallbacks) {
-					callback();
+					callback(this._delta);
 				}
 			}
-			this.render();
-			this._controls_controller?.update();
+			this.render(this._delta);
+			this._controls_controller?.update(this._delta);
 		}
 	}
 
@@ -163,11 +167,11 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		}
 	}
 
-	render() {
+	render(delta: number) {
 		if (this.camerasController.cameraNode() && this._canvas) {
 			if (this._onBeforeRenderCallbacks) {
 				for (let callback of this._onBeforeRenderCallbacks) {
-					callback();
+					callback(delta);
 				}
 			}
 			const size = this.camerasController.size;
@@ -175,7 +179,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 			this._camera_node.renderController.render(this._canvas, size, aspect);
 			if (this._onAfterRenderCallbacks) {
 				for (let callback of this._onAfterRenderCallbacks) {
-					callback();
+					callback(delta);
 				}
 			}
 		} else {

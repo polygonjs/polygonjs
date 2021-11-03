@@ -239,12 +239,8 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this.translationData.direction.y = 0;
 	}
 
-	private prevTime = performance.now();
-	update() {
-		const time = performance.now();
-		const deltaTime = time - this.prevTime;
-		this.prevTime = time;
-		this._translateCamera(this.translationData, deltaTime);
+	update(delta: number) {
+		this._translateCamera(this.translationData, delta);
 	}
 
 	private _camTmpPost = new Vector3();

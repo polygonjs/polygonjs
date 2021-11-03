@@ -63,20 +63,6 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 			PlayerControlsEventNode.PARAM_CALLBACK_initPlayer(node as PlayerControlsEventNode);
 		},
 	});
-	/** @param start Position */
-	startPosition = ParamConfig.VECTOR3([0, 5, 0], {
-		...updatePlayerParamsCallbackOption(),
-	});
-	/** @param physics Steps */
-	physicsSteps = ParamConfig.INTEGER(5, {
-		range: [1, 10],
-		rangeLocked: [true, false],
-		...updatePlayerParamsCallbackOption(),
-	});
-	/** @param gravity */
-	gravity = ParamConfig.VECTOR3([0, -30, 0], {
-		...updatePlayerParamsCallbackOption(),
-	});
 	/** @param jump Allowed */
 	jumpAllowed = ParamConfig.BOOLEAN(true, {
 		...updatePlayerParamsCallbackOption(),
@@ -105,6 +91,23 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
 	});
+	physics = ParamConfig.FOLDER();
+	/** @param physics Steps */
+	physicsSteps = ParamConfig.INTEGER(5, {
+		range: [1, 10],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param gravity */
+	gravity = ParamConfig.VECTOR3([0, -30, 0], {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param recompute colliding geo */
+	updateCollider = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			PlayerControlsEventNode.PARAM_CALLBACK_updateCollider(node as PlayerControlsEventNode);
+		},
+	});
 	mesh = ParamConfig.FOLDER();
 	/** @param player object */
 	useMesh = ParamConfig.BOOLEAN(true, {
@@ -119,6 +122,11 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType) => {
 			PlayerControlsEventNode.PARAM_CALLBACK_updatePlayerMaterial(node as PlayerControlsEventNode);
 		},
+	});
+	init = ParamConfig.FOLDER();
+	/** @param start Position */
+	startPosition = ParamConfig.VECTOR3([0, 5, 0], {
+		...updatePlayerParamsCallbackOption(),
 	});
 }
 const ParamsConfig = new PlayerEventParamsConfig();
@@ -214,11 +222,6 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			this.states.error.set('player node not found');
 			return;
 		}
-		const colliderNode = this.pv.colliderObject.nodeWithContext(NodeContext.SOP);
-		if (!colliderNode) {
-			this.states.error.set('collider node not found');
-			return;
-		}
 		const cameraNode = this.pv.camera.nodeWithContext(NodeContext.OBJ);
 		if (!cameraNode) {
 			this.states.error.set('invalid camera node');
@@ -226,6 +229,21 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		}
 		this._cameraObject = cameraNode.object as Camera;
 		const playerObject = playerObjectNode.object as Mesh;
+		const collider = await this._getCollider();
+		if (!collider) {
+			this.states.error.set('invalid collider');
+			return;
+		}
+		const player = new Player({object: playerObject, collider: collider});
+
+		return player;
+	}
+	private async _getCollider() {
+		const colliderNode = this.pv.colliderObject.nodeWithContext(NodeContext.SOP);
+		if (!colliderNode) {
+			this.states.error.set('collider node not found');
+			return;
+		}
 		const container = await colliderNode.compute();
 		const coreGroup = container.coreContent();
 		if (!coreGroup) {
@@ -233,9 +251,15 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			return;
 		}
 		const object = coreGroup.objects()[0] as MeshWithBVH;
-		const player = new Player({object: playerObject, collider: object});
-
-		return player;
+		return object;
+	}
+	private async _updateCollider() {
+		const collider = await this._getCollider();
+		if (!collider) {
+			this.states.error.set('invalid collider');
+			return;
+		}
+		this._player?.setCollider(collider);
 	}
 	private _getAzimuthalAngle() {
 		if (!(this._cameraObject && this._player)) {
@@ -245,13 +269,8 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		const playerPosition = this._player.object.position;
 		tmpCameraPosition.copy(cameraPosition);
 		tmpPlayerPosition.copy(playerPosition);
-		// tmpCameraPosition.y = 0;
-		// tmpPlayerPosition.y = 0;
-		// tmpCameraPosition.normalize();
-		// tmpPlayerPosition.normalize();
 		tmpCameraPosition.sub(tmpPlayerPosition);
 		spherical.setFromVector3(tmpCameraPosition);
-		// const angle = tmpCameraPosition.angleTo(tmpPlayerPosition);
 		return spherical.theta;
 	}
 
@@ -266,5 +285,8 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 	}
 	static PARAM_CALLBACK_updatePlayerMesh(node: PlayerControlsEventNode) {
 		node._updatePlayerMesh();
+	}
+	static PARAM_CALLBACK_updateCollider(node: PlayerControlsEventNode) {
+		node._updateCollider();
 	}
 }

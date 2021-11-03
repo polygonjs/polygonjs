@@ -3,8 +3,6 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {SceneEventType} from './events/SceneEventsController';
 import {EventContext} from './events/_BaseEventsController';
-// import {Poly} from '../../Poly';
-import {Clock} from 'three/src/core/Clock';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
@@ -22,7 +20,6 @@ export class TimeController {
 	private _maxFrameLocked = false;
 	private _playing: boolean = false;
 	private _delta: number = 0;
-	private _clock = new Clock();
 
 	private _PLAY_EVENT_CONTEXT: EventContext<Event> | undefined;
 	private _PAUSE_EVENT_CONTEXT: EventContext<Event> | undefined;
@@ -130,17 +127,17 @@ export class TimeController {
 	setFrameToStart() {
 		this.setFrame(TimeController.START_FRAME, true);
 	}
-	incrementTimeIfPlaying() {
+	incrementTimeIfPlaying(delta: number) {
 		if (this._playing) {
 			if (!this.scene.root().areChildrenCooking()) {
-				this.incrementTime();
+				this.incrementTime(delta);
 			}
 		}
 	}
-	incrementTime() {
+	incrementTime(delta: number) {
 		if (this._realtimeState) {
 			// const performance_now = performance.now();
-			this._delta = this._clock.getDelta();
+			this._delta = delta;
 			const new_time = this._time + this._delta;
 			// this._prev_performance_now = performance_now;
 			this.setTime(new_time);

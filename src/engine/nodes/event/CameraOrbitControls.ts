@@ -121,7 +121,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 
 	private _controls_by_element_id: Map<string, OrbitControls> = new Map();
 
-	async create_controls_instance(camera: Camera, element: HTMLElement) {
+	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		const controls = new OrbitControls(camera, element);
 		controls.addEventListener('end', () => {
 			this._on_controls_end(controls);
@@ -143,7 +143,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		});
 	}
 
-	setup_controls(controls: OrbitControls) {
+	setupControls(controls: OrbitControls) {
 		controls.enabled = isBooleanTrue(this.pv.enabled);
 
 		controls.enablePan = isBooleanTrue(this.pv.allowPan);
@@ -186,7 +186,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		}
 	}
 
-	update_required(): boolean {
+	updateRequired(): boolean {
 		return isBooleanTrue(this.pv.tdamping);
 	}
 
@@ -220,7 +220,7 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		});
 	}
 
-	dispose_controls_for_html_element_id(html_element_id: string) {
+	disposeControlsForHtmlElementId(html_element_id: string) {
 		// this method is important so that we can do the following steps:
 		// 1. assign an orbit_controls to the camera
 		// 2. remove the controls

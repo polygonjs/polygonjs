@@ -107,7 +107,7 @@ export class ThreejsCameraControlsController {
 		const map_for_element = this._applied_controls_by_element_id.get(html_element_id);
 		if (map_for_element) {
 			map_for_element.forEach((controls_node, controls_id) => {
-				controls_node.dispose_controls_for_html_element_id(html_element_id);
+				controls_node.disposeControlsForHtmlElementId(html_element_id);
 			});
 		}
 

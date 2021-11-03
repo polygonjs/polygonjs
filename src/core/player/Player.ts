@@ -55,6 +55,10 @@ export class Player {
 		this._mesh.receiveShadow = true;
 		this._mesh.castShadow = true;
 		this.addKeyEvents();
+		this.reset();
+	}
+	setCollider(collider: MeshWithBVH) {
+		this.collider = collider;
 	}
 	setCapsule(capsuleOptions: CapsuleOptions) {
 		this.capsuleInfo.radius = capsuleOptions.radius;

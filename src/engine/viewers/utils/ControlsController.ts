@@ -39,10 +39,10 @@ export class ViewerControlsController {
 			}
 		}
 	}
-	update() {
+	update(delta: number) {
 		if (this._config && this._controls) {
-			if (this._config.update_required()) {
-				this._controls.update();
+			if (this._config.updateRequired()) {
+				this._controls.update(delta);
 			}
 		}
 	}

@@ -12,7 +12,7 @@ export interface CameraControls {
 	name?: string;
 	enabled?: boolean;
 	dispose: () => void;
-	update: () => void;
+	update: (delta: number) => void;
 	addEventListener: (eventName: string, callback: () => void) => void;
 	removeEventListener: (eventName: string, callback: () => void) => void;
 }
@@ -38,7 +38,7 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		if (!canvas) {
 			return;
 		}
-		const controls = await this.create_controls_instance(camera, canvas);
+		const controls = await this.createControlsInstance(camera, canvas);
 		const current_controls = this._controls_by_viewer.get(viewer);
 		if (current_controls) {
 			current_controls.dispose();
@@ -48,24 +48,24 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		const timestamp = performance.now();
 		controls.name = `${this.path()}:${camera.name}:${timestamp}:${this.controls_id()}`;
 		await this.params.evalAll();
-		this.setup_controls(controls);
+		this.setupControls(controls);
 		return controls;
 	}
 	controls_id() {
 		return JSON.stringify(this.params.all.map((p) => p.valueSerialized()));
 	}
-	abstract update_required(): boolean;
+	abstract updateRequired(): boolean;
 	//this.cook()
 
 	// dispose_controls: (controls_instance)->
 	// 	if controls_instance?
 	// 		controls_instance.dispose()
 
-	abstract setup_controls(controls: CameraControls): void;
+	abstract setupControls(controls: CameraControls): void;
 	//
-	abstract dispose_controls_for_html_element_id(html_element_id: string): void;
+	abstract disposeControlsForHtmlElementId(html_element_id: string): void;
 
-	abstract create_controls_instance(camera: Camera, element: HTMLElement): Promise<CameraControls>;
+	abstract createControlsInstance(camera: Camera, element: HTMLElement): Promise<CameraControls>;
 	// abstract set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void;
 	abstract endEventName(): string;
 }

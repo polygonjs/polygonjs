@@ -16,8 +16,8 @@ import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/Contro
 // class AbstractViewer {}
 
 const HOVERED_CLASS_NAME = 'hovered';
-type onTimeTickHook = () => void;
-type onRenderHook = () => void;
+type onTimeTickHook = (delta: number) => void;
+type onRenderHook = (delta: number) => void;
 type ViewerHook = onTimeTickHook | onRenderHook;
 
 export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
