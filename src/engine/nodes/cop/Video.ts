@@ -22,7 +22,7 @@ import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {FileType} from '../../params/utils/OptionsController';
-import {CopFileTypeController} from './utils/FileTypeController';
+import {isUrlVideo} from '../../../core/FileTypeController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
@@ -76,8 +76,16 @@ export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 	};
 }
+export function FileTypeCheckCopParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param check url extension */
+		checkFileType = ParamConfig.BOOLEAN(true);
+	};
+}
 
-class VideoCopParamsConfig extends TextureParamConfig(VideoCopParamConfig(NodeParamsConfig)) {}
+class VideoCopParamsConfig extends FileTypeCheckCopParamConfig(
+	TextureParamConfig(VideoCopParamConfig(NodeParamsConfig))
+) {}
 
 const ParamsConfig = new VideoCopParamsConfig();
 
@@ -122,7 +130,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		});
 	}
 	async cook(input_contents: Texture[]) {
-		if (CopFileTypeController.isStaticImageUrl(this.pv.url)) {
+		if (isBooleanTrue(this.pv.checkFileType) && !isUrlVideo(this.pv.url)) {
 			this.states.error.set('url is not a video');
 		} else {
 			const texture = await this._load_texture(this.pv.url);
@@ -146,6 +154,12 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			} else {
 				this.cookController.endCook();
 			}
+		}
+	}
+	dispose() {
+		super.dispose();
+		if (this._video) {
+			this._video.parentElement?.removeChild(this._video);
 		}
 	}
 
@@ -207,7 +221,11 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	private async _load_texture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
 		const url_param = this.p.url;
-		this._texture_loader = this._texture_loader || new CoreLoaderTexture(url, url_param, this, this.scene());
+		this._texture_loader =
+			this._texture_loader ||
+			new CoreLoaderTexture(url, url_param, this, this.scene(), {
+				forceVideo: !isBooleanTrue(this.pv.checkFileType),
+			});
 		try {
 			texture = await this._texture_loader.load_texture_from_url_or_op({
 				tdataType: this.pv.ttype && this.pv.tadvanced,

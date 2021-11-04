@@ -8,11 +8,15 @@ QUnit.test('COP video simple mp4', async (assert) => {
 
 	const container = await file1.compute();
 	assert.ok(!file1.states.error.message());
-	console.log(file1.states.error.message());
+	console.log('error message:', file1.states.error.message());
 	const texture = container.texture();
 	assert.equal(texture.image.videoWidth, 480);
 	assert.equal(texture.image.videoHeight, 204);
 	assert.deepEqual(container.resolution(), [480, 204]);
+
+	setTimeout(() => {
+		file1.dispose();
+	}, 1000);
 });
 QUnit.test('COP video simple ogv', async (assert) => {
 	const COP = window.COP;
@@ -26,4 +30,8 @@ QUnit.test('COP video simple ogv', async (assert) => {
 	assert.equal(texture.image.videoWidth, 480);
 	assert.equal(texture.image.videoHeight, 204);
 	assert.deepEqual(container.resolution(), [480, 204]);
+
+	setTimeout(() => {
+		file1.dispose();
+	}, 1000);
 });

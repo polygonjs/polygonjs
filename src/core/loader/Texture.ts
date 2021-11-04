@@ -12,6 +12,7 @@ import {CoreUserAgent} from '../UserAgent';
 import {ASSETS_ROOT} from './AssetsUtils';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreBaseLoader} from './_Base';
+import {VIDEO_EXTENSIONS, ImageExtension} from '../FileTypeController';
 interface VideoSourceTypeByExt {
 	ogg: string;
 	ogv: string;
@@ -27,48 +28,37 @@ interface ThreeLoaderByExt {
 	hdr: string;
 }
 
-enum Extension {
-	JPG = 'jpg',
-	JPEG = 'jpeg',
-	PNG = 'png',
-	EXR = 'exr',
-	BASIS = 'basis',
-	HDR = 'hdr',
-}
-export const TEXTURE_IMAGE_EXTENSIONS: Extension[] = [
-	Extension.JPEG,
-	Extension.JPG,
-	Extension.PNG,
-	Extension.EXR,
-	Extension.BASIS,
-	Extension.HDR,
-];
-export const TEXTURE_VIDEO_EXTENSIONS: string[] = ['ogg', 'ogv', 'mp4'];
-
 interface TextureLoadOptions {
 	tdataType: boolean;
 	dataType: number;
 }
 type MaxConcurrentLoadsCountMethod = () => number;
 type OnTextureLoadedCallback = (url: string, texture: Texture) => void;
+
+interface CoreLoaderTextureOptions {
+	forceVideo?: boolean;
+}
+
 export class CoreLoaderTexture extends CoreBaseLoader {
 	static PARAM_DEFAULT = `${ASSETS_ROOT}/textures/uv.jpg`;
 	static PARAM_ENV_DEFAULT = `${ASSETS_ROOT}/textures/piz_compressed.exr`;
 
-	static VIDEO_EXTENSIONS = ['mp4', 'webm', 'ogv'];
 	static VIDEO_SOURCE_TYPE_BY_EXT: VideoSourceTypeByExt = {
 		ogg: 'video/ogg; codecs="theora, vorbis"',
 		ogv: 'video/ogg; codecs="theora, vorbis"',
 		mp4: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
 	};
+	private _forceVideo: boolean = false;
 
 	constructor(
 		_url: string,
 		private _param: BaseParamType,
 		protected _node: BaseNodeType,
-		protected _scene: PolyScene
+		protected _scene: PolyScene,
+		options?: CoreLoaderTextureOptions
 	) {
 		super(_url, _scene, _node);
+		this._forceVideo = options?.forceVideo || this._forceVideo;
 	}
 
 	static _onTextureLoadedCallback: OnTextureLoadedCallback | undefined;
@@ -132,48 +122,110 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			const ext = this.extension();
 			const url = await this._urlToLoad();
 
-			if (CoreLoaderTexture.VIDEO_EXTENSIONS.includes(ext)) {
-				const texture: VideoTexture = await this._load_as_video(url);
+			if (this._forceVideo || VIDEO_EXTENSIONS.includes(ext)) {
+				const texture: VideoTexture = await this._loadVideo(url);
 				resolve(texture);
 			} else {
-				this.loader_for_ext(ext, options).then(async (loader) => {
-					if (loader) {
-						CoreLoaderTexture.increment_in_progress_loads_count();
-						await CoreLoaderTexture.wait_for_max_concurrent_loads_queue_freed();
-						loader.load(
-							url,
-							(texture: Texture) => {
-								CoreLoaderTexture.decrement_in_progress_loads_count();
-
-								const callback = CoreLoaderTexture._onTextureLoadedCallback;
-								if (callback) {
-									callback(url, texture);
-								}
-
-								resolve(texture);
-							},
-							undefined,
-							(error: any) => {
-								CoreLoaderTexture.decrement_in_progress_loads_count();
-								Poly.warn('error', error);
-								reject();
-							}
-						);
-					} else {
-						reject();
-					}
-				});
+				try {
+					const texture: Texture = await this._loadImage(url, options);
+					resolve(texture);
+				} catch (e) {
+					reject();
+				}
 			}
+		});
+	}
+
+	private _loadImage(url: string, options: TextureLoadOptions): Promise<Texture> {
+		return new Promise(async (resolve, reject) => {
+			const ext = this.extension();
+			this.loader_for_ext(ext, options).then(async (loader) => {
+				if (loader) {
+					CoreLoaderTexture.incrementInProgressLoadsCount();
+					await CoreLoaderTexture.waitForMaxConcurrentLoadsQueueFreed();
+					loader.load(
+						url,
+						(texture: Texture) => {
+							CoreLoaderTexture.decrementInProgressLoadsCount();
+
+							const callback = CoreLoaderTexture._onTextureLoadedCallback;
+							if (callback) {
+								callback(url, texture);
+							}
+
+							resolve(texture);
+						},
+						undefined,
+						(error: any) => {
+							CoreLoaderTexture.decrementInProgressLoadsCount();
+							Poly.warn('error', error);
+							reject();
+						}
+					);
+				} else {
+					reject();
+				}
+			});
+		});
+	}
+	private _loadVideo(url: string): Promise<VideoTexture> {
+		return new Promise(async (resolve, reject) => {
+			CoreLoaderTexture.incrementInProgressLoadsCount();
+			await CoreLoaderTexture.waitForMaxConcurrentLoadsQueueFreed();
+
+			const video = document.createElement('video');
+			video.setAttribute('crossOrigin', 'anonymous');
+			video.setAttribute('autoplay', `${true}`); // to ensure it loads
+			video.setAttribute('loop', `${true}`);
+			// wait for onloadedmetadata to ensure that we have a duration
+			video.onloadedmetadata = function () {
+				video.pause();
+				const texture = new VideoTexture(video);
+				// video.setAttribute('controls', true)
+				// video.style="display:none"
+				CoreLoaderTexture.decrementInProgressLoadsCount();
+				const callback = CoreLoaderTexture._onTextureLoadedCallback;
+				if (callback) {
+					callback(url, texture);
+				}
+				resolve(texture);
+			};
+
+			// add source as is
+			const original_source = document.createElement('source');
+			const original_ext = CoreBaseLoader.extension(url) as keyof VideoSourceTypeByExt;
+			let type: string = CoreLoaderTexture.VIDEO_SOURCE_TYPE_BY_EXT[original_ext];
+			type = type || CoreLoaderTexture._default_video_source_type(url);
+			original_source.setAttribute('type', type);
+			original_source.setAttribute('src', url);
+			video.appendChild(original_source);
+
+			// add secondary source, either mp4 or ogv depending on the first url
+			let secondary_url = url;
+			if (original_ext == 'mp4') {
+				// add ogv
+				secondary_url = CoreLoaderTexture.replaceExtension(url, 'ogv');
+			} else {
+				// add mp4
+				secondary_url = CoreLoaderTexture.replaceExtension(url, 'mp4');
+			}
+			const secondary_source = document.createElement('source');
+			const secondary_ext = CoreBaseLoader.extension(secondary_url) as keyof VideoSourceTypeByExt;
+			type = CoreLoaderTexture.VIDEO_SOURCE_TYPE_BY_EXT[secondary_ext];
+			type = type || CoreLoaderTexture._default_video_source_type(url);
+			secondary_source.setAttribute('type', type);
+			secondary_source.setAttribute('src', url);
+			video.appendChild(secondary_source);
 		});
 	}
 
 	static module_names(ext: string): ModuleName[] | void {
 		switch (ext) {
-			case Extension.EXR:
+			case ImageExtension.EXR:
 				return [ModuleName.EXRLoader];
-			case Extension.HDR:
+			case ImageExtension.HDR:
 				return [ModuleName.RGBELoader];
-			case Extension.BASIS:
+			case ImageExtension.BASIS:
 				return [ModuleName.BasisTextureLoader];
 		}
 	}
@@ -181,13 +233,13 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 	async loader_for_ext(ext: string, options: TextureLoadOptions) {
 		const ext_lowercase = ext.toLowerCase() as keyof ThreeLoaderByExt;
 		switch (ext_lowercase) {
-			case Extension.EXR: {
+			case ImageExtension.EXR: {
 				return await this._exr_loader(options);
 			}
-			case Extension.HDR: {
+			case ImageExtension.HDR: {
 				return await this._hdr_loader(options);
 			}
-			case Extension.BASIS: {
+			case ImageExtension.BASIS: {
 				return await CoreLoaderTexture._basis_loader(this._node);
 			}
 		}
@@ -251,49 +303,6 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		}
 	}
 
-	_load_as_video(url: string): Promise<VideoTexture> {
-		return new Promise((resolve, reject) => {
-			const video = document.createElement('video');
-			video.setAttribute('crossOrigin', 'anonymous');
-			video.setAttribute('autoplay', `${true}`); // to ensure it loads
-			video.setAttribute('loop', `${true}`);
-
-			// wait for onloadedmetadata to ensure that we have a duration
-			video.onloadedmetadata = function () {
-				video.pause();
-				const texture = new VideoTexture(video);
-				resolve(texture);
-			};
-			// video.setAttribute('controls', true)
-			// video.style="display:none"
-
-			// add source as is
-			const original_source = document.createElement('source');
-			const original_ext = CoreBaseLoader.extension(url) as keyof VideoSourceTypeByExt;
-			let type: string = CoreLoaderTexture.VIDEO_SOURCE_TYPE_BY_EXT[original_ext];
-			type = type || CoreLoaderTexture._default_video_source_type(url);
-			original_source.setAttribute('type', type);
-			original_source.setAttribute('src', url);
-			video.appendChild(original_source);
-
-			// add secondary source, either mp4 or ogv depending on the first url
-			let secondary_url = url;
-			if (original_ext == 'mp4') {
-				// add ogv
-				secondary_url = CoreLoaderTexture.replaceExtension(url, 'ogv');
-			} else {
-				// add mp4
-				secondary_url = CoreLoaderTexture.replaceExtension(url, 'mp4');
-			}
-			const secondary_source = document.createElement('source');
-			const secondary_ext = CoreBaseLoader.extension(secondary_url) as keyof VideoSourceTypeByExt;
-			type = CoreLoaderTexture.VIDEO_SOURCE_TYPE_BY_EXT[secondary_ext];
-			type = type || CoreLoaderTexture._default_video_source_type(url);
-			secondary_source.setAttribute('type', type);
-			secondary_source.setAttribute('src', url);
-			video.appendChild(secondary_source);
-		});
-	}
 	static _default_video_source_type(url: string) {
 		const ext = CoreBaseLoader.extension(url);
 		return `video/${ext}`;
@@ -429,10 +438,10 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 	// 	this.MAX_CONCURRENT_LOADS_COUNT = count;
 	// }
 
-	private static increment_in_progress_loads_count() {
+	static incrementInProgressLoadsCount() {
 		this.in_progress_loads_count++;
 	}
-	private static decrement_in_progress_loads_count() {
+	static decrementInProgressLoadsCount() {
 		this.in_progress_loads_count--;
 
 		const queued_resolve = this._queue.pop();
@@ -444,7 +453,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		}
 	}
 
-	private static async wait_for_max_concurrent_loads_queue_freed(): Promise<void> {
+	static async waitForMaxConcurrentLoadsQueueFreed(): Promise<void> {
 		if (this.in_progress_loads_count <= this.MAX_CONCURRENT_LOADS_COUNT) {
 			return;
 		} else {

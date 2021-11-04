@@ -14,7 +14,7 @@ import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {FileType} from '../../params/utils/OptionsController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
-import {CopFileTypeController} from './utils/FileTypeController';
+import {isUrlStaticImage} from '../../../core/FileTypeController';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 
@@ -77,7 +77,9 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		});
 	}
 	async cook(input_contents: Texture[]) {
-		if (CopFileTypeController.isStaticImageUrl(this.pv.url)) {
+		if (!isUrlStaticImage(this.pv.url)) {
+			this.states.error.set('url is not an image');
+		} else {
 			const texture = await this._loadTexture(this.pv.url);
 
 			if (texture) {
@@ -91,8 +93,6 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 			} else {
 				this._clearTexture();
 			}
-		} else {
-			this.states.error.set('url is not an image');
 		}
 	}
 

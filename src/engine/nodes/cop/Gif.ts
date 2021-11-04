@@ -16,6 +16,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CanvasTexture} from 'three/src/textures/CanvasTexture';
 import {parseGIF, decompressFrames, ParsedFrame} from 'gifuct-js';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {isUrlGif} from '../../../core/FileTypeController';
 
 export function GifCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -92,22 +93,30 @@ export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
 		});
 	}
 	async cook(input_contents: Texture[]) {
-		const response = await fetch(this.pv.url);
-		const buffer = await response.arrayBuffer();
-		const gif = await parseGIF(buffer);
-		const buildImagePatches = true;
-		this._parsedFrames = await decompressFrames(gif, buildImagePatches);
-		const firstFrame = this._parsedFrames[0];
-		this._frameDelay = firstFrame.delay;
-		this._frameIndex = this.pv.gifFrame - 1;
-
-		this._createCanvas();
-		if (!this._gifCanvasElement) {
-			this.states.error.set('failed to create canvas');
+		if (!isUrlGif(this.pv.url)) {
+			this.states.error.set('url is not an image');
 		} else {
-			const texture = new CanvasTexture(this._gifCanvasElement);
-			await this.textureParamsController.update(texture);
-			this.setTexture(texture);
+			CoreLoaderTexture.incrementInProgressLoadsCount();
+			await CoreLoaderTexture.waitForMaxConcurrentLoadsQueueFreed();
+
+			const response = await fetch(this.pv.url);
+			const buffer = await response.arrayBuffer();
+			const gif = await parseGIF(buffer);
+			const buildImagePatches = true;
+			this._parsedFrames = await decompressFrames(gif, buildImagePatches);
+			const firstFrame = this._parsedFrames[0];
+			this._frameDelay = firstFrame.delay;
+			this._frameIndex = this.pv.gifFrame - 1;
+
+			this._createCanvas();
+			CoreLoaderTexture.decrementInProgressLoadsCount();
+			if (!this._gifCanvasElement) {
+				this.states.error.set('failed to create canvas');
+			} else {
+				const texture = new CanvasTexture(this._gifCanvasElement);
+				await this.textureParamsController.update(texture);
+				this.setTexture(texture);
+			}
 		}
 	}
 	private _gifCanvasElement: HTMLCanvasElement | undefined;
