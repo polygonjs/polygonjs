@@ -92,7 +92,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 				this._clearTexture();
 			}
 		} else {
-			this.states.error.set('input is not an image');
+			this.states.error.set('url is not an image');
 		}
 	}
 

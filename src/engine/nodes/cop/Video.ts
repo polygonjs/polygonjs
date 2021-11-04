@@ -123,7 +123,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	}
 	async cook(input_contents: Texture[]) {
 		if (CopFileTypeController.isStaticImageUrl(this.pv.url)) {
-			this.states.error.set('input is not a video');
+			this.states.error.set('url is not a video');
 		} else {
 			const texture = await this._load_texture(this.pv.url);
 
