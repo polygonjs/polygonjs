@@ -18,6 +18,7 @@ import {MobileJoystickControlsEventNode} from '../../../nodes/event/MobileJoysti
 import {MouseEventNode} from '../../../nodes/event/Mouse';
 import {NodeCookEventNode} from '../../../nodes/event/NodeCook';
 import {NullEventNode} from '../../../nodes/event/Null';
+import {PlayerControlsEventNode} from '../../../nodes/event/PlayerControls';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
 import {SceneEventNode} from '../../../nodes/event/Scene';
@@ -51,10 +52,11 @@ export interface EventNodeChildrenMap {
 	keyboard: KeyboardEventNode;
 	limit: LimitEventNode;
 	message: MessageEventNode;
-	MobileJoystickControls: MobileJoystickControlsEventNode;
+	mobileJoystickControls: MobileJoystickControlsEventNode;
 	mouse: MouseEventNode;
 	nodeCook: NodeCookEventNode;
 	null: NullEventNode;
+	playerControls: PlayerControlsEventNode;
 	pointer: PointerEventNode;
 	raycast: RaycastEventNode;
 	scene: SceneEventNode;
@@ -96,6 +98,7 @@ export class EventRegister {
 		poly.registerNode(MouseEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(NodeCookEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(NullEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(PlayerControlsEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(PointerEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(RaycastEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(SceneEventNode, CATEGORY_EVENT.SCENE);
