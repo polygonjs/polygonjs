@@ -44,11 +44,11 @@ export class PointerLockControls extends EventDispatcher {
 		this.euler.x = Math.max(PI_2 - this.maxPolarAngle, Math.min(PI_2 - this.minPolarAngle, this.euler.x));
 
 		this.camera.quaternion.setFromEuler(this.euler);
-		this.computeAzimuthalAngle();
+		this._computeAzimuthalAngle();
 
 		this.dispatchEvent(changeEvent);
 	}
-	computeAzimuthalAngle() {
+	private _computeAzimuthalAngle() {
 		this.camera.updateMatrixWorld();
 		tmpCameraUnproject.set(0, 0, 1);
 		this.camera.localToWorld(tmpCameraUnproject);

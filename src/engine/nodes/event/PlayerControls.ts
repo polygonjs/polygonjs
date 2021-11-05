@@ -11,6 +11,7 @@ import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {TypedEventNode} from './_Base';
 import {Player} from '../../../core/player/Player';
+import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
 import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ParamOptions} from '../../params/utils/OptionsController';
@@ -63,22 +64,6 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 			PlayerControlsEventNode.PARAM_CALLBACK_initPlayer(node as PlayerControlsEventNode);
 		},
 	});
-	/** @param jump Allowed */
-	jumpAllowed = ParamConfig.BOOLEAN(true, {
-		...updatePlayerParamsCallbackOption(),
-	});
-	/** @param jump Force */
-	jumpStrength = ParamConfig.FLOAT(10, {
-		range: [0, 100],
-		rangeLocked: [true, false],
-		...updatePlayerParamsCallbackOption(),
-	});
-	/** @param travel speed */
-	speed = ParamConfig.FLOAT(1, {
-		range: [0, 10],
-		rangeLocked: [true, false],
-		...updatePlayerParamsCallbackOption(),
-	});
 	/** @param collision Capsule Radius */
 	capsuleRadius = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
@@ -100,6 +85,32 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 	});
 	/** @param gravity */
 	gravity = ParamConfig.VECTOR3([0, -30, 0], {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param travel speed */
+	speed = ParamConfig.FLOAT(1, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param jump Allowed */
+	jumpAllowed = ParamConfig.BOOLEAN(true, {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param jump Force */
+	jumpStrength = ParamConfig.FLOAT(10, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param run Allowed */
+	runAllowed = ParamConfig.BOOLEAN(true, {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param jump Force */
+	runSpeedMult = ParamConfig.FLOAT(2, {
+		range: [0, 10],
+		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param recompute colliding geo */
@@ -128,6 +139,12 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 	startPosition = ParamConfig.VECTOR3([0, 5, 0], {
 		...updatePlayerParamsCallbackOption(),
 	});
+	/** @param reset */
+	reset = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			PlayerControlsEventNode.PARAM_CALLBACK_resetPlayer(node as PlayerControlsEventNode);
+		},
+	});
 }
 const ParamsConfig = new PlayerEventParamsConfig();
 
@@ -138,6 +155,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 	}
 
 	private _player: Player | undefined;
+	private _corePlayerKeyEvents: CorePlayerKeyEvents | undefined;
 	private _cameraObject: Camera | undefined;
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
@@ -152,7 +170,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		]);
 	}
 	private async _initPlayer() {
-		this._player = await this._createPlayer();
+		this._player = this._player || (await this._createPlayer());
 		if (!this._player) {
 			this.states.error.set('could not create player');
 			return;
@@ -160,7 +178,9 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		this._updatePlayerMesh();
 		this._updatePlayerMaterial();
 		this._updatePlayerParams();
-		this._player.addKeyEvents();
+		this._corePlayerKeyEvents = new CorePlayerKeyEvents(this._player);
+		this._corePlayerKeyEvents.addEvents();
+		this._player.reset();
 
 		const player = this._player;
 		this.scene().registerOnBeforeTick(this._callbackName(), (delta) => {
@@ -174,6 +194,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 	}
 	private _disposePlayer() {
 		if (this._player) {
+			this._corePlayerKeyEvents?.removeEvents();
 			this._player.dispose();
 			this.scene().unRegisterOnBeforeTick(this._callbackName());
 		}
@@ -193,6 +214,8 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		this._player.physicsSteps = this.pv.physicsSteps;
 		this._player.jumpAllowed = isBooleanTrue(this.pv.jumpAllowed);
 		this._player.jumpStrength = this.pv.jumpStrength;
+		this._player.runAllowed = isBooleanTrue(this.pv.runAllowed);
+		this._player.runSpeedMult = this.pv.runSpeedMult;
 		this._player.gravity.copy(this.pv.gravity);
 		this._player.speed = this.pv.speed;
 		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight});
@@ -234,7 +257,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			this.states.error.set('invalid collider');
 			return;
 		}
-		const player = new Player({object: playerObject, collider: collider});
+		const player = new Player({object: playerObject, collider: collider, meshName: this.path()});
 
 		return player;
 	}
@@ -288,5 +311,8 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 	}
 	static PARAM_CALLBACK_updateCollider(node: PlayerControlsEventNode) {
 		node._updateCollider();
+	}
+	static PARAM_CALLBACK_resetPlayer(node: PlayerControlsEventNode) {
+		node._resetPlayer();
 	}
 }

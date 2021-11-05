@@ -14,6 +14,7 @@ import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {Player} from '../../../core/player/Player';
+import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
 
@@ -45,27 +46,11 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 			FirstPersonControlsEventNode.PARAM_CALLBACK_lockControls(node as FirstPersonControlsEventNode);
 		},
 	});
-	/** @param jump Allowed */
-	jumpAllowed = ParamConfig.BOOLEAN(true, {
-		...updatePlayerParamsCallbackOption(),
-	});
-	/** @param jump Force */
-	jumpStrength = ParamConfig.FLOAT(10, {
-		range: [0, 100],
-		rangeLocked: [true, false],
-		...updatePlayerParamsCallbackOption(),
-	});
-	/** @param translate speed */
-	translateSpeed = ParamConfig.FLOAT(1, {
-		range: [0, 10],
-		rangeLocked: [true, false],
-		...updatePlayerParamsCallbackOption(),
-	});
-	/** @param rotate speed */
-	rotateSpeed = ParamConfig.FLOAT(1, {
-		range: [0, 10],
-		rangeLocked: [true, false],
-		...updatePlayerParamsCallbackOption(),
+	/** @param click to dispose controls */
+	dispose = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			FirstPersonControlsEventNode.PARAM_CALLBACK_disposeControls(node as FirstPersonControlsEventNode);
+		},
 	});
 	/** @param collision Capsule Radius */
 	capsuleRadius = ParamConfig.FLOAT(0.5, {
@@ -91,12 +76,45 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 	gravity = ParamConfig.VECTOR3([0, -30, 0], {
 		...updatePlayerParamsCallbackOption(),
 	});
+	/** @param translate speed */
+	translateSpeed = ParamConfig.FLOAT(1, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param rotate speed */
+	rotateSpeed = ParamConfig.FLOAT(1, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param jump Allowed */
+	jumpAllowed = ParamConfig.BOOLEAN(true, {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param jump Force */
+	jumpStrength = ParamConfig.FLOAT(10, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param run Allowed */
+	runAllowed = ParamConfig.BOOLEAN(true, {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param run speed mult */
+	runSpeedMult = ParamConfig.FLOAT(2, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
 	/** @param recompute colliding geo */
 	updateCollider = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			FirstPersonControlsEventNode.PARAM_CALLBACK_updateCollider(node as FirstPersonControlsEventNode);
 		},
 	});
+
 	init = ParamConfig.FOLDER();
 	/** @param start Position */
 	startPosition = ParamConfig.VECTOR3([0, 2, 0], {
@@ -105,6 +123,12 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 	/** @param start Position */
 	startRotation = ParamConfig.VECTOR3([0, 0, 0], {
 		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param reset */
+	reset = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			FirstPersonControlsEventNode.PARAM_CALLBACK_resetPlayer(node as FirstPersonControlsEventNode);
+		},
 	});
 	/** @param min rotation angle */
 	minPolarAngle = ParamConfig.FLOAT(0, {
@@ -141,6 +165,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 
 	protected _controls_by_element_id: PointerLockControlsMap = new Map();
 	private _player: Player | undefined;
+	private _corePlayerKeyEvents: CorePlayerKeyEvents | undefined;
 
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		await this._initPlayer(camera);
@@ -192,21 +217,27 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		return controls;
 	}
 	private async _initPlayer(camera: Camera) {
-		this._player = await this._createPlayer(camera);
+		this._player = this._player || (await this._createPlayer(camera));
 		if (!this._player) {
 			return;
 		}
 		this._updatePlayerParams();
-		this._player.addKeyEvents();
+		this._corePlayerKeyEvents = new CorePlayerKeyEvents(this._player);
+		this._corePlayerKeyEvents.addEvents();
+		this._player.reset();
 	}
 	private async _updatePlayerParams() {
 		if (!this._player) {
+			console.warn('no player to update');
 			return;
 		}
 		this._player.startPosition.copy(this.pv.startPosition);
+		this._player.startRotation.copy(this.pv.startRotation);
 		this._player.physicsSteps = this.pv.physicsSteps;
 		this._player.jumpAllowed = isBooleanTrue(this.pv.jumpAllowed);
 		this._player.jumpStrength = this.pv.jumpStrength;
+		this._player.runAllowed = isBooleanTrue(this.pv.runAllowed);
+		this._player.runSpeedMult = this.pv.runSpeedMult;
 		this._player.gravity.copy(this.pv.gravity);
 		this._player.speed = this.pv.translateSpeed;
 		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight});
@@ -221,6 +252,9 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		const player = new Player({object: playerObject, collider: collider});
 
 		return player;
+	}
+	private _resetPlayer() {
+		this._player?.reset();
 	}
 	private async _getCollider() {
 		const colliderNode = this.pv.colliderObject.nodeWithContext(NodeContext.SOP);
@@ -271,15 +305,14 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 	disposeControlsForHtmlElementId(html_element_id: string) {
 		const controls = this._controls_by_element_id.get(html_element_id);
 		if (controls) {
+			controls.dispose();
 			this._controls_by_element_id.delete(html_element_id);
 		}
 	}
-
-	// private _recomputeCollidingGeo() {
-	// 	this._controls_by_element_id.forEach((controls, id) => {
-	// 		this._setupCollisionGeo(controls);
-	// 	});
-	// }
+	disposeControls() {
+		this._corePlayerKeyEvents?.removeEvents();
+		this._player?.dispose();
+	}
 
 	//
 	//
@@ -297,91 +330,19 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		firstControls.lock();
 	}
 
-	//
-	//
-	// KEYBOARD
-	//
-	//
-	// private _onKeyDown(event: KeyboardEvent, controls: PointerLockControls) {
-	// 	switch (event.code) {
-	// 		case 'ArrowUp':
-	// 		case 'KeyW':
-	// 			controls.setMoveForward(true);
-	// 			break;
-
-	// 		case 'ArrowLeft':
-	// 		case 'KeyA':
-	// 			controls.setMoveLeft(true);
-	// 			break;
-
-	// 		case 'ArrowDown':
-	// 		case 'KeyS':
-	// 			controls.setMoveBackward(true);
-	// 			break;
-
-	// 		case 'ArrowRight':
-	// 		case 'KeyD':
-	// 			controls.setMoveRight(true);
-	// 			break;
-	// 		case 'Space':
-	// 			controls.jump();
-	// 			break;
-
-	// 		// case 'Space':
-	// 		// 	if ( canJump === true ) velocity.y += 350;
-	// 		// 	canJump = false;
-	// 		// 	break;
-	// 	}
-	// }
-	// private _onKeyUp(event: KeyboardEvent, controls: PointerLockControls) {
-	// 	switch (event.code) {
-	// 		case 'ArrowUp':
-	// 		case 'KeyW':
-	// 			controls.setMoveForward(false);
-	// 			break;
-
-	// 		case 'ArrowLeft':
-	// 		case 'KeyA':
-	// 			controls.setMoveLeft(false);
-	// 			break;
-
-	// 		case 'ArrowDown':
-	// 		case 'KeyS':
-	// 			controls.setMoveBackward(false);
-	// 			break;
-
-	// 		case 'ArrowRight':
-	// 		case 'KeyD':
-	// 			controls.setMoveRight(false);
-	// 			break;
-	// 	}
-	// }
-	// private _onKeyDownBound: ((event: KeyboardEvent) => void) | undefined;
-	// private _onKeyUpBound: ((event: KeyboardEvent) => void) | undefined;
-	// private _createKeysEvents(controls: PointerLockControls) {
-	// 	this._onKeyDownBound = (event: KeyboardEvent) => {
-	// 		this._onKeyDown(event, controls);
-	// 	};
-	// 	this._onKeyUpBound = (event: KeyboardEvent) => {
-	// 		this._onKeyUp(event, controls);
-	// 	};
-	// 	document.addEventListener('keydown', this._onKeyDownBound);
-	// 	document.addEventListener('keyup', this._onKeyUpBound);
-	// }
-	// private _removeKeysEvents() {
-	// 	if (this._onKeyDownBound && this._onKeyUpBound) {
-	// 		document.removeEventListener('keydown', this._onKeyDownBound);
-	// 		document.removeEventListener('keyup', this._onKeyUpBound);
-	// 	}
-	// }
-
 	static PARAM_CALLBACK_lockControls(node: FirstPersonControlsEventNode) {
 		node.lockControls();
+	}
+	static PARAM_CALLBACK_disposeControls(node: FirstPersonControlsEventNode) {
+		node.disposeControls();
 	}
 	static PARAM_CALLBACK_updateCollider(node: FirstPersonControlsEventNode) {
 		node._updateCollider();
 	}
 	static PARAM_CALLBACK_updatePlayerParams(node: FirstPersonControlsEventNode) {
 		node._updatePlayerParams();
+	}
+	static PARAM_CALLBACK_resetPlayer(node: FirstPersonControlsEventNode) {
+		node._resetPlayer();
 	}
 }

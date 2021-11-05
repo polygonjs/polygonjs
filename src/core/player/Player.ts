@@ -10,6 +10,7 @@ import {Material} from 'three/src/materials/Material';
 interface PlayerOptions {
 	object: Object3D;
 	collider: MeshWithBVH;
+	meshName?: string;
 }
 
 type ResetRequiredCallback = () => boolean;
@@ -34,12 +35,17 @@ export class Player {
 		radius: 0.5,
 		segment: new Line3(new Vector3(), new Vector3(0, -1.0, 0.0)),
 	};
-	private _mesh: Mesh = new Mesh();
+	private _meshName: string | undefined;
+	private _mesh: Mesh | undefined;
 	public object: Object3D;
 	public collider: MeshWithBVH;
 	public startPosition = new Vector3(0, 5, 0);
+	public startRotation = new Vector3(0, 0, 0);
 	public jumpAllowed = true;
 	public jumpStrength = 10;
+	public runAllowed = true;
+	public runSpeedMult = 2;
+	private _running = false;
 	public speed = 10;
 	public physicsSteps = 5;
 	public gravity = new Vector3(0, -30, 0);
@@ -51,11 +57,13 @@ export class Player {
 		this.object = options.object;
 		this.object.matrixAutoUpdate = true;
 		this.collider = options.collider;
-		this._mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
-		this._mesh.receiveShadow = true;
-		this._mesh.castShadow = true;
-		this.addKeyEvents();
-		this.reset();
+		if (options.meshName) {
+			this._mesh = new Mesh();
+			this._mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
+			this._mesh.name = options.meshName;
+			this._mesh.receiveShadow = true;
+			this._mesh.castShadow = true;
+		}
 	}
 	setCollider(collider: MeshWithBVH) {
 		this.collider = collider;
@@ -63,25 +71,39 @@ export class Player {
 	setCapsule(capsuleOptions: CapsuleOptions) {
 		this.capsuleInfo.radius = capsuleOptions.radius;
 		this.capsuleInfo.segment.end.y = -capsuleOptions.height;
-		this._mesh.geometry = createPlayerGeometry(capsuleOptions);
+		if (this._mesh) {
+			this._mesh.geometry = createPlayerGeometry(capsuleOptions);
+		}
 	}
 	setUsePlayerMesh(state: boolean) {
 		if (state) {
+			this._mesh = this._mesh || this._createMesh();
 			this.object.add(this._mesh);
 		} else {
-			this.object.remove(this._mesh);
+			if (this._mesh) {
+				this.object.remove(this._mesh);
+			}
 		}
 	}
+	private _createMesh() {
+		const mesh = new Mesh();
+		mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
+		mesh.name = this._meshName || 'defaultPlayerMeshName';
+		mesh.receiveShadow = true;
+		mesh.castShadow = true;
+		return mesh;
+	}
 	setMaterial(material: Material) {
-		this._mesh.material = material;
+		if (this._mesh) {
+			this._mesh.material = material;
+		}
 	}
 	reset() {
 		this._velocity.set(0, 0, 0);
 		this.object.position.copy(this.startPosition);
+		this.object.rotation.setFromVector3(this.startRotation);
 	}
-	dispose() {
-		this._removeKeyEvents();
-	}
+	dispose() {}
 	setResetRequiredCallback(callback: ResetRequiredCallback) {
 		this._resetRequiredCallback = callback;
 	}
@@ -103,24 +125,25 @@ export class Player {
 
 		// move the player
 		const angle = this._azimuthalAngle;
+		const speed = this.speed * delta * (this._running ? this.runSpeedMult : 1);
 		if (this._pressed.forward) {
 			tempVector.set(0, 0, -1).applyAxisAngle(upVector, angle);
-			this.object.position.addScaledVector(tempVector, this.speed * delta);
+			this.object.position.addScaledVector(tempVector, speed);
 		}
 
 		if (this._pressed.backward) {
 			tempVector.set(0, 0, 1).applyAxisAngle(upVector, angle);
-			this.object.position.addScaledVector(tempVector, this.speed * delta);
+			this.object.position.addScaledVector(tempVector, speed);
 		}
 
 		if (this._pressed.left) {
 			tempVector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
-			this.object.position.addScaledVector(tempVector, this.speed * delta);
+			this.object.position.addScaledVector(tempVector, speed);
 		}
 
 		if (this._pressed.right) {
 			tempVector.set(1, 0, 0).applyAxisAngle(upVector, angle);
-			this.object.position.addScaledVector(tempVector, this.speed * delta);
+			this.object.position.addScaledVector(tempVector, speed);
 		}
 
 		this.object.updateMatrixWorld();
@@ -197,66 +220,30 @@ export class Player {
 		// to prevent space from pausing from the editor
 		e.preventDefault();
 	}
-	private _onKeyDown(e: KeyboardEvent) {
-		switch (e.code) {
-			case 'ArrowUp':
-			case 'KeyW':
-				this._pressed.forward = true;
-				Player.stopEvent(e);
-				break;
-			case 'ArrowDown':
-			case 'KeyS':
-				this._pressed.backward = true;
-				Player.stopEvent(e);
-				break;
-			case 'ArrowRight':
-			case 'KeyD':
-				this._pressed.right = true;
-				Player.stopEvent(e);
-				break;
-			case 'ArrowLeft':
-			case 'KeyA':
-				this._pressed.left = true;
-				Player.stopEvent(e);
-				break;
-			case 'Space':
-				if (this._onGround && this.jumpAllowed) {
-					this._velocity.y = this.jumpStrength;
-				}
-				Player.stopEvent(e);
-				break;
+	setForward(state: boolean) {
+		this._pressed.forward = state;
+	}
+	setBackward(state: boolean) {
+		this._pressed.backward = state;
+	}
+	setLeft(state: boolean) {
+		this._pressed.left = state;
+	}
+	setRight(state: boolean) {
+		this._pressed.right = state;
+	}
+	jump() {
+		if (this._onGround && this.jumpAllowed) {
+			this._velocity.y = this.jumpStrength;
 		}
 	}
-	private _onKeyUp(e: KeyboardEvent) {
-		switch (e.code) {
-			case 'ArrowUp':
-			case 'KeyW':
-				this._pressed.forward = false;
-				break;
-			case 'ArrowDown':
-			case 'KeyS':
-				this._pressed.backward = false;
-				break;
-			case 'ArrowRight':
-			case 'KeyD':
-				this._pressed.right = false;
-				break;
-			case 'ArrowLeft':
-			case 'KeyA':
-				this._pressed.left = false;
-				break;
+	setRun(state: boolean) {
+		if (state) {
+			if (this._onGround && this.runAllowed) {
+				this._running = true;
+			}
+		} else {
+			this._running = false;
 		}
-	}
-	private _bounds = {
-		keydown: this._onKeyDown.bind(this),
-		keyup: this._onKeyUp.bind(this),
-	};
-	addKeyEvents() {
-		document.addEventListener('keydown', this._bounds.keydown);
-		document.addEventListener('keyup', this._bounds.keyup);
-	}
-	private _removeKeyEvents() {
-		document.removeEventListener('keydown', this._bounds.keydown);
-		document.removeEventListener('keyup', this._bounds.keyup);
 	}
 }

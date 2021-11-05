@@ -5,9 +5,11 @@ import {Euler} from 'three/src/math/Euler';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {BaseCollisionHandler} from './BaseCollisionHandler';
+import {Player} from '../../../core/player/Player';
+import {Spherical} from 'three/src/math/Spherical';
 
 interface TranslationData {
-	direction: {x: number; y: number};
+	direction: Vector3;
 }
 interface RotationData {
 	direction: {x: number; y: number};
@@ -20,20 +22,22 @@ interface RotationRange {
 
 // const VIEWER_CALLBACK_NAME = 'mobile-nav';
 interface MobileJoystickControlsDefaultParams {
-	rotationSpeed: number;
+	rotateSpeed: number;
 	rotationRange: RotationRange;
-	translationSpeed: number;
+	// translateSpeed: number;
 }
 export const DEFAULT_PARAMS: MobileJoystickControlsDefaultParams = {
-	rotationSpeed: 1,
+	rotateSpeed: 1,
 	rotationRange: {min: -Math.PI * 0.25, max: Math.PI * 0.25},
-	translationSpeed: 0.1,
+	// translateSpeed: 0.1,
 };
 const EVENT_CHANGE = {type: 'change'};
+const tmpCameraUnproject = new Vector3();
+const spherical = new Spherical();
 
 export class MobileJoystickControls extends BaseCollisionHandler {
 	private translationData: TranslationData = {
-		direction: {x: 0, y: 0},
+		direction: new Vector3(),
 	};
 	private rotationData: RotationData = {
 		direction: {x: 0, y: 0},
@@ -48,17 +52,18 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 	};
 
 	private _startCameraRotation = new Euler();
-	private _velocity = new Vector3();
+	// private _velocity = new Vector3();
 	// private _element: HTMLElement;
 	// private _translationSpeed = 4;
-	private _rotationSpeed = DEFAULT_PARAMS.rotationSpeed;
+	private _rotationSpeed = DEFAULT_PARAMS.rotateSpeed;
 	private _rotationRange: RotationRange = {
 		min: DEFAULT_PARAMS.rotationRange.min,
 		max: DEFAULT_PARAMS.rotationRange.max,
 	};
-	private _translationSpeed = DEFAULT_PARAMS.translationSpeed;
+	// private _translationSpeed = DEFAULT_PARAMS.translateSpeed;
+	private _azimuthalAngle: number = 0;
 
-	constructor(private _camera: Camera, private domElement: HTMLElement) {
+	constructor(private _camera: Camera, private domElement: HTMLElement, private player?: Player) {
 		super();
 		// this._element = this._viewer.domElement();
 		this._camera.rotation.order = 'ZYX';
@@ -113,7 +118,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this._translateDomElement.removeEventListener('touchstart', this._boundMethods.onTranslateStart);
 		this._translateDomElement.removeEventListener('touchmove', this._boundMethods.onTranslateMove);
 		this._translateDomElement.removeEventListener('touchend', this._boundMethods.onTranslateEnd);
-		this.domElement.parentElement?.removeChild(this._translateDomElement);
+		this._translateDomElement.parentElement?.removeChild(this._translateDomElement);
 	}
 
 	setRotationSpeed(speed: number) {
@@ -123,9 +128,9 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this._rotationRange.min = range.min;
 		this._rotationRange.max = range.max;
 	}
-	setTranslationSpeed(speed: number) {
-		this._translationSpeed = speed;
-	}
+	// setTranslationSpeed(speed: number) {
+	// 	this._translationSpeed = speed;
+	// }
 
 	//
 	//
@@ -199,7 +204,16 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 			this._rotationRange.min,
 			this._rotationRange.max
 		);
+		this._computeAzimuthalAngle();
 		this.dispatchEvent(EVENT_CHANGE);
+	}
+	private _computeAzimuthalAngle() {
+		this._camera.updateMatrixWorld();
+		tmpCameraUnproject.set(0, 0, 1);
+		this._camera.localToWorld(tmpCameraUnproject);
+		tmpCameraUnproject.sub(this._camera.position);
+		spherical.setFromVector3(tmpCameraUnproject);
+		this._azimuthalAngle = spherical.theta;
 	}
 	//
 	//
@@ -217,8 +231,11 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		if (!touch) {
 			return;
 		}
-		this._translationStartPosition.set(touch.clientX, touch.clientY);
 		this._translateDomElementRect = this._translateDomElement.getBoundingClientRect();
+		const elementCenterX = this._translateDomElementRect.left + this._translateDomElementRect.width * 0.5;
+		const elementCenterY = this._translateDomElementRect.top + this._translateDomElementRect.height * 0.5;
+		// this._translationStartPosition.set(touch.clientX, touch.clientY);
+		this._translationStartPosition.set(elementCenterX, elementCenterY);
 	}
 	private _onTranslateMove(event: TouchEvent) {
 		const touch = this._getTouch(event, this._translateDomElement);
@@ -228,60 +245,109 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this._translationMovePosition.set(touch.clientX, touch.clientY);
 		this._translationDelta.copy(this._translationMovePosition).sub(this._translationStartPosition);
 
-		this.translationData.direction.x =
-			(this._translationSpeed * this._translationDelta.x) / this._translateDomElementRect.width;
-		this.translationData.direction.y =
-			(this._translationSpeed * -this._translationDelta.y) / this._translateDomElementRect.height;
+		this.translationData.direction.x = (this._translationDelta.x / this._translateDomElementRect.width) * 0.5;
+		this.translationData.direction.z = (-this._translationDelta.y / this._translateDomElementRect.height) * 0.5;
+		this._updatePlayerTranslate();
 		this.dispatchEvent(EVENT_CHANGE);
 	}
 	private _onTranslateEnd() {
 		this.translationData.direction.x = 0;
-		this.translationData.direction.y = 0;
+		this.translationData.direction.z = 0;
+		this._updatePlayerTranslate();
+	}
+	private _updatePlayerTranslate() {
+		if (!this.player) {
+			return;
+		}
+		const direction = this.translationData.direction;
+		this.player.setForward(false);
+		this.player.setBackward(false);
+		this.player.setLeft(false);
+		this.player.setRight(false);
+
+		const absx = Math.abs(direction.x);
+		const absz = Math.abs(direction.z);
+		const delta = absz - absx;
+		function checkZ(player: Player) {
+			if (direction.z > 0) {
+				player.setForward(true);
+			}
+			if (direction.z < 0) {
+				player.setBackward(true);
+			}
+		}
+		function checkX(player: Player) {
+			if (direction.x > 0) {
+				player.setRight(true);
+			}
+			if (direction.x < 0) {
+				player.setLeft(true);
+			}
+		}
+		if (delta > 0) {
+			// if delta > 0, we have dir.z > dir.x,
+			// and we therefore move in z first
+			checkZ(this.player);
+			if (delta < absz * 0.5) {
+				// if dir.x and dir.z are close, we move in diagonal
+				checkX(this.player);
+			}
+		} else {
+			checkX(this.player);
+			if (delta < absx * 0.5) {
+				// if dir.x and dir.z are close, we move in diagonal
+				checkZ(this.player);
+			}
+		}
 	}
 
 	update(delta: number) {
-		this._translateCamera(this.translationData, delta);
-	}
-
-	private _camTmpPost = new Vector3();
-	private _camWorldDir = new Vector3();
-	private _up = new Vector3(0, 1, 0);
-	private _camSideVector = new Vector3();
-	private _translateCamera(data: TranslationData, deltaTime: number) {
-		this._camera.getWorldDirection(this._camWorldDir);
-		this._camWorldDir.y = 0;
-		this._camWorldDir.normalize();
-		this._camSideVector.crossVectors(this._up, this._camWorldDir);
-		this._camSideVector.normalize();
-		this._camSideVector.multiplyScalar(-data.direction.x);
-		this._camWorldDir.multiplyScalar(data.direction.y);
-
-		this._velocity.copy(this._camWorldDir);
-		this._velocity.add(this._camSideVector);
-		const initialHeight = this._camera.position.y;
-		this._camTmpPost.copy(this._camera.position);
-
-		if (this._playerCollisionController) {
-			// damping
-			const damping = 1; //Math.exp(-3 * deltaTime) - 1;
-			this._velocity.addScaledVector(this._velocity, damping);
-			const deltaPosition = this._velocity.clone().multiplyScalar(deltaTime);
-			this._camTmpPost.add(deltaPosition);
-
-			const result = this._playerCollisionController.testPosition(this._camTmpPost);
-			if (result) {
-				// playerCollider.translate( result.normal.multiplyScalar( result.depth ) );
-				this._camTmpPost.add(result.normal.multiplyScalar(result.depth));
-			}
-			this._camera.position.copy(this._camTmpPost);
-		} else {
-			this._camTmpPost.add(this._camSideVector);
-			this._camTmpPost.add(this._camWorldDir);
-			this._camera.position.copy(this._camTmpPost);
+		// this._translateCamera(this.translationData, delta);
+		if (this.player) {
+			this.player.setAzimuthalAngle(this._azimuthalAngle);
+			this.player.update(delta);
 		}
-		// ensure that the camera never changes y.
-		this._camera.position.y = initialHeight;
 	}
+
+	// private _camTmpPost = new Vector3();
+	// private _camWorldDir = new Vector3();
+	// private _up = new Vector3(0, 1, 0);
+	// private _camSideVector = new Vector3();
+	// private _translateCamera(data: TranslationData, deltaTime: number) {
+	// 	this._camera.getWorldDirection(this._camWorldDir);
+	// 	this._camWorldDir.y = 0;
+	// 	this._camWorldDir.normalize();
+	// 	this._camSideVector.crossVectors(this._up, this._camWorldDir);
+	// 	this._camSideVector.normalize();
+	// 	this._camSideVector.multiplyScalar(-data.direction.x);
+	// 	this._camWorldDir.multiplyScalar(data.direction.y);
+
+	// 	this._velocity.copy(this._camWorldDir);
+	// 	this._velocity.add(this._camSideVector);
+	// 	const initialHeight = this._camera.position.y;
+	// 	this._camTmpPost.copy(this._camera.position);
+
+	// 	if (this._playerCollisionController) {
+	// 		// damping
+	// 		const damping = 1; //Math.exp(-3 * deltaTime) - 1;
+	// 		this._velocity.addScaledVector(this._velocity, damping);
+	// 		const deltaPosition = this._velocity.clone().multiplyScalar(deltaTime);
+	// 		this._camTmpPost.add(deltaPosition);
+
+	// 		const result = this._playerCollisionController.testPosition(this._camTmpPost);
+	// 		if (result) {
+	// 			// playerCollider.translate( result.normal.multiplyScalar( result.depth ) );
+	// 			this._camTmpPost.add(result.normal.multiplyScalar(result.depth));
+	// 		}
+	// 		this._camera.position.copy(this._camTmpPost);
+	// 	} else {
+	// 		this._camTmpPost.add(this._camSideVector);
+	// 		this._camTmpPost.add(this._camWorldDir);
+	// 		this._camera.position.copy(this._camTmpPost);
+	// 	}
+	// 	// ensure that the camera never changes y.
+	// 	this._camera.position.y = initialHeight;
+	// }
 
 	//
 	//

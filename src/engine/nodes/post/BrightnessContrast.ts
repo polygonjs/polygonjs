@@ -42,7 +42,6 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass,
 		// (pass as any).clearAlpha = false;
 		// (pass as any).clearColor = false;
 		// (pass as any).clearDepth = false;
-		console.log('brightness', pass);
 		(pass.fsQuad as any).material.transparent = true;
 		this.updatePass(pass);
 

@@ -14,82 +14,90 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {MobileJoystickControls, DEFAULT_PARAMS} from '../../../modules/core/controls/MobileJoystickControls';
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
-import {ObjType} from '../../poly/registers/nodes/types/Obj';
-import {setupCollision} from './collision/CollisionUtils';
+import {Player} from '../../../core/player/Player';
+import {ParamOptions} from '../../params/utils/OptionsController';
+import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
 
 const EVENT_START = 'start';
 const EVENT_CHANGE = 'change';
 const EVENT_END = 'end';
 
+function updatePlayerParamsCallbackOption(): ParamOptions {
+	return {
+		callback: (node: BaseNodeType) => {
+			MobileJoystickControlsEventNode.PARAM_CALLBACK_updatePlayerParams(node as MobileJoystickControlsEventNode);
+		},
+	};
+}
+
 type MobileJoystickControlsMap = Map<string, MobileJoystickControls>;
 
 class MobileJoystickEventParamsConfig extends NodeParamsConfig {
-	/** @param click to lick controls */
-	minPolarAngle = ParamConfig.FLOAT(0, {
-		range: [0, Math.PI],
-		rangeLocked: [true, true],
-	});
-	/** @param click to lick controls */
-	maxPolarAngle = ParamConfig.FLOAT('$PI', {
-		range: [0, Math.PI],
-		rangeLocked: [true, true],
-	});
-	/** @param rotation speed */
-	rotationSpeed = ParamConfig.FLOAT(DEFAULT_PARAMS.rotationSpeed);
-	/** @param translation speed */
-	translationSpeed = ParamConfig.FLOAT(DEFAULT_PARAMS.translationSpeed);
-	/** @param detects collisions */
-	collideWithGeo = ParamConfig.BOOLEAN(0);
-	/** @param geometry to collide with */
-	collidingGeo = ParamConfig.NODE_PATH('', {
+	main = ParamConfig.FOLDER();
+	/** @param collider object */
+	colliderObject = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
-			context: NodeContext.OBJ,
-			types: [ObjType.GEO],
+			context: NodeContext.SOP,
 		},
-		visibleIf: {collideWithGeo: true},
 	});
-	/** @param recompute colliding geo */
-	recomputeCollidingGeo = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			MobileJoystickControlsEventNode.PARAM_CALLBACK_recomputeCollidingGeo(
-				node as MobileJoystickControlsEventNode
-			);
-		},
-		visibleIf: {collideWithGeo: true},
-	});
-	/** @param player height */
-	playerHeight = ParamConfig.FLOAT(1.8, {
-		visibleIf: {collideWithGeo: true},
-	});
-	/** @param player radius */
-	playerRadius = ParamConfig.FLOAT(0.3, {
-		visibleIf: {collideWithGeo: true},
-	});
-	/** @param player mass */
-	playerMass = ParamConfig.FLOAT(100, {
-		range: [0, 100],
-		rangeLocked: [true, false],
-		visibleIf: {collideWithGeo: true},
-	});
-	/** @param jump Duration */
-	jumpDuration = ParamConfig.FLOAT(1, {
+	/** @param collision Capsule Radius */
+	capsuleRadius = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
 		rangeLocked: [true, false],
-		visibleIf: {collideWithGeo: true},
+		...updatePlayerParamsCallbackOption(),
 	});
-	/** @param jump Force */
-	jumpForce = ParamConfig.FLOAT(100, {
-		range: [0, 1000],
+	/** @param collision Capsule Height */
+	capsuleHeight = ParamConfig.FLOAT(1, {
+		range: [0, 2],
 		rangeLocked: [true, false],
-		visibleIf: {collideWithGeo: true},
+		...updatePlayerParamsCallbackOption(),
 	});
-	/** @param use Gravity */
-	useGravity = ParamConfig.BOOLEAN(1, {
-		visibleIf: {collideWithGeo: true},
+	physics = ParamConfig.FOLDER();
+	/** @param physics Steps */
+	physicsSteps = ParamConfig.INTEGER(5, {
+		range: [1, 10],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param gravity */
-	gravity = ParamConfig.VECTOR3([0, -9.8, 0], {
-		visibleIf: {collideWithGeo: true, useGravity: true},
+	gravity = ParamConfig.VECTOR3([0, -30, 0], {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param translation speed */
+	translateSpeed = ParamConfig.FLOAT(1);
+	/** @param rotation speed */
+	rotateSpeed = ParamConfig.FLOAT(DEFAULT_PARAMS.rotateSpeed);
+
+	/** @param recompute colliding geo */
+	updateCollider = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			MobileJoystickControlsEventNode.PARAM_CALLBACK_updateCollider(node as MobileJoystickControlsEventNode);
+		},
+	});
+	init = ParamConfig.FOLDER();
+	/** @param start Position */
+	startPosition = ParamConfig.VECTOR3([0, 2, 0], {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param start Position */
+	startRotation = ParamConfig.VECTOR3([0, 0, 0], {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param reset */
+	reset = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			MobileJoystickControlsEventNode.PARAM_CALLBACK_resetPlayer(node as MobileJoystickControlsEventNode);
+		},
+	});
+	/** @param min polar angle */
+	minPolarAngle = ParamConfig.FLOAT('-$PI*0.5', {
+		range: [-Math.PI, Math.PI],
+		rangeLocked: [true, true],
+	});
+	/** @param max polar angle */
+	maxPolarAngle = ParamConfig.FLOAT('$PI*0.5', {
+		range: [-Math.PI, Math.PI],
+		rangeLocked: [true, true],
 	});
 }
 const ParamsConfig = new MobileJoystickEventParamsConfig();
@@ -111,13 +119,73 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	}
 
 	private _controls_by_element_id: MobileJoystickControlsMap = new Map();
+	private _player: Player | undefined;
 
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
-		const controls = new MobileJoystickControls(camera, element);
+		await this._initPlayer(camera);
+		const controls = new MobileJoystickControls(camera, element, this._player);
 
 		this._controls_by_element_id.set(element.id, controls);
 		this._bind_listeners_to_controls_instance(controls);
 		return controls;
+	}
+
+	private async _initPlayer(camera: Camera) {
+		this._player = this._player || (await this._createPlayer(camera));
+		if (!this._player) {
+			return;
+		}
+		this._updatePlayerParams();
+		this._player.reset();
+	}
+	private async _updatePlayerParams() {
+		if (!this._player) {
+			return;
+		}
+		this._player.startPosition.copy(this.pv.startPosition);
+		this._player.physicsSteps = this.pv.physicsSteps;
+		this._player.jumpAllowed = false;
+		this._player.runAllowed = false;
+		this._player.gravity.copy(this.pv.gravity);
+		this._player.speed = this.pv.translateSpeed;
+		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight});
+	}
+	private async _createPlayer(camera: Camera) {
+		const playerObject = camera;
+		const collider = await this._getCollider();
+		if (!collider) {
+			this.states.error.set('invalid collider');
+			return;
+		}
+		const player = new Player({object: playerObject, collider: collider});
+
+		return player;
+	}
+	private _resetPlayer() {
+		this._player?.reset();
+	}
+	private async _getCollider() {
+		const colliderNode = this.pv.colliderObject.nodeWithContext(NodeContext.SOP);
+		if (!colliderNode) {
+			this.states.error.set('collider node not found');
+			return;
+		}
+		const container = await colliderNode.compute();
+		const coreGroup = container.coreContent();
+		if (!coreGroup) {
+			this.states.error.set('invalid collider node');
+			return;
+		}
+		const object = coreGroup.objects()[0] as MeshWithBVH;
+		return object;
+	}
+	private async _updateCollider() {
+		const collider = await this._getCollider();
+		if (!collider) {
+			this.states.error.set('invalid collider');
+			return;
+		}
+		this._player?.setCollider(collider);
 	}
 
 	protected _bind_listeners_to_controls_instance(controls: MobileJoystickControls) {
@@ -137,14 +205,8 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	}
 
 	setupControls(controls: MobileJoystickControls) {
-		controls.setRotationSpeed(this.pv.rotationSpeed);
+		controls.setRotationSpeed(this.pv.rotateSpeed);
 		controls.setRotationRange({min: this.pv.minPolarAngle, max: this.pv.maxPolarAngle});
-		controls.setTranslationSpeed(this.pv.translationSpeed);
-
-		this._setupCollisionGeo(controls);
-	}
-	private async _setupCollisionGeo(controls: MobileJoystickControls) {
-		setupCollision(controls, this);
 	}
 
 	disposeControlsForHtmlElementId(html_element_id: string) {
@@ -154,12 +216,13 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		}
 	}
 
-	static PARAM_CALLBACK_recomputeCollidingGeo(node: MobileJoystickControlsEventNode) {
-		node._recomputeCollidingGeo();
+	static PARAM_CALLBACK_updateCollider(node: MobileJoystickControlsEventNode) {
+		node._updateCollider();
 	}
-	private _recomputeCollidingGeo() {
-		this._controls_by_element_id.forEach((controls, id) => {
-			this._setupCollisionGeo(controls);
-		});
+	static PARAM_CALLBACK_updatePlayerParams(node: MobileJoystickControlsEventNode) {
+		node._updatePlayerParams();
+	}
+	static PARAM_CALLBACK_resetPlayer(node: MobileJoystickControlsEventNode) {
+		node._resetPlayer();
 	}
 }
