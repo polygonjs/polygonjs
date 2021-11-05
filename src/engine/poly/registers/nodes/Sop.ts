@@ -58,7 +58,6 @@ import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LineSopNode} from '../../../nodes/sop/Line';
 import {LodSopNode} from '../../../nodes/sop/Lod';
 import {MaterialSopNode} from '../../../nodes/sop/Material';
-import {MediapipeFaceMeshSopNode} from '../../../nodes/sop/MediapipeFaceMesh';
 import {MergeSopNode} from '../../../nodes/sop/Merge';
 import {NoiseSopNode} from '../../../nodes/sop/Noise';
 import {NormalsSopNode} from '../../../nodes/sop/Normals';
@@ -171,7 +170,6 @@ export interface GeoNodeChildrenMap {
 	line: LineSopNode;
 	lod: LodSopNode;
 	material: MaterialSopNode;
-	mediapipeFaceMesh: MediapipeFaceMeshSopNode;
 	merge: MergeSopNode;
 	noise: NoiseSopNode;
 	normals: NormalsSopNode;
@@ -388,7 +386,6 @@ export class SopRegister {
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(MediapipeFaceMeshSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);

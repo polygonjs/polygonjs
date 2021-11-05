@@ -91,7 +91,6 @@ export class SopRegister {
 
 		// poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
-		// poly.registerNode(MediapipeFaceMeshSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(NullSopNode, CATEGORY_SOP.MISC);
