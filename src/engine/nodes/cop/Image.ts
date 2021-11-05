@@ -17,6 +17,7 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 import {isUrlStaticImage} from '../../../core/FileTypeController';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {isBooleanTrue} from '../../../core/BooleanValue';
 
 export function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -32,7 +33,16 @@ export function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 	};
 }
-class ImageCopParamsConfig extends TextureParamConfig(ImageCopParamConfig(NodeParamsConfig)) {}
+export function FileTypeCheckCopParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param check url extension */
+		checkFileType = ParamConfig.BOOLEAN(true);
+	};
+}
+
+class ImageCopParamsConfig extends FileTypeCheckCopParamConfig(
+	TextureParamConfig(ImageCopParamConfig(NodeParamsConfig))
+) {}
 
 const ParamsConfig = new ImageCopParamsConfig();
 
@@ -77,7 +87,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		});
 	}
 	async cook(input_contents: Texture[]) {
-		if (!isUrlStaticImage(this.pv.url)) {
+		if (isBooleanTrue(this.pv.checkFileType) && !isUrlStaticImage(this.pv.url)) {
 			this.states.error.set('url is not an image');
 		} else {
 			const texture = await this._loadTexture(this.pv.url);
@@ -113,7 +123,9 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	private async _loadTexture(url: string) {
 		let texture: Texture | null = null;
 		const url_param = this.p.url;
-		const textureLoader = new CoreLoaderTexture(url, url_param, this, this.scene());
+		const textureLoader = new CoreLoaderTexture(url, url_param, this, this.scene(), {
+			forceImage: !isBooleanTrue(this.pv.checkFileType),
+		});
 		try {
 			texture = await textureLoader.load_texture_from_url_or_op({
 				tdataType: this.pv.ttype && this.pv.tadvanced,

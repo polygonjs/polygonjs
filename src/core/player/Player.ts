@@ -7,6 +7,7 @@ import {MeshWithBVH} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh'
 import {createPlayerGeometry, CapsuleOptions} from './PlayerGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
+import {DEG2RAD} from 'three/src/math/MathUtils';
 interface PlayerOptions {
 	object: Object3D;
 	collider: MeshWithBVH;
@@ -21,6 +22,7 @@ const tempVector2 = new Vector3();
 const tempBox = new Box3();
 const tempMat = new Matrix4();
 const tempSegment = new Line3();
+const startRotationRadians = new Vector3();
 
 export class Player {
 	private _pressed = {
@@ -101,7 +103,8 @@ export class Player {
 	reset() {
 		this._velocity.set(0, 0, 0);
 		this.object.position.copy(this.startPosition);
-		this.object.rotation.setFromVector3(this.startRotation);
+		startRotationRadians.copy(this.startRotation).multiplyScalar(DEG2RAD);
+		this.object.rotation.setFromVector3(startRotationRadians);
 	}
 	dispose() {}
 	setResetRequiredCallback(callback: ResetRequiredCallback) {

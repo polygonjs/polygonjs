@@ -12,7 +12,7 @@ import {CoreUserAgent} from '../UserAgent';
 import {ASSETS_ROOT} from './AssetsUtils';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreBaseLoader} from './_Base';
-import {VIDEO_EXTENSIONS, ImageExtension} from '../FileTypeController';
+import {VIDEO_EXTENSIONS, IMAGE_EXTENSIONS, ImageExtension} from '../FileTypeController';
 interface VideoSourceTypeByExt {
 	ogg: string;
 	ogv: string;
@@ -37,6 +37,7 @@ type OnTextureLoadedCallback = (url: string, texture: Texture) => void;
 
 interface CoreLoaderTextureOptions {
 	forceVideo?: boolean;
+	forceImage?: boolean;
 }
 
 export class CoreLoaderTexture extends CoreBaseLoader {
@@ -49,6 +50,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		mp4: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
 	};
 	private _forceVideo: boolean = false;
+	private _forceImage: boolean = false;
 
 	constructor(
 		_url: string,
@@ -59,6 +61,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 	) {
 		super(_url, _scene, _node);
 		this._forceVideo = options?.forceVideo || this._forceVideo;
+		this._forceImage = options?.forceImage || this._forceImage;
 	}
 
 	static _onTextureLoadedCallback: OnTextureLoadedCallback | undefined;
@@ -126,11 +129,13 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 				const texture: VideoTexture = await this._loadVideo(url);
 				resolve(texture);
 			} else {
-				try {
-					const texture: Texture = await this._loadImage(url, options);
-					resolve(texture);
-				} catch (e) {
-					reject();
+				if (this._forceImage || IMAGE_EXTENSIONS.includes(ext)) {
+					try {
+						const texture: Texture = await this._loadImage(url, options);
+						resolve(texture);
+					} catch (e) {
+						reject();
+					}
 				}
 			}
 		});
