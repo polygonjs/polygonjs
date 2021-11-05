@@ -11,7 +11,7 @@ QUnit.test('rounded_box simple', async (assert) => {
 	assert.equal(container.boundingBox().min.y, -0.5);
 	assert.notOk(rounded_box1.isDirty(), 'box is dirty');
 
-	rounded_box1.p.size.set(2);
+	rounded_box1.p.size.set([2, 2, 2]);
 	assert.ok(rounded_box1.isDirty(), 'box is dirty');
 	container = await rounded_box1.compute();
 	assert.ok(!rounded_box1.isDirty(), 'box is not dirty anymore');

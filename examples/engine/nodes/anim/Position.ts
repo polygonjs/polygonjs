@@ -15,7 +15,7 @@ export function AnimPosition() {
 	copy.setInput(0, objectProperties);
 	copy.setInput(1, plane);
 
-	roundedBox.p.size.set(0.8);
+	roundedBox.p.size.set([0.8, 0.8, 0.8]);
 	plane.p.size.set([3, 3]);
 	objectProperties.p.tname.set(true);
 	objectProperties.p.name.set('animTarget');
