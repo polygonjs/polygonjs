@@ -1,6 +1,6 @@
 import {Euler} from 'three/src/math/Euler';
 import {Camera} from 'three/src/cameras/Camera';
-import {Player} from '../../../core/player/Player';
+import {CorePlayer} from '../../../core/player/Player';
 import {EventDispatcher} from 'three/src/core/EventDispatcher';
 import {Vector3} from 'three/src/math/Vector3';
 import {Spherical} from 'three/src/math/Spherical';
@@ -25,7 +25,7 @@ export class PointerLockControls extends EventDispatcher {
 	};
 	private _azimuthalAngle: number = 0;
 
-	constructor(private camera: Camera, private domElement: HTMLElement, private player?: Player) {
+	constructor(private camera: Camera, private domElement: HTMLElement, private player?: CorePlayer) {
 		super();
 		this.connect();
 	}

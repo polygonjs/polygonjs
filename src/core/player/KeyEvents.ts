@@ -1,7 +1,11 @@
-import {Player} from './Player';
+import {CorePlayer} from './Player';
 
+function stopEvent(e: KeyboardEvent) {
+	// to prevent space from pausing from the editor
+	e.preventDefault();
+}
 export class CorePlayerKeyEvents {
-	constructor(private player: Player) {}
+	constructor(private player: CorePlayer) {}
 	private _onKeyDown(e: KeyboardEvent) {
 		if (e.ctrlKey) {
 			// if ctrl is pressed, we do not register any event.
@@ -12,31 +16,31 @@ export class CorePlayerKeyEvents {
 			case 'ArrowUp':
 			case 'KeyW':
 				this.player.setForward(true);
-				Player.stopEvent(e);
+				stopEvent(e);
 				break;
 			case 'ArrowDown':
 			case 'KeyS':
 				this.player.setBackward(true);
-				Player.stopEvent(e);
+				stopEvent(e);
 				break;
 			case 'ArrowRight':
 			case 'KeyD':
 				this.player.setRight(true);
-				Player.stopEvent(e);
+				stopEvent(e);
 				break;
 			case 'ArrowLeft':
 			case 'KeyA':
 				this.player.setLeft(true);
-				Player.stopEvent(e);
+				stopEvent(e);
 				break;
 			case 'Space':
 				this.player.jump();
-				Player.stopEvent(e);
+				stopEvent(e);
 				break;
 			case 'ShiftLeft':
 			case 'ShiftRight':
 				this.player.setRun(true);
-				Player.stopEvent(e);
+				stopEvent(e);
 				break;
 		}
 	}
@@ -61,7 +65,7 @@ export class CorePlayerKeyEvents {
 			case 'ShiftLeft':
 			case 'ShiftRight':
 				this.player.setRun(false);
-				Player.stopEvent(e);
+				stopEvent(e);
 				break;
 		}
 	}

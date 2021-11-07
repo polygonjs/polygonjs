@@ -5,7 +5,7 @@ import {Euler} from 'three/src/math/Euler';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {BaseCollisionHandler} from './BaseCollisionHandler';
-import {Player} from '../../../core/player/Player';
+import {CorePlayer} from '../../../core/player/Player';
 import {Spherical} from 'three/src/math/Spherical';
 
 interface TranslationData {
@@ -63,7 +63,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 	// private _translationSpeed = DEFAULT_PARAMS.translateSpeed;
 	private _azimuthalAngle: number = 0;
 
-	constructor(private _camera: Camera, private domElement: HTMLElement, private player?: Player) {
+	constructor(private _camera: Camera, private domElement: HTMLElement, private player?: CorePlayer) {
 		super();
 		// this._element = this._viewer.domElement();
 		this._camera.rotation.order = 'ZYX';
@@ -268,7 +268,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		const absx = Math.abs(direction.x);
 		const absz = Math.abs(direction.z);
 		const delta = absz - absx;
-		function checkZ(player: Player) {
+		function checkZ(player: CorePlayer) {
 			if (direction.z > 0) {
 				player.setForward(true);
 			}
@@ -276,7 +276,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 				player.setBackward(true);
 			}
 		}
-		function checkX(player: Player) {
+		function checkX(player: CorePlayer) {
 			if (direction.x > 0) {
 				player.setRight(true);
 			}

@@ -14,7 +14,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {MobileJoystickControls, DEFAULT_PARAMS} from '../../../modules/core/controls/MobileJoystickControls';
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
-import {Player} from '../../../core/player/Player';
+import {CorePlayer} from '../../../core/player/Player';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
 
@@ -119,7 +119,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	}
 
 	private _controls_by_element_id: MobileJoystickControlsMap = new Map();
-	private _player: Player | undefined;
+	private _player: CorePlayer | undefined;
 
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		await this._initPlayer(camera);
@@ -157,7 +157,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 			this.states.error.set('invalid collider');
 			return;
 		}
-		const player = new Player({object: playerObject, collider: collider});
+		const player = new CorePlayer({object: playerObject, collider: collider});
 
 		return player;
 	}

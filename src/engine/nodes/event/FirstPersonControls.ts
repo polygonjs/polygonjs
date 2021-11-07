@@ -13,7 +13,7 @@ import {PointerLockControls} from '../../../modules/core/controls/PointerLockCon
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
-import {Player} from '../../../core/player/Player';
+import {CorePlayer} from '../../../core/player/Player';
 import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
@@ -21,6 +21,48 @@ import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
 const EVENT_LOCK = 'lock';
 const EVENT_CHANGE = 'change';
 const EVENT_UNLOCK = 'unlock';
+
+// function testOverlay(controls: PointerLockControls) {
+// 	const overlay = document.createElement('div');
+// 	const overlayBody = document.createElement('div');
+// 	const body = document.body;
+
+// 	overlay.appendChild(overlayBody);
+// 	overlay.style.position = 'absolute';
+// 	overlay.style.top = '0px';
+// 	overlay.style.left = '0px';
+// 	overlay.style.width = '100%';
+// 	overlay.style.height = '100%';
+// 	overlay.style.padding = '50px';
+// 	overlay.style.zIndex = '9999999';
+// 	overlayBody.style.width = '100%';
+// 	overlayBody.style.height = '100%';
+// 	overlayBody.style.backgroundColor = 'white';
+// 	overlayBody.innerText = 'overlay';
+// 	let overlayActive = false;
+// 	function removeOverlay() {
+// 		console.log('remove');
+// 		body.removeChild(overlay);
+// 		controls.lock();
+// 		overlayActive = false;
+// 	}
+// 	function addOverlay() {
+// 		console.log('add');
+// 		body.appendChild(overlay);
+// 		controls.unlock();
+// 		overlayActive = true;
+// 	}
+
+// 	document.body.addEventListener('keydown', (e) => {
+// 		console.log(e.code, e.key, overlayActive);
+// 		if (!overlayActive && e.key == 'e') {
+// 			addOverlay();
+// 		}
+// 		if (overlayActive && e.key == 'Escape') {
+// 			removeOverlay();
+// 		}
+// 	});
+// }
 
 function updatePlayerParamsCallbackOption(): ParamOptions {
 	return {
@@ -46,10 +88,10 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 			FirstPersonControlsEventNode.PARAM_CALLBACK_lockControls(node as FirstPersonControlsEventNode);
 		},
 	});
-	/** @param click to dispose controls */
-	dispose = ParamConfig.BUTTON(null, {
+	/** @param click to unlock controls */
+	unlock = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			FirstPersonControlsEventNode.PARAM_CALLBACK_disposeControls(node as FirstPersonControlsEventNode);
+			FirstPersonControlsEventNode.PARAM_CALLBACK_unlockControls(node as FirstPersonControlsEventNode);
 		},
 	});
 	/** @param collision Capsule Radius */
@@ -164,7 +206,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 	}
 
 	protected _controls_by_element_id: PointerLockControlsMap = new Map();
-	private _player: Player | undefined;
+	private _player: CorePlayer | undefined;
 	private _corePlayerKeyEvents: CorePlayerKeyEvents | undefined;
 
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
@@ -174,45 +216,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		this._controls_by_element_id.set(element.id, controls);
 		this._bind_listeners_to_controls_instance(controls);
 
-		// function testOverlay(){
-		// 	const overlay = document.createElement('div');
-		// 	const overlayBody = document.createElement('div');
-		// 	const body = document.body;
-
-		// 	overlay.appendChild(overlayBody);
-		// 	overlay.style.position = 'absolute';
-		// 	overlay.style.top = '0px';
-		// 	overlay.style.left = '0px';
-		// 	overlay.style.width = '100%';
-		// 	overlay.style.height = '100%';
-		// 	overlay.style.padding = '50px';
-		// 	overlay.style.zIndex = '9999999';
-		// 	overlayBody.style.width = '100%';
-		// 	overlayBody.style.height = '100%';
-		// 	overlayBody.style.backgroundColor = 'white';
-		// 	overlayBody.innerText = 'overlay';
-		// 	let overlayActive = false;
-		// 	function toggleOverlay() {
-		// 		if (overlayActive) {
-		// 			console.log('remove');
-		// 			body.removeChild(overlay);
-		// 			controls.lock();
-		// 		} else {
-		// 			console.log('add');
-		// 			body.appendChild(overlay);
-		// 			controls.unlock();
-		// 		}
-		// 		overlayActive = !overlayActive;
-		// 	}
-		// 	toggleOverlay();
-		// 	document.addEventListener('keypress', (e) => {
-		// 		console.log(e.code, e.key);
-		// 		if (e.key == 'e') {
-		// 			toggleOverlay();
-		// 		}
-		// 	});
-		// }
-		// testOverlay()
+		// testOverlay(controls);
 
 		return controls;
 	}
@@ -222,8 +226,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 			return;
 		}
 		this._updatePlayerParams();
-		this._corePlayerKeyEvents = new CorePlayerKeyEvents(this._player);
-		this._corePlayerKeyEvents.addEvents();
+
 		this._player.reset();
 	}
 	private async _updatePlayerParams() {
@@ -249,7 +252,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 			this.states.error.set('invalid collider');
 			return;
 		}
-		const player = new Player({object: playerObject, collider: collider});
+		const player = new CorePlayer({object: playerObject, collider: collider});
 
 		return player;
 	}
@@ -309,9 +312,14 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 			this._controls_by_element_id.delete(html_element_id);
 		}
 	}
-	disposeControls() {
+	unlockControls() {
+		const controls = this._firstControls();
+		if (!controls) {
+			return;
+		}
+		controls.unlock();
 		this._corePlayerKeyEvents?.removeEvents();
-		this._player?.dispose();
+		this._player?.stop();
 	}
 
 	//
@@ -320,21 +328,29 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 	//
 	//
 	private lockControls() {
+		const controls = this._firstControls();
+		if (!controls) {
+			return;
+		}
+		if (this._player) {
+			this._corePlayerKeyEvents = this._corePlayerKeyEvents || new CorePlayerKeyEvents(this._player);
+			this._corePlayerKeyEvents.addEvents();
+		}
+		controls.lock();
+	}
+	private _firstControls() {
 		let firstControls: PointerLockControls | undefined;
 		this._controls_by_element_id.forEach((controls, id) => {
 			firstControls = firstControls || controls;
 		});
-		if (!firstControls) {
-			return;
-		}
-		firstControls.lock();
+		return firstControls;
 	}
 
 	static PARAM_CALLBACK_lockControls(node: FirstPersonControlsEventNode) {
 		node.lockControls();
 	}
-	static PARAM_CALLBACK_disposeControls(node: FirstPersonControlsEventNode) {
-		node.disposeControls();
+	static PARAM_CALLBACK_unlockControls(node: FirstPersonControlsEventNode) {
+		node.unlockControls();
 	}
 	static PARAM_CALLBACK_updateCollider(node: FirstPersonControlsEventNode) {
 		node._updateCollider();

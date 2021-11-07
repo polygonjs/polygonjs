@@ -24,7 +24,7 @@ const tempMat = new Matrix4();
 const tempSegment = new Line3();
 const startRotationRadians = new Vector3();
 
-export class Player {
+export class CorePlayer {
 	private _pressed = {
 		forward: false,
 		backward: false,
@@ -101,12 +101,18 @@ export class Player {
 		}
 	}
 	reset() {
-		this._velocity.set(0, 0, 0);
+		this.stop();
 		this.object.position.copy(this.startPosition);
 		startRotationRadians.copy(this.startRotation).multiplyScalar(DEG2RAD);
 		this.object.rotation.setFromVector3(startRotationRadians);
 	}
-	dispose() {}
+	stop() {
+		this._pressed.forward = false;
+		this._pressed.backward = false;
+		this._pressed.left = false;
+		this._pressed.right = false;
+		this._running = false;
+	}
 	setResetRequiredCallback(callback: ResetRequiredCallback) {
 		this._resetRequiredCallback = callback;
 	}
@@ -219,10 +225,7 @@ export class Player {
 			this.reset();
 		}
 	}
-	static stopEvent(e: KeyboardEvent) {
-		// to prevent space from pausing from the editor
-		e.preventDefault();
-	}
+
 	setForward(state: boolean) {
 		this._pressed.forward = state;
 	}

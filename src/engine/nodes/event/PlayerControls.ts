@@ -10,7 +10,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {TypedEventNode} from './_Base';
-import {Player} from '../../../core/player/Player';
+import {CorePlayer} from '../../../core/player/Player';
 import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
 import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
 import {Mesh} from 'three/src/objects/Mesh';
@@ -154,7 +154,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		return CameraControlsNodeType.PLAYER;
 	}
 
-	private _player: Player | undefined;
+	private _player: CorePlayer | undefined;
 	private _corePlayerKeyEvents: CorePlayerKeyEvents | undefined;
 	private _cameraObject: Camera | undefined;
 	initializeNode() {
@@ -195,7 +195,6 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 	private _disposePlayer() {
 		if (this._player) {
 			this._corePlayerKeyEvents?.removeEvents();
-			this._player.dispose();
 			this.scene().unRegisterOnBeforeTick(this._callbackName());
 		}
 		this.dispatchEventToOutput(EVENT_DISPOSE, {});
@@ -257,7 +256,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			this.states.error.set('invalid collider');
 			return;
 		}
-		const player = new Player({object: playerObject, collider: collider, meshName: this.path()});
+		const player = new CorePlayer({object: playerObject, collider: collider, meshName: this.path()});
 
 		return player;
 	}
