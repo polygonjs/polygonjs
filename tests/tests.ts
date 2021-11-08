@@ -191,6 +191,7 @@ import './engine/nodes/sop/Line';
 import './engine/nodes/sop/Lod';
 import './engine/nodes/sop/Material';
 import './engine/nodes/sop/Merge';
+import './engine/nodes/sop/Metaball';
 import './engine/nodes/sop/Noise';
 import './engine/nodes/sop/Normals';
 import './engine/nodes/sop/Null';

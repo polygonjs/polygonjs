@@ -97,7 +97,7 @@ When transmission is non-zero, opacity should be set to 1.  */
 
 		/** @param thickness  */
 		thickness = ParamConfig.FLOAT(0.01, {
-			range: [0, 1],
+			range: [0, 10],
 			rangeLocked: [true, false],
 		});
 		/** @param toggle if you want to use a thickness map */
@@ -105,7 +105,10 @@ When transmission is non-zero, opacity should be set to 1.  */
 		/** @param specify the roughness map COP node */
 		thicknessMap = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {visibleIf: {useThicknessMap: 1}});
 		/** @param attenuation distance */
-		attenuationDistance = ParamConfig.FLOAT(0);
+		attenuationDistance = ParamConfig.FLOAT(0, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 		/** @param attenuation color */
 		attenuationColor = ParamConfig.COLOR([1, 1, 1]);
 	};
