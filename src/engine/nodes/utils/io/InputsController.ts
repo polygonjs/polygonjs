@@ -19,8 +19,8 @@ export class InputsController<NC extends NodeContext> {
 	private _inputs: Array<NodeTypeMap[NC] | null> = [];
 	private _has_named_inputs: boolean = false;
 	private _named_input_connection_points: ConnectionPointTypeMap[NC][] | undefined;
-	private _min_inputs_count: number = 0;
-	private _max_inputs_count: number = MAX_INPUTS_COUNT_UNSET;
+	private _minInputsCount: number = 0;
+	private _maxInputsCount: number = MAX_INPUTS_COUNT_UNSET;
 	private _maxInputsCountOnInput: number = MAX_INPUTS_COUNT_UNSET;
 	private _depends_on_inputs: boolean = true;
 
@@ -54,16 +54,19 @@ export class InputsController<NC extends NodeContext> {
 	set_depends_on_inputs(depends_on_inputs: boolean) {
 		this._depends_on_inputs = depends_on_inputs;
 	}
-	private set_min_inputs_count(min_inputs_count: number) {
-		this._min_inputs_count = min_inputs_count;
+	private setMinCount(minInputsCount: number) {
+		this._minInputsCount = minInputsCount;
+	}
+	minCount() {
+		return this._minInputsCount;
 	}
 
-	private set_max_inputs_count(max_inputs_count: number) {
-		if (this._max_inputs_count == MAX_INPUTS_COUNT_UNSET) {
-			this._maxInputsCountOnInput = max_inputs_count;
+	private setMaxCount(maxInputsCount: number) {
+		if (this._maxInputsCount == MAX_INPUTS_COUNT_UNSET) {
+			this._maxInputsCountOnInput = maxInputsCount;
 		}
-		this._max_inputs_count = max_inputs_count;
-		this.init_graph_node_inputs();
+		this._maxInputsCount = maxInputsCount;
+		this._initGraphNodeInputs();
 	}
 
 	namedInputConnectionPointsByName(name: string): ConnectionPointTypeMap[NC] | undefined {
@@ -94,9 +97,9 @@ export class InputsController<NC extends NodeContext> {
 
 		// update connections
 		this._named_input_connection_points = connection_points;
-		this.set_min_inputs_count(0);
-		this.set_max_inputs_count(connection_points.length);
-		this.init_graph_node_inputs();
+		this.setMinCount(0);
+		this.setMaxCount(connection_points.length);
+		this._initGraphNodeInputs();
 		this.node.emit(NodeEvent.NAMED_INPUTS_UPDATED);
 	}
 	// private _has_connected_inputs() {
@@ -129,12 +132,12 @@ export class InputsController<NC extends NodeContext> {
 	namedInputConnectionPoints(): ConnectionPointTypeMap[NC][] {
 		return this._named_input_connection_points || [];
 	}
-	private init_graph_node_inputs() {
-		for (let i = 0; i < this._max_inputs_count; i++) {
-			this._graph_node_inputs[i] = this._graph_node_inputs[i] || this._create_graph_node_input(i);
+	private _initGraphNodeInputs() {
+		for (let i = 0; i < this._maxInputsCount; i++) {
+			this._graph_node_inputs[i] = this._graph_node_inputs[i] || this._createGraphNodeInput(i);
 		}
 	}
-	private _create_graph_node_input(index: number): CoreGraphNode {
+	private _createGraphNodeInput(index: number): CoreGraphNode {
 		const graph_input_node = new CoreGraphNode(this.node.scene(), `input_${index}`);
 		// graph_input_node.setScene(this.node.scene);
 		if (!this._graph_node) {
@@ -147,12 +150,12 @@ export class InputsController<NC extends NodeContext> {
 	}
 
 	maxInputsCount(): number {
-		return this._max_inputs_count || 0;
+		return this._maxInputsCount || 0;
 	}
 	maxInputsCountOverriden(): boolean {
-		return this._max_inputs_count != this._maxInputsCountOnInput;
+		return this._maxInputsCount != this._maxInputsCountOnInput;
 	}
-	input_graph_node(input_index: number): CoreGraphNode {
+	inputGraphNode(input_index: number): CoreGraphNode {
 		return this._graph_node_inputs[input_index];
 	}
 
@@ -160,19 +163,19 @@ export class InputsController<NC extends NodeContext> {
 		if (max == null) {
 			max = min;
 		}
-		this.set_min_inputs_count(min);
-		this.set_max_inputs_count(max);
+		this.setMinCount(min);
+		this.setMaxCount(max);
 
 		// this._clonable_states_controller.init_inputs_clonable_state();
-		this.init_connections_controller_inputs();
+		this._initConnectionControllerInputs();
 	}
-	private init_connections_controller_inputs() {
+	private _initConnectionControllerInputs() {
 		this.node.io.connections.initInputs();
 	}
 
 	is_any_input_dirty() {
 		return this._graph_node?.isDirty() || false;
-		// if (this._max_inputs_count > 0) {
+		// if (this._maxInputsCount > 0) {
 		// 	for (let i = 0; i < this._inputs.length; i++) {
 		// 		if (this._inputs[i]?.isDirty()) {
 		// 			return true;
@@ -197,7 +200,7 @@ export class InputsController<NC extends NodeContext> {
 
 	existing_input_indices() {
 		const existing_input_indices: number[] = [];
-		if (this._max_inputs_count > 0) {
+		if (this._maxInputsCount > 0) {
 			for (let i = 0; i < this._inputs.length; i++) {
 				if (this._inputs[i]) {
 					existing_input_indices.push(i);
@@ -209,9 +212,9 @@ export class InputsController<NC extends NodeContext> {
 
 	async eval_required_inputs() {
 		let containers: Array<ContainerMap[NC] | null | undefined> = [];
-		if (this._max_inputs_count > 0) {
+		if (this._maxInputsCount > 0) {
 			const existing_input_indices = this.existing_input_indices();
-			if (existing_input_indices.length < this._min_inputs_count) {
+			if (existing_input_indices.length < this._minInputsCount) {
 				this.node.states.error.set('inputs are missing');
 			} else {
 				if (existing_input_indices.length > 0) {

@@ -60,7 +60,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	process_inputs_data(data: NodeJsonExporterData) {
 		const maxInputsCount = data.maxInputsCount;
 		if (maxInputsCount != null) {
-			this._node.io.inputs.setCount(1, maxInputsCount);
+			const minCount = this._node.io.inputs.minCount();
+			this._node.io.inputs.setCount(minCount, maxInputsCount);
 		}
 
 		this.setInputs(data['inputs']);

@@ -1,3 +1,12 @@
+import {Points} from 'three/src/objects/Points';
+import {Mesh} from 'three/src/objects/Mesh';
+import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
+import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
+import {AddSopNode} from '../../../../src/engine/nodes/sop/Add';
+import {PlaneSopNode} from '../../../../src/engine/nodes/sop/Plane';
+import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
+
 QUnit.test('merge simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -41,13 +50,6 @@ QUnit.skip('merge geos with different attributes', async (assert) => {
 	assert.equal(core_group.pointsCount(), 12);
 });
 
-import {Points} from 'three/src/objects/Points';
-import {Mesh} from 'three/src/objects/Mesh';
-import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
-import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
-import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
-import {AddSopNode} from '../../../../src/engine/nodes/sop/Add';
-import {PlaneSopNode} from '../../../../src/engine/nodes/sop/Plane';
 QUnit.test('sop merge has predictable order in assembled objects', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -136,4 +138,30 @@ QUnit.test('sop merge can update its inputs count', async (assert) => {
 	objects = core_group.objects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);
+});
+
+QUnit.test('sop merge maintains its inputs count when nothing is connected to it', async (assert) => {
+	const geo1 = window.geo1;
+	const scene = window.scene;
+
+	const merge1 = geo1.createNode('merge');
+	merge1.p.inputsCount.set(20);
+
+	await merge1.compute();
+
+	// save
+	const data = new SceneJsonExporter(scene).data();
+	console.log('************ LOAD **************');
+	const scene2 = await SceneJsonImporter.loadData(data);
+	await scene2.waitForCooksCompleted();
+	const geo2 = scene2.node(geo1.path())! as GeoObjNode;
+	const merge2 = scene2.node(merge1.path())! as MergeSopNode;
+	assert.equal(merge2.io.inputs.maxInputsCount(), 20);
+	const plane1 = geo2.createNode('plane');
+	merge2.setInput(15, plane1);
+	assert.equal(merge2.io.inputs.inputs()[15]?.graphNodeId(), plane1.graphNodeId());
+	for (let i = 0; i < 20; i++) {
+		merge2.setInput(i, plane1);
+	}
+	assert.equal(merge2.io.inputs.inputs()[19]?.graphNodeId(), plane1.graphNodeId());
 });

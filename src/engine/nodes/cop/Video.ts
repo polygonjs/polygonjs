@@ -28,8 +28,9 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
+import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
 
-export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
+function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the video from */
 		url = ParamConfig.STRING(CoreLoaderTexture.PARAM_DEFAULT, {
@@ -67,19 +68,13 @@ export function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 			cook: false,
 			// do not use videoTime, as calling "this._video.currentTime =" every frame is really expensive
 		});
-		/** @param seek the video at the time specified in vide_time */
+		/** @param seek the video at the time specified in videoTime */
 		setVideoTime = ParamConfig.BUTTON(null, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
 				VideoCopNode.PARAM_CALLBACK_video_update_time(node as VideoCopNode);
 			},
 		});
-	};
-}
-export function FileTypeCheckCopParamConfig<TBase extends Constructor>(Base: TBase) {
-	return class Mixin extends Base {
-		/** @param check url extension */
-		checkFileType = ParamConfig.BOOLEAN(true);
 	};
 }
 

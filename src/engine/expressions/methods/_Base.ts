@@ -100,7 +100,7 @@ export class BaseMethod {
 			const index = index_or_path as number;
 			const node = this.node();
 			if (node) {
-				const input_graph_node = node.io.inputs.input_graph_node(index);
+				const input_graph_node = node.io.inputs.inputGraphNode(index);
 				return input_graph_node;
 			}
 		} else {

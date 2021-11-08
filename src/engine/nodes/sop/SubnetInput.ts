@@ -70,7 +70,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 
 		const parent = this.parent();
 		if (parent) {
-			this._current_parent_input_graph_node = parent.io.inputs.input_graph_node(this.pv.input);
+			this._current_parent_input_graph_node = parent.io.inputs.inputGraphNode(this.pv.input);
 			this.addGraphInput(this._current_parent_input_graph_node);
 		}
 	}

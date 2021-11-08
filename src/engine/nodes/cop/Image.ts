@@ -18,8 +18,9 @@ import {isUrlStaticImage} from '../../../core/FileTypeController';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
 
-export function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
+function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the image from */
 		url = ParamConfig.STRING(CoreLoaderTexture.PARAM_DEFAULT, {
@@ -31,12 +32,6 @@ export function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 				ImageCopNode.PARAM_CALLBACK_reload(node as ImageCopNode, param);
 			},
 		});
-	};
-}
-export function FileTypeCheckCopParamConfig<TBase extends Constructor>(Base: TBase) {
-	return class Mixin extends Base {
-		/** @param check url extension */
-		checkFileType = ParamConfig.BOOLEAN(true);
 	};
 }
 
