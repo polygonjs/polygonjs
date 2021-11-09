@@ -5,8 +5,8 @@ import {ShaderAssemblerMesh} from './_BaseMesh';
 import {BaseGlShaderAssembler} from '../_Base';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
-import metalnessmap_fragment from '../../../gl/ShaderLib/ShaderChunk/metalnessmap_fragment.glsl';
-import roughnessmap_fragment from '../../../gl/ShaderLib/ShaderChunk/roughnessmap_fragment.glsl';
+import metalnessmapFragment from '../../../gl/ShaderLib/ShaderChunk/metalnessmap_fragment.glsl';
+import roughnessmapFragment from '../../../gl/ShaderLib/ShaderChunk/roughnessmap_fragment.glsl';
 import {OutputGlNode} from '../../../Output';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {GlConnectionPoint, GlConnectionPointType} from '../../../../utils/io/connections/Gl';
@@ -39,8 +39,9 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	}
 
 	static filterFragmentShader(fragmentShader: string) {
-		fragmentShader = fragmentShader.replace('#include <metalnessmap_fragment>', metalnessmap_fragment);
-		fragmentShader = fragmentShader.replace('#include <roughnessmap_fragment>', roughnessmap_fragment);
+		fragmentShader = fragmentShader.replace('#include <metalnessmap_fragment>', metalnessmapFragment);
+		fragmentShader = fragmentShader.replace('#include <roughnessmap_fragment>', roughnessmapFragment);
+
 		fragmentShader = fragmentShader.replace(
 			'vec3 totalEmissiveRadiance = emissive;',
 			'vec3 totalEmissiveRadiance = emissive * POLY_emissive;'
@@ -98,17 +99,23 @@ ${sss_injected_fragment}
 		if (ShaderAssemblerStandard.USE_SSS) {
 			list.push(new GlConnectionPoint('SSSModel', GlConnectionPointType.SSS_MODEL, sss_default));
 		}
+		if (this.isPhysical()) {
+			list.push(new GlConnectionPoint('transmission', GlConnectionPointType.FLOAT, 1));
+			list.push(new GlConnectionPoint('thickness', GlConnectionPointType.FLOAT, 1));
+		}
 		output_child.io.inputs.setNamedInputConnectionPoints(list);
 	}
 
 	create_shader_configs() {
+		const fragmentInputNames = ['color', 'alpha', 'metalness', 'roughness', 'emissive', 'SSSModel'];
+		if (this.isPhysical()) {
+			fragmentInputNames.push('transmission');
+			fragmentInputNames.push('thickness');
+		}
+
 		return [
 			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv'], []),
-			new ShaderConfig(
-				ShaderName.FRAGMENT,
-				['color', 'alpha', 'metalness', 'roughness', 'emissive', 'SSSModel'],
-				[ShaderName.VERTEX]
-			),
+			new ShaderConfig(ShaderName.FRAGMENT, fragmentInputNames, [ShaderName.VERTEX]),
 		];
 	}
 	create_variable_configs() {
@@ -136,6 +143,20 @@ ${sss_injected_fragment}
 				new VariableConfig('SSSModel', {
 					default: sss_default,
 					prefix: 'SSSModel POLY_SSSModel = ',
+				})
+			);
+		}
+		if (this.isPhysical()) {
+			list.push(
+				new VariableConfig('transmission', {
+					default: '1.0',
+					prefix: 'float POLY_transmission = ',
+				})
+			);
+			list.push(
+				new VariableConfig('thickness', {
+					default: '1.0',
+					prefix: 'float POLY_thickness = ',
 				})
 			);
 		}

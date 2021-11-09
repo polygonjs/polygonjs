@@ -29,8 +29,9 @@ import {WireframeController, WireframeParamConfig} from './utils/WireframeContro
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {UpdateOptions} from './utils/_BaseTextureController';
 
-const CONTROLLER_OPTIONS = {
+const CONTROLLER_OPTIONS: UpdateOptions = {
 	directParams: true,
 };
 interface Controllers {

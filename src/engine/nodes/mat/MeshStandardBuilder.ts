@@ -31,8 +31,8 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
-
-const CONTROLLER_OPTIONS = {
+import {UpdateOptions} from './utils/_BaseTextureController';
+const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
 interface Controllers {

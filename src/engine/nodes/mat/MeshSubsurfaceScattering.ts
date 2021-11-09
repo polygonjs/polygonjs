@@ -64,8 +64,8 @@ function ParamOptionsFactoryN(uniform_name: string) {
 		},
 	};
 }
-
-const CONTROLLER_OPTIONS = {
+import {UpdateOptions} from './utils/_BaseTextureController';
+const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
 interface Controllers {

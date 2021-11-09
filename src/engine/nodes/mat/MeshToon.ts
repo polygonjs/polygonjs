@@ -25,8 +25,8 @@ import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-
-const CONTROLLER_OPTIONS = {
+import {UpdateOptions} from './utils/_BaseTextureController';
+const CONTROLLER_OPTIONS: UpdateOptions = {
 	directParams: true,
 };
 interface Controllers {

@@ -33,8 +33,8 @@ import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {Constructor} from '../../../types/GlobalTypes';
-
-const CONTROLLER_OPTIONS = {
+import {UpdateOptions} from './utils/_BaseTextureController';
+const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
 interface Controllers {
@@ -55,9 +55,7 @@ interface Controllers {
 
 function AdvancedMeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends PCSSParamConfig(
-		FogParamConfig(
-			WireframeParamConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base)))
-		)
+		FogParamConfig(WireframeParamConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base))))
 	) {};
 }
 class MeshPhysicalMatParamsConfig extends AdvancedMeshPhysicalParamConfig(
@@ -116,12 +114,12 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 		bumpMap: new TextureBumpMapController(this, CONTROLLER_OPTIONS),
 		displacementMap: new TextureDisplacementMapController(this, CONTROLLER_OPTIONS),
 		emissiveMap: new TextureEmissiveMapController(this, CONTROLLER_OPTIONS),
-		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
+		envMap: new TextureEnvMapController(this, {uniforms: true, directParams: true}),
 		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
-		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this, CONTROLLER_OPTIONS),
+		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this, {uniforms: true, directParams: true}),
 		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
-		physical: new MeshPhysicalController(this, CONTROLLER_OPTIONS),
+		physical: new MeshPhysicalController(this, {uniforms: true, directParams: true}),
 		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
@@ -132,6 +130,13 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 				this.controllers[controllerName].initializeNode();
 			}
 		});
+	}
+
+	createMaterial() {
+		const material = super.createMaterial();
+		(material as any).isMeshStandardMaterial = true;
+		(material as any).isMeshPhysicalMaterial = true;
+		return material;
 	}
 
 	async cook() {

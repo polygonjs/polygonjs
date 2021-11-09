@@ -17,7 +17,8 @@ import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureN
 import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
-const CONTROLLER_OPTIONS = {
+import {UpdateOptions} from './utils/_BaseTextureController';
+const CONTROLLER_OPTIONS: UpdateOptions = {
 	directParams: true,
 };
 interface Controllers {

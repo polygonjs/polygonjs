@@ -105,9 +105,8 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			class_by_custom_name.forEach(
 				(assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
 					if (this._code_builder) {
-						let assembler: ShaderAssemblerMaterial | undefined = this._assemblers_by_custom_name.get(
-							custom_name
-						);
+						let assembler: ShaderAssemblerMaterial | undefined =
+							this._assemblers_by_custom_name.get(custom_name);
 						if (!assembler) {
 							assembler = new assembler_class(this.currentGlParentNode());
 							this._assemblers_by_custom_name.set(custom_name, assembler);

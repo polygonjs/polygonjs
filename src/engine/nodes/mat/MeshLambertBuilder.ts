@@ -24,8 +24,8 @@ import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-
-const CONTROLLER_OPTIONS = {
+import {UpdateOptions} from './utils/_BaseTextureController';
+const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
 interface Controllers {
@@ -53,9 +53,7 @@ class MeshLambertMatParamsConfig extends PCSSParamConfig(
 											MapParamConfig(
 												/* textures */
 												TexturesFolderParamConfig(
-													TransparencyParamConfig(
-														DefaultFolderParamConfig(NodeParamsConfig)
-													)
+													TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 												)
 											)
 										)

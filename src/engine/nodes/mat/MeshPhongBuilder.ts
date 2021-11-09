@@ -29,8 +29,8 @@ import {TextureDisplacementMapController, DisplacementMapParamConfig} from './ut
 import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
 import {TextureSpecularMapController, SpecularMapParamConfig} from './utils/TextureSpecularMapController';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
-
-const CONTROLLER_OPTIONS = {
+import {UpdateOptions} from './utils/_BaseTextureController';
+const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
 interface Controllers {

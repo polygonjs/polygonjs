@@ -27,6 +27,8 @@ interface MeshPhysicalWithUniforms extends ShaderMaterial {
 		sheen: IUniformN;
 		sheenRoughness: IUniformN;
 		sheenTint: IUniformColor;
+		specularTint: IUniformColor;
+		ior: IUniformN;
 	};
 }
 
@@ -78,11 +80,6 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		sheenColor = ParamConfig.COLOR([1, 1, 1], {
 			visibleIf: {useSheen: 1},
 		});
-		/** @param Degree of reflectivity, from 0.0 to 1.0. Default is 0.5, which corresponds to an index-of-refraction of 1.5. This models the reflectivity of non-metallic materials. It has no effect when metalness is 1.0 */
-		reflectivity = ParamConfig.FLOAT(0.5, {
-			range: [0, 1],
-			rangeLocked: [true, true],
-		});
 
 		/** @param Degree of transmission (or optical transparency), from 0.0 to 1.0. Default is 0.0.
 Thin, transparent or semitransparent, plastic or glass materials remain largely reflective even if they are fully transmissive. The transmission property can be used to model these materials.
@@ -94,6 +91,11 @@ When transmission is non-zero, opacity should be set to 1.  */
 		useTransmissionMap = ParamConfig.BOOLEAN(0);
 		/** @param specify the roughness map COP node */
 		transmissionMap = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {visibleIf: {useTransmissionMap: 1}});
+		/** @param Index-of-refraction for non-metallic materials */
+		ior = ParamConfig.FLOAT(1.5, {
+			range: [1, 2.3333],
+			rangeLocked: [true, true],
+		});
 
 		/** @param thickness  */
 		thickness = ParamConfig.FLOAT(0.01, {
@@ -123,6 +125,8 @@ abstract class TextureClearCoatMapMatNode extends TypedMatNode<CurrentMaterial, 
 	controllers!: Controllers;
 	abstract createMaterial(): CurrentMaterial;
 }
+
+const meshPhysical = new MeshPhysicalMaterial();
 
 export class MeshPhysicalController extends BaseTextureMapController {
 	constructor(protected node: TextureClearCoatMapMatNode, _update_options: UpdateOptions) {
@@ -158,18 +162,22 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		);
 		this._update(this.node.material, 'thicknessMap', this.node.p.useThicknessMap, this.node.p.thicknessMap);
 		const pv = this.node.pv;
+
+		// this is to get the reflectivity value
+		meshPhysical.ior = pv.ior;
+		const reflectivity = meshPhysical.reflectivity;
+
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as MeshPhysicalWithUniforms;
 			mat.uniforms.clearcoat.value = pv.clearcoat;
 			mat.uniforms.clearcoatNormalScale.value.copy(pv.clearcoatNormalScale);
 			mat.uniforms.clearcoatRoughness.value = pv.clearcoatRoughness;
-			// ior is currently a getter/setter wrapper to set reflectivity, so is not currently present in uniforms
-			// mat.uniforms.ior.value = this.node.pv.ior;
-			mat.uniforms.reflectivity.value = pv.reflectivity;
+			mat.uniforms.reflectivity.value = reflectivity;
 			mat.uniforms.transmission.value = pv.transmission;
 			mat.uniforms.thickness.value = pv.thickness;
 			mat.uniforms.attenuationDistance.value = pv.attenuationDistance;
 			mat.uniforms.attenuationTint.value = pv.attenuationColor;
+
 			if (isBooleanTrue(pv.useSheen)) {
 				this._sheenColorClone.copy(pv.sheenColor);
 				mat.uniforms.sheen.value = pv.sheen;
@@ -178,6 +186,11 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			} else {
 				mat.uniforms.sheen.value = 0;
 			}
+			mat.uniforms.ior.value = pv.ior;
+
+			// to ensure compilation goes through
+			(mat as any).specularTint = mat.uniforms.specularTint.value;
+			(mat as any).ior = mat.uniforms.ior.value;
 
 			// mat.defines['CLEARCOAT'] = isBooleanTrue(this.node.pv.useClearCoatNormalMap);
 			// mat.defines['USE_CLEARCOAT_ROUGHNESSMAP'] = isBooleanTrue(this.node.pv.useClearCoatRoughnessMap);
@@ -186,9 +199,11 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshPhysicalMaterial;
 			mat.clearcoat = pv.clearcoat;
-			mat.clearcoatNormalScale.copy(pv.clearcoatNormalScale);
+			if (mat.clearcoatNormalScale != null) {
+				mat.clearcoatNormalScale.copy(pv.clearcoatNormalScale);
+			}
 			mat.clearcoatRoughness = pv.clearcoatRoughness;
-			mat.reflectivity = pv.reflectivity;
+			mat.reflectivity = reflectivity;
 			// ior is currently a getter/setter wrapper to set reflectivity, so currently conflicts with 'mat.reflectivity ='
 			// mat.ior = this.node.pv.ior;
 			if (isBooleanTrue(pv.useSheen)) {
