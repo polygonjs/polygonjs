@@ -15,10 +15,6 @@ interface MetaballSopParams extends DefaultOperationParams {
 	metaStrength: number;
 	enableUVs: boolean;
 	enableColors: boolean;
-	addPlanes: boolean;
-	addPlaneX: boolean;
-	addPlaneY: boolean;
-	addPlaneZ: boolean;
 }
 const pos = new Vector3();
 export class MetaballSopOperation extends BaseSopOperation {
@@ -29,10 +25,6 @@ export class MetaballSopOperation extends BaseSopOperation {
 		metaStrength: 1,
 		enableUVs: false,
 		enableColors: false,
-		addPlanes: false,
-		addPlaneX: false,
-		addPlaneY: false,
-		addPlaneZ: false,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static type(): Readonly<'metaball'> {
@@ -49,17 +41,6 @@ export class MetaballSopOperation extends BaseSopOperation {
 			params.enableColors
 		);
 		metaballs.isolation = params.isolation;
-		if (isBooleanTrue(params.addPlanes)) {
-			if (isBooleanTrue(params.addPlaneX)) {
-				metaballs.addPlaneX(params.metaStrength, subtract);
-			}
-			if (isBooleanTrue(params.addPlaneY)) {
-				metaballs.addPlaneY(params.metaStrength, subtract);
-			}
-			if (isBooleanTrue(params.addPlaneZ)) {
-				metaballs.addPlaneZ(params.metaStrength, subtract);
-			}
-		}
 
 		const points = inputCoreGroup.points();
 		for (let point of points) {

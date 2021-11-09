@@ -1,8 +1,8 @@
 /**
- * Creates a box.
+ * Creates metaballs.
  *
  * @remarks
- * If the node has no input, you can control the radius and center of the box. If the node has an input, it will create a box that encompasses the input geometry.
+ * This nodes creates metaballs from points. Note that the points must currently be within the coordinates 0,0,0 and 1,1,1. The points can also have a metaStrength float attribute to define the size of the metaball
  *
  */
 
@@ -34,20 +34,6 @@ class MetaballSopParamsConfig extends NodeParamsConfig {
 	enableUVs = ParamConfig.BOOLEAN(DEFAULT.enableUVs);
 	/** @param enableColors */
 	enableColors = ParamConfig.BOOLEAN(DEFAULT.enableColors);
-	/** @param addPlanes */
-	addPlanes = ParamConfig.BOOLEAN(DEFAULT.addPlanes);
-	/** @param addPlaneX */
-	addPlaneX = ParamConfig.BOOLEAN(DEFAULT.addPlaneX, {
-		visibleIf: {addPlanes: true},
-	});
-	/** @param addPlaneY */
-	addPlaneY = ParamConfig.BOOLEAN(DEFAULT.addPlaneY, {
-		visibleIf: {addPlanes: true},
-	});
-	/** @param addPlaneZ */
-	addPlaneZ = ParamConfig.BOOLEAN(DEFAULT.addPlaneZ, {
-		visibleIf: {addPlanes: true},
-	});
 }
 const ParamsConfig = new MetaballSopParamsConfig();
 
@@ -58,7 +44,7 @@ export class MetaballSopNode extends TypedSopNode<MetaballSopParamsConfig> {
 	}
 
 	static displayedInputNames(): string[] {
-		return ['geometry to create metaballs from'];
+		return ['points to create metaballs from'];
 	}
 
 	initializeNode() {
