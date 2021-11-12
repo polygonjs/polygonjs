@@ -66,6 +66,7 @@ const EVENT_UNLOCK = 'unlock';
 
 function updatePlayerParamsCallbackOption(): ParamOptions {
 	return {
+		cook: false,
 		callback: (node: BaseNodeType) => {
 			FirstPersonControlsEventNode.PARAM_CALLBACK_updatePlayerParams(node as FirstPersonControlsEventNode);
 		},
@@ -128,7 +129,7 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 	rotateSpeed = ParamConfig.FLOAT(1, {
 		range: [0, 10],
 		rangeLocked: [true, false],
-		...updatePlayerParamsCallbackOption(),
+		// ...updatePlayerParamsCallbackOption(),
 	});
 	/** @param jump Allowed */
 	jumpAllowed = ParamConfig.BOOLEAN(true, {

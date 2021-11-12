@@ -89,7 +89,7 @@ export class ViewerControlsController {
 	private _create_graph_node() {
 		const node = new CoreGraphNode(this.viewer.cameraNode().scene(), 'viewer-controls');
 		node.addPostDirtyHook('this.viewer.controls_controller', async () => {
-			await this.viewer.controlsController.create_controls();
+			await this.create_controls();
 		});
 		return node;
 	}
