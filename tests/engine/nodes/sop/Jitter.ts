@@ -15,6 +15,24 @@ QUnit.test('jitter simple', async (assert) => {
 	assert.more_than(size.z, 1.8);
 });
 
+QUnit.test('jitter with large y mult', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane1 = geo1.createNode('plane');
+	const scatter1 = geo1.createNode('scatter');
+	const jitter1 = geo1.createNode('jitter');
+	jitter1.setInput(0, scatter1);
+	scatter1.setInput(0, plane1);
+	jitter1.p.mult.y.set(10);
+
+	let container = await jitter1.compute();
+
+	let size = container.size();
+	assert.more_than(size.x, 2.0);
+	assert.more_than(size.y, 15);
+	assert.more_than(size.z, 1.8);
+});
+
 QUnit.test('jitter with copy', async (assert) => {
 	const geo1 = window.geo1;
 
