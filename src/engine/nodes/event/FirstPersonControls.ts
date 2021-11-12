@@ -231,7 +231,6 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 	}
 	private async _updatePlayerParams() {
 		if (!this._player) {
-			console.warn('no player to update');
 			return;
 		}
 		this._player.startPosition.copy(this.pv.startPosition);
