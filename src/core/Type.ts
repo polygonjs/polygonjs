@@ -26,3 +26,11 @@ export class CoreType {
 		return value != null && (type == 'object' || type == 'function');
 	}
 }
+
+// a simple way to test the type and value of a param value
+export function isBooleanTrue(value: boolean) {
+	return value;
+}
+export function ensureString(value: string) {
+	return value;
+}

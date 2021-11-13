@@ -1,4 +1,11 @@
-import {ObjectType, objectTypeFromConstructor, AttribClass} from '../../../../src/core/geometry/Constant';
+import {
+	ObjectType,
+	objectTypeFromConstructor,
+	AttribClass,
+	AttribType,
+	ATTRIBUTE_TYPES,
+} from '../../../../src/core/geometry/Constant';
+import {CorePoint} from '../../../../src/core/geometry/Point';
 
 QUnit.test('SOP delete: (class=points) simple plane', async (assert) => {
 	const geo1 = window.geo1;
@@ -78,6 +85,62 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	core_object = container.coreContent()!;
 	assert.equal(core_object.coreObjects().length, 1);
 	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[0].object().constructor), ObjectType.MESH);
+});
+
+QUnit.test('SOP delete: (class=point) string attrib', async (assert) => {
+	const geo1 = window.geo1;
+	const add1 = geo1.createNode('add');
+	const add2 = geo1.createNode('add');
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const attribCreate2 = geo1.createNode('attribCreate');
+	const merge1 = geo1.createNode('merge');
+	const delete1 = geo1.createNode('delete');
+
+	attribCreate1.setInput(0, add1);
+	attribCreate2.setInput(0, add2);
+	merge1.setInput(0, attribCreate1);
+	merge1.setInput(1, attribCreate2);
+	delete1.setInput(0, merge1);
+	[attribCreate1, attribCreate2].forEach((n) => {
+		n.setType(AttribType.STRING);
+		n.p.name.set('name');
+	});
+	attribCreate1.p.string.set('beaver');
+	attribCreate2.p.string.set('eagle');
+
+	delete1.p.byAttrib.set(true);
+	delete1.p.attribType.set(ATTRIBUTE_TYPES.indexOf(AttribType.STRING));
+	delete1.p.attribName.set('name');
+	delete1.p.attribString.set('beaver');
+
+	async function getPoints() {
+		let container = await delete1.compute();
+		let core_object = container.coreContent()!;
+		return core_object.points();
+	}
+
+	let container = await delete1.compute();
+	let core_object = container.coreContent()!;
+	assert.equal(core_object.points().length, 1);
+	assert.equal((await getPoints())[0].stringAttribValue('name'), 'eagle');
+
+	delete1.p.invert.set(true);
+	container = await delete1.compute();
+	core_object = container.coreContent()!;
+	assert.equal(core_object.points().length, 1);
+	assert.equal(core_object.points()[0].stringAttribValue('name'), 'beaver');
+
+	delete1.p.attribString.set('mountain');
+	assert.deepEqual(
+		(await getPoints()).map((p: CorePoint) => p.stringAttribValue('name')),
+		[]
+	);
+
+	delete1.p.invert.set(false);
+	assert.deepEqual(
+		(await getPoints()).map((p: CorePoint) => p.stringAttribValue('name')),
+		['beaver', 'eagle']
+	);
 });
 
 QUnit.test('SOP delete byBoundingObject', async (assert) => {

@@ -216,6 +216,7 @@ import {CoreString} from '../../../core/String';
 import {Poly} from '../../Poly';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;
@@ -241,7 +242,7 @@ export class FunctionGenerator extends BaseTraverser {
 		if (parsed_tree.error_message == null) {
 			try {
 				// this.function_pre_entities_loop_lines = [];
-				this._attribute_requirements_controller.reset();
+				this._attribute_requirements_controller = new AttributeRequirementsController();
 				// this.function_pre_body = ''
 				if (parsed_tree.node) {
 					const function_main_string = this.traverse_node(parsed_tree.node);
@@ -258,6 +259,7 @@ export class FunctionGenerator extends BaseTraverser {
 
 			if (this.function_main_string) {
 				try {
+					const body = this._functionBody();
 					// not sure why I needed AsyncFunction
 					this.function = new Function(
 						'Core',
@@ -266,7 +268,7 @@ export class FunctionGenerator extends BaseTraverser {
 						'_set_error_from_error',
 						`
 					try {
-						${this.function_body()}
+						${body}
 					} catch(e) {
 						_set_error_from_error(e)
 						return null;
@@ -294,7 +296,7 @@ export class FunctionGenerator extends BaseTraverser {
 		this.immutable_dependencies = [];
 	}
 
-	function_body() {
+	private _functionBody() {
 		if (this.param.options.isExpressionForEntities()) {
 			return `
 			const entities = param.expressionController.entities();
@@ -302,9 +304,12 @@ export class FunctionGenerator extends BaseTraverser {
 				return new Promise( async (resolve, reject)=>{
 					let entity;
 					const entity_callback = param.expressionController.entity_callback();
-					${this._attribute_requirements_controller.assign_attributes_lines()}
-					if( ${this._attribute_requirements_controller.attribute_presence_check_line()} ){
-						${this._attribute_requirements_controller.assign_arrays_lines()}
+					// assign_attributes_lines
+					${this._attribute_requirements_controller.assignAttributesLines()}
+					// check if attributes are present
+					if( ${this._attribute_requirements_controller.attributePresenceCheckLine()} ){
+						// assign_arrays_lines
+						${this._attribute_requirements_controller.assignArraysLines()}
 						for(let index=0; index < entities.length; index++){
 							entity = entities[index];
 							result = ${this.function_main_string};
@@ -347,6 +352,7 @@ export class FunctionGenerator extends BaseTraverser {
 			const Core = {
 				Math: CoreMath,
 				String: CoreString,
+				Geometry: CoreGeometry,
 			};
 			const result = this.function(Core, this.param, this.methods, this._set_error_from_error_bound);
 			return result;
@@ -454,10 +460,8 @@ export class FunctionGenerator extends BaseTraverser {
 				if (attribute_name == 'ptnum') {
 					return '((entity != null) ? entity.index() : 0)';
 				} else {
-					const var_attribute_size = this._attribute_requirements_controller.var_attribute_size(
-						attribute_name
-					);
-					const var_array = this._attribute_requirements_controller.var_array(attribute_name);
+					const var_attribute_size = this._attribute_requirements_controller.varAttributeSize(attribute_name);
+					const var_array = this._attribute_requirements_controller.varArray(attribute_name);
 					this._attribute_requirements_controller.add(attribute_name);
 					if (property) {
 						const property_offset = PROPERTY_OFFSETS[property];

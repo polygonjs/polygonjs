@@ -22,8 +22,13 @@ export class CSS2DObject extends Object3D {
 	get element() {
 		return this._element;
 	}
+	clone(recursive: boolean | undefined): this {
+		const element = this._element.cloneNode(true) as HTMLElement;
+		const cloned = new CSS2DObject(element).copy(this, recursive);
+		return cloned as this;
+	}
 
-	copy(source: CSS2DObject, recursive: boolean) {
+	copy(source: CSS2DObject, recursive: boolean | undefined) {
 		Object3D.prototype.copy.call(this, source, recursive);
 
 		this._element = source.element.cloneNode(true) as HTMLElement;

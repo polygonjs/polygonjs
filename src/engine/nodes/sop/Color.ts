@@ -262,7 +262,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		let tmp_array: number[] | undefined;
 		if (param.hasExpression() && param.expressionController) {
 			tmp_array = this._init_array_if_required(geometry, arrays_by_geometry_uuid, points.length);
-			await param.expressionController.compute_expression_for_points(points, (point, value) => {
+			await param.expressionController.computeExpressionForPoints(points, (point, value) => {
 				// array[point.index()*3+2] = value
 				(tmp_array as number[])[point.index()] = value;
 			});

@@ -5,6 +5,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {ensureString} from '../../../../../core/Type';
 
 export enum ComparisonOperator {
 	EQUAL = '==',
@@ -70,7 +71,7 @@ export class ByAttributeHelper {
 		let value: string | undefined;
 		for (let entity of entities) {
 			value = entity.stringAttribValue(this.node.pv.attribName);
-			if (value == this.node.pv.attrib_string) {
+			if (value == ensureString(this.node.pv.attribString)) {
 				this.node.entitySelectionHelper.select(entity);
 			}
 		}
@@ -95,7 +96,7 @@ export class ByAttributeHelper {
 	}
 
 	private _eval_for_points_numeric_float(entities: CoreEntity[]) {
-		let attribName = this.node.pv.attribName;
+		let attribName: string = this.node.pv.attribName;
 		const compared_value = this.node.pv.attribValue1;
 		let value: number;
 		const comparison_operator: ComparisonOperator = COMPARISON_OPERATORS[this.node.pv.attribComparisonOperator];

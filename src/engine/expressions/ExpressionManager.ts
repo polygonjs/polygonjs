@@ -11,7 +11,7 @@ import {ParamType} from '../poly/ParamType';
 export class ExpressionManager {
 	public parse_completed: boolean = false;
 	private parse_started: boolean = false;
-	private function_generator: FunctionGenerator;
+	private _functionGenerator: FunctionGenerator;
 	private expression_string_generator: ExpressionStringGenerator | undefined;
 	public dependencies_controller: DependenciesController;
 	// private _error_message: string | undefined;
@@ -20,11 +20,11 @@ export class ExpressionManager {
 	constructor(
 		public param: BaseParamType // public element_index: number=0
 	) {
-		this.function_generator = new FunctionGenerator(this.param);
+		this._functionGenerator = new FunctionGenerator(this.param);
 		this.dependencies_controller = new DependenciesController(this.param);
 	}
 
-	parse_expression(expression: string) {
+	parseExpression(expression: string) {
 		if (this.parse_started) {
 			throw new Error(`parse in progress for param ${this.param.path()}`);
 		}
@@ -38,10 +38,10 @@ export class ExpressionManager {
 		} else {
 			this.parsed_tree.parse_expression(expression);
 		}
-		this.function_generator.parse_tree(this.parsed_tree);
+		this._functionGenerator.parse_tree(this.parsed_tree);
 
-		if (this.function_generator.error_message() == null) {
-			this.dependencies_controller.update(this.function_generator);
+		if (this._functionGenerator.error_message() == null) {
+			this.dependencies_controller.update(this._functionGenerator);
 			if (this.dependencies_controller.error_message) {
 				this.param.states.error.set(this.dependencies_controller.error_message);
 			} else {
@@ -52,11 +52,11 @@ export class ExpressionManager {
 		//this.set_error(this.function_generator.error_message);
 		//}
 	}
-	async compute_function(): Promise<any> {
+	async computeFunction(): Promise<any> {
 		// this.parse_and_update_dependencies_if_not_done(expression);
-		if (this.compute_allowed()) {
+		if (this._computeAllowed()) {
 			try {
-				const new_value = await this.function_generator.eval_function();
+				const new_value = await this._functionGenerator.eval_function();
 				return new_value;
 			} catch (e) {
 				// if (this.function_generator.is_errored && this.function_generator.error_message) {
@@ -78,18 +78,18 @@ export class ExpressionManager {
 		// if(force){ // || this.element_index <= 1){
 		this.dependencies_controller.reset();
 		// }
-		this.function_generator.reset();
+		this._functionGenerator.reset();
 	}
 
 	is_errored(): boolean {
-		return this.function_generator.is_errored();
+		return this._functionGenerator.is_errored();
 	}
 	error_message() {
-		return this.function_generator.error_message();
+		return this._functionGenerator.error_message();
 	}
 
-	private compute_allowed(): boolean {
-		return /*this._error_message == null &&*/ this.function_generator.eval_allowed();
+	private _computeAllowed(): boolean {
+		return /*this._error_message == null &&*/ this._functionGenerator.eval_allowed();
 	}
 
 	// private parse_and_update_dependencies(expression: string) {

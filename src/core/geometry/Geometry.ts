@@ -28,6 +28,7 @@ import {CoreString} from '../String';
 import {GroupString} from './Group';
 
 const IS_INSTANCE_KEY = 'isInstance';
+const INDEX_ATTRIB_VALUES = 'indexed_attrib_values';
 
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
@@ -73,8 +74,7 @@ export class CoreGeometry {
 	}
 
 	userDataAttribs() {
-		const key = 'indexed_attrib_values';
-		return (this._geometry.userData[key] = this._geometry.userData[key] || {});
+		return (this._geometry.userData[INDEX_ATTRIB_VALUES] = this._geometry.userData[INDEX_ATTRIB_VALUES] || {});
 	}
 	indexedAttributeNames() {
 		return Object.keys(this.userDataAttribs() || {});

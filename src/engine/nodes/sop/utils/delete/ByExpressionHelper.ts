@@ -16,7 +16,7 @@ export class ByExpressionHelper {
 	private async eval_expressions_for_points_with_expression(entities: CoreEntity[]) {
 		const param = this.node.p.expression;
 		if (param.expressionController) {
-			await param.expressionController.compute_expression_for_entities(entities, (entity, value) => {
+			await param.expressionController.computeExpressionForEntities(entities, (entity, value) => {
 				if (value) {
 					this.node.entitySelectionHelper.select(entity);
 				}

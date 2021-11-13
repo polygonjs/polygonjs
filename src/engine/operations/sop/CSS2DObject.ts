@@ -23,7 +23,7 @@ interface CSS2DObjectSopParams extends DefaultOperationParams {
 	id: string;
 	useClassAttrib: boolean;
 	className: string;
-	useHtmlAttrib: boolean;
+	useHTMLAttrib: boolean;
 	html: string;
 	copyAttributes: boolean;
 	attributesToCopy: string;
@@ -32,10 +32,10 @@ interface CSS2DObjectSopParams extends DefaultOperationParams {
 export class CSS2DObjectSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: CSS2DObjectSopParams = {
 		useIdAttrib: false,
-		id: 'my_css_object',
+		id: 'myCSSObject',
 		useClassAttrib: false,
 		className: 'CSS2DObject',
-		useHtmlAttrib: false,
+		useHTMLAttrib: false,
 		html: '<div>default html</div>',
 		copyAttributes: false,
 		attributesToCopy: '',
@@ -59,13 +59,11 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 		const points = core_group.points();
 		const objects: CSS2DObject[] = [];
 		for (let point of points) {
-			const id = isBooleanTrue(params.useIdAttrib)
-				? (point.attribValue(ATTRIBUTE_NAME.id) as string)
-				: params.className;
+			const id = isBooleanTrue(params.useIdAttrib) ? (point.attribValue(ATTRIBUTE_NAME.id) as string) : params.id;
 			const className = isBooleanTrue(params.useClassAttrib)
 				? (point.attribValue(ATTRIBUTE_NAME.className) as string)
 				: params.className;
-			const html = isBooleanTrue(params.useHtmlAttrib)
+			const html = isBooleanTrue(params.useHTMLAttrib)
 				? (point.attribValue(ATTRIBUTE_NAME.html) as string)
 				: params.html;
 

@@ -1,83 +1,92 @@
+const VAR_CORE_GEOMETRY = `coreGeometry`;
+
 export class AttributeRequirementsController {
-	private _attribute_names: Set<string> | undefined;
+	private _attributeNames: Set<string> | undefined;
 	constructor() {}
 
 	reset() {
-		if (this._attribute_names) {
-			this._attribute_names.clear();
+		if (this._attributeNames) {
+			this._attributeNames.clear();
 		}
 	}
-	assign_attributes_lines(): string {
-		if (this._attribute_names) {
+	assignAttributesLines(): string {
+		if (this._attributeNames) {
 			const lines: string[] = [];
-			this._attribute_names?.forEach((attribute_name: string) => {
-				lines.push(AttributeRequirementsController.assign_attribute_line(attribute_name));
-			});
+			for (let attribName of this._attributeNames) {
+				lines.push(AttributeRequirementsController.assign_attribute_line(attribName));
+			}
 			return lines.join(';\n');
 		} else {
 			return '';
 		}
 	}
-	assign_arrays_lines(): string {
-		if (this._attribute_names) {
+	assignArraysLines(): string {
+		if (this._attributeNames) {
 			const lines: string[] = [];
-			this._attribute_names?.forEach((attribute_name: string) => {
-				lines.push(AttributeRequirementsController.assign_item_size_line(attribute_name));
-				lines.push(AttributeRequirementsController.assign_array_line(attribute_name));
-			});
+			if (this._attributeNames.size > 0) {
+				const coreGeoLine = `const ${VAR_CORE_GEOMETRY} = new Core.Geometry(entities[0].geometry())`;
+				lines.push(coreGeoLine);
+			}
+			for (let attribName of this._attributeNames) {
+				lines.push(AttributeRequirementsController.assignItemSizeLine(attribName));
+				lines.push(AttributeRequirementsController.assignArrayLine(attribName));
+			}
 			return lines.join(';\n');
 		} else {
 			return '';
 		}
 	}
-	attribute_presence_check_line(): string {
-		if (this._attribute_names) {
-			const var_names: string[] = [];
-			this._attribute_names?.forEach((attribute_name: string) => {
-				const var_name = AttributeRequirementsController.var_attribute(attribute_name);
-				var_names.push(var_name);
-			});
-			if (var_names.length > 0) {
-				return var_names.join(' && ');
+	attributePresenceCheckLine(): string {
+		if (this._attributeNames) {
+			const varNames: string[] = [];
+			for (let attribName of this._attributeNames) {
+				const varName = AttributeRequirementsController._varAttribute(attribName);
+				varNames.push(varName);
+			}
+			if (varNames.length > 0) {
+				return varNames.join(' && ');
 			}
 		}
 		// TODO: add test that a Point Sop can take an expression that does not require attributes
 		return 'true';
 	}
 
-	add(attribute_name: string) {
-		this._attribute_names = this._attribute_names || new Set<string>();
-		this._attribute_names.add(attribute_name);
+	add(attribName: string) {
+		this._attributeNames = this._attributeNames || new Set<string>();
+		this._attributeNames.add(attribName);
 	}
 
-	static assign_attribute_line(attribute_name: string) {
-		const var_attribute = this.var_attribute(attribute_name);
-		return `const ${var_attribute} = entities[0].geometry().attributes['${attribute_name}']`;
+	static assign_attribute_line(attribName: string) {
+		const var_attribute = this._varAttribute(attribName);
+		return `const ${var_attribute} = entities[0].geometry().attributes['${attribName}']`;
 	}
-	static assign_item_size_line(attribute_name: string) {
-		const var_attribute = this.var_attribute(attribute_name);
-		const var_attribute_size = this.var_attribute_size(attribute_name);
+	static assignItemSizeLine(attribName: string) {
+		const var_attribute = this._varAttribute(attribName);
+		const var_attribute_size = this._varAttribSize(attribName);
 		return `const ${var_attribute_size} = ${var_attribute}.itemSize`;
 	}
-	static assign_array_line(attribute_name: string) {
-		const var_attribute = this.var_attribute(attribute_name);
-		const var_array = this.var_array(attribute_name);
-		return `const ${var_array} = ${var_attribute}.array`;
+	static assignArrayLine(attribName: string) {
+		const varAttribute = this._varAttribute(attribName);
+		const varArray = this._varArray(attribName);
+		const isIndexedCondition = `${VAR_CORE_GEOMETRY}.isAttribIndexed('${attribName}')`;
+		const indexedArray = `${VAR_CORE_GEOMETRY}.userDataAttrib('${attribName}')`;
+		const nonIndexedArray = `${varAttribute}.array`;
+		return `const ${varArray} = ${isIndexedCondition} ? ${indexedArray} : ${nonIndexedArray}`;
 	}
 
-	static var_attribute(attribute_name: string) {
-		return `attrib_${attribute_name}`;
+	private static _varAttribute(attribName: string) {
+		return `attrib_${attribName}`;
 	}
-	static var_attribute_size(attribute_name: string) {
-		return `attrib_size_${attribute_name}`;
+	private static _varAttribSize(attribName: string) {
+		return `attrib_size_${attribName}`;
 	}
-	static var_array(attribute_name: string) {
-		return `array_${attribute_name}`;
+	private static _varArray(attribName: string) {
+		return `array_${attribName}`;
 	}
-	var_attribute_size(attribute_name: string) {
-		return AttributeRequirementsController.var_attribute_size(attribute_name);
+	varAttributeSize(attribName: string) {
+		return AttributeRequirementsController._varAttribSize(attribName);
 	}
-	var_array(attribute_name: string) {
-		return AttributeRequirementsController.var_array(attribute_name);
+	varArray(attribName: string) {
+		return AttributeRequirementsController._varArray(attribName);
 	}
 }

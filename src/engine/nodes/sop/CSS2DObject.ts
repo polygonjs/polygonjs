@@ -27,10 +27,10 @@ class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 		visibleIf: {useClassAttrib: 0},
 	});
 	/** @param defines if the vertex html attribute is used to create the html content */
-	useHtmlAttrib = ParamConfig.BOOLEAN(DEFAULT.useHtmlAttrib);
+	useHTMLAttrib = ParamConfig.BOOLEAN(DEFAULT.useHTMLAttrib);
 	/** @param value of the html content */
 	html = ParamConfig.STRING(DEFAULT.html, {
-		visibleIf: {useHtmlAttrib: 0},
+		visibleIf: {useHTMLAttrib: 0},
 		multiline: true,
 	});
 	/** @param toggles on if attributes are copied from the geometry to the html element */

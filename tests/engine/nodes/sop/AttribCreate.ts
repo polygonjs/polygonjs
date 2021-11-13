@@ -443,3 +443,27 @@ QUnit.test('attrib create for string on vertices without expr', async (assert) =
 	assert.equal(array[1], 0);
 	assert.equal(array[2], 0);
 });
+
+QUnit.test('attrib create for string referring other string attributes', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane1 = geo1.createNode('plane');
+	const attribCreate_class = geo1.createNode('attribCreate');
+	const attribCreate_html = geo1.createNode('attribCreate');
+	attribCreate_class.setInput(0, plane1);
+	attribCreate_html.setInput(0, attribCreate_class);
+
+	attribCreate_class.p.name.set('class');
+	attribCreate_class.setType(AttribType.STRING);
+	attribCreate_class.p.string.set('myClass`@ptnum*3`');
+	attribCreate_html.p.name.set('html');
+	attribCreate_html.setType(AttribType.STRING);
+	attribCreate_html.p.string.set('myId`@ptnum`-`@class`');
+
+	let container = await attribCreate_html.compute();
+	const coreGroup = container.coreContent()!;
+	const points = coreGroup.points();
+	assert.equal(points[0].attribValue('html'), 'myId0-myClass0');
+	assert.equal(points[1].attribValue('html'), 'myId1-myClass3');
+	assert.equal(points[2].attribValue('html'), 'myId2-myClass6');
+});

@@ -84,7 +84,7 @@ export class ExpressionController<T extends ParamType> {
 
 			if (this._expression) {
 				this._manager = this._manager || new ExpressionManager(this.param);
-				this._manager.parse_expression(this._expression);
+				this._manager.parseExpression(this._expression);
 			} else {
 				this._manager?.reset();
 			}
@@ -103,11 +103,11 @@ export class ExpressionController<T extends ParamType> {
 
 	async compute_expression() {
 		if (this._manager && this.active()) {
-			const result = await this._manager.compute_function();
+			const result = await this._manager.computeFunction();
 			return result;
 		}
 	}
-	async compute_expression_for_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
+	async computeExpressionForEntities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this.set_entities(entities, callback);
 		await this.compute_expression();
 		if (this._manager?.error_message()) {
@@ -116,11 +116,11 @@ export class ExpressionController<T extends ParamType> {
 
 		this.reset_entities();
 	}
-	compute_expression_for_points(entities: CorePoint[], callback: PointEntityCallback<T>) {
-		return this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
+	computeExpressionForPoints(entities: CorePoint[], callback: PointEntityCallback<T>) {
+		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
-	compute_expression_for_objects(entities: CoreObject[], callback: ObjectEntityCallback<T>) {
-		return this.compute_expression_for_entities(entities, callback as EntityCallback<T>);
+	computeExpressionForObjects(entities: CoreObject[], callback: ObjectEntityCallback<T>) {
+		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
 	entities() {
 		return this._entities;
