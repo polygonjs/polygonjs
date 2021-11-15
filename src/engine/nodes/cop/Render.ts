@@ -17,7 +17,7 @@ import {
 } from 'three/src/constants';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
+import {CameraNodeType, NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {TypedCameraObjNode} from '../obj/_BaseCamera';
 import {CopRendererController} from './utils/RendererController';
@@ -29,8 +29,6 @@ import {Poly} from '../../Poly';
 import {Constructor} from '../../../types/GlobalTypes';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-
-const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
 
 export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

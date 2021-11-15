@@ -164,6 +164,8 @@ import './engine/nodes/sop/Box';
 import './engine/nodes/sop/BVH';
 import './engine/nodes/sop/BVHVisualizer';
 import './engine/nodes/sop/Cache';
+import './engine/nodes/sop/CameraPlane';
+import './engine/nodes/sop/CameraProject';
 import './engine/nodes/sop/Center';
 import './engine/nodes/sop/Circle';
 import './engine/nodes/sop/Circle3Points';

@@ -6,7 +6,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
+import {CameraNodeType, NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
 import {TypedSopNode} from './_Base';
 import {Plane} from 'three/src/math/Plane';
 import {Raycaster} from 'three/src/core/Raycaster';
@@ -16,7 +16,6 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreTransform} from '../../../core/Transform';
 import {BaseNodeType} from '../_Base';
 
-const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
 type CameraType = OrthographicCamera | PerspectiveCamera;
 const DEFAULT = {
 	direction: new Vector3(0, 1, 0),
@@ -117,7 +116,6 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 			i++;
 		}
 		this._planeCenter.multiplyScalar(0.25);
-
 		const w0 = this._planeCorners[1].distanceTo(this._planeCorners[2]);
 		const w1 = this._planeCorners[0].distanceTo(this._planeCorners[3]);
 		const h0 = this._planeCorners[0].distanceTo(this._planeCorners[1]);

@@ -64,6 +64,7 @@ export enum CameraNodeType {
 	PERSPECTIVE = 'perspectiveCamera',
 	ORTHOGRAPHIC = 'orthographicCamera',
 }
+export const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
 export enum GlNodeType {
 	ATTRIBUTE = 'attribute',
 }
