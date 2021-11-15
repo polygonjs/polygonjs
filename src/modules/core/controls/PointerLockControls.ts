@@ -25,7 +25,7 @@ export class PointerLockControls extends EventDispatcher {
 	};
 	private _azimuthalAngle: number = 0;
 
-	constructor(private camera: Camera, private domElement: HTMLElement, private player?: CorePlayer) {
+	constructor(private camera: Camera, public readonly domElement: HTMLElement, private player?: CorePlayer) {
 		super();
 		this.connect();
 	}

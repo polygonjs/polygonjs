@@ -318,8 +318,6 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 			return;
 		}
 		controls.unlock();
-		this._corePlayerKeyEvents?.removeEvents();
-		this._player?.stop();
 	}
 
 	//
@@ -335,6 +333,20 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		if (this._player) {
 			this._corePlayerKeyEvents = this._corePlayerKeyEvents || new CorePlayerKeyEvents(this._player);
 			this._corePlayerKeyEvents.addEvents();
+
+			// here we need to detect when the pointerLock is removed, potentially with ESC key,
+			// so that we can remove the key events and properly stop the player
+			const onPointerlockChange = () => {
+				if (!controls) {
+					return;
+				}
+				if (controls.domElement.ownerDocument.pointerLockElement != controls.domElement) {
+					controls.domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange);
+					this._corePlayerKeyEvents?.removeEvents();
+					this._player?.stop();
+				}
+			};
+			controls.domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange);
 		}
 		controls.lock();
 	}
