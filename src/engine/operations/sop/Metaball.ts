@@ -2,8 +2,9 @@ import {BaseSopOperation} from './_Base';
 import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
-import {MarchingCubes} from '../../../modules/three/examples/jsm/objects/MarchingCubes';
+// import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
+// import {MarchingCubes} from '../../../modules/three/examples/jsm/objects/MarchingCubes';
+import {MarchingCubes} from '../../../modules/core/objects/MarchingCubes';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -13,6 +14,8 @@ interface MetaballSopParams extends DefaultOperationParams {
 	isolation: number;
 	useMetaStrengthAttrib: boolean;
 	metaStrength: number;
+	useMetaSubstractAttrib: boolean;
+	metaSubstract: number;
 	enableUVs: boolean;
 	enableColors: boolean;
 }
@@ -23,6 +26,8 @@ export class MetaballSopOperation extends BaseSopOperation {
 		isolation: 1,
 		useMetaStrengthAttrib: false,
 		metaStrength: 1,
+		useMetaSubstractAttrib: false,
+		metaSubstract: 1,
 		enableUVs: false,
 		enableColors: false,
 	};
@@ -33,10 +38,9 @@ export class MetaballSopOperation extends BaseSopOperation {
 	cook(inputContents: CoreGroup[], params: MetaballSopParams) {
 		const inputCoreGroup = inputContents[0];
 
-		const subtract = 1;
 		const metaballs = new MarchingCubes(
 			params.resolution,
-			CoreConstant.MATERIALS[ObjectType.MESH],
+			// CoreConstant.MATERIALS[ObjectType.MESH],
 			params.enableUVs,
 			params.enableColors
 		);
@@ -48,15 +52,23 @@ export class MetaballSopOperation extends BaseSopOperation {
 
 			let metaStrength = params.metaStrength;
 			if (isBooleanTrue(params.useMetaStrengthAttrib)) {
-				let metaStrength = point.attribValue('metaStrength') as number;
-				if (CoreType.isNumber(metaStrength)) {
-					metaStrength *= params.metaStrength;
+				let metaStrengthAttrib = point.attribValue('metaStrength') as number;
+				if (CoreType.isNumber(metaStrengthAttrib)) {
+					metaStrength *= metaStrengthAttrib;
+				}
+			}
+			let metaSubstract = params.metaSubstract;
+			if (isBooleanTrue(params.useMetaSubstractAttrib)) {
+				let metaSubstractAttrib = point.attribValue('metaSubstract') as number;
+				if (CoreType.isNumber(metaSubstractAttrib)) {
+					metaSubstract *= metaSubstractAttrib;
 				}
 			}
 
-			metaballs.addBall(pos.x, pos.y, pos.z, metaStrength, subtract, undefined);
+			metaballs.addBall(pos.x, pos.y, pos.z, metaStrength, metaSubstract, undefined);
 		}
+		metaballs.createPolygons();
 
-		return this.createCoreGroupFromObjects([metaballs]);
+		return this.createCoreGroupFromGeometry(metaballs);
 	}
 }
