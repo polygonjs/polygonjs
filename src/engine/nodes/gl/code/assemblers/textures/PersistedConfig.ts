@@ -46,7 +46,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 		this.node.texture_material.fragmentShader = data.fragment_shader;
 		this.node.texture_material.uniforms = data.uniforms;
 
-		BuilderCopNode.handle_dependencies(
+		BuilderCopNode.handleDependencies(
 			this.node,
 			data.uniforms_time_dependent || false,
 			data.uniforms as IUniformsWithTime

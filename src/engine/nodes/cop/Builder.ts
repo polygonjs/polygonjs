@@ -199,7 +199,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				this._uniforms = uniforms;
 			}
 
-			BuilderCopNode.handle_dependencies(this, assemblerController.assembler.uniformsTimeDependent());
+			BuilderCopNode.handleDependencies(this, assemblerController.assembler.uniformsTimeDependent());
 		}
 
 		if (this._fragment_shader && this._uniforms) {
@@ -213,22 +213,31 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		assemblerController.post_compile();
 	}
 
-	static handle_dependencies(node: BuilderCopNode, time_dependent: boolean, uniforms?: IUniformsWithTime) {
-		// That's actually useless, since this doesn't make the texture recook
+	static handleDependencies(node: BuilderCopNode, timeDependent: boolean, uniforms?: IUniformsWithTime) {
 		const scene = node.scene();
-		const id = node.graphNodeId();
-		const id_s = `${id}`;
-		if (time_dependent) {
-			// TODO: remove this once the scene knows how to re-render
-			// the render target if it is .uniformsTimeDependent()
-			node.states.timeDependent.forceTimeDependent();
+		if (timeDependent) {
 			if (uniforms) {
-				scene.uniformsController.addTimeDependentUniformOwner(id_s, uniforms);
+				scene.uniformsController.addTimeDependentUniformOwner(node._uniformCallbackName(), uniforms);
 			}
+			scene.registerOnBeforeTick(node._callbackName(), node._boundRenderOnTarget);
 		} else {
-			node.states.timeDependent.unforceTimeDependent();
-			scene.uniformsController.removeTimeDependentUniformOwner(id_s);
+			node._removeCallbacks();
 		}
+	}
+	private _callbackName() {
+		return `cop/builder_${this.graphNodeId()}`;
+	}
+	private _uniformCallbackName() {
+		return `${this.graphNodeId()}`;
+	}
+	dispose() {
+		super.dispose();
+		this._removeCallbacks();
+	}
+	private _removeCallbacks() {
+		const scene = this.scene();
+		scene.uniformsController.removeTimeDependentUniformOwner(this._uniformCallbackName());
+		scene.unRegisterOnBeforeTick(this._callbackName());
 	}
 
 	//
@@ -236,6 +245,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	// RENDER + RENDER TARGET
 	//
 	//
+	private _boundRenderOnTarget = this.renderOnTarget.bind(this);
 	async renderOnTarget() {
 		this.createRenderTargetIfRequired();
 		if (!this._render_target) {
