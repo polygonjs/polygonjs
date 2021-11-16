@@ -46,6 +46,7 @@ import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
 import {ExporterSopNode} from '../../../nodes/sop/Exporter';
 import {FaceSopNode} from '../../../nodes/sop/Face';
 import {FileSopNode} from '../../../nodes/sop/File';
+import {FileMultiSopNode} from '../../../nodes/sop/FileMulti';
 import {FuseSopNode} from '../../../nodes/sop/Fuse';
 import {HexagonsSopNode} from '../../../nodes/sop/Hexagons';
 import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
@@ -160,6 +161,7 @@ export interface GeoNodeChildrenMap {
 	exporter: ExporterSopNode;
 	face: FaceSopNode;
 	file: FileSopNode;
+	fileMulti: FileMultiSopNode;
 	fuse: FuseSopNode;
 	heightMap: HeightMapSopNode;
 	hexagons: HexagonsSopNode;
@@ -380,6 +382,7 @@ export class SopRegister {
 		poly.registerNode(ExporterSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(FaceSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(FileSopNode, CATEGORY_SOP.INPUT);
+		poly.registerNode(FileMultiSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FuseSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(HexagonsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(HeightMapSopNode, CATEGORY_SOP.MODIFIER);

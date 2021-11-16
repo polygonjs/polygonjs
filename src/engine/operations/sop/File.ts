@@ -12,10 +12,9 @@ interface FileSopParams extends DefaultOperationParams {
 	format: string;
 }
 
-const DEFAULT_URL = `${ASSETS_ROOT}/models/wolf.obj`;
 export class FileSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: FileSopParams = {
-		url: DEFAULT_URL,
+		url: `${ASSETS_ROOT}/models/wolf.obj`,
 		format: GeometryFormat.AUTO,
 	};
 	static type(): Readonly<'file'> {
@@ -32,32 +31,32 @@ export class FileSopOperation extends BaseSopOperation {
 		return new Promise((resolve) => {
 			loader.load(
 				(objects: Object3D[]) => {
-					const new_objects = this._on_load(objects);
+					const new_objects = this._onLoad(objects);
 					resolve(this.createCoreGroupFromObjects(new_objects));
 				},
 				(message: string) => {
-					this._on_error(message, params);
+					this._onError(message, params);
 				}
 			);
 		});
 	}
 
-	private _on_load(objects: Object3D[]) {
+	private _onLoad(objects: Object3D[]) {
 		objects = objects.flat();
 
 		for (let object of objects) {
 			object.traverse((child) => {
-				this._ensure_geometry_has_index(child);
+				this._ensureGeometryHasIndex(child);
 				child.matrixAutoUpdate = false;
 			});
 		}
 		return objects;
 	}
-	private _on_error(message: string, params: FileSopParams) {
+	private _onError(message: string, params: FileSopParams) {
 		this.states?.error.set(`could not load geometry from ${params.url} (${message})`);
 	}
 
-	private _ensure_geometry_has_index(object: Object3D) {
+	private _ensureGeometryHasIndex(object: Object3D) {
 		const mesh = object as Mesh;
 		const geometry = mesh.geometry;
 		if (geometry) {

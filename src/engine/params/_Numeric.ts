@@ -49,7 +49,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 	}
 	protected async processComputation(): Promise<void> {
 		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
-			const expression_result = await this.expressionController.compute_expression();
+			const expression_result = await this.expressionController.computeExpression();
 			if (this.expressionController.is_errored()) {
 				this.states.error.set(
 					`expression error: "${this.expressionController.expression()}" (${this.expressionController.error_message()})`

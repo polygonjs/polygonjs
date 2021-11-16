@@ -4,7 +4,7 @@ import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/operations/
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {BufferAttribute, Uint16BufferAttribute} from 'three/src/core/BufferAttribute';
 
-QUnit.test('attrib cast simple', async (assert) => {
+QUnit.test('attribCast simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const file1 = geo1.createNode('file');
@@ -19,8 +19,6 @@ QUnit.test('attrib cast simple', async (assert) => {
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	let index = geometry.getIndex()!;
-	console.log(index.constructor)
-	console.log(BufferAttribute)
 	assert.ok(index instanceof BufferAttribute);
 	assert.notOk(index instanceof Uint16BufferAttribute);
 
@@ -34,8 +32,6 @@ QUnit.test('attrib cast simple', async (assert) => {
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	index = geometry.getIndex()!;
-	console.log(index.constructor)
-	console.log(Uint16BufferAttribute)
 	assert.ok(index instanceof BufferAttribute);
 	assert.ok(index instanceof Uint16BufferAttribute);
 });

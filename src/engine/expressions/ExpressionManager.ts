@@ -56,7 +56,7 @@ export class ExpressionManager {
 		// this.parse_and_update_dependencies_if_not_done(expression);
 		if (this._computeAllowed()) {
 			try {
-				const new_value = await this._functionGenerator.eval_function();
+				const new_value = await this._functionGenerator.evalFunction();
 				return new_value;
 			} catch (e) {
 				// if (this.function_generator.is_errored && this.function_generator.error_message) {
@@ -89,7 +89,7 @@ export class ExpressionManager {
 	}
 
 	private _computeAllowed(): boolean {
-		return /*this._error_message == null &&*/ this._functionGenerator.eval_allowed();
+		return /*this._error_message == null &&*/ this._functionGenerator.evalAllowed();
 	}
 
 	// private parse_and_update_dependencies(expression: string) {

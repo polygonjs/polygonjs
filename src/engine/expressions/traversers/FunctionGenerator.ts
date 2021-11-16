@@ -339,10 +339,10 @@ export class FunctionGenerator extends BaseTraverser {
 		}
 	}
 
-	eval_allowed(): boolean {
+	evalAllowed(): boolean {
 		return this.function != null;
 	}
-	eval_function() {
+	evalFunction() {
 		// this.param.entity_attrib_values = this.param.entity_attrib_values || {}
 		// this.param.entity_attrib_values.position =
 		// 	this.param.entity_attrib_values.position || new THREE.Vector3()

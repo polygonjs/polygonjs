@@ -98,7 +98,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		const template_points = template_core_group.points();
 
 		const instancer = new CoreInstancer(template_core_group);
-		let instance_matrices = instancer.matrices();
+		const instance_matrices = instancer.matrices();
 		const t = new Vector3();
 		const q = new Quaternion();
 		const s = new Vector3();
