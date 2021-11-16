@@ -352,6 +352,8 @@ export class CoreGeometry {
 				return this._lines_segment_builder.from_points(points);
 			case ObjectType.OBJECT3D:
 				return null;
+			case ObjectType.GROUP:
+				return null;
 			case ObjectType.LOD:
 				return null;
 		}

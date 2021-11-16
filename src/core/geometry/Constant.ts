@@ -24,6 +24,7 @@ interface MaterialsByString {
 
 export enum ObjectType {
 	OBJECT3D = 'Object3D',
+	GROUP = 'Group',
 	MESH = 'Mesh',
 	POINTS = 'Points',
 	LINE_SEGMENTS = 'LineSegments',
@@ -38,6 +39,7 @@ export interface ObjectData {
 }
 export interface ObjectByObjectType {
 	[ObjectType.MESH]: Mesh;
+	[ObjectType.GROUP]: Group;
 	[ObjectType.POINTS]: Points;
 	[ObjectType.LINE_SEGMENTS]: LineSegments;
 	[ObjectType.OBJECT3D]: Object3D;
@@ -45,6 +47,7 @@ export interface ObjectByObjectType {
 }
 export interface ObjectConstructorByObjectType {
 	[ObjectType.MESH]: typeof Mesh;
+	[ObjectType.GROUP]: typeof Group;
 	[ObjectType.POINTS]: typeof Points;
 	[ObjectType.LINE_SEGMENTS]: typeof LineSegments;
 	[ObjectType.OBJECT3D]: typeof Object3D;
@@ -52,6 +55,7 @@ export interface ObjectConstructorByObjectType {
 }
 export const OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE: ObjectConstructorByObjectType = {
 	[ObjectType.MESH]: Mesh,
+	[ObjectType.GROUP]: Group,
 	[ObjectType.POINTS]: Points,
 	[ObjectType.LINE_SEGMENTS]: LineSegments,
 	[ObjectType.OBJECT3D]: Object3D,
@@ -61,6 +65,8 @@ export function objectTypeFromConstructor(constructor: Function) {
 	switch (constructor) {
 		case Object3D:
 			return ObjectType.OBJECT3D;
+		case Group:
+			return ObjectType.GROUP;
 		case Mesh:
 			return ObjectType.MESH;
 		case Points:
@@ -77,6 +83,8 @@ export function objectTypeFromConstructor(constructor: Function) {
 export function ObjectTypeByObject(object: Object3D): ObjectType | undefined {
 	if (object instanceof Mesh) {
 		return ObjectType.MESH;
+	} else if (object instanceof Group) {
+		return ObjectType.GROUP;
 	} else if (object instanceof LineSegments) {
 		return ObjectType.LINE_SEGMENTS;
 	} else if (object instanceof Points) {

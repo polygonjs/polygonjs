@@ -57,6 +57,12 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	objectsVisibleCount(): number {
 		let count = 0;
 		if (this._content) {
+			const objects = this._content.objects();
+			for (let object of objects) {
+				if (object.visible) {
+					count++;
+				}
+			}
 		}
 		return count;
 	}
