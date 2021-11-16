@@ -40,7 +40,7 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 		copyAttributes: false,
 		attributesToCopy: '',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static type(): Readonly<'CSS2DObject'> {
 		return 'CSS2DObject';
 	}

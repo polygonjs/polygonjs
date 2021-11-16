@@ -50,6 +50,7 @@ export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig>
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(CSS2DObjectSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: CSS2DObjectSopOperation | undefined;
