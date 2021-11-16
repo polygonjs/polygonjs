@@ -48,19 +48,19 @@ export class CorePoint extends CoreEntity {
 	_position: Vector3 | undefined;
 	_normal: Vector3 | undefined;
 
-	constructor(private _core_geometry: CoreGeometry, _index: number) {
+	constructor(private _coreGeometry: CoreGeometry, _index: number) {
 		super(_index);
-		this._geometry = this._core_geometry.geometry();
+		this._geometry = this._coreGeometry.geometry();
 	}
 	applyMatrix4(matrix: Matrix4) {
 		this.position().applyMatrix4(matrix);
 	}
 
-	core_geometry() {
-		return this._core_geometry;
+	coreGeometry() {
+		return this._coreGeometry;
 	}
 	geometry() {
-		return (this._geometry = this._geometry || this._core_geometry.geometry());
+		return (this._geometry = this._geometry || this._coreGeometry.geometry());
 	}
 
 	attribSize(name: string): number {
@@ -70,7 +70,7 @@ export class CorePoint extends CoreEntity {
 
 	hasAttrib(name: string): boolean {
 		const remapped_name = CoreAttribute.remapName(name);
-		return this._core_geometry.hasAttrib(remapped_name);
+		return this._coreGeometry.hasAttrib(remapped_name);
 	}
 
 	attribValue(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
@@ -89,7 +89,7 @@ export class CorePoint extends CoreEntity {
 			const attrib = this._geometry.getAttribute(remaped_name);
 			if (attrib) {
 				const {array} = attrib;
-				if (this._core_geometry.isAttribIndexed(remaped_name)) {
+				if (this._coreGeometry.isAttribIndexed(remaped_name)) {
 					return this.indexedAttribValue(remaped_name);
 				} else {
 					const size = attrib.itemSize;
@@ -140,21 +140,21 @@ export class CorePoint extends CoreEntity {
 
 	indexedAttribValue(name: string): string {
 		const value_index = this.attribValueIndex(name); //attrib.value()
-		return this._core_geometry.userDataAttrib(name)[value_index];
+		return this._coreGeometry.userDataAttrib(name)[value_index];
 	}
 	stringAttribValue(name: string) {
 		return this.indexedAttribValue(name);
 	}
 
 	attribValueIndex(name: string): number {
-		if (this._core_geometry.isAttribIndexed(name)) {
+		if (this._coreGeometry.isAttribIndexed(name)) {
 			return this._geometry.getAttribute(name).array[this._index];
 		} else {
 			return -1;
 		}
 	}
 	isAttribIndexed(name: string) {
-		return this._core_geometry.isAttribIndexed(name);
+		return this._coreGeometry.isAttribIndexed(name);
 	}
 
 	position() {

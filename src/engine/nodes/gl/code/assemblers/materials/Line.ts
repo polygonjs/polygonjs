@@ -55,7 +55,6 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 		return material;
 	}
 	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
-		console.log('custom_assembler_class_by_custom_name', ASSEMBLER_MAP);
 		return ASSEMBLER_MAP;
 	}
 	create_shader_configs() {
@@ -102,8 +101,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 			new VariableConfig('position', {
 				default: 'vec3( position )',
 				prefix: 'vec3 transformed = ',
-				suffix:
-					';vec4 mvPosition = vec4( transformed, 1.0 ); gl_Position = projectionMatrix * modelViewMatrix * mvPosition;',
+				suffix: ';vec4 mvPosition = vec4( transformed, 1.0 ); gl_Position = projectionMatrix * modelViewMatrix * mvPosition;',
 			}),
 			// new VariableConfig('normal', {
 			// 	prefix: 'objectNormal = '

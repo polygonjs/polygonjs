@@ -385,8 +385,8 @@ export class PolyScene {
 	 * Returns the list registered BeforeTick callback names
 	 *
 	 */
-	registeredBeforeTickCallbackNames(): string[] | undefined {
-		return this.timeController.registeredBeforeTickCallbackNames();
+	registeredBeforeTickCallbacks(): Map<string, onTimeTickHook> {
+		return this.timeController.registeredBeforeTickCallbacks();
 	}
 	/**
 	 * registers AfterTick callback. AfterTick callbacks are run after updating the frame (and therefore after any time dependent node has changed)
@@ -406,7 +406,7 @@ export class PolyScene {
 	 * Returns the list registered AfterTick callback names
 	 *
 	 */
-	registeredAfterTickCallbackNames(): string[] | undefined {
-		return this.timeController.registeredAfterTickCallbackNames();
+	registeredAfterTickCallbacks(): Map<string, onTimeTickHook> {
+		return this.timeController.registeredAfterTickCallbacks();
 	}
 }

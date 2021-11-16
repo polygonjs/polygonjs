@@ -141,17 +141,9 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		if (this._do_render) {
 			this._delta = this._clock.getDelta();
 			this._request_animation_frame_id = requestAnimationFrame(this._animate_method);
-			if (this._onBeforeTickCallbacks) {
-				for (let callback of this._onBeforeTickCallbacks) {
-					callback(this._delta);
-				}
-			}
+			this._onBeforeTickCallbacks?.forEach((c) => c(this._delta));
 			this._scene.timeController.incrementTimeIfPlaying(this._delta);
-			if (this._onAfterTickCallbacks) {
-				for (let callback of this._onAfterTickCallbacks) {
-					callback(this._delta);
-				}
-			}
+			this._onAfterTickCallbacks?.forEach((c) => c(this._delta));
 			this.render(this._delta);
 			this._controls_controller?.update(this._delta);
 		}
@@ -169,19 +161,13 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 	render(delta: number) {
 		if (this.camerasController.cameraNode() && this._canvas) {
-			if (this._onBeforeRenderCallbacks) {
-				for (let callback of this._onBeforeRenderCallbacks) {
-					callback(delta);
-				}
-			}
+			this._onBeforeRenderCallbacks?.forEach((c) => c(delta));
+
 			const size = this.camerasController.size;
 			const aspect = this.camerasController.aspect;
 			this._camera_node.renderController.render(this._canvas, size, aspect);
-			if (this._onAfterRenderCallbacks) {
-				for (let callback of this._onAfterRenderCallbacks) {
-					callback(delta);
-				}
-			}
+
+			this._onAfterRenderCallbacks?.forEach((c) => c(delta));
 		} else {
 			console.warn('no camera to render with');
 		}

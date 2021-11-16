@@ -219,7 +219,10 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			if (uniforms) {
 				scene.uniformsController.addTimeDependentUniformOwner(node._uniformCallbackName(), uniforms);
 			}
-			scene.registerOnBeforeTick(node._callbackName(), node._boundRenderOnTarget);
+			const callbackName = node._callbackName();
+			if (!scene.registeredBeforeTickCallbacks().has(callbackName)) {
+				scene.registerOnBeforeTick(callbackName, node._boundRenderOnTarget);
+			}
 		} else {
 			node._removeCallbacks();
 		}
@@ -228,7 +231,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		return `cop/builder_${this.graphNodeId()}`;
 	}
 	private _uniformCallbackName() {
-		return `${this.graphNodeId()}`;
+		return `cop/builder_uniforms_${this.graphNodeId()}`;
 	}
 	dispose() {
 		super.dispose();

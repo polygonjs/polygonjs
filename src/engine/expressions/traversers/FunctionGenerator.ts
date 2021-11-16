@@ -112,7 +112,14 @@ import {ParsedTree} from './ParsedTree';
 import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralConstructsController';
 import {BaseMethod} from '../methods/_Base';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
-
+import {BaseTraverser} from './_Base';
+import {MethodDependency} from '../MethodDependency';
+import {AttributeRequirementsController} from '../AttributeRequirementsController';
+import {CoreMath} from '../../../core/math/_Module';
+import {CoreString} from '../../../core/String';
+import {Poly} from '../../Poly';
+import {CoreType} from '../../../core/Type';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 // import {JsepsByString} from '../DependenciesController'
 import jsep from 'jsep';
 
@@ -205,18 +212,6 @@ const PROPERTY_OFFSETS: AnyDictionary = {
 	g: 1,
 	b: 2,
 };
-
-import {BaseTraverser} from './_Base';
-import {MethodDependency} from '../MethodDependency';
-import {AttributeRequirementsController} from '../AttributeRequirementsController';
-import {CoreMath} from '../../../core/math/_Module';
-import {CoreString} from '../../../core/String';
-
-// import {AsyncFunction} from '../../../core/AsyncFunction';
-import {Poly} from '../../Poly';
-import {CoreType} from '../../../core/Type';
-import {PolyDictionary} from '../../../types/GlobalTypes';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;
@@ -352,7 +347,6 @@ export class FunctionGenerator extends BaseTraverser {
 			const Core = {
 				Math: CoreMath,
 				String: CoreString,
-				Geometry: CoreGeometry,
 			};
 			const result = this.function(Core, this.param, this.methods, this._set_error_from_error_bound);
 			return result;

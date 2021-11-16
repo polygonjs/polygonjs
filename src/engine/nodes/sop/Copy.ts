@@ -19,7 +19,6 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three/src/core/Object3D';
 import {Vector3} from 'three/src/math/Vector3';
-import {Quaternion} from 'three/src/math/Quaternion';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {TypeAssert} from '../../poly/Assert';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -99,10 +98,6 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 		const instancer = new CoreInstancer(template_core_group);
 		const instance_matrices = instancer.matrices();
-		const t = new Vector3();
-		const q = new Quaternion();
-		const s = new Vector3();
-		instance_matrices[0].decompose(t, q, s);
 
 		this._attribute_names_to_copy = CoreString.attribNames(this.pv.attributesToCopy).filter((attrib_name) =>
 			template_core_group.hasAttrib(attrib_name)

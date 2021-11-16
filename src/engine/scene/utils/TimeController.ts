@@ -9,6 +9,8 @@ import {EventContext} from './events/_BaseEventsController';
 const FPS = 60.0;
 export type onTimeTickHook = (delta: number) => void;
 // const performance = Poly.performance.performanceManager();
+
+type CallbacksMap = Map<string, onTimeTickHook>;
 export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;
@@ -77,11 +79,7 @@ export class TimeController {
 		if (time != this._time) {
 			this._time = time;
 
-			if (this._onBeforeTickCallbacks) {
-				for (let callback of this._onBeforeTickCallbacks) {
-					callback(this._delta);
-				}
-			}
+			this._onBeforeTickCallbacks?.forEach((callback) => callback(this._delta));
 
 			if (update_frame) {
 				const new_frame = Math.floor(this._time * FPS);
@@ -105,11 +103,7 @@ export class TimeController {
 			// dispatch events after nodes have cooked
 			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.TICK_EVENT_CONTEXT);
 
-			if (this._onAfterTickCallbacks) {
-				for (let callback of this._onAfterTickCallbacks) {
-					callback(this._delta);
-				}
-			}
+			this._onAfterTickCallbacks?.forEach((callback) => callback(this._delta));
 		}
 	}
 
@@ -193,53 +187,39 @@ export class TimeController {
 	// CALLBACKS
 	//
 	//
-	private _onBeforeTickCallbackNames: string[] | undefined;
-	private _onAfterTickCallbackNames: string[] | undefined;
-	protected _onBeforeTickCallbacks: onTimeTickHook[] | undefined;
-	protected _onAfterTickCallbacks: onTimeTickHook[] | undefined;
+	private _onBeforeTickCallbacks: CallbacksMap | undefined;
+	private _onAfterTickCallbacks: CallbacksMap | undefined;
 
 	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook) {
-		this._onBeforeTickCallbackNames = this._onBeforeTickCallbackNames || [];
-		this._onBeforeTickCallbacks = this._onBeforeTickCallbacks || [];
-		this._registerCallback(callbackName, callback, this._onBeforeTickCallbackNames, this._onBeforeTickCallbacks);
+		this._registerCallback(callbackName, callback, this.registeredBeforeTickCallbacks());
 	}
 	unRegisterOnBeforeTick(callbackName: string) {
-		this._unregisterCallback(callbackName, this._onBeforeTickCallbackNames, this._onBeforeTickCallbacks);
+		this._unregisterCallback(callbackName, this._onBeforeTickCallbacks);
 	}
-	registeredBeforeTickCallbackNames() {
-		return this._onBeforeTickCallbackNames;
+	registeredBeforeTickCallbacks() {
+		return (this._onBeforeTickCallbacks = this._onBeforeTickCallbacks || new Map());
 	}
 	registerOnAfterTick(callbackName: string, callback: onTimeTickHook) {
-		this._onAfterTickCallbacks = this._onAfterTickCallbacks || [];
-		this._onAfterTickCallbackNames = this._onAfterTickCallbackNames || [];
-		this._registerCallback(callbackName, callback, this._onAfterTickCallbackNames, this._onAfterTickCallbacks);
+		this._registerCallback(callbackName, callback, this.registeredAfterTickCallbacks());
 	}
 	unRegisterOnAfterTick(callbackName: string) {
-		this._unregisterCallback(callbackName, this._onAfterTickCallbackNames, this._onAfterTickCallbacks);
+		this._unregisterCallback(callbackName, this._onAfterTickCallbacks);
 	}
-	registeredAfterTickCallbackNames() {
-		return this._onAfterTickCallbackNames;
+	registeredAfterTickCallbacks() {
+		return (this._onAfterTickCallbacks = this._onAfterTickCallbacks || new Map());
 	}
 
-	private _registerCallback<C extends onTimeTickHook>(
-		callbackName: string,
-		callback: C,
-		names: string[],
-		callbacks: C[]
-	) {
-		if (names?.includes(callbackName)) {
+	private _registerCallback<C extends onTimeTickHook>(callbackName: string, callback: C, map: CallbacksMap) {
+		if (map.has(callbackName)) {
 			console.warn(`callback ${callbackName} already registered`);
 			return;
 		}
-		callbacks.push(callback);
-		names.push(callbackName);
+		map.set(callbackName, callback);
 	}
-	private _unregisterCallback(callbackName: string, names?: string[], hooks?: onTimeTickHook[]) {
-		if (!(names && hooks)) {
+	private _unregisterCallback(callbackName: string, map?: CallbacksMap) {
+		if (!map) {
 			return;
 		}
-		const index = names.indexOf(callbackName);
-		names.splice(index, 1);
-		hooks.splice(index, 1);
+		map.delete(callbackName);
 	}
 }

@@ -21,7 +21,6 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Group} from 'three/src/objects/Group';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
-import {Matrix4} from 'three/src/math/Matrix4';
 class FileMultiSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(`${ASSETS_ROOT}/models/\`@name\`.obj`, {
@@ -54,7 +53,6 @@ export class FileMultiSopNode extends TypedSopNode<FileMultiSopParamsConfig> {
 	async requiredModules() {
 		const ext = CoreBaseLoader.extension(this.p.url.rawInput() || '');
 		const format = this.pv.format as GeometryFormat;
-		console.log(ext, format);
 		return CoreLoaderGeometry.moduleNamesFromFormat(format, ext);
 	}
 
@@ -75,42 +73,76 @@ export class FileMultiSopNode extends TypedSopNode<FileMultiSopParamsConfig> {
 		const instancer = new CoreInstancer(inputCoreGroup);
 		const instanceMatrices = instancer.matrices();
 		const points = inputCoreGroup.points();
-		const urls: string[] = new Array(points.length);
+		// const urls: string[] = new Array(points.length);
+		const urls: string[] = [];
+		const urlByIndex: Map<number, string> = new Map();
+		const loadedResultByUrl: Map<string, Object3D> = new Map();
+		const urlUsageCount: Map<string, number> = new Map();
 		const param = this.p.url;
+		// gather all unique urls
 		if (param.hasExpression() && param.expressionController) {
-			await param.expressionController.computeExpressionForPoints(points, (point, value) => {
+			const uniqueUrls: Set<string> = new Set();
+			await param.expressionController.computeExpressionForPoints(points, (point, url) => {
 				// check that this index was not already set
 				const index = point.index();
-				const currentUrl = urls[index];
-				if (currentUrl != null) {
-					this.states.error.set(
-						`input points have duplicate indices. Make sure to merge inputs objects together`
-					);
+				if (urlByIndex.has(index)) {
+					this.states.error.set(`input points have duplicate indices. Make sure to merge inputs together.`);
 				} else {
-					urls[index] = value;
+					urlByIndex.set(index, url);
+					uniqueUrls.add(url);
+					FileMultiSopNode._incrementUrlUsageCount(url, urlUsageCount);
 				}
 			});
+			uniqueUrls.forEach((url) => {
+				urls.push(url);
+			});
 		} else {
-			urls.fill(this.pv.url);
+			const url = this.pv.url;
+			urls.push(url);
+			FileMultiSopNode._incrementUrlUsageCount(url, urlUsageCount);
 		}
+		// load each url and place the result under a parent
+
 		const loadedObjects: Object3D[] = [];
-		const promises = urls.map((url, i) => {
-			return this._loadFromUrlPromises(url, loadedObjects, instanceMatrices[i]);
-		});
+		const promises = urls.map((url) => this._loadFromUrlPromises(url, loadedResultByUrl));
 		await Promise.all(promises);
+		// move each loaded result and transform it according to its template point
+		for (let point of points) {
+			const index = point.index();
+			const url = urlByIndex.get(index) || this.pv.url;
+			const instanceMatrix = instanceMatrices[index];
+			const usageCount = urlUsageCount.get(url) || 1;
+			let parent = loadedResultByUrl.get(url);
+			if (parent) {
+				// if this url is used more than 1x, we clone the loaded result
+				if (usageCount > 1) {
+					parent = parent.clone();
+				}
+				parent.applyMatrix4(instanceMatrix);
+				loadedObjects.push(parent);
+			}
+		}
+
 		this.setObjects(loadedObjects);
 	}
+	private static _incrementUrlUsageCount(url: string, map: Map<string, number>) {
+		const currentUsage = map.get(url);
+		if (currentUsage != null) {
+			map.set(url, currentUsage + 1);
+		} else {
+			map.set(url, 1);
+		}
+	}
 
-	private async _loadFromUrlPromises(url: string, loadedObjects: Object3D[], matrix: Matrix4) {
+	private async _loadFromUrlPromises(url: string, loadedResultByUrl: Map<string, Object3D>) {
 		const objects = await this._loadObject(url);
 		const parent = new Group();
-		parent.applyMatrix4(matrix);
 		parent.matrixAutoUpdate = false;
 		parent.name = url;
 		for (let object of objects) {
 			parent.add(object);
 		}
-		loadedObjects.push(parent);
+		loadedResultByUrl.set(url, parent);
 	}
 
 	private _loadObject(url: string): Promise<Object3D[]> {

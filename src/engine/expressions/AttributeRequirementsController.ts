@@ -13,7 +13,7 @@ export class AttributeRequirementsController {
 		if (this._attributeNames) {
 			const lines: string[] = [];
 			for (let attribName of this._attributeNames) {
-				lines.push(AttributeRequirementsController.assign_attribute_line(attribName));
+				lines.push(AttributeRequirementsController.assignAttributeLine(attribName));
 			}
 			return lines.join(';\n');
 		} else {
@@ -24,7 +24,7 @@ export class AttributeRequirementsController {
 		if (this._attributeNames) {
 			const lines: string[] = [];
 			if (this._attributeNames.size > 0) {
-				const coreGeoLine = `const ${VAR_CORE_GEOMETRY} = new Core.Geometry(entities[0].geometry())`;
+				const coreGeoLine = `const ${VAR_CORE_GEOMETRY} = entities[0].coreGeometry();`;
 				lines.push(coreGeoLine);
 			}
 			for (let attribName of this._attributeNames) {
@@ -56,20 +56,20 @@ export class AttributeRequirementsController {
 		this._attributeNames.add(attribName);
 	}
 
-	static assign_attribute_line(attribName: string) {
-		const var_attribute = this._varAttribute(attribName);
-		return `const ${var_attribute} = entities[0].geometry().attributes['${attribName}']`;
+	static assignAttributeLine(attribName: string) {
+		const varAttribute = this._varAttribute(attribName);
+		return `const ${varAttribute} = entities[0].geometry().attributes['${attribName}']`;
 	}
 	static assignItemSizeLine(attribName: string) {
-		const var_attribute = this._varAttribute(attribName);
-		const var_attribute_size = this._varAttribSize(attribName);
-		return `const ${var_attribute_size} = ${var_attribute}.itemSize`;
+		const varAttribute = this._varAttribute(attribName);
+		const varAttributeSize = this._varAttribSize(attribName);
+		return `const ${varAttributeSize} = ${varAttribute}.itemSize`;
 	}
 	static assignArrayLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);
 		const varArray = this._varArray(attribName);
 		const isIndexedCondition = `${VAR_CORE_GEOMETRY}.isAttribIndexed('${attribName}')`;
-		const indexedArray = `${VAR_CORE_GEOMETRY}.userDataAttrib('${attribName}')`;
+		const indexedArray = `entities.map(e=>e.indexedAttribValue('${attribName}'))`;
 		const nonIndexedArray = `${varAttribute}.array`;
 		return `const ${varArray} = ${isIndexedCondition} ? ${indexedArray} : ${nonIndexedArray}`;
 	}

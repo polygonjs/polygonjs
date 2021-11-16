@@ -15,7 +15,7 @@ export abstract class CoreGeometryBuilderBase {
 		const first_point = points[0];
 		if (first_point != null) {
 			const old_geometry = first_point.geometry();
-			const old_core_geometry = first_point.core_geometry();
+			const old_core_geometry = first_point.coreGeometry();
 
 			// index
 			const new_index_by_old_index: PolyDictionary<number> = {};
