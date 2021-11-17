@@ -135,25 +135,28 @@ export class CorePlayer {
 		// move the player
 		const angle = this._azimuthalAngle;
 		const speed = this.speed * delta * (this._running ? this.runSpeedMult : 1);
+		tempVector2.set(0, 0, 0);
 		if (this._pressed.forward) {
 			tempVector.set(0, 0, -1).applyAxisAngle(upVector, angle);
-			this.object.position.addScaledVector(tempVector, speed);
+			tempVector2.add(tempVector);
 		}
 
 		if (this._pressed.backward) {
 			tempVector.set(0, 0, 1).applyAxisAngle(upVector, angle);
-			this.object.position.addScaledVector(tempVector, speed);
+			tempVector2.add(tempVector);
 		}
 
 		if (this._pressed.left) {
 			tempVector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
-			this.object.position.addScaledVector(tempVector, speed);
+			tempVector2.add(tempVector);
 		}
 
 		if (this._pressed.right) {
 			tempVector.set(1, 0, 0).applyAxisAngle(upVector, angle);
-			this.object.position.addScaledVector(tempVector, speed);
+			tempVector2.add(tempVector);
 		}
+		tempVector2.normalize().multiplyScalar(speed);
+		this.object.position.add(tempVector2);
 
 		this.object.updateMatrixWorld();
 
