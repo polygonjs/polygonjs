@@ -57,6 +57,63 @@ QUnit.test('noise to update a float attribute', async (assert) => {
 	assert.in_delta(massAttribArray[3], 1 + 0.11, 0.01);
 });
 
+QUnit.test('noise without rest and no input cloning', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+
+	const sphere1 = geo1.createNode('sphere');
+	const noise1 = geo1.createNode('noise');
+	noise1.setInput(0, sphere1);
+	sphere1.p.resolution.set([8, 6]);
+	noise1.io.inputs.overrideClonedState(true);
+	noise1.p.useNormals.set(1);
+	noise1.p.useRestAttributes.set(false);
+	noise1.p.offset.y.set('$T');
+
+	let container = await noise1.compute();
+	// const core_group = container.coreContent();
+	// const {geometry} = core_group.objects()[0];
+
+	assert.in_delta(container.boundingBox(true).max.y, 1.3, 0.1);
+	assert.in_delta(container.boundingBox(true).min.y, -1.3, 0.1);
+	for (let i = 0; i < 1000; i++) {
+		scene.setFrame(i);
+		container = await noise1.compute();
+	}
+	assert.in_delta(container.boundingBox(true).max.y, 10.17, 0.1);
+	assert.in_delta(container.boundingBox(true).min.y, -13.46, 0.1);
+});
+
+QUnit.test('noise with rest and no input cloning', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+
+	const sphere1 = geo1.createNode('sphere');
+	const restAttributes1 = geo1.createNode('restAttributes');
+	const noise1 = geo1.createNode('noise');
+	restAttributes1.setInput(0, sphere1);
+	noise1.setInput(0, restAttributes1);
+	sphere1.p.resolution.set([8, 6]);
+	noise1.io.inputs.overrideClonedState(true);
+	noise1.p.useNormals.set(1);
+	noise1.p.useRestAttributes.set(true);
+	noise1.p.offset.y.set('$T');
+
+	let container = await noise1.compute();
+	// const core_group = container.coreContent();
+	// const {geometry} = core_group.objects()[0];
+
+	assert.in_delta(container.boundingBox(true).max.y, 1.3, 0.1);
+	assert.in_delta(container.boundingBox(true).min.y, -1.3, 0.1);
+	for (let i = 0; i < 1000; i++) {
+		scene.setFrame(i);
+		container = await noise1.compute();
+	}
+
+	assert.in_delta(container.boundingBox(true).max.y, 1.3, 0.1);
+	assert.in_delta(container.boundingBox(true).min.y, -1.3, 0.1);
+});
+
 QUnit.skip('noise on flamingo', (assert) => {
 	// load example flamingo glb
 	assert.equal(0, 1);

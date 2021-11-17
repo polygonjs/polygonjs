@@ -183,8 +183,8 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// BBOX
 	//
 	//
-	boundingBox(): Box3 {
-		return this._content.boundingBox();
+	boundingBox(forceUpdate: boolean = false): Box3 {
+		return this._content.boundingBox(forceUpdate);
 	}
 	center(): Vector3 {
 		return this._content.center();

@@ -266,8 +266,11 @@ export class CoreGroup {
 		}
 	}
 
-	boundingBox(): Box3 {
-		return (this._bounding_box = this._bounding_box || this._compute_bounding_box());
+	boundingBox(forceUpdate: boolean = false): Box3 {
+		if (forceUpdate) {
+			return (this._bounding_box = this._computeBoundingBox());
+		}
+		return (this._bounding_box = this._bounding_box || this._computeBoundingBox());
 	}
 	// bounding_sphere(): Sphere {
 	// 	return (this._bounding_sphere = this._bounding_sphere || this._compute_bounding_sphere());
@@ -283,7 +286,7 @@ export class CoreGroup {
 		return size;
 	}
 
-	private _compute_bounding_box() {
+	private _computeBoundingBox() {
 		let bbox: Box3 | undefined; // = new Box3();
 		if (this._objects) {
 			for (let object of this._objects) {
