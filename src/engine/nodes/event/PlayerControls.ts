@@ -12,7 +12,6 @@ import {BaseNodeType} from '../_Base';
 import {TypedEventNode} from './_Base';
 import {CorePlayer} from '../../../core/player/Player';
 import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
-import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -20,6 +19,7 @@ import {CameraNodeType} from '../../poly/NodeContext';
 import {Camera} from 'three/src/cameras/Camera';
 import {Vector3} from 'three/src/math/Vector3';
 import {Spherical} from 'three/src/math/Spherical';
+import {CollisionController} from './collision/CollisionController';
 
 const EVENT_INIT = 'init';
 const EVENT_DISPOSE = 'dispose';
@@ -49,6 +49,14 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 	colliderObject = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.SOP,
+		},
+		// if the node is dependent,
+		// the PlayerControlsEventNode will be re-created when this node changes
+		// which we do not want, as it will act like a hard reset
+		// when all we want is to update the collider
+		dependentOnFoundNode: false,
+		callback: (node: BaseNodeType) => {
+			PlayerControlsEventNode.PARAM_CALLBACK_updateCollider(node as PlayerControlsEventNode);
 		},
 	});
 	/** @param The camera is used in those controls so that the forward direction is away from the camera. This essentially positions the camera always behind the player object, with a third person view. */
@@ -154,6 +162,10 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		return CameraControlsNodeType.PLAYER;
 	}
 
+	private _collisionController: CollisionController | undefined;
+	collisionController(): CollisionController {
+		return (this._collisionController = this._collisionController || new CollisionController(this));
+	}
 	private _player: CorePlayer | undefined;
 	private _corePlayerKeyEvents: CorePlayerKeyEvents | undefined;
 	private _cameraObject: Camera | undefined;
@@ -188,6 +200,9 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			player.update(delta);
 		});
 		this.dispatchEventToOutput(EVENT_INIT, {});
+	}
+	player() {
+		return this._player;
 	}
 	private _callbackName() {
 		return `event/PlayerControls-${this.graphNodeId()}`;
@@ -251,7 +266,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		}
 		this._cameraObject = cameraNode.object as Camera;
 		const playerObject = playerObjectNode.object as Mesh;
-		const collider = await this._getCollider();
+		const collider = await this.collisionController().getCollider();
 		if (!collider) {
 			this.states.error.set('invalid collider');
 			return;
@@ -260,28 +275,9 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 
 		return player;
 	}
-	private async _getCollider() {
-		const colliderNode = this.pv.colliderObject.nodeWithContext(NodeContext.SOP);
-		if (!colliderNode) {
-			this.states.error.set('collider node not found');
-			return;
-		}
-		const container = await colliderNode.compute();
-		const coreGroup = container.coreContent();
-		if (!coreGroup) {
-			this.states.error.set('invalid collider node');
-			return;
-		}
-		const object = coreGroup.objects()[0] as MeshWithBVH;
-		return object;
-	}
+
 	private async _updateCollider() {
-		const collider = await this._getCollider();
-		if (!collider) {
-			this.states.error.set('invalid collider');
-			return;
-		}
-		this._player?.setCollider(collider);
+		await this.collisionController().updateCollider();
 	}
 	private _getAzimuthalAngle() {
 		if (!(this._cameraObject && this._player)) {

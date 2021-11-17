@@ -29,7 +29,7 @@ export class NullEventNode extends TypedEventNode<NullEventParamsConfig> {
 			new EventConnectionPoint(
 				NullEventInput.TRIGGER,
 				EventConnectionPointType.BASE,
-				this.process_event_trigger.bind(this)
+				this.processEventTrigger.bind(this)
 			),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -39,7 +39,7 @@ export class NullEventNode extends TypedEventNode<NullEventParamsConfig> {
 
 	processEvent(event_context: EventContext<Event>) {}
 
-	private process_event_trigger(event_context: EventContext<Event>) {
+	private processEventTrigger(event_context: EventContext<Event>) {
 		this.dispatchEventToOutput(NullEventOutput.OUT, event_context);
 	}
 }

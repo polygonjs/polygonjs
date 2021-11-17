@@ -46,7 +46,7 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 			new EventConnectionPoint(
 				LimitEventInput.TRIGGER,
 				EventConnectionPointType.BASE,
-				this.process_event_trigger.bind(this)
+				this.processEventTrigger.bind(this)
 			),
 			new EventConnectionPoint(
 				LimitEventInput.RESET,
@@ -63,7 +63,7 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 
 	processEvent(event_context: EventContext<Event>) {}
 
-	private process_event_trigger(event_context: EventContext<Event>) {
+	private processEventTrigger(event_context: EventContext<Event>) {
 		if (this._process_count < this.pv.maxCount) {
 			this._process_count += 1;
 			this.dispatchEventToOutput(LimitEventOutput.OUT, event_context);

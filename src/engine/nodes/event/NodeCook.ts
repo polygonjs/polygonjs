@@ -23,7 +23,7 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 	/** @param mask to select which nodes this will cook or listen to */
 	mask = ParamConfig.STRING('/geo*', {
 		callback: (node: BaseNodeType) => {
-			NodeCookEventNode.PARAM_CALLBACK_update_resolved_nodes(node as NodeCookEventNode);
+			NodeCookEventNode.PARAM_CALLBACK_updateResolvedNodes(node as NodeCookEventNode);
 		},
 	});
 	/** @param forces cook of nodes mentioned in the mask param */
@@ -41,16 +41,18 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 		visibleIf: {cookMode: COOK_MODES.indexOf(CookMode.BATCH)},
 		separatorAfter: true,
 	});
+	/** @param if on, we only trigger the first time a specific node has cooked. If false, we register every time a node cooks */
+	registerOnlyFirstCooks = ParamConfig.BOOLEAN(true);
 	/** @param updates the list of nodes from the mask parameter. This can be useful if nodes are added or removed from the scene */
 	updateResolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			NodeCookEventNode.PARAM_CALLBACK_update_resolve(node as NodeCookEventNode);
+			NodeCookEventNode.PARAM_CALLBACK_updateResolve(node as NodeCookEventNode);
 		},
 	});
 	/** @param prints the list of nodes the mask resolves to to the console. Useful for debugging */
 	printResolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			NodeCookEventNode.PARAM_CALLBACK_print_resolve(node as NodeCookEventNode);
+			NodeCookEventNode.PARAM_CALLBACK_updateResolve(node as NodeCookEventNode);
 		},
 	});
 }
@@ -66,14 +68,14 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	static readonly OUTPUT_EACH_NODE = 'each';
 	static readonly OUTPUT_ALL_NODES = 'all';
 
-	private _resolved_nodes: BaseNodeType[] = [];
+	private _resolvedNodes: BaseNodeType[] = [];
 
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				NodeCookEventNode.INPUT_TRIGGER,
 				EventConnectionPointType.BASE,
-				this.process_event_trigger.bind(this)
+				this.processEventTrigger.bind(this)
 			),
 		]);
 
@@ -86,11 +88,11 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	// for public api
 	// TODO: make it more generic, with input being an enum of input names
 	trigger() {
-		this.process_event_trigger({});
+		this.processEventTrigger({});
 	}
 
 	cook() {
-		this._update_resolved_nodes();
+		this._updateResolvedNodes();
 		this.cookController.endCook();
 	}
 	dispose() {
@@ -98,81 +100,85 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		this._reset();
 	}
 
-	private process_event_trigger(event_context: EventContext<Event>) {
+	resolvedNodes() {
+		return this._resolvedNodes;
+	}
+
+	private processEventTrigger(event_context: EventContext<Event>) {
 		this._cook_nodes_with_mode();
 	}
 
 	private _cook_nodes_with_mode() {
-		this._update_resolved_nodes(); // necesarry when triggered on scene load
+		this._updateResolvedNodes(); // necesarry when triggered on scene load
 		const mode = COOK_MODES[this.pv.cookMode];
 		switch (mode) {
 			case CookMode.ALL_TOGETHER:
-				return this._cook_nodes_all_together();
+				return this._cookNodesAllTogether();
 			case CookMode.BATCH:
-				return this._cook_nodes_batch();
+				return this._cookNodesInBatch();
 		}
 		TypeAssert.unreachable(mode);
 	}
-	private _cook_nodes_all_together() {
-		this._cook_nodes(this._resolved_nodes);
+	private _cookNodesAllTogether() {
+		this._cookNodes(this._resolvedNodes);
 	}
-	private async _cook_nodes_batch() {
+	private async _cookNodesInBatch() {
 		const batch_size = this.pv.batchSize;
-		const batches_count = Math.ceil(this._resolved_nodes.length / batch_size);
+		const batches_count = Math.ceil(this._resolvedNodes.length / batch_size);
 
 		for (let i = 0; i < batches_count; i++) {
 			const start = i * batch_size;
 			const end = (i + 1) * batch_size;
-			const nodes_in_batch = this._resolved_nodes.slice(start, end);
-			await this._cook_nodes(nodes_in_batch);
+			const nodes_in_batch = this._resolvedNodes.slice(start, end);
+			await this._cookNodes(nodes_in_batch);
 		}
 	}
-	private async _cook_nodes(nodes: BaseNodeType[]) {
+	private async _cookNodes(nodes: BaseNodeType[]) {
 		const promises: Promise<any>[] = [];
 		for (let node of nodes) {
-			promises.push(this._cook_node(node));
+			promises.push(this._cookNode(node));
 		}
 		return await Promise.all(promises);
 	}
-	private _cook_node(node: BaseNodeType) {
+	private _cookNode(node: BaseNodeType) {
 		if (isBooleanTrue(this.pv.force)) {
 			node.setDirty(this);
 		}
 		return node.compute();
 	}
 
-	static PARAM_CALLBACK_update_resolved_nodes(node: NodeCookEventNode) {
-		node._update_resolved_nodes();
+	static PARAM_CALLBACK_updateResolvedNodes(node: NodeCookEventNode) {
+		node._updateResolvedNodes();
 	}
-	private _update_resolved_nodes() {
+	private _updateResolvedNodes() {
 		this._reset();
 
-		this._resolved_nodes = this.scene().nodesController.nodesFromMask(this.pv.mask || '');
-		for (let node of this._resolved_nodes) {
+		this._resolvedNodes = this.scene().nodesController.nodesFromMask(this.pv.mask || '');
+		for (let node of this._resolvedNodes) {
 			node.cookController.registerOnCookEnd(this._callbackNameForNode(node), () => {
-				this._on_node_cook_complete(node);
+				this._onNodeCookComplete(node);
 			});
-			this._cook_state_by_node_id.set(node.graphNodeId(), false);
+			this._cookStateByNodeId.set(node.graphNodeId(), false);
 		}
 	}
 	private _callbackNameForNode(node: BaseNodeType) {
 		return `owner-${this.graphNodeId()}-target-${node.graphNodeId()}`;
 	}
 
-	private _dispatched_first_node_cooked: boolean = false;
-	private _dispatched_all_nodes_cooked: boolean = false;
-	private _cook_state_by_node_id: Map<CoreGraphNodeId, boolean> = new Map();
+	private _dispatchedFirstNodeCooked: boolean = false;
+	private _dispatchedAllNodesCooked: boolean = false;
+	private _cookStateByNodeId: Map<CoreGraphNodeId, boolean> = new Map();
 	private _reset() {
-		this._dispatched_first_node_cooked = false;
-		this._cook_state_by_node_id.clear();
-		for (let node of this._resolved_nodes) {
+		this._dispatchedFirstNodeCooked = false;
+		this._cookStateByNodeId.clear();
+		for (let node of this._resolvedNodes) {
 			node.cookController.deregisterOnCookEnd(this._callbackNameForNode(node));
 		}
-		this._resolved_nodes = [];
+		this._resolvedNodes = [];
 	}
-	private _all_nodes_have_cooked() {
-		for (let node of this._resolved_nodes) {
-			const state = this._cook_state_by_node_id.get(node.graphNodeId());
+	private _allNodesHaveCooked() {
+		for (let node of this._resolvedNodes) {
+			const state = this._cookStateByNodeId.get(node.graphNodeId());
 			if (!state) {
 				return false;
 			}
@@ -180,32 +186,34 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		return true;
 	}
 
-	private _on_node_cook_complete(node: BaseNodeType) {
+	private _onNodeCookComplete(node: BaseNodeType) {
 		const event_context: EventContext<Event> = {value: {node: node}};
-		if (!this._dispatched_first_node_cooked) {
-			this._dispatched_first_node_cooked = true;
+		if (!this._dispatchedFirstNodeCooked) {
+			this._dispatchedFirstNodeCooked = true;
 			this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_FIRST_NODE, event_context);
 		}
-		if (!this._cook_state_by_node_id.get(node.graphNodeId())) {
+		const nodeHasCooked = this._cookStateByNodeId.get(node.graphNodeId());
+
+		if (!nodeHasCooked || !isBooleanTrue(this.pv.registerOnlyFirstCooks)) {
 			this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_EACH_NODE, event_context);
 		}
-		this._cook_state_by_node_id.set(node.graphNodeId(), true);
+		this._cookStateByNodeId.set(node.graphNodeId(), true);
 
-		if (!this._dispatched_all_nodes_cooked) {
-			if (this._all_nodes_have_cooked()) {
-				this._dispatched_all_nodes_cooked = true;
+		if (!this._dispatchedAllNodesCooked) {
+			if (this._allNodesHaveCooked()) {
+				this._dispatchedAllNodesCooked = true;
 				this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_ALL_NODES, {});
 			}
 		}
 	}
 
-	static PARAM_CALLBACK_update_resolve(node: NodeCookEventNode) {
-		node._update_resolved_nodes();
+	static PARAM_CALLBACK_updateResolve(node: NodeCookEventNode) {
+		node._allNodesHaveCooked();
 	}
-	static PARAM_CALLBACK_print_resolve(node: NodeCookEventNode) {
-		node.print_resolve();
+	static PARAM_CALLBACK_printResolve(node: NodeCookEventNode) {
+		node.printResolve();
 	}
-	private print_resolve() {
-		console.log(this._resolved_nodes);
+	private printResolve() {
+		console.log(this._resolvedNodes);
 	}
 }

@@ -28,8 +28,8 @@ import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {CorePlayer} from '../../../core/player/Player';
 import {ParamOptions} from '../../params/utils/OptionsController';
-import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
 import {isBooleanTrue} from '../../../core/Type';
+import {CollisionController} from './collision/CollisionController';
 
 const EVENT_START = 'start';
 const EVENT_CHANGE = 'change';
@@ -51,6 +51,14 @@ class MobileJoystickEventParamsConfig extends NodeParamsConfig {
 	colliderObject = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.SOP,
+		},
+		// if the node is dependent,
+		// the MobileJoystickControlsEventNode will be re-created when this node changes
+		// which we do not want, as it will act like a hard reset
+		// when all we want is to update the collider
+		dependentOnFoundNode: false,
+		callback: (node: BaseNodeType) => {
+			MobileJoystickControlsEventNode.PARAM_CALLBACK_updateCollider(node as MobileJoystickControlsEventNode);
 		},
 	});
 	/** @param collision Capsule Radius */
@@ -143,6 +151,10 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		return 'end';
 	}
 	static readonly INPUT_UPDATE_COLLIDER = 'updateCollider';
+	private _collisionController: CollisionController | undefined;
+	collisionController(): CollisionController {
+		return (this._collisionController = this._collisionController || new CollisionController(this));
+	}
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
@@ -178,6 +190,9 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		this._updatePlayerParams();
 		this._player.reset();
 	}
+	player() {
+		return this._player;
+	}
 	private async _updatePlayerParams() {
 		if (!this._player) {
 			return;
@@ -196,7 +211,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	}
 	private async _createPlayer(camera: Camera) {
 		const playerObject = camera;
-		const collider = await this._getCollider();
+		const collider = await this.collisionController().getCollider();
 		if (!collider) {
 			this.states.error.set('invalid collider');
 			return;
@@ -208,28 +223,9 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	private _resetPlayer() {
 		this._player?.reset();
 	}
-	private async _getCollider() {
-		const colliderNode = this.pv.colliderObject.nodeWithContext(NodeContext.SOP);
-		if (!colliderNode) {
-			this.states.error.set('collider node not found');
-			return;
-		}
-		const container = await colliderNode.compute();
-		const coreGroup = container.coreContent();
-		if (!coreGroup) {
-			this.states.error.set('invalid collider node');
-			return;
-		}
-		const object = coreGroup.objects()[0] as MeshWithBVH;
-		return object;
-	}
+
 	private async _updateCollider() {
-		const collider = await this._getCollider();
-		if (!collider) {
-			this.states.error.set('invalid collider');
-			return;
-		}
-		this._player?.setCollider(collider);
+		await this.collisionController().updateCollider();
 	}
 
 	protected _bind_listeners_to_controls_instance(controls: MobileJoystickControls) {
