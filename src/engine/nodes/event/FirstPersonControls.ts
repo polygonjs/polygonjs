@@ -194,10 +194,15 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 	endEventName() {
 		return 'unlock';
 	}
-
+	static readonly INPUT_UPDATE_COLLIDER = 'updateCollider';
 	initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE, this.lockControls.bind(this)),
+			new EventConnectionPoint(
+				FirstPersonControlsEventNode.INPUT_UPDATE_COLLIDER,
+				EventConnectionPointType.BASE,
+				this._updateCollider.bind(this)
+			),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE),

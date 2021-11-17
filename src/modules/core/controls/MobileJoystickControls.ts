@@ -7,6 +7,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {BaseCollisionHandler} from './BaseCollisionHandler';
 import {CorePlayer} from '../../../core/player/Player';
 import {Spherical} from 'three/src/math/Spherical';
+import {isBooleanTrue} from '../../../core/Type';
 
 interface TranslationData {
 	direction: Vector3;
@@ -49,6 +50,8 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		onTranslateStart: this._onTranslateStart.bind(this),
 		onTranslateMove: this._onTranslateMove.bind(this),
 		onTranslateEnd: this._onTranslateEnd.bind(this),
+		onJump: this._onJump.bind(this),
+		onRunToggle: this._onRunToggle.bind(this),
 	};
 
 	private _startCameraRotation = new Euler();
@@ -73,20 +76,24 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		// 	const deltaTime = Math.min(0.1, clock.getDelta());
 		// 	this.update(deltaTime);
 		// });
+		this._addElements();
 		this._addEvents();
 	}
 	dispose() {
 		// this._viewer.unRegisterOnBeforeRender(VIEWER_CALLBACK_NAME);
 		this._removeEvents();
+		this._removeElements();
+		this.updateElements();
 	}
 	private _translateDomElement = this._createTranslateDomElement();
 	private _translateDomElementRect: DOMRect = this._translateDomElement.getBoundingClientRect();
 	private _createTranslateDomElement() {
-		const element = document.createElement('div');
 		const rect = this.domElement.getBoundingClientRect();
 		const minDim = Math.min(rect.width, rect.height);
 		const size = Math.round(0.4 * minDim);
 		const margin = Math.round(0.1 * minDim);
+		const element = document.createElement('div');
+		element.id = 'MobileJoystickControls-translate';
 		element.style.width = `${size}px`;
 		element.style.height = element.style.width;
 		element.style.border = '1px solid black';
@@ -96,6 +103,62 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		element.style.left = `${margin}px`;
 		return element;
 	}
+	private _jumpDomElement = this._createJumpDomElement();
+	private _jumpDomElementSize() {
+		const rect = this.domElement.getBoundingClientRect();
+		const minDim = Math.min(rect.width, rect.height);
+		const size = Math.round(0.2 * minDim);
+		const margin = Math.round(0.05 * minDim);
+		return {size, margin};
+	}
+	private _createJumpDomElement() {
+		const {size, margin} = this._jumpDomElementSize();
+		const element = document.createElement('div');
+		element.id = 'MobileJoystickControls-jump';
+		element.style.width = `${size}px`;
+		element.style.height = `${Math.floor(size)}px`;
+		element.style.border = '1px solid black';
+		element.style.position = 'absolute';
+		element.style.bottom = `${margin}px`;
+		element.style.right = `${margin}px`;
+		return element;
+	}
+	private _runDomElement = this._createRunDomElement();
+	private _createRunDomElement() {
+		const element = document.createElement('div');
+		const rect = this.domElement.getBoundingClientRect();
+		const minDim = Math.min(rect.width, rect.height);
+		const size = Math.round(0.2 * minDim);
+		const margin = Math.round(0.05 * minDim);
+		element.id = 'MobileJoystickControls-run';
+		element.style.width = `${size}px`;
+		element.style.height = `${Math.floor(size)}px`;
+		element.style.border = '1px solid black';
+		element.style.position = 'absolute';
+		console.log(margin + parseInt(this._jumpDomElement.style.height));
+		element.style.bottom = `${2 * margin + parseInt(this._jumpDomElement.style.height)}px`;
+		element.style.right = `${margin}px`;
+		element.style.translate = `-50%`;
+		return element;
+	}
+	private _addElements() {
+		this.domElement.parentElement?.append(this._translateDomElement);
+		this.domElement.parentElement?.append(this._jumpDomElement);
+		this.domElement.parentElement?.append(this._runDomElement);
+	}
+	private _removeElements() {
+		const elements = [this._translateDomElement];
+		for (let element of elements) {
+			element.parentElement?.removeChild(element);
+		}
+	}
+	updateElements() {
+		if (!this.player) {
+			return;
+		}
+		this._jumpDomElement.style.display = isBooleanTrue(this.player.jumpAllowed) ? 'block' : 'none';
+		this._runDomElement.style.display = isBooleanTrue(this.player.runAllowed) ? 'block' : 'none';
+	}
 	private _addEvents() {
 		CoreDomUtils.disableContextMenu();
 		this.domElement.addEventListener('touchstart', this._boundMethods.onRotateStart);
@@ -104,7 +167,8 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this._translateDomElement.addEventListener('touchstart', this._boundMethods.onTranslateStart);
 		this._translateDomElement.addEventListener('touchmove', this._boundMethods.onTranslateMove);
 		this._translateDomElement.addEventListener('touchend', this._boundMethods.onTranslateEnd);
-		this.domElement.parentElement?.append(this._translateDomElement);
+		this._jumpDomElement.addEventListener('pointerdown', this._boundMethods.onJump);
+		this._runDomElement.addEventListener('pointerdown', this._boundMethods.onRunToggle);
 	}
 	private _removeEvents() {
 		// TODO: ideally the viewer should know that
@@ -118,7 +182,8 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this._translateDomElement.removeEventListener('touchstart', this._boundMethods.onTranslateStart);
 		this._translateDomElement.removeEventListener('touchmove', this._boundMethods.onTranslateMove);
 		this._translateDomElement.removeEventListener('touchend', this._boundMethods.onTranslateEnd);
-		this._translateDomElement.parentElement?.removeChild(this._translateDomElement);
+		this._jumpDomElement.removeEventListener('pointerdown', this._boundMethods.onJump);
+		this._runDomElement.removeEventListener('pointerdown', this._boundMethods.onRunToggle);
 	}
 
 	setRotationSpeed(speed: number) {
@@ -299,6 +364,18 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 				checkZ(this.player);
 			}
 		}
+	}
+	private _onJump() {
+		this.player?.jump();
+	}
+	private _onRunToggle() {
+		if (!this.player) {
+			return;
+		}
+		const runState = this.player.running();
+		this.player.setRun(!runState);
+		const borderSize = this.player.running() ? 3 : 1;
+		this._runDomElement.style.border = `${borderSize}px solid black`;
 	}
 
 	update(delta: number) {

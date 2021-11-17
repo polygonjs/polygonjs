@@ -6,6 +6,18 @@
  * <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
  * as this will prevent the screen from zooming in and out when using a finger to translate and another to rotate.
  *
+ * And if you are using an iphone, you may need to also add the following css:
+ * - to prevent page reload when swiping down
+ * body {
+ *	overscroll-behavior-y: none;
+ *	position: fixed;
+ *	overflow: hidden;
+ * }
+ * - and to disable page zoom from double tap or when using 2 fingers
+ * body {
+ *	touch-action: none;
+ *}
+ *
  */
 import {Camera} from 'three/src/cameras/Camera';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
@@ -17,6 +29,7 @@ import {BaseNodeType} from '../_Base';
 import {CorePlayer} from '../../../core/player/Player';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
+import {isBooleanTrue} from '../../../core/Type';
 
 const EVENT_START = 'start';
 const EVENT_CHANGE = 'change';
@@ -67,7 +80,26 @@ class MobileJoystickEventParamsConfig extends NodeParamsConfig {
 	translateSpeed = ParamConfig.FLOAT(1);
 	/** @param rotation speed */
 	rotateSpeed = ParamConfig.FLOAT(DEFAULT_PARAMS.rotateSpeed);
-
+	/** @param jump Allowed */
+	jumpAllowed = ParamConfig.BOOLEAN(true, {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param jump Force */
+	jumpStrength = ParamConfig.FLOAT(10, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param run Allowed */
+	runAllowed = ParamConfig.BOOLEAN(true, {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param run speed mult */
+	runSpeedMult = ParamConfig.FLOAT(2, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		...updatePlayerParamsCallbackOption(),
+	});
 	/** @param recompute colliding geo */
 	updateCollider = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
@@ -110,7 +142,15 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	endEventName() {
 		return 'end';
 	}
+	static readonly INPUT_UPDATE_COLLIDER = 'updateCollider';
 	initializeNode() {
+		this.io.inputs.setNamedInputConnectionPoints([
+			new EventConnectionPoint(
+				MobileJoystickControlsEventNode.INPUT_UPDATE_COLLIDER,
+				EventConnectionPointType.BASE,
+				this._updateCollider.bind(this)
+			),
+		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(EVENT_START, EventConnectionPointType.BASE),
 			new EventConnectionPoint(EVENT_CHANGE, EventConnectionPointType.BASE),
@@ -144,11 +184,15 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		}
 		this._player.startPosition.copy(this.pv.startPosition);
 		this._player.physicsSteps = this.pv.physicsSteps;
-		this._player.jumpAllowed = false;
-		this._player.runAllowed = false;
+		this._player.jumpAllowed = isBooleanTrue(this.pv.jumpAllowed);
+		this._player.jumpStrength = this.pv.jumpStrength;
+		this._player.runAllowed = isBooleanTrue(this.pv.runAllowed);
+		this._player.runSpeedMult = this.pv.runSpeedMult;
 		this._player.gravity.copy(this.pv.gravity);
 		this._player.speed = this.pv.translateSpeed;
 		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight});
+
+		this._controls_by_element_id.forEach((controls) => controls.updateElements());
 	}
 	private async _createPlayer(camera: Camera) {
 		const playerObject = camera;

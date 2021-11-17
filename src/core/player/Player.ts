@@ -252,4 +252,7 @@ export class CorePlayer {
 			this._running = false;
 		}
 	}
+	running() {
+		return this._running;
+	}
 }
