@@ -135,7 +135,6 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		element.style.height = `${Math.floor(size)}px`;
 		element.style.border = '1px solid black';
 		element.style.position = 'absolute';
-		console.log(margin + parseInt(this._jumpDomElement.style.height));
 		element.style.bottom = `${2 * margin + parseInt(this._jumpDomElement.style.height)}px`;
 		element.style.right = `${margin}px`;
 		element.style.translate = `-50%`;
