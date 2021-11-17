@@ -1,4 +1,4 @@
-import {BaseNodeClass} from '../../../nodes/_Base';
+import {BaseNodeClass, BaseNodeType} from '../../../nodes/_Base';
 import {BaseOperation} from '../../../operations/_Base';
 import {NodeContext} from '../../NodeContext';
 import {PolyEngine} from '../../../Poly';
@@ -31,9 +31,16 @@ export class NodesRegister {
 
 	constructor(private poly: PolyEngine) {}
 
+	private static type(node: BaseNodeType | BaseNodeConstructor) {
+		return this.filterType(node.type());
+	}
+	private static filterType(nodeType: string) {
+		return nodeType.toLowerCase();
+	}
+
 	register(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
 		const context = node.context();
-		const nodeType = node.type().toLowerCase();
+		const nodeType = NodesRegister.type(node);
 
 		let current_nodes_for_context = this._node_register.get(context);
 		if (!current_nodes_for_context) {
@@ -67,17 +74,23 @@ export class NodesRegister {
 		}
 		this.poly.pluginsRegister.registerNode(node);
 	}
-	deregister(context: NodeContext, node_type: string) {
-		this._node_register.get(context)?.delete(node_type);
-		this._node_register_categories.get(context)?.delete(node_type);
-		this._node_register_options.get(context)?.delete(node_type);
+	deregister(context: NodeContext, nodeType: string) {
+		nodeType = NodesRegister.filterType(nodeType);
+		this._node_register.get(context)?.delete(nodeType);
+		this._node_register_categories.get(context)?.delete(nodeType);
+		this._node_register_options.get(context)?.delete(nodeType);
 	}
-	isRegistered(context: NodeContext, type: string): boolean {
+	isRegistered(context: NodeContext, nodeType: string): boolean {
 		const nodes_for_context = this._node_register.get(context);
 		if (!nodes_for_context) {
 			return false;
 		}
-		return nodes_for_context.get(type) != null;
+		nodeType = NodesRegister.filterType(nodeType);
+		return nodes_for_context.get(nodeType) != null;
+	}
+	nodeOptions(context: NodeContext, nodeType: string): RegisterOptions | undefined {
+		nodeType = NodesRegister.filterType(nodeType);
+		return this._node_register_options.get(context)?.get(nodeType);
 	}
 	registeredNodesForContextAndParentType(context: NodeContext, parent_node_type: string) {
 		const map = this._node_register.get(context);
@@ -87,7 +100,7 @@ export class NodesRegister {
 				nodes_for_context.push(node);
 			});
 			return nodes_for_context.filter((node) => {
-				const nodeType = node.type().toLowerCase();
+				const nodeType = NodesRegister.type(node);
 				const options = this._node_register_options.get(context)?.get(nodeType);
 				if (!options) {
 					return true;
@@ -108,17 +121,18 @@ export class NodesRegister {
 			return [];
 		}
 	}
-	registeredNodes(context: NodeContext, parent_node_type: string): PolyDictionary<BaseNodeConstructor> {
+	registeredNodes(context: NodeContext, parentNodeType: string): PolyDictionary<BaseNodeConstructor> {
 		const nodesByType: PolyDictionary<BaseNodeConstructor> = {};
-		const nodes = this.registeredNodesForContextAndParentType(context, parent_node_type);
+		const nodes = this.registeredNodesForContextAndParentType(context, parentNodeType);
 		for (let node of nodes) {
-			const type = node.type().toLowerCase();
-			nodesByType[type] = node;
+			const nodeType = NodesRegister.type(node);
+			nodesByType[nodeType] = node;
 		}
 		return nodesByType;
 	}
-	registeredCategory(context: NodeContext, type: string) {
-		return this._node_register_categories.get(context)?.get(type.toLowerCase());
+	registeredCategory(context: NodeContext, nodeType: string) {
+		nodeType = NodesRegister.filterType(nodeType);
+		return this._node_register_categories.get(context)?.get(nodeType);
 	}
 
 	map() {
@@ -131,6 +145,13 @@ export class OperationsRegister {
 
 	constructor(private poly: PolyEngine) {}
 
+	private static type(node: BaseOperationConstructor) {
+		return this.filterType(node.type());
+	}
+	private static filterType(nodeType: string) {
+		return nodeType.toLowerCase();
+	}
+
 	register(operation: BaseOperationConstructor) {
 		const context = operation.context();
 		let current_operations_for_context = this._operation_register.get(context);
@@ -139,7 +160,7 @@ export class OperationsRegister {
 			this._operation_register.set(context, current_operations_for_context);
 		}
 
-		const operationType = operation.type().toLowerCase();
+		const operationType = OperationsRegister.type(operation);
 		const already_registered_operation = current_operations_for_context.get(operationType);
 		if (already_registered_operation) {
 			const message = `operation ${context}/${operationType} already registered`;
@@ -150,7 +171,7 @@ export class OperationsRegister {
 		this.poly.pluginsRegister.registerOperation(operation);
 	}
 
-	registeredOperationsForContextAndParentType(context: NodeContext, parent_node_type: string) {
+	registeredOperationsForContextAndParentType(context: NodeContext, parentNodeType: string) {
 		const map = this._operation_register.get(context);
 		if (map) {
 			const nodes_for_context: BaseOperationConstructor[] = [];
@@ -165,7 +186,8 @@ export class OperationsRegister {
 	registeredOperation(context: NodeContext, operationType: string): BaseOperationConstructor | undefined {
 		const current_operations_for_context = this._operation_register.get(context);
 		if (current_operations_for_context) {
-			return current_operations_for_context.get(operationType.toLowerCase());
+			operationType = OperationsRegister.filterType(operationType);
+			return current_operations_for_context.get(operationType);
 		}
 	}
 }

@@ -7,8 +7,6 @@
  */
 import {TypedSopNode, BaseSopNodeType} from './_Base';
 import {NodeContext} from '../../poly/NodeContext';
-// import {CoreWalker} from '../../../Core/Walker';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {GeometryContainer} from '../../containers/Geometry';
@@ -28,8 +26,15 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 		return 'objectMerge';
 	}
 
-	// _param_apply_parent_transform: boolean
-	initializeNode() {}
+	initializeNode() {
+		this.scene().dispatchController.onAddListener(() => {
+			this.params.onParamsCreated('params_label', () => {
+				this.params.label.init([this.p.geometry], () => {
+					return this.p.geometry.rawInput();
+				});
+			});
+		});
+	}
 
 	async cook(input_containers: CoreGroup[]) {
 		const geometry_node = this.p.geometry.found_node();
@@ -70,10 +75,4 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 			this.states.error.set('invalid target');
 		}
 	}
-
-	// geometry_node() {
-	// 	if ((this._param_geometry != null) && (this._param_geometry !== '')) {
-	// 		CoreWalker.find_node(this, this._param_geometry);
-	// 	}
-	// }
 }
