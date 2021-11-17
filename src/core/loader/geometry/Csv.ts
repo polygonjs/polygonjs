@@ -6,11 +6,14 @@ import {AttribType} from '../../geometry/Constant';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {CoreType} from '../../Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {PolyScene} from '../../../engine/index_all';
+import {BaseNodeType} from '../../../engine/nodes/_Base';
+import {CoreBaseLoader} from '../_Base';
 
 type CsvValue = string | number | number[];
 const POSITION = 'position';
 
-export class CsvLoader {
+export class CsvLoader extends CoreBaseLoader {
 	static SEPARATOR = ',';
 	static VECTOR_SEPARATOR = ',';
 
@@ -23,12 +26,13 @@ export class CsvLoader {
 	private attribute_data_by_name: PolyDictionary<CoreAttributeData> = {};
 	private _loading = false;
 
-	constructor(private attribute_names?: string[]) {
+	constructor(url: string, scene: PolyScene, private attribute_names?: string[], protected _node?: BaseNodeType) {
+		super(url, scene, _node);
 		if (!this.attribute_names) {
 			this.attribute_names_from_first_line = true;
 		}
 	}
-	async load(url: string) {
+	async load() {
 		// we need to check if it is currently loading, as we accumulate the points_count durig read.
 		// If another load was to start before the first load is completed, the points_count would be messed up.
 		if (this._loading) {
@@ -37,14 +41,15 @@ export class CsvLoader {
 		}
 		this._loading = true;
 		this.points_count = 0;
-		await this.load_data(url);
+		await this.loadData();
 		this.infer_types();
 		this.read_values();
 		const geometry = this.create_points();
 		return geometry;
 	}
 
-	private async load_data(url: string) {
+	private async loadData() {
+		const url = await this._urlToLoad();
 		const response = await fetch(url);
 		const text = await response.text();
 		this.lines = text.split('\n');

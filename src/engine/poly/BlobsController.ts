@@ -27,11 +27,13 @@ export class BlobsController {
 	private _globalBlobsByStoredUrl: Map<string, Blob> = new Map();
 	private _scene: PolyScene | undefined;
 	registerBlobUrl(data: BlobUrlData) {
-		console.log('registerBlobUrl', data, Poly.playerMode());
 		if (!Poly.playerMode()) {
 			return;
 		}
 		this._blobUrlsByStoredUrl.set(data.storedUrl, data.blobUrl);
+	}
+	deregisterUrl(url: string) {
+		this._blobUrlsByStoredUrl.delete(url);
 	}
 	blobUrl(storedUrl: string) {
 		return this._blobUrlsByStoredUrl.get(storedUrl);

@@ -62,6 +62,19 @@ export class CoreBaseLoader {
 	}
 
 	protected async _urlToLoad(): Promise<string> {
+		const {storedUrl, fullUrl} = this._urlData();
+		// }
+		if (this._node) {
+			await Poly.blobs.fetchBlobForNode({storedUrl, fullUrl, node: this._node});
+		}
+		const blobUrl = Poly.blobs.blobUrl(storedUrl);
+		return blobUrl || fullUrl;
+	}
+	deregisterUrl() {
+		const {storedUrl} = this._urlData();
+		Poly.blobs.deregisterUrl(storedUrl);
+	}
+	private _urlData() {
 		let fullUrl = this._url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
 		const storedUrl = this._url.split('?')[0];
 		// const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
@@ -74,12 +87,7 @@ export class CoreBaseLoader {
 				fullUrl = `${assets_root}${fullUrl}`;
 			}
 		}
-		// }
-		if (this._node) {
-			await Poly.blobs.fetchBlobForNode({storedUrl, fullUrl, node: this._node});
-		}
-		const blobUrl = Poly.blobs.blobUrl(storedUrl);
-		return blobUrl || fullUrl;
+		return {fullUrl, storedUrl};
 	}
 
 	protected static async _loadMultipleBlobGlobal(options: MultipleDependenciesLoadOptions) {

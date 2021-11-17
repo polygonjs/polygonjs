@@ -85,7 +85,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		if (isBooleanTrue(this.pv.checkFileType) && !isUrlStaticImage(this.pv.url)) {
 			this.states.error.set('url is not an image');
 		} else {
-			const texture = await this._loadTexture(this.pv.url);
+			const texture = await this._loadTexture();
 
 			if (texture) {
 				const inputTexture = input_contents[0];
@@ -110,19 +110,22 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		node.paramCallbackReload();
 	}
 	private paramCallbackReload() {
+		this.clearLoadedBlob();
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
 		this.p.url.setDirty();
 	}
-
-	private async _loadTexture(url: string) {
-		let texture: Texture | null = null;
-		const url_param = this.p.url;
-		const textureLoader = new CoreLoaderTexture(url, url_param, this, this.scene(), {
+	private _loader() {
+		return new CoreLoaderTexture(this.pv.url, this.p.url, this, this.scene(), {
 			forceImage: !isBooleanTrue(this.pv.checkFileType),
 		});
+	}
+
+	private async _loadTexture() {
+		let texture: Texture | null = null;
+
 		try {
-			texture = await textureLoader.load_texture_from_url_or_op({
+			texture = await this._loader().load_texture_from_url_or_op({
 				tdataType: this.pv.ttype && this.pv.tadvanced,
 				dataType: this.pv.type,
 			});
@@ -131,8 +134,12 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 			}
 		} catch (e) {}
 		if (!texture) {
-			this.states.error.set(`could not load texture '${url}'`);
+			this.states.error.set(`could not load texture '${this.pv.url}'`);
 		}
 		return texture;
+	}
+	clearLoadedBlob() {
+		const loader = this._loader();
+		loader.deregisterUrl();
 	}
 }

@@ -112,13 +112,25 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		});
 	}
 	async cook() {
+		this._load();
+	}
+	private _load() {
 		switch (DATA_TYPES[this.pv.dataType]) {
 			case DataType.JSON:
-				return this._load_json();
+				return this._loadJSON();
 			case DataType.CSV:
-				return this._load_csv();
+				return this._loadCSV();
 		}
 	}
+	private _clearLoadedBlob() {
+		switch (DATA_TYPES[this.pv.dataType]) {
+			case DataType.JSON:
+				return this._resetJSON();
+			case DataType.CSV:
+				return this._resetCSV();
+		}
+	}
+
 	private _url() {
 		const assets_root = this.scene().assets.root();
 		if (assets_root) {
@@ -132,7 +144,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	// JSON
 	//
 	//
-	private _load_json() {
+	private _loadJSON() {
 		const loader = new JsonDataLoader(
 			this._url(),
 			this.scene(),
@@ -145,13 +157,17 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 			this
 		);
 
-		loader.load(this._on_load.bind(this), undefined, this._on_error.bind(this));
+		loader.load(this._onLoad.bind(this), undefined, this._onError.bind(this));
+	}
+	private _resetJSON() {
+		const loader = new JsonDataLoader(this._url(), this.scene());
+		loader.deregisterUrl();
 	}
 
-	_on_load(geometry: BufferGeometry) {
+	private _onLoad(geometry: BufferGeometry) {
 		this.setGeometry(geometry, ObjectType.POINTS);
 	}
-	_on_error(error: ErrorEvent) {
+	private _onError(error: ErrorEvent) {
 		this.states.error.set(`could not load geometry from ${this._url()} (${error})`);
 		this.cookController.endCook();
 	}
@@ -161,15 +177,20 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	// CSV
 	//
 	//
-	async _load_csv() {
+	private async _loadCSV() {
 		const attribNames = isBooleanTrue(this.pv.readAttribNamesFromFile) ? undefined : this.pv.attribNames.split(' ');
-		const loader = new CsvLoader(attribNames);
-		const geometry = await loader.load(this._url());
+		const loader = new CsvLoader(this._url(), this.scene(), attribNames, this);
+		const geometry = await loader.load();
 		if (geometry) {
 			this.setGeometry(geometry, ObjectType.POINTS);
 		} else {
 			this.states.error.set('could not generate points');
 		}
+	}
+	private _resetCSV() {
+		const attribNames: string[] = [];
+		const loader = new CsvLoader(this._url(), this.scene(), attribNames, this);
+		loader.deregisterUrl();
 	}
 
 	// async _on_open_url(){
@@ -184,6 +205,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		node.param_callback_reload();
 	}
 	param_callback_reload() {
+		this._clearLoadedBlob();
 		// this._previous_param_url = null
 
 		// set the param dirty is preferable, in case this is used to refresh a local asset

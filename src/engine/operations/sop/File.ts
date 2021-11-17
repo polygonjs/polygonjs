@@ -6,6 +6,8 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreLoaderGeometry, GeometryFormat} from '../../../core/loader/Geometry';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
+import {PolyScene} from '../../index_all';
+import {BaseNodeType} from '../../nodes/_Base';
 
 interface FileSopParams extends DefaultOperationParams {
 	url: string;
@@ -21,12 +23,12 @@ export class FileSopOperation extends BaseSopOperation {
 		return 'file';
 	}
 
+	static loader(params: FileSopParams, scene: PolyScene, node?: BaseNodeType) {
+		return new CoreLoaderGeometry({url: params.url, format: params.format as GeometryFormat}, scene, node);
+	}
+
 	cook(input_contents: CoreGroup[], params: FileSopParams): Promise<CoreGroup> {
-		const loader = new CoreLoaderGeometry(
-			{url: params.url, format: params.format as GeometryFormat},
-			this.scene(),
-			this._node
-		);
+		const loader = FileSopOperation.loader(params, this.scene(), this._node);
 
 		return new Promise((resolve) => {
 			loader.load(
@@ -39,6 +41,10 @@ export class FileSopOperation extends BaseSopOperation {
 				}
 			);
 		});
+	}
+	clearLoadedBlob(params: FileSopParams) {
+		const loader = FileSopOperation.loader(params, this.scene(), this._node);
+		loader.deregisterUrl();
 	}
 
 	private _onLoad(objects: Object3D[]) {

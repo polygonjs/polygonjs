@@ -71,9 +71,11 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: FileSopOperation | undefined;
+	private operation() {
+		return (this._operation = this._operation || new FileSopOperation(this.scene(), this.states, this));
+	}
 	async cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new FileSopOperation(this.scene(), this.states, this);
-		const core_group = await this._operation.cook(input_contents, this.pv);
+		const core_group = await this.operation().cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}
 
@@ -81,6 +83,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		node._paramCallbackReload();
 	}
 	private _paramCallbackReload() {
+		this.operation().clearLoadedBlob(this.pv);
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		this.p.url.setDirty();
 		// this.setDirty()
