@@ -29,11 +29,11 @@ export class PropertyNameAnimNode extends TypedAnimNode<PropertyNameAnimParamsCo
 		});
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
-		const timeline_builder = input_contents[0] || new TimelineBuilder();
+	cook(inputContents: TimelineBuilder[]) {
+		const timelineBuilder = inputContents[0] || new TimelineBuilder();
 
-		timeline_builder.setPropertyName(this.pv.name);
+		timelineBuilder.setPropertyName(this.pv.name);
 
-		this.setTimelineBuilder(timeline_builder);
+		this.setTimelineBuilder(timelineBuilder);
 	}
 }

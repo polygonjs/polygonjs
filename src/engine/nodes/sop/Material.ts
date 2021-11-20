@@ -32,7 +32,7 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 	// but can also be used when requiring a unique material per object, when using a copy SOP
 	/** @param Cloning the material would prevent the material node to have any effect on the processed geometries. But it would allow to have multiple materials, if this was used with a Copy SOP for instance */
 	cloneMat = ParamConfig.BOOLEAN(DEFAULT.cloneMat, {visibleIf: {assignMat: 1}});
-	/** @param while cloning the material, you may only want to change basic properties (such as depthWrite or trasparent), but you would want to still use the same uniforms */
+	/** @param while cloning the material, you may only want to change basic properties (such as depthWrite or transparent), but you would want to still use the same uniforms */
 	shareUniforms = ParamConfig.BOOLEAN(DEFAULT.shareUniforms, {visibleIf: {assignMat: 1, cloneMat: 1}});
 	/** @param swap one texture with another */
 	swapCurrentTex = ParamConfig.BOOLEAN(DEFAULT.swapCurrentTex);

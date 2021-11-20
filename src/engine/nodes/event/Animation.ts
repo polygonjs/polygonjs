@@ -49,7 +49,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		return 'animation';
 	}
 
-	private _timeline_builder: TimelineBuilder | undefined;
+	private _timelineBuilder: TimelineBuilder | undefined;
 	private _timeline: gsap.core.Timeline | undefined;
 
 	initializeNode() {
@@ -95,8 +95,8 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		if (!container) {
 			return;
 		}
-		this._timeline_builder = container.coreContent();
-		if (!this._timeline_builder) {
+		this._timelineBuilder = container.coreContent();
+		if (!this._timelineBuilder) {
 			return;
 		}
 		if (this._timeline) {
@@ -104,16 +104,16 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		}
 		this._timeline = gsap.timeline();
 
-		this._timeline_builder.populate(this._timeline);
+		this._timelineBuilder.populate(this._timeline);
 
 		this._timeline.vars.onStart = () => {
-			this.trigger_animation_started(event_context);
+			this._triggerAnimationStarted(event_context);
 		};
 		this._timeline.vars.onComplete = () => {
 			if (this._timeline) {
 				this._timeline.kill();
 			}
-			this.trigger_animation_completed(event_context);
+			this._triggerAnimationCompleted(event_context);
 		};
 	}
 	private _pause() {
@@ -122,10 +122,10 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		}
 	}
 
-	trigger_animation_started(event_context: EventContext<Event>) {
+	private _triggerAnimationStarted(event_context: EventContext<Event>) {
 		this.dispatchEventToOutput(AnimationEventOutput.START, event_context);
 	}
-	trigger_animation_completed(event_context: EventContext<Event>) {
+	private _triggerAnimationCompleted(event_context: EventContext<Event>) {
 		this.dispatchEventToOutput(AnimationEventOutput.COMPLETE, event_context);
 	}
 }

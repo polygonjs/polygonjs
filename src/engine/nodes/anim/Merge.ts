@@ -67,52 +67,52 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 		});
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
-		const merged_timeline_builder = new TimelineBuilder();
+	cook(inputContents: TimelineBuilder[]) {
+		const mergedTimelineBuilder = new TimelineBuilder();
 
 		let i = 0;
-		for (let timeline_builder of input_contents) {
-			if (timeline_builder) {
+		for (let timelineBuilder of inputContents) {
+			if (timelineBuilder) {
 				if (i > 0) {
-					this._update_timeline_builder(timeline_builder);
+					this._updateTimelineBuilder(timelineBuilder);
 				}
 
-				merged_timeline_builder.addTimelineBuilder(timeline_builder);
+				mergedTimelineBuilder.addTimelineBuilder(timelineBuilder);
 				i++;
 			}
 		}
 
-		this.setTimelineBuilder(merged_timeline_builder);
+		this.setTimelineBuilder(mergedTimelineBuilder);
 	}
 
-	private _update_timeline_builder(timeline_builder: TimelineBuilder) {
+	private _updateTimelineBuilder(timelineBuilder: TimelineBuilder) {
 		const mode = MERGE_MODES[this.pv.mode];
 		switch (mode) {
 			case MergeMode.ALL_TOGETHER:
-				return this._set_play_all_together(timeline_builder);
+				return this._setPlayAllTogether(timelineBuilder);
 			case MergeMode.ONE_AT_A_TIME:
-				return this._set_play_one_at_a_time(timeline_builder);
+				return this._setPlayOneAtATime(timelineBuilder);
 		}
 		TypeAssert.unreachable(mode);
 	}
-	private _set_play_all_together(timeline_builder: TimelineBuilder) {
-		let position = timeline_builder.position();
+	private _setPlayAllTogether(timelineBuilder: TimelineBuilder) {
+		let position = timelineBuilder.position();
 		if (!position || isBooleanTrue(this.pv.overridePositions)) {
 			position = new AnimationPosition();
 			position.setMode(AnimationPositionMode.RELATIVE);
 			position.setRelativeTo(AnimationPositionRelativeTo.START);
 			position.setOffset(this.pv.offset);
-			timeline_builder.setPosition(position);
+			timelineBuilder.setPosition(position);
 		}
 	}
-	private _set_play_one_at_a_time(timeline_builder: TimelineBuilder) {
-		let position = timeline_builder.position();
+	private _setPlayOneAtATime(timelineBuilder: TimelineBuilder) {
+		let position = timelineBuilder.position();
 		if (!position || isBooleanTrue(this.pv.overridePositions)) {
 			position = new AnimationPosition();
 			position.setMode(AnimationPositionMode.RELATIVE);
 			position.setRelativeTo(AnimationPositionRelativeTo.END);
 			position.setOffset(this.pv.offset);
-			timeline_builder.setPosition(position);
+			timelineBuilder.setPosition(position);
 		}
 	}
 	private _callbackUpdateInputsCount() {

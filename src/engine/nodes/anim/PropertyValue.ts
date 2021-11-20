@@ -48,7 +48,7 @@ class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 	printResolve = ParamConfig.BUTTON(null, {
 		visibleIf: {mode: PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH},
 		callback: (node: BaseNodeType) => {
-			PropertyValueAnimNode.PARAM_CALLBACK_print_resolve(node as PropertyValueAnimNode);
+			PropertyValueAnimNode.PARAM_CALLBACK_printResolve(node as PropertyValueAnimNode);
 		},
 	});
 	overridePropertyName = ParamConfig.BOOLEAN(0, {
@@ -95,70 +95,70 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		this.io.inputs.setCount(0, 1);
 	}
 
-	async cook(input_contents: TimelineBuilder[]) {
-		const timeline_builder = input_contents[0] || new TimelineBuilder();
+	async cook(inputContents: TimelineBuilder[]) {
+		const timelineBuilder = inputContents[0] || new TimelineBuilder();
 
-		await this._prepare_timeline_builder(timeline_builder);
-		this.setTimelineBuilder(timeline_builder);
+		await this._prepareTimelineBuilder(timelineBuilder);
+		this.setTimelineBuilder(timelineBuilder);
 	}
 	setMode(targetType: AnimPropertyValueNodeMode) {
 		this.p.mode.set(PROPERTY_VALUE_MODES.indexOf(targetType));
 	}
 
-	private async _prepare_timeline_builder(timeline_builder: TimelineBuilder) {
+	private async _prepareTimelineBuilder(timelineBuilder: TimelineBuilder) {
 		const mode = PROPERTY_VALUE_MODES[this.pv.mode];
 		switch (mode) {
 			case AnimPropertyValueNodeMode.CUSTOM: {
-				return this._prepare_timebuilder_custom(timeline_builder);
+				return this._prepareTimebuilderCustom(timelineBuilder);
 			}
 			case AnimPropertyValueNodeMode.FROM_SCENE_GRAPH: {
-				return this._prepare_timebuilder_from_scene_graph(timeline_builder);
+				return this._prepareTimebuilderFromSceneGraph(timelineBuilder);
 			}
 			case AnimPropertyValueNodeMode.FROM_NODE: {
-				return await this._prepare_timebuilder_from_node(timeline_builder);
+				return await this._prepareTimebuilderFromNode(timelineBuilder);
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
 
-	private _prepare_timebuilder_custom(timeline_builder: TimelineBuilder) {
-		const target_value = [this.pv.value1, this.pv.value2.clone(), this.pv.value3.clone(), this.pv.value4.clone()][
+	private _prepareTimebuilderCustom(timelineBuilder: TimelineBuilder) {
+		const targetValue = [this.pv.value1, this.pv.value2.clone(), this.pv.value3.clone(), this.pv.value4.clone()][
 			this.pv.size - 1
 		];
-		timeline_builder.setPropertyValue(target_value);
+		timelineBuilder.setPropertyValue(targetValue);
 	}
-	private _prepare_timebuilder_from_scene_graph(timeline_builder: TimelineBuilder) {
-		const property_name = isBooleanTrue(this.pv.overridePropertyName)
+	private _prepareTimebuilderFromSceneGraph(timelineBuilder: TimelineBuilder) {
+		const propertyName = isBooleanTrue(this.pv.overridePropertyName)
 			? this.pv.propertyName
-			: timeline_builder.propertyName();
+			: timelineBuilder.propertyName();
 
-		if (!property_name) {
+		if (!propertyName) {
 			return;
 		}
 
-		const found_object = this._foundObjectFromSceneGraph();
-		if (found_object) {
-			const value: any = found_object[property_name as keyof Object3D];
+		const foundObject = this._foundObjectFromSceneGraph();
+		if (foundObject) {
+			const value: any = foundObject[propertyName as keyof Object3D];
 			if (value) {
 				if (CoreType.isNumber(value) || CoreType.isVector(value) || value instanceof Quaternion) {
-					timeline_builder.setPropertyValue(value);
+					timelineBuilder.setPropertyValue(value);
 				}
 			}
 		}
 	}
 
-	private async _prepare_timebuilder_from_node(timeline_builder: TimelineBuilder) {
-		const property_name = isBooleanTrue(this.pv.overridePropertyName)
+	private async _prepareTimebuilderFromNode(timelineBuilder: TimelineBuilder) {
+		const propertyName = isBooleanTrue(this.pv.overridePropertyName)
 			? this.pv.propertyName
-			: timeline_builder.propertyName();
-		if (!property_name) {
+			: timelineBuilder.propertyName();
+		if (!propertyName) {
 			return;
 		}
 		const node = this.pv.nodePath.node();
 		if (!node) {
 			return;
 		}
-		const param = node.params.get(property_name);
+		const param = node.params.get(propertyName);
 		if (!param) {
 			return;
 		}
@@ -168,19 +168,19 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 		const value = param.value;
 		if (value) {
 			if (CoreType.isNumber(value) || CoreType.isVector(value)) {
-				timeline_builder.setPropertyValue(value);
+				timelineBuilder.setPropertyValue(value);
 			}
 		}
 	}
 
-	static PARAM_CALLBACK_print_resolve(node: PropertyValueAnimNode) {
+	static PARAM_CALLBACK_printResolve(node: PropertyValueAnimNode) {
 		node.printResolve();
 	}
 	private _foundObjectFromSceneGraph() {
 		return this.scene().findObjectByMask(this.pv.objectMask);
 	}
 	private printResolve() {
-		const found_object = this._foundObjectFromSceneGraph();
-		console.log(found_object);
+		const foundObject = this._foundObjectFromSceneGraph();
+		console.log(foundObject);
 	}
 }
