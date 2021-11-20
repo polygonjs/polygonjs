@@ -1,3 +1,5 @@
+import {CorePoint} from '../../../../src/core/geometry/Point';
+
 QUnit.test('scatter simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -36,4 +38,38 @@ QUnit.test('scatter takes into account the transform of objects', async (assert)
 	add.p.position.x.set(5);
 	container = await scatter1.compute();
 	assert.in_delta(container.coreContent()!.points()[0].position().x, 5.026, 0.01);
+});
+
+QUnit.test('scatter interpolates correctly a float attributes with value 0', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane1 = geo1.createNode('plane');
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const scatter1 = geo1.createNode('scatter');
+	attribCreate1.setInput(0, plane1);
+	scatter1.setInput(0, attribCreate1);
+
+	attribCreate1.p.name.set('delay');
+	attribCreate1.p.size.set(1);
+	attribCreate1.p.value1.set(0);
+	scatter1.p.pointsCount.set(2);
+	scatter1.p.attributesToTransfer.set('delay');
+
+	let container = await scatter1.compute();
+	assert.ok(!scatter1.states.error.active());
+	function delayValues() {
+		return container
+			.coreContent()!
+			.points()
+			.map((p: CorePoint) => p.attribValue('delay'));
+	}
+	assert.deepEqual(delayValues(), [0, 0]);
+
+	attribCreate1.p.value1.set(14.5);
+	container = await scatter1.compute();
+	assert.deepEqual(delayValues(), [14.5, 14.5]);
+
+	attribCreate1.p.value1.set(-17);
+	container = await scatter1.compute();
+	assert.deepEqual(delayValues(), [-17, -17]);
 });

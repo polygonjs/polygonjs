@@ -1,4 +1,4 @@
-import {NumericAttribValue} from '../../types/GlobalTypes';
+import {AttribValue, NumericAttribValue} from '../../types/GlobalTypes';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {Triangle} from 'three/src/math/Triangle';
@@ -27,8 +27,8 @@ export class CoreFace {
 	_positions: Vector3Array3 | undefined;
 	_deltas: Vector3Array2 | undefined;
 
-	constructor(private _core_geometry: CoreGeometry, private _index: number) {
-		this._geometry = this._core_geometry.geometry();
+	constructor(private _coreGeometry: CoreGeometry, private _index: number) {
+		this._geometry = this._coreGeometry.geometry();
 	}
 	index() {
 		return this._index;
@@ -42,18 +42,18 @@ export class CoreFace {
 		}
 	}
 	private _get_points(): CorePointArray3 {
-		const index_array = this._geometry.index?.array || [];
+		const indexArray = this._geometry.index?.array || [];
 		const start = this._index * 3;
 		return [
-			new CorePoint(this._core_geometry, index_array[start + 0]),
-			new CorePoint(this._core_geometry, index_array[start + 1]),
-			new CorePoint(this._core_geometry, index_array[start + 2]),
+			new CorePoint(this._coreGeometry, indexArray[start + 0]),
+			new CorePoint(this._coreGeometry, indexArray[start + 1]),
+			new CorePoint(this._coreGeometry, indexArray[start + 2]),
 		];
 	}
 	positions() {
-		return (this._positions = this._positions || this._get_positions());
+		return (this._positions = this._positions || this._getPositions());
 	}
-	private _get_positions(): Vector3Array3 {
+	private _getPositions(): Vector3Array3 {
 		const points = this.points();
 		return [points[0].position(), points[1].position(), points[2].position()];
 	}
@@ -65,9 +65,9 @@ export class CoreFace {
 		return new Triangle(positions[0], positions[1], positions[2]);
 	}
 	deltas() {
-		return (this._deltas = this._deltas || this._get_deltas());
+		return (this._deltas = this._deltas || this._getDeltas());
 	}
-	private _get_deltas(): Vector3Array2 {
+	private _getDeltas(): Vector3Array2 {
 		const positions = this.positions();
 		return [positions[1].clone().sub(positions[0]), positions[2].clone().sub(positions[0])];
 	}
@@ -84,7 +84,7 @@ export class CoreFace {
 		return target;
 	}
 
-	random_position(seed: number) {
+	randomPosition(seed: number) {
 		let weights = [CoreMath.randFloat(seed), CoreMath.randFloat(seed * 6541)];
 
 		if (weights[0] + weights[1] > 1) {
@@ -112,125 +112,125 @@ export class CoreFace {
 	// 	return pos
 	// }
 
-	attrib_value_at_position(attrib_name: string, position: Vector3) {
+	attribValueAtPosition(attrib_name: string, position: Vector3) {
 		// const weights = CoreInterpolate._weights_from_3(position, this._positions)
-		const barycentric_coordinates = new Vector3();
-		this.triangle().getBarycoord(position, barycentric_coordinates);
-		const weights = barycentric_coordinates.toArray();
+		const barycentricCoordinates = new Vector3();
+		this.triangle().getBarycoord(position, barycentricCoordinates);
+		const weights = barycentricCoordinates.toArray();
 
 		const attrib = this._geometry.attributes[attrib_name];
-		const attrib_size = attrib.itemSize;
-		const point_values = this.points().map((point) => point.attribValue(attrib_name));
+		const attribSize = attrib.itemSize;
+		const pointValues = this.points().map((point) => point.attribValue(attrib_name));
 
-		let new_attrib_value;
+		let newAttribValue: AttribValue | undefined;
 		let sum;
 		let index = 0;
-		switch (attrib_size) {
+		switch (attribSize) {
 			case 1: {
 				sum = 0;
-				for (let point_value of point_values as number[]) {
-					sum += point_value * weights[index];
+				for (let pointValue of pointValues as number[]) {
+					sum += pointValue * weights[index];
 					index++;
 				}
-				new_attrib_value = sum;
+				newAttribValue = sum;
 				break;
 			}
 			default: {
-				for (let point_value of point_values as Vector3[]) {
-					const weighted_value = point_value.multiplyScalar(weights[index]);
+				for (let pointValue of pointValues as Vector3[]) {
+					const weightedValue = pointValue.multiplyScalar(weights[index]);
 					if (sum) {
-						sum.add(weighted_value);
+						sum.add(weightedValue);
 					} else {
-						sum = weighted_value;
+						sum = weightedValue;
 					}
 					index++;
 				}
-				new_attrib_value = sum;
+				newAttribValue = sum;
 			}
 		}
-		return new_attrib_value;
+		return newAttribValue;
 	}
 
-	static interpolated_value(
+	static interpolatedValue(
 		geometry: BufferGeometry,
 		face: FaceLike,
-		intersect_point: Vector3,
+		intersectPoint: Vector3,
 		attrib: BufferAttribute
 	) {
 		// let point_index, i, sum
-		const point_indices = [face.a, face.b, face.c];
-		const position_attrib = geometry.getAttribute('position');
-		const position_attrib_array = position_attrib.array;
-		const point_positions = point_indices.map(
+		const pointIndices = [face.a, face.b, face.c];
+		const positionAttrib = geometry.getAttribute('position');
+		const positionAttribArray = positionAttrib.array;
+		const pointPositions = pointIndices.map(
 			(point_index) =>
 				new Vector3(
-					position_attrib_array[point_index * 3 + 0],
-					position_attrib_array[point_index * 3 + 1],
-					position_attrib_array[point_index * 3 + 2]
+					positionAttribArray[point_index * 3 + 0],
+					positionAttribArray[point_index * 3 + 1],
+					positionAttribArray[point_index * 3 + 2]
 				)
 		);
 
-		const attrib_size = attrib.itemSize;
-		const attrib_array = attrib.array;
-		let attrib_values: NumericAttribValue[] = [];
-		switch (attrib_size) {
+		const attribSize = attrib.itemSize;
+		const attribArray = attrib.array;
+		let attribValues: NumericAttribValue[] = [];
+		switch (attribSize) {
 			case 1:
-				attrib_values = point_indices.map((point_index) => attrib_array[point_index]);
+				attribValues = pointIndices.map((point_index) => attribArray[point_index]);
 				break;
 			case 2:
-				attrib_values = point_indices.map(
-					(point_index) => new Vector2(attrib_array[point_index * 2 + 0], attrib_array[point_index * 2 + 1])
+				attribValues = pointIndices.map(
+					(point_index) => new Vector2(attribArray[point_index * 2 + 0], attribArray[point_index * 2 + 1])
 				);
 				break;
 			case 3:
-				attrib_values = point_indices.map(
+				attribValues = pointIndices.map(
 					(point_index) =>
 						new Vector3(
-							attrib_array[point_index * 3 + 0],
-							attrib_array[point_index * 3 + 1],
-							attrib_array[point_index * 3 + 2]
+							attribArray[point_index * 3 + 0],
+							attribArray[point_index * 3 + 1],
+							attribArray[point_index * 3 + 2]
 						)
 				);
 				break;
 		}
 
-		const dist_to_points = point_indices.map((point_index, i) => intersect_point.distanceTo(point_positions[i]));
+		const distToPoints = pointIndices.map((point_index, i) => intersectPoint.distanceTo(pointPositions[i]));
 
 		// https://math.stackexchange.com/questions/1336386/weighted-average-distance-between-3-or-more-points
 		// TODO: replace this with Core.Math.Interpolate
-		const distance_total = ArrayUtils.sum([
-			dist_to_points[0] * dist_to_points[1],
-			dist_to_points[0] * dist_to_points[2],
-			dist_to_points[1] * dist_to_points[2],
+		const distanceTotal = ArrayUtils.sum([
+			distToPoints[0] * distToPoints[1],
+			distToPoints[0] * distToPoints[2],
+			distToPoints[1] * distToPoints[2],
 		]);
 
 		const weights = [
-			(dist_to_points[1] * dist_to_points[2]) / distance_total,
-			(dist_to_points[0] * dist_to_points[2]) / distance_total,
-			(dist_to_points[0] * dist_to_points[1]) / distance_total,
+			(distToPoints[1] * distToPoints[2]) / distanceTotal,
+			(distToPoints[0] * distToPoints[2]) / distanceTotal,
+			(distToPoints[0] * distToPoints[1]) / distanceTotal,
 		];
 
-		let new_attrib_value;
-		switch (attrib_size) {
+		let newAttribValue;
+		switch (attribSize) {
 			case 1:
-				new_attrib_value = ArrayUtils.sum(
-					point_indices.map((point_indx, i) => weights[i] * (attrib_values[i] as number))
+				newAttribValue = ArrayUtils.sum(
+					pointIndices.map((point_indx, i) => weights[i] * (attribValues[i] as number))
 				);
 				break;
 			default:
-				var values = point_indices.map((point_index, i) =>
-					(attrib_values[i] as Vector3).multiplyScalar(weights[i])
+				var values = pointIndices.map((point_index, i) =>
+					(attribValues[i] as Vector3).multiplyScalar(weights[i])
 				);
-				new_attrib_value = null;
+				newAttribValue = null;
 				for (let value of values) {
-					if (new_attrib_value) {
-						new_attrib_value.add(value);
+					if (newAttribValue) {
+						newAttribValue.add(value);
 					} else {
-						new_attrib_value = value;
+						newAttribValue = value;
 					}
 				}
 		}
 
-		return new_attrib_value;
+		return newAttribValue;
 	}
 }
