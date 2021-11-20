@@ -78,10 +78,11 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 			this._timelineBuilder.populate(this._timeline);
 
 			// if the timeline is empty, we resolve the promise now
-			if (this._timeline.getChildren().length == 0 || this._timeline.totalDuration() == 0) {
-				Poly.warn(`timeline created by ${this.path()} is empty`);
-				resolveOnce();
-			}
+			// not needed since gsap 3.7.0 ( https://github.com/greensock/GSAP/issues/448 )
+			// if (this._timeline.getChildren().length == 0 || this._timeline.totalDuration() == 0) {
+			// 	Poly.warn(`timeline created by ${this.path()} is empty`);
+			// 	resolveOnce();
+			// }
 		});
 	}
 	async pause() {
