@@ -18,35 +18,35 @@ export class RampPoint {
 			value: this._value,
 		};
 	}
-	get position() {
+	position() {
 		return this._position;
 	}
-	get value() {
+	value() {
 		return this._value;
 	}
 	copy(point: RampPoint) {
-		this._position = point.position;
-		this._value = point.value;
+		this._position = point.position();
+		this._value = point.value();
 	}
 	clone() {
 		const point = new RampPoint();
 		point.copy(this);
 		return point;
 	}
-	is_equal(other_point: RampPoint) {
-		return this._position == other_point.position && this._value == other_point.value;
+	isEqual(other_point: RampPoint) {
+		return this._position == other_point.position() && this._value == other_point.value();
 	}
-	is_equal_json(json: RampPointJson) {
+	isEqualJSON(json: RampPointJson) {
 		return this._position == json.position && this._value == json.value;
 	}
-	from_json(json: RampPointJson) {
+	fromJSON(json: RampPointJson) {
 		this._position = json.position;
 		this._value = json.value;
 	}
-	static are_equal_json(json1: RampPointJson, json2: RampPointJson) {
+	static areEqualJSON(json1: RampPointJson, json2: RampPointJson) {
 		return json1.position == json2.position && json1.value == json2.value;
 	}
-	static from_json(json: RampPointJson) {
+	static fromJSON(json: RampPointJson) {
 		return new RampPoint(json.position, json.value);
 	}
 }
@@ -61,19 +61,19 @@ export class RampValue {
 		this._uuid = generateUUID();
 	}
 
-	get uuid() {
+	uuid() {
 		return this._uuid;
 	}
-	get interpolation() {
+	interpolation() {
 		return this._interpolation;
 	}
-	get points() {
+	points() {
 		return this._points;
 	}
-	static from_json(json: RampValueJson): RampValue {
+	static fromJSON(json: RampValueJson): RampValue {
 		const points = [];
-		for (let json_point of json.points) {
-			points.push(RampPoint.from_json(json_point));
+		for (let jsonPoint of json.points) {
+			points.push(RampPoint.fromJSON(jsonPoint));
 		}
 		return new RampValue(json.interpolation, points);
 	}
@@ -89,9 +89,9 @@ export class RampValue {
 		return ramp;
 	}
 	copy(ramp: RampValue) {
-		this._interpolation = ramp.interpolation;
+		this._interpolation = ramp.interpolation();
 		let index = 0;
-		for (let point of ramp.points) {
+		for (let point of ramp.points()) {
 			const current_point = this._points[index];
 			if (current_point) {
 				current_point.copy(point);
@@ -103,17 +103,17 @@ export class RampValue {
 	}
 
 	is_equal(other_ramp_value: RampValue): boolean {
-		if (this._interpolation != other_ramp_value.interpolation) {
+		if (this._interpolation != other_ramp_value.interpolation()) {
 			return false;
 		}
-		const other_points = other_ramp_value.points;
+		const other_points = other_ramp_value.points();
 		if (this._points.length != other_points.length) {
 			return false;
 		}
 		let index = 0;
 		for (let point of this._points) {
 			const other_point = other_points[index];
-			if (!point.is_equal(other_point)) {
+			if (!point.isEqual(other_point)) {
 				return false;
 			}
 			index += 1;
@@ -131,7 +131,7 @@ export class RampValue {
 		let index = 0;
 		for (let point of this._points) {
 			const other_point = json.points[index];
-			if (!point.is_equal_json(other_point)) {
+			if (!point.isEqualJSON(other_point)) {
 				return false;
 			}
 			index += 1;
@@ -148,7 +148,7 @@ export class RampValue {
 		let index = 0;
 		for (let point1 of json1.points) {
 			const point2 = json2.points[index];
-			if (!RampPoint.are_equal_json(point1, point2)) {
+			if (!RampPoint.areEqualJSON(point1, point2)) {
 				return false;
 			}
 			index += 1;
@@ -162,9 +162,9 @@ export class RampValue {
 		for (let json_point of json.points) {
 			const current_point = this._points[index];
 			if (current_point) {
-				current_point.from_json(json_point);
+				current_point.fromJSON(json_point);
 			} else {
-				this._points.push(RampPoint.from_json(json_point));
+				this._points.push(RampPoint.fromJSON(json_point));
 			}
 			index += 1;
 		}

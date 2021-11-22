@@ -38,6 +38,8 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
+		const tmpTextureGlType = GlConnectionPointType.VEC3;
+		const tmpTexureVarName = this.glVarName('tmpTexureVarName');
 		const gl_type = GlConnectionPointType.FLOAT;
 		const texture_name = this._uniform_name();
 		const var_name = this.glVarName(OUTPUT_NAME);
@@ -46,8 +48,11 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		shaders_collection_controller.addDefinitions(this, [definition]);
 
 		const input_val = this.variableForInputParam(this.p.input);
-		const body_line = `${gl_type} ${var_name} = texture2D(${this._uniform_name()}, vec2(${input_val}, 0.0)).x`;
-		shaders_collection_controller.addBodyLines(this, [body_line]);
+		const body_lines = [
+			`${tmpTextureGlType} ${tmpTexureVarName} = texture2D(${this._uniform_name()}, vec2(${input_val}, 0.0)).xyz`,
+			`${gl_type} ${var_name} = -1.0 + ${tmpTexureVarName}.x + ${tmpTexureVarName}.y + ${tmpTexureVarName}.z`,
+		];
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 	paramsGenerating() {
 		return true;

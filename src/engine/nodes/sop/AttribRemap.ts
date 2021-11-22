@@ -96,7 +96,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 
 		for (let i = 0; i < valuesf.length; i++) {
 			const value = valuesf[i];
-			const remaped_value = ramp_param.value_at_position(value);
+			const remaped_value = ramp_param.valueAtPosition(value);
 			remaped_values[i] = remaped_value;
 		}
 	}
@@ -105,10 +105,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		const ramp_param = this.p.ramp;
 		for (let i = 0; i < valuesv.length; i++) {
 			const value = valuesv[i];
-			const remaped_value = new Vector2(
-				ramp_param.value_at_position(value.x),
-				ramp_param.value_at_position(value.y)
-			);
+			const remaped_value = new Vector2(ramp_param.valueAtPosition(value.x), ramp_param.valueAtPosition(value.y));
 			remaped_values[i] = remaped_value;
 		}
 	}
@@ -118,9 +115,9 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		for (let i = 0; i < valuesv.length; i++) {
 			const value = valuesv[i];
 			const remaped_value = new Vector3(
-				ramp_param.value_at_position(value.x),
-				ramp_param.value_at_position(value.y),
-				ramp_param.value_at_position(value.z)
+				ramp_param.valueAtPosition(value.x),
+				ramp_param.valueAtPosition(value.y),
+				ramp_param.valueAtPosition(value.z)
 			);
 			remaped_values[i] = remaped_value;
 		}
@@ -131,10 +128,10 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		for (let i = 0; i < valuesv.length; i++) {
 			const value = valuesv[i];
 			const remaped_value = new Vector4(
-				ramp_param.value_at_position(value.x),
-				ramp_param.value_at_position(value.y),
-				ramp_param.value_at_position(value.z),
-				ramp_param.value_at_position(value.w)
+				ramp_param.valueAtPosition(value.x),
+				ramp_param.valueAtPosition(value.y),
+				ramp_param.valueAtPosition(value.z),
+				ramp_param.valueAtPosition(value.w)
 			);
 			remaped_values[i] = remaped_value;
 		}

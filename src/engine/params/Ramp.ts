@@ -8,13 +8,12 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ArrayUtils} from '../../core/ArrayUtils';
+import {clamp} from 'three/src/math/MathUtils';
 
-// interface RampParamVisitor extends TypedParamVisitor {
-// 	visit_ramp_param: (param: RampParam) => any;
-// }
 const TEXTURE_WIDTH = 1024;
 const TEXTURE_HEIGHT = 1;
 const TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
+const TEXTURE_BYTES_MULT = 255;
 
 export class RampParam extends TypedParam<ParamType.RAMP> {
 	static type() {
@@ -39,14 +38,14 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		if (raw_input instanceof RampValue) {
 			return raw_input.clone();
 		} else {
-			return RampValue.from_json(raw_input).toJSON();
+			return RampValue.fromJSON(raw_input).toJSON();
 		}
 	}
 	rawInputSerialized() {
 		if (this._raw_input instanceof RampValue) {
 			return this._raw_input.toJSON();
 		} else {
-			return RampValue.from_json(this._raw_input).toJSON();
+			return RampValue.fromJSON(this._raw_input).toJSON();
 		}
 	}
 	valueSerialized() {
@@ -102,14 +101,14 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 			}
 		} else {
 			if (!this._value) {
-				this._value = RampValue.from_json(this._raw_input);
+				this._value = RampValue.fromJSON(this._raw_input);
 			} else {
 				this._value.from_json(this._raw_input);
 			}
 		}
 
-		this._reset_ramp_interpolant();
-		this._update_rampTexture();
+		this._resetRampInterpolant();
+		this._updateRampTexture();
 		this.options.executeCallback();
 		this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		this.setSuccessorsDirty(this);
@@ -144,56 +143,78 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		return false;
 	}
 
-	private _reset_ramp_interpolant() {
+	private _resetRampInterpolant() {
 		this._ramp_interpolant = undefined;
 		// this._ramp_texture = undefined;
 	}
 	rampTexture() {
 		return this._ramp_texture;
 	}
-	private _update_rampTexture() {
-		this._update_ramp_texture_data();
+	private _updateRampTexture() {
+		this._updateRampTextureData();
 		this.rampTexture().needsUpdate = true;
 	}
-	private _update_ramp_texture_data() {
+	private _updateRampTextureData() {
 		let stride = 0;
 		let position = 0;
 		let value = 0;
+		// we set the bounds at [-1:2]
+		// so that we can have the ramp go 1 unit below and above the range [0:1]
+		// so -1 becomes R=0, G=0, B=0
+		// so -0.5 becomes R=0.5, G=0, B=0
+		// so 0 becomes R=1, G=0, B=0
+		// so 0.5 becomes R=1, G=0.5, B=0
+		// so 1 becomes R=1, G=1, B=0
+		// so 1.5 becomes R=1, G=1, B=0.5
+		// so 2 becomes R=1, G=1, B=1
 		for (var i = 0; i < TEXTURE_SIZE; i++) {
 			stride = i * 3;
 			position = i / TEXTURE_WIDTH;
-			value = this.value_at_position(position);
-			this._texture_data[stride] = value * 255; // if I set 256, a value of 1 will become 0
-			// data[ stride+1 ] = 1
-			// data[ stride+2 ] = 2
+			value = this.valueAtPosition(position);
+			if (value <= 0) {
+				// if I set 256, a value of 1 will become 0
+				this._texture_data[stride + 0] = (clamp(value, -1, 0) + 1) * TEXTURE_BYTES_MULT;
+				this._texture_data[stride + 1] = 0;
+				this._texture_data[stride + 2] = 0;
+			} else {
+				if (value <= 1) {
+					this._texture_data[stride + 0] = TEXTURE_BYTES_MULT;
+					this._texture_data[stride + 1] = clamp(value, 0, 1) * TEXTURE_BYTES_MULT;
+					this._texture_data[stride + 2] = 0;
+				} else {
+					this._texture_data[stride + 0] = TEXTURE_BYTES_MULT;
+					this._texture_data[stride + 1] = TEXTURE_BYTES_MULT;
+					this._texture_data[stride + 2] = (clamp(value, 1, 2) - 1) * TEXTURE_BYTES_MULT;
+				}
+			}
 		}
 	}
 
-	static create_interpolant(positions: Float32Array, values: Float32Array) {
-		const values_count = 1;
-		const interpolated_values = new Float32Array(values_count);
-		return new CubicInterpolant(positions, values, values_count, interpolated_values);
+	static createInterpolant(positions: Float32Array, values: Float32Array) {
+		const valuesCount = 1;
+		const interpolatedValues = new Float32Array(valuesCount);
+		return new CubicInterpolant(positions, values, valuesCount, interpolatedValues);
 	}
 	interpolant() {
-		return (this._ramp_interpolant = this._ramp_interpolant || this._create_interpolant());
+		return (this._ramp_interpolant = this._ramp_interpolant || this._createInterpolant());
 	}
-	_create_interpolant() {
-		const points = this.value.points;
-		const sorted_points = ArrayUtils.sortBy(points, (point) => point.position);
-		const positions = new Float32Array(sorted_points.length);
-		const values = new Float32Array(sorted_points.length);
+	private _createInterpolant() {
+		const points = this.value.points();
+		const sortedPoints = ArrayUtils.sortBy(points, (point) => point.position());
+		const positions = new Float32Array(sortedPoints.length);
+		const values = new Float32Array(sortedPoints.length);
 
 		let i = 0;
-		for (let sorted_point of sorted_points) {
-			positions[i] = sorted_point.position;
-			values[i] = sorted_point.value;
+		for (let sortedPoint of sortedPoints) {
+			positions[i] = sortedPoint.position();
+			values[i] = sortedPoint.value();
 			i++;
 		}
 
-		return RampParam.create_interpolant(positions, values);
+		return RampParam.createInterpolant(positions, values);
 	}
 
-	value_at_position(position: number): number {
+	valueAtPosition(position: number): number {
 		return (<unknown>this.interpolant().evaluate(position)[0]) as number;
 	}
 }
