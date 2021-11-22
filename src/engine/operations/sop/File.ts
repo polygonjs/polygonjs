@@ -6,7 +6,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {CoreLoaderGeometry, GeometryFormat} from '../../../core/loader/Geometry';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
-import {PolyScene} from '../../index_all';
+import {PolyScene} from '../../scene/PolyScene';
 import {BaseNodeType} from '../../nodes/_Base';
 
 interface FileSopParams extends DefaultOperationParams {
