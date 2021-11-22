@@ -111,7 +111,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		node.PARAM_CALLBACK_reset();
 	}
 	PARAM_CALLBACK_reset() {
-		this.gpuController.reset_gpu_compute_and_set_dirty();
+		this.gpuController.resetGpuComputeAndSetDirty();
 	}
 
 	static displayedInputNames(): string[] {
@@ -160,40 +160,41 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	async _reset_material_if_dirty() {
 		if (this.p.material.isDirty()) {
 			this.renderController.reset_render_material();
-			if (!this.is_on_frame_start()) {
+			if (!this.isOnStartFrame()) {
 				await this.renderController.init_render_material();
 			}
 		}
 	}
 
-	is_on_frame_start(): boolean {
+	isOnStartFrame(): boolean {
 		return this.scene().frame() == this.pv.startFrame;
 	}
 
-	async cook(input_contents: CoreGroup[]) {
-		this.gpuController.set_restart_not_required();
-		const core_group = input_contents[0];
+	async cook(inputContents: CoreGroup[]) {
+		this.gpuController.setRestartNotRequired();
+		const coreGroup = inputContents[0];
 
 		this.compileIfRequired();
+		const isOnStartFrame = this.isOnStartFrame();
 
-		if (this.is_on_frame_start()) {
-			this.gpuController.reset_particle_groups();
+		if (isOnStartFrame) {
+			this.gpuController.resetParticleGroups();
 		}
 
 		if (!this.gpuController.initialized()) {
-			await this.gpuController.init(core_group);
+			await this.gpuController.init(coreGroup);
 		}
 
 		if (!this.renderController.initialized()) {
-			this.renderController.init_core_group(core_group);
+			this.renderController.init_core_group(coreGroup);
 			await this.renderController.init_render_material();
 		}
 
-		this.gpuController.restart_simulation_if_required();
-		this.gpuController.compute_similation_if_required();
+		this.gpuController.restartSimulationIfRequired();
+		this.gpuController.computeSimilationIfRequired();
 
-		if (this.is_on_frame_start()) {
-			this.setCoreGroup(core_group);
+		if (isOnStartFrame) {
+			this.setCoreGroup(coreGroup);
 		} else {
 			this.cookController.endCook();
 		}
@@ -228,8 +229,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.gpuController.setShadersByName(this._shaders_by_name);
 		this.renderController.setShadersByName(this._shaders_by_name);
 
-		this.gpuController.reset_gpu_compute();
-		this.gpuController.reset_particle_groups();
+		this.gpuController.resetGpuCompute();
+		this.gpuController.resetParticleGroups();
 	}
 
 	init_with_persisted_config() {
@@ -237,7 +238,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		const texture_allocations_controller = this.persisted_config.texture_allocations_controller();
 		if (shaders_by_name && texture_allocations_controller) {
 			this._setShaderNames(shaders_by_name);
-			this.gpuController.set_persisted_texture_allocation_controller(texture_allocations_controller);
+			this.gpuController.setPersistedTextureAllocationController(texture_allocations_controller);
 		}
 	}
 
