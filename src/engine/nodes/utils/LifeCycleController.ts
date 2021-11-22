@@ -22,13 +22,13 @@ export class LifeCycleController {
 		this._on_delete_hooks = undefined;
 	}
 
-	set_creation_completed() {
+	setCreationCompleted() {
 		if (!this._creation_completed) {
 			this._creation_completed = true;
 			// this.run_on_creation_completed_hooks();
 		}
 	}
-	get creation_completed() {
+	creationCompleted() {
 		return this.node.scene().loadingController.loaded() && this._creation_completed;
 	}
 	//

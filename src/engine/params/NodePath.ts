@@ -8,8 +8,6 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {TypedNodePathParamValue} from '../../core/Walker';
 
 export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
-	// private _found_node: BaseNodeType | null = null;
-
 	static type() {
 		return ParamType.NODE_PATH;
 	}
@@ -66,7 +64,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		let node: BaseNodeType | null = null;
 		const path_non_empty = path != null && path !== '';
 
-		this.scene().referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
+		this.scene().referencesController.resetReferenceFromParam(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
 		if (path_non_empty) {
 			node = CoreWalker.findNode(this.node, path, this.decomposed_path);
@@ -75,10 +73,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		const current_found_entity = this._value.node();
 		const newly_found_entity = node;
 
-		this.scene().referencesController.set_named_nodes_from_param(this);
-		if (node) {
-			this.scene().referencesController.set_reference_from_param(this, node);
-		}
+		this._handleReferences(node, path);
 
 		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
 			const dependent_on_found_node = this.options.dependentOnFoundNode();
@@ -155,12 +150,12 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		return expected_types?.includes(node.type());
 	}
 
-	notify_path_rebuild_required(node: BaseNodeType) {
+	notifyPathRebuildRequired(node: BaseNodeType) {
 		this.decomposed_path.update_from_name_change(node);
-		const new_path = this.decomposed_path.to_path();
-		this.set(new_path);
+		const newPath = this.decomposed_path.to_path();
+		this.set(newPath);
 	}
-	notify_target_param_owner_params_updated(node: BaseNodeType) {
+	notifyTargetParamOwnerParamsUpdated(node: BaseNodeType) {
 		this.setDirty();
 	}
 }

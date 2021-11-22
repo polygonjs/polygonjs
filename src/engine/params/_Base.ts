@@ -72,6 +72,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 				predecessor.dispose();
 			}
 		}
+		this.scene().missingExpressionReferencesController.deregisterParam(this);
 		this._expression_controller?.dispose();
 		super.dispose();
 		this._options?.dispose();

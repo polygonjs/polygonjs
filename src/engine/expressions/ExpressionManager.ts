@@ -108,7 +108,7 @@ export class ExpressionManager {
 	// 	}
 	// }
 
-	update_from_method_dependency_name_change() {
+	updateFromMethodDependencyNameChange() {
 		this.expression_string_generator =
 			this.expression_string_generator || new ExpressionStringGenerator(this.param);
 

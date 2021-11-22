@@ -126,7 +126,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 
 	update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (!this.node.lifecycle.creation_completed || !this._connections_match_inputs()) {
+		if (!this.node.lifecycle.creationCompleted() || !this._connections_match_inputs()) {
 			this.update_connection_types();
 			this.node.removeDirtyState();
 

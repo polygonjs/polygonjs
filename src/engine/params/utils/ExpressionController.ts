@@ -36,6 +36,7 @@ export class ExpressionController<T extends ParamType> {
 	// 	// this.param.dirtyController.removePostDirtyHook('expression_controller_reset');
 	// }
 	dispose() {
+		this.param.scene().expressionsController.deregisterParam(this.param);
 		this._resetMethodDependencies();
 	}
 	private _resetMethodDependencies() {
@@ -75,8 +76,8 @@ export class ExpressionController<T extends ParamType> {
 	// }
 
 	set_expression(expression: string | undefined, set_dirty: boolean = true) {
-		this.param.scene().missingExpressionReferencesController.deregister_param(this.param);
-		this.param.scene().expressionsController.deregister_param(this.param);
+		this.param.scene().missingExpressionReferencesController.deregisterParam(this.param);
+		this.param.scene().expressionsController.deregisterParam(this.param);
 
 		if (this._expression != expression) {
 			this._resetMethodDependencies();
@@ -95,9 +96,9 @@ export class ExpressionController<T extends ParamType> {
 		}
 	}
 
-	update_from_method_dependency_name_change() {
+	updateFromMethodDependencyNameChange() {
 		if (this._manager && this.active()) {
-			this._manager.update_from_method_dependency_name_change();
+			this._manager.updateFromMethodDependencyNameChange();
 		}
 	}
 

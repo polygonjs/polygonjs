@@ -77,7 +77,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 			? OperatorPathMode.PARAM
 			: OperatorPathMode.NODE;
 
-		this.scene().referencesController.reset_reference_from_param(this); // must be before decomposed path is changed
+		this.scene().referencesController.resetReferenceFromParam(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
 		if (path_non_empty) {
 			if (mode == OperatorPathMode.PARAM) {
@@ -90,10 +90,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		const current_found_entity = mode == OperatorPathMode.PARAM ? this._found_param : this._found_node;
 		const newly_found_entity = mode == OperatorPathMode.PARAM ? param : node;
 
-		this.scene().referencesController.set_named_nodes_from_param(this);
-		if (node) {
-			this.scene().referencesController.set_reference_from_param(this, node);
-		}
+		this._handleReferences(node, path);
 
 		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
 			const dependent_on_found_node = this.options.dependentOnFoundNode();
@@ -244,12 +241,12 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 		return expected_types.includes(param.type());
 	}
 
-	notify_path_rebuild_required(node: BaseNodeType) {
+	notifyPathRebuildRequired(node: BaseNodeType) {
 		this.decomposed_path.update_from_name_change(node);
 		const new_path = this.decomposed_path.to_path();
 		this.set(new_path);
 	}
-	notify_target_param_owner_params_updated(node: BaseNodeType) {
+	notifyTargetParamOwnerParamsUpdated(node: BaseNodeType) {
 		this.setDirty();
 	}
 }

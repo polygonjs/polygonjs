@@ -64,7 +64,7 @@ QUnit.test('gl add updates its output type correctly when scene is loaded', asyn
 	const constant1 = material_basic_builder1.createNode('constant');
 	constant1.set_gl_type(GlConnectionPointType.VEC2);
 	add1.setInput(0, constant1);
-	assert.ok(add1.lifecycle.creation_completed);
+	assert.ok(add1.lifecycle.creationCompleted());
 	add1.params.get('add1')!.set([1, 2, 3]);
 
 	const data = new SceneJsonExporter(scene).data();
@@ -94,7 +94,7 @@ QUnit.test('gl add updates its output type correctly when scene is loaded 2', as
 	constant1.set_gl_type(GlConnectionPointType.VEC2);
 	add1.setInput(0, constant1);
 	add1.setInput(1, constant1);
-	assert.ok(add1.lifecycle.creation_completed);
+	assert.ok(add1.lifecycle.creationCompleted());
 	add1.params.get('add1')!.set([1, 2, 3]);
 
 	let new_scene: PolyScene | undefined;

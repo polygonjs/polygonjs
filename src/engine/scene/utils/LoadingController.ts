@@ -18,7 +18,7 @@ export class LoadingController {
 		this._set_loading_state(true);
 	}
 	async markAsLoaded() {
-		this.scene.missingExpressionReferencesController.resolve_missing_references();
+		this.scene.missingExpressionReferencesController.resolveMissingReferences();
 		await this._set_loading_state(false);
 		this.trigger_loaded_event();
 	}

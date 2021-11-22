@@ -6,6 +6,7 @@ import {ParamType} from '../../poly/ParamType';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 import {OperatorPathParam} from '../../params/OperatorPath';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 
 type BasePathParam = TypedPathParam<any>;
 // class BasePathParam extends Typ
@@ -16,16 +17,17 @@ export class ReferencesController {
 	private _referencing_params_by_all_named_node_ids: Map<CoreGraphNodeId, BasePathParam[]> = new Map();
 	constructor(protected scene: PolyScene) {}
 
-	set_reference_from_param(src_param: BasePathParam, referenced_node: BaseNodeType | BaseParamType) {
-		this._referenced_nodes_by_src_param_id.set(src_param.graphNodeId(), referenced_node);
+	setReferenceFromParam(src_param: BasePathParam, referencedGraphNode: BaseNodeType | BaseParamType) {
+		this._referenced_nodes_by_src_param_id.set(src_param.graphNodeId(), referencedGraphNode);
 		MapUtils.pushOnArrayAtEntry(
 			this._referencing_params_by_referenced_node_id,
-			referenced_node.graphNodeId(),
+			referencedGraphNode.graphNodeId(),
 			src_param
 		);
 	}
-	set_named_nodes_from_param(src_param: BasePathParam) {
+	setNamedNodesFromParam(src_param: BasePathParam) {
 		const named_nodes: BaseNodeType[] = src_param.decomposed_path.named_nodes();
+
 		for (let named_node of named_nodes) {
 			MapUtils.pushOnArrayAtEntry(
 				this._referencing_params_by_all_named_node_ids,
@@ -34,7 +36,7 @@ export class ReferencesController {
 			);
 		}
 	}
-	reset_reference_from_param(src_param: BasePathParam) {
+	resetReferenceFromParam(src_param: BasePathParam) {
 		const referenced_node = this._referenced_nodes_by_src_param_id.get(src_param.graphNodeId());
 		if (referenced_node) {
 			MapUtils.popFromArrayAtEntry(
@@ -50,6 +52,7 @@ export class ReferencesController {
 					src_param
 				);
 			}
+
 			this._referenced_nodes_by_src_param_id.delete(src_param.graphNodeId());
 		}
 	}
@@ -117,11 +120,13 @@ export class ReferencesController {
 	// TRACK NAME CHANGES
 	//
 	//
-	notify_name_updated(node: BaseNodeType) {
-		const referencing_params = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
-		if (referencing_params) {
-			for (let referencing_param of referencing_params) {
-				referencing_param.notify_path_rebuild_required(node);
+	notifyNameUpdated(node: BaseNodeType) {
+		const referencingParams = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
+		if (referencingParams) {
+			// make sure to do a cloned copy, since the list will change as the params are notified to rebuild
+			const referencingParamsCloned = ArrayUtils.shallowClone(referencingParams);
+			for (let referencingParam of referencingParamsCloned) {
+				referencingParam.notifyPathRebuildRequired(node);
 			}
 		}
 	}
@@ -137,12 +142,15 @@ export class ReferencesController {
 	// TRACK PARAM DELETIONS/ADDITIONS
 	//
 	//
-	notify_params_updated(node: BaseNodeType) {
-		const referencing_params = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
-		if (referencing_params) {
-			for (let referencing_param of referencing_params) {
-				if (referencing_param.options.isSelectingParam()) {
-					referencing_param.notify_target_param_owner_params_updated(node);
+	notifyParamsUpdated(node: BaseNodeType) {
+		const referencingParams = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
+
+		if (referencingParams) {
+			// make sure to do a cloned copy, since the list will change as the params are notified to rebuild
+			const referencingParamsCloned = ArrayUtils.shallowClone(referencingParams);
+			for (let referencingParam of referencingParamsCloned) {
+				if (referencingParam.options.isSelectingParam()) {
+					referencingParam.notifyTargetParamOwnerParamsUpdated(node);
 				}
 			}
 		}

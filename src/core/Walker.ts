@@ -273,33 +273,36 @@ export class CoreWalker {
 		}
 	}
 
-	static makeAbsolutePath(node_src: BaseNodeType | BaseParamType, path: string): string | null {
+	static makeAbsolutePath(nodeSrc: BaseNodeType | BaseParamType, path: string): string | null {
 		if (path[0] == CoreWalker.SEPARATOR) {
 			return path;
 		}
+		const pathElements = path.split(CoreWalker.SEPARATOR);
+		const firstElement = pathElements.shift();
 
-		const path_elements = path.split(CoreWalker.SEPARATOR);
-		const first_element = path_elements.shift();
-
-		if (first_element) {
-			switch (first_element) {
+		if (firstElement) {
+			switch (firstElement) {
 				case '..': {
-					const parent = node_src.parent();
+					const parent = nodeSrc.parent();
 					if (parent) {
-						return this.makeAbsolutePath(parent, path_elements.join(CoreWalker.SEPARATOR));
+						if (parent == nodeSrc.scene().root()) {
+							return CoreWalker.SEPARATOR + pathElements.join(CoreWalker.SEPARATOR);
+						} else {
+							return this.makeAbsolutePath(parent, pathElements.join(CoreWalker.SEPARATOR));
+						}
 					} else {
 						return null;
 					}
 				}
 				case '.': {
-					return this.makeAbsolutePath(node_src, path_elements.join(CoreWalker.SEPARATOR));
+					return this.makeAbsolutePath(nodeSrc, pathElements.join(CoreWalker.SEPARATOR));
 				}
 				default: {
-					return [node_src.path(), path].join(CoreWalker.SEPARATOR);
+					return [nodeSrc.path(), path].join(CoreWalker.SEPARATOR);
 				}
 			}
 		} else {
-			return node_src.path();
+			return nodeSrc.path();
 		}
 	}
 }

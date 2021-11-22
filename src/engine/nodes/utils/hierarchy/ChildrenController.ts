@@ -139,7 +139,7 @@ export class HierarchyChildrenController {
 		const child_node = new node_class(this.node.scene(), `child_node_${node_type}`, params_init_value_overrides);
 		child_node.initialize_base_and_node();
 		this.add_node(child_node);
-		child_node.lifecycle.set_creation_completed();
+		child_node.lifecycle.setCreationCompleted();
 		return child_node;
 	}
 	private _find_node_class(node_type: string) {
@@ -198,7 +198,7 @@ export class HierarchyChildrenController {
 			this.node.scene().webgl_controller.set_require_webgl2();
 		}
 
-		this.node.scene().missingExpressionReferencesController.check_for_missing_references(child_node);
+		this.node.scene().missingExpressionReferencesController.checkForMissingReferences(child_node);
 
 		return child_node;
 	}

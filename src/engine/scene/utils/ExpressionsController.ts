@@ -6,10 +6,10 @@ export class ExpressionsController {
 	private _params_by_id: Map<CoreGraphNodeId, BaseParamType> = new Map();
 	constructor() {}
 
-	register_param(param: BaseParamType) {
+	registerParam(param: BaseParamType) {
 		this._params_by_id.set(param.graphNodeId(), param);
 	}
-	deregister_param(param: BaseParamType) {
+	deregisterParam(param: BaseParamType) {
 		this._params_by_id.delete(param.graphNodeId());
 	}
 
@@ -17,7 +17,7 @@ export class ExpressionsController {
 	//
 	//
 	//
-	regenerate_referring_expressions(node: BaseNodeType) {
+	regenerateReferringExpressions(node: BaseNodeType) {
 		node.nameController.graph_node.setSuccessorsDirty(node);
 	}
 }

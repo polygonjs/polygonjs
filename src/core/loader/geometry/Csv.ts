@@ -6,7 +6,7 @@ import {AttribType} from '../../geometry/Constant';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {CoreType} from '../../Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {PolyScene} from '../../../engine/index_all';
+import {PolyScene} from '../../../engine/scene/PolyScene';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {CoreBaseLoader} from '../_Base';
 

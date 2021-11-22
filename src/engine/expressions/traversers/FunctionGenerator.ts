@@ -576,9 +576,7 @@ export class FunctionGenerator extends BaseTraverser {
 				this.method_dependencies.push(method_dependency);
 			} else {
 				if (path_node && CoreType.isString(path_argument)) {
-					this.param
-						.scene()
-						.missingExpressionReferencesController.register(this.param, path_node, path_argument);
+					this.param.scene().missingExpressionReferencesController.register(this.param, path_argument);
 				}
 			}
 		}

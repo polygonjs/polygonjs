@@ -7,7 +7,7 @@ import {DispatchController} from './utils/DispatchController';
 import {ExpressionsController} from './utils/ExpressionsController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
-import {MissingReferencesController} from './utils/MissingReferencesController';
+import {MissingReferencesController} from './utils/missingReferences/MissingReferencesController';
 import {NodesController} from './utils/NodesController';
 import {PolySceneSerializer} from './utils/Serializer';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';

@@ -98,7 +98,7 @@ QUnit.test('gl mult updates its output type correctly when scene is loaded 2', a
 	constant1.set_gl_type(GlConnectionPointType.VEC2);
 	mult1.setInput(0, constant1);
 	mult1.setInput(1, constant1);
-	assert.ok(mult1.lifecycle.creation_completed);
+	assert.ok(mult1.lifecycle.creationCompleted());
 	mult1.params.get('mult1')!.set([1, 2, 3]);
 
 	let new_scene: PolyScene | undefined;

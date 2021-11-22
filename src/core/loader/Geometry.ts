@@ -15,7 +15,7 @@ import {CoreUserAgent} from '../UserAgent';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {TypeAssert} from '../../engine/poly/Assert';
-import {PolyScene} from '../../engine/index_all';
+import {PolyScene} from '../../engine/scene/PolyScene';
 import {isBooleanTrue} from '../BooleanValue';
 
 export enum GeometryFormat {

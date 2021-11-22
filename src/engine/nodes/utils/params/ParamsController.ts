@@ -135,7 +135,7 @@ export class ParamsController {
 		this._updateCaches();
 		this._initParamAccessors();
 		// param.emit(ParamEvent.DELETED);
-		this.node.scene().referencesController.notify_params_updated(this.node);
+		this.node.scene().referencesController.notifyParamsUpdated(this.node);
 		this.node.emit(NodeEvent.PARAMS_UPDATED);
 	}
 	updateParams(options: ParamsUpdateOptions) {

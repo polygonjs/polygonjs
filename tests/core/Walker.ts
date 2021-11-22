@@ -1,6 +1,6 @@
 import {CoreWalker} from '../../src/core/Walker';
 
-QUnit.test('walker from a box', (assert) => {
+QUnit.test('CoreWalker: from a box', (assert) => {
 	const scene = window.scene;
 	const box1 = window.geo1.createNode('box');
 
@@ -20,7 +20,7 @@ QUnit.test('walker from a box', (assert) => {
 	assert.notEqual(window.scene.node('/geo10'), window.geo1);
 });
 
-QUnit.test('a param to another', (assert) => {
+QUnit.test('CoreWalker: a param to another', (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
@@ -43,7 +43,7 @@ QUnit.test('CoreWalker.relativePath', (assert) => {
 	assert.equal(CoreWalker.relativePath(material, meshBasic), '../materialsNetwork1/meshBasic1');
 });
 
-QUnit.test('node.node() relative and absolute', (assert) => {
+QUnit.test('CoreWalker node.node() relative and absolute', (assert) => {
 	const geo1 = window.geo1;
 	const material = geo1.createNode('material');
 
@@ -56,4 +56,33 @@ QUnit.test('node.node() relative and absolute', (assert) => {
 	assert.equal(geo2.node('/')?.graphNodeId(), root.graphNodeId());
 	assert.equal(geo2.node('/geo1')?.graphNodeId(), geo1.graphNodeId());
 	assert.equal(geo2.node('/geo1/material1')?.graphNodeId(), material.graphNodeId());
+});
+
+QUnit.test('CoreWalker.makeAbsolute', (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+	const geo2 = scene.createNode('geo');
+	const box11 = geo1.createNode('box');
+	const box12 = geo1.createNode('box');
+	const box21 = geo2.createNode('box');
+	const box22 = geo2.createNode('box');
+	const MAT1 = geo1.createNode('materialsNetwork');
+	const MAT2 = geo2.createNode('materialsNetwork');
+	const meshBasic1 = MAT1.createNode('meshBasic');
+	const meshBasic2 = MAT2.createNode('meshBasic');
+	box11.setName('box11');
+	box12.setName('box12');
+	box21.setName('box21');
+	box22.setName('box22');
+
+	assert.equal(CoreWalker.relativePath(box11, box22), '../../geo2/box22');
+	assert.equal(CoreWalker.makeAbsolutePath(box11, CoreWalker.relativePath(box11, box22)), '/geo2/box22');
+	assert.equal(CoreWalker.makeAbsolutePath(box11, './../../geo2/box22'), '/geo2/box22');
+	assert.equal(CoreWalker.makeAbsolutePath(box11, './../box12'), '/geo1/box12');
+
+	assert.equal(CoreWalker.relativePath(meshBasic1, meshBasic2), '../../../geo2/materialsNetwork1/meshBasic1');
+	assert.equal(
+		CoreWalker.makeAbsolutePath(meshBasic1, CoreWalker.relativePath(meshBasic1, meshBasic2)),
+		'/geo2/materialsNetwork1/meshBasic1'
+	);
 });

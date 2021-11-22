@@ -3,6 +3,10 @@ import {SetUtils} from './SetUtils';
 import {CoreType} from './Type';
 
 export class ArrayUtils {
+	static shallowClone<T>(array: Array<T>): Array<T> {
+		// https://stackoverflow.com/questions/3978492/fastest-way-to-duplicate-an-array-in-javascript-slice-vs-for-loop
+		return [...array];
+	}
 	static min<T>(array: Array<T>): T {
 		let min = array[0];
 		for (let element of array) {

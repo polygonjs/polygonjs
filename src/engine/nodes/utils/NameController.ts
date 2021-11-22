@@ -60,11 +60,11 @@ export class NameController {
 			}
 		}
 
-		if (this.node.lifecycle.creation_completed) {
-			this.node.scene().missingExpressionReferencesController.check_for_missing_references(this.node);
-			this.node.scene().expressionsController.regenerate_referring_expressions(this.node);
+		if (this.node.lifecycle.creationCompleted()) {
+			this.node.scene().missingExpressionReferencesController.checkForMissingReferences(this.node);
+			this.node.scene().expressionsController.regenerateReferringExpressions(this.node);
 		}
-		this.node.scene().referencesController.notify_name_updated(this.node);
+		this.node.scene().referencesController.notifyNameUpdated(this.node);
 		this.node.emit(NodeEvent.NAME_UPDATED);
 	}
 
