@@ -115,10 +115,6 @@ export class ClipSopOperation extends BaseSopOperation {
 		// and we perform the intersection a second time to actually set the position attribute values
 		performIntersection(posAttr);
 
-		// set the draw range to only the new segments and offset the lines so they don't intersect with the geometry
-		// outlineLines.geometry.setDrawRange(0, index);
-		// outlineLines.position.copy( clippingPlane.normal ).multiplyScalar( - 0.00001 );
-		// posAttr.needsUpdate = true;
 		return outlineLines;
 	}
 }

@@ -133,18 +133,15 @@ export class PolyEngine {
 	setLogger(logger: BaseCoreLogger | null) {
 		this._logger = logger;
 	}
-	get logger() {
-		return this._logger;
-	}
 
 	log(message?: any, ...optionalParams: any[]) {
-		this.logger?.log(...[message, ...optionalParams]);
+		this._logger?.log(...[message, ...optionalParams]);
 	}
 	warn(message?: any, ...optionalParams: any[]) {
-		this.logger?.warn(...[message, ...optionalParams]);
+		this._logger?.warn(...[message, ...optionalParams]);
 	}
 	error(message?: any, ...optionalParams: any[]) {
-		this.logger?.error(...[message, ...optionalParams]);
+		this._logger?.error(...[message, ...optionalParams]);
 	}
 }
 
