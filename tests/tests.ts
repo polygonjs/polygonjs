@@ -169,6 +169,7 @@ import './engine/nodes/sop/CameraProject';
 import './engine/nodes/sop/Center';
 import './engine/nodes/sop/Circle';
 import './engine/nodes/sop/Circle3Points';
+import './engine/nodes/sop/Clip';
 import './engine/nodes/sop/Color';
 import './engine/nodes/sop/Cone';
 import './engine/nodes/sop/Copy';

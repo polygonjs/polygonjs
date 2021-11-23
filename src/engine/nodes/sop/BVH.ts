@@ -10,8 +10,11 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BVHSopOperation} from '../../operations/sop/BVH';
 
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class BVHSopParamsConfig extends NodeParamsConfig {}
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+const DEFAULT = BVHSopOperation.DEFAULT_PARAMS;
+class BVHSopParamsConfig extends NodeParamsConfig {
+	keepOnlyPosition = ParamConfig.BOOLEAN(DEFAULT.keepOnlyPosition);
+}
 const ParamsConfig = new BVHSopParamsConfig();
 
 export class BVHSopNode extends TypedSopNode<BVHSopParamsConfig> {

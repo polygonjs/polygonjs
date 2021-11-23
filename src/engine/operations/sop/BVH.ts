@@ -8,11 +8,16 @@ import {Material} from 'three/src/materials/Material';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {ObjectType} from '../../../core/geometry/Constant';
+import {isBooleanTrue} from '../../../core/Type';
 
-interface BVHSopParams extends DefaultOperationParams {}
+interface BVHSopParams extends DefaultOperationParams {
+	keepOnlyPosition: boolean;
+}
 
 export class BVHSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: BVHSopParams = {};
+	static readonly DEFAULT_PARAMS: BVHSopParams = {
+		keepOnlyPosition: false,
+	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.ALWAYS;
 	static type(): Readonly<'BVH'> {
 		return 'BVH';
@@ -26,10 +31,12 @@ export class BVHSopOperation extends BaseSopOperation {
 					object.traverse((child) => {
 						const mesh = child as Mesh;
 						if (mesh.isMesh) {
-							const geometry = mesh.geometry;
-							for (const key in geometry.attributes) {
-								if (key !== 'position') {
-									geometry.deleteAttribute(key);
+							if (isBooleanTrue(params.keepOnlyPosition)) {
+								const geometry = mesh.geometry;
+								for (const key in geometry.attributes) {
+									if (key !== 'position') {
+										geometry.deleteAttribute(key);
+									}
 								}
 							}
 
