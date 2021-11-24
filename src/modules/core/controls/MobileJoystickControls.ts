@@ -65,7 +65,10 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 	};
 	// private _translationSpeed = DEFAULT_PARAMS.translateSpeed;
 	private _azimuthalAngle: number = 0;
-
+	private _translateDomElement: HTMLElement;
+	private _translateDomElementRect: DOMRect;
+	private _jumpDomElement: HTMLElement;
+	private _runDomElement: HTMLElement;
 	constructor(private _camera: Camera, private domElement: HTMLElement, private player?: CorePlayer) {
 		super();
 		// this._element = this._viewer.domElement();
@@ -76,6 +79,10 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		// 	const deltaTime = Math.min(0.1, clock.getDelta());
 		// 	this.update(deltaTime);
 		// });
+		this._translateDomElement = this._createTranslateDomElement();
+		this._translateDomElementRect = this._translateDomElement.getBoundingClientRect();
+		this._runDomElement = this._createRunDomElement();
+		this._jumpDomElement = this._createJumpDomElement();
 		this._addElements();
 		this._addEvents();
 	}
@@ -85,8 +92,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this._removeElements();
 		this.updateElements();
 	}
-	private _translateDomElement = this._createTranslateDomElement();
-	private _translateDomElementRect: DOMRect = this._translateDomElement.getBoundingClientRect();
+
 	private _createTranslateDomElement() {
 		const rect = this.domElement.getBoundingClientRect();
 		const minDim = Math.min(rect.width, rect.height);
@@ -103,7 +109,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		element.style.left = `${margin}px`;
 		return element;
 	}
-	private _jumpDomElement = this._createJumpDomElement();
+
 	private _jumpDomElementSize() {
 		const rect = this.domElement.getBoundingClientRect();
 		const minDim = Math.min(rect.width, rect.height);
@@ -116,14 +122,16 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		const element = document.createElement('div');
 		element.id = 'MobileJoystickControls-jump';
 		element.style.width = `${size}px`;
-		element.style.height = `${Math.floor(size)}px`;
+		const height = Math.floor(size);
+		element.style.height = `${height}px`;
 		element.style.border = '1px solid black';
 		element.style.position = 'absolute';
-		element.style.bottom = `${margin}px`;
+		element.style.bottom = `${2 * margin + parseInt(this._runDomElement.style.height)}px`;
 		element.style.right = `${margin}px`;
+		element.style.borderRadius = `${height}px`;
 		return element;
 	}
-	private _runDomElement = this._createRunDomElement();
+
 	private _createRunDomElement() {
 		const element = document.createElement('div');
 		const rect = this.domElement.getBoundingClientRect();
@@ -135,7 +143,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		element.style.height = `${Math.floor(size)}px`;
 		element.style.border = '1px solid black';
 		element.style.position = 'absolute';
-		element.style.bottom = `${2 * margin + parseInt(this._jumpDomElement.style.height)}px`;
+		element.style.bottom = `${margin}px`;
 		element.style.right = `${margin}px`;
 		element.style.translate = `-50%`;
 		return element;
@@ -146,7 +154,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this.domElement.parentElement?.append(this._runDomElement);
 	}
 	private _removeElements() {
-		const elements = [this._translateDomElement];
+		const elements = [this._translateDomElement, this._jumpDomElement, this._runDomElement];
 		for (let element of elements) {
 			element.parentElement?.removeChild(element);
 		}

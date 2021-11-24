@@ -99,6 +99,12 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 	autoplay = ParamConfig.BOOLEAN(1);
 	/** @param show helper */
 	showHelper = ParamConfig.BOOLEAN(0);
+	/** @param helper size */
+	helperSize = ParamConfig.FLOAT(1, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		visibleIf: {showHelper: true},
+	});
 	/** @param play */
 	play = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
@@ -138,7 +144,21 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		this.flags.display.onUpdate(() => {
 			this._updateHelperHierarchy();
 		});
+		this.scene().dispatchController.onAddListener(() => {
+			this.params.onParamsCreated('params_label', () => {
+				this.params.label.init([this.p.url], () => {
+					const url = this.p.url.rawInput();
+					if (url) {
+						const elements = url.split('/');
+						return elements[elements.length - 1];
+					} else {
+						return '';
+					}
+				});
+			});
+		});
 	}
+
 	private _updateHelperHierarchy() {
 		if (!this._helper) {
 			return;
@@ -194,6 +214,7 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 			}
 			if (this._helper) {
 				this._helper.visible = isBooleanTrue(this.pv.showHelper);
+				this._helper.range = this.pv.helperSize;
 				this._helper.update();
 			}
 		}

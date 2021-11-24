@@ -52,7 +52,7 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 	/** @param prints the list of nodes the mask resolves to to the console. Useful for debugging */
 	printResolve = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			NodeCookEventNode.PARAM_CALLBACK_updateResolve(node as NodeCookEventNode);
+			NodeCookEventNode.PARAM_CALLBACK_printResolve(node as NodeCookEventNode);
 		},
 	});
 }

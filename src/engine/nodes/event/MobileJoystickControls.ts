@@ -37,6 +37,7 @@ const EVENT_END = 'end';
 
 function updatePlayerParamsCallbackOption(): ParamOptions {
 	return {
+		cook: false,
 		callback: (node: BaseNodeType) => {
 			MobileJoystickControlsEventNode.PARAM_CALLBACK_updatePlayerParams(node as MobileJoystickControlsEventNode);
 		},
@@ -247,6 +248,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	setupControls(controls: MobileJoystickControls) {
 		controls.setRotationSpeed(this.pv.rotateSpeed);
 		controls.setRotationRange({min: this.pv.minPolarAngle, max: this.pv.maxPolarAngle});
+		controls.updateElements();
 	}
 
 	disposeControlsForHtmlElementId(html_element_id: string) {
