@@ -19,6 +19,7 @@ import {RopType} from '../../../../poly/registers/nodes/types/Rop';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {CoreUserAgent} from '../../../../../core/UserAgent';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
+import {Object3D} from 'three/src/core/Object3D';
 export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		render = ParamConfig.FOLDER();
@@ -72,11 +73,11 @@ export class RenderController {
 	// render methods
 	//
 	//
-	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number) {
+	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number, renderObjectOverride?: Object3D) {
 		if (isBooleanTrue(this.node.pv.doPostProcess)) {
 			this.node.postProcessController.render(canvas, size);
 		} else {
-			this.render_with_renderer(canvas);
+			this.renderWithRenderer(canvas, renderObjectOverride);
 		}
 
 		if (this._resolved_cssRenderer_rop && this._resolved_scene && isBooleanTrue(this.node.pv.setCSSRenderer)) {
@@ -86,12 +87,14 @@ export class RenderController {
 			}
 		}
 	}
-	render_with_renderer(canvas: HTMLCanvasElement) {
+	renderWithRenderer(canvas: HTMLCanvasElement, renderObjectOverride?: Object3D) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
 			// renderer.autoClear = false;
-			if (this._resolved_scene) {
-				renderer.render(this._resolved_scene, this.node.object);
+
+			const scene = /*renderObjectOverride ||*/ this._resolved_scene;
+			if (scene) {
+				renderer.render(scene, this.node.object);
 			}
 		}
 	}
@@ -253,7 +256,7 @@ export class RenderController {
 		return renderer;
 	}
 
-	delete_renderer(canvas: HTMLCanvasElement) {
+	deleteRenderer(canvas: HTMLCanvasElement) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
 			Poly.renderersController.deregisterRenderer(renderer);

@@ -6,6 +6,7 @@ import {ViewerControlsController} from './utils/ControlsController';
 import {ViewerEventsController} from './utils/EventsController';
 import {WebGLController} from './utils/WebglController';
 import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/ControlsController';
+import {Object3D} from 'three/src/core/Object3D';
 
 const HOVERED_CLASS_NAME = 'hovered';
 type ViewerHook = (delta: number) => void;
@@ -17,6 +18,16 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	protected _active: boolean = false;
 	private static _next_viewer_id = 0;
 	private _id: Readonly<number>;
+	protected _renderObjectOverride: Object3D | undefined;
+
+	setRenderObjectOverride(object?: Object3D | null) {
+		console.log('setRenderObjectOverride', object);
+		if (object) {
+			this._renderObjectOverride = object;
+		} else {
+			this._renderObjectOverride = undefined;
+		}
+	}
 
 	active() {
 		return this._active;

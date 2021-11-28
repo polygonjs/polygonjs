@@ -1,8 +1,10 @@
 import {BaseNodeType} from '../../_Base';
 import {NameController} from '../NameController';
+import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 
 type Callback = () => void;
 import {CoreWalker} from '../../../../core/Walker';
+import {NodeContext} from '../../../poly/NodeContext';
 
 export class HierarchyParentController {
 	private _parent: BaseNodeType | null = null;
@@ -22,9 +24,17 @@ export class HierarchyParentController {
 			}
 		}
 	}
-	is_selected(): boolean {
-		return this.parent()?.childrenController?.selection?.contains(this.node) || false;
+	firstAncestorWithContext<N extends NodeContext>(context: N): NodeTypeMap[N] | null {
+		if (this._parent) {
+			if (this._parent.context() == context) {
+				return this._parent as NodeTypeMap[N];
+			} else {
+				return this._parent.parentController.firstAncestorWithContext(context);
+			}
+		}
+		return null;
 	}
+
 	path(relative_to_parent?: BaseNodeType): string {
 		const separator = CoreWalker.SEPARATOR;
 		if (this._parent != null) {

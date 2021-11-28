@@ -214,8 +214,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	/**
 	 * returns the parent.
 	 *
-	 */ parent() {
+	 */
+	parent() {
 		return this.parentController.parent();
+	}
+	firstAncestorWithContext<N extends NodeContext>(context: N) {
+		return this.parentController.firstAncestorWithContext(context);
 	}
 	root() {
 		return this._scene.root();
