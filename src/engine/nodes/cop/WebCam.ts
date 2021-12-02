@@ -10,6 +10,7 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Texture} from 'three/src/textures/Texture';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
+import {sRGBEncoding} from 'three/src/constants';
 
 export function WebCamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -17,7 +18,10 @@ export function WebCamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		res = ParamConfig.VECTOR2([1024, 1024]);
 	};
 }
-class WebCamCopParamsConfig extends TextureParamConfig(WebCamCopParamConfig(NodeParamsConfig)) {}
+class WebCamCopParamsConfig extends TextureParamConfig(WebCamCopParamConfig(NodeParamsConfig), {
+	tencoding: true,
+	encoding: sRGBEncoding,
+}) {}
 
 const ParamsConfig = new WebCamCopParamsConfig();
 

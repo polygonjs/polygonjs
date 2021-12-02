@@ -9,6 +9,9 @@ export class CoreDomUtils {
 	static reEstablishContextMenu() {
 		document.removeEventListener('contextmenu', CONTEXT_MENU_DISABLER);
 	}
+	static isHTMLVideoElementLoaded(videoElement: HTMLVideoElement) {
+		return videoElement.readyState === 4;
+	}
 }
 export function observeStyleChange(element: HTMLElement) {
 	const Observe = (element: HTMLElement, opt: any, cb: any) => {

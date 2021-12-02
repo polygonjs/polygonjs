@@ -77,14 +77,18 @@ const CALLBACK_PARAMS_TRANSFORM_ROTATION = callbackParams('PARAM_CALLBACK_update
 const CALLBACK_PARAMS_TRANSFORM_CENTER = callbackParams('PARAM_CALLBACK_update_center');
 const CALLBACK_PARAMS_ADVANCED = callbackParams('PARAM_CALLBACK_update_advanced');
 
-export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
+interface TextureParamConfigDefaults {
+	tencoding: boolean | number;
+	encoding: number;
+}
+export function TextureParamConfig<TBase extends Constructor>(Base: TBase, defaults?: TextureParamConfigDefaults) {
 	return class Mixin extends Base {
 		/** @param toggle on to allow updating the texture encoding */
-		tencoding = ParamConfig.BOOLEAN(0, {
+		tencoding = ParamConfig.BOOLEAN(defaults?.tencoding || 0, {
 			...CALLBACK_PARAMS_ENCODING,
 		});
 		/** @param sets the texture encoding */
-		encoding = ParamConfig.INTEGER(DEFAULT.ENCODING, {
+		encoding = ParamConfig.INTEGER(defaults?.encoding || DEFAULT.ENCODING, {
 			visibleIf: {tencoding: 1},
 			menu: {
 				entries: ENCODINGS.map((m) => {
@@ -265,6 +269,12 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 	};
 }
+
+// export function TextureParamConfigFactory<TBase extends Constructor>(defaults: TextureParamConfigDefaults) {
+// 	return (Base: TBase) => {
+// 		return TextureParamConfig(Base, defaults);
+// 	};
+// }
 
 class TextureParamsConfig extends TextureParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new TextureParamsConfig();
