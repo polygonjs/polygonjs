@@ -34,28 +34,28 @@ export class NameController {
 		return `${base}1`;
 	}
 
-	request_name_to_parent(new_name: string) {
+	requestNameToParent(new_name: string) {
 		const parent = this.node.parent();
 		if (parent && parent.childrenAllowed() && parent.childrenController) {
-			parent.childrenController.set_child_name(this.node, new_name);
+			parent.childrenController.setChildName(this.node, new_name);
 		} else {
-			console.warn('request_name_to_parent failed, no parent found');
+			console.warn('requestNameToParent failed, no parent found');
 		}
 	}
 	setName(new_name: string) {
 		if (new_name != this.node.name()) {
-			this.request_name_to_parent(new_name);
+			this.requestNameToParent(new_name);
 		}
 	}
-	update_name_from_parent(new_name: string) {
+	updateNameFromParent(new_name: string) {
 		this.node._set_core_name(new_name);
-		this.post_setName();
-		this.run_post_set_fullPath_hooks();
+		this._postSetName();
+		this.runPostSetFullPathHooks();
 		if (this.node.childrenAllowed()) {
 			const children = this.node.childrenController?.children();
 			if (children) {
 				for (let child_node of children) {
-					child_node.nameController.run_post_set_fullPath_hooks();
+					child_node.nameController.runPostSetFullPathHooks();
 				}
 			}
 		}
@@ -77,14 +77,14 @@ export class NameController {
 		this._on_set_fullPath_hooks.push(hook);
 	}
 
-	post_setName() {
+	private _postSetName() {
 		if (this._on_set_name_hooks) {
 			for (let hook of this._on_set_name_hooks) {
 				hook();
 			}
 		}
 	}
-	run_post_set_fullPath_hooks() {
+	runPostSetFullPathHooks() {
 		if (this._on_set_fullPath_hooks) {
 			for (let hook of this._on_set_fullPath_hooks) {
 				hook();

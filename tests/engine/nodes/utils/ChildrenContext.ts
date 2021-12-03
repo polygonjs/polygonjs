@@ -8,12 +8,12 @@ QUnit.test('children_context grand_parent types are updated as nodes get added a
 		return;
 	}
 
-	assert.ok(root.childrenController.has_children_and_grandchildren_with_context(NodeContext.OBJ));
-	assert.ok(!root.childrenController.has_children_and_grandchildren_with_context(NodeContext.SOP));
+	assert.ok(root.childrenController.hasChildrenAndGrandchildrenWithContext(NodeContext.OBJ));
+	assert.ok(!root.childrenController.hasChildrenAndGrandchildrenWithContext(NodeContext.SOP));
 
 	const box = geo1.createNode('box');
-	assert.ok(root.childrenController.has_children_and_grandchildren_with_context(NodeContext.SOP));
+	assert.ok(root.childrenController.hasChildrenAndGrandchildrenWithContext(NodeContext.SOP));
 
 	geo1.removeNode(box);
-	assert.ok(!root.childrenController.has_children_and_grandchildren_with_context(NodeContext.SOP));
+	assert.ok(!root.childrenController.hasChildrenAndGrandchildrenWithContext(NodeContext.SOP));
 });

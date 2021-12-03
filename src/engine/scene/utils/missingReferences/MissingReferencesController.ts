@@ -5,16 +5,17 @@ import {MapUtils} from '../../../../core/MapUtils';
 import {PolyScene} from '../../PolyScene';
 import {CoreWalker} from '../../../../core/Walker';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
+import {SetUtils} from '../../../../core/SetUtils';
 
 export class MissingReferencesController {
-	private references: Map<CoreGraphNodeId, MissingReference[]> = new Map();
+	private references: Map<CoreGraphNodeId, Set<MissingReference>> = new Map();
 
 	constructor(private scene: PolyScene) {}
 
 	register(param: BaseParamType, path: string): MissingReference {
 		const missingReference = new MissingReference(param, path);
 
-		MapUtils.pushOnArrayAtEntry(this.references, param.graphNodeId(), missingReference);
+		MapUtils.addToSetAtEntry(this.references, param.graphNodeId(), missingReference);
 
 		return missingReference;
 	}
@@ -73,9 +74,11 @@ export class MissingReferencesController {
 	private _checkForMissingReferencesForNode(node: BaseNodeType) {
 		const id = node.graphNodeId();
 
-		this.references.forEach((missing_references, node_id) => {
+		const missingReferences = MapUtils.arrayFromValues(this.references);
+		for (let missingReference of missingReferences) {
 			let match_found = false;
-			for (let ref of missing_references) {
+			const list = SetUtils.toArray(missingReference);
+			for (let ref of list) {
 				if (ref.matchesPath(node.path())) {
 					match_found = true;
 					ref.resolveMissingDependencies();
@@ -84,14 +87,16 @@ export class MissingReferencesController {
 			if (match_found) {
 				this.references.delete(id);
 			}
-		});
+		}
 	}
 	private _checkForMissingReferencesForParam(param: BaseParamType) {
 		const id = param.graphNodeId();
 
-		this.references.forEach((missing_references, node_id) => {
+		const missingReferences = MapUtils.arrayFromValues(this.references);
+		for (let missingReference of missingReferences) {
 			let match_found = false;
-			for (let ref of missing_references) {
+			const list = SetUtils.toArray(missingReference);
+			for (let ref of list) {
 				if (ref.matchesPath(param.path())) {
 					match_found = true;
 					ref.resolveMissingDependencies();
@@ -100,6 +105,6 @@ export class MissingReferencesController {
 			if (match_found) {
 				this.references.delete(id);
 			}
-		});
+		}
 	}
 }

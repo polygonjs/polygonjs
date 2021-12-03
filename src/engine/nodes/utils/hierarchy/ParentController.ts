@@ -20,7 +20,7 @@ export class HierarchyParentController {
 		if (parent != this.node.parentController.parent()) {
 			this._parent = parent;
 			if (this._parent) {
-				this.node.nameController.request_name_to_parent(NameController.base_name(this.node));
+				this.node.nameController.requestNameToParent(NameController.base_name(this.node));
 			}
 		}
 	}
@@ -86,7 +86,7 @@ export class HierarchyParentController {
 			if (elements.length === 1) {
 				const name = elements[0];
 				if (this.node.childrenController) {
-					return this.node.childrenController.child_by_name(name);
+					return this.node.childrenController.childByName(name);
 				} else {
 					return null;
 				}

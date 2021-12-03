@@ -340,7 +340,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	nodeSibbling(name: string): NodeTypeMap[NC] | null {
 		const parent = this.parent();
 		if (parent) {
-			const node = parent.childrenController?.child_by_name(name);
+			const node = parent.childrenController?.childByName(name);
 			if (node) {
 				return node as NodeTypeMap[NC];
 			}

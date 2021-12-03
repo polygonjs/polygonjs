@@ -10,7 +10,7 @@ export class GlNodeFinder {
 	}
 	static findParamGeneratingNodes(node: BaseGlParentNode) {
 		const list: BaseGlNodeType[] = [];
-		node.childrenController?.traverse_children((child) => {
+		node.childrenController?.traverseChildren((child) => {
 			const childGlNode = child as BaseGlNodeType;
 			if (childGlNode.paramsGenerating()) {
 				list.push(childGlNode);

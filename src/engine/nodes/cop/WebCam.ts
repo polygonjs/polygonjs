@@ -44,6 +44,23 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
+	dispose() {
+		super.dispose();
+		this._cancelWebcamRequest();
+	}
+	private _stream: MediaStream | undefined;
+	private _cancelWebcamRequest() {
+		try {
+			if (this._stream) {
+				this._stream.getTracks().forEach(function (track) {
+					track.stop();
+				});
+			}
+		} catch (err) {
+			console.error(err);
+			console.warn(`failed to cancel webcam request`);
+		}
+	}
 
 	private _createHTMLVideoElement() {
 		if (this._video) {
@@ -80,6 +97,7 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 			navigator.mediaDevices
 				.getUserMedia(constraints)
 				.then((stream) => {
+					this._stream = stream;
 					// apply the stream to the video element used in the texture
 					if (!this._video) {
 						return;
