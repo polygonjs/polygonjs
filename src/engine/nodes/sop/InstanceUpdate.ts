@@ -30,7 +30,7 @@ class InstanceUpdateSopParamsConfig extends NodeParamsConfig {
 	geoAttributes = ParamConfig.STRING(DEFAULT.geoAttributes, {
 		visibleIf: {mode: INSTANCE_UPDATE_MODES.indexOf(InstanceUpdateMode.GEO)},
 	});
-	/** @param which attributes will be updated ont he instance points */
+	/** @param which attributes will be updated ont the instance points */
 	pointAttributes = ParamConfig.STRING(DEFAULT.pointAttributes, {
 		visibleIf: {mode: INSTANCE_UPDATE_MODES.indexOf(InstanceUpdateMode.POINTS)},
 	});
