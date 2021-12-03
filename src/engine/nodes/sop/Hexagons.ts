@@ -38,16 +38,14 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 		return 'hexagons';
 	}
 
-	private _core_transform = new CoreTransform();
-
-	initializeNode() {}
+	private _coreTransform = new CoreTransform();
 
 	cook() {
 		if (this.pv.hexagonRadius > 0) {
 			const operation = new CoreGeometryOperationHexagon(this.pv.size, this.pv.hexagonRadius, this.pv.pointsOnly);
 			const geometry = operation.process();
 
-			this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
+			this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 
 			if (isBooleanTrue(this.pv.pointsOnly)) {
 				this.setGeometry(geometry, ObjectType.POINTS);

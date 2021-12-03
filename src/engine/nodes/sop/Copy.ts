@@ -91,44 +91,35 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		await this.cook_with_template(core_group0, core_group1);
 	}
 
+	private _instancer = new CoreInstancer();
 	private async cook_with_template(instance_core_group: CoreGroup, template_core_group: CoreGroup) {
 		this._objects = [];
 
 		const template_points = template_core_group.points();
 
-		const instancer = new CoreInstancer(template_core_group);
-		const instance_matrices = instancer.matrices();
+		this._instancer.setCoreGroup(template_core_group);
 
 		this._attribute_names_to_copy = CoreString.attribNames(this.pv.attributesToCopy).filter((attrib_name) =>
 			template_core_group.hasAttrib(attrib_name)
 		);
-		await this._copy_moved_objects_on_template_points(instance_core_group, instance_matrices, template_points);
+		await this._copy_moved_objects_on_template_points(instance_core_group, template_points);
 		this.setObjects(this._objects);
 	}
 
 	// https://stackoverflow.com/questions/24586110/resolve-promises-one-after-another-i-e-in-sequence
-	private async _copy_moved_objects_on_template_points(
-		instance_core_group: CoreGroup,
-		instance_matrices: Matrix4[],
-		template_points: CorePoint[]
-	) {
+	private async _copy_moved_objects_on_template_points(instance_core_group: CoreGroup, template_points: CorePoint[]) {
 		for (let point_index = 0; point_index < template_points.length; point_index++) {
-			await this._copy_moved_object_on_template_point(
-				instance_core_group,
-				instance_matrices,
-				template_points,
-				point_index
-			);
+			await this._copy_moved_object_on_template_point(instance_core_group, template_points, point_index);
 		}
 	}
 
+	private _instanceMatrix = new Matrix4();
 	private async _copy_moved_object_on_template_point(
 		instance_core_group: CoreGroup,
-		instance_matrices: Matrix4[],
 		template_points: CorePoint[],
 		point_index: number
 	) {
-		const matrix = instance_matrices[point_index];
+		this._instancer.matrixFromPoint(template_points[point_index], this._instanceMatrix);
 		const template_point = template_points[point_index];
 		this.stamp_node.set_point(template_point);
 
@@ -144,9 +135,9 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			// and have a toggle to bake back to the geo?
 			// or just enfore the use of a merge?
 			if (isBooleanTrue(this.pv.transformOnly)) {
-				moved_object.applyMatrix4(matrix);
+				moved_object.applyMatrix4(this._instanceMatrix);
 			} else {
-				this._apply_matrix_to_object_or_geometry(moved_object, matrix);
+				this._apply_matrix_to_object_or_geometry(moved_object, this._instanceMatrix);
 			}
 
 			this._objects.push(moved_object);

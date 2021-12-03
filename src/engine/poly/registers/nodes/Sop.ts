@@ -54,6 +54,7 @@ import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
 import {HeightMapSopNode} from '../../../nodes/sop/HeightMap';
 import {IcosahedronSopNode} from '../../../nodes/sop/Icosahedron';
 import {InstanceSopNode} from '../../../nodes/sop/Instance';
+import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
 import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
@@ -170,6 +171,7 @@ export interface GeoNodeChildrenMap {
 	hierarchy: HierarchySopNode;
 	icosahedron: IcosahedronSopNode;
 	instance: InstanceSopNode;
+	instanceUpdate: InstanceUpdateSopNode;
 	instancesCount: InstancesCountSopNode;
 	jitter: JitterSopNode;
 	jsPoint: JsPointSopNode;
@@ -260,6 +262,7 @@ import {FileSopOperation} from '../../../operations/sop/File';
 import {HierarchySopOperation} from '../../../operations/sop/Hierarchy';
 import {IcosahedronSopOperation} from '../../../operations/sop/Icosahedron';
 import {InstanceSopOperation} from '../../../operations/sop/Instance';
+import {InstanceUpdateSopOperation} from '../../../operations/sop/InstanceUpdate';
 import {JitterSopOperation} from '../../../operations/sop/Jitter';
 import {MergeSopOperation} from '../../../operations/sop/Merge';
 import {MetaballSopOperation} from '../../../operations/sop/Metaball';
@@ -315,6 +318,7 @@ export class SopRegister {
 		poly.registerOperation(HierarchySopOperation);
 		poly.registerOperation(IcosahedronSopOperation);
 		poly.registerOperation(InstanceSopOperation);
+		poly.registerOperation(InstanceUpdateSopOperation);
 		poly.registerOperation(JitterSopOperation);
 		poly.registerOperation(MergeSopOperation);
 		poly.registerOperation(MetaballSopOperation);
@@ -394,6 +398,7 @@ export class SopRegister {
 		poly.registerNode(HierarchySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(IcosahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
 		if (process.env.NODE_ENV == 'development') {

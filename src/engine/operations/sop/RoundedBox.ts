@@ -49,7 +49,7 @@ export class RoundedBoxSopOperation extends BaseSopOperation {
 		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
 
 		const geometry = new RoundedBoxGeometry(size.x, size.y, size.z, divisions, params.bevel);
-		const matrix = this._core_transform.translation_matrix(center);
+		const matrix = this._core_transform.translationMatrix(center);
 		geometry.applyMatrix4(matrix);
 		return geometry;
 	}

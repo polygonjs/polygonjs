@@ -88,7 +88,7 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 		const objects = core_group.objects();
 		for (let object of objects) {
 			object.matrix.identity();
-			CoreTransform.decompose_matrix(object);
+			CoreTransform.decomposeMatrix(object);
 		}
 
 		this.setCoreGroup(core_group);
@@ -125,7 +125,7 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 							this._bbox_center.z
 						);
 						object.matrix.multiply(this._translate_matrix);
-						CoreTransform.decompose_matrix(object);
+						CoreTransform.decomposeMatrix(object);
 						object.updateWorldMatrix(false, false);
 						// object.updateMatrixWorld();
 					}

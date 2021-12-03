@@ -148,7 +148,7 @@ export class TransformController {
 	}
 
 	set_params_from_matrix(matrix: Matrix4, options: SetParamsFromMatrixOptions = {}) {
-		CoreTransform.set_params_from_matrix(matrix, this.node, options);
+		CoreTransform.setParamsFromMatrix(matrix, this.node, options);
 	}
 
 	//
@@ -183,14 +183,14 @@ export class TransformController {
 		this._keep_pos_when_parenting_m_new_parent_inv.invert();
 		this._keep_pos_when_parenting_m_object.premultiply(this._keep_pos_when_parenting_m_new_parent_inv);
 		// apply mat
-		CoreTransform.set_params_from_matrix(this._keep_pos_when_parenting_m_object, this.node, {scale: true});
+		CoreTransform.setParamsFromMatrix(this._keep_pos_when_parenting_m_object, this.node, {scale: true});
 	}
 	update_node_transform_params_from_object(update_matrix = false) {
 		const object = this.node.object;
 		if (update_matrix) {
 			object.updateMatrix();
 		}
-		CoreTransform.set_params_from_matrix(object.matrix, this.node, {scale: true});
+		CoreTransform.setParamsFromMatrix(object.matrix, this.node, {scale: true});
 	}
 
 	//

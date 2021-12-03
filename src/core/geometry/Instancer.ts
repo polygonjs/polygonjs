@@ -9,6 +9,7 @@ import {CoreGroup} from './Group';
 import {CoreGeometry} from './Geometry';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreType} from '../Type';
+import {Attribute} from './Attribute';
 import {PolyDictionary} from '../../types/GlobalTypes';
 
 const DEFAULT = {
@@ -21,9 +22,6 @@ const SCALE_ATTRIB_NAME = 'scale';
 const PSCALE_ATTRIB_NAME = 'pscale';
 const NORMAL_ATTRIB_NAME = 'normal';
 const UP_ATTRIB_NAME = 'up';
-const MATRIX_T = 'translate';
-const MATRIX_R = 'rotate';
-const MATRIX_S = 'scale';
 
 const DEFAULT_COLOR = new Vector3(1, 1, 1);
 const DEFAULT_UV = new Vector2(0, 0);
@@ -37,92 +35,163 @@ export enum InstanceAttrib {
 	COLOR = 'instanceColor',
 	UV = 'instanceUv',
 }
+
+const ATTRIB_NAME_MAP: PolyDictionary<string> = {
+	P: InstanceAttrib.POSITION,
+	N: InstanceAttrib.ORIENTATION,
+	up: InstanceAttrib.ORIENTATION,
+	Cd: InstanceAttrib.COLOR,
+	[Attribute.COLOR]: InstanceAttrib.COLOR,
+	[Attribute.NORMAL]: InstanceAttrib.ORIENTATION,
+	[Attribute.POSITION]: InstanceAttrib.POSITION,
+	[Attribute.PSCALE]: InstanceAttrib.SCALE,
+	[Attribute.SCALE]: InstanceAttrib.SCALE,
+};
 export class CoreInstancer {
-	private _is_pscale_present: boolean;
-	private _is_scale_present: boolean;
-	private _is_normal_present: boolean;
-	private _is_up_present: boolean;
-	private _do_rotate_matrices: boolean;
-	private _matrices: PolyDictionary<Matrix4> = {};
+	private _is_pscale_present: boolean = false;
+	private _is_scale_present: boolean = false;
+	private _is_normal_present: boolean = false;
+	private _is_up_present: boolean = false;
+	private _do_rotate_matrices: boolean = false;
+	// private _matrices: PolyDictionary<Matrix4> = {};
+	private _matrixT = new Matrix4();
+	private _matrixR = new Matrix4();
+	private _matrixS = new Matrix4();
 
-	constructor(private _group_wrapper: CoreGroup) {
-		this._is_pscale_present = this._group_wrapper.hasAttrib('pscale');
-		this._is_scale_present = this._group_wrapper.hasAttrib('scale');
+	static transformAttributeNames: string[] = [
+		InstanceAttrib.POSITION,
+		InstanceAttrib.ORIENTATION,
+		InstanceAttrib.SCALE,
+	];
 
-		this._is_normal_present = this._group_wrapper.hasAttrib('normal');
-		this._is_up_present = this._group_wrapper.hasAttrib('up');
+	static remapName(name: string): string {
+		return ATTRIB_NAME_MAP[name] || name;
+	}
+
+	constructor(private _coreGroup?: CoreGroup) {
+		if (_coreGroup) {
+			this.setCoreGroup(_coreGroup);
+		}
+	}
+	setCoreGroup(coreGroup: CoreGroup) {
+		this._coreGroup = coreGroup;
+		this._is_pscale_present = this._coreGroup.hasAttrib(Attribute.PSCALE);
+		this._is_scale_present = this._coreGroup.hasAttrib(Attribute.SCALE);
+
+		this._is_normal_present = this._coreGroup.hasAttrib(Attribute.NORMAL);
+		this._is_up_present = this._coreGroup.hasAttrib(Attribute.UP);
 
 		this._do_rotate_matrices = this._is_normal_present; //&& this._is_up_present;
 	}
 
-	matrices() {
-		this._matrices = {};
-		this._matrices[MATRIX_T] = new Matrix4();
-		this._matrices[MATRIX_R] = new Matrix4();
-		this._matrices[MATRIX_S] = new Matrix4();
-
-		return this._group_wrapper.points().map((point) => {
-			const matrix = new Matrix4();
-			this._matrix_from_point(point, matrix);
-			return matrix;
-		});
-	}
-
-	private _point_scale = new Vector3();
-	private _point_normal = new Vector3();
-	private _point_up = new Vector3();
+	private _pointScale = new Vector3();
+	private _pointNormal = new Vector3();
+	private _pointUp = new Vector3();
 	// private _point_m = new Matrix4()
-	_matrix_from_point(point: CorePoint, matrix: Matrix4) {
+	matrixFromPoint(point: CorePoint, targetMatrix: Matrix4) {
+		targetMatrix.identity();
 		const t = point.position();
 		//r = new Vector3(0,0,0)
 		if (this._is_scale_present) {
-			point.attribValue(SCALE_ATTRIB_NAME, this._point_scale);
+			point.attribValue(SCALE_ATTRIB_NAME, this._pointScale);
 		} else {
-			this._point_scale.copy(DEFAULT.SCALE);
+			this._pointScale.copy(DEFAULT.SCALE);
 		}
 		const pscale: number = this._is_pscale_present
 			? (point.attribValue(PSCALE_ATTRIB_NAME) as number)
 			: DEFAULT.PSCALE;
-		this._point_scale.multiplyScalar(pscale);
+		this._pointScale.multiplyScalar(pscale);
 
 		//matrix = #Core.Transform.matrix(t, r, s, scale)
 		// matrix.identity();
 
-		const scale_matrix = this._matrices[MATRIX_S];
-		scale_matrix.makeScale(this._point_scale.x, this._point_scale.y, this._point_scale.z);
+		const scale_matrix = this._matrixS;
+		scale_matrix.makeScale(this._pointScale.x, this._pointScale.y, this._pointScale.z);
 
-		const translate_matrix = this._matrices[MATRIX_T];
+		const translate_matrix = this._matrixT;
 		translate_matrix.makeTranslation(t.x, t.y, t.z);
 
-		matrix.multiply(translate_matrix);
+		targetMatrix.multiply(translate_matrix);
 
 		if (this._do_rotate_matrices) {
-			const rotate_matrix = this._matrices[MATRIX_R];
+			const rotate_matrix = this._matrixR;
 			const eye = DEFAULT.EYE;
-			point.attribValue(NORMAL_ATTRIB_NAME, this._point_normal);
-			this._point_normal.multiplyScalar(-1);
+			point.attribValue(NORMAL_ATTRIB_NAME, this._pointNormal);
+			this._pointNormal.multiplyScalar(-1);
 			if (this._is_up_present) {
-				point.attribValue(UP_ATTRIB_NAME, this._point_up);
+				point.attribValue(UP_ATTRIB_NAME, this._pointUp);
 			} else {
-				this._point_up.copy(DEFAULT.UP);
+				this._pointUp.copy(DEFAULT.UP);
 			}
-			this._point_up.normalize();
-			rotate_matrix.lookAt(eye, this._point_normal, this._point_up);
+			this._pointUp.normalize();
+			rotate_matrix.lookAt(eye, this._pointNormal, this._pointUp);
 
-			matrix.multiply(rotate_matrix);
+			targetMatrix.multiply(rotate_matrix);
 		}
 
-		matrix.multiply(scale_matrix);
+		targetMatrix.multiply(scale_matrix);
 	}
 
 	private static _point_color = new Vector3();
 	private static _point_uv = new Vector2();
-	static create_instance_buffer_geo(
-		geometry_to_instance: BufferGeometry,
-		template_core_group: CoreGroup,
-		attributes_to_copy: string
+	private static _position = new Vector3(0, 0, 0);
+	private static _quaternion = new Quaternion();
+	private static _scale = new Vector3(1, 1, 1);
+	private static _tmpMatrix = new Matrix4();
+	static updateTransformInstanceAttributes(
+		instancePts: CorePoint[],
+		templateCoreGroup: CoreGroup,
+		geometry: InstancedBufferGeometry
 	) {
-		const instance_pts = template_core_group.points();
+		const instancesCount = instancePts.length;
+		const positions = new Float32Array(instancesCount * 3);
+		const scales = new Float32Array(instancesCount * 3);
+		const orients = new Float32Array(instancesCount * 4);
+		const instancer = new CoreInstancer(templateCoreGroup);
+		let i = 0;
+		for (let instancePt of instancePts) {
+			instancer.matrixFromPoint(instancePt, this._tmpMatrix);
+			const index3 = i * 3;
+			const index4 = i * 4;
+
+			this._tmpMatrix.decompose(this._position, this._quaternion, this._scale);
+
+			this._position.toArray(positions, index3);
+			this._quaternion.toArray(orients, index4);
+			this._scale.toArray(scales, index3);
+			i++;
+		}
+		geometry.setAttribute(InstanceAttrib.POSITION, new InstancedBufferAttribute(positions, 3));
+		geometry.setAttribute(InstanceAttrib.SCALE, new InstancedBufferAttribute(scales, 3));
+		geometry.setAttribute(InstanceAttrib.ORIENTATION, new InstancedBufferAttribute(orients, 4));
+	}
+
+	static updateColorInstanceAttribute(
+		instancePts: CorePoint[],
+		templateCoreGroup: CoreGroup,
+		geometry: InstancedBufferGeometry
+	) {
+		const instancesCount = instancePts.length;
+		const colors = new Float32Array(instancesCount * 3);
+		const hasColor = templateCoreGroup.hasAttrib(ATTRIB_NAME_COLOR);
+		let i = 0;
+		for (let instancePt of instancePts) {
+			const color = hasColor
+				? (instancePt.attribValue(ATTRIB_NAME_COLOR, this._point_color) as Vector3)
+				: DEFAULT_COLOR;
+			color.toArray(colors, i * 3);
+
+			i++;
+		}
+		geometry.setAttribute(InstanceAttrib.COLOR, new InstancedBufferAttribute(colors, 3));
+	}
+
+	static createInstanceBufferGeometry(
+		geometryToInstance: BufferGeometry,
+		templateCoreGroup: CoreGroup,
+		attributesToCopy: string
+	) {
+		const instancePts = templateCoreGroup.points();
 		// geometry_to_instance = new BoxBufferGeometry( 2, 2, 2 )
 		// geometry = new InstancedBufferGeometry()
 		// geometry.index = geometry_to_instance.index
@@ -130,77 +199,46 @@ export class CoreInstancer {
 		// geometry.attributes.uv = geometry_to_instance.attributes.uv
 
 		const geometry = new InstancedBufferGeometry();
-		geometry.copy(geometry_to_instance);
+		geometry.copy(geometryToInstance);
 		geometry.instanceCount = Infinity;
 
-		const instances_count = instance_pts.length;
-		const positions = new Float32Array(instances_count * 3);
-		const colors = new Float32Array(instances_count * 3);
-		const scales = new Float32Array(instances_count * 3);
-		const orients = new Float32Array(instances_count * 4);
-
-		const has_color = template_core_group.hasAttrib(ATTRIB_NAME_COLOR);
-
-		const position = new Vector3(0, 0, 0);
-		const quaternion = new Quaternion();
-		const scale = new Vector3(1, 1, 1);
-
-		const instancer = new CoreInstancer(template_core_group);
-		const instance_matrices = instancer.matrices();
-
-		instance_pts.forEach((instance_pt, i) => {
-			const index3 = i * 3;
-			const index4 = i * 4;
-
-			const matrix = instance_matrices[i];
-			matrix.decompose(position, quaternion, scale);
-
-			position.toArray(positions, index3);
-			quaternion.toArray(orients, index4);
-			scale.toArray(scales, index3);
-
-			const color = has_color
-				? (instance_pt.attribValue(ATTRIB_NAME_COLOR, this._point_color) as Vector3)
-				: DEFAULT_COLOR;
-			color.toArray(colors, index3);
-		});
+		const instancesCount = instancePts.length;
 
 		// if(this._param_add_uv_offset){
-		const has_uv = template_core_group.hasAttrib(ATTRIB_NAME_UV);
+		const has_uv = templateCoreGroup.hasAttrib(ATTRIB_NAME_UV);
 		if (has_uv) {
-			const uvs = new Float32Array(instances_count * 2);
-			instance_pts.forEach((instance_pt, i) => {
+			const uvs = new Float32Array(instancesCount * 2);
+			let i = 0;
+			for (let instancePt of instancePts) {
 				const index2 = i * 2;
-				const uv = has_uv ? (instance_pt.attribValue(ATTRIB_NAME_UV, this._point_uv) as Vector2) : DEFAULT_UV;
+				const uv = has_uv ? (instancePt.attribValue(ATTRIB_NAME_UV, this._point_uv) as Vector2) : DEFAULT_UV;
 				uv.toArray(uvs, index2);
-			});
+				i++;
+			}
 			geometry.setAttribute(InstanceAttrib.UV, new InstancedBufferAttribute(uvs, 2));
 		}
 		// }
+		this.updateTransformInstanceAttributes(instancePts, templateCoreGroup, geometry);
+		this.updateColorInstanceAttribute(instancePts, templateCoreGroup, geometry);
 
-		geometry.setAttribute(InstanceAttrib.POSITION, new InstancedBufferAttribute(positions, 3));
-		geometry.setAttribute(InstanceAttrib.SCALE, new InstancedBufferAttribute(scales, 3));
-		geometry.setAttribute(InstanceAttrib.ORIENTATION, new InstancedBufferAttribute(orients, 4));
-		geometry.setAttribute(InstanceAttrib.COLOR, new InstancedBufferAttribute(colors, 3));
+		const attribNames = templateCoreGroup.attribNamesMatchingMask(attributesToCopy);
 
-		const attrib_names = template_core_group.attribNamesMatchingMask(attributes_to_copy);
-
-		attrib_names.forEach((attrib_name) => {
-			const attrib_size = template_core_group.attribSize(attrib_name);
-			const values = new Float32Array(instances_count * attrib_size);
-			instance_pts.forEach((pt, i) => {
-				const value = pt.attribValue(attrib_name);
+		attribNames.forEach((attribName) => {
+			const attribSize = templateCoreGroup.attribSize(attribName);
+			const values = new Float32Array(instancesCount * attribSize);
+			instancePts.forEach((pt, i) => {
+				const value = pt.attribValue(attribName);
 				if (CoreType.isNumber(value)) {
 					values[i] = value;
 				} else {
-					(value as Vector3).toArray(values, i * attrib_size);
+					(value as Vector3).toArray(values, i * attribSize);
 				}
 			});
-			geometry.setAttribute(attrib_name, new InstancedBufferAttribute(values, attrib_size));
+			geometry.setAttribute(attribName, new InstancedBufferAttribute(values, attribSize));
 		});
 
-		const core_geometry = new CoreGeometry(geometry);
-		core_geometry.markAsInstance();
+		const coreGeometry = new CoreGeometry(geometry);
+		coreGeometry.markAsInstance();
 
 		return geometry;
 	}

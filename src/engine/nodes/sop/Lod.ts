@@ -83,12 +83,12 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 					if (i == 0) {
 						// copy transform of first object to LOD
 						this._lod.matrix.copy(object.matrix);
-						CoreTransform.decompose_matrix(this._lod);
+						CoreTransform.decomposeMatrix(this._lod);
 					}
 				}
 				// reset the objects transforms so that the LOD carries that transform
 				object.matrix.identity();
-				CoreTransform.decompose_matrix(object);
+				CoreTransform.decomposeMatrix(object);
 			}
 		}
 	}
@@ -99,7 +99,7 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 			this._lod.remove(child);
 			// ensures the removed children are at the right location
 			child.matrix.multiply(this._lod.matrix);
-			CoreTransform.decompose_matrix(child);
+			CoreTransform.decomposeMatrix(child);
 		}
 		while (this._lod.levels.pop()) {}
 	}

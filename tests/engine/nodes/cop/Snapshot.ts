@@ -45,15 +45,15 @@ QUnit.test('COP snapshot from webcam', async (assert) => {
 	let container = await snapshot1.compute();
 	assert.equal(snapshot1.states.error.message(), 'video not loaded');
 
-	await CoreSleep.sleep(1000);
+	await CoreSleep.sleep(2000);
 
 	snapshot1.p.capture.pressButton();
 	container = await snapshot1.compute();
 	assert.notOk(snapshot1.states.error.message());
 
 	let texture = container.texture();
-	assert.equal(texture.image.width, 800);
-	assert.equal(texture.image.height, 600);
+	assert.equal(texture.image.width, 1024);
+	assert.equal(texture.image.height, 960);
 	assert.equal(texture.encoding, 3001);
 
 	setTimeout(() => {

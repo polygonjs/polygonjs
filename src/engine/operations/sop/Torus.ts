@@ -38,7 +38,7 @@ export class TorusSopOperation extends BaseSopOperation {
 
 		const geometry = new TorusBufferGeometry(radius, radiusTube, segmentsRadial, segmentsTube);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
-		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, params.direction);
+		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		return this.createCoreGroupFromGeometry(geometry);
 	}
 }

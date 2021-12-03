@@ -21,6 +21,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Group} from 'three/src/objects/Group';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
+import {Matrix4} from 'three/src/math/Matrix4';
 class FileMultiSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(`${ASSETS_ROOT}/models/\`@name\`.obj`, {
@@ -68,10 +69,11 @@ export class FileMultiSopNode extends TypedSopNode<FileMultiSopParamsConfig> {
 		});
 	}
 
+	private _instancer = new CoreInstancer();
+	private _instanceMatrix = new Matrix4();
 	async cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
-		const instancer = new CoreInstancer(inputCoreGroup);
-		const instanceMatrices = instancer.matrices();
+
 		const points = inputCoreGroup.points();
 		// const urls: string[] = new Array(points.length);
 		const urls: string[] = [];
@@ -107,10 +109,12 @@ export class FileMultiSopNode extends TypedSopNode<FileMultiSopParamsConfig> {
 		const promises = urls.map((url) => this._loadFromUrlPromises(url, loadedResultByUrl));
 		await Promise.all(promises);
 		// move each loaded result and transform it according to its template point
+		this._instancer.setCoreGroup(inputCoreGroup);
 		for (let point of points) {
 			const index = point.index();
 			const url = urlByIndex.get(index) || this.pv.url;
-			const instanceMatrix = instanceMatrices[index];
+
+			this._instancer.matrixFromPoint(point, this._instanceMatrix);
 			const usageCount = urlUsageCount.get(url) || 1;
 			let parent = loadedResultByUrl.get(url);
 			if (parent) {
@@ -118,7 +122,7 @@ export class FileMultiSopNode extends TypedSopNode<FileMultiSopParamsConfig> {
 				if (usageCount > 1) {
 					parent = parent.clone();
 				}
-				parent.applyMatrix4(instanceMatrix);
+				parent.applyMatrix4(this._instanceMatrix);
 				loadedObjects.push(parent);
 			}
 		}

@@ -198,7 +198,7 @@ export abstract class TypedCameraObjNode<
 
 	update_transform_params_from_object() {
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
-		CoreTransform.set_params_from_object(this._object, this);
+		CoreTransform.setParamsFromObject(this._object, this);
 	}
 	abstract createViewer(element: HTMLElement): BaseViewerType;
 

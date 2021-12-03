@@ -126,9 +126,9 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 		this.planeSize.set(width, height);
 		const geometry = this._createPlane(this.planeSize);
 
-		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
+		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 
-		const matrix = this._core_transform.translation_matrix(this._planeCenter);
+		const matrix = this._core_transform.translationMatrix(this._planeCenter);
 		geometry.applyMatrix4(matrix);
 
 		this.setGeometry(geometry);

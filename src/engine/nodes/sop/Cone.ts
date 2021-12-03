@@ -54,7 +54,7 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 			this.pv.thetaLength
 		);
 
-		this._core_transform.rotate_geometry(geometry, DEFAULT_UP, this.pv.direction);
+		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 
 		this.setGeometry(geometry);

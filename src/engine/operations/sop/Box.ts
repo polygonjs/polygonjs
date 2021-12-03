@@ -26,12 +26,12 @@ export class BoxSopOperation extends BaseSopOperation {
 	cook(input_contents: CoreGroup[], params: BoxSopParams) {
 		const input_core_group = input_contents[0];
 		const geometry = input_core_group
-			? this._cook_with_input(input_core_group, params)
-			: this._cook_without_input(params);
+			? this._cookWithInput(input_core_group, params)
+			: this._cookWithoutInput(params);
 
 		return this.createCoreGroupFromGeometry(geometry);
 	}
-	private _cook_without_input(params: BoxSopParams) {
+	private _cookWithoutInput(params: BoxSopParams) {
 		const divisions = params.divisions;
 		const size = params.size;
 		const geometry = new BoxBufferGeometry(size, size, size, divisions, divisions, divisions);
@@ -40,7 +40,7 @@ export class BoxSopOperation extends BaseSopOperation {
 		return geometry;
 	}
 
-	private _cook_with_input(core_group: CoreGroup, params: BoxSopParams) {
+	private _cookWithInput(core_group: CoreGroup, params: BoxSopParams) {
 		const divisions = params.divisions;
 
 		const bbox = core_group.boundingBox();
@@ -48,7 +48,7 @@ export class BoxSopOperation extends BaseSopOperation {
 		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
 
 		const geometry = new BoxBufferGeometry(size.x, size.y, size.z, divisions, divisions, divisions);
-		const matrix = this._core_transform.translation_matrix(center);
+		const matrix = this._core_transform.translationMatrix(center);
 		geometry.applyMatrix4(matrix);
 		return geometry;
 	}

@@ -7,15 +7,20 @@ import {CoreType} from '../Type';
 import {AttribSize} from './Constant';
 
 export enum Attribute {
-	POSITION = 'position',
+	COLOR = 'color',
 	NORMAL = 'normal',
+	POSITION = 'position',
+	PSCALE = 'pscale',
+	UP = 'up',
+	UV = 'uv',
+	SCALE = 'scale',
 	TANGENT = 'tangent',
 }
 
 const ATTRIB_NAME_MAP: PolyDictionary<string> = {
-	P: 'position',
-	N: 'normal',
-	Cd: 'color',
+	P: Attribute.POSITION,
+	N: Attribute.NORMAL,
+	Cd: Attribute.COLOR,
 };
 
 export class CoreAttribute {

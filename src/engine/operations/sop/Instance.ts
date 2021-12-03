@@ -93,7 +93,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		template_core_group: CoreGroup,
 		params: InstanceSopParams
 	) {
-		this._geometry = CoreInstancer.create_instance_buffer_geo(
+		this._geometry = CoreInstancer.createInstanceBufferGeometry(
 			geometry_to_instance,
 			template_core_group,
 			params.attributesToCopy

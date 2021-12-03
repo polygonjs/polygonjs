@@ -49,7 +49,7 @@ export class CoreTransform {
 	private static set_params_from_matrix_t: Number3 = [0, 0, 0];
 	private static set_params_from_matrix_r: Number3 = [0, 0, 0];
 	private static set_params_from_matrix_s: Number3 = [0, 0, 0];
-	static set_params_from_matrix(matrix: Matrix4, node: BaseNodeType, options: SetParamsFromMatrixOptions = {}) {
+	static setParamsFromMatrix(matrix: Matrix4, node: BaseNodeType, options: SetParamsFromMatrixOptions = {}) {
 		let update_scale = options['scale'];
 		if (update_scale == null) {
 			update_scale = true;
@@ -82,7 +82,7 @@ export class CoreTransform {
 	static set_params_from_object_position_array: Number3 = [0, 0, 0];
 	static set_params_from_object_rotation_deg = new Vector3();
 	static set_params_from_object_rotation_array: Number3 = [0, 0, 0];
-	static set_params_from_object(object: Object3D, node: BaseNodeType) {
+	static setParamsFromObject(object: Object3D, node: BaseNodeType) {
 		object.position.toArray(this.set_params_from_object_position_array);
 
 		object.rotation.toArray(this.set_params_from_object_rotation_array);
@@ -99,7 +99,7 @@ export class CoreTransform {
 	private _translation_matrix: Matrix4 = new Matrix4();
 	private _translation_matrix_q = new Quaternion();
 	private _translation_matrix_s = new Vector3(1, 1, 1);
-	translation_matrix(t: Vector3): Matrix4 {
+	translationMatrix(t: Vector3): Matrix4 {
 		this._translation_matrix.compose(t, this._translation_matrix_q, this._translation_matrix_s);
 		return this._translation_matrix;
 	}
@@ -109,12 +109,7 @@ export class CoreTransform {
 	private _matrix_euler = new Euler();
 	private _matrix_s = new Vector3();
 	matrix(t: Vector3, r: Vector3, s: Vector3, scale: number, rotation_order: RotationOrder) {
-		this._matrix_euler.set(
-			degToRad(r.x),
-			degToRad(r.y),
-			degToRad(r.z),
-			rotation_order
-		);
+		this._matrix_euler.set(degToRad(r.x), degToRad(r.y), degToRad(r.z), rotation_order);
 		this._matrix_q.setFromEuler(this._matrix_euler);
 
 		this._matrix_s.copy(s).multiplyScalar(scale);
@@ -126,7 +121,7 @@ export class CoreTransform {
 	private _rotate_geometry_m = new Matrix4();
 	private _rotate_geometry_q = new Quaternion();
 	private _rotate_geometry_vec_dest = new Vector3();
-	rotate_geometry(geometry: BufferGeometry, vec_origin: Vector3, vec_dest: Vector3) {
+	rotateGeometry(geometry: BufferGeometry, vec_origin: Vector3, vec_dest: Vector3) {
 		this._rotate_geometry_vec_dest.copy(vec_dest);
 		this._rotate_geometry_vec_dest.normalize();
 		this._rotate_geometry_q.setFromUnitVectors(vec_origin, this._rotate_geometry_vec_dest);
@@ -135,7 +130,7 @@ export class CoreTransform {
 		geometry.applyMatrix4(this._rotate_geometry_m);
 	}
 
-	static decompose_matrix(object: Object3D) {
+	static decomposeMatrix(object: Object3D) {
 		object.matrix.decompose(object.position, object.quaternion, object.scale);
 	}
 }
