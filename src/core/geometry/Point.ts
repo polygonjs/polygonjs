@@ -137,6 +137,29 @@ export class CorePoint extends CoreEntity {
 			}
 		}
 	}
+	attribValueNumber(name: string) {
+		const remapedName = CoreAttribute.remapName(name);
+		const attrib = this._geometry.getAttribute(remapedName);
+		return attrib.array[this._index];
+	}
+	attribValueVector2(name: string, target: Vector2) {
+		const remapedName = CoreAttribute.remapName(name);
+		const attrib = this._geometry.getAttribute(remapedName);
+		target.fromArray(attrib.array, this._index * 2);
+		return target;
+	}
+	attribValueVector3(name: string, target: Vector3) {
+		const remapedName = CoreAttribute.remapName(name);
+		const attrib = this._geometry.getAttribute(remapedName);
+		target.fromArray(attrib.array, this._index * 3);
+		return target;
+	}
+	attribValueVector4(name: string, target: Vector4) {
+		const remapedName = CoreAttribute.remapName(name);
+		const attrib = this._geometry.getAttribute(remapedName);
+		target.fromArray(attrib.array, this._index * 4);
+		return target;
+	}
 
 	indexedAttribValue(name: string): string {
 		const value_index = this.attribValueIndex(name); //attrib.value()
@@ -180,60 +203,72 @@ export class CorePoint extends CoreEntity {
 		return this.setAttribValueVector3(ATTRIB_NAMES.NORMAL, new_normal);
 	}
 
-	setAttribValue(name: string, value: NumericAttribValue | string) {
-		// TODO: this fails if the value is null
-		if (value == null) {
-			return;
-		}
-		if (name == null) {
-			throw 'Point.set_attrib_value requires a name';
-		}
-
-		const attrib = this._geometry.getAttribute(name);
+	setAttribValue(attribName: string, value: NumericAttribValue | string) {
+		const attrib = this._geometry.getAttribute(attribName);
 		const array = attrib.array as number[];
-		const attrib_size = attrib.itemSize;
+		const attribSize = attrib.itemSize;
 
 		if (CoreType.isArray(value)) {
-			for (let i = 0; i < attrib_size; i++) {
-				array[this._index * attrib_size + i] = value[i];
+			for (let i = 0; i < attribSize; i++) {
+				array[this._index * attribSize + i] = value[i];
 			}
 			return;
 		}
 
-		switch (attrib_size) {
+		switch (attribSize) {
 			case 1:
 				array[this._index] = value as number;
 				break;
 			case 2:
 				const v2 = value as Vector2Like;
-				array[this._index * 2 + 0] = v2.x;
-				array[this._index * 2 + 1] = v2.y;
+				const i2 = this._index * 2;
+				array[i2 + 0] = v2.x;
+				array[i2 + 1] = v2.y;
 				break;
 			case 3:
-				const is_color = (value as ColorLike).r != null;
-				if (is_color) {
+				const isColor = (value as ColorLike).r != null;
+				const i3 = this._index * 3;
+				if (isColor) {
 					const col = value as ColorLike;
-					array[this._index * 3 + 0] = col.r;
-					array[this._index * 3 + 1] = col.g;
-					array[this._index * 3 + 2] = col.b;
+					array[i3 + 0] = col.r;
+					array[i3 + 1] = col.g;
+					array[i3 + 2] = col.b;
 				} else {
 					const v3 = value as Vector3Like;
-					array[this._index * 3 + 0] = v3.x;
-					array[this._index * 3 + 1] = v3.y;
-					array[this._index * 3 + 2] = v3.z;
+					array[i3 + 0] = v3.x;
+					array[i3 + 1] = v3.y;
+					array[i3 + 2] = v3.z;
 				}
 				break;
 			case 4:
 				const v4 = value as Vector4Like;
-				array[this._index * 4 + 0] = v4.x;
-				array[this._index * 4 + 1] = v4.y;
-				array[this._index * 4 + 2] = v4.z;
-				array[this._index * 4 + 3] = v4.w;
+				const i4 = this._index * 4;
+				array[i4 + 0] = v4.x;
+				array[i4 + 1] = v4.y;
+				array[i4 + 2] = v4.z;
+				array[i4 + 3] = v4.w;
 				break;
 			default:
-				console.warn(`Point.set_attrib_value does not yet allow attrib size ${attrib_size}`);
-				throw `attrib size ${attrib_size} not implemented`;
+				console.warn(`Point.set_attrib_value does not yet allow attrib size ${attribSize}`);
+				throw `attrib size ${attribSize} not implemented`;
 		}
+	}
+	setAttribValueFromNumber(attribName: string, value: number) {
+		const attrib = this._geometry.getAttribute(attribName);
+		const array = attrib.array as number[];
+		array[this._index] = value;
+	}
+	setAttribValueFromVector2(attribName: string, value: Vector2) {
+		const attrib = this._geometry.getAttribute(attribName);
+		value.toArray(attrib.array, this._index * 2);
+	}
+	setAttribValueFromVector3(attribName: string, value: Vector3) {
+		const attrib = this._geometry.getAttribute(attribName);
+		value.toArray(attrib.array, this._index * 3);
+	}
+	setAttribValueFromVector4(attribName: string, value: Vector4) {
+		const attrib = this._geometry.getAttribute(attribName);
+		value.toArray(attrib.array, this._index * 4);
 	}
 	setAttribValueVector3(name: string, value: Vector3) {
 		// TODO: this fails if the value is null

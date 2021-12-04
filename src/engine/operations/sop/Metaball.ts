@@ -22,8 +22,8 @@ interface MetaballSopParams extends DefaultOperationParams {
 const pos = new Vector3();
 export class MetaballSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: MetaballSopParams = {
-		resolution: 10,
-		isolation: 1,
+		resolution: 40,
+		isolation: 30,
 		useMetaStrengthAttrib: false,
 		metaStrength: 1,
 		useMetaSubstractAttrib: false,
@@ -49,6 +49,7 @@ export class MetaballSopOperation extends BaseSopOperation {
 		const points = inputCoreGroup.points();
 		for (let point of points) {
 			point.getPosition(pos);
+			pos.multiplyScalar(0.5).addScalar(0.5);
 
 			let metaStrength = params.metaStrength;
 			if (isBooleanTrue(params.useMetaStrengthAttrib)) {
@@ -64,7 +65,6 @@ export class MetaballSopOperation extends BaseSopOperation {
 					metaSubstract *= metaSubstractAttrib;
 				}
 			}
-
 			metaballs.addBall(pos.x, pos.y, pos.z, metaStrength, metaSubstract, undefined);
 		}
 		metaballs.createPolygons();

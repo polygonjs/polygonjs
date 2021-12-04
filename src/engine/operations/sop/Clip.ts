@@ -36,7 +36,7 @@ export class ClipSopOperation extends BaseSopOperation {
 		const coreGroup = inputCoreGroups[0];
 		const mesh = coreGroup.objectsWithGeo()[0] as Mesh;
 
-		this._plane.set(params.direction, params.distance);
+		this._plane.set(params.direction, -params.distance);
 		this._plane.translate(params.origin);
 
 		const outlineLines = this._createClipGeo(mesh);

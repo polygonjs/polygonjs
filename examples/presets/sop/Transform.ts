@@ -2,6 +2,9 @@ import {TransformSopNode} from '../../../src/engine/nodes/sop/Transform';
 
 export function TransformSopNodePresets() {
 	return {
+		onGround: function (node: TransformSopNode) {
+			node.p.t.y.set(`-bbox(0, 'min').y`);
+		},
 		centerToOrigin: function (node: TransformSopNode) {
 			node.p.t.set(['-$CEX', '-$CEY', '-$CEZ']);
 		},

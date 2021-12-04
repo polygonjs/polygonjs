@@ -20,7 +20,7 @@ class MetaballSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param isolation */
 	isolation = ParamConfig.FLOAT(DEFAULT.isolation, {
-		range: [0, 10],
+		range: [0, 100],
 		rangeLocked: [true, false],
 	});
 	/** @param useMetaStrengthAttrib */

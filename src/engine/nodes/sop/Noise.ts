@@ -171,25 +171,29 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			freqIncrease: this.pv.freqIncrease,
 		};
 
-		switch (targetAttribSize) {
-			case 1: {
-				this._cookForFloat(destPoints, fbmParams);
-				break;
+		try {
+			switch (targetAttribSize) {
+				case 1: {
+					this._cookForFloat(destPoints, fbmParams);
+					break;
+				}
+				case 2: {
+					this._cookForV2(destPoints, fbmParams);
+					break;
+				}
+				case 3: {
+					this._cookForV3(destPoints, fbmParams);
+					break;
+				}
+				case 4: {
+					this._cookForV4(destPoints, fbmParams);
+					break;
+				}
 			}
-			case 2: {
-				this._cookForV2(destPoints, fbmParams);
-				break;
-			}
-			case 3: {
-				this._cookForV3(destPoints, fbmParams);
-				break;
-			}
-			case 4: {
-				this._cookForV4(destPoints, fbmParams);
-				break;
-			}
+		} catch (err) {
+			console.error('sop/noise error', err);
+			this.states.error.set(`cook failed for (${this.path()}). make sure the required attributes are present`);
 		}
-
 		if (!this.io.inputs.cloneRequired(0)) {
 			for (let geometry of coreGroup.geometries()) {
 				(geometry.getAttribute(destAttribName) as BufferAttribute).needsUpdate = true;
@@ -212,17 +216,17 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const attribName = this.pv.attribName;
 		for (let destPoint of destPoints) {
 			if (useRestAttributes) {
-				destPoint.attribValue(this.pv.restP, position);
+				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
-					destPoint.attribValue(this.pv.restN, normal);
+					destPoint.attribValueVector3(this.pv.restN, normal);
 				}
 				this._currentAttribValueF = position.x;
 			} else {
 				destPoint.getPosition(position);
 				if (useNormals) {
-					destPoint.attribValue(Attribute.NORMAL, normal);
+					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
-				this._currentAttribValueF = destPoint.attribValue(attribName) as number;
+				this._currentAttribValueF = destPoint.attribValueNumber(attribName);
 			}
 
 			const amplitude = tamplitudeAttrib ? this._amplitudeFromAttrib(destPoint, baseAmplitude) : baseAmplitude;
@@ -235,7 +239,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				this._currentAttribValueF,
 				noiseValue
 			);
-			destPoint.setAttribValue(attribName, newAttribValueF);
+			destPoint.setAttribValueFromNumber(attribName, newAttribValueF);
 		}
 	}
 	private _cookForV2(destPoints: CorePoint[], fbmParams: FbmParams) {
@@ -248,17 +252,17 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const attribName = this.pv.attribName;
 		for (let destPoint of destPoints) {
 			if (useRestAttributes) {
-				destPoint.attribValue(this.pv.restP, position);
+				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
-					destPoint.attribValue(this.pv.restN, normal);
+					destPoint.attribValueVector3(this.pv.restN, normal);
 				}
 				this._currentAttribValueV2.set(position.x, position.y);
 			} else {
 				destPoint.getPosition(position);
 				if (useNormals) {
-					destPoint.attribValue(Attribute.NORMAL, normal);
+					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
-				destPoint.attribValue(attribName, this._currentAttribValueV2);
+				destPoint.attribValueVector2(attribName, this._currentAttribValueV2);
 			}
 
 			const amplitude = tamplitudeAttrib ? this._amplitudeFromAttrib(destPoint, baseAmplitude) : baseAmplitude;
@@ -272,7 +276,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				this._currentAttribValueV2,
 				noiseValue
 			);
-			destPoint.setAttribValue(attribName, newAttribValueV);
+			destPoint.setAttribValueFromVector2(attribName, newAttribValueV);
 		}
 	}
 	private _cookForV3(destPoints: CorePoint[], fbmParams: FbmParams) {
@@ -285,17 +289,17 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const attribName = this.pv.attribName;
 		for (let destPoint of destPoints) {
 			if (useRestAttributes) {
-				destPoint.attribValue(this.pv.restP, position);
+				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
-					destPoint.attribValue(this.pv.restN, normal);
+					destPoint.attribValueVector3(this.pv.restN, normal);
 				}
 				this._currentAttribValueV3.copy(position);
 			} else {
 				destPoint.getPosition(position);
 				if (useNormals) {
-					destPoint.attribValue(Attribute.NORMAL, normal);
+					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
-				destPoint.attribValue(attribName, this._currentAttribValueV3);
+				destPoint.attribValueVector3(attribName, this._currentAttribValueV3);
 			}
 
 			const amplitude = tamplitudeAttrib ? this._amplitudeFromAttrib(destPoint, baseAmplitude) : baseAmplitude;
@@ -308,7 +312,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				this._currentAttribValueV3,
 				noiseValue
 			);
-			destPoint.setAttribValue(attribName, newAttribValueV);
+			destPoint.setAttribValueFromVector3(attribName, newAttribValueV);
 		}
 	}
 	private _cookForV4(destPoints: CorePoint[], fbmParams: FbmParams) {
@@ -321,17 +325,17 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const attribName = this.pv.attribName;
 		for (let destPoint of destPoints) {
 			if (useRestAttributes) {
-				destPoint.attribValue(this.pv.restP, position);
+				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
-					destPoint.attribValue(this.pv.restN, normal);
+					destPoint.attribValueVector3(this.pv.restN, normal);
 				}
 				this._currentAttribValueV4.set(position.x, position.y, position.z, 0);
 			} else {
 				destPoint.getPosition(position);
 				if (useNormals) {
-					destPoint.attribValue(Attribute.NORMAL, normal);
+					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
-				destPoint.attribValue(attribName, this._currentAttribValueV4);
+				destPoint.attribValueVector4(attribName, this._currentAttribValueV4);
 			}
 
 			const amplitude = tamplitudeAttrib ? this._amplitudeFromAttrib(destPoint, baseAmplitude) : baseAmplitude;
@@ -345,7 +349,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				this._currentAttribValueV4,
 				noiseValue
 			);
-			destPoint.setAttribValue(attribName, newAttribValueV);
+			destPoint.setAttribValueFromVector4(attribName, newAttribValueV);
 		}
 	}
 
