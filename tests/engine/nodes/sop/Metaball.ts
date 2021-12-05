@@ -21,23 +21,23 @@ QUnit.test('metaball simple', async (assert) => {
 	assert.notOk(metaball1.states.error.message());
 
 	let result = await compute(metaball1);
-	assert.equal(result.coreGroup.points().length, 1000);
-	assert.in_delta(result.bbox.min.x, -0.8, 0.1);
-	assert.in_delta(result.bbox.max.x, 0, 0.1);
-	assert.in_delta(result.bbox.min.y, -0.8, 0.1);
-	assert.in_delta(result.bbox.max.y, 0, 0.1);
-	assert.in_delta(result.bbox.min.z, -0.8, 0.1);
-	assert.in_delta(result.bbox.max.z, 0, 0.1);
+	assert.equal(result.coreGroup.points().length, 64000);
+	assert.in_delta(result.bbox.min.x, -0.4, 0.1);
+	assert.in_delta(result.bbox.max.x, 0.4, 0.1);
+	assert.in_delta(result.bbox.min.y, -0.4, 0.1);
+	assert.in_delta(result.bbox.max.y, 0.4, 0.1);
+	assert.in_delta(result.bbox.min.z, -0.4, 0.1);
+	assert.in_delta(result.bbox.max.z, 0.4, 0.1);
 
 	add1.p.position.set([0.5, 0.5, 0.5]);
 	result = await compute(metaball1);
-	assert.equal(result.coreGroup.points().length, 1000);
-	assert.in_delta(result.bbox.min.x, -0.45, 0.1);
-	assert.in_delta(result.bbox.max.x, 0.45, 0.1);
-	assert.in_delta(result.bbox.min.y, -0.45, 0.1);
-	assert.in_delta(result.bbox.max.y, 0.45, 0.1);
-	assert.in_delta(result.bbox.min.z, -0.45, 0.1);
-	assert.in_delta(result.bbox.max.z, 0.45, 0.1);
+	assert.equal(result.coreGroup.points().length, 64000);
+	assert.in_delta(result.bbox.min.x, 0, 0.1);
+	assert.in_delta(result.bbox.max.x, 0.9, 0.1);
+	assert.in_delta(result.bbox.min.y, 0, 0.1);
+	assert.in_delta(result.bbox.max.y, 0.9, 0.1);
+	assert.in_delta(result.bbox.min.z, 0, 0.1);
+	assert.in_delta(result.bbox.max.z, 0.9, 0.1);
 
 	metaball1.p.resolution.set(2);
 	result = await compute(metaball1);
