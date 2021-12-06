@@ -41,6 +41,7 @@ export class CoreObject extends CoreEntity {
 			this._object.userData[ATTRIBUTES] = {};
 		}
 	}
+	dispose() {}
 
 	// set_index(i: number) {
 	// 	this._index = i;

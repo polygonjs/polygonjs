@@ -14,6 +14,7 @@ export class GPUComputationRenderer {
 	constructor(x: number, y: number, renderer: WebGLRenderer);
 	compute(): void;
 	init(): string | null;
+	dispose(): void;
 	setDataType(type: TextureDataType): void;
 	addVariable(name: string, fragment_shader: string, variable: DataTexture): GPUComputationRendererVariable;
 	setVariableDependencies(variable: GPUComputationRendererVariable, vars: GPUComputationRendererVariable[]): void;
