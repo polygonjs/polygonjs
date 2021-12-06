@@ -414,6 +414,39 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 			[-2, 2, -5, 0].join(':'),
 			'point with persisted config moved y'
 		);
+
+		// and if we set the active param to 0, nothing moves
+		scene2.setFrame(4);
+		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		assert.deepEqual(AssertUtils.array_with_precision(pixelBuffer), [-3, 4, -6, 0].join(':'), 'active still on');
+		new_particles1.p.active.set(0);
+		scene2.setFrame(5);
+		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		assert.deepEqual(AssertUtils.array_with_precision(pixelBuffer), [-3, 4, -6, 0].join(':'), 'active now off');
+		scene2.setFrame(6);
+		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		assert.deepEqual(AssertUtils.array_with_precision(pixelBuffer), [-3, 4, -6, 0].join(':'), 'active still off');
+		// and if we set the active param back to 1, particles move again
+		new_particles1.p.active.set(1);
+		scene2.setFrame(7);
+		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		assert.deepEqual(
+			AssertUtils.array_with_precision(pixelBuffer),
+			[-4, 6, -7, 0].join(':'),
+			'point with persisted config moved y'
+		);
+		scene2.setFrame(8);
+		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		assert.deepEqual(
+			AssertUtils.array_with_precision(pixelBuffer),
+			[-5, 8, -8, 0].join(':'),
+			'point with persisted config moved y'
+		);
 	});
 
 	RendererUtils.dispose();
