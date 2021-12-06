@@ -156,10 +156,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			if (input_data && this._node.parent()) {
 				if (CoreType.isString(input_data)) {
 					const input_node_name = input_data;
-					const input_node = this._node.nodeSibbling(input_node_name);
+					const input_node = this._node.nodeSibling(input_node_name);
 					this._node.setInput(i, input_node);
 				} else {
-					const input_node = this._node.nodeSibbling(input_data['node']);
+					const input_node = this._node.nodeSibling(input_data['node']);
 					const input_index = input_data['index'];
 					this._node.setInput(input_index, input_node, input_data['output']);
 				}

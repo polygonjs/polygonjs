@@ -136,7 +136,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return (this._nameController = this._nameController || new NameController(this));
 	}
 	/**
-	 * sets the name of a node. Note that if a sibbling node already has that name, it will be updated to be unique.
+	 * sets the name of a node. Note that if a sibling node already has that name, it will be updated to be unique.
 	 *
 	 */
 	setName(name: string) {
@@ -365,10 +365,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return this.parentController?.findNode(path) || null;
 	}
 	/**
-	 * returns a sibbling node
+	 * returns a sibling node
 	 *
 	 */
-	nodeSibbling(name: string): NodeTypeMap[NC] | null {
+	nodeSibling(name: string): NodeTypeMap[NC] | null {
 		const parent = this.parent();
 		if (parent) {
 			const node = parent.childrenController?.childByName(name);

@@ -1,5 +1,8 @@
 import {NodeContext} from '../../src/engine/poly/NodeContext';
 
+// anim
+import {PropertyNameAnimNode} from '../../src/engine/nodes/anim/PropertyName';
+import {PropertyNameAnimNodePresets} from './anim/PropertyName';
 // cop
 import {ImageCopNode} from '../../src/engine/nodes/cop/Image';
 import {VideoCopNode} from '../../src/engine/nodes/cop/Video';
@@ -38,6 +41,9 @@ import {RoundedBoxSopNodePresets} from './sop/RoundedBox';
 // to use a BasePreset class that knows how to register itself
 // based on the node it applies to
 export const presetsLibrary = {
+	[NodeContext.ANIM]: {
+		[PropertyNameAnimNode.type()]: PropertyNameAnimNodePresets,
+	},
 	[NodeContext.COP]: {
 		[ImageCopNode.type()]: ImageCopNodePresets,
 		[VideoCopNode.type()]: VideoCopNodePresets,
