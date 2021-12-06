@@ -14,7 +14,7 @@ export class EventsNetworkMatNode extends ParamLessBaseNetworkMatNode {
 		return NetworkNodeType.EVENT;
 	}
 
-	protected _children_controller_context = NodeContext.EVENT;
+	protected _childrenControllerContext = NodeContext.EVENT;
 
 	createNode<S extends keyof EventNodeChildrenMap>(
 		node_class: S,

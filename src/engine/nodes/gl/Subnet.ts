@@ -11,7 +11,7 @@ import {SubnetInputGlNode} from './SubnetInput';
 import {ParamsInitData} from '../utils/io/IOController';
 
 export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K> {
-	protected _children_controller_context = NodeContext.GL;
+	protected _childrenControllerContext = NodeContext.GL;
 	initializeNode() {
 		this.childrenController?.set_output_node_find_method(() => {
 			return this.nodesByType(SubnetOutputGlNode.type())[0];

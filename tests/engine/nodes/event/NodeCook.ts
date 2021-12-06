@@ -76,7 +76,7 @@ QUnit.test('event nodeCook simple', async (assert) => {
 
 	assert.equal(scatter1.cookController.onCookEndCallbackNames()?.length, 1, 'one callback');
 	events.removeNode(nodeCook1);
-	assert.equal(scatter1.cookController.onCookEndCallbackNames()?.length, 0, 'zero callback');
+	assert.notOk(scatter1.cookController.onCookEndCallbackNames(), 'all callbacks removed');
 });
 
 QUnit.test('event nodeCook can trigger a node cook multiple times', async (assert) => {

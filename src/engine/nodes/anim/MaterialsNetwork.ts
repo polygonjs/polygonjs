@@ -14,7 +14,7 @@ export class MaterialsNetworkAnimNode extends ParamLessBaseNetworkAnimNode {
 		return NetworkNodeType.MAT;
 	}
 
-	protected _children_controller_context = NodeContext.MAT;
+	protected _childrenControllerContext = NodeContext.MAT;
 
 	createNode<S extends keyof MatNodeChildrenMap>(
 		node_class: S,

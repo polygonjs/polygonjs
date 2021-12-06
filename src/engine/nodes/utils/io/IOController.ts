@@ -46,6 +46,12 @@ export class IOController<NC extends NodeContext> {
 
 	constructor(protected node: TypedNode<NC, any>) {}
 
+	dispose() {
+		this.inputs.dispose();
+		this.outputs.dispose();
+		this.connections.dispose();
+	}
+
 	get connections() {
 		return this._connections;
 	}

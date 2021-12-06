@@ -22,7 +22,7 @@ export class PostProcessNetworkRopNode extends BaseNetworkRopNode<PostProcessNet
 		this.effectsComposerController.displayNodeControllerCallbacks()
 	);
 
-	protected _children_controller_context = NodeContext.POST;
+	protected _childrenControllerContext = NodeContext.POST;
 
 	createNode<S extends keyof PostNodeChildrenMap>(
 		node_class: S,

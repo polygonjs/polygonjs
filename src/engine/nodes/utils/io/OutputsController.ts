@@ -11,6 +11,12 @@ export class OutputsController<NC extends NodeContext> {
 
 	constructor(private node: TypedNode<NC, any>) {}
 
+	dispose() {
+		if (this._named_output_connection_points) {
+			this._named_output_connection_points.splice(0, this._named_output_connection_points.length);
+		}
+	}
+
 	setHasOneOutput() {
 		this._has_outputs = true;
 	}

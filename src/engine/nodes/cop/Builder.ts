@@ -95,7 +95,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private _data_texture_controller: DataTextureController | undefined;
 	private _renderer_controller: CopRendererController | undefined;
 
-	protected _children_controller_context = NodeContext.GL;
+	protected _childrenControllerContext = NodeContext.GL;
 	initializeNode() {
 		this._texture_mesh.material = this.texture_material;
 		this._texture_mesh.scale.multiplyScalar(0.25);

@@ -54,7 +54,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	);
 	//
 
-	protected _children_controller_context = NodeContext.SOP;
+	protected _childrenControllerContext = NodeContext.SOP;
 
 	private _onChildAddBound = this._onChildAdd.bind(this);
 	initializeNode() {

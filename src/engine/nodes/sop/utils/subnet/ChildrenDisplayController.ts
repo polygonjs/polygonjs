@@ -19,16 +19,15 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	}
 
 	// display_node and children_display controllers
-	public readonly childrenDisplayController: SopSubnetChildrenDisplayController = new SopSubnetChildrenDisplayController(
-		this
-	);
+	public readonly childrenDisplayController: SopSubnetChildrenDisplayController =
+		new SopSubnetChildrenDisplayController(this);
 	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.childrenDisplayController.displayNodeControllerCallbacks()
 	);
 	//
 
-	protected _children_controller_context = NodeContext.SOP;
+	protected _childrenControllerContext = NodeContext.SOP;
 	createNode<S extends keyof GeoNodeChildrenMap>(
 		node_class: S,
 		params_init_value_overrides?: ParamsInitData

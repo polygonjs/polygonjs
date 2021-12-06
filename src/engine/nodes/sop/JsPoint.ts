@@ -32,7 +32,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 	// }
 
 	// private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
-	protected _children_controller_context = NodeContext.JS;
+	protected _childrenControllerContext = NodeContext.JS;
 	// private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
 	initializeNode() {
 		this.io.inputs.setCount(1);

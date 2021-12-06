@@ -11,7 +11,7 @@ export class NameController {
 	private _on_set_fullPath_hooks: Callback[] | undefined;
 
 	constructor(protected node: BaseNodeType) {
-		this._graph_node = new CoreGraphNode(node.scene(), 'node_name_controller');
+		this._graph_node = new CoreGraphNode(node.scene(), 'nodeNameController');
 		// this._graph_node.setScene(this.node.scene);
 	}
 

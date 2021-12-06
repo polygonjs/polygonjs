@@ -129,7 +129,7 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		this.effectsComposerController.displayNodeControllerCallbacks()
 	);
 
-	protected _children_controller_context = NodeContext.POST;
+	protected _childrenControllerContext = NodeContext.POST;
 	initializeNode() {
 		this.io.inputs.setCount(1);
 

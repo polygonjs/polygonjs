@@ -119,7 +119,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 
 	private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
-	protected _children_controller_context = NodeContext.GL;
+	protected _childrenControllerContext = NodeContext.GL;
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		// set to never at the moment

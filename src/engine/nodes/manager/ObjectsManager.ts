@@ -43,7 +43,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		this as any
 	);
 
-	protected _children_controller_context = NodeContext.OBJ;
+	protected _childrenControllerContext = NodeContext.OBJ;
 	initializeNode() {
 		// this.children_controller?.init({dependent: false});
 		this._object.matrixAutoUpdate = false;

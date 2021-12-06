@@ -27,6 +27,9 @@ export class UIData {
 		this._position.x = x;
 		this._position.y = y;
 	}
+	dispose() {
+		this._comment = undefined;
+	}
 
 	setComment(comment: string | undefined) {
 		this._comment = comment;

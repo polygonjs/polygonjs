@@ -15,7 +15,7 @@ export class AnimationsNetworkRopNode extends ParamLessBaseNetworkRopNode {
 		return NetworkNodeType.ANIM;
 	}
 
-	protected _children_controller_context = NodeContext.ANIM;
+	protected _childrenControllerContext = NodeContext.ANIM;
 
 	createNode<S extends keyof AnimNodeChildrenMap>(
 		node_class: S,

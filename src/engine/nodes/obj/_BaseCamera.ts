@@ -238,7 +238,7 @@ export class TypedThreejsCameraObjNode<
 		this.childrenDisplayController.displayNodeControllerCallbacks()
 	);
 	//
-	protected _children_controller_context = NodeContext.SOP;
+	protected _childrenControllerContext = NodeContext.SOP;
 
 	initializeBaseNode() {
 		super.initializeBaseNode();

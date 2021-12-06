@@ -47,7 +47,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		);
 		//
 
-		protected _children_controller_context = NodeContext.SOP;
+		protected _childrenControllerContext = NodeContext.SOP;
 
 		initializeNode() {
 			this.hierarchyController.initializeNode();

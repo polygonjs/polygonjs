@@ -17,7 +17,7 @@ export class EventsNetworkObjNode extends ParamLessBaseManagerObjNode {
 		return NetworkNodeType.EVENT;
 	}
 
-	protected _children_controller_context = NodeContext.EVENT;
+	protected _childrenControllerContext = NodeContext.EVENT;
 	// initializeNode() {
 	// 	this.children_controller?.init({dependent: false});
 	// }

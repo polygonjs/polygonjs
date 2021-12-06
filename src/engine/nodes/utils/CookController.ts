@@ -21,6 +21,9 @@ export class NodeCookController<NC extends NodeContext> {
 	performanceRecordStarted() {
 		return this._core_performance.started();
 	}
+	dispose() {
+		this._clearHooks();
+	}
 
 	// Disallowing inputs evaluation is important for switch nodes (such as SOP and COP)
 	// that should not evaluate all inputs, but only a single one, depending on a param value
@@ -182,6 +185,14 @@ export class NodeCookController<NC extends NodeContext> {
 		this._on_cook_complete_hook_names.push(callbackName);
 		this._on_cook_complete_hooks.push(callback);
 	}
+	private _clearHooks() {
+		if (!this._on_cook_complete_hook_names || !this._on_cook_complete_hooks) {
+			return;
+		}
+		for (let hookName of this._on_cook_complete_hook_names) {
+			this.deregisterOnCookEnd(hookName);
+		}
+	}
 	deregisterOnCookEnd(callbackName: string) {
 		if (!this._on_cook_complete_hook_names || !this._on_cook_complete_hooks) {
 			return;
@@ -189,6 +200,12 @@ export class NodeCookController<NC extends NodeContext> {
 		const index = this._on_cook_complete_hook_names?.indexOf(callbackName);
 		this._on_cook_complete_hook_names.splice(index, 1);
 		this._on_cook_complete_hooks.splice(index, 1);
+		if (this._on_cook_complete_hook_names.length == 0) {
+			this._on_cook_complete_hook_names = undefined;
+		}
+		if (this._on_cook_complete_hooks.length == 0) {
+			this._on_cook_complete_hooks = undefined;
+		}
 	}
 	private _run_on_cook_complete_hooks() {
 		if (this._on_cook_complete_hooks) {

@@ -19,6 +19,14 @@ export class ConnectionsController<NC extends NodeContext> {
 			this._input_connections.push(undefined);
 		}
 	}
+	dispose() {
+		if (this._input_connections) {
+			this._input_connections.splice(0, this._input_connections.length);
+		}
+		if (this._output_connections) {
+			this._output_connections.clear();
+		}
+	}
 
 	//
 	//

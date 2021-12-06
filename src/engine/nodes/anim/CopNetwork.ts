@@ -15,7 +15,7 @@ export class CopNetworkAnimNode extends ParamLessBaseNetworkAnimNode {
 		return NetworkNodeType.COP;
 	}
 
-	protected _children_controller_context = NodeContext.COP;
+	protected _childrenControllerContext = NodeContext.COP;
 
 	createNode<S extends keyof CopNodeChildrenMap>(
 		node_class: S,

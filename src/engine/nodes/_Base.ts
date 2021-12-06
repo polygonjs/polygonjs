@@ -61,17 +61,17 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _parent_controller: HierarchyParentController | undefined;
 
-	private _ui_data: UIData | undefined;
+	private _uiData: UIData | undefined;
 
 	private _states: StatesController<NC> | undefined;
 	private _lifecycle: LifeCycleController | undefined;
 	private _serializer: NodeSerializer | undefined;
-	private _cook_controller: NodeCookController<NC> | undefined;
+	private _cookController: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
 	public readonly displayNodeController: DisplayNodeController | undefined;
 	public readonly persisted_config: BasePersistedConfig | undefined;
 
-	private _params_controller: ParamsController | undefined;
+	private _paramsController: ParamsController | undefined;
 	readonly paramsConfig: K | undefined;
 	readonly pv: ParamsValueAccessorType<K> = (<unknown>new ParamsValueAccessor<K>()) as ParamsValueAccessorType<K>;
 	// readonly pv: ParamsValueAccessor<K> = new ParamsValueAccessor<K>(this);
@@ -86,7 +86,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		}
 	}
 
-	private _name_controller: NameController | undefined;
+	private _nameController: NameController | undefined;
 	get parentController(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
@@ -94,25 +94,25 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return [];
 	}
 
-	private _children_controller: HierarchyChildrenController | undefined;
-	protected _children_controller_context: NodeContext | undefined;
-	get childrenControllerContext() {
-		return this._children_controller_context;
+	private _childrenController: HierarchyChildrenController | undefined;
+	protected _childrenControllerContext: NodeContext | undefined;
+	childrenControllerContext() {
+		return this._childrenControllerContext;
 	}
-	private _create_children_controller(): HierarchyChildrenController | undefined {
-		if (this._children_controller_context) {
-			return new HierarchyChildrenController(this, this._children_controller_context);
+	private _create_childrenController(): HierarchyChildrenController | undefined {
+		if (this._childrenControllerContext) {
+			return new HierarchyChildrenController(this, this._childrenControllerContext);
 		}
 	}
 	get childrenController(): HierarchyChildrenController | undefined {
-		return (this._children_controller = this._children_controller || this._create_children_controller());
+		return (this._childrenController = this._childrenController || this._create_childrenController());
 	}
 	childrenAllowed(): boolean {
-		return this._children_controller_context != null;
+		return this._childrenControllerContext != null;
 	}
 
 	get uiData(): UIData {
-		return (this._ui_data = this._ui_data || new UIData(this));
+		return (this._uiData = this._uiData || new UIData(this));
 	}
 
 	get states(): StatesController<NC> {
@@ -126,14 +126,14 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	get cookController(): NodeCookController<NC> {
-		return (this._cook_controller = this._cook_controller || new NodeCookController(this));
+		return (this._cookController = this._cookController || new NodeCookController(this));
 	}
 	protected _io: IOController<NC> | undefined;
 	get io(): IOController<NC> {
 		return (this._io = this._io || new IOController(this));
 	}
 	get nameController(): NameController {
-		return (this._name_controller = this._name_controller || new NameController(this));
+		return (this._nameController = this._nameController || new NameController(this));
 	}
 	/**
 	 * sets the name of a node. Note that if a sibbling node already has that name, it will be updated to be unique.
@@ -147,7 +147,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	get params(): ParamsController {
-		return (this._params_controller = this._params_controller || new ParamsController(this));
+		return (this._paramsController = this._paramsController || new ParamsController(this));
 	}
 	// get processing_context(): ProcessingContext {
 	// 	return (this._processing_context = this._processing_context || new ProcessingContext(this));
@@ -240,7 +240,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		default_value: ParamInitValuesTypeMap[T],
 		options?: ParamOptions
 	): ParamConstructorMap[T] | undefined {
-		return this._params_controller?.addParam(type, name, default_value, options);
+		return this._paramsController?.addParam(type, name, default_value, options);
 	}
 	paramDefaultValue(name: string): ParamInitValueSerialized {
 		return null;
@@ -309,14 +309,45 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		this.childrenController?.removeNode(node);
 	}
 	dispose() {
+		console.log('dispose');
 		super.dispose();
 		this.setParent(null);
-		this.io.inputs.dispose();
-		this.lifecycle.dispose();
-		this.displayNodeController?.dispose();
-		this.nameController.dispose();
-		this.childrenController?.dispose();
-		this.params.dispose();
+		if (this._nameController) {
+			this._nameController.dispose();
+			this._nameController = undefined;
+		}
+		if (this._io) {
+			this._io.dispose();
+			this._io = undefined;
+		}
+		if (this._lifecycle) {
+			this._lifecycle.dispose();
+			this._lifecycle = undefined;
+		}
+		if (this.displayNodeController) {
+			this.displayNodeController.dispose();
+			// this.displayNodeController = undefined
+		}
+		if (this._childrenController) {
+			this._childrenController.dispose();
+			this._childrenController = undefined;
+		}
+		if (this._paramsController) {
+			this._paramsController.dispose();
+			this._paramsController = undefined;
+		}
+		if (this._cookController) {
+			this._cookController.dispose();
+			this._cookController = undefined;
+		}
+		if (this._serializer) {
+			this._serializer.dispose();
+			this._serializer = undefined;
+		}
+		if (this._uiData) {
+			this._uiData.dispose();
+			this._uiData = undefined;
+		}
 	}
 
 	/**

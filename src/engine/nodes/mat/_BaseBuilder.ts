@@ -37,7 +37,7 @@ export abstract class TypedBuilderMatNode<
 	K extends MatBuilderParamsConfig
 > extends TypedMatNode<ShaderMaterialWithCustomMaterials, K> {
 	protected _assembler_controller: GlAssemblerController<A> | undefined;
-	protected _children_controller_context = NodeContext.GL;
+	protected _childrenControllerContext = NodeContext.GL;
 	readonly persisted_config: MaterialPersistedConfig = new MaterialPersistedConfig(this);
 
 	//

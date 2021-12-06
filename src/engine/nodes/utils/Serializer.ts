@@ -32,6 +32,8 @@ export interface NodeSerializerData {
 export class NodeSerializer {
 	constructor(private node: BaseNodeType) {}
 
+	dispose() {}
+
 	// serialize() {
 	// 	return this.toJSON();
 	// }

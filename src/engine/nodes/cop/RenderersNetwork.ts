@@ -14,7 +14,7 @@ export class RenderersNetworkCopNode extends ParamLessBaseNetworkCopNode {
 		return NetworkNodeType.ROP;
 	}
 
-	protected _children_controller_context = NodeContext.ROP;
+	protected _childrenControllerContext = NodeContext.ROP;
 
 	createNode<S extends keyof RopNodeChildrenMap>(
 		node_class: S,
