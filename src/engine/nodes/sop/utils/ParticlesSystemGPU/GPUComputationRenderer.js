@@ -131,6 +131,12 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 	mesh.updateMatrix();
 	scene.add(mesh);
 
+	this.dispose = function () {
+		scene.dispose();
+		passThruShader.dispose();
+		mesh.dispose();
+	};
+
 	this.setDataType = function (type) {
 		dataType = type;
 		return this;

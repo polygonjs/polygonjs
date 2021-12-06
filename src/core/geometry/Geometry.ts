@@ -34,6 +34,7 @@ export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
 
 	constructor(private _geometry: BufferGeometry) {}
+	dispose() {}
 
 	geometry() {
 		return this._geometry;

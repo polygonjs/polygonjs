@@ -206,7 +206,7 @@ export class TimeController {
 		this._unregisterCallback(callbackName, this._onAfterTickCallbacks);
 	}
 	registeredAfterTickCallbacks() {
-		return (this._onAfterTickCallbacks = this._onAfterTickCallbacks || new Map());
+		return (this._onAfterTickCallbacks = this._onAfterTickCallbacks || (new Map() as CallbacksMap));
 	}
 
 	private _registerCallback<C extends onTimeTickHook>(callbackName: string, callback: C, map: CallbacksMap) {

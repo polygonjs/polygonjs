@@ -41,6 +41,22 @@ export class CoreGroup {
 		// this._group = _group;
 		this.touch();
 	}
+	dispose() {
+		this._objects = [];
+		this._objects_with_geo = [];
+		if (this._core_objects) {
+			for (let co of this._core_objects) {
+				co.dispose();
+			}
+			this._core_objects = undefined;
+		}
+		if (this._core_geometries) {
+			for (let cg of this._core_geometries) {
+				cg.dispose();
+			}
+			this._core_geometries = undefined;
+		}
+	}
 
 	//
 	//

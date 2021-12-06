@@ -43,6 +43,12 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 		range: [0, 1000],
 		rangeLocked: [true, false],
 	});
+	/** @param set active to true to continue simulation */
+	active = ParamConfig.BOOLEAN(1, {
+		// active should be set to not trigger cook
+		// otherwise, it will force the particles to be reset
+		cook: false,
+	});
 	/** @param auto sets the resolution of the textures used by the GPU shaders */
 	autoTexturesSize = ParamConfig.BOOLEAN(1);
 	/** @param max texture size. This is important to set a limit, as some systems may not handle large textures for particle sims */
@@ -191,7 +197,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 
 		this.gpuController.restartSimulationIfRequired();
-		this.gpuController.computeSimilationIfRequired();
+		this.gpuController.computeSimulationIfRequired(0);
 
 		if (isOnStartFrame) {
 			this.setCoreGroup(coreGroup);

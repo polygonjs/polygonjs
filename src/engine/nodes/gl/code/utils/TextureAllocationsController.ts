@@ -27,6 +27,11 @@ export class TextureAllocationsController {
 
 	constructor() {}
 
+	dispose() {
+		this._writableAllocations.splice(0, this._writableAllocations.length);
+		this._readonlyAllocations.splice(0, this._readonlyAllocations.length);
+	}
+
 	private static _sortNodes(root_nodes: BaseGlNodeType[]): BaseGlNodeType[] {
 		//let's go through the output node first, in case there is a name conflict, it will have priority
 		const outputNodes = root_nodes.filter((node) => node.type() == OutputGlNode.type());
@@ -75,9 +80,8 @@ export class TextureAllocationsController {
 				case AttributeGlNode.type(): {
 					const attrib_node = node as AttributeGlNode;
 					const named_input: BaseGlNodeType | null = attrib_node.connected_input_node();
-					const connection_point:
-						| BaseGlConnectionPoint
-						| undefined = attrib_node.connected_input_connection_point();
+					const connection_point: BaseGlConnectionPoint | undefined =
+						attrib_node.connected_input_connection_point();
 					if (named_input && connection_point) {
 						// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
 						// connections_by_node_id[node_id].push(named_input)
@@ -103,9 +107,8 @@ export class TextureAllocationsController {
 						const is_attribute = OUTPUT_NAME_ATTRIBUTES.includes(output_name);
 
 						if (is_attribute) {
-							const connection_point = globals_node.io.outputs.namedOutputConnectionPointsByName(
-								output_name
-							);
+							const connection_point =
+								globals_node.io.outputs.namedOutputConnectionPointsByName(output_name);
 							if (connection_point) {
 								const gl_type = connection_point.type();
 								const variable = new TextureVariable(
