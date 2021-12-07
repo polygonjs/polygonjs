@@ -25,36 +25,36 @@ export class ColorCopNode extends TypedCopNode<ColorCopParamsConfig> {
 	static type() {
 		return 'color';
 	}
-	private _data_texture: DataTexture | undefined;
+	private _dataTexture: DataTexture | undefined;
 
 	cook() {
 		const w = this.pv.resolution.x;
 		const h = this.pv.resolution.y;
-		this._data_texture = this._data_texture || this._create_data_texture(w, h);
+		this._dataTexture = this._dataTexture || this._createDataTexture(w, h);
 
-		const pixels_count = h * w;
+		const pixelsCount = h * w;
 		const c = this.pv.color.toArray();
 		const r = c[0] * 255;
 		const g = c[1] * 255;
 		const b = c[2] * 255;
 		const a = 255;
-		const data = this._data_texture.image.data;
-		for (let i = 0; i < pixels_count; i++) {
+		const data = this._dataTexture.image.data;
+		for (let i = 0; i < pixelsCount; i++) {
 			data[i * 4 + 0] = r;
 			data[i * 4 + 1] = g;
 			data[i * 4 + 2] = b;
 			data[i * 4 + 3] = a;
 		}
-		this._data_texture.needsUpdate = true;
+		this._dataTexture.needsUpdate = true;
 
-		this.setTexture(this._data_texture);
+		this.setTexture(this._dataTexture);
 	}
 
-	private _create_data_texture(width: number, height: number) {
-		const pixel_buffer = this._create_pixel_buffer(width, height);
+	private _createDataTexture(width: number, height: number) {
+		const pixel_buffer = this._createPixelBuffer(width, height);
 		return new DataTexture(pixel_buffer, width, height);
 	}
-	private _create_pixel_buffer(width: number, height: number) {
+	private _createPixelBuffer(width: number, height: number) {
 		const size = width * height * 4;
 
 		return new Uint8Array(size);
@@ -64,6 +64,6 @@ export class ColorCopNode extends TypedCopNode<ColorCopParamsConfig> {
 		node._reset();
 	}
 	private _reset() {
-		this._data_texture = undefined;
+		this._dataTexture = undefined;
 	}
 }

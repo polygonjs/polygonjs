@@ -9,18 +9,15 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {PaletteSopOperation} from '../../operations/sop/Palette';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-
-import {Color} from 'three/src/math/Color';
 import {
-	Palette,
 	SORTED_PALETTE_NAMES,
 	MAX_PALETTE_COLORS_COUNT,
-	PALETTES_BY_NAME,
 	visibleIfColorsCountAtLeast,
 } from '../../../core/color/chromotomeWrapper';
-import {BaseNodeType} from '../_Base';
 import {Number3} from '../../../types/GlobalTypes';
 import {ColorConversion} from '../../../core/Color';
+import {PaletteController, paletteControllerCallbackOptions} from '../utils/color/PaletteController';
+import {NodeContext} from '../../poly/NodeContext';
 
 const DEFAULT = PaletteSopOperation.DEFAULT_PARAMS;
 
@@ -32,28 +29,20 @@ class PaletteSopParamsConfig extends NodeParamsConfig {
 				return {name: name, value};
 			}),
 		},
-		callback: (node: BaseNodeType) => {
-			PaletteSopNode.PARAM_CALLBACK_updateColors(node as PaletteSopNode);
-		},
+		...paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_updateColors),
 	});
 	/** @param click to set the node to the next palette */
-	pickNext = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PaletteSopNode.PARAM_CALLBACK_pickNext(node as PaletteSopNode);
-		},
-	});
+	pickNext = ParamConfig.BUTTON(null, paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_pickNext));
 	/** @param click to set the node to the previous palette */
-	pickPrevious = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PaletteSopNode.PARAM_CALLBACK_pickPrevious(node as PaletteSopNode);
-		},
-	});
+	pickPrevious = ParamConfig.BUTTON(
+		null,
+		paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_pickPrevious)
+	);
 	/** @param click to set the node to a random palette */
-	pickRandom = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PaletteSopNode.PARAM_CALLBACK_pickRandom(node as PaletteSopNode);
-		},
-	});
+	pickRandom = ParamConfig.BUTTON(
+		null,
+		paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_pickRandom)
+	);
 	colorsCount = ParamConfig.INTEGER(DEFAULT.colorsCount, {
 		hidden: true,
 		range: [0, MAX_PALETTE_COLORS_COUNT],
@@ -92,13 +81,15 @@ export class PaletteSopNode extends TypedSopNode<PaletteSopParamsConfig> {
 	static type() {
 		return 'palette';
 	}
-
+	public readonly paletteController: PaletteController<NodeContext.SOP> = new PaletteController<NodeContext.SOP>(
+		this
+	);
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(PaletteSopOperation.INPUT_CLONED_STATE);
 
 		this.params.onParamsCreated('palette_init', () => {
-			this.paramCallbackUpdateColors();
+			PaletteController.PARAM_CALLBACK_updateColors(this);
 		});
 	}
 
@@ -107,69 +98,5 @@ export class PaletteSopNode extends TypedSopNode<PaletteSopParamsConfig> {
 		this._operation = this._operation || new PaletteSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
-	}
-
-	//
-	//
-	// CALLBACKS
-	//
-	//
-
-	static PARAM_CALLBACK_pickNext(node: PaletteSopNode) {
-		node.paramCallbackPickNext();
-	}
-	static PARAM_CALLBACK_pickPrevious(node: PaletteSopNode) {
-		node.paramCallbackPickPrevious();
-	}
-	static PARAM_CALLBACK_pickRandom(node: PaletteSopNode) {
-		node.paramCallbackPickRandom();
-	}
-
-	private paramCallbackPickNext() {
-		const nextIndex = this.pv.palette < SORTED_PALETTE_NAMES.length - 1 ? this.pv.palette + 1 : 0;
-		this._batchUpdatesWithPalette(nextIndex);
-	}
-	private paramCallbackPickPrevious() {
-		const previousIndex = this.pv.palette == 0 ? SORTED_PALETTE_NAMES.length - 1 : this.pv.palette - 1;
-		this._batchUpdatesWithPalette(previousIndex);
-	}
-	private paramCallbackPickRandom() {
-		const randomIndex = Math.floor(Math.random() * SORTED_PALETTE_NAMES.length);
-		this._batchUpdatesWithPalette(randomIndex);
-	}
-
-	private _batchUpdatesWithPalette(palette: number) {
-		this.scene().batchUpdates(() => {
-			this.p.palette.set(palette);
-			this._update_colors();
-		});
-	}
-
-	static PARAM_CALLBACK_updateColors(node: PaletteSopNode) {
-		node.paramCallbackUpdateColors();
-	}
-
-	private _tmp_color = new Color();
-	private _tmp_color_array: Number3 = [1, 1, 1];
-	private paramCallbackUpdateColors() {
-		this.scene().batchUpdates(() => {
-			this._update_colors();
-		});
-	}
-	private _update_colors() {
-		const name = SORTED_PALETTE_NAMES[this.pv.palette];
-		const palette = PALETTES_BY_NAME.get(name) as Palette;
-		const colorParams = [this.p.color1, this.p.color2, this.p.color3, this.p.color4, this.p.color5];
-		this.p.colorsCount.set(palette.colors.length);
-		for (let i = 0; i < palette.colors.length; i++) {
-			const color = palette.colors[i];
-			const param = colorParams[i];
-			if (color && param) {
-				this._tmp_color.set(color);
-				this._tmp_color.toArray(this._tmp_color_array);
-				param.set(this._tmp_color_array);
-			}
-		}
-		this.p.colorsCount.set(palette.colors.length);
 	}
 }
