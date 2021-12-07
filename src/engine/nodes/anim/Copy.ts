@@ -16,7 +16,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 		return 'copy';
 	}
 
-	private _stamp_node!: CopyStamp;
+	private _stampNode!: CopyStamp;
 
 	initializeNode() {
 		this.io.inputs.setCount(1);
@@ -25,7 +25,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 	async cook(input_contents: TimelineBuilder[]) {
 		const builder = new TimelineBuilder();
 		for (let i = 0; i < this.pv.count; i++) {
-			this.stampNode().set_global_index(i);
+			this.stampNode().setGlobalIndex(i);
 			const container = await this.containerController.requestInputContainer(0);
 			if (container) {
 				const stamped_builder = container.coreContentCloned();
@@ -42,15 +42,15 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 	// STAMP
 	//
 	//
-	stamp_value(attrib_name?: string) {
+	stampValue(attrib_name?: string) {
 		return this.stampNode().value(attrib_name);
 	}
 	stampNode() {
-		return (this._stamp_node = this._stamp_node || this.create_stamp_node());
+		return (this._stampNode = this._stampNode || this._createStampNode());
 	}
-	private create_stamp_node() {
-		const stamp_node = new CopyStamp(this.scene());
-		this.dirtyController.setForbiddenTriggerNodes([stamp_node]);
-		return stamp_node;
+	private _createStampNode() {
+		const stampNode = new CopyStamp(this.scene());
+		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		return stampNode;
 	}
 }

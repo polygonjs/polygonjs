@@ -9,7 +9,7 @@ export class BaseCopyStamp extends CoreGraphNode {
 		super(scene, 'CopyStamp');
 	}
 
-	set_global_index(index: number) {
+	setGlobalIndex(index: number) {
 		this._global_index = index;
 		this.setDirty();
 		this.removeDirtyState();

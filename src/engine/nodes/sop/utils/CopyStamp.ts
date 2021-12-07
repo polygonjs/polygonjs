@@ -4,7 +4,7 @@ import {CorePoint} from '../../../../core/geometry/Point';
 export class CopyStamp extends BaseCopyStamp {
 	protected _point: CorePoint | undefined;
 
-	set_point(point: CorePoint) {
+	setPoint(point: CorePoint) {
 		this._point = point;
 		this.setDirty();
 		this.removeDirtyState();

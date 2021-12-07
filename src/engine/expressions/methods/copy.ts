@@ -19,8 +19,10 @@ import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {CoreWalker} from '../../../core/Walker';
 import {CopySopNode} from '../../nodes/sop/Copy';
+import {CopyAnimNode} from '../../nodes/anim/Copy';
 import {BaseNodeType} from '../../nodes/_Base';
 
+type CopyNode = CopyAnimNode | CopySopNode;
 export class CopyExpression extends BaseMethod {
 	protected _require_dependency = true;
 	static requiredArguments() {
@@ -35,18 +37,18 @@ export class CopyExpression extends BaseMethod {
 
 	findDependency(index_or_path: number | string): MethodDependency | null {
 		const node = this.findReferencedGraphNode(index_or_path) as BaseNodeType;
-		// I'd prefer testing with if(node instanceof CopySopNode)
+		// I'd prefer testing with if(node instanceof CopySopNode || node instanceof CopyAnimNode)
 		// but tslib generates an error when doing so
 		if (node && node.type() == 'copy') {
-			const stamp_node = (node as CopySopNode).stamp_node;
-			return this.createDependency(stamp_node, index_or_path);
+			const stampNode = (node as CopyNode).stampNode();
+			return this.createDependency(stampNode, index_or_path);
 		}
 		return null;
 	}
 	// find_dependencies(index_or_path: number|string): ReferenceSearchResult{
 	// 	// return this.find_node_dependency_from_index_or_path(index_or_path)
 	// 	const node = this.find_dependency_from_index_or_path(index_or_path)
-	// 	return this.create_search_result(stamp_node, index_or_path)
+	// 	return this.create_search_result(stampNode, index_or_path)
 	// }
 
 	processArguments(args: any[]): Promise<any> {
@@ -61,7 +63,7 @@ export class CopyExpression extends BaseMethod {
 
 				let value;
 				if (node && node.type() == CopySopNode.type()) {
-					value = (node as CopySopNode).stamp_value(attribute_name);
+					value = (node as CopySopNode).stampValue(attribute_name);
 				}
 				// if (node && node instanceof CopySopNode) {
 				// 	value = node.stamp_value(attribute_name);
@@ -77,7 +79,7 @@ export class CopyExpression extends BaseMethod {
 		});
 	}
 	// update_dependencies() {
-	// 	return this.jsep_node()._graph_node.addGraphInput( this.copy_sop.stamp_node() );
+	// 	return this.jsep_node()._graph_node.addGraphInput( this.copy_sop.stampNode() );
 	// }
 
 	// processArguments(args, callback){

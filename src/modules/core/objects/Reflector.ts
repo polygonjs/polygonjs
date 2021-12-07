@@ -25,6 +25,7 @@ import {Vector2} from 'three/src/math/Vector2';
 
 import VERTEX from './reflector/vert.glsl';
 import FRAGMENT from './reflector/frag.glsl';
+import {isBooleanTrue} from '../../../core/Type';
 
 const ReflectorShader = {
 	uniforms: {
@@ -279,11 +280,11 @@ export class Reflector extends Mesh {
 		if (renderer.autoClear === false) renderer.clear();
 		renderer.render(scene, this.virtualCamera);
 
-		if (this._options.tblur) {
+		if (isBooleanTrue(this._options.tblur)) {
 			const blurAmount = this._options.blur * this._options.pixelRatio;
 			const verticalBlurAmount = blurAmount * this._options.verticalBlurMult;
 			this._coreRenderBlur.applyBlur(this.renderTarget, renderer, blurAmount, verticalBlurAmount);
-			if (this._options.tblur2) {
+			if (isBooleanTrue(this._options.tblur2)) {
 				const blurAmount2 = this._options.blur2 * this._options.pixelRatio;
 				const verticalBlurAmount2 = blurAmount2 * this._options.verticalBlur2Mult;
 				this._coreRenderBlur.applyBlur(this.renderTarget, renderer, blurAmount2, verticalBlurAmount2);

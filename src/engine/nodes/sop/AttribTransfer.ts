@@ -54,6 +54,12 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 	initializeNode() {
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
+
+		this.scene().dispatchController.onAddListener(() => {
+			this.params.onParamsCreated('params_label', () => {
+				this.params.label.init([this.p.name]);
+			});
+		});
 	}
 
 	async cook(input_contents: CoreGroup[]) {

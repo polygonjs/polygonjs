@@ -22,6 +22,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {TypeAssert} from '../../poly/Assert';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {CoreAttribute} from '../../../core/geometry/Attribute';
 
 enum TransformMode {
 	OBJECT = 0,
@@ -63,9 +64,9 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		return 'copy';
 	}
 
-	private _attribute_names_to_copy: string[] = [];
+	private _attribNamesToCopy: string[] = [];
 	private _objects: Object3D[] = [];
-	private _stamp_node!: CopyStamp;
+	private _stampNode!: CopyStamp;
 
 	static displayedInputNames(): string[] {
 		return ['geometry to be copied', 'points to copy to'];
@@ -99,7 +100,10 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 		this._instancer.setCoreGroup(template_core_group);
 
-		this._attribute_names_to_copy = CoreString.attribNames(this.pv.attributesToCopy).filter((attrib_name) =>
+		this._attribNamesToCopy = CoreString.attribNames(this.pv.attributesToCopy).map((attribName) =>
+			CoreAttribute.remapName(attribName)
+		);
+		this._attribNamesToCopy = this._attribNamesToCopy.filter((attrib_name) =>
 			template_core_group.hasAttrib(attrib_name)
 		);
 		await this._copy_moved_objects_on_template_points(instance_core_group, template_points);
@@ -121,7 +125,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	) {
 		this._instancer.matrixFromPoint(template_points[point_index], this._instanceMatrix);
 		const template_point = template_points[point_index];
-		this.stamp_node.set_point(template_point);
+		this.stampNode().setPoint(template_point);
 
 		const moved_objects = await this._get_moved_objects_for_template_point(instance_core_group, point_index);
 
@@ -204,7 +208,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 					return;
 				}
 			} else {
-				this.states.error.set(`input failed for index ${this.stamp_value()}`);
+				this.states.error.set(`input failed for index ${this.stampValue()}`);
 				return;
 			}
 		} else {
@@ -219,7 +223,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private async _copy_moved_objects_for_instance(instance_core_group: CoreGroup, i: number) {
-		this.stamp_node.set_global_index(i);
+		this.stampNode().setGlobalIndex(i);
 
 		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
 		if (stamped_instance_core_group) {
@@ -240,7 +244,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private _copyAttributes_from_template(object: Object3D, template_point: CorePoint) {
-		this._attribute_names_to_copy.forEach((attrib_name, i) => {
+		this._attribNamesToCopy.forEach((attrib_name, i) => {
 			const attrib_value = template_point.attribValue(attrib_name);
 			const object_wrapper = new CoreObject(object, i);
 			object_wrapper.addAttribute(attrib_name, attrib_value);
@@ -252,25 +256,21 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	// STAMP
 	//
 	//
-	stamp_value(attrib_name?: string) {
-		return this.stamp_node.value(attrib_name);
+	stampValue(attrib_name?: string) {
+		return this.stampNode().value(attrib_name);
 	}
-	get stamp_node() {
-		return (this._stamp_node = this._stamp_node || this.create_stamp_node());
+	stampNode() {
+		return (this._stampNode = this._stampNode || this._createStampNode());
 	}
-	private create_stamp_node() {
-		const stamp_node = new CopyStamp(this.scene());
-		this.dirtyController.setForbiddenTriggerNodes([stamp_node]);
-		return stamp_node;
+	private _createStampNode() {
+		const stampNode = new CopyStamp(this.scene());
+		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		return stampNode;
 	}
 	dispose() {
 		super.dispose();
-		if (this._stamp_node) {
-			this._stamp_node.dispose();
+		if (this._stampNode) {
+			this._stampNode.dispose();
 		}
 	}
-
-	// private set_dirty_allowed(original_trigger_graph_node: CoreGraphNode): boolean {
-	// 	return original_trigger_graph_node.graphNodeId() !== this.stamp_node.graphNodeId();
-	// }
 }
