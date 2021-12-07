@@ -8,6 +8,7 @@ import {MarchingCubes} from '../../../modules/core/objects/MarchingCubes';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BufferGeometry} from 'three';
 
 interface MetaballSopParams extends DefaultOperationParams {
 	resolution: number;
@@ -25,7 +26,7 @@ export class MetaballSopOperation extends BaseSopOperation {
 		resolution: 40,
 		isolation: 30,
 		useMetaStrengthAttrib: false,
-		metaStrength: 1,
+		metaStrength: 0.1,
 		useMetaSubstractAttrib: false,
 		metaSubstract: 1,
 		enableUVs: false,
@@ -38,6 +39,17 @@ export class MetaballSopOperation extends BaseSopOperation {
 	cook(inputContents: CoreGroup[], params: MetaballSopParams) {
 		const inputCoreGroup = inputContents[0];
 
+		try {
+			const geometry = this._createMetaballsGeometry(inputCoreGroup, params);
+			return this.createCoreGroupFromGeometry(geometry);
+		} catch (err) {
+			this.states?.error.set(`failed to create metaballs, possibly a memory issue`);
+			console.error('metaballs failed');
+			return this.createCoreGroupFromObjects([]);
+		}
+	}
+
+	private _createMetaballsGeometry(inputCoreGroup: CoreGroup, params: MetaballSopParams) {
 		const metaballs = new MarchingCubes(
 			params.resolution,
 			// CoreConstant.MATERIALS[ObjectType.MESH],
@@ -68,7 +80,13 @@ export class MetaballSopOperation extends BaseSopOperation {
 			metaballs.addBall(pos.x, pos.y, pos.z, metaStrength, metaSubstract, undefined);
 		}
 		metaballs.createPolygons();
+		const geometry = new BufferGeometry();
+		const attribNames = Object.keys(metaballs.attributes);
+		for (let attribName of attribNames) {
+			const attrib = metaballs.attributes[attribName];
+			geometry.setAttribute(attribName, attrib);
+		}
 
-		return this.createCoreGroupFromGeometry(metaballs);
+		return geometry;
 	}
 }

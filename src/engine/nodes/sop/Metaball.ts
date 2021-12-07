@@ -27,7 +27,7 @@ class MetaballSopParamsConfig extends NodeParamsConfig {
 	useMetaStrengthAttrib = ParamConfig.BOOLEAN(DEFAULT.useMetaStrengthAttrib);
 	/** @param metaStrength */
 	metaStrength = ParamConfig.FLOAT(DEFAULT.metaStrength, {
-		range: [0, 10],
+		range: [0, 1],
 		rangeLocked: [true, false],
 	});
 	/** @param useMetaSubstractAttrib */
