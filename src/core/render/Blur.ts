@@ -31,6 +31,11 @@ export class CoreRenderBlur {
 		this._verticalBlurMaterial = new ShaderMaterial(VerticalBlurShader);
 		this._verticalBlurMaterial.depthTest = false;
 	}
+	dispose() {
+		this._horizontalBlurMaterial.dispose();
+		this._verticalBlurMaterial.dispose();
+		this._renderTargetBlur.dispose();
+	}
 	setSize(w: number, h: number) {
 		this._renderTargetBlur.setSize(w, h);
 	}

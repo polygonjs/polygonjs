@@ -13,6 +13,8 @@ import {Number3} from '../../../types/GlobalTypes';
 const DEFAULT = ReflectorSopOperation.DEFAULT_PARAMS;
 
 class ReflectorSopParamsConfig extends NodeParamsConfig {
+	/** @param direction the objects reflects */
+	direction = ParamConfig.VECTOR3(DEFAULT.direction.toArray());
 	/** @param when active is off, the mirror is not rendered */
 	active = ParamConfig.BOOLEAN(DEFAULT.active);
 	/** @param bias to ensure the mirror does not reflect itself */

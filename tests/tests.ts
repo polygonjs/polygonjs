@@ -216,6 +216,7 @@ import './engine/nodes/sop/PolarTransform';
 import './engine/nodes/sop/Poly';
 import './engine/nodes/sop/Polywire';
 import './engine/nodes/sop/Ray';
+import './engine/nodes/sop/Reflector';
 import './engine/nodes/sop/Resample';
 import './engine/nodes/sop/RoundedBox';
 import './engine/nodes/sop/Scatter';

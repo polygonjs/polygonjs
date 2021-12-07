@@ -291,6 +291,7 @@ import {TextureCopySopOperation} from '../../../operations/sop/TextureCopy';
 import {TexturePropertiesSopOperation} from '../../../operations/sop/TextureProperties';
 import {TorusSopOperation} from '../../../operations/sop/Torus';
 import {TorusKnotSopOperation} from '../../../operations/sop/TorusKnot';
+import {TubeSopOperation} from '../../../operations/sop/Tube';
 import {TransformSopOperation} from '../../../operations/sop/Transform';
 import {UvLayoutSopOperation} from '../../../operations/sop/UvLayout';
 import {UvTransformSopOperation} from '../../../operations/sop/UvTransform';
@@ -349,6 +350,7 @@ export class SopRegister {
 		poly.registerOperation(TorusSopOperation);
 		poly.registerOperation(TorusKnotSopOperation);
 		poly.registerOperation(TransformSopOperation);
+		poly.registerOperation(TubeSopOperation);
 		poly.registerOperation(UvLayoutSopOperation);
 		poly.registerOperation(UvTransformSopOperation);
 		poly.registerOperation(UvUnwrapSopOperation);

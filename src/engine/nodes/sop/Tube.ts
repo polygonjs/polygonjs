@@ -4,15 +4,9 @@
  *
  */
 import {TypedSopNode} from './_Base';
-
-import {Vector3} from 'three/src/math/Vector3';
-import {CylinderBufferGeometry} from 'three/src/geometries/CylinderGeometry';
-import {CoreTransform} from '../../../core/Transform';
-
-const DEFAULT_UP = new Vector3(0, 1, 0);
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/BooleanValue';
+import {TubeSopOperation} from '../../operations/sop/Tube';
+import {CoreGroup} from '../../../core/geometry/Group';
 class TubeSopParamsConfig extends NodeParamsConfig {
 	/** @param tube radius */
 	radius = ParamConfig.FLOAT(1, {range: [0, 1]});
@@ -37,21 +31,10 @@ export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
 		return 'tube';
 	}
 
-	private _core_transform = new CoreTransform();
-
-	cook() {
-		const geometry = new CylinderBufferGeometry(
-			this.pv.radius,
-			this.pv.radius,
-			this.pv.height,
-			this.pv.segmentsRadial,
-			this.pv.segmentsHeight,
-			!isBooleanTrue(this.pv.cap)
-		);
-
-		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
-		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
-
-		this.setGeometry(geometry);
+	private _operation: TubeSopOperation | undefined;
+	cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new TubeSopOperation(this._scene, this.states);
+		const core_group = this._operation.cook(input_contents, this.pv);
+		this.setCoreGroup(core_group);
 	}
 }

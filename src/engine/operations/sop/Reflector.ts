@@ -5,7 +5,10 @@ import {Color} from 'three/src/math/Color';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Reflector} from '../../../modules/core/objects/Reflector';
 import {Poly} from '../../Poly';
+import {Vector3} from 'three/src/math/Vector3';
+import {CoreTransform} from '../../../core/Transform';
 interface ReflectorSopParams extends DefaultOperationParams {
+	direction: Vector3;
 	active: boolean;
 	clipBias: number;
 	color: Color;
@@ -19,8 +22,11 @@ interface ReflectorSopParams extends DefaultOperationParams {
 	verticalBlur2Mult: number;
 }
 
+const DEFAULT_UP = new Vector3(0, 0, 1);
+
 export class ReflectorSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ReflectorSopParams = {
+		direction: DEFAULT_UP.clone(),
 		active: true,
 		clipBias: 0.003,
 		color: new Color(1, 1, 1),
@@ -33,11 +39,14 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		blur2: 1,
 		verticalBlur2Mult: 1,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+
+	// clone needs to be on Always if we rotate the geo to align with the reflection direction
+	static readonly INPUT_CLONED_STATE = InputCloneMode.ALWAYS;
 	static type(): Readonly<'reflector'> {
 		return 'reflector';
 	}
 
+	private _coreTransform = new CoreTransform();
 	async cook(input_contents: CoreGroup[], params: ReflectorSopParams) {
 		const input_core_group = input_contents[0];
 
@@ -50,6 +59,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		const objects = input_core_group.objectsWithGeo();
 
 		for (let object of objects) {
+			this._coreTransform.rotateGeometry(object.geometry, params.direction, DEFAULT_UP);
 			const reflector = new Reflector(object.geometry, {
 				clipBias: params.clipBias,
 				renderer,
@@ -65,10 +75,12 @@ export class ReflectorSopOperation extends BaseSopOperation {
 				blur2: params.blur2,
 				verticalBlur2Mult: params.verticalBlur2Mult,
 			});
+			reflector.matrixAutoUpdate = false;
 			reflector.position.copy(object.position);
 			reflector.rotation.copy(object.rotation);
 			reflector.scale.copy(object.scale);
 			reflector.updateMatrix();
+			this._coreTransform.rotateObject(reflector, DEFAULT_UP, params.direction);
 			reflectors.push(reflector);
 		}
 

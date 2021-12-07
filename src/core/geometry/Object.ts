@@ -289,7 +289,11 @@ export class CoreObject extends CoreEntity {
 				}
 			}
 			if (mesh_node.material) {
-				mesh_node.material = src_node.material;
+				// no need to assign the material here
+				// as this should already be done in the .clone() method.
+				// Otherwise, when this is assigned here, some objects that rely on their own mat
+				// such as sop/Reflector stop working when cloned
+				// mesh_node.material = src_node.material;
 				CoreMaterial.applyCustomMaterials(node, mesh_node.material as ShaderMaterialWithCustomMaterials);
 
 				// prevents crashes for linesegments with shader material such as the line dashed instance
