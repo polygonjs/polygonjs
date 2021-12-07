@@ -1,6 +1,7 @@
 import {AnimTargetNodeTargetType} from '../../../../src/engine/nodes/anim/Target';
 import {AnimPropertyValueNodeMode} from '../../../../src/engine/nodes/anim/PropertyValue';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {AnimatedPropertiesRegister} from '../../../../src/core/animation/AnimatedPropertiesRegister';
 
 QUnit.test('anim null simple', async (assert) => {
 	// setup objects
@@ -253,4 +254,77 @@ QUnit.test('anim null play promise still returns if no target params resolved', 
 	assert.deepEqual(attribCreate.pv.value4.toArray(), [0, 0, 0, 0]);
 	await null1.play();
 	assert.deepEqual(attribCreate.pv.value4.toArray(), [0, 0, 0, 0]);
+});
+
+/*
+TESTS WITH AnimatedPropertiesRegister
+*/
+QUnit.test('animating a scene graph prop when it is already animated kills the previous timeline', async (assert) => {
+	// setup objects
+	const geo = window.geo1;
+	const box = geo.createNode('box');
+	const objectProperties = geo.createNode('objectProperties');
+	objectProperties.setInput(0, box);
+	objectProperties.p.tname.set(true);
+	objectProperties.p.name.set('test');
+	objectProperties.flags.display.set(true);
+
+	// we wait to ensure that the created objects
+	// are attached to the scene.
+	// otherwise the anim nodes will not find them.
+	await CoreSleep.sleep(100);
+
+	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	assert.equal(object.name, 'test');
+
+	// setup anim
+	const ANIM = window.scene.root().createNode('animationsNetwork');
+	const duration = ANIM.createNode('duration');
+	duration.p.duration.set(4);
+
+	const target = ANIM.createNode('target');
+	target.setInput(0, duration);
+	target.setTargetType(AnimTargetNodeTargetType.SCENE_GRAPH);
+	target.p.objectMask.set('*test');
+	target.p.updateMatrix.set(true);
+
+	const propertyName = ANIM.createNode('propertyName');
+	propertyName.setInput(0, target);
+	propertyName.p.name.set('position');
+
+	// null1
+	const propertyValue1 = ANIM.createNode('propertyValue');
+	propertyValue1.setInput(0, propertyName);
+	propertyValue1.setMode(AnimPropertyValueNodeMode.CUSTOM);
+	propertyValue1.p.size.set(3);
+	propertyValue1.p.value3.set([3, 4, 7]);
+	const null1 = ANIM.createNode('null');
+	null1.setInput(0, propertyValue1);
+
+	// null2
+	const propertyValue2 = ANIM.createNode('propertyValue');
+	propertyValue2.setInput(0, propertyName);
+	propertyValue2.setMode(AnimPropertyValueNodeMode.CUSTOM);
+	propertyValue2.p.size.set(3);
+	propertyValue2.p.value3.set([0, 0, 0]);
+	const null2 = ANIM.createNode('null');
+	null2.setInput(0, propertyValue2);
+
+	assert.in_delta(object.position.y, 0, 0.1);
+	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 0);
+	null1.play();
+	await CoreSleep.sleep(500);
+	assert.in_delta(object.position.y, 0.5, 0.1);
+	await CoreSleep.sleep(500);
+	assert.in_delta(object.position.y, 1, 0.1);
+
+	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 1);
+	null2.play();
+	await CoreSleep.sleep(500);
+	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 1);
+	await CoreSleep.sleep(500);
+	assert.in_delta(object.position.y, 0.75, 0.1);
+	await CoreSleep.sleep(4000);
+	assert.in_delta(object.position.y, 0, 0.1);
+	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 0);
 });

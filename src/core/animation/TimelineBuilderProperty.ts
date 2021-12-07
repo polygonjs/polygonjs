@@ -19,6 +19,7 @@ import {Poly} from '../../engine/Poly';
 import {CoreType} from '../Type';
 import {ColorParam} from '../../engine/params/Color';
 import {IntegerParam} from '../../engine/params/Integer';
+import {AnimatedPropertiesRegister, RegisterableProperty} from './AnimatedPropertiesRegister';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Vector4 | Quaternion;
 
@@ -99,6 +100,10 @@ export class TimelineBuilderProperty {
 			// let to_target: object | null = null;
 			const props = this._sceneGraphProps(object3d, this._propertyName);
 			if (props) {
+				const registerableProp: RegisterableProperty = {
+					object: object3d,
+					propertyName: this._propertyName,
+				};
 				let {targetProperty, toTarget, propertyNames} = props;
 				const vars = this._commonVars(timelineBuilder);
 
@@ -152,13 +157,13 @@ export class TimelineBuilderProperty {
 				}
 
 				if (toTarget) {
-					this._startTimeline(timelineBuilder, timeline, vars, toTarget);
+					this._startTimeline(timelineBuilder, timeline, vars, toTarget, registerableProp);
 				}
 			}
 		}
 	}
-	private _sceneGraphProps(object: object, property_name: string): Object3DProps | undefined {
-		const elements = property_name.split(PROPERTY_SEPARATOR);
+	private _sceneGraphProps(object: object, propertyName: string): Object3DProps | undefined {
+		const elements = propertyName.split(PROPERTY_SEPARATOR);
 		if (elements.length > 1) {
 			const firstElement = elements.shift() as string;
 			const subObject = (object as any)[firstElement as any] as object;
@@ -167,12 +172,12 @@ export class TimelineBuilderProperty {
 				return this._sceneGraphProps(subObject, subPropertyName);
 			}
 		} else {
-			const targetProperty = (object as any)[property_name as any] as AnimPropertyTargetValue;
+			const targetProperty = (object as any)[propertyName as any] as AnimPropertyTargetValue;
 			let toTarget: object | null = null;
 			const propertyNames: string[] = [];
 			if (CoreType.isNumber(targetProperty)) {
 				toTarget = object;
-				propertyNames.push(property_name);
+				propertyNames.push(propertyName);
 			} else {
 				toTarget = targetProperty;
 				if (this._targetValue instanceof Vector2) {
@@ -257,7 +262,7 @@ export class TimelineBuilderProperty {
 		};
 		const operation = timelineBuilder.operation();
 		vars.num = this.withOp(param.value, this._targetValue, operation);
-		this._startTimeline(timelineBuilder, timeline, vars, proxy);
+		this._startTimeline(timelineBuilder, timeline, vars, proxy, param);
 	}
 	private _populateVarsForParamFloat(
 		param: FloatParam,
@@ -278,7 +283,7 @@ export class TimelineBuilderProperty {
 		};
 		const operation = timelineBuilder.operation();
 		vars.num = this.withOp(param.value, this._targetValue, operation);
-		this._startTimeline(timelineBuilder, timeline, vars, proxy);
+		this._startTimeline(timelineBuilder, timeline, vars, proxy, param);
 	}
 	private _populateVarsForParamVector2(
 		param: Vector2Param,
@@ -302,7 +307,7 @@ export class TimelineBuilderProperty {
 		const operation = timelineBuilder.operation();
 		vars.x = this.withOp(param.value.x, this._targetValue.x, operation);
 		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
-		this._startTimeline(timelineBuilder, timeline, vars, proxy);
+		this._startTimeline(timelineBuilder, timeline, vars, proxy, param);
 	}
 	private _populateVarsForParamVector3(
 		param: Vector3Param,
@@ -327,7 +332,7 @@ export class TimelineBuilderProperty {
 		vars.x = this.withOp(param.value.x, this._targetValue.x, operation);
 		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
 		vars.z = this.withOp(param.value.z, this._targetValue.z, operation);
-		this._startTimeline(timelineBuilder, timeline, vars, proxy);
+		this._startTimeline(timelineBuilder, timeline, vars, proxy, param);
 	}
 
 	private _populateVarsForParamVector4(
@@ -354,7 +359,7 @@ export class TimelineBuilderProperty {
 		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
 		vars.z = this.withOp(param.value.z, this._targetValue.z, operation);
 		vars.w = this.withOp(param.value.w, this._targetValue.w, operation);
-		this._startTimeline(timelineBuilder, timeline, vars, proxy);
+		this._startTimeline(timelineBuilder, timeline, vars, proxy, param);
 	}
 	private _populateVarsForParamColor(
 		param: ColorParam,
@@ -380,7 +385,7 @@ export class TimelineBuilderProperty {
 		vars.x = this.withOp(param.value.r, this._targetValue.x, operation);
 		vars.y = this.withOp(param.value.g, this._targetValue.y, operation);
 		vars.z = this.withOp(param.value.b, this._targetValue.z, operation);
-		this._startTimeline(timelineBuilder, timeline, vars, proxy);
+		this._startTimeline(timelineBuilder, timeline, vars, proxy, param);
 	}
 
 	private withOp(current_value: number, value: number, operation: Operation) {
@@ -424,10 +429,43 @@ export class TimelineBuilderProperty {
 		timelineBuilder: TimelineBuilder,
 		timeline: gsap.core.Timeline,
 		vars: gsap.TweenVars,
-		target: object
+		target: object,
+		registerableProp: RegisterableProperty
 	) {
 		const position = timelineBuilder.position();
 		const positionParam = position ? position.toParameter() : undefined;
-		timeline.to(target, vars, positionParam);
+		const existingTimeline = AnimatedPropertiesRegister.registeredTimelineForProperty(registerableProp);
+		if (existingTimeline) {
+			existingTimeline.kill();
+			AnimatedPropertiesRegister.deRegisterProp(registerableProp);
+		}
+		const newTimeline = timeline.to(target, vars, positionParam);
+
+		const onStart = () => {
+			AnimatedPropertiesRegister.registerProp(registerableProp, newTimeline);
+		};
+		const onComplete = () => {
+			AnimatedPropertiesRegister.deRegisterProp(registerableProp);
+		};
+
+		if (vars.onStart) {
+			const prevOnStart = vars.onStart;
+			vars.onStart = () => {
+				onStart();
+				prevOnStart();
+			};
+		} else {
+			vars.onStart = onStart;
+		}
+
+		if (vars.onComplete) {
+			const prevOnComplete = vars.onComplete;
+			vars.onComplete = () => {
+				onComplete();
+				prevOnComplete();
+			};
+		} else {
+			vars.onComplete = onComplete;
+		}
 	}
 }
