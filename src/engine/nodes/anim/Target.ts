@@ -39,7 +39,7 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 		visibleIf: {type: TARGET_TYPE_SCENE_GRAPH},
 	});
 	/** @param sets if the matrix should be updated as the animation progresses */
-	updateMatrix = ParamConfig.BOOLEAN(0, {
+	updateMatrix = ParamConfig.BOOLEAN(1, {
 		visibleIf: {type: TARGET_TYPE_SCENE_GRAPH},
 	});
 	/** @param prints which objects are targeted by this node, for debugging */
