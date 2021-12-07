@@ -39,7 +39,7 @@ QUnit.test('attribFromTexture with float - optimized', async (assert) => {
 
 	const data = new SceneJsonExporter(scene).data();
 
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
@@ -85,7 +85,7 @@ QUnit.test('attribFromTexture with vector - optimized', async (assert) => {
 
 	const data = new SceneJsonExporter(scene).data();
 
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 

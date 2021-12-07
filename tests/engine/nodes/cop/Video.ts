@@ -8,7 +8,6 @@ QUnit.test('COP video simple mp4', async (assert) => {
 
 	const container = await file1.compute();
 	assert.ok(!file1.states.error.message());
-	console.log('error message:', file1.states.error.message());
 	const texture = container.texture();
 	assert.equal(texture.image.videoWidth, 480);
 	assert.equal(texture.image.videoHeight, 204);

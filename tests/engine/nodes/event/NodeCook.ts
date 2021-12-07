@@ -56,7 +56,7 @@ QUnit.test('event nodeCook simple', async (assert) => {
 	switch2.p.input.set(0);
 	const data = new SceneJsonExporter(scene).data();
 
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const scatter1_2 = scene2.node(scatter1.path()) as ScatterSopNode;
@@ -120,7 +120,7 @@ QUnit.test('event nodeCook can trigger a node cook multiple times', async (asser
 	assert.equal(box2.pv.size, 5);
 
 	const data = new SceneJsonExporter(scene).data();
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const box1_2 = scene2.node(box1.path()) as BoxSopNode;

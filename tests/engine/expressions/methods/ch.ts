@@ -96,7 +96,7 @@ QUnit.test('expression ch can be resolved if on scene load', async (assert) => {
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 

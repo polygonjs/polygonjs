@@ -79,7 +79,6 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 	const core_content = container.coreContent()!;
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.pointsCount(), 0);
-	console.log(container.objectsCountByType());
 	assert.deepEqual(container.objectsCountByType(), {Group: 1});
 	assert.equal(core_content.objects().length, 1);
 	assert.equal(core_content.pointsCount(), 0);
@@ -88,7 +87,6 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 
 	const first_mesh = first_object.children[0] as Mesh;
 	const first_geometry = first_mesh.geometry as BufferGeometry;
-	console.log('first_geometry', first_geometry);
 	assert.ok(first_geometry.index, 'geometry has index');
 });
 QUnit.test('SOP file json wolf', async (assert) => {

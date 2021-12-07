@@ -182,7 +182,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	scene.setFrame(1);
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(particles1.usedAssembler(), async () => {
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
@@ -373,7 +373,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	scene.setFrame(0);
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(particles1.usedAssembler(), async () => {
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 

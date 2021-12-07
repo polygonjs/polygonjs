@@ -73,7 +73,7 @@ QUnit.test(
 		assert.ok(param1.options.hasOptionsOverridden());
 
 		const data = new SceneJsonExporter(scene).data();
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.path()) as ColorSopNode;
@@ -97,7 +97,7 @@ QUnit.test(
 		assert.ok(param1.options.hasOptionsOverridden());
 
 		const data = new SceneJsonExporter(scene).data();
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.path()) as ColorSopNode;

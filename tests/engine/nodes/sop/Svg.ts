@@ -22,6 +22,5 @@ QUnit.test('SOP svg with tiger', async (assert) => {
 	assert.equal(first_mesh.children.length, 0);
 
 	const first_geometry = first_mesh.geometry as BufferGeometry;
-	console.log('first_geometry', first_geometry);
 	assert.ok(first_geometry.index, 'geometry has index');
 });

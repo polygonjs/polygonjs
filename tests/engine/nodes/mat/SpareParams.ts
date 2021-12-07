@@ -124,7 +124,7 @@ QUnit.test(
 
 		// the param is not saved in the export data, since it will be re-created
 
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
@@ -205,7 +205,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 
 	// the param is not saved in the export data, since it will be re-created
 
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(10);
@@ -283,11 +283,10 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.g, 0.8);
 	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.b, 0.3);
 
-	console.log('************ EXPORT **************');
 	const data = new SceneJsonExporter(scene).data();
 
 	// the param is not saved in the export data, since it will be re-created
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	await CoreSleep.sleep(100);

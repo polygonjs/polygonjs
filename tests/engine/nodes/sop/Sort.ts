@@ -61,7 +61,7 @@ QUnit.test('sort simple with points', async (assert) => {
 
 	window.scene.setFrame(10);
 	coreGroup = (await delete1.compute()).coreContent()!;
-	assert.in_delta(coreGroup.boundingBox().min.y, 0.59, 0.1);
+	assert.in_delta(coreGroup.boundingBox().min.y, 0.71, 0.1);
 	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
 
 	window.scene.setFrame(30);

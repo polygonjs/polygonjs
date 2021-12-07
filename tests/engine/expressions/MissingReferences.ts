@@ -12,7 +12,7 @@ import {ObjectMergeSopNode} from '../../../src/engine/nodes/sop/ObjectMerge';
 async function saveAndLoad(scene: PolyScene) {
 	const data = new SceneJsonExporter(scene).data();
 
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene.waitForCooksCompleted();
 	return scene2;
@@ -267,7 +267,7 @@ QUnit.test('mutiple params referencing a node with an absolute path all get upda
 	) {
 		const data = new SceneJsonExporter(sceneToSave).data();
 
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene = await SceneJsonImporter.loadData(data);
 		await scene.waitForCooksCompleted();
 
@@ -325,7 +325,7 @@ QUnit.test('mutiple params referencing a node with a relative path all get updat
 	) {
 		const data = new SceneJsonExporter(sceneToSave).data();
 
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene = await SceneJsonImporter.loadData(data);
 		await scene.waitForCooksCompleted();
 

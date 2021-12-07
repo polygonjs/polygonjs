@@ -12,13 +12,19 @@ const DEFAULT = ScatterSopOperation.DEFAULT_PARAMS;
 class ScatterSopParamsConfig extends NodeParamsConfig {
 	/** @param number of points to create */
 	pointsCount = ParamConfig.INTEGER(DEFAULT.pointsCount, {
+		range: [0, 1000],
+		rangeLocked: [true, false],
+	});
+	/** @param seed */
+	seed = ParamConfig.INTEGER(DEFAULT.seed, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
-	/** @param seed to affect the distribution of points */
-	seed = ParamConfig.INTEGER(DEFAULT.seed, {
-		range: [0, 100],
-		rangeLocked: [false, false],
+	/** @param attribute which will influence the distribution of points */
+	useWeightAttribute = ParamConfig.BOOLEAN(DEFAULT.useWeightAttribute);
+	/** @param attribute which will influence the distribution of points */
+	weightAttribute = ParamConfig.STRING(DEFAULT.weightAttribute, {
+		visibleIf: {useWeightAttribute: 1},
 	});
 	/** @param toggle on to transfer attribute from the input geometry to the created points */
 	transferAttributes = ParamConfig.BOOLEAN(DEFAULT.transferAttributes);

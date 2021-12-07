@@ -309,7 +309,6 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		this.childrenController?.removeNode(node);
 	}
 	dispose() {
-		console.log('dispose');
 		super.dispose();
 		this.setParent(null);
 		if (this._nameController) {

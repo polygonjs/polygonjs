@@ -113,7 +113,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 	assert.deepEqual(viewer.eventsController.registeredEventTypes(), ['click'], 'only click registered');
 
 	const data = new SceneJsonExporter(scene).data();
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const element2 = document.createElement('div');

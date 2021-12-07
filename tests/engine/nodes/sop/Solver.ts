@@ -75,20 +75,20 @@ QUnit.test('solver simple', async (assert) => {
 	container = await solver1.compute();
 	core_group = container.coreContent()!;
 	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 1.9, 0.1);
+	assert.in_delta(size.x, 1.8, 0.1);
 	assert.ok(!solver1.states.error.message());
 
 	scene.setFrame(4);
 	container = await solver1.compute();
 	core_group = container.coreContent()!;
 	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 2, 0.1);
+	assert.in_delta(size.x, 2.1, 0.1);
 	assert.ok(!solver1.states.error.message());
 
 	scene.setFrame(5);
 	container = await solver1.compute();
 	core_group = container.coreContent()!;
 	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 2, 0.1);
+	assert.in_delta(size.x, 2.6, 0.1);
 	assert.ok(!solver1.states.error.message());
 });

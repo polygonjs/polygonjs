@@ -10,7 +10,7 @@ QUnit.test('jitter simple', async (assert) => {
 	let container = await jitter1.compute();
 
 	let size = container.size();
-	assert.more_than(size.x, 2.0);
+	assert.more_than(size.x, 1.8);
 	assert.more_than(size.y, 1.5);
 	assert.more_than(size.z, 1.8);
 });
@@ -28,7 +28,7 @@ QUnit.test('jitter with large y mult', async (assert) => {
 	let container = await jitter1.compute();
 
 	let size = container.size();
-	assert.more_than(size.x, 2.0);
+	assert.more_than(size.x, 1.8);
 	assert.more_than(size.y, 15);
 	assert.more_than(size.z, 1.8);
 });

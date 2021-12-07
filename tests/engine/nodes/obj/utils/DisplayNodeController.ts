@@ -138,7 +138,6 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 		['/geo1:parented_outputs', 'geo1:sop_group'],
 		'object contains a hierarchy parent and a sop group'
 	);
-	console.log('obj', obj);
 	let geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
 	assert.equal(geometry.getAttribute('position').array.length, 24 * 3);
 

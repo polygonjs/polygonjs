@@ -29,7 +29,6 @@ QUnit.test('attrib_remap simple', async (assert) => {
 	container = await attrib_remap1.compute();
 	core_group = container.coreContent()!;
 	values = core_group.points().map((p: CorePoint) => p.attribValue('test') as number);
-	console.log('values', values);
 	assert.equal(values[0], 0);
 	assert.equal(values[1], 0.625);
 	assert.equal(values[2], 1);

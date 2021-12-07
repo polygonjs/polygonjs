@@ -31,7 +31,7 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(mesh_standard1.usedAssembler(), async () => {
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
@@ -76,7 +76,7 @@ QUnit.test('mesh standard builder persisted_config with no node', async (assert)
 	await AssemblersUtils.withUnregisteredAssembler(mesh_standard1.usedAssembler(), async () => {
 		Poly.setPlayerMode(true);
 
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
@@ -96,7 +96,6 @@ QUnit.test('mesh standard builder persisted_config with no node', async (assert)
 		await CoreSleep.sleep(100);
 		assert.equal(material.fragmentShader, mesh_standard1.material.fragmentShader, 'fragment shader is as expected');
 		assert.equal(material.vertexShader, mesh_standard1.material.vertexShader, 'vertex shader is as expected');
-		console.log('done');
 	});
 });
 
@@ -113,7 +112,7 @@ QUnit.test('mesh standard builder persisted_config with no node but with assembl
 	const data = new SceneJsonExporter(scene).data();
 	Poly.setPlayerMode(true);
 
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
@@ -133,5 +132,4 @@ QUnit.test('mesh standard builder persisted_config with no node but with assembl
 	await CoreSleep.sleep(100);
 	assert.equal(material.fragmentShader, mesh_standard1.material.fragmentShader, 'fragment shader is as expected');
 	assert.equal(material.vertexShader, mesh_standard1.material.vertexShader, 'vertex shader is as expected');
-	console.log('done');
 });

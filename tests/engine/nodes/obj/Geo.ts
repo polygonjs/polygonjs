@@ -96,10 +96,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	assert.deepEqual(main_group.children.map((c) => c.name).sort(), ['/geo1', '/perspectiveCamera1'].sort());
 
 	const geo1 = window.geo1;
-	console.log(
-		main_group.children,
-		main_group.children.map((o) => o.name)
-	);
+
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
 	assert.ok(obj);
 	assert.equal(obj.uuid, geo1.object.uuid);

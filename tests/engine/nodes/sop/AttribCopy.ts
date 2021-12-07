@@ -33,11 +33,9 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(core_group, 'core group exists');
 	assert.ok(geometry, 'geometry exists');
-	console.log('geometry', geometry);
 
 	let {array} = geometry.getAttribute('position');
 	assert.equal(array.length, container.pointsCount() * 3, 'array is 3x the points count');
-	console.log('array', array, array.length, container.pointsCount());
 	assert.equal(array[0], 0);
 	assert.equal(array[3], 1);
 	assert.equal(array[6], 2);
@@ -66,7 +64,6 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 
 	array = geometry.getAttribute('position').array;
 	assert.equal(array.length, container.pointsCount() * 3, 'array is 3x points_count');
-	console.log('array', array);
 	assert.equal(array[0], 0);
 	assert.equal(array[3], 1);
 	assert.equal(array[6], 2);

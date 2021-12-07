@@ -19,7 +19,7 @@ QUnit.test('expression js simple', async (assert) => {
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const geo2 = scene2.root().nodesByType('geo')[0];

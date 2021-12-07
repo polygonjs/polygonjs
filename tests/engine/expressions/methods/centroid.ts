@@ -90,7 +90,7 @@ QUnit.test('expression centroid with input index still build dependency after sc
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
 
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 

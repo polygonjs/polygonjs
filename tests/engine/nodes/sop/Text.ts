@@ -22,7 +22,7 @@ async function checkConsolePrints(callback: Callback) {
 
 	console.log = function () {
 		consoleHistory.log.push(arguments);
-		originalConsole.log.apply(window.console, arguments as any);
+		// originalConsole.log.apply(window.console, arguments as any);
 	};
 	console.warn = function () {
 		consoleHistory.warn.push(arguments);

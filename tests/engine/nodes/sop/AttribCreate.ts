@@ -178,7 +178,7 @@ QUnit.test('attrib create expression vector vertex', async (assert) => {
 	// test to make sure it can reload with an expression on a vector
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const attrib_create2 = scene2.node(attrib_create1.path()) as AttribCreateSopNode;
@@ -374,7 +374,7 @@ QUnit.test('attrib create for many points completes in reasonable time', async (
 	// test to make sure it can reload with an expression
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
-	console.log('************ LOAD **************');
+	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const attrib_create2 = scene2.node(attrib_create1.path()) as AttribCreateSopNode;

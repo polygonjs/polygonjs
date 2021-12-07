@@ -121,7 +121,7 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(builder1.usedAssembler(), async () => {
-		console.log('************ LOAD **************');
+		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 

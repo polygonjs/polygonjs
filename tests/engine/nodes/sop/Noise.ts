@@ -42,19 +42,19 @@ QUnit.test('noise to update a float attribute', async (assert) => {
 	coreContent = (await noise1.compute()).coreContent();
 	assert.notOk(noise1.states.error.active());
 	let massAttribArray = coreContent?.objectsWithGeo()[0].geometry.getAttribute('mass').array!;
-	assert.in_delta(massAttribArray[0], -0.57, 0.01);
-	assert.in_delta(massAttribArray[1], 0.09, 0.01);
-	assert.in_delta(massAttribArray[2], -0.19, 0.01);
-	assert.in_delta(massAttribArray[3], 0.11, 0.01);
+	assert.in_delta(massAttribArray[0], -0.03, 0.01);
+	assert.in_delta(massAttribArray[1], 0.53, 0.01);
+	assert.in_delta(massAttribArray[2], 0.41, 0.01);
+	assert.in_delta(massAttribArray[3], -0.23, 0.01);
 
 	noise1.setOperation(NoiseOperation.ADD);
 	coreContent = (await noise1.compute()).coreContent();
 	assert.notOk(noise1.states.error.active());
 	massAttribArray = coreContent?.objectsWithGeo()[0].geometry.getAttribute('mass').array!;
-	assert.in_delta(massAttribArray[0], 1 - 0.57, 0.01);
-	assert.in_delta(massAttribArray[1], 1 + 0.09, 0.01);
-	assert.in_delta(massAttribArray[2], 1 - 0.19, 0.01);
-	assert.in_delta(massAttribArray[3], 1 + 0.11, 0.01);
+	assert.in_delta(massAttribArray[0], 1 - 0.03, 0.01);
+	assert.in_delta(massAttribArray[1], 1 + 0.53, 0.01);
+	assert.in_delta(massAttribArray[2], 1 + 0.41, 0.01);
+	assert.in_delta(massAttribArray[3], 1 - 0.23, 0.01);
 });
 
 QUnit.test('noise without rest and no input cloning', async (assert) => {

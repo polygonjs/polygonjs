@@ -15,11 +15,9 @@ export class CoreGraph {
 	private _addedNodesDuringDebugging: Map<CoreGraphNodeId, CoreGraphNode> = new Map();
 	startDebugging() {
 		this._debugging = true;
-		console.log('CoreGraph.startDebugging', this._next_id);
 	}
 	stopDebugging() {
 		this._debugging = false;
-		console.log('CoreGraph.stopDebugging', this._next_id);
 	}
 	printDebug() {
 		this._addedNodesDuringDebugging.forEach((node, nodeId) => {

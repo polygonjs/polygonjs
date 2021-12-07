@@ -30,14 +30,18 @@ QUnit.test('scatter takes into account the transform of objects', async (assert)
 	scatter1.setInput(0, copy);
 	scatter1.p.pointsCount.set(1);
 
-	let container;
-
-	container = await scatter1.compute();
-	assert.in_delta(container.coreContent()!.points()[0].position().x, 0.026, 0.01);
+	let container = await scatter1.compute();
+	let object = container.coreContent()!.objectsWithGeo()[0];
+	let firstPt = container.coreContent()!.points()[0];
+	assert.equal(object.position.x, 0);
+	assert.in_delta(firstPt.position().x, 0.36, 0.01);
 
 	add.p.position.x.set(5);
 	container = await scatter1.compute();
-	assert.in_delta(container.coreContent()!.points()[0].position().x, 5.026, 0.01);
+	object = container.coreContent()!.objectsWithGeo()[0];
+	firstPt = container.coreContent()!.points()[0];
+	assert.equal(object.position.x, 5);
+	assert.in_delta(firstPt.position().x, 0.36, 0.01);
 });
 
 QUnit.test('scatter interpolates correctly a float attributes with value 0', async (assert) => {
@@ -53,6 +57,7 @@ QUnit.test('scatter interpolates correctly a float attributes with value 0', asy
 	attribCreate1.p.size.set(1);
 	attribCreate1.p.value1.set(0);
 	scatter1.p.pointsCount.set(2);
+	scatter1.p.transferAttributes.set(1);
 	scatter1.p.attributesToTransfer.set('delay');
 
 	let container = await scatter1.compute();
