@@ -1561,6 +1561,11 @@ chrome-trace-event@^1.0.2:
   dependencies:
     tslib "^1.9.0"
 
+chromotome@^1.19.1:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/chromotome/-/chromotome-1.19.1.tgz#6b914e254ee7d4f43506c93691ac35640ff6bd01"
+  integrity sha512-fvV9avTNmiftGyOHSBzVi7N92KrXRXpbsWOi3k4lXBFaHccG82x/3+QHOMV+n4zrXNwxu2ZgzoZDHUl4ed8fQA==
+
 cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/cipher-base/-/cipher-base-1.0.4.tgz#8760e4ecc272f4c363532f926d874aae2c1397de"

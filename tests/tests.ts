@@ -204,6 +204,7 @@ import './engine/nodes/sop/Normals';
 import './engine/nodes/sop/Null';
 import './engine/nodes/sop/ObjectMerge';
 import './engine/nodes/sop/ObjectProperties';
+import './engine/nodes/sop/Palette';
 import './engine/nodes/sop/ParticlesSystemGpu';
 import './engine/nodes/sop/Peak';
 import './engine/nodes/sop/Plane';

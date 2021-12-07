@@ -39,6 +39,7 @@
 	},
 	"dependencies": {
 		"@types/three": "0.133.1",
+		"chromotome": "^1.19.1",
 		"fflate": "0.6.9",
 		"gifuct-js": "2.1.2",
 		"gsap": "3.8.0",
