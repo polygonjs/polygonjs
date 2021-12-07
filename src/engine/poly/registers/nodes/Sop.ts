@@ -66,6 +66,7 @@ import {MergeSopNode} from '../../../nodes/sop/Merge';
 import {MetaballSopNode} from '../../../nodes/sop/Metaball';
 import {NoiseSopNode} from '../../../nodes/sop/Noise';
 import {NormalsSopNode} from '../../../nodes/sop/Normals';
+import {NormalsHelperSopNode} from '../../../nodes/sop/NormalsHelper';
 import {NullSopNode} from '../../../nodes/sop/Null';
 import {ObjectMergeSopNode} from '../../../nodes/sop/ObjectMerge';
 import {ObjectPropertiesSopNode} from '../../../nodes/sop/ObjectProperties';
@@ -184,6 +185,7 @@ export interface GeoNodeChildrenMap {
 	merge: MergeSopNode;
 	noise: NoiseSopNode;
 	normals: NormalsSopNode;
+	normalsHelper: NormalsHelperSopNode;
 	null: NullSopNode;
 	objectMerge: ObjectMergeSopNode;
 	objectProperties: ObjectPropertiesSopNode;
@@ -418,6 +420,7 @@ export class SopRegister {
 		poly.registerNode(MetaballSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(NormalsHelperSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(NullSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ObjectPropertiesSopNode, CATEGORY_SOP.MODIFIER);

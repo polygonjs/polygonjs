@@ -203,6 +203,7 @@ import './engine/nodes/sop/Merge';
 import './engine/nodes/sop/Metaball';
 import './engine/nodes/sop/Noise';
 import './engine/nodes/sop/Normals';
+import './engine/nodes/sop/NormalsHelper';
 import './engine/nodes/sop/Null';
 import './engine/nodes/sop/ObjectMerge';
 import './engine/nodes/sop/ObjectProperties';
