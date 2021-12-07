@@ -15,7 +15,6 @@ QUnit.test('cop/palette simple', async (assert) => {
 	const indexAtPos = (x: number, y: number) => {
 		return x + y * w;
 	};
-	console.log(data);
 	const color = new Color();
 	const setColorAtPos = (x: number, y: number, color: Color) => {
 		const index = indexAtPos(x, y);

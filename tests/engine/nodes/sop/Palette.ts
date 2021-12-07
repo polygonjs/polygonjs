@@ -1,6 +1,6 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
-QUnit.test('palette simple', async (assert) => {
+QUnit.test('sop/palette simple', async (assert) => {
 	const scene = new PolyScene();
 	const geo1 = scene.root().createNode('geo');
 
