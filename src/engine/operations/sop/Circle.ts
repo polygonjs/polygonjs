@@ -14,6 +14,7 @@ interface CircleSopParams extends DefaultOperationParams {
 	open: boolean;
 	arcAngle: number;
 	direction: Vector3;
+	connectLastPoint: boolean;
 }
 const DEFAULT_UP = new Vector3(0, 0, 1);
 
@@ -24,6 +25,7 @@ export class CircleSopOperation extends BaseSopOperation {
 		open: true,
 		arcAngle: 360,
 		direction: new Vector3(0, 1, 0),
+		connectLastPoint: true,
 	};
 	static type(): Readonly<'circle'> {
 		return 'circle';
@@ -32,20 +34,20 @@ export class CircleSopOperation extends BaseSopOperation {
 	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[], params: CircleSopParams) {
 		if (isBooleanTrue(params.open)) {
-			return this._create_circle(params);
+			return this._createCircle(params);
 		} else {
-			return this._create_disk(params);
+			return this._createDisk(params);
 		}
 	}
-	private _create_circle(params: CircleSopParams) {
-		const geometry = CoreGeometryUtilCircle.create(params.radius, params.segments, params.arcAngle);
+	private _createCircle(params: CircleSopParams) {
+		const geometry = CoreGeometryUtilCircle.create(params);
 
 		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
 		return this.createCoreGroupFromGeometry(geometry, ObjectType.LINE_SEGMENTS);
 	}
 
-	private _create_disk(params: CircleSopParams) {
+	private _createDisk(params: CircleSopParams) {
 		const geometry = new CircleBufferGeometry(params.radius, params.segments);
 
 		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);

@@ -113,7 +113,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		const points = core_geometry.points();
 		const indices = geometry.getIndex()?.array as number[];
 
-		const accumulated_curve_point_indices = CoreGeometryUtilCurve.accumulated_curve_point_indices(indices);
+		const accumulated_curve_point_indices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);
 		// accumulated_curve_point_indices = [accumulated_curve_point_indices[0]]
 		const geometries: BufferGeometry[] = [];
 		for (let i = 0; i < accumulated_curve_point_indices.length; i++) {

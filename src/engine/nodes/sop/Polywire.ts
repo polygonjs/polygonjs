@@ -4,34 +4,22 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {CoreTransform, DEFAULT_ROTATION_ORDER} from '../../../core/Transform';
-import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
-import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
-import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
-import {Vector3} from 'three/src/math/Vector3';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-
-const POSITION_ATTRIBUTE_NAME = 'position';
-const DEFAULT_R = new Vector3(0, 0, 0);
-const DEFAULT_S = new Vector3(1, 1, 1);
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CorePoint} from '../../../core/geometry/Point';
-import {ObjectType} from '../../../core/geometry/Constant';
+
+import {PolywireSopOperation} from '../../operations/sop/Polywire';
+const DEFAULT = PolywireSopOperation.DEFAULT_PARAMS;
 class PolywireSopParamsConfig extends NodeParamsConfig {
 	/** @param radius */
-	radius = ParamConfig.FLOAT(1);
+	radius = ParamConfig.FLOAT(DEFAULT.radius);
 	/** @param segments count on the circle used */
-	segmentsRadial = ParamConfig.INTEGER(8, {
+	segmentsRadial = ParamConfig.INTEGER(DEFAULT.segmentsRadial, {
 		range: [3, 20],
 		rangeLocked: [true, false],
 	});
 	/** @param toggle on for the geometry to close back on itself */
-	closed = ParamConfig.BOOLEAN(0);
+	closed = ParamConfig.BOOLEAN(DEFAULT.closed);
 }
 const ParamsConfig = new PolywireSopParamsConfig();
 
@@ -45,88 +33,15 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 		return ['lines to create tubes from'];
 	}
 
-	private _core_transform = new CoreTransform();
-
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	private _geometries: BufferGeometry[] = [];
-
-	cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-
-		this._geometries = [];
-		for (let object of core_group.objects()) {
-			if (object instanceof LineSegments) {
-				this._create_tube(object);
-			}
-		}
-
-		const merged_geometry = CoreGeometry.mergeGeometries(this._geometries);
-		for (let geometry of this._geometries) {
-			geometry.dispose();
-		}
-		if (merged_geometry) {
-			const object = this.createObject(merged_geometry, ObjectType.MESH);
-
-			this.setObject(object);
-		} else {
-			this.setObjects([]);
-		}
-	}
-
-	_create_tube(line_segment: LineSegments) {
-		const geometry = line_segment.geometry as BufferGeometry;
-		const wrapper = new CoreGeometry(geometry);
-		const points = wrapper.points();
-		const indices = geometry.getIndex()?.array as number[];
-
-		const accumulated_curve_point_indices = CoreGeometryUtilCurve.accumulated_curve_point_indices(indices);
-
-		for (let curve_point_indices of accumulated_curve_point_indices) {
-			const current_points = curve_point_indices.map((index) => points[index]);
-			this._create_tube_from_points(current_points);
-		}
-	}
-
-	_create_tube_from_points(points: CorePoint[]) {
-		if (points.length <= 1) {
-			return;
-		}
-
-		const positions = points.map((point) => point.attribValue(POSITION_ATTRIBUTE_NAME)) as Vector3[];
-
-		const circle_template = CoreGeometryUtilCircle.create(this.pv.radius, this.pv.segmentsRadial);
-		const circles: BufferGeometry[] = [];
-		const scale = 1;
-		for (let position of positions) {
-			const t = position;
-			const matrix = this._core_transform.matrix(t, DEFAULT_R, DEFAULT_S, scale, DEFAULT_ROTATION_ORDER);
-
-			const new_circle = circle_template.clone();
-			new_circle.applyMatrix4(matrix);
-			circles.push(new_circle);
-		}
-
-		for (let i = 0; i < circles.length; i++) {
-			if (i > 0) {
-				const circle = circles[i];
-				const prev_circle = circles[i - 1];
-
-				const geometry = this._skin(prev_circle, circle);
-				this._geometries.push(geometry);
-			}
-		}
-	}
-
-	_skin(geometry1: BufferGeometry, geometry0: BufferGeometry) {
-		const geometry = new BufferGeometry();
-
-		const operation = new CoreGeometryOperationSkin(geometry, geometry1, geometry0);
-		operation.process();
-
-		return geometry;
+	private _operation: PolywireSopOperation | undefined;
+	cook(inputCoreGroups: CoreGroup[]) {
+		this._operation = this._operation || new PolywireSopOperation(this._scene, this.states);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

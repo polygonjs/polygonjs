@@ -278,6 +278,7 @@ import {PeakSopOperation} from '../../../operations/sop/Peak';
 import {PlaneSopOperation} from '../../../operations/sop/Plane';
 import {PlayerCapsuleSopOperation} from '../../../operations/sop/PlayerCapsule';
 import {PolarTransformSopOperation} from '../../../operations/sop/PolarTransform';
+import {PolywireSopOperation} from '../../../operations/sop/Polywire';
 import {PointLightSopOperation} from '../../../operations/sop/PointLight';
 import {RaySopOperation} from '../../../operations/sop/Ray';
 import {ReflectorSopOperation} from '../../../operations/sop/Reflector';
@@ -337,6 +338,7 @@ export class SopRegister {
 		poly.registerOperation(PlayerCapsuleSopOperation);
 		poly.registerOperation(PointLightSopOperation);
 		poly.registerOperation(PolarTransformSopOperation);
+		poly.registerOperation(PolywireSopOperation);
 		poly.registerOperation(RaySopOperation);
 		poly.registerOperation(ReflectorSopOperation);
 		poly.registerOperation(RestAttributesSopOperation);

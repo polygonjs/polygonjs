@@ -19,6 +19,10 @@ class CircleSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param toggle on to have an arc instead of a closed circle */
 	open = ParamConfig.BOOLEAN(DEFAULT.open);
+	/** @param connects last dot for open circle */
+	connectLastPoint = ParamConfig.BOOLEAN(DEFAULT.connectLastPoint, {
+		visibleIf: {open: 1},
+	});
 	/** @param angle fo the arc */
 	arcAngle = ParamConfig.FLOAT(DEFAULT.arcAngle, {
 		range: [0, 360],

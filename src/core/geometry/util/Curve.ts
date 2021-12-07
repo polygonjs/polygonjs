@@ -6,7 +6,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryUtilCurve {
-	static accumulated_curve_point_indices(indices: number[]) {
+	static accumulatedCurvePointIndices(indices: number[]) {
 		let curve_point_indices: number[] = [];
 		const accumulated_curve_point_indices = [];
 		let last_index_added: number | null = null;
@@ -103,7 +103,7 @@ export class CoreGeometryUtilCurve {
 		const points = core_geometry.points();
 		const indices = (geometry.getIndex()?.array as number[]) || [];
 
-		const accumulated_curve_point_indices = this.accumulated_curve_point_indices(indices);
+		const accumulated_curve_point_indices = this.accumulatedCurvePointIndices(indices);
 
 		if (accumulated_curve_point_indices.length > 0) {
 			const attribute_sizes_by_name = core_geometry.attribSizes();

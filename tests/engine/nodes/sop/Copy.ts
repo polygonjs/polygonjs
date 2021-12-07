@@ -47,7 +47,7 @@ QUnit.test('copy sop with template and stamp', async (assert) => {
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set(`1+2*copy('../${copy1.name()}', 0)`);
 	switch1.p.input.set(`copy('../${copy1.name()}', 0)`);
-	assert.ok(switch1.graphAllPredecessors().includes(copy1.stamp_node));
+	assert.ok(switch1.graphAllPredecessors().includes(copy1.stampNode()));
 
 	let container = await copy1.compute();
 	// let core_group = container.coreContent();

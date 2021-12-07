@@ -1,3 +1,5 @@
+import {Vector3} from 'three/src/math/Vector3';
+
 QUnit.test('polywire simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -10,7 +12,20 @@ QUnit.test('polywire simple', async (assert) => {
 
 	container = await circle1.compute();
 	assert.equal(container.pointsCount(), 12);
+	const size = new Vector3();
 
+	polywire1.p.closed.set(0);
 	container = await polywire1.compute();
 	assert.equal(container.pointsCount(), 192);
+	assert.equal(container.boundingBox().getSize(size).y, 2);
+
+	polywire1.p.closed.set(1);
+	container = await polywire1.compute();
+	assert.equal(container.pointsCount(), 208);
+	assert.equal(container.boundingBox().getSize(size).y, 2);
+
+	polywire1.p.radius.set(0.5);
+	container = await polywire1.compute();
+	assert.equal(container.pointsCount(), 208);
+	assert.equal(container.boundingBox().getSize(size).y, 1);
 });
