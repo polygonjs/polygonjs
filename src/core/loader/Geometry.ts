@@ -25,6 +25,7 @@ export enum GeometryFormat {
 	JSON = 'json',
 	GLTF = 'gltf',
 	GLTF_WITH_DRACO = 'gltf_with_draco',
+	LDRAW = 'ldraw',
 	OBJ = 'obj',
 	PDB = 'pdb',
 	PLY = 'ply',
@@ -37,6 +38,7 @@ export const GEOMETRY_FORMATS: GeometryFormat[] = [
 	GeometryFormat.JSON,
 	GeometryFormat.GLTF,
 	GeometryFormat.GLTF_WITH_DRACO,
+	GeometryFormat.LDRAW,
 	GeometryFormat.OBJ,
 	GeometryFormat.PDB,
 	GeometryFormat.PLY,
@@ -48,6 +50,7 @@ enum GeometryExtension {
 	FBX = 'fbx',
 	GLTF = 'gltf',
 	GLB = 'glb',
+	MPD = 'mpd',
 	OBJ = 'obj',
 	PDB = 'pdb',
 	PLY = 'ply',
@@ -58,6 +61,7 @@ export const GEOMETRY_EXTENSIONS: GeometryExtension[] = [
 	GeometryExtension.FBX,
 	GeometryExtension.GLTF,
 	GeometryExtension.GLB,
+	GeometryExtension.MPD,
 	GeometryExtension.OBJ,
 	GeometryExtension.PDB,
 	GeometryExtension.PLY,
@@ -162,6 +166,11 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 					return this.on_load_succes_pdb(object as PdbObject);
 				case GeometryExtension.OBJ:
 					return [obj]; // [object] //.children
+				case GeometryExtension.MPD: {
+					obj.rotation.x = Math.PI;
+					obj.updateMatrix();
+					return [obj];
+				}
 				default:
 					return [obj];
 			}
@@ -230,6 +239,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 				return [ModuleName.GLTFLoader];
 			case GeometryFormat.GLTF_WITH_DRACO:
 				return [ModuleName.GLTFLoader, ModuleName.DRACOLoader];
+			case GeometryFormat.LDRAW:
+				return [ModuleName.LDrawLoader];
 			case GeometryFormat.OBJ:
 				return [ModuleName.OBJLoader];
 			case GeometryFormat.PDB:
@@ -277,6 +288,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 				return this.loader_for_gltf();
 			case GeometryFormat.GLTF_WITH_DRACO:
 				return this.loader_for_glb(this._node);
+			case GeometryFormat.LDRAW:
+				return this.loader_for_ldraw();
 			case GeometryFormat.OBJ:
 				return this.loader_for_obj();
 			case GeometryFormat.PDB:
@@ -300,6 +313,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 				return this.loader_for_gltf();
 			case GeometryExtension.GLB:
 				return this.loader_for_glb(this._node);
+			case GeometryExtension.MPD:
+				return this.loader_for_ldraw();
 			case GeometryExtension.OBJ:
 				return this.loader_for_obj();
 			case GeometryExtension.PDB:
@@ -363,6 +378,15 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	}
 	loader_for_drc(node?: BaseNodeType) {
 		return CoreLoaderGeometry.loader_for_drc(node);
+	}
+	static loader_for_ldraw(node?: BaseNodeType) {
+		const LDrawLoader = Poly.modulesRegister.module(ModuleName.LDrawLoader);
+		if (LDrawLoader) {
+			return new LDrawLoader(this.loadingManager);
+		}
+	}
+	loader_for_ldraw(node?: BaseNodeType) {
+		return CoreLoaderGeometry.loader_for_ldraw(node);
 	}
 
 	private static gltf_loader: GLTFLoader | undefined;

@@ -11,6 +11,7 @@ import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoade
 import {STLLoader} from '../../../../modules/three/examples/jsm/loaders/STLLoader';
 import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
 import {ModuleName} from './Common';
+import {LDrawLoader} from './entry_points/LDrawLoader';
 
 export interface ModulesMap {
 	[ModuleName.BasisTextureLoader]: typeof BasisTextureLoader;
@@ -18,6 +19,7 @@ export interface ModulesMap {
 	[ModuleName.EXRLoader]: typeof EXRLoader;
 	[ModuleName.FBXLoader]: typeof FBXLoader;
 	[ModuleName.GLTFLoader]: typeof GLTFLoader;
+	[ModuleName.LDrawLoader]: typeof LDrawLoader;
 	[ModuleName.OBJLoader]: typeof OBJLoader;
 	[ModuleName.PDBLoader]: typeof PDBLoader;
 	[ModuleName.PLYLoader]: typeof PLYLoader;

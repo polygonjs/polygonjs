@@ -30,6 +30,7 @@ module.exports = (env) => {
 		'EXRLoader',
 		'FBXLoader',
 		'GLTFLoader',
+		'LDrawLoader',
 		'OBJLoader',
 		'PDBLoader',
 		'PLYLoader',

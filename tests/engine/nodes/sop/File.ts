@@ -4,7 +4,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {GeometryFormat} from '../../../../src/core/loader/Geometry';
 
-async function with_file(path: string, format: GeometryFormat = GeometryFormat.AUTO) {
+async function withFile(path: string, format: GeometryFormat = GeometryFormat.AUTO) {
 	const geo1 = window.geo1;
 	const fileNode = geo1.createNode('file');
 	fileNode.p.url.set(`${ASSETS_ROOT}${path}`);
@@ -13,7 +13,7 @@ async function with_file(path: string, format: GeometryFormat = GeometryFormat.A
 	const container = await fileNode.compute();
 	return {container, fileNode};
 }
-async function with_hierarchy() {
+async function withHierarchy() {
 	const hierarchy1 = window.geo1.createNode('hierarchy');
 	const file1 = window.geo1.nodesByType('file')[0];
 	hierarchy1.setInput(0, file1);
@@ -75,7 +75,7 @@ QUnit.test('SOP file simple', async (assert) => {
 });
 
 QUnit.test('SOP file obj wolf', async (assert) => {
-	const {container} = await with_file('/models/wolf.obj');
+	const {container} = await withFile('/models/wolf.obj');
 	const core_content = container.coreContent()!;
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.pointsCount(), 0);
@@ -90,57 +90,63 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 	assert.ok(first_geometry.index, 'geometry has index');
 });
 QUnit.test('SOP file json wolf', async (assert) => {
-	const {container} = await with_file('models/wolf.json');
+	const {container} = await withFile('models/wolf.json');
 	assert.equal(container.totalPointsCount(), 5352);
 });
 QUnit.test('SOP file glb stork', async (assert) => {
-	const {container} = await with_file('models/stork.glb');
+	const {container} = await withFile('models/stork.glb');
 	assert.equal(container.totalPointsCount(), 358);
 });
 QUnit.test('SOP file glb soldier', async (assert) => {
-	const {container} = await with_file('models/soldier.glb');
+	const {container} = await withFile('models/soldier.glb');
 	assert.equal(container.totalPointsCount(), 7434);
 });
 QUnit.test('SOP file glb json', async (assert) => {
-	const {container} = await with_file('models/parrot.glb');
+	const {container} = await withFile('models/parrot.glb');
 	assert.equal(container.totalPointsCount(), 497);
 });
 QUnit.test('SOP file glb horse', async (assert) => {
-	const {container} = await with_file('models/horse.glb');
+	const {container} = await withFile('models/horse.glb');
 	assert.equal(container.totalPointsCount(), 796);
 });
 QUnit.test('SOP file glb flamingo', async (assert) => {
-	const {container} = await with_file('models/flamingo.glb');
+	const {container} = await withFile('models/flamingo.glb');
 	assert.equal(container.totalPointsCount(), 337);
 });
 QUnit.test('SOP file z3 glb with draco', async (assert) => {
-	const {container} = await with_file('models/z3.glb');
+	const {container} = await withFile('models/z3.glb');
 	assert.equal(container.pointsCount(), 0);
-	const container2 = await with_hierarchy();
+	const container2 = await withHierarchy();
 	assert.equal(container2.pointsCount(), 498800);
 });
 QUnit.test('SOP file draco bunny', async (assert) => {
-	const {container} = await with_file('models/bunny.drc');
+	const {container} = await withFile('models/bunny.drc');
 	assert.equal(container.pointsCount(), 34834);
 });
 QUnit.test('SOP file format pdb', async (assert) => {
-	const {container} = await with_file('models/ethanol.pdb');
+	const {container} = await withFile('models/ethanol.pdb');
 	assert.equal(container.pointsCount(), 25);
 });
 QUnit.test('SOP file format ply', async (assert) => {
-	const {container} = await with_file('models/dolphins_be.ply');
+	const {container} = await withFile('models/dolphins_be.ply');
 	assert.equal(container.pointsCount(), 855);
 });
 QUnit.test('SOP file format stl', async (assert) => {
-	const {container} = await with_file('models/warrior.stl');
+	const {container} = await withFile('models/warrior.stl');
 	assert.equal(container.pointsCount(), 154059);
 });
 QUnit.test('SOP file draco bunny with format DRC', async (assert) => {
-	const {container} = await with_file('models/bunny.drc', GeometryFormat.DRC);
+	const {container} = await withFile('models/bunny.drc', GeometryFormat.DRC);
 	assert.equal(container.pointsCount(), 34834);
 });
+QUnit.test('SOP file Ldraw', async (assert) => {
+	const {container} = await withFile('models/889-1-RadarTruck.mpd_Packed.mpd', GeometryFormat.LDRAW);
+	assert.equal(container.pointsCount(), 0);
+	const container2 = await withHierarchy();
+	assert.equal(container2.pointsCount(), 122188);
+});
 QUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
-	const {container, fileNode} = await with_file('models/bunny.drc', GeometryFormat.FBX);
+	const {container, fileNode} = await withFile('models/bunny.drc', GeometryFormat.FBX);
 	assert.equal(
 		fileNode.states.error.message(),
 		'could not load geometry from https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/models/bunny.drc (Error: THREE.FBXLoader: Cannot find the version number for the file given.)'
