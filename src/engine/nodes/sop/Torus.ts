@@ -16,13 +16,26 @@ class TorusSopParamsConfig extends NodeParamsConfig {
 	radiusTube = ParamConfig.FLOAT(DEFAULT.radiusTube, {range: [0, 1]});
 	/** @param number of segments along the length of the torus */
 	segmentsRadial = ParamConfig.INTEGER(DEFAULT.segmentsRadial, {
-		range: [1, 50],
+		range: [2, 50],
 		rangeLocked: [true, false],
 	});
 	/** @param number of segments along the tube */
 	segmentsTube = ParamConfig.INTEGER(DEFAULT.segmentsTube, {
 		range: [1, 50],
 		rangeLocked: [true, false],
+	});
+	/** @param open */
+	open = ParamConfig.BOOLEAN(DEFAULT.open);
+	/** @param arc */
+	arc = ParamConfig.FLOAT('$PI*2', {
+		step: 0.00001,
+		range: [0, Math.PI * 2],
+		rangeLocked: [true, true],
+		visibleIf: {open: 1},
+	});
+	/** @param create caps */
+	cap = ParamConfig.BOOLEAN(DEFAULT.cap, {
+		visibleIf: {open: 1},
 	});
 	/** @param axis perpendicular to the torus */
 	direction = ParamConfig.VECTOR3(DEFAULT.direction);
@@ -40,7 +53,7 @@ export class TorusSopNode extends TypedSopNode<TorusSopParamsConfig> {
 	private _operation: TorusSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new TorusSopOperation(this.scene(), this.states);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(input_contents, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }
