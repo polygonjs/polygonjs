@@ -54,7 +54,7 @@ class CopySopParamsConfig extends NodeParamsConfig {
 		visibleIf: {copyAttributes: true},
 	});
 	/** @param toggle on to use the `copy` expression, which allows to change how the left input is evaluated for each point */
-	useCopyExpr = ParamConfig.BOOLEAN(0);
+	useCopyExpr = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new CopySopParamsConfig();
 
@@ -78,6 +78,9 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	async cook(input_contents: CoreGroup[]) {
+		if (!isBooleanTrue(this.pv.useCopyExpr)) {
+			this.stampNode().reset();
+		}
 		const core_group0 = input_contents[0];
 		if (!this.io.inputs.has_input(1)) {
 			await this.cook_without_template(core_group0);
@@ -124,14 +127,16 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		point_index: number
 	) {
 		this._instancer.matrixFromPoint(template_points[point_index], this._instanceMatrix);
-		const template_point = template_points[point_index];
-		this.stampNode().setPoint(template_point);
+		const templatePoint = template_points[point_index];
+		if (isBooleanTrue(this.pv.useCopyExpr)) {
+			this.stampNode().setPoint(templatePoint);
+		}
 
 		const moved_objects = await this._get_moved_objects_for_template_point(instance_core_group, point_index);
 
 		for (let moved_object of moved_objects) {
 			if (isBooleanTrue(this.pv.copyAttributes)) {
-				this._copyAttributes_from_template(moved_object, template_point);
+				this._copyAttributes_from_template(moved_object, templatePoint);
 			}
 
 			// TODO: that node is getting inconsistent...
@@ -198,22 +203,29 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private async _stamp_instance_group_if_required(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
-		if (isBooleanTrue(this.pv.useCopyExpr)) {
-			const container0 = await this.containerController.requestInputContainer(0);
-			if (container0) {
-				const core_group0 = container0.coreContent();
-				if (core_group0) {
-					return core_group0;
-				} else {
-					return;
-				}
+		// we do not test here for pv.useCopyExpr
+		// as we use the stampNode.reset() at the beginning of the cook
+		// to reupdate it if necessary,
+		// which can be needed when we switch from
+		// useCopyExpr=true to useCopyExpr=false
+		// in which case the copy() expression should return 0.
+		// If we were not doing that, it would return the last evaluated value
+		// if (isBooleanTrue(this.pv.useCopyExpr)) {
+		const container0 = await this.containerController.requestInputContainer(0);
+		if (container0) {
+			const core_group0 = container0.coreContent();
+			if (core_group0) {
+				return core_group0;
 			} else {
-				this.states.error.set(`input failed for index ${this.stampValue()}`);
 				return;
 			}
 		} else {
-			return instance_core_group;
+			this.states.error.set(`input failed for index ${this.stampValue()}`);
+			return;
 		}
+		// } else {
+		// 	return instance_core_group;
+		// }
 	}
 
 	private async _copy_moved_objects_for_each_instance(instance_core_group: CoreGroup) {
@@ -223,7 +235,9 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private async _copy_moved_objects_for_instance(instance_core_group: CoreGroup, i: number) {
-		this.stampNode().setGlobalIndex(i);
+		if (isBooleanTrue(this.pv.useCopyExpr)) {
+			this.stampNode().setGlobalIndex(i);
+		}
 
 		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
 		if (stamped_instance_core_group) {

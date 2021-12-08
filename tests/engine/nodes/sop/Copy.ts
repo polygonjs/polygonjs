@@ -1,3 +1,4 @@
+import {Object3D} from 'three/src/core/Object3D';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../../src/core/geometry/Constant';
 
 QUnit.test('copy sop simple', async (assert) => {
@@ -43,6 +44,7 @@ QUnit.test('copy sop with template and stamp', async (assert) => {
 	const copy1 = geo1.createNode('copy');
 	copy1.setInput(0, attrib_create1);
 	copy1.setInput(1, line1);
+	copy1.p.useCopyExpr.set(0);
 
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set(`1+2*copy('../${copy1.name()}', 0)`);
@@ -81,7 +83,7 @@ QUnit.test('copy sop without template and stamp', async (assert) => {
 	copy1.p.count.set(3);
 
 	switch1.p.input.set(`copy('../${copy1.name()}', 0) % 2`);
-
+	copy1.p.useCopyExpr.set(0);
 	let container = await copy1.compute();
 	// let core_group = container.coreContent();
 	// let {geometry} = core_group.objects()[0];
@@ -124,6 +126,77 @@ QUnit.test('copy sop objects with template and stamp', async (assert) => {
 	assert.equal(objects[1].userData.attributes.test, 1);
 	assert.equal(objects[2].userData.attributes.test, 2);
 	assert.equal(objects[3].userData.attributes.test, 3);
+});
+
+QUnit.test('copy sop using a copy stamp expression only triggers the successors once per cook', async (assert) => {
+	const geo1 = window.geo1;
+
+	window.scene.performance.start();
+
+	const sphere = geo1.createNode('sphere');
+	const scatter = geo1.createNode('scatter');
+	const roundedBox = geo1.createNode('roundedBox');
+	const objectProperties = geo1.createNode('objectProperties');
+	const copy = geo1.createNode('copy');
+	const attribPromote = geo1.createNode('attribPromote');
+
+	scatter.setInput(0, sphere);
+	scatter.p.pointsCount.set(5);
+
+	objectProperties.setInput(0, roundedBox);
+	objectProperties.p.tname.set(1);
+	objectProperties.p.name.set("box_`copy('../copy1',0)`");
+
+	copy.setInput(0, objectProperties);
+	copy.setInput(1, scatter);
+	copy.p.useCopyExpr.set(true);
+
+	attribPromote.setInput(0, copy);
+
+	await attribPromote.compute();
+
+	assert.equal(attribPromote.cookController.cooksCount(), 1);
+
+	window.scene.performance.stop();
+});
+QUnit.test('copy sop switching from useCopyExpr from true to false will give expected results', async (assert) => {
+	const geo1 = window.geo1;
+
+	const sphere = geo1.createNode('sphere');
+	const scatter = geo1.createNode('scatter');
+	const roundedBox = geo1.createNode('roundedBox');
+	const objectProperties = geo1.createNode('objectProperties');
+	const copy = geo1.createNode('copy');
+	const attribPromote = geo1.createNode('attribPromote');
+
+	scatter.setInput(0, sphere);
+	scatter.p.pointsCount.set(5);
+
+	objectProperties.setInput(0, roundedBox);
+	objectProperties.p.tname.set(1);
+	objectProperties.p.name.set("box_`copy('../copy1',0)`");
+
+	copy.setInput(0, objectProperties);
+	copy.setInput(1, scatter);
+	copy.p.useCopyExpr.set(false);
+
+	attribPromote.setInput(0, copy);
+
+	async function objectNames() {
+		const container = await attribPromote.compute();
+		return container
+			.coreContent()
+			?.objects()
+			.map((o: Object3D) => o.name);
+	}
+
+	assert.deepEqual(await objectNames(), ['box_0', 'box_0', 'box_0', 'box_0', 'box_0']);
+	copy.p.useCopyExpr.set(true);
+	assert.deepEqual(await objectNames(), ['box_0', 'box_1', 'box_2', 'box_3', 'box_4']);
+	copy.p.useCopyExpr.set(false);
+	assert.deepEqual(await objectNames(), ['box_0', 'box_0', 'box_0', 'box_0', 'box_0']);
+	copy.p.useCopyExpr.set(true);
+	assert.deepEqual(await objectNames(), ['box_0', 'box_1', 'box_2', 'box_3', 'box_4']);
 });
 
 QUnit.skip('copy sop with group sets an error', (assert) => {});

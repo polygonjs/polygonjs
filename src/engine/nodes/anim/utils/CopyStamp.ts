@@ -1,3 +1,3 @@
-import {BaseCopyStamp} from '../../utils/CopyStamp';
+import {BaseCopyStamp} from '../../utils/BaseCopyStamp';
 
 export class CopyStamp extends BaseCopyStamp {}

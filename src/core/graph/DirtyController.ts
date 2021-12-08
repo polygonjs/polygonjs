@@ -9,7 +9,7 @@ export class DirtyController {
 	_dirty: boolean = true;
 	_dirty_timestamp: number | undefined;
 	_cached_successors: CoreGraphNode[] | undefined;
-	_forbidden_trigger_nodes: CoreGraphNodeId[] | undefined;
+	_forbidden_trigger_node_ids: Set<CoreGraphNodeId> | undefined;
 
 	// hooks
 	_post_dirty_hooks: PostDirtyHook[] | undefined;
@@ -63,18 +63,25 @@ export class DirtyController {
 		this._dirty = false;
 	}
 	setForbiddenTriggerNodes(nodes: CoreGraphNode[]) {
-		this._forbidden_trigger_nodes = nodes.map((n) => n.graphNodeId());
+		if (this._forbidden_trigger_node_ids) {
+			this._forbidden_trigger_node_ids.clear();
+		} else {
+			this._forbidden_trigger_node_ids = new Set();
+		}
+		for (let node of nodes) {
+			this._forbidden_trigger_node_ids.add(node.graphNodeId());
+			node.dirtyController.clearSuccessorsCacheWithPredecessors();
+		}
+	}
+	isForbiddenTriggerNodeId(nodeId: CoreGraphNodeId) {
+		return this._forbidden_trigger_node_ids != null && this._forbidden_trigger_node_ids.has(nodeId);
 	}
 
 	setDirty(original_trigger_graph_node?: CoreGraphNode | null, propagate?: boolean): void {
 		if (propagate == null) {
 			propagate = true;
 		}
-		if (
-			original_trigger_graph_node &&
-			this._forbidden_trigger_nodes &&
-			this._forbidden_trigger_nodes.includes(original_trigger_graph_node.graphNodeId())
-		) {
+		if (original_trigger_graph_node && this.isForbiddenTriggerNodeId(original_trigger_graph_node.graphNodeId())) {
 			return;
 		}
 

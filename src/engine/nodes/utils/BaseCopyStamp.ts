@@ -3,19 +3,26 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {PolyScene} from '../../scene/PolyScene';
 
 export class BaseCopyStamp extends CoreGraphNode {
-	protected _global_index: number = 0;
+	protected _globalIndex: number = 0;
 
 	constructor(scene: PolyScene) {
 		super(scene, 'CopyStamp');
 	}
 
-	setGlobalIndex(index: number) {
-		this._global_index = index;
-		this.setDirty();
-		this.removeDirtyState();
+	reset() {
+		this.setGlobalIndex(0);
 	}
 
-	value(attrib_name?: string): AttribValue {
-		return this._global_index;
+	setGlobalIndex(index: number) {
+		const oldIndex = this._globalIndex;
+		this._globalIndex = index;
+		if (oldIndex != this._globalIndex) {
+			this.setDirty();
+			this.removeDirtyState();
+		}
+	}
+
+	value(attribName?: string): AttribValue {
+		return this._globalIndex;
 	}
 }

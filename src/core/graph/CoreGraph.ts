@@ -1,8 +1,10 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
+import {SetUtils} from '../SetUtils';
 import {CoreGraphNode} from './CoreGraphNode';
 
 export type CoreGraphNodeId = number;
 
+type TraverseCallback = (id: CoreGraphNodeId) => CoreGraphNodeId[];
 export class CoreGraph {
 	private _next_id: CoreGraphNodeId = 0;
 	private _scene: PolyScene | undefined;
@@ -140,6 +142,7 @@ export class CoreGraph {
 		}
 		return [];
 	}
+
 	predecessors(node: CoreGraphNode) {
 		const ids = this.predecessorIds(node.graphNodeId());
 		return this.nodesFromIds(ids);
@@ -148,8 +151,9 @@ export class CoreGraph {
 		const map = this._successors.get(id);
 		if (map) {
 			const ids: CoreGraphNodeId[] = [];
-			map.forEach((bool, id) => {
-				ids.push(id);
+
+			map.forEach((bool, successorId) => {
+				ids.push(successorId);
 			});
 			return ids;
 		}
@@ -159,11 +163,52 @@ export class CoreGraph {
 		const ids = this.successorIds(node.graphNodeId()) || [];
 		return this.nodesFromIds(ids);
 	}
+	private _boundPredecessorIds: TraverseCallback = this.predecessorIds.bind(this);
+	private _boundSuccessorIds: TraverseCallback = this.successorIds.bind(this);
 	allPredecessorIds(node: CoreGraphNode): CoreGraphNodeId[] {
-		return this.allNextIds(node, 'predecessorIds');
+		const method = this._boundPredecessorIds;
+		const ids: Set<CoreGraphNodeId> = new Set();
+		let nextIds = method(node.graphNodeId());
+
+		while (nextIds.length > 0) {
+			const nextNextIds: number[] = [];
+			for (let nextId of nextIds) {
+				ids.add(nextId);
+
+				for (let nextNextId of method(nextId)) {
+					nextNextIds.push(nextNextId);
+				}
+			}
+
+			nextIds = nextNextIds;
+		}
+
+		return SetUtils.toArray(ids);
 	}
 	allSuccessorIds(node: CoreGraphNode): CoreGraphNodeId[] {
-		return this.allNextIds(node, 'successorIds');
+		const method = this._boundSuccessorIds;
+		const ids: Set<CoreGraphNodeId> = new Set();
+		let nextIds = method(node.graphNodeId());
+
+		while (nextIds.length > 0) {
+			const nextNextIds: number[] = [];
+			for (let nextId of nextIds) {
+				const nextNode = this.nodeFromId(nextId);
+				if (nextNode && !nextNode.dirtyController.isForbiddenTriggerNodeId(node.graphNodeId())) {
+					ids.add(nextId);
+					for (let nextNextId of method(nextId)) {
+						nextNextIds.push(nextNextId);
+					}
+				}
+			}
+
+			// for (let id of nextNextIds) {
+			// 	nextIds.push(id);
+			// }
+			nextIds = nextNextIds;
+		}
+
+		return SetUtils.toArray(ids);
 	}
 	allPredecessors(node: CoreGraphNode): CoreGraphNode[] {
 		const ids = this.allPredecessorIds(node);
@@ -210,33 +255,6 @@ export class CoreGraph {
 				this._predecessors.delete(dest_id);
 			}
 		}
-	}
-
-	private allNextIds(node: CoreGraphNode, method: 'successorIds' | 'predecessorIds'): CoreGraphNodeId[] {
-		const ids_by_id: Map<CoreGraphNodeId, boolean> = new Map();
-		const ids: CoreGraphNodeId[] = [];
-		let next_ids = this[method](node.graphNodeId());
-
-		while (next_ids.length > 0) {
-			const next_next_ids = [];
-			for (let next_id of next_ids) {
-				for (let next_next_id of this[method](next_id)) {
-					next_next_ids.push(next_next_id);
-				}
-			}
-
-			for (let id of next_ids) {
-				ids_by_id.set(id, true);
-			}
-			for (let id of next_next_ids) {
-				next_ids.push(id);
-			}
-			next_ids = next_next_ids;
-		}
-		ids_by_id.forEach((bool, id) => {
-			ids.push(id);
-		});
-		return ids;
 	}
 
 	private _hasPredecessor(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId): boolean {

@@ -1,13 +1,21 @@
-import {BaseCopyStamp} from '../../utils/CopyStamp';
+import {BaseCopyStamp} from '../../utils/BaseCopyStamp';
 import {CorePoint} from '../../../../core/geometry/Point';
 
 export class CopyStamp extends BaseCopyStamp {
 	protected _point: CorePoint | undefined;
 
-	setPoint(point: CorePoint) {
+	reset() {
+		super.reset();
+		this.setPoint(undefined);
+	}
+
+	setPoint(point?: CorePoint) {
+		const oldPoint = this._point;
 		this._point = point;
-		this.setDirty();
-		this.removeDirtyState();
+		if (oldPoint != this._point) {
+			this.setDirty();
+			this.removeDirtyState();
+		}
 	}
 
 	value(attrib_name?: string) {
@@ -18,7 +26,7 @@ export class CopyStamp extends BaseCopyStamp {
 				return this._point.index();
 			}
 		} else {
-			return this._global_index;
+			return this._globalIndex;
 		}
 	}
 }
