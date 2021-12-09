@@ -85,7 +85,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
-	private _resolved_sop_group: Group | undefined;
+	private _resolvedSopGroup: Group | undefined;
 	private _found_point_post = new Vector3();
 
 	createObject() {
@@ -252,20 +252,20 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 			if (node.context() == NodeContext.OBJ && node.type() == GeoObjNode.type()) {
 				const geo_node = node as GeoObjNode;
 				// this._remove_render_hook();
-				this._resolved_sop_group = geo_node.childrenDisplayController.sopGroup();
+				this._resolvedSopGroup = geo_node.childrenDisplayController.sopGroup();
 				// I can't really use _resolved_sop_group_child
 				// because it may not exist when this method is execute
-				// this._resolved_sop_group_child = this._resolved_sop_group.children[0] as Object3DWithGeometry;
+				// this._resolved_sop_group_child = this._resolvedSopGroup.children[0] as Object3DWithGeometry;
 			} else {
 				this.states.error.set('found node is not a geo node');
 			}
 		}
 	}
 	private _resolved_object() {
-		if (!this._resolved_sop_group) {
+		if (!this._resolvedSopGroup) {
 			return;
 		}
-		const object = this._resolved_sop_group.children[0];
+		const object = this._resolvedSopGroup.children[0];
 		if (object) {
 			return object as Object3DWithGeometry;
 		}

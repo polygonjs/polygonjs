@@ -7,6 +7,8 @@ import {CoreType} from '../Type';
 import {AttribSize} from './Constant';
 
 export enum Attribute {
+	POINT_INDEX = 'ptnum',
+	OBJECT_INDEX = 'objnum',
 	COLOR = 'color',
 	NORMAL = 'normal',
 	POSITION = 'position',

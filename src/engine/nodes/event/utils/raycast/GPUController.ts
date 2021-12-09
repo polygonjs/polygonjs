@@ -112,9 +112,9 @@ export class RaycastGPUController {
 			this._node.p.pixelValue.set(this._param_read);
 
 			if (this._node.pv.pixelValue.x > this._node.pv.hitThreshold) {
-				this._node.trigger_hit(context);
+				this._node.triggerHit(context);
 			} else {
-				this._node.trigger_miss(context);
+				this._node.triggerMiss(context);
 			}
 		}
 	}

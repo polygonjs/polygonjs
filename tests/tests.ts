@@ -100,6 +100,7 @@ QUnit.module('event');
 import './engine/nodes/event/Code';
 import './engine/nodes/event/Drag';
 import './engine/nodes/event/NodeCook';
+import './engine/nodes/event/Param';
 import './engine/nodes/event/Pointer';
 import './engine/nodes/event/SetParam';
 import './engine/nodes/event/Touch';

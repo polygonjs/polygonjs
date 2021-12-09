@@ -61,7 +61,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	constructor(scene: PolyScene, node: BaseNodeType) {
 		super(scene, 'BaseParam');
 		this._node = node;
-		this.initialize_param();
+		this._initializeParam();
 	}
 	dispose() {
 		// if any direct predecessor is a MethodDependency,
@@ -77,7 +77,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		super.dispose();
 		this._options?.dispose();
 	}
-	initialize_param() {}
+	protected _initializeParam() {}
 	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))
 	// }
 	// initialize() {
@@ -114,14 +114,14 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	abstract defaultValueSerialized(): ParamInitValueSerializedTypeMap[T];
 	abstract rawInputSerialized(): ParamInitValueSerializedTypeMap[T];
 	abstract valueSerialized(): ParamValueSerializedTypeMap[T];
-	copy_value(param: BaseParamType) {
+	copyValue(param: BaseParamType) {
 		if (param.type() == this.type()) {
-			this._copy_value(param as TypedParam<T>);
+			this._copyValue(param as TypedParam<T>);
 		} else {
 			console.warn(`cannot copy value from ${param.type()} to ${this.type()}`);
 		}
 	}
-	protected _copy_value(param: TypedParam<T>) {
+	protected _copyValue(param: TypedParam<T>) {
 		throw 'abstract method param._copy_value';
 	}
 	valuePreConversionSerialized(): ParamValuePreConversionSerializedTypeMap[T] {
@@ -130,27 +130,27 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	convert(raw_val: any): ParamValuesTypeMap[T] | null {
 		return null;
 	}
-	static are_raw_input_equal(val1: any, val2: any) {
+	static areRawInputEqual(val1: any, val2: any) {
 		return false;
 	}
-	is_raw_input_equal(other_raw_input: ParamInitValuesTypeMap[T]) {
-		return (this.constructor as any).are_raw_input_equal(this._raw_input, other_raw_input);
+	isRawInputEqual(other_raw_input: ParamInitValuesTypeMap[T]) {
+		return (this.constructor as any).areRawInputEqual(this._raw_input, other_raw_input);
 	}
-	static are_values_equal(val1: any, val2: any) {
+	static areValuesEqual(val1: any, val2: any) {
 		return false;
 	}
-	is_value_equal(other_val: ParamValuesTypeMap[T]) {
-		return (this.constructor as any).are_values_equal(this.value, other_val);
+	isValueEqual(other_val: ParamValuesTypeMap[T]) {
+		return (this.constructor as any).areValuesEqual(this.value, other_val);
 	}
-	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[T]): ParamInitValuesTypeMap[T] {
+	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[T]): ParamInitValuesTypeMap[T] {
 		return raw_input;
 	}
 	set(raw_input: ParamInitValuesTypeMap[T]): void {
-		this._raw_input = this._clone_raw_input(this._prefilter_invalid_raw_input(raw_input));
+		this._raw_input = this._cloneRawInput(this._prefilterInvalidRawInput(raw_input));
 		this.emitController.emit(ParamEvent.RAW_INPUT_UPDATED);
 		this.processRawInput();
 	}
-	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
+	protected _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
 		return raw_input as ParamInitValuesTypeMap[T];
 	}
 	defaultValue() {
@@ -195,8 +195,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	this._default_value = default_value;
 	// }
 	setInitValue(init_value: ParamInitValuesTypeMap[T]) {
-		this._default_value = this._clone_raw_input(this._prefilter_invalid_raw_input(init_value));
-		// this._raw_input = this._clone_raw_input(init_value);
+		this._default_value = this._cloneRawInput(this._prefilterInvalidRawInput(init_value));
+		// this._raw_input = this._cloneRawInput(init_value);
 
 		// if (this.isMultiple()) {
 		// 	this.initComponents();

@@ -14,7 +14,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 	defaultValueSerialized() {
 		return this._default_value;
 	}
-	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.STRING]) {
+	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.STRING]) {
 		return `${raw_input}`;
 	}
 	rawInputSerialized() {
@@ -23,17 +23,17 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 	valueSerialized() {
 		return `${this.value}`;
 	}
-	protected _copy_value(param: StringParam) {
+	protected _copyValue(param: StringParam) {
 		this.set(param.value);
 	}
 
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.STRING],
 		raw_input2: ParamInitValuesTypeMap[ParamType.STRING]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.STRING], val2: ParamValuesTypeMap[ParamType.STRING]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.STRING], val2: ParamValuesTypeMap[ParamType.STRING]) {
 		return val1 == val2;
 	}
 	isDefault(): boolean {

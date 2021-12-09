@@ -44,11 +44,11 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 		return this.value.toArray() as Number4;
 	}
 	private _copied_value: Number4 = [0, 0, 0, 0];
-	protected _copy_value(param: Vector4Param) {
+	protected _copyValue(param: Vector4Param) {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
-	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR4]) {
+	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR4]) {
 		if (raw_input instanceof Vector4) {
 			return raw_input.clone();
 		} else {
@@ -69,7 +69,7 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 			return new_array;
 		}
 	}
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.VECTOR4],
 		raw_input2: ParamInitValuesTypeMap[ParamType.VECTOR4]
 	) {
@@ -102,7 +102,7 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 			}
 		}
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR4], val2: ParamValuesTypeMap[ParamType.VECTOR4]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.VECTOR4], val2: ParamValuesTypeMap[ParamType.VECTOR4]) {
 		return val1.equals(val2);
 	}
 	initComponents() {

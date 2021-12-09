@@ -24,6 +24,8 @@ class NullAnimParamsConfig extends NodeParamsConfig {
 			NullAnimNode.PARAM_CALLBACK_pause(node as NullAnimNode);
 		},
 	});
+	/** @param stops previous animations still in progress started by this node */
+	stopsPreviousAnim = ParamConfig.BOOLEAN(1);
 	/** @param toggle to see debug infos printed in the console */
 	debug = ParamConfig.BOOLEAN(0);
 }
@@ -57,7 +59,7 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 			if (!this._timelineBuilder) {
 				return;
 			}
-			if (this._timeline) {
+			if (this._timeline && isBooleanTrue(this.pv.stopsPreviousAnim)) {
 				this._timeline.kill();
 			}
 			let resolved = false;
@@ -73,7 +75,6 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 				Poly.log(`play from '${this.path()}'`);
 			}
 
-			(this._timeline as any).pjsid = Math.random();
 			this._timelineBuilder.setDebug(isBooleanTrue(this.pv.debug));
 			this._timelineBuilder.populate(this._timeline);
 

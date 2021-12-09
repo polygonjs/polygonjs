@@ -208,7 +208,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	}
 
 	static PARAM_CALLBACK_updateResolve(node: NodeCookEventNode) {
-		node._allNodesHaveCooked();
+		node._updateResolvedNodes();
 	}
 	static PARAM_CALLBACK_printResolve(node: NodeCookEventNode) {
 		node.printResolve();

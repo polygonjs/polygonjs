@@ -30,11 +30,11 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	rawInputSerialized() {
 		return this._components.map((c) => c.rawInputSerialized()) as ParamInitValueSerializedTypeMap[T];
 	}
-	 protected _copy_value(param: TypedMultipleParam<T>) {
+	protected _copyValue(param: TypedMultipleParam<T>) {
 		for (let i = 0; i < this.components.length; i++) {
 			const component = this.components[i];
 			const src_component = param.components[i];
-			component.copy_value(src_component);
+			component.copyValue(src_component);
 		}
 	}
 
@@ -99,7 +99,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	// and not DEFAULT.color.toArray()
 	// and this could also maybe fix the .set() calls
 	// where an array currently needs to be used
-	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
+	protected _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (!CoreType.isArray(raw_input)) {
 			const number_or_string = raw_input as number | string;
 			const raw_input_wrapped_in_array: StringOrNumber[] = this.componentNames().map(() => number_or_string);

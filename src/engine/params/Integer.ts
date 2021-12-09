@@ -18,10 +18,10 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	valueSerialized() {
 		return this.value;
 	}
-	protected _copy_value(param: IntegerParam) {
+	protected _copyValue(param: IntegerParam) {
 		this.set(param.valueSerialized());
 	}
-	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
+	protected _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
 		if (CoreType.isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
 		}
@@ -31,13 +31,13 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		return raw_input;
 	}
 
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.INTEGER],
 		raw_input2: ParamInitValuesTypeMap[ParamType.INTEGER]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.INTEGER], val2: ParamValuesTypeMap[ParamType.INTEGER]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.INTEGER], val2: ParamValuesTypeMap[ParamType.INTEGER]) {
 		return val1 == val2;
 	}
 	static convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {

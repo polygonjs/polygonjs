@@ -15,6 +15,7 @@ import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {Vector2} from 'three/src/math/Vector2';
 
 import {TangentSpaceNormalMap, ObjectSpaceNormalMap} from 'three/src/constants';
+import {IUniformV2} from '../../utils/code/gl/Uniforms';
 enum NormalMapMode {
 	TANGENT = 'tangent',
 	OBJECT = 'object',
@@ -48,6 +49,12 @@ export function NormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		/** @param How much the normal map affects the material. Typical ranges are 0-1 */
 		normalScale = ParamConfig.VECTOR2([1, 1], {visibleIf: {useNormalMap: 1}});
+		/** @param Normal Map Scale Multiplier, which multiples normalScale */
+		normalScaleMult = ParamConfig.FLOAT(1, {
+			range: [0, 1],
+			rangeLocked: [false, false],
+			visibleIf: {useNormalMap: 1},
+		});
 	};
 }
 
@@ -74,19 +81,20 @@ export class TextureNormalMapController extends BaseTextureMapController {
 		this.add_hooks(this.node.p.useNormalMap, this.node.p.normalMap);
 	}
 	async update() {
-		this._update(this.node.material, 'normalMap', this.node.p.useNormalMap, this.node.p.normalMap);
-		const normalMapType = NormalMapModeByName[NORMAL_MAP_MODES[this.node.pv.normalMapType]];
+		const {p, pv, material} = this.node;
+		this._update(this.node.material, 'normalMap', p.useNormalMap, p.normalMap);
+		const normalMapType = NormalMapModeByName[NORMAL_MAP_MODES[pv.normalMapType]];
 		if (this._update_options.uniforms) {
-			const mat = this.node.material as ShaderMaterial;
+			const mat = material as ShaderMaterial;
 			// mat.uniforms.normalMapType.value = normalMapType; // not present in uniforms
-			mat.uniforms.normalScale.value.copy(this.node.pv.normalScale);
+			(mat.uniforms.normalScale as IUniformV2).value.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
 		}
-		const mat = this.node.material as MeshPhongMaterial;
+		const mat = material as MeshPhongMaterial;
 		// normalMapType is set for uniforms AND directParams
 		// to ensure that the USE_* defines are set
 		mat.normalMapType = normalMapType;
 		if (this._update_options.directParams) {
-			mat.normalScale.copy(this.node.pv.normalScale);
+			mat.normalScale.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
 		}
 	}
 	static async update(node: TextureNormalMapMatNode) {

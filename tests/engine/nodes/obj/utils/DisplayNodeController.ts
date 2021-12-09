@@ -98,7 +98,7 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 	assert.ok(box1.flags.display.active(), 'display flag is set on');
 	assert.equal(geo1.displayNodeController.displayNode()?.graphNodeId(), box1.graphNodeId(), 'display node is box');
 	assert.equal(box1.cookController.cooksCount(), 0, 'box has not cooked');
-	assert.equal(geo1.childrenDisplayController.sopGroup().children.length, 0, 'sop_group is empty');
+	assert.equal(geo1.childrenDisplayController.sopGroup().children.length, 0, 'sopGroup is empty');
 
 	box1.p.size.set(box1.pv.size * 2);
 	await scene.waitForCooksCompleted();
@@ -135,7 +135,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	assert.equal(obj.children.length, 2, 'obj has 2 children');
 	assert.deepEqual(
 		obj.children.map((c) => c.name).sort(),
-		['/geo1:parented_outputs', 'geo1:sop_group'],
+		['/geo1:parentedOutputs', 'geo1:sopGroup'],
 		'object contains a hierarchy parent and a sop group'
 	);
 	let geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;

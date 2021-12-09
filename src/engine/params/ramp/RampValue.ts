@@ -110,7 +110,7 @@ export class RampValue {
 		}
 	}
 
-	is_equal(other_ramp_value: RampValue): boolean {
+	isEqual(other_ramp_value: RampValue): boolean {
 		if (this._interpolation != other_ramp_value.interpolation()) {
 			return false;
 		}
@@ -129,7 +129,7 @@ export class RampValue {
 
 		return true;
 	}
-	is_equal_json(json: RampValueJson) {
+	isEqualJSON(json: RampValueJson) {
 		if (this._interpolation != json.interpolation) {
 			return false;
 		}

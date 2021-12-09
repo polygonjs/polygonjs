@@ -23,7 +23,7 @@ import {Vector4} from 'three/src/math/Vector4';
 import {IntegerParam} from '../../params/Integer';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
-enum SetParamParamType {
+export enum SetParamParamType {
 	BOOLEAN = 'boolean',
 	BUTTON = 'button',
 	NUMBER = 'number',
@@ -48,6 +48,10 @@ const TYPE_VECTOR2 = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.VECTOR2);
 const TYPE_VECTOR3 = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.VECTOR3);
 const TYPE_VECTOR4 = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.VECTOR4);
 const TYPE_STRING = SET_PARAM_PARAM_TYPE.indexOf(SetParamParamType.STRING);
+
+function valueParamOptions() {
+	return {cook: false};
+}
 
 const OUTPUT_NAME = 'output';
 class SetParamParamsConfig extends NodeParamsConfig {
@@ -75,30 +79,37 @@ class SetParamParamsConfig extends NodeParamsConfig {
 			type: TYPE_BOOLEAN,
 			toggle: 0,
 		},
+		...valueParamOptions(),
 	});
 	/** @param param value for a float parameter */
 	number = ParamConfig.FLOAT(0, {
 		visibleIf: {type: TYPE_NUMBER},
+		...valueParamOptions(),
 	});
 	/** @param param value for a vector2 parameter */
 	vector2 = ParamConfig.VECTOR2([0, 0], {
 		visibleIf: {type: TYPE_VECTOR2},
+		...valueParamOptions(),
 	});
 	/** @param param value for a vector3 parameter */
 	vector3 = ParamConfig.VECTOR3([0, 0, 0], {
 		visibleIf: {type: TYPE_VECTOR3},
+		...valueParamOptions(),
 	});
 	/** @param param value for a vector4 parameter */
 	vector4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
 		visibleIf: {type: TYPE_VECTOR4},
+		...valueParamOptions(),
 	});
 	/** @param if on, the value will be incremented by the value, as opposed to be set to the value */
 	increment = ParamConfig.BOOLEAN(0, {
 		visibleIf: [{type: TYPE_NUMBER}, {type: TYPE_VECTOR2}, {type: TYPE_VECTOR3}, {type: TYPE_VECTOR4}],
+		...valueParamOptions(),
 	});
 	/** @param param value for a string parameter */
 	string = ParamConfig.STRING('', {
 		visibleIf: {type: TYPE_STRING},
+		...valueParamOptions(),
 	});
 	/** @param execute button to test the node */
 	execute = ParamConfig.BUTTON(null, {
@@ -128,6 +139,11 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 			});
 		});
 	}
+	setParamType(paramType: SetParamParamType) {
+		const index = SET_PARAM_PARAM_TYPE.indexOf(paramType);
+		this.p.type.set(index);
+	}
+
 	async processEvent(event_context: EventContext<Event>) {
 		if (this.p.param.isDirty()) {
 			// TODO: investigate occasions
@@ -139,9 +155,9 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		const param = this.p.param.value.param();
 
 		if (param) {
-			const new_value = await this._new_param_value(param);
-			if (new_value != null) {
-				param.set(new_value);
+			const newValue = await this._newParamValue(param);
+			if (newValue != null) {
+				param.set(newValue);
 			}
 		} else {
 			this.states.error.set('target param not found');
@@ -156,11 +172,11 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 	private _tmp_array2: Number2 = [0, 0];
 	private _tmp_array3: Number3 = [0, 0, 0];
 	private _tmp_array4: Number4 = [0, 0, 0, 0];
-	private async _new_param_value(param: BaseParamType) {
+	private async _newParamValue(param: BaseParamType) {
 		const type = SET_PARAM_PARAM_TYPE[this.pv.type];
 		switch (type) {
 			case SetParamParamType.BOOLEAN: {
-				await this._compute_params_if_dirty([this.p.toggle]);
+				await this._computeParamsIfDirty([this.p.toggle]);
 				// use 1 and 0, so we can also use it on integer params, such as for a switch node
 				if (isBooleanTrue(this.pv.toggle)) {
 					return param.value ? 0 : 1;
@@ -172,7 +188,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				return param.options.executeCallback();
 			}
 			case SetParamParamType.NUMBER: {
-				await this._compute_params_if_dirty([this.p.increment, this.p.number]);
+				await this._computeParamsIfDirty([this.p.increment, this.p.number]);
 				if (isBooleanTrue(this.pv.increment)) {
 					if (param.type() == ParamType.FLOAT) {
 						return (param as FloatParam).value + this.pv.number;
@@ -184,7 +200,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				}
 			}
 			case SetParamParamType.VECTOR2: {
-				await this._compute_params_if_dirty([this.p.increment, this.p.vector2]);
+				await this._computeParamsIfDirty([this.p.increment, this.p.vector2]);
 				if (isBooleanTrue(this.pv.increment)) {
 					if (param.type() == ParamType.VECTOR2) {
 						this._tmp_vector2.copy((param as Vector2Param).value);
@@ -199,7 +215,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				return this._tmp_array2;
 			}
 			case SetParamParamType.VECTOR3: {
-				await this._compute_params_if_dirty([this.p.increment, this.p.vector3]);
+				await this._computeParamsIfDirty([this.p.increment, this.p.vector3]);
 				if (isBooleanTrue(this.pv.increment)) {
 					if (param.type() == ParamType.VECTOR3) {
 						this._tmp_vector3.copy((param as Vector3Param).value);
@@ -214,7 +230,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				return this._tmp_array3;
 			}
 			case SetParamParamType.VECTOR4: {
-				await this._compute_params_if_dirty([this.p.increment, this.p.vector4]);
+				await this._computeParamsIfDirty([this.p.increment, this.p.vector4]);
 				if (isBooleanTrue(this.pv.increment)) {
 					if (param.type() == ParamType.VECTOR4) {
 						this._tmp_vector4.copy((param as Vector4Param).value);
@@ -229,7 +245,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 				return this._tmp_array4;
 			}
 			case SetParamParamType.STRING: {
-				await this._compute_params_if_dirty([this.p.string]);
+				await this._computeParamsIfDirty([this.p.string]);
 				return this.pv.string;
 			}
 		}
@@ -240,7 +256,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		node.processEvent({});
 	}
 
-	private async _compute_params_if_dirty(params: BaseParamType[]) {
+	private async _computeParamsIfDirty(params: BaseParamType[]) {
 		const dirty_params = [];
 		for (let param of params) {
 			if (param.isDirty()) {

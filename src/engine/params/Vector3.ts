@@ -38,12 +38,12 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		return this.value.toArray() as Number3;
 	}
 	private _copied_value: Number3 = [0, 0, 0];
-	protected _copy_value(param: Vector3Param) {
+	protected _copyValue(param: Vector3Param) {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
 
-	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
+	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
 		if (raw_input instanceof Vector3) {
 			return raw_input.clone();
 		} else {
@@ -62,7 +62,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 		}
 	}
 
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.VECTOR3],
 		raw_input2: ParamInitValuesTypeMap[ParamType.VECTOR3]
 	) {
@@ -82,7 +82,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 			}
 		}
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR3], val2: ParamValuesTypeMap[ParamType.VECTOR3]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.VECTOR3], val2: ParamValuesTypeMap[ParamType.VECTOR3]) {
 		return val1.equals(val2);
 	}
 	initComponents() {

@@ -12,7 +12,7 @@ import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
 import {Bone} from 'three/src/objects/Bone';
 import {CoreGeometry} from './Geometry';
 import {GroupString} from './Group';
-import {CoreAttribute} from './Attribute';
+import {Attribute, CoreAttribute} from './Attribute';
 import {CoreConstant, AttribType, AttribSize} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from './Material';
@@ -20,7 +20,6 @@ import {CoreString} from '../String';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
 import {ObjectUtils} from '../ObjectUtils';
-const PTNUM = 'ptnum';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
 
@@ -184,7 +183,7 @@ export class CoreObject extends CoreEntity {
 		index: number = 0,
 		target?: Vector2 | Vector3 | Vector4
 	): AttribValue | undefined {
-		if (name === PTNUM) {
+		if (name === Attribute.OBJECT_INDEX) {
 			return index;
 		}
 		if (object.userData && object.userData[ATTRIBUTES]) {

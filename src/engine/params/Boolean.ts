@@ -23,16 +23,16 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 	valueSerialized() {
 		return this.value;
 	}
-	protected _copy_value(param: BooleanParam) {
+	protected _copyValue(param: BooleanParam) {
 		this.set(param.value);
 	}
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.BOOLEAN],
 		raw_input2: ParamInitValuesTypeMap[ParamType.BOOLEAN]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.BOOLEAN], val2: ParamValuesTypeMap[ParamType.BOOLEAN]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.BOOLEAN], val2: ParamValuesTypeMap[ParamType.BOOLEAN]) {
 		return val1 == val2;
 	}
 	convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean | null {

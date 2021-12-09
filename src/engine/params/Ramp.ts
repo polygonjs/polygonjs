@@ -34,7 +34,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 			return this._default_value;
 		}
 	}
-	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]) {
+	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]) {
 		if (raw_input instanceof RampValue) {
 			return raw_input.clone();
 		} else {
@@ -51,30 +51,30 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	valueSerialized() {
 		return this.value.toJSON();
 	}
-	protected _copy_value(param: RampParam) {
+	protected _copyValue(param: RampParam) {
 		this.set(param.valueSerialized());
 	}
 
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.RAMP],
 		raw_input2: ParamInitValuesTypeMap[ParamType.RAMP]
 	) {
 		if (raw_input1 instanceof RampValue) {
 			if (raw_input2 instanceof RampValue) {
-				return raw_input1.is_equal(raw_input2);
+				return raw_input1.isEqual(raw_input2);
 			} else {
-				return raw_input1.is_equal_json(raw_input2);
+				return raw_input1.isEqualJSON(raw_input2);
 			}
 		} else {
 			if (raw_input2 instanceof RampValue) {
-				return raw_input2.is_equal_json(raw_input1);
+				return raw_input2.isEqualJSON(raw_input1);
 			} else {
 				return RampValue.are_json_equal(raw_input1, raw_input2);
 			}
 		}
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
-		return val1.is_equal(val2);
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
+		return val1.isEqual(val2);
 	}
 	// initialize_param() {
 	// 	this.addPostDirtyHook(
@@ -87,9 +87,9 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	// }
 	isDefault(): boolean {
 		if (this._default_value instanceof RampValue) {
-			return this.value.is_equal(this._default_value);
+			return this.value.isEqual(this._default_value);
 		} else {
-			return this.value.is_equal_json(this._default_value);
+			return this.value.isEqualJSON(this._default_value);
 		}
 	}
 	protected processRawInput() {

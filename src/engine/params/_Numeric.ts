@@ -14,7 +14,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		return this._raw_input == this._default_value;
 	}
 
-	protected _prefilter_invalid_raw_input(raw_input: any): ParamInitValuesTypeMap[T] {
+	protected _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (CoreType.isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[T];
 		} else {

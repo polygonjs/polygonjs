@@ -16,14 +16,14 @@ export class FolderParam extends TypedParam<ParamType.FOLDER> {
 	valueSerialized() {
 		return this.value;
 	}
-	protected _copy_value(param: FolderParam) {}
-	static are_raw_input_equal(
+	protected _copyValue(param: FolderParam) {}
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.FOLDER],
 		raw_input2: ParamInitValuesTypeMap[ParamType.FOLDER]
 	) {
 		return true;
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.FOLDER], val2: ParamValuesTypeMap[ParamType.FOLDER]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.FOLDER], val2: ParamValuesTypeMap[ParamType.FOLDER]) {
 		return true;
 	}
 }

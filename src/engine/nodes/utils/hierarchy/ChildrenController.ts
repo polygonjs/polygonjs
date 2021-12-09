@@ -250,7 +250,7 @@ export class HierarchyChildrenController {
 
 			// set other dependencies dirty
 			// Note that this call to set_dirty was initially before this._children_node.remove_graph_input
-			// but that prevented the obj/geo node to properly clear its sop_group if this was the last node
+			// but that prevented the obj/geo node to properly clear its sopGroup if this was the last node
 			// if (this._is_dependent_on_children && this._children_node) {
 			// 	this._children_node.set_successors_dirty(this.node);
 			// }

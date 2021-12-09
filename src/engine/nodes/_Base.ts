@@ -81,7 +81,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		for (let param of non_spare) {
 			const other_param = node.params.get(param.name());
 			if (other_param) {
-				param.copy_value(other_param);
+				param.copyValue(other_param);
 			}
 		}
 	}

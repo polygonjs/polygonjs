@@ -10,7 +10,7 @@ import {Vector4} from 'three/src/math/Vector4';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector2} from 'three/src/math/Vector2';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {CoreAttribute} from './Attribute';
+import {Attribute, CoreAttribute} from './Attribute';
 import {CoreGeometry} from './Geometry';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
@@ -40,7 +40,6 @@ const COMPONENT_INDICES = {
 	b: 2,
 };
 
-const PTNUM = 'ptnum';
 const DOT = '.';
 
 export class CorePoint extends CoreEntity {
@@ -74,7 +73,7 @@ export class CorePoint extends CoreEntity {
 	}
 
 	attribValue(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
-		if (name === PTNUM) {
+		if (name === Attribute.POINT_INDEX) {
 			return this.index();
 		} else {
 			let component_name = null;

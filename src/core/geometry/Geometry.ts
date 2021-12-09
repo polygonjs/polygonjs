@@ -14,7 +14,7 @@ import {Box3} from 'three/src/math/Box3';
 import {CorePoint} from './Point';
 import {CoreFace} from './Face';
 import {ObjectType, AttribType, AttribSize} from './Constant';
-import {CoreAttribute} from './Attribute';
+import {Attribute, CoreAttribute} from './Attribute';
 import {CoreAttributeData} from './AttributeData';
 import {CoreGeometryBuilderPoints} from './builders/Points';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
@@ -90,7 +90,7 @@ export class CoreGeometry {
 	}
 
 	hasAttrib(name: string): boolean {
-		if (name === 'ptnum') {
+		if (name === Attribute.POINT_INDEX) {
 			return true;
 		}
 		name = CoreAttribute.remapName(name);
@@ -138,7 +138,7 @@ export class CoreGeometry {
 		if ((attrib = this._geometry.attributes[name]) != null) {
 			return attrib.itemSize;
 		} else {
-			if (name === 'ptnum') {
+			if (name === Attribute.POINT_INDEX) {
 				// to ensure attrib copy with ptnum as source works
 				return 1;
 			} else {

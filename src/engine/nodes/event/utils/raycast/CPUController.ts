@@ -28,6 +28,7 @@ import {CoreType} from '../../../../../core/Type';
 import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {RaycasterForBVH} from '../../../../operations/sop/utils/Bvh/three-mesh-bvh';
+import {CoreObject} from '../../../../../core/geometry/Object';
 
 interface CursorOffset {
 	offsetX: number;
@@ -94,10 +95,10 @@ export class RaycastCPUController {
 		const type = CPU_INTERSECT_WITH_OPTIONS[this._node.pv.intersectWith];
 		switch (type) {
 			case CPUIntersectWith.GEOMETRY: {
-				return this._intersect_with_geometry(context);
+				return this._intersectGeometry(context);
 			}
 			case CPUIntersectWith.PLANE: {
-				return this._intersect_with_plane(context);
+				return this._intersectPlane(context);
 			}
 		}
 		TypeAssert.unreachable(type);
@@ -105,17 +106,17 @@ export class RaycastCPUController {
 
 	private _plane = new Plane();
 	private _plane_intersect_target = new Vector3();
-	private _intersect_with_plane(context: EventContext<MouseEvent>) {
+	private _intersectPlane(context: EventContext<MouseEvent>) {
 		this._plane.normal.copy(this._node.pv.planeDirection);
 		this._plane.constant = this._node.pv.planeOffset;
 		this._raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
 
-		this._set_position_param(this._plane_intersect_target);
-		this._node.trigger_hit(context);
+		this._setPositionParam(this._plane_intersect_target);
+		this._node.triggerHit(context);
 	}
 
 	private _intersections: Intersection[] = [];
-	private _intersect_with_geometry(context: EventContext<MouseEvent>) {
+	private _intersectGeometry(context: EventContext<MouseEvent>) {
 		if (!this._resolved_targets) {
 			this.update_target();
 		}
@@ -129,48 +130,66 @@ export class RaycastCPUController {
 			);
 			const intersection = intersections[0];
 			if (intersection) {
-				this._set_position_param(intersection.point);
+				this._setPositionParam(intersection.point);
 
 				if (isBooleanTrue(this._node.pv.geoAttribute)) {
-					this._resolve_geometry_attribute(intersection);
+					this._resolveIntersectAttribute(intersection);
 				}
 				context.value = {intersect: intersection};
-				this._node.trigger_hit(context);
+				this._node.triggerHit(context);
 			} else {
-				this._node.trigger_miss(context);
+				this._node.triggerMiss(context);
 			}
 		}
 	}
-	private _resolve_geometry_attribute(intersection: Intersection) {
-		const attrib_type = ATTRIBUTE_TYPES[this._node.pv.geoAttributeType];
-		const val = RaycastCPUController.resolve_geometry_attribute(
-			intersection,
-			this._node.pv.geoAttributeName,
-			attrib_type
-		);
-		if (val != null) {
-			switch (attrib_type) {
+	private _resolveIntersectAttribute(intersection: Intersection) {
+		const attribType = ATTRIBUTE_TYPES[this._node.pv.geoAttributeType];
+		let attribValue = RaycastCPUController.resolveObjectAttribute(intersection, this._node.pv.geoAttributeName);
+		if (attribValue == null) {
+			attribValue = RaycastCPUController.resolveGeometryAttribute(
+				intersection,
+				this._node.pv.geoAttributeName,
+				attribType
+			);
+		}
+		if (attribValue != null) {
+			switch (attribType) {
 				case AttribType.NUMERIC: {
-					this._node.p.geoAttributeValue1.set(val);
+					this._node.p.geoAttributeValue1.set(attribValue);
 					return;
 				}
 				case AttribType.STRING: {
-					if (CoreType.isString(val)) {
-						this._node.p.geoAttributeValues.set(val);
+					if (CoreType.isString(attribValue)) {
+						this._node.p.geoAttributeValues.set(attribValue);
 					}
 					return;
 				}
 			}
-			TypeAssert.unreachable(attrib_type);
+			TypeAssert.unreachable(attribType);
 		}
 	}
-	static resolve_geometry_attribute(intersection: Intersection, attribute_name: string, attrib_type: AttribType) {
-		const object_type = objectTypeFromConstructor(intersection.object.constructor);
-		switch (object_type) {
+	static resolveObjectAttribute(intersection: Intersection, attribName: string) {
+		const value = CoreObject.attribValue(intersection.object, attribName);
+		if (!value) {
+			return;
+		}
+		if (CoreType.isNumber(value) || CoreType.isString(value)) {
+			return value;
+		}
+		if (CoreType.isArray(value)) {
+			return value[0];
+		}
+		if (CoreType.isVector(value)) {
+			return value.x;
+		}
+	}
+	static resolveGeometryAttribute(intersection: Intersection, attribName: string, attribType: AttribType) {
+		const objectType = objectTypeFromConstructor(intersection.object.constructor);
+		switch (objectType) {
 			case ObjectType.MESH:
-				return this.resolve_geometry_attribute_for_mesh(intersection, attribute_name, attrib_type);
+				return this.resolveGeometryAttributeForMesh(intersection, attribName, attribType);
 			case ObjectType.POINTS:
-				return this.resolve_geometry_attribute_for_point(intersection, attribute_name, attrib_type);
+				return this.resolveGeometryAttributeForPoint(intersection, attribName, attribType);
 		}
 		// TODO: have the raycast cpu controller work with all object types
 		// TypeAssert.unreachable(object_type)
@@ -183,16 +202,12 @@ export class RaycastCPUController {
 	private static _uvB = new Vector2();
 	private static _uvC = new Vector2();
 	private static _hitUV = new Vector2();
-	static resolve_geometry_attribute_for_mesh(
-		intersection: Intersection,
-		attribute_name: string,
-		attrib_type: AttribType
-	) {
+	static resolveGeometryAttributeForMesh(intersection: Intersection, attribName: string, attribType: AttribType) {
 		const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
 		if (geometry) {
-			const attribute = geometry.getAttribute(attribute_name) as BufferAttribute;
+			const attribute = geometry.getAttribute(attribName) as BufferAttribute;
 			if (attribute) {
-				switch (attrib_type) {
+				switch (attribType) {
 					case AttribType.NUMERIC: {
 						const position = geometry.getAttribute('position') as BufferAttribute;
 						if (intersection.face) {
@@ -220,25 +235,21 @@ export class RaycastCPUController {
 						const core_geometry = new CoreGeometry(geometry);
 						const core_point = core_geometry.points()[0];
 						if (core_point) {
-							return core_point.stringAttribValue(attribute_name);
+							return core_point.stringAttribValue(attribName);
 						}
 						return;
 					}
 				}
-				TypeAssert.unreachable(attrib_type);
+				TypeAssert.unreachable(attribType);
 			}
 		}
 	}
-	static resolve_geometry_attribute_for_point(
-		intersection: Intersection,
-		attribute_name: string,
-		attrib_type: AttribType
-	) {
+	static resolveGeometryAttributeForPoint(intersection: Intersection, attribName: string, attribType: AttribType) {
 		const geometry = (intersection.object as Points).geometry as BufferGeometry;
 		if (geometry && intersection.index != null) {
-			switch (attrib_type) {
+			switch (attribType) {
 				case AttribType.NUMERIC: {
-					const attribute = geometry.getAttribute(attribute_name);
+					const attribute = geometry.getAttribute(attribName);
 					if (attribute) {
 						return attribute.array[intersection.index];
 					}
@@ -248,18 +259,18 @@ export class RaycastCPUController {
 					const core_geometry = new CoreGeometry(geometry);
 					const core_point = core_geometry.points()[intersection.index];
 					if (core_point) {
-						return core_point.stringAttribValue(attribute_name);
+						return core_point.stringAttribValue(attribName);
 					}
 					return;
 				}
 			}
-			TypeAssert.unreachable(attrib_type);
+			TypeAssert.unreachable(attribType);
 		}
 	}
 
 	private _found_position_target_param: Vector3Param | undefined;
 	private _hit_position_array: Number3 = [0, 0, 0];
-	private _set_position_param(hit_position: Vector3) {
+	private _setPositionParam(hit_position: Vector3) {
 		hit_position.toArray(this._hit_position_array);
 		if (isBooleanTrue(this._node.pv.tpositionTarget)) {
 			if (Poly.playerMode()) {

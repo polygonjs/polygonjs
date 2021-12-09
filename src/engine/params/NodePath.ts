@@ -11,7 +11,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	static type() {
 		return ParamType.NODE_PATH;
 	}
-	initialize_param() {
+	protected _initializeParam() {
 		this._value = new TypedNodePathParamValue();
 	}
 
@@ -24,16 +24,16 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	valueSerialized() {
 		return `${this.value}`;
 	}
-	protected _copy_value(param: NodePathParam) {
+	protected _copyValue(param: NodePathParam) {
 		this.set(param.valueSerialized());
 	}
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.NODE_PATH],
 		raw_input2: ParamInitValuesTypeMap[ParamType.NODE_PATH]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static are_values_equal(
+	static areValuesEqual(
 		val1: ParamValuesTypeMap[ParamType.NODE_PATH],
 		val2: ParamValuesTypeMap[ParamType.NODE_PATH]
 	) {

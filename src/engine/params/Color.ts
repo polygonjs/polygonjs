@@ -49,16 +49,16 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		return this._value_pre_conversion_serialized;
 	}
 	private _copied_value: Number3 = [0, 0, 0];
-	protected _copy_value(param: ColorParam) {
+	protected _copyValue(param: ColorParam) {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
-	// protected _prefilter_invalid_raw_input(
+	// protected _prefilterInvalidRawInput(
 	// 	raw_input: ParamInitValuesTypeMap[ParamType.COLOR]
 	// ): ParamInitValuesTypeMap[ParamType.COLOR] {
 	// 	return raw_input;
 	// }
-	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]) {
+	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]) {
 		if (raw_input instanceof Color) {
 			return raw_input.clone();
 		} else {
@@ -76,7 +76,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 			return new_array;
 		}
 	}
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.COLOR],
 		raw_input2: ParamInitValuesTypeMap[ParamType.COLOR]
 	) {
@@ -96,7 +96,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 			}
 		}
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.COLOR], val2: ParamValuesTypeMap[ParamType.COLOR]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.COLOR], val2: ParamValuesTypeMap[ParamType.COLOR]) {
 		return val1.equals(val2);
 	}
 	initComponents() {

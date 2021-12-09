@@ -16,14 +16,14 @@ export class ButtonParam extends TypedParam<ParamType.BUTTON> {
 	valueSerialized() {
 		return this.value;
 	}
-	protected _copy_value(param: ButtonParam) {}
-	static are_raw_input_equal(
+	protected _copyValue(param: ButtonParam) {}
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.BUTTON],
 		raw_input2: ParamInitValuesTypeMap[ParamType.BUTTON]
 	) {
 		return true;
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.BUTTON], val2: ParamValuesTypeMap[ParamType.BUTTON]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.BUTTON], val2: ParamValuesTypeMap[ParamType.BUTTON]) {
 		return true;
 	}
 	async pressButton() {

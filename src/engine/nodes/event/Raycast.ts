@@ -317,12 +317,12 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 			new EventConnectionPoint(
 				RaycastEventNode.INPUT_TRIGGER,
 				EventConnectionPointType.BASE,
-				this._process_trigger_event_throttled.bind(this)
+				this._processTriggerEventThrottled.bind(this)
 			),
 			new EventConnectionPoint(
 				RaycastEventNode.INPUT_MOUSE,
 				EventConnectionPointType.MOUSE,
-				this._process_mouse_event.bind(this)
+				this._processMouseEvent.bind(this)
 			),
 			new EventConnectionPoint(
 				RaycastEventNode.INPUT_UPDATE_OBJECTS,
@@ -341,14 +341,14 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 		]);
 	}
 
-	trigger_hit(context: EventContext<MouseEvent>) {
+	triggerHit(context: EventContext<MouseEvent>) {
 		this.dispatchEventToOutput(RaycastEventNode.OUTPUT_HIT, context);
 	}
-	trigger_miss(context: EventContext<MouseEvent>) {
+	triggerMiss(context: EventContext<MouseEvent>) {
 		this.dispatchEventToOutput(RaycastEventNode.OUTPUT_MISS, context);
 	}
 
-	private _process_mouse_event(context: EventContext<MouseEvent>) {
+	private _processMouseEvent(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
 			this.cpuController.updateMouse(context);
 		} else {
@@ -356,22 +356,29 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 		}
 	}
 
-	private _last_event_processed_at = -1;
-	private _process_trigger_event_throttled(context: EventContext<MouseEvent>) {
-		const previous = this._last_event_processed_at;
-		const performance = Poly.performance.performanceManager();
-		const now = performance.now();
-		this._last_event_processed_at = now;
-		const delta = now - previous;
+	private _lastEventProcessedAt = -1;
+	private _processTriggerEventThrottled(context: EventContext<MouseEvent>) {
+		const now = Poly.performance.performanceManager().now();
+		const getDelta = (now: number) => {
+			const previous = this._lastEventProcessedAt;
+			const delta = now - previous;
+			return delta;
+		};
+		const delta = getDelta(now);
 		if (delta < TIMESTAMP) {
 			setTimeout(() => {
-				this._process_trigger_event(context);
+				const delta = getDelta(now);
+				if (delta < TIMESTAMP) {
+					this._processTriggerEvent(context);
+				}
 			}, TIMESTAMP - delta);
 		} else {
-			this._process_trigger_event(context);
+			this._processTriggerEvent(context);
 		}
 	}
-	private _process_trigger_event(context: EventContext<MouseEvent>) {
+	private _processTriggerEvent(context: EventContext<MouseEvent>) {
+		this._processMouseEvent(context);
+		this._lastEventProcessedAt = Poly.performance.performanceManager().now();
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
 			this.cpuController.processEvent(context);
 		} else {

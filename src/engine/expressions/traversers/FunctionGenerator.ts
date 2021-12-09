@@ -1,28 +1,61 @@
 /**
  * The following expressions are available to use in most parameters:
  *
- * ## variables
+ * ## Variables
  *
- * - $F: current frame
- * - $T: current time
- * - $OS: current node name
- * - $CH: current param name
- * - $CEX: input centroid x component
- * - $CEY: input centroid y component
- * - $CEZ: input centroid z component
+ * - `$F`: current frame
+ * - `$T`: current time
+ * - `$OS`: current node name
+ * - `$CH`: current param name
+ * - `$CEX`: input centroid x component
+ * - `$CEY`: input centroid y component
+ * - `$CEZ`: input centroid z component
  *
  * Those variables are aliases to the javascript math module:
  *
- * - $E
- * - $LN2
- * - $LN10
- * - $LOG10E
- * - $LOG2E
- * - $PI
- * - $SQRT1_2
- * - $SQRT2
+ * - `$E`
+ * - `$LN2`
+ * - `$LN10`
+ * - `$LOG10E`
+ * - `$LOG2E`
+ * - `$PI`
+ * - `$SQRT1_2`
+ * - `$SQRT2`
  *
- * ## math expressions
+ * In some parameters which can evaluate per entity (which means per point or per object),
+ * it is also possible to use variables to access attributes:
+ *
+ * - `@ptnum` will evaluate to the current point index
+ * - `@objnum` will evaluate to the current object index
+ * - And you can also refer to any existing attribute, **using @ following by the attribute name**.
+ *
+ * For instance:
+ *
+ * - `@P.x` evaluates to the **x** component of the position.
+ * - `@P.y` evaluates to the **y** component of the position.
+ * - `@P.z` evaluates to the **z** component of the position.
+ * - `@N.x` evaluates to the **x** component of the normal.
+ * - `@N.y` evaluates to the **y** component of the normal.
+ * - `@N.z` evaluates to the **z** component of the normal.
+ * - `@Cd.x` evaluates to the **x** component of the color.
+ * - `@Cd.y` evaluates to the **y** component of the color.
+ * - `@Cd.z` evaluates to the **z** component of the color.
+ * - `@uv.x` evaluates to the **x** component of the uv.
+ * - `@uv.y` evaluates to the **y** component of the uv.
+ *
+ * Using the attribCreate, point or normal SOPs, you can mix and match them.
+ * For instance, if in the point SOP, you set to the x component `@uv.x` and y component `@uv.y`
+ * then the points will be transformed to look like in UV space.
+ *
+ * Another common setup is to use an attribute create to add an attribute `id`, with `@ptnum`.
+ * This way, every point will have a unique id.
+ * You can then use this id in the following nodes, or even in a material.
+ *
+ * Instead of having an attribute id that goes from 0 to the number of points in your geometry,
+ * you can also create one that goes from 0 to 1, using `@ptnum / (pointsCount(0)-1)`
+ *
+ *
+ * ## Math expressions
  *
  * The following are native javascript functions:
  *
@@ -96,7 +129,7 @@
  * - ease_io_elastic
  *
  *
- * ## string expressions:
+ * ## String expressions:
  *
  * - precision (alias to the [CoreString](https://github.com/polygonjs/polygonjs-engine/blob/master/src/core/String.ts) module precision method)
  * - [strCharsCount](/docs/expressions/strCharsCount)
@@ -111,7 +144,7 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ParsedTree} from './ParsedTree';
 import {LiteralConstructsController, LiteralConstructMethod} from '../LiteralConstructsController';
 import {BaseMethod} from '../methods/_Base';
-import {CoreAttribute} from '../../../core/geometry/Attribute';
+import {Attribute, CoreAttribute} from '../../../core/geometry/Attribute';
 import {BaseTraverser} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {AttributeRequirementsController} from '../AttributeRequirementsController';
@@ -469,7 +502,7 @@ export class FunctionGenerator extends BaseTraverser {
 			// `
 			if (attributeName) {
 				attributeName = CoreAttribute.remapName(attributeName);
-				if (attributeName == 'ptnum') {
+				if (attributeName == Attribute.POINT_INDEX || attributeName == Attribute.OBJECT_INDEX) {
 					return '((entity != null) ? entity.index() : 0)';
 				} else {
 					const var_attribute_size = this._attribute_requirements_controller.varAttributeSize(attributeName);

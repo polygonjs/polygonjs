@@ -13,11 +13,11 @@ interface BaseObjNodeClassWithDisplayNode extends BaseObjNodeClass {
 export class ChildrenDisplayController {
 	_children_uuids_dict: Map<string, boolean> = new Map();
 	_children_length: number = 0;
-	private _sop_group = this._create_sop_group();
+	private _sopGroup = this._createSopGroup();
 
 	constructor(private node: BaseObjNodeClassWithDisplayNode) {}
 
-	private _create_sop_group() {
+	private _createSopGroup() {
 		// This may need to be a Mesh for the rivet to update correctly
 		// But when it is not used for a rivet, there is a place where a MeshBasicMaterial
 		// is added to it, making it an additional webgl program for the renderer.
@@ -27,10 +27,10 @@ export class ChildrenDisplayController {
 		return group;
 	}
 	sopGroup() {
-		return this._sop_group;
+		return this._sopGroup;
 	}
-	set_sop_group_name() {
-		this._sop_group.name = `${this.node.name()}:sop_group`;
+	setSopGroupName() {
+		this._sopGroup.name = `${this.node.name()}:sopGroup`;
 	}
 
 	displayNodeControllerCallbacks(): DisplayNodeControllerCallbacks {
@@ -53,8 +53,8 @@ export class ChildrenDisplayController {
 
 	initializeNode() {
 		this.node.object.add(this.sopGroup());
-		this.node.nameController.add_post_set_fullPath_hook(this.set_sop_group_name.bind(this));
-		this._create_sop_group();
+		this.node.nameController.add_post_set_fullPath_hook(this.setSopGroupName.bind(this));
+		this._createSopGroup();
 
 		const display_flag = this.node.flags?.display;
 		if (display_flag) {
@@ -97,23 +97,23 @@ export class ChildrenDisplayController {
 			return;
 		}
 		if (this.usedInScene()) {
-			await this._set_content_under_sop_group();
+			await this._setContentUnderSopGroup();
 		}
 	}
 
 	remove_children() {
-		if (this._sop_group.children.length == 0) {
+		if (this._sopGroup.children.length == 0) {
 			return;
 		}
 		let child: Object3D | undefined;
-		while ((child = this._sop_group.children[0])) {
-			this._sop_group.remove(child);
+		while ((child = this._sopGroup.children[0])) {
+			this._sopGroup.remove(child);
 		}
 		this._children_uuids_dict.clear();
 		this._children_length = 0;
 	}
 
-	async _set_content_under_sop_group() {
+	async _setContentUnderSopGroup() {
 		// we also check that the parent are the same, in case the node has been deleted
 		// TODO: there should be a wider refactor where deleted node cannot raise callbacks such as flags update
 		const display_node = this.node.displayNodeController.displayNode() as BaseSopNodeType;
@@ -136,7 +136,7 @@ export class ChildrenDisplayController {
 				if (new_objects_are_different) {
 					this.remove_children();
 					for (let object of new_objects) {
-						this._sop_group.add(object);
+						this._sopGroup.add(object);
 						// ensure the matrix of the parent is used
 						object.updateMatrix();
 						this._children_uuids_dict.set(object.uuid, true);

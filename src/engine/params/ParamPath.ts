@@ -11,7 +11,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	static type() {
 		return ParamType.PARAM_PATH;
 	}
-	initialize_param() {
+	protected _initializeParam() {
 		this._value = new TypedParamPathParamValue();
 	}
 
@@ -24,16 +24,16 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	valueSerialized() {
 		return `${this.value}`;
 	}
-	protected _copy_value(param: ParamPathParam) {
+	protected _copyValue(param: ParamPathParam) {
 		this.set(param.valueSerialized());
 	}
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.PARAM_PATH],
 		raw_input2: ParamInitValuesTypeMap[ParamType.PARAM_PATH]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static are_values_equal(
+	static areValuesEqual(
 		val1: ParamValuesTypeMap[ParamType.PARAM_PATH],
 		val2: ParamValuesTypeMap[ParamType.PARAM_PATH]
 	) {

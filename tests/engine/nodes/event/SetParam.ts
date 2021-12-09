@@ -3,7 +3,7 @@ import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SwitchSopNode} from '../../../../src/engine/nodes/sop/Switch';
 import {CoreSleep} from '../../../../src/core/Sleep';
 
-QUnit.test('event set_param simple', async (assert) => {
+QUnit.test('event/setParam simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 

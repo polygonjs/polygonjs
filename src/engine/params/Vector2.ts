@@ -38,12 +38,12 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 		return this.value.toArray() as Number2;
 	}
 	private _copied_value: Number2 = [0, 0];
-	protected _copy_value(param: Vector2Param) {
+	protected _copyValue(param: Vector2Param) {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
 
-	protected _clone_raw_input(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR2]) {
+	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR2]) {
 		if (raw_input instanceof Vector2) {
 			return raw_input.clone();
 		} else {
@@ -58,7 +58,7 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 			return new_array;
 		}
 	}
-	static are_raw_input_equal(
+	static areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.VECTOR2],
 		raw_input2: ParamInitValuesTypeMap[ParamType.VECTOR2]
 	) {
@@ -76,7 +76,7 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 			}
 		}
 	}
-	static are_values_equal(val1: ParamValuesTypeMap[ParamType.VECTOR2], val2: ParamValuesTypeMap[ParamType.VECTOR2]) {
+	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.VECTOR2], val2: ParamValuesTypeMap[ParamType.VECTOR2]) {
 		return val1.equals(val2);
 	}
 	initComponents() {

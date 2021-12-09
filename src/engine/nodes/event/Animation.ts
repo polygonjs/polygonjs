@@ -22,6 +22,7 @@ export enum AnimationEventOutput {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/Type';
 class AnimationEventParamsConfig extends NodeParamsConfig {
 	/** @parm animation node */
 	animation = ParamConfig.NODE_PATH('', {
@@ -40,6 +41,8 @@ class AnimationEventParamsConfig extends NodeParamsConfig {
 			AnimationEventNode.PARAM_CALLBACK_pause(node as AnimationEventNode);
 		},
 	});
+	/** @param stops previous animations still in progress started by this node */
+	stopsPreviousAnim = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new AnimationEventParamsConfig();
 
@@ -99,7 +102,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		if (!this._timelineBuilder) {
 			return;
 		}
-		if (this._timeline) {
+		if (this._timeline && isBooleanTrue(this.pv.stopsPreviousAnim)) {
 			this._timeline.kill();
 		}
 		this._timeline = gsap.timeline();
@@ -110,9 +113,6 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 			this._triggerAnimationStarted(event_context);
 		};
 		this._timeline.vars.onComplete = () => {
-			if (this._timeline) {
-				this._timeline.kill();
-			}
 			this._triggerAnimationCompleted(event_context);
 		};
 	}
