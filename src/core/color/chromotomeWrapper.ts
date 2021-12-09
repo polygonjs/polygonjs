@@ -1,9 +1,7 @@
 import {getAll} from 'chromotome';
 export interface Palette {
-	background: string;
 	colors: string[];
 	name: string;
-	size: number;
 }
 import {VisibleIfParamOptions} from '../../engine/params/utils/OptionsController';
 

@@ -18,9 +18,9 @@ type RandomFunc = RandomFuncWithoutSeed | RandomFuncWithSeed;
 
 export class MeshSurfaceSampler {
 	private geometry: BufferGeometry;
-	private randomFunction: RandomFunc;
+	private randomFunction: RandomFunc = Math.random;
 	private positionAttribute: BufferAttribute | InterleavedBufferAttribute;
-	private additionalAttributes: Dictionary<BufferAttribute | InterleavedBufferAttribute> = {};
+	private additionalAttributes: Map<string, BufferAttribute | InterleavedBufferAttribute> = new Map();
 	private weightAttribute: BufferAttribute | InterleavedBufferAttribute | null = null;
 	private distribution: Float32Array | null = null;
 	constructor(mesh: Mesh, private additionalAttributeNames: string[]) {
@@ -37,20 +37,14 @@ export class MeshSurfaceSampler {
 		}
 
 		this.geometry = geometry;
-		this.randomFunction = Math.random;
 
 		this.positionAttribute = this.geometry.getAttribute('position');
-		// this.colorAttribute = this.geometry.getAttribute('color');
 		for (let attribName of additionalAttributeNames) {
 			const attribute = this.geometry.getAttribute(attribName);
 			if (attribute) {
-				this.additionalAttributes[attribName] = attribute;
+				this.additionalAttributes.set(attribName, attribute);
 			}
 		}
-
-		this.weightAttribute = null;
-
-		this.distribution = null;
 	}
 
 	setWeightAttribute(name: string) {
@@ -167,7 +161,7 @@ export class MeshSurfaceSampler {
 		if (targetAdditionalVectors) {
 			let i = 0;
 			for (let attribName of this.additionalAttributeNames) {
-				const attrib = this.additionalAttributes[attribName];
+				const attrib = this.additionalAttributes.get(attribName);
 				if (attrib) {
 					_face.a.fromBufferAttribute(attrib, faceIndex * 3);
 					_face.b.fromBufferAttribute(attrib, faceIndex * 3 + 1);
