@@ -34,10 +34,10 @@ export class NameController {
 		return `${base}1`;
 	}
 
-	requestNameToParent(new_name: string) {
+	requestNameToParent(newName: string) {
 		const parent = this.node.parent();
 		if (parent && parent.childrenAllowed() && parent.childrenController) {
-			parent.childrenController.setChildName(this.node, new_name);
+			parent.childrenController.setChildName(this.node, newName);
 		} else {
 			console.warn('requestNameToParent failed, no parent found');
 		}

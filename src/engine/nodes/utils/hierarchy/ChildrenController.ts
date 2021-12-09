@@ -64,32 +64,32 @@ export class HierarchyChildrenController {
 	//
 	//
 
-	setChildName(node: BaseNodeType, new_name: string): void {
-		let current_child_with_name;
-		new_name = CoreString.sanitizeName(new_name);
+	setChildName(node: BaseNodeType, newName: string): void {
+		let currentChildWithName: BaseNodeType | undefined;
+		newName = CoreString.sanitizeName(newName);
 
-		if ((current_child_with_name = this._childrenByName.get(new_name)) != null) {
+		if ((currentChildWithName = this._childrenByName.get(newName)) != null) {
 			// only return if found node is same as argument node, and if new_name is same as current_name
-			if (node.name() === new_name && current_child_with_name.graphNodeId() === node.graphNodeId()) {
+			if (node.name() === newName && currentChildWithName.graphNodeId() === node.graphNodeId()) {
 				return;
 			}
 
 			// increment new_name
-			new_name = CoreString.increment(new_name);
+			newName = CoreString.increment(newName);
 
-			return this.setChildName(node, new_name);
+			return this.setChildName(node, newName);
 		} else {
-			const current_name = node.name();
+			const currentName = node.name();
 
 			// delete old entry if node was in _children with old name
-			const current_child = this._childrenByName.get(current_name);
-			if (current_child) {
-				this._childrenByName.delete(current_name);
+			const currentChild = this._childrenByName.get(currentName);
+			if (currentChild) {
+				this._childrenByName.delete(currentName);
 			}
 
 			// add to new name
-			this._childrenByName.set(new_name, node);
-			node.nameController.updateNameFromParent(new_name);
+			this._childrenByName.set(newName, node);
+			node.nameController.updateNameFromParent(newName);
 			this._addToNodesByType(node);
 			this.node.scene().nodesController.addToInstanciatedNode(node);
 		}
