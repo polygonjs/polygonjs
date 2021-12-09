@@ -105,12 +105,12 @@ export class HierarchyChildrenController {
 		return `${this.node.context()}/${this.node.type()}`;
 	}
 
-	available_children_classes() {
+	availableChildrenClasses() {
 		return Poly.registeredNodes(this._context, this.node.type());
 	}
 
 	isValidChildType(node_type: string): boolean {
-		const node_class = this.available_children_classes()[node_type];
+		const node_class = this.availableChildrenClasses()[node_type];
 		return node_class != null;
 	}
 
@@ -150,11 +150,11 @@ export class HierarchyChildrenController {
 		return childNode;
 	}
 	private _findNodeClass(node_type: string) {
-		const nodeClass = this.available_children_classes()[node_type.toLowerCase()];
+		const nodeClass = this.availableChildrenClasses()[node_type.toLowerCase()];
 
 		if (nodeClass == null) {
 			const message = `child node type '${node_type}' not found for node '${this.node.path()}'. Available types are: ${Object.keys(
-				this.available_children_classes()
+				this.availableChildrenClasses()
 			).join(', ')}, ${this._context}, ${this.node.type()}`;
 			console.error(message);
 			throw message;

@@ -1,6 +1,6 @@
 import 'qunit';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
-import {ObjectsManagerNode} from '../../src/engine/nodes/manager/ObjectsManager';
+import {RootManagerNode} from '../../src/engine/nodes/manager/Root';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
 import {GeoObjNode} from '../../src/engine/nodes/obj/Geo';
 import {MaterialsNetworkObjNode} from '../../src/engine/nodes/obj/MaterialsNetwork';
@@ -26,7 +26,7 @@ declare global {
 	interface Window {
 		// create_renderer_if_none: () => void;
 		scene: PolyScene;
-		root: ObjectsManagerNode;
+		root: RootManagerNode;
 		perspective_camera1: PerspectiveCameraObjNode;
 		geo1: GeoObjNode;
 		MAT: MaterialsNetworkObjNode;

@@ -90,14 +90,21 @@ class ContactShadowObjParamConfig extends TransformedParamConfig(NodeParamsConfi
 	});
 
 	scene = ParamConfig.FOLDER();
-	include = ParamConfig.STRING('');
-	exclude = ParamConfig.STRING('');
+	renderAllObjects = ParamConfig.BOOLEAN(true);
+	include = ParamConfig.STRING('', {
+		visibleIf: {renderAllObjects: 0},
+	});
+	exclude = ParamConfig.STRING('', {
+		visibleIf: {renderAllObjects: 0},
+	});
 	updateObjectsList = ParamConfig.BUTTON(null, {
+		visibleIf: {renderAllObjects: 0},
 		callback: (node: BaseNodeType) => {
 			ContactShadowObjNode.PARAM_CALLBACK_updateObjectsList(node as ContactShadowObjNode);
 		},
 	});
 	printResolveObjectsList = ParamConfig.BUTTON(null, {
+		visibleIf: {renderAllObjects: 0},
 		callback: (node: BaseNodeType) => {
 			ContactShadowObjNode.PARAM_CALLBACK_printResolveObjectsList(node as ContactShadowObjNode);
 		},
@@ -275,19 +282,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 
 	private _emptyOnBeforeRender = () => {};
 	private _renderShadow(renderer: WebGLRenderer, scene: Scene) {
-		if (!this._helper) {
-			return;
-		}
-		if (!this._depthMaterial) {
-			return;
-		}
-		if (!this._shadowCamera) {
-			return;
-		}
-		if (!this._helper) {
-			return;
-		}
-		if (!this._plane) {
+		if (!(this._helper && this._depthMaterial && this._shadowCamera && this._helper && this._plane)) {
 			return;
 		}
 
@@ -467,6 +462,9 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 
 	private _initialVisibilityState: WeakMap<Object3D, boolean> = new WeakMap();
 	private _initVisibility(scene: Scene) {
+		if (isBooleanTrue(this.pv.renderAllObjects)) {
+			return;
+		}
 		// if at least one object is included,
 		// this means those which are not are to be hidden.
 		// Therefore, we then have to traverse the whole scene.
@@ -498,10 +496,13 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 	}
 
 	private _restoreVisibility(scene: Scene) {
+		if (isBooleanTrue(this.pv.renderAllObjects)) {
+			return;
+		}
 		if (this._includedObjects.length > 0) {
 			scene.traverse((object) => {
 				const state = this._initialVisibilityState.get(object);
-				if (state) object.visible = state;
+				if (state != null) object.visible = state;
 			});
 		} else {
 			this._restoreObjectsVisibility(this._includedObjects);
