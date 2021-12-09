@@ -128,9 +128,12 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		// name
 		if (isBooleanTrue(pv.tname)) {
 			if (this.p.name.expressionController) {
-				this.p.name.expressionController.computeExpressionForObjects(entities, (entity, value: string) => {
-					entity.object().name = value;
-				});
+				await this.p.name.expressionController.computeExpressionForObjects(
+					entities,
+					(entity, value: string) => {
+						entity.object().name = value;
+					}
+				);
 			} else {
 				entities.forEach((e) => (e.object().name = pv.name));
 			}
@@ -138,7 +141,7 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		// renderOrder
 		if (isBooleanTrue(pv.trenderOrder)) {
 			if (this.p.renderOrder.expressionController) {
-				this.p.renderOrder.expressionController.computeExpressionForObjects(
+				await this.p.renderOrder.expressionController.computeExpressionForObjects(
 					entities,
 					(entity, value: number) => {
 						entity.object().renderOrder = value;
@@ -151,7 +154,7 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		// frustumCulled
 		if (isBooleanTrue(pv.tfrustumCulled)) {
 			if (this.p.frustumCulled.expressionController) {
-				this.p.frustumCulled.expressionController.computeExpressionForObjects(
+				await this.p.frustumCulled.expressionController.computeExpressionForObjects(
 					entities,
 					(entity, value: boolean) => {
 						entity.object().frustumCulled = value;
@@ -164,7 +167,7 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		// matrixAutoUpdate
 		if (isBooleanTrue(pv.tmatrixAutoUpdate)) {
 			if (this.p.matrixAutoUpdate.expressionController) {
-				this.p.matrixAutoUpdate.expressionController.computeExpressionForObjects(
+				await this.p.matrixAutoUpdate.expressionController.computeExpressionForObjects(
 					entities,
 					(entity, value: boolean) => {
 						entity.object().matrixAutoUpdate = value;
@@ -177,9 +180,12 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		// visible
 		if (isBooleanTrue(pv.tvisible)) {
 			if (this.p.visible.expressionController) {
-				this.p.visible.expressionController.computeExpressionForObjects(entities, (entity, value: boolean) => {
-					entity.object().visible = value;
-				});
+				await this.p.visible.expressionController.computeExpressionForObjects(
+					entities,
+					(entity, value: boolean) => {
+						entity.object().visible = value;
+					}
+				);
 			} else {
 				entities.forEach((e) => (e.object().visible = pv.visible));
 			}
@@ -187,7 +193,7 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		// castShadow
 		if (isBooleanTrue(pv.tcastShadow)) {
 			if (this.p.castShadow.expressionController) {
-				this.p.castShadow.expressionController.computeExpressionForObjects(
+				await this.p.castShadow.expressionController.computeExpressionForObjects(
 					entities,
 					(entity, value: boolean) => {
 						entity.object().castShadow = value;
@@ -200,7 +206,7 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		// receiveShadow
 		if (isBooleanTrue(pv.treceiveShadow)) {
 			if (this.p.receiveShadow.expressionController) {
-				this.p.receiveShadow.expressionController.computeExpressionForObjects(
+				await this.p.receiveShadow.expressionController.computeExpressionForObjects(
 					entities,
 					(entity, value: boolean) => {
 						entity.object().receiveShadow = value;

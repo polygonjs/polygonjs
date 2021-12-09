@@ -93,9 +93,9 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	}
 
 	private _operation: TransformSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new TransformSopOperation(this.scene(), this.states);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }
