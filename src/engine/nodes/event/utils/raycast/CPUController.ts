@@ -170,7 +170,7 @@ export class RaycastCPUController {
 	}
 	static resolveObjectAttribute(intersection: Intersection, attribName: string) {
 		const value = CoreObject.attribValue(intersection.object, attribName);
-		if (!value) {
+		if (value == null) {
 			return;
 		}
 		if (CoreType.isNumber(value) || CoreType.isString(value)) {
