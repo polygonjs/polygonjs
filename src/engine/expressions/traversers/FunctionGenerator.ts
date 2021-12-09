@@ -202,6 +202,7 @@ const QUOTE = "'";
 const ARGUMENTS_SEPARATOR = ', ';
 const ATTRIBUTE_PREFIX = '@';
 import {VARIABLE_PREFIX} from './_Base';
+import {CorePoint} from '../../../core/geometry/Point';
 
 const PROPERTY_OFFSETS: AnyDictionary = {
 	x: 0,
@@ -257,6 +258,7 @@ export class FunctionGenerator extends BaseTraverser {
 					const body = this._functionBody();
 					// not sure why I needed AsyncFunction
 					this.function = new Function(
+						'CorePoint',
 						'Core',
 						'param',
 						'methods',
@@ -295,20 +297,36 @@ export class FunctionGenerator extends BaseTraverser {
 		if (this.param.options.isExpressionForEntities()) {
 			return `
 			const entities = param.expressionController.entities();
+			function getEntitiesAttribute(entities, attribName){
+				const firstEntity = entities[0];
+				if(firstEntity instanceof CorePoint){
+					return firstEntity.geometry().attributes[attribName];
+				} else {
+					return entities.map(e=>e.attribValue(attribName));
+				}
+			}
+			function getCorePointAttribValue(entity, attribName, array, attributeSize, propertyOffset){
+				return array[entity.index()*attributeSize+propertyOffset];
+			}
+			function getCoreObjectAttribValue(entity, attribName, array, attributeSize, propertyOffset){
+				return entity.attribValue(attribName)
+			}
 			if(entities){
 				return new Promise( async (resolve, reject)=>{
 					let entity;
-					const entity_callback = param.expressionController.entity_callback();
+					const entityCallback = param.expressionController.entityCallback();
 					// assign_attributes_lines
 					${this._attribute_requirements_controller.assignAttributesLines()}
 					// check if attributes are present
 					if( ${this._attribute_requirements_controller.attributePresenceCheckLine()} ){
+						// assign function
+						const getEntityAttribValue = (entities[0] instanceof CorePoint) ? getCorePointAttribValue : getCoreObjectAttribValue;
 						// assign_arrays_lines
 						${this._attribute_requirements_controller.assignArraysLines()}
 						for(let index=0; index < entities.length; index++){
 							entity = entities[index];
 							result = ${this.function_main_string};
-							entity_callback(entity, result);
+							entityCallback(entity, result);
 						}
 						resolve()
 					} else {
@@ -348,7 +366,7 @@ export class FunctionGenerator extends BaseTraverser {
 				Math: CoreMath,
 				String: CoreString,
 			};
-			const result = this.function(Core, this.param, this.methods, this._set_error_from_error_bound);
+			const result = this.function(CorePoint, Core, this.param, this.methods, this._set_error_from_error_bound);
 			return result;
 		}
 	}
@@ -429,19 +447,19 @@ export class FunctionGenerator extends BaseTraverser {
 	protected traverse_UnaryExpression(node: jsep.UnaryExpression): string {
 		if (node.operator === ATTRIBUTE_PREFIX) {
 			let argument = node.argument;
-			let attribute_name;
+			let attributeName: string | undefined;
 			let property;
 			switch (argument.type) {
 				case 'Identifier': {
 					const argument_identifier = (<unknown>argument) as jsep.Identifier;
-					attribute_name = argument_identifier.name;
+					attributeName = argument_identifier.name;
 					break;
 				}
 				case 'MemberExpression': {
 					const argument_member_expression = (<unknown>argument) as jsep.MemberExpression;
 					const attrib_node = argument_member_expression.object as jsep.Identifier;
 					const property_node = argument_member_expression.property as jsep.Identifier;
-					attribute_name = attrib_node.name;
+					attributeName = attrib_node.name;
 					property = property_node.name;
 					break;
 				}
@@ -449,20 +467,25 @@ export class FunctionGenerator extends BaseTraverser {
 			// this.function_pre_body += `
 			// param.entity_attrib_value(${QUOTE}${attrib_node.name}${QUOTE}, param.entity_attrib_values.position);
 			// `
-			if (attribute_name) {
-				attribute_name = CoreAttribute.remapName(attribute_name);
-				if (attribute_name == 'ptnum') {
+			if (attributeName) {
+				attributeName = CoreAttribute.remapName(attributeName);
+				if (attributeName == 'ptnum') {
 					return '((entity != null) ? entity.index() : 0)';
 				} else {
-					const var_attribute_size = this._attribute_requirements_controller.varAttributeSize(attribute_name);
-					const var_array = this._attribute_requirements_controller.varArray(attribute_name);
-					this._attribute_requirements_controller.add(attribute_name);
-					if (property) {
-						const property_offset = PROPERTY_OFFSETS[property];
-						return `${var_array}[entity.index()*${var_attribute_size}+${property_offset}]`;
-					} else {
-						return `${var_array}[entity.index()*${var_attribute_size}]`;
+					const var_attribute_size = this._attribute_requirements_controller.varAttributeSize(attributeName);
+					const var_array = this._attribute_requirements_controller.varArray(attributeName);
+					this._attribute_requirements_controller.add(attributeName);
+					let propertyOffset = property ? PROPERTY_OFFSETS[property] : 0;
+					if (propertyOffset == null) {
+						propertyOffset = 0;
 					}
+					// if (property) {
+					// 	const property_offset = PROPERTY_OFFSETS[property];
+					// 	return `${var_array}[entity.index()*${var_attribute_size}+${property_offset}]`;
+					// } else {
+					// 	return `${var_array}[entity.index()*${var_attribute_size}]`;
+					// }
+					return `getEntityAttribValue(entity, '${attributeName}', ${var_array}, ${var_attribute_size}, ${propertyOffset})`;
 				}
 			} else {
 				console.warn('attribute not found');

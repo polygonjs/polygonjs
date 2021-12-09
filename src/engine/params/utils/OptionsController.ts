@@ -156,8 +156,9 @@ export interface FolderParamOptions extends BaseParamOptions {
 export interface IntegerParamOptions
 	extends NumberParamOptions,
 		MenuNumericParamOptions,
-		CallbackParamOptions,
-		ComputeOnDirtyParamOptions {}
+		ComputeOnDirtyParamOptions,
+		ExpressionParamOptions,
+		CallbackParamOptions {}
 export interface OperatorPathParamOptions
 	extends BaseParamOptions,
 		FileParamOptions,

@@ -58,7 +58,7 @@ export class AttributeRequirementsController {
 
 	static assignAttributeLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);
-		return `const ${varAttribute} = entities[0].geometry().attributes['${attribName}']`;
+		return `const ${varAttribute} = getEntitiesAttribute(entities,'${attribName}')`;
 	}
 	static assignItemSizeLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);

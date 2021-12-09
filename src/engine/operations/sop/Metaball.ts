@@ -8,7 +8,7 @@ import {MarchingCubes} from '../../../modules/core/objects/MarchingCubes';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BufferGeometry} from 'three';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface MetaballSopParams extends DefaultOperationParams {
 	resolution: number;

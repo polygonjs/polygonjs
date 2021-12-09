@@ -32,7 +32,7 @@ interface ObjectPropertiesSopParams extends DefaultOperationParams {
 
 export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: ObjectPropertiesSopParams = {
-		applyToChildren: true,
+		applyToChildren: false,
 		// name
 		tname: false,
 		name: '',
@@ -60,22 +60,22 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 		return 'objectProperties';
 	}
 
-	cook(input_contents: CoreGroup[], params: ObjectPropertiesSopParams) {
-		const core_group = input_contents[0];
+	cook(inputCoreGroups: CoreGroup[], params: ObjectPropertiesSopParams) {
+		const coreGroup = inputCoreGroups[0];
 
-		for (let object of core_group.objects()) {
-			if (params.applyToChildren) {
+		for (let object of coreGroup.objects()) {
+			if (isBooleanTrue(params.applyToChildren)) {
 				object.traverse((child) => {
-					this._update_object(child, params);
+					this._updateObject(child, params);
 				});
 			} else {
-				this._update_object(object, params);
+				this._updateObject(object, params);
 			}
 		}
 
-		return core_group;
+		return coreGroup;
 	}
-	private _update_object(object: Object3D, params: ObjectPropertiesSopParams) {
+	private _updateObject(object: Object3D, params: ObjectPropertiesSopParams) {
 		if (isBooleanTrue(params.tname)) {
 			object.name = params.name;
 		}

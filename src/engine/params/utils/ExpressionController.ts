@@ -25,7 +25,7 @@ type ObjectEntityCallback<T extends ParamType> = (
 export class ExpressionController<T extends ParamType> {
 	protected _expression: string | undefined;
 	protected _entities: CoreEntity[] | undefined;
-	protected _entity_callback: EntityCallback<T> | undefined;
+	protected _entityCallback: EntityCallback<T> | undefined;
 	protected _manager: ExpressionManager | undefined;
 	protected _method_dependencies_by_graph_node_id: Map<CoreGraphNodeId, MethodDependency> | undefined;
 	// private _reset_bound = this.reset.bind(this);
@@ -109,13 +109,13 @@ export class ExpressionController<T extends ParamType> {
 		}
 	}
 	async computeExpressionForEntities(entities: CoreEntity[], callback: EntityCallback<T>) {
-		this.set_entities(entities, callback);
+		this._setEntities(entities, callback);
 		await this.computeExpression();
 		if (this._manager?.error_message()) {
 			this.param.node.states.error.set(`expression evalution error: ${this._manager?.error_message()}`);
 		}
 
-		this.reset_entities();
+		this._resetEntities();
 	}
 	computeExpressionForPoints(entities: CorePoint[], callback: PointEntityCallback<T>) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
@@ -126,15 +126,15 @@ export class ExpressionController<T extends ParamType> {
 	entities() {
 		return this._entities;
 	}
-	entity_callback() {
-		return this._entity_callback;
+	entityCallback() {
+		return this._entityCallback;
 	}
-	set_entities(entities: CoreEntity[], callback: EntityCallback<T>) {
+	private _setEntities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this._entities = entities;
-		this._entity_callback = callback;
+		this._entityCallback = callback;
 	}
-	reset_entities() {
+	private _resetEntities() {
 		this._entities = undefined;
-		this._entity_callback = undefined;
+		this._entityCallback = undefined;
 	}
 }
