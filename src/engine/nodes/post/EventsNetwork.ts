@@ -6,8 +6,8 @@ import {ParamLessBaseNetworkPostNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';
 import {BaseEventNodeType} from '../event/_Base';
-import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class EventsNetworkPostNode extends ParamLessBaseNetworkPostNode {
 	static type() {
@@ -18,17 +18,11 @@ export class EventsNetworkPostNode extends ParamLessBaseNetworkPostNode {
 
 	createNode<S extends keyof EventNodeChildrenMap>(
 		node_class: S,
-		params_init_value_overrides?: ParamsInitData
+		options?: NodeCreateOptions
 	): EventNodeChildrenMap[S];
-	createNode<K extends valueof<EventNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<EventNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<K extends valueof<EventNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<EventNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseEventNodeType[];

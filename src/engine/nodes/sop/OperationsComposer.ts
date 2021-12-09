@@ -31,52 +31,50 @@ export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSo
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	private _output_operation_container: SopOperationContainer | undefined;
-	private _input_configs_by_operation_container: OperationInputsMap = new WeakMap();
+	private _outputOperationContainer: SopOperationContainer | undefined;
+	private _inputConfigsByOperationContainer: OperationInputsMap = new WeakMap();
 
-	set_output_operation_container(operation_container: SopOperationContainer) {
-		this._output_operation_container = operation_container;
+	setOutputOperationContainer(operationContainer: SopOperationContainer) {
+		this._outputOperationContainer = operationContainer;
 	}
-	output_operation_container() {
-		return this._output_operation_container;
+	outputOperationContainer() {
+		return this._outputOperationContainer;
 	}
-	add_input_config(operation: SopOperationContainer, input_config: OperationContainerInputConfig) {
-		let existing_map = this._input_configs_by_operation_container.get(operation);
+	addInputConfig(operation: SopOperationContainer, inputConfig: OperationContainerInputConfig) {
+		let existing_map = this._inputConfigsByOperationContainer.get(operation);
 		if (!existing_map) {
 			existing_map = new Map();
-			this._input_configs_by_operation_container.set(operation, existing_map);
+			this._inputConfigsByOperationContainer.set(operation, existing_map);
 		}
-		existing_map.set(input_config.operation_input_index, input_config.node_input_index);
+		existing_map.set(inputConfig.operation_input_index, inputConfig.node_input_index);
 	}
 
-	private _operation_containers_requiring_resolve: BaseOperationContainer<NodeContext.SOP>[] | undefined;
-	add_operation_container_with_path_param_resolve_required(
-		operation_container: BaseOperationContainer<NodeContext.SOP>
-	) {
-		if (!this._operation_containers_requiring_resolve) {
-			this._operation_containers_requiring_resolve = [];
+	private _operationContainersRequiringResolve: BaseOperationContainer<NodeContext.SOP>[] | undefined;
+	addOperationContainerWithPathParamResolveRequired(operationContainer: BaseOperationContainer<NodeContext.SOP>) {
+		if (!this._operationContainersRequiringResolve) {
+			this._operationContainersRequiringResolve = [];
 		}
-		this._operation_containers_requiring_resolve.push(operation_container);
+		this._operationContainersRequiringResolve.push(operationContainer);
 	}
-	resolve_operation_containers_path_params() {
-		if (!this._operation_containers_requiring_resolve) {
+	resolveOperationContainersPathParams() {
+		if (!this._operationContainersRequiringResolve) {
 			return;
 		}
-		for (let operation_container of this._operation_containers_requiring_resolve) {
-			operation_container.resolve_path_params(this);
+		for (let operationContainer of this._operationContainersRequiringResolve) {
+			operationContainer.resolvePathParams(this);
 		}
 	}
 
-	async cook(input_contents: CoreGroup[]) {
-		if (this._output_operation_container) {
-			this._output_operation_container.setDirty();
+	async cook(inputCoreGroups: CoreGroup[]) {
+		if (this._outputOperationContainer) {
+			this._outputOperationContainer.setDirty();
 
-			const core_group = await this._output_operation_container.compute(
-				input_contents,
-				this._input_configs_by_operation_container
+			const coreGroup = await this._outputOperationContainer.compute(
+				inputCoreGroups,
+				this._inputConfigsByOperationContainer
 			);
-			if (core_group) {
-				this.setCoreGroup(core_group);
+			if (coreGroup) {
+				this.setCoreGroup(coreGroup);
 			}
 		}
 	}

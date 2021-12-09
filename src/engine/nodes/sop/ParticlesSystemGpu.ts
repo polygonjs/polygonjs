@@ -34,8 +34,8 @@ import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/PersistedConfig';
-import {ParamsInitData} from '../utils/io/IOController';
 import {TimeController} from '../../scene/utils/TimeController';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	/** @param frame the particles simulation starts */
@@ -135,19 +135,10 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 	}
 
-	createNode<S extends keyof GlNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
+	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseGlNodeType[];

@@ -12,6 +12,7 @@ import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder
 import {Material} from 'three/src/materials/Material';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Object3D} from 'three/src/core/Object3D';
+
 export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
 	static context() {
 		return NodeContext.SOP;

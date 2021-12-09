@@ -8,6 +8,9 @@ import {ParamType} from '../../../src/engine/poly/ParamType';
 import {GeoObjNode} from '../../../src/engine/nodes/obj/Geo';
 import {MaterialsNetworkSopNode} from '../../../src/engine/nodes/sop/MaterialsNetwork';
 import {ObjectMergeSopNode} from '../../../src/engine/nodes/sop/ObjectMerge';
+import {saveAndLoadScene} from '../../helpers/ImportHelper';
+import {MeshStandardMatNode} from '../../../src/engine/nodes/mat/MeshStandard';
+import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
 
 async function saveAndLoad(scene: PolyScene) {
 	const data = new SceneJsonExporter(scene).data();
@@ -541,5 +544,48 @@ QUnit.test(
 		assert.ok(objectMerge2.isDirty());
 		await objectMerge2.compute();
 		assert.notOk(objectMerge2.states.error.active());
+	}
+);
+
+QUnit.test(
+	'referring to a node named image1 will not create conflict when other nodes may be given same name during scene load',
+	async (assert) => {
+		const scene = window.scene;
+		const COP = window.COP;
+		const geo1 = window.geo1;
+		await scene.waitForCooksCompleted();
+
+		const imageEnvMap = COP.createNode('image');
+		imageEnvMap.p.url.set(`${ASSETS_ROOT}/textures/piz_compressed.exr`);
+		const envMap = COP.createNode('envMap');
+		envMap.setInput(0, imageEnvMap);
+		imageEnvMap.setName('imageEnvMap');
+		envMap.setName('envMap');
+		const imageUv = COP.createNode('image');
+		imageUv.p.url.set(`${ASSETS_ROOT}/textures/uv.jpg`);
+		imageUv.setName('imageUv');
+		const image1 = COP.createNode('image');
+		image1.setName('image1');
+
+		assert.equal(imageEnvMap.name(), 'imageEnvMap');
+		assert.equal(envMap.name(), 'envMap');
+		assert.equal(imageUv.name(), 'imageUv');
+		assert.equal(image1.name(), 'image1');
+
+		const sphere1 = geo1.createNode('sphere');
+		const material = geo1.createNode('material');
+		material.setInput(0, sphere1);
+		const MAT = geo1.createNode('materialsNetwork');
+		const meshStandard = MAT.createNode('meshStandard');
+		meshStandard.p.useEnvMap.set(1);
+		meshStandard.p.envMap.set(envMap.path());
+		meshStandard.p.useMap.set(1);
+		meshStandard.p.map.set(image1.path());
+
+		await saveAndLoadScene(scene, async (scene2) => {
+			const meshStandard2 = scene2.node(meshStandard.path()) as MeshStandardMatNode;
+			assert.equal(meshStandard2.p.envMap.value.path(), envMap.path());
+			assert.equal(meshStandard2.p.map.value.path(), image1.path());
+		});
 	}
 );

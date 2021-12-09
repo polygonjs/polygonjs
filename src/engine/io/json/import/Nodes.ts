@@ -10,6 +10,7 @@ import {Poly} from '../../../Poly';
 import {NodeJsonImporter} from './Node';
 import {CoreString} from '../../../../core/String';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {NodeCreateOptions} from '../../../nodes/utils/hierarchy/ChildrenController';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
@@ -25,16 +26,19 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		const {optimized_names, non_optimized_names} = OptimizedNodesJsonImporter.child_names_by_optimized_state(data);
 		const nonOptimizedNodes: BaseNodeTypeWithIO[] = [];
-		for (let node_name of non_optimized_names) {
-			const node_data = data[node_name];
+		for (let nodeName of non_optimized_names) {
+			const node_data = data[nodeName];
 			const nodeType = node_data['type'].toLowerCase();
-			const non_spare_params_data = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
-
+			const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
+			const nodeCreateOptions: NodeCreateOptions = {
+				paramsInitValueOverrides,
+				nodeName,
+			};
 			try {
 				// try with current type
-				const node = this._node.createNode(nodeType, non_spare_params_data);
+				const node = this._node.createNode(nodeType, nodeCreateOptions);
 				if (node) {
-					node.setName(node_name);
+					// node.setName(node_name);
 					nonOptimizedNodes.push(node);
 				}
 			} catch (e) {
@@ -42,18 +46,18 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				console.error(`error importing node: cannot create with type ${nodeType}`, e);
 				const nodeTypeCamelCase = CoreString.camelCase(nodeType);
 				try {
-					const node = this._node.createNode(nodeTypeCamelCase, non_spare_params_data);
+					const node = this._node.createNode(nodeTypeCamelCase, nodeCreateOptions);
 					if (node) {
-						node.setName(node_name);
+						// node.setName(node_name);
 						nonOptimizedNodes.push(node);
 					}
 				} catch (e) {
 					// add Network
 					const nodeTypeWithNetwork = `${nodeType}Network`;
 					try {
-						const node = this._node.createNode(nodeTypeWithNetwork, non_spare_params_data);
+						const node = this._node.createNode(nodeTypeWithNetwork, nodeCreateOptions);
 						if (node) {
-							node.setName(node_name);
+							// node.setName(node_name);
 							nonOptimizedNodes.push(node);
 						}
 					} catch (e) {
@@ -115,6 +119,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				importer.process_data(scene_importer, data[node.name()]);
 			} else {
 				Poly.warn(`possible import error for node ${node.name()}`);
+				Poly.log('available names are', Object.keys(data).sort(), data);
 			}
 		}
 		for (let node of nonOptimizedNodes) {

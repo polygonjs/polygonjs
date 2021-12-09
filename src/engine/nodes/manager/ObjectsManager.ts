@@ -5,7 +5,6 @@ import {ObjNodeChildrenMap} from '../../poly/registers/nodes/Obj';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {HierarchyObjNode} from '../obj/utils/HierarchyController';
-import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {ROOT_NAME} from '../../scene/utils/ObjectsController';
 import {Scene} from 'three/src/scenes/Scene';
@@ -18,6 +17,7 @@ import {
 	SceneMaterialOverrideParamConfig,
 	SceneMaterialOverrideController,
 } from '../manager/utils/Scene/MaterialOverride';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export const ROOT_NODE_NAME = 'RootNode';
 class ObjectsManagerParamsConfig extends SceneMaterialOverrideParamConfig(
@@ -62,19 +62,10 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 	get object() {
 		return this._object;
 	}
-	createNode<S extends keyof ObjNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): ObjNodeChildrenMap[S];
-	createNode<K extends valueof<ObjNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<ObjNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof ObjNodeChildrenMap>(nodeClass: S, options?: NodeCreateOptions): ObjNodeChildrenMap[S];
+	createNode<K extends valueof<ObjNodeChildrenMap>>(nodeClass: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<ObjNodeChildrenMap>>(nodeClass: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(nodeClass, options) as K;
 	}
 	children() {
 		return super.children() as BaseObjNodeType[];

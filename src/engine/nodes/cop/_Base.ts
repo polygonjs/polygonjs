@@ -2,7 +2,6 @@ import {TypedNode} from '../_Base';
 import {Texture} from 'three/src/textures/Texture';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
-import {PolyScene} from '../../scene/PolyScene';
 import {FlagsControllerBO} from '../utils/FlagsController';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {LuminanceFormat, HalfFloatType} from 'three/src/constants';
@@ -30,10 +29,6 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	}
 	static displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
-	}
-
-	constructor(scene: PolyScene) {
-		super(scene, 'BaseCopNode');
 	}
 
 	initializeBaseNode() {

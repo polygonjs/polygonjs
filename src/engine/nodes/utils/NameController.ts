@@ -1,4 +1,4 @@
-import {BaseNodeType} from '../_Base';
+import {BaseNodeClass, BaseNodeType} from '../_Base';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {CoreType} from '../../../core/Type';
@@ -25,7 +25,7 @@ export class NameController {
 		return this._graph_node;
 	}
 
-	static base_name(node: BaseNodeType) {
+	static baseName(node: BaseNodeType | typeof BaseNodeClass) {
 		let base: string = node.type();
 		const last_char = base[base.length - 1];
 		if (!CoreType.isNaN(parseInt(last_char))) {
@@ -48,7 +48,7 @@ export class NameController {
 		}
 	}
 	updateNameFromParent(new_name: string) {
-		this.node._set_core_name(new_name);
+		this.node._setCoreName(new_name);
 		this._postSetName();
 		this.runPostSetFullPathHooks();
 		if (this.node.childrenAllowed()) {
@@ -60,7 +60,7 @@ export class NameController {
 			}
 		}
 
-		if (this.node.lifecycle.creationCompleted()) {
+		if (this.node.lifecycle.creationCompleted() && this.node.scene().loadingController.loaded()) {
 			this.node.scene().missingExpressionReferencesController.checkForMissingReferences(this.node);
 			this.node.scene().expressionsController.regenerateReferringExpressions(this.node);
 		}

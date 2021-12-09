@@ -17,10 +17,10 @@ import {FlagsControllerD} from '../utils/FlagsController';
 import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
-import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	/** @param toggle off to hide */
 	display = ParamConfig.BOOLEAN(1);
@@ -76,19 +76,10 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		}
 	}
 
-	createNode<S extends keyof GeoNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): GeoNodeChildrenMap[S];
-	createNode<K extends valueof<GeoNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<GeoNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof GeoNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GeoNodeChildrenMap[S];
+	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseSopNodeType[];

@@ -1,7 +1,6 @@
-import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
-import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {PointSopNode} from '../../../../src/engine/nodes/sop/Point';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 
 function prepareCOP(scene: PolyScene) {
 	const cop = scene.root().createNode('copNetwork');
@@ -9,7 +8,7 @@ function prepareCOP(scene: PolyScene) {
 	return image;
 }
 
-QUnit.test('attribFromTexture with float - optimized', async (assert) => {
+QUnit.test('operation/sop/attribFromTexture with float - optimized', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -37,21 +36,18 @@ QUnit.test('attribFromTexture with float - optimized', async (assert) => {
 
 	attribFromTexture.flags.optimize.set(true);
 
-	const data = new SceneJsonExporter(scene).data();
-
-	// console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.loadData(data);
-	await scene2.waitForCooksCompleted();
-
-	const point2 = scene2.node(point.path()) as PointSopNode;
-	await point2.compute();
-	container = await point2.compute();
-	core_group = container.coreContent()!;
-	bbox = core_group.boundingBox();
-	assert.in_delta(bbox.max.y, 0.5, 0.1);
+	await saveAndLoadScene(scene, async (scene2) => {
+		await scene2.waitForCooksCompleted();
+		const point2 = scene2.node(point.path()) as PointSopNode;
+		await point2.compute();
+		container = await point2.compute();
+		core_group = container.coreContent()!;
+		bbox = core_group.boundingBox();
+		assert.in_delta(bbox.max.y, 0.5, 0.1);
+	});
 });
 
-QUnit.test('attribFromTexture with vector - optimized', async (assert) => {
+QUnit.test('operation/sop/attribFromTexture with vector - optimized', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -83,17 +79,13 @@ QUnit.test('attribFromTexture with vector - optimized', async (assert) => {
 
 	attribFromTexture.flags.optimize.set(true);
 
-	const data = new SceneJsonExporter(scene).data();
-
-	// console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.loadData(data);
-	await scene2.waitForCooksCompleted();
-
-	const point2 = scene2.node(point.path()) as PointSopNode;
-	await point2.compute();
-	container = await point2.compute();
-	core_group = container.coreContent()!;
-	bbox = core_group.boundingBox();
-	assert.in_delta(bbox.max.y, 1.4, 0.1);
-	assert.in_delta(bbox.min.y, -1, 0.1);
+	await saveAndLoadScene(scene, async (scene2) => {
+		const point2 = scene2.node(point.path()) as PointSopNode;
+		await point2.compute();
+		container = await point2.compute();
+		core_group = container.coreContent()!;
+		bbox = core_group.boundingBox();
+		assert.in_delta(bbox.max.y, 1.4, 0.1);
+		assert.in_delta(bbox.min.y, -1, 0.1);
+	});
 });

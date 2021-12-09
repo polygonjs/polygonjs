@@ -44,9 +44,9 @@ import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {TexturePersistedConfig} from '../gl/code/assemblers/textures/PersistedConfig';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
-import {ParamsInitData} from '../utils/io/IOController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreUserAgent} from '../../../core/UserAgent';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */
@@ -117,19 +117,10 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		// });
 	}
 
-	createNode<S extends keyof GlNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
+	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseGlNodeType[];

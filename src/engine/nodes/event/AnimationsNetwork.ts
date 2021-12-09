@@ -7,8 +7,8 @@ import {ParamLessBaseNetworkEventNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {AnimNodeChildrenMap} from '../../poly/registers/nodes/Anim';
 import {BaseAnimNodeType} from '../anim/_Base';
-import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class AnimationsNetworkEventNode extends ParamLessBaseNetworkEventNode {
 	static type() {
@@ -17,19 +17,10 @@ export class AnimationsNetworkEventNode extends ParamLessBaseNetworkEventNode {
 
 	protected _childrenControllerContext = NodeContext.ANIM;
 
-	createNode<S extends keyof AnimNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): AnimNodeChildrenMap[S];
-	createNode<K extends valueof<AnimNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<AnimNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof AnimNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): AnimNodeChildrenMap[S];
+	createNode<K extends valueof<AnimNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<AnimNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseAnimNodeType[];

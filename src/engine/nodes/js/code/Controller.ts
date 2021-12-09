@@ -6,22 +6,13 @@ import {GlobalsJsNode} from '../Globals';
 import {JsNodeChildrenMap} from '../../../poly/registers/nodes/Js';
 import {BaseJsNodeType} from '../_Base';
 import {JsAssemblerNodeSpareParamsController} from './SpareParamsController';
-import {ParamsInitData} from '../../utils/io/IOController';
+import {NodeCreateOptions} from '../../utils/hierarchy/ChildrenController';
 
 export class AssemblerControllerNode extends TypedNode<any, any> {
-	createNode<S extends keyof JsNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): JsNodeChildrenMap[S];
-	createNode<K extends valueof<JsNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<JsNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof JsNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): JsNodeChildrenMap[S];
+	createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseJsNodeType[];

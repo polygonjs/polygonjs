@@ -84,8 +84,8 @@ const OPTION_SET = OPTION_SETS.data2;
 
 import {ParamConfig} from '../utils/params/ParamsConfig';
 import {CopRendererController} from './utils/RendererController';
-import {ParamsInitData} from '../utils/io/IOController';
 import {CoreUserAgent} from '../../../core/UserAgent';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 // class PostCopParamsConfig extends NodeParamsConfig {
 // 	use_camera_renderer = ParamConfig.BOOLEAN(0);
 // }
@@ -147,19 +147,10 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		});
 	}
 
-	createNode<S extends keyof PostNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): PostNodeChildrenMap[S];
-	createNode<K extends valueof<PostNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<PostNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof PostNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): PostNodeChildrenMap[S];
+	createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BasePostProcessNodeType[];

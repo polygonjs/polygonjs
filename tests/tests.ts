@@ -71,6 +71,7 @@ import './engine/params/utils/TimeDependent';
 
 QUnit.module('operations');
 import './engine/operations/sop/AttribFromTexture';
+import './engine/operations/sop/Null';
 
 QUnit.module('nodes utils');
 import './engine/nodes/utils/Bypass';

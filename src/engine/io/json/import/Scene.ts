@@ -86,7 +86,7 @@ export class SceneJsonImporter {
 			return;
 		}
 		for (let operations_composer_node of this._base_operations_composer_nodes_with_resolve_required) {
-			operations_composer_node.resolve_operation_containers_path_params();
+			operations_composer_node.resolveOperationContainersPathParams();
 		}
 	}
 }

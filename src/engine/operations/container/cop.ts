@@ -20,16 +20,16 @@ export class CopOperationContainer extends BaseOperationContainer<NodeContext.CO
 
 	// TODO: there may a better to overload add_input
 	protected _inputs: CopOperationContainer[] = [];
-	private _current_input_index: number = 0;
-	add_input(input: CopOperationContainer) {
-		super.setInput(this._current_input_index, input);
-		this.increment_input_index();
+	private _currentInputIndex: number = 0;
+	addInput(input: CopOperationContainer) {
+		super.setInput(this._currentInputIndex, input);
+		this.incrementInputIndex();
 	}
-	increment_input_index() {
-		this._current_input_index++;
+	incrementInputIndex() {
+		this._currentInputIndex++;
 	}
-	current_input_index() {
-		return this._current_input_index;
+	currentInputIndex() {
+		return this._currentInputIndex;
 	}
 
 	async compute(input_contents: Texture[], operation_inputs_map: OperationInputsMap) {

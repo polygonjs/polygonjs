@@ -19,7 +19,6 @@ import {TypedObjNode} from './_Base';
 import {BaseViewerType} from '../../viewers/_Base';
 import {HierarchyController} from './utils/HierarchyController';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
-import {ParamsInitData} from '../utils/io/IOController';
 import {Raycaster} from 'three/src/core/Raycaster';
 import {Vector2} from 'three/src/math/Vector2';
 import {CoreType} from '../../../core/Type';
@@ -52,6 +51,7 @@ export const UPDATE_FROM_CONTROLS_MODES: UpdateFromControlsMode[] = [
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export function CameraMainCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -250,19 +250,10 @@ export class TypedThreejsCameraObjNode<
 		this.initHelperHook();
 	}
 
-	createNode<S extends keyof GeoNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): GeoNodeChildrenMap[S];
-	createNode<K extends valueof<GeoNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<GeoNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof GeoNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GeoNodeChildrenMap[S];
+	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseSopNodeType[];

@@ -8,7 +8,7 @@ import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
-import {ParamsInitData} from '../utils/io/IOController';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K> {
 	protected _childrenControllerContext = NodeContext.GL;
@@ -95,19 +95,10 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	// CHILDREN
 	//
 	//
-	createNode<S extends keyof GlNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
+	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseGlNodeType[];

@@ -178,8 +178,9 @@ export class ParamsController {
 			for (let name of Object.keys(paramsConfig)) {
 				const config = paramsConfig[name];
 				let init_value: ParamInitData<ParamType> | undefined;
-				if (this.node.params_init_value_overrides) {
-					init_value = this.node.params_init_value_overrides[name];
+				const paramsInitValueOverrides = this.node.createOptions?.paramsInitValueOverrides;
+				if (paramsInitValueOverrides) {
+					init_value = paramsInitValueOverrides[name];
 					init_values_used = true;
 				}
 				this.addParam(config.type, name, config.init_value, config.options, init_value);
@@ -191,7 +192,9 @@ export class ParamsController {
 		if (init_values_used) {
 			this.node.setDirty();
 		}
-		this.node.params_init_value_overrides = undefined;
+		if (this.node.createOptions) {
+			this.node.createOptions.paramsInitValueOverrides = undefined;
+		}
 	}
 	private _initParamAccessors() {
 		let current_names_in_accessor = Object.getOwnPropertyNames(this.node.pv);

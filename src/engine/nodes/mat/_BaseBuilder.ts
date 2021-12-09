@@ -8,9 +8,9 @@ import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../poly/NodeContext';
-import {ParamsInitData} from '../utils/io/IOController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BaseNodeType} from '../_Base';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export function BaseBuilderParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -65,19 +65,10 @@ export abstract class TypedBuilderMatNode<
 	}
 	protected abstract _create_assembler_controller(): GlAssemblerController<A> | undefined;
 
-	createNode<S extends keyof GlNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
+	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseGlNodeType[];

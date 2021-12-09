@@ -7,8 +7,8 @@ import {GeoNodeChildrenMap} from '../../../../poly/registers/nodes/Sop';
 
 import {NodeParamsConfig} from '../../../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {ParamsInitData} from '../../../utils/io/IOController';
 import {Constructor, valueof} from '../../../../../types/GlobalTypes';
+import {NodeCreateOptions} from '../../../utils/hierarchy/ChildrenController';
 
 export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<T> {
 	initializeBaseNode() {
@@ -28,19 +28,10 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	//
 
 	protected _childrenControllerContext = NodeContext.SOP;
-	createNode<S extends keyof GeoNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): GeoNodeChildrenMap[S];
-	createNode<K extends valueof<GeoNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<GeoNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof GeoNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GeoNodeChildrenMap[S];
+	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseSopNodeType[];

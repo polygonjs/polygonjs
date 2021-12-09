@@ -9,7 +9,7 @@ import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
 import {ObjNodeRenderOrder} from './_Base';
 import {MatNodeChildrenMap} from '../../poly/registers/nodes/Mat';
 import {BaseMatNodeType} from '../mat/_Base';
-import {ParamsInitData} from '../utils/io/IOController';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class MaterialsNetworkObjNode extends ParamLessBaseManagerObjNode {
 	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
@@ -19,19 +19,10 @@ export class MaterialsNetworkObjNode extends ParamLessBaseManagerObjNode {
 
 	protected _childrenControllerContext = NodeContext.MAT;
 
-	createNode<S extends keyof MatNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): MatNodeChildrenMap[S];
-	createNode<K extends valueof<MatNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<MatNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof MatNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): MatNodeChildrenMap[S];
+	createNode<K extends valueof<MatNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<MatNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseMatNodeType[];

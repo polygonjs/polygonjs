@@ -4,7 +4,7 @@ import {UIData} from './utils/UIData';
 import {FlagsController, FlagsControllerD} from './utils/FlagsController';
 import {StatesController} from './utils/StatesController';
 import {HierarchyParentController} from './utils/hierarchy/ParentController';
-import {HierarchyChildrenController} from './utils/hierarchy/ChildrenController';
+import {HierarchyChildrenController, NodeCreateOptions} from './utils/hierarchy/ChildrenController';
 import {LifeCycleController} from './utils/LifeCycleController';
 import {TypedContainerController} from './utils/ContainerController';
 import {NodeCookController, OnCookCompleteHook} from './utils/CookController';
@@ -16,7 +16,7 @@ import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
 import {NodeParamsConfig} from './utils/params/ParamsConfig';
 import {ParamsValueAccessor, ParamsValueAccessorType} from './utils/params/ParamsValueAccessor';
 // import {ProcessingContext} from './utils/ProcessingContext';
-import {IOController, ParamsInitData} from './utils/io/IOController';
+import {IOController} from './utils/io/IOController';
 import {NodeEvent} from '../poly/NodeEvent';
 import {NodeContext} from '../poly/NodeContext';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
@@ -142,7 +142,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	setName(name: string) {
 		this.nameController.setName(name);
 	}
-	_set_core_name(name: string) {
+	_setCoreName(name: string) {
 		this._name = name;
 	}
 
@@ -153,12 +153,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	// 	return (this._processing_context = this._processing_context || new ProcessingContext(this));
 	// }
 
-	constructor(scene: PolyScene, name: string = 'BaseNode', public params_init_value_overrides?: ParamsInitData) {
-		super(scene, name);
+	constructor(scene: PolyScene, nodeName: string = 'BaseNode', public createOptions?: NodeCreateOptions) {
+		super(scene, nodeName);
 	}
 
 	private _initialized: boolean = false;
-	public initialize_base_and_node() {
+	public initializeBaseAndNode() {
 		if (!this._initialized) {
 			this._initialized = true;
 
@@ -287,19 +287,11 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	 * create a node.
 	 *
 	 */
-	createNode(nodeClass: any, params_init_value_overrides?: ParamsInitData) {
-		return this.childrenController?.createNode(nodeClass, params_init_value_overrides);
+	createNode(nodeClass: any, options?: NodeCreateOptions) {
+		return this.childrenController?.createNode(nodeClass, options);
 	}
-	create_operation_container(
-		type: string,
-		operation_container_name: string,
-		params_init_value_overrides?: ParamsInitData
-	) {
-		return this.childrenController?.create_operation_container(
-			type,
-			operation_container_name,
-			params_init_value_overrides
-		);
+	createOperationContainer(type: string, operation_container_name: string, options?: NodeCreateOptions) {
+		return this.childrenController?.createOperationContainer(type, operation_container_name, options);
 	}
 	/**
 	 * removes a child node

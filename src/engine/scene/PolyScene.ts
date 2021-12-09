@@ -143,17 +143,17 @@ export class PolyScene {
 	 */
 	createNode<S extends keyof ObjNodeChildrenMap>(
 		nodeClass: S,
-		params_init_value_overrides?: ParamsInitData
+		paramsInitValueOverrides?: ParamsInitData
 	): ObjNodeChildrenMap[S];
 	createNode<K extends valueof<ObjNodeChildrenMap>>(
 		nodeClass: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
+		paramsInitValueOverrides?: ParamsInitData
 	): K;
 	createNode<K extends valueof<ObjNodeChildrenMap>>(
 		nodeClass: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
+		paramsInitValueOverrides?: ParamsInitData
 	): K {
-		return this.root().createNode(nodeClass, params_init_value_overrides) as K;
+		return this.root().createNode(nodeClass, paramsInitValueOverrides) as K;
 	}
 	/**
 	 * returns all nodes with a given type

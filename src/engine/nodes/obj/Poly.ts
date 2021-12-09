@@ -10,9 +10,9 @@ import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeController';
-import {ParamsInitData} from '../utils/io/IOController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export function createPolyObjNode(node_type: string, definition: PolyNodeDefinition) {
 	class PolyObjParamConfig extends NodeParamsConfig {
@@ -65,17 +65,11 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 
 		createNode<S extends keyof GeoNodeChildrenMap>(
 			node_class: S,
-			params_init_value_overrides?: ParamsInitData
+			options?: NodeCreateOptions
 		): GeoNodeChildrenMap[S];
-		createNode<K extends valueof<GeoNodeChildrenMap>>(
-			node_class: Constructor<K>,
-			params_init_value_overrides?: ParamsInitData
-		): K;
-		createNode<K extends valueof<GeoNodeChildrenMap>>(
-			node_class: Constructor<K>,
-			params_init_value_overrides?: ParamsInitData
-		): K {
-			return super.createNode(node_class, params_init_value_overrides) as K;
+		createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+		createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+			return super.createNode(node_class, options) as K;
 		}
 		children() {
 			return super.children() as BaseSopNodeType[];

@@ -17,17 +17,17 @@
 
 // 		createNode<S extends keyof CopNodeChildrenMap>(
 // 			node_class: S,
-// 			params_init_value_overrides?: ParamsInitData
+// 			options?: NodeCreateOptions
 // 		): CopNodeChildrenMap[S];
 // 		createNode<K extends valueof<CopNodeChildrenMap>>(
 // 			node_class: Constructor<K>,
-// 			params_init_value_overrides?: ParamsInitData
+// 			options?: NodeCreateOptions
 // 		): K;
 // 		createNode<S extends keyof CopNodeChildrenMap, K extends valueof<CopNodeChildrenMap>>(
 // 			node_class: S | Constructor<K>,
-// 			params_init_value_overrides?: ParamsInitData
+// 			options?: NodeCreateOptions
 // 		): K | CopNodeChildrenMap[S] {
-// 			return super.createNode(node_class, params_init_value_overrides) as K | CopNodeChildrenMap[S];
+// 			return super.createNode(node_class, paramsInitValueOverrides) as K | CopNodeChildrenMap[S];
 // 		}
 // 		children() {
 // 			return super.children() as BaseCopNodeType[];

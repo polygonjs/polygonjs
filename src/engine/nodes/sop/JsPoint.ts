@@ -9,7 +9,7 @@ import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
 import {BaseJsNodeType} from '../js/_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ParamsInitData} from '../utils/io/IOController';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 class JsPointSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new JsPointSopParamsConfig();
 export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
@@ -47,19 +47,10 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// this.children_controller?.init({dependent: false});
 	}
 
-	createNode<S extends keyof JsNodeChildrenMap>(
-		node_class: S,
-		params_init_value_overrides?: ParamsInitData
-	): JsNodeChildrenMap[S];
-	createNode<K extends valueof<JsNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<JsNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData
-	): K {
-		return super.createNode(node_class, params_init_value_overrides) as K;
+	createNode<S extends keyof JsNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): JsNodeChildrenMap[S];
+	createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
 	}
 	children() {
 		return super.children() as BaseJsNodeType[];

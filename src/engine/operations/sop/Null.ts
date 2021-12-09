@@ -1,4 +1,5 @@
 import {BaseSopOperation} from './_Base';
+import {ConvertExportParamDataParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {DefaultOperationParams} from '../_Base';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -20,4 +21,6 @@ export class NullSopOperation extends BaseSopOperation {
 			return this.createCoreGroupFromObjects([]);
 		}
 	}
+
+	convertExportParamData(options: ConvertExportParamDataParams) {}
 }

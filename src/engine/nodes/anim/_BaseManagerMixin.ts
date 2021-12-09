@@ -17,17 +17,17 @@
 
 // 		createNode<S extends keyof AnimNodeChildrenMap>(
 // 			node_class: S,
-// 			params_init_value_overrides?: ParamsInitData
+// 			options?: NodeCreateOptions
 // 		): AnimNodeChildrenMap[S];
 // 		createNode<K extends valueof<AnimNodeChildrenMap>>(
 // 			node_class: Constructor<K>,
-// 			params_init_value_overrides?: ParamsInitData
+// 			options?: NodeCreateOptions
 // 		): K;
 // 		createNode<S extends keyof AnimNodeChildrenMap, K extends valueof<AnimNodeChildrenMap>>(
 // 			node_class: S | Constructor<K>,
-// 			params_init_value_overrides?: ParamsInitData
+// 			options?: NodeCreateOptions
 // 		): K | AnimNodeChildrenMap[S] {
-// 			return super.createNode(node_class, params_init_value_overrides) as K | AnimNodeChildrenMap[S];
+// 			return super.createNode(node_class, paramsInitValueOverrides) as K | AnimNodeChildrenMap[S];
 // 		}
 // 		children() {
 // 			return super.children() as BaseAnimNodeType[];

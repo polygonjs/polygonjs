@@ -14,10 +14,9 @@ export class NodesController {
 	_instanciated_nodes_by_context_and_type: PolyDictionary<PolyDictionary<PolyDictionary<BaseNodeType>>> = {};
 
 	init() {
-		this._root = new ObjectsManagerNode(this.scene);
-		this._root.initialize_base_and_node();
+		this._root = new ObjectsManagerNode(this.scene, ROOT_NODE_NAME);
+		this._root.initializeBaseAndNode();
 		this._root.params.init();
-		this._root._set_core_name(ROOT_NODE_NAME);
 	}
 
 	root() {

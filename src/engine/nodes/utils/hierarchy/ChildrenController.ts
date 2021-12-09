@@ -1,9 +1,8 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {CoreString} from '../../../../core/String';
-import {BaseNodeType} from '../../_Base';
+import {BaseNodeClass, BaseNodeType} from '../../_Base';
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
-import {NameController} from '../NameController';
 import {CoreNodeSelection} from '../../../../core/NodeSelection';
 import {Poly} from '../../../Poly';
 import {ParamsInitData} from '../io/IOController';
@@ -12,8 +11,14 @@ import {BaseOperationContainer} from '../../../operations/container/_Base';
 import {SopOperationContainer} from '../../../operations/container/sop';
 import {BaseSopOperation} from '../../../operations/sop/_Base';
 import {MapUtils} from '../../../../core/MapUtils';
+import {NameController} from '../NameController';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
+
+export interface NodeCreateOptions {
+	paramsInitValueOverrides?: ParamsInitData;
+	nodeName?: string;
+}
 
 export class HierarchyChildrenController {
 	private _childrenByName: Map<string, BaseNodeType> = new Map();
@@ -89,6 +94,12 @@ export class HierarchyChildrenController {
 			this.node.scene().nodesController.addToInstanciatedNode(node);
 		}
 	}
+	private _nextAvailableChildName(nodeName: string): string {
+		nodeName = CoreString.sanitizeName(nodeName);
+		return this._childrenByName.get(nodeName)
+			? this._nextAvailableChildName(CoreString.increment(nodeName))
+			: nodeName;
+	}
 
 	node_context_signature() {
 		return `${this.node.context()}/${this.node.type()}`;
@@ -103,7 +114,7 @@ export class HierarchyChildrenController {
 		return node_class != null;
 	}
 
-	// create_node(node_type: string, params_init_value_overrides?: ParamsInitData): BaseNodeType {
+	// create_node(node_type: string, options?: NodeCreateOptions): BaseNodeType {
 	// 	const node_class = this.available_children_classes()[node_type];
 
 	// 	if (node_class == null) {
@@ -113,52 +124,47 @@ export class HierarchyChildrenController {
 	// 		console.error(message);
 	// 		throw message;
 	// 	} else {
-	// 		const child_node = new node_class(this.node.scene, `child_node_${node_type}`, params_init_value_overrides);
+	// 		const child_node = new node_class(this.node.scene, `child_node_${node_type}`, paramsInitValueOverrides);
 	// 		child_node.initialize_base_and_node();
 	// 		this.add_node(child_node);
 	// 		child_node.lifecycle.set_creation_completed();
 	// 		return child_node;
 	// 	}
 	// }
-	createNode<K extends BaseNodeType>(
-		node_class_or_string: string | Constructor<K>,
-		params_init_value_overrides?: ParamsInitData,
-		node_type = ''
-	): K {
-		if (typeof node_class_or_string == 'string') {
-			const node_class = this._find_node_class(node_class_or_string);
-			return this._create_and_init_node(node_class, params_init_value_overrides, node_type) as K;
+	createNode<K extends BaseNodeType>(nodeClassOrString: string | Constructor<K>, options?: NodeCreateOptions): K {
+		if (typeof nodeClassOrString == 'string') {
+			const nodeClass = this._findNodeClass(nodeClassOrString);
+			return this._createAndInitNode(nodeClass, options) as K;
 		} else {
-			return this._create_and_init_node(node_class_or_string, params_init_value_overrides, node_type);
+			return this._createAndInitNode(nodeClassOrString, options);
 		}
 	}
-	private _create_and_init_node<K extends BaseNodeType>(
-		node_class: Constructor<K>,
-		params_init_value_overrides?: ParamsInitData,
-		node_type = ''
-	) {
-		const child_node = new node_class(this.node.scene(), `child_node_${node_type}`, params_init_value_overrides);
-		child_node.initialize_base_and_node();
-		this._addNode(child_node);
-		child_node.lifecycle.setCreationCompleted();
-		return child_node;
+	private _createAndInitNode<K extends BaseNodeType>(nodeClass: Constructor<K>, options?: NodeCreateOptions) {
+		const requestedNodeName =
+			options?.nodeName || NameController.baseName((<unknown>nodeClass) as typeof BaseNodeClass);
+		const nodeName = this._nextAvailableChildName(requestedNodeName);
+		const childNode = new nodeClass(this.node.scene(), nodeName, options);
+		childNode.initializeBaseAndNode();
+		this._addNode(childNode);
+		childNode.lifecycle.setCreationCompleted();
+		return childNode;
 	}
-	private _find_node_class(node_type: string) {
-		const node_class = this.available_children_classes()[node_type.toLowerCase()];
+	private _findNodeClass(node_type: string) {
+		const nodeClass = this.available_children_classes()[node_type.toLowerCase()];
 
-		if (node_class == null) {
+		if (nodeClass == null) {
 			const message = `child node type '${node_type}' not found for node '${this.node.path()}'. Available types are: ${Object.keys(
 				this.available_children_classes()
 			).join(', ')}, ${this._context}, ${this.node.type()}`;
 			console.error(message);
 			throw message;
 		}
-		return node_class;
+		return nodeClass;
 	}
-	create_operation_container(
+	createOperationContainer(
 		operation_type: string,
 		operation_container_name: string,
-		params_init_value_overrides?: ParamsInitData
+		options?: NodeCreateOptions
 	): BaseOperationContainer<any> {
 		const operation_class = Poly.registeredOperation(this._context, operation_type);
 
@@ -171,7 +177,7 @@ export class HierarchyChildrenController {
 			const operation_container = new SopOperationContainer(
 				operation,
 				operation_container_name,
-				params_init_value_overrides || {}
+				options?.paramsInitValueOverrides || {}
 			);
 			return operation_container;
 		}
@@ -192,7 +198,6 @@ export class HierarchyChildrenController {
 			child_node.lifecycle.run_on_create_hooks();
 		}
 		child_node.lifecycle.run_on_add_hooks();
-		this.setChildName(child_node, NameController.base_name(child_node));
 		this.node.lifecycle.run_on_child_add_hooks(child_node);
 
 		if (child_node.require_webgl2()) {

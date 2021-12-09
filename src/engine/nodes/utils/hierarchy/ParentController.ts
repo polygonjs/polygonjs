@@ -1,5 +1,4 @@
 import {BaseNodeType} from '../../_Base';
-import {NameController} from '../NameController';
 import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 
 type Callback = () => void;
@@ -20,7 +19,7 @@ export class HierarchyParentController {
 		if (parent != this.node.parentController.parent()) {
 			this._parent = parent;
 			if (this._parent) {
-				this.node.nameController.requestNameToParent(NameController.base_name(this.node));
+				this.node.nameController.requestNameToParent(this.node.name());
 			}
 		}
 	}
