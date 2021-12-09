@@ -6,7 +6,7 @@ export interface RampPointJson {
 }
 export interface RampValueJson {
 	points: RampPointJson[];
-	interpolation: string;
+	interpolation: RampInterpolation;
 }
 
 export class RampPoint {
@@ -52,12 +52,16 @@ export class RampPoint {
 }
 
 export enum RampInterpolation {
-	LINEAR = 'linear',
+	CUBIC = 'cubic',
 }
+export const RAMP_INTERPOLATIONS: RampInterpolation[] = [RampInterpolation.CUBIC];
 export class RampValue {
 	private _uuid: string;
 
-	constructor(private _interpolation: string = RampInterpolation.LINEAR, private _points: RampPoint[] = []) {
+	constructor(
+		private _interpolation: RampInterpolation = RampInterpolation.CUBIC,
+		private _points: RampPoint[] = []
+	) {
 		this._uuid = generateUUID();
 	}
 
@@ -75,7 +79,11 @@ export class RampValue {
 		for (let jsonPoint of json.points) {
 			points.push(RampPoint.fromJSON(jsonPoint));
 		}
-		return new RampValue(json.interpolation, points);
+		let interpolation = json.interpolation;
+		if (interpolation == null || (interpolation as string) == '') {
+			interpolation = RampInterpolation.CUBIC;
+		}
+		return new RampValue(interpolation, points);
 	}
 	toJSON(): RampValueJson {
 		return {

@@ -147,7 +147,7 @@ export class ObjectsManagerNode extends TypedBaseManagerNode<ObjectsManagerParam
 		if (node.attachableToHierarchy()) {
 			const node_input = node.io.inputs.input(0);
 			if (node_input) {
-				return node_input.children_group;
+				return node_input.childrenGroup();
 			} else {
 				return this._object;
 			}

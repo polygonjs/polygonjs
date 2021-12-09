@@ -34,7 +34,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		return 'plane';
 	}
 
-	private _core_transform = new CoreTransform();
+	private _coreTransform = new CoreTransform();
 
 	cook(input_contents: CoreGroup[], params: PlaneSopParams) {
 		const core_group = input_contents[0];
@@ -50,9 +50,9 @@ export class PlaneSopOperation extends BaseSopOperation {
 		// convert to buffer geo, as some render problems can occur otherwise
 		// geometry = BufferGeometryUtils.mergeBufferGeometries([geometry])
 		// console.log(geometry, geometry.isBufferGeometry)
-		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
-		const matrix = this._core_transform.translationMatrix(params.center);
+		const matrix = this._coreTransform.translationMatrix(params.center);
 		geometry.applyMatrix4(matrix);
 
 		return this.createCoreGroupFromGeometry(geometry);
@@ -68,9 +68,9 @@ export class PlaneSopOperation extends BaseSopOperation {
 		const size2d = new Vector2(this._size.x, this._size.z);
 		const geometry = this._create_plane(size2d, params);
 
-		this._core_transform.rotateGeometry(geometry, ROTATE_START, ROTATE_END);
+		this._coreTransform.rotateGeometry(geometry, ROTATE_START, ROTATE_END);
 
-		const matrix = this._core_transform.translationMatrix(this._center);
+		const matrix = this._coreTransform.translationMatrix(this._center);
 		geometry.applyMatrix4(matrix);
 
 		return this.createCoreGroupFromGeometry(geometry);

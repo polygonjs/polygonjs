@@ -84,7 +84,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		this.set_object_name();
 	}
 
-	get children_group() {
+	childrenGroup() {
 		return this._children_group;
 	}
 	get object() {
@@ -100,7 +100,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	protected set_object_name() {
 		if (this._object) {
 			this._object.name = this.path();
-			this._children_group.name = `${this.path()}:parented_outputs`;
+			this._children_group.name = `${this.path()}:parentedOutputs`;
 		}
 	}
 

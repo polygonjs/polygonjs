@@ -13,7 +13,7 @@ QUnit.test('attrib_remap simple', async (assert) => {
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set('@ptnum*0.25');
 	attrib_remap1.p.name.set('test');
-	const ramp_value = new RampValue(RampInterpolation.LINEAR, [
+	const ramp_value = new RampValue(RampInterpolation.CUBIC, [
 		new RampPoint(0, 0),
 		new RampPoint(0.5, 1),
 		new RampPoint(1, 0),

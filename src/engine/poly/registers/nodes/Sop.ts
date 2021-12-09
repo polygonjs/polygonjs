@@ -75,6 +75,7 @@ import {PaletteSopNode} from '../../../nodes/sop/Palette';
 import {ParticlesSystemGpuSopNode} from '../../../nodes/sop/ParticlesSystemGpu';
 import {PeakSopNode} from '../../../nodes/sop/Peak';
 import {PlaneSopNode} from '../../../nodes/sop/Plane';
+import {PlaneHelperSopNode} from '../../../nodes/sop/PlaneHelper';
 import {PlayerCapsuleSopNode} from '../../../nodes/sop/PlayerCapsule';
 import {PointSopNode} from '../../../nodes/sop/Point';
 import {PointLightSopNode} from '../../../nodes/sop/PointLight';
@@ -194,6 +195,7 @@ export interface GeoNodeChildrenMap {
 	particlesSystemGpu: ParticlesSystemGpuSopNode;
 	peak: PeakSopNode;
 	plane: PlaneSopNode;
+	planeHelper: PlaneHelperSopNode;
 	playerCapsule: PlayerCapsuleSopNode;
 	point: PointSopNode;
 	pointLight: PointLightSopNode;
@@ -276,6 +278,7 @@ import {ObjectPropertiesSopOperation} from '../../../operations/sop/ObjectProper
 import {PaletteSopOperation} from '../../../operations/sop/Palette';
 import {PeakSopOperation} from '../../../operations/sop/Peak';
 import {PlaneSopOperation} from '../../../operations/sop/Plane';
+import {PlaneHelperSopOperation} from '../../../operations/sop/PlaneHelper';
 import {PlayerCapsuleSopOperation} from '../../../operations/sop/PlayerCapsule';
 import {PolarTransformSopOperation} from '../../../operations/sop/PolarTransform';
 import {PolywireSopOperation} from '../../../operations/sop/Polywire';
@@ -335,6 +338,7 @@ export class SopRegister {
 		poly.registerOperation(PaletteSopOperation);
 		poly.registerOperation(PeakSopOperation);
 		poly.registerOperation(PlaneSopOperation);
+		poly.registerOperation(PlaneHelperSopOperation);
 		poly.registerOperation(PlayerCapsuleSopOperation);
 		poly.registerOperation(PointLightSopOperation);
 		poly.registerOperation(PolarTransformSopOperation);
@@ -422,7 +426,7 @@ export class SopRegister {
 		poly.registerNode(MetaballSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(NormalsHelperSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(NormalsHelperSopNode, CATEGORY_SOP.HELPERS);
 		poly.registerNode(NullSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ObjectPropertiesSopNode, CATEGORY_SOP.MODIFIER);
@@ -431,6 +435,7 @@ export class SopRegister {
 		poly.registerNode(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.registerNode(PeakSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(PlaneHelperSopNode, CATEGORY_SOP.HELPERS);
 		poly.registerNode(PlayerCapsuleSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PolarTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PointSopNode, CATEGORY_SOP.MODIFIER);

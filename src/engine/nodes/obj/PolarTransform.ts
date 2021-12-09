@@ -17,6 +17,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {degToRad} from 'three/src/math/MathUtils';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {PolarGridHelper} from 'three';
 class PolarTransformObjParamConfig extends NodeParamsConfig {
 	/** @param center of the transform */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
@@ -46,7 +47,7 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 	}
 	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	private _helper = new AxesHelper(1);
+	private _helper = this._createHelper();
 
 	createObject() {
 		const group = new Group();
@@ -67,12 +68,47 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 		});
 	}
 	private _updateHelperHierarchy() {
-		if (this.flags.display.active()) {
+		if (this._displayedHelper()) {
 			this.object.add(this._helper);
-			this._helper.updateMatrix();
+			this._updateHelper();
 		} else {
 			this.object.remove(this._helper);
 		}
+	}
+	private _displayedHelper() {
+		return this.flags.display.active();
+	}
+
+	private __axisHelper__: AxesHelper | undefined;
+	private _axisHelper() {
+		return (this.__axisHelper__ = this.__axisHelper__ || this._createAxisHelper());
+	}
+	private _createAxisHelper() {
+		const axisHelper = new AxesHelper(1);
+		axisHelper.matrixAutoUpdate = false;
+		return axisHelper;
+	}
+	private __polarGridHelper__: PolarGridHelper | undefined;
+	private _polarGridHelper() {
+		return (this.__polarGridHelper__ = this.__polarGridHelper__ || this._createPolarGridHelper());
+	}
+	private _createPolarGridHelper() {
+		const radius = this.pv.depth;
+		const radials = 16;
+		const circles = 8;
+		const divisions = 64;
+		const polarGridHelper = new PolarGridHelper(radius, radials, circles, divisions);
+		polarGridHelper.matrixAutoUpdate = false;
+		return polarGridHelper;
+	}
+	private _createHelper() {
+		const group = new Group();
+		group.name = 'PolarTransformHelper';
+		group.matrixAutoUpdate = false;
+		group.add(this._axisHelper());
+		group.add(this._polarGridHelper());
+
+		return group;
 	}
 
 	// TODO: this will have to be checked via the parent, when I will have obj managers at lower levels than root
@@ -114,6 +150,17 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 		object.scale.copy(this._decomposed.s);
 		object.updateMatrix();
 
+		this._updateHelper();
+
 		this.cookController.endCook();
+	}
+
+	private _updateHelper() {
+		if (!this._displayedHelper()) {
+			return;
+		}
+		this._helper.updateMatrix();
+		this._polarGridHelper().matrix.copy(this.object.matrix);
+		this._polarGridHelper().matrix.invert();
 	}
 }

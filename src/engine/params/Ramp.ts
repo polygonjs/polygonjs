@@ -24,7 +24,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	private _texture_data = new Uint8Array(3 * TEXTURE_SIZE);
 	private _ramp_texture = new DataTexture(this._texture_data, TEXTURE_WIDTH, TEXTURE_HEIGHT, RGBFormat);
 
-	static DEFAULT_VALUE = new RampValue(RampInterpolation.LINEAR, [new RampPoint(0, 0), new RampPoint(1, 1)]);
+	static DEFAULT_VALUE = new RampValue(RampInterpolation.CUBIC, [new RampPoint(0, 0), new RampPoint(1, 1)]);
 	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.toJSON();
 
 	defaultValueSerialized() {
