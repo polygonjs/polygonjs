@@ -8,7 +8,6 @@
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ViewerParamsConfig extends NodeParamsConfig {
 	/** @param sets the class of the viewer */
@@ -50,25 +49,33 @@ export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
 		]);
 	}
 
-	private _process_trigger_setClass(context: EventContext<MouseEvent>) {
-		const canvas = context.viewer?.canvas();
+	private _getViewer(context: EventContext<Event>) {
+		if (context.viewer) {
+			return context.viewer;
+		} else {
+			return this.scene().viewersRegister.firstViewer();
+		}
+	}
+
+	private _process_trigger_setClass(context: EventContext<Event>) {
+		const canvas = this._getViewer(context)?.canvas();
 		if (canvas) {
 			canvas.classList.add(this.pv.className);
 		}
 	}
 
-	private _process_trigger_unsetClass(context: EventContext<MouseEvent>) {
-		const canvas = context.viewer?.canvas();
+	private _process_trigger_unsetClass(context: EventContext<Event>) {
+		const canvas = this._getViewer(context)?.canvas();
 		if (canvas) {
 			canvas.classList.remove(this.pv.className);
 		}
 	}
-	private _process_trigger_createControls(context: EventContext<MouseEvent>) {
+	private _process_trigger_createControls(context: EventContext<Event>) {
 		this.scene().viewersRegister.traverseViewers((v) => {
 			v.controlsController?.create_controls();
 		});
 	}
-	private _process_trigger_disposeControls(context: EventContext<MouseEvent>) {
+	private _process_trigger_disposeControls(context: EventContext<Event>) {
 		this.scene().viewersRegister.traverseViewers((v) => {
 			v.controlsController?.dispose_controls();
 		});
