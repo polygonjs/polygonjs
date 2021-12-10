@@ -6,41 +6,50 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 class OutlinePostParamsConfig extends NodeParamsConfig {
+	/** @param object mask of the objects that will have an outline */
 	objectsMask = ParamConfig.STRING('*outlined*', {
 		...PostParamOptions,
 	});
+	/** @param updates the cached objects found by objectMask  */
 	refreshObjects = ParamConfig.BUTTON(null, {
 		...PostParamOptions,
 	});
+	/** @param debug print the objects to the dev console */
 	printObjects = ParamConfig.BUTTON(null, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
 			OutlinePostNode.PARAM_CALLBACK_printResolve(node as OutlinePostNode);
 		},
 	});
+	/** @param edgeStrenth */
 	edgeStrength = ParamConfig.FLOAT(3, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
+	/** @param edgeThickness */
 	edgeThickness = ParamConfig.FLOAT(1.0, {
 		range: [0, 4],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
+	/** @param adds a blur to the edges */
 	edgeGlow = ParamConfig.FLOAT(0, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
+	/** @param defines if the edges pulsate */
 	pulsePeriod = ParamConfig.FLOAT(0, {
 		range: [0, 5],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
+	/** @param visibleEdgeColor */
 	visibleEdgeColor = ParamConfig.COLOR([1, 1, 1], {
 		...PostParamOptions,
 	});
+	/** @param hiddenEdgeColor */
 	hiddenEdgeColor = ParamConfig.COLOR([0.2, 0.1, 0.4], {
 		...PostParamOptions,
 	});

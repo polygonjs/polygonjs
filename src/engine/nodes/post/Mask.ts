@@ -22,7 +22,9 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
 class MaskPostParamsConfig extends NodeParamsConfig {
+	/** @param overrides the scene to render */
 	overrideScene = ParamConfig.BOOLEAN(0, PostParamOptions);
+	/** @param scene to render the mask from */
 	scene = ParamConfig.NODE_PATH('', {
 		visibleIf: {overrideScene: 1},
 		nodeSelection: {
@@ -31,7 +33,9 @@ class MaskPostParamsConfig extends NodeParamsConfig {
 		},
 		...PostParamOptions,
 	});
+	/** @param overrides the camera to render the mask */
 	overrideCamera = ParamConfig.BOOLEAN(0, PostParamOptions);
+	/** @param camera to render with */
 	camera = ParamConfig.NODE_PATH('', {
 		visibleIf: {overrideCamera: 1},
 		nodeSelection: {
@@ -39,6 +43,7 @@ class MaskPostParamsConfig extends NodeParamsConfig {
 		},
 		...PostParamOptions,
 	});
+	/** @param inverse the mask */
 	inverse = ParamConfig.BOOLEAN(0, PostParamOptions);
 }
 const ParamsConfig = new MaskPostParamsConfig();
