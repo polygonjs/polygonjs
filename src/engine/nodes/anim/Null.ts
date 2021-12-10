@@ -24,8 +24,8 @@ class NullAnimParamsConfig extends NodeParamsConfig {
 			NullAnimNode.PARAM_CALLBACK_pause(node as NullAnimNode);
 		},
 	});
-	/** @param stops previous animations still in progress started by this node */
-	stopsPreviousAnim = ParamConfig.BOOLEAN(1);
+	/** @param sets if the animations created can be stopped when a new animation in generated on the same property */
+	stoppable = ParamConfig.BOOLEAN(0);
 	/** @param toggle to see debug infos printed in the console */
 	debug = ParamConfig.BOOLEAN(0);
 }
@@ -44,6 +44,8 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 
 	cook(inputContents: TimelineBuilder[]) {
 		const timelineBuilder = inputContents[0] || new TimelineBuilder();
+		timelineBuilder.setDebug(isBooleanTrue(this.pv.debug));
+		timelineBuilder.setStoppable(this.pv.stoppable);
 		this.setTimelineBuilder(timelineBuilder);
 	}
 
@@ -59,9 +61,9 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 			if (!this._timelineBuilder) {
 				return;
 			}
-			if (this._timeline && isBooleanTrue(this.pv.stopsPreviousAnim)) {
-				this._timeline.kill();
-			}
+			// if (this._timeline && isBooleanTrue(this.pv.stopsPreviousAnim)) {
+			// 	this._timeline.kill();
+			// }
 			let resolved = false;
 			function resolveOnce() {
 				if (!resolved) {
@@ -75,7 +77,6 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 				Poly.log(`play from '${this.path()}'`);
 			}
 
-			this._timelineBuilder.setDebug(isBooleanTrue(this.pv.debug));
 			this._timelineBuilder.populate(this._timeline);
 
 			// if the timeline is empty, we resolve the promise now

@@ -29,6 +29,7 @@ export class TimelineBuilder {
 	private _position: AnimationPosition | undefined;
 	private _property: TimelineBuilderProperty | undefined;
 	private _updateCallback: AnimationUpdateCallback | undefined;
+	private _stoppable = true;
 
 	private _debug = false;
 	setDebug(debug: boolean) {
@@ -122,6 +123,13 @@ export class TimelineBuilder {
 	position() {
 		return this._position;
 	}
+	setStoppable(state: boolean) {
+		this._stoppable = state;
+	}
+	stoppable() {
+		return this._stoppable;
+	}
+
 	setUpdateCallback(update_callback: AnimationUpdateCallback) {
 		this._updateCallback = update_callback;
 	}
@@ -171,6 +179,7 @@ export class TimelineBuilder {
 		if (this._position) {
 			newTimelineBuilder.setPosition(this._position.clone());
 		}
+		newTimelineBuilder.setStoppable(this._stoppable);
 		for (let childTimelineBuilder of this._timelineBuilders) {
 			const newChildTimelineBuilder = childTimelineBuilder.clone();
 			newTimelineBuilder.addTimelineBuilder(newChildTimelineBuilder);

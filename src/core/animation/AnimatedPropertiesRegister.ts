@@ -20,16 +20,21 @@ export type RegisterableProperty =
 	| Vector4Param
 	| ColorParam;
 
+interface TimelineData {
+	timeline: gsap.core.Timeline;
+	stoppable: boolean;
+}
+
 class AnimatedPropertiesRegisterClass {
 	private static _instance: AnimatedPropertiesRegisterClass;
 	static instance() {
 		return (this._instance = this._instance || new AnimatedPropertiesRegisterClass());
 	}
-	private _propertiesMap: Map<RegisterableProperty, gsap.core.Timeline> = new Map();
+	private _propertiesMap: Map<RegisterableProperty, TimelineData> = new Map();
 	private constructor() {}
 
-	registerProp(property: RegisterableProperty, timeline: gsap.core.Timeline) {
-		this._propertiesMap.set(this._convert(property), timeline);
+	registerProp(property: RegisterableProperty, timelineData: TimelineData) {
+		this._propertiesMap.set(this._convert(property), timelineData);
 	}
 	deRegisterProp(property: RegisterableProperty) {
 		this._propertiesMap.delete(this._convert(property));

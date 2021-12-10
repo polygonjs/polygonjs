@@ -310,6 +310,8 @@ QUnit.test('animating a scene graph prop when it is already animated kills the p
 	const null2 = ANIM.createNode('null');
 	null2.setInput(0, propertyValue2);
 
+	// test with null1.p.stoppable.set(1)
+	null1.p.stoppable.set(1);
 	assert.in_delta(object.position.y, 0, 0.1);
 	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 0);
 	null1.play();
@@ -326,5 +328,26 @@ QUnit.test('animating a scene graph prop when it is already animated kills the p
 	assert.in_delta(object.position.y, 0.75, 0.1);
 	await CoreSleep.sleep(4000);
 	assert.in_delta(object.position.y, 0, 0.1);
+	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 0);
+
+	await CoreSleep.sleep(1000);
+	// test with null1.p.stoppable.set(0)
+	null1.p.stoppable.set(0);
+	assert.in_delta(object.position.y, 0, 0.1);
+	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 0);
+	null1.play();
+	await CoreSleep.sleep(500);
+	assert.in_delta(object.position.y, 0.5, 0.1);
+	await CoreSleep.sleep(500);
+	assert.in_delta(object.position.y, 1, 0.1);
+
+	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 1);
+	null2.play();
+	await CoreSleep.sleep(500);
+	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 1);
+	await CoreSleep.sleep(500);
+	assert.in_delta(object.position.y, 2, 0.1);
+	await CoreSleep.sleep(4000);
+	assert.in_delta(object.position.y, 4, 0.1);
 	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 0);
 });

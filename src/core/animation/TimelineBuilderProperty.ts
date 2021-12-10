@@ -435,14 +435,22 @@ export class TimelineBuilderProperty {
 		const position = timelineBuilder.position();
 		const positionParam = position ? position.toParameter() : undefined;
 		const existingTimeline = AnimatedPropertiesRegister.registeredTimelineForProperty(registerableProp);
-		if (existingTimeline) {
-			existingTimeline.kill();
-			AnimatedPropertiesRegister.deRegisterProp(registerableProp);
-		}
 		const newTimeline = timeline.to(target, vars, positionParam);
 
 		const onStart = () => {
-			AnimatedPropertiesRegister.registerProp(registerableProp, newTimeline);
+			if (existingTimeline) {
+				if (existingTimeline.stoppable) {
+					existingTimeline.timeline.kill();
+					AnimatedPropertiesRegister.deRegisterProp(registerableProp);
+				} else {
+					newTimeline.kill();
+					return;
+				}
+			}
+			AnimatedPropertiesRegister.registerProp(registerableProp, {
+				timeline: newTimeline,
+				stoppable: timelineBuilder.stoppable(),
+			});
 		};
 		const onComplete = () => {
 			AnimatedPropertiesRegister.deRegisterProp(registerableProp);
