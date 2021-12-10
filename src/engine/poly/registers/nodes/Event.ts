@@ -2,6 +2,7 @@ import {CATEGORY_EVENT} from './Category';
 
 import {AnimationEventNode} from '../../../nodes/event/Animation';
 import {AnyEventNode} from '../../../nodes/event/Any';
+import {AudioEventNode} from '../../../nodes/event/Audio';
 import {BlockEventNode} from '../../../nodes/event/Block';
 import {ButtonEventNode} from '../../../nodes/event/Button';
 import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
@@ -39,6 +40,7 @@ import {PostProcessNetworkEventNode} from '../../../nodes/event/PostProcessNetwo
 import {RenderersNetworkEventNode} from '../../../nodes/event/RenderersNetwork';
 
 export interface EventNodeChildrenMap {
+	audio: AudioEventNode;
 	animation: AnimationEventNode;
 	any: AnyEventNode;
 	block: BlockEventNode;
@@ -84,6 +86,7 @@ export class EventRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AnimationEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(AnyEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(AudioEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(BlockEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(ButtonEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
