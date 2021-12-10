@@ -24,6 +24,7 @@ import {
 	SceneMaterialOverrideParamConfig,
 	SceneMaterialOverrideController,
 } from '../manager/utils/Scene/MaterialOverride';
+import {ObjType} from '../../poly/registers/nodes/types/Obj';
 class SceneObjParamConfig extends SceneMaterialOverrideParamConfig(
 	SceneFogParamConfig(SceneEnvParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig))))
 ) {}
@@ -31,8 +32,8 @@ const ParamsConfig = new SceneObjParamConfig();
 
 export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 	paramsConfig = ParamsConfig;
-	static type(): Readonly<'scene'> {
-		return 'scene';
+	static type(): Readonly<ObjType.SCENE> {
+		return ObjType.SCENE;
 	}
 	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 
