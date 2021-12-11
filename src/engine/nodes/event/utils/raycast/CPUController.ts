@@ -6,19 +6,12 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Raycaster, Intersection} from 'three/src/core/Raycaster';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseObjNodeType} from '../../../obj/_Base';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Points} from 'three/src/objects/Points';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {GeoObjNode} from '../../../obj/Geo';
 import {TypeAssert} from '../../../../poly/Assert';
 import {Plane} from 'three/src/math/Plane';
 import {Vector3} from 'three/src/math/Vector3';
 import {ParamType} from '../../../../poly/ParamType';
 import {AttribType, ATTRIBUTE_TYPES} from '../../../../../core/geometry/Constant';
-import {objectTypeFromConstructor, ObjectType} from '../../../../../core/geometry/Constant';
-import {CoreGeometry} from '../../../../../core/geometry/Geometry';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Triangle} from 'three/src/math/Triangle';
 import {BaseCameraObjNodeType} from '../../../obj/_BaseCamera';
 import {Vector3Param} from '../../../../params/Vector3';
 import {Poly} from '../../../../Poly';
@@ -28,7 +21,7 @@ import {CoreType} from '../../../../../core/Type';
 import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {RaycasterForBVH} from '../../../../operations/sop/utils/Bvh/three-mesh-bvh';
-import {CoreObject} from '../../../../../core/geometry/Object';
+import {IntersectDataEventNode} from '../../IntersectData';
 
 interface CursorOffset {
 	offsetX: number;
@@ -130,7 +123,9 @@ export class RaycastCPUController {
 			);
 			const intersection = intersections[0];
 			if (intersection) {
-				this._setPositionParam(intersection.point);
+				if (isBooleanTrue(this._node.pv.tposition)) {
+					this._setPositionParam(intersection.point);
+				}
 
 				if (isBooleanTrue(this._node.pv.geoAttribute)) {
 					this._resolveIntersectAttribute(intersection);
@@ -144,9 +139,9 @@ export class RaycastCPUController {
 	}
 	private _resolveIntersectAttribute(intersection: Intersection) {
 		const attribType = ATTRIBUTE_TYPES[this._node.pv.geoAttributeType];
-		let attribValue = RaycastCPUController.resolveObjectAttribute(intersection, this._node.pv.geoAttributeName);
+		let attribValue = IntersectDataEventNode.resolveObjectAttribute(intersection, this._node.pv.geoAttributeName);
 		if (attribValue == null) {
-			attribValue = RaycastCPUController.resolveGeometryAttribute(
+			attribValue = IntersectDataEventNode.resolveGeometryAttribute(
 				intersection,
 				this._node.pv.geoAttributeName,
 				attribType
@@ -161,105 +156,6 @@ export class RaycastCPUController {
 				case AttribType.STRING: {
 					if (CoreType.isString(attribValue)) {
 						this._node.p.geoAttributeValues.set(attribValue);
-					}
-					return;
-				}
-			}
-			TypeAssert.unreachable(attribType);
-		}
-	}
-	static resolveObjectAttribute(intersection: Intersection, attribName: string) {
-		const value = CoreObject.attribValue(intersection.object, attribName);
-		if (value == null) {
-			return;
-		}
-		if (CoreType.isNumber(value) || CoreType.isString(value)) {
-			return value;
-		}
-		if (CoreType.isArray(value)) {
-			return value[0];
-		}
-		if (CoreType.isVector(value)) {
-			return value.x;
-		}
-	}
-	static resolveGeometryAttribute(intersection: Intersection, attribName: string, attribType: AttribType) {
-		const objectType = objectTypeFromConstructor(intersection.object.constructor);
-		switch (objectType) {
-			case ObjectType.MESH:
-				return this.resolveGeometryAttributeForMesh(intersection, attribName, attribType);
-			case ObjectType.POINTS:
-				return this.resolveGeometryAttributeForPoint(intersection, attribName, attribType);
-		}
-		// TODO: have the raycast cpu controller work with all object types
-		// TypeAssert.unreachable(object_type)
-	}
-
-	private static _vA = new Vector3();
-	private static _vB = new Vector3();
-	private static _vC = new Vector3();
-	private static _uvA = new Vector2();
-	private static _uvB = new Vector2();
-	private static _uvC = new Vector2();
-	private static _hitUV = new Vector2();
-	static resolveGeometryAttributeForMesh(intersection: Intersection, attribName: string, attribType: AttribType) {
-		const geometry = (intersection.object as Mesh).geometry as BufferGeometry;
-		if (geometry) {
-			const attribute = geometry.getAttribute(attribName) as BufferAttribute;
-			if (attribute) {
-				switch (attribType) {
-					case AttribType.NUMERIC: {
-						const position = geometry.getAttribute('position') as BufferAttribute;
-						if (intersection.face) {
-							this._vA.fromBufferAttribute(position, intersection.face.a);
-							this._vB.fromBufferAttribute(position, intersection.face.b);
-							this._vC.fromBufferAttribute(position, intersection.face.c);
-							this._uvA.fromBufferAttribute(attribute, intersection.face.a);
-							this._uvB.fromBufferAttribute(attribute, intersection.face.b);
-							this._uvC.fromBufferAttribute(attribute, intersection.face.c);
-							intersection.uv = Triangle.getUV(
-								intersection.point,
-								this._vA,
-								this._vB,
-								this._vC,
-								this._uvA,
-								this._uvB,
-								this._uvC,
-								this._hitUV
-							);
-							return this._hitUV.x;
-						}
-						return;
-					}
-					case AttribType.STRING: {
-						const core_geometry = new CoreGeometry(geometry);
-						const core_point = core_geometry.points()[0];
-						if (core_point) {
-							return core_point.stringAttribValue(attribName);
-						}
-						return;
-					}
-				}
-				TypeAssert.unreachable(attribType);
-			}
-		}
-	}
-	static resolveGeometryAttributeForPoint(intersection: Intersection, attribName: string, attribType: AttribType) {
-		const geometry = (intersection.object as Points).geometry as BufferGeometry;
-		if (geometry && intersection.index != null) {
-			switch (attribType) {
-				case AttribType.NUMERIC: {
-					const attribute = geometry.getAttribute(attribName);
-					if (attribute) {
-						return attribute.array[intersection.index];
-					}
-					return;
-				}
-				case AttribType.STRING: {
-					const core_geometry = new CoreGeometry(geometry);
-					const core_point = core_geometry.points()[intersection.index];
-					if (core_point) {
-						return core_point.stringAttribValue(attribName);
 					}
 					return;
 				}

@@ -1,4 +1,5 @@
 import {Note} from 'tone/build/esm/core/type/NoteUnits';
+export const DEFAULT_NOTE: Note = 'C1';
 export const ALL_NOTES: Note[] = [
 	'Cbb-4',
 	'Cb-4',

@@ -8,21 +8,23 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {BaseNodeType} from '../_Base';
 import {AudioController} from '../../../core/audio/AudioController';
-import {ALL_NOTES} from '../../../core/audio/Notes';
+import {ALL_NOTES, DEFAULT_NOTE} from '../../../core/audio/Notes';
 
 class PlayInstrumentAudioParamsConfig extends NodeParamsConfig {
 	/** @param note */
-	note = ParamConfig.STRING('', {
+	note = ParamConfig.STRING(DEFAULT_NOTE, {
 		menuString: {
 			entries: ALL_NOTES.sort().map((note) => {
 				return {value: note, name: note};
 			}),
 		},
+		cook: false,
 	});
 	/** @param duration */
 	duration = ParamConfig.FLOAT(0.125, {
 		range: [0, 1],
 		rangeLocked: [true, false],
+		cook: false,
 	});
 	/** @param play the audio */
 	play = ParamConfig.BUTTON(null, {
@@ -36,11 +38,13 @@ class PlayInstrumentAudioParamsConfig extends NodeParamsConfig {
 			PlayInstrumentAudioNode.PARAM_CALLBACK_stop(node as PlayInstrumentAudioNode);
 		},
 	});
+	showNotes = ParamConfig.BOOLEAN(0);
+	showKeys = ParamConfig.BOOLEAN(0);
+	startOctave = ParamConfig.INTEGER(2, {range: [1, 8], rangeLocked: [false, false]});
+	endOctave = ParamConfig.INTEGER(4, {range: [1, 8], rangeLocked: [false, false]});
+	updateNoteFromInstrument = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new PlayInstrumentAudioParamsConfig();
-
-// const notes = ['C2', 'D2', 'E2', 'F2', 'G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3', 'G3'];
-// const notes = ['A6', 'G6', 'F6', 'E6', 'D6', 'C6', 'B5', 'A5', 'G5'];
 
 export class PlayInstrumentAudioNode extends TypedAudioNode<PlayInstrumentAudioParamsConfig> {
 	paramsConfig = ParamsConfig;
@@ -63,7 +67,6 @@ export class PlayInstrumentAudioNode extends TypedAudioNode<PlayInstrumentAudioP
 			return;
 		}
 		await AudioController.start();
-		console.log(`'${this.pv.note}', '${this.pv.duration}'`);
 
 		instrument.triggerAttackRelease(this.pv.note, '8n');
 	}

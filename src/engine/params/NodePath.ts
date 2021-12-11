@@ -70,12 +70,20 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			node = CoreWalker.findNode(this.node, path, this.decomposed_path);
 		}
 
-		const current_found_entity = this._value.node();
-		const newly_found_entity = node;
+		const currentFoundEntity = this._value.node();
+		const newlyFoundEntity = node;
+
+		// if the param refers to its own node, we set an error
+		if (newlyFoundEntity) {
+			if (newlyFoundEntity.graphNodeId() == this.node.graphNodeId()) {
+				this.states.error.set(`param cannot refer to its own node`);
+				return;
+			}
+		}
 
 		this._handleReferences(node, path);
 
-		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
+		if (currentFoundEntity?.graphNodeId() !== newlyFoundEntity?.graphNodeId()) {
 			const dependent_on_found_node = this.options.dependentOnFoundNode();
 
 			const previously_found_node = this._value.node();

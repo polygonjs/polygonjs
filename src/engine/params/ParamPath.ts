@@ -48,34 +48,42 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	protected processRawInput() {
 		if (this._value.path() != this._raw_input) {
 			this._value.set_path(this._raw_input);
-			this.find_target();
+			this.findTarget();
 			this.setDirty();
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
 	protected async processComputation() {
-		this.find_target();
+		this.findTarget();
 	}
-	private find_target() {
+	private findTarget() {
 		if (!this.node) {
 			return;
 		}
 		const path = this._raw_input;
 		let param: BaseParamType | null = null;
-		const path_non_empty = path != null && path !== '';
+		const pathNonEmpty = path != null && path !== '';
 
 		this.scene().referencesController.resetReferenceFromParam(this); // must be before decomposed path is changed
 		this.decomposed_path.reset();
-		if (path_non_empty) {
+		if (pathNonEmpty) {
 			param = CoreWalker.findParam(this.node, path, this.decomposed_path);
 		}
 
-		const current_found_entity = this._value.param();
-		const newly_found_entity = param;
+		const currentFoundEntity = this._value.param();
+		const newlyFoundEntity = param;
+
+		// if the param refers to itself, we set an error
+		if (newlyFoundEntity) {
+			if (newlyFoundEntity.graphNodeId() == this.graphNodeId()) {
+				this.states.error.set(`param cannot refer to itself`);
+				return;
+			}
+		}
 
 		this._handleReferences(param, path);
 
-		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
+		if (currentFoundEntity?.graphNodeId() !== newlyFoundEntity?.graphNodeId()) {
 			const dependent_on_found_node = this.options.dependentOnFoundNode();
 
 			const previously_found_node = this._value.param();

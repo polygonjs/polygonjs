@@ -218,20 +218,25 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// POSITION (common between plane and geo intersection)
 	//
 	//
+	/** @param toggle on to update hit position */
+	tposition = ParamConfig.BOOLEAN(1, {
+		cook: false,
+		...visible_for_cpu(),
+	});
 	/** @param toggle on to set the param to the hit position */
 	tpositionTarget = ParamConfig.BOOLEAN(0, {
 		cook: false,
-		...visible_for_cpu(),
+		...visible_for_cpu({tposition: 1}),
 	});
 	/** @param this will be set to the hit position */
 	position = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
-		...visible_for_cpu({tpositionTarget: 0}),
+		...visible_for_cpu({tposition: 1, tpositionTarget: 0}),
 	});
 	/** @param this parameter will be set to the hit position */
 	positionTarget = ParamConfig.PARAM_PATH('', {
 		cook: false,
-		...visible_for_cpu({tpositionTarget: 1}),
+		...visible_for_cpu({tposition: 1, tpositionTarget: 1}),
 		paramSelection: ParamType.VECTOR3,
 		computeOnDirty: true,
 	});

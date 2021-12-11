@@ -111,9 +111,6 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			});
 		});
 	}
-	setClass(attribClass: AttribClass) {
-		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
-	}
 
 	private _operation: AttribCreateSopOperation | undefined;
 	cook(input_contents: CoreGroup[]) {
@@ -412,6 +409,9 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	// API UTILS
 	//
 	//
+	setClass(attribClass: AttribClass) {
+		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
+	}
 	setType(type: AttribType) {
 		this.p.type.set(ATTRIBUTE_TYPES.indexOf(type));
 	}

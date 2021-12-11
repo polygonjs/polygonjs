@@ -12,6 +12,7 @@ import {DelayEventNode} from '../../../nodes/event/Delay';
 // import {CodeEventNode} from '../../../nodes/event/Code';
 import {DragEventNode} from '../../../nodes/event/Drag';
 import {FirstPersonControlsEventNode} from '../../../nodes/event/FirstPersonControls';
+import {IntersectDataEventNode} from '../../../nodes/event/IntersectData';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 import {LimitEventNode} from '../../../nodes/event/Limit';
 import {MessageEventNode} from '../../../nodes/event/Message';
@@ -52,6 +53,7 @@ export interface EventNodeChildrenMap {
 	drag: DragEventNode;
 	// code: CodeEventNode;
 	firstPersonControls: FirstPersonControlsEventNode;
+	intersectData: IntersectDataEventNode;
 	keyboard: KeyboardEventNode;
 	limit: LimitEventNode;
 	message: MessageEventNode;
@@ -96,6 +98,7 @@ export class EventRegister {
 		// poly.registerNode(CodeEventNode, CATEGORY_EVENT.ADVANCED);
 		poly.registerNode(DragEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(FirstPersonControlsEventNode, CATEGORY_EVENT.CAMERA);
+		poly.registerNode(IntersectDataEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(KeyboardEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(LimitEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(MessageEventNode, CATEGORY_EVENT.MISC);

@@ -84,6 +84,7 @@ export const CATEGORY_SOP = {
 	ADVANCED: 'advanced',
 	ANIMATION: 'animation',
 	ATTRIBUTE: 'attributes',
+	AUDIO: 'audio',
 	DYNAMICS: 'dynamics',
 	HELPERS: 'helpers',
 	INPUT: 'inputs',

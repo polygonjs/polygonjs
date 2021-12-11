@@ -105,10 +105,10 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	}
 
 	private processEventTrigger(event_context: EventContext<Event>) {
-		this._cook_nodes_with_mode();
+		this._cookNodesWithMode();
 	}
 
-	private _cook_nodes_with_mode() {
+	private _cookNodesWithMode() {
 		this._updateResolvedNodes(); // necesarry when triggered on scene load
 		const mode = COOK_MODES[this.pv.cookMode];
 		switch (mode) {
@@ -187,19 +187,20 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	}
 
 	private _onNodeCookComplete(node: BaseNodeType) {
-		const event_context: EventContext<Event> = {value: {node: node}};
-		if (!this._dispatchedFirstNodeCooked) {
+		const registerOnlyFirstCook = isBooleanTrue(this.pv.registerOnlyFirstCooks);
+		const eventContext: EventContext<Event> = {value: {node: node}};
+		if (!this._dispatchedFirstNodeCooked || !registerOnlyFirstCook) {
 			this._dispatchedFirstNodeCooked = true;
-			this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_FIRST_NODE, event_context);
+			this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_FIRST_NODE, eventContext);
 		}
 		const nodeHasCooked = this._cookStateByNodeId.get(node.graphNodeId());
 
-		if (!nodeHasCooked || !isBooleanTrue(this.pv.registerOnlyFirstCooks)) {
-			this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_EACH_NODE, event_context);
+		if (!nodeHasCooked || !registerOnlyFirstCook) {
+			this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_EACH_NODE, eventContext);
 		}
 		this._cookStateByNodeId.set(node.graphNodeId(), true);
 
-		if (!this._dispatchedAllNodesCooked) {
+		if (!this._dispatchedAllNodesCooked || !registerOnlyFirstCook) {
 			if (this._allNodesHaveCooked()) {
 				this._dispatchedAllNodesCooked = true;
 				this.dispatchEventToOutput(NodeCookEventNode.OUTPUT_ALL_NODES, {});

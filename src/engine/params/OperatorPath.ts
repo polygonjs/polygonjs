@@ -88,12 +88,19 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 			}
 		}
 
-		const current_found_entity = mode == OperatorPathMode.PARAM ? this._found_param : this._found_node;
-		const newly_found_entity = mode == OperatorPathMode.PARAM ? param : node;
+		const currentFoundEntity = mode == OperatorPathMode.PARAM ? this._found_param : this._found_node;
+		const newlyFoundEntity = mode == OperatorPathMode.PARAM ? param : node;
+		// if the param refers to its own node, we set an error
+		if (newlyFoundEntity) {
+			if (newlyFoundEntity.graphNodeId() == this.node.graphNodeId()) {
+				this.states.error.set(`param cannot refer to its own node`);
+				return;
+			}
+		}
 
 		this._handleReferences(node, path);
 
-		if (current_found_entity?.graphNodeId() !== newly_found_entity?.graphNodeId()) {
+		if (currentFoundEntity?.graphNodeId() !== newlyFoundEntity?.graphNodeId()) {
 			const dependent_on_found_node = this.options.dependentOnFoundNode();
 
 			if (this._found_node) {

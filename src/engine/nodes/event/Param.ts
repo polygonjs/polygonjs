@@ -13,7 +13,7 @@ import {RampParam} from '../../params/Ramp';
 function previousValueParamOptions() {
 	return {
 		cook: false,
-		// hidden:true
+		hidden: true,
 	};
 }
 

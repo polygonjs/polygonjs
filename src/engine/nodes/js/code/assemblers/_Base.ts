@@ -12,7 +12,6 @@ import {ParamJsNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {JsLineType} from '../utils/LineType';
 import {JsConnectionPoint, JsConnectionPointType} from '../../../utils/io/connections/Js';
-import {NodeTypeMap} from '../../../../containers/utils/ContainerMap';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -33,7 +32,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	shaderNames() {
 		return [];
 	}
-	input_names_for_shader_name(node: NodeTypeMap[NodeContext.JS], shader_name: ShaderName): string[] {
+	input_names_for_shader_name(node: BaseJsNodeType, shader_name: ShaderName): string[] {
 		return [];
 	}
 

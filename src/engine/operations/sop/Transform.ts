@@ -57,25 +57,25 @@ export class TransformSopOperation extends BaseSopOperation {
 	cook(input_contents: CoreGroup[], params: TransformSopParams) {
 		const objects = input_contents[0].objects();
 
-		this._apply_transform(objects, params);
+		this._applyTransform(objects, params);
 
 		return input_contents[0];
 	}
-	private _apply_transform(objects: Object3D[], params: TransformSopParams) {
+	private _applyTransform(objects: Object3D[], params: TransformSopParams) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
 			case TransformTargetType.GEOMETRIES: {
-				return this._update_geometries(objects, params);
+				return this._updateGeometries(objects, params);
 			}
 			case TransformTargetType.OBJECTS: {
-				return this._update_objects(objects, params);
+				return this._updateObjects(objects, params);
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
 
 	private _point_pos = new Vector3();
-	private _update_geometries(objects: Object3D[], params: TransformSopParams) {
+	private _updateGeometries(objects: Object3D[], params: TransformSopParams) {
 		const matrix = this._matrix(params);
 
 		if (params.group.trim() === '') {
@@ -98,7 +98,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _update_objects(objects: Object3D[], params: TransformSopParams) {
+	private _updateObjects(objects: Object3D[], params: TransformSopParams) {
 		const objectMode = TRANSFORM_OBJECT_MODES[params.objectMode];
 		switch (objectMode) {
 			case TransformObjectMode.SET_PARAMS: {
