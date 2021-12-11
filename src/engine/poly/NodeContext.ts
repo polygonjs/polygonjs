@@ -1,6 +1,7 @@
 // nodes
 import {BaseSopNodeType} from '../nodes/sop/_Base';
 import {BaseAnimNodeType} from '../nodes/anim/_Base';
+import {BaseAudioNodeType} from '../nodes/audio/_Base';
 import {BaseCopNodeType} from '../nodes/cop/_Base';
 import {BaseEventNodeType} from '../nodes/event/_Base';
 import {BaseGlNodeType} from '../nodes/gl/_Base';
@@ -11,18 +12,22 @@ import {BaseObjNodeType} from '../nodes/obj/_Base';
 import {BasePostProcessNodeType} from '../nodes/post/_Base';
 import {BaseRopNodeType} from '../nodes/rop/_Base';
 // registers
-import {GeoNodeChildrenMap} from './registers/nodes/Sop';
-import {GlNodeChildrenMap} from './registers/nodes/Gl';
-import {EventNodeChildrenMap} from './registers/nodes/Event';
-import {CopNodeChildrenMap} from './registers/nodes/Cop';
-import {AnimNodeChildrenMap} from './registers/nodes/Anim';
-import {MatNodeChildrenMap} from './registers/nodes/Mat';
-import {ObjNodeChildrenMap} from './registers/nodes/Obj';
-import {PostNodeChildrenMap} from './registers/nodes/Post';
-import {RopNodeChildrenMap} from './registers/nodes/Rop';
+// import {GeoNodeChildrenMap} from './registers/nodes/Sop';
+// import {GlNodeChildrenMap} from './registers/nodes/Gl';
+// import {EventNodeChildrenMap} from './registers/nodes/Event';
+// import {CopNodeChildrenMap} from './registers/nodes/Cop';
+// import {AnimNodeChildrenMap} from './registers/nodes/Anim';
+// import {MatNodeChildrenMap} from './registers/nodes/Mat';
+// import {ObjNodeChildrenMap} from './registers/nodes/Obj';
+// import {PostNodeChildrenMap} from './registers/nodes/Post';
+// import {RopNodeChildrenMap} from './registers/nodes/Rop';
+// import {AudioNodeChildrenMap} from './registers/nodes/Audio';
+import {TypedNode} from '../nodes/_Base';
+// import { JsNodeChildrenMap } from './registers/nodes/Js';
 
 export enum NodeContext {
 	ANIM = 'anim',
+	AUDIO = 'audio',
 	COP = 'cop',
 	EVENT = 'event',
 	GL = 'gl',
@@ -37,6 +42,7 @@ export enum NodeContext {
 
 export type NodeContextUnion =
 	| NodeContext.ANIM
+	| NodeContext.AUDIO
 	| NodeContext.COP
 	| NodeContext.EVENT
 	| NodeContext.GL
@@ -50,6 +56,7 @@ export type NodeContextUnion =
 
 export enum NetworkNodeType {
 	ANIM = 'animationsNetwork',
+	AUDIO = 'audioNetwork',
 	COP = 'copNetwork',
 	EVENT = 'eventsNetwork',
 	MAT = 'materialsNetwork',
@@ -85,8 +92,10 @@ export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [
 	CameraControlsNodeType.MOBILE_JOYSTICK,
 ];
 
-export interface BaseNodeByContextMap {
+export type NodeTypeMapGeneric = {[key in NodeContext]: TypedNode<key, any>};
+export interface BaseNodeByContextMap extends NodeTypeMapGeneric {
 	[NodeContext.ANIM]: BaseAnimNodeType;
+	[NodeContext.AUDIO]: BaseAudioNodeType;
 	[NodeContext.COP]: BaseCopNodeType;
 	[NodeContext.EVENT]: BaseEventNodeType;
 	[NodeContext.GL]: BaseGlNodeType;
@@ -98,19 +107,21 @@ export interface BaseNodeByContextMap {
 	[NodeContext.SOP]: BaseSopNodeType;
 	[NodeContext.ROP]: BaseRopNodeType;
 }
-export interface ChildrenNodeMapByContextMap {
-	[NodeContext.ANIM]: AnimNodeChildrenMap;
-	[NodeContext.COP]: CopNodeChildrenMap;
-	[NodeContext.EVENT]: EventNodeChildrenMap;
-	[NodeContext.GL]: GlNodeChildrenMap;
-	[NodeContext.JS]: BaseJsNodeType;
-	[NodeContext.MANAGER]: {};
-	[NodeContext.MAT]: MatNodeChildrenMap;
-	[NodeContext.OBJ]: ObjNodeChildrenMap;
-	[NodeContext.POST]: PostNodeChildrenMap;
-	[NodeContext.SOP]: GeoNodeChildrenMap;
-	[NodeContext.ROP]: RopNodeChildrenMap;
-}
+
+// export interface ChildrenNodeMapByContextMap {
+// 	[NodeContext.ANIM]: AnimNodeChildrenMap;
+// 	[NodeContext.AUDIO]: AudioNodeChildrenMap;
+// 	[NodeContext.COP]: CopNodeChildrenMap;
+// 	[NodeContext.EVENT]: EventNodeChildrenMap;
+// 	[NodeContext.GL]: GlNodeChildrenMap;
+// 	[NodeContext.JS]: JsNodeChildrenMap;
+// 	[NodeContext.MANAGER]: {};
+// 	[NodeContext.MAT]: MatNodeChildrenMap;
+// 	[NodeContext.OBJ]: ObjNodeChildrenMap;
+// 	[NodeContext.POST]: PostNodeChildrenMap;
+// 	[NodeContext.SOP]: GeoNodeChildrenMap;
+// 	[NodeContext.ROP]: RopNodeChildrenMap;
+// }
 
 export interface NodeContextAndType {
 	context: NodeContext;

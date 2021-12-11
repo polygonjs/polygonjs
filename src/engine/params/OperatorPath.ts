@@ -7,9 +7,10 @@ import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
-import {NodeContext, BaseNodeByContextMap, ChildrenNodeMapByContextMap} from '../poly/NodeContext';
+import {NodeContext, BaseNodeByContextMap} from '../poly/NodeContext';
 import {ParamConstructorMap} from './types/ParamConstructorMap';
 import {CoreType} from '../../core/Type';
+import {NodeChildrenMapByContext} from '../poly/registers/nodes/All';
 
 enum OperatorPathMode {
 	NODE = 'NODE',
@@ -175,16 +176,16 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 	// 	context: N,
 	// 	type: K
 	// ): ChildrenNodeMapByContextMap[N][K] | undefined {
-	found_node_with_context_and_type<N extends NodeContext, K extends keyof ChildrenNodeMapByContextMap[N]>(
+	found_node_with_context_and_type<N extends NodeContext, K extends keyof NodeChildrenMapByContext[N]>(
 		context: N,
 		type_or_types: K | K[]
-	): ChildrenNodeMapByContextMap[N][K] | undefined {
+	): NodeChildrenMapByContext[N][K] | undefined {
 		const node = this.found_node_with_context(context);
 		if (node) {
 			if (CoreType.isArray(type_or_types)) {
 				for (let type of type_or_types) {
 					if (node.type() == type) {
-						return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];
+						return (<unknown>node) as NodeChildrenMapByContext[N][K];
 					}
 				}
 				this.states.error.set(
@@ -193,7 +194,7 @@ export class OperatorPathParam extends TypedPathParam<ParamType.OPERATOR_PATH> {
 			} else {
 				const type = type_or_types;
 				if (node.type() == type) {
-					return (<unknown>node) as ChildrenNodeMapByContextMap[N][K];
+					return (<unknown>node) as NodeChildrenMapByContext[N][K];
 				} else {
 					this.states.error.set(`expected node type to be ${type}, but was instead ${node.type()}`);
 				}

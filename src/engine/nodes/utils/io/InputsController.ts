@@ -1,10 +1,10 @@
 import {TypedNodeConnection} from './NodeConnection';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 import {NodeEvent} from '../../../poly/NodeEvent';
-import {NodeContext} from '../../../poly/NodeContext';
+import {BaseNodeByContextMap, NodeContext} from '../../../poly/NodeContext';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 import {TypedNode} from '../../_Base';
-import {ContainerMap, NodeTypeMap} from '../../../containers/utils/ContainerMap';
+import {ContainerMap} from '../../../containers/utils/ContainerMap';
 import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
 import {BaseConnectionPoint} from './connections/_Base';
@@ -16,7 +16,7 @@ const MAX_INPUTS_COUNT_UNSET = 0;
 export class InputsController<NC extends NodeContext> {
 	private _graph_node: CoreGraphNode | undefined;
 	private _graph_node_inputs: CoreGraphNode[] = [];
-	private _inputs: Array<NodeTypeMap[NC] | null> = [];
+	private _inputs: Array<BaseNodeByContextMap[NC] | null> = [];
 	private _has_named_inputs: boolean = false;
 	private _named_input_connection_points: ConnectionPointTypeMap[NC][] | undefined;
 	private _minInputsCount: number = 0;
@@ -219,7 +219,7 @@ export class InputsController<NC extends NodeContext> {
 			} else {
 				if (existing_input_indices.length > 0) {
 					const promises: Promise<ContainerMap[NC] | null>[] = [];
-					let input: NodeTypeMap[NC] | null;
+					let input: BaseNodeByContextMap[NC] | null;
 					for (let i = 0; i < this._inputs.length; i++) {
 						input = this._inputs[i];
 						if (input) {
@@ -294,7 +294,7 @@ export class InputsController<NC extends NodeContext> {
 
 	setInput(
 		input_index_or_name: number | string,
-		node: NodeTypeMap[NC] | null,
+		node: BaseNodeByContextMap[NC] | null,
 		output_index_or_name: number | string = 0
 	) {
 		const input_index = this.get_input_index(input_index_or_name) || 0;
@@ -388,9 +388,9 @@ export class InputsController<NC extends NodeContext> {
 		}
 	}
 
-	remove_input(node: NodeTypeMap[NC]) {
+	remove_input(node: BaseNodeByContextMap[NC]) {
 		const inputs = this.inputs();
-		let input: NodeTypeMap[NC] | null;
+		let input: BaseNodeByContextMap[NC] | null;
 		for (let i = 0; i < inputs.length; i++) {
 			input = inputs[i];
 			if (input != null && node != null) {
@@ -401,10 +401,10 @@ export class InputsController<NC extends NodeContext> {
 		}
 	}
 
-	input(input_index: number): NodeTypeMap[NC] | null {
+	input(input_index: number): BaseNodeByContextMap[NC] | null {
 		return this._inputs[input_index];
 	}
-	named_input(input_name: string): NodeTypeMap[NC] | null {
+	named_input(input_name: string): BaseNodeByContextMap[NC] | null {
 		if (this.hasNamedInputs()) {
 			const input_index = this.get_input_index(input_name);
 			return this._inputs[input_index];

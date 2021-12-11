@@ -118,6 +118,7 @@ import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 // networks
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
+import {AudioNetworkSopNode} from '../../../nodes/sop/AudioNetwork';
 import {CopNetworkSopNode} from '../../../nodes/sop/CopNetwork';
 import {EventsNetworkSopNode} from '../../../nodes/sop/EventsNetwork';
 import {MaterialsNetworkSopNode} from '../../../nodes/sop/MaterialsNetwork';
@@ -239,6 +240,7 @@ export interface GeoNodeChildrenMap {
 
 	// networks
 	animationsNetwork: AnimationsNetworkSopNode;
+	audioNetwork: AudioNetworkSopNode;
 	copNetwork: CopNetworkSopNode;
 	eventsNetwork: EventsNetworkSopNode;
 	materialsNetwork: MaterialsNetworkSopNode;
@@ -489,6 +491,7 @@ export class SopRegister {
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		// networks
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(AudioNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(CopNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(EventsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(MaterialsNetworkSopNode, CATEGORY_SOP.NETWORK);

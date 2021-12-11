@@ -1,6 +1,6 @@
-import {NodeContext} from '../../../poly/NodeContext';
+import {BaseNodeByContextMap, NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
-import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
+// import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 interface DisconnectionOptions {
 	setInput?: boolean;
@@ -34,11 +34,11 @@ export class TypedNodeConnection<NC extends NodeContext> {
 		return this._id;
 	}
 
-	get node_src(): NodeTypeMap[NC] {
-		return (<unknown>this._node_src) as NodeTypeMap[NC];
+	get node_src(): BaseNodeByContextMap[NC] {
+		return (<unknown>this._node_src) as BaseNodeByContextMap[NC];
 	}
-	get node_dest(): NodeTypeMap[NC] {
-		return (<unknown>this._node_dest) as NodeTypeMap[NC];
+	get node_dest(): BaseNodeByContextMap[NC] {
+		return (<unknown>this._node_dest) as BaseNodeByContextMap[NC];
 	}
 	get output_index() {
 		return this._output_index;

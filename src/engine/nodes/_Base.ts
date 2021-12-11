@@ -18,7 +18,7 @@ import {ParamsValueAccessor, ParamsValueAccessorType} from './utils/params/Param
 // import {ProcessingContext} from './utils/ProcessingContext';
 import {IOController} from './utils/io/IOController';
 import {NodeEvent} from '../poly/NodeEvent';
-import {NodeContext} from '../poly/NodeContext';
+import {BaseNodeByContextMap, NodeContext} from '../poly/NodeContext';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
 
 export interface NodeDeletedEmitData {
@@ -43,7 +43,7 @@ import {ContainableMap} from '../containers/utils/ContainableMap';
 import {ParamOptions} from '../params/utils/OptionsController';
 import {ParamType} from '../poly/ParamType';
 import {DisplayNodeController} from './utils/DisplayNodeController';
-import {NodeTypeMap} from '../containers/utils/ContainerMap';
+// import {NodeTypeMap} from '../containers/utils/ContainerMap';
 import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
 import {ModuleName} from '../poly/registers/modules/Common';
 import {BasePersistedConfig} from './utils/PersistedConfig';
@@ -359,12 +359,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	 * returns a sibling node
 	 *
 	 */
-	nodeSibling(name: string): NodeTypeMap[NC] | null {
+	nodeSibling(name: string): BaseNodeByContextMap[NC] | null {
 		const parent = this.parent();
 		if (parent) {
 			const node = parent.childrenController?.childByName(name);
 			if (node) {
-				return node as NodeTypeMap[NC];
+				return node as BaseNodeByContextMap[NC];
 			}
 		}
 		return null;
@@ -383,7 +383,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	 */
 	setInput(
 		input_index_or_name: number | string,
-		node: NodeTypeMap[NC] | null,
+		node: BaseNodeByContextMap[NC] | null,
 		output_index_or_name: number | string = 0
 	) {
 		this.io.inputs.setInput(input_index_or_name, node, output_index_or_name);

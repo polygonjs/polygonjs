@@ -1,9 +1,9 @@
 import {BaseNodeType} from '../../_Base';
-import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
+// import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 
 type Callback = () => void;
 import {CoreWalker} from '../../../../core/Walker';
-import {NodeContext} from '../../../poly/NodeContext';
+import {BaseNodeByContextMap, NodeContext} from '../../../poly/NodeContext';
 
 export class HierarchyParentController {
 	private _parent: BaseNodeType | null = null;
@@ -23,10 +23,10 @@ export class HierarchyParentController {
 			}
 		}
 	}
-	firstAncestorWithContext<N extends NodeContext>(context: N): NodeTypeMap[N] | null {
+	firstAncestorWithContext<N extends NodeContext>(context: N): BaseNodeByContextMap[N] | null {
 		if (this._parent) {
 			if (this._parent.context() == context) {
-				return this._parent as NodeTypeMap[N];
+				return this._parent as BaseNodeByContextMap[N];
 			} else {
 				return this._parent.parentController.firstAncestorWithContext(context);
 			}

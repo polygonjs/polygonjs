@@ -7,6 +7,12 @@ export const CATEGORY_ANIM = {
 	PROP: 'prop',
 	TIMING: 'timing',
 };
+export const CATEGORY_AUDIO = {
+	EFFECTS: 'effects',
+	INPUTS: 'inputs',
+	INSTRUMENTS: 'instruments',
+	MISC: 'misc',
+};
 
 export const CATEGORY_COP = {
 	ADVANCED: 'advanced',

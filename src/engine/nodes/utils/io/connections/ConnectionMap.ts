@@ -19,6 +19,7 @@ type ConnectionPointTypeMapGeneric = {
 
 export interface ConnectionPointTypeMap extends ConnectionPointTypeMapGeneric {
 	[NodeContext.ANIM]: undefined;
+	[NodeContext.AUDIO]: undefined;
 	[NodeContext.COP]: undefined;
 	[NodeContext.EVENT]: BaseEventConnectionPoint;
 	[NodeContext.GL]: BaseGlConnectionPoint;
@@ -36,6 +37,7 @@ type ConnectionPointEnumMapGeneric = {
 
 export interface ConnectionPointEnumMap extends ConnectionPointEnumMapGeneric {
 	[NodeContext.ANIM]: undefined;
+	[NodeContext.AUDIO]: undefined;
 	[NodeContext.COP]: undefined;
 	[NodeContext.EVENT]: EventConnectionPointType;
 	[NodeContext.GL]: GlConnectionPointType;
@@ -52,6 +54,7 @@ type IConnectionPointEnumMap = {[key in NodeContextUnion]: ConnectionPointEnumMa
 
 export const DEFAULT_CONNECTION_POINT_ENUM_MAP: IConnectionPointEnumMap = {
 	[NodeContext.ANIM]: undefined,
+	[NodeContext.AUDIO]: undefined,
 	[NodeContext.COP]: undefined,
 	[NodeContext.EVENT]: EventConnectionPointType.BASE,
 	[NodeContext.GL]: GlConnectionPointType.FLOAT,
