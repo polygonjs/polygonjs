@@ -17,6 +17,14 @@ import {SwitchAudioNode} from '../../../nodes/audio/Switch';
 import {SynthAudioNode} from '../../../nodes/audio/Synth';
 import {ToDestinationAudioNode} from '../../../nodes/audio/ToDestination';
 import {VolumeAudioNode} from '../../../nodes/audio/Volume';
+// networks
+import {AnimationsNetworkAudioNode} from '../../../nodes/audio/AnimationsNetwork';
+import {AudioNetworkAudioNode} from '../../../nodes/audio/AudioNetwork';
+import {CopNetworkAudioNode} from '../../../nodes/audio/CopNetwork';
+import {EventsNetworkAudioNode} from '../../../nodes/audio/EventsNetwork';
+import {MaterialsNetworkAudioNode} from '../../../nodes/audio/MaterialsNetwork';
+import {PostProcessNetworkAudioNode} from '../../../nodes/audio/PostProcessNetwork';
+import {RenderersNetworkAudioNode} from '../../../nodes/audio/RenderersNetwork';
 
 export interface AudioNodeChildrenMap {
 	AMSynth: AMSynthAudioNode;
@@ -36,6 +44,14 @@ export interface AudioNodeChildrenMap {
 	switch: SwitchAudioNode;
 	toDestination: ToDestinationAudioNode;
 	volume: VolumeAudioNode;
+	// networks
+	animationsNetwork: AnimationsNetworkAudioNode;
+	audioNetwork: AudioNetworkAudioNode;
+	copNetwork: CopNetworkAudioNode;
+	eventsNetwork: EventsNetworkAudioNode;
+	materialsNetwork: MaterialsNetworkAudioNode;
+	postProcessNetwork: PostProcessNetworkAudioNode;
+	renderersNetwork: RenderersNetworkAudioNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -64,5 +80,13 @@ export class AudioRegister {
 		poly.registerNode(SynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
 		poly.registerNode(ToDestinationAudioNode, CATEGORY_AUDIO.EFFECTS);
 		poly.registerNode(VolumeAudioNode, CATEGORY_AUDIO.MISC);
+		// networks
+		poly.registerNode(AnimationsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
+		poly.registerNode(AudioNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
+		poly.registerNode(CopNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
+		poly.registerNode(EventsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
+		poly.registerNode(MaterialsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
+		poly.registerNode(PostProcessNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
+		poly.registerNode(RenderersNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
 	}
 }

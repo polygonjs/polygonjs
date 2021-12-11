@@ -12,6 +12,7 @@ export const CATEGORY_AUDIO = {
 	INPUTS: 'inputs',
 	INSTRUMENTS: 'instruments',
 	MISC: 'misc',
+	NETWORK,
 };
 
 export const CATEGORY_COP = {

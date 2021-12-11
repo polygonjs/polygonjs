@@ -34,6 +34,7 @@ import {ViewerEventNode} from '../../../nodes/event/Viewer';
 import {WindowEventNode} from '../../../nodes/event/Window';
 // networks
 import {AnimationsNetworkEventNode} from '../../../nodes/event/AnimationsNetwork';
+import {AudioNetworkEventNode} from '../../../nodes/event/AudioNetwork';
 import {CopNetworkEventNode} from '../../../nodes/event/CopNetwork';
 import {EventsNetworkEventNode} from '../../../nodes/event/EventsNetwork';
 import {MaterialsNetworkEventNode} from '../../../nodes/event/MaterialsNetwork';
@@ -76,6 +77,7 @@ export interface EventNodeChildrenMap {
 
 	// networks
 	animationsNetwork: AnimationsNetworkEventNode;
+	audioNetwork: AudioNetworkEventNode;
 	copNetwork: CopNetworkEventNode;
 	eventsNetwork: EventsNetworkEventNode;
 	materialsNetwork: MaterialsNetworkEventNode;
@@ -120,6 +122,7 @@ export class EventRegister {
 		poly.registerNode(WindowEventNode, CATEGORY_EVENT.INPUT);
 		// networks
 		poly.registerNode(AnimationsNetworkEventNode, CATEGORY_EVENT.NETWORK);
+		poly.registerNode(AudioNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(CopNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(EventsNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(MaterialsNetworkEventNode, CATEGORY_EVENT.NETWORK);

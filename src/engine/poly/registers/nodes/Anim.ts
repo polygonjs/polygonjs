@@ -15,6 +15,7 @@ import {SwitchAnimNode} from '../../../nodes/anim/Switch';
 import {TargetAnimNode} from '../../../nodes/anim/Target';
 // networks
 import {AnimationsNetworkAnimNode} from '../../../nodes/anim/AnimationsNetwork';
+import {AudioNetworkAnimNode} from '../../../nodes/anim/AudioNetwork';
 import {CopNetworkAnimNode} from '../../../nodes/anim/CopNetwork';
 import {EventsNetworkAnimNode} from '../../../nodes/anim/EventsNetwork';
 import {MaterialsNetworkAnimNode} from '../../../nodes/anim/MaterialsNetwork';
@@ -37,6 +38,7 @@ export interface AnimNodeChildrenMap {
 	target: TargetAnimNode;
 	// networks
 	animationsNetwork: AnimationsNetworkAnimNode;
+	audioNetwork: AudioNetworkAnimNode;
 	copNetwork: CopNetworkAnimNode;
 	eventsNetwork: EventsNetworkAnimNode;
 	materialsNetwork: MaterialsNetworkAnimNode;
@@ -62,6 +64,7 @@ export class AnimRegister {
 		poly.registerNode(TargetAnimNode, CATEGORY_ANIM.PROP);
 		// networks
 		poly.registerNode(AnimationsNetworkAnimNode, CATEGORY_ANIM.NETWORK);
+		poly.registerNode(AudioNetworkAnimNode, CATEGORY_ANIM.NETWORK);
 		poly.registerNode(CopNetworkAnimNode, CATEGORY_ANIM.NETWORK);
 		poly.registerNode(EventsNetworkAnimNode, CATEGORY_ANIM.NETWORK);
 		poly.registerNode(MaterialsNetworkAnimNode, CATEGORY_ANIM.NETWORK);

@@ -24,6 +24,7 @@ import {CubeCameraObjNode} from '../../../nodes/obj/CubeCamera';
 
 // networks
 import {AnimationsNetworkObjNode} from '../../../nodes/obj/AnimationsNetwork';
+import {AudioNetworkObjNode} from '../../../nodes/obj/AudioNetwork';
 import {CopNetworkObjNode} from '../../../nodes/obj/CopNetwork';
 import {EventsNetworkObjNode} from '../../../nodes/obj/EventsNetwork';
 import {MaterialsNetworkObjNode} from '../../../nodes/obj/MaterialsNetwork';
@@ -52,6 +53,7 @@ export interface ObjNodeChildrenMap {
 	spotLight: SpotLightObjNode;
 	// networks
 	animationsNetwork: AnimationsNetworkObjNode;
+	audioNetwork: AudioNetworkObjNode;
 	copNetwork: CopNetworkObjNode;
 	eventsNetwork: EventsNetworkObjNode;
 	materialsNetwork: MaterialsNetworkObjNode;
@@ -89,6 +91,7 @@ export class ObjRegister {
 
 		// networks
 		poly.registerNode(AnimationsNetworkObjNode, CATEGORY_OBJ.NETWORK);
+		poly.registerNode(AudioNetworkObjNode, CATEGORY_OBJ.NETWORK);
 		poly.registerNode(CopNetworkObjNode, CATEGORY_OBJ.NETWORK);
 		poly.registerNode(EventsNetworkObjNode, CATEGORY_OBJ.NETWORK);
 		poly.registerNode(MaterialsNetworkObjNode, CATEGORY_OBJ.NETWORK);

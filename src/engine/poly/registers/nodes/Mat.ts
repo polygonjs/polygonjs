@@ -25,6 +25,7 @@ import {VolumeBuilderMatNode} from '../../../nodes/mat/VolumeBuilder';
 
 // networks
 import {AnimationsNetworkMatNode} from '../../../nodes/mat/AnimationsNetwork';
+import {AudioNetworkMatNode} from '../../../nodes/mat/AudioNetwork';
 import {CopNetworkMatNode} from '../../../nodes/mat/CopNetwork';
 import {EventsNetworkMatNode} from '../../../nodes/mat/EventsNetwork';
 import {MaterialsNetworkMatNode} from '../../../nodes/mat/MaterialsNetwork';
@@ -56,6 +57,7 @@ export interface MatNodeChildrenMap {
 	volumeBuilder: VolumeBuilderMatNode;
 	// networks
 	animationsNetwork: AnimationsNetworkMatNode;
+	audioNetwork: AudioNetworkMatNode;
 	copNetwork: CopNetworkMatNode;
 	eventsNetwork: EventsNetworkMatNode;
 	materialsNetwork: MaterialsNetworkMatNode;
@@ -90,6 +92,7 @@ export class MatRegister {
 		poly.registerNode(VolumeBuilderMatNode, CATEGORY_MAT.VOLUME);
 		// networks
 		poly.registerNode(AnimationsNetworkMatNode, CATEGORY_MAT.NETWORK);
+		poly.registerNode(AudioNetworkMatNode, CATEGORY_MAT.NETWORK);
 		poly.registerNode(CopNetworkMatNode, CATEGORY_MAT.NETWORK);
 		poly.registerNode(EventsNetworkMatNode, CATEGORY_MAT.NETWORK);
 		poly.registerNode(MaterialsNetworkMatNode, CATEGORY_MAT.NETWORK);

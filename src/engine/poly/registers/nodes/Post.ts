@@ -30,6 +30,7 @@ import {VerticalBlurPostNode} from '../../../nodes/post/VerticalBlur';
 import {VignettePostNode} from '../../../nodes/post/Vignette';
 // networks
 import {AnimationsNetworkPostNode} from '../../../nodes/post/AnimationsNetwork';
+import {AudioNetworkPostNode} from '../../../nodes/post/AudioNetwork';
 import {CopNetworkPostNode} from '../../../nodes/post/CopNetwork';
 import {EventsNetworkPostNode} from '../../../nodes/post/EventsNetwork';
 import {MaterialsNetworkPostNode} from '../../../nodes/post/MaterialsNetwork';
@@ -67,6 +68,7 @@ export interface PostNodeChildrenMap {
 	vignette: VignettePostNode;
 	// networks
 	animationsNetwork: AnimationsNetworkPostNode;
+	audioNetwork: AudioNetworkPostNode;
 	copNetwork: CopNetworkPostNode;
 	eventsNetwork: EventsNetworkPostNode;
 	materialsNetwork: MaterialsNetworkPostNode;
@@ -107,6 +109,7 @@ export class PostRegister {
 		poly.registerNode(VignettePostNode, CATEGORY_POST.EFFECT);
 		// netwoks
 		poly.registerNode(AnimationsNetworkPostNode, CATEGORY_POST.NETWORK);
+		poly.registerNode(AudioNetworkPostNode, CATEGORY_POST.NETWORK);
 		poly.registerNode(CopNetworkPostNode, CATEGORY_POST.NETWORK);
 		poly.registerNode(EventsNetworkPostNode, CATEGORY_POST.NETWORK);
 		poly.registerNode(MaterialsNetworkPostNode, CATEGORY_POST.NETWORK);

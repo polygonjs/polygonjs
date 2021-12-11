@@ -5,6 +5,7 @@ import {CSS2DRendererRopNode} from '../../../nodes/rop/CSS2DRenderer';
 import {Css3DRendererRopNode} from '../../../nodes/rop/CSS3DRenderer';
 // networks
 import {AnimationsNetworkRopNode} from '../../../nodes/rop/AnimationsNetwork';
+import {AudioNetworkRopNode} from '../../../nodes/rop/AudioNetwork';
 import {EventsNetworkRopNode} from '../../../nodes/rop/EventsNetwork';
 import {MaterialsNetworkRopNode} from '../../../nodes/rop/MaterialsNetwork';
 import {PostProcessNetworkRopNode} from '../../../nodes/rop/PostProcessNetwork';
@@ -17,6 +18,7 @@ export interface RopNodeChildrenMap {
 	WebGLRenderer: WebGLRendererRopNode;
 	// networks
 	animationsNetwork: AnimationsNetworkRopNode;
+	audioNetwork: AudioNetworkRopNode;
 	copNetwork: CopNetworkRopNode;
 	eventsNetwork: EventsNetworkRopNode;
 	materialsNetwork: MaterialsNetworkRopNode;
@@ -32,6 +34,7 @@ export class RopRegister {
 		poly.registerNode(WebGLRendererRopNode, CATEGORY_ROP.WEBGL);
 		// networks
 		poly.registerNode(AnimationsNetworkRopNode, CATEGORY_ROP.NETWORK);
+		poly.registerNode(AudioNetworkRopNode, CATEGORY_ROP.NETWORK);
 		poly.registerNode(CopNetworkRopNode, CATEGORY_ROP.NETWORK);
 		poly.registerNode(EventsNetworkRopNode, CATEGORY_ROP.NETWORK);
 		poly.registerNode(MaterialsNetworkRopNode, CATEGORY_ROP.NETWORK);

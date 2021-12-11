@@ -19,6 +19,7 @@ import {VideoCopNode} from '../../../nodes/cop/Video';
 import {WebCamCopNode} from '../../../nodes/cop/WebCam';
 // networks
 import {AnimationsNetworkCopNode} from '../../../nodes/cop/AnimationsNetwork';
+import {AudioNetworkCopNode} from '../../../nodes/cop/AudioNetwork';
 import {EventsNetworkCopNode} from '../../../nodes/cop/EventsNetwork';
 import {CopNetworkCopNode} from '../../../nodes/cop/CopNetwork';
 import {MaterialsNetworkCopNode} from '../../../nodes/cop/MaterialsNetwork';
@@ -45,6 +46,7 @@ export interface CopNodeChildrenMap {
 	webCam: WebCamCopNode;
 	// networks
 	animationsNetwork: AnimationsNetworkCopNode;
+	audioNetwork: AudioNetworkCopNode;
 	copNetwork: CopNetworkCopNode;
 	eventsNetwork: EventsNetworkCopNode;
 	materialsNetwork: MaterialsNetworkCopNode;
@@ -74,6 +76,7 @@ export class CopRegister {
 		poly.registerNode(WebCamCopNode, CATEGORY_COP.ADVANCED);
 		// networks
 		poly.registerNode(AnimationsNetworkCopNode, CATEGORY_COP.NETWORK);
+		poly.registerNode(AudioNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(CopNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(EventsNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(MaterialsNetworkCopNode, CATEGORY_COP.NETWORK);
