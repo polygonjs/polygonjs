@@ -180,7 +180,7 @@ export class RenderController {
 
 	private _super_sampling_size = new Vector2();
 	createRenderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer | undefined {
-		const gl = Poly.renderersController.createRenderingContext(canvas);
+		const gl = Poly.renderersController.getRenderingContext(canvas);
 		if (!gl) {
 			console.error('failed to create webgl context');
 			return;
@@ -190,7 +190,7 @@ export class RenderController {
 		if (isBooleanTrue(this.node.pv.setRenderer)) {
 			this.update_renderer();
 			if (this._resolved_renderer_rop) {
-				renderer = this._resolved_renderer_rop.createRenderer(canvas, gl);
+				renderer = this._resolved_renderer_rop.createRenderer(this.node, canvas, gl);
 			}
 		}
 		if (!renderer) {

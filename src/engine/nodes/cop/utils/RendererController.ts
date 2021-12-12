@@ -38,7 +38,8 @@ export class CopRendererController {
 		if (renderer) {
 			return renderer;
 		} else {
-			return await Poly.renderersController.waitForRenderer();
+			const renderer = await Poly.renderersController.waitForRenderer();
+			return renderer;
 		}
 	}
 

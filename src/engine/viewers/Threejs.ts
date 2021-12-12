@@ -1,4 +1,3 @@
-import {PolyScene} from '../scene/PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
 import {ViewerControlsController} from './utils/ControlsController';
 import {TypedViewer} from './_Base';
@@ -15,49 +14,45 @@ declare global {
 }
 
 export interface ThreejsViewerProperties {
-	autoRender: boolean;
+	autoRender?: boolean;
 }
 
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _request_animation_frame_id: number | undefined;
-	private _do_render: boolean = true;
+	private _doRender: boolean = true;
 	private _clock = new Clock();
 	private _delta: number = 0;
 
 	private _animate_method: () => void = this.animate.bind(this);
+	protected _canvasIdPrefix() {
+		return 'ThreejsViewer';
+	}
+	constructor(protected _cameraNode: BaseThreejsCameraObjNodeType, private _properties?: ThreejsViewerProperties) {
+		super(_cameraNode);
 
-	constructor(
-		_container: HTMLElement,
-		protected _scene: PolyScene,
-		protected _camera_node: BaseThreejsCameraObjNodeType,
-		private _properties?: ThreejsViewerProperties
-	) {
-		super(_container, _scene, _camera_node);
+		this._doRender = this._properties != null ? this._properties.autoRender || true : true;
 
-		this._do_render = this._properties != null ? this._properties.autoRender : true;
-
-		this._canvas = document.createElement('canvas');
-		this._canvas.id = `canvas_id_${Math.random()}`.replace('.', '_');
-		this._canvas.style.display = 'block';
-		this._canvas.style.outline = 'none';
-
-		this._container.appendChild(this._canvas);
-		this._container.classList.add(CSS_CLASS);
 		// this._container.style.height = '100%'; // this should be app specific
-
+	}
+	mount(element: HTMLElement) {
+		super.mount(element);
+		this._domElement?.appendChild(this.canvas());
+		this._domElement?.classList.add(CSS_CLASS);
 		this._build();
 		this._setEvents();
 	}
+
 	get controlsController(): ViewerControlsController {
 		return (this._controls_controller = this._controls_controller || new ViewerControlsController(this));
 	}
 
 	public _build() {
-		this._init_display();
+		this._initDisplay();
 		this.activate();
 	}
 
 	dispose() {
+		this.scene().viewersRegister.unregisterViewer(this);
 		this._cancel_animate();
 		this.controlsController.dispose();
 		this._disposeEvents();
@@ -65,7 +60,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		super.dispose();
 	}
 	get cameraControlsController() {
-		return this._camera_node.controls_controller;
+		return this._cameraNode.controls_controller;
 	}
 
 	private _setEvents() {
@@ -79,16 +74,16 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	}
 	private _onResizeBound = this.onResize.bind(this);
 	onResize() {
-		const canvas = this.canvas();
+		const canvas = this._canvas;
 		if (!canvas) {
 			return;
 		}
 		this.camerasController.computeSizeAndAspect();
-		this._camera_node.renderController.set_renderer_size(canvas, this.camerasController.size);
+		this._cameraNode.renderController.set_renderer_size(canvas, this.camerasController.size);
 		this.camerasController.updateCameraAspect();
 	}
 
-	private _init_display() {
+	private _initDisplay() {
 		if (!this._canvas) {
 			console.warn('no canvas found for viewer');
 			return;
@@ -96,7 +91,11 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this.camerasController.computeSizeAndAspect();
 		const size: Vector2 = this.camerasController.size;
 
-		this._camera_node.renderController.createRenderer(this._canvas, size);
+		const controller = this._cameraNode.renderController;
+		const existingRenderer = controller.renderer(this._canvas);
+		if (!existingRenderer) {
+			controller.createRenderer(this._canvas, size);
+		}
 		// this.canvas_context = canvas.getContext('2d')
 
 		// init renderer
@@ -131,14 +130,14 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	}
 
 	setAutoRender(state = true) {
-		this._do_render = state;
-		if (this._do_render) {
+		this._doRender = state;
+		if (this._doRender) {
 			this.animate();
 		}
 	}
 
 	animate() {
-		if (this._do_render) {
+		if (this._doRender) {
 			this._delta = this._clock.getDelta();
 			this._request_animation_frame_id = requestAnimationFrame(this._animate_method);
 			this._onBeforeTickCallbacks?.forEach((c) => c(this._delta));
@@ -150,12 +149,12 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	}
 
 	private _cancel_animate() {
-		this._do_render = false;
+		this._doRender = false;
 		if (this._request_animation_frame_id) {
 			cancelAnimationFrame(this._request_animation_frame_id);
 		}
 		if (this._canvas) {
-			this._camera_node.renderController.deleteRenderer(this._canvas);
+			this._cameraNode.renderController.deleteRenderer(this._canvas);
 		}
 	}
 
@@ -165,7 +164,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 			const size = this.camerasController.size;
 			const aspect = this.camerasController.aspect;
-			this._camera_node.renderController.render(this._canvas, size, aspect, this._renderObjectOverride);
+			this._cameraNode.renderController.render(this._canvas, size, aspect, this._renderObjectOverride);
 
 			this._onAfterRenderCallbacks?.forEach((c) => c(delta));
 		} else {
@@ -175,7 +174,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 	renderer() {
 		if (this._canvas) {
-			return this._camera_node.renderController.renderer(this._canvas);
+			return this._cameraNode.renderController.renderer(this._canvas);
 		}
 	}
 }

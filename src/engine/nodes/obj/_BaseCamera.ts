@@ -158,6 +158,10 @@ export class BaseThreejsCameraObjParamsConfig extends CameraPostProcessParamConf
 	)
 ) {}
 
+interface BaseViewerOptions {
+	element?: HTMLElement;
+}
+
 export abstract class TypedCameraObjNode<
 	O extends OrthoOrPerspCamera,
 	K extends BaseCameraObjParamsConfig
@@ -200,11 +204,15 @@ export abstract class TypedCameraObjNode<
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
 		CoreTransform.setParamsFromObject(this._object, this);
 	}
-	abstract createViewer(element: HTMLElement): BaseViewerType;
+	abstract createViewer(options?: BaseViewerOptions): BaseViewerType;
 
 	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeType, param: BaseParamType) {
 		(node.object as any)[param.name()] = (node.pv as any)[param.name()];
 	}
+}
+
+interface ThreejsViewerOptions extends BaseViewerOptions {
+	viewerProperties?: ThreejsViewerProperties;
 }
 
 export class TypedThreejsCameraObjNode<
@@ -308,8 +316,15 @@ export class TypedThreejsCameraObjNode<
 		}
 	}
 
-	createViewer(element: HTMLElement, viewer_properties?: ThreejsViewerProperties): ThreejsViewer {
-		return new ThreejsViewer(element, this.scene(), this, viewer_properties);
+	createViewer(options?: ThreejsViewerOptions): ThreejsViewer {
+		const viewer = new ThreejsViewer(this, options?.viewerProperties || {});
+		const element = options?.element;
+		this.scene().viewersRegister.registerViewer(viewer);
+		if (element) {
+			viewer.mount(element);
+		}
+
+		return viewer;
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
 		node.postProcessController.reset();

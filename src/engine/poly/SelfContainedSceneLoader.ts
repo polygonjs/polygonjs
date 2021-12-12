@@ -148,7 +148,7 @@ export class SelfContainedScenesLoader {
 			console.warn('no master camera found');
 			return;
 		}
-		const viewer = cameraNode.createViewer(element);
+		const viewer = cameraNode.createViewer({element});
 		scene.play();
 
 		// we attach scene and viewer to the element

@@ -1,10 +1,8 @@
 import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
 import {WebGLMultisampleRenderTarget} from 'three/src/renderers/WebGLMultisampleRenderTarget';
-import {PolyDictionary} from '../../types/GlobalTypes';
-
 interface POLYWebGLRenderer extends WebGLRenderer {
-	_polygon_id: number;
+	_polygonId: number;
 }
 
 const CONTEXT_OPTIONS = {
@@ -23,7 +21,8 @@ enum WebGLContext {
 
 export class RenderersController {
 	private _next_renderer_id: number = 0;
-	private _renderers: PolyDictionary<WebGLRenderer> = {};
+	private _renderers: Map<number, WebGLRenderer> = new Map();
+	private _firstRenderer: WebGLRenderer | null = null;
 	private _printDebug = false;
 	private _require_webgl2: boolean = false;
 	private _resolves: Callback[] = [];
@@ -68,7 +67,7 @@ export class RenderersController {
 		return renderer;
 	}
 
-	createRenderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
+	getRenderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
 		let gl: WebGLRenderingContext | null = null;
 		if (this._require_webgl2) {
 			gl = this._getRenderingContextWebgl(canvas, true);
@@ -106,27 +105,42 @@ export class RenderersController {
 	}
 
 	registerRenderer(renderer: WebGLRenderer) {
-		if ((renderer as POLYWebGLRenderer)._polygon_id) {
+		if ((renderer as POLYWebGLRenderer)._polygonId) {
 			throw new Error('render already registered');
 		}
-		(renderer as POLYWebGLRenderer)._polygon_id = this._next_renderer_id += 1;
+		const nextId = (this._next_renderer_id += 1);
+		(renderer as POLYWebGLRenderer)._polygonId = nextId;
 
-		this._renderers[(renderer as POLYWebGLRenderer)._polygon_id] = renderer;
+		this._renderers.set(nextId, renderer);
 
 		if (Object.keys(this._renderers).length == 1) {
 			this.flush_callbacks_with_renderer(renderer);
 		}
+		this._updateCache();
 	}
 	deregisterRenderer(renderer: WebGLRenderer) {
-		delete this._renderers[(renderer as POLYWebGLRenderer)._polygon_id];
+		const id = (renderer as POLYWebGLRenderer)._polygonId;
+		this._renderers.delete(id);
 		renderer.dispose();
+		this._updateCache();
+	}
+	deregisterAllRenderers() {
+		const renderers: WebGLRenderer[] = [];
+		this._renderers.forEach((renderer, id) => {
+			renderers.push(renderer);
+		});
+		for (let renderer of renderers) {
+			this.deregisterRenderer(renderer);
+		}
+	}
+	private _updateCache() {
+		this._firstRenderer = null;
+		this._renderers.forEach((renderer) => {
+			this._firstRenderer = this._firstRenderer || renderer;
+		});
 	}
 	firstRenderer(): WebGLRenderer | null {
-		const first_id = Object.keys(this._renderers)[0];
-		if (first_id) {
-			return this._renderers[first_id];
-		}
-		return null;
+		return this._firstRenderer;
 	}
 	renderers(): WebGLRenderer[] {
 		return Object.values(this._renderers);

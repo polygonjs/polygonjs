@@ -29,8 +29,8 @@ export class ViewerCamerasController {
 	}
 
 	private _updateSize() {
-		this._size.x = this._viewer.domElement().offsetWidth;
-		this._size.y = this._viewer.domElement().offsetHeight;
+		this._size.x = this._viewer.domElement()?.offsetWidth || 0;
+		this._size.y = this._viewer.domElement()?.offsetHeight || 0;
 	}
 	private _getAspect(): number {
 		return this._size.x / this._size.y;

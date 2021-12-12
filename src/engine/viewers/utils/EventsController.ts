@@ -21,6 +21,7 @@ export class ViewerEventsController {
 	updateEvents(eventsController: BaseSceneEventsControllerType) {
 		const canvas = this.canvas();
 		if (!canvas) {
+			console.warn('no canvas found');
 			return;
 		}
 		const controllerType = eventsController.type();
@@ -60,7 +61,8 @@ export class ViewerEventsController {
 	}
 
 	init() {
-		if (!this.canvas) {
+		if (!this.canvas()) {
+			console.warn('no canvas found for eventsController');
 			return;
 		}
 		this.viewer.scene().eventsDispatcher.traverseControllers((controller) => {

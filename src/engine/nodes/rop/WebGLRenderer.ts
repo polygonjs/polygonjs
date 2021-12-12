@@ -180,10 +180,10 @@ const DEFAULT_PARAMS: WebGLRendererParameters = {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
-import {PolyDictionary} from '../../../types/GlobalTypes';
 import {RenderController} from '../obj/utils/cameras/RenderController';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to set the precision */
 	tprecision = ParamConfig.BOOLEAN(0);
@@ -281,8 +281,12 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		return RopType.WEBGL;
 	}
 
-	private _renderers_by_canvas_id: PolyDictionary<WebGLRenderer> = {};
-	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
+	private _renderersbyCameraNode: Map<BaseCameraObjNodeType, WebGLRenderer> = new Map();
+	createRenderer(
+		cameraNode: BaseCameraObjNodeType,
+		canvas: HTMLCanvasElement,
+		gl: WebGLRenderingContext
+	): WebGLRenderer {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<
 			keyof WebGLRendererParameters
@@ -320,16 +324,14 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 
 		this._update_renderer(renderer);
 
-		this._renderers_by_canvas_id[canvas.id] = renderer;
+		this._renderersbyCameraNode.set(cameraNode, renderer);
 		return renderer;
 	}
 
 	cook() {
-		const ids = Object.keys(this._renderers_by_canvas_id);
-		for (let id of ids) {
-			const renderer = this._renderers_by_canvas_id[id];
+		this._renderersbyCameraNode.forEach((renderer, cameraNode) => {
 			this._update_renderer(renderer);
-		}
+		});
 
 		this._traverse_scene_and_update_materials();
 

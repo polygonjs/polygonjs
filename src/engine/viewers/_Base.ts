@@ -1,12 +1,11 @@
-import {PolyScene} from '../scene/PolyScene';
 import {BaseCameraObjNodeType} from '../nodes/obj/_BaseCamera';
-
 import {ViewerCamerasController} from './utils/CamerasController';
 import {ViewerControlsController} from './utils/ControlsController';
 import {ViewerEventsController} from './utils/EventsController';
 import {WebGLController} from './utils/WebglController';
 import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/ControlsController';
 import {Object3D} from 'three/src/core/Object3D';
+import {PolyScene} from '../scene/PolyScene';
 
 const HOVERED_CLASS_NAME = 'hovered';
 type ViewerHook = (delta: number) => void;
@@ -14,14 +13,36 @@ type CallbacksMap = Map<string, ViewerHook>;
 
 export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// protected _display_scene: Scene;
-	protected _canvas: HTMLCanvasElement | undefined;
+	// protected _canvas: HTMLCanvasElement | undefined;
+	protected _domElement: HTMLElement | undefined;
 	protected _active: boolean = false;
 	private static _next_viewer_id = 0;
 	private _id: Readonly<number>;
 	protected _renderObjectOverride: Object3D | undefined;
+	protected _scene: PolyScene;
+	protected _canvas: HTMLCanvasElement | undefined;
+	constructor(protected _cameraNode: C) {
+		this._id = TypedViewer._next_viewer_id++;
+		this._scene = this._cameraNode.scene();
+	}
+	mount(element: HTMLElement) {
+		this._domElement = element;
+	}
+	protected _canvasIdPrefix() {
+		return 'TypedViewer';
+	}
+	private _createCanvas() {
+		const canvas = document.createElement('canvas');
+		canvas.id = `${this._canvasIdPrefix()}_${this._id}`;
+		canvas.style.display = 'block';
+		canvas.style.outline = 'none';
+		return canvas;
+	}
+	canvas() {
+		return (this._canvas = this._canvas || this._createCanvas());
+	}
 
 	setRenderObjectOverride(object?: Object3D | null) {
-		console.log('setRenderObjectOverride', object);
 		if (object) {
 			this._renderObjectOverride = object;
 		} else {
@@ -56,21 +77,15 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		return (this._webgl_controller = this._webgl_controller || new WebGLController(this));
 	}
 
-	constructor(protected _container: HTMLElement, protected _scene: PolyScene, protected _camera_node: C) {
-		this._id = TypedViewer._next_viewer_id++;
-		this._scene.viewersRegister.registerViewer(this);
-	}
 	domElement() {
-		return this._container;
+		return this._domElement;
 	}
 	scene() {
 		return this._scene;
 	}
-	canvas() {
-		return this._canvas;
-	}
+
 	cameraNode() {
-		return this._camera_node;
+		return this._cameraNode;
 	}
 	get cameraControlsController(): ThreejsCameraControlsController | undefined {
 		return undefined;
@@ -82,18 +97,21 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	dispose() {
 		this._scene.viewersRegister.unregisterViewer(this);
 		this.eventsController.dispose();
+		if (!this._domElement) {
+			return;
+		}
 		let child: Element;
-		while ((child = this._container.children[0])) {
-			this._container.removeChild(child);
+		while ((child = this._domElement.children[0])) {
+			this._domElement.removeChild(child);
 		}
 	}
 
 	// html container class
 	resetContainerClass() {
-		this.domElement().classList.remove(HOVERED_CLASS_NAME);
+		this.domElement()?.classList.remove(HOVERED_CLASS_NAME);
 	}
 	setContainerClassHovered() {
-		this.domElement().classList.add(HOVERED_CLASS_NAME);
+		this.domElement()?.classList.add(HOVERED_CLASS_NAME);
 	}
 
 	//

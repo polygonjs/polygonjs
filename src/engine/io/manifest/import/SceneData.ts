@@ -165,14 +165,12 @@ export async function mountScene(data: loadSceneData) {
 			console.warn('no master camera found');
 			return;
 		}
-		const container = CoreType.isString(data.domElement)
-			? document.getElementById(data.domElement)
-			: data.domElement;
-		if (!container) {
+		const element = CoreType.isString(data.domElement) ? document.getElementById(data.domElement) : data.domElement;
+		if (!element) {
 			console.warn('no element to mount the viewer onto');
 			return;
 		}
-		const viewer = cameraNode.createViewer(container);
+		const viewer = cameraNode.createViewer({element});
 
 		return {scene, cameraNode, viewer};
 	}

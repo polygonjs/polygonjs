@@ -35,6 +35,7 @@ declare global {
 	}
 }
 QUnit.testStart(async () => {
+	Poly.renderersController.deregisterAllRenderers();
 	// return new Promise(async (resolve, reject) => {
 	window.scene = new PolyScene();
 	window.scene.setName('test scene');
