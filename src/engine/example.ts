@@ -113,7 +113,7 @@ function loadExample(example: SceneBuilderResult) {
 		}
 	}
 
-	example.camera.createViewer(document.getElementById('app')!);
+	example.camera.createViewer({element: document.getElementById('app')!});
 }
 
 type ExampleMethod = () => SceneBuilderResult;

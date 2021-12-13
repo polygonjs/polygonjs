@@ -48,7 +48,8 @@ The API is designed to be very simple. Here is how you create a minimal scene wi
 	const orbitsControls = events1.createNode('cameraOrbitControls');
 	perspectiveCamera1.p.controls.setNode(orbitsControls);
 
-	perspectiveCamera1.createViewer(document.getElementById('app'));
+	const element = document.getElementById('app');
+	perspectiveCamera1.createViewer({element});
 </script>
 ```
 
@@ -104,7 +105,8 @@ const events1 = perspectiveCamera1.createNode('eventsNetwork');
 const orbitsControls = events1.createNode('cameraOrbitControls');
 perspectiveCamera1.p.controls.setNode(orbitsControls);
 
-perspectiveCamera1.createViewer(document.getElementById('app'));
+const element = document.getElementById('app');
+perspectiveCamera1.createViewer({element);
 ```
 
 And we can also create some html inputs:
