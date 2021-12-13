@@ -1,5 +1,7 @@
-import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+import {PolyScene, Poly} from '../../../../src/engine/index_all';
 
+import {OBJLoaderModule} from '../../../../src/engine/poly/registers/modules/entry_points/OBJLoader';
+Poly.registerModule(OBJLoaderModule);
 export function SopInstance() {
 	// create a scene
 	const scene = new PolyScene();

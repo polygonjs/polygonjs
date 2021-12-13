@@ -3,6 +3,7 @@ import {DRACOLoader} from '../../../../modules/three/examples/jsm/loaders/DRACOL
 import {EXRLoader} from '../../../../modules/three/examples/jsm/loaders/EXRLoader';
 import {FBXLoader} from '../../../../modules/three/examples/jsm/loaders/FBXLoader';
 import {GLTFLoader} from '../../../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {LDrawLoader} from '../../../../modules/three/examples/jsm/loaders/LDrawLoader';
 import {OBJLoader} from '../../../../modules/three/examples/jsm/loaders/OBJLoader';
 import {PDBLoader} from '../../../../modules/three/examples/jsm/loaders/PDBLoader';
 import {PLYLoader} from '../../../../modules/three/examples/jsm/loaders/PLYLoader';
@@ -11,7 +12,6 @@ import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoade
 import {STLLoader} from '../../../../modules/three/examples/jsm/loaders/STLLoader';
 import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
 import {ModuleName} from './Common';
-import {LDrawLoader} from './entry_points/LDrawLoader';
 
 export interface ModulesMap {
 	[ModuleName.BasisTextureLoader]: typeof BasisTextureLoader;

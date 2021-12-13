@@ -1,2 +1,9 @@
 import {EXRLoader} from '../../../../../modules/three/examples/jsm/loaders/EXRLoader';
-export {EXRLoader};
+import {ModuleName} from '../Common';
+import {BaseModule} from '../_BaseModule';
+
+const EXRLoaderModule: BaseModule<ModuleName.EXRLoader> = {
+	moduleName: ModuleName.EXRLoader,
+	module: EXRLoader,
+};
+export {EXRLoader, EXRLoaderModule};

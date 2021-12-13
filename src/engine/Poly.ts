@@ -22,6 +22,8 @@ import {BlobsController} from './poly/BlobsController';
 import {AssetUrlsController} from './poly/AssetUrlsController';
 import {SelfContainedScenesLoader} from './poly/SelfContainedSceneLoader';
 import {PolyPerformanceformanceController} from './poly/PerformanceController';
+import {BaseModule} from './poly/registers/modules/_BaseModule';
+import {ModuleName} from './poly/registers/modules/Common';
 
 declare global {
 	interface Window {
@@ -96,6 +98,9 @@ export class PolyEngine {
 	}
 	registeredCameraTypes() {
 		return this.camerasRegister.registeredTypes();
+	}
+	registerModule(module: BaseModule<ModuleName>) {
+		this.modulesRegister.register(module.moduleName, module.module);
 	}
 
 	inWorkerThread() {
