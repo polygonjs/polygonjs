@@ -98,6 +98,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		}
 		// this.canvas_context = canvas.getContext('2d')
 
+		this.audioController().update();
 		// init renderer
 		// renderer = new THREE.WebGLRenderer
 		// 	canvas: canvas

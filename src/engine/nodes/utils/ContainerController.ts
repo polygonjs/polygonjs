@@ -27,6 +27,9 @@ export class TypedContainerController<NC extends NodeContext> {
 		if (this.node.isDirty()) {
 			return new Promise((resolve, reject) => {
 				this._callbacks.push(resolve as () => ContainerMap[NC]);
+				if (this.node.flags?.bypass?.active()) {
+					throw 'we should not be here';
+				}
 				this.node.cookController.cookMain();
 			});
 		}

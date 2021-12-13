@@ -110,11 +110,11 @@ export class SopSubnetChildrenDisplayController {
 			});
 		}
 
-		this.node.lifecycle.add_on_child_add_hook(() => {
+		this.node.lifecycle.onChildAdd(() => {
 			this._output_node_needs_update = true;
 			this.node.setDirty();
 		});
-		this.node.lifecycle.add_on_child_remove_hook(() => {
+		this.node.lifecycle.onChildRemove(() => {
 			this._output_node_needs_update = true;
 			this.node.setDirty();
 		});

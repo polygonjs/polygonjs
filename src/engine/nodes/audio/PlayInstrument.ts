@@ -1,12 +1,12 @@
 /**
- * null node, useful to gather inputs together
+ * useful to gather inputs together
  *
  *
  */
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
-import {BaseNodeType} from '../_Base';
+// import {BaseNodeType} from '../_Base';
 import {AudioController} from '../../../core/audio/AudioController';
 import {ALL_NOTES, DEFAULT_NOTE} from '../../../core/audio/Notes';
 
@@ -27,18 +27,18 @@ class PlayInstrumentAudioParamsConfig extends NodeParamsConfig {
 		cook: false,
 	});
 	/** @param play the audio */
-	play = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PlayInstrumentAudioNode.PARAM_CALLBACK_play(node as PlayInstrumentAudioNode);
-		},
-	});
+	// play = ParamConfig.BUTTON(null, {
+	// 	callback: (node: BaseNodeType) => {
+	// 		PlayInstrumentAudioNode.PARAM_CALLBACK_play(node as PlayInstrumentAudioNode);
+	// 	},
+	// });
 	/** @param stop the audio */
-	stop = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PlayInstrumentAudioNode.PARAM_CALLBACK_stop(node as PlayInstrumentAudioNode);
-		},
-	});
-	showNotes = ParamConfig.BOOLEAN(0);
+	// stop = ParamConfig.BUTTON(null, {
+	// 	callback: (node: BaseNodeType) => {
+	// 		PlayInstrumentAudioNode.PARAM_CALLBACK_stop(node as PlayInstrumentAudioNode);
+	// 	},
+	// });
+	showNotes = ParamConfig.BOOLEAN(0, {separatorBefore: true});
 	showKeys = ParamConfig.BOOLEAN(0);
 	startOctave = ParamConfig.INTEGER(2, {range: [1, 8], rangeLocked: [false, false]});
 	endOctave = ParamConfig.INTEGER(4, {range: [1, 8], rangeLocked: [false, false]});
@@ -68,15 +68,15 @@ export class PlayInstrumentAudioNode extends TypedAudioNode<PlayInstrumentAudioP
 		}
 		await AudioController.start();
 
-		instrument.triggerAttackRelease(this.pv.note, '8n');
+		instrument.triggerAttackRelease(this.pv.note, this.pv.duration);
 	}
-	async stop() {
-		const instrument = await this._getInstrument();
-		if (!instrument) {
-			return;
-		}
-		// TODO: find out how to properly call triggerRelease, without or without the argument
-	}
+	// async stop() {
+	// 	const instrument = await this._getInstrument();
+	// 	if (!instrument) {
+	// 		return;
+	// 	}
+	// 	// TODO: find out how to properly call triggerRelease, without or without the argument
+	// }
 	private async _getInstrument() {
 		if (this.isDirty()) {
 			await this.compute();
@@ -88,10 +88,10 @@ export class PlayInstrumentAudioNode extends TypedAudioNode<PlayInstrumentAudioP
 		return audioBuilder.instrument();
 	}
 
-	static PARAM_CALLBACK_play(node: PlayInstrumentAudioNode) {
-		node.play();
-	}
-	static PARAM_CALLBACK_stop(node: PlayInstrumentAudioNode) {
-		node.stop();
-	}
+	// static PARAM_CALLBACK_play(node: PlayInstrumentAudioNode) {
+	// 	node.play();
+	// }
+	// static PARAM_CALLBACK_stop(node: PlayInstrumentAudioNode) {
+	// 	node.stop();
+	// }
 }

@@ -51,12 +51,12 @@ export class LifeCycleController {
 	// ON CHILD ADD
 	//
 	//
-	add_on_child_add_hook(callback: CallbackWithChildNode) {
+	onChildAdd(callback: CallbackWithChildNode) {
 		this._on_child_add_hooks = this._on_child_add_hooks || [];
 		this._on_child_add_hooks.push(callback);
 	}
-	run_on_child_add_hooks(node: BaseNodeType) {
-		this.execute_hooks_with_child_node(this._on_child_add_hooks, node);
+	runOnChildAddCallbacks(node: BaseNodeType) {
+		this._executeCallbacksWithChildNode(this._on_child_add_hooks, node);
 	}
 
 	//
@@ -64,12 +64,12 @@ export class LifeCycleController {
 	// ON CHILD REMOVE
 	//
 	//
-	add_on_child_remove_hook(callback: CallbackWithChildNode) {
+	onChildRemove(callback: CallbackWithChildNode) {
 		this._on_child_remove_hooks = this._on_child_remove_hooks || [];
 		this._on_child_remove_hooks.push(callback);
 	}
-	run_on_child_remove_hooks(node: BaseNodeType) {
-		this.execute_hooks_with_child_node(this._on_child_remove_hooks, node);
+	runOnChildRemoveCallbacks(node: BaseNodeType) {
+		this._executeCallbacksWithChildNode(this._on_child_remove_hooks, node);
 	}
 
 	//
@@ -77,12 +77,12 @@ export class LifeCycleController {
 	// ON CREATE
 	//
 	//
-	add_on_create_hook(callback: Callback) {
+	onCreate(callback: Callback) {
 		this._on_create_hooks = this._on_create_hooks || [];
 		this._on_create_hooks.push(callback);
 	}
-	run_on_create_hooks() {
-		this.execute_hooks(this._on_create_hooks);
+	runOnCreateCallbacks() {
+		this._executeCallbacks(this._on_create_hooks);
 	}
 
 	//
@@ -90,12 +90,12 @@ export class LifeCycleController {
 	// ON ADD
 	//
 	//
-	add_on_add_hook(callback: Callback) {
+	onAdd(callback: Callback) {
 		this._on_add_hooks = this._on_add_hooks || [];
 		this._on_add_hooks.push(callback);
 	}
-	run_on_add_hooks() {
-		this.execute_hooks(this._on_add_hooks);
+	runOnAddCallbacks() {
+		this._executeCallbacks(this._on_add_hooks);
 	}
 
 	//
@@ -103,12 +103,12 @@ export class LifeCycleController {
 	// ON DELETE
 	//
 	//
-	add_delete_hook(callback: Callback) {
+	onDelete(callback: Callback) {
 		this._on_delete_hooks = this._on_delete_hooks || [];
 		this._on_delete_hooks.push(callback);
 	}
-	run_on_delete_hooks() {
-		this.execute_hooks(this._on_delete_hooks);
+	runOnDeleteCallbacks() {
+		this._executeCallbacks(this._on_delete_hooks);
 	}
 
 	//
@@ -116,7 +116,7 @@ export class LifeCycleController {
 	// UTILS
 	//
 	//
-	protected execute_hooks(hooks: Callback[] | undefined) {
+	protected _executeCallbacks(hooks: Callback[] | undefined) {
 		if (hooks) {
 			let hook: Callback | undefined;
 			// do not flush, as this MAY BE needed multiple times
@@ -125,7 +125,7 @@ export class LifeCycleController {
 			}
 		}
 	}
-	protected execute_hooks_with_child_node(hooks: CallbackWithChildNode[] | undefined, child_node: BaseNodeType) {
+	protected _executeCallbacksWithChildNode(hooks: CallbackWithChildNode[] | undefined, child_node: BaseNodeType) {
 		if (hooks) {
 			let hook: CallbackWithChildNode | undefined;
 			// do not flush, as this is needed multiple times

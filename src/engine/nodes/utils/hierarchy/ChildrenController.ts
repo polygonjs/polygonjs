@@ -195,10 +195,10 @@ export class HierarchyChildrenController {
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.toJSON()});
 		if (this.node.scene().lifecycleController.onCreateHookAllowed()) {
-			child_node.lifecycle.run_on_create_hooks();
+			child_node.lifecycle.runOnCreateCallbacks();
 		}
-		child_node.lifecycle.run_on_add_hooks();
-		this.node.lifecycle.run_on_child_add_hooks(child_node);
+		child_node.lifecycle.runOnAddCallbacks();
+		this.node.lifecycle.runOnChildAddCallbacks(child_node);
 
 		if (child_node.require_webgl2()) {
 			this.node.scene().webgl_controller.set_require_webgl2();
@@ -258,8 +258,8 @@ export class HierarchyChildrenController {
 			// disconnect successors
 			child_node.graphDisconnectSuccessors();
 
-			this.node.lifecycle.run_on_child_remove_hooks(child_node);
-			child_node.lifecycle.run_on_delete_hooks();
+			this.node.lifecycle.runOnChildRemoveCallbacks(child_node);
+			child_node.lifecycle.runOnDeleteCallbacks();
 			child_node.dispose();
 			child_node.emit(NodeEvent.DELETED, {parent_id: this.node.graphNodeId()});
 		}

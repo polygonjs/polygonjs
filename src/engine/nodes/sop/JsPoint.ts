@@ -42,8 +42,8 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 
 		// this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 
-		// this.lifecycle.add_on_create_hook(this.assembler_controller.on_create.bind(this.assembler_controller));
-		// this.lifecycle.add_on_create_hook(this._on_create_prepare_material_bound);
+		// this.lifecycle.onCreate(this.assembler_controller.on_create.bind(this.assembler_controller));
+		// this.lifecycle.onCreate(this._on_create_prepare_material_bound);
 		// this.children_controller?.init({dependent: false});
 	}
 

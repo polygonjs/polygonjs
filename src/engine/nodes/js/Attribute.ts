@@ -34,7 +34,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initializeNode() {
 		// this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
-		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
+		this.lifecycle.onCreate(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => []);

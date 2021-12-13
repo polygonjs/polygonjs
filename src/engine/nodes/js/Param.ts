@@ -39,7 +39,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	initializeNode() {
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_function_node_to_recompile.bind(this));
-		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
+		this.lifecycle.onCreate(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => []);

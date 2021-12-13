@@ -58,8 +58,8 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 
 	private _onChildAddBound = this._onChildAdd.bind(this);
 	initializeNode() {
-		// this.lifecycle.add_on_create_hook(this._on_create_bound);
-		this.lifecycle.add_on_child_add_hook(this._onChildAddBound);
+		// this.lifecycle.onCreate(this._on_create_bound);
+		this.lifecycle.onChildAdd(this._onChildAddBound);
 
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();

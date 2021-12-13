@@ -28,7 +28,7 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 	initializeNode() {
 		super.initializeNode();
 
-		this.lifecycle.add_on_add_hook(() => {
+		this.lifecycle.onAdd(() => {
 			this.material_node?.assemblerController?.add_globals_outputs(this);
 		});
 	}

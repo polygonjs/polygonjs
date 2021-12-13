@@ -30,7 +30,7 @@ export class PolyNodeController {
 			this.create_params_from_definition();
 		});
 
-		this.node.lifecycle.add_on_create_hook(() => {
+		this.node.lifecycle.onCreate(() => {
 			this.create_params_from_definition();
 			this.createChildNodesFromDefinition();
 		});

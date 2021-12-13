@@ -9,6 +9,7 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {ROOT_NAME} from '../../scene/utils/ObjectsController';
 import {Scene} from 'three/src/scenes/Scene';
 
+import {RootAudioController, RootAudioParamConfig} from './utils/Scene/Audio';
 import {SceneAutoUpdateParamConfig, SceneAutoUpdateController} from './utils/Scene/AutoUpdate';
 import {SceneBackgroundParamConfig, SceneBackgroundController} from './utils/Scene/Background';
 import {SceneEnvParamConfig, SceneEnvController} from './utils/Scene/Env';
@@ -17,8 +18,12 @@ import {SceneMaterialOverrideParamConfig, SceneMaterialOverrideController} from 
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export const ROOT_NODE_NAME = 'RootNode';
-class ObjectsManagerParamsConfig extends SceneMaterialOverrideParamConfig(
-	SceneEnvParamConfig(SceneFogParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig))))
+class ObjectsManagerParamsConfig extends RootAudioParamConfig(
+	SceneMaterialOverrideParamConfig(
+		SceneEnvParamConfig(
+			SceneFogParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig)))
+		)
+	)
 ) {}
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
@@ -32,6 +37,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	private _queued_nodes_by_id: Map<number, BaseObjNodeType> = new Map();
 	// private _expected_geo_nodes: PolyDictionary<GeoObjNode> = {};
 	// private _process_queue_start: number = -1;
+	readonly audioController: RootAudioController = new RootAudioController(this as any);
 	readonly sceneAutoUpdateController: SceneAutoUpdateController = new SceneAutoUpdateController(this as any);
 	readonly sceneBackgroundController: SceneBackgroundController = new SceneBackgroundController(this as any);
 	readonly sceneEnvController: SceneEnvController = new SceneEnvController(this as any);
@@ -45,8 +51,8 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 		// this.children_controller?.init({dependent: false});
 		this._object.matrixAutoUpdate = false;
 
-		this.lifecycle.add_on_child_add_hook(this._on_child_add.bind(this));
-		this.lifecycle.add_on_child_remove_hook(this._on_child_remove.bind(this));
+		this.lifecycle.onChildAdd(this._on_child_add.bind(this));
+		this.lifecycle.onChildRemove(this._on_child_remove.bind(this));
 	}
 
 	private _createScene() {

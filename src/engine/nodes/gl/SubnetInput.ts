@@ -17,7 +17,7 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 		this.io.connection_points.set_expected_input_types_function(() => []);
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 
-		// this.lifecycle.add_on_add_hook(() => {
+		// this.lifecycle.onAdd(() => {
 		// 	this._connect_to_parent_connections_controller();
 		// });
 	}

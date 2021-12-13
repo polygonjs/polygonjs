@@ -55,12 +55,12 @@ export class DisplayNodeController {
 		}
 		this._initialized = true;
 
-		this.node.lifecycle.add_on_child_add_hook((child_node) => {
+		this.node.lifecycle.onChildAdd((child_node) => {
 			if (!this._display_node) {
 				child_node.flags?.display?.set(true);
 			}
 		});
-		this.node.lifecycle.add_on_child_remove_hook((child_node) => {
+		this.node.lifecycle.onChildRemove((child_node) => {
 			if (child_node.graphNodeId() == this._display_node?.graphNodeId()) {
 				const children = this.node.children();
 				const last_child = children[children.length - 1];

@@ -16,17 +16,17 @@ export class CamerasController {
 		if (this.mainCameraNodePath) {
 			const path = this.mainCameraNodePath();
 			if (!path) {
-				return this._find_any_camera();
+				return this._findAnyCamera();
 			}
 			const camera_node = this.scene.node(path) as BaseCameraObjNodeType | null;
 			return camera_node;
 		} else {
 			console.warn('main camera node not found');
-			return this._find_any_camera();
+			return this._findAnyCamera();
 		}
 	}
 
-	private _find_any_camera(): BaseCameraObjNodeType | null {
+	private _findAnyCamera(): BaseCameraObjNodeType | null {
 		const root = this.scene.root();
 		return root.nodesByType('perspectiveCamera')[0] || root.nodesByType('orthographicCamera')[0];
 	}

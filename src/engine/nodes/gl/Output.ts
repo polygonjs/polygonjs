@@ -25,7 +25,7 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 		super.initializeNode();
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
 
-		this.lifecycle.add_on_add_hook(() => {
+		this.lifecycle.onAdd(() => {
 			this.material_node?.assemblerController?.add_output_inputs(this);
 		});
 	}

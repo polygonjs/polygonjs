@@ -49,7 +49,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initializeNode() {
 		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
-		this.lifecycle.add_on_create_hook(this._on_create_set_name_if_none_bound);
+		this.lifecycle.onCreate(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => {
@@ -75,7 +75,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 				});
 			});
 		});
-		this.lifecycle.add_on_add_hook(this._bound_setExportWhenConnectedStatus);
+		this.lifecycle.onAdd(this._bound_setExportWhenConnectedStatus);
 		this.params.addOnSceneLoadHook('prepare params', this._bound_setExportWhenConnectedStatus);
 	}
 	private _bound_setExportWhenConnectedStatus = this._setExportWhenConnectedStatus.bind(this);

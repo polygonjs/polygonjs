@@ -27,9 +27,9 @@ export abstract class TypedInputEventNode<K extends BaseInputEventParamsConfig> 
 		const unregister = () => {
 			this.scene().eventsDispatcher.unregisterEventNode(this);
 		};
-		this.lifecycle.add_on_add_hook(register);
+		this.lifecycle.onAdd(register);
 		// this.lifecycle.add_on_creation_completed_hook(register);
-		this.lifecycle.add_delete_hook(unregister);
+		this.lifecycle.onDelete(unregister);
 
 		this.params.onParamsCreated('update_register', () => {
 			this._updateRegister();

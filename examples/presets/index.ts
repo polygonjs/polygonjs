@@ -3,6 +3,9 @@ import {NodeContext} from '../../src/engine/poly/NodeContext';
 // anim
 import {PropertyNameAnimNode} from '../../src/engine/nodes/anim/PropertyName';
 import {PropertyNameAnimNodePresets} from './anim/PropertyName';
+// audio
+import {FileAudioNodePresets} from './audio/File';
+import {FileAudioNode} from '../../src/engine/nodes/audio/File';
 // cop
 import {ImageCopNode} from '../../src/engine/nodes/cop/Image';
 import {VideoCopNode} from '../../src/engine/nodes/cop/Video';
@@ -15,8 +18,6 @@ import {AttributeGlNodePresets} from './gl/Attribute';
 import {MeshSubsurfaceScatteringMatNodePresets} from './mat/MeshSubsurfaceScattering';
 import {MeshSubsurfaceScatteringMatNode} from '../../src/engine/nodes/mat/MeshSubsurfaceScattering';
 // obj
-import {PositionalAudioObjNodePresets} from './obj/PositionalAudio';
-import {PositionalAudioObjNode} from '../../src/engine/nodes/obj/PositionalAudio';
 // sop
 import {ColorSopNode} from '../../src/engine/nodes/sop/Color';
 import {DataSopNode} from '../../src/engine/nodes/sop/Data';
@@ -44,6 +45,9 @@ export const presetsLibrary = {
 	[NodeContext.ANIM]: {
 		[PropertyNameAnimNode.type()]: PropertyNameAnimNodePresets,
 	},
+	[NodeContext.AUDIO]: {
+		[FileAudioNode.type()]: FileAudioNodePresets,
+	},
 	[NodeContext.COP]: {
 		[ImageCopNode.type()]: ImageCopNodePresets,
 		[VideoCopNode.type()]: VideoCopNodePresets,
@@ -54,9 +58,9 @@ export const presetsLibrary = {
 	[NodeContext.MAT]: {
 		[MeshSubsurfaceScatteringMatNode.type()]: MeshSubsurfaceScatteringMatNodePresets,
 	},
-	[NodeContext.OBJ]: {
-		[PositionalAudioObjNode.type()]: PositionalAudioObjNodePresets,
-	},
+	// [NodeContext.OBJ]: {
+	// 	[PositionalAudioObjNode.type()]: PositionalAudioObjNodePresets,
+	// },
 	[NodeContext.SOP]: {
 		[ColorSopNode.type()]: ColorSopNodePresets,
 		[CSS2DObjectSopNode.type()]: CSS2DObjectSopNodePresets,

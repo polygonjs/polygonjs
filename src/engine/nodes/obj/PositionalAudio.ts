@@ -7,70 +7,58 @@
  */
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
-import {PositionalAudio} from 'three/src/audio/PositionalAudio';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {PositionalAudioHelper} from '../../../modules/three/examples/jsm/helpers/PositionalAudioHelper';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HierarchyController} from './utils/HierarchyController';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
 import {NodeContext} from '../../poly/NodeContext';
-import {AudioListenerObjNode} from './AudioListener';
-import {CoreLoaderAudio} from '../../../core/loader/Audio';
-import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {FileType} from '../../params/utils/OptionsController';
+import {CorePositionalAudio, DistanceModel, DISTANCE_MODELS} from '../../../core/audio/PositionalAudio';
+import {CorePositionalAudioHelper} from '../../../core/audio/PositionalAudioHelper';
+import {BaseNodeType} from '../_Base';
+import {AudioController} from '../../../core/audio/AudioController';
+import {AudioNodeChildrenMap} from '../../poly/registers/nodes/Audio';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {BaseAudioNodeType} from '../audio/_Base';
 
-enum DistanceModel {
-	LINEAR = 'linear',
-	INVERSE = 'inverse',
-	EXPONENTIAL = 'exponential',
-}
-const DISTANCE_MODELS: DistanceModel[] = [DistanceModel.LINEAR, DistanceModel.INVERSE, DistanceModel.EXPONENTIAL];
+const paramCallback = () => {
+	return {
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			PositionalAudioObjNode.PARAM_CALLBACK_updatePositionalAudio(node as PositionalAudioObjNode);
+		},
+	};
+};
 
 class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	audio = ParamConfig.FOLDER();
-	/** @param listener */
-	listener = ParamConfig.NODE_PATH('', {
-		nodeSelection: {
-			context: NodeContext.OBJ,
-			types: [ObjType.AUDIO_LISTENER],
-		},
-	});
 	/** @param url */
-	url = ParamConfig.STRING('', {
-		fileBrowse: {type: [FileType.AUDIO]},
-	});
-	/** @param volume */
-	volume = ParamConfig.FLOAT(1);
-	/** @param loop */
-	loop = ParamConfig.BOOLEAN(1, {
-		separatorBefore: true,
-	});
-	/** @param loopStart */
-	loopStart = ParamConfig.FLOAT(0, {
-		visibleIf: {loop: 1},
-	});
-	/** @param loopEnd */
-	loopEnd = ParamConfig.FLOAT(0, {
-		visibleIf: {loop: 1},
-		separatorAfter: true,
+	audioNode = ParamConfig.NODE_PATH('', {
+		nodeSelection: {
+			context: NodeContext.AUDIO,
+		},
+		// dependentOnFoundNode: false,
 	});
 
 	/** @param refDistance. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode/refDistance*/
 	refDistance = ParamConfig.FLOAT(10, {
 		range: [0, 10],
 		rangeLocked: [true, false],
+		...paramCallback(),
 	});
 	/** @param rolloffFactor. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode/rolloffFactor */
 	rolloffFactor = ParamConfig.FLOAT(10, {
 		range: [0, 10],
 		rangeLocked: [true, false],
+		...paramCallback(),
 	});
 	/** @param maxDistance. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode/maxDistance */
 	maxDistance = ParamConfig.FLOAT(100, {
 		range: [0.001, 100],
 		rangeLocked: [true, false],
+		...paramCallback(),
 	});
 	/** @param distanceModel. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode/distanceModel */
 	distanceModel = ParamConfig.INTEGER(DISTANCE_MODELS.indexOf(DistanceModel.LINEAR), {
@@ -79,24 +67,28 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 				return {name, value};
 			}),
 		},
+		...paramCallback(),
 	});
 	/** @param coneInnerAngle. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode */
 	coneInnerAngle = ParamConfig.FLOAT(180, {
 		range: [0, 360],
 		rangeLocked: [true, true],
+		...paramCallback(),
 	});
 	/** @param coneOuterAngle. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode */
 	coneOuterAngle = ParamConfig.FLOAT(230, {
 		range: [0, 360],
 		rangeLocked: [true, true],
+		...paramCallback(),
 	});
 	/** @param coneOuterGain. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode */
 	coneOuterGain = ParamConfig.FLOAT(0.1, {
 		range: [0, 1],
 		rangeLocked: [true, true],
+		...paramCallback(),
 	});
 	/** @param autoplay */
-	autoplay = ParamConfig.BOOLEAN(1);
+	// autoplay = ParamConfig.BOOLEAN(1);
 	/** @param show helper */
 	showHelper = ParamConfig.BOOLEAN(0);
 	/** @param helper size */
@@ -104,21 +96,16 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 		range: [0, 10],
 		rangeLocked: [true, false],
 		visibleIf: {showHelper: true},
-	});
-	/** @param play */
-	play = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PositionalAudioObjNode.PARAM_CALLBACK_play(node as PositionalAudioObjNode);
-		},
-	});
-	/** @param pause */
-	pause = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PositionalAudioObjNode.PARAM_CALLBACK_pause(node as PositionalAudioObjNode);
-		},
+		...paramCallback(),
 	});
 }
 const ParamsConfig = new PositionalAudioParamConfig();
+
+function createPositionalAudio() {
+	const positionalAudio = new CorePositionalAudio();
+	positionalAudio.matrixAutoUpdate = false;
+	return positionalAudio;
+}
 
 export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioParamConfig> {
 	paramsConfig = ParamsConfig;
@@ -128,37 +115,39 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	readonly transformController: TransformController = new TransformController(this);
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	private _helper: PositionalAudioHelper | undefined;
-	private _positionalAudio: PositionalAudio | undefined;
-	private _loadedUrl: string | undefined;
+	private _positionalAudio = createPositionalAudio();
+	private _helper: CorePositionalAudioHelper | undefined;
 
 	createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
+		group.add(this._positionalAudio);
 		return group;
 	}
 	initializeNode() {
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
 		this._updateHelperHierarchy();
-		this.flags.display.onUpdate(() => {
-			this._updateHelperHierarchy();
-		});
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.url], () => {
-					const url = this.p.url.rawInput();
-					if (url) {
-						const elements = url.split('/');
-						return elements[elements.length - 1];
-					} else {
-						return '';
-					}
-				});
-			});
+
+		this.flags.display.onUpdate(async () => {
+			await this._updateToDestination();
+			await this._updateHelperHierarchy();
 		});
 	}
-
+	private async _updateToDestination() {
+		if (this.flags.display.active()) {
+			await AudioController.start();
+			const listener = this.root().audioController.audioListeners()[0];
+			if (!listener) {
+				this.states.error.set('a listener is required in the scene');
+				return;
+			}
+			this._positionalAudio.disconnect();
+			listener.object.addInput(this._positionalAudio);
+		} else {
+			this._positionalAudio.disconnect();
+		}
+	}
 	private _updateHelperHierarchy() {
 		if (!this._helper) {
 			return;
@@ -170,120 +159,90 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		}
 	}
 
-	cook() {
+	async cook() {
 		this.transformController.update();
 
+		await this._updateToDestination();
 		this._updatePositionalAudio();
+		this._connectAudioNode();
 
 		this.cookController.endCook();
 	}
 
 	private async _updatePositionalAudio() {
-		if (this.p.listener.isDirty()) {
-			await this.p.listener.compute();
+		this._positionalAudio.setRefDistance(this.pv.refDistance);
+		this._positionalAudio.setRolloffFactor(this.pv.rolloffFactor);
+		this._positionalAudio.setMaxDistance(this.pv.maxDistance);
+		this._positionalAudio.setDistanceModel(DISTANCE_MODELS[this.pv.distanceModel]);
+		this._positionalAudio.setDirectionalCone(this.pv.coneInnerAngle, this.pv.coneOuterAngle, this.pv.coneOuterGain);
+
+		if (isBooleanTrue(this.pv.showHelper)) {
+			this._helper = this._helper || this._createHelper(this._positionalAudio);
+			this.object.add(this._helper);
 		}
-
-		const newUrl = this.pv.url;
-		if (this._loadedUrl != newUrl) {
-			try {
-				await this._createPositionalAudio();
-			} catch (e) {
-				this.states.error.set(`error when creating audio: ${e}`);
-			}
-		}
-
-		if (this._positionalAudio) {
-			this._positionalAudio.setVolume(this.pv.volume);
-			this._positionalAudio.setLoop(isBooleanTrue(this.pv.loop));
-			this._positionalAudio.setLoopStart(this.pv.loopStart);
-			this._positionalAudio.setLoopEnd(this.pv.loopEnd);
-
-			this._positionalAudio.setRefDistance(this.pv.refDistance);
-			this._positionalAudio.setRolloffFactor(this.pv.rolloffFactor);
-			this._positionalAudio.setMaxDistance(this.pv.maxDistance);
-			this._positionalAudio.setDistanceModel(DISTANCE_MODELS[this.pv.distanceModel]);
-			this._positionalAudio.setDirectionalCone(
-				this.pv.coneInnerAngle,
-				this.pv.coneOuterAngle,
-				this.pv.coneOuterGain
-			);
-
-			if (isBooleanTrue(this.pv.showHelper)) {
-				this._helper = this._helper || this._createHelper(this._positionalAudio);
-				this.object.add(this._helper);
-			}
-			if (this._helper) {
-				this._helper.visible = isBooleanTrue(this.pv.showHelper);
-				this._helper.range = this.pv.helperSize;
-				this._helper.update();
-			}
+		if (this._helper) {
+			this._helper.visible = isBooleanTrue(this.pv.showHelper);
+			this._helper.range = this.pv.helperSize;
+			this._helper.update();
 		}
 	}
-	private _createHelper(positionalAudio: PositionalAudio) {
-		const helper = new PositionalAudioHelper(positionalAudio);
+	private _createHelper(positionalAudio: CorePositionalAudio) {
+		const helper = new CorePositionalAudioHelper(positionalAudio);
 
 		helper.matrixAutoUpdate = false;
 		return helper;
 	}
 
-	private async _createPositionalAudio() {
-		const node = this.pv.listener.nodeWithContext(NodeContext.OBJ) as AudioListenerObjNode | undefined;
-		if (!node) {
+	private _resetAudioNode() {
+		this._positionalAudio.setInput(undefined);
+	}
+	private async _connectAudioNode() {
+		this._positionalAudio.setInput(undefined);
+
+		const baseAudioNode = this.pv.audioNode.nodeWithContext(NodeContext.AUDIO);
+		if (!baseAudioNode) {
+			this.states.error.set('no audio node found');
+			this._resetAudioNode();
 			return;
 		}
-		const listener = node.object;
-
-		if (this._positionalAudio) {
-			if (this._positionalAudio.source) {
-				this._positionalAudio.stop();
-				this._positionalAudio.disconnect();
-			}
-			this.object.remove(this._positionalAudio);
-			this._positionalAudio = undefined;
-		}
-		if (this._helper) {
-			this._helper.dispose();
-			this._helper = undefined;
-		}
-
-		this._positionalAudio = new PositionalAudio(listener);
-		this._positionalAudio.matrixAutoUpdate = false;
-
-		const loader = new CoreLoaderAudio(this.pv.url, this.scene(), this);
-		const buffer = await loader.load();
-		this._loadedUrl = this.pv.url;
-		this._positionalAudio.autoplay = isBooleanTrue(this.pv.autoplay);
-		this._positionalAudio.setBuffer(buffer);
-
-		this.object.add(this._positionalAudio);
-	}
-	isPlaying() {
-		if (this._positionalAudio) {
-			return isBooleanTrue(this._positionalAudio.isPlaying);
-		}
-		return false;
-	}
-
-	static PARAM_CALLBACK_play(node: PositionalAudioObjNode) {
-		node.PARAM_CALLBACK_play();
-	}
-	static PARAM_CALLBACK_pause(node: PositionalAudioObjNode) {
-		node.PARAM_CALLBACK_pause();
-	}
-	private PARAM_CALLBACK_play() {
-		if (!this._positionalAudio) {
+		const audioContainer = await baseAudioNode.compute();
+		const audioBuilder = audioContainer.coreContent();
+		if (!audioBuilder) {
+			this.states.error.set('invalid audio node');
+			this._resetAudioNode();
 			return;
 		}
-		if (!this.isPlaying()) {
-			this._positionalAudio.play();
-		}
-	}
-	private PARAM_CALLBACK_pause() {
-		if (!this._positionalAudio) {
+		const toneAudioNode = audioBuilder.audioNode();
+		if (!toneAudioNode) {
+			this.states.error.set('no valid audio node given');
+			this._resetAudioNode();
 			return;
 		}
-		if (this.isPlaying()) {
-			this._positionalAudio.pause();
-		}
+		this._positionalAudio.setInput(toneAudioNode);
+	}
+
+	static PARAM_CALLBACK_updatePositionalAudio(node: PositionalAudioObjNode) {
+		node._updatePositionalAudio();
+	}
+
+	/*
+	 *
+	 * CHILDREN
+	 *
+	 */
+	protected _childrenControllerContext = NodeContext.AUDIO;
+	createNode<S extends keyof AudioNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): AudioNodeChildrenMap[S];
+	createNode<K extends valueof<AudioNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<AudioNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		return super.createNode(node_class, options) as K;
+	}
+	children() {
+		return super.children() as BaseAudioNodeType[];
+	}
+	nodesByType<K extends keyof AudioNodeChildrenMap>(type: K): AudioNodeChildrenMap[K][] {
+		return super.nodesByType(type) as AudioNodeChildrenMap[K][];
 	}
 }

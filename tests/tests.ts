@@ -118,7 +118,7 @@ import './engine/nodes/gl/Param';
 import './engine/nodes/gl/Rotate';
 
 QUnit.module('manager');
-import './engine/nodes/manager/ObjectsManager';
+import './engine/nodes/manager/Root';
 
 QUnit.module('mat');
 import './engine/nodes/mat/LineBasicBuilder';

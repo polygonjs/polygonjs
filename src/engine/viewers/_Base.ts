@@ -6,6 +6,7 @@ import {WebGLController} from './utils/WebglController';
 import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/ControlsController';
 import {Object3D} from 'three/src/core/Object3D';
 import {PolyScene} from '../scene/PolyScene';
+import {ViewerAudioController} from './utils/AudioController';
 
 const HOVERED_CLASS_NAME = 'hovered';
 type ViewerHook = (delta: number) => void;
@@ -75,6 +76,10 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	protected _webgl_controller: WebGLController | undefined;
 	get webglController(): WebGLController {
 		return (this._webgl_controller = this._webgl_controller || new WebGLController(this));
+	}
+	private _audioController: ViewerAudioController | undefined;
+	audioController(): ViewerAudioController {
+		return (this._audioController = this._audioController || new ViewerAudioController(this));
 	}
 
 	domElement() {

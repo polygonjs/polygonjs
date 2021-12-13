@@ -210,7 +210,7 @@ export class InputsController<NC extends NodeContext> {
 		return existing_input_indices;
 	}
 
-	async eval_required_inputs() {
+	async evalRequiredInputs() {
 		let containers: Array<ContainerMap[NC] | null | undefined> = [];
 		if (this._maxInputsCount > 0) {
 			const existing_input_indices = this.existing_input_indices();
@@ -228,7 +228,7 @@ export class InputsController<NC extends NodeContext> {
 							// if (input.isDirty()) {
 							// 	containers.push(input.containerController.container as ContainerMap[NC]);
 							// } else {
-							promises.push(this.eval_required_input(i) as Promise<ContainerMap[NC]>);
+							promises.push(this.evalRequiredInput(i) as Promise<ContainerMap[NC]>);
 							// }
 						}
 					}
@@ -241,7 +241,7 @@ export class InputsController<NC extends NodeContext> {
 		return containers;
 	}
 
-	async eval_required_input(input_index: number) {
+	async evalRequiredInput(input_index: number) {
 		let container: ContainerMap[NC] | undefined = undefined;
 		const input_node = this.input(input_index);
 		// if (input_node && !input_node.isDirty()) {

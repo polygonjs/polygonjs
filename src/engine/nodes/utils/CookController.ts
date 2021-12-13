@@ -93,12 +93,15 @@ export class NodeCookController<NC extends NodeContext> {
 	endCook(message?: string | null) {
 		this._finalizeCookPerformance();
 
-		const dirty_timestamp = this.node.dirtyController.dirtyTimestamp();
-		if (dirty_timestamp == null || dirty_timestamp === this._cooking_dirty_timestamp) {
+		const dirtyTimestamp = this.node.dirtyController.dirtyTimestamp();
+		if (dirtyTimestamp == null || dirtyTimestamp === this._cooking_dirty_timestamp) {
 			this.node.removeDirtyState();
 			this._terminateCookProcess();
 		} else {
-			Poly.log('COOK AGAIN', dirty_timestamp, this._cooking_dirty_timestamp, this.node.path());
+			if (this.node.flags?.bypass?.active()) {
+				return;
+			}
+			Poly.log('COOK AGAIN', dirtyTimestamp, this._cooking_dirty_timestamp, this.node.path());
 			this._cooking = false;
 			this.cookMain();
 		}
@@ -123,7 +126,7 @@ export class NodeCookController<NC extends NodeContext> {
 		const io_inputs = this.node.io.inputs;
 		if (this._inputs_evaluation_required) {
 			if (io_inputs.is_any_input_dirty()) {
-				input_containers = await io_inputs.eval_required_inputs();
+				input_containers = await io_inputs.evalRequiredInputs();
 			} else {
 				input_containers = await io_inputs.containers_without_evaluation();
 			}

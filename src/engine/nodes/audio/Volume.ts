@@ -5,16 +5,17 @@
  */
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {AudioBuilder, InstrumentType, SourceType} from '../../../core/audio/AudioBuilder';
+import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {BaseNodeType} from '../_Base';
 import {effectParamsOptions} from './utils/EffectsController';
+import {Volume} from 'tone/build/esm/component/channel/Volume';
 
 const VOLUME_DEFAULTS = {
 	volume: 0,
 };
 
 const paramCallback = (node: BaseNodeType) => {
-	VolumeAudioNode.PARAM_CALLBACK_updateVolume(node as VolumeAudioNode);
+	VolumeAudioNode.PARAM_CALLBACK_updateEffect(node as VolumeAudioNode);
 };
 
 class VolumeAudioParamsConfig extends NodeParamsConfig {
@@ -40,33 +41,31 @@ export class VolumeAudioNode extends TypedAudioNode<VolumeAudioParamsConfig> {
 	cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
-		this._updateInputVolume(audioBuilder.instrument());
-		this._updateInputVolume(audioBuilder.source());
+		const effect = this._effect();
+
+		const inputNode = audioBuilder.audioNode();
+		if (inputNode) {
+			inputNode.connect(effect);
+		}
+		audioBuilder.setAudioNode(effect);
 
 		this.setAudioBuilder(audioBuilder);
 	}
-	static PARAM_CALLBACK_updateVolume(node: VolumeAudioNode) {
-		node._updateVolume();
+
+	private __effect__: Volume | undefined;
+	private _effect() {
+		return (this.__effect__ = this.__effect__ || this._createEffect());
 	}
-	private async _updateVolume() {
-		const inputs = await this._getVolumeControllables();
-		this._updateInputVolume(inputs?.instrument);
-		this._updateInputVolume(inputs?.source);
+	private _createEffect() {
+		return new Volume({
+			volume: this.pv.volume,
+		});
 	}
-	private _updateInputVolume(input: InstrumentType | SourceType | undefined) {
-		if (!input) {
-			return;
-		}
-		input.volume.value = this.pv.volume;
+	static PARAM_CALLBACK_updateEffect(node: VolumeAudioNode) {
+		node._updateEffect();
 	}
-	private async _getVolumeControllables() {
-		if (this.isDirty()) {
-			await this.compute();
-		}
-		const audioBuilder = this.containerController.container().coreContent();
-		if (!audioBuilder) {
-			return;
-		}
-		return {instrument: audioBuilder.instrument(), source: audioBuilder.source()};
+	private _updateEffect() {
+		const effect = this._effect();
+		effect.volume.linearRampToValueAtTime(this.pv.volume, '+1');
 	}
 }
