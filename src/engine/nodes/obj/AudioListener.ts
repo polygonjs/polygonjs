@@ -21,7 +21,7 @@ import {BaseNodeType} from '../_Base';
 class AudioListenerParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	audio = ParamConfig.FOLDER();
 	/** @param soundOn */
-	soundOn = ParamConfig.BOOLEAN(0, {
+	soundOn = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
 			AudioListenerObjNode.PARAM_CALLBACK_updateListener(node as AudioListenerObjNode);
@@ -63,7 +63,6 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 		this.transformController.initializeNode();
 		this.scene().dispatchController.onAddListener(() => {
 			this.params.onParamsCreated('params_label', () => {
-				this.p.soundOn.set(this.root().audioController.soundOn());
 				this.params.label.init([this.p.soundOn], () => {
 					return this.pv.soundOn ? 'on' : 'off';
 				});
@@ -76,6 +75,9 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 		this.object.dispose();
 		this._setPositionalAudioNodesDirty();
 	}
+	toggleSound() {
+		this.p.soundOn.set(!isBooleanTrue(this.pv.soundOn));
+	}
 	private _setPositionalAudioNodesDirty() {
 		// set the positionalAudio dirty
 		// so that they can raise an error if no other listener is found
@@ -86,11 +88,11 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 
 	cook() {
 		this.transformController.update();
-		this._checkValid();
+		this._validateUniq();
 		this._updateAudioListener();
 		this.cookController.endCook();
 	}
-	private _checkValid() {
+	private _validateUniq() {
 		const existingListeners = this.root().audioController.audioListeners();
 		if (existingListeners.length > 1) {
 			this.states.error.set('only 1 audioListener can exist in a scene');

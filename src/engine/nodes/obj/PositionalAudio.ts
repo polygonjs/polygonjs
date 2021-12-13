@@ -142,7 +142,7 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 				this.states.error.set('a listener is required in the scene');
 				return;
 			}
-			this._positionalAudio.disconnect();
+			// this._positionalAudio.disconnect();
 			listener.object.addInput(this._positionalAudio);
 		} else {
 			this._positionalAudio.disconnect();

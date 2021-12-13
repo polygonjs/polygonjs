@@ -20,7 +20,7 @@ const paramCallback = (node: BaseNodeType) => {
 class ReverbAudioParamsConfig extends NodeParamsConfig {
 	/** @param The duration of the reverb. */
 	decay = ParamConfig.FLOAT(DEFAULTS.decay, {
-		range: [0, 10],
+		range: [0.001, 10],
 		rangeLocked: [true, false],
 		...effectParamsOptions(paramCallback),
 	});

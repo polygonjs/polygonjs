@@ -3,6 +3,7 @@ import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {RootManagerNode} from '../../Root';
 import {AudioController} from '../../../../../core/audio/AudioController';
+import {isBooleanTrue} from '../../../../../core/Type';
 
 const CallbackOptions = {
 	computeOnDirty: false,
@@ -27,32 +28,28 @@ export function RootAudioParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 export class RootAudioController {
-	private _soundOn = false;
 	constructor(protected node: RootManagerNode) {}
 
 	async toggleSound() {
-		this._soundOn = !this._soundOn;
-		if (this._soundOn) {
+		this.audioListeners().forEach((node) => {
+			node.toggleSound();
+		});
+
+		if (this.soundOn()) {
 			await AudioController.start();
 		}
 		this.update();
 	}
 	soundOn() {
-		return this._soundOn;
+		const listener = this.audioListeners()[0];
+		return isBooleanTrue(listener.pv.soundOn) || false;
 	}
 
 	update() {
-		this._updateListeners();
 		this._updateViewers();
 	}
 	audioListeners() {
 		return this.node.nodesByType('audioListener');
-	}
-	private _updateListeners() {
-		for (let listener of this.audioListeners()) {
-			listener.p.soundOn.set(this._soundOn);
-			// listener.setDirty();
-		}
 	}
 
 	private _updateViewers() {
