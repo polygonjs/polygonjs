@@ -11,7 +11,7 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {BaseNodeType} from '../_Base';
 import {ALL_NOTES, DEFAULT_NOTE} from '../../../core/audio/Notes';
 import {NodeContext} from '../../poly/NodeContext';
-import {AudioController} from '../../../core/audio/AudioController';
+import {AudioListenerObjNode} from '../obj/AudioListener';
 
 class AudioEventParamsConfig extends NodeParamsConfig {
 	/** @parm audio node */
@@ -66,12 +66,16 @@ export class AudioEventNode extends TypedEventNode<AudioEventParamsConfig> {
 		this._play();
 	}
 	private async _play() {
+		if (!AudioListenerObjNode.soundActivated()) {
+			return;
+		}
+
 		const instrument = await this._getInstrument();
 		if (!instrument) {
 			return;
 		}
 
-		await AudioController.start();
+		// await AudioController.start();
 
 		if (this._previousNote) {
 			// instrument.triggerRelease(this._previousNote);

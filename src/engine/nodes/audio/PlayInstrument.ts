@@ -6,8 +6,6 @@
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
-// import {BaseNodeType} from '../_Base';
-import {AudioController} from '../../../core/audio/AudioController';
 import {ALL_NOTES, DEFAULT_NOTE} from '../../../core/audio/Notes';
 
 class PlayInstrumentAudioParamsConfig extends NodeParamsConfig {
@@ -66,7 +64,7 @@ export class PlayInstrumentAudioNode extends TypedAudioNode<PlayInstrumentAudioP
 			console.log('no instrument');
 			return;
 		}
-		await AudioController.start();
+		// await AudioController.start();
 
 		instrument.triggerAttackRelease(this.pv.note, this.pv.duration);
 	}

@@ -99,15 +99,12 @@ export class ViewerAudioController {
 		this._updateIcon();
 	}
 	private _updateIcon() {
-		if (!(this._onIcon && this._offIcon)) {
-			return;
-		}
 		if (this._viewer.cameraNode().root().audioController.soundOn()) {
-			this._onIcon.style.display = 'block';
-			this._offIcon.style.display = 'none';
+			this.onIcon().style.display = 'block';
+			this.offIcon().style.display = 'none';
 		} else {
-			this._onIcon.style.display = 'none';
-			this._offIcon.style.display = 'block';
+			this.onIcon().style.display = 'none';
+			this.offIcon().style.display = 'block';
 		}
 	}
 }

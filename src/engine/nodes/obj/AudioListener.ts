@@ -18,13 +18,14 @@ import {isBooleanTrue} from '../../../core/Type';
 // import {AudioContext} from 'three/src/audio/AudioContext.js';
 import {CoreAudioListener} from '../../../core/audio/AudioListener';
 import {BaseNodeType} from '../_Base';
+import {AudioController} from '../../../core/audio/AudioController';
 class AudioListenerParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	audio = ParamConfig.FOLDER();
 	/** @param soundOn */
 	soundOn = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			AudioListenerObjNode.PARAM_CALLBACK_updateListener(node as AudioListenerObjNode);
+			AudioListenerObjNode.PARAM_CALLBACK_update(node as AudioListenerObjNode);
 		},
 	});
 	/** @param volume */
@@ -68,7 +69,10 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 				});
 			});
 		});
-		this.lifecycle.onAdd(this._setPositionalAudioNodesDirty.bind(this));
+		this.lifecycle.onAdd(() => {
+			this._setPositionalAudioNodesDirty();
+			this.addAudioActivationEvents();
+		});
 	}
 	dispose() {
 		super.dispose();
@@ -89,7 +93,7 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 	cook() {
 		this.transformController.update();
 		this._validateUniq();
-		this._updateAudioListener();
+		this._updateListenersAndViewers();
 		this.cookController.endCook();
 	}
 	private _validateUniq() {
@@ -103,7 +107,62 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 		const volume = isBooleanTrue(this.pv.soundOn) ? this.pv.masterVolume : 0;
 		this.object.setMasterVolume(volume);
 	}
-	static PARAM_CALLBACK_updateListener(node: AudioListenerObjNode) {
-		node._updateAudioListener();
+
+	private _updateViewers() {
+		this.root().audioController.update();
+	}
+	private _updateListenersAndViewers() {
+		this._updateAudioListener();
+		this._updateViewers();
+	}
+
+	static PARAM_CALLBACK_update(node: AudioListenerObjNode) {
+		node._updateListenersAndViewers();
+	}
+
+	/*
+
+	EVENTS TO ACTIVATE SOUND
+
+	*/
+	private static _eventsAdded = false;
+	private static _audioActivated = false;
+	private async _onpointerdown(event: PointerEvent) {
+		await this.activateSound();
+	}
+	private async _onkeypress(event: KeyboardEvent) {
+		await this.activateSound();
+	}
+	static soundActivated(): boolean {
+		return this._audioActivated;
+	}
+	soundActivated(): boolean {
+		return AudioListenerObjNode.soundActivated();
+	}
+	async activateSound() {
+		if (!this.soundActivated()) {
+			await AudioController.start();
+			AudioListenerObjNode._audioActivated = true;
+		}
+		this._removeAudioActivationEvents();
+	}
+	private _boundEvents = {
+		pointerdown: this._onpointerdown.bind(this),
+		keypress: this._onkeypress.bind(this),
+	};
+	addAudioActivationEvents() {
+		if (this.soundActivated()) {
+			return;
+		}
+		if (AudioListenerObjNode._eventsAdded) {
+			return;
+		}
+		AudioListenerObjNode._eventsAdded = true;
+		document.body.addEventListener('pointerdown', this._boundEvents.pointerdown);
+		document.body.addEventListener('keypress', this._boundEvents.keypress);
+	}
+	private _removeAudioActivationEvents() {
+		document.body.removeEventListener('pointerdown', this._boundEvents.pointerdown);
+		document.body.removeEventListener('keypress', this._boundEvents.keypress);
 	}
 }

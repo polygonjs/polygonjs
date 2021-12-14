@@ -17,7 +17,6 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CorePositionalAudio, DistanceModel, DISTANCE_MODELS} from '../../../core/audio/PositionalAudio';
 import {CorePositionalAudioHelper} from '../../../core/audio/PositionalAudioHelper';
 import {BaseNodeType} from '../_Base';
-import {AudioController} from '../../../core/audio/AudioController';
 import {AudioNodeChildrenMap} from '../../poly/registers/nodes/Audio';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
@@ -136,7 +135,6 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 	}
 	private async _updateToDestination() {
 		if (this.flags.display.active()) {
-			await AudioController.start();
 			const listener = this.root().audioController.audioListeners()[0];
 			if (!listener) {
 				this.states.error.set('a listener is required in the scene');
@@ -188,7 +186,6 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 	}
 	private _createHelper(positionalAudio: CorePositionalAudio) {
 		const helper = new CorePositionalAudioHelper(positionalAudio);
-
 		helper.matrixAutoUpdate = false;
 		return helper;
 	}

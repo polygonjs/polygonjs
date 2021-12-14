@@ -10,7 +10,6 @@ import {Player} from 'tone/build/esm/source/buffer/Player';
 import {CoreLoaderAudio} from '../../../core/loader/Audio';
 import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
-import {AudioController} from '../../../core/audio/AudioController';
 class FileAudioParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the audio file from */
 	url = ParamConfig.STRING('');
@@ -30,6 +29,12 @@ class FileAudioParamsConfig extends NodeParamsConfig {
 			FileAudioNode.PARAM_CALLBACK_pause(node as FileAudioNode);
 		},
 	});
+	/** @param restart the audio */
+	restart = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			FileAudioNode.PARAM_CALLBACK_restart(node as FileAudioNode);
+		},
+	});
 }
 const ParamsConfig = new FileAudioParamsConfig();
 
@@ -45,29 +50,38 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 
 	async cook(inputContents: AudioBuilder[]) {
 		const player = await this._loadUrl();
-		const audioBuilder = new AudioBuilder();
-		audioBuilder.setSource(player);
-		this.setAudioBuilder(audioBuilder);
+		if (player) {
+			const audioBuilder = new AudioBuilder();
+			audioBuilder.setSource(player);
+			this.setAudioBuilder(audioBuilder);
+		} else {
+			this.cookController.endCook();
+		}
 	}
-	private async _loadUrl(): Promise<Player> {
-		const loader = new CoreLoaderAudio(this.pv.url, this.scene(), this);
-		const buffer = await loader.load();
+	private async _loadUrl(): Promise<Player | void> {
+		try {
+			const loader = new CoreLoaderAudio(this.pv.url, this.scene(), this);
+			const buffer = await loader.load();
 
-		return new Promise((resolve) => {
-			const player = new Player({
-				url: buffer,
-				loop: isBooleanTrue(this.pv.loop),
-				volume: 0,
-				// no onload event if a buffer is provided instead of a url
-				// onload: () => {
-				// 	resolve(player);
-				// },
+			return new Promise((resolve) => {
+				const player = new Player({
+					url: buffer,
+					loop: isBooleanTrue(this.pv.loop),
+					volume: 0,
+					// no onload event if a buffer is provided instead of a url
+					// onload: () => {
+					// 	resolve(player);
+					// },
+				});
+				if (isBooleanTrue(this.pv.autostart)) {
+					player.start();
+				}
+				resolve(player);
 			});
-			if (isBooleanTrue(this.pv.autostart)) {
-				player.start();
-			}
-			resolve(player);
-		});
+		} catch (err) {
+			this.states.error.set(`failed to load url '${this.pv.url}'`);
+			return;
+		}
 	}
 	async play(): Promise<void> {
 		const source = await this._getSource();
@@ -75,7 +89,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 			console.log('no source');
 			return;
 		}
-		await AudioController.start();
+		// await AudioController.start();
 
 		source.start();
 	}
@@ -85,6 +99,15 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 			return;
 		}
 		source.stop();
+	}
+	async restart() {
+		const source = await this._getSource();
+		if (!source) {
+			return;
+		}
+		if (source instanceof Player) {
+			source.seek(0);
+		}
 	}
 	private async _getSource() {
 		if (this.isDirty()) {
@@ -102,5 +125,8 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	}
 	static PARAM_CALLBACK_pause(node: FileAudioNode) {
 		node.pause();
+	}
+	static PARAM_CALLBACK_restart(node: FileAudioNode) {
+		node.restart();
 	}
 }

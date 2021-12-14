@@ -6,7 +6,6 @@ import {Listener} from 'tone/build/esm/core/context/Listener';
 import {AnyAudioContext} from 'tone/build/esm/core/context/AudioContext';
 import {Gain} from 'tone/build/esm/core/context/Gain';
 import {CorePositionalAudio} from './PositionalAudio';
-import {AudioController} from './AudioController';
 
 const _position = new Vector3();
 const _quaternion = new Quaternion();
@@ -15,11 +14,10 @@ const _orientation = new Vector3();
 
 export class CoreAudioListener extends Object3D {
 	private context: AnyAudioContext;
-	// private type = 'AudioListener';
 	private timeDelta = 0;
 	private _clock = new Clock();
-	// private volume: Volume;
 	private gain: Gain;
+
 	constructor() {
 		super();
 
@@ -33,7 +31,6 @@ export class CoreAudioListener extends Object3D {
 	}
 
 	async addInput(positionalAudioNode: CorePositionalAudio) {
-		await AudioController.start();
 		positionalAudioNode.connect(this.gain);
 	}
 	dispose() {

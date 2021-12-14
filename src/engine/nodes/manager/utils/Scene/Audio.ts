@@ -2,7 +2,6 @@ import {Constructor} from '../../../../../types/GlobalTypes';
 import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {RootManagerNode} from '../../Root';
-import {AudioController} from '../../../../../core/audio/AudioController';
 import {isBooleanTrue} from '../../../../../core/Type';
 
 const CallbackOptions = {
@@ -35,14 +34,15 @@ export class RootAudioController {
 			node.toggleSound();
 		});
 
-		if (this.soundOn()) {
-			await AudioController.start();
-		}
 		this.update();
 	}
 	soundOn() {
 		const listener = this.audioListeners()[0];
-		return isBooleanTrue(listener.pv.soundOn) || false;
+		if (listener) {
+			return isBooleanTrue(listener.pv.soundOn) || false;
+		} else {
+			return false;
+		}
 	}
 
 	update() {
