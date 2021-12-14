@@ -101,18 +101,18 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 			format: RGBAFormat,
 			stencilBuffer: true,
 		};
-		const render_target1 = Poly.renderersController.renderTarget(
+		const renderTarget1 = Poly.renderersController.renderTarget(
 			renderer.domElement.offsetWidth,
 			renderer.domElement.offsetHeight,
 			parameters
 		);
-		const render_target2 = Poly.renderersController.renderTarget(
+		const renderTarget2 = Poly.renderersController.renderTarget(
 			renderer.domElement.offsetWidth,
 			renderer.domElement.offsetHeight,
 			parameters
 		);
-		const composer1 = new EffectComposer(renderer, render_target1);
-		const composer2 = new EffectComposer(renderer, render_target2);
+		const composer1 = new EffectComposer(renderer, renderTarget1);
+		const composer2 = new EffectComposer(renderer, renderTarget2);
 		// renderToScreen = false to ensure the last pass of each composer is still
 		// written to the render_target
 		composer1.renderToScreen = false;

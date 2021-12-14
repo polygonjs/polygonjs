@@ -1,14 +1,14 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
-import {BaseNodeType, TypedNode} from '../../../_Base';
-import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
-import {Scene} from 'three/src/scenes/Scene';
+import {BaseNodeType} from '../../../_Base';
+import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {NodeContext} from '../../../../poly/NodeContext';
+import {SceneObjNode} from '../../../obj/Scene';
 
 const CallbackOptions = {
 	computeOnDirty: false,
 	callback: (node: BaseNodeType) => {
-		SceneMaterialOverrideController.update(node as SceneMaterialOverrideNode);
+		SceneMaterialOverrideController.update(node as SceneObjNode);
 	},
 };
 
@@ -27,17 +27,17 @@ export function SceneMaterialOverrideParamConfig<TBase extends Constructor>(Base
 		});
 	};
 }
-class SceneMaterialOverrideParamsConfig extends SceneMaterialOverrideParamConfig(NodeParamsConfig) {}
-abstract class SceneMaterialOverrideNode extends TypedNode<any, SceneMaterialOverrideParamsConfig> {
-	readonly SceneMaterialOverrideController = new SceneMaterialOverrideController(this);
-	protected _object = new Scene();
-	get object() {
-		return this._object;
-	}
-}
+// class SceneMaterialOverrideParamsConfig extends SceneMaterialOverrideParamConfig(NodeParamsConfig) {}
+// abstract class SceneMaterialOverrideNode extends TypedNode<any, SceneMaterialOverrideParamsConfig> {
+// 	readonly sceneMaterialOverrideController = new SceneMaterialOverrideController(this);
+// 	protected _object = new Scene();
+// 	get object() {
+// 		return this._object;
+// 	}
+// }
 
 export class SceneMaterialOverrideController {
-	constructor(protected node: SceneMaterialOverrideNode) {}
+	constructor(protected node: SceneObjNode) {}
 
 	async update() {
 		const scene = this.node.object;
@@ -46,18 +46,18 @@ export class SceneMaterialOverrideController {
 		if (isBooleanTrue(pv.useOverrideMaterial)) {
 			const node = pv.overrideMaterial.nodeWithContext(NodeContext.MAT);
 			if (node) {
-				node.compute().then((container) => {
-					scene.overrideMaterial = container.material();
-				});
+				const container = await node.compute();
+				scene.overrideMaterial = container.material();
 			} else {
-				this.node.states.error.set('bgTexture node not found');
+				scene.overrideMaterial = null;
+				this.node.states.error.set('overrideMaterial node not found');
 			}
 		} else {
 			scene.overrideMaterial = null;
 		}
 	}
 
-	static async update(node: SceneMaterialOverrideNode) {
-		node.SceneMaterialOverrideController.update();
+	static async update(node: SceneObjNode) {
+		node.sceneMaterialOverrideController.update();
 	}
 }
