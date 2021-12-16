@@ -2,9 +2,8 @@ import {SceneJsonImporter} from '../io/json/import/Scene';
 import {SceneJsonExporterData} from '../io/json/export/Scene';
 import {Poly} from '../Poly';
 import {BlobUrlData} from './BlobsController';
-import {ViewerData, ViewerDataByElement, UnzippedData} from './Common';
+import {ViewerData, ViewerDataByElement} from './Common';
 import {DomEffects} from '../../core/DomEffects';
-import {SelfContainedFileName} from '../io/self_contained/Common';
 import {PolyScene} from '../scene/PolyScene';
 import {createObjectURL} from '../../core/BlobUtils';
 
@@ -95,38 +94,38 @@ export class SelfContainedScenesLoader {
 		// if polyConfig is loaded,
 		// the scene will be loaded from _loadPolyConfig.
 		// if it is not, the scene will be loaded in this function
-		const polyConfigLoaded = this._loadPolyConfig(ids, unzippedData);
-		if (polyConfigLoaded) {
-			return;
-		}
+		// const polyConfigLoaded = this._loadPolyConfig(ids, unzippedData);
+		// if (polyConfigLoaded) {
+		// 	return;
+		// }
 		this._loadScene(element, sceneData, sceneJsonImporterContructor);
 	}
 
-	private _loadPolyConfig(ids: PolyConfigIds, unzippedData: UnzippedData) {
-		const polyConfigArray = unzippedData[SelfContainedFileName.POLY_CONFIG];
-		if (!polyConfigArray) {
-			return false;
-		}
-		const polyConfigUrl = this._createJsBlob(polyConfigArray, 'polyConfig');
+	// private _loadPolyConfig(ids: PolyConfigIds, unzippedData: Unzipped) {
+	// 	const polyConfigArray = unzippedData[SelfContainedFileName.POLY_CONFIG];
+	// 	if (!polyConfigArray) {
+	// 		return false;
+	// 	}
+	// 	const polyConfigUrl = this._createJsBlob(polyConfigArray, 'polyConfig');
 
-		let script = document.getElementById(ids.scriptElementId);
+	// 	let script = document.getElementById(ids.scriptElementId);
 
-		const lines: string[] = [];
-		lines.push(`import {configurePolygonjs, configureScene} from '${polyConfigUrl}';`);
-		lines.push(`configurePolygonjs(window.${ids.Poly});`);
-		lines.push(
-			`window.${ids.loadSceneArgs}.method(window.${ids.loadSceneArgs}.element, window.${ids.loadSceneArgs}.sceneData, window.${ids.loadSceneArgs}.sceneJsonImporterContructor, configureScene);`
-		);
-		lines.push(`delete window.${ids.loadSceneArgs};`);
+	// 	const lines: string[] = [];
+	// 	lines.push(`import {configurePolygonjs, configureScene} from '${polyConfigUrl}';`);
+	// 	lines.push(`configurePolygonjs(window.${ids.Poly});`);
+	// 	lines.push(
+	// 		`window.${ids.loadSceneArgs}.method(window.${ids.loadSceneArgs}.element, window.${ids.loadSceneArgs}.sceneData, window.${ids.loadSceneArgs}.sceneJsonImporterContructor, configureScene);`
+	// 	);
+	// 	lines.push(`delete window.${ids.loadSceneArgs};`);
 
-		if (!script) {
-			script = document.createElement('script') as HTMLScriptElement;
-			script.setAttribute('type', 'module');
-			(script as any).text = lines.join('\n');
-			document.body.append(script);
-		}
-		return true;
-	}
+	// 	if (!script) {
+	// 		script = document.createElement('script') as HTMLScriptElement;
+	// 		script.setAttribute('type', 'module');
+	// 		(script as any).text = lines.join('\n');
+	// 		document.body.append(script);
+	// 	}
+	// 	return true;
+	// }
 
 	private async _loadScene(
 		element: HTMLElement,

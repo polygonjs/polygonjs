@@ -106,7 +106,6 @@ export class PolyEngine {
 	inWorkerThread() {
 		return false;
 	}
-	desktopController(): any {}
 
 	//
 	//

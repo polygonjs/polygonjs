@@ -1,6 +1,7 @@
 import {ModuleName} from '../../poly/registers/modules/Common';
 
 export enum SelfContainedFileName {
+	MANIFEST = 'manifest.json',
 	CODE = 'code.json',
 	EDITOR = 'editor.json',
 	ASSETS = 'assets.json',
@@ -12,3 +13,10 @@ export enum SelfContainedFileName {
 export type JsFilesManifest = {
 	modules: ModuleName[];
 };
+export interface SelfContainedManifestContent {
+	source: string;
+	version: {
+		polygonjs: string;
+		editor: string;
+	};
+}

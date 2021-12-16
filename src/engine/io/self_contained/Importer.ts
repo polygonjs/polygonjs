@@ -1,5 +1,5 @@
 import {unzipSync, strFromU8, Unzipped} from 'fflate';
-import {JsFilesManifest, SelfContainedFileName} from './Common';
+import {JsFilesManifest, SelfContainedFileName, SelfContainedManifestContent} from './Common';
 import {ViewerDataByElement} from '../../poly/Common';
 import {ModuleName} from '../../poly/registers/modules/Common';
 import {DomEffects} from '../../../core/DomEffects';
@@ -102,10 +102,12 @@ export class SelfContainedSceneImporter {
 			return;
 		}
 		const unzippedData = unzipSync(massiveFile);
+		const manifestContent = this._getManifest(unzippedData);
 		const sceneData = JSON.parse(strFromU8(unzippedData[SelfContainedFileName.CODE]));
 		const assetsManifest = JSON.parse(strFromU8(unzippedData[SelfContainedFileName.ASSETS]));
 		const jsFilesManifest: JsFilesManifest = JSON.parse(strFromU8(unzippedData[SelfContainedFileName.JS_FILES]));
 		if (DEBUG) {
+			console.log(manifestContent);
 			console.log(unzippedData);
 			console.log(assetsManifest);
 			console.log(jsFilesManifest);
@@ -137,6 +139,18 @@ export class SelfContainedSceneImporter {
 		});
 		return unzippedData;
 	}
+	private _getManifest(unzippedData: Unzipped) {
+		try {
+			const data = unzippedData[SelfContainedFileName.MANIFEST];
+			if (data) {
+				const str = strFromU8(data);
+				const manifestContent: SelfContainedManifestContent = JSON.parse(str);
+				return manifestContent;
+			}
+		} catch (err) {
+			return;
+		}
+	}
 
 	private _POLYGONJS_LOADED = false;
 	markPolygonjsAsLoaded() {
@@ -164,19 +178,33 @@ export class SelfContainedSceneImporter {
 			console.log('loading polygonjsUrl', polygonjsUrl);
 		}
 
+		const polyConfigArray = unzippedData[SelfContainedFileName.POLY_CONFIG];
+		const polyConfigUrl = polyConfigArray ? this._createJsBlob(polyConfigArray, 'polyConfig') : null;
+		const useSeparatePolyConfig = polyConfigUrl != null;
+
 		const elementId = `polygonjs-module-viewer-script`;
 		let script = document.getElementById(elementId);
 
 		const lines: string[] = [];
-		lines.push(`import {Poly, SceneJsonImporter} from '${polygonjsUrl}';`);
+		// TODO:
+		// check the version (which needs to be contained either in the manifest, not in js)
+		// keeping in mind the version may is not present with an old version,
+		// But for now, we can simply use the presence of the polyConfig to determine if it should be loaded or not
+		// if they are NOT separate, we import {Poly, SceneJsonImporter, configureScene} and we do not import PolyConfig later
+		// if they are separate, we import {Poly, SceneJsonImporter} and we still load PolyConfig later
+		if (useSeparatePolyConfig) {
+			lines.push(`import {Poly, SceneJsonImporter} from '${polygonjsUrl}';`);
+			lines.push(`import {configurePolygonjs} from '${polyConfigUrl}';`);
+			lines.push(`configurePolygonjs(Poly);`);
+		} else {
+			lines.push(`import {Poly, SceneJsonImporter, configureScene} from '${polygonjsUrl}';`);
+		}
 		requiredModuleNames.forEach((moduleName) => {
 			const moduleUrl = this._createJsBlob(unzippedData[`js/modules/${moduleName}.js`], moduleName);
 
 			lines.push(`import {${moduleName}} from '${moduleUrl}';`);
 			lines.push(`Poly.modulesRegister.register('${moduleName}', ${moduleName});`);
 		});
-
-		// lines.push(`Poly.selfContainedScenesLoader.load(window.__POLYGONJS_VIEWER_LOAD_DATA__, SceneJsonImporter);`);
 		lines.push(`window.__POLYGONJS_SELF_CONTAINED___POLY__ = Poly;`);
 		lines.push(
 			`Poly.selfContainedScenesLoader.markAsLoaded(window.__POLYGONJS_SELF_CONTAINED___MARK_AS_LOADED_CALLBACK__, SceneJsonImporter)`
