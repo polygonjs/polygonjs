@@ -5,7 +5,6 @@ import {BlobUrlData} from './BlobsController';
 import {ViewerData, ViewerDataByElement} from './Common';
 import {DomEffects} from '../../core/DomEffects';
 import {PolyScene} from '../scene/PolyScene';
-import {createObjectURL} from '../../core/BlobUtils';
 
 type SceneJsonImporterContructor = typeof SceneJsonImporter;
 
@@ -164,11 +163,5 @@ export class SelfContainedScenesLoader {
 				posterElement.parentElement?.removeChild(posterElement);
 			});
 		}
-	}
-
-	private _createJsBlob(array: Uint8Array, filename: string) {
-		const blob = new Blob([array]);
-		const file = new File([blob], `${filename}.js`, {type: 'application/javascript'});
-		return createObjectURL(file);
 	}
 }
