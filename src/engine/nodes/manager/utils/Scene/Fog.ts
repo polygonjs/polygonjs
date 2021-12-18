@@ -1,17 +1,16 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
-import {BaseNodeType, TypedNode} from '../../../_Base';
-
+import {BaseNodeType} from '../../../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
-import {Scene} from 'three/src/scenes/Scene';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {Fog} from 'three/src/scenes/Fog';
 import {FogExp2} from 'three/src/scenes/FogExp2';
 import {ParamsValueAccessorType} from '../../../utils/params/ParamsValueAccessor';
+import {RootManagerNode} from '../../Root';
 
 const CallbackOptions = {
 	computeOnDirty: false,
 	callback: (node: BaseNodeType) => {
-		SceneFogController.update(node as SceneFogNode);
+		SceneFogController.update(node as RootManagerNode);
 	},
 };
 
@@ -62,16 +61,9 @@ export function SceneFogParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 class SceneFogParamsConfig extends SceneFogParamConfig(NodeParamsConfig) {}
-abstract class SceneFogNode extends TypedNode<any, SceneFogParamsConfig> {
-	readonly sceneFogController = new SceneFogController(this);
-	protected _object = new Scene();
-	get object() {
-		return this._object;
-	}
-}
 
 export class SceneFogController {
-	constructor(protected node: SceneFogNode) {}
+	constructor(protected node: RootManagerNode) {}
 	private _fog: Fog | undefined;
 	private _fogExp2: FogExp2 | undefined;
 
@@ -106,7 +98,7 @@ export class SceneFogController {
 		return (this._fogExp2 = this._fogExp2 || new FogExp2(0xffffff, pv.fogDensity));
 	}
 
-	static async update(node: SceneFogNode) {
+	static async update(node: RootManagerNode) {
 		node.sceneFogController.update();
 	}
 }

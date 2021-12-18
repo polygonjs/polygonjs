@@ -11,7 +11,7 @@ export interface ManifestContent {
 	nodes: ManifestNodesData;
 }
 
-interface ProgressCallbackArgs {
+export interface ProgressCallbackArgs {
 	count: number;
 	total: number;
 }

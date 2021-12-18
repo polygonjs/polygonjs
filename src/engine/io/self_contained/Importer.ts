@@ -23,6 +23,7 @@ enum LoadingMode {
 export class SelfContainedSceneImporter {
 	private _viewerDataByElement: ViewerDataByElement = new Map();
 	private _firstPolygonjsVersionFound: string | undefined;
+	private _exportManifestContent: SelfContainedManifestContent | undefined;
 
 	async load() {
 		window.__POLYGONJS_SELF_CONTAINED___MARK_AS_LOADED_CALLBACK__ = this.markPolygonjsAsLoaded.bind(this);
@@ -102,12 +103,12 @@ export class SelfContainedSceneImporter {
 			return;
 		}
 		const unzippedData = unzipSync(massiveFile);
-		const manifestContent = this._getManifest(unzippedData);
-		const sceneData = JSON.parse(strFromU8(unzippedData[SelfContainedFileName.CODE]));
+		this._exportManifestContent = this._getExportManifest(unzippedData);
+		const sceneData = this.assembleSceneData();
 		const assetsManifest = JSON.parse(strFromU8(unzippedData[SelfContainedFileName.ASSETS]));
 		const jsFilesManifest: JsFilesManifest = JSON.parse(strFromU8(unzippedData[SelfContainedFileName.JS_FILES]));
 		if (DEBUG) {
-			console.log(manifestContent);
+			console.log(this._exportManifestContent);
 			console.log(unzippedData);
 			console.log(assetsManifest);
 			console.log(jsFilesManifest);
@@ -139,9 +140,14 @@ export class SelfContainedSceneImporter {
 		});
 		return unzippedData;
 	}
-	private _getManifest(unzippedData: Unzipped) {
+	assembleSceneData(): any {
+		// SceneJsonExporter
+		// JSON.parse(strFromU8(unzippedData[SelfContainedFileName.CODE]));
+		throw 'assembleSceneData not implemented';
+	}
+	private _getExportManifest(unzippedData: Unzipped) {
 		try {
-			const data = unzippedData[SelfContainedFileName.MANIFEST];
+			const data = unzippedData[SelfContainedFileName.EXPORT_MANIFEST];
 			if (data) {
 				const str = strFromU8(data);
 				const manifestContent: SelfContainedManifestContent = JSON.parse(str);
@@ -192,12 +198,18 @@ export class SelfContainedSceneImporter {
 		// But for now, we can simply use the presence of the polyConfig to determine if it should be loaded or not
 		// if they are NOT separate, we import {Poly, SceneJsonImporter, configureScene} and we do not import PolyConfig later
 		// if they are separate, we import {Poly, SceneJsonImporter} and we still load PolyConfig later
+		// also, when exporting from the web editor, configureScene will not exist
+		// and trying to import it will lead to an error
 		if (useSeparatePolyConfig) {
 			lines.push(`import {Poly, SceneJsonImporter} from '${polygonjsUrl}';`);
 			lines.push(`import {configurePolygonjs} from '${polyConfigUrl}';`);
 			lines.push(`configurePolygonjs(Poly);`);
 		} else {
-			lines.push(`import {Poly, SceneJsonImporter, configureScene} from '${polygonjsUrl}';`);
+			if (this._exportManifestContent?.useConfigureScene) {
+				lines.push(`import {Poly, SceneJsonImporter, configureScene} from '${polygonjsUrl}';`);
+			} else {
+				lines.push(`import {Poly, SceneJsonImporter} from '${polygonjsUrl}';`);
+			}
 		}
 		requiredModuleNames.forEach((moduleName) => {
 			const moduleUrl = this._createJsBlob(unzippedData[`js/modules/${moduleName}.js`], moduleName);

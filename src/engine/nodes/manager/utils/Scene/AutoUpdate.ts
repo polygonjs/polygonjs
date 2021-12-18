@@ -1,13 +1,13 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
-import {BaseNodeType, TypedNode} from '../../../_Base';
-import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
-import {Scene} from 'three/src/scenes/Scene';
+import {BaseNodeType} from '../../../_Base';
+import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
+import {RootManagerNode} from '../../Root';
 
 const CallbackOptions = {
 	computeOnDirty: false,
 	callback: (node: BaseNodeType) => {
-		SceneAutoUpdateController.update(node as SceneAutoUpdateNode);
+		SceneAutoUpdateController.update(node as RootManagerNode);
 	},
 };
 
@@ -17,17 +17,17 @@ export function SceneAutoUpdateParamConfig<TBase extends Constructor>(Base: TBas
 		autoUpdate = ParamConfig.BOOLEAN(1, CallbackOptions);
 	};
 }
-class SceneAutoUpdateParamsConfig extends SceneAutoUpdateParamConfig(NodeParamsConfig) {}
-abstract class SceneAutoUpdateNode extends TypedNode<any, SceneAutoUpdateParamsConfig> {
-	readonly sceneAutoUpdateController = new SceneAutoUpdateController(this);
-	protected _object = new Scene();
-	get object() {
-		return this._object;
-	}
-}
+// class SceneAutoUpdateParamsConfig extends SceneAutoUpdateParamConfig(NodeParamsConfig) {}
+// abstract class SceneAutoUpdateNode extends TypedNode<any, SceneAutoUpdateParamsConfig> {
+// 	readonly sceneAutoUpdateController = new SceneAutoUpdateController(this);
+// 	protected _object = new Scene();
+// 	get object() {
+// 		return this._object;
+// 	}
+// }
 
 export class SceneAutoUpdateController {
-	constructor(protected node: SceneAutoUpdateNode) {}
+	constructor(protected node: RootManagerNode) {}
 
 	async update() {
 		const scene = this.node.object;
@@ -38,7 +38,7 @@ export class SceneAutoUpdateController {
 		}
 	}
 
-	static async update(node: SceneAutoUpdateNode) {
+	static async update(node: RootManagerNode) {
 		node.sceneAutoUpdateController.update();
 	}
 }

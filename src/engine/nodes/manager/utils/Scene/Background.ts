@@ -1,8 +1,8 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
-import {BaseNodeType, TypedNode} from '../../../_Base';
-import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
+import {BaseNodeType} from '../../../_Base';
+import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {NodeContext} from '../../../../poly/NodeContext';
-import {Scene} from 'three/src/scenes/Scene';
+import {RootManagerNode} from '../../Root';
 
 export enum BackgroundMode {
 	NONE = 'none',
@@ -14,7 +14,7 @@ export const BACKGROUND_MODES: BackgroundMode[] = [BackgroundMode.NONE, Backgrou
 const CallbackOptions = {
 	computeOnDirty: false,
 	callback: (node: BaseNodeType) => {
-		SceneBackgroundController.update(node as SceneBackgroundNode);
+		SceneBackgroundController.update(node as RootManagerNode);
 	},
 };
 
@@ -46,17 +46,9 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 		});
 	};
 }
-class SceneBackgroundParamsConfig extends SceneBackgroundParamConfig(NodeParamsConfig) {}
-abstract class SceneBackgroundNode extends TypedNode<any, SceneBackgroundParamsConfig> {
-	readonly sceneBackgroundController = new SceneBackgroundController(this);
-	protected _object = new Scene();
-	get object() {
-		return this._object;
-	}
-}
 
 export class SceneBackgroundController {
-	constructor(protected node: SceneBackgroundNode) {}
+	constructor(protected node: RootManagerNode) {}
 
 	update() {
 		const scene = this.node.object;
@@ -79,7 +71,7 @@ export class SceneBackgroundController {
 			}
 		}
 	}
-	static update(node: SceneBackgroundNode) {
+	static update(node: RootManagerNode) {
 		node.sceneBackgroundController.update();
 	}
 }

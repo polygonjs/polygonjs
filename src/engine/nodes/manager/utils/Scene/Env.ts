@@ -1,14 +1,14 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
-import {BaseNodeType, TypedNode} from '../../../_Base';
-import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
-import {Scene} from 'three/src/scenes/Scene';
+import {BaseNodeType} from '../../../_Base';
+import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {NodeContext} from '../../../../poly/NodeContext';
+import {RootManagerNode} from '../../Root';
 
 const CallbackOptions = {
 	computeOnDirty: false,
 	callback: (node: BaseNodeType) => {
-		SceneEnvController.update(node as SceneEnvNode);
+		SceneEnvController.update(node as RootManagerNode);
 	},
 };
 
@@ -27,17 +27,9 @@ export function SceneEnvParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 	};
 }
-class SceneEnvParamsConfig extends SceneEnvParamConfig(NodeParamsConfig) {}
-abstract class SceneEnvNode extends TypedNode<any, SceneEnvParamsConfig> {
-	readonly sceneEnvController = new SceneEnvController(this);
-	protected _object = new Scene();
-	get object() {
-		return this._object;
-	}
-}
 
 export class SceneEnvController {
-	constructor(protected node: SceneEnvNode) {}
+	constructor(protected node: RootManagerNode) {}
 
 	async update() {
 		const scene = this.node.object;
@@ -57,7 +49,7 @@ export class SceneEnvController {
 		}
 	}
 
-	static async update(node: SceneEnvNode) {
+	static async update(node: RootManagerNode) {
 		node.sceneEnvController.update();
 	}
 }

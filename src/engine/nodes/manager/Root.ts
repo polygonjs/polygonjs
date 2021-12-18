@@ -14,14 +14,17 @@ import {SceneAutoUpdateParamConfig, SceneAutoUpdateController} from './utils/Sce
 import {SceneBackgroundParamConfig, SceneBackgroundController} from './utils/Scene/Background';
 import {SceneEnvParamConfig, SceneEnvController} from './utils/Scene/Env';
 import {SceneFogParamConfig, SceneFogController} from './utils/Scene/Fog';
+import {RootLoadProgressParamConfig, RootLoadProgressController} from './utils/Scene/LoadProgress';
 import {SceneMaterialOverrideParamConfig, SceneMaterialOverrideController} from './utils/Scene/MaterialOverride';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export const ROOT_NODE_NAME = 'RootNode';
-class ObjectsManagerParamsConfig extends RootAudioParamConfig(
-	SceneMaterialOverrideParamConfig(
-		SceneEnvParamConfig(
-			SceneFogParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig)))
+class ObjectsManagerParamsConfig extends RootLoadProgressParamConfig(
+	RootAudioParamConfig(
+		SceneMaterialOverrideParamConfig(
+			SceneEnvParamConfig(
+				SceneFogParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig)))
+			)
 		)
 	)
 ) {}
@@ -37,14 +40,23 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	private _queued_nodes_by_id: Map<number, BaseObjNodeType> = new Map();
 	// private _expected_geo_nodes: PolyDictionary<GeoObjNode> = {};
 	// private _process_queue_start: number = -1;
-	readonly audioController: RootAudioController = new RootAudioController(this as any);
-	readonly sceneAutoUpdateController: SceneAutoUpdateController = new SceneAutoUpdateController(this as any);
-	readonly sceneBackgroundController: SceneBackgroundController = new SceneBackgroundController(this as any);
-	readonly sceneEnvController: SceneEnvController = new SceneEnvController(this as any);
-	readonly sceneFogController: SceneFogController = new SceneFogController(this as any);
+	readonly audioController: RootAudioController = new RootAudioController(this);
+	readonly sceneAutoUpdateController: SceneAutoUpdateController = new SceneAutoUpdateController(this);
+	readonly sceneBackgroundController: SceneBackgroundController = new SceneBackgroundController(this);
+	readonly sceneEnvController: SceneEnvController = new SceneEnvController(this);
+	readonly sceneFogController: SceneFogController = new SceneFogController(this);
+	readonly loadProgress: RootLoadProgressController = new RootLoadProgressController(this);
 	readonly sceneMaterialOverrideController: SceneMaterialOverrideController = new SceneMaterialOverrideController(
 		this as any
 	);
+
+	cook() {
+		// the cook method is necessary here,
+		// with the .endCook()
+		// Without it, the button param of this node would not execute
+		// its callback, as this node would not be perceived as cooking done
+		this.cookController.endCook();
+	}
 
 	protected _childrenControllerContext = NodeContext.OBJ;
 	initializeNode() {

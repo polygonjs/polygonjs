@@ -3,12 +3,12 @@ import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {NodeContext} from '../../../../poly/NodeContext';
-import {SceneObjNode} from '../../../obj/Scene';
+import {RootManagerNode} from '../../Root';
 
 const CallbackOptions = {
 	computeOnDirty: false,
 	callback: (node: BaseNodeType) => {
-		SceneMaterialOverrideController.update(node as SceneObjNode);
+		SceneMaterialOverrideController.update(node as RootManagerNode);
 	},
 };
 
@@ -37,7 +37,7 @@ export function SceneMaterialOverrideParamConfig<TBase extends Constructor>(Base
 // }
 
 export class SceneMaterialOverrideController {
-	constructor(protected node: SceneObjNode) {}
+	constructor(protected node: RootManagerNode) {}
 
 	async update() {
 		const scene = this.node.object;
@@ -57,7 +57,7 @@ export class SceneMaterialOverrideController {
 		}
 	}
 
-	static async update(node: SceneObjNode) {
+	static async update(node: RootManagerNode) {
 		node.sceneMaterialOverrideController.update();
 	}
 }
