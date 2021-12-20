@@ -2,7 +2,7 @@ import {ModuleName} from '../../poly/registers/modules/Common';
 
 export enum SelfContainedFileName {
 	EXPORT_MANIFEST = 'scene/export_manifest.json',
-	SCENE_MANIFEST = 'scene/scene_manifest.json',
+	// SCENE_MANIFEST = 'scene/scene_manifest.json',
 	CODE_PREFIX = 'scene/code',
 	PROPERTIES = 'scene/code/properties.json',
 	EDITOR = 'scene/editor.json',

@@ -18,10 +18,10 @@ export class CamerasController {
 			if (!path) {
 				return this._findAnyCamera();
 			}
-			const camera_node = this.scene.node(path) as BaseCameraObjNodeType | null;
-			return camera_node;
+			const cameraNode = this.scene.node(path) as BaseCameraObjNodeType | null;
+			return cameraNode;
 		} else {
-			console.warn('main camera node not found');
+			console.warn('main cameraNode not found');
 			return this._findAnyCamera();
 		}
 	}

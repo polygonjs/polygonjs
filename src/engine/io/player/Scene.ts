@@ -1,6 +1,7 @@
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
 import {PolyScene} from '../../scene/PolyScene';
+import {TimeController} from '../../scene/utils/TimeController';
 import {ThreejsViewer} from '../../viewers/Threejs';
 import {BaseViewerType} from '../../viewers/_Base';
 import {SceneJsonImporter} from '../json/import/Scene';
@@ -13,8 +14,8 @@ type ConfigureSceneCallback = (scene: PolyScene) => void;
 interface ScenePlayerImporterOptions {
 	domElement: HTMLElement;
 	sceneName: string;
-	sceneCodeManifestUrl: string;
-	progressBarUpdateCallback: ProgressBarUpdateCallback;
+	manifest: ManifestContent;
+	updateProgressBar?: ProgressBarUpdateCallback;
 	configureScene?: ConfigureSceneCallback;
 }
 
@@ -27,22 +28,46 @@ export class ScenePlayerImporter {
 	private _scene: PolyScene | undefined;
 	private _viewer: BaseViewerType | undefined;
 	constructor(private options: ScenePlayerImporterOptions) {}
+
+	static async loadScene(options: ScenePlayerImporterOptions) {
+		const importer = new ScenePlayerImporter(options);
+		return await importer.loadScene();
+	}
+
 	private _onSceneDataLoadProgress(args: ProgressCallbackArgs) {
+		const updateProgressBar = this.options.updateProgressBar;
+		if (!updateProgressBar) {
+			return;
+		}
 		const ratio = PROGRESS_RATIO.sceneData * (args.count / args.total);
-		this.options.progressBarUpdateCallback(ratio);
+		updateProgressBar(ratio);
 		if (ratio >= 1) {
-			if (this._viewer) {
-				const threejsViewer = this._viewer as ThreejsViewer;
-				if (threejsViewer.setAutoRender) {
-					threejsViewer.setAutoRender(true);
-				}
-			}
+			this._onLoadComplete();
 		}
 	}
+	private _onLoadComplete() {
+		if (this._viewer) {
+			const threejsViewer = this._viewer as ThreejsViewer;
+			if (threejsViewer.setAutoRender) {
+				threejsViewer.setAutoRender(true);
+			}
+		}
+		if (this._scene) {
+			this._scene.setFrame(TimeController.START_FRAME);
+			this._scene.play();
+		}
+	}
+
 	private async _watchNodesProgress(scene: PolyScene) {
+		const updateProgressBar = this.options.updateProgressBar;
+		if (!updateProgressBar) {
+			return;
+		}
 		const nodes = await scene.root().loadProgress.resolvedNodes();
-		console.log('_watchNodesProgress', nodes);
 		const nodesCount = nodes.length;
+		if (nodesCount == 0) {
+			updateProgressBar(1);
+		}
 		const callbackName = 'ScenePlayerImporter';
 		const cookedNodeIds = new Set<CoreGraphNodeId>();
 		for (let node of nodes) {
@@ -52,8 +77,7 @@ export class ScenePlayerImporter {
 					cookedNodeIds.add(nodeId);
 
 					const ratio = PROGRESS_RATIO.sceneData + PROGRESS_RATIO.nodes * (cookedNodeIds.size / nodesCount);
-					console.log('nodes ratio', ratio);
-					this.options.progressBarUpdateCallback(ratio);
+					updateProgressBar(ratio);
 
 					node.cookController.deregisterOnCookEnd(callbackName);
 				}
@@ -61,12 +85,9 @@ export class ScenePlayerImporter {
 		}
 	}
 	async loadScene() {
-		const response = await fetch(this.options.sceneCodeManifestUrl);
-		const manifestContent = (await response.json()) as ManifestContent;
-
 		const sceneData = await SceneDataManifestImporter.importSceneData({
 			urlPrefix: SelfContainedFileName.CODE_PREFIX,
-			manifest: manifestContent,
+			manifest: this.options.manifest,
 			onProgress: this._onSceneDataLoadProgress.bind(this),
 		});
 
@@ -85,14 +106,13 @@ export class ScenePlayerImporter {
 		// mount
 		const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;
 		if (!cameraNode) {
-			console.warn('no master camera found');
-			return;
+			console.warn('no master camera found, viewer is not mounted');
+		} else {
+			this._viewer = cameraNode.createViewer({
+				element: this.options.domElement,
+				viewerProperties: {autoRender: false},
+			});
 		}
-		this._viewer = cameraNode.createViewer({
-			element: this.options.domElement,
-			viewerProperties: {autoRender: false},
-		});
-		this._scene.play();
 		return this._scene;
 	}
 }
