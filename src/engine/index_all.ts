@@ -1,6 +1,7 @@
 import {PolyScene} from './scene/PolyScene';
 import {SceneJsonImporter} from './io/json/import/Scene';
-import {SceneDataManifestImporter, mountScene} from './io/manifest/import/SceneData';
+import {SceneDataManifestImporter} from './io/manifest/import/SceneData';
+import {mountScene} from './io/player/MountScene';
 import {ScenePlayerImporter} from './io/player/Scene';
 ScenePlayerImporter;
 import {Poly} from './Poly';

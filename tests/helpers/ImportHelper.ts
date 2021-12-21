@@ -1,4 +1,5 @@
-import {PolyScene, SceneJsonImporter} from '../../src/engine/index_all';
+import {PolyScene} from '../../src/engine/scene/PolyScene';
+import {SceneJsonImporter} from '../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../src/engine/io/json/export/Scene';
 
 type SaveLoadSceneCallback = (scene: PolyScene) => Promise<void>;
