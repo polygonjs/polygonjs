@@ -1,5 +1,5 @@
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
-import {SceneDataManifestImporter} from '../../index_all';
+import {SceneDataManifestImporter} from '../manifest/import/SceneData';
 import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';

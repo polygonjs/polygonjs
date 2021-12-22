@@ -1,5 +1,5 @@
 import {CoreType} from '../../../core/Type';
-import {SceneJsonImporter} from '../../index_all';
+import {SceneJsonImporter} from '../json/import/Scene';
 import {SceneJsonExporterData} from '../json/export/Scene';
 import {ManifestContent, SceneDataManifestImporter} from '../manifest/import/SceneData';
 

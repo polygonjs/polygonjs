@@ -186,6 +186,7 @@ export class BlobsController {
 		return {
 			manifest,
 			blobsMap,
+			paramUrls,
 		};
 	}
 }
