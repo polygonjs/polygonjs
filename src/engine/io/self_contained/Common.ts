@@ -8,6 +8,7 @@ export enum SelfContainedFileName {
 	EDITOR = 'scene/editor.json',
 	ASSETS = 'scene/assets.json',
 	POLYGONJS = 'js/all.js',
+	SCENE_DATA_LOADER = 'js/sceneDataLoader.js',
 	POLY_CONFIG = 'js/polyConfig.js',
 	JS_FILES = 'scene/js_files.json',
 	POSTER = 'images/poster.png',

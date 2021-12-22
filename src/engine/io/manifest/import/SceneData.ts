@@ -1,8 +1,9 @@
 // import {CoreType} from '../../../../core/Type';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-// import {SceneJsonImporter} from '../../../io/json/import/Scene';
+import {PROGRESS_RATIO} from '../../common/Progress';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../json/export/Node';
 import {SceneJsonExporterData, SceneJsonExporterDataProperties} from '../../json/export/Scene';
+import {SelfContainedFileName} from '../../self_contained/Common';
 
 export type ManifestNodesData = PolyDictionary<string>;
 export interface ManifestContent {
@@ -11,13 +12,9 @@ export interface ManifestContent {
 	nodes: ManifestNodesData;
 }
 
-export interface ProgressCallbackArgs {
-	count: number;
-	total: number;
-}
-type ProgressCallback = (args: ProgressCallbackArgs) => void;
+type ProgressCallback = (ratio: number) => void;
 interface ImportData {
-	urlPrefix: string;
+	urlPrefix?: string;
 	manifest: ManifestContent;
 	editorMode?: boolean;
 	onProgress?: ProgressCallback;
@@ -30,11 +27,12 @@ export interface SceneDataElements {
 }
 
 export class SceneDataManifestImporter {
-	static async importSceneData(import_data: ImportData): Promise<SceneJsonExporterData> {
-		if (import_data.editorMode == null) {
-			import_data.editorMode = false;
+	static async importSceneData(importData: ImportData): Promise<SceneJsonExporterData> {
+		if (importData.editorMode == null) {
+			importData.editorMode = false;
 		}
-		const {manifest, urlPrefix} = import_data;
+		const manifest = importData.manifest;
+		const urlPrefix = importData.urlPrefix || SelfContainedFileName.CODE_PREFIX;
 		const node_paths = Object.keys(manifest.nodes);
 		const node_urls: string[] = [];
 		for (let node_path of node_paths) {
@@ -47,7 +45,7 @@ export class SceneDataManifestImporter {
 		const all_urls = [root_url, properties_url];
 
 		// add editor urls if needed
-		if (import_data.editorMode) {
+		if (importData.editorMode) {
 			const now = Date.now();
 			all_urls.push(`${urlPrefix}/ui.json?t=${now}`);
 			//all_urls.push(`${url_prefix}/editor.json?t=${now}`);
@@ -60,12 +58,18 @@ export class SceneDataManifestImporter {
 
 		let count = 0;
 		const total = all_urls.length;
+
+		const onProgress = (ratio: number) => {
+			const progressRatio = PROGRESS_RATIO.sceneData;
+			if (importData.onProgress) {
+				importData.onProgress(progressRatio.start + progressRatio.mult * ratio);
+			}
+		};
+
 		const promises = all_urls.map(async (url) => {
 			const response = await fetch(url);
-			if (import_data.onProgress) {
-				count++;
-				import_data.onProgress({count, total});
-			}
+			count++;
+			onProgress(count / total);
 			return response;
 		});
 		const responses = await Promise.all(promises);
@@ -80,7 +84,7 @@ export class SceneDataManifestImporter {
 			properties: jsons[1],
 		};
 		let response_offset = 2;
-		if (import_data.editorMode) {
+		if (importData.editorMode) {
 			assemble_data['ui'] = jsons[2];
 			response_offset += 1;
 		}

@@ -43,6 +43,7 @@ module.exports = (env) => {
 		common_options.entry[`modules/${module}`] = `./src/engine/poly/registers/modules/entry_points/${module}.ts`;
 	}
 	common_options.entry[`viewer`] = './src/engine/index_self_contained_importer.ts';
+	common_options.entry[`sceneDataLoader`] = './src/engine/index_sceneDataLoader.ts';
 
 	if (ONE_ENTRY_PER_NODE) {
 		delete common_options.entry['all'];

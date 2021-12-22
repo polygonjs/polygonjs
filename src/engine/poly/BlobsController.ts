@@ -2,6 +2,7 @@ import {PolyScene} from '../scene/PolyScene';
 import {BaseNodeType} from '../nodes/_Base';
 import {Poly} from '../Poly';
 import {createObjectURL} from '../../core/BlobUtils';
+import {PolyDictionary} from '../../types/GlobalTypes';
 export interface BlobUrlData {
 	storedUrl: string;
 	blobUrl: string;
@@ -161,5 +162,30 @@ export class BlobsController {
 	}
 	createBlobUrl(blob: Blob) {
 		return createObjectURL(blob);
+	}
+	assetsManifestWithBlobsMap() {
+		const manifest: PolyDictionary<string> = {};
+		const blobsMap: Map<string, Blob> = new Map();
+		const blobs: Blob[] = [];
+		const paramUrls: string[] = [];
+		Poly.blobs.forEachBlob((blob, paramUrl) => {
+			blobs.push(blob);
+			paramUrls.push(paramUrl);
+		});
+		for (let i = 0; i < blobs.length; i++) {
+			const paramUrl = paramUrls[i];
+			const blob = blobs[i];
+			const assetShortName = paramUrl.split('?')[0];
+			const elements = paramUrl.split('.');
+			const ext = elements[elements.length - 1];
+			const assignedName = `${i}.${ext}`;
+			const fileNameInZip = `assets/${assignedName}`;
+			blobsMap.set(fileNameInZip, blob);
+			manifest[assetShortName] = assignedName;
+		}
+		return {
+			manifest,
+			blobsMap,
+		};
 	}
 }

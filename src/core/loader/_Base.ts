@@ -30,8 +30,8 @@ interface MultipleDependenciesLoadOptions {
 }
 
 export class CoreBaseLoader {
-	static readonly loadingManager = LOADING_MANAGER;
-	public readonly loadingManager = LOADING_MANAGER;
+	static readonly loadingManager = LOADING_MANAGER; // static
+	public readonly loadingManager = LOADING_MANAGER; // not static
 
 	constructor(protected _url: string, protected _scene: PolyScene, protected _node?: BaseNodeType) {}
 

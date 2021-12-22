@@ -64,4 +64,17 @@ export class MapUtils {
 			map.set(key, newElements);
 		}
 	}
+	static async forEachSync<K, V>(map: Map<K, V>, callback: (v: V, k: K) => Promise<void>) {
+		const values: V[] = [];
+		const keys: K[] = [];
+		map.forEach((value, key) => {
+			values.push(value);
+			keys.push(key);
+		});
+		for (let i = 0; i < values.length; i++) {
+			const key = keys[i];
+			const value = values[i];
+			await callback(value, key);
+		}
+	}
 }
