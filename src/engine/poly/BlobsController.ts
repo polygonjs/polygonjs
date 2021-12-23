@@ -16,6 +16,10 @@ interface BlobData {
 	storedUrl: string;
 	fullUrl: string;
 }
+interface PartialBlobData {
+	storedUrl: string;
+	fullUrl?: string;
+}
 export interface FetchBlobResponse {
 	blobData?: BlobData;
 	error?: string;
@@ -130,7 +134,7 @@ export class BlobsController {
 			return {error: `failed to fetch ${options.fullUrl}`};
 		}
 	}
-	forEachBlob(callback: (blob: Blob, storedUrl: string) => void) {
+	forEachBlob(callback: (blob: Blob, blobData: PartialBlobData) => void) {
 		// we first go through the nodes and their assigned blobs
 		this._blobDataByNodeId.forEach((blobData, nodeGraphNodeId) => {
 			if (this._scene) {
@@ -139,7 +143,7 @@ export class BlobsController {
 					const {storedUrl} = blobData;
 					const blob = this._blobsByStoredUrl.get(storedUrl);
 					if (blob) {
-						callback(blob, storedUrl);
+						callback(blob, blobData);
 					}
 				}
 			}
@@ -156,7 +160,7 @@ export class BlobsController {
 		storedUrls.forEach((storedUrl) => {
 			const blob = this._globalBlobsByStoredUrl.get(storedUrl);
 			if (blob) {
-				callback(blob, storedUrl);
+				callback(blob, {storedUrl});
 			}
 		});
 	}
@@ -167,13 +171,19 @@ export class BlobsController {
 		const manifest: PolyDictionary<string> = {};
 		const blobsMap: Map<string, Blob> = new Map();
 		const blobs: Blob[] = [];
-		const paramUrls: string[] = [];
-		Poly.blobs.forEachBlob((blob, paramUrl) => {
+		const fullUrls: string[] = [];
+		const storedUrls: string[] = [];
+		Poly.blobs.forEachBlob((blob, blobData) => {
 			blobs.push(blob);
-			paramUrls.push(paramUrl);
+			const fullUrl = blobData.fullUrl;
+			if (fullUrl) {
+				fullUrls.push(fullUrl);
+			}
+			storedUrls.push(blobData.storedUrl);
 		});
+		console.log(blobs, storedUrls);
 		for (let i = 0; i < blobs.length; i++) {
-			const paramUrl = paramUrls[i];
+			const paramUrl = storedUrls[i];
 			const blob = blobs[i];
 			const assetShortName = paramUrl.split('?')[0];
 			const elements = paramUrl.split('.');
@@ -186,7 +196,8 @@ export class BlobsController {
 		return {
 			manifest,
 			blobsMap,
-			paramUrls,
+			fullUrls,
+			storedUrls,
 		};
 	}
 }

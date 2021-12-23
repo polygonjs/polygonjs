@@ -28,8 +28,13 @@ interface ImportCommonOptions extends LoadSceneOptions {
 
 export interface SceneDataImportOptions extends ImportCommonOptions {
 	sceneData: SceneJsonExporterData;
+	assetsRoot: string;
 }
 export type LoadSceneData = (options: SceneDataImportOptions) => void;
+export interface SceneDataImportOptionsOnly {
+	sceneData: SceneJsonExporterData;
+	assetsRoot: string;
+}
 
 interface ManifestImportOptions extends ImportCommonOptions {
 	manifest: {
@@ -50,13 +55,13 @@ export class ScenePlayerImporter {
 		const importer = new ScenePlayerImporter(options);
 		return await importer.loadScene();
 	}
-	static async loadManifest(options: ManifestImportOptions) {
+	static async loadManifest(options: ManifestImportOptions, assetsRoot: string) {
 		// const promises: PreloadPromises = [AssetsPreloader.fetchAssets(options), this._fetchSceneData(options)];
 		const promises: PreloadPromises = [this._fetchSceneData(options)];
 		const results = await Promise.all(promises);
 		const sceneData: SceneJsonExporterData = results[1];
 
-		return await this._loadSceneData(options, sceneData);
+		return await this._loadSceneData(options, {sceneData, assetsRoot});
 	}
 	private static async _fetchSceneData(options: ManifestImportOptions) {
 		const sceneData = await SceneDataManifestImporter.importSceneData({
@@ -66,13 +71,17 @@ export class ScenePlayerImporter {
 		});
 		return sceneData;
 	}
-	private static async _loadSceneData(options: ManifestImportOptions, sceneData: SceneJsonExporterData) {
+	private static async _loadSceneData(
+		manifestOptions: ManifestImportOptions,
+		sceneDataAptions: SceneDataImportOptionsOnly
+	) {
 		const scene = await ScenePlayerImporter.loadSceneData({
-			domElement: options.domElement,
-			sceneName: options.sceneName,
-			onProgress: options.onProgress,
-			configureScene: options.configureScene,
-			sceneData,
+			domElement: manifestOptions.domElement,
+			sceneName: manifestOptions.sceneName,
+			onProgress: manifestOptions.onProgress,
+			configureScene: manifestOptions.configureScene,
+			sceneData: sceneDataAptions.sceneData,
+			assetsRoot: sceneDataAptions.assetsRoot,
 		});
 		return scene;
 	}

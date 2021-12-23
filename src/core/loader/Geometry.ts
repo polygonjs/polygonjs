@@ -340,11 +340,11 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	static async loader_for_drc(node?: BaseNodeType) {
 		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (DRACOLoader) {
-			const draco_loader = new DRACOLoader(this.loadingManager);
+			const dracoLoader = new DRACOLoader(this.loadingManager);
 			const root = Poly.libs.root();
 			const DRACOPath = Poly.libs.DRACOPath();
 			if (root || DRACOPath) {
-				const decoder_path = `${root || ''}${DRACOPath || ''}/`;
+				const decoderPath = `${root || ''}${DRACOPath || ''}/`;
 
 				if (node) {
 					// const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
@@ -358,8 +358,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 					await this._loadMultipleBlobGlobal({
 						files: files.map((file) => {
 							return {
-								storedUrl: `${DRACOPath}/${file}`,
-								fullUrl: `${decoder_path}${file}`,
+								storedUrl: `${decoderPath}/${file}`,
+								fullUrl: `${decoderPath}${file}`,
 							};
 						}),
 						node,
@@ -367,13 +367,13 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 					});
 				}
 
-				draco_loader.setDecoderPath(decoder_path);
+				dracoLoader.setDecoderPath(decoderPath);
 			} else {
-				(draco_loader as any).setDecoderPath(undefined);
+				(dracoLoader as any).setDecoderPath(undefined);
 			}
 
-			draco_loader.setDecoderConfig({type: 'js'});
-			return draco_loader;
+			dracoLoader.setDecoderConfig({type: 'js'});
+			return dracoLoader;
 		}
 	}
 	loader_for_drc(node?: BaseNodeType) {
@@ -400,7 +400,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			const root = Poly.libs.root();
 			const DRACOGLTFPath = Poly.libs.DRACOGLTFPath();
 			if (root || DRACOGLTFPath) {
-				const decoder_path = `${root || ''}${DRACOGLTFPath || ''}/`;
+				const decoderPath = `${root || ''}${DRACOGLTFPath || ''}/`;
 
 				if (node) {
 					// const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
@@ -413,8 +413,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 					await this._loadMultipleBlobGlobal({
 						files: files.map((file) => {
 							return {
-								storedUrl: `${DRACOGLTFPath}/${file}`,
-								fullUrl: `${decoder_path}${file}`,
+								storedUrl: `${decoderPath}/${file}`,
+								fullUrl: `${decoderPath}${file}`,
 							};
 						}),
 						node,
@@ -422,7 +422,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 					});
 				}
 
-				this.draco_loader.setDecoderPath(decoder_path);
+				this.draco_loader.setDecoderPath(decoderPath);
 			} else {
 				(this.draco_loader as any).setDecoderPath(undefined);
 			}
