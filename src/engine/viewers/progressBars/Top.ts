@@ -97,7 +97,7 @@ export function onProgress(ratio) {
 				if (poster.parentElement) {
 					poster.parentElement.removeChild(poster);
 				}
-			}, 1200);
+			}, 500);
 		}
 	}
 }
