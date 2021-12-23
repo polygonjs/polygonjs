@@ -162,5 +162,6 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 		this._helper.updateMatrix();
 		this._polarGridHelper().matrix.copy(this.object.matrix);
 		this._polarGridHelper().matrix.invert();
+		this._polarGridHelper().matrix.multiply(this._centerMatrix);
 	}
 }
