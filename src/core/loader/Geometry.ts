@@ -340,6 +340,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	static async loader_for_drc(node?: BaseNodeType) {
 		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (DRACOLoader) {
+			const useJs = true;
+
 			const dracoLoader = new DRACOLoader(this.loadingManager);
 			const root = Poly.libs.root();
 			const DRACOPath = Poly.libs.DRACOPath();
@@ -354,7 +356,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 
 					// 	Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
 					// }
-					const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+					const files = useJs ? ['draco_decoder.js'] : ['draco_decoder.wasm', 'draco_wasm_wrapper.js'];
 					await this._loadMultipleBlobGlobal({
 						files: files.map((file) => {
 							return {
@@ -372,7 +374,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 				(dracoLoader as any).setDecoderPath(undefined);
 			}
 
-			dracoLoader.setDecoderConfig({type: 'js'});
+			dracoLoader.setDecoderConfig({type: useJs ? 'js' : 'wasm'});
 			return dracoLoader;
 		}
 	}

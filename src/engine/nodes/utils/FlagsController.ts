@@ -8,7 +8,7 @@ export class FlagsController {
 	public readonly bypass: DisplayFlag | undefined;
 	public readonly display: BypassFlag | undefined;
 	public readonly optimize: OptimizeFlag | undefined;
-	constructor(protected node: BaseNodeType) {}
+	constructor(public readonly node: BaseNodeType) {}
 	hasDisplay(): boolean {
 		return false;
 	}
@@ -22,7 +22,7 @@ export class FlagsController {
 
 function Display<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		protected node!: BaseNodeType;
+		public readonly node!: BaseNodeType;
 		public display: DisplayFlag = new DisplayFlag(this.node);
 		hasDisplay(): boolean {
 			return true;
@@ -31,7 +31,7 @@ function Display<TBase extends Constructor>(Base: TBase) {
 }
 function Bypass<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		protected node!: BaseNodeType;
+		public readonly node!: BaseNodeType;
 		public readonly bypass: BypassFlag = new BypassFlag(this.node);
 		hasBypass(): boolean {
 			return true;
@@ -40,7 +40,7 @@ function Bypass<TBase extends Constructor>(Base: TBase) {
 }
 function Optimize<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		protected node!: BaseNodeType;
+		public readonly node!: BaseNodeType;
 		public readonly optimize: OptimizeFlag = new OptimizeFlag(this.node);
 		hasOptimize(): boolean {
 			return true;

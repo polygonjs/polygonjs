@@ -181,7 +181,6 @@ export class BlobsController {
 			}
 			storedUrls.push(blobData.storedUrl);
 		});
-		console.log(blobs, storedUrls);
 		for (let i = 0; i < blobs.length; i++) {
 			const paramUrl = storedUrls[i];
 			const blob = blobs[i];
