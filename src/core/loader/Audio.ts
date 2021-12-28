@@ -73,11 +73,11 @@ export class CoreLoaderAudio extends CoreBaseLoader {
 		console.log(url);
 		return new Promise((resolve, reject) => {
 			const onSuccess = (buffer: AudioBuffer) => {
-				console.log('success');
+				//console.log('success');
 				resolve(buffer);
 			};
 			const onProgress = (progress: ProgressEvent) => {
-				console.log(progress);
+				//console.log(progress);
 			};
 			const onError = (err: any) => {
 				console.log(`error:`);
