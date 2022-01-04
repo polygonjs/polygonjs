@@ -47,6 +47,7 @@ export class BlobsController {
 		this._blobUrlsByStoredUrl.clear();
 		this._blobsByStoredUrl.clear();
 		this._blobDataByNodeId.clear();
+		this._globalBlobsByStoredUrl.clear();
 	}
 	private _clearBlobForNode(node: BaseNodeType) {
 		const blobData = this._blobDataByNodeId.get(node.graphNodeId());
