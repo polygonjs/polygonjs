@@ -18,7 +18,7 @@ interface OceanPlaneSopParams extends DefaultOperationParams {
 	waterColor: Color;
 	size: number;
 	distortionScale: number;
-	distortionSpeed: number;
+	timeScale: number;
 	normals: TypedNodePathParamValue;
 	renderReflection: boolean;
 }
@@ -31,7 +31,7 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 		sunColor: new Color(1, 1, 1),
 		waterColor: new Color(0x001e0f),
 		distortionScale: 1,
-		distortionSpeed: 1,
+		timeScale: 1,
 		size: 10,
 		normals: new TypedNodePathParamValue(''),
 		renderReflection: true,
@@ -49,7 +49,7 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 		material.uniforms.sunColor.value.copy(params.sunColor);
 		material.uniforms.waterColor.value.copy(params.waterColor);
 		material.uniforms.distortionScale.value = params.distortionScale;
-		material.uniforms.timeMult.value = params.distortionSpeed;
+		material.uniforms.timeScale.value = params.timeScale;
 		material.uniforms.size.value = params.size;
 
 		water.setReflectionActive(isBooleanTrue(params.renderReflection));

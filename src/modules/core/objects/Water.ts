@@ -39,7 +39,7 @@ export interface WaterMaterial extends ShaderMaterial {
 		normalSampler: IUniformTexture;
 		alpha: IUniformN;
 		time: IUniformN;
-		timeMult: IUniformN;
+		timeScale: IUniformN;
 		// internals
 		mirrorSampler: IUniformTexture;
 		textureMatrix: {value: Matrix4};
@@ -129,7 +129,7 @@ export class Water extends Mesh {
 					mirrorSampler: {value: null},
 					alpha: {value: 1.0},
 					time: {value: 0.0},
-					timeMult: {value: 1.0},
+					timeScale: {value: 1.0},
 					size: {value: 1.0},
 					distortionScale: {value: 20.0},
 					textureMatrix: {value: new Matrix4()},

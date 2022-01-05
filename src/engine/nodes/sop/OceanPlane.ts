@@ -26,7 +26,7 @@ class OceanPlaneSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 	/** @param distortion speed */
-	distortionSpeed = ParamConfig.FLOAT(DEFAULT.distortionSpeed, {
+	timeScale = ParamConfig.FLOAT(DEFAULT.timeScale, {
 		range: [0, 2],
 		rangeLocked: [true, false],
 	});

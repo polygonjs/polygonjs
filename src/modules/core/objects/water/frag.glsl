@@ -1,7 +1,7 @@
 uniform sampler2D mirrorSampler;
 uniform float alpha;
 uniform float time;
-uniform float timeMult;
+uniform float timeScale;
 uniform float size;
 uniform float distortionScale;
 uniform sampler2D normalSampler;
@@ -14,7 +14,7 @@ varying vec4 mirrorCoord;
 varying vec4 worldPosition;
 
 vec4 getNoise( vec2 uv ) {
-	float t = time * timeMult;
+	float t = time * timeScale;
 	vec2 uv0 = ( uv / 103.0 ) + vec2(t / 17.0, t / 29.0);
 	vec2 uv1 = uv / 107.0-vec2( t / -19.0, t / 31.0 );
 	vec2 uv2 = uv / vec2( 8907.0, 9803.0 ) + vec2( t / 101.0, t / 97.0 );
