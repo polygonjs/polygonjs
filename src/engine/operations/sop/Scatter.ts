@@ -69,7 +69,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 		}
 		const baseSeed = (2454 * params.seed) % Number.MAX_SAFE_INTEGER;
 		sampler.setRandomGenerator((index: number) => {
-			return CoreMath.randFloat(baseSeed + index);
+			return CoreMath.randFloat(baseSeed, index);
 		});
 		sampler.build();
 

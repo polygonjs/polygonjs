@@ -135,8 +135,8 @@ export class MeshSurfaceSampler {
 		targetNormal: Vector3,
 		targetAdditionalVectors?: Vector3[]
 	) {
-		let u = this.randomFunction(i * (faceIndex + 1));
-		let v = this.randomFunction((i + 1) * (faceIndex + 1));
+		let u = this.randomFunction(i * (faceIndex + 1456));
+		let v = this.randomFunction((i + 9851) * (faceIndex + 7646));
 
 		if (u + v > 1) {
 			u = 1 - u;
