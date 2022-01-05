@@ -44,20 +44,20 @@ export class TypedNodePathParamValue {
 		return cloned;
 	}
 
-	nodeWithContext<N extends NodeContext>(
+	nodeWithContext<N extends NodeContext, K extends NodeContext>(
 		context: N,
-		error_state?: NodeErrorState<N>
+		errorState?: NodeErrorState<K>
 	): BaseNodeByContextMap[N] | undefined {
 		const found_node = this.node();
 		if (!found_node) {
-			error_state?.set(`no node found at ${this.path()}`);
+			errorState?.set(`no node found at ${this.path()}`);
 			return;
 		}
 		const node_context = found_node.context();
 		if (node_context == context) {
 			return found_node as BaseNodeByContextMap[N];
 		} else {
-			error_state?.set(`expected ${context} node, but got a ${node_context}`);
+			errorState?.set(`expected ${context} node, but got a ${node_context}`);
 			return;
 		}
 	}
