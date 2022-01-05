@@ -34,14 +34,14 @@ QUnit.test('scatter takes into account the transform of objects', async (assert)
 	let object = container.coreContent()!.objectsWithGeo()[0];
 	let firstPt = container.coreContent()!.points()[0];
 	assert.equal(object.position.x, 0);
-	assert.in_delta(firstPt.position().x, 0.36, 0.01);
+	assert.in_delta(firstPt.position().x, -0.23, 0.01);
 
 	add.p.position.x.set(5);
 	container = await scatter1.compute();
 	object = container.coreContent()!.objectsWithGeo()[0];
 	firstPt = container.coreContent()!.points()[0];
 	assert.equal(object.position.x, 5);
-	assert.in_delta(firstPt.position().x, 0.36, 0.01);
+	assert.in_delta(firstPt.position().x, -0.23, 0.01);
 });
 
 QUnit.test('scatter interpolates correctly a float attributes with value 0', async (assert) => {

@@ -53,7 +53,7 @@ QUnit.assert.in_delta = function (
 	const result = in_delta;
 	const actual = delta;
 	const expected = max_delta;
-	this.pushResult({result, actual, expected, message});
+	this.pushResult({result, actual, expected, message: `${message} (result: ${val1})`});
 };
 QUnit.assert.vector3_in_delta = function (
 	val1: Vector3,
