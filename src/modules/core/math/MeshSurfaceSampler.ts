@@ -99,7 +99,6 @@ export class MeshSurfaceSampler {
 
 	sample(index: number, targetPosition: Vector3, targetNormal: Vector3, targetAdditionalVectors?: Vector3[]) {
 		const cumulativeTotal = this.distribution![this.distribution!.length - 1];
-
 		const faceIndex = this.binarySearch(this.randomFunction(index) * cumulativeTotal);
 
 		return this.sampleFace(index, faceIndex, targetPosition, targetNormal, targetAdditionalVectors);
@@ -136,8 +135,8 @@ export class MeshSurfaceSampler {
 		targetNormal: Vector3,
 		targetAdditionalVectors?: Vector3[]
 	) {
-		let u = this.randomFunction(i * faceIndex);
-		let v = this.randomFunction((i + 1) * faceIndex);
+		let u = this.randomFunction(i * (faceIndex + 1));
+		let v = this.randomFunction((i + 1) * (faceIndex + 1));
 
 		if (u + v > 1) {
 			u = 1 - u;
