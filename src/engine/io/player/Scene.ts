@@ -53,7 +53,9 @@ export class ScenePlayerImporter {
 
 	static async loadSceneData(options: SceneDataImportOptions) {
 		const importer = new ScenePlayerImporter(options);
-		return await importer.loadScene();
+		const scene = await importer.loadScene();
+		const viewer = importer._viewer;
+		return {scene, viewer};
 	}
 	static async loadManifest(options: ManifestImportOptions, assetsRoot: string) {
 		// const promises: PreloadPromises = [AssetsPreloader.fetchAssets(options), this._fetchSceneData(options)];

@@ -47,12 +47,19 @@ import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {BaseNodeType} from '../_Base';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
 	useCameraRenderer = ParamConfig.BOOLEAN(0);
+	/** @param force Render */
+	render = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			BuilderCopNode.PARAM_CALLBACK_render(node as BuilderCopNode);
+		},
+	});
 }
 
 const ParamsConfig = new BuilderCopParamsConfig();
@@ -325,5 +332,9 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		});
 		Poly.warn('created render target', this.path(), width, height);
 		return renderTarget;
+	}
+
+	static PARAM_CALLBACK_render(node: BuilderCopNode) {
+		node.renderOnTarget();
 	}
 }

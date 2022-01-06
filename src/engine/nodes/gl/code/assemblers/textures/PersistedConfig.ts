@@ -56,11 +56,17 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 			const param = this.node.params.get(pair[0]);
 			const uniform = data.uniforms[pair[1]];
 			if (param && uniform) {
+				const callback = () => {
+					GlParamConfig.callback(param, uniform);
+				};
 				param.options.set({
-					callback: () => {
-						GlParamConfig.callback(param, uniform);
-					},
+					callback: callback,
 				});
+				// it's best to execute the callback directly
+				// as it may otherwise be prevented if the scene is loading for instance
+				// and this is currently necessary for ramp params, when no assembler is loaded
+				callback();
+				// param.options.executeCallback();
 			}
 		}
 	}

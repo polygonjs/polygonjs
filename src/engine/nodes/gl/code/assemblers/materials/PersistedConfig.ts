@@ -147,9 +147,8 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 						customUniforms.push(customUniform);
 					}
 				}
-
 				if (param && (uniform || customUniforms)) {
-					param.options.setOption('callback', () => {
+					const callback = () => {
 						if (uniform) {
 							GlParamConfig.callback(param, uniform);
 						}
@@ -158,7 +157,13 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 								GlParamConfig.callback(param, customUniform);
 							}
 						}
-					});
+					};
+					param.options.setOption('callback', callback);
+					// it's best to execute the callback directly
+					// as it may otherwise be prevented if the scene is loading for instance
+					// and this is currently necessary for ramp params, when no assembler is loaded
+					callback();
+					// param.options.executeCallback();
 				}
 			}
 		}

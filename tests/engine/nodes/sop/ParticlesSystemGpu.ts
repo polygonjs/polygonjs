@@ -223,6 +223,16 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 			[2, 2, -1, 0].join(':'),
 			'point with persisted config moved y'
 		);
+
+		test_param2.set([-2, -4, -8]);
+		scene2.setFrame(4);
+		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		assert.deepEqual(
+			AssertUtils.array_with_precision(pixelBuffer),
+			[0, -2, -9, 0].join(':'),
+			'point with persisted config moved in all axises'
+		);
 	});
 
 	RendererUtils.dispose();

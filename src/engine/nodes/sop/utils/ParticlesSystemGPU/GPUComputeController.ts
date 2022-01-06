@@ -336,11 +336,16 @@ export class ParticlesSystemGpuComputeController {
 							}
 						}
 						if (param && uniform) {
-							param.options.setOption('callback', () => {
+							const callback = () => {
 								for (let material of all_materials) {
 									GlParamConfig.callback(param, material.uniforms[uniform_name]);
 								}
-							});
+							};
+							param.options.setOption('callback', callback);
+							// just like texture and material persistedconfigs
+							// the callback should be run a first time
+							// so that ramp params can be set correctly
+							callback();
 						}
 					}
 				}
