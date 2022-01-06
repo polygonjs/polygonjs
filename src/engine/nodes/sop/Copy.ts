@@ -18,11 +18,10 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three/src/core/Object3D';
-import {Vector3} from 'three/src/math/Vector3';
-import {ArrayUtils} from '../../../core/ArrayUtils';
 import {TypeAssert} from '../../poly/Assert';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
+import {CoreTransform, RotationOrder} from '../../../core/Transform';
 
 enum TransformMode {
 	OBJECT = 0,
@@ -39,6 +38,14 @@ class CopySopParamsConfig extends NodeParamsConfig {
 		range: [1, 20],
 		rangeLocked: [true, false],
 	});
+	/** @param translate each copy */
+	t = ParamConfig.VECTOR3([0, 0, 0]);
+	/** @param rotate each copy */
+	r = ParamConfig.VECTOR3([0, 0, 0]);
+	/** @param scale each copy */
+	s = ParamConfig.VECTOR3([1, 1, 1]);
+	/** @param scale multiplier for each copy */
+	scale = ParamConfig.FLOAT(1);
 	/** @param transforms every input object each on a single input point */
 	transformOnly = ParamConfig.BOOLEAN(0);
 	/** @param defines if the objects or the geometries are transformed */
@@ -74,32 +81,32 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 	initializeNode() {
 		this.io.inputs.setCount(1, 2);
-		this.io.inputs.initInputsClonedState([InputCloneMode.ALWAYS, InputCloneMode.NEVER]);
+		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	async cook(inputCoreGroups: CoreGroup[]) {
 		if (!isBooleanTrue(this.pv.useCopyExpr)) {
 			this.stampNode().reset();
 		}
-		const core_group0 = input_contents[0];
+		const coreGroup0 = inputCoreGroups[0];
 		if (!this.io.inputs.has_input(1)) {
-			await this.cook_without_template(core_group0);
+			await this.cookWithoutTemplate(coreGroup0);
 			return;
 		}
 
-		const core_group1 = input_contents[1];
-		if (!core_group1) {
+		const coreGroup1 = inputCoreGroups[1];
+		if (!coreGroup1) {
 			this.states.error.set('second input invalid');
 			return;
 		}
-		await this.cook_with_template(core_group0, core_group1);
+		await this.cookWithTemplate(coreGroup0, coreGroup1);
 	}
 
 	private _instancer = new CoreInstancer();
-	private async cook_with_template(instance_core_group: CoreGroup, template_core_group: CoreGroup) {
+	private async cookWithTemplate(instanceCoreGroup: CoreGroup, template_core_group: CoreGroup) {
 		this._objects = [];
 
-		const template_points = template_core_group.points();
+		const templatePoints = template_core_group.points();
 
 		this._instancer.setCoreGroup(template_core_group);
 
@@ -109,20 +116,22 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this._attribNamesToCopy = this._attribNamesToCopy.filter((attrib_name) =>
 			template_core_group.hasAttrib(attrib_name)
 		);
-		await this._copy_moved_objects_on_template_points(instance_core_group, template_points);
+		await this._copyMovedObjectsOnTemplatePoints(instanceCoreGroup, templatePoints);
 		this.setObjects(this._objects);
 	}
 
 	// https://stackoverflow.com/questions/24586110/resolve-promises-one-after-another-i-e-in-sequence
-	private async _copy_moved_objects_on_template_points(instance_core_group: CoreGroup, template_points: CorePoint[]) {
-		for (let point_index = 0; point_index < template_points.length; point_index++) {
-			await this._copy_moved_object_on_template_point(instance_core_group, template_points, point_index);
+	private async _copyMovedObjectsOnTemplatePoints(instanceCoreGroup: CoreGroup, templatePoints: CorePoint[]) {
+		this._initAccumulatedTransform();
+		for (let point_index = 0; point_index < templatePoints.length; point_index++) {
+			await this._copyMovedObjectOnTemplatePoint(instanceCoreGroup, templatePoints, point_index);
+			this._accumulateTransform();
 		}
 	}
 
 	private _instanceMatrix = new Matrix4();
-	private async _copy_moved_object_on_template_point(
-		instance_core_group: CoreGroup,
+	private async _copyMovedObjectOnTemplatePoint(
+		instanceCoreGroup: CoreGroup,
 		template_points: CorePoint[],
 		point_index: number
 	) {
@@ -132,11 +141,11 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			this.stampNode().setPoint(templatePoint);
 		}
 
-		const moved_objects = await this._get_moved_objects_for_template_point(instance_core_group, point_index);
+		const movedObjects = await this._getMovedObjectsForTemplatePoint(instanceCoreGroup, point_index);
 
-		for (let moved_object of moved_objects) {
+		for (let movedObject of movedObjects) {
 			if (isBooleanTrue(this.pv.copyAttributes)) {
-				this._copyAttributes_from_template(moved_object, templatePoint);
+				this._copyAttributes_from_template(movedObject, templatePoint);
 			}
 
 			// TODO: that node is getting inconsistent...
@@ -144,65 +153,42 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			// and have a toggle to bake back to the geo?
 			// or just enfore the use of a merge?
 			if (isBooleanTrue(this.pv.transformOnly)) {
-				moved_object.applyMatrix4(this._instanceMatrix);
+				movedObject.applyMatrix4(this._instanceMatrix);
 			} else {
-				this._apply_matrix_to_object_or_geometry(moved_object, this._instanceMatrix);
+				this._applyMatrixToObjectOrGeometry(movedObject, this._instanceMatrix);
 			}
+			this._applyAccumulatedTransform(movedObject);
 
-			this._objects.push(moved_object);
+			this._objects.push(movedObject);
 		}
 	}
-
-	private _apply_matrix_to_object_or_geometry(object: Object3D, matrix: Matrix4) {
-		const transformMode = TRANSFORM_MODES[this.pv.transformMode];
-		switch (transformMode) {
-			case TransformMode.OBJECT: {
-				this._apply_matrix_to_object(object, matrix);
-				return;
-			}
-			case TransformMode.GEOMETRY: {
-				const geometry = (object as Object3DWithGeometry).geometry;
-				if (geometry) {
-					geometry.applyMatrix4(matrix);
-				}
-				return;
-			}
-		}
-		TypeAssert.unreachable(transformMode);
-	}
-
-	private _object_position = new Vector3();
-	private _apply_matrix_to_object(object: Object3D, matrix: Matrix4) {
-		// center to origin
-		this._object_position.copy(object.position);
-		object.position.multiplyScalar(0);
-		object.updateMatrix();
-		// apply matrix
-		object.applyMatrix4(matrix);
-		// revert to position
-		object.position.add(this._object_position);
-		object.updateMatrix();
-	}
-
-	private async _get_moved_objects_for_template_point(
-		instance_core_group: CoreGroup,
-		point_index: number
+	private async _getMovedObjectsForTemplatePoint(
+		instanceCoreGroup: CoreGroup,
+		pointIndex: number
 	): Promise<Object3D[]> {
-		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
-		if (stamped_instance_core_group) {
+		const stampedInstanceCoreGroup = await this._stampInstanceGroupIfRequired(instanceCoreGroup);
+		if (stampedInstanceCoreGroup) {
 			// duplicate or select from instance children
-			const moved_objects = isBooleanTrue(this.pv.transformOnly)
+			const getObjectsForTransformOnly = () => {
+				const object = stampedInstanceCoreGroup.objects()[pointIndex];
+				if (object) {
+					return [object.clone()];
+				} else {
+					return [];
+				}
+			};
+			const movedObjects = isBooleanTrue(this.pv.transformOnly)
 				? // TODO: why is doing a transform slower than cloning the input??
-				  ArrayUtils.compact([stamped_instance_core_group.objects()[point_index]])
-				: stamped_instance_core_group.clone().objects();
+				  getObjectsForTransformOnly()
+				: stampedInstanceCoreGroup.clone().objects();
 
-			return moved_objects;
+			return movedObjects;
 		} else {
 			return [];
 		}
 	}
 
-	private async _stamp_instance_group_if_required(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
+	private async _stampInstanceGroupIfRequired(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
 		// we do not test here for pv.useCopyExpr
 		// as we use the stampNode.reset() at the beginning of the cook
 		// to reupdate it if necessary,
@@ -228,31 +214,34 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		// }
 	}
 
-	private async _copy_moved_objects_for_each_instance(instance_core_group: CoreGroup) {
+	private async _copyMovedObjectsForEachInstance(instance_core_group: CoreGroup) {
+		this._initAccumulatedTransform();
 		for (let i = 0; i < this.pv.count; i++) {
-			await this._copy_moved_objects_for_instance(instance_core_group, i);
+			await this._copyMovedObjectsForInstance(instance_core_group, i);
+			this._accumulateTransform();
 		}
 	}
 
-	private async _copy_moved_objects_for_instance(instance_core_group: CoreGroup, i: number) {
+	private async _copyMovedObjectsForInstance(instance_core_group: CoreGroup, i: number) {
 		if (isBooleanTrue(this.pv.useCopyExpr)) {
 			this.stampNode().setGlobalIndex(i);
 		}
 
-		const stamped_instance_core_group = await this._stamp_instance_group_if_required(instance_core_group);
+		const stamped_instance_core_group = await this._stampInstanceGroupIfRequired(instance_core_group);
 		if (stamped_instance_core_group) {
 			stamped_instance_core_group.objects().forEach((object) => {
 				// TODO: I should use the Core Group, to ensure that material.linewidth is properly cloned
-				const new_object = CoreObject.clone(object);
-				this._objects.push(new_object);
+				const clonedObject = CoreObject.clone(object);
+				this._applyAccumulatedTransform(clonedObject);
+				this._objects.push(clonedObject);
 			});
 		}
 	}
 
 	// TODO: what if I combine both param_count and stamping?!
-	private async cook_without_template(instance_core_group: CoreGroup) {
+	private async cookWithoutTemplate(instance_core_group: CoreGroup) {
 		this._objects = [];
-		await this._copy_moved_objects_for_each_instance(instance_core_group);
+		await this._copyMovedObjectsForEachInstance(instance_core_group);
 
 		this.setObjects(this._objects);
 	}
@@ -286,5 +275,66 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		if (this._stampNode) {
 			this._stampNode.dispose();
 		}
+	}
+
+	//
+	//
+	// ACCUMULATE TRANSFORM
+	//
+	//
+	private _coreTransform = new CoreTransform();
+	private _transformAccumulatedMatrix = new Matrix4();
+	private _transformMatrix = new Matrix4();
+	private _initAccumulatedTransform() {
+		const pv = this.pv;
+		this._transformMatrix = this._coreTransform.matrix(pv.t, pv.r, pv.s, pv.scale, RotationOrder.XYZ);
+		this._transformAccumulatedMatrix.identity();
+	}
+	private _accumulateTransform() {
+		this._transformAccumulatedMatrix.multiply(this._transformMatrix);
+	}
+	private _applyAccumulatedTransform(object: Object3D) {
+		this._applyMatrixToObjectOrGeometry(object, this._transformAccumulatedMatrix);
+		// object.matrix.multiply(this._transformAccumulatedMatrix);
+		// object.matrix.decompose(object.position, object.quaternion, object.scale);
+		// object.matrixAutoUpdate = false;
+	}
+
+	//
+	//
+	// MATRIX OPERATIONS
+	//
+	//
+	private _applyMatrixToObjectOrGeometry(object: Object3D, matrix: Matrix4) {
+		const transformMode = TRANSFORM_MODES[this.pv.transformMode];
+		switch (transformMode) {
+			case TransformMode.OBJECT: {
+				this._applyMatrixToObject(object, matrix);
+				return;
+			}
+			case TransformMode.GEOMETRY: {
+				const geometry = (object as Object3DWithGeometry).geometry;
+				if (geometry) {
+					geometry.applyMatrix4(matrix);
+				}
+				return;
+			}
+		}
+		TypeAssert.unreachable(transformMode);
+	}
+
+	// private _object_position = new Vector3();
+	private _applyMatrixToObject(object: Object3D, matrix: Matrix4) {
+		object.matrix.multiply(matrix);
+		object.matrix.decompose(object.position, object.quaternion, object.scale);
+		// center to origin
+		// this._object_position.copy(object.position);
+		// object.position.multiplyScalar(0);
+		// object.updateMatrix();
+		// // apply matrix
+		// object.applyMatrix4(matrix);
+		// // revert to position
+		// object.position.add(this._object_position);
+		// object.updateMatrix();
 	}
 }

@@ -53,7 +53,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		return 'transform';
 	}
 
-	private _core_transform = new CoreTransform();
+	private _coreTransform = new CoreTransform();
 	cook(input_contents: CoreGroup[], params: TransformSopParams) {
 		const objects = input_contents[0].objects();
 
@@ -142,7 +142,7 @@ export class TransformSopOperation extends BaseSopOperation {
 	}
 
 	private _matrix(params: TransformSopParams) {
-		return this._core_transform.matrix(
+		return this._coreTransform.matrix(
 			params.t,
 			params.r,
 			params.s,

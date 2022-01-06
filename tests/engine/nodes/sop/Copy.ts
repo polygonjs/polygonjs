@@ -1,5 +1,6 @@
 import {Object3D} from 'three/src/core/Object3D';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../../src/core/geometry/Constant';
+import {CopySopNode} from '../../../../src/engine/nodes/sop/Copy';
 
 QUnit.test('copy sop simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -197,6 +198,117 @@ QUnit.test('copy sop switching from useCopyExpr from true to false will give exp
 	assert.deepEqual(await objectNames(), ['box_0', 'box_0', 'box_0', 'box_0', 'box_0']);
 	copy.p.useCopyExpr.set(true);
 	assert.deepEqual(await objectNames(), ['box_0', 'box_1', 'box_2', 'box_3', 'box_4']);
+});
+
+QUnit.test('copy sop accumulated transform without template points', async (assert) => {
+	const geo1 = window.geo1;
+
+	const box = geo1.createNode('box');
+	const copy = geo1.createNode('copy');
+	copy.setInput(0, box);
+	copy.p.count.set(4);
+	copy.p.t.z.set(1);
+	async function computeCopy(copy: CopySopNode) {
+		const container = await copy.compute();
+		return container.coreContent()?.objects()!;
+	}
+	const objects = await computeCopy(copy);
+	assert.in_delta(objects[0].position.z, 0, 0.05);
+	assert.equal(objects[1].position.z, 1);
+	assert.equal(objects[2].position.z, 2);
+	assert.equal(objects[3].position.z, 3);
+});
+QUnit.test('copy sop accumulated transform with template points', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane = geo1.createNode('plane');
+	const box = geo1.createNode('box');
+	const copy = geo1.createNode('copy');
+	copy.setInput(0, box);
+	copy.setInput(1, plane);
+	copy.p.t.z.set(1);
+	async function computeCopy(copy: CopySopNode) {
+		const container = await copy.compute();
+		return container.coreContent()?.objects()!;
+	}
+	const objects = await computeCopy(copy);
+	assert.in_delta(objects[0].position.y, 0, 0.05);
+	assert.equal(objects[1].position.y, 1);
+	assert.equal(objects[2].position.y, 2);
+	assert.equal(objects[3].position.y, 3);
+});
+QUnit.test('copy sop transform only with not enough points or objects', async (assert) => {
+	const geo1 = window.geo1;
+
+	const line1 = geo1.createNode('line');
+	const line2 = geo1.createNode('line');
+	const box = geo1.createNode('box');
+	const copy1 = geo1.createNode('copy');
+	const copy2 = geo1.createNode('copy');
+
+	line1.p.pointsCount.set(5);
+	line2.p.pointsCount.set(10);
+
+	copy1.setInput(0, box);
+	copy1.setInput(1, line1);
+
+	copy2.setInput(0, copy1);
+	copy2.setInput(1, line2);
+	copy2.p.transformOnly.set(1);
+	async function computeCopy(copy: CopySopNode) {
+		const container = await copy.compute();
+		return container.coreContent()?.objects()!;
+	}
+	let objects = await computeCopy(copy2);
+	assert.equal(objects.length, 5);
+
+	line1.p.pointsCount.set(12);
+	line2.p.pointsCount.set(7);
+	objects = await computeCopy(copy2);
+	assert.equal(objects.length, 7);
+
+	line1.p.pointsCount.set(10);
+	line2.p.pointsCount.set(10);
+	objects = await computeCopy(copy2);
+	assert.equal(objects.length, 10);
+
+	line1.p.pointsCount.set(2);
+	line2.p.pointsCount.set(10);
+	objects = await computeCopy(copy2);
+	assert.equal(objects.length, 2);
+
+	line1.p.pointsCount.set(10);
+	line2.p.pointsCount.set(2);
+	objects = await computeCopy(copy2);
+	assert.equal(objects.length, 2);
+});
+QUnit.test('copy sop transform only with accumulated transform', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane = geo1.createNode('plane');
+	const box = geo1.createNode('box');
+	const transform = geo1.createNode('transform');
+	const copy1 = geo1.createNode('copy');
+	const copy2 = geo1.createNode('copy');
+
+	transform.setInput(0, plane);
+	transform.p.scale.set(0);
+	copy1.setInput(0, box);
+	copy1.setInput(1, transform);
+
+	copy2.setInput(0, copy1);
+	copy2.setInput(1, plane);
+	copy2.p.t.z.set(1);
+	copy2.p.transformOnly.set(true);
+	async function computeCopy(copy: CopySopNode) {
+		const container = await copy.compute();
+		return container.coreContent()?.objects()!;
+	}
+	const objects = await computeCopy(copy2);
+	assert.in_delta(objects[0].position.y, 0, 0.05);
+	assert.equal(objects[1].position.y, 1);
+	assert.equal(objects[2].position.y, 2);
+	assert.equal(objects[3].position.y, 3);
 });
 
 QUnit.skip('copy sop with group sets an error', (assert) => {});
