@@ -3,9 +3,10 @@ import {ToneAudioNodeOptions, ToneAudioNode} from 'tone/build/esm/core/context/T
 import {Instrument} from 'tone/build/esm/instrument/Instrument';
 import {OmniOscillatorSynthOptions} from 'tone/build/esm/source/oscillator/OscillatorInterface';
 import {Source} from 'tone/build/esm/source/Source';
+import {AmplitudeEnvelope} from 'tone/build/esm/component/envelope/AmplitudeEnvelope';
 
 export type SourceType = Source<any>;
-export type InstrumentType = Instrument<any>;
+export type InstrumentType = Instrument<any> | AmplitudeEnvelope;
 export type EnvelopeParamsType = Partial<Omit<EnvelopeOptions, keyof ToneAudioNodeOptions>>;
 export type OscillatorParamsType = Partial<OmniOscillatorSynthOptions>;
 

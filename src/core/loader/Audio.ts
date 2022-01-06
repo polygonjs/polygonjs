@@ -69,8 +69,6 @@ export class CoreLoaderAudio extends CoreBaseLoader {
 	async load(): Promise<AudioBuffer> {
 		const audioLoader = new AudioLoader(this.loadingManager);
 		const url = await this._urlToLoad();
-		console.log(this._url);
-		console.log(url);
 		return new Promise((resolve, reject) => {
 			const onSuccess = (buffer: AudioBuffer) => {
 				//console.log('success');

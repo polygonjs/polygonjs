@@ -84,6 +84,7 @@ import './engine/nodes/anim/Merge';
 import './engine/nodes/anim/Null';
 
 QUnit.module('cop');
+import './engine/nodes/cop/AudioAnalyzer';
 import './engine/nodes/cop/Builder';
 import './engine/nodes/cop/Canvas';
 import './engine/nodes/cop/Color';

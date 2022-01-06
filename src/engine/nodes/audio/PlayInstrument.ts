@@ -65,7 +65,6 @@ export class PlayInstrumentAudioNode extends TypedAudioNode<PlayInstrumentAudioP
 			return;
 		}
 		// await AudioController.start();
-
 		instrument.triggerAttackRelease(this.pv.note, this.pv.duration);
 	}
 	// async stop() {

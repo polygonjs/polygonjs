@@ -1,22 +1,28 @@
 /**
- * creates an envelope that can be given to synths
+ * creates an amplitude envelope to analyze sounds
  *
  *
  */
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {AudioBuilder, EnvelopeParamsType} from '../../../core/audio/AudioBuilder';
-export const ENVELOPE_DEFAULTS: EnvelopeParamsType = {
-	attackCurve: 'linear',
+import {AudioBuilder} from '../../../core/audio/AudioBuilder';
+import {AmplitudeEnvelope} from 'tone/build/esm/component/envelope/AmplitudeEnvelope';
+
+interface AmplitudeEnvelopeParams {
+	attack: number;
+	decay: number;
+	release: number;
+	sustain: number;
+}
+
+export const ENVELOPE_DEFAULTS: AmplitudeEnvelopeParams = {
 	attack: 0.01,
-	decayCurve: 'exponential',
 	decay: 0.1,
-	releaseCurve: 'exponential',
 	release: 1,
 	sustain: 0.5,
 };
 
-class EnvelopeAudioParamsConfig extends NodeParamsConfig {
+class AmplitudeEnvelopeAudioParamsConfig extends NodeParamsConfig {
 	/** @param The amount of time it takes for the envelope to go from 0 to it's maximum value. */
 	attack = ParamConfig.FLOAT(ENVELOPE_DEFAULTS.attack as number, {
 		range: [0, 0.1],
@@ -38,29 +44,34 @@ class EnvelopeAudioParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 }
-const ParamsConfig = new EnvelopeAudioParamsConfig();
+const ParamsConfig = new AmplitudeEnvelopeAudioParamsConfig();
 
-export class EnvelopeAudioNode extends TypedAudioNode<EnvelopeAudioParamsConfig> {
+export class AmplitudeEnvelopeAudioNode extends TypedAudioNode<AmplitudeEnvelopeAudioParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
-		return 'envelope';
+		return 'amplitudeEnveloppe';
 	}
 
 	initializeNode() {
-		this.io.inputs.setCount(0);
+		this.io.inputs.setCount(1);
 	}
 
 	cook(inputContents: AudioBuilder[]) {
-		const audioBuilder = new AudioBuilder();
-		audioBuilder.setEnvelopeParams({
-			attackCurve: 'linear',
+		const audioBuilder = inputContents[0];
+
+		const ampEnv = new AmplitudeEnvelope({
 			attack: this.pv.attack,
-			decayCurve: 'exponential',
 			decay: this.pv.decay,
-			releaseCurve: 'exponential',
 			release: this.pv.release,
 			sustain: this.pv.sustain,
 		});
+
+		const inputNode = audioBuilder.audioNode();
+		if (inputNode) {
+			inputNode.connect(ampEnv);
+		}
+		audioBuilder.setInstrument(ampEnv);
+		audioBuilder.setAudioNode(ampEnv);
 
 		this.setAudioBuilder(audioBuilder);
 	}

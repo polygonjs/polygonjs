@@ -91,6 +91,16 @@ export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [
 	CameraControlsNodeType.FIRST_PERSON,
 	CameraControlsNodeType.MOBILE_JOYSTICK,
 ];
+export enum AudioNodeAnalyzerType {
+	FFT = 'FFT',
+	METER = 'meter',
+	WAVEFORM = 'waveform',
+}
+export const AUDIO_ANALYZER_NODES: Readonly<string[]> = [
+	AudioNodeAnalyzerType.FFT,
+	AudioNodeAnalyzerType.METER,
+	AudioNodeAnalyzerType.WAVEFORM,
+];
 
 export type NodeTypeMapGeneric = {[key in NodeContext]: TypedNode<key, any>};
 export interface BaseNodeByContextMap extends NodeTypeMapGeneric {

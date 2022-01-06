@@ -1,11 +1,14 @@
 import {CATEGORY_AUDIO} from './Category';
 
 import {AMSynthAudioNode} from '../../../nodes/audio/AMSynth';
+// import {AmplitudeEnvelopeAudioNode} from '../../../nodes/audio/AmplitudeEnvelope';
 import {ChorusAudioNode} from '../../../nodes/audio/Chorus';
 import {EnvelopeAudioNode} from '../../../nodes/audio/Envelope';
 import {FetchAudioNode} from '../../../nodes/audio/Fetch';
 import {FileAudioNode} from '../../../nodes/audio/File';
+import {FFTAudioNode} from '../../../nodes/audio/FFT';
 import {FMSynthAudioNode} from '../../../nodes/audio/FMSynth';
+import {MeterAudioNode} from '../../../nodes/audio/Meter';
 import {MonoSynthAudioNode} from '../../../nodes/audio/MonoSynth';
 import {NullAudioNode} from '../../../nodes/audio/Null';
 import {PitchShiftAudioNode} from '../../../nodes/audio/PitchShift';
@@ -15,7 +18,9 @@ import {PolySynthAudioNode} from '../../../nodes/audio/PolySynth';
 import {ReverbAudioNode} from '../../../nodes/audio/Reverb';
 import {SwitchAudioNode} from '../../../nodes/audio/Switch';
 import {SynthAudioNode} from '../../../nodes/audio/Synth';
+import {ToDestinationAudioNode} from '../../../nodes/audio/ToDestination';
 import {VolumeAudioNode} from '../../../nodes/audio/Volume';
+import {WaveformAudioNode} from '../../../nodes/audio/Waveform';
 // networks
 import {AnimationsNetworkAudioNode} from '../../../nodes/audio/AnimationsNetwork';
 import {AudioNetworkAudioNode} from '../../../nodes/audio/AudioNetwork';
@@ -27,11 +32,14 @@ import {RenderersNetworkAudioNode} from '../../../nodes/audio/RenderersNetwork';
 
 export interface AudioNodeChildrenMap {
 	AMSynth: AMSynthAudioNode;
+	// amplitudeEnvelope: AmplitudeEnvelopeAudioNode;
 	chorus: ChorusAudioNode;
 	envelope: EnvelopeAudioNode;
 	fetch: FetchAudioNode;
 	file: FileAudioNode;
+	FFT: FFTAudioNode;
 	FMSynth: FMSynthAudioNode;
+	meter: MeterAudioNode;
 	monoSynth: MonoSynthAudioNode;
 	null: NullAudioNode;
 	pitchShift: PitchShiftAudioNode;
@@ -41,7 +49,9 @@ export interface AudioNodeChildrenMap {
 	reverb: ReverbAudioNode;
 	synth: SynthAudioNode;
 	switch: SwitchAudioNode;
+	toDestination: ToDestinationAudioNode;
 	volume: VolumeAudioNode;
+	waveform: WaveformAudioNode;
 	// networks
 	animationsNetwork: AnimationsNetworkAudioNode;
 	audioNetwork: AudioNetworkAudioNode;
@@ -57,11 +67,14 @@ import {PolyEngine} from '../../../Poly';
 export class AudioRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AMSynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
+		// poly.registerNode(AmplitudeEnvelopeAudioNode, CATEGORY_AUDIO.EFFECTS);
 		poly.registerNode(ChorusAudioNode, CATEGORY_AUDIO.EFFECTS);
 		poly.registerNode(EnvelopeAudioNode, CATEGORY_AUDIO.MISC);
 		poly.registerNode(FetchAudioNode, CATEGORY_AUDIO.INPUTS);
 		poly.registerNode(FileAudioNode, CATEGORY_AUDIO.INPUTS);
+		poly.registerNode(FFTAudioNode, CATEGORY_AUDIO.ANALYZER);
 		poly.registerNode(FMSynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
+		poly.registerNode(MeterAudioNode, CATEGORY_AUDIO.ANALYZER);
 		poly.registerNode(MonoSynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
 		poly.registerNode(NullAudioNode, CATEGORY_AUDIO.MISC);
 		poly.registerNode(PitchShiftAudioNode, CATEGORY_AUDIO.EFFECTS);
@@ -71,7 +84,9 @@ export class AudioRegister {
 		poly.registerNode(ReverbAudioNode, CATEGORY_AUDIO.EFFECTS);
 		poly.registerNode(SwitchAudioNode, CATEGORY_AUDIO.MISC);
 		poly.registerNode(SynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
+		poly.registerNode(ToDestinationAudioNode, CATEGORY_AUDIO.MISC);
 		poly.registerNode(VolumeAudioNode, CATEGORY_AUDIO.MISC);
+		poly.registerNode(WaveformAudioNode, CATEGORY_AUDIO.ANALYZER);
 		// networks
 		poly.registerNode(AnimationsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
 		poly.registerNode(AudioNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
