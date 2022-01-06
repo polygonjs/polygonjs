@@ -1,5 +1,5 @@
 /**
- * Uses a flat mesh and renders a mirror on it.
+ * Creates a plane with a distorted reflection, to simulate an ocean surface
  *
  *
  */
