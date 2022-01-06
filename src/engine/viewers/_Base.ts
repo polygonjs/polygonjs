@@ -29,6 +29,15 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	mount(element: HTMLElement) {
 		this._domElement = element;
 	}
+	unmount() {
+		if (!this._domElement) {
+			return;
+		}
+		let childElement: Element | undefined;
+		while ((childElement = this._domElement.children[0])) {
+			this._domElement.removeChild(childElement);
+		}
+	}
 	protected _canvasIdPrefix() {
 		return 'TypedViewer';
 	}
