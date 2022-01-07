@@ -20,7 +20,8 @@ QUnit.test('COP audioAnalyzer with FFT', async (assert) => {
 
 	const COP = window.COP;
 	const audioAnalyzer = COP.createNode('audioAnalyzer');
-	audioAnalyzer.p.audioAnalyzerNode.setNode(FFT);
+	audioAnalyzer.p.activeR.set(1);
+	audioAnalyzer.p.audioNodeR.setNode(FFT);
 
 	let container = await audioAnalyzer.compute();
 	assert.ok(!audioAnalyzer.states.error.message());
@@ -44,13 +45,16 @@ QUnit.test('COP audioAnalyzer with Meter', async (assert) => {
 	const null1 = positionalAudio.createNode('null');
 	null1.setInput(0, meter);
 	meter.setInput(0, file);
+	meter.p.normalRange.set(0);
 	positionalAudio.p.audioNode.setNode(null1);
 
 	await CoreSleep.sleep(1000);
 
 	const COP = window.COP;
 	const audioAnalyzer = COP.createNode('audioAnalyzer');
-	audioAnalyzer.p.audioAnalyzerNode.setNode(meter);
+	audioAnalyzer.p.activeR.set(1);
+	audioAnalyzer.p.audioNodeR.setNode(meter);
+	// audioAnalyzer.p.rangeR.set([0, 1]);
 
 	let container = await audioAnalyzer.compute();
 	assert.ok(!audioAnalyzer.states.error.message());
@@ -80,8 +84,9 @@ QUnit.test('COP audioAnalyzer with Waveform', async (assert) => {
 
 	const COP = window.COP;
 	const audioAnalyzer = COP.createNode('audioAnalyzer');
-	audioAnalyzer.p.audioAnalyzerNode.setNode(waveform);
-	audioAnalyzer.p.decibelRange.set([-0.25, 0.25]);
+	audioAnalyzer.p.activeR.set(1);
+	audioAnalyzer.p.audioNodeR.setNode(waveform);
+	audioAnalyzer.p.rangeR.set([-0.25, 0.25]);
 
 	let container = await audioAnalyzer.compute();
 	assert.ok(!audioAnalyzer.states.error.message());
@@ -89,8 +94,9 @@ QUnit.test('COP audioAnalyzer with Waveform', async (assert) => {
 	assert.equal(texture.image.width, 256);
 	assert.deepEqual(container.resolution(), [256, 1]);
 	assert.in_delta(texture.image.data[0], 169, 20);
-	assert.in_delta(texture.image.data[100], 158, 20);
-	assert.notEqual(texture.image.data[0], texture.image.data[20]);
+	const nextIndex = 100 * 4;
+	assert.in_delta(texture.image.data[nextIndex], 158, 20);
+	assert.notEqual(texture.image.data[0], texture.image.data[nextIndex]);
 
 	null1.setInput(0, null);
 });

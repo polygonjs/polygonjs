@@ -70,7 +70,7 @@ export class AmplitudeEnvelopeAudioNode extends TypedAudioNode<AmplitudeEnvelope
 		if (inputNode) {
 			inputNode.connect(ampEnv);
 		}
-		audioBuilder.setInstrument(ampEnv);
+		// audioBuilder.setInstrument(ampEnv);
 		audioBuilder.setAudioNode(ampEnv);
 
 		this.setAudioBuilder(audioBuilder);
