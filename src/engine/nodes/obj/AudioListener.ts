@@ -6,16 +6,12 @@
  *
  */
 import {TypedObjNode} from './_Base';
-// import {Object3D} from 'three/src/core/Object3D';
-// import {AudioListener} from 'three/src/audio/AudioListener';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HierarchyController} from './utils/HierarchyController';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
 import {isBooleanTrue} from '../../../core/Type';
-
-// import {AudioContext} from 'three/src/audio/AudioContext.js';
 import {CoreAudioListener} from '../../../core/audio/AudioListener';
 import {BaseNodeType} from '../_Base';
 import {AudioController} from '../../../core/audio/AudioController';

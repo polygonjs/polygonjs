@@ -3,11 +3,15 @@ import {BaseNodeType} from '../nodes/_Base';
 import {Poly} from '../Poly';
 import {createObjectURL} from '../../core/BlobUtils';
 import {PolyDictionary} from '../../types/GlobalTypes';
+import {MapUtils} from '../../core/MapUtils';
 export interface BlobUrlData {
 	storedUrl: string;
 	blobUrl: string;
 }
-export interface FetchBlobUrlOptions {
+export interface BlobsControllerFetchNodeOptions {
+	multiAssetsForNode?: boolean;
+}
+export interface FetchBlobUrlOptions extends BlobsControllerFetchNodeOptions {
 	storedUrl: string;
 	fullUrl: string;
 	node: BaseNodeType;
@@ -28,7 +32,7 @@ export interface FetchBlobResponse {
 export class BlobsController {
 	private _blobUrlsByStoredUrl: Map<string, string> = new Map();
 	private _blobsByStoredUrl: Map<string, Blob> = new Map();
-	private _blobDataByNodeId: Map<number, BlobData> = new Map();
+	private _blobDataByNodeId: Map<number, BlobData[]> = new Map();
 	private _globalBlobsByStoredUrl: Map<string, Blob> = new Map();
 	private _scene: PolyScene | undefined;
 	registerBlobUrl(data: BlobUrlData) {
@@ -52,17 +56,26 @@ export class BlobsController {
 	private _clearBlobForNode(node: BaseNodeType) {
 		const blobData = this._blobDataByNodeId.get(node.graphNodeId());
 		if (blobData) {
-			this._blobsByStoredUrl.delete(blobData.storedUrl);
-			this._blobUrlsByStoredUrl.delete(blobData.storedUrl);
+			const firstEntry = blobData[0];
+			if (firstEntry) {
+				this._blobsByStoredUrl.delete(firstEntry.storedUrl);
+				this._blobUrlsByStoredUrl.delete(firstEntry.storedUrl);
+			}
 		}
 		this._blobDataByNodeId.delete(node.graphNodeId());
 	}
-	private _assignBlobToNode(node: BaseNodeType, blobData: BlobData) {
-		this._clearBlobForNode(node);
-		this._blobDataByNodeId.set(node.graphNodeId(), {
+	private _assignBlobToNode(node: BaseNodeType, blobData: BlobData, options: BlobsControllerFetchNodeOptions = {}) {
+		if (options.multiAssetsForNode != true) {
+			this._clearBlobForNode(node);
+		}
+		MapUtils.pushOnArrayAtEntry(this._blobDataByNodeId, node.graphNodeId(), {
 			storedUrl: blobData.storedUrl,
 			fullUrl: blobData.fullUrl,
 		});
+		// this._blobDataByNodeId.set(node.graphNodeId(), {
+		// 	storedUrl: blobData.storedUrl,
+		// 	fullUrl: blobData.fullUrl,
+		// });
 	}
 
 	async fetchBlobGlobal(options: FetchBlobUrlOptions): Promise<FetchBlobResponse> {
@@ -118,10 +131,14 @@ export class BlobsController {
 				// the scene is given here to the blobsController, although that is not ideal.
 				// TODO: think on how the blobsController could be given the scene in a more predictable way.
 				this._scene = options.node.scene();
-				this._assignBlobToNode(options.node, {
-					storedUrl: options.storedUrl,
-					fullUrl: options.fullUrl,
-				});
+				this._assignBlobToNode(
+					options.node,
+					{
+						storedUrl: options.storedUrl,
+						fullUrl: options.fullUrl,
+					},
+					{multiAssetsForNode: options.multiAssetsForNode}
+				);
 				return {
 					blobData: {
 						storedUrl: options.storedUrl,
@@ -141,10 +158,12 @@ export class BlobsController {
 			if (this._scene) {
 				const node = this._scene.graph.nodeFromId(nodeGraphNodeId);
 				if (node) {
-					const {storedUrl} = blobData;
-					const blob = this._blobsByStoredUrl.get(storedUrl);
-					if (blob) {
-						callback(blob, blobData);
+					for (let blobDataEntry of blobData) {
+						const {storedUrl} = blobDataEntry;
+						const blob = this._blobsByStoredUrl.get(storedUrl);
+						if (blob) {
+							callback(blob, blobDataEntry);
+						}
 					}
 				}
 			}

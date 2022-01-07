@@ -2,7 +2,7 @@ import {LoadingManager} from 'three/src/loaders/LoadingManager';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
-import {FetchBlobResponse} from '../../engine/poly/BlobsController';
+import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
 
 const LOADING_MANAGER = new LoadingManager();
 LOADING_MANAGER.setURLModifier((url) => {
@@ -33,7 +33,12 @@ export class CoreBaseLoader {
 	static readonly loadingManager = LOADING_MANAGER; // static
 	public readonly loadingManager = LOADING_MANAGER; // not static
 
-	constructor(protected _url: string, protected _scene: PolyScene, protected _node?: BaseNodeType) {}
+	constructor(
+		protected _url: string,
+		protected _scene: PolyScene,
+		protected _node?: BaseNodeType,
+		public blobOptions: BlobsControllerFetchNodeOptions = {}
+	) {}
 
 	static extension(url: string) {
 		let ext: string | null = null;
@@ -65,7 +70,12 @@ export class CoreBaseLoader {
 		const {storedUrl, fullUrl} = this._urlData();
 		// }
 		if (this._node) {
-			await Poly.blobs.fetchBlobForNode({storedUrl, fullUrl, node: this._node});
+			await Poly.blobs.fetchBlobForNode({
+				storedUrl,
+				fullUrl,
+				node: this._node,
+				multiAssetsForNode: this.blobOptions.multiAssetsForNode,
+			});
 		}
 		const blobUrl = Poly.blobs.blobUrl(storedUrl);
 		return blobUrl || fullUrl;

@@ -16,6 +16,7 @@ import {PlayInstrumentAudioNode} from '../../../nodes/audio/PlayInstrument';
 import {PolySynthAudioNode} from '../../../nodes/audio/PolySynth';
 // import {OscillatorAudioNode} from '../../../nodes/audio/Oscillator';
 import {ReverbAudioNode} from '../../../nodes/audio/Reverb';
+import {SamplerAudioNode} from '../../../nodes/audio/Sampler';
 import {SwitchAudioNode} from '../../../nodes/audio/Switch';
 import {SynthAudioNode} from '../../../nodes/audio/Synth';
 import {ToDestinationAudioNode} from '../../../nodes/audio/ToDestination';
@@ -48,6 +49,7 @@ export interface AudioNodeChildrenMap {
 	// oscillator: OscillatorAudioNode;
 	reverb: ReverbAudioNode;
 	synth: SynthAudioNode;
+	sampler: SamplerAudioNode;
 	switch: SwitchAudioNode;
 	toDestination: ToDestinationAudioNode;
 	volume: VolumeAudioNode;
@@ -82,6 +84,7 @@ export class AudioRegister {
 		poly.registerNode(PolySynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
 		// poly.registerNode(OscillatorAudioNode, CATEGORY_AUDIO.MISC);
 		poly.registerNode(ReverbAudioNode, CATEGORY_AUDIO.EFFECTS);
+		poly.registerNode(SamplerAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
 		poly.registerNode(SwitchAudioNode, CATEGORY_AUDIO.MISC);
 		poly.registerNode(SynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
 		poly.registerNode(ToDestinationAudioNode, CATEGORY_AUDIO.MISC);
