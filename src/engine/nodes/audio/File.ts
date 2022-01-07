@@ -49,22 +49,27 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	}
 
 	async cook(inputContents: AudioBuilder[]) {
-		const player = await this._loadUrl();
-		if (player) {
+		await this._loadUrl();
+		if (this._player) {
 			const audioBuilder = new AudioBuilder();
-			audioBuilder.setSource(player);
+			audioBuilder.setSource(this._player);
 			this.setAudioBuilder(audioBuilder);
 		} else {
 			this.cookController.endCook();
 		}
 	}
+	private _player: Player | undefined;
 	private async _loadUrl(): Promise<Player | void> {
 		try {
 			const loader = new CoreLoaderAudio(this.pv.url, this.scene(), this);
 			const buffer = await loader.load();
 
 			return new Promise((resolve) => {
-				const player = new Player({
+				if (this._player) {
+					this._player.dispose();
+				}
+
+				this._player = new Player({
 					url: buffer,
 					loop: isBooleanTrue(this.pv.loop),
 					volume: 0,
@@ -74,9 +79,9 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 					// },
 				});
 				if (isBooleanTrue(this.pv.autostart)) {
-					player.start();
+					this._player.start();
 				}
-				resolve(player);
+				resolve(this._player);
 			});
 		} catch (err) {
 			this.states.error.set(`failed to load url '${this.pv.url}'`);
@@ -84,40 +89,13 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 		}
 	}
 	async play(): Promise<void> {
-		const source = await this._getSource();
-		if (!source) {
-			console.log('no source');
-			return;
-		}
-		// await AudioController.start();
-
-		source.start();
+		this._player?.start();
 	}
 	async pause() {
-		const source = await this._getSource();
-		if (!source) {
-			return;
-		}
-		source.stop();
+		this._player?.stop();
 	}
 	async restart() {
-		const source = await this._getSource();
-		if (!source) {
-			return;
-		}
-		if (source instanceof Player) {
-			source.seek(0);
-		}
-	}
-	private async _getSource() {
-		if (this.isDirty()) {
-			await this.compute();
-		}
-		const audioBuilder = this.containerController.container().coreContent();
-		if (!audioBuilder) {
-			return;
-		}
-		return audioBuilder.source();
+		this._player?.seek(0);
 	}
 
 	static PARAM_CALLBACK_play(node: FileAudioNode) {

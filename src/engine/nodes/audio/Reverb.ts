@@ -1,11 +1,16 @@
 /**
- * applies a reverb
+ * Simple convolution created with decaying noise.
+ * Generates an Impulse Response Buffer
+ * with Tone.Offline then feeds the IR into ConvolverNode.
+ * The impulse response generation is async, so you have
+ * to wait until [[ready]] resolves before it will make a sound.
  *
+ * See description on [Tone.js](https://tonejs.github.io/)
  *
  */
 
 import {Reverb} from 'tone/build/esm/effect/Reverb';
-const DEFAULTS = {wet: 1, decay: 1.5, preDelay: 0.01};
+const DEFAULTS = Reverb.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
