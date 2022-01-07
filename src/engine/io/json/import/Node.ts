@@ -200,59 +200,64 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		const params_update_options: ParamsUpdateOptions = {};
 		for (let param_name of param_names) {
 			const param_data = data[param_name] as ComplexParamJsonExporterData<ParamType>;
-			const options = param_data['options'];
-			// const is_spare = options && options['spare'] === true;
+			if (param_data) {
+				const options = param_data['options'];
+				// const is_spare = options && options['spare'] === true;
 
-			// make camelCase if required
-			if (false && param_name.includes('_')) {
-				param_name = CoreString.camelCase(param_name);
-			}
-
-			const param_type = param_data['type']!;
-			const has_param = this._node.params.has_param(param_name);
-			let has_param_and_same_type = false;
-			let param;
-			if (has_param) {
-				param = this._node.params.get(param_name);
-				// we can safely consider same type if param_type is not mentioned
-				if ((param && param.type() == param_type) || param_type == null) {
-					has_param_and_same_type = true;
+				// make camelCase if required
+				if (false && param_name.includes('_')) {
+					param_name = CoreString.camelCase(param_name);
 				}
-			}
 
-			if (has_param_and_same_type) {
-				if (this._is_param_data_complex(param_data)) {
-					this._process_param_data_complex(param_name, param_data);
+				const param_type = param_data['type']!;
+				const has_param = this._node.params.has_param(param_name);
+				let has_param_and_same_type = false;
+				let param;
+				if (has_param) {
+					param = this._node.params.get(param_name);
+					// we can safely consider same type if param_type is not mentioned
+					if ((param && param.type() == param_type) || param_type == null) {
+						has_param_and_same_type = true;
+					}
+				}
+
+				if (has_param_and_same_type) {
+					if (this._is_param_data_complex(param_data)) {
+						this._process_param_data_complex(param_name, param_data);
+					} else {
+						this._process_param_data_simple(
+							param_name,
+							param_data as SimpleParamJsonExporterData<ParamType>
+						);
+					}
 				} else {
-					this._process_param_data_simple(param_name, param_data as SimpleParamJsonExporterData<ParamType>);
-				}
-			} else {
-				// it the param is a spare one,
-				// we check if it is currently exists with same type first.
-				// - if it is, we only update the value
-				// - if it's not, we delete it and add it again
-				params_update_options.namesToDelete = params_update_options.namesToDelete || [];
-				params_update_options.namesToDelete.push(param_name);
-				params_update_options.toAdd = params_update_options.toAdd || [];
-				params_update_options.toAdd.push({
-					name: param_name,
-					type: param_type,
-					init_value: param_data['default_value'] as any,
-					raw_input: param_data['raw_input'] as any,
-					options: options,
-				});
+					// it the param is a spare one,
+					// we check if it is currently exists with same type first.
+					// - if it is, we only update the value
+					// - if it's not, we delete it and add it again
+					params_update_options.namesToDelete = params_update_options.namesToDelete || [];
+					params_update_options.namesToDelete.push(param_name);
+					params_update_options.toAdd = params_update_options.toAdd || [];
+					params_update_options.toAdd.push({
+						name: param_name,
+						type: param_type,
+						init_value: param_data['default_value'] as any,
+						raw_input: param_data['raw_input'] as any,
+						options: options,
+					});
 
-				// if (options && param_type) {
-				// 	if (param_data['default_value']) {
-				// 		if (has_param) {
-				// 			this._node.params.delete_param(param_name);
-				// 		}
-				// 		param = this._node.add_param(param_type, param_name, param_data['default_value'], options);
-				// 		if (param) {
-				// 			JsonImportDispatcher.dispatch_param(param).process_data(param_data);
-				// 		}
-				// 	}
-				// }
+					// if (options && param_type) {
+					// 	if (param_data['default_value']) {
+					// 		if (has_param) {
+					// 			this._node.params.delete_param(param_name);
+					// 		}
+					// 		param = this._node.add_param(param_type, param_name, param_data['default_value'], options);
+					// 		if (param) {
+					// 			JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+					// 		}
+					// 	}
+					// }
+				}
 			}
 		}
 

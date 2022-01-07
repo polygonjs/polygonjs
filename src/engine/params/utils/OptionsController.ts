@@ -49,6 +49,8 @@ const COLOR_CONVERSION = 'conversion';
 const SEPARATOR_BEFORE_OPTION = 'separatorBefore';
 const SEPARATOR_AFTER_OPTION = 'separatorAfter';
 
+const EDITABLE = 'editable';
+
 export interface NumericParamOptionsMenuEntry {
 	name: string;
 	value: number;
@@ -98,6 +100,8 @@ interface BaseParamOptions {
 	// separator
 	separatorBefore?: boolean;
 	separatorAfter?: boolean;
+	// editable
+	editable?: boolean;
 }
 
 interface ExpressionParamOptions {
@@ -397,6 +401,14 @@ export class OptionsController {
 	}
 	separatorAfter() {
 		return this._options[SEPARATOR_AFTER_OPTION];
+	}
+	// editable
+	editable() {
+		const editable = this._options[EDITABLE];
+		if (editable != null) {
+			return editable;
+		}
+		return true;
 	}
 
 	// expression
