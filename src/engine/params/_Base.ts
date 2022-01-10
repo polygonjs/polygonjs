@@ -30,7 +30,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _node: BaseNodeType;
 	protected _parent_param: TypedMultipleParam<any> | undefined;
 	protected _components: FloatParam[] | undefined;
-	protected _compute_resolves: ComputeCallback[] | undefined;
+	protected _computeResolves: ComputeCallback[] | undefined;
 
 	private _options: OptionsController = new OptionsController(this);
 	get options(): OptionsController {
@@ -72,6 +72,17 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 				predecessor.dispose();
 			}
 		}
+		const successors = this.graphSuccessors();
+		for (let successor of successors) {
+			if (successor instanceof TypedParam) {
+				const input = successor.rawInputSerialized();
+				successor.set(successor.defaultValue());
+				successor.set(input);
+			} else {
+				successor.setDirty();
+			}
+		}
+
 		this.scene().missingExpressionReferencesController.deregisterParam(this);
 		this._expression_controller?.dispose();
 		super.dispose();
@@ -164,28 +175,29 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 
 	protected processRawInput() {}
-	private _is_computing: boolean = false;
+	private _isComputing: boolean = false;
 	async compute(): Promise<void> {
 		if (this.scene().loadingController.isLoading()) {
 			console.warn(`param attempt to compute ${this.path()}`);
 		}
 
 		if (this.isDirty()) {
-			if (!this._is_computing) {
-				this._is_computing = true;
+			if (!this._isComputing) {
+				this._isComputing = true;
 				await this.processComputation();
-				this._is_computing = false;
+				this._isComputing = false;
 
-				if (this._compute_resolves) {
-					let callback: ComputeCallback | undefined;
-					while ((callback = this._compute_resolves.pop())) {
-						callback();
+				if (this._computeResolves) {
+					const resolves = [...this._computeResolves];
+					this._computeResolves = [];
+					for (let resolve of resolves) {
+						resolve();
 					}
 				}
 			} else {
 				return new Promise((resolve, reject) => {
-					this._compute_resolves = this._compute_resolves || [];
-					this._compute_resolves.push(resolve);
+					this._computeResolves = this._computeResolves || [];
+					this._computeResolves.push(resolve);
 				});
 			}
 		}
@@ -222,7 +234,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 			// before all params are added
 			this.options.allowCallback();
 
-			if (!this.parent_param) {
+			if (!this.parentParam()) {
 				if (this.options.makesNodeDirtyWhenDirty()) {
 					node.params.params_node?.addGraphInput(this, false);
 				} else {
@@ -254,7 +266,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		param.addGraphInput(this, false);
 		this._parent_param = param;
 	}
-	get parent_param(): TypedMultipleParam<any> | undefined {
+	parentParam(): TypedMultipleParam<any> | undefined {
 		return this._parent_param;
 	}
 	has_parent_param(): boolean {
@@ -274,10 +286,10 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 
 	// emit
-	emit(event_name: ParamEvent): void {
+	emit(eventName: ParamEvent): void {
 		if (this.emitController.emitAllowed()) {
-			this.emitController.incrementCount(event_name);
-			this.scene().dispatchController.dispatch(this, event_name);
+			this.emitController.incrementCount(eventName);
+			this.scene().dispatchController.dispatch(this, eventName);
 		}
 	}
 

@@ -10,28 +10,27 @@ import {PolyScene} from '../PolyScene';
 
 export class Cooker {
 	private _queue: Map<CoreGraphNodeId, CoreGraphNode | undefined> = new Map();
-	private _block_level: number = 0;
-	private _process_item_bound = this._process_item.bind(this);
+	private _blockLevel: number = 0;
 
 	constructor(private _scene: PolyScene) {
-		this._block_level = 0;
+		this._blockLevel = 0;
 	}
 
 	block() {
-		this._block_level += 1;
+		this._blockLevel += 1;
 	}
 	unblock() {
-		this._block_level -= 1;
-		if (this._block_level < 0) {
-			this._block_level = 0;
+		this._blockLevel -= 1;
+		if (this._blockLevel < 0) {
+			this._blockLevel = 0;
 		}
 
 		this.process_queue();
 	}
 	// unblock_later: ->
 	// 	setTimeout( this.unblock.bind(this), 0 )
-	get blocked() {
-		return this._block_level > 0;
+	blocked() {
+		return this._blockLevel > 0;
 	}
 
 	enqueue(node: CoreGraphNode, original_trigger_graph_node?: CoreGraphNode) {
@@ -39,25 +38,25 @@ export class Cooker {
 	}
 
 	process_queue() {
-		if (this.blocked) {
+		if (this.blocked()) {
 			return;
 		}
-		// let node: CoreGraphNode;
-		// console.warn('FLUSH', Object.keys(this._queue).length);
-
-		this._queue.forEach(this._process_item_bound);
-		// for (let id of Object.keys(this._queue)) {
-		// 	node = this._queue[id];
-		// 	if (node) {
-		// 		delete this._queue[id];
-		// 		node.dirtyController.run_post_dirty_hooks();
-		// 	}
-		// }
+		const nodes: Array<CoreGraphNode | undefined> = [];
+		const nodeIds: CoreGraphNodeId[] = [];
+		this._queue.forEach((node, nodeId) => {
+			nodes.push(node);
+			nodeIds.push(nodeId);
+		});
+		this._queue.clear();
+		for (let i = 0; i < nodes.length; i++) {
+			const node = nodes[i];
+			const nodeId = nodeIds[i];
+			this._processItem(node, nodeId);
+		}
 	}
-	private _process_item(original_trigger_graph_node: CoreGraphNode | undefined, id: CoreGraphNodeId) {
+	private _processItem(original_trigger_graph_node: CoreGraphNode | undefined, id: CoreGraphNodeId) {
 		const node = this._scene.graph.nodeFromId(id);
 		if (node) {
-			this._queue.delete(id);
 			node.dirtyController.runPostDirtyHooks(original_trigger_graph_node);
 		}
 	}

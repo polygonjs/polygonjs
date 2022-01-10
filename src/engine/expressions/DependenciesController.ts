@@ -14,9 +14,9 @@ export interface JsepsByString {
 export class DependenciesController {
 	error_message: string | undefined;
 	// private references_controller: MissingReferencesController
-	private cyclic_graph_detected: boolean = false;
+	private _cyclicGraphDetected: boolean = false;
 	// private jsep_nodes_by_missing_paths: JsepsByString = {}
-	private method_dependencies: MethodDependency[] = [];
+	private methodDependencies: MethodDependency[] = [];
 
 	// private names_listeners: NamesListener[] = []
 
@@ -31,10 +31,10 @@ export class DependenciesController {
 	reset() {
 		this.param.graphDisconnectPredecessors();
 
-		this.method_dependencies.forEach((method_dependency) => {
-			method_dependency.reset();
+		this.methodDependencies.forEach((methodDependency) => {
+			methodDependency.reset();
 		});
-		this.method_dependencies = [];
+		this.methodDependencies = [];
 
 		// this.jsep_nodes_by_missing_paths = {}
 		// const ref_ids = Object.keys(this.missing_expression_references_by_id)
@@ -47,7 +47,7 @@ export class DependenciesController {
 		// this.names_listeners.forEach(names_listener=>{names_listener.reset()})
 	}
 
-	update(function_generator: FunctionGenerator) {
+	update(functionGenerator: FunctionGenerator) {
 		// const immutable_dependencies = function_generator.immutable_dependencies
 		// const jsep_dependencies = function_generator.jsep_dependencies
 		// const jsep_nodes_by_missing_paths = function_generator.jsep_nodes_by_missing_paths
@@ -56,21 +56,21 @@ export class DependenciesController {
 		// 	console.log("connect_param_to_dependencies", this.param.path())
 		// }
 
-		this.cyclic_graph_detected = false;
+		this._cyclicGraphDetected = false;
 
-		this.connect_immutable_dependencies(function_generator);
-		this.method_dependencies = function_generator.method_dependencies;
-		this.handle_method_dependencies();
+		this._connectImmutableDependencies(functionGenerator);
+		this.methodDependencies = functionGenerator.methodDependencies;
+		this._handleMethodDependencies();
 		// this.connect_missing_paths(function_generator)
 
-		this.listen_for_name_changes();
+		this._listenForNameChanges();
 	}
 
-	private connect_immutable_dependencies(function_generator: FunctionGenerator) {
-		function_generator.immutable_dependencies.forEach((dependency) => {
-			if (this.cyclic_graph_detected == false) {
+	private _connectImmutableDependencies(function_generator: FunctionGenerator) {
+		function_generator.immutableDependencies.forEach((dependency) => {
+			if (this._cyclicGraphDetected == false) {
 				if (this.param.addGraphInput(dependency) == false) {
-					this.cyclic_graph_detected = true;
+					this._cyclicGraphDetected = true;
 					this.set_error('cannot create expression, infinite graph detected');
 					this.reset();
 					return;
@@ -78,15 +78,15 @@ export class DependenciesController {
 			}
 		});
 	}
-	private handle_method_dependencies() {
-		this.method_dependencies.forEach((method_dependency) => {
-			if (this.cyclic_graph_detected == false) {
-				this.handle_method_dependency(method_dependency);
+	private _handleMethodDependencies() {
+		this.methodDependencies.forEach((methodDependency) => {
+			if (this._cyclicGraphDetected == false) {
+				this._handleMethodDependency(methodDependency);
 			}
 		});
 	}
 
-	private handle_method_dependency(method_dependency: MethodDependency) {
+	private _handleMethodDependency(method_dependency: MethodDependency) {
 		const node_simple = method_dependency.resolved_graph_node;
 
 		if (node_simple) {
@@ -96,7 +96,7 @@ export class DependenciesController {
 			// TODO: test that it is no longer active if expression is updated
 
 			if (!this.param.addGraphInput(node_simple)) {
-				this.cyclic_graph_detected = true;
+				this._cyclicGraphDetected = true;
 				this.set_error('cannot create expression, infinite graph detected');
 				this.reset();
 				return;
@@ -106,9 +106,9 @@ export class DependenciesController {
 		//}
 	}
 
-	private listen_for_name_changes() {
-		this.method_dependencies.forEach((method_dependency) => {
-			method_dependency.listen_for_name_changes();
+	private _listenForNameChanges() {
+		this.methodDependencies.forEach((methodDependency) => {
+			methodDependency.listen_for_name_changes();
 		});
 	}
 

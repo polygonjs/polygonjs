@@ -17,6 +17,16 @@ export class TypedContainerController<NC extends NodeContext> {
 	container() {
 		return this._container;
 	}
+	containerUnlessBypassed(): ContainerMap[NC] | undefined {
+		if (this.node.flags?.bypass?.active()) {
+			const inputNode = (<unknown>this.node.io.inputs.input(0)) as TypedNode<NC, any>;
+			if (inputNode) {
+				return inputNode.containerController.containerUnlessBypassed();
+			}
+		} else {
+			return this.container();
+		}
+	}
 
 	async compute(): Promise<ContainerMap[NC]> {
 		if (this.node.flags?.bypass?.active()) {

@@ -1,17 +1,20 @@
 import {BaseParamType} from '../_Base';
 import {ParamEvent} from '../../poly/ParamEvent';
-import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class EmitController {
-	_blocked_emit: boolean = false;
-	_blocked_parent_emit: boolean = false;
-	_count_by_event_name: PolyDictionary<number> = {};
+	_blockedEmit: boolean = false;
+	_blockedParentEmit: boolean = false;
+	_countByEventName: Map<string, number> = new Map();
 	constructor(protected param: BaseParamType) {}
 
 	emitAllowed(): boolean {
-		if (this._blocked_emit === true) {
+		if (this._blockedEmit === true) {
 			return false;
 		}
+		// be careful as this seems to prevent camera from panning as expected
+		// if (this.param.scene().timeController.playing()) {
+		// 	return false;
+		// }
 
 		if (this.param.scene().loadingController.isLoading()) {
 			return false;
@@ -25,7 +28,7 @@ export class EmitController {
 	}
 
 	blockEmit() {
-		this._blocked_emit = true;
+		this._blockedEmit = true;
 		if (this.param.isMultiple() && this.param.components) {
 			for (let component of this.param.components) {
 				component.emitController.blockEmit();
@@ -34,7 +37,7 @@ export class EmitController {
 		return true;
 	}
 	unblockEmit() {
-		this._blocked_emit = false;
+		this._blockedEmit = false;
 		if (this.param.isMultiple() && this.param.components) {
 			for (let component of this.param.components) {
 				component.emitController.unblockEmit();
@@ -43,28 +46,29 @@ export class EmitController {
 		return true;
 	}
 	blockParentEmit() {
-		this._blocked_parent_emit = true;
+		this._blockedParentEmit = true;
 		return true;
 	}
 	unblockParentEmit() {
-		this._blocked_parent_emit = false;
+		this._blockedParentEmit = false;
 		return true;
 	}
 
-	incrementCount(event_name: ParamEvent) {
-		this._count_by_event_name[event_name] = this._count_by_event_name[event_name] || 0;
-		this._count_by_event_name[event_name] += 1;
+	incrementCount(eventName: ParamEvent) {
+		const count = (this._countByEventName.get(eventName) || 0) + 1;
+		this._countByEventName.set(eventName, count);
 	}
-	eventsCount(event_name: ParamEvent): number {
-		return this._count_by_event_name[event_name] || 0;
+	eventsCount(eventName: ParamEvent): number {
+		return this._countByEventName.get(eventName) || 0;
 	}
 
 	emit(event: ParamEvent) {
 		if (this.emitAllowed()) {
 			this.param.emit(event);
 
-			if (this.param.parent_param != null && this._blocked_parent_emit !== true) {
-				this.param.parent_param.emit(event);
+			const parentParam = this.param.parentParam();
+			if (parentParam != null && this._blockedParentEmit !== true) {
+				parentParam.emit(event);
 			}
 		}
 	}

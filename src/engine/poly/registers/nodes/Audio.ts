@@ -105,13 +105,13 @@ export class AudioRegister {
 		poly.registerNode(ChorusAudioNode, CATEGORY_AUDIO.EFFECTS);
 		poly.registerNode(DistortionAudioNode, CATEGORY_AUDIO.EFFECTS);
 		poly.registerNode(EnvelopeAudioNode, CATEGORY_AUDIO.MISC);
-		poly.registerNode(FFTAudioNode, CATEGORY_AUDIO.ANALYZER);
+		poly.registerNode(FFTAudioNode, CATEGORY_AUDIO.ANALYSER);
 		poly.registerNode(FMSynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
 		poly.registerNode(FeedbackDelayAudioNode, CATEGORY_AUDIO.EFFECTS);
 		poly.registerNode(FetchAudioNode, CATEGORY_AUDIO.INPUTS);
 		poly.registerNode(FileAudioNode, CATEGORY_AUDIO.INPUTS);
 		poly.registerNode(FrequencyShifterAudioNode, CATEGORY_AUDIO.EFFECTS);
-		poly.registerNode(MeterAudioNode, CATEGORY_AUDIO.ANALYZER);
+		poly.registerNode(MeterAudioNode, CATEGORY_AUDIO.ANALYSER);
 		poly.registerNode(MonoSynthAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
 		poly.registerNode(NoiseAudioNode, CATEGORY_AUDIO.INSTRUMENTS);
 		poly.registerNode(NullAudioNode, CATEGORY_AUDIO.MISC);
@@ -131,7 +131,7 @@ export class AudioRegister {
 		poly.registerNode(UserMediaAudioNode, CATEGORY_AUDIO.INPUTS);
 		poly.registerNode(VibratoAudioNode, CATEGORY_AUDIO.EFFECTS);
 		poly.registerNode(VolumeAudioNode, CATEGORY_AUDIO.MISC);
-		poly.registerNode(WaveformAudioNode, CATEGORY_AUDIO.ANALYZER);
+		poly.registerNode(WaveformAudioNode, CATEGORY_AUDIO.ANALYSER);
 		// networks
 		poly.registerNode(AnimationsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
 		poly.registerNode(AudioNetworkAudioNode, CATEGORY_AUDIO.NETWORK);

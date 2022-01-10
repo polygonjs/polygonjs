@@ -20,6 +20,7 @@ import {CoreString} from '../String';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
 import {ObjectUtils} from '../ObjectUtils';
+import {ArrayUtils} from '../ArrayUtils';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
 
@@ -74,7 +75,7 @@ export class CoreObject extends CoreEntity {
 			const indices = CoreString.indices(group);
 			if (indices) {
 				const points = this.points();
-				return indices.map((i) => points[i]);
+				return ArrayUtils.compact(indices.map((i) => points[i]));
 			} else {
 				return [];
 			}
@@ -145,11 +146,11 @@ export class CoreObject extends CoreEntity {
 	setAttribValue(name: string, value: AttribValue) {
 		this.addAttribute(name, value);
 	}
-	addNumericVertexAttrib(name: string, size: number, default_value: NumericAttribValue) {
-		if (default_value == null) {
-			default_value = CoreAttribute.default_value(size);
+	addNumericVertexAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
+		if (defaultValue == null) {
+			defaultValue = CoreAttribute.default_value(size);
 		}
-		this.coreGeometry()?.addNumericAttrib(name, size, default_value);
+		this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
 	}
 
 	attributeNames(): string[] {

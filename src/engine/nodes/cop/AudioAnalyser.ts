@@ -1,5 +1,5 @@
 /**
- * Generates a AudioAnalyzer
+ * Generates a texture from audio analyse nodes, such as [FFT](/docs/nodes/audio/FFT), [Meter](/docs/nodes/audio/meter) and [Waveform](/docs/nodes/audio/waveform).
  *
  *
  */
@@ -7,19 +7,18 @@ import {TypedCopNode} from './_Base';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
-import {AUDIO_ANALYZER_NODES, NodeContext} from '../../poly/NodeContext';
-import {CoreType, isBooleanTrue} from '../../../core/Type';
-import {ToneAudioNode} from 'tone/build/esm/core/context/ToneAudioNode';
-import {ToneWithContextOptions} from 'tone/build/esm/core/context/ToneWithContext';
+import {AUDIO_ANALYSER_NODES, NodeContext} from '../../poly/NodeContext';
+import {isBooleanTrue} from '../../../core/Type';
 import {BooleanParam} from '../../params/Boolean';
 import {NodePathParam} from '../../params/NodePath';
 import {Vector2Param} from '../../params/Vector2';
+import {BaseAnalyserAudioNode} from '../audio/_BaseAnalyser';
 
 interface ToneAudioByChannel {
-	R?: ToneAudioNode<ToneWithContextOptions>;
-	G?: ToneAudioNode<ToneWithContextOptions>;
-	B?: ToneAudioNode<ToneWithContextOptions>;
-	A?: ToneAudioNode<ToneWithContextOptions>;
+	R?: BaseAnalyserAudioNode<any>;
+	G?: BaseAnalyserAudioNode<any>;
+	B?: BaseAnalyserAudioNode<any>;
+	A?: BaseAnalyserAudioNode<any>;
 }
 interface ParamSet {
 	active: BooleanParam;
@@ -39,15 +38,23 @@ const OFFSET_BY_CHANNEL = {
 	B: 2,
 	A: 3,
 };
+type AnalyserValues = number[] | Float32Array;
+interface ValuesByChannel {
+	R?: AnalyserValues;
+	G?: AnalyserValues;
+	B?: AnalyserValues;
+	A?: AnalyserValues;
+}
+const CHANNELS: Channel[] = ['R', 'G', 'B', 'A'];
 
-class AudioAnalyzerCopParamsConfig extends NodeParamsConfig {
+class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 	/** @param if off, the texture will not be updated */
 	activeR = ParamConfig.BOOLEAN(0);
 	/** @param audio node to read data from, into the RED channel */
 	audioNodeR = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.AUDIO,
-			types: AUDIO_ANALYZER_NODES,
+			types: AUDIO_ANALYSER_NODES,
 		},
 		visibleIf: {activeR: 1},
 	});
@@ -62,7 +69,7 @@ class AudioAnalyzerCopParamsConfig extends NodeParamsConfig {
 	audioNodeG = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.AUDIO,
-			types: AUDIO_ANALYZER_NODES,
+			types: AUDIO_ANALYSER_NODES,
 		},
 		visibleIf: {activeG: 1},
 	});
@@ -77,7 +84,7 @@ class AudioAnalyzerCopParamsConfig extends NodeParamsConfig {
 	audioNodeB = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.AUDIO,
-			types: AUDIO_ANALYZER_NODES,
+			types: AUDIO_ANALYSER_NODES,
 		},
 		visibleIf: {activeB: 1},
 	});
@@ -92,7 +99,7 @@ class AudioAnalyzerCopParamsConfig extends NodeParamsConfig {
 	audioNodeA = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.AUDIO,
-			types: AUDIO_ANALYZER_NODES,
+			types: AUDIO_ANALYSER_NODES,
 		},
 		visibleIf: {activeA: 1},
 	});
@@ -104,30 +111,31 @@ class AudioAnalyzerCopParamsConfig extends NodeParamsConfig {
 	/** @param update */
 	update = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			AudioAnalyzerCopNode.PARAM_CALLBACK_update(node as AudioAnalyzerCopNode);
+			AudioAnalyserCopNode.PARAM_CALLBACK_update(node as AudioAnalyserCopNode);
 		},
 	});
 }
-const ParamsConfig = new AudioAnalyzerCopParamsConfig();
+const ParamsConfig = new AudioAnalyserCopParamsConfig();
 
-export class AudioAnalyzerCopNode extends TypedCopNode<AudioAnalyzerCopParamsConfig> {
+export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
-		return 'audioAnalyzer';
+		return 'audioAnalyser';
 	}
 
 	async cook() {
 		this._initParamsByChannel();
 		await this._getAudioNodes();
 		this._registerOnTickHook();
-		await this._updateTexture();
+		this._updateTexture();
 	}
 
 	dispose() {
 		this._unRegisterOnTickHook();
 	}
 
-	private _toneAudioNodeByChannel: ToneAudioByChannel = {};
+	private _audioNodesByChannel: ToneAudioByChannel = {};
+	private _valuesByChannel: ValuesByChannel = {};
 	private async _getAudioNodes() {
 		const promises = [
 			this._getAudioNode('R'),
@@ -148,19 +156,17 @@ export class AudioAnalyzerCopNode extends TypedCopNode<AudioAnalyzerCopParamsCon
 		const nodeParam = paramSet.node;
 		const audioNode = nodeParam.value.nodeWithContext(NodeContext.AUDIO);
 		if (!audioNode) {
-			this.states.error.set('no audio analyzer node found');
+			this.states.error.set('no audio analyser node found');
 			this.cookController.endCook();
+			return;
+		}
+		const audioAnalyserNode = audioNode as BaseAnalyserAudioNode<any>;
+		if (!audioAnalyserNode.getAnalyserValue) {
 			return;
 		}
 
-		const container = await audioNode.compute();
-		const audioBuilder = container.coreContent();
-		if (!audioBuilder) {
-			this.states.error.set('audio node invalid');
-			this.cookController.endCook();
-			return;
-		}
-		this._toneAudioNodeByChannel[channel] = audioBuilder.audioNode();
+		await audioNode.compute();
+		this._audioNodesByChannel[channel] = audioAnalyserNode;
 	}
 
 	private _updateTexture() {
@@ -168,48 +174,89 @@ export class AudioAnalyzerCopNode extends TypedCopNode<AudioAnalyzerCopParamsCon
 			return;
 		}
 
-		this._updateTextureChannel('R', this._paramSetByChannel['R']);
-		this._updateTextureChannel('G', this._paramSetByChannel['G']);
-		this._updateTextureChannel('B', this._paramSetByChannel['B']);
-		this._updateTextureChannel('A', this._paramSetByChannel['A']);
+		let maxSize = -1;
+		for (let channel of CHANNELS) {
+			const values = this._valuesForChannel(channel, this._paramSetByChannel[channel]);
+			this._valuesByChannel[channel] = values;
+			if (values) {
+				const size = values.length;
+				if (maxSize < size) {
+					maxSize = size;
+				}
+			}
+		}
+
+		if (!this._dataTexture) {
+			this._createDataTexture(maxSize);
+		} else {
+			if (this._dataTexture.image.width != maxSize) {
+				// regenerate a texture if size is different
+				this._createDataTexture(maxSize);
+			}
+		}
+		if (!this._dataTexture) {
+			return;
+		}
+
+		for (let channel of CHANNELS) {
+			const values = this._valuesByChannel[channel];
+			if (values) {
+				this._updateTextureChannel(channel, this._paramSetByChannel[channel], values, this._dataTexture);
+			}
+		}
 	}
-	private async _updateTextureChannel(channel: Channel, paramSet: ParamSet) {
-		const audioNode = this._toneAudioNodeByChannel[channel];
+	private _valuesForChannel(channel: Channel, paramSet: ParamSet) {
+		const audioNode = this._audioNodesByChannel[channel];
 		if (!audioNode) {
 			return;
 		}
 		if (!isBooleanTrue(paramSet.active.value)) {
 			return;
 		}
-		const value = (audioNode as any).getValue();
-		const values: number[] = CoreType.isNumber(value) ? [value] : value;
-
+		const values = audioNode.getAnalyserValue();
+		return values;
+	}
+	private async _updateTextureChannel(
+		channel: Channel,
+		paramSet: ParamSet,
+		values: AnalyserValues,
+		texture: DataTexture
+	) {
 		const w = values.length;
 		const h = 1;
-		this._dataTexture = this._dataTexture || this._createDataTexture(w, h);
 
 		const offset = OFFSET_BY_CHANNEL[channel];
 		const pixelsCount = h * w;
 
 		const min = paramSet.range.x.value;
 		const max = paramSet.range.y.value;
-		const data = this._dataTexture.image.data;
+		const data = texture.image.data;
 		for (let i = 0; i < pixelsCount; i++) {
 			const normalized = (values[i] - min) / (max - min);
 			const clamped = Math.max(0, Math.min(1, normalized));
 			const v = clamped * 255;
 			data[i * 4 + offset] = v;
 		}
-		this._dataTexture.needsUpdate = true;
-
-		this.setTexture(this._dataTexture);
+		texture.needsUpdate = true;
 	}
 	private _dataTexture: DataTexture | undefined;
-	private _createDataTexture(width: number, height: number) {
+	private _createDataTexture(valuesSize: number) {
+		if (valuesSize <= 0) {
+			return;
+		}
+		const height = 1;
+		const width = valuesSize;
 		const size = width * height * 4;
 		const pixelBuffer = new Uint8Array(size);
 		pixelBuffer.fill(0);
-		return new DataTexture(pixelBuffer, width, height);
+		// file alpha to 1
+		// so that this can be set as a color texture without the material becoming transparent
+		for (let i = 0; i < size; i++) {
+			pixelBuffer[i * 4 + 3] = 255;
+		}
+		const texture = new DataTexture(pixelBuffer, width, height);
+		this._dataTexture = texture;
+		this.setTexture(texture);
 	}
 
 	/*
@@ -244,7 +291,7 @@ export class AudioAnalyzerCopNode extends TypedCopNode<AudioAnalyzerCopParamsCon
 	/*
 	 * PARAM CALLBACK
 	 */
-	static PARAM_CALLBACK_update(node: AudioAnalyzerCopNode) {
+	static PARAM_CALLBACK_update(node: AudioAnalyserCopNode) {
 		node._updateTexture();
 	}
 
@@ -261,6 +308,6 @@ export class AudioAnalyzerCopNode extends TypedCopNode<AudioAnalyzerCopParamsCon
 		this.scene().unRegisterOnBeforeTick(this._tickCallbackName());
 	}
 	private _tickCallbackName() {
-		return `cop/audioAnalyzerNode-${this.graphNodeId()}`;
+		return `cop/audioAnalyserNode-${this.graphNodeId()}`;
 	}
 }

@@ -21,7 +21,7 @@ import {TextureContainer} from '../../containers/Texture';
 import {Vector2} from 'three/src/math/Vector2';
 
 export class CopResExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 	static requiredArguments() {
 		return [
 			['string', 'path to node'],

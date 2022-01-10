@@ -47,9 +47,7 @@ export interface WaterMaterial extends ShaderMaterial {
 	};
 }
 
-interface WaterOptions {
-	textureWidth?: number;
-	textureHeight?: number;
+export interface WaterOptions {
 	clipBias?: number;
 	alpha?: number;
 	time?: number;
@@ -61,21 +59,27 @@ interface WaterOptions {
 	distortionScale?: number;
 	side?: number;
 	fog?: boolean;
+	renderer: WebGLRenderer;
+	pixelRatio?: number;
 }
-
+const renderTargetParams = {
+	minFilter: LinearFilter,
+	magFilter: LinearFilter,
+	format: RGBFormat,
+};
 export class Water extends Mesh {
 	public readonly isWater = true;
 	private _renderTarget: WebGLRenderTarget;
 	public material: WaterMaterial;
 	private _renderReflection = true;
 
-	constructor(geometry: BufferGeometry, options: WaterOptions = {}) {
+	constructor(geometry: BufferGeometry, private _options: WaterOptions) {
 		super(geometry);
 
 		const scope = this;
 
-		const textureWidth = options.textureWidth !== undefined ? options.textureWidth : 512;
-		const textureHeight = options.textureHeight !== undefined ? options.textureHeight : 512;
+		const options = this._options;
+		const {width, height} = this._getRendererSize(options.renderer);
 
 		const clipBias = options.clipBias !== undefined ? options.clipBias : 0.0;
 		const alpha = options.alpha !== undefined ? options.alpha : 1.0;
@@ -108,15 +112,10 @@ export class Water extends Mesh {
 
 		const mirrorCamera = new PerspectiveCamera();
 
-		const parameters = {
-			minFilter: LinearFilter,
-			magFilter: LinearFilter,
-			format: RGBFormat,
-		};
+		this._renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
+		console.log(width, height);
 
-		this._renderTarget = new WebGLRenderTarget(textureWidth, textureHeight, parameters);
-
-		if (!isPowerOfTwo(textureWidth) || !isPowerOfTwo(textureHeight)) {
+		if (!isPowerOfTwo(width) || !isPowerOfTwo(height)) {
 			this._renderTarget.texture.generateMipmaps = false;
 		}
 
@@ -283,5 +282,12 @@ export class Water extends Mesh {
 		// if (viewport !== undefined) {
 		// 	renderer.state.viewport(viewport);
 		// }
+	}
+	private _getRendererSize(renderer: WebGLRenderer) {
+		const canvas = renderer.domElement;
+		const ratio = this._options.pixelRatio || 1;
+		const width = canvas.width * ratio;
+		const height = canvas.height * ratio;
+		return {width, height};
 	}
 }

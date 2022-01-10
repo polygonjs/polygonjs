@@ -247,6 +247,12 @@ const PROPERTY_OFFSETS: AnyDictionary = {
 	b: 2,
 };
 
+type MethodArgumentFunction = () => string | number;
+const Core = {
+	Math: CoreMath,
+	String: CoreString,
+};
+
 export class FunctionGenerator extends BaseTraverser {
 	private function: Function | undefined;
 	private _attribute_requirements_controller = new AttributeRequirementsController();
@@ -254,8 +260,8 @@ export class FunctionGenerator extends BaseTraverser {
 	private methods: BaseMethod[] = [];
 	private method_index: number = -1;
 
-	public method_dependencies: MethodDependency[] = [];
-	public immutable_dependencies: CoreGraphNode[] = [];
+	public methodDependencies: MethodDependency[] = [];
+	public immutableDependencies: CoreGraphNode[] = [];
 	// public jsep_dependencies: JsepDependency[] = []
 	// public jsep_nodes_by_missing_paths: JsepsByString = {}
 
@@ -322,8 +328,8 @@ export class FunctionGenerator extends BaseTraverser {
 		this.methods = [];
 		this.method_index = -1;
 		this.function = undefined;
-		this.method_dependencies = [];
-		this.immutable_dependencies = [];
+		this.methodDependencies = [];
+		this.immutableDependencies = [];
 	}
 
 	private _functionBody() {
@@ -395,10 +401,6 @@ export class FunctionGenerator extends BaseTraverser {
 		if (this.function) {
 			this.clear_error();
 
-			const Core = {
-				Math: CoreMath,
-				String: CoreString,
-			};
 			const result = this.function(CorePoint, Core, this.param, this.methods, this._set_error_from_error_bound);
 			return result;
 		}
@@ -410,7 +412,7 @@ export class FunctionGenerator extends BaseTraverser {
 	//
 	//
 	protected traverse_CallExpression(node: jsep.CallExpression): string | undefined {
-		const method_arguments = node.arguments.map((arg) => {
+		const methodArguments = node.arguments.map((arg) => {
 			return this.traverse_node(arg);
 		});
 		const callee = node.callee as jsep.Identifier;
@@ -419,11 +421,11 @@ export class FunctionGenerator extends BaseTraverser {
 			// literal construct (if...)
 			const literal_contruct = LITERAL_CONSTRUCT[method_name];
 			if (literal_contruct) {
-				return literal_contruct(method_arguments);
+				return literal_contruct(methodArguments);
 			}
 
 			// direct expressions (Math.floor, Math.sin...)
-			const arguments_joined = `${method_arguments.join(ARGUMENTS_SEPARATOR)}`;
+			const arguments_joined = `${methodArguments.join(ARGUMENTS_SEPARATOR)}`;
 			const direct_function_name = DIRECT_EXPRESSION_FUNCTIONS[method_name];
 			if (direct_function_name) {
 				return `${direct_function_name}(${arguments_joined})`;
@@ -433,14 +435,14 @@ export class FunctionGenerator extends BaseTraverser {
 			const expressionRegister = Poly.expressionsRegister;
 			const indirect_method = expressionRegister.getMethod(method_name);
 			if (indirect_method) {
-				const path_node = node.arguments[0];
+				const pathNode = node.arguments[0];
 				// const path_argument = this.string_generator.traverse_node(path_node)
-				const function_string = `return ${method_arguments[0]}`;
-				let path_argument_function;
-				let path_argument = [];
+				const functionString = `return ${methodArguments[0]}`;
+				let pathArgumentFunction: MethodArgumentFunction | undefined;
+				let pathArgument: string | number | undefined;
 				try {
-					path_argument_function = new Function(function_string);
-					path_argument = path_argument_function();
+					pathArgumentFunction = new Function(functionString) as MethodArgumentFunction;
+					pathArgument = pathArgumentFunction();
 				} catch {
 					// path_argument_function = new AsyncFunction(function_string)
 					// it looks like if the input contains an await,
@@ -448,7 +450,8 @@ export class FunctionGenerator extends BaseTraverser {
 					// This means that the dependencies have been generated already
 					// so we may not need to do it now
 				}
-				this._create_method_and_dependencies(method_name, path_argument, path_node);
+				this._createMethodAndDependencies(method_name, pathArgument, pathNode);
+
 				return `(await methods[${this.method_index}].processArguments([${arguments_joined}]))`;
 			} else {
 				const available_methods = expressionRegister.availableMethods().join(', ');
@@ -563,7 +566,7 @@ export class FunctionGenerator extends BaseTraverser {
 	//
 	//
 	protected traverse_Identifier_F(): string {
-		this.immutable_dependencies.push(this.param.scene().timeController.graphNode);
+		this.immutableDependencies.push(this.param.scene().timeController.graphNode);
 		return `param.scene().timeController.frame()`;
 	}
 	// protected traverse_Identifier_FPS(): string {
@@ -571,7 +574,7 @@ export class FunctionGenerator extends BaseTraverser {
 	// 	return `param.scene().timeController.fps`;
 	// }
 	protected traverse_Identifier_T(): string {
-		this.immutable_dependencies.push(this.param.scene().timeController.graphNode);
+		this.immutableDependencies.push(this.param.scene().timeController.graphNode);
 		return `param.scene().timeController.time()`;
 	}
 	protected traverse_Identifier_OS(): string {
@@ -596,7 +599,7 @@ export class FunctionGenerator extends BaseTraverser {
 	private _method_centroid(component: string): string {
 		const method_arguments = [0, `${QUOTE}${component}${QUOTE}`];
 		const arguments_joined = method_arguments.join(ARGUMENTS_SEPARATOR);
-		this._create_method_and_dependencies('centroid', 0);
+		this._createMethodAndDependencies('centroid', 0);
 		return `(await methods[${this.method_index}].processArguments([${arguments_joined}]))`;
 	}
 
@@ -605,34 +608,34 @@ export class FunctionGenerator extends BaseTraverser {
 	// Methods dependencies
 	//
 	//
-	private _create_method_and_dependencies(
-		method_name: string,
-		path_argument: number | string,
-		path_node?: jsep.Expression
+	private _createMethodAndDependencies(
+		methodName: string,
+		pathArgument: number | string | undefined,
+		pathNode?: jsep.Expression
 	) {
 		const expressionRegister = Poly.expressionsRegister;
-		const method_constructor = expressionRegister.getMethod(method_name);
-		if (!method_constructor) {
-			const available_methods = expressionRegister.availableMethods();
-			const message = `method not found (${method_name}), available methods are: ${available_methods.join(', ')}`;
+		const methodConstructor = expressionRegister.getMethod(methodName);
+		if (!methodConstructor) {
+			const availableMethods = expressionRegister.availableMethods();
+			const message = `method not found (${methodName}), available methods are: ${availableMethods.join(', ')}`;
 			this.set_error(message);
 			Poly.warn(message);
 			return;
 		}
-		const method = new method_constructor(this.param) as BaseMethod;
+		const method = new methodConstructor(this.param) as BaseMethod;
 		this.method_index += 1;
 		this.methods[this.method_index] = method;
 
-		if (method.require_dependency()) {
-			const method_dependency = method.findDependency(path_argument);
-			if (method_dependency) {
-				if (path_node) {
-					method_dependency.set_jsep_node(path_node);
+		if (method.requireDependency() && pathArgument != null) {
+			const methodDependency = method.findDependency(pathArgument);
+			if (methodDependency) {
+				if (pathNode) {
+					methodDependency.set_jsep_node(pathNode);
 				}
-				this.method_dependencies.push(method_dependency);
+				this.methodDependencies.push(methodDependency);
 			} else {
-				if (path_node && CoreType.isString(path_argument)) {
-					this.param.scene().missingExpressionReferencesController.register(this.param, path_argument);
+				if (pathNode && CoreType.isString(pathArgument)) {
+					this.param.scene().missingExpressionReferencesController.register(this.param, pathArgument);
 				}
 			}
 		}

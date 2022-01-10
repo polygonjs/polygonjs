@@ -47,7 +47,7 @@ export class CorePerformance {
 		return this._started;
 	}
 
-	record_node_cook_data(node: BaseNodeType, performance_data: NodePerformanceData) {
+	recordNodeCookData(node: BaseNodeType, performance_data: NodePerformanceData) {
 		const id = node.graphNodeId();
 		if (this._nodes_cook_data[id] == null) {
 			this._nodes_cook_data[id] = new PerformanceNode(node);

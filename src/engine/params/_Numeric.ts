@@ -71,8 +71,9 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 	}
 	private _update_value(new_value: ParamValuesTypeMap[T]) {
 		this._value = new_value;
-		if (this.parent_param) {
-			this.parent_param.set_value_from_components();
+		const parentParam = this.parentParam();
+		if (parentParam) {
+			parentParam.set_value_from_components();
 		}
 		this.options.executeCallback();
 		this.emitController.emit(ParamEvent.VALUE_UPDATED);

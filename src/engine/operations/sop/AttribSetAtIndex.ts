@@ -10,8 +10,8 @@ import {TypeAssert} from '../../../engine/poly/Assert';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 
-interface AttribCreateSopParams extends DefaultOperationParams {
-	group: string;
+interface AttribSetAtIndexSopParams extends DefaultOperationParams {
+	index: number;
 	class: number;
 	type: number;
 	name: string;
@@ -23,9 +23,9 @@ interface AttribCreateSopParams extends DefaultOperationParams {
 	string: string;
 }
 
-export class AttribCreateSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AttribCreateSopParams = {
-		group: '',
+export class AttribSetAtIndexSopOperation extends BaseSopOperation {
+	static readonly DEFAULT_PARAMS: AttribSetAtIndexSopParams = {
+		index: 0,
 		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
 		name: 'new_attrib',
@@ -37,11 +37,11 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		string: '',
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attribCreate'> {
-		return 'attribCreate';
+	static type(): Readonly<'attribSetAtIndex'> {
+		return 'attribSetAtIndex';
 	}
 
-	cook(inputCoreGroups: CoreGroup[], params: AttribCreateSopParams) {
+	cook(inputCoreGroups: CoreGroup[], params: AttribSetAtIndexSopParams) {
 		const coreGroup = inputCoreGroups[0];
 		const attribName = params.name;
 		if (attribName && attribName.trim() != '') {
@@ -51,7 +51,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		}
 		return coreGroup;
 	}
-	private _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup, params: AttribCreateSopParams) {
+	private _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
 		const attrib_type = ATTRIBUTE_TYPES[params.type];
 		switch (attribClass) {
 			case AttribClass.VERTEX:
@@ -64,7 +64,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(attribClass);
 	}
 
-	private _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
+	private _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
 		const coreObjects = coreGroup.coreObjects();
 		switch (attribType) {
 			case AttribType.NUMERIC: {
@@ -82,13 +82,12 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		}
 		TypeAssert.unreachable(attribType);
 	}
-	private _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
-		const coreObjects = coreGroup.coreObjectsFromGroup(params.group);
+	private _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
+		const allCoreObjects = coreGroup.coreObjects();
 
 		// add attrib if non existent
 		const attribName = params.name;
-		const allCoreObjects = coreGroup.coreObjects();
-		const defaultValue = AttribCreateSopOperation.defaultAttribValue(params);
+		const defaultValue = AttribSetAtIndexSopOperation.defaultAttribValue(params);
 		if (defaultValue != null) {
 			for (let coreObject of allCoreObjects) {
 				if (!coreObject.hasAttrib(attribName)) {
@@ -96,82 +95,108 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 				}
 			}
 		}
-
+		const coreObject = allCoreObjects[params.index];
+		if (!coreObject) {
+			return;
+		}
 		switch (attribType) {
 			case AttribType.NUMERIC:
-				this._addNumericAttributeToObjects(coreObjects, params);
+				this._addNumericAttributeToObject(coreObject, params);
 				return;
 			case AttribType.STRING:
-				this._addStringAttributeToObjects(coreObjects, params);
+				this._addStringAttributeToObject(coreObject, params);
 				return;
 		}
 		TypeAssert.unreachable(attribType);
 	}
 
-	private _addNumericAttributeToPoints(coreObject: CoreObject, params: AttribCreateSopParams) {
+	private _addNumericAttributeToPoints(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
 		const coreGeometry = coreObject.coreGeometry();
 		if (!coreGeometry) {
 			return;
 		}
-		const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
-
 		const attribName = CoreAttribute.remapName(params.name);
 		if (!coreGeometry.hasAttrib(attribName)) {
 			coreGeometry.addNumericAttrib(attribName, params.size, 0);
-		} else {
-			coreGeometry.markAttribAsNeedsUpdate(attribName);
 		}
 
-		if (params.group) {
-			const points = coreObject.pointsFromGroup(params.group);
-			for (let point of points) {
-				point.setAttribValue(attribName, value);
+		const attrib = coreGeometry.geometry().attributes[attribName];
+		const array = attrib.array as number[];
+		const {index, size} = params;
+		switch (size) {
+			case 1: {
+				if (index < array.length) {
+					array[index] = params.value1;
+					attrib.needsUpdate = true;
+				}
+				break;
 			}
-		} else {
-			coreObject.addNumericVertexAttrib(attribName, params.size, value);
+			case 2: {
+				const i2 = index * 2;
+				if (i2 < array.length) {
+					params.value2.toArray(array, i2);
+					attrib.needsUpdate = true;
+				}
+				break;
+			}
+			case 3: {
+				const i3 = index * 3;
+				if (i3 < array.length) {
+					params.value3.toArray(array, i3);
+					attrib.needsUpdate = true;
+				}
+				break;
+			}
+			case 4: {
+				const i4 = index * 4;
+				if (i4 < array.length) {
+					params.value4.toArray(array, i4);
+					attrib.needsUpdate = true;
+				}
+				break;
+			}
 		}
 	}
 
-	private _addNumericAttributeToObjects(coreObjects: CoreObject[], params: AttribCreateSopParams) {
+	private _addNumericAttributeToObject(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
 		const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
 		const attribName = params.name;
-		for (let coreObject of coreObjects) {
-			coreObject.setAttribValue(attribName, value);
-		}
+		coreObject.setAttribValue(attribName, value);
 	}
 
-	private _addStringAttributeToPoints(coreObject: CoreObject, params: AttribCreateSopParams) {
+	private _addStringAttributeToPoints(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
 		const coreGeometry = coreObject.coreGeometry();
 		if (!coreGeometry) {
 			return;
 		}
-		const points = coreObject.pointsFromGroup(params.group);
+
 		const attribName = params.name;
-		const value = params.string;
-
-		let stringValues: string[] = new Array(points.length);
-
-		// if a group is given, we prefill the existing stringValues
-		if (this._hasGroup(params)) {
-			const allPoints = coreObject.points();
-			stringValues = stringValues.length != allPoints.length ? new Array(allPoints.length) : stringValues;
-			// create attrib if non existent
-			if (!coreGeometry.hasAttrib(attribName)) {
-				const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
-				coreGeometry.setIndexedAttribute(attribName, tmpIndexData['values'], tmpIndexData['indices']);
-			}
-
-			for (let point of allPoints) {
-				let currentValue = point.stringAttribValue(attribName);
-				if (currentValue == null) {
-					currentValue = '';
-				}
-				stringValues[point.index()] = currentValue;
-			}
+		// create attrib if non existent
+		if (!coreGeometry.hasAttrib(attribName)) {
+			const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
+			coreGeometry.setIndexedAttribute(attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}
 
-		for (let point of points) {
-			stringValues[point.index()] = value;
+		const value = params.string;
+
+		const points = coreObject.points();
+		const indexPoint = points[params.index];
+		let stringValues: string[] = new Array(points.length);
+
+		// We prefill the existing stringValues
+		const allPoints = coreObject.points();
+		stringValues = stringValues.length != allPoints.length ? new Array(allPoints.length) : stringValues;
+
+		for (let point of allPoints) {
+			let currentValue = point.stringAttribValue(attribName);
+			if (currentValue == null) {
+				currentValue = '';
+			}
+			stringValues[point.index()] = currentValue;
+		}
+
+		if (indexPoint) {
+			stringValues[indexPoint.index()] = value;
 		}
 
 		const indexData = CoreAttribute.arrayToIndexedArrays(stringValues);
@@ -179,14 +204,9 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		coreGeometry.setIndexedAttribute(attribName, indexData['values'], indexData['indices']);
 	}
 
-	private _addStringAttributeToObjects(coreObjects: CoreObject[], params: AttribCreateSopParams) {
+	private _addStringAttributeToObject(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
 		const value = params.string;
-		for (let coreObject of coreObjects) {
-			coreObject.setAttribValue(params.name, value);
-		}
-	}
-	private _hasGroup(params: AttribCreateSopParams) {
-		return params.group.trim() != '';
+		coreObject.setAttribValue(params.name, value);
 	}
 
 	//
@@ -194,11 +214,11 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 	// INTERNAL UTILS
 	//
 	//
-	private static _attribType(params: AttribCreateSopParams) {
+	private static _attribType(params: AttribSetAtIndexSopParams) {
 		return ATTRIBUTE_TYPES[params.type];
 	}
 
-	static defaultAttribValue(params: AttribCreateSopParams) {
+	static defaultAttribValue(params: AttribSetAtIndexSopParams) {
 		const attribType = this._attribType(params);
 		switch (attribType) {
 			case AttribType.NUMERIC: {
@@ -213,7 +233,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 	private static _defaultStringValue() {
 		return '';
 	}
-	private static _defaultNumericValue(params: AttribCreateSopParams) {
+	private static _defaultNumericValue(params: AttribSetAtIndexSopParams) {
 		const size = params.size;
 		switch (size) {
 			case 1:

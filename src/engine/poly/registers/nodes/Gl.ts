@@ -79,6 +79,7 @@ import {MaxLengthGlNode} from '../../../nodes/gl/MaxLength';
 import {MixGlNode} from '../../../nodes/gl/Mix';
 import {ModelViewMatrixMultGlNode} from '../../../nodes/gl/ModelViewMatrixMult';
 import {MultAddGlNode} from '../../../nodes/gl/MultAdd';
+import {MultScalarGlNode} from '../../../nodes/gl/MultScalar';
 import {NegateGlNode} from '../../../nodes/gl/Negate';
 import {NoiseGlNode} from '../../../nodes/gl/Noise';
 import {NullGlNode} from '../../../nodes/gl/Null';
@@ -172,6 +173,7 @@ export interface GlNodeChildrenMap {
 	modelViewMatrixMult: ModelViewMatrixMultGlNode;
 	mult: MultGlNode;
 	multAdd: MultAddGlNode;
+	multScalar: MultScalarGlNode;
 	negate: NegateGlNode;
 	noise: NoiseGlNode;
 	normalize: NormalizeGlNode;
@@ -296,6 +298,7 @@ export class GlRegister {
 		poly.registerNode(MixGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(MultGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(MultAddGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(MultScalarGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(NegateGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(NullGlNode, CATEGORY_GL.UTIL);
 		poly.registerNode(NoiseGlNode, CATEGORY_GL.GEOMETRY);

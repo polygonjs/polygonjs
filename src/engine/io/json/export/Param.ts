@@ -11,7 +11,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	constructor(protected _param: T) {}
 
 	required(): boolean {
-		const is_spare_and_not_component = this._param.options.isSpare() && !this._param.parent_param;
+		const is_spare_and_not_component = this._param.options.isSpare() && !this._param.parentParam();
 
 		// we should not need to check if it has an expression anymore,
 		// as it could have an expression AND be of default value
@@ -21,7 +21,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	}
 
 	data() {
-		if (this._param.parent_param) {
+		if (this._param.parentParam()) {
 			console.warn('no component should be saved');
 			throw 'no component should be saved';
 		}
@@ -40,7 +40,7 @@ export class ParamJsonExporter<T extends BaseParamType> {
 	private _data_complex() {
 		this._complex_data = {};
 
-		if (this._param.options.isSpare() && !this._param.parent_param) {
+		if (this._param.options.isSpare() && !this._param.parentParam()) {
 			this._complex_data['type'] = this._param.type();
 			this._complex_data['default_value'] = this._param.defaultValueSerialized();
 			this._complex_data['options'] = this._param.options.current();

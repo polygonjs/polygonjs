@@ -1,4 +1,4 @@
-import {Constructor, PolyDictionary} from '../../../../../types/GlobalTypes';
+import {Constructor} from '../../../../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
 import {BaseThreejsCameraObjNodeType, BaseThreejsCameraObjNodeClass} from '../../_BaseCamera';
 import {EffectComposer} from '../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
@@ -44,7 +44,7 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 }
 
 export class PostProcessController {
-	private _composers_by_canvas_id: PolyDictionary<EffectComposer> = {};
+	private _composersByCanvasId: Map<string, EffectComposer> = new Map();
 
 	constructor(private node: BaseThreejsCameraObjNodeType) {
 		if (this.node.p.postProcessNode) {
@@ -77,19 +77,24 @@ export class PostProcessController {
 	}
 
 	reset() {
-		const ids = Object.keys(this._composers_by_canvas_id);
-		for (let id of ids) {
-			delete this._composers_by_canvas_id[id];
-		}
+		this._composersByCanvasId.clear();
 	}
 
 	// method could be private, but is public for the test suite
-	composer(canvas: HTMLCanvasElement): EffectComposer {
-		return (this._composers_by_canvas_id[canvas.id] =
-			this._composers_by_canvas_id[canvas.id] || this._create_composer(canvas));
+	composer(canvas: HTMLCanvasElement): EffectComposer | undefined {
+		const existingComposer = this._composersByCanvasId.get(canvas.id);
+		if (existingComposer) {
+			return existingComposer;
+		} else {
+			const newComposer = this._createComposer(canvas);
+			if (newComposer) {
+				this._composersByCanvasId.set(canvas.id, newComposer);
+			}
+			return newComposer;
+		}
 	}
 
-	private _create_composer(canvas: HTMLCanvasElement) {
+	private _createComposer(canvas: HTMLCanvasElement) {
 		const renderer = this.node.renderController.renderer(canvas);
 		if (renderer) {
 			const scene = this.node.renderController.resolved_scene || this.node.scene().threejsScene();

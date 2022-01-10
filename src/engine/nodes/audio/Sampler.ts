@@ -1,5 +1,5 @@
 /**
- * creates a fast fourier transform analyzer
+ * allows to import multiple audio files to use as samples
  *
  *
  */

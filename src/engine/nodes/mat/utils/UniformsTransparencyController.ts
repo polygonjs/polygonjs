@@ -8,7 +8,7 @@ import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
 import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
 
-export function TransparencyParamConfig<TBase extends Constructor>(Base: TBase) {
+export function UniformsTransparencyParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param sets the material to transparent */
 		transparent = ParamConfig.BOOLEAN(0);
@@ -25,7 +25,7 @@ class TransparencyMaterial extends ShaderMaterial {
 	alphaTest!: number;
 	uniforms!: IUniforms;
 }
-class TransparencyParamsConfig extends TransparencyParamConfig(NodeParamsConfig) {}
+class TransparencyParamsConfig extends UniformsTransparencyParamConfig(NodeParamsConfig) {}
 
 class TransparencyMatNode extends TypedMatNode<TransparencyMaterial, TransparencyParamsConfig> {
 	createMaterial() {
@@ -33,7 +33,7 @@ class TransparencyMatNode extends TypedMatNode<TransparencyMaterial, Transparenc
 	}
 }
 
-export class TransparencyController extends BaseController {
+export class UniformsTransparencyController extends BaseController {
 	constructor(protected node: TransparencyMatNode) {
 		super(node);
 	}
@@ -63,6 +63,9 @@ export class TransparencyController extends BaseController {
 		}
 		mat.opacity = pv.opacity;
 
+		if (mat.uniforms.alphaTest) {
+			mat.uniforms.alphaTest.value = pv.alphaTest;
+		}
 		mat.alphaTest = pv.alphaTest;
 
 		const customMaterials = (mat as ShaderMaterialWithCustomMaterials).customMaterials;

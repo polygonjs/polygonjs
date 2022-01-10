@@ -98,7 +98,9 @@ export class ParticlesSystemGpuComputeController {
 
 	async init(coreGroup: CoreGroup) {
 		this.initParticleGroupPoints(coreGroup);
-		await this.create_gpu_compute();
+		this.node.debugMessage('GPUComputeController: this.createGPUCompute() START');
+		await this.createGPUCompute();
+		this.node.debugMessage('GPUComputeController: this.createGPUCompute() END');
 	}
 
 	getCurrentRenderTarget(shader_name: ShaderName) {
@@ -150,7 +152,7 @@ export class ParticlesSystemGpuComputeController {
 		for (let i = 0; i < iterationsCount; i++) {
 			this._gpuCompute.compute();
 		}
-		this.node.renderController.update_render_material_uniforms();
+		this.node.renderController.updateRenderMaterialUniforms();
 
 		// const time = this.node.scene().time();
 		// this._deltaTime = time - this._lastSimulatedTime;
@@ -166,7 +168,7 @@ export class ParticlesSystemGpuComputeController {
 		return `texture_${shaderName}`;
 	}
 
-	async create_gpu_compute() {
+	async createGPUCompute() {
 		if (isBooleanTrue(this.node.pv.autoTexturesSize)) {
 			const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(this._points.length));
 			this._usedTexturesSize.x = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.x);
@@ -190,9 +192,11 @@ export class ParticlesSystemGpuComputeController {
 		this._forceTimeDependent();
 		this._initParticlesUVs();
 		// we need to recreate the material if the texture allocation changes
-		this.node.renderController.reset_render_material();
+		this.node.renderController.resetRenderMaterial();
 
+		this.node.debugMessage('GPUComputeController: Poly.renderersController.waitForRenderer() START');
 		const renderer = await Poly.renderersController.waitForRenderer();
+		this.node.debugMessage('GPUComputeController: Poly.renderersController.waitForRenderer() END');
 		if (renderer) {
 			this._renderer = renderer;
 		} else {

@@ -329,8 +329,8 @@ export class OptionsController {
 		// not running the callback when a node is cooking prevents some event nodes from behaving as expected.
 		// It may also prevent files such as the sop/file to reload correctly if its reload callback was called while it loads a file
 		// if (!this.node.cookController.is_cooking) {
-		const parent_param = this.param().parent_param;
-		if (parent_param) {
+		const parentParam = this.param().parentParam();
+		if (parentParam) {
 			// if the param is a component of a MultipleParam,
 			// we let the parent handle the callback.
 			// The main reason is for material builder uniforms.
@@ -338,7 +338,7 @@ export class OptionsController {
 			// will be receiving a float. The reason is that the callback is created by the ParamConfig, and it is then passed down to the component unchanged.
 			// I could maybe find a way so that the param config creates callback for the multiple param
 			// and also for the components. But they would have to be assigned correctly by the multiple param
-			parent_param.options.executeCallback();
+			parentParam.options.executeCallback();
 		} else {
 			callback(this.node(), this.param());
 		}
@@ -365,18 +365,16 @@ export class OptionsController {
 
 	// cook
 	makesNodeDirtyWhenDirty() {
-		let cook_options;
-
 		// false as the dirty state will go through the parent param
-		if (this.param().parent_param != null) {
+		if (this.param().parentParam() != null) {
 			return false;
 		}
 
-		let value = true;
-		if ((cook_options = this._options[COOK_OPTION]) != null) {
-			value = cook_options;
+		const cookOptions = this._options[COOK_OPTION];
+		if (cookOptions != null) {
+			return cookOptions;
 		}
-		return value;
+		return true;
 	}
 
 	// desktop

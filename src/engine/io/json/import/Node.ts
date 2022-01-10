@@ -46,7 +46,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		// params
 		// const spare_params_data = ParamJsonImporter.spare_params_data(data['params']);
 		// this.set_params(spare_params_data);
-		this.set_params(data['params']);
+		this.set_params(data);
 
 		if (data.persisted_config) {
 			this.set_persisted_config(data.persisted_config);
@@ -191,7 +191,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	// PARAMS
 	//
 	//
-	set_params(data?: PolyDictionary<ParamJsonExporterData<ParamType>>) {
+	set_params(nodeData: NodeJsonExporterData) {
+		const data = nodeData['params'];
 		if (!data) {
 			return;
 		}
@@ -272,7 +273,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			for (let spare_param of this._node.params.spare) {
 				const param_data = data[spare_param.name()] as ComplexParamJsonExporterData<ParamType>;
 				// JsonImportDispatcher.dispatch_param(spare_param).process_data(param_data);
-				if (!spare_param.parent_param && param_data) {
+				if (!spare_param.parentParam() && param_data) {
 					if (this._is_param_data_complex(param_data)) {
 						this._process_param_data_complex(spare_param.name(), param_data);
 					} else {

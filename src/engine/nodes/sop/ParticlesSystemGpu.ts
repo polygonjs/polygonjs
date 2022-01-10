@@ -89,6 +89,13 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		super.dispose();
 		this.gpuController.dispose();
 	}
+	private _debugCook = false;
+	debugMessage(message: string) {
+		if (!this._debugCook) {
+			return;
+		}
+		console.log(message);
+	}
 
 	get assemblerController() {
 		return this._assembler_controller;
@@ -156,9 +163,11 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	async _reset_material_if_dirty() {
 		if (this.p.material.isDirty()) {
-			this.renderController.reset_render_material();
+			this.renderController.resetRenderMaterial();
 			if (!this.isOnStartFrame()) {
-				await this.renderController.init_render_material();
+				this.debugMessage('particles:this.renderController.initRenderMaterial START');
+				await this.renderController.initRenderMaterial();
+				this.debugMessage('particles:this.renderController.initRenderMaterial END');
 			}
 		}
 	}
@@ -179,12 +188,16 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 
 		if (!this.gpuController.initialized()) {
+			this.debugMessage('particles:this.gpuController.init(coreGroup) START');
 			await this.gpuController.init(coreGroup);
+			this.debugMessage('particles:this.gpuController.init(coreGroup) END');
 		}
 
 		if (!this.renderController.initialized()) {
-			this.renderController.init_core_group(coreGroup);
-			await this.renderController.init_render_material();
+			this.renderController.initCoreGroup(coreGroup);
+			this.debugMessage('particles:this.renderController.initRenderMaterial() START');
+			await this.renderController.initRenderMaterial();
+			this.debugMessage('particles:this.renderController.initRenderMaterial() END');
 		}
 
 		this.gpuController.restartSimulationIfRequired();
@@ -198,7 +211,9 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 	async compileIfRequired() {
 		if (this.assemblerController?.compileRequired()) {
+			this.debugMessage('particles:this.run_assembler() START');
 			await this.run_assembler();
+			this.debugMessage('particles:this.run_assembler() END');
 		}
 	}
 	async run_assembler() {

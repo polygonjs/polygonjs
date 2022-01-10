@@ -493,30 +493,32 @@ export class ParamsController {
 	}
 
 	async _evalParam(param: BaseParamType) {
-		// return new Promise((resolve, reject)=> {
-		// const param_cache_name = this.param_cache_name(param.name());
-		// const cached_value = this[param_cache_name] || null;
-		if (/*cached_value == null ||*/ param.isDirty() /* || param.is_errored()*/) {
-			/*const param_value =*/ await param.compute(); //.then(param_value=>{
-			// this[param_cache_name] = param_value;
+		if (param.isDirty()) {
+			await param.compute();
 			if (param.states.error.active()) {
 				this.node.states.error.set(`param '${param.name()}' error: ${param.states.error.message()}`);
 			}
-			// return param_value;
-		} else {
-			// return param.value;
 		}
-		// });
 	}
 
+	private _promises: Promise<void>[] = [];
 	async evalParams(params: BaseParamType[]) {
-		const promises = [];
+		let dirtyParamsCount = 0;
 		for (let param of params) {
 			if (param.isDirty()) {
-				promises.push(this._evalParam(param));
+				dirtyParamsCount += 1;
 			}
 		}
-		await Promise.all(promises);
+		this._promises.length = dirtyParamsCount;
+		let i = 0;
+		for (let param of params) {
+			if (param.isDirty()) {
+				this._promises[i] = this._evalParam(param);
+				i += 1;
+			}
+		}
+
+		await Promise.all(this._promises);
 
 		if (this.node.states.error.active()) {
 			this.node._setContainer(null);

@@ -97,6 +97,7 @@ export class Reflector extends Mesh {
 
 		const {width, height} = this._getRendererSize(this._options.renderer);
 
+		console.log(width, height);
 		this.renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
 		if (!isPowerOfTwo(width) || !isPowerOfTwo(height)) {
 			this.renderTarget.texture.generateMipmaps = false;

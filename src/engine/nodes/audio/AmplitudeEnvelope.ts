@@ -1,5 +1,5 @@
 /**
- * creates an amplitude envelope to analyze sounds
+ * creates an amplitude envelope to analyse sounds
  *
  *
  */

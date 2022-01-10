@@ -110,7 +110,7 @@ QUnit.test('a string param using single quotes in its expression is sanitized co
 
 	attribCreate1.setInput(0, plane1);
 	attribCreate1.p.name.set('html');
-	attribCreate1.setType(AttribType.STRING);
+	attribCreate1.setAttribType(AttribType.STRING);
 	attribCreate1.p.string.set("<div style='will-change: transform, opacity;'>`@ptnum`</div>");
 
 	const container = await attribCreate1.compute();

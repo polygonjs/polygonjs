@@ -72,7 +72,7 @@ QUnit.test('sop/objectProperties with expression', async (assert) => {
 
 	const attribCreate = geo1.createNode('attribCreate');
 	attribCreate.setInput(0, merge);
-	attribCreate.setClass(AttribClass.OBJECT);
+	attribCreate.setAttribClass(AttribClass.OBJECT);
 	attribCreate.p.name.set('id');
 	attribCreate.p.value1.set('@ptnum');
 	objectProperties1.setInput(0, attribCreate);

@@ -18,7 +18,7 @@ import {BaseMethod} from './_Base';
 import {Vector2} from 'three/src/math/Vector2';
 
 export class WindowSizeExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 	static requiredArguments() {
 		return [[]];
 	}

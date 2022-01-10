@@ -6,7 +6,7 @@
  *
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
+import {UniformsTransparencyParamConfig, UniformsTransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
 import {TypedBuilderMatNode, BaseBuilderParamConfig} from './_BaseBuilder';
@@ -23,7 +23,7 @@ class PointsMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
 		BaseBuilderParamConfig(
 			/* advanced */ AdvancedFolderParamConfig(
-				TransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+				UniformsTransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 			)
 		)
 	)
@@ -58,7 +58,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 			this.controllers[controllerName].update();
 		}
 
-		TransparencyController.update(this);
+		UniformsTransparencyController.update(this);
 		FogController.update(this);
 
 		this.compileIfRequired();

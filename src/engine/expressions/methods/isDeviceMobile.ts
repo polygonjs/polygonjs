@@ -16,7 +16,7 @@ import {BaseMethod} from './_Base';
 import {CoreUserAgent} from '../../../core/UserAgent';
 
 export class isDeviceMobileExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 
 	static requiredArguments() {
 		return [];

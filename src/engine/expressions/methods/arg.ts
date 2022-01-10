@@ -19,7 +19,7 @@
 import {BaseMethod} from './_Base';
 
 export class ArgExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 	static requiredArguments() {
 		return [
 			['string', 'arguments list'],

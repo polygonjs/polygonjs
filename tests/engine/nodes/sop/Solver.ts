@@ -82,7 +82,6 @@ QUnit.test('solver simple', async (assert) => {
 	container = await solver1.compute();
 	core_group = container.coreContent()!;
 	core_group.boundingBox().getSize(size);
-	console.log(size.x);
 	assert.in_delta(size.x, 1.89, 0.1);
 	assert.ok(!solver1.states.error.message());
 
@@ -90,7 +89,6 @@ QUnit.test('solver simple', async (assert) => {
 	container = await solver1.compute();
 	core_group = container.coreContent()!;
 	core_group.boundingBox().getSize(size);
-	console.log(size.x);
 	assert.in_delta(size.x, 1.89, 0.1);
 	assert.ok(!solver1.states.error.message());
 });

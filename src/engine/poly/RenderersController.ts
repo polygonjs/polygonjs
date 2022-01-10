@@ -113,8 +113,8 @@ export class RenderersController {
 
 		this._renderers.set(nextId, renderer);
 
-		if (Object.keys(this._renderers).length == 1) {
-			this.flush_callbacks_with_renderer(renderer);
+		if (this._renderers.size == 1) {
+			this._flushCallbacksWithRenderer(renderer);
 		}
 		this._updateCache();
 	}
@@ -146,10 +146,14 @@ export class RenderersController {
 		return Object.values(this._renderers);
 	}
 
-	private flush_callbacks_with_renderer(renderer: WebGLRenderer) {
-		let callback: Callback | undefined;
-		while ((callback = this._resolves.pop())) {
-			callback(renderer);
+	private _flushCallbacksWithRenderer(renderer: WebGLRenderer) {
+		const callbacks: Callback[] = [];
+		for (let r of this._resolves) {
+			callbacks.push(r);
+		}
+		this._resolves = [];
+		for (let c of callbacks) {
+			c(renderer);
 		}
 	}
 

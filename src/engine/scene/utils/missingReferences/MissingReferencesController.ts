@@ -29,32 +29,32 @@ export class MissingReferencesController {
 	//
 	//
 	resolveMissingReferences() {
-		const resolved_references: MissingReference[] = [];
+		const resolvedReferences: MissingReference[] = [];
 		this.references.forEach((references) => {
 			for (let reference of references) {
-				if (this._is_reference_resolvable(reference)) {
-					resolved_references.push(reference);
+				if (this._isReferenceResolvable(reference)) {
+					resolvedReferences.push(reference);
 				}
 			}
 		});
-		for (let reference of resolved_references) {
+		for (let reference of resolvedReferences) {
 			reference.resolveMissingDependencies();
 		}
 	}
-	private _is_reference_resolvable(reference: MissingReference) {
-		const absolute_path = reference.absolutePath();
-		if (absolute_path) {
-			const node = this.scene.node(absolute_path);
+	private _isReferenceResolvable(reference: MissingReference) {
+		const absolutePath = reference.absolutePath();
+		if (absolutePath) {
+			const node = this.scene.node(absolutePath);
 			// try and find a node first
 			if (node) {
 				return true;
 			} else {
 				// if no node, try and find a param, via a parent first
-				const paths = CoreWalker.split_parent_child(absolute_path);
+				const paths = CoreWalker.splitParentChild(absolutePath);
 				if (paths.child) {
-					const parent_node = this.scene.node(paths.parent);
-					if (parent_node) {
-						const param = parent_node.params.get(paths.child);
+					const parentNode = this.scene.node(paths.parent);
+					if (parentNode) {
+						const param = parentNode.params.get(paths.child);
 						if (param) {
 							return true;
 						}
@@ -76,15 +76,15 @@ export class MissingReferencesController {
 
 		const missingReferences = MapUtils.arrayFromValues(this.references);
 		for (let missingReference of missingReferences) {
-			let match_found = false;
+			let matchFound = false;
 			const list = SetUtils.toArray(missingReference);
 			for (let ref of list) {
 				if (ref.matchesPath(node.path())) {
-					match_found = true;
+					matchFound = true;
 					ref.resolveMissingDependencies();
 				}
 			}
-			if (match_found) {
+			if (matchFound) {
 				this.references.delete(id);
 			}
 		}
@@ -94,15 +94,15 @@ export class MissingReferencesController {
 
 		const missingReferences = MapUtils.arrayFromValues(this.references);
 		for (let missingReference of missingReferences) {
-			let match_found = false;
+			let matchFound = false;
 			const list = SetUtils.toArray(missingReference);
 			for (let ref of list) {
 				if (ref.matchesPath(param.path())) {
-					match_found = true;
+					matchFound = true;
 					ref.resolveMissingDependencies();
 				}
 			}
-			if (match_found) {
+			if (matchFound) {
 				this.references.delete(id);
 			}
 		}

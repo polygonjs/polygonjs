@@ -6,7 +6,7 @@
  *
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {TransparencyParamConfig, TransparencyController} from './utils/UniformsTransparencyController';
+import {UniformsTransparencyParamConfig, UniformsTransparencyController} from './utils/UniformsTransparencyController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
 import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
@@ -66,7 +66,7 @@ class MeshPhongMatParamsConfig extends PCSSParamConfig(
 															MapParamConfig(
 																/* textures */
 																TexturesFolderParamConfig(
-																	TransparencyParamConfig(
+																	UniformsTransparencyParamConfig(
 																		DefaultFolderParamConfig(NodeParamsConfig)
 																	)
 																)
@@ -126,7 +126,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
-		TransparencyController.update(this);
+		UniformsTransparencyController.update(this);
 		FogController.update(this);
 		WireframeController.update(this);
 

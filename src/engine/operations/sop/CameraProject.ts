@@ -30,7 +30,8 @@ export class CameraProjectSopOperation extends BaseSopOperation {
 		if (cameraNode) {
 			const cameraObject = cameraNode.object;
 
-			for (let point of inputCoreGroup.points()) {
+			const points = inputCoreGroup.points();
+			for (let point of points) {
 				point.getPosition(this._pointPosition);
 				if (isBooleanTrue(params.unproject)) {
 					this._pointPosition.unproject(cameraObject);

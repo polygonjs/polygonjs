@@ -96,6 +96,13 @@ export class CoreGeometry {
 		name = CoreAttribute.remapName(name);
 		return this._geometry.attributes[name] != null;
 	}
+	markAttribAsNeedsUpdate(attribName: string) {
+		attribName = CoreAttribute.remapName(attribName);
+		const attrib = this._geometry.attributes[attribName];
+		if (attrib) {
+			attrib.needsUpdate = true;
+		}
+	}
 	attribType(name: string) {
 		if (this.isAttribIndexed(name)) {
 			return AttribType.STRING;
@@ -154,6 +161,7 @@ export class CoreGeometry {
 	setIndexedAttribute(name: string, values: string[], indices: number[]) {
 		this.setIndexedAttributeValues(name, values);
 		this._geometry.setAttribute(name, new Int32BufferAttribute(indices, 1));
+		this._geometry.getAttribute(name).needsUpdate = true;
 	}
 
 	addNumericAttrib(name: string, size: number = 1, default_value: NumericAttribValue = 0) {

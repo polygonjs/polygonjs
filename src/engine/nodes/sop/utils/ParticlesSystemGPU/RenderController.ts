@@ -30,10 +30,10 @@ export class ParticlesSystemGpuRenderController {
 			this._all_uniform_names.push(`texture_${name}`);
 		});
 
-		this.reset_render_material();
+		this.resetRenderMaterial();
 	}
 
-	assign_render_material() {
+	assignRenderMaterial() {
 		if (!this._render_material) {
 			return;
 		}
@@ -51,9 +51,9 @@ export class ParticlesSystemGpuRenderController {
 		// - mark the material as needsUpdate (to ensure it gets recompiled by the renderer)
 		// - update the uniforms (to ensure the material gets the right values, as the uniforms have been reset)
 		this._render_material.needsUpdate = true;
-		this.update_render_material_uniforms();
+		this.updateRenderMaterialUniforms();
 	}
-	update_render_material_uniforms() {
+	updateRenderMaterialUniforms() {
 		if (!this._render_material) {
 			return;
 		}
@@ -76,7 +76,7 @@ export class ParticlesSystemGpuRenderController {
 		}
 	}
 
-	reset_render_material() {
+	resetRenderMaterial() {
 		this._render_material = undefined;
 		this._particles_group_objects = [];
 	}
@@ -87,12 +87,12 @@ export class ParticlesSystemGpuRenderController {
 		return this._render_material != null;
 	}
 
-	init_core_group(core_group: CoreGroup) {
+	initCoreGroup(core_group: CoreGroup) {
 		for (let child of core_group.objectsWithGeo()) {
 			this._particles_group_objects.push(child);
 		}
 	}
-	async init_render_material() {
+	async initRenderMaterial() {
 		const assembler = this.node.assemblerController?.assembler;
 
 		if (this._render_material) {
@@ -100,7 +100,9 @@ export class ParticlesSystemGpuRenderController {
 		}
 
 		if (this.node.p.material.isDirty()) {
+			this.node.debugMessage('renderController: this.node.p.material.compute() START');
 			await this.node.p.material.compute();
+			this.node.debugMessage('renderController: this.node.p.material.compute() END');
 		}
 		const mat_node = this.node.p.material.found_node() as BaseBuilderMatNodeType;
 
@@ -132,7 +134,9 @@ export class ParticlesSystemGpuRenderController {
 					}
 				}
 			}
+			this.node.debugMessage('renderController: mat_node.compute() START');
 			const container = await mat_node.compute();
+			this.node.debugMessage('renderController: mat_node.compute() END');
 			this._render_material = container.material() as ShaderMaterial;
 		} else {
 			this.node.states.error.set('render material not valid');
@@ -150,6 +154,6 @@ export class ParticlesSystemGpuRenderController {
 			}
 		}
 
-		this.assign_render_material();
+		this.assignRenderMaterial();
 	}
 }

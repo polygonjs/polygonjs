@@ -16,7 +16,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CorePoint} from '../../../core/geometry/Point';
 import {objectTypeFromConstructor} from '../../../core/geometry/Constant';
-import {PolyDictionary} from '../../../types/GlobalTypes';
+import {MapUtils} from '../../../core/MapUtils';
 class FuseSopParamsConfig extends NodeParamsConfig {
 	/** @param distance threshold */
 	dist = ParamConfig.FLOAT(0.1, {
@@ -64,7 +64,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		const points = core_object.points();
 
 		const precision = this.pv.dist;
-		const points_by_position: PolyDictionary<CorePoint[]> = {};
+		const pointsByPosition: Map<string, CorePoint[]> = new Map();
 		for (let point of points) {
 			const position = point.position();
 			const rounded_position = new Vector3(
@@ -73,21 +73,17 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 				Math.round(position.z / precision)
 			);
 			const key = rounded_position.toArray().join('-');
-			points_by_position[key] = points_by_position[key] || [];
-			points_by_position[key].push(point);
+			MapUtils.pushOnArrayAtEntry(pointsByPosition, key, point);
 		}
 
-		const kept_points: CorePoint[] = [];
-		Object.keys(points_by_position).forEach((key) => {
-			kept_points.push(points_by_position[key][0]);
+		const keptPoints: CorePoint[] = [];
+		pointsByPosition.forEach((points, key) => {
+			keptPoints.push(points[0]);
 		});
 
 		(object as Mesh).geometry.dispose();
-		if (kept_points.length > 0) {
-			const geometry = CoreGeometry.geometryFromPoints(
-				kept_points,
-				objectTypeFromConstructor(object.constructor)
-			);
+		if (keptPoints.length > 0) {
+			const geometry = CoreGeometry.geometryFromPoints(keptPoints, objectTypeFromConstructor(object.constructor));
 			if (geometry) {
 				(object as Mesh).geometry = geometry;
 			}

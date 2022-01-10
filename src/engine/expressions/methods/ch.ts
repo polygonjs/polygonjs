@@ -17,19 +17,23 @@
 import {BaseMethod} from './_Base';
 import {DecomposedPath} from '../../../core/DecomposedPath';
 import {MethodDependency} from '../MethodDependency';
+import {BaseParamType} from '../../params/_Base';
 
 export class ChExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 
 	static requiredArguments() {
 		return [['string', 'path to param']];
 	}
 
-	findDependency(index_or_path: number | string): MethodDependency | null {
-		const decomposed_path = new DecomposedPath();
-		const param = this.getReferencedParam(index_or_path as string, decomposed_path);
+	private _referencedParam: BaseParamType | undefined;
+	findDependency(indexOrPath: number | string): MethodDependency | null {
+		const decomposedPath = new DecomposedPath();
+		const param = this.getReferencedParam(indexOrPath as string, decomposedPath);
 		if (param) {
-			return this.createDependency(param, index_or_path, decomposed_path);
+			// TODO: consider using this dependency optimization in other expression methods
+			this._referencedParam = param;
+			return this.createDependency(param, indexOrPath, decomposedPath);
 		}
 		return null;
 	}
@@ -39,17 +43,15 @@ export class ChExpression extends BaseMethod {
 			let val: any = 0;
 			if (args.length == 1) {
 				const path = args[0];
-				const ref = this.getReferencedParam(path);
+				const ref = this._referencedParam || this.getReferencedParam(path);
 				if (ref) {
 					if (ref.isDirty()) {
 						await ref.compute();
 					}
 					const result = ref.value;
 					if (result != null) {
-						// if (CoreType.isNumber(result)) {
 						val = result;
 						resolve(val);
-						// }
 					}
 				} else {
 					reject(0);

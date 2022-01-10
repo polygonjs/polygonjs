@@ -75,6 +75,7 @@ import './engine/operations/sop/Null';
 
 QUnit.module('nodes utils');
 import './engine/nodes/utils/Bypass';
+import './engine/nodes/utils/CookController';
 import './engine/nodes/utils/ChildrenContext';
 import './engine/nodes/utils/Memory';
 
@@ -84,7 +85,7 @@ import './engine/nodes/anim/Merge';
 import './engine/nodes/anim/Null';
 
 QUnit.module('cop');
-import './engine/nodes/cop/AudioAnalyzer';
+import './engine/nodes/cop/AudioAnalyser';
 import './engine/nodes/cop/Builder';
 import './engine/nodes/cop/Canvas';
 import './engine/nodes/cop/Color';
@@ -162,6 +163,7 @@ import './engine/nodes/sop/AttribNormalize';
 import './engine/nodes/sop/AttribPromote';
 import './engine/nodes/sop/AttribRemap';
 import './engine/nodes/sop/AttribRename';
+import './engine/nodes/sop/AttribSetAtIndex';
 import './engine/nodes/sop/AttribTransfer';
 import './engine/nodes/sop/BboxScatter';
 import './engine/nodes/sop/Blend';

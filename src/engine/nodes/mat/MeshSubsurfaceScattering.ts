@@ -209,8 +209,9 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 		param: BaseParamType,
 		uniform_name: string
 	) {
-		if (param.parent_param) {
-			node.material.uniforms[uniform_name].value.copy(param.parent_param.value);
+		const parentParam = param.parentParam();
+		if (parentParam) {
+			node.material.uniforms[uniform_name].value.copy(parentParam.value);
 		}
 	}
 	static PARAM_CALLBACK_update_uniformTexture(

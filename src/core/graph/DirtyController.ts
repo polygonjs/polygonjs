@@ -104,7 +104,7 @@ export class DirtyController {
 	runPostDirtyHooks(original_trigger_graph_node?: CoreGraphNode) {
 		if (this._post_dirty_hooks) {
 			const cooker = this.node.scene().cooker;
-			if (cooker.blocked) {
+			if (cooker.blocked()) {
 				cooker.enqueue(this.node, original_trigger_graph_node);
 			} else {
 				for (let hook of this._post_dirty_hooks) {

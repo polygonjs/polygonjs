@@ -126,15 +126,16 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 
 	var passThruShader = createShaderMaterial(getPassThroughFragmentShader(), passThruUniforms);
 
-	var mesh = new Mesh(new PlaneBufferGeometry(2, 2), passThruShader);
+	const plane = new PlaneBufferGeometry(2, 2);
+	var mesh = new Mesh(plane, passThruShader);
 	mesh.matrixAutoUpdate = false;
 	mesh.updateMatrix();
 	scene.add(mesh);
 
 	this.dispose = function () {
-		scene.dispose();
+		// scene.dispose();
 		passThruShader.dispose();
-		mesh.dispose();
+		plane.dispose();
 	};
 
 	this.setDataType = function (type) {

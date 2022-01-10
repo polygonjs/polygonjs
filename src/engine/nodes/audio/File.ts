@@ -10,13 +10,21 @@ import {Player} from 'tone/build/esm/source/buffer/Player';
 import {CoreLoaderAudio} from '../../../core/loader/Audio';
 import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
+import {FileType} from '../../params/utils/OptionsController';
+
+const LOOP_OPTIONS = {
+	cook: false,
+	callback: (node: BaseNodeType) => {
+		FileAudioNode.PARAM_CALLBACK_updateLoop(node as FileAudioNode);
+	},
+};
 class FileAudioParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the audio file from */
-	url = ParamConfig.STRING('');
+	url = ParamConfig.STRING('', {
+		fileBrowse: {type: [FileType.AUDIO]},
+	});
 	/** @param auto start */
 	autostart = ParamConfig.BOOLEAN(1);
-	/** @param loop */
-	loop = ParamConfig.BOOLEAN(1);
 	/** @param play the audio */
 	play = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
@@ -35,6 +43,39 @@ class FileAudioParamsConfig extends NodeParamsConfig {
 			FileAudioNode.PARAM_CALLBACK_restart(node as FileAudioNode);
 		},
 	});
+	/** @param duration */
+	duration = ParamConfig.FLOAT(-1, {
+		cook: false,
+		editable: false,
+	});
+	/** @param display currentTime param */
+	updateCurrentTimeParam = ParamConfig.BOOLEAN(0, {
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			FileAudioNode.PARAM_CALLBACK_updateUpdateCurrentTimeParam(node as FileAudioNode);
+		},
+	});
+	/** @param currentTime */
+	currentTime = ParamConfig.FLOAT(0, {
+		visibleIf: {updateCurrentTimeParam: 1},
+		range: [0, 100],
+		editable: false,
+		cook: false,
+	});
+	/** @param loop */
+	loop = ParamConfig.BOOLEAN(1, {
+		...LOOP_OPTIONS,
+	});
+	/** @param useLoopRange */
+	useLoopRange = ParamConfig.BOOLEAN(0, {
+		visibleIf: {loop: 1},
+		...LOOP_OPTIONS,
+	});
+	/** @param loop Range */
+	loopRange = ParamConfig.VECTOR2([-1, -1], {
+		visibleIf: {loop: 1, useLoopRange: 1},
+		...LOOP_OPTIONS,
+	});
 }
 const ParamsConfig = new FileAudioParamsConfig();
 
@@ -50,6 +91,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 
 	async cook(inputContents: AudioBuilder[]) {
 		await this._loadUrl();
+		this._updateOnTickHook();
 		if (this._player) {
 			const audioBuilder = new AudioBuilder();
 			audioBuilder.setSource(this._player);
@@ -78,6 +120,8 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 					// 	resolve(player);
 					// },
 				});
+				this.p.duration.set(buffer.duration);
+				this.p.loopRange.set([0, buffer.duration]);
 				if (isBooleanTrue(this.pv.autostart)) {
 					this._player.start();
 				}
@@ -97,6 +141,9 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	async restart() {
 		this._player?.seek(0);
 	}
+	async seek(time: number) {
+		this._player?.seek(0);
+	}
 
 	static PARAM_CALLBACK_play(node: FileAudioNode) {
 		node.play();
@@ -106,5 +153,60 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	}
 	static PARAM_CALLBACK_restart(node: FileAudioNode) {
 		node.restart();
+	}
+	/*
+	 * UPDATE CURRENT TIME PARAM
+	 */
+	static PARAM_CALLBACK_updateUpdateCurrentTimeParam(node: FileAudioNode) {
+		node._updateCurrentTimeParam();
+		node._updateOnTickHook();
+	}
+
+	private _updateCurrentTimeParam() {
+		if (!this._player) {
+			return;
+		}
+		const currentTime = this._player.now();
+		this.p.currentTime.set(currentTime);
+	}
+	/*
+	 * LOOP
+	 */
+	static PARAM_CALLBACK_updateLoop(node: FileAudioNode) {
+		node._updateLoop();
+	}
+	private _updateLoop() {
+		if (!this._player) {
+			return;
+		}
+		this._player.loop = this.pv.loop;
+		if (this._player.loop) {
+			if (isBooleanTrue(this.pv.useLoopRange)) {
+				this._player.setLoopPoints(this.pv.loopRange.x, this.pv.loopRange.y);
+			}
+		}
+	}
+
+	/*
+	 * REGISTER TICK CALLBACK
+	 */
+	private _updateOnTickHook() {
+		if (isBooleanTrue(this.pv.updateCurrentTimeParam)) {
+			this._registerOnTickHook();
+		} else {
+			this._unRegisterOnTickHook();
+		}
+	}
+	private async _registerOnTickHook() {
+		if (this.scene().registeredBeforeTickCallbacks().has(this._tickCallbackName())) {
+			return;
+		}
+		this.scene().registerOnBeforeTick(this._tickCallbackName(), this._updateCurrentTimeParam.bind(this));
+	}
+	private async _unRegisterOnTickHook() {
+		this.scene().unRegisterOnBeforeTick(this._tickCallbackName());
+	}
+	private _tickCallbackName() {
+		return `audio/File-${this.graphNodeId()}`;
 	}
 }

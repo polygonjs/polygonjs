@@ -75,13 +75,18 @@ export class TimeController {
 	// 	this._frame_interval = 1000 / this._fps;
 	// 	this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	// }
-	setTime(time: number, update_frame = true) {
+	setTime(time: number, updateFrame = true) {
 		if (time != this._time) {
 			this._time = time;
 
-			this._onBeforeTickCallbacks?.forEach((callback) => callback(this._delta));
+			// we block updates here, so that dependent nodes only cook once
+			this.scene.cooker.block();
+			const delta = this._delta;
+			for (const callback of this._onBeforeTickCallbacks) {
+				callback(delta);
+			}
 
-			if (update_frame) {
+			if (updateFrame) {
 				const new_frame = Math.floor(this._time * FPS);
 				const bounded_frame = this._ensureFrameWithinBounds(new_frame);
 				if (new_frame != bounded_frame) {
@@ -95,15 +100,15 @@ export class TimeController {
 			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
 			this.scene.uniformsController.updateTimeDependentUniformOwners();
 
-			// we block updates here, so that dependent nodes only cook once
-			this.scene.cooker.block();
 			this.graphNode.setSuccessorsDirty();
 			this.scene.cooker.unblock();
 
 			// dispatch events after nodes have cooked
 			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.TICK_EVENT_CONTEXT);
 
-			this._onAfterTickCallbacks?.forEach((callback) => callback(this._delta));
+			for (const callback of this._onAfterTickCallbacks) {
+				callback(delta);
+			}
 		}
 	}
 
@@ -187,26 +192,28 @@ export class TimeController {
 	// CALLBACKS
 	//
 	//
-	private _onBeforeTickCallbacks: CallbacksMap | undefined;
-	private _onAfterTickCallbacks: CallbacksMap | undefined;
+	private _onBeforeTickCallbacksMap: CallbacksMap | undefined;
+	private _onAfterTickCallbacksMap: CallbacksMap | undefined;
+	private _onBeforeTickCallbacks: Array<onTimeTickHook> = [];
+	private _onAfterTickCallbacks: Array<onTimeTickHook> = [];
 
 	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook) {
 		this._registerCallback(callbackName, callback, this.registeredBeforeTickCallbacks());
 	}
 	unRegisterOnBeforeTick(callbackName: string) {
-		this._unregisterCallback(callbackName, this._onBeforeTickCallbacks);
+		this._unregisterCallback(callbackName, this._onBeforeTickCallbacksMap);
 	}
 	registeredBeforeTickCallbacks() {
-		return (this._onBeforeTickCallbacks = this._onBeforeTickCallbacks || new Map());
+		return (this._onBeforeTickCallbacksMap = this._onBeforeTickCallbacksMap || new Map());
 	}
 	registerOnAfterTick(callbackName: string, callback: onTimeTickHook) {
 		this._registerCallback(callbackName, callback, this.registeredAfterTickCallbacks());
 	}
 	unRegisterOnAfterTick(callbackName: string) {
-		this._unregisterCallback(callbackName, this._onAfterTickCallbacks);
+		this._unregisterCallback(callbackName, this._onAfterTickCallbacksMap);
 	}
 	registeredAfterTickCallbacks() {
-		return (this._onAfterTickCallbacks = this._onAfterTickCallbacks || (new Map() as CallbacksMap));
+		return (this._onAfterTickCallbacksMap = this._onAfterTickCallbacksMap || (new Map() as CallbacksMap));
 	}
 
 	private _registerCallback<C extends onTimeTickHook>(callbackName: string, callback: C, map: CallbacksMap) {
@@ -215,11 +222,23 @@ export class TimeController {
 			return;
 		}
 		map.set(callbackName, callback);
+		this._updateCallbacks();
 	}
 	private _unregisterCallback(callbackName: string, map?: CallbacksMap) {
 		if (!map) {
 			return;
 		}
 		map.delete(callbackName);
+		this._updateCallbacks();
+	}
+	private _updateCallbacks() {
+		this._onBeforeTickCallbacks = [];
+		this._onBeforeTickCallbacksMap?.forEach((callback) => {
+			this._onBeforeTickCallbacks.push(callback);
+		});
+		this._onAfterTickCallbacks = [];
+		this._onAfterTickCallbacksMap?.forEach((callback) => {
+			this._onAfterTickCallbacks.push(callback);
+		});
 	}
 }

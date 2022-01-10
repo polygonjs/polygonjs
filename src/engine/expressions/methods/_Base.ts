@@ -11,9 +11,9 @@ import {Poly} from '../../Poly';
 import {CoreType} from '../../../core/Type';
 
 export class BaseMethod {
-	protected _require_dependency = false;
-	require_dependency() {
-		return this._require_dependency;
+	protected _requireDependency = false;
+	requireDependency() {
+		return this._requireDependency;
 	}
 
 	constructor(public readonly param: BaseParamType) {}
@@ -135,7 +135,7 @@ export class BaseMethod {
 		//}
 	}
 
-	findDependency(args: any): MethodDependency | null {
+	findDependency(arg: string | number): MethodDependency | null {
 		return null;
 	}
 

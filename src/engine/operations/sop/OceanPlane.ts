@@ -8,9 +8,9 @@ import {PlaneGeometry} from 'three/src/geometries/PlaneGeometry';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../poly/NodeContext';
-// import {Water} from '../../../modules/three/examples/jsm/objects/Water';
-import {Water} from '../../../modules/core/objects/Water';
+import {Water, WaterOptions} from '../../../modules/core/objects/Water';
 import {isBooleanTrue} from '../../../core/Type';
+import {Poly} from '../../Poly';
 
 interface OceanPlaneSopParams extends DefaultOperationParams {
 	sunDirection: Vector3;
@@ -43,7 +43,12 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 
 	protected _coreTransform = new CoreTransform();
 	async cook(input_contents: CoreGroup[], params: OceanPlaneSopParams) {
-		const water = this.water(params);
+		const renderer = await Poly.renderersController.firstRenderer();
+		if (!renderer) {
+			return this.createCoreGroupFromObjects([]);
+		}
+
+		const water = this._water({renderer, ...params});
 		const material = water.material;
 		material.uniforms.sunDirection.value.copy(params.sunDirection);
 		material.uniforms.sunColor.value.copy(params.sunColor);
@@ -86,15 +91,13 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects([water]);
 	}
 
-	private _water: Water | undefined;
-	water(params: OceanPlaneSopParams) {
-		return (this._water = this._water || this._createWaterObject(params));
+	private __water__: Water | undefined;
+	private _water(params: WaterOptions) {
+		return (this.__water__ = this.__water__ || this._createWaterObject(params));
 	}
-	private _createWaterObject(params: OceanPlaneSopParams) {
+	private _createWaterObject(params: WaterOptions) {
 		const waterGeometry = new PlaneGeometry(10000, 10000);
 		const water = new Water(waterGeometry, {
-			textureWidth: 512,
-			textureHeight: 512,
 			// waterNormals: new TextureLoader().load('/clients/me/waternormals.jpg', function (texture) {
 			// 	console.log(texture);
 			// 	texture.wrapS = texture.wrapT = RepeatWrapping;
@@ -104,6 +107,8 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 			waterColor: params.waterColor,
 			distortionScale: params.distortionScale,
 			// fog: scene.fog !== undefined
+			renderer: params.renderer,
+			pixelRatio: 1,
 		});
 		water.rotation.x = -Math.PI / 2;
 		// water.updateMatrix();

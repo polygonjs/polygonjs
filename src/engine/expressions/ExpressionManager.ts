@@ -56,18 +56,21 @@ export class ExpressionManager {
 		// this.parse_and_update_dependencies_if_not_done(expression);
 		if (this._computeAllowed()) {
 			try {
-				const new_value = await this._functionGenerator.evalFunction();
-				return new_value;
+				const newValue = await this._functionGenerator.evalFunction();
+				return newValue;
 			} catch (e) {
+				console.log('failed expression');
 				// if (this.function_generator.is_errored && this.function_generator.error_message) {
 				// 	this.set_error(this.function_generator.error_message);
 				// }
-				return; // new Promise((resolve, reject) => resolve());
+				// return new Promise((resolve, reject) => {
+				// 	resolve(null);
+				// })
 			}
 		} else {
-			return new Promise((resolve, reject) => {
-				resolve(null);
-			});
+			// return new Promise((resolve, reject) => {
+			// 	resolve(null);
+			// });
 		}
 	}
 

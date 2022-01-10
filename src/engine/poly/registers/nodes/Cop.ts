@@ -1,6 +1,6 @@
 import {CATEGORY_COP} from './Category';
 
-import {AudioAnalyzerCopNode} from '../../../nodes/cop/AudioAnalyzer';
+import {AudioAnalyserCopNode} from '../../../nodes/cop/AudioAnalyser';
 import {BuilderCopNode} from '../../../nodes/cop/Builder';
 import {CanvasCopNode} from '../../../nodes/cop/Canvas';
 import {ColorCopNode} from '../../../nodes/cop/Color';
@@ -28,7 +28,7 @@ import {PostProcessNetworkCopNode} from '../../../nodes/cop/PostProcessNetwork';
 import {RenderersNetworkCopNode} from '../../../nodes/cop/RenderersNetwork';
 
 export interface CopNodeChildrenMap {
-	audioAnalyzer: AudioAnalyzerCopNode;
+	audioAnalyser: AudioAnalyserCopNode;
 	builder: BuilderCopNode;
 	canvas: CanvasCopNode;
 	color: ColorCopNode;
@@ -59,7 +59,7 @@ export interface CopNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 export class CopRegister {
 	static run(poly: PolyEngine) {
-		poly.registerNode(AudioAnalyzerCopNode, CATEGORY_COP.ADVANCED);
+		poly.registerNode(AudioAnalyserCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(BuilderCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(CanvasCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);

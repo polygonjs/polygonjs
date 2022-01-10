@@ -102,7 +102,7 @@ QUnit.test('SOP delete: (class=point) string attrib', async (assert) => {
 	merge1.setInput(1, attribCreate2);
 	delete1.setInput(0, merge1);
 	[attribCreate1, attribCreate2].forEach((n) => {
-		n.setType(AttribType.STRING);
+		n.setAttribType(AttribType.STRING);
 		n.p.name.set('name');
 	});
 	attribCreate1.p.string.set('beaver');

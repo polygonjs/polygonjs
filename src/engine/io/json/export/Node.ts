@@ -263,7 +263,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 
 		for (let param_name of this._node.params.names) {
 			const param = this._node.params.get(param_name);
-			if (param && !param.parent_param) {
+			if (param && !param.parentParam()) {
 				const param_exporter = JsonExportDispatcher.dispatch_param(param);
 				if (param_exporter.required()) {
 					const params_data = param_exporter.data();

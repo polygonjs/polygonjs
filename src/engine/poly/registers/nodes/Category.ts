@@ -8,7 +8,7 @@ export const CATEGORY_ANIM = {
 	TIMING: 'timing',
 };
 export const CATEGORY_AUDIO = {
-	ANALYZER: 'analyzer',
+	ANALYSER: 'analyser',
 	EFFECTS: 'effects',
 	INPUTS: 'inputs',
 	INSTRUMENTS: 'instruments',

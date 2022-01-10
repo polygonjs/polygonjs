@@ -116,7 +116,7 @@ export class CoreWalker {
 	public static readonly PARENT_WITH_SLASH = `${CoreWalker.PARENT}/`;
 	public static readonly NON_LETTER_PREFIXES = [CoreWalker.SEPARATOR, CoreWalker.DOT];
 
-	static split_parent_child(path: string) {
+	static splitParentChild(path: string) {
 		const elements: string[] = path.split(CoreWalker.SEPARATOR).filter((e) => e.length > 0);
 		const child_path = elements.pop();
 		const parent_path = elements.join(CoreWalker.SEPARATOR);

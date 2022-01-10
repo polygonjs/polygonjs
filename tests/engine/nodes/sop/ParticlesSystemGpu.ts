@@ -462,6 +462,30 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	RendererUtils.dispose();
 });
 
+QUnit.test('ParticlesSystemGPU node can be deleted without error', async (assert) => {
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	scene.setFrame(0);
+
+	await scene.waitForCooksCompleted();
+	const {renderer} = await RendererUtils.waitForRenderer();
+	assert.ok(renderer, 'renderer created');
+
+	const plane1 = geo1.createNode('plane');
+	const scatter1 = geo1.createNode('scatter');
+	const particles1 = geo1.createNode('particlesSystemGpu');
+
+	scatter1.setInput(0, plane1);
+	particles1.setInput(0, scatter1);
+
+	await particles1.compute();
+	geo1.removeNode(particles1);
+
+	assert.equal(1, 1);
+
+	RendererUtils.dispose();
+});
+
 QUnit.skip(
 	'ParticlesSystemGPU spare params are created from param, ramp and texture nodes even when not connected to output',
 	async (assert) => {

@@ -1,8 +1,7 @@
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
-console.log(ASSETS_ROOT);
 
-QUnit.test('COP audioAnalyzer with FFT', async (assert) => {
+QUnit.test('COP audioAnalyser with FFT', async (assert) => {
 	const scene = window.scene;
 
 	scene.root().createNode('audioListener');
@@ -19,7 +18,7 @@ QUnit.test('COP audioAnalyzer with FFT', async (assert) => {
 	await CoreSleep.sleep(1000);
 
 	const COP = window.COP;
-	const audioAnalyzer = COP.createNode('audioAnalyzer');
+	const audioAnalyzer = COP.createNode('audioAnalyser');
 	audioAnalyzer.p.activeR.set(1);
 	audioAnalyzer.p.audioNodeR.setNode(FFT);
 
@@ -51,7 +50,7 @@ QUnit.test('COP audioAnalyzer with Meter', async (assert) => {
 	await CoreSleep.sleep(1000);
 
 	const COP = window.COP;
-	const audioAnalyzer = COP.createNode('audioAnalyzer');
+	const audioAnalyzer = COP.createNode('audioAnalyser');
 	audioAnalyzer.p.activeR.set(1);
 	audioAnalyzer.p.audioNodeR.setNode(meter);
 	// audioAnalyzer.p.rangeR.set([0, 1]);
@@ -83,7 +82,7 @@ QUnit.test('COP audioAnalyzer with Waveform', async (assert) => {
 	await CoreSleep.sleep(1000);
 
 	const COP = window.COP;
-	const audioAnalyzer = COP.createNode('audioAnalyzer');
+	const audioAnalyzer = COP.createNode('audioAnalyser');
 	audioAnalyzer.p.activeR.set(1);
 	audioAnalyzer.p.audioNodeR.setNode(waveform);
 	audioAnalyzer.p.rangeR.set([-0.25, 0.25]);

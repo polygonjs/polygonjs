@@ -1,23 +1,32 @@
+import {CoreSleep} from '../../../../src/core/Sleep';
 import {CameraProjectSopNode} from '../../../../src/engine/nodes/sop/CameraProject';
 
-function createCamera() {
+async function createCamera() {
 	const scene = window.scene;
 	const camera = scene.createNode('perspectiveCamera');
+	camera.p.near.set(1);
+	camera.p.far.set(10);
+	await camera.compute();
+	await CoreSleep.sleep(500);
 	// camera.p.t.set([0, 0, 5]);
 	// camera.p.r.set([0, 45, 0]);
 	// camera.p.near.set(1);
 	// camera.p.far.set(10);
 	camera.object.position.set(0, 0, 5);
-	camera.object.near = 1;
-	camera.object.far = 10;
+	// camera.object.near = 1;
+	// camera.object.far = 10;
+	camera.object.updateProjectionMatrix();
 	camera.object.updateMatrix();
 	camera.object.updateMatrixWorld(true);
 	camera.object.updateWorldMatrix(true, true);
 
 	return camera;
 }
-function createCameraProject() {
-	const camera = createCamera();
+async function createCameraProject(assert: Assert) {
+	const camera = await createCamera();
+	assert.equal(camera.object.near, 1);
+	assert.equal(camera.object.far, 10);
+
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const bboxScatter1 = geo1.createNode('bboxScatter');
@@ -38,7 +47,7 @@ async function getBbox(cameraProject1: CameraProjectSopNode) {
 }
 
 QUnit.test('cameraProject simple', async (assert) => {
-	const cameraProject1 = createCameraProject();
+	const cameraProject1 = await createCameraProject(assert);
 
 	let bbox = await getBbox(cameraProject1);
 
@@ -51,7 +60,7 @@ QUnit.test('cameraProject simple', async (assert) => {
 });
 
 QUnit.test('cameraProject unproject', async (assert) => {
-	const cameraProject1 = createCameraProject();
+	const cameraProject1 = await createCameraProject(assert);
 
 	let bbox = await getBbox(cameraProject1);
 	assert.in_delta(bbox.min.x, -0.53, 0.1);

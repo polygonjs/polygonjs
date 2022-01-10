@@ -19,7 +19,7 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 
 export class ObjectsCountExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 	// npoints(0)
 	// npoints('../REF_bbox')
 	static requiredArguments() {

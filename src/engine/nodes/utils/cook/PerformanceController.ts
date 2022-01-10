@@ -9,9 +9,12 @@ export interface NodePerformanceData {
 
 const performance = Poly.performance.performanceManager();
 export class NodeCookPerformanceformanceController {
-	private _inputs_start: number = 0;
-	private _params_start: number = 0;
-	private _cook_start: number = 0;
+	private _inputsStart: number = 0;
+	private _inputsTime: number = 0;
+	private _paramsStart: number = 0;
+	private _paramsTime: number = 0;
+	private _cookStart: number = 0;
+	private _cookTime: number = 0;
 	private _cooksCount: number = 0;
 	private _data: NodePerformanceData = {
 		inputsTime: 0,
@@ -24,7 +27,10 @@ export class NodeCookPerformanceformanceController {
 	cooksCount() {
 		return this._cooksCount;
 	}
-	data2() {
+	data() {
+		this._data.inputsTime = this._inputsTime;
+		this._data.paramsTime = this._paramsTime;
+		this._data.cookTime = this._cookTime;
 		return this._data;
 	}
 
@@ -37,12 +43,12 @@ export class NodeCookPerformanceformanceController {
 	//
 	recordInputsStart() {
 		if (this.active()) {
-			this._inputs_start = performance.now();
+			this._inputsStart = performance.now();
 		}
 	}
 	recordInputsEnd() {
 		if (this.active()) {
-			this._data.inputsTime = performance.now() - this._inputs_start;
+			this._inputsTime = performance.now() - this._inputsStart;
 		}
 	}
 	//
@@ -50,12 +56,12 @@ export class NodeCookPerformanceformanceController {
 	//
 	recordParamsStart() {
 		if (this.active()) {
-			this._params_start = performance.now();
+			this._paramsStart = performance.now();
 		}
 	}
 	recordParamsEnd() {
 		if (this.active()) {
-			this._data.paramsTime = performance.now() - this._params_start;
+			this._paramsTime = performance.now() - this._paramsStart;
 		}
 	}
 	//
@@ -63,12 +69,12 @@ export class NodeCookPerformanceformanceController {
 	//
 	recordCookStart() {
 		if (this.active()) {
-			this._cook_start = performance.now();
+			this._cookStart = performance.now();
 		}
 	}
 	recordCookEnd() {
 		if (this.active()) {
-			this._data.cookTime = performance.now() - this._cook_start;
+			this._cookTime = performance.now() - this._cookStart;
 			this._cooksCount += 1;
 		}
 	}

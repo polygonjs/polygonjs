@@ -16,13 +16,13 @@ QUnit.test('CSS2DObject simple', async (assert) => {
 	CSS2DObject1.setInput(0, attribCreate_html);
 
 	attribCreate_id.p.name.set('id');
-	attribCreate_id.setType(AttribType.STRING);
+	attribCreate_id.setAttribType(AttribType.STRING);
 	attribCreate_id.p.string.set('myId`@ptnum`');
 	attribCreate_class.p.name.set('class');
-	attribCreate_class.setType(AttribType.STRING);
+	attribCreate_class.setAttribType(AttribType.STRING);
 	attribCreate_class.p.string.set('myClass`@ptnum*3`');
 	attribCreate_html.p.name.set('html');
-	attribCreate_html.setType(AttribType.STRING);
+	attribCreate_html.setAttribType(AttribType.STRING);
 	attribCreate_html.p.string.set('This is the content `@ptnum*10` (`@class`)');
 
 	async function CSS2DObjects() {

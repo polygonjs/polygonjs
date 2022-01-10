@@ -14,8 +14,8 @@ type OnUpdateHook = () => void;
 
 const MAX_INPUTS_COUNT_UNSET = 0;
 export class InputsController<NC extends NodeContext> {
-	private _graph_node: CoreGraphNode | undefined;
-	private _graph_node_inputs: CoreGraphNode[] = [];
+	private _graphNode: CoreGraphNode | undefined;
+	private _graphNodeInputs: CoreGraphNode[] = [];
 	private _inputs: Array<BaseNodeByContextMap[NC] | null> = [];
 	private _has_named_inputs: boolean = false;
 	private _named_input_connection_points: ConnectionPointTypeMap[NC][] | undefined;
@@ -31,10 +31,10 @@ export class InputsController<NC extends NodeContext> {
 	// clonable
 
 	dispose() {
-		if (this._graph_node) {
-			this._graph_node.dispose();
+		if (this._graphNode) {
+			this._graphNode.dispose();
 		}
-		for (let graph_node of this._graph_node_inputs) {
+		for (let graph_node of this._graphNodeInputs) {
 			if (graph_node) {
 				graph_node.dispose();
 			}
@@ -134,18 +134,18 @@ export class InputsController<NC extends NodeContext> {
 	}
 	private _initGraphNodeInputs() {
 		for (let i = 0; i < this._maxInputsCount; i++) {
-			this._graph_node_inputs[i] = this._graph_node_inputs[i] || this._createGraphNodeInput(i);
+			this._graphNodeInputs[i] = this._graphNodeInputs[i] || this._createGraphNodeInput(i);
 		}
 	}
 	private _createGraphNodeInput(index: number): CoreGraphNode {
 		const graph_input_node = new CoreGraphNode(this.node.scene(), `input_${index}`);
 		// graph_input_node.setScene(this.node.scene);
-		if (!this._graph_node) {
-			this._graph_node = new CoreGraphNode(this.node.scene(), 'inputs');
-			this.node.addGraphInput(this._graph_node, false);
+		if (!this._graphNode) {
+			this._graphNode = new CoreGraphNode(this.node.scene(), 'inputs');
+			this.node.addGraphInput(this._graphNode, false);
 		}
 
-		this._graph_node.addGraphInput(graph_input_node, false);
+		this._graphNode.addGraphInput(graph_input_node, false);
 		return graph_input_node;
 	}
 
@@ -156,7 +156,7 @@ export class InputsController<NC extends NodeContext> {
 		return this._maxInputsCount != this._maxInputsCountOnInput;
 	}
 	inputGraphNode(input_index: number): CoreGraphNode {
-		return this._graph_node_inputs[input_index];
+		return this._graphNodeInputs[input_index];
 	}
 
 	setCount(min: number, max?: number) {
@@ -173,8 +173,8 @@ export class InputsController<NC extends NodeContext> {
 		this.node.io.connections.initInputs();
 	}
 
-	is_any_input_dirty() {
-		return this._graph_node?.isDirty() || false;
+	isAnyInputDirty() {
+		return this._graphNode?.isDirty() || false;
 		// if (this._maxInputsCount > 0) {
 		// 	for (let i = 0; i < this._inputs.length; i++) {
 		// 		if (this._inputs[i]?.isDirty()) {
@@ -185,13 +185,18 @@ export class InputsController<NC extends NodeContext> {
 		// 	return false;
 		// }
 	}
-	async containers_without_evaluation() {
+	containersWithoutEvaluation() {
 		const containers: Array<ContainerMap[NC] | undefined> = [];
 		for (let i = 0; i < this._inputs.length; i++) {
-			const input_node = this._inputs[i];
+			const inputNode = this._inputs[i];
 			let container: ContainerMap[NC] | undefined = undefined;
-			if (input_node) {
-				container = (await input_node.compute()) as ContainerMap[NC];
+			if (inputNode) {
+				// container = (await inputNode.compute()) as ContainerMap[NC];
+				// we do not need a promise using await here,
+				// as we know that the input node is not dirty
+				// therefore we can simply request the container
+				// and only check if it is bypassed or not
+				container = inputNode.containerController.containerUnlessBypassed() as ContainerMap[NC] | undefined;
 			}
 			containers.push(container);
 		}
@@ -234,7 +239,7 @@ export class InputsController<NC extends NodeContext> {
 					}
 					containers = await Promise.all(promises);
 					// containers = containers.concat(promised_containers);
-					this._graph_node?.removeDirtyState();
+					this._graphNode?.removeDirtyState();
 				}
 			}
 		}
@@ -252,7 +257,7 @@ export class InputsController<NC extends NodeContext> {
 		// }
 		if (input_node) {
 			container = (await input_node.compute()) as ContainerMap[NC];
-			this._graph_node_inputs[input_index].removeDirtyState();
+			this._graphNodeInputs[input_index].removeDirtyState();
 		}
 
 		// we do not clone here, as we just check if a group is present
@@ -321,7 +326,7 @@ export class InputsController<NC extends NodeContext> {
 			}
 		}
 
-		const graph_input_node = this._graph_node_inputs[input_index];
+		const graph_input_node = this._graphNodeInputs[input_index];
 		if (graph_input_node == null) {
 			const message = `graph_input_node not found at index ${input_index}`;
 			console.warn(message);
@@ -433,31 +438,31 @@ export class InputsController<NC extends NodeContext> {
 	// CLONABLE STATES
 	//
 	//
-	private _cloned_states_controller: ClonedStatesController<NC> | undefined;
+	private _clonedStatesController: ClonedStatesController<NC> | undefined;
 	initInputsClonedState(states: InputCloneMode | InputCloneMode[]) {
-		if (!this._cloned_states_controller) {
-			this._cloned_states_controller = new ClonedStatesController(this);
-			this._cloned_states_controller.initInputsClonedState(states);
+		if (!this._clonedStatesController) {
+			this._clonedStatesController = new ClonedStatesController(this);
+			this._clonedStatesController.initInputsClonedState(states);
 		}
 	}
 	overrideClonedStateAllowed(): boolean {
-		return this._cloned_states_controller?.overrideClonedStateAllowed() || false;
+		return this._clonedStatesController?.overrideClonedStateAllowed() || false;
 	}
 	overrideClonedState(state: boolean) {
-		this._cloned_states_controller?.overrideClonedState(state);
+		this._clonedStatesController?.overrideClonedState(state);
 	}
 	clonedStateOverriden() {
-		return this._cloned_states_controller?.overriden() || false;
+		return this._clonedStatesController?.overriden() || false;
 	}
 	cloneRequired(index: number) {
-		const state = this._cloned_states_controller?.cloneRequiredState(index);
+		const state = this._clonedStatesController?.cloneRequiredState(index);
 		if (state != null) {
 			return state;
 		}
 		return true;
 	}
 	cloneRequiredStates(): boolean | boolean[] {
-		const states = this._cloned_states_controller?.cloneRequiredStates();
+		const states = this._clonedStatesController?.cloneRequiredStates();
 		if (states != null) {
 			return states;
 		}

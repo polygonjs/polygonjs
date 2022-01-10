@@ -36,7 +36,7 @@ const VECTOR_NAMES: Array<keyof BoxComponents> = ['min', 'max', 'size', 'center'
 const COMPONENT_NAMES = ['x', 'y', 'z'];
 
 export class BboxExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 	static requiredArguments() {
 		return [
 			['string', 'path to node'],

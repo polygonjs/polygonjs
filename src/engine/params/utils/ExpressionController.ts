@@ -102,10 +102,9 @@ export class ExpressionController<T extends ParamType> {
 		}
 	}
 
-	async computeExpression() {
+	computeExpression() {
 		if (this._manager && this.active()) {
-			const result = await this._manager.computeFunction();
-			return result;
+			return this._manager.computeFunction();
 		}
 	}
 	async computeExpressionForEntities(entities: CoreEntity[], callback: EntityCallback<T>) {

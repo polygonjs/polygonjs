@@ -61,6 +61,14 @@ export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFun
 	}
 }
 
+function inputTypeOrFloatExceptBool(inputType: GlConnectionPointType | undefined): GlConnectionPointType {
+	if (inputType == GlConnectionPointType.BOOL) {
+		inputType = GlConnectionPointType.FLOAT;
+	}
+	const type = inputType || GlConnectionPointType.FLOAT;
+	return type;
+}
+
 //
 //
 // 1 argument
@@ -71,7 +79,7 @@ export abstract class BaseNodeGlMathFunctionArg1GlNode extends BaseGlMathFunctio
 		return 'in';
 	}
 	protected _expected_input_types() {
-		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type];
 	}
 }
@@ -83,7 +91,7 @@ export abstract class BaseNodeGlMathFunctionArg1GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg2GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type];
 	}
 }
@@ -95,7 +103,7 @@ export abstract class BaseNodeGlMathFunctionArg2GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg3GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type];
 	}
 }
@@ -106,7 +114,7 @@ export abstract class BaseNodeGlMathFunctionArg3GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type, type];
 	}
 }
@@ -117,7 +125,7 @@ export abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMathFunctio
 //
 export abstract class BaseNodeGlMathFunctionArg5GlNode extends BaseGlMathFunctionGlNode {
 	protected _expected_input_types() {
-		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type, type, type];
 	}
 }

@@ -62,7 +62,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			if (add_input) {
 				if (this.node.params.has(param_name)) {
 					const param = this.node.params.get(param_name);
-					if (param && !param.parent_param) {
+					if (param && !param.parentParam()) {
 						const connection_type = connection_type_map[param.type()] as ConnectionPointEnumMap[NC];
 						if (connection_type) {
 							const connection_point = create_connection_point(
@@ -167,7 +167,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		this.node.params.updateParams(params_update_options);
 
 		for (let spare_param of this.node.params.spare) {
-			if (!spare_param.parent_param) {
+			if (!spare_param.parentParam()) {
 				const raw_input = this._raw_input_serialized_by_param_name.get(spare_param.name());
 				if (raw_input) {
 					spare_param.set(raw_input as any);

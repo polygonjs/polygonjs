@@ -34,7 +34,7 @@ export interface OrthoOrPerspCamera extends Camera {
 const EVENT_CHANGE = {type: 'change'};
 
 export const BASE_CAMERA_DEFAULT = {
-	near: 1.0,
+	near: 0.1,
 	far: 100.0,
 };
 
@@ -87,7 +87,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 
 		/** @param near */
 		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {
-			range: [0, 100],
+			range: [0.1, 100],
 			cook: false,
 			computeOnDirty: true,
 			callback: (node: BaseNodeType, param: BaseParamType) => {

@@ -9,8 +9,8 @@ import {PolyScene} from '../scene/PolyScene';
 import {ViewerAudioController} from './utils/AudioController';
 
 const HOVERED_CLASS_NAME = 'hovered';
-type ViewerHook = (delta: number) => void;
-type CallbacksMap = Map<string, ViewerHook>;
+type ViewerCallback = (delta: number) => void;
+type CallbacksMap = Map<string, ViewerCallback>;
 
 export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// protected _display_scene: Scene;
@@ -134,60 +134,101 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	//
 	//
 	// tick callbacks
-	protected _onBeforeTickCallbacks: CallbacksMap | undefined;
-	protected _onAfterTickCallbacks: CallbacksMap | undefined;
+	private _onBeforeTickCallbacksMap: CallbacksMap | undefined;
+	private _onAfterTickCallbacksMap: CallbacksMap | undefined;
+	protected _onBeforeTickCallbacks: Array<ViewerCallback> = [];
+	protected _onAfterTickCallbacks: Array<ViewerCallback> = [];
 	// render callbacks
-	protected _onBeforeRenderCallbacks: CallbacksMap | undefined;
-	protected _onAfterRenderCallbacks: CallbacksMap | undefined;
+	private _onBeforeRenderCallbacksMap: CallbacksMap | undefined;
+	private _onAfterRenderCallbacksMap: CallbacksMap | undefined;
+	protected _onBeforeRenderCallbacks: Array<ViewerCallback> = [];
+	protected _onAfterRenderCallbacks: Array<ViewerCallback> = [];
 
-	registerOnBeforeTick(callbackName: string, callback: ViewerHook) {
+	registerOnBeforeTick(callbackName: string, callback: ViewerCallback) {
 		this._registerCallback(callbackName, callback, this.registeredBeforeTickCallbacks());
 	}
 	unRegisterOnBeforeTick(callbackName: string) {
-		this._unregisterCallback(callbackName, this._onBeforeTickCallbacks);
+		this._unregisterCallback(callbackName, this._onBeforeTickCallbacksMap);
 	}
 	registeredBeforeTickCallbacks() {
-		return (this._onBeforeTickCallbacks = this._onBeforeTickCallbacks || new Map());
+		return (this._onBeforeTickCallbacksMap = this._onBeforeTickCallbacksMap || new Map());
 	}
-	registerOnAfterTick(callbackName: string, callback: ViewerHook) {
+	registerOnAfterTick(callbackName: string, callback: ViewerCallback) {
 		this._registerCallback(callbackName, callback, this.registeredAfterTickCallbacks());
 	}
 	unRegisterOnAfterTick(callbackName: string) {
-		this._unregisterCallback(callbackName, this._onAfterTickCallbacks);
+		this._unregisterCallback(callbackName, this._onAfterTickCallbacksMap);
 	}
 	registeredAfterTickCallbacks() {
-		return (this._onAfterTickCallbacks = this._onAfterTickCallbacks || new Map());
+		return (this._onAfterTickCallbacksMap = this._onAfterTickCallbacksMap || new Map());
 	}
-	registerOnBeforeRender(callbackName: string, callback: ViewerHook) {
+	registerOnBeforeRender(callbackName: string, callback: ViewerCallback) {
 		this._registerCallback(callbackName, callback, this.registeredBeforeRenderCallbacks());
 	}
 	unRegisterOnBeforeRender(callbackName: string) {
-		this._unregisterCallback(callbackName, this._onBeforeRenderCallbacks);
+		this._unregisterCallback(callbackName, this._onBeforeRenderCallbacksMap);
 	}
 	registeredBeforeRenderCallbacks() {
-		return (this._onBeforeRenderCallbacks = this._onBeforeRenderCallbacks || new Map());
+		return (this._onBeforeRenderCallbacksMap = this._onBeforeRenderCallbacksMap || new Map());
 	}
-	registerOnAfterRender(callbackName: string, callback: ViewerHook) {
+	registerOnAfterRender(callbackName: string, callback: ViewerCallback) {
 		this._registerCallback(callbackName, callback, this.registeredAfterRenderCallbacks());
 	}
 	unRegisterOnAfterRender(callbackName: string) {
-		this._unregisterCallback(callbackName, this._onAfterRenderCallbacks);
+		this._unregisterCallback(callbackName, this._onAfterRenderCallbacksMap);
 	}
 	registeredAfterRenderCallbacks() {
-		return (this._onAfterRenderCallbacks = this._onAfterRenderCallbacks || new Map());
+		return (this._onAfterRenderCallbacksMap = this._onAfterRenderCallbacksMap || new Map());
 	}
-	private _registerCallback<C extends ViewerHook>(callbackName: string, callback: C, map: CallbacksMap) {
+	private _registerCallback<C extends ViewerCallback>(callbackName: string, callback: C, map: CallbacksMap) {
 		if (map.has(callbackName)) {
 			console.warn(`callback ${callbackName} already registered`);
 			return;
 		}
 		map.set(callbackName, callback);
+		this._updateCallbacks();
 	}
 	private _unregisterCallback(callbackName: string, map?: CallbacksMap) {
 		if (!map) {
 			return;
 		}
 		map.delete(callbackName);
+		this._updateCallbacks();
+	}
+	private _updateCallbacks() {
+		this._onBeforeTickCallbacks = [];
+		this._onBeforeTickCallbacksMap?.forEach((callback) => {
+			this._onBeforeTickCallbacks.push(callback);
+		});
+		this._onAfterTickCallbacks = [];
+		this._onAfterTickCallbacksMap?.forEach((callback) => {
+			this._onAfterTickCallbacks.push(callback);
+		});
+		this._onBeforeRenderCallbacks = [];
+		this._onBeforeRenderCallbacksMap?.forEach((callback) => {
+			this._onBeforeRenderCallbacks.push(callback);
+		});
+		this._onAfterRenderCallbacks = [];
+		this._onAfterRenderCallbacksMap?.forEach((callback) => {
+			this._onAfterRenderCallbacks.push(callback);
+		});
+	}
+	private _runCallbacks(callbacks: ViewerCallback[], delta: number) {
+		for (const callback of callbacks) {
+			callback(delta);
+		}
+	}
+	protected _runOnBeforeTickCallbacks(delta: number) {
+		this._runCallbacks(this._onBeforeTickCallbacks, delta);
+	}
+	protected _runOnAfterTickCallbacks(delta: number) {
+		this._runCallbacks(this._onAfterTickCallbacks, delta);
+	}
+	protected _runOnBeforeRenderCallbacks(delta: number) {
+		this._runCallbacks(this._onBeforeRenderCallbacks, delta);
+	}
+	protected _runOnAfterRenderCallbacks(delta: number) {
+		this._runCallbacks(this._onAfterRenderCallbacks, delta);
 	}
 }
 

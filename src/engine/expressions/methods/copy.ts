@@ -24,7 +24,7 @@ import {BaseNodeType} from '../../nodes/_Base';
 
 type CopyNode = CopyAnimNode | CopySopNode;
 export class CopyExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 	static requiredArguments() {
 		return [
 			['string', 'path to copy'],

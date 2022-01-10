@@ -121,19 +121,19 @@ QUnit.test('geo obj: $F in params will update the matrix', async (assert) => {
 	assert.notOk(geo1.isDirty(), 'geo1 is not dirty');
 	scene.setFrame(1);
 	scene.setFrame(3);
-	assert.equal(geo1.cookController.cooksCount(), 1);
+	assert.equal(geo1.cookController.cooksCount(), 1, 'cooked 1x');
 	assert.notOk(geo1.isDirty(), 'geo1 is not dirty');
 	geo1.p.r.y.set('$F+10');
 
-	assert.ok(geo1.isDirty());
+	assert.ok(geo1.isDirty(), 'geo is dirty');
 	await scene.waitForCooksCompleted();
-	assert.equal(geo1.cookController.cooksCount(), 2);
+	assert.equal(geo1.cookController.cooksCount(), 2, 'cooked 2x');
 	assert.notOk(geo1.isDirty());
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 13, 0]);
 
 	scene.setFrame(37);
 	await scene.waitForCooksCompleted();
-	assert.equal(geo1.cookController.cooksCount(), 3);
+	assert.equal(geo1.cookController.cooksCount(), 3, 'cooked 3x');
 	assert.notOk(geo1.isDirty());
 	assert.deepEqual(geo1.pv.r.toArray(), [0, 47, 0]);
 

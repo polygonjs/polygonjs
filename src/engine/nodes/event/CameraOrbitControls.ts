@@ -46,8 +46,8 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	/** @param rotation speed */
 	rotateSpeed = ParamConfig.FLOAT(0.5);
 	/** @param smallest distance the camera can go to the target */
-	minDistance = ParamConfig.FLOAT(1, {
-		range: [0, 100],
+	minDistance = ParamConfig.FLOAT(0.1, {
+		range: [0.1, 100],
 		rangeLocked: [true, false],
 	});
 	/** @param max distance the camera can go away the target */

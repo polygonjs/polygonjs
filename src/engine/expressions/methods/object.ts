@@ -21,7 +21,7 @@ import {GeometryContainer} from '../../containers/Geometry';
 
 const EXPECTED_ARGS_COUNT = 3;
 export class ObjectExpression extends BaseMethod {
-	protected _require_dependency = true;
+	protected _requireDependency = true;
 	static requiredArguments() {
 		return [
 			['string', 'path to node'],
