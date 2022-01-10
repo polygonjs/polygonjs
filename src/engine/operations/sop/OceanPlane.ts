@@ -8,10 +8,9 @@ import {PlaneGeometry} from 'three/src/geometries/PlaneGeometry';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../poly/NodeContext';
-import {Water, WaterOptions} from '../../../modules/core/objects/Water';
 import {isBooleanTrue} from '../../../core/Type';
 import {Poly} from '../../Poly';
-
+import {Water, WaterOptions} from '../../../modules/core/objects/Water';
 interface OceanPlaneSopParams extends DefaultOperationParams {
 	sunDirection: Vector3;
 	sunColor: Color;
@@ -22,6 +21,18 @@ interface OceanPlaneSopParams extends DefaultOperationParams {
 	normals: TypedNodePathParamValue;
 	renderReflection: boolean;
 }
+
+const DEFAULT_PARAMS = {
+	pixelRatio: 1,
+	clipBias: 0, // if clipBias is 0.03 like in BaseReflector, the bottom of the reflection appears cut out
+	active: true,
+	tblur: false,
+	blur: 0,
+	verticalBlurMult: 0,
+	tblur2: false,
+	blur2: 0,
+	verticalBlur2Mult: 0,
+};
 
 // const DEFAULT_UP = new Vector3(0, 0, 1);
 
@@ -48,7 +59,9 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 			return this.createCoreGroupFromObjects([]);
 		}
 
-		const water = this._water({renderer, ...params});
+		const scene = this.scene().threejsScene();
+		const waterOptions: WaterOptions = {scene, renderer, ...params, ...DEFAULT_PARAMS};
+		const water = this._water(waterOptions);
 		const material = water.material;
 		material.uniforms.sunDirection.value.copy(params.sunDirection);
 		material.uniforms.sunColor.value.copy(params.sunColor);
@@ -97,19 +110,7 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 	}
 	private _createWaterObject(params: WaterOptions) {
 		const waterGeometry = new PlaneGeometry(10000, 10000);
-		const water = new Water(waterGeometry, {
-			// waterNormals: new TextureLoader().load('/clients/me/waternormals.jpg', function (texture) {
-			// 	console.log(texture);
-			// 	texture.wrapS = texture.wrapT = RepeatWrapping;
-			// }),
-			sunDirection: params.sunDirection,
-			sunColor: params.sunColor,
-			waterColor: params.waterColor,
-			distortionScale: params.distortionScale,
-			// fog: scene.fog !== undefined
-			renderer: params.renderer,
-			pixelRatio: 1,
-		});
+		const water = new Water(waterGeometry, params);
 		water.rotation.x = -Math.PI / 2;
 		// water.updateMatrix();
 		// water.matrixAutoUpdate = false;
