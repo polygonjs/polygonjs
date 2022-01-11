@@ -1,7 +1,7 @@
 import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
 import {TypedNode, BaseNodeType} from '../_Base';
-import {EffectComposer} from '../../../modules/three/examples/jsm/postprocessing/EffectComposer';
+import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -44,7 +44,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 
 	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
-	protected _passes_by_requester_id: Map<CoreGraphNodeId, P> = new Map();
+	protected _passesByRequesterId: Map<CoreGraphNodeId, P> = new Map();
 
 	static displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
@@ -71,11 +71,11 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this._addPassFromInput(0, context);
 
 		if (!this.flags.bypass.active()) {
-			let pass = this._passes_by_requester_id.get(context.requester.graphNodeId());
+			let pass = this._passesByRequesterId.get(context.requester.graphNodeId());
 			if (!pass) {
 				pass = this._createPass(context);
 				if (pass) {
-					this._passes_by_requester_id.set(context.requester.graphNodeId(), pass);
+					this._passesByRequesterId.set(context.requester.graphNodeId(), pass);
 				}
 			}
 			if (pass) {
@@ -83,6 +83,10 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			}
 		}
 	}
+	passesByRequester(requester: BaseNodeType) {
+		return this._passesByRequesterId.get(requester.graphNodeId());
+	}
+
 	protected _addPassFromInput(index: number, context: TypedPostNodeContext) {
 		const input = this.io.inputs.input(index);
 		if (input) {
@@ -99,7 +103,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	}
 	private _update_pass_bound = this.updatePass.bind(this);
 	private _updatePasses() {
-		this._passes_by_requester_id.forEach(this._update_pass_bound);
+		this._passesByRequesterId.forEach(this._update_pass_bound);
 	}
 	protected updatePass(pass: P) {}
 }

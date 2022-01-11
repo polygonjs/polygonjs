@@ -12,7 +12,7 @@ import {BokehShader, BokehDepthShader} from '../../three/examples/jsm/shaders/Bo
 
 import {CoreScene} from '../../../core/geometry/Scene';
 
-import DepthInstanceVertex from './gl/DepthInstance.vert.glsl';
+import DepthInstanceVertex from './BokehPass2/DepthInstance.vert.glsl';
 import {IUniformN, IUniformTexture, IUniformV2} from '../../../engine/nodes/utils/code/gl/Uniforms';
 import {Vector2} from 'three/src/math/Vector2';
 import {Color} from 'three/src/math/Color';

@@ -4,6 +4,8 @@ import {Object3D} from 'three/src/core/Object3D';
 
 export const ROOT_NAME = '/';
 
+type ObjCallback = (obj: Object3D) => void;
+
 export class ObjectsController {
 	constructor(private scene: PolyScene) {}
 
@@ -26,19 +28,41 @@ export class ObjectsController {
 	}
 
 	objectsByMask(mask: string): Object3D[] {
-		return this.objectsByMaskInObject(mask, this.scene.threejsScene(), [], '');
+		const list: Object3D[] = [];
+		this.traverseObjectsWithMask(mask, (obj) => {
+			list.push(obj);
+		});
+		return list;
 	}
 	objectsByMaskInObject(mask: string, object: Object3D, list: Object3D[] = [], objectPath: string = '') {
+		this.traverseObjectsWithMask(mask, (obj) => {
+			list.push(obj);
+		});
+		return list;
+	}
+	traverseObjectsWithMask(mask: string, callback: ObjCallback, invertMask: boolean = false) {
+		this.traverseObjectsWithMaskInObject(mask, this.scene.threejsScene(), callback, invertMask);
+	}
+	traverseObjectsWithMaskInObject(
+		mask: string,
+		object: Object3D,
+		callback: ObjCallback,
+		invertMask: boolean,
+		objectPath: string = ''
+	) {
 		for (let child of object.children) {
 			const childName = this._removeTrailingOrHeadingSlash(child.name);
 			objectPath = this._removeTrailingOrHeadingSlash(objectPath);
 			const path = `${objectPath}/${childName}`;
-			if (CoreString.matchMask(path, mask)) {
-				list.push(child);
+			let match = CoreString.matchMask(path, mask);
+			if (invertMask) {
+				match = !match;
 			}
-			this.objectsByMaskInObject(mask, child, list, path);
+			if (match) {
+				callback(child);
+			}
+			this.traverseObjectsWithMaskInObject(mask, child, callback, invertMask, path);
 		}
-		return list;
 	}
 
 	private _removeTrailingOrHeadingSlash(objectName: string) {

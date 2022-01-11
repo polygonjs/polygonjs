@@ -136,6 +136,9 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 			this.animate();
 		}
 	}
+	autoRenderState(): boolean {
+		return this._doRender;
+	}
 
 	animate() {
 		if (this._doRender) {

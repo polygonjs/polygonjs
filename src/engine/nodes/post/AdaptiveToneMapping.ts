@@ -1,5 +1,5 @@
 /**
- * Adds An AdaptativeToneMapping effect
+ * Adds An AdaptiveToneMapping effect
  *
  *
  */

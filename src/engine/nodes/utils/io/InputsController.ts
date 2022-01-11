@@ -203,7 +203,7 @@ export class InputsController<NC extends NodeContext> {
 		return containers;
 	}
 
-	existing_input_indices() {
+	private _existingInputIndices() {
 		const existing_input_indices: number[] = [];
 		if (this._maxInputsCount > 0) {
 			for (let i = 0; i < this._inputs.length; i++) {
@@ -218,7 +218,7 @@ export class InputsController<NC extends NodeContext> {
 	async evalRequiredInputs() {
 		let containers: Array<ContainerMap[NC] | null | undefined> = [];
 		if (this._maxInputsCount > 0) {
-			const existing_input_indices = this.existing_input_indices();
+			const existing_input_indices = this._existingInputIndices();
 			if (existing_input_indices.length < this._minInputsCount) {
 				this.node.states.error.set('inputs are missing');
 			} else {

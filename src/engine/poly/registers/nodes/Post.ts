@@ -26,6 +26,7 @@ import {SepiaPostNode} from '../../../nodes/post/Sepia';
 import {SequencePostNode} from '../../../nodes/post/Sequence';
 import {TriangleBlurPostNode} from '../../../nodes/post/TriangleBlur';
 import {UnrealBloomPostNode} from '../../../nodes/post/UnrealBloom';
+import {UpdateScenePostNode} from '../../../nodes/post/UpdateScene';
 import {VerticalBlurPostNode} from '../../../nodes/post/VerticalBlur';
 import {VignettePostNode} from '../../../nodes/post/Vignette';
 // networks
@@ -64,6 +65,7 @@ export interface PostNodeChildrenMap {
 	sequence: SequencePostNode;
 	triangleBlur: TriangleBlurPostNode;
 	unrealBloom: UnrealBloomPostNode;
+	updateScene: UpdateScenePostNode;
 	verticalBlur: VerticalBlurPostNode;
 	vignette: VignettePostNode;
 	// networks
@@ -105,6 +107,7 @@ export class PostRegister {
 		poly.registerNode(SequencePostNode, CATEGORY_POST.MISC);
 		poly.registerNode(TriangleBlurPostNode, CATEGORY_POST.BLUR);
 		poly.registerNode(UnrealBloomPostNode, CATEGORY_POST.EFFECT);
+		poly.registerNode(UpdateScenePostNode, CATEGORY_POST.ADVANCED);
 		poly.registerNode(VerticalBlurPostNode, CATEGORY_POST.BLUR);
 		poly.registerNode(VignettePostNode, CATEGORY_POST.EFFECT);
 		// netwoks

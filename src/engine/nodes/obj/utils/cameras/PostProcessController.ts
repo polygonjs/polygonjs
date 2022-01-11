@@ -1,7 +1,7 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
 import {BaseThreejsCameraObjNodeType, BaseThreejsCameraObjNodeClass} from '../../_BaseCamera';
-import {EffectComposer} from '../../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
+import {EffectComposer} from '../../../../../modules/core/post_process/EffectComposer';
 import {NetworkNodeType} from '../../../../poly/NodeContext';
 import {BaseNetworkPostProcessNodeType} from '../../../post/utils/EffectsComposerController';
 import {BaseNodeType} from '../../../_Base';

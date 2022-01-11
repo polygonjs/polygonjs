@@ -4,82 +4,19 @@
  *
  */
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
-import {Pass, FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing/Pass';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {EffectComposer} from '../../../modules/three/examples/jsm/postprocessing/EffectComposer';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {LayerPass, LAYER_MODES} from '../../../modules/core/post_process/LayerPass';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 import {LinearFilter, RGBAFormat} from 'three/src/constants';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {IUniformV2, IUniformN, IUniformTexture} from '../utils/code/gl/Uniforms';
-import VERTEX from './gl/default.vert.glsl';
-import FRAGMENT from './gl/Layer.frag.glsl';
 import {Poly} from '../../Poly';
 
-interface LayerUniforms {
-	// tDiffuse: IUniformTexture;
-	texture1: IUniformTexture;
-	texture2: IUniformTexture;
-	delta: IUniformV2;
-	h: IUniformN;
+class LayerPostParamsConfig extends NodeParamsConfig {
+	mode = ParamConfig.INTEGER(0, {
+		menu: {
+			entries: LAYER_MODES.map((name, value) => ({name, value})),
+		},
+	});
 }
-
-// const FRAGMENT = `
-// #include <common>
-// uniform sampler2D tDiffuse;
-// varying vec2 vUv;
-// void main() {
-// 	gl_FragColor = texture2D( tDiffuse, vUv);
-// }`;
-const SHADER = {
-	uniforms: {
-		tDiffuse: {value: null},
-		texture1: {value: null},
-		texture2: {value: null},
-		h: {value: 1.0 / 512.0},
-	},
-	vertexShader: VERTEX,
-	fragmentShader: FRAGMENT,
-};
-
-class LayerPass extends Pass {
-	private material: ShaderMaterial;
-	private uniforms: LayerUniforms;
-	private fsQuad: FullScreenQuad;
-	constructor(private _composer1: EffectComposer, private _composer2: EffectComposer) {
-		super();
-
-		this.uniforms = UniformsUtils.clone(SHADER.uniforms);
-		this.material = new ShaderMaterial({
-			uniforms: this.uniforms as any,
-			vertexShader: SHADER.vertexShader,
-			fragmentShader: SHADER.fragmentShader,
-			transparent: true,
-		});
-		this.fsQuad = new FullScreenQuad(this.material);
-	}
-	render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget) {
-		this._composer1.render();
-		this._composer2.render();
-
-		// this.uniforms.texture1.value = this._composer1.writeBuffer.texture;
-		// this.uniforms.texture2.value = this._composer2.writeBuffer.texture;
-		this.uniforms.texture1.value = this._composer1.readBuffer.texture;
-		this.uniforms.texture2.value = this._composer2.readBuffer.texture;
-
-		if (this.renderToScreen) {
-			renderer.setRenderTarget(null);
-			this.fsQuad.render(renderer);
-		} else {
-			renderer.setRenderTarget(writeBuffer);
-			if (this.clear) renderer.clear(renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil);
-			this.fsQuad.render(renderer);
-		}
-	}
-}
-
-class LayerPostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new LayerPostParamsConfig();
 export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostParamsConfig> {
 	paramsConfig = ParamsConfig;
@@ -126,9 +63,12 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 		this._addPassFromInput(1, cloned_context2);
 
 		const pass = new LayerPass(composer1, composer2);
+		// pass.needsSwap = true;
 		this.updatePass(pass);
 		context.composer.addPass(pass);
 	}
 
-	updatePass(pass: LayerPass) {}
+	updatePass(pass: LayerPass) {
+		pass.mode = LAYER_MODES[this.pv.mode];
+	}
 }

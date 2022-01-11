@@ -100,6 +100,7 @@ export const CATEGORY_SOP = {
 	RENDER: 'render',
 };
 export const CATEGORY_POST = {
+	ADVANCED: 'advanced',
 	BLUR: 'blur',
 	COLOR: 'color',
 	EFFECT: 'effect',
