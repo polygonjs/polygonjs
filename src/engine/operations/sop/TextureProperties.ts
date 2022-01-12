@@ -126,10 +126,12 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 			return;
 		}
 		if (isBooleanTrue(params.useRendererMaxAnisotropy)) {
-			const renderer = await Poly.renderersController.firstRenderer();
-			if (renderer) {
-				texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+			const renderer = Poly.renderersController.firstRenderer();
+			if (!renderer) {
+				console.warn('no renderer found');
+				return;
 			}
+			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 		} else {
 			texture.anisotropy = params.anisotropy;
 		}

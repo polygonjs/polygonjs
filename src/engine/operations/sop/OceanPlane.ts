@@ -53,9 +53,10 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 	}
 
 	protected _coreTransform = new CoreTransform();
-	async cook(input_contents: CoreGroup[], params: OceanPlaneSopParams) {
-		const renderer = await Poly.renderersController.firstRenderer();
+	async cook(inputCoreGroups: CoreGroup[], params: OceanPlaneSopParams) {
+		const renderer = await Poly.renderersController.waitForRenderer();
 		if (!renderer) {
+			console.warn('no renderer found');
 			return this.createCoreGroupFromObjects([]);
 		}
 

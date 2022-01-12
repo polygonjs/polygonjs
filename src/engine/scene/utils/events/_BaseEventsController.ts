@@ -47,7 +47,7 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 
 		if (this._require_canvas_event_listeners) {
 			this.dispatcher.scene.viewersRegister.traverseViewers((viewer) => {
-				viewer.eventsController.updateEvents(this);
+				viewer.eventsController().updateEvents(this);
 			});
 		}
 	}

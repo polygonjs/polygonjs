@@ -33,7 +33,7 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		// so the controls may need to be re-created everytime
 		// TODO: the controls should be created (and disposed?) by the viewer
 		//this.dispose_controls()
-		viewer.controlsController?.dispose_controls();
+		viewer.controlsController()?.dispose_controls();
 		const canvas = viewer.canvas();
 		if (!canvas) {
 			return;

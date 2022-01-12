@@ -95,18 +95,21 @@ export class PostProcessController {
 	}
 
 	private _createComposer(canvas: HTMLCanvasElement) {
-		const renderer = this.node.renderController.renderer(canvas);
+		const renderer = this.node.renderController().renderer(canvas);
 		if (renderer) {
-			const scene = this.node.renderController.resolved_scene || this.node.scene().threejsScene();
+			const scene = this.node.renderController().resolvedScene() || this.node.scene().threejsScene();
 			const camera = this.node.object;
 
 			const found_node = this.node.p.postProcessNode.value.node();
 			if (found_node) {
 				if (found_node.type() == NetworkNodeType.POST) {
 					const post_process_network = found_node as BaseNetworkPostProcessNodeType;
-					const resolution = this.node.renderController.canvas_resolution(canvas);
+					const resolution = this.node.renderController().canvasResolution(canvas);
 
-					const composer = post_process_network.effectsComposerController.createEffectsComposer({
+					if (!resolution) {
+						return;
+					}
+					return post_process_network.effectsComposerController.createEffectsComposer({
 						renderer,
 						scene,
 						camera,
@@ -116,7 +119,6 @@ export class PostProcessController {
 						// render_target: render_target,
 						// prepend_render_pass: this.node.pv.prepend_render_pass,
 					});
-					return composer;
 				} else {
 					this.node.states.error.set('found node is not a post process node');
 				}

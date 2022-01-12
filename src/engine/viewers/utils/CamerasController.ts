@@ -47,6 +47,6 @@ export class ViewerCamerasController {
 
 	async _updateFromCameraContainer() {
 		this.updateCameraAspect();
-		await this._viewer.controlsController?.create_controls();
+		await this._viewer.controlsController()?.create_controls();
 	}
 }

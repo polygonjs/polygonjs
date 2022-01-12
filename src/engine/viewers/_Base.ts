@@ -17,13 +17,13 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// protected _canvas: HTMLCanvasElement | undefined;
 	protected _domElement: HTMLElement | undefined;
 	protected _active: boolean = false;
-	private static _next_viewer_id = 0;
+	private static _nextViewerId = 0;
 	private _id: Readonly<number>;
 	protected _renderObjectOverride: Object3D | undefined;
 	protected _scene: PolyScene;
 	protected _canvas: HTMLCanvasElement | undefined;
 	constructor(protected _cameraNode: C) {
-		this._id = TypedViewer._next_viewer_id++;
+		this._id = TypedViewer._nextViewerId++;
 		this._scene = this._cameraNode.scene();
 	}
 	mount(element: HTMLElement) {
@@ -70,21 +70,21 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		this._active = false;
 	}
 
-	protected _cameras_controller: ViewerCamerasController | undefined;
-	get camerasController(): ViewerCamerasController {
-		return (this._cameras_controller = this._cameras_controller || new ViewerCamerasController(this));
+	protected _camerasController: ViewerCamerasController | undefined;
+	camerasController(): ViewerCamerasController {
+		return (this._camerasController = this._camerasController || new ViewerCamerasController(this));
 	}
-	protected _controls_controller: ViewerControlsController | undefined;
-	get controlsController() {
-		return this._controls_controller;
+	protected _controlsController: ViewerControlsController | undefined;
+	controlsController() {
+		return this._controlsController;
 	}
-	protected _events_controller: ViewerEventsController | undefined;
-	get eventsController(): ViewerEventsController {
-		return (this._events_controller = this._events_controller || new ViewerEventsController(this));
+	protected _eventsController: ViewerEventsController | undefined;
+	eventsController(): ViewerEventsController {
+		return (this._eventsController = this._eventsController || new ViewerEventsController(this));
 	}
-	protected _webgl_controller: WebGLController | undefined;
-	get webglController(): WebGLController {
-		return (this._webgl_controller = this._webgl_controller || new WebGLController(this));
+	protected _webGLController: WebGLController | undefined;
+	webglController(): WebGLController {
+		return (this._webGLController = this._webGLController || new WebGLController(this));
 	}
 	private _audioController: ViewerAudioController | undefined;
 	audioController(): ViewerAudioController {
@@ -101,7 +101,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	cameraNode() {
 		return this._cameraNode;
 	}
-	get cameraControlsController(): ThreejsCameraControlsController | undefined {
+	cameraControlsController(): ThreejsCameraControlsController | undefined {
 		return undefined;
 	}
 	id() {
@@ -110,7 +110,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 
 	dispose() {
 		this._scene.viewersRegister.unregisterViewer(this);
-		this.eventsController.dispose();
+		this.eventsController().dispose();
 		if (!this._domElement) {
 			return;
 		}

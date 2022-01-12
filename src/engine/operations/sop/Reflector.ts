@@ -51,7 +51,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		const input_core_group = input_contents[0];
 
 		const reflectors: Reflector[] = [];
-		const renderer = await Poly.renderersController.firstRenderer();
+		const renderer = await Poly.renderersController.waitForRenderer();
 		if (!renderer) {
 			return this.createCoreGroupFromObjects(reflectors);
 		}

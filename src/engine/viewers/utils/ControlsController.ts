@@ -25,7 +25,7 @@ export class ViewerControlsController {
 			return;
 		}
 
-		this._config = await this.viewer.cameraControlsController?.apply_controls(this.viewer);
+		this._config = await this.viewer.cameraControlsController()?.apply_controls(this.viewer);
 		if (this._config) {
 			this._controls = this._config.controls;
 
@@ -55,7 +55,7 @@ export class ViewerControlsController {
 		if (this._controls) {
 			const canvas = this.viewer.canvas();
 			if (canvas) {
-				this.viewer?.cameraControlsController.dispose_controls(canvas);
+				this.viewer?.cameraControlsController().dispose_controls(canvas);
 			}
 
 			if (this._bound_on_controls_start) {
@@ -78,17 +78,17 @@ export class ViewerControlsController {
 
 	private _graph_node: CoreGraphNode | undefined;
 	private _update_graph_node() {
-		const controls_param = this.viewer.cameraNode().p.controls;
+		const controlsParam = this.viewer.cameraNode().p.controls;
 		this._graph_node = this._graph_node || this._create_graph_node();
 		if (!this._graph_node) {
 			return;
 		}
 		this._graph_node.graphDisconnectPredecessors();
-		this._graph_node.addGraphInput(controls_param);
+		this._graph_node.addGraphInput(controlsParam);
 	}
 	private _create_graph_node() {
 		const node = new CoreGraphNode(this.viewer.cameraNode().scene(), 'viewer-controls');
-		node.addPostDirtyHook('this.viewer.controls_controller', async () => {
+		node.addPostDirtyHook('this.viewer.controlsController', async () => {
 			await this.create_controls();
 		});
 		return node;

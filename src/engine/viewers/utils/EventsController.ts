@@ -54,7 +54,7 @@ export class ViewerEventsController {
 	}
 
 	cameraNode() {
-		return this.viewer.camerasController.cameraNode();
+		return this.viewer.camerasController().cameraNode();
 	}
 	canvas() {
 		return this.viewer.canvas();

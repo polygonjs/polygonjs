@@ -1,6 +1,6 @@
-import {Constructor, valueof} from '../../../../types/GlobalTypes';
+import {Constructor, PolyDictionary, valueof} from '../../../../types/GlobalTypes';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
+import {WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
 import {EffectComposer} from '../../../../modules/core/post_process/EffectComposer';
 import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
@@ -12,7 +12,7 @@ import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
 import {BaseCameraObjNodeType} from '../../obj/_BaseCamera';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {RGBFormat} from 'three/src/constants';
+import {RGBFormat, RGBAFormat, UnsignedByteType, HalfFloatType, FloatType} from 'three/src/constants';
 import {Poly} from '../../../Poly';
 
 import {
@@ -22,30 +22,59 @@ import {
 	MIN_FILTER_MENU_ENTRIES,
 } from '../../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+
+const RENDER_TARGET_FORMATS_OPTIONS: PolyDictionary<number> = {
+	RGBFormat: RGBFormat,
+	RGBAFormat: RGBAFormat,
+};
+const RENDER_TARGET_FORMATS_MENU_ENTRIES = Object.keys(RENDER_TARGET_FORMATS_OPTIONS)
+	.sort()
+	.map((name) => {
+		return {
+			name,
+			value: RENDER_TARGET_FORMATS_OPTIONS[name] as number,
+		};
+	});
+
+const RENDER_TARGET_TEXTURE_TYPE_OPTIONS: PolyDictionary<number> = {
+	UnsignedByteType: UnsignedByteType,
+	HalfFloatType: HalfFloatType,
+	FloatType: FloatType,
+};
+const RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES = Object.keys(RENDER_TARGET_TEXTURE_TYPE_OPTIONS).map((name) => {
+	return {
+		name,
+		value: RENDER_TARGET_TEXTURE_TYPE_OPTIONS[name] as number,
+	};
+});
+
 export class PostProcessNetworkParamsConfig extends NodeParamsConfig {
 	prependRenderPass = ParamConfig.BOOLEAN(1);
-	useRenderTarget = ParamConfig.BOOLEAN(1);
-	tmagFilter = ParamConfig.BOOLEAN(0, {
-		visibleIf: {useRenderTarget: 1},
+	format = ParamConfig.INTEGER(RGBAFormat, {
+		menu: {
+			entries: RENDER_TARGET_FORMATS_MENU_ENTRIES,
+		},
 	});
+	textureType = ParamConfig.INTEGER(UnsignedByteType, {
+		menu: {
+			entries: RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES,
+		},
+	});
+	tmagFilter = ParamConfig.BOOLEAN(0);
 	magFilter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
-		visibleIf: {useRenderTarget: 1, tmagFilter: 1},
+		visibleIf: {tmagFilter: 1},
 		menu: {
 			entries: MAG_FILTER_MENU_ENTRIES,
 		},
 	});
-	tminFilter = ParamConfig.BOOLEAN(0, {
-		visibleIf: {useRenderTarget: 1},
-	});
+	tminFilter = ParamConfig.BOOLEAN(0);
 	minFilter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
-		visibleIf: {useRenderTarget: 1, tminFilter: 1},
+		visibleIf: {tminFilter: 1},
 		menu: {
 			entries: MIN_FILTER_MENU_ENTRIES,
 		},
 	});
-	stencilBuffer = ParamConfig.BOOLEAN(0, {
-		visibleIf: {useRenderTarget: 1},
-	});
+	stencilBuffer = ParamConfig.BOOLEAN(0);
 	sampling = ParamConfig.INTEGER(1, {
 		range: [1, 4],
 		rangeLocked: [true, false],
@@ -72,6 +101,10 @@ interface CreateEffectsComposerOptions {
 	// useRenderTarget?: boolean;
 	// prepend_render_pass?: boolean;
 }
+export interface RenderTargetCreateOptions {
+	width: number;
+	height: number;
+}
 
 export class EffectsComposerController {
 	constructor(private node: BaseNetworkPostProcessNodeType) {}
@@ -92,12 +125,12 @@ export class EffectsComposerController {
 		const renderer = options.renderer;
 
 		let composer: EffectComposer;
-		if (isBooleanTrue(this.node.pv.useRenderTarget)) {
-			const render_target = this._create_render_target(renderer);
-			composer = new EffectComposer(renderer, render_target);
-		} else {
-			composer = new EffectComposer(renderer);
-		}
+		//if (isBooleanTrue(this.node.pv.useRenderTarget)) {
+		const renderTarget = this.createRenderTarget(renderer);
+		composer = new EffectComposer(renderer, renderTarget);
+		// } else {
+		// 	composer = new EffectComposer(renderer);
+		// }
 
 		// to achieve better antialiasing
 		// while using post:
@@ -106,41 +139,45 @@ export class EffectsComposerController {
 		// and when using in cop/post has the output texture be 2x as large
 		// composer.setPixelRatio(window.devicePixelRatio * 1);
 
-		this._build_passes(composer, options);
+		this._buildPasses(composer, options);
 
 		return composer;
 	}
 
-	private _renderer_size = new Vector2();
-	private _create_render_target(renderer: WebGLRenderer) {
-		let render_target: WebGLRenderTarget | undefined;
+	private _rendererSize = new Vector2();
+	createRenderTarget(renderer: WebGLRenderer, options?: RenderTargetCreateOptions) {
 		renderer.autoClear = false;
+		const pv = this.node.pv;
 		const parameters: WebGLRenderTargetOptions = {
-			// format: RGBFormat,
-			format: RGBFormat,
-			stencilBuffer: isBooleanTrue(this.node.pv.stencilBuffer),
+			format: pv.format,
+			type: pv.textureType,
+			stencilBuffer: isBooleanTrue(pv.stencilBuffer),
 		};
-		if (isBooleanTrue(this.node.pv.tminFilter)) {
-			parameters.minFilter = this.node.pv.minFilter;
+		if (isBooleanTrue(pv.tminFilter)) {
+			parameters.minFilter = pv.minFilter;
 		}
-		if (isBooleanTrue(this.node.pv.tmagFilter)) {
-			parameters.magFilter = this.node.pv.magFilter;
+		if (isBooleanTrue(pv.tmagFilter)) {
+			parameters.magFilter = pv.magFilter;
 		}
 
-		renderer.getDrawingBufferSize(this._renderer_size);
-		render_target = Poly.renderersController.renderTarget(this._renderer_size.x, this._renderer_size.y, parameters);
-		return render_target;
+		renderer.getDrawingBufferSize(this._rendererSize);
+		const renderTarget = Poly.renderersController.renderTarget(
+			options?.width || this._rendererSize.x,
+			options?.height || this._rendererSize.y,
+			parameters
+		);
+		return renderTarget;
 	}
 
-	private _build_passes(composer: EffectComposer, options: CreateEffectsComposerOptions) {
+	private _buildPasses(composer: EffectComposer, options: CreateEffectsComposerOptions) {
 		if (isBooleanTrue(this.node.pv.prependRenderPass)) {
-			const render_pass = new RenderPass(options.scene, options.camera);
-			composer.addPass(render_pass);
+			const renderPass = new RenderPass(options.scene, options.camera);
+			composer.addPass(renderPass);
 		}
 
-		const post_node = this.node.displayNodeController.displayNode() as BasePostProcessNodeType;
-		if (post_node) {
-			post_node.setupComposer({
+		const postNode = this.node.displayNodeController.displayNode() as BasePostProcessNodeType;
+		if (postNode) {
+			postNode.setupComposer({
 				composer: composer,
 				camera: options.camera,
 				resolution: options.resolution,

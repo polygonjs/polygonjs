@@ -222,21 +222,21 @@ export class TypedThreejsCameraObjNode<
 	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	readonly transformController: TransformController = new TransformController(this);
-	protected _controls_controller: ThreejsCameraControlsController | undefined;
-	get controls_controller(): ThreejsCameraControlsController {
-		return (this._controls_controller = this._controls_controller || new ThreejsCameraControlsController(this));
+	protected _controlsController: ThreejsCameraControlsController | undefined;
+	controlsController(): ThreejsCameraControlsController {
+		return (this._controlsController = this._controlsController || new ThreejsCameraControlsController(this));
 	}
-	protected _layers_controller: LayersController | undefined;
-	get layers_controller() {
-		return (this._layers_controller = this._layers_controller || new LayersController(this));
+	protected __layersController__: LayersController | undefined;
+	private _layersController() {
+		return (this.__layersController__ = this.__layersController__ || new LayersController(this));
 	}
-	protected _render_controller: RenderController | undefined;
-	get renderController(): RenderController {
-		return (this._render_controller = this._render_controller || new RenderController(this));
+	protected _renderController: RenderController | undefined;
+	renderController(): RenderController {
+		return (this._renderController = this._renderController || new RenderController(this));
 	}
-	protected _post_process_controller: PostProcessController | undefined;
-	get postProcessController(): PostProcessController {
-		return (this._post_process_controller = this._post_process_controller || new PostProcessController(this));
+	protected _postProcessController: PostProcessController | undefined;
+	postProcessController(): PostProcessController {
+		return (this._postProcessController = this._postProcessController || new PostProcessController(this));
 	}
 
 	// display_node and children_display controllers
@@ -276,15 +276,15 @@ export class TypedThreejsCameraObjNode<
 
 	async cook() {
 		this.transformController.update();
-		this.layers_controller.update();
+		this._layersController().update();
 		// await this.background_controller.update();
 
 		this.updateNearFar();
 
-		this.renderController.update();
+		this.renderController().update();
 		this.updateCamera();
 		this._updateHelper();
-		this.controls_controller.update_controls();
+		this.controlsController().update_controls();
 
 		// TODO: ideally the update transform and update camera
 		// can both return if the camera has changed
@@ -336,7 +336,7 @@ export class TypedThreejsCameraObjNode<
 		}
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
-		node.postProcessController.reset();
+		node.postProcessController().reset();
 	}
 
 	//

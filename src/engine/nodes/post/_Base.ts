@@ -3,7 +3,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {TypedNode, BaseNodeType} from '../_Base';
 import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-import {NodeContext} from '../../poly/NodeContext';
+import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Scene} from 'three/src/scenes/Scene';
 import {FlagsControllerDB} from '../utils/FlagsController';
@@ -11,6 +11,10 @@ import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
+import {BaseNetworkPostProcessNodeType} from './utils/EffectsComposerController';
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {RenderTargetCreateOptions} from './utils/EffectsComposerController';
 
 const INPUT_PASS_NAME = 'input pass';
 const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
@@ -106,6 +110,26 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this._passesByRequesterId.forEach(this._update_pass_bound);
 	}
 	protected updatePass(pass: P) {}
+
+	private _postProcessNetworkNode(): BaseNetworkPostProcessNodeType {
+		const parentNode = this.parent()!;
+		if (parentNode.type() == NetworkNodeType.POST) {
+			return parentNode as BaseNetworkPostProcessNodeType;
+		} else {
+			if (parentNode.context() != NodeContext.POST) {
+				console.error('parent is neighter a POST NETWORK or a POST node');
+			}
+			const parentPostNode = parentNode as BasePostProcessNodeType;
+			return parentPostNode._postProcessNetworkNode();
+		}
+	}
+	protected _createRenderTarget(renderer: WebGLRenderer, options?: RenderTargetCreateOptions) {
+		const parentNode = this._postProcessNetworkNode();
+		return parentNode.effectsComposerController.createRenderTarget(renderer);
+	}
+	protected _createEffectComposer(renderer: WebGLRenderer, renderTarget?: WebGLRenderTarget) {
+		return new EffectComposer(renderer, renderTarget);
+	}
 }
 
 export type BasePostProcessNodeType = TypedPostProcessNode<Pass, NodeParamsConfig>;

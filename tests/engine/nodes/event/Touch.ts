@@ -6,33 +6,33 @@ QUnit.test('touch event nodes simple', async (assert) => {
 	assert.ok(!scene.loadingController.isLoading());
 
 	await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async ({viewer, element}) => {
-		assert.deepEqual(viewer.eventsController.registeredEventTypes(), []);
+		assert.deepEqual(viewer.eventsController().registeredEventTypes(), []);
 
 		const events = scene.root().createNode('eventsNetwork');
 		const drag1 = events.createNode('touch');
 		await drag1.compute();
-		assert.deepEqual(viewer.eventsController.registeredEventTypes(), ['touchstart']);
+		assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['touchstart']);
 
 		drag1.p.active.set(0);
 		await drag1.compute();
-		assert.deepEqual(viewer.eventsController.registeredEventTypes(), [], 'no events if node is set to inactive');
+		assert.deepEqual(viewer.eventsController().registeredEventTypes(), [], 'no events if node is set to inactive');
 
 		drag1.p.active.set(1);
 		await drag1.compute();
-		assert.deepEqual(viewer.eventsController.registeredEventTypes(), ['touchstart']);
+		assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['touchstart']);
 
 		drag1.p.touchstart.set(0);
 		await drag1.compute();
-		assert.deepEqual(viewer.eventsController.registeredEventTypes(), []);
+		assert.deepEqual(viewer.eventsController().registeredEventTypes(), []);
 
 		events.removeNode(drag1);
 		await drag1.compute();
-		assert.deepEqual(viewer.eventsController.registeredEventTypes(), []);
+		assert.deepEqual(viewer.eventsController().registeredEventTypes(), []);
 
 		drag1.p.active.set(1);
 		await drag1.compute();
 		assert.deepEqual(
-			viewer.eventsController.registeredEventTypes(),
+			viewer.eventsController().registeredEventTypes(),
 			[],
 			'setting a deleted node to active does not update the register'
 		);
@@ -48,7 +48,7 @@ QUnit.test('touch event nodes simple', async (assert) => {
 		document.body.appendChild(element2);
 
 		await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async (args2) => {
-			assert.deepEqual(args2.viewer.eventsController.registeredEventTypes(), ['touchmove']);
+			assert.deepEqual(args2.viewer.eventsController().registeredEventTypes(), ['touchmove']);
 		});
 	});
 

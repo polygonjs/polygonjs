@@ -86,6 +86,7 @@ import {ParamConfig} from '../utils/params/ParamsConfig';
 import {CopRendererController} from './utils/RendererController';
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {isBooleanTrue} from '../../../core/Type';
 // class PostCopParamsConfig extends NodeParamsConfig {
 // 	use_camera_renderer = ParamConfig.BOOLEAN(0);
 // }
@@ -105,8 +106,8 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		return 'post';
 	}
 
-	private _texture_mesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
-	private _texture_material: ShaderMaterial = new ShaderMaterial({
+	private _textureMesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
+	private _textureMaterial: ShaderMaterial = new ShaderMaterial({
 		uniforms: {
 			map: {value: null},
 			resolution: {value: null},
@@ -114,14 +115,14 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		vertexShader: VERTEX_SHADER,
 		fragmentShader: FRAGMENT_SHADER,
 	});
-	private _texture_scene: Scene = new Scene();
-	private _texture_camera: Camera = new Camera();
-	private _render_target: WebGLRenderTarget | undefined;
+	private _textureScene: Scene = new Scene();
+	private _textureCamera: Camera = new Camera();
+	private _renderTarget: WebGLRenderTarget | undefined;
 	protected _composer: EffectComposer | undefined;
-	private _composer_resolution: Vector2 = new Vector2();
+	private _composerResolution: Vector2 = new Vector2();
 	// private _prev_renderer_size: Vector2 = new Vector2();
-	private _data_texture_controller: DataTextureController | undefined;
-	private _renderer_controller: CopRendererController | undefined;
+	private _dataTextureController: DataTextureController | undefined;
+	private _rendererController: CopRendererController | undefined;
 
 	readonly effectsComposerController: EffectsComposerController = new EffectsComposerController(this);
 	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
@@ -134,12 +135,12 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		this.io.inputs.setCount(1);
 
 		// init scene
-		this._texture_mesh.name = 'cop/post';
-		this._texture_scene.name = 'cop/post';
-		this._texture_camera.name = 'cop/post';
-		this._texture_mesh.material = this._texture_material;
-		this._texture_scene.add(this._texture_mesh);
-		this._texture_camera.position.z = 1;
+		this._textureMesh.name = 'cop/post';
+		this._textureScene.name = 'cop/post';
+		this._textureCamera.name = 'cop/post';
+		this._textureMesh.material = this._textureMaterial;
+		this._textureScene.add(this._textureMesh);
+		this._textureCamera.position.z = 1;
 
 		// when receiving dirty from children
 		this.dirtyController.addPostDirtyHook('reset', () => {
@@ -162,7 +163,7 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 	async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
 		this.build_effects_composer_if_required();
-		this.render_on_target(texture);
+		this._renderOnTarget(texture);
 	}
 
 	build_effects_composer_if_required() {
@@ -172,55 +173,54 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 	}
 	private build_effects_composer() {}
 
-	private async render_on_target(texture: Texture) {
-		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
-		const renderer = await this._renderer_controller.renderer();
+	private async _renderOnTarget(texture: Texture) {
+		this._rendererController = this._rendererController || new CopRendererController(this);
+		const renderer = await this._rendererController.renderer();
 
 		//
 		// prepare
 		//
-		this._renderer_controller.save_state();
-		this._composer_resolution.set(texture.image.width, texture.image.height);
-		this._render_target =
-			this._render_target || this._create_render_target(this._composer_resolution.x, this._composer_resolution.y);
-		renderer.setRenderTarget(this._render_target);
-		renderer.setSize(this._composer_resolution.x, this._composer_resolution.y);
+		this._rendererController.saveState();
+		this._composerResolution.set(texture.image.width, texture.image.height);
+		this._renderTarget =
+			this._renderTarget || this._createRenderTarget(this._composerResolution.x, this._composerResolution.y);
+		renderer.setRenderTarget(this._renderTarget);
+		renderer.setSize(this._composerResolution.x, this._composerResolution.y);
 
 		//
 		// render
 		//
 		// setup composer
 		// console.log('this._composer_resolution', this._composer_resolution);
-		this._composer = this._composer || this._create_composer(renderer, this._render_target);
-		this._texture_material.uniforms.map.value = texture;
-		this._texture_material.uniforms.resolution.value = this._composer_resolution;
+		this._composer = this._composer || this._createComposer(renderer, this._renderTarget);
+		this._textureMaterial.uniforms.map.value = texture;
+		this._textureMaterial.uniforms.resolution.value = this._composerResolution;
 
 		// renderer.clear();
 		// renderer.render(this._texture_scene, this._texture_camera);
 		// renderer.autoClear = false;
 		this._composer.render();
 
-		if (this.pv.use_camera_renderer) {
-			this.setTexture(this._render_target.texture);
+		if (isBooleanTrue(this.pv.useCameraRenderer)) {
+			this.setTexture(this._renderTarget.texture);
 		} else {
-			const data_texture = this._copy_to_data_texture(renderer, this._render_target);
+			const data_texture = this._copy_to_data_texture(renderer, this._renderTarget);
 			this.setTexture(data_texture);
 		}
 
 		//
 		// restore renderer
 		//
-		this._renderer_controller.restore_state();
+		this._rendererController.restoreState();
 	}
 
-	render_target() {
-		return this._render_target;
-	}
+	// renderTarget() {
+	// 	return this._renderTarget;
+	// }
 
 	private _copy_to_data_texture(renderer: WebGLRenderer, render_target: WebGLRenderTarget) {
-		this._data_texture_controller =
-			this._data_texture_controller || new DataTextureController(OPTION_SET.data_type);
-		const data_texture = this._data_texture_controller.from_render_target(renderer, render_target);
+		this._dataTextureController = this._dataTextureController || new DataTextureController(OPTION_SET.data_type);
+		const data_texture = this._dataTextureController.from_render_target(renderer, render_target);
 		// const data_texture = this._data_texture_controller.from_render_target(renderer, this._composer.writeBuffer);
 		// const pixel_count = data_texture.image.data.length / 4;
 		// for (let i = 0; i < pixel_count; i++) {
@@ -234,11 +234,11 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		return data_texture;
 	}
 
-	private _create_render_target(width: number, height: number) {
-		if (this._render_target) {
-			const image = this._render_target.texture.image;
+	private _createRenderTarget(width: number, height: number) {
+		if (this._renderTarget) {
+			const image = this._renderTarget.texture.image;
 			if (image.width == width && image.height == height) {
-				return this._render_target;
+				return this._renderTarget;
 			}
 		}
 
@@ -246,12 +246,12 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		return renderTarget;
 	}
 
-	protected _create_composer(renderer: WebGLRenderer, render_target: WebGLRenderTarget) {
+	private _createComposer(renderer: WebGLRenderer, render_target: WebGLRenderTarget) {
 		const composer = this.effectsComposerController.createEffectsComposer({
 			renderer,
-			scene: this._texture_scene,
-			camera: this._texture_camera,
-			resolution: this._composer_resolution,
+			scene: this._textureScene,
+			camera: this._textureCamera,
+			resolution: this._composerResolution,
 			requester: this,
 		});
 		composer.renderToScreen = false;

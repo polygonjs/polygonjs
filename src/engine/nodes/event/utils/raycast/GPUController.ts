@@ -35,8 +35,8 @@ export class RaycastGPUController {
 		},
 	};
 	private _mouse: Vector2 = new Vector2();
-	private _mouse_array: Number2 = [0, 0];
-	private _render_target: WebGLRenderTarget | undefined;
+	private _mouseArray: Number2 = [0, 0];
+	private _renderTarget: WebGLRenderTarget | undefined;
 	private _read = new Float32Array(4);
 	private _param_read: Number4 = [0, 0, 0, 0];
 	constructor(private _node: RaycastEventNode) {}
@@ -53,8 +53,8 @@ export class RaycastGPUController {
 		) {
 			this._mouse.x = context.event.offsetX / canvas.offsetWidth;
 			this._mouse.y = 1 - context.event.offsetY / canvas.offsetHeight;
-			this._mouse.toArray(this._mouse_array);
-			this._node.p.mouse.set(this._mouse_array);
+			this._mouse.toArray(this._mouseArray);
+			this._node.p.mouse.set(this._mouseArray);
 		} else {
 			console.warn('event type not implemented');
 		}
@@ -67,11 +67,11 @@ export class RaycastGPUController {
 		}
 
 		const camera_node = context.cameraNode;
-		const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).renderController;
+		const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).renderController();
 
 		if (renderer_controller) {
-			this._render_target =
-				this._render_target ||
+			this._renderTarget =
+				this._renderTarget ||
 				new WebGLRenderTarget(canvas.offsetWidth, canvas.offsetHeight, {
 					minFilter: LinearFilter,
 					magFilter: NearestFilter,
@@ -87,10 +87,13 @@ export class RaycastGPUController {
 
 			// find renderer and use it
 			const threejs_camera = camera_node as BaseThreejsCameraObjNodeType;
-			const scene = renderer_controller.resolved_scene || camera_node.scene().threejsScene();
+			const scene = renderer_controller.resolvedScene() || camera_node.scene().threejsScene();
 			const renderer = renderer_controller.renderer(canvas);
+			if (!renderer) {
+				return;
+			}
 			this._modify_scene_and_renderer(scene, renderer);
-			renderer.setRenderTarget(this._render_target);
+			renderer.setRenderTarget(this._renderTarget);
 			renderer.clear();
 			renderer.render(scene, threejs_camera.object);
 			renderer.setRenderTarget(null);
@@ -98,7 +101,7 @@ export class RaycastGPUController {
 
 			// read result
 			renderer.readRenderTargetPixels(
-				this._render_target,
+				this._renderTarget,
 				Math.round(this._mouse.x * canvas.offsetWidth),
 				Math.round(this._mouse.y * canvas.offsetHeight),
 				1,

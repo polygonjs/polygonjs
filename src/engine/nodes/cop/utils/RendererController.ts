@@ -34,7 +34,7 @@ export class CopRendererController {
 	}
 
 	async cameraRenderer() {
-		let renderer = Poly.renderersController.firstRenderer();
+		let renderer = Poly.renderersController.waitForRenderer();
 		if (renderer) {
 			return renderer;
 		} else {
@@ -43,7 +43,7 @@ export class CopRendererController {
 		}
 	}
 
-	save_state() {
+	saveState() {
 		// const prev_target = renderer.getRenderTarget();
 		// renderer.getSize(this._prev_renderer_size);
 		// console.log('texture', texture);
@@ -52,14 +52,14 @@ export class CopRendererController {
 		// renderer.toneMappingExposure = 1;
 		// renderer.outputEncoding = sRGBEncoding; // should be linear
 
-		this.make_linear();
+		this._makeLinear();
 	}
 
-	make_linear() {
+	private _makeLinear() {
 		// renderer.outputEncoding = LinearEncoding
 	}
 
-	restore_state() {
+	restoreState() {
 		// renderer.setRenderTarget(prev_target);
 		// renderer.setSize(this._prev_renderer_size.x, this._prev_renderer_size.y);
 		// renderer.setPixelRatio(prev_pixel_aspect_ratio);

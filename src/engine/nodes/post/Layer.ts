@@ -6,9 +6,6 @@
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
 import {LayerPass, LAYER_MODES} from '../../../modules/core/post_process/LayerPass';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
-import {LinearFilter, RGBAFormat} from 'three/src/constants';
-import {Poly} from '../../Poly';
 
 class LayerPostParamsConfig extends NodeParamsConfig {
 	mode = ParamConfig.INTEGER(0, {
@@ -32,24 +29,10 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 	setupComposer(context: TypedPostNodeContext): void {
 		const renderer = context.composer.renderer;
 
-		const parameters = {
-			minFilter: LinearFilter,
-			magFilter: LinearFilter,
-			format: RGBAFormat,
-			stencilBuffer: true,
-		};
-		const renderTarget1 = Poly.renderersController.renderTarget(
-			renderer.domElement.offsetWidth,
-			renderer.domElement.offsetHeight,
-			parameters
-		);
-		const renderTarget2 = Poly.renderersController.renderTarget(
-			renderer.domElement.offsetWidth,
-			renderer.domElement.offsetHeight,
-			parameters
-		);
-		const composer1 = new EffectComposer(renderer, renderTarget1);
-		const composer2 = new EffectComposer(renderer, renderTarget2);
+		const renderTarget1 = this._createRenderTarget(renderer);
+		const renderTarget2 = this._createRenderTarget(renderer);
+		const composer1 = this._createEffectComposer(renderer, renderTarget1);
+		const composer2 = this._createEffectComposer(renderer, renderTarget2);
 		// renderToScreen = false to ensure the last pass of each composer is still
 		// written to the render_target
 		composer1.renderToScreen = false;

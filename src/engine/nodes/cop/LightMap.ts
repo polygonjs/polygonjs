@@ -75,7 +75,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	}
 
 	private async _createLightMapController() {
-		const renderer = await Poly.renderersController.firstRenderer();
+		const renderer = await Poly.renderersController.waitForRenderer();
 		if (!renderer) {
 			console.warn('no renderer found');
 			return;

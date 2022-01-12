@@ -1,8 +1,6 @@
-import {AdditiveBlending} from 'three/src/constants';
+import {AdditiveBlending, NoBlending, NormalBlending} from 'three/src/constants';
 import {Color} from 'three/src/math/Color';
-import {LinearFilter} from 'three/src/constants';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {RGBAFormat} from 'three/src/constants';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector2} from 'three/src/math/Vector2';
@@ -84,20 +82,20 @@ interface CompositeMaterial extends ShaderMaterial {
 	uniforms: CompositeUniforms;
 }
 
-const pars = {minFilter: LinearFilter, magFilter: LinearFilter, format: RGBAFormat};
+type RenderTargetFactory = (resx: number, resy: number) => WebGLRenderTarget;
 
 interface UnrealBloomPassOptions {
+	renderTargetFactory: RenderTargetFactory;
 	resolution: Vector2;
 	strength: number;
 	radius: number;
 	threshold: number;
-	premult: boolean;
-	// overrideObjects: boolean;
-	// scene: PolyScene;
-	// objectsMask: string;
+	// premult: boolean;
+	bloomOnly: boolean;
 }
 
 export class UnrealBloomPass extends Pass {
+	private renderTargetFactory: RenderTargetFactory;
 	static BlurDirectionX = new Vector2(1.0, 0.0);
 	static BlurDirectionY = new Vector2(0.0, 1.0);
 
@@ -129,18 +127,17 @@ export class UnrealBloomPass extends Pass {
 	public strength: number;
 	public radius: number;
 	public threshold: number;
-	public premult: boolean;
-	// public overrideObjects: boolean;
-	// public objectsMask: string;
+	public premult: boolean = true;
+	public bloomOnly: boolean;
 	constructor(options: UnrealBloomPassOptions) {
 		super();
+		this.renderTargetFactory = options.renderTargetFactory;
 		this.resolution = options.resolution;
 		this.strength = options.strength;
 		this.radius = options.radius;
 		this.threshold = options.threshold;
-		this.premult = options.premult;
-		// this.overrideObjects = options.overrideObjects;
-		// this.objectsMask = options.objectsMask;
+		// this.premult = options.premult;
+		this.bloomOnly = options.bloomOnly;
 
 		// render targets
 		this.renderTargetsHorizontal = [];
@@ -148,19 +145,19 @@ export class UnrealBloomPass extends Pass {
 		let resx = Math.round(this.resolution.x / 2);
 		let resy = Math.round(this.resolution.y / 2);
 
-		this.renderTargetBright = new WebGLRenderTarget(resx, resy, pars);
+		this.renderTargetBright = this.renderTargetFactory(resx, resy); //new WebGLRenderTarget(resx, resy, pars);
 		this.renderTargetBright.texture.name = 'UnrealBloomPass.bright';
 		this.renderTargetBright.texture.generateMipmaps = false;
 
 		for (let i = 0; i < this.nMips; i++) {
-			const renderTargetHorizonal = new WebGLRenderTarget(resx, resy, pars);
+			const renderTargetHorizonal = this.renderTargetFactory(resx, resy);
 
 			renderTargetHorizonal.texture.name = 'UnrealBloomPass.h' + i;
 			renderTargetHorizonal.texture.generateMipmaps = false;
 
 			this.renderTargetsHorizontal.push(renderTargetHorizonal);
 
-			const renderTargetVertical = new WebGLRenderTarget(resx, resy, pars);
+			const renderTargetVertical = this.renderTargetFactory(resx, resy);
 
 			renderTargetVertical.texture.name = 'UnrealBloomPass.v' + i;
 			renderTargetVertical.texture.generateMipmaps = false;
@@ -236,7 +233,7 @@ export class UnrealBloomPass extends Pass {
 			uniforms: this.copyUniforms,
 			vertexShader: copyShader.vertexShader,
 			fragmentShader: copyShader.fragmentShader,
-			blending: AdditiveBlending,
+			blending: this._blending(),
 			depthTest: false,
 			depthWrite: false,
 			transparent: true,
@@ -275,22 +272,14 @@ export class UnrealBloomPass extends Pass {
 		}
 	}
 
-	// private _meshesList: Mesh[] = [];
-	// meshesList() {
-	// 	return this._meshesList;
-	// }
-	// private _materialByMesh: WeakMap<Mesh, Material | Material[]> = new WeakMap();
-	render(
-		renderer: WebGLRenderer,
-		writeBuffer: WebGLRenderTarget,
-		readBuffer: WebGLRenderTarget,
-		deltaTime: number,
-		maskActive: boolean
-	) {
-		this._renderBloom(renderer, writeBuffer, readBuffer, deltaTime, maskActive);
+	private _blending() {
+		return this.bloomOnly ? NoBlending : [AdditiveBlending, NormalBlending][1];
+	}
+	private _updateBlending() {
+		this.materialCopy.blending = this._blending();
 	}
 
-	private _renderBloom(
+	render(
 		renderer: WebGLRenderer,
 		writeBuffer: WebGLRenderTarget,
 		readBuffer: WebGLRenderTarget,
@@ -301,6 +290,8 @@ export class UnrealBloomPass extends Pass {
 		this.oldClearAlpha = renderer.getClearAlpha();
 		const oldAutoClear = renderer.autoClear;
 		renderer.autoClear = false;
+
+		this._updateBlending();
 
 		renderer.setClearColor(this.clearColor, 0);
 

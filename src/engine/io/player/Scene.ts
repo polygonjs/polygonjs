@@ -153,8 +153,6 @@ export class ScenePlayerImporter {
 		if (configureScene) {
 			configureScene(this._scene);
 		}
-		// watch progress of selected nodes
-		this._watchNodesProgress(this._scene);
 
 		// mount
 		const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;
@@ -166,6 +164,9 @@ export class ScenePlayerImporter {
 				viewerProperties: {autoRender: false},
 			});
 		}
+		// watch progress of selected nodes
+		this._watchNodesProgress(this._scene);
+
 		return this._scene;
 	}
 }

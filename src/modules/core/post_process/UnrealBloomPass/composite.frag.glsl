@@ -9,7 +9,7 @@ uniform float bloomStrength;
 uniform float bloomRadius;
 uniform float bloomFactors[NUM_MIPS];
 uniform vec3 bloomTintColors[NUM_MIPS];
-uniform bool bloomPremult;
+// uniform bool bloomPremult;
 
 float lerpBloomFactor(const in float factor) {
 	float mirrorFactor = 1.2 - factor;
@@ -28,8 +28,9 @@ void main() {
 		lerpBloomFactor(bloomFactors[3]) * vec4(bloomTintColors[3], 1.0) * texture2D(blurTexture4, vUv) +
 		lerpBloomFactor(bloomFactors[4]) * vec4(bloomTintColors[4], 1.0) * texture2D(blurTexture5, vUv) );
 
-	if(bloomPremult){
-		gl_FragColor.a = luminance(gl_FragColor.rgb);
-		gl_FragColor.rgb /= gl_FragColor.a;
-	}
+	// if(bloomPremult){
+		// gl_FragColor.a = luminance(gl_FragColor.rgb);
+		gl_FragColor.a = max(max(gl_FragColor.r, gl_FragColor.g), gl_FragColor.b);
+		// gl_FragColor.rgb *= gl_FragColor.a;
+	// }
 }

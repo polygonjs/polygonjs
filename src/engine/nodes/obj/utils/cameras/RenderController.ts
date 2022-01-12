@@ -1,4 +1,4 @@
-import {Constructor, PolyDictionary} from '../../../../../types/GlobalTypes';
+import {Constructor} from '../../../../../types/GlobalTypes';
 import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {Vector2} from 'three/src/math/Vector2';
 import {Scene} from 'three/src/scenes/Scene';
@@ -60,11 +60,11 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 }
 
 export class RenderController {
-	private _renderers_by_canvas_id: PolyDictionary<WebGLRenderer> = {};
-	private _resolution_by_canvas_id: PolyDictionary<Vector2> = {};
-	private _resolved_scene: Scene | undefined;
-	private _resolved_renderer_rop: WebGLRendererRopNode | undefined;
-	private _resolved_cssRenderer_rop: CSS2DRendererRopNode | Css3DRendererRopNode | undefined;
+	private _renderersByCanvasId: Map<string, WebGLRenderer> = new Map();
+	private _resolutionByCanvasId: Map<string, Vector2> = new Map();
+	private _resolvedScene: Scene | undefined;
+	private _resolvedRendererROP: WebGLRendererRopNode | undefined;
+	private _resolvedCSSRendererROP: CSS2DRendererRopNode | Css3DRendererRopNode | undefined;
 
 	constructor(private node: BaseThreejsCameraObjNodeType) {}
 
@@ -75,15 +75,15 @@ export class RenderController {
 	//
 	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number, renderObjectOverride?: Object3D) {
 		if (isBooleanTrue(this.node.pv.doPostProcess)) {
-			this.node.postProcessController.render(canvas, size);
+			this.node.postProcessController().render(canvas, size);
 		} else {
 			this.renderWithRenderer(canvas, renderObjectOverride);
 		}
 
-		if (this._resolved_cssRenderer_rop && this._resolved_scene && isBooleanTrue(this.node.pv.setCSSRenderer)) {
+		if (this._resolvedCSSRendererROP && this._resolvedScene && isBooleanTrue(this.node.pv.setCSSRenderer)) {
 			const cssRenderer = this.cssRenderer(canvas);
 			if (cssRenderer) {
-				cssRenderer.render(this._resolved_scene, this.node.object);
+				cssRenderer.render(this._resolvedScene, this.node.object);
 			}
 		}
 	}
@@ -92,7 +92,7 @@ export class RenderController {
 		if (renderer) {
 			// renderer.autoClear = false;
 
-			const scene = /*renderObjectOverride ||*/ this._resolved_scene;
+			const scene = /*renderObjectOverride ||*/ this._resolvedScene;
 			if (scene) {
 				renderer.render(scene, this.node.object);
 			}
@@ -100,9 +100,9 @@ export class RenderController {
 	}
 
 	async update() {
-		this.update_scene();
-		this.update_renderer();
-		this.update_cssRenderer();
+		this._updateScene();
+		this._updateRenderer();
+		this._updateCSSRenderer();
 	}
 
 	//
@@ -110,10 +110,10 @@ export class RenderController {
 	// SCENE
 	//
 	//
-	get resolved_scene() {
-		return this._resolved_scene;
+	resolvedScene() {
+		return this._resolvedScene;
 	}
-	private update_scene() {
+	private _updateScene() {
 		if (isBooleanTrue(this.node.pv.setScene)) {
 			const param = this.node.p.scene;
 			if (param.isDirty()) {
@@ -125,10 +125,10 @@ export class RenderController {
 				if (node.isDirty()) {
 					node.cookController.cookMainWithoutInputs();
 				}
-				this._resolved_scene = node.object;
+				this._resolvedScene = node.object;
 			}
 		} else {
-			this._resolved_scene = this.node.scene().threejsScene();
+			this._resolvedScene = this.node.scene().threejsScene();
 		}
 	}
 
@@ -137,44 +137,48 @@ export class RenderController {
 	// RENDERER
 	//
 	//
-	private update_renderer() {
+	private _updateRenderer() {
 		if (isBooleanTrue(this.node.pv.setRenderer)) {
 			const param = this.node.p.renderer;
 			if (param.isDirty()) {
 				param.find_target();
 			}
-			this._resolved_renderer_rop = param.found_node_with_context_and_type(NodeContext.ROP, RopType.WEBGL);
+			this._resolvedRendererROP = param.found_node_with_context_and_type(NodeContext.ROP, RopType.WEBGL);
 		} else {
-			this._resolved_renderer_rop = undefined;
+			this._resolvedRendererROP = undefined;
 		}
 	}
-	private update_cssRenderer() {
+	private _updateCSSRenderer() {
 		if (isBooleanTrue(this.node.pv.setCSSRenderer)) {
 			const param = this.node.p.CSSRenderer;
 			if (param.isDirty()) {
 				param.find_target();
 			}
-			this._resolved_cssRenderer_rop = param.found_node_with_context_and_type(NodeContext.ROP, [
+			this._resolvedCSSRendererROP = param.found_node_with_context_and_type(NodeContext.ROP, [
 				RopType.CSS2D,
 				RopType.CSS3D,
 			]);
 		} else {
-			if (this._resolved_cssRenderer_rop) {
+			if (this._resolvedCSSRendererROP) {
 				// TODO: not yet sure how to remove it so that it can be easily added again
 				// const renderer = this.cssRenderer()
 				// const dom
 				// this._resolved_cssRenderer_rop.remove_renderer_element(canvas);
 			}
-			this._resolved_cssRenderer_rop = undefined;
+			this._resolvedCSSRendererROP = undefined;
 		}
 	}
 
 	renderer(canvas: HTMLCanvasElement) {
-		return this._renderers_by_canvas_id[canvas.id];
+		return this._renderersByCanvasId.get(canvas.id);
 	}
+	renderersByCanvasId() {
+		return this._renderersByCanvasId;
+	}
+
 	cssRenderer(canvas: HTMLCanvasElement) {
-		if (this._resolved_cssRenderer_rop && isBooleanTrue(this.node.pv.setCSSRenderer)) {
-			return this._resolved_cssRenderer_rop.renderer(canvas);
+		if (this._resolvedCSSRendererROP && isBooleanTrue(this.node.pv.setCSSRenderer)) {
+			return this._resolvedCSSRendererROP.renderer(canvas);
 		}
 	}
 
@@ -188,9 +192,9 @@ export class RenderController {
 
 		let renderer: WebGLRenderer | undefined;
 		if (isBooleanTrue(this.node.pv.setRenderer)) {
-			this.update_renderer();
-			if (this._resolved_renderer_rop) {
-				renderer = this._resolved_renderer_rop.createRenderer(this.node, canvas, gl);
+			this._updateRenderer();
+			if (this._resolvedRendererROP) {
+				renderer = this._resolvedRendererROP.createRenderer(this.node, canvas, gl);
 			}
 		}
 		if (!renderer) {
@@ -209,9 +213,9 @@ export class RenderController {
 		// renderer.extensions.get( 'WEBGL_draw_buffers' );
 
 		Poly.renderersController.registerRenderer(renderer);
-		this._renderers_by_canvas_id[canvas.id] = renderer;
+		this._renderersByCanvasId.set(canvas.id, renderer);
 		this._super_sampling_size.copy(size);
-		this.set_renderer_size(canvas, this._super_sampling_size);
+		this.setRendererSize(canvas, this._super_sampling_size);
 		// remove devicePixelRatio for now, as this seems to double the size
 		// of the canvas on high dpi screens
 		// or if this is used, make sure to have the canvas at 100% width and height
@@ -262,12 +266,16 @@ export class RenderController {
 			Poly.renderersController.deregisterRenderer(renderer);
 		}
 	}
-	canvas_resolution(canvas: HTMLCanvasElement) {
-		return this._resolution_by_canvas_id[canvas.id];
+	canvasResolution(canvas: HTMLCanvasElement) {
+		return this._resolutionByCanvasId.get(canvas.id);
 	}
-	set_renderer_size(canvas: HTMLCanvasElement, size: Vector2) {
-		this._resolution_by_canvas_id[canvas.id] = this._resolution_by_canvas_id[canvas.id] || new Vector2();
-		this._resolution_by_canvas_id[canvas.id].copy(size);
+	setRendererSize(canvas: HTMLCanvasElement, size: Vector2) {
+		let currentRes = this._resolutionByCanvasId.get(canvas.id);
+		if (!currentRes) {
+			currentRes = new Vector2();
+			this._resolutionByCanvasId.set(canvas.id, currentRes);
+		}
+		currentRes.copy(size);
 
 		const renderer = this.renderer(canvas);
 		if (renderer) {
@@ -275,7 +283,7 @@ export class RenderController {
 			renderer.setSize(size.x, size.y, update_style);
 		}
 
-		if (this._resolved_cssRenderer_rop) {
+		if (this._resolvedCSSRendererROP) {
 			const cssRenderer = this.cssRenderer(canvas);
 			if (cssRenderer) {
 				cssRenderer.setSize(size.x, size.y);
