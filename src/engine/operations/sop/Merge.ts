@@ -19,6 +19,7 @@ interface MergeSopParams extends DefaultOperationParams {
 export class MergeSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: MergeSopParams = {
 		compact: false,
+		keepHierarchy: false,
 	};
 	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static type(): Readonly<'merge'> {
@@ -28,35 +29,30 @@ export class MergeSopOperation extends BaseSopOperation {
 	// TODO: improvement:
 	// for compact, I should really keep track of geometry ids,
 	// to make sure I am not including a geometry twice, if there is a hierarchy
-	cook(input_contents: CoreGroup[], params: MergeSopParams) {
-		let all_objects: Object3D[] = [];
-		for (let input_core_group of input_contents) {
-			if (input_core_group) {
-				const objects = input_core_group.objects();
+	cook(inputCoreGroups: CoreGroup[], params: MergeSopParams) {
+		let allObjects: Object3D[] = [];
+		for (let inputCoreGroup of inputCoreGroups) {
+			if (inputCoreGroup) {
+				const objects = inputCoreGroup.objects();
 				if (isBooleanTrue(params.compact)) {
 					for (let object of objects) {
 						object.traverse((child) => {
-							all_objects.push(child as Object3DWithGeometry);
+							allObjects.push(child as Object3DWithGeometry);
 						});
 					}
 				} else {
 					// if we are not compact,
 					// we only use the current level, not children
-					for (let object of input_core_group.objects()) {
-						all_objects.push(object);
+					for (let object of inputCoreGroup.objects()) {
+						allObjects.push(object);
 					}
 				}
 			}
 		}
 		if (isBooleanTrue(params.compact)) {
-			all_objects = this._makeCompact(all_objects);
+			allObjects = this._makeCompact(allObjects);
 		}
-		for (let object of all_objects) {
-			object.traverse((o) => {
-				o.matrixAutoUpdate = false;
-			});
-		}
-		return this.createCoreGroupFromObjects(all_objects);
+		return this.createCoreGroupFromObjects(allObjects);
 	}
 	private _makeCompact(all_objects: Object3D[]): Object3DWithGeometry[] {
 		const materials_by_object_type: Map<ObjectType, Material> = new Map();
@@ -106,6 +102,7 @@ export class MergeSopOperation extends BaseSopOperation {
 					if (merged_geometry) {
 						const material = materials_by_object_type.get(object_type);
 						const object = this.createObject(merged_geometry, object_type, material);
+						object.matrixAutoUpdate = false;
 						merged_objects.push(object as Object3DWithGeometry);
 					} else {
 						this.states?.error.set('merge failed, check that input geometries have the same attributes');

@@ -99,44 +99,44 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			});
 	}
 
-	private _load(): Promise<any> {
+	private _load(): Promise<Object3D[]> {
 		return new Promise(async (resolve, reject) => {
 			const url = await this._urlToLoad();
 			const ext = this.extension();
 			if (ext == GeometryFormat.JSON && this._options.format == GeometryFormat.AUTO) {
-				CoreLoaderGeometry.increment_in_progress_loads_count();
+				CoreLoaderGeometry.incrementInProgressLoadsCount();
 				await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 				fetch(url)
 					.then(async (response) => {
 						const data = await response.json();
 						const obj_loader = new ObjectLoader(this.loadingManager);
 						obj_loader.parse(data, (obj) => {
-							CoreLoaderGeometry.decrement_in_progress_loads_count();
-							resolve(this.on_load_success(obj.children[0]));
+							CoreLoaderGeometry.decrementInProgressLoadsCount();
+							resolve(this._onLoadSuccess(obj.children[0]));
 						});
 					})
 					.catch((error) => {
-						CoreLoaderGeometry.decrement_in_progress_loads_count();
+						CoreLoaderGeometry.decrementInProgressLoadsCount();
 						reject(error);
 					});
 			} else {
 				const loader = await this._loaderForFormat();
 				if (loader) {
-					CoreLoaderGeometry.increment_in_progress_loads_count();
+					CoreLoaderGeometry.incrementInProgressLoadsCount();
 					await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
 
 					loader.load(
 						url,
 						(object: Object3D | BufferGeometry | PdbObject | GLTF) => {
-							this.on_load_success(object).then((object2) => {
-								CoreLoaderGeometry.decrement_in_progress_loads_count();
+							this._onLoadSuccess(object).then((object2) => {
+								CoreLoaderGeometry.decrementInProgressLoadsCount();
 								resolve(object2);
 							});
 						},
 						undefined,
 						(error_message: ErrorEvent) => {
 							Poly.warn('error loading', url, error_message);
-							CoreLoaderGeometry.decrement_in_progress_loads_count();
+							CoreLoaderGeometry.decrementInProgressLoadsCount();
 							reject(error_message);
 						}
 					);
@@ -148,7 +148,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		});
 	}
 
-	private async on_load_success(object: Object3D | BufferGeometry | PdbObject | GLTF): Promise<Object3D[]> {
+	private async _onLoadSuccess(object: Object3D | BufferGeometry | PdbObject | GLTF): Promise<Object3D[]> {
 		const ext = this.extension();
 
 		if (ext == GeometryFormat.JSON) {
@@ -163,9 +163,9 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		if (isBooleanTrue(obj.isObject3D)) {
 			switch (ext) {
 				case GeometryExtension.PDB:
-					return this.on_load_succes_pdb(object as PdbObject);
+					return this._onLoadSuccessPDB(object as PdbObject);
 				case GeometryExtension.OBJ:
-					return [obj]; // [object] //.children
+					return [obj];
 				case GeometryExtension.MPD: {
 					obj.rotation.x = Math.PI;
 					obj.updateMatrix();
@@ -179,18 +179,18 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		if (geo.isBufferGeometry) {
 			switch (ext) {
 				case GeometryExtension.DRC:
-					return this.on_load_succes_drc(geo);
+					return this._onLoadSuccessDRC(geo);
 				default:
 					return [new Mesh(geo)];
 			}
 		}
 		const gltf = object as GLTF;
-		if (gltf.scene != null) {
+		if (gltf.scene != null || gltf.scenes != null) {
 			switch (ext) {
 				case GeometryExtension.GLTF:
-					return this.on_load_succes_gltf(gltf);
+					return this._onLoadSuccessGLTF(gltf);
 				case GeometryExtension.GLB:
-					return this.on_load_succes_gltf(gltf);
+					return this._onLoadSuccessGLTF(gltf);
 				default:
 					return [obj];
 			}
@@ -199,7 +199,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		if (pdbobject.geometryAtoms || pdbobject.geometryBonds) {
 			switch (ext) {
 				case GeometryExtension.PDB:
-					return this.on_load_succes_pdb(pdbobject);
+					return this._onLoadSuccessPDB(pdbobject);
 				default:
 					return [];
 			}
@@ -208,18 +208,18 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		return [];
 	}
 
-	private on_load_succes_drc(geometry: BufferGeometry): Object3D[] {
+	private _onLoadSuccessDRC(geometry: BufferGeometry): Object3D[] {
 		const mesh = new Mesh(geometry, CoreLoaderGeometry._default_mat_mesh);
 
 		return [mesh];
 	}
-	private on_load_succes_gltf(gltf: GLTF): Object3D[] {
-		const scene = gltf['scene'];
+	private _onLoadSuccessGLTF(gltf: GLTF): Object3D[] {
+		const scene = gltf.scene || gltf.scenes[0];
 		scene.animations = gltf.animations;
 
 		return [scene];
 	}
-	private on_load_succes_pdb(pdb_object: PdbObject): Object3D[] {
+	private _onLoadSuccessPDB(pdb_object: PdbObject): Object3D[] {
 		const atoms = new Points(pdb_object.geometryAtoms, CoreLoaderGeometry._default_mat_point);
 		const bonds = new LineSegments(pdb_object.geometryBonds, CoreLoaderGeometry._default_mat_line);
 
@@ -470,7 +470,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	//
 	private static MAX_CONCURRENT_LOADS_COUNT: number = CoreLoaderGeometry._init_max_concurrent_loads_count();
 	private static CONCURRENT_LOADS_DELAY: number = CoreLoaderGeometry._init_concurrent_loads_delay();
-	private static in_progress_loads_count: number = 0;
+	private static _inProgressLoadsCount: number = 0;
 	private static _queue: Array<() => void> = [];
 	private static _maxConcurrentLoadsCountMethod: MaxConcurrentLoadsCountMethod | undefined;
 	public static setMaxConcurrentLoadsCount(method: MaxConcurrentLoadsCountMethod | undefined) {
@@ -520,11 +520,11 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	// 	this.MAX_CONCURRENT_LOADS_COUNT = count;
 	// }
 
-	private static increment_in_progress_loads_count() {
-		this.in_progress_loads_count++;
+	private static incrementInProgressLoadsCount() {
+		this._inProgressLoadsCount++;
 	}
-	private static decrement_in_progress_loads_count() {
-		this.in_progress_loads_count--;
+	private static decrementInProgressLoadsCount() {
+		this._inProgressLoadsCount--;
 
 		const queued_resolve = this._queue.pop();
 		if (queued_resolve) {
@@ -536,7 +536,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	}
 
 	private static async wait_for_max_concurrent_loads_queue_freed(): Promise<void> {
-		if (this.in_progress_loads_count <= this.MAX_CONCURRENT_LOADS_COUNT) {
+		if (this._inProgressLoadsCount <= this.MAX_CONCURRENT_LOADS_COUNT) {
 			return;
 		} else {
 			return new Promise((resolve) => {

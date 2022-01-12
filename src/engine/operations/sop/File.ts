@@ -12,12 +12,14 @@ import {BaseNodeType} from '../../nodes/_Base';
 interface FileSopParams extends DefaultOperationParams {
 	url: string;
 	format: string;
+	matrixAutoUpdate: boolean;
 }
 
 export class FileSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: FileSopParams = {
 		url: `${ASSETS_ROOT}/models/wolf.obj`,
 		format: GeometryFormat.AUTO,
+		matrixAutoUpdate: false,
 	};
 	static type(): Readonly<'file'> {
 		return 'file';
@@ -33,7 +35,7 @@ export class FileSopOperation extends BaseSopOperation {
 		return new Promise((resolve) => {
 			loader.load(
 				(objects: Object3D[]) => {
-					const new_objects = this._onLoad(objects);
+					const new_objects = this._onLoad(objects, params);
 					resolve(this.createCoreGroupFromObjects(new_objects));
 				},
 				(message: string) => {
@@ -47,13 +49,17 @@ export class FileSopOperation extends BaseSopOperation {
 		loader.deregisterUrl();
 	}
 
-	private _onLoad(objects: Object3D[]) {
-		objects = objects.flat();
+	private _onLoad(objects: Object3D[], params: FileSopParams) {
+		// .flat() is overzealous and could break the hierarchy
+		// objects = objects.flat();
 
 		for (let object of objects) {
 			object.traverse((child) => {
 				this._ensureGeometryHasIndex(child);
-				child.matrixAutoUpdate = false;
+				if (!params.matrixAutoUpdate) {
+					child.updateMatrix();
+				}
+				child.matrixAutoUpdate = params.matrixAutoUpdate;
 			});
 		}
 		return objects;

@@ -28,6 +28,8 @@ class FileSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param sets the matrixAutoUpdate attribute for the objects loaded */
+	matrixAutoUpdate = ParamConfig.BOOLEAN(0);
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
