@@ -29,7 +29,7 @@ const tmpPos1 = new Vector3();
 const tmpN = new Vector3();
 const triangle = new Triangle();
 const center = new Vector3();
-const vertex = new Vector3();
+const position = new Vector3();
 const normal = new Vector3();
 
 export class TorusSopOperation extends BaseSopOperation {
@@ -52,7 +52,7 @@ export class TorusSopOperation extends BaseSopOperation {
 	private _core_transform = new CoreTransform();
 	cook(input_contents: CoreGroup[], params: TorusSopParams) {
 		const arc = isBooleanTrue(params.open) ? params.arc : Math.PI * 2;
-		const cap = isBooleanTrue(params.open) ? params.cap : false;
+		const cap: boolean = isBooleanTrue(params.open) ? params.cap : false;
 
 		const radialSegments = Math.floor(params.segmentsRadial);
 		const tubularSegments = Math.floor(params.segmentsTube);
@@ -61,39 +61,44 @@ export class TorusSopOperation extends BaseSopOperation {
 		// buffers
 
 		const indices: number[] = [];
-		const vertices: number[] = [];
+		const positions: number[] = [];
 		const normals: number[] = [];
 		const uvs: number[] = [];
 
-		// generate vertices, normals and uvs
+		// generate positions, normals and uvs
 		const capIndices0: number[] = [];
 		const capIndices1: number[] = [];
 
+		function setPosition(i: number, j: number, position: Vector3) {
+			const u = (i / tubularSegments) * arc;
+			const v = (j / radialSegments) * Math.PI * 2;
+
+			// vertex
+
+			position.x = (radius + radiusTube * Math.cos(v)) * Math.cos(u);
+			position.y = (radius + radiusTube * Math.cos(v)) * Math.sin(u);
+			position.z = radiusTube * Math.sin(v);
+			return {u, v};
+		}
+
 		for (let j = 0; j <= radialSegments; j++) {
 			for (let i = 0; i <= tubularSegments; i++) {
-				const u = (i / tubularSegments) * arc;
-				const v = (j / radialSegments) * Math.PI * 2;
+				const {u} = setPosition(i, j, position);
 
-				// vertex
-
-				vertex.x = (radius + radiusTube * Math.cos(v)) * Math.cos(u);
-				vertex.y = (radius + radiusTube * Math.cos(v)) * Math.sin(u);
-				vertex.z = radiusTube * Math.sin(v);
-
-				vertices.push(vertex.x, vertex.y, vertex.z);
-				if (cap) {
-					if (i == 0) {
-						capIndices0.push(vertices.length / 3 - 1);
-					} else if (i == tubularSegments) {
-						capIndices1.push(vertices.length / 3 - 1);
-					}
-				}
+				positions.push(position.x, position.y, position.z);
+				// if (cap) {
+				// 	if (i == 0) {
+				// 		capIndices0.push(positions.length / 3 - 1);
+				// 	} else if (i == tubularSegments) {
+				// 		capIndices1.push(positions.length / 3 - 1);
+				// 	}
+				// }
 
 				// normal
 
 				center.x = radius * Math.cos(u);
 				center.y = radius * Math.sin(u);
-				normal.subVectors(vertex, center).normalize();
+				normal.subVectors(position, center).normalize();
 
 				normals.push(normal.x, normal.y, normal.z);
 
@@ -101,6 +106,24 @@ export class TorusSopOperation extends BaseSopOperation {
 
 				uvs.push(i / tubularSegments);
 				uvs.push(j / radialSegments);
+			}
+		}
+		if (cap) {
+			let i = 0;
+			for (let j = 0; j <= radialSegments; j++) {
+				setPosition(i, j, position);
+				positions.push(position.x, position.y, position.z);
+				// normal is pushed here to correctly set the length of the array
+				// but will be overriden in _addCap
+				normals.push(-1, -1, -1);
+				capIndices0.push(positions.length / 3 - 1);
+			}
+			i = tubularSegments;
+			for (let j = 0; j <= radialSegments; j++) {
+				setPosition(i, j, position);
+				positions.push(position.x, position.y, position.z);
+				normals.push(-1, -1, -1);
+				capIndices1.push(positions.length / 3 - 1);
 			}
 		}
 
@@ -123,46 +146,47 @@ export class TorusSopOperation extends BaseSopOperation {
 		}
 
 		if (cap) {
-			this._addCap(capIndices0, vertices, normals, indices, false);
-			this._addCap(capIndices1, vertices, normals, indices, true);
+			this._addCap(capIndices0, positions, normals, indices, false);
+			this._addCap(capIndices1, positions, normals, indices, true);
 		}
 
 		// build geometry
 		const geometry = new BufferGeometry();
 		geometry.setIndex(indices);
-		geometry.setAttribute(Attribute.POSITION, new Float32BufferAttribute(vertices, 3));
+		geometry.setAttribute(Attribute.POSITION, new Float32BufferAttribute(positions, 3));
 		geometry.setAttribute(Attribute.NORMAL, new Float32BufferAttribute(normals, 3));
 		geometry.setAttribute(Attribute.UV, new Float32BufferAttribute(uvs, 2));
 
-		if (0) {
-			geometry.translate(params.center.x, params.center.y, params.center.z);
-			this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
-		}
+		geometry.translate(params.center.x, params.center.y, params.center.z);
+		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
 		return this.createCoreGroupFromGeometry(geometry);
 	}
 
-	private _addCap(capIndices: number[], vertices: number[], normals: number[], indices: number[], invert: boolean) {
+	private _addCap(capIndices: number[], positions: number[], normals: number[], indices: number[], invert: boolean) {
 		const capPointsCount = capIndices.length;
 		if (capPointsCount <= 2) {
 			return;
 		}
 		capCenter0.set(0, 0, 0);
 		for (let i = 0; i < capPointsCount; i++) {
-			capPositionsCenter0.fromArray(vertices, capIndices[i] * 3);
+			capPositionsCenter0.fromArray(positions, capIndices[i] * 3);
 			capCenter0.add(capPositionsCenter0);
 		}
 		capCenter0.divideScalar(capIndices.length);
-		vertices.push(capCenter0.x, capCenter0.y, capCenter0.z);
-		const centerIndex = vertices.length / 3 - 1;
+		positions.push(capCenter0.x, capCenter0.y, capCenter0.z);
+		const centerIndex = positions.length / 3 - 1;
 
-		tmpPos0.fromArray(vertices, capIndices[0] * 3);
-		tmpPos1.fromArray(vertices, capIndices[1] * 3);
+		tmpPos0.fromArray(positions, capIndices[0] * 3);
+		tmpPos1.fromArray(positions, capIndices[1] * 3);
 		triangle.a.copy(tmpPos0);
 		triangle.b.copy(tmpPos1);
 		triangle.c.copy(capCenter0);
-		tmpN.set(0, 0, 0);
 		triangle.getNormal(tmpN);
+
+		if (invert) {
+			tmpN.multiplyScalar(-1);
+		}
 		normals.push(tmpN.x, tmpN.y, tmpN.z);
 
 		for (let i = 0; i < capIndices.length - 1; i++) {
@@ -174,6 +198,7 @@ export class TorusSopOperation extends BaseSopOperation {
 			} else {
 				indices.push(a, b, c);
 			}
+			tmpN.toArray(normals, 3 * b);
 		}
 	}
 }
