@@ -206,7 +206,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			video.appendChild(original_source);
 
 			// add secondary source, either mp4 or ogv depending on the first url
-			let secondary_url = url;
+			let secondary_url: string | undefined;
 			if (original_ext == 'mp4') {
 				// add ogv
 				secondary_url = CoreLoaderTexture.replaceExtension(url, 'ogv');

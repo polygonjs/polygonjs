@@ -1,4 +1,3 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Geometry, Face3} from '../deprecated/Geometry';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';

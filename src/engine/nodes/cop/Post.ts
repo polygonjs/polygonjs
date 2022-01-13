@@ -26,6 +26,12 @@ import {Vector2} from 'three/src/math/Vector2';
 import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {ParamConfig} from '../utils/params/ParamsConfig';
+import {CopRendererController} from './utils/RendererController';
+import {CoreUserAgent} from '../../../core/UserAgent';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {isBooleanTrue} from '../../../core/Type';
+
 export interface IUniforms {
 	[uniform: string]: IUniform;
 }
@@ -82,11 +88,6 @@ const OPTION_SETS = {
 };
 const OPTION_SET = OPTION_SETS.data2;
 
-import {ParamConfig} from '../utils/params/ParamsConfig';
-import {CopRendererController} from './utils/RendererController';
-import {CoreUserAgent} from '../../../core/UserAgent';
-import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {isBooleanTrue} from '../../../core/Type';
 // class PostCopParamsConfig extends NodeParamsConfig {
 // 	use_camera_renderer = ParamConfig.BOOLEAN(0);
 // }

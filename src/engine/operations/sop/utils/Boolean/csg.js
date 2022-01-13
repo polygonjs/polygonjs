@@ -6,7 +6,6 @@
 // https://github.com/manthrax/THREE-CSGMesh
 //
 
-import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Matrix3} from 'three/src/math/Matrix3';
 import {Matrix4} from 'three/src/math/Matrix4';
@@ -14,7 +13,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Mesh} from 'three/src/objects/Mesh';
 
-import {CSG, Vertex, Vector, Polygon} from './csg-lib.js';
+import {CSG, Vertex, Polygon} from './csg-lib.js';
 
 //import {Geometry} from "../three.js-dev/examples/jsm/deprecated/Geometry.js";
 
@@ -22,67 +21,66 @@ CSG.fromGeometry = function (geom, objectIndex) {
 	//   if (geom.isBufferGeometry)
 	//        geom = new Geometry().fromBufferGeometry(geom)
 	let polys = [];
-	if (geom.isGeometry) {
-		let fs = geom.faces;
-		let vs = geom.vertices;
-		let fm = ['a', 'b', 'c'];
-		for (let i = 0; i < fs.length; i++) {
-			let f = fs[i];
-			let vertices = [];
-			for (let j = 0; j < 3; j++)
-				vertices.push(new Vertex(vs[f[fm[j]]], f.vertexNormals[j], geom.faceVertexUvs[0][i][j]));
-			polys.push(new Polygon(vertices, objectIndex));
+	// if (geom.isGeometry) {
+	// 	let fs = geom.faces;
+	// 	let vs = geom.vertices;
+	// 	let fm = ['a', 'b', 'c'];
+	// 	for (let i = 0; i < fs.length; i++) {
+	// 		let f = fs[i];
+	// 		let vertices = [];
+	// 		for (let j = 0; j < 3; j++)
+	// 			vertices.push(new Vertex(vs[f[fm[j]]], f.vertexNormals[j], geom.faceVertexUvs[0][i][j]));
+	// 		polys.push(new Polygon(vertices, objectIndex));
+	// 	}
+	// } else if (geom.isBufferGeometry) {
+	let posattr = geom.attributes.position;
+	let normalattr = geom.attributes.normal;
+	let uvattr = geom.attributes.uv;
+	let colorattr = geom.attributes.color;
+	let index;
+	if (geom.index) index = geom.index.array;
+	else {
+		index = new Array((posattr.array.length / posattr.itemSize) | 0);
+		for (let i = 0; i < index.length; i++) index[i] = i;
+	}
+	let triCount = (index.length / 3) | 0;
+	polys = new Array(triCount);
+	for (let i = 0, pli = 0, l = index.length; i < l; i += 3, pli++) {
+		const vertices = new Array(3);
+		for (let j = 0; j < 3; j++) {
+			let vi = index[i + j];
+			let vp = vi * 3;
+			let vt = vi * 2;
+			let x = posattr.array[vp];
+			let y = posattr.array[vp + 1];
+			let z = posattr.array[vp + 2];
+			let nx = normalattr.array[vp];
+			let ny = normalattr.array[vp + 1];
+			let nz = normalattr.array[vp + 2];
+			let u = uvattr.array[vt];
+			let v = uvattr.array[vt + 1];
+			vertices[j] = new Vertex(
+				{
+					x,
+					y,
+					z,
+				},
+				{
+					x: nx,
+					y: ny,
+					z: nz,
+				},
+				{
+					x: u,
+					y: v,
+					z: 0,
+				},
+				colorattr && {x: colorattr.array[vt], y: colorattr.array[vt + 1], z: colorattr.array[vt + 2]}
+			);
 		}
-	} else if (geom.isBufferGeometry) {
-		let vertices, normals, uvs;
-		let posattr = geom.attributes.position;
-		let normalattr = geom.attributes.normal;
-		let uvattr = geom.attributes.uv;
-		let colorattr = geom.attributes.color;
-		let index;
-		if (geom.index) index = geom.index.array;
-		else {
-			index = new Array((posattr.array.length / posattr.itemSize) | 0);
-			for (let i = 0; i < index.length; i++) index[i] = i;
-		}
-		let triCount = (index.length / 3) | 0;
-		polys = new Array(triCount);
-		for (let i = 0, pli = 0, l = index.length; i < l; i += 3, pli++) {
-			let vertices = new Array(3);
-			for (let j = 0; j < 3; j++) {
-				let vi = index[i + j];
-				let vp = vi * 3;
-				let vt = vi * 2;
-				let x = posattr.array[vp];
-				let y = posattr.array[vp + 1];
-				let z = posattr.array[vp + 2];
-				let nx = normalattr.array[vp];
-				let ny = normalattr.array[vp + 1];
-				let nz = normalattr.array[vp + 2];
-				let u = uvattr.array[vt];
-				let v = uvattr.array[vt + 1];
-				vertices[j] = new Vertex(
-					{
-						x,
-						y,
-						z,
-					},
-					{
-						x: nx,
-						y: ny,
-						z: nz,
-					},
-					{
-						x: u,
-						y: v,
-						z: 0,
-					},
-					colorattr && {x: colorattr.array[vt], y: colorattr.array[vt + 1], z: colorattr.array[vt + 2]}
-				);
-			}
-			polys[pli] = new Polygon(vertices, objectIndex);
-		}
-	} else console.error('Unsupported CSG input type:' + geom.type);
+		polys[pli] = new Polygon(vertices, objectIndex);
+	}
+	// } else console.error('Unsupported CSG input type:' + geom.type);
 	return CSG.fromPolygons(polys);
 };
 
@@ -178,7 +176,7 @@ CSG.toMesh = function (csg, toMatrix, toMaterial) {
 			}
 			geom.setIndex(index);
 		}
-		g2 = geom;
+		// g2 = geom;
 	}
 
 	let inv = new Matrix4().copy(toMatrix).invert();

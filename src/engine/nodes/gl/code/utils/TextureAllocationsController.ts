@@ -182,19 +182,15 @@ export class TextureAllocationsController {
 			// const allocated_variable = this.variables().filter((v) => v.name() == new_variable.name())[0];
 			// allocated_variable.merge(new_variable);
 		} else {
-			if (!isAllocated) {
-				for (let allocation of allocations) {
-					if (!isAllocated && allocation.hasSpaceForVariable(new_variable)) {
-						allocation.addVariable(new_variable);
-						isAllocated = true;
-					}
+			for (let allocation of allocations) {
+				if (!isAllocated && allocation.hasSpaceForVariable(new_variable)) {
+					allocation.addVariable(new_variable);
+					isAllocated = true;
 				}
 			}
-			if (!isAllocated) {
-				const new_allocation = new TextureAllocation(/*this.nextAllocationName()*/);
-				allocations.push(new_allocation);
-				new_allocation.addVariable(new_variable);
-			}
+			const new_allocation = new TextureAllocation(/*this.nextAllocationName()*/);
+			allocations.push(new_allocation);
+			new_allocation.addVariable(new_variable);
 		}
 	}
 	private _addWritableAllocation(allocation: TextureAllocation) {

@@ -34,7 +34,7 @@ export class CopRendererController {
 	}
 
 	async cameraRenderer() {
-		let renderer = Poly.renderersController.waitForRenderer();
+		let renderer = await Poly.renderersController.waitForRenderer();
 		if (renderer) {
 			return renderer;
 		} else {
