@@ -317,23 +317,21 @@ export class TypedThreejsCameraObjNode<
 	}
 
 	createViewer(options?: ThreejsViewerOptions | HTMLElement): ThreejsViewer {
+		let viewer: ThreejsViewer;
+		let element: HTMLElement | undefined;
 		if (options && options instanceof HTMLElement) {
-			const viewer = new ThreejsViewer(this);
-			const element = options;
-			if (element) {
-				viewer.mount(element);
-			}
-			return viewer;
+			viewer = new ThreejsViewer(this);
+			element = options;
 		} else {
-			const viewer = new ThreejsViewer(this, options?.viewerProperties || {});
-			const element = options?.element;
-			this.scene().viewersRegister.registerViewer(viewer);
-			if (element) {
-				viewer.mount(element);
-			}
-
-			return viewer;
+			viewer = new ThreejsViewer(this, options?.viewerProperties || {});
+			element = options?.element;
 		}
+		if (element) {
+			viewer.mount(element);
+		}
+
+		this.scene().viewersRegister.registerViewer(viewer);
+		return viewer;
 	}
 	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
 		node.postProcessController().reset();

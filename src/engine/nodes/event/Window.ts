@@ -32,7 +32,7 @@ export class WindowEventNode extends TypedInputEventNode<WindowEventParamsConfig
 		return 'window';
 	}
 	protected acceptedEventTypes() {
-		return ACCEPTED_WINDOW_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_WINDOW_EVENT_TYPES.map((n) => `${n}`));
 	}
 	initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

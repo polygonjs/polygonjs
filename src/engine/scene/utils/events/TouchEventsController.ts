@@ -14,11 +14,11 @@ export const ACCEPTED_TOUCH_EVENT_TYPES: TouchEventType[] = [
 ];
 
 export class TouchEventsController extends BaseSceneEventsController<MouseEvent, PointerEventNode> {
-	protected _require_canvas_event_listeners: boolean = true;
+	protected _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'touch';
 	}
 	acceptedEventTypes() {
-		return ACCEPTED_TOUCH_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_TOUCH_EVENT_TYPES.map((n) => `${n}`));
 	}
 }

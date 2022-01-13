@@ -36,14 +36,15 @@ export abstract class TypedInputEventNode<K extends BaseInputEventParamsConfig> 
 		});
 	}
 
-	processEvent(event_context: EventContext<Event>) {
+	processEvent(eventContext: EventContext<Event>) {
 		if (!this.pv.active) {
 			return;
 		}
-		if (!event_context.event) {
+		if (!eventContext.event) {
 			return;
 		}
-		this.dispatchEventToOutput(event_context.event.type, event_context);
+
+		this.dispatchEventToOutput(eventContext.event.type, eventContext);
 	}
 
 	static PARAM_CALLBACK_updateRegister(node: BaseInputEventNodeType) {
@@ -59,15 +60,15 @@ export abstract class TypedInputEventNode<K extends BaseInputEventParamsConfig> 
 		this._activeEventDatas = [];
 		if (this.pv.active) {
 			const list = this.acceptedEventTypes();
-			for (let name of list) {
+			list.forEach((name) => {
 				const param = this.params.get(name);
 				if (param && param.value) {
 					this._activeEventDatas.push({type: name, emitter: EVENT_EMITTERS[this.pv.element]});
 				}
-			}
+			});
 		}
 	}
-	protected abstract acceptedEventTypes(): string[];
+	protected abstract acceptedEventTypes(): Set<string>;
 	activeEventDatas() {
 		return this._activeEventDatas;
 	}
@@ -88,6 +89,6 @@ class BaseInputEventParamsConfig extends NodeParamsConfig {
 export type BaseInputEventNodeType = TypedInputEventNode<BaseInputEventParamsConfig>;
 export class BaseInputEventNodeClass extends TypedInputEventNode<BaseInputEventParamsConfig> {
 	acceptedEventTypes() {
-		return [];
+		return new Set<string>();
 	}
 }

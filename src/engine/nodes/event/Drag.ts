@@ -47,7 +47,7 @@ export class DragEventNode extends TypedInputEventNode<DragEventParamsConfig> {
 		return 'drag';
 	}
 	protected acceptedEventTypes() {
-		return ACCEPTED_DRAG_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_DRAG_EVENT_TYPES.map((n) => `${n}`));
 	}
 	initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

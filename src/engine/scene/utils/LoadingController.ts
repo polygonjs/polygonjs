@@ -10,42 +10,42 @@ export class LoadingController {
 		return (this._LOADED_EVENT_CONTEXT = this._LOADED_EVENT_CONTEXT || {event: new Event(SceneEventType.LOADED)});
 	}
 
-	_loading_state: boolean = false;
-	_auto_updating: boolean = true;
-	_first_object_loaded: boolean = false;
+	private _loadingState: boolean = false;
+	private _autoUpdating: boolean = true;
+	// private _firstObjectLoaded: boolean = false;
 
 	markAsLoading() {
-		this._set_loading_state(true);
+		this._setLoadingState(true);
 	}
 	async markAsLoaded() {
 		this.scene.missingExpressionReferencesController.resolveMissingReferences();
-		await this._set_loading_state(false);
-		this.trigger_loaded_event();
+		await this._setLoadingState(false);
+		this._triggerLoadedEvent();
 	}
-	trigger_loaded_event() {
+	private _triggerLoadedEvent() {
 		// we only dispatch events in the browser. If this is run from nodejs, we do not.
 		if (globalThis.Event) {
 			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.LOADED_EVENT_CONTEXT);
 		}
 	}
 
-	private async _set_loading_state(state: boolean) {
-		this._loading_state = state;
-		await this.set_auto_update(!this._loading_state);
+	private async _setLoadingState(state: boolean) {
+		this._loadingState = state;
+		await this.setAutoUpdate(!this._loadingState);
 	}
 	isLoading() {
-		return this._loading_state;
+		return this._loadingState;
 	}
 	loaded() {
-		return !this._loading_state;
+		return !this._loadingState;
 	}
 	autoUpdating() {
-		return this._auto_updating;
+		return this._autoUpdating;
 	}
-	async set_auto_update(new_state: boolean) {
-		if (this._auto_updating !== new_state) {
-			this._auto_updating = new_state;
-			if (this._auto_updating) {
+	async setAutoUpdate(newState: boolean) {
+		if (this._autoUpdating !== newState) {
+			this._autoUpdating = newState;
+			if (this._autoUpdating) {
 				// if this.env_is_development()
 				// 	this.performance().start()
 
@@ -57,16 +57,16 @@ export class LoadingController {
 		}
 	}
 
-	on_first_object_loaded() {
-		if (!this._first_object_loaded) {
-			this._first_object_loaded = true;
+	// on_first_object_loaded() {
+	// 	if (!this._firstObjectLoaded) {
+	// 		this._firstObjectLoaded = true;
 
-			const loader = document.getElementById('scene_loading_container');
-			if (loader) {
-				loader.parentElement?.removeChild(loader);
-			}
-		}
-	}
+	// 		const loader = document.getElementById('scene_loading_container');
+	// 		if (loader) {
+	// 			loader.parentElement?.removeChild(loader);
+	// 		}
+	// 	}
+	// }
 
 	// on_all_objects_loaded() {
 	// 	// POLY.viewer_loaders_manager().dipose_loaders()

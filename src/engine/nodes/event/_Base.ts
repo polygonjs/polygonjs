@@ -46,11 +46,11 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	// 		this.processEvent(event_context, connection_point)
 	// 	// })
 	// }
-	processEventViaConnectionPoint(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {
-		if (connection_point.event_listener) {
-			connection_point.event_listener(event_context);
+	processEventViaConnectionPoint(eventContext: EventContext<Event>, connectionPoint: BaseEventConnectionPoint) {
+		if (connectionPoint.event_listener) {
+			connectionPoint.event_listener(eventContext);
 		} else {
-			this.processEvent(event_context);
+			this.processEvent(eventContext);
 		}
 	}
 	processEvent(event_context: EventContext<Event>) {}
@@ -69,11 +69,11 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		if (index >= 0) {
 			const connections = this.io.connections.outputConnections();
 			const current_connections = connections.filter((connection) => connection.output_index == index);
-			let dest_node: BaseEventNodeType;
+			let destNode: BaseEventNodeType;
 			for (let connection of current_connections) {
-				dest_node = connection.node_dest;
-				const connection_point = dest_node.io.inputs.namedInputConnectionPoints()[connection.input_index];
-				dest_node.processEventViaConnectionPoint(event_context, connection_point);
+				destNode = connection.node_dest;
+				const connection_point = destNode.io.inputs.namedInputConnectionPoints()[connection.input_index];
+				destNode.processEventViaConnectionPoint(event_context, connection_point);
 			}
 			// const nodes = current_connections.map((connection) => connection.node_dest);
 			// for (let node of nodes) {

@@ -98,6 +98,15 @@ export class RenderController {
 			}
 		}
 	}
+	preCompile(canvas: HTMLCanvasElement) {
+		const renderer = this.renderer(canvas);
+		if (renderer) {
+			const scene = /*renderObjectOverride ||*/ this._resolvedScene;
+			if (scene) {
+				renderer.compile(scene, this.node.object);
+			}
+		}
+	}
 
 	async update() {
 		this._updateScene();

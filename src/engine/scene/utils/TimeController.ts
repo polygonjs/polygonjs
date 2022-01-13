@@ -137,9 +137,9 @@ export class TimeController {
 		if (this._realtimeState) {
 			// const performance_now = performance.now();
 			this._delta = delta;
-			const new_time = this._time + this._delta;
+			const newTime = this._time + this._delta;
 			// this._prev_performance_now = performance_now;
-			this.setTime(new_time);
+			this.setTime(newTime);
 		} else {
 			this.setFrame(this.frame() + 1);
 		}

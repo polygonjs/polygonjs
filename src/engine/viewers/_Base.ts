@@ -26,17 +26,27 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		this._id = TypedViewer._nextViewerId++;
 		this._scene = this._cameraNode.scene();
 	}
+
+	protected _mounted = false;
 	mount(element: HTMLElement) {
 		this._domElement = element;
+		this._mounted = true;
 	}
 	unmount() {
 		if (!this._domElement) {
 			return;
 		}
-		let childElement: Element | undefined;
-		while ((childElement = this._domElement.children[0])) {
-			this._domElement.removeChild(childElement);
-		}
+		// let childElement: Element | undefined;
+		// while ((childElement = this._domElement.children[0])) {
+		// 	this._domElement.removeChild(childElement);
+		// }
+		// when unmounting, it is very unsafe to remove all HTMLElements
+		// that have been created inside _domElement
+		// as those could have been created by an app specific code
+		// OR... those could have been created when an element is shared by multiple scenes
+		// at different times
+		this._domElement.removeChild(this.canvas());
+		this._mounted = false;
 	}
 	protected _canvasIdPrefix() {
 		return 'TypedViewer';

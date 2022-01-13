@@ -33,7 +33,7 @@ interface ReflectorOptions extends BaseReflectorOptions {
 	opacity: number;
 }
 
-export class Reflector extends BaseReflector {
+export class Reflector extends BaseReflector<BufferGeometry, ShaderMaterial> {
 	constructor(public geometry: BufferGeometry, protected _options: ReflectorOptions) {
 		super(geometry, _options);
 	}

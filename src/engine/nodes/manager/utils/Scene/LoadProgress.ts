@@ -26,6 +26,8 @@ export class RootLoadProgressController {
 	static async PARAM_CALLBACK_printResolve(node: RootManagerNode) {
 		const nodes = await node.loadProgress.resolvedNodes();
 		console.log(nodes);
+		const nodePaths = nodes.map((node) => node.path()).sort();
+		console.log(nodePaths);
 	}
 	async resolvedNodes() {
 		const param = this.node.p.nodesMask;

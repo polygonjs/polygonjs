@@ -20,30 +20,30 @@ import {DragEventNode} from '../../../nodes/event/Drag';
 import {TouchEventNode} from '../../../nodes/event/Touch';
 
 export class SceneEventsDispatcher {
-	private _keyboard_events_controller: KeyboardEventsController | undefined;
-	private _mouse_events_controller: MouseEventsController | undefined;
-	private _drag_events_controller: DragEventsController | undefined;
-	private _pointer_events_controller: PointerEventsController | undefined;
-	private _scene_events_controller: SceneEventsController | undefined;
-	private _window_events_controller: WindowEventsController | undefined;
-	private _touch_events_controller: TouchEventsController | undefined;
+	private _keyboardEventsController: KeyboardEventsController | undefined;
+	private _mouseEventsController: MouseEventsController | undefined;
+	private _dragEventsController: DragEventsController | undefined;
+	private _pointerEventsController: PointerEventsController | undefined;
+	private _sceneEventsController: SceneEventsController | undefined;
+	private _windowEventsController: WindowEventsController | undefined;
+	private _touchEventsController: TouchEventsController | undefined;
 	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
 	registerEventNode(node: BaseInputEventNodeType) {
-		const controller = this._find_or_create_controller_for_node(node);
+		const controller = this._findOrCreateControllerForNode(node);
 		if (controller) {
 			controller.registerNode(node);
 		}
 	}
 	unregisterEventNode(node: BaseInputEventNodeType) {
-		const controller = this._find_or_create_controller_for_node(node);
+		const controller = this._findOrCreateControllerForNode(node);
 		if (controller) {
 			controller.unregisterNode(node);
 		}
 	}
 	updateViewerEventListeners(node: BaseInputEventNodeType) {
-		const controller = this._find_or_create_controller_for_node(node);
+		const controller = this._findOrCreateControllerForNode(node);
 		if (controller) {
 			controller.updateViewerEventListeners();
 		}
@@ -66,7 +66,7 @@ export class SceneEventsDispatcher {
 	// 	}
 	// }
 
-	private _find_or_create_controller_for_node<T extends BaseEventNodeType>(
+	private _findOrCreateControllerForNode<T extends BaseEventNodeType>(
 		node: T
 	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
 		switch (node.type()) {
@@ -88,32 +88,32 @@ export class SceneEventsDispatcher {
 	}
 
 	get keyboardEventsController() {
-		return (this._keyboard_events_controller =
-			this._keyboard_events_controller || this._create_controller(KeyboardEventsController));
+		return (this._keyboardEventsController =
+			this._keyboardEventsController || this._create_controller(KeyboardEventsController));
 	}
 	get mouseEventsController() {
-		return (this._mouse_events_controller =
-			this._mouse_events_controller || this._create_controller(MouseEventsController));
+		return (this._mouseEventsController =
+			this._mouseEventsController || this._create_controller(MouseEventsController));
 	}
 	get dragEventsController() {
-		return (this._drag_events_controller =
-			this._drag_events_controller || this._create_controller(DragEventsController));
+		return (this._dragEventsController =
+			this._dragEventsController || this._create_controller(DragEventsController));
 	}
 	get pointerEventsController() {
-		return (this._pointer_events_controller =
-			this._pointer_events_controller || this._create_controller(PointerEventsController));
+		return (this._pointerEventsController =
+			this._pointerEventsController || this._create_controller(PointerEventsController));
 	}
 	get sceneEventsController() {
-		return (this._scene_events_controller =
-			this._scene_events_controller || this._create_controller(SceneEventsController));
+		return (this._sceneEventsController =
+			this._sceneEventsController || this._create_controller(SceneEventsController));
 	}
 	get windowEventsController() {
-		return (this._window_events_controller =
-			this._window_events_controller || this._create_controller(WindowEventsController));
+		return (this._windowEventsController =
+			this._windowEventsController || this._create_controller(WindowEventsController));
 	}
 	get touchEventsController() {
-		return (this._touch_events_controller =
-			this._touch_events_controller || this._create_controller(TouchEventsController));
+		return (this._touchEventsController =
+			this._touchEventsController || this._create_controller(TouchEventsController));
 	}
 	private _create_controller<T extends BaseSceneEventsControllerClass>(event_constructor: Constructor<T>): T {
 		const controller = new event_constructor(this);

@@ -17,7 +17,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {degToRad} from 'three/src/math/MathUtils';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {PolarGridHelper} from 'three';
+import {PolarGridHelper} from 'three/src/helpers/PolarGridHelper';
 class PolarTransformObjParamConfig extends NodeParamsConfig {
 	/** @param center of the transform */
 	center = ParamConfig.VECTOR3([0, 0, 0]);

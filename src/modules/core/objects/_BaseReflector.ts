@@ -7,7 +7,6 @@ import {Matrix4} from 'three/src/math/Matrix4';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Plane} from 'three/src/math/Plane';
 import {RGBFormat} from 'three/src/constants';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
@@ -19,6 +18,7 @@ import {Scene} from 'three/src/scenes/Scene';
 import {CoreRenderBlur} from '../../../core/render/Blur';
 import {Vector2} from 'three/src/math/Vector2';
 import {isBooleanTrue} from '../../../core/Type';
+import {Material} from 'three/src/materials/Material';
 
 export interface BaseReflectorOptions {
 	// color: Color;
@@ -42,7 +42,10 @@ export const renderTargetParams = {
 	format: RGBFormat,
 };
 
-export abstract class BaseReflector extends Mesh {
+export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial extends Material> extends Mesh<
+	TGeometry,
+	TMaterial
+> {
 	public type = 'BaseReflector';
 
 	private reflectorPlane = new Plane();
@@ -61,13 +64,13 @@ export abstract class BaseReflector extends Mesh {
 	private virtualCamera = new PerspectiveCamera();
 
 	protected renderTarget: WebGLRenderTarget;
-	public material: ShaderMaterial;
+	public material: TMaterial;
 	protected _coreRenderBlur: CoreRenderBlur;
 
 	public onBeforeRender = this._onBeforeRender.bind(this);
 	protected _mirrorCameraMultipliedByMatrixWorld = true;
 
-	constructor(public geometry: BufferGeometry, protected _options: BaseReflectorOptions) {
+	constructor(public geometry: TGeometry, protected _options: BaseReflectorOptions) {
 		super(geometry);
 
 		const {width, height} = this._getRendererSize(this._options.renderer);
@@ -81,7 +84,7 @@ export abstract class BaseReflector extends Mesh {
 
 		this._addWindowResizeEvent();
 	}
-	protected abstract _createMaterial(): ShaderMaterial;
+	protected abstract _createMaterial(): TMaterial;
 
 	dispose() {
 		this.geometry.dispose();

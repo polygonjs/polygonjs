@@ -30,7 +30,10 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	constructor(protected _cameraNode: BaseThreejsCameraObjNodeType, private _properties?: ThreejsViewerProperties) {
 		super(_cameraNode);
 
-		this._doRender = this._properties != null ? this._properties.autoRender || true : true;
+		this._doRender = true;
+		if (this._properties != null && this._properties.autoRender != null) {
+			this._doRender = this._properties.autoRender;
+		}
 
 		// this._container.style.height = '100%'; // this should be app specific
 	}
@@ -164,7 +167,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	}
 
 	render(delta: number) {
-		if (this.camerasController().cameraNode() && this._canvas) {
+		if (this._canvas) {
 			const delta = this._delta;
 			this._runOnBeforeRenderCallbacks(delta);
 
@@ -174,13 +177,18 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 			this._runOnAfterRenderCallbacks(delta);
 		} else {
-			console.warn('no camera to render with');
+			console.warn('no canvas to render onto');
 		}
 	}
 
 	renderer() {
 		if (this._canvas) {
 			return this._cameraNode.renderController().renderer(this._canvas);
+		}
+	}
+	preCompile() {
+		if (this._canvas) {
+			this._cameraNode.renderController().preCompile(this._canvas);
 		}
 	}
 }

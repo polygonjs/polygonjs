@@ -19,33 +19,45 @@ export interface EventContext<E extends Event> {
 }
 
 export abstract class BaseSceneEventsController<E extends Event, T extends BaseInputEventNodeType> {
-	protected _nodes_by_graph_node_id: Map<CoreGraphNodeId, T> = new Map();
-	protected _require_canvas_event_listeners: boolean = false;
+	protected _nodesByGraphNodeId: Map<CoreGraphNodeId, T> = new Map();
+	protected _requireCanvasEventListeners: boolean = false;
 	constructor(private dispatcher: SceneEventsDispatcher) {}
 
 	registerNode(node: T) {
-		this._nodes_by_graph_node_id.set(node.graphNodeId(), node);
+		this._nodesByGraphNodeId.set(node.graphNodeId(), node);
 		this.updateViewerEventListeners();
 	}
 	unregisterNode(node: T) {
-		this._nodes_by_graph_node_id.delete(node.graphNodeId());
+		this._nodesByGraphNodeId.delete(node.graphNodeId());
 		this.updateViewerEventListeners();
 	}
 	abstract type(): string;
-	abstract acceptedEventTypes(): string[];
+	abstract acceptedEventTypes(): Set<string>;
 	// abstract accepts_event(event: Event): boolean;
 
-	processEvent(event_context: EventContext<E>) {
+	processEvent(eventContext: EventContext<E>) {
 		if (this._activeEventDatas.length == 0) {
 			return;
 		}
-		this._nodes_by_graph_node_id.forEach((node) => node.processEvent(event_context));
+		const eventType = eventContext.event?.type;
+		if (eventType) {
+			// The check here if the eventType is active
+			// is not necessary for canvas events (pointer, mouse, keyboard)
+			// but currently necessary for scene events (such as tick)
+			if (!this._activeEventDataTypes.has(eventType)) {
+				return;
+			}
+		}
+
+		this._nodesByGraphNodeId.forEach((node) => {
+			node.processEvent(eventContext);
+		});
 	}
 
 	updateViewerEventListeners() {
-		this._update_active_event_types();
+		this._updateActiveEventTypes();
 
-		if (this._require_canvas_event_listeners) {
+		if (this._requireCanvasEventListeners) {
 			this.dispatcher.scene.viewersRegister.traverseViewers((viewer) => {
 				viewer.eventsController().updateEvents(this);
 			});
@@ -53,23 +65,26 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 	}
 
 	private _activeEventDatas: EventData[] = [];
+	private _activeEventDataTypes: Set<string> = new Set();
 	activeEventDatas() {
 		return this._activeEventDatas;
 	}
-	private _update_active_event_types() {
-		const active_node_event_types_state: Map<EventData, boolean> = new Map();
+	private _updateActiveEventTypes() {
+		const activeNodeEventTypesState: Map<EventData, boolean> = new Map();
+		this._activeEventDataTypes.clear();
 
-		this._nodes_by_graph_node_id.forEach((node) => {
+		this._nodesByGraphNodeId.forEach((node) => {
 			if (node.parent()) {
 				const nodeActiveEventDatas = node.activeEventDatas();
 				for (let data of nodeActiveEventDatas) {
-					active_node_event_types_state.set(data, true);
+					activeNodeEventTypesState.set(data, true);
 				}
 			}
 		});
 		this._activeEventDatas = [];
-		active_node_event_types_state.forEach((state, name) => {
-			this._activeEventDatas.push(name);
+		activeNodeEventTypesState.forEach((state, data) => {
+			this._activeEventDatas.push(data);
+			this._activeEventDataTypes.add(data.type);
 		});
 	}
 }
@@ -79,7 +94,7 @@ export class BaseSceneEventsControllerClass extends BaseSceneEventsController<Ev
 	type() {
 		return '';
 	}
-	acceptedEventTypes(): string[] {
-		return [];
+	acceptedEventTypes(): Set<string> {
+		return new Set<string>();
 	}
 }

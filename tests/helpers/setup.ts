@@ -55,7 +55,7 @@ QUnit.testStart(async () => {
 	window.COP = root.createNode('copNetwork');
 	window.COP.setName('COP');
 
-	window.scene.loadingController.set_auto_update(true);
+	window.scene.loadingController.setAutoUpdate(true);
 	await window.scene.loadingController.markAsLoaded();
 	window.scene.cooker.unblock();
 });

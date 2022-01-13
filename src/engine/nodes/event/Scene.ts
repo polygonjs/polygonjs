@@ -44,7 +44,7 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to trigger an event on every tick */
 	treachedTime = ParamConfig.BOOLEAN(0, {
 		callback: (node: BaseNodeType) => {
-			SceneEventNode.PARAM_CALLBACK_update_time_dependency(node as SceneEventNode);
+			SceneEventNode.PARAM_CALLBACK_updateTimeDependency(node as SceneEventNode);
 		},
 	});
 	/** @param time to trigger an event */
@@ -72,14 +72,14 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 		return 'scene';
 	}
 
-	private graph_node: CoreGraphNode | undefined;
+	private _graphNode: CoreGraphNode | undefined;
 
 	protected acceptedEventTypes() {
-		return ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`));
 	}
 
 	dispose() {
-		this.graph_node?.dispose();
+		this._graphNode?.dispose();
 		super.dispose();
 	}
 
@@ -93,26 +93,24 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 			new EventConnectionPoint(SceneEventType.PLAY, EventConnectionPointType.BASE, this._play.bind(this)),
 			new EventConnectionPoint(SceneEventType.PAUSE, EventConnectionPointType.BASE, this._pause.bind(this)),
 		]);
-		const out_connection_points: BaseEventConnectionPoint[] = ACCEPTED_SCENE_EVENT_TYPES.map((event_type) => {
+		const outConnectionPoints: BaseEventConnectionPoint[] = ACCEPTED_SCENE_EVENT_TYPES.map((event_type) => {
 			return new EventConnectionPoint(event_type, EventConnectionPointType.BASE);
 		});
-		out_connection_points.push(
-			new EventConnectionPoint(SceneNodeOutput.TIME_REACHED, EventConnectionPointType.BASE)
-		);
-		this.io.outputs.setNamedOutputConnectionPoints(out_connection_points);
+		outConnectionPoints.push(new EventConnectionPoint(SceneNodeOutput.TIME_REACHED, EventConnectionPointType.BASE));
+		this.io.outputs.setNamedOutputConnectionPoints(outConnectionPoints);
 
-		this.params.onParamsCreated('update_time_dependency', () => {
-			this.update_time_dependency();
+		this.params.onParamsCreated('updateTimeDependency', () => {
+			this._updateTimeDependency();
 		});
 	}
 
-	private _onSetFrame(event_context: EventContext<Event>) {
+	private _onSetFrame(eventContext: EventContext<Event>) {
 		this.scene().setFrame(this.pv.setFrameValue);
 	}
-	private _play(event_context: EventContext<Event>) {
+	private _play(eventContext: EventContext<Event>) {
 		this.scene().play();
 	}
-	private _pause(event_context: EventContext<Event>) {
+	private _pause(eventContext: EventContext<Event>) {
 		this.scene().pause();
 	}
 
@@ -121,21 +119,21 @@ export class SceneEventNode extends TypedInputEventNode<SceneEventParamsConfig> 
 			this.dispatchEventToOutput(SceneNodeOutput.TIME_REACHED, {});
 		}
 	}
-	private update_time_dependency() {
+	private _updateTimeDependency() {
 		if (this.pv.treachedTime) {
-			this.graph_node = this.graph_node || new CoreGraphNode(this.scene(), 'scene_node_time_graph_node');
-			this.graph_node.addGraphInput(this.scene().timeController.graphNode);
-			this.graph_node.addPostDirtyHook('time_update', this._onFrameUpdate.bind(this));
+			this._graphNode = this._graphNode || new CoreGraphNode(this.scene(), 'sceneNodeTimeGraphNode');
+			this._graphNode.addGraphInput(this.scene().timeController.graphNode);
+			this._graphNode.addPostDirtyHook('timeUpdate', this._onFrameUpdate.bind(this));
 		} else {
-			if (this.graph_node) {
-				this.graph_node.graphDisconnectPredecessors();
+			if (this._graphNode) {
+				this._graphNode.graphDisconnectPredecessors();
 			}
 		}
 	}
 	static PARAM_CALLBACK_setFrame(node: SceneEventNode) {
 		node._onSetFrame({});
 	}
-	static PARAM_CALLBACK_update_time_dependency(node: SceneEventNode) {
-		node.update_time_dependency();
+	static PARAM_CALLBACK_updateTimeDependency(node: SceneEventNode) {
+		node._updateTimeDependency();
 	}
 }

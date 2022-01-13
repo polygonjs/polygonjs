@@ -20,7 +20,7 @@ export interface LoadSceneOptions {
 export type LoadScene = (options: LoadSceneOptions) => void;
 
 interface ImportCommonOptions extends LoadSceneOptions {
-	domElement: HTMLElement;
+	domElement?: HTMLElement;
 	sceneName: string;
 	configureScene?: ConfigureSceneCallback;
 	assetUrls?: string[];
@@ -88,33 +88,43 @@ export class ScenePlayerImporter {
 		return scene;
 	}
 
-	private _onLoadComplete() {
+	private _onLoadCompleteCalled = false;
+	private async _onLoadComplete() {
+		if (this._onLoadCompleteCalled == true) {
+			return;
+		}
+		this._onLoadCompleteCalled = true;
 		if (this._viewer) {
 			const threejsViewer = this._viewer as ThreejsViewer;
+			threejsViewer.preCompile();
 			if (threejsViewer.setAutoRender) {
 				threejsViewer.setAutoRender(true);
 			}
 		}
 		if (this._scene) {
+			await this._scene.cookController.waitForCooksCompleted();
 			this._scene.setFrame(TimeController.START_FRAME);
+			// we need to wait for node cooks to be completed
+			// otherwise, the play would be stale
 			this._scene.play();
 		}
 	}
 	private _onNodesCookProgress(ratio: number) {
-		if (ratio >= 1) {
-			this._onLoadComplete();
-		}
-		const progressRatio = PROGRESS_RATIO.nodes;
-
 		const onProgress = (ratio: number) => {
 			if (this.options.onProgress) {
 				this.options.onProgress(progressRatio.start + progressRatio.mult * ratio);
 			}
 		};
-		if (!onProgress) {
-			return;
-		}
+		const progressRatio = PROGRESS_RATIO.nodes;
+		// make sure to always call onProgress
+		// even if ratio==1
+		// as there may still be important instructions
+		// in the user-defined options.onProgress
 		onProgress(ratio);
+
+		if (ratio >= 1) {
+			this._onLoadComplete();
+		}
 	}
 
 	private async _watchNodesProgress(scene: PolyScene) {

@@ -51,7 +51,7 @@ export interface WaterOptions extends BaseReflectorOptions {
 	fog?: boolean;
 }
 
-export class Water extends BaseReflector {
+export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 	public readonly isWater = true;
 	// private _renderReflection = true;
 	protected _mirrorCameraMultipliedByMatrixWorld = false;
@@ -134,5 +134,30 @@ export class Water extends BaseReflector {
 		} else {
 			this.material.uniforms['mirrorSampler'].value = null;
 		}
+	}
+
+	clone(recursive: boolean): this {
+		// we clone so that a cloned reflector does not share the same color
+		const clonedOptions = {...this._options};
+		clonedOptions.sunDirection = this._options.sunDirection?.clone();
+		clonedOptions.sunColor = this._options.sunColor?.clone();
+		clonedOptions.waterColor = this._options.waterColor?.clone();
+		const clonedGeometry = this.geometry.clone();
+
+		const clonedWater = new Water(clonedGeometry, clonedOptions);
+		const material: WaterMaterial = clonedWater.material;
+		clonedWater.copy(this, recursive);
+		// the material and geometry needs to be added back after the copy, as Mesh.copy would override that
+		clonedWater.material = material;
+		clonedWater.geometry = clonedGeometry;
+		// normalsSampler is given asynchronously to the node, so it needs to be passed after the options
+		material.uniforms.normalSampler.value = this.material.uniforms.normalSampler.value;
+
+		// TODO:
+		// - size is not passed correctly
+		// - make time dependent to update the time uniform attribute
+
+		clonedWater.updateMatrix();
+		return clonedWater as this;
 	}
 }

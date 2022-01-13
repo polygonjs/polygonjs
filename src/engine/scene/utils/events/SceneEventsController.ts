@@ -19,6 +19,6 @@ export class SceneEventsController extends BaseSceneEventsController<Event, Scen
 		return 'scene';
 	}
 	acceptedEventTypes() {
-		return ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_SCENE_EVENT_TYPES.map((n) => `${n}`));
 	}
 }

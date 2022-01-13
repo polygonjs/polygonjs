@@ -14,11 +14,11 @@ export const ACCEPTED_POINTER_EVENT_TYPES: PointerEventType[] = [
 ];
 
 export class PointerEventsController extends BaseSceneEventsController<MouseEvent, PointerEventNode> {
-	protected _require_canvas_event_listeners: boolean = true;
+	protected _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'pointer';
 	}
 	acceptedEventTypes() {
-		return ACCEPTED_POINTER_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_POINTER_EVENT_TYPES.map((n) => `${n}`));
 	}
 }

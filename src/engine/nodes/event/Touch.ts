@@ -43,7 +43,7 @@ export class TouchEventNode extends TypedInputEventNode<TouchEventParamsConfig> 
 		return 'touch';
 	}
 	protected acceptedEventTypes() {
-		return ACCEPTED_TOUCH_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_TOUCH_EVENT_TYPES.map((n) => `${n}`));
 	}
 	initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

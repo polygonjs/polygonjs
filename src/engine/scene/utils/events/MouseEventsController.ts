@@ -38,12 +38,12 @@ export const ACCEPTED_MOUSE_EVENT_TYPES: MouseEventType[] = [
 ];
 
 export class MouseEventsController extends BaseSceneEventsController<MouseEvent, MouseEventNode> {
-	protected _require_canvas_event_listeners: boolean = true;
+	protected _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'mouse';
 	}
 	acceptedEventTypes() {
-		return ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`));
 	}
 	// accepts_event(event: MouseEvent) {
 	// 	return ACCEPTED_MOUSE_EVENT_TYPES.includes(event.type as MouseEventType);

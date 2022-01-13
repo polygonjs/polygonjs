@@ -14,12 +14,12 @@ export const ACCEPTED_KEYBOARD_EVENT_TYPES: KeyboardEventType[] = [
 ];
 
 export class KeyboardEventsController extends BaseSceneEventsController<KeyboardEvent, KeyboardEventNode> {
-	protected _require_canvas_event_listeners: boolean = true;
+	protected _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'keyboard';
 	}
 	acceptedEventTypes() {
-		return ACCEPTED_KEYBOARD_EVENT_TYPES.map((n) => `${n}`);
+		return new Set(ACCEPTED_KEYBOARD_EVENT_TYPES.map((n) => `${n}`));
 	}
 	// accepts_event(event: MouseEvent) {
 	// 	return ACCEPTED_KEYBOARD_EVENT_TYPES.includes(event.type as KeyboardEventType);

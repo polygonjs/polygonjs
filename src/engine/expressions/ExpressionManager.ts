@@ -59,7 +59,6 @@ export class ExpressionManager {
 				const newValue = await this._functionGenerator.evalFunction();
 				return newValue;
 			} catch (e) {
-				console.log('failed expression');
 				// if (this.function_generator.is_errored && this.function_generator.error_message) {
 				// 	this.set_error(this.function_generator.error_message);
 				// }
