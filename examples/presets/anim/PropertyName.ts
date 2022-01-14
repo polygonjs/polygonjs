@@ -1,42 +1,39 @@
 import {PropertyNameAnimNode} from '../../../src/engine/nodes/anim/PropertyName';
+import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
 
-export function PropertyNameAnimNodePresets() {
-	return {
-		position: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`position`);
-		},
-		positionX: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`position.x`);
-		},
-		positionY: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`position.y`);
-		},
-		positionZ: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`position.z`);
-		},
-		rotation: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`rotation`);
-		},
-		rotationX: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`rotation.x`);
-		},
-		rotationY: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`rotation.y`);
-		},
-		rotationZ: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`rotation.z`);
-		},
-		scale: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`scale`);
-		},
-		scaleX: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`scale.x`);
-		},
-		scaleY: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`scale.y`);
-		},
-		scaleZ: function (node: PropertyNameAnimNode) {
-			node.p.name.set(`scale.z`);
-		},
-	};
-}
+const PropertyNameAnimNodePresetsCollectionFactory: PresetsCollectionFactory<PropertyNameAnimNode> = (
+	node: PropertyNameAnimNode
+) => {
+	const collection = new NodePresetsCollection();
+
+	const position = new BasePreset().addEntry(node.p.name, `position`);
+	const positionX = new BasePreset().addEntry(node.p.name, `position.x`);
+	const positionY = new BasePreset().addEntry(node.p.name, `position.y`);
+	const positionZ = new BasePreset().addEntry(node.p.name, `position.z`);
+	const rotation = new BasePreset().addEntry(node.p.name, `rotation`);
+	const rotationX = new BasePreset().addEntry(node.p.name, `rotation.x`);
+	const rotationY = new BasePreset().addEntry(node.p.name, `rotation.y`);
+	const rotationZ = new BasePreset().addEntry(node.p.name, `rotation.z`);
+	const scale = new BasePreset().addEntry(node.p.name, `scale`);
+	const scaleX = new BasePreset().addEntry(node.p.name, `scale.x`);
+	const scaleY = new BasePreset().addEntry(node.p.name, `scale.y`);
+	const scaleZ = new BasePreset().addEntry(node.p.name, `scale.z`);
+
+	collection.setPresets({
+		position,
+		positionX,
+		positionY,
+		positionZ,
+		rotation,
+		rotationX,
+		rotationY,
+		rotationZ,
+		scale,
+		scaleX,
+		scaleY,
+		scaleZ,
+	});
+
+	return collection;
+};
+export {PropertyNameAnimNode, PropertyNameAnimNodePresetsCollectionFactory};

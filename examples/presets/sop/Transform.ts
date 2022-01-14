@@ -1,15 +1,17 @@
 import {TransformSopNode} from '../../../src/engine/nodes/sop/Transform';
+import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
 
-export function TransformSopNodePresets() {
-	return {
-		onGround: function (node: TransformSopNode) {
-			node.p.t.y.set(`-bbox(0, 'min').y`);
-		},
-		centerToOrigin: function (node: TransformSopNode) {
-			node.p.t.set(['-$CEX', '-$CEY', '-$CEZ']);
-		},
-		scaleTo1: function (node: TransformSopNode) {
-			node.p.scale.set('1/bbox(0,"size").x');
-		},
-	};
-}
+const transformSopNodePresetsCollectionFactory: PresetsCollectionFactory<TransformSopNode> = (
+	node: TransformSopNode
+) => {
+	const collection = new NodePresetsCollection();
+
+	const onGround = new BasePreset().addEntry(node.p.t.y, `-bbox(0, 'min').y`);
+	const centerToOrigin = new BasePreset().addEntry(node.p.t, ['-$CEX', '-$CEY', '-$CEZ']);
+	const scaleTo1 = new BasePreset().addEntry(node.p.scale, '1/bbox(0,"size").x');
+
+	collection.setPresets({onGround, centerToOrigin, scaleTo1});
+
+	return collection;
+};
+export {TransformSopNode, transformSopNodePresetsCollectionFactory};

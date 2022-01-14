@@ -124,7 +124,7 @@ QUnit.test('event nodeCook can trigger a node cook multiple times', async (asser
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 	const box1_2 = scene2.node(box1.path()) as BoxSopNode;
-	const box2_2 = scene2.node(box2.path()) as MergeSopNode;
+	const box2_2 = scene2.node(box2.path()) as BoxSopNode;
 
 	box1_2.p.size.set(box1_2.pv.size + 1);
 	await CoreSleep.sleep(100);

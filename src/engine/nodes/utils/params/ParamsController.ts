@@ -8,7 +8,7 @@ import {OperatorPathParam} from '../../../params/OperatorPath';
 
 import {ParamType} from '../../../poly/ParamType';
 // import {ParamEvent} from '../../../poly/ParamEvent';
-import {NodeParamsConfig} from './ParamsConfig';
+import {ParamTemplate} from './ParamsConfig';
 
 import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
 import {ParamConstructorByType} from '../../../params/types/ParamConstructorByType';
@@ -172,7 +172,7 @@ export class ParamsController {
 	}
 
 	private _initFromParamsConfig() {
-		const paramsConfig = this.node.paramsConfig as NodeParamsConfig;
+		const paramsConfig = this.node.paramsConfig as PolyDictionary<ParamTemplate<ParamType>>;
 		let init_values_used = false;
 		if (paramsConfig) {
 			for (let name of Object.keys(paramsConfig)) {

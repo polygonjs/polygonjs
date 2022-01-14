@@ -1,19 +1,34 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {FileAudioNode} from '../../../src/engine/nodes/audio/File';
+import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
 
-export function FileAudioNodePresets() {
-	return {
-		ambient_mp3: function (node: FileAudioNode) {
-			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/audio/Thrystero_Diagonal-160.mp3`);
-		},
-		ambient_ogg: function (node: FileAudioNode) {
-			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/audio/Thrystero_Diagonal-160.ogg`);
-		},
-		helicopter_ogg: function (node: FileAudioNode) {
-			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/audio/497848__amaida1__helicopter-sound.ogg`);
-		},
-		helicopter_wav: function (node: FileAudioNode) {
-			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/audio/497848__amaida1__helicopter-sound.wav`);
-		},
-	};
-}
+const fileAudioNodePresetsCollectionFactory: PresetsCollectionFactory<FileAudioNode> = (node: FileAudioNode) => {
+	const collection = new NodePresetsCollection();
+
+	const ambient_mp3 = new BasePreset().addEntry(
+		node.p.url,
+		`${DEMO_ASSETS_ROOT_URL}/audio/Thrystero_Diagonal-160.mp3`
+	);
+	const ambient_ogg = new BasePreset().addEntry(
+		node.p.url,
+		`${DEMO_ASSETS_ROOT_URL}/audio/Thrystero_Diagonal-160.ogg`
+	);
+	const helicopter_ogg = new BasePreset().addEntry(
+		node.p.url,
+		`${DEMO_ASSETS_ROOT_URL}/audio/497848__amaida1__helicopter-sound.ogg`
+	);
+	const helicopter_wav = new BasePreset().addEntry(
+		node.p.url,
+		`${DEMO_ASSETS_ROOT_URL}/audio/497848__amaida1__helicopter-sound.wav`
+	);
+
+	collection.setPresets({
+		ambient_mp3,
+		ambient_ogg,
+		helicopter_ogg,
+		helicopter_wav,
+	});
+
+	return collection;
+};
+export {FileAudioNode, fileAudioNodePresetsCollectionFactory};

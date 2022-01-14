@@ -75,6 +75,7 @@ export abstract class TypedInputEventNode<K extends BaseInputEventParamsConfig> 
 }
 
 class BaseInputEventParamsConfig extends NodeParamsConfig {
+	active = ParamConfig.BOOLEAN(true);
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(0, {
 		menu: {

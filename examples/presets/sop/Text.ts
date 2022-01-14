@@ -1,6 +1,6 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {TextSopNode} from '../../../src/engine/nodes/sop/Text';
-import {PolyDictionary} from '../../../src/types/GlobalTypes';
+import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
 
 const FONT_NAMES: string[] = [
 	'Absolute.ttf',
@@ -59,14 +59,27 @@ const FONT_NAMES: string[] = [
 	'Wintersoul.ttf',
 ];
 
-type TextSopNodePresetFunction = (node: TextSopNode) => void;
-export function TextSopNodePresets() {
-	const data: PolyDictionary<TextSopNodePresetFunction> = {};
+// type TextSopNodePresetFunction = (node: TextSopNode) => void;
+// export function TextSopNodePresets() {
+// 	const data: PolyDictionary<TextSopNodePresetFunction> = {};
+// 	for (let fontName of FONT_NAMES) {
+// 		const presetName = fontName.split('.')[0];
+// 		data[presetName] = function (node: TextSopNode) {
+// 			node.p.font.set(`${DEMO_ASSETS_ROOT_URL}/fonts/${fontName}`);
+// 		};
+// 	}
+// 	return data;
+// }
+
+const textSopNodeNodePresetsCollectionFactory: PresetsCollectionFactory<TextSopNode> = (node: TextSopNode) => {
+	const collection = new NodePresetsCollection();
+
 	for (let fontName of FONT_NAMES) {
+		const preset = new BasePreset().addEntry(node.p.font, `${DEMO_ASSETS_ROOT_URL}/fonts/${fontName}`);
 		const presetName = fontName.split('.')[0];
-		data[presetName] = function (node: TextSopNode) {
-			node.p.font.set(`${DEMO_ASSETS_ROOT_URL}/fonts/${fontName}`);
-		};
+		collection.addPreset(presetName, preset);
 	}
-	return data;
-}
+
+	return collection;
+};
+export {TextSopNode, textSopNodeNodePresetsCollectionFactory};

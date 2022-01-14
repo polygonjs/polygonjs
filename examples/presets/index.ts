@@ -1,75 +1,84 @@
 import {NodeContext} from '../../src/engine/poly/NodeContext';
 
 // anim
-import {PropertyNameAnimNode} from '../../src/engine/nodes/anim/PropertyName';
-import {PropertyNameAnimNodePresets} from './anim/PropertyName';
+import {PropertyNameAnimNode, PropertyNameAnimNodePresetsCollectionFactory} from './anim/PropertyName';
 // audio
-import {FileAudioNodePresets} from './audio/File';
-import {FileAudioNode} from '../../src/engine/nodes/audio/File';
+import {FileAudioNode, fileAudioNodePresetsCollectionFactory} from './audio/File';
 // cop
-import {ImageCopNode} from '../../src/engine/nodes/cop/Image';
-import {VideoCopNode} from '../../src/engine/nodes/cop/Video';
-import {ImageCopNodePresets} from './cop/Image';
-import {VideoCopNodePresets} from './cop/Video';
-// gl
-import {AttributeGlNode} from '../../src/engine/nodes/gl/Attribute';
-import {AttributeGlNodePresets} from './gl/Attribute';
-// mat
-import {MeshSubsurfaceScatteringMatNodePresets} from './mat/MeshSubsurfaceScattering';
-import {MeshSubsurfaceScatteringMatNode} from '../../src/engine/nodes/mat/MeshSubsurfaceScattering';
+import {ImageCopNode, imageCopNodePresetsCollectionFactory} from './cop/Image';
+import {VideoCopNode, videoCopNodePresetsCollectionFactory} from './cop/Video';
+// // gl
+import {AttributeGlNode, attributeGlNodePresetsCollectionFactory} from './gl/Attribute';
+// // mat
+import {
+	MeshSubsurfaceScatteringMatNode,
+	meshSubsurfaceScatteringMatNodePresetsCollectionFactory,
+} from './mat/MeshSubsurfaceScattering';
 // obj
 // sop
-import {ColorSopNode} from '../../src/engine/nodes/sop/Color';
-import {DataSopNode} from '../../src/engine/nodes/sop/Data';
-import {ColorSopNodePresets} from './sop/Color';
-import {DataUrlSopNodePresets} from './sop/DataUrl';
-import {DataSopNodePresets} from './sop/Data';
-import {CSS2DObjectSopNodePresets} from './sop/CSS2DObject';
-import {CSS2DObjectSopNode} from '../../src/engine/nodes/sop/CSS2DObject';
-import {DataUrlSopNode} from '../../src/engine/nodes/sop/DataUrl';
-import {FileSopNodePresets} from './sop/File';
-import {FileSopNode} from '../../src/engine/nodes/sop/File';
-import {PointSopNode} from '../../src/engine/nodes/sop/Point';
-import {RoundedBoxSopNode} from '../../src/engine/nodes/sop/RoundedBox';
-import {TextSopNode} from '../../src/engine/nodes/sop/Text';
-import {TransformSopNode} from '../../src/engine/nodes/sop/Transform';
-import {PointSopNodePresets} from './sop/Point';
-import {TextSopNodePresets} from './sop/Text';
-import {TransformSopNodePresets} from './sop/Transform';
-import {RoundedBoxSopNodePresets} from './sop/RoundedBox';
+import {ColorSopNode, colorSopNodePresetsCollectionFactory} from './sop/Color';
+import {CSS2DObjectSopNode, CSS2DObjectSopNodePresetsCollectionFactory} from './sop/CSS2DObject';
+import {DataSopNode, dataSopNodePresetsCollectionFactory} from './sop/Data';
+import {DataUrlSopNode, dataUrlSopNodePresetsCollectionFactory} from './sop/DataUrl';
+import {FileSopNode, fileSopNodePresetsCollectionFactory} from './sop/File';
+import {TransformSopNode, transformSopNodePresetsCollectionFactory} from './sop/Transform';
+import {PolyDictionary} from '../../src/types/GlobalTypes';
+import {PresetsCollectionFactory} from './BasePreset';
+import {PointSopNode, pointSopNodePresetsCollectionFactory} from './sop/Point';
+import {RoundedBoxSopNode, roundedBoxSopNodePresetsCollectionFactory} from './sop/RoundedBox';
+import {TextSopNode, textSopNodeNodePresetsCollectionFactory} from './sop/Text';
 
 // TODO: it may be easier when there are many presets
 // to use a BasePreset class that knows how to register itself
 // based on the node it applies to
-export const presetsLibrary = {
+
+interface PresetsLibrary {
+	[NodeContext.ANIM]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.AUDIO]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.COP]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.EVENT]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.GL]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.JS]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.MANAGER]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.MAT]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.OBJ]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.POST]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.ROP]: PolyDictionary<PresetsCollectionFactory<any>>;
+	[NodeContext.SOP]: PolyDictionary<PresetsCollectionFactory<any>>;
+}
+
+export const presetsLibrary: PresetsLibrary = {
 	[NodeContext.ANIM]: {
-		[PropertyNameAnimNode.type()]: PropertyNameAnimNodePresets,
+		[PropertyNameAnimNode.type()]: PropertyNameAnimNodePresetsCollectionFactory,
 	},
 	[NodeContext.AUDIO]: {
-		[FileAudioNode.type()]: FileAudioNodePresets,
+		[FileAudioNode.type()]: fileAudioNodePresetsCollectionFactory,
 	},
 	[NodeContext.COP]: {
-		[ImageCopNode.type()]: ImageCopNodePresets,
-		[VideoCopNode.type()]: VideoCopNodePresets,
+		[ImageCopNode.type()]: imageCopNodePresetsCollectionFactory,
+		[VideoCopNode.type()]: videoCopNodePresetsCollectionFactory,
 	},
+	[NodeContext.EVENT]: {},
 	[NodeContext.GL]: {
-		[AttributeGlNode.type()]: AttributeGlNodePresets,
+		[AttributeGlNode.type()]: attributeGlNodePresetsCollectionFactory,
 	},
+	[NodeContext.JS]: {},
+	[NodeContext.MANAGER]: {},
 	[NodeContext.MAT]: {
-		[MeshSubsurfaceScatteringMatNode.type()]: MeshSubsurfaceScatteringMatNodePresets,
+		[MeshSubsurfaceScatteringMatNode.type()]: meshSubsurfaceScatteringMatNodePresetsCollectionFactory,
 	},
-	// [NodeContext.OBJ]: {
-	// 	[PositionalAudioObjNode.type()]: PositionalAudioObjNodePresets,
-	// },
+	[NodeContext.OBJ]: {},
+	[NodeContext.POST]: {},
+	[NodeContext.ROP]: {},
 	[NodeContext.SOP]: {
-		[ColorSopNode.type()]: ColorSopNodePresets,
-		[CSS2DObjectSopNode.type()]: CSS2DObjectSopNodePresets,
-		[DataSopNode.type()]: DataSopNodePresets,
-		[DataUrlSopNode.type()]: DataUrlSopNodePresets,
-		[FileSopNode.type()]: FileSopNodePresets,
-		[PointSopNode.type()]: PointSopNodePresets,
-		[RoundedBoxSopNode.type()]: RoundedBoxSopNodePresets,
-		[TextSopNode.type()]: TextSopNodePresets,
-		[TransformSopNode.type()]: TransformSopNodePresets,
+		[ColorSopNode.type()]: colorSopNodePresetsCollectionFactory,
+		[CSS2DObjectSopNode.type()]: CSS2DObjectSopNodePresetsCollectionFactory,
+		[DataSopNode.type()]: dataSopNodePresetsCollectionFactory,
+		[DataUrlSopNode.type()]: dataUrlSopNodePresetsCollectionFactory,
+		[FileSopNode.type()]: fileSopNodePresetsCollectionFactory,
+		[PointSopNode.type()]: pointSopNodePresetsCollectionFactory,
+		[RoundedBoxSopNode.type()]: roundedBoxSopNodePresetsCollectionFactory,
+		[TextSopNode.type()]: textSopNodeNodePresetsCollectionFactory,
+		[TransformSopNode.type()]: transformSopNodePresetsCollectionFactory,
 	},
 };
