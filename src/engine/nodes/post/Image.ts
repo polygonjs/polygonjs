@@ -21,15 +21,18 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseCopNodeType} from '../cop/_Base';
 import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class ImagePostParamsConfig extends NodeParamsConfig {
+	/** @param map */
 	map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
 		nodeSelection: {context: NodeContext.COP},
 		...PostParamOptions,
 	});
+	/** @param darkness */
 	darkness = ParamConfig.FLOAT(0, {
 		range: [0, 2],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
+	/** @param offset */
 	offset = ParamConfig.FLOAT(0, {
 		range: [0, 2],
 		rangeLocked: [true, false],

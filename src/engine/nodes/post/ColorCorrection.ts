@@ -18,12 +18,15 @@ interface ColorCorrectionPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class ColorCorrectionPostParamsConfig extends NodeParamsConfig {
+	/** @param pow */
 	pow = ParamConfig.VECTOR3([2, 2, 2], {
 		...PostParamOptions,
 	});
+	/** @param mult */
 	mult = ParamConfig.COLOR([1, 1, 1], {
 		...PostParamOptions,
 	});
+	/** @param add */
 	add = ParamConfig.COLOR([0, 0, 0], {
 		...PostParamOptions,
 	});

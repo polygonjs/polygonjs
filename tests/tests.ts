@@ -101,11 +101,16 @@ import './engine/nodes/cop/Video';
 QUnit.module('event');
 import './engine/nodes/event/Code';
 import './engine/nodes/event/Drag';
+import './engine/nodes/event/Keyboard';
+import './engine/nodes/event/Mouse';
 import './engine/nodes/event/NodeCook';
 import './engine/nodes/event/Param';
 import './engine/nodes/event/Pointer';
+import './engine/nodes/event/Scene';
+import './engine/nodes/event/SetFlag';
 import './engine/nodes/event/SetParam';
 import './engine/nodes/event/Touch';
+import './engine/nodes/event/Window';
 
 QUnit.module('gl');
 import './engine/nodes/gl/Add';
@@ -121,6 +126,7 @@ import './engine/nodes/gl/Rotate';
 
 QUnit.module('manager');
 import './engine/nodes/manager/Root';
+import './engine/nodes/manager/root/AudioController';
 
 QUnit.module('mat');
 import './engine/nodes/mat/LineBasicBuilder';

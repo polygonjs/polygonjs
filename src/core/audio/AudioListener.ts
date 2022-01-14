@@ -34,6 +34,7 @@ export class CoreAudioListener extends Object3D {
 		positionalAudioNode.connect(this.gain);
 	}
 	dispose() {
+		this.setMasterVolume(0);
 		this.gain.disconnect();
 	}
 
@@ -76,6 +77,9 @@ export class CoreAudioListener extends Object3D {
 		// this.volume.volume.setTargetAtTime(value, this.context.currentTime, 0.01);
 
 		return this;
+	}
+	masterVolume() {
+		return this.gain.gain.value;
 	}
 
 	updateMatrixWorld(force: boolean) {

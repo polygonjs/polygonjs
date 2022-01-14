@@ -15,7 +15,9 @@ interface RenderPassWithContext extends RenderPass {
 	};
 }
 class RenderPostParamsConfig extends NodeParamsConfig {
+	/** @param overrideScene */
 	overrideScene = ParamConfig.BOOLEAN(0, PostParamOptions);
+	/** @param scene */
 	scene = ParamConfig.OPERATOR_PATH('/scene1', {
 		visibleIf: {overrideScene: 1},
 		nodeSelection: {
@@ -24,7 +26,9 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 		},
 		...PostParamOptions,
 	});
+	/** @param overrideCamera */
 	overrideCamera = ParamConfig.BOOLEAN(0, PostParamOptions);
+	/** @param camera */
 	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
 		visibleIf: {overrideCamera: 1},
 		nodeSelection: {

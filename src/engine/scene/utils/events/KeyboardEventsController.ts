@@ -2,7 +2,7 @@ import {BaseSceneEventsController} from './_BaseEventsController';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 
 // https://developer.mozilla.org/en-US/docs/Web/Events
-enum KeyboardEventType {
+export enum KeyboardEventType {
 	keydown = 'keydown',
 	keypress = 'keypress',
 	keyup = 'keyup',
@@ -21,7 +21,4 @@ export class KeyboardEventsController extends BaseSceneEventsController<Keyboard
 	acceptedEventTypes() {
 		return new Set(ACCEPTED_KEYBOARD_EVENT_TYPES.map((n) => `${n}`));
 	}
-	// accepts_event(event: MouseEvent) {
-	// 	return ACCEPTED_KEYBOARD_EVENT_TYPES.includes(event.type as KeyboardEventType);
-	// }
 }

@@ -8,6 +8,7 @@ import {LayerPass, LAYER_MODES} from '../../../modules/core/post_process/LayerPa
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 class LayerPostParamsConfig extends NodeParamsConfig {
+	/** @param layer mode */
 	mode = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: LAYER_MODES.map((name, value) => ({name, value})),

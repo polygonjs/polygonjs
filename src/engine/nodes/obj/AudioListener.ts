@@ -68,12 +68,14 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 		this.lifecycle.onAdd(() => {
 			this._setPositionalAudioNodesDirty();
 			this.addAudioActivationEvents();
+			this.root().audioController.update();
 		});
 	}
 	dispose() {
 		super.dispose();
 		this.object.dispose();
 		this._setPositionalAudioNodesDirty();
+		this.root().audioController.update();
 	}
 	toggleSound() {
 		this.p.soundOn.set(!isBooleanTrue(this.pv.soundOn));
@@ -140,6 +142,8 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 			await AudioController.start();
 			AudioListenerObjNode._audioActivated = true;
 		}
+		// remove events as they are not needed
+		// once the audio has been activated via user event
 		this._removeAudioActivationEvents();
 	}
 	private _boundEvents = {

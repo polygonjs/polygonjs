@@ -55,6 +55,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	}
 
 	dispose() {
+		this.setAutoRender(false);
 		this.scene().viewersRegister.unregisterViewer(this);
 		this._cancelAnimate();
 		this.controlsController().dispose();

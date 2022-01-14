@@ -11,74 +11,89 @@ import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
+	/** @param focalDepth */
 	focalDepth = ParamConfig.FLOAT(10, {
 		range: [0, 50],
 		rangeLocked: [true, false],
 		step: 0.001,
 		...PostParamOptions,
 	});
+	/** @param fStep */
 	fStep = ParamConfig.FLOAT(10, {
 		range: [0.1, 22],
 		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
+	/** @param maxBlur */
 	maxBlur = ParamConfig.FLOAT(2, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
+	/** @param vignetting */
 	vignetting = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 	});
+	/** @param depthBlur */
 	depthBlur = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 	});
+	/** @param threshold */
 	threshold = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
 		rangeLocked: [true, true],
 		step: 0.001,
 		...PostParamOptions,
 	});
+	/** @param gain */
 	gain = ParamConfig.FLOAT(1, {
 		range: [0, 100],
 		rangeLocked: [true, true],
 		step: 0.001,
 		...PostParamOptions,
 	});
+	/** @param bias */
 	bias = ParamConfig.FLOAT(1, {
 		range: [0, 3],
 		rangeLocked: [true, true],
 		step: 0.001,
 		...PostParamOptions,
 	});
+	/** @param fringe */
 	fringe = ParamConfig.FLOAT(0.7, {
 		range: [0, 5],
 		rangeLocked: [true, false],
 		step: 0.001,
 		...PostParamOptions,
 	});
+	/** @param noise */
 	noise = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 	});
+	/** @param dithering */
 	dithering = ParamConfig.FLOAT(0, {
 		range: [0, 0.001],
 		rangeLocked: [true, true],
 		step: 0.0001,
 		...PostParamOptions,
 	});
+	/** @param pentagon */
 	pentagon = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 	});
+	/** @param rings */
 	rings = ParamConfig.INTEGER(3, {
 		range: [1, 8],
 		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
+	/** @param samples */
 	samples = ParamConfig.INTEGER(4, {
 		range: [1, 13],
 		rangeLocked: [true, true],
 		...PostParamOptions,
 	});
+	/** @param clearColor */
 	clearColor = ParamConfig.COLOR([1, 1, 1], {
 		...PostParamOptions,
 	});

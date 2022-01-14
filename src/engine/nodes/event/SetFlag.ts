@@ -73,10 +73,10 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
 	}
-	async processEvent(event_context: EventContext<Event>) {
+	async processEvent(eventContext: EventContext<Event>) {
 		let mask = this.pv.mask;
-		if (event_context.value) {
-			const node = event_context.value.node;
+		if (eventContext.value) {
+			const node = eventContext.value.node;
 			if (node) {
 				const parent = node.parent();
 				if (parent) {
@@ -87,56 +87,56 @@ export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
 		const nodes = this.scene().nodesController.nodesFromMask(mask);
 
 		for (let node of nodes) {
-			this._update_node_flags(node);
+			this._updateNodeFlags(node);
 		}
 	}
-	private _update_node_flags(node: BaseNodeType) {
-		this._update_node_display_flag(node);
-		this._update_node_bypass_flag(node);
+	private _updateNodeFlags(node: BaseNodeType) {
+		this._updateNodeDisplayFlag(node);
+		this._updateNodeBypassFlag(node);
 	}
-	private _update_node_display_flag(node: BaseNodeType) {
+	private _updateNodeDisplayFlag(node: BaseNodeType) {
 		if (!isBooleanTrue(this.pv.tdisplay)) {
 			return;
 		}
 		if (!node.flags?.hasDisplay()) {
 			return;
 		}
-		const display_flag = node.flags.display;
-		if (!display_flag) {
+		const displayFlag = node.flags.display;
+		if (!displayFlag) {
 			return;
 		}
 		const mode = FLAG_UPDATE_MODES[this.pv.displayMode];
 		switch (mode) {
 			case FlagUpdateMode.SET: {
-				display_flag.set(isBooleanTrue(this.pv.display));
+				displayFlag.set(isBooleanTrue(this.pv.display));
 				return;
 			}
 			case FlagUpdateMode.TOGGLE: {
-				display_flag.set(!display_flag.active());
+				displayFlag.set(!displayFlag.active());
 				return;
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
-	private _update_node_bypass_flag(node: BaseNodeType) {
+	private _updateNodeBypassFlag(node: BaseNodeType) {
 		if (!isBooleanTrue(this.pv.tbypass)) {
 			return;
 		}
 		if (!node.flags?.hasBypass()) {
 			return;
 		}
-		const bypass_flag = node.flags.bypass;
-		if (!bypass_flag) {
+		const bypassFlag = node.flags.bypass;
+		if (!bypassFlag) {
 			return;
 		}
 		const mode = FLAG_UPDATE_MODES[this.pv.bypassMode];
 		switch (mode) {
 			case FlagUpdateMode.SET: {
-				bypass_flag.set(isBooleanTrue(this.pv.bypass));
+				bypassFlag.set(isBooleanTrue(this.pv.bypass));
 				return;
 			}
 			case FlagUpdateMode.TOGGLE: {
-				bypass_flag.set(!bypass_flag.active());
+				bypassFlag.set(!bypassFlag.active());
 				return;
 			}
 		}

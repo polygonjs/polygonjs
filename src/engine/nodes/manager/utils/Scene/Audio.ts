@@ -26,6 +26,7 @@ export function RootAudioParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
+type onToggleSoundCallback = (soundOn: boolean) => void;
 export class RootAudioController {
 	constructor(protected node: RootManagerNode) {}
 
@@ -35,6 +36,7 @@ export class RootAudioController {
 		});
 
 		this.update();
+		this._runOnToggleSoundCallbacks();
 	}
 	soundOn() {
 		const listener = this.audioListeners()[0];
@@ -59,5 +61,25 @@ export class RootAudioController {
 	}
 	static update(node: RootManagerNode) {
 		node.audioController.update();
+	}
+
+	/*
+	 *
+	 * CALLBACKS
+	 *
+	 */
+	private _callbacksByName = new Map<string, onToggleSoundCallback>();
+	onToggleSound(callbackName: string, callback: onToggleSoundCallback) {
+		if (this._callbacksByName.get(callbackName)) {
+			console.warn(`callback already registered ith name '${callbackName}'`);
+			return;
+		}
+		this._callbacksByName.set(callbackName, callback);
+	}
+	private _runOnToggleSoundCallbacks() {
+		const soundOn = this.soundOn();
+		this._callbacksByName.forEach((callback) => {
+			callback(soundOn);
+		});
 	}
 }

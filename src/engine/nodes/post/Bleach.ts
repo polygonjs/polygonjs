@@ -17,6 +17,7 @@ interface BleachPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class BleachPostParamsConfig extends NodeParamsConfig {
+	/** @param opacity */
 	opacity = ParamConfig.FLOAT(0.95, {
 		range: [-5, 5],
 		rangeLocked: [true, true],

@@ -90,6 +90,9 @@ export class CoreGraphNode {
 	addPostDirtyHook(name: string, callback: PostDirtyHook) {
 		this._dirty_controller.addPostDirtyHook(name, callback);
 	}
+	removePostDirtyHook(name: string) {
+		this._dirty_controller.removePostDirtyHook(name);
+	}
 
 	//
 	//

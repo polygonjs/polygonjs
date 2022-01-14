@@ -6,63 +6,53 @@ import {SceneEvent} from '../../poly/SceneEvent';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {ParamEvent} from '../../poly/ParamEvent';
 
-// type Callback = (emitter: CoreGraphNodeScene) => void; // TODO: typescript: maybe arg should be an event instead of the emitter
 interface EventsListener {
-	process_events: (emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) => void;
+	process_events: (emitter: CoreGraphNode, event: SceneEvent | NodeEvent | ParamEvent, data?: any) => void;
 }
 type OnAddListenerCallback = () => void;
 
 export class DispatchController {
-	private _on_add_listener_callbacks: OnAddListenerCallback[] | undefined;
+	private _onAddListenerCallbacks: OnAddListenerCallback[] | undefined;
 	constructor(private scene: PolyScene) {}
 
-	private _events_listener: EventsListener | undefined;
+	private _eventsListener: EventsListener | undefined;
 
-	setListener(events_listener: EventsListener) {
+	setListener(eventsListener: EventsListener) {
 		// let's have a single listener for now
 		// which is a constraint I've added when adding on_add_listener
-		if (!this._events_listener) {
-			this._events_listener = events_listener;
-			this.run_on_add_listener_callbacks();
+		if (!this._eventsListener) {
+			this._eventsListener = eventsListener;
+			this._runOnAddListenerCallbacks();
 		} else {
 			console.warn('scene already has a listener');
 		}
-		// this._store.scene = this;
 	}
 	onAddListener(callback: OnAddListenerCallback) {
-		if (this._events_listener) {
+		if (this._eventsListener) {
 			callback();
 		} else {
-			this._on_add_listener_callbacks = this._on_add_listener_callbacks || [];
-			this._on_add_listener_callbacks.push(callback);
+			this._onAddListenerCallbacks = this._onAddListenerCallbacks || [];
+			this._onAddListenerCallbacks.push(callback);
 		}
 	}
-	private run_on_add_listener_callbacks() {
-		if (this._on_add_listener_callbacks) {
+	private _runOnAddListenerCallbacks() {
+		if (this._onAddListenerCallbacks) {
 			let callback: OnAddListenerCallback | undefined;
-			while ((callback = this._on_add_listener_callbacks.pop())) {
+			while ((callback = this._onAddListenerCallbacks.pop())) {
 				callback();
 			}
-			this._on_add_listener_callbacks = undefined;
+			this._onAddListenerCallbacks = undefined;
 		}
 	}
-	get eventsListener() {
-		return this._events_listener;
-	}
-	dispatch(emitter: CoreGraphNode, event_name: SceneEvent | NodeEvent | ParamEvent, data?: any) {
-		this._events_listener?.process_events(emitter, event_name, data);
+
+	dispatch(emitter: CoreGraphNode, event: SceneEvent | NodeEvent | ParamEvent, data?: any) {
+		this._eventsListener?.process_events(emitter, event, data);
 	}
 	emitAllowed(): boolean {
 		return (
-			this._events_listener != null &&
+			this._eventsListener != null &&
 			this.scene.loadingController.loaded() &&
-			this.scene.loadingController.autoUpdating() //&&
-			// !Poly.playerMode() // TODO: typecript: maybe I should still be able to emit events in player mode? - check how the Event Sop works
+			this.scene.loadingController.autoUpdating()
 		);
 	}
-	// store_commit(event_name: string, payload: any = this) {
-	// 	if (this._store) {
-	// 		this._store.commit(`engine/${event_name}`, payload);
-	// 	}
-	// }
 }

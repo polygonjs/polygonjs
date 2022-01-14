@@ -17,6 +17,7 @@ interface PixelPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class PixelPostParamsConfig extends NodeParamsConfig {
+	/** @param pixelSize */
 	pixelSize = ParamConfig.INTEGER(16, {
 		range: [1, 50],
 		rangeLocked: [true, false],

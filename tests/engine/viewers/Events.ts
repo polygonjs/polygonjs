@@ -217,11 +217,3 @@ QUnit.test('scene event nodes do not add events to the viewer', async (assert) =
 		assert.deepEqual(viewer.eventsController().registeredEventTypes(), []);
 	});
 });
-
-QUnit.test('scene event nodes 1 with tick on processes event', async (assert) => {
-	assert.equal(1, 2);
-});
-
-QUnit.test('scene event nodes 1 with tick on processes event and 1 with tick off does not', async (assert) => {
-	assert.equal(1, 2);
-});

@@ -17,16 +17,19 @@ interface BrightnessContrastPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
+	/** @param brightness */
 	brightness = ParamConfig.FLOAT(0, {
 		range: [-1, 1],
 		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
+	/** @param contrast */
 	contrast = ParamConfig.FLOAT(0, {
 		range: [-1, 1],
 		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
+	/** @param transparent */
 	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
 }
 const ParamsConfig = new BrightnessContrastPostParamsConfig();

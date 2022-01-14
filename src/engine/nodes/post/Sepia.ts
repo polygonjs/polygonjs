@@ -10,6 +10,7 @@ interface SepiaPassWithUniforms extends ShaderPass {
 }
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class SepiaPostParamsConfig extends NodeParamsConfig {
+	/** @param amount */
 	amount = ParamConfig.FLOAT(0.5, {
 		range: [0, 2],
 		rangeLocked: [false, false],

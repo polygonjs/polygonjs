@@ -16,6 +16,7 @@ interface FXAAPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class FXAAPostParamsConfig extends NodeParamsConfig {
+	/** @param transparent */
 	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
 }
 const ParamsConfig = new FXAAPostParamsConfig();

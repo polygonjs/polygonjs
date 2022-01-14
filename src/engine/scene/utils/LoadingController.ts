@@ -1,14 +1,13 @@
 import {PolyScene} from '../PolyScene';
-import {SceneEventType} from './events/SceneEventsController';
-import {EventContext} from './events/_BaseEventsController';
+import {SCENE_EVENT_LOADED_EVENT_CONTEXT} from './events/SceneEventsController';
 
 export class LoadingController {
 	constructor(private scene: PolyScene) {}
 
-	private _LOADED_EVENT_CONTEXT: EventContext<Event> | undefined;
-	get LOADED_EVENT_CONTEXT() {
-		return (this._LOADED_EVENT_CONTEXT = this._LOADED_EVENT_CONTEXT || {event: new Event(SceneEventType.LOADED)});
-	}
+	// private _LOADED_EVENT_CONTEXT: EventContext<SceneEvent> | undefined;
+	// get LOADED_EVENT_CONTEXT() {
+	// 	return (this._LOADED_EVENT_CONTEXT = this._LOADED_EVENT_CONTEXT || {event: new SceneEvent(SceneEventType.LOADED)});
+	// }
 
 	private _loadingState: boolean = false;
 	private _autoUpdating: boolean = true;
@@ -25,7 +24,7 @@ export class LoadingController {
 	private _triggerLoadedEvent() {
 		// we only dispatch events in the browser. If this is run from nodejs, we do not.
 		if (globalThis.Event) {
-			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.LOADED_EVENT_CONTEXT);
+			this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_LOADED_EVENT_CONTEXT);
 		}
 	}
 

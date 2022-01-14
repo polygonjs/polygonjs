@@ -1,8 +1,13 @@
 import {PolyScene} from '../PolyScene';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
-import {SceneEventType} from './events/SceneEventsController';
-import {EventContext} from './events/_BaseEventsController';
+// import {SceneEventType} from './events/SceneEventsController';
+// import {EventContext} from './events/_BaseEventsController';
+import {
+	SCENE_EVENT_PLAY_EVENT_CONTEXT,
+	SCENE_EVENT_PAUSE_EVENT_CONTEXT,
+	// SCENE_EVENT_TICK_EVENT_CONTEXT,
+} from './events/SceneEventsController';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
@@ -23,18 +28,18 @@ export class TimeController {
 	private _playing: boolean = false;
 	private _delta: number = 0;
 
-	private _PLAY_EVENT_CONTEXT: EventContext<Event> | undefined;
-	private _PAUSE_EVENT_CONTEXT: EventContext<Event> | undefined;
-	private _TICK_EVENT_CONTEXT: EventContext<Event> | undefined;
-	get PLAY_EVENT_CONTEXT() {
-		return (this._PLAY_EVENT_CONTEXT = this._PLAY_EVENT_CONTEXT || {event: new Event(SceneEventType.PLAY)});
-	}
-	get PAUSE_EVENT_CONTEXT() {
-		return (this._PAUSE_EVENT_CONTEXT = this._PAUSE_EVENT_CONTEXT || {event: new Event(SceneEventType.PAUSE)});
-	}
-	get TICK_EVENT_CONTEXT() {
-		return (this._TICK_EVENT_CONTEXT = this._TICK_EVENT_CONTEXT || {event: new Event(SceneEventType.TICK)});
-	}
+	// private _PLAY_EVENT_CONTEXT: EventContext<SceneEvent> | undefined;
+	// private _PAUSE_EVENT_CONTEXT: EventContext<SceneEvent> | undefined;
+	// private _TICK_EVENT_CONTEXT: EventContext<SceneEvent> | undefined;
+	// get PLAY_EVENT_CONTEXT() {
+	// 	return (this._PLAY_EVENT_CONTEXT = this._PLAY_EVENT_CONTEXT || {event: new SceneEvent(SceneEventType.PLAY)});
+	// }
+	// get PAUSE_EVENT_CONTEXT() {
+	// 	return (this._PAUSE_EVENT_CONTEXT = this._PAUSE_EVENT_CONTEXT || {event: new SceneEvent(SceneEventType.PAUSE)});
+	// }
+	// get TICK_EVENT_CONTEXT() {
+	// 	return (this._TICK_EVENT_CONTEXT = this._TICK_EVENT_CONTEXT || {event: new SceneEvent(SceneEventType.TICK)});
+	// }
 
 	constructor(private scene: PolyScene) {
 		this._graph_node = new CoreGraphNode(scene, 'time controller');
@@ -76,51 +81,54 @@ export class TimeController {
 	// 	this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
 	// }
 	setTime(time: number, updateFrame = true) {
-		if (time != this._time) {
-			this._time = time;
+		if (time == this._time) {
+			return;
+		}
+		this._time = time;
 
-			// we block updates here, so that dependent nodes only cook once
-			this.scene.cooker.block();
-			const delta = this._delta;
-			for (const callback of this._onBeforeTickCallbacks) {
-				callback(delta);
+		// we block updates here, so that dependent nodes only cook once
+		this.scene.cooker.block();
+		const delta = this._delta;
+		for (const callback of this._onBeforeTickCallbacks) {
+			callback(delta);
+		}
+
+		if (updateFrame) {
+			const new_frame = Math.floor(this._time * FPS);
+			const bounded_frame = this._ensureFrameWithinBounds(new_frame);
+			if (new_frame != bounded_frame) {
+				this.setFrame(bounded_frame, true);
+			} else {
+				this._frame = new_frame;
 			}
+		}
 
-			if (updateFrame) {
-				const new_frame = Math.floor(this._time * FPS);
-				const bounded_frame = this._ensureFrameWithinBounds(new_frame);
-				if (new_frame != bounded_frame) {
-					this.setFrame(bounded_frame, true);
-				} else {
-					this._frame = new_frame;
-				}
-			}
+		// update time dependents
+		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
+		this.scene.uniformsController.updateTimeDependentUniformOwners();
 
-			// update time dependents
-			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
-			this.scene.uniformsController.updateTimeDependentUniformOwners();
+		this.graphNode.setSuccessorsDirty();
+		this.scene.cooker.unblock();
 
-			this.graphNode.setSuccessorsDirty();
-			this.scene.cooker.unblock();
+		// dispatch events after nodes have cooked
+		// this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_TICK_EVENT_CONTEXT);
 
-			// dispatch events after nodes have cooked
-			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.TICK_EVENT_CONTEXT);
-
-			for (const callback of this._onAfterTickCallbacks) {
-				callback(delta);
-			}
+		for (const callback of this._onAfterTickCallbacks) {
+			callback(delta);
 		}
 	}
 
-	setFrame(frame: number, update_time = true) {
-		if (frame != this._frame) {
-			frame = this._ensureFrameWithinBounds(frame);
-			if (frame != this._frame) {
-				this._frame = frame;
-				if (update_time) {
-					this.setTime(this._frame / FPS, false);
-				}
-			}
+	setFrame(frame: number, updateTime = true) {
+		if (frame == this._frame) {
+			return;
+		}
+		frame = this._ensureFrameWithinBounds(frame);
+		if (frame == this._frame) {
+			return;
+		}
+		this._frame = frame;
+		if (updateTime) {
+			this.setTime(this._frame / FPS, false);
 		}
 	}
 	setFrameToStart() {
@@ -168,15 +176,14 @@ export class TimeController {
 			this._playing = false;
 			// TODO: try and unify the dispatch controller and events dispatcher
 			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.PAUSE_EVENT_CONTEXT);
+			this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PLAY_EVENT_CONTEXT);
 		}
 	}
 	play() {
 		if (this._playing !== true) {
 			this._playing = true;
-			// this._prev_performance_now = performance.now();
 			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.eventsDispatcher.sceneEventsController.processEvent(this.PLAY_EVENT_CONTEXT);
+			this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PAUSE_EVENT_CONTEXT);
 		}
 	}
 	togglePlayPause() {

@@ -14,6 +14,7 @@ interface AfterImagePassWithUniforms extends AfterimagePass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AfterImagePostParamsConfig extends NodeParamsConfig {
+	/** @param damping */
 	damp = ParamConfig.FLOAT(0.96, {
 		range: [0, 1],
 		rangeLocked: [true, true],

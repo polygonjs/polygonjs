@@ -391,27 +391,22 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		return CoreLoaderGeometry.loader_for_ldraw(node);
 	}
 
-	private static gltf_loader: GLTFLoader | undefined;
-	private static draco_loader: DRACOLoader | undefined;
+	private static gltfLoader: GLTFLoader | undefined;
+	private static dracoLoader: DRACOLoader | undefined;
 	static async loader_for_glb(node?: BaseNodeType) {
 		const GLTFLoader = Poly.modulesRegister.module(ModuleName.GLTFLoader);
 		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
 		if (GLTFLoader && DRACOLoader) {
-			this.gltf_loader = this.gltf_loader || new GLTFLoader(this.loadingManager);
-			this.draco_loader = this.draco_loader || new DRACOLoader(this.loadingManager);
+			this.gltfLoader = this.gltfLoader || new GLTFLoader(this.loadingManager);
+			this.dracoLoader = this.dracoLoader || new DRACOLoader(this.loadingManager);
 			const root = Poly.libs.root();
 			const DRACOGLTFPath = Poly.libs.DRACOGLTFPath();
+			const useJs = false;
 			if (root || DRACOGLTFPath) {
 				const decoderPath = `${root || ''}${DRACOGLTFPath || ''}/`;
 
 				if (node) {
-					// const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
-					// for (let file of files) {
-					// 	const storedUrl = `${DRACOGLTFPath}/${file}`;
-					// 	const fullUrl = `${decoder_path}${file}`;
-					// 	Poly.blobs.fetchBlob({storedUrl, fullUrl, node});
-					// }
-					const files = ['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'];
+					const files = useJs ? ['draco_decoder.js'] : ['draco_decoder.wasm', 'draco_wasm_wrapper.js'];
 					await this._loadMultipleBlobGlobal({
 						files: files.map((file) => {
 							return {
@@ -424,14 +419,14 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 					});
 				}
 
-				this.draco_loader.setDecoderPath(decoderPath);
+				this.dracoLoader.setDecoderPath(decoderPath);
 			} else {
-				(this.draco_loader as any).setDecoderPath(undefined);
+				(this.dracoLoader as any).setDecoderPath(undefined);
 			}
 			// not having this uses wasm if the relevant libraries are found
-			// draco_loader.setDecoderConfig({type: 'js'});
-			this.gltf_loader.setDRACOLoader(this.draco_loader);
-			return this.gltf_loader;
+			this.dracoLoader.setDecoderConfig({type: useJs ? 'js' : 'wasm'});
+			this.gltfLoader.setDRACOLoader(this.dracoLoader);
+			return this.gltfLoader;
 		}
 	}
 	loader_for_glb(node?: BaseNodeType) {

@@ -103,6 +103,8 @@ export class LifeCycleController {
 	// ON DELETE
 	//
 	//
+	// TODO: that is not very different than methods in .dispose
+	// so this should probably be removed/refactored
 	onDelete(callback: Callback) {
 		this._on_delete_hooks = this._on_delete_hooks || [];
 		this._on_delete_hooks.push(callback);

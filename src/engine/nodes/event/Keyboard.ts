@@ -12,6 +12,7 @@ import {ACCEPTED_KEYBOARD_EVENT_TYPES} from '../../scene/utils/events/KeyboardEv
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
+import {CoreString} from '../../../core/String';
 class KeyboardEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -28,6 +29,7 @@ class KeyboardEventParamsConfig extends NodeParamsConfig {
 			}),
 		},
 		separatorAfter: true,
+		...EVENT_PARAM_OPTIONS,
 	});
 
 	/** @param toggle on to listen to keydown events */
@@ -78,14 +80,18 @@ export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsCo
 			});
 		});
 	}
-	processEvent(event_context: EventContext<KeyboardEvent>) {
+	setElement(element: CoreEventEmitter) {
+		this.p.element.set(EVENT_EMITTERS.indexOf(element));
+	}
+
+	processEvent(eventContext: EventContext<KeyboardEvent>) {
 		if (!this.pv.active) {
 			return;
 		}
-		if (!event_context.event) {
+		if (!eventContext.event) {
 			return;
 		}
-		const event = event_context.event;
+		const event = eventContext.event;
 		if (event.ctrlKey != isBooleanTrue(this.pv.ctrlKey)) {
 			return;
 		}
@@ -99,13 +105,9 @@ export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsCo
 			return;
 		}
 
-		const requiredCodes = this.pv.keyCodes.trim();
-		if (requiredCodes.length > 0) {
-			const codes = this.pv.keyCodes.split(' ');
-			if (!codes.includes(event.code)) {
-				return;
-			}
+		if (!CoreString.matchMask(event.code, this.pv.keyCodes)) {
+			return;
 		}
-		this.dispatchEventToOutput(event_context.event.type, event_context);
+		this.dispatchEventToOutput(eventContext.event.type, eventContext);
 	}
 }

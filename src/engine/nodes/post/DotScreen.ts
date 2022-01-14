@@ -18,14 +18,17 @@ interface DotScreenPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class DotScreenPostParamsConfig extends NodeParamsConfig {
+	/** @param center */
 	center = ParamConfig.VECTOR2([0.5, 0.5], {
 		...PostParamOptions,
 	});
+	/** @param angle */
 	angle = ParamConfig.FLOAT('$PI*0.5', {
 		range: [0, 10],
 		rangeLocked: [false, false],
 		...PostParamOptions,
 	});
+	/** @param scale */
 	scale = ParamConfig.FLOAT(1.0, {
 		range: [0, 1],
 		rangeLocked: [false, false],

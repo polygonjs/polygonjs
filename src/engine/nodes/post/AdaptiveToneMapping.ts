@@ -34,19 +34,24 @@ import {AdaptiveToneMappingPass} from '../../../modules/three/examples/jsm/postp
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AdaptiveToneMappingPostParamsConfig extends NodeParamsConfig {
+	/** @param adaptive */
 	adaptive = ParamConfig.BOOLEAN(1, {
 		...PostParamOptions,
 	});
+	/** @param averageLuminance */
 	averageLuminance = ParamConfig.FLOAT(0.7, {
 		...PostParamOptions,
 	});
+	/** @param midGrey */
 	midGrey = ParamConfig.FLOAT(0.04, {
 		...PostParamOptions,
 	});
+	/** @param maxLuminance */
 	maxLuminance = ParamConfig.FLOAT(16, {
 		range: [0, 20],
 		...PostParamOptions,
 	});
+	/** @param adaptiveRange */
 	adaptiveRange = ParamConfig.FLOAT(2, {
 		range: [0, 10],
 		...PostParamOptions,

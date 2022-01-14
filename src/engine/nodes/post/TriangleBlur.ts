@@ -47,6 +47,7 @@ const Shader = {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 class TriangleBlurPostParamsConfig extends NodeParamsConfig {
+	/** @param delta */
 	delta = ParamConfig.VECTOR2([2, 2], {
 		...PostParamOptions,
 	});

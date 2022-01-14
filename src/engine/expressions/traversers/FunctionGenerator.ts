@@ -109,24 +109,24 @@
  * And the following are alias to the [Polygonjs Easing](https://github.com/polygonjs/polygonjs-engine/blob/master/src/core/math/Easing.ts) module:
  *
  * - linear
- * - ease_i
- * - ease_o
- * - ease_io
- * - ease_i2
- * - ease_o2
- * - ease_io2
- * - ease_i3
- * - ease_o3
- * - ease_io3
- * - ease_i4
- * - ease_o4
- * - ease_io4
- * - ease_i_sin
- * - ease_o_sin
- * - ease_io_sin
- * - ease_i_elastic
- * - ease_o_elastic
- * - ease_io_elastic
+ * - ease_i( number, power )
+ * - ease_o( number, power )
+ * - ease_io( number, power )
+ * - ease_i2( number ), is a shortcut for ease_i( number, 2 )
+ * - ease_o2( number ), is a shortcut for ease_o( number, 2 )
+ * - ease_io2( number ), is a shortcut for ease_io( number, 2 )
+ * - ease_i3( number ), is a shortcut for ease_i( number, 3 )
+ * - ease_o3( number ), is a shortcut for ease_o( number, 3 )
+ * - ease_io3( number ), is a shortcut for ease_io( number, 3 )
+ * - ease_i4( number ), is a shortcut for ease_i( number, 4 )
+ * - ease_o4( number ), is a shortcut for ease_o( number, 4 )
+ * - ease_io4( number ), is a shortcut for ease_io( number, 4 )
+ * - ease_i_sin( number )
+ * - ease_o_sin( number )
+ * - ease_io_sin( number )
+ * - ease_i_elastic( number )
+ * - ease_o_elastic( number )
+ * - ease_io_elastic( number )
  *
  *
  * ## String expressions:

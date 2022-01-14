@@ -1,6 +1,7 @@
 import {BaseViewerType} from '../_Base';
 import {EventContext, BaseSceneEventsControllerType} from '../../scene/utils/events/_BaseEventsController';
 import {EventData} from '../../nodes/event/_BaseInput';
+import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../scene/utils/events/KeyboardEventsController';
 type EventListener = (e: Event) => void;
 interface EventListenerWithData {
 	listener: EventListener;
@@ -13,6 +14,10 @@ export enum CoreEventEmitter {
 	DOCUMENT = 'document',
 }
 export const EVENT_EMITTERS: CoreEventEmitter[] = [CoreEventEmitter.CANVAS, CoreEventEmitter.DOCUMENT];
+
+function elementFromEmitterType(emitter: CoreEventEmitter, canvas: HTMLCanvasElement) {
+	return emitter == CoreEventEmitter.CANVAS ? canvas : document;
+}
 export class ViewerEventsController {
 	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();
 
@@ -31,17 +36,28 @@ export class ViewerEventsController {
 			this._bound_listener_map_by_event_controller_type.set(controllerType, map);
 		}
 		map.forEach((listenerWithData, eventType) => {
-			const eventOwner = this._eventOwner(listenerWithData.data, canvas);
-			eventOwner.removeEventListener(eventType, listenerWithData.listener);
+			for (let emitter of EVENT_EMITTERS) {
+				const element = this._eventOwner({emitter, type: eventType}, canvas);
+				element.removeEventListener(eventType, listenerWithData.listener);
+			}
 		});
 		map.clear();
 
 		const listener = (event: Event) => {
-			this.processEvent(event, eventsController);
+			this.processEvent(event, eventsController, canvas);
 		};
 		for (let eventData of eventsController.activeEventDatas()) {
 			const eventOwner = this._eventOwner(eventData, canvas);
 			eventOwner.addEventListener(eventData.type, listener);
+
+			// if the event being added is a keyboard type,
+			// we need to add tabindex to the canvas to allow it to have focus
+			if (eventOwner != document) {
+				if (ACCEPTED_KEYBOARD_EVENT_TYPES.includes(eventData.type as KeyboardEventType)) {
+					(eventOwner as HTMLElement).setAttribute('tabindex', '0');
+				}
+			}
+
 			map.set(eventData.type, {listener, data: eventData});
 		}
 	}
@@ -49,7 +65,7 @@ export class ViewerEventsController {
 		if (eventData.type == 'resize') {
 			return window;
 		} else {
-			return eventData.emitter == CoreEventEmitter.CANVAS ? canvas : document;
+			return elementFromEmitterType(eventData.emitter, canvas);
 		}
 	}
 
@@ -92,16 +108,12 @@ export class ViewerEventsController {
 		});
 	}
 
-	private processEvent(event: Event, controller: BaseSceneEventsControllerType) {
-		const canvas = this.canvas();
-		if (!canvas) {
-			return;
-		}
-		const event_context: EventContext<Event> = {
+	private processEvent(event: Event, controller: BaseSceneEventsControllerType, canvas: HTMLCanvasElement) {
+		const eventContext: EventContext<Event> = {
 			viewer: this.viewer,
 			event: event,
 			cameraNode: this.cameraNode(),
 		};
-		controller.processEvent(event_context);
+		controller.processEvent(eventContext);
 	}
 }

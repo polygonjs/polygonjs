@@ -17,12 +17,14 @@ interface HorizontalBlurPassWithUniforms extends ShaderPass {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class HorizontalBlurPostParamsConfig extends NodeParamsConfig {
+	/** @param amount */
 	amount = ParamConfig.FLOAT(2, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 		step: 0.01,
 		...PostParamOptions,
 	});
+	/** @param transparent */
 	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
 }
 const ParamsConfig = new HorizontalBlurPostParamsConfig();
