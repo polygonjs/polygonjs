@@ -27,6 +27,7 @@ import './engine/expressions/methods/centroid';
 import './engine/expressions/methods/ch';
 import './engine/expressions/methods/copRes';
 import './engine/expressions/methods/cos';
+import './engine/expressions/methods/easing';
 import './engine/expressions/methods/floor';
 import './engine/expressions/methods/if';
 import './engine/expressions/methods/js';

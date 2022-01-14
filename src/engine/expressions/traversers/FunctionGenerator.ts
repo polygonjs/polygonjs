@@ -108,10 +108,6 @@
  *
  * And the following are alias to the [Polygonjs Easing](https://github.com/polygonjs/polygonjs-engine/blob/master/src/core/math/Easing.ts) module:
  *
- * - linear
- * - ease_i( number, power )
- * - ease_o( number, power )
- * - ease_io( number, power )
  * - ease_i2( number ), is a shortcut for ease_i( number, 2 )
  * - ease_o2( number ), is a shortcut for ease_o( number, 2 )
  * - ease_io2( number ), is a shortcut for ease_io( number, 2 )

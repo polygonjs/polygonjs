@@ -70,9 +70,9 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		// this.uiData.set_icon('dot-circle');
 	}
 
-	async cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-		await this._eval_expressions_for_core_group(core_group);
+	async cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
+		await this._evalExpressionsForCoreGroup(coreGroup);
 	}
 
 	// group.traverse (object)=>
@@ -80,42 +80,42 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	// 		this._eval_expressions(geometry)
 	// 		geometry.computeVertexNormals()
 
-	async _eval_expressions_for_core_group(core_group: CoreGroup) {
-		const core_objects = core_group.coreObjects();
+	async _evalExpressionsForCoreGroup(coreGroup: CoreGroup) {
+		const coreObjects = coreGroup.coreObjects();
 		// this._allocate_arrays(core_objects)
 
-		for (let i = 0; i < core_objects.length; i++) {
-			await this._eval_expressions_for_core_object(core_objects[i]);
+		for (let i = 0; i < coreObjects.length; i++) {
+			await this._evalExpressionsForCoreObject(coreObjects[i]);
 		}
 
 		if (isBooleanTrue(this.pv.updateNormals)) {
-			core_group.computeVertexNormals();
+			coreGroup.computeVertexNormals();
 		}
 
-		const geometries = core_group.geometries();
+		const geometries = coreGroup.geometries();
 		for (let geometry of geometries) {
 			geometry.computeBoundingBox();
 		}
 
 		// needs update required for when no cloning
 		if (!this.io.inputs.cloneRequired(0)) {
-			const geometries = core_group.geometries();
+			const geometries = coreGroup.geometries();
 			for (let geometry of geometries) {
 				const attrib = geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute;
 				attrib.needsUpdate = true;
 			}
 		}
 
-		this.setCoreGroup(core_group);
+		this.setCoreGroup(coreGroup);
 	}
-	async _eval_expressions_for_core_object(core_object: CoreObject) {
-		const object = core_object.object();
+	async _evalExpressionsForCoreObject(coreObject: CoreObject) {
+		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
-		const points = core_object.points();
+		const points = coreObject.points();
 
 		const array = geometry.getAttribute(POSITION_ATTRIB_NAME).array as number[];
 
-		const tmp_array_x = await this._update_from_param(
+		const tmp_array_x = await this._updateFromParam(
 			geometry,
 			array,
 			points,
@@ -125,7 +125,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			this._x_arrays_by_geometry_uuid,
 			0
 		);
-		const tmp_array_y = await this._update_from_param(
+		const tmp_array_y = await this._updateFromParam(
 			geometry,
 			array,
 			points,
@@ -135,7 +135,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			this._y_arrays_by_geometry_uuid,
 			1
 		);
-		const tmp_array_z = await this._update_from_param(
+		const tmp_array_z = await this._updateFromParam(
 			geometry,
 			array,
 			points,
@@ -157,7 +157,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		}
 	}
 
-	private async _update_from_param(
+	private async _updateFromParam(
 		geometry: BufferGeometry,
 		array: number[],
 		points: CorePoint[],
@@ -170,24 +170,24 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		const do_update = do_update_param;
 		const param = value_param;
 
-		let tmp_array = this._init_array_if_required(geometry, arrays_by_geometry_uuid, points.length, offset);
+		let tmpArray = this._initArrayIfRequired(geometry, arrays_by_geometry_uuid, points.length, offset);
 		if (do_update.value) {
 			if (param.hasExpression() && param.expressionController) {
 				await param.expressionController.computeExpressionForPoints(points, (point, value) => {
-					tmp_array[point.index()] = value;
+					tmpArray[point.index()] = value;
 				});
 			} else {
 				let point;
 				for (let i = 0; i < points.length; i++) {
 					point = points[i];
-					tmp_array[point.index()] = param_value;
+					tmpArray[point.index()] = param_value;
 				}
 			}
 		}
-		return tmp_array;
+		return tmpArray;
 	}
 
-	private _init_array_if_required(
+	private _initArrayIfRequired(
 		geometry: BufferGeometry,
 		arrays_by_geometry_uuid: ValueArrayByName,
 		points_count: number,
