@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseParamType} from '../../params/_Base';
 class AnimationMixerSopParamsConfig extends NodeParamsConfig {
 	time = ParamConfig.FLOAT('$T', {range: [0, 10]});
-	clip = ParamConfig.OPERATOR_PATH('/ANIM/OUT', {
+	clip = ParamConfig.NODE_PATH('/ANIM/OUT', {
 		nodeSelection: {
 			context: NodeContext.ANIM,
 		},
@@ -64,7 +64,7 @@ export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsC
 		if (this.p.clip.isDirty()) {
 			await this.p.clip.compute();
 		}
-		const anim_node = this.p.clip.found_node_with_context(NodeContext.ANIM);
+		const anim_node = this.pv.clip.nodeWithContext(NodeContext.ANIM);
 		if (anim_node) {
 			// const container = await anim_node.compute();
 			// const animation_clip = container.animation_clip();

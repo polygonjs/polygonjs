@@ -22,7 +22,7 @@ export interface ParamInitValuesTypeMap extends ParamInitValuesTypeMapGeneric {
 	[ParamType.FLOAT]: StringOrNumber;
 	[ParamType.FOLDER]: null;
 	[ParamType.INTEGER]: StringOrNumber;
-	[ParamType.OPERATOR_PATH]: string;
+	// [ParamType.OPERATOR_PATH]: string;
 	[ParamType.PARAM_PATH]: string;
 	[ParamType.NODE_PATH]: string;
 	[ParamType.RAMP]: RampValue | RampValueJson;

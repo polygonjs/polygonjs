@@ -22,7 +22,7 @@ import {BaseCopNodeType} from '../cop/_Base';
 import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class ImagePostParamsConfig extends NodeParamsConfig {
 	/** @param map */
-	map = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
+	map = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.UV, {
 		nodeSelection: {context: NodeContext.COP},
 		...PostParamOptions,
 	});
@@ -75,16 +75,12 @@ export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostPar
 		if (this.p.map.isDirty()) {
 			await this.p.map.compute();
 		}
-		const found_node = this.p.map.found_node();
-		if (found_node) {
-			if (found_node.context() == NodeContext.COP) {
-				const cop_node = found_node as BaseCopNodeType;
-				const map_container = await cop_node.compute();
-				const texture = map_container.coreContent();
-				pass.uniforms.map.value = texture;
-			} else {
-				this.states.error.set('node is not COP');
-			}
+		const foundNode = this.pv.map.nodeWithContext(NodeContext.COP, this.states.error);
+		if (foundNode) {
+			const cop_node = foundNode as BaseCopNodeType;
+			const map_container = await cop_node.compute();
+			const texture = map_container.coreContent();
+			pass.uniforms.map.value = texture;
 		} else {
 			this.states.error.set('no map found');
 		}

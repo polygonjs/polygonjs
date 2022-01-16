@@ -19,6 +19,7 @@ import {
 } from '../params/types/ParamValueSerializedTypeMap';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 import {MethodDependency} from '../expressions/MethodDependency';
+import {Poly} from '../Poly';
 
 type ComputeCallback = (value: void) => void;
 const TYPED_PARAM_DEFAULT_COMPONENT_NAMES: Readonly<string[]> = [];
@@ -178,7 +179,12 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	private _isComputing: boolean = false;
 	async compute(): Promise<void> {
 		if (this.scene().loadingController.isLoading()) {
-			console.warn(`param attempt to compute ${this.path()}`);
+			// TODO:
+			// test that node path created in material builders
+			// do not compute on load,
+			// But they should still be able to compute an expression
+			// and therefore .compute() is still necessary
+			Poly.warn(`param attempt to compute ${this.path()} while scene is loading`);
 		}
 
 		if (this.isDirty()) {

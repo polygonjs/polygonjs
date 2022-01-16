@@ -31,9 +31,10 @@ enum RivetUpdateMode {
 const UPDATE_MODES: RivetUpdateMode[] = [RivetUpdateMode.ON_RENDER, RivetUpdateMode.MANUAL];
 
 class RivetObjParamConfig extends NodeParamsConfig {
-	object = ParamConfig.OPERATOR_PATH('', {
+	object = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
+			types: [GeoObjNode.type()],
 		},
 		dependentOnFoundNode: false,
 		computeOnDirty: true,
@@ -247,12 +248,12 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 			await this.p.object.compute();
 		}
 
-		const node = this.p.object.found_node();
+		const node = this.pv.object.nodeWithContext(NodeContext.OBJ);
 		if (node) {
-			if (node.context() == NodeContext.OBJ && node.type() == GeoObjNode.type()) {
-				const geo_node = node as GeoObjNode;
+			if (node.type() == GeoObjNode.type()) {
+				const geoNode = node as GeoObjNode;
 				// this._remove_render_hook();
-				this._resolvedSopGroup = geo_node.childrenDisplayController.sopGroup();
+				this._resolvedSopGroup = geoNode.childrenDisplayController.sopGroup();
 				// I can't really use _resolved_sop_group_child
 				// because it may not exist when this method is execute
 				// this._resolved_sop_group_child = this._resolvedSopGroup.children[0] as Object3DWithGeometry;

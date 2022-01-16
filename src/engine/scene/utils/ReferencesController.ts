@@ -5,8 +5,9 @@ import {MapUtils} from '../../../core/MapUtils';
 import {ParamType} from '../../poly/ParamType';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
-import {OperatorPathParam} from '../../params/OperatorPath';
+// import {OperatorPathParam} from '../../params/OperatorPath';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {NodePathParam} from '../../params/NodePath';
 
 type BasePathParam = TypedPathParam<any>;
 // class BasePathParam extends Typ
@@ -76,7 +77,7 @@ export class ReferencesController {
 		}
 	}
 	nodes_referenced_by(node: BaseNodeType) {
-		const path_param_types: Readonly<Set<ParamType>> = new Set([ParamType.OPERATOR_PATH, ParamType.NODE_PATH]);
+		const path_param_types: Readonly<Set<ParamType>> = new Set([ParamType.NODE_PATH]);
 		const path_params: BasePathParam[] = [];
 		for (let param of node.params.all) {
 			if (path_param_types.has(param.type())) {
@@ -102,15 +103,15 @@ export class ReferencesController {
 		nodes_by_id: Map<CoreGraphNodeId, BaseNodeType>,
 		params: BaseParamType[]
 	) {
-		if (param instanceof OperatorPathParam) {
-			const found_node = param.found_node();
-			const found_param = param.found_param();
+		if (param instanceof NodePathParam) {
+			const found_node = param.value.node();
+			// const found_param = param.found_param();
 			if (found_node) {
 				nodes_by_id.set(found_node.graphNodeId(), found_node);
 			}
-			if (found_param) {
-				params.push(found_param);
-			}
+			// if (found_param) {
+			// 	params.push(found_param);
+			// }
 			return;
 		}
 	}

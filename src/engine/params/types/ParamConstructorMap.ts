@@ -4,7 +4,7 @@ import {ColorParam} from '../Color';
 import {FloatParam} from '../Float';
 import {FolderParam} from '../Folder';
 import {IntegerParam} from '../Integer';
-import {OperatorPathParam} from '../OperatorPath';
+// import {OperatorPathParam} from '../OperatorPath';
 import {ParamPathParam} from '../ParamPath';
 import {NodePathParam} from '../NodePath';
 import {RampParam} from '../Ramp';
@@ -23,7 +23,7 @@ export interface ParamConstructorMap extends ParamConstructorMapType {
 	[ParamType.FLOAT]: FloatParam;
 	[ParamType.FOLDER]: FolderParam;
 	[ParamType.INTEGER]: IntegerParam;
-	[ParamType.OPERATOR_PATH]: OperatorPathParam;
+	// [ParamType.OPERATOR_PATH]: OperatorPathParam;
 	[ParamType.PARAM_PATH]: ParamPathParam;
 	[ParamType.NODE_PATH]: NodePathParam;
 	[ParamType.RAMP]: RampParam;

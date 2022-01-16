@@ -16,7 +16,7 @@ class TransformCopySopParamConfig extends NodeParamsConfig {
 	/** @param toggle on if the second input should be used */
 	useSecondInput = ParamConfig.BOOLEAN(1);
 	/** @param use a reference object */
-	reference = ParamConfig.OPERATOR_PATH('', {
+	reference = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.SOP,
 		},
@@ -65,7 +65,7 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 		this.setObjects(target_objects);
 	}
 	private async _copy_from_found_node(target_objects: Object3D[]) {
-		const node = this.p.reference.found_node_with_context(NodeContext.SOP);
+		const node = this.pv.reference.nodeWithContext(NodeContext.SOP, this.states.error);
 		if (node) {
 			const container = await node.compute();
 			const core_group = container.coreContent();

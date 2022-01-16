@@ -4,7 +4,7 @@ import {RaycastEventNode, TargetType, TARGET_TYPES} from '../../Raycast';
 import {Object3D} from 'three/src/core/Object3D';
 import {Vector2} from 'three/src/math/Vector2';
 import {Raycaster, Intersection} from 'three/src/core/Raycaster';
-import {NodeContext} from '../../../../poly/NodeContext';
+import {CAMERA_TYPES, NodeContext} from '../../../../poly/NodeContext';
 import {BaseObjNodeType} from '../../../obj/_Base';
 import {GeoObjNode} from '../../../obj/Geo';
 import {TypeAssert} from '../../../../poly/Assert';
@@ -195,21 +195,23 @@ export class RaycastCPUController {
 			points_param.threshold = this._node.pv.pointsThreshold;
 		}
 
-		let camera_node: Readonly<BaseCameraObjNodeType> | undefined = context.cameraNode;
+		let cameraNode: Readonly<BaseCameraObjNodeType> | undefined = context.cameraNode;
 		if (isBooleanTrue(this._node.pv.overrideCamera)) {
 			if (isBooleanTrue(this._node.pv.overrideRay)) {
 				this._raycaster.ray.origin.copy(this._node.pv.rayOrigin);
 				this._raycaster.ray.direction.copy(this._node.pv.rayDirection);
 			} else {
-				const found_camera_node = this._node.p.camera.found_node_with_context(NodeContext.OBJ);
-				if (found_camera_node) {
-					camera_node = (<unknown>found_camera_node) as Readonly<BaseCameraObjNodeType>;
+				const foundCameraNode = this._node.pv.camera.nodeWithContext(NodeContext.OBJ, this._node.states.error);
+				if (foundCameraNode) {
+					if ((CAMERA_TYPES as string[]).includes(foundCameraNode.type())) {
+						cameraNode = (<unknown>foundCameraNode) as Readonly<BaseCameraObjNodeType>;
+					}
 				}
 			}
 		}
 
-		if (camera_node && !isBooleanTrue(this._node.pv.overrideRay)) {
-			camera_node.prepareRaycaster(this._mouse, this._raycaster);
+		if (cameraNode && !isBooleanTrue(this._node.pv.overrideRay)) {
+			cameraNode.prepareRaycaster(this._mouse, this._raycaster);
 		}
 	}
 

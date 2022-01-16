@@ -31,8 +31,8 @@ export class JsParamConfig<T extends ParamType> extends ParamConfig<T> {
 				return {value: 0};
 			case ParamType.INTEGER:
 				return {value: 0};
-			case ParamType.OPERATOR_PATH:
-				return {value: 0};
+			// case ParamType.OPERATOR_PATH:
+			// 	return {value: 0};
 			case ParamType.NODE_PATH:
 				return {value: 0};
 			case ParamType.PARAM_PATH:

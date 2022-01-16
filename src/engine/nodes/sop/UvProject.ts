@@ -16,13 +16,14 @@ const UV_NAME = 'uv';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {NodeContext} from '../../poly/NodeContext';
+import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {BaseObjNodeType} from '../obj/_Base';
 class UvProjectSopParamsConfig extends NodeParamsConfig {
 	/** @param camera node to use as projection */
-	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
+	camera = ParamConfig.NODE_PATH('/perspective_camera1', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
+			types: CAMERA_TYPES,
 		},
 	});
 	// force_aspect = ParamConfig.BOOLEAN(0)
@@ -51,9 +52,9 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 	cook(core_groups: CoreGroup[]) {
 		this._processed_core_group = core_groups[0];
 
-		const camera_node = this.p.camera.found_node();
-		if (camera_node != null) {
-			this._camera_object = (camera_node as BaseCameraObjNodeType).object;
+		const cameraNode = this.pv.camera.nodeWithContext(NodeContext.OBJ, this.states.error);
+		if (cameraNode != null && (CAMERA_TYPES as string[]).includes(cameraNode.type())) {
+			this._camera_object = (cameraNode as BaseCameraObjNodeType).object;
 			this._cameraController.setTarget(this._camera_object);
 		} else {
 			this._camera_object = undefined;

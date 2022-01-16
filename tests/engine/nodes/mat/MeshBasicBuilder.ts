@@ -39,6 +39,7 @@ import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {create_required_nodes_for_subnet_gl_node} from '../gl/Subnet';
 import {create_required_nodes_for_ifThen_gl_node} from '../gl/IfThen';
 import {create_required_nodes_for_forLoop_gl_node} from '../gl/ForLoop';
+import {ParamType} from '../../../../src/engine/poly/ParamType';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -135,7 +136,11 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
 	// mesh_basic1.param_names();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
-	assert.equal(mesh_basic1.p.textureMap.value, '/COP/imageUv', 'textureMap value is "/COP/imageUv"');
+	assert.equal(
+		mesh_basic1.params.paramWithType('textureMap', ParamType.NODE_PATH)!.value.path(),
+		'/COP/imageUv',
+		'textureMap value is "/COP/imageUv"'
+	);
 	mesh_basic1.params.get('textureMap')!.set('/COP/file2');
 
 	const data = new SceneJsonExporter(scene).data();
@@ -148,7 +153,11 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	await new_mesh_basic1.compute();
 	assert.notOk(new_mesh_basic1.assemblerController?.compileRequired(), 'compile is not required');
 	assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
-	assert.equal(new_mesh_basic1.params.get('textureMap')?.value, '/COP/file2', 'textureMap value is "/COP/file_uv"');
+	assert.equal(
+		new_mesh_basic1.params.paramWithType('textureMap', ParamType.NODE_PATH)!.value.path(),
+		'/COP/file2',
+		'textureMap value is "/COP/file_uv"'
+	);
 });
 
 QUnit.test(

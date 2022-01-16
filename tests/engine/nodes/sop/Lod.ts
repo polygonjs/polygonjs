@@ -43,6 +43,7 @@ QUnit.test('LOD simple', async (assert) => {
 	assert.equal(box2_pts_count, 162);
 
 	container = await LOD1.compute();
+	assert.notOk(LOD1.states.error.message());
 	core_group = container.coreContent()!;
 	const lod = core_group.objects()[0] as LOD;
 

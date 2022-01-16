@@ -7,19 +7,19 @@ import {MaterialSopNode} from '../../../src/engine/nodes/sop/Material';
 import {ParamType} from '../../../src/engine/poly/ParamType';
 import {GeoObjNode} from '../../../src/engine/nodes/obj/Geo';
 import {MaterialsNetworkSopNode} from '../../../src/engine/nodes/sop/MaterialsNetwork';
-import {ObjectMergeSopNode} from '../../../src/engine/nodes/sop/ObjectMerge';
+// import {ObjectMergeSopNode} from '../../../src/engine/nodes/sop/ObjectMerge';
 import {saveAndLoadScene} from '../../helpers/ImportHelper';
 import {MeshStandardMatNode} from '../../../src/engine/nodes/mat/MeshStandard';
 import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
 
-async function saveAndLoad(scene: PolyScene) {
-	const data = new SceneJsonExporter(scene).data();
+// async function saveAndLoad(scene: PolyScene) {
+// 	const data = new SceneJsonExporter(scene).data();
 
-	// console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.loadData(data);
-	await scene.waitForCooksCompleted();
-	return scene2;
-}
+// 	// console.log('************ LOAD **************');
+// 	const scene2 = await SceneJsonImporter.loadData(data);
+// 	await scene.waitForCooksCompleted();
+// 	return scene2;
+// }
 
 QUnit.test('expression ch refers to a node that is later added', async (assert) => {
 	const geo1 = window.geo1;
@@ -130,7 +130,7 @@ QUnit.test('a top node referenced in an expression gets renamed involves updatin
 	assert.equal(param.value, 3);
 });
 
-QUnit.test('a relative path in a operator path param gets updated when ref changes name', async (assert) => {
+QUnit.test('a relative path in a node path param gets updated when ref changes name', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 	const material_sop = geo1.createNode('material');
@@ -154,47 +154,47 @@ QUnit.test('a relative path in a operator path param gets updated when ref chang
 	assert.equal(path_param.value.path(), '/new_MAT/new_name_again');
 });
 
-QUnit.test('an absolute path in a operator path param gets updated when ref changes name', async (assert) => {
-	const scene = window.scene;
-	const geo = window.geo1;
-	const anim = scene.root().createNode('animationsNetwork');
-	const target = anim.createNode('target');
-	const box = geo.createNode('box');
-	const param = target.p.nodePath;
+// QUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
+// 	const scene = window.scene;
+// 	const geo = window.geo1;
+// 	const anim = scene.root().createNode('animationsNetwork');
+// 	const target = anim.createNode('target');
+// 	const box = geo.createNode('box');
+// 	const param = target.p.nodePath;
 
-	assert.equal(param.type(), ParamType.OPERATOR_PATH);
+// 	assert.equal(param.type(), ParamType.OPERATOR_PATH);
 
-	await scene.waitForCooksCompleted();
+// 	await scene.waitForCooksCompleted();
 
-	param.set(box.path());
+// 	param.set(box.path());
 
-	await param.compute();
-	assert.equal(param.value, '/geo1/box1');
+// 	await param.compute();
+// 	assert.equal(param.value, '/geo1/box1');
 
-	box.setName('new_name');
-	// assert.ok(param.isDirty(), 'is dirty on renamed 1');
-	// await param.compute();
-	// assert.notOk(param.isDirty());
-	assert.equal(param.value, '/geo1/new_name');
+// 	box.setName('new_name');
+// 	// assert.ok(param.isDirty(), 'is dirty on renamed 1');
+// 	// await param.compute();
+// 	// assert.notOk(param.isDirty());
+// 	assert.equal(param.value, '/geo1/new_name');
 
-	box.setName('new_name2');
-	// assert.ok(param.isDirty(), 'is dirty on renamed 2');
-	// await param.compute();
-	// assert.notOk(param.isDirty());
-	assert.equal(param.value, '/geo1/new_name2');
+// 	box.setName('new_name2');
+// 	// assert.ok(param.isDirty(), 'is dirty on renamed 2');
+// 	// await param.compute();
+// 	// assert.notOk(param.isDirty());
+// 	assert.equal(param.value, '/geo1/new_name2');
 
-	geo.setName('new_event');
-	// assert.ok(param.isDirty());
-	// await param.compute();
-	// assert.notOk(param.isDirty());
-	assert.equal(param.value, '/new_event/new_name2');
+// 	geo.setName('new_event');
+// 	// assert.ok(param.isDirty());
+// 	// await param.compute();
+// 	// assert.notOk(param.isDirty());
+// 	assert.equal(param.value, '/new_event/new_name2');
 
-	box.setName('new_name_again');
-	// assert.ok(param.isDirty());
-	// await param.compute();
-	// assert.notOk(param.isDirty());
-	assert.equal(param.value, '/new_event/new_name_again');
-});
+// 	box.setName('new_name_again');
+// 	// assert.ok(param.isDirty());
+// 	// await param.compute();
+// 	// assert.notOk(param.isDirty());
+// 	assert.equal(param.value, '/new_event/new_name_again');
+// });
 
 QUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
@@ -408,32 +408,34 @@ QUnit.test(
 
 		// new scene with compute node
 		async function testWithCompute() {
-			const scene2 = await saveAndLoad(scene);
-			const material2 = scene2.node(material1.path()) as MaterialSopNode;
-			assert.equal(material2.pv.material.path(), '/MAT/meshBasic1');
+			await saveAndLoadScene(scene, async (scene2) => {
+				const material2 = scene2.node(material1.path()) as MaterialSopNode;
+				assert.equal(material2.pv.material.path(), '/MAT/meshBasic1');
 
-			await material2.compute();
-			assert.notOk(material2.pv.material.node());
-			const MAT2 = scene2.node(window.MAT.path()) as MaterialsNetworkObjNode;
-			const meshBasic1 = MAT2.createNode('meshBasic');
-			assert.equal(meshBasic1.path(), material2.pv.material.path());
-			assert.ok(material2.pv.material.node());
-			assert.equal(material2.pv.material.node()!.graphNodeId(), meshBasic1.graphNodeId());
+				await material2.compute();
+				assert.notOk(material2.pv.material.node());
+				const MAT2 = scene2.node(window.MAT.path()) as MaterialsNetworkObjNode;
+				const meshBasic1 = MAT2.createNode('meshBasic');
+				assert.equal(meshBasic1.path(), material2.pv.material.path());
+				assert.ok(material2.pv.material.node());
+				assert.equal(material2.pv.material.node()!.graphNodeId(), meshBasic1.graphNodeId());
+			});
 		}
 
 		// new scene without compute node
 		async function testWithoutCompute() {
-			const scene2 = await saveAndLoad(scene);
-			const material2 = scene2.node(material1.path()) as MaterialSopNode;
-			assert.equal(material2.pv.material.path(), '/MAT/meshBasic1');
+			await saveAndLoadScene(scene, async (scene2) => {
+				const material2 = scene2.node(material1.path()) as MaterialSopNode;
+				assert.equal(material2.pv.material.path(), '/MAT/meshBasic1');
 
-			// await material2.compute();
-			assert.notOk(material2.pv.material.node());
-			const MAT2 = scene2.node(window.MAT.path()) as MaterialsNetworkObjNode;
-			const meshBasic1 = MAT2.createNode('meshBasic');
-			assert.equal(meshBasic1.path(), material2.pv.material.path());
-			assert.ok(material2.pv.material.node());
-			assert.equal(material2.pv.material.node()!.graphNodeId(), meshBasic1.graphNodeId());
+				// await material2.compute();
+				assert.notOk(material2.pv.material.node());
+				const MAT2 = scene2.node(window.MAT.path()) as MaterialsNetworkObjNode;
+				const meshBasic1 = MAT2.createNode('meshBasic');
+				assert.equal(meshBasic1.path(), material2.pv.material.path());
+				assert.ok(material2.pv.material.node());
+				assert.equal(material2.pv.material.node()!.graphNodeId(), meshBasic1.graphNodeId());
+			});
 		}
 		await testWithCompute();
 		await testWithoutCompute();
@@ -455,97 +457,104 @@ QUnit.test(
 		assert.equal(material1.p.material.type(), ParamType.NODE_PATH);
 
 		async function testWithCompute() {
-			const scene2 = await saveAndLoad(scene);
-			const material2 = scene2.node(material1.path()) as MaterialSopNode;
-			assert.equal(material2.pv.material.path(), '../MAT/meshBasic1');
+			await saveAndLoadScene(scene, async (scene2) => {
+				const material2 = scene2.node(material1.path()) as MaterialSopNode;
+				assert.equal(material2.pv.material.path(), '../MAT/meshBasic1');
 
-			await material2.compute();
-			assert.notOk(material2.pv.material.node());
-			const geo2 = scene2.node(geo1.path()) as GeoObjNode;
-			const MAT2 = geo2.createNode('materialsNetwork');
-			MAT2.setName('MAT');
-			const meshBasic1 = MAT2.createNode('meshBasic');
-			assert.equal(CoreWalker.relativePath(material2, meshBasic1), material2.pv.material.path());
-			assert.ok(material2.pv.material.node());
-			assert.equal(material2.pv.material.node()!.graphNodeId(), meshBasic1.graphNodeId());
+				await material2.compute();
+				assert.notOk(material2.pv.material.node());
+				const geo2 = scene2.node(geo1.path()) as GeoObjNode;
+				const MAT2 = geo2.createNode('materialsNetwork');
+				MAT2.setName('MAT');
+				const meshBasic1 = MAT2.createNode('meshBasic');
+				assert.equal(CoreWalker.relativePath(material2, meshBasic1), material2.pv.material.path());
+				assert.ok(material2.pv.material.node());
+				assert.equal(material2.pv.material.node()!.graphNodeId(), meshBasic1.graphNodeId());
+			});
 		}
 		async function testWithoutCompute() {
-			const scene2 = await saveAndLoad(scene);
-			const material2 = scene2.node(material1.path()) as MaterialSopNode;
-			assert.equal(material2.pv.material.path(), '../MAT/meshBasic1');
+			await saveAndLoadScene(scene, async (scene2) => {
+				const material2 = scene2.node(material1.path()) as MaterialSopNode;
+				assert.equal(material2.pv.material.path(), '../MAT/meshBasic1');
 
-			await material2.compute();
-			assert.notOk(material2.pv.material.node());
-			const geo2 = scene2.node(geo1.path()) as GeoObjNode;
-			const MAT2 = geo2.createNode('materialsNetwork');
-			MAT2.setName('MAT');
-			const meshBasic1 = MAT2.createNode('meshBasic');
-			assert.equal(CoreWalker.relativePath(material2, meshBasic1), material2.pv.material.path());
-			assert.ok(material2.pv.material.node());
-			assert.equal(material2.pv.material.node()!.graphNodeId(), meshBasic1.graphNodeId());
+				await material2.compute();
+				assert.notOk(material2.pv.material.node());
+				const geo2 = scene2.node(geo1.path()) as GeoObjNode;
+				const MAT2 = geo2.createNode('materialsNetwork');
+				MAT2.setName('MAT');
+				const meshBasic1 = MAT2.createNode('meshBasic');
+				assert.equal(CoreWalker.relativePath(material2, meshBasic1), material2.pv.material.path());
+				assert.ok(material2.pv.material.node());
+				assert.equal(material2.pv.material.node()!.graphNodeId(), meshBasic1.graphNodeId());
+			});
 		}
 		await testWithCompute();
 		await testWithoutCompute();
 	}
 );
 
-QUnit.test(
-	'an operator path param referencing a non existing node with an absolute path gets linked to it when one matching is named to the path',
-	async (assert) => {
-		const scene = window.scene;
-		const geo1 = window.geo1;
-		await scene.waitForCooksCompleted();
+// QUnit.test(
+// 	'an operator path param referencing a non existing node with an absolute path gets linked to it when one matching is named to the path',
+// 	async (assert) => {
+// 		const scene = window.scene;
+// 		const geo1 = window.geo1;
+// 		await scene.waitForCooksCompleted();
 
-		const box = geo1.createNode('box');
-		geo1.flags.display.set(false);
-		box.flags.display.set(true);
-		const objectMerge1 = geo1.createNode('objectMerge');
-		objectMerge1.p.geometry.set('/geo2/box1');
-		assert.equal(objectMerge1.p.geometry.type(), ParamType.OPERATOR_PATH);
+// 		const eventsNetwork = scene.root().createNode('eventsNetwork');
+// 		const raycast1 = eventsNetwork.createNode('raycast');
 
-		const scene2 = await saveAndLoad(scene);
-		const objectMerge2 = scene2.node(objectMerge1.path()) as ObjectMergeSopNode;
-		assert.equal(objectMerge2.pv.geometry, '/geo2/box1');
+// 		const box = geo1.createNode('box');
+// 		geo1.flags.display.set(false);
+// 		box.flags.display.set(true);
+// 		// const objectMerge1 = geo1.createNode('objectMerge');
+// 		raycast1.p.camera.set('/geo2/box1');
+// 		assert.equal(raycast1.p.camera.type(), ParamType.OPERATOR_PATH);
 
-		await objectMerge2.compute();
-		assert.equal(objectMerge2.states.error.message(), `node not found at path '/geo2/box1'`);
-		const geo2 = scene2.createNode('geo');
-		const box2 = geo2.createNode('box');
-		assert.equal(box2.path(), objectMerge2.pv.geometry);
-		assert.ok(objectMerge2.isDirty());
-		await objectMerge2.compute();
-		assert.notOk(objectMerge2.states.error.active());
-	}
-);
+// 		await saveAndLoadScene(scene, async (scene2) => {
+// 			const objectMerge2 = scene2.node(objectMerge1.path()) as ObjectMergeSopNode;
+// 			assert.equal(objectMerge2.pv.geometry, '/geo2/box1');
 
-QUnit.test(
-	'an operator path param referencing a non existing node with a relative path gets linked to it when one matching is named to the path',
-	async (assert) => {
-		const scene = window.scene;
-		const geo1 = window.geo1;
-		await scene.waitForCooksCompleted();
+// 			await objectMerge2.compute();
+// 			assert.equal(objectMerge2.states.error.message(), `node not found at path '/geo2/box1'`);
+// 			const geo2 = scene2.createNode('geo');
+// 			const box2 = geo2.createNode('box');
+// 			assert.equal(box2.path(), objectMerge2.pv.geometry);
+// 			assert.ok(objectMerge2.isDirty());
+// 			await objectMerge2.compute();
+// 			assert.notOk(objectMerge2.states.error.active());
+// 		});
+// 	}
+// );
 
-		const box = geo1.createNode('box');
-		geo1.flags.display.set(false);
-		box.flags.display.set(true);
-		const objectMerge1 = geo1.createNode('objectMerge');
-		objectMerge1.p.geometry.set('../../geo2/box1');
-		assert.equal(objectMerge1.p.geometry.type(), ParamType.OPERATOR_PATH);
+// QUnit.test(
+// 	'an operator path param referencing a non existing node with a relative path gets linked to it when one matching is named to the path',
+// 	async (assert) => {
+// 		const scene = window.scene;
+// 		const geo1 = window.geo1;
+// 		await scene.waitForCooksCompleted();
 
-		const scene2 = await saveAndLoad(scene);
-		const objectMerge2 = scene2.node(objectMerge1.path()) as ObjectMergeSopNode;
-		assert.equal(objectMerge2.pv.geometry, '../../geo2/box1');
+// 		const box = geo1.createNode('box');
+// 		geo1.flags.display.set(false);
+// 		box.flags.display.set(true);
+// 		const objectMerge1 = geo1.createNode('objectMerge');
+// 		objectMerge1.p.geometry.set('../../geo2/box1');
+// 		assert.equal(objectMerge1.p.geometry.type(), ParamType.OPERATOR_PATH);
 
-		await objectMerge2.compute();
-		assert.equal(objectMerge2.states.error.message(), `node not found at path '../../geo2/box1'`);
-		const geo2 = scene2.createNode('geo');
-		const box2 = geo2.createNode('box');
-		assert.equal(CoreWalker.relativePath(objectMerge2, box2), objectMerge2.pv.geometry);
-		assert.ok(objectMerge2.isDirty());
-		await objectMerge2.compute();
-		assert.notOk(objectMerge2.states.error.active());
-	}
-);
+// 		await saveAndLoadScene(scene, async (scene2) => {
+// 			const objectMerge2 = scene2.node(objectMerge1.path()) as ObjectMergeSopNode;
+// 			assert.equal(objectMerge2.pv.geometry, '../../geo2/box1');
+
+// 			await objectMerge2.compute();
+// 			assert.equal(objectMerge2.states.error.message(), `node not found at path '../../geo2/box1'`);
+// 			const geo2 = scene2.createNode('geo');
+// 			const box2 = geo2.createNode('box');
+// 			assert.equal(CoreWalker.relativePath(objectMerge2, box2), objectMerge2.pv.geometry);
+// 			assert.ok(objectMerge2.isDirty());
+// 			await objectMerge2.compute();
+// 			assert.notOk(objectMerge2.states.error.active());
+// 		});
+// 	}
+// );
 
 QUnit.test(
 	'referring to a node named image1 will not create conflict when other nodes may be given same name during scene load',

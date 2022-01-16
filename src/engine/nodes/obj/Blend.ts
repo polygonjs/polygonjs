@@ -23,13 +23,13 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
 class BlendObjParamConfig extends NodeParamsConfig {
 	/** @param object to blend transform from */
-	object0 = ParamConfig.OPERATOR_PATH('/geo1', {
+	object0 = ParamConfig.NODE_PATH('/geo1', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
 	});
 	/** @param object to blend transform to */
-	object1 = ParamConfig.OPERATOR_PATH('/geo2', {
+	object1 = ParamConfig.NODE_PATH('/geo2', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
@@ -100,8 +100,8 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	}
 
 	cook() {
-		const obj_node0 = this.p.object0.found_node_with_context(NodeContext.OBJ);
-		const obj_node1 = this.p.object1.found_node_with_context(NodeContext.OBJ);
+		const obj_node0 = this.pv.object0.nodeWithContext(NodeContext.OBJ, this.states.error);
+		const obj_node1 = this.pv.object1.nodeWithContext(NodeContext.OBJ, this.states.error);
 		if (obj_node0 && obj_node1) {
 			this._blend(obj_node0.object, obj_node1.object);
 		}

@@ -3,7 +3,7 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {NodeContext} from '../../poly/NodeContext';
+import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {VisibleIfParamOptions, ParamOptions} from '../../params/utils/OptionsController';
@@ -80,9 +80,10 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param the camera to override to */
-	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
+	camera = ParamConfig.NODE_PATH('/perspective_camera1', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
+			types: CAMERA_TYPES,
 		},
 		dependentOnFoundNode: false,
 		visibleIf: {
@@ -111,7 +112,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	/** @param the material to use on the scene for GPU detection */
-	material = ParamConfig.OPERATOR_PATH('/MAT/mesh_basic_builder1', {
+	material = ParamConfig.NODE_PATH('/MAT/mesh_basic_builder1', {
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},

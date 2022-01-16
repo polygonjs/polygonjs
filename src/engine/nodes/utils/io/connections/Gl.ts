@@ -153,7 +153,7 @@ export interface IGLParamTypeToConnectionPointTypeMap extends GLParamTypeToConne
 	[ParamType.VECTOR3]: GlConnectionPointType.VEC3;
 	[ParamType.VECTOR4]: GlConnectionPointType.VEC4;
 	[ParamType.BUTTON]: undefined;
-	[ParamType.OPERATOR_PATH]: undefined;
+	// [ParamType.OPERATOR_PATH]: undefined;
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
@@ -175,7 +175,7 @@ export const GLParamTypeToConnectionPointTypeMap: IGLParamTypeToConnectionPointT
 	[ParamType.VECTOR3]: GlConnectionPointType.VEC3,
 	[ParamType.VECTOR4]: GlConnectionPointType.VEC4,
 	[ParamType.BUTTON]: undefined,
-	[ParamType.OPERATOR_PATH]: undefined,
+	// [ParamType.OPERATOR_PATH]: undefined,
 	[ParamType.PARAM_PATH]: undefined,
 	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,

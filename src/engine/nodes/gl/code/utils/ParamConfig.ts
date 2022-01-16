@@ -9,7 +9,7 @@ import {BaseParamType} from '../../../../params/_Base';
 import {TypeAssert} from '../../../../poly/Assert';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {RampParam} from '../../../../params/Ramp';
-import {OperatorPathParam} from '../../../../params/OperatorPath';
+// import {OperatorPathParam} from '../../../../params/OperatorPath';
 import {ParamConfig} from '../../../utils/code/configs/ParamConfig';
 import {NodePathParam} from '../../../../params/NodePath';
 import {NodeContext} from '../../../../poly/NodeContext';
@@ -56,9 +56,9 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 			case ParamType.RAMP:
 				uniform.value = (param as RampParam).rampTexture();
 				return;
-			case ParamType.OPERATOR_PATH:
-				GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, uniform);
-				return;
+			// case ParamType.OPERATOR_PATH:
+			// 	GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, uniform);
+			// 	return;
 			case ParamType.NODE_PATH:
 				GlParamConfig.set_uniform_value_from_texture_from_node_path_param(param as NodePathParam, uniform);
 				return;
@@ -82,8 +82,8 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 				return {value: 0};
 			case ParamType.INTEGER:
 				return {value: 0};
-			case ParamType.OPERATOR_PATH:
-				return {value: 0};
+			// case ParamType.OPERATOR_PATH:
+			// 	return {value: 0};
 			case ParamType.NODE_PATH:
 				return {value: 0};
 			case ParamType.PARAM_PATH:
@@ -103,23 +103,23 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		TypeAssert.unreachable(type);
 	}
 
-	private static set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
-		const found_node = param.found_node();
-		if (found_node) {
-			if (found_node.isDirty()) {
-				found_node.compute().then((container) => {
-					const texture = container.texture();
-					uniform.value = texture;
-				});
-			} else {
-				const container = found_node.containerController.container();
-				const texture = container.texture();
-				uniform.value = texture;
-			}
-		} else {
-			uniform.value = null;
-		}
-	}
+	// private static set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
+	// 	const found_node = param.found_node();
+	// 	if (found_node) {
+	// 		if (found_node.isDirty()) {
+	// 			found_node.compute().then((container) => {
+	// 				const texture = container.texture();
+	// 				uniform.value = texture;
+	// 			});
+	// 		} else {
+	// 			const container = found_node.containerController.container();
+	// 			const texture = container.texture();
+	// 			uniform.value = texture;
+	// 		}
+	// 	} else {
+	// 		uniform.value = null;
+	// 	}
+	// }
 	private static async set_uniform_value_from_texture_from_node_path_param(param: NodePathParam, uniform: IUniform) {
 		if (param.isDirty()) {
 			await param.compute();

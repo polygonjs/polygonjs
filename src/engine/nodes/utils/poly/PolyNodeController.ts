@@ -1,4 +1,3 @@
-import {OperatorPathParam} from '../../../params/OperatorPath';
 import {ParamOptionToAdd} from '../params/ParamsController';
 import {ParamType} from '../../../poly/ParamType';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../../io/json/export/Node';
@@ -10,6 +9,7 @@ import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
 import {createPolySopNode} from '../../sop/Poly';
 import {createPolyObjNode} from '../../obj/Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {NodePathParam} from '../../../params/NodePath';
 
 export interface PolyNodeDefinition {
 	nodeContext: NodeContext;
@@ -84,8 +84,8 @@ export class PolyNodeController {
 		}
 	}
 
-	debug(param: OperatorPathParam) {
-		const node = param.found_node();
+	debug(param: NodePathParam) {
+		const node = param.value.node();
 		if (node) {
 			const root_exporter = JsonExportDispatcher.dispatch_node(node);
 			const nodes_data = root_exporter.data({showPolyNodesData: true});

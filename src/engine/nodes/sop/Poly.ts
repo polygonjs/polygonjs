@@ -6,7 +6,7 @@ import {NodeContext} from '../../poly/NodeContext';
 
 export function createPolySopNode(node_type: string, definition: PolyNodeDefinition) {
 	class PolySopParamsConfig extends NodeParamsConfig {
-		template = ParamConfig.OPERATOR_PATH('../template');
+		template = ParamConfig.NODE_PATH('../template');
 		debug = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {
 				BasePolySopNode.PARAM_CALLBACK_debug(node as BasePolySopNode);

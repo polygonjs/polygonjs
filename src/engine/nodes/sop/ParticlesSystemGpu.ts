@@ -71,7 +71,7 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	});
 
 	/** @param material used to render the particles */
-	material = ParamConfig.OPERATOR_PATH('', {
+	material = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},

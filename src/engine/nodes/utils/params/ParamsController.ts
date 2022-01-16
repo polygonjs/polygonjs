@@ -4,7 +4,7 @@ import {ParamOptions} from '../../../params/utils/OptionsController';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 
 import {FloatParam} from '../../../params/Float';
-import {OperatorPathParam} from '../../../params/OperatorPath';
+// import {OperatorPathParam} from '../../../params/OperatorPath';
 
 import {ParamType} from '../../../poly/ParamType';
 // import {ParamEvent} from '../../../poly/ParamEvent';
@@ -272,7 +272,7 @@ export class ParamsController {
 	}
 
 	private set_with_type<T extends ParamType>(param_name: string, value: ParamInitValuesTypeMap[T], type: T) {
-		const param = this.param_with_type(param_name, type);
+		const param = this.paramWithType(param_name, type);
 		if (param) {
 			param.set(value as never);
 		} else {
@@ -295,57 +295,57 @@ export class ParamsController {
 	get(param_name: string) {
 		return this.param(param_name);
 	}
-	param_with_type<T extends ParamType>(param_name: string, type: T): ParamConstructorMap[T] | undefined {
+	paramWithType<T extends ParamType>(param_name: string, type: T): ParamConstructorMap[T] | undefined {
 		const param = this.param(param_name);
 		if (param && param.type() == type) {
 			return param as ParamConstructorMap[T];
 		}
 	}
-	get_float(param_name: string): FloatParam {
-		return this.param_with_type(param_name, ParamType.FLOAT) as FloatParam;
+	getFloat(param_name: string): FloatParam {
+		return this.paramWithType(param_name, ParamType.FLOAT) as FloatParam;
 	}
-	get_operator_path(param_name: string): OperatorPathParam {
-		return this.param_with_type(param_name, ParamType.OPERATOR_PATH) as OperatorPathParam;
-	}
+	// get_operator_path(param_name: string): OperatorPathParam {
+	// 	return this.paramWithType(param_name, ParamType.OPERATOR_PATH) as OperatorPathParam;
+	// }
 	value(param_name: string) {
 		return this.param(param_name)?.value;
 	}
-	value_with_type<T extends ParamType>(param_name: string, type: T): ParamValuesTypeMap[T] {
-		return this.param_with_type(param_name, type)?.value as ParamValuesTypeMap[T];
+	valueWithType<T extends ParamType>(param_name: string, type: T): ParamValuesTypeMap[T] {
+		return this.paramWithType(param_name, type)?.value as ParamValuesTypeMap[T];
 		// const param = this.param(name);
 		// if (param && param.type() == type) {
 		// 	return param.value();
 		// }
 	}
-	boolean(param_name: string) {
-		return this.value_with_type(param_name, ParamType.BOOLEAN);
+	boolean(paramName: string) {
+		return this.valueWithType(paramName, ParamType.BOOLEAN);
 	}
-	float(param_name: string) {
-		return this.value_with_type(param_name, ParamType.FLOAT);
+	float(paramName: string) {
+		return this.valueWithType(paramName, ParamType.FLOAT);
 	}
-	integer(param_name: string) {
-		return this.value_with_type(param_name, ParamType.INTEGER);
+	integer(paramName: string) {
+		return this.valueWithType(paramName, ParamType.INTEGER);
 	}
-	string(param_name: string) {
-		return this.value_with_type(param_name, ParamType.STRING);
+	string(paramName: string) {
+		return this.valueWithType(paramName, ParamType.STRING);
 	}
-	vector2(param_name: string) {
-		return this.value_with_type(param_name, ParamType.VECTOR2);
+	vector2(paramName: string) {
+		return this.valueWithType(paramName, ParamType.VECTOR2);
 	}
-	vector3(param_name: string) {
-		return this.value_with_type(param_name, ParamType.VECTOR3);
+	vector3(paramName: string) {
+		return this.valueWithType(paramName, ParamType.VECTOR3);
 	}
-	color(param_name: string) {
-		return this.value_with_type(param_name, ParamType.COLOR);
+	color(paramName: string) {
+		return this.valueWithType(paramName, ParamType.COLOR);
 	}
 
-	param(param_name: string) {
-		const p = this._params_by_name[param_name];
+	param(paramName: string) {
+		const p = this._params_by_name[paramName];
 		if (p != null) {
 			return p;
 		} else {
 			Poly.warn(
-				`tried to access param '${param_name}' in node ${this.node.path()}, but existing params are: ${
+				`tried to access param '${paramName}' in node ${this.node.path()}, but existing params are: ${
 					this.names
 				} on node ${this.node.path()}`
 			);

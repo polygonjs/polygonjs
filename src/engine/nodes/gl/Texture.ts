@@ -55,7 +55,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		this._param_configs_controller.reset();
 
 		const param_config = new GlParamConfig(
-			ParamType.OPERATOR_PATH,
+			ParamType.NODE_PATH,
 			this.pv.paramName,
 			this.pv.defaultValue,
 			this._uniform_name()

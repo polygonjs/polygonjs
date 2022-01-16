@@ -104,12 +104,12 @@ export class ParamConfig {
 	// PATH PARAMS
 	//
 	//
-	static OPERATOR_PATH(
-		init_value: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
-		options?: ParamOptionsByTypeMap[ParamType.OPERATOR_PATH]
-	) {
-		return new ParamTemplate<ParamType.OPERATOR_PATH>(ParamType.OPERATOR_PATH, init_value, options);
-	}
+	// static OPERATOR_PATH(
+	// 	init_value: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH],
+	// 	options?: ParamOptionsByTypeMap[ParamType.OPERATOR_PATH]
+	// ) {
+	// 	return new ParamTemplate<ParamType.OPERATOR_PATH>(ParamType.OPERATOR_PATH, init_value, options);
+	// }
 	static NODE_PATH(
 		init_value: ParamInitValuesTypeMap[ParamType.NODE_PATH],
 		options?: ParamOptionsByTypeMap[ParamType.NODE_PATH]

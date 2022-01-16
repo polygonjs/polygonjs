@@ -17,7 +17,7 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 export function createPolyObjNode(node_type: string, definition: PolyNodeDefinition) {
 	class PolyObjParamConfig extends NodeParamsConfig {
 		display = ParamConfig.BOOLEAN(1);
-		template = ParamConfig.OPERATOR_PATH('../template');
+		template = ParamConfig.NODE_PATH('../template');
 		debug = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {
 				BasePolyObjNode.PARAM_CALLBACK_debug(node as BasePolyObjNode);

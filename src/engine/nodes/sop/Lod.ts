@@ -10,10 +10,11 @@ import {Object3D} from 'three/src/core/Object3D';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
-import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
+import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreTransform} from '../../../core/Transform';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {Camera} from 'three/src/cameras/Camera';
 class LODSopParamsConfig extends NodeParamsConfig {
 	/** @param distance when switching between high res and mid res (first input and second input) */
 	distance0 = ParamConfig.FLOAT(1);
@@ -28,7 +29,11 @@ class LODSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param sets which camera will be used when the switch is to be done manually */
-	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
+	camera = ParamConfig.NODE_PATH('', {
+		nodeSelection: {
+			context: NodeContext.OBJ,
+			types: CAMERA_TYPES,
+		},
 		visibleIf: {autoUpdate: 0},
 		dependentOnFoundNode: false,
 	});
@@ -57,19 +62,19 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 		return lod;
 	}
 
-	cook(input_contents: CoreGroup[]) {
-		this._clear_lod();
+	cook(inputCoreGroups: CoreGroup[]) {
+		this._clearLOD();
 
-		this._add_level(input_contents[0], 0);
-		this._add_level(input_contents[1], this.pv.distance0);
-		this._add_level(input_contents[2], this.pv.distance1);
+		this._addLevel(inputCoreGroups[0], 0);
+		this._addLevel(inputCoreGroups[1], this.pv.distance0);
+		this._addLevel(inputCoreGroups[2], this.pv.distance1);
 
 		this._lod.autoUpdate = isBooleanTrue(this.pv.autoUpdate);
 
 		this.setObject(this._lod);
 	}
 
-	_add_level(core_group: CoreGroup | undefined, level: number) {
+	_addLevel(core_group: CoreGroup | undefined, level: number) {
 		if (core_group) {
 			const objects = core_group.objects();
 			let object: Object3D;
@@ -93,7 +98,7 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 		}
 	}
 
-	private _clear_lod() {
+	private _clearLOD() {
 		let child: Object3D;
 		while ((child = this._lod.children[0])) {
 			this._lod.remove(child);
@@ -105,25 +110,25 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 	}
 
 	static PARAM_CALLBACK_update(node: LodSopNode) {
-		node._update_lod();
+		node._updateLOD();
 	}
-	private async _update_lod() {
-		if (this.p.autoUpdate) {
+	private async _updateLOD() {
+		if (isBooleanTrue(this.pv.autoUpdate)) {
 			return;
 		}
 
-		const camera_param = this.p.camera;
-		if (camera_param.isDirty()) {
-			await camera_param.compute();
-		}
-		let camera_node =
-			camera_param.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE) ||
-			camera_param.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.ORTHOGRAPHIC);
-		if (camera_node) {
-			const object = camera_node.object;
-			this._lod.update(object);
-		} else {
+		const cameraNode = this.pv.camera.nodeWithContext(NodeContext.OBJ, this.states.error);
+		// camera_param.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.PERSPECTIVE) ||
+		// camera_param.found_node_with_context_and_type(NodeContext.OBJ, CameraNodeType.ORTHOGRAPHIC);
+		if (!cameraNode) {
 			this.states.error.set('no camera node found');
+			return;
 		}
+		if (!(CAMERA_TYPES as string[]).includes(cameraNode.type())) {
+			this.states.error.set('node is not a camera node');
+			return;
+		}
+		const object = cameraNode.object as Camera;
+		this._lod.update(object);
 	}
 }

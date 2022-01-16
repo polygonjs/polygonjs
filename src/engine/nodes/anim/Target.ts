@@ -31,7 +31,7 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param if set to a Polygonjs node, this is the node path */
-	nodePath = ParamConfig.OPERATOR_PATH('', {
+	nodePath = ParamConfig.NODE_PATH('', {
 		visibleIf: {type: TARGET_TYPE_NODE},
 	});
 	/** @param if set to a THREE object, this is a mask to find the objects */
@@ -66,7 +66,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 					const type = TARGET_TYPES[this.pv.type];
 					switch (type) {
 						case AnimTargetNodeTargetType.NODE:
-							return this.pv.nodePath;
+							return this.pv.nodePath.path();
 						case AnimTargetNodeTargetType.SCENE_GRAPH:
 							return this.pv.objectMask;
 					}
@@ -94,7 +94,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 			case AnimTargetNodeTargetType.NODE: {
 				return new PropertyTarget(this.scene(), {
 					node: {
-						path: this.pv.nodePath,
+						path: this.pv.nodePath.path(),
 						relativeTo: this,
 					},
 				});

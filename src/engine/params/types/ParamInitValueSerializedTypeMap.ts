@@ -23,7 +23,7 @@ export interface ParamInitValueSerializedTypeMap /*extends ParamInitValueSeriali
 	[ParamType.FLOAT]: ParamInitValuesTypeMap[ParamType.FLOAT];
 	[ParamType.FOLDER]: ParamInitValuesTypeMap[ParamType.FOLDER];
 	[ParamType.INTEGER]: ParamInitValuesTypeMap[ParamType.INTEGER];
-	[ParamType.OPERATOR_PATH]: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH];
+	// [ParamType.OPERATOR_PATH]: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH];
 	[ParamType.NODE_PATH]: ParamInitValuesTypeMap[ParamType.NODE_PATH];
 	[ParamType.PARAM_PATH]: ParamInitValuesTypeMap[ParamType.PARAM_PATH];
 	[ParamType.RAMP]: RampValueJson;

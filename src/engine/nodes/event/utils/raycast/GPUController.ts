@@ -138,7 +138,7 @@ export class RaycastGPUController {
 	}
 
 	update_material() {
-		const node = this._node.p.material.found_node();
+		const node = this._node.pv.material.nodeWithContext(NodeContext.MAT, this._node.states.error);
 		if (node) {
 			if (node.context() == NodeContext.MAT) {
 				this._resolved_material = (node as BaseMatNodeType).material;

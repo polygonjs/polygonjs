@@ -9,6 +9,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsControllerData} from '../../../gl/code/utils/TextureAllocationsController';
 import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
+import {NodeContext} from '../../../../poly/NodeContext';
 
 export class ParticlesSystemGpuRenderController {
 	private _render_material: ShaderMaterial | undefined;
@@ -104,15 +105,18 @@ export class ParticlesSystemGpuRenderController {
 			await this.node.p.material.compute();
 			this.node.debugMessage('renderController: this.node.p.material.compute() END');
 		}
-		const mat_node = this.node.p.material.found_node() as BaseBuilderMatNodeType;
+		const matNode = this.node.pv.material.nodeWithContext(
+			NodeContext.MAT,
+			this.node.states.error
+		) as BaseBuilderMatNodeType;
 
-		if (mat_node) {
+		if (matNode) {
 			if (assembler) {
 				const new_texture_allocations_json: TextureAllocationsControllerData = assembler
 					.textureAllocationsController()
 					.toJSON(this.node.scene());
 
-				const matNodeAssemblerController = mat_node.assemblerController;
+				const matNodeAssemblerController = matNode.assemblerController;
 				if (matNodeAssemblerController) {
 					this.globals_handler.set_texture_allocations_controller(assembler.textureAllocationsController());
 					matNodeAssemblerController.set_assembler_globals_handler(this.globals_handler);
@@ -134,9 +138,9 @@ export class ParticlesSystemGpuRenderController {
 					}
 				}
 			}
-			this.node.debugMessage('renderController: mat_node.compute() START');
-			const container = await mat_node.compute();
-			this.node.debugMessage('renderController: mat_node.compute() END');
+			this.node.debugMessage('renderController: matNode.compute() START');
+			const container = await matNode.compute();
+			this.node.debugMessage('renderController: matNode.compute() END');
 			this._render_material = container.material() as ShaderMaterial;
 		} else {
 			this.node.states.error.set('render material not valid');

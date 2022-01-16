@@ -16,7 +16,7 @@ import {CoreImage} from '../../../core/Image';
 import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
 	/** @param texture node to load the heightmap from */
-	texture = ParamConfig.OPERATOR_PATH(NODE_PATH_DEFAULT.NODE.UV, {
+	texture = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.UV, {
 		nodeSelection: {context: NodeContext.COP},
 	});
 	/** @param values multiplier */
@@ -38,7 +38,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 	async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
-		const node = this.p.texture.found_node();
+		const node = this.pv.texture.nodeWithContext(NodeContext.COP, this.states.error);
 		if (node) {
 			const node_context = node.context();
 			if (node_context == NodeContext.COP) {

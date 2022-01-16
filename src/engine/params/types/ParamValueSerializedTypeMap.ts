@@ -23,7 +23,7 @@ export interface ParamValueSerializedTypeMap /*extends ParamValueSerializedTypeM
 	[ParamType.FLOAT]: number;
 	[ParamType.FOLDER]: null;
 	[ParamType.INTEGER]: number;
-	[ParamType.OPERATOR_PATH]: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH];
+	// [ParamType.OPERATOR_PATH]: ParamInitValuesTypeMap[ParamType.OPERATOR_PATH];
 	[ParamType.NODE_PATH]: ParamInitValuesTypeMap[ParamType.NODE_PATH];
 	[ParamType.PARAM_PATH]: ParamInitValuesTypeMap[ParamType.PARAM_PATH];
 	[ParamType.RAMP]: RampValueJson;
@@ -41,7 +41,7 @@ export interface ParamValuePreConversionSerializedTypeMap /*extends ParamValuePr
 	[ParamType.FLOAT]: undefined;
 	[ParamType.FOLDER]: undefined;
 	[ParamType.INTEGER]: undefined;
-	[ParamType.OPERATOR_PATH]: undefined;
+	// [ParamType.OPERATOR_PATH]: undefined;
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.RAMP]: undefined;

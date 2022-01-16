@@ -7,7 +7,7 @@ import {CATEGORY_SOP} from './Category';
 
 import {AddSopNode} from '../../../nodes/sop/Add';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
-import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
+// import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
 import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
 import {AttribCastSopNode} from '../../../nodes/sop/AttribCast';
 import {AttribCopySopNode} from '../../../nodes/sop/AttribCopy';
@@ -131,7 +131,7 @@ import {RenderersNetworkSopNode} from '../../../nodes/sop/RenderersNetwork';
 export interface GeoNodeChildrenMap {
 	add: AddSopNode;
 	animationCopy: AnimationCopySopNode;
-	animationMixer: AnimationMixerSopNode;
+	// animationMixer: AnimationMixerSopNode;
 	attribAddMult: AttribAddMultSopNode;
 	attribCast: AttribCastSopNode;
 	attribCopy: AttribCopySopNode;
@@ -379,7 +379,7 @@ export class SopRegister {
 
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
-		poly.registerNode(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
+		// poly.registerNode(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
 		poly.registerNode(AttribAddMultSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCastSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCopySopNode, CATEGORY_SOP.ATTRIBUTE);

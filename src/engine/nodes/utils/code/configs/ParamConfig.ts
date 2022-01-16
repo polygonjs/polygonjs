@@ -32,7 +32,7 @@ export class ParamConfig<T extends ParamType> {
 	get param_options(): ParamOptions {
 		const callback_bound = this._callback.bind(this);
 		switch (this._type) {
-			case ParamType.OPERATOR_PATH:
+			case ParamType.NODE_PATH:
 				return {callback: callback_bound, nodeSelection: {context: NodeContext.COP}};
 			default:
 				return {callback: callback_bound};

@@ -1,7 +1,7 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RampParam} from '../../../../src/engine/params/Ramp';
-import {OperatorPathParam} from '../../../../src/engine/params/OperatorPath';
+import {NodePathParam} from '../../../../src/engine/params/NodePath';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -48,7 +48,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	await CoreSleep.sleep(100);
 	assert.equal(mesh_basic1.params.spare.length, 3);
 	// const ramp_spare_param1 = mesh_basic1.params.get('ramp') as RampParam;
-	const operator_path_spare_param1 = mesh_basic1.params.get('textureMap') as OperatorPathParam;
+	const operator_path_spare_param1 = mesh_basic1.params.get('textureMap') as NodePathParam;
 	const float_spare_param1 = mesh_basic1.params.get('param1') as FloatParam;
 	float_spare_param1.set(0.75);
 	await CoreSleep.sleep(300); // delay should be longer than the delay in SpareParamsController for operator_path params
@@ -64,7 +64,7 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 	assert.ok(float_spare_param1);
 	// check that the spare paramsare the expected type
 	assert.equal(mesh_basic1.params.get('ramp')!.type(), ParamType.RAMP);
-	assert.equal(operator_path_spare_param1.type(), ParamType.OPERATOR_PATH);
+	assert.equal(operator_path_spare_param1.type(), ParamType.NODE_PATH);
 	assert.equal(float_spare_param1.type(), ParamType.FLOAT);
 	// check that the uniforms are present
 	assert.ok(mesh_basic1.material.uniforms['ramp_texture_v_POLY_ramp1_val']);

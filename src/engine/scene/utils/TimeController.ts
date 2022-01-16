@@ -172,19 +172,21 @@ export class TimeController {
 		return this._playing === true;
 	}
 	pause() {
-		if (this._playing == true) {
-			this._playing = false;
-			// TODO: try and unify the dispatch controller and events dispatcher
-			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PLAY_EVENT_CONTEXT);
+		if (this._playing == false) {
+			return;
 		}
+		this._playing = false;
+		// TODO: try and unify the dispatch controller and events dispatcher
+		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PAUSE_EVENT_CONTEXT);
 	}
 	play() {
-		if (this._playing !== true) {
-			this._playing = true;
-			this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
-			this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PAUSE_EVENT_CONTEXT);
+		if (this._playing == true) {
+			return;
 		}
+		this._playing = true;
+		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PLAY_EVENT_CONTEXT);
 	}
 	togglePlayPause() {
 		if (this.playing()) {

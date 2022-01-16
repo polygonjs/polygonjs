@@ -1,4 +1,5 @@
 import {GlRotateMode} from '../../../../src/engine/nodes/gl/Rotate';
+import {ParamType} from '../../../../src/engine/poly/ParamType';
 
 QUnit.test('gl rotate has his input updated when mode changes', async (assert) => {
 	const MAT = window.MAT;
@@ -35,6 +36,6 @@ QUnit.test('gl rotate is created with correct defaults', async (assert) => {
 	assert.equal(material_basic_builder1.children().length, 2);
 
 	const rotate1 = material_basic_builder1.createNode('rotate');
-	assert.deepEqual(rotate1.p.vector.valueSerialized(), [0, 0, 1]);
-	assert.deepEqual(rotate1.p.axis.valueSerialized(), [0, 1, 0]);
+	assert.deepEqual(rotate1.params.paramWithType('vector', ParamType.VECTOR3)!.valueSerialized(), [0, 0, 1]);
+	assert.deepEqual(rotate1.params.paramWithType('axis', ParamType.VECTOR3)!.valueSerialized(), [0, 1, 0]);
 });

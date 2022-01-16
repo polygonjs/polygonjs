@@ -12,7 +12,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {GeometryContainer} from '../../containers/Geometry';
 class ObjectMergeSopParamsConfig extends NodeParamsConfig {
 	/** @param which SOP node to import from */
-	geometry = ParamConfig.OPERATOR_PATH('', {
+	geometry = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.SOP,
 		},
@@ -37,20 +37,16 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 	}
 
 	async cook(input_containers: CoreGroup[]) {
-		const geometry_node = this.p.geometry.found_node();
-		if (geometry_node) {
-			if (geometry_node.context() == NodeContext.SOP) {
-				const container = await geometry_node.compute();
-				this.import_input(geometry_node as BaseSopNodeType, container);
-			} else {
-				this.states.error.set('found node is not a geometry');
-			}
-		} else {
+		const geometryNode = this.pv.geometry.nodeWithContext(NodeContext.SOP, this.states.error);
+		if (!geometryNode) {
 			this.states.error.set(`node not found at path '${this.pv.geometry}'`);
+			return;
 		}
+		const container = await geometryNode.compute();
+		this.importInput(geometryNode as BaseSopNodeType, container);
 	}
 
-	import_input(geometry_node: BaseSopNodeType, container: GeometryContainer) {
+	importInput(geometry_node: BaseSopNodeType, container: GeometryContainer) {
 		let core_group;
 		// I unfortunately need to do a clone here,
 		// because if 2 objectmerge nodes import the same geometry,

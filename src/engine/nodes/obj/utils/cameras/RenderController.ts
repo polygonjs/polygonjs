@@ -27,7 +27,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle on to override rendered scene */
 		setScene = ParamConfig.BOOLEAN(0);
 		/** @param override rendered scene */
-		scene = ParamConfig.OPERATOR_PATH('', {
+		scene = ParamConfig.NODE_PATH('', {
 			visibleIf: {setScene: 1},
 			nodeSelection: {
 				context: NodeContext.OBJ,
@@ -38,7 +38,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle on to override the renderer */
 		setRenderer = ParamConfig.BOOLEAN(0);
 		/** @param override renderer used */
-		renderer = ParamConfig.OPERATOR_PATH('', {
+		renderer = ParamConfig.NODE_PATH('', {
 			visibleIf: {setRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
@@ -49,7 +49,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle on to add a CSSRenderer to have html elements on top of the 3D objects */
 		setCSSRenderer = ParamConfig.BOOLEAN(0);
 		/** @param add a css renderer */
-		CSSRenderer = ParamConfig.OPERATOR_PATH('', {
+		CSSRenderer = ParamConfig.NODE_PATH('', {
 			visibleIf: {setCSSRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
@@ -109,9 +109,9 @@ export class RenderController {
 	}
 
 	async update() {
-		this._updateScene();
-		this._updateRenderer();
-		this._updateCSSRenderer();
+		await this._updateScene();
+		await this._updateRenderer();
+		await this._updateCSSRenderer();
 	}
 
 	//
@@ -122,19 +122,20 @@ export class RenderController {
 	resolvedScene() {
 		return this._resolvedScene;
 	}
-	private _updateScene() {
+	private async _updateScene() {
 		if (isBooleanTrue(this.node.pv.setScene)) {
 			const param = this.node.p.scene;
 			if (param.isDirty()) {
-				param.find_target();
+				await param.compute();
 			}
-			const node = param.found_node_with_context_and_type(NodeContext.OBJ, SceneObjNode.type());
-			if (node) {
+			const node = param.value.nodeWithContext(NodeContext.OBJ, this.node.states.error);
+			if (node && node.type() == SceneObjNode.type()) {
+				const sceneName = node as SceneObjNode;
 				// it's probably weird to cook the node here, but that works for now
-				if (node.isDirty()) {
-					node.cookController.cookMainWithoutInputs();
+				if (sceneName.isDirty()) {
+					sceneName.cookController.cookMainWithoutInputs();
 				}
-				this._resolvedScene = node.object;
+				this._resolvedScene = sceneName.object;
 			}
 		} else {
 			this._resolvedScene = this.node.scene().threejsScene();
@@ -146,36 +147,40 @@ export class RenderController {
 	// RENDERER
 	//
 	//
-	private _updateRenderer() {
+	private async _updateRenderer() {
 		if (isBooleanTrue(this.node.pv.setRenderer)) {
 			const param = this.node.p.renderer;
 			if (param.isDirty()) {
-				param.find_target();
+				await param.compute();
 			}
-			this._resolvedRendererROP = param.found_node_with_context_and_type(NodeContext.ROP, RopType.WEBGL);
-		} else {
-			this._resolvedRendererROP = undefined;
+			const node = param.value.nodeWithContext(NodeContext.ROP, this.node.states.error);
+			if (node && node.type() == WebGLRendererRopNode.type()) {
+				this._resolvedRendererROP = node as WebGLRendererRopNode;
+				return;
+			}
 		}
+		this._resolvedRendererROP = undefined;
 	}
-	private _updateCSSRenderer() {
+	private async _updateCSSRenderer() {
 		if (isBooleanTrue(this.node.pv.setCSSRenderer)) {
 			const param = this.node.p.CSSRenderer;
 			if (param.isDirty()) {
-				param.find_target();
+				await param.compute();
 			}
-			this._resolvedCSSRendererROP = param.found_node_with_context_and_type(NodeContext.ROP, [
-				RopType.CSS2D,
-				RopType.CSS3D,
-			]);
-		} else {
-			if (this._resolvedCSSRendererROP) {
-				// TODO: not yet sure how to remove it so that it can be easily added again
-				// const renderer = this.cssRenderer()
-				// const dom
-				// this._resolved_cssRenderer_rop.remove_renderer_element(canvas);
+			const node = param.value.nodeWithContext(NodeContext.ROP, this.node.states.error);
+			const types = [RopType.CSS2D, RopType.CSS3D];
+			if (node && (types as string[]).includes(node.type())) {
+				this._resolvedCSSRendererROP = node as CSS2DRendererRopNode;
+				return;
 			}
-			this._resolvedCSSRendererROP = undefined;
 		}
+		if (this._resolvedCSSRendererROP) {
+			// TODO: not yet sure how to remove it so that it can be easily added again
+			// const renderer = this.cssRenderer()
+			// const dom
+			// this._resolved_cssRenderer_rop.remove_renderer_element(canvas);
+		}
+		this._resolvedCSSRendererROP = undefined;
 	}
 
 	renderer(canvas: HTMLCanvasElement) {
@@ -192,7 +197,7 @@ export class RenderController {
 	}
 
 	private _super_sampling_size = new Vector2();
-	createRenderer(canvas: HTMLCanvasElement, size: Vector2): WebGLRenderer | undefined {
+	async createRenderer(canvas: HTMLCanvasElement, size: Vector2): Promise<WebGLRenderer | undefined> {
 		const gl = Poly.renderersController.getRenderingContext(canvas);
 		if (!gl) {
 			console.error('failed to create webgl context');
@@ -201,7 +206,7 @@ export class RenderController {
 
 		let renderer: WebGLRenderer | undefined;
 		if (isBooleanTrue(this.node.pv.setRenderer)) {
-			this._updateRenderer();
+			await this._updateRenderer();
 			if (this._resolvedRendererROP) {
 				renderer = this._resolvedRendererROP.createRenderer(this.node, canvas, gl);
 			}

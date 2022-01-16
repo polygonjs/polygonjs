@@ -71,7 +71,7 @@ export interface IJsParamTypeToConnectionPointTypeMap extends JsParamTypeToConne
 	[ParamType.VECTOR3]: JsConnectionPointType.VEC3;
 	[ParamType.VECTOR4]: JsConnectionPointType.VEC4;
 	[ParamType.BUTTON]: undefined;
-	[ParamType.OPERATOR_PATH]: undefined;
+	// [ParamType.OPERATOR_PATH]: undefined;
 	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
@@ -87,7 +87,7 @@ export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointT
 	[ParamType.VECTOR3]: JsConnectionPointType.VEC3,
 	[ParamType.VECTOR4]: JsConnectionPointType.VEC4,
 	[ParamType.BUTTON]: undefined,
-	[ParamType.OPERATOR_PATH]: undefined,
+	// [ParamType.OPERATOR_PATH]: undefined,
 	[ParamType.PARAM_PATH]: undefined,
 	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,

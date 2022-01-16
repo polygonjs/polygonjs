@@ -1,7 +1,7 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {RenderPass} from '../../../modules/three/examples/jsm/postprocessing/RenderPass';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CameraNodeType, NodeContext} from '../../poly/NodeContext';
+import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {SceneObjNode} from '../obj/Scene';
 import {Scene} from 'three/src/scenes/Scene';
 import {Camera} from 'three/src/cameras/Camera';
@@ -18,7 +18,7 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 	/** @param overrideScene */
 	overrideScene = ParamConfig.BOOLEAN(0, PostParamOptions);
 	/** @param scene */
-	scene = ParamConfig.OPERATOR_PATH('/scene1', {
+	scene = ParamConfig.NODE_PATH('/scene1', {
 		visibleIf: {overrideScene: 1},
 		nodeSelection: {
 			context: NodeContext.OBJ,
@@ -29,10 +29,11 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 	/** @param overrideCamera */
 	overrideCamera = ParamConfig.BOOLEAN(0, PostParamOptions);
 	/** @param camera */
-	camera = ParamConfig.OPERATOR_PATH('/perspective_camera1', {
+	camera = ParamConfig.NODE_PATH('/perspective_camera1', {
 		visibleIf: {overrideCamera: 1},
 		nodeSelection: {
 			context: NodeContext.OBJ,
+			types: CAMERA_TYPES,
 		},
 		...PostParamOptions,
 	});
@@ -68,10 +69,10 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 			if (this.p.camera.isDirty()) {
 				await this.p.camera.compute();
 			}
-			const obj_node = this.p.camera.found_node_with_context(NodeContext.OBJ);
-			if (obj_node) {
-				if (obj_node.type() == CameraNodeType.PERSPECTIVE || obj_node.type() == CameraNodeType.ORTHOGRAPHIC) {
-					const camera = (obj_node as PerspectiveCameraObjNode).object;
+			const objNode = this.pv.camera.nodeWithContext(NodeContext.OBJ);
+			if (objNode) {
+				if ((CAMERA_TYPES as string[]).includes(objNode.type())) {
+					const camera = (objNode as PerspectiveCameraObjNode).object;
 					pass.camera = camera;
 				}
 			}
@@ -85,10 +86,10 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 			if (this.p.camera.isDirty()) {
 				await this.p.scene.compute();
 			}
-			const obj_node = this.p.scene.found_node_with_context(NodeContext.OBJ);
-			if (obj_node) {
-				if (obj_node.type() == SceneObjNode.type()) {
-					const scene = (obj_node as SceneObjNode).object;
+			const objNode = this.pv.scene.nodeWithContext(NodeContext.OBJ);
+			if (objNode) {
+				if (objNode.type() == SceneObjNode.type()) {
+					const scene = (objNode as SceneObjNode).object;
 					pass.scene = scene;
 				}
 			}

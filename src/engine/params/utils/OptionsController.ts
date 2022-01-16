@@ -32,7 +32,7 @@ const LANGUAGE_OPTION = 'language';
 const NODE_SELECTION = 'nodeSelection';
 const NODE_SELECTION_CONTEXT = 'context';
 const NODE_SELECTION_TYPES = 'types';
-const PARAM_SELECTION = 'paramSelection';
+// const PARAM_SELECTION = 'paramSelection';
 const DEPENDENT_ON_FOUND_NODE = 'dependentOnFoundNode';
 const RANGE_OPTION = 'range';
 const RANGE_LOCKED_OPTION = 'rangeLocked';
@@ -164,7 +164,7 @@ export interface IntegerParamOptions
 		ComputeOnDirtyParamOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions {}
-export interface OperatorPathParamOptions
+export interface NodeOrParamPathParamOptions
 	extends BaseParamOptions,
 		FileParamOptions,
 		ComputeOnDirtyParamOptions,
@@ -206,7 +206,7 @@ export interface ParamOptions
 		FileParamOptions,
 		MenuNumericParamOptions,
 		StringParamOptions,
-		OperatorPathParamOptions {
+		NodeOrParamPathParamOptions {
 	texture?: {
 		env?: boolean;
 	};
@@ -484,20 +484,21 @@ export class OptionsController {
 
 	// param selection
 	isSelectingParam() {
-		return this.paramSelectionOptions() != null;
+		return this.param().type() == ParamType.PARAM_PATH;
+		// return this.paramSelectionOptions() != null;
 	}
-	paramSelectionOptions() {
-		return this._options[PARAM_SELECTION];
-	}
-	paramSelectionType() {
-		const options = this.paramSelectionOptions();
-		if (options) {
-			const type_or_boolean = options;
-			if (!CoreType.isBoolean(type_or_boolean)) {
-				return type_or_boolean;
-			}
-		}
-	}
+	// paramSelectionOptions() {
+	// 	return this._options[PARAM_SELECTION];
+	// }
+	// paramSelectionType() {
+	// 	const options = this.paramSelectionOptions();
+	// 	if (options) {
+	// 		const type_or_boolean = options;
+	// 		if (!CoreType.isBoolean(type_or_boolean)) {
+	// 			return type_or_boolean;
+	// 		}
+	// 	}
+	// }
 
 	// range
 	range(): Number2 {

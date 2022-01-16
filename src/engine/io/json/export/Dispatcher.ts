@@ -8,13 +8,18 @@ import {NodeJsonExporter} from './Node';
 import {ParamJsonExporter} from './Param';
 // import {ParamMultipleJsonExporter} from './param/Multiple';
 import {ParamNumericJsonExporter} from './param/Numeric';
-import {ParamOperatorPathJsonExporter} from './param/OperatorPath';
+// import {ParamOperatorPathJsonExporter} from './param/OperatorPath';
+import {ParamNodePathJsonExporter} from './param/NodePath';
+import {ParamParamPathJsonExporter} from './param/ParamPath';
+
 import {ParamStringJsonExporter} from './param/String';
 import {ParamRampJsonExporter} from './param/Ramp';
 // import {TypedObjNode} from '../../../nodes/obj/_Base';
 // import {TypedMultipleParam} from '../../../params/_Multiple';
 import {TypedNumericParam} from '../../../params/_Numeric';
-import {OperatorPathParam} from '../../../params/OperatorPath';
+// import {OperatorPathParam} from '../../../params/OperatorPath';
+import {NodePathParam} from '../../../params/NodePath';
+import {ParamPathParam} from '../../../params/ParamPath';
 import {StringParam} from '../../../params/String';
 import {RampParam} from '../../../params/Ramp';
 // import {PolySopNode} from '../../../nodes/sop/Poly';
@@ -38,8 +43,14 @@ export class JsonExportDispatcher {
 		if (param instanceof TypedNumericParam) {
 			return new ParamNumericJsonExporter(param);
 		}
-		if (param instanceof OperatorPathParam) {
-			return new ParamOperatorPathJsonExporter(param);
+		// if (param instanceof OperatorPathParam) {
+		// 	return new ParamOperatorPathJsonExporter(param);
+		// }
+		if (param instanceof NodePathParam) {
+			return new ParamNodePathJsonExporter(param);
+		}
+		if (param instanceof ParamPathParam) {
+			return new ParamParamPathJsonExporter(param);
 		}
 		if (param instanceof StringParam) {
 			return new ParamStringJsonExporter(param);

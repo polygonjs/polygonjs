@@ -101,7 +101,7 @@ export class AssemblerNodeSpareParamsController {
 
 				// we also have a special case for operator path,
 				// since they would not have found their node at load time
-				if (param.type() == ParamType.OPERATOR_PATH) {
+				if (param.type() == ParamType.NODE_PATH) {
 					setTimeout(async () => {
 						if (param.isDirty()) {
 							await param.compute();
