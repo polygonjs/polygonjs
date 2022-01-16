@@ -13,7 +13,8 @@ import {NodeParamsConfig} from './ParamsConfig';
 // type test = Pick<ParamConfig<ParamType.FLOAT>, 'default_value'>;
 
 export type ParamsAccessorType<T extends NodeParamsConfig> = {
-	readonly [P in keyof T]: T[P]['param_class'];
+	readonly // @ts-ignore
+	[P in keyof T]: T[P]['param_class'];
 };
 
 export class ParamsAccessor<T extends NodeParamsConfig> {

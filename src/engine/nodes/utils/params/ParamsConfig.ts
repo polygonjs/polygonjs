@@ -1,4 +1,4 @@
-import {Number2, Number3, Number4, PolyDictionary} from '../../../../types/GlobalTypes';
+import {Number2, Number3, Number4} from '../../../../types/GlobalTypes';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {RampParam} from '../../../params/Ramp';
@@ -127,11 +127,11 @@ export class ParamConfig {
 //
 // NodeParamsConfig:
 //
-export class NodeParamsConfig implements PolyDictionary<ParamTemplate<ParamType>> {
-	[name: string]: ParamTemplate<ParamType>;
-}
+// export class NodeParamsConfig implements PolyDictionary<ParamTemplate<ParamType>> {
+// 	[name: string]: ParamTemplate<ParamType>;
+// }
 // in order to have all param names validated by typescript, this definition of NodeParamsConfig could be used:
-// export class NodeParamsConfig {}
+export class NodeParamsConfig {}
 
 // but it will lead to some type error in ParamsValueAccessorType and ParamsAccessorType, preventing compilation with it.
 // TODO: try and find a way that prevents node.p.nonExistingAttribute to be accessible, and that has not other compilation error
