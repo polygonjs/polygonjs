@@ -210,7 +210,13 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 					param_name = CoreString.camelCase(param_name);
 				}
 
-				const param_type = param_data['type']!;
+				let param_type = param_data['type']!;
+				// backward compatibiity: ensure that old param of type 'operator_path'
+				// are converted to a NodePath param
+				if ((param_type as string) == 'operator_path') {
+					param_type = ParamType.NODE_PATH;
+				}
+
 				const has_param = this._node.params.has_param(param_name);
 				let has_param_and_same_type = false;
 				let param;
