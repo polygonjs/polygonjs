@@ -21,12 +21,6 @@ export class PropertyNameAnimNode extends TypedAnimNode<PropertyNameAnimParamsCo
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name]);
-			});
-		});
 	}
 
 	cook(inputContents: TimelineBuilder[]) {

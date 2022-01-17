@@ -65,20 +65,6 @@ export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsCo
 				return new EventConnectionPoint(event_type, EventConnectionPointType.KEYBOARD);
 			})
 		);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				const params: BaseParamType[] = [this.p.keydown, this.p.keypress, this.p.keyup];
-				this.params.label.init(params.concat([this.p.keyCodes]), () => {
-					const eventNames = params
-						.map((p) => {
-							return p.value ? p.name() : undefined;
-						})
-						.filter((v) => v)
-						.join(', ');
-					return `${eventNames} (${this.pv.keyCodes})`;
-				});
-			});
-		});
 	}
 	setElement(element: CoreEventEmitter) {
 		this.p.element.set(EVENT_EMITTERS.indexOf(element));

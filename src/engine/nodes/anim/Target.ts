@@ -10,9 +10,12 @@ export enum AnimTargetNodeTargetType {
 	SCENE_GRAPH = 'scene graph',
 	NODE = 'node',
 }
-const TARGET_TYPES: AnimTargetNodeTargetType[] = [AnimTargetNodeTargetType.SCENE_GRAPH, AnimTargetNodeTargetType.NODE];
-const TARGET_TYPE_SCENE_GRAPH = TARGET_TYPES.indexOf(AnimTargetNodeTargetType.SCENE_GRAPH);
-const TARGET_TYPE_NODE = TARGET_TYPES.indexOf(AnimTargetNodeTargetType.NODE);
+export const ANIM_TARGET_TYPES: AnimTargetNodeTargetType[] = [
+	AnimTargetNodeTargetType.SCENE_GRAPH,
+	AnimTargetNodeTargetType.NODE,
+];
+const TARGET_TYPE_SCENE_GRAPH = ANIM_TARGET_TYPES.indexOf(AnimTargetNodeTargetType.SCENE_GRAPH);
+const TARGET_TYPE_NODE = ANIM_TARGET_TYPES.indexOf(AnimTargetNodeTargetType.NODE);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
@@ -25,7 +28,7 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 	/** @param sets if the target is a Polygonjs node, or a THREE object */
 	type = ParamConfig.INTEGER(TARGET_TYPE_SCENE_GRAPH, {
 		menu: {
-			entries: TARGET_TYPES.map((name, value) => {
+			entries: ANIM_TARGET_TYPES.map((name, value) => {
 				return {name, value};
 			}),
 		},
@@ -59,21 +62,6 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.type, this.p.nodePath, this.p.objectMask], () => {
-					const type = TARGET_TYPES[this.pv.type];
-					switch (type) {
-						case AnimTargetNodeTargetType.NODE:
-							return this.pv.nodePath.path();
-						case AnimTargetNodeTargetType.SCENE_GRAPH:
-							return this.pv.objectMask;
-					}
-					TypeAssert.unreachable(type);
-				});
-			});
-		});
 	}
 
 	cook(input_contents: TimelineBuilder[]) {
@@ -86,10 +74,10 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		this.setTimelineBuilder(timeline_builder);
 	}
 	setTargetType(targetType: AnimTargetNodeTargetType) {
-		this.p.type.set(TARGET_TYPES.indexOf(targetType));
+		this.p.type.set(ANIM_TARGET_TYPES.indexOf(targetType));
 	}
 	private _create_target(timeline_builder: TimelineBuilder) {
-		const type = TARGET_TYPES[this.pv.type];
+		const type = ANIM_TARGET_TYPES[this.pv.type];
 		switch (type) {
 			case AnimTargetNodeTargetType.NODE: {
 				return new PropertyTarget(this.scene(), {
@@ -106,7 +94,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		TypeAssert.unreachable(type);
 	}
 	private _set_update_callback(timeline_builder: TimelineBuilder) {
-		const type = TARGET_TYPES[this.pv.type];
+		const type = ANIM_TARGET_TYPES[this.pv.type];
 		let update_callback = timeline_builder.updateCallback();
 		switch (type) {
 			case AnimTargetNodeTargetType.NODE: {
@@ -128,7 +116,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		node.print_resolve();
 	}
 	private print_resolve() {
-		const type = TARGET_TYPES[this.pv.type];
+		const type = ANIM_TARGET_TYPES[this.pv.type];
 		const timeline_builder = new TimelineBuilder();
 		const target = this._create_target(timeline_builder);
 		switch (type) {

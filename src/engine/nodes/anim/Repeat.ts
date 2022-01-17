@@ -31,15 +31,6 @@ export class RepeatAnimNode extends TypedAnimNode<RepeatAnimParamsConfig> {
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.unlimited, this.p.count, this.p.yoyo], () => {
-					const count = `${this.p.unlimited ? 'unlimited' : this.pv.count}`;
-					return `${count} (yoyo: ${this.pv.yoyo})`;
-				});
-			});
-		});
 	}
 
 	private _repeat_params(): AnimationRepeatParams {

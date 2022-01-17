@@ -63,23 +63,6 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				let params: BaseParamType[] = [this.p.url];
-				params = params.concat(this.textureParamsController.paramLabelsParams());
-				this.params.label.init(params, () => {
-					const url = this.p.url.rawInput();
-					if (url) {
-						const elements = url.split('/');
-						const urlLabel = elements[elements.length - 1];
-						const textureLabels = this.textureParamsController.paramLabels();
-						return [urlLabel].concat(textureLabels);
-					} else {
-						return '';
-					}
-				});
-			});
-		});
 	}
 	async cook(input_contents: Texture[]) {
 		if (isBooleanTrue(this.pv.checkFileType) && !isUrlStaticImage(this.pv.url)) {

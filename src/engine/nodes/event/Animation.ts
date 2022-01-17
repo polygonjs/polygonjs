@@ -65,13 +65,6 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 			new EventConnectionPoint(AnimationEventOutput.START, EventConnectionPointType.BASE),
 			new EventConnectionPoint(AnimationEventOutput.COMPLETE, EventConnectionPointType.BASE),
 		]);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.animation], () => {
-					return this.pv.animation.path();
-				});
-			});
-		});
 	}
 
 	processEvent(event_context: EventContext<Event>) {

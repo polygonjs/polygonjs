@@ -29,12 +29,6 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name]);
-			});
-		});
 	}
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {

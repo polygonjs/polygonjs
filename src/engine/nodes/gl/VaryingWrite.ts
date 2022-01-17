@@ -45,11 +45,6 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 			VARYING_NODE_AVAILABLE_GL_TYPES[this.pv.type],
 		]);
 		this.io.connection_points.set_expected_output_types_function(() => []);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name]);
-			});
-		});
 	}
 
 	get input_name() {

@@ -21,12 +21,6 @@ export class DelayAnimNode extends TypedAnimNode<DelayAnimParamsConfig> {
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.delay]);
-			});
-		});
 	}
 
 	cook(input_contents: TimelineBuilder[]) {

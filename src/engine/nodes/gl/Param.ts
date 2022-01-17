@@ -54,11 +54,6 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.addPostDirtyHook('_update_if_type_changed', this._update_signature_if_required_bound);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name]);
-			});
-		});
 	}
 	// private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
 	// 	if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {

@@ -68,13 +68,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name, this.p.exportWhenConnected], () => {
-					return this.pv.exportWhenConnected ? `${this.pv.name} (EXPORTED)` : this.pv.name;
-				});
-			});
-		});
+
 		this.lifecycle.onAdd(this._bound_setExportWhenConnectedStatus);
 		this.params.addOnSceneLoadHook('prepare params', this._bound_setExportWhenConnectedStatus);
 	}

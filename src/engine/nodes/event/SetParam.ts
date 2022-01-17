@@ -132,12 +132,6 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.param]);
-			});
-		});
 	}
 	setParamType(paramType: SetParamParamType) {
 		const index = SET_PARAM_PARAM_TYPE.indexOf(paramType);

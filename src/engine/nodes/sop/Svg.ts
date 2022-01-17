@@ -44,22 +44,6 @@ export class SvgSopNode extends TypedSopNode<SvgSopParamsConfig> {
 		return [ModuleName.SVGLoader];
 	}
 
-	initializeNode() {
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.url], () => {
-					const url = this.pv.url;
-					if (url) {
-						const elements = url.split('/');
-						return elements[elements.length - 1];
-					} else {
-						return '';
-					}
-				});
-			});
-		});
-	}
-
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: SvgSopOperation | undefined;
 	async cook(input_contents: CoreGroup[]) {

@@ -55,19 +55,6 @@ export class DragEventNode extends TypedInputEventNode<DragEventParamsConfig> {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.DRAG);
 			})
 		);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				const params = [this.p.dragover];
-				this.params.label.init(params, () => {
-					return params
-						.map((p) => {
-							return p.value ? p.name() : undefined;
-						})
-						.filter((v) => v)
-						.join(', ');
-				});
-			});
-		});
 	}
 	processEvent(event_context: EventContext<DragEvent>) {
 		if (!this.pv.active) {

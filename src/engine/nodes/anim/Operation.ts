@@ -33,14 +33,6 @@ export class OperationAnimNode extends TypedAnimNode<OperationAnimParamsConfig> 
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.operation], () => {
-					return OPERATIONS[this.pv.operation];
-				});
-			});
-		});
 	}
 
 	cook(input_contents: TimelineBuilder[]) {

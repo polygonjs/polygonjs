@@ -40,19 +40,6 @@ export class WindowEventNode extends TypedInputEventNode<WindowEventParamsConfig
 				return new EventConnectionPoint(event_type, EventConnectionPointType.POINTER);
 			})
 		);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				const params = [this.p.resize];
-				this.params.label.init(params, () => {
-					return params
-						.map((p) => {
-							return p.value ? p.name() : undefined;
-						})
-						.filter((v) => v)
-						.join(', ');
-				});
-			});
-		});
 	}
 	processEvent(event_context: EventContext<Event>) {
 		if (!this.pv.active) {

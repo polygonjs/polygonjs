@@ -75,14 +75,6 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		// this.uiData.set_param_label(this.p.applyOn, (v)=>TARGET_TYPES[v])
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(TransformSopOperation.INPUT_CLONED_STATE);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.applyOn], () => {
-					return TRANSFORM_TARGET_TYPES[this.pv.applyOn];
-				});
-			});
-		});
 	}
 
 	setApplyOn(type: TransformTargetType) {

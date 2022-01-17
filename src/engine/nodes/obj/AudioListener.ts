@@ -58,13 +58,7 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 	initializeNode() {
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.soundOn], () => {
-					return this.pv.soundOn ? 'on' : 'off';
-				});
-			});
-		});
+
 		this.lifecycle.onAdd(() => {
 			this._setPositionalAudioNodesDirty();
 			this.addAudioActivationEvents();

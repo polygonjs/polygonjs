@@ -29,18 +29,8 @@ export class BooleanSopNode extends TypedSopNode<BooleanSopParamsConfig> {
 	}
 
 	initializeNode() {
-		super.initializeNode();
-
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState(BooleanSopOperation.INPUT_CLONED_STATE);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.operation], () => {
-					return BOOLEAN_OPERATIONS[this.pv.operation];
-				});
-			});
-		});
 	}
 	setOperation(operation: BooleanOperation) {
 		this.p.operation.set(BOOLEAN_OPERATIONS.indexOf(operation));

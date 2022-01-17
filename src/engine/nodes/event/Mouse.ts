@@ -83,34 +83,6 @@ export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> 
 				return new EventConnectionPoint(event_type, EventConnectionPointType.MOUSE);
 			})
 		);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				const params = [
-					this.p.auxclick,
-					this.p.click,
-					this.p.dblclick,
-					this.p.mousedown,
-					this.p.mouseenter,
-					this.p.mouseleave,
-					this.p.mousemove,
-					this.p.mouseout,
-					this.p.mouseout,
-					this.p.mouseup,
-					this.p.pointerlockchange,
-					this.p.pointerlockerror,
-					this.p.select,
-					this.p.wheel,
-				];
-				this.params.label.init(params, () => {
-					return params
-						.map((p) => {
-							return p.value ? p.name() : undefined;
-						})
-						.filter((v) => v)
-						.join(', ');
-				});
-			});
-		});
 	}
 	processEvent(event_context: EventContext<MouseEvent>) {
 		if (!this.pv.active) {

@@ -110,19 +110,6 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.url], () => {
-					const url = this.p.url.rawInput();
-					if (url) {
-						const elements = url.split('/');
-						return elements[elements.length - 1];
-					} else {
-						return '';
-					}
-				});
-			});
-		});
 	}
 	async cook(input_contents: Texture[]) {
 		if (isBooleanTrue(this.pv.checkFileType) && !isUrlVideo(this.pv.url)) {

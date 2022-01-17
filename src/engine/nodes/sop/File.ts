@@ -55,22 +55,6 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		return CoreLoaderGeometry.moduleNamesFromFormat(format, ext);
 	}
 
-	initializeNode() {
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.url], () => {
-					const url = this.p.url.rawInput();
-					if (url) {
-						const elements = url.split('/');
-						return elements[elements.length - 1];
-					} else {
-						return '';
-					}
-				});
-			});
-		});
-	}
-
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: FileSopOperation | undefined;
 	private operation() {

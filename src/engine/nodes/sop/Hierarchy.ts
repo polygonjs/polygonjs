@@ -7,7 +7,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {HierarchyMode, HierarchySopOperation, HIERARCHY_MODES} from '../../operations/sop/Hierarchy';
-const modesWithLevel = [HierarchyMode.ADD_PARENT, HierarchyMode.REMOVE_PARENT];
+export const MODES_WITH_LEVEL = [HierarchyMode.ADD_PARENT, HierarchyMode.REMOVE_PARENT];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = HierarchySopOperation.DEFAULT_PARAMS;
 class HierarchySopParamsConfig extends NodeParamsConfig {
@@ -51,19 +51,6 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState(HierarchySopOperation.INPUT_CLONED_STATE);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.mode, this.p.levels, this.p.objectMask], () => {
-					const mode = HIERARCHY_MODES[this.pv.mode];
-					if (modesWithLevel.includes(mode)) {
-						return `${mode} ${this.pv.levels}`;
-					} else {
-						return `${mode} (with mask: ${this.pv.objectMask})`;
-					}
-				});
-			});
-		});
 	}
 
 	private _operation: HierarchySopOperation | undefined;

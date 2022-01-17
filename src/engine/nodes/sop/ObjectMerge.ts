@@ -26,16 +26,6 @@ export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig>
 		return 'objectMerge';
 	}
 
-	initializeNode() {
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.geometry], () => {
-					return this.p.geometry.rawInput();
-				});
-			});
-		});
-	}
-
 	async cook(input_containers: CoreGroup[]) {
 		const geometryNode = this.pv.geometry.nodeWithContext(NodeContext.SOP, this.states.error);
 		if (!geometryNode) {

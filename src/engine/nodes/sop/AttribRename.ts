@@ -32,18 +32,6 @@ export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfi
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.oldName, this.p.newName], () => {
-					if (this.pv.oldName != '' && this.pv.newName != '') {
-						return `${this.pv.oldName} -> ${this.pv.newName}`;
-					} else {
-						return '';
-					}
-				});
-			});
-		});
 	}
 
 	cook(input_contents: CoreGroup[]) {

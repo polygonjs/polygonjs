@@ -17,13 +17,13 @@ enum MergeMode {
 	ALL_TOGETHER = 'play all together',
 	ONE_AT_A_TIME = 'play one at a time',
 }
-const MERGE_MODES: MergeMode[] = [MergeMode.ALL_TOGETHER, MergeMode.ONE_AT_A_TIME];
+export const EASING_ANIM_MERGE_MODES: MergeMode[] = [MergeMode.ALL_TOGETHER, MergeMode.ONE_AT_A_TIME];
 const DEFAULT_INPUTS_COUNT = 4;
 class MergeAnimParamsConfig extends NodeParamsConfig {
 	/** @param mode (at the same time or one after the other) */
 	mode = ParamConfig.INTEGER(0, {
 		menu: {
-			entries: MERGE_MODES.map((name, value) => {
+			entries: EASING_ANIM_MERGE_MODES.map((name, value) => {
 				return {name, value};
 			}),
 		},
@@ -55,12 +55,6 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 		this.io.inputs.setCount(0, 4);
 
 		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.mode], () => {
-					const mode = MERGE_MODES[this.pv.mode];
-					return mode;
-				});
-			});
 			this.params.addOnSceneLoadHook('update inputs', () => {
 				this._callbackUpdateInputsCount();
 			});
@@ -86,7 +80,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 	}
 
 	private _updateTimelineBuilder(timelineBuilder: TimelineBuilder) {
-		const mode = MERGE_MODES[this.pv.mode];
+		const mode = EASING_ANIM_MERGE_MODES[this.pv.mode];
 		switch (mode) {
 			case MergeMode.ALL_TOGETHER:
 				return this._setPlayAllTogether(timelineBuilder);

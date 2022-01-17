@@ -59,19 +59,6 @@ export class PointerEventNode extends TypedInputEventNode<PointerEventParamsConf
 				return new EventConnectionPoint(event_type, EventConnectionPointType.POINTER);
 			})
 		);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				const params = [this.p.pointerdown, this.p.pointermove, this.p.pointerup];
-				this.params.label.init(params, () => {
-					return params
-						.map((p) => {
-							return p.value ? p.name() : undefined;
-						})
-						.filter((v) => v)
-						.join(', ');
-				});
-			});
-		});
 	}
 	processEvent(event_context: EventContext<MouseEvent>) {
 		if (!this.pv.active) {

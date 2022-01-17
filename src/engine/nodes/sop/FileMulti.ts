@@ -60,13 +60,6 @@ export class FileMultiSopNode extends TypedSopNode<FileMultiSopParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.url], () => {
-					return this.p.url.rawInput();
-				});
-			});
-		});
 	}
 
 	private _instancer = new CoreInstancer();

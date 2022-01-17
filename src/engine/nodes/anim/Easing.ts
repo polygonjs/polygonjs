@@ -36,22 +36,14 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name, this.p.inOut], () => {
-					return this.easing_full_name();
-				});
-			});
-		});
 	}
 
-	private easing_full_name() {
-		const easing = EASINGS[this.pv.name];
+	static easingFullName(node: EasingAnimNode) {
+		const easing = EASINGS[node.pv.name];
 		if (easing == AnimNodeEasing.NONE) {
 			return easing;
 		}
-		const in_out = IN_OUT_MODES[this.pv.inOut];
+		const in_out = IN_OUT_MODES[node.pv.inOut];
 		const easing_full_name = `${easing}.${in_out}`;
 		return easing_full_name;
 	}
@@ -59,8 +51,8 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 	cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
-		const easing_full_name = this.easing_full_name();
-		timeline_builder.setEasing(easing_full_name);
+		const easingFullName = EasingAnimNode.easingFullName(this);
+		timeline_builder.setEasing(easingFullName);
 
 		this.setTimelineBuilder(timeline_builder);
 	}

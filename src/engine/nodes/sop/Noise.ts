@@ -120,12 +120,6 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE]);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.attribName]);
-			});
-		});
 	}
 
 	setOperation(operation: NoiseOperation) {

@@ -41,15 +41,6 @@ export class AttribCastSopNode extends TypedSopNode<IndexCastSopParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(AttribCastSopOperation.INPUT_CLONED_STATE);
-
-		// this.uiData.set_icon('compress-arrows-alt');
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.type], () => {
-					return ATTRIB_TYPES[this.pv.type];
-				});
-			});
-		});
 	}
 
 	private _operation: AttribCastSopOperation | undefined;

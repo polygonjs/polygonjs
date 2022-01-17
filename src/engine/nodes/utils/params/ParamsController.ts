@@ -16,7 +16,6 @@ import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeM
 import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 import {NodeEvent} from '../../../poly/NodeEvent';
 import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitValueSerializedTypeMap';
-import {ParamsLabelController} from './ParamsLabelController';
 import {Poly} from '../../../Poly';
 import {ParamInitData} from '../io/IOController';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
@@ -61,15 +60,6 @@ export class ParamsController {
 	private _on_scene_load_hooks: OnSceneLoadHook[] | undefined;
 	private _on_scene_load_hook_names: string[] | undefined;
 
-	// labels
-	private _label_controller: ParamsLabelController | undefined;
-	get label(): ParamsLabelController {
-		return (this._label_controller = this._label_controller || new ParamsLabelController());
-	}
-	hasLabelController(): boolean {
-		return this._label_controller != null;
-	}
-
 	constructor(public readonly node: BaseNodeType) {}
 
 	dispose() {
@@ -87,9 +77,6 @@ export class ParamsController {
 		this._post_create_params_hooks = undefined;
 		this._on_scene_load_hooks = undefined;
 		this._on_scene_load_hook_names = undefined;
-
-		//
-		this._label_controller?.dispose();
 	}
 
 	private initDependencyNode() {

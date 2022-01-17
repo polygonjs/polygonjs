@@ -21,7 +21,6 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {AttribCopySopOperation} from '../../operations/sop/AttribCopy';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/BooleanValue';
 const DEFAULT = AttribCopySopOperation.DEFAULT_PARAMS;
 class AttribCopySopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to copy */
@@ -58,14 +57,6 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState(AttribCopySopOperation.INPUT_CLONED_STATE);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name, this.p.tnewName, this.p.newName], () => {
-					return isBooleanTrue(this.pv.tnewName) ? `${this.pv.name} -> ${this.pv.newName}` : this.pv.name;
-				});
-			});
-		});
 	}
 
 	private _operation: AttribCopySopOperation | undefined;

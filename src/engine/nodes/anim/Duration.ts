@@ -24,12 +24,6 @@ export class DurationAnimNode extends TypedAnimNode<DurationAnimParamsConfig> {
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.duration]);
-			});
-		});
 	}
 
 	cook(input_contents: TimelineBuilder[]) {

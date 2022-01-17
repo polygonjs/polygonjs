@@ -91,26 +91,16 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		return 'text';
 	}
 
-	private _loaded_fonts: FontByUrl = {};
-
-	initializeNode() {
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.text], () => {
-					return this.p.text.rawInput();
-				});
-			});
-		});
-	}
+	private _loadedFonts: FontByUrl = {};
 
 	async cook() {
 		try {
-			this._loaded_fonts[this.pv.font] = this._loaded_fonts[this.pv.font] || (await this._loadFont());
+			this._loadedFonts[this.pv.font] = this._loadedFonts[this.pv.font] || (await this._loadFont());
 		} catch (err) {
 			this.states.error.set(`count not load font (${this.pv.font})`);
 			return;
 		}
-		const font = this._loaded_fonts[this.pv.font];
+		const font = this._loadedFonts[this.pv.font];
 		if (font) {
 			switch (TEXT_TYPES[this.pv.type]) {
 				case TEXT_TYPE.MESH:

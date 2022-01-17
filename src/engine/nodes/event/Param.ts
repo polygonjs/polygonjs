@@ -47,11 +47,6 @@ export class ParamEventNode extends TypedEventNode<ParamEventParamsConfig> {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(ParamEventNode.OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.param]);
-			});
-		});
 	}
 
 	async cook() {

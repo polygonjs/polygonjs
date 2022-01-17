@@ -111,12 +111,6 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(AttribCreateSopOperation.INPUT_CLONED_STATE);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.name]);
-			});
-		});
 	}
 
 	private _operation: AttribCreateSopOperation | undefined;

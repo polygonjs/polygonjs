@@ -33,14 +33,6 @@ export class BlockEventNode extends TypedEventNode<BlockParamsConfig> {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(BlockEventNode.OUTPUT, EventConnectionPointType.BASE),
 		]);
-
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.onParamsCreated('params_label', () => {
-				this.params.label.init([this.p.blocking], () => {
-					return isBooleanTrue(this.pv.blocking) ? 'blocking (X)' : 'pass-through (-->)';
-				});
-			});
-		});
 	}
 
 	private trigger_output(context: EventContext<MouseEvent>) {
