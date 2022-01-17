@@ -9,7 +9,6 @@ import {
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -19,10 +18,7 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureEnvMapController),
 		});
 		/** @param specify the environment map COP node */
-		envMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
-			OperatorPathOptions(TextureEnvMapController, 'useEnvMap')
-		);
+		envMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureEnvMapController, 'useEnvMap'));
 		/** @param environment intensity */
 		envMapIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
 		/** @param refraction ratio */

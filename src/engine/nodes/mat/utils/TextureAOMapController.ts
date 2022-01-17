@@ -11,7 +11,6 @@ import {
 } from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an ambient occlusion map */
@@ -20,10 +19,7 @@ export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureAOMapController),
 		});
 		/** @param specify the AO map COP node */
-		aoMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
-			OperatorPathOptions(TextureAOMapController, 'useAOMap')
-		);
+		aoMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureAOMapController, 'useAOMap'));
 		/** @param ambient occlusion intensity */
 		aoMapIntensity = ParamConfig.FLOAT(1, {range: [0, 1], rangeLocked: [false, false], visibleIf: {useAOMap: 1}});
 	};

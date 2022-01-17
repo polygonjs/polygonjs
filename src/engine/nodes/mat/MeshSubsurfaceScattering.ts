@@ -25,7 +25,6 @@ import {WireframeController, WireframeParamConfig} from './utils/WireframeShader
 import {FogController, FogParamConfig} from './utils/FogController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodePathParam} from '../../params/NodePath';
-import {NODE_PATH_DEFAULT} from '../../../core/Walker';
 import {Constructor} from '../../../types/GlobalTypes';
 
 function ParamOptionsFactoryColor(uniform_name: string) {
@@ -82,7 +81,7 @@ export function SubsurfaceParamConfig<TBase extends Constructor>(Base: TBase) {
 		shininess = ParamConfig.FLOAT(1, {
 			range: [0, 1000],
 		});
-		thicknessMap = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {
+		thicknessMap = ParamConfig.NODE_PATH('', {
 			nodeSelection: {context: NodeContext.COP},
 			...ParamOptionsFactoryTexture('thicknessMap'),
 		});

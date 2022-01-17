@@ -111,13 +111,13 @@ export class ParamConfig {
 	// 	return new ParamTemplate<ParamType.OPERATOR_PATH>(ParamType.OPERATOR_PATH, init_value, options);
 	// }
 	static NODE_PATH(
-		init_value: ParamInitValuesTypeMap[ParamType.NODE_PATH],
+		init_value: '', // forces at empty value at init, instead of ParamInitValuesTypeMap[ParamType.NODE_PATH],
 		options?: ParamOptionsByTypeMap[ParamType.NODE_PATH]
 	) {
 		return new ParamTemplate<ParamType.NODE_PATH>(ParamType.NODE_PATH, init_value, options);
 	}
 	static PARAM_PATH(
-		init_value: ParamInitValuesTypeMap[ParamType.PARAM_PATH],
+		init_value: '', // forces at empty value at init, instead of ParamInitValuesTypeMap[ParamType.PARAM_PATH],
 		options?: ParamOptionsByTypeMap[ParamType.PARAM_PATH]
 	) {
 		return new ParamTemplate<ParamType.PARAM_PATH>(ParamType.PARAM_PATH, init_value, options);

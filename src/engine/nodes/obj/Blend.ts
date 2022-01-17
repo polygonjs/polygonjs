@@ -23,13 +23,13 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
 class BlendObjParamConfig extends NodeParamsConfig {
 	/** @param object to blend transform from */
-	object0 = ParamConfig.NODE_PATH('/geo1', {
+	object0 = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},
 	});
 	/** @param object to blend transform to */
-	object1 = ParamConfig.NODE_PATH('/geo2', {
+	object1 = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 		},

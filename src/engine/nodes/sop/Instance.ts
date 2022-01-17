@@ -19,7 +19,7 @@ class InstanceSopParamsConfig extends NodeParamsConfig {
 	/** @param toggles on to apply a material. This is useful in most cases, but there may be situations where the material would be apply later, such as when you are feeding this node to a particles system */
 	applyMaterial = ParamConfig.BOOLEAN(DEFAULT.applyMaterial);
 	/** @param material to apply */
-	material = ParamConfig.NODE_PATH(DEFAULT.material.path(), {
+	material = ParamConfig.NODE_PATH('', {
 		visibleIf: {applyMaterial: 1},
 		nodeSelection: {
 			context: NodeContext.MAT,

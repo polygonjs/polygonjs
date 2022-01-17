@@ -9,7 +9,6 @@ import {
 } from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {Color} from 'three/src/math/Color';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {IUniformColor, IUniformN, IUniformV2} from '../../utils/code/gl/Uniforms';
@@ -39,15 +38,12 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle if you want to use a roughness map */
 		useClearCoatMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
-		clearcoatMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
-			OperatorPathOptions(MeshPhysicalController, 'useClearCoatMap')
-		);
+		clearcoatMap = ParamConfig.NODE_PATH('', OperatorPathOptions(MeshPhysicalController, 'useClearCoatMap'));
 		/** @param toggle if you want to use a clear coat normal map */
 		useClearCoatNormalMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
 		clearcoatNormalMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
+			'',
 			OperatorPathOptions(MeshPhysicalController, 'useClearCoatNormalMap')
 		);
 		/** @param How much the normal map affects the material. Typical ranges are 0-1 */
@@ -58,7 +54,7 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		useClearCoatRoughnessMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
 		clearcoatRoughnessMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
+			'',
 			OperatorPathOptions(MeshPhysicalController, 'useClearCoatRoughnessMap')
 		);
 
@@ -90,7 +86,7 @@ When transmission is non-zero, opacity should be set to 1.  */
 		/** @param toggle if you want to use a transmission map */
 		useTransmissionMap = ParamConfig.BOOLEAN(0);
 		/** @param specify the roughness map COP node */
-		transmissionMap = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {visibleIf: {useTransmissionMap: 1}});
+		transmissionMap = ParamConfig.NODE_PATH('', {visibleIf: {useTransmissionMap: 1}});
 		/** @param Index-of-refraction for non-metallic materials */
 		ior = ParamConfig.FLOAT(1.5, {
 			range: [1, 2.3333],
@@ -105,7 +101,7 @@ When transmission is non-zero, opacity should be set to 1.  */
 		/** @param toggle if you want to use a thickness map */
 		useThicknessMap = ParamConfig.BOOLEAN(0);
 		/** @param specify the roughness map COP node */
-		thicknessMap = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {visibleIf: {useThicknessMap: 1}});
+		thicknessMap = ParamConfig.NODE_PATH('', {visibleIf: {useThicknessMap: 1}});
 		/** @param attenuation distance */
 		attenuationDistance = ParamConfig.FLOAT(0, {
 			range: [0, 10],

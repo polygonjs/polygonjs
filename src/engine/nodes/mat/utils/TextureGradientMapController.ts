@@ -10,17 +10,13 @@ import {
 } from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 
 export function GradientMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a gradient map */
 		useGradientMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureGradientMapController));
 		/** Gradient map for toon shading. It's required to set Texture.minFilter and Texture.magFilter to THREE.NearestFilter when using this type of texture */
-		gradientMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
-			OperatorPathOptions(TextureGradientMapController, 'useGradientMap')
-		);
+		gradientMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureGradientMapController, 'useGradientMap'));
 	};
 }
 

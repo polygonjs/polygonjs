@@ -10,7 +10,6 @@ import {
 } from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an alpha map */
@@ -19,10 +18,7 @@ export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureAlphaMapController),
 		});
 		/** @param specify the alpha map COP node */
-		alphaMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
-			OperatorPathOptions(TextureAlphaMapController, 'useAlphaMap')
-		);
+		alphaMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureAlphaMapController, 'useAlphaMap'));
 	};
 }
 class TextureAlphaMaterial extends Material {

@@ -15,7 +15,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribFromTextureSopOperation.DEFAULT_PARAMS;
 class AttribFromTextureSopParamsConfig extends NodeParamsConfig {
 	/** @param texture node */
-	texture = ParamConfig.NODE_PATH(DEFAULT.texture.path(), {
+	texture = ParamConfig.NODE_PATH('', {
 		nodeSelection: {context: NodeContext.COP},
 	});
 	/** @param uv attribute */

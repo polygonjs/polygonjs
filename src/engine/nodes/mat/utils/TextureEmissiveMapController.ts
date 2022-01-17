@@ -10,7 +10,6 @@ import {
 } from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {Color} from 'three/src/math/Color';
 
 export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -20,10 +19,7 @@ export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param toggle if you want to use a emissive map */
 		useEmissiveMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEmissiveMapController));
 		/** @param specify the emissive map COP node */
-		emissiveMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
-			OperatorPathOptions(TextureEmissiveMapController, 'useEmissiveMap')
-		);
+		emissiveMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureEmissiveMapController, 'useEmissiveMap'));
 		/** @param emissive intensity */
 		emissiveIntensity = ParamConfig.FLOAT(1);
 	};

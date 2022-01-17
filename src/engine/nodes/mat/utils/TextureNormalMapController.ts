@@ -11,7 +11,6 @@ import {
 } from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {Vector2} from 'three/src/math/Vector2';
 
 import {TangentSpaceNormalMap, ObjectSpaceNormalMap} from 'three/src/constants';
@@ -34,10 +33,7 @@ export function NormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureNormalMapController),
 		});
 		/** @param specify the normal map COP node */
-		normalMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
-			OperatorPathOptions(TextureNormalMapController, 'useNormalMap')
-		);
+		normalMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureNormalMapController, 'useNormalMap'));
 		/** @param type of normal map being used */
 		normalMapType = ParamConfig.INTEGER(0, {
 			visibleIf: {useNormalMap: 1},

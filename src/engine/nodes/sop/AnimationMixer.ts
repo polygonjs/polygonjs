@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseParamType} from '../../params/_Base';
 class AnimationMixerSopParamsConfig extends NodeParamsConfig {
 	time = ParamConfig.FLOAT('$T', {range: [0, 10]});
-	clip = ParamConfig.NODE_PATH('/ANIM/OUT', {
+	clip = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.ANIM,
 		},

@@ -80,7 +80,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param the camera to override to */
-	camera = ParamConfig.NODE_PATH('/perspective_camera1', {
+	camera = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: CAMERA_TYPES,
@@ -112,7 +112,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	/** @param the material to use on the scene for GPU detection */
-	material = ParamConfig.NODE_PATH('/MAT/mesh_basic_builder1', {
+	material = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},

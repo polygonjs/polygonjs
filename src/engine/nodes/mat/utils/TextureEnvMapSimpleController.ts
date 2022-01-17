@@ -9,7 +9,6 @@ import {
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {MultiplyOperation, MixOperation, AddOperation} from 'three/src/constants';
@@ -32,7 +31,7 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapController));
 		/** @param specify the environment map COP node. Note that this only works with CubeCamera */
 		envMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
+			'',
 			OperatorPathOptions(TextureEnvMapController, 'useEnvMap', {types: [CopType.CUBE_CAMERA]})
 		);
 		/** @param defines how the env map is combined with the color */

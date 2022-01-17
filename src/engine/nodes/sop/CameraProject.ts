@@ -12,7 +12,7 @@ import {NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
 const DEFAULT = CameraProjectSopOperation.DEFAULT_PARAMS;
 class CameraProjectSopParamsConfig extends NodeParamsConfig {
 	/** @param cameara */
-	camera = ParamConfig.NODE_PATH(DEFAULT.camera.path(), {
+	camera = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: CAMERA_TYPES,

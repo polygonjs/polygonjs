@@ -14,6 +14,8 @@ QUnit.test('blend obj simple', async (assert) => {
 	scene.threejsScene().updateMatrixWorld(true);
 
 	const blend1 = root.createNode('blend');
+	blend1.p.object0.setNode(geo1);
+	blend1.p.object1.setNode(geo2);
 	blend1.p.blend.set(0.5);
 	await scene.waitForCooksCompleted();
 	assert.deepEqual(blend1.object.position.toArray(), [0.5, 0.5, 0]);

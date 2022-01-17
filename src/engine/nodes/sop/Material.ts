@@ -19,7 +19,7 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to assign the new material */
 	assignMat = ParamConfig.BOOLEAN(DEFAULT.assignMat);
 	/** @param the material node */
-	material = ParamConfig.NODE_PATH(DEFAULT.material.path(), {
+	material = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},

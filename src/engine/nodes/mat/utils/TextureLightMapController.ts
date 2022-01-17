@@ -10,7 +10,6 @@ import {
 } from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 
 export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -21,10 +20,7 @@ export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureLightMapController),
 		});
 		/** @param specify the light map COP node */
-		lightMap = ParamConfig.NODE_PATH(
-			NODE_PATH_DEFAULT.NODE.EMPTY,
-			OperatorPathOptions(TextureLightMapController, 'useLightMap')
-		);
+		lightMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureLightMapController, 'useLightMap'));
 		/** @param light. When set to 0, reflections from environment maps will be very sharp, or blurred when 1. Any value between 0 and 1 can help modulate this. */
 		lightMapIntensity = ParamConfig.FLOAT(1, {
 			visibleIf: {useLightMap: 1},

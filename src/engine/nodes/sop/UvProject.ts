@@ -20,7 +20,7 @@ import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {BaseObjNodeType} from '../obj/_Base';
 class UvProjectSopParamsConfig extends NodeParamsConfig {
 	/** @param camera node to use as projection */
-	camera = ParamConfig.NODE_PATH('/perspective_camera1', {
+	camera = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.OBJ,
 			types: CAMERA_TYPES,

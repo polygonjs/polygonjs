@@ -18,7 +18,7 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 	/** @param overrideScene */
 	overrideScene = ParamConfig.BOOLEAN(0, PostParamOptions);
 	/** @param scene */
-	scene = ParamConfig.NODE_PATH('/scene1', {
+	scene = ParamConfig.NODE_PATH('', {
 		visibleIf: {overrideScene: 1},
 		nodeSelection: {
 			context: NodeContext.OBJ,
@@ -29,7 +29,7 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 	/** @param overrideCamera */
 	overrideCamera = ParamConfig.BOOLEAN(0, PostParamOptions);
 	/** @param camera */
-	camera = ParamConfig.NODE_PATH('/perspective_camera1', {
+	camera = ParamConfig.NODE_PATH('', {
 		visibleIf: {overrideCamera: 1},
 		nodeSelection: {
 			context: NodeContext.OBJ,

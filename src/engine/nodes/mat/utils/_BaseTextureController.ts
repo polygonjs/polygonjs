@@ -12,14 +12,13 @@ import {BaseParamType} from '../../../params/_Base';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {IUniforms, ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
-import {NODE_PATH_DEFAULT} from '../../../../core/Walker';
 import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
 import {Poly} from '../../../Poly';
 
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		useMap = ParamConfig.BOOLEAN(0);
-		map = ParamConfig.NODE_PATH(NODE_PATH_DEFAULT.NODE.EMPTY, {visibleIf: {useMap: 1}});
+		map = ParamConfig.NODE_PATH('', {visibleIf: {useMap: 1}});
 	};
 }
 // class TextureMapMaterial<T extends string> extends Material {
