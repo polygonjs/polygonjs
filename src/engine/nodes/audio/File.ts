@@ -18,6 +18,14 @@ const LOOP_OPTIONS = {
 		FileAudioNode.PARAM_CALLBACK_updateLoop(node as FileAudioNode);
 	},
 };
+function seekCallback(offset: number) {
+	return {
+		callback: (node: BaseNodeType) => {
+			FileAudioNode.PARAM_CALLBACK_seekOffset(node as FileAudioNode, offset);
+		},
+		label: `${offset}`,
+	};
+}
 class FileAudioParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the audio file from */
 	url = ParamConfig.STRING('', {
@@ -48,20 +56,11 @@ class FileAudioParamsConfig extends NodeParamsConfig {
 		cook: false,
 		editable: false,
 	});
-	/** @param display currentTime param */
-	updateCurrentTimeParam = ParamConfig.BOOLEAN(0, {
-		cook: false,
-		callback: (node: BaseNodeType) => {
-			FileAudioNode.PARAM_CALLBACK_updateUpdateCurrentTimeParam(node as FileAudioNode);
-		},
-	});
-	/** @param currentTime */
-	currentTime = ParamConfig.FLOAT(0, {
-		visibleIf: {updateCurrentTimeParam: 1},
-		range: [0, 100],
-		editable: false,
-		cook: false,
-	});
+	/** @param seek 10 seconds back */
+	seekM10 = ParamConfig.BUTTON(null, seekCallback(-10));
+	/** @param seek 5 seconds back */
+	seekM5 = ParamConfig.BUTTON(null, seekCallback(-5));
+
 	/** @param loop */
 	loop = ParamConfig.BOOLEAN(1, {
 		...LOOP_OPTIONS,
@@ -91,7 +90,6 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 
 	async cook(inputContents: AudioBuilder[]) {
 		await this._loadUrl();
-		this._updateOnTickHook();
 		if (this._player) {
 			const audioBuilder = new AudioBuilder();
 			audioBuilder.setSource(this._player);
@@ -139,10 +137,18 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 		this._player?.stop();
 	}
 	async restart() {
-		this._player?.seek(0);
+		this._player?.restart(0);
 	}
 	async seek(time: number) {
-		this._player?.seek(0);
+		this._player?.seek(time);
+	}
+	private seekOffset(offset: number) {
+		if (!this._player) {
+			return;
+		}
+		const currentTime = this._player.now();
+		console.log('seek', currentTime + offset);
+		this._player.seek(currentTime + offset);
 	}
 
 	static PARAM_CALLBACK_play(node: FileAudioNode) {
@@ -154,21 +160,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	static PARAM_CALLBACK_restart(node: FileAudioNode) {
 		node.restart();
 	}
-	/*
-	 * UPDATE CURRENT TIME PARAM
-	 */
-	static PARAM_CALLBACK_updateUpdateCurrentTimeParam(node: FileAudioNode) {
-		node._updateCurrentTimeParam();
-		node._updateOnTickHook();
-	}
 
-	private _updateCurrentTimeParam() {
-		if (!this._player) {
-			return;
-		}
-		const currentTime = this._player.now();
-		this.p.currentTime.set(currentTime);
-	}
 	/*
 	 * LOOP
 	 */
@@ -188,25 +180,9 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	}
 
 	/*
-	 * REGISTER TICK CALLBACK
+	 * SEEK
 	 */
-	private _updateOnTickHook() {
-		if (isBooleanTrue(this.pv.updateCurrentTimeParam)) {
-			this._registerOnTickHook();
-		} else {
-			this._unRegisterOnTickHook();
-		}
-	}
-	private async _registerOnTickHook() {
-		if (this.scene().registeredBeforeTickCallbacks().has(this._tickCallbackName())) {
-			return;
-		}
-		this.scene().registerOnBeforeTick(this._tickCallbackName(), this._updateCurrentTimeParam.bind(this));
-	}
-	private async _unRegisterOnTickHook() {
-		this.scene().unRegisterOnBeforeTick(this._tickCallbackName());
-	}
-	private _tickCallbackName() {
-		return `audio/File-${this.graphNodeId()}`;
+	static PARAM_CALLBACK_seekOffset(node: FileAudioNode, offset: number) {
+		node.seekOffset(offset);
 	}
 }
