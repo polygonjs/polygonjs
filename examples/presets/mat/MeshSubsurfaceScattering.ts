@@ -1,5 +1,5 @@
 import {MeshSubsurfaceScatteringMatNode} from '../../../src/engine/nodes/mat/MeshSubsurfaceScattering';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 // export function MeshSubsurfaceScatteringMatNodePresets() {
 // 	return {
@@ -39,4 +39,10 @@ const meshSubsurfaceScatteringMatNodePresetsCollectionFactory: PresetsCollection
 
 		return collection;
 	};
-export {MeshSubsurfaceScatteringMatNode, meshSubsurfaceScatteringMatNodePresetsCollectionFactory};
+export const meshSubsurfaceScatteringMatPresetRegister: PresetRegister<
+	typeof MeshSubsurfaceScatteringMatNode,
+	MeshSubsurfaceScatteringMatNode
+> = {
+	nodeClass: MeshSubsurfaceScatteringMatNode,
+	setupFunc: meshSubsurfaceScatteringMatNodePresetsCollectionFactory,
+};

@@ -76,7 +76,7 @@ QUnit.test('geo obj cooks only once when multiple params are updated', async (as
 		geo1.p.t.x.set(2);
 		geo1.p.s.y.set(4);
 	});
-	await scene.waitForCooksCompleted();
+	await geo1.compute();
 	assert.equal(geo1.object.uuid, obj.uuid);
 	assert.deepEqual(
 		obj.matrix.toArray(),

@@ -4,6 +4,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 
 const CONDITION_INPUT_NAME = 'condition';
 
@@ -18,7 +19,7 @@ export class IfThenGlNode extends SubnetGlNode {
 
 	protected _expected_inputs_count() {
 		const current_connections = this.io.connections.inputConnections();
-		return current_connections ? Math.max(current_connections.length + 1, 2) : 2;
+		return current_connections ? Math.max(ArrayUtils.compact(current_connections).length + 1, 2) : 2;
 	}
 
 	protected _expected_input_types(): GlConnectionPointType[] {

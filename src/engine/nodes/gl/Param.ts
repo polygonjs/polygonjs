@@ -101,7 +101,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		const var_name = this.glVarName(output_connection_point.name());
 		return var_name;
 	}
-	set_gl_type(type: GlConnectionPointType) {
+	setGlType(type: GlConnectionPointType) {
 		const index = GL_CONNECTION_POINT_TYPES.indexOf(type);
 		this.p.type.set(index);
 	}

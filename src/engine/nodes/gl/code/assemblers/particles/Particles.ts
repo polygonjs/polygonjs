@@ -53,7 +53,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				}
 				case AttributeGlNode.type(): {
 					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler?
-					const attrib_name = (node as AttributeGlNode).attribute_name;
+					const attrib_name = (node as AttributeGlNode).attributeName();
 					const variable = this._texture_allocations_controller?.variable(attrib_name);
 					if (variable && variable.allocation()) {
 						const allocation_shader_name = variable.allocation()?.shaderName();
@@ -77,7 +77,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				}
 				case AttributeGlNode.type(): {
 					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler? AND especially since there is no way to assign it?
-					const attrib_name: string = (node as AttributeGlNode).attribute_name;
+					const attrib_name: string = (node as AttributeGlNode).attributeName();
 					const variable = this._texture_allocations_controller?.variable(attrib_name);
 					if (variable && variable.allocation()) {
 						const allocation_shader_name = variable.allocation()?.shaderName();
@@ -280,8 +280,8 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		shaders_collection_controller: ShadersCollectionController
 	) {
 		if (attribute_node.isImporting()) {
-			const gl_type = attribute_node.gl_type();
-			const attribute_name = attribute_node.attribute_name;
+			const gl_type = attribute_node.glType();
+			const attribute_name = attribute_node.attributeName();
 			const new_value = this.globals_handler?.read_attribute(
 				attribute_node,
 				gl_type,
@@ -314,7 +314,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		if (attribute_node.isExporting()) {
 			const input = attribute_node.connected_input_node();
 			if (input) {
-				const variable_name = attribute_node.attribute_name;
+				const variable_name = attribute_node.attributeName();
 
 				this.add_export_body_line(
 					attribute_node,

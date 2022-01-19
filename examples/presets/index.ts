@@ -1,84 +1,76 @@
 import {NodeContext} from '../../src/engine/poly/NodeContext';
 
 // anim
-import {PropertyNameAnimNode, PropertyNameAnimNodePresetsCollectionFactory} from './anim/PropertyName';
+import {propertyNameAnimPresetRegister} from './anim/PropertyName';
 // audio
-import {FileAudioNode, fileAudioNodePresetsCollectionFactory} from './audio/File';
+import {fileAudioPresetRegister} from './audio/File';
 // cop
-import {ImageCopNode, imageCopNodePresetsCollectionFactory} from './cop/Image';
-import {VideoCopNode, videoCopNodePresetsCollectionFactory} from './cop/Video';
+import {audioAnalyserCopPresetRegister} from './cop/AudioAnalyser';
+import {imageCopPresetRegister} from './cop/Image';
+import {videoCopPresetRegister} from './cop/Video';
 // // gl
-import {AttributeGlNode, attributeGlNodePresetsCollectionFactory} from './gl/Attribute';
+import {attributeGlPresetRegister} from './gl/Attribute';
 // // mat
-import {
-	MeshSubsurfaceScatteringMatNode,
-	meshSubsurfaceScatteringMatNodePresetsCollectionFactory,
-} from './mat/MeshSubsurfaceScattering';
+import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
 // obj
 // sop
-import {ColorSopNode, colorSopNodePresetsCollectionFactory} from './sop/Color';
-import {CSS2DObjectSopNode, CSS2DObjectSopNodePresetsCollectionFactory} from './sop/CSS2DObject';
-import {DataSopNode, dataSopNodePresetsCollectionFactory} from './sop/Data';
-import {DataUrlSopNode, dataUrlSopNodePresetsCollectionFactory} from './sop/DataUrl';
-import {FileSopNode, fileSopNodePresetsCollectionFactory} from './sop/File';
-import {TransformSopNode, transformSopNodePresetsCollectionFactory} from './sop/Transform';
-import {PolyDictionary} from '../../src/types/GlobalTypes';
-import {PresetsCollectionFactory} from './BasePreset';
-import {PointSopNode, pointSopNodePresetsCollectionFactory} from './sop/Point';
-import {RoundedBoxSopNode, roundedBoxSopNodePresetsCollectionFactory} from './sop/RoundedBox';
-import {TextSopNode, textSopNodeNodePresetsCollectionFactory} from './sop/Text';
+import {colorSopPresetRegister} from './sop/Color';
+import {CSS2DObjectPresetRegister} from './sop/CSS2DObject';
+import {dataSopPresetRegister} from './sop/Data';
+import {dataUrlSopPresetRegister} from './sop/DataUrl';
+import {fileSopPresetRegister} from './sop/File';
+import {transformSopPresetRegister} from './sop/Transform';
+import {pointSopPresetRegister} from './sop/Point';
+import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
+import {textSopPresetRegister} from './sop/Text';
 
-// TODO: it may be easier when there are many presets
-// to use a BasePreset class that knows how to register itself
-// based on the node it applies to
+import {PresetRegister} from './BasePreset';
+import {BaseNodeClass, BaseNodeType} from '../../src/engine/nodes/_Base';
 
-interface PresetsLibrary {
-	[NodeContext.ANIM]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.AUDIO]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.COP]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.EVENT]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.GL]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.JS]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.MANAGER]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.MAT]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.OBJ]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.POST]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.ROP]: PolyDictionary<PresetsCollectionFactory<any>>;
-	[NodeContext.SOP]: PolyDictionary<PresetsCollectionFactory<any>>;
+class PresetLibraryClass {
+	static _instance: PresetLibraryClass | undefined;
+	private _presetsByContextAndType: Map<NodeContext, Map<string, PresetRegister<any, any>>> = new Map();
+	private constructor() {
+		// anim
+		this._registerPreset(propertyNameAnimPresetRegister);
+		// audio
+		this._registerPreset(fileAudioPresetRegister);
+		// cop
+		this._registerPreset(audioAnalyserCopPresetRegister);
+		this._registerPreset(imageCopPresetRegister);
+		this._registerPreset(videoCopPresetRegister);
+		// gl
+		this._registerPreset(attributeGlPresetRegister);
+		// mat
+		this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
+		// sop
+		this._registerPreset(colorSopPresetRegister);
+		this._registerPreset(CSS2DObjectPresetRegister);
+		this._registerPreset(dataSopPresetRegister);
+		this._registerPreset(dataUrlSopPresetRegister);
+		this._registerPreset(fileSopPresetRegister);
+		this._registerPreset(pointSopPresetRegister);
+		this._registerPreset(roundedBoxSopPresetRegister);
+		this._registerPreset(textSopPresetRegister);
+		this._registerPreset(transformSopPresetRegister);
+	}
+
+	private _registerPreset<N extends typeof BaseNodeClass, NI extends BaseNodeClass>(register: PresetRegister<N, NI>) {
+		const context = register.nodeClass.context();
+		const type = register.nodeClass.type();
+		let typeMap = this._presetsByContextAndType.get(context);
+		if (!typeMap) {
+			typeMap = new Map<string, PresetRegister<any, any>>();
+			this._presetsByContextAndType.set(context, typeMap);
+		}
+		typeMap.set(type, register);
+	}
+	preset(node: BaseNodeType) {
+		return this._presetsByContextAndType.get(node.context())?.get(node.type());
+	}
+
+	static instance() {
+		return (this._instance = this._instance || new PresetLibraryClass());
+	}
 }
-
-export const presetsLibrary: PresetsLibrary = {
-	[NodeContext.ANIM]: {
-		[PropertyNameAnimNode.type()]: PropertyNameAnimNodePresetsCollectionFactory,
-	},
-	[NodeContext.AUDIO]: {
-		[FileAudioNode.type()]: fileAudioNodePresetsCollectionFactory,
-	},
-	[NodeContext.COP]: {
-		[ImageCopNode.type()]: imageCopNodePresetsCollectionFactory,
-		[VideoCopNode.type()]: videoCopNodePresetsCollectionFactory,
-	},
-	[NodeContext.EVENT]: {},
-	[NodeContext.GL]: {
-		[AttributeGlNode.type()]: attributeGlNodePresetsCollectionFactory,
-	},
-	[NodeContext.JS]: {},
-	[NodeContext.MANAGER]: {},
-	[NodeContext.MAT]: {
-		[MeshSubsurfaceScatteringMatNode.type()]: meshSubsurfaceScatteringMatNodePresetsCollectionFactory,
-	},
-	[NodeContext.OBJ]: {},
-	[NodeContext.POST]: {},
-	[NodeContext.ROP]: {},
-	[NodeContext.SOP]: {
-		[ColorSopNode.type()]: colorSopNodePresetsCollectionFactory,
-		[CSS2DObjectSopNode.type()]: CSS2DObjectSopNodePresetsCollectionFactory,
-		[DataSopNode.type()]: dataSopNodePresetsCollectionFactory,
-		[DataUrlSopNode.type()]: dataUrlSopNodePresetsCollectionFactory,
-		[FileSopNode.type()]: fileSopNodePresetsCollectionFactory,
-		[PointSopNode.type()]: pointSopNodePresetsCollectionFactory,
-		[RoundedBoxSopNode.type()]: roundedBoxSopNodePresetsCollectionFactory,
-		[TextSopNode.type()]: textSopNodeNodePresetsCollectionFactory,
-		[TransformSopNode.type()]: transformSopNodePresetsCollectionFactory,
-	},
-};
+export const PresetLibrary = PresetLibraryClass.instance();

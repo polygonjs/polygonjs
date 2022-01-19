@@ -56,7 +56,7 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 		visibleIf: {castShadow: 1},
 	});
 	/** @param shadows bias */
-	shadowBias = ParamConfig.FLOAT(0.001, {
+	shadowBias = ParamConfig.FLOAT(0.0001, {
 		visibleIf: {castShadow: 1},
 		range: [-0.01, 0.01],
 		rangeLocked: [false, false],

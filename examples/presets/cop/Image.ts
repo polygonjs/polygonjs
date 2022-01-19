@@ -1,6 +1,6 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {ImageCopNode} from '../../../src/engine/nodes/cop/Image';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNode> = (node: ImageCopNode) => {
 	const collection = new NodePresetsCollection();
@@ -29,4 +29,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 
 	return collection;
 };
-export {ImageCopNode, imageCopNodePresetsCollectionFactory};
+export const imageCopPresetRegister: PresetRegister<typeof ImageCopNode, ImageCopNode> = {
+	nodeClass: ImageCopNode,
+	setupFunc: imageCopNodePresetsCollectionFactory,
+};

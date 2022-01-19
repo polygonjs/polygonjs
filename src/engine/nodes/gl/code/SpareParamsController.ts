@@ -64,6 +64,9 @@ export class AssemblerNodeSpareParamsController {
 					spare: true,
 					computeOnDirty: true,
 					cook: false, // it should update the uniforms only via its callback
+					// important for texture nodes
+					// that compute after being found by the nodepath param
+					dependentOnFoundNode: true,
 				};
 				const options = ObjectUtils.merge(config_options, default_options);
 

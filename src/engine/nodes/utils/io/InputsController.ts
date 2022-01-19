@@ -426,7 +426,7 @@ export class InputsController<NC extends NodeContext> {
 	has_named_input(name: string): boolean {
 		return this.get_named_input_index(name) >= 0;
 	}
-	has_input(input_index: number): boolean {
+	hasInput(input_index: number): boolean {
 		return this._inputs[input_index] != null;
 	}
 	inputs() {

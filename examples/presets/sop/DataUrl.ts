@@ -1,6 +1,6 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {DataUrlSopNode} from '../../../src/engine/nodes/sop/DataUrl';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 // export function DataUrlSopNodePresets() {
 // 	return {
@@ -28,4 +28,7 @@ const dataUrlSopNodePresetsCollectionFactory: PresetsCollectionFactory<DataUrlSo
 
 	return collection;
 };
-export {DataUrlSopNode, dataUrlSopNodePresetsCollectionFactory};
+export const dataUrlSopPresetRegister: PresetRegister<typeof DataUrlSopNode, DataUrlSopNode> = {
+	nodeClass: DataUrlSopNode,
+	setupFunc: dataUrlSopNodePresetsCollectionFactory,
+};

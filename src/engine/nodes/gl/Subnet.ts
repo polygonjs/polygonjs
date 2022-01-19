@@ -9,6 +9,7 @@ import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 
 export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K> {
 	protected _childrenControllerContext = NodeContext.GL;
@@ -25,7 +26,7 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 
 	protected _expected_inputs_count() {
 		const current_connections = this.io.connections.inputConnections();
-		return current_connections ? current_connections.length + 1 : 1;
+		return current_connections ? ArrayUtils.compact(current_connections).length + 1 : 1;
 	}
 
 	protected _expected_input_types(): GlConnectionPointType[] {

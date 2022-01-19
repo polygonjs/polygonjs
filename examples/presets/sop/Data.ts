@@ -1,5 +1,5 @@
 import {DataSopNode} from '../../../src/engine/nodes/sop/Data';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 const BASIC_DATA = [{height: 3}, {height: 4}];
 const DEFAULT_DATA = [
 	{value: -40},
@@ -40,4 +40,7 @@ const dataSopNodePresetsCollectionFactory: PresetsCollectionFactory<DataSopNode>
 
 	return collection;
 };
-export {DataSopNode, dataSopNodePresetsCollectionFactory};
+export const dataSopPresetRegister: PresetRegister<typeof DataSopNode, DataSopNode> = {
+	nodeClass: DataSopNode,
+	setupFunc: dataSopNodePresetsCollectionFactory,
+};

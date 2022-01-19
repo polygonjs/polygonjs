@@ -4,12 +4,10 @@ import {Scene} from 'three/src/scenes/Scene';
 import {Points} from 'three/src/objects/Points';
 import {Group} from 'three/src/objects/Group';
 import {FrontSide} from 'three/src/constants';
-import {Color} from 'three/src/math/Color';
 import {Bone} from 'three/src/objects/Bone';
 import {Material} from 'three/src/materials/Material';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 // object types
 import {Object3D} from 'three/src/core/Object3D';
@@ -107,18 +105,22 @@ export const ObjectTypeMenuEntries = [
 const materials: MaterialsByString = {
 	MeshStandard: new MeshStandardMaterial({
 		color: 0xffffff,
-		//vertexColors: VertexColors
-		side: FrontSide, // DoubleSide
+		side: FrontSide,
 		metalness: 0.5,
 		roughness: 0.9,
 	}),
-	[ObjectType.MESH]: new MeshLambertMaterial({
-		// MeshStandardMaterial
-		color: new Color(1, 1, 1),
+	// [ObjectType.MESH]: new MeshLambertMaterial({
+	// 	color: new Color(1, 1, 1),
+	// 	side: FrontSide,
+	// 	vertexColors: false,
+	// 	transparent: true,
+	// 	depthTest: true,
+	// }),
+	[ObjectType.MESH]: new MeshStandardMaterial({
+		color: 0xffffff,
 		side: FrontSide,
-		vertexColors: false,
-		transparent: true,
-		depthTest: true,
+		metalness: 0.0,
+		roughness: 0.9,
 	}),
 	[ObjectType.POINTS]: new PointsMaterial({
 		color: 0xffffff,

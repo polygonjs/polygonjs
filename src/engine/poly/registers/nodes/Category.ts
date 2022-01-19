@@ -5,6 +5,7 @@ export const CATEGORY_ANIM = {
 	MODIFIER: 'modifiers',
 	NETWORK,
 	PROP: 'prop',
+	SUBNET: 'subnet',
 	TIMING: 'timing',
 };
 export const CATEGORY_AUDIO = {
@@ -41,6 +42,7 @@ export const CATEGORY_GL = {
 	MATH: 'math',
 	PHYSICS: 'physics',
 	QUAT: 'quat',
+	SDF: 'math',
 	TRIGO: 'trigo',
 	UTIL: 'util',
 	INSTANCE: 'instance',
@@ -98,6 +100,7 @@ export const CATEGORY_SOP = {
 	PHYSICS: 'physics',
 	PRIMITIVES: 'primitives',
 	RENDER: 'render',
+	SUBNET: 'subnet',
 };
 export const CATEGORY_POST = {
 	ADVANCED: 'advanced',

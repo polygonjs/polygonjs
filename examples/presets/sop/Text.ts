@@ -1,6 +1,6 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {TextSopNode} from '../../../src/engine/nodes/sop/Text';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 const FONT_NAMES: string[] = [
 	'Absolute.ttf',
@@ -82,4 +82,7 @@ const textSopNodeNodePresetsCollectionFactory: PresetsCollectionFactory<TextSopN
 
 	return collection;
 };
-export {TextSopNode, textSopNodeNodePresetsCollectionFactory};
+export const textSopPresetRegister: PresetRegister<typeof TextSopNode, TextSopNode> = {
+	nodeClass: TextSopNode,
+	setupFunc: textSopNodeNodePresetsCollectionFactory,
+};

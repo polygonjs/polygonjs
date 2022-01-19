@@ -11,11 +11,14 @@ import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {effectParamsOptions} from './utils/EffectsController';
 import {BaseNodeType} from '../_Base';
 import {BaseAnalyserAudioNode} from './_BaseAnalyser';
+import {Number2} from '../../../types/GlobalTypes';
 const DEFAULTS = Meter.getDefaults();
 
 const paramCallback = (node: BaseNodeType) => {
 	MeterAudioNode.PARAM_CALLBACK_updateEffect(node as MeterAudioNode);
 };
+
+const RANGE_DEFAULT: Number2 = [10000, -10000];
 class MeterAudioParamsConfig extends NodeParamsConfig {
 	/** @param a value from between 0 and 1 where 0 represents no time averaging with the last analysis frame */
 	smoothing = ParamConfig.FLOAT(DEFAULTS.smoothing, {
@@ -24,9 +27,9 @@ class MeterAudioParamsConfig extends NodeParamsConfig {
 		...effectParamsOptions(paramCallback),
 	});
 	/** @param normalizes the output between 0 and 1. The value will be in decibel otherwise. */
-	normalRange = ParamConfig.BOOLEAN(1, effectParamsOptions(paramCallback));
+	normalRange = ParamConfig.BOOLEAN(0, effectParamsOptions(paramCallback));
 	/** @param display meter param */
-	updateMeterParam = ParamConfig.BOOLEAN(0, {
+	updateRangeParam = ParamConfig.BOOLEAN(0, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
 			MeterAudioNode.PARAM_CALLBACK_updateUpdateMeterParam(node as MeterAudioNode);
@@ -34,10 +37,23 @@ class MeterAudioParamsConfig extends NodeParamsConfig {
 	});
 	/** @param meter value */
 	value = ParamConfig.FLOAT(0, {
-		visibleIf: {updateMeterParam: 1},
+		visibleIf: {updateRangeParam: 1},
 		range: [-100, 100],
 		editable: false,
 		cook: false,
+	});
+	/** @param accumulated range */
+	maxRange = ParamConfig.VECTOR2([10000, -10000], {
+		visibleIf: {updateRangeParam: 1},
+		editable: false,
+		cook: false,
+	});
+	/** @param resetMaxRange */
+	resetMaxRange = ParamConfig.BUTTON(null, {
+		visibleIf: {updateRangeParam: 1},
+		callback: (node) => {
+			MeterAudioNode.PARAM_CALLBACK_resetMaxRange(node as MeterAudioNode);
+		},
 	});
 }
 const ParamsConfig = new MeterAudioParamsConfig();
@@ -110,22 +126,34 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 		node._updateMeterParam();
 		node._updateOnTickHook();
 	}
+	static PARAM_CALLBACK_resetMaxRange(node: MeterAudioNode) {
+		node.p.maxRange.set(RANGE_DEFAULT);
+	}
 
 	private _updateMeterParam() {
 		if (!this.__effect__) {
 			return;
 		}
 		const value = this.__effect__.getValue();
-		if (CoreType.isNumber(value)) {
+		if (CoreType.isNumber(value) && isFinite(value)) {
 			this.p.value.set(value);
 		} else {
 			if (CoreType.isArray(value)) {
 				const valueN = value[0];
 				// we check that we have a number again in case meter.getValue()
 				// returns Infinity
-				if (CoreType.isNumber(valueN)) {
+				if (CoreType.isNumber(valueN) && isFinite(valueN)) {
 					this.p.value.set(valueN);
 				}
+			}
+		}
+		// update max range
+		const newVal = this.pv.value;
+		if (newVal < this.pv.maxRange.x && CoreType.isNumber(newVal) && isFinite(newVal)) {
+			this.p.maxRange.x.set(newVal);
+		} else {
+			if (newVal > this.pv.maxRange.y && CoreType.isNumber(newVal) && isFinite(newVal)) {
+				this.p.maxRange.y.set(newVal);
 			}
 		}
 	}
@@ -133,7 +161,7 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 	 * REGISTER TICK CALLBACK
 	 */
 	private _updateOnTickHook() {
-		if (isBooleanTrue(this.pv.updateMeterParam)) {
+		if (isBooleanTrue(this.pv.updateRangeParam)) {
 			this._registerOnTickHook();
 		} else {
 			this._unRegisterOnTickHook();

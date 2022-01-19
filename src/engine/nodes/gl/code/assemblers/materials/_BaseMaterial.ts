@@ -351,11 +351,11 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	) {
 		// const named_output = attribute_node.connected_output()
 		// const named_connection = attribute_node.connected_input()
-		const gl_type = attribute_node.gl_type();
+		const gl_type = attribute_node.glType();
 		const new_var = this.globals_handler?.read_attribute(
 			attribute_node,
 			gl_type,
-			attribute_node.attribute_name,
+			attribute_node.attributeName(),
 			shaders_collection_controller
 		);
 		const var_name = attribute_node.glVarName(attribute_node.output_name);

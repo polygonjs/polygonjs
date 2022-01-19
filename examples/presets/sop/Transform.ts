@@ -1,5 +1,5 @@
 import {TransformSopNode} from '../../../src/engine/nodes/sop/Transform';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 const transformSopNodePresetsCollectionFactory: PresetsCollectionFactory<TransformSopNode> = (
 	node: TransformSopNode
@@ -14,4 +14,7 @@ const transformSopNodePresetsCollectionFactory: PresetsCollectionFactory<Transfo
 
 	return collection;
 };
-export {TransformSopNode, transformSopNodePresetsCollectionFactory};
+export const transformSopPresetRegister: PresetRegister<typeof TransformSopNode, TransformSopNode> = {
+	nodeClass: TransformSopNode,
+	setupFunc: transformSopNodePresetsCollectionFactory,
+};

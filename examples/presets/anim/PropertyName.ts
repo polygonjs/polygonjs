@@ -1,5 +1,5 @@
 import {PropertyNameAnimNode} from '../../../src/engine/nodes/anim/PropertyName';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 const PropertyNameAnimNodePresetsCollectionFactory: PresetsCollectionFactory<PropertyNameAnimNode> = (
 	node: PropertyNameAnimNode
@@ -36,4 +36,7 @@ const PropertyNameAnimNodePresetsCollectionFactory: PresetsCollectionFactory<Pro
 
 	return collection;
 };
-export {PropertyNameAnimNode, PropertyNameAnimNodePresetsCollectionFactory};
+export const propertyNameAnimPresetRegister: PresetRegister<typeof PropertyNameAnimNode, PropertyNameAnimNode> = {
+	nodeClass: PropertyNameAnimNode,
+	setupFunc: PropertyNameAnimNodePresetsCollectionFactory,
+};

@@ -20,8 +20,7 @@ export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;
 	private _time: number = 0;
-	// private _prev_performance_now: number = 0;
-	private _graph_node: CoreGraphNode;
+	private _graphNode: CoreGraphNode;
 	private _realtimeState = true;
 	private _maxFrame = 600;
 	private _maxFrameLocked = false;
@@ -42,10 +41,10 @@ export class TimeController {
 	// }
 
 	constructor(private scene: PolyScene) {
-		this._graph_node = new CoreGraphNode(scene, 'time controller');
+		this._graphNode = new CoreGraphNode(scene, 'timeController');
 	}
 	get graphNode() {
-		return this._graph_node;
+		return this._graphNode;
 	}
 
 	frame(): number {
@@ -65,21 +64,17 @@ export class TimeController {
 	}
 	setMaxFrame(maxFrame: number) {
 		this._maxFrame = Math.floor(maxFrame);
-		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.MAX_FRAME_UPDATED);
+		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.MAX_FRAME_UPDATED);
 	}
 	setMaxFrameLocked(state: boolean) {
 		this._maxFrameLocked = state;
-		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.MAX_FRAME_UPDATED);
+		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.MAX_FRAME_UPDATED);
 	}
 	setRealtimeState(state: boolean) {
 		this._realtimeState = state;
-		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.REALTIME_STATUS_UPDATED);
+		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.REALTIME_STATUS_UPDATED);
 	}
-	// set_fps(fps: number) {
-	// 	this._fps = Math.floor(fps);
-	// 	this._frame_interval = 1000 / this._fps;
-	// 	this.scene.events_controller.dispatch(this._graph_node, SceneEvent.FRAME_RANGE_UPDATED);
-	// }
+
 	setTime(time: number, updateFrame = true) {
 		if (time == this._time) {
 			return;
@@ -94,17 +89,17 @@ export class TimeController {
 		}
 
 		if (updateFrame) {
-			const new_frame = Math.floor(this._time * FPS);
-			const bounded_frame = this._ensureFrameWithinBounds(new_frame);
-			if (new_frame != bounded_frame) {
+			const newFrame = Math.floor(this._time * FPS);
+			const bounded_frame = this._ensureFrameWithinBounds(newFrame);
+			if (newFrame != bounded_frame) {
 				this.setFrame(bounded_frame, true);
 			} else {
-				this._frame = new_frame;
+				this._frame = newFrame;
 			}
 		}
 
 		// update time dependents
-		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.FRAME_UPDATED);
+		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.FRAME_UPDATED);
 		this.scene.uniformsController.updateTimeDependentUniformOwners();
 
 		this.graphNode.setSuccessorsDirty();
@@ -147,13 +142,14 @@ export class TimeController {
 			this._delta = delta;
 			const newTime = this._time + this._delta;
 			// this._prev_performance_now = performance_now;
-			this.setTime(newTime);
+			this.setTime(newTime, false);
+			this.setFrame(this._frame + 1, false);
 		} else {
 			this.setFrame(this.frame() + 1);
 		}
 	}
 
-	_ensureFrameWithinBounds(frame: number): number {
+	private _ensureFrameWithinBounds(frame: number): number {
 		if (this._playing) {
 			if (this._maxFrameLocked && frame > this._maxFrame) {
 				return TimeController.START_FRAME;
@@ -177,7 +173,7 @@ export class TimeController {
 		}
 		this._playing = false;
 		// TODO: try and unify the dispatch controller and events dispatcher
-		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PAUSE_EVENT_CONTEXT);
 	}
 	play() {
@@ -185,7 +181,7 @@ export class TimeController {
 			return;
 		}
 		this._playing = true;
-		this.scene.dispatchController.dispatch(this._graph_node, SceneEvent.PLAY_STATE_UPDATED);
+		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PLAY_EVENT_CONTEXT);
 	}
 	togglePlayPause() {

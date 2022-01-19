@@ -1,5 +1,5 @@
 import {PointSopNode} from '../../../src/engine/nodes/sop/Point';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 // export function PointSopNodePresets() {
 // 	return {
@@ -31,4 +31,7 @@ const pointSopNodePresetsCollectionFactory: PresetsCollectionFactory<PointSopNod
 
 	return collection;
 };
-export {PointSopNode, pointSopNodePresetsCollectionFactory};
+export const pointSopPresetRegister: PresetRegister<typeof PointSopNode, PointSopNode> = {
+	nodeClass: PointSopNode,
+	setupFunc: pointSopNodePresetsCollectionFactory,
+};

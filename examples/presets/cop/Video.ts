@@ -1,6 +1,6 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {VideoCopNode} from '../../../src/engine/nodes/cop/Video';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 const videoCopNodePresetsCollectionFactory: PresetsCollectionFactory<VideoCopNode> = (node: VideoCopNode) => {
 	const collection = new NodePresetsCollection();
@@ -15,4 +15,7 @@ const videoCopNodePresetsCollectionFactory: PresetsCollectionFactory<VideoCopNod
 
 	return collection;
 };
-export {VideoCopNode, videoCopNodePresetsCollectionFactory};
+export const videoCopPresetRegister: PresetRegister<typeof VideoCopNode, VideoCopNode> = {
+	nodeClass: VideoCopNode,
+	setupFunc: videoCopNodePresetsCollectionFactory,
+};

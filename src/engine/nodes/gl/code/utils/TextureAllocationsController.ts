@@ -86,7 +86,7 @@ export class TextureAllocationsController {
 						// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
 						// connections_by_node_id[node_id].push(named_input)
 						const variable = new TextureVariable(
-							attrib_node.attribute_name,
+							attrib_node.attributeName(),
 							GlConnectionPointComponentsCountMap[connection_point.type()]
 						);
 						variable.addGraphNodeId(node_id);
@@ -129,7 +129,7 @@ export class TextureAllocationsController {
 						// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
 						// connections_by_node_id[node_id].push(named_output)
 						const variable = new TextureVariable(
-							attribute_node.attribute_name,
+							attribute_node.attributeName(),
 							GlConnectionPointComponentsCountMap[connection_point.type()]
 						);
 						if (!attribute_node.isExporting()) {

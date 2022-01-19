@@ -16,7 +16,7 @@ QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 	const param1 = mesh_lambert1.createNode('param');
 	param1.p.name.set('float_param');
 	const param2 = mesh_lambert1.createNode('param');
-	param2.set_gl_type(GlConnectionPointType.VEC3);
+	param2.setGlType(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
 	const float_to_vec31 = mesh_lambert1.createNode('floatToVec3');
 	float_to_vec31.setInput(0, param1);

@@ -8,16 +8,16 @@ import {PolyScene} from '../../engine/scene/PolyScene';
  */
 export class CoreGraphNode {
 	private _graph: CoreGraph;
-	private _graph_node_id: CoreGraphNodeId;
-	private _dirty_controller: DirtyController = new DirtyController(this);
+	private _graphNodeId: CoreGraphNodeId;
+	private _dirtyController: DirtyController = new DirtyController(this);
 	constructor(protected _scene: PolyScene, protected _name: string) {
-		this._graph_node_id = _scene.graph.nextId();
+		this._graphNodeId = _scene.graph.nextId();
 		_scene.graph.addNode(this);
 		this._graph = _scene.graph;
 	}
 
 	dispose() {
-		this._dirty_controller.dispose();
+		this._dirtyController.dispose();
 		this.graphRemove();
 	}
 
@@ -47,7 +47,7 @@ export class CoreGraphNode {
 	 *
 	 */
 	graphNodeId(): CoreGraphNodeId {
-		return this._graph_node_id;
+		return this._graphNodeId;
 	}
 
 	//
@@ -56,7 +56,7 @@ export class CoreGraphNode {
 	//
 	//
 	get dirtyController() {
-		return this._dirty_controller;
+		return this._dirtyController;
 	}
 	/**
 	 * makes the graphNode dirty, which in turns makes its dependencies dirty
@@ -64,34 +64,34 @@ export class CoreGraphNode {
 	 */
 	setDirty(trigger?: CoreGraphNode | null) {
 		trigger = trigger || this;
-		this._dirty_controller.setDirty(trigger);
+		this._dirtyController.setDirty(trigger);
 	}
 	/**
 	 * makes dependencies dirty
 	 *
 	 */
 	setSuccessorsDirty(trigger?: CoreGraphNode) {
-		this._dirty_controller.setSuccessorsDirty(trigger);
+		this._dirtyController.setSuccessorsDirty(trigger);
 	}
 	/**
 	 * removes the dirty state
 	 *
 	 */
 	removeDirtyState() {
-		this._dirty_controller.removeDirtyState();
+		this._dirtyController.removeDirtyState();
 	}
 	isDirty() {
-		return this._dirty_controller.isDirty();
+		return this._dirtyController.isDirty();
 	}
 	/**
 	 * adds a callback that gets run when the graphNode is dirty
 	 *
 	 */
 	addPostDirtyHook(name: string, callback: PostDirtyHook) {
-		this._dirty_controller.addPostDirtyHook(name, callback);
+		this._dirtyController.addPostDirtyHook(name, callback);
 	}
 	removePostDirtyHook(name: string) {
-		this._dirty_controller.removePostDirtyHook(name);
+		this._dirtyController.removePostDirtyHook(name);
 	}
 
 	//
@@ -119,7 +119,7 @@ export class CoreGraphNode {
 	}
 
 	graphPredecessorIds(): CoreGraphNodeId[] {
-		return this._graph.predecessorIds(this._graph_node_id) || [];
+		return this._graph.predecessorIds(this._graphNodeId) || [];
 	}
 	graphPredecessors(): CoreGraphNode[] {
 		return this._graph.predecessors(this);

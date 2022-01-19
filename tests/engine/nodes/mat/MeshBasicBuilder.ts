@@ -40,6 +40,7 @@ import {create_required_nodes_for_subnet_gl_node} from '../gl/Subnet';
 import {create_required_nodes_for_ifThen_gl_node} from '../gl/IfThen';
 import {create_required_nodes_for_forLoop_gl_node} from '../gl/ForLoop';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
+import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -73,7 +74,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(BASIC_UNIFORMS).sort());
 
 	const constant1 = mesh_basic1.createNode('constant');
-	constant1.set_gl_type(GlConnectionPointType.VEC3);
+	constant1.setGlType(GlConnectionPointType.VEC3);
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.setInput('color', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
@@ -127,7 +128,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	vec4_to_vector1.setInput('vec4', texture1, TextureGlNode.OUTPUT_NAME);
 	texture1.setInput('uv', attribute1);
 	attribute1.p.name.set('uv');
-	attribute1.set_gl_type(GlConnectionPointType.VEC2);
+	attribute1.setGlType(GlConnectionPointType.VEC2);
 
 	// await CoreSleep.sleep(50);
 
@@ -138,26 +139,22 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
 	assert.equal(
 		mesh_basic1.params.paramWithType('textureMap', ParamType.NODE_PATH)!.value.path(),
-		'/COP/imageUv',
-		'textureMap value is "/COP/imageUv"'
+		'',
+		'textureMap value is ""'
 	);
 	mesh_basic1.params.get('textureMap')!.set('/COP/file2');
 
-	const data = new SceneJsonExporter(scene).data();
-
-	// console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.loadData(data);
-	await scene2.waitForCooksCompleted();
-
-	const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
-	await new_mesh_basic1.compute();
-	assert.notOk(new_mesh_basic1.assemblerController?.compileRequired(), 'compile is not required');
-	assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
-	assert.equal(
-		new_mesh_basic1.params.paramWithType('textureMap', ParamType.NODE_PATH)!.value.path(),
-		'/COP/file2',
-		'textureMap value is "/COP/file_uv"'
-	);
+	await saveAndLoadScene(scene, async (scene2) => {
+		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
+		await new_mesh_basic1.compute();
+		assert.notOk(new_mesh_basic1.assemblerController?.compileRequired(), 'compile is not required');
+		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
+		assert.equal(
+			new_mesh_basic1.params.paramWithType('textureMap', ParamType.NODE_PATH)!.value.path(),
+			'/COP/file2',
+			'textureMap value is "/COP/file_uv"'
+		);
+	});
 });
 
 QUnit.test(
@@ -171,7 +168,7 @@ QUnit.test(
 		const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 		const attribute1 = mesh_basic1.createNode('attribute');
 		attribute1.p.name.set('uv');
-		attribute1.set_gl_type(GlConnectionPointType.VEC2);
+		attribute1.setGlType(GlConnectionPointType.VEC2);
 		const vec2ToFloat1 = mesh_basic1.createNode('vec2ToFloat');
 		const float_to_vec31 = mesh_basic1.createNode('floatToVec3');
 		vec2ToFloat1.setInput(0, attribute1);
@@ -305,7 +302,7 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	const param1 = mesh_basic1.createNode('param');
 	param1.p.name.set('float_param');
 	const param2 = mesh_basic1.createNode('param');
-	param2.set_gl_type(GlConnectionPointType.VEC3);
+	param2.setGlType(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
 	const float_to_vec31 = mesh_basic1.createNode('floatToVec3');
 	float_to_vec31.setInput(0, param1);

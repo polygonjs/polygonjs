@@ -1,6 +1,6 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {FileAudioNode} from '../../../src/engine/nodes/audio/File';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 const fileAudioNodePresetsCollectionFactory: PresetsCollectionFactory<FileAudioNode> = (node: FileAudioNode) => {
 	const collection = new NodePresetsCollection();
@@ -31,4 +31,7 @@ const fileAudioNodePresetsCollectionFactory: PresetsCollectionFactory<FileAudioN
 
 	return collection;
 };
-export {FileAudioNode, fileAudioNodePresetsCollectionFactory};
+export const fileAudioPresetRegister: PresetRegister<typeof FileAudioNode, FileAudioNode> = {
+	nodeClass: FileAudioNode,
+	setupFunc: fileAudioNodePresetsCollectionFactory,
+};

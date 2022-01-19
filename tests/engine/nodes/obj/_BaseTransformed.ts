@@ -51,13 +51,13 @@ QUnit.test('obj nodes can keep their position on input change', async (assert) =
 
 	// / -> parent A
 	geo1.setInput(0, null2);
-	await scene.waitForCooksCompleted();
+	await geo1.compute();
 	assert.equal(geo1.pv.t.y, 3.4, 'ty');
 	assert.equal(geo1.pv.t.z, -5, 'tz');
 
 	// parent A -> parent B
 	geo1.setInput(0, null1);
-	await scene.waitForCooksCompleted();
+	await geo1.compute();
 	assert.in_delta(geo1.pv.t.y, -0.6, 0.00001, 'ty');
 	assert.equal(geo1.pv.t.z, 2, 'tz');
 });

@@ -6,13 +6,14 @@
 import {TypedCopNode} from './_Base';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseNodeType} from '../_Base';
 import {AUDIO_ANALYSER_NODES, NodeContext} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/Type';
 import {BooleanParam} from '../../params/Boolean';
 import {NodePathParam} from '../../params/NodePath';
 import {Vector2Param} from '../../params/Vector2';
 import {BaseAnalyserAudioNode} from '../audio/_BaseAnalyser';
+import {NearestFilter} from 'three/src/constants';
+import {FloatParam} from '../../params/Float';
 
 interface ToneAudioByChannel {
 	R?: BaseAnalyserAudioNode<any>;
@@ -24,6 +25,7 @@ interface ParamSet {
 	active: BooleanParam;
 	node: NodePathParam;
 	range: Vector2Param;
+	speedMult: FloatParam;
 }
 interface ParamSetByChannel {
 	R: ParamSet;
@@ -47,6 +49,10 @@ interface ValuesByChannel {
 }
 const CHANNELS: Channel[] = ['R', 'G', 'B', 'A'];
 
+const TEXTURE_ROWS = 2;
+const BYTE_SIZE = 255;
+const HALF_BYTE_SIZE = Math.floor(BYTE_SIZE * 0.5);
+const DEFAULT_SPEED = 0.04;
 class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 	/** @param if off, the texture will not be updated */
 	activeR = ParamConfig.BOOLEAN(0);
@@ -61,6 +67,11 @@ class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 	/** @param decibel range */
 	rangeR = ParamConfig.VECTOR2([-100, 100], {
 		visibleIf: {activeR: 1},
+	});
+	/** @param speed mult */
+	speedMultR = ParamConfig.FLOAT(DEFAULT_SPEED, {
+		visibleIf: {activeR: 1},
+		separatorAfter: true,
 	});
 
 	/** @param if off, the texture will not be updated */
@@ -77,6 +88,11 @@ class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 	rangeG = ParamConfig.VECTOR2([-100, 100], {
 		visibleIf: {activeG: 1},
 	});
+	/** @param speed mult */
+	speedMultG = ParamConfig.FLOAT(DEFAULT_SPEED, {
+		visibleIf: {activeG: 1},
+		separatorAfter: true,
+	});
 
 	/** @param if off, the texture will not be updated */
 	activeB = ParamConfig.BOOLEAN(0);
@@ -92,6 +108,11 @@ class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 	rangeB = ParamConfig.VECTOR2([-100, 100], {
 		visibleIf: {activeB: 1},
 	});
+	/** @param speed mult */
+	speedMultB = ParamConfig.FLOAT(DEFAULT_SPEED, {
+		visibleIf: {activeB: 1},
+		separatorAfter: true,
+	});
 
 	/** @param if off, the texture will not be updated */
 	activeA = ParamConfig.BOOLEAN(0);
@@ -104,15 +125,13 @@ class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 		visibleIf: {activeA: 1},
 	});
 	/** @param decibel range */
-	rangeA = ParamConfig.VECTOR2([-100, 100], {
+	rangeA = ParamConfig.VECTOR2([0, 1], {
 		visibleIf: {activeA: 1},
 	});
-
-	/** @param update */
-	update = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			AudioAnalyserCopNode.PARAM_CALLBACK_update(node as AudioAnalyserCopNode);
-		},
+	/** @param speed mult */
+	speedMultA = ParamConfig.FLOAT(DEFAULT_SPEED, {
+		visibleIf: {activeA: 1},
+		separatorAfter: true,
 	});
 }
 const ParamsConfig = new AudioAnalyserCopParamsConfig();
@@ -127,7 +146,9 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		this._initParamsByChannel();
 		await this._getAudioNodes();
 		this._registerOnTickHook();
-		this._updateTexture();
+		this._updateTexture(1);
+
+		this.cookController.endCook();
 	}
 
 	dispose() {
@@ -169,7 +190,7 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		this._audioNodesByChannel[channel] = audioAnalyserNode;
 	}
 
-	private _updateTexture() {
+	private _updateTexture(delta: number) {
 		if (!this._paramSetByChannel) {
 			return;
 		}
@@ -177,6 +198,7 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		let maxSize = -1;
 		for (let channel of CHANNELS) {
 			const values = this._valuesForChannel(channel, this._paramSetByChannel[channel]);
+
 			this._valuesByChannel[channel] = values;
 			if (values) {
 				const size = values.length;
@@ -201,7 +223,7 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		for (let channel of CHANNELS) {
 			const values = this._valuesByChannel[channel];
 			if (values) {
-				this._updateTextureChannel(channel, this._paramSetByChannel[channel], values, this._dataTexture);
+				this._updateTextureChannel(channel, this._paramSetByChannel[channel], values, this._dataTexture, delta);
 			}
 		}
 	}
@@ -220,22 +242,28 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		channel: Channel,
 		paramSet: ParamSet,
 		values: AnalyserValues,
-		texture: DataTexture
+		texture: DataTexture,
+		delta: number
 	) {
-		const w = values.length;
-		const h = 1;
+		const columns = values.length;
 
 		const offset = OFFSET_BY_CHANNEL[channel];
-		const pixelsCount = h * w;
 
 		const min = paramSet.range.x.value;
 		const max = paramSet.range.y.value;
 		const data = texture.image.data;
-		for (let i = 0; i < pixelsCount; i++) {
+
+		const row2Offset = columns * 4;
+		const speedMult = paramSet.speedMult.value;
+		for (let i = 0; i < columns; i++) {
 			const normalized = (values[i] - min) / (max - min);
 			const clamped = Math.max(0, Math.min(1, normalized));
-			const v = clamped * 255;
-			data[i * 4 + offset] = v;
+			const v = clamped * BYTE_SIZE;
+			const arrayIndex = i * 4 + offset;
+			const prevValue = data[arrayIndex];
+			data[arrayIndex] = v;
+			const speed = (speedMult * (v - prevValue)) / delta;
+			data[row2Offset + arrayIndex] = HALF_BYTE_SIZE + speed;
 		}
 		texture.needsUpdate = true;
 	}
@@ -244,7 +272,7 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		if (valuesSize <= 0) {
 			return;
 		}
-		const height = 1;
+		const height = TEXTURE_ROWS;
 		const width = valuesSize;
 		const size = width * height * 4;
 		const pixelBuffer = new Uint8Array(size);
@@ -252,11 +280,13 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		// file alpha to 1
 		// so that this can be set as a color texture without the material becoming transparent
 		for (let i = 0; i < size; i++) {
-			pixelBuffer[i * 4 + 3] = 255;
+			pixelBuffer[i * 4 + 3] = BYTE_SIZE;
 		}
 		const texture = new DataTexture(pixelBuffer, width, height);
+		texture.minFilter = NearestFilter;
+		texture.magFilter = NearestFilter;
 		this._dataTexture = texture;
-		this.setTexture(texture);
+		this.setTexture(this._dataTexture);
 	}
 
 	/*
@@ -269,30 +299,27 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 				active: this.p.activeR,
 				node: this.p.audioNodeR,
 				range: this.p.rangeR,
+				speedMult: this.p.speedMultR,
 			},
 			G: {
 				active: this.p.activeG,
 				node: this.p.audioNodeG,
 				range: this.p.rangeG,
+				speedMult: this.p.speedMultG,
 			},
 			B: {
 				active: this.p.activeB,
 				node: this.p.audioNodeB,
 				range: this.p.rangeB,
+				speedMult: this.p.speedMultB,
 			},
 			A: {
 				active: this.p.activeA,
 				node: this.p.audioNodeA,
 				range: this.p.rangeA,
+				speedMult: this.p.speedMultA,
 			},
 		};
-	}
-
-	/*
-	 * PARAM CALLBACK
-	 */
-	static PARAM_CALLBACK_update(node: AudioAnalyserCopNode) {
-		node._updateTexture();
 	}
 
 	/*

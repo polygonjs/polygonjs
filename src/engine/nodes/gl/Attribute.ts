@@ -119,13 +119,13 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 	this._init_graph_node_inputs();
 	// }
 
-	get attribute_name(): string {
+	attributeName(): string {
 		return this.pv.name.trim();
 	}
-	gl_type(): GlConnectionPointType {
+	glType(): GlConnectionPointType {
 		return this.io.outputs.namedOutputConnectionPoints()[0].type();
 	}
-	set_gl_type(type: GlConnectionPointType) {
+	setGlType(type: GlConnectionPointType) {
 		this.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(type));
 	}
 	//

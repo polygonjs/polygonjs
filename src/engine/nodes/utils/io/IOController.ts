@@ -64,7 +64,7 @@ export class IOController<NC extends NodeContext> {
 	get inputs(): InputsController<NC> {
 		return (this._inputs = this._inputs || new InputsController(this.node));
 	}
-	has_inputs() {
+	hasInputs() {
 		return this._inputs != null;
 	}
 

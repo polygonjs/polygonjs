@@ -31,7 +31,7 @@ export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
 
 	async cook() {
 		const input_index = this.pv.input;
-		if (this.io.inputs.has_input(input_index)) {
+		if (this.io.inputs.hasInput(input_index)) {
 			const container = await this.containerController.requestInputContainer(input_index);
 			if (container) {
 				this.setTexture(container.texture());

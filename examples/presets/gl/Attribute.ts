@@ -1,6 +1,6 @@
 import {AttributeGlNode, ATTRIBUTE_NODE_AVAILABLE_GL_TYPES} from '../../../src/engine/nodes/gl/Attribute';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 // export function AttributeGlNodePresets() {
 // 	return {
@@ -69,4 +69,7 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 
 	return collection;
 };
-export {AttributeGlNode, attributeGlNodePresetsCollectionFactory};
+export const attributeGlPresetRegister: PresetRegister<typeof AttributeGlNode, AttributeGlNode> = {
+	nodeClass: AttributeGlNode,
+	setupFunc: attributeGlNodePresetsCollectionFactory,
+};

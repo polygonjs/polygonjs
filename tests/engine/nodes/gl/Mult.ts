@@ -23,8 +23,8 @@ QUnit.test('gl mult default connections', async (assert) => {
 		[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]
 	);
 
-	constant1.set_gl_type(GlConnectionPointType.FLOAT);
-	constant2.set_gl_type(GlConnectionPointType.FLOAT);
+	constant1.setGlType(GlConnectionPointType.FLOAT);
+	constant2.setGlType(GlConnectionPointType.FLOAT);
 
 	// float only
 	mult1.setInput(0, constant1);
@@ -49,7 +49,7 @@ QUnit.test('gl mult default connections', async (assert) => {
 	);
 
 	// float * vec3
-	constant2.set_gl_type(GlConnectionPointType.VEC3);
+	constant2.setGlType(GlConnectionPointType.VEC3);
 	assert.deepEqual(
 		mult1.io.inputs.namedInputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
 		[GlConnectionPointType.FLOAT, GlConnectionPointType.VEC3]
@@ -95,7 +95,7 @@ QUnit.test('gl mult updates its output type correctly when scene is loaded 2', a
 
 	const mult1 = material_basic_builder1.createNode('mult');
 	const constant1 = material_basic_builder1.createNode('constant');
-	constant1.set_gl_type(GlConnectionPointType.VEC2);
+	constant1.setGlType(GlConnectionPointType.VEC2);
 	mult1.setInput(0, constant1);
 	mult1.setInput(1, constant1);
 	assert.ok(mult1.lifecycle.creationCompleted());

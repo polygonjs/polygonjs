@@ -27,6 +27,8 @@ import {Scene} from 'three/src/scenes/Scene';
 import {CoreString} from '../../core/String';
 import {Object3D} from 'three/src/core/Object3D';
 
+type SceneBatchUpdateCallback = () => void | Promise<void>;
+
 /**
  * PolyScene contains all nodes within a scene.
  *
@@ -91,7 +93,7 @@ export class PolyScene {
 	 *
 	 */
 	async waitForCooksCompleted(): Promise<void> {
-		return this.cookController.waitForCooksCompleted();
+		return await this.cookController.waitForCooksCompleted();
 	}
 
 	private _dispatch_controller: DispatchController | undefined;
@@ -332,10 +334,10 @@ export class PolyScene {
 	 * batchUpdates can be useful to set multiple parameter values without triggering a recook for each update.
 	 *
 	 */
-	batchUpdates(callback: () => void) {
+	async batchUpdates(callback: SceneBatchUpdateCallback) {
 		this._cooker.block();
 
-		callback();
+		await callback();
 
 		this._cooker.unblock();
 	}

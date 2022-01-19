@@ -86,6 +86,12 @@ import {NullGlNode} from '../../../nodes/gl/Null';
 import {OutputGlNode} from '../../../nodes/gl/Output';
 import {ParamGlNode} from '../../../nodes/gl/Param';
 import {RefractGlNode} from '../../../nodes/gl/Refract';
+import {SDFBoxGlNode} from '../../../nodes/gl/SDFBox';
+import {SDFGradientGlNode} from '../../../nodes/gl/SDFGradient';
+import {SDFIntersectionGlNode} from '../../../nodes/gl/SDFIntersection';
+import {SDFSphereGlNode} from '../../../nodes/gl/SDFSphere';
+import {SDFSubtractionGlNode} from '../../../nodes/gl/SDFSubtraction';
+import {SDFUnionGlNode} from '../../../nodes/gl/SDFUnion';
 import {SSSModelGlNode} from '../../../nodes/gl/SSSModel';
 import {QuatMultGlNode} from '../../../nodes/gl/QuatMult';
 import {QuatFromAxisAngleGlNode} from '../../../nodes/gl/QuatFromAxisAngle';
@@ -199,6 +205,12 @@ export interface GlNodeChildrenMap {
 	smoothstep: SmoothstepGlNode;
 	sphere: SphereGlNode;
 	sqrt: SqrtGlNode;
+	SDFBox: SDFBoxGlNode;
+	SDFGradient: SDFGradientGlNode;
+	SDFIntersection: SDFIntersectionGlNode;
+	SDFSphere: SDFSphereGlNode;
+	SDFSubtraction: SDFSubtractionGlNode;
+	SDFUnion: SDFUnionGlNode;
 	SSSModel: SSSModelGlNode;
 	step: StepGlNode;
 	subnet: SubnetGlNode;
@@ -231,6 +243,7 @@ const SUBNET_CHILD_OPTION = {
 		`${IfThenGlNode.context()}/${IfThenGlNode.type()}`,
 		`${SubnetGlNode.context()}/${SubnetGlNode.type()}`,
 		`${ForLoopGlNode.context()}/${ForLoopGlNode.type()}`,
+		`${SDFGradientGlNode.context()}/${SDFGradientGlNode.type()}`,
 	],
 };
 export class GlRegister {
@@ -319,6 +332,14 @@ export class GlRegister {
 		poly.registerNode(RgbToHsvGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(RotateGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(RoundGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(SDFBoxGlNode, CATEGORY_GL.SDF);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(SDFGradientGlNode, CATEGORY_GL.SDF);
+		}
+		poly.registerNode(SDFIntersectionGlNode, CATEGORY_GL.SDF);
+		poly.registerNode(SDFSphereGlNode, CATEGORY_GL.SDF);
+		poly.registerNode(SDFSubtractionGlNode, CATEGORY_GL.SDF);
+		poly.registerNode(SDFUnionGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SignGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(SinGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(SmoothstepGlNode, CATEGORY_GL.MATH);

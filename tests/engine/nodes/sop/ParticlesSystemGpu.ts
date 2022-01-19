@@ -109,7 +109,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	assert.equal(particles1.children().length, 2);
 	const add1 = particles1.createNode('add');
 	const param1 = particles1.createNode('param');
-	param1.set_gl_type(GlConnectionPointType.VEC3);
+	param1.setGlType(GlConnectionPointType.VEC3);
 	param1.p.name.set('test_param');
 	add1.setInput(0, globals1, 'position');
 	add1.setInput(1, param1);
@@ -273,7 +273,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	// then we use an add node
 	const add1 = particles1.createNode('add');
 	const param1 = particles1.createNode('param');
-	param1.set_gl_type(GlConnectionPointType.VEC3);
+	param1.setGlType(GlConnectionPointType.VEC3);
 	param1.p.name.set('test_param');
 	add1.setInput(0, globals1, 'position');
 	add1.setInput(1, param1);

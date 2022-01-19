@@ -5,13 +5,14 @@
 import {SubnetSopNodeLike} from './utils/subnet/ChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NetworkNodeType} from '../../poly/NodeContext';
 class SubnetSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetSopParamsConfig();
 
 export class SubnetSopNode extends SubnetSopNodeLike<SubnetSopParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
-		return 'subnet';
+		return NetworkNodeType.SUBNET;
 	}
 
 	initializeNode() {

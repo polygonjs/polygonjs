@@ -40,7 +40,7 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 
 	async cook() {
 		const input_index = this.pv.input;
-		if (this.io.inputs.has_input(input_index)) {
+		if (this.io.inputs.hasInput(input_index)) {
 			const container = await this.containerController.requestInputContainer(input_index);
 			if (container) {
 				const core_group = container.coreContent();

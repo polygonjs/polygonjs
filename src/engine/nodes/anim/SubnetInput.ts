@@ -2,27 +2,27 @@
  * Fetches the input from a parent subnet node.
  *
  * @remarks
- * Can only be created inside a subnet SOP.
+ * Can only be created inside a subnet ANIM node.
  *
  */
-import {TypedSopNode} from './_Base';
+import {TypedAnimNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {NetworkChildNodeType} from '../../poly/NodeContext';
-class SubnetInputSopParamsConfig extends NodeParamsConfig {
+class SubnetInputAnimParamsConfig extends NodeParamsConfig {
 	/** @param sets which input of the parent subnet node is used */
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],
 		rangeLocked: [true, true],
 		callback: (node: BaseNodeType) => {
-			SubnetInputSopNode.PARAM_CALLBACK_reset(node as SubnetInputSopNode);
+			SubnetInputAnimNode.PARAM_CALLBACK_reset(node as SubnetInputAnimNode);
 		},
 	});
 }
-const ParamsConfig = new SubnetInputSopParamsConfig();
+const ParamsConfig = new SubnetInputAnimParamsConfig();
 
-export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig> {
+export class SubnetInputAnimNode extends TypedAnimNode<SubnetInputAnimParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
 		return NetworkChildNodeType.INPUT;
@@ -39,20 +39,20 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 	}
 
 	async cook() {
-		const inputIndex = this.pv.input;
+		const input_index = this.pv.input;
 		const parent = this.parent();
 		if (parent) {
-			if (parent.io.inputs.hasInput(inputIndex)) {
-				const container = await parent.containerController.requestInputContainer(inputIndex);
+			if (parent.io.inputs.hasInput(input_index)) {
+				const container = await parent.containerController.requestInputContainer(input_index);
 				if (container) {
-					const core_group = container.coreContent();
-					if (core_group) {
-						this.setCoreGroup(core_group);
+					const timelineBuilder = container.coreContent();
+					if (timelineBuilder) {
+						this.setTimelineBuilder(timelineBuilder);
 						return;
 					}
 				}
 			} else {
-				this.states.error.set(`parent has no input ${inputIndex}`);
+				this.states.error.set(`parent has no input ${input_index}`);
 			}
 			this.cookController.endCook();
 		} else {
@@ -60,7 +60,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 		}
 	}
 
-	static PARAM_CALLBACK_reset(node: SubnetInputSopNode) {
+	static PARAM_CALLBACK_reset(node: SubnetInputAnimNode) {
 		node._setParentInputDependency();
 	}
 	private _setParentInputDependency() {

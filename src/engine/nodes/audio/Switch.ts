@@ -29,7 +29,7 @@ export class SwitchAudioNode extends TypedAudioNode<SwitchAudioParamsConfig> {
 
 	async cook(inputContents: AudioBuilder[]) {
 		const inputIndex = this.pv.input;
-		if (this.io.inputs.has_input(inputIndex)) {
+		if (this.io.inputs.hasInput(inputIndex)) {
 			const container = await this.containerController.requestInputContainer(inputIndex);
 			if (container) {
 				const audioBuilder = container.coreContent();

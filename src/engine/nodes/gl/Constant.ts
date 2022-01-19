@@ -99,7 +99,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return this.glVarName(ConstantGlNode.OUTPUT_NAME);
 	}
 
-	set_gl_type(type: GlConnectionPointType) {
+	setGlType(type: GlConnectionPointType) {
 		this.p.type.set(GL_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 }

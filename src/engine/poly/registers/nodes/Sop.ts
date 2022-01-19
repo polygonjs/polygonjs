@@ -9,6 +9,7 @@ import {AddSopNode} from '../../../nodes/sop/Add';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 // import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
 import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
+import {AttribAudioAnalyserSopNode} from '../../../nodes/sop/AttribAudioAnalyser';
 import {AttribCastSopNode} from '../../../nodes/sop/AttribCast';
 import {AttribCopySopNode} from '../../../nodes/sop/AttribCopy';
 import {AttribCreateSopNode} from '../../../nodes/sop/AttribCreate';
@@ -133,6 +134,7 @@ export interface GeoNodeChildrenMap {
 	animationCopy: AnimationCopySopNode;
 	// animationMixer: AnimationMixerSopNode;
 	attribAddMult: AttribAddMultSopNode;
+	attribAudioAnalyser: AttribAudioAnalyserSopNode;
 	attribCast: AttribCastSopNode;
 	attribCopy: AttribCopySopNode;
 	attribCreate: AttribCreateSopNode;
@@ -381,6 +383,9 @@ export class SopRegister {
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		// poly.registerNode(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
 		poly.registerNode(AttribAddMultSopNode, CATEGORY_SOP.ATTRIBUTE);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(AttribAudioAnalyserSopNode, CATEGORY_SOP.AUDIO);
+		}
 		poly.registerNode(AttribCastSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCopySopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCreateSopNode, CATEGORY_SOP.ATTRIBUTE);
@@ -473,17 +478,17 @@ export class SopRegister {
 		poly.registerNode(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(SplitSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(SubnetSopNode, CATEGORY_SOP.MISC);
+		poly.registerNode(SubnetSopNode, CATEGORY_SOP.SUBNET);
 		poly.registerNode(
 			SubnetInputSopNode,
-			CATEGORY_SOP.MISC /*{
+			CATEGORY_SOP.SUBNET /*{
 			// TODO: use "except" so that it works inside PolyNodes
 			// only: [`${NodeContext.SOP}/${SubnetSopNode.type()}`, `${NodeContext.SOP}/poly`],
 		}*/
 		);
 		poly.registerNode(
 			SubnetOutputSopNode,
-			CATEGORY_SOP.MISC /*{
+			CATEGORY_SOP.SUBNET /*{
 			// only: [`${NodeContext.SOP}/${SubnetSopNode.type()}`, `${NodeContext.SOP}/poly`],
 		}*/
 		);

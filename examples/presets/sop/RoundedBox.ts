@@ -1,5 +1,5 @@
 import {RoundedBoxSopNode} from '../../../src/engine/nodes/sop/RoundedBox';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 // export function RoundedBoxSopNodePresets() {
 // 	return {
@@ -29,4 +29,7 @@ const roundedBoxSopNodePresetsCollectionFactory: PresetsCollectionFactory<Rounde
 
 	return collection;
 };
-export {RoundedBoxSopNode, roundedBoxSopNodePresetsCollectionFactory};
+export const roundedBoxSopPresetRegister: PresetRegister<typeof RoundedBoxSopNode, RoundedBoxSopNode> = {
+	nodeClass: RoundedBoxSopNode,
+	setupFunc: roundedBoxSopNodePresetsCollectionFactory,
+};

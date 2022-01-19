@@ -33,7 +33,7 @@ import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
 function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the video from */
-		url = ParamConfig.STRING(CoreLoaderTexture.PARAM_DEFAULT, {
+		url = ParamConfig.STRING('', {
 			fileBrowse: {type: [FileType.TEXTURE_VIDEO]},
 		});
 		/** @param reload the video */

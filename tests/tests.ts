@@ -84,6 +84,7 @@ QUnit.module('anim');
 import './engine/nodes/anim/Delete';
 import './engine/nodes/anim/Merge';
 import './engine/nodes/anim/Null';
+import './engine/nodes/anim/Subnet';
 
 QUnit.module('cop');
 import './engine/nodes/cop/AudioAnalyser';

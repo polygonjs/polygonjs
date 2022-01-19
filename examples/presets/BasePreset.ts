@@ -38,6 +38,7 @@ export class NodePresetsCollection {
 			this.addPreset(name, preset);
 		}
 		this._updatePresetNames();
+		return this;
 	}
 	addPreset(presetName: string, preset: BasePreset) {
 		if (this._presetsByName.get(presetName)) {
@@ -45,6 +46,7 @@ export class NodePresetsCollection {
 		}
 
 		this._presetsByName.set(presetName, preset);
+		return this;
 	}
 	private _presetNames: string[] = [];
 	private _updatePresetNames() {
@@ -74,3 +76,22 @@ export class NodePresetsCollection {
 }
 
 export type PresetsCollectionFactory<N extends BaseNodeType> = (node: N) => NodePresetsCollection;
+
+import {BaseNodeClass} from '../../src/engine/nodes/_Base';
+// import {BaseParamType} from '../../src/engine/params/_Base';
+
+// type PresetCallback<N extends BaseNodeType> = () => NodePresetsCollection
+// interface ParamsLabelConfig {
+// 	params: BaseParamType | BaseParamType[];
+// 	callback: ParamsLabelCallback;
+// }
+// export type ParamsLabelSetup<N extends BaseNodeClass> = (node: N) => ParamsLabelConfig;
+
+// export type ParamsLabelRegister<N extends typeof BaseNodeClass, NI extends BaseNodeClass> = (
+// 	node: N
+// ) => ParamsLabelSetup<NI>;
+
+export interface PresetRegister<N extends typeof BaseNodeClass, NI extends BaseNodeClass> {
+	nodeClass: N;
+	setupFunc: PresetsCollectionFactory<NI>;
+}

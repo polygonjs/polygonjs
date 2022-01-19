@@ -1,6 +1,6 @@
 import {CSS2DObjectSopNode} from '../../../src/engine/nodes/sop/CSS2DObject';
 import {ParamType} from '../../../src/engine/poly/ParamType';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 // export function CSS2DObjectSopNodePresets() {
 // 	return {
@@ -41,4 +41,7 @@ const CSS2DObjectSopNodePresetsCollectionFactory: PresetsCollectionFactory<CSS2D
 
 	return collection;
 };
-export {CSS2DObjectSopNode, CSS2DObjectSopNodePresetsCollectionFactory};
+export const CSS2DObjectPresetRegister: PresetRegister<typeof CSS2DObjectSopNode, CSS2DObjectSopNode> = {
+	nodeClass: CSS2DObjectSopNode,
+	setupFunc: CSS2DObjectSopNodePresetsCollectionFactory,
+};

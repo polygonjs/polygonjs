@@ -1,5 +1,5 @@
 import {ColorSopNode} from '../../../src/engine/nodes/sop/Color';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 // export function ColorSopNodePresets() {
 // 	return {
@@ -24,4 +24,7 @@ const colorSopNodePresetsCollectionFactory: PresetsCollectionFactory<ColorSopNod
 
 	return collection;
 };
-export {ColorSopNode, colorSopNodePresetsCollectionFactory};
+export const colorSopPresetRegister: PresetRegister<typeof ColorSopNode, ColorSopNode> = {
+	nodeClass: ColorSopNode,
+	setupFunc: colorSopNodePresetsCollectionFactory,
+};

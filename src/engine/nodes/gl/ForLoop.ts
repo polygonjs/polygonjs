@@ -5,6 +5,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 
 enum ForLoopInput {
 	START_INDEX = 'i',
@@ -40,7 +41,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 
 	protected _expected_inputs_count() {
 		const current_connections = this.io.connections.inputConnections();
-		return current_connections ? current_connections.length + 1 : 1;
+		return current_connections ? ArrayUtils.compact(current_connections).length + 1 : 1;
 	}
 
 	protected _expected_input_types(): GlConnectionPointType[] {

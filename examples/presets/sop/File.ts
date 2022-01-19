@@ -1,7 +1,7 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {FileSopNode} from '../../../src/engine/nodes/sop/File';
 import {ParamType} from '../../../src/engine/poly/ParamType';
-import {BasePreset, NodePresetsCollection, PresetsCollectionFactory} from '../BasePreset';
+import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 // export function FileSopNodePresets() {
 // 	return {
@@ -87,4 +87,8 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 
 	return collection;
 };
-export {FileSopNode, fileSopNodePresetsCollectionFactory};
+
+export const fileSopPresetRegister: PresetRegister<typeof FileSopNode, FileSopNode> = {
+	nodeClass: FileSopNode,
+	setupFunc: fileSopNodePresetsCollectionFactory,
+};

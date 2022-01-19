@@ -3,7 +3,6 @@
  *
  */
 import {TypedAnimNode} from './_Base';
-import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import gsap from 'gsap';
 import {BaseNodeType} from '../_Base';
@@ -39,7 +38,6 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 
 	initializeNode() {
 		this.io.inputs.setCount(0, 1);
-		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	cook(inputContents: TimelineBuilder[]) {

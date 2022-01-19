@@ -39,7 +39,7 @@ QUnit.test('volume builder simple', async (assert) => {
 	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(VOLUME_UNIFORMS).sort());
 
 	const constant1 = volume_builder1.createNode('constant');
-	constant1.set_gl_type(GlConnectionPointType.FLOAT);
+	constant1.setGlType(GlConnectionPointType.FLOAT);
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.setInput('density', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
@@ -66,7 +66,7 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 	const param1 = volume1.createNode('param');
 	param1.p.name.set('float_param');
 	const param2 = volume1.createNode('param');
-	param2.set_gl_type(GlConnectionPointType.VEC3);
+	param2.setGlType(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
 	const float_to_vec31 = volume1.createNode('floatToVec3');
 	float_to_vec31.setInput(0, param1);

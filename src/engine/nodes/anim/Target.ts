@@ -64,19 +64,19 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
-		const timeline_builder = input_contents[0] || new TimelineBuilder();
+	cook(inputCoreContents: TimelineBuilder[]) {
+		const timelineBuilder = inputCoreContents[0] || new TimelineBuilder();
 
-		const target = this._create_target(timeline_builder);
-		timeline_builder.setTarget(target);
-		this._set_update_callback(timeline_builder);
+		const target = this._create_target(timelineBuilder);
+		timelineBuilder.setTarget(target);
+		this._set_update_callback(timelineBuilder);
 
-		this.setTimelineBuilder(timeline_builder);
+		this.setTimelineBuilder(timelineBuilder);
 	}
 	setTargetType(targetType: AnimTargetNodeTargetType) {
 		this.p.type.set(ANIM_TARGET_TYPES.indexOf(targetType));
 	}
-	private _create_target(timeline_builder: TimelineBuilder) {
+	private _create_target(timelineBuilder: TimelineBuilder) {
 		const type = ANIM_TARGET_TYPES[this.pv.type];
 		switch (type) {
 			case AnimTargetNodeTargetType.NODE: {
@@ -93,9 +93,9 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		}
 		TypeAssert.unreachable(type);
 	}
-	private _set_update_callback(timeline_builder: TimelineBuilder) {
+	private _set_update_callback(timelineBuilder: TimelineBuilder) {
 		const type = ANIM_TARGET_TYPES[this.pv.type];
-		let update_callback = timeline_builder.updateCallback();
+		let update_callback = timelineBuilder.updateCallback();
 		switch (type) {
 			case AnimTargetNodeTargetType.NODE: {
 				return;
@@ -104,7 +104,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 				if (isBooleanTrue(this.pv.updateMatrix)) {
 					update_callback = update_callback || new AnimationUpdateCallback();
 					update_callback.setUpdateMatrix(this.pv.updateMatrix);
-					timeline_builder.setUpdateCallback(update_callback);
+					timelineBuilder.setUpdateCallback(update_callback);
 				}
 				return;
 			}

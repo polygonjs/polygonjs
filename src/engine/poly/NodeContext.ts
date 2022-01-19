@@ -62,6 +62,7 @@ export enum NetworkNodeType {
 	MAT = 'materialsNetwork',
 	POST = 'postProcessNetwork',
 	ROP = 'renderersNetwork',
+	SUBNET = 'subnet',
 }
 export enum NetworkChildNodeType {
 	INPUT = 'subnetInput',

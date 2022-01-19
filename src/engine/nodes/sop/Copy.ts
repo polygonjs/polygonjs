@@ -89,7 +89,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			this.stampNode().reset();
 		}
 		const coreGroup0 = inputCoreGroups[0];
-		if (!this.io.inputs.has_input(1)) {
+		if (!this.io.inputs.hasInput(1)) {
 			await this.cookWithoutTemplate(coreGroup0);
 			return;
 		}
