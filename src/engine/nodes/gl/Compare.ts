@@ -1,3 +1,12 @@
+/**
+ * compares 2 input values and generates a boolean value
+ *
+ * @remarks
+ *
+ * This node is frequently used with the [gl/TwoWaySwitch](/docs/nodes/gl/TwoWaySwitch)
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';

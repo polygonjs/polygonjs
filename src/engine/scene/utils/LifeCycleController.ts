@@ -5,15 +5,15 @@ import {PolyScene} from '../PolyScene';
 export class LifeCycleController {
 	constructor(private scene: PolyScene) {}
 
-	private _lifecycle_on_create_allowed: boolean = true;
+	private _lifecycleOnAfterCreatedAllowed: boolean = true;
 
-	onCreateHookAllowed(): boolean {
-		return this.scene.loadingController.loaded() && this._lifecycle_on_create_allowed;
+	onAfterCreatedCallbackAllowed(): boolean {
+		return this.scene.loadingController.loaded() && this._lifecycleOnAfterCreatedAllowed;
 	}
 
-	onCreatePrevent(callback: () => void) {
-		this._lifecycle_on_create_allowed = false;
+	onAfterCreatedPrevent(callback: () => void) {
+		this._lifecycleOnAfterCreatedAllowed = false;
 		callback();
-		this._lifecycle_on_create_allowed = true;
+		this._lifecycleOnAfterCreatedAllowed = true;
 	}
 }

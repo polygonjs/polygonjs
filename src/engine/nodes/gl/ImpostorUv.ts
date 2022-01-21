@@ -1,3 +1,10 @@
+/**
+ * ImportorUV is an experimental node that helps creating importors, which are displaying a render of a higher resolution render onto different tiles of a texture
+ *
+ *
+ *
+ */
+
 import Quaternion from './gl/quaternion.glsl';
 import Impostor from './gl/impostor.glsl';
 import {TypedGlNode} from './_Base';

@@ -14,7 +14,7 @@ export class TextureVariable {
 	private _position: number = -1;
 	private _readonly = false;
 
-	private _graph_node_ids: Map<CoreGraphNodeId, boolean> | undefined;
+	private _graphNodeIds: Set<CoreGraphNodeId> | undefined;
 
 	constructor(private _name: string, private _size: number) {
 		if (!_name) {
@@ -27,8 +27,8 @@ export class TextureVariable {
 			this.setReadonly(false);
 		}
 
-		variable.graphNodeIds()?.forEach((boolean, graph_node_id) => {
-			this.addGraphNodeId(graph_node_id);
+		variable.graphNodeIds()?.forEach((graphNodeId) => {
+			this.addGraphNodeId(graphNodeId);
 		});
 	}
 
@@ -47,11 +47,11 @@ export class TextureVariable {
 	}
 
 	graphNodeIds() {
-		return this._graph_node_ids;
+		return this._graphNodeIds;
 	}
 	addGraphNodeId(id: CoreGraphNodeId) {
-		this._graph_node_ids = this._graph_node_ids || new Map();
-		this._graph_node_ids.set(id, true);
+		this._graphNodeIds = this._graphNodeIds || new Set();
+		this._graphNodeIds.add(id);
 	}
 	name() {
 		return this._name;
@@ -76,9 +76,9 @@ export class TextureVariable {
 
 	toJSON(scene: PolyScene): TextureVariableData {
 		const names: string[] = [];
-		if (this._graph_node_ids) {
-			this._graph_node_ids.forEach((boolean, node_id) => {
-				const node = scene.graph.nodeFromId(node_id) as BaseGlNodeType;
+		if (this._graphNodeIds) {
+			this._graphNodeIds.forEach((graphNodeId) => {
+				const node = scene.graph.nodeFromId(graphNodeId) as BaseGlNodeType;
 				if (node) {
 					const name = node.path();
 					if (name) {

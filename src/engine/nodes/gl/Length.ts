@@ -1,3 +1,10 @@
+/**
+ * outputs the length of a vector
+ *
+ *
+ *
+ */
+
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 

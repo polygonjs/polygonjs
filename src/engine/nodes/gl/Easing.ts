@@ -1,3 +1,16 @@
+/**
+ * generates an easing function
+ *
+ *
+ * @remarks
+ *
+ * Easing are powerful functions and can be used in many use cases, such as:
+ * - when animating objects, vertices, or any value
+ * - when interpolating between values, such as colors
+ * - when modifying the shape of an object
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 

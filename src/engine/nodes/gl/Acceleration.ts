@@ -1,3 +1,13 @@
+/**
+ * computes forces based on position, velocity, forces and mass.
+ *
+ * @remarks
+ *
+ * This node is most useful inside particles systems
+ *
+ *
+ */
+
 import {Number3, PolyDictionary} from '../../../types/GlobalTypes';
 import {TypedGlNode} from './_Base';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
@@ -93,10 +103,10 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 		const velocity_result = this.glVarName(AccelerationGlOutput.VELOCITY);
 
 		const velocity_args = [input_velocity, input_force, input_mass, GlConstant.DELTA_TIME].join(', ');
-		const velocity_body_line = `${var_type} ${velocity_result} = compute_velocity_from_acceleration(${velocity_args})`;
+		const velocity_body_line = `${var_type} ${velocity_result} = velFromAccel(${velocity_args})`;
 
 		const position_args = [input_position, velocity_result, GlConstant.DELTA_TIME].join(', ');
-		const position_body_line = `${var_type} ${position_result} = compute_position_from_velocity(${position_args})`;
+		const position_body_line = `${var_type} ${position_result} = posFromVel(${position_args})`;
 
 		shaders_collection_controller.addBodyLines(this, [velocity_body_line, position_body_line]);
 	}

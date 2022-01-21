@@ -1,3 +1,9 @@
+/**
+ * rotates a vector
+ *
+ *
+ */
+
 import {Number3} from '../../../types/GlobalTypes';
 import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 import Quaternion from './gl/quaternion.glsl';

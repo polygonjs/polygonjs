@@ -1,3 +1,10 @@
+/**
+ * convenient node to apply an addition, followed by a mult and another addition
+ *
+ *
+ *
+ */
+
 import {BaseNodeGlMathFunctionArg4GlNode} from './_BaseMathFunction';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';

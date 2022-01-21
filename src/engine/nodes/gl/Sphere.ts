@@ -1,3 +1,10 @@
+/**
+ * the function of a sphere
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import DiskMethods from './gl/disk.glsl';

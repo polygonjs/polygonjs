@@ -14,6 +14,7 @@ import {attributeGlPresetRegister} from './gl/Attribute';
 import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
 // obj
 // sop
+import {attribCreateSopPresetRegister} from './sop/AttribCreate';
 import {colorSopPresetRegister} from './sop/Color';
 import {CSS2DObjectPresetRegister} from './sop/CSS2DObject';
 import {dataSopPresetRegister} from './sop/Data';
@@ -44,6 +45,7 @@ class PresetLibraryClass {
 		// mat
 		this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
 		// sop
+		this._registerPreset(attribCreateSopPresetRegister);
 		this._registerPreset(colorSopPresetRegister);
 		this._registerPreset(CSS2DObjectPresetRegister);
 		this._registerPreset(dataSopPresetRegister);

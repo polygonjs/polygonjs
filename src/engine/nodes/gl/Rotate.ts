@@ -1,3 +1,10 @@
+/**
+ * rotates an input vector
+ *
+ *
+ *
+ */
+
 import {Number3, PolyDictionary} from '../../../types/GlobalTypes';
 import {TypedGlNode} from './_Base';
 import Quaternion from './gl/quaternion.glsl';

@@ -1,3 +1,10 @@
+/**
+ * refracts an input vector
+ *
+ *
+ *
+ */
+
 import {BaseGlMathFunctionGlNode} from './_BaseMathFunction';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 

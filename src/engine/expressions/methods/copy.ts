@@ -13,6 +13,8 @@
  * ## Usage
  *
  * - `copy('../copy1', 0, 'i')` - returns the index of each evaluation
+ * - `copy('../copy1', 0)` - returns the index of each evaluation
+ * - `copy('../copy1')` - returns the index of each evaluation
  *
  */
 import {BaseMethod} from './_Base';
@@ -35,42 +37,34 @@ export class CopyExpression extends BaseMethod {
 		return [['string', 'attribute name (optional)']];
 	}
 
-	findDependency(index_or_path: number | string): MethodDependency | null {
-		const node = this.findReferencedGraphNode(index_or_path) as BaseNodeType;
+	findDependency(indexOrPath: number | string): MethodDependency | null {
+		const node = this.findReferencedGraphNode(indexOrPath) as BaseNodeType;
 		// I'd prefer testing with if(node instanceof CopySopNode || node instanceof CopyAnimNode)
 		// but tslib generates an error when doing so
 		if (node && node.type() == 'copy') {
 			const stampNode = (node as CopyNode).stampNode();
-			return this.createDependency(stampNode, index_or_path);
+			return this.createDependency(stampNode, indexOrPath);
 		}
 		return null;
 	}
-	// find_dependencies(index_or_path: number|string): ReferenceSearchResult{
-	// 	// return this.find_node_dependency_from_index_or_path(index_or_path)
-	// 	const node = this.find_dependency_from_index_or_path(index_or_path)
-	// 	return this.create_search_result(stampNode, index_or_path)
-	// }
 
 	processArguments(args: any[]): Promise<any> {
 		return new Promise((resolve, reject) => {
-			if (args.length == 2 || args.length == 3) {
+			if (args.length >= 1) {
 				const path = args[0];
-				const default_value = args[1];
-				const attribute_name = args[2];
+				const defaultValue = args[1] || 0;
+				const attributeName = args[2];
 
-				const current_node = this.node();
-				const node = current_node ? CoreWalker.findNode(current_node, path) : null;
+				const currentNode = this.node();
+				const node = currentNode ? CoreWalker.findNode(currentNode, path) : null;
 
 				let value;
 				if (node && node.type() == CopySopNode.type()) {
-					value = (node as CopySopNode).stampValue(attribute_name);
+					value = (node as CopySopNode).stampValue(attributeName);
 				}
-				// if (node && node instanceof CopySopNode) {
-				// 	value = node.stamp_value(attribute_name);
-				// }
 
 				if (value == null) {
-					value = default_value;
+					value = defaultValue;
 				}
 				resolve(value);
 			} else {
@@ -78,21 +72,4 @@ export class CopyExpression extends BaseMethod {
 			}
 		});
 	}
-	// update_dependencies() {
-	// 	return this.jsep_node()._graph_node.addGraphInput( this.copy_sop.stampNode() );
-	// }
-
-	// processArguments(args, callback){
-	// 	const path = args[0];
-	// 	const default_value = args[1];
-	// 	const attribute_name = args[2];
-
-	// 	this.copy_sop = Walker.find_node(this.node(), path);
-	// 	let value = (this.copy_sop != null) ?
-	// 		this.copy_sop.stamp_value(attribute_name) : undefined;
-
-	// 	if (value == null) { value = default_value; }
-
-	// 	return callback(value);
-	// }
 }

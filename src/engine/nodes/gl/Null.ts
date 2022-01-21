@@ -1,3 +1,10 @@
+/**
+ * utility node that helps you organise your shaders
+ *
+ *
+ *
+ */
+
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 // import {ParamType} from '../../../Engine/Param/_Module';
 // import {TypedConnectionFloat} from './GlData'

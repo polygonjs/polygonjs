@@ -1,19 +1,6 @@
 import {PointSopNode} from '../../../src/engine/nodes/sop/Point';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
-// export function PointSopNodePresets() {
-// 	return {
-// 		UvToPosition: function (node: PointSopNode) {
-// 			node.p.updateX.set(true);
-// 			node.p.updateY.set(true);
-// 			node.p.updateZ.set(true);
-// 			node.p.x.set('@uv.x');
-// 			node.p.y.set('@uv.y');
-// 			node.p.z.set(0);
-// 		},
-// 	};
-// }
-
 const pointSopNodePresetsCollectionFactory: PresetsCollectionFactory<PointSopNode> = (node: PointSopNode) => {
 	const collection = new NodePresetsCollection();
 
@@ -25,8 +12,22 @@ const pointSopNodePresetsCollectionFactory: PresetsCollectionFactory<PointSopNod
 		.addEntry(node.p.y, '@uv.y')
 		.addEntry(node.p.z, 0);
 
+	const wave = new BasePreset()
+		.addEntry(node.p.updateX, false)
+		.addEntry(node.p.updateY, true)
+		.addEntry(node.p.updateZ, false)
+		.addEntry(node.p.y, 'sin(@P.z)');
+
+	const animatedWave = new BasePreset()
+		.addEntry(node.p.updateX, false)
+		.addEntry(node.p.updateY, true)
+		.addEntry(node.p.updateZ, false)
+		.addEntry(node.p.y, 'sin(@P.z + 2*$T)');
+
 	collection.setPresets({
 		UvToPosition,
+		wave,
+		animatedWave,
 	});
 
 	return collection;

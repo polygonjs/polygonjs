@@ -124,7 +124,10 @@ import './engine/nodes/gl/Mult';
 import './engine/nodes/gl/MultAdd';
 import './engine/nodes/gl/Noise';
 import './engine/nodes/gl/Param';
+import './engine/nodes/gl/Ramp';
 import './engine/nodes/gl/Rotate';
+import './engine/nodes/gl/Texture';
+import './engine/nodes/gl/VaryingWrite';
 
 QUnit.module('manager');
 import './engine/nodes/manager/Root';

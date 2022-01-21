@@ -1,3 +1,9 @@
+/**
+ * outputs a complement (1-x)
+ *
+ *
+ */
+
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import ComplementMethods from './gl/complement.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';

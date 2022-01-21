@@ -245,7 +245,10 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		texture: DataTexture,
 		delta: number
 	) {
-		const columns = values.length;
+		if (!this._dataTexture) {
+			return;
+		}
+		const columns = this._dataTexture.image.width;
 
 		const offset = OFFSET_BY_CHANNEL[channel];
 

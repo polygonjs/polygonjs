@@ -1,3 +1,10 @@
+/**
+ * converts a quaternion to an angle
+ *
+ *
+ *
+ */
+
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import Quaternion from './gl/quaternion.glsl';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';

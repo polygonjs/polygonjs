@@ -21,6 +21,11 @@ const DEFAULT_COLOR = new Color(1, 1, 1);
 const COLOR_ATTRIB_NAME = 'color';
 
 type ValueArrayByName = PolyDictionary<number[]>;
+interface ArrayByGeometryUUID {
+	R: ValueArrayByName;
+	G: ValueArrayByName;
+	B: ValueArrayByName;
+}
 
 import {ColorSopOperation} from '../../operations/sop/Color';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -52,9 +57,11 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		return 'color';
 	}
 
-	private _r_arrays_by_geometry_uuid: ValueArrayByName = {};
-	private _g_arrays_by_geometry_uuid: ValueArrayByName = {};
-	private _b_arrays_by_geometry_uuid: ValueArrayByName = {};
+	private _arrayByGeometryUUID: ArrayByGeometryUUID = {
+		R: {},
+		G: {},
+		B: {},
+	};
 
 	static displayedInputNames(): string[] {
 		return ['geometry to update color of'];
@@ -63,57 +70,65 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
-		// this.uiData.set_icon('palette');
 	}
 
-	async cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-		const core_objects = core_group.coreObjects();
+	async cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
+		const coreObjects = coreGroup.coreObjects();
 
-		for (let core_object of core_objects) {
+		for (let coreObject of coreObjects) {
 			if (isBooleanTrue(this.pv.fromAttribute)) {
-				this._set_fromAttribute(core_object);
+				this._setFromAttribute(coreObject);
 			} else {
 				const hasExpression = this.p.color.hasExpression();
 				if (hasExpression) {
-					await this._eval_expressions(core_object);
+					await this._evalExpressions(coreObject);
 				} else {
-					this._eval_simple_values(core_object);
+					this._evalSimpleValues(coreObject);
 				}
 			}
 		}
 
 		// needs update required for when no cloning
 		if (!this.io.inputs.cloneRequired(0)) {
-			const geometries = core_group.geometries();
+			const geometries = coreGroup.geometries();
 			for (let geometry of geometries) {
 				(geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).needsUpdate = true;
 			}
 		}
 
-		this.setCoreGroup(core_group);
+		this.setCoreGroup(coreGroup);
 	}
 
-	_set_fromAttribute(core_object: CoreObject) {
-		const core_geometry = core_object.coreGeometry();
-		if (!core_geometry) {
+	_setFromAttribute(coreObject: CoreObject) {
+		const coreGeometry = coreObject.coreGeometry();
+		if (!coreGeometry) {
 			return;
 		}
-		this._create_init_color(core_geometry, DEFAULT_COLOR);
-		const points = core_geometry.points();
+		const attribName = this.pv.attribName;
+		if (attribName.trim().length == 0) {
+			return;
+		}
+		const geometry = coreGeometry.geometry();
+		const srcAttrib = geometry.getAttribute(attribName);
+		if (!srcAttrib) {
+			return;
+		}
 
-		const src_attrib_size = core_geometry.attribSize(this.pv.attribName);
-		const geometry = core_geometry.geometry();
-		const src_array = geometry.getAttribute(this.pv.attribName).array;
-		const dest_array = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];
+		this._createInitColor(coreGeometry, DEFAULT_COLOR);
+		const points = coreGeometry.points();
 
-		switch (src_attrib_size) {
+		const srcAttribSize = coreGeometry.attribSize(attribName);
+		const srcArray = srcAttrib.array;
+		const destArray = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];
+
+		switch (srcAttribSize) {
 			case 1: {
 				for (let i = 0; i < points.length; i++) {
 					const dest_i = i * 3;
-					dest_array[dest_i + 0] = src_array[i];
-					dest_array[dest_i + 1] = 1 - src_array[i];
-					dest_array[dest_i + 2] = 0;
+					destArray[dest_i + 0] = srcArray[i];
+					destArray[dest_i + 1] = 1 - srcArray[i];
+					destArray[dest_i + 2] = 0;
 				}
 				break;
 			}
@@ -121,15 +136,15 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 				for (let i = 0; i < points.length; i++) {
 					const dest_i = i * 3;
 					const src_i = i * 2;
-					dest_array[dest_i + 0] = src_array[src_i + 0];
-					dest_array[dest_i + 1] = src_array[src_i + 1];
-					dest_array[dest_i + 2] = 0;
+					destArray[dest_i + 0] = srcArray[src_i + 0];
+					destArray[dest_i + 1] = srcArray[src_i + 1];
+					destArray[dest_i + 2] = 0;
 				}
 				break;
 			}
 			case 3: {
-				for (let i = 0; i < src_array.length; i++) {
-					dest_array[i] = src_array[i];
+				for (let i = 0; i < srcArray.length; i++) {
+					destArray[i] = srcArray[i];
 				}
 				break;
 			}
@@ -137,61 +152,61 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 				for (let i = 0; i < points.length; i++) {
 					const dest_i = i * 3;
 					const src_i = i * 4;
-					dest_array[dest_i + 0] = src_array[src_i + 0];
-					dest_array[dest_i + 1] = src_array[src_i + 1];
-					dest_array[dest_i + 2] = src_array[src_i + 2];
+					destArray[dest_i + 0] = srcArray[src_i + 0];
+					destArray[dest_i + 1] = srcArray[src_i + 1];
+					destArray[dest_i + 2] = srcArray[src_i + 2];
 				}
 				break;
 			}
 		}
 	}
 
-	private _create_init_color(core_geometry: CoreGeometry, color: Color) {
-		if (!core_geometry.hasAttrib(COLOR_ATTRIB_NAME)) {
-			core_geometry.addNumericAttrib(COLOR_ATTRIB_NAME, 3, DEFAULT_COLOR);
+	private _createInitColor(coreGeometry: CoreGeometry, color: Color) {
+		if (!coreGeometry.hasAttrib(COLOR_ATTRIB_NAME)) {
+			coreGeometry.addNumericAttrib(COLOR_ATTRIB_NAME, 3, DEFAULT_COLOR);
 		}
 	}
 
-	_eval_simple_values(core_object: CoreObject) {
-		const core_geometry = core_object.coreGeometry();
-		if (!core_geometry) {
+	_evalSimpleValues(coreObject: CoreObject) {
+		const coreGeometry = coreObject.coreGeometry();
+		if (!coreGeometry) {
 			return;
 		}
-		this._create_init_color(core_geometry, DEFAULT_COLOR);
+		this._createInitColor(coreGeometry, DEFAULT_COLOR);
 
-		let new_color: Color;
+		let newColor: Color;
 		if (isBooleanTrue(this.pv.asHsv)) {
-			new_color = new Color();
-			CoreColor.set_hsv(this.pv.color.r, this.pv.color.g, this.pv.color.b, new_color);
+			newColor = new Color();
+			CoreColor.set_hsv(this.pv.color.r, this.pv.color.g, this.pv.color.b, newColor);
 		} else {
-			new_color = this.pv.color; //.clone();
+			newColor = this.pv.color; //.clone();
 		}
-		core_geometry.addNumericAttrib(COLOR_ATTRIB_NAME, 3, new_color);
+		coreGeometry.addNumericAttrib(COLOR_ATTRIB_NAME, 3, newColor);
 	}
 
-	async _eval_expressions(core_object: CoreObject) {
+	async _evalExpressions(core_object: CoreObject) {
 		const points = core_object.points();
 		const object = core_object.object();
-		const core_geometry = core_object.coreGeometry();
-		if (core_geometry) {
-			this._create_init_color(core_geometry, DEFAULT_COLOR);
+		const coreGeometry = core_object.coreGeometry();
+		if (coreGeometry) {
+			this._createInitColor(coreGeometry, DEFAULT_COLOR);
 		}
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		if (geometry) {
 			const array = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];
 
-			const tmp_array_r = await this._update_from_param(geometry, array, points, 0);
-			const tmp_array_g = await this._update_from_param(geometry, array, points, 1);
-			const tmp_array_b = await this._update_from_param(geometry, array, points, 2);
+			const tmpArrayR = await this._updateFromParam(geometry, array, points, 0);
+			const tmpArrayG = await this._updateFromParam(geometry, array, points, 1);
+			const tmpArrayB = await this._updateFromParam(geometry, array, points, 2);
 
-			if (tmp_array_r) {
-				this._commit_tmp_values(tmp_array_r, array, 0);
+			if (tmpArrayR) {
+				this._commitTmpValues(tmpArrayR, array, 0);
 			}
-			if (tmp_array_g) {
-				this._commit_tmp_values(tmp_array_g, array, 1);
+			if (tmpArrayG) {
+				this._commitTmpValues(tmpArrayG, array, 1);
 			}
-			if (tmp_array_b) {
-				this._commit_tmp_values(tmp_array_b, array, 2);
+			if (tmpArrayB) {
+				this._commitTmpValues(tmpArrayB, array, 2);
 			}
 
 			// to hsv
@@ -244,7 +259,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		// }
 	}
 
-	private async _update_from_param(
+	private async _updateFromParam(
 		geometry: BufferGeometry,
 		array: number[],
 		points: CorePoint[],
@@ -252,49 +267,49 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	): Promise<number[] | undefined> {
 		// const component_name = ['r', 'g', 'b'][offset];
 		const param = this.p.color.components[offset];
-		const param_value = [this.pv.color.r, this.pv.color.g, this.pv.color.b][offset];
-		const arrays_by_geometry_uuid = [
-			this._r_arrays_by_geometry_uuid,
-			this._g_arrays_by_geometry_uuid,
-			this._b_arrays_by_geometry_uuid,
+		const paramValue = [this.pv.color.r, this.pv.color.g, this.pv.color.b][offset];
+		const arraysByGeometryUUID = [
+			this._arrayByGeometryUUID.R,
+			this._arrayByGeometryUUID.B,
+			this._arrayByGeometryUUID.G,
 		][offset];
 
-		let tmp_array: number[] | undefined;
+		let tmpArray: number[] | undefined;
 		if (param.hasExpression() && param.expressionController) {
-			tmp_array = this._init_array_if_required(geometry, arrays_by_geometry_uuid, points.length);
+			tmpArray = this._initArrayIfRequired(geometry, arraysByGeometryUUID, points.length);
 			await param.expressionController.computeExpressionForPoints(points, (point, value) => {
 				// array[point.index()*3+2] = value
-				(tmp_array as number[])[point.index()] = value;
+				(tmpArray as number[])[point.index()] = value;
 			});
 		} else {
 			for (let point of points) {
-				array[point.index() * 3 + offset] = param_value;
+				array[point.index() * 3 + offset] = paramValue;
 			}
 		}
-		return tmp_array;
+		return tmpArray;
 	}
 
-	private _init_array_if_required(
+	private _initArrayIfRequired(
 		geometry: BufferGeometry,
-		arrays_by_geometry_uuid: ValueArrayByName,
-		points_count: number
+		arraysByGeometryUUID: ValueArrayByName,
+		pointsCount: number
 	) {
 		const uuid = geometry.uuid;
-		const current_array = arrays_by_geometry_uuid[uuid];
-		if (current_array) {
+		const currentArray = arraysByGeometryUUID[uuid];
+		if (currentArray) {
 			// only create new array if we need more point, or as soon as the length is different?
-			if (current_array.length < points_count) {
-				arrays_by_geometry_uuid[uuid] = new Array(points_count);
+			if (currentArray.length < pointsCount) {
+				arraysByGeometryUUID[uuid] = new Array(pointsCount);
 			}
 		} else {
-			arrays_by_geometry_uuid[uuid] = new Array(points_count);
+			arraysByGeometryUUID[uuid] = new Array(pointsCount);
 		}
-		return arrays_by_geometry_uuid[uuid];
+		return arraysByGeometryUUID[uuid];
 	}
 
-	private _commit_tmp_values(tmp_array: number[], target_array: number[], offset: number) {
-		for (let i = 0; i < tmp_array.length; i++) {
-			target_array[i * 3 + offset] = tmp_array[i];
+	private _commitTmpValues(tmpArray: number[], targetArray: number[], offset: number) {
+		for (let i = 0; i < tmpArray.length; i++) {
+			targetArray[i * 3 + offset] = tmpArray[i];
 		}
 	}
 }

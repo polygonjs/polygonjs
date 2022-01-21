@@ -42,7 +42,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	}
 	static readonly OUTPUT_NAME = 'val';
 	private _params_by_type: Map<GlConnectionPointType, BaseParamType> | undefined;
-	protected _allow_inputs_created_from_params: boolean = false;
+	// protected _allow_inputs_created_from_params: boolean = false;
 	initializeNode() {
 		this.io.connection_points.set_output_name_function((index: number) => ConstantGlNode.OUTPUT_NAME);
 		this.io.connection_points.set_expected_input_types_function(() => []);

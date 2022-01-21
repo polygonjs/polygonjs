@@ -14,6 +14,7 @@ import {ShaderAssemblerCustomLineDepthDOF} from './CustomLineDepthDOF';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
+import {VaryingWriteGlNode} from '../../../VaryingWrite';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance],
@@ -59,7 +60,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 	}
 	create_shader_configs() {
 		return [
-			new ShaderConfig(ShaderName.VERTEX, ['position', 'uv'], []),
+			new ShaderConfig(ShaderName.VERTEX, ['position', 'uv', VaryingWriteGlNode.INPUT_NAME], []),
 			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
 		];
 	}

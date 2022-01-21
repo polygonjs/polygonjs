@@ -1,3 +1,10 @@
+/**
+ * multiplies an input vector by the modelViewMatrix
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';

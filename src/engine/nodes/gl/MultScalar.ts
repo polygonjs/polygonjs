@@ -1,3 +1,9 @@
+/**
+ * convenient node to multiply a vector by a scalar
+ *
+ *
+ *
+ */
 import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';

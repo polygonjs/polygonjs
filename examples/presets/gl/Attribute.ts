@@ -53,8 +53,11 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 	const instancePosition = new BasePreset().addEntry(node.p.name, `instancePosition`).addEntry(node.p.type, v3);
 	const instanceScale = new BasePreset().addEntry(node.p.name, `instanceScale`).addEntry(node.p.type, v3);
 	const position = new BasePreset().addEntry(node.p.name, `position`).addEntry(node.p.type, v3);
+	const normal = new BasePreset().addEntry(node.p.name, `normal`).addEntry(node.p.type, v3);
 	const uv = new BasePreset().addEntry(node.p.name, `uv`).addEntry(node.p.type, v2);
 	const id = new BasePreset().addEntry(node.p.name, `position`).addEntry(node.p.type, f);
+	const pti = new BasePreset().addEntry(node.p.name, `pti`).addEntry(node.p.type, f);
+	const restP = new BasePreset().addEntry(node.p.name, `restP`).addEntry(node.p.type, v3);
 
 	collection.setPresets({
 		color,
@@ -63,8 +66,11 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 		instancePosition,
 		instanceScale,
 		position,
+		normal,
 		uv,
 		id,
+		pti,
+		restP,
 	});
 
 	return collection;

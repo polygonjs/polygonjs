@@ -14,6 +14,7 @@ import sss_default from '../../../gl/sss/init.glsl';
 import sss_declaration_fragment from '../../../gl/sss/declaration.glsl';
 import sss_injected_fragment from '../../../gl/sss/injected.glsl';
 import {AssemblerControllerNode} from '../../Controller';
+import {VaryingWriteGlNode} from '../../../VaryingWrite';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	static USE_SSS: Readonly<boolean> = true;
@@ -114,7 +115,7 @@ ${sss_injected_fragment}
 		}
 
 		return [
-			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv'], []),
+			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv', VaryingWriteGlNode.INPUT_NAME], []),
 			new ShaderConfig(ShaderName.FRAGMENT, fragmentInputNames, [ShaderName.VERTEX]),
 		];
 	}

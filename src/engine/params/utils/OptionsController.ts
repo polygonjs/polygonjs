@@ -48,6 +48,7 @@ const COLOR_CONVERSION = 'conversion';
 
 const SEPARATOR_BEFORE_OPTION = 'separatorBefore';
 const SEPARATOR_AFTER_OPTION = 'separatorAfter';
+const JOIN_TO_PREVIOUS_PARAM = 'joinToPreviousParam';
 
 const EDITABLE = 'editable';
 
@@ -100,6 +101,7 @@ interface BaseParamOptions {
 	// separator
 	separatorBefore?: boolean;
 	separatorAfter?: boolean;
+	joinToPreviousParam?: boolean;
 	// editable
 	editable?: boolean;
 }
@@ -399,6 +401,9 @@ export class OptionsController {
 	}
 	separatorAfter() {
 		return this._options[SEPARATOR_AFTER_OPTION];
+	}
+	joinToPreviousParam() {
+		return this._options[JOIN_TO_PREVIOUS_PARAM];
 	}
 	// editable
 	editable() {

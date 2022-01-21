@@ -177,6 +177,9 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			return;
 		}
 		const output_nodes: BaseGlNodeType[] = GlNodeFinder.findOutputNodes(this.currentGlParentNode());
+		if (output_nodes.length == 0) {
+			this.currentGlParentNode().states.error.set('one output node is required');
+		}
 		if (output_nodes.length > 1) {
 			this.currentGlParentNode().states.error.set('only one output node allowed');
 		}
@@ -358,7 +361,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			attribute_node.attributeName(),
 			shaders_collection_controller
 		);
-		const var_name = attribute_node.glVarName(attribute_node.output_name);
+		const var_name = attribute_node.glVarName(attribute_node.outputName());
 		shaders_collection_controller.addBodyLines(attribute_node, [`${gl_type} ${var_name} = ${new_var}`]);
 		// this.add_output_body_line(
 		// 	attribute_node,

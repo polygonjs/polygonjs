@@ -1,3 +1,10 @@
+/**
+ * multiplies 2 quaternions
+ *
+ *
+ *
+ */
+
 import {BaseNodeGlMathFunctionArg1GlNode} from './_BaseMathFunction';
 import Quaternion from './gl/quaternion.glsl';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';

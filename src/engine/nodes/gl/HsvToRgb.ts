@@ -1,3 +1,10 @@
+/**
+ * transforms an input color (vec3) from HSV color space to RGB
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 

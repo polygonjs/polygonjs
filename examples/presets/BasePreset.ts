@@ -37,15 +37,15 @@ export class NodePresetsCollection {
 			const preset = presetsByName[name];
 			this.addPreset(name, preset);
 		}
-		this._updatePresetNames();
 		return this;
 	}
 	addPreset(presetName: string, preset: BasePreset) {
 		if (this._presetsByName.get(presetName)) {
-			console.warn('existing preset', preset);
+			console.warn('existing preset', presetName);
 		}
 
 		this._presetsByName.set(presetName, preset);
+		this._updatePresetNames();
 		return this;
 	}
 	private _presetNames: string[] = [];

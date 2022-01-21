@@ -194,10 +194,10 @@ export class HierarchyChildrenController {
 			}
 		}
 		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.toJSON()});
-		if (this.node.scene().lifecycleController.onCreateHookAllowed()) {
-			child_node.lifecycle.runOnCreateCallbacks();
+		if (this.node.scene().lifecycleController.onAfterCreatedCallbackAllowed()) {
+			child_node.lifecycle.runOnAfterCreatedCallbacks();
 		}
-		child_node.lifecycle.runOnAddCallbacks();
+		child_node.lifecycle.runOnAfterAddedCallbacks();
 		this.node.lifecycle.runOnChildAddCallbacks(child_node);
 
 		if (child_node.require_webgl2()) {
@@ -209,17 +209,18 @@ export class HierarchyChildrenController {
 		return child_node;
 	}
 
-	removeNode(child_node: BaseNodeType): void {
-		if (child_node.parent() != this.node) {
-			return console.warn(`node ${child_node.name()} not under parent ${this.node.path()}`);
+	removeNode(childNode: BaseNodeType): void {
+		if (childNode.parent() != this.node) {
+			return console.warn(`node ${childNode.name()} not under parent ${this.node.path()}`);
 		} else {
-			if (this.selection.contains(child_node)) {
-				this.selection.remove([child_node]);
+			childNode.lifecycle.runOnBeforeDeleteCallbacks();
+			if (this.selection.contains(childNode)) {
+				this.selection.remove([childNode]);
 			}
 
-			const first_connection = child_node.io.connections.firstInputConnection();
-			const input_connections = child_node.io.connections.inputConnections();
-			const output_connections = child_node.io.connections.outputConnections();
+			const first_connection = childNode.io.connections.firstInputConnection();
+			const input_connections = childNode.io.connections.inputConnections();
+			const output_connections = childNode.io.connections.outputConnections();
 			if (input_connections) {
 				for (let input_connection of input_connections) {
 					if (input_connection) {
@@ -243,10 +244,10 @@ export class HierarchyChildrenController {
 			}
 
 			// remove from children
-			child_node.setParent(null);
-			this._childrenByName.delete(child_node.name());
-			this._removeFromNodesByType(child_node);
-			this.node.scene().nodesController.removeFromInstanciatedNode(child_node);
+			childNode.setParent(null);
+			this._childrenByName.delete(childNode.name());
+			this._removeFromNodesByType(childNode);
+			this.node.scene().nodesController.removeFromInstanciatedNode(childNode);
 
 			// set other dependencies dirty
 			// Note that this call to set_dirty was initially before this._children_node.remove_graph_input
@@ -254,14 +255,14 @@ export class HierarchyChildrenController {
 			// if (this._is_dependent_on_children && this._children_node) {
 			// 	this._children_node.set_successors_dirty(this.node);
 			// }
-			child_node.setSuccessorsDirty(this.node);
+			childNode.setSuccessorsDirty(this.node);
 			// disconnect successors
-			child_node.graphDisconnectSuccessors();
+			childNode.graphDisconnectSuccessors();
 
-			this.node.lifecycle.runOnChildRemoveCallbacks(child_node);
-			child_node.lifecycle.runOnDeleteCallbacks();
-			child_node.dispose();
-			child_node.emit(NodeEvent.DELETED, {parent_id: this.node.graphNodeId()});
+			this.node.lifecycle.runOnChildRemoveCallbacks(childNode);
+			childNode.lifecycle.runOnDeleteCallbacks();
+			childNode.dispose();
+			childNode.emit(NodeEvent.DELETED, {parent_id: this.node.graphNodeId()});
 		}
 	}
 

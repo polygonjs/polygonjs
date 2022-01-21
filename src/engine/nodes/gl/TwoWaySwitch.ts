@@ -1,3 +1,14 @@
+/**
+ * outputs 1 of the 2 inputs based on a boolean input
+ *
+ * @remarks
+ *
+ * This node is frequently used with the [gl/Compare](/docs/nodes/gl/Compare).
+ *
+ * For more involved use cases where you'd like to switch between more than 2 values, use the [gl/Switch](/docs/nodes/gl/Switch) instead.
+ *
+ */
+
 import {ParamlessTypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 // import {GlConnectionsController} from './utils/GLConnectionsController';

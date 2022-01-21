@@ -5,12 +5,13 @@ import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName, Globals
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {BaseGlShaderAssembler} from '../_Base';
-// import {ShaderAssemblerCustomPointsDepth} from './CustomPointsDepth';
+import {ShaderAssemblerCustomPointsDepth} from './CustomPointsDepth';
 import {ShaderAssemblerCustomPointsDistance} from './CustomPointsDistance';
 import {ShaderAssemblerCustomPointsDepthDOF} from './CustomPointsDepthDOF';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {VaryingWriteGlNode} from '../../../VaryingWrite';
 
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 	[ShaderName.VERTEX, ['#include <begin_vertex>', 'gl_PointSize = size;']],
@@ -20,10 +21,10 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 const CUSTOM_ASSEMBLER_MAP: CustomAssemblerMap = new Map();
 CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomPointsDistance);
 CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomPointsDepthDOF);
-// if (false) {
-// 	// currently not working
-// 	CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomPointsDepth);
-// }
+if (false) {
+	// 	currently not working
+	CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomPointsDepth);
+}
 
 export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
@@ -87,7 +88,11 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 
 	create_shader_configs() {
 		return [
-			new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv', 'gl_PointSize'], []),
+			new ShaderConfig(
+				ShaderName.VERTEX,
+				['position', 'normal', 'uv', 'gl_PointSize', VaryingWriteGlNode.INPUT_NAME],
+				[]
+			),
 			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
 		];
 	}

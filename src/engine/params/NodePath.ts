@@ -7,6 +7,10 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {TypedNodePathParamValue} from '../../core/Walker';
 
+interface SetNodeOptions {
+	relative: boolean;
+}
+
 export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	static type() {
 		return ParamType.NODE_PATH;
@@ -42,8 +46,13 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	isDefault(): boolean {
 		return this._raw_input == this._default_value;
 	}
-	setNode(node: BaseNodeType) {
-		this.set(node.path());
+	setNode(node: BaseNodeType, options?: SetNodeOptions) {
+		if (options?.relative == true) {
+			const path = CoreWalker.relativePath(this.node, node);
+			this.set(path);
+		} else {
+			this.set(node.path());
+		}
 	}
 	protected processRawInput() {
 		if (this._value.path() != this._raw_input) {

@@ -33,7 +33,7 @@ export class SubnetInputAnimNode extends TypedAnimNode<SubnetInputAnimParamsConf
 	initializeNode() {
 		this.io.inputs.setCount(0);
 
-		this.lifecycle.onAdd(() => {
+		this.lifecycle.onAfterAdded(() => {
 			this._setParentInputDependency();
 		});
 	}

@@ -59,7 +59,7 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
 
-		this.lifecycle.onAdd(() => {
+		this.lifecycle.onAfterAdded(() => {
 			this._setPositionalAudioNodesDirty();
 			this.addAudioActivationEvents();
 			this.root().audioController.update();

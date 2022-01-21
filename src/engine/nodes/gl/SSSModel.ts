@@ -1,3 +1,10 @@
+/**
+ * SSS Model
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../../nodes/utils/params/ParamsConfig';
 import {GlConnectionPoint, GlConnectionPointType} from '../../nodes/utils/io/connections/Gl';

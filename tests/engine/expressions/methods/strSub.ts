@@ -39,3 +39,22 @@ QUnit.test('expression strSub simple', async (assert) => {
 	await text_param.compute();
 	assert.equal(text_param.value, 'a');
 });
+
+QUnit.test('expression strSub with a number argument', async (assert) => {
+	const geo1 = window.geo1;
+
+	const text1 = geo1.createNode('text');
+	const text_param = text1.p.text;
+
+	text_param.set('`strSub(1)`');
+	await text_param.compute();
+	assert.equal(text_param.value, '1');
+
+	text_param.set('`strSub(12)`');
+	await text_param.compute();
+	assert.equal(text_param.value, '1');
+
+	text_param.set('`strSub(12.1254,0,4)`');
+	await text_param.compute();
+	assert.equal(text_param.value, '12.1');
+});

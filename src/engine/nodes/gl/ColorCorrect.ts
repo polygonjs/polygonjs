@@ -1,3 +1,9 @@
+/**
+ * applies a color correction
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';

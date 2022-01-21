@@ -136,23 +136,23 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	await mesh_basic1.compute();
 	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
 	// mesh_basic1.param_names();
-	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
+	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['texture1'], 'spare params has texture1');
 	assert.equal(
-		mesh_basic1.params.paramWithType('textureMap', ParamType.NODE_PATH)!.value.path(),
+		mesh_basic1.params.paramWithType('texture1', ParamType.NODE_PATH)!.value.path(),
 		'',
-		'textureMap value is ""'
+		'texture1 value is ""'
 	);
-	mesh_basic1.params.get('textureMap')!.set('/COP/file2');
+	mesh_basic1.params.get('texture1')!.set('/COP/file2');
 
 	await saveAndLoadScene(scene, async (scene2) => {
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 		await new_mesh_basic1.compute();
 		assert.notOk(new_mesh_basic1.assemblerController?.compileRequired(), 'compile is not required');
-		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['textureMap'], 'spare params has textureMap');
+		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['texture1'], 'spare params has texture1');
 		assert.equal(
-			new_mesh_basic1.params.paramWithType('textureMap', ParamType.NODE_PATH)!.value.path(),
+			new_mesh_basic1.params.paramWithType('texture1', ParamType.NODE_PATH)!.value.path(),
 			'/COP/file2',
-			'textureMap value is "/COP/file_uv"'
+			'texture1 value is "/COP/file_uv"'
 		);
 	});
 });

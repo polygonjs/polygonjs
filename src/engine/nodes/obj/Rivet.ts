@@ -101,7 +101,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// });
 
 		// register hooks
-		// this.lifecycle.onAdd(() => {
+		// this.lifecycle.onAfterAdded(() => {
 		// 	this._add_render_hook();
 		// 	// this.scene.rivets_register.register_rivet(this);
 		// });

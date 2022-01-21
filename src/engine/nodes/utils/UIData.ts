@@ -16,7 +16,7 @@ export class UIData {
 	// private _border_radius: number = 3;
 	private _color: Color = new Color(0.75, 0.75, 0.75);
 	// private _icon: string | null = null;
-	private _layout_vertical: boolean = true;
+	private _layoutVertical: boolean = true;
 	private _comment: string | undefined;
 	private _json: NodeUIDataJson = {
 		x: 0,
@@ -51,10 +51,10 @@ export class UIData {
 	// 	return this._icon;
 	// }
 	setLayoutHorizontal() {
-		this._layout_vertical = false;
+		this._layoutVertical = false;
 	}
 	isLayoutVertical() {
-		return this._layout_vertical;
+		return this._layoutVertical;
 	}
 
 	copy(ui_data: UIData) {
@@ -66,12 +66,12 @@ export class UIData {
 		return this._position;
 	}
 
-	setPosition(new_position: Vector2 | number, y: number = 0) {
-		if (CoreType.isNumber(new_position)) {
-			const x = new_position;
+	setPosition(newPosition: Vector2 | number, y: number = 0) {
+		if (CoreType.isNumber(newPosition)) {
+			const x = newPosition;
 			this._position.set(x, y);
 		} else {
-			this._position.copy(new_position);
+			this._position.copy(newPosition);
 		}
 		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
 	}

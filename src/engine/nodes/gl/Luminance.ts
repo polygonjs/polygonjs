@@ -1,3 +1,10 @@
+/**
+ * outputs the luminance of a color
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ThreeToGl} from '../../../core/ThreeToGl';

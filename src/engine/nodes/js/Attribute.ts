@@ -33,8 +33,8 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	initializeNode() {
-		// this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
-		this.lifecycle.onCreate(this._on_create_set_name_if_none_bound);
+		// this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
+		this.lifecycle.onAfterCreated(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => []);
@@ -50,22 +50,12 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	// 	return ['type'];
 	// }
 
-	get input_name() {
+	inputName() {
 		return AttributeJsNode.INPUT_NAME;
 	}
-	get output_name() {
+	outputName() {
 		return AttributeJsNode.OUTPUT_NAME;
 	}
-
-	// private create_inputs_from_params() {
-	// 	if (this.material_node.allow_attribute_exports) {
-	// 		// this.set_named_inputs([new TypedConnectionFloat(AttributeGlNode.input_name())]);
-	// 		this.io.inputs.setNamedInputConnectionPoints([
-	// 			new TypedNamedConnectionPoint(INPUT_NAME, ConnectionPointTypes[this.pv.type]),
-	// 		]);
-	// 		// this._init_graph_node_inputs();
-	// 	}
-	// }
 
 	setLines(lines_controller: LinesController) {
 		// if (lines_controller.shader_name) {
@@ -73,23 +63,13 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		// }
 	}
 
-	// update_output_type(constructor) {
-	// 	const named_output = new constructor(Attribute.output_name());
-	// 	this.set_named_outputs([named_output]);
-	// }
-	// update_input_type(constructor) {
-	// 	const named_input = new constructor(Attribute.input_name());
-	// 	this.set_named_inputs([named_input]);
-	// 	this._init_graph_node_inputs();
-	// }
-
-	get attribute_name(): string {
+	attributeName(): string {
 		return this.pv.name.trim();
 	}
-	gl_type() {
+	glType() {
 		return this.io.outputs.namedOutputConnectionPoints()[0].type();
 	}
-	set_gl_type(type: JsConnectionPointType) {
+	setGlType(type: JsConnectionPointType) {
 		this.p.type.set(ATTRIBUTE_NODE_AVAILABLE_JS_TYPES.indexOf(type));
 	}
 	//
@@ -103,24 +83,14 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	connected_input_connection_point(): BaseJsConnectionPoint | undefined {
 		return this.io.inputs.named_input_connection_point(AttributeJsNode.INPUT_NAME);
 	}
-	// connected_input(): NamedConnection {
-	// 	const connection_point = this.connected_input_connection_point();
-	// 	if (connection_point) {
-	// 		return this.io.inputs.named_inputs().filter((ni) => ni.name() == Attribute.input_name())[0];
-	// 	}
-	// }
+
 	output_connection_point(): BaseJsConnectionPoint | undefined {
 		// if (this.io.inputs.hasNamedInputs()) {
-		return this.io.outputs.namedOutputConnectionPointsByName(this.input_name);
+		return this.io.outputs.namedOutputConnectionPointsByName(this.inputName());
 		// }
 	}
-	// connected_output(): NamedConnection {
-	// 	const output = this.named_output(0);
-	// 	if (output) {
-	// 		return output; //this.named_inputs().filter(ni=>ni.name() == Attribute.input_name())[0]
-	// 	}
-	// }
-	get is_importing(): boolean {
+
+	isImporting(): boolean {
 		return this.io.outputs.used_output_names().length > 0; // TODO: ensure that we can check that the connected outputs are part of the nodes retrived by the node traverser
 	}
 	// get is_exporting(): boolean {

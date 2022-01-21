@@ -1,3 +1,10 @@
+/**
+ * creates a for loop, executing the nodes inside it on each loop
+ *
+ *
+ *
+ */
+
 import {TypedSubnetGlNode} from './Subnet';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -25,7 +32,9 @@ class ForLoopGlParamsConfig extends NodeParamsConfig {
 		range: [0, 100],
 		rangeLocked: [false, false],
 	});
-	step = ParamConfig.FLOAT(1);
+	step = ParamConfig.FLOAT(1, {
+		separatorAfter: true,
+	});
 }
 const ParamsConfig = new ForLoopGlParamsConfig();
 

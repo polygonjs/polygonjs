@@ -8,7 +8,7 @@ import {CoreGroup} from '../../../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsControllerData} from '../../../gl/code/utils/TextureAllocationsController';
-import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
+import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../../../gl/code/globals/Texture';
 import {NodeContext} from '../../../../poly/NodeContext';
 
 export class ParticlesSystemGpuRenderController {
@@ -18,7 +18,10 @@ export class ParticlesSystemGpuRenderController {
 	private _all_shader_names: ShaderName[] = [];
 	private _all_uniform_names: string[] = [];
 	private _texture_allocations_json: TextureAllocationsControllerData | undefined;
-	private globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.UV_VARYING);
+	private _materialGlobalsHandler = new GlobalsTextureHandler(
+		GlobalsTextureHandler.UV_VARYING,
+		GlobalsTextureHandlerPurpose.MATERIAL
+	);
 
 	constructor(private node: ParticlesSystemGpuSopNode) {}
 
@@ -118,8 +121,10 @@ export class ParticlesSystemGpuRenderController {
 
 				const matNodeAssemblerController = matNode.assemblerController;
 				if (matNodeAssemblerController) {
-					this.globals_handler.set_texture_allocations_controller(assembler.textureAllocationsController());
-					matNodeAssemblerController.set_assembler_globals_handler(this.globals_handler);
+					this._materialGlobalsHandler.set_texture_allocations_controller(
+						assembler.textureAllocationsController()
+					);
+					matNodeAssemblerController.set_assembler_globals_handler(this._materialGlobalsHandler);
 				}
 
 				if (

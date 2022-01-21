@@ -16,9 +16,22 @@
  *
  */
 
+import {CoreType} from '../../../core/Type';
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
+function toString(arg: any) {
+	if (arg == null) {
+		return '';
+	}
+	return CoreType.isString(arg) ? arg : `${arg}`;
+}
+function toInt(arg: any, defaultVal: number) {
+	if (arg == null) {
+		return defaultVal;
+	}
+	return CoreType.isNumber(arg) ? arg : parseInt(arg);
+}
 export class StrSubExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
 	static requiredArguments() {
@@ -36,11 +49,12 @@ export class StrSubExpression extends BaseMethod {
 
 	async processArguments(args: any[]): Promise<string> {
 		let value = '';
-		const string = args[0];
-		const range_start = args[1] || 0;
-		let range_size = args[2] || 1;
+		const string = toString(args[0]);
+		const rangeStart = toInt(args[1], 0);
+		let rangeSize = toInt(args[2], 1);
+
 		if (string) {
-			value = string.substr(range_start, range_size);
+			value = string.substr(rangeStart, rangeSize);
 		}
 		return value;
 	}

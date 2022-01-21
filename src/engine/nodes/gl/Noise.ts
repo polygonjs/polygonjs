@@ -1,3 +1,18 @@
+/**
+ * applies a noise
+ *
+ * @remark
+ *
+ * This node is very powerful and can be used to affect many parts of a shader, or even generate forces in a particle system.
+ * It can also create fbm effects, where several layers of noise are added to each other, giving a fractal effect.
+ *
+ * Another very interesting use case is to use multiple noise nodes, where a first one is used to modify the input position of a second one.
+ * This is called domain warping and can help you create very complex effect quickly.
+ *
+ *
+ *
+ */
+
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {TypedGlNode} from './_Base';
 import {

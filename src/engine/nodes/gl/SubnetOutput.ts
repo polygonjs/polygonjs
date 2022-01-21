@@ -1,3 +1,10 @@
+/**
+ * a subnet output is the output of a... subnet!
+ *
+ *
+ *
+ */
+
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

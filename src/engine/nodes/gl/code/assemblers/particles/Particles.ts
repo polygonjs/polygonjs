@@ -288,7 +288,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 				attribute_name,
 				shaders_collection_controller
 			);
-			const var_name = attribute_node.glVarName(attribute_node.output_name);
+			const var_name = attribute_node.glVarName(attribute_node.outputName());
 			const body_line = `${gl_type} ${var_name} = ${new_value}`;
 			shaders_collection_controller.addBodyLines(attribute_node, [body_line]);
 
@@ -318,7 +318,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 
 				this.add_export_body_line(
 					attribute_node,
-					attribute_node.input_name,
+					attribute_node.inputName(),
 					input,
 					variable_name,
 					shaders_collection_controller

@@ -22,7 +22,7 @@ export class SubnetOutputAnimNode extends TypedAnimNode<SubnetOutputSopParamsCon
 		this.io.inputs.setCount(1);
 		this.io.outputs.setHasNoOutput();
 
-		this.lifecycle.onAdd(this._setParentDirtyBound);
+		this.lifecycle.onAfterAdded(this._setParentDirtyBound);
 		this.addPostDirtyHook('makeParentDirty', this._setParentDirtyBound);
 	}
 	dispose() {

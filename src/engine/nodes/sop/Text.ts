@@ -104,21 +104,21 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		if (font) {
 			switch (TEXT_TYPES[this.pv.type]) {
 				case TEXT_TYPE.MESH:
-					return this._create_geometry_from_type_mesh(font);
+					return this._createGeometryFromTypeMesh(font);
 				case TEXT_TYPE.FLAT:
-					return this._create_geometry_from_type_flat(font);
+					return this._createGeometryFromTypeFlat(font);
 				case TEXT_TYPE.LINE:
-					return this._create_geometry_from_type_line(font);
+					return this._createGeometryFromTypeLine(font);
 				case TEXT_TYPE.STROKE:
-					return this._create_geometry_from_type_stroke(font);
+					return this._createGeometryFromTypeStroke(font);
 				default:
 					console.warn('type is not valid');
 			}
 		}
 	}
 
-	private _create_geometry_from_type_mesh(font: Font) {
-		const text = this.displayed_text();
+	private _createGeometryFromTypeMesh(font: Font) {
+		const text = this._displayedText();
 
 		const parameters = {
 			font: font,
@@ -130,8 +130,8 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		try {
 			const geometry = new TextGeometry(text, parameters);
 			if (!geometry.index) {
-				const position_array = geometry.getAttribute('position').array;
-				geometry.setIndex(ArrayUtils.range(position_array.length / 3));
+				const positionArray = geometry.getAttribute('position').array;
+				geometry.setIndex(ArrayUtils.range(positionArray.length / 3));
 			}
 			this.setGeometry(geometry);
 		} catch (err) {
@@ -139,19 +139,19 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		}
 	}
 
-	private _create_geometry_from_type_flat(font: Font) {
-		const shapes = this._get_shapes(font);
+	private _createGeometryFromTypeFlat(font: Font) {
+		const shapes = this._getShapes(font);
 		if (shapes) {
 			var geometry = new ShapeBufferGeometry(shapes);
 			this.setGeometry(geometry);
 		}
 	}
-	private _create_geometry_from_type_line(font: Font) {
-		const shapes = this.shapes_from_font(font);
+	private _createGeometryFromTypeLine(font: Font) {
+		const shapes = this._shapesFromFont(font);
 		if (shapes) {
 			const positions = [];
 			const indices = [];
-			let current_index = 0;
+			let currentIndex = 0;
 
 			for (let i = 0; i < shapes.length; i++) {
 				const shape = shapes[i];
@@ -161,11 +161,11 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 					positions.push(point.x);
 					positions.push(point.y);
 					positions.push(0);
-					indices.push(current_index);
+					indices.push(currentIndex);
 					if (j > 0 && j < points.length - 1) {
-						indices.push(current_index);
+						indices.push(currentIndex);
 					}
-					current_index += 1;
+					currentIndex += 1;
 				}
 			}
 			const geometry = new BufferGeometry();
@@ -174,8 +174,8 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			this.setGeometry(geometry, ObjectType.LINE_SEGMENTS);
 		}
 	}
-	private async _create_geometry_from_type_stroke(font: Font) {
-		const shapes = this.shapes_from_font(font);
+	private async _createGeometryFromTypeStroke(font: Font) {
+		const shapes = this._shapesFromFont(font);
 		if (shapes) {
 			const loader = await CoreLoaderFont.loadSVGLoader();
 			if (!loader) {
@@ -203,8 +203,8 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		}
 	}
 
-	private shapes_from_font(font: Font) {
-		const shapes = this._get_shapes(font);
+	private _shapesFromFont(font: Font) {
+		const shapes = this._getShapes(font);
 		if (shapes) {
 			const holeShapes: Path[] = [];
 			for (let i = 0; i < shapes.length; i++) {
@@ -221,8 +221,8 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		}
 	}
 
-	private _get_shapes(font: Font) {
-		const text = this.displayed_text();
+	private _getShapes(font: Font) {
+		const text = this._displayedText();
 		try {
 			const shapes = font.generateShapes(text, this.pv.size);
 			return shapes;
@@ -231,7 +231,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		}
 	}
 
-	private displayed_text(): string {
+	private _displayedText(): string {
 		return this.pv.text || '';
 	}
 

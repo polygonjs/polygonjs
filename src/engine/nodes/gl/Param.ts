@@ -40,28 +40,17 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	static type(): Readonly<'param'> {
 		return 'param';
 	}
-	protected _allow_inputs_created_from_params: boolean = false;
-	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
-	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
+	// protected _allow_inputs_created_from_params: boolean = false;
+	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
 	initializeNode() {
-		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
-		this.lifecycle.onCreate(this._on_create_set_name_if_none_bound);
+		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
+		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
+		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => []);
 		this.io.connection_points.set_expected_output_types_function(() => [GL_CONNECTION_POINT_TYPES[this.pv.type]]);
-		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
-		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
-		// this.addPostDirtyHook('_update_if_type_changed', this._update_signature_if_required_bound);
 	}
-	// private _update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-	// 	if (!this.lifecycle.creation_completed || dirty_trigger == this.p.type) {
-	// 		this.update_output_type();
-	// 		this.removeDirtyState();
-	// 		this.make_output_nodes_dirty();
-	// 	}
-	// }
 
 	setLines(shaders_collection_controller: ShadersCollectionController) {
 		const definitions = [];
@@ -106,19 +95,12 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		this.p.type.set(index);
 	}
 
-	// update_output_type() {
-	// 	const set_dirty = false;
-	// 	this.io.outputs.setNamedOutputConnectionPoints(
-	// 		[new TypedNamedConnectionPoint(OUTPUT_NAME, ConnectionPointTypes[this.pv.type])],
-	// 		set_dirty
-	// 	);
-	// }
 	//
 	//
 	// HOOKS
 	//
 	//
-	private _on_create_set_name_if_none() {
+	private _onCreateSetNameIfNone() {
 		if (this.pv.name == '') {
 			this.p.name.set(this.name());
 		}

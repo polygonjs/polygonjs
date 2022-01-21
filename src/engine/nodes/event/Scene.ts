@@ -128,8 +128,8 @@ export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
 			const eventsController = this.scene().eventsDispatcher.sceneEventsController;
 			eventsController.removeObserverFromAllEventTypes(this);
 		};
-		this.lifecycle.onAdd(register);
-		this.lifecycle.onDelete(unregister);
+		this.lifecycle.onAfterAdded(register);
+		this.lifecycle.onBeforeDeleted(unregister);
 	}
 
 	processEvent(eventContext: EventContext<Event>) {

@@ -35,11 +35,11 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	static type() {
 		return 'param';
 	}
-	protected _allow_inputs_created_from_params: boolean = false;
-	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
+	// protected _allow_inputs_created_from_params: boolean = false;
+	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
 	initializeNode() {
-		this.addPostDirtyHook('_set_mat_to_recompile', this._set_function_node_to_recompile.bind(this));
-		this.lifecycle.onCreate(this._on_create_set_name_if_none_bound);
+		this.addPostDirtyHook('_setMatToRecompile', this._set_function_node_to_recompile.bind(this));
+		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => []);
@@ -50,7 +50,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		const definitions = [];
 
 		const gl_type = JS_CONNECTION_POINT_TYPES[this.pv.type];
-		const var_name = this.uniform_name();
+		const var_name = this.uniformName();
 
 		definitions.push(new UniformJsDefinition(this, gl_type, var_name));
 		lines_controller.addDefinitions(this, definitions);
@@ -69,19 +69,19 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 			CoreType.isArray(default_value) &&
 			default_value.length == 3
 		) {
-			const param_config = new JsParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniform_name());
+			const param_config = new JsParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniformName());
 			this._param_configs_controller.push(param_config);
 		} else {
-			const param_config = new JsParamConfig(param_type, this.pv.name, default_value, this.uniform_name());
+			const param_config = new JsParamConfig(param_type, this.pv.name, default_value, this.uniformName());
 			this._param_configs_controller.push(param_config);
 		}
 	}
-	uniform_name() {
+	uniformName() {
 		const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
 		const var_name = this.js_var_name(output_connection_point.name());
 		return var_name;
 	}
-	set_gl_type(type: JsConnectionPointType) {
+	setGlType(type: JsConnectionPointType) {
 		const index = JS_CONNECTION_POINT_TYPES.indexOf(type);
 		this.p.type.set(index);
 	}
@@ -91,7 +91,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	// HOOKS
 	//
 	//
-	private _on_create_set_name_if_none() {
+	private _onCreateSetNameIfNone() {
 		if (this.pv.name == '') {
 			this.p.name.set(this.name());
 		}

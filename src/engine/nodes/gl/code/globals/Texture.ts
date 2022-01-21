@@ -9,11 +9,18 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {UniformGLDefinition, AttributeGLDefinition, VaryingGLDefinition} from '../../utils/GLDefinition';
 import {GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
+import {TextureVariable} from '../utils/TextureVariable';
+import {TypeAssert} from '../../../../poly/Assert';
 
 // import {DefinitionBaseConfig} from '../Config/DefinitionBaseConfig'
 // import {UniformConfig} from '../Config/UniformConfig'
 // import {AttributeConfig} from '../Config/AttributeConfig'
 // import { Attribute } from '../../Attribute';
+
+export enum GlobalsTextureHandlerPurpose {
+	PARTICLES_SHADER = 'particles_shader',
+	MATERIAL = 'material',
+}
 
 export class GlobalsTextureHandler extends GlobalsBaseController {
 	private _texture_allocations_controller: TextureAllocationsController | undefined;
@@ -24,7 +31,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 	private globals_geometry_handler: GlobalsGeometryHandler | undefined;
 
-	constructor(private _uv_name: string) {
+	constructor(private _uv_name: string, private _purpose: GlobalsTextureHandlerPurpose) {
 		super();
 	}
 
@@ -141,6 +148,18 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 	// 	return name
 	// }
 
+	private _textureVariableUsable(textureVariable: TextureVariable) {
+		switch (this._purpose) {
+			case GlobalsTextureHandlerPurpose.PARTICLES_SHADER: {
+				return true;
+			}
+			case GlobalsTextureHandlerPurpose.MATERIAL: {
+				return !textureVariable.readonly();
+			}
+		}
+		TypeAssert.unreachable(this._purpose);
+	}
+
 	read_attribute(
 		node: BaseGlNodeType,
 		gl_type: GlConnectionPointType,
@@ -154,7 +173,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 		const texture_variable = this._texture_allocations_controller.variable(attrib_name);
 
-		if (texture_variable) {
+		if (texture_variable && this._textureVariableUsable(texture_variable)) {
 			this.add_particles_sim_uv_attribute(node, shaders_collection_controller);
 			// const texture_variable = allocation.variable(attrib_name)
 			// if(!texture_variable){

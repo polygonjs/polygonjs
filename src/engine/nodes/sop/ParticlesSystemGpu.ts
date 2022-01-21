@@ -14,7 +14,7 @@
 
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedSopNode} from './_Base';
-import {GlobalsTextureHandler} from '../gl/code/globals/Texture';
+import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../gl/code/globals/Texture';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
@@ -108,7 +108,10 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	public readonly persisted_config: ParticlesPersistedConfig = new ParticlesPersistedConfig(this);
-	private globals_handler = new GlobalsTextureHandler(GlobalsTextureHandler.PARTICLE_SIM_UV);
+	private _particlesGlobalsHandler = new GlobalsTextureHandler(
+		GlobalsTextureHandler.PARTICLE_SIM_UV,
+		GlobalsTextureHandlerPurpose.PARTICLES_SHADER
+	);
 	private _shaders_by_name: Map<ShaderName, string> = new Map();
 	shaders_by_name() {
 		return this._shaders_by_name;
@@ -131,7 +134,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return ['points to emit particles from'];
 	}
 
-	private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
+	private _resetMaterialIfDirtyBound = this._resetMaterialIfDirty.bind(this);
 	protected _childrenControllerContext = NodeContext.GL;
 	initializeNode() {
 		this.io.inputs.setCount(1);
@@ -139,7 +142,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		// otherwise the input is cloned on every frame inside cook_main()
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 
-		this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
+		this.addPostDirtyHook('_resetMaterialIfDirty', this._resetMaterialIfDirtyBound);
 	}
 
 	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
@@ -161,7 +164,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return false;
 	}
 
-	async _reset_material_if_dirty() {
+	private async _resetMaterialIfDirty() {
 		if (this.p.material.isDirty()) {
 			this.renderController.resetRenderMaterial();
 			if (!this.isOnStartFrame()) {
@@ -202,7 +205,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		this.gpuController.restartSimulationIfRequired();
 		this.gpuController.computeSimulationIfRequired(0);
-
 		if (isOnStartFrame) {
 			this.setCoreGroup(coreGroup);
 		} else {
@@ -221,10 +223,10 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (!assemblerController) {
 			return;
 		}
-		const export_nodes = this._find_export_nodes();
+		const export_nodes = this._findExportNodes();
 		if (export_nodes.length > 0) {
 			const root_nodes = export_nodes;
-			assemblerController.set_assembler_globals_handler(this.globals_handler);
+			assemblerController.set_assembler_globals_handler(this._particlesGlobalsHandler);
 			assemblerController.assembler.set_root_nodes(root_nodes);
 
 			assemblerController.assembler.compile();
@@ -254,7 +256,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 	}
 
-	private _find_export_nodes() {
+	private _findExportNodes() {
 		const nodes: BaseGlNodeType[] = GlNodeFinder.findAttributeExportNodes(this);
 		const output_nodes = GlNodeFinder.findOutputNodes(this);
 		if (output_nodes.length > 1) {

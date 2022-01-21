@@ -48,12 +48,12 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	initializeNode() {
-		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile_if_is_exporting.bind(this));
-		this.lifecycle.onCreate(this._on_create_set_name_if_none_bound);
+		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompileIfIsExporting.bind(this));
+		this.lifecycle.onAfterCreated(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => {
-			if (this.material_node?.assemblerController?.allow_attribute_exports()) {
+			if (this.materialNode()?.assemblerController?.allow_attribute_exports()) {
 				return [ATTRIBUTE_NODE_AVAILABLE_GL_TYPES[this.pv.type]];
 			} else {
 				return [];
@@ -69,12 +69,12 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
 
-		this.lifecycle.onAdd(this._bound_setExportWhenConnectedStatus);
+		this.lifecycle.onAfterAdded(this._bound_setExportWhenConnectedStatus);
 		this.params.addOnSceneLoadHook('prepare params', this._bound_setExportWhenConnectedStatus);
 	}
 	private _bound_setExportWhenConnectedStatus = this._setExportWhenConnectedStatus.bind(this);
 	private _setExportWhenConnectedStatus() {
-		if (this.material_node?.assemblerController?.allow_attribute_exports()) {
+		if (this.materialNode()?.assemblerController?.allow_attribute_exports()) {
 			this.p.texportWhenConnected.set(1);
 		}
 	}
@@ -87,15 +87,15 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 	return ['type'];
 	// }
 
-	get input_name() {
+	inputName() {
 		return AttributeGlNode.INPUT_NAME;
 	}
-	get output_name() {
+	outputName() {
 		return AttributeGlNode.OUTPUT_NAME;
 	}
 
 	// private create_inputs_from_params() {
-	// 	if (this.material_node.allow_attribute_exports) {
+	// 	if (this.materialNode().allow_attribute_exports) {
 	// 		// this.set_named_inputs([new TypedConnectionFloat(AttributeGlNode.input_name())]);
 	// 		this.io.inputs.setNamedInputConnectionPoints([
 	// 			new TypedNamedConnectionPoint(INPUT_NAME, ConnectionPointTypes[this.pv.type]),
@@ -149,7 +149,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// }
 	output_connection_point(): BaseGlConnectionPoint | undefined {
 		// if (this.io.inputs.hasNamedInputs()) {
-		return this.io.outputs.namedOutputConnectionPointsByName(this.output_name);
+		return this.io.outputs.namedOutputConnectionPointsByName(this.outputName());
 		// }
 	}
 	// connected_output(): NamedConnection {
@@ -169,9 +169,14 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 			return false;
 		}
 	}
-	private _set_mat_to_recompile_if_is_exporting() {
-		if (this.isExporting()) {
-			this._set_mat_to_recompile();
+	private _setMatToRecompileIfIsExporting() {
+		//if (this.isExporting()) {
+		// we cannot just use .isExporting()
+		// as the node must also set the parent to recompile
+		// when its input is being removed
+		// (in which case .isExporting() would always return false)
+		if (isBooleanTrue(this.pv.exportWhenConnected)) {
+			this._setMatToRecompile();
 		}
 	}
 	//
@@ -196,7 +201,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 		this.removeDirtyState();
 	// 		this.make_output_nodes_dirty();
 	// 	}
-	// 	this.material_node?.assembler_controller.set_compilation_required_and_dirty(this);
+	// 	this.materialNode()?.assembler_controller.set_compilation_required_and_dirty(this);
 	// }
 	// private update_input_and_output_types() {
 	// 	const set_dirty = false;
@@ -204,7 +209,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 		[new TypedNamedConnectionPoint(this.output_name, ConnectionPointTypesAvailableForAttribute[this.pv.type])],
 	// 		set_dirty
 	// 	);
-	// 	if (this.material_node?.assembler_controller.allow_attribute_exports()) {
+	// 	if (this.materialNode()?.assembler_controller.allow_attribute_exports()) {
 	// 		this.io.inputs.setNamedInputConnectionPoints([
 	// 			new TypedNamedConnectionPoint(this.input_name, ConnectionPointTypesAvailableForAttribute[this.pv.type]),
 	// 		]);

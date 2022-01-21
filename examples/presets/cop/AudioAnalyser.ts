@@ -6,7 +6,7 @@ const audioAnalyserCopNodePresetsCollectionFactory: PresetsCollectionFactory<Aud
 	node: AudioAnalyserCopNode
 ) => {
 	const fft_meter_waveform = new BasePreset()
-		.addEntry<ParamType.VECTOR2>(node.p.rangeR, [-100, 100])
+		.addEntry<ParamType.VECTOR2>(node.p.rangeR, [-160, 0])
 		.addEntry<ParamType.VECTOR2>(node.p.rangeG, [-100, 100])
 		.addEntry<ParamType.VECTOR2>(node.p.rangeB, [-0.05, 0.05]);
 

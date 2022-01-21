@@ -1,3 +1,10 @@
+/**
+ * outputs the length of a vector, clamping it to a max value
+ *
+ *
+ *
+ */
+
 import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
 import MaxLength from './gl/max_length.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';

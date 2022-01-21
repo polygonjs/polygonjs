@@ -147,11 +147,13 @@ export class TextureAllocationsController {
 		this._allocateVariables(variables);
 	}
 	private _allocateVariables(variables: TextureVariable[]) {
-		const variables_by_size_inverse = ArrayUtils.sortBy(variables, (variable) => {
-			return -variable.size();
+		const uniqVariables = this._ensureVariablesAreUnique(variables);
+
+		const variablesBySizeInverse = uniqVariables.sort((v0: TextureVariable, v1: TextureVariable) => {
+			return v0.size() < v1.size() ? 1 : -1;
 		});
-		const uniqVariables = this._ensureVariablesAreUnique(variables_by_size_inverse);
-		for (let variable of uniqVariables) {
+
+		for (let variable of variablesBySizeInverse) {
 			if (variable.readonly()) {
 				this._allocateVariable(variable, this._readonlyAllocations);
 			} else {
@@ -175,22 +177,24 @@ export class TextureAllocationsController {
 		});
 		return uniqVariables;
 	}
-	private _allocateVariable(new_variable: TextureVariable, allocations: TextureAllocation[]) {
-		let isAllocated = this.hasVariable(new_variable.name());
+	private _allocateVariable(newVariable: TextureVariable, allocations: TextureAllocation[]) {
+		let isAllocated = this.hasVariable(newVariable.name());
 		if (isAllocated) {
 			throw 'no variable should be allocated since they have been made unique before';
 			// const allocated_variable = this.variables().filter((v) => v.name() == new_variable.name())[0];
 			// allocated_variable.merge(new_variable);
 		} else {
 			for (let allocation of allocations) {
-				if (!isAllocated && allocation.hasSpaceForVariable(new_variable)) {
-					allocation.addVariable(new_variable);
+				if (!isAllocated && allocation.hasSpaceForVariable(newVariable)) {
+					allocation.addVariable(newVariable);
 					isAllocated = true;
 				}
 			}
-			const new_allocation = new TextureAllocation(/*this.nextAllocationName()*/);
-			allocations.push(new_allocation);
-			new_allocation.addVariable(new_variable);
+			if (!isAllocated) {
+				const newAllocation = new TextureAllocation(/*this.nextAllocationName()*/);
+				allocations.push(newAllocation);
+				newAllocation.addVariable(newVariable);
+			}
 		}
 	}
 	private _addWritableAllocation(allocation: TextureAllocation) {

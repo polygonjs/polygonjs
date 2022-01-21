@@ -8,7 +8,8 @@ declare global {
 	interface Assert {
 		null: (num: number, message?: string) => void;
 		not_null: (num: number, message?: string) => void;
-		includes: (array: any[], element: any, message?: string) => void;
+		includes: (array: string | any[], element: any, message?: string) => void;
+		not_includes: (array: string | any[], element: any, message?: string) => void;
 		in_delta: (val1: number, val2: number, max_delta: number, message?: string) => void;
 		vector3_in_delta: (val1: Vector3, val2: Number3, max_delta?: number, message?: string) => void;
 		less_than: (val1: number, max_val: number, message?: string) => void;
@@ -34,10 +35,22 @@ QUnit.assert.not_null = function (val1: number, message: string = 'IS null') {
 	this.pushResult({result, actual, expected, message});
 };
 
-QUnit.assert.includes = function (array: any[], element: any, message: string = 'DOES NOT INCLUDE') {
-	const result = array.includes(element);
-	const actual = array;
+QUnit.assert.includes = function (arrayOrString: string | any[], element: any, message?: string) {
+	const result = arrayOrString.includes(element);
+	const actual = arrayOrString;
 	const expected = [element];
+	if (message == null) {
+		message = `includes ${element}`;
+	}
+	this.pushResult({result, actual, expected, message});
+};
+QUnit.assert.not_includes = function (arrayOrString: string | any[], element: any, message?: string) {
+	const result = !arrayOrString.includes(element);
+	const actual = arrayOrString;
+	const expected = [element];
+	if (message == null) {
+		message = `does not includes ${element}`;
+	}
 	this.pushResult({result, actual, expected, message});
 };
 

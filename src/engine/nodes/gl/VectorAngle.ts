@@ -1,3 +1,11 @@
+/**
+ * finds the angle between vectors
+ *
+ *
+ *
+ *
+ */
+
 import {Number3, PolyDictionary} from '../../../types/GlobalTypes';
 import Quaternion from './gl/quaternion.glsl';
 import {MathFunctionArg2Factory} from './_Math_Arg2';

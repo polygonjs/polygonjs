@@ -1,3 +1,11 @@
+/**
+ * aligns vectors
+ *
+ *
+ *
+ *
+ */
+
 import {Number3, PolyDictionary} from '../../../types/GlobalTypes';
 import Quaternion from './gl/quaternion.glsl';
 import {MathFunctionArg3Factory} from './_Math_Arg3';

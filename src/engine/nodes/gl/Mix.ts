@@ -1,3 +1,10 @@
+/**
+ * mixes 2 input values based on a blend (float) value
+ *
+ *
+ *
+ */
+
 import {BaseGlMathFunctionGlNode} from './_BaseMathFunction';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {PolyDictionary} from '../../../types/GlobalTypes';

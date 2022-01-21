@@ -1,3 +1,10 @@
+/**
+ * a subnet input is the input of a... subnet!
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -17,7 +24,7 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 		this.io.connection_points.set_expected_input_types_function(() => []);
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 
-		// this.lifecycle.onAdd(() => {
+		// this.lifecycle.onAfterAdded(() => {
 		// 	this._connect_to_parent_connections_controller();
 		// });
 	}

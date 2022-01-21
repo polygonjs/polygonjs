@@ -1,3 +1,13 @@
+/**
+ * generates a disk
+ *
+ *
+ * @remarks
+ *
+ * There are many uses to this node, but one of them is to gives a disk shape to points in a [mat/pointsBuilder](/docs/nodes/mat/pointsBuilder)
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import DiskMethods from './gl/disk.glsl';

@@ -1,3 +1,10 @@
+/**
+ * This node updates the position and normals of instances
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 

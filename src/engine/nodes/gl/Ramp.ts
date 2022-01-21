@@ -1,3 +1,10 @@
+/**
+ * generates a ramp as a spare parameter, which can then be used to interpolate an input value.
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {GlConnectionPoint, GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -12,7 +19,7 @@ import {GlParamConfig} from './code/utils/ParamConfig';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RampGlParamsConfig extends NodeParamsConfig {
-	name = ParamConfig.STRING('ramp');
+	name = ParamConfig.STRING('');
 	input = ParamConfig.FLOAT(0);
 }
 const ParamsConfig = new RampGlParamsConfig();
@@ -21,11 +28,13 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 	static type(): Readonly<'ramp'> {
 		return 'ramp';
 	}
-
+	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
 	initializeNode() {
 		super.initializeNode();
 
-		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
+		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
+		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
+		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
@@ -64,5 +73,15 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 	}
 	private _uniform_name() {
 		return 'ramp_texture_' + this.glVarName(OUTPUT_NAME);
+	}
+	//
+	//
+	// HOOKS
+	//
+	//
+	private _onCreateSetNameIfNone() {
+		if (this.pv.name == '') {
+			this.p.name.set(this.name());
+		}
 	}
 }

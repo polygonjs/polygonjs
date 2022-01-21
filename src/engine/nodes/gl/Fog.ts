@@ -1,3 +1,10 @@
+/**
+ * applies a fog
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';

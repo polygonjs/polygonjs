@@ -33,7 +33,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 	initializeNode() {
 		this.io.inputs.setCount(0);
 
-		this.lifecycle.onAdd(() => {
+		this.lifecycle.onAfterAdded(() => {
 			this._setParentInputDependency();
 		});
 	}

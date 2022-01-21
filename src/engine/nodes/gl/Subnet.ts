@@ -1,9 +1,16 @@
+/**
+ * a subnet can contain many nodes and is very useful to organise your shaders
+ *
+ *
+ *
+ */
+
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {NodeContext} from '../../poly/NodeContext';
+import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
@@ -156,6 +163,6 @@ const ParamsConfig = new SubnetGlParamsConfig();
 export class SubnetGlNode extends TypedSubnetGlNode<SubnetGlParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
-		return 'subnet';
+		return NetworkNodeType.SUBNET;
 	}
 }

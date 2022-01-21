@@ -23,10 +23,10 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 
 	initializeNode() {
 		super.initializeNode();
-		this.addPostDirtyHook('_set_mat_to_recompile', this._set_mat_to_recompile.bind(this));
+		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 
-		this.lifecycle.onAdd(() => {
-			this.material_node?.assemblerController?.add_output_inputs(this);
+		this.lifecycle.onAfterAdded(() => {
+			this.materialNode()?.assemblerController?.add_output_inputs(this);
 		});
 	}
 

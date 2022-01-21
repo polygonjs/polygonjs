@@ -1,3 +1,14 @@
+/**
+ * switches between different input values based on an integer input
+ *
+ * @remarks
+ *
+ * For simple use cases where you'd like to switch between 2 values only, use the [gl/TwoWaySwitch](/docs/nodes/gl/TwoWaySwitch) instead.
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';

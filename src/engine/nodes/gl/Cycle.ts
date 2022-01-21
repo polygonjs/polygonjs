@@ -1,3 +1,9 @@
+/**
+ * cycles a value
+ *
+ *
+ */
+
 import CycleMethods from './gl/cycle.glsl';
 import {MathFunctionArg3Factory} from './_Math_Arg3';
 

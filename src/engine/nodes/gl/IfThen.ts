@@ -1,4 +1,11 @@
-import {SubnetGlNode} from './Subnet';
+/**
+ * executes the nodes inside it based on an input condition
+ *
+ *
+ *
+ */
+
+import {TypedSubnetGlNode} from './Subnet';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -11,7 +18,7 @@ const CONDITION_INPUT_NAME = 'condition';
 class IfThenGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new IfThenGlParamsConfig();
 
-export class IfThenGlNode extends SubnetGlNode {
+export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 	paramsConfig = ParamsConfig;
 	static type(): Readonly<'ifThen'> {
 		return 'ifThen';

@@ -42,14 +42,14 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		console.warn('gl nodes should never cook');
 	}
 
-	protected _set_mat_to_recompile() {
-		this.material_node?.assemblerController?.set_compilation_required_and_dirty(this);
+	protected _setMatToRecompile() {
+		this.materialNode()?.assemblerController?.set_compilation_required_and_dirty(this);
 	}
-	get material_node(): AssemblerControllerNode | undefined {
+	materialNode(): AssemblerControllerNode | undefined {
 		const parent = this.parent();
 		if (parent) {
 			if (parent.context() == NodeContext.GL) {
-				return (parent as BaseGlNodeType)?.material_node;
+				return (parent as BaseGlNodeType)?.materialNode();
 			} else {
 				return parent as AssemblerControllerNode;
 			}
@@ -62,7 +62,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	//
 	//
 	glVarName(name: string) {
-		const path_sanitized = this.path(this.material_node).replace(REGEX_PATH_SANITIZE, '_');
+		const path_sanitized = this.path(this.materialNode()).replace(REGEX_PATH_SANITIZE, '_');
 		return `v_POLY_${path_sanitized}_${name}`;
 	}
 
@@ -77,9 +77,8 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseGlNodeType;
-			const output_connection_point = input_node.io.outputs.namedOutputConnectionPoints()[
-				connection.output_index
-			];
+			const output_connection_point =
+				input_node.io.outputs.namedOutputConnectionPoints()[connection.output_index];
 			if (output_connection_point) {
 				const output_name = output_connection_point.name();
 				return input_node.glVarName(output_name);
