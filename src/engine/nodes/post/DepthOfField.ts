@@ -10,6 +10,7 @@ import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseParamType} from '../../params/_Base';
 class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	/** @param focalDepth */
 	focalDepth = ParamConfig.FLOAT(10, {
@@ -124,9 +125,9 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 	protected _createPass(context: TypedPostNodeContext) {
 		const camera = context.camera;
 		if ((camera as PerspectiveCamera).isPerspectiveCamera) {
-			const camera_node = context.camera_node as PerspectiveCameraObjNode;
-			if (camera_node) {
-				const pass = new BokehPass2(this, context.scene, camera_node.object, context.resolution);
+			const cameraNode = context.camera_node as PerspectiveCameraObjNode;
+			if (cameraNode) {
+				const pass = new BokehPass2(this, context.scene, cameraNode.object, context.resolution);
 
 				this.updatePass(pass);
 
@@ -134,48 +135,65 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 				// or when the camera is deleted
 				// and maybe the graph node should be on the pass itself?
 				// so that it can be called when we call .dispose() on it?
-				const core_graph_node = new CoreGraphNode(this.scene(), 'DOF');
-				core_graph_node.addGraphInput(camera_node.p.near);
-				core_graph_node.addGraphInput(camera_node.p.far);
-				core_graph_node.addGraphInput(camera_node.p.fov);
-				core_graph_node.addGraphInput(this.p.focalDepth);
-				core_graph_node.addPostDirtyHook('post/DOF', () => {
-					this.update_pass_from_camera_node(pass, camera_node);
+				const coreGraphNode = new CoreGraphNode(this.scene(), 'DOF');
+				const params: BaseParamType[] = [
+					cameraNode.p.near,
+					cameraNode.p.far,
+					cameraNode.p.fov,
+					this.p.focalDepth,
+				];
+				for (let param of params) {
+					coreGraphNode.addGraphInput(param);
+				}
+				coreGraphNode.addPostDirtyHook('post/DOF', async (triggerNode: CoreGraphNode | undefined) => {
+					if (triggerNode) {
+						const triggerParam: BaseParamType = triggerNode as BaseParamType;
+						if (params.includes(triggerParam)) {
+							await triggerParam.compute();
+							console.log('CoreGraphNode', triggerParam);
+						}
+					}
+					this._updatePassFromCameraNode(pass, cameraNode);
+				});
+				// on scene initialization,
+				// we need to make sure the camera is cooked properly
+				cameraNode.compute().then(() => {
+					this._updatePassFromCameraNode(pass, cameraNode);
 				});
 
 				return pass;
 			}
 		}
 	}
-	update_pass_from_camera_node(pass: BokehPass2, camera: PerspectiveCameraObjNode) {
-		pass.update_camera_uniforms_with_node(this, camera.object);
+	private async _updatePassFromCameraNode(pass: BokehPass2, camera: PerspectiveCameraObjNode) {
+		pass.updateCameraUniformsWithNode(this, camera.object);
 	}
 	updatePass(pass: BokehPass2) {
-		pass.bokeh_uniforms['fstop'].value = this.pv.fStep;
-		pass.bokeh_uniforms['maxblur'].value = this.pv.maxBlur;
+		pass.bokehUniforms['fstop'].value = this.pv.fStep;
+		pass.bokehUniforms['maxblur'].value = this.pv.maxBlur;
 
-		pass.bokeh_uniforms['threshold'].value = this.pv.threshold;
-		pass.bokeh_uniforms['gain'].value = this.pv.gain;
-		pass.bokeh_uniforms['bias'].value = this.pv.bias;
-		pass.bokeh_uniforms['fringe'].value = this.pv.fringe;
-		pass.bokeh_uniforms['dithering'].value = this.pv.dithering;
+		pass.bokehUniforms['threshold'].value = this.pv.threshold;
+		pass.bokehUniforms['gain'].value = this.pv.gain;
+		pass.bokehUniforms['bias'].value = this.pv.bias;
+		pass.bokehUniforms['fringe'].value = this.pv.fringe;
+		pass.bokehUniforms['dithering'].value = this.pv.dithering;
 
 		// booleans
-		pass.bokeh_uniforms['noise'].value = isBooleanTrue(this.pv.noise) ? 1 : 0;
-		pass.bokeh_uniforms['pentagon'].value = isBooleanTrue(this.pv.pentagon) ? 1 : 0;
-		pass.bokeh_uniforms['vignetting'].value = isBooleanTrue(this.pv.vignetting) ? 1 : 0;
-		pass.bokeh_uniforms['depthblur'].value = isBooleanTrue(this.pv.depthBlur) ? 1 : 0;
+		pass.bokehUniforms['noise'].value = isBooleanTrue(this.pv.noise) ? 1 : 0;
+		pass.bokehUniforms['pentagon'].value = isBooleanTrue(this.pv.pentagon) ? 1 : 0;
+		pass.bokehUniforms['vignetting'].value = isBooleanTrue(this.pv.vignetting) ? 1 : 0;
+		pass.bokehUniforms['depthblur'].value = isBooleanTrue(this.pv.depthBlur) ? 1 : 0;
 
 		// debug
-		pass.bokeh_uniforms['shaderFocus'].value = 0;
-		pass.bokeh_uniforms['showFocus'].value = 0;
-		pass.bokeh_uniforms['manualdof'].value = 0;
-		pass.bokeh_uniforms['focusCoords'].value.set(0.5, 0.5);
+		pass.bokehUniforms['shaderFocus'].value = 0;
+		pass.bokehUniforms['showFocus'].value = 0;
+		pass.bokehUniforms['manualdof'].value = 0;
+		pass.bokehUniforms['focusCoords'].value.set(0.5, 0.5);
 
-		pass.bokeh_material.defines['RINGS'] = this.pv.rings;
-		pass.bokeh_material.defines['SAMPLES'] = this.pv.samples;
-		pass.bokeh_material.needsUpdate = true;
+		pass.bokehMaterial.defines['RINGS'] = this.pv.rings;
+		pass.bokehMaterial.defines['SAMPLES'] = this.pv.samples;
+		pass.bokehMaterial.needsUpdate = true;
 
-		pass.clear_color.copy(this.pv.clearColor);
+		pass.clearColor.copy(this.pv.clearColor);
 	}
 }

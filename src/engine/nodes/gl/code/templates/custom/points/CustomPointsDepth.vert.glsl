@@ -7,6 +7,9 @@ varying float vViewZDepth;
 // INSERT DEFINES
 
 
+// vHighPrecisionZW is added to match CustomMeshDepth.frag
+// which is itself taken from threejs
+varying vec2 vHighPrecisionZW;
 
 void main() {
 
@@ -22,6 +25,8 @@ void main() {
 		bool isPerspective = ( projectionMatrix[ 2 ][ 3 ] == - 1.0 );
 		if ( isPerspective ) gl_PointSize *= ( scale / - mvPosition.z );
 	#endif
+
+	vHighPrecisionZW = gl_Position.zw;
 
 }
 

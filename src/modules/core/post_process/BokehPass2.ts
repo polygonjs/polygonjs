@@ -9,9 +9,8 @@ import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LinearFilter} from 'three/src/constants';
 import {BokehShader, BokehDepthShader} from '../../three/examples/jsm/shaders/BokehShader2';
-
+import {TransformControls} from 'three/examples/jsm/controls/TransformControls';
 import {CoreScene} from '../../../core/geometry/Scene';
-
 import DepthInstanceVertex from './BokehPass2/DepthInstance.vert.glsl';
 import {IUniformN, IUniformTexture, IUniformV2} from '../../../engine/nodes/utils/code/gl/Uniforms';
 import {Vector2} from 'three/src/math/Vector2';
@@ -19,6 +18,7 @@ import {Color} from 'three/src/math/Color';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {DepthOfFieldPostNode} from '../../../engine/nodes/post/DepthOfField';
+import {Object3D} from 'three/src/core/Object3D';
 
 interface BokehUniforms {
 	tColor: IUniformTexture;
@@ -66,39 +66,40 @@ interface BokehShaderMaterial extends ShaderMaterial {
 	};
 }
 
+const DEBUG_DISPLAY_DEPTH = false;
 export class BokehPass2 {
-	private _core_scene: CoreScene;
+	private _coreScene: CoreScene;
 	private materialDepth: ShaderMaterial;
 	private materialDepthInstance: ShaderMaterial;
-	private _camera_uniforms: CameraUniforms = {mNear: {value: 0}, mFar: {value: 0}};
+	private _cameraUniforms: CameraUniforms = {mNear: {value: 0}, mFar: {value: 0}};
 	// pass attributes
 	public enabled: boolean = true;
 	public needsSwap: boolean = true;
 	public clear: boolean = true;
 	public renderToScreen: boolean = true;
 	// processing
-	private _processing_scene: Scene = new Scene();
-	private _processing_camera: OrthographicCamera;
+	private _processingScene: Scene = new Scene();
+	private _processingCamera: OrthographicCamera;
 	private _rtTextureDepth: WebGLRenderTarget;
 	private _rtTextureColor: WebGLRenderTarget;
-	public bokeh_uniforms: BokehUniforms;
-	public bokeh_material: BokehShaderMaterial;
+	public bokehUniforms: BokehUniforms;
+	public bokehMaterial: BokehShaderMaterial;
 	private _quad: Mesh;
-	public clear_color = new Color(1, 1, 1);
+	public clearColor = new Color(1, 1, 1);
 
 	constructor(
-		private _depth_of_field_node: DepthOfFieldPostNode,
+		private _depthIfFieldNode: DepthOfFieldPostNode,
 		private _scene: Scene,
 		private _camera: PerspectiveCamera,
 		private _resolution: Vector2
 	) {
-		this._core_scene = new CoreScene(this._scene);
+		this._coreScene = new CoreScene(this._scene);
 		const shaderSettings = {
 			rings: 3,
 			samples: 4,
 		};
 
-		this._processing_camera = new OrthographicCamera(
+		this._processingCamera = new OrthographicCamera(
 			this._resolution.x / -2,
 			this._resolution.x / 2,
 			this._resolution.y / 2,
@@ -106,39 +107,39 @@ export class BokehPass2 {
 			-10000,
 			10000
 		);
-		this._processing_camera.position.z = 100;
+		this._processingCamera.position.z = 100;
 
-		this._processing_scene.add(this._processing_camera);
+		this._processingScene.add(this._processingCamera);
 
 		var pars = {minFilter: LinearFilter, magFilter: LinearFilter, format: RGBFormat};
 		this._rtTextureDepth = new WebGLRenderTarget(this._resolution.x, this._resolution.y, pars);
 		this._rtTextureColor = new WebGLRenderTarget(this._resolution.x, this._resolution.y, pars);
 
-		var bokeh_shader = BokehShader;
-		if (!bokeh_shader) {
+		const bokehShader = BokehShader;
+		if (!bokehShader) {
 			console.error('BokehPass relies on BokehShader');
 		}
 
-		this.bokeh_uniforms = UniformsUtils.clone(bokeh_shader.uniforms);
+		this.bokehUniforms = UniformsUtils.clone(bokehShader.uniforms);
 
-		this.bokeh_uniforms['tColor'].value = this._rtTextureColor.texture;
-		this.bokeh_uniforms['tDepth'].value = this._rtTextureDepth.texture;
-		this.bokeh_uniforms['textureWidth'].value = this._resolution.x;
-		this.bokeh_uniforms['textureHeight'].value = this._resolution.y;
+		this.bokehUniforms['tColor'].value = this._rtTextureColor.texture;
+		this.bokehUniforms['tDepth'].value = this._rtTextureDepth.texture;
+		this.bokehUniforms['textureWidth'].value = this._resolution.x;
+		this.bokehUniforms['textureHeight'].value = this._resolution.y;
 
-		this.bokeh_material = new ShaderMaterial({
-			uniforms: this.bokeh_uniforms,
-			vertexShader: bokeh_shader.vertexShader,
-			fragmentShader: bokeh_shader.fragmentShader,
+		this.bokehMaterial = new ShaderMaterial({
+			uniforms: this.bokehUniforms,
+			vertexShader: bokehShader.vertexShader,
+			fragmentShader: bokehShader.fragmentShader,
 			defines: {
 				RINGS: shaderSettings.rings,
 				SAMPLES: shaderSettings.samples,
 			},
 		}) as BokehShaderMaterial;
 
-		this._quad = new Mesh(new PlaneBufferGeometry(this._resolution.x, this._resolution.y), this.bokeh_material);
+		this._quad = new Mesh(new PlaneBufferGeometry(this._resolution.x, this._resolution.y), this.bokehMaterial);
 		this._quad.position.z = -500;
-		this._processing_scene.add(this._quad);
+		this._processingScene.add(this._quad);
 
 		// depth shader
 		var depthShader = BokehDepthShader;
@@ -159,15 +160,15 @@ export class BokehPass2 {
 			fragmentShader: depthShader.fragmentShader,
 		});
 
-		this.update_camera_uniforms_with_node(this._depth_of_field_node, this._camera);
+		this.updateCameraUniformsWithNode(this._depthIfFieldNode, this._camera);
 	}
 
 	setSize(width: number, height: number) {
 		this._rtTextureDepth.setSize(width, height);
 		this._rtTextureColor.setSize(width, height);
 
-		this.bokeh_uniforms['textureWidth'].value = width;
-		this.bokeh_uniforms['textureHeight'].value = height;
+		this.bokehUniforms['textureWidth'].value = width;
+		this.bokehUniforms['textureHeight'].value = height;
 	}
 
 	dispose() {
@@ -175,11 +176,10 @@ export class BokehPass2 {
 		this._rtTextureColor.dispose();
 	}
 
-	private _prev_clear_color = new Color();
+	private _prevClearColor = new Color();
 	render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
-		const debug_display_depth = false;
-		renderer.getClearColor(this._prev_clear_color);
-		renderer.setClearColor(this.clear_color);
+		renderer.getClearColor(this._prevClearColor);
+		renderer.setClearColor(this.clearColor);
 
 		// TODO: try and make this work so it can be combined with other POST nodes
 		// check how ShaderPass.js has implemented it
@@ -192,13 +192,15 @@ export class BokehPass2 {
 		renderer.render(this._scene, this._camera);
 		renderer.setClearColor(0x000000); // cancels the bg color
 
+		this._removeTransformControlsFromScene();
+
 		// render depth into texture
-		this._core_scene.with_overriden_material(
+		this._coreScene.withOverridenMaterial(
 			this.materialDepth,
 			this.materialDepthInstance,
-			this._camera_uniforms,
+			this._cameraUniforms,
 			() => {
-				if (debug_display_depth) {
+				if (DEBUG_DISPLAY_DEPTH) {
 					renderer.setRenderTarget(null);
 				} else {
 					renderer.setRenderTarget(this._rtTextureDepth);
@@ -209,34 +211,72 @@ export class BokehPass2 {
 		);
 		// render bokeh composite
 
-		if (!debug_display_depth) {
+		if (!DEBUG_DISPLAY_DEPTH) {
 			renderer.setRenderTarget(null);
 			renderer.clear();
-			renderer.render(this._processing_scene, this._processing_camera);
+			renderer.render(this._processingScene, this._processingCamera);
 		}
 
-		renderer.setClearColor(this._prev_clear_color);
+		this._restoreTransformControls();
+
+		renderer.setClearColor(this._prevClearColor);
 	}
 
-	update_camera_uniforms_with_node(node: DepthOfFieldPostNode, camera: PerspectiveCamera) {
+	updateCameraUniformsWithNode(node: DepthOfFieldPostNode, camera: PerspectiveCamera) {
 		// from camera
-		this.bokeh_uniforms['focalLength'].value = camera.getFocalLength();
-		this.bokeh_uniforms['znear'].value = camera.near;
-		this.bokeh_uniforms['zfar'].value = camera.far;
+		this.bokehUniforms['focalLength'].value = camera.getFocalLength();
+		this.bokehUniforms['znear'].value = camera.near;
+		this.bokehUniforms['zfar'].value = camera.far;
 
 		// focal length
 		var sdistance = DepthOfFieldPostNode.smoothstep(camera.near, camera.far, node.pv.focalDepth);
 		var ldistance = DepthOfFieldPostNode.linearize(1 - sdistance, camera.near, camera.far);
-		this.bokeh_uniforms['focalDepth'].value = ldistance; //this._param_focal_depth
+		this.bokehUniforms['focalDepth'].value = ldistance; //this._param_focal_depth
 
 		// depth materials
-		this._camera_uniforms = {
+		this._cameraUniforms = {
 			mNear: {value: camera.near},
 			mFar: {value: camera.far},
 		};
 		for (let material of [this.materialDepth, this.materialDepthInstance]) {
-			material.uniforms['mNear'].value = this._camera_uniforms['mNear'].value;
-			material.uniforms['mFar'].value = this._camera_uniforms['mFar'].value;
+			material.uniforms['mNear'].value = this._cameraUniforms['mNear'].value;
+			material.uniforms['mFar'].value = this._cameraUniforms['mFar'].value;
 		}
+	}
+
+	// private _hiddenObjects: Set<Object3D> = new Set();
+	private _previousParent: Map<Object3D, Object3D> = new Map();
+	// private _previousMatrixAutoUpdate: WeakMap<Object3D, boolean> = new WeakMap();
+	private _removeTransformControlsFromScene() {
+		// this._hiddenObjects.clear();
+		this._coreScene.scene().traverse((object) => {
+			if (object instanceof TransformControls) {
+				const parent = object.parent;
+				if (parent) {
+					this._previousParent.set(object, parent);
+				}
+				// this._hiddenObjects.add(object);
+				// this._previousMatrixAutoUpdate.set(object, object.matrixAutoUpdate);
+				// object.visible = false;
+				// object.matrixAutoUpdate = false;
+			}
+		});
+		this._previousParent.forEach((parent, object) => {
+			parent.remove(object);
+		});
+	}
+	private _restoreTransformControls() {
+		this._previousParent.forEach((parent, object) => {
+			parent.add(object);
+		});
+
+		// this._hiddenObjects.forEach((object) => {
+		// 	object.visible = true;
+		// 	const previousMatrixAutoUpdate = this._previousMatrixAutoUpdate.get(object);
+		// 	if (previousMatrixAutoUpdate != null) {
+		// 		object.matrixAutoUpdate = previousMatrixAutoUpdate;
+		// 	}
+		// });
+		this._previousParent.clear();
 	}
 }

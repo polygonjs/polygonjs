@@ -8,9 +8,10 @@ import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {GlobalsGeometryHandler} from '../../globals/Geometry';
 
-// import {ShaderAssemblerCustomMeshDepth} from './CustomMeshDepth';
+import {ShaderAssemblerCustomLineDepth} from './custom/line/CustomLineDepth';
+import {ShaderAssemblerCustomLineDistance} from './custom/line/CustomLineDistance';
 // import {ShaderAssemblerCustomMeshDistance} from './CustomMeshDistance';
-import {ShaderAssemblerCustomLineDepthDOF} from './CustomLineDepthDOF';
+// import {ShaderAssemblerCustomLineDepthDOF} from './CustomLineDepthDOF';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
@@ -21,9 +22,13 @@ const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth],
 	// [CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF],
 ]);
-// ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDepth);
-// ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDistance);
-ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomLineDepthDOF);
+ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomLineDistance);
+ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomLineDepth);
+// ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomLineDepthDOF);
+if (false) {
+	// ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance);
+	// ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomLineDepthDOF);
+}
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 	[ShaderName.VERTEX, ['#include <begin_vertex>', '#include <project_vertex>']],
 	[ShaderName.FRAGMENT, []],

@@ -13,9 +13,6 @@ import {Object3D} from 'three/src/core/Object3D';
 interface Uniforms {
 	[propName: string]: IUniform;
 }
-interface MaterialsByString {
-	[propName: string]: Material;
-}
 
 export class CoreScene {
 	constructor(private _scene: Scene) {}
@@ -24,40 +21,39 @@ export class CoreScene {
 		return this._scene;
 	}
 
-	with_overriden_material(
-		base_material: Material,
-		instance_material: Material,
+	private _originalMaterialByObjectId: Map<string, Material | Material[]> = new Map();
+	withOverridenMaterial(
+		baseMaterial: Material,
+		instanceMaterial: Material,
 		uniforms: Uniforms,
 		callback: () => void
 	) {
-		const original_material_by_object_id: MaterialsByString = {};
-		let assigned_material: MaterialWithUniforms;
+		let assignedMaterial: MaterialWithUniforms;
 
 		this._scene.traverse((object3d: Object3D) => {
 			const object = object3d as ObjectWithCustomMaterials;
 			if (object.material) {
 				const geometry = object.geometry as BufferGeometry;
 				if (geometry) {
-					// console.log(object, object.customMaterials)
-					const custom_dof_material = object.customDepthDOFMaterial;
-					if (custom_dof_material) {
-						assigned_material = custom_dof_material as MaterialWithUniforms;
-						if (assigned_material.uniforms) {
+					const customDOPMaterial = object.customDepthDOFMaterial;
+					if (customDOPMaterial) {
+						assignedMaterial = customDOPMaterial as MaterialWithUniforms;
+						if (assignedMaterial.uniforms) {
 							for (let k of Object.keys(uniforms)) {
-								assigned_material.uniforms[k].value = uniforms[k].value;
+								assignedMaterial.uniforms[k].value = uniforms[k].value;
 							}
 						}
 					} else {
 						if (CoreGeometry.markedAsInstance(geometry)) {
-							assigned_material = instance_material as MaterialWithUniforms;
+							assignedMaterial = instanceMaterial as MaterialWithUniforms;
 						} else {
-							assigned_material = base_material as MaterialWithUniforms;
+							assignedMaterial = baseMaterial as MaterialWithUniforms;
 						}
 					}
 
-					if (assigned_material) {
-						original_material_by_object_id[object.uuid] = object.material as Material;
-						object.material = assigned_material;
+					if (assignedMaterial) {
+						this._originalMaterialByObjectId.set(object.uuid, object.material);
+						object.material = assignedMaterial;
 					}
 
 					// if( CoreGeometry.markedAsInstance(geometry) ){
@@ -76,13 +72,14 @@ export class CoreScene {
 			if (object.material) {
 				const geometry = object.geometry;
 				if (geometry) {
-					object.material = original_material_by_object_id[object.uuid];
+					const mat = this._originalMaterialByObjectId.get(object.uuid);
+					if (mat) {
+						object.material = mat;
+					}
 				}
 			}
 		});
 
-		for (let key of Object.keys(original_material_by_object_id)) {
-			delete original_material_by_object_id[key];
-		}
+		this._originalMaterialByObjectId.clear();
 	}
 }

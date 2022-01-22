@@ -18,9 +18,9 @@ import {BaseGlNodeType} from '../../../_Base';
 // import {GlobalsGeometryHandler} from './Globals/Geometry'
 
 export enum CustomMaterialName {
-	DISTANCE = 'customDistanceMaterial',
-	DEPTH = 'customDepthMaterial',
-	DEPTH_DOF = 'customDepthDOFMaterial',
+	DISTANCE = 'customDistanceMaterial', // for point lights
+	DEPTH = 'customDepthMaterial', // for spot lights and directional
+	DEPTH_DOF = 'customDepthDOFMaterial', // for post/bokeh only (see in scene.)
 }
 // export type ShaderAssemblerRenderDerivated = {new (node: BaseNodeType): ShaderAssemblerRender};
 // type ShaderAssemblerRenderDerivatedClass = new (...args: any[]) => ShaderAssemblerRender;

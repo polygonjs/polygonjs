@@ -467,24 +467,25 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		const line_before_body = this.insert_body_after(shader_name);
 		const lines_to_remove = this.lines_to_remove(shader_name);
 		let line_before_define_found = false;
-		let line_before_body_found = false;
+		let lineBeforeBodyFoundOnPreviousLine = false;
+		let lineBeforeBodyFound = false;
 
 		for (let template_line of template_lines) {
 			if (line_before_define_found == true) {
 				if (function_declaration) {
-					this._insert_lines(new_lines, function_declaration);
+					this._insertLines(new_lines, function_declaration);
 				}
 				if (define) {
-					this._insert_lines(new_lines, define);
+					this._insertLines(new_lines, define);
 				}
 				line_before_define_found = false;
 			}
-			if (line_before_body_found == true) {
+			if (lineBeforeBodyFoundOnPreviousLine == true) {
 				// this._insert_default_body_declarations(new_lines, shader_name)
 				if (body) {
-					this._insert_lines(new_lines, body);
+					this._insertLines(new_lines, body);
 				}
-				line_before_body_found = false;
+				lineBeforeBodyFoundOnPreviousLine = false;
 			}
 
 			let line_remove_required = false;
@@ -507,7 +508,8 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 				line_before_define_found = true;
 			}
 			if (line_before_body && template_line.indexOf(line_before_body) >= 0) {
-				line_before_body_found = true;
+				lineBeforeBodyFoundOnPreviousLine = true;
+				lineBeforeBodyFound = true;
 			}
 
 			// if(template_line.indexOf('// INSERT DEFINE') >= 0){
@@ -527,6 +529,14 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			// 	}
 			// }
 		}
+		if (line_before_body) {
+			if (!lineBeforeBodyFound) {
+				console.warn(`line '${line_before_body}' was not found in shader '${shader_name}'`, template, this);
+			} else {
+				// console.log(`OK: line '${line_before_body}' was found in shader '${shader_name}'`, template, this);
+			}
+		}
+
 		this._lines.set(shader_name, new_lines);
 	}
 
@@ -534,18 +544,18 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// 	new_lines.push('float POLY_roughness = 1.0;')
 	// }
 
-	private _insert_lines(new_lines: string[], lines_to_add: string[]) {
-		if (lines_to_add.length > 0) {
-			for (let i = 0; i < SPACED_LINES; i++) {
-				new_lines.push('');
-			}
-
-			for (let line_to_add of lines_to_add) {
-				new_lines.push(line_to_add);
-			}
-			for (let i = 0; i < SPACED_LINES; i++) {
-				new_lines.push('');
-			}
+	private _insertLines(newLines: string[], linesToAdd: string[]) {
+		if (linesToAdd.length == 0) {
+			return;
+		}
+		for (let i = 0; i < SPACED_LINES; i++) {
+			newLines.push('');
+		}
+		for (let lineToAdd of linesToAdd) {
+			newLines.push(lineToAdd);
+		}
+		for (let i = 0; i < SPACED_LINES; i++) {
+			newLines.push('');
 		}
 	}
 

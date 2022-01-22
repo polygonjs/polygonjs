@@ -1,17 +1,17 @@
 import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName} from './_BaseMaterial';
 
-import {ShaderAssemblerCustomMeshDistance} from './CustomMeshDistance';
-import {ShaderAssemblerCustomMeshDepth} from './CustomMeshDepth';
-import {ShaderAssemblerCustomMeshDepthDOF} from './CustomMeshDepthDOF';
+import {ShaderAssemblerCustomMeshDistance} from './custom/mesh/CustomMeshDistance';
+import {ShaderAssemblerCustomMeshDepth} from './custom/mesh/CustomMeshDepth';
+import {ShaderAssemblerCustomMeshDepthDOF} from './custom/mesh/CustomMeshDepthDOF';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance],
 	// [CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth],
 	// [CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF],
 ]);
-ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth); // for spot lights and directional
 ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance); // for point lights
-ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF); // for ??? (would it be DOF post effect?)
+ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth); // for spot lights and directional
+ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF); // for CoreScene.withOverridenMaterial
 
 export abstract class ShaderAssemblerMesh extends ShaderAssemblerMaterial {
 	// TODO: I've noticed a case where instances would not display when those shadow shaders were exported

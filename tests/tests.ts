@@ -159,6 +159,7 @@ import './engine/nodes/obj/SpotLight';
 
 QUnit.module('post');
 import './engine/nodes/post/Base';
+import './engine/nodes/post/DepthOfField';
 
 QUnit.module('sop');
 import './engine/nodes/sop/Add';
@@ -263,3 +264,4 @@ QUnit.module('viewer');
 import './engine/viewers/Callbacks';
 import './engine/viewers/Controls';
 import './engine/viewers/Events';
+import './engine/viewers/Shadows';

@@ -4,23 +4,24 @@ import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {RGBADepthPacking} from 'three/src/constants';
 import {BasicDepthPacking} from 'three/src/constants';
 
-import {ShaderAssemblerMaterial} from './_BaseMaterial';
-import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
+import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
+
+import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepth.frag.glsl';
 
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	[ShaderName.VERTEX, '#include <begin_vertex>'],
-	[ShaderName.FRAGMENT, 'vec4 diffuseColor = vec4( 1.0 );'],
+	[ShaderName.FRAGMENT, '// INSERT BODY'],
 ]);
 
-export class ShaderAssemblerCustomMeshDistance extends ShaderAssemblerMaterial {
+export class ShaderAssemblerCustomMeshDepth extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'vec4 diffuseColor' }
 	// _template_shader(){ return ShaderLib.standard }
-
 	templateShader() {
-		const template = ShaderLib.distanceRGBA;
+		const template = ShaderLib.depth;
 		return {
 			vertexShader: template.vertexShader, //TemplateVertex,
-			fragmentShader: template.fragmentShader, //TemplateFragment,
+			fragmentShader: TemplateFragment,
 			uniforms: template.uniforms,
 		};
 	}

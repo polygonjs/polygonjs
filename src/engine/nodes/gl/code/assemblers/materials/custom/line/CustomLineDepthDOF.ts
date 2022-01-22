@@ -4,17 +4,16 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 // import {RGBADepthPacking} from 'three/src/constants';
 // import {BasicDepthPacking} from 'three/src/constants';
 
-import {ShaderAssemblerMaterial} from './_BaseMaterial';
+import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
 
-import TemplateVertex from '../../templates/CustomMeshDepthDOF.vert.glsl';
-import TemplateFragment from '../../templates/CustomMeshDepthDOF.frag.glsl';
-import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import TemplateVertex from '../../../../templates/custom/line/CustomLineDepthDOF.vert.glsl';
+import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepthDOF.frag.glsl';
+import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
 
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([[ShaderName.VERTEX, '// INSERT DEFINES']]);
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([[ShaderName.VERTEX, '// INSERT BODY']]);
-// fragment: 'vec4 diffuseColor = vec4( 1.0 );' // do not change? unless there is a texture lookup
 
-export class ShaderAssemblerCustomMeshDepthDOF extends ShaderAssemblerMaterial {
+export class ShaderAssemblerCustomLineDepthDOF extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'vec4 diffuseColor' }
 	// _template_shader(){ return ShaderLib.standard }
 	templateShader() {
@@ -22,6 +21,7 @@ export class ShaderAssemblerCustomMeshDepthDOF extends ShaderAssemblerMaterial {
 			vertexShader: TemplateVertex,
 			fragmentShader: TemplateFragment,
 			uniforms: {
+				scale: {value: 1},
 				mNear: {value: 0},
 				mFar: {value: 10},
 			},
@@ -40,6 +40,8 @@ export class ShaderAssemblerCustomMeshDepthDOF extends ShaderAssemblerMaterial {
 			// defines: {
 			// 	DEPTH_PACKING: [RGBADepthPacking, BasicDepthPacking][0]
 			// },
+			depthTest: true,
+			linewidth: 100,
 
 			uniforms: UniformsUtils.clone(template_shader.uniforms),
 			vertexShader: template_shader.vertexShader,
