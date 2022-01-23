@@ -14,6 +14,8 @@ QUnit.test('blend obj simple', async (assert) => {
 
 	await scene.waitForCooksCompleted();
 
+	// move camera so that blend node is in the frustum
+	// and its .onBeforeRender is called
 	window.perspective_camera1.p.t.z.set(100);
 	window.perspective_camera1.p.far.set(1000);
 
