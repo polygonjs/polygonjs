@@ -54,12 +54,12 @@ export class TransformSopOperation extends BaseSopOperation {
 	}
 
 	private _coreTransform = new CoreTransform();
-	cook(input_contents: CoreGroup[], params: TransformSopParams) {
-		const objects = input_contents[0].objects();
+	cook(inputCoreGroups: CoreGroup[], params: TransformSopParams) {
+		const objects = inputCoreGroups[0].objects();
 
 		this._applyTransform(objects, params);
 
-		return input_contents[0];
+		return inputCoreGroups[0];
 	}
 	private _applyTransform(objects: Object3D[], params: TransformSopParams) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];

@@ -1,6 +1,13 @@
 /**
  * Creates a plane with a distorted reflection, to simulate an ocean surface
  *
+ * @remarks
+ *
+ * Without any input, this node creates a very large plane.
+ * If you would like the ocean to be restricted to a smaller area, such as a disk,
+ * you can plug in an input geometry. Just make sure that this geometry should be facing the z axis,
+ * as it will currently be rotated internally to face the y axis. Note that this behavior may change in the future
+ * to be made more intuitive.
  *
  */
 
@@ -14,6 +21,8 @@ import {NodeContext} from '../../poly/NodeContext';
 const DEFAULT = OceanPlaneSopOperation.DEFAULT_PARAMS;
 
 class OceanPlaneSopParamsConfig extends NodeParamsConfig {
+	/** @param reflection direction */
+	direction = ParamConfig.VECTOR3(DEFAULT.direction.toArray());
 	/** @param sun direction */
 	sunDirection = ParamConfig.VECTOR3(DEFAULT.sunDirection.toArray());
 	/** @param sun color */
@@ -53,7 +62,7 @@ export class OceanPlaneSopNode extends TypedSopNode<OceanPlaneSopParamsConfig> {
 	}
 
 	initializeNode() {
-		this.io.inputs.setCount(0);
+		this.io.inputs.setCount(1);
 	}
 
 	private _operation: OceanPlaneSopOperation | undefined;

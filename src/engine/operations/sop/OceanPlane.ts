@@ -4,14 +4,16 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Color} from 'three/src/math/Color';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreTransform} from '../../../core/Transform';
-import {PlaneGeometry} from 'three/src/geometries/PlaneGeometry';
+// import {PlaneGeometry} from 'three/src/geometries/PlaneGeometry';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {Water, WaterOptions} from '../../../modules/core/objects/Water';
+import {TransformResetMode, TransformResetSopOperation, TRANSFORM_RESET_MODES} from './TransformReset';
 interface OceanPlaneSopParams extends DefaultOperationParams {
+	direction: Vector3;
 	sunDirection: Vector3;
 	sunColor: Color;
 	waterColor: Color;
@@ -38,6 +40,7 @@ const DEFAULT_PARAMS = {
 
 export class OceanPlaneSopOperation extends BaseSopOperation {
 	static readonly DEFAULT_PARAMS: OceanPlaneSopParams = {
+		direction: new Vector3(0, 1, 0),
 		sunDirection: new Vector3(1, 1, 1),
 		sunColor: new Color(1, 1, 1),
 		waterColor: new Color(0x001e0f),
@@ -52,75 +55,82 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 		return 'oceanPlane';
 	}
 
+	private _transformResetOptions: TransformResetSopOperation | undefined;
 	protected _coreTransform = new CoreTransform();
 	async cook(inputCoreGroups: CoreGroup[], params: OceanPlaneSopParams) {
+		this._transformResetOptions = this._transformResetOptions || new TransformResetSopOperation(this._scene);
+		const transformResetMode = TRANSFORM_RESET_MODES.indexOf(TransformResetMode.PROMOTE_GEO_TO_OBJECT);
+		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});
+
 		const renderer = await Poly.renderersController.waitForRenderer();
 		if (!renderer) {
 			console.warn('no renderer found');
 			return this.createCoreGroupFromObjects([]);
 		}
 
+		const objects = inputCoreGroup.objectsWithGeo();
+		const waterObjects: Water[] = [];
 		const scene = this.scene().threejsScene();
-		const waterOptions: WaterOptions = {scene, renderer, ...params, ...DEFAULT_PARAMS};
-		const water = this._water(waterOptions);
-		const material = water.material;
-		material.uniforms.sunDirection.value.copy(params.sunDirection);
-		material.uniforms.sunColor.value.copy(params.sunColor);
-		material.uniforms.waterColor.value.copy(params.waterColor);
-		material.uniforms.distortionScale.value = params.distortionScale;
-		material.uniforms.timeScale.value = params.timeScale;
-		material.uniforms.size.value = params.size;
+		for (let object of objects) {
+			Water.rotateGeometry(object.geometry, params.direction);
+			const waterOptions: WaterOptions = {scene, renderer, ...params, ...DEFAULT_PARAMS};
+			// const water = this._water(waterOptions, inputCoreGroup);
+			const water = new Water(object.geometry, waterOptions);
+			waterObjects.push(water);
+			// since the object currently needs to be rotated for reflections to work
+			// any input geometry should be facing the z axis.
+			//
+			// water.rotation.x = -Math.PI / 2;
+			water.matrixAutoUpdate = false;
+			water.position.copy(object.position);
+			water.rotation.copy(object.rotation);
+			water.scale.copy(object.scale);
+			water.updateMatrix();
+			Water.compensateGeometryRotation(water, params.direction);
+			//
 
-		water.setReflectionActive(isBooleanTrue(params.renderReflection));
+			// water.updateMatrix();
+			// water.matrixAutoUpdate = false;
+			this.scene().uniformsController.addTimeDependentUniformOwner(
+				`oceanPlane-${water.uuid}`,
+				water.material.uniforms as IUniformsWithTime
+			);
+			const material = water.material;
+			material.uniforms.direction.value.copy(params.direction);
+			material.uniforms.sunDirection.value.copy(params.sunDirection);
+			material.uniforms.sunColor.value.copy(params.sunColor);
+			material.uniforms.waterColor.value.copy(params.waterColor);
+			material.uniforms.distortionScale.value = params.distortionScale;
+			material.uniforms.timeScale.value = params.timeScale;
+			material.uniforms.size.value = params.size;
 
-		const normalsNode = params.normals.nodeWithContext(NodeContext.COP, this.states?.error);
-		if (normalsNode) {
-			if (normalsNode.isDirty()) {
-				await normalsNode.compute();
+			water.setReflectionActive(isBooleanTrue(params.renderReflection));
+
+			const normalsNode = params.normals.nodeWithContext(NodeContext.COP, this.states?.error);
+			if (normalsNode) {
+				if (normalsNode.isDirty()) {
+					await normalsNode.compute();
+				}
+				const texture = normalsNode.containerController.container().texture();
+				material.uniforms.normalSampler.value = texture;
+			} else {
+				material.uniforms.normalSampler.value = null;
 			}
-			const texture = normalsNode.containerController.container().texture();
-			material.uniforms.normalSampler.value = texture;
-		} else {
-			material.uniforms.normalSampler.value = null;
 		}
-		// this._coreTransform.rotateGeometry(object.geometry, params.direction, DEFAULT_UP);
-		// const water = new Water(waterGeometry, {
-		// 	textureWidth: 512,
-		// 	textureHeight: 512,
-		// 	waterNormals: new TextureLoader().load('/clients/me/waternormals.jpg', function (texture) {
-		// 		console.log(texture);
-		// 		texture.wrapS = texture.wrapT = RepeatWrapping;
-		// 	}),
-		// 	sunDirection: new Vector3(),
-		// 	sunColor: 0xffffff,
-		// 	waterColor: 0x001e0f,
-		// 	distortionScale: 3.7,
-		// 	// fog: scene.fog !== undefined
-		// });
-		// water.rotation.x = -Math.PI / 2;
-		// water.updateMatrix();
-		// water.matrixAutoUpdate = false;
-		// this._coreTransform.rotateObject(reflector, DEFAULT_UP, params.direction);
 
-		return this.createCoreGroupFromObjects([water]);
+		return this.createCoreGroupFromObjects(waterObjects);
 	}
 
-	private __water__: Water | undefined;
-	private _water(params: WaterOptions) {
-		return (this.__water__ = this.__water__ || this._createWaterObject(params));
-	}
-	private _createWaterObject(params: WaterOptions) {
-		const waterGeometry = new PlaneGeometry(10000, 10000);
-		const water = new Water(waterGeometry, params);
-		water.rotation.x = -Math.PI / 2;
-		// water.updateMatrix();
-		// water.matrixAutoUpdate = false;
+	// private __water__: Water | undefined;
+	// private _water(params: WaterOptions, coreGroup?: CoreGroup) {
+	// 	// return (this.__water__ = this.__water__ || this._createWaterObject(params, coreGroup));
+	// 	return this._createWaterObject(params, coreGroup);
+	// }
+	// private _createWaterObject(params: WaterOptions, coreGroup?: CoreGroup) {
+	// 	let waterGeometry = coreGroup ? coreGroup.geometries()[0] : null;
+	// 	waterGeometry = waterGeometry || new PlaneGeometry(10000, 10000);
+	// 	const water = new Water(waterGeometry, params);
 
-		this.scene().uniformsController.addTimeDependentUniformOwner(
-			`oceanPlane-${water.uuid}`,
-			water.material.uniforms as IUniformsWithTime
-		);
-
-		return water;
-	}
+	// 	return water;
+	// }
 }

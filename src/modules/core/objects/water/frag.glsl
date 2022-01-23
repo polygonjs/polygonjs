@@ -9,9 +9,11 @@ uniform vec3 sunColor;
 uniform vec3 sunDirection;
 uniform vec3 eye;
 uniform vec3 waterColor;
+uniform vec3 direction;
 
 varying vec4 mirrorCoord;
 varying vec4 worldPosition;
+varying vec2 geoUV;
 
 vec4 getNoise( vec2 uv ) {
 	float t = time * timeScale;
@@ -26,12 +28,15 @@ vec4 getNoise( vec2 uv ) {
 	return noise * 0.5 - 1.0;
 }
 
+
 void sunLight( const vec3 surfaceNormal, const vec3 eyeDirection, float shiny, float spec, float diffuse, inout vec3 diffuseColor, inout vec3 specularColor ) {
 	vec3 reflection = normalize( reflect( -sunDirection, surfaceNormal ) );
 	float direction = max( 0.0, dot( eyeDirection, reflection ) );
 	specularColor += pow( direction, shiny ) * sunColor * spec;
 	diffuseColor += max( dot( sunDirection, surfaceNormal ), 0.0 ) * sunColor * diffuse;
 }
+
+
 
 #include <common>
 #include <packing>
@@ -45,7 +50,7 @@ void sunLight( const vec3 surfaceNormal, const vec3 eyeDirection, float shiny, f
 void main() {
 
 	#include <logdepthbuf_fragment>
-	vec4 noise = getNoise( worldPosition.xz * size );
+	vec4 noise = getNoise( geoUV * size );
 	vec3 surfaceNormal = normalize( noise.xzy * vec3( 1.5, 1.0, 1.5 ) );
 
 	vec3 diffuseLight = vec3(0.0);

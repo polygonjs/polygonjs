@@ -6,7 +6,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Reflector} from '../../../modules/core/objects/Reflector';
 import {Poly} from '../../Poly';
 import {Vector3} from 'three/src/math/Vector3';
-import {CoreTransform} from '../../../core/Transform';
+import {TransformResetSopOperation, TRANSFORM_RESET_MODES, TransformResetMode} from './TransformReset';
 interface ReflectorSopParams extends DefaultOperationParams {
 	direction: Vector3;
 	active: boolean;
@@ -46,9 +46,11 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		return 'reflector';
 	}
 
-	private _coreTransform = new CoreTransform();
-	async cook(input_contents: CoreGroup[], params: ReflectorSopParams) {
-		const input_core_group = input_contents[0];
+	private _transformResetOptions: TransformResetSopOperation | undefined;
+	async cook(inputCoreGroups: CoreGroup[], params: ReflectorSopParams) {
+		this._transformResetOptions = this._transformResetOptions || new TransformResetSopOperation(this._scene);
+		const transformResetMode = TRANSFORM_RESET_MODES.indexOf(TransformResetMode.PROMOTE_GEO_TO_OBJECT);
+		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});
 
 		const reflectors: Reflector[] = [];
 		const renderer = await Poly.renderersController.waitForRenderer();
@@ -56,10 +58,10 @@ export class ReflectorSopOperation extends BaseSopOperation {
 			return this.createCoreGroupFromObjects(reflectors);
 		}
 
-		const objects = input_core_group.objectsWithGeo();
+		const objects = inputCoreGroup.objectsWithGeo();
 
 		for (let object of objects) {
-			this._coreTransform.rotateGeometry(object.geometry, params.direction, DEFAULT_UP);
+			Reflector.rotateGeometry(object.geometry, params.direction);
 			const reflector = new Reflector(object.geometry, {
 				clipBias: params.clipBias,
 				renderer,
@@ -80,7 +82,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 			reflector.rotation.copy(object.rotation);
 			reflector.scale.copy(object.scale);
 			reflector.updateMatrix();
-			this._coreTransform.rotateObject(reflector, DEFAULT_UP, params.direction);
+			Reflector.compensateGeometryRotation(reflector, params.direction);
 			reflectors.push(reflector);
 		}
 

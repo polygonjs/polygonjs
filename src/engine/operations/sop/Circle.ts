@@ -7,6 +7,7 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreTransform} from '../../../core/Transform';
 import {CircleBufferGeometry} from 'three/src/geometries/CircleGeometry';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
 
 interface CircleSopParams extends DefaultOperationParams {
 	radius: number;
@@ -14,6 +15,7 @@ interface CircleSopParams extends DefaultOperationParams {
 	open: boolean;
 	arcAngle: number;
 	direction: Vector3;
+	center: Vector3;
 	connectLastPoint: boolean;
 }
 const DEFAULT_UP = new Vector3(0, 0, 1);
@@ -25,6 +27,7 @@ export class CircleSopOperation extends BaseSopOperation {
 		open: true,
 		arcAngle: 360,
 		direction: new Vector3(0, 1, 0),
+		center: new Vector3(0, 0, 0),
 		connectLastPoint: true,
 	};
 	static type(): Readonly<'circle'> {
@@ -41,17 +44,17 @@ export class CircleSopOperation extends BaseSopOperation {
 	}
 	private _createCircle(params: CircleSopParams) {
 		const geometry = CoreGeometryUtilCircle.create(params);
-
-		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
-
+		this._setCenterAndDirection(geometry, params);
 		return this.createCoreGroupFromGeometry(geometry, ObjectType.LINE_SEGMENTS);
 	}
 
 	private _createDisk(params: CircleSopParams) {
 		const geometry = new CircleBufferGeometry(params.radius, params.segments);
-
-		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
-
+		this._setCenterAndDirection(geometry, params);
 		return this.createCoreGroupFromGeometry(geometry);
+	}
+	private _setCenterAndDirection(geometry: BufferGeometry, params: CircleSopParams) {
+		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		geometry.translate(params.center.x, params.center.y, params.center.z);
 	}
 }

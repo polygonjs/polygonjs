@@ -118,24 +118,25 @@ export class CoreTransform {
 		return this._matrix;
 	}
 
-	private _rotate_geometry_m = new Matrix4();
-	private _rotate_geometry_q = new Quaternion();
-	private _rotate_geometry_vec_dest = new Vector3();
-	rotateGeometry(geometry: BufferGeometry, vec_origin: Vector3, vec_dest: Vector3) {
-		this._rotate_geometry_vec_dest.copy(vec_dest);
-		this._rotate_geometry_vec_dest.normalize();
-		this._rotate_geometry_q.setFromUnitVectors(vec_origin, this._rotate_geometry_vec_dest);
+	private _m = new Matrix4();
+	private _q = new Quaternion();
+	private _rotateDirOrigin = new Vector3();
+	private _rotateDirDest = new Vector3();
+	rotateGeometry(geometry: BufferGeometry, dirOrigin: Vector3, dirDest: Vector3) {
+		this._rotateDirDest.copy(dirDest).normalize();
+		this._rotateDirOrigin.copy(dirOrigin).normalize();
+		this._q.setFromUnitVectors(this._rotateDirOrigin, this._rotateDirDest);
 		// this._rotate_geometry_m.identity(); // not entirely sure this is necessary
-		this._rotate_geometry_m.makeRotationFromQuaternion(this._rotate_geometry_q);
-		geometry.applyMatrix4(this._rotate_geometry_m);
+		this._m.makeRotationFromQuaternion(this._q);
+		geometry.applyMatrix4(this._m);
 	}
-	rotateObject(object: Object3D, vec_origin: Vector3, vec_dest: Vector3) {
-		this._rotate_geometry_vec_dest.copy(vec_dest);
-		this._rotate_geometry_vec_dest.normalize();
-		this._rotate_geometry_q.setFromUnitVectors(vec_origin, this._rotate_geometry_vec_dest);
+	rotateObject(object: Object3D, dirOrigin: Vector3, dirDest: Vector3) {
+		this._rotateDirDest.copy(dirDest).normalize();
+		this._rotateDirOrigin.copy(dirOrigin).normalize();
+		this._q.setFromUnitVectors(this._rotateDirOrigin, this._rotateDirDest);
 		// this._rotate_geometry_m.identity(); // not entirely sure this is necessary
-		this._rotate_geometry_m.makeRotationFromQuaternion(this._rotate_geometry_q);
-		object.applyMatrix4(this._rotate_geometry_m);
+		this._m.makeRotationFromQuaternion(this._q);
+		object.applyMatrix4(this._m);
 		object.updateMatrix();
 	}
 

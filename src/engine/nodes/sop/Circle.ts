@@ -31,6 +31,8 @@ class CircleSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param direction of the axis perpendicular to the circle plane */
 	direction = ParamConfig.VECTOR3(DEFAULT.direction);
+	/** @param center */
+	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
 const ParamsConfig = new CircleSopParamsConfig();
 

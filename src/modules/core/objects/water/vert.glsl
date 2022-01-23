@@ -3,6 +3,7 @@ uniform float time;
 
 varying vec4 mirrorCoord;
 varying vec4 worldPosition;
+varying vec2 geoUV;
 
 #include <common>
 #include <fog_pars_vertex>
@@ -15,6 +16,7 @@ void main() {
 	mirrorCoord = textureMatrix * mirrorCoord;
 	vec4 mvPosition =  modelViewMatrix * vec4( position, 1.0 );
 	gl_Position = projectionMatrix * mvPosition;
+	geoUV = uv;
 
 	#include <beginnormal_vertex>
 	#include <defaultnormal_vertex>

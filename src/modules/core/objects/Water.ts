@@ -32,6 +32,7 @@ export interface WaterMaterial extends ShaderMaterial {
 		alpha: IUniformN;
 		time: IUniformN;
 		timeScale: IUniformN;
+		direction: IUniformV3;
 		// internals
 		mirrorSampler: IUniformTexture;
 		textureMatrix: {value: Matrix4};
@@ -88,6 +89,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 					textureMatrix: {value: new Matrix4()},
 					sunColor: {value: new Color(0x7f7f7f)},
 					sunDirection: {value: new Vector3(0.70707, 0.70707, 0)},
+					direction: {value: new Vector3().copy(BaseReflector.DEFAULT_UP)},
 					eye: {value: new Vector3()},
 					waterColor: {value: new Color(0x555555)},
 				},

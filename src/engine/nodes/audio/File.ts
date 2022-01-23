@@ -19,6 +19,10 @@ const LOOP_OPTIONS = {
 	},
 };
 
+type OnBeforePlayCallback = (offset: number) => void;
+type OnPlaySuccessCallback = () => void;
+type OnPlayErrorCallback = (err: unknown) => void;
+
 class FileAudioParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the audio file from */
 	url = ParamConfig.STRING('', {
@@ -174,15 +178,20 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 		if (!this._player) {
 			return;
 		}
-		const offset = this._stoppedAt;
-		if (isBooleanTrue(this.pv.updateCurrentTimeParam)) {
-			// using pv.currentTime is useful when reloading the page
-			// and still starting from where we were
-			this._player.start(0, this.pv.currentTime);
-		} else {
-			this._player.start(0, this._currentTime());
+		// const offset = this._stoppedAt;
+		// using pv.currentTime is useful when reloading the page
+		// and still starting from where we were
+		const offset = isBooleanTrue(this.pv.updateCurrentTimeParam) ? this.pv.currentTime : this._currentTime();
+		const sanitizedOffset = Math.max(offset, 0);
+		try {
+			this._runOnBeforePlayCallbacks(sanitizedOffset);
+			this._player.start(0, sanitizedOffset);
+			this._runOnPlaySuccessCallbacks();
+		} catch (err) {
+			console.error(err);
+			this._runOnPlayErrorCallbacks(err);
 		}
-		this._startedAt = this._player.now() - offset;
+		this._startedAt = this._player.now() - this._stoppedAt;
 		this._stoppedAt = 0;
 	}
 	async pause() {
@@ -201,6 +210,9 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 			return;
 		}
 		this._player.seek(0);
+		this._stoppedAt = 0;
+		this._startedAt = undefined;
+		this.p.currentTime.set(0);
 		this.play();
 	}
 	seekOffset(offset: number) {
@@ -299,5 +311,42 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	}
 	static PARAM_CALLBACK_restart(node: FileAudioNode) {
 		node.restart();
+	}
+
+	/*
+	 * HOOKS
+	 */
+	private _onBeforePlayCallbacks: Set<OnBeforePlayCallback> | undefined;
+	private _onPlaySuccessCallbacks: Set<OnPlaySuccessCallback> | undefined;
+	private _onPlayErrorCallbacks: Set<OnPlayErrorCallback> | undefined;
+	onBeforePlay(callback: OnBeforePlayCallback) {
+		this._onBeforePlayCallbacks = this._onBeforePlayCallbacks || new Set();
+		this._onBeforePlayCallbacks.add(callback);
+	}
+	private _runOnBeforePlayCallbacks(offset: number) {
+		if (!this._onBeforePlayCallbacks) {
+			return;
+		}
+		this._onBeforePlayCallbacks.forEach((callback) => callback(offset));
+	}
+	onPlaySuccess(callback: OnPlaySuccessCallback) {
+		this._onPlaySuccessCallbacks = this._onPlaySuccessCallbacks || new Set();
+		this._onPlaySuccessCallbacks.add(callback);
+	}
+	private _runOnPlaySuccessCallbacks() {
+		if (!this._onPlaySuccessCallbacks) {
+			return;
+		}
+		this._onPlaySuccessCallbacks.forEach((callback) => callback());
+	}
+	onPlayError(callback: OnPlayErrorCallback) {
+		this._onPlayErrorCallbacks = this._onPlayErrorCallbacks || new Set();
+		this._onPlayErrorCallbacks.add(callback);
+	}
+	private _runOnPlayErrorCallbacks(err: unknown) {
+		if (!this._onPlayErrorCallbacks) {
+			return;
+		}
+		this._onPlayErrorCallbacks.forEach((callback) => callback(err));
 	}
 }

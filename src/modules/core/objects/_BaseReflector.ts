@@ -13,12 +13,14 @@ import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {Mesh} from 'three/src/objects/Mesh';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Object3D} from 'three/src/core/Object3D';
 import {Camera} from 'three/src/cameras/Camera';
 import {Scene} from 'three/src/scenes/Scene';
 import {CoreRenderBlur} from '../../../core/render/Blur';
 import {Vector2} from 'three/src/math/Vector2';
 import {isBooleanTrue} from '../../../core/Type';
 import {Material} from 'three/src/materials/Material';
+import {CoreTransform} from '../../../core/Transform';
 
 export interface BaseReflectorOptions {
 	// color: Color;
@@ -46,6 +48,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	TGeometry,
 	TMaterial
 > {
+	static DEFAULT_UP = new Vector3(0, 0, 1);
 	public type = 'BaseReflector';
 
 	private reflectorPlane = new Plane();
@@ -124,6 +127,14 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 		const width = canvas.width * this._options.pixelRatio;
 		const height = canvas.height * this._options.pixelRatio;
 		return {width, height};
+	}
+
+	private static _coreTransform = new CoreTransform();
+	static rotateGeometry(geometry: BufferGeometry, direction: Vector3) {
+		this._coreTransform.rotateGeometry(geometry, direction, this.DEFAULT_UP);
+	}
+	static compensateGeometryRotation(object: Object3D, direction: Vector3) {
+		this._coreTransform.rotateObject(object, this.DEFAULT_UP, direction);
 	}
 
 	protected _onBeforeRender(
