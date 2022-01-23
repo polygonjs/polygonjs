@@ -17,10 +17,10 @@ import {OceanPlaneSopOperation} from '../../operations/sop/OceanPlane';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Number3} from '../../../types/GlobalTypes';
-import {NodeContext} from '../../poly/NodeContext';
 const DEFAULT = OceanPlaneSopOperation.DEFAULT_PARAMS;
 
 class OceanPlaneSopParamsConfig extends NodeParamsConfig {
+	main = ParamConfig.FOLDER();
 	/** @param reflection direction */
 	direction = ParamConfig.VECTOR3(DEFAULT.direction.toArray());
 	/** @param sun direction */
@@ -29,9 +29,16 @@ class OceanPlaneSopParamsConfig extends NodeParamsConfig {
 	sunColor = ParamConfig.COLOR(DEFAULT.sunColor.toArray() as Number3);
 	/** @param water color */
 	waterColor = ParamConfig.COLOR(DEFAULT.waterColor.toArray() as Number3);
+	/** @param reflection color */
+	reflectionColor = ParamConfig.COLOR(DEFAULT.reflectionColor.toArray() as Number3);
+	/** @param waves Height */
+	wavesHeight = ParamConfig.FLOAT(DEFAULT.wavesHeight, {
+		range: [0, 10],
+		rangeLocked: [false, false],
+	});
 	/** @param distortion scale */
 	distortionScale = ParamConfig.FLOAT(DEFAULT.distortionScale, {
-		range: [0, 10],
+		range: [0, 1],
 		rangeLocked: [true, false],
 	});
 	/** @param distortion speed */
@@ -44,14 +51,16 @@ class OceanPlaneSopParamsConfig extends NodeParamsConfig {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
-	/** @param normals Texture */
-	normals = ParamConfig.NODE_PATH('', {
-		nodeSelection: {
-			context: NodeContext.COP,
-		},
-	});
+	advanced = ParamConfig.FOLDER();
 	/** @param render reflection */
 	renderReflection = ParamConfig.BOOLEAN(DEFAULT.renderReflection);
+	/** @param normal Bias - adjusts this if the reflections are too grainy */
+	normalBias = ParamConfig.FLOAT(DEFAULT.normalBias, {
+		range: [0, 0.1],
+		rangeLocked: [false, false],
+	});
+	/** @param reacts to fog */
+	useFog = ParamConfig.BOOLEAN(DEFAULT.useFog);
 }
 const ParamsConfig = new OceanPlaneSopParamsConfig();
 

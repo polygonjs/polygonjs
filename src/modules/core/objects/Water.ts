@@ -25,14 +25,16 @@ export interface WaterMaterial extends ShaderMaterial {
 	uniforms: {
 		sunDirection: IUniformV3;
 		sunColor: IUniformColor;
+		wavesHeight: IUniformN;
 		waterColor: IUniformColor;
+		reflectionColor: IUniformColor;
 		distortionScale: IUniformN;
 		size: IUniformN;
-		normalSampler: IUniformTexture;
 		alpha: IUniformN;
 		time: IUniformN;
 		timeScale: IUniformN;
 		direction: IUniformV3;
+		normalBias: IUniformN;
 		// internals
 		mirrorSampler: IUniformTexture;
 		textureMatrix: {value: Matrix4};
@@ -43,13 +45,19 @@ export interface WaterMaterial extends ShaderMaterial {
 export interface WaterOptions extends BaseReflectorOptions {
 	alpha?: number;
 	time?: number;
+	timeScale?: number;
+	size?: number;
+	direction?: Vector3;
 	sunDirection?: Vector3;
 	sunColor?: Color;
+	wavesHeight?: number;
 	waterColor?: Color;
+	reflectionColor?: Color;
 	waterNormals?: Texture;
 	distortionScale?: number;
+	normalBias?: number;
 	side?: number;
-	fog?: boolean;
+	useFog?: boolean;
 }
 
 export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
@@ -64,22 +72,26 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 		const options = this._options;
 		const alpha = options.alpha !== undefined ? options.alpha : 1.0;
 		const time = options.time !== undefined ? options.time : 0.0;
-		const normalSampler = options.waterNormals !== undefined ? options.waterNormals : null;
+		const timeScale = options.timeScale !== undefined ? options.timeScale : 1.0;
+		const size = options.size !== undefined ? options.size : 0.0;
+		const direction = options.direction !== undefined ? options.direction : new Vector3(0.0, 1.0, 0.0);
 		const sunDirection =
 			options.sunDirection !== undefined ? options.sunDirection : new Vector3(0.70707, 0.70707, 0.0);
 		const sunColor = new Color(options.sunColor !== undefined ? options.sunColor : 0xffffff);
+		const wavesHeight: number = options.wavesHeight !== undefined ? options.wavesHeight : 1;
 		const waterColor = new Color(options.waterColor !== undefined ? options.waterColor : 0x7f7f7f);
+		const reflectionColor = new Color(options.reflectionColor !== undefined ? options.reflectionColor : 0xffffff);
 
 		const distortionScale = options.distortionScale !== undefined ? options.distortionScale : 20.0;
 		const side = options.side !== undefined ? options.side : FrontSide;
-		const fog = options.fog !== undefined ? options.fog : false;
+		const useFog = options.useFog !== undefined ? options.useFog : false;
+		const normalBias: number = options.normalBias !== undefined ? options.normalBias : 0.001;
 
 		const mirrorShader = {
 			uniforms: UniformsUtils.merge([
 				UniformsLib['fog'],
 				UniformsLib['lights'],
 				{
-					normalSampler: {value: null},
 					mirrorSampler: {value: null},
 					alpha: {value: 1.0},
 					time: {value: 0.0},
@@ -91,7 +103,10 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 					sunDirection: {value: new Vector3(0.70707, 0.70707, 0)},
 					direction: {value: new Vector3().copy(BaseReflector.DEFAULT_UP)},
 					eye: {value: new Vector3()},
+					wavesHeight: {value: wavesHeight},
 					waterColor: {value: new Color(0x555555)},
+					reflectionColor: {value: new Color(0xffffff)},
+					normalBias: {value: normalBias},
 				},
 			]),
 			vertexShader: VERTEX,
@@ -104,18 +119,23 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 			uniforms: UniformsUtils.clone(mirrorShader.uniforms),
 			lights: true,
 			side: side,
-			fog: fog,
+			fog: useFog,
 		}) as WaterMaterial;
 
+		material.uniforms['time'].value = time;
+		material.uniforms['timeScale'].value = timeScale;
+		material.uniforms['size'].value = size;
 		material.uniforms['mirrorSampler'].value = this.renderTarget.texture;
 		material.uniforms['textureMatrix'].value = this.textureMatrix;
 		material.uniforms['alpha'].value = alpha;
-		material.uniforms['time'].value = time;
-		material.uniforms['normalSampler'].value = normalSampler;
 		material.uniforms['sunColor'].value = sunColor;
+		material.uniforms['wavesHeight'].value = wavesHeight;
 		material.uniforms['waterColor'].value = waterColor;
+		material.uniforms['reflectionColor'].value = reflectionColor;
+		material.uniforms['direction'].value = direction;
 		material.uniforms['sunDirection'].value = sunDirection;
 		material.uniforms['distortionScale'].value = distortionScale;
+		material.uniforms['normalBias'].value = normalBias;
 
 		material.uniforms['eye'].value = new Vector3();
 
@@ -152,8 +172,6 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 		// the material and geometry needs to be added back after the copy, as Mesh.copy would override that
 		clonedWater.material = material;
 		clonedWater.geometry = clonedGeometry;
-		// normalsSampler is given asynchronously to the node, so it needs to be passed after the options
-		material.uniforms.normalSampler.value = this.material.uniforms.normalSampler.value;
 
 		// TODO:
 		// - size is not passed correctly
