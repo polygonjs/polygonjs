@@ -23,10 +23,17 @@ export class RendererUtils {
 
 	static async withViewer(options: WithViewerOptions, callback: WithViewerCallback) {
 		const element = document.createElement('div');
+		// element.style.position = 'absolute';
+		// element.style.top = '0px';
+		// element.style.left = '0px';
+		// element.style.width = '200px';
+		// element.style.height = '200px';
+		// element.style.zIndex = '9999999';
 		document.body.appendChild(element);
 		const viewer = options.cameraNode.createViewer({element});
 		// options.cameraNode.scene().viewersRegister.viewerWithCamera(options.cameraNode)
 		await callback({viewer, element});
+
 		viewer.dispose();
 		document.body.removeChild(element);
 	}

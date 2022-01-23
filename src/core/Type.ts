@@ -1,6 +1,7 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
+import {Quaternion} from 'three/src/math/Quaternion';
 
 export class CoreType {
 	static isNumber(value: any): value is number {
@@ -8,6 +9,9 @@ export class CoreType {
 	}
 	static isVector(value: any): value is Vector2 | Vector3 | Vector4 {
 		return value instanceof Vector2 || value instanceof Vector3 || value instanceof Vector4;
+	}
+	static isQuaternion(value: any): value is Quaternion {
+		return value instanceof Quaternion;
 	}
 	static isString(value: any): value is string {
 		return typeof value == 'string';

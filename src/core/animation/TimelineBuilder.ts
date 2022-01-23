@@ -199,6 +199,9 @@ export class TimelineBuilder {
 	setPropertyValue(value: AnimPropertyTargetValue) {
 		this.property().setTargetValue(value);
 	}
+	propertyValue() {
+		return this._property?.targetValue();
+	}
 
 	populate(timeline: gsap.core.Timeline) {
 		this._printDebug(['populate', this, timeline]);

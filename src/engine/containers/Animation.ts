@@ -10,7 +10,7 @@ export class AnimationContainer extends TypedContainer<NodeContext.ANIM> {
 	setTimelineBuilder(timeline_builder: TimelineBuilder) {
 		return this.set_content(timeline_builder);
 	}
-	timeline_builder() {
+	timelineBuilder() {
 		return this.content();
 	}
 

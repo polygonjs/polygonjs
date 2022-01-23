@@ -4,7 +4,7 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Group} from 'three/src/objects/Group';
+import {Mesh} from 'three/src/objects/Mesh';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {AxesHelper} from 'three/src/helpers/AxesHelper';
 import {HierarchyController} from './utils/HierarchyController';
@@ -60,10 +60,12 @@ class BlendObjParamConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [false, false],
 	});
+	/** @param updateOnRender */
+	updateOnRender = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new BlendObjParamConfig();
 
-export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
+export class BlendObjNode extends TypedObjNode<Mesh, BlendObjParamConfig> {
 	paramsConfig = ParamsConfig;
 	static type() {
 		return 'blend';
@@ -73,9 +75,12 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	private _helper = new AxesHelper(1);
 
 	createObject() {
-		const group = new Group();
-		group.matrixAutoUpdate = false;
-		return group;
+		// use Mesh instead of Group in order to have the onBeforeRender
+		const object = new Mesh();
+		object.matrixAutoUpdate = false;
+		object.onBeforeRender = this._onBeforeRender.bind(this);
+
+		return object;
 	}
 	initializeNode() {
 		this.hierarchyController.initializeNode();
@@ -99,23 +104,45 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 		}
 	}
 
-	cook() {
-		const obj_node0 = this.pv.object0.nodeWithContext(NodeContext.OBJ, this.states.error);
-		const obj_node1 = this.pv.object1.nodeWithContext(NodeContext.OBJ, this.states.error);
-		if (obj_node0 && obj_node1) {
-			this._blend(obj_node0.object, obj_node1.object);
+	private _object0: Object3D | undefined;
+	private _object1: Object3D | undefined;
+	async cook() {
+		const objNode0 = this.pv.object0.nodeWithContext(NodeContext.OBJ, this.states.error);
+		const objNode1 = this.pv.object1.nodeWithContext(NodeContext.OBJ, this.states.error);
+		if (objNode0 && objNode1) {
+			if (objNode0.isDirty()) {
+				await objNode0.compute();
+			}
+			if (objNode1.isDirty()) {
+				await objNode1.compute();
+			}
+			this._object0 = objNode0.object;
+			this._object1 = objNode1.object;
+
+			this._computeBlendedMatrix();
+		} else {
+			this.states.error.set('blend targets not found');
 		}
 
 		this.cookController.endCook();
 	}
+	private _onBeforeRender() {
+		if (!this.pv.updateOnRender) {
+			return;
+		}
+		this._computeBlendedMatrix();
+	}
 
-	private _blend(object0: Object3D, object1: Object3D) {
+	private _computeBlendedMatrix() {
+		if (!(this._object0 && this._object1)) {
+			return;
+		}
 		const mode = BLEND_MODES[this.pv.mode];
 		switch (mode) {
 			case BlendMode.TOGETHER:
-				return this._blend_together(object0, object1);
+				return this._blendTogether(this._object0, this._object1);
 			case BlendMode.SEPARATELY:
-				return this._blend_separately(object0, object1);
+				return this._blendSeparately(this._object0, this._object1);
 		}
 		TypeAssert.unreachable(mode);
 	}
@@ -125,8 +152,8 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 	private _t1 = new Vector3();
 	private _q1 = new Quaternion();
 	private _s1 = new Vector3();
-	private _blend_together(object0: Object3D, object1: Object3D) {
-		this._decompose_matrices(object0, object1);
+	private _blendTogether(object0: Object3D, object1: Object3D) {
+		this._decomposeMatrices(object0, object1);
 
 		this._object.position.copy(this._t0).lerp(this._t1, this.pv.blend);
 		this._object.quaternion.copy(this._q0).slerp(this._q1, this.pv.blend);
@@ -134,16 +161,26 @@ export class BlendObjNode extends TypedObjNode<Group, BlendObjParamConfig> {
 			this._object.updateMatrix();
 		}
 	}
-	private _blend_separately(object0: Object3D, object1: Object3D) {
-		this._decompose_matrices(object0, object1);
+	private _blendSeparately(object0: Object3D, object1: Object3D) {
+		this._decomposeMatrices(object0, object1);
 		this._object.position.copy(this._t0).lerp(this._t1, this.pv.blendT);
 		this._object.quaternion.copy(this._q0).slerp(this._q1, this.pv.blendR);
 		if (!this._object.matrixAutoUpdate) {
 			this._object.updateMatrix();
 		}
 	}
-	private _decompose_matrices(object0: Object3D, object1: Object3D) {
+	private _decomposeMatrices(object0: Object3D, object1: Object3D) {
+		this._updateMatrix(object0);
+		this._updateMatrix(object1);
+
 		object0.matrixWorld.decompose(this._t0, this._q0, this._s0);
 		object1.matrixWorld.decompose(this._t1, this._q1, this._s1);
+	}
+	private _updateMatrix(object: Object3D) {
+		if (!object.matrixAutoUpdate) {
+			object.updateMatrix();
+			object.updateMatrixWorld(true);
+			object.updateWorldMatrix(true, true);
+		}
 	}
 }
