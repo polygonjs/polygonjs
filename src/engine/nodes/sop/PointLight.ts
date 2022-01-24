@@ -41,17 +41,17 @@ class PointLightSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PointLightSopParamsConfig();
 
 export class PointLightSopNode extends TypedSopNode<PointLightSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'pointLight';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 	}
 
 	private _operation: PointLightSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new PointLightSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

@@ -46,25 +46,25 @@ class FileMultiSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FileMultiSopParamsConfig();
 
 export class FileMultiSopNode extends TypedSopNode<FileMultiSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'fileMulti';
 	}
 
-	async requiredModules() {
+	override async requiredModules() {
 		const ext = CoreBaseLoader.extension(this.p.url.rawInput() || '');
 		const format = this.pv.format as GeometryFormat;
 		return CoreLoaderGeometry.moduleNamesFromFormat(format, ext);
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	private _instancer = new CoreInstancer();
 	private _instanceMatrix = new Matrix4();
-	async cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
 		const points = inputCoreGroup.points();

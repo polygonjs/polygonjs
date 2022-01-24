@@ -11,15 +11,15 @@ interface TextureCopySopParams extends DefaultOperationParams {
 }
 
 export class TextureCopySopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: TextureCopySopParams = {
+	static override readonly DEFAULT_PARAMS: TextureCopySopParams = {
 		textureName: 'map',
 	};
-	static readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
-	static type(): Readonly<'TextureCopy'> {
+	static override readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
+	static override type(): Readonly<'TextureCopy'> {
 		return 'TextureCopy';
 	}
 
-	async cook(inputContents: CoreGroup[], params: TextureCopySopParams) {
+	override async cook(inputContents: CoreGroup[], params: TextureCopySopParams) {
 		const coreGroupTarget = inputContents[0];
 		const coreGroupSrc = inputContents[1];
 

@@ -25,12 +25,12 @@ class AnyEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AnyEventParamsConfig();
 
 export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'any';
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_input_name_function(this._input_name.bind(this));
 		this.io.connection_points.set_output_name_function(() => OUTPUT_NAME);
@@ -45,7 +45,7 @@ export class AnyEventNode extends TypedEventNode<AnyEventParamsConfig> {
 		return `trigger${index}`;
 	}
 
-	async processEvent(event_context: EventContext<Event>) {
+	override async processEvent(event_context: EventContext<Event>) {
 		if (this.p.active.isDirty()) {
 			await this.p.active.compute();
 		}

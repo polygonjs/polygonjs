@@ -41,11 +41,11 @@ interface Controllers {
 }
 abstract class PCSSMapMatNode extends TypedMatNode<Material, PCSSParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): Material;
+	abstract override createMaterial(): Material;
 }
 
 export class PCSSController extends BaseController {
-	constructor(protected node: PCSSMapMatNode) {
+	constructor(protected override node: PCSSMapMatNode) {
 		super(node);
 	}
 
@@ -78,7 +78,7 @@ ${PCSSWithDefines}
 		return fragmentShader;
 	}
 
-	async update() {
+	override async update() {
 		const matNode = (<unknown>this.node) as BaseBuilderMatNodeType;
 		if (!matNode.assemblerController) {
 			return;

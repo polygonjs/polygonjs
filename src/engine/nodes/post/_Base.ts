@@ -42,18 +42,18 @@ export const PostParamOptions: ParamOptions = {
  */
 
 export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.POST;
 	}
 
-	public readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
+	public override readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
 	protected _passesByRequesterId: Map<CoreGraphNodeId, P> = new Map();
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.flags.display.set(false);
 		this.flags.display.onUpdate(() => {
 			if (this.flags.display.active()) {
@@ -68,7 +68,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this.io.outputs.setHasOneOutput();
 	}
 
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 	setupComposer(context: TypedPostNodeContext): void {

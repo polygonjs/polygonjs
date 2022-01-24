@@ -157,8 +157,8 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PlayerEventParamsConfig();
 
 export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return CameraControlsNodeType.PLAYER;
 	}
 
@@ -169,7 +169,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 	private _player: CorePlayer | undefined;
 	private _corePlayerKeyEvents: CorePlayerKeyEvents | undefined;
 	private _cameraObject: Camera | undefined;
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(EVENT_INIT, EventConnectionPointType.BASE, this._initPlayer.bind(this)),
 			new EventConnectionPoint(EVENT_DISPOSE, EventConnectionPointType.BASE, this._disposePlayer.bind(this)),

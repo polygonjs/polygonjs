@@ -19,17 +19,17 @@ class IfThenGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new IfThenGlParamsConfig();
 
 export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'ifThen'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'ifThen'> {
 		return 'ifThen';
 	}
 
-	protected _expected_inputs_count() {
+	protected override _expected_inputs_count() {
 		const current_connections = this.io.connections.inputConnections();
 		return current_connections ? Math.max(ArrayUtils.compact(current_connections).length + 1, 2) : 2;
 	}
 
-	protected _expected_input_types(): GlConnectionPointType[] {
+	protected override _expected_input_types(): GlConnectionPointType[] {
 		const types: GlConnectionPointType[] = [GlConnectionPointType.BOOL];
 
 		const default_type = GlConnectionPointType.FLOAT;
@@ -52,7 +52,7 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 		return types;
 	}
 
-	protected _expected_output_types() {
+	protected override _expected_output_types() {
 		const types: GlConnectionPointType[] = [];
 		const input_types = this._expected_input_types();
 		for (let i = 1; i < input_types.length; i++) {
@@ -60,7 +60,7 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 		}
 		return types;
 	}
-	protected _expected_input_name(index: number) {
+	protected override _expected_input_name(index: number) {
 		if (index == 0) {
 			return CONDITION_INPUT_NAME;
 		} else {
@@ -73,7 +73,7 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 			}
 		}
 	}
-	protected _expected_output_name(index: number) {
+	protected override _expected_output_name(index: number) {
 		return this._expected_input_name(index + 1);
 	}
 	//
@@ -81,16 +81,16 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 	// defines the outputs for the child subnet input
 	//
 	//
-	child_expected_input_connection_point_types() {
+	override child_expected_input_connection_point_types() {
 		return this._expected_output_types();
 	}
-	child_expected_input_connection_point_name(index: number) {
+	override child_expected_input_connection_point_name(index: number) {
 		return this._expected_output_name(index);
 	}
-	child_expected_output_connection_point_types() {
+	override child_expected_output_connection_point_types() {
 		return this._expected_output_types();
 	}
-	child_expected_output_connection_point_name(index: number) {
+	override child_expected_output_connection_point_name(index: number) {
 		return this._expected_output_name(index);
 	}
 
@@ -99,7 +99,10 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 	// set_lines
 	//
 	//
-	set_lines_block_start(shaders_collection_controller: ShadersCollectionController, child_node: SubnetInputGlNode) {
+	override set_lines_block_start(
+		shaders_collection_controller: ShadersCollectionController,
+		child_node: SubnetInputGlNode
+	) {
 		const body_lines: string[] = [];
 		const connection_points = this.io.inputs.namedInputConnectionPoints();
 		for (let i = 1; i < connection_points.length; i++) {
@@ -133,5 +136,5 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 		shaders_collection_controller.addBodyLines(child_node, body_lines);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {}
+	override setLines(shaders_collection_controller: ShadersCollectionController) {}
 }

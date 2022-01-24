@@ -4,7 +4,7 @@ import {TimelineBuilder} from '../../core/animation/TimelineBuilder';
 import {NodeContext} from '../poly/NodeContext';
 
 export class AnimationContainer extends TypedContainer<NodeContext.ANIM> {
-	set_content(content: ContainableMap[NodeContext.ANIM]) {
+	override set_content(content: ContainableMap[NodeContext.ANIM]) {
 		super.set_content(content);
 	}
 	setTimelineBuilder(timeline_builder: TimelineBuilder) {
@@ -14,7 +14,7 @@ export class AnimationContainer extends TypedContainer<NodeContext.ANIM> {
 		return this.content();
 	}
 
-	coreContentCloned() {
+	override coreContentCloned() {
 		if (this._content) {
 			return this._content.clone();
 		}

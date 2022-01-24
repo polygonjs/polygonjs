@@ -39,12 +39,12 @@ class EnvMapCopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class CubeCameraCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return CopType.CUBE_CAMERA;
 	}
 
-	async cook() {
+	override async cook() {
 		const cubeCameraNode = this.pv.cubeCamera.nodeWithContext(NodeContext.OBJ, this.states.error);
 		if (!cubeCameraNode) {
 			this.states.error.set(`cubeCamera not found at '${this.pv.cubeCamera.path()}'`);

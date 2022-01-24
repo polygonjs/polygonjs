@@ -25,7 +25,7 @@ interface ReflectorSopParams extends DefaultOperationParams {
 const DEFAULT_UP = new Vector3(0, 0, 1);
 
 export class ReflectorSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: ReflectorSopParams = {
+	static override readonly DEFAULT_PARAMS: ReflectorSopParams = {
 		direction: DEFAULT_UP.clone(),
 		active: true,
 		clipBias: 0.003,
@@ -41,13 +41,13 @@ export class ReflectorSopOperation extends BaseSopOperation {
 	};
 
 	// clone needs to be on Always if we rotate the geo to align with the reflection direction
-	static readonly INPUT_CLONED_STATE = InputCloneMode.ALWAYS;
-	static type(): Readonly<'reflector'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.ALWAYS;
+	static override type(): Readonly<'reflector'> {
 		return 'reflector';
 	}
 
 	private _transformResetOptions: TransformResetSopOperation | undefined;
-	async cook(inputCoreGroups: CoreGroup[], params: ReflectorSopParams) {
+	override async cook(inputCoreGroups: CoreGroup[], params: ReflectorSopParams) {
 		this._transformResetOptions = this._transformResetOptions || new TransformResetSopOperation(this._scene);
 		const transformResetMode = TRANSFORM_RESET_MODES.indexOf(TransformResetMode.PROMOTE_GEO_TO_OBJECT);
 		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});

@@ -12,27 +12,33 @@ import {ObjNodeRenderOrder} from './_Base';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 class BaseAudioObjNode extends ParamLessBaseManagerObjNode {
-	static type() {
+	static override type() {
 		return NetworkNodeType.AUDIO;
 	}
 
-	protected _childrenControllerContext = NodeContext.AUDIO;
+	protected override _childrenControllerContext = NodeContext.AUDIO;
 
-	createNode<S extends keyof AudioNodeChildrenMap>(
+	override createNode<S extends keyof AudioNodeChildrenMap>(
 		node_class: S,
 		options?: NodeCreateOptions
 	): AudioNodeChildrenMap[S];
-	createNode<K extends valueof<AudioNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<AudioNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<K extends valueof<AudioNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<AudioNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseAudioNodeType[];
 	}
-	nodesByType<K extends keyof AudioNodeChildrenMap>(type: K): AudioNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof AudioNodeChildrenMap>(type: K): AudioNodeChildrenMap[K][] {
 		return super.nodesByType(type) as AudioNodeChildrenMap[K][];
 	}
 }
 export class AudioNetworkObjNode extends BaseAudioObjNode {
-	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
+	public override readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
 }

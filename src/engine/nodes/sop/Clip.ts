@@ -26,18 +26,18 @@ class ClipSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ClipSopParamsConfig();
 
 export class ClipSopNode extends TypedSopNode<ClipSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'clip';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(ClipSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: ClipSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new ClipSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

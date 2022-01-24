@@ -13,8 +13,8 @@ class Css3DRendererRopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new Css3DRendererRopParamsConfig();
 
 export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<RopType.CSS3D> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<RopType.CSS3D> {
 		return RopType.CSS3D;
 	}
 
@@ -48,7 +48,7 @@ export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsCon
 	// 	}
 	// }
 
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 }

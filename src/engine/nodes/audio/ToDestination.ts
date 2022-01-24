@@ -12,17 +12,17 @@ class ToDestinationAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ToDestinationAudioParamsConfig();
 
 export class ToDestinationAudioNode extends TypedAudioNode<ToDestinationAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'toDestination';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
 	private _previousAudioNode: ToneAudioNode | undefined;
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
 		const audioNode = audioBuilder.audioNode();

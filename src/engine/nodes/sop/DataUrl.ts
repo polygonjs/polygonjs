@@ -92,12 +92,12 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DataUrlSopParamsConfig();
 
 export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'dataUrl';
 	}
 
-	async cook() {
+	override async cook() {
 		this._load();
 	}
 	private _load() {

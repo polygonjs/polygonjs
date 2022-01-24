@@ -38,21 +38,21 @@ class TouchEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TouchEventParamsConfig();
 
 export class TouchEventNode extends TypedInputEventNode<TouchEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'touch';
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_TOUCH_EVENT_TYPES.map((n) => `${n}`));
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(
 			ACCEPTED_TOUCH_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.DRAG);
 			})
 		);
 	}
-	processEvent(event_context: EventContext<TouchEvent>) {
+	override processEvent(event_context: EventContext<TouchEvent>) {
 		if (!this.pv.active) {
 			return;
 		}

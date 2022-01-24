@@ -6,7 +6,7 @@ import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {ShaderAssemblerMesh} from './_BaseMesh';
 
 export class ShaderAssemblerLambert extends ShaderAssemblerMesh {
-	templateShader() {
+	override templateShader() {
 		const template = ShaderLib.lambert;
 		return {
 			vertexShader: template.vertexShader,
@@ -14,7 +14,7 @@ export class ShaderAssemblerLambert extends ShaderAssemblerMesh {
 			uniforms: template.uniforms,
 		};
 	}
-	createMaterial() {
+	override createMaterial() {
 		const template_shader = this.templateShader();
 		const material = new ShaderMaterial({
 			lights: true,

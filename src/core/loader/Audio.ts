@@ -19,7 +19,7 @@ type OnProgress = (buffer: ProgressEvent) => void;
 type OnError = (event: ErrorEvent) => void;
 
 class AudioLoader extends Loader {
-	constructor(public manager: LoadingManager) {
+	constructor(public override manager: LoadingManager) {
 		super(manager);
 	}
 

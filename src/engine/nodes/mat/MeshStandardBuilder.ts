@@ -94,11 +94,11 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	ShaderAssemblerStandard,
 	MeshStandardMatParamsConfig
 > {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshStandardBuilder';
 	}
-	public usedAssembler(): Readonly<AssemblerName.GL_MESH_STANDARD> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_STANDARD> {
 		return AssemblerName.GL_MESH_STANDARD;
 	}
 	protected _create_assembler_controller() {
@@ -120,7 +120,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
@@ -128,7 +128,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		});
 	}
 
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

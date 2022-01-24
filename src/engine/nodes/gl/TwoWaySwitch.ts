@@ -24,12 +24,12 @@ const InputNames: Array<InputName> = [InputName.CONDITION, InputName.IF_TRUE, In
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
-	static type() {
+	static override type() {
 		return 'twoWaySwitch';
 	}
 
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.initializeNode();
 
@@ -58,7 +58,7 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		return [type];
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines: string[] = [];
 
 		const value = this.glVarName(OUTPUT_NAME);

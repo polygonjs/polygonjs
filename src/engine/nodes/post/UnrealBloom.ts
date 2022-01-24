@@ -34,12 +34,12 @@ class UnrealBloomPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new UnrealBloomPostParamsConfig();
 export class UnrealBloomPostNode extends TypedPostProcessNode<UnrealBloomPass, UnrealBloomPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'unrealBloom';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new UnrealBloomPass({
 			resolution: new Vector2(context.resolution.x, context.resolution.y),
 			strength: this.pv.strength,
@@ -52,7 +52,7 @@ export class UnrealBloomPostNode extends TypedPostProcessNode<UnrealBloomPass, U
 		});
 		return pass;
 	}
-	updatePass(pass: UnrealBloomPass) {
+	override updatePass(pass: UnrealBloomPass) {
 		pass.strength = this.pv.strength;
 		pass.radius = this.pv.radius;
 		pass.threshold = this.pv.threshold;

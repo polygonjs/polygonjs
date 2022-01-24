@@ -24,10 +24,13 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _delta: number = 0;
 
 	private _animateMethod: () => void = this.animate.bind(this);
-	protected _canvasIdPrefix() {
+	protected override _canvasIdPrefix() {
 		return 'ThreejsViewer';
 	}
-	constructor(protected _cameraNode: BaseThreejsCameraObjNodeType, private _properties?: ThreejsViewerProperties) {
+	constructor(
+		protected override _cameraNode: BaseThreejsCameraObjNodeType,
+		private _properties?: ThreejsViewerProperties
+	) {
 		super(_cameraNode);
 
 		this._doRender = true;
@@ -37,7 +40,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 		// this._container.style.height = '100%'; // this should be app specific
 	}
-	mount(element: HTMLElement) {
+	override mount(element: HTMLElement) {
 		super.mount(element);
 		this._domElement?.appendChild(this.canvas());
 		this._domElement?.classList.add(CSS_CLASS);
@@ -45,7 +48,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this._setEvents();
 	}
 
-	controlsController(): ViewerControlsController {
+	override controlsController(): ViewerControlsController {
 		return (this._controlsController = this._controlsController || new ViewerControlsController(this));
 	}
 
@@ -54,7 +57,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this.activate();
 	}
 
-	dispose() {
+	override dispose() {
 		this.setAutoRender(false);
 		this.scene().viewersRegister.unregisterViewer(this);
 		this._cancelAnimate();
@@ -63,7 +66,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		// TODO: also dispose the renderer
 		super.dispose();
 	}
-	cameraControlsController() {
+	override cameraControlsController() {
 		return this._cameraNode.controlsController();
 	}
 

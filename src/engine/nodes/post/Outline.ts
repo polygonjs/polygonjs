@@ -56,14 +56,14 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new OutlinePostParamsConfig();
 export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'outline';
 	}
 
 	private _resolvedObjects: Object3D[] = [];
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new OutlinePass(
 			new Vector2(context.resolution.x, context.resolution.y),
 			context.scene,
@@ -73,7 +73,7 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 		this.updatePass(pass);
 		return pass;
 	}
-	updatePass(pass: OutlinePass) {
+	override updatePass(pass: OutlinePass) {
 		pass.edgeStrength = this.pv.edgeStrength;
 		pass.edgeThickness = this.pv.edgeThickness;
 		pass.edgeGlow = this.pv.edgeGlow;

@@ -11,15 +11,24 @@ import {AssemblerNodeSpareParamsController} from './SpareParamsController';
 import {NodeCreateOptions} from '../../utils/hierarchy/ChildrenController';
 
 export class BaseGlParentNode extends TypedNode<any, any> {
-	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): GlNodeChildrenMap[S];
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 }

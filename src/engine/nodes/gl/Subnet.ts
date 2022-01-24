@@ -19,8 +19,8 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 
 export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K> {
-	protected _childrenControllerContext = NodeContext.GL;
-	initializeNode() {
+	protected override _childrenControllerContext = NodeContext.GL;
+	override initializeNode() {
 		this.childrenController?.set_output_node_find_method(() => {
 			return this.nodesByType(SubnetOutputGlNode.type())[0];
 		});
@@ -103,15 +103,24 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 	// CHILDREN
 	//
 	//
-	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): GlNodeChildrenMap[S];
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 
@@ -154,15 +163,15 @@ export class TypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K
 		shaders_collection_controller.addBodyLines(child_node, ['}']);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {}
+	override setLines(shaders_collection_controller: ShadersCollectionController) {}
 }
 
 class SubnetGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetGlParamsConfig();
 
 export class SubnetGlNode extends TypedSubnetGlNode<SubnetGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return NetworkNodeType.SUBNET;
 	}
 }

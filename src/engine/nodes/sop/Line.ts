@@ -24,14 +24,14 @@ class LineSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new LineSopParamsConfig();
 
 export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'line';
 	}
 
-	initializeNode() {}
+	override initializeNode() {}
 
-	cook() {
+	override cook() {
 		const pointsCount = Math.max(2, this.pv.pointsCount);
 
 		const positions: number[] = new Array(pointsCount * 3);

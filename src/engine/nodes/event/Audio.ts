@@ -50,11 +50,11 @@ class AudioEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AudioEventParamsConfig();
 
 export class AudioEventNode extends TypedEventNode<AudioEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'audio';
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint('play', EventConnectionPointType.BASE, this._triggerPlay.bind(this)),
 			// new EventConnectionPoint('stop', EventConnectionPointType.BASE, this._triggerPlay.bind(this)),

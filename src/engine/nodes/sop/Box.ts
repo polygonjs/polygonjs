@@ -26,22 +26,22 @@ class BoxSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BoxSopParamsConfig();
 
 export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override readonly paramsConfig = ParamsConfig;
+	static override type() {
 		return 'box';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to create bounding box from (optional)'];
 	}
 
-	initializeNode() {
+	protected override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(BoxSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: BoxSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new BoxSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

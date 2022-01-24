@@ -26,7 +26,12 @@ export class CsvLoader extends CoreBaseLoader {
 	private attribute_data_by_name: PolyDictionary<CoreAttributeData> = {};
 	private _loading = false;
 
-	constructor(url: string, scene: PolyScene, private attribute_names?: string[], protected _node?: BaseNodeType) {
+	constructor(
+		url: string,
+		scene: PolyScene,
+		private attribute_names?: string[],
+		protected override _node?: BaseNodeType
+	) {
 		super(url, scene, _node);
 		if (!this.attribute_names) {
 			this.attribute_names_from_first_line = true;

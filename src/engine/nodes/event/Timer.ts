@@ -22,11 +22,11 @@ class TimerEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TimerEventParamsConfig();
 
 export class TimerEventNode extends TypedEventNode<TimerEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'timer';
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(INPUT_START_NAME, EventConnectionPointType.BASE, this._start_timer.bind(this)),
 			new EventConnectionPoint(INPUT_END_NAME, EventConnectionPointType.BASE, this._stop_timer.bind(this)),

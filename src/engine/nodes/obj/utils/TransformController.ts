@@ -61,7 +61,7 @@ export function TransformedParamConfig<TBase extends Constructor>(
 }
 class TransformedParamsConfig extends TransformedParamConfig(NodeParamsConfig) {}
 export class TransformedObjNode extends TypedObjNode<Object3D, TransformedParamsConfig> {
-	readonly transformController: TransformController = new TransformController(this);
+	override readonly transformController: TransformController = new TransformController(this);
 }
 
 const HOOK_NAME = '_cook_main_without_inputs_when_dirty';

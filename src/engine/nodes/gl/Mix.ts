@@ -13,17 +13,17 @@ const DefaultValues: PolyDictionary<number> = {
 	blend: 0.5,
 };
 export class MixGlNode extends BaseGlMathFunctionGlNode {
-	static type() {
+	static override type() {
 		return 'mix';
 	}
-	protected gl_method_name() {
+	protected override gl_method_name() {
 		return 'mix';
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['value0', 'value1', 'blend'][index]);
@@ -36,12 +36,12 @@ export class MixGlNode extends BaseGlMathFunctionGlNode {
 		return 'mix';
 	}
 
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
 		return [type, type, GlConnectionPointType.FLOAT];
 	}
 
-	protected _expected_output_types() {
+	protected override _expected_output_types() {
 		const type = this._expected_input_types()[0];
 		return [type];
 	}

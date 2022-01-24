@@ -39,17 +39,17 @@ interface Controllers {
 }
 abstract class TextureLightMapMatNode extends TypedMatNode<CurrentMaterial, TextureLightMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureLightMapController extends BaseTextureMapController {
-	constructor(protected node: TextureLightMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureLightMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useLightMap, this.node.p.lightMap);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'lightMap', this.node.p.useLightMap, this.node.p.lightMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
@@ -60,7 +60,7 @@ export class TextureLightMapController extends BaseTextureMapController {
 			mat.lightMapIntensity = this.node.pv.lightMapIntensity;
 		}
 	}
-	static async update(node: TextureLightMapMatNode) {
+	static override async update(node: TextureLightMapMatNode) {
 		node.controllers.lightMap.update();
 	}
 }

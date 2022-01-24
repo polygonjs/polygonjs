@@ -13,24 +13,24 @@ class SubnetOutputSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputSopParamsConfig();
 
 export class SubnetOutputAnimNode extends TypedAnimNode<SubnetOutputSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<NetworkChildNodeType.OUTPUT> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<NetworkChildNodeType.OUTPUT> {
 		return NetworkChildNodeType.OUTPUT;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.outputs.setHasNoOutput();
 
 		this.lifecycle.onAfterAdded(this._setParentDirtyBound);
 		this.addPostDirtyHook('makeParentDirty', this._setParentDirtyBound);
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		this._setParentDirty();
 	}
 
-	cook(inputContents: TimelineBuilder[]) {
+	override cook(inputContents: TimelineBuilder[]) {
 		const timelineBuilder = inputContents[0];
 		this.setTimelineBuilder(timelineBuilder);
 	}

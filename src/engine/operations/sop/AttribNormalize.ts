@@ -20,18 +20,18 @@ export enum NormalizeMode {
 export const NORMALIZE_MODES: NormalizeMode[] = [NormalizeMode.MIN_MAX_TO_01, NormalizeMode.VECTOR_TO_LENGTH_1];
 
 export class AttribNormalizeSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AttribNormalizeSopParams = {
+	static override readonly DEFAULT_PARAMS: AttribNormalizeSopParams = {
 		mode: 0,
 		name: 'position',
 		changeName: false,
 		newName: '',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attribNormalize'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'attribNormalize'> {
 		return 'attribNormalize';
 	}
 
-	cook(input_contents: CoreGroup[], params: AttribNormalizeSopParams) {
+	override cook(input_contents: CoreGroup[], params: AttribNormalizeSopParams) {
 		const core_group = input_contents[0];
 		const objects = input_contents[0].objectsWithGeo();
 		const attrib_names = CoreString.attribNames(params.name);

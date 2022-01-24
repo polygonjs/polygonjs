@@ -63,8 +63,8 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 	DirectionalLight,
 	DirectionalLightObjParamsConfig
 > {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return LightType.DIRECTIONAL;
 	}
 	private _target_target!: Object3D;
@@ -73,14 +73,14 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		(<unknown>DirectionalLightHelper) as HelperConstructor<Mesh, DirectionalLight>,
 		'DirectionalLightHelper'
 	);
-	initializeNode() {
+	override initializeNode() {
 		// this.io.inputs.setCount(0, 1);
 		// this.io.inputs.set_depends_on_inputs(false);
 
 		this._helperController.initializeNode();
 	}
 
-	createLight() {
+	override createLight() {
 		const light = new DirectionalLight();
 		light.matrixAutoUpdate = false;
 
@@ -97,12 +97,12 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 		return light;
 	}
 
-	protected updateLightParams() {
+	protected override updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.shadow.camera.far = this.pv.distance;
 	}
-	protected updateShadowParams() {
+	protected override updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadow);
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 

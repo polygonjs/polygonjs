@@ -32,12 +32,12 @@ class InstanceTransformGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new InstanceTransformGlParamsConfig();
 export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'instanceTransform';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -46,7 +46,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 		const function_declaration_lines = [];
 

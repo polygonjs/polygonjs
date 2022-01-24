@@ -137,12 +137,12 @@ class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AudioAnalyserCopParamsConfig();
 
 export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'audioAnalyser';
 	}
 
-	async cook() {
+	override async cook() {
 		this._initParamsByChannel();
 		await this._getAudioNodes();
 		this._registerOnTickHook();
@@ -151,7 +151,8 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		this.cookController.endCook();
 	}
 
-	dispose() {
+	override dispose() {
+		super.dispose();
 		this._unRegisterOnTickHook();
 	}
 

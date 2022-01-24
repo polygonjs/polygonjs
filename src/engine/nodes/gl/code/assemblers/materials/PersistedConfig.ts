@@ -23,10 +23,10 @@ export interface PersistedConfigBaseMaterialData {
 // - 4. for the volume shader, a uniform with an array of vector can be saved, but not loaded again as a vector (but only as an {x,y,z} object)
 export class MaterialPersistedConfig extends BasePersistedConfig {
 	private _material: ShaderMaterialWithCustomMaterials | undefined;
-	constructor(protected node: BaseBuilderMatNodeType) {
+	constructor(protected override node: BaseBuilderMatNodeType) {
 		super(node);
 	}
-	toJSON(): PersistedConfigBaseMaterialData | undefined {
+	override toJSON(): PersistedConfigBaseMaterialData | undefined {
 		const assemblerController = this.node.assemblerController;
 		if (!assemblerController) {
 			return;
@@ -72,7 +72,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		};
 		return data;
 	}
-	load(data: PersistedConfigBaseMaterialData) {
+	override load(data: PersistedConfigBaseMaterialData) {
 		this._material = this._loadMaterial(data.material);
 		if (!this._material) {
 			return;

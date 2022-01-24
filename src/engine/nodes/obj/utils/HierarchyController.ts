@@ -5,7 +5,7 @@ import {TransformController, TransformedObjNode} from './TransformController';
 
 class HierarchyParamsConfig extends NodeParamsConfig {}
 export class HierarchyObjNode extends TypedObjNode<Object3D, HierarchyParamsConfig> {
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
 }
 
 export class HierarchyController {

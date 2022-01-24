@@ -13,11 +13,11 @@ type DispatchHook = (event_context: EventContext<Event>) => void;
  */
 
 export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.EVENT, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.EVENT;
 	}
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
 		// this.addPostDirtyHook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 		// cook is required for some nodes like event/animation
@@ -37,7 +37,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	_cook_without_inputs() {
 		this.cookController.cookMainWithoutInputs();
 	}
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 	// eval_params_and_processEvent(event_context: EventContext<Event>, connection_point: BaseEventConnectionPoint) {

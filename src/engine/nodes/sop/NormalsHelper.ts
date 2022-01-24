@@ -25,21 +25,21 @@ class NormalsHelperSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new NormalsHelperSopParamsConfig();
 
 export class NormalsHelperSopNode extends TypedSopNode<NormalsHelperSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'normalsHelper';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to view normals of'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 		const objects = inputCoreGroup.objectsWithGeo();
 		const newObjects: Object3D[] = [];

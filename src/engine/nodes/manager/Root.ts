@@ -31,8 +31,8 @@ class ObjectsManagerParamsConfig extends RootLoadProgressParamConfig(
 const ParamsConfig = new ObjectsManagerParamsConfig();
 
 export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'root';
 	}
 
@@ -50,7 +50,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 		this as any
 	);
 
-	cook() {
+	override cook() {
 		// the cook method is necessary here,
 		// with the .endCook()
 		// Without it, the button param of this node would not execute
@@ -58,8 +58,8 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 		this.cookController.endCook();
 	}
 
-	protected _childrenControllerContext = NodeContext.OBJ;
-	initializeNode() {
+	protected override _childrenControllerContext = NodeContext.OBJ;
+	override initializeNode() {
 		// this.children_controller?.init({dependent: false});
 		this._object.matrixAutoUpdate = false;
 
@@ -77,15 +77,24 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	get object() {
 		return this._object;
 	}
-	createNode<S extends keyof ObjNodeChildrenMap>(nodeClass: S, options?: NodeCreateOptions): ObjNodeChildrenMap[S];
-	createNode<K extends valueof<ObjNodeChildrenMap>>(nodeClass: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<ObjNodeChildrenMap>>(nodeClass: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof ObjNodeChildrenMap>(
+		nodeClass: S,
+		options?: NodeCreateOptions
+	): ObjNodeChildrenMap[S];
+	override createNode<K extends valueof<ObjNodeChildrenMap>>(
+		nodeClass: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<ObjNodeChildrenMap>>(
+		nodeClass: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(nodeClass, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseObjNodeType[];
 	}
-	nodesByType<K extends keyof ObjNodeChildrenMap>(type: K): ObjNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof ObjNodeChildrenMap>(type: K): ObjNodeChildrenMap[K][] {
 		return super.nodesByType(type) as ObjNodeChildrenMap[K][];
 	}
 

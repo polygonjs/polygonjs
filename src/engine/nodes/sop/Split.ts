@@ -36,21 +36,21 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DeleteSopParamsConfig();
 
 export class SplitSopNode extends TypedSopNode<DeleteSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'split';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to split in multiple objects'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
 	private _new_objects: Object3D[] = [];
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
 		this._new_objects = [];

@@ -25,12 +25,12 @@ class DiskGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new DiskGlParamsConfig();
 export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'disk';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -38,7 +38,7 @@ export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const position = ThreeToGl.vector2(this.variableForInputParam(this.p.position));
 		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));

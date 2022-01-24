@@ -27,21 +27,21 @@ class FuseSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FuseSopParamsConfig();
 
 export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'fuse';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['points to fuse together'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
 		const new_objects = [];

@@ -29,16 +29,16 @@ export interface CenterGeosOptions {
 }
 
 export class TransformResetSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: TransformResetSopParams = {
+	static override readonly DEFAULT_PARAMS: TransformResetSopParams = {
 		mode: 0,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'transformReset'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'transformReset'> {
 		return 'transformReset';
 	}
 	private _bboxCenter = new Vector3();
 	private _translateMatrix = new Matrix4();
-	cook(inputCoreGroups: CoreGroup[], params: TransformResetSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: TransformResetSopParams) {
 		const mode = TRANSFORM_RESET_MODES[params.mode];
 		return this._selectMode(mode, inputCoreGroups);
 	}

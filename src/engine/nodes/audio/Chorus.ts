@@ -41,16 +41,16 @@ class ChorusAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ChorusAudioParamsConfig();
 
 export class ChorusAudioNode extends TypedAudioNode<ChorusAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'chorus';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 		const effect = this._effect();
 

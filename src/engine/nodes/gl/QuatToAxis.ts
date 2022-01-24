@@ -11,11 +11,11 @@ import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 export class QuatToAxisGlNode extends BaseNodeGlMathFunctionArg1GlNode {
-	static type() {
+	static override type() {
 		return 'quatToAxis';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['quat'][index]);
@@ -26,7 +26,7 @@ export class QuatToAxisGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// protected _gl_input_name(index: number) {
 	// 	return ['quat'][index];
 	// }
-	gl_method_name(): string {
+	override gl_method_name(): string {
 		return 'quatToAxis';
 	}
 
@@ -36,7 +36,7 @@ export class QuatToAxisGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// protected _expected_output_types() {
 	// 	return [ConnectionPointType.VEC3];
 	// }
-	gl_function_definitions() {
+	override gl_function_definitions() {
 		return [new FunctionGLDefinition(this, Quaternion)];
 	}
 }

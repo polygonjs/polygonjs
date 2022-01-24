@@ -107,23 +107,23 @@ function createPositionalAudio() {
 }
 
 export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return ObjType.POSITIONAL_AUDIO;
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	readonly transformController: TransformController = new TransformController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	override readonly transformController: TransformController = new TransformController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _positionalAudio = createPositionalAudio();
 	private _helper: CorePositionalAudioHelper | undefined;
 
-	createObject() {
+	override createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		group.add(this._positionalAudio);
 		return group;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
 		this._updateHelperHierarchy();
@@ -157,7 +157,7 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		}
 	}
 
-	async cook() {
+	override async cook() {
 		this.transformController.update();
 
 		await this._updateToDestination();
@@ -227,19 +227,25 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 	 * CHILDREN
 	 *
 	 */
-	protected _childrenControllerContext = NodeContext.AUDIO;
-	createNode<S extends keyof AudioNodeChildrenMap>(
+	protected override _childrenControllerContext = NodeContext.AUDIO;
+	override createNode<S extends keyof AudioNodeChildrenMap>(
 		node_class: S,
 		options?: NodeCreateOptions
 	): AudioNodeChildrenMap[S];
-	createNode<K extends valueof<AudioNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<AudioNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<K extends valueof<AudioNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<AudioNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseAudioNodeType[];
 	}
-	nodesByType<K extends keyof AudioNodeChildrenMap>(type: K): AudioNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof AudioNodeChildrenMap>(type: K): AudioNodeChildrenMap[K][] {
 		return super.nodesByType(type) as AudioNodeChildrenMap[K][];
 	}
 }

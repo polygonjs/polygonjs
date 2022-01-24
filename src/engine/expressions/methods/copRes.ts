@@ -21,20 +21,20 @@ import {TextureContainer} from '../../containers/Texture';
 import {Vector2} from 'three/src/math/Vector2';
 
 export class CopResExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'component_name: x or y'],
 		];
 	}
 
-	findDependency(index_or_path: number | string): MethodDependency | null {
+	override findDependency(index_or_path: number | string): MethodDependency | null {
 		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
 	private _resolution = new Vector2();
-	async processArguments(args: any[]): Promise<number | Vector2> {
+	override async processArguments(args: any[]): Promise<number | Vector2> {
 		if (args.length == 1 || args.length == 2) {
 			const index_or_path = args[0];
 			const component_name = args[1];

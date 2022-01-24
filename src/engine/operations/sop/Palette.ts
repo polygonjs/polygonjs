@@ -16,7 +16,7 @@ interface PaletteSopParams extends DefaultOperationParams {
 }
 
 export class PaletteSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: PaletteSopParams = {
+	static override readonly DEFAULT_PARAMS: PaletteSopParams = {
 		palette: 0,
 		colorsCount: 0,
 		color1: new Color(1, 1, 1),
@@ -25,12 +25,12 @@ export class PaletteSopOperation extends BaseSopOperation {
 		color4: new Color(1, 1, 1),
 		color5: new Color(1, 1, 1),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'palette'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'palette'> {
 		return 'palette';
 	}
 
-	cook(input_contents: CoreGroup[], params: PaletteSopParams) {
+	override cook(input_contents: CoreGroup[], params: PaletteSopParams) {
 		const core_group = input_contents[0];
 
 		const objects = core_group.objectsWithGeo();

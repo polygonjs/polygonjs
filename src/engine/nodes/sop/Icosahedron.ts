@@ -25,13 +25,13 @@ class IcosahedronSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new IcosahedronSopParamsConfig();
 
 export class IcosahedronSopNode extends TypedSopNode<IcosahedronSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'icosahedron';
 	}
 
 	private _operation: IcosahedronSopOperation | undefined;
-	cook() {
+	override cook() {
 		this._operation = this._operation || new IcosahedronSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook([], this.pv);
 		this.setCoreGroup(core_group);

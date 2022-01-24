@@ -26,21 +26,21 @@ class TransformCopySopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new TransformCopySopParamConfig();
 
 export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'transformCopy';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['objects to transform', 'objects to copy transform from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		if (isBooleanTrue(this.pv.useSecondInput) && input_contents[1]) {
 			this._copy_from_src_objects(input_contents[0].objects(), input_contents[1].objects());
 		} else {

@@ -33,15 +33,15 @@ class AudioListenerParamConfig extends TransformedParamConfig(NodeParamsConfig) 
 const ParamsConfig = new AudioListenerParamConfig();
 
 export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioListenerParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return ObjType.AUDIO_LISTENER;
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	readonly transformController: TransformController = new TransformController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	override readonly transformController: TransformController = new TransformController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
-	createObject() {
+	override createObject() {
 		// const group = new AudioListener();
 		const object = new CoreAudioListener();
 		object.matrixAutoUpdate = false;
@@ -55,7 +55,7 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 
 		return object;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
 
@@ -65,7 +65,7 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 			this.root().audioController.update();
 		});
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		this.object.dispose();
 		this._setPositionalAudioNodesDirty();
@@ -82,7 +82,7 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 			.forEach((n) => n.setDirty());
 	}
 
-	cook() {
+	override cook() {
 		this.transformController.update();
 		this._validateUniq();
 		this._updateListenersAndViewers();

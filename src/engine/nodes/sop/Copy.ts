@@ -66,8 +66,8 @@ class CopySopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CopySopParamsConfig();
 
 export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'copy';
 	}
 
@@ -75,16 +75,16 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	private _objects: Object3D[] = [];
 	private _stampNode!: CopyStamp;
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to be copied', 'points to copy to'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	async cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		if (!isBooleanTrue(this.pv.useCopyExpr)) {
 			this.stampNode().reset();
 		}
@@ -270,7 +270,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
 		return stampNode;
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		if (this._stampNode) {
 			this._stampNode.dispose();

@@ -29,18 +29,18 @@ class HorizontalBlurPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new HorizontalBlurPostParamsConfig();
 export class HorizontalBlurPostNode extends TypedPostProcessNode<ShaderPass, HorizontalBlurPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'horizontalBlur';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(HorizontalBlurShader) as HorizontalBlurPassWithUniforms;
 		pass.resolution_x = context.resolution.x;
 		this.updatePass(pass);
 		return pass;
 	}
-	updatePass(pass: HorizontalBlurPassWithUniforms) {
+	override updatePass(pass: HorizontalBlurPassWithUniforms) {
 		pass.uniforms.h.value = this.pv.amount / (pass.resolution_x * window.devicePixelRatio);
 		pass.material.transparent = this.pv.transparent;
 	}

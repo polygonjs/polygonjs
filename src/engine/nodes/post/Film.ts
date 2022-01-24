@@ -45,12 +45,12 @@ class FilmPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new FilmPostParamsConfig();
 export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'film';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new FilmPass(
 			this.pv.noiseIntensity,
 			this.pv.scanlinesIntensity,
@@ -61,7 +61,7 @@ export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsC
 
 		return pass;
 	}
-	updatePass(pass: FilmPassWithUniforms) {
+	override updatePass(pass: FilmPassWithUniforms) {
 		pass.uniforms.nIntensity.value = this.pv.noiseIntensity;
 		pass.uniforms.sIntensity.value = this.pv.scanlinesIntensity;
 		pass.uniforms.sCount.value = this.pv.scanlinesCount;

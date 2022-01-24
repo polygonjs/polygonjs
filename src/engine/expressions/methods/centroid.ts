@@ -21,19 +21,19 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 import {Vector3Like} from '../../../types/GlobalTypes';
 export class CentroidExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'component_name, x,y or z'],
 		];
 	}
 
-	findDependency(index_or_path: number | string): MethodDependency | null {
+	override findDependency(index_or_path: number | string): MethodDependency | null {
 		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	processArguments(args: any[]): Promise<any> {
+	override processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (args.length >= 1) {
 				const index_or_path = args[0];

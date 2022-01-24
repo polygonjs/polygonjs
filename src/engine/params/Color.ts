@@ -11,7 +11,7 @@ import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
-	protected _value = new Color();
+	protected override _value = new Color();
 	protected _value_pre_conversion = new Color();
 	private _value_serialized_dirty: boolean = false;
 	private _value_serialized: Number3 = [0, 0, 0];
@@ -19,13 +19,13 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	r!: FloatParam;
 	g!: FloatParam;
 	b!: FloatParam;
-	static type() {
+	static override type() {
 		return ParamType.COLOR;
 	}
-	componentNames(): Readonly<string[]> {
+	override componentNames(): Readonly<string[]> {
 		return COMPONENT_NAMES_COLOR;
 	}
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		if (CoreType.isArray(this._default_value)) {
 			return this._default_value;
 		} else {
@@ -40,16 +40,16 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	// 		return new_array;
 	// 	}
 	// }
-	valueSerialized() {
+	override valueSerialized() {
 		this._update_value_serialized_if_required();
 		return this._value_serialized;
 	}
-	valuePreConversionSerialized() {
+	override valuePreConversionSerialized() {
 		this._update_value_serialized_if_required();
 		return this._value_pre_conversion_serialized;
 	}
 	private _copied_value: Number3 = [0, 0, 0];
-	protected _copyValue(param: ColorParam) {
+	protected override _copyValue(param: ColorParam) {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
@@ -58,7 +58,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	// ): ParamInitValuesTypeMap[ParamType.COLOR] {
 	// 	return raw_input;
 	// }
-	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]) {
+	protected override _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.COLOR]) {
 		if (raw_input instanceof Color) {
 			return raw_input.clone();
 		} else {
@@ -76,7 +76,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 			return new_array;
 		}
 	}
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.COLOR],
 		raw_input2: ParamInitValuesTypeMap[ParamType.COLOR]
 	) {
@@ -96,10 +96,13 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 			}
 		}
 	}
-	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.COLOR], val2: ParamValuesTypeMap[ParamType.COLOR]) {
+	static override areValuesEqual(
+		val1: ParamValuesTypeMap[ParamType.COLOR],
+		val2: ParamValuesTypeMap[ParamType.COLOR]
+	) {
 		return val1.equals(val2);
 	}
-	initComponents() {
+	override initComponents() {
 		super.initComponents();
 		this.r = this.components[0];
 		this.g = this.components[1];
@@ -141,7 +144,7 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		return this._value_pre_conversion;
 	}
 
-	set_value_from_components() {
+	override set_value_from_components() {
 		this._value_pre_conversion.r = this.r.value;
 		this._value_pre_conversion.g = this.g.value;
 		this._value_pre_conversion.b = this.b.value;

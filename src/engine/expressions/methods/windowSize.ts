@@ -18,18 +18,18 @@ import {BaseMethod} from './_Base';
 import {Vector2} from 'three/src/math/Vector2';
 
 export class WindowSizeExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [[]];
 	}
 
-	findDependency(index_or_path: number | string): null {
+	override findDependency(index_or_path: number | string): null {
 		this.param.addGraphInput(this.param.scene().windowController.graphNode());
 		return null;
 	}
 
 	private _windowSize = new Vector2();
-	processArguments(args: any[]): Promise<Vector2> {
+	override processArguments(args: any[]): Promise<Vector2> {
 		return new Promise((resolve) => {
 			this._windowSize.set(window.innerWidth, window.innerHeight);
 			resolve(this._windowSize);

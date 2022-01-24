@@ -16,10 +16,10 @@ export interface PersistedConfigBaseTextureData {
 }
 
 export class TexturePersistedConfig extends BasePersistedConfig {
-	constructor(protected node: BuilderCopNode) {
+	constructor(protected override node: BuilderCopNode) {
 		super(node);
 	}
-	toJSON(): PersistedConfigBaseTextureData | undefined {
+	override toJSON(): PersistedConfigBaseTextureData | undefined {
 		const assemblerController = this.node.assemblerController;
 		if (!assemblerController) {
 			return;
@@ -42,7 +42,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 
 		return data;
 	}
-	load(data: PersistedConfigBaseTextureData) {
+	override load(data: PersistedConfigBaseTextureData) {
 		this.node.texture_material.fragmentShader = data.fragment_shader;
 		this.node.texture_material.uniforms = data.uniforms;
 

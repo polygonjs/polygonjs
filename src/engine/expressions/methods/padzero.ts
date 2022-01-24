@@ -17,11 +17,11 @@
 import {BaseMethod} from './_Base';
 
 export class PadzeroExpression extends BaseMethod {
-	static requiredArguments() {
+	static override requiredArguments() {
 		return [['string', 'number']];
 	}
 
-	processArguments(args: any[]): Promise<string> {
+	override processArguments(args: any[]): Promise<string> {
 		return new Promise((resolve) => {
 			const pad: number = args[0] || 2;
 			const src_number: number = args[1] || 0;

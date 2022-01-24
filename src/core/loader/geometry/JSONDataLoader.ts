@@ -15,7 +15,12 @@ export interface JsonDataLoaderOptions {
 export class JsonDataLoader extends CoreBaseLoader {
 	private _parser: JSONDataParser;
 
-	constructor(url: string, scene: PolyScene, options: JsonDataLoaderOptions = {}, protected _node?: BaseNodeType) {
+	constructor(
+		url: string,
+		scene: PolyScene,
+		options: JsonDataLoaderOptions = {},
+		protected override _node?: BaseNodeType
+	) {
 		super(url, scene, _node);
 		this._parser = new JSONDataParser(options);
 	}

@@ -21,18 +21,18 @@ class PeakSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PeakSopParamsConfig();
 
 export class PeakSopNode extends TypedSopNode<PeakSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'peak';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	private _operation: PeakSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new PeakSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

@@ -8,49 +8,52 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {CoreType} from '../../core/Type';
 
 export class StringParam extends TypedParam<ParamType.STRING> {
-	static type() {
+	static override type() {
 		return ParamType.STRING;
 	}
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		return this._default_value;
 	}
-	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.STRING]) {
+	protected override _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.STRING]) {
 		return `${raw_input}`;
 	}
-	rawInputSerialized() {
+	override rawInputSerialized() {
 		return `${this._raw_input}`;
 	}
-	valueSerialized() {
+	override valueSerialized() {
 		return `${this.value}`;
 	}
-	protected _copyValue(param: StringParam) {
+	protected override _copyValue(param: StringParam) {
 		this.set(param.value);
 	}
 
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.STRING],
 		raw_input2: ParamInitValuesTypeMap[ParamType.STRING]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.STRING], val2: ParamValuesTypeMap[ParamType.STRING]) {
+	static override areValuesEqual(
+		val1: ParamValuesTypeMap[ParamType.STRING],
+		val2: ParamValuesTypeMap[ParamType.STRING]
+	) {
 		return val1 == val2;
 	}
-	isDefault(): boolean {
+	override isDefault(): boolean {
 		return this._raw_input == this._default_value;
 	}
 
-	convert(raw_val: any): string {
+	override convert(raw_val: any): string {
 		if (CoreType.isString(raw_val)) {
 			return raw_val;
 		}
 		return `${raw_val}`;
 	}
 
-	rawInput() {
+	override rawInput() {
 		return this._raw_input;
 	}
-	protected processRawInput() {
+	protected override processRawInput() {
 		this.states.error.clear();
 
 		if (this._value_elements(this._raw_input).length >= 3) {
@@ -74,7 +77,7 @@ export class StringParam extends TypedParam<ParamType.STRING> {
 			}
 		}
 	}
-	protected async processComputation(): Promise<void> {
+	protected override async processComputation(): Promise<void> {
 		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
 			const expression_result = await this.expressionController.computeExpression();
 			if (this.expressionController.is_errored()) {

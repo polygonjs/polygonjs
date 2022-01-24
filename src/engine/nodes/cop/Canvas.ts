@@ -29,13 +29,13 @@ class RenderCopParamConfig extends TextureParamConfig(CanvasCopNodeParamConfig(N
 const ParamsConfig = new RenderCopParamConfig();
 
 export class CanvasCopNode extends TypedCopNode<RenderCopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'canvas'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'canvas'> {
 		return 'canvas';
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	async cook() {
+	override async cook() {
 		const elementId = this.pv.canvasId;
 		const element = document.getElementById(elementId);
 		if (!element) {

@@ -31,11 +31,11 @@ class PointsMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoints, PointsMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'pointsBuilder';
 	}
-	public usedAssembler(): Readonly<AssemblerName.GL_POINTS> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_POINTS> {
 		return AssemblerName.GL_POINTS;
 	}
 	protected _create_assembler_controller() {
@@ -46,14 +46,14 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
 			}
 		});
 	}
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

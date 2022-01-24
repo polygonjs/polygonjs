@@ -21,7 +21,7 @@ class FogMatNode extends TypedMatNode<Material, FogParamsConfig> {
 }
 
 export class FogController extends BaseController {
-	constructor(protected node: FogMatNode) {
+	constructor(protected override node: FogMatNode) {
 		super(node);
 	}
 	static update(node: FogMatNode) {

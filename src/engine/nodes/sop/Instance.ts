@@ -30,16 +30,16 @@ class InstanceSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new InstanceSopParamsConfig();
 
 export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'instance';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to be instanciated', 'points to instance to'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.inputs.setCount(2);
@@ -47,7 +47,7 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 	}
 
 	private _operation: InstanceSopOperation | undefined;
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new InstanceSopOperation(this.scene(), this.states);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

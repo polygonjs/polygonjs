@@ -7,7 +7,11 @@ import {NodeContext} from '../../poly/NodeContext';
 export type OperationInputsMap = WeakMap<SopOperationContainer, Map<number, number>>;
 
 export class SopOperationContainer extends BaseOperationContainer<NodeContext.SOP> {
-	constructor(protected operation: BaseSopOperation, protected name: string, protected init_params: ParamsInitData) {
+	constructor(
+		protected override operation: BaseSopOperation,
+		protected override name: string,
+		protected init_params: ParamsInitData
+	) {
 		super(operation, name, init_params);
 	}
 
@@ -16,7 +20,7 @@ export class SopOperationContainer extends BaseOperationContainer<NodeContext.SO
 	}
 
 	// TODO: there may a better to overload add_input
-	protected _inputs: SopOperationContainer[] = [];
+	protected override _inputs: SopOperationContainer[] = [];
 	private _currentInputIndex: number = 0;
 	addInput(input: SopOperationContainer) {
 		super.setInput(this._currentInputIndex, input);

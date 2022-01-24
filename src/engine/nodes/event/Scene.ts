@@ -86,19 +86,19 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SceneEventParamsConfig();
 
 export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'scene';
 	}
 
 	private _graphNode: CoreGraphNode | undefined;
 
-	dispose() {
+	override dispose() {
 		this._graphNode?.dispose();
 		super.dispose();
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				SceneNodeInput.SET_FRAME,
@@ -132,7 +132,7 @@ export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
 		this.lifecycle.onBeforeDeleted(unregister);
 	}
 
-	processEvent(eventContext: EventContext<Event>) {
+	override processEvent(eventContext: EventContext<Event>) {
 		if (!this.pv.active) {
 			return;
 		}

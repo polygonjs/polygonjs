@@ -19,7 +19,7 @@ import {BaseMethod} from './_Base';
 
 export class StrIndexExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
-	static requiredArguments() {
+	static override requiredArguments() {
 		return [
 			['string', 'string to get index from'],
 			['string', 'char to find index of'],
@@ -31,7 +31,7 @@ export class StrIndexExpression extends BaseMethod {
 	// 	// return this.createDependencyFromIndexOrPath(index_or_path)
 	// }
 
-	async processArguments(args: any[]): Promise<number> {
+	override async processArguments(args: any[]): Promise<number> {
 		let value = -1;
 		if (args.length == 2) {
 			const string = args[0];

@@ -80,12 +80,12 @@ class CompareGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new CompareGlParamsConfig();
 export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'compare';
 	}
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.connection_points.spare_params.set_inputless_param_names(['test']);
@@ -108,7 +108,7 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		return [type, type];
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines: string[] = [];
 
 		const value = this.glVarName(OUTPUT_NAME);

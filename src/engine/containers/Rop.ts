@@ -3,7 +3,7 @@ import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';
 
 export class RopContainer extends TypedContainer<NodeContext.ROP> {
-	set_content(content: ContainableMap[NodeContext.ROP]) {
+	override set_content(content: ContainableMap[NodeContext.ROP]) {
 		super.set_content(content);
 	}
 	renderer() {

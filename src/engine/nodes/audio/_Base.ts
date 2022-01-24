@@ -12,17 +12,17 @@ const DEFAULT_INPUT_NAMES = [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
  *
  */
 export class TypedAudioNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.AUDIO, K> {
-	public readonly flags: FlagsControllerB = new FlagsControllerB(this);
+	public override readonly flags: FlagsControllerB = new FlagsControllerB(this);
 
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.AUDIO;
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		this.io.outputs.setHasOneOutput();
 	}
 	protected setAudioBuilder(audioBuilder: AudioBuilder) {

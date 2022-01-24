@@ -22,13 +22,13 @@ class SwitchParamsConfig extends NodeParamsConfig {}
 
 const ParamsConfig = new SwitchParamsConfig();
 export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'switch';
 	}
 	static INPUT_INDEX = 'index';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 		// this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 
@@ -63,7 +63,7 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 		return [type];
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const var_type: GlConnectionPointType = this.io.outputs.namedOutputConnectionPoints()[0].type();
 		const out = this.glVarName(this.io.connection_points.output_name(0));
 		const index_point_name = this.io.connection_points.input_name(0);

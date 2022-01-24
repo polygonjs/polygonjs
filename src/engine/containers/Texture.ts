@@ -4,17 +4,17 @@ import {NodeContext} from '../poly/NodeContext';
 import {Number2} from '../../types/GlobalTypes';
 
 export class TextureContainer extends TypedContainer<NodeContext.COP> {
-	set_content(content: ContainableMap[NodeContext.COP]) {
+	override set_content(content: ContainableMap[NodeContext.COP]) {
 		super.set_content(content);
 	}
 
 	texture(): ContainableMap[NodeContext.COP] {
 		return this._content;
 	}
-	coreContent(): ContainableMap[NodeContext.COP] {
+	override coreContent(): ContainableMap[NodeContext.COP] {
 		return this._content;
 	}
-	coreContentCloned(): ContainableMap[NodeContext.COP] | undefined {
+	override coreContentCloned(): ContainableMap[NodeContext.COP] | undefined {
 		const texture = this._content?.clone();
 		if (texture) {
 			texture.needsUpdate = true;
@@ -26,7 +26,7 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 		return this.texture();
 	}
 
-	infos() {
+	override infos() {
 		if (this._content != null) {
 			return [this._content];
 		}

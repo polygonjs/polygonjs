@@ -6,7 +6,7 @@ import {ParamType} from '../../../../poly/ParamType';
 const LINE_BREAK_REGEXP = /\\n+/g;
 
 export class ParamStringJsonImporter extends ParamJsonImporter<StringParam> {
-	add_main(data: ComplexParamJsonExporterData<ParamType.STRING>) {
+	override add_main(data: ComplexParamJsonExporterData<ParamType.STRING>) {
 		let raw_input = data['raw_input'];
 		if (raw_input !== undefined) {
 			// if (CoreType.isString(value)) {

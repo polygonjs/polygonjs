@@ -10,14 +10,14 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 interface CenterSopParams extends DefaultOperationParams {}
 
 export class CenterSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: CenterSopParams = {};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'center'> {
+	static override readonly DEFAULT_PARAMS: CenterSopParams = {};
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'center'> {
 		return 'center';
 	}
 
 	private _geo_center: Vector3 = new Vector3();
-	cook(input_contents: CoreGroup[], params: CenterSopParams) {
+	override cook(input_contents: CoreGroup[], params: CenterSopParams) {
 		const core_group = input_contents[0];
 		const src_objects = core_group.objectsWithGeo();
 

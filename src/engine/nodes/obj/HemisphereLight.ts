@@ -38,8 +38,8 @@ class HemisphereLightObjParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new HemisphereLightObjParamsConfig();
 
 export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, HemisphereLightObjParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return LightType.HEMISPHERE;
 	}
 	private _helperController = new HelperController<Mesh, HemisphereLight>(
@@ -48,7 +48,7 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 		'HemisphereLightHelper'
 	);
 
-	createLight() {
+	override createLight() {
 		const light = new HemisphereLight();
 		light.matrixAutoUpdate = false;
 		// make sure the light is initialized with same defaults as the node parameters
@@ -56,12 +56,12 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 		light.groundColor.copy(DEFAULT.groundColor);
 		return light;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this._helperController.initializeNode();
 	}
 
-	protected updateLightParams() {
+	protected override updateLightParams() {
 		this.light.color = this.pv.skyColor;
 		this.light.groundColor = this.pv.groundColor;
 		this.light.position.copy(this.pv.position);

@@ -44,22 +44,22 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MaterialSopParamsConfig();
 
 export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'material';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['objects to assign material to'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(MaterialSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: MaterialSopOperation | undefined;
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new MaterialSopOperation(this._scene, this.states);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

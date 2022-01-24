@@ -24,24 +24,24 @@ class AnimationMixerSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AnimationMixerSopParamsConfig();
 
 export class AnimationMixerSopNode extends TypedSopNode<AnimationMixerSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'animationMixer';
 	}
 
 	private _previous_time: number | undefined;
 	private _mixer: AnimationMixer | undefined;
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to be animated'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const object = core_group.objects()[0];
 		if (object) {

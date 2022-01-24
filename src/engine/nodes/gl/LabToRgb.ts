@@ -20,12 +20,12 @@ class LabToRgbGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new LabToRgbGlParamsConfig();
 export class LabToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'lab_to_rgb';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -33,7 +33,7 @@ export class LabToRgbGlNode extends TypedGlNode<LabToRgbGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const function_declaration_lines = [];
 		const body_lines = [];
 

@@ -4,10 +4,10 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkAnimParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ANIM, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.ANIM;
 	}
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 }

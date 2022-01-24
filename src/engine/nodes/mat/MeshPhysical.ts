@@ -89,12 +89,12 @@ class MeshPhysicalMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshPhysicalMatParamsConfig();
 
 export class MeshPhysicalMatNode extends TypedMatNode<MeshPhysicalMaterial, MeshPhysicalMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshPhysical';
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		return new MeshPhysicalMaterial({
 			vertexColors: false,
 			side: FrontSide,
@@ -120,7 +120,7 @@ export class MeshPhysicalMatNode extends TypedMatNode<MeshPhysicalMaterial, Mesh
 		physical: new MeshPhysicalController(this, CONTROLLER_OPTIONS),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
@@ -128,7 +128,7 @@ export class MeshPhysicalMatNode extends TypedMatNode<MeshPhysicalMaterial, Mesh
 		});
 	}
 
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

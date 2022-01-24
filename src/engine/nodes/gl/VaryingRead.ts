@@ -31,14 +31,14 @@ class VaryingReadGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new VaryingReadGlParamsConfig();
 export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'varyingRead'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'varyingRead'> {
 		return 'varyingRead';
 	}
 	static readonly OUTPUT_NAME = 'fragment';
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 		this.lifecycle.onAfterCreated(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
@@ -57,7 +57,7 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 		return VaryingReadGlNode.OUTPUT_NAME;
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		if (shaders_collection_controller.current_shader_name == ShaderName.FRAGMENT) {
 			const varying_name = this.pv.name;
 			const definition = new VaryingGLDefinition(this, this.glType(), varying_name);

@@ -17,16 +17,16 @@ class DurationAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DurationAnimParamsConfig();
 
 export class DurationAnimNode extends TypedAnimNode<DurationAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override readonly paramsConfig = ParamsConfig;
+	static override type() {
 		return 'duration';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
+	override cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		timeline_builder.setDuration(this.pv.duration);

@@ -37,17 +37,17 @@ interface Controllers {
 }
 abstract class TextureEmissiveMapMatNode extends TypedMatNode<CurrentMaterial, TextureEmissiveMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureEmissiveMapController extends BaseTextureMapController {
-	constructor(protected node: TextureEmissiveMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureEmissiveMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useEmissiveMap, this.node.p.emissiveMap);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'emissiveMap', this.node.p.useEmissiveMap, this.node.p.emissiveMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
@@ -60,7 +60,7 @@ export class TextureEmissiveMapController extends BaseTextureMapController {
 			mat.emissiveIntensity = this.node.pv.emissiveIntensity;
 		}
 	}
-	static async update(node: TextureEmissiveMapMatNode) {
+	static override async update(node: TextureEmissiveMapMatNode) {
 		node.controllers.emissiveMap.update();
 	}
 }

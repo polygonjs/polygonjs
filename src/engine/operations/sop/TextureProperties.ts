@@ -35,7 +35,7 @@ interface TexturePropertiesSopParams extends DefaultOperationParams {
 }
 
 export class TexturePropertiesSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: TexturePropertiesSopParams = {
+	static override readonly DEFAULT_PARAMS: TexturePropertiesSopParams = {
 		applyToChildren: false,
 		// anisotropy
 		tencoding: false,
@@ -57,12 +57,12 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		tmagFilter: false,
 		magFilter: MAG_FILTER_DEFAULT_VALUE,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'textureProperties'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'textureProperties'> {
 		return 'textureProperties';
 	}
 
-	async cook(input_contents: CoreGroup[], params: TexturePropertiesSopParams) {
+	override async cook(input_contents: CoreGroup[], params: TexturePropertiesSopParams) {
 		const core_group = input_contents[0];
 
 		const objects: Mesh[] = [];

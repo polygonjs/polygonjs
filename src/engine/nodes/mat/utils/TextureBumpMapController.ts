@@ -45,17 +45,17 @@ interface Controllers {
 }
 abstract class TextureBumpMapMatNode extends TypedMatNode<CurrentMaterial, TextureBumpMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureBumpMapController extends BaseTextureMapController {
-	constructor(protected node: TextureBumpMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureBumpMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useBumpMap, this.node.p.bumpMap);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'bumpMap', this.node.p.useBumpMap, this.node.p.bumpMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
@@ -66,7 +66,7 @@ export class TextureBumpMapController extends BaseTextureMapController {
 			mat.bumpScale = this.node.pv.bumpScale;
 		}
 	}
-	static async update(node: TextureBumpMapMatNode) {
+	static override async update(node: TextureBumpMapMatNode) {
 		node.controllers.bumpMap.update();
 	}
 }

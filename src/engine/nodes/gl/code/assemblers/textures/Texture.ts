@@ -16,7 +16,7 @@ import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	private _uniforms: IUniforms | undefined;
 
-	templateShader() {
+	override templateShader() {
 		return {
 			fragmentShader: TemplateDefault,
 			vertexShader: undefined,
@@ -68,7 +68,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	add_output_inputs(output_child: OutputGlNode) {
+	override add_output_inputs(output_child: OutputGlNode) {
 		// output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
 		// output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
 		output_child.io.inputs.setNamedInputConnectionPoints([
@@ -76,7 +76,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			new GlConnectionPoint('alpha', GlConnectionPointType.FLOAT),
 		]);
 	}
-	add_globals_outputs(globals_node: GlobalsGlNode) {
+	override add_globals_outputs(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC2),
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
@@ -89,10 +89,10 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	// CONFIGS
 	//
 	//
-	create_shader_configs() {
+	override create_shader_configs() {
 		return [new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [])];
 	}
-	create_variable_configs() {
+	override create_variable_configs() {
 		return [
 			new VariableConfig('color', {
 				prefix: 'diffuseColor.xyz = ',
@@ -109,13 +109,13 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	// TEMPLATE HOOKS
 	//
 	//
-	protected insert_define_after(shader_name: ShaderName) {
+	protected override insert_define_after(shader_name: ShaderName) {
 		return '// INSERT DEFINE';
 	}
-	protected insert_body_after(shader_name: ShaderName) {
+	protected override insert_body_after(shader_name: ShaderName) {
 		return '// INSERT BODY';
 	}
-	protected lines_to_remove(shader_name: ShaderName) {
+	protected override lines_to_remove(shader_name: ShaderName) {
 		return ['// INSERT DEFINE', '// INSERT BODY'];
 	}
 
@@ -125,7 +125,10 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		}
 	}
 
-	set_node_lines_output(output_node: OutputGlNode, shaders_collection_controller: ShadersCollectionController) {
+	override set_node_lines_output(
+		output_node: OutputGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		const input_names = this.input_names_for_shader_name(
 			output_node,
 			shaders_collection_controller.current_shader_name
@@ -152,7 +155,10 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		}
 	}
 
-	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {
+	override set_node_lines_globals(
+		globals_node: GlobalsGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		const shader_name = shaders_collection_controller.current_shader_name;
 		const shader_config = this.shader_config(shader_name);
 		if (!shader_config) {

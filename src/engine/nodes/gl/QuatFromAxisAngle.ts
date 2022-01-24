@@ -28,11 +28,11 @@ const DefaultValues: IDefaultValues = {
 };
 
 export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
-	static type() {
+	static override type() {
 		return 'quatFromAxisAngle';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => InputNames[index]);
@@ -46,10 +46,10 @@ export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	// protected _gl_input_name(index: number) {
 	// 	return InputNames[index];
 	// }
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return DefaultValues[name as InputName];
 	}
-	gl_method_name(): string {
+	override gl_method_name(): string {
 		return 'quatFromAxisAngle';
 	}
 
@@ -59,7 +59,7 @@ export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	// protected expected_output_types() {
 	// 	return [ConnectionPointType.VEC4];
 	// }
-	gl_function_definitions() {
+	override gl_function_definitions() {
 		return [new FunctionGLDefinition(this, Quaternion)];
 	}
 }

@@ -34,21 +34,21 @@ class EnvMapCopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'envMap';
 	}
 	private _data_texture_controller: DataTextureController | undefined;
 	private _renderer_controller: CopRendererController | undefined;
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 
 		// for now, if I clone the input, it gets messed up
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	async cook(input_contents: Texture[]) {
+	override async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
 		this.convert_texture_to_env_map(texture);
 	}

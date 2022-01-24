@@ -34,14 +34,14 @@ class LimitEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new LimitEventParamsConfig();
 
 export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'limit';
 	}
 
 	private _process_count: number = 0;
 	private _last_dispatched: boolean = false;
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				LimitEventInput.TRIGGER,
@@ -61,7 +61,7 @@ export class LimitEventNode extends TypedEventNode<LimitEventParamsConfig> {
 		]);
 	}
 
-	processEvent(event_context: EventContext<Event>) {}
+	override processEvent(event_context: EventContext<Event>) {}
 
 	private processEventTrigger(event_context: EventContext<Event>) {
 		if (this._process_count < this.pv.maxCount) {

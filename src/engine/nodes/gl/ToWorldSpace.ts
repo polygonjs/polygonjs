@@ -31,19 +31,19 @@ class ToWorldSpaceGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ToWorldSpaceGlParamsConfig();
 export class ToWorldSpaceGlNode extends TypedGlNode<ToWorldSpaceGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'toWorldSpace';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.connection_points.spare_params.set_inputless_param_names(['interpretation']);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 		const vec = ThreeToGl.vector3(this.variableForInputParam(this.p.vec));
 		const out = this.glVarName(OUTPUT_NAME);

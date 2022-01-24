@@ -18,7 +18,7 @@ interface AttribFromTextureSopParams extends DefaultOperationParams {
 }
 
 export class AttribFromTextureSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AttribFromTextureSopParams = {
+	static override readonly DEFAULT_PARAMS: AttribFromTextureSopParams = {
 		texture: new TypedNodePathParamValue(NODE_PATH_DEFAULT.NODE.EMPTY),
 		uvAttrib: 'uv',
 		attrib: 'pscale',
@@ -26,12 +26,12 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		add: 0,
 		mult: 1,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attribFromTexture'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'attribFromTexture'> {
 		return 'attribFromTexture';
 	}
 
-	async cook(input_contents: CoreGroup[], params: AttribFromTextureSopParams) {
+	override async cook(input_contents: CoreGroup[], params: AttribFromTextureSopParams) {
 		const core_group = input_contents[0];
 
 		const texture_node = params.texture.nodeWithContext(NodeContext.COP, this.states?.error);

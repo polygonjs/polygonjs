@@ -83,12 +83,12 @@ class MeshStandardMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshStandardMatParamsConfig();
 
 export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, MeshStandardMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshStandard';
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		return new MeshStandardMaterial({
 			vertexColors: false,
 			side: FrontSide,
@@ -113,7 +113,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
@@ -121,7 +121,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		});
 	}
 
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

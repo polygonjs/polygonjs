@@ -53,11 +53,11 @@ class GifCopParamsConfig extends TextureParamConfig(GifCopParamConfig(NodeParams
 const ParamsConfig = new GifCopParamsConfig();
 
 export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'gif';
 	}
-	async requiredModules() {
+	override async requiredModules() {
 		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}
@@ -67,15 +67,15 @@ export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
 
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['optional texture to copy attributes from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
-	async cook(input_contents: Texture[]) {
+	override async cook(input_contents: Texture[]) {
 		if (!isUrlGif(this.pv.url)) {
 			this.states.error.set('url is not an image');
 		} else {

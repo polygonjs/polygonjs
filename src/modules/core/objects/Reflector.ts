@@ -34,7 +34,7 @@ interface ReflectorOptions extends BaseReflectorOptions {
 }
 
 export class Reflector extends BaseReflector<BufferGeometry, ShaderMaterial> {
-	constructor(public geometry: BufferGeometry, protected _options: ReflectorOptions) {
+	constructor(public override geometry: BufferGeometry, protected override _options: ReflectorOptions) {
 		super(geometry, _options);
 	}
 	protected _createMaterial() {
@@ -51,14 +51,14 @@ export class Reflector extends BaseReflector<BufferGeometry, ShaderMaterial> {
 		return material;
 	}
 
-	dispose() {
+	override dispose() {
 		this.renderTarget.dispose();
 		this.material.dispose();
 		this._coreRenderBlur.dispose();
 		super.dispose();
 	}
 
-	clone(recursive: boolean): this {
+	override clone(recursive: boolean): this {
 		// we clone so that a cloned reflector does not share the same color
 		const clonedOptions = {...this._options};
 		clonedOptions.color = this._options.color.clone();

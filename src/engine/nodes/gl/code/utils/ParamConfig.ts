@@ -37,7 +37,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		this._callback(node, param);
 	}
 
-	protected _callback(node: BaseNodeType, param: BaseParamType) {
+	protected override _callback(node: BaseNodeType, param: BaseParamType) {
 		GlParamConfig.callback(param, this.uniform);
 		// switch (param.type) {
 		// 	case ParamType.RAMP:

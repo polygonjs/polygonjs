@@ -23,17 +23,17 @@ class AfterImagePostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new AfterImagePostParamsConfig();
 export class AfterImagePostNode extends TypedPostProcessNode<AfterImagePassWithUniforms, AfterImagePostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'afterImage';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new AfterimagePass() as AfterImagePassWithUniforms;
 		this.updatePass(pass);
 		return pass;
 	}
-	updatePass(pass: AfterImagePassWithUniforms) {
+	override updatePass(pass: AfterImagePassWithUniforms) {
 		pass.uniforms.damp.value = this.pv.damp;
 	}
 }

@@ -276,8 +276,8 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new WebGLRendererRopParamsConfig();
 
 export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<RopType.WEBGL> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<RopType.WEBGL> {
 		return RopType.WEBGL;
 	}
 
@@ -328,7 +328,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		return renderer;
 	}
 
-	cook() {
+	override cook() {
 		this._renderersbyCameraNode.forEach((renderer, cameraNode) => {
 			this._update_renderer(renderer);
 		});

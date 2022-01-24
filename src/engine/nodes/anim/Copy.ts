@@ -11,18 +11,18 @@ class CopyAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CopyAnimParamsConfig();
 
 export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override readonly paramsConfig = ParamsConfig;
+	static override type() {
 		return 'copy';
 	}
 
 	private _stampNode!: CopyStamp;
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	async cook(input_contents: TimelineBuilder[]) {
+	override async cook(input_contents: TimelineBuilder[]) {
 		const builder = new TimelineBuilder();
 		for (let i = 0; i < this.pv.count; i++) {
 			this.stampNode().setGlobalIndex(i);

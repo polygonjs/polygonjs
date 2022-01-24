@@ -32,16 +32,16 @@ class PitchShiftAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PitchShiftAudioParamsConfig();
 
 export class PitchShiftAudioNode extends TypedAudioNode<PitchShiftAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'pitchShift';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 		const effect = this._effect();
 

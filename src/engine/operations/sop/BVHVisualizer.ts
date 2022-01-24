@@ -10,14 +10,14 @@ interface BVHVisualizerSopParams extends DefaultOperationParams {
 }
 
 export class BVHVisualizerSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: BVHVisualizerSopParams = {
+	static override readonly DEFAULT_PARAMS: BVHVisualizerSopParams = {
 		depth: 0,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'BVHVisualizer'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'BVHVisualizer'> {
 		return 'BVHVisualizer';
 	}
-	cook(input_contents: CoreGroup[], params: BVHVisualizerSopParams) {
+	override cook(input_contents: CoreGroup[], params: BVHVisualizerSopParams) {
 		const coreGroup = input_contents[0];
 		const object = coreGroup.objects()[0] as Mesh;
 		const visualizer = new MeshBVHVisualizer(object, params.depth);

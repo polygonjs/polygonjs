@@ -5,21 +5,25 @@ import {ParamsInitData} from '../../../engine/nodes/utils/io/IOController';
 import {Texture} from 'three/src/textures/Texture';
 
 export class BaseCopOperation extends BaseOperation<NodeContext.COP> {
-	static context() {
+	static override context() {
 		return NodeContext.COP;
 	}
-	cook(input_contents: Texture[], params: any): Texture | Promise<Texture> | void {}
+	override cook(input_contents: Texture[], params: any): Texture | Promise<Texture> | void {}
 }
 
 export type OperationInputsMap = WeakMap<CopOperationContainer, Map<number, number>>;
 
 export class CopOperationContainer extends BaseOperationContainer<NodeContext.COP> {
-	constructor(protected operation: BaseCopOperation, protected name: string, protected init_params: ParamsInitData) {
+	constructor(
+		protected override operation: BaseCopOperation,
+		protected override name: string,
+		protected init_params: ParamsInitData
+	) {
 		super(operation, name, init_params);
 	}
 
 	// TODO: there may a better to overload add_input
-	protected _inputs: CopOperationContainer[] = [];
+	protected override _inputs: CopOperationContainer[] = [];
 	private _currentInputIndex: number = 0;
 	addInput(input: CopOperationContainer) {
 		super.setInput(this._currentInputIndex, input);

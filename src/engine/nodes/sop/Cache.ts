@@ -26,20 +26,20 @@ class CacheSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CacheSopParamsConfig();
 
 export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'cache';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to cache'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const is_cache_empty = this.pv.cache == '' || this.pv.cache == null;
 		const core_group = input_contents[0];
 		if (is_cache_empty && core_group) {

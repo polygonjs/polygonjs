@@ -23,14 +23,14 @@ class SubnetInputSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SubnetInputSopParamsConfig();
 
 export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return NetworkChildNodeType.INPUT;
 	}
 
 	private _currentParentInputGraphNode: CoreGraphNode | undefined;
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 
 		this.lifecycle.onAfterAdded(() => {
@@ -38,7 +38,7 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 		});
 	}
 
-	async cook() {
+	override async cook() {
 		const inputIndex = this.pv.input;
 		const parent = this.parent();
 		if (parent) {

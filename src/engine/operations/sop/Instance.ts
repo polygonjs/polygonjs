@@ -21,20 +21,20 @@ interface InstanceSopParams extends DefaultOperationParams {
 }
 
 export class InstanceSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: InstanceSopParams = {
+	static override readonly DEFAULT_PARAMS: InstanceSopParams = {
 		attributesToCopy: 'instance*',
 		applyMaterial: true,
 		material: new TypedNodePathParamValue(''),
 	};
-	static readonly INPUT_CLONED_STATE = [InputCloneMode.ALWAYS, InputCloneMode.NEVER];
-	static type(): Readonly<'instance'> {
+	static override readonly INPUT_CLONED_STATE = [InputCloneMode.ALWAYS, InputCloneMode.NEVER];
+	static override type(): Readonly<'instance'> {
 		return 'instance';
 	}
 
 	private _globals_handler: GlobalsGeometryHandler | undefined;
 	private _geometry: BufferGeometry | undefined;
 
-	async cook(input_contents: CoreGroup[], params: InstanceSopParams) {
+	override async cook(input_contents: CoreGroup[], params: InstanceSopParams) {
 		const core_group_to_instance = input_contents[0];
 		this._geometry = undefined;
 

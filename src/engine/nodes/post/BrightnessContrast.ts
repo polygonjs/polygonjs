@@ -34,12 +34,12 @@ class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new BrightnessContrastPostParamsConfig();
 export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass, BrightnessContrastPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'brightnessContrast';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(BrightnessContrastShader) as BrightnessContrastPassWithUniforms;
 		// pass.clear = false;
 		// (pass as any).clearAlpha = false;
@@ -50,7 +50,7 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<ShaderPass,
 
 		return pass;
 	}
-	updatePass(pass: BrightnessContrastPassWithUniforms) {
+	override updatePass(pass: BrightnessContrastPassWithUniforms) {
 		pass.uniforms.brightness.value = this.pv.brightness;
 		pass.uniforms.contrast.value = this.pv.contrast;
 		pass.material.transparent = this.pv.transparent;

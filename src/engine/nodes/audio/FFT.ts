@@ -68,16 +68,16 @@ class FFTAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FFTAudioParamsConfig();
 
 export class FFTAudioNode extends BaseAnalyserAudioNode<FFTAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return AudioNodeAnalyserType.FFT;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
 		this._resetEffect();

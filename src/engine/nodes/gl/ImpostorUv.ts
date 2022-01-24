@@ -27,11 +27,11 @@ class ImpostorUvGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ImpostorUvGlParamsConfig();
 export class ImpostorUvGlNode extends TypedGlNode<ImpostorUvGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'impostorUv';
 	}
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -39,7 +39,7 @@ export class ImpostorUvGlNode extends TypedGlNode<ImpostorUvGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines: string[] = [];
 
 		shaders_collection_controller.addDefinitions(this, [

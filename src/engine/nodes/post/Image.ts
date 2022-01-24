@@ -40,8 +40,8 @@ class ImagePostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ImagePostParamsConfig();
 export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'image';
 	}
 
@@ -58,13 +58,13 @@ export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostPar
 		};
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(ImagePostNode._create_shader()) as ShaderPassWithRequiredUniforms;
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: ShaderPassWithRequiredUniforms) {
+	override updatePass(pass: ShaderPassWithRequiredUniforms) {
 		pass.uniforms.darkness.value = this.pv.darkness;
 		pass.uniforms.offset.value = this.pv.offset;
 

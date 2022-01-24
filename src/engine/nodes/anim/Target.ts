@@ -55,16 +55,16 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TargetAnimParamsConfig();
 
 export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'target';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(inputCoreContents: TimelineBuilder[]) {
+	override cook(inputCoreContents: TimelineBuilder[]) {
 		const timelineBuilder = inputCoreContents[0] || new TimelineBuilder();
 
 		const target = this._create_target(timelineBuilder);

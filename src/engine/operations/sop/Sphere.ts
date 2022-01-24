@@ -33,7 +33,7 @@ export const SPHERE_TYPE: SphereTypes = {
 export const SPHERE_TYPES: Array<SphereType> = [SphereType.DEFAULT, SphereType.ISOCAHEDRON];
 
 export class SphereSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: SphereSopParams = {
+	static override readonly DEFAULT_PARAMS: SphereSopParams = {
 		type: SPHERE_TYPE.default,
 		radius: 1,
 		resolution: new Vector2(30, 30),
@@ -45,12 +45,12 @@ export class SphereSopOperation extends BaseSopOperation {
 		detail: 1,
 		center: new Vector3(0, 0, 0),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'sphere'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'sphere'> {
 		return 'sphere';
 	}
 
-	cook(input_contents: CoreGroup[], params: SphereSopParams) {
+	override cook(input_contents: CoreGroup[], params: SphereSopParams) {
 		const core_group = input_contents[0];
 		if (core_group) {
 			return this._cook_with_input(core_group, params);

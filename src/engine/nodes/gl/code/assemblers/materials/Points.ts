@@ -24,11 +24,11 @@ CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomPointsDe
 CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomPointsDepthDOF);
 
 export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
-	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
+	override custom_assembler_class_by_custom_name(): CustomAssemblerMap {
 		return CUSTOM_ASSEMBLER_MAP;
 	}
 
-	templateShader() {
+	override templateShader() {
 		const template = ShaderLib.points;
 		return {
 			vertexShader: template.vertexShader,
@@ -36,7 +36,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 			uniforms: template.uniforms,
 		};
 	}
-	createMaterial() {
+	override createMaterial() {
 		const template_shader = this.templateShader();
 
 		// const uniforms = UniformsUtils.clone( template_shader.uniforms )
@@ -72,18 +72,18 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	// those shadow shaders should ideally be overriden
 	// to properly take into account point size
 
-	add_output_inputs(output_child: OutputGlNode) {
+	override add_output_inputs(output_child: OutputGlNode) {
 		const list = BaseGlShaderAssembler.output_input_connection_points();
 		list.push(new GlConnectionPoint('gl_PointSize', GlConnectionPointType.FLOAT));
 		output_child.io.inputs.setNamedInputConnectionPoints(list);
 	}
-	create_globals_node_output_connections() {
+	override create_globals_node_output_connections() {
 		return BaseGlShaderAssembler.create_globals_node_output_connections().concat([
 			new GlConnectionPoint(GlobalsOutput.GL_POINTCOORD, GlConnectionPointType.VEC2),
 		]);
 	}
 
-	create_shader_configs() {
+	override create_shader_configs() {
 		return [
 			new ShaderConfig(
 				ShaderName.VERTEX,
@@ -93,7 +93,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
 		];
 	}
-	create_variable_configs() {
+	override create_variable_configs() {
 		return BaseGlShaderAssembler.create_variable_configs().concat([
 			new VariableConfig('gl_PointSize', {
 				default: '1.0',
@@ -102,7 +102,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 			}),
 		]);
 	}
-	protected lines_to_remove(shader_name: ShaderName) {
+	protected override lines_to_remove(shader_name: ShaderName) {
 		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
 }

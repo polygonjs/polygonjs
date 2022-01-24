@@ -102,8 +102,8 @@ const ParamsConfig = new PostProcessCopNetworkParamsConfig();
 // when the params of the children post nodes are updated,
 // this node currently does not re-render
 export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'post';
 	}
 
@@ -126,13 +126,13 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 	private _rendererController: CopRendererController | undefined;
 
 	readonly effectsComposerController: EffectsComposerController = new EffectsComposerController(this);
-	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
+	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.effectsComposerController.displayNodeControllerCallbacks()
 	);
 
-	protected _childrenControllerContext = NodeContext.POST;
-	initializeNode() {
+	protected override _childrenControllerContext = NodeContext.POST;
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 
 		// init scene
@@ -149,19 +149,28 @@ export class PostCopNode extends TypedCopNode<PostProcessCopNetworkParamsConfig>
 		});
 	}
 
-	createNode<S extends keyof PostNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): PostNodeChildrenMap[S];
-	createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof PostNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): PostNodeChildrenMap[S];
+	override createNode<K extends valueof<PostNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<PostNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BasePostProcessNodeType[];
 	}
-	nodesByType<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][] {
 		return super.nodesByType(type) as PostNodeChildrenMap[K][];
 	}
 
-	async cook(input_contents: Texture[]) {
+	override async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
 		this.build_effects_composer_if_required();
 		this._renderOnTarget(texture);

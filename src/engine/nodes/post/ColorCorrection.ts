@@ -33,17 +33,17 @@ class ColorCorrectionPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ColorCorrectionPostParamsConfig();
 export class ColorCorrectionPostNode extends TypedPostProcessNode<ShaderPass, ColorCorrectionPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'colorCorrection';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(ColorCorrectionShader) as ColorCorrectionPassWithUniforms;
 		this.updatePass(pass);
 		return pass;
 	}
-	updatePass(pass: ColorCorrectionPassWithUniforms) {
+	override updatePass(pass: ColorCorrectionPassWithUniforms) {
 		pass.uniforms.powRGB.value.copy(this.pv.pow);
 		pass.uniforms.mulRGB.value.set(this.pv.mult.r, this.pv.mult.g, this.pv.mult.b);
 		pass.uniforms.addRGB.value.set(this.pv.add.r, this.pv.add.g, this.pv.add.b);

@@ -39,17 +39,17 @@ class FaceSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FaceSopParamsConfig();
 
 export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'face';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
 		if (isBooleanTrue(this.pv.makeFacesUnique)) {

@@ -143,11 +143,11 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 	ShaderMaterialWithUniforms,
 	MeshSubsurfaceScatteringMatParamsConfig
 > {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshSubsurfaceScattering';
 	}
-	createMaterial() {
+	override createMaterial() {
 		const uniforms = UniformsUtils.clone(SubsurfaceScatteringShader.uniforms);
 		const material: ShaderMaterialWithUniforms = new ShaderMaterial({
 			uniforms: uniforms,
@@ -165,14 +165,14 @@ export class MeshSubsurfaceScatteringMatNode extends TypedMatNode<
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
 			}
 		});
 	}
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

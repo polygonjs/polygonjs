@@ -31,7 +31,7 @@ interface ObjectPropertiesSopParams extends DefaultOperationParams {
 }
 
 export class ObjectPropertiesSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: ObjectPropertiesSopParams = {
+	static override readonly DEFAULT_PARAMS: ObjectPropertiesSopParams = {
 		applyToChildren: false,
 		// name
 		tname: false,
@@ -55,12 +55,12 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 		treceiveShadow: false,
 		receiveShadow: true,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'objectProperties'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'objectProperties'> {
 		return 'objectProperties';
 	}
 
-	cook(inputCoreGroups: CoreGroup[], params: ObjectPropertiesSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: ObjectPropertiesSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
 		for (let object of coreGroup.objects()) {

@@ -13,8 +13,8 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 class JsPointSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new JsPointSopParamsConfig();
 export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'jsPoint';
 	}
 	// protected _assembler_controller: GlAssemblerController<ShaderAssemblerParticles> = new GlAssemblerController<
@@ -32,9 +32,9 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 	// }
 
 	// private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
-	protected _childrenControllerContext = NodeContext.JS;
+	protected override _childrenControllerContext = NodeContext.JS;
 	// private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
@@ -47,19 +47,28 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// this.children_controller?.init({dependent: false});
 	}
 
-	createNode<S extends keyof JsNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): JsNodeChildrenMap[S];
-	createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof JsNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): JsNodeChildrenMap[S];
+	override createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseJsNodeType[];
 	}
-	nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
 		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		// this.gpu_controller.set_restart_not_required();
 		const core_group = input_contents[0];
 

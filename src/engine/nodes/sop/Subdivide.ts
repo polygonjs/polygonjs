@@ -18,17 +18,17 @@ class SubdivideSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SubdivideSopParamsConfig();
 
 export class SubdivideSopNode extends TypedSopNode<SubdivideSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'subdivide';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
 	private _operation: SubdivideSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new SubdivideSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

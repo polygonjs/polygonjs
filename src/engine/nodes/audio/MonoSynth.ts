@@ -15,16 +15,16 @@ class MonoSynthAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new MonoSynthAudioParamsConfig();
 
 export class MonoSynthAudioNode extends TypedAudioNode<MonoSynthAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'monoSynth';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const envelopeBuilder = inputContents[0];
 		const envelopeParams = envelopeBuilder.envelopeParams() || ENVELOPE_DEFAULTS;
 

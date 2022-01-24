@@ -37,7 +37,7 @@ interface TransformSopParams extends DefaultOperationParams {
 }
 
 export class TransformSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: TransformSopParams = {
+	static override readonly DEFAULT_PARAMS: TransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES),
 		objectMode: TRANSFORM_OBJECT_MODES.indexOf(TransformObjectMode.SET_PARAMS),
 		group: '',
@@ -48,13 +48,13 @@ export class TransformSopOperation extends BaseSopOperation {
 		scale: 1,
 		pivot: new Vector3(0, 0, 0),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'transform'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'transform'> {
 		return 'transform';
 	}
 
 	private _coreTransform = new CoreTransform();
-	cook(inputCoreGroups: CoreGroup[], params: TransformSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: TransformSopParams) {
 		const objects = inputCoreGroups[0].objects();
 
 		this._applyTransform(objects, params);

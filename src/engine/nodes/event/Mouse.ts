@@ -70,21 +70,21 @@ class MouseEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MouseEventParamsConfig();
 
 export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'mouse';
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`));
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(
 			ACCEPTED_MOUSE_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.MOUSE);
 			})
 		);
 	}
-	processEvent(event_context: EventContext<MouseEvent>) {
+	override processEvent(event_context: EventContext<MouseEvent>) {
 		if (!this.pv.active) {
 			return;
 		}

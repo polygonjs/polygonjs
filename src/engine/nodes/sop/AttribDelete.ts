@@ -28,21 +28,21 @@ class AttribDeleteSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribDeleteSopParamsConfig();
 
 export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribDelete';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to delete attributes from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const attrib_names = core_group.attribNamesMatchingMask(this.pv.name);
 

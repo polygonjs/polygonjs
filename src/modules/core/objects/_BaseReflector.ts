@@ -49,7 +49,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	TMaterial
 > {
 	static DEFAULT_UP = new Vector3(0, 0, 1);
-	public type = 'BaseReflector';
+	public override type = 'BaseReflector';
 
 	private reflectorPlane = new Plane();
 	private normal = new Vector3();
@@ -67,13 +67,13 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	private virtualCamera = new PerspectiveCamera();
 
 	protected renderTarget: WebGLRenderTarget;
-	public material: TMaterial;
+	public override material: TMaterial;
 	protected _coreRenderBlur: CoreRenderBlur;
 
-	public onBeforeRender = this._onBeforeRender.bind(this);
+	public override onBeforeRender = this._onBeforeRender.bind(this);
 	protected _mirrorCameraMultipliedByMatrixWorld = true;
 
-	constructor(public geometry: TGeometry, protected _options: BaseReflectorOptions) {
+	constructor(public override geometry: TGeometry, protected _options: BaseReflectorOptions) {
 		super(geometry);
 
 		const {width, height} = this._getRendererSize(this._options.renderer);

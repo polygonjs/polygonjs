@@ -9,15 +9,24 @@ import {JsAssemblerNodeSpareParamsController} from './SpareParamsController';
 import {NodeCreateOptions} from '../../utils/hierarchy/ChildrenController';
 
 export class AssemblerControllerNode extends TypedNode<any, any> {
-	createNode<S extends keyof JsNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): JsNodeChildrenMap[S];
-	createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<JsNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof JsNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): JsNodeChildrenMap[S];
+	override createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseJsNodeType[];
 	}
-	nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
 		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
 

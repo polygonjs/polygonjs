@@ -26,18 +26,18 @@ export const HIERARCHY_MODES: Array<HierarchyMode> = [
 ];
 
 export class HierarchySopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: HierarchySopParams = {
+	static override readonly DEFAULT_PARAMS: HierarchySopParams = {
 		mode: 0,
 		levels: 1,
 		objectMask: '',
 		debugObjectMask: false,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'hierarchy'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'hierarchy'> {
 		return 'hierarchy';
 	}
 
-	cook(input_contents: CoreGroup[], params: HierarchySopParams) {
+	override cook(input_contents: CoreGroup[], params: HierarchySopParams) {
 		const core_group = input_contents[0];
 
 		const mode = HIERARCHY_MODES[params.mode];

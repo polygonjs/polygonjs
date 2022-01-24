@@ -17,7 +17,7 @@ export abstract class ShaderAssemblerMesh extends ShaderAssemblerMaterial {
 	// TODO: I've noticed a case where instances would not display when those shadow shaders were exported
 	// But the objects display fine if those are not assigned
 	// so it could be a bug at render time (not sure if my code, threejs or hardware)
-	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
+	override custom_assembler_class_by_custom_name(): CustomAssemblerMap {
 		return ASSEMBLER_MAP;
 	}
 }

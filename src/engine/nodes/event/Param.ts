@@ -37,23 +37,23 @@ class ParamEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ParamEventParamsConfig();
 
 export class ParamEventNode extends TypedEventNode<ParamEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'param'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'param'> {
 		return 'param';
 	}
 	static readonly OUTPUT_NAME = 'valueChanged';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(ParamEventNode.OUTPUT_NAME, EventConnectionPointType.BASE),
 		]);
 	}
 
-	async cook() {
+	override async cook() {
 		await this._listenToParam();
 		this.cookController.endCook();
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		this._reset();
 	}

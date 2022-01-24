@@ -37,8 +37,8 @@ export abstract class TypedBuilderMatNode<
 	K extends MatBuilderParamsConfig
 > extends TypedMatNode<ShaderMaterialWithCustomMaterials, K> {
 	protected _assembler_controller: GlAssemblerController<A> | undefined;
-	protected _childrenControllerContext = NodeContext.GL;
-	readonly persisted_config: MaterialPersistedConfig = new MaterialPersistedConfig(this);
+	protected override _childrenControllerContext = NodeContext.GL;
+	override readonly persisted_config: MaterialPersistedConfig = new MaterialPersistedConfig(this);
 
 	//
 	//
@@ -65,18 +65,27 @@ export abstract class TypedBuilderMatNode<
 	}
 	protected abstract _create_assembler_controller(): GlAssemblerController<A> | undefined;
 
-	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): GlNodeChildrenMap[S];
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
-	childrenAllowed() {
+	override childrenAllowed() {
 		if (this.assemblerController) {
 			return super.childrenAllowed();
 		}

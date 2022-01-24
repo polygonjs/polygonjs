@@ -12,11 +12,11 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 export class NullGlNode extends BaseNodeGlMathFunctionArg1GlNode {
-	static type() {
+	static override type() {
 		return 'null';
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const in_value = ThreeToGl.any(this.variableForInput(this._gl_input_name(0)));
 
 		const out_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];

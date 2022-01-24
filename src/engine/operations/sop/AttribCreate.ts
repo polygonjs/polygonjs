@@ -24,7 +24,7 @@ interface AttribCreateSopParams extends DefaultOperationParams {
 }
 
 export class AttribCreateSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AttribCreateSopParams = {
+	static override readonly DEFAULT_PARAMS: AttribCreateSopParams = {
 		group: '',
 		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
@@ -36,12 +36,12 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		value4: new Vector4(0, 0, 0, 0),
 		string: '',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attribCreate'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'attribCreate'> {
 		return 'attribCreate';
 	}
 
-	cook(inputCoreGroups: CoreGroup[], params: AttribCreateSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: AttribCreateSopParams) {
 		const coreGroup = inputCoreGroups[0];
 		const attribName = params.name;
 		if (attribName && attribName.trim() != '') {

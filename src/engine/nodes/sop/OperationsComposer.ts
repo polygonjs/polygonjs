@@ -17,12 +17,12 @@ export interface OperationContainerInputConfig {
 }
 
 export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return OPERATIONS_COMPOSER_NODE_TYPE;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		// the number of inputs will be set from the JsonImporter, when the node is created
 		// since this is when we can know the number of inputs
 		// and creating a large number of max inputs in advance
@@ -65,7 +65,7 @@ export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSo
 		}
 	}
 
-	async cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		if (this._outputOperationContainer) {
 			this._outputOperationContainer.setDirty();
 

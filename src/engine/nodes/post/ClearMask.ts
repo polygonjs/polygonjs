@@ -5,16 +5,16 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class ClearMaskPostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ClearMaskPostParamsConfig();
 export class ClearMaskPostNode extends TypedPostProcessNode<ClearMaskPass, ClearMaskPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'clearMask';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ClearMaskPass();
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: ClearMaskPass) {}
+	override updatePass(pass: ClearMaskPass) {}
 }

@@ -41,20 +41,20 @@ const AXIS_VERTICAL = new Vector3(0, 1, 0);
 const AXIS_HORIZONTAL = new Vector3(-1, 0, 0);
 
 export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObjParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'polarTransform';
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = this._createHelper();
 
-	createObject() {
+	override createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 
 		if (!this.dirtyController.hasHook(HOOK_NAME)) {
@@ -127,7 +127,7 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 		q: new Quaternion(),
 		s: new Vector3(),
 	};
-	cook() {
+	override cook() {
 		const object = this.object;
 
 		this._centerMatrix.identity();

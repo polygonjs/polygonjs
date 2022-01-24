@@ -19,18 +19,18 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 
 export class ObjectsCountExpression extends BaseMethod {
-	protected _requireDependency = true;
+	protected override _requireDependency = true;
 	// npoints(0)
 	// npoints('../REF_bbox')
-	static requiredArguments() {
+	static override requiredArguments() {
 		return [['string', 'path to node']];
 	}
 
-	findDependency(index_or_path: number | string): MethodDependency | null {
+	override findDependency(index_or_path: number | string): MethodDependency | null {
 		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	processArguments(args: any[]): Promise<any> {
+	override processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (args.length == 1) {
 				const index_or_path = args[0];

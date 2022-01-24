@@ -9,7 +9,7 @@ import {ArrayUtils} from '../../../core/ArrayUtils';
 export class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseGlMathFunctionParamsConfig();
 export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFunctionParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 	protected gl_method_name() {
 		return ''; // leave blank to allow nodes such as mult, add, substract to work
 	}
@@ -17,7 +17,7 @@ export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFun
 		return [];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
@@ -46,7 +46,7 @@ export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFun
 		return 'in';
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const var_type: GlConnectionPointType = this.io.outputs.namedOutputConnectionPoints()[0].type();
 		const args = this.io.inputs.namedInputConnectionPoints().map((connection, i) => {
 			const name = connection.name();
@@ -75,10 +75,10 @@ function inputTypeOrFloatExceptBool(inputType: GlConnectionPointType | undefined
 //
 //
 export abstract class BaseNodeGlMathFunctionArg1GlNode extends BaseGlMathFunctionGlNode {
-	protected _gl_input_name(index: number) {
+	protected override _gl_input_name(index: number) {
 		return 'in';
 	}
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type];
 	}
@@ -90,7 +90,7 @@ export abstract class BaseNodeGlMathFunctionArg1GlNode extends BaseGlMathFunctio
 //
 //
 export abstract class BaseNodeGlMathFunctionArg2GlNode extends BaseGlMathFunctionGlNode {
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type];
 	}
@@ -102,7 +102,7 @@ export abstract class BaseNodeGlMathFunctionArg2GlNode extends BaseGlMathFunctio
 //
 //
 export abstract class BaseNodeGlMathFunctionArg3GlNode extends BaseGlMathFunctionGlNode {
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type];
 	}
@@ -113,7 +113,7 @@ export abstract class BaseNodeGlMathFunctionArg3GlNode extends BaseGlMathFunctio
 //
 //
 export abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMathFunctionGlNode {
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type, type];
 	}
@@ -124,7 +124,7 @@ export abstract class BaseNodeGlMathFunctionArg4GlNode extends BaseGlMathFunctio
 //
 //
 export abstract class BaseNodeGlMathFunctionArg5GlNode extends BaseGlMathFunctionGlNode {
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type, type, type];
 	}

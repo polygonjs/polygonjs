@@ -20,18 +20,18 @@ interface AddSopParams extends DefaultOperationParams {
 }
 
 export class AddSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AddSopParams = {
+	static override readonly DEFAULT_PARAMS: AddSopParams = {
 		createPoint: true,
 		pointsCount: 1,
 		position: new Vector3(0, 0, 0),
 		connectInputPoints: false,
 		connectToLastPoint: false,
 	};
-	static type(): Readonly<'add'> {
+	static override type(): Readonly<'add'> {
 		return 'add';
 	}
 
-	cook(input_contents: CoreGroup[], params: AddSopParams) {
+	override cook(input_contents: CoreGroup[], params: AddSopParams) {
 		const objects: Object3D[] = [];
 		this._create_point(objects, params);
 		this._create_polygon(input_contents[0], objects, params);

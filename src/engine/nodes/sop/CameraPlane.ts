@@ -66,8 +66,8 @@ class CameraPlaneSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CameraPlaneSopParamsConfig();
 
 export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'cameraPlane';
 	}
 	private _plane = new Plane();
@@ -76,7 +76,7 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 	private _planeCenter = new Vector3();
 	private _core_transform = new CoreTransform();
 
-	cook() {
+	override cook() {
 		this._updateWindowControllerDependency();
 
 		const foundNode = this.pv.camera.nodeWithContext(NodeContext.OBJ);

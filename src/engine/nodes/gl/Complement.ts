@@ -9,15 +9,15 @@ import ComplementMethods from './gl/complement.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 export class ComplementGlNode extends BaseNodeGlMathFunctionArg1GlNode {
-	static type() {
+	static override type() {
 		return 'complement';
 	}
 
-	gl_method_name(): string {
+	override gl_method_name(): string {
 		return 'complement';
 	}
 
-	gl_function_definitions() {
+	override gl_function_definitions() {
 		return [new FunctionGLDefinition(this, ComplementMethods)];
 	}
 }

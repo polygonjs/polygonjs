@@ -26,16 +26,16 @@ class OperationAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new OperationAnimParamsConfig();
 
 export class OperationAnimNode extends TypedAnimNode<OperationAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'operation';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
+	override cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		timeline_builder.setOperation(OPERATIONS[this.pv.operation]);

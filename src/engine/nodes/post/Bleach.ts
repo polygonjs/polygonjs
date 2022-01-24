@@ -26,19 +26,19 @@ class BleachPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new BleachPostParamsConfig();
 export class BleachPostNode extends TypedPostProcessNode<ShaderPass, BleachPostParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'bleach';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(BleachBypassShader) as BleachPassWithUniforms;
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: BleachPassWithUniforms) {
+	override updatePass(pass: BleachPassWithUniforms) {
 		pass.uniforms.opacity.value = this.pv.opacity;
 	}
 }

@@ -65,12 +65,12 @@ class MeshLambertMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshLambertMatParamsConfig();
 
 export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLambertMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshLambert';
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		return new MeshLambertMaterial({
 			vertexColors: false,
 			side: FrontSide,
@@ -88,14 +88,14 @@ export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLa
 		map: new TextureMapController(this, CONTROLLER_OPTIONS),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
 			}
 		});
 	}
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

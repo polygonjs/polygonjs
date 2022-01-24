@@ -38,7 +38,11 @@ export abstract class TypedJsDefinition<T extends JsDefinitionType> {
 }
 
 export class AttributeGLDefinition extends TypedJsDefinition<JsDefinitionType.ATTRIBUTE> {
-	constructor(protected _node: BaseJsNodeType, protected _data_type: JsConnectionPointType, protected _name: string) {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _data_type: JsConnectionPointType,
+		protected override _name: string
+	) {
 		super(JsDefinitionType.ATTRIBUTE, _data_type, _node, _name);
 	}
 	get line() {
@@ -47,7 +51,7 @@ export class AttributeGLDefinition extends TypedJsDefinition<JsDefinitionType.AT
 }
 
 export class FunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.FUNCTION> {
-	constructor(protected _node: BaseJsNodeType, protected _name: string) {
+	constructor(protected override _node: BaseJsNodeType, protected override _name: string) {
 		super(JsDefinitionType.FUNCTION, JsConnectionPointType.FLOAT, _node, _name);
 	}
 	get line() {
@@ -56,7 +60,11 @@ export class FunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.FUN
 }
 
 export class UniformJsDefinition extends TypedJsDefinition<JsDefinitionType.UNIFORM> {
-	constructor(protected _node: BaseJsNodeType, protected _data_type: JsConnectionPointType, protected _name: string) {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _data_type: JsConnectionPointType,
+		protected override _name: string
+	) {
 		super(JsDefinitionType.UNIFORM, _data_type, _node, _name);
 	}
 	get line() {

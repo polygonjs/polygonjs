@@ -60,8 +60,8 @@ class LightMapCopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new LightMapCopParamConfig();
 
 export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'lightMap'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'lightMap'> {
 		return 'lightMap';
 	}
 	private lightMapController: LightMapController | undefined;
@@ -70,7 +70,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	private _data_texture_controller: DataTextureController | undefined;
 	private _renderer_controller: CopRendererController | undefined;
 
-	async cook() {
+	override async cook() {
 		this._updateManual();
 	}
 

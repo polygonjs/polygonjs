@@ -65,14 +65,14 @@ class BuilderCopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BuilderCopParamsConfig();
 
 export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'builder';
 	}
-	readonly persisted_config: TexturePersistedConfig = new TexturePersistedConfig(this);
+	override readonly persisted_config: TexturePersistedConfig = new TexturePersistedConfig(this);
 	protected _assembler_controller = this._create_assembler_controller();
 
-	public usedAssembler(): Readonly<AssemblerName.GL_TEXTURE> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_TEXTURE> {
 		return AssemblerName.GL_TEXTURE;
 	}
 	protected _create_assembler_controller() {
@@ -102,8 +102,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private _data_texture_controller: DataTextureController | undefined;
 	private _renderer_controller: CopRendererController | undefined;
 
-	protected _childrenControllerContext = NodeContext.GL;
-	initializeNode() {
+	protected override _childrenControllerContext = NodeContext.GL;
+	override initializeNode() {
 		this._texture_mesh.material = this.texture_material;
 		this._texture_mesh.scale.multiplyScalar(0.25);
 		this._texture_scene.add(this._texture_mesh);
@@ -124,18 +124,27 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		// });
 	}
 
-	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): GlNodeChildrenMap[S];
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
-	childrenAllowed() {
+	override childrenAllowed() {
 		if (this.assemblerController) {
 			return super.childrenAllowed();
 		}
@@ -154,7 +163,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	// 	}
 	// }
 
-	async cook() {
+	override async cook() {
 		this.compileIfRequired();
 		this.renderOnTarget();
 	}
@@ -231,7 +240,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private _uniformCallbackName() {
 		return `cop/builder_uniforms_${this.graphNodeId()}`;
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		this._removeCallbacks();
 	}

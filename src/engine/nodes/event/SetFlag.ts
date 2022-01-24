@@ -64,16 +64,16 @@ class SetFlagParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SetFlagParamsConfig();
 
 export class SetFlagEventNode extends TypedEventNode<SetFlagParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'setFlag';
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
 	}
-	async processEvent(eventContext: EventContext<Event>) {
+	override async processEvent(eventContext: EventContext<Event>) {
 		let mask = this.pv.mask;
 		if (eventContext.value) {
 			const node = eventContext.value.node;

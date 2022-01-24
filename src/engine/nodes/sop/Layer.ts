@@ -18,20 +18,20 @@ class LayerSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new LayerSopParamsConfig();
 
 export class LayerSopNode extends TypedSopNode<LayerSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'layer';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['objects to change layers of'];
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
 		for (let object of core_group.objects()) {

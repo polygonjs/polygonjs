@@ -75,12 +75,12 @@ class MeshToonMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new MeshToonMatParamsConfig();
 
 export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshToon';
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		return new MeshToonMaterial({
 			vertexColors: false,
 			side: FrontSide,
@@ -102,14 +102,14 @@ export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatP
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
 			}
 		});
 	}
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

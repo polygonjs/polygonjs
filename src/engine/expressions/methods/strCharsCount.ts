@@ -18,7 +18,7 @@ import {BaseMethod} from './_Base';
 
 export class StrCharsCountExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
-	static requiredArguments() {
+	static override requiredArguments() {
 		return [['string', 'string to count characters of']];
 	}
 
@@ -27,7 +27,7 @@ export class StrCharsCountExpression extends BaseMethod {
 	// 	// return this.createDependencyFromIndexOrPath(index_or_path)
 	// }
 
-	async processArguments(args: any[]): Promise<number> {
+	override async processArguments(args: any[]): Promise<number> {
 		let value = 0;
 		if (args.length == 1) {
 			const string = args[0];

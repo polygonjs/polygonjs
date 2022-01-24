@@ -19,18 +19,18 @@ class CopyPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new CopyPostParamsConfig();
 export class CopyPostNode extends TypedPostProcessNode<ShaderPass, CopyPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'copy';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(CopyShader) as CopyPassWithUniforms;
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: CopyPassWithUniforms) {
+	override updatePass(pass: CopyPassWithUniforms) {
 		pass.uniforms.opacity.value = this.pv.opacity;
 		pass.material.transparent = this.pv.transparent;
 	}

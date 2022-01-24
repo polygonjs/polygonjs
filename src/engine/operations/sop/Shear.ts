@@ -47,7 +47,7 @@ interface ShearSopParams extends DefaultOperationParams {
 }
 
 export class ShearSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: ShearSopParams = {
+	static override readonly DEFAULT_PARAMS: ShearSopParams = {
 		mode: SHEAR_MODES.indexOf(ShearMode.AXIS),
 		// matrix mode
 		xy: 0,
@@ -64,13 +64,13 @@ export class ShearSopOperation extends BaseSopOperation {
 		axis: new Vector3(0, 1, 0),
 		axisAmount: 0,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'shear'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'shear'> {
 		return 'shear';
 	}
 
 	private _m4 = new Matrix4();
-	cook(input_contents: CoreGroup[], params: ShearSopParams) {
+	override cook(input_contents: CoreGroup[], params: ShearSopParams) {
 		const objects = input_contents[0].objects();
 
 		this._applyShear(objects, params);

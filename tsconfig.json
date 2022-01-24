@@ -5,6 +5,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitReturns": false,
 		"noUnusedLocals": true,
+		"noImplicitOverride": true,
 		"strict": true,
 
 		// output & paths

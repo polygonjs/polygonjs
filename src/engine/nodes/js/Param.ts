@@ -31,13 +31,13 @@ class ParamJsParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ParamJsParamsConfig();
 
 export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'param';
 	}
 	// protected _allow_inputs_created_from_params: boolean = false;
 	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._set_function_node_to_recompile.bind(this));
 		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.io.connection_points.initializeNode();
@@ -46,7 +46,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [JS_CONNECTION_POINT_TYPES[this.pv.type]]);
 	}
 
-	setLines(lines_controller: LinesController) {
+	override setLines(lines_controller: LinesController) {
 		const definitions = [];
 
 		const gl_type = JS_CONNECTION_POINT_TYPES[this.pv.type];
@@ -55,7 +55,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		definitions.push(new UniformJsDefinition(this, gl_type, var_name));
 		lines_controller.addDefinitions(this, definitions);
 	}
-	setParamConfigs() {
+	override setParamConfigs() {
 		const gl_type = JS_CONNECTION_POINT_TYPES[this.pv.type];
 		const default_value = JsConnectionPointInitValueMap[gl_type];
 		let param_type = JsConnectionPointTypeToParamTypeMap[gl_type];

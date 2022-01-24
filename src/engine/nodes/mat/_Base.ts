@@ -11,13 +11,13 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	NodeContext.MAT,
 	K
 > {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.MAT;
 	}
 
 	protected _material: M | undefined;
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		super.initializeBaseNode();
 
 		this.nameController.add_post_set_fullPath_hook(this.set_material_name.bind(this));

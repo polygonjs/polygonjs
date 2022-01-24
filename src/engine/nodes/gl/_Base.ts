@@ -24,21 +24,21 @@ const REGEX_PATH_SANITIZE = /\/+/g;
  *
  */
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.GL, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.GL;
 	}
 
 	protected _param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
 		this.io.connections.initInputs();
 
 		this.io.connection_points.spare_params.initializeNode();
 	}
 
-	cook() {
+	override cook() {
 		console.warn('gl nodes should never cook');
 	}
 
@@ -126,7 +126,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// INPUT
 	//
 	//
-	paramDefaultValue(name: string): ParamInitValueSerialized {
+	override paramDefaultValue(name: string): ParamInitValueSerialized {
 		return null;
 	}
 }
@@ -137,5 +137,5 @@ export class BaseGlNodeClass extends TypedGlNode<NodeParamsConfig> {}
 class ParamlessParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ParamlessParamsConfig();
 export class ParamlessTypedGlNode extends TypedGlNode<ParamlessParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 }

@@ -14,19 +14,19 @@ class SubnetOutputSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputSopParamsConfig();
 
 export class SubnetOutputSopNode extends TypedSopNode<SubnetOutputSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<NetworkChildNodeType.OUTPUT> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<NetworkChildNodeType.OUTPUT> {
 		return NetworkChildNodeType.OUTPUT;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.outputs.setHasNoOutput();
 
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this.setCoreGroup(input_contents[0]);
 	}
 }

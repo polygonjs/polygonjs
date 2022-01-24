@@ -19,12 +19,12 @@ class NullEventParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullEventParamsConfig();
 
 export class NullEventNode extends TypedEventNode<NullEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'null';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				NullEventInput.TRIGGER,
@@ -37,7 +37,7 @@ export class NullEventNode extends TypedEventNode<NullEventParamsConfig> {
 		]);
 	}
 
-	processEvent(event_context: EventContext<Event>) {}
+	override processEvent(event_context: EventContext<Event>) {}
 
 	private processEventTrigger(event_context: EventContext<Event>) {
 		this.dispatchEventToOutput(NullEventOutput.OUT, event_context);

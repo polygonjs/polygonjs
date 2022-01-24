@@ -43,7 +43,11 @@ export abstract class TypedGLDefinition<T extends GLDefinitionType> {
 }
 
 export class AttributeGLDefinition extends TypedGLDefinition<GLDefinitionType.ATTRIBUTE> {
-	constructor(protected _node: BaseGlNodeType, protected _data_type: GlConnectionPointType, protected _name: string) {
+	constructor(
+		protected override _node: BaseGlNodeType,
+		protected override _data_type: GlConnectionPointType,
+		protected override _name: string
+	) {
 		super(GLDefinitionType.ATTRIBUTE, _data_type, _node, _name);
 	}
 	get line() {
@@ -52,7 +56,7 @@ export class AttributeGLDefinition extends TypedGLDefinition<GLDefinitionType.AT
 }
 
 export class FunctionGLDefinition extends TypedGLDefinition<GLDefinitionType.FUNCTION> {
-	constructor(protected _node: BaseGlNodeType, protected _name: string) {
+	constructor(protected override _node: BaseGlNodeType, protected override _name: string) {
 		super(GLDefinitionType.FUNCTION, GlConnectionPointType.FLOAT, _node, _name);
 	}
 	get line() {
@@ -61,7 +65,11 @@ export class FunctionGLDefinition extends TypedGLDefinition<GLDefinitionType.FUN
 }
 
 export class UniformGLDefinition extends TypedGLDefinition<GLDefinitionType.UNIFORM> {
-	constructor(protected _node: BaseGlNodeType, protected _data_type: GlConnectionPointType, protected _name: string) {
+	constructor(
+		protected override _node: BaseGlNodeType,
+		protected override _data_type: GlConnectionPointType,
+		protected override _name: string
+	) {
 		super(GLDefinitionType.UNIFORM, _data_type, _node, _name);
 	}
 	get line() {
@@ -70,7 +78,11 @@ export class UniformGLDefinition extends TypedGLDefinition<GLDefinitionType.UNIF
 }
 
 export class VaryingGLDefinition extends TypedGLDefinition<GLDefinitionType.VARYING> {
-	constructor(protected _node: BaseGlNodeType, protected _data_type: GlConnectionPointType, protected _name: string) {
+	constructor(
+		protected override _node: BaseGlNodeType,
+		protected override _data_type: GlConnectionPointType,
+		protected override _name: string
+	) {
 		super(GLDefinitionType.VARYING, _data_type, _node, _name);
 	}
 	get line() {

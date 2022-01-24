@@ -56,16 +56,16 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 	PerspectiveCamera,
 	PerspectiveCameraObjParamConfig
 > {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<CameraNodeType.PERSPECTIVE> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<CameraNodeType.PERSPECTIVE> {
 		return CameraNodeType.PERSPECTIVE;
 	}
 
-	createObject() {
+	override createObject() {
 		return new PerspectiveCamera(DEFAULT.fov, 1, BASE_CAMERA_DEFAULT.near, BASE_CAMERA_DEFAULT.far);
 	}
 
-	updateCamera() {
+	override updateCamera() {
 		if (this._object.fov != this.pv.fov) {
 			this._object.fov = this.pv.fov;
 			this._object.updateProjectionMatrix();
@@ -73,7 +73,7 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 		this._updateForAspectRatio();
 	}
 
-	protected _updateForAspectRatio() {
+	protected override _updateForAspectRatio() {
 		if (this._aspect) {
 			this._object.aspect = this._aspect;
 			this._adjustFOVFromMode();

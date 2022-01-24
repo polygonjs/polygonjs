@@ -22,16 +22,16 @@ interface SortSopParams extends DefaultOperationParams {
 }
 
 export class SortSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: SortSopParams = {
+	static override readonly DEFAULT_PARAMS: SortSopParams = {
 		axis: AXISES.indexOf(Axis.X),
 		invert: false,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'sort'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'sort'> {
 		return 'sort';
 	}
 
-	cook(input_contents: CoreGroup[], params: SortSopParams) {
+	override cook(input_contents: CoreGroup[], params: SortSopParams) {
 		const coreGroup = input_contents[0];
 
 		const objects = coreGroup.objectsWithGeo();

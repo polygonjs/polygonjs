@@ -18,7 +18,7 @@ export const EVENT_PARAM_OPTIONS: ParamOptions = {
 };
 
 export abstract class TypedInputEventNode<K extends BaseInputEventParamsConfig> extends TypedEventNode<K> {
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		super.initializeBaseNode();
 
 		const register = () => {
@@ -36,7 +36,7 @@ export abstract class TypedInputEventNode<K extends BaseInputEventParamsConfig> 
 		});
 	}
 
-	processEvent(eventContext: EventContext<Event>) {
+	override processEvent(eventContext: EventContext<Event>) {
 		if (!this.pv.active) {
 			return;
 		}

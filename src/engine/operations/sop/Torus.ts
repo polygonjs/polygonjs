@@ -33,7 +33,7 @@ const position = new Vector3();
 const normal = new Vector3();
 
 export class TorusSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: TorusSopParams = {
+	static override readonly DEFAULT_PARAMS: TorusSopParams = {
 		radius: 1,
 		radiusTube: 1,
 		segmentsRadial: 20,
@@ -44,13 +44,13 @@ export class TorusSopOperation extends BaseSopOperation {
 		direction: new Vector3(0, 1, 0),
 		center: new Vector3(0, 0, 0),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'torus'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'torus'> {
 		return 'torus';
 	}
 
 	private _core_transform = new CoreTransform();
-	cook(input_contents: CoreGroup[], params: TorusSopParams) {
+	override cook(input_contents: CoreGroup[], params: TorusSopParams) {
 		const arc = isBooleanTrue(params.open) ? params.arc : Math.PI * 2;
 		const cap: boolean = isBooleanTrue(params.open) ? params.cap : false;
 

@@ -45,22 +45,22 @@ const ParamsConfig = new AttribCopySopParamsConfig();
 
 // TODO: attrib copy should handle string attributes
 export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribCopy';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to copy attributes to', 'geometry to copy attributes from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState(AttribCopySopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: AttribCopySopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new AttribCopySopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

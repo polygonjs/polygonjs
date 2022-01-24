@@ -32,22 +32,22 @@ class UvLayoutSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new UvLayoutSopParamConfig();
 
 export class UvLayoutSopNode extends TypedSopNode<UvLayoutSopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return SopType.UV_LAYOUT;
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometries to unwrap UVs'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(UvLayoutSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: UvLayoutSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new UvLayoutSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

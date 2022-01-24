@@ -10,14 +10,14 @@ interface SubdivideSopParams extends DefaultOperationParams {
 }
 
 export class SubdivideSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: SubdivideSopParams = {
+	static override readonly DEFAULT_PARAMS: SubdivideSopParams = {
 		subdivisions: 1,
 	};
-	static type(): Readonly<'subdivide'> {
+	static override type(): Readonly<'subdivide'> {
 		return 'subdivide';
 	}
 
-	cook(input_contents: CoreGroup[], params: SubdivideSopParams) {
+	override cook(input_contents: CoreGroup[], params: SubdivideSopParams) {
 		const core_group = input_contents[0];
 		const modifier = new SubdivisionModifier(params.subdivisions);
 

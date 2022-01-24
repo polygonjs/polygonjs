@@ -21,7 +21,7 @@ interface CircleSopParams extends DefaultOperationParams {
 const DEFAULT_UP = new Vector3(0, 0, 1);
 
 export class CircleSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: CircleSopParams = {
+	static override readonly DEFAULT_PARAMS: CircleSopParams = {
 		radius: 1,
 		segments: 12,
 		open: true,
@@ -30,12 +30,12 @@ export class CircleSopOperation extends BaseSopOperation {
 		center: new Vector3(0, 0, 0),
 		connectLastPoint: true,
 	};
-	static type(): Readonly<'circle'> {
+	static override type(): Readonly<'circle'> {
 		return 'circle';
 	}
 
 	private _core_transform = new CoreTransform();
-	cook(input_contents: CoreGroup[], params: CircleSopParams) {
+	override cook(input_contents: CoreGroup[], params: CircleSopParams) {
 		if (isBooleanTrue(params.open)) {
 			return this._createCircle(params);
 		} else {

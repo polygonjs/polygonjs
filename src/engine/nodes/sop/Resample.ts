@@ -76,18 +76,18 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ResampleSopParamsConfig();
 
 export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'resample';
 	}
 
 	// private _objects: Object3D
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
 		// this._objects = [];

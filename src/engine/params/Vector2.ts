@@ -9,17 +9,17 @@ import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR2: Readonly<string[]> = ['x', 'y'];
 export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
-	protected _value = new Vector2();
+	protected override _value = new Vector2();
 	x!: FloatParam;
 	y!: FloatParam;
-	static type() {
+	static override type() {
 		return ParamType.VECTOR2;
 	}
 
-	componentNames(): Readonly<string[]> {
+	override componentNames(): Readonly<string[]> {
 		return COMPONENT_NAMES_VECTOR2;
 	}
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		if (CoreType.isArray(this._default_value)) {
 			return this._default_value;
 		} else {
@@ -34,16 +34,16 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 	// 		return new_array;
 	// 	}
 	// }
-	valueSerialized() {
+	override valueSerialized() {
 		return this.value.toArray() as Number2;
 	}
 	private _copied_value: Number2 = [0, 0];
-	protected _copyValue(param: Vector2Param) {
+	protected override _copyValue(param: Vector2Param) {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
 
-	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR2]) {
+	protected override _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR2]) {
 		if (raw_input instanceof Vector2) {
 			return raw_input.clone();
 		} else {
@@ -58,7 +58,7 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 			return new_array;
 		}
 	}
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.VECTOR2],
 		raw_input2: ParamInitValuesTypeMap[ParamType.VECTOR2]
 	) {
@@ -76,16 +76,19 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 			}
 		}
 	}
-	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.VECTOR2], val2: ParamValuesTypeMap[ParamType.VECTOR2]) {
+	static override areValuesEqual(
+		val1: ParamValuesTypeMap[ParamType.VECTOR2],
+		val2: ParamValuesTypeMap[ParamType.VECTOR2]
+	) {
 		return val1.equals(val2);
 	}
-	initComponents() {
+	override initComponents() {
 		super.initComponents();
 		this.x = this.components[0];
 		this.y = this.components[1];
 	}
 
-	set_value_from_components() {
+	override set_value_from_components() {
 		this._value.x = this.x.value;
 		this._value.y = this.y.value;
 	}

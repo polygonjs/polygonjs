@@ -30,20 +30,20 @@ interface Controllers {
 }
 abstract class TextureSpecularMapMatNode extends TypedMatNode<CurrentMaterial, TextureSpecularMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureSpecularMapController extends BaseTextureMapController {
-	constructor(protected node: TextureSpecularMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureSpecularMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useSpecularMap, this.node.p.specularMap);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'specularMap', this.node.p.useSpecularMap, this.node.p.specularMap);
 	}
-	static async update(node: TextureSpecularMapMatNode) {
+	static override async update(node: TextureSpecularMapMatNode) {
 		node.controllers.specularMap.update();
 	}
 }

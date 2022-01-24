@@ -21,7 +21,7 @@ import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
 export class StrConcatExpression extends BaseMethod {
-	static requiredArguments(): any[] {
+	static override requiredArguments(): any[] {
 		return [
 			// ['string', 'string to get range from'],
 			// ['integer', 'range start'],
@@ -34,7 +34,7 @@ export class StrConcatExpression extends BaseMethod {
 	// 	// return this.createDependencyFromIndexOrPath(index_or_path)
 	// }
 
-	async processArguments(args: any[]): Promise<string> {
+	override async processArguments(args: any[]): Promise<string> {
 		let value = '';
 
 		for (let arg of args) {

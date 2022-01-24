@@ -44,18 +44,18 @@ class AudioNotesSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new AudioNotesSopParamsConfig();
 export class AudioNotesSopNode extends TypedSopNode<AudioNotesSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'AudioNotes';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(AudioNotesSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: AudioNotesSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new AudioNotesSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

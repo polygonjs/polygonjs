@@ -66,16 +66,16 @@ class WaveformAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new WaveformAudioParamsConfig();
 
 export class WaveformAudioNode extends BaseAnalyserAudioNode<WaveformAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return AudioNodeAnalyserType.WAVEFORM;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
 		this._resetEffect();

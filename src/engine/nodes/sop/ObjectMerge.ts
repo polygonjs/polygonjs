@@ -21,12 +21,12 @@ class ObjectMergeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ObjectMergeSopParamsConfig();
 
 export class ObjectMergeSopNode extends TypedSopNode<ObjectMergeSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'objectMerge';
 	}
 
-	async cook(input_containers: CoreGroup[]) {
+	override async cook(input_containers: CoreGroup[]) {
 		const geometryNode = this.pv.geometry.nodeWithContext(NodeContext.SOP, this.states.error);
 		if (!geometryNode) {
 			this.states.error.set(`node not found at path '${this.pv.geometry}'`);

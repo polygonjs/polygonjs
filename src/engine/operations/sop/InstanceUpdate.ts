@@ -20,17 +20,17 @@ interface InstanceUpdateSopParams extends DefaultOperationParams {
 }
 
 export class InstanceUpdateSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: InstanceUpdateSopParams = {
+	static override readonly DEFAULT_PARAMS: InstanceUpdateSopParams = {
 		mode: INSTANCE_UPDATE_MODES.indexOf(InstanceUpdateMode.GEO),
 		geoAttributes: 'P N',
 		pointAttributes: 'P',
 	};
-	static readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
-	static type(): Readonly<'instanceUpdate'> {
+	static override readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
+	static override type(): Readonly<'instanceUpdate'> {
 		return 'instanceUpdate';
 	}
 
-	async cook(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
+	override async cook(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
 		this._cookFromUpdateMode(inputCoreGroups, params);
 
 		return inputCoreGroups[0];

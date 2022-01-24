@@ -16,13 +16,13 @@ import {BaseMethod} from './_Base';
 import {CoreUserAgent} from '../../../core/UserAgent';
 
 export class isDeviceTouchExpression extends BaseMethod {
-	protected _requireDependency = true;
+	protected override _requireDependency = true;
 
-	static requiredArguments() {
+	static override requiredArguments() {
 		return [];
 	}
 
-	async processArguments(args: any[]): Promise<boolean> {
+	override async processArguments(args: any[]): Promise<boolean> {
 		return new Promise(async (resolve, reject) => {
 			resolve(CoreUserAgent.isTouchDevice());
 		});

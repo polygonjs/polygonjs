@@ -4,7 +4,7 @@ import {CorePoint} from '../../../../core/geometry/Point';
 export class CopyStamp extends BaseCopyStamp {
 	protected _point: CorePoint | undefined;
 
-	reset() {
+	override reset() {
 		super.reset();
 		this.setPoint(undefined);
 	}
@@ -18,7 +18,7 @@ export class CopyStamp extends BaseCopyStamp {
 		}
 	}
 
-	value(attrib_name?: string) {
+	override value(attrib_name?: string) {
 		if (this._point) {
 			if (attrib_name) {
 				return this._point.attribValue(attrib_name);

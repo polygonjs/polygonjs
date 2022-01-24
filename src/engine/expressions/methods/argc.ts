@@ -17,12 +17,12 @@
 import {BaseMethod} from './_Base';
 
 export class ArgcExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [['string', 'arguments list']];
 	}
 
-	processArguments(args: any[]): Promise<any> {
+	override processArguments(args: any[]): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (args.length == 1) {
 				const argumentsList = args[0];

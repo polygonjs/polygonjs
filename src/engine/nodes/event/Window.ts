@@ -27,21 +27,21 @@ class WindowEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new WindowEventParamsConfig();
 
 export class WindowEventNode extends TypedInputEventNode<WindowEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'window';
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_WINDOW_EVENT_TYPES.map((n) => `${n}`));
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(
 			ACCEPTED_WINDOW_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.POINTER);
 			})
 		);
 	}
-	processEvent(event_context: EventContext<Event>) {
+	override processEvent(event_context: EventContext<Event>) {
 		if (!this.pv.active) {
 			return;
 		}

@@ -25,14 +25,14 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([[ShaderName.FRAGMENT, []]]);
 
 export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
-	templateShader() {
+	override templateShader() {
 		return {
 			vertexShader: VERTEX,
 			fragmentShader: FRAGMENT,
 			uniforms: UniformsUtils.clone(VOLUME_UNIFORMS),
 		};
 	}
-	createMaterial() {
+	override createMaterial() {
 		const template_shader = this.templateShader();
 		const material = new ShaderMaterial({
 			vertexShader: template_shader.vertexShader,
@@ -55,35 +55,35 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 	// 	// output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
 	// 	// output_child.params.add_param(ParamType.FLOAT, 'density', 1, {hidden: true});
 	// }
-	add_output_inputs(output_child: OutputGlNode) {
+	override add_output_inputs(output_child: OutputGlNode) {
 		output_child.io.inputs.setNamedInputConnectionPoints([
 			new GlConnectionPoint('density', GlConnectionPointType.FLOAT, 1),
 		]);
 	}
-	static create_globals_node_output_connections() {
+	static override create_globals_node_output_connections() {
 		return [
 			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('pos_normalized', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 		];
 	}
-	create_globals_node_output_connections() {
+	override create_globals_node_output_connections() {
 		return ShaderAssemblerVolume.create_globals_node_output_connections();
 	}
 
-	protected insert_body_after(shader_name: ShaderName): string | undefined {
+	protected override insert_body_after(shader_name: ShaderName): string | undefined {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
-	protected lines_to_remove(shader_name: ShaderName): string[] | undefined {
+	protected override lines_to_remove(shader_name: ShaderName): string[] | undefined {
 		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
-	create_shader_configs(): ShaderConfig[] {
+	override create_shader_configs(): ShaderConfig[] {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, [], []),
 			new ShaderConfig(ShaderName.FRAGMENT, [/*'color', */ 'density'], [ShaderName.VERTEX]),
 		];
 	}
-	static create_variable_configs() {
+	static override create_variable_configs() {
 		return [
 			new VariableConfig('position', {
 				// default_from_attribute: true,
@@ -97,11 +97,14 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 			}),
 		];
 	}
-	create_variable_configs(): VariableConfig[] {
+	override create_variable_configs(): VariableConfig[] {
 		return ShaderAssemblerVolume.create_variable_configs();
 	}
 
-	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {
+	override set_node_lines_globals(
+		globals_node: GlobalsGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		const body_lines = [];
 		const shader_name = shaders_collection_controller.current_shader_name;
 		const shader_config = this.shader_config(shader_name);

@@ -21,14 +21,14 @@ class VolumeMatParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new VolumeMatParamsConfig();
 
 export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'volume';
 	}
 
 	private _volume_controller = new VolumeController(this);
 
-	createMaterial() {
+	override createMaterial() {
 		const mat = new ShaderMaterial({
 			vertexShader: VERTEX,
 			fragmentShader: FRAGMENT,
@@ -43,8 +43,8 @@ export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsC
 		return mat;
 	}
 
-	initializeNode() {}
-	async cook() {
+	override initializeNode() {}
+	override async cook() {
 		this._volume_controller.update_uniforms_from_params();
 
 		this.setMaterial(this.material);

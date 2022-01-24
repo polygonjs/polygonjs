@@ -27,20 +27,20 @@ class BlendSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BlendSopParamsConfig();
 
 export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'blend';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to blend from', 'geometry to blend to'];
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		// this.request_input_container 0, (container0)=>
 		// 	if container0? && (group0 = container0.group())?
 		// 		this.request_input_container 1, (container1)=>

@@ -9,14 +9,14 @@ import {CoreType} from '../../core/Type';
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
-	protected _components!: FloatParam[];
-	get components() {
+	protected override _components!: FloatParam[];
+	override get components() {
 		return this._components;
 	}
-	isNumeric() {
+	override isNumeric() {
 		return true;
 	}
-	isDefault() {
+	override isDefault() {
 		for (let c of this.components) {
 			if (!c.isDefault()) {
 				return false;
@@ -24,13 +24,13 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 		return true;
 	}
-	rawInput() {
+	override rawInput() {
 		return this._components.map((c) => c.rawInput()) as ParamInitValueSerializedTypeMap[T];
 	}
 	rawInputSerialized() {
 		return this._components.map((c) => c.rawInputSerialized()) as ParamInitValueSerializedTypeMap[T];
 	}
-	protected _copyValue(param: TypedMultipleParam<T>) {
+	protected override _copyValue(param: TypedMultipleParam<T>) {
 		for (let i = 0; i < this.components.length; i++) {
 			const component = this.components[i];
 			const src_component = param.components[i];
@@ -38,7 +38,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 	}
 
-	initComponents() {
+	override initComponents() {
 		if (this._components != null) {
 			return;
 		}
@@ -67,14 +67,14 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		// this.compute();
 	}
 
-	protected async processComputation(): Promise<void> {
+	protected override async processComputation(): Promise<void> {
 		await this.compute_components();
 		this.set_value_from_components();
 	}
 	set_value_from_components() {}
 	// set_raw_input_from_components() {}
 
-	hasExpression() {
+	override hasExpression() {
 		for (let c of this.components) {
 			if (c.expressionController?.active()) {
 				return true;
@@ -99,7 +99,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	// and not DEFAULT.color.toArray()
 	// and this could also maybe fix the .set() calls
 	// where an array currently needs to be used
-	protected _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
+	protected override _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (!CoreType.isArray(raw_input)) {
 			const number_or_string = raw_input as number | string;
 			const raw_input_wrapped_in_array: StringOrNumber[] = this.componentNames().map(() => number_or_string);
@@ -109,7 +109,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 	}
 
-	protected processRawInput() {
+	protected override processRawInput() {
 		const cooker = this.scene().cooker;
 		cooker.block();
 		const components = this.components;

@@ -8,7 +8,7 @@ enum DragEventType {
 export const ACCEPTED_DRAG_EVENT_TYPES: DragEventType[] = [DragEventType.dragover];
 
 export class DragEventsController extends BaseSceneEventsController<MouseEvent, PointerEventNode> {
-	protected _requireCanvasEventListeners: boolean = true;
+	protected override _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'drag';
 	}

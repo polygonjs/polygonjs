@@ -25,16 +25,16 @@ class UserMediaAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new UserMediaAudioParamsConfig();
 
 export class UserMediaAudioNode extends TypedAudioNode<UserMediaAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'userMedia';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 	}
 
-	async cook(inputContents: AudioBuilder[]) {
+	override async cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = new AudioBuilder();
 		const userMedia = this._userMedia();
 		audioBuilder.setSource(userMedia);

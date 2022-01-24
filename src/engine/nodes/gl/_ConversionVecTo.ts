@@ -8,7 +8,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 class VecToParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new VecToParamsConfig();
 class BaseVecToGlNode extends TypedGlNode<VecToParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 }
 
 interface VecToGlOptions {
@@ -20,22 +20,22 @@ function VecToGlFactory(type: string, options: VecToGlOptions) {
 	const components = options.components;
 	const param_type = options.param_type;
 	return class VecToGlNode extends BaseVecToGlNode {
-		static type() {
+		static override type() {
 			return type;
 		}
 
-		initializeNode() {
+		override initializeNode() {
 			this.io.outputs.setNamedOutputConnectionPoints(
 				components.map((c) => {
 					return new GlConnectionPoint(c, GlConnectionPointType.FLOAT);
 				})
 			);
 		}
-		createParams() {
+		override createParams() {
 			this.addParam(param_type, 'vec', components.map((c) => 0) as Number2);
 		}
 
-		setLines(shaders_collection_controller: ShadersCollectionController) {
+		override setLines(shaders_collection_controller: ShadersCollectionController) {
 			const body_lines: string[] = [];
 
 			const vec = this.variableForInput('vec');
@@ -67,24 +67,24 @@ export class Vec4ToFloatGlNode extends VecToGlFactory('vec4ToFloat', {
 }) {}
 
 export class Vec4ToVec3GlNode extends BaseVecToGlNode {
-	static type() {
+	static override type() {
 		return 'vec4ToVec3';
 	}
 	static readonly INPUT_NAME_VEC4 = 'vec4';
 	static readonly OUTPUT_NAME_VEC3 = 'vec3';
 	static readonly OUTPUT_NAME_W = 'w';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(Vec4ToVec3GlNode.OUTPUT_NAME_VEC3, GlConnectionPointType.VEC3),
 			new GlConnectionPoint(Vec4ToVec3GlNode.OUTPUT_NAME_W, GlConnectionPointType.FLOAT),
 		]);
 	}
-	createParams() {
+	override createParams() {
 		this.addParam(ParamType.VECTOR4, Vec4ToVec3GlNode.INPUT_NAME_VEC4, components_v4.map((c) => 0) as Number4);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
 		const in_vec4 = Vec4ToVec3GlNode.INPUT_NAME_VEC4;
@@ -107,24 +107,24 @@ export class Vec4ToVec3GlNode extends BaseVecToGlNode {
 }
 
 export class Vec3ToVec2GlNode extends BaseVecToGlNode {
-	static type() {
+	static override type() {
 		return 'vec3ToVec2';
 	}
 	static readonly INPUT_NAME_VEC3 = 'vec3';
 	static readonly OUTPUT_NAME_VEC2 = 'vec2';
 	static readonly OUTPUT_NAME_Z = 'z';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(Vec3ToVec2GlNode.OUTPUT_NAME_VEC2, GlConnectionPointType.VEC2),
 			new GlConnectionPoint(Vec3ToVec2GlNode.OUTPUT_NAME_Z, GlConnectionPointType.FLOAT),
 		]);
 	}
-	createParams() {
+	override createParams() {
 		this.addParam(ParamType.VECTOR3, Vec3ToVec2GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
 		const in_vec3 = Vec3ToVec2GlNode.INPUT_NAME_VEC3;
@@ -146,24 +146,24 @@ export class Vec3ToVec2GlNode extends BaseVecToGlNode {
 	}
 }
 export class Vec2ToVec3GlNode extends BaseVecToGlNode {
-	static type() {
+	static override type() {
 		return 'vec2ToVec3';
 	}
 	static readonly INPUT_NAME_VEC2 = 'vec3';
 	static readonly INPUT_NAME_Z = 'z';
 	static readonly OUTPUT_NAME_VEC3 = 'vec3';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(Vec2ToVec3GlNode.OUTPUT_NAME_VEC3, GlConnectionPointType.VEC3),
 		]);
 	}
-	createParams() {
+	override createParams() {
 		this.addParam(ParamType.VECTOR2, Vec2ToVec3GlNode.INPUT_NAME_VEC2, components_v2.map((c) => 0) as Number2);
 		this.addParam(ParamType.FLOAT, Vec2ToVec3GlNode.INPUT_NAME_Z, 0);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
 		const in_vec2 = Vec2ToVec3GlNode.INPUT_NAME_VEC2;
@@ -178,24 +178,24 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 	}
 }
 export class Vec3ToVec4GlNode extends BaseVecToGlNode {
-	static type() {
+	static override type() {
 		return 'vec3ToVec4';
 	}
 	static readonly INPUT_NAME_VEC3 = 'vec3';
 	static readonly INPUT_NAME_W = 'w';
 	static readonly OUTPUT_NAME_VEC4 = 'vec4';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(Vec3ToVec4GlNode.OUTPUT_NAME_VEC4, GlConnectionPointType.VEC4),
 		]);
 	}
-	createParams() {
+	override createParams() {
 		this.addParam(ParamType.VECTOR3, Vec3ToVec4GlNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
 		this.addParam(ParamType.FLOAT, Vec3ToVec4GlNode.INPUT_NAME_W, 0);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 
 		const in_vec3 = Vec3ToVec4GlNode.INPUT_NAME_VEC3;

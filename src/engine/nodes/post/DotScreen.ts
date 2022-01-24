@@ -37,19 +37,19 @@ class DotScreenPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new DotScreenPostParamsConfig();
 export class DotScreenPostNode extends TypedPostProcessNode<ShaderPass, DotScreenPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'dotScreen';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(DotScreenShader) as DotScreenPassWithUniforms;
 
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: DotScreenPassWithUniforms) {
+	override updatePass(pass: DotScreenPassWithUniforms) {
 		pass.uniforms.center.value = this.pv.center;
 		pass.uniforms.angle.value = this.pv.angle;
 		pass.uniforms.scale.value = this.pv.scale;

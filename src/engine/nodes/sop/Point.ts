@@ -51,8 +51,8 @@ class PointSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PointSopParamsConfig();
 
 export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'point';
 	}
 
@@ -60,17 +60,17 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	private _y_arrays_by_geometry_uuid: ValueArrayByName = new Map();
 	private _z_arrays_by_geometry_uuid: ValueArrayByName = new Map();
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['points to move'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 		// this.uiData.set_icon('dot-circle');
 	}
 
-	async cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 		await this._evalExpressionsForCoreGroup(coreGroup);
 	}

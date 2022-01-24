@@ -12,18 +12,18 @@ import {ParamType} from '../../poly/ParamType';
 // import {IOController} from '../utils/io/IOController';
 
 export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.JS, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.JS;
 	}
 
 	protected _param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseJsFunctionAssembler | undefined;
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
 		this.io.connection_points.initializeNode();
 	}
-	cook() {
+	override cook() {
 		console.warn('js nodes should never cook');
 	}
 
@@ -55,9 +55,8 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseJsNodeType;
-			const output_connection_point = input_node.io.outputs.namedOutputConnectionPoints()[
-				connection.output_index
-			];
+			const output_connection_point =
+				input_node.io.outputs.namedOutputConnectionPoints()[connection.output_index];
 			if (output_connection_point) {
 				const output_name = output_connection_point.name();
 				return input_node.js_var_name(output_name);
@@ -108,5 +107,5 @@ export class BaseJsNodeClass extends TypedJsNode<NodeParamsConfig> {}
 class ParamlessParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ParamlessParamsConfig();
 export class ParamlessTypedJsNode extends TypedJsNode<ParamlessParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 }

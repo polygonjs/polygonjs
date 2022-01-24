@@ -25,16 +25,16 @@ interface BooleanSopParams extends DefaultOperationParams {
 }
 
 export class BooleanSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: BooleanSopParams = {
+	static override readonly DEFAULT_PARAMS: BooleanSopParams = {
 		operation: BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT),
 		useBothMaterials: true,
 	};
-	static readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
-	static type(): Readonly<'boolean'> {
+	static override readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
+	static override type(): Readonly<'boolean'> {
 		return 'boolean';
 	}
 
-	cook(input_contents: CoreGroup[], params: BooleanSopParams): CoreGroup {
+	override cook(input_contents: CoreGroup[], params: BooleanSopParams): CoreGroup {
 		const meshA = input_contents[0].objectsWithGeo()[0] as Mesh;
 		const meshB = input_contents[1].objectsWithGeo()[0] as Mesh;
 

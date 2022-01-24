@@ -36,11 +36,11 @@ class LineBasicMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new LineBasicMatParamsConfig();
 
 export class LineBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerLine, LineBasicMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'lineBasicBuilder';
 	}
-	public usedAssembler(): Readonly<AssemblerName.GL_LINE> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_LINE> {
 		return AssemblerName.GL_LINE;
 	}
 	protected _create_assembler_controller() {
@@ -51,14 +51,14 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
 			}
 		});
 	}
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

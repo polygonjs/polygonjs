@@ -36,8 +36,8 @@ const VECTOR_NAMES: Array<keyof BoxComponents> = ['min', 'max', 'size', 'center'
 const COMPONENT_NAMES = ['x', 'y', 'z'];
 
 export class BboxExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'vector name, min, max, size or center'],
@@ -45,11 +45,11 @@ export class BboxExpression extends BaseMethod {
 		];
 	}
 
-	findDependency(index_or_path: number | string): MethodDependency | null {
+	override findDependency(index_or_path: number | string): MethodDependency | null {
 		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	processArguments(args: any[]): Promise<any> {
+	override processArguments(args: any[]): Promise<any> {
 		let value: number | Vector3 | Box3 = 0;
 		return new Promise(async (resolve, reject) => {
 			if (args.length >= 1) {

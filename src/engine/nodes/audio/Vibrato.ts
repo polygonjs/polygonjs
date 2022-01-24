@@ -35,16 +35,16 @@ class VibratoAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new VibratoAudioParamsConfig();
 
 export class VibratoAudioNode extends TypedAudioNode<VibratoAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'vibrato';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 		const effect = this._createEffect();
 

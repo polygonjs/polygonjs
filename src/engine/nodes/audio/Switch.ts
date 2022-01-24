@@ -17,17 +17,17 @@ class SwitchAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SwitchAudioParamsConfig();
 
 export class SwitchAudioNode extends TypedAudioNode<SwitchAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'switch';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 		this.cookController.disallowInputsEvaluation();
 	}
 
-	async cook(inputContents: AudioBuilder[]) {
+	override async cook(inputContents: AudioBuilder[]) {
 		const inputIndex = this.pv.input;
 		if (this.io.inputs.hasInput(inputIndex)) {
 			const container = await this.containerController.requestInputContainer(inputIndex);

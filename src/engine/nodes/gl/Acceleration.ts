@@ -52,12 +52,12 @@ class AccelerationGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AccelerationGlParamsConfig();
 
 export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'acceleration';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -86,10 +86,10 @@ export class AccelerationGlNode extends TypedGlNode<AccelerationGlParamsConfig> 
 	protected _gl_output_name(index: number) {
 		return OUTPUT_NAMES[index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return INPUT_DEFAULT_VALUE[name];
 	}
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const var_type = this.io.outputs.namedOutputConnectionPoints()[0].type();
 		const delta_definition = new UniformGLDefinition(this, GlConnectionPointType.FLOAT, GlConstant.DELTA_TIME);
 		const function_definition = new FunctionGLDefinition(this, Physics);

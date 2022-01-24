@@ -22,10 +22,10 @@ export function MathFunctionArg2Factory(type: string, options: MathArg2Options =
 	const out_type = options.out_type;
 	const functions = options.functions || [];
 	return class Node extends BaseNodeGlMathFunctionArg2GlNode {
-		static type() {
+		static override type() {
 			return type;
 		}
-		initializeNode() {
+		override initializeNode() {
 			super.initializeNode();
 			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
@@ -36,23 +36,23 @@ export function MathFunctionArg2Factory(type: string, options: MathArg2Options =
 				this.io.connection_points.set_expected_output_types_function(() => [out_type]);
 			}
 		}
-		_gl_input_name(index: number): string {
+		override _gl_input_name(index: number): string {
 			return gl_input_names[index];
 		}
 		_gl_output_name(index: number): string {
 			return gl_output_name;
 		}
-		gl_method_name(): string {
+		override gl_method_name(): string {
 			return gl_method_name;
 		}
-		gl_function_definitions(): FunctionGLDefinition[] {
+		override gl_function_definitions(): FunctionGLDefinition[] {
 			if (functions) {
 				return functions.map((f) => new FunctionGLDefinition(this, f));
 			} else {
 				return [];
 			}
 		}
-		_expected_input_types() {
+		override _expected_input_types() {
 			let first_input_type = this.io.connection_points.first_input_connection_type();
 			if (first_input_type && allowed_in_types) {
 				if (!allowed_in_types.includes(first_input_type)) {
@@ -86,11 +86,11 @@ export class DotGlNode extends MathFunctionArg2Factory('dot', {
 export class MaxGlNode extends MathFunctionArg2Factory('max') {}
 export class MinGlNode extends MathFunctionArg2Factory('min') {}
 export class ModGlNode extends MathFunctionArg2Factory('mod') {
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return ({in1: 1} as PolyDictionary<number>)[name];
 	}
 	// mod can only take floats
-	_expected_input_types() {
+	override _expected_input_types() {
 		const type = GlConnectionPointType.FLOAT;
 		return [type, type];
 	}

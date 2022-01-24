@@ -14,7 +14,7 @@ export class AudioContainer extends TypedContainer<NodeContext.AUDIO> {
 		return this.content();
 	}
 
-	coreContentCloned() {
+	override coreContentCloned() {
 		if (this._content) {
 			return this._content.clone();
 		}

@@ -72,11 +72,11 @@ class MeshLambertMatParamsConfig extends PCSSParamConfig(
 const ParamsConfig = new MeshLambertMatParamsConfig();
 
 export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerLambert, MeshLambertMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshLambertBuilder';
 	}
-	public usedAssembler(): Readonly<AssemblerName.GL_MESH_LAMBERT> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_LAMBERT> {
 		return AssemblerName.GL_MESH_LAMBERT;
 	}
 	protected _create_assembler_controller() {
@@ -94,7 +94,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
@@ -102,7 +102,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 		});
 	}
 
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

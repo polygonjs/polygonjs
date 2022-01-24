@@ -11,21 +11,30 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class AnimationsNetworkSopNode extends ParamLessBaseNetworkSopNode {
-	static type() {
+	static override type() {
 		return NetworkNodeType.ANIM;
 	}
 
-	protected _childrenControllerContext = NodeContext.ANIM;
+	protected override _childrenControllerContext = NodeContext.ANIM;
 
-	createNode<S extends keyof AnimNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): AnimNodeChildrenMap[S];
-	createNode<K extends valueof<AnimNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<AnimNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof AnimNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): AnimNodeChildrenMap[S];
+	override createNode<K extends valueof<AnimNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<AnimNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseAnimNodeType[];
 	}
-	nodesByType<K extends keyof AnimNodeChildrenMap>(type: K): AnimNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof AnimNodeChildrenMap>(type: K): AnimNodeChildrenMap[K][] {
 		return super.nodesByType(type) as AnimNodeChildrenMap[K][];
 	}
 }

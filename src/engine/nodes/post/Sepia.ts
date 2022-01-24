@@ -19,19 +19,19 @@ class SepiaPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SepiaPostParamsConfig();
 export class SepiaPostNode extends TypedPostProcessNode<ShaderPass, SepiaPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'sepia';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(SepiaShader) as SepiaPassWithUniforms;
 
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: SepiaPassWithUniforms) {
+	override updatePass(pass: SepiaPassWithUniforms) {
 		pass.uniforms.amount.value = this.pv.amount;
 	}
 }

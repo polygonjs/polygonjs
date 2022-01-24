@@ -23,14 +23,14 @@ class SubnetInputAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SubnetInputAnimParamsConfig();
 
 export class SubnetInputAnimNode extends TypedAnimNode<SubnetInputAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return NetworkChildNodeType.INPUT;
 	}
 
 	private _currentParentInputGraphNode: CoreGraphNode | undefined;
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 
 		this.lifecycle.onAfterAdded(() => {
@@ -38,7 +38,7 @@ export class SubnetInputAnimNode extends TypedAnimNode<SubnetInputAnimParamsConf
 		});
 	}
 
-	async cook() {
+	override async cook() {
 		const input_index = this.pv.input;
 		const parent = this.parent();
 		if (parent) {

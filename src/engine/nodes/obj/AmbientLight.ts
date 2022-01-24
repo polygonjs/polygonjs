@@ -21,9 +21,9 @@ class AmbientLightObjParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AmbientLightObjParamsConfig();
 
 export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, AmbientLightObjParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'ambientLight';
 	}
 
@@ -32,11 +32,11 @@ export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, Ambient
 		light.matrixAutoUpdate = false;
 		return light;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	protected updateLightParams() {
+	protected override updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 	}

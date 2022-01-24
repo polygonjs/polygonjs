@@ -62,17 +62,17 @@ export class AdaptiveToneMappingPostNode extends TypedPostProcessNode<
 	AdaptiveToneMappingPass,
 	AdaptiveToneMappingPostParamsConfig
 > {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'adaptiveToneMapping';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new AdaptiveToneMappingPass(this.pv.adaptive, context.resolution.x);
 		this.updatePass(pass);
 		return pass;
 	}
-	updatePass(pass: AdaptiveToneMappingPass) {
+	override updatePass(pass: AdaptiveToneMappingPass) {
 		pass.setMaxLuminance(this.pv.maxLuminance);
 		pass.setMiddleGrey(this.pv.midGrey);
 		pass.setAverageLuminance(this.pv.averageLuminance);

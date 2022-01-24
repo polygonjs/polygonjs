@@ -3,15 +3,15 @@ import {Group} from 'three/src/objects/Group';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 export class BaseManagerObjNode<K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
-	protected _attachableToHierarchy: boolean = false;
+	protected override _attachableToHierarchy: boolean = false;
 
-	createObject() {
+	override createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
 	}
 
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 }

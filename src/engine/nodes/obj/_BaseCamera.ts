@@ -167,14 +167,14 @@ export abstract class TypedCameraObjNode<
 	K extends BaseCameraObjParamsConfig
 > extends TypedObjNode<O, K> {
 	// public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	public readonly renderOrder: number = ObjNodeRenderOrder.CAMERA;
-	protected _object!: O;
+	public override readonly renderOrder: number = ObjNodeRenderOrder.CAMERA;
+	protected override _object!: O;
 	protected _aspect: number = -1;
-	get object() {
+	override get object() {
 		return this._object;
 	}
 
-	async cook() {
+	override async cook() {
 		this.updateCamera();
 		this._object.dispatchEvent(EVENT_CHANGE);
 		this.cookController.endCook();
@@ -219,9 +219,9 @@ export class TypedThreejsCameraObjNode<
 	O extends OrthoOrPerspCamera,
 	K extends BaseThreejsCameraObjParamsConfig
 > extends TypedCameraObjNode<O, K> {
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	readonly transformController: TransformController = new TransformController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	override readonly transformController: TransformController = new TransformController(this);
 	protected _controlsController: ThreejsCameraControlsController | undefined;
 	controlsController(): ThreejsCameraControlsController {
 		return (this._controlsController = this._controlsController || new ThreejsCameraControlsController(this));
@@ -240,15 +240,15 @@ export class TypedThreejsCameraObjNode<
 	}
 
 	// display_node and children_display controllers
-	public readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
-	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
+	public override readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
+	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.childrenDisplayController.displayNodeControllerCallbacks()
 	);
 	//
-	protected _childrenControllerContext = NodeContext.SOP;
+	protected override _childrenControllerContext = NodeContext.SOP;
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		super.initializeBaseNode();
 		this.io.outputs.setHasOneOutput();
 		this.hierarchyController.initializeNode();
@@ -258,23 +258,32 @@ export class TypedThreejsCameraObjNode<
 		this.initHelperHook();
 	}
 
-	createNode<S extends keyof GeoNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GeoNodeChildrenMap[S];
-	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof GeoNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): GeoNodeChildrenMap[S];
+	override createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseSopNodeType[];
 	}
-	nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
-	prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {
+	override prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {
 		raycaster.setFromCamera(mouse, this._object);
 	}
 
-	async cook() {
+	override async cook() {
 		this.transformController.update();
 		this._layersController().update();
 		// await this.background_controller.update();
@@ -306,7 +315,7 @@ export class TypedThreejsCameraObjNode<
 		}
 	}
 
-	setupForAspectRatio(aspect: number) {
+	override setupForAspectRatio(aspect: number) {
 		if (CoreType.isNaN(aspect)) {
 			return;
 		}

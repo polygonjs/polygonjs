@@ -46,8 +46,8 @@ class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig)
 const ParamsConfig = new PointLightObjParamsConfig();
 
 export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, PointLightObjParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return LightType.POINT;
 	}
 	private _helperController = new HelperController<Mesh, PointLight>(
@@ -55,7 +55,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 		(<unknown>PointLightHelper) as HelperConstructor<Mesh, PointLight>,
 		'PointLightHelper'
 	);
-	initializeNode() {
+	override initializeNode() {
 		this._helperController.initializeNode();
 	}
 
@@ -72,7 +72,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 		return light;
 	}
 
-	protected updateLightParams() {
+	protected override updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.decay = this.pv.decay;
@@ -81,7 +81,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 
 		this._helperController.update();
 	}
-	protected updateShadowParams() {
+	protected override updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadows);
 		this.light.shadow.mapSize.copy(this.pv.shadowRes);
 		this.light.shadow.camera.near = this.pv.shadowNear;

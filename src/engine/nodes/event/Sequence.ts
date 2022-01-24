@@ -24,12 +24,12 @@ class PassEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PassEventParamsConfig();
 
 export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'sequence';
 	}
-	initializeNode() {
+	override initializeNode() {
 		// this.io.inputs.setNamedInputConnectionPoints([
 		// 	new EventConnectionPoint(INPUT_NAME, EventConnectionPointType.BASE),
 		// ]);
@@ -53,7 +53,7 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 		return `out${index}`;
 	}
 
-	processEvent(event_context: EventContext<Event>) {
+	override processEvent(event_context: EventContext<Event>) {
 		const count = this.pv.outputsCount;
 		for (let i = 0; i < count; i++) {
 			const connection_point = this.io.outputs.namedOutputConnectionPoints()[i];

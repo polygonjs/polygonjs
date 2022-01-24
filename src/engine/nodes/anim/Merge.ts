@@ -46,12 +46,12 @@ class MergeAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MergeAnimParamsConfig();
 
 export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override readonly paramsConfig = ParamsConfig;
+	static override type() {
 		return 'merge';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 
 		this.scene().dispatchController.onAddListener(() => {
@@ -61,7 +61,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 		});
 	}
 
-	cook(inputContents: TimelineBuilder[]) {
+	override cook(inputContents: TimelineBuilder[]) {
 		const mergedTimelineBuilder = new TimelineBuilder();
 
 		let i = 0;

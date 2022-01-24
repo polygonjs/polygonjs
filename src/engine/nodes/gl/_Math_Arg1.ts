@@ -11,21 +11,21 @@ function MathFunctionArg1Factory(type: string, options: MathArg1Options = {}) {
 	const gl_output_name = options.out || 'val';
 	const gl_input_name = options.in || 'in';
 	return class Node extends BaseNodeGlMathFunctionArg1GlNode {
-		static type() {
+		static override type() {
 			return type;
 		}
-		initializeNode() {
+		override initializeNode() {
 			super.initializeNode();
 			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 		}
-		protected _gl_input_name(index: number): string {
+		protected override _gl_input_name(index: number): string {
 			return gl_input_name;
 		}
 		protected _gl_output_name(index: number): string {
 			return gl_output_name;
 		}
-		gl_method_name(): string {
+		override gl_method_name(): string {
 			return gl_method_name;
 		}
 	};

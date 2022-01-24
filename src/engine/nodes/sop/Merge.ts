@@ -34,19 +34,19 @@ class MergeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MergeSopParamsConfig();
 
 export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'merge';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
 	}
 	setCompactMode(compact: boolean) {
 		this.p.compact.set(compact);
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, DEFAULT_INPUTS_COUNT);
 		this.io.inputs.initInputsClonedState(MergeSopOperation.INPUT_CLONED_STATE);
 
@@ -58,7 +58,7 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 	}
 
 	private _operation: MergeSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new MergeSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

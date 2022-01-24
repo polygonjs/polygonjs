@@ -4,7 +4,7 @@ import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';
 
 export class ObjectContainer extends TypedContainer<NodeContext.OBJ> {
-	set_content(content: ContainableMap[NodeContext.OBJ]) {
+	override set_content(content: ContainableMap[NodeContext.OBJ]) {
 		super.set_content(content);
 	}
 	set_object(object: Object3D) {

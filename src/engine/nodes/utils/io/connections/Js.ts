@@ -137,35 +137,35 @@ export interface JsConnectionPointData<T extends JsConnectionPointType> {
 
 import {BaseConnectionPoint} from './_Base';
 export class JsConnectionPoint<T extends JsConnectionPointType> extends BaseConnectionPoint {
-	protected _json: JsConnectionPointData<T> | undefined;
-	protected _init_value: any;
+	protected override _json: JsConnectionPointData<T> | undefined;
+	protected override _init_value: any;
 
 	constructor(
-		protected _name: string,
-		protected _type: T // protected _init_value?: ConnectionPointInitValueMapGeneric[T]
+		_name: string,
+		protected override _type: T // protected _init_value?: ConnectionPointInitValueMapGeneric[T]
 	) {
 		super(_name, _type);
 		// if (this._init_value === undefined) {
 		this._init_value = JsConnectionPointInitValueMap[this._type];
 		// }
 	}
-	type() {
+	override type() {
 		return this._type;
 	}
-	are_types_matched(src_type: string, dest_type: string): boolean {
+	override are_types_matched(src_type: string, dest_type: string): boolean {
 		return src_type == dest_type;
 	}
 	get param_type(): IConnectionPointTypeToParamTypeMap[T] {
 		return JsConnectionPointTypeToParamTypeMap[this._type];
 	}
-	get init_value() {
+	override get init_value() {
 		return this._init_value;
 	}
 
-	toJSON(): JsConnectionPointData<T> {
+	override toJSON(): JsConnectionPointData<T> {
 		return (this._json = this._json || this._create_json());
 	}
-	protected _create_json(): JsConnectionPointData<T> {
+	protected override _create_json(): JsConnectionPointData<T> {
 		return {
 			name: this._name,
 			type: this._type,

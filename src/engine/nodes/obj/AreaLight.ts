@@ -39,8 +39,8 @@ class AreaLightObjParamsConfig extends AreaLightParamConfig(TransformedParamConf
 const ParamsConfig = new AreaLightObjParamsConfig();
 
 export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight, AreaLightObjParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'areaLight';
 	}
 	private _helperController = new HelperController<RectAreaLightHelper, RectAreaLight>(
@@ -48,7 +48,7 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 		RectAreaLightObjNodeHelper as any,
 		'RectAreaLightObjNodeHelper'
 	);
-	initializeNode() {
+	override initializeNode() {
 		this._helperController.initializeNode();
 	}
 
@@ -64,7 +64,7 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 		return light;
 	}
 
-	protected updateLightParams() {
+	protected override updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.width = this.pv.width;

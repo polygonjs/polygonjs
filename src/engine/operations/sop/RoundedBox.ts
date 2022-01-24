@@ -14,18 +14,18 @@ interface RoundedBoxSopParams extends DefaultOperationParams {
 }
 
 export class RoundedBoxSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: RoundedBoxSopParams = {
+	static override readonly DEFAULT_PARAMS: RoundedBoxSopParams = {
 		size: new Vector3(1, 1, 1),
 		divisions: 2,
 		bevel: 0.1,
 		center: new Vector3(0, 0, 0),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'roundedBox'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'roundedBox'> {
 		return 'roundedBox';
 	}
 	private _core_transform = new CoreTransform();
-	cook(input_contents: CoreGroup[], params: RoundedBoxSopParams) {
+	override cook(input_contents: CoreGroup[], params: RoundedBoxSopParams) {
 		const input_core_group = input_contents[0];
 		const geometry = input_core_group
 			? this._cook_with_input(input_core_group, params)

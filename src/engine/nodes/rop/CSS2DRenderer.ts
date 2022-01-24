@@ -37,8 +37,8 @@ class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CSS2DRendererRopParamsConfig();
 
 export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<RopType.CSS2D> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<RopType.CSS2D> {
 		return RopType.CSS2D;
 	}
 
@@ -76,7 +76,7 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 	// 	}
 	// }
 
-	cook() {
+	override cook() {
 		this._update_css();
 
 		this._renderers_by_canvas_id.forEach((renderer) => {

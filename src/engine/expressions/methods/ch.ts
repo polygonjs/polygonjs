@@ -20,14 +20,14 @@ import {MethodDependency} from '../MethodDependency';
 import {BaseParamType} from '../../params/_Base';
 
 export class ChExpression extends BaseMethod {
-	protected _requireDependency = true;
+	protected override _requireDependency = true;
 
-	static requiredArguments() {
+	static override requiredArguments() {
 		return [['string', 'path to param']];
 	}
 
 	private _referencedParam: BaseParamType | undefined;
-	findDependency(indexOrPath: number | string): MethodDependency | null {
+	override findDependency(indexOrPath: number | string): MethodDependency | null {
 		const decomposedPath = new DecomposedPath();
 		const param = this.getReferencedParam(indexOrPath as string, decomposedPath);
 		if (param) {
@@ -38,7 +38,7 @@ export class ChExpression extends BaseMethod {
 		return null;
 	}
 
-	async processArguments(args: any[]): Promise<any> {
+	override async processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			let val: any = 0;
 			if (args.length == 1) {

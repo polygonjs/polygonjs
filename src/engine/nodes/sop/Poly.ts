@@ -15,12 +15,12 @@ export function createPolySopNode(node_type: string, definition: PolyNodeDefinit
 	}
 	const ParamsConfig = new PolySopParamsConfig();
 	class BasePolySopNode extends SubnetSopNodeLike<PolySopParamsConfig> {
-		paramsConfig = ParamsConfig;
-		static type() {
+		override paramsConfig = ParamsConfig;
+		static override type() {
 			return node_type;
 		}
 
-		public readonly polyNodeController: PolyNodeController = new PolyNodeController(this, definition);
+		public override readonly polyNodeController: PolyNodeController = new PolyNodeController(this, definition);
 
 		static PARAM_CALLBACK_debug(node: BasePolySopNode) {
 			node._debug();

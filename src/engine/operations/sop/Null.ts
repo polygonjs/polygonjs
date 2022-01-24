@@ -7,13 +7,13 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 interface NullSopParams extends DefaultOperationParams {}
 
 export class NullSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: NullSopParams = {};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'null'> {
+	static override readonly DEFAULT_PARAMS: NullSopParams = {};
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'null'> {
 		return 'null';
 	}
 
-	cook(input_contents: CoreGroup[], params: NullSopParams) {
+	override cook(input_contents: CoreGroup[], params: NullSopParams) {
 		const core_group = input_contents[0];
 		if (core_group) {
 			return core_group;
@@ -22,5 +22,5 @@ export class NullSopOperation extends BaseSopOperation {
 		}
 	}
 
-	convertExportParamData(options: ConvertExportParamDataParams) {}
+	override convertExportParamData(options: ConvertExportParamDataParams) {}
 }

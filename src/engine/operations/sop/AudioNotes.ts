@@ -26,7 +26,7 @@ interface AudioNotesSopParams extends DefaultOperationParams {
 }
 
 export class AudioNotesSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AudioNotesSopParams = {
+	static override readonly DEFAULT_PARAMS: AudioNotesSopParams = {
 		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT),
 		name: 'note',
 		toctave: false,
@@ -35,12 +35,12 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 		endOctave: 4,
 		outOfRangeBehavior: OUT_OF_RANGE_BEHAVIOR.indexOf(OutOfRangeBehavior.BOUNCE),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'AudioNotes'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'AudioNotes'> {
 		return 'AudioNotes';
 	}
 
-	cook(inputCoreGroups: CoreGroup[], params: AudioNotesSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: AudioNotesSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
 		const attribClass = ATTRIBUTE_CLASSES[params.class];

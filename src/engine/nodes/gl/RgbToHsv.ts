@@ -20,18 +20,18 @@ class RgbToHsvGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new RgbToHsvGlParamsConfig();
 export class RgbToHsvGlNode extends TypedGlNode<RgbToHsvGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'rgbToHsv';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const function_declaration_lines = [];
 		const body_lines = [];
 

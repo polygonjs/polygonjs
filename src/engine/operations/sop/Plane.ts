@@ -21,7 +21,7 @@ const ROTATE_START = new Vector3(0, 0, 1);
 const ROTATE_END = new Vector3(0, 1, 0);
 
 export class PlaneSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: PlaneSopParams = {
+	static override readonly DEFAULT_PARAMS: PlaneSopParams = {
 		size: new Vector2(1, 1),
 		useSegmentsCount: false,
 		stepSize: 1,
@@ -29,14 +29,14 @@ export class PlaneSopOperation extends BaseSopOperation {
 		direction: new Vector3(0, 1, 0),
 		center: new Vector3(0, 0, 0),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'plane'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'plane'> {
 		return 'plane';
 	}
 
 	private _coreTransform = new CoreTransform();
 
-	cook(input_contents: CoreGroup[], params: PlaneSopParams) {
+	override cook(input_contents: CoreGroup[], params: PlaneSopParams) {
 		const core_group = input_contents[0];
 		if (core_group) {
 			return this._cook_with_input(core_group, params);

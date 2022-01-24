@@ -43,18 +43,18 @@ class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CSS2DObjectSopParamsConfig();
 
 export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'CSS2DObject';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(CSS2DObjectSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: CSS2DObjectSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new CSS2DObjectSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

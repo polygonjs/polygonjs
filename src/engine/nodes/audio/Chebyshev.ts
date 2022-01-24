@@ -39,16 +39,16 @@ class ChebyshevAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ChebyshevAudioParamsConfig();
 
 export class ChebyshevAudioNode extends TypedAudioNode<ChebyshevAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'chebyshev';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
 		const effect = this._effect();

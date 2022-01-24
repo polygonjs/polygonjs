@@ -36,13 +36,13 @@ class ParamGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ParamGlParamsConfig();
 
 export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'param'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'param'> {
 		return 'param';
 	}
 	// protected _allow_inputs_created_from_params: boolean = false;
 	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
@@ -52,7 +52,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [GL_CONNECTION_POINT_TYPES[this.pv.type]]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const definitions = [];
 
 		const gl_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
@@ -61,10 +61,10 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		definitions.push(new UniformGLDefinition(this, gl_type, var_name));
 		shaders_collection_controller.addDefinitions(this, definitions);
 	}
-	paramsGenerating() {
+	override paramsGenerating() {
 		return true;
 	}
-	setParamConfigs() {
+	override setParamConfigs() {
 		const gl_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
 		const default_value = GlConnectionPointInitValueMap[gl_type];
 		let param_type = GlConnectionPointTypeToParamTypeMap[gl_type];

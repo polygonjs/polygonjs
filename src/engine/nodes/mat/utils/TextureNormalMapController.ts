@@ -66,17 +66,17 @@ interface Controllers {
 }
 abstract class TextureNormalMapMatNode extends TypedMatNode<CurrentMaterial, TextureNormalMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureNormalMapController extends BaseTextureMapController {
-	constructor(protected node: TextureNormalMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureNormalMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useNormalMap, this.node.p.normalMap);
 	}
-	async update() {
+	override async update() {
 		const {p, pv, material} = this.node;
 		this._update(this.node.material, 'normalMap', p.useNormalMap, p.normalMap);
 		const normalMapType = NormalMapModeByName[NORMAL_MAP_MODES[pv.normalMapType]];
@@ -93,7 +93,7 @@ export class TextureNormalMapController extends BaseTextureMapController {
 			mat.normalScale.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
 		}
 	}
-	static async update(node: TextureNormalMapMatNode) {
+	static override async update(node: TextureNormalMapMatNode) {
 		node.controllers.normalMap.update();
 	}
 }

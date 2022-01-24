@@ -22,14 +22,14 @@ export class VectorAlignGlNode extends MathFunctionArg3Factory('vectorAlign', {
 	method: 'vectorAlignWithUp',
 	functions: [Quaternion],
 }) {
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = GlConnectionPointType.VEC3;
 		return [type, type, type];
 	}
-	protected _expected_output_types() {
+	protected override _expected_output_types() {
 		return [GlConnectionPointType.VEC4];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 }

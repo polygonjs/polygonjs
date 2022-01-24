@@ -21,18 +21,18 @@ enum InputName {
 }
 
 export class MultScalarGlNode extends BaseNodeGlMathFunctionArg2GlNode {
-	static type() {
+	static override type() {
 		return 'multScalar';
 	}
 
-	protected _gl_input_name(index: number) {
+	protected override _gl_input_name(index: number) {
 		return [InputName.VALUE, InputName.MULT][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const value = ThreeToGl.any(this.variableForInput(InputName.VALUE));
 		const mult = ThreeToGl.any(this.variableForInput(InputName.MULT));
 
@@ -42,7 +42,7 @@ export class MultScalarGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 		const body_line = `${gl_type} ${out} = (${mult}*${value})`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
 		return [type, GlConnectionPointType.FLOAT];
 	}

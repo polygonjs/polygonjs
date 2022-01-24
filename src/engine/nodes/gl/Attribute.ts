@@ -37,8 +37,8 @@ class AttributeGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttributeGlParamsConfig();
 
 export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<GlNodeType.ATTRIBUTE> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<GlNodeType.ATTRIBUTE> {
 		return GlNodeType.ATTRIBUTE;
 	}
 	static readonly INPUT_NAME = 'in';
@@ -47,7 +47,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	initializeNode() {
+	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompileIfIsExporting.bind(this));
 		this.lifecycle.onAfterCreated(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
@@ -104,7 +104,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 	}
 	// }
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
 		assembler.set_node_lines_attribute(this, shaders_collection_controller);
 	}

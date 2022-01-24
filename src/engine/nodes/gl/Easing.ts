@@ -172,12 +172,12 @@ class EasingGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new EasingGlParamsConfig();
 export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'easing';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.connection_points.spare_params.set_inputless_param_names(['type']);
@@ -187,7 +187,7 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const ease_name = EASE_NAMES[this.pv.type];
 		const method_name = METHOD_NAMES_BY_EASE_NAME[ease_name];
 		const glsl_function_code = IMPORT_BY_EASE_NAME[ease_name];

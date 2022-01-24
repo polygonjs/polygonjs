@@ -9,18 +9,18 @@ import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR4: Readonly<string[]> = ['x', 'y', 'z', 'w'];
 export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
-	protected _value = new Vector4();
+	protected override _value = new Vector4();
 	x!: FloatParam;
 	y!: FloatParam;
 	z!: FloatParam;
 	w!: FloatParam;
-	static type() {
+	static override type() {
 		return ParamType.VECTOR4;
 	}
-	componentNames(): Readonly<string[]> {
+	override componentNames(): Readonly<string[]> {
 		return COMPONENT_NAMES_VECTOR4;
 	}
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		if (CoreType.isArray(this._default_value)) {
 			return this._default_value;
 		} else {
@@ -40,15 +40,15 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	// 		return new_array;
 	// 	}
 	// }
-	valueSerialized() {
+	override valueSerialized() {
 		return this.value.toArray() as Number4;
 	}
 	private _copied_value: Number4 = [0, 0, 0, 0];
-	protected _copyValue(param: Vector4Param) {
+	protected override _copyValue(param: Vector4Param) {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
-	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR4]) {
+	protected override _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR4]) {
 		if (raw_input instanceof Vector4) {
 			return raw_input.clone();
 		} else {
@@ -69,7 +69,7 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 			return new_array;
 		}
 	}
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.VECTOR4],
 		raw_input2: ParamInitValuesTypeMap[ParamType.VECTOR4]
 	) {
@@ -102,10 +102,13 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 			}
 		}
 	}
-	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.VECTOR4], val2: ParamValuesTypeMap[ParamType.VECTOR4]) {
+	static override areValuesEqual(
+		val1: ParamValuesTypeMap[ParamType.VECTOR4],
+		val2: ParamValuesTypeMap[ParamType.VECTOR4]
+	) {
 		return val1.equals(val2);
 	}
-	initComponents() {
+	override initComponents() {
 		super.initComponents();
 		this.x = this.components[0];
 		this.y = this.components[1];
@@ -113,7 +116,7 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 		this.w = this.components[3];
 	}
 
-	set_value_from_components() {
+	override set_value_from_components() {
 		this._value.x = this.x.value;
 		this._value.y = this.y.value;
 		this._value.z = this.z.value;

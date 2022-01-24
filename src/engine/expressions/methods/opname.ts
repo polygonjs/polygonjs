@@ -20,12 +20,12 @@ import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 
 export class OpnameExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [['string', 'path to node']];
 	}
 
-	findDependency(index_or_path: number | string): MethodDependency | null {
+	override findDependency(index_or_path: number | string): MethodDependency | null {
 		const graph_node = this.findReferencedGraphNode(index_or_path);
 		if (graph_node) {
 			const node = graph_node as BaseNodeType;
@@ -37,7 +37,7 @@ export class OpnameExpression extends BaseMethod {
 		return null;
 	}
 
-	processArguments(args: any[]): Promise<any> {
+	override processArguments(args: any[]): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (args.length == 1) {
 				const index_or_path = args[0];

@@ -35,8 +35,8 @@ class UvProjectSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new UvProjectSopParamsConfig();
 
 export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'uvProject';
 	}
 
@@ -44,12 +44,12 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 	private _processed_core_group: CoreGroup | undefined;
 	private _camera_object: Camera | undefined;
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	cook(core_groups: CoreGroup[]) {
+	override cook(core_groups: CoreGroup[]) {
 		this._processed_core_group = core_groups[0];
 
 		const cameraNode = this.pv.camera.nodeWithContext(NodeContext.OBJ, this.states.error);

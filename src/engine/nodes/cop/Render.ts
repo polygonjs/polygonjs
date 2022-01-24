@@ -56,8 +56,8 @@ class RenderCopParamConfig extends TextureParamConfig(RenderCopNodeParamConfig(N
 const ParamsConfig = new RenderCopParamConfig();
 
 export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'render'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'render'> {
 		return 'render';
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
@@ -69,7 +69,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	private _renderer_controller: CopRendererController | undefined;
 	private _data_texture_controller: DataTextureController | undefined;
 
-	async cook() {
+	override async cook() {
 		this._texture_scene = this.scene().threejsScene();
 
 		this._camera_node = this.pv.camera.nodeWithContext(NodeContext.OBJ) as TypedCameraObjNode<any, any>;

@@ -12,7 +12,7 @@ interface RestAttributesSopParams extends DefaultOperationParams {
 }
 
 export class RestAttributesSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: RestAttributesSopParams = {
+	static override readonly DEFAULT_PARAMS: RestAttributesSopParams = {
 		tposition: true,
 		position: 'position',
 		restP: 'restP',
@@ -20,11 +20,11 @@ export class RestAttributesSopOperation extends BaseSopOperation {
 		normal: 'normal',
 		restN: 'restN',
 	};
-	static type(): Readonly<'restAttributes'> {
+	static override type(): Readonly<'restAttributes'> {
 		return 'restAttributes';
 	}
 
-	cook(input_contents: CoreGroup[], params: RestAttributesSopParams) {
+	override cook(input_contents: CoreGroup[], params: RestAttributesSopParams) {
 		const core_group = input_contents[0];
 		const objects = core_group.objectsWithGeo();
 		if (isBooleanTrue(params.tposition)) {

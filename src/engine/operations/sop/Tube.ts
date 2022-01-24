@@ -20,7 +20,7 @@ interface TubeSopParams extends DefaultOperationParams {
 }
 
 export class TubeSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: TubeSopParams = {
+	static override readonly DEFAULT_PARAMS: TubeSopParams = {
 		radius: 1,
 		height: 1,
 		segmentsRadial: 12,
@@ -29,12 +29,12 @@ export class TubeSopOperation extends BaseSopOperation {
 		center: new Vector3(0, 0, 0),
 		direction: new Vector3(0, 0, 1),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'tube'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'tube'> {
 		return 'tube';
 	}
 	private _coreTransform = new CoreTransform();
-	cook(input_contents: CoreGroup[], params: TubeSopParams) {
+	override cook(input_contents: CoreGroup[], params: TubeSopParams) {
 		const geometry = new CylinderBufferGeometry(
 			params.radius,
 			params.radius,

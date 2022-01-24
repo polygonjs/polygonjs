@@ -14,16 +14,16 @@ class PolySynthAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new PolySynthAudioParamsConfig();
 
 export class PolySynthAudioNode extends TypedAudioNode<PolySynthAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'polySynth';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const synth = new PolySynth(Synth, {
 			oscillator: {
 				partials: [0, 2, 3, 4],

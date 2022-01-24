@@ -14,7 +14,7 @@ export const ACCEPTED_KEYBOARD_EVENT_TYPES: KeyboardEventType[] = [
 ];
 
 export class KeyboardEventsController extends BaseSceneEventsController<KeyboardEvent, KeyboardEventNode> {
-	protected _requireCanvasEventListeners: boolean = true;
+	protected override _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'keyboard';
 	}

@@ -83,22 +83,22 @@ class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ObjectPropertiesSopParamsConfig();
 
 export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'objectProperties';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['objects to change properties of'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(ObjectPropertiesSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: ObjectPropertiesSopOperation | undefined;
-	async cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new ObjectPropertiesSopOperation(this.scene(), this.states);
 
 		// first check that any param has an expression

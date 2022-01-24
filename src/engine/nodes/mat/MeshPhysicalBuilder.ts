@@ -97,11 +97,11 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	ShaderAssemblerPhysical,
 	MeshPhysicalMatParamsConfig
 > {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshPhysicalBuilder';
 	}
-	public usedAssembler(): Readonly<AssemblerName.GL_MESH_PHYSICAL> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_PHYSICAL> {
 		return AssemblerName.GL_MESH_PHYSICAL;
 	}
 	protected _create_assembler_controller() {
@@ -124,7 +124,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
@@ -132,14 +132,14 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 		});
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		const material = super.createMaterial();
 		(material as any).isMeshStandardMaterial = true;
 		(material as any).isMeshPhysicalMaterial = true;
 		return material;
 	}
 
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

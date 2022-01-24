@@ -19,17 +19,17 @@ class DelaySopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DelaySopParamsConfig();
 
 export class DelaySopNode extends TypedSopNode<DelaySopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'delay';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
 	}
 
-	cook(inputs_contents: CoreGroup[]) {
+	override cook(inputs_contents: CoreGroup[]) {
 		const core_group = inputs_contents[0];
 		const c = () => {
 			this.setCoreGroup(core_group);

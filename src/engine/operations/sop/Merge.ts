@@ -17,19 +17,19 @@ interface MergeSopParams extends DefaultOperationParams {
 }
 
 export class MergeSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: MergeSopParams = {
+	static override readonly DEFAULT_PARAMS: MergeSopParams = {
 		compact: false,
 		keepHierarchy: false,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'merge'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'merge'> {
 		return 'merge';
 	}
 
 	// TODO: improvement:
 	// for compact, I should really keep track of geometry ids,
 	// to make sure I am not including a geometry twice, if there is a hierarchy
-	cook(inputCoreGroups: CoreGroup[], params: MergeSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: MergeSopParams) {
 		let allObjects: Object3D[] = [];
 		for (let inputCoreGroup of inputCoreGroups) {
 			if (inputCoreGroup) {

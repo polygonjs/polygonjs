@@ -55,8 +55,8 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 	constructor(
 		_url: string,
 		private _param: BaseParamType,
-		protected _node: BaseNodeType,
-		protected _scene: PolyScene,
+		protected override _node: BaseNodeType,
+		protected override _scene: PolyScene,
 		options?: CoreLoaderTextureOptions
 	) {
 		super(_url, _scene, _node);

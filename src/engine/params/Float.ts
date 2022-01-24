@@ -5,22 +5,22 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {CoreType} from '../../core/Type';
 export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
-	static type() {
+	static override type() {
 		return ParamType.FLOAT;
 	}
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		return this._default_value;
 	}
-	rawInputSerialized() {
+	override rawInputSerialized() {
 		return this._raw_input;
 	}
-	valueSerialized() {
+	override valueSerialized() {
 		return this.value;
 	}
-	protected _copyValue(param: FloatParam) {
+	protected override _copyValue(param: FloatParam) {
 		this.set(param.valueSerialized());
 	}
-	protected _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
+	protected override _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
 		if (CoreType.isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
 		}
@@ -30,13 +30,16 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 		return raw_input;
 	}
 
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.FLOAT],
 		raw_input2: ParamInitValuesTypeMap[ParamType.FLOAT]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.FLOAT], val2: ParamValuesTypeMap[ParamType.FLOAT]) {
+	static override areValuesEqual(
+		val1: ParamValuesTypeMap[ParamType.FLOAT],
+		val2: ParamValuesTypeMap[ParamType.FLOAT]
+	) {
 		return val1 == val2;
 	}
 	static convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
@@ -56,7 +59,7 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 			return null;
 		}
 	}
-	convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
+	override convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
 		const result = FloatParam.convert(raw_val);
 		if (result) {
 			return this.options.ensureInRange(result);

@@ -49,17 +49,17 @@ interface Controllers {
 }
 abstract class TextureDisplacementMapMatNode extends TypedMatNode<CurrentMaterial, TextureDisplacementMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureDisplacementMapController extends BaseTextureMapController {
-	constructor(protected node: TextureDisplacementMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureDisplacementMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useDisplacementMap, this.node.p.displacementMap);
 	}
-	async update() {
+	override async update() {
 		this._update(
 			this.node.material,
 			'displacementMap',
@@ -77,7 +77,7 @@ export class TextureDisplacementMapController extends BaseTextureMapController {
 			mat.displacementBias = this.node.pv.displacementBias;
 		}
 	}
-	static async update(node: TextureDisplacementMapMatNode) {
+	static override async update(node: TextureDisplacementMapMatNode) {
 		node.controllers.displacementMap.update();
 	}
 }

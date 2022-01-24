@@ -13,18 +13,18 @@ interface UvTransformSopParams extends DefaultOperationParams {
 }
 
 export class UvTransformSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: UvTransformSopParams = {
+	static override readonly DEFAULT_PARAMS: UvTransformSopParams = {
 		attribName: 'uv',
 		t: new Vector2(0, 0),
 		s: new Vector2(1, 1),
 		pivot: new Vector2(0, 0),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<SopType.UV_TRANSFORM> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<SopType.UV_TRANSFORM> {
 		return SopType.UV_TRANSFORM;
 	}
 
-	cook(input_contents: CoreGroup[], params: UvTransformSopParams): CoreGroup {
+	override cook(input_contents: CoreGroup[], params: UvTransformSopParams): CoreGroup {
 		const objects = input_contents[0].objectsWithGeo();
 		for (let object of objects) {
 			const geometry = object.geometry;

@@ -19,7 +19,7 @@ export class SceneEvent extends Event {
 	constructor(type: SceneEventType) {
 		super(type);
 	}
-	get type(): SceneEventType {
+	override get type(): SceneEventType {
 		return super.type as SceneEventType;
 	}
 }

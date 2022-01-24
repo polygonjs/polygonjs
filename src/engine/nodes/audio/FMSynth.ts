@@ -14,16 +14,16 @@ class FMSynthAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new FMSynthAudioParamsConfig();
 
 export class FMSynthAudioNode extends TypedAudioNode<FMSynthAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'FMSynth';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const envelopeBuilder = inputContents[0];
 		const envelopeParams = envelopeBuilder.envelopeParams() || ENVELOPE_DEFAULTS;
 

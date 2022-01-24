@@ -74,18 +74,18 @@ class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new AttribSetAtIndexSopParamsConfig();
 export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribSetAtIndex';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(AttribSetAtIndexSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: AttribSetAtIndexSopOperation | undefined;
-	cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		// cannot yet convert to an operation, as expressions may be used in this node
 		// but we can still use one when no expression is required
 		const attribName = this.pv.name;

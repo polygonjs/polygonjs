@@ -24,18 +24,18 @@ class SynthAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SynthAudioParamsConfig();
 
 export class SynthAudioNode extends TypedAudioNode<SynthAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'Synth';
 	}
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const envelopeBuilder = inputContents[0];
 		const envelopeParams = envelopeBuilder.envelopeParams() || ENVELOPE_DEFAULTS;
 

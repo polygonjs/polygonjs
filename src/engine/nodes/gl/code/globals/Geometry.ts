@@ -36,7 +36,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		uv: 'defined( USE_MAP ) || defined( USE_BUMPMAP ) || defined( USE_NORMALMAP ) || defined( USE_SPECULARMAP ) || defined( USE_ALPHAMAP ) || defined( USE_EMISSIVEMAP ) || defined( USE_ROUGHNESSMAP ) || defined( USE_METALNESSMAP )',
 	};
 
-	handle_globals_node(
+	override handle_globals_node(
 		globals_node: GlobalsGlNode,
 		output_name: string,
 		shaders_collection_controller: ShadersCollectionController

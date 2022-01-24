@@ -26,18 +26,18 @@ import {BaseNodeType} from '../../nodes/_Base';
 
 type CopyNode = CopyAnimNode | CopySopNode;
 export class CopyExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [
 			['string', 'path to copy'],
 			['integer', 'default value'],
 		];
 	}
-	static optionalArguments() {
+	static override optionalArguments() {
 		return [['string', 'attribute name (optional)']];
 	}
 
-	findDependency(indexOrPath: number | string): MethodDependency | null {
+	override findDependency(indexOrPath: number | string): MethodDependency | null {
 		const node = this.findReferencedGraphNode(indexOrPath) as BaseNodeType;
 		// I'd prefer testing with if(node instanceof CopySopNode || node instanceof CopyAnimNode)
 		// but tslib generates an error when doing so
@@ -48,7 +48,7 @@ export class CopyExpression extends BaseMethod {
 		return null;
 	}
 
-	processArguments(args: any[]): Promise<any> {
+	override processArguments(args: any[]): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (args.length >= 1) {
 				const path = args[0];

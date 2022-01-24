@@ -3,7 +3,7 @@ import {ParamPathParam} from '../../../../params/ParamPath';
 import {SceneJsonExporter} from '../Scene';
 
 export class ParamParamPathJsonExporter extends ParamJsonExporter<ParamPathParam> {
-	add_main() {
+	override add_main() {
 		let val = this._param.rawInput();
 		// val = val.replace(/'/g, "\\'");
 		val = SceneJsonExporter.sanitize_string(val);

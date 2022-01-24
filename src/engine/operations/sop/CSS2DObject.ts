@@ -30,7 +30,7 @@ interface CSS2DObjectSopParams extends DefaultOperationParams {
 }
 
 export class CSS2DObjectSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: CSS2DObjectSopParams = {
+	static override readonly DEFAULT_PARAMS: CSS2DObjectSopParams = {
 		useIdAttrib: false,
 		id: 'myCSSObject',
 		useClassAttrib: false,
@@ -40,12 +40,12 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 		copyAttributes: false,
 		attributesToCopy: '',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'CSS2DObject'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'CSS2DObject'> {
 		return 'CSS2DObject';
 	}
 
-	cook(input_contents: CoreGroup[], params: CSS2DObjectSopParams) {
+	override cook(input_contents: CoreGroup[], params: CSS2DObjectSopParams) {
 		const core_group = input_contents[0];
 		if (core_group) {
 			const objects = this._create_objects_from_input_points(core_group, params);

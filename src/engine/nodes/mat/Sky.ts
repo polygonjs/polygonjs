@@ -46,19 +46,19 @@ class SkyMatParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SkyMatParamsConfig();
 
 export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'sky';
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		const object = new Sky();
 		const mat = object.material as ShaderMaterialWithSkyUniforms;
 		mat.depthWrite = true;
 		return mat;
 	}
 
-	async cook() {
+	override async cook() {
 		const uniforms = this.material.uniforms;
 		uniforms.turbidity.value = this.pv.turbidity;
 		uniforms.rayleigh.value = this.pv.rayleigh;

@@ -7,7 +7,7 @@ const ARGUMENTS_SEPARATOR = ', ';
 import {BaseTraverser} from './_Base';
 
 export class ExpressionStringGenerator extends BaseTraverser {
-	constructor(public param: BaseParamType) {
+	constructor(public override param: BaseParamType) {
 		super(param);
 	}
 

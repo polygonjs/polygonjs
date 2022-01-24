@@ -32,16 +32,16 @@ class PingPongDelayAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PingPongDelayAudioParamsConfig();
 
 export class PingPongDelayAudioNode extends TypedAudioNode<PingPongDelayAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'pingPongDelay';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 		const effect = this._createEffect();
 

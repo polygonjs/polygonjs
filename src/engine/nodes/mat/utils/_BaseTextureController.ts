@@ -88,7 +88,7 @@ export interface UpdateOptions {
 	// define_uv?: boolean;
 }
 export class BaseTextureMapController extends BaseController {
-	constructor(protected node: BaseMatNodeType, protected _update_options: UpdateOptions) {
+	constructor(protected override node: BaseMatNodeType, protected _update_options: UpdateOptions) {
 		super(node);
 		// if (this._update_options.define == null) {
 		// 	this._update_options.define = true;

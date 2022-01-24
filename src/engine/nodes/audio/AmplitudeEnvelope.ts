@@ -47,16 +47,16 @@ class AmplitudeEnvelopeAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AmplitudeEnvelopeAudioParamsConfig();
 
 export class AmplitudeEnvelopeAudioNode extends TypedAudioNode<AmplitudeEnvelopeAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'amplitudeEnveloppe';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
 		const ampEnv = new AmplitudeEnvelope({

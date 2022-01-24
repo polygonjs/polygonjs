@@ -32,12 +32,12 @@ class AttribNormalizeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribNormalizeSopParamsConfig();
 
 export class AttribNormalizeSopNode extends TypedSopNode<AttribNormalizeSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribNormalize';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(AttribNormalizeSopOperation.INPUT_CLONED_STATE);
 	}
@@ -47,7 +47,7 @@ export class AttribNormalizeSopNode extends TypedSopNode<AttribNormalizeSopParam
 	}
 
 	private _operation: AttribNormalizeSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new AttribNormalizeSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

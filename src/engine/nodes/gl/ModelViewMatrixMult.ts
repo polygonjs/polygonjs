@@ -19,19 +19,19 @@ class ModelViewMatrixMultGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ModelViewMatrixMultGlParamsConfig();
 export class ModelViewMatrixMultGlNode extends TypedGlNode<ModelViewMatrixMultGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'modelViewMatrixMult'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'modelViewMatrixMult'> {
 		return 'modelViewMatrixMult';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		if (shaders_collection_controller.current_shader_name == ShaderName.VERTEX) {
 			const input = ThreeToGl.vector3(this.variableForInputParam(this.p.vector));
 			const out_value = this.glVarName(OUTPUT_NAME);

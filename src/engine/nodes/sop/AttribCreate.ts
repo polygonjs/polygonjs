@@ -96,8 +96,8 @@ class AttribCreateSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new AttribCreateSopParamsConfig();
 export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribCreate';
 	}
 
@@ -108,13 +108,13 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		W: new Map(),
 	};
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(AttribCreateSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: AttribCreateSopOperation | undefined;
-	cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		// cannot yet convert to an operation, as expressions may be used in this node
 		// but we can still use one when no expression is required
 		const attribName = this.pv.name;

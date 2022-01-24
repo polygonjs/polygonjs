@@ -10,21 +10,30 @@ import {BaseMatNodeType} from '../mat/_Base';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class MaterialsNetworkAnimNode extends ParamLessBaseNetworkAnimNode {
-	static type() {
+	static override type() {
 		return NetworkNodeType.MAT;
 	}
 
-	protected _childrenControllerContext = NodeContext.MAT;
+	protected override _childrenControllerContext = NodeContext.MAT;
 
-	createNode<S extends keyof MatNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): MatNodeChildrenMap[S];
-	createNode<K extends valueof<MatNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<MatNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof MatNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): MatNodeChildrenMap[S];
+	override createNode<K extends valueof<MatNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<MatNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseMatNodeType[];
 	}
-	nodesByType<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof MatNodeChildrenMap>(type: K): MatNodeChildrenMap[K][] {
 		return super.nodesByType(type) as MatNodeChildrenMap[K][];
 	}
 }

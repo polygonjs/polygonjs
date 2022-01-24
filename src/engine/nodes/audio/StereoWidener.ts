@@ -27,16 +27,16 @@ class StereoWidenerAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new StereoWidenerAudioParamsConfig();
 
 export class StereoWidenerAudioNode extends TypedAudioNode<StereoWidenerAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'stereoWidener';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 		const effect = new StereoWidener(this.pv.width);
 

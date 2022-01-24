@@ -58,17 +58,17 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 	OrthographicCamera,
 	OrthographicCameraObjParamConfig
 > {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
 	// protected get background_controller_constructor() {
 	// 	return OrthographicCameraBackgroundController;
 	// }
 
-	static type(): Readonly<CameraNodeType.ORTHOGRAPHIC> {
+	static override type(): Readonly<CameraNodeType.ORTHOGRAPHIC> {
 		return CameraNodeType.ORTHOGRAPHIC;
 	}
 
-	createObject() {
+	override createObject() {
 		return new OrthographicCamera(
 			DEFAULT.left * 2,
 			DEFAULT.right * 2,
@@ -79,11 +79,11 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 		);
 	}
 
-	updateCamera() {
+	override updateCamera() {
 		this._updateForAspectRatio();
 	}
 
-	protected _updateForAspectRatio() {
+	protected override _updateForAspectRatio() {
 		if (this._aspect) {
 			this._adjustFOVFromMode();
 			this._object.updateProjectionMatrix();

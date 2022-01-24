@@ -144,8 +144,8 @@ class MobileJoystickEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MobileJoystickEventParamsConfig();
 
 export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNode<MobileJoystickEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return CameraControlsNodeType.MOBILE_JOYSTICK;
 	}
 	endEventName() {
@@ -156,7 +156,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	collisionController(): CollisionController {
 		return (this._collisionController = this._collisionController || new CollisionController(this));
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				MobileJoystickControlsEventNode.INPUT_UPDATE_COLLIDER,

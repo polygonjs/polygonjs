@@ -9,19 +9,19 @@ import {FlagsController} from '../utils/FlagsController';
  */
 
 export class TypedRopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ROP, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.ROP;
 	}
 
-	public readonly flags: FlagsController = new FlagsController(this);
+	public override readonly flags: FlagsController = new FlagsController(this);
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		this.dirtyController.addPostDirtyHook('cook_immediately', () => {
 			this.cookController.cookMainWithoutInputs();
 		});
 	}
 
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 }

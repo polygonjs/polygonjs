@@ -14,12 +14,12 @@ class SDFSphereGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SDFSphereGlParamsConfig();
 export class SDFSphereGlNode extends TypedGlNode<SDFSphereGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'SDFSphere';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -27,7 +27,7 @@ export class SDFSphereGlNode extends TypedGlNode<SDFSphereGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const position = ThreeToGl.vector2(this.variableForInputParam(this.p.position));
 		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));

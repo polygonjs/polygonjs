@@ -25,10 +25,10 @@ export enum ObjNodeRenderOrder {
  *
  */
 export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<NodeContext.OBJ, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.OBJ;
 	}
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
@@ -78,7 +78,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 
 	public readonly childrenDisplayController: ChildrenDisplayController | undefined;
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		this._object = this._create_object_with_attributes();
 		this.nameController.add_post_set_fullPath_hook(this.set_object_name.bind(this));
 		this.set_object_name();

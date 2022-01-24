@@ -24,22 +24,22 @@ class CameraProjectSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CameraProjectSopParamsConfig();
 
 export class CameraProjectSopNode extends TypedSopNode<CameraProjectSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'cameraProject';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['points to project/unproject'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(CameraProjectSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: CameraProjectSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new CameraProjectSopOperation(this._scene, this.states);
 		const coreGroup = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(coreGroup);

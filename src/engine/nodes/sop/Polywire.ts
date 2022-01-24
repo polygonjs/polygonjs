@@ -24,22 +24,22 @@ class PolywireSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PolywireSopParamsConfig();
 
 export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'polywire';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['lines to create tubes from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	private _operation: PolywireSopOperation | undefined;
-	cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new PolywireSopOperation(this._scene, this.states);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);

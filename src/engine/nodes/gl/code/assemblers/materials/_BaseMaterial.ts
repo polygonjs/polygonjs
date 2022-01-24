@@ -147,10 +147,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	protected _resetFilterFragmentShaderCallbacks() {
 		this._filterFragmentShaderCallbacks.clear();
 	}
-	_addFilterFragmentShaderCallback(callbackName: string, callback: (s: string) => string) {
+	override _addFilterFragmentShaderCallback(callbackName: string, callback: (s: string) => string) {
 		this._filterFragmentShaderCallbacks.set(callbackName, callback);
 	}
-	_removeFilterFragmentShaderCallback(callbackName: string) {
+	override _removeFilterFragmentShaderCallback(callbackName: string) {
 		this._filterFragmentShaderCallbacks.delete(callbackName);
 	}
 	private _filterFragmentShaderMethodOwner: ShaderAssemblerMaterial | undefined;
@@ -335,7 +335,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 	}
 
-	set_node_lines_output(output_node: OutputGlNode, shaders_collection_controller: ShadersCollectionController) {
+	override set_node_lines_output(
+		output_node: OutputGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		// const body_lines = [];
 		const shader_name = shaders_collection_controller.current_shader_name;
 		const input_names = this.shader_config(shader_name)?.input_names();
@@ -348,7 +351,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			}
 		}
 	}
-	set_node_lines_attribute(
+	override set_node_lines_attribute(
 		attribute_node: AttributeGlNode,
 		shaders_collection_controller: ShadersCollectionController
 	) {
@@ -503,7 +506,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 	}
 
-	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {
+	override set_node_lines_globals(
+		globals_node: GlobalsGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		const body_lines: string[] = [];
 		const shader_name = shaders_collection_controller.current_shader_name;
 		const shader_config = this.shader_config(shader_name);

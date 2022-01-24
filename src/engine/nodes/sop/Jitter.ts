@@ -21,22 +21,22 @@ class JitterSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new JitterSopParamsConfig();
 
 export class JitterSopNode extends TypedSopNode<JitterSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'jitter';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to jitter points of'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(JitterSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: JitterSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new JitterSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

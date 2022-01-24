@@ -59,12 +59,12 @@ class RotateParamsConfig extends NodeParamsConfig {
 
 const ParamsConfig = new RotateParamsConfig();
 export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'rotate';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
@@ -79,7 +79,7 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		const mode = Modes[this.pv.signature];
 		return InputNamesByMode[mode][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 	gl_method_name(): string {
@@ -102,7 +102,7 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		return [new FunctionGLDefinition(this, Quaternion)];
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const var_type: GlConnectionPointType = this.io.outputs.namedOutputConnectionPoints()[0].type();
 		const args = this.io.inputs.namedInputConnectionPoints().map((connection, i) => {
 			const name = connection.name();

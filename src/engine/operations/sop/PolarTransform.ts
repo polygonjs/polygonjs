@@ -23,19 +23,19 @@ interface PolarTransformSopParams extends DefaultOperationParams {
 }
 
 export class PolarTransformSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: PolarTransformSopParams = {
+	static override readonly DEFAULT_PARAMS: PolarTransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES),
 		center: new Vector3(0, 0, 0),
 		longitude: 0,
 		latitude: 0,
 		depth: 1,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'polarTransform'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'polarTransform'> {
 		return 'polarTransform';
 	}
 
-	cook(input_contents: CoreGroup[], params: PolarTransformSopParams) {
+	override cook(input_contents: CoreGroup[], params: PolarTransformSopParams) {
 		const objects = input_contents[0].objects();
 		const matrix = this.matrix(params);
 

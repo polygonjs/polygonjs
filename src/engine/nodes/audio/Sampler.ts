@@ -64,16 +64,16 @@ class SamplerAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SamplerAudioParamsConfig();
 
 export class SamplerAudioNode extends TypedAudioNode<SamplerAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'sampler';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	async cook(inputContents: AudioBuilder[]) {
+	override async cook(inputContents: AudioBuilder[]) {
 		const envelopeBuilder = inputContents[0];
 		const envelopeParams = envelopeBuilder.envelopeParams() || SAMPLER_DEFAULTS;
 

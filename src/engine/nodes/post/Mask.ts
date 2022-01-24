@@ -48,12 +48,12 @@ class MaskPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new MaskPostParamsConfig();
 export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, MaskPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'mask';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new MaskPass(context.scene, context.camera) as MaskPassWithContext;
 		pass.context = {
 			scene: context.scene,
@@ -63,7 +63,7 @@ export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, Mask
 
 		return pass;
 	}
-	updatePass(pass: MaskPassWithContext) {
+	override updatePass(pass: MaskPassWithContext) {
 		pass.inverse = isBooleanTrue(this.pv.inverse);
 		this._updateScene(pass);
 		this._updateCamera(pass);

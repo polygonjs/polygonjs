@@ -4,10 +4,10 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkCopParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkCopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.COP, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.COP;
 	}
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 }

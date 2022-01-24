@@ -14,14 +14,14 @@ interface PeakSopParams extends DefaultOperationParams {
 }
 
 export class PeakSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: PeakSopParams = {
+	static override readonly DEFAULT_PARAMS: PeakSopParams = {
 		amount: 0,
 	};
-	static type(): Readonly<'peak'> {
+	static override type(): Readonly<'peak'> {
 		return 'peak';
 	}
 
-	cook(input_contents: CoreGroup[], params: PeakSopParams) {
+	override cook(input_contents: CoreGroup[], params: PeakSopParams) {
 		const core_group = input_contents[0];
 
 		let core_geometry: CoreGeometry, point: CorePoint;

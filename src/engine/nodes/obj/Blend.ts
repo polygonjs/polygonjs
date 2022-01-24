@@ -66,15 +66,15 @@ class BlendObjParamConfig extends NodeParamsConfig {
 const ParamsConfig = new BlendObjParamConfig();
 
 export class BlendObjNode extends TypedObjNode<Mesh, BlendObjParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'blend';
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 
-	createObject() {
+	override createObject() {
 		// use Mesh instead of Group in order to have the onBeforeRender
 		const object = new Mesh();
 		object.matrixAutoUpdate = false;
@@ -82,7 +82,7 @@ export class BlendObjNode extends TypedObjNode<Mesh, BlendObjParamConfig> {
 
 		return object;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 		this.io.inputs.setCount(0);
 
@@ -106,7 +106,7 @@ export class BlendObjNode extends TypedObjNode<Mesh, BlendObjParamConfig> {
 
 	private _object0: Object3D | undefined;
 	private _object1: Object3D | undefined;
-	async cook() {
+	override async cook() {
 		const objNode0 = this.pv.object0.nodeWithContext(NodeContext.OBJ, this.states.error);
 		const objNode1 = this.pv.object1.nodeWithContext(NodeContext.OBJ, this.states.error);
 		if (objNode0 && objNode1) {

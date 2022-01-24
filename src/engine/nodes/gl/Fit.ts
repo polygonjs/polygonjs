@@ -17,21 +17,21 @@ const FitDefaultValues: PolyDictionary<number> = {
 };
 
 export class FitGlNode extends BaseNodeGlMathFunctionArg5GlNode {
-	static type() {
+	static override type() {
 		return 'fit';
 	}
 
-	protected _gl_input_name(index: number): string {
+	protected override _gl_input_name(index: number): string {
 		return ['val', 'srcMin', 'srcMax', 'destMin', 'destMax'][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return FitDefaultValues[name];
 	}
-	protected gl_method_name(): string {
+	protected override gl_method_name(): string {
 		return 'fit';
 	}
 
-	gl_function_definitions() {
+	override gl_function_definitions() {
 		return [new FunctionGLDefinition(this, FitMethods)];
 	}
 }
@@ -47,21 +47,21 @@ const FitTo01DefaultValues: PolyDictionary<number> = {
 };
 
 export class FitTo01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
-	static type() {
+	static override type() {
 		return 'fitTo01';
 	}
 
-	_gl_input_name(index: number): string {
+	override _gl_input_name(index: number): string {
 		return ['val', 'srcMin', 'srcMax'][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return FitTo01DefaultValues[name];
 	}
-	gl_method_name(): string {
+	override gl_method_name(): string {
 		return 'fitTo01';
 	}
 
-	gl_function_definitions() {
+	override gl_function_definitions() {
 		return [new FunctionGLDefinition(this, FitMethods)];
 	}
 }
@@ -77,21 +77,21 @@ const FitFrom01DefaultValues: PolyDictionary<number> = {
 };
 
 export class FitFrom01GlNode extends BaseNodeGlMathFunctionArg3GlNode {
-	static type() {
+	static override type() {
 		return 'fitFrom01';
 	}
 
-	_gl_input_name(index: number): string {
+	override _gl_input_name(index: number): string {
 		return ['val', 'destMin', 'destMax'][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return FitFrom01DefaultValues[name];
 	}
-	gl_method_name(): string {
+	override gl_method_name(): string {
 		return 'fitFrom01';
 	}
 
-	gl_function_definitions() {
+	override gl_function_definitions() {
 		return [new FunctionGLDefinition(this, FitMethods)];
 	}
 }
@@ -107,21 +107,21 @@ const FitFrom01ToVarianceDefaultValues: PolyDictionary<number> = {
 };
 
 export class FitFrom01ToVarianceGlNode extends BaseNodeGlMathFunctionArg3GlNode {
-	static type() {
+	static override type() {
 		return 'fitFrom01ToVariance';
 	}
 
-	_gl_input_name(index: number): string {
+	override _gl_input_name(index: number): string {
 		return ['val', 'center', 'variance'][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return FitFrom01ToVarianceDefaultValues[name];
 	}
-	gl_method_name(): string {
+	override gl_method_name(): string {
 		return 'fitFrom01ToVariance';
 	}
 
-	gl_function_definitions() {
+	override gl_function_definitions() {
 		return [new FunctionGLDefinition(this, FitMethods)];
 	}
 }

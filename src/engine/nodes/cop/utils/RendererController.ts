@@ -9,7 +9,7 @@ class BaseCopRendererCopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new BaseCopRendererCopParamsConfig();
 export class BaseCopRendererCopNode extends TypedCopNode<BaseCopRendererCopParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 }
 
 export class CopRendererController {

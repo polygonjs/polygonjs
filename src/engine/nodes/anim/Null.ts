@@ -31,16 +31,16 @@ class NullAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new NullAnimParamsConfig();
 
 export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'null';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(inputContents: TimelineBuilder[]) {
+	override cook(inputContents: TimelineBuilder[]) {
 		const timelineBuilder = inputContents[0] || new TimelineBuilder();
 		timelineBuilder.setDebug(isBooleanTrue(this.pv.debug));
 		timelineBuilder.setStoppable(this.pv.stoppable);

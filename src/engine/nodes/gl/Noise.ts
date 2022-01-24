@@ -187,14 +187,14 @@ class NoiseGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new NoiseGlParamsConfig();
 export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'noise';
 	}
 
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.initializeNode();
 		this.io.connection_points.spare_params.set_inputless_param_names(['octaves', 'ampAttenuation', 'freqIncrease']);
@@ -212,7 +212,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	protected _gl_input_name(index: number) {
 		return [InputName.AMP, InputName.POSITION, InputName.FREQ, InputName.OFFSET][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 
@@ -232,7 +232,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		}
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const function_declaration_lines = [];
 		const body_lines = [];
 

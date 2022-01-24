@@ -33,14 +33,14 @@ class HexagonsSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new HexagonsSopParamsConfig();
 
 export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'hexagons';
 	}
 
 	private _coreTransform = new CoreTransform();
 
-	cook() {
+	override cook() {
 		if (this.pv.hexagonRadius > 0) {
 			const operation = new CoreGeometryOperationHexagon(this.pv.size, this.pv.hexagonRadius, this.pv.pointsOnly);
 			const geometry = operation.process();

@@ -15,12 +15,12 @@ class SubnetOutputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputGlParamsConfig();
 
 export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<NetworkChildNodeType.OUTPUT> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<NetworkChildNodeType.OUTPUT> {
 		return NetworkChildNodeType.OUTPUT;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.connection_points.set_input_name_function(this._expected_input_name.bind(this));
 		this.io.connection_points.set_expected_output_types_function(() => []);
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
@@ -30,7 +30,7 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 			this.parent()?.setDirty(this);
 		});
 	}
-	parent() {
+	override parent() {
 		return super.parent() as SubnetGlNode | null;
 	}
 
@@ -44,7 +44,7 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 		return parent?.child_expected_output_connection_point_types() || [];
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const parent = this.parent();
 		if (!parent) {
 			return;

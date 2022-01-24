@@ -16,12 +16,12 @@ class SwitchCopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SwitchCopParamsConfig();
 
 export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'switch';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 		// this.uiData.set_icon('code-branch');
@@ -29,7 +29,7 @@ export class SwitchCopNode extends TypedCopNode<SwitchCopParamsConfig> {
 		this.cookController.disallowInputsEvaluation();
 	}
 
-	async cook() {
+	override async cook() {
 		const input_index = this.pv.input;
 		if (this.io.inputs.hasInput(input_index)) {
 			const container = await this.containerController.requestInputContainer(input_index);

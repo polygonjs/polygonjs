@@ -8,7 +8,7 @@ enum WindowEventType {
 export const ACCEPTED_WINDOW_EVENT_TYPES: WindowEventType[] = [WindowEventType.resize];
 
 export class WindowEventsController extends BaseSceneEventsController<Event, PointerEventNode> {
-	protected _requireCanvasEventListeners: boolean = true;
+	protected override _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'window';
 	}

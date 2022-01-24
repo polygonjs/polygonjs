@@ -54,19 +54,19 @@ class TriangleBlurPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new TriangleBlurPostParamsConfig();
 export class TriangleBlurPostNode extends TypedPostProcessNode<ShaderPass, TriangleBlurPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'triangleBlur';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(Shader) as TriangleBlurPassWithUniforms;
 		pass.resolution = context.resolution.clone();
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: TriangleBlurPassWithUniforms) {
+	override updatePass(pass: TriangleBlurPassWithUniforms) {
 		pass.uniforms.delta.value.copy(this.pv.delta).divide(pass.resolution).multiplyScalar(window.devicePixelRatio);
 	}
 }

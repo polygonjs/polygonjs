@@ -86,14 +86,14 @@ class TextSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TextSopParamsConfig();
 
 export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'text';
 	}
 
 	private _loadedFonts: FontByUrl = {};
 
-	async cook() {
+	override async cook() {
 		try {
 			this._loadedFonts[this.pv.font] = this._loadedFonts[this.pv.font] || (await this._loadFont());
 		} catch (err) {
@@ -239,7 +239,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		const loader = new CoreLoaderFont(this.pv.font, this.scene(), this);
 		return loader.load();
 	}
-	async requiredModules() {
+	override async requiredModules() {
 		if (this.p.font.isDirty()) {
 			await this.p.font.compute();
 		}

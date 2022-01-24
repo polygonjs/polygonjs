@@ -14,16 +14,16 @@ class DelayAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DelayAnimParamsConfig();
 
 export class DelayAnimNode extends TypedAnimNode<DelayAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override readonly paramsConfig = ParamsConfig;
+	static override type() {
 		return 'delay';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
+	override cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		timeline_builder.setDelay(this.pv.delay);

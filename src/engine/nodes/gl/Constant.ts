@@ -36,20 +36,20 @@ class ConstantGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ConstantGlParamsConfig();
 export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'constant';
 	}
 	static readonly OUTPUT_NAME = 'val';
 	private _params_by_type: Map<GlConnectionPointType, BaseParamType> | undefined;
 	// protected _allow_inputs_created_from_params: boolean = false;
-	initializeNode() {
+	override initializeNode() {
 		this.io.connection_points.set_output_name_function((index: number) => ConstantGlNode.OUTPUT_NAME);
 		this.io.connection_points.set_expected_input_types_function(() => []);
 		this.io.connection_points.set_expected_output_types_function(() => [this._current_connection_type]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const param = this._current_param;
 		if (param) {
 			const connection_type = this._current_connection_type;

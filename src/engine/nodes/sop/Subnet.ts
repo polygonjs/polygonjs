@@ -10,12 +10,12 @@ class SubnetSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetSopParamsConfig();
 
 export class SubnetSopNode extends SubnetSopNodeLike<SubnetSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return NetworkNodeType.SUBNET;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}

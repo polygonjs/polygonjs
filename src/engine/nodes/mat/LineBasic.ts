@@ -24,12 +24,12 @@ class LineBasicMatParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfi
 const ParamsConfig = new LineBasicMatParamsConfig();
 
 export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'lineBasic';
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		return new LineBasicMaterial({
 			color: 0xffffff,
 			linewidth: 1,
@@ -39,14 +39,14 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 		advancedCommon: new AdvancedCommonController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
 			}
 		});
 	}
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

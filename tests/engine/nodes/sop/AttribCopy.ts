@@ -72,8 +72,9 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	assert.equal(array[8], 5);
 });
 
-async function requestAttribArray(node: BaseSopNodeType, attribName: string) {
+async function requestAttribArray(assert: Assert, node: BaseSopNodeType, attribName: string) {
 	let container = await node.compute();
+	assert.notOk(node.states.error.message());
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	return geometry.getAttribute(attribName).array;
@@ -92,13 +93,13 @@ QUnit.test('attribcopy from input 2', async (assert) => {
 	attribCopy.setInput(1, noise);
 	attribCopy.p.name.set('P');
 
-	const boxP = await requestAttribArray(box, 'position');
-	const noiseP = await requestAttribArray(noise, 'position');
+	const boxP = await requestAttribArray(assert, box, 'position');
+	const noiseP = await requestAttribArray(assert, noise, 'position');
 
 	//
 	// 1. we test that the attrib is copied to the dest with same name
 	//
-	let attribCopyP = await requestAttribArray(attribCopy, 'position');
+	let attribCopyP = await requestAttribArray(assert, attribCopy, 'position');
 	assert.deepEqual(attribCopyP, noiseP);
 
 	//
@@ -107,8 +108,8 @@ QUnit.test('attribcopy from input 2', async (assert) => {
 	attribCopy.p.tnewName.set(true);
 	attribCopy.p.newName.set('P2');
 
-	attribCopyP = await requestAttribArray(attribCopy, 'position');
-	const attribCopyP2 = await requestAttribArray(attribCopy, 'P2');
+	attribCopyP = await requestAttribArray(assert, attribCopy, 'position');
+	const attribCopyP2 = await requestAttribArray(assert, attribCopy, 'P2');
 	assert.deepEqual(attribCopyP2, noiseP);
 	assert.deepEqual(attribCopyP, boxP);
 });

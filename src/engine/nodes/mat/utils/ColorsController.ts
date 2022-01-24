@@ -27,20 +27,20 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 
 class ColoredMaterial extends Material {
 	public color!: Color;
-	vertexColors!: boolean;
-	transparent!: boolean;
-	depthTest!: boolean;
-	alphaTest!: number;
+	// vertexColors!: boolean;
+	// transparent!: boolean;
+	// depthTest!: boolean;
+	// alphaTest!: number;
 }
 class ColorParamsConfig extends ColorParamConfig(NodeParamsConfig) {}
 class ColoredMatNode extends TypedMatNode<ColoredMaterial, ColorParamsConfig> {
-	createMaterial() {
+	override createMaterial() {
 		return new ColoredMaterial();
 	}
 }
 
 export class ColorsController extends BaseController {
-	constructor(protected node: ColoredMatNode) {
+	constructor(protected override node: ColoredMatNode) {
 		super(node);
 	}
 	static update(node: ColoredMatNode) {

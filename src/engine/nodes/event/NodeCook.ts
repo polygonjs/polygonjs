@@ -59,8 +59,8 @@ class NodeCookEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new NodeCookEventParamsConfig();
 
 export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'nodeCook'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'nodeCook'> {
 		return 'nodeCook';
 	}
 	static readonly INPUT_TRIGGER = 'trigger';
@@ -70,7 +70,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 
 	private _resolvedNodes: BaseNodeType[] = [];
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				NodeCookEventNode.INPUT_TRIGGER,
@@ -91,11 +91,11 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		this.processEventTrigger({});
 	}
 
-	cook() {
+	override cook() {
 		this._updateResolvedNodes();
 		this.cookController.endCook();
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		this._reset();
 	}

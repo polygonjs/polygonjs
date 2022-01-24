@@ -4,10 +4,10 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkMatParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkMatNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.MAT, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.MAT;
 	}
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 }

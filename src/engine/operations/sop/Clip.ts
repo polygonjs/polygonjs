@@ -23,16 +23,16 @@ const tempVector = new Vector3();
 const tempLine = new Line3();
 
 export class ClipSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: ClipSopParams = {
+	static override readonly DEFAULT_PARAMS: ClipSopParams = {
 		origin: new Vector3(0, 0, 0),
 		distance: 0,
 		direction: new Vector3(0, 1, 0),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'clip'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'clip'> {
 		return 'clip';
 	}
-	cook(inputCoreGroups: CoreGroup[], params: ClipSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: ClipSopParams) {
 		const coreGroup = inputCoreGroups[0];
 		const mesh = coreGroup.objectsWithGeo()[0] as Mesh;
 

@@ -56,12 +56,12 @@ class PointsMatParamsConfig extends FogParamConfig(
 const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'points';
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		return new PointsMaterial({
 			vertexColors: false,
 			side: FrontSide,
@@ -76,7 +76,7 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
@@ -84,7 +84,7 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		});
 	}
 
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

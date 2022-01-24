@@ -6,10 +6,10 @@ interface MathArg2BooleanOptions {
 
 function MathFunctionArg2BooleanFactory(type: string, options: MathArg2BooleanOptions) {
 	return class Node extends BaseNodeGlMathFunctionArgBoolean2GlNode {
-		static type() {
+		static override type() {
 			return type;
 		}
-		initializeNode() {
+		override initializeNode() {
 			super.initializeNode();
 			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
@@ -21,7 +21,7 @@ function MathFunctionArg2BooleanFactory(type: string, options: MathArg2BooleanOp
 		protected _gl_output_name(index: number) {
 			return type;
 		}
-		protected _gl_input_name(index = 0) {
+		protected override _gl_input_name(index = 0) {
 			return `${type}${index}`;
 		}
 	};

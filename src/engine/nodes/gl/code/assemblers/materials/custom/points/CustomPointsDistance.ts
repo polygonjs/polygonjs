@@ -22,7 +22,7 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 export class ShaderAssemblerCustomPointsDistance extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'vec4 diffuseColor' }
 	// _template_shader(){ return ShaderLib.standard }
-	templateShader() {
+	override templateShader() {
 		const template = ShaderLib.distanceRGBA;
 
 		const uniforms = UniformsUtils.clone(template.uniforms);
@@ -35,14 +35,14 @@ export class ShaderAssemblerCustomPointsDistance extends ShaderAssemblerMaterial
 			uniforms: uniforms,
 		};
 	}
-	protected insert_define_after(shader_name: ShaderName) {
+	protected override insert_define_after(shader_name: ShaderName) {
 		return INSERT_DEFINE_AFTER_MAP.get(shader_name);
 	}
-	protected insert_body_after(shader_name: ShaderName) {
+	protected override insert_body_after(shader_name: ShaderName) {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		const template_shader = this.templateShader();
 		return new ShaderMaterial({
 			// vertexColors: VertexColors,

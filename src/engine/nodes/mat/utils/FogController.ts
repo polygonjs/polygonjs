@@ -15,13 +15,13 @@ export function FogParamConfig<TBase extends Constructor>(Base: TBase) {
 
 class FogParamsConfig extends FogParamConfig(NodeParamsConfig) {}
 class FogMatNode extends TypedMatNode<Material, FogParamsConfig> {
-	createMaterial() {
+	override createMaterial() {
 		return new Material();
 	}
 }
 
 export class FogController extends BaseController {
-	constructor(protected node: FogMatNode) {
+	constructor(protected override node: FogMatNode) {
 		super(node);
 	}
 	static update(node: FogMatNode) {

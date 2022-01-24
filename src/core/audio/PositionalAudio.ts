@@ -109,7 +109,7 @@ export class CorePositionalAudio extends Object3D {
 		return this.pannerNode.coneOuterAngle;
 	}
 
-	updateMatrixWorld(force: boolean) {
+	override updateMatrixWorld(force: boolean) {
 		super.updateMatrixWorld(force);
 
 		// if (this.hasPlaybackControl === true && this.isPlaying === false) return;

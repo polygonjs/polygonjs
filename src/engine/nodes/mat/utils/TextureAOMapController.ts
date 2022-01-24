@@ -36,17 +36,17 @@ interface Controllers {
 }
 abstract class TextureAOMapMatNode extends TypedMatNode<CurrentMaterial, TextureAOMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureAOMapController extends BaseTextureMapController {
-	constructor(protected node: TextureAOMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureAOMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useAOMap, this.node.p.aoMap);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'aoMap', this.node.p.useAOMap, this.node.p.aoMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
@@ -57,7 +57,7 @@ export class TextureAOMapController extends BaseTextureMapController {
 			mat.aoMapIntensity = this.node.pv.aoMapIntensity;
 		}
 	}
-	static async update(node: TextureAOMapMatNode) {
+	static override async update(node: TextureAOMapMatNode) {
 		node.controllers.aoMap.update();
 	}
 }

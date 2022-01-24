@@ -25,17 +25,17 @@ class PlaneHelperSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PlaneHelperSopParamsConfig();
 
 export class PlaneHelperSopNode extends TypedSopNode<PlaneHelperSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'planeHelper';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 	}
 
 	private _operation: PlaneHelperSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new PlaneHelperSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

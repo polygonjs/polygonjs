@@ -39,22 +39,22 @@ class HierarchySopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new HierarchySopParamsConfig();
 
 export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'hierarchy';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to add or remove parents to/from', 'objects to use as parent or children (optional)'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState(HierarchySopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: HierarchySopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new HierarchySopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

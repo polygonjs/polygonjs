@@ -64,7 +64,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		this._node = node;
 		this._initializeParam();
 	}
-	dispose() {
+	override dispose() {
 		// if any direct predecessor is a MethodDependency,
 		// it must be disposed here
 		const predecessors = this.graphPredecessors();
@@ -116,7 +116,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 
 	// name
-	setName(name: string) {
+	override setName(name: string) {
 		super.setName(name);
 	}
 

@@ -51,21 +51,21 @@ class ColorCorrectParamsConfig extends NodeParamsConfig {
 
 const ParamsConfig = new ColorCorrectParamsConfig();
 export class ColorCorrectGlNode extends TypedGlNode<ColorCorrectParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'colorCorrect';
 	}
 	static INPUT_NAME = 'color';
 	static INPUT_GAMMA_FACTOR = 'gammaFactor';
 	static OUTPUT_NAME = 'out';
-	initializeNode() {
+	override initializeNode() {
 		this.io.connection_points.spare_params.set_inputless_param_names(['to', 'from']);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(ColorCorrectGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const from = TYPES[this.pv.from];
 		const to = TYPES[this.pv.to];
 		const out = this.glVarName(ColorCorrectGlNode.OUTPUT_NAME);

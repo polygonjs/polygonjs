@@ -13,17 +13,17 @@ interface JitterSopParams extends DefaultOperationParams {
 }
 
 export class JitterSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: JitterSopParams = {
+	static override readonly DEFAULT_PARAMS: JitterSopParams = {
 		amount: 1,
 		mult: new Vector3(1, 1, 1),
 		seed: 1,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'jitter'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'jitter'> {
 		return 'jitter';
 	}
 
-	cook(input_contents: CoreGroup[], params: JitterSopParams) {
+	override cook(input_contents: CoreGroup[], params: JitterSopParams) {
 		const core_group = input_contents[0];
 
 		const points = core_group.points();

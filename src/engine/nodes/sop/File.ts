@@ -40,11 +40,11 @@ class FileSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FileSopParamsConfig();
 
 export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'file';
 	}
-	async requiredModules() {
+	override async requiredModules() {
 		for (let p of [this.p.url, this.p.format]) {
 			if (p.isDirty()) {
 				await p.compute();
@@ -60,7 +60,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 	private operation() {
 		return (this._operation = this._operation || new FileSopOperation(this.scene(), this.states, this));
 	}
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		const core_group = await this.operation().cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

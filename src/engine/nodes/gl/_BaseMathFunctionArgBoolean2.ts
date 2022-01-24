@@ -5,22 +5,22 @@ import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGlMathFunctionArg2GlNode {
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 	}
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		return [GlConnectionPointType.BOOL, GlConnectionPointType.BOOL];
 	}
 
-	protected _expected_output_types() {
+	protected override _expected_output_types() {
 		return [GlConnectionPointType.BOOL];
 	}
 
 	abstract boolean_operation(): string;
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const args = this.io.inputs.namedInputConnectionPoints().map((named_input, i) => {
 			const name = named_input.name();
 			return ThreeToGl.any(this.variableForInput(name));

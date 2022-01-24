@@ -19,20 +19,20 @@ class BboxScatterSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BboxScatterSopParamsConfig();
 
 export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'bboxScatter';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to create points from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const container = input_contents[0];
 		const stepSize = this.pv.stepSize;
 		const bbox = container.boundingBox();

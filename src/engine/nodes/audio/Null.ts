@@ -11,16 +11,16 @@ class NullAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullAudioParamsConfig();
 
 export class NullAudioNode extends TypedAudioNode<NullAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'null';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 		this.setAudioBuilder(audioBuilder);
 	}

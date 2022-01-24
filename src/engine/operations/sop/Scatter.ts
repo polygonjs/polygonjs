@@ -25,7 +25,7 @@ interface ScatterSopParams extends DefaultOperationParams {
 }
 
 export class ScatterSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: ScatterSopParams = {
+	static override readonly DEFAULT_PARAMS: ScatterSopParams = {
 		pointsCount: 100,
 		seed: 0,
 		useWeightAttribute: false,
@@ -35,14 +35,14 @@ export class ScatterSopOperation extends BaseSopOperation {
 		addIdAttribute: true,
 		addIdnAttribute: true,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'scatter'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'scatter'> {
 		return 'scatter';
 	}
 
 	private _position = new Vector3();
 	private _normal = new Vector3();
-	async cook(inputContents: CoreGroup[], params: ScatterSopParams) {
+	override async cook(inputContents: CoreGroup[], params: ScatterSopParams) {
 		const coreGroup = inputContents[0];
 		let inputMesh = coreGroup.objectsWithGeo()[0] as Mesh;
 		const originalMesh = inputMesh;

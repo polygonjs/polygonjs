@@ -36,17 +36,17 @@ class SvgSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SvgSopParamsConfig();
 
 export class SvgSopNode extends TypedSopNode<SvgSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'svg';
 	}
-	async requiredModules() {
+	override async requiredModules() {
 		return [ModuleName.SVGLoader];
 	}
 
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: SvgSopOperation | undefined;
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new SvgSopOperation(this.scene(), this.states, this);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

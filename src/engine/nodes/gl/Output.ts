@@ -16,12 +16,12 @@ class OutputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OutputGlParamsConfig();
 
 export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'output';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 
@@ -30,7 +30,7 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 		});
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		// if (shaders_collection_controller.shader_name) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
 		assembler.set_node_lines_output(this, shaders_collection_controller);

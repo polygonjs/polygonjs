@@ -14,7 +14,7 @@ export const ACCEPTED_TOUCH_EVENT_TYPES: TouchEventType[] = [
 ];
 
 export class TouchEventsController extends BaseSceneEventsController<MouseEvent, PointerEventNode> {
-	protected _requireCanvasEventListeners: boolean = true;
+	protected override _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'touch';
 	}

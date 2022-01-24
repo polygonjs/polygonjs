@@ -29,20 +29,20 @@ class SnapshotCopParamsConfig extends SnapshotCopParamConfig(NodeParamsConfig) {
 const ParamsConfig = new SnapshotCopParamsConfig();
 
 export class SnapshotCopNode extends TypedCopNode<SnapshotCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return CopType.SNAPSHOT;
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['input to take a snapshot of'];
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	async cook(inputTextures: Texture[]) {
+	override async cook(inputTextures: Texture[]) {
 		const inputTexture = inputTextures[0];
 
 		if (inputTexture && inputTexture instanceof VideoTexture) {

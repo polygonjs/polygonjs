@@ -70,19 +70,19 @@ class UpdateScenePostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new UpdateScenePostParamsConfig();
 export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, UpdateScenePostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'updateScene';
 	}
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.inputs.setCount(0, 2);
 	}
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['previous pass', 'updateScene node to reset changes of'];
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new UpdateScenePass({
 			scene: this.scene(),
 			reset: isBooleanTrue(this.pv.reset),
@@ -95,7 +95,7 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 		});
 		return pass;
 	}
-	updatePass(pass: UpdateScenePass) {
+	override updatePass(pass: UpdateScenePass) {
 		pass.reset = isBooleanTrue(this.pv.reset);
 		pass.objectsMask = this.pv.objectsMask;
 		pass.invertMask = isBooleanTrue(this.pv.invertMask);

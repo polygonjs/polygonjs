@@ -12,38 +12,38 @@ interface SetNodeOptions {
 }
 
 export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
-	static type() {
+	static override type() {
 		return ParamType.NODE_PATH;
 	}
-	protected _initializeParam() {
+	protected override _initializeParam() {
 		this._value = new TypedNodePathParamValue();
 	}
 
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		return this._default_value;
 	}
-	rawInputSerialized() {
+	override rawInputSerialized() {
 		return `${this._raw_input}`;
 	}
-	valueSerialized() {
+	override valueSerialized() {
 		return `${this.value}`;
 	}
-	protected _copyValue(param: NodePathParam) {
+	protected override _copyValue(param: NodePathParam) {
 		this.set(param.valueSerialized());
 	}
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.NODE_PATH],
 		raw_input2: ParamInitValuesTypeMap[ParamType.NODE_PATH]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static areValuesEqual(
+	static override areValuesEqual(
 		val1: ParamValuesTypeMap[ParamType.NODE_PATH],
 		val2: ParamValuesTypeMap[ParamType.NODE_PATH]
 	) {
 		return val1 == val2;
 	}
-	isDefault(): boolean {
+	override isDefault(): boolean {
 		return this._raw_input == this._default_value;
 	}
 	setNode(node: BaseNodeType, options?: SetNodeOptions) {
@@ -54,7 +54,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			this.set(node.path());
 		}
 	}
-	protected processRawInput() {
+	protected override processRawInput() {
 		if (this._value.path() != this._raw_input) {
 			this._value.set_path(this._raw_input);
 			this._findTarget();
@@ -62,7 +62,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
-	protected async processComputation() {
+	protected override async processComputation() {
 		this._findTarget();
 	}
 	private _findTarget() {

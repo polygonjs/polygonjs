@@ -175,8 +175,8 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DeleteSopParamsConfig();
 
 export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'delete';
 	}
 
@@ -188,16 +188,16 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	public readonly byBboxHelper = new ByBboxHelper(this);
 	public readonly byBoundingObjectHelper = new ByBoundingObjectHelper(this);
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to delete from', 'points inside this geometry will be deleted (optional)'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const core_group2 = input_contents[1];
 

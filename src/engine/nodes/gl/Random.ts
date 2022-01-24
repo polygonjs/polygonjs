@@ -18,12 +18,12 @@ class RandomGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new RandomGlParamsConfig();
 export class RandomGlNode extends TypedGlNode<RandomGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'random';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -31,7 +31,7 @@ export class RandomGlNode extends TypedGlNode<RandomGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		// const function_declaration_lines = []
 
 		// http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/

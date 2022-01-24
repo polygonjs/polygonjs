@@ -30,18 +30,18 @@ const deltaNext = new Vector3();
 const deltaPrev = new Vector3();
 
 export class PolywireSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: PolywireSopParams = {
+	static override readonly DEFAULT_PARAMS: PolywireSopParams = {
 		radius: 1,
 		segmentsRadial: 8,
 		closed: true,
 	};
-	static type(): Readonly<'polywire'> {
+	static override type(): Readonly<'polywire'> {
 		return 'polywire';
 	}
 
 	private _coreTransform = new CoreTransform();
 	private _geometries: BufferGeometry[] = [];
-	cook(input_contents: CoreGroup[], params: PolywireSopParams) {
+	override cook(input_contents: CoreGroup[], params: PolywireSopParams) {
 		const core_group = input_contents[0];
 
 		this._geometries = [];

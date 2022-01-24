@@ -21,12 +21,12 @@ class FXAAPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new FXAAPostParamsConfig();
 export class FXAAPostNode extends TypedPostProcessNode<ShaderPass, FXAAPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'FXAA';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(FXAAShader) as FXAAPassWithUniforms;
 		pass.uniforms.resolution.value.set(1 / context.resolution.x, 1 / context.resolution.y);
 		pass.material.transparent = true;
@@ -34,7 +34,7 @@ export class FXAAPostNode extends TypedPostProcessNode<ShaderPass, FXAAPostParam
 
 		return pass;
 	}
-	updatePass(pass: FXAAPassWithUniforms) {
+	override updatePass(pass: FXAAPassWithUniforms) {
 		pass.material.transparent = this.pv.transparent;
 	}
 }

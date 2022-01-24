@@ -33,31 +33,31 @@ class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 const ParamsConfig = new GeoObjParamConfig();
 
 export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return ObjType.GEO;
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	readonly transformController: TransformController = new TransformController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	createObject() {
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	override readonly transformController: TransformController = new TransformController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
 	}
 
 	// display_node and children_display controllers
-	public readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
-	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
+	public override readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
+	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.childrenDisplayController.displayNodeControllerCallbacks()
 	);
 	//
 
-	protected _childrenControllerContext = NodeContext.SOP;
+	protected override _childrenControllerContext = NodeContext.SOP;
 
 	private _onChildAddBound = this._onChildAdd.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		// this.lifecycle.onCreated(this._on_create_bound);
 		this.lifecycle.onChildAdd(this._onChildAddBound);
 
@@ -67,7 +67,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.childrenDisplayController.initializeNode();
 	}
 
-	isDisplayNodeCooking(): boolean {
+	override isDisplayNodeCooking(): boolean {
 		if (this.flags.display.active()) {
 			const display_node = this.displayNodeController.displayNode();
 			return display_node ? display_node.isDirty() : false;
@@ -76,15 +76,24 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		}
 	}
 
-	createNode<S extends keyof GeoNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GeoNodeChildrenMap[S];
-	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof GeoNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): GeoNodeChildrenMap[S];
+	override createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseSopNodeType[];
 	}
-	nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
@@ -106,7 +115,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	// COOK
 	//
 	//
-	cook() {
+	override cook() {
 		this.transformController.update();
 		this.object.visible = isBooleanTrue(this.pv.display);
 		this.object.renderOrder = this.pv.renderOrder;

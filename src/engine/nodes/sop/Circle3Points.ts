@@ -68,17 +68,17 @@ class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new Circle3PointsSopParamsConfig();
 
 export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'circle3Points';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState([InputCloneMode.NEVER]);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const points = core_group.points();
 		if (points.length < 3) {

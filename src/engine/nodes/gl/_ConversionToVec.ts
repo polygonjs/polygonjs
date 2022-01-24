@@ -15,19 +15,19 @@ class FloatToVec2GlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig2 = new FloatToVec2GlParamsConfig();
 export class FloatToVec2GlNode extends TypedGlNode<FloatToVec2GlParamsConfig> {
-	paramsConfig = ParamsConfig2;
-	static type() {
+	override paramsConfig = ParamsConfig2;
+	static override type() {
 		return 'floatToVec2';
 	}
 	static readonly OUTPUT_NAME = 'vec2';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(FloatToVec2GlNode.OUTPUT_NAME, GlConnectionPointType.VEC2),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const x = this.variableForInputParam(this.p.x);
 		const y = this.variableForInputParam(this.p.y);
 
@@ -49,19 +49,19 @@ class FloatToVec3GlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig3 = new FloatToVec3GlParamsConfig();
 export class FloatToVec3GlNode extends TypedGlNode<FloatToVec3GlParamsConfig> {
-	paramsConfig = ParamsConfig3;
-	static type() {
+	override paramsConfig = ParamsConfig3;
+	static override type() {
 		return 'floatToVec3';
 	}
 	static readonly OUTPUT_NAME = 'vec3';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(FloatToVec3GlNode.OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const x = this.variableForInputParam(this.p.x);
 		const y = this.variableForInputParam(this.p.y);
 		const z = this.variableForInputParam(this.p.z);
@@ -85,19 +85,19 @@ class FloatToVec4GlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig4 = new FloatToVec4GlParamsConfig();
 export class FloatToVec4GlNode extends TypedGlNode<FloatToVec4GlParamsConfig> {
-	paramsConfig = ParamsConfig4;
-	static type() {
+	override paramsConfig = ParamsConfig4;
+	static override type() {
 		return 'floatToVec4';
 	}
 	static readonly OUTPUT_NAME = 'vec4';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(FloatToVec4GlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const x = this.variableForInputParam(this.p.x);
 		const y = this.variableForInputParam(this.p.y);
 		const z = this.variableForInputParam(this.p.z);

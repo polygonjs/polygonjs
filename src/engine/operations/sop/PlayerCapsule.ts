@@ -9,14 +9,14 @@ interface PlayerCapsuleSopParams extends DefaultOperationParams {
 }
 
 export class PlayerCapsuleSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: PlayerCapsuleSopParams = {
+	static override readonly DEFAULT_PARAMS: PlayerCapsuleSopParams = {
 		radius: 0.5,
 		height: 1,
 	};
-	static type(): Readonly<'playerCapsule'> {
+	static override type(): Readonly<'playerCapsule'> {
 		return 'playerCapsule';
 	}
-	cook(input_contents: CoreGroup[], params: PlayerCapsuleSopParams) {
+	override cook(input_contents: CoreGroup[], params: PlayerCapsuleSopParams) {
 		return this.createCoreGroupFromGeometry(createPlayerGeometry(params));
 	}
 }

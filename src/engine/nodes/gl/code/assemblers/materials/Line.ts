@@ -36,7 +36,7 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 
 export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'diffuseColor' }
-	templateShader() {
+	override templateShader() {
 		const template = ShaderLib.dashed;
 		return {
 			vertexShader: template.vertexShader, //TemplateVertex,
@@ -44,7 +44,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 			uniforms: template.uniforms,
 		};
 	}
-	createMaterial() {
+	override createMaterial() {
 		const template_shader = this.templateShader();
 
 		const material = new ShaderMaterial({
@@ -60,16 +60,16 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 		this._addCustomMaterials(material);
 		return material;
 	}
-	custom_assembler_class_by_custom_name(): CustomAssemblerMap {
+	override custom_assembler_class_by_custom_name(): CustomAssemblerMap {
 		return ASSEMBLER_MAP;
 	}
-	create_shader_configs() {
+	override create_shader_configs() {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, ['position', 'uv', VaryingWriteGlNode.INPUT_NAME], []),
 			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
 		];
 	}
-	static output_input_connection_points() {
+	static override output_input_connection_points() {
 		return [
 			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
@@ -83,10 +83,10 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 		// output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
 		// output_child.add_param(ParamType.VECTOR2, 'uv', [0, 0], {hidden: true});
 	}
-	add_output_inputs(output_child: OutputGlNode) {
+	override add_output_inputs(output_child: OutputGlNode) {
 		output_child.io.inputs.setNamedInputConnectionPoints(ShaderAssemblerLine.output_input_connection_points());
 	}
-	static create_globals_node_output_connections() {
+	static override create_globals_node_output_connections() {
 		return [
 			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			// new Connection.Vec3('normal'),
@@ -99,10 +99,10 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 		];
 	}
-	create_globals_node_output_connections() {
+	override create_globals_node_output_connections() {
 		return ShaderAssemblerLine.create_globals_node_output_connections();
 	}
-	create_variable_configs() {
+	override create_variable_configs() {
 		return [
 			new VariableConfig('position', {
 				default: 'vec3( position )',
@@ -125,7 +125,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 			}),
 		];
 	}
-	protected lines_to_remove(shader_name: ShaderName) {
+	protected override lines_to_remove(shader_name: ShaderName) {
 		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
 }

@@ -10,24 +10,30 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class EventsNetworkMatNode extends ParamLessBaseNetworkMatNode {
-	static type() {
+	static override type() {
 		return NetworkNodeType.EVENT;
 	}
 
-	protected _childrenControllerContext = NodeContext.EVENT;
+	protected override _childrenControllerContext = NodeContext.EVENT;
 
-	createNode<S extends keyof EventNodeChildrenMap>(
+	override createNode<S extends keyof EventNodeChildrenMap>(
 		node_class: S,
 		options?: NodeCreateOptions
 	): EventNodeChildrenMap[S];
-	createNode<K extends valueof<EventNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<EventNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<K extends valueof<EventNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<EventNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseEventNodeType[];
 	}
-	nodesByType<K extends keyof EventNodeChildrenMap>(type: K): EventNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof EventNodeChildrenMap>(type: K): EventNodeChildrenMap[K][] {
 		return super.nodesByType(type) as EventNodeChildrenMap[K][];
 	}
 }

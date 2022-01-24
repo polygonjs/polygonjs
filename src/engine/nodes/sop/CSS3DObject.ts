@@ -36,16 +36,16 @@ class CSS3DObjectSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CSS3DObjectSopParamsConfig();
 
 export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'CSS3DObject';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		if (core_group) {
 			this._create_objects_from_input_points(core_group);

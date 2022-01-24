@@ -80,8 +80,8 @@ class PaletteCopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PaletteCopParamsConfig();
 
 export class PaletteCopNode extends TypedCopNode<PaletteCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'palette';
 	}
 	public readonly paletteController: PaletteController<NodeContext.COP> = new PaletteController<NodeContext.COP>(
@@ -89,13 +89,13 @@ export class PaletteCopNode extends TypedCopNode<PaletteCopParamsConfig> {
 	);
 	private _dataTexture: DataTexture | undefined;
 	private _colorParams: ColorParam[] | undefined;
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('palette_init', () => {
 			PaletteController.PARAM_CALLBACK_updateColors(this);
 		});
 	}
 	private _colors = [new Color(), new Color(), new Color(), new Color(), new Color()];
-	cook() {
+	override cook() {
 		const w = this.pv.resolution.x;
 		const h = this.pv.resolution.y;
 		this._dataTexture = this._dataTexture || this._createDataTexture(w, h);

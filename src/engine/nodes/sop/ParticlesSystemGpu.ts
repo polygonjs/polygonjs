@@ -80,12 +80,12 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new ParticlesSystemGpuSopParamsConfig();
 export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'particlesSystemGpu';
 	}
 
-	dispose() {
+	override dispose() {
 		super.dispose();
 		this.gpuController.dispose();
 	}
@@ -100,14 +100,14 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	get assemblerController() {
 		return this._assembler_controller;
 	}
-	public usedAssembler(): Readonly<AssemblerName.GL_PARTICLES> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_PARTICLES> {
 		return AssemblerName.GL_PARTICLES;
 	}
 	protected _assembler_controller = this._create_assembler_controller();
 	private _create_assembler_controller() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	public readonly persisted_config: ParticlesPersistedConfig = new ParticlesPersistedConfig(this);
+	public override readonly persisted_config: ParticlesPersistedConfig = new ParticlesPersistedConfig(this);
 	private _particlesGlobalsHandler = new GlobalsTextureHandler(
 		GlobalsTextureHandler.PARTICLE_SIM_UV,
 		GlobalsTextureHandlerPurpose.PARTICLES_SHADER
@@ -120,7 +120,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	public readonly gpuController = new ParticlesSystemGpuComputeController(this);
 	public readonly renderController = new ParticlesSystemGpuRenderController(this);
 
-	static require_webgl2() {
+	static override require_webgl2() {
 		return true;
 	}
 	static PARAM_CALLBACK_reset(node: ParticlesSystemGpuSopNode) {
@@ -130,13 +130,13 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.gpuController.resetGpuComputeAndSetDirty();
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['points to emit particles from'];
 	}
 
 	private _resetMaterialIfDirtyBound = this._resetMaterialIfDirty.bind(this);
-	protected _childrenControllerContext = NodeContext.GL;
-	initializeNode() {
+	protected override _childrenControllerContext = NodeContext.GL;
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
@@ -145,18 +145,27 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		this.addPostDirtyHook('_resetMaterialIfDirty', this._resetMaterialIfDirtyBound);
 	}
 
-	createNode<S extends keyof GlNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GlNodeChildrenMap[S];
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<GlNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof GlNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): GlNodeChildrenMap[S];
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<GlNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseGlNodeType[];
 	}
-	nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof GlNodeChildrenMap>(type: K): GlNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
-	childrenAllowed() {
+	override childrenAllowed() {
 		if (this.assemblerController) {
 			return super.childrenAllowed();
 		}
@@ -179,7 +188,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this.scene().frame() == this.pv.startFrame;
 	}
 
-	async cook(inputContents: CoreGroup[]) {
+	override async cook(inputContents: CoreGroup[]) {
 		this.gpuController.setRestartNotRequired();
 		const coreGroup = inputContents[0];
 

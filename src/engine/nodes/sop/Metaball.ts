@@ -45,22 +45,22 @@ class MetaballSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MetaballSopParamsConfig();
 
 export class MetaballSopNode extends TypedSopNode<MetaballSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'metaball';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['points to create metaballs from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(MetaballSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: MetaballSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new MetaballSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

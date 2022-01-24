@@ -11,20 +11,29 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class CopNetworkObjNode extends ParamLessBaseManagerObjNode {
-	static type() {
+	static override type() {
 		return NetworkNodeType.COP;
 	}
-	protected _childrenControllerContext = NodeContext.COP;
+	protected override _childrenControllerContext = NodeContext.COP;
 
-	createNode<S extends keyof CopNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): CopNodeChildrenMap[S];
-	createNode<K extends valueof<CopNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<CopNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof CopNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): CopNodeChildrenMap[S];
+	override createNode<K extends valueof<CopNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<CopNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseCopNodeType[];
 	}
-	nodesByType<K extends keyof CopNodeChildrenMap>(type: K): CopNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof CopNodeChildrenMap>(type: K): CopNodeChildrenMap[K][] {
 		return super.nodesByType(type) as CopNodeChildrenMap[K][];
 	}
 }

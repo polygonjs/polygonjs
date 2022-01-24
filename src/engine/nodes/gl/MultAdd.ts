@@ -22,18 +22,18 @@ enum InputName {
 }
 
 export class MultAddGlNode extends BaseNodeGlMathFunctionArg4GlNode {
-	static type() {
+	static override type() {
 		return 'multAdd';
 	}
 
-	protected _gl_input_name(index: number) {
+	protected override _gl_input_name(index: number) {
 		return [InputName.VALUE, InputName.PRE_ADD, InputName.MULT, InputName.POST_ADD][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const value = ThreeToGl.any(this.variableForInput(InputName.VALUE));
 		const preAdd = ThreeToGl.any(this.variableForInput(InputName.PRE_ADD));
 		const mult = ThreeToGl.any(this.variableForInput(InputName.MULT));

@@ -2,7 +2,7 @@ import {PolyhedronBufferGeometry} from './Polyhedron';
 
 // from three/src/geometries/TetrahedronGeometry
 export class TetrahedronBufferGeometry extends PolyhedronBufferGeometry {
-	parameters: any; //{radius: number, detail:number}
+	override parameters: any; //{radius: number, detail:number}
 	constructor(radius: number, detail: number, points_only: boolean) {
 		const vertices = [1, 1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1];
 

@@ -195,8 +195,8 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FirstPersonEventParamsConfig();
 
 export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<FirstPersonEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return CameraControlsNodeType.FIRST_PERSON;
 	}
 	endEventName() {
@@ -207,7 +207,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 	collisionController(): CollisionController {
 		return (this._collisionController = this._collisionController || new CollisionController(this));
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE, this.lockControls.bind(this)),
 			new EventConnectionPoint(

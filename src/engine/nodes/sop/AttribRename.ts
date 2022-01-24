@@ -24,17 +24,17 @@ class AttribRenameSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribRenameSopParamsConfig();
 
 export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribRename';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		// const group = input_containers[0].group();
 		const core_group = input_contents[0];
 

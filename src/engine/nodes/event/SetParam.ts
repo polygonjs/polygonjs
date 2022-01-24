@@ -121,11 +121,11 @@ class SetParamParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SetParamParamsConfig();
 
 export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'setParam';
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
 		]);
@@ -138,7 +138,7 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 		this.p.type.set(index);
 	}
 
-	async processEvent(event_context: EventContext<Event>) {
+	override async processEvent(event_context: EventContext<Event>) {
 		if (this.p.param.isDirty()) {
 			// TODO: investigate occasions
 			// where the referenced param is recomputed

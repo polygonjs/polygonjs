@@ -24,7 +24,7 @@ interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 }
 
 export class AttribSetAtIndexSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AttribSetAtIndexSopParams = {
+	static override readonly DEFAULT_PARAMS: AttribSetAtIndexSopParams = {
 		index: 0,
 		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
@@ -36,12 +36,12 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		value4: new Vector4(0, 0, 0, 0),
 		string: '',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attribSetAtIndex'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'attribSetAtIndex'> {
 		return 'attribSetAtIndex';
 	}
 
-	cook(inputCoreGroups: CoreGroup[], params: AttribSetAtIndexSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: AttribSetAtIndexSopParams) {
 		const coreGroup = inputCoreGroups[0];
 		const attribName = params.name;
 		if (attribName && attribName.trim() != '') {

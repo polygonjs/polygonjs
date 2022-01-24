@@ -29,16 +29,16 @@ class AttribRemapSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribRemapSopParamsConfig();
 
 export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribRemap';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		this._remap_attribute(core_group);
 		this.setCoreGroup(core_group);
@@ -78,18 +78,18 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 	private _get_remaped_values(attrib_size: AttribSize, values: AttribValue[], remaped_values: NumericAttribValue[]) {
 		switch (attrib_size) {
 			case AttribSize.FLOAT:
-				return this._get_normalized_float(values, remaped_values);
+				return this._getNormalizedFloat(values, remaped_values);
 			case AttribSize.VECTOR2:
-				return this._get_normalized_vector2(values, remaped_values);
+				return this._getNormalizedVector2(values, remaped_values);
 			case AttribSize.VECTOR3:
-				return this._get_normalized_vector3(values, remaped_values);
+				return this._getNormalizedVector3(values, remaped_values);
 			case AttribSize.VECTOR4:
-				return this._get_normalized_vector4(values, remaped_values);
+				return this._getNormalizedVector4(values, remaped_values);
 		}
 		TypeAssert.unreachable(attrib_size);
 	}
 
-	private _get_normalized_float(values: AttribValue[], remaped_values: NumericAttribValue[]) {
+	private _getNormalizedFloat(values: AttribValue[], remaped_values: NumericAttribValue[]) {
 		const valuesf = values as number[];
 
 		const ramp_param = this.p.ramp;
@@ -100,7 +100,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 			remaped_values[i] = remaped_value;
 		}
 	}
-	private _get_normalized_vector2(values: AttribValue[], remaped_values: NumericAttribValue[]) {
+	private _getNormalizedVector2(values: AttribValue[], remaped_values: NumericAttribValue[]) {
 		const valuesv = values as Vector2[];
 		const ramp_param = this.p.ramp;
 		for (let i = 0; i < valuesv.length; i++) {
@@ -109,7 +109,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 			remaped_values[i] = remaped_value;
 		}
 	}
-	private _get_normalized_vector3(values: AttribValue[], remaped_values: NumericAttribValue[]) {
+	private _getNormalizedVector3(values: AttribValue[], remaped_values: NumericAttribValue[]) {
 		const valuesv = values as Vector3[];
 		const ramp_param = this.p.ramp;
 		for (let i = 0; i < valuesv.length; i++) {
@@ -122,7 +122,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 			remaped_values[i] = remaped_value;
 		}
 	}
-	private _get_normalized_vector4(values: AttribValue[], remaped_values: NumericAttribValue[]) {
+	private _getNormalizedVector4(values: AttribValue[], remaped_values: NumericAttribValue[]) {
 		const valuesv = values as Vector4[];
 		const ramp_param = this.p.ramp;
 		for (let i = 0; i < valuesv.length; i++) {

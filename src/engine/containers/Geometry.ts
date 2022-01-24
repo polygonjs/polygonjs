@@ -17,13 +17,13 @@ import {PolyDictionary} from '../../types/GlobalTypes';
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// set_objects(objects: Object3D[]) {}
 
-	coreContentCloned(): CoreGroup | undefined {
+	override coreContentCloned(): CoreGroup | undefined {
 		if (this._content) {
 			return this._content.clone();
 		}
 	}
 
-	set_content(content: ContainableMap[NodeContext.SOP]) {
+	override set_content(content: ContainableMap[NodeContext.SOP]) {
 		super.set_content(content);
 	}
 

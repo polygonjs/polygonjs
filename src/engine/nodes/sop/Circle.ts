@@ -37,18 +37,18 @@ class CircleSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CircleSopParamsConfig();
 
 export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'circle';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		// this.io.inputs.setCount(0);
 		// this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
 	}
 
 	private _operation: CircleSopOperation | undefined;
-	cook() {
+	override cook() {
 		this._operation = this._operation || new CircleSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook([], this.pv);
 		this.setCoreGroup(core_group);

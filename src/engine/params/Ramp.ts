@@ -16,7 +16,7 @@ const TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
 const TEXTURE_BYTES_MULT = 255;
 
 export class RampParam extends TypedParam<ParamType.RAMP> {
-	static type() {
+	static override type() {
 		return ParamType.RAMP;
 	}
 
@@ -27,35 +27,35 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	static DEFAULT_VALUE = new RampValue(RampInterpolation.CUBIC, [new RampPoint(0, 0), new RampPoint(1, 1)]);
 	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.toJSON();
 
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		if (this._default_value instanceof RampValue) {
 			return this._default_value.toJSON();
 		} else {
 			return this._default_value;
 		}
 	}
-	protected _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]) {
+	protected override _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.RAMP]) {
 		if (raw_input instanceof RampValue) {
 			return raw_input.clone();
 		} else {
 			return RampValue.fromJSON(raw_input).toJSON();
 		}
 	}
-	rawInputSerialized() {
+	override rawInputSerialized() {
 		if (this._raw_input instanceof RampValue) {
 			return this._raw_input.toJSON();
 		} else {
 			return RampValue.fromJSON(this._raw_input).toJSON();
 		}
 	}
-	valueSerialized() {
+	override valueSerialized() {
 		return this.value.toJSON();
 	}
-	protected _copyValue(param: RampParam) {
+	protected override _copyValue(param: RampParam) {
 		this.set(param.valueSerialized());
 	}
 
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.RAMP],
 		raw_input2: ParamInitValuesTypeMap[ParamType.RAMP]
 	) {
@@ -73,7 +73,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 			}
 		}
 	}
-	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
+	static override areValuesEqual(val1: ParamValuesTypeMap[ParamType.RAMP], val2: ParamValuesTypeMap[ParamType.RAMP]) {
 		return val1.isEqual(val2);
 	}
 	// initialize_param() {
@@ -85,14 +85,14 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	// accepts_visitor(visitor: RampParamVisitor) {
 	// 	return visitor.visit_ramp_param(this);
 	// }
-	isDefault(): boolean {
+	override isDefault(): boolean {
 		if (this._default_value instanceof RampValue) {
 			return this.value.isEqual(this._default_value);
 		} else {
 			return this.value.isEqualJSON(this._default_value);
 		}
 	}
-	protected processRawInput() {
+	protected override processRawInput() {
 		if (this._raw_input instanceof RampValue) {
 			if (!this._value) {
 				this._value = this._raw_input;
@@ -139,7 +139,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	// 	return this.convert_value(v)
 	// }
 
-	hasExpression() {
+	override hasExpression() {
 		return false;
 	}
 

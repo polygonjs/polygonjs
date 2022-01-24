@@ -30,17 +30,17 @@ interface Controllers {
 }
 abstract class TextureGradientMapMatNode extends TypedMatNode<CurrentMaterial, TextureGradientMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureGradientMapController extends BaseTextureMapController {
-	constructor(protected node: TextureGradientMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureGradientMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useGradientMap, this.node.p.gradientMap);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'gradientMap', this.node.p.useGradientMap, this.node.p.gradientMap);
 		// if (this._update_options.uniforms) {
 		// 	const mat = this.node.material as ShaderMaterial;
@@ -51,7 +51,7 @@ export class TextureGradientMapController extends BaseTextureMapController {
 		// 	mat.gradientMapIntensity = this.node.pv.gradientMapIntensity;
 		// }
 	}
-	static async update(node: TextureGradientMapMatNode) {
+	static override async update(node: TextureGradientMapMatNode) {
 		node.controllers.gradientMap.update();
 	}
 }

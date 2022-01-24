@@ -52,8 +52,8 @@ class ColorSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ColorSopParamsConfig();
 
 export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'color';
 	}
 
@@ -63,16 +63,16 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		B: {},
 	};
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to update color of'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	async cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 		const coreObjects = coreGroup.coreObjects();
 

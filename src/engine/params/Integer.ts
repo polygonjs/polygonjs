@@ -6,22 +6,22 @@ import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {CoreType} from '../../core/Type';
 
 export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
-	static type() {
+	static override type() {
 		return ParamType.INTEGER;
 	}
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		return this._default_value;
 	}
-	rawInputSerialized() {
+	override rawInputSerialized() {
 		return this._raw_input;
 	}
-	valueSerialized() {
+	override valueSerialized() {
 		return this.value;
 	}
-	protected _copyValue(param: IntegerParam) {
+	protected override _copyValue(param: IntegerParam) {
 		this.set(param.valueSerialized());
 	}
-	protected _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
+	protected override _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[ParamType.INTEGER] {
 		if (CoreType.isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
 		}
@@ -31,13 +31,16 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 		return raw_input;
 	}
 
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.INTEGER],
 		raw_input2: ParamInitValuesTypeMap[ParamType.INTEGER]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.INTEGER], val2: ParamValuesTypeMap[ParamType.INTEGER]) {
+	static override areValuesEqual(
+		val1: ParamValuesTypeMap[ParamType.INTEGER],
+		val2: ParamValuesTypeMap[ParamType.INTEGER]
+	) {
 		return val1 == val2;
 	}
 	static convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
@@ -57,7 +60,7 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 			return null;
 		}
 	}
-	convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
+	override convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
 		const result = IntegerParam.convert(raw_val);
 		if (result) {
 			return this.options.ensureInRange(result);

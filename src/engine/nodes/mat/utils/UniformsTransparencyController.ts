@@ -3,7 +3,7 @@ import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {IUniforms, ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
+import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
 import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
@@ -20,10 +20,10 @@ export function UniformsTransparencyParamConfig<TBase extends Constructor>(Base:
 }
 
 class TransparencyMaterial extends ShaderMaterial {
-	transparent!: boolean;
-	depthTest!: boolean;
-	alphaTest!: number;
-	uniforms!: IUniforms;
+	// transparent!: boolean;
+	// depthTest!: boolean;
+	// alphaTest!: number;
+	// uniforms!: IUniforms;
 }
 class TransparencyParamsConfig extends UniformsTransparencyParamConfig(NodeParamsConfig) {}
 
@@ -34,7 +34,7 @@ class TransparencyMatNode extends TypedMatNode<TransparencyMaterial, Transparenc
 }
 
 export class UniformsTransparencyController extends BaseController {
-	constructor(protected node: TransparencyMatNode) {
+	constructor(protected override node: TransparencyMatNode) {
 		super(node);
 	}
 	static update(node: TransparencyMatNode) {

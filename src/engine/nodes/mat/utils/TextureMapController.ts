@@ -29,20 +29,20 @@ interface Controllers {
 }
 abstract class TextureMapMatNode extends TypedMatNode<CurrentMaterial, TextureMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureMapController extends BaseTextureMapController {
-	constructor(protected node: TextureMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useMap, this.node.p.map);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'map', this.node.p.useMap, this.node.p.map);
 	}
-	static async update(node: TextureMapMatNode) {
+	static override async update(node: TextureMapMatNode) {
 		node.controllers.map.update();
 	}
 }

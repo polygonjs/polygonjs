@@ -18,12 +18,12 @@ class SphereGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SphereGlParamsConfig();
 export class SDFUnionGlNode extends TypedGlNode<SphereGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'SDFUnion';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -31,7 +31,7 @@ export class SDFUnionGlNode extends TypedGlNode<SphereGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const sdf0 = ThreeToGl.vector2(this.variableForInputParam(this.p.sdf0));
 		const sdf1 = ThreeToGl.vector2(this.variableForInputParam(this.p.sdf1));
 

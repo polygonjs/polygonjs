@@ -14,12 +14,12 @@ class SDFBoxGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SDFBoxGlParamsConfig();
 export class SDFBoxGlNode extends TypedGlNode<SDFBoxGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'SDFBox';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -27,7 +27,7 @@ export class SDFBoxGlNode extends TypedGlNode<SDFBoxGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const position = ThreeToGl.vector2(this.variableForInputParam(this.p.position));
 		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
 		const size = ThreeToGl.vector3(this.variableForInputParam(this.p.size));

@@ -42,16 +42,16 @@ class AutoFilterAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AutoFilterAudioParamsConfig();
 
 export class AutoFilterAudioNode extends TypedAudioNode<AutoFilterAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'autoFilter';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 		const effect = this._effect();
 

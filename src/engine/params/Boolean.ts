@@ -6,36 +6,39 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {CoreType} from '../../core/Type';
 
 export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
-	static type() {
+	static override type() {
 		return ParamType.BOOLEAN;
 	}
 	// TODO: be careful as this does not allow serialization of expressions as default value
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		if (CoreType.isString(this._default_value)) {
 			return this._default_value;
 		} else {
 			return this.convert(this._default_value) || false;
 		}
 	}
-	rawInputSerialized() {
+	override rawInputSerialized() {
 		return this._raw_input;
 	}
-	valueSerialized() {
+	override valueSerialized() {
 		return this.value;
 	}
-	protected _copyValue(param: BooleanParam) {
+	protected override _copyValue(param: BooleanParam) {
 		this.set(param.value);
 	}
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.BOOLEAN],
 		raw_input2: ParamInitValuesTypeMap[ParamType.BOOLEAN]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static areValuesEqual(val1: ParamValuesTypeMap[ParamType.BOOLEAN], val2: ParamValuesTypeMap[ParamType.BOOLEAN]) {
+	static override areValuesEqual(
+		val1: ParamValuesTypeMap[ParamType.BOOLEAN],
+		val2: ParamValuesTypeMap[ParamType.BOOLEAN]
+	) {
 		return val1 == val2;
 	}
-	convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean | null {
+	override convert(raw_val: ParamInitValuesTypeMap[ParamType.BOOLEAN]): boolean | null {
 		if (CoreType.isBoolean(raw_val)) {
 			return raw_val;
 		} else {

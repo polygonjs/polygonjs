@@ -4,10 +4,10 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkAudioParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkAudioNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.AUDIO, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.AUDIO;
 	}
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 }

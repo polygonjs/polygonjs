@@ -8,7 +8,7 @@ export class PostProcessContainer extends TypedContainer<NodeContext.POST> {
 	// constructor() {
 	// 	super();
 	// }
-	set_content(content: ContainableMap[NodeContext.POST]) {
+	override set_content(content: ContainableMap[NodeContext.POST]) {
 		super.set_content(content);
 	}
 	render_pass() {

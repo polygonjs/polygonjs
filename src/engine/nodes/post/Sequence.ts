@@ -6,17 +6,17 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 class SequencePostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SequencePostParamsConfig();
 export class SequencePostNode extends TypedPostProcessNode<Pass, SequencePostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'sequence';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.inputs.setCount(0, 4);
 	}
 
-	setupComposer(context: TypedPostNodeContext): void {
+	override setupComposer(context: TypedPostNodeContext): void {
 		this._addPassFromInput(0, context);
 		this._addPassFromInput(1, context);
 		this._addPassFromInput(2, context);

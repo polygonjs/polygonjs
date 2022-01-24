@@ -10,21 +10,21 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 export class NegateGlNode extends BaseNodeGlMathFunctionArg1GlNode {
-	static type() {
+	static override type() {
 		return 'negate';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['in'][index]);
 	}
 
-	protected _gl_input_name(index: number) {
+	protected override _gl_input_name(index: number) {
 		return ['in'][index];
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const in_value = ThreeToGl.any(this.variableForInput(this._gl_input_name(0)));
 
 		const gl_type = this.io.inputs.namedInputConnectionPoints()[0].type();

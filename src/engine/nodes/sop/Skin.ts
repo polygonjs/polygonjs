@@ -17,20 +17,20 @@ class SkinSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SkinSopParamsConfig();
 
 export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'skin';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['lines to create polygons from', 'if used, lines from both inputs will be used'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const inputs_count = ArrayUtils.compact(this.io.inputs.inputs()).length;
 		switch (inputs_count) {
 			case 1:

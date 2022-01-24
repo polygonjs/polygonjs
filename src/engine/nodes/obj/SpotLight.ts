@@ -98,8 +98,8 @@ class SpotLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) 
 const ParamsConfig = new SpotLightObjParamsConfig();
 
 export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, SpotLightObjParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return LightType.SPOT;
 	}
 	private _target_target!: Object3D;
@@ -109,7 +109,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		'SpotLightHelper'
 	);
 	private _volumetricController = new VolumetricSpotLight(this);
-	initializeNode() {
+	override initializeNode() {
 		this._helperController.initializeNode();
 	}
 
@@ -132,7 +132,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		return light;
 	}
 
-	protected updateLightParams() {
+	protected override updateLightParams() {
 		this.light.color = this.pv.color;
 		this.light.intensity = this.pv.intensity;
 		this.light.angle = this.pv.angle * (Math.PI / 180);
@@ -146,7 +146,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLight, Spo
 		this._helperController.update();
 		this._volumetricController.update();
 	}
-	protected updateShadowParams() {
+	protected override updateShadowParams() {
 		this.light.castShadow = isBooleanTrue(this.pv.castShadow);
 		this.light.shadow.autoUpdate = isBooleanTrue(this.pv.shadowAutoUpdate);
 		this.light.shadow.needsUpdate = isBooleanTrue(this.pv.shadowUpdateOnNextRender);

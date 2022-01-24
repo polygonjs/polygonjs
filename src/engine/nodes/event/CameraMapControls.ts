@@ -11,7 +11,7 @@ import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
 
 export class CameraMapControlsEventNode extends CameraOrbitControlsEventNode {
-	static type() {
+	static override type() {
 		return CameraControlsNodeType.MAP;
 	}
 

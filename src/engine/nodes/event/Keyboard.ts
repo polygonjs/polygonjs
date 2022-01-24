@@ -52,14 +52,14 @@ class KeyboardEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new KeyboardEventParamsConfig();
 
 export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'keyboard';
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_KEYBOARD_EVENT_TYPES.map((n) => `${n}`));
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(
 			ACCEPTED_KEYBOARD_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.KEYBOARD);
@@ -70,7 +70,7 @@ export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsCo
 		this.p.element.set(EVENT_EMITTERS.indexOf(element));
 	}
 
-	processEvent(eventContext: EventContext<KeyboardEvent>) {
+	override processEvent(eventContext: EventContext<KeyboardEvent>) {
 		if (!this.pv.active) {
 			return;
 		}

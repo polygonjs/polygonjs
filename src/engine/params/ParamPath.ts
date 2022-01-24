@@ -8,44 +8,44 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 
 export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
-	static type() {
+	static override type() {
 		return ParamType.PARAM_PATH;
 	}
-	protected _initializeParam() {
+	protected override _initializeParam() {
 		this._value = new TypedParamPathParamValue();
 	}
 
-	defaultValueSerialized() {
+	override defaultValueSerialized() {
 		return this._default_value;
 	}
-	rawInputSerialized() {
+	override rawInputSerialized() {
 		return `${this._raw_input}`;
 	}
-	valueSerialized() {
+	override valueSerialized() {
 		return `${this.value}`;
 	}
-	protected _copyValue(param: ParamPathParam) {
+	protected override _copyValue(param: ParamPathParam) {
 		this.set(param.valueSerialized());
 	}
-	static areRawInputEqual(
+	static override areRawInputEqual(
 		raw_input1: ParamInitValuesTypeMap[ParamType.PARAM_PATH],
 		raw_input2: ParamInitValuesTypeMap[ParamType.PARAM_PATH]
 	) {
 		return raw_input1 == raw_input2;
 	}
-	static areValuesEqual(
+	static override areValuesEqual(
 		val1: ParamValuesTypeMap[ParamType.PARAM_PATH],
 		val2: ParamValuesTypeMap[ParamType.PARAM_PATH]
 	) {
 		return val1 == val2;
 	}
-	isDefault(): boolean {
+	override isDefault(): boolean {
 		return this._raw_input == this._default_value;
 	}
 	setParam(param: BaseParamType) {
 		this.set(param.path());
 	}
-	protected processRawInput() {
+	protected override processRawInput() {
 		if (this._value.path() != this._raw_input) {
 			this._value.set_path(this._raw_input);
 			this.findTarget();
@@ -53,7 +53,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 		}
 	}
-	protected async processComputation() {
+	protected override async processComputation() {
 		this.findTarget();
 	}
 	private findTarget() {

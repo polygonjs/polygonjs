@@ -21,7 +21,7 @@ class WireframedMatNode extends TypedMatNode<ShaderMaterial, WireframeParamsConf
 }
 
 export class WireframeController extends BaseController {
-	constructor(protected node: WireframedMatNode) {
+	constructor(protected override node: WireframedMatNode) {
 		super(node);
 	}
 	static update(node: WireframedMatNode) {

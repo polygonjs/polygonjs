@@ -41,16 +41,16 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
  *
  */
 export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.SOP;
 	}
-	public readonly flags: FlagsControllerDBO = new FlagsControllerDBO(this);
+	public override readonly flags: FlagsControllerDBO = new FlagsControllerDBO(this);
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		this.flags.display.set(false);
 		this.flags.display.onUpdate(() => {
 			if (this.flags.display.active()) {

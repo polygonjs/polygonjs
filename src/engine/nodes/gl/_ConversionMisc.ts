@@ -15,18 +15,18 @@ class FloatToIntGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfigFloatToInt = new FloatToIntGlParamsConfig();
 export class FloatToIntGlNode extends TypedGlNode<FloatToIntGlParamsConfig> {
-	paramsConfig = ParamsConfigFloatToInt;
-	static type() {
+	override paramsConfig = ParamsConfigFloatToInt;
+	static override type() {
 		return 'floatToInt';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME_INT, GlConnectionPointType.INT),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const float = this.variableForInputParam(this.p.float);
 
 		const int = this.glVarName(OUTPUT_NAME_INT);
@@ -46,18 +46,18 @@ class IntToFloatGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfigIntToFloat = new IntToFloatGlParamsConfig();
 export class IntToFloatGlNode extends TypedGlNode<IntToFloatGlParamsConfig> {
-	paramsConfig = ParamsConfigIntToFloat;
-	static type() {
+	override paramsConfig = ParamsConfigIntToFloat;
+	static override type() {
 		return 'intToFloat';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME_FLOAT, GlConnectionPointType.FLOAT),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const int = this.variableForInputParam(this.p.int);
 
 		const float = this.glVarName(OUTPUT_NAME_FLOAT);
@@ -77,18 +77,18 @@ class IntToBoolGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfigIntToBool = new IntToBoolGlParamsConfig();
 export class IntToBoolGlNode extends TypedGlNode<IntToBoolGlParamsConfig> {
-	paramsConfig = ParamsConfigIntToBool;
-	static type() {
+	override paramsConfig = ParamsConfigIntToBool;
+	static override type() {
 		return 'intToBool';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME_BOOL, GlConnectionPointType.BOOL),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const int = this.variableForInputParam(this.p.int);
 
 		const bool = this.glVarName(OUTPUT_NAME_BOOL);
@@ -107,18 +107,18 @@ class BoolToIntGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfigBoolToInt = new BoolToIntGlParamsConfig();
 export class BoolToIntGlNode extends TypedGlNode<BoolToIntGlParamsConfig> {
-	paramsConfig = ParamsConfigBoolToInt;
-	static type() {
+	override paramsConfig = ParamsConfigBoolToInt;
+	static override type() {
 		return 'boolToInt';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME_INT, GlConnectionPointType.INT),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const bool = this.variableForInputParam(this.p.bool);
 
 		const int = this.glVarName(OUTPUT_NAME_INT);

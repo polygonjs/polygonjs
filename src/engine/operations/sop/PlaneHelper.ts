@@ -12,17 +12,17 @@ interface PlaneHelperSopParams extends DefaultOperationParams {
 }
 
 export class PlaneHelperSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: PlaneHelperSopParams = {
+	static override readonly DEFAULT_PARAMS: PlaneHelperSopParams = {
 		size: 10,
 		colorCenterLine: new Color(0, 0, 1),
 		colorGrid: new Color(1, 1, 1),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'planeHelper'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'planeHelper'> {
 		return 'planeHelper';
 	}
 
-	cook(input_contents: CoreGroup[], params: PlaneHelperSopParams) {
+	override cook(input_contents: CoreGroup[], params: PlaneHelperSopParams) {
 		const helper = new GridHelper(params.size, params.size, params.colorCenterLine, params.colorGrid);
 		return this.createCoreGroupFromObjects([helper]);
 	}

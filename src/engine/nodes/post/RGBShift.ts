@@ -32,18 +32,18 @@ class RGBShiftPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new RGBShiftPostParamsConfig();
 export class RGBShiftPostNode extends TypedPostProcessNode<ShaderPass, RGBShiftPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'RGBShift';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(RGBShiftShader) as RGBShiftPassWithUniforms;
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: RGBShiftPassWithUniforms) {
+	override updatePass(pass: RGBShiftPassWithUniforms) {
 		pass.uniforms.amount.value = this.pv.amount;
 		pass.uniforms.angle.value = this.pv.angle;
 	}

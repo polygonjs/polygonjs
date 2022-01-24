@@ -83,8 +83,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 
 	constructor(
 		protected _options: CoreLoaderGeometryOptions,
-		protected _scene: PolyScene,
-		protected _node?: BaseNodeType
+		protected override _scene: PolyScene,
+		protected override _node?: BaseNodeType
 	) {
 		super(_options.url, _scene, _node);
 	}

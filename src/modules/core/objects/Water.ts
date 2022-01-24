@@ -63,9 +63,9 @@ export interface WaterOptions extends BaseReflectorOptions {
 export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 	public readonly isWater = true;
 	// private _renderReflection = true;
-	protected _mirrorCameraMultipliedByMatrixWorld = false;
+	protected override _mirrorCameraMultipliedByMatrixWorld = false;
 
-	constructor(geometry: BufferGeometry, protected _options: WaterOptions) {
+	constructor(geometry: BufferGeometry, protected override _options: WaterOptions) {
 		super(geometry, _options);
 	}
 	protected _createMaterial() {
@@ -142,7 +142,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 		return material;
 	}
 
-	protected _onBeforeRender(renderer: WebGLRenderer, scene: Scene, anyCamera: Camera) {
+	protected override _onBeforeRender(renderer: WebGLRenderer, scene: Scene, anyCamera: Camera) {
 		super._onBeforeRender(renderer, scene, anyCamera);
 		if (this.material) {
 			this.material.uniforms['eye'].value.setFromMatrixPosition(anyCamera.matrixWorld);
@@ -158,7 +158,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 		}
 	}
 
-	clone(recursive: boolean): this {
+	override clone(recursive: boolean): this {
 		// we clone so that a cloned reflector does not share the same color
 		const clonedOptions = {...this._options};
 		clonedOptions.sunDirection = this._options.sunDirection?.clone();

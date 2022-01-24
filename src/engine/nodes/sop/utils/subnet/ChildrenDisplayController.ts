@@ -11,7 +11,7 @@ import {Constructor, valueof} from '../../../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../../../utils/hierarchy/ChildrenController';
 
 export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<T> {
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		super.initializeBaseNode();
 		this.childrenDisplayController.initializeNode();
 		// the inputs will be evaluated by the child input nodes
@@ -21,26 +21,35 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	// display_node and children_display controllers
 	public readonly childrenDisplayController: SopSubnetChildrenDisplayController =
 		new SopSubnetChildrenDisplayController(this);
-	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
+	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.childrenDisplayController.displayNodeControllerCallbacks()
 	);
 	//
 
-	protected _childrenControllerContext = NodeContext.SOP;
-	createNode<S extends keyof GeoNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): GeoNodeChildrenMap[S];
-	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	protected override _childrenControllerContext = NodeContext.SOP;
+	override createNode<S extends keyof GeoNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): GeoNodeChildrenMap[S];
+	override createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<GeoNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BaseSopNodeType[];
 	}
-	nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
 		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		const child_output_node = this.childrenDisplayController.output_node();
 		if (child_output_node) {
 			const container = await child_output_node.compute();

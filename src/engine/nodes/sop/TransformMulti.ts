@@ -125,16 +125,16 @@ class TransformMultiSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new TransformMultiSopParamConfig();
 
 export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'transformMulti';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['objects to transform', 'objects to copy initial transform from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 
@@ -152,7 +152,7 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 
 	private _core_transform = new CoreTransform();
 	private _rot_and_index_pairs: VectorNumberParamPair[] | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const objects = input_contents[0].objectsWithGeo();
 		const src_object = input_contents[1] ? input_contents[1].objectsWithGeo()[0] : undefined;
 

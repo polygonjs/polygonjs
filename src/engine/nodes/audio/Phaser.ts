@@ -52,16 +52,16 @@ class PhaserAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PhaserAudioParamsConfig();
 
 export class PhaserAudioNode extends TypedAudioNode<PhaserAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'phaser';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
 		this._resetEffect();

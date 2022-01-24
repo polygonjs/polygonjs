@@ -26,8 +26,8 @@ class WebCamCopParamsConfig extends TextureParamConfig(WebCamCopParamConfig(Node
 const ParamsConfig = new WebCamCopParamsConfig();
 
 export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return CopType.WEB_CAM;
 	}
 
@@ -37,14 +37,14 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['optional texture to copy attributes from'];
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		this._cancelWebcamRequest();
 	}
@@ -81,7 +81,7 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		return element;
 	}
 
-	async cook(input_contents: Texture[]) {
+	override async cook(input_contents: Texture[]) {
 		this._video = this._createHTMLVideoElement();
 
 		const texture = new VideoTexture(this._video);

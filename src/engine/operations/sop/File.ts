@@ -16,12 +16,12 @@ interface FileSopParams extends DefaultOperationParams {
 }
 
 export class FileSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: FileSopParams = {
+	static override readonly DEFAULT_PARAMS: FileSopParams = {
 		url: `${ASSETS_ROOT}/models/wolf.obj`,
 		format: GeometryFormat.AUTO,
 		matrixAutoUpdate: false,
 	};
-	static type(): Readonly<'file'> {
+	static override type(): Readonly<'file'> {
 		return 'file';
 	}
 
@@ -29,7 +29,7 @@ export class FileSopOperation extends BaseSopOperation {
 		return new CoreLoaderGeometry({url: params.url, format: params.format as GeometryFormat}, scene, node);
 	}
 
-	cook(input_contents: CoreGroup[], params: FileSopParams): Promise<CoreGroup> {
+	override cook(input_contents: CoreGroup[], params: FileSopParams): Promise<CoreGroup> {
 		const loader = FileSopOperation.loader(params, this.scene(), this._node);
 
 		return new Promise((resolve) => {

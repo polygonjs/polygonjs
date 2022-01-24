@@ -77,15 +77,15 @@ class IntersectDataParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new IntersectDataParamsConfig();
 
 export class IntersectDataEventNode extends TypedEventNode<IntersectDataParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'intersectData';
 	}
 	static readonly INPUT_HIT = 'hit';
 	static readonly INPUT_MISS = 'miss';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				IntersectDataEventNode.INPUT_HIT,

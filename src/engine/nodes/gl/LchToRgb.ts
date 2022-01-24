@@ -20,12 +20,12 @@ class LchToRgbGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new LchToRgbGlParamsConfig();
 export class LchToRgbGlNode extends TypedGlNode<LchToRgbGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'lch_to_rgb';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -33,7 +33,7 @@ export class LchToRgbGlNode extends TypedGlNode<LchToRgbGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const function_declaration_lines = [];
 		const body_lines = [];
 

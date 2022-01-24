@@ -19,14 +19,14 @@ class BlockParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BlockParamsConfig();
 
 export class BlockEventNode extends TypedEventNode<BlockParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'block';
 	}
 	static readonly OUTPUT = 'output';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint('in', EventConnectionPointType.BASE, this._process_incoming_event.bind(this)),
 		]);

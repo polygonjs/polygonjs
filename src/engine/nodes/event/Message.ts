@@ -21,14 +21,14 @@ class MessageParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MessageParamsConfig();
 
 export class MessageEventNode extends TypedEventNode<MessageParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'message';
 	}
 	static readonly OUTPUT = 'output';
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE, this._process_trigger_event.bind(this)),
 		]);

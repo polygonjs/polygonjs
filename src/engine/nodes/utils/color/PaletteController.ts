@@ -132,7 +132,7 @@ class PaletteAbstractNodeParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PaletteAbstractNodeParamsConfig();
 
 export class PaletteAbstractNode<NC extends NodeContext> extends TypedNode<NC, PaletteAbstractNodeParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 	//  static type() {
 	// 	 return 'palette';
 	//  }

@@ -13,7 +13,7 @@ export function BaseLightHelperParamConfig<TBase extends Constructor>(Base: TBas
 }
 class BaseLightHelperParamsConfig extends BaseLightHelperParamConfig(NodeParamsConfig) {}
 export abstract class BaseLightHelperObjNode<L extends Light> extends TypedObjNode<Group, BaseLightHelperParamsConfig> {
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
 	// public readonly helper: BaseLightHelper<L> | undefined;
 	abstract get light(): L;

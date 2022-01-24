@@ -29,19 +29,19 @@ class VerticalBlurPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new VerticalBlurPostParamsConfig();
 export class VerticalBlurPostNode extends TypedPostProcessNode<ShaderPass, VerticalBlurPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'verticalBlur';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(VerticalBlurShader) as VerticalBlurPassWithUniforms;
 		pass.resolution_y = context.resolution.y;
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: VerticalBlurPassWithUniforms) {
+	override updatePass(pass: VerticalBlurPassWithUniforms) {
 		pass.uniforms.v.value = this.pv.amount / (pass.resolution_y * window.devicePixelRatio);
 		pass.material.transparent = this.pv.transparent;
 	}

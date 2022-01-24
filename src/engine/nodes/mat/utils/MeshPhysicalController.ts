@@ -119,13 +119,13 @@ interface Controllers {
 }
 abstract class TextureClearCoatMapMatNode extends TypedMatNode<CurrentMaterial, TextureClearCoatMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 const meshPhysical = new MeshPhysicalMaterial();
 
 export class MeshPhysicalController extends BaseTextureMapController {
-	constructor(protected node: TextureClearCoatMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureClearCoatMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
@@ -136,7 +136,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		this.add_hooks(this.node.p.useThicknessMap, this.node.p.thicknessMap);
 	}
 	private _sheenColorClone = new Color();
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'clearcoatMap', this.node.p.useClearCoatMap, this.node.p.clearcoatMap);
 		this._update(
 			this.node.material,
@@ -216,7 +216,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			mat.attenuationTint = pv.attenuationColor;
 		}
 	}
-	static async update(node: TextureClearCoatMapMatNode) {
+	static override async update(node: TextureClearCoatMapMatNode) {
 		node.controllers.physical.update();
 	}
 }

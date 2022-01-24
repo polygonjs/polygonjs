@@ -14,10 +14,10 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Object3D} from 'three/src/core/Object3D';
 
 export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
-	static context() {
+	static override context() {
 		return NodeContext.SOP;
 	}
-	cook(input_contents: CoreGroup[], params: any): CoreGroup | Promise<CoreGroup> | void {}
+	override cook(input_contents: CoreGroup[], params: any): CoreGroup | Promise<CoreGroup> | void {}
 
 	//
 	//

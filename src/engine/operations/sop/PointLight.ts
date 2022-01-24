@@ -20,7 +20,7 @@ interface PointLightSopParams extends DefaultOperationParams {
 }
 
 export class PointLightSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: PointLightSopParams = {
+	static override readonly DEFAULT_PARAMS: PointLightSopParams = {
 		color: new Color(1, 1, 1),
 		intensity: 1,
 		decay: 0.1,
@@ -31,11 +31,11 @@ export class PointLightSopOperation extends BaseSopOperation {
 		shadowNear: 1,
 		shadowFar: 100,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'pointLight'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'pointLight'> {
 		return 'pointLight';
 	}
-	cook(input_contents: CoreGroup[], params: PointLightSopParams) {
+	override cook(input_contents: CoreGroup[], params: PointLightSopParams) {
 		const light = new PointLight();
 		light.matrixAutoUpdate = false;
 

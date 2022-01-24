@@ -12,27 +12,36 @@ import {EffectsComposerController, PostProcessNetworkParamsConfig} from '../post
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class PostProcessNetworkSopNode extends BaseNetworkSopNode<PostProcessNetworkParamsConfig> {
-	paramsConfig = new PostProcessNetworkParamsConfig();
-	static type() {
+	override paramsConfig = new PostProcessNetworkParamsConfig();
+	static override type() {
 		return NetworkNodeType.POST;
 	}
 	readonly effectsComposerController: EffectsComposerController = new EffectsComposerController(this);
-	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
+	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.effectsComposerController.displayNodeControllerCallbacks()
 	);
 
-	protected _childrenControllerContext = NodeContext.POST;
+	protected override _childrenControllerContext = NodeContext.POST;
 
-	createNode<S extends keyof PostNodeChildrenMap>(node_class: S, options?: NodeCreateOptions): PostNodeChildrenMap[S];
-	createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-	createNode<K extends valueof<PostNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+	override createNode<S extends keyof PostNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): PostNodeChildrenMap[S];
+	override createNode<K extends valueof<PostNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<PostNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
 		return super.createNode(node_class, options) as K;
 	}
-	children() {
+	override children() {
 		return super.children() as BasePostProcessNodeType[];
 	}
-	nodesByType<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][] {
+	override nodesByType<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][] {
 		return super.nodesByType(type) as PostNodeChildrenMap[K][];
 	}
 }

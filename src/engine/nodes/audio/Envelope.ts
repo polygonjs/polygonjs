@@ -41,16 +41,16 @@ class EnvelopeAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new EnvelopeAudioParamsConfig();
 
 export class EnvelopeAudioNode extends TypedAudioNode<EnvelopeAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'envelope';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = new AudioBuilder();
 		audioBuilder.setEnvelopeParams({
 			attackCurve: 'linear',

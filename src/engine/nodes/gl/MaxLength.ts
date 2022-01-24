@@ -21,25 +21,25 @@ const MaxLengthDefaultValues: PolyDictionary<number> = {
 };
 
 export class MaxLengthGlNode extends BaseNodeGlMathFunctionArg2GlNode {
-	static type() {
+	static override type() {
 		return 'maxLength';
 	}
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
 		return [type, GlConnectionPointType.FLOAT];
 	}
 
-	protected _gl_input_name(index: number): string {
+	protected override _gl_input_name(index: number): string {
 		return ['val', 'max'][index];
 	}
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return MaxLengthDefaultValues[name];
 	}
-	protected gl_method_name(): string {
+	protected override gl_method_name(): string {
 		return 'maxLength';
 	}
 
-	gl_function_definitions() {
+	override gl_function_definitions() {
 		return [new FunctionGLDefinition(this, MaxLength)];
 	}
 }

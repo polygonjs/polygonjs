@@ -27,18 +27,18 @@ class VATDataGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new VATDataGlParamsConfig();
 export class SSSModelGlNode extends TypedGlNode<VATDataGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'SSSModel';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT.SSS_MODEL, GlConnectionPointType.SSS_MODEL),
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const body_lines = [];
 		const outSSModel = this.glVarName(OUTPUT.SSS_MODEL);
 		body_lines.push(`SSSModel ${outSSModel}`);

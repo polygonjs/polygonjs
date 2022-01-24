@@ -21,8 +21,8 @@ import {GeometryContainer} from '../../containers/Geometry';
 
 const EXPECTED_ARGS_COUNT = 3;
 export class PointExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [
 			['string', 'path to node'],
 			['string', 'attribute name'],
@@ -30,11 +30,11 @@ export class PointExpression extends BaseMethod {
 		];
 	}
 
-	findDependency(index_or_path: number | string): MethodDependency | null {
+	override findDependency(index_or_path: number | string): MethodDependency | null {
 		return this.createDependencyFromIndexOrPath(index_or_path);
 	}
 
-	processArguments(args: any[]): Promise<any> {
+	override processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (args.length == EXPECTED_ARGS_COUNT) {
 				const index_or_path = args[0];

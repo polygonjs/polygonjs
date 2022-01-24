@@ -15,16 +15,14 @@ class SolverSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SolverSopParamsConfig();
 
 export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'solver';
 	}
 	private _last_simulated_frame: number | null = null;
-	public readonly childrenDisplayController: SopSubnetChildrenDisplayController = new SopSubnetChildrenDisplayController(
-		this,
-		{dependsOnDisplayNode: false}
-	);
-	public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
+	public override readonly childrenDisplayController: SopSubnetChildrenDisplayController =
+		new SopSubnetChildrenDisplayController(this, {dependsOnDisplayNode: false});
+	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		{
 			onDisplayNodeRemove: () => {
@@ -40,7 +38,7 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 		{dependsOnDisplayNode: false}
 	);
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 
@@ -51,7 +49,7 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 	previousFrameCoreGroup() {
 		return this._previousFrameCoreGroup;
 	}
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		if (this.pv.startFrame == this.scene().frame()) {
 			this._reset();
 		}

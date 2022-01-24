@@ -26,16 +26,16 @@ class FeedbackDelayAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FeedbackDelayAudioParamsConfig();
 
 export class FeedbackDelayAudioNode extends TypedAudioNode<FeedbackDelayAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'feedbackDelay';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 		const effect = new FeedbackDelay({
 			delayTime: this.pv.delayTime,

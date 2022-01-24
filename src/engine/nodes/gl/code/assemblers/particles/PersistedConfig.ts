@@ -16,10 +16,10 @@ export interface PersistedConfigBaseParticlesData {
 export class ParticlesPersistedConfig extends BasePersistedConfig {
 	private _loaded_data: PersistedConfigBaseParticlesData | undefined;
 
-	constructor(protected node: ParticlesSystemGpuSopNode) {
+	constructor(protected override node: ParticlesSystemGpuSopNode) {
 		super(node);
 	}
-	toJSON(): PersistedConfigBaseParticlesData | undefined {
+	override toJSON(): PersistedConfigBaseParticlesData | undefined {
 		const assemblerController = this.node.assemblerController;
 		if (!assemblerController) {
 			return;
@@ -55,7 +55,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			uniforms_owner: material_data || {},
 		};
 	}
-	load(data: PersistedConfigBaseParticlesData) {
+	override load(data: PersistedConfigBaseParticlesData) {
 		if (!Poly.playerMode()) {
 			return;
 		}

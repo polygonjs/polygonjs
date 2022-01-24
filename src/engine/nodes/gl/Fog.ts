@@ -24,12 +24,12 @@ class FogGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new FogGlParamsConfig();
 export class FogGlNode extends TypedGlNode<FogGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'fog';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -37,7 +37,7 @@ export class FogGlNode extends TypedGlNode<FogGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		if (shaders_collection_controller.current_shader_name == ShaderName.FRAGMENT) {
 			const varying_name = this.glVarName(this.name());
 			const definition = new VaryingGLDefinition(this, GlConnectionPointType.VEC4, varying_name);

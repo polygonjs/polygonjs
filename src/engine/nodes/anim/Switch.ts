@@ -17,16 +17,16 @@ class SwitchAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new SwitchAnimParamsConfig();
 
 export class SwitchAnimNode extends TypedAnimNode<SwitchAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'switch';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
+	override cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[this.pv.input];
 		if (timeline_builder) {
 			this.setTimelineBuilder(timeline_builder);

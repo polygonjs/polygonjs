@@ -25,22 +25,22 @@ function createRaycaster() {
 }
 
 export class RaySopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: RaySopParams = {
+	static override readonly DEFAULT_PARAMS: RaySopParams = {
 		useNormals: true,
 		direction: new Vector3(0, -1, 0),
 		transformPoints: true,
 		transferFaceNormals: true,
 		addDistAttribute: false,
 	};
-	static readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
-	static type(): Readonly<'ray'> {
+	static override readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
+	static override type(): Readonly<'ray'> {
 		return 'ray';
 	}
 
 	private _matDoubleSideTmpSetter = new MatDoubleSideTmpSetter();
 	private _raycaster = createRaycaster();
 
-	cook(input_contents: CoreGroup[], params: RaySopParams) {
+	override cook(input_contents: CoreGroup[], params: RaySopParams) {
 		const coreGroupToRay = input_contents[0];
 		const coreGroupToRayOnto = input_contents[1];
 

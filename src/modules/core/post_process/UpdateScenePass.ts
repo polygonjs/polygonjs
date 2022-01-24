@@ -23,7 +23,7 @@ interface UpdateScenePassOptions {
 }
 
 export class UpdateScenePass extends Pass {
-	public needsSwap = false;
+	public override needsSwap = false;
 	public updatesRender = false;
 	private _scene: PolyScene;
 	public reset: boolean;
@@ -52,7 +52,7 @@ export class UpdateScenePass extends Pass {
 	private _materialByMesh: Map<Mesh, Material | Material[]> = new Map();
 	private _visibleByObject: Map<Object3D, boolean> = new Map();
 
-	render(
+	override render(
 		renderer: WebGLRenderer,
 		writeBuffer: WebGLRenderTarget,
 		readBuffer: WebGLRenderTarget,

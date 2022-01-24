@@ -43,12 +43,12 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new RenderPostParamsConfig();
 export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'render';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new RenderPass(context.scene, context.camera) as RenderPassWithContext;
 
 		pass.context = {
@@ -59,7 +59,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 		return pass;
 	}
 
-	updatePass(pass: RenderPassWithContext) {
+	override updatePass(pass: RenderPassWithContext) {
 		this._updateCamera(pass);
 		this._update_scene(pass);
 	}

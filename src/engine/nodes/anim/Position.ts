@@ -35,16 +35,16 @@ class PositionAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PositionAnimParamsConfig();
 
 export class PositionAnimNode extends TypedAnimNode<PositionAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'position';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
+	override cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		const position = new AnimationPosition();

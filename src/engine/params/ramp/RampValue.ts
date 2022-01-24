@@ -99,6 +99,10 @@ export class RampValue {
 	copy(ramp: RampValue) {
 		this._interpolation = ramp.interpolation();
 		let index = 0;
+		if (this._points.length > ramp.points().length) {
+			this._points.splice(0, ramp.points().length);
+		}
+
 		for (let point of ramp.points()) {
 			const current_point = this._points[index];
 			if (current_point) {

@@ -17,17 +17,17 @@ class LayerPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new LayerPostParamsConfig();
 export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'layer';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 		this.io.inputs.setCount(2);
 	}
 
-	setupComposer(context: TypedPostNodeContext): void {
+	override setupComposer(context: TypedPostNodeContext): void {
 		const renderer = context.composer.renderer;
 
 		const renderTarget1 = this._createRenderTarget(renderer);
@@ -52,7 +52,7 @@ export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostPara
 		context.composer.addPass(pass);
 	}
 
-	updatePass(pass: LayerPass) {
+	override updatePass(pass: LayerPass) {
 		pass.mode = LAYER_MODES[this.pv.mode];
 	}
 }

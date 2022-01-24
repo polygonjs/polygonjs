@@ -36,14 +36,14 @@ class ConeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ConeSopParamsConfig();
 
 export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'cone';
 	}
 
 	private _core_transform = new CoreTransform();
 
-	cook() {
+	override cook() {
 		const geometry = new ConeBufferGeometry(
 			this.pv.radius,
 			this.pv.height,

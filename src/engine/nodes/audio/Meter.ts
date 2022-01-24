@@ -59,16 +59,16 @@ class MeterAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new MeterAudioParamsConfig();
 
 export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return AudioNodeAnalyserType.METER;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
 		this._resetEffect();

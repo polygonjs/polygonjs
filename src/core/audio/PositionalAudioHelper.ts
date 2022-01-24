@@ -20,7 +20,7 @@ function createOuterAngleMaterial() {
 }
 
 export class CorePositionalAudioHelper extends Line {
-	public readonly type = 'PositionalAudioHelper';
+	public override readonly type = 'PositionalAudioHelper';
 	constructor(
 		private audio: CorePositionalAudio,
 		public range = 1,

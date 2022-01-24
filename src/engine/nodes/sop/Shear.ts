@@ -110,16 +110,16 @@ class ShearSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new ShearSopParamConfig();
 
 export class ShearSopNode extends TypedSopNode<ShearSopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return SopType.SHEAR;
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometries or objects to transform'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		// this.uiData.set_param_label(this.p.applyOn, (v)=>TARGET_TYPES[v])
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(ShearSopOperation.INPUT_CLONED_STATE);
@@ -130,7 +130,7 @@ export class ShearSopNode extends TypedSopNode<ShearSopParamConfig> {
 	}
 
 	private _operation: ShearSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new ShearSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

@@ -40,12 +40,12 @@ class DataSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DataSopParamsConfig();
 
 export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'data';
 	}
 
-	cook() {
+	override cook() {
 		let json = null;
 		try {
 			json = JSON.parse(this.pv.data);

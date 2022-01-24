@@ -14,21 +14,21 @@ class AnimationCopySopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new AnimationCopySopParamsConfig();
 
 export class AnimationCopySopNode extends TypedSopNode<AnimationCopySopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'animationCopy';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to copy animation to', 'geometry to copy animation from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group_target = input_contents[0];
 		const core_group_src = input_contents[1];
 

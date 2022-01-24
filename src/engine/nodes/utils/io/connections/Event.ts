@@ -43,11 +43,11 @@ import {BaseConnectionPoint} from './_Base';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {ParamType} from '../../../../poly/ParamType';
 export class EventConnectionPoint<T extends EventConnectionPointType> extends BaseConnectionPoint {
-	protected _json: EventConnectionPointData<T> | undefined;
+	protected override _json: EventConnectionPointData<T> | undefined;
 
 	constructor(
-		protected _name: string,
-		protected _type: T, // protected _init_value?: ConnectionPointInitValueMapGeneric[T]
+		protected override _name: string,
+		protected override _type: T, // protected _init_value?: ConnectionPointInitValueMapGeneric[T]
 		protected _event_listener?: (event_context: EventContext<any>) => void
 	) {
 		super(_name, _type);
@@ -55,13 +55,13 @@ export class EventConnectionPoint<T extends EventConnectionPointType> extends Ba
 		// this._init_value = null
 		// }
 	}
-	type() {
+	override type() {
 		return this._type;
 	}
 	get param_type() {
 		return ParamType.FLOAT; // should never be used anyway
 	}
-	are_types_matched(src_type: string, dest_type: string): boolean {
+	override are_types_matched(src_type: string, dest_type: string): boolean {
 		if (dest_type == EventConnectionPointType.BASE) {
 			return true;
 		} else {
@@ -78,10 +78,10 @@ export class EventConnectionPoint<T extends EventConnectionPointType> extends Ba
 	// 	return this._init_value;
 	// }
 
-	toJSON(): EventConnectionPointData<T> {
+	override toJSON(): EventConnectionPointData<T> {
 		return (this._json = this._json || this._create_json());
 	}
-	protected _create_json(): EventConnectionPointData<T> {
+	protected override _create_json(): EventConnectionPointData<T> {
 		return {
 			name: this._name,
 			type: this._type,

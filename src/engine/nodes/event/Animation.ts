@@ -47,15 +47,15 @@ class AnimationEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AnimationEventParamsConfig();
 
 export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'animation';
 	}
 
 	private _timelineBuilder: TimelineBuilder | undefined;
 	private _timeline: gsap.core.Timeline | undefined;
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(AnimationEventInput.START, EventConnectionPointType.BASE, this._play.bind(this)),
 			new EventConnectionPoint(AnimationEventInput.STOP, EventConnectionPointType.BASE, this._pause.bind(this)),
@@ -67,7 +67,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		]);
 	}
 
-	processEvent(event_context: EventContext<Event>) {
+	override processEvent(event_context: EventContext<Event>) {
 		// this.dispatchEventToOutput(OUTPUT_NAME, event_context);
 	}
 

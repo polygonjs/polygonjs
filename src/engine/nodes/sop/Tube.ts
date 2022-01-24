@@ -26,13 +26,13 @@ class TubeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TubeSopParamsConfig();
 
 export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'tube';
 	}
 
 	private _operation: TubeSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new TubeSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

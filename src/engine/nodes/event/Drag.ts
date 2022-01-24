@@ -42,21 +42,21 @@ class DragEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DragEventParamsConfig();
 
 export class DragEventNode extends TypedInputEventNode<DragEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'drag';
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_DRAG_EVENT_TYPES.map((n) => `${n}`));
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(
 			ACCEPTED_DRAG_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.DRAG);
 			})
 		);
 	}
-	processEvent(event_context: EventContext<DragEvent>) {
+	override processEvent(event_context: EventContext<DragEvent>) {
 		if (!this.pv.active) {
 			return;
 		}

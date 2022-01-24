@@ -28,7 +28,7 @@ interface MaterialSopParams extends DefaultOperationParams {
 }
 
 export class MaterialSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: MaterialSopParams = {
+	static override readonly DEFAULT_PARAMS: MaterialSopParams = {
 		group: '',
 		assignMat: true,
 		material: new TypedNodePathParamValue(''),
@@ -39,14 +39,14 @@ export class MaterialSopOperation extends BaseSopOperation {
 		texSrc0: 'emissiveMap',
 		texDest0: 'map',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'material'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'material'> {
 		return 'material';
 	}
 
 	private _globals_handler: GlobalsGeometryHandler = new GlobalsGeometryHandler();
 
-	async cook(input_contents: CoreGroup[], params: MaterialSopParams) {
+	override async cook(input_contents: CoreGroup[], params: MaterialSopParams) {
 		const core_group = input_contents[0];
 
 		this._old_mat_by_old_new_id.clear();

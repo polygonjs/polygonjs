@@ -40,22 +40,22 @@ class ScatterSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ScatterSopParamsConfig();
 
 export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'scatter';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to scatter points onto'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	private _operation: ScatterSopOperation | undefined;
-	async cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new ScatterSopOperation(this.scene(), this.states);
 		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);

@@ -24,12 +24,12 @@ class RepeatAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new RepeatAnimParamsConfig();
 
 export class RepeatAnimNode extends TypedAnimNode<RepeatAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'repeat';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
@@ -41,7 +41,7 @@ export class RepeatAnimNode extends TypedAnimNode<RepeatAnimParamsConfig> {
 		};
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
+	override cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		timeline_builder.setRepeatParams(this._repeat_params());

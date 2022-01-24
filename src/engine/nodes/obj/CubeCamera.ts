@@ -98,20 +98,20 @@ export function CubeCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 class CubeCameraObjParamsConfig extends CubeCameraParamConfig(TransformedParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new CubeCameraObjParamsConfig();
 export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return ObjType.CUBE_CAMERA;
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	readonly transformController: TransformController = new TransformController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	override readonly transformController: TransformController = new TransformController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
 	private _excludedObjects: Object3D[] = [];
 	private _cubeCamera: CubeCamera | undefined;
 	private _previousVisibleStateByUuid: Map<string, boolean> = new Map();
 	private _helper = new AxesHelper(1);
 
-	initializeNode() {
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
 		this._updateHelperHierarchy();
@@ -123,13 +123,13 @@ export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsCo
 		this.io.inputs.setCount(0, 1);
 	}
 
-	createObject() {
+	override createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = true;
 		return group;
 	}
 
-	cook() {
+	override cook() {
 		this.transformController.update();
 
 		this._resolveObjects();

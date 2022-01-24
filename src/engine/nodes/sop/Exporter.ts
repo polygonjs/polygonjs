@@ -49,17 +49,17 @@ class ExporterSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ExporterSopParamsConfig();
 
 export class ExporterSopNode extends TypedSopNode<ExporterSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'exporter';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		this.setCoreGroup(input_contents[0]);
 	}
 

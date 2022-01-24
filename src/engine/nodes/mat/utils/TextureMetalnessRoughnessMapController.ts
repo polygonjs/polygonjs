@@ -52,17 +52,17 @@ interface Controllers {
 }
 abstract class TextureMetalnessMapMatNode extends TypedMatNode<CurrentMaterial, TextureMetalnessMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureMetalnessRoughnessMapController extends BaseTextureMapController {
-	constructor(protected node: TextureMetalnessMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureMetalnessMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useMetalnessMap, this.node.p.metalnessMap);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'metalnessMap', this.node.p.useMetalnessMap, this.node.p.metalnessMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
@@ -83,7 +83,7 @@ export class TextureMetalnessRoughnessMapController extends BaseTextureMapContro
 			mat.roughness = this.node.pv.roughness;
 		}
 	}
-	static async update(node: TextureMetalnessMapMatNode) {
+	static override async update(node: TextureMetalnessMapMatNode) {
 		node.controllers.metalnessRoughnessMap.update();
 	}
 }

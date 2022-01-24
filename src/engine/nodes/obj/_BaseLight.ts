@@ -6,16 +6,16 @@ import {FlagsControllerD} from '../utils/FlagsController';
 import {Group} from 'three/src/objects/Group';
 
 export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-	public readonly renderOrder: number = ObjNodeRenderOrder.LIGHT;
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	public override readonly renderOrder: number = ObjNodeRenderOrder.LIGHT;
 	protected _color_with_intensity = new Color(0x00000);
 	protected _light!: L;
 	get light() {
 		return this._light;
 	}
 	protected abstract createLight(): L;
-	protected _used_in_scene: boolean = true;
-	initializeBaseNode() {
+	protected override _used_in_scene: boolean = true;
+	override initializeBaseNode() {
 		super.initializeBaseNode();
 
 		this._light = this.createLight();
@@ -36,7 +36,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 		// }
 	}
 
-	protected set_object_name() {
+	protected override set_object_name() {
 		super.set_object_name();
 		if (this._light) {
 			this._light.name = `${this.path()}:light`;
@@ -52,7 +52,7 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 		}
 	}
 
-	cook() {
+	override cook() {
 		this.updateLightParams();
 		this.updateShadowParams();
 		this.cookController.endCook();

@@ -31,19 +31,19 @@ class SceneObjParamConfig extends SceneMaterialOverrideParamConfig(
 const ParamsConfig = new SceneObjParamConfig();
 
 export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<ObjType.SCENE> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<ObjType.SCENE> {
 		return ObjType.SCENE;
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
 
-	createObject() {
+	override createObject() {
 		const scene = new Scene();
 		scene.matrixAutoUpdate = false;
 		return scene;
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 	}
 
@@ -55,7 +55,7 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 		this as any
 	);
 
-	cook() {
+	override cook() {
 		this.SceneAutoUpdateController.update();
 		this.sceneBackgroundController.update();
 		this.SceneEnvController.update();

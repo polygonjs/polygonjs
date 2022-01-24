@@ -21,13 +21,13 @@ class ColorCopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ColorCopParamsConfig();
 
 export class ColorCopNode extends TypedCopNode<ColorCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'color';
 	}
 	private _dataTexture: DataTexture | undefined;
 
-	cook() {
+	override cook() {
 		const w = this.pv.resolution.x;
 		const h = this.pv.resolution.y;
 		this._dataTexture = this._dataTexture || this._createDataTexture(w, h);

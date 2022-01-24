@@ -3,7 +3,7 @@ import {SceneJsonExporter} from '../Scene';
 import {StringParam} from '../../../../params/String';
 
 export class ParamStringJsonExporter extends ParamJsonExporter<StringParam> {
-	add_main() {
+	override add_main() {
 		// let val = this._param.input_value();
 		let val = this._param.rawInput();
 		// if (CoreType.isString(val)){

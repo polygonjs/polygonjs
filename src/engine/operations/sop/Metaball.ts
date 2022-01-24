@@ -22,7 +22,7 @@ interface MetaballSopParams extends DefaultOperationParams {
 }
 const pos = new Vector3();
 export class MetaballSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: MetaballSopParams = {
+	static override readonly DEFAULT_PARAMS: MetaballSopParams = {
 		resolution: 40,
 		isolation: 30,
 		useMetaStrengthAttrib: false,
@@ -32,11 +32,11 @@ export class MetaballSopOperation extends BaseSopOperation {
 		enableUVs: false,
 		enableColors: false,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'metaball'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'metaball'> {
 		return 'metaball';
 	}
-	cook(inputContents: CoreGroup[], params: MetaballSopParams) {
+	override cook(inputContents: CoreGroup[], params: MetaballSopParams) {
 		const inputCoreGroup = inputContents[0];
 
 		try {

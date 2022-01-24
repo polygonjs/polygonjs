@@ -24,16 +24,16 @@ class InstancesCountSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new InstancesCountSopParamsConfig();
 
 export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'instancesCount';
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const objects = core_group.objectsWithGeo();
 		for (let object of objects) {

@@ -23,14 +23,14 @@ export enum AttribPromoteMode {
 }
 
 export class AttribPromoteSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AttribPromoteSopParams = {
+	static override readonly DEFAULT_PARAMS: AttribPromoteSopParams = {
 		classFrom: AttribClass.VERTEX,
 		classTo: AttribClass.OBJECT,
 		mode: AttribPromoteMode.FIRST_FOUND,
 		name: '',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attribPromote'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'attribPromote'> {
 		return 'attribPromote';
 	}
 
@@ -38,7 +38,7 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 	private _core_object: CoreObject | undefined;
 	private _values_per_attrib_name: PolyDictionary<NumericAttribValue[]> = {};
 	private _filtered_values_per_attrib_name: PolyDictionary<NumericAttribValue | undefined> = {};
-	cook(input_contents: CoreGroup[], params: AttribPromoteSopParams) {
+	override cook(input_contents: CoreGroup[], params: AttribPromoteSopParams) {
 		this._core_group = input_contents[0];
 
 		this._values_per_attrib_name = {};

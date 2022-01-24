@@ -62,16 +62,16 @@ class TransformSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new TransformSopParamConfig();
 
 export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return SopType.TRANSFORM;
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometries or objects to transform'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		// this.uiData.set_param_label(this.p.applyOn, (v)=>TARGET_TYPES[v])
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(TransformSopOperation.INPUT_CLONED_STATE);
@@ -85,7 +85,7 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	}
 
 	private _operation: TransformSopOperation | undefined;
-	cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new TransformSopOperation(this.scene(), this.states);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);

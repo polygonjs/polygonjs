@@ -7,14 +7,14 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {CoreType} from '../../core/Type';
 
 export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<T> {
-	isNumeric() {
+	override isNumeric() {
 		return true;
 	}
-	isDefault(): boolean {
+	override isDefault(): boolean {
 		return this._raw_input == this._default_value;
 	}
 
-	protected _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
+	protected override _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (CoreType.isArray(raw_input)) {
 			return raw_input[0] as ParamInitValuesTypeMap[T];
 		} else {
@@ -22,7 +22,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		}
 	}
 
-	protected processRawInput() {
+	protected override processRawInput() {
 		this.states.error.clear();
 
 		const converted = this.convert(this._raw_input);
@@ -47,7 +47,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 			}
 		}
 	}
-	protected async processComputation(): Promise<void> {
+	protected override async processComputation(): Promise<void> {
 		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
 			const expression_result = await this.expressionController.computeExpression();
 			if (this.expressionController.is_errored()) {

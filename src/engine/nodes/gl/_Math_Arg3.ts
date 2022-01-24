@@ -19,37 +19,37 @@ export function MathFunctionArg3Factory(type: string, options: MathArg3Options =
 	const out_type = options.out_type || GlConnectionPointType.FLOAT;
 	const functions = options.functions || [];
 	return class Node extends BaseNodeGlMathFunctionArg3GlNode {
-		static type() {
+		static override type() {
 			return type;
 		}
-		initializeNode() {
+		override initializeNode() {
 			super.initializeNode();
 			this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
 			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 			this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 		}
-		protected _gl_input_name(index: number): string {
+		protected override _gl_input_name(index: number): string {
 			return gl_input_names[index];
 		}
 		protected _gl_output_name(index: number): string {
 			return gl_output_name;
 		}
-		gl_method_name(): string {
+		override gl_method_name(): string {
 			return gl_method_name;
 		}
-		protected _expected_output_types() {
+		protected override _expected_output_types() {
 			return [out_type];
 		}
-		paramDefaultValue(name: string) {
+		override paramDefaultValue(name: string) {
 			return param_default_values[name];
 		}
-		gl_function_definitions(): FunctionGLDefinition[] {
+		override gl_function_definitions(): FunctionGLDefinition[] {
 			return functions.map((f) => new FunctionGLDefinition(this, f));
 		}
 	};
 }
 export class ClampGlNode extends MathFunctionArg3Factory('clamp', {in: ['value', 'min', 'max'], default: {max: 1}}) {
-	protected _expected_output_types() {
+	protected override _expected_output_types() {
 		return [this._expected_input_types()[0]];
 	}
 }
@@ -58,7 +58,7 @@ export class SmoothstepGlNode extends MathFunctionArg3Factory('smoothstep', {
 	in: ['edge0', 'edge1', 'x'],
 	default: {edge1: 1},
 }) {
-	protected _expected_output_types() {
+	protected override _expected_output_types() {
 		return [this._expected_input_types()[0]];
 	}
 }

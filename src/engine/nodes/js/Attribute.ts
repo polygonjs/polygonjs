@@ -23,8 +23,8 @@ class AttributeJsParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttributeJsParamsConfig();
 
 export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribute';
 	}
 	static readonly INPUT_NAME = 'export';
@@ -32,7 +32,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 
 	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		// this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 		this.lifecycle.onAfterCreated(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
@@ -57,7 +57,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		return AttributeJsNode.OUTPUT_NAME;
 	}
 
-	setLines(lines_controller: LinesController) {
+	override setLines(lines_controller: LinesController) {
 		// if (lines_controller.shader_name) {
 		this.function_node?.assembler_controller.assembler.set_node_lines_attribute(this, lines_controller);
 		// }

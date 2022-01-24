@@ -30,13 +30,13 @@ class TextureParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new TextureParamsConfig();
 export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'texture'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'texture'> {
 		return 'texture';
 	}
 	static readonly OUTPUT_NAME = 'rgba';
 	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
@@ -45,7 +45,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const uv = ThreeToGl.vector2(this.variableForInputParam(this.p.uv));
 
 		const rgba = this.glVarName(TextureGlNode.OUTPUT_NAME);
@@ -55,11 +55,11 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		shaders_collection_controller.addDefinitions(this, [definition]);
 		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
-	paramsGenerating() {
+	override paramsGenerating() {
 		return true;
 	}
 
-	setParamConfigs() {
+	override setParamConfigs() {
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
 		this._param_configs_controller.reset();
 

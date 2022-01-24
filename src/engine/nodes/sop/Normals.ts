@@ -57,20 +57,20 @@ class NormalsSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new NormalsSopParamsConfig();
 
 export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'normals';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to update normals of'];
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
 		if (isBooleanTrue(this.pv.edit)) {

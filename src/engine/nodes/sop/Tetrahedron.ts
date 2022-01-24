@@ -24,12 +24,12 @@ class TetrahedronSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TetrahedronSopParamsConfig();
 
 export class TetrahedronSopNode extends TypedSopNode<TetrahedronSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'tetrahedron';
 	}
 
-	cook() {
+	override cook() {
 		const pointsOnly = this.pv.pointsOnly;
 		const geometry = new TetrahedronBufferGeometry(this.pv.radius, this.pv.detail, pointsOnly);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);

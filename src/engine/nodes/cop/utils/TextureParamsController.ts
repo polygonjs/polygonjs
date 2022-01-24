@@ -279,7 +279,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase, defau
 class TextureParamsConfig extends TextureParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new TextureParamsConfig();
 class TextureCopNode extends TypedCopNode<TextureParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 	public readonly textureParamsController = new TextureParamsController(this);
 }
 

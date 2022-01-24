@@ -14,16 +14,16 @@ class AMSynthAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new AMSynthAudioParamsConfig();
 
 export class AMSynthAudioNode extends TypedAudioNode<AMSynthAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'AMSynth';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const envelopeBuilder = inputContents[0];
 		const envelopeParams = envelopeBuilder.envelopeParams() || ENVELOPE_DEFAULTS;
 

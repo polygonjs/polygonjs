@@ -39,7 +39,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		this._texture_allocations_controller = controller;
 	}
 
-	handle_globals_node(
+	override handle_globals_node(
 		globals_node: GlobalsGlNode,
 		output_name: string,
 		shaders_collection_controller: ShadersCollectionController

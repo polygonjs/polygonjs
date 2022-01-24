@@ -18,22 +18,22 @@ class BVHSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BVHSopParamsConfig();
 
 export class BVHSopNode extends TypedSopNode<BVHSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'BVH';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to create BVH from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(BVHSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: BVHSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new BVHSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

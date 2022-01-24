@@ -14,7 +14,7 @@ const ALL_COMPONENTS = ['x', 'y', 'z', 'w'];
 // const OUTPUT_NAME = 'round'
 
 export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
-	static type() {
+	static override type() {
 		return 'round';
 	}
 
@@ -27,7 +27,7 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	// 	this.add_param(ParamType.FLOAT, 'value', 1);
 	// }
 	// https://hub.jmonkeyengine.org/t/round-with-glsl/8186/6
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		// const function_declaration_lines = []
 
 		// 		function_declaration_lines.push(`highp float round(float num){

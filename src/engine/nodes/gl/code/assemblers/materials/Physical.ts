@@ -19,7 +19,7 @@ function addPolyTransmission(fragment: string) {
 }
 
 export class ShaderAssemblerPhysical extends ShaderAssemblerStandard {
-	constructor(protected _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
 		super(_gl_parent_node);
 
 		this._addFilterFragmentShaderCallback(
@@ -27,10 +27,10 @@ export class ShaderAssemblerPhysical extends ShaderAssemblerStandard {
 			ShaderAssemblerPhysical.filterFragmentShader
 		);
 	}
-	isPhysical() {
+	override isPhysical() {
 		return true;
 	}
-	static filterFragmentShader(fragmentShader: string) {
+	static override filterFragmentShader(fragmentShader: string) {
 		fragmentShader = fragmentShader.replace(
 			'#include <transmission_fragment>',
 			addPolyTransmission(originalTransmissionFragment)

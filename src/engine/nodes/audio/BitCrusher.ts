@@ -29,16 +29,16 @@ class BitCrusherAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new BitCrusherAudioParamsConfig();
 
 export class BitCrusherAudioNode extends TypedAudioNode<BitCrusherAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'bitCrusher';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
 
-	cook(inputContents: AudioBuilder[]) {
+	override cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = inputContents[0];
 
 		// since the .bits property is readonly, we need to re-create it on every cook

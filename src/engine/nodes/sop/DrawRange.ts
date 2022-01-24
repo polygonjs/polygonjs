@@ -30,16 +30,16 @@ class DrawRangeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new DrawRangeSopParamsConfig();
 
 export class DrawRangeSopNode extends TypedSopNode<DrawRangeSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'drawRange';
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const objects = core_group.objects();
 		for (let object of objects) {

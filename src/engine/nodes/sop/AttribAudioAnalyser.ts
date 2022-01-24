@@ -80,18 +80,18 @@ class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new AttribSetAtIndexSopParamsConfig();
 export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribSetAtIndexSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribAudioAnalyser';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	// private _attribIndex: number = 0;
-	cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._initParamsByIndex();
 		this._registerOnTickHook();
 		const coreGroup = inputCoreGroups[0];
@@ -112,7 +112,7 @@ export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribSetAtIndexSop
 
 		this.setCoreGroup(coreGroup);
 	}
-	dispose() {
+	override dispose() {
 		this._unRegisterOnTickHook();
 	}
 

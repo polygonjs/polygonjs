@@ -21,12 +21,12 @@ const ParamsConfig = new MeshBasicMatParamsConfig();
 // TODO: allow to add customDepthMaterial: https://stackoverflow.com/questions/43848330/three-js-shadows-cast-by-partially-transparent-mesh
 // this may need a mat/custom_depth and for the sop/material to select which material property to assign it to on the object3D
 export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'shadow';
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		return new ShadowMaterial({
 			vertexColors: false,
 			side: FrontSide,
@@ -39,14 +39,14 @@ export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatPara
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
 			}
 		});
 	}
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

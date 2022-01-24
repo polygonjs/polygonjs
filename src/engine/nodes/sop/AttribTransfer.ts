@@ -33,8 +33,8 @@ class AttribTransferSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribTransferSopParamsConfig();
 
 export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribTransfer';
 	}
 
@@ -47,16 +47,16 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 	_prev_param_srcGroup: string | undefined;
 	_octree: CoreOctree | undefined;
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to transfer attributes to', 'geometry to transfer attributes from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		this._core_group_dest = input_contents[0];
 		const dest_points = this._core_group_dest.pointsFromGroup(this.pv.destGroup);
 

@@ -14,16 +14,16 @@ class PropertyNameAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PropertyNameAnimParamsConfig();
 
 export class PropertyNameAnimNode extends TypedAnimNode<PropertyNameAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'propertyName';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	cook(inputContents: TimelineBuilder[]) {
+	override cook(inputContents: TimelineBuilder[]) {
 		const timelineBuilder = inputContents[0] || new TimelineBuilder();
 
 		timelineBuilder.setPropertyName(this.pv.name);

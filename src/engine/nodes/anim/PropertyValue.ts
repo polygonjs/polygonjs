@@ -86,16 +86,16 @@ class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PropertyValueAnimParamsConfig();
 
 export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'propertyValue';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	async cook(inputContents: TimelineBuilder[]) {
+	override async cook(inputContents: TimelineBuilder[]) {
 		const timelineBuilder = inputContents[0] || new TimelineBuilder();
 
 		await this._prepareTimelineBuilder(timelineBuilder);

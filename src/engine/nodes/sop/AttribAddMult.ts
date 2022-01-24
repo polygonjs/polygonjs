@@ -25,18 +25,18 @@ class AttribAddMultSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new AttribAddMultSopParamsConfig();
 
 export class AttribAddMultSopNode extends TypedSopNode<AttribAddMultSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'attribAddMult';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(AttribAddMultSopOperation.INPUT_CLONED_STATE);
 	}
 
 	private _operation: AttribAddMultSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new AttribAddMultSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

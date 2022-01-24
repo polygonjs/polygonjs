@@ -4,7 +4,7 @@ import {TypedMultipleParam} from '../../../../params/_Multiple';
 import {ParamType} from '../../../../poly/ParamType';
 
 export class ParamMultipleJsonImporter extends ParamJsonImporter<TypedMultipleParam<ParamType>> {
-	add_main(data: ComplexParamJsonExporterData<ParamType>) {
+	override add_main(data: ComplexParamJsonExporterData<ParamType>) {
 		// const components = data['components'];
 		// if (components) {
 		// 	Object.keys(components).forEach((component_name) => {

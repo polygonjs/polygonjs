@@ -119,19 +119,19 @@ class FileAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FileAudioParamsConfig();
 
 export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'file';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 	}
 
 	private _startedAt: number | undefined;
 	private _stoppedAt: number = 0;
 
-	async cook(inputContents: AudioBuilder[]) {
+	override async cook(inputContents: AudioBuilder[]) {
 		await this._loadUrl();
 		this._updateOnTickHook();
 		if (this._player) {

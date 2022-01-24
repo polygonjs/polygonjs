@@ -81,17 +81,17 @@ interface Controllers {
 }
 abstract class AdvancedCommonMapMatNode extends TypedMatNode<Material, AdvancedCommonParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): Material;
+	abstract override createMaterial(): Material;
 }
 
 export class AdvancedCommonController extends BaseController {
-	constructor(protected node: AdvancedCommonMapMatNode) {
+	constructor(protected override node: AdvancedCommonMapMatNode) {
 		super(node);
 	}
 
 	initializeNode() {}
 
-	async update() {
+	override async update() {
 		const mat = this.node.material;
 		const pv = this.node.pv;
 		this._updateSides(mat, pv);

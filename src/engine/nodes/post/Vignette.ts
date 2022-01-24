@@ -32,18 +32,18 @@ class VignettePostParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new VignettePostParamsConfig();
 
 export class VignettePostNode extends TypedPostProcessNode<ShaderPass, VignettePostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'vignette';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(VignetteShader) as VignettePassWithUniforms;
 		this.updatePass(pass);
 
 		return pass;
 	}
-	updatePass(pass: VignettePassWithUniforms) {
+	override updatePass(pass: VignettePassWithUniforms) {
 		pass.uniforms.offset.value = this.pv.offset;
 		pass.uniforms.darkness.value = this.pv.darkness;
 	}

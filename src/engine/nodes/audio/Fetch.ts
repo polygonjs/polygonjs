@@ -15,16 +15,16 @@ class FetchAudioParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new FetchAudioParamsConfig();
 
 export class FetchAudioNode extends TypedAudioNode<FetchAudioParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'fetch';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0);
 	}
 
-	async cook(inputContents: AudioBuilder[]) {
+	override async cook(inputContents: AudioBuilder[]) {
 		const baseAudioNode = this.pv.audioNode.nodeWithContext(NodeContext.AUDIO);
 		if (!baseAudioNode) {
 			this.states.error.set('no audio node found');

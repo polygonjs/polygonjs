@@ -22,16 +22,16 @@ const EMPTY_DATA_TEXTURE = new DataTexture(data, size, 1, LuminanceFormat, HalfF
  */
 
 export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.COP, K> {
-	public readonly flags: FlagsControllerBO = new FlagsControllerBO(this);
+	public override readonly flags: FlagsControllerBO = new FlagsControllerBO(this);
 
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.COP;
 	}
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
 
-	initializeBaseNode() {
+	override initializeBaseNode() {
 		this.io.outputs.setHasOneOutput();
 	}
 

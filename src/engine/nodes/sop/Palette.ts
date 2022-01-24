@@ -77,14 +77,14 @@ class PaletteSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new PaletteSopParamsConfig();
 
 export class PaletteSopNode extends TypedSopNode<PaletteSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'palette';
 	}
 	public readonly paletteController: PaletteController<NodeContext.SOP> = new PaletteController<NodeContext.SOP>(
 		this
 	);
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(PaletteSopOperation.INPUT_CLONED_STATE);
 
@@ -94,7 +94,7 @@ export class PaletteSopNode extends TypedSopNode<PaletteSopParamsConfig> {
 	}
 
 	private _operation: PaletteSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new PaletteSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);

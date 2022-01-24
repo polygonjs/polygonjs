@@ -26,18 +26,18 @@ class ButtonEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ButtonEventParamsConfig();
 
 export class ButtonEventNode extends TypedEventNode<ButtonEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'button';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(ButtonEventOutput.OUT, EventConnectionPointType.BASE),
 		]);
 	}
 
-	processEvent(event_context: EventContext<Event>) {}
+	override processEvent(event_context: EventContext<Event>) {}
 
 	private process_event_execute(event_context: EventContext<Event>) {
 		this.dispatchEventToOutput(ButtonEventOutput.OUT, event_context);

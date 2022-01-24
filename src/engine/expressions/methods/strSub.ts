@@ -34,7 +34,7 @@ function toInt(arg: any, defaultVal: number) {
 }
 export class StrSubExpression extends BaseMethod {
 	// str_chars_count('bla') => 3
-	static requiredArguments() {
+	static override requiredArguments() {
 		return [
 			['string', 'string to get range from'],
 			['integer', 'range start'],
@@ -47,7 +47,7 @@ export class StrSubExpression extends BaseMethod {
 	// 	// return this.createDependencyFromIndexOrPath(index_or_path)
 	// }
 
-	async processArguments(args: any[]): Promise<string> {
+	override async processArguments(args: any[]): Promise<string> {
 		let value = '';
 		const string = toString(args[0]);
 		const rangeStart = toInt(args[1], 0);

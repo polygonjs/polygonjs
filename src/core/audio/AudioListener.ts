@@ -82,7 +82,7 @@ export class CoreAudioListener extends Object3D {
 		return this.gain.gain.value;
 	}
 
-	updateMatrixWorld(force: boolean) {
+	override updateMatrixWorld(force: boolean) {
 		super.updateMatrixWorld(force);
 
 		const listener = this.context.listener;

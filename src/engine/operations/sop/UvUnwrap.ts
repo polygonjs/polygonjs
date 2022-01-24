@@ -12,15 +12,15 @@ interface UvUnwrapSopParams extends DefaultOperationParams {
 }
 
 export class UvUnwrapSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: UvUnwrapSopParams = {
+	static override readonly DEFAULT_PARAMS: UvUnwrapSopParams = {
 		uv: 'uv',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<SopType.UV_UNWRAP> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<SopType.UV_UNWRAP> {
 		return SopType.UV_UNWRAP;
 	}
 
-	cook(input_contents: CoreGroup[], params: UvUnwrapSopParams) {
+	override cook(input_contents: CoreGroup[], params: UvUnwrapSopParams) {
 		const coreGroup = input_contents[0];
 		const objects = coreGroup.objectsWithGeo();
 		for (let object of objects) {

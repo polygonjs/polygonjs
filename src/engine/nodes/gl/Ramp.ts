@@ -24,12 +24,12 @@ class RampGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new RampGlParamsConfig();
 export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'ramp'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'ramp'> {
 		return 'ramp';
 	}
 	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
@@ -40,7 +40,7 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const tmpTextureGlType = GlConnectionPointType.VEC3;
 		const tmpTexureVarName = this.glVarName('tmpTexureVarName');
 		const gl_type = GlConnectionPointType.FLOAT;
@@ -57,10 +57,10 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		];
 		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
-	paramsGenerating() {
+	override paramsGenerating() {
 		return true;
 	}
-	setParamConfigs() {
+	override setParamConfigs() {
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
 		this._param_configs_controller.reset();
 		const param_config = new GlParamConfig(

@@ -77,18 +77,18 @@ interface AttribCastSopParams extends DefaultOperationParams {
 }
 
 export class AttribCastSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AttribCastSopParams = {
+	static override readonly DEFAULT_PARAMS: AttribCastSopParams = {
 		castAttributes: true,
 		mask: '*',
 		castIndex: false,
 		type: ATTRIB_TYPES.indexOf(AttribType.Float32BufferAttribute),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attribCast'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'attribCast'> {
 		return 'attribCast';
 	}
 
-	cook(input_contents: CoreGroup[], params: AttribCastSopParams) {
+	override cook(input_contents: CoreGroup[], params: AttribCastSopParams) {
 		const core_group = input_contents[0];
 		const objects = core_group.objectsWithGeo();
 		for (let object of objects) {

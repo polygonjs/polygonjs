@@ -15,7 +15,7 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 export class ShaderAssemblerDepth extends ShaderAssemblerMaterial {
 	// _color_declaration() { return 'vec4 diffuseColor' }
 	// _template_shader(){ return ShaderLib.standard }
-	templateShader() {
+	override templateShader() {
 		const template = ShaderLib.depth;
 		return {
 			vertexShader: template.vertexShader, //TemplateVertex,
@@ -23,11 +23,11 @@ export class ShaderAssemblerDepth extends ShaderAssemblerMaterial {
 			uniforms: template.uniforms,
 		};
 	}
-	protected insert_body_after(shader_name: ShaderName) {
+	protected override insert_body_after(shader_name: ShaderName) {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		const template_shader = this.templateShader();
 		return new ShaderMaterial({
 			// vertexColors: VertexColors,

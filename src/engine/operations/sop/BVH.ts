@@ -15,14 +15,14 @@ interface BVHSopParams extends DefaultOperationParams {
 }
 
 export class BVHSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: BVHSopParams = {
+	static override readonly DEFAULT_PARAMS: BVHSopParams = {
 		keepOnlyPosition: false,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.ALWAYS;
-	static type(): Readonly<'BVH'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.ALWAYS;
+	static override type(): Readonly<'BVH'> {
 		return 'BVH';
 	}
-	cook(input_contents: CoreGroup[], params: BVHSopParams) {
+	override cook(input_contents: CoreGroup[], params: BVHSopParams) {
 		const allMeshes: Mesh[] = [];
 		for (let input_core_group of input_contents) {
 			if (input_core_group) {

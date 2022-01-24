@@ -9,11 +9,11 @@ import {BaseGlMathFunctionGlNode} from './_BaseMathFunction';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 
 export class RefractGlNode extends BaseGlMathFunctionGlNode {
-	static type() {
+	static override type() {
 		return 'refract';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function((index: number) => ['I', 'N', 'eta'][index]);
@@ -22,16 +22,16 @@ export class RefractGlNode extends BaseGlMathFunctionGlNode {
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 	}
 
-	gl_method_name(): string {
+	override gl_method_name(): string {
 		return 'refract';
 	}
 
-	protected _expected_input_types() {
+	protected override _expected_input_types() {
 		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
 		return [type, type, GlConnectionPointType.FLOAT];
 	}
 
-	protected _expected_output_types() {
+	protected override _expected_output_types() {
 		const type = this._expected_input_types()[0];
 		return [type];
 	}

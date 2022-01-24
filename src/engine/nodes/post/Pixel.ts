@@ -26,12 +26,12 @@ class PixelPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new PixelPostParamsConfig();
 export class PixelPostNode extends TypedPostProcessNode<ShaderPass, PixelPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'pixel';
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(PixelShader) as PixelPassWithUniforms;
 		pass.uniforms.resolution.value = context.resolution;
 		pass.uniforms.resolution.value.multiplyScalar(window.devicePixelRatio);
@@ -39,7 +39,7 @@ export class PixelPostNode extends TypedPostProcessNode<ShaderPass, PixelPostPar
 
 		return pass;
 	}
-	updatePass(pass: PixelPassWithUniforms) {
+	override updatePass(pass: PixelPassWithUniforms) {
 		pass.uniforms.pixelSize.value = this.pv.pixelSize;
 	}
 }

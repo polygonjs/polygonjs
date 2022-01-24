@@ -88,7 +88,7 @@ export class LayerPass extends Pass {
 		});
 		this.fsQuad = new FullScreenQuad(this.material);
 	}
-	render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget) {
+	override render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget) {
 		this._composer1.render();
 		this._composer2.render();
 

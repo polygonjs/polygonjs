@@ -64,17 +64,17 @@ interface Controllers {
 }
 abstract class TextureEnvMapMatNode extends TypedMatNode<CurrentMaterial, TextureEnvMapParamsConfig> {
 	controllers!: Controllers;
-	abstract createMaterial(): CurrentMaterial;
+	abstract override createMaterial(): CurrentMaterial;
 }
 
 export class TextureEnvMapController extends BaseTextureMapController {
-	constructor(protected node: TextureEnvMapMatNode, _update_options: UpdateOptions) {
+	constructor(protected override node: TextureEnvMapMatNode, _update_options: UpdateOptions) {
 		super(node, _update_options);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useEnvMap, this.node.p.envMap);
 	}
-	async update() {
+	override async update() {
 		this._update(this.node.material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
 		const combine = OperationByName[COMBINE_OPERATIONS[this.node.pv.combine]];
 		if (this._update_options.uniforms) {
@@ -90,7 +90,7 @@ export class TextureEnvMapController extends BaseTextureMapController {
 			mat.refractionRatio = this.node.pv.refractionRatio;
 		}
 	}
-	static async update(node: TextureEnvMapMatNode) {
+	static override async update(node: TextureEnvMapMatNode) {
 		node.controllers.envMap.update();
 	}
 }

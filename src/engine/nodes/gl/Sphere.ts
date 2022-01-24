@@ -22,12 +22,12 @@ class SphereGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SphereGlParamsConfig();
 export class SphereGlNode extends TypedGlNode<SphereGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'sphere';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -35,7 +35,7 @@ export class SphereGlNode extends TypedGlNode<SphereGlParamsConfig> {
 		]);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const position = ThreeToGl.vector2(this.variableForInputParam(this.p.position));
 		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));

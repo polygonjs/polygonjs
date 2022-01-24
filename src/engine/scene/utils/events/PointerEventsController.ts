@@ -14,7 +14,7 @@ export const ACCEPTED_POINTER_EVENT_TYPES: PointerEventType[] = [
 ];
 
 export class PointerEventsController extends BaseSceneEventsController<MouseEvent, PointerEventNode> {
-	protected _requireCanvasEventListeners: boolean = true;
+	protected override _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'pointer';
 	}

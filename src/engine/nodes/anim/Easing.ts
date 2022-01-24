@@ -29,12 +29,12 @@ class EasingAnimParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new EasingAnimParamsConfig();
 
 export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override readonly paramsConfig = ParamsConfig;
+	static override type() {
 		return 'easing';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
 
@@ -48,7 +48,7 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 		return easing_full_name;
 	}
 
-	cook(input_contents: TimelineBuilder[]) {
+	override cook(input_contents: TimelineBuilder[]) {
 		const timeline_builder = input_contents[0] || new TimelineBuilder();
 
 		const easingFullName = EasingAnimNode.easingFullName(this);

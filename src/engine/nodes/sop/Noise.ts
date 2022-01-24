@@ -99,8 +99,8 @@ const position = new Vector3();
 const normal = new Vector3();
 
 export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'noise';
 	}
 
@@ -114,10 +114,10 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	private _currentAttribValueV3 = new Vector3();
 	private _currentAttribValueV4 = new Vector4();
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['geometry to add noise to'];
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE]);
 	}
@@ -126,7 +126,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		this.p.operation.set(OPERATIONS.indexOf(operation));
 	}
 
-	async cook(input_contents: CoreGroup[]) {
+	override async cook(input_contents: CoreGroup[]) {
 		const coreGroup = input_contents[0];
 		const destPoints = coreGroup.points();
 		const destAttribName = this.pv.attribName;

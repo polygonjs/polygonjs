@@ -13,16 +13,16 @@ class SolverPreviousFrameSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SolverPreviousFrameSopParamsConfig();
 
 export class SolverPreviousFrameSopNode extends TypedSopNode<SolverPreviousFrameSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'solverPreviousFrame';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.addGraphInput(this.scene().timeController.graphNode);
 	}
 
-	async cook() {
+	override async cook() {
 		const parent = this.parent();
 		if (parent?.type() != SolverSopNode.type()) {
 			this.states.error.set(`the parent is not a '${SolverSopNode.type()}'`);

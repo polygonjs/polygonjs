@@ -101,9 +101,8 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new DepthOfFieldPostParamsConfig();
 export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, DepthOfFieldPostParamsConfig> {
-	paramsConfig = ParamsConfig;
-
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'depthOfField';
 	}
 
@@ -122,7 +121,7 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		return x * x * (3 - 2 * x);
 	}
 
-	protected _createPass(context: TypedPostNodeContext) {
+	protected override _createPass(context: TypedPostNodeContext) {
 		const camera = context.camera;
 		if ((camera as PerspectiveCamera).isPerspectiveCamera) {
 			const cameraNode = context.camera_node as PerspectiveCameraObjNode;
@@ -168,7 +167,7 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 	private async _updatePassFromCameraNode(pass: BokehPass2, camera: PerspectiveCameraObjNode) {
 		pass.updateCameraUniformsWithNode(this, camera.object);
 	}
-	updatePass(pass: BokehPass2) {
+	override updatePass(pass: BokehPass2) {
 		pass.bokehUniforms['fstop'].value = this.pv.fStep;
 		pass.bokehUniforms['maxblur'].value = this.pv.maxBlur;
 

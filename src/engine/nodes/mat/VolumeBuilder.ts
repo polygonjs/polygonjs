@@ -16,11 +16,11 @@ class VolumeMatParamsConfig extends BaseBuilderParamConfig(VolumeParamConfig(Nod
 const ParamsConfig = new VolumeMatParamsConfig();
 
 export class VolumeBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerVolume, VolumeMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'volumeBuilder';
 	}
-	public usedAssembler(): Readonly<AssemblerName.GL_VOLUME> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_VOLUME> {
 		return AssemblerName.GL_VOLUME;
 	}
 	protected _create_assembler_controller() {
@@ -29,8 +29,8 @@ export class VolumeBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerVol
 
 	private _volume_controller = new VolumeController(this);
 
-	initializeNode() {}
-	async cook() {
+	override initializeNode() {}
+	override async cook() {
 		this._volume_controller.update_uniforms_from_params();
 
 		this.compileIfRequired();

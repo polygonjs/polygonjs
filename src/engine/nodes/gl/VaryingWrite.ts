@@ -32,14 +32,14 @@ class VaryingWriteGlParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new VaryingWriteGlParamsConfig();
 export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'varyingWrite'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'varyingWrite'> {
 		return 'varyingWrite';
 	}
 	static readonly INPUT_NAME = 'vertex';
 
 	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
-	initializeNode() {
+	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.io.connection_points.initializeNode();
@@ -58,7 +58,7 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 		return VaryingWriteGlNode.INPUT_NAME;
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		if (shaders_collection_controller.current_shader_name == ShaderName.VERTEX) {
 			const glType = this.glType();
 			if (!glType) {

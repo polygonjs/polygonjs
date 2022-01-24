@@ -79,22 +79,22 @@ class RivetObjParamConfig extends NodeParamsConfig {
 const ParamsConfig = new RivetObjParamConfig();
 
 export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'rivet'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'rivet'> {
 		return 'rivet';
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 	private _resolvedSopGroup: Group | undefined;
 	private _found_point_post = new Vector3();
 
-	createObject() {
+	override createObject() {
 		const mesh = new Mesh();
 		mesh.matrixAutoUpdate = false;
 		return mesh;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 		// this.io.inputs.add_on_set_input_hook('on_input_updated:update_object_position', () => {
 		// 	this.update_object_position();
@@ -140,7 +140,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		}
 	}
 
-	async cook() {
+	override async cook() {
 		await this._update_resolved_object();
 		this._update_render_hook();
 		// this._update_updateMode();

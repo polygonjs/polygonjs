@@ -45,13 +45,13 @@ class TorusSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TorusSopParamsConfig();
 
 export class TorusSopNode extends TypedSopNode<TorusSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'torus';
 	}
 
 	private _operation: TorusSopOperation | undefined;
-	cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new TorusSopOperation(this.scene(), this.states);
 		const coreGroup = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(coreGroup);

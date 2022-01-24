@@ -249,36 +249,36 @@ export interface GlConnectionPointData<T extends GlConnectionPointType> {
 
 import {BaseConnectionPoint} from './_Base';
 export class GlConnectionPoint<T extends GlConnectionPointType> extends BaseConnectionPoint {
-	protected _json: GlConnectionPointData<T> | undefined;
+	protected override _json: GlConnectionPointData<T> | undefined;
 	// protected _init_value: any;
 
 	constructor(
-		protected _name: string,
-		protected _type: T,
-		protected _init_value?: ConnectionPointInitValueMapGeneric[T]
+		protected override _name: string,
+		protected override _type: T,
+		protected override _init_value?: ConnectionPointInitValueMapGeneric[T]
 	) {
 		super(_name, _type);
 		// if (this._init_value === undefined) {
 		this._init_value = this._init_value || GlConnectionPointInitValueMap[this._type];
 		// }
 	}
-	type() {
+	override type() {
 		return this._type;
 	}
-	are_types_matched(src_type: string, dest_type: string): boolean {
+	override are_types_matched(src_type: string, dest_type: string): boolean {
 		return src_type == dest_type;
 	}
 	get param_type(): IConnectionPointTypeToParamTypeMap[T] {
 		return GlConnectionPointTypeToParamTypeMap[this._type];
 	}
-	get init_value() {
+	override get init_value() {
 		return this._init_value;
 	}
 
-	toJSON(): GlConnectionPointData<T> {
+	override toJSON(): GlConnectionPointData<T> {
 		return (this._json = this._json || this._create_json());
 	}
-	protected _create_json(): GlConnectionPointData<T> {
+	protected override _create_json(): GlConnectionPointData<T> {
 		return {
 			name: this._name,
 			type: this._type,

@@ -3,7 +3,7 @@ import {BaseCoreLogger} from './Base';
 export class TestLogger extends BaseCoreLogger {
 	_lines: any[] = [];
 
-	log(message?: any, ...optionalParams: any[]) {
+	override log(message?: any, ...optionalParams: any[]) {
 		this._lines.push(message);
 		if (optionalParams.length > 1) {
 			this._lines.push(message);

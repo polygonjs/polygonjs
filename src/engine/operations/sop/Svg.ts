@@ -19,18 +19,18 @@ interface SvgSopParams extends DefaultOperationParams {
 
 const DEFAULT_URL = `${ASSETS_ROOT}/models/svg/tiger.svg`;
 export class SvgSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: SvgSopParams = {
+	static override readonly DEFAULT_PARAMS: SvgSopParams = {
 		url: DEFAULT_URL,
 		drawFillShapes: true,
 		fillShapesWireframe: false,
 		drawStrokes: true,
 		strokesWireframe: false,
 	};
-	static type(): Readonly<'svg'> {
+	static override type(): Readonly<'svg'> {
 		return 'svg';
 	}
 
-	cook(input_contents: CoreGroup[], params: SvgSopParams): Promise<CoreGroup> {
+	override cook(input_contents: CoreGroup[], params: SvgSopParams): Promise<CoreGroup> {
 		const loader = new CoreSVGLoader(params.url, this.scene(), this._node);
 
 		return new Promise(async (resolve) => {

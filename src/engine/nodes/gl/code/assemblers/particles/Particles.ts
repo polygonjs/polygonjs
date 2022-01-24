@@ -26,10 +26,10 @@ import {NodeContext} from '../../../../../poly/NodeContext';
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _texture_allocations_controller: TextureAllocationsController | undefined;
 
-	templateShader() {
+	override templateShader() {
 		return undefined;
 	}
-	protected _template_shader_for_shader_name(shader_name: ShaderName) {
+	protected override _template_shader_for_shader_name(shader_name: ShaderName) {
 		return TemplateDefault;
 	}
 	// async get_shaders(){
@@ -37,12 +37,12 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	// 	return this._shaders_by_name
 	// }
 
-	compile() {
+	override compile() {
 		this.setup_shader_names_and_variables();
 		this.update_shaders();
 	}
 
-	root_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
+	override root_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
 		// return this._root_nodes
 		const list = [];
 		for (let node of this._root_nodes) {
@@ -67,7 +67,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		}
 		return list;
 	}
-	leaf_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
+	override leaf_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
 		const list = [];
 		for (let node of this._leaf_nodes) {
 			switch (node.type()) {
@@ -151,7 +151,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	add_output_inputs(output_child: OutputGlNode) {
+	override add_output_inputs(output_child: OutputGlNode) {
 		// output_child.add_param(ParamType.VECTOR3, 'position', [0, 0, 0]);
 		// output_child.add_param(ParamType.VECTOR3, 'velocity', [0, 0, 0]);
 		output_child.io.inputs.setNamedInputConnectionPoints([
@@ -159,7 +159,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			new GlConnectionPoint('velocity', GlConnectionPointType.VEC3),
 		]);
 	}
-	add_globals_outputs(globals_node: GlobalsGlNode) {
+	override add_globals_outputs(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('velocity', GlConnectionPointType.VEC3),
@@ -167,7 +167,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 		]);
 	}
-	allow_attribute_exports() {
+	override allow_attribute_exports() {
 		return true;
 	}
 
@@ -181,14 +181,14 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	// CONFIGS
 	//
 	//
-	create_shader_configs() {
+	override create_shader_configs() {
 		return this._texture_allocations_controller?.createShaderConfigs() || [];
 		// [
 		// 	new ShaderConfig('position', ['position'], []),
 		// 	// new ShaderConfig('fragment', ['color', 'alpha'], ['vertex']),
 		// ]
 	}
-	create_variable_configs() {
+	override create_variable_configs() {
 		return [
 			// new VariableConfig('position', {
 			// 	default: 'vec3( position )',
@@ -196,10 +196,10 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			// }),
 		];
 	}
-	shaderNames(): ShaderName[] {
+	override shaderNames(): ShaderName[] {
 		return this.textureAllocationsController().shaderNames() || [];
 	}
-	input_names_for_shader_name(root_node: BaseGlNodeType, shader_name: ShaderName) {
+	override input_names_for_shader_name(root_node: BaseGlNodeType, shader_name: ShaderName) {
 		return this.textureAllocationsController().inputNamesForShaderName(root_node, shader_name) || [];
 		// return this.shader_config(shader_name).input_names()
 	}
@@ -209,13 +209,13 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	// TEMPLATE HOOKS
 	//
 	//
-	protected insert_define_after(shader_name: ShaderName) {
+	protected override insert_define_after(shader_name: ShaderName) {
 		return '// INSERT DEFINE';
 	}
-	protected insert_body_after(shader_name: ShaderName) {
+	protected override insert_body_after(shader_name: ShaderName) {
 		return '// INSERT BODY';
 	}
-	protected lines_to_remove(shader_name: ShaderName) {
+	protected override lines_to_remove(shader_name: ShaderName) {
 		return ['// INSERT DEFINE', '// INSERT BODY'];
 	}
 
@@ -249,7 +249,10 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		}
 	}
 
-	set_node_lines_output(output_node: BaseGlNodeType, shaders_collection_controller: ShadersCollectionController) {
+	override set_node_lines_output(
+		output_node: BaseGlNodeType,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		const shader_name = shaders_collection_controller.current_shader_name;
 		const input_names = this.textureAllocationsController().inputNamesForShaderName(output_node, shader_name);
 		if (input_names) {
@@ -275,7 +278,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			}
 		}
 	}
-	set_node_lines_attribute(
+	override set_node_lines_attribute(
 		attribute_node: AttributeGlNode,
 		shaders_collection_controller: ShadersCollectionController
 	) {
@@ -326,7 +329,10 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			}
 		}
 	}
-	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {
+	override set_node_lines_globals(
+		globals_node: GlobalsGlNode,
+		shaders_collection_controller: ShadersCollectionController
+	) {
 		for (let output_name of globals_node.io.outputs.used_output_names()) {
 			switch (output_name) {
 				case 'time':

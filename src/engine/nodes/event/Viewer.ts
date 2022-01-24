@@ -16,13 +16,12 @@ class ViewerParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ViewerParamsConfig();
 
 export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
-	paramsConfig = ParamsConfig;
-
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'viewer';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			// class
 			new EventConnectionPoint(

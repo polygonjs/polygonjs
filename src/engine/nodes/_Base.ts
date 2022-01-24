@@ -139,7 +139,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	 * sets the name of a node. Note that if a sibling node already has that name, it will be updated to be unique.
 	 *
 	 */
-	setName(name: string) {
+	override setName(name: string) {
 		this.nameController.setName(name);
 	}
 	_setCoreName(name: string) {
@@ -300,7 +300,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	removeNode(node: BaseNodeType) {
 		this.childrenController?.removeNode(node);
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		this.setParent(null);
 		if (this._nameController) {
@@ -427,5 +427,5 @@ export type BaseNodeType = TypedNode<any, any>;
 export class BaseNodeClass extends TypedNode<any, any> {}
 
 export class BaseNodeClassWithDisplayFlag extends TypedNode<any, any> {
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 }

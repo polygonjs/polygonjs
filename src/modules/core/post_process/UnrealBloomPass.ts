@@ -255,7 +255,7 @@ export class UnrealBloomPass extends Pass {
 		this.renderTargetBright.dispose();
 	}
 
-	setSize(width: number, height: number) {
+	override setSize(width: number, height: number) {
 		let resx = Math.round(width / 2);
 		let resy = Math.round(height / 2);
 
@@ -279,7 +279,7 @@ export class UnrealBloomPass extends Pass {
 		this.materialCopy.blending = this._blending();
 	}
 
-	render(
+	override render(
 		renderer: WebGLRenderer,
 		writeBuffer: WebGLRenderTarget,
 		readBuffer: WebGLRenderTarget,

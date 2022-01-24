@@ -16,21 +16,21 @@ interface DecalSopParams extends DefaultOperationParams {
 }
 
 export class DecalSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: DecalSopParams = {
+	static override readonly DEFAULT_PARAMS: DecalSopParams = {
 		t: new Vector3(0, 0, 0),
 		r: new Vector3(0, 0, 0),
 		s: new Vector3(1, 1, 1),
 		scale: 1,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static type(): Readonly<'decal'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override type(): Readonly<'decal'> {
 		return 'decal';
 	}
 
 	private _r = new Vector3();
 	private _rotation = new Euler(0, 0, 0);
 	private _scale = new Vector3(1, 1, 1);
-	cook(inputContents: CoreGroup[], params: DecalSopParams) {
+	override cook(inputContents: CoreGroup[], params: DecalSopParams) {
 		const inputCoreGroup = inputContents[0];
 
 		this._r.copy(params.r).multiplyScalar(DEG2RAD);

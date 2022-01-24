@@ -12,18 +12,18 @@ interface AttribAddMultSopParams extends DefaultOperationParams {
 }
 
 export class AttribAddMultSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: AttribAddMultSopParams = {
+	static override readonly DEFAULT_PARAMS: AttribAddMultSopParams = {
 		name: '',
 		preAdd: 0,
 		mult: 1,
 		postAdd: 0,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'attribAddMult'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'attribAddMult'> {
 		return 'attribAddMult';
 	}
 
-	cook(input_contents: CoreGroup[], params: AttribAddMultSopParams) {
+	override cook(input_contents: CoreGroup[], params: AttribAddMultSopParams) {
 		const core_group = input_contents[0];
 		const attrib_names = core_group.attribNamesMatchingMask(params.name);
 

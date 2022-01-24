@@ -119,12 +119,12 @@ const DARKNESS = 1;
 const DEFAULT_RENDER_TARGET_RES = new Vector2(256, 256);
 
 export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type(): Readonly<'contactShadow'> {
+	override paramsConfig = ParamsConfig;
+	static override type(): Readonly<'contactShadow'> {
 		return 'contactShadow';
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper: CameraHelper | undefined;
 
 	private _renderTarget = this._createRenderTarget(DEFAULT_RENDER_TARGET_RES);
@@ -147,7 +147,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 	private _includedAncestors: Object3D[] = [];
 	private _excludedObjects: Object3D[] = [];
 
-	createObject() {
+	override createObject() {
 		const group = new Group();
 		this._shadowGroup = new Group();
 		group.add(this._shadowGroup);
@@ -191,8 +191,8 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 
 		return group;
 	}
-	readonly transformController: TransformController = new TransformController(this);
-	initializeNode() {
+	override readonly transformController: TransformController = new TransformController(this);
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
 
@@ -203,7 +203,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 			this._updateHelperVisibility();
 		});
 	}
-	async cook() {
+	override async cook() {
 		this.transformController.update();
 		this._updateRenderHook();
 		this._updateHelperVisibility();

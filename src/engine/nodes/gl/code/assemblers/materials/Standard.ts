@@ -21,7 +21,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	isPhysical() {
 		return false;
 	}
-	constructor(protected _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
 		super(_gl_parent_node);
 
 		this._addFilterFragmentShaderCallback(
@@ -30,7 +30,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 		);
 	}
 
-	templateShader() {
+	override templateShader() {
 		const template = this.isPhysical() ? ShaderLib.physical : ShaderLib.standard;
 		return {
 			vertexShader: template.vertexShader,
@@ -66,7 +66,7 @@ ${sss_injected_fragment}
 		return fragmentShader;
 	}
 
-	createMaterial() {
+	override createMaterial() {
 		const template_shader = this.templateShader();
 
 		const options = {
@@ -91,7 +91,7 @@ ${sss_injected_fragment}
 		return material;
 	}
 
-	add_output_inputs(output_child: OutputGlNode) {
+	override add_output_inputs(output_child: OutputGlNode) {
 		// BaseGlShaderAssembler.add_output_inputs(output_child);
 		const list = BaseGlShaderAssembler.output_input_connection_points();
 		list.push(new GlConnectionPoint('metalness', GlConnectionPointType.FLOAT, 1));
@@ -107,7 +107,7 @@ ${sss_injected_fragment}
 		output_child.io.inputs.setNamedInputConnectionPoints(list);
 	}
 
-	create_shader_configs() {
+	override create_shader_configs() {
 		const fragmentInputNames = ['color', 'alpha', 'metalness', 'roughness', 'emissive', 'SSSModel'];
 		if (this.isPhysical()) {
 			fragmentInputNames.push('transmission');
@@ -119,7 +119,7 @@ ${sss_injected_fragment}
 			new ShaderConfig(ShaderName.FRAGMENT, fragmentInputNames, [ShaderName.VERTEX]),
 		];
 	}
-	create_variable_configs() {
+	override create_variable_configs() {
 		const list = BaseGlShaderAssembler.create_variable_configs();
 		list.push(
 			new VariableConfig('metalness', {

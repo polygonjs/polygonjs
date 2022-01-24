@@ -263,7 +263,7 @@ export class FunctionGenerator extends BaseTraverser {
 
 	// private string_generator: ExpressionStringGenerator = new ExpressionStringGenerator()
 
-	constructor(public param: BaseParamType) {
+	constructor(public override param: BaseParamType) {
 		super(param);
 	}
 
@@ -318,7 +318,7 @@ export class FunctionGenerator extends BaseTraverser {
 		}
 	}
 
-	reset() {
+	override reset() {
 		super.reset();
 		this.function_main_string = undefined;
 		this.methods = [];
@@ -458,14 +458,14 @@ export class FunctionGenerator extends BaseTraverser {
 
 		this.set_error(`unknown method: ${method_name}`);
 	}
-	protected traverse_BinaryExpression(node: jsep.BinaryExpression): string {
+	protected override traverse_BinaryExpression(node: jsep.BinaryExpression): string {
 		// if(node.right.type == 'Identifier'){
 		// 	this.set_error(`cannot have identifier after ${node.operator}`)
 		// 	return ""
 		// }
 		return `(${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)})`;
 	}
-	protected traverse_LogicalExpression(node: jsep.LogicalExpression): string {
+	protected override traverse_LogicalExpression(node: jsep.LogicalExpression): string {
 		// || or &&
 		// if(node.right.type == 'Identifier'){
 		// 	this.set_error(`cannot have identifier after ${node.operator}`)
@@ -473,7 +473,7 @@ export class FunctionGenerator extends BaseTraverser {
 		// }
 		return `(${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)})`;
 	}
-	protected traverse_MemberExpression(node: jsep.MemberExpression): string {
+	protected override traverse_MemberExpression(node: jsep.MemberExpression): string {
 		return `${this.traverse_node(node.object)}.${this.traverse_node(node.property)}`;
 	}
 	protected traverse_UnaryExpression(node: jsep.UnaryExpression): string {
@@ -528,7 +528,7 @@ export class FunctionGenerator extends BaseTraverser {
 		}
 	}
 
-	protected traverse_Literal(node: jsep.Literal): string {
+	protected override traverse_Literal(node: jsep.Literal): string {
 		return `${node.raw}`; // 5 or 'string' (raw will include quotes)
 	}
 

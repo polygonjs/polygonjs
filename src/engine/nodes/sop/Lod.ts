@@ -41,17 +41,17 @@ class LODSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new LODSopParamsConfig();
 
 export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'lod';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['high res', 'mid res', 'low res'];
 	}
 	private _lod = this._create_LOD();
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 3);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
@@ -62,7 +62,7 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 		return lod;
 	}
 
-	cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._clearLOD();
 
 		this._addLevel(inputCoreGroups[0], 0);

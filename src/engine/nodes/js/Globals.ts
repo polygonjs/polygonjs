@@ -6,16 +6,16 @@ class GlobalsJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsJsParamsConfig();
 
 export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'globals';
 	}
 
-	createParams() {
+	override createParams() {
 		this.function_node?.assembler_controller.add_globals_outputs(this);
 	}
 
-	setLines(lines_controller: LinesController) {
+	override setLines(lines_controller: LinesController) {
 		this.function_node?.assembler_controller?.assembler.set_node_lines_globals(this, lines_controller);
 	}
 }

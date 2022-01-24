@@ -14,16 +14,16 @@ interface CameraProjectSopParams extends DefaultOperationParams {
 }
 
 export class CameraProjectSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: CameraProjectSopParams = {
+	static override readonly DEFAULT_PARAMS: CameraProjectSopParams = {
 		camera: new TypedNodePathParamValue(''),
 		unproject: false,
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'cameraProject'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'cameraProject'> {
 		return 'cameraProject';
 	}
 	private _pointPosition = new Vector3();
-	cook(inputCoreGroups: CoreGroup[], params: CameraProjectSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: CameraProjectSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
 		const cameraNode = params.camera.nodeWithContext(NodeContext.OBJ, this.states?.error) as BaseCameraObjNodeType;

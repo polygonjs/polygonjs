@@ -104,14 +104,14 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CameraOrbitEventParamsConfig();
 
 export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<CameraOrbitEventParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return CameraControlsNodeType.ORBIT;
 	}
 	endEventName() {
 		return 'end';
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(OUTPUT_START, EventConnectionPointType.BASE),
 			new EventConnectionPoint(OUTPUT_CHANGE, EventConnectionPointType.BASE),

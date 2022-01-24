@@ -85,11 +85,11 @@ class VideoCopParamsConfig extends FileTypeCheckCopParamConfig(
 const ParamsConfig = new VideoCopParamsConfig();
 
 export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return CopType.VIDEO;
 	}
-	async requiredModules() {
+	override async requiredModules() {
 		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}
@@ -104,14 +104,14 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	// private _data_texture_controller: DataTextureController | undefined;
 	private _texture_loader: CoreLoaderTexture | undefined;
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['optional texture to copy attributes from'];
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
-	async cook(input_contents: Texture[]) {
+	override async cook(input_contents: Texture[]) {
 		if (isBooleanTrue(this.pv.checkFileType) && !isUrlVideo(this.pv.url)) {
 			this.states.error.set('url is not a video');
 		} else {
@@ -138,7 +138,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			}
 		}
 	}
-	dispose() {
+	override dispose() {
 		super.dispose();
 		if (this._video) {
 			this._video.parentElement?.removeChild(this._video);

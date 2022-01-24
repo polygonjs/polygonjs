@@ -16,17 +16,17 @@ class TexturePropertiesCopParamsConfig extends TextureParamConfig(NodeParamsConf
 const ParamsConfig = new TexturePropertiesCopParamsConfig();
 
 export class TexturePropertiesCopNode extends TypedCopNode<TexturePropertiesCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'textureProperties';
 	}
 
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE]);
 	}
-	async cook(input_contents: Texture[]) {
+	override async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
 		this.textureParamsController.update(texture);
 		this.setTexture(texture);

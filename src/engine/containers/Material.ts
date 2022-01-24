@@ -4,7 +4,7 @@ import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';
 
 export class MaterialContainer extends TypedContainer<NodeContext.MAT> {
-	set_content(content: ContainableMap[NodeContext.MAT]) {
+	override set_content(content: ContainableMap[NodeContext.MAT]) {
 		super.set_content(content);
 	}
 	set_material(material: Material) {

@@ -40,7 +40,7 @@ const DEFAULT_PARAMS = {
 // const DEFAULT_UP = new Vector3(0, 0, 1);
 
 export class OceanPlaneSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: OceanPlaneSopParams = {
+	static override readonly DEFAULT_PARAMS: OceanPlaneSopParams = {
 		direction: new Vector3(0, 1, 0),
 		sunDirection: new Vector3(1, 1, 1),
 		sunColor: new Color(1, 1, 1),
@@ -55,13 +55,13 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 		useFog: false,
 	};
 
-	static type(): Readonly<'oceanPlane'> {
+	static override type(): Readonly<'oceanPlane'> {
 		return 'oceanPlane';
 	}
 
 	private _transformResetOptions: TransformResetSopOperation | undefined;
 	protected _coreTransform = new CoreTransform();
-	async cook(inputCoreGroups: CoreGroup[], params: OceanPlaneSopParams) {
+	override async cook(inputCoreGroups: CoreGroup[], params: OceanPlaneSopParams) {
 		this._transformResetOptions = this._transformResetOptions || new TransformResetSopOperation(this._scene);
 		const transformResetMode = TRANSFORM_RESET_MODES.indexOf(TransformResetMode.PROMOTE_GEO_TO_OBJECT);
 		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});

@@ -303,9 +303,9 @@ class RaycastParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new RaycastParamsConfig();
 
 export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
-	paramsConfig = ParamsConfig;
+	override paramsConfig = ParamsConfig;
 
-	static type() {
+	static override type() {
 		return 'raycast';
 	}
 	static readonly INPUT_TRIGGER = 'trigger';
@@ -318,7 +318,7 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 	public readonly cpuController: RaycastCPUController = new RaycastCPUController(this);
 	public readonly gpuController: RaycastGPUController = new RaycastGPUController(this);
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new EventConnectionPoint(
 				RaycastEventNode.INPUT_TRIGGER,

@@ -42,11 +42,11 @@ class ImageCopParamsConfig extends FileTypeCheckCopParamConfig(
 const ParamsConfig = new ImageCopParamsConfig();
 
 export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'image';
 	}
-	async requiredModules() {
+	override async requiredModules() {
 		if (this.p.url.isDirty()) {
 			await this.p.url.compute();
 		}
@@ -56,15 +56,15 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['optional texture to copy attributes from'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
-	async cook(input_contents: Texture[]) {
+	override async cook(input_contents: Texture[]) {
 		if (isBooleanTrue(this.pv.checkFileType) && !isUrlStaticImage(this.pv.url)) {
 			this.states.error.set('url is not an image');
 		} else {

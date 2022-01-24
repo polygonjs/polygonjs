@@ -10,17 +10,17 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 
 const ParamsConfig = new NodeParamsConfig();
 export class NullCopNode extends TypedCopNode<NodeParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'null';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	async cook(input_contents: Texture[]) {
+	override async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
 		this.setTexture(texture);
 	}

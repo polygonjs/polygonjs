@@ -34,16 +34,16 @@ class TransformResetSopParamConfig extends NodeParamsConfig {
 const ParamsConfig = new TransformResetSopParamConfig();
 
 export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'transformReset';
 	}
 
-	static displayedInputNames(): string[] {
+	static override displayedInputNames(): string[] {
 		return ['objects to reset transform', 'optional reference for center'];
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState(TransformResetSopOperation.INPUT_CLONED_STATE);
 	}
@@ -53,7 +53,7 @@ export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamCo
 	}
 
 	private _operation: TransformResetSopOperation | undefined;
-	cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new TransformResetSopOperation(this.scene(), this.states);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);

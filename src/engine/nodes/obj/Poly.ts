@@ -27,34 +27,36 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 	const ParamsConfig = new PolyObjParamConfig();
 
 	class BasePolyObjNode extends TypedObjNode<Group, PolyObjParamConfig> {
-		paramsConfig = ParamsConfig;
-		static type() {
+		override paramsConfig = ParamsConfig;
+		static override type() {
 			return node_type;
 		}
-		readonly hierarchyController: HierarchyController = new HierarchyController(this);
-		public readonly flags: FlagsControllerD = new FlagsControllerD(this);
-		createObject() {
+		override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+		public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
+		override createObject() {
 			const group = new Group();
 			group.matrixAutoUpdate = false;
 			return group;
 		}
 
 		// display_node and children_display controllers
-		public readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
-		public readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
+		public override readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(
+			this
+		);
+		public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 			this,
 			this.childrenDisplayController.displayNodeControllerCallbacks()
 		);
 		//
 
-		protected _childrenControllerContext = NodeContext.SOP;
+		protected override _childrenControllerContext = NodeContext.SOP;
 
-		initializeNode() {
+		override initializeNode() {
 			this.hierarchyController.initializeNode();
 			this.childrenDisplayController.initializeNode();
 		}
 
-		isDisplayNodeCooking(): boolean {
+		override isDisplayNodeCooking(): boolean {
 			if (this.flags.display.active()) {
 				const display_node = this.displayNodeController.displayNode();
 				return display_node ? display_node.isDirty() : false;
@@ -63,18 +65,24 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 			}
 		}
 
-		createNode<S extends keyof GeoNodeChildrenMap>(
+		override createNode<S extends keyof GeoNodeChildrenMap>(
 			node_class: S,
 			options?: NodeCreateOptions
 		): GeoNodeChildrenMap[S];
-		createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K;
-		createNode<K extends valueof<GeoNodeChildrenMap>>(node_class: Constructor<K>, options?: NodeCreateOptions): K {
+		override createNode<K extends valueof<GeoNodeChildrenMap>>(
+			node_class: Constructor<K>,
+			options?: NodeCreateOptions
+		): K;
+		override createNode<K extends valueof<GeoNodeChildrenMap>>(
+			node_class: Constructor<K>,
+			options?: NodeCreateOptions
+		): K {
 			return super.createNode(node_class, options) as K;
 		}
-		children() {
+		override children() {
 			return super.children() as BaseSopNodeType[];
 		}
-		nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
+		override nodesByType<K extends keyof GeoNodeChildrenMap>(type: K): GeoNodeChildrenMap[K][] {
 			return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 		}
 
@@ -83,7 +91,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		// COOK
 		//
 		//
-		cook() {
+		override cook() {
 			this.object.visible = isBooleanTrue(this.pv.display);
 			this.cookController.endCook();
 		}
@@ -93,7 +101,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 		// POLY
 		//
 		//
-		public readonly polyNodeController: PolyNodeController = new PolyNodeController(this, definition);
+		public override readonly polyNodeController: PolyNodeController = new PolyNodeController(this, definition);
 
 		//
 		//

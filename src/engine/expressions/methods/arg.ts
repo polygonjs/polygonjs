@@ -19,15 +19,15 @@
 import {BaseMethod} from './_Base';
 
 export class ArgExpression extends BaseMethod {
-	protected _requireDependency = true;
-	static requiredArguments() {
+	protected override _requireDependency = true;
+	static override requiredArguments() {
 		return [
 			['string', 'arguments list'],
 			['number', 'index'],
 		];
 	}
 
-	processArguments(args: any[]): Promise<any> {
+	override processArguments(args: any[]): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (args.length == 2) {
 				const argumentsList = args[0];

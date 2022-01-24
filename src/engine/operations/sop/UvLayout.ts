@@ -14,18 +14,18 @@ interface UvLayoutSopParams extends DefaultOperationParams {
 }
 
 export class UvLayoutSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: UvLayoutSopParams = {
+	static override readonly DEFAULT_PARAMS: UvLayoutSopParams = {
 		res: 1024,
 		padding: 3,
 		uv: 'uv',
 		uv2: 'uv2',
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<SopType.UV_LAYOUT> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<SopType.UV_LAYOUT> {
 		return SopType.UV_LAYOUT;
 	}
 
-	cook(input_contents: CoreGroup[], params: UvLayoutSopParams) {
+	override cook(input_contents: CoreGroup[], params: UvLayoutSopParams) {
 		const coreGroup = input_contents[0];
 		const objects = coreGroup.objectsWithGeo();
 		const meshes: Mesh[] = [];

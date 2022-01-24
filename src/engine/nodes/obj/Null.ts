@@ -16,21 +16,21 @@ class NullObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new NullObjParamConfig();
 
 export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'null';
 	}
-	readonly hierarchyController: HierarchyController = new HierarchyController(this);
-	readonly transformController: TransformController = new TransformController(this);
-	public readonly flags: FlagsControllerD = new FlagsControllerD(this);
+	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
+	override readonly transformController: TransformController = new TransformController(this);
+	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	private _helper = new AxesHelper(1);
 
-	createObject() {
+	override createObject() {
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 		return group;
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.hierarchyController.initializeNode();
 		this.transformController.initializeNode();
 		this._updateHelperHierarchy();
@@ -48,7 +48,7 @@ export class NullObjNode extends TypedObjNode<Group, NullObjParamConfig> {
 		}
 	}
 
-	cook() {
+	override cook() {
 		this.transformController.update();
 		this.cookController.endCook();
 	}

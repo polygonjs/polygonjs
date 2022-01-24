@@ -16,7 +16,7 @@ interface TorusKnotSopParams extends DefaultOperationParams {
 }
 
 export class TorusKnotSopOperation extends BaseSopOperation {
-	static readonly DEFAULT_PARAMS: TorusKnotSopParams = {
+	static override readonly DEFAULT_PARAMS: TorusKnotSopParams = {
 		radius: 1,
 		radiusTube: 1,
 		segmentsRadial: 64,
@@ -25,12 +25,12 @@ export class TorusKnotSopOperation extends BaseSopOperation {
 		q: 3,
 		center: new Vector3(0, 0, 0),
 	};
-	static readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static type(): Readonly<'torusKnot'> {
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override type(): Readonly<'torusKnot'> {
 		return 'torusKnot';
 	}
 
-	cook(input_contents: CoreGroup[], params: TorusKnotSopParams) {
+	override cook(input_contents: CoreGroup[], params: TorusKnotSopParams) {
 		const radius = params.radius;
 		const radiusTube = params.radiusTube;
 		const segmentsRadial = params.segmentsRadial;

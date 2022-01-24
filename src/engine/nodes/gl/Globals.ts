@@ -20,12 +20,12 @@ class GlobalsGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsGlParamsConfig();
 
 export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'globals';
 	}
 
-	initializeNode() {
+	override initializeNode() {
 		super.initializeNode();
 
 		this.lifecycle.onAfterAdded(() => {
@@ -33,7 +33,7 @@ export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 		});
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		// if (lines_controller.shader_name) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
 		assembler.set_node_lines_globals(this, shaders_collection_controller);

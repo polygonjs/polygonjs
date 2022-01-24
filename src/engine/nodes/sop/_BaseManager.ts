@@ -4,13 +4,13 @@ import {TypedNode} from '../_Base';
 
 class ParamLessNetworkSopParamsConfig extends NodeParamsConfig {}
 export class BaseNetworkSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
-	static context(): NodeContext {
+	static override context(): NodeContext {
 		return NodeContext.SOP;
 	}
 	// initializeBaseNode() {
 	// 	this.children_controller?.init({dependent: false});
 	// }
-	cook() {
+	override cook() {
 		this.cookController.endCook();
 	}
 }

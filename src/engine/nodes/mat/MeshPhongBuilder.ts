@@ -89,11 +89,11 @@ class MeshPhongMatParamsConfig extends PCSSParamConfig(
 const ParamsConfig = new MeshPhongMatParamsConfig();
 
 export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPhong, MeshPhongMatParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'meshPhongBuilder';
 	}
-	public usedAssembler(): Readonly<AssemblerName.GL_MESH_PHONG> {
+	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_PHONG> {
 		return AssemblerName.GL_MESH_PHONG;
 	}
 	protected _create_assembler_controller() {
@@ -114,7 +114,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
-	initializeNode() {
+	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
@@ -122,7 +122,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 		});
 	}
 
-	async cook() {
+	override async cook() {
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}

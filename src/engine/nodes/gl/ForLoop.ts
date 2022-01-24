@@ -39,21 +39,21 @@ class ForLoopGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new ForLoopGlParamsConfig();
 
 export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
-	paramsConfig = ParamsConfig;
-	static type() {
+	override paramsConfig = ParamsConfig;
+	static override type() {
 		return 'forLoop';
 	}
 
-	paramDefaultValue(name: string) {
+	override paramDefaultValue(name: string) {
 		return DEFAULT_VALUES[name];
 	}
 
-	protected _expected_inputs_count() {
+	protected override _expected_inputs_count() {
 		const current_connections = this.io.connections.inputConnections();
 		return current_connections ? ArrayUtils.compact(current_connections).length + 1 : 1;
 	}
 
-	protected _expected_input_types(): GlConnectionPointType[] {
+	protected override _expected_input_types(): GlConnectionPointType[] {
 		const types: GlConnectionPointType[] = [
 			// GlConnectionPointType.FLOAT,
 			// GlConnectionPointType.FLOAT,
@@ -80,7 +80,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		return types;
 	}
 
-	protected _expected_output_types() {
+	protected override _expected_output_types() {
 		const types: GlConnectionPointType[] = [];
 		const input_types = this._expected_input_types();
 		for (let i = OFFSET; i < input_types.length; i++) {
@@ -88,7 +88,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		}
 		return types;
 	}
-	protected _expected_input_name(index: number) {
+	protected override _expected_input_name(index: number) {
 		// switch (index) {
 		// 	case 0:
 		// 		return ForLoopInput.START_INDEX;
@@ -107,7 +107,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		// }
 		// }
 	}
-	protected _expected_output_name(index: number) {
+	protected override _expected_output_name(index: number) {
 		return this._expected_input_name(index + OFFSET);
 	}
 	//
@@ -115,16 +115,16 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 	// defines the outputs for the child subnet input
 	//
 	//
-	child_expected_input_connection_point_types() {
+	override child_expected_input_connection_point_types() {
 		return this._expected_input_types();
 	}
-	child_expected_input_connection_point_name(index: number) {
+	override child_expected_input_connection_point_name(index: number) {
 		return this._expected_input_name(index);
 	}
-	child_expected_output_connection_point_types() {
+	override child_expected_output_connection_point_types() {
 		return this._expected_output_types();
 	}
-	child_expected_output_connection_point_name(index: number) {
+	override child_expected_output_connection_point_name(index: number) {
 		return this._expected_output_name(index);
 	}
 
@@ -133,7 +133,10 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 	// set_lines
 	//
 	//
-	set_lines_block_start(shaders_collection_controller: ShadersCollectionController, child_node: SubnetInputGlNode) {
+	override set_lines_block_start(
+		shaders_collection_controller: ShadersCollectionController,
+		child_node: SubnetInputGlNode
+	) {
 		const body_lines: string[] = [];
 		const connection_points = this.io.inputs.namedInputConnectionPoints();
 		for (let i = OFFSET; i < connection_points.length; i++) {
@@ -192,5 +195,5 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		shaders_collection_controller.addBodyLines(child_node, body_lines);
 	}
 
-	setLines(shaders_collection_controller: ShadersCollectionController) {}
+	override setLines(shaders_collection_controller: ShadersCollectionController) {}
 }
