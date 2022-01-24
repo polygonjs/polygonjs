@@ -18,19 +18,18 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		return 'directionalLight';
 	}
 	override cook(input_contents: CoreGroup[], params: DirectionalLightParams) {
+		const group = new Group();
 		const light = this.createLight();
+		group.add(light);
+		group.add(light.target);
 
 		this.updateLightParams(light, params);
 		this.updateShadowParams(light, params);
 
 		if (isBooleanTrue(params.showHelper)) {
-			const group = new Group();
-			group.add(light);
 			group.add(this._createHelper(light, params));
-			return this.createCoreGroupFromObjects([group]);
-		} else {
-			return this.createCoreGroupFromObjects([light]);
 		}
+		return this.createCoreGroupFromObjects([group]);
 	}
 
 	private _helper: CoreDirectionalLightHelper | undefined;
@@ -49,6 +48,8 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		light.shadow.mapSize.x = 1024;
 		light.shadow.mapSize.y = 1024;
 		light.shadow.camera.near = 0.1;
+
+		light.target.name = 'DirectionalLight Default Target';
 
 		// light.add(light.target);
 		// light.target.position.z = -1;

@@ -85,9 +85,15 @@ interface Options {
 	light: DirectionalLight;
 }
 
+class CoreCameraHelper extends CameraHelper {
+	override clone(recursive?: boolean): this {
+		return new CameraHelper(this.camera).copy(this, recursive) as this;
+	}
+}
+
 export class CoreDirectionalLightHelper {
 	private _line_material = new LineBasicMaterial({fog: false});
-	private _cameraHelper!: CameraHelper;
+	private _cameraHelper!: CoreCameraHelper;
 	private _square = new Line();
 	createObject() {
 		return new Mesh();
@@ -118,7 +124,7 @@ export class CoreDirectionalLightHelper {
 
 		object.add(this._square);
 
-		this._cameraHelper = new CameraHelper(light.shadow.camera);
+		this._cameraHelper = new CoreCameraHelper(light.shadow.camera);
 		this._cameraHelper.rotateX(-Math.PI * 0.5);
 		this._cameraHelper.updateMatrix();
 		this._cameraHelper.matrixAutoUpdate = false;

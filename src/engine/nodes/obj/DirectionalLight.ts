@@ -6,7 +6,6 @@
 import {DirectionalLight} from 'three/src/lights/DirectionalLight';
 import {DirectionalLightHelper} from './utils/helpers/DirectionalLightHelper';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {Object3D} from 'three/src/core/Object3D';
 import {Mesh} from 'three/src/objects/Mesh';
 import {HelperController, HelperConstructor} from './utils/HelperController';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
@@ -26,7 +25,6 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 	static override type() {
 		return LightType.DIRECTIONAL;
 	}
-	private _lightTarget!: Object3D;
 	private _helperController = new HelperController<Mesh, DirectionalLight>(
 		this,
 		(<unknown>DirectionalLightHelper) as HelperConstructor<Mesh, DirectionalLight>,
@@ -46,9 +44,7 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 	override createLight() {
 		const light = this._operation().createLight();
 
-		this._lightTarget = light.target;
-		this._lightTarget.name = 'DirectionalLight Default Target';
-		this.object.add(this._lightTarget);
+		this.object.add(light.target);
 
 		return light;
 	}
