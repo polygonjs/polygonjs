@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -8,6 +7,7 @@ import {MapUtils} from '../../../core/MapUtils';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum Axis {
 	X = 'x',

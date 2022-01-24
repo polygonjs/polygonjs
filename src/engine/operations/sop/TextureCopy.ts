@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Texture} from 'three/src/textures/Texture';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {CoreType} from '../../../core/Type';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface TextureCopySopParams extends DefaultOperationParams {
 	textureName: string;
 }

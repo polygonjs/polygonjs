@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
 import {Group} from 'three/src/objects/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface HierarchySopParams extends DefaultOperationParams {
 	mode: number;

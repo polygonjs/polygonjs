@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Color} from 'three/src/math/Color';
 import {Vector3} from 'three/src/math/Vector3';
@@ -10,6 +9,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {Water, WaterOptions} from '../../../modules/core/objects/Water';
 import {TransformResetMode, TransformResetSopOperation, TRANSFORM_RESET_MODES} from './TransformReset';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface OceanPlaneSopParams extends DefaultOperationParams {
 	direction: Vector3;
 	sunDirection: Vector3;

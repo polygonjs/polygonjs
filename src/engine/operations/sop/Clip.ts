@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {Plane} from 'three/src/math/Plane';
@@ -12,6 +11,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
 import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface ClipSopParams extends DefaultOperationParams {
 	origin: Vector3;

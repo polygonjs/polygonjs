@@ -4,12 +4,12 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Object3D} from 'three/src/core/Object3D';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {DefaultOperationParams} from '../_Base';
 
 import {TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {degToRad} from 'three/src/math/MathUtils';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 const AXIS_VERTICAL = new Vector3(0, 1, 0);
 const AXIS_HORIZONTAL = new Vector3(-1, 0, 0);

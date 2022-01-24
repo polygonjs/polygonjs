@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CSG} from './utils/Boolean/csg';
@@ -7,6 +6,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {TypeAssert} from '../../poly/Assert';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreType} from '../../../core/Type';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum BooleanOperation {
 	INTERSECT = 'intersect',

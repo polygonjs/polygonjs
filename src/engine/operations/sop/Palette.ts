@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Color} from 'three/src/math/Color';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface PaletteSopParams extends DefaultOperationParams {
 	palette: number;

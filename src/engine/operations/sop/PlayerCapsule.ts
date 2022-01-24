@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {createPlayerGeometry} from '../../../core/player/PlayerGeometry';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface PlayerCapsuleSopParams extends DefaultOperationParams {
 	radius: number;

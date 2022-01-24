@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {GridHelper} from 'three/src/helpers/GridHelper';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Color} from 'three/src/math/Color';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface PlaneHelperSopParams extends DefaultOperationParams {
 	size: number;

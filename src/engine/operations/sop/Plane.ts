@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
@@ -7,6 +6,7 @@ import {CoreTransform} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface PlaneSopParams extends DefaultOperationParams {
 	size: Vector2;

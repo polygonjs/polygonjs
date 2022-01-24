@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
@@ -11,6 +10,7 @@ import {LinearEncoding, UVMapping, RepeatWrapping} from 'three/src/constants';
 
 import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface TexturePropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
 	// encoding

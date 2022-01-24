@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
 import {Material} from 'three/src/materials/Material';
@@ -11,6 +10,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface MergeSopParams extends DefaultOperationParams {
 	compact: boolean;

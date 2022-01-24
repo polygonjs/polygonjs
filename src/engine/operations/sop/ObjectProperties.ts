@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three/src/core/Object3D';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface ObjectPropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;

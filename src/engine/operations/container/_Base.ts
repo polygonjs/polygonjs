@@ -6,10 +6,11 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
-import {BaseOperation, DefaultOperationParams, DefaultOperationParam} from '../_Base';
+import {BaseOperation} from '../_Base';
 import {InputsController} from './utils/InputsController';
 import {CoreType} from '../../../core/Type';
 import {NodeContext} from '../../poly/NodeContext';
+import {DefaultOperationParam, DefaultOperationParams} from '../../../core/operations/_Base';
 
 export class BaseOperationContainer<NC extends NodeContext> {
 	protected params: DefaultOperationParams = {};

@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {
@@ -18,6 +17,7 @@ import {
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum AttribType {
 	Float64BufferAttribute = 'Float64BufferAttribute',

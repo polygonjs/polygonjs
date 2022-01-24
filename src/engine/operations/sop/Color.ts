@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Color} from 'three/src/math/Color';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface ColorSopParams extends DefaultOperationParams {
 	fromAttribute: boolean;

@@ -1,8 +1,8 @@
 import {BaseSopOperation} from './_Base';
 import {ConvertExportParamDataParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {DefaultOperationParams} from '../_Base';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface NullSopParams extends DefaultOperationParams {}
 

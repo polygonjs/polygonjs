@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface RestAttributesSopParams extends DefaultOperationParams {
 	tposition: boolean;
 	position: string;

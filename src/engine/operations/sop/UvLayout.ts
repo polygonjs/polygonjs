@@ -1,10 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {DefaultOperationParams} from '../_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Potpack, PotPackBox, PotPackBoxResult} from '../../../core/libs/Potpack';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface UvLayoutSopParams extends DefaultOperationParams {
 	res: number;

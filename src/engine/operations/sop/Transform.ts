@@ -3,7 +3,6 @@ import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {Object3D} from 'three/src/core/Object3D';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {DefaultOperationParams} from '../_Base';
 
 import {
 	CoreTransform,
@@ -14,6 +13,7 @@ import {
 } from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DEG2RAD} from 'three/src/math/MathUtils';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum TransformObjectMode {
 	SET_PARAMS = 'set params',

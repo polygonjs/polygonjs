@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
@@ -14,6 +13,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {CoreObject} from '../../../core/geometry/Object';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;

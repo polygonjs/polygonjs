@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {AttribClass} from '../../../core/geometry/Constant';
@@ -9,6 +8,7 @@ import {CoreString} from '../../../core/String';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {NumericAttribValue, PolyDictionary} from '../../../types/GlobalTypes';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface AttribPromoteSopParams extends DefaultOperationParams {
 	classFrom: number;
 	classTo: number;

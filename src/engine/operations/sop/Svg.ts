@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Object3D} from 'three/src/core/Object3D';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {CoreSVGLoader} from '../../../core/loader/SVG';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface SvgSopParams extends DefaultOperationParams {
 	url: string;

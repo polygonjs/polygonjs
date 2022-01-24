@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -9,6 +8,7 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {Triangle} from 'three/src/math/Triangle';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface TorusSopParams extends DefaultOperationParams {
 	radius: number;

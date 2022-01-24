@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Color} from 'three/src/math/Color';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -7,6 +6,7 @@ import {Reflector} from '../../../modules/core/objects/Reflector';
 import {Poly} from '../../Poly';
 import {Vector3} from 'three/src/math/Vector3';
 import {TransformResetSopOperation, TRANSFORM_RESET_MODES, TransformResetMode} from './TransformReset';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface ReflectorSopParams extends DefaultOperationParams {
 	direction: Vector3;
 	active: boolean;

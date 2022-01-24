@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreTransform} from '../../../core/Transform';
 import {CylinderBufferGeometry} from 'three/src/geometries/CylinderGeometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/Type';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 const DEFAULT_UP = new Vector3(0, 1, 0);
 

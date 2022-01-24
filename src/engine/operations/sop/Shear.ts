@@ -1,7 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
-import {DefaultOperationParams} from '../_Base';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Object3D} from 'three/src/core/Object3D';
@@ -10,6 +9,7 @@ import {TypeAssert} from '../../poly/Assert';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {Plane} from 'three/src/math/Plane';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum ShearMode {
 	MATRIX = 'matrix',

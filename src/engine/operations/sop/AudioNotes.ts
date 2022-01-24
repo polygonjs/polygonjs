@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
@@ -8,6 +7,7 @@ import {NotesBuilder, NoteHolder} from '../../../core/audio/NotesBuilder';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {CoreEntity} from '../../../core/geometry/Entity';
 import {isBooleanTrue} from '../../../core/Type';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 enum OutOfRangeBehavior {
 	RESTART = 'restart',

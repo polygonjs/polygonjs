@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TorusKnotBufferGeometry} from 'three/src/geometries/TorusKnotGeometry';
 import {Vector3} from 'three/src/math/Vector3';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface TorusKnotSopParams extends DefaultOperationParams {
 	radius: number;

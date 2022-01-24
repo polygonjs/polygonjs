@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -8,6 +7,7 @@ import {CoreLoaderGeometry, GeometryFormat} from '../../../core/loader/Geometry'
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {PolyScene} from '../../scene/PolyScene';
 import {BaseNodeType} from '../../nodes/_Base';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface FileSopParams extends DefaultOperationParams {
 	url: string;

@@ -1,24 +1,20 @@
 import {NodeContext} from '../../engine/poly/NodeContext';
 import {ParamType} from '../../engine/poly/ParamType';
-import {ParamValuesTypeMap} from '../../engine/params/types/ParamValuesTypeMap';
 import {StatesController} from '../../engine/nodes/utils/StatesController';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {InputCloneMode} from '../../engine/poly/InputCloneMode';
-import {PolyDictionary} from '../../types/GlobalTypes';
 import {BaseNodeType} from '../nodes/_Base';
 import {CoreType} from '../../core/Type';
 import {TypedNodePathParamValue, TypedParamPathParamValue} from '../../core/Walker';
 import {Vector3} from 'three/src/math/Vector3';
 import {SimpleParamJsonExporterData} from '../nodes/utils/io/IOController';
+import {DefaultOperationParams} from '../../core/operations/_Base';
 
 export interface ConvertExportParamDataParams {
 	paramName: string;
 	paramData: SimpleParamJsonExporterData<ParamType>;
 	params: DefaultOperationParams;
 }
-
-export type DefaultOperationParam<T extends ParamType> = ParamValuesTypeMap[T];
-export type DefaultOperationParams = PolyDictionary<DefaultOperationParam<ParamType>>;
 
 export const OPERATIONS_COMPOSER_NODE_TYPE: Readonly<string> = 'operationsComposer';
 

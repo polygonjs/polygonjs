@@ -1,6 +1,5 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {DefaultOperationParams} from '../_Base';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {ObjectType} from '../../../core/geometry/Constant';
@@ -12,6 +11,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {MeshSurfaceSampler} from '../../../modules/core/math/MeshSurfaceSampler';
 import {CoreMath} from '../../../core/math/_Module';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface ScatterSopParams extends DefaultOperationParams {
 	pointsCount: number;

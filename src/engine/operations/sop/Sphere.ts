@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SphereBufferGeometry} from 'three/src/geometries/SphereGeometry';
 import {IcosahedronBufferGeometry} from 'three/src/geometries/IcosahedronGeometry';
@@ -7,6 +6,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface SphereSopParams extends DefaultOperationParams {
 	type: number;

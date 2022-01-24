@@ -7,42 +7,14 @@ import {PointLight} from 'three/src/lights/PointLight';
 import {PointLightHelper} from './utils/helpers/PointLightHelper';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
-import {ColorConversion} from '../../../core/Color';
 import {Mesh} from 'three/src/objects/Mesh';
-import {isBooleanTrue} from '../../../core/BooleanValue';
 import {LightType} from '../../poly/registers/nodes/types/Light';
-class PointLightObjParamsConfig extends TransformedParamConfig(NodeParamsConfig) {
-	light = ParamConfig.FOLDER();
-	/** @param light color */
-	color = ParamConfig.COLOR([1, 1, 1], {
-		conversion: ColorConversion.SRGB_TO_LINEAR,
-	});
-	/** @param light intensity */
-	intensity = ParamConfig.FLOAT(1);
-	/** @param light decay */
-	decay = ParamConfig.FLOAT(0.1);
-	/** @param light distance */
-	distance = ParamConfig.FLOAT(100);
-	// shadows
-	/** @param toggle to cast shadows */
-	castShadows = ParamConfig.BOOLEAN(1);
-	/** @param shadow res */
-	shadowRes = ParamConfig.VECTOR2([1024, 1024], {visibleIf: {castShadows: 1}});
-	/** @param shadow bias */
-	shadowBias = ParamConfig.FLOAT(0.001, {visibleIf: {castShadows: 1}});
-	/** @param shadow camera near */
-	shadowNear = ParamConfig.FLOAT(1, {visibleIf: {castShadows: 1}});
-	/** @param shadow camera far */
-	shadowFar = ParamConfig.FLOAT(100, {visibleIf: {castShadows: 1}});
+import {PointLightSopOperation} from '../../operations/sop/PointLight';
+import {PointLightParamConfig} from '../../../core/lights/PointLight';
 
-	// helper
-	/** @param toggle to show helper */
-	showHelper = ParamConfig.BOOLEAN(0);
-	/** @param helper size */
-	helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
-}
+class PointLightObjParamsConfig extends PointLightParamConfig(TransformedParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new PointLightObjParamsConfig();
 
 export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, PointLightObjParamsConfig> {
@@ -59,33 +31,20 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 		this._helperController.initializeNode();
 	}
 
+	private __operation__: PointLightSopOperation | undefined;
+	private _operation() {
+		return (this.__operation__ = this.__operation__ || new PointLightSopOperation(this._scene, this.states));
+	}
 	createLight() {
-		const light = new PointLight();
-		light.matrixAutoUpdate = false;
-
-		light.castShadow = true;
-		light.shadow.bias = -0.001;
-		light.shadow.mapSize.x = 1024;
-		light.shadow.mapSize.y = 1024;
-		light.shadow.camera.near = 0.1;
-
-		return light;
+		return this._operation().createLight();
 	}
 
 	protected override updateLightParams() {
-		this.light.color = this.pv.color;
-		this.light.intensity = this.pv.intensity;
-		this.light.decay = this.pv.decay;
-
-		this.light.distance = this.pv.distance;
+		this._operation().updateLightParams(this.light, this.pv);
 
 		this._helperController.update();
 	}
 	protected override updateShadowParams() {
-		this.light.castShadow = isBooleanTrue(this.pv.castShadows);
-		this.light.shadow.mapSize.copy(this.pv.shadowRes);
-		this.light.shadow.camera.near = this.pv.shadowNear;
-		this.light.shadow.camera.far = this.pv.shadowFar;
-		this.light.shadow.bias = this.pv.shadowBias;
+		this._operation().updateShadowParams(this.light, this.pv);
 	}
 }

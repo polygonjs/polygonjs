@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -7,6 +6,7 @@ import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseCameraObjNodeType} from '../../nodes/obj/_BaseCamera';
 import {isBooleanTrue} from '../../../core/Type';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface CameraProjectSopParams extends DefaultOperationParams {
 	camera: TypedNodePathParamValue;

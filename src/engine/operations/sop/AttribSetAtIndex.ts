@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
@@ -9,6 +8,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 	index: number;

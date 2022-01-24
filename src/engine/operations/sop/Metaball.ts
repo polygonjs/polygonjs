@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 // import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
@@ -9,6 +8,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface MetaballSopParams extends DefaultOperationParams {
 	resolution: number;

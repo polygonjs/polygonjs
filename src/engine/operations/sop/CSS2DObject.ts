@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CSS2DObject} from '../../../modules/core/objects/CSS2DObject';
 import {CoreString} from '../../../core/String';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface CSS2DObjectParams {
 	id: string;

@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {ObjectType} from '../../../core/geometry/Constant';
@@ -12,6 +11,7 @@ import {LineSegments} from 'three/src/objects/LineSegments';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CorePoint} from '../../../core/geometry/Point';
 import {isBooleanTrue} from '../../../core/Type';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;

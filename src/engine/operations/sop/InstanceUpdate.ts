@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../poly/Assert';
 import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum InstanceUpdateMode {
 	GEO = 'geo',

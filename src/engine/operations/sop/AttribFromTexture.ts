@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue, NODE_PATH_DEFAULT} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
@@ -7,6 +6,7 @@ import {AttribFromTexture} from '../../../core/geometry/operation/AttribFromText
 import {CoreObject} from '../../../core/geometry/Object';
 import {Texture} from 'three/src/textures/Texture';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface AttribFromTextureSopParams extends DefaultOperationParams {
 	texture: TypedNodePathParamValue;

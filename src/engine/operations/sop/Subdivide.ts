@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SubdivisionModifier} from '../../../modules/three/examples/jsm/modifiers/SubdivisionModifier';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface SubdivideSopParams extends DefaultOperationParams {
 	subdivisions: number;

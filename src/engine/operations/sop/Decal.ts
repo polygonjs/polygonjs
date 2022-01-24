@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {Euler} from 'three/src/math/Euler';
@@ -7,6 +6,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DecalGeometry} from '../../../modules/three/examples/jsm/geometries/DecalGeometry';
 import {DEG2RAD} from 'three/src/math/MathUtils';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface DecalSopParams extends DefaultOperationParams {
 	t: Vector3;

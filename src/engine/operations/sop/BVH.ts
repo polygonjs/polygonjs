@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH} from './utils/Bvh/three-mesh-bvh';
@@ -9,6 +8,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {isBooleanTrue} from '../../../core/Type';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface BVHSopParams extends DefaultOperationParams {
 	keepOnlyPosition: boolean;

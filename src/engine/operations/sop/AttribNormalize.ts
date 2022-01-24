@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreString} from '../../../core/String';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface AttribNormalizeSopParams extends DefaultOperationParams {
 	mode: number;
 	name: string;

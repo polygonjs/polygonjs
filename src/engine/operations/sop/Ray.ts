@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Vector3} from 'three/src/math/Vector3';
@@ -7,6 +6,7 @@ import {Raycaster, Intersection} from 'three/src/core/Raycaster';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MatDoubleSideTmpSetter} from '../../../core/render/MatDoubleSideTmpSetter';
 import {RaycasterForBVH} from './utils/Bvh/three-mesh-bvh';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface RaySopParams extends DefaultOperationParams {
 	useNormals: boolean;

@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three/src/math/Vector3';
 import {ObjectType} from '../../../core/geometry/Constant';
@@ -8,6 +7,7 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {BufferAttribute, Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {CorePoint} from '../../../core/geometry/Point';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface AddSopParams extends DefaultOperationParams {
 	// create point
 	createPoint: boolean;

@@ -1,12 +1,12 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {DefaultOperationParams} from '../_Base';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three/src/math/Vector3';
 import {Matrix4} from 'three/src/math/Matrix4';
 
 import {CoreTransform} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum TransformResetMode {
 	RESET_OBJECT = 'reset objects transform',

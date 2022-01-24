@@ -1,5 +1,4 @@
 import {BaseSopOperation} from './_Base';
-import {DefaultOperationParams} from '../_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
@@ -13,6 +12,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface InstanceSopParams extends DefaultOperationParams {
 	attributesToCopy: string;
