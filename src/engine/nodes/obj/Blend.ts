@@ -77,6 +77,7 @@ export class BlendObjNode extends TypedObjNode<Mesh, BlendObjParamConfig> {
 	override createObject() {
 		// use Mesh instead of Group in order to have the onBeforeRender
 		const object = new Mesh();
+
 		object.matrixAutoUpdate = false;
 		object.onBeforeRender = this._onBeforeRender.bind(this);
 
@@ -86,7 +87,7 @@ export class BlendObjNode extends TypedObjNode<Mesh, BlendObjParamConfig> {
 		this.hierarchyController.initializeNode();
 		this.io.inputs.setCount(0);
 
-		this.addPostDirtyHook('blend_on_dirty', () => {
+		this.addPostDirtyHook('blendOnDirty', () => {
 			this.cookController.cookMainWithoutInputs();
 		});
 
@@ -107,6 +108,10 @@ export class BlendObjNode extends TypedObjNode<Mesh, BlendObjParamConfig> {
 	private _object0: Object3D | undefined;
 	private _object1: Object3D | undefined;
 	override async cook() {
+		// frustumCulled = false as onBeforeRender needs to be run
+		// even if the node is not in the view
+		this.object.frustumCulled = !this.pv.updateOnRender;
+
 		const objNode0 = this.pv.object0.nodeWithContext(NodeContext.OBJ, this.states.error);
 		const objNode1 = this.pv.object1.nodeWithContext(NodeContext.OBJ, this.states.error);
 		if (objNode0 && objNode1) {
