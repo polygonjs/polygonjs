@@ -1,15 +1,14 @@
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
-import {SceneDataManifestImporter} from '../manifest/import/SceneData';
+// import {SceneDataManifestImporter} from '../manifest/import/SceneData';
 import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
-import {ThreejsViewer} from '../../viewers/Threejs';
 import {BaseViewerType} from '../../viewers/_Base';
 // import {AssetsPreloader} from '../assets/PreLoader';
 import {PROGRESS_RATIO} from '../common/Progress';
 import {SceneJsonExporterData} from '../json/export/Scene';
 import {SceneJsonImporter} from '../json/import/Scene';
-import {ManifestContent} from '../manifest/import/SceneData';
+// import {ManifestContent} from '../manifest/import/SceneData';
 
 type ProgressBarUpdateCallback = (progressRatio: number) => void;
 type ConfigureSceneCallback = (scene: PolyScene) => void;
@@ -36,15 +35,15 @@ export interface SceneDataImportOptionsOnly {
 	assetsRoot: string;
 }
 
-interface ManifestImportOptions extends ImportCommonOptions {
-	manifest: {
-		content: ManifestContent;
-		urlPrefix?: string;
-	};
-}
+// interface ManifestImportOptions extends ImportCommonOptions {
+// 	manifest: {
+// 		content: ManifestContent;
+// 		urlPrefix?: string;
+// 	};
+// }
 
 // type PreloadPromises = [Promise<void>, Promise<SceneJsonExporterData>];
-type PreloadPromises = [Promise<SceneJsonExporterData>];
+// type PreloadPromises = [Promise<SceneJsonExporterData>];
 
 export class ScenePlayerImporter {
 	private _scene: PolyScene | undefined;
@@ -57,36 +56,36 @@ export class ScenePlayerImporter {
 		const viewer = importer._viewer;
 		return {scene, viewer};
 	}
-	static async loadManifest(options: ManifestImportOptions, assetsRoot: string) {
-		// const promises: PreloadPromises = [AssetsPreloader.fetchAssets(options), this._fetchSceneData(options)];
-		const promises: PreloadPromises = [this._fetchSceneData(options)];
-		const results = await Promise.all(promises);
-		const sceneData: SceneJsonExporterData = results[1];
+	// static async loadManifest(options: ManifestImportOptions, assetsRoot: string) {
+	// 	// const promises: PreloadPromises = [AssetsPreloader.fetchAssets(options), this._fetchSceneData(options)];
+	// 	const promises: PreloadPromises = [this._fetchSceneData(options)];
+	// 	const results = await Promise.all(promises);
+	// 	const sceneData: SceneJsonExporterData = results[1];
 
-		return await this._loadSceneData(options, {sceneData, assetsRoot});
-	}
-	private static async _fetchSceneData(options: ManifestImportOptions) {
-		const sceneData = await SceneDataManifestImporter.importSceneData({
-			urlPrefix: options.manifest.urlPrefix,
-			manifest: options.manifest.content,
-			onProgress: options.onProgress,
-		});
-		return sceneData;
-	}
-	private static async _loadSceneData(
-		manifestOptions: ManifestImportOptions,
-		sceneDataAptions: SceneDataImportOptionsOnly
-	) {
-		const scene = await ScenePlayerImporter.loadSceneData({
-			domElement: manifestOptions.domElement,
-			sceneName: manifestOptions.sceneName,
-			onProgress: manifestOptions.onProgress,
-			configureScene: manifestOptions.configureScene,
-			sceneData: sceneDataAptions.sceneData,
-			assetsRoot: sceneDataAptions.assetsRoot,
-		});
-		return scene;
-	}
+	// 	return await this._loadSceneData(options, {sceneData, assetsRoot});
+	// }
+	// private static async _fetchSceneData(options: ManifestImportOptions) {
+	// 	const sceneData = await SceneDataManifestImporter.importSceneData({
+	// 		urlPrefix: options.manifest.urlPrefix,
+	// 		manifest: options.manifest.content,
+	// 		onProgress: options.onProgress,
+	// 	});
+	// 	return sceneData;
+	// }
+	// private static async _loadSceneData(
+	// 	manifestOptions: ManifestImportOptions,
+	// 	sceneDataAptions: SceneDataImportOptionsOnly
+	// ) {
+	// 	const scene = await ScenePlayerImporter.loadSceneData({
+	// 		domElement: manifestOptions.domElement,
+	// 		sceneName: manifestOptions.sceneName,
+	// 		onProgress: manifestOptions.onProgress,
+	// 		configureScene: manifestOptions.configureScene,
+	// 		sceneData: sceneDataAptions.sceneData,
+	// 		assetsRoot: sceneDataAptions.assetsRoot,
+	// 	});
+	// 	return scene;
+	// }
 
 	private _onLoadCompleteCalled = false;
 	private async _onLoadComplete() {
@@ -95,11 +94,7 @@ export class ScenePlayerImporter {
 		}
 		this._onLoadCompleteCalled = true;
 		if (this._viewer) {
-			const threejsViewer = this._viewer as ThreejsViewer;
-			threejsViewer.preCompile();
-			if (threejsViewer.setAutoRender) {
-				threejsViewer.setAutoRender(true);
-			}
+			this._viewer.markAsReady();
 		}
 		if (this._scene) {
 			await this._scene.cookController.waitForCooksCompleted();

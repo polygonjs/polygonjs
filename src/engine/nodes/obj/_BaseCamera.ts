@@ -158,7 +158,7 @@ export class BaseThreejsCameraObjParamsConfig extends CameraPostProcessParamConf
 	)
 ) {}
 
-interface BaseViewerOptions {
+export interface BaseViewerOptions {
 	element?: HTMLElement;
 }
 
@@ -214,7 +214,6 @@ export abstract class TypedCameraObjNode<
 interface ThreejsViewerOptions extends BaseViewerOptions {
 	viewerProperties?: ThreejsViewerProperties;
 }
-
 export class TypedThreejsCameraObjNode<
 	O extends OrthoOrPerspCamera,
 	K extends BaseThreejsCameraObjParamsConfig

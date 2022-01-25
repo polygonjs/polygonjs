@@ -139,6 +139,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	setContainerClassHovered() {
 		this.domElement()?.classList.add(HOVERED_CLASS_NAME);
 	}
+	markAsReady() {}
 
 	//
 	//

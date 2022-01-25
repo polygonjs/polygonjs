@@ -195,4 +195,8 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 			this._cameraNode.renderController().preCompile(this._canvas);
 		}
 	}
+	override markAsReady() {
+		this.preCompile();
+		this.setAutoRender(true);
+	}
 }
