@@ -3,7 +3,6 @@ import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
 import {TypedObjNode} from '../../_Base';
 import {Group} from 'three/src/objects/Group';
-import {Light} from 'three/src/lights/Light';
 import {Object3D} from 'three/src/core/Object3D';
 import {FlagsControllerD} from '../../../utils/FlagsController';
 export function BaseLightHelperParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -12,14 +11,17 @@ export function BaseLightHelperParamConfig<TBase extends Constructor>(Base: TBas
 	};
 }
 class BaseLightHelperParamsConfig extends BaseLightHelperParamConfig(NodeParamsConfig) {}
-export abstract class BaseLightHelperObjNode<L extends Light> extends TypedObjNode<Group, BaseLightHelperParamsConfig> {
+export abstract class BaseLightHelperObjNode<L extends Object3D> extends TypedObjNode<
+	Group,
+	BaseLightHelperParamsConfig
+> {
 	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 
 	// public readonly helper: BaseLightHelper<L> | undefined;
 	abstract get light(): L;
 }
 
-export abstract class BaseLightHelper<O extends Object3D, L extends Light, N extends BaseLightHelperObjNode<L>> {
+export abstract class BaseLightHelper<O extends Object3D, L extends Object3D, N extends BaseLightHelperObjNode<L>> {
 	protected _object: O = this.createObject();
 	protected _material = new MeshBasicMaterial({wireframe: true, fog: false});
 	constructor(protected node: N, private _name: string) {}

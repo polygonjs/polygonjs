@@ -1,4 +1,3 @@
-import {Light} from 'three/src/lights/Light';
 import {Object3D} from 'three/src/core/Object3D';
 import {BaseLightHelper, BaseLightHelperObjNode} from './helpers/_BaseLightHelper';
 
@@ -6,11 +5,11 @@ import {BaseLightHelper, BaseLightHelperObjNode} from './helpers/_BaseLightHelpe
 // 	dispose: () => void;
 // 	update: () => void;
 // }
-export interface HelperConstructor<O extends Object3D, L extends Light> {
+export interface HelperConstructor<O extends Object3D, L extends Object3D> {
 	new (node: BaseLightHelperObjNode<L>, name: string): BaseLightHelper<O, L, BaseLightHelperObjNode<L>>;
 }
 
-export class HelperController<O extends Object3D, L extends Light> {
+export class HelperController<O extends Object3D, L extends Object3D> {
 	private _helper: BaseLightHelper<O, L, BaseLightHelperObjNode<L>> | undefined;
 	constructor(
 		private node: BaseLightHelperObjNode<L>,

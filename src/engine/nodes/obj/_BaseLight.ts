@@ -1,11 +1,11 @@
 import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
-import {Light} from 'three/src/lights/Light';
+import {Object3D} from 'three/src/core/Object3D';
 import {Color} from 'three/src/math/Color';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {Group} from 'three/src/objects/Group';
 
-export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
+export abstract class TypedLightObjNode<L extends Object3D, K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
 	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	public override readonly renderOrder: number = ObjNodeRenderOrder.LIGHT;
 	protected _color_with_intensity = new Color(0x00000);
@@ -62,5 +62,5 @@ export abstract class TypedLightObjNode<L extends Light, K extends NodeParamsCon
 	protected updateShadowParams(): void {}
 }
 
-export type BaseLightObjNodeType = TypedLightObjNode<Light, NodeParamsConfig>;
+export type BaseLightObjNodeType = TypedLightObjNode<Object3D, NodeParamsConfig>;
 // export class BaseLightObjNodeClass extends TypedLightObjNode<Light, NodeParamsConfig> {}

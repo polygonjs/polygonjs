@@ -5,35 +5,13 @@
  * An area light can be expensive to compute but can give a good result.
  *
  */
-import {Constructor} from '../../../types/GlobalTypes';
 import {RectAreaLight} from 'three/src/lights/RectAreaLight';
-import {RectAreaLightUniformsLib} from '../../../modules/three/examples/jsm/lights/RectAreaLightUniformsLib';
-import {RectAreaLightHelper} from '../../../modules/three/examples/jsm/helpers/RectAreaLightHelper';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ColorConversion} from '../../../core/Color';
-import {HelperController} from './utils/HelperController';
-import {RectAreaLightObjNodeHelper} from './utils/helpers/AreaLightHelper';
-
-export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
-	return class Mixin extends Base {
-		light = ParamConfig.FOLDER();
-		/** @param light color */
-		color = ParamConfig.COLOR([1, 1, 1], {
-			conversion: ColorConversion.SRGB_TO_LINEAR,
-		});
-		/** @param light intensity */
-		intensity = ParamConfig.FLOAT(1, {range: [0, 10]});
-		/** @param grid width */
-		width = ParamConfig.FLOAT(1, {range: [0, 10]});
-		/** @param grid height */
-		height = ParamConfig.FLOAT(1, {range: [0, 10]});
-		// helper
-		/** @param toggle on to show helper */
-		showHelper = ParamConfig.BOOLEAN(0);
-	};
-}
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {AreaLightParamConfig, CoreRectAreaLightHelper} from '../../../core/lights/AreaLight';
+import {AreaLightSopOperation} from '../../operations/sop/AreaLight';
+import {isBooleanTrue} from '../../../core/Type';
 
 class AreaLightObjParamsConfig extends AreaLightParamConfig(TransformedParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new AreaLightObjParamsConfig();
@@ -43,33 +21,28 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 	static override type() {
 		return 'areaLight';
 	}
-	private _helperController = new HelperController<RectAreaLightHelper, RectAreaLight>(
-		this,
-		RectAreaLightObjNodeHelper as any,
-		'RectAreaLightObjNodeHelper'
-	);
-	override initializeNode() {
-		this._helperController.initializeNode();
+
+	private __operation__: AreaLightSopOperation | undefined;
+	private _operation() {
+		return (this.__operation__ = this.__operation__ || new AreaLightSopOperation(this._scene, this.states));
 	}
-
 	createLight() {
-		const light = new RectAreaLight(0xffffff, 1, 1, 1);
-		light.matrixAutoUpdate = false;
-
-		if (!(RectAreaLightUniformsLib as any).initialized) {
-			RectAreaLightUniformsLib.init();
-			(RectAreaLightUniformsLib as any).initialized = true;
-		}
-
-		return light;
+		return this._operation().createLight();
 	}
 
 	protected override updateLightParams() {
-		this.light.color = this.pv.color;
-		this.light.intensity = this.pv.intensity;
-		this.light.width = this.pv.width;
-		this.light.height = this.pv.height;
+		this._operation().updateLightParams(this.light, this.pv);
 
-		this._helperController.update();
+		if (isBooleanTrue(this.pv.showHelper)) {
+			this._helper = this._helper || new CoreRectAreaLightHelper(this.light);
+			this.light.add(this._helper);
+			this._helper.update();
+		} else {
+			if (this._helper) {
+				this.light.remove(this._helper);
+			}
+		}
 	}
+
+	private _helper: CoreRectAreaLightHelper | undefined;
 }

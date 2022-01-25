@@ -267,21 +267,21 @@ export class CoreObject extends CoreEntity {
 		return CoreObject.clone(this._object);
 	}
 
-	static clone(src_object: Object3D) {
-		const new_object = src_object.clone();
+	static clone(srcObject: Object3D) {
+		const clonedObject = srcObject.clone();
 
 		var sourceLookup = new Map<Object3D, Object3D>();
 		var cloneLookup = new Map<Object3D, Object3D>();
-		CoreObject.parallelTraverse(src_object, new_object, function (sourceNode: Object3D, clonedNode: Object3D) {
+		CoreObject.parallelTraverse(srcObject, clonedObject, function (sourceNode: Object3D, clonedNode: Object3D) {
 			sourceLookup.set(clonedNode, sourceNode);
 			cloneLookup.set(sourceNode, clonedNode);
 		});
-		new_object.traverse(function (node) {
-			const src_node = sourceLookup.get(node) as SkinnedMesh;
+		clonedObject.traverse(function (node) {
+			const srcNode = sourceLookup.get(node) as SkinnedMesh;
 			const mesh_node = node as Mesh;
 
-			if (mesh_node.geometry) {
-				const src_node_geometry = src_node.geometry as BufferGeometry;
+			if (mesh_node.geometry && srcNode && srcNode.geometry) {
+				const src_node_geometry = srcNode.geometry as BufferGeometry;
 				mesh_node.geometry = CoreGeometry.clone(src_node_geometry);
 				const mesh_node_geometry = mesh_node.geometry as BufferGeometry;
 				if (mesh_node_geometry.userData) {
@@ -303,37 +303,37 @@ export class CoreObject extends CoreEntity {
 					material_with_color.color = new Color(1, 1, 1);
 				}
 			}
-			if (src_object.userData) {
-				node.userData = ObjectUtils.cloneDeep(src_node.userData);
-			}
+			if (srcNode) {
+				if (srcNode.userData) {
+					node.userData = ObjectUtils.cloneDeep(srcNode.userData);
+				}
+				const src_node_with_animations = (<unknown>srcNode) as Object3DWithAnimations;
+				if (src_node_with_animations.animations) {
+					(node as Object3DWithAnimations).animations = src_node_with_animations.animations.map((animation) =>
+						animation.clone()
+					);
+				}
+				const skinned_node = node as SkinnedMesh;
+				if (skinned_node.isSkinnedMesh) {
+					var clonedMesh = skinned_node;
+					var sourceMesh = srcNode;
+					var sourceBones = sourceMesh.skeleton.bones;
 
-			const src_node_with_animations = (<unknown>src_node) as Object3DWithAnimations;
-			if (src_node_with_animations.animations) {
-				(node as Object3DWithAnimations).animations = src_node_with_animations.animations.map((animation) =>
-					animation.clone()
-				);
-			}
+					clonedMesh.skeleton = sourceMesh.skeleton.clone();
+					clonedMesh.bindMatrix.copy(sourceMesh.bindMatrix);
 
-			const skinned_node = node as SkinnedMesh;
-			if (skinned_node.isSkinnedMesh) {
-				var clonedMesh = skinned_node;
-				var sourceMesh = src_node;
-				var sourceBones = sourceMesh.skeleton.bones;
+					const new_bones = sourceBones.map(function (bone) {
+						return cloneLookup.get(bone);
+					}) as Bone[];
 
-				clonedMesh.skeleton = sourceMesh.skeleton.clone();
-				clonedMesh.bindMatrix.copy(sourceMesh.bindMatrix);
+					clonedMesh.skeleton.bones = new_bones;
 
-				const new_bones = sourceBones.map(function (bone) {
-					return cloneLookup.get(bone);
-				}) as Bone[];
-
-				clonedMesh.skeleton.bones = new_bones;
-
-				clonedMesh.bind(clonedMesh.skeleton, clonedMesh.bindMatrix);
+					clonedMesh.bind(clonedMesh.skeleton, clonedMesh.bindMatrix);
+				}
 			}
 		});
 
-		return new_object;
+		return clonedObject;
 	}
 
 	static parallelTraverse(a: Object3D, b: Object3D, callback: (a: Object3D, b: Object3D) => void) {

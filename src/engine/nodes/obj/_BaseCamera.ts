@@ -22,7 +22,7 @@ import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {Raycaster} from 'three/src/core/Raycaster';
 import {Vector2} from 'three/src/math/Vector2';
 import {CoreType} from '../../../core/Type';
-import {CameraHelper} from './utils/helpers/CameraHelper';
+import {CameraHelper} from '../../../core/helpers/CameraHelper';
 
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;

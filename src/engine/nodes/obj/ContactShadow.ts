@@ -20,7 +20,7 @@ import {Material} from 'three/src/materials/Material';
 import {Mesh} from 'three/src/objects/Mesh';
 import {RenderHook} from '../../../core/geometry/Material';
 import {TypeAssert} from '../../poly/Assert';
-import {CameraHelper} from './utils/helpers/CameraHelper';
+import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';

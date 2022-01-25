@@ -4,37 +4,13 @@
  *
  */
 import {HemisphereLight} from 'three/src/lights/HemisphereLight';
-import {HemisphereLightHelper} from './utils/helpers/HemisphereLightHelper';
 import {TypedLightObjNode} from './_BaseLight';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {HelperController, HelperConstructor} from './utils/HelperController';
-import {ColorConversion} from '../../../core/Color';
-import {Color} from 'three/src/math/Color';
-import {Mesh} from 'three/src/objects/Mesh';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {LightType} from '../../poly/registers/nodes/types/Light';
+import {HemisphereLightParamConfig} from '../../../core/lights/HemisphereLight';
+import {HemisphereLightSopOperation} from '../../operations/sop/HemisphereLight';
 
-const DEFAULT = {
-	skyColor: new Color(1, 1, 1),
-	groundColor: new Color(0, 0, 0),
-};
-class HemisphereLightObjParamsConfig extends NodeParamsConfig {
-	/** @param sky color */
-	skyColor = ParamConfig.COLOR(DEFAULT.skyColor, {
-		conversion: ColorConversion.SRGB_TO_LINEAR,
-	});
-	/** @param ground color */
-	groundColor = ParamConfig.COLOR(DEFAULT.groundColor, {
-		conversion: ColorConversion.SRGB_TO_LINEAR,
-	});
-	/** @param light intensity */
-	intensity = ParamConfig.FLOAT(1);
-	/** @param light position */
-	position = ParamConfig.VECTOR3([0, 1, 0]);
-	/** @param toggle to show helper */
-	showHelper = ParamConfig.BOOLEAN(0);
-	/** @param helper size */
-	helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
-}
+class HemisphereLightObjParamsConfig extends HemisphereLightParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new HemisphereLightObjParamsConfig();
 
 export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, HemisphereLightObjParamsConfig> {
@@ -42,31 +18,16 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 	static override type() {
 		return LightType.HEMISPHERE;
 	}
-	private _helperController = new HelperController<Mesh, HemisphereLight>(
-		this,
-		(<unknown>HemisphereLightHelper) as HelperConstructor<Mesh, HemisphereLight>,
-		'HemisphereLightHelper'
-	);
 
-	override createLight() {
-		const light = new HemisphereLight();
-		light.matrixAutoUpdate = false;
-		// make sure the light is initialized with same defaults as the node parameters
-		light.color.copy(DEFAULT.skyColor);
-		light.groundColor.copy(DEFAULT.groundColor);
-		return light;
+	private __operation__: HemisphereLightSopOperation | undefined;
+	private _operation() {
+		return (this.__operation__ = this.__operation__ || new HemisphereLightSopOperation(this._scene, this.states));
 	}
-	override initializeNode() {
-		this.io.inputs.setCount(0, 1);
-		this._helperController.initializeNode();
+	override createLight() {
+		return this._operation().createLight();
 	}
 
 	protected override updateLightParams() {
-		this.light.color = this.pv.skyColor;
-		this.light.groundColor = this.pv.groundColor;
-		this.light.position.copy(this.pv.position);
-		this.light.intensity = this.pv.intensity;
-
-		this._helperController.update();
+		this._operation().updateLightParams(this.light, this.pv);
 	}
 }

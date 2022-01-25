@@ -158,6 +158,12 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 		if (!this.scene().loadingController.autoUpdating()) {
 			return this._addToQueue(node);
 		} else {
+			// update 25/01/2022: the light obj nodes, the null obj do not cook when created.
+			// this aims to solve this.
+			// and only once the scene has loaded
+			if (node.isDisplayed() && !node.cookController.isCooking()) {
+				node.compute();
+			}
 			return this._addToScene(node);
 		}
 	}
@@ -197,6 +203,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 					// only when scene loads. Or if the displayNodeController itself could be improved
 					// to take care of it itself.
 					// node.compute();
+
 					node.childrenDisplayController?.request_display_node_container();
 					node.addObjectToParent(parent_object);
 				} else {

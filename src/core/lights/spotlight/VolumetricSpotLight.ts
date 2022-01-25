@@ -1,17 +1,16 @@
 // from
 // https://github.com/jeromeetienne/threex.volumetricspotlight
 
-import {SpotLightObjNode} from '../../SpotLight';
 import {ConeBufferGeometry} from 'three/src/geometries/ConeGeometry';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Color} from 'three/src/math/Color';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Mesh} from 'three/src/objects/Mesh';
-import {isBooleanTrue} from '../../../../../core/BooleanValue';
-import {SpotLightHelper} from '../helpers/SpotLightHelper';
 
 import VERTEX from './glsl/vert.glsl';
 import FRAGMENT from './glsl/frag.glsl';
+import {isBooleanTrue} from '../../Type';
+import {CoreSpotLightHelper, SpotLightContainer} from '../SpotLight';
 
 interface SpotLightVolumetricMaterial extends ShaderMaterial {
 	uniforms: {
@@ -22,29 +21,35 @@ interface SpotLightVolumetricMaterial extends ShaderMaterial {
 	};
 }
 
+export interface VolumetricSpotLightParams {
+	tvolumetric: boolean;
+	volAttenuation: number;
+	volAnglePower: number;
+}
+
 export class VolumetricSpotLight {
 	private _mesh: Mesh<ConeBufferGeometry, SpotLightVolumetricMaterial> | undefined;
-	constructor(public readonly node: SpotLightObjNode) {}
+	constructor(public readonly container: SpotLightContainer) {}
 
-	update() {
-		const pv = this.node.pv;
-		if (isBooleanTrue(pv.tvolumetric)) {
+	update(params: VolumetricSpotLightParams) {
+		const light = this.container.light();
+		if (isBooleanTrue(params.tvolumetric)) {
 			const object = this.object();
-			const light = this.node.light;
-			SpotLightHelper.updateConeObject(object, {
-				sizeMult: pv.helperSize,
+
+			CoreSpotLightHelper.updateConeObject(object, {
+				sizeMult: 1,
 				distance: light.distance,
 				angle: light.angle,
 			});
 			const uniforms = object.material.uniforms;
 			uniforms.lightColor.value.copy(light.color);
-			uniforms.attenuation.value = pv.volAttenuation;
-			uniforms.anglePower.value = pv.volAnglePower;
+			uniforms.attenuation.value = params.volAttenuation;
+			uniforms.anglePower.value = params.volAnglePower;
 
-			this.node.light.add(object);
+			light.add(object);
 		} else {
 			if (this._mesh) {
-				this.node.light.remove(this._mesh);
+				light.remove(this._mesh);
 			}
 		}
 	}

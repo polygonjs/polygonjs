@@ -6,8 +6,10 @@
 import {CATEGORY_SOP} from './Category';
 
 import {AddSopNode} from '../../../nodes/sop/Add';
+import {AmbientLightSopNode} from '../../../nodes/sop/AmbientLight';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 // import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
+import {AreaLightSopNode} from '../../../nodes/sop/AreaLight';
 import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
 import {AttribAudioAnalyserSopNode} from '../../../nodes/sop/AttribAudioAnalyser';
 import {AttribCastSopNode} from '../../../nodes/sop/AttribCast';
@@ -56,6 +58,7 @@ import {FuseSopNode} from '../../../nodes/sop/Fuse';
 import {HexagonsSopNode} from '../../../nodes/sop/Hexagons';
 import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
 import {HeightMapSopNode} from '../../../nodes/sop/HeightMap';
+import {HemisphereLightSopNode} from '../../../nodes/sop/HemisphereLight';
 import {IcosahedronSopNode} from '../../../nodes/sop/Icosahedron';
 import {InstanceSopNode} from '../../../nodes/sop/Instance';
 import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
@@ -100,6 +103,7 @@ import {SolverSopNode} from '../../../nodes/sop/Solver';
 import {SolverPreviousFrameSopNode} from '../../../nodes/sop/SolverPreviousFrame';
 import {SphereSopNode} from '../../../nodes/sop/Sphere';
 import {SplitSopNode} from '../../../nodes/sop/Split';
+import {SpotLightSopNode} from '../../../nodes/sop/SpotLight';
 import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
 import {SubnetSopNode} from '../../../nodes/sop/Subnet';
 import {SubnetInputSopNode} from '../../../nodes/sop/SubnetInput';
@@ -132,8 +136,10 @@ import {RenderersNetworkSopNode} from '../../../nodes/sop/RenderersNetwork';
 
 export interface GeoNodeChildrenMap {
 	add: AddSopNode;
+	ambientLight: AmbientLightSopNode;
 	animationCopy: AnimationCopySopNode;
 	// animationMixer: AnimationMixerSopNode;
+	areaLight: AreaLightSopNode;
 	attribAddMult: AttribAddMultSopNode;
 	attribAudioAnalyser: AttribAudioAnalyserSopNode;
 	attribCast: AttribCastSopNode;
@@ -182,6 +188,7 @@ export interface GeoNodeChildrenMap {
 	heightMap: HeightMapSopNode;
 	hexagons: HexagonsSopNode;
 	hierarchy: HierarchySopNode;
+	hemisphereLight: HemisphereLightSopNode;
 	icosahedron: IcosahedronSopNode;
 	instance: InstanceSopNode;
 	instanceUpdate: InstanceUpdateSopNode;
@@ -259,6 +266,8 @@ export interface GeoNodeChildrenMap {
 }
 
 import {AddSopOperation} from '../../../operations/sop/Add';
+import {AmbientLightSopOperation} from '../../../operations/sop/AmbientLight';
+import {AreaLightSopOperation} from '../../../operations/sop/AreaLight';
 import {AttribAddMultSopOperation} from '../../../operations/sop/AttribAddMult';
 import {AttribCastSopOperation} from '../../../operations/sop/AttribCast';
 import {AttribCopySopOperation} from '../../../operations/sop/AttribCopy';
@@ -280,6 +289,7 @@ import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
 import {FileSopOperation} from '../../../operations/sop/File';
+import {HemisphereLightSopOperation} from '../../../operations/sop/HemisphereLight';
 import {HierarchySopOperation} from '../../../operations/sop/Hierarchy';
 import {IcosahedronSopOperation} from '../../../operations/sop/Icosahedron';
 import {InstanceSopOperation} from '../../../operations/sop/Instance';
@@ -307,6 +317,7 @@ import {ScatterSopOperation} from '../../../operations/sop/Scatter';
 import {ShearSopOperation} from '../../../operations/sop/Shear';
 import {SortSopOperation} from '../../../operations/sop/Sort';
 import {SphereSopOperation} from '../../../operations/sop/Sphere';
+import {SpotLightSopOperation} from '../../../operations/sop/SpotLight';
 import {SubdivideSopOperation} from '../../../operations/sop/Subdivide';
 import {SvgSopOperation} from '../../../operations/sop/Svg';
 import {TextureCopySopOperation} from '../../../operations/sop/TextureCopy';
@@ -324,6 +335,8 @@ import {PolyEngine} from '../../../Poly';
 export class SopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerOperation(AddSopOperation);
+		poly.registerOperation(AmbientLightSopOperation);
+		poly.registerOperation(AreaLightSopOperation);
 		poly.registerOperation(AttribAddMultSopOperation);
 		poly.registerOperation(AttribCastSopOperation);
 		poly.registerOperation(AttribCopySopOperation);
@@ -345,6 +358,7 @@ export class SopRegister {
 		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
 		poly.registerOperation(FileSopOperation);
+		poly.registerOperation(HemisphereLightSopOperation);
 		poly.registerOperation(HierarchySopOperation);
 		poly.registerOperation(IcosahedronSopOperation);
 		poly.registerOperation(InstanceSopOperation);
@@ -372,6 +386,7 @@ export class SopRegister {
 		poly.registerOperation(ShearSopOperation);
 		poly.registerOperation(SortSopOperation);
 		poly.registerOperation(SphereSopOperation);
+		poly.registerOperation(SpotLightSopOperation);
 		poly.registerOperation(SubdivideSopOperation);
 		poly.registerOperation(SvgSopOperation);
 		poly.registerOperation(TextureCopySopOperation);
@@ -386,8 +401,10 @@ export class SopRegister {
 		poly.registerOperation(UvUnwrapSopOperation);
 
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
+		poly.registerNode(AmbientLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		// poly.registerNode(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
+		poly.registerNode(AreaLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(AttribAddMultSopNode, CATEGORY_SOP.ATTRIBUTE);
 		if (process.env.NODE_ENV == 'development') {
 			poly.registerNode(AttribAudioAnalyserSopNode, CATEGORY_SOP.AUDIO);
@@ -435,8 +452,9 @@ export class SopRegister {
 		poly.registerNode(FileSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileMultiSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FuseSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(HexagonsSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(HemisphereLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(HeightMapSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(HexagonsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(HierarchySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(IcosahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
@@ -484,6 +502,7 @@ export class SopRegister {
 		poly.registerNode(SortSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(SplitSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(SpotLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SubnetSopNode, CATEGORY_SOP.SUBNET);
 		poly.registerNode(

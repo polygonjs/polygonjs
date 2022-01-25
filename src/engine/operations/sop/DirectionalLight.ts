@@ -1,13 +1,12 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {DirectionalLight} from 'three/src/lights/DirectionalLight';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Group} from 'three/src/objects/Group';
 import {
-	CoreDirectionalLightHelper,
 	DirectionalLightParams,
 	DEFAULT_DIRECTIONAL_LIGHT_PARAMS,
+	DirectionalLightContainer,
+	DirectionalLightContainerParams,
 } from '../../../core/lights/DirectionalLight';
 import {Object3D} from 'three/src/core/Object3D';
 
@@ -18,29 +17,18 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		return 'directionalLight';
 	}
 	override cook(input_contents: CoreGroup[], params: DirectionalLightParams) {
-		const group = new Group();
-		const light = this.createLight();
-		group.add(light);
-		group.add(light.target);
+		const container = this.createLight(params);
 
-		this.updateLightParams(light, params);
-		this.updateShadowParams(light, params);
+		this.updateLightParams(container, params);
+		this.updateShadowParams(container, params);
 
-		if (isBooleanTrue(params.showHelper)) {
-			group.add(this._createHelper(light, params));
-		}
-		return this.createCoreGroupFromObjects([group]);
-	}
-
-	private _helper: CoreDirectionalLightHelper | undefined;
-	private _createHelper(light: DirectionalLight, params: DirectionalLightParams) {
-		this._helper = this._helper || new CoreDirectionalLightHelper();
-		return this._helper.createAndBuildObject({light});
+		return this.createCoreGroupFromObjects([container]);
 	}
 
 	public readonly _targetObject!: Object3D;
-	createLight() {
-		const light = new DirectionalLight();
+	createLight(params: DirectionalLightContainerParams) {
+		const container = new DirectionalLightContainer({showHelper: params.showHelper});
+		const light = container.light();
 		light.matrixAutoUpdate = false;
 
 		light.castShadow = true;
@@ -49,22 +37,16 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		light.shadow.mapSize.y = 1024;
 		light.shadow.camera.near = 0.1;
 
-		light.target.name = 'DirectionalLight Default Target';
-
-		// light.add(light.target);
-		// light.target.position.z = -1;
-		// this._targetObject = light.target;
-		// this._targetObject.name = 'DirectionalLight Default Target';
-		// this.object.add(this._targetObject);
-
-		return light;
+		return container;
 	}
-	updateLightParams(light: DirectionalLight, params: DirectionalLightParams) {
+	updateLightParams(container: DirectionalLightContainer, params: DirectionalLightParams) {
+		const light = container.light();
 		light.color = params.color;
 		light.intensity = params.intensity;
 		light.shadow.camera.far = params.distance;
 	}
-	updateShadowParams(light: DirectionalLight, params: DirectionalLightParams) {
+	updateShadowParams(container: DirectionalLightContainer, params: DirectionalLightParams) {
+		const light = container.light();
 		light.castShadow = isBooleanTrue(params.castShadow);
 		light.shadow.mapSize.copy(params.shadowRes);
 
@@ -78,5 +60,7 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		shadowCamera.top = shadowSize.y * 0.5;
 		shadowCamera.bottom = -shadowSize.y * 0.5;
 		light.shadow.camera.updateProjectionMatrix();
+
+		container.updateHelper();
 	}
 }

@@ -1,5 +1,5 @@
 import {TypedLightObjNode} from './_BaseLight';
-import {Light} from 'three/src/lights/Light';
+import {Object3D} from 'three/src/core/Object3D';
 // import {CoreTransform} from '../../../core/Transform';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
@@ -10,7 +10,7 @@ import {HierarchyController} from './utils/HierarchyController';
 class TransformedObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
 
 export abstract class BaseLightTransformedObjNode<
-	L extends Light,
+	L extends Object3D,
 	K extends TransformedObjParamConfig
 > extends TypedLightObjNode<L, K> {
 	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);

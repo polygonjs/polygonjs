@@ -9,8 +9,10 @@ import {DirectionalLight} from 'three/src/lights/DirectionalLight';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {CameraHelper} from 'three/src/helpers/CameraHelper';
 import {Line} from 'three/src/objects/Line';
+// import {CameraHelper} from 'three/src/helpers/CameraHelper';
+import {CoreCameraHelper} from '../helpers/CoreCameraHelper';
+import {Group} from 'three/src/objects/Group';
 
 export interface DirectionalLightParams extends DefaultOperationParams {
 	color: Color;
@@ -81,31 +83,85 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 	};
 }
 
-interface Options {
-	light: DirectionalLight;
+export interface DirectionalLightContainerParams {
+	showHelper: boolean;
 }
+export class DirectionalLightContainer extends Group {
+	private _light = new DirectionalLight();
+	private _target = this._light.target;
+	public showHelper = false;
+	public override matrixAutoUpdate = false;
+	constructor(options: DirectionalLightContainerParams) {
+		super();
+		this.showHelper = options.showHelper;
+		// set light pos to 0,0,1
+		// in order to have it face z axis
+		this._light.position.set(0, 0, 1);
+		this._light.updateMatrix();
+		this._target.updateMatrix();
+		this._light.matrixAutoUpdate = false;
+		this._target.matrixAutoUpdate = false;
+		this._target.name = 'DirectionalLight Default Target';
 
-class CoreCameraHelper extends CameraHelper {
-	override clone(recursive?: boolean): this {
-		return new CameraHelper(this.camera).copy(this, recursive) as this;
+		this.add(this._light);
+		this.add(this._target);
+		this.updateHelper();
 	}
+
+	light() {
+		return this._light;
+	}
+	override copy(source: this, recursive?: boolean): this {
+		this._light.copy(source.light());
+		this.position.copy(source.position);
+		this.rotation.copy(source.rotation);
+		this.scale.copy(source.scale);
+		this.quaternion.copy(source.quaternion);
+		this.matrix.copy(source.matrix);
+		this.matrixWorld.copy(source.matrixWorld);
+		this.add(this._light.target);
+		return this as this;
+	}
+
+	override clone(recursive?: boolean): this {
+		const cloned = new DirectionalLightContainer({showHelper: this.showHelper});
+		cloned.copy(this);
+
+		return cloned as this;
+	}
+
+	updateHelper() {
+		if (this.showHelper) {
+			this.__helper__ = this.__helper__ || new CoreDirectionalLightHelper(this);
+			this.add(this.__helper__.object);
+			this.__helper__.update();
+		} else {
+			if (this.__helper__) {
+				this.remove(this.__helper__.object);
+			}
+		}
+	}
+
+	private __helper__: CoreDirectionalLightHelper | undefined;
 }
 
 export class CoreDirectionalLightHelper {
-	private _line_material = new LineBasicMaterial({fog: false});
+	public object: Mesh = new Mesh();
+	private _lineMaterial = new LineBasicMaterial({fog: false});
 	private _cameraHelper!: CoreCameraHelper;
 	private _square = new Line();
-	createObject() {
-		return new Mesh();
-	}
-	createAndBuildObject(options: Options) {
-		const object = this.createObject();
-		this.buildHelper(object, options.light);
-		this.update(object, options);
-		return object;
+
+	constructor(public container: DirectionalLightContainer) {
+		this.createAndBuildObject();
 	}
 
-	buildHelper(object: Mesh, light: DirectionalLight) {
+	createAndBuildObject() {
+		this.buildHelper();
+		this.update();
+	}
+
+	buildHelper() {
+		const light = this.container.light();
 		const geometry = new BufferGeometry();
 		const size = 1;
 		geometry.setAttribute(
@@ -117,24 +173,24 @@ export class CoreDirectionalLightHelper {
 		);
 
 		this._square.geometry = geometry;
-		this._square.material = this._line_material;
-		this._square.rotateX(Math.PI * 0.5);
+		this._square.material = this._lineMaterial;
+		// this._square.rotateX(Math.PI * 0.5);
 		this._square.updateMatrix();
 		this._square.matrixAutoUpdate = false;
 
-		object.add(this._square);
+		this.object.add(this._square);
 
 		this._cameraHelper = new CoreCameraHelper(light.shadow.camera);
-		this._cameraHelper.rotateX(-Math.PI * 0.5);
+		// this._cameraHelper.rotateX(-Math.PI * 0.5);
 		this._cameraHelper.updateMatrix();
 		this._cameraHelper.matrixAutoUpdate = false;
-		object.add(this._cameraHelper);
+		this.object.add(this._cameraHelper);
 	}
 
-	update(object: Mesh, options: Options) {
-		object.updateMatrix();
+	update() {
+		this.object.updateMatrix();
 		this._cameraHelper.update();
 
-		this._line_material.color.copy(options.light.color);
+		this._lineMaterial.color.copy(this.container.light().color);
 	}
 }
