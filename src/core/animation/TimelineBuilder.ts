@@ -1,4 +1,4 @@
-import {TimelineBuilderProperty, AnimPropertyTargetValue} from './TimelineBuilderProperty';
+import {TimelineBuilderProperty, AnimPropertyTargetValue, RegisterOptions} from './TimelineBuilderProperty';
 import {PropertyTarget} from './PropertyTarget';
 import {AnimationPosition} from './Position';
 import {AnimationUpdateCallback} from './UpdateCallback';
@@ -203,12 +203,12 @@ export class TimelineBuilder {
 		return this._property?.targetValue();
 	}
 
-	populate(timeline: gsap.core.Timeline) {
+	populate(timeline: gsap.core.Timeline, options: RegisterOptions) {
 		this._printDebug(['populate', this, timeline]);
 		for (let timelineBuilder of this._timelineBuilders) {
 			const subTimeline = gsap.timeline();
 			timelineBuilder.setDebug(this._debug);
-			timelineBuilder.populate(subTimeline);
+			timelineBuilder.populate(subTimeline, options);
 
 			const position_param = timelineBuilder.position()?.toParameter() || undefined;
 			timeline.add(subTimeline, position_param);
@@ -216,7 +216,7 @@ export class TimelineBuilder {
 
 		if (this._property && this._target) {
 			this._property.setDebug(this._debug);
-			this._property.addToTimeline(this, timeline, this._target);
+			this._property.addToTimeline({timelineBuilder: this, timeline, target: this._target, ...options});
 		}
 	}
 }

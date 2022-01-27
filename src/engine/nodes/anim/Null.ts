@@ -6,25 +6,27 @@ import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import gsap from 'gsap';
 import {BaseNodeType} from '../_Base';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
+
 class NullAnimParamsConfig extends NodeParamsConfig {
 	/** @param play the animations */
 	play = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			NullAnimNode.PARAM_CALLBACK_play(node as NullAnimNode);
 		},
+		hidden: true,
 	});
 	/** @param pause the animations */
 	pause = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
 			NullAnimNode.PARAM_CALLBACK_pause(node as NullAnimNode);
 		},
+		hidden: true,
 	});
 	/** @param sets if the animations created can be stopped when a new animation in generated on the same property */
-	stoppable = ParamConfig.BOOLEAN(0);
+	stoppable = ParamConfig.BOOLEAN(1);
 	/** @param toggle to see debug infos printed in the console */
 	debug = ParamConfig.BOOLEAN(0);
 }
@@ -47,36 +49,38 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 		this.setTimelineBuilder(timelineBuilder);
 	}
 
-	private _timelineBuilder: TimelineBuilder | undefined;
+	// private _timelineBuilder: TimelineBuilder | undefined;
 	private _timeline: gsap.core.Timeline | undefined;
+	async timelineBuilder() {
+		const container = await this.compute();
+		if (!container) {
+			return;
+		}
+		const timelineBuilder = container.coreContent();
+		if (!timelineBuilder) {
+			return;
+		}
+		return timelineBuilder;
+	}
 	async play(): Promise<void> {
-		return new Promise(async (resolve) => {
-			const container = await this.compute();
-			if (!container) {
-				return;
-			}
-			this._timelineBuilder = container.coreContent();
-			if (!this._timelineBuilder) {
-				return;
-			}
-			// if (this._timeline && isBooleanTrue(this.pv.stopsPreviousAnim)) {
-			// 	this._timeline.kill();
-			// }
-			let resolved = false;
-			function resolveOnce() {
-				if (!resolved) {
-					resolved = true;
-					resolve();
-				}
-			}
-			this._timeline = gsap.timeline({onComplete: resolveOnce});
-
+		return new Promise(async (playResolve) => {
 			if (isBooleanTrue(this.pv.debug)) {
 				Poly.log(`play from '${this.path()}'`);
 			}
 
-			this._timelineBuilder.populate(this._timeline);
-
+			let resolved = false;
+			function resolveOnce() {
+				if (!resolved) {
+					resolved = true;
+					playResolve();
+				}
+			}
+			const timelineBuilder = await this.timelineBuilder();
+			if (!timelineBuilder) {
+				return;
+			}
+			this._timeline = gsap.timeline({onComplete: resolveOnce});
+			timelineBuilder.populate(this._timeline, {registerproperties: true});
 			// if the timeline is empty, we resolve the promise now
 			// not needed since gsap 3.7.0 ( https://github.com/greensock/GSAP/issues/448 )
 			// if (this._timeline.getChildren().length == 0 || this._timeline.totalDuration() == 0) {

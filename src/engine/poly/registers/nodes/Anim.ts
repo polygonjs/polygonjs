@@ -11,6 +11,7 @@ import {PositionAnimNode} from '../../../nodes/anim/Position';
 import {PropertyNameAnimNode} from '../../../nodes/anim/PropertyName';
 import {PropertyValueAnimNode} from '../../../nodes/anim/PropertyValue';
 import {RepeatAnimNode} from '../../../nodes/anim/Repeat';
+import {PlayAnimNode} from '../../../nodes/anim/Play';
 import {SubnetAnimNode} from '../../../nodes/anim/Subnet';
 import {SubnetInputAnimNode} from '../../../nodes/anim/SubnetInput';
 import {SubnetOutputAnimNode} from '../../../nodes/anim/SubnetOutput';
@@ -33,6 +34,7 @@ export interface AnimNodeChildrenMap {
 	merge: MergeAnimNode;
 	null: NullAnimNode;
 	operation: OperationAnimNode;
+	play: PlayAnimNode;
 	position: PositionAnimNode;
 	propertyName: PropertyNameAnimNode;
 	propertyValue: PropertyValueAnimNode;
@@ -62,14 +64,15 @@ export class AnimRegister {
 		poly.registerNode(MergeAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.registerNode(NullAnimNode, CATEGORY_ANIM.MISC);
 		poly.registerNode(OperationAnimNode, CATEGORY_ANIM.MODIFIER);
+		poly.registerNode(PlayAnimNode, CATEGORY_ANIM.MISC);
 		poly.registerNode(PositionAnimNode, CATEGORY_ANIM.TIMING);
 		poly.registerNode(PropertyNameAnimNode, CATEGORY_ANIM.PROP);
 		poly.registerNode(PropertyValueAnimNode, CATEGORY_ANIM.PROP);
 		poly.registerNode(RepeatAnimNode, CATEGORY_ANIM.MODIFIER);
-		poly.registerNode(SwitchAnimNode, CATEGORY_ANIM.MISC);
 		poly.registerNode(SubnetAnimNode, CATEGORY_ANIM.SUBNET);
 		poly.registerNode(SubnetInputAnimNode, CATEGORY_ANIM.SUBNET);
 		poly.registerNode(SubnetOutputAnimNode, CATEGORY_ANIM.SUBNET);
+		poly.registerNode(SwitchAnimNode, CATEGORY_ANIM.MISC);
 		poly.registerNode(TargetAnimNode, CATEGORY_ANIM.PROP);
 		// networks
 		poly.registerNode(AnimationsNetworkAnimNode, CATEGORY_ANIM.NETWORK);

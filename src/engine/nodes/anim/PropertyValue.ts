@@ -9,6 +9,9 @@ import {CoreType} from '../../../core/Type';
 import {TypeAssert} from '../../poly/Assert';
 import {Object3D} from 'three/src/core/Object3D';
 import {Quaternion} from 'three/src/math/Quaternion';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseNodeType} from '../_Base';
 
 export enum AnimPropertyValueNodeMode {
 	CUSTOM = 'custom',
@@ -24,9 +27,6 @@ const PROPERTY_VALUE_MODE_CUSTOM = PROPERTY_VALUE_MODES.indexOf(AnimPropertyValu
 const PROPERTY_VALUE_MODE_FROM_SCENE_GRAPH = PROPERTY_VALUE_MODES.indexOf(AnimPropertyValueNodeMode.FROM_SCENE_GRAPH);
 const PROPERTY_VALUE_MODE_FROM_NODE = PROPERTY_VALUE_MODES.indexOf(AnimPropertyValueNodeMode.FROM_NODE);
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BaseNodeType} from '../_Base';
 class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 	/** @param mode */
 	mode = ParamConfig.INTEGER(PROPERTY_VALUE_MODE_CUSTOM, {
@@ -76,11 +76,19 @@ class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 	});
 	/** @param value for a vector3 */
 	value3 = ParamConfig.VECTOR3([0, 0, 0], {
-		visibleIf: {mode: PROPERTY_VALUE_MODE_CUSTOM, size: 3},
+		visibleIf: {mode: PROPERTY_VALUE_MODE_CUSTOM, size: 3, asColor: false},
+	});
+	/** @param value for a vector3 as color */
+	color = ParamConfig.COLOR([0, 0, 0], {
+		visibleIf: {mode: PROPERTY_VALUE_MODE_CUSTOM, size: 3, asColor: true},
 	});
 	/** @param value for a vector4 */
 	value4 = ParamConfig.VECTOR4([0, 0, 0, 0], {
 		visibleIf: {mode: PROPERTY_VALUE_MODE_CUSTOM, size: 4},
+	});
+	/** @param when using vector3, use toggle on it should be a color */
+	asColor = ParamConfig.BOOLEAN(0, {
+		visibleIf: {mode: PROPERTY_VALUE_MODE_CUSTOM, size: 3},
 	});
 }
 const ParamsConfig = new PropertyValueAnimParamsConfig();
@@ -122,10 +130,25 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 	}
 
 	private _prepareTimebuilderCustom(timelineBuilder: TimelineBuilder) {
-		const targetValue = [this.pv.value1, this.pv.value2.clone(), this.pv.value3.clone(), this.pv.value4.clone()][
-			this.pv.size - 1
-		];
-		timelineBuilder.setPropertyValue(targetValue);
+		const size = this.pv.size;
+		switch (size) {
+			case 1: {
+				return timelineBuilder.setPropertyValue(this.pv.value1);
+			}
+			case 2: {
+				return timelineBuilder.setPropertyValue(this.pv.value2);
+			}
+			case 3: {
+				if (isBooleanTrue(this.pv.asColor)) {
+					return timelineBuilder.setPropertyValue(this.pv.color);
+				} else {
+					return timelineBuilder.setPropertyValue(this.pv.value3);
+				}
+			}
+			case 4: {
+				return timelineBuilder.setPropertyValue(this.pv.value4);
+			}
+		}
 	}
 	private _prepareTimebuilderFromSceneGraph(timelineBuilder: TimelineBuilder) {
 		const propertyName = isBooleanTrue(this.pv.overridePropertyName)
