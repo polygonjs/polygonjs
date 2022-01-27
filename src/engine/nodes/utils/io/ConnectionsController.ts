@@ -4,27 +4,27 @@ import {TypedNode} from '../../_Base';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 export class ConnectionsController<NC extends NodeContext> {
-	private _input_connections: Array<TypedNodeConnection<NC> | undefined> | undefined;
-	private _output_connections: Map<number, Map<number, TypedNodeConnection<NC>>> = new Map();
+	private _inputConnections: Array<TypedNodeConnection<NC> | undefined> | undefined;
+	private _outputConnections: Map<number, Map<number, TypedNodeConnection<NC>>> = new Map();
 
 	constructor(protected _node: TypedNode<NC, any>) {}
 
 	initInputs() {
 		const count = this._node.io.inputs.maxInputsCount();
-		this._input_connections = this._input_connections || new Array(count);
+		this._inputConnections = this._inputConnections || new Array(count);
 		// adjust the array if this method is called more than once
 		// which can be the case for nodes that have adjustable input counts
 		// such as sop/merge
-		while (this._input_connections.length < count) {
-			this._input_connections.push(undefined);
+		while (this._inputConnections.length < count) {
+			this._inputConnections.push(undefined);
 		}
 	}
 	dispose() {
-		if (this._input_connections) {
-			this._input_connections.splice(0, this._input_connections.length);
+		if (this._inputConnections) {
+			this._inputConnections.splice(0, this._inputConnections.length);
 		}
-		if (this._output_connections) {
-			this._output_connections.clear();
+		if (this._outputConnections) {
+			this._outputConnections.clear();
 		}
 	}
 
@@ -34,9 +34,9 @@ export class ConnectionsController<NC extends NodeContext> {
 	//
 	//
 	addInputConnection(connection: TypedNodeConnection<NC>) {
-		if (this._input_connections) {
+		if (this._inputConnections) {
 			// if (connection.input_index < this._input_connections.length) {
-			this._input_connections[connection.input_index] = connection;
+			this._inputConnections[connection.input_index] = connection;
 			// } else {
 			// 	console.warn(`attempt to add an input connection at index ${connection.input_index}`);
 			// }
@@ -45,18 +45,18 @@ export class ConnectionsController<NC extends NodeContext> {
 		}
 	}
 	removeInputConnection(connection: TypedNodeConnection<NC>) {
-		if (this._input_connections) {
-			if (connection.input_index < this._input_connections.length) {
-				this._input_connections[connection.input_index] = undefined;
+		if (this._inputConnections) {
+			if (connection.input_index < this._inputConnections.length) {
+				this._inputConnections[connection.input_index] = undefined;
 				// if all connections after are also undefined, we can safely shrink the array
 				let all_connections_after_are_undefined = true;
-				for (let i = connection.input_index; i < this._input_connections.length; i++) {
-					if (this._input_connections[i]) {
+				for (let i = connection.input_index; i < this._inputConnections.length; i++) {
+					if (this._inputConnections[i]) {
 						all_connections_after_are_undefined = false;
 					}
 				}
 				if (all_connections_after_are_undefined) {
-					this._input_connections = this._input_connections.slice(0, connection.input_index);
+					this._inputConnections = this._inputConnections.slice(0, connection.input_index);
 				}
 			} else {
 				console.warn(`attempt to remove an input connection at index ${connection.input_index}`);
@@ -66,22 +66,22 @@ export class ConnectionsController<NC extends NodeContext> {
 		}
 	}
 	inputConnection(index: number): TypedNodeConnection<NC> | undefined {
-		if (this._input_connections) {
-			return this._input_connections[index];
+		if (this._inputConnections) {
+			return this._inputConnections[index];
 		}
 	}
 	firstInputConnection(): TypedNodeConnection<NC> | null {
-		if (this._input_connections) {
-			return ArrayUtils.compact(this._input_connections)[0];
+		if (this._inputConnections) {
+			return ArrayUtils.compact(this._inputConnections)[0];
 		} else {
 			return null;
 		}
 	}
 	inputConnections() {
-		return this._input_connections;
+		return this._inputConnections;
 	}
 	existingInputConnections() {
-		const current_connections = this._input_connections;
+		const current_connections = this._inputConnections;
 		if (current_connections) {
 			// remove the last one if it is undefined
 			while (
@@ -102,10 +102,10 @@ export class ConnectionsController<NC extends NodeContext> {
 	addOutputConnection(connection: TypedNodeConnection<NC>) {
 		const output_index = connection.output_index;
 		const id = connection.id;
-		let connections_by_id = this._output_connections.get(output_index);
+		let connections_by_id = this._outputConnections.get(output_index);
 		if (!connections_by_id) {
 			connections_by_id = new Map<number, TypedNodeConnection<NC>>();
-			this._output_connections.set(output_index, connections_by_id);
+			this._outputConnections.set(output_index, connections_by_id);
 		}
 		connections_by_id.set(id, connection);
 		// this._output_connections[output_index] = this._output_connections[output_index] || {};
@@ -114,7 +114,7 @@ export class ConnectionsController<NC extends NodeContext> {
 	removeOutputConnection(connection: TypedNodeConnection<NC>) {
 		const output_index = connection.output_index;
 		const id = connection.id;
-		let connections_by_id = this._output_connections.get(output_index);
+		let connections_by_id = this._outputConnections.get(output_index);
 		if (connections_by_id) {
 			connections_by_id.delete(id);
 		}
@@ -124,7 +124,7 @@ export class ConnectionsController<NC extends NodeContext> {
 	outputConnections() {
 		let list: TypedNodeConnection<NC>[] = [];
 
-		this._output_connections.forEach((connections_by_id, output_index) => {
+		this._outputConnections.forEach((connections_by_id, output_index) => {
 			connections_by_id.forEach((connection, id) => {
 				if (connection) {
 					list.push(connection);

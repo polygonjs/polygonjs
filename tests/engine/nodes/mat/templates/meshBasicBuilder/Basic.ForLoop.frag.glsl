@@ -45,7 +45,6 @@ void main() {
 
 	// /MAT/meshBasicBuilder1/forLoop1/subnetInput1
 	vec3 v_POLY_forLoop1_position = v_POLY_globals1_position;
-	float v_POLY_forLoop1_in1 = 0.0;
 	for(float v_POLY_forLoop1_i = 0.0; v_POLY_forLoop1_i < 10.0; v_POLY_forLoop1_i+= 1.0){
 		float v_POLY_forLoop1_subnetInput1_i = v_POLY_forLoop1_i;
 		vec3 v_POLY_forLoop1_subnetInput1_position = v_POLY_forLoop1_position;

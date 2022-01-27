@@ -126,7 +126,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 
 	update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (!this.node.lifecycle.creationCompleted() || !this._connections_match_inputs()) {
+		if (!this.node.lifecycle.creationCompleted() || !this._inputsOutputsMatchExpectations()) {
 			this.update_connection_types();
 			this.node.removeDirtyState();
 
@@ -190,31 +190,64 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		}
 	}
 
-	protected _connections_match_inputs(): boolean {
-		const current_input_types = this.node.io.inputs.namedInputConnectionPoints().map((c) => c?.type());
-		const current_output_types = this.node.io.outputs.namedOutputConnectionPoints().map((c) => c?.type());
-		const expected_input_types = this._wrapped_expected_input_types_function();
-		const expected_output_types = this._wrapped_expected_output_types_function();
-
-		if (expected_input_types.length != current_input_types.length) {
-			return false;
-		}
-		if (expected_output_types.length != current_output_types.length) {
-			return false;
-		}
-
-		for (let i = 0; i < current_input_types.length; i++) {
-			if (current_input_types[i] != expected_input_types[i]) {
+	protected _inputsOutputsMatchExpectations(): boolean {
+		function arraysMatch<T>(array0: Array<T>, array1: Array<T>): boolean {
+			if (array0.length != array1.length) {
 				return false;
 			}
-		}
-		for (let i = 0; i < current_output_types.length; i++) {
-			if (current_output_types[i] != expected_output_types[i]) {
-				return false;
+			for (let i = 0; i < array0.length; i++) {
+				if (array0[i] != array1[i]) {
+					return false;
+				}
 			}
+			return true;
 		}
 
-		return true;
+		const namedInputConnections = this.node.io.inputs.namedInputConnectionPoints();
+		const namedOutputConnections = this.node.io.outputs.namedOutputConnectionPoints();
+		const inputTypesMatch = arraysMatch(
+			namedInputConnections.map((c) => c?.type()),
+			this._wrapped_expected_input_types_function()
+		);
+		const outputTypesMatch = arraysMatch(
+			namedOutputConnections.map((c) => c?.type()),
+			this._wrapped_expected_output_types_function()
+		);
+		const inputNamesMatch = arraysMatch(
+			namedInputConnections.map((c) => c?.name()),
+			namedInputConnections.map((c, i) => this._wrapped_input_name_function(i))
+		);
+		const outputNamesMatch = arraysMatch(
+			namedOutputConnections.map((c) => c?.name()),
+			namedOutputConnections.map((c, i) => this._wrapped_output_name_function(i))
+		);
+
+		return inputTypesMatch && outputTypesMatch && inputNamesMatch && outputNamesMatch;
+
+		// const current_input_types = this.node.io.inputs.namedInputConnectionPoints().map((c) => c?.type());
+		// const current_output_types = this.node.io.outputs.namedOutputConnectionPoints().map((c) => c?.type());
+		// const expected_input_types = this._wrapped_expected_input_types_function();
+		// const expected_output_types = this._wrapped_expected_output_types_function();
+
+		// if (expected_input_types.length != current_input_types.length) {
+		// 	return false;
+		// }
+		// if (expected_output_types.length != current_output_types.length) {
+		// 	return false;
+		// }
+
+		// for (let i = 0; i < current_input_types.length; i++) {
+		// 	if (current_input_types[i] != expected_input_types[i]) {
+		// 		return false;
+		// 	}
+		// }
+		// for (let i = 0; i < current_output_types.length; i++) {
+		// 	if (current_output_types[i] != expected_output_types[i]) {
+		// 		return false;
+		// 	}
+		// }
+
+		// return true;
 	}
 
 	//

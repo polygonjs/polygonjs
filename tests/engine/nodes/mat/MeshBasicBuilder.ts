@@ -211,6 +211,11 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	const ifThen_subnetOutput1 = subnetOutput1;
 	const multAdd1 = ifThen1.createNode('multAdd');
 
+	ifThen1.setInputType(0, GlConnectionPointType.VEC3);
+	// ifThen1.setOutputType(0, GlConnectionPointType.VEC3);
+	ifThen1.setInputName(0, 'position');
+	// ifThen1.setOutputName(0, 'position');
+
 	vec3ToFloat1.setInput(0, globals1, 'position');
 	compare1.setInput(0, vec3ToFloat1, 1);
 	compare1.set_test_name(GlCompareTestName.LESS_THAN);
@@ -252,6 +257,11 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 	const forLoop_subnetOutput1 = subnetOutput1;
 	const add1 = forLoop1.createNode('add');
 
+	forLoop1.setInputType(0, GlConnectionPointType.VEC3);
+	// forLoop1.setOutputType(0, GlConnectionPointType.VEC3);
+	forLoop1.setInputName(0, 'position');
+	// forLoop1.setOutputName(0, 'position');
+
 	forLoop1.setInput(0, globals1, 'position');
 	output1.setInput('color', forLoop1);
 	forLoop_subnetOutput1.setInput(0, add1);
@@ -278,6 +288,11 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	const subnet_subnetInput1 = subnetInput1;
 	const subnet_subnetOutput1 = subnetOutput1;
 	const add1 = subnet1.createNode('add');
+
+	subnet1.setInputType(0, GlConnectionPointType.VEC3);
+	// subnet1.setOutputType(0, GlConnectionPointType.VEC3);
+	subnet1.setInputName(0, 'position');
+	// subnet1.setOutputName(0, 'position');
 
 	subnet1.setInput(0, globals1, 'position');
 	output1.setInput('color', subnet1);

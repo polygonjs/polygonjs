@@ -5,14 +5,14 @@
  *
  */
 
-import {TypedSubnetGlNode} from './Subnet';
-import {GlConnectionPointType} from '../utils/io/connections/Gl';
+import {TypedSubnetGlNode, TypedSubnetGlParamsConfigMixin} from './Subnet';
+// import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+// import {ArrayUtils} from '../../../core/ArrayUtils';
 
 enum ForLoopInput {
 	START_INDEX = 'i',
@@ -26,7 +26,7 @@ const DEFAULT_VALUES: PolyDictionary<number> = {
 };
 const OFFSET = 0;
 
-class ForLoopGlParamsConfig extends NodeParamsConfig {
+class ForLoopGlParamsConfig extends TypedSubnetGlParamsConfigMixin(NodeParamsConfig) {
 	start = ParamConfig.FLOAT(0);
 	max = ParamConfig.FLOAT(10, {
 		range: [0, 100],
@@ -48,85 +48,68 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		return DEFAULT_VALUES[name];
 	}
 
-	protected override _expected_inputs_count() {
-		const current_connections = this.io.connections.inputConnections();
-		return current_connections ? ArrayUtils.compact(current_connections).length + 1 : 1;
-	}
+	// protected override _expectedInputsCount() {
+	// 	const current_connections = this.io.connections.inputConnections();
+	// 	return current_connections ? ArrayUtils.compact(current_connections).length + 1 : 1;
+	// }
 
-	protected override _expected_input_types(): GlConnectionPointType[] {
-		const types: GlConnectionPointType[] = [
-			// GlConnectionPointType.FLOAT,
-			// GlConnectionPointType.FLOAT,
-			// GlConnectionPointType.FLOAT,
-		];
+	// protected override _expectedInputTypes(): GlConnectionPointType[] {
+	// 	const types: GlConnectionPointType[] = [
+	// 		// GlConnectionPointType.FLOAT,
+	// 		// GlConnectionPointType.FLOAT,
+	// 		// GlConnectionPointType.FLOAT,
+	// 	];
 
-		const default_type = GlConnectionPointType.FLOAT;
-		const current_connections = this.io.connections.inputConnections();
+	// 	const default_type = GlConnectionPointType.FLOAT;
+	// 	const current_connections = this.io.connections.inputConnections();
 
-		const expected_count = this._expected_inputs_count();
-		for (let i = OFFSET; i < expected_count; i++) {
-			if (current_connections) {
-				const connection = current_connections[i];
-				if (connection) {
-					const type = connection.src_connection_point().type();
-					types.push(type);
-				} else {
-					types.push(default_type);
-				}
-			} else {
-				types.push(default_type);
-			}
-		}
-		return types;
-	}
+	// 	const expected_count = this._expectedInputsCount();
+	// 	for (let i = OFFSET; i < expected_count; i++) {
+	// 		if (current_connections) {
+	// 			const connection = current_connections[i];
+	// 			if (connection) {
+	// 				const type = connection.src_connection_point().type();
+	// 				types.push(type);
+	// 			} else {
+	// 				types.push(default_type);
+	// 			}
+	// 		} else {
+	// 			types.push(default_type);
+	// 		}
+	// 	}
+	// 	return types;
+	// }
 
-	protected override _expected_output_types() {
-		const types: GlConnectionPointType[] = [];
-		const input_types = this._expected_input_types();
-		for (let i = OFFSET; i < input_types.length; i++) {
-			types.push(input_types[i]);
-		}
-		return types;
-	}
-	protected override _expected_input_name(index: number) {
-		// switch (index) {
-		// 	case 0:
-		// 		return ForLoopInput.START_INDEX;
-		// 	case 1:
-		// 		return ForLoopInput.MAX;
-		// 	case 2:
-		// 		return ForLoopInput.STEP;
-		// 	default: {
-		const connection = this.io.connections.inputConnection(index);
-		if (connection) {
-			const name = connection.src_connection_point().name();
-			return name;
-		} else {
-			return `in${index}`;
-		}
-		// }
-		// }
-	}
-	protected override _expected_output_name(index: number) {
-		return this._expected_input_name(index + OFFSET);
-	}
-	//
-	//
-	// defines the outputs for the child subnet input
-	//
-	//
-	override child_expected_input_connection_point_types() {
-		return this._expected_input_types();
-	}
-	override child_expected_input_connection_point_name(index: number) {
-		return this._expected_input_name(index);
-	}
-	override child_expected_output_connection_point_types() {
-		return this._expected_output_types();
-	}
-	override child_expected_output_connection_point_name(index: number) {
-		return this._expected_output_name(index);
-	}
+	// protected override _expectedOutputTypes() {
+	// 	const types: GlConnectionPointType[] = [];
+	// 	const input_types = this._expectedInputTypes();
+	// 	for (let i = OFFSET; i < input_types.length; i++) {
+	// 		types.push(input_types[i]);
+	// 	}
+	// 	return types;
+	// }
+	// protected override _expectedInputName(index: number) {
+	// 	// switch (index) {
+	// 	// 	case 0:
+	// 	// 		return ForLoopInput.START_INDEX;
+	// 	// 	case 1:
+	// 	// 		return ForLoopInput.MAX;
+	// 	// 	case 2:
+	// 	// 		return ForLoopInput.STEP;
+	// 	// 	default: {
+	// 	const connection = this.io.connections.inputConnection(index);
+	// 	if (connection) {
+	// 		const name = connection.src_connection_point().name();
+	// 		return name;
+	// 	} else {
+	// 		return `in${index}`;
+	// 	}
+	// 	// }
+	// 	// }
+	// }
+	// protected override _expectedOutputName(index: number) {
+	// 	return this._expectedInputName(index + OFFSET);
+	// }
 
 	//
 	//

@@ -1,5 +1,6 @@
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
+import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 
 export function create_required_nodes_for_subnet_gl_node(node: SubnetGlNode) {
 	const subnetOutput1 = node.createNode('subnetOutput');
@@ -21,14 +22,21 @@ QUnit.test('gl Subnet can be saved and loaded and has the same number of inputs'
 	assert.equal(subnet1.io.outputs.namedOutputConnectionPoints().length, 1);
 
 	assert.equal(subnet1.io.inputs.maxInputsCount(), 1);
+	subnet1.setInputType(0, GlConnectionPointType.VEC3);
+	subnet1.setInputName(0, 'position');
 	subnet1.setInput(0, globals1, 'position');
+	assert.equal(subnet1.io.inputs.maxInputsCount(), 1);
+
+	subnet1.p.inputsCount.set(2);
 	assert.equal(subnet1.io.inputs.maxInputsCount(), 2);
 
+	subnet1.setInputType(1, GlConnectionPointType.VEC2);
+	subnet1.setInputName(1, 'uv');
 	subnet1.setInput(1, globals1, 'uv');
-	assert.equal(subnet1.io.inputs.maxInputsCount(), 3);
+	assert.equal(subnet1.io.inputs.maxInputsCount(), 2);
 
 	await saveAndLoadScene(scene, async (scene2) => {
 		const subnet2 = scene2.node(subnet1.path()) as SubnetGlNode;
-		assert.equal(subnet2.io.inputs.maxInputsCount(), 3);
+		assert.equal(subnet2.io.inputs.maxInputsCount(), 2);
 	});
 });

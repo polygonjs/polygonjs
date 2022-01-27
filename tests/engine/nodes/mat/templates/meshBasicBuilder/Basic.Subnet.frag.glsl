@@ -45,7 +45,6 @@ void main() {
 
 	// /MAT/meshBasicBuilder1/subnet1/subnetInput1
 	vec3 v_POLY_subnet1_position = v_POLY_globals1_position;
-	float v_POLY_subnet1_in1 = 0.0;
 	if(true){
 		vec3 v_POLY_subnet1_subnetInput1_position = v_POLY_globals1_position;
 	

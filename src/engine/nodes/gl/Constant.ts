@@ -46,31 +46,28 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	override initializeNode() {
 		this.io.connection_points.set_output_name_function((index: number) => ConstantGlNode.OUTPUT_NAME);
 		this.io.connection_points.set_expected_input_types_function(() => []);
-		this.io.connection_points.set_expected_output_types_function(() => [this._current_connection_type]);
+		this.io.connection_points.set_expected_output_types_function(() => [this._currentConnectionType()]);
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const param = this._current_param;
-		if (param) {
-			const connection_type = this._current_connection_type;
-
-			let value: string | number = ThreeToGl.any(param.value);
-			// ensure that it is an integer when needed
-			// as ThreeToGl.any can only detect if this is a number for now
-			// and therefore does not make the distinction between float and int
-			if (param.name() == this.p.int.name() && CoreType.isNumber(param.value)) {
-				value = ThreeToGl.integer(param.value);
-			}
-
-			const var_value = this._current_var_name;
-			const body_line = `${connection_type} ${var_value} = ${value}`;
-			shaders_collection_controller.addBodyLines(this, [body_line]);
-		} else {
+		const param = this._currentParam();
+		if (!param) {
 			console.warn(`no param found for constant node for type '${this.pv.type}'`);
+			return;
 		}
+		const value = this.currentValue();
+		if (value == null) {
+			console.warn(`no value found for constant node for type '${this.pv.type}'`);
+			return;
+		}
+
+		const connection_type = this._currentConnectionType();
+		const var_value = this._currentVarName();
+		const body_line = `${connection_type} ${var_value} = ${value}`;
+		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 
-	private get _current_connection_type() {
+	private _currentConnectionType() {
 		if (this.pv.type == null) {
 			console.warn('constant gl node type if not valid');
 		}
@@ -81,7 +78,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		return connection_type;
 	}
 
-	private get _current_param(): BaseParamType {
+	private _currentParam(): BaseParamType {
 		this._params_by_type =
 			this._params_by_type ||
 			new Map<GlConnectionPointType, BaseParamType>([
@@ -95,8 +92,21 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		const connection_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
 		return this._params_by_type.get(connection_type)!;
 	}
-	private get _current_var_name(): string {
+	private _currentVarName(): string {
 		return this.glVarName(ConstantGlNode.OUTPUT_NAME);
+	}
+	currentValue() {
+		const param = this._currentParam();
+		if (param) {
+			let value = ThreeToGl.any(param.value);
+			// ensure that it is an integer when needed
+			// as ThreeToGl.any can only detect if this is a number for now
+			// and therefore does not make the distinction between float and int
+			if (param.name() == this.p.int.name() && CoreType.isNumber(param.value)) {
+				value = ThreeToGl.integer(param.value);
+			}
+			return value;
+		}
 	}
 
 	setGlType(type: GlConnectionPointType) {

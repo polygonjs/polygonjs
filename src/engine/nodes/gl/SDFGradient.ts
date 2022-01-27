@@ -1,4 +1,4 @@
-import {TypedSubnetGlNode} from './Subnet';
+import {TypedSubnetGlNode, TypedSubnetGlParamsConfigMixin} from './Subnet';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -9,7 +9,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 const POSITION_INPUT_NAME = 'position';
 const GRADIENT_OUTPUT_NAME = 'position';
 
-class SDFGradientGlParamsConfig extends NodeParamsConfig {}
+class SDFGradientGlParamsConfig extends TypedSubnetGlParamsConfigMixin(NodeParamsConfig) {}
 const ParamsConfig = new SDFGradientGlParamsConfig();
 
 export class SDFGradientGlNode extends TypedSubnetGlNode<SDFGradientGlParamsConfig> {
@@ -18,39 +18,22 @@ export class SDFGradientGlNode extends TypedSubnetGlNode<SDFGradientGlParamsConf
 		return 'SDFGradient';
 	}
 
-	protected override _expected_inputs_count() {
+	protected override _expectedInputsCount() {
 		return 1;
 	}
 
-	protected override _expected_input_types(): GlConnectionPointType[] {
+	protected override _expectedInputTypes(): GlConnectionPointType[] {
 		return [GlConnectionPointType.VEC3];
 	}
 
-	protected override _expected_output_types() {
+	protected override _expectedOutputTypes() {
 		return [GlConnectionPointType.VEC3];
 	}
-	protected override _expected_input_name(index: number) {
+	protected override _expectedInputName(index: number) {
 		return POSITION_INPUT_NAME;
 	}
-	protected override _expected_output_name(index: number) {
+	protected override _expectedOutputName(index: number) {
 		return GRADIENT_OUTPUT_NAME;
-	}
-	//
-	//
-	// defines the outputs for the child subnet input
-	//
-	//
-	override child_expected_input_connection_point_types() {
-		return this._expected_output_types();
-	}
-	override child_expected_input_connection_point_name(index: number) {
-		return this._expected_output_name(index);
-	}
-	override child_expected_output_connection_point_types() {
-		return this._expected_output_types();
-	}
-	override child_expected_output_connection_point_name(index: number) {
-		return this._expected_output_name(index);
 	}
 
 	//

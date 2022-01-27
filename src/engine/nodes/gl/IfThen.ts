@@ -5,7 +5,7 @@
  *
  */
 
-import {TypedSubnetGlNode} from './Subnet';
+import {TypedSubnetGlNode, TypedSubnetGlParamsConfigMixin} from './Subnet';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -15,7 +15,7 @@ import {ArrayUtils} from '../../../core/ArrayUtils';
 
 const CONDITION_INPUT_NAME = 'condition';
 
-class IfThenGlParamsConfig extends NodeParamsConfig {}
+class IfThenGlParamsConfig extends TypedSubnetGlParamsConfigMixin(NodeParamsConfig) {}
 const ParamsConfig = new IfThenGlParamsConfig();
 
 export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
@@ -24,74 +24,66 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 		return 'ifThen';
 	}
 
-	protected override _expected_inputs_count() {
+	protected override _expectedInputsCount() {
 		const current_connections = this.io.connections.inputConnections();
 		return current_connections ? Math.max(ArrayUtils.compact(current_connections).length + 1, 2) : 2;
 	}
 
-	protected override _expected_input_types(): GlConnectionPointType[] {
-		const types: GlConnectionPointType[] = [GlConnectionPointType.BOOL];
+	protected override _expectedInputTypes(): GlConnectionPointType[] {
+		return [GlConnectionPointType.BOOL, ...super._expectedInputTypes()];
 
-		const default_type = GlConnectionPointType.FLOAT;
-		const current_connections = this.io.connections.inputConnections();
+		// const default_type = GlConnectionPointType.FLOAT;
+		// const current_connections = this.io.connections.inputConnections();
 
-		const expected_count = this._expected_inputs_count();
-		for (let i = 1; i < expected_count; i++) {
-			if (current_connections) {
-				const connection = current_connections[i];
-				if (connection) {
-					const type = connection.src_connection_point().type();
-					types.push(type);
-				} else {
-					types.push(default_type);
-				}
-			} else {
-				types.push(default_type);
-			}
-		}
-		return types;
+		// const expected_count = this._expectedInputsCount();
+		// for (let i = 1; i < expected_count; i++) {
+		// 	if (current_connections) {
+		// 		const connection = current_connections[i];
+		// 		if (connection) {
+		// 			const type = connection.src_connection_point().type();
+		// 			types.push(type);
+		// 		} else {
+		// 			types.push(default_type);
+		// 		}
+		// 	} else {
+		// 		types.push(default_type);
+		// 	}
+		// }
+		// return types;
 	}
 
-	protected override _expected_output_types() {
-		const types: GlConnectionPointType[] = [];
-		const input_types = this._expected_input_types();
-		for (let i = 1; i < input_types.length; i++) {
-			types.push(input_types[i]);
-		}
-		return types;
-	}
-	protected override _expected_input_name(index: number) {
+	// protected override _expectedOutputTypes() {
+	// 	const types: GlConnectionPointType[] = [];
+	// 	const input_types = this._expectedInputTypes();
+	// 	for (let i = 1; i < input_types.length; i++) {
+	// 		types.push(input_types[i]);
+	// 	}
+	// 	return types;
+	// }
+	protected override _expectedInputName(index: number) {
 		if (index == 0) {
 			return CONDITION_INPUT_NAME;
 		} else {
-			const connection = this.io.connections.inputConnection(index);
-			if (connection) {
-				const name = connection.src_connection_point().name();
-				return name;
-			} else {
-				return `in${index}`;
-			}
+			return super._expectedInputName(index - 1);
+			// const connection = this.io.connections.inputConnection(index);
+			// if (connection) {
+			// 	const name = connection.src_connection_point().name();
+			// 	return name;
+			// } else {
+			// 	return `in${index}`;
+			// }
 		}
 	}
-	protected override _expected_output_name(index: number) {
-		return this._expected_input_name(index + 1);
+	override childExpectedInputConnectionPointTypes() {
+		const subnetInputTypes = super.childExpectedInputConnectionPointTypes();
+		const types: GlConnectionPointType[] = [];
+		for (let i = 1; i < subnetInputTypes.length; i++) {
+			types.push(subnetInputTypes[i]);
+		}
+		return types;
 	}
-	//
-	//
-	// defines the outputs for the child subnet input
-	//
-	//
-	override child_expected_input_connection_point_types() {
-		return this._expected_output_types();
-	}
-	override child_expected_input_connection_point_name(index: number) {
-		return this._expected_output_name(index);
-	}
-	override child_expected_output_connection_point_types() {
-		return this._expected_output_types();
-	}
-	override child_expected_output_connection_point_name(index: number) {
-		return this._expected_output_name(index);
+	override childExpectedInputConnectionPointName(index: number) {
+		return super.childExpectedInputConnectionPointName(index + 1);
 	}
 
 	//

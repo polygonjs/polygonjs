@@ -35,12 +35,12 @@ export class SubnetInputGlNode extends TypedGlNode<SubnetInputGlParamsConfig> {
 
 	private _expected_output_names(index: number) {
 		const parent = this.parent();
-		return parent?.child_expected_input_connection_point_name(index) || `out${index}`;
+		return parent?.childExpectedInputConnectionPointName(index) || `out${index}`;
 	}
 
 	protected _expected_output_types() {
 		const parent = this.parent();
-		return parent?.child_expected_input_connection_point_types() || [];
+		return parent?.childExpectedInputConnectionPointTypes() || [];
 	}
 
 	// private _connect_to_parent_connections_controller() {

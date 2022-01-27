@@ -51,7 +51,6 @@ void main() {
 	
 	// /MAT/meshBasicBuilder1/ifThen1/subnetInput1
 	vec3 v_POLY_ifThen1_position = v_POLY_globals1_position;
-	float v_POLY_ifThen1_in2 = 0.0;
 	if(v_POLY_compare1_val){
 		vec3 v_POLY_ifThen1_subnetInput1_position = v_POLY_globals1_position;
 	

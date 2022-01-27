@@ -275,7 +275,7 @@ export class InputsController<NC extends NodeContext> {
 		return container;
 	}
 
-	get_named_input_index(name: string): number {
+	getNamedInputIndex(name: string): number {
 		if (this._named_input_connection_points) {
 			for (let i = 0; i < this._named_input_connection_points.length; i++) {
 				if (this._named_input_connection_points[i]?.name() == name) {
@@ -285,10 +285,10 @@ export class InputsController<NC extends NodeContext> {
 		}
 		return -1;
 	}
-	get_input_index(input_index_or_name: number | string): number {
+	getInputIndex(input_index_or_name: number | string): number {
 		if (CoreType.isString(input_index_or_name)) {
 			if (this.hasNamedInputs()) {
-				return this.get_named_input_index(input_index_or_name);
+				return this.getNamedInputIndex(input_index_or_name);
 			} else {
 				throw new Error(`node ${this.node.path()} has no named inputs`);
 			}
@@ -302,7 +302,7 @@ export class InputsController<NC extends NodeContext> {
 		node: BaseNodeByContextMap[NC] | null,
 		output_index_or_name: number | string = 0
 	) {
-		const input_index = this.get_input_index(input_index_or_name) || 0;
+		const input_index = this.getInputIndex(input_index_or_name) || 0;
 		if (input_index < 0) {
 			const message = `invalid input (${input_index_or_name}) for node ${this.node.path()}`;
 			console.warn(message);
@@ -411,7 +411,7 @@ export class InputsController<NC extends NodeContext> {
 	}
 	named_input(input_name: string): BaseNodeByContextMap[NC] | null {
 		if (this.hasNamedInputs()) {
-			const input_index = this.get_input_index(input_name);
+			const input_index = this.getInputIndex(input_name);
 			return this._inputs[input_index];
 		} else {
 			return null;
@@ -419,12 +419,12 @@ export class InputsController<NC extends NodeContext> {
 	}
 	named_input_connection_point(input_name: string): ConnectionPointTypeMap[NC] | undefined {
 		if (this.hasNamedInputs() && this._named_input_connection_points) {
-			const input_index = this.get_input_index(input_name);
+			const input_index = this.getInputIndex(input_name);
 			return this._named_input_connection_points[input_index];
 		}
 	}
 	has_named_input(name: string): boolean {
-		return this.get_named_input_index(name) >= 0;
+		return this.getNamedInputIndex(name) >= 0;
 	}
 	hasInput(input_index: number): boolean {
 		return this._inputs[input_index] != null;

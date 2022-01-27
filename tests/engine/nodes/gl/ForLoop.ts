@@ -1,4 +1,5 @@
 import {ForLoopGlNode} from '../../../../src/engine/nodes/gl/ForLoop';
+import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 
 export function create_required_nodes_for_forLoop_gl_node(node: ForLoopGlNode) {
@@ -21,9 +22,15 @@ QUnit.test('gl ForLoop can be saved and loaded and has the same number of inputs
 	assert.equal(forLoop1.io.outputs.namedOutputConnectionPoints().length, 1);
 
 	assert.equal(forLoop1.io.inputs.maxInputsCount(), 1);
+	forLoop1.p.inputsCount.set(2);
+	forLoop1.setInputType(1, GlConnectionPointType.VEC3);
+	forLoop1.setInputName(1, 'position');
 	forLoop1.setInput(0, globals1, 'position');
 	assert.equal(forLoop1.io.inputs.maxInputsCount(), 2);
 
+	forLoop1.p.inputsCount.set(3);
+	forLoop1.setInputType(2, GlConnectionPointType.VEC2);
+	forLoop1.setInputName(2, 'uv');
 	forLoop1.setInput(1, globals1, 'uv');
 	assert.equal(forLoop1.io.inputs.maxInputsCount(), 3);
 
