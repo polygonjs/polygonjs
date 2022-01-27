@@ -39,11 +39,13 @@ export class PaletteController<NC extends NodeContext> {
 	}
 
 	PARAM_CALLBACK_pickNext() {
-		const nextIndex = this.node.pv.palette < SORTED_PALETTE_NAMES.length - 1 ? this.node.pv.palette + 1 : 0;
+		const currentIndex = SORTED_PALETTE_NAMES.indexOf(this.node.pv.paletteName)
+		const nextIndex = currentIndex < SORTED_PALETTE_NAMES.length - 1 ? currentIndex + 1 : 0;
 		this._batchUpdatesWithPalette(nextIndex);
 	}
 	PARAM_CALLBACK_pickPrevious() {
-		const previousIndex = this.node.pv.palette == 0 ? SORTED_PALETTE_NAMES.length - 1 : this.node.pv.palette - 1;
+		const currentIndex = SORTED_PALETTE_NAMES.indexOf(this.node.pv.paletteName)
+		const previousIndex = currentIndex == 0 ? SORTED_PALETTE_NAMES.length - 1 : currentIndex - 1;
 		this._batchUpdatesWithPalette(previousIndex);
 	}
 	PARAM_CALLBACK_pickRandom() {
@@ -51,9 +53,10 @@ export class PaletteController<NC extends NodeContext> {
 		this._batchUpdatesWithPalette(randomIndex);
 	}
 
-	private _batchUpdatesWithPalette(palette: number) {
+	private _batchUpdatesWithPalette(paletteIndex: number) {
+		const paletteName = SORTED_PALETTE_NAMES[paletteIndex]
 		this.node.scene().batchUpdates(() => {
-			this.node.p.palette.set(palette);
+			this.node.p.paletteName.set(paletteName);
 			this._updateColors();
 		});
 	}
@@ -66,7 +69,7 @@ export class PaletteController<NC extends NodeContext> {
 
 	private _updateColors() {
 		const node = this.node;
-		const name = SORTED_PALETTE_NAMES[node.pv.palette];
+		const name = node.pv.paletteName;
 		const palette = PALETTES_BY_NAME.get(name) as Palette;
 		const colorParams = [node.p.color1, node.p.color2, node.p.color3, node.p.color4, node.p.color5];
 		node.p.colorsCount.set(palette.colors.length);
@@ -85,7 +88,7 @@ export class PaletteController<NC extends NodeContext> {
 
 class PaletteAbstractNodeParamsConfig extends NodeParamsConfig {
 	/** @param name of the palette */
-	palette = ParamConfig.INTEGER(0, paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_updateColors));
+	paletteName = ParamConfig.STRING('', paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_updateColors));
 	/** @param click to set the node to the next palette */
 	pickNext = ParamConfig.BUTTON(null, paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_pickNext));
 	/** @param click to set the node to the previous palette */

@@ -54,7 +54,9 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		return this._core_group;
 	}
 	private find_values(params: AttribPromoteSopParams) {
-		const attrib_names = CoreString.attribNames(params.name);
+		const attrib_names = CoreString.attribNames(params.name).map((attribName) =>
+			CoreAttribute.remapName(attribName)
+		);
 		for (let attrib_name of attrib_names) {
 			this._find_values_for_attrib_name(attrib_name, params);
 		}

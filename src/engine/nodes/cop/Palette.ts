@@ -26,10 +26,10 @@ class PaletteCopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param name of the palette */
-	palette = ParamConfig.INTEGER(0, {
-		menu: {
+	paletteName = ParamConfig.STRING(SORTED_PALETTE_NAMES[0], {
+		menuString: {
 			entries: SORTED_PALETTE_NAMES.map((name, value) => {
-				return {name: name, value};
+				return {name: name, value: name};
 			}),
 		},
 		...paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_updateColors),

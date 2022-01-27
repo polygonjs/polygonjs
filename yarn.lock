@@ -1495,10 +1495,10 @@ chrome-trace-event@^1.0.2:
   resolved "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz#1015eced4741e15d06664a957dbbf50d041e26ac"
   integrity sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg==
 
-chromotome@1.19.1:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/chromotome/-/chromotome-1.19.1.tgz#6b914e254ee7d4f43506c93691ac35640ff6bd01"
-  integrity sha512-fvV9avTNmiftGyOHSBzVi7N92KrXRXpbsWOi3k4lXBFaHccG82x/3+QHOMV+n4zrXNwxu2ZgzoZDHUl4ed8fQA==
+chromotome@1.20.0:
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/chromotome/-/chromotome-1.20.0.tgz#b72c676fb7117c7e573dacf210044afdd3f6a22f"
+  integrity sha512-lxY3AwgdJZFbsq/8cAwQ6lzqPIUuj3uztWpQEfJ1fgEtCtjsvDD6Pp/sg1J5Mau+91nPxF0VH/UhV5CmYsBqDw==
 
 cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   version "1.0.4"

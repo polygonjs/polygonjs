@@ -1,3 +1,4 @@
+import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
 QUnit.test('sop/palette simple', async (assert) => {
@@ -10,7 +11,7 @@ QUnit.test('sop/palette simple', async (assert) => {
 	scatter.p.pointsCount.set(4);
 	scatter.setInput(0, plane);
 	palette.setInput(0, plane);
-	palette.p.palette.set(1);
+	palette.p.paletteName.set(SORTED_PALETTE_NAMES[1]);
 
 	let container = await palette.compute();
 	let coreContent = container.coreContent()!;
@@ -31,7 +32,7 @@ QUnit.test('sop/palette simple', async (assert) => {
 	assert.in_delta(colorAttribArray[10], 0.0012141079641878605, delta);
 	assert.in_delta(colorAttribArray[11], 0.9734452962875366, delta);
 
-	palette.p.palette.set(2);
+	palette.p.paletteName.set(SORTED_PALETTE_NAMES[2]);
 	container = await palette.compute();
 	coreContent = container.coreContent()!;
 	assert.ok(coreContent);

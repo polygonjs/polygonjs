@@ -23,10 +23,10 @@ const DEFAULT = PaletteSopOperation.DEFAULT_PARAMS;
 
 class PaletteSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the palette */
-	palette = ParamConfig.INTEGER(DEFAULT.palette, {
-		menu: {
+	paletteName = ParamConfig.STRING(DEFAULT.paletteName, {
+		menuString: {
 			entries: SORTED_PALETTE_NAMES.map((name, value) => {
-				return {name: name, value};
+				return {name: name, value: name};
 			}),
 		},
 		...paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_updateColors),

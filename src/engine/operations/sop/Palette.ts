@@ -4,9 +4,10 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Color} from 'three/src/math/Color';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import { SORTED_PALETTE_NAMES } from '../../../core/color/chromotomeWrapper';
 
 interface PaletteSopParams extends DefaultOperationParams {
-	palette: number;
+	paletteName: string;
 	colorsCount: number;
 	color1: Color;
 	color2: Color;
@@ -17,7 +18,7 @@ interface PaletteSopParams extends DefaultOperationParams {
 
 export class PaletteSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PaletteSopParams = {
-		palette: 0,
+		paletteName: SORTED_PALETTE_NAMES[0],
 		colorsCount: 0,
 		color1: new Color(1, 1, 1),
 		color2: new Color(1, 1, 1),
@@ -35,13 +36,13 @@ export class PaletteSopOperation extends BaseSopOperation {
 
 		const objects = core_group.objectsWithGeo();
 		for (let object of objects) {
-			this._apply_palette(object, params);
+			this._applyPalette(object, params);
 		}
 
 		return core_group;
 	}
 
-	private _apply_palette(object: Object3DWithGeometry, params: PaletteSopParams) {
+	private _applyPalette(object: Object3DWithGeometry, params: PaletteSopParams) {
 		if (params.colorsCount <= 0) {
 			return;
 		}
