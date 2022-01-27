@@ -1,5 +1,6 @@
 import {Color} from 'three/src/math/Color';
 import {DataTexture} from 'three/src/textures/DataTexture';
+import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 
 QUnit.test('cop/palette simple', async (assert) => {
 	const COP = window.COP;
@@ -7,7 +8,7 @@ QUnit.test('cop/palette simple', async (assert) => {
 
 	const w = 256;
 	const h = 256;
-	palette.p.palette.set(0);
+	palette.p.paletteName.set(SORTED_PALETTE_NAMES[0]);
 	palette.p.resolution.set([h, w]);
 	let container = await palette.compute();
 	let texture = container.coreContent() as DataTexture;
@@ -26,7 +27,7 @@ QUnit.test('cop/palette simple', async (assert) => {
 	setColorAtPos(250, 0, color);
 	assert.deepEqual(color.toArray(), [203, 201, 199]);
 
-	palette.p.palette.set(1);
+	palette.p.paletteName.set(SORTED_PALETTE_NAMES[1]);
 	await palette.compute();
 	setColorAtPos(0, 0, color);
 	assert.deepEqual(color.toArray(), [255, 23, 0]);
