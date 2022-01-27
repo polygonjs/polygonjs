@@ -3,12 +3,7 @@ import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Vector2} from 'three/src/math/Vector2';
@@ -33,7 +28,7 @@ export function NormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureNormalMapController),
 		});
 		/** @param specify the normal map COP node */
-		normalMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureNormalMapController, 'useNormalMap'));
+		normalMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureNormalMapController, 'useNormalMap'));
 		/** @param type of normal map being used */
 		normalMapType = ParamConfig.INTEGER(0, {
 			visibleIf: {useNormalMap: 1},

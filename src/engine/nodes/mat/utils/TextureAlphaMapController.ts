@@ -2,12 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -18,7 +13,7 @@ export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureAlphaMapController),
 		});
 		/** @param specify the alpha map COP node */
-		alphaMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureAlphaMapController, 'useAlphaMap'));
+		alphaMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureAlphaMapController, 'useAlphaMap'));
 	};
 }
 class TextureAlphaMaterial extends Material {

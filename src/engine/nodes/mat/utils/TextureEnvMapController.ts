@@ -1,11 +1,6 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -18,7 +13,7 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureEnvMapController),
 		});
 		/** @param specify the environment map COP node */
-		envMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureEnvMapController, 'useEnvMap'));
+		envMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureEnvMapController, 'useEnvMap'));
 		/** @param environment intensity */
 		envMapIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
 		/** @param refraction ratio */

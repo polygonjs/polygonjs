@@ -3,12 +3,7 @@ import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -19,7 +14,7 @@ export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureAOMapController),
 		});
 		/** @param specify the AO map COP node */
-		aoMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureAOMapController, 'useAOMap'));
+		aoMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureAOMapController, 'useAOMap'));
 		/** @param ambient occlusion intensity */
 		aoMapIntensity = ParamConfig.FLOAT(1, {range: [0, 1], rangeLocked: [false, false], visibleIf: {useAOMap: 1}});
 	};

@@ -1,11 +1,6 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
@@ -21,19 +16,19 @@ export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBas
 		/** @param specify the displacement map COP node */
 		displacementMap = ParamConfig.NODE_PATH(
 			'',
-			OperatorPathOptions(TextureDisplacementMapController, 'useDisplacementMap')
+			NodePathOptions(TextureDisplacementMapController, 'useDisplacementMap')
 		);
 		/** @param displacement scale */
 		displacementScale = ParamConfig.FLOAT(1, {
 			range: [0, 1],
 			rangeLocked: [false, false],
-			...OperatorPathOptions(TextureDisplacementMapController, 'useDisplacementMap'),
+			...NodePathOptions(TextureDisplacementMapController, 'useDisplacementMap'),
 		});
 		/** @param displacement bias */
 		displacementBias = ParamConfig.FLOAT(0, {
 			range: [0, 1],
 			rangeLocked: [false, false],
-			...OperatorPathOptions(TextureDisplacementMapController, 'useDisplacementMap'),
+			...NodePathOptions(TextureDisplacementMapController, 'useDisplacementMap'),
 		});
 	};
 }

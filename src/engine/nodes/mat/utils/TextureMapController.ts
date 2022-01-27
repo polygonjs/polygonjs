@@ -2,12 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -16,7 +11,7 @@ export function MapParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param toggle on to use a map affecting color */
 		useMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
 		/** @param texture map affecting color */
-		map = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureMapController, 'useMap'));
+		map = ParamConfig.NODE_PATH('', NodePathOptions(TextureMapController, 'useMap'));
 	};
 }
 class TextureMapMaterial extends Material {

@@ -2,12 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
@@ -22,7 +17,7 @@ export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base
 		/** @param specify the metalness map COP node */
 		metalnessMap = ParamConfig.NODE_PATH(
 			'',
-			OperatorPathOptions(TextureMetalnessRoughnessMapController, 'useMetalnessMap')
+			NodePathOptions(TextureMetalnessRoughnessMapController, 'useMetalnessMap')
 		);
 		/** @param metalness. It's recommended to either set this value to 0 or to 1, as objects are either metallic or not. Any value in between tends to look like an alien plastic */
 		metalness = ParamConfig.FLOAT(1);
@@ -34,7 +29,7 @@ export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base
 		/** @param specify the roughness map COP node */
 		roughnessMap = ParamConfig.NODE_PATH(
 			'',
-			OperatorPathOptions(TextureMetalnessRoughnessMapController, 'useRoughnessMap')
+			NodePathOptions(TextureMetalnessRoughnessMapController, 'useRoughnessMap')
 		);
 		/** @param roughness. When set to 0, reflections from environment maps will be very sharp, or blurred when 1. Any value between 0 and 1 can help modulate this. */
 		roughness = ParamConfig.FLOAT(0.5);

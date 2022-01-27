@@ -1,11 +1,6 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
@@ -19,18 +14,18 @@ export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 			...BooleanParamOptions(TextureBumpMapController),
 		});
 		/** @param specify the bump map COP node */
-		bumpMap = ParamConfig.NODE_PATH('', OperatorPathOptions(TextureBumpMapController, 'useBumpMap'));
+		bumpMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureBumpMapController, 'useBumpMap'));
 		/** @param bump scale */
 		bumpScale = ParamConfig.FLOAT(1, {
 			range: [0, 1],
 			rangeLocked: [false, false],
-			...OperatorPathOptions(TextureBumpMapController, 'useBumpMap'),
+			...NodePathOptions(TextureBumpMapController, 'useBumpMap'),
 		});
 		/** @param bump bias */
 		bumpBias = ParamConfig.FLOAT(0, {
 			range: [0, 1],
 			rangeLocked: [false, false],
-			...OperatorPathOptions(TextureBumpMapController, 'useBumpMap'),
+			...NodePathOptions(TextureBumpMapController, 'useBumpMap'),
 		});
 	};
 }

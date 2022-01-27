@@ -49,13 +49,13 @@ export function BooleanParamOptions(controller_class: typeof BaseTextureMapContr
 		},
 	};
 }
-interface OperatorPathOptionsOptions {
+interface NodePathOptionsOptions {
 	types?: string[];
 }
-export function OperatorPathOptions(
+export function NodePathOptions(
 	controller: typeof BaseTextureMapController,
 	use_map_name: string,
-	options?: OperatorPathOptionsOptions
+	options?: NodePathOptionsOptions
 ) {
 	return {
 		visibleIf: {[use_map_name]: 1},

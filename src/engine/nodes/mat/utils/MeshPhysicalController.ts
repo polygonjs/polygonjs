@@ -1,12 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Color} from 'three/src/math/Color';
@@ -38,13 +33,13 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param toggle if you want to use a roughness map */
 		useClearCoatMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
-		clearcoatMap = ParamConfig.NODE_PATH('', OperatorPathOptions(MeshPhysicalController, 'useClearCoatMap'));
+		clearcoatMap = ParamConfig.NODE_PATH('', NodePathOptions(MeshPhysicalController, 'useClearCoatMap'));
 		/** @param toggle if you want to use a clear coat normal map */
 		useClearCoatNormalMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(MeshPhysicalController));
 		/** @param specify the roughness map COP node */
 		clearcoatNormalMap = ParamConfig.NODE_PATH(
 			'',
-			OperatorPathOptions(MeshPhysicalController, 'useClearCoatNormalMap')
+			NodePathOptions(MeshPhysicalController, 'useClearCoatNormalMap')
 		);
 		/** @param How much the normal map affects the material. Typical ranges are 0-1 */
 		clearcoatNormalScale = ParamConfig.VECTOR2([1, 1], {visibleIf: {useClearCoatNormalMap: 1}});
@@ -55,7 +50,7 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param specify the roughness map COP node */
 		clearcoatRoughnessMap = ParamConfig.NODE_PATH(
 			'',
-			OperatorPathOptions(MeshPhysicalController, 'useClearCoatRoughnessMap')
+			NodePathOptions(MeshPhysicalController, 'useClearCoatRoughnessMap')
 		);
 
 		/** @param toggle if you want to use sheen */

@@ -1,11 +1,6 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
-import {
-	BaseTextureMapController,
-	BooleanParamOptions,
-	OperatorPathOptions,
-	UpdateOptions,
-} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -32,7 +27,7 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param specify the environment map COP node. Note that this only works with CubeCamera */
 		envMap = ParamConfig.NODE_PATH(
 			'',
-			OperatorPathOptions(TextureEnvMapController, 'useEnvMap', {types: [CopType.CUBE_CAMERA]})
+			NodePathOptions(TextureEnvMapController, 'useEnvMap', {types: [CopType.CUBE_CAMERA]})
 		);
 		/** @param defines how the env map is combined with the color */
 		combine = ParamConfig.INTEGER(0, {
