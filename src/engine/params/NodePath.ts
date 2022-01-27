@@ -93,19 +93,19 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		this._handleReferences(node, path);
 
 		if (currentFoundEntity?.graphNodeId() !== newlyFoundEntity?.graphNodeId()) {
-			const dependent_on_found_node = this.options.dependentOnFoundNode();
+			const dependentOnFoundNode = this.options.dependentOnFoundNode();
 
-			const previously_found_node = this._value.node();
-			if (previously_found_node) {
-				if (dependent_on_found_node) {
-					this.removeGraphInput(previously_found_node);
+			const previouslyFoundNode = this._value.node();
+			if (previouslyFoundNode) {
+				if (dependentOnFoundNode) {
+					this.removeGraphInput(previouslyFoundNode);
 				} else {
 					// this._found_node.remove_param_referree(this) // TODO: typescript
 				}
 			}
 
 			if (node) {
-				this._assign_found_node(node);
+				this._assignFoundNode(node);
 			} else {
 				this._value.set_node(null);
 			}
@@ -121,13 +121,13 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		this.removeDirtyState();
 	}
 
-	private _assign_found_node(node: BaseNodeType) {
-		const dependent_on_found_node = this.options.dependentOnFoundNode();
+	private _assignFoundNode(node: BaseNodeType) {
+		const dependentOnFoundNode = this.options.dependentOnFoundNode();
 		if (this._isNodeExpectedContext(node)) {
 			if (this._is_node_expected_type(node)) {
 				this.states.error.clear();
 				this._value.set_node(node);
-				if (dependent_on_found_node) {
+				if (dependentOnFoundNode) {
 					this.addGraphInput(node);
 				}
 			} else {

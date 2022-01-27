@@ -14,6 +14,7 @@ import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {IUniforms, ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
 import {Poly} from '../../../Poly';
+import {isBooleanTrue} from '../../../../core/Type';
 
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -114,12 +115,13 @@ export class BaseTextureMapController extends BaseController {
 		use_map_param: BooleanParam,
 		path_param: NodePathParam
 	) {
-		if (this._update_options.uniforms) {
+		const {uniforms, directParams} = this._update_options;
+		if (uniforms && isBooleanTrue(uniforms)) {
 			const shader_material = material as ShaderMaterial;
 			const attr_name = mat_attrib_name as keyof SubType<IUniforms, Texture | null>;
 			await this._update_texture_on_uniforms(shader_material, attr_name, use_map_param, path_param);
 		}
-		if (this._update_options.directParams) {
+		if (directParams && isBooleanTrue(directParams)) {
 			const mat = material as Material;
 			const attr_name = mat_attrib_name as keyof SubType<Material, Texture | null>;
 			await this._update_texture_on_material(mat, attr_name, use_map_param, path_param);
@@ -151,21 +153,20 @@ export class BaseTextureMapController extends BaseController {
 		material: Material,
 		uniforms: O,
 		mat_attrib_name: keyof SubType<O, Texture | null>,
-		texture: Texture
+		newTexture: Texture
 	) {
-		const has_texture = uniforms[mat_attrib_name] != null && uniforms[mat_attrib_name].value != null;
-		let new_texture_is_different = false;
-		if (has_texture) {
-			const current_texture: Texture = (<unknown>uniforms[mat_attrib_name].value) as Texture;
-			if (current_texture.uuid != texture.uuid) {
-				new_texture_is_different = true;
+		const currentTexture = (<unknown>uniforms[mat_attrib_name].value) as Texture | undefined;
+		let textureChangeRequired = false;
+		if (currentTexture) {
+			if (currentTexture.uuid != newTexture.uuid) {
+				textureChangeRequired = true;
 			}
 		}
-		if (!has_texture || new_texture_is_different) {
+		if (currentTexture == null || textureChangeRequired) {
 			const uniform = uniforms[mat_attrib_name];
 			// check as the uniform may not exist on a customMaterial
 			if (uniform) {
-				uniforms[mat_attrib_name].value = texture as any;
+				uniforms[mat_attrib_name].value = newTexture as any;
 			}
 			// currently removing the settings of defines USE_MAP or USE_UV
 			// as this seems to conflict with setting .map on the material itself.
@@ -181,7 +182,7 @@ export class BaseTextureMapController extends BaseController {
 			// 		material.defines['USE_UV'] = 5;
 			// 	}
 			// }
-			this._apply_texture_on_material(material, material, mat_attrib_name as any, texture);
+			this._apply_texture_on_material(material, material, mat_attrib_name as any, newTexture);
 			material.needsUpdate = true;
 
 			const customMaterials = (material as ShaderMaterialWithCustomMaterials).customMaterials;
@@ -194,7 +195,7 @@ export class BaseTextureMapController extends BaseController {
 							customMaterial,
 							customMaterial.uniforms as O,
 							mat_attrib_name,
-							texture
+							newTexture
 						);
 					}
 				}
@@ -266,18 +267,17 @@ export class BaseTextureMapController extends BaseController {
 		material: Material,
 		texture_owner: M,
 		mat_attrib_name: keyof SubType<M, Texture | null>,
-		texture: Texture
+		newTexture: Texture
 	) {
-		const has_texture = texture_owner[mat_attrib_name] != null;
-		let new_texture_is_different = false;
-		if (has_texture) {
-			const current_texture: Texture = (<unknown>texture_owner[mat_attrib_name]) as Texture;
-			if (current_texture.uuid != texture.uuid) {
-				new_texture_is_different = true;
+		const currentTexture = (<unknown>texture_owner[mat_attrib_name]) as Texture | undefined;
+		let textureChangeRequired = false;
+		if (currentTexture) {
+			if (currentTexture.uuid != newTexture.uuid) {
+				textureChangeRequired = true;
 			}
 		}
-		if (!has_texture || new_texture_is_different) {
-			texture_owner[mat_attrib_name] = texture as any;
+		if (currentTexture == null || textureChangeRequired) {
+			texture_owner[mat_attrib_name] = newTexture as any;
 			material.needsUpdate = true;
 		}
 	}

@@ -38,27 +38,34 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	setTexture(texture: Texture) {
 		texture.name = this.path();
 
-		const currentTexture = this.containerController.container().texture();
-		if (currentTexture) {
-			// this method to change the texture of a cop/image
-			// and have the material update could potentially work.
-			// But at the moment, when loading a 2nd texture,
-			// This overrides the properties of the 1st texture.
-			// So that when we try and reload that 1st texture, it has become the 2nd.
-			// And even with more texture, the behavior still seems to keep the 2nd texture
-			if (currentTexture.uuid != texture.uuid) {
-				const newPropNames = Object.keys(texture) as Array<keyof Texture>;
-				for (let newPropName of newPropNames) {
-					(currentTexture as any)[newPropName] = texture[newPropName];
-				}
-				// document.body.append((currentTexture as any).image);
-				// document.body.style.overflow = 'auto';
-				currentTexture.needsUpdate = true;
-			}
-			this._setContainer(currentTexture);
-		} else {
-			this._setContainer(texture);
-		}
+		// the behavior below was an attempt at copying all properties
+		// of a new texture to the current texture,
+		// in the hope that it would make it easy for materials using it to update.
+		// But that only partially worked, and created more confusion
+		// as the materials updated only once or twice.
+		// So now it is the material's responsibility to update the texture
+		// when this file is dirty.
+		// const currentTexture = this.containerController.container().texture();
+		// if (currentTexture) {
+		// 	// this method to change the texture of a cop/image
+		// 	// and have the material update could potentially work.
+		// 	// But at the moment, when loading a 2nd texture,
+		// 	// This overrides the properties of the 1st texture.
+		// 	// So that when we try and reload that 1st texture, it has become the 2nd.
+		// 	// And even with more texture, the behavior still seems to keep the 2nd texture
+		// 	if (currentTexture.uuid != texture.uuid) {
+		// 		const newPropNames = Object.keys(texture) as Array<keyof Texture>;
+		// 		for (let newPropName of newPropNames) {
+		// 			(currentTexture as any)[newPropName] = texture[newPropName];
+		// 		}
+		// 		// document.body.append((currentTexture as any).image);
+		// 		// document.body.style.overflow = 'auto';
+		// 		currentTexture.needsUpdate = true;
+		// 	}
+		// 	this._setContainer(currentTexture);
+		// } else {
+		this._setContainer(texture);
+		// }
 		// this._copy_texture(texture);
 	}
 	protected _clearTexture() {
