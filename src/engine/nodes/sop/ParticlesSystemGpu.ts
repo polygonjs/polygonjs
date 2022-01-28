@@ -223,7 +223,12 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	async compileIfRequired() {
 		if (this.assemblerController?.compileRequired()) {
 			this.debugMessage('particles:this.run_assembler() START');
-			await this.run_assembler();
+			try {
+				await this.run_assembler();
+			} catch (err) {
+				const message = (err as any).message || 'failed to compile';
+				this.states.error.set(message);
+			}
 			this.debugMessage('particles:this.run_assembler() END');
 		}
 	}
@@ -268,6 +273,9 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	private _findExportNodes() {
 		const nodes: BaseGlNodeType[] = GlNodeFinder.findAttributeExportNodes(this);
 		const output_nodes = GlNodeFinder.findOutputNodes(this);
+		if (output_nodes.length == 0) {
+			this.states.error.set('one output node is required');
+		}
 		if (output_nodes.length > 1) {
 			this.states.error.set('only one output node is allowed');
 			return [];

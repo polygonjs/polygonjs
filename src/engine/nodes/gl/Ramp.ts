@@ -19,7 +19,7 @@ import {GlParamConfig} from './code/utils/ParamConfig';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RampGlParamsConfig extends NodeParamsConfig {
-	name = ParamConfig.STRING('');
+	name = ParamConfig.STRING('ramp');
 	input = ParamConfig.FLOAT(0);
 }
 const ParamsConfig = new RampGlParamsConfig();
@@ -28,12 +28,10 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 	static override type(): Readonly<'ramp'> {
 		return 'ramp';
 	}
-	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
 	override initializeNode() {
 		super.initializeNode();
 
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
-		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
@@ -73,15 +71,5 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 	}
 	private _uniform_name() {
 		return 'ramp_texture_' + this.glVarName(OUTPUT_NAME);
-	}
-	//
-	//
-	// HOOKS
-	//
-	//
-	private _onCreateSetNameIfNone() {
-		if (this.pv.name == '') {
-			this.p.name.set(this.name());
-		}
 	}
 }

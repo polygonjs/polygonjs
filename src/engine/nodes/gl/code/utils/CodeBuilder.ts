@@ -96,7 +96,14 @@ export class CodeBuilder {
 		// set param configs
 		if (this._param_configs_set_allowed) {
 			for (let param_node of param_nodes) {
-				param_node.setParamConfigs();
+				try {
+					param_node.states.error.clear();
+					param_node.setParamConfigs();
+				} catch (err) {
+					const message: string = (err as any).message || 'failed to create spare param';
+					param_node.states.error.set(message);
+					throw new Error(`${param_node.name()} cannot create spare parameter`);
+				}
 			}
 			this.setParamConfigs(param_nodes);
 		}

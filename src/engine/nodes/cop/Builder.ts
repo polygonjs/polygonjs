@@ -176,7 +176,12 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	compileIfRequired() {
 		if (this.assemblerController?.compileRequired()) {
-			this.compile();
+			try {
+				this.compile();
+			} catch (err) {
+				const message = (err as any).message || 'failed to compile';
+				this.states.error.set(message);
+			}
 		}
 	}
 	private compile() {
@@ -185,6 +190,10 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			return;
 		}
 		const output_nodes: BaseGlNodeType[] = GlNodeFinder.findOutputNodes(this);
+		if (output_nodes.length == 0) {
+			this.states.error.set('one output node is required');
+			return;
+		}
 		if (output_nodes.length > 1) {
 			this.states.error.set('only one output node allowed');
 			return;

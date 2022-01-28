@@ -27,6 +27,7 @@ export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 
 		this.lifecycle.onAfterAdded(() => {
 			this.materialNode()?.assemblerController?.add_output_inputs(this);
+			this._setMatToRecompile();
 		});
 	}
 

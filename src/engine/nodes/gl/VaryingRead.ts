@@ -37,10 +37,8 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 	}
 	static readonly OUTPUT_NAME = 'fragment';
 
-	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
-		this.lifecycle.onAfterCreated(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_output_name_function(() => {
@@ -78,16 +76,5 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 	}
 	setGlType(type: GlConnectionPointType) {
 		this.p.type.set(VARYING_NODE_AVAILABLE_GL_TYPES.indexOf(type));
-	}
-
-	//
-	//
-	// HOOKS
-	//
-	//
-	private _on_create_set_name_if_none() {
-		if (this.pv.name == '') {
-			this.p.name.set(this.name());
-		}
 	}
 }

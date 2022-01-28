@@ -38,10 +38,8 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 	}
 	static readonly INPUT_NAME = 'vertex';
 
-	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
-		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_input_name_function(() => {
@@ -86,16 +84,5 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 	}
 	setGlType(type: GlConnectionPointType) {
 		this.p.type.set(VARYING_NODE_AVAILABLE_GL_TYPES.indexOf(type));
-	}
-
-	//
-	//
-	// HOOKS
-	//
-	//
-	private _onCreateSetNameIfNone() {
-		if (this.pv.name == '') {
-			this.p.name.set(this.name());
-		}
 	}
 }

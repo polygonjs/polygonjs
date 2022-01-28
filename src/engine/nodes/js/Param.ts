@@ -36,10 +36,8 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		return 'param';
 	}
 	// protected _allow_inputs_created_from_params: boolean = false;
-	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._set_function_node_to_recompile.bind(this));
-		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => []);
@@ -84,16 +82,5 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	setGlType(type: JsConnectionPointType) {
 		const index = JS_CONNECTION_POINT_TYPES.indexOf(type);
 		this.p.type.set(index);
-	}
-
-	//
-	//
-	// HOOKS
-	//
-	//
-	private _onCreateSetNameIfNone() {
-		if (this.pv.name == '') {
-			this.p.name.set(this.name());
-		}
 	}
 }

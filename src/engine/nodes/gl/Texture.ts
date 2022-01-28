@@ -24,8 +24,8 @@ import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/ParamConfig';
 class TextureParamsConfig extends NodeParamsConfig {
-	paramName = ParamConfig.STRING('');
-	defaultValue = ParamConfig.STRING('');
+	paramName = ParamConfig.STRING('textureMap');
+	// defaultValue = ParamConfig.STRING('');
 	uv = ParamConfig.VECTOR2([0, 0]);
 }
 const ParamsConfig = new TextureParamsConfig();
@@ -35,10 +35,8 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		return 'texture';
 	}
 	static readonly OUTPUT_NAME = 'rgba';
-	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
-		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(TextureGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
@@ -66,23 +64,12 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		const param_config = new GlParamConfig(
 			ParamType.NODE_PATH,
 			this.pv.paramName,
-			this.pv.defaultValue,
+			'', //this.pv.defaultValue,
 			this._uniform_name()
 		);
 		this._param_configs_controller.push(param_config);
 	}
 	private _uniform_name() {
 		return this.glVarName(this.pv.paramName);
-	}
-
-	//
-	//
-	// HOOKS
-	//
-	//
-	private _onCreateSetNameIfNone() {
-		if (this.pv.paramName == '') {
-			this.p.paramName.set(this.name());
-		}
 	}
 }

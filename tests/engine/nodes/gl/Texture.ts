@@ -1,4 +1,5 @@
 import {ParamType} from '../../../../src/engine/poly/ParamType';
+import {checkConsolePrints} from '../../../helpers/Console';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
 QUnit.test('gl texture updates it parent material with new spare parameters', async (assert) => {
@@ -85,4 +86,66 @@ QUnit.test('gl texture updates it particle system with new spare parameters', as
 	particlesSystemGpu1.removeNode(texture1);
 	await particlesSystemGpu1.compute();
 	assert.equal(particlesSystemGpu1.params.spare.length, 0);
+});
+
+QUnit.test('gl texture generates an error on material if no name is given', async (assert) => {
+	const MAT = window.MAT;
+	const geo1 = window.geo1;
+	const COP = window.COP;
+	const scene = window.scene;
+
+	await scene.waitForCooksCompleted();
+	const {renderer} = await RendererUtils.waitForRenderer();
+	assert.ok(renderer, 'renderer created');
+
+	function createParticles() {
+		const plane = geo1.createNode('plane');
+		const particles = geo1.createNode('particlesSystemGpu');
+		particles.setInput(0, plane);
+		const mat = MAT.createNode('meshBasicBuilder');
+		particles.p.material.setNode(mat);
+		return particles;
+	}
+	const builderNodes = [
+		MAT.createNode('meshBasicBuilder'),
+		MAT.createNode('meshLambertBuilder'),
+		MAT.createNode('meshPhongBuilder'),
+		MAT.createNode('meshStandardBuilder'),
+		MAT.createNode('meshPhysicalBuilder'),
+		MAT.createNode('volumeBuilder'),
+		createParticles(),
+		COP.createNode('builder'),
+	];
+	async function runTest() {
+		for (let builderNode of builderNodes) {
+			assert.equal(builderNode.nodesByType('output').length, 0);
+			await builderNode.compute();
+			assert.equal(builderNode.states.error.message(), 'one output node is required');
+
+			builderNode.createNode('output');
+			await builderNode.compute();
+			assert.notOk(
+				builderNode.states.error.message(),
+				'error message has disappeared as we have one output node'
+			);
+
+			const tex = builderNode.createNode('texture');
+			tex.p.paramName.set('');
+			await builderNode.compute();
+			assert.equal(
+				builderNode.states.error.message(),
+				'texture1 cannot create spare parameter',
+				builderNode.path()
+			);
+			tex.p.paramName.set(tex.name());
+			await builderNode.compute();
+			assert.notOk(builderNode.states.error.message());
+		}
+	}
+	const displayConsoleOutput = false;
+	if (displayConsoleOutput) {
+		runTest();
+	} else {
+		await checkConsolePrints(runTest);
+	}
 });

@@ -39,7 +39,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	}
 
 	override cook() {
-		console.warn('gl nodes should never cook');
+		console.warn('gl node cooking');
 	}
 
 	protected _setMatToRecompile() {

@@ -41,10 +41,8 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		return 'param';
 	}
 	// protected _allow_inputs_created_from_params: boolean = false;
-	private _onCreateSetNameIfNoneBound = this._onCreateSetNameIfNone.bind(this);
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
-		this.lifecycle.onAfterCreated(this._onCreateSetNameIfNoneBound);
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.connection_points.initializeNode();
 
@@ -93,16 +91,5 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	setGlType(type: GlConnectionPointType) {
 		const index = GL_CONNECTION_POINT_TYPES.indexOf(type);
 		this.p.type.set(index);
-	}
-
-	//
-	//
-	// HOOKS
-	//
-	//
-	private _onCreateSetNameIfNone() {
-		if (this.pv.name == '') {
-			this.p.name.set(this.name());
-		}
 	}
 }

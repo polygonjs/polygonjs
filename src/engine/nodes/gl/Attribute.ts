@@ -44,12 +44,10 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	static readonly INPUT_NAME = 'in';
 	static readonly OUTPUT_NAME = 'val';
 
-	private _on_create_set_name_if_none_bound = this._on_create_set_name_if_none.bind(this);
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompileIfIsExporting.bind(this));
-		this.lifecycle.onAfterCreated(this._on_create_set_name_if_none_bound);
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => {
@@ -177,16 +175,6 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		// (in which case .isExporting() would always return false)
 		if (isBooleanTrue(this.pv.exportWhenConnected)) {
 			this._setMatToRecompile();
-		}
-	}
-	//
-	//
-	// HOOKS
-	//
-	//
-	private _on_create_set_name_if_none() {
-		if (this.pv.name == '') {
-			this.p.name.set(this.name());
 		}
 	}
 

@@ -109,7 +109,12 @@ export abstract class TypedBuilderMatNode<
 		// 	return;
 		// }
 		if (this.assemblerController?.compileRequired()) {
-			this._compile();
+			try {
+				this._compile();
+			} catch (err) {
+				const message = (err as any).message || 'failed to compile';
+				this.states.error.set(message);
+			}
 		}
 	}
 	protected _compile() {

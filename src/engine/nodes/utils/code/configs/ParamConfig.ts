@@ -13,7 +13,11 @@ import {ParamOptions} from '../../../../params/utils/OptionsController';
 export class ParamConfig<T extends ParamType> {
 	// private _texture_loader: CoreTextureLoader
 
-	constructor(protected _type: T, protected _name: string, protected _default_value: ParamInitValuesTypeMap[T]) {}
+	constructor(protected _type: T, protected _name: string, protected _default_value: ParamInitValuesTypeMap[T]) {
+		if (_name == '' || _name == null) {
+			throw new Error(`name must not be an empty string`);
+		}
+	}
 
 	static from_param<K extends ParamType>(param: TypedParam<K>): ParamConfig<K> {
 		return new ParamConfig<K>(param.type(), param.name(), param.defaultValue());

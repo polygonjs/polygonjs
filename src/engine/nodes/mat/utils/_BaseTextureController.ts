@@ -153,20 +153,21 @@ export class BaseTextureMapController extends BaseController {
 		material: Material,
 		uniforms: O,
 		mat_attrib_name: keyof SubType<O, Texture | null>,
-		newTexture: Texture
+		texture: Texture
 	) {
-		const currentTexture = (<unknown>uniforms[mat_attrib_name].value) as Texture | undefined;
-		let textureChangeRequired = false;
-		if (currentTexture) {
-			if (currentTexture.uuid != newTexture.uuid) {
-				textureChangeRequired = true;
+		const has_texture = uniforms[mat_attrib_name] != null && uniforms[mat_attrib_name].value != null;
+		let new_texture_is_different = false;
+		if (has_texture) {
+			const current_texture: Texture = (<unknown>uniforms[mat_attrib_name].value) as Texture;
+			if (current_texture.uuid != texture.uuid) {
+				new_texture_is_different = true;
 			}
 		}
-		if (currentTexture == null || textureChangeRequired) {
+		if (!has_texture || new_texture_is_different) {
 			const uniform = uniforms[mat_attrib_name];
 			// check as the uniform may not exist on a customMaterial
 			if (uniform) {
-				uniforms[mat_attrib_name].value = newTexture as any;
+				uniforms[mat_attrib_name].value = texture as any;
 			}
 			// currently removing the settings of defines USE_MAP or USE_UV
 			// as this seems to conflict with setting .map on the material itself.
@@ -182,7 +183,7 @@ export class BaseTextureMapController extends BaseController {
 			// 		material.defines['USE_UV'] = 5;
 			// 	}
 			// }
-			this._apply_texture_on_material(material, material, mat_attrib_name as any, newTexture);
+			this._apply_texture_on_material(material, material, mat_attrib_name as any, texture);
 			material.needsUpdate = true;
 
 			const customMaterials = (material as ShaderMaterialWithCustomMaterials).customMaterials;
@@ -195,7 +196,7 @@ export class BaseTextureMapController extends BaseController {
 							customMaterial,
 							customMaterial.uniforms as O,
 							mat_attrib_name,
-							newTexture
+							texture
 						);
 					}
 				}
