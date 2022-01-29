@@ -4,11 +4,6 @@
  *
  */
 import {TypedGlNode} from './_Base';
-// import {ThreeToGl} from '../../../Core/ThreeToGl';
-// import {CodeBuilder} from './Util/CodeBuilder'
-// import {Definition} from './Definition/_Module';
-// import {ShaderName, LineType, LINE_TYPES} from './Assembler/Util/CodeBuilder';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseGlShaderAssembler} from './code/assemblers/_Base';

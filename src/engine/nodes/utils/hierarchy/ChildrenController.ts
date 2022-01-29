@@ -49,10 +49,10 @@ export class HierarchyChildrenController {
 	//
 	//
 	private _output_node_find_method: (() => BaseNodeType) | undefined;
-	set_output_node_find_method(method: OutputNodeFindMethod) {
+	setOutputNodeFindMethod(method: OutputNodeFindMethod) {
 		this._output_node_find_method = method;
 	}
-	output_node() {
+	outputNode() {
 		if (this._output_node_find_method) {
 			return this._output_node_find_method();
 		}

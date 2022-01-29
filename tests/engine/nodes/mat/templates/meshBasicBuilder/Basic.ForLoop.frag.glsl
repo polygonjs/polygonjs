@@ -43,15 +43,18 @@ void main() {
 
 
 
-	// /MAT/meshBasicBuilder1/forLoop1/subnetInput1
+	// /MAT/meshBasicBuilder1/forLoop1
 	vec3 v_POLY_forLoop1_position = v_POLY_globals1_position;
-	for(float v_POLY_forLoop1_i = 0.0; v_POLY_forLoop1_i < 10.0; v_POLY_forLoop1_i+= 1.0){
-		float v_POLY_forLoop1_subnetInput1_i = v_POLY_forLoop1_i;
+	for(int v_POLY_forLoop1_i = 0; v_POLY_forLoop1_i < 10; v_POLY_forLoop1_i+= 1){
+		// /MAT/meshBasicBuilder1/forLoop1/subnetInput1
+		int v_POLY_forLoop1_subnetInput1_i = v_POLY_forLoop1_i;
+		int v_POLY_forLoop1_subnetInput1_start = 0;
+		int v_POLY_forLoop1_subnetInput1_max = 10;
+		int v_POLY_forLoop1_subnetInput1_step = 1;
 		vec3 v_POLY_forLoop1_subnetInput1_position = v_POLY_forLoop1_position;
 	
 		// /MAT/meshBasicBuilder1/forLoop1/add1
 		vec3 v_POLY_forLoop1_add1_sum = (v_POLY_forLoop1_subnetInput1_position + vec3(0.1, 0.1, 0.1));
-	
 		// /MAT/meshBasicBuilder1/forLoop1/subnetOutput1
 		v_POLY_forLoop1_position = v_POLY_forLoop1_add1_sum;
 	}

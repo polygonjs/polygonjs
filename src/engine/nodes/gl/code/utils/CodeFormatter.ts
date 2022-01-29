@@ -22,7 +22,7 @@ export class CodeFormatter {
 		let line = `// ${node.path()}`;
 		let prefix: string = LINE_PREFIXES[line_type];
 		if (line_type == LineType.BODY) {
-			let distance = this.node_distance_to_material(node);
+			let distance = this.nodeDistanceToMaterial(node);
 			// special case for subnet_output, so that the comment is offset correctly
 			if (node.type() == NetworkChildNodeType.OUTPUT) {
 				distance += 1;
@@ -41,13 +41,21 @@ export class CodeFormatter {
 		}
 		let prefix: string = LINE_PREFIXES[line_type];
 		if (line_type == LineType.BODY) {
-			prefix = prefix.repeat(this.node_distance_to_material(node));
+			prefix = prefix.repeat(this.nodeDistanceToMaterial(node));
 		}
 		line = `${prefix}${line}`;
 		if (add_suffix) {
 			const last_char = line[line.length - 1];
 			const suffix = LINE_SUFFIXES[line_type];
-			if (last_char != suffix && last_char != BLOCK_START_LAST_CHAR && last_char != BLOCK_END_LAST_CHAR) {
+			const lineIsEmpty = line.trim().length == 0;
+			const lineIsComment = line.trim().startsWith('//');
+			if (
+				last_char != suffix &&
+				last_char != BLOCK_START_LAST_CHAR &&
+				last_char != BLOCK_END_LAST_CHAR &&
+				!lineIsEmpty &&
+				!lineIsComment
+			) {
 				line += suffix;
 			}
 		}
@@ -57,7 +65,7 @@ export class CodeFormatter {
 		return line_type == LineType.BODY ? '	' : '';
 	}
 
-	static node_distance_to_material(node: BaseNodeType): number {
+	static nodeDistanceToMaterial(node: BaseNodeType): number {
 		const parent = node.parent();
 		if (!parent) {
 			return 0;
@@ -65,13 +73,14 @@ export class CodeFormatter {
 		if (parent.context() != node.context()) {
 			return 1;
 		} else {
+			return 1 + this.nodeDistanceToMaterial(parent);
 			// we do not have an offset of 1 for subnet_input and subnet_output
 			// so that those nodes can control the tabs themselves in setLines()
-			let offset = 1;
-			if (node.type() == NetworkChildNodeType.INPUT || node.type() == NetworkChildNodeType.OUTPUT) {
-				offset = 0;
-			}
-			return offset + this.node_distance_to_material(parent);
+			// let offset = 1;
+			// if (node.type() == NetworkChildNodeType.INPUT || node.type() == NetworkChildNodeType.OUTPUT) {
+			// 	offset = 0;
+			// }
+			// return offset + this.node_distance_to_material(parent);
 		}
 	}
 }

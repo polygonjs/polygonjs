@@ -32,7 +32,7 @@ export class ModelViewMatrixMultGlNode extends TypedGlNode<ModelViewMatrixMultGl
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		if (shaders_collection_controller.current_shader_name == ShaderName.VERTEX) {
+		if (shaders_collection_controller.currentShaderName() == ShaderName.VERTEX) {
 			const input = ThreeToGl.vector3(this.variableForInputParam(this.p.vector));
 			const out_value = this.glVarName(OUTPUT_NAME);
 			const body_line = `vec4 ${out_value} = modelViewMatrix * vec4(${input}, 1.0)`;

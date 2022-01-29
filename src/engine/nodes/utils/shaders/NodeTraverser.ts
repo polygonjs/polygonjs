@@ -1,8 +1,8 @@
 import {CoreGraph} from '../../../../core/graph/CoreGraph';
 import {MapUtils} from '../../../../core/MapUtils';
 import {ShaderName} from './ShaderName';
-import {TypedNode, BaseNodeType} from '../../_Base';
-import {NodeContext, NetworkChildNodeType, BaseNodeByContextMap} from '../../../poly/NodeContext';
+import {TypedNode} from '../../_Base';
+import {NodeContext, BaseNodeByContextMap} from '../../../poly/NodeContext';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
@@ -56,7 +56,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		return this._input_names_for_shader_name_method(root_node, shader_name);
 	}
 
-	traverse(root_nodes: BaseNodeByContextMap[NC][]) {
+	traverse(rootNodes: BaseNodeByContextMap[NC][]) {
 		this.reset();
 
 		for (let shader_name of this.shaderNames()) {
@@ -65,9 +65,9 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 
 		for (let shader_name of this.shaderNames()) {
 			this._shader_name = shader_name;
-			for (let root_node of root_nodes) {
-				this.find_leaves_from_root_node(root_node);
-				this.set_nodes_depth();
+			for (let rootNode of rootNodes) {
+				this._findLeavesFromRootNode(rootNode);
+				this._setNodesDepth();
 			}
 		}
 
@@ -81,12 +81,12 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		});
 	}
 
-	leaves_from_nodes(nodes: BaseNodeByContextMap[NC][]) {
+	leavesFromNodes(nodes: BaseNodeByContextMap[NC][]) {
 		this._shader_name = ShaderName.LEAVES_FROM_NODES_SHADER;
 		this._graph_ids_by_shader_name.set(this._shader_name, new Map());
 		this._leaves_graph_id.set(this._shader_name, new Map());
 		for (let node of nodes) {
-			this.find_leaves(node);
+			this._findLeaves(node);
 		}
 
 		const node_ids: CoreGraphNodeId[] = [];
@@ -96,7 +96,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		return this._graph.nodesFromIds(node_ids) as BaseNodeByContextMap[NC][];
 	}
 
-	nodes_for_shader_name(shader_name: ShaderName) {
+	nodesForShaderName(shader_name: ShaderName) {
 		const depths: number[] = [];
 		this._graph_id_by_depth.forEach((value: CoreGraphNodeId[], key: number) => {
 			depths.push(key);
@@ -112,14 +112,14 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 					if (is_present) {
 						const node = this._graph.nodeFromId(graph_id) as BaseNodeByContextMap[NC];
 
-						this.add_nodes_with_children(node, node_id_used_state, nodes, shader_name);
+						this._addNodesWithChildren(node, node_id_used_state, nodes, shader_name);
 					}
 				});
 			}
 		});
 		return nodes;
 	}
-	sorted_nodes() {
+	sortedNodes() {
 		const depths: number[] = [];
 		this._graph_id_by_depth.forEach((ids: CoreGraphNodeId[], depth: number) => {
 			depths.push(depth);
@@ -133,7 +133,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 				for (let graph_id of graph_ids_for_depth) {
 					const node = this._graph.nodeFromId(graph_id) as BaseNodeByContextMap[NC];
 					if (node) {
-						this.add_nodes_with_children(node, node_id_used_state, nodes);
+						this._addNodesWithChildren(node, node_id_used_state, nodes);
 					}
 				}
 			}
@@ -141,7 +141,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 
 		return nodes;
 	}
-	add_nodes_with_children(
+	private _addNodesWithChildren(
 		node: BaseNodeByContextMap[NC],
 		node_id_used_state: Map<CoreGraphNodeId, boolean>,
 		accumulated_nodes: BaseNodeByContextMap[NC][],
@@ -152,54 +152,55 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			node_id_used_state.set(node.graphNodeId(), true);
 		}
 
-		if (node.type() == NetworkChildNodeType.INPUT) {
-			const parent = node.parent();
-			if (parent) {
-				const nodes_with_same_parent_as_subnet_input = this.sorted_nodes_for_shader_name_for_parent(
-					parent,
-					shader_name
-				);
-				for (let child_node of nodes_with_same_parent_as_subnet_input) {
-					if (child_node.graphNodeId() != node.graphNodeId()) {
-						this.add_nodes_with_children(child_node, node_id_used_state, accumulated_nodes, shader_name);
-					}
-				}
-			}
-		}
+		// if (node.type() == NetworkChildNodeType.INPUT) {
+		// 	console.log('_addNodesWithChildren', node);
+		// 	const parent = node.parent();
+		// 	if (parent) {
+		// 		const nodes_with_same_parent_as_subnet_input = this._sortedNodesForShaderNameForParent(
+		// 			parent,
+		// 			shader_name
+		// 		);
+		// 		for (let child_node of nodes_with_same_parent_as_subnet_input) {
+		// 			if (child_node.graphNodeId() != node.graphNodeId()) {
+		// 				this._addNodesWithChildren(child_node, node_id_used_state, accumulated_nodes, shader_name);
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
-	sorted_nodes_for_shader_name_for_parent(parent: BaseNodeType, shader_name?: ShaderName) {
-		const depths: number[] = [];
-		this._graph_id_by_depth.forEach((value: CoreGraphNodeId[], key: number) => {
-			depths.push(key);
-		});
-		depths.sort((a, b) => a - b);
-		const nodes: BaseNodeByContextMap[NC][] = [];
-		depths.forEach((depth) => {
-			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
-			if (graph_ids_for_depth) {
-				graph_ids_for_depth.forEach((graph_id: CoreGraphNodeId) => {
-					const is_present = shader_name
-						? this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id)
-						: true;
-					if (is_present) {
-						const node = this._graph.nodeFromId(graph_id) as BaseNodeByContextMap[NC];
-						if (node.parent() == parent) {
-							nodes.push(node);
-						}
-					}
-				});
-			}
-		});
-		const first_node = nodes[0];
-		if (parent.context() == first_node.context()) {
-			nodes.push(parent as BaseNodeByContextMap[NC]);
-		}
+	// private _sortedNodesForShaderNameForParent(parent: BaseNodeType, shader_name?: ShaderName) {
+	// 	const depths: number[] = [];
+	// 	this._graph_id_by_depth.forEach((value: CoreGraphNodeId[], key: number) => {
+	// 		depths.push(key);
+	// 	});
+	// 	depths.sort((a, b) => a - b);
+	// 	const nodes: BaseNodeByContextMap[NC][] = [];
+	// 	depths.forEach((depth) => {
+	// 		const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
+	// 		if (graph_ids_for_depth) {
+	// 			graph_ids_for_depth.forEach((graph_id: CoreGraphNodeId) => {
+	// 				const is_present = shader_name
+	// 					? this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id)
+	// 					: true;
+	// 				if (is_present) {
+	// 					const node = this._graph.nodeFromId(graph_id) as BaseNodeByContextMap[NC];
+	// 					if (node.parent() == parent) {
+	// 						nodes.push(node);
+	// 					}
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+	// 	const first_node = nodes[0];
+	// 	if (parent.context() == first_node.context()) {
+	// 		nodes.push(parent as BaseNodeByContextMap[NC]);
+	// 	}
 
-		return nodes;
-	}
+	// 	return nodes;
+	// }
 
-	private find_leaves_from_root_node(root_node: BaseNodeByContextMap[NC]) {
+	private _findLeavesFromRootNode(root_node: BaseNodeByContextMap[NC]) {
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(root_node.graphNodeId(), true);
 
 		const input_names = this.input_names_for_shader_name(root_node, this._shader_name);
@@ -212,7 +213,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 						input.graphNodeId(),
 						root_node.graphNodeId()
 					);
-					this.find_leaves(input);
+					this._findLeaves(input);
 				}
 			}
 		}
@@ -222,10 +223,10 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		});
 	}
 
-	private find_leaves(node: BaseNodeByContextMap[NC]) {
+	private _findLeaves(node: BaseNodeByContextMap[NC]) {
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graphNodeId(), true);
 
-		const inputs = this._find_inputs_or_children(node) as BaseNodeByContextMap[NC][];
+		const inputs = this._findInputs(node) as BaseNodeByContextMap[NC][];
 		const compact_inputs: BaseNodeByContextMap[NC][] = ArrayUtils.compact(inputs);
 		const input_graph_ids = ArrayUtils.uniq(compact_inputs.map((n) => n.graphNodeId()));
 		const unique_inputs = input_graph_ids.map((graph_id) =>
@@ -235,36 +236,38 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			for (let input of unique_inputs) {
 				MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
 
-				this.find_leaves(input);
+				this._findLeaves(input);
 			}
 		} else {
 			this._leaves_graph_id.get(this._shader_name)!.set(node.graphNodeId(), true);
 		}
 	}
 
-	private _find_inputs_or_children(node: BaseNodeByContextMap[NC]) {
-		if (node.type() == NetworkChildNodeType.INPUT) {
-			return node.parent()?.io.inputs.inputs() || [];
-		} else {
-			if (node.childrenAllowed()) {
-				// this._subnets_by_id.set(node.graphNodeId(), node);
-				const output_node = node.childrenController?.output_node();
-				return [output_node];
-			} else {
-				return node.io.inputs.inputs();
-			}
-		}
+	private _findInputs(node: BaseNodeByContextMap[NC]) {
+		return node.io.inputs.inputs();
+
+		// if (node.type() == NetworkChildNodeType.INPUT) {
+		// 	return node.parent()?.io.inputs.inputs() || [];
+		// } else {
+		// 	if (node.childrenAllowed()) {
+		// 		// this._subnets_by_id.set(node.graphNodeId(), node);
+		// 		const output_node = node.childrenController?.outputNode();
+		// 		return [output_node];
+		// 	} else {
+		// 		return node.io.inputs.inputs();
+		// 	}
+		// }
 	}
 
-	private set_nodes_depth() {
+	private _setNodesDepth() {
 		this._leaves_graph_id.forEach((booleans_by_graph_id, shader_name) => {
 			booleans_by_graph_id.forEach((boolean, graph_id) => {
-				this.set_node_depth(graph_id);
+				this._setNodeDepth(graph_id);
 			});
 		});
 	}
 
-	private set_node_depth(graph_id: CoreGraphNodeId, depth: number = 0) {
+	private _setNodeDepth(graph_id: CoreGraphNodeId, depth: number = 0) {
 		/*
 		adjust graph depth by hierarchical depth
 		meaning that nodes inside a subnet should add their depth to the parent (and a multiplier)
@@ -293,7 +296,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		const output_ids = this._outputs_by_graph_id.get(graph_id);
 		if (output_ids) {
 			output_ids.forEach((output_id) => {
-				this.set_node_depth(output_id, depth + 1);
+				this._setNodeDepth(output_id, depth + 1);
 			});
 		}
 	}

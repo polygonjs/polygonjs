@@ -49,14 +49,14 @@ void main() {
 	// /MAT/meshBasicBuilder1/compare1
 	bool v_POLY_compare1_val = (v_POLY_vec3ToFloat1_y < 0.0);
 	
-	// /MAT/meshBasicBuilder1/ifThen1/subnetInput1
+	// /MAT/meshBasicBuilder1/ifThen1
 	vec3 v_POLY_ifThen1_position = v_POLY_globals1_position;
 	if(v_POLY_compare1_val){
+		// /MAT/meshBasicBuilder1/ifThen1/subnetInput1
 		vec3 v_POLY_ifThen1_subnetInput1_position = v_POLY_globals1_position;
 	
 		// /MAT/meshBasicBuilder1/ifThen1/multAdd1
 		vec3 v_POLY_ifThen1_multAdd1_val = (vec3(2.0, 2.0, 2.0)*(v_POLY_ifThen1_subnetInput1_position + vec3(0.0, 0.0, 0.0))) + vec3(0.0, 0.0, 0.0);
-	
 		// /MAT/meshBasicBuilder1/ifThen1/subnetOutput1
 		v_POLY_ifThen1_position = v_POLY_ifThen1_multAdd1_val;
 	}

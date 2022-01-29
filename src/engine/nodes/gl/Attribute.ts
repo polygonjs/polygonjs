@@ -20,7 +20,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 class AttributeGlParamsConfig extends NodeParamsConfig {
 	/** @param attribute name */
-	name = ParamConfig.STRING('');
+	name = ParamConfig.STRING('attribute1');
 	/** @param attribute type (float, vec2, vec3, vec4) */
 	type = ParamConfig.INTEGER(0, {
 		menu: {

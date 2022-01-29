@@ -9,15 +9,6 @@ uniform float opacity;
 #endif
 
 #include <common>
-
-
-
-// /MAT/meshBasicBuilder1/globals1
-varying vec3 v_POLY_globals1_position;
-
-
-
-
 #include <dithering_pars_fragment>
 #include <color_pars_fragment>
 #include <uv_pars_fragment>
@@ -40,26 +31,6 @@ void main() {
 	#include <clipping_planes_fragment>
 
 	vec4 diffuseColor = vec4( diffuse, opacity );
-
-
-
-	// /MAT/meshBasicBuilder1/subnet1
-	vec3 v_POLY_subnet1_position = v_POLY_globals1_position;
-	if(true){
-		// /MAT/meshBasicBuilder1/subnet1/subnetInput1
-		vec3 v_POLY_subnet1_subnetInput1_position = v_POLY_globals1_position;
-	
-		// /MAT/meshBasicBuilder1/subnet1/add1
-		vec3 v_POLY_subnet1_add1_sum = (v_POLY_subnet1_subnetInput1_position + vec3(1.0, 0.5, 0.25));
-		// /MAT/meshBasicBuilder1/subnet1/subnetOutput1
-		v_POLY_subnet1_position = v_POLY_subnet1_add1_sum;
-	}
-	
-	// /MAT/meshBasicBuilder1/output1
-	diffuseColor.xyz = v_POLY_subnet1_position;
-
-
-
 
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>

@@ -126,6 +126,7 @@ import './engine/nodes/gl/Noise';
 import './engine/nodes/gl/Param';
 import './engine/nodes/gl/Ramp';
 import './engine/nodes/gl/Rotate';
+import './engine/nodes/gl/SDFGradient';
 import './engine/nodes/gl/Texture';
 import './engine/nodes/gl/VaryingWrite';
 

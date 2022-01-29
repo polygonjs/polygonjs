@@ -245,14 +245,14 @@ void main() {
 	// /MAT/meshBasicBuilder1/compare1
 	bool v_POLY_compare1_val = (v_POLY_vec3ToFloat1_y < 0.0);
 	
-	// /MAT/meshBasicBuilder1/ifThen1/subnetInput1
+	// /MAT/meshBasicBuilder1/ifThen1
 	vec3 v_POLY_ifThen1_position = v_POLY_globals1_position;
 	if(v_POLY_compare1_val){
+		// /MAT/meshBasicBuilder1/ifThen1/subnetInput1
 		vec3 v_POLY_ifThen1_subnetInput1_position = v_POLY_globals1_position;
 	
 		// /MAT/meshBasicBuilder1/ifThen1/rotate1
 		vec3 v_POLY_ifThen1_rotate1_val = rotateWithAxisAngle(v_POLY_ifThen1_subnetInput1_position, vec3(0.0, 1.0, 0.0), 0.0);
-	
 		// /MAT/meshBasicBuilder1/ifThen1/subnetOutput1
 		v_POLY_ifThen1_position = v_POLY_ifThen1_rotate1_val;
 	}

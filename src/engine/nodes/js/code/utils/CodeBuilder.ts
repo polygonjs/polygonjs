@@ -31,19 +31,19 @@ export class JsCodeBuilder {
 			this._gl_parent_node,
 			this._assembler.shaderNames(),
 			(root_node, shader_name) => {
-				return this._assembler.input_names_for_shader_name(root_node, shader_name);
+				return this._assembler.inputNamesForShaderName(root_node, shader_name);
 			}
 		);
 		node_traverser.traverse(root_nodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseJsNodeType[]> = new Map();
 		for (let shader_name of this.shaderNames()) {
-			const nodes = node_traverser.nodes_for_shader_name(shader_name);
+			const nodes = node_traverser.nodesForShaderName(shader_name);
 			nodes_by_shader_name.set(shader_name, nodes);
 		}
-		const sorted_nodes = node_traverser.sorted_nodes();
+		const sorted_nodes = node_traverser.sortedNodes();
 		for (let shader_name of this.shaderNames()) {
-			const root_nodes_for_shader = this._assembler.root_nodes_by_shader_name(shader_name);
+			const root_nodes_for_shader = this._assembler.rootNodesByShaderName(shader_name);
 
 			for (let root_node of root_nodes_for_shader) {
 				MapUtils.pushOnArrayAtEntry(nodes_by_shader_name, shader_name, root_node);

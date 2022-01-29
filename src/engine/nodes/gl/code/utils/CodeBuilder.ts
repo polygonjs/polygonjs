@@ -17,31 +17,33 @@ import {ArrayUtils} from '../../../../../core/ArrayUtils';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 
 type RootNodesForShaderMethod = (shader_name: ShaderName) => BaseGlNodeType[];
+// let nextId = 1;
 export class CodeBuilder {
-	_param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> = new ParamConfigsController();
-	_param_configs_set_allowed: boolean = true;
+	// private _id = (nextId += 1);
+	private _param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> = new ParamConfigsController();
+	private _param_configs_set_allowed: boolean = true;
 
-	private _shaders_collection_controller: ShadersCollectionController | undefined;
-	_lines: Map<ShaderName, Map<LineType, string[]>> = new Map();
+	private _shadersCollectionController: ShadersCollectionController | undefined;
+	private _lines: Map<ShaderName, Map<LineType, string[]>> = new Map();
 	// _function_declared: Map<ShaderName, Map<string, boolean>> = new Map();
 
 	constructor(
-		private _node_traverser: TypedNodeTraverser<NodeContext.GL>,
+		private _nodeTraverser: TypedNodeTraverser<NodeContext.GL>,
 		private _root_nodes_for_shader_method: RootNodesForShaderMethod,
 		private _assembler: TypedAssembler<NodeContext.GL>
 	) {}
 	shaderNames() {
-		return this._node_traverser.shaderNames();
+		return this._nodeTraverser.shaderNames();
 	}
-	buildFromNodes(root_nodes: BaseGlNodeType[], param_nodes: BaseGlNodeType[]) {
-		this._node_traverser.traverse(root_nodes);
+	buildFromNodes(rootNodes: BaseGlNodeType[], param_nodes: BaseGlNodeType[]) {
+		this._nodeTraverser.traverse(rootNodes);
 
 		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
 		for (let shader_name of this.shaderNames()) {
-			const nodes = this._node_traverser.nodes_for_shader_name(shader_name);
+			const nodes = this._nodeTraverser.nodesForShaderName(shader_name);
 			nodes_by_shader_name.set(shader_name, nodes);
 		}
-		const sorted_nodes = this._node_traverser.sorted_nodes();
+		const sorted_nodes = this._nodeTraverser.sortedNodes();
 		for (let shader_name of this.shaderNames()) {
 			const root_nodes_for_shader = this._root_nodes_for_shader_method(shader_name);
 
@@ -56,10 +58,10 @@ export class CodeBuilder {
 			sorted_node_ids.set(node.graphNodeId(), true);
 		}
 
-		for (let root_node of root_nodes) {
-			if (!sorted_node_ids.get(root_node.graphNodeId())) {
-				sorted_nodes.push(root_node);
-				sorted_node_ids.set(root_node.graphNodeId(), true);
+		for (let rootNode of rootNodes) {
+			if (!sorted_node_ids.get(rootNode.graphNodeId())) {
+				sorted_nodes.push(rootNode);
+				sorted_node_ids.set(rootNode.graphNodeId(), true);
 			}
 		}
 		for (let node of sorted_nodes) {
@@ -77,7 +79,7 @@ export class CodeBuilder {
 		// })
 		// await Promise.all(param_promises)
 
-		this._shaders_collection_controller = new ShadersCollectionController(
+		this._shadersCollectionController = new ShadersCollectionController(
 			this.shaderNames(),
 			this.shaderNames()[0],
 			this._assembler
@@ -86,10 +88,11 @@ export class CodeBuilder {
 		for (let shader_name of this.shaderNames()) {
 			let nodes = nodes_by_shader_name.get(shader_name) || [];
 			nodes = ArrayUtils.uniq(nodes);
-			this._shaders_collection_controller.set_current_shader_name(shader_name);
+
+			this._shadersCollectionController.set_current_shader_name(shader_name);
 			if (nodes) {
 				for (let node of nodes) {
-					node.setLines(this._shaders_collection_controller);
+					node.setLines(this._shadersCollectionController);
 				}
 			}
 		}
@@ -112,8 +115,8 @@ export class CodeBuilder {
 		this.set_code_lines(sorted_nodes);
 	}
 
-	shaders_collection_controller() {
-		return this._shaders_collection_controller;
+	shadersCollectionController() {
+		return this._shadersCollectionController;
 	}
 
 	disallow_new_param_configs() {
@@ -179,12 +182,12 @@ export class CodeBuilder {
 		definition_type: GLDefinitionType,
 		line_type: LineType
 	) {
-		if (!this._shaders_collection_controller) {
+		if (!this._shadersCollectionController) {
 			return;
 		}
-		const definitions = [];
+		const definitions: BaseGLDefinition[] = [];
 		for (let node of nodes) {
-			let node_definitions = this._shaders_collection_controller.definitions(shader_name, node);
+			let node_definitions = this._shadersCollectionController.definitions(shader_name, node);
 			if (node_definitions) {
 				node_definitions = node_definitions.filter((d) => d.definition_type == definition_type);
 				for (let definition of node_definitions) {
@@ -233,8 +236,8 @@ export class CodeBuilder {
 	}
 	add_code_line_for_nodes_and_line_type(nodes: BaseGlNodeType[], shader_name: ShaderName, line_type: LineType) {
 		nodes = nodes.filter((node) => {
-			if (this._shaders_collection_controller) {
-				const lines = this._shaders_collection_controller.body_lines(shader_name, node);
+			if (this._shadersCollectionController) {
+				const lines = this._shadersCollectionController.body_lines(shader_name, node);
 				return lines && lines.length > 0;
 			}
 		});
@@ -251,10 +254,10 @@ export class CodeBuilder {
 		line_type: LineType,
 		is_last: boolean
 	): void {
-		if (!this._shaders_collection_controller) {
+		if (!this._shadersCollectionController) {
 			return;
 		}
-		const lines = this._shaders_collection_controller.body_lines(shader_name, node);
+		const lines = this._shadersCollectionController.body_lines(shader_name, node);
 
 		if (lines && lines.length > 0) {
 			const lines_for_shader = this._lines.get(shader_name)!;

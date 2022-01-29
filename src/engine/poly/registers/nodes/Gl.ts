@@ -333,9 +333,7 @@ export class GlRegister {
 		poly.registerNode(RotateGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(RoundGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(SDFBoxGlNode, CATEGORY_GL.SDF);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(SDFGradientGlNode, CATEGORY_GL.SDF);
-		}
+		poly.registerNode(SDFGradientGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SDFIntersectionGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SDFSphereGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SDFSubtractionGlNode, CATEGORY_GL.SDF);

@@ -21,7 +21,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {GlParamConfig} from './code/utils/ParamConfig';
 import {CoreType} from '../../../core/Type';
 class ParamGlParamsConfig extends NodeParamsConfig {
-	name = ParamConfig.STRING('');
+	name = ParamConfig.STRING('param1');
 	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
 		menu: {
 			entries: GL_CONNECTION_POINT_TYPES.map((name, i) => {
@@ -43,6 +43,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	// protected _allow_inputs_created_from_params: boolean = false;
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
+		this.lifecycle.onAfterAdded(this._setMatToRecompile.bind(this));
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.connection_points.initializeNode();
 

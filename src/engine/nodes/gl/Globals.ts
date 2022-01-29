@@ -4,10 +4,6 @@
  *
  */
 import {TypedGlNode} from './_Base';
-// import {ParamType} from '../../../Engine/Param/_Module';
-// import {Connection} from './GlData';
-// import {Definition} from './Definition/_Module';
-// import {ShaderName} from './Assembler/Util/CodeBuilder';
 
 // list of globals
 // https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)

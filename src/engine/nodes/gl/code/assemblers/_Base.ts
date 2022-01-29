@@ -152,7 +152,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// ROOT NODES AND SHADER NAMES
 	//
 	//
-	root_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
+	rootNodesByShaderName(shaderName: ShaderName): BaseGlNodeType[] {
 		// return this._root_nodes
 		const list = [];
 		for (let node of this._root_nodes) {
@@ -228,17 +228,17 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		this._code_builder = undefined;
 	}
 	private _create_code_builder() {
-		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(
+		const nodeTraverser = new TypedNodeTraverser<NodeContext.GL>(
 			this.currentGlParentNode(),
 			this.shaderNames(),
-			(root_node, shader_name) => {
-				return this.input_names_for_shader_name(root_node, shader_name);
+			(rootNode, shaderName) => {
+				return this.inputNamesForShaderName(rootNode, shaderName);
 			}
 		);
 		return new CodeBuilder(
-			node_traverser,
-			(shader_name) => {
-				return this.root_nodes_by_shader_name(shader_name);
+			nodeTraverser,
+			(shaderName) => {
+				return this.rootNodesByShaderName(shaderName);
 			},
 			this
 		);
@@ -402,7 +402,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		this._variable_configs = undefined;
 		this.variable_configs();
 	}
-	input_names_for_shader_name(root_node: BaseGlNodeType, shader_name: ShaderName) {
+	inputNamesForShaderName(root_node: BaseGlNodeType, shader_name: ShaderName) {
 		return this.shader_config(shader_name)?.input_names() || [];
 	}
 

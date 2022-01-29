@@ -50,7 +50,7 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	}
 
 	override async cook(input_contents: CoreGroup[]) {
-		const child_output_node = this.childrenDisplayController.output_node();
+		const child_output_node = this.childrenDisplayController.outputNode();
 		if (child_output_node) {
 			const container = await child_output_node.compute();
 			const core_content = container.coreContent();
@@ -76,16 +76,16 @@ const DEFAULT_OPTIONS: SopSubnetChildrenDisplayControllerOptions = {
 	dependsOnDisplayNode: true,
 };
 export class SopSubnetChildrenDisplayController {
-	private _output_node_needs_update: boolean = true;
-	private _output_node: SubnetOutputSopNode | undefined;
-	private _graph_node: CoreGraphNode | undefined;
+	private _outputNodeNeedsUpdate: boolean = true;
+	private _outputNode: SubnetOutputSopNode | undefined;
+	private _graphNode: CoreGraphNode | undefined;
 	constructor(
 		private node: SubnetSopNodeLike<any>,
 		private options: SopSubnetChildrenDisplayControllerOptions = DEFAULT_OPTIONS
 	) {}
 
 	dispose() {
-		this._graph_node?.dispose();
+		this._graphNode?.dispose();
 	}
 
 	displayNodeControllerCallbacks(): DisplayNodeControllerCallbacks {
@@ -102,11 +102,11 @@ export class SopSubnetChildrenDisplayController {
 		};
 	}
 
-	output_node() {
-		if (this._output_node_needs_update) {
-			this._update_output_node();
+	outputNode() {
+		if (this._outputNodeNeedsUpdate) {
+			this._updateOutputNode();
 		}
-		return this._output_node;
+		return this._outputNode;
 	}
 
 	initializeNode() {
@@ -120,37 +120,37 @@ export class SopSubnetChildrenDisplayController {
 		}
 
 		this.node.lifecycle.onChildAdd(() => {
-			this._output_node_needs_update = true;
+			this._outputNodeNeedsUpdate = true;
 			this.node.setDirty();
 		});
 		this.node.lifecycle.onChildRemove(() => {
-			this._output_node_needs_update = true;
+			this._outputNodeNeedsUpdate = true;
 			this.node.setDirty();
 		});
 	}
 
-	private _update_output_node() {
-		const found_node = this.node.nodesByType(SubnetOutputSopNode.type())[0];
+	private _updateOutputNode() {
+		const foundNode = this.node.nodesByType(SubnetOutputSopNode.type())[0];
 		if (
-			this._output_node == null ||
-			found_node == null ||
-			this._output_node.graphNodeId() != found_node.graphNodeId()
+			this._outputNode == null ||
+			foundNode == null ||
+			this._outputNode.graphNodeId() != foundNode.graphNodeId()
 		) {
-			if (this._graph_node && this._output_node) {
-				this._graph_node.removeGraphInput(this._output_node);
+			if (this._graphNode && this._outputNode) {
+				this._graphNode.removeGraphInput(this._outputNode);
 			}
 
-			this._output_node = found_node;
+			this._outputNode = foundNode;
 
-			if (this._output_node && this.options.dependsOnDisplayNode) {
-				this._graph_node = this._graph_node || this._create_graph_node();
+			if (this._outputNode && this.options.dependsOnDisplayNode) {
+				this._graphNode = this._graphNode || this._createGraphNode();
 
-				this._graph_node.addGraphInput(this._output_node);
+				this._graphNode.addGraphInput(this._outputNode);
 			}
 		}
 	}
 
-	private _create_graph_node() {
+	private _createGraphNode() {
 		const graph_node = new CoreGraphNode(this.node.scene(), 'subnetChildrenDisplayController');
 		graph_node.addPostDirtyHook('subnetChildrenDisplayController', () => {
 			this.node.setDirty();

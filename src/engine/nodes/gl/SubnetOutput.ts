@@ -5,11 +5,10 @@
  *
  */
 
-import {TypedGlNode, BaseGlNodeType} from './_Base';
+import {TypedGlNode} from './_Base';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NetworkChildNodeType} from '../../poly/NodeContext';
-import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetGlNode} from './Subnet';
 class SubnetOutputGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputGlParamsConfig();
@@ -44,31 +43,8 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 		return parent?.childExpectedOutputConnectionPointTypes() || [];
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const parent = this.parent();
-		if (!parent) {
-			return;
-		}
-		const body_lines: string[] = [];
-
-		const connections = this.io.connections.inputConnections();
-		if (connections) {
-			for (let connection of connections) {
-				if (connection) {
-					const connection_point = connection.dest_connection_point();
-
-					const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
-					// const gl_type = connection_point.type;
-					const out = (parent as BaseGlNodeType).glVarName(connection_point.name());
-					// const body_line = `${gl_type} ${out} = ${in_value}`;
-					// do not use the type, to avoid re-defining a variable that should be defined in the parent node
-					const body_line = `	${out} = ${in_value}`;
-					body_lines.push(body_line);
-				}
-			}
-		}
-
-		shaders_collection_controller.addBodyLines(this, body_lines);
-		parent.set_lines_block_end(shaders_collection_controller, this);
+		return parent?.setSubnetOutputLines(shadersCollectionController, this) || [];
 	}
 }

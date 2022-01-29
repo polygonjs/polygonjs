@@ -38,7 +38,7 @@ export class FogGlNode extends TypedGlNode<FogGlParamsConfig> {
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		if (shaders_collection_controller.current_shader_name == ShaderName.FRAGMENT) {
+		if (shaders_collection_controller.currentShaderName() == ShaderName.FRAGMENT) {
 			const varying_name = this.glVarName(this.name());
 			const definition = new VaryingGLDefinition(this, GlConnectionPointType.VEC4, varying_name);
 			const vertex_body_line = `${varying_name} = modelViewMatrix * vec4(position, 1.0)`;

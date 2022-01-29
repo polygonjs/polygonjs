@@ -62,7 +62,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		if (!assembler) {
 			return;
 		}
-		const shader_config = assembler.shader_config(shaders_collection_controller.current_shader_name);
+		const shader_config = assembler.shader_config(shaders_collection_controller.currentShaderName());
 		if (!shader_config) {
 			return;
 		}
@@ -144,7 +144,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		// if (!shader_name) {
 		// 	throw 'no shader name';
 		// }
-		const shader_name = shaders_collection_controller.current_shader_name;
+		const shader_name = shaders_collection_controller.currentShaderName();
 		switch (shader_name) {
 			case ShaderName.VERTEX: {
 				return attrib_name;

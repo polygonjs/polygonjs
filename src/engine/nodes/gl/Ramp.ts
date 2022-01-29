@@ -19,7 +19,7 @@ import {GlParamConfig} from './code/utils/ParamConfig';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RampGlParamsConfig extends NodeParamsConfig {
-	name = ParamConfig.STRING('ramp');
+	name = ParamConfig.STRING('ramp1');
 	input = ParamConfig.FLOAT(0);
 }
 const ParamsConfig = new RampGlParamsConfig();
@@ -32,6 +32,7 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		super.initializeNode();
 
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
+		this.lifecycle.onAfterAdded(this._setMatToRecompile.bind(this));
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),

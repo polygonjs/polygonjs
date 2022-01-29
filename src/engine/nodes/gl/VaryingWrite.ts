@@ -57,7 +57,7 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		if (shaders_collection_controller.current_shader_name == ShaderName.VERTEX) {
+		if (shaders_collection_controller.currentShaderName() == ShaderName.VERTEX) {
 			const glType = this.glType();
 			if (!glType) {
 				return;

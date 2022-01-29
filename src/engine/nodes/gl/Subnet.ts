@@ -10,7 +10,7 @@ import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/connections/Gl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
+import {NetworkChildNodeType, NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
@@ -19,17 +19,17 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
+import {TypedNodeTraverser} from '../utils/shaders/NodeTraverser';
+import {CodeBuilder} from './code/utils/CodeBuilder';
+import {LineType} from './code/utils/LineType';
+import {BaseGLDefinition} from './utils/GLDefinition';
+import {CodeFormatter} from './code/utils/CodeFormatter';
 
 function visibleIfInputsCountAtLeast(index: number) {
 	return {
 		visibleIf: ArrayUtils.range(index + 1, 10).map((i) => ({inputsCount: i})),
 	};
 }
-// function visibleIfOutputsCountAtLeast(index: number) {
-// 	return {
-// 		visibleIf: ArrayUtils.range(index + 1, 10).map((i) => ({outputsCount: i})),
-// 	};
-// }
 
 function inputTypeParam(index: number) {
 	return ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
@@ -42,33 +42,18 @@ function inputTypeParam(index: number) {
 		...visibleIfInputsCountAtLeast(index),
 	});
 }
-// function outputTypeParam(index: number) {
-// 	return ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
-// 		menu: {
-// 			entries: GL_CONNECTION_POINT_TYPES.map((name, i) => {
-// 				return {name: name, value: i};
-// 			}),
-// 		},
-// 		separatorBefore: true,
-// 		...visibleIfOutputsCountAtLeast(index),
-// 	});
-// }
+
 function inputNameParam(index: number) {
 	return ParamConfig.STRING(`input${index}`, {
 		...visibleIfInputsCountAtLeast(index),
 	});
 }
-// function outputNameParam(index: number) {
-// 	return ParamConfig.STRING(`output${index}`, {
-// 		...visibleIfOutputsCountAtLeast(index),
-// 	});
-// }
 
 export function TypedSubnetGlParamsConfigMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		inputs = ParamConfig.FOLDER();
 		inputsCount = ParamConfig.INTEGER(1, {
-			range: [1, 10],
+			range: [0, 10],
 			rangeLocked: [true, true],
 		});
 		inputType0 = inputTypeParam(0);
@@ -91,31 +76,6 @@ export function TypedSubnetGlParamsConfigMixin<TBase extends Constructor>(Base: 
 		inputName8 = inputNameParam(8);
 		inputType9 = inputTypeParam(9);
 		inputName9 = inputNameParam(9);
-		// outputs = ParamConfig.FOLDER();
-		// outputsCount = ParamConfig.INTEGER(1, {
-		// 	range: [0, 10],
-		// 	rangeLocked: [true, true],
-		// });
-		// outputType0 = outputTypeParam(0);
-		// outputName0 = outputNameParam(0);
-		// outputType1 = outputTypeParam(1);
-		// outputName1 = outputNameParam(1);
-		// outputType2 = outputTypeParam(2);
-		// outputName2 = outputNameParam(2);
-		// outputType3 = outputTypeParam(3);
-		// outputName3 = outputNameParam(3);
-		// outputType4 = outputTypeParam(4);
-		// outputName4 = outputNameParam(4);
-		// outputType5 = outputTypeParam(5);
-		// outputName5 = outputNameParam(5);
-		// outputType6 = outputTypeParam(6);
-		// outputName6 = outputNameParam(6);
-		// outputType7 = outputTypeParam(7);
-		// outputName7 = outputNameParam(7);
-		// outputType8 = outputTypeParam(8);
-		// outputName8 = outputNameParam(8);
-		// outputType9 = outputTypeParam(9);
-		// outputName9 = outputNameParam(9);
 		spare = ParamConfig.FOLDER();
 	};
 }
@@ -123,7 +83,7 @@ class TypedSubnetGlParamsConfig extends TypedSubnetGlParamsConfigMixin(NodeParam
 export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends TypedGlNode<K> {
 	protected override _childrenControllerContext = NodeContext.GL;
 	override initializeNode() {
-		this.childrenController?.set_output_node_find_method(() => {
+		this.childrenController?.setOutputNodeFindMethod(() => {
 			return this.nodesByType(SubnetOutputGlNode.type())[0];
 		});
 
@@ -132,7 +92,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 		this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 	}
-	private _inputTypeParams(): IntegerParam[] {
+	protected _inputTypeParams(): IntegerParam[] {
 		return [
 			this.p.inputType0,
 			this.p.inputType1,
@@ -146,7 +106,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 			this.p.inputType9,
 		];
 	}
-	private _inputNameParams(): StringParam[] {
+	protected _inputNameParams(): StringParam[] {
 		return [
 			this.p.inputName0,
 			this.p.inputName1,
@@ -160,34 +120,6 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 			this.p.inputName9,
 		];
 	}
-	// private _outputTypeParams(): IntegerParam[] {
-	// 	return [
-	// 		this.p.outputType0,
-	// 		this.p.outputType1,
-	// 		this.p.outputType2,
-	// 		this.p.outputType3,
-	// 		this.p.outputType4,
-	// 		this.p.outputType5,
-	// 		this.p.outputType6,
-	// 		this.p.outputType7,
-	// 		this.p.outputType8,
-	// 		this.p.outputType9,
-	// 	];
-	// }
-	// private _outputNameParams(): StringParam[] {
-	// 	return [
-	// 		this.p.outputName0,
-	// 		this.p.outputName1,
-	// 		this.p.outputName2,
-	// 		this.p.outputName3,
-	// 		this.p.outputName4,
-	// 		this.p.outputName5,
-	// 		this.p.outputName6,
-	// 		this.p.outputName7,
-	// 		this.p.outputName8,
-	// 		this.p.outputName9,
-	// 	];
-	// }
 
 	setInputType(index: number, type: GlConnectionPointType) {
 		const param = this._inputTypeParams()[index];
@@ -203,74 +135,25 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 		}
 		param.set(inputName);
 	}
-	// setOutputType(index: number, type: GlConnectionPointType) {
-	// 	const param = this._inputTypeParams()[index];
-	// 	if (!param) {
-	// 		return;
-	// 	}
-	// 	param.set(GL_CONNECTION_POINT_TYPES.indexOf(type));
-	// }
-	// setOutputName(index: number, outputName: string) {
-	// 	const param = this._inputNameParams()[index];
-	// 	if (!param) {
-	// 		return;
-	// 	}
-	// 	param.set(outputName);
-	// }
 
 	protected _expectedInputsCount(): number {
 		return this.pv.inputsCount;
-		// const current_connections = this.io.connections.inputConnections();
-		// return current_connections ? ArrayUtils.compact(current_connections).length + 1 : 1;
 	}
 
 	protected _expectedInputTypes(): GlConnectionPointType[] {
 		const count = this.pv.inputsCount;
 		const params: IntegerParam[] = this._inputTypeParams();
 		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
-		// const types: GlConnectionPointType[] = [];
-
-		// const default_type = GlConnectionPointType.FLOAT;
-		// const current_connections = this.io.connections.inputConnections();
-
-		// const expected_count = this._expected_inputs_count();
-		// for (let i = 0; i < expected_count; i++) {
-		// 	if (current_connections) {
-		// 		const connection = current_connections[i];
-		// 		if (connection) {
-		// 			const type = connection.src_connection_point().type();
-		// 			types.push(type);
-		// 		} else {
-		// 			types.push(default_type);
-		// 		}
-		// 	} else {
-		// 		types.push(default_type);
-		// 	}
-		// }
-		// return types;
 	}
 	protected _expectedInputName(index: number) {
 		const params: StringParam[] = this._inputNameParams();
 		return params[index].value;
-		// const connection = this.io.connections.inputConnection(index);
-		// if (connection) {
-		// 	const name = connection.src_connection_point().name();
-		// 	return name;
-		// } else {
-		// 	return `in${index}`;
-		// }
 	}
 
 	protected _expectedOutputTypes() {
 		const count = this.pv.inputsCount;
 		const params: IntegerParam[] = this._inputTypeParams();
 		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
-		// const types: GlConnectionPointType[] = [];
-		// const input_types = this._expected_input_types();
-		// for (let i = 0; i < input_types.length; i++) {
-		// 	types.push(input_types[i]);
-		// }
-		// return types;
 	}
 
 	protected _expectedOutputName(index: number) {
@@ -328,7 +211,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 	// set_lines
 	//
 	//
-	set_lines_block_start(shaders_collection_controller: ShadersCollectionController, child_node: SubnetInputGlNode) {
+	protected _setLinesPreBlock(shadersCollectionController: ShadersCollectionController) {
 		const body_lines: string[] = [];
 		const connection_points = this.io.inputs.namedInputConnectionPoints();
 		for (let i = 0; i < connection_points.length; i++) {
@@ -339,30 +222,138 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 			const body_line = `${gl_type} ${out} = ${in_value}`;
 			body_lines.push(body_line);
 		}
-		const open_if_line = `if(true){`;
-		body_lines.push(open_if_line);
 
+		shadersCollectionController.addBodyLines(this, body_lines);
+	}
+	protected setLinesBlockStart(shadersCollectionController: ShadersCollectionController) {
+		shadersCollectionController.addBodyLines(this, [`if(true){`]);
+	}
+	setSubnetInputLines(shadersCollectionController: ShadersCollectionController, childNode: SubnetInputGlNode) {
 		const connections = this.io.connections.inputConnections();
-		if (connections) {
-			for (let connection of connections) {
-				if (connection) {
-					const connection_point = connection.dest_connection_point();
-					const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
-					const gl_type = connection_point.type();
-					const out = child_node.glVarName(connection_point.name());
-					const body_line = `	${gl_type} ${out} = ${in_value}`;
-					body_lines.push(body_line);
-				}
+		if (!connections) {
+			return;
+		}
+		const body_lines: string[] = [];
+		for (let connection of connections) {
+			if (connection) {
+				const connection_point = connection.dest_connection_point();
+				const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
+				const gl_type = connection_point.type();
+				const out = childNode.glVarName(connection_point.name());
+				const body_line = `	${gl_type} ${out} = ${in_value}`;
+				body_lines.push(body_line);
+			}
+		}
+		shadersCollectionController.addBodyLines(childNode, body_lines);
+	}
+	setSubnetOutputLines(shadersCollectionController: ShadersCollectionController, childNode: SubnetOutputGlNode) {
+		const connections = childNode.io.connections.inputConnections();
+		if (!connections) {
+			return;
+		}
+		const body_lines: string[] = [];
+
+		for (let connection of connections) {
+			if (connection) {
+				const connection_point = connection.dest_connection_point();
+
+				const in_value = ThreeToGl.any(childNode.variableForInput(connection_point.name()));
+				const out = this.glVarName(connection_point.name());
+				// const body_line = `${gl_type} ${out} = ${in_value}`;
+				// do not use the type, to avoid re-defining a variable that should be defined in the parent node
+				const body_line = `	${out} = ${in_value}`;
+				body_lines.push(body_line);
 			}
 		}
 
-		shaders_collection_controller.addBodyLines(child_node, body_lines);
-	}
-	set_lines_block_end(shaders_collection_controller: ShadersCollectionController, child_node: SubnetOutputGlNode) {
-		shaders_collection_controller.addBodyLines(child_node, ['}']);
+		shadersCollectionController.addBodyLines(childNode, body_lines);
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {}
+	// set_lines_block_end(shadersCollectionController: ShadersCollectionController, childNode: SubnetOutputGlNode) {
+	// 	shadersCollectionController.addBodyLines(childNode, ['}']);
+	// }
+
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const codeBuilder = this._runCodeBuilder(shadersCollectionController);
+		if (!codeBuilder) {
+			return;
+		}
+		const shadername = shadersCollectionController.currentShaderName();
+		const bodyLines = codeBuilder.lines(shadername, LineType.BODY);
+		this._setLinesPreBlock(shadersCollectionController);
+		this.setLinesBlockStart(shadersCollectionController);
+		shadersCollectionController.addBodyLines(this, this._sanitizeBodyLines(bodyLines));
+
+		shadersCollectionController.addBodyLines(this, ['}']);
+	}
+	protected _runCodeBuilder(shadersCollectionController: ShadersCollectionController) {
+		// I potentially could look for attribute nodes to use as output,
+		// but for now, I'll enforce a rule that attribute nodes must be at the top level
+		const outputNodes: SubnetOutputGlNode[] = this.nodesByType(NetworkChildNodeType.OUTPUT);
+		const matNode = this.materialNode();
+		if (!matNode) {
+			return;
+		}
+		if (outputNodes.length == 0) {
+			matNode.states.error.set(`${this.path()}:one output node is required`);
+		}
+		if (outputNodes.length > 1) {
+			matNode.states.error.set(`${this.path()}:only one output node allowed`);
+		}
+		const subnetOutput = outputNodes[0];
+		const subnetOutputInputNames = subnetOutput.io.inputs.namedInputConnectionPoints().map((cp) => cp.name());
+
+		const assembler = shadersCollectionController.assembler();
+
+		const nodeTraverser = new TypedNodeTraverser<NodeContext.GL>(
+			this,
+			shadersCollectionController.shaderNames(),
+			(rootNode, shaderName) => {
+				return subnetOutputInputNames;
+			}
+		);
+		const codeBuilder = new CodeBuilder(
+			nodeTraverser,
+			(shaderName) => {
+				return [subnetOutput];
+				// return assembler.rootNodesByShaderName(shaderName);
+			},
+			assembler
+		);
+		const paramNodes: BaseGlNodeType[] = [];
+		codeBuilder.buildFromNodes(outputNodes, paramNodes);
+		this._addCodeBuilderDefinition(codeBuilder, shadersCollectionController);
+		return codeBuilder;
+	}
+	private _addCodeBuilderDefinition(
+		codeBuilder: CodeBuilder,
+		shadersCollectionController: ShadersCollectionController
+	) {
+		const shadername = shadersCollectionController.currentShaderName();
+		const internalShadersCollectionController = codeBuilder.shadersCollectionController();
+		if (internalShadersCollectionController) {
+			const definitions: BaseGLDefinition[] = [];
+			internalShadersCollectionController.traverseDefinitions(shadername, (definition) =>
+				definitions.push(definition)
+			);
+			shadersCollectionController.addDefinitions(this, definitions);
+		}
+	}
+
+	// align with the right number of tabs
+	protected _sanitizeBodyLines(lines: string[]): string[] {
+		const level = CodeFormatter.nodeDistanceToMaterial(this);
+		const prefix = `\t`.repeat(level);
+
+		return lines.map((line) => {
+			const trimmed = line.trim();
+			if (trimmed.length == 0) {
+				return '';
+			} else {
+				return `${prefix}${trimmed}`;
+			}
+		});
+	}
 }
 
 class SubnetGlParamsConfig extends TypedSubnetGlParamsConfigMixin(NodeParamsConfig) {}

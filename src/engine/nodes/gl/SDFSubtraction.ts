@@ -1,3 +1,11 @@
+/**
+ * Subtracts 2 SDFs
+ *
+ * @remarks
+ *
+ * based on [https://iquilezles.org/www/articles/distfunctions/distfunctions.htm](https://iquilezles.org/www/articles/distfunctions/distfunctions.htm)
+ */
+
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';

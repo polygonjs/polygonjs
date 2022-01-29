@@ -129,9 +129,9 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		output_node: OutputGlNode,
 		shaders_collection_controller: ShadersCollectionController
 	) {
-		const input_names = this.input_names_for_shader_name(
+		const input_names = this.inputNamesForShaderName(
 			output_node,
-			shaders_collection_controller.current_shader_name
+			shaders_collection_controller.currentShaderName()
 		);
 		if (input_names) {
 			for (let input_name of input_names) {
@@ -159,7 +159,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		globals_node: GlobalsGlNode,
 		shaders_collection_controller: ShadersCollectionController
 	) {
-		const shader_name = shaders_collection_controller.current_shader_name;
+		const shader_name = shaders_collection_controller.currentShaderName();
 		const shader_config = this.shader_config(shader_name);
 		if (!shader_config) {
 			return;

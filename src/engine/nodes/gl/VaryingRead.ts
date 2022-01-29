@@ -56,7 +56,7 @@ export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		if (shaders_collection_controller.current_shader_name == ShaderName.FRAGMENT) {
+		if (shaders_collection_controller.currentShaderName() == ShaderName.FRAGMENT) {
 			const varying_name = this.pv.name;
 			const definition = new VaryingGLDefinition(this, this.glType(), varying_name);
 

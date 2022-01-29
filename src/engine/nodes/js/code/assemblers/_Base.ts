@@ -32,7 +32,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	shaderNames() {
 		return [];
 	}
-	input_names_for_shader_name(node: BaseJsNodeType, shader_name: ShaderName): string[] {
+	inputNamesForShaderName(node: BaseJsNodeType, shader_name: ShaderName): string[] {
 		return [];
 	}
 
@@ -68,7 +68,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	// ROOT NODES AND SHADER NAMES
 	//
 	//
-	root_nodes_by_shader_name(shader_name: ShaderName): BaseJsNodeType[] {
+	rootNodesByShaderName(shader_name: ShaderName): BaseJsNodeType[] {
 		// return this._root_nodes
 		const list = [];
 		for (let node of this._root_nodes) {

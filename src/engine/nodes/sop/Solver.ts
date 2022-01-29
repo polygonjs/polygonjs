@@ -81,7 +81,7 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 		this._last_simulated_frame = this.scene().frame();
 	}
 	private async computeSolver() {
-		const child_output_node = this.childrenDisplayController.output_node();
+		const child_output_node = this.childrenDisplayController.outputNode();
 		if (child_output_node) {
 			const container = await child_output_node.compute();
 			const core_content = container.coreContent();

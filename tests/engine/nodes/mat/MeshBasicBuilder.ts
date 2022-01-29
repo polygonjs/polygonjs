@@ -265,7 +265,7 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 	forLoop1.setInput(0, globals1, 'position');
 	output1.setInput('color', forLoop1);
 	forLoop_subnetOutput1.setInput(0, add1);
-	add1.setInput(0, forLoop_subnetInput1);
+	add1.setInput(0, forLoop_subnetInput1, 4);
 	add1.params.get('add1')!.set([0.1, 0.1, 0.1]);
 
 	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');

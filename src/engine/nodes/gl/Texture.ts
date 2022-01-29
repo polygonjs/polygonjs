@@ -24,7 +24,7 @@ import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/ParamConfig';
 class TextureParamsConfig extends NodeParamsConfig {
-	paramName = ParamConfig.STRING('textureMap');
+	paramName = ParamConfig.STRING('texture1');
 	// defaultValue = ParamConfig.STRING('');
 	uv = ParamConfig.VECTOR2([0, 0]);
 }
@@ -37,6 +37,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 	static readonly OUTPUT_NAME = 'rgba';
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
+		this.lifecycle.onAfterAdded(this._setMatToRecompile.bind(this));
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(TextureGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),

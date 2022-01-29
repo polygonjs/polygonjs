@@ -10,8 +10,9 @@ import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import {SubnetInputGlNode} from './SubnetInput';
+// import {SubnetInputGlNode} from './SubnetInput';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {SubnetInputGlNode} from './SubnetInput';
 
 const CONDITION_INPUT_NAME = 'condition';
 
@@ -31,47 +32,13 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 
 	protected override _expectedInputTypes(): GlConnectionPointType[] {
 		return [GlConnectionPointType.BOOL, ...super._expectedInputTypes()];
-
-		// const default_type = GlConnectionPointType.FLOAT;
-		// const current_connections = this.io.connections.inputConnections();
-
-		// const expected_count = this._expectedInputsCount();
-		// for (let i = 1; i < expected_count; i++) {
-		// 	if (current_connections) {
-		// 		const connection = current_connections[i];
-		// 		if (connection) {
-		// 			const type = connection.src_connection_point().type();
-		// 			types.push(type);
-		// 		} else {
-		// 			types.push(default_type);
-		// 		}
-		// 	} else {
-		// 		types.push(default_type);
-		// 	}
-		// }
-		// return types;
 	}
 
-	// protected override _expectedOutputTypes() {
-	// 	const types: GlConnectionPointType[] = [];
-	// 	const input_types = this._expectedInputTypes();
-	// 	for (let i = 1; i < input_types.length; i++) {
-	// 		types.push(input_types[i]);
-	// 	}
-	// 	return types;
-	// }
 	protected override _expectedInputName(index: number) {
 		if (index == 0) {
 			return CONDITION_INPUT_NAME;
 		} else {
 			return super._expectedInputName(index - 1);
-			// const connection = this.io.connections.inputConnection(index);
-			// if (connection) {
-			// 	const name = connection.src_connection_point().name();
-			// 	return name;
-			// } else {
-			// 	return `in${index}`;
-			// }
 		}
 	}
 	override childExpectedInputConnectionPointTypes() {
@@ -91,42 +58,53 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 	// set_lines
 	//
 	//
-	override set_lines_block_start(
-		shaders_collection_controller: ShadersCollectionController,
-		child_node: SubnetInputGlNode
-	) {
+	protected override _setLinesPreBlock(shadersCollectionController: ShadersCollectionController) {
 		const body_lines: string[] = [];
-		const connection_points = this.io.inputs.namedInputConnectionPoints();
-		for (let i = 1; i < connection_points.length; i++) {
-			const connection_point = connection_points[i];
-			const gl_type = connection_point.type();
-			const out = this.glVarName(connection_point.name());
-			const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
-			const body_line = `${gl_type} ${out} = ${in_value}`;
-			body_lines.push(body_line);
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		for (let i = 0; i < connectionPoints.length; i++) {
+			const connectionPoint = connectionPoints[i];
+			const connectionPointName = connectionPoint.name();
+			if (connectionPointName != CONDITION_INPUT_NAME) {
+				const gl_type = connectionPoint.type();
+				const out = this.glVarName(connectionPointName);
+				const in_value = ThreeToGl.any(this.variableForInput(connectionPointName));
+				const body_line = `${gl_type} ${out} = ${in_value}`;
+				body_lines.push(body_line);
+			}
 		}
+
+		shadersCollectionController.addBodyLines(this, body_lines);
+	}
+	override setSubnetInputLines(
+		shadersCollectionController: ShadersCollectionController,
+		childNode: SubnetInputGlNode
+	) {
+		const connections = this.io.connections.inputConnections();
+		if (!connections) {
+			return;
+		}
+		const body_lines: string[] = [];
+		for (let connection of connections) {
+			if (connection) {
+				const connectionPoint = connection.dest_connection_point();
+				const connectionPointName = connectionPoint.name();
+				if (connectionPointName != CONDITION_INPUT_NAME) {
+					const in_value = ThreeToGl.any(this.variableForInput(connectionPointName));
+					const gl_type = connectionPoint.type();
+					const out = childNode.glVarName(connectionPointName);
+					const body_line = `	${gl_type} ${out} = ${in_value}`;
+					body_lines.push(body_line);
+				}
+			}
+		}
+		shadersCollectionController.addBodyLines(childNode, body_lines);
+	}
+	protected override setLinesBlockStart(shaders_collection_controller: ShadersCollectionController) {
+		const body_lines: string[] = [];
 		const condition_value = ThreeToGl.any(this.variableForInput(CONDITION_INPUT_NAME));
 		const open_if_line = `if(${condition_value}){`;
 		body_lines.push(open_if_line);
 
-		const connections = this.io.connections.inputConnections();
-		if (connections) {
-			for (let connection of connections) {
-				if (connection) {
-					// if under an if_then node
-					if (connection.input_index != 0) {
-						const connection_point = connection.dest_connection_point();
-						const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
-						const gl_type = connection_point.type();
-						const out = child_node.glVarName(connection_point.name());
-						const body_line = `	${gl_type} ${out} = ${in_value}`;
-						body_lines.push(body_line);
-					}
-				}
-			}
-		}
-		shaders_collection_controller.addBodyLines(child_node, body_lines);
+		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
-
-	override setLines(shaders_collection_controller: ShadersCollectionController) {}
 }

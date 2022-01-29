@@ -340,7 +340,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		shaders_collection_controller: ShadersCollectionController
 	) {
 		// const body_lines = [];
-		const shader_name = shaders_collection_controller.current_shader_name;
+		const shader_name = shaders_collection_controller.currentShaderName();
 		const input_names = this.shader_config(shader_name)?.input_names();
 		if (input_names) {
 			// shaders_collection_controller.set_body_lines([], shader_name);
@@ -511,7 +511,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		shaders_collection_controller: ShadersCollectionController
 	) {
 		const body_lines: string[] = [];
-		const shader_name = shaders_collection_controller.current_shader_name;
+		const shader_name = shaders_collection_controller.currentShaderName();
 		const shader_config = this.shader_config(shader_name);
 		if (!shader_config) {
 			return;
@@ -524,7 +524,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		for (let output_name of used_output_names) {
 			const var_name = globals_node.glVarName(output_name);
-			const globals_shader_name = shaders_collection_controller.current_shader_name;
+			const globals_shader_name = shaders_collection_controller.currentShaderName();
 
 			const options: HandleGlobalsOutputOptions = {
 				globals_node,
