@@ -42,7 +42,7 @@ export const CATEGORY_GL = {
 	MATH: 'math',
 	PHYSICS: 'physics',
 	QUAT: 'quat',
-	SDF: 'math',
+	SDF: 'sdf',
 	TRIGO: 'trigo',
 	UTIL: 'util',
 	INSTANCE: 'instance',
