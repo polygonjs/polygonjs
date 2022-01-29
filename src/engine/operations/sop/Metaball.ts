@@ -15,8 +15,8 @@ interface MetaballSopParams extends DefaultOperationParams {
 	isolation: number;
 	useMetaStrengthAttrib: boolean;
 	metaStrength: number;
-	useMetaSubstractAttrib: boolean;
-	metaSubstract: number;
+	useMetaSubtractAttrib: boolean;
+	metaSubtract: number;
 	enableUVs: boolean;
 	enableColors: boolean;
 }
@@ -27,8 +27,8 @@ export class MetaballSopOperation extends BaseSopOperation {
 		isolation: 30,
 		useMetaStrengthAttrib: false,
 		metaStrength: 0.1,
-		useMetaSubstractAttrib: false,
-		metaSubstract: 1,
+		useMetaSubtractAttrib: false,
+		metaSubtract: 1,
 		enableUVs: false,
 		enableColors: false,
 	};
@@ -70,14 +70,14 @@ export class MetaballSopOperation extends BaseSopOperation {
 					metaStrength *= metaStrengthAttrib;
 				}
 			}
-			let metaSubstract = params.metaSubstract;
-			if (isBooleanTrue(params.useMetaSubstractAttrib)) {
-				let metaSubstractAttrib = point.attribValue('metaSubstract') as number;
-				if (CoreType.isNumber(metaSubstractAttrib)) {
-					metaSubstract *= metaSubstractAttrib;
+			let metaSubtract = params.metaSubtract;
+			if (isBooleanTrue(params.useMetaSubtractAttrib)) {
+				let metaSubtractAttrib = point.attribValue('metaSubtract') as number;
+				if (CoreType.isNumber(metaSubtractAttrib)) {
+					metaSubtract *= metaSubtractAttrib;
 				}
 			}
-			metaballs.addBall(pos.x, pos.y, pos.z, metaStrength, metaSubstract, undefined);
+			metaballs.addBall(pos.x, pos.y, pos.z, metaStrength, metaSubtract, undefined);
 		}
 		metaballs.createPolygons();
 		const geometry = new BufferGeometry();

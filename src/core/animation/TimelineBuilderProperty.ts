@@ -401,7 +401,7 @@ export class TimelineBuilderProperty {
 				return value;
 			case Operation.ADD:
 				return current_value + value;
-			case Operation.SUBSTRACT:
+			case Operation.SUBTRACT:
 				return current_value - value;
 		}
 		TypeAssert.unreachable(operation);

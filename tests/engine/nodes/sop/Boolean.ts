@@ -18,7 +18,7 @@ QUnit.test('SOP boolean simple', async (assert) => {
 
 	transformB.p.t.set([0.1, 0.1, 0.2]);
 
-	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBSTRACT));
+	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 	let coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 135);
@@ -37,7 +37,7 @@ QUnit.test('SOP boolean simple', async (assert) => {
 	const sphere = geo1.createNode('sphere');
 	transformB.setInput(0, sphere);
 
-	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBSTRACT));
+	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 462);
@@ -81,7 +81,7 @@ QUnit.test('SOP boolean with shared materials', async (assert) => {
 
 	transformB.p.t.set([0.1, 0.1, 0.2]);
 
-	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBSTRACT));
+	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 	let coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 135);

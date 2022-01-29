@@ -11,7 +11,7 @@ const ParamsConfig = new BaseGlMathFunctionParamsConfig();
 export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFunctionParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	protected gl_method_name() {
-		return ''; // leave blank to allow nodes such as mult, add, substract to work
+		return ''; // leave blank to allow nodes such as mult, add, subtract to work
 	}
 	protected gl_function_definitions(): TypedGLDefinition<GLDefinitionType>[] {
 		return [];

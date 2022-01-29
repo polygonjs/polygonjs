@@ -7,9 +7,9 @@ import gsap from 'gsap';
 export enum Operation {
 	SET = 'set',
 	ADD = 'add',
-	SUBSTRACT = 'substract',
+	SUBTRACT = 'subtract',
 }
-export const OPERATIONS: Operation[] = [Operation.SET, Operation.ADD, Operation.SUBSTRACT];
+export const OPERATIONS: Operation[] = [Operation.SET, Operation.ADD, Operation.SUBTRACT];
 
 export interface AnimationRepeatParams {
 	count: number;

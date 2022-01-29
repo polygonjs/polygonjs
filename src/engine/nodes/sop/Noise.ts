@@ -21,14 +21,14 @@ export enum NoiseOperation {
 	ADD = 'add',
 	SET = 'set',
 	MULT = 'mult',
-	SUBSTRACT = 'substract',
+	SUBTRACT = 'subtract',
 	DIVIDE = 'divide',
 }
 const OPERATIONS: NoiseOperation[] = [
 	NoiseOperation.ADD,
 	NoiseOperation.SET,
 	NoiseOperation.MULT,
-	NoiseOperation.SUBSTRACT,
+	NoiseOperation.SUBTRACT,
 	NoiseOperation.DIVIDE,
 ];
 
@@ -79,7 +79,7 @@ class NoiseSopParamsConfig extends NodeParamsConfig {
 	restP = ParamConfig.STRING('restP', {visibleIf: {useRestAttributes: true}});
 	/** @param name of rest normal */
 	restN = ParamConfig.STRING('restN', {visibleIf: {useRestAttributes: true}});
-	/** @param operation done when applying the noise (add, set, mult, substract, divide) */
+	/** @param operation done when applying the noise (add, set, mult, subtract, divide) */
 	operation = ParamConfig.INTEGER(OPERATIONS.indexOf(NoiseOperation.ADD), {
 		menu: {
 			entries: OPERATIONS.map((operation) => {
@@ -412,7 +412,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				return current_attrib_value * noise_value;
 			case NoiseOperation.DIVIDE:
 				return current_attrib_value / noise_value;
-			case NoiseOperation.SUBSTRACT:
+			case NoiseOperation.SUBTRACT:
 				return current_attrib_value - noise_value;
 		}
 		TypeAssert.unreachable(operation);
@@ -432,7 +432,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				return current_attrib_value.multiply(noise_value);
 			case NoiseOperation.DIVIDE:
 				return current_attrib_value.divide(noise_value);
-			case NoiseOperation.SUBSTRACT:
+			case NoiseOperation.SUBTRACT:
 				return current_attrib_value.sub(noise_value);
 		}
 		TypeAssert.unreachable(operation);
@@ -451,7 +451,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				return current_attrib_value.multiply(noise_value);
 			case NoiseOperation.DIVIDE:
 				return current_attrib_value.divide(noise_value);
-			case NoiseOperation.SUBSTRACT:
+			case NoiseOperation.SUBTRACT:
 				return current_attrib_value.sub(noise_value);
 		}
 		TypeAssert.unreachable(operation);
@@ -470,7 +470,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				return current_attrib_value.multiplyScalar(noise_value.x);
 			case NoiseOperation.DIVIDE:
 				return current_attrib_value.divideScalar(noise_value.x);
-			case NoiseOperation.SUBSTRACT:
+			case NoiseOperation.SUBTRACT:
 				return current_attrib_value.sub(noise_value);
 		}
 		TypeAssert.unreachable(operation);

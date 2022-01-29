@@ -30,10 +30,10 @@ class MetaballSopParamsConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
-	/** @param useMetaSubstractAttrib */
-	useMetaSubstractAttrib = ParamConfig.BOOLEAN(DEFAULT.useMetaSubstractAttrib);
+	/** @param useMetaSubtractAttrib */
+	useMetaSubtractAttrib = ParamConfig.BOOLEAN(DEFAULT.useMetaSubtractAttrib);
 	/** @param metaStrength */
-	metaSubstract = ParamConfig.FLOAT(DEFAULT.metaSubstract, {
+	metaSubtract = ParamConfig.FLOAT(DEFAULT.metaSubtract, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 	});

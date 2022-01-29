@@ -48,7 +48,7 @@ import {
 } from '../../../nodes/gl/_Math_Arg2';
 import {ClampGlNode, FaceforwardGlNode, SmoothstepGlNode} from '../../../nodes/gl/_Math_Arg3';
 
-import {AddGlNode, DivideGlNode, MultGlNode, SubstractGlNode} from '../../../nodes/gl/_Math_Arg2Operation';
+import {AddGlNode, DivideGlNode, MultGlNode, SubtractGlNode} from '../../../nodes/gl/_Math_Arg2Operation';
 
 import {AndGlNode, OrGlNode} from '../../../nodes/gl/_Math_Arg2Boolean';
 import {AccelerationGlNode} from '../../../nodes/gl/Acceleration';
@@ -216,7 +216,7 @@ export interface GlNodeChildrenMap {
 	subnet: SubnetGlNode;
 	subnetInput: SubnetInputGlNode;
 	subnetOutput: SubnetOutputGlNode;
-	substract: SubstractGlNode;
+	subtract: SubtractGlNode;
 	switch: SwitchGlNode;
 	tan: TanGlNode;
 	texture: TextureGlNode;
@@ -348,7 +348,7 @@ export class GlRegister {
 		poly.registerNode(SubnetGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(SubnetInputGlNode, CATEGORY_GL.LOGIC, SUBNET_CHILD_OPTION);
 		poly.registerNode(SubnetOutputGlNode, CATEGORY_GL.LOGIC, SUBNET_CHILD_OPTION);
-		poly.registerNode(SubstractGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(SubtractGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(SwitchGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(TanGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(TextureGlNode, CATEGORY_GL.COLOR);

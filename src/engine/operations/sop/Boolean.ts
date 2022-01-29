@@ -10,12 +10,12 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum BooleanOperation {
 	INTERSECT = 'intersect',
-	SUBSTRACT = 'substract',
+	SUBTRACT = 'subtract',
 	UNION = 'union',
 }
 export const BOOLEAN_OPERATIONS: BooleanOperation[] = [
 	BooleanOperation.INTERSECT,
-	BooleanOperation.SUBSTRACT,
+	BooleanOperation.SUBTRACT,
 	BooleanOperation.UNION,
 ];
 
@@ -60,7 +60,7 @@ export class BooleanSopOperation extends BaseSopOperation {
 			case BooleanOperation.INTERSECT: {
 				return bspA.intersect(bspB);
 			}
-			case BooleanOperation.SUBSTRACT: {
+			case BooleanOperation.SUBTRACT: {
 				return bspA.subtract(bspB);
 			}
 			case BooleanOperation.UNION: {

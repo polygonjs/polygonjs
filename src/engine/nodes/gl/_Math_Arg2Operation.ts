@@ -95,9 +95,9 @@ export class DivideGlNode extends MathFunctionArg2OperationFactory('divide', {
 		return 1;
 	}
 }
-export class SubstractGlNode extends MathFunctionArg2OperationFactory('substract', {
+export class SubtractGlNode extends MathFunctionArg2OperationFactory('subtract', {
 	in_prefix: 'sub',
-	out: 'substract',
+	out: 'subtract',
 	operation: '-',
 }) {}
 

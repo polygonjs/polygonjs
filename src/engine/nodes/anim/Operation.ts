@@ -6,7 +6,7 @@
  *
  * - set: the animation override the current value
  * - add: the animation adds to the current value
- * substract: the animation substracts from the current value
+ * - subtract: the animation subtracts from the current value
  *
  */
 import {TypedAnimNode} from './_Base';
@@ -14,7 +14,7 @@ import {TimelineBuilder, OPERATIONS} from '../../../core/animation/TimelineBuild
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class OperationAnimParamsConfig extends NodeParamsConfig {
-	/** @param sets the operation (set, add or substract) */
+	/** @param sets the operation (set, add or subtract) */
 	operation = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: OPERATIONS.map((name, value) => {
