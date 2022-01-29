@@ -55,7 +55,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		const param_uniform_pairs: [string, string][] = [];
 		const param_configs = assemblerController.assembler.param_configs();
 		for (let param_config of param_configs) {
-			param_uniform_pairs.push([param_config.name(), param_config.uniform_name]);
+			param_uniform_pairs.push([param_config.name(), param_config.uniformName()]);
 		}
 
 		const material_data = this._materialToJson(this.node.material, {node: this.node, suffix: 'main'});

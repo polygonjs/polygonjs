@@ -53,10 +53,10 @@ void main() {
 
 
 	// /geo1/materialsNetwork1/meshPhongBuilder1/attribute1
-	float v_POLY_attribute1_val = randomId;
+	float v_POLY_attribute_randomId = randomId;
 	
 	// /geo1/materialsNetwork1/meshPhongBuilder1/floatToVec3_1
-	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_attribute1_val, 0.75, 0.75);
+	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_attribute_randomId, 0.75, 0.75);
 	
 	// /geo1/materialsNetwork1/meshPhongBuilder1/hsvToRgb1
 	vec3 v_POLY_hsvToRgb1_rgb = hsv2rgb(v_POLY_floatToVec3_1_vec3);

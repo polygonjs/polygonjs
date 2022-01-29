@@ -39,8 +39,8 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 		const uniforms_owner = new ShaderMaterial();
 		const param_configs = assemblerController.assembler.param_configs();
 		for (let param_config of param_configs) {
-			param_uniform_pairs.push([param_config.name(), param_config.uniform_name]);
-			uniforms_owner.uniforms[param_config.uniform_name] = param_config.uniform;
+			param_uniform_pairs.push([param_config.name(), param_config.uniformName()]);
+			uniforms_owner.uniforms[param_config.uniformName()] = param_config.uniform();
 		}
 
 		const material_data = this._materialToJson(uniforms_owner, {

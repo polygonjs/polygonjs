@@ -91,6 +91,9 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	outputName() {
 		return AttributeGlNode.OUTPUT_NAME;
 	}
+	override glVarName(name: string) {
+		return `v_POLY_attribute_${this.pv.name}`;
+	}
 
 	// private create_inputs_from_params() {
 	// 	if (this.materialNode().allow_attribute_exports) {
@@ -104,7 +107,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
-		assembler.set_node_lines_attribute(this, shaders_collection_controller);
+		assembler.setNodeLinesAttribute(this, shaders_collection_controller);
 	}
 
 	// update_output_type(constructor) {

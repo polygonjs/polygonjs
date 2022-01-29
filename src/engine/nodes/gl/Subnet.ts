@@ -10,7 +10,7 @@ import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/connections/Gl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {NetworkChildNodeType, NetworkNodeType, NodeContext} from '../../poly/NodeContext';
+import {GlNodeType, NetworkChildNodeType, NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
@@ -22,8 +22,9 @@ import {StringParam} from '../../params/String';
 import {TypedNodeTraverser} from '../utils/shaders/NodeTraverser';
 import {CodeBuilder} from './code/utils/CodeBuilder';
 import {LineType} from './code/utils/LineType';
-import {BaseGLDefinition} from './utils/GLDefinition';
+import {BaseGLDefinition, FunctionGLDefinition} from './utils/GLDefinition';
 import {CodeFormatter} from './code/utils/CodeFormatter';
+import {ShaderName} from '../utils/shaders/ShaderName';
 
 function visibleIfInputsCountAtLeast(index: number) {
 	return {
@@ -329,14 +330,37 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 		codeBuilder: CodeBuilder,
 		shadersCollectionController: ShadersCollectionController
 	) {
-		const shadername = shadersCollectionController.currentShaderName();
 		const internalShadersCollectionController = codeBuilder.shadersCollectionController();
-		if (internalShadersCollectionController) {
+		if (!internalShadersCollectionController) {
+			return;
+		}
+		const currentShaderName = shadersCollectionController.currentShaderName();
+
+		// 1- add all definitions for each shaderName
+		const shaderNames = shadersCollectionController.shaderNames();
+		for (let shaderName of shaderNames) {
 			const definitions: BaseGLDefinition[] = [];
-			internalShadersCollectionController.traverseDefinitions(shadername, (definition) =>
-				definitions.push(definition)
-			);
-			shadersCollectionController.addDefinitions(this, definitions);
+			internalShadersCollectionController.traverseDefinitions(shaderName, (definition) => {
+				// only add function if it is for the current shader
+				const isNotFunction = !(definition instanceof FunctionGLDefinition);
+				const isCurrentShader = shaderName == currentShaderName;
+				if (isNotFunction || isCurrentShader) {
+					definitions.push(definition);
+				}
+			});
+			shadersCollectionController.addDefinitions(this, definitions, shaderName);
+		}
+		// 2- add vertex body lines if current shader name is fragment
+		if (currentShaderName == ShaderName.FRAGMENT) {
+			const attribNodes = this.nodesByType(GlNodeType.ATTRIBUTE);
+			const bodyLines: string[] = [];
+			for (let attribNode of attribNodes) {
+				const linesForNode = internalShadersCollectionController.body_lines(ShaderName.VERTEX, attribNode);
+				if (linesForNode) {
+					bodyLines.push(...linesForNode);
+				}
+			}
+			shadersCollectionController.addBodyLines(this, bodyLines, ShaderName.VERTEX);
 		}
 	}
 

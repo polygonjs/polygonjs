@@ -269,7 +269,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			}
 		}
 	}
-	override set_node_lines_attribute(
+	override setNodeLinesAttribute(
 		attribute_node: AttributeGlNode,
 		shaders_collection_controller: ShadersCollectionController
 	) {

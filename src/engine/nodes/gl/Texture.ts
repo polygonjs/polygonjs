@@ -48,7 +48,7 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		const uv = ThreeToGl.vector2(this.variableForInputParam(this.p.uv));
 
 		const rgba = this.glVarName(TextureGlNode.OUTPUT_NAME);
-		const map = this._uniform_name();
+		const map = this.uniformName();
 		const definition = new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, map);
 		const body_line = `vec4 ${rgba} = texture2D(${map}, ${uv})`;
 		shaders_collection_controller.addDefinitions(this, [definition]);
@@ -66,11 +66,14 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 			ParamType.NODE_PATH,
 			this.pv.paramName,
 			'', //this.pv.defaultValue,
-			this._uniform_name()
+			this.uniformName()
 		);
 		this._param_configs_controller.push(param_config);
 	}
-	private _uniform_name() {
+	override glVarName(name: string) {
+		return `v_POLY_texture_${this.pv.paramName}`;
+	}
+	uniformName() {
 		return this.glVarName(this.pv.paramName);
 	}
 }

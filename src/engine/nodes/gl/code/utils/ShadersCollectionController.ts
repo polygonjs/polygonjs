@@ -39,20 +39,20 @@ export class ShadersCollectionController {
 		return this._shaderNames;
 	}
 
-	set_current_shader_name(shader_name: ShaderName) {
-		this._currentShaderName = shader_name;
+	set_current_shader_name(shaderName: ShaderName) {
+		this._currentShaderName = shaderName;
 	}
 	currentShaderName() {
 		return this._currentShaderName;
 	}
 
-	addDefinitions(node: BaseGlNodeType, definitions: BaseGLDefinition[], shader_name?: ShaderName) {
+	addDefinitions(node: BaseGlNodeType, definitions: BaseGLDefinition[], shaderName?: ShaderName) {
 		if (definitions.length == 0) {
 			return;
 		}
 
-		shader_name = shader_name || this._currentShaderName;
-		const lines_controller = this._linesControllerByShaderName.get(shader_name);
+		shaderName = shaderName || this._currentShaderName;
+		const lines_controller = this._linesControllerByShaderName.get(shaderName);
 		if (lines_controller) {
 			lines_controller.addDefinitions(node, definitions);
 		}
@@ -73,22 +73,28 @@ export class ShadersCollectionController {
 	// 	return this._lines_controller_by_shader_name.get(shader_name)?.all_definition_nodes(scene) || [];
 	// }
 
-	addBodyLines(node: BaseGlNodeType, lines: string[], shader_name?: ShaderName) {
+	addBodyLines(node: BaseGlNodeType, lines: string[], shaderName?: ShaderName) {
 		if (lines.length == 0) {
 			return;
 		}
-		shader_name = shader_name || this._currentShaderName;
-		const lines_controller = this._linesControllerByShaderName.get(shader_name);
+		shaderName = shaderName || this._currentShaderName;
+		const lines_controller = this._linesControllerByShaderName.get(shaderName);
 		if (lines_controller) {
 			lines_controller.addBodyLines(node, lines);
 		}
 	}
-	body_lines(shader_name: ShaderName, node: BaseGlNodeType) {
-		const lines_controller = this._linesControllerByShaderName.get(shader_name);
+	body_lines(shaderName: ShaderName, node: BaseGlNodeType) {
+		const lines_controller = this._linesControllerByShaderName.get(shaderName);
 		if (lines_controller) {
 			return lines_controller.body_lines(node);
 		}
 	}
+	// traverseBodyLines(shaderName: ShaderName, callback: BodyLinesTraverseCallback) {
+	// 	const lines_controller = this._linesControllerByShaderName.get(shaderName);
+	// 	if (lines_controller) {
+	// 		return lines_controller.traverseBodyLines(callback);
+	// 	}
+	// }
 	// all_body_line_nodes(shader_name: ShaderName, scene: PolyScene) {
 	// 	return this._lines_controller_by_shader_name.get(shader_name)?.all_body_line_nodes(scene) || [];
 	// }

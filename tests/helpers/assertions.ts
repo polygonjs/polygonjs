@@ -54,12 +54,7 @@ QUnit.assert.not_includes = function (arrayOrString: string | any[], element: an
 	this.pushResult({result, actual, expected, message});
 };
 
-QUnit.assert.in_delta = function (
-	val1: number,
-	val2: number,
-	max_delta: number = 0.001,
-	message: string = 'NOT in delta'
-) {
+QUnit.assert.in_delta = function (val1: number, val2: number, max_delta: number = 0.001, message: string = 'in delta') {
 	// var actual = haystack.indexOf(needle) > -1;
 	const delta = Math.abs(val1 - val2);
 	const in_delta = delta < max_delta;

@@ -39,22 +39,22 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		]);
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const tmpTextureGlType = GlConnectionPointType.VEC3;
-		const tmpTexureVarName = this.glVarName('tmpTexureVarName');
-		const gl_type = GlConnectionPointType.FLOAT;
-		const texture_name = this._uniform_name();
-		const var_name = this.glVarName(OUTPUT_NAME);
+		const tmpTexureVarName = super.glVarName('tmpTexureVarName');
+		const glType = GlConnectionPointType.FLOAT;
+		const texture_name = this.uniformName();
+		const varName = super.glVarName(OUTPUT_NAME);
 
 		const definition = new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, texture_name);
-		shaders_collection_controller.addDefinitions(this, [definition]);
+		shadersCollectionController.addDefinitions(this, [definition]);
 
-		const input_val = this.variableForInputParam(this.p.input);
-		const body_lines = [
-			`${tmpTextureGlType} ${tmpTexureVarName} = texture2D(${this._uniform_name()}, vec2(${input_val}, 0.0)).xyz`,
-			`${gl_type} ${var_name} = -1.0 + ${tmpTexureVarName}.x + ${tmpTexureVarName}.y + ${tmpTexureVarName}.z`,
+		const inputVal = this.variableForInputParam(this.p.input);
+		const bodyLines = [
+			`${tmpTextureGlType} ${tmpTexureVarName} = texture2D(${this.uniformName()}, vec2(${inputVal}, 0.0)).xyz`,
+			`${glType} ${varName} = -1.0 + ${tmpTexureVarName}.x + ${tmpTexureVarName}.y + ${tmpTexureVarName}.z`,
 		];
-		shaders_collection_controller.addBodyLines(this, body_lines);
+		shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 	override paramsGenerating() {
 		return true;
@@ -66,11 +66,17 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 			ParamType.RAMP,
 			this.pv.name,
 			RampParam.DEFAULT_VALUE,
-			this._uniform_name()
+			this.uniformName()
 		);
 		this._param_configs_controller.push(param_config);
 	}
-	private _uniform_name() {
-		return 'ramp_texture_' + this.glVarName(OUTPUT_NAME);
+	override glVarName(name?: string): string {
+		if (name) {
+			return super.glVarName(name);
+		}
+		return `v_POLY_ramp_${this.pv.name}`;
+	}
+	uniformName() {
+		return this.glVarName();
 	}
 }

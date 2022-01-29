@@ -32,10 +32,10 @@ void main() {
 
 
 	// /geo1/materialsNetwork1/lineBasicBuilder1/attribute1
-	float v_POLY_attribute1_val = randomid;
+	float v_POLY_attribute_randomid = randomid;
 	
 	// /geo1/materialsNetwork1/lineBasicBuilder1/floatToVec3_1
-	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_attribute1_val, 0.31, 0.24);
+	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_attribute_randomid, 0.31, 0.24);
 	
 	// /geo1/materialsNetwork1/lineBasicBuilder1/varyingWrite1
 	ptColor = v_POLY_floatToVec3_1_vec3;

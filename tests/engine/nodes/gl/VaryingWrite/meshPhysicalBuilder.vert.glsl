@@ -58,10 +58,10 @@ void main() {
 
 
 	// /geo1/materialsNetwork1/meshPhysicalBuilder1/attribute1
-	float v_POLY_attribute1_val = randomId;
+	float v_POLY_attribute_randomId = randomId;
 	
 	// /geo1/materialsNetwork1/meshPhysicalBuilder1/multAdd2
-	float v_POLY_multAdd2_val = (10000.0*(v_POLY_attribute1_val + 1.3)) + 0.0;
+	float v_POLY_multAdd2_val = (10000.0*(v_POLY_attribute_randomId + 1.3)) + 0.0;
 	
 	// /geo1/materialsNetwork1/meshPhysicalBuilder1/floatToVec3_1
 	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_multAdd2_val, 0.84, 0.47);

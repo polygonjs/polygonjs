@@ -351,12 +351,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			}
 		}
 	}
-	override set_node_lines_attribute(
+	override setNodeLinesAttribute(
 		attribute_node: AttributeGlNode,
 		shaders_collection_controller: ShadersCollectionController
 	) {
-		// const named_output = attribute_node.connected_output()
-		// const named_connection = attribute_node.connected_input()
 		const gl_type = attribute_node.glType();
 		const new_var = this.globals_handler?.read_attribute(
 			attribute_node,
@@ -366,37 +364,6 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		);
 		const var_name = attribute_node.glVarName(attribute_node.outputName());
 		shaders_collection_controller.addBodyLines(attribute_node, [`${gl_type} ${var_name} = ${new_var}`]);
-		// this.add_output_body_line(
-		// 	attribute_node,
-		// 	shader_name,
-		// 	input_name
-		// 	)
-
-		// const vertex_definitions = []
-		// const vertex_body_lines = []
-		// const fragment_definitions = []
-
-		// const named_output = attribute_node.named_outputs()[0]
-		// const gl_type = named_output.type()
-		// const var_name = attribute_node.glVarName(named_output.name())
-
-		// const attribute_name = attribute_node.attribute_name()
-		// // TODO: I should probably raise an error in the node
-		// // maybe when doint the initial eval of all nodes and check for errors?
-		// if(!attribute_name){
-		// 	console.error(attribute_node.path())
-		// 	throw new Error("empty attr name")
-		// }
-		// if(GlobalsGeometryHandler.PRE_DEFINED_ATTRIBUTES.indexOf(attribute_name) < 0){
-		// 	vertex_definitions.push(new Definition.Attribute(attribute_node, gl_type, attribute_name))
-		// }
-		// vertex_definitions.push(new Definition.Varying(attribute_node, gl_type, var_name))
-		// vertex_body_lines.push( `${var_name} = ${attribute_name}` )
-		// fragment_definitions.push(new Definition.Varying(attribute_node, gl_type, var_name))
-
-		// attribute_node.set_definitions(vertex_definitions, 'vertex')
-		// attribute_node.set_definitions(fragment_definitions, 'fragment')
-		// attribute_node.addBodyLines(vertex_body_lines, 'vertex')
 	}
 
 	handle_globals_output_name(options: HandleGlobalsOutputOptions) {

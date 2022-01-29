@@ -319,7 +319,7 @@ export class ParticlesSystemGpuComputeController {
 		if (assembler) {
 			for (let material of all_materials) {
 				for (let param_config of assembler.param_configs()) {
-					material.uniforms[param_config.uniform_name] = param_config.uniform;
+					material.uniforms[param_config.uniformName()] = param_config.uniform();
 				}
 			}
 		} else {

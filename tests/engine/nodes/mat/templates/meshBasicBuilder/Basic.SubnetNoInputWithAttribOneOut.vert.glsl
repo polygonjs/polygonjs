@@ -1,5 +1,17 @@
 
 #include <common>
+
+
+
+// /MAT/meshBasicBuilder1/subnet1/attribute1
+varying vec3 varying_v_POLY_attribute_attrib1;
+
+// /MAT/meshBasicBuilder1/subnet1/attribute1
+attribute vec3 attrib1;
+
+
+
+
 #include <uv_pars_vertex>
 #include <uv2_pars_vertex>
 #include <envmap_pars_vertex>
@@ -18,18 +30,15 @@ void main() {
 
 
 
+	// /MAT/meshBasicBuilder1/subnet1
+	vec3 v_POLY_attribute_attrib1 = attrib1;
+	varying_v_POLY_attribute_attrib1 = vec3(attrib1);
+	
 	// /MAT/meshBasicBuilder1/attribute1
-	vec2 v_POLY_attribute_uv = uv;
-	
-	// /MAT/meshBasicBuilder1/vec2ToFloat1
-	float v_POLY_vec2ToFloat1_x = v_POLY_attribute_uv.x;
-	float v_POLY_vec2ToFloat1_y = v_POLY_attribute_uv.y;
-	
-	// /MAT/meshBasicBuilder1/floatToVec3_1
-	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_vec2ToFloat1_x, 0.0, v_POLY_vec2ToFloat1_y);
+	varying_v_POLY_attribute_attrib1 = vec3(attrib1);
 	
 	// /MAT/meshBasicBuilder1/output1
-	vec3 transformed = v_POLY_floatToVec3_1_vec3;
+	vec3 transformed = position;
 	vec3 objectNormal = normal;
 	#ifdef USE_TANGENT
 		vec3 objectTangent = vec3( tangent.xyz );

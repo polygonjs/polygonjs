@@ -5,6 +5,7 @@ import {MapUtils} from '../../../../../core/MapUtils';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
 export type DefinitionTraverseCallback = (definition: BaseGLDefinition) => void;
+// export type BodyLinesTraverseCallback = (lines: string[]) => void;
 export class LinesController {
 	private _definitionsByNodeId: Map<CoreGraphNodeId, BaseGLDefinition[]> = new Map();
 	private _bodyLinesByNodeId: Map<CoreGraphNodeId, string[]> = new Map();
@@ -64,6 +65,11 @@ export class LinesController {
 	body_lines(node: BaseGlNodeType): string[] | undefined {
 		return this._bodyLinesByNodeId.get(node.graphNodeId());
 	}
+	// traverseBodyLines(callback: BodyLinesTraverseCallback) {
+	// 	this._bodyLinesByNodeId.forEach((lines) => {
+	// 		callback(lines);
+	// 	});
+	// }
 	// all_body_line_nodes(scene: PolyScene) {
 	// 	const nodes: BaseGlNodeType[] = [];
 	// 	this._body_lines_by_node_id.forEach((lines, node_id) => {

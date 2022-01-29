@@ -57,7 +57,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 
 	override setLines(lines_controller: LinesController) {
 		// if (lines_controller.shader_name) {
-		this.function_node?.assembler_controller.assembler.set_node_lines_attribute(this, lines_controller);
+		this.function_node?.assembler_controller.assembler.setNodeLinesAttribute(this, lines_controller);
 		// }
 	}
 

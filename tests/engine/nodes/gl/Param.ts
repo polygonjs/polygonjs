@@ -3,6 +3,9 @@ import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {create_required_nodes_for_subnet_gl_node} from './Subnet';
+import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
+import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 
 QUnit.test('gl param updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
@@ -216,4 +219,142 @@ QUnit.test('gl param updates its particles system with new spare parameters', as
 	particlesSystemGpu1.removeNode(param1);
 	await particlesSystemGpu1.compute();
 	assert.equal(particlesSystemGpu1.params.spare.length, 0);
+});
+
+QUnit.test('gl param: 1 param node on top level and one in a subnet work ok', async (assert) => {
+	const MAT = window.MAT;
+	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
+	meshBasicBuilder1.createNode('output');
+	meshBasicBuilder1.createNode('globals');
+	const material = meshBasicBuilder1.material;
+	const output1 = meshBasicBuilder1.nodesByType('output')[0];
+	meshBasicBuilder1.nodesByType('globals')[0];
+	const subnet1 = meshBasicBuilder1.createNode('subnet');
+	const {subnetOutput1} = create_required_nodes_for_subnet_gl_node(subnet1);
+	// const subnet_subnetInput1 = subnetInput1;
+	const subnet_subnetOutput1 = subnetOutput1;
+
+	function createParamNode(parent: SubnetGlNode | MeshBasicBuilderMatNode) {
+		const param1 = parent.createNode('param');
+		param1.p.name.set('test');
+		param1.setGlType(GlConnectionPointType.FLOAT);
+		return param1;
+	}
+
+	// only 1 param in subnet
+	const param1 = createParamNode(subnet1);
+	const floatToVec3_1 = subnet1.createNode('vec3ToFloat');
+	floatToVec3_1.setInput(0, param1);
+	subnet_subnetOutput1.setInput(0, floatToVec3_1);
+	subnet1.setInputType(0, GlConnectionPointType.VEC3);
+	subnet1.setInputName(0, 'pos');
+	output1.setInput('color', subnet1);
+
+	await meshBasicBuilder1.compute();
+	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
+	let uniform = material.uniforms['v_POLY_param_test'];
+	assert.ok(uniform);
+	assert.equal(uniform.value, 0);
+	let spareParam = meshBasicBuilder1.params.get('test')!;
+	assert.ok(spareParam);
+	spareParam.set(0.5);
+	assert.equal(uniform.value, 0.5);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/subnet1/param1
+uniform float v_POLY_param_test;`
+	);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
+		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_param_test.x;`
+	);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/output1
+	diffuseColor.xyz = v_POLY_subnet1_pos;`
+	);
+
+	// only 1 param out of subnet
+	subnet1.removeNode(param1);
+	await meshBasicBuilder1.compute();
+	assert.not_includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/subnet1/param1
+uniform float v_POLY_param_test;`,
+		'uniform is not declared anymore'
+	);
+	spareParam = meshBasicBuilder1.params.get('test')!;
+	assert.notOk(spareParam, 'spare param is removed');
+
+	const param2 = createParamNode(meshBasicBuilder1);
+	const floatToVec3_2 = meshBasicBuilder1.createNode('vec3ToFloat');
+	floatToVec3_2.setInput(0, param2);
+	output1.setInput('color', floatToVec3_2);
+	await meshBasicBuilder1.compute();
+	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
+	uniform = material.uniforms['v_POLY_param_test'];
+	assert.ok(uniform, 'uniform exists');
+	assert.equal(uniform.value, 0.5, 'uniform value is still previous one');
+	spareParam = meshBasicBuilder1.params.get('test')!;
+	assert.ok(spareParam);
+	spareParam.set(0.7);
+	assert.equal(uniform.value, 0.7);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/param1
+uniform float v_POLY_param_test;`
+	);
+	assert.not_includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
+		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_param_test.x;`
+	);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/vec3ToFloat1
+	float v_POLY_vec3ToFloat1_x = v_POLY_param_test.x;`
+	);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/output1
+	diffuseColor.xyz = v_POLY_vec3ToFloat1_x;`
+	);
+
+	// and with both param nodes
+	const param3 = createParamNode(subnet1);
+	floatToVec3_1.setInput(0, param3);
+	const add1 = meshBasicBuilder1.createNode('add');
+	add1.setInput(0, subnet1);
+	add1.setInput(1, floatToVec3_2);
+	output1.setInput('color', add1);
+	await meshBasicBuilder1.compute();
+	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
+	uniform = material.uniforms['v_POLY_param_test'];
+	assert.ok(uniform, 'uniform exists');
+	assert.equal(uniform.value, 0.7, 'uniform value is still previous one');
+	spareParam = meshBasicBuilder1.params.get('test')!;
+	assert.ok(spareParam);
+	spareParam.set(0.8);
+	assert.equal(uniform.value, 0.8);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/subnet1/param1
+uniform float v_POLY_param_test;`
+	);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
+		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_param_test.x;`
+	);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/vec3ToFloat1
+	float v_POLY_vec3ToFloat1_x = v_POLY_param_test.x;`
+	);
+	assert.includes(
+		material.fragmentShader,
+		`// /MAT/meshBasicBuilder1/output1
+	diffuseColor.xyz = v_POLY_add1_sum;`
+	);
 });

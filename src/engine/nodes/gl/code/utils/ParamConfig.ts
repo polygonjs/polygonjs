@@ -21,11 +21,11 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 		super(_type, _name, _default_value);
 	}
 
-	get uniform_name() {
+	uniformName() {
 		return this._uniform_name;
 	}
 
-	get uniform() {
+	uniform() {
 		return (this._uniform = this._uniform || this._create_uniform());
 	}
 
@@ -38,7 +38,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	}
 
 	protected override _callback(node: BaseNodeType, param: BaseParamType) {
-		GlParamConfig.callback(param, this.uniform);
+		GlParamConfig.callback(param, this.uniform());
 		// switch (param.type) {
 		// 	case ParamType.RAMP:
 		// 		this.uniform.value = (param as RampParam).rampTexture();

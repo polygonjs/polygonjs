@@ -59,7 +59,7 @@ QUnit.test(
 		assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
 		await mesh_basic1.compute();
 		assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-		const uniform_name = param1.uniform_name();
+		const uniform_name = param1.uniformName();
 		assert.equal(mesh_basic1.params.get(param_name)!.value, 0);
 		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0);
 		mesh_basic1.params.get(param_name)!.set(0.5);
@@ -175,7 +175,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 
 	const param1 = mesh_basic1.createNode('param');
 	const param_name = param1.p.name.value;
-	const uniform_name = param1.uniform_name();
+	const uniform_name = param1.uniformName();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
 	param1.setGlType(GlConnectionPointType.FLOAT);
 	await CoreSleep.sleep(100);
@@ -256,7 +256,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 
 	const param1 = mesh_basic1.createNode('param');
 	const param_name = param1.p.name.value;
-	const uniform_name = param1.uniform_name();
+	const uniform_name = param1.uniformName();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
 	param1.setGlType(GlConnectionPointType.FLOAT);
 	await mesh_basic1.compute();

@@ -142,7 +142,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	const all_variables = particles1.gpuController.allVariables();
 	assert.equal(all_variables.length, 1);
 	const variable = all_variables[0];
-	const param_uniform = variable.material.uniforms.v_POLY_param1_val;
+	const param_uniform = variable.material.uniforms.v_POLY_param_test_param;
 	assert.deepEqual(param_uniform.value.toArray(), [0, 1, 0], 'param uniform set to the expected value');
 
 	const buffer_width = 1;
@@ -292,7 +292,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	assert.ok(gpuMaterial);
 	assert.deepEqual(
 		Object.keys(gpuMaterial.uniforms).sort(),
-		['delta_time', 'texture_position', 'time', 'v_POLY_param1_val'],
+		['delta_time', 'texture_position', 'time', 'v_POLY_param_test_param'],
 		'uniforms ok'
 	);
 	assert.ok(gpuMaterial, 'material ok');
@@ -324,7 +324,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	assert.ok(gpuMaterial);
 	assert.deepEqual(
 		Object.keys(gpuMaterial.uniforms).sort(),
-		['delta_time', 'texture_position', 'texture_restP', 'time', 'v_POLY_param1_val'],
+		['delta_time', 'texture_position', 'texture_restP', 'time', 'v_POLY_param_test_param'],
 		'uniforms ok'
 	);
 	assert.ok(gpuMaterial, 'material ok');
@@ -343,7 +343,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	all_variables = particles1.gpuController.allVariables();
 	assert.equal(all_variables.length, 1);
 	const variable = all_variables[0];
-	const param_uniform = variable.material.uniforms.v_POLY_param1_val;
+	const param_uniform = variable.material.uniforms.v_POLY_param_test_param;
 	assert.deepEqual(param_uniform.value.toArray(), [0, 1, 0], 'param uniform set to the expected value');
 
 	const buffer_width = 1;
@@ -929,7 +929,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.includes(
 		material.fragmentShader,
-		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
+		'float v_POLY_attribute_randomId = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
 	);
 	assert.deepEqual(particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations, {
 		writable: [
@@ -960,9 +960,9 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.not_includes(
 		material.fragmentShader,
-		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
+		'float v_POLY_attribute_randomId = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
 	);
-	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = varying_v_POLY_attribute1_val;`);
+	assert.includes(material.fragmentShader, `float v_POLY_attribute_randomId = varying_v_POLY_attribute_randomId;`);
 	assert.deepEqual(particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations, {
 		writable: [
 			{
@@ -1013,7 +1013,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.includes(
 		material.fragmentShader,
-		`float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;`
+		`float v_POLY_attribute_randomId = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;`
 	);
 
 	// change name
@@ -1045,5 +1045,5 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 		material.vertexShader,
 		`vec3 transformed = texture2D( texture_position_SEPARATOR_otherAttrib, particles_sim_uv_varying ).xyz;`
 	);
-	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = varying_v_POLY_attribute1_val;`);
+	assert.includes(material.fragmentShader, `float v_POLY_attribute_randomId = varying_v_POLY_attribute_randomId;`);
 });

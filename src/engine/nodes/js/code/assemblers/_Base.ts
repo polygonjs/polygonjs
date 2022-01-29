@@ -123,7 +123,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	}
 	set_node_lines_globals(globals_node: GlobalsJsNode, lines_controller: LinesController) {}
 	set_node_lines_output(output_node: OutputJsNode, lines_controller: LinesController) {}
-	set_node_lines_attribute(attribute_node: AttributeJsNode, lines_controller: LinesController) {}
+	setNodeLinesAttribute(attribute_node: AttributeJsNode, lines_controller: LinesController) {}
 
 	//
 	//

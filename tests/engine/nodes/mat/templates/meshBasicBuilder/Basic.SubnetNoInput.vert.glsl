@@ -18,18 +18,8 @@ void main() {
 
 
 
-	// /MAT/meshBasicBuilder1/attribute1
-	vec2 v_POLY_attribute_uv = uv;
-	
-	// /MAT/meshBasicBuilder1/vec2ToFloat1
-	float v_POLY_vec2ToFloat1_x = v_POLY_attribute_uv.x;
-	float v_POLY_vec2ToFloat1_y = v_POLY_attribute_uv.y;
-	
-	// /MAT/meshBasicBuilder1/floatToVec3_1
-	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_vec2ToFloat1_x, 0.0, v_POLY_vec2ToFloat1_y);
-	
 	// /MAT/meshBasicBuilder1/output1
-	vec3 transformed = v_POLY_floatToVec3_1_vec3;
+	vec3 transformed = position;
 	vec3 objectNormal = normal;
 	#ifdef USE_TANGENT
 		vec3 objectTangent = vec3( tangent.xyz );

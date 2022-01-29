@@ -4,7 +4,7 @@
 
 
 // /MAT/meshBasicBuilder1/attribute1
-varying vec2 varying_v_POLY_attribute1_val;
+varying vec2 varying_v_POLY_attribute_uv;
 
 
 
@@ -28,7 +28,7 @@ void main() {
 
 
 	// /MAT/meshBasicBuilder1/attribute1
-	varying_v_POLY_attribute1_val = vec2(uv);
+	varying_v_POLY_attribute_uv = vec2(uv);
 	
 	// /MAT/meshBasicBuilder1/output1
 	vec3 transformed = position;

@@ -14,7 +14,7 @@ varying vec3 vViewPosition;
 
 
 // /MAT/meshPhysicalBuilder1/param2
-uniform vec3 v_POLY_param2_val;
+uniform vec3 v_POLY_param_vec3_param;
 
 // /MAT/meshPhysicalBuilder1/globals1
 uniform float time;
@@ -46,7 +46,7 @@ void main() {
 	float v_POLY_globals1_time = time;
 	
 	// /MAT/meshPhysicalBuilder1/output1
-	vec3 transformed = v_POLY_param2_val;
+	vec3 transformed = v_POLY_param_vec3_param;
 	vec3 objectNormal = normal;
 	#ifdef USE_TANGENT
 		vec3 objectTangent = vec3( tangent.xyz );

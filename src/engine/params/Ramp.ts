@@ -1,4 +1,4 @@
-import {RGBFormat} from 'three/src/constants';
+import {RGBAFormat} from 'three/src/constants';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
 import {TypedParam} from './_Base';
@@ -10,6 +10,7 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {ArrayUtils} from '../../core/ArrayUtils';
 import {clamp} from 'three/src/math/MathUtils';
 
+const STRIDE = 4;
 const TEXTURE_WIDTH = 1024;
 const TEXTURE_HEIGHT = 1;
 const TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
@@ -20,9 +21,9 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		return ParamType.RAMP;
 	}
 
-	private _ramp_interpolant: CubicInterpolant | undefined;
-	private _texture_data = new Uint8Array(3 * TEXTURE_SIZE);
-	private _ramp_texture = new DataTexture(this._texture_data, TEXTURE_WIDTH, TEXTURE_HEIGHT, RGBFormat);
+	private _rampInterpolant: CubicInterpolant | undefined;
+	private _textureData = new Uint8Array(STRIDE * TEXTURE_SIZE);
+	private _rampTexture = new DataTexture(this._textureData, TEXTURE_WIDTH, TEXTURE_HEIGHT, RGBAFormat);
 
 	static DEFAULT_VALUE = new RampValue(RampInterpolation.CUBIC, [new RampPoint(0, 0), new RampPoint(1, 1)]);
 	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.toJSON();
@@ -144,11 +145,11 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	}
 
 	private _resetRampInterpolant() {
-		this._ramp_interpolant = undefined;
+		this._rampInterpolant = undefined;
 		// this._ramp_texture = undefined;
 	}
 	rampTexture() {
-		return this._ramp_texture;
+		return this._rampTexture;
 	}
 	private _updateRampTexture() {
 		this._updateRampTextureData();
@@ -168,23 +169,23 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		// so 1.5 becomes R=1, G=1, B=0.5
 		// so 2 becomes R=1, G=1, B=1
 		for (var i = 0; i < TEXTURE_SIZE; i++) {
-			stride = i * 3;
+			stride = i * STRIDE;
 			position = i / TEXTURE_WIDTH;
 			value = this.valueAtPosition(position);
 			if (value <= 0) {
 				// if I set 256, a value of 1 will become 0
-				this._texture_data[stride + 0] = (clamp(value, -1, 0) + 1) * TEXTURE_BYTES_MULT;
-				this._texture_data[stride + 1] = 0;
-				this._texture_data[stride + 2] = 0;
+				this._textureData[stride + 0] = (clamp(value, -1, 0) + 1) * TEXTURE_BYTES_MULT;
+				this._textureData[stride + 1] = 0;
+				this._textureData[stride + 2] = 0;
 			} else {
 				if (value <= 1) {
-					this._texture_data[stride + 0] = TEXTURE_BYTES_MULT;
-					this._texture_data[stride + 1] = clamp(value, 0, 1) * TEXTURE_BYTES_MULT;
-					this._texture_data[stride + 2] = 0;
+					this._textureData[stride + 0] = TEXTURE_BYTES_MULT;
+					this._textureData[stride + 1] = clamp(value, 0, 1) * TEXTURE_BYTES_MULT;
+					this._textureData[stride + 2] = 0;
 				} else {
-					this._texture_data[stride + 0] = TEXTURE_BYTES_MULT;
-					this._texture_data[stride + 1] = TEXTURE_BYTES_MULT;
-					this._texture_data[stride + 2] = (clamp(value, 1, 2) - 1) * TEXTURE_BYTES_MULT;
+					this._textureData[stride + 0] = TEXTURE_BYTES_MULT;
+					this._textureData[stride + 1] = TEXTURE_BYTES_MULT;
+					this._textureData[stride + 2] = (clamp(value, 1, 2) - 1) * TEXTURE_BYTES_MULT;
 				}
 			}
 		}
@@ -196,7 +197,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		return new CubicInterpolant(positions, values, valuesCount, interpolatedValues);
 	}
 	interpolant() {
-		return (this._ramp_interpolant = this._ramp_interpolant || this._createInterpolant());
+		return (this._rampInterpolant = this._rampInterpolant || this._createInterpolant());
 	}
 	private _createInterpolant() {
 		const points = this.value.points();

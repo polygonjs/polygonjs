@@ -131,7 +131,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 
 	protected addUniforms(current_uniforms: IUniforms) {
 		for (let param_config of this.param_configs()) {
-			current_uniforms[param_config.uniform_name] = param_config.uniform;
+			current_uniforms[param_config.uniformName()] = param_config.uniform();
 		}
 
 		if (this.uniformsTimeDependent()) {
@@ -211,7 +211,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {}
 	set_node_lines_output(output_node: OutputGlNode, shaders_collection_controller: ShadersCollectionController) {}
-	set_node_lines_attribute(
+	setNodeLinesAttribute(
 		attribute_node: AttributeGlNode,
 		shaders_collection_controller: ShadersCollectionController
 	) {}

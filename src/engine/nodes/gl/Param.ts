@@ -55,7 +55,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		const definitions = [];
 
 		const gl_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
-		const var_name = this.uniform_name();
+		const var_name = this.uniformName();
 
 		definitions.push(new UniformGLDefinition(this, gl_type, var_name));
 		shaders_collection_controller.addDefinitions(this, definitions);
@@ -77,16 +77,19 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 			CoreType.isArray(default_value) &&
 			default_value.length == 3
 		) {
-			const param_config = new GlParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniform_name());
+			const param_config = new GlParamConfig(ParamType.COLOR, this.pv.name, default_value, this.uniformName());
 			this._param_configs_controller.push(param_config);
 		} else {
-			const param_config = new GlParamConfig(param_type, this.pv.name, default_value, this.uniform_name());
+			const param_config = new GlParamConfig(param_type, this.pv.name, default_value, this.uniformName());
 			this._param_configs_controller.push(param_config);
 		}
 	}
-	uniform_name() {
-		const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
-		const var_name = this.glVarName(output_connection_point.name());
+	override glVarName() {
+		return `v_POLY_param_${this.pv.name}`;
+	}
+	uniformName() {
+		// const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
+		const var_name = this.glVarName(/*output_connection_point.name()*/);
 		return var_name;
 	}
 	setGlType(type: GlConnectionPointType) {
