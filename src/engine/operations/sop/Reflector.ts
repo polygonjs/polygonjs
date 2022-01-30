@@ -78,6 +78,8 @@ export class ReflectorSopOperation extends BaseSopOperation {
 				verticalBlur2Mult: params.verticalBlur2Mult,
 			});
 			reflector.matrixAutoUpdate = false;
+			// make sure object attributes are up to date
+			object.matrix.decompose(object.position, object.quaternion, object.scale);
 			reflector.position.copy(object.position);
 			reflector.rotation.copy(object.rotation);
 			reflector.scale.copy(object.scale);

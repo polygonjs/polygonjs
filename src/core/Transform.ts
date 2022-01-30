@@ -136,8 +136,9 @@ export class CoreTransform {
 		this._q.setFromUnitVectors(this._rotateDirOrigin, this._rotateDirDest);
 		// this._rotate_geometry_m.identity(); // not entirely sure this is necessary
 		this._m.makeRotationFromQuaternion(this._q);
-		object.applyMatrix4(this._m);
-		object.updateMatrix();
+		object.matrix.multiply(this._m);
+		// object.updateMatrix();
+		object.matrix.decompose(object.position, object.quaternion, object.scale);
 	}
 
 	static decomposeMatrix(object: Object3D) {

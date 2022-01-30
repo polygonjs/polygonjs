@@ -97,6 +97,8 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 			const water = new Water(object.geometry, waterOptions);
 			waterObjects.push(water);
 			water.matrixAutoUpdate = false;
+			// make sure object attributes are up to date
+			object.matrix.decompose(object.position, object.quaternion, object.scale);
 			water.position.copy(object.position);
 			water.rotation.copy(object.rotation);
 			water.scale.copy(object.scale);
