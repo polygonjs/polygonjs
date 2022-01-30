@@ -24,6 +24,7 @@ import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {GlNodeFinder} from '../utils/NodeFinder';
 import {VaryingWriteGlNode} from '../../VaryingWrite';
+import {SubnetOutputGlNode} from '../../SubnetOutput';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -152,63 +153,52 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// ROOT NODES AND SHADER NAMES
 	//
 	//
-	rootNodesByShaderName(shaderName: ShaderName): BaseGlNodeType[] {
+	rootNodesByShaderName(shaderName: ShaderName, rootNodes: BaseGlNodeType[]): BaseGlNodeType[] {
 		// return this._root_nodes
 		const list = [];
-		for (let node of this._root_nodes) {
+		for (let node of rootNodes) {
 			switch (node.type()) {
+				case VaryingWriteGlNode.type():
+				case ParamGlNode.type():
+				case SubnetOutputGlNode.type():
 				case OutputGlNode.type(): {
 					list.push(node);
 					break;
 				}
-				case ParamGlNode.type(): {
-					list.push(node);
-					break;
-				}
+				// case SubnetOutputGlNode.type(): {
+				// 	list.push(node);
+				// 	break;
+				// }
+				// case ParamGlNode.type(): {
+				// 	list.push(node);
+				// 	break;
+				// }
 				case AttributeGlNode.type(): {
-					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler?
-					// const attrib_name = (node as AttributeGlNode).attribute_name;
-					// const variable = this._texture_allocations_controller.variable(attrib_name);
-					// if (variable) {
-					// 	const allocation_shader_name = variable.allocation().shader_name();
-					// 	if (allocation_shader_name == shader_name) {
-					// 		list.push(node);
-					// 	}
-					// }
-					// break;
-				}
-				case VaryingWriteGlNode.type(): {
-					list.push(node);
 					break;
 				}
+				// case VaryingWriteGlNode.type(): {
+				// 	list.push(node);
+				// 	break;
+				// }
 			}
 		}
 		return list;
 	}
-	leaf_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
-		const list = [];
-		for (let node of this._leaf_nodes) {
-			switch (node.type()) {
-				case GlobalsGlNode.type(): {
-					list.push(node);
-					break;
-				}
-				case AttributeGlNode.type(): {
-					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler? AND especially since there is no way to assign it?
-					// const attrib_name: string = (node as AttributeGlNode).attribute_name;
-					// const variable = this._texture_allocations_controller.variable(attrib_name);
-					// if (variable) {
-					// 	const allocation_shader_name = variable.allocation().shader_name();
-					// 	if (allocation_shader_name == shader_name) {
-					// 		list.push(node);
-					// 	}
-					// }
-					// break;
-				}
-			}
-		}
-		return list;
-	}
+	// leafNodesByShaderName(shaderName: ShaderName): BaseGlNodeType[] {
+	// 	const list = [];
+	// 	for (let node of this._leaf_nodes) {
+	// 		switch (node.type()) {
+	// 			case GlobalsGlNode.type(): {
+	// 				list.push(node);
+	// 				break;
+	// 			}
+	// 			case AttributeGlNode.type(): {
+	// 				break;
+	// 			}
+	// 		}
+	// 	}
+	// 	return list;
+	// }
 	set_node_lines_globals(globals_node: GlobalsGlNode, shaders_collection_controller: ShadersCollectionController) {}
 	set_node_lines_output(output_node: OutputGlNode, shaders_collection_controller: ShadersCollectionController) {}
 	setNodeLinesAttribute(
@@ -237,8 +227,8 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		);
 		return new CodeBuilder(
 			nodeTraverser,
-			(shaderName) => {
-				return this.rootNodesByShaderName(shaderName);
+			(shaderName, rootNodes) => {
+				return this.rootNodesByShaderName(shaderName, rootNodes);
 			},
 			this
 		);

@@ -149,7 +149,7 @@ export class Vec2ToVec3GlNode extends BaseVecToGlNode {
 	static override type() {
 		return 'vec2ToVec3';
 	}
-	static readonly INPUT_NAME_VEC2 = 'vec3';
+	static readonly INPUT_NAME_VEC2 = 'vec2';
 	static readonly INPUT_NAME_Z = 'z';
 	static readonly OUTPUT_NAME_VEC3 = 'vec3';
 

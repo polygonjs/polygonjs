@@ -6,7 +6,15 @@
  */
 
 import {AutoWah} from 'tone/build/esm/effect/AutoWah';
-const DEFAULTS = AutoWah.getDefaults();
+const DEFAULTS = {
+	// Q: 2,
+	baseFrequency: 100,
+	follower: 0.2,
+	// gain: 2,
+	octaves: 6,
+	sensitivity: 0,
+	// wet: 1,
+}; //AutoWah.getDefaults();
 /*
  baseFrequency: Frequency;
     octaves: Positive;

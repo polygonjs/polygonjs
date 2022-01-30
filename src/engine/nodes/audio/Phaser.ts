@@ -8,7 +8,13 @@
  */
 
 import {Phaser} from 'tone/build/esm/effect/Phaser';
-const DEFAULTS = Phaser.getDefaults();
+const DEFAULTS = {
+	Q: 10,
+	baseFrequency: 350,
+	frequency: 0.5,
+	octaves: 3,
+	stages: 10,
+}; //Phaser.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

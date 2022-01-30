@@ -13,9 +13,10 @@ import {UniformGLDefinition} from '../../../utils/GLDefinition';
 import {GlobalsTextureHandler} from '../../globals/Texture';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {NodeContext} from '../../../../../poly/NodeContext';
+import {SubnetOutputGlNode} from '../../../SubnetOutput';
 
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
-	private _texture_allocations_controller: TextureAllocationsController | undefined;
+	private _textureAllocationsController: TextureAllocationsController | undefined;
 
 	override templateShader() {
 		return undefined;
@@ -33,19 +34,22 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		this.update_shaders();
 	}
 
-	override rootNodesByShaderName(shader_name: ShaderName): BaseGlNodeType[] {
+	override rootNodesByShaderName(shader_name: ShaderName, rootNodes: BaseGlNodeType[]): BaseGlNodeType[] {
 		// return this._root_nodes
 		const list = [];
-		for (let node of this._root_nodes) {
+		for (let node of rootNodes) {
 			switch (node.type()) {
+				case SubnetOutputGlNode.type():
 				case OutputGlNode.type(): {
 					list.push(node);
 					break;
 				}
+				// 	list.push(node);
+				// 	break;
+				// }
 				case AttributeGlNode.type(): {
-					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler?
 					const attrib_name = (node as AttributeGlNode).attributeName();
-					const variable = this._texture_allocations_controller?.variable(attrib_name);
+					const variable = this._textureAllocationsController?.variable(attrib_name);
 					if (variable && variable.allocation()) {
 						const allocation_shader_name = variable.allocation()?.shaderName();
 						if (allocation_shader_name == shader_name) {
@@ -58,40 +62,54 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		}
 		return list;
 	}
-	override leaf_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
-		const list = [];
-		for (let node of this._leaf_nodes) {
-			switch (node.type()) {
-				case GlobalsGlNode.type(): {
-					list.push(node);
-					break;
-				}
-				case AttributeGlNode.type(): {
-					// TODO: typescript - gl - why is there a texture allocation controller in the base assembler? AND especially since there is no way to assign it?
-					const attrib_name: string = (node as AttributeGlNode).attributeName();
-					const variable = this._texture_allocations_controller?.variable(attrib_name);
-					if (variable && variable.allocation()) {
-						const allocation_shader_name = variable.allocation()?.shaderName();
-						if (allocation_shader_name == shader_name) {
-							list.push(node);
-						}
-					}
-					break;
-				}
-			}
-		}
-		return list;
-	}
+	// override leaf_nodes_by_shader_name(shader_name: ShaderName): BaseGlNodeType[] {
+	// 	const list = [];
+	// 	for (let node of this._leaf_nodes) {
+	// 		switch (node.type()) {
+	// 			case GlobalsGlNode.type(): {
+	// 				list.push(node);
+	// 				break;
+	// 			}
+	// 			case AttributeGlNode.type(): {
+	// 				const attrib_name: string = (node as AttributeGlNode).attributeName();
+	// 				const variable = this._textureAllocationsController?.variable(attrib_name);
+	// 				if (variable && variable.allocation()) {
+	// 					const allocation_shader_name = variable.allocation()?.shaderName();
+	// 					if (allocation_shader_name == shader_name) {
+	// 						list.push(node);
+	// 					}
+	// 				}
+	// 				break;
+	// 			}
+	// 		}
+	// 	}
+	// 	return list;
+	// }
 
 	setup_shader_names_and_variables() {
-		const node_traverser = new TypedNodeTraverser<NodeContext.GL>(
+		// here we need 2 traversers:
+		// 1: the first one is shallow and does not traverse children, just like the materials
+		// 2: the second one does traverse the children,
+		// and is necessary to find the attribute nodes that may be inside subnets
+		// so that we can allocate the texture variables
+
+		const node_traverser_shallow = new TypedNodeTraverser<NodeContext.GL>(
 			this.currentGlParentNode(),
 			this.shaderNames(),
 			(root_node, shader_name) => {
 				return this.inputNamesForShaderName(root_node, shader_name);
 			}
 		);
-		this._leaf_nodes = node_traverser.leavesFromNodes(this._root_nodes);
+		const node_traverser_deep = new TypedNodeTraverser<NodeContext.GL>(
+			this.currentGlParentNode(),
+			this.shaderNames(),
+			(root_node, shader_name) => {
+				return this.inputNamesForShaderName(root_node, shader_name);
+			},
+			{traverseChildren: true}
+		);
+		this._leaf_nodes = node_traverser_shallow.leavesFromNodes(this._root_nodes);
+		const leafNodesForTextureAllocations = node_traverser_deep.leavesFromNodes(this._root_nodes);
 
 		// for (let node of this._root_nodes) {
 		// 	await node.params.eval_all();
@@ -100,14 +118,17 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		// 	await node.params.eval_all();
 		// }
 
-		this._texture_allocations_controller = new TextureAllocationsController();
-		this._texture_allocations_controller.allocateConnectionsFromRootNodes(this._root_nodes, this._leaf_nodes);
+		this._textureAllocationsController = new TextureAllocationsController();
+		this._textureAllocationsController.allocateConnectionsFromRootNodes(
+			this._root_nodes,
+			leafNodesForTextureAllocations
+		);
 
 		// const globals_handler = new GlobalsTextureHandler()
 		// this.set_assembler_globals_handler(globals_handler)
 		if (this.globals_handler) {
 			((<unknown>this.globals_handler) as GlobalsTextureHandler)?.set_texture_allocations_controller(
-				this._texture_allocations_controller
+				this._textureAllocationsController
 			);
 		}
 
@@ -163,8 +184,8 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	}
 
 	textureAllocationsController() {
-		return (this._texture_allocations_controller =
-			this._texture_allocations_controller || new TextureAllocationsController());
+		return (this._textureAllocationsController =
+			this._textureAllocationsController || new TextureAllocationsController());
 	}
 
 	//
@@ -173,7 +194,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	//
 	//
 	override create_shader_configs() {
-		return this._texture_allocations_controller?.createShaderConfigs() || [];
+		return this._textureAllocationsController?.createShaderConfigs() || [];
 		// [
 		// 	new ShaderConfig('position', ['position'], []),
 		// 	// new ShaderConfig('fragment', ['color', 'alpha'], ['vertex']),

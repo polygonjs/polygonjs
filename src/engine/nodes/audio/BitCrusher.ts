@@ -6,7 +6,7 @@
  */
 
 import {BitCrusher} from 'tone/build/esm/effect/BitCrusher';
-const DEFAULTS = BitCrusher.getDefaults();
+const DEFAULTS = {bits: 4}; //BitCrusher.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

@@ -11,7 +11,11 @@
  */
 
 import {PingPongDelay} from 'tone/build/esm/effect/PingPongDelay';
-const DEFAULTS = PingPongDelay.getDefaults();
+const DEFAULTS = {
+	delayTime: 0.25,
+	// feedback: 0.5,
+	maxDelay: 1,
+}; //PingPongDelay.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

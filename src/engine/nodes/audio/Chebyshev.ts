@@ -8,7 +8,11 @@
  */
 
 import {Chebyshev} from 'tone/build/esm/effect/Chebyshev';
-const DEFAULTS = Chebyshev.getDefaults();
+interface ChebyshevDefault {
+	order: number;
+	oversample: OverSampleType;
+}
+const DEFAULTS: ChebyshevDefault = {order: 4, oversample: 'none'}; //Chebyshev.getDefaults();
 
 const OVER_SAMPLE_TYPES: OverSampleType[] = ['2x', '4x', 'none'];
 
@@ -30,7 +34,7 @@ class ChebyshevAudioParamsConfig extends NodeParamsConfig {
 		...effectParamsOptions(paramCallback),
 	});
 	/** @param oversample */
-	oversample = ParamConfig.INTEGER(2, {
+	oversample = ParamConfig.INTEGER(OVER_SAMPLE_TYPES.indexOf(DEFAULTS.oversample), {
 		menu: {
 			entries: OVER_SAMPLE_TYPES.map((name, value) => ({name, value})),
 		},

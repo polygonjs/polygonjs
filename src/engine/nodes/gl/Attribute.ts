@@ -105,9 +105,9 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	// 	}
 	// }
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
-		assembler.setNodeLinesAttribute(this, shaders_collection_controller);
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const assembler = shadersCollectionController.assembler() as BaseGlShaderAssembler;
+		assembler.setNodeLinesAttribute(this, shadersCollectionController);
 	}
 
 	// update_output_type(constructor) {

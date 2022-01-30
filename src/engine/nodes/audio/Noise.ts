@@ -8,13 +8,20 @@
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
-import {Noise, NoiseOptions, NoiseType} from 'tone/build/esm/source/Noise';
+import {Noise, NoiseType} from 'tone/build/esm/source/Noise';
 import {effectParamsOptions} from './utils/EffectsController';
 import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/Type';
 const NOISE_TYPES: NoiseType[] = ['white', 'brown', 'pink'];
 
-export const NOISE_DEFAULTS: NoiseOptions = Noise.getDefaults();
+export const NOISE_DEFAULTS = {
+	fadeIn: 0,
+	fadeOut: 0,
+	mute: false,
+	playbackRate: 1,
+	// type: "white",
+	// volume: 0,
+}; //Noise.getDefaults();
 
 const paramCallback = (node: BaseNodeType) => {
 	NoiseAudioNode.PARAM_CALLBACK_updateNoise(node as NoiseAudioNode);

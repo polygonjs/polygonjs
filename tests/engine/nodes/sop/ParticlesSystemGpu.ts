@@ -1047,3 +1047,155 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.includes(material.fragmentShader, `float v_POLY_attribute_randomId = varying_v_POLY_attribute_randomId;`);
 });
+
+QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', async (assert) => {
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	scene.setFrame(0);
+
+	await scene.waitForCooksCompleted();
+	const {renderer} = await RendererUtils.waitForRenderer();
+	assert.ok(renderer, 'renderer created');
+
+	const sopadd1 = geo1.createNode('add');
+	const restAttributes1 = geo1.createNode('restAttributes');
+	const particles1 = geo1.createNode('particlesSystemGpu');
+	assert.equal(particles1.children().length, 0, 'no children');
+	const {output1, globals1} = create_required_nodes(particles1);
+	assert.equal(particles1.children().length, 2, '2 children');
+
+	sopadd1.p.createPoint.set(1);
+	sopadd1.p.position.set([1, 0.5, 0.25]);
+	restAttributes1.setInput(0, sopadd1);
+	particles1.setInput(0, restAttributes1);
+
+	// we set up an attribute inside a subnet
+	const subnet1 = particles1.createNode('subnet');
+	subnet1.p.inputsCount.set(1);
+	subnet1.setInputType(0, GlConnectionPointType.VEC3);
+	const subnet1_subnetInput1 = subnet1.createNode('subnetInput');
+	const subnet1_subnetOutput1 = subnet1.createNode('subnetOutput');
+	const attribute1 = subnet1.createNode('attribute');
+	const add1 = subnet1.createNode('add');
+	attribute1.setGlType(GlConnectionPointType.VEC3);
+	attribute1.p.name.set('restP');
+	add1.setInput(0, attribute1);
+	add1.setInput(1, subnet1_subnetInput1);
+	subnet1_subnetOutput1.setInput(0, add1);
+	subnet1.setInput(0, globals1, 'position');
+	output1.setInput('position', subnet1);
+
+	scene.setFrame(1);
+	await particles1.compute();
+	const render_material = particles1.renderController.material()!;
+	const uniform = render_material.uniforms.texture_position;
+
+	assert.ok(render_material, 'material ok');
+	assert.ok(uniform, 'uniform ok');
+
+	const buffer_width = 1;
+	const buffer_height = 1;
+	let render_target1 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
+	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
+	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	assert.deepEqual(pixelBuffer.join(':'), [3, 1.5, 0.75, 0].join(':'), 'point moved sideways frame 1');
+
+	scene.setFrame(2);
+	let render_target2 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
+	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
+	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	assert.deepEqual(pixelBuffer.join(':'), [4, 2, 1, 0].join(':'), 'point moved sideways frame 2');
+
+	scene.setFrame(3);
+	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
+	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	assert.deepEqual(pixelBuffer.join(':'), [5, 2.5, 1.25, 0].join(':'), 'point moved sideways frame 3');
+
+	scene.setFrame(4);
+	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
+	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	assert.deepEqual(pixelBuffer.join(':'), [6, 3, 1.5, 0].join(':'), 'point moved sideways frame 4');
+
+	RendererUtils.dispose();
+});
+
+QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (assert) => {
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	scene.setFrame(0);
+
+	await scene.waitForCooksCompleted();
+	const {renderer} = await RendererUtils.waitForRenderer();
+	assert.ok(renderer, 'renderer created');
+
+	const sopadd1 = geo1.createNode('add');
+	const particles1 = geo1.createNode('particlesSystemGpu');
+	assert.equal(particles1.children().length, 0, 'no children');
+	const {output1, globals1} = create_required_nodes(particles1);
+	assert.equal(particles1.children().length, 2, '2 children');
+
+	sopadd1.p.createPoint.set(1);
+	sopadd1.p.position.set([1, 0.5, 0.25]);
+	particles1.setInput(0, sopadd1);
+
+	// we set up an attribute inside a subnet
+	const subnet1 = particles1.createNode('subnet');
+	subnet1.p.inputsCount.set(1);
+	subnet1.setInputType(0, GlConnectionPointType.VEC3);
+	const subnet1_subnetInput1 = subnet1.createNode('subnetInput');
+	const subnet1_subnetOutput1 = subnet1.createNode('subnetOutput');
+	const param1 = subnet1.createNode('param');
+	const add1 = subnet1.createNode('add');
+	param1.setGlType(GlConnectionPointType.VEC3);
+	param1.p.name.set('myCustomParam');
+	add1.setInput(0, param1);
+	add1.setInput(1, subnet1_subnetInput1);
+	subnet1_subnetOutput1.setInput(0, add1);
+	subnet1.setInput(0, globals1, 'position');
+	output1.setInput('position', subnet1);
+
+	scene.setFrame(1);
+	await particles1.compute();
+
+	const spareParam = particles1.params.get('myCustomParam')! as Vector3Param;
+	assert.ok(spareParam);
+	spareParam.set([-1, 2, -4]);
+
+	const render_material = particles1.renderController.material()!;
+	const uniform = render_material.uniforms.texture_position;
+
+	assert.ok(render_material, 'material ok');
+	assert.ok(uniform, 'uniform ok');
+
+	const buffer_width = 1;
+	const buffer_height = 1;
+	let render_target1 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
+	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
+	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	assert.deepEqual(pixelBuffer.join(':'), [1, 0.5, 0.25, 0].join(':'), 'point moved sideways frame 1');
+
+	spareParam.set([3, 5, 6]);
+	scene.setFrame(2);
+	let render_target2 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
+	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
+	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	assert.deepEqual(pixelBuffer.join(':'), [4, 5.5, 6.25, 0].join(':'), 'point moved sideways frame 2');
+
+	spareParam.set([7, 0.5, 33]);
+	scene.setFrame(3);
+	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
+	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	assert.deepEqual(pixelBuffer.join(':'), [11, 6, 39.25, 0].join(':'), 'point moved sideways frame 3');
+
+	spareParam.set([27, 123, 4033]);
+	scene.setFrame(4);
+	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
+	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	assert.deepEqual(pixelBuffer.join(':'), [38, 129, 4072.25, 0].join(':'), 'point moved sideways frame 4');
+
+	RendererUtils.dispose();
+});

@@ -16,7 +16,7 @@ import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 
-type RootNodesForShaderMethod = (shader_name: ShaderName) => BaseGlNodeType[];
+type RootNodesForShaderMethod = (shader_name: ShaderName, rootNodes: BaseGlNodeType[]) => BaseGlNodeType[];
 // let nextId = 1;
 export class CodeBuilder {
 	// private _id = (nextId += 1);
@@ -45,7 +45,7 @@ export class CodeBuilder {
 		}
 		const sorted_nodes = this._nodeTraverser.sortedNodes();
 		for (let shader_name of this.shaderNames()) {
-			const root_nodes_for_shader = this._root_nodes_for_shader_method(shader_name);
+			const root_nodes_for_shader = this._root_nodes_for_shader_method(shader_name, rootNodes);
 
 			for (let root_node of root_nodes_for_shader) {
 				MapUtils.pushOnArrayAtEntry(nodes_by_shader_name, shader_name, root_node);

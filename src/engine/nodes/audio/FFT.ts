@@ -12,7 +12,11 @@ import {effectParamsOptions} from './utils/EffectsController';
 import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {BaseAnalyserAudioNode} from './_BaseAnalyser';
 import {Number2} from '../../../types/GlobalTypes';
-const DEFAULTS = FFT.getDefaults();
+const DEFAULTS = {
+	// normalRange: false,
+	// size: 1024,
+	smoothing: 0.8,
+}; //FFT.getDefaults();
 
 const paramCallback = (node: BaseNodeType) => {
 	FFTAudioNode.PARAM_CALLBACK_updateEffect(node as FFTAudioNode);

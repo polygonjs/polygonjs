@@ -10,7 +10,10 @@
  */
 
 import {Reverb} from 'tone/build/esm/effect/Reverb';
-const DEFAULTS = Reverb.getDefaults();
+const DEFAULTS = {
+	decay: 1.5,
+	preDelay: 0.01,
+}; //Reverb.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

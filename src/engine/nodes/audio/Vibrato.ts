@@ -9,7 +9,11 @@
  */
 
 import {Vibrato} from 'tone/build/esm/effect/Vibrato';
-const DEFAULTS = Vibrato.getDefaults();
+const DEFAULTS = {
+	depth: 0.1,
+	frequency: 5,
+	maxDelay: 0.005,
+}; //Vibrato.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

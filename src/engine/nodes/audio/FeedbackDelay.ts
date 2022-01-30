@@ -5,7 +5,12 @@
  */
 
 import {FeedbackDelay} from 'tone/build/esm/effect/FeedbackDelay';
-const DEFAULTS = FeedbackDelay.getDefaults();
+const DEFAULTS = {
+	delayTime: 0.25,
+	feedback: 0.125,
+	maxDelay: 1,
+	// wet: 1,
+}; //FeedbackDelay.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -19,6 +24,11 @@ class FeedbackDelayAudioParamsConfig extends NodeParamsConfig {
 	});
 	/** @param maxDelay */
 	maxDelay = ParamConfig.FLOAT(DEFAULTS.maxDelay as number, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
+	/** @param feedback */
+	feedback = ParamConfig.FLOAT(DEFAULTS.feedback as number, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
@@ -40,6 +50,7 @@ export class FeedbackDelayAudioNode extends TypedAudioNode<FeedbackDelayAudioPar
 		const effect = new FeedbackDelay({
 			delayTime: this.pv.delayTime,
 			maxDelay: this.pv.maxDelay,
+			feedback: this.pv.feedback,
 		});
 
 		const inputNode = audioBuilder.audioNode();

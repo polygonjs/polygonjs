@@ -7,7 +7,15 @@
  */
 
 import {AutoFilter} from 'tone/build/esm/effect/AutoFilter';
-const DEFAULTS = AutoFilter.getDefaults();
+/* do not use AutoFilter.getDefaults() as it otherwise tries to start the AudioContext*/
+const DEFAULTS = {
+	baseFrequency: 200,
+	// depth: 1,
+	// frequency: 1,
+	octaves: 2.6,
+	// type: 'sine',
+	// wet: 1,
+};
 /*
 baseFrequency: Frequency;
 octaves: Positive;

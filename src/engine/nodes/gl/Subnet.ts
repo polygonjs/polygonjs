@@ -315,9 +315,9 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 		);
 		const codeBuilder = new CodeBuilder(
 			nodeTraverser,
-			(shaderName) => {
-				return [subnetOutput];
-				// return assembler.rootNodesByShaderName(shaderName);
+			(shaderName, rootNodes) => {
+				// return [subnetOutput];
+				return assembler.rootNodesByShaderName(shaderName, rootNodes);
 			},
 			assembler
 		);
@@ -351,7 +351,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 			shadersCollectionController.addDefinitions(this, definitions, shaderName);
 		}
 		// 2- add vertex body lines if current shader name is fragment
-		if (currentShaderName == ShaderName.FRAGMENT) {
+		if (currentShaderName != ShaderName.VERTEX) {
 			const attribNodes = this.nodesByType(GlNodeType.ATTRIBUTE);
 			const bodyLines: string[] = [];
 			for (let attribNode of attribNodes) {

@@ -11,7 +11,7 @@
  */
 
 import {StereoWidener} from 'tone/build/esm/effect/StereoWidener';
-const DEFAULTS = StereoWidener.getDefaults();
+const DEFAULTS = {width: 0.5}; //StereoWidener.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

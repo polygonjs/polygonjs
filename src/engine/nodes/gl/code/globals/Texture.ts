@@ -167,12 +167,12 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		shaders_collection_controller: ShadersCollectionController
 	) {
 		if (!this._texture_allocations_controller) {
+			console.warn('no texture allocation controller');
 			return;
 		}
 		// attrib_name = GlobalsTextureHandler.remap_instance_attribute(attrib_name)
 
 		const texture_variable = this._texture_allocations_controller.variable(attrib_name);
-
 		if (texture_variable && this._textureVariableUsable(texture_variable)) {
 			this.add_particles_sim_uv_attribute(node, shaders_collection_controller);
 			// const texture_variable = allocation.variable(attrib_name)

@@ -2,7 +2,7 @@ import {CoreGraph} from '../../../../core/graph/CoreGraph';
 import {MapUtils} from '../../../../core/MapUtils';
 import {ShaderName} from './ShaderName';
 import {TypedNode} from '../../_Base';
-import {NodeContext, BaseNodeByContextMap} from '../../../poly/NodeContext';
+import {NodeContext, BaseNodeByContextMap, NetworkChildNodeType} from '../../../poly/NodeContext';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
@@ -18,6 +18,10 @@ type InputNamesByShaderNameMethod<NC extends NodeContext> = (
 	root_node: BaseNodeByContextMap[NC],
 	shader_name: ShaderName
 ) => string[];
+
+interface NodeTraverserOptions {
+	traverseChildren?: boolean;
+}
 export class TypedNodeTraverser<NC extends NodeContext> {
 	private _leaves_graph_id: BooleanByStringByShaderName = new Map();
 	private _graph_ids_by_shader_name: BooleanByStringByShaderName = new Map();
@@ -31,9 +35,13 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	constructor(
 		private _parent_node: TypedNode<NC, any>,
 		private _shader_names: ShaderName[],
-		private _input_names_for_shader_name_method: InputNamesByShaderNameMethod<NC>
+		private _input_names_for_shader_name_method: InputNamesByShaderNameMethod<NC>,
+		private _options?: NodeTraverserOptions
 	) {
 		this._graph = this._parent_node.scene().graph;
+	}
+	private _traverseChildren() {
+		return this._options?.traverseChildren || false;
 	}
 
 	private reset() {
@@ -244,19 +252,21 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 
 	private _findInputs(node: BaseNodeByContextMap[NC]) {
-		return node.io.inputs.inputs();
-
-		// if (node.type() == NetworkChildNodeType.INPUT) {
-		// 	return node.parent()?.io.inputs.inputs() || [];
-		// } else {
-		// 	if (node.childrenAllowed()) {
-		// 		// this._subnets_by_id.set(node.graphNodeId(), node);
-		// 		const output_node = node.childrenController?.outputNode();
-		// 		return [output_node];
-		// 	} else {
-		// 		return node.io.inputs.inputs();
-		// 	}
-		// }
+		if (this._traverseChildren()) {
+			if (node.type() == NetworkChildNodeType.INPUT) {
+				return node.parent()?.io.inputs.inputs() || [];
+			} else {
+				if (node.childrenAllowed()) {
+					// this._subnets_by_id.set(node.graphNodeId(), node);
+					const output_node = node.childrenController?.outputNode();
+					return [output_node];
+				} else {
+					return node.io.inputs.inputs();
+				}
+			}
+		} else {
+			return node.io.inputs.inputs();
+		}
 	}
 
 	private _setNodesDepth() {

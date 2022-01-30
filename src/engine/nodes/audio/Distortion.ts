@@ -5,7 +5,14 @@
  */
 
 import {Distortion} from 'tone/build/esm/effect/Distortion';
-const DEFAULTS = Distortion.getDefaults();
+interface DistortionDefault {
+	distortion: number;
+	oversample: OverSampleType;
+}
+const DEFAULTS: DistortionDefault = {
+	distortion: 0.4,
+	oversample: 'none',
+}; //Distortion.getDefaults();
 
 const OVER_SAMPLE_TYPES: OverSampleType[] = ['2x', '4x', 'none'];
 
@@ -27,7 +34,7 @@ class DistortionAudioParamsConfig extends NodeParamsConfig {
 		...effectParamsOptions(paramCallback),
 	});
 	/** @param oversample */
-	oversample = ParamConfig.INTEGER(2, {
+	oversample = ParamConfig.INTEGER(OVER_SAMPLE_TYPES.indexOf(DEFAULTS.oversample), {
 		menu: {
 			entries: OVER_SAMPLE_TYPES.map((name, value) => ({name, value})),
 		},

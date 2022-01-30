@@ -12,7 +12,9 @@ import {effectParamsOptions} from './utils/EffectsController';
 import {BaseNodeType} from '../_Base';
 import {BaseAnalyserAudioNode} from './_BaseAnalyser';
 import {Number2} from '../../../types/GlobalTypes';
-const DEFAULTS = Meter.getDefaults();
+const DEFAULTS = {
+	smoothing: 0.8,
+}; //Meter.getDefaults();
 
 const paramCallback = (node: BaseNodeType) => {
 	MeterAudioNode.PARAM_CALLBACK_updateEffect(node as MeterAudioNode);

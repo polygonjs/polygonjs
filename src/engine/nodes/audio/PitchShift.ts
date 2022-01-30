@@ -9,7 +9,11 @@
  */
 
 import {PitchShift} from 'tone/build/esm/effect/PitchShift';
-const DEFAULTS = PitchShift.getDefaults();
+const DEFAULTS = {
+	// 	delayTime: 0,
+	// feedback: 0,
+	pitch: 0,
+}; //PitchShift.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

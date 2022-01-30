@@ -16,7 +16,7 @@
  */
 
 import {FrequencyShifter} from 'tone/build/esm/effect/FrequencyShifter';
-const DEFAULTS = FrequencyShifter.getDefaults();
+const DEFAULTS = {frequency: 0}; //FrequencyShifter.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

@@ -9,7 +9,12 @@
  */
 
 import {Tremolo} from 'tone/build/esm/effect/Tremolo';
-const DEFAULTS = Tremolo.getDefaults();
+const DEFAULTS = {
+	depth: 0.5,
+	frequency: 10,
+	spread: 180,
+	// type: "sine"
+}; //Tremolo.getDefaults();
 
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
