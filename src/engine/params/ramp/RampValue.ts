@@ -98,15 +98,19 @@ export class RampValue {
 	}
 	copy(ramp: RampValue) {
 		this._interpolation = ramp.interpolation();
-		let index = 0;
-		if (this._points.length > ramp.points().length) {
-			this._points.splice(0, ramp.points().length);
+		const newPointsCount = ramp.points().length;
+		const currentPointsCount = this._points.length;
+		if (currentPointsCount > newPointsCount) {
+			const pointsCountToRemove = currentPointsCount - newPointsCount;
+			const spliceStart = currentPointsCount - pointsCountToRemove;
+			this._points.splice(spliceStart, pointsCountToRemove);
 		}
 
+		let index = 0;
 		for (let point of ramp.points()) {
-			const current_point = this._points[index];
-			if (current_point) {
-				current_point.copy(point);
+			const currentPoint = this._points[index];
+			if (currentPoint) {
+				currentPoint.copy(point);
 			} else {
 				this._points.push(point.clone());
 			}
@@ -167,14 +171,22 @@ export class RampValue {
 		}
 		return true;
 	}
-	from_json(json: RampValueJson) {
+	fromJSON(json: RampValueJson) {
 		this._interpolation = json.interpolation;
+
+		const newPointsCount = json.points.length;
+		const currentPointsCount = this._points.length;
+		if (currentPointsCount > newPointsCount) {
+			const pointsCountToRemove = currentPointsCount - newPointsCount;
+			const spliceStart = currentPointsCount - pointsCountToRemove;
+			this._points.splice(spliceStart, pointsCountToRemove);
+		}
 
 		let index = 0;
 		for (let json_point of json.points) {
-			const current_point = this._points[index];
-			if (current_point) {
-				current_point.fromJSON(json_point);
+			const currentPoint = this._points[index];
+			if (currentPoint) {
+				currentPoint.fromJSON(json_point);
 			} else {
 				this._points.push(RampPoint.fromJSON(json_point));
 			}

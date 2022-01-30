@@ -11,16 +11,23 @@ import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {UserMedia} from 'tone/build/esm/source/UserMedia';
-import {effectParamsOptions} from './utils/EffectsController';
 import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/Type';
 
-const paramCallback = (node: BaseNodeType) => {
-	UserMediaAudioNode.PARAM_CALLBACK_updateUserMedia(node as UserMediaAudioNode);
-};
-
 class UserMediaAudioParamsConfig extends NodeParamsConfig {
-	play = ParamConfig.BOOLEAN(1, effectParamsOptions(paramCallback));
+	autostart = ParamConfig.BOOLEAN(1);
+	/** @param play the audio */
+	open = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			UserMediaAudioNode.PARAM_CALLBACK_open(node as UserMediaAudioNode);
+		},
+	});
+	/** @param stop the audio */
+	close = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			UserMediaAudioNode.PARAM_CALLBACK_close(node as UserMediaAudioNode);
+		},
+	});
 }
 const ParamsConfig = new UserMediaAudioParamsConfig();
 
@@ -37,6 +44,9 @@ export class UserMediaAudioNode extends TypedAudioNode<UserMediaAudioParamsConfi
 	override async cook(inputContents: AudioBuilder[]) {
 		const audioBuilder = new AudioBuilder();
 		const userMedia = this._userMedia();
+		if (isBooleanTrue(this.pv.autostart)) {
+			await userMedia.open();
+		}
 		audioBuilder.setSource(userMedia);
 		this.setAudioBuilder(audioBuilder);
 	}
@@ -47,16 +57,21 @@ export class UserMediaAudioNode extends TypedAudioNode<UserMediaAudioParamsConfi
 	private _createEffect() {
 		return new UserMedia();
 	}
-	static PARAM_CALLBACK_updateUserMedia(node: UserMediaAudioNode) {
-		node._updateUserMedia();
-	}
-	private _updateUserMedia() {
-		const userMedia = this._userMedia();
 
-		if (isBooleanTrue(this.pv.play)) {
-			userMedia.open();
-		} else {
-			userMedia.close();
-		}
+	async open() {
+		return await this._userMedia().open();
+	}
+	close() {
+		this._userMedia().close();
+	}
+
+	/*
+	 * STATIC CALLBACKS
+	 */
+	static PARAM_CALLBACK_open(node: UserMediaAudioNode) {
+		node.open();
+	}
+	static PARAM_CALLBACK_close(node: UserMediaAudioNode) {
+		node.close();
 	}
 }

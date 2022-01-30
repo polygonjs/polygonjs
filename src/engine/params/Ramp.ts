@@ -104,7 +104,7 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 			if (!this._value) {
 				this._value = RampValue.fromJSON(this._raw_input);
 			} else {
-				this._value.from_json(this._raw_input);
+				this._value.fromJSON(this._raw_input);
 			}
 		}
 
