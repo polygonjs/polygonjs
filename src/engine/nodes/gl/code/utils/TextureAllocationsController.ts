@@ -32,16 +32,19 @@ export class TextureAllocationsController {
 		this._readonlyAllocations.splice(0, this._readonlyAllocations.length);
 	}
 
-	private static _sortNodes(root_nodes: BaseGlNodeType[]): BaseGlNodeType[] {
+	private static _sortNodes(rootNodes: BaseGlNodeType[]): BaseGlNodeType[] {
 		//let's go through the output node first, in case there is a name conflict, it will have priority
-		const outputNodes = root_nodes.filter((node) => node.type() == OutputGlNode.type());
+		const outputNodes = rootNodes.filter((node) => node.type() == OutputGlNode.type());
 		const sortedRootNodes: BaseGlNodeType[] = outputNodes;
 		// we also sort them by name, to add some predictability to the generated shaders
-		const nonOutputNodes = root_nodes.filter((node) => node.type() != OutputGlNode.type());
-		const nonOutputNodeNames = nonOutputNodes.map((n) => n.name()).sort();
+		const nonOutputNodes = rootNodes.filter((node) => node.type() != OutputGlNode.type());
+		// but make sure not to use .name() here,
+		// as otherwise, 2 nodes where 1 is at top leve and 1 in a subnet
+		// could override one another if they have the same name
+		const nonOutputNodeNames = nonOutputNodes.map((n) => n.path()).sort();
 		const nonOutputNodesByName: Map<string, BaseGlNodeType> = new Map();
 		for (let node of nonOutputNodes) {
-			nonOutputNodesByName.set(node.name(), node);
+			nonOutputNodesByName.set(node.path(), node);
 		}
 		for (let nodeName of nonOutputNodeNames) {
 			const node = nonOutputNodesByName.get(nodeName);
@@ -49,6 +52,7 @@ export class TextureAllocationsController {
 				sortedRootNodes.push(node);
 			}
 		}
+
 		return sortedRootNodes;
 	}
 
