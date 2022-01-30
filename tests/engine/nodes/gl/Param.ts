@@ -266,8 +266,11 @@ uniform float v_POLY_param_test;`
 	);
 	assert.includes(
 		material.fragmentShader,
-		`// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
-		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_param_test.x;`
+		`// /MAT/meshBasicBuilder1/subnet1/param1
+		float v_POLY_subnet1_param1_val = v_POLY_param_test;
+	
+		// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
+		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_subnet1_param1_val.x;`
 	);
 	assert.includes(
 		material.fragmentShader,
@@ -295,7 +298,7 @@ uniform float v_POLY_param_test;`,
 	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
 	uniform = material.uniforms['v_POLY_param_test'];
 	assert.ok(uniform, 'uniform exists');
-	assert.equal(uniform.value, 0.5, 'uniform value is still previous one');
+	assert.equal(uniform.value, 0.5, 'uniform value is still previous one (0.5)');
 	spareParam = meshBasicBuilder1.params.get('test')!;
 	assert.ok(spareParam);
 	spareParam.set(0.7);
@@ -307,13 +310,12 @@ uniform float v_POLY_param_test;`
 	);
 	assert.not_includes(
 		material.fragmentShader,
-		`// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
-		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_param_test.x;`
-	);
-	assert.includes(
-		material.fragmentShader,
-		`// /MAT/meshBasicBuilder1/vec3ToFloat1
-	float v_POLY_vec3ToFloat1_x = v_POLY_param_test.x;`
+		`// /MAT/meshBasicBuilder1/param1
+	float v_POLY_param1_val = v_POLY_param_test;
+
+	// /MAT/meshBasicBuilder1/vec3ToFloat1
+	float v_POLY_vec3ToFloat1_x = v_POLY_param1_val.x;`,
+		'assign param to a value first'
 	);
 	assert.includes(
 		material.fragmentShader,
@@ -332,7 +334,7 @@ uniform float v_POLY_param_test;`
 	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
 	uniform = material.uniforms['v_POLY_param_test'];
 	assert.ok(uniform, 'uniform exists');
-	assert.equal(uniform.value, 0.7, 'uniform value is still previous one');
+	assert.equal(uniform.value, 0.7, 'uniform value is still previous one (0.7)');
 	spareParam = meshBasicBuilder1.params.get('test')!;
 	assert.ok(spareParam);
 	spareParam.set(0.8);
@@ -344,14 +346,20 @@ uniform float v_POLY_param_test;`
 	);
 	assert.includes(
 		material.fragmentShader,
-		`// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
-		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_param_test.x;`
+		`// /MAT/meshBasicBuilder1/subnet1
+	vec3 v_POLY_subnet1_pos = vec3(0.0, 0.0, 0.0);
+	if(true){
+		// /MAT/meshBasicBuilder1/subnet1/param1
+		float v_POLY_subnet1_param1_val = v_POLY_param_test;
+	
+		// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
+		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_subnet1_param1_val.x;
+		// /MAT/meshBasicBuilder1/subnet1/subnetOutput1
+		v_POLY_subnet1_pos = v_POLY_subnet1_vec3ToFloat1_x;
+	}`,
+		'assign param to a val first'
 	);
-	assert.includes(
-		material.fragmentShader,
-		`// /MAT/meshBasicBuilder1/vec3ToFloat1
-	float v_POLY_vec3ToFloat1_x = v_POLY_param_test.x;`
-	);
+
 	assert.includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/output1

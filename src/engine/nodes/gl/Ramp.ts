@@ -70,13 +70,13 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		);
 		this._param_configs_controller.push(param_config);
 	}
-	override glVarName(name?: string): string {
-		if (name) {
-			return super.glVarName(name);
-		}
-		return `v_POLY_ramp_${this.pv.name}`;
-	}
+	// override glVarName(name?: string): string {
+	// 	if (name) {
+	// 		return super.glVarName(name);
+	// 	}
+	// 	return `v_POLY_ramp_${this.pv.name}`;
+	// }
 	uniformName() {
-		return this.glVarName();
+		return `v_POLY_ramp_${this.pv.name}`;
 	}
 }

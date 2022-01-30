@@ -293,7 +293,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				const connection_point = output_node.io.inputs.namedInputConnectionPointsByName(input_name);
 				if (connection_point) {
 					const gl_type = connection_point.type();
-					const attr_read = this.globals_handler?.read_attribute(
+					const attr_read = this.globals_handler?.readAttribute(
 						output_node,
 						gl_type,
 						input_name,
@@ -337,33 +337,33 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 	override set_node_lines_output(
 		output_node: OutputGlNode,
-		shaders_collection_controller: ShadersCollectionController
+		shadersCollectionController: ShadersCollectionController
 	) {
 		// const body_lines = [];
-		const shader_name = shaders_collection_controller.currentShaderName();
+		const shader_name = shadersCollectionController.currentShaderName();
 		const input_names = this.shader_config(shader_name)?.input_names();
 		if (input_names) {
 			// shaders_collection_controller.set_body_lines([], shader_name);
 			for (let input_name of input_names) {
 				if (output_node.io.inputs.has_named_input(input_name)) {
-					this.add_output_body_line(output_node, shaders_collection_controller, input_name);
+					this.add_output_body_line(output_node, shadersCollectionController, input_name);
 				}
 			}
 		}
 	}
 	override setNodeLinesAttribute(
 		attribute_node: AttributeGlNode,
-		shaders_collection_controller: ShadersCollectionController
+		shadersCollectionController: ShadersCollectionController
 	) {
 		const gl_type = attribute_node.glType();
-		const new_var = this.globals_handler?.read_attribute(
+		const new_var = this.globals_handler?.readAttribute(
 			attribute_node,
 			gl_type,
 			attribute_node.attributeName(),
-			shaders_collection_controller
+			shadersCollectionController
 		);
 		const var_name = attribute_node.glVarName(attribute_node.outputName());
-		shaders_collection_controller.addBodyLines(attribute_node, [`${gl_type} ${var_name} = ${new_var}`]);
+		shadersCollectionController.addBodyLines(attribute_node, [`${gl_type} ${var_name} = ${new_var}`]);
 	}
 
 	handle_globals_output_name(options: HandleGlobalsOutputOptions) {

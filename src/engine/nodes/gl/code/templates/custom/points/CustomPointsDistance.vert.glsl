@@ -1,3 +1,4 @@
+
 uniform float size;
 uniform float scale;
 #define DISTANCE

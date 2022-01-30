@@ -4,7 +4,7 @@
 
 
 // /MAT/meshBasicBuilder1/subnet1/attribute1
-varying vec3 varying_v_POLY_attribute_attrib1;
+varying vec3 v_POLY_attribute_attrib1;
 
 // /MAT/meshBasicBuilder1/subnet1/attribute1
 attribute vec3 attrib1;
@@ -31,11 +31,11 @@ void main() {
 
 
 	// /MAT/meshBasicBuilder1/subnet1
-	vec3 v_POLY_attribute_attrib1 = attrib1;
-	varying_v_POLY_attribute_attrib1 = vec3(attrib1);
+	vec3 v_POLY_subnet1_attribute1_val = attrib1;
+	v_POLY_attribute_attrib1 = vec3(attrib1);
 	
 	// /MAT/meshBasicBuilder1/attribute1
-	varying_v_POLY_attribute_attrib1 = vec3(attrib1);
+	v_POLY_attribute_attrib1 = vec3(attrib1);
 	
 	// /MAT/meshBasicBuilder1/output1
 	vec3 transformed = position;

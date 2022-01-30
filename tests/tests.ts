@@ -115,6 +115,7 @@ import './engine/nodes/event/Touch';
 import './engine/nodes/event/Window';
 
 QUnit.module('gl');
+import './engine/nodes/gl/Assemblers/conflicts';
 import './engine/nodes/gl/Add';
 import './engine/nodes/gl/Attribute';
 import './engine/nodes/gl/Constant';

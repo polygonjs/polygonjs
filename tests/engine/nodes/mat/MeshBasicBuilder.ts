@@ -191,19 +191,39 @@ QUnit.test(
 		assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
 		await mesh_basic1.compute();
 		assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is not required');
-		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInVertex.vert);
-		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInVertex.frag);
+		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInVertex.vert, 'TEST_SHADER_LIB.attribInVertex.vert');
+		assert.equal(
+			material.fragmentShader,
+			TEST_SHADER_LIB.attribInVertex.frag,
+			'TEST_SHADER_LIB.attribInVertex.frag'
+		);
 
 		// set uv to color, to have it declared to the fragment shader
 		output1.setInput('color', float_to_vec31);
 		await mesh_basic1.compute();
-		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInFragment.vert);
-		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInFragment.frag);
+		assert.equal(
+			material.vertexShader,
+			TEST_SHADER_LIB.attribInFragment.vert,
+			'TEST_SHADER_LIB.attribInFragment.vert'
+		);
+		assert.equal(
+			material.fragmentShader,
+			TEST_SHADER_LIB.attribInFragment.frag,
+			'TEST_SHADER_LIB.attribInFragment.frag'
+		);
 		// remove uv from position, to have it declared ONLY to the fragment shader
 		output1.setInput('position', null);
 		await mesh_basic1.compute();
-		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInFragmentOnly.vert);
-		assert.equal(material.fragmentShader, TEST_SHADER_LIB.attribInFragmentOnly.frag);
+		assert.equal(
+			material.vertexShader,
+			TEST_SHADER_LIB.attribInFragmentOnly.vert,
+			'TEST_SHADER_LIB.attribInFragmentOnly.vert'
+		);
+		assert.equal(
+			material.fragmentShader,
+			TEST_SHADER_LIB.attribInFragmentOnly.frag,
+			'TEST_SHADER_LIB.attribInFragmentOnly.frag'
+		);
 	}
 );
 
@@ -383,8 +403,16 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
 	await mesh_basic1.compute();
 	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.SubnetNoInputWithAttrib.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.SubnetNoInputWithAttrib.frag);
+	assert.equal(
+		material.vertexShader,
+		TEST_SHADER_LIB.SubnetNoInputWithAttrib.vert,
+		'TEST_SHADER_LIB.SubnetNoInputWithAttrib.vert'
+	);
+	assert.equal(
+		material.fragmentShader,
+		TEST_SHADER_LIB.SubnetNoInputWithAttrib.frag,
+		'TEST_SHADER_LIB.SubnetNoInputWithAttrib.frag'
+	);
 
 	// 2 attributes with same names, one inside the subnet, one outside
 	const attribute3 = mesh_basic1.createNode('attribute');
@@ -398,8 +426,16 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
 	await mesh_basic1.compute();
 	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.frag);
+	assert.equal(
+		material.vertexShader,
+		TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.vert,
+		'TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.vert'
+	);
+	assert.equal(
+		material.fragmentShader,
+		TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.frag,
+		'TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.frag'
+	);
 });
 
 QUnit.test('mesh basic builder persisted_config', async (assert) => {

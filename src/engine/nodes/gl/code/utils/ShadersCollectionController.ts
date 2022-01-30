@@ -39,7 +39,7 @@ export class ShadersCollectionController {
 		return this._shaderNames;
 	}
 
-	set_current_shader_name(shaderName: ShaderName) {
+	setCurrentShaderName(shaderName: ShaderName) {
 		this._currentShaderName = shaderName;
 	}
 	currentShaderName() {

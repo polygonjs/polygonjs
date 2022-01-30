@@ -111,16 +111,16 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 	// variable_config_required_definitions(variable_name:string):DefinitionBaseConfig[]{
 	// 	return null
 	// }
-	read_attribute(
+	readAttribute(
 		node: BaseGlNodeType,
 		gl_type: GlConnectionPointType,
 		attrib_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	) {
-		return GlobalsGeometryHandler.read_attribute(node, gl_type, attrib_name, shaders_collection_controller);
+		return GlobalsGeometryHandler.readAttribute(node, gl_type, attrib_name, shaders_collection_controller);
 	}
 
-	static read_attribute(
+	static readAttribute(
 		node: BaseGlNodeType,
 		gl_type: GlConnectionPointType,
 		attrib_name: string,
@@ -154,8 +154,9 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 				if (!(node instanceof AttributeGlNode)) {
 					return;
 				}
+				const attribNode = node as AttributeGlNode;
 
-				const var_name = 'varying_' + node.glVarName(node.outputName());
+				const var_name = attribNode.varyingName(); //'varying_' + node.glVarName(node.outputName());
 				const varying_definition = new VaryingGLDefinition(node, gl_type, var_name);
 
 				const definitions_by_shader_name: Map<ShaderName, VaryingGLDefinition[]> = new Map();
@@ -221,6 +222,6 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		attrib_name: string,
 		shaders_collection_controller: ShadersCollectionController
 	) {
-		return GlobalsGeometryHandler.read_attribute(node, gl_type, attrib_name, shaders_collection_controller);
+		return GlobalsGeometryHandler.readAttribute(node, gl_type, attrib_name, shaders_collection_controller);
 	}
 }

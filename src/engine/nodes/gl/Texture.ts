@@ -70,10 +70,13 @@ export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
 		);
 		this._param_configs_controller.push(param_config);
 	}
-	override glVarName(name: string) {
-		return `v_POLY_texture_${this.pv.paramName}`;
-	}
+	// override glVarName(name?: string) {
+	// 	if (name) {
+	// 		return super.glVarName(name);
+	// 	}
+	// 	return `v_POLY_texture_${this.pv.paramName}`;
+	// }
 	uniformName() {
-		return this.glVarName(this.pv.paramName);
+		return `v_POLY_texture_${this.pv.paramName}`;
 	}
 }

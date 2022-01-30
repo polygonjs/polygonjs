@@ -51,14 +51,24 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [GL_CONNECTION_POINT_TYPES[this.pv.type]]);
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const definitions = [];
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const glType = GL_CONNECTION_POINT_TYPES[this.pv.type];
+		const uniformName = this.uniformName();
 
-		const gl_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
-		const var_name = this.uniformName();
+		const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
+		if (output_connection_point) {
+			// a body is needed for each node,
+			// otherwise, if there are 2 params referencing the same uniform
+			// that creates conflicts
+			const output_name = output_connection_point.name();
+			const out = this.glVarName(output_name);
 
-		definitions.push(new UniformGLDefinition(this, gl_type, var_name));
-		shaders_collection_controller.addDefinitions(this, definitions);
+			const bodyLine = `${glType} ${out} = ${uniformName}`;
+			shadersCollectionController.addBodyLines(this, [bodyLine]);
+		}
+
+		const definition = new UniformGLDefinition(this, glType, uniformName);
+		shadersCollectionController.addDefinitions(this, [definition]);
 	}
 	override paramsGenerating() {
 		return true;
@@ -84,13 +94,17 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 			this._param_configs_controller.push(param_config);
 		}
 	}
-	override glVarName() {
-		return `v_POLY_param_${this.pv.name}`;
-	}
+	// override glVarName(name?: string) {
+	// 	if (name) {
+	// 		return super.glVarName(name);
+	// 	}
+	// 	return `v_POLY_param_${this.pv.name}`;
+	// }
 	uniformName() {
+		return `v_POLY_param_${this.pv.name}`;
 		// const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
-		const var_name = this.glVarName(/*output_connection_point.name()*/);
-		return var_name;
+		// const var_name = this.glVarName(/*output_connection_point.name()*/);
+		// return var_name;
 	}
 	setGlType(type: GlConnectionPointType) {
 		const index = GL_CONNECTION_POINT_TYPES.indexOf(type);

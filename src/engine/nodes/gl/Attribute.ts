@@ -91,7 +91,17 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	outputName() {
 		return AttributeGlNode.OUTPUT_NAME;
 	}
-	override glVarName(name: string) {
+	// TODO:
+	// ideally glVarName should know which shader it is being called in.
+	// so that if it is in a vertex shader, it can return the name of the attribute directly.
+	// and if it is in a fragment, it would behave as usual.
+	// override glVarName() {
+	// 	// if (name) {
+	// 	// 	return super.glVarName(name);
+	// 	// }
+	// 	// return this.varyingName();
+	// }
+	varyingName() {
 		return `v_POLY_attribute_${this.pv.name}`;
 	}
 

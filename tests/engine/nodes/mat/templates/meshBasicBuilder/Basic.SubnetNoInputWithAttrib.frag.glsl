@@ -13,10 +13,10 @@ uniform float opacity;
 
 
 // /MAT/meshBasicBuilder1/subnet1/attribute1
-varying vec3 varying_v_POLY_attribute_attrib1;
+varying vec3 v_POLY_attribute_attrib1;
 
 // /MAT/meshBasicBuilder1/subnet1/attribute2
-varying vec3 varying_v_POLY_attribute_attrib2;
+varying vec3 v_POLY_attribute_attrib2;
 
 
 
@@ -50,12 +50,12 @@ void main() {
 	vec3 v_POLY_subnet1_basecolor = vec3(0.0, 0.0, 0.0);
 	if(true){
 		// /MAT/meshBasicBuilder1/subnet1/attribute1
-		vec3 v_POLY_attribute_attrib1 = varying_v_POLY_attribute_attrib1;
+		vec3 v_POLY_subnet1_attribute1_val = v_POLY_attribute_attrib1;
 	
 		// /MAT/meshBasicBuilder1/subnet1/attribute2
-		vec3 v_POLY_attribute_attrib2 = varying_v_POLY_attribute_attrib2;
+		vec3 v_POLY_subnet1_attribute2_val = v_POLY_attribute_attrib2;
 		// /MAT/meshBasicBuilder1/subnet1/add1
-		vec3 v_POLY_subnet1_add1_sum = (v_POLY_attribute_attrib1 + v_POLY_attribute_attrib2 + vec3(0.0, 0.0, 0.0));
+		vec3 v_POLY_subnet1_add1_sum = (v_POLY_subnet1_attribute1_val + v_POLY_subnet1_attribute2_val + vec3(0.0, 0.0, 0.0));
 		// /MAT/meshBasicBuilder1/subnet1/subnetOutput1
 		v_POLY_subnet1_basecolor = v_POLY_subnet1_add1_sum;
 	}

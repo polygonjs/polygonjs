@@ -60,7 +60,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 		if (variable && connection_point) {
 			const gl_type = connection_point.type();
-			const new_value = this.read_attribute(globals_node, gl_type, output_name, shaders_collection_controller);
+			const new_value = this.readAttribute(globals_node, gl_type, output_name, shaders_collection_controller);
 			const body_line = `${gl_type} ${var_name} = ${new_value}`;
 			shaders_collection_controller.addBodyLines(globals_node, [body_line]);
 		} else {
@@ -160,7 +160,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		TypeAssert.unreachable(this._purpose);
 	}
 
-	read_attribute(
+	readAttribute(
 		node: BaseGlNodeType,
 		gl_type: GlConnectionPointType,
 		attrib_name: string,
@@ -202,7 +202,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 				return body_line;
 			}
 		} else {
-			return GlobalsGeometryHandler.read_attribute(node, gl_type, attrib_name, shaders_collection_controller);
+			return GlobalsGeometryHandler.readAttribute(node, gl_type, attrib_name, shaders_collection_controller);
 		}
 	}
 

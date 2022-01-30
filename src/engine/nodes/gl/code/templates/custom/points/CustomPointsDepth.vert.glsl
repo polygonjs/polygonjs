@@ -1,3 +1,4 @@
+
 uniform float size;
 uniform float scale;
 #include <common>
@@ -29,5 +30,3 @@ void main() {
 	vHighPrecisionZW = gl_Position.zw;
 
 }
-
-

@@ -4,7 +4,7 @@
 
 
 // /MAT/meshBasicBuilder1/attribute1
-varying vec2 varying_v_POLY_attribute_uv;
+varying vec2 v_POLY_attribute_uv;
 
 
 
@@ -28,12 +28,12 @@ void main() {
 
 
 	// /MAT/meshBasicBuilder1/attribute1
-	vec2 v_POLY_attribute_uv = uv;
-	varying_v_POLY_attribute_uv = vec2(uv);
+	vec2 v_POLY_attribute1_val = uv;
+	v_POLY_attribute_uv = vec2(uv);
 	
 	// /MAT/meshBasicBuilder1/vec2ToFloat1
-	float v_POLY_vec2ToFloat1_x = v_POLY_attribute_uv.x;
-	float v_POLY_vec2ToFloat1_y = v_POLY_attribute_uv.y;
+	float v_POLY_vec2ToFloat1_x = v_POLY_attribute1_val.x;
+	float v_POLY_vec2ToFloat1_y = v_POLY_attribute1_val.y;
 	
 	// /MAT/meshBasicBuilder1/floatToVec3_1
 	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_vec2ToFloat1_x, 0.0, v_POLY_vec2ToFloat1_y);

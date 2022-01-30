@@ -1,3 +1,4 @@
+
 uniform float scale;
 attribute float lineDistance;
 varying float vLineDistance;
@@ -21,6 +22,3 @@ void main() {
 
 
 }
-
-
-

@@ -89,7 +89,7 @@ export class CodeBuilder {
 			let nodes = nodes_by_shader_name.get(shader_name) || [];
 			nodes = ArrayUtils.uniq(nodes);
 
-			this._shadersCollectionController.set_current_shader_name(shader_name);
+			this._shadersCollectionController.setCurrentShaderName(shader_name);
 			if (nodes) {
 				for (let node of nodes) {
 					node.setLines(this._shadersCollectionController);

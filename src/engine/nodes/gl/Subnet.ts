@@ -335,6 +335,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 			return;
 		}
 		const currentShaderName = shadersCollectionController.currentShaderName();
+		internalShadersCollectionController.setCurrentShaderName(currentShaderName);
 
 		// 1- add all definitions for each shaderName
 		const shaderNames = shadersCollectionController.shaderNames();

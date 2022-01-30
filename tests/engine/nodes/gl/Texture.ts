@@ -211,7 +211,7 @@ uniform sampler2D v_POLY_texture_myTextureMap;`
 	assert.includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/subnet1/texture1
-		vec4 v_POLY_texture_myTextureMap = texture2D(v_POLY_texture_myTextureMap, vec2(0.0, 0.0));`
+		vec4 v_POLY_subnet1_texture1_rgba = texture2D(v_POLY_texture_myTextureMap, vec2(0.0, 0.0));`
 	);
 	assert.includes(
 		material.fragmentShader,
@@ -258,7 +258,7 @@ uniform sampler2D v_POLY_texture_myTextureMap;`
 	assert.includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/texture1
-	vec4 v_POLY_texture_myTextureMap = texture2D(v_POLY_texture_myTextureMap, vec2(0.0, 0.0));`
+	vec4 v_POLY_texture1_rgba = texture2D(v_POLY_texture_myTextureMap, vec2(0.0, 0.0));`
 	);
 	assert.includes(
 		material.fragmentShader,
@@ -289,13 +289,19 @@ uniform sampler2D v_POLY_texture_myTextureMap;`
 	);
 	assert.includes(
 		material.fragmentShader,
-		`// /MAT/meshBasicBuilder1/subnet1/vec4ToVec3_1
-		vec3 v_POLY_subnet1_vec4ToVec3_1_vec3 = v_POLY_texture_myTextureMap.xyz;`
+		`// /MAT/meshBasicBuilder1/subnet1/texture1
+		vec4 v_POLY_subnet1_texture1_rgba = texture2D(v_POLY_texture_myTextureMap, vec2(0.0, 0.0));
+	
+		// /MAT/meshBasicBuilder1/subnet1/vec4ToVec3_1
+		vec3 v_POLY_subnet1_vec4ToVec3_1_vec3 = v_POLY_subnet1_texture1_rgba.xyz;`
 	);
 	assert.includes(
 		material.fragmentShader,
-		`// /MAT/meshBasicBuilder1/vec4ToVec3_1
-	vec3 v_POLY_vec4ToVec3_1_vec3 = v_POLY_texture_myTextureMap.xyz;`
+		`// /MAT/meshBasicBuilder1/texture1
+	vec4 v_POLY_texture1_rgba = texture2D(v_POLY_texture_myTextureMap, vec2(0.0, 0.0));
+	
+	// /MAT/meshBasicBuilder1/vec4ToVec3_1
+	vec3 v_POLY_vec4ToVec3_1_vec3 = v_POLY_texture1_rgba.xyz;`
 	);
 	assert.includes(
 		material.fragmentShader,

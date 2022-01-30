@@ -25,7 +25,7 @@ export abstract class GlobalsBaseController {
 		// shader_name: ShaderName
 	): void {}
 
-	abstract read_attribute(
+	abstract readAttribute(
 		node: BaseGlNodeType,
 		gl_type: GlConnectionPointType,
 		attrib_name: string,

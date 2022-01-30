@@ -929,7 +929,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.includes(
 		material.fragmentShader,
-		'float v_POLY_attribute_randomId = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
+		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
 	);
 	assert.deepEqual(particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations, {
 		writable: [
@@ -960,9 +960,9 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.not_includes(
 		material.fragmentShader,
-		'float v_POLY_attribute_randomId = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
+		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
 	);
-	assert.includes(material.fragmentShader, `float v_POLY_attribute_randomId = varying_v_POLY_attribute_randomId;`);
+	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
 	assert.deepEqual(particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations, {
 		writable: [
 			{
@@ -1013,7 +1013,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.includes(
 		material.fragmentShader,
-		`float v_POLY_attribute_randomId = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;`
+		`float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;`
 	);
 
 	// change name
@@ -1045,7 +1045,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 		material.vertexShader,
 		`vec3 transformed = texture2D( texture_position_SEPARATOR_otherAttrib, particles_sim_uv_varying ).xyz;`
 	);
-	assert.includes(material.fragmentShader, `float v_POLY_attribute_randomId = varying_v_POLY_attribute_randomId;`);
+	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
 });
 
 QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', async (assert) => {
@@ -1196,6 +1196,57 @@ QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [38, 129, 4072.25, 0].join(':'), 'point moved sideways frame 4');
+
+	RendererUtils.dispose();
+});
+
+QUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trigger a redefinition', async (assert) => {
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	scene.setFrame(0);
+
+	await scene.waitForCooksCompleted();
+	const {renderer} = await RendererUtils.waitForRenderer();
+	assert.ok(renderer, 'renderer created');
+
+	const sopadd1 = geo1.createNode('add');
+	const particles1 = geo1.createNode('particlesSystemGpu');
+	assert.equal(particles1.children().length, 0, 'no children');
+	const {output1} = create_required_nodes(particles1);
+	assert.equal(particles1.children().length, 2, '2 children');
+
+	sopadd1.p.createPoint.set(1);
+	sopadd1.p.position.set([1, 0.5, 0.25]);
+	particles1.setInput(0, sopadd1);
+
+	// we set up an attribute inside a subnet
+	const attribute1 = particles1.createNode('attribute');
+	const attribute2 = particles1.createNode('attribute');
+	attribute1.p.name.set('test');
+	attribute2.p.name.set('test');
+	attribute1.setGlType(GlConnectionPointType.VEC3);
+	attribute2.setGlType(GlConnectionPointType.VEC3);
+	const add1 = particles1.createNode('add');
+	add1.setInput(0, attribute1);
+	add1.setInput(1, attribute2);
+	output1.setInput('position', add1);
+
+	scene.setFrame(1);
+	await particles1.compute();
+
+	const materials = particles1.gpuController.materials();
+	assert.equal(materials.length, 1);
+	const material = materials[0];
+	assert.includes(
+		material.fragmentShader,
+		`
+	// /geo1/particlesSystemGpu1/attribute1
+	vec3 v_POLY_attribute1_val = texture2D( texture_test, particleUV ).xyz;
+	
+	// /geo1/particlesSystemGpu1/attribute2
+	vec3 v_POLY_attribute2_val = texture2D( texture_test, particleUV ).xyz;
+`
+	);
 
 	RendererUtils.dispose();
 });

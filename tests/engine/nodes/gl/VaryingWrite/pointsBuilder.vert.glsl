@@ -31,7 +31,7 @@ void main() {
 	float v_POLY_constant_point_size_val = 6.9;
 	
 	// /geo1/materialsNetwork1/pointsParticles_DEBUG/attribute1
-	float v_POLY_attribute_randomid = randomid;
+	float v_POLY_attribute1_val = randomid;
 	
 	// /geo1/materialsNetwork1/pointsParticles_DEBUG/output1
 	vec3 transformed = position;
@@ -42,7 +42,7 @@ void main() {
 	gl_PointSize = v_POLY_constant_point_size_val * size * 10.0;
 	
 	// /geo1/materialsNetwork1/pointsParticles_DEBUG/floatToVec3_1
-	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_attribute_randomid, 0.31, 0.24);
+	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_attribute1_val, 0.31, 0.24);
 	
 	// /geo1/materialsNetwork1/pointsParticles_DEBUG/varyingWrite1
 	ptColor = v_POLY_floatToVec3_1_vec3;

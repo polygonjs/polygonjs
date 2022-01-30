@@ -114,11 +114,14 @@ void main() {
 
 
 
+	// /MAT/meshPhysicalBuilder1/param1
+	float v_POLY_param1_val = v_POLY_param_float_param;
+	
 	// /MAT/meshPhysicalBuilder1/globals1
 	float v_POLY_globals1_time = time;
 	
 	// /MAT/meshPhysicalBuilder1/floatToVec3_1
-	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_param_float_param, v_POLY_globals1_time, 0.0);
+	vec3 v_POLY_floatToVec3_1_vec3 = vec3(v_POLY_param1_val, v_POLY_globals1_time, 0.0);
 	
 	// /MAT/meshPhysicalBuilder1/output1
 	diffuseColor.xyz = v_POLY_floatToVec3_1_vec3;

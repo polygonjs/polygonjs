@@ -105,7 +105,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	}
 	private _default_instancePosition(shaders_collection_controller: ShadersCollectionController): string | undefined {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
-		return assembler.globals_handler?.read_attribute(
+		return assembler.globals_handler?.readAttribute(
 			this,
 			GlConnectionPointType.VEC3,
 			VARS.instancePosition,
@@ -117,7 +117,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	}
 	private _default_input_instanceOrientation(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
-		return assembler.globals_handler?.read_attribute(
+		return assembler.globals_handler?.readAttribute(
 			this,
 			GlConnectionPointType.VEC4,
 			VARS.instanceOrientation,
@@ -129,7 +129,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	}
 	private _default_input_instanceScale(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
-		return assembler.globals_handler?.read_attribute(
+		return assembler.globals_handler?.readAttribute(
 			this,
 			GlConnectionPointType.VEC3,
 			VARS.instanceScale,

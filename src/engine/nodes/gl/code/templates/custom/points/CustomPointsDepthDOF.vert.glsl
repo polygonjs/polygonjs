@@ -1,3 +1,4 @@
+
 uniform float size;
 uniform float scale;
 #include <common>
@@ -22,4 +23,3 @@ void main() {
 	#endif
 
 }
-

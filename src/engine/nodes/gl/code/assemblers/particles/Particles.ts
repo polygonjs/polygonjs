@@ -297,7 +297,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		if (attribute_node.isImporting()) {
 			const gl_type = attribute_node.glType();
 			const attribute_name = attribute_node.attributeName();
-			const new_value = this.globals_handler?.read_attribute(
+			const new_value = this.globals_handler?.readAttribute(
 				attribute_node,
 				gl_type,
 				attribute_name,
@@ -379,7 +379,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		if (output_connection_point) {
 			const gl_type = output_connection_point.type();
 
-			const attrib_read = this.globals_handler?.read_attribute(
+			const attrib_read = this.globals_handler?.readAttribute(
 				globals_node,
 				gl_type,
 				output_name,
