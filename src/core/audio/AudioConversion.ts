@@ -8,7 +8,6 @@ export function convertFrequencyBandsToOctaveBandsDivisions2(
 	let currentOctaveSize = 1;
 	const valuesCount = values.length;
 	const divideMethod = divisions == 2 ? divideOctave2 : divideOctave4;
-	console.log(divisions == 2, divideMethod);
 	for (let i = 0; i < valuesCount; ) {
 		// let currentOctaveValue = 0;
 		// const valuesCount0 = Math.max(1, Math.floor(currentOctaveSize / 3));

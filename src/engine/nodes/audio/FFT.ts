@@ -54,7 +54,7 @@ class FFTAudioParamsConfig extends NodeParamsConfig {
 		//cook:false,
 	});
 	octaveDivisions = ParamConfig.INTEGER(1, {
-		range: [1, 3],
+		range: [1, 2],
 		rangeLocked: [true, true],
 		visibleIf: {asOctaves: 1},
 		separatorAfter: true,
