@@ -535,7 +535,7 @@ export class FunctionGenerator extends BaseTraverser {
 	protected traverse_Identifier(node: jsep.Identifier): string | undefined {
 		const identifier_first_char = node.name[0];
 		if (identifier_first_char == VARIABLE_PREFIX) {
-			const identifier_name_without_dollar_sign = node.name.substr(1);
+			const identifier_name_without_dollar_sign = node.name.substring(1);
 
 			// globals constants: Math.PI or Math.E
 			const direct_constant_name = GLOBAL_CONSTANTS[identifier_name_without_dollar_sign];

@@ -54,7 +54,7 @@ export class StrSubExpression extends BaseMethod {
 		let rangeSize = toInt(args[2], 1);
 
 		if (string) {
-			value = string.substr(rangeStart, rangeSize);
+			value = string.substring(rangeStart, rangeStart + rangeSize);
 		}
 		return value;
 	}

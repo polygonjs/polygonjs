@@ -102,7 +102,7 @@ export class CoreString {
 	}
 
 	static upperFirst(word: string): string {
-		const newString = word[0].toUpperCase() + word.substr(1);
+		const newString = word[0].toUpperCase() + word.substring(1);
 		return newString;
 	}
 	// https://stackoverflow.com/questions/52963900/convert-different-strings-to-snake-case-in-javascript

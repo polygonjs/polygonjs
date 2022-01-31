@@ -58,3 +58,24 @@ QUnit.test('root adds objects to hierarchy when loaded from json', async (assert
 		['/ambientLight1', '/geo1', '/perspectiveCamera1']
 	);
 });
+
+QUnit.test('it is possible to link to root params', async (assert) => {
+	const scene = create_scene();
+	assert.ok(!scene.loadingController.isLoading());
+
+	const MAT = window.MAT;
+	const meshBasic1 = MAT.createNode('meshBasic');
+	const root = window.scene.root();
+	const rootColorR = root.p.bgColor.r;
+	const matColorR = meshBasic1.p.color.r;
+	rootColorR.set(1);
+	matColorR.set(`ch('/bgColorr')`);
+	await matColorR.compute();
+	console.log(matColorR.states.error.message());
+	assert.notOk(matColorR.states.error.active());
+	assert.equal(matColorR.value, 1);
+
+	rootColorR.set(0.5);
+	await matColorR.compute();
+	assert.equal(matColorR.value, 0.5);
+});

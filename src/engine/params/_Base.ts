@@ -285,7 +285,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		const nodeRelativePath = CoreWalker.relativePath(node, this.node);
 
 		if (nodeRelativePath.length > 0) {
-			return `${nodeRelativePath}${CoreWalker.SEPARATOR}${this.name()}`;
+			return CoreWalker.sanitizePath(`${nodeRelativePath}${CoreWalker.SEPARATOR}${this.name()}`);
 		} else {
 			return this.name();
 		}

@@ -67,10 +67,10 @@ export class ObjectsController {
 
 	private _removeTrailingOrHeadingSlash(objectName: string) {
 		if (objectName[0] == '/') {
-			objectName = objectName.substr(1);
+			objectName = objectName.substring(1);
 		}
 		if (objectName[objectName.length - 1] == '/') {
-			objectName = objectName.substr(0, objectName.length - 1);
+			objectName = objectName.substring(0, objectName.length - 1);
 		}
 		return objectName;
 	}

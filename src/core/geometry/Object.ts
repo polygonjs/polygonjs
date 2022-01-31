@@ -91,7 +91,7 @@ export class CoreObject extends CoreEntity {
 		const elements = group.split('=');
 		const attribNameWithPrefix = elements[0];
 		if (attribNameWithPrefix[0] == '@') {
-			const attribName = attribNameWithPrefix.substr(1);
+			const attribName = attribNameWithPrefix.substring(1);
 			const expectedAttribValue = elements[1];
 			const currentAttribValue = this.attribValue(object, attribName);
 			return expectedAttribValue == currentAttribValue;

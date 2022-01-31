@@ -133,7 +133,7 @@ export class CoreWalker {
 
 		let next_node: BaseNodeType | null = null;
 		if (path[0] === CoreWalker.SEPARATOR) {
-			const path_from_root = path.substr(1);
+			const path_from_root = path.substring(1);
 			next_node = this.findNode(node_src.root(), path_from_root, decomposed_path);
 		} else {
 			switch (first_element) {
@@ -180,8 +180,13 @@ export class CoreWalker {
 		if (elements.length === 1) {
 			return node_src.params.get(elements[0]);
 		} else {
-			const node_path = elements.slice(0, +(elements.length - 2) + 1 || undefined).join(CoreWalker.SEPARATOR);
-			const node = this.findNode(node_src, node_path, decomposed_path);
+			let node: BaseNodeType | null = null;
+			if (path[0] === CoreWalker.SEPARATOR && elements.length == 2) {
+				node = node_src.root();
+			} else {
+				const node_path = elements.slice(0, +(elements.length - 2) + 1 || undefined).join(CoreWalker.SEPARATOR);
+				node = this.findNode(node_src, node_path, decomposed_path);
+			}
 			if (node != null) {
 				const param_name = elements[elements.length - 1];
 				const param = node.params.get(param_name);
@@ -228,8 +233,11 @@ export class CoreWalker {
 				cmptr++;
 			}
 			const down = remaining_elements.join(CoreWalker.SEPARATOR);
-			return `${up}${down}`;
+			return this.sanitizePath(`${up}${down}`);
 		}
+	}
+	static sanitizePath(path: string) {
+		return path.replace(/\/\//g, '/');
 	}
 
 	static closestCommonParent(

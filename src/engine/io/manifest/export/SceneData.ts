@@ -83,7 +83,7 @@ export class SceneDataManifestExporter {
 
 		const nodeFullPath = parentFullPath ? `${parentFullPath}/${nodeName}` : nodeName;
 		// we remove the prefix 'root/' if needed
-		const manifestPath = parentFullPath ? nodeFullPath.substr(5) : nodeFullPath;
+		const manifestPath = parentFullPath ? nodeFullPath.substring(5) : nodeFullPath;
 		// const manifestPath = nodeFullPath;
 
 		const children = nodeData.nodes;
