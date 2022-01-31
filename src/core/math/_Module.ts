@@ -126,4 +126,7 @@ export class CoreMath {
 	static nearestPower2(num: number) {
 		return Math.pow(2, Math.ceil(Math.log(num) / Math.log(2)));
 	}
+	static pow2Inverse(num: number) {
+		return Math.log(num) / Math.log(2);
+	}
 }

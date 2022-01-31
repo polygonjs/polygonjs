@@ -29,7 +29,7 @@ class MeterAudioParamsConfig extends NodeParamsConfig {
 		...effectParamsOptions(paramCallback),
 	});
 	/** @param normalizes the output between 0 and 1. The value will be in decibel otherwise. */
-	normalRange = ParamConfig.BOOLEAN(0, effectParamsOptions(paramCallback));
+	normalRange = ParamConfig.BOOLEAN(1, effectParamsOptions(paramCallback));
 	/** @param display meter param */
 	updateRangeParam = ParamConfig.BOOLEAN(0, {
 		cook: false,
@@ -136,7 +136,7 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 		if (!this.__effect__) {
 			return;
 		}
-		const value = this.__effect__.getValue();
+		const value = this.getAnalyserValue();
 		if (CoreType.isNumber(value) && isFinite(value)) {
 			this.p.value.set(value);
 		} else {

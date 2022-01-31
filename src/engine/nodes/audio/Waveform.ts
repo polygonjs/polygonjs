@@ -13,10 +13,16 @@ import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Number2} from '../../../types/GlobalTypes';
 
+const DEFAULTS = {
+	// normalRange: false,
+	size: 1024,
+	smoothing: 0.8,
+}; //FFT.getDefaults();
+
 const RANGE_DEFAULT: Number2 = [10000, -10000];
 class WaveformAudioParamsConfig extends NodeParamsConfig {
 	/** @param array size will be 2**sizeExponent */
-	sizeExponent = ParamConfig.INTEGER(8, {
+	sizeExponent = ParamConfig.INTEGER(10, {
 		range: [4, 14],
 		rangeLocked: [true, true],
 	});
@@ -25,14 +31,14 @@ class WaveformAudioParamsConfig extends NodeParamsConfig {
 		editable: false,
 	});
 	/** @param a value from between 0 and 1 where 0 represents no time averaging with the last analysis frame */
-	smoothing = ParamConfig.FLOAT(0.8, {
+	smoothing = ParamConfig.FLOAT(DEFAULTS.smoothing, {
 		range: [0, 1],
 		rangeLocked: [true, true],
 		cook: false,
 		// ...effectParamsOptions(paramCallback),
 	});
 	/** @param normalizes the output between 0 and 1. The value will be in decibel otherwise. */
-	normalRange = ParamConfig.BOOLEAN(0, {
+	normalRange = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		// ...effectParamsOptions(paramCallback)
 	});
@@ -181,7 +187,10 @@ export class WaveformAudioNode extends BaseAnalyserAudioNode<WaveformAudioParams
 		if (!this.__effect__) {
 			return;
 		}
-		const values = this.__effect__.getValue();
+		const values = this.getAnalyserValue();
+		if (!values) {
+			return;
+		}
 		const min = Math.min(...values);
 		const max = Math.max(...values);
 		this.p.range.set([min, max]);

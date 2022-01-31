@@ -12,7 +12,7 @@ import {BooleanParam} from '../../params/Boolean';
 import {NodePathParam} from '../../params/NodePath';
 import {Vector2Param} from '../../params/Vector2';
 import {BaseAnalyserAudioNode} from '../audio/_BaseAnalyser';
-import {NearestFilter} from 'three/src/constants';
+import {NearestFilter, RGBAFormat, FloatType} from 'three/src/constants';
 import {FloatParam} from '../../params/Float';
 
 interface ToneAudioByChannel {
@@ -50,7 +50,7 @@ interface ValuesByChannel {
 const CHANNELS: Channel[] = ['R', 'G', 'B', 'A'];
 
 const TEXTURE_ROWS = 2;
-const BYTE_SIZE = 255;
+const BYTE_SIZE = 1;
 const HALF_BYTE_SIZE = Math.floor(BYTE_SIZE * 0.5);
 const DEFAULT_SPEED = 0.04;
 class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
@@ -65,7 +65,7 @@ class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 		visibleIf: {activeR: 1},
 	});
 	/** @param decibel range */
-	rangeR = ParamConfig.VECTOR2([-100, 100], {
+	rangeR = ParamConfig.VECTOR2([0, 1], {
 		visibleIf: {activeR: 1},
 	});
 	/** @param speed mult */
@@ -85,7 +85,7 @@ class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 		visibleIf: {activeG: 1},
 	});
 	/** @param decibel range */
-	rangeG = ParamConfig.VECTOR2([-100, 100], {
+	rangeG = ParamConfig.VECTOR2([0, 1], {
 		visibleIf: {activeG: 1},
 	});
 	/** @param speed mult */
@@ -105,7 +105,7 @@ class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 		visibleIf: {activeB: 1},
 	});
 	/** @param decibel range */
-	rangeB = ParamConfig.VECTOR2([-100, 100], {
+	rangeB = ParamConfig.VECTOR2([0, 1], {
 		visibleIf: {activeB: 1},
 	});
 	/** @param speed mult */
@@ -236,8 +236,7 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		if (!isBooleanTrue(paramSet.active.value)) {
 			return;
 		}
-		const values = audioNode.getAnalyserValue();
-		return values;
+		return audioNode.getAnalyserValue();
 	}
 	private async _updateTextureChannel(
 		channel: Channel,
@@ -279,14 +278,14 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		const height = TEXTURE_ROWS;
 		const width = valuesSize;
 		const size = width * height * 4;
-		const pixelBuffer = new Uint8Array(size);
+		const pixelBuffer = new Float32Array(size);
 		pixelBuffer.fill(0);
 		// file alpha to 1
 		// so that this can be set as a color texture without the material becoming transparent
 		for (let i = 0; i < size; i++) {
 			pixelBuffer[i * 4 + 3] = BYTE_SIZE;
 		}
-		const texture = new DataTexture(pixelBuffer, width, height);
+		const texture = new DataTexture(pixelBuffer, width, height, RGBAFormat, FloatType);
 		texture.minFilter = NearestFilter;
 		texture.magFilter = NearestFilter;
 		this._dataTexture = texture;

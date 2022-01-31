@@ -18,3 +18,10 @@ QUnit.test('triangle expand', (assert) => {
 	assert.in_delta(triangle.c.y, 0, 0.01);
 	assert.in_delta(triangle.c.z, 1.44, 0.01);
 });
+
+QUnit.test('pow2Inverse', (assert) => {
+	assert.equal(CoreMath.pow2Inverse(2), 1);
+	assert.equal(CoreMath.pow2Inverse(4), 2);
+	assert.equal(CoreMath.pow2Inverse(8), 3);
+	assert.equal(CoreMath.pow2Inverse(16), 4);
+});

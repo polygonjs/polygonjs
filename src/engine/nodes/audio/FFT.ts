@@ -12,9 +12,13 @@ import {effectParamsOptions} from './utils/EffectsController';
 import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {BaseAnalyserAudioNode} from './_BaseAnalyser';
 import {Number2} from '../../../types/GlobalTypes';
+import {
+	convertFrequencyBandsToOctaveBands,
+	convertFrequencyBandsToOctaveBandsDivisions2,
+} from '../../../core/audio/AudioConversion';
 const DEFAULTS = {
-	// normalRange: false,
-	// size: 1024,
+	normalRange: false,
+	size: 1024,
 	smoothing: 0.8,
 }; //FFT.getDefaults();
 
@@ -26,7 +30,7 @@ const RANGE_DEFAULT: Number2 = [10000, -10000];
 
 class FFTAudioParamsConfig extends NodeParamsConfig {
 	/** @param array size will be 2**sizeExponent */
-	sizeExponent = ParamConfig.INTEGER(8, {
+	sizeExponent = ParamConfig.INTEGER(10, {
 		range: [4, 14],
 		rangeLocked: [true, true],
 	});
@@ -41,7 +45,20 @@ class FFTAudioParamsConfig extends NodeParamsConfig {
 		...effectParamsOptions(paramCallback),
 	});
 	/** @param normalizes the output between 0 and 1. The value will be in decibel otherwise. */
-	normalRange = ParamConfig.BOOLEAN(0, effectParamsOptions(paramCallback));
+	normalRange = ParamConfig.BOOLEAN(1, effectParamsOptions(paramCallback));
+	/** @param groups the FFT frequency bands into octave bands */
+	asOctaves = ParamConfig.BOOLEAN(1, {
+		// if cook is false, the materials reading the COP/audioAnalyser
+		// do not seem to update the texture when this is changed.
+		// I should investigate, as this should not be different than changing normalRange.
+		//cook:false,
+	});
+	octaveDivisions = ParamConfig.INTEGER(1, {
+		range: [1, 3],
+		rangeLocked: [true, true],
+		visibleIf: {asOctaves: 1},
+		separatorAfter: true,
+	});
 	/** @param display range param */
 	updateRangeParam = ParamConfig.BOOLEAN(0, {
 		cook: false,
@@ -98,8 +115,43 @@ export class FFTAudioNode extends BaseAnalyserAudioNode<FFTAudioParamsConfig> {
 	}
 	getAnalyserValue() {
 		if (this.__effect__) {
-			return this.__effect__.getValue();
+			const fftValues = this.__effect__.getValue();
+
+			if (isBooleanTrue(this.pv.asOctaves)) {
+				// if (isBooleanTrue(this.pv.normalRange)) {
+				// const timeConstant = this.__effect__.getFrequencyOfIndex(1);
+				// const mult = 2 ** this.pv.sizeExponent;
+				// console.log('mult', mult);
+				// const valuesCount = fftValues.length;
+				// for (let i = 0; i < valuesCount; i++) {
+				// 	fftValues[i] *= mult;
+				// }
+				// }
+				const octaveValues = this._octaveValues();
+				if (this._octaveDivisions() == 1) {
+					convertFrequencyBandsToOctaveBands(fftValues, octaveValues);
+				} else {
+					convertFrequencyBandsToOctaveBandsDivisions2(fftValues, octaveValues, this._octaveDivisions());
+				}
+				return octaveValues;
+			} else {
+				return fftValues;
+			}
 		}
+	}
+	private __octaveValues: Float32Array | undefined;
+	private _octaveDivisions() {
+		return 2 ** (this.pv.octaveDivisions - 1);
+	}
+	private _octaveValues() {
+		const requiredSize = isBooleanTrue(this.pv.asOctaves)
+			? this.pv.sizeExponent * this._octaveDivisions()
+			: this.pv.sizeExponent;
+		// const requiredSize = this.pv.sizeExponent;
+		if (this.__octaveValues && this.__octaveValues.length != requiredSize) {
+			this.__octaveValues = undefined;
+		}
+		return (this.__octaveValues = this.__octaveValues || new Float32Array(requiredSize));
 	}
 	private __effect__: FFT | undefined;
 	private _effect() {
@@ -145,7 +197,10 @@ export class FFTAudioNode extends BaseAnalyserAudioNode<FFTAudioParamsConfig> {
 		if (!this.__effect__) {
 			return;
 		}
-		const values = this.__effect__.getValue();
+		const values = this.getAnalyserValue();
+		if (!values) {
+			return;
+		}
 		const min = Math.min(...values);
 		const max = Math.max(...values);
 		this.p.range.set([min, max]);

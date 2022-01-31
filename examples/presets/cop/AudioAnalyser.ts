@@ -5,12 +5,18 @@ import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFact
 const audioAnalyserCopNodePresetsCollectionFactory: PresetsCollectionFactory<AudioAnalyserCopNode> = (
 	node: AudioAnalyserCopNode
 ) => {
-	const fft_meter_waveform = new BasePreset()
-		.addEntry<ParamType.VECTOR2>(node.p.rangeR, [-160, 0])
-		.addEntry<ParamType.VECTOR2>(node.p.rangeG, [-100, 100])
-		.addEntry<ParamType.VECTOR2>(node.p.rangeB, [-0.05, 0.05]);
+	const normalised = new BasePreset()
+		.addEntry<ParamType.VECTOR2>(node.p.rangeR, [0, 1])
+		.addEntry<ParamType.VECTOR2>(node.p.rangeG, [0, 1])
+		.addEntry<ParamType.VECTOR2>(node.p.rangeB, [0, 1])
+		.addEntry<ParamType.VECTOR2>(node.p.rangeA, [0, 1]);
+	const decibels = new BasePreset()
+		.addEntry<ParamType.VECTOR2>(node.p.rangeR, [-200, 0])
+		.addEntry<ParamType.VECTOR2>(node.p.rangeG, [-200, 0])
+		.addEntry<ParamType.VECTOR2>(node.p.rangeB, [-200, 0])
+		.addEntry<ParamType.VECTOR2>(node.p.rangeA, [-200, 0]);
 
-	return new NodePresetsCollection().setPresets({fft_meter_waveform});
+	return new NodePresetsCollection().setPresets({normalised, decibels});
 };
 export const audioAnalyserCopPresetRegister: PresetRegister<typeof AudioAnalyserCopNode, AudioAnalyserCopNode> = {
 	nodeClass: AudioAnalyserCopNode,
