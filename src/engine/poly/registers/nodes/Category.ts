@@ -32,6 +32,7 @@ export const CATEGORY_EVENT = {
 	NETWORK,
 };
 export const CATEGORY_GL = {
+	ADVANCED: 'advanced',
 	COLOR: 'color',
 	CONVERSION: 'conversion',
 	DYNAMICS: 'dynamics',

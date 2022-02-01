@@ -62,6 +62,7 @@ import {CrossGlNode} from '../../../nodes/gl/Cross';
 import {CycleGlNode} from '../../../nodes/gl/Cycle';
 import {DiskGlNode} from '../../../nodes/gl/Disk';
 import {EasingGlNode} from '../../../nodes/gl/Easing';
+import {FlockingGlNode} from '../../../nodes/gl/Flocking';
 import {FitGlNode, FitTo01GlNode, FitFrom01GlNode, FitFrom01ToVarianceGlNode} from '../../../nodes/gl/Fit';
 import {FogGlNode} from '../../../nodes/gl/Fog';
 import {ForLoopGlNode} from '../../../nodes/gl/ForLoop';
@@ -148,6 +149,7 @@ export interface GlNodeChildrenMap {
 	fitTo01: FitTo01GlNode;
 	fitFrom01: FitFrom01GlNode;
 	fitFrom01ToVariance: FitFrom01ToVarianceGlNode;
+	flocking: FlockingGlNode;
 	floatToInt: FloatToIntGlNode;
 	floatToVec2: FloatToVec2GlNode;
 	floatToVec3: FloatToVec3GlNode;
@@ -276,6 +278,9 @@ export class GlRegister {
 		poly.registerNode(ExpGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(Exp2GlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FaceforwardGlNode, CATEGORY_GL.GEOMETRY);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(FlockingGlNode, CATEGORY_GL.ADVANCED);
+		}
 		poly.registerNode(FitGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FitTo01GlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FitFrom01GlNode, CATEGORY_GL.MATH);
