@@ -5,12 +5,9 @@ import {BaseController} from './_BaseController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
-import {DoubleSide, BackSide, FrontSide} from 'three/src/constants';
 import {NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending} from 'three/src/constants';
-import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
-import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
-import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
+import {updateMaterialSide} from './helpers/MaterialSideHelper';
 const BLENDING_VALUES = {
 	NoBlending,
 	NormalBlending,
@@ -111,37 +108,7 @@ export class AdvancedCommonController extends BaseController {
 	}
 
 	private _updateSides(mat: Material, pv: ParamsValueAccessorType<AdvancedCommonParamsConfig>) {
-		// normal render
-		const singleSide = isBooleanTrue(pv.front) ? FrontSide : BackSide;
-		const newSide = isBooleanTrue(pv.doubleSided) ? DoubleSide : singleSide;
-		if (newSide != mat.side) {
-			mat.side = newSide;
-			mat.needsUpdate = true;
-		}
-		// shadow render
-		if (isBooleanTrue(pv.overrideShadowSide)) {
-			const singleSide = isBooleanTrue(pv.shadowFront) ? FrontSide : BackSide;
-			const newSide = isBooleanTrue(pv.shadowDoubleSided) ? DoubleSide : singleSide;
-			const mat = this.node.material;
-			if (newSide != mat.shadowSide) {
-				mat.shadowSide = newSide;
-				mat.needsUpdate = true;
-			}
-		} else {
-			/* TODO: update types */
-			(mat as any).shadowSide = null;
-		}
-
-		const customMaterials = (mat as ShaderMaterialWithCustomMaterials).customMaterials;
-		if (customMaterials) {
-			const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
-			for (let customName of customNames) {
-				const customMaterial = customMaterials[customName];
-				if (customMaterial) {
-					this._updateSides(customMaterial, pv);
-				}
-			}
-		}
+		updateMaterialSide(mat, pv);
 	}
 
 	static async update(node: AdvancedCommonMapMatNode) {

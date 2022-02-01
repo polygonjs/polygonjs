@@ -34,10 +34,10 @@ export class FlockingGlNode extends TypedGlNode<FlockingGlParamsConfig> {
 		]);
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const bodyLines: string[] = [];
 
-		shaders_collection_controller.addDefinitions(this, [new FunctionGLDefinition(this, Flocking)]);
+		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, Flocking)]);
 
 		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
 		const velocity = ThreeToGl.vector3(this.variableForInputParam(this.p.velocity));
@@ -48,10 +48,12 @@ export class FlockingGlNode extends TypedGlNode<FlockingGlParamsConfig> {
 		// - work out better math so that repulse/attract functions
 		// - link position and vel textures in the function (vel may not yet be needed)
 		// - how could I just have repulse?
+		// - ensure that in the for loop the number of particles is known so that we don't look up non existing ones
+		// - this node should probably be only available in particles
 		const out = this.glVarName(OUTPUT_NAME);
 		const args = ['texture_position', 'texture_velocity', position, velocity, minDist, maxDist].join(', ');
 		bodyLines.push(`vec3 ${out} = flocking(${args})`);
 
-		shaders_collection_controller.addBodyLines(this, bodyLines);
+		shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 }
