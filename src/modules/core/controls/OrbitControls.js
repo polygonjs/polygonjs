@@ -79,7 +79,7 @@ class OrbitControls extends EventDispatcher {
 		// Set to true to automatically rotate around the target
 		// If auto-rotate is enabled, you must call controls.update() in your animation loop
 		this.autoRotate = false;
-		this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
+		this.autoRotateSpeed = 2.0; // 30 seconds per orbit when fps is 60
 
 		// Set to false to disable use of the keys
 		this.enableKeys = true;
@@ -281,14 +281,14 @@ class OrbitControls extends EventDispatcher {
 		})();
 
 		this.dispose = function () {
-			scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
+			scope.domElement.removeEventListener('contextmenu', onContextMenu);
 
-			scope.domElement.removeEventListener('pointerdown', onPointerDown, false);
+			scope.domElement.removeEventListener('pointerdown', onPointerDown);
 			scope.domElement.removeEventListener('pointercancel', onPointerCancel);
-			scope.domElement.removeEventListener('wheel', onMouseWheel, false);
+			scope.domElement.removeEventListener('wheel', onMouseWheel);
 
-			scope.domElement.ownerDocument.removeEventListener('pointermove', onPointerMove, false);
-			scope.domElement.ownerDocument.removeEventListener('pointerup', onPointerUp, false);
+			scope.domElement.removeEventListener('pointermove', onPointerMove);
+			scope.domElement.removeEventListener('pointerup', onPointerUp);
 
 			if (scope._domElementKeyEvents !== null) {
 				scope._domElementKeyEvents.removeEventListener('keydown', onKeyDown);
@@ -706,8 +706,8 @@ class OrbitControls extends EventDispatcher {
 
 			if (pointers.length === 0) {
 				scope.domElement.setPointerCapture(event.pointerId);
-				scope.domElement.ownerDocument.addEventListener('pointermove', onPointerMove);
-				scope.domElement.ownerDocument.addEventListener('pointerup', onPointerUp);
+				scope.domElement.addEventListener('pointermove', onPointerMove);
+				scope.domElement.addEventListener('pointerup', onPointerUp);
 			}
 
 			//
@@ -745,8 +745,8 @@ class OrbitControls extends EventDispatcher {
 
 			if (pointers.length === 0) {
 				scope.domElement.releasePointerCapture(event.pointerId);
-				scope.domElement.ownerDocument.removeEventListener('pointermove', onPointerMove);
-				scope.domElement.ownerDocument.removeEventListener('pointerup', onPointerUp);
+				scope.domElement.removeEventListener('pointermove', onPointerMove);
+				scope.domElement.removeEventListener('pointerup', onPointerUp);
 			}
 		}
 
@@ -863,12 +863,7 @@ class OrbitControls extends EventDispatcher {
 		}
 
 		function onMouseWheel(event) {
-			if (
-				scope.enabled === false ||
-				scope.enableZoom === false ||
-				(state !== STATE.NONE && state !== STATE.ROTATE)
-			)
-				return;
+			if (scope.enabled === false || scope.enableZoom === false || state !== STATE.NONE) return;
 
 			event.preventDefault();
 
