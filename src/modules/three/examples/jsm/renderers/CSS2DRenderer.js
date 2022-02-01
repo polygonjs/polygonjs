@@ -4,11 +4,11 @@ import {Vector3} from 'three/src/math/Vector3';
 
 class CSS2DObject extends Object3D {
 
- 	constructor( element ) {
+	constructor( element = document.createElement( 'div' ) ) {
 
 		super();
 
-		this.element = element || document.createElement( 'div' );
+		this.element = element;
 
 		this.element.style.position = 'absolute';
 		this.element.style.userSelect = 'none';
@@ -55,7 +55,7 @@ const _b = new Vector3();
 
 class CSS2DRenderer {
 
-	constructor() {
+	constructor( parameters = {} ) {
 
 		const _this = this;
 
@@ -66,7 +66,8 @@ class CSS2DRenderer {
 			objects: new WeakMap()
 		};
 
-		const domElement = document.createElement( 'div' );
+		const domElement = parameters.element !== undefined ? parameters.element : document.createElement( 'div' );
+
 		domElement.style.overflow = 'hidden';
 
 		this.domElement = domElement;

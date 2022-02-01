@@ -13,11 +13,11 @@ const _scale = new Vector3();
 
 class CSS3DObject extends Object3D {
 
-	constructor( element ) {
+	constructor( element = document.createElement( 'div' ) ) {
 
 		super();
 
-		this.element = element || document.createElement( 'div' );
+		this.element = element;
 		this.element.style.position = 'absolute';
 		this.element.style.pointerEvents = 'auto';
 		this.element.style.userSelect = 'none';
@@ -85,7 +85,7 @@ const _matrix2 = new Matrix4();
 
 class CSS3DRenderer {
 
-	constructor() {
+	constructor( parameters = {} ) {
 
 		const _this = this;
 
@@ -97,7 +97,8 @@ class CSS3DRenderer {
 			objects: new WeakMap()
 		};
 
-		const domElement = document.createElement( 'div' );
+		const domElement = parameters.element !== undefined ? parameters.element : document.createElement( 'div' );
+
 		domElement.style.overflow = 'hidden';
 
 		this.domElement = domElement;

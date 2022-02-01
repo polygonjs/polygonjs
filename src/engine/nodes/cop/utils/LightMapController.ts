@@ -11,7 +11,6 @@ import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Camera} from 'three/src/cameras/Camera';
 import {Light} from 'three/src/lights/Light';
 import {Texture} from 'three/src/textures/Texture';
-import {RenderTarget} from 'three/src/renderers/webgl/WebGLRenderLists';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Vector3} from 'three/src/math/Vector3';
 import {Quaternion} from 'three/src/math/Quaternion';
@@ -136,7 +135,7 @@ export class LightMapController {
 	 * @param {boolean} blurEdges  Whether to fix UV Edges via blurring
 	 */
 	private _objectStateByObject: WeakMap<Object3D, ObjectState> = new WeakMap();
-	private _previousRenderTarget: RenderTarget | null = null;
+	private _previousRenderTarget: WebGLRenderTarget | null = null;
 	private _lightHierarchyStateByLight: WeakMap<Light, LightHierarchyState> = new WeakMap();
 	private _lightMatrixStateByLight: WeakMap<Light, LightMatrixState> = new WeakMap();
 	// private _reset() {

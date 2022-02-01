@@ -71,7 +71,6 @@ QUnit.test('it is possible to link to root params', async (assert) => {
 	rootColorR.set(1);
 	matColorR.set(`ch('/bgColorr')`);
 	await matColorR.compute();
-	console.log(matColorR.states.error.message());
 	assert.notOk(matColorR.states.error.active());
 	assert.equal(matColorR.value, 1);
 

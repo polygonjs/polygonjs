@@ -5,7 +5,7 @@ import {AnyEventNode} from '../../../nodes/event/Any';
 import {AudioEventNode} from '../../../nodes/event/Audio';
 import {BlockEventNode} from '../../../nodes/event/Block';
 import {ButtonEventNode} from '../../../nodes/event/Button';
-import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
+// import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
 import {DelayEventNode} from '../../../nodes/event/Delay';
@@ -47,7 +47,7 @@ export interface EventNodeChildrenMap {
 	any: AnyEventNode;
 	block: BlockEventNode;
 	button: ButtonEventNode;
-	cameraDeviceOrientationControls: CameraDeviceOrientationControlsEventNode;
+	// cameraDeviceOrientationControls: CameraDeviceOrientationControlsEventNode;
 	cameraMapControls: CameraOrbitControlsEventNode;
 	cameraOrbitControls: CameraMapControlsEventNode;
 	delay: DelayEventNode;
@@ -93,7 +93,7 @@ export class EventRegister {
 		poly.registerNode(AudioEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(BlockEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(ButtonEventNode, CATEGORY_EVENT.MISC);
-		poly.registerNode(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
+		// poly.registerNode(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(DelayEventNode, CATEGORY_EVENT.MISC);

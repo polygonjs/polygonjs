@@ -17,11 +17,11 @@ interface MeshPhysicalWithUniforms extends ShaderMaterial {
 		transmission: IUniformN;
 		thickness: IUniformN;
 		attenuationDistance: IUniformN;
-		attenuationTint: IUniformColor;
+		attenuationColor: IUniformColor;
 		sheen: IUniformN;
 		sheenRoughness: IUniformN;
-		sheenTint: IUniformColor;
-		specularTint: IUniformColor;
+		sheenColor: IUniformColor;
+		specularColor: IUniformColor;
 		ior: IUniformN;
 	};
 }
@@ -167,20 +167,20 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			mat.uniforms.transmission.value = pv.transmission;
 			mat.uniforms.thickness.value = pv.thickness;
 			mat.uniforms.attenuationDistance.value = pv.attenuationDistance;
-			mat.uniforms.attenuationTint.value = pv.attenuationColor;
+			mat.uniforms.attenuationColor.value = pv.attenuationColor;
 
 			if (isBooleanTrue(pv.useSheen)) {
 				this._sheenColorClone.copy(pv.sheenColor);
 				mat.uniforms.sheen.value = pv.sheen;
 				mat.uniforms.sheenRoughness.value = pv.sheenRoughness;
-				mat.uniforms.sheenTint.value = this._sheenColorClone;
+				mat.uniforms.sheenColor.value = this._sheenColorClone;
 			} else {
 				mat.uniforms.sheen.value = 0;
 			}
 			mat.uniforms.ior.value = pv.ior;
 
 			// to ensure compilation goes through
-			(mat as any).specularTint = mat.uniforms.specularTint.value;
+			(mat as any).specularColor = mat.uniforms.specularColor.value;
 			(mat as any).ior = mat.uniforms.ior.value;
 
 			// mat.defines['CLEARCOAT'] = isBooleanTrue(this.node.pv.useClearCoatNormalMap);
@@ -201,14 +201,14 @@ export class MeshPhysicalController extends BaseTextureMapController {
 				this._sheenColorClone.copy(pv.sheenColor);
 				mat.sheen = pv.sheen;
 				mat.sheenRoughness = pv.sheenRoughness;
-				mat.sheenTint = this._sheenColorClone;
+				mat.sheenColor = this._sheenColorClone;
 			} else {
 				mat.sheen = 0;
 			}
 			mat.transmission = pv.transmission;
 			mat.thickness = pv.thickness;
 			mat.attenuationDistance = pv.attenuationDistance;
-			mat.attenuationTint = pv.attenuationColor;
+			mat.attenuationColor = pv.attenuationColor;
 		}
 	}
 	static override async update(node: TextureClearCoatMapMatNode) {
