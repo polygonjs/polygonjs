@@ -1,5 +1,5 @@
 import {ObjectUtils} from '../../../../../core/ObjectUtils';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {Material} from 'three/src/materials/Material';
 import {Object3D} from 'three/src/core/Object3D';
 import {BaseBuilderMatNodeType} from '../../../mat/_BaseBuilder';
 import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
@@ -10,42 +10,45 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsControllerData} from '../../../gl/code/utils/TextureAllocationsController';
 import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../../../gl/code/globals/Texture';
 import {NodeContext} from '../../../../poly/NodeContext';
+import {ShaderAssemblerMaterial} from '../../../gl/code/assemblers/materials/_BaseMaterial';
+import {IUniformTexture} from '../../../utils/code/gl/Uniforms';
 
 export class ParticlesSystemGpuRenderController {
-	private _render_material: ShaderMaterial | undefined;
-	protected _particles_group_objects: Object3D[] = [];
-	private _shaders_by_name: Map<ShaderName, string> | undefined;
-	private _all_shader_names: ShaderName[] = [];
-	private _all_uniform_names: string[] = [];
+	private _renderMaterial: Material | undefined;
+	protected _particlesGroupObjects: Object3D[] = [];
+	private _allShaderNames: ShaderName[] = [];
+	private _uniformByShaderName: Map<ShaderName, IUniformTexture> = new Map();
+	private _allUniformNames: string[] = [];
 	private _texture_allocations_json: TextureAllocationsControllerData | undefined;
 	private _materialGlobalsHandler = new GlobalsTextureHandler(
 		GlobalsTextureHandler.UV_VARYING,
 		GlobalsTextureHandlerPurpose.MATERIAL
 	);
+	private _matNodeAssembler: ShaderAssemblerMaterial | undefined;
 
 	constructor(private node: ParticlesSystemGpuSopNode) {}
 
-	setShadersByName(shaders_by_name: Map<ShaderName, string>) {
-		this._shaders_by_name = shaders_by_name;
-		this._all_shader_names = [];
-		this._all_uniform_names = [];
-		this._shaders_by_name.forEach((shader, name) => {
-			this._all_shader_names.push(name);
-			this._all_uniform_names.push(`texture_${name}`);
+	setShadersByName(shadersByName: Map<ShaderName, string>) {
+		this._allShaderNames = [];
+		this._uniformByShaderName.clear();
+		this._allUniformNames = [];
+		shadersByName.forEach((shader, name) => {
+			this._allShaderNames.push(name);
+			this._allUniformNames.push(`texture_${name}`);
 		});
 
 		this.resetRenderMaterial();
 	}
 
 	assignRenderMaterial() {
-		if (!this._render_material) {
+		if (!this._renderMaterial) {
 			return;
 		}
-		for (let object3d of this._particles_group_objects) {
+		for (let object3d of this._particlesGroupObjects) {
 			const object = object3d as Mesh;
 			if (object.geometry) {
-				object.material = this._render_material;
-				CoreMaterial.applyCustomMaterials(object, this._render_material as ShaderMaterialWithCustomMaterials);
+				object.material = this._renderMaterial;
+				CoreMaterial.applyCustomMaterials(object, this._renderMaterial as ShaderMaterialWithCustomMaterials);
 				object.matrixAutoUpdate = false;
 				object.updateMatrix();
 			}
@@ -54,52 +57,59 @@ export class ParticlesSystemGpuRenderController {
 		// we need to:
 		// - mark the material as needsUpdate (to ensure it gets recompiled by the renderer)
 		// - update the uniforms (to ensure the material gets the right values, as the uniforms have been reset)
-		this._render_material.needsUpdate = true;
+		this._renderMaterial.needsUpdate = true;
 		this.updateRenderMaterialUniforms();
 	}
 	updateRenderMaterialUniforms() {
-		if (!this._render_material) {
+		if (!this._renderMaterial) {
 			return;
 		}
 
-		let uniform_name: string;
-		let shader_name: ShaderName;
-		for (let i = 0; i < this._all_shader_names.length; i++) {
-			shader_name = this._all_shader_names[i];
-			uniform_name = this._all_uniform_names[i];
-			const texture = this.node.gpuController.getCurrentRenderTarget(shader_name)?.texture;
-			if (texture) {
+		let uniformName: string;
+		let shaderName: ShaderName;
+		for (let i = 0; i < this._allShaderNames.length; i++) {
+			shaderName = this._allShaderNames[i];
+			uniformName = this._allUniformNames[i];
+			let uniform = this._uniformByShaderName.get(shaderName);
+			if (!uniform) {
+				uniform = {value: null};
+				this._uniformByShaderName.set(shaderName, uniform);
+			}
+			if (uniform) {
+				const texture = this.node.gpuController.getCurrentRenderTarget(shaderName)?.texture;
+				uniform.value = texture || null;
 				// Setting needsUpdate to true was an attempt at fixing the bug
 				// where a particle system with no output on scene load
 				// fails to render when adding outputs later.
 				// At least until the scene is fully reloaded
 				// texture.needsUpdate = true;
-				this._render_material.uniforms[uniform_name].value = texture;
-				CoreMaterial.assign_custom_uniforms(this._render_material, uniform_name, texture);
+				CoreMaterial.assignUniforms(this._renderMaterial, uniformName, uniform, this._matNodeAssembler);
+				// this._renderMaterial.uniforms[uniformName].value = texture;
+				// CoreMaterial.assignCustomUniforms(this._renderMaterial, uniformName, texture);
 			}
 		}
 	}
 
 	resetRenderMaterial() {
-		this._render_material = undefined;
-		this._particles_group_objects = [];
+		this._renderMaterial = undefined;
+		this._particlesGroupObjects = [];
 	}
 	material() {
-		return this._render_material;
+		return this._renderMaterial;
 	}
 	initialized(): boolean {
-		return this._render_material != null;
+		return this._renderMaterial != null;
 	}
 
 	initCoreGroup(core_group: CoreGroup) {
 		for (let child of core_group.objectsWithGeo()) {
-			this._particles_group_objects.push(child);
+			this._particlesGroupObjects.push(child);
 		}
 	}
 	async initRenderMaterial() {
-		const assembler = this.node.assemblerController?.assembler;
+		const assembler = this.node.assemblerController()?.assembler;
 
-		if (this._render_material) {
+		if (this._renderMaterial) {
 			return;
 		}
 
@@ -119,12 +129,13 @@ export class ParticlesSystemGpuRenderController {
 					.textureAllocationsController()
 					.toJSON(this.node.scene());
 
-				const matNodeAssemblerController = matNode.assemblerController;
+				const matNodeAssemblerController = matNode.assemblerController();
 				if (matNodeAssemblerController) {
 					this._materialGlobalsHandler.set_texture_allocations_controller(
 						assembler.textureAllocationsController()
 					);
 					matNodeAssemblerController.set_assembler_globals_handler(this._materialGlobalsHandler);
+					this._matNodeAssembler = matNodeAssemblerController.assembler; //.setAdditionalUniformNames(this._allUniformNames);
 				}
 
 				if (
@@ -146,22 +157,23 @@ export class ParticlesSystemGpuRenderController {
 			this.node.debugMessage('renderController: matNode.compute() START');
 			const container = await matNode.compute();
 			this.node.debugMessage('renderController: matNode.compute() END');
-			this._render_material = container.material() as ShaderMaterial;
+			this._renderMaterial = container.material();
 		} else {
 			this.node.states.error.set('render material not valid');
 		}
 
 		// add uniforms
-		if (this._render_material) {
-			const uniforms = this._render_material.uniforms;
-			for (let uniform_name of this._all_uniform_names) {
-				const uniform_value = {value: null};
-				uniforms[uniform_name] = uniform_value;
-				if (this._render_material) {
-					CoreMaterial.init_custom_material_uniforms(this._render_material, uniform_name, uniform_value);
-				}
-			}
-		}
+		// if (this._renderMaterial) {
+		// 	const uniforms = this._renderMaterial.uniforms;
+		// 	console.log('this._allUniformNames', this._allUniformNames);
+		// 	for (let uniformName of this._allUniformNames) {
+		// 		const uniformValue = {value: null};
+		// 		uniforms[uniformName] = uniformValue;
+		// 		if (this._renderMaterial) {
+		// 			CoreMaterial.initCustomMaterialUniforms(this._renderMaterial, uniformName, uniformValue);
+		// 		}
+		// 	}
+		// }
 
 		this.assignRenderMaterial();
 	}

@@ -3,7 +3,6 @@ import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -19,7 +18,7 @@ export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 class TextureAlphaMaterial extends Material {
 	alphaMap!: Texture | null;
 }
-type CurrentMaterial = TextureAlphaMaterial | ShaderMaterial;
+type CurrentMaterial = TextureAlphaMaterial | Material;
 class TextureAlphaMapParamsConfig extends AlphaMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	alphaMap: TextureAlphaMapController;

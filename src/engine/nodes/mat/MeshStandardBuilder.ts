@@ -32,6 +32,9 @@ import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {UpdateOptions} from './utils/_BaseTextureController';
+import {Material} from 'three/src/materials/Material';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
@@ -48,6 +51,14 @@ interface Controllers {
 	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
 	normalMap: TextureNormalMapController;
 	PCSS: PCSSController;
+}
+interface MeshStandardBuilderMaterial extends MeshStandardMaterial {
+	vertexShader: string;
+	fragmentShader: string;
+	uniforms: IUniforms;
+	customMaterials: {
+		[key in CustomMaterialName]?: Material;
+	};
 }
 class MeshStandardMatParamsConfig extends PCSSParamConfig(
 	FogParamConfig(
@@ -91,6 +102,7 @@ class MeshStandardMatParamsConfig extends PCSSParamConfig(
 const ParamsConfig = new MeshStandardMatParamsConfig();
 
 export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
+	MeshStandardBuilderMaterial,
 	ShaderAssemblerStandard,
 	MeshStandardMatParamsConfig
 > {
@@ -101,7 +113,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_STANDARD> {
 		return AssemblerName.GL_MESH_STANDARD;
 	}
-	protected _create_assembler_controller() {
+	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	readonly controllers: Controllers = {

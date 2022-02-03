@@ -1,7 +1,6 @@
 import {OutputGlNode} from '../../../../src/engine/nodes/gl/Output';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
-import {BaseBuilderMatNodeType} from '../../../../src/engine/nodes/mat/_BaseBuilder';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {CoreSleep} from '../../../../src/core/Sleep';
@@ -9,10 +8,13 @@ import {FloatParam} from '../../../../src/engine/params/Float';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {ColorParam} from '../../../../src/engine/params/Color';
+import {RendererUtils} from '../../../helpers/RendererUtils';
+import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test(
 	'MAT spare params:spare params are re-created as expected and the uniforms updated on change',
 	async (assert) => {
+		const {renderer} = await RendererUtils.waitForRenderer();
 		const scene = window.scene;
 		scene.setFrame(1);
 		const MAT = window.MAT;
@@ -22,23 +24,23 @@ QUnit.test(
 		mesh_basic1.createNode('output');
 		mesh_basic1.createNode('globals');
 		assert.ok(mesh_basic1.assemblerController, 'assembler controller is present');
-		assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 
-		await mesh_basic1.compute();
+		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
-		assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compile is not required');
+		assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compile is not required');
 
 		const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 		const param1 = mesh_basic1.createNode('param');
 		CoreSleep.sleep(10);
-		assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 		const param_name = param1.p.name.value;
 		param1.setGlType(GlConnectionPointType.FLOAT);
 
-		assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 		CoreSleep.sleep(10);
-		await mesh_basic1.compute();
-		assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is NOT required');
+		await RendererUtils.compile(mesh_basic1, renderer);
+		assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is NOT required');
 
 		// param should already exist, and also uniform on mat
 		assert.deepEqual(mesh_basic1.params.spare_names.sort(), [param_name], 'spare params has param_name');
@@ -46,25 +48,26 @@ QUnit.test(
 
 		// changing the param type updates the spare param type
 		param1.setGlType(GlConnectionPointType.INT);
-		await mesh_basic1.compute();
+		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.equal(mesh_basic1.params.get(param_name)!.type(), ParamType.INTEGER);
 
 		// we revert back to float for the rest of the test
 		param1.setGlType(GlConnectionPointType.FLOAT);
-		await mesh_basic1.compute();
+		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.equal(mesh_basic1.params.get(param_name)!.type(), ParamType.FLOAT);
 
 		// updating the param updates the uniform, without having to cook the material node
 		output1.setInput('alpha', param1);
-		assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-		await mesh_basic1.compute();
-		assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+		await RendererUtils.compile(mesh_basic1, renderer);
+		assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 		const uniform_name = param1.uniformName();
 		assert.equal(mesh_basic1.params.get(param_name)!.value, 0);
-		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0);
+		const mesh_basic1Material = mesh_basic1.material;
+		assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 0);
 		mesh_basic1.params.get(param_name)!.set(0.5);
 		assert.equal(
-			mesh_basic1.material.uniforms[uniform_name].value,
+			materialUniforms(mesh_basic1Material)![uniform_name].value,
 			0.5,
 			'param updates the uniform when its value changes'
 		);
@@ -74,7 +77,7 @@ QUnit.test(
 		assert.equal(scene.frame(), 1);
 		await CoreSleep.sleep(100);
 		assert.equal(
-			mesh_basic1.material.uniforms[uniform_name].value,
+			materialUniforms(mesh_basic1Material)![uniform_name].value,
 			1,
 			'param updates the uniform when its expression becomes dirty'
 		);
@@ -82,21 +85,21 @@ QUnit.test(
 		scene.setFrame(2);
 		await CoreSleep.sleep(100);
 		assert.equal(
-			mesh_basic1.material.uniforms[uniform_name].value,
+			materialUniforms(mesh_basic1Material)![uniform_name].value,
 			2,
 			'param updates the uniform when its expression becomes dirty'
 		);
 		scene.setFrame(3);
 		await CoreSleep.sleep(20);
 		assert.equal(
-			mesh_basic1.material.uniforms[uniform_name].value,
+			materialUniforms(mesh_basic1Material)![uniform_name].value,
 			3,
 			'param updates the uniform when its expression becomes dirty again'
 		);
 
 		// if I change the type of the param, the raw_input stays
 		param1.setGlType(GlConnectionPointType.INT);
-		await mesh_basic1.compute();
+		await RendererUtils.compile(mesh_basic1, renderer);
 		let spare_param = mesh_basic1.params.get(param_name)!;
 		assert.equal(spare_param.type(), ParamType.INTEGER);
 		await CoreSleep.sleep(10);
@@ -107,15 +110,15 @@ QUnit.test(
 		assert.equal(scene.frame(), 35, 'scene frame is 35');
 		await spare_param.compute();
 		assert.equal(spare_param.value, 35, 'param is 35');
-		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 35, 'uniforrm is 35');
+		assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 35, 'uniforrm is 35');
 		scene.timeController.setMaxFrame(1000);
 		scene.setFrame(124);
 		await spare_param.compute();
-		assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 124, 'frame is 124');
+		assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 124, 'frame is 124');
 
 		// we revert back to float for the rest of the test
 		param1.setGlType(GlConnectionPointType.FLOAT);
-		await mesh_basic1.compute();
+		await RendererUtils.compile(mesh_basic1, renderer);
 		spare_param = mesh_basic1.params.get(param_name)!;
 		assert.equal(spare_param.type(), ParamType.FLOAT);
 		assert.equal(mesh_basic1.params.get(param_name)!.rawInput(), '$F');
@@ -128,78 +131,102 @@ QUnit.test(
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
-		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
-		await new_mesh_basic1.compute();
-		assert.ok(new_mesh_basic1.assemblerController, 'assembler_controller is present');
-		assert.notOk(new_mesh_basic1.assemblerController?.compileRequired(), 'compile is not required');
+		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as MeshBasicBuilderMatNode;
+		await RendererUtils.compile(new_mesh_basic1, renderer);
+		const new_mesh_basic1Material = new_mesh_basic1.material;
+		assert.ok(new_mesh_basic1.assemblerController(), 'assembler_controller is present');
+		assert.notOk(new_mesh_basic1.assemblerController()?.compileRequired(), 'compile is not required');
 		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), [param_name], 'spare params has param_name');
 		assert.equal(new_mesh_basic1.params.get(param_name)?.rawInput(), '$F', 'param raw input is $F');
 		await CoreSleep.sleep(100);
 		assert.equal(new_mesh_basic1.params.get(param_name)?.value, 124, 'param value is 124');
-		assert.equal(new_mesh_basic1.material.uniforms[uniform_name].value, 124, 'uniform is 124');
+		assert.equal(materialUniforms(new_mesh_basic1Material)![uniform_name].value, 124, 'uniform is 124');
 
 		// update the param to be sure dependency with frame has been created
 		scene2.setFrame(2);
 		await CoreSleep.sleep(100);
 		assert.equal(
-			new_mesh_basic1.material.uniforms[uniform_name].value,
+			materialUniforms(new_mesh_basic1Material)![uniform_name].value,
 			2,
 			'param updates the uniform when its expression becomes dirty'
 		);
 		scene2.setFrame(10);
 		await CoreSleep.sleep(20);
 		assert.equal(
-			new_mesh_basic1.material.uniforms[uniform_name].value,
+			materialUniforms(new_mesh_basic1Material)![uniform_name].value,
 			10,
 			'param updates the uniform when its expression becomes dirty again'
 		);
+		RendererUtils.dispose();
 	}
 );
 
 QUnit.test('MAT spare params:creating a spare param as vector, saving and load back', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
-	mesh_basic1.createNode('output');
+	const output1 = mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
 
 	await scene.waitForCooksCompleted();
 
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
+	const mesh_basic1Material = mesh_basic1.material;
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired());
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired());
 
 	// const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 
 	const param1 = mesh_basic1.createNode('param');
 	const param_name = param1.p.name.value;
-	const uniform_name = param1.uniformName();
+	const uniformName = param1.uniformName();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
 	param1.setGlType(GlConnectionPointType.FLOAT);
-	await CoreSleep.sleep(100);
-	const float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
+	await RendererUtils.compile(mesh_basic1, renderer);
+	let float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 	assert.equal(float_spare_param.type(), ParamType.FLOAT, 'param is float');
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0);
+
+	// not uniform yet as we have not yet recompiled the shader, since the compile key has not changed yet
+	// Update: it is recompiled everytime now
+	// assert.notOk(materialUniforms(mesh_basic1Material)![uniformName]);
+	assert.ok(materialUniforms(mesh_basic1Material)![uniformName]);
+	// but if we add the param to the output node, it will make the vertex or fragment updated,
+	// and therefore trigger a recompile
+	output1.setInput('alpha', param1);
+	await RendererUtils.compile(mesh_basic1, renderer);
+
+	assert.notEqual(
+		float_spare_param.graphNodeId(),
+		mesh_basic1.params.get(param_name)?.graphNodeId(),
+		'param has changed'
+	);
+	float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
+
+	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value, 0, 'uniform is 0');
 	float_spare_param.set(0.25);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0.25);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value, 0.25, 'uniform is 0.25');
 
 	// now change to vec3
 	param1.setGlType(GlConnectionPointType.VEC3);
-	await CoreSleep.sleep(100);
+	output1.setInput('alpha', null);
+	output1.setInput('color', param1);
+	await RendererUtils.compile(mesh_basic1, renderer);
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as Vector3Param;
+	assert.ok(vec3_spare_param, 'vec3_spare_param exists');
 	assert.equal(vec3_spare_param.type(), ParamType.VECTOR3, 'param is vec3');
 	assert.deepEqual(vec3_spare_param.valueSerialized(), [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
 	assert.deepEqual(vec3_spare_param.defaultValueSerialized(), [0, 0, 0], 'default_value_serialized is 0,0,0');
 	vec3_spare_param.set([0.1, 0.2, 0.3]);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.x, 0.1);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.y, 0.2);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.z, 0.3);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.x, 0.1);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.y, 0.2);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.z, 0.3);
 	vec3_spare_param.y.set(0.8);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.x, 0.1);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.y, 0.8);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.z, 0.3);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.x, 0.1);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.y, 0.8);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.z, 0.3);
 
 	const data = new SceneJsonExporter(scene).data();
 
@@ -225,30 +252,36 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	await CoreSleep.sleep(100);
 	vec3_spare_param2.set([0.1, 0.2, 0.3]);
 	await CoreSleep.sleep(100);
+	await RendererUtils.compile(mesh_basic2, renderer);
 	assert.equal(vec3_spare_param2.value.x, 0.1);
 	assert.equal(vec3_spare_param2.value.y, 0.2);
 	assert.equal(vec3_spare_param2.value.z, 0.3);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.x, 0.1);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.y, 0.2);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.z, 0.3);
+	const mesh_basic2Material = mesh_basic2.material;
+	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.x, 0.1);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.y, 0.2);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.z, 0.3);
 	return;
 	vec3_spare_param2.y.set(0.8);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.x, 0.1);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.y, 0.8);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.z, 0.3);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.x, 0.1);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.y, 0.8);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.z, 0.3);
+
+	RendererUtils.dispose();
 });
 QUnit.test('MAT spare params: creating a spare param as color, saving and load back', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
+
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
-	mesh_basic1.createNode('output');
+	const output1 = mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compile required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compile required');
 
 	await scene.waitForCooksCompleted();
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), [], 'no spare params');
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compile not required');
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compile not required');
 
 	// const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 
@@ -259,29 +292,31 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	const uniform_name = param1.uniformName();
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
 	param1.setGlType(GlConnectionPointType.FLOAT);
-	await mesh_basic1.compute();
-	const float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
+	output1.setInput('alpha', param1);
+	await RendererUtils.compile(mesh_basic1, renderer);
+	let float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 	assert.equal(float_spare_param.type(), ParamType.FLOAT, 'param is float');
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0);
+	const mesh_basic1Material = mesh_basic1.material;
+	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 0);
 	float_spare_param.set(0.25);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value, 0.25);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 0.25);
 
 	// now change to vec3
 	param1.setGlType(GlConnectionPointType.VEC3);
 	param1.p.asColor.set(1);
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
 	let vec3_spare_param = mesh_basic1.params.get(param_name)! as ColorParam;
 	assert.equal(vec3_spare_param.type(), ParamType.COLOR, 'param is color');
 	assert.deepEqual(vec3_spare_param.valueSerialized(), [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
 	assert.deepEqual(vec3_spare_param.defaultValueSerialized(), [0, 0, 0], 'default_value_serialized is 0,0,0');
 	vec3_spare_param.set([0.1, 0.2, 0.3]);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.r, 0.1);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.g, 0.2);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.b, 0.3);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.r, 0.1);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.g, 0.2);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.b, 0.3);
 	vec3_spare_param.g.set(0.8);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.r, 0.1);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.g, 0.8);
-	assert.equal(mesh_basic1.material.uniforms[uniform_name].value.b, 0.3);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.r, 0.1);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.g, 0.8);
+	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.b, 0.3);
 
 	const data = new SceneJsonExporter(scene).data();
 
@@ -312,13 +347,16 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	// assert.equal(mesh_basic2.material.uniforms[uniform_name].value.r, 0.1);
 	// assert.equal(mesh_basic2.material.uniforms[uniform_name].value.g, 0.8);
 	// assert.equal(mesh_basic2.material.uniforms[uniform_name].value.b, 0.3);
-
+	await RendererUtils.compile(mesh_basic2, renderer);
 	vec3_spare_param2.set([0.7, 0.2, 0.15]);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.r, 0.7);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.g, 0.2);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.b, 0.15);
+	const mesh_basic2Material = mesh_basic2.material;
+	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.r, 0.7);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.g, 0.2);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.b, 0.15);
 	vec3_spare_param2.g.set(0.6);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.r, 0.7);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.g, 0.6);
-	assert.equal(mesh_basic2.material.uniforms[uniform_name].value.b, 0.15);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.r, 0.7);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.g, 0.6);
+	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.b, 0.15);
+
+	RendererUtils.dispose();
 });

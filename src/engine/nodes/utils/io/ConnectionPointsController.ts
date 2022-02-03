@@ -11,6 +11,17 @@ import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
 
 type IONameFunction = (index: number) => string;
 type ExpectedConnectionTypesFunction<NC extends NodeContext> = () => ConnectionPointEnumMap[NC][];
+function arraysMatch<T>(array0: Array<T>, array1: Array<T>): boolean {
+	if (array0.length != array1.length) {
+		return false;
+	}
+	for (let i = 0; i < array0.length; i++) {
+		if (array0[i] != array1[i]) {
+			return false;
+		}
+	}
+	return true;
+}
 
 export class ConnectionPointsController<NC extends NodeContext> {
 	private _spare_params_controller: ConnectionPointsSpareParamsController<NC>;
@@ -126,7 +137,11 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 
 	update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (!this.node.lifecycle.creationCompleted() || !this._inputsOutputsMatchExpectations()) {
+		if (
+			!this.node.lifecycle.creationCompleted() ||
+			!this._inputsOutputsMatchExpectations() ||
+			!this._spareParamsMatchEditableState()
+		) {
 			this.update_connection_types();
 			this.node.removeDirtyState();
 
@@ -135,8 +150,10 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			if (!this.node.scene().loadingController.isLoading()) {
 				this.make_successors_update_signatures();
 			}
+			this._spare_params_controller.updateSpareParamsEditableStateIfNeeded();
 		}
 	}
+
 	// used when a node changes its signature, adn the output nodes need to adapt their own signatures
 	private make_successors_update_signatures() {
 		const successors = this.node.graphAllSuccessors();
@@ -191,18 +208,6 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 
 	protected _inputsOutputsMatchExpectations(): boolean {
-		function arraysMatch<T>(array0: Array<T>, array1: Array<T>): boolean {
-			if (array0.length != array1.length) {
-				return false;
-			}
-			for (let i = 0; i < array0.length; i++) {
-				if (array0[i] != array1[i]) {
-					return false;
-				}
-			}
-			return true;
-		}
-
 		const namedInputConnections = this.node.io.inputs.namedInputConnectionPoints();
 		const namedOutputConnections = this.node.io.outputs.namedOutputConnectionPoints();
 		const inputTypesMatch = arraysMatch(
@@ -223,31 +228,29 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		);
 
 		return inputTypesMatch && outputTypesMatch && inputNamesMatch && outputNamesMatch;
-
-		// const current_input_types = this.node.io.inputs.namedInputConnectionPoints().map((c) => c?.type());
-		// const current_output_types = this.node.io.outputs.namedOutputConnectionPoints().map((c) => c?.type());
-		// const expected_input_types = this._wrapped_expected_input_types_function();
-		// const expected_output_types = this._wrapped_expected_output_types_function();
-
-		// if (expected_input_types.length != current_input_types.length) {
-		// 	return false;
-		// }
-		// if (expected_output_types.length != current_output_types.length) {
-		// 	return false;
-		// }
-
-		// for (let i = 0; i < current_input_types.length; i++) {
-		// 	if (current_input_types[i] != expected_input_types[i]) {
-		// 		return false;
-		// 	}
-		// }
-		// for (let i = 0; i < current_output_types.length; i++) {
-		// 	if (current_output_types[i] != expected_output_types[i]) {
-		// 		return false;
-		// 	}
-		// }
-
-		// return true;
+	}
+	private _spareParamsMatchEditableState(): boolean {
+		let i = 0;
+		const params = this.node.params;
+		for (let connectionPoint of this.node.io.inputs.namedInputConnectionPoints()) {
+			if (connectionPoint) {
+				const isConnected = this.node.io.inputs.input(i) != null;
+				const paramName = connectionPoint?.name();
+				const hasParam = params.has(paramName);
+				if (hasParam) {
+					const param = params.get(paramName);
+					if (param) {
+						const expectedEditableState = !isConnected;
+						const currentEditableState = param.options.editable();
+						if (expectedEditableState != currentEditableState) {
+							return false;
+						}
+					}
+				}
+			}
+			i++;
+		}
+		return true;
 	}
 
 	//

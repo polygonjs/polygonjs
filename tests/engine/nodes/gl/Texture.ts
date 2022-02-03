@@ -1,4 +1,5 @@
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
@@ -157,6 +158,7 @@ QUnit.test('gl texture generates an error on material if no name is given', asyn
 });
 
 QUnit.test('gl texture: 1 texture node on top level and one in a subnet work ok', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	meshBasicBuilder1.createNode('output');
@@ -194,9 +196,9 @@ QUnit.test('gl texture: 1 texture node on top level and one in a subnet work ok'
 	subnet1.setInputName(0, 'pos');
 	output1.setInput('color', subnet1);
 
-	await meshBasicBuilder1.compute();
-	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
-	let uniform = material.uniforms['v_POLY_texture_myTextureMap'];
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
+	let uniform = materialUniforms(material)!['v_POLY_texture_myTextureMap'];
 	assert.ok(uniform);
 	assert.equal(uniform.value, null);
 	let spareParam = meshBasicBuilder1.params.get('myTextureMap')! as NodePathParam;
@@ -221,7 +223,7 @@ uniform sampler2D v_POLY_texture_myTextureMap;`
 
 	// only 1 param out of subnet
 	subnet1.removeNode(texture1);
-	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.not_includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/subnet1/texture1
@@ -235,9 +237,9 @@ uniform sampler2D v_POLY_texture_myTextureMap;`,
 	const vec4ToVec3_2 = meshBasicBuilder1.createNode('vec4ToVec3');
 	vec4ToVec3_2.setInput(0, texture2);
 	output1.setInput('color', vec4ToVec3_2);
-	await meshBasicBuilder1.compute();
-	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
-	uniform = material.uniforms['v_POLY_texture_myTextureMap'];
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
+	uniform = materialUniforms(material)!['v_POLY_texture_myTextureMap'];
 	assert.ok(uniform, 'uniform exists');
 	assert.equal(uniform.value.uuid, textureObject1.uuid, 'uniform value is still previous one');
 	spareParam = meshBasicBuilder1.params.get('myTextureMap')! as NodePathParam;
@@ -273,9 +275,9 @@ uniform sampler2D v_POLY_texture_myTextureMap;`
 	add1.setInput(0, subnet1);
 	add1.setInput(1, vec4ToVec3_2);
 	output1.setInput('color', add1);
-	await meshBasicBuilder1.compute();
-	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
-	uniform = material.uniforms['v_POLY_texture_myTextureMap'];
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
+	uniform = materialUniforms(material)!['v_POLY_texture_myTextureMap'];
 	assert.ok(uniform, 'uniform exists');
 	assert.equal(uniform.value.uuid, textureObject2.uuid, 'uniform value is still previous one');
 	spareParam = meshBasicBuilder1.params.get('myTextureMap')! as NodePathParam;
@@ -308,4 +310,6 @@ uniform sampler2D v_POLY_texture_myTextureMap;`
 		`// /MAT/meshBasicBuilder1/output1
 	diffuseColor.xyz = v_POLY_add1_sum;`
 	);
+
+	RendererUtils.dispose();
 });

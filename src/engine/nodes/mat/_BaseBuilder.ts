@@ -3,10 +3,10 @@ import {TypedMatNode} from './_Base';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderAssemblerMaterial} from '../gl/code/assemblers/materials/_BaseMaterial';
-import {MaterialPersistedConfig} from '../gl/code/assemblers/materials/PersistedConfig';
+import {MaterialPersistedConfig} from '../gl/code/assemblers/materials/MaterialPersistedConfig';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
-import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
+import {MaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BaseNodeType} from '../_Base';
@@ -33,10 +33,11 @@ export function BaseBuilderParamConfig<TBase extends Constructor>(Base: TBase) {
 class MatBuilderParamsConfig extends BaseBuilderParamConfig(NodeParamsConfig) {}
 
 export abstract class TypedBuilderMatNode<
+	M extends MaterialWithCustomMaterials,
 	A extends ShaderAssemblerMaterial,
 	K extends MatBuilderParamsConfig
-> extends TypedMatNode<ShaderMaterialWithCustomMaterials, K> {
-	protected _assembler_controller: GlAssemblerController<A> | undefined;
+> extends TypedMatNode<M, K> {
+	protected _assemblerController: GlAssemblerController<A> | undefined;
 	protected override _childrenControllerContext = NodeContext.GL;
 	override readonly persisted_config: MaterialPersistedConfig = new MaterialPersistedConfig(this);
 
@@ -46,12 +47,12 @@ export abstract class TypedBuilderMatNode<
 	//
 	//
 	createMaterial() {
-		let material: ShaderMaterialWithCustomMaterials | undefined;
+		let material: M | undefined;
 		if (this.persisted_config) {
-			material = this.persisted_config.material();
+			material = this.persisted_config.material() as M;
 		}
 		if (!material) {
-			material = this.assemblerController?.assembler.createMaterial() as ShaderMaterialWithCustomMaterials;
+			material = this.assemblerController()?.assembler.createMaterial() as M;
 		}
 		return material;
 	}
@@ -60,10 +61,10 @@ export abstract class TypedBuilderMatNode<
 	// ASSEMBLER
 	//
 	//
-	get assemblerController() {
-		return (this._assembler_controller = this._assembler_controller || this._create_assembler_controller());
+	assemblerController() {
+		return (this._assemblerController = this._assemblerController || this._createAssemblerController());
 	}
-	protected abstract _create_assembler_controller(): GlAssemblerController<A> | undefined;
+	protected abstract _createAssemblerController(): GlAssemblerController<A> | undefined;
 
 	override createNode<S extends keyof GlNodeChildrenMap>(
 		node_class: S,
@@ -86,7 +87,7 @@ export abstract class TypedBuilderMatNode<
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 	override childrenAllowed() {
-		if (this.assemblerController) {
+		if (this.assemblerController()) {
 			return super.childrenAllowed();
 		}
 		this.scene().markAsReadOnly(this);
@@ -108,7 +109,7 @@ export abstract class TypedBuilderMatNode<
 		// if (Poly.playerMode()) {
 		// 	return;
 		// }
-		if (this.assemblerController?.compileRequired()) {
+		if (this.assemblerController()?.compileRequired()) {
 			try {
 				this._compile();
 			} catch (err) {
@@ -118,7 +119,7 @@ export abstract class TypedBuilderMatNode<
 		}
 	}
 	protected _compile() {
-		const assemblerController = this.assemblerController;
+		const assemblerController = this.assemblerController();
 		if (this.material && assemblerController) {
 			assemblerController.assembler.setGlParentNode(this);
 			this._setAssemblerGlParentNode(assemblerController);
@@ -136,7 +137,7 @@ export abstract class TypedBuilderMatNode<
 		}
 
 		const resolvedBuilderNode = resolvedNode as BaseBuilderMatNodeType;
-		if (!resolvedBuilderNode.assemblerController) {
+		if (!resolvedBuilderNode.assemblerController()) {
 			this.states.error.set(`resolved node '${resolvedNode.path()}' is not a builder node`);
 			return;
 		}
@@ -154,8 +155,12 @@ export abstract class TypedBuilderMatNode<
 		node.PARAM_CALLBACK_setCompileRequired();
 	}
 	private PARAM_CALLBACK_setCompileRequired() {
-		this.assemblerController?.setCompilationRequired(true);
+		this.assemblerController()?.setCompilationRequired(true);
 	}
 }
 
-export type BaseBuilderMatNodeType = TypedBuilderMatNode<ShaderAssemblerMaterial, MatBuilderParamsConfig>;
+export type BaseBuilderMatNodeType = TypedBuilderMatNode<
+	MaterialWithCustomMaterials,
+	ShaderAssemblerMaterial,
+	MatBuilderParamsConfig
+>;

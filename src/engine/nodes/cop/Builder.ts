@@ -42,7 +42,7 @@ import {DataTextureController, DataTextureControllerBufferType} from './utils/Da
 import {CopRendererController} from './utils/RendererController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-import {TexturePersistedConfig} from '../gl/code/assemblers/textures/PersistedConfig';
+import {TexturePersistedConfig} from '../gl/code/assemblers/textures/TexturePersistedConfig';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreUserAgent} from '../../../core/UserAgent';
@@ -70,12 +70,12 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		return 'builder';
 	}
 	override readonly persisted_config: TexturePersistedConfig = new TexturePersistedConfig(this);
-	protected _assembler_controller = this._create_assembler_controller();
+	protected _assemblerController = this._createAssemblerController();
 
 	public override usedAssembler(): Readonly<AssemblerName.GL_TEXTURE> {
 		return AssemblerName.GL_TEXTURE;
 	}
-	protected _create_assembler_controller() {
+	protected _createAssemblerController() {
 		const assembler_controller = Poly.assemblersRegister.assembler(this, this.usedAssembler());
 		if (assembler_controller) {
 			const globals_handler = new GlobalsGeometryHandler();
@@ -84,8 +84,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 
-	get assemblerController() {
-		return this._assembler_controller;
+	assemblerController() {
+		return this._assemblerController;
 	}
 
 	private _texture_mesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
@@ -145,7 +145,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 	override childrenAllowed() {
-		if (this.assemblerController) {
+		if (this.assemblerController()) {
 			return super.childrenAllowed();
 		}
 		this.scene().markAsReadOnly(this);
@@ -175,7 +175,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 
 	compileIfRequired() {
-		if (this.assemblerController?.compileRequired()) {
+		if (this.assemblerController()?.compileRequired()) {
 			try {
 				this.compile();
 			} catch (err) {
@@ -185,7 +185,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 	private compile() {
-		const assemblerController = this.assemblerController;
+		const assemblerController = this.assemblerController();
 		if (!assemblerController) {
 			return;
 		}
@@ -233,7 +233,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		const scene = node.scene();
 		if (timeDependent) {
 			if (uniforms) {
-				scene.uniformsController.addTimeDependentUniformOwner(node._uniformCallbackName(), uniforms);
+				scene.uniformsController.addTimeUniform(uniforms);
 			}
 			const callbackName = node._callbackName();
 			if (!scene.registeredBeforeTickCallbacks().has(callbackName)) {
@@ -246,16 +246,16 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private _callbackName() {
 		return `cop/builder_${this.graphNodeId()}`;
 	}
-	private _uniformCallbackName() {
-		return `cop/builder_uniforms_${this.graphNodeId()}`;
-	}
+	// private _uniformCallbackName() {
+	// 	return `cop/builder_uniforms_${this.graphNodeId()}`;
+	// }
 	override dispose() {
 		super.dispose();
 		this._removeCallbacks();
 	}
 	private _removeCallbacks() {
 		const scene = this.scene();
-		scene.uniformsController.removeTimeDependentUniformOwner(this._uniformCallbackName());
+		// scene.uniformsController.removeTimeUniform(uniforms);
 		scene.unRegisterOnBeforeTick(this._callbackName());
 	}
 

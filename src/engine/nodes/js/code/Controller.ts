@@ -5,7 +5,7 @@ import {OutputJsNode} from '../Output';
 import {GlobalsJsNode} from '../Globals';
 import {JsNodeChildrenMap} from '../../../poly/registers/nodes/Js';
 import {BaseJsNodeType} from '../_Base';
-import {JsAssemblerNodeSpareParamsController} from './SpareParamsController';
+import {JsAssemblerNodeSpareParamsController} from './JsAssemblerNodeSpareParamsController';
 import {NodeCreateOptions} from '../../utils/hierarchy/ChildrenController';
 
 export class AssemblerControllerNode extends TypedNode<any, any> {

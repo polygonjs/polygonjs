@@ -10,31 +10,45 @@ import {TypeAssert} from '../../../../poly/Assert';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {RampParam} from '../../../../params/Ramp';
 // import {OperatorPathParam} from '../../../../params/OperatorPath';
-import {ParamConfig} from '../../../utils/code/configs/ParamConfig';
+import {BaseParamConfig} from '../../../utils/code/configs/BaseParamConfig';
 import {NodePathParam} from '../../../../params/NodePath';
 import {NodeContext} from '../../../../poly/NodeContext';
 
-export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
+export interface GlParamConfigJSON<T extends ParamType> {
+	type: T;
+	name: string;
+	defaultValue: ParamInitValuesTypeMap[T];
+	uniformName: string;
+}
+export class GlParamConfig<T extends ParamType> extends BaseParamConfig<T> {
 	private _uniform: IUniform | undefined;
 
-	constructor(_type: T, _name: string, _default_value: ParamInitValuesTypeMap[T], private _uniform_name: string) {
-		super(_type, _name, _default_value);
+	constructor(_type: T, _name: string, _defaultValue: ParamInitValuesTypeMap[T], private _uniformName: string) {
+		super(_type, _name, _defaultValue);
+	}
+
+	toJSON(): GlParamConfigJSON<T> {
+		return {
+			type: this._type,
+			name: this._name,
+			defaultValue: this._defaultValue,
+			uniformName: this._uniformName,
+		};
+	}
+	static fromJSON(json: GlParamConfigJSON<ParamType>): GlParamConfig<ParamType> {
+		return new GlParamConfig(json.type, json.name, json.defaultValue, json.uniformName);
 	}
 
 	uniformName() {
-		return this._uniform_name;
+		return this._uniformName;
 	}
 
 	uniform() {
-		return (this._uniform = this._uniform || this._create_uniform());
+		return (this._uniform = this._uniform || this._createUniform());
 	}
 
-	private _create_uniform() {
-		return GlParamConfig.uniform_by_type(this._type);
-	}
-
-	execute_callback(node: BaseNodeType, param: BaseParamType) {
-		this._callback(node, param);
+	private _createUniform() {
+		return GlParamConfig.uniformByType(this._type);
 	}
 
 	protected override _callback(node: BaseNodeType, param: BaseParamType) {
@@ -68,7 +82,7 @@ export class GlParamConfig<T extends ParamType> extends ParamConfig<T> {
 	}
 
 	// TODO: refactor that to use the default values map?
-	static uniform_by_type(type: ParamType): IUniform {
+	static uniformByType(type: ParamType): IUniform {
 		switch (type) {
 			case ParamType.BOOLEAN:
 				return {value: 0};

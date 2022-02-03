@@ -68,7 +68,7 @@ const AND_SEPARATOR = ' && ';
 const COMPONENTS = ['x', 'y', 'z', 'w'];
 const OUTPUT_NAME = 'val';
 class CompareGlParamsConfig extends NodeParamsConfig {
-	test = ParamConfig.INTEGER(0, {
+	test = ParamConfig.INTEGER(1, {
 		menu: {
 			entries: TEST_NAMES.map((name, i) => {
 				const operator = TEST_OPERATIONS_FLOAT[i];
@@ -96,8 +96,14 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_type.bind(this));
 		this.io.connection_points.set_expected_output_types_function(() => [GlConnectionPointType.BOOL]);
 	}
-	set_test_name(test: GlCompareTestName) {
+	setTestName(test: GlCompareTestName) {
 		this.p.test.set(TEST_NAMES.indexOf(test));
+	}
+	testName() {
+		return TEST_NAMES[this.pv.test];
+	}
+	operator() {
+		return TEST_OPERATIONS_FLOAT[this.pv.test];
 	}
 
 	protected _gl_input_name(index: number) {
@@ -112,7 +118,7 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		const body_lines: string[] = [];
 
 		const value = this.glVarName(OUTPUT_NAME);
-		const operator = TEST_OPERATIONS_FLOAT[this.pv.test];
+		const operator = this.operator();
 		const value0 = ThreeToGl.any(this.variableForInput(this._gl_input_name(0)));
 		const value1 = ThreeToGl.any(this.variableForInput(this._gl_input_name(1)));
 

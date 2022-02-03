@@ -3,7 +3,6 @@ import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 export function MapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -17,7 +16,7 @@ export function MapParamConfig<TBase extends Constructor>(Base: TBase) {
 class TextureMapMaterial extends Material {
 	map!: Texture | null;
 }
-type CurrentMaterial = TextureMapMaterial | ShaderMaterial;
+type CurrentMaterial = TextureMapMaterial | Material;
 class TextureMapParamsConfig extends MapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	map: TextureMapController;

@@ -25,9 +25,20 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {UpdateOptions} from './utils/_BaseTextureController';
+import {Material} from 'three/src/materials/Material';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
+interface MeshLambertBuilderMaterial extends MeshLambertMaterial {
+	vertexShader: string;
+	fragmentShader: string;
+	uniforms: IUniforms;
+	customMaterials: {
+		[key in CustomMaterialName]?: Material;
+	};
+}
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
@@ -71,7 +82,11 @@ class MeshLambertMatParamsConfig extends PCSSParamConfig(
 ) {}
 const ParamsConfig = new MeshLambertMatParamsConfig();
 
-export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerLambert, MeshLambertMatParamsConfig> {
+export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<
+	MeshLambertBuilderMaterial,
+	ShaderAssemblerLambert,
+	MeshLambertMatParamsConfig
+> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshLambertBuilder';
@@ -79,7 +94,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<ShaderAssembl
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_LAMBERT> {
 		return AssemblerName.GL_MESH_LAMBERT;
 	}
-	protected _create_assembler_controller() {
+	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 

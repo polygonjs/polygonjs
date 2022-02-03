@@ -47,7 +47,12 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		}
 
 		this._uniforms = this._uniforms || {};
-		this.addUniforms(this._uniforms);
+		this._gl_parent_node.scene().uniformsController.addUniforms(this._uniforms, {
+			paramConfigs: this.param_configs(),
+			additionalTextureUniforms: {},
+			timeDependent: this.uniformsTimeDependent(),
+			resolutionDependent: this.uniformsResolutionDependent(),
+		});
 
 		for (let shader_name of this.shaderNames()) {
 			const lines = this._lines.get(shader_name);
@@ -109,13 +114,13 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	// TEMPLATE HOOKS
 	//
 	//
-	protected override insert_define_after(shader_name: ShaderName) {
+	protected override insertDefineAfter(shader_name: ShaderName) {
 		return '// INSERT DEFINE';
 	}
-	protected override insert_body_after(shader_name: ShaderName) {
+	protected override insertBodyAfter(shader_name: ShaderName) {
 		return '// INSERT BODY';
 	}
-	protected override lines_to_remove(shader_name: ShaderName) {
+	protected override linesToRemove(shader_name: ShaderName) {
 		return ['// INSERT DEFINE', '// INSERT BODY'];
 	}
 

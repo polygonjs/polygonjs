@@ -4,6 +4,10 @@ import {LineBasicMatNode} from '../../../nodes/mat/LineBasic';
 import {LineBasicBuilderMatNode} from '../../../nodes/mat/LineBasicBuilder';
 import {MeshBasicMatNode} from '../../../nodes/mat/MeshBasic';
 import {MeshBasicBuilderMatNode} from '../../../nodes/mat/MeshBasicBuilder';
+import {MeshDepthMatNode} from '../../../nodes/mat/MeshDepth';
+import {MeshDepthBuilderMatNode} from '../../../nodes/mat/MeshDepthBuilder';
+import {MeshDistanceMatNode} from '../../../nodes/mat/MeshDistance';
+import {MeshDistanceBuilderMatNode} from '../../../nodes/mat/MeshDistanceBuilder';
 import {MeshLambertMatNode} from '../../../nodes/mat/MeshLambert';
 import {MeshLambertBuilderMatNode} from '../../../nodes/mat/MeshLambertBuilder';
 import {MeshMatcapMatNode} from '../../../nodes/mat/MeshMatcap';
@@ -37,6 +41,10 @@ export interface MatNodeChildrenMap {
 	lineBasicBuilder: LineBasicBuilderMatNode;
 	meshBasic: MeshBasicMatNode;
 	meshBasicBuilder: MeshBasicBuilderMatNode;
+	meshDepth: MeshDepthMatNode;
+	meshDepthBuilder: MeshDepthBuilderMatNode;
+	MeshDistance: MeshDistanceMatNode;
+	meshDistanceBuilder: MeshDistanceBuilderMatNode;
 	meshLambert: MeshLambertMatNode;
 	meshLambertBuilder: MeshLambertBuilderMatNode;
 	meshMatcap: MeshMatcapMatNode;
@@ -72,6 +80,12 @@ export class MatRegister {
 		poly.registerNode(LineBasicBuilderMatNode, CATEGORY_MAT.LINE);
 		poly.registerNode(MeshBasicMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(MeshBasicBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		poly.registerNode(MeshDepthMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshDepthBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(MeshDistanceMatNode, CATEGORY_MAT.MESH);
+			poly.registerNode(MeshDistanceBuilderMatNode, CATEGORY_MAT.ADVANCED);
+		}
 		poly.registerNode(MeshLambertMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(MeshLambertBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(MeshMatcapMatNode, CATEGORY_MAT.MESH);

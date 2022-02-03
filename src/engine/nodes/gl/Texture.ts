@@ -22,7 +22,7 @@ import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsCont
 import {ParamType} from '../../poly/ParamType';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {GlParamConfig} from './code/utils/ParamConfig';
+import {GlParamConfig} from './code/utils/GLParamConfig';
 class TextureParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('texture1');
 	// defaultValue = ParamConfig.STRING('');

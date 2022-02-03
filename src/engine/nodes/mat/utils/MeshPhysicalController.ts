@@ -3,6 +3,7 @@ import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {Material} from 'three/src/materials/Material';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Color} from 'three/src/math/Color';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
@@ -107,7 +108,7 @@ When transmission is non-zero, opacity should be set to 1.  */
 	};
 }
 
-type CurrentMaterial = MeshPhysicalMaterial | ShaderMaterial;
+type CurrentMaterial = MeshPhysicalMaterial | Material;
 class TextureClearCoatMapParamsConfig extends MeshPhysicalParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	physical: MeshPhysicalController;
@@ -160,28 +161,32 @@ export class MeshPhysicalController extends BaseTextureMapController {
 
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as MeshPhysicalWithUniforms;
-			mat.uniforms.clearcoat.value = pv.clearcoat;
-			mat.uniforms.clearcoatNormalScale.value.copy(pv.clearcoatNormalScale);
-			mat.uniforms.clearcoatRoughness.value = pv.clearcoatRoughness;
-			mat.uniforms.reflectivity.value = reflectivity;
-			mat.uniforms.transmission.value = pv.transmission;
-			mat.uniforms.thickness.value = pv.thickness;
-			mat.uniforms.attenuationDistance.value = pv.attenuationDistance;
-			mat.uniforms.attenuationColor.value = pv.attenuationColor;
+			if (mat.uniforms) {
+				mat.uniforms.clearcoat.value = pv.clearcoat;
+				mat.uniforms.clearcoatNormalScale.value.copy(pv.clearcoatNormalScale);
+				mat.uniforms.clearcoatRoughness.value = pv.clearcoatRoughness;
+				mat.uniforms.reflectivity.value = reflectivity;
+				mat.uniforms.transmission.value = pv.transmission;
+				mat.uniforms.thickness.value = pv.thickness;
+				mat.uniforms.attenuationDistance.value = pv.attenuationDistance;
+				mat.uniforms.attenuationColor.value = pv.attenuationColor;
 
-			if (isBooleanTrue(pv.useSheen)) {
-				this._sheenColorClone.copy(pv.sheenColor);
-				mat.uniforms.sheen.value = pv.sheen;
-				mat.uniforms.sheenRoughness.value = pv.sheenRoughness;
-				mat.uniforms.sheenColor.value = this._sheenColorClone;
-			} else {
-				mat.uniforms.sheen.value = 0;
+				if (isBooleanTrue(pv.useSheen)) {
+					this._sheenColorClone.copy(pv.sheenColor);
+					mat.uniforms.sheen.value = pv.sheen;
+					mat.uniforms.sheenRoughness.value = pv.sheenRoughness;
+					mat.uniforms.sheenColor.value = this._sheenColorClone;
+				} else {
+					mat.uniforms.sheen.value = 0;
+				}
+				mat.uniforms.ior.value = pv.ior;
 			}
-			mat.uniforms.ior.value = pv.ior;
 
 			// to ensure compilation goes through
-			(mat as any).specularColor = mat.uniforms.specularColor.value;
-			(mat as any).ior = mat.uniforms.ior.value;
+			if (mat.uniforms) {
+				(mat as any).specularColor = mat.uniforms.specularColor.value;
+				(mat as any).ior = mat.uniforms.ior.value;
+			}
 
 			// mat.defines['CLEARCOAT'] = isBooleanTrue(this.node.pv.useClearCoatNormalMap);
 			// mat.defines['USE_CLEARCOAT_ROUGHNESSMAP'] = isBooleanTrue(this.node.pv.useClearCoatRoughnessMap);

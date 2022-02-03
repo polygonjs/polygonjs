@@ -15,7 +15,7 @@ import {ParamType} from '../../poly/ParamType';
 
 const OUTPUT_NAME = 'val';
 
-import {GlParamConfig} from './code/utils/ParamConfig';
+import {GlParamConfig} from './code/utils/GLParamConfig';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class RampGlParamsConfig extends NodeParamsConfig {

@@ -108,10 +108,7 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 
 			// water.updateMatrix();
 			// water.matrixAutoUpdate = false;
-			this.scene().uniformsController.addTimeDependentUniformOwner(
-				`oceanPlane-${water.uuid}`,
-				water.material.uniforms as IUniformsWithTime
-			);
+			this.scene().uniformsController.addTimeUniform(water.material.uniforms as IUniformsWithTime);
 			const material = water.material;
 			material.uniforms.direction.value.copy(params.direction);
 			material.uniforms.sunDirection.value.copy(params.sunDirection);

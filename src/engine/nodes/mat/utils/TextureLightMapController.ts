@@ -27,7 +27,7 @@ class TextureLightMaterial extends Material {
 	lightMap!: Texture | null;
 	lightMapIntensity!: number;
 }
-type CurrentMaterial = TextureLightMaterial | ShaderMaterial;
+type CurrentMaterial = TextureLightMaterial | Material;
 class TextureLightMapParamsConfig extends LightMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	lightMap: TextureLightMapController;
@@ -48,7 +48,9 @@ export class TextureLightMapController extends BaseTextureMapController {
 		this._update(this.node.material, 'lightMap', this.node.p.useLightMap, this.node.p.lightMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.lightMapIntensity.value = this.node.pv.lightMapIntensity;
+			if (mat.uniforms) {
+				mat.uniforms.lightMapIntensity.value = this.node.pv.lightMapIntensity;
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshStandardMaterial;

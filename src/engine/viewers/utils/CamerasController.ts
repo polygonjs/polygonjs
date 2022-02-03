@@ -24,7 +24,7 @@ export class ViewerCamerasController {
 
 	computeSizeAndAspect() {
 		this._updateSize();
-		this.cameraNode().scene().uniformsController.updateResolutionDependentUniformOwners(this._size);
+		this.cameraNode().scene().uniformsController.updateResolution(this._size);
 		this._aspect = this._getAspect();
 	}
 

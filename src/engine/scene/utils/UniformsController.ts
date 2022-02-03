@@ -1,90 +1,109 @@
-import {PolyDictionary, Vector2Like} from '../../../types/GlobalTypes';
 import {PolyScene} from '../PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {IUniformN, IUniformTexture, IUniformV2} from '../../nodes/utils/code/gl/Uniforms';
+import {GlParamConfig} from '../../nodes/gl/code/utils/GLParamConfig';
+import {ParamType} from '../../poly/ParamType';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 
-type IUniforms = PolyDictionary<IUniform>;
+export enum UniformName {
+	TIME = 'time',
+	RESOLUTION = 'resolution',
+}
+export interface IUniforms {
+	[uniform: string]: IUniform;
+}
 export interface IUniformsWithTime extends IUniforms {
-	time: IUniform;
+	time: IUniformN;
 }
 export interface IUniformsWithResolution extends IUniforms {
-	resolution: {
-		value: Vector2Like;
-	};
+	resolution: IUniformV2;
+}
+// interface IUniformsWithResolutionOnly {
+// 	resolution: IUniformV2;
+// }
+interface AddUniformOptions {
+	paramConfigs: readonly GlParamConfig<ParamType>[];
+	additionalTextureUniforms: PolyDictionary<IUniformTexture>;
+	timeDependent: boolean;
+	resolutionDependent: boolean;
+}
+interface GlobalUniforms {
+	// time: IUniformN;
+	resolution: IUniformV2;
 }
 
+const GLOBAL_UNIFORMS: GlobalUniforms = {
+	// [UniformName.TIME]: {value: 0},
+	[UniformName.RESOLUTION]: {value: new Vector2(1000, 1000)},
+};
 export class UniformsController {
 	constructor(private scene: PolyScene) {}
 
-	private _time_dependent_uniform_owners: PolyDictionary<IUniformsWithTime> = {}; //new Map()
-	private _time_dependent_uniform_owners_ids: string[] | null = null;
+	// private _resolution: Vector2 = new Vector2(1, 1);
+	// private _resolutionDependentUniformsMap: Map<string, IUniformsWithResolutionOnly> = new Map();
+	// private _resolutionDependentUniforms: IUniformsWithResolutionOnly[] = [];
 
-	private _resolution: Vector2 = new Vector2(1, 1);
-	private _resolution_dependent_uniform_owners: PolyDictionary<IUniformsWithResolution> = {};
-	private _resolution_dependent_uniform_owners_ids: string[] = [];
+	// add uniforms from assemblers
+	addUniforms(uniforms: IUniforms, options: AddUniformOptions) {
+		const {paramConfigs, additionalTextureUniforms, timeDependent, resolutionDependent} = options;
+		for (let paramConfig of paramConfigs) {
+			uniforms[paramConfig.uniformName()] = paramConfig.uniform();
+		}
+		const additionalUniformNames = Object.keys(additionalTextureUniforms);
+		for (let uniformName of additionalUniformNames) {
+			const uniformValue = additionalTextureUniforms[uniformName];
+			uniforms[uniformName] = uniformValue;
+		}
 
-	// time
-	addTimeDependentUniformOwner(id: string, uniforms: IUniformsWithTime) {
-		this._time_dependent_uniform_owners[id] = uniforms;
-		if (!this._time_dependent_uniform_owners_ids) {
-			this._time_dependent_uniform_owners_ids = [];
+		if (timeDependent) {
+			uniforms[UniformName.TIME] = this.scene.timeController.timeUniform();
+		} else {
+			delete uniforms[UniformName.TIME];
 		}
-		if (!this._time_dependent_uniform_owners_ids.includes(id)) {
-			this._time_dependent_uniform_owners_ids.push(id);
-		}
-	}
-	removeTimeDependentUniformOwner(id: string) {
-		delete this._time_dependent_uniform_owners[id];
-		if (this._time_dependent_uniform_owners_ids) {
-			const index = this._time_dependent_uniform_owners_ids.indexOf(id);
-			if (index >= 0) {
-				this._time_dependent_uniform_owners_ids.splice(index, 1);
-			}
+		if (resolutionDependent) {
+			uniforms[UniformName.RESOLUTION] = GLOBAL_UNIFORMS[UniformName.RESOLUTION];
+		} else {
+			delete uniforms[UniformName.RESOLUTION];
 		}
 	}
-	public updateTimeDependentUniformOwners() {
-		const time = this.scene.time();
-		if (this._time_dependent_uniform_owners_ids) {
-			for (let id of this._time_dependent_uniform_owners_ids) {
-				const uniforms = this._time_dependent_uniform_owners[id];
-				uniforms.time.value = time;
-			}
-		}
+	addTimeUniform(uniforms: IUniforms) {
+		uniforms[UniformName.TIME] = this.scene.timeController.timeUniform();
 	}
+	removeTimeUniform(uniforms: IUniforms) {
+		delete uniforms[UniformName.TIME];
+	}
+	timeUniformValue() {
+		return this.scene.timeController.timeUniform().value;
+	}
+
+	// public updateTime() {
+	// 	GLOBAL_UNIFORMS[UniformName.TIME].value = this.scene.time();
+	// }
 
 	// resolution
-	addResolutionDependentUniformOwner(id: string, uniforms: IUniformsWithResolution) {
-		this._resolution_dependent_uniform_owners[id] = uniforms;
-		if (!this._resolution_dependent_uniform_owners_ids) {
-			this._resolution_dependent_uniform_owners_ids = [];
-		}
-		if (!this._resolution_dependent_uniform_owners_ids.includes(id)) {
-			this._resolution_dependent_uniform_owners_ids.push(id);
-		}
+	addResolutionUniforms(uniforms: IUniforms) {
+		uniforms[UniformName.RESOLUTION] = GLOBAL_UNIFORMS[UniformName.RESOLUTION];
+	}
+	removeResolutionUniform(uniforms: IUniforms) {
+		delete uniforms[UniformName.RESOLUTION];
+	}
+	// private _updateResolutionDependentUniformsCache() {
+	// 	this._resolutionDependentUniforms.splice(0, this._resolutionDependentUniforms.length);
+	// 	this._resolutionDependentUniformsMap.forEach((uniforms) => {
+	// 		this._resolutionDependentUniforms.push(uniforms);
+	// 	});
+	// }
 
-		if (this._resolution) {
-			this.updateResolutionDependentUniforms(uniforms);
-		}
+	updateResolution(resolution: Vector2) {
+		GLOBAL_UNIFORMS[UniformName.RESOLUTION].value.copy(resolution);
+		// for (let uniforms of this._resolutionDependentUniforms) {
+		// 	this.updateResolutionDependentUniforms(uniforms);
+		// }
 	}
-	removeResolutionDependentUniformOwner(id: string) {
-		delete this._resolution_dependent_uniform_owners[id];
-		if (this._resolution_dependent_uniform_owners_ids) {
-			const index = this._resolution_dependent_uniform_owners_ids.indexOf(id);
-			if (index >= 0) {
-				this._resolution_dependent_uniform_owners_ids.splice(index, 1);
-			}
-		}
-	}
-
-	updateResolutionDependentUniformOwners(resolution: Vector2) {
-		this._resolution.copy(resolution);
-		for (let id of this._resolution_dependent_uniform_owners_ids) {
-			const uniforms = this._resolution_dependent_uniform_owners[id];
-			this.updateResolutionDependentUniforms(uniforms);
-		}
-	}
-	updateResolutionDependentUniforms(uniforms: IUniformsWithResolution) {
-		uniforms.resolution.value.x = this._resolution.x; // * window.devicePixelRatio;
-		uniforms.resolution.value.y = this._resolution.y; // * window.devicePixelRatio;
-	}
+	// updateResolutionDependentUniforms(uniforms: IUniformsWithResolutionOnly) {
+	// 	const resolutionUniform = uniforms[UniformName.RESOLUTION];
+	// 	resolutionUniform.value.x = this._resolution.x; // * window.devicePixelRatio;
+	// 	resolutionUniform.value.y = this._resolution.y; // * window.devicePixelRatio;
+	// }
 }

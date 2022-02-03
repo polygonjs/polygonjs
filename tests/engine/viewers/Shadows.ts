@@ -1,6 +1,13 @@
-import {ShaderMaterialWithCustomMaterials} from '../../../src/core/geometry/Material';
+import {RendererUtils} from '../../helpers/RendererUtils';
+import {PolyScene} from '../../../src/engine/scene/PolyScene';
+import {BaseBuilderMatNodeType} from '../../../src/engine/nodes/mat/_BaseBuilder';
+import {CoreSleep} from '../../../src/core/Sleep';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {Vector3Param} from '../../../src/engine/params/Vector3';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {Scene} from 'three/src/scenes/Scene';
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {Camera} from 'three/src/cameras/Camera';
 
 // mesh
 import MESH_BASIC_DEPTH_VERTEX from './templates/meshBasicBuilder/customDepthMaterial.vert.glsl';
@@ -21,14 +28,47 @@ import LINE_BASIC_DEPTH_VERTEX from './templates/lineBasicBuilder/customDepthMat
 import LINE_BASIC_DEPTH_FRAGMENT from './templates/lineBasicBuilder/customDepthMaterial.frag.glsl';
 import LINE_BASIC_DISTANCE_VERTEX from './templates/lineBasicBuilder/customDistanceMaterial.vert.glsl';
 import LINE_BASIC_DISTANCE_FRAGMENT from './templates/lineBasicBuilder/customDistanceMaterial.frag.glsl';
-import LINE_BASIC_DOF_VERTEX from './templates/lineBasicBuilder/customDOFMaterial.vert.glsl';
-import LINE_BASIC_DOF_FRAGMENT from './templates/lineBasicBuilder/customDOFMaterial.frag.glsl';
+import {BokehPass2} from '../../../src/modules/core/post_process/BokehPass2';
+import {materialUniforms} from '../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+// import LINE_BASIC_DOF_VERTEX from './templates/lineBasicBuilder/customDOFMaterial.vert.glsl';
+// import LINE_BASIC_DOF_FRAGMENT from './templates/lineBasicBuilder/customDOFMaterial.frag.glsl';
 
-// TODO:
-// the DOF material are actually incorrect in this test
-// and need more work, at least for points and lines
+async function addLightCastingShadow(assert: Assert, scene: PolyScene, builderMatNode: BaseBuilderMatNodeType) {
+	// we need to create a spotlight and assign the material for the customDepthMaterial to be compile
+	const geo1 = window.geo1;
+	const camera = scene.createNode('perspectiveCamera');
+	// add a spotLight to test the DepthMaterial
+	const spotLight = scene.createNode('spotLight');
+	spotLight.p.t.set([2, 2, 2]);
+	spotLight.p.castShadow.set(true);
+	// add a pointLight to test the DistanceMaterial
+	const pointLight = scene.createNode('pointLight');
+	pointLight.p.t.set([2, 2, 2]);
+	pointLight.p.castShadow.set(true);
 
-QUnit.test('depth/distance shadows work for mesh, with mat builders ', async (assert) => {
+	const box1 = geo1.createNode('box');
+	const material1 = geo1.createNode('material');
+	material1.setInput(0, box1);
+	material1.p.material.setNode(builderMatNode);
+	material1.flags.display.set(true);
+	await material1.compute();
+	await CoreSleep.sleep(100);
+
+	const geoSopGroup = scene.threejsScene().getObjectByName('geo1:sopGroup');
+	assert.ok(geoSopGroup);
+	assert.equal(geoSopGroup!.children.length, 1);
+
+	return {camera};
+}
+
+function renderWithDOF(scene: Scene, renderer: WebGLRenderer, camera: Camera) {
+	BokehPass2.updateObjectsWithDepthMaterial(scene, () => {
+		renderer.render(window.scene.threejsScene(), camera);
+	});
+}
+
+QUnit.test('depth/distance shadows work for mesh, with mat builders', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const matNode = window.MAT.createNode('meshBasicBuilder');
 	const globals1 = matNode.createNode('globals');
 	const output1 = matNode.createNode('output');
@@ -42,15 +82,19 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders ', async (as
 	add1.setInput(0, globals1);
 	add1.setInput(1, param1);
 
-	await matNode.compute();
-	const material = matNode.material as ShaderMaterialWithCustomMaterials;
+	const {camera} = await addLightCastingShadow(assert, window.scene, matNode);
+
+	await RendererUtils.compile(matNode, renderer);
+	await renderer.render(window.scene.threejsScene(), camera.object);
+	renderWithDOF(window.scene.threejsScene(), renderer, camera.object);
+	const material = matNode.material;
 
 	const spareParam = matNode.params.get('myCustomVec') as Vector3Param;
 	assert.ok(spareParam);
 
-	const customDepthMaterial = material.customMaterials.customDepthMaterial!;
-	const customDistanceMaterial = material.customMaterials.customDistanceMaterial!;
-	const customDepthDOFMaterial = material.customMaterials.customDepthDOFMaterial!;
+	const customDepthMaterial = material.customMaterials.customDepthMaterial! as ShaderMaterial;
+	const customDistanceMaterial = material.customMaterials.customDistanceMaterial! as ShaderMaterial;
+	const customDepthDOFMaterial = material.customMaterials.customDepthDOFMaterial! as ShaderMaterial;
 	assert.ok(customDepthMaterial);
 	assert.ok(customDistanceMaterial);
 	assert.ok(customDepthDOFMaterial);
@@ -63,9 +107,9 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders ', async (as
 	// check that the material has the correct vertex and fragment
 	// check that creating a gl/param node creates and syncs the uniform
 	const uniforms = [
-		customDepthMaterial.uniforms['v_POLY_param_myCustomVec'],
-		customDistanceMaterial.uniforms['v_POLY_param_myCustomVec'],
-		customDepthDOFMaterial.uniforms['v_POLY_param_myCustomVec'],
+		materialUniforms(customDepthMaterial)!['v_POLY_param_myCustomVec'],
+		materialUniforms(customDistanceMaterial)!['v_POLY_param_myCustomVec'],
+		materialUniforms(customDepthDOFMaterial)!['v_POLY_param_myCustomVec'],
 	];
 	for (let uniform of uniforms) {
 		assert.ok(uniform);
@@ -75,9 +119,13 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders ', async (as
 	for (let uniform of uniforms) {
 		assert.deepEqual(uniform.value.toArray(), [1, 2, 3]);
 	}
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('depth/distance shadows work for point, with mat builders', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
+
 	const matNode = window.MAT.createNode('pointsBuilder');
 	const globals1 = matNode.createNode('globals');
 	const output1 = matNode.createNode('output');
@@ -91,15 +139,19 @@ QUnit.test('depth/distance shadows work for point, with mat builders', async (as
 	add1.setInput(0, globals1);
 	add1.setInput(1, param1);
 
-	await matNode.compute();
-	const material = matNode.material as ShaderMaterialWithCustomMaterials;
+	const {camera} = await addLightCastingShadow(assert, window.scene, matNode);
+
+	await RendererUtils.compile(matNode, renderer);
+	await renderer.render(window.scene.threejsScene(), camera.object);
+	renderWithDOF(window.scene.threejsScene(), renderer, camera.object);
+	const material = matNode.material;
 
 	const spareParam = matNode.params.get('myCustomVec') as Vector3Param;
 	assert.ok(spareParam);
 
-	const customDepthMaterial = material.customMaterials.customDepthMaterial!;
-	const customDistanceMaterial = material.customMaterials.customDistanceMaterial!;
-	const customDepthDOFMaterial = material.customMaterials.customDepthDOFMaterial!;
+	const customDepthMaterial = material.customMaterials.customDepthMaterial! as ShaderMaterial;
+	const customDistanceMaterial = material.customMaterials.customDistanceMaterial! as ShaderMaterial;
+	const customDepthDOFMaterial = material.customMaterials.customDepthDOFMaterial! as ShaderMaterial;
 	assert.ok(customDepthMaterial);
 	assert.ok(customDistanceMaterial);
 	assert.ok(customDepthDOFMaterial);
@@ -124,8 +176,12 @@ QUnit.test('depth/distance shadows work for point, with mat builders', async (as
 	for (let uniform of uniforms) {
 		assert.deepEqual(uniform.value.toArray(), [1, 2, 3]);
 	}
+
+	RendererUtils.dispose();
 });
 QUnit.test('depth/distance shadows work for lines, with mat builders ', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
+
 	const matNode = window.MAT.createNode('lineBasicBuilder');
 	const globals1 = matNode.createNode('globals');
 	const output1 = matNode.createNode('output');
@@ -139,15 +195,19 @@ QUnit.test('depth/distance shadows work for lines, with mat builders ', async (a
 	add1.setInput(0, globals1);
 	add1.setInput(1, param1);
 
-	await matNode.compute();
-	const material = matNode.material as ShaderMaterialWithCustomMaterials;
+	const {camera} = await addLightCastingShadow(assert, window.scene, matNode);
+
+	await RendererUtils.compile(matNode, renderer);
+	await renderer.render(window.scene.threejsScene(), camera.object);
+	renderWithDOF(window.scene.threejsScene(), renderer, camera.object);
+	const material = matNode.material;
 
 	const spareParam = matNode.params.get('myCustomVec') as Vector3Param;
 	assert.ok(spareParam);
 
-	const customDepthMaterial = material.customMaterials.customDepthMaterial!;
-	const customDistanceMaterial = material.customMaterials.customDistanceMaterial!;
-	const customDepthDOFMaterial = material.customMaterials.customDepthDOFMaterial!;
+	const customDepthMaterial = material.customMaterials.customDepthMaterial! as ShaderMaterial;
+	const customDistanceMaterial = material.customMaterials.customDistanceMaterial! as ShaderMaterial;
+	const customDepthDOFMaterial = material.customMaterials.customDepthDOFMaterial! as ShaderMaterial;
 	assert.ok(customDepthMaterial, 'depth');
 	assert.ok(customDistanceMaterial, 'dist');
 	assert.ok(customDepthDOFMaterial, 'DOF');
@@ -155,8 +215,8 @@ QUnit.test('depth/distance shadows work for lines, with mat builders ', async (a
 	assert.equal(customDepthMaterial.fragmentShader, LINE_BASIC_DEPTH_FRAGMENT, 'depth frag ok');
 	assert.equal(customDistanceMaterial.vertexShader, LINE_BASIC_DISTANCE_VERTEX, 'dist vert ok');
 	assert.equal(customDistanceMaterial.fragmentShader, LINE_BASIC_DISTANCE_FRAGMENT, 'dist frag ok');
-	assert.equal(customDepthDOFMaterial.vertexShader, LINE_BASIC_DOF_VERTEX, 'DOF vert ok');
-	assert.equal(customDepthDOFMaterial.fragmentShader, LINE_BASIC_DOF_FRAGMENT, 'DOF frag ok');
+	// assert.equal(customDepthDOFMaterial.vertexShader, LINE_BASIC_DOF_VERTEX, 'DOF vert ok');
+	// assert.equal(customDepthDOFMaterial.fragmentShader, LINE_BASIC_DOF_FRAGMENT, 'DOF frag ok');
 	// check that the material has the correct vertex and fragment
 	// check that creating a gl/param node creates and syncs the uniform
 	const uniforms = [
@@ -172,4 +232,6 @@ QUnit.test('depth/distance shadows work for lines, with mat builders ', async (a
 	for (let uniform of uniforms) {
 		assert.deepEqual(uniform.value.toArray(), [1, 2, 3]);
 	}
+
+	RendererUtils.dispose();
 });

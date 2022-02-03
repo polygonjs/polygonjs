@@ -47,6 +47,11 @@ import {create_required_nodes_for_ifThen_gl_node} from '../gl/IfThen';
 import {create_required_nodes_for_forLoop_gl_node} from '../gl/ForLoop';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
+import {RendererUtils} from '../../../helpers/RendererUtils';
+import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {CoreSleep} from '../../../../src/core/Sleep';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -69,8 +74,10 @@ const TEST_SHADER_LIB = {
 };
 
 const BASIC_UNIFORMS = UniformsUtils.clone(ShaderLib.basic.uniforms);
+const BASIC_UNIFORM_NAMES = Object.keys(BASIC_UNIFORMS).concat(['clippingPlanes']).sort();
 
 QUnit.test('mesh basic builder simple', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -80,22 +87,24 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	const globals1: GlobalsGlNode = mesh_basic1.node('globals1')! as GlobalsGlNode;
 	const output1: OutputGlNode = mesh_basic1.node('output1')! as OutputGlNode;
 
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.default.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
-	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(BASIC_UNIFORMS).sort());
+	assert.deepEqual(Object.keys(materialUniforms(material)!).sort(), BASIC_UNIFORM_NAMES);
 
 	const constant1 = mesh_basic1.createNode('constant');
 	constant1.setGlType(GlConnectionPointType.VEC3);
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.setInput('color', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
+	// await mesh_basic1.compute();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.minimal.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.minimal.frag);
 	output1.setInput('color', globals1, 'position');
 
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
+	// await mesh_basic1.compute();
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.position.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.position.frag);
 
@@ -106,9 +115,10 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	vec3ToFloat1.setInput('vec', globals1, 'position');
 	output1.setInput('color', float_to_vec3_1);
 
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
+	// await mesh_basic1.compute();
 
-	assert.equal(material.lights, false);
+	//assert.equal(material.lights, false);
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.positionXZ.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.positionXZ.frag);
 
@@ -116,11 +126,15 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	const float_to_vec3_2 = mesh_basic1.createNode('floatToVec3');
 	float_to_vec3_2.setInput('z', globals1, 'time');
 	output1.setInput('position', float_to_vec3_2, 'vec3');
-	await mesh_basic1.compute();
-	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(BASIC_UNIFORMS).concat(['time']).sort());
+	await RendererUtils.compile(mesh_basic1, renderer);
+	// await mesh_basic1.compute();
+	assert.deepEqual(Object.keys(materialUniforms(material)!).sort(), BASIC_UNIFORM_NAMES.concat(['time']).sort());
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('mesh basic builder can save and load param configs', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -128,9 +142,9 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	mesh_basic1.createNode('globals');
 	await scene.waitForCooksCompleted();
 
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired());
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired());
 
 	const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 	const attribute1 = mesh_basic1.createNode('attribute');
@@ -144,9 +158,9 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	// await CoreSleep.sleep(50);
 
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	await mesh_basic1.compute();
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	// mesh_basic1.param_names();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), ['texture1'], 'spare params has texture1');
 	assert.equal(
@@ -158,8 +172,8 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 
 	await saveAndLoadScene(scene, async (scene2) => {
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
-		await new_mesh_basic1.compute();
-		assert.notOk(new_mesh_basic1.assemblerController?.compileRequired(), 'compile is not required');
+		await RendererUtils.compile(new_mesh_basic1, renderer);
+		assert.notOk(new_mesh_basic1.assemblerController()?.compileRequired(), 'compile is not required');
 		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), ['texture1'], 'spare params has texture1');
 		assert.equal(
 			new_mesh_basic1.params.paramWithType('texture1', ParamType.NODE_PATH)!.value.path(),
@@ -167,11 +181,13 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 			'texture1 value is "/COP/file_uv"'
 		);
 	});
+	RendererUtils.dispose();
 });
 
 QUnit.test(
 	'mesh basic builder: attrib is declared accordingly and uses varying if used in fragment',
 	async (assert) => {
+		const {renderer} = await RendererUtils.waitForRenderer();
 		const MAT = window.MAT;
 		const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 		mesh_basic1.createNode('output');
@@ -188,9 +204,9 @@ QUnit.test(
 		float_to_vec31.setInput('z', vec2ToFloat1, 'y');
 		output1.setInput('position', float_to_vec31);
 
-		assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-		await mesh_basic1.compute();
-		assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is not required');
+		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+		await RendererUtils.compile(mesh_basic1, renderer);
+		assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
 		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInVertex.vert, 'TEST_SHADER_LIB.attribInVertex.vert');
 		assert.equal(
 			material.fragmentShader,
@@ -200,7 +216,7 @@ QUnit.test(
 
 		// set uv to color, to have it declared to the fragment shader
 		output1.setInput('color', float_to_vec31);
-		await mesh_basic1.compute();
+		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.equal(
 			material.vertexShader,
 			TEST_SHADER_LIB.attribInFragment.vert,
@@ -213,7 +229,7 @@ QUnit.test(
 		);
 		// remove uv from position, to have it declared ONLY to the fragment shader
 		output1.setInput('position', null);
-		await mesh_basic1.compute();
+		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.equal(
 			material.vertexShader,
 			TEST_SHADER_LIB.attribInFragmentOnly.vert,
@@ -224,10 +240,12 @@ QUnit.test(
 			TEST_SHADER_LIB.attribInFragmentOnly.frag,
 			'TEST_SHADER_LIB.attribInFragmentOnly.frag'
 		);
+		RendererUtils.dispose();
 	}
 );
 
 QUnit.test('mesh basic builder with ifThen', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -250,7 +268,7 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 
 	vec3ToFloat1.setInput(0, globals1, 'position');
 	compare1.setInput(0, vec3ToFloat1, 1);
-	compare1.set_test_name(GlCompareTestName.LESS_THAN);
+	compare1.setTestName(GlCompareTestName.LESS_THAN);
 	ifThen1.setInput(0, compare1);
 	ifThen1.setInput(1, globals1, 'position');
 	output1.setInput('color', ifThen1, 'position');
@@ -258,9 +276,9 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	multAdd1.params.get('mult')!.set([2, 2, 2]);
 	ifThen_subnetOutput1.setInput(0, multAdd1);
 
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	await mesh_basic1.compute();
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is not required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThen.vert, 'vertex');
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag, 'fragment');
 
@@ -268,14 +286,17 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	const rotate1 = ifThen1.createNode('rotate');
 	rotate1.setInput(0, ifThen_subnetInput1);
 	ifThen_subnetOutput1.setInput(0, rotate1);
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	await mesh_basic1.compute();
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is not required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThenRotate.vert, 'vertex');
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThenRotate.frag, 'fragment');
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('mesh basic builder with forLoop', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -300,14 +321,16 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 	add1.setInput(0, forLoop_subnetInput1, 4);
 	add1.params.get('add1')!.set([0.1, 0.1, 0.1]);
 
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	await mesh_basic1.compute();
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.ForLoop.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.ForLoop.frag);
+	RendererUtils.dispose();
 });
 
 QUnit.test('mesh basic builder with subnet', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -332,14 +355,17 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	add1.setInput(0, subnet_subnetInput1);
 	add1.params.get('add1')!.set([1.0, 0.5, 0.25]);
 
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	await mesh_basic1.compute();
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.Subnet.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.Subnet.frag);
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('mesh basic builder with subnet without input', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -362,14 +388,17 @@ QUnit.test('mesh basic builder with subnet without input', async (assert) => {
 
 	output1.setInput('color', subnet1);
 
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	await mesh_basic1.compute();
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.SubnetNoInput.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.SubnetNoInput.frag);
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('mesh basic builder with subnet without input and attributes', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -400,9 +429,9 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 	output1.setInput('color', subnet1);
 
 	// 2 attributes with different names inside the subnet
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	await mesh_basic1.compute();
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	assert.equal(
 		material.vertexShader,
 		TEST_SHADER_LIB.SubnetNoInputWithAttrib.vert,
@@ -423,9 +452,9 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 	add2.setInput(0, subnet1);
 	add2.setInput(1, attribute3);
 	output1.setInput('color', add2);
-	assert.ok(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
-	await mesh_basic1.compute();
-	assert.notOk(mesh_basic1.assemblerController?.compileRequired(), 'compiled is required');
+	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	assert.equal(
 		material.vertexShader,
 		TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.vert,
@@ -436,9 +465,12 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 		TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.frag,
 		'TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.frag'
 	);
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('mesh basic builder persisted_config', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -455,7 +487,8 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	float_to_vec31.setInput(1, globals1, 'time');
 	output1.setInput('color', float_to_vec31);
 	output1.setInput('position', param2);
-	await mesh_basic1.compute();
+	await RendererUtils.compile(mesh_basic1, renderer);
+	const mesh_basic1Material = mesh_basic1.material;
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
@@ -464,53 +497,86 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
-		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
-		assert.notOk(new_mesh_basic1.assemblerController);
+		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as MeshBasicBuilderMatNode;
+		assert.notOk(new_mesh_basic1.assemblerController());
 		assert.ok(new_mesh_basic1.persisted_config);
+
 		const float_param = new_mesh_basic1.params.get('float_param') as FloatParam;
 		const vec3_param = new_mesh_basic1.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param);
 		assert.ok(vec3_param);
 		const material = new_mesh_basic1.material;
-		assert.equal(material.fragmentShader, mesh_basic1.material.fragmentShader);
-		assert.equal(material.vertexShader, mesh_basic1.material.vertexShader);
+		await RendererUtils.compile(new_mesh_basic1, renderer);
+
+		assert.equal(material.fragmentShader, mesh_basic1Material.fragmentShader);
+		assert.equal(material.vertexShader, mesh_basic1Material.vertexShader);
 
 		// float param callback
-		assert.equal(material.uniforms.v_POLY_param_float_param.value, 0);
+		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 0);
 		float_param.set(2);
-		assert.equal(material.uniforms.v_POLY_param_float_param.value, 2);
+		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 2);
 		float_param.set(4);
-		assert.equal(material.uniforms.v_POLY_param_float_param.value, 4);
+		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 4);
 
 		// vector3 param callback
-		assert.deepEqual(material.uniforms.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
+		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
 		vec3_param.set([1, 2, 3]);
-		assert.deepEqual(material.uniforms.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
+		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
 		vec3_param.set([5, 6, 7]);
-		assert.deepEqual(material.uniforms.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
+		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
 	});
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) => {
+	console.log('START - mesh basic builder frame dependent with custom mat')
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
+	const geo1 = window.geo1;
 	const scene = window.scene;
+	scene.setFrame(0);
+	assert.equal(scene.time(), 0);
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
 	const output1 = mesh_basic1.nodesByType('output')[0];
 	const globals1 = mesh_basic1.nodesByType('globals')[0];
 
-	assert.notOk((mesh_basic1.material as any).uniforms.time);
+	// we need to create a spotlight and assign the material for the customDepthMaterial to be compile
+	const camera = scene.createNode('perspectiveCamera');
+	const spotLight = scene.createNode('spotLight');
+	spotLight.p.t.set([2, 2, 2]);
+	spotLight.p.castShadow.set(true);
+	const box1 = geo1.createNode('box');
+	const material1 = geo1.createNode('material');
+	material1.setInput(0, box1);
+	material1.p.material.setNode(mesh_basic1);
+	material1.flags.display.set(true);
+	await material1.compute();
+	await CoreSleep.sleep(100);
+
+	const geoSopGroup = scene.threejsScene().getObjectByName('geo1:sopGroup');
+	assert.ok(geoSopGroup);
+	assert.equal(geoSopGroup!.children.length, 1);
+
+	assert.notOk(materialUniforms(mesh_basic1.material), 'uniforms not created yet');
 
 	output1.setInput('alpha', globals1, 'time');
-	await mesh_basic1.compute();
-	const customMat = mesh_basic1.material.customMaterials.customDepthDOFMaterial!;
-	assert.equal((mesh_basic1.material as any).uniforms.time.value, 0);
-	assert.equal(customMat.uniforms.time.value, 0);
+	await RendererUtils.compile(mesh_basic1, renderer);
+	assert.ok(mesh_basic1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	const customMat = mesh_basic1.material.customMaterials.customDepthMaterial!;
+	assert.notOk(materialUniforms(customMat), 'custom mat not compiled yet');
+	renderer.render(scene.threejsScene(), camera.object); // we also need to render to have the custom materials
+	assert.ok(materialUniforms(customMat), 'custom mat uniforms compiled');
+	assert.equal(scene.time(), 0)
+	assert.equal(scene.uniformsController.timeUniformValue(), 0)
+	assert.equal(materialUniforms(mesh_basic1.material)!.time.value, 0, 'time is 0 on main mat');
+	assert.equal(materialUniforms(customMat)!.time.value, 0);
 
 	scene.setFrame(60);
-	assert.equal((mesh_basic1.material as any).uniforms.time.value, 1);
-	assert.equal(customMat.uniforms.time.value, 1);
+	assert.equal(materialUniforms(mesh_basic1.material)!.time.value, 1, 'time is 1 on main mat');
+	assert.equal(materialUniforms(customMat)!.time.value, 1);
 
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(mesh_basic1.usedAssembler(), async () => {
@@ -520,13 +586,16 @@ QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) 
 
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 		const mesh_basic2 = new_mesh_basic1;
-		const customMat2 = mesh_basic2.material.customMaterials.customDepthDOFMaterial!;
-		assert.equal((mesh_basic2.material as any).uniforms.time.value, 1);
-		assert.equal(customMat2.uniforms.time.value, 1);
+		const customMat2 = mesh_basic2.material.customMaterials.customDepthMaterial!;
+		assert.equal(materialUniforms(mesh_basic2.material)!.time.value, 1, 'time is 1 on new main mat');
+		assert.equal(materialUniforms(customMat2)!.time.value, 1);
 		scene.setFrame(120);
-		assert.equal((mesh_basic2.material as any).uniforms.time.value, 1);
-		assert.equal(customMat2.uniforms.time.value, 1);
+		assert.equal(materialUniforms(mesh_basic2.material)!.time.value, 2, 'time is 2 on new main mat');
+		assert.equal(materialUniforms(customMat2)!.time.value, 2, 'time is 2 on custom mat');
 	});
+
+	RendererUtils.dispose();
+	console.log('END - mesh basic builder frame dependent with custom mat')
 });
 
 QUnit.skip('mesh basic builder bbox dependent', (assert) => {});

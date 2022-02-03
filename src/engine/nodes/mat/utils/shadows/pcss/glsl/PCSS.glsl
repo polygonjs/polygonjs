@@ -4,10 +4,9 @@
 #define LIGHT_SIZE_UV (PCSS_FILTER_SIZE * LIGHT_WORLD_SIZE)
 #define NEAR_PLANE 9.5
 
-// #define NUM_SAMPLES 32
+#define NUM_SAMPLES 17
 #define NUM_RINGS 11
 #define BLOCKER_SEARCH_NUM_SAMPLES NUM_SAMPLES
-#define PCF_NUM_SAMPLES NUM_SAMPLES
 
 vec2 poissonDisk[NUM_SAMPLES];
 
@@ -53,15 +52,20 @@ float findBlocker( sampler2D shadowMap, const in vec2 uv, const in float zReceiv
 
 float PCF_Filter(sampler2D shadowMap, vec2 uv, float zReceiver, float filterRadius ) {
 	float sum = 0.0;
-	for( int i = 0; i < PCF_NUM_SAMPLES; i ++ ) {
-		float depth = unpackRGBAToDepth( texture2D( shadowMap, uv + poissonDisk[ i ] * filterRadius ) );
+	float depth;
+	#pragma unroll_loop_start
+	for( int i = 0; i < 17; i ++ ) {
+		depth = unpackRGBAToDepth( texture2D( shadowMap, uv + poissonDisk[ i ] * filterRadius ) );
 		if( zReceiver <= depth ) sum += 1.0;
 	}
-	for( int i = 0; i < PCF_NUM_SAMPLES; i ++ ) {
-		float depth = unpackRGBAToDepth( texture2D( shadowMap, uv + -poissonDisk[ i ].yx * filterRadius ) );
+	#pragma unroll_loop_end
+	#pragma unroll_loop_start
+	for( int i = 0; i < 17; i ++ ) {
+		depth = unpackRGBAToDepth( texture2D( shadowMap, uv + -poissonDisk[ i ].yx * filterRadius ) );
 		if( zReceiver <= depth ) sum += 1.0;
 	}
-	return sum / ( 2.0 * float( PCF_NUM_SAMPLES ) );
+	#pragma unroll_loop_end
+	return sum / ( 2.0 * float( 17 ) );
 }
 
 float PCSS ( sampler2D shadowMap, vec4 coords ) {

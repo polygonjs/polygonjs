@@ -56,7 +56,7 @@ export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	castShadow: false,
 	shadowAutoUpdate: true,
 	shadowUpdateOnNextRender: false,
-	shadowRes: new Vector2(256, 256),
+	shadowRes: new Vector2(1024, 1024), // used to be 256 for performance, but is now higher to start with a better look dev
 	// shadowSize: new Vector2(2, 2),
 	shadowBias: 0.0001,
 	shadowNear: 0.1,

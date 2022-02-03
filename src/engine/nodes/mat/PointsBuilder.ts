@@ -15,22 +15,38 @@ import {Poly} from '../../Poly';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {CustomMaterialName} from '../../../core/geometry/Material';
+import {Material} from 'three/src/materials/Material';
+import {PointsMaterial} from 'three/src/materials/PointsMaterial';
+import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
 
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 }
+interface PointsBuilderMaterial extends PointsMaterial {
+	vertexShader: string;
+	fragmentShader: string;
+	customMaterials: {
+		[key in CustomMaterialName]?: Material;
+	};
+}
+
 class PointsMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
 		BaseBuilderParamConfig(
 			/* advanced */ AdvancedFolderParamConfig(
-				UniformsTransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+				UniformsTransparencyParamConfig(PointsParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
 			)
 		)
 	)
 ) {}
 const ParamsConfig = new PointsMatParamsConfig();
 
-export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoints, PointsMatParamsConfig> {
+export class PointsBuilderMatNode extends TypedBuilderMatNode<
+	PointsBuilderMaterial,
+	ShaderAssemblerPoints,
+	PointsMatParamsConfig
+> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'pointsBuilder';
@@ -38,7 +54,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 	public override usedAssembler(): Readonly<AssemblerName.GL_POINTS> {
 		return AssemblerName.GL_POINTS;
 	}
-	protected _create_assembler_controller() {
+	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	readonly controllers: Controllers = {
@@ -60,6 +76,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPoi
 
 		UniformsTransparencyController.update(this);
 		FogController.update(this);
+		PointsSizeController.update(this);
 
 		this.compileIfRequired();
 

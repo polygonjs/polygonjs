@@ -54,7 +54,7 @@ class TextureNormalMaterial extends Material {
 	normalMapType!: number;
 	normalScale!: Vector2;
 }
-type CurrentMaterial = TextureNormalMaterial | ShaderMaterial;
+type CurrentMaterial = TextureNormalMaterial | Material;
 class TextureNormalMapParamsConfig extends NormalMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	normalMap: TextureNormalMapController;
@@ -77,8 +77,10 @@ export class TextureNormalMapController extends BaseTextureMapController {
 		const normalMapType = NormalMapModeByName[NORMAL_MAP_MODES[pv.normalMapType]];
 		if (this._update_options.uniforms) {
 			const mat = material as ShaderMaterial;
-			// mat.uniforms.normalMapType.value = normalMapType; // not present in uniforms
-			(mat.uniforms.normalScale as IUniformV2).value.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
+			if (mat.uniforms) {
+				// mat.uniforms.normalMapType.value = normalMapType; // not present in uniforms
+				(mat.uniforms.normalScale as IUniformV2).value.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
+			}
 		}
 		const mat = material as MeshPhongMaterial;
 		// normalMapType is set for uniforms AND directParams

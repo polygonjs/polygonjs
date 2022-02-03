@@ -19,7 +19,7 @@ type CallbacksMap = Map<string, onTimeTickHook>;
 export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;
-	private _time: number = 0;
+	private _timeUniform = {value: 0};
 	private _graphNode: CoreGraphNode;
 	private _realtimeState = true;
 	private _maxFrame = 600;
@@ -50,8 +50,11 @@ export class TimeController {
 	frame(): number {
 		return this._frame;
 	}
+	timeUniform() {
+		return this._timeUniform;
+	}
 	time(): number {
-		return this._time;
+		return this._timeUniform.value;
 	}
 	maxFrame() {
 		return this._maxFrame;
@@ -76,10 +79,10 @@ export class TimeController {
 	}
 
 	setTime(time: number, updateFrame = true) {
-		if (time == this._time) {
+		if (time == this._timeUniform.value) {
 			return;
 		}
-		this._time = time;
+		this._timeUniform.value = time;
 
 		// we block updates here, so that dependent nodes only cook once
 		this.scene.cooker.block();
@@ -89,7 +92,7 @@ export class TimeController {
 		}
 
 		if (updateFrame) {
-			const newFrame = Math.floor(this._time * FPS);
+			const newFrame = Math.floor(this._timeUniform.value * FPS);
 			const bounded_frame = this._ensureFrameWithinBounds(newFrame);
 			if (newFrame != bounded_frame) {
 				this.setFrame(bounded_frame, true);
@@ -100,7 +103,7 @@ export class TimeController {
 
 		// update time dependents
 		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.FRAME_UPDATED);
-		this.scene.uniformsController.updateTimeDependentUniformOwners();
+		// this.scene.uniformsController.updateTime();
 
 		this.graphNode.setSuccessorsDirty();
 		this.scene.cooker.unblock();
@@ -140,7 +143,7 @@ export class TimeController {
 		if (this._realtimeState) {
 			// const performance_now = performance.now();
 			this._delta = delta;
-			const newTime = this._time + this._delta;
+			const newTime = this._timeUniform.value + this._delta;
 			// this._prev_performance_now = performance_now;
 			this.setTime(newTime, false);
 			this.setFrame(this._frame + 1, false);

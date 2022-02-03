@@ -15,10 +15,21 @@ import {Poly} from '../../Poly';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
+import {CustomMaterialName} from '../../../core/geometry/Material';
+import {Material} from 'three/src/materials/Material';
 
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 }
+interface LineBasicBuilderMaterial extends LineBasicMaterial {
+	vertexShader: string;
+	fragmentShader: string;
+	customMaterials: {
+		[key in CustomMaterialName]?: Material;
+	};
+}
+
 class LineBasicMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
 		BaseBuilderParamConfig(
@@ -35,7 +46,11 @@ class LineBasicMatParamsConfig extends FogParamConfig(
 }
 const ParamsConfig = new LineBasicMatParamsConfig();
 
-export class LineBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerLine, LineBasicMatParamsConfig> {
+export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
+	LineBasicBuilderMaterial,
+	ShaderAssemblerLine,
+	LineBasicMatParamsConfig
+> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'lineBasicBuilder';
@@ -43,7 +58,7 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 	public override usedAssembler(): Readonly<AssemblerName.GL_LINE> {
 		return AssemblerName.GL_LINE;
 	}
-	protected _create_assembler_controller() {
+	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	readonly controllers: Controllers = {

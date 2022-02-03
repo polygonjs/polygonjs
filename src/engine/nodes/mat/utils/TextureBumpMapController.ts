@@ -33,7 +33,7 @@ class TextureBumpMaterial extends Material {
 	bumpMap!: Texture | null;
 	bumpScale!: number;
 }
-type CurrentMaterial = TextureBumpMaterial | ShaderMaterial;
+type CurrentMaterial = TextureBumpMaterial | Material;
 class TextureBumpMapParamsConfig extends BumpMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	bumpMap: TextureBumpMapController;
@@ -54,7 +54,9 @@ export class TextureBumpMapController extends BaseTextureMapController {
 		this._update(this.node.material, 'bumpMap', this.node.p.useBumpMap, this.node.p.bumpMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.bumpScale.value = this.node.pv.bumpScale;
+			if (mat.uniforms) {
+				mat.uniforms.bumpScale.value = this.node.pv.bumpScale;
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshStandardMaterial;

@@ -7,7 +7,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
-import {GlParamConfig} from './code/utils/ParamConfig';
+import {GlParamConfig} from './code/utils/GLParamConfig';
 import {ParamType} from '../../poly/ParamType';
 import {IntegerParam} from '../../params/Integer';
 import {FloatParam} from '../../params/Float';
@@ -43,7 +43,7 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	}
 
 	protected _setMatToRecompile() {
-		this.materialNode()?.assemblerController?.set_compilation_required_and_dirty(this);
+		this.materialNode()?.assemblerController()?.set_compilation_required_and_dirty(this);
 	}
 	materialNode(): AssemblerControllerNode | undefined {
 		const parent = this.parent();

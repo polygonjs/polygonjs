@@ -23,6 +23,9 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {UpdateOptions} from './utils/_BaseTextureController';
+import {Material} from 'three/src/materials/Material';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
@@ -32,6 +35,15 @@ interface Controllers {
 	aoMap: TextureAOMapController;
 	envMap: TextureEnvMapController;
 	map: TextureMapController;
+}
+
+interface MeshBasicBuilderMaterial extends MeshBasicMaterial {
+	vertexShader: string;
+	fragmentShader: string;
+	uniforms: IUniforms;
+	customMaterials: {
+		[key in CustomMaterialName]?: Material;
+	};
 }
 class MeshBasicMatParamsConfig extends FogParamConfig(
 	WireframeParamConfig(
@@ -58,7 +70,11 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 ) {}
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
-export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerBasic, MeshBasicMatParamsConfig> {
+export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
+	MeshBasicBuilderMaterial,
+	ShaderAssemblerBasic,
+	MeshBasicMatParamsConfig
+> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshBasicBuilder';
@@ -66,7 +82,7 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_BASIC> {
 		return AssemblerName.GL_MESH_BASIC;
 	}
-	protected _create_assembler_controller() {
+	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	readonly controllers: Controllers = {

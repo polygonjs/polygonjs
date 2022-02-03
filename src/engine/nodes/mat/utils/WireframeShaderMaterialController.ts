@@ -1,8 +1,8 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
+import {Material} from 'three/src/materials/Material';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 
@@ -14,9 +14,9 @@ export function WireframeParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 class WireframeParamsConfig extends WireframeParamConfig(NodeParamsConfig) {}
-class WireframedMatNode extends TypedMatNode<ShaderMaterial, WireframeParamsConfig> {
+class WireframedMatNode extends TypedMatNode<Material, WireframeParamsConfig> {
 	createMaterial() {
-		return new ShaderMaterial();
+		return new Material();
 	}
 }
 
@@ -28,7 +28,10 @@ export class WireframeController extends BaseController {
 		const material = node.material;
 		const pv = node.pv;
 
-		material.wireframe = isBooleanTrue(pv.wireframe);
-		material.needsUpdate = true;
+		const shaderMaterial = material as ShaderMaterial;
+		if (shaderMaterial.wireframe != null) {
+			shaderMaterial.wireframe = isBooleanTrue(pv.wireframe);
+			shaderMaterial.needsUpdate = true;
+		}
 	}
 }

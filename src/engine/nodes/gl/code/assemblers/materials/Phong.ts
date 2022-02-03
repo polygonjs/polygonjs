@@ -1,7 +1,6 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {ShaderAssemblerMesh} from './_BaseMesh';
+import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 
 export class ShaderAssemblerPhong extends ShaderAssemblerMesh {
 	override templateShader() {
@@ -13,14 +12,7 @@ export class ShaderAssemblerPhong extends ShaderAssemblerMesh {
 		};
 	}
 	override createMaterial() {
-		const template_shader = this.templateShader();
-		const material = new ShaderMaterial({
-			lights: true,
-
-			uniforms: UniformsUtils.clone(template_shader.uniforms),
-			vertexShader: template_shader.vertexShader,
-			fragmentShader: template_shader.fragmentShader,
-		});
+		const material = new MeshPhongMaterial();
 		this._addCustomMaterials(material);
 		return material;
 	}

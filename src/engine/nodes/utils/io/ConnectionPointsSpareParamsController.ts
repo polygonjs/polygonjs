@@ -108,8 +108,10 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			}
 		}
 
+		let i = 0;
 		for (let connection_point of this.node.io.inputs.namedInputConnectionPoints()) {
 			if (connection_point) {
+				const isConnected = this.node.io.inputs.input(i) != null;
 				const param_name = connection_point.name();
 				const param_type: ParamType = connection_point.param_type;
 				let init_value = connection_point.init_value;
@@ -154,14 +156,16 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 						name: param_name,
 						type: param_type,
 						// TODO: I should really treat differently init_value and raw_input here
-						init_value: ObjectUtils.clone(init_value as any),
-						raw_input: ObjectUtils.clone(init_value as any),
+						initValue: ObjectUtils.clone(init_value as any),
+						rawInput: ObjectUtils.clone(init_value as any),
 						options: {
 							spare: true,
+							editable: !isConnected,
 						},
 					});
 				}
 			}
+			i++;
 		}
 		// if (!this.node.scene.loading_controller.isLoading()) {
 		this.node.params.updateParams(params_update_options);
@@ -175,5 +179,23 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			}
 		}
 		// }
+	}
+
+	updateSpareParamsEditableStateIfNeeded() {
+		let i = 0;
+		const params = this.node.params;
+		for (let connectionPoint of this.node.io.inputs.namedInputConnectionPoints()) {
+			if (connectionPoint) {
+				const isConnected = this.node.io.inputs.input(i) != null;
+				const paramName = connectionPoint?.name();
+				if (params.has(paramName)) {
+					const param = params.get(paramName);
+					if (param) {
+						param.options.setOption('editable', !isConnected);
+					}
+				}
+			}
+			i++;
+		}
 	}
 }

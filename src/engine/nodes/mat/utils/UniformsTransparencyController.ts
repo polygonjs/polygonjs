@@ -1,6 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
+import {Material} from 'three/src/materials/Material';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
@@ -19,7 +20,7 @@ export function UniformsTransparencyParamConfig<TBase extends Constructor>(Base:
 	};
 }
 
-class TransparencyMaterial extends ShaderMaterial {
+class TransparencyMaterial extends Material {
 	// transparent!: boolean;
 	// depthTest!: boolean;
 	// alphaTest!: number;
@@ -58,13 +59,15 @@ export class UniformsTransparencyController extends BaseController {
 		this._updateCommon(mat, pv);
 	}
 	private static _updateCommon(mat: TransparencyMaterial, pv: ParamsValueAccessorType<TransparencyParamsConfig>) {
-		if (mat.uniforms.opacity) {
-			mat.uniforms.opacity.value = pv.opacity;
+		const shaderMaterial = mat as ShaderMaterial;
+
+		if (shaderMaterial.uniforms && shaderMaterial.uniforms.opacity) {
+			shaderMaterial.uniforms.opacity.value = pv.opacity;
 		}
 		mat.opacity = pv.opacity;
 
-		if (mat.uniforms.alphaTest) {
-			mat.uniforms.alphaTest.value = pv.alphaTest;
+		if (shaderMaterial.uniforms && shaderMaterial.uniforms.alphaTest) {
+			shaderMaterial.uniforms.alphaTest.value = pv.alphaTest;
 		}
 		mat.alphaTest = pv.alphaTest;
 
@@ -74,7 +77,7 @@ export class UniformsTransparencyController extends BaseController {
 			for (let customName of customNames) {
 				const customMaterial = customMaterials[customName];
 				if (customMaterial) {
-					this._updateCommon(customMaterial, pv);
+					this._updateCommon(customMaterial as ShaderMaterial, pv);
 				}
 			}
 		}

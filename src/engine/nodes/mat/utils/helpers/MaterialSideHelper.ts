@@ -1,7 +1,7 @@
 import {Material} from 'three/src/materials/Material';
 import {isBooleanTrue} from '../../../../../core/Type';
 import {FrontSide, BackSide, DoubleSide} from 'three/src/constants';
-import {ShaderMaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
+import {MaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
 import {CustomMaterialName} from '../../../gl/code/assemblers/materials/_BaseMaterial';
 
 interface SideUpdateParams {
@@ -33,7 +33,7 @@ export function updateMaterialSide(mat: Material, params: SideUpdateParams) {
 		(mat as any).shadowSide = null;
 	}
 
-	const customMaterials = (mat as ShaderMaterialWithCustomMaterials).customMaterials;
+	const customMaterials = (mat as MaterialWithCustomMaterials).customMaterials;
 	if (customMaterials) {
 		const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
 		for (let customName of customNames) {

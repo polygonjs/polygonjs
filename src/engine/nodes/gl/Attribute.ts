@@ -51,7 +51,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 		this.io.connection_points.initializeNode();
 
 		this.io.connection_points.set_expected_input_types_function(() => {
-			if (this.materialNode()?.assemblerController?.allow_attribute_exports()) {
+			if (this.materialNode()?.assemblerController()?.allow_attribute_exports()) {
 				return [ATTRIBUTE_NODE_AVAILABLE_GL_TYPES[this.pv.type]];
 			} else {
 				return [];
@@ -72,7 +72,7 @@ export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	}
 	private _bound_setExportWhenConnectedStatus = this._setExportWhenConnectedStatus.bind(this);
 	private _setExportWhenConnectedStatus() {
-		if (this.materialNode()?.assemblerController?.allow_attribute_exports()) {
+		if (this.materialNode()?.assemblerController()?.allow_attribute_exports()) {
 			this.p.texportWhenConnected.set(1);
 		}
 	}

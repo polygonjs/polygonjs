@@ -248,8 +248,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 					params_update_options.toAdd.push({
 						name: param_name,
 						type: param_type,
-						init_value: param_data['default_value'] as any,
-						raw_input: param_data['raw_input'] as any,
+						initValue: param_data['default_value'] as any,
+						rawInput: param_data['raw_input'] as any,
 						options: options,
 					});
 

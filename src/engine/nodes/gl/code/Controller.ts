@@ -7,7 +7,7 @@ import {OutputGlNode} from '../Output';
 import {GlobalsGlNode} from '../Globals';
 import {GlNodeChildrenMap} from '../../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../_Base';
-import {AssemblerNodeSpareParamsController} from './SpareParamsController';
+import {GlAssemblerNodeSpareParamsController} from './GlAssemblerNodeSpareParamsController';
 import {NodeCreateOptions} from '../../utils/hierarchy/ChildrenController';
 
 export class BaseGlParentNode extends TypedNode<any, any> {
@@ -32,20 +32,20 @@ export class BaseGlParentNode extends TypedNode<any, any> {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 }
-export class AssemblerControllerNode extends BaseGlParentNode {
-	assemblerController: GlAssemblerController<BaseGlShaderAssembler> | undefined;
+export abstract class AssemblerControllerNode extends BaseGlParentNode {
+	abstract assemblerController(): GlAssemblerController<BaseGlShaderAssembler> | undefined;
 }
 
 type BaseGlShaderAssemblerConstructor<A extends BaseGlShaderAssembler> = new (...args: any[]) => A;
 export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	protected _assembler!: A;
-	private _spare_params_controller!: AssemblerNodeSpareParamsController;
+	private _spareParamsController!: GlAssemblerNodeSpareParamsController;
 	private _globals_handler: GlobalsBaseController | undefined = new GlobalsGeometryHandler();
 	private _compile_required: boolean = true;
 
 	constructor(private node: AssemblerControllerNode, assembler_class: BaseGlShaderAssemblerConstructor<A>) {
 		this._assembler = new assembler_class(this.node);
-		this._spare_params_controller = new AssemblerNodeSpareParamsController(this, this.node);
+		this._spareParamsController = new GlAssemblerNodeSpareParamsController(this, this.node);
 	}
 	set_assembler_globals_handler(globals_handler: GlobalsBaseController) {
 		const current_id = this._globals_handler ? this._globals_handler.id() : null;
@@ -94,7 +94,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	// Create spare params on mat nodes
 	//
 	createSpareParameters() {
-		this._spare_params_controller.createSpareParameters();
+		this._spareParamsController.createSpareParameters();
 	}
 
 	addFilterFragmentShaderCallback(callbackName: string, callback: (s: string) => string) {

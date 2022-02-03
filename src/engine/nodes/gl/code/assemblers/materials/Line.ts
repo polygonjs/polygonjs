@@ -1,5 +1,5 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+// import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName} from './_BaseMaterial';
 import {ShaderConfig} from '../../configs/ShaderConfig';
@@ -12,6 +12,7 @@ import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {VaryingWriteGlNode} from '../../../VaryingWrite';
 import {ShaderAssemblerCustomLineDepthDOF} from './custom/line/CustomLineDepthDOF';
+import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([]);
 ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomLineDistance);
@@ -33,22 +34,24 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 		};
 	}
 	override createMaterial() {
-		const template_shader = this.templateShader();
+		const material = new LineBasicMaterial();
 
-		const material = new ShaderMaterial({
-			depthTest: true,
-			alphaTest: 0.5,
-			linewidth: 1,
-			// isLineBasicMaterial: true,
+		// const template_shader = this.templateShader();
 
-			uniforms: UniformsUtils.clone(template_shader.uniforms),
-			vertexShader: template_shader.vertexShader,
-			fragmentShader: template_shader.fragmentShader,
-		});
+		// const material = new ShaderMaterial({
+		// 	depthTest: true,
+		// 	alphaTest: 0.5,
+		// 	linewidth: 1,
+		// 	// isLineBasicMaterial: true,
+
+		// 	uniforms: UniformsUtils.clone(template_shader.uniforms),
+		// 	vertexShader: template_shader.vertexShader,
+		// 	fragmentShader: template_shader.fragmentShader,
+		// });
 		this._addCustomMaterials(material);
 		return material;
 	}
-	override custom_assembler_class_by_custom_name(): CustomAssemblerMap {
+	override customAssemblerClassByCustomName(): CustomAssemblerMap {
 		return ASSEMBLER_MAP;
 	}
 	override create_shader_configs() {
@@ -113,7 +116,7 @@ export class ShaderAssemblerLine extends ShaderAssemblerMaterial {
 			}),
 		];
 	}
-	protected override lines_to_remove(shader_name: ShaderName) {
+	protected override linesToRemove(shader_name: ShaderName) {
 		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
 }

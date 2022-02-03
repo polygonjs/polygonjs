@@ -35,11 +35,14 @@ export class ShaderAssemblerCustomPointsDepth extends ShaderAssemblerMaterial {
 			uniforms: uniforms,
 		};
 	}
-	protected override insert_define_after(shader_name: ShaderName) {
+	protected override insertDefineAfter(shader_name: ShaderName) {
 		return INSERT_DEFINE_AFTER_MAP.get(shader_name);
 	}
-	protected override insert_body_after(shader_name: ShaderName) {
+	protected override insertBodyAfter(shader_name: ShaderName) {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
+	}
+	protected depthPacking() {
+		return RGBADepthPacking;
 	}
 
 	override createMaterial() {
@@ -52,12 +55,17 @@ export class ShaderAssemblerCustomPointsDepth extends ShaderAssemblerMaterial {
 			// lights: true,
 			defines: {
 				USE_SIZEATTENUATION: 1,
-				DEPTH_PACKING: [RGBADepthPacking, BasicDepthPacking][0],
+				DEPTH_PACKING: this.depthPacking(),
 			},
 
 			uniforms: UniformsUtils.clone(template_shader.uniforms),
 			vertexShader: template_shader.vertexShader,
 			fragmentShader: template_shader.fragmentShader,
 		});
+	}
+}
+export class ShaderAssemblerCustomPointsDepthForRender extends ShaderAssemblerCustomPointsDepth {
+	protected override depthPacking() {
+		return BasicDepthPacking;
 	}
 }

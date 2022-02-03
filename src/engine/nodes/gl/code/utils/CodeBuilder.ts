@@ -9,7 +9,7 @@ import {ShadersCollectionController} from './ShadersCollectionController';
 import {CodeFormatter} from './CodeFormatter';
 
 import {LineType} from './LineType';
-import {GlParamConfig} from './ParamConfig';
+import {GlParamConfig} from './GLParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';

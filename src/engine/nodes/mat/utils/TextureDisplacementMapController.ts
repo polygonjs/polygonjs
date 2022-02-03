@@ -37,7 +37,7 @@ class TextureDisplacementMaterial extends Material {
 	displacementScale!: number;
 	displacementBias!: number;
 }
-type CurrentMaterial = TextureDisplacementMaterial | ShaderMaterial;
+type CurrentMaterial = TextureDisplacementMaterial | Material;
 class TextureDisplacementMapParamsConfig extends DisplacementMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	displacementMap: TextureDisplacementMapController;
@@ -63,8 +63,10 @@ export class TextureDisplacementMapController extends BaseTextureMapController {
 		);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.displacementScale.value = this.node.pv.displacementScale;
-			mat.uniforms.displacementBias.value = this.node.pv.displacementBias;
+			if (mat.uniforms) {
+				mat.uniforms.displacementScale.value = this.node.pv.displacementScale;
+				mat.uniforms.displacementBias.value = this.node.pv.displacementBias;
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshStandardMaterial;

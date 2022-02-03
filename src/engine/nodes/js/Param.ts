@@ -12,7 +12,7 @@ import {ParamType} from '../../poly/ParamType';
 import {UniformJsDefinition} from './utils/JsDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {LinesController} from './code/utils/LinesController';
-import {JsParamConfig} from './code/utils/ParamConfig';
+import {JsParamConfig} from './code/utils/JsParamConfig';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 class ParamJsParamsConfig extends NodeParamsConfig {

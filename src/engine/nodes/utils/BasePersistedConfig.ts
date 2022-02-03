@@ -65,14 +65,16 @@ export class BasePersistedConfig {
 		this._found_param_texture_by_id.clear();
 		this._found_param_textures_id_by_uniform_name.clear();
 		const uniforms = material.uniforms;
-		const uniformNames = Object.keys(uniforms);
-		for (let uniformName of uniformNames) {
-			const value = uniforms[uniformName].value;
-			if (value && value.uuid) {
-				const texture = value as Texture;
-				this._found_uniform_texture_by_id.set(texture.uuid, value);
-				this._found_uniform_textures_id_by_uniform_name.set(uniformName, texture.uuid);
-				uniforms[uniformName].value = null;
+		if (uniforms) {
+			const uniformNames = Object.keys(uniforms);
+			for (let uniformName of uniformNames) {
+				const value = uniforms[uniformName].value;
+				if (value && value.uuid) {
+					const texture = value as Texture;
+					this._found_uniform_texture_by_id.set(texture.uuid, value);
+					this._found_uniform_textures_id_by_uniform_name.set(uniformName, texture.uuid);
+					uniforms[uniformName].value = null;
+				}
 			}
 		}
 		const matPropertyNames = Object.keys(material) as Array<keyof Material>;
@@ -96,12 +98,14 @@ export class BasePersistedConfig {
 			param_names_needing_reassignment.push(name);
 		});
 		const uniforms = material.uniforms;
-		for (let name of uniform_names_needing_reassignment) {
-			const texture_id = this._found_uniform_textures_id_by_uniform_name.get(name);
-			if (texture_id) {
-				const texture = this._found_uniform_texture_by_id.get(texture_id);
-				if (texture) {
-					uniforms[name].value = texture;
+		if (uniforms) {
+			for (let name of uniform_names_needing_reassignment) {
+				const texture_id = this._found_uniform_textures_id_by_uniform_name.get(name);
+				if (texture_id) {
+					const texture = this._found_uniform_texture_by_id.get(texture_id);
+					if (texture) {
+						uniforms[name].value = texture;
+					}
 				}
 			}
 		}
@@ -139,14 +143,17 @@ export class BasePersistedConfig {
 			material.lights = data.lights;
 		}
 
-		// fix matrix that may be loaded as a mat4 instead of a mat3
-		const uv2Transform = material.uniforms.uv2Transform;
-		if (uv2Transform) {
-			this.mat4ToMat3(uv2Transform);
-		}
-		const uvTransform = material.uniforms.uvTransform;
-		if (uvTransform) {
-			this.mat4ToMat3(uvTransform);
+		const uniforms = material.uniforms;
+		if (uniforms) {
+			// fix matrix that may be loaded as a mat4 instead of a mat3
+			const uv2Transform = uniforms.uv2Transform;
+			if (uv2Transform) {
+				this.mat4ToMat3(uv2Transform);
+			}
+			const uvTransform = uniforms.uvTransform;
+			if (uvTransform) {
+				this.mat4ToMat3(uvTransform);
+			}
 		}
 		return material as ShaderMaterialWithCustomMaterials;
 	}

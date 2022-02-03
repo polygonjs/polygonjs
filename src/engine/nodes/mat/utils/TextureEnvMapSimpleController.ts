@@ -2,10 +2,9 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-
+import {Material} from 'three/src/materials/Material';
 import {MultiplyOperation, MixOperation, AddOperation} from 'three/src/constants';
 import {CopType} from '../../../poly/registers/nodes/types/Cop';
 enum CombineOperation {
@@ -52,7 +51,7 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	envMap!: Texture | null;
 // 	envMapIntensity!: number;
 // }
-type CurrentMaterial = MeshBasicMaterial | ShaderMaterial;
+type CurrentMaterial = MeshBasicMaterial | Material;
 class TextureEnvMapParamsConfig extends EnvMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	envMap: TextureEnvMapController;
@@ -74,9 +73,11 @@ export class TextureEnvMapController extends BaseTextureMapController {
 		const combine = OperationByName[COMBINE_OPERATIONS[this.node.pv.combine]];
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			// mat.uniforms.combine.value = combine; // combine is not present in the uniforms
-			mat.uniforms.reflectivity.value = this.node.pv.reflectivity;
-			mat.uniforms.refractionRatio.value = this.node.pv.refractionRatio;
+			if (mat.uniforms) {
+				// mat.uniforms.combine.value = combine; // combine is not present in the uniforms
+				mat.uniforms.reflectivity.value = this.node.pv.reflectivity;
+				mat.uniforms.refractionRatio.value = this.node.pv.refractionRatio;
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshBasicMaterial;

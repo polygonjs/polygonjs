@@ -1,4 +1,4 @@
-import {Vector4} from 'three';
+import {Vector4} from 'three/src/math/Vector4';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {CoreConstant, AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';

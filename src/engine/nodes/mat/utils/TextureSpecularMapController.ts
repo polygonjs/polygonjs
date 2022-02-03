@@ -3,7 +3,6 @@ import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 
 export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -18,7 +17,7 @@ export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 class TextureSpecularMaterial extends Material {
 	specularMap!: Texture | null;
 }
-type CurrentMaterial = TextureSpecularMaterial | ShaderMaterial;
+type CurrentMaterial = TextureSpecularMaterial | Material;
 class TextureSpecularMapParamsConfig extends SpecularMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	specularMap: TextureSpecularMapController;

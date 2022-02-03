@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-
+import {Material} from 'three/src/materials/Material';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -28,7 +28,7 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	envMap!: Texture | null;
 // 	envMapIntensity!: number;
 // }
-type CurrentMaterial = MeshStandardMaterial | ShaderMaterial;
+type CurrentMaterial = MeshStandardMaterial | Material;
 class TextureEnvMapParamsConfig extends EnvMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	envMap: TextureEnvMapController;
@@ -49,8 +49,10 @@ export class TextureEnvMapController extends BaseTextureMapController {
 		this._update(this.node.material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.envMapIntensity.value = this.node.pv.envMapIntensity;
-			mat.uniforms.refractionRatio.value = this.node.pv.refractionRatio;
+			if (mat.uniforms) {
+				mat.uniforms.envMapIntensity.value = this.node.pv.envMapIntensity;
+				mat.uniforms.refractionRatio.value = this.node.pv.refractionRatio;
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshStandardMaterial;

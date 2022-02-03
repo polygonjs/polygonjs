@@ -1,5 +1,5 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+// import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {ShaderAssemblerMesh} from './_BaseMesh';
 import {BaseGlShaderAssembler} from '../_Base';
@@ -11,10 +11,10 @@ import {OutputGlNode} from '../../../Output';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {GlConnectionPoint, GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 import sss_default from '../../../gl/sss/init.glsl';
-import sss_declaration_fragment from '../../../gl/sss/declaration.glsl';
-import sss_injected_fragment from '../../../gl/sss/injected.glsl';
 import {AssemblerControllerNode} from '../../Controller';
 import {VaryingWriteGlNode} from '../../../VaryingWrite';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {includeSSSDeclarations} from './common/SSS';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	static USE_SSS: Readonly<boolean> = true;
@@ -47,44 +47,31 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 			'vec3 totalEmissiveRadiance = emissive;',
 			'vec3 totalEmissiveRadiance = emissive * POLY_emissive;'
 		);
+		fragmentShader = includeSSSDeclarations(fragmentShader);
 
-		if (ShaderAssemblerStandard.USE_SSS) {
-			fragmentShader = fragmentShader.replace(
-				/void main\s?\(\) {/,
-				`${sss_declaration_fragment}
-
-void main() {`
-			);
-
-			fragmentShader = fragmentShader.replace(
-				'#include <lights_fragment_begin>',
-				`#include <lights_fragment_begin>
-${sss_injected_fragment}
-`
-			);
-		}
 		return fragmentShader;
 	}
 
 	override createMaterial() {
-		const template_shader = this.templateShader();
+		// const template_shader = this.templateShader();
 
-		const options = {
-			lights: true,
-			extensions: {
-				derivatives: true,
-			},
+		// const options = {
+		// 	lights: true,
+		// 	extensions: {
+		// 		derivatives: true,
+		// 	},
 
-			uniforms: UniformsUtils.clone(template_shader.uniforms),
-			vertexShader: template_shader.vertexShader,
-			fragmentShader: template_shader.fragmentShader,
-		};
+		// 	uniforms: UniformsUtils.clone(template_shader.uniforms),
+		// 	vertexShader: template_shader.vertexShader,
+		// 	fragmentShader: template_shader.fragmentShader,
+		// };
 
-		const material = new ShaderMaterial(options);
+		// const material = new ShaderMaterial(options);
+		const material = new MeshStandardMaterial() as any;
 
-		if (this.isPhysical()) {
-			material.defines.PHYSICAL = true;
-		}
+		// if (this.isPhysical()) {
+		// 	material.defines.PHYSICAL = true;
+		// }
 
 		this._addCustomMaterials(material);
 

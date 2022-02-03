@@ -71,10 +71,10 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 		return ShaderAssemblerVolume.create_globals_node_output_connections();
 	}
 
-	protected override insert_body_after(shader_name: ShaderName): string | undefined {
+	protected override insertBodyAfter(shader_name: ShaderName): string | undefined {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
-	protected override lines_to_remove(shader_name: ShaderName): string[] | undefined {
+	protected override linesToRemove(shader_name: ShaderName): string[] | undefined {
 		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
 	override create_shader_configs(): ShaderConfig[] {

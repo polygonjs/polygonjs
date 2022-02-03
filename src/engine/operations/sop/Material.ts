@@ -61,15 +61,15 @@ export class MaterialSopOperation extends BaseSopOperation {
 			return;
 		}
 
-		const material_node = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
-		if (material_node) {
-			const material = material_node.material;
-			const assembler_controller = (material_node as BaseBuilderMatNodeType).assemblerController;
-			if (assembler_controller) {
-				assembler_controller.set_assembler_globals_handler(this._globals_handler);
+		const materialNode = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
+		if (materialNode) {
+			const material = materialNode.material;
+			const baseBuilderMatNode = materialNode as BaseBuilderMatNodeType;
+			if (baseBuilderMatNode.assemblerController) {
+				baseBuilderMatNode.assemblerController()?.set_assembler_globals_handler(this._globals_handler);
 			}
 
-			await material_node.compute();
+			await materialNode.compute();
 			if (material) {
 				if (isBooleanTrue(params.applyToChildren)) {
 					// if we apply to children, the group will be tested inside _apply_material
@@ -87,7 +87,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 				return core_group;
 			} else {
-				this.states?.error.set(`material invalid. (error: '${material_node.states.error.message()}')`);
+				this.states?.error.set(`material invalid. (error: '${materialNode.states.error.message()}')`);
 			}
 		} else {
 			this.states?.error.set(`no material node found`);

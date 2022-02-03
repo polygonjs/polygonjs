@@ -1,13 +1,8 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
-// import {SphereBufferGeometry} from 'three/src/geometries/SphereGeometry';
-// import {Vector3} from 'three/src/math/Vector3';
-// import {Mesh} from 'three/src/objects/Mesh';
-// import {LIGHT_HELPER_MAT} from './_Base';
 import {DefaultOperationParams} from '../operations/_Base';
 import {Color} from 'three/src/math/Color';
-// import {RectAreaLight} from 'three';
 
 export interface AreaLightParams extends DefaultOperationParams {
 	color: Color;
@@ -52,7 +47,7 @@ import {Line} from 'three/src/objects/Line';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {Mesh} from 'three/src/objects/Mesh';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {RectAreaLight} from 'three';
+import {RectAreaLight} from 'three/src/lights/RectAreaLight';
 
 /**
  *  This helper must be added as a child of the light

@@ -1,5 +1,5 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+// import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName, GlobalsOutput} from './_BaseMaterial';
 import {ShaderConfig} from '../../configs/ShaderConfig';
@@ -12,6 +12,7 @@ import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {VaryingWriteGlNode} from '../../../VaryingWrite';
+import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 	[ShaderName.VERTEX, ['#include <begin_vertex>', 'gl_PointSize = size;']],
@@ -24,7 +25,7 @@ CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomPointsDe
 CUSTOM_ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomPointsDepthDOF);
 
 export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
-	override custom_assembler_class_by_custom_name(): CustomAssemblerMap {
+	override customAssemblerClassByCustomName(): CustomAssemblerMap {
 		return CUSTOM_ASSEMBLER_MAP;
 	}
 
@@ -37,33 +38,34 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 		};
 	}
 	override createMaterial() {
-		const template_shader = this.templateShader();
+		const material = new PointsMaterial();
+		// const template_shader = this.templateShader();
 
-		// const uniforms = UniformsUtils.clone( template_shader.uniforms )
-		// uniforms.size.value = 10
+		// // const uniforms = UniformsUtils.clone( template_shader.uniforms )
+		// // uniforms.size.value = 10
 
-		const material = new ShaderMaterial({
-			transparent: true,
-			fog: true,
+		// const material = new ShaderMaterial({
+		// 	transparent: true,
+		// 	fog: true,
 
-			// size: 10,
-			// //blending: AdditiveBlending
-			// depthTest: true,
-			// depthwrite: true,
-			// alphaTest: 0.5,
-			defines: {
-				// ALPHATEST: 0.5,
-				USE_SIZEATTENUATION: 1,
-			},
+		// 	// size: 10,
+		// 	// //blending: AdditiveBlending
+		// 	// depthTest: true,
+		// 	// depthwrite: true,
+		// 	// alphaTest: 0.5,
+		// 	defines: {
+		// 		// ALPHATEST: 0.5,
+		// 		USE_SIZEATTENUATION: 1,
+		// 	},
 
-			uniforms: UniformsUtils.clone(template_shader.uniforms),
-			vertexShader: template_shader.vertexShader,
-			fragmentShader: template_shader.fragmentShader,
-		});
+		// 	uniforms: UniformsUtils.clone(template_shader.uniforms),
+		// 	vertexShader: template_shader.vertexShader,
+		// 	fragmentShader: template_shader.fragmentShader,
+		// });
 		this._addCustomMaterials(material);
 		return material;
 	}
-	// protected insert_body_after(shader_name){
+	// protected insertBodyAfter(shader_name){
 	// 	return {
 	// 		vertex: 'gl_PointSize = size;',
 	// 		fragment: 'vec4 diffuseColor = vec4( diffuse, opacity );'
@@ -102,7 +104,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 			}),
 		]);
 	}
-	protected override lines_to_remove(shader_name: ShaderName) {
+	protected override linesToRemove(shader_name: ShaderName) {
 		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
 }

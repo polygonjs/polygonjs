@@ -8,14 +8,14 @@ import {GlobalsGlNode} from '../../../Globals';
 import {BaseGLDefinition, UniformGLDefinition, VaryingGLDefinition} from '../../../utils/GLDefinition';
 import {GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 import {MapUtils} from '../../../../../../core/MapUtils';
-import {ShaderMaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
+import {MaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {Material} from 'three/src/materials/Material';
 import {GlNodeFinder} from '../../utils/NodeFinder';
-import {IUniformsWithResolution, IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {BaseGlNodeType} from '../../../_Base';
-// import {BaseNodeType} from '../../_Base';
-// import {GlobalsGeometryHandler} from './Globals/Geometry'
+import {createOnBeforeCompile, OnBeforeCompileData} from './OnBeforeCompile';
+import {PolyDictionary} from '../../../../../../types/GlobalTypes';
+import {IUniformTexture} from '../../../../utils/code/gl/Uniforms';
 
 export enum CustomMaterialName {
 	DISTANCE = 'customDistanceMaterial', // for point lights
@@ -54,64 +54,60 @@ interface HandleGlobalsOutputOptions {
 }
 
 type FragmentShaderFilterCallback = (s: string) => string;
+type CustomAssemblerCallback = (a: ShaderAssemblerMaterial, assemblerName: CustomMaterialName) => void;
 
 export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
-	private _assemblers_by_custom_name: Map<CustomMaterialName, ShaderAssemblerMaterial> = new Map();
+	private _assemblersByCustomName: Map<CustomMaterialName, ShaderAssemblerMaterial> = new Map();
 
-	createMaterial(): ShaderMaterial {
-		return new ShaderMaterial();
+	createMaterial(): Material {
+		return new Material();
 	}
 
-	custom_assembler_class_by_custom_name(): CustomAssemblerMap | undefined {
+	customAssemblerClassByCustomName(): CustomAssemblerMap | undefined {
 		return undefined;
 	}
+	traverseCustomAssemblers(callback: CustomAssemblerCallback) {
+		this._assemblersByCustomName.forEach(callback);
+	}
 
-	protected _addCustomMaterials(material: ShaderMaterial) {
-		const class_by_custom_name = this.custom_assembler_class_by_custom_name();
-		if (class_by_custom_name) {
-			class_by_custom_name.forEach(
-				(assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
-					this._add_custom_material(
-						material as ShaderMaterialWithCustomMaterials,
-						custom_name,
-						assembler_class
-					);
-				}
-			);
+	protected _addCustomMaterials(material: Material) {
+		const map = this.customAssemblerClassByCustomName();
+		if (map) {
+			map.forEach((assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
+				this._addCustomMaterial(material as MaterialWithCustomMaterials, custom_name, assembler_class);
+			});
 		}
 	}
-	private _add_custom_material(
-		material: ShaderMaterialWithCustomMaterials,
+	private _addCustomMaterial(
+		material: MaterialWithCustomMaterials,
 		custom_name: CustomMaterialName,
 		assembler_class: typeof ShaderAssemblerMaterial
 	) {
-		let custom_assembler: ShaderAssemblerMaterial | undefined = this._assemblers_by_custom_name.get(custom_name);
-		if (!custom_assembler) {
-			custom_assembler = new assembler_class(this.currentGlParentNode());
-			this._assemblers_by_custom_name.set(custom_name, custom_assembler);
+		let customAssembler: ShaderAssemblerMaterial | undefined = this._assemblersByCustomName.get(custom_name);
+		if (!customAssembler) {
+			customAssembler = new assembler_class(this.currentGlParentNode());
+			this._assemblersByCustomName.set(custom_name, customAssembler);
 		}
 		material.customMaterials = material.customMaterials || {};
-		const mat = custom_assembler.createMaterial();
+		const mat = customAssembler.createMaterial();
 		mat.name = custom_name;
 		material.customMaterials[custom_name] = mat;
 	}
 
-	compileCustomMaterials(material: ShaderMaterialWithCustomMaterials) {
-		// const custom_materials_by_name: Map<CustomMaterialName, ShaderMaterial> = new Map();
-		// this._assemblers_by_custom_name.clear();
-
-		const class_by_custom_name = this.custom_assembler_class_by_custom_name();
+	compileCustomMaterials(material: MaterialWithCustomMaterials) {
+		const class_by_custom_name = this.customAssemblerClassByCustomName();
 		if (class_by_custom_name) {
 			class_by_custom_name.forEach(
 				(assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
 					if (this._code_builder) {
 						let assembler: ShaderAssemblerMaterial | undefined =
-							this._assemblers_by_custom_name.get(custom_name);
+							this._assemblersByCustomName.get(custom_name);
 						if (!assembler) {
 							assembler = new assembler_class(this.currentGlParentNode());
-							this._assemblers_by_custom_name.set(custom_name, assembler);
+							this._assemblersByCustomName.set(custom_name, assembler);
 						}
 
+						assembler._setAdditionalTextureUniforms(this._additionalTextureUniforms);
 						assembler.set_root_nodes(this._root_nodes);
 						assembler.set_param_configs_owner(this._code_builder);
 						assembler.set_shader_configs(this.shaderConfigs());
@@ -170,8 +166,30 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			return this.filterFragmentShader(fragmentShader);
 		}
 	}
+	private _onBeforeCompileData: OnBeforeCompileData | undefined;
+	onBeforeCompileData() {
+		return this._onBeforeCompileData;
+	}
+	// private _additionalUniformNames:string[]=[]
+	// setAdditionalUniformNames(uniformNames:string[]){
+	// 	this._additionalUniformNames = [...uniformNames]
+	// }
+	private _additionalTextureUniforms: PolyDictionary<IUniformTexture> = {};
+	clearAdditionalTextureUniforms() {
+		this._additionalTextureUniforms = {};
+	}
+	addAdditionalTextureUniforms(uniformName: string, uniform: IUniformTexture) {
+		this._additionalTextureUniforms[uniformName] = uniform;
+	}
+	private _setAdditionalTextureUniforms(uniforms: PolyDictionary<IUniformTexture>) {
+		this.clearAdditionalTextureUniforms();
+		const uniformNames = Object.keys(uniforms);
+		for (let uniformName of uniformNames) {
+			this._additionalTextureUniforms[uniformName] = uniforms[uniformName];
+		}
+	}
 
-	compileMaterial(material: ShaderMaterial) {
+	compileMaterial(material: Material) {
 		// no need to compile if the globals handler has not been declared
 		if (!this.compileAllowed()) {
 			return;
@@ -188,41 +206,26 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		this.set_root_nodes(root_nodes);
 		this._update_shaders();
 
-		const new_vertex_shader = this._shaders_by_name.get(ShaderName.VERTEX);
-		const new_fragment_shader = this._shaders_by_name.get(ShaderName.FRAGMENT);
-		if (new_vertex_shader && new_fragment_shader) {
-			material.vertexShader = new_vertex_shader;
-			material.fragmentShader = this.processFilterFragmentShader(new_fragment_shader);
-			this.addUniforms(material.uniforms);
-			material.needsUpdate = true;
-		}
-
 		const scene = this.currentGlParentNode().scene();
-		if (this.uniformsTimeDependent()) {
-			// make sure not to use this.currentGlParentNode().graphNodeId() as the id,
-			// as we need several materials:
-			// - the visible one
-			// - the multiple shadow ones
-			// - and possibly a depth one
-			scene.uniformsController.addTimeDependentUniformOwner(
-				material.uuid,
-				material.uniforms as IUniformsWithTime
-			);
-		} else {
-			scene.uniformsController.removeTimeDependentUniformOwner(material.uuid);
-		}
-		if (this.uniforms_resolution_dependent()) {
-			// make sure not to use this.currentGlParentNode().graphNodeId() as the id,
-			// as we need several materials:
-			// - the visible one
-			// - the multiple shadow ones
-			// - and possibly a depth one
-			scene.uniformsController.addResolutionDependentUniformOwner(
-				material.uuid,
-				material.uniforms as IUniformsWithResolution
-			);
-		} else {
-			scene.uniformsController.removeResolutionDependentUniformOwner(material.uuid);
+		const vertexShader = this._shaders_by_name.get(ShaderName.VERTEX);
+		const fragmentShader = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		if (vertexShader && fragmentShader) {
+			const processedFragmentShader = this.processFilterFragmentShader(fragmentShader);
+			this._onBeforeCompileData = {
+				vertexShader,
+				fragmentShader: processedFragmentShader,
+				paramConfigs: this.param_configs(),
+				additionalTextureUniforms: this._additionalTextureUniforms,
+				timeDependent: this.uniformsTimeDependent(),
+				resolutionDependent: this.uniformsResolutionDependent(),
+			};
+			material.onBeforeCompile = createOnBeforeCompile(scene, material, this._onBeforeCompileData);
+			material.needsUpdate = true;
+			// const paramConfigsKey: string = this.param_configs()
+			// 	.map((p) => JSON.stringify(p.toJSON()))
+			// 	.join(',');
+			const key = `${performance.now()}`; //`${vertexShader}:${fragmentShader}`; //:${paramConfigsKey}`;
+			material.customProgramCacheKey = () => key;
 		}
 
 		// const material = await this._assembler.get_material();
@@ -232,12 +235,12 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// assign custom materials
 		if (COMPILE_CUSTOM_MATERIALS) {
-			if ((material as ShaderMaterialWithCustomMaterials).customMaterials) {
-				this.compileCustomMaterials(material as ShaderMaterialWithCustomMaterials);
+			if ((material as MaterialWithCustomMaterials).customMaterials) {
+				this.compileCustomMaterials(material as MaterialWithCustomMaterials);
 			}
 		}
 		// const custom_materials = await this.get_custom_materials();
-		// const material_with_custom_materials = material as ShaderMaterialWithCustomMaterials;
+		// const material_with_custom_materials = material as MaterialWithCustomMaterials;
 		// material_with_custom_materials.custom_materials = {};
 		// custom_materials.forEach((custom_material, shader_name) => {
 		// 	material_with_custom_materials.custom_materials[shader_name] = custom_material;
@@ -434,7 +437,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
 		}
 
-		this.set_uniforms_resolution_dependent();
+		this.setUniformsResolutionDependent();
 	}
 	handle_mvPosition(options: HandleGlobalsOutputOptions) {
 		if (options.shader_name == ShaderName.FRAGMENT) {

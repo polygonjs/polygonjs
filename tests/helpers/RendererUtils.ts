@@ -1,8 +1,13 @@
 import {Vector2} from 'three/src/math/Vector2';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {Scene} from 'three/src/scenes/Scene';
+import {Mesh} from 'three/src/objects/Mesh';
+import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
+import {BaseBuilderMatNodeType} from '../../src/engine/nodes/mat/_BaseBuilder';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
 import {Poly} from '../../src/engine/Poly';
 import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
+import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
 
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
@@ -49,6 +54,26 @@ export class RendererUtils {
 			this._configs.push(config);
 			resolve(config);
 		});
+	}
+
+	private static _scene = this._createMatCompileScene();
+	private static _camera = new PerspectiveCamera();
+	private static _mesh = new Mesh();
+	static async compile(matNode: BaseBuilderMatNodeType, renderer: WebGLRenderer) {
+		await matNode.compute();
+		this._mesh.material = matNode.material;
+		renderer.compile(this._mesh, this._camera);
+	}
+	private static _createMatCompileScene(): Scene {
+		this._scene = new Scene();
+		this._mesh = new Mesh(new BoxBufferGeometry(1, 1, 1));
+		this._mesh.frustumCulled = false;
+		this._camera = new PerspectiveCamera();
+		this._camera.position.z = 5;
+		this._camera.updateMatrix();
+		this._scene.add(this._mesh);
+		this._scene.add(this._camera);
+		return this._scene;
 	}
 
 	static dispose() {

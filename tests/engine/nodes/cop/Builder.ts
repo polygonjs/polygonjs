@@ -129,7 +129,7 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 			await scene2.waitForCooksCompleted();
 
 			const new_builder1 = scene2.node('/COP/builder1') as BuilderCopNode;
-			assert.notOk(new_builder1.assemblerController);
+			assert.notOk(new_builder1.assemblerController());
 			assert.ok(new_builder1.persisted_config);
 			const float_param = new_builder1.params.get('float_param') as FloatParam;
 			const vec3_param = new_builder1.params.get('vec3_param') as Vector3Param;

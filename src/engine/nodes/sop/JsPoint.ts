@@ -17,11 +17,11 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 	static override type() {
 		return 'jsPoint';
 	}
-	// protected _assembler_controller: GlAssemblerController<ShaderAssemblerParticles> = new GlAssemblerController<
+	// protected _assemblerController: GlAssemblerController<ShaderAssemblerParticles> = new GlAssemblerController<
 	// 	ShaderAssemblerParticles
 	// >(this, ShaderAssemblerParticles);
-	// get assemblerController() {
-	// 	return this._assembler_controller;
+	// assemblerController() {
+	// 	return this._assemblerController;
 	// }
 
 	// static PARAM_CALLBACK_reset(node: ParticlesSystemGpuSopNode) {

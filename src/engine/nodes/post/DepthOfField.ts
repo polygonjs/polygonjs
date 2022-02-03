@@ -98,6 +98,10 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	clearColor = ParamConfig.COLOR([1, 1, 1], {
 		...PostParamOptions,
 	});
+	/** @param display depth pass that is used internally */
+	debug = ParamConfig.BOOLEAN(0, {
+		...PostParamOptions,
+	});
 }
 const ParamsConfig = new DepthOfFieldPostParamsConfig();
 export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, DepthOfFieldPostParamsConfig> {
@@ -149,7 +153,6 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 						const triggerParam: BaseParamType = triggerNode as BaseParamType;
 						if (params.includes(triggerParam)) {
 							await triggerParam.compute();
-							console.log('CoreGraphNode', triggerParam);
 						}
 					}
 					this._updatePassFromCameraNode(pass, cameraNode);
@@ -194,5 +197,7 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		pass.bokehMaterial.needsUpdate = true;
 
 		pass.clearColor.copy(this.pv.clearColor);
+
+		pass.displayDepth = this.pv.debug;
 	}
 }

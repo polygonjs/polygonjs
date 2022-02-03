@@ -24,7 +24,7 @@ class TextureAOMaterial extends Material {
 	aoMap!: Texture | null;
 	aoMapIntensity!: number;
 }
-type CurrentMaterial = TextureAOMaterial | ShaderMaterial;
+type CurrentMaterial = TextureAOMaterial | Material;
 class TextureAOMapParamsConfig extends AOMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	aoMap: TextureAOMapController;
@@ -45,7 +45,9 @@ export class TextureAOMapController extends BaseTextureMapController {
 		this._update(this.node.material, 'aoMap', this.node.p.useAOMap, this.node.p.aoMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.aoMapIntensity.value = this.node.pv.aoMapIntensity;
+			if (mat.uniforms) {
+				mat.uniforms.aoMapIntensity.value = this.node.pv.aoMapIntensity;
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshBasicMaterial;

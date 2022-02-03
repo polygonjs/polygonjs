@@ -11,6 +11,7 @@ import {Geometry} from '../../../../modules/three/examples/jsm/deprecated/Geomet
 import {Group} from 'three/src/objects/Group';
 import {Box3} from 'three/src/math/Box3';
 import {Object3D} from 'three/src/core/Object3D';
+import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 
 export function VolumeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -26,7 +27,7 @@ export function VolumeParamConfig<TBase extends Constructor>(Base: TBase) {
 		lightDir = ParamConfig.VECTOR3([-1, -1, -1]);
 	};
 }
-class VolumeMaterial extends ShaderMaterial {}
+class VolumeMaterial extends Material {}
 class VolumeParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
 
 abstract class VolumeMatNode extends TypedMatNode<VolumeMaterial, VolumeParamsConfig> {}
@@ -53,7 +54,11 @@ export class VolumeController {
 	}
 
 	update_uniforms_from_params() {
-		const uniforms = this.node.material.uniforms;
+		const shaderMaterial = this.node.material as ShaderMaterialWithCustomMaterials;
+		const uniforms = shaderMaterial.uniforms;
+		if (!uniforms) {
+			return;
+		}
 
 		uniforms.u_Color.value.copy(this.node.pv.color);
 		uniforms.u_StepSize.value = this.node.pv.stepSize;

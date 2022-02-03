@@ -1,6 +1,9 @@
 import {GlConnectionPointType} from '../../../../../src/engine/nodes/utils/io/connections/Gl';
+import {RendererUtils} from '../../../../helpers/RendererUtils';
 
 QUnit.test('2 gl/attributes with same name can live on same level without conflict in a material', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
+
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	const output1 = meshBasicBuilder1.createNode('output');
@@ -16,7 +19,8 @@ QUnit.test('2 gl/attributes with same name can live on same level without confli
 
 	// test for vertex only
 	output1.setInput('position', add1);
-	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	// await meshBasicBuilder1.compute();
 	const material = meshBasicBuilder1.material;
 	assert.includes(
 		material.vertexShader,
@@ -42,7 +46,8 @@ attribute vec3 myAttrib;
 	// test for fragment only
 	output1.setInput('position', null);
 	output1.setInput('color', add1);
-	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	// await meshBasicBuilder1.compute();
 	assert.includes(
 		material.vertexShader,
 		`
@@ -91,9 +96,13 @@ varying vec3 v_POLY_attribute_myAttrib;
 `,
 		'fragmentShader reads varying declared in vertexShader (body)'
 	);
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('2 gl/param with same name can live on same level without conflict in a material', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
+
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	const output1 = meshBasicBuilder1.createNode('output');
@@ -109,7 +118,7 @@ QUnit.test('2 gl/param with same name can live on same level without conflict in
 
 	// test for vertex only
 	output1.setInput('position', add1);
-	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	const material = meshBasicBuilder1.material;
 	assert.includes(
 		material.vertexShader,
@@ -135,7 +144,8 @@ uniform vec3 v_POLY_param_myParam;
 	// test for fragment only
 	output1.setInput('position', null);
 	output1.setInput('color', add1);
-	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	// await meshBasicBuilder1.compute();
 	assert.not_includes(material.vertexShader, 'uniform vec3 v_POLY_');
 	assert.includes(
 		material.fragmentShader,

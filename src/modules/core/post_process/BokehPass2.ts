@@ -10,8 +10,8 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {LinearFilter} from 'three/src/constants';
 import {BokehShader, BokehDepthShader} from '../../three/examples/jsm/shaders/BokehShader2';
 import {TransformControls} from 'three/examples/jsm/controls/TransformControls';
-import {CoreScene} from '../../../core/geometry/Scene';
-import DepthInstanceVertex from './BokehPass2/DepthInstance.vert.glsl';
+// import {CoreScene} from '../../../core/geometry/Scene';
+// import DepthInstanceVertex from './BokehPass2/DepthInstance.vert.glsl';
 import {IUniformN, IUniformTexture, IUniformV2} from '../../../engine/nodes/utils/code/gl/Uniforms';
 import {Vector2} from 'three/src/math/Vector2';
 import {Color} from 'three/src/math/Color';
@@ -19,6 +19,10 @@ import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {DepthOfFieldPostNode} from '../../../engine/nodes/post/DepthOfField';
 import {Object3D} from 'three/src/core/Object3D';
+import {ObjectWithCustomMaterials} from '../../../core/geometry/Material';
+import {Material} from 'three/src/materials/Material';
+import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
 
 interface BokehUniforms {
 	tColor: IUniformTexture;
@@ -52,11 +56,11 @@ interface BokehUniforms {
 
 	[uniform: string]: IUniform;
 }
-interface CameraUniforms {
-	mNear: IUniformN;
-	mFar: IUniformN;
-	[propName: string]: IUniform;
-}
+// interface CameraUniforms {
+// 	mNear: IUniformN;
+// 	mFar: IUniformN;
+// 	[propName: string]: IUniform;
+// }
 
 interface BokehShaderMaterial extends ShaderMaterial {
 	uniforms: BokehUniforms;
@@ -66,12 +70,11 @@ interface BokehShaderMaterial extends ShaderMaterial {
 	};
 }
 
-const DEBUG_DISPLAY_DEPTH = false;
 export class BokehPass2 {
-	private _coreScene: CoreScene;
-	private materialDepth: ShaderMaterial;
-	private materialDepthInstance: ShaderMaterial;
-	private _cameraUniforms: CameraUniforms = {mNear: {value: 0}, mFar: {value: 0}};
+	// private _coreScene: CoreScene;
+	private static materialDepth = new MeshDepthMaterial(); //ShaderMaterial;
+	// private materialDepthInstance: ShaderMaterial;
+	// private _cameraUniforms: CameraUniforms = {mNear: {value: 0}, mFar: {value: 0}};
 	// pass attributes
 	public enabled: boolean = true;
 	public needsSwap: boolean = true;
@@ -86,6 +89,7 @@ export class BokehPass2 {
 	public bokehMaterial: BokehShaderMaterial;
 	private _quad: Mesh;
 	public clearColor = new Color(1, 1, 1);
+	public displayDepth = false;
 
 	constructor(
 		private _depthIfFieldNode: DepthOfFieldPostNode,
@@ -93,7 +97,7 @@ export class BokehPass2 {
 		private _camera: PerspectiveCamera,
 		private _resolution: Vector2
 	) {
-		this._coreScene = new CoreScene(this._scene);
+		// this._coreScene = new CoreScene(this._scene);
 		const shaderSettings = {
 			rings: 3,
 			samples: 4,
@@ -147,18 +151,18 @@ export class BokehPass2 {
 			console.error('BokehPass relies on BokehDepthShader');
 		}
 
-		this.materialDepth = new ShaderMaterial({
-			uniforms: depthShader.uniforms,
-			vertexShader: depthShader.vertexShader,
-			fragmentShader: depthShader.fragmentShader,
-		});
+		// this.materialDepth = new ShaderMaterial({
+		// 	uniforms: depthShader.uniforms,
+		// 	vertexShader: depthShader.vertexShader,
+		// 	fragmentShader: depthShader.fragmentShader,
+		// });
 
 		// add a shader similar to this.materialDepth, but that works with instances
-		this.materialDepthInstance = new ShaderMaterial({
-			uniforms: depthShader.uniforms,
-			vertexShader: DepthInstanceVertex,
-			fragmentShader: depthShader.fragmentShader,
-		});
+		// this.materialDepthInstance = new ShaderMaterial({
+		// 	uniforms: depthShader.uniforms,
+		// 	vertexShader: DepthInstanceVertex,
+		// 	fragmentShader: depthShader.fragmentShader,
+		// });
 
 		this.updateCameraUniformsWithNode(this._depthIfFieldNode, this._camera);
 	}
@@ -192,34 +196,106 @@ export class BokehPass2 {
 		renderer.render(this._scene, this._camera);
 		renderer.setClearColor(0x000000); // cancels the bg color
 
-		this._removeTransformControlsFromScene();
-
-		// render depth into texture
-		this._coreScene.withOverridenMaterial(
-			this.materialDepth,
-			this.materialDepthInstance,
-			this._cameraUniforms,
-			() => {
-				if (DEBUG_DISPLAY_DEPTH) {
+		this._withRemovedTransformControls(() => {
+			// render depth into texture
+			// this._coreScene.withOverridenMaterial(
+			// 	this.materialDepth,
+			// 	this.materialDepthInstance,
+			// 	this._cameraUniforms,
+			// 	() => {
+			// 		if (this.displayDepth) {
+			// 			renderer.setRenderTarget(null);
+			// 		} else {
+			// 			renderer.setRenderTarget(this._rtTextureDepth);
+			// 		}
+			// 		renderer.clear();
+			// 		renderer.render(this._scene, this._camera);
+			// 	}
+			// );
+			BokehPass2.updateObjectsWithDepthMaterial(this._scene, () => {
+				if (this.displayDepth) {
 					renderer.setRenderTarget(null);
 				} else {
 					renderer.setRenderTarget(this._rtTextureDepth);
 				}
 				renderer.clear();
 				renderer.render(this._scene, this._camera);
+			});
+			// render bokeh composite
+
+			if (!this.displayDepth) {
+				renderer.setRenderTarget(null);
+				renderer.clear();
+				renderer.render(this._processingScene, this._processingCamera);
 			}
-		);
-		// render bokeh composite
-
-		if (!DEBUG_DISPLAY_DEPTH) {
-			renderer.setRenderTarget(null);
-			renderer.clear();
-			renderer.render(this._processingScene, this._processingCamera);
-		}
-
-		this._restoreTransformControls();
+		});
 
 		renderer.setClearColor(this._prevClearColor);
+	}
+
+	private static _originalMaterialByObjectId: Map<Mesh, Material | Material[]> = new Map();
+	static updateObjectsWithDepthMaterial(scene: Scene, callback: () => void) {
+		// let assignedMaterial: MaterialWithUniforms;
+		// this._originalMaterialByObjectId.clear()
+
+		scene.traverse((object3d: Object3D) => {
+			const object = object3d as ObjectWithCustomMaterials;
+			if (object.material) {
+				const geometry = object.geometry as BufferGeometry;
+				if (geometry) {
+					const customMaterial = object.customDepthDOFMaterial || this.materialDepth;
+					// if (customMaterial) {
+					this._originalMaterialByObjectId.set(object as Mesh, object.material);
+					object.material = customMaterial;
+					// assignedMaterial = customMaterial as MaterialWithUniforms;
+					// if (assignedMaterial.uniforms) {
+					// 	for (let k of Object.keys(uniforms)) {
+					// 		assignedMaterial.uniforms[k].value = uniforms[k].value;
+					// 	}
+					// }
+					// }
+					// } else {
+					// 	if (CoreGeometry.markedAsInstance(geometry)) {
+					// 		assignedMaterial = instanceMaterial as MaterialWithUniforms;
+					// 	} else {
+					// 		assignedMaterial = baseMaterial as MaterialWithUniforms;
+					// 	}
+					// }
+
+					// if (assignedMaterial) {
+					// 	this._originalMaterialByObjectId.set(object.uuid, object.material);
+					// 	object.material = assignedMaterial;
+					// }
+
+					// if( CoreGeometry.markedAsInstance(geometry) ){
+					// 	object.material = instance_material
+					// } else {
+					// 	object.material = base_material
+					// }
+				}
+			}
+		});
+
+		callback();
+
+		this._originalMaterialByObjectId.forEach((material, object) => {
+			object.material = material;
+		});
+
+		// this._scene.traverse((object3d: Object3D) => {
+		// 	const object = object3d as Mesh;
+		// 	if (object.material) {
+		// 		const geometry = object.geometry;
+		// 		if (geometry) {
+		// 			const mat = this._originalMaterialByObjectId.get(object.uuid);
+		// 			if (mat) {
+		// 				object.material = mat;
+		// 			}
+		// 		}
+		// 	}
+		// });
+
+		this._originalMaterialByObjectId.clear();
 	}
 
 	updateCameraUniformsWithNode(node: DepthOfFieldPostNode, camera: PerspectiveCamera) {
@@ -234,49 +310,51 @@ export class BokehPass2 {
 		this.bokehUniforms['focalDepth'].value = ldistance; //this._param_focal_depth
 
 		// depth materials
-		this._cameraUniforms = {
-			mNear: {value: camera.near},
-			mFar: {value: camera.far},
-		};
-		for (let material of [this.materialDepth, this.materialDepthInstance]) {
-			material.uniforms['mNear'].value = this._cameraUniforms['mNear'].value;
-			material.uniforms['mFar'].value = this._cameraUniforms['mFar'].value;
-		}
+		// this._cameraUniforms = {
+		// 	mNear: {value: camera.near},
+		// 	mFar: {value: camera.far},
+		// };
+		// for (let material of [this.materialDepth, this.materialDepthInstance]) {
+		// 	material.uniforms['mNear'].value = this._cameraUniforms['mNear'].value;
+		// 	material.uniforms['mFar'].value = this._cameraUniforms['mFar'].value;
+		// }
 	}
 
 	// private _hiddenObjects: Set<Object3D> = new Set();
 	private _previousParent: Map<Object3D, Object3D> = new Map();
 	// private _previousMatrixAutoUpdate: WeakMap<Object3D, boolean> = new WeakMap();
-	private _removeTransformControlsFromScene() {
-		// this._hiddenObjects.clear();
-		this._coreScene.scene().traverse((object) => {
+	private _withRemovedTransformControls(callback: () => void) {
+		this._scene.traverse((object) => {
 			if (object instanceof TransformControls) {
 				const parent = object.parent;
 				if (parent) {
 					this._previousParent.set(object, parent);
 				}
-				// this._hiddenObjects.add(object);
-				// this._previousMatrixAutoUpdate.set(object, object.matrixAutoUpdate);
-				// object.visible = false;
-				// object.matrixAutoUpdate = false;
 			}
 		});
 		this._previousParent.forEach((parent, object) => {
 			parent.remove(object);
 		});
-	}
-	private _restoreTransformControls() {
+
+		callback();
+
 		this._previousParent.forEach((parent, object) => {
 			parent.add(object);
 		});
-
-		// this._hiddenObjects.forEach((object) => {
-		// 	object.visible = true;
-		// 	const previousMatrixAutoUpdate = this._previousMatrixAutoUpdate.get(object);
-		// 	if (previousMatrixAutoUpdate != null) {
-		// 		object.matrixAutoUpdate = previousMatrixAutoUpdate;
-		// 	}
-		// });
 		this._previousParent.clear();
 	}
+
+	// private _removeTransformControlsFromScene() {
+	// }
+	// private _restoreTransformControls() {
+
+	// 	// this._hiddenObjects.forEach((object) => {
+	// 	// 	object.visible = true;
+	// 	// 	const previousMatrixAutoUpdate = this._previousMatrixAutoUpdate.get(object);
+	// 	// 	if (previousMatrixAutoUpdate != null) {
+	// 	// 		object.matrixAutoUpdate = previousMatrixAutoUpdate;
+	// 	// 	}
+	// 	// });
+	// 	this._previousParent.clear();
+	// }
 }

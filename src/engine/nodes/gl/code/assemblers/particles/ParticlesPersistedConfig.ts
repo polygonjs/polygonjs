@@ -1,9 +1,8 @@
-import {BasePersistedConfig} from '../../../../utils/PersistedConfig';
+import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
 import {ParticlesSystemGpuSopNode} from '../../../../sop/ParticlesSystemGpu';
 import {TextureAllocationsController, TextureAllocationsControllerData} from '../../utils/TextureAllocationsController';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Poly} from '../../../../../Poly';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 
 export interface PersistedConfigBaseParticlesData {
@@ -20,7 +19,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 		super(node);
 	}
 	override toJSON(): PersistedConfigBaseParticlesData | undefined {
-		const assemblerController = this.node.assemblerController;
+		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
 		}
@@ -56,10 +55,12 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 		};
 	}
 	override load(data: PersistedConfigBaseParticlesData) {
-		if (!Poly.playerMode()) {
+		const assemblerController = this.node.assemblerController();
+		if (assemblerController) {
 			return;
 		}
 		this._loaded_data = data;
+		console.log('particles data', data);
 		//
 		// for now, unlike the texture and material persistedconfigs,
 		// the callbacks are created in the GPUController

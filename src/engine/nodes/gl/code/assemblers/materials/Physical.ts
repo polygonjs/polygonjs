@@ -1,6 +1,7 @@
 import {ShaderAssemblerStandard} from './Standard';
 import originalTransmissionFragment from 'three/src/renderers/shaders/ShaderChunk/transmission_fragment.glsl';
 import {AssemblerControllerNode} from '../../Controller';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 function addPolyTransmission(fragment: string) {
 	const lines = fragment.split('\n');
 	let cmptr = 0;
@@ -36,5 +37,30 @@ export class ShaderAssemblerPhysical extends ShaderAssemblerStandard {
 			addPolyTransmission(originalTransmissionFragment)
 		);
 		return fragmentShader;
+	}
+	override createMaterial() {
+		// const template_shader = this.templateShader();
+
+		// const options = {
+		// 	lights: true,
+		// 	extensions: {
+		// 		derivatives: true,
+		// 	},
+
+		// 	uniforms: UniformsUtils.clone(template_shader.uniforms),
+		// 	vertexShader: template_shader.vertexShader,
+		// 	fragmentShader: template_shader.fragmentShader,
+		// };
+
+		// const material = new ShaderMaterial(options);
+		const material = new MeshPhysicalMaterial() as any;
+
+		// if (this.isPhysical()) {
+		// 	material.defines.PHYSICAL = true;
+		// }
+
+		this._addCustomMaterials(material);
+
+		return material;
 	}
 }

@@ -22,6 +22,7 @@ import {MeshStandardBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshS
 import {MeshPhongBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshPhongBuilder';
 import {MeshLambertBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshLambertBuilder';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
+import {RendererUtils} from '../../../helpers/RendererUtils';
 
 function createMeshBasicBuilder(parentNode: MaterialsNetworkSopNode): MeshBasicBuilderMatNode {
 	const meshBasicBuilder1 = parentNode.createNode('meshBasicBuilder');
@@ -671,63 +672,85 @@ function createPointsBuilder(parentNode: MaterialsNetworkSopNode): PointsBuilder
 }
 
 QUnit.test('gl VaryingWrite works inside a meshBasicBuilder', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
 	const matNode = createMeshBasicBuilder(MAT);
-	await matNode.compute();
-	assert.equal(matNode.material.vertexShader, MESH_BASIC_BUILDER_VERTEX);
-	assert.equal(matNode.material.fragmentShader, MESH_BASIC_BUILDER_FRAGMENT);
+	await RendererUtils.compile(matNode, renderer);
+	const material = matNode.material;
+	assert.equal(material.vertexShader, MESH_BASIC_BUILDER_VERTEX);
+	assert.equal(material.fragmentShader, MESH_BASIC_BUILDER_FRAGMENT);
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('gl VaryingWrite works inside a meshLambertBuilder', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
 	const matNode = createMeshLambertBuilder(MAT);
-	await matNode.compute();
-	assert.equal(matNode.material.vertexShader, MESH_LAMBERT_BUILDER_VERTEX);
-	assert.equal(matNode.material.fragmentShader, MESH_LAMBERT_BUILDER_FRAGMENT);
+	await RendererUtils.compile(matNode, renderer);
+	const material = matNode.material;
+	assert.equal(material.vertexShader, MESH_LAMBERT_BUILDER_VERTEX);
+	assert.equal(material.fragmentShader, MESH_LAMBERT_BUILDER_FRAGMENT);
+	RendererUtils.dispose();
 });
 QUnit.test('gl VaryingWrite works inside a meshPhongBuilder', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
 	const matNode = createMeshPhongBuilder(MAT);
-	await matNode.compute();
-	assert.equal(matNode.material.vertexShader, MESH_PHONG_BUILDER_VERTEX);
-	assert.equal(matNode.material.fragmentShader, MESH_PHONG_BUILDER_FRAGMENT);
+	await RendererUtils.compile(matNode, renderer);
+	const material = matNode.material;
+	assert.equal(material.vertexShader, MESH_PHONG_BUILDER_VERTEX);
+	assert.equal(material.fragmentShader, MESH_PHONG_BUILDER_FRAGMENT);
+	RendererUtils.dispose();
 });
 
 QUnit.test('gl VaryingWrite works inside a meshStandardBuilder', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
 	const matNode = createMeshStandardBuilder(MAT);
-	await matNode.compute();
-	assert.equal(matNode.material.vertexShader, MESH_STANDARD_BUILDER_VERTEX);
-	assert.equal(matNode.material.fragmentShader, MESH_STANDARD_BUILDER_FRAGMENT);
+	await RendererUtils.compile(matNode, renderer);
+	const material = matNode.material;
+	assert.equal(material.vertexShader, MESH_STANDARD_BUILDER_VERTEX);
+	assert.equal(material.fragmentShader, MESH_STANDARD_BUILDER_FRAGMENT);
+	RendererUtils.dispose();
 });
 
 QUnit.test('gl VaryingWrite works inside a meshPhysicalBuilder', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
 	const matNode = createMeshPhysicalBuilder(MAT);
-	await matNode.compute();
-	assert.equal(matNode.material.vertexShader, MESH_PHYSICAL_BUILDER_VERTEX);
-	assert.equal(matNode.material.fragmentShader, MESH_PHYSICAL_BUILDER_FRAGMENT);
+	await RendererUtils.compile(matNode, renderer);
+	const material = matNode.material;
+	assert.equal(material.vertexShader, MESH_PHYSICAL_BUILDER_VERTEX);
+	assert.equal(material.fragmentShader, MESH_PHYSICAL_BUILDER_FRAGMENT);
+	RendererUtils.dispose();
 });
 
 QUnit.test('gl VaryingWrite works inside a lineBasicBuilder', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
 	const lineBuilder1 = createLineBuilder(MAT);
-	await lineBuilder1.compute();
-	assert.equal(lineBuilder1.material.vertexShader, LINE_BASIC_BUILDER_VERTEX);
-	assert.equal(lineBuilder1.material.fragmentShader, LINE_BASIC_BUILDER_FRAGMENT);
+	await RendererUtils.compile(lineBuilder1, renderer);
+	const material = lineBuilder1.material;
+	assert.equal(material.vertexShader, LINE_BASIC_BUILDER_VERTEX);
+	assert.equal(material.fragmentShader, LINE_BASIC_BUILDER_FRAGMENT);
+	RendererUtils.dispose();
 });
 
 QUnit.test('gl VaryingWrite works inside a pointsBuilder', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
 	const pointsBuilder1 = createPointsBuilder(MAT);
-	await pointsBuilder1.compute();
-	assert.equal(pointsBuilder1.material.vertexShader, POINTS_BUILDER_VERTEX);
-	assert.equal(pointsBuilder1.material.fragmentShader, POINTS_BUILDER_FRAGMENT);
+	await RendererUtils.compile(pointsBuilder1, renderer);
+	const material = pointsBuilder1.material;
+	assert.equal(material.vertexShader, POINTS_BUILDER_VERTEX);
+	assert.equal(material.fragmentShader, POINTS_BUILDER_FRAGMENT);
+	RendererUtils.dispose();
 });

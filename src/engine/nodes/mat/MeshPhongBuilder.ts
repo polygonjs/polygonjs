@@ -30,9 +30,20 @@ import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureN
 import {TextureSpecularMapController, SpecularMapParamConfig} from './utils/TextureSpecularMapController';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {UpdateOptions} from './utils/_BaseTextureController';
+import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
+import {Material} from 'three/src/materials/Material';
+import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
+interface MeshPhongBuilderMaterial extends MeshPhongMaterial {
+	vertexShader: string;
+	fragmentShader: string;
+	uniforms: IUniforms;
+	customMaterials: {
+		[key in CustomMaterialName]?: Material;
+	};
+}
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
@@ -88,7 +99,11 @@ class MeshPhongMatParamsConfig extends PCSSParamConfig(
 ) {}
 const ParamsConfig = new MeshPhongMatParamsConfig();
 
-export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssemblerPhong, MeshPhongMatParamsConfig> {
+export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<
+	MeshPhongBuilderMaterial,
+	ShaderAssemblerPhong,
+	MeshPhongMatParamsConfig
+> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshPhongBuilder';
@@ -96,7 +111,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<ShaderAssembler
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_PHONG> {
 		return AssemblerName.GL_MESH_PHONG;
 	}
-	protected _create_assembler_controller() {
+	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	readonly controllers: Controllers = {

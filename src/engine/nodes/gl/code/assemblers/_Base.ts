@@ -1,5 +1,4 @@
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Vector2} from 'three/src/math/Vector2';
 import {LineType} from '../utils/LineType';
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {VariableConfig} from '../configs/VariableConfig';
@@ -97,10 +96,10 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	}
 
 	get globals_handler(): GlobalsBaseController | undefined {
-		return this.currentGlParentNode().assemblerController?.globals_handler;
+		return this.currentGlParentNode().assemblerController()?.globals_handler;
 	}
 	compileAllowed(): boolean {
-		return this.currentGlParentNode().assemblerController?.globals_handler != null;
+		return this.currentGlParentNode().assemblerController()?.globals_handler != null;
 	}
 	shaders_by_name() {
 		return this._shaders_by_name;
@@ -130,23 +129,24 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return undefined;
 	}
 
-	protected addUniforms(current_uniforms: IUniforms) {
-		for (let param_config of this.param_configs()) {
-			current_uniforms[param_config.uniformName()] = param_config.uniform();
-		}
+	// protected addUniforms(uniforms: IUniforms) {
 
-		if (this.uniformsTimeDependent()) {
-			current_uniforms['time'] = {
-				// type: '1f',
-				value: this.currentGlParentNode().scene().time(),
-			};
-		}
-		if (this.uniforms_resolution_dependent()) {
-			current_uniforms['resolution'] = {
-				value: new Vector2(1000, 1000),
-			};
-		}
-	}
+	// 	for (let param_config of this.param_configs()) {
+	// 		uniforms[param_config.uniformName()] = param_config.uniform();
+	// 	}
+
+	// 	if (this.uniformsTimeDependent()) {
+	// 		uniforms[UniformName.TIME] = uniforms[UniformName.TIME] || {
+	// 			// type: '1f',
+	// 			value: this.currentGlParentNode().scene().time(),
+	// 		};
+	// 	}
+	// 	if (this.uniformsResolutionDependent()) {
+	// 		uniforms[UniformName.RESOLUTION] = uniforms[UniformName.RESOLUTION] || {
+	// 			value: new Vector2(1000, 1000),
+	// 		};
+	// 	}
+	// }
 
 	//
 	//
@@ -410,10 +410,10 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	protected _reset_uniforms_resolution_dependency() {
 		this._uniforms_resolution_dependent = false;
 	}
-	set_uniforms_resolution_dependent() {
+	setUniformsResolutionDependent() {
 		this._uniforms_resolution_dependent = true;
 	}
-	uniforms_resolution_dependent(): boolean {
+	uniformsResolutionDependent(): boolean {
 		return this._uniforms_resolution_dependent;
 	}
 
@@ -422,14 +422,14 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// TEMPLATE HOOKS
 	//
 	//
-	protected insert_define_after(shader_name: ShaderName): string | undefined {
-		return INSERT_DEFINE_AFTER_MAP.get(shader_name);
+	protected insertDefineAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_DEFINE_AFTER_MAP.get(shaderName);
 	}
-	protected insert_body_after(shader_name: ShaderName): string | undefined {
-		return INSERT_BODY_AFTER_MAP.get(shader_name);
+	protected insertBodyAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_BODY_AFTER_MAP.get(shaderName);
 	}
-	protected lines_to_remove(shader_name: ShaderName): string[] | undefined {
-		return LINES_TO_REMOVE_MAP.get(shader_name);
+	protected linesToRemove(shaderName: ShaderName): string[] | undefined {
+		return LINES_TO_REMOVE_MAP.get(shaderName);
 	}
 
 	//
@@ -453,9 +453,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			// `#define FRAME_RANGE_END ${ThreeToGl.float(scene.time_controller.frame_range[1])}`,
 		];
 
-		const line_before_define = this.insert_define_after(shader_name);
-		const line_before_body = this.insert_body_after(shader_name);
-		const lines_to_remove = this.lines_to_remove(shader_name);
+		const line_before_define = this.insertDefineAfter(shader_name);
+		const line_before_body = this.insertBodyAfter(shader_name);
+		const linesToRemove = this.linesToRemove(shader_name);
 		let line_before_define_found = false;
 		let lineBeforeBodyFoundOnPreviousLine = false;
 		let lineBeforeBodyFound = false;
@@ -480,8 +480,8 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 
 			let line_remove_required = false;
 
-			if (lines_to_remove) {
-				for (let line_to_remove of lines_to_remove) {
+			if (linesToRemove) {
+				for (let line_to_remove of linesToRemove) {
 					if (template_line.indexOf(line_to_remove) >= 0) {
 						line_remove_required = true;
 					}

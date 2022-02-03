@@ -6,7 +6,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {LinesController} from './code/utils/LinesController';
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
-import {JsParamConfig} from './code/utils/ParamConfig';
+import {JsParamConfig} from './code/utils/JsParamConfig';
 import {ParamType} from '../../poly/ParamType';
 // import {BaseGlConnectionPoint} from '../utils/io/connections/Gl';
 // import {IOController} from '../utils/io/IOController';

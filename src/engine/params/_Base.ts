@@ -28,7 +28,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _default_value!: ParamInitValuesTypeMap[T];
 	protected _raw_input!: ParamInitValuesTypeMap[T];
 	protected _value!: ParamValuesTypeMap[T];
-	protected _node: BaseNodeType;
+	protected _node: BaseNodeType | undefined;
 	protected _parent_param: TypedMultipleParam<any> | undefined;
 	protected _components: FloatParam[] | undefined;
 	protected _computeResolves: ComputeCallback[] | undefined;
@@ -37,9 +37,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get options(): OptionsController {
 		return (this._options = this._options || new OptionsController(this));
 	}
-	private _emit_controller: EmitController = new EmitController(this);
+	private _emitController: EmitController = new EmitController(this);
 	get emitController(): EmitController {
-		return (this._emit_controller = this._emit_controller || new EmitController(this));
+		return (this._emitController = this._emitController || new EmitController(this));
 	}
 	protected _expression_controller: ExpressionController<T> | undefined;
 	get expressionController(): ExpressionController<T> | undefined {
@@ -88,6 +88,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		this._expression_controller?.dispose();
 		super.dispose();
 		this._options?.dispose();
+		this._node = undefined;
+		this._parent_param = undefined;
 	}
 	protected _initializeParam() {}
 	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))
@@ -261,7 +263,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		}
 	}
 	get node() {
-		return this._node;
+		return this._node!;
 	}
 	parent() {
 		return this.node;
@@ -282,7 +284,10 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return this.node?.path() + '/' + this.name();
 	}
 	pathRelativeTo(node: BaseNodeType): string {
-		const nodeRelativePath = CoreWalker.relativePath(node, this.node);
+		if (!this._node) {
+			return this.name();
+		}
+		const nodeRelativePath = CoreWalker.relativePath(node, this._node);
 
 		if (nodeRelativePath.length > 0) {
 			return CoreWalker.sanitizePath(`${nodeRelativePath}${CoreWalker.SEPARATOR}${this.name()}`);

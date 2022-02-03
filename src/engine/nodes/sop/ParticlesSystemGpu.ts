@@ -23,7 +23,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
-import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/RenderController';
+import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/ParticlesSystemGpuRenderController';
 import {
 	ParticlesSystemGpuComputeController,
 	PARTICLE_DATA_TYPES,
@@ -33,7 +33,7 @@ import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/PersistedConfig';
+import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/ParticlesPersistedConfig';
 import {TimeController} from '../../scene/utils/TimeController';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
@@ -97,14 +97,14 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		console.log(message);
 	}
 
-	get assemblerController() {
-		return this._assembler_controller;
+	assemblerController() {
+		return this._assemblerController;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_PARTICLES> {
 		return AssemblerName.GL_PARTICLES;
 	}
-	protected _assembler_controller = this._create_assembler_controller();
-	private _create_assembler_controller() {
+	protected _assemblerController = this._createAssemblerController();
+	private _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	public override readonly persisted_config: ParticlesPersistedConfig = new ParticlesPersistedConfig(this);
@@ -166,7 +166,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 	override childrenAllowed() {
-		if (this.assemblerController) {
+		if (this.assemblerController()) {
 			return super.childrenAllowed();
 		}
 		this.scene().markAsReadOnly(this);
@@ -221,7 +221,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 	}
 	async compileIfRequired() {
-		if (this.assemblerController?.compileRequired()) {
+		if (this.assemblerController()?.compileRequired()) {
 			this.debugMessage('particles:this.run_assembler() START');
 			try {
 				await this.run_assembler();
@@ -233,7 +233,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 	}
 	async run_assembler() {
-		const assemblerController = this.assemblerController;
+		const assemblerController = this.assemblerController();
 		if (!assemblerController) {
 			return;
 		}

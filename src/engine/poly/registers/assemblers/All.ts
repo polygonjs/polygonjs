@@ -10,6 +10,8 @@ import {ShaderAssemblerLine} from '../../../nodes/gl/code/assemblers/materials/L
 import {ShaderAssemblerParticles} from '../../../nodes/gl/code/assemblers/particles/Particles';
 import {ShaderAssemblerTexture} from '../../../nodes/gl/code/assemblers/textures/Texture';
 import {ShaderAssemblerVolume} from '../../../nodes/gl/code/assemblers/materials/Volume';
+import {ShaderAssemblerCustomMeshDepthForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
+import {ShaderAssemblerCustomMeshDistanceForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
 
 export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	[AssemblerName.GL_MESH_BASIC]: {
@@ -31,6 +33,14 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	[AssemblerName.GL_MESH_PHYSICAL]: {
 		controller: GlAssemblerController<ShaderAssemblerPhysical>;
 		assembler: typeof ShaderAssemblerPhysical;
+	};
+	[AssemblerName.GL_MESH_DEPTH]: {
+		controller: GlAssemblerController<ShaderAssemblerCustomMeshDepthForRender>;
+		assembler: typeof ShaderAssemblerCustomMeshDepthForRender;
+	};
+	[AssemblerName.GL_MESH_DISTANCE]: {
+		controller: GlAssemblerController<ShaderAssemblerCustomMeshDistanceForRender>;
+		assembler: typeof ShaderAssemblerCustomMeshDistanceForRender;
 	};
 	[AssemblerName.GL_PARTICLES]: {
 		controller: GlAssemblerController<ShaderAssemblerParticles>;
@@ -70,6 +80,16 @@ export class AllAssemblersRegister {
 			AssemblerName.GL_MESH_PHYSICAL,
 			GlAssemblerController,
 			ShaderAssemblerPhysical
+		);
+		poly.assemblersRegister.register(
+			AssemblerName.GL_MESH_DEPTH,
+			GlAssemblerController,
+			ShaderAssemblerCustomMeshDepthForRender
+		);
+		poly.assemblersRegister.register(
+			AssemblerName.GL_MESH_DISTANCE,
+			GlAssemblerController,
+			ShaderAssemblerCustomMeshDistanceForRender
 		);
 		poly.assemblersRegister.register(AssemblerName.GL_PARTICLES, GlAssemblerController, ShaderAssemblerParticles);
 		poly.assemblersRegister.register(AssemblerName.GL_POINTS, GlAssemblerController, ShaderAssemblerPoints);

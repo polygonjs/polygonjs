@@ -53,6 +53,8 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 
 		this.material.color.copy(this.pv.color);
 		this.material.linewidth = this.pv.lineWidth;
+		this.material.needsUpdate = true;
+		console.log(this.material);
 
 		this.setMaterial(this.material);
 	}

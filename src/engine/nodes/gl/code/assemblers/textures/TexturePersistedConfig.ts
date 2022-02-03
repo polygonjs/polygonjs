@@ -1,7 +1,7 @@
-import {BasePersistedConfig} from '../../../../utils/PersistedConfig';
+import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {BuilderCopNode} from '../../../../cop/Builder';
-import {GlParamConfig} from '../../utils/ParamConfig';
+import {GlParamConfig} from '../../utils/GLParamConfig';
 import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 
@@ -20,7 +20,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 		super(node);
 	}
 	override toJSON(): PersistedConfigBaseTextureData | undefined {
-		const assemblerController = this.node.assemblerController;
+		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
 		}
@@ -37,12 +37,17 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 			uniforms: this.node.texture_material.uniforms,
 			param_uniform_pairs: param_uniform_pairs,
 			uniforms_time_dependent: assemblerController.assembler.uniformsTimeDependent(),
-			uniforms_resolution_dependent: assemblerController.assembler.uniforms_resolution_dependent(),
+			uniforms_resolution_dependent: assemblerController.assembler.uniformsResolutionDependent(),
 		};
 
 		return data;
 	}
 	override load(data: PersistedConfigBaseTextureData) {
+		const assemblerController = this.node.assemblerController();
+		if (assemblerController) {
+			return;
+		}
+
 		this.node.texture_material.fragmentShader = data.fragment_shader;
 		this.node.texture_material.uniforms = data.uniforms;
 

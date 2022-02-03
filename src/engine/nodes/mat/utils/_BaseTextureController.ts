@@ -11,7 +11,11 @@ import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {IUniforms, ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
+import {
+	IUniforms,
+	MaterialWithCustomMaterials,
+	ShaderMaterialWithCustomMaterials,
+} from '../../../../core/geometry/Material';
 import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
 import {Poly} from '../../../Poly';
 import {isBooleanTrue} from '../../../../core/Type';
@@ -155,6 +159,9 @@ export class BaseTextureMapController extends BaseController {
 		mat_attrib_name: keyof SubType<O, Texture | null>,
 		texture: Texture
 	) {
+		if (!uniforms) {
+			return;
+		}
 		const has_texture = uniforms[mat_attrib_name] != null && uniforms[mat_attrib_name].value != null;
 		let new_texture_is_different = false;
 		if (has_texture) {
@@ -190,7 +197,7 @@ export class BaseTextureMapController extends BaseController {
 			if (customMaterials) {
 				const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
 				for (let customName of customNames) {
-					const customMaterial = customMaterials[customName];
+					const customMaterial = customMaterials[customName] as ShaderMaterial;
 					if (customMaterial) {
 						this._apply_texture_on_uniforms(
 							customMaterial,
@@ -208,6 +215,9 @@ export class BaseTextureMapController extends BaseController {
 		uniforms: U,
 		mat_attrib_name: keyof SubType<U, Texture | null>
 	) {
+		if (!uniforms) {
+			return;
+		}
 		if (!uniforms[mat_attrib_name]) {
 			Poly.warn(`'${mat_attrib_name}' uniform not found. existing uniforms are:`, Object.keys(uniforms).sort());
 			return;
@@ -223,11 +233,11 @@ export class BaseTextureMapController extends BaseController {
 			this._remove_texture_from_material(material, material, mat_attrib_name as any);
 			material.needsUpdate = true;
 
-			const customMaterials = (material as ShaderMaterialWithCustomMaterials).customMaterials;
+			const customMaterials = (material as MaterialWithCustomMaterials).customMaterials;
 			if (customMaterials) {
 				const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
 				for (let customName of customNames) {
-					const customMaterial = customMaterials[customName];
+					const customMaterial = customMaterials[customName] as ShaderMaterial;
 					if (customMaterial) {
 						this._remove_texture_from_uniforms(
 							customMaterial,

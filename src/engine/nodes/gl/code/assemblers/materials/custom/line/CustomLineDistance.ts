@@ -3,12 +3,9 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {RGBADepthPacking} from 'three/src/constants';
 import {BasicDepthPacking} from 'three/src/constants';
-
 import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
-
 import TemplateVertex from '../../../../templates/custom/line/CustomLineDistance.vert.glsl';
-import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepth.frag.glsl';
-
+import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDistance.frag.glsl';
 import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
 
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([
@@ -24,8 +21,6 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 	[ShaderName.FRAGMENT, []],
 ]);
 export class ShaderAssemblerCustomLineDistance extends ShaderAssemblerMaterial {
-	// _color_declaration() { return 'vec4 diffuseColor' }
-	// _template_shader(){ return ShaderLib.standard }
 	override templateShader() {
 		const template = ShaderLib.distanceRGBA;
 
@@ -37,13 +32,13 @@ export class ShaderAssemblerCustomLineDistance extends ShaderAssemblerMaterial {
 			uniforms: uniforms,
 		};
 	}
-	protected override insert_define_after(shader_name: ShaderName) {
+	protected override insertDefineAfter(shader_name: ShaderName) {
 		return INSERT_DEFINE_AFTER_MAP.get(shader_name);
 	}
-	protected override insert_body_after(shader_name: ShaderName) {
+	protected override insertBodyAfter(shader_name: ShaderName) {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
-	protected override lines_to_remove(shader_name: ShaderName) {
+	protected override linesToRemove(shader_name: ShaderName) {
 		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
 

@@ -25,7 +25,7 @@ class TextureEmissiveMaterial extends Material {
 	emissiveMap!: Texture | null;
 	emissiveIntensity!: number;
 }
-type CurrentMaterial = TextureEmissiveMaterial | ShaderMaterial;
+type CurrentMaterial = TextureEmissiveMaterial | Material;
 class TextureEmissiveMapParamsConfig extends EmissiveMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	emissiveMap: TextureEmissiveMapController;
@@ -46,8 +46,10 @@ export class TextureEmissiveMapController extends BaseTextureMapController {
 		this._update(this.node.material, 'emissiveMap', this.node.p.useEmissiveMap, this.node.p.emissiveMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.emissive.value.copy(this.node.pv.emissive);
-			// mat.uniforms.emissiveIntensity.value = this.node.pv.emissiveIntensity; // not found in uniforms
+			if (mat.uniforms) {
+				mat.uniforms.emissive.value.copy(this.node.pv.emissive);
+				// mat.uniforms.emissiveIntensity.value = this.node.pv.emissiveIntensity; // not found in uniforms
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as TextureEmissiveMaterial;

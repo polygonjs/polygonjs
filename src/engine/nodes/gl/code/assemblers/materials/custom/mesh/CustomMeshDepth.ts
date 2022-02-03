@@ -1,49 +1,61 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {RGBADepthPacking, BasicDepthPacking} from 'three/src/constants';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
-import {RGBADepthPacking} from 'three/src/constants';
-import {BasicDepthPacking} from 'three/src/constants';
-
 import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
 import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
-
 import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepth.frag.glsl';
+import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
+import {AssemblerControllerNode} from '../../../../Controller';
+import {includeSSSDeclarations} from '../../common/SSS';
 
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	[ShaderName.VERTEX, '#include <begin_vertex>'],
-	[ShaderName.FRAGMENT, '// INSERT BODY'],
+	[ShaderName.FRAGMENT, '#include <alphamap_fragment>'],
 ]);
 
 export class ShaderAssemblerCustomMeshDepth extends ShaderAssemblerMaterial {
-	// _color_declaration() { return 'vec4 diffuseColor' }
-	// _template_shader(){ return ShaderLib.standard }
+	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
+		super(_gl_parent_node);
+
+		this._addFilterFragmentShaderCallback('MeshStandardBuilderMatNode', includeSSSDeclarations);
+	}
+
 	override templateShader() {
 		const template = ShaderLib.depth;
 		return {
-			vertexShader: template.vertexShader, //TemplateVertex,
+			vertexShader: template.vertexShader,
 			fragmentShader: TemplateFragment,
 			uniforms: template.uniforms,
 		};
 	}
-	protected override insert_body_after(shader_name: ShaderName) {
-		return INSERT_BODY_AFTER_MAP.get(shader_name);
+	protected override insertBodyAfter(shaderName: ShaderName) {
+		return INSERT_BODY_AFTER_MAP.get(shaderName);
+	}
+
+	protected depthPacking() {
+		// surprisingly, even though the mesh depth material looks better with
+		// BasicDepthPacking when used to be rendered,
+		// it seems here we need to use RGBADepthPacking
+		// to have proper shadows.
+		// Also, it is even more surprising as the threejs docs mention
+		// from https://threejs.org/docs/?q=mate#api/en/materials/MeshDepthMaterial
+		// "Encoding for depth packing. Default is BasicDepthPacking."
+		//
+		// But the below ShaderAssemblerCustomMeshDepthForRender
+		// which is used in MeshDepthBuilder (which is unlike this assembler is not used for shadow, but for direct render)
+		// uses BasicDepthPacking
+		return RGBADepthPacking;
 	}
 
 	override createMaterial() {
-		const template_shader = this.templateShader();
-		return new ShaderMaterial({
-			// vertexColors: VertexColors,
-			// side: FrontSide,
-			// transparent: true,
-			// fog: true,
-			// lights: true,
-			defines: {
-				DEPTH_PACKING: [RGBADepthPacking, BasicDepthPacking][0],
-			},
+		const material = new MeshDepthMaterial();
 
-			uniforms: UniformsUtils.clone(template_shader.uniforms),
-			vertexShader: template_shader.vertexShader,
-			fragmentShader: template_shader.fragmentShader,
-		});
+		material.depthPacking = this.depthPacking();
+
+		return material;
+	}
+}
+export class ShaderAssemblerCustomMeshDepthForRender extends ShaderAssemblerCustomMeshDepth {
+	protected override depthPacking() {
+		return BasicDepthPacking;
 	}
 }

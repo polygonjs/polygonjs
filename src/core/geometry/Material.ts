@@ -12,19 +12,25 @@ export interface MaterialWithUniforms extends Material {
 	uniforms: IUniforms;
 }
 
-enum CustomMaterialName {
+export enum CustomMaterialName {
 	customDistanceMaterial = 'customDistanceMaterial',
 	customDepthMaterial = 'customDepthMaterial',
 	customDepthDOFMaterial = 'customDepthDOFMaterial',
 }
+
 export interface ObjectWithCustomMaterials extends Mesh {
 	// customDistanceMaterial?: Material;
 	// customDepthMaterial?: Material;
 	customDepthDOFMaterial?: Material;
 }
+export interface MaterialWithCustomMaterials extends Material {
+	customMaterials: {
+		[key in CustomMaterialName]?: Material;
+	};
+}
 export interface ShaderMaterialWithCustomMaterials extends ShaderMaterial {
 	customMaterials: {
-		[key in CustomMaterialName]?: ShaderMaterial;
+		[key in CustomMaterialName]?: Material;
 	};
 }
 export interface MaterialWithSkinning extends Material {
@@ -38,6 +44,9 @@ import {Camera} from 'three/src/cameras/Camera';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Geometry} from '../../modules/three/examples/jsm/deprecated/Geometry';
 import {Group} from 'three/src/objects/Group';
+import {ShaderAssemblerMaterial} from '../../engine/nodes/gl/code/assemblers/materials/_BaseMaterial';
+import {assignUniformViaUserData} from '../../engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {IUniformTexture} from '../../engine/nodes/utils/code/gl/Uniforms';
 
 export type RenderHook = (
 	renderer: WebGLRenderer,
@@ -121,7 +130,7 @@ export class CoreMaterial {
 	}
 
 	static applyCustomMaterials(object: Object3D, material: Material) {
-		const material_with_custom = material as ShaderMaterialWithCustomMaterials;
+		const material_with_custom = material as MaterialWithCustomMaterials;
 		if (material_with_custom.customMaterials) {
 			for (let name of Object.keys(material_with_custom.customMaterials)) {
 				const mat_name = name as CustomMaterialName;
@@ -137,28 +146,61 @@ export class CoreMaterial {
 			// object.material = material.customMaterials.customDistanceMaterial
 		}
 	}
-	static assign_custom_uniforms(mat: Material, uniform_name: string, uniform_value: any) {
-		const material = mat as ShaderMaterialWithCustomMaterials;
-		if (material.customMaterials) {
-			for (let name of Object.keys(material.customMaterials)) {
-				const mat_name = name as CustomMaterialName;
-				const custom_material = material.customMaterials[mat_name];
-				if (custom_material) {
-					custom_material.uniforms[uniform_name].value = uniform_value;
-				}
-			}
+	static assignUniforms(
+		mat: Material,
+		uniformName: string,
+		uniform: IUniformTexture,
+		assembler?: ShaderAssemblerMaterial
+	) {
+		assignUniformViaUserData(mat, uniformName, uniform);
+		if (assembler) {
+			this.assignUniformForOnBeforeCompile(mat, uniformName, uniform, assembler);
 		}
 	}
-	static init_custom_material_uniforms(mat: Material, uniform_name: string, uniform_value: any) {
-		const material = mat as ShaderMaterialWithCustomMaterials;
-		if (material.customMaterials) {
-			for (let name of Object.keys(material.customMaterials)) {
-				const mat_name = name as CustomMaterialName;
-				const custom_material = material.customMaterials[mat_name];
-				if (custom_material) {
-					custom_material.uniforms[uniform_name] = custom_material.uniforms[uniform_name] || uniform_value;
-				}
-			}
-		}
+	// static assignCustomUniforms(
+	// 	assembler: ShaderAssemblerMaterial,
+	// 	mat: Material,
+	// 	uniformName: string,
+	// 	uniform: IUniform
+	// ) {
+	// 	const material = mat as MaterialWithCustomMaterials;
+	// 	if (material.customMaterials) {
+	// 		const matNames = Object.keys(material.customMaterials) as Array<CustomMaterialName>;
+	// 		for (let matName of matNames) {
+	// 			const customMaterial = material.customMaterials[matName];
+	// 			if (customMaterial) {
+	// 				this.assignUniforms(assembler, customMaterial, uniformName, uniform);
+	// 				// const customShaderMaterial = customMaterial as ShaderMaterial;
+	// 				// if (customShaderMaterial.uniforms) {
+	// 				// 	customShaderMaterial.uniforms[uniformName].value = uniformValue;
+	// 				// }
+	// 			}
+	// 		}
+	// 	}
+	// }
+	static assignUniformForOnBeforeCompile(
+		mat: Material,
+		uniformName: string,
+		uniform: IUniformTexture,
+		assembler: ShaderAssemblerMaterial
+	) {
+		assembler.addAdditionalTextureUniforms(uniformName, uniform);
 	}
+
+	// static initCustomMaterialUniforms(mat: Material, uniformName: string, uniformValue: any) {
+	// 	const material = mat as MaterialWithCustomMaterials;
+	// 	if (material.customMaterials) {
+	// 		for (let name of Object.keys(material.customMaterials)) {
+	// 			const mat_name = name as CustomMaterialName;
+	// 			const customMaterial = material.customMaterials[mat_name];
+	// 			if (customMaterial) {
+	// 				const customShaderMaterial = customMaterial as ShaderMaterial;
+	// 				if (customShaderMaterial.uniforms) {
+	// 					customShaderMaterial.uniforms[uniformName] =
+	// 						customShaderMaterial.uniforms[uniformName] || uniformValue;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 }

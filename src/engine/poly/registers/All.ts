@@ -4,6 +4,8 @@ import {AllAssemblersRegister} from './assemblers/All';
 import {AllCamerasRegister} from './cameras/All';
 
 import {Poly} from '../../Poly';
+import {UrlHelper} from '../../../core/UrlHelper';
+
 export class AllRegister {
 	private static _started = false;
 	static async run() {
@@ -14,7 +16,11 @@ export class AllRegister {
 		AllNodesRegister.run(Poly);
 		AllCamerasRegister.run(Poly);
 		AllExpressionsRegister.run(Poly);
-		AllAssemblersRegister.run(Poly);
+
+		const debugAssemblers = UrlHelper.urlParam('assemblers');
+		if (debugAssemblers == null || debugAssemblers == '1') {
+			AllAssemblersRegister.run(Poly);
+		}
 
 		// modules are not registered separately
 		// AllModulesRegister.run(Poly);

@@ -40,7 +40,7 @@ class TextureMetalnessMaterial extends Material {
 	metalnessMap!: Texture | null;
 	metalness!: number;
 }
-type CurrentMaterial = TextureMetalnessMaterial | ShaderMaterial;
+type CurrentMaterial = TextureMetalnessMaterial | Material;
 class TextureMetalnessMapParamsConfig extends MetalnessRoughnessMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
@@ -61,7 +61,9 @@ export class TextureMetalnessRoughnessMapController extends BaseTextureMapContro
 		this._update(this.node.material, 'metalnessMap', this.node.p.useMetalnessMap, this.node.p.metalnessMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.metalness.value = this.node.pv.metalness;
+			if (mat.uniforms) {
+				mat.uniforms.metalness.value = this.node.pv.metalness;
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshStandardMaterial;
@@ -71,7 +73,9 @@ export class TextureMetalnessRoughnessMapController extends BaseTextureMapContro
 		this._update(this.node.material, 'roughnessMap', this.node.p.useRoughnessMap, this.node.p.roughnessMap);
 		if (this._update_options.uniforms) {
 			const mat = this.node.material as ShaderMaterial;
-			mat.uniforms.roughness.value = this.node.pv.roughness;
+			if (mat.uniforms) {
+				mat.uniforms.roughness.value = this.node.pv.roughness;
+			}
 		}
 		if (this._update_options.directParams) {
 			const mat = this.node.material as MeshStandardMaterial;

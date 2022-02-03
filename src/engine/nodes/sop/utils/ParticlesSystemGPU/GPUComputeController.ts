@@ -14,7 +14,7 @@ import {Poly} from '../../../../Poly';
 import {CorePoint} from '../../../../../core/geometry/Point';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsController} from '../../../gl/code/utils/TextureAllocationsController';
-import {GlParamConfig} from '../../../gl/code/utils/ParamConfig';
+import {GlParamConfig} from '../../../gl/code/utils/GLParamConfig';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 // import {CoreGraphNode} from '../../../../../core/graph/CoreGraphNode';
 import {FloatType, HalfFloatType} from 'three/src/constants';
@@ -296,7 +296,7 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	private _createSimulationMaterialUniforms() {
-		const assemblerController = this.node.assemblerController;
+		const assemblerController = this.node.assemblerController();
 		const assembler = assemblerController?.assembler;
 		if (!assembler && !this._persistedTextureAllocationsController) {
 			return;
@@ -490,7 +490,7 @@ export class ParticlesSystemGpuComputeController {
 	}
 	private _textureAllocationsController() {
 		return (
-			this.node.assemblerController?.assembler.textureAllocationsController() ||
+			this.node.assemblerController()?.assembler.textureAllocationsController() ||
 			this._persistedTextureAllocationsController
 		);
 	}

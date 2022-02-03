@@ -6,7 +6,8 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {create_required_nodes_for_subnet_gl_node} from './Subnet';
 import {RampValue, RampPoint, RampInterpolation} from '../../../../src/engine/params/ramp/RampValue';
-import {DataTexture} from 'three';
+import {DataTexture} from 'three/src/textures/DataTexture';
+import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test('gl ramp updates its parent material with new spare parameters', async (assert) => {
 	const scene = window.scene;
@@ -98,6 +99,7 @@ QUnit.test('gl ramp updates its particles system with new spare parameters', asy
 });
 
 QUnit.test('gl ramp: 1 ramp node on top level and one in a subnet work ok', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	meshBasicBuilder1.createNode('output');
@@ -132,9 +134,9 @@ QUnit.test('gl ramp: 1 ramp node on top level and one in a subnet work ok', asyn
 	subnet1.setInputName(0, 'pos');
 	output1.setInput('color', subnet1);
 
-	await meshBasicBuilder1.compute();
-	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
-	let uniform = material.uniforms['v_POLY_ramp_myCustomRamp'];
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
+	let uniform = materialUniforms(material)!['v_POLY_ramp_myCustomRamp'];
 	assert.ok(uniform);
 	assert.ok(uniform.value.uuid);
 	let spareParam = meshBasicBuilder1.params.get('myCustomRamp')! as RampParam;
@@ -168,7 +170,7 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`
 
 	// only 1 param out of subnet
 	subnet1.removeNode(ramp1);
-	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.not_includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/subnet1/ramp1
@@ -182,9 +184,9 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`,
 	const floatToVec3_2 = meshBasicBuilder1.createNode('floatToVec3');
 	floatToVec3_2.setInput(0, ramp2);
 	output1.setInput('color', floatToVec3_2);
-	await meshBasicBuilder1.compute();
-	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
-	uniform = material.uniforms['v_POLY_ramp_myCustomRamp'];
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
+	uniform = materialUniforms(material)!['v_POLY_ramp_myCustomRamp'];
 	assert.ok(uniform, 'uniform exists');
 	assert.in_delta(firstPixelValue(uniform.value), 0.75, 0.05, 'uniform value is still previous one');
 	spareParam = meshBasicBuilder1.params.get('myCustomRamp')! as RampParam;
@@ -221,9 +223,9 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`
 	add1.setInput(0, subnet1);
 	add1.setInput(1, floatToVec3_2);
 	output1.setInput('color', add1);
-	await meshBasicBuilder1.compute();
-	assert.notOk(meshBasicBuilder1.assemblerController?.compileRequired(), 'compiled is not required');
-	uniform = material.uniforms['v_POLY_ramp_myCustomRamp'];
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
+	uniform = materialUniforms(material)!['v_POLY_ramp_myCustomRamp'];
 	assert.ok(uniform, 'uniform exists');
 	assert.in_delta(firstPixelValue(uniform.value), 0.25, 0.05, 'uniform value is still previous one');
 	spareParam = meshBasicBuilder1.params.get('myCustomRamp')! as RampParam;
@@ -252,4 +254,6 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`
 		`// /MAT/meshBasicBuilder1/output1
 	diffuseColor.xyz = v_POLY_add1_sum;`
 	);
+
+	RendererUtils.dispose();
 });

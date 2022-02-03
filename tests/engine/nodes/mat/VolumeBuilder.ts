@@ -16,6 +16,9 @@ import {VolumeBuilderMatNode} from '../../../../src/engine/nodes/mat/VolumeBuild
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
+import {ShaderMaterialWithCustomMaterials} from '../../../../src/core/geometry/Material';
+import {RendererUtils} from '../../../helpers/RendererUtils';
+import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -24,26 +27,27 @@ const TEST_SHADER_LIB = {
 };
 
 QUnit.test('volume builder simple', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
 	const volume_builder1 = MAT.createNode('volumeBuilder');
 	volume_builder1.createNode('output');
 	volume_builder1.createNode('globals');
-	const material = volume_builder1.material;
+	const material = volume_builder1.material as ShaderMaterialWithCustomMaterials;
 	const globals1: GlobalsGlNode = volume_builder1.node('globals1')! as GlobalsGlNode;
 	const output1: OutputGlNode = volume_builder1.node('output1')! as OutputGlNode;
 
-	await volume_builder1.compute();
+	await RendererUtils.compile(volume_builder1, renderer);
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.default.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
-	assert.deepEqual(Object.keys(material.uniforms).sort(), Object.keys(VOLUME_UNIFORMS).sort());
+	assert.deepEqual(Object.keys(materialUniforms(material)!).sort(), Object.keys(VOLUME_UNIFORMS).sort());
 
 	const constant1 = volume_builder1.createNode('constant');
 	constant1.setGlType(GlConnectionPointType.FLOAT);
 	constant1.p.vec3.set([1, 0, 0.5]);
 	output1.setInput('density', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
-	await volume_builder1.compute();
+	await RendererUtils.compile(volume_builder1, renderer);
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.minimal.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.minimal.frag);
 
@@ -51,12 +55,15 @@ QUnit.test('volume builder simple', async (assert) => {
 	output1.setInput('density', vec3ToFloat1, 'y');
 	vec3ToFloat1.setInput(0, globals1, 'position');
 
-	await volume_builder1.compute();
+	await RendererUtils.compile(volume_builder1, renderer);
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.position.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.position.frag);
+
+	RendererUtils.dispose();
 });
 
 QUnit.test('volume builder persisted_config', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const volume1 = MAT.createNode('volumeBuilder');
 	volume1.createNode('output');
@@ -72,7 +79,8 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 	float_to_vec31.setInput(0, param1);
 	float_to_vec31.setInput(1, globals1, 'time');
 	output1.setInput(0, param2);
-	await volume1.compute();
+	await RendererUtils.compile(volume1, renderer);
+	const volume1Material = volume1.material as ShaderMaterialWithCustomMaterials;
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
@@ -82,28 +90,31 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 		await scene2.waitForCooksCompleted();
 
 		const new_volume1 = scene2.node('/MAT/volumeBuilder1') as VolumeBuilderMatNode;
-		assert.notOk(new_volume1.assemblerController);
+		assert.notOk(new_volume1.assemblerController());
 		assert.ok(new_volume1.persisted_config);
 		const float_param = new_volume1.params.get('float_param') as FloatParam;
 		const vec3_param = new_volume1.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param);
 		assert.ok(vec3_param);
-		const material = new_volume1.material;
-		assert.equal(material.fragmentShader, volume1.material.fragmentShader);
-		assert.equal(material.vertexShader, volume1.material.vertexShader);
+		const material = new_volume1.material as ShaderMaterialWithCustomMaterials;
+		await RendererUtils.compile(new_volume1, renderer);
+		assert.equal(material.fragmentShader, volume1Material.fragmentShader);
+		assert.equal(material.vertexShader, volume1Material.vertexShader);
 
 		// float param callback
-		assert.equal(material.uniforms.v_POLY_param_float_param.value, 0);
+		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 0);
 		float_param.set(2);
-		assert.equal(material.uniforms.v_POLY_param_float_param.value, 2);
+		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 2);
 		float_param.set(4);
-		assert.equal(material.uniforms.v_POLY_param_float_param.value, 4);
+		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 4);
 
 		// vector3 param callback
-		assert.deepEqual(material.uniforms.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
+		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
 		vec3_param.set([1, 2, 3]);
-		assert.deepEqual(material.uniforms.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
+		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
 		vec3_param.set([5, 6, 7]);
-		assert.deepEqual(material.uniforms.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
+		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
 	});
+
+	RendererUtils.dispose();
 });

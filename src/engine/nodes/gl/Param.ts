@@ -18,7 +18,7 @@ import {UniformGLDefinition} from './utils/GLDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 // import {GlConnectionsController} from './utils/GLConnectionsController';
-import {GlParamConfig} from './code/utils/ParamConfig';
+import {GlParamConfig} from './code/utils/GLParamConfig';
 import {CoreType} from '../../../core/Type';
 class ParamGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('param1');

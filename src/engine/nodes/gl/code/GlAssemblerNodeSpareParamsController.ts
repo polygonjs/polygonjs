@@ -1,22 +1,22 @@
+import {ObjectUtils} from '../../../../core/ObjectUtils';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
 import {ParamJsonExporterData} from '../../utils/io/IOController';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
-import {JsAssemblerControllerType, AssemblerControllerNode} from './Controller';
+import {GlAssemblerControllerType, AssemblerControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
-import {ObjectUtils} from '../../../../core/ObjectUtils';
 
 /*
 Create spare params on mat nodes
 */
-export class JsAssemblerNodeSpareParamsController {
+export class GlAssemblerNodeSpareParamsController {
 	private _deleted_params_data: Map<string, ParamJsonExporterData<ParamType>> = new Map();
 	private _created_spare_param_names: string[] = [];
 	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	private _init_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
-	constructor(private _controller: JsAssemblerControllerType, private _node: AssemblerControllerNode) {}
+	constructor(private _controller: GlAssemblerControllerType, private _node: AssemblerControllerNode) {}
 	get assembler() {
 		return this._controller.assembler;
 	}
@@ -24,10 +24,10 @@ export class JsAssemblerNodeSpareParamsController {
 	createSpareParameters() {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
-		const param_configs = this.assembler.param_configs();
-		const assembler_param_names = param_configs.map((c) => c.name());
+		const paramConfigs = this.assembler.param_configs();
+		const assembler_param_names = paramConfigs.map((c) => c.name());
 		const spare_param_names_to_add = ObjectUtils.clone(assembler_param_names);
-		const validation_result = this._validate_names(spare_param_names_to_add);
+		const validation_result = this._validateNames(spare_param_names_to_add);
 		if (validation_result == false) {
 			return;
 		}
@@ -57,32 +57,35 @@ export class JsAssemblerNodeSpareParamsController {
 		});
 
 		// this.within_param_folder('spare_params', () => {
-		for (let param_config of param_configs) {
-			if (spare_param_names_to_add.indexOf(param_config.name()) >= 0) {
-				const config_options = ObjectUtils.clone(param_config.param_options);
-				const default_options: ParamOptions = {
+		for (let paramConfig of paramConfigs) {
+			if (spare_param_names_to_add.indexOf(paramConfig.name()) >= 0) {
+				// const config_options = ObjectUtils.clone(paramConfig.paramOptions());
+				const options: ParamOptions = {
 					spare: true,
 					computeOnDirty: true,
 					cook: false, // it should update the uniforms only via its callback
+					// important for texture nodes
+					// that compute after being found by the nodepath param
+					dependentOnFoundNode: true,
 				};
-				const options = ObjectUtils.merge(config_options, default_options);
+				// const options = ObjectUtils.merge(config_options, default_options);
 
 				// set init_value and raw_input to the previous param's
-				let init_value = this._init_value_serialized_by_param_name.get(param_config.name());
+				let init_value = this._init_value_serialized_by_param_name.get(paramConfig.name());
 				if (init_value == null) {
-					init_value = param_config.default_value as any;
+					init_value = paramConfig.defaultValue() as any;
 				}
-				let raw_input = this._raw_input_serialized_by_param_name.get(param_config.name());
+				let raw_input = this._raw_input_serialized_by_param_name.get(paramConfig.name());
 				if (raw_input == null) {
-					raw_input = param_config.default_value as any;
+					raw_input = paramConfig.defaultValue() as any;
 				}
 
 				params_update_options.toAdd = params_update_options.toAdd || [];
 				params_update_options.toAdd.push({
-					name: param_config.name(),
-					type: param_config.type(),
-					init_value: init_value as any,
-					raw_input: raw_input as any,
+					name: paramConfig.name(),
+					type: paramConfig.type(),
+					initValue: init_value as any,
+					rawInput: raw_input as any,
 					options: options,
 				});
 			}
@@ -90,11 +93,15 @@ export class JsAssemblerNodeSpareParamsController {
 
 		this._node.params.updateParams(params_update_options);
 		this._created_spare_param_names = params_update_options.toAdd?.map((o) => o.name) || [];
+
+		for (let paramConfig of paramConfigs) {
+			paramConfig.applyToNode(this._node);
+		}
 	}
 
 	// TODO: handle the case where a param created by user already exists.
 	// we may then change the name of the new spare param.
-	private _validate_names(spare_param_names_to_add: string[]): boolean {
+	private _validateNames(spare_param_names_to_add: string[]): boolean {
 		// check that param_names_to_add does not include any currently existing param names (that are not spare)
 		const current_param_names = ObjectUtils.clone(this._node.params.non_spare_names);
 		const spare_params_with_same_name_as_params = ArrayUtils.intersection(

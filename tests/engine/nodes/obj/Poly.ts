@@ -10,8 +10,8 @@ const definition: PolyNodeDefinition = {
 		{
 			name: 'id',
 			type: ParamType.INTEGER,
-			init_value: 0,
-			raw_input: 0,
+			initValue: 0,
+			rawInput: 0,
 		},
 	],
 	nodes: {

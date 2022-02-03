@@ -34,9 +34,20 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {Constructor} from '../../../types/GlobalTypes';
 import {UpdateOptions} from './utils/_BaseTextureController';
+import {Material} from 'three/src/materials/Material';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 const CONTROLLER_OPTIONS: UpdateOptions = {
 	uniforms: true,
 };
+interface MeshPhysicalBuilderMaterial extends MeshPhysicalMaterial {
+	vertexShader: string;
+	fragmentShader: string;
+	uniforms: IUniforms;
+	customMaterials: {
+		[key in CustomMaterialName]?: Material;
+	};
+}
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
@@ -94,6 +105,7 @@ class MeshPhysicalMatParamsConfig extends AdvancedMeshPhysicalParamConfig(
 const ParamsConfig = new MeshPhysicalMatParamsConfig();
 
 export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
+	MeshPhysicalBuilderMaterial,
 	ShaderAssemblerPhysical,
 	MeshPhysicalMatParamsConfig
 > {
@@ -104,7 +116,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_PHYSICAL> {
 		return AssemblerName.GL_MESH_PHYSICAL;
 	}
-	protected _create_assembler_controller() {
+	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	readonly controllers: Controllers = {

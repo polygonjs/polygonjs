@@ -10,7 +10,7 @@ import {LinesController} from './LinesController';
 import {JsCodeFormatter} from './CodeFormatter';
 
 import {JsLineType} from './LineType';
-import {JsParamConfig} from './ParamConfig';
+import {JsParamConfig} from './JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {ShaderName} from '../../../utils/shaders/ShaderName';

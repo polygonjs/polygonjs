@@ -28,10 +28,10 @@ export class ShaderAssemblerCustomPointsDepthDOF extends ShaderAssemblerMaterial
 			},
 		};
 	}
-	protected override insert_define_after(shader_name: ShaderName) {
+	protected override insertDefineAfter(shader_name: ShaderName) {
 		return INSERT_DEFINE_AFTER_MAP.get(shader_name);
 	}
-	protected override insert_body_after(shader_name: ShaderName) {
+	protected override insertBodyAfter(shader_name: ShaderName) {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
 

@@ -221,13 +221,13 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	// TEMPLATE HOOKS
 	//
 	//
-	protected override insert_define_after(shader_name: ShaderName) {
+	protected override insertDefineAfter(shader_name: ShaderName) {
 		return '// INSERT DEFINE';
 	}
-	protected override insert_body_after(shader_name: ShaderName) {
+	protected override insertBodyAfter(shader_name: ShaderName) {
 		return '// INSERT BODY';
 	}
-	protected override lines_to_remove(shader_name: ShaderName) {
+	protected override linesToRemove(shader_name: ShaderName) {
 		return ['// INSERT DEFINE', '// INSERT BODY'];
 	}
 
