@@ -2,24 +2,14 @@ import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
 import {BaseBuilderMatNodeType} from '../../../../mat/_BaseBuilder';
 import {CustomMaterialName} from './_BaseMaterial';
 import {ShaderMaterialWithCustomMaterials, MaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
-// import {IUniformsWithTime, IUniformsWithResolution} from '../../../../../scene/utils/UniformsController';
-import {GlParamConfig, GlParamConfigJSON} from '../../utils/GLParamConfig';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
-// import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {createOnBeforeCompile, OnBeforeCompileData} from './OnBeforeCompile';
-import {ParamType} from '../../../../../poly/ParamType';
-// import {Shader} from 'three/src/renderers/shaders/ShaderLib';
-// import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-
-// from https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
-type RemoveParamConfigField<Type> = {
-	[Property in keyof Type as Exclude<Property, 'paramConfigs' | 'additionalTextureUniforms'>]: Type[Property];
-};
-
-interface OnBeforeCompileDataJSON extends RemoveParamConfigField<OnBeforeCompileData> {
-	paramConfigs: GlParamConfigJSON<ParamType>[];
-}
+import {
+	assignOnBeforeCompileDataAndFunction,
+	onBeforeCompileDataFromJSON,
+	OnBeforeCompileDataJSON,
+	onBeforeCompileDataToJSON,
+} from './OnBeforeCompile';
 
 export interface PersistedConfigBaseMaterialData {
 	material: object;
@@ -28,25 +18,6 @@ export interface PersistedConfigBaseMaterialData {
 	// uniforms_resolution_dependent?: boolean;
 	onBeforeCompileDataJSON: OnBeforeCompileDataJSON;
 	customMaterials?: PolyDictionary<PersistedConfigBaseMaterialData>;
-}
-
-function onBeforeCompileDataToJSON(onBeforeCompileData: OnBeforeCompileData): OnBeforeCompileDataJSON {
-	const onBeforeCompileDataJSON: OnBeforeCompileDataJSON = {
-		vertexShader: onBeforeCompileData.vertexShader,
-		fragmentShader: onBeforeCompileData.fragmentShader,
-		timeDependent: onBeforeCompileData.timeDependent,
-		resolutionDependent: onBeforeCompileData.resolutionDependent,
-		paramConfigs: onBeforeCompileData.paramConfigs.map((pc) => pc.toJSON()),
-	};
-	return onBeforeCompileDataJSON;
-}
-function onBeforeCompileDataFromJSON(json: OnBeforeCompileDataJSON): OnBeforeCompileData {
-	const onBeforeCompileData: OnBeforeCompileData = {
-		...json,
-		additionalTextureUniforms: {},
-		paramConfigs: json.paramConfigs.map((json) => GlParamConfig.fromJSON(json)),
-	};
-	return onBeforeCompileData;
 }
 
 // potential bug with Material Loader
@@ -139,8 +110,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 
 		const onBeforeCompileData = onBeforeCompileDataFromJSON(data.onBeforeCompileDataJSON);
 		const material = this._material;
-		const onBeforeCompile = createOnBeforeCompile(this.node.scene(), material, onBeforeCompileData);
-		material.onBeforeCompile = onBeforeCompile;
+		assignOnBeforeCompileDataAndFunction(this.node.scene(), material, onBeforeCompileData);
 
 		for (let paramConfig of onBeforeCompileData.paramConfigs) {
 			paramConfig.applyToNode(this.node);
@@ -202,12 +172,9 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 						customMatData.onBeforeCompileDataJSON
 					);
 					customOnBeforeCompileData.paramConfigs = onBeforeCompileData.paramConfigs;
-					customMat.onBeforeCompile = createOnBeforeCompile(
-						this.node.scene(),
-						customMat,
-						customOnBeforeCompileData
-					);
+					this.node.scene(), material, onBeforeCompileData;
 
+					assignOnBeforeCompileDataAndFunction(this.node.scene(), customMat, customOnBeforeCompileData);
 					this._material.customMaterials[customMatName] = customMat;
 
 					// console.log('=============', customMatName);

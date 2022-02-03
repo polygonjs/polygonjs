@@ -40,19 +40,19 @@ type BaseGlShaderAssemblerConstructor<A extends BaseGlShaderAssembler> = new (..
 export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	protected _assembler!: A;
 	private _spareParamsController!: GlAssemblerNodeSpareParamsController;
-	private _globals_handler: GlobalsBaseController | undefined = new GlobalsGeometryHandler();
+	private _globalsHandler: GlobalsBaseController | undefined = new GlobalsGeometryHandler();
 	private _compile_required: boolean = true;
 
 	constructor(private node: AssemblerControllerNode, assembler_class: BaseGlShaderAssemblerConstructor<A>) {
 		this._assembler = new assembler_class(this.node);
 		this._spareParamsController = new GlAssemblerNodeSpareParamsController(this, this.node);
 	}
-	set_assembler_globals_handler(globals_handler: GlobalsBaseController) {
-		const current_id = this._globals_handler ? this._globals_handler.id() : null;
-		const new_id = globals_handler ? globals_handler.id() : null;
+	setAssemblerGlobalsHandler(globalsHandler: GlobalsBaseController) {
+		const current_id = this._globalsHandler ? this._globalsHandler.id() : null;
+		const new_id = globalsHandler ? globalsHandler.id() : null;
 
 		if (current_id != new_id) {
-			this._globals_handler = globals_handler;
+			this._globalsHandler = globalsHandler;
 			this.set_compilation_required_and_dirty();
 			this._assembler.reset_configs();
 		}
@@ -60,8 +60,8 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	get assembler() {
 		return this._assembler;
 	}
-	get globals_handler() {
-		return this._globals_handler;
+	globalsHandler() {
+		return this._globalsHandler;
 	}
 
 	add_output_inputs(output_child: OutputGlNode) {

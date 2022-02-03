@@ -240,7 +240,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		const export_nodes = this._findExportNodes();
 		if (export_nodes.length > 0) {
 			const root_nodes = export_nodes;
-			assemblerController.set_assembler_globals_handler(this._particlesGlobalsHandler);
+			assemblerController.setAssemblerGlobalsHandler(this._particlesGlobalsHandler);
 			assemblerController.assembler.set_root_nodes(root_nodes);
 
 			assemblerController.assembler.compile();

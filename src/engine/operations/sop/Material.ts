@@ -21,7 +21,7 @@ interface MaterialSopParams extends DefaultOperationParams {
 	material: TypedNodePathParamValue;
 	applyToChildren: boolean;
 	cloneMat: boolean;
-	shareUniforms: boolean;
+	shareCustomUniforms: boolean;
 	swapCurrentTex: boolean;
 	texSrc0: string;
 	texDest0: string;
@@ -34,7 +34,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		material: new TypedNodePathParamValue(''),
 		applyToChildren: true,
 		cloneMat: false,
-		shareUniforms: true,
+		shareCustomUniforms: true,
 		swapCurrentTex: false,
 		texSrc0: 'emissiveMap',
 		texDest0: 'map',
@@ -44,7 +44,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		return 'material';
 	}
 
-	private _globals_handler: GlobalsGeometryHandler = new GlobalsGeometryHandler();
+	private _globalsHandler: GlobalsGeometryHandler = new GlobalsGeometryHandler();
 
 	override async cook(input_contents: CoreGroup[], params: MaterialSopParams) {
 		const core_group = input_contents[0];
@@ -52,7 +52,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		this._old_mat_by_old_new_id.clear();
 
 		await this._apply_materials(core_group, params);
-		this._swap_textures(core_group, params);
+		this._swapTextures(core_group, params);
 		return core_group;
 	}
 
@@ -66,7 +66,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 			const material = materialNode.material;
 			const baseBuilderMatNode = materialNode as BaseBuilderMatNodeType;
 			if (baseBuilderMatNode.assemblerController) {
-				baseBuilderMatNode.assemblerController()?.set_assembler_globals_handler(this._globals_handler);
+				baseBuilderMatNode.assemblerController()?.setAssemblerGlobalsHandler(this._globalsHandler);
 			}
 
 			await materialNode.compute();
@@ -96,7 +96,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 	private _old_mat_by_old_new_id: Map<string, Material> = new Map();
 	private _materials_by_uuid: Map<string, Material> = new Map();
-	private _swap_textures(core_group: CoreGroup, params: MaterialSopParams) {
+	private _swapTextures(core_group: CoreGroup, params: MaterialSopParams) {
 		if (!isBooleanTrue(params.swapCurrentTex)) {
 			return;
 		}
@@ -127,7 +127,9 @@ export class MaterialSopOperation extends BaseSopOperation {
 			}
 		}
 
-		const used_material = isBooleanTrue(params.cloneMat) ? CoreMaterial.clone(src_material) : src_material;
+		const used_material = isBooleanTrue(params.cloneMat)
+			? CoreMaterial.clone(this.scene(), src_material, {shareCustomUniforms: params.shareCustomUniforms})
+			: src_material;
 
 		if (src_material instanceof ShaderMaterial && used_material instanceof ShaderMaterial) {
 			for (let uniform_name in src_material.uniforms) {

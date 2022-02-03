@@ -95,11 +95,11 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		}
 	}
 
-	get globals_handler(): GlobalsBaseController | undefined {
-		return this.currentGlParentNode().assemblerController()?.globals_handler;
+	globalsHandler(): GlobalsBaseController | undefined {
+		return this.currentGlParentNode().assemblerController()?.globalsHandler();
 	}
 	compileAllowed(): boolean {
-		return this.currentGlParentNode().assemblerController()?.globals_handler != null;
+		return this.currentGlParentNode().assemblerController()?.globalsHandler() != null;
 	}
 	shaders_by_name() {
 		return this._shaders_by_name;
@@ -363,8 +363,8 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		return [
 			new VariableConfig('position', {
 				default_from_attribute: true,
-				// default: this.globals_handler().variable_config_default('position'),
-				// required_definitions: this.globals_handler().variable_config_required_definitions('position'),
+				// default: this.globalsHandler().variable_config_default('position'),
+				// required_definitions: this.globalsHandler().variable_config_required_definitions('position'),
 				prefix: 'vec3 transformed = ',
 			}),
 			new VariableConfig('normal', {

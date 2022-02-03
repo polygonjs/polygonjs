@@ -78,8 +78,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	protected _createAssemblerController() {
 		const assembler_controller = Poly.assemblersRegister.assembler(this, this.usedAssembler());
 		if (assembler_controller) {
-			const globals_handler = new GlobalsGeometryHandler();
-			assembler_controller.set_assembler_globals_handler(globals_handler);
+			const globalsHandler = new GlobalsGeometryHandler();
+			assembler_controller.setAssemblerGlobalsHandler(globalsHandler);
 			return assembler_controller;
 		}
 	}

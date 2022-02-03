@@ -124,10 +124,10 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			leafNodesForTextureAllocations
 		);
 
-		// const globals_handler = new GlobalsTextureHandler()
-		// this.set_assembler_globals_handler(globals_handler)
-		if (this.globals_handler) {
-			((<unknown>this.globals_handler) as GlobalsTextureHandler)?.set_texture_allocations_controller(
+		// const globalsHandler = new GlobalsTextureHandler()
+		// this.setAssemblerGlobalsHandler(globalsHandler)
+		if (this.globalsHandler()) {
+			((<unknown>this.globalsHandler()) as GlobalsTextureHandler)?.set_texture_allocations_controller(
 				this._textureAllocationsController
 			);
 		}
@@ -284,7 +284,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 					// position reads the default attribute position
 					// or maybe there is no need?
 					// if(input_name == 'position'){
-					// 	this.globals_handler().read_attribute(output_node, 'vec3', 'position')
+					// 	this.globalsHandler().read_attribute(output_node, 'vec3', 'position')
 					// }
 				}
 			}
@@ -297,7 +297,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		if (attribute_node.isImporting()) {
 			const gl_type = attribute_node.glType();
 			const attribute_name = attribute_node.attributeName();
-			const new_value = this.globals_handler?.readAttribute(
+			const new_value = this.globalsHandler()?.readAttribute(
 				attribute_node,
 				gl_type,
 				attribute_name,
@@ -379,7 +379,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		if (output_connection_point) {
 			const gl_type = output_connection_point.type();
 
-			const attrib_read = this.globals_handler?.readAttribute(
+			const attrib_read = this.globalsHandler()?.readAttribute(
 				globals_node,
 				gl_type,
 				output_name,

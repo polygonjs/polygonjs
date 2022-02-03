@@ -45,7 +45,10 @@ import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Geometry} from '../../modules/three/examples/jsm/deprecated/Geometry';
 import {Group} from 'three/src/objects/Group';
 import {ShaderAssemblerMaterial} from '../../engine/nodes/gl/code/assemblers/materials/_BaseMaterial';
-import {assignUniformViaUserData} from '../../engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {
+	assignUniformViaUserData,
+	copyOnBeforeCompileData,
+} from '../../engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {IUniformTexture} from '../../engine/nodes/utils/code/gl/Uniforms';
 
 export type RenderHook = (
@@ -82,18 +85,26 @@ const EMPTY_RENDER_HOOK: RenderHook = (
 	group: Group | null
 ) => {};
 
+interface CloneOptions {
+	shareCustomUniforms: boolean;
+}
 export class CoreMaterial {
 	static node(scene: PolyScene, material: Material) {
 		return scene.node(material.name);
 	}
 
-	static clone(src_material: Material | ShaderMaterial) {
-		const cloned_material = src_material.clone();
-		const src_uniforms = (src_material as ShaderMaterial).uniforms;
-		if (src_uniforms) {
-			(cloned_material as ShaderMaterial).uniforms = UniformsUtils.clone(src_uniforms);
+	static clone(scene: PolyScene, srcMaterial: Material | ShaderMaterial, options: CloneOptions) {
+		const clonedMaterial = srcMaterial.clone();
+		const srcUniforms = (srcMaterial as ShaderMaterial).uniforms;
+		if (srcUniforms) {
+			(clonedMaterial as ShaderMaterial).uniforms = UniformsUtils.clone(srcUniforms);
 		}
-		return cloned_material;
+		copyOnBeforeCompileData(scene, {
+			src: srcMaterial,
+			dest: clonedMaterial,
+			shareCustomUniforms: options.shareCustomUniforms,
+		});
+		return clonedMaterial;
 	}
 
 	// static clone_single(src_material: Material) {

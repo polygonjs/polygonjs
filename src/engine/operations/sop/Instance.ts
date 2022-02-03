@@ -31,7 +31,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		return 'instance';
 	}
 
-	private _globals_handler: GlobalsGeometryHandler | undefined;
+	private _globalsHandler: GlobalsGeometryHandler | undefined;
 	private _geometry: BufferGeometry | undefined;
 
 	override async cook(input_contents: CoreGroup[], params: InstanceSopParams) {
@@ -69,11 +69,11 @@ export class InstanceSopOperation extends BaseSopOperation {
 		if (isBooleanTrue(params.applyMaterial)) {
 			const material_node = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
 			if (material_node) {
-				this._globals_handler = this._globals_handler || new GlobalsGeometryHandler();
+				this._globalsHandler = this._globalsHandler || new GlobalsGeometryHandler();
 				const mat_builder_node = material_node as BaseBuilderMatNodeType;
 				const matNodeAssemblerController = mat_builder_node.assemblerController();
 				if (matNodeAssemblerController) {
-					matNodeAssemblerController.set_assembler_globals_handler(this._globals_handler);
+					matNodeAssemblerController.setAssemblerGlobalsHandler(this._globalsHandler);
 				}
 
 				const container = await material_node.compute();

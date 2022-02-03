@@ -8,6 +8,7 @@ import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCa
 import {Poly} from '../../src/engine/Poly';
 import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
 import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
+import {Material} from 'three/src/materials/Material';
 
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
@@ -59,9 +60,15 @@ export class RendererUtils {
 	private static _scene = this._createMatCompileScene();
 	private static _camera = new PerspectiveCamera();
 	private static _mesh = new Mesh();
-	static async compile(matNode: BaseBuilderMatNodeType, renderer: WebGLRenderer) {
-		await matNode.compute();
-		this._mesh.material = matNode.material;
+	static async compile(matNode: BaseBuilderMatNodeType | Material, renderer: WebGLRenderer) {
+		let material: Material;
+		if (matNode instanceof Material) {
+			material = matNode;
+		} else {
+			material = matNode.material;
+			await matNode.compute();
+		}
+		this._mesh.material = material;
 		renderer.compile(this._mesh, this._camera);
 	}
 	private static _createMatCompileScene(): Scene {

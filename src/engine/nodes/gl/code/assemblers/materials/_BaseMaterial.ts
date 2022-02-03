@@ -13,7 +13,7 @@ import {ShadersCollectionController} from '../../utils/ShadersCollectionControll
 import {Material} from 'three/src/materials/Material';
 import {GlNodeFinder} from '../../utils/NodeFinder';
 import {BaseGlNodeType} from '../../../_Base';
-import {createOnBeforeCompile, OnBeforeCompileData} from './OnBeforeCompile';
+import {assignOnBeforeCompileDataAndFunction, OnBeforeCompileData} from './OnBeforeCompile';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 import {IUniformTexture} from '../../../../utils/code/gl/Uniforms';
 
@@ -219,7 +219,8 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				timeDependent: this.uniformsTimeDependent(),
 				resolutionDependent: this.uniformsResolutionDependent(),
 			};
-			material.onBeforeCompile = createOnBeforeCompile(scene, material, this._onBeforeCompileData);
+			assignOnBeforeCompileDataAndFunction(scene, material, this._onBeforeCompileData);
+			// material.onBeforeCompile = createOnBeforeCompile(scene, material, this._onBeforeCompileData);
 			material.needsUpdate = true;
 			// const paramConfigsKey: string = this.param_configs()
 			// 	.map((p) => JSON.stringify(p.toJSON()))
@@ -296,7 +297,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				const connection_point = output_node.io.inputs.namedInputConnectionPointsByName(input_name);
 				if (connection_point) {
 					const gl_type = connection_point.type();
-					const attr_read = this.globals_handler?.readAttribute(
+					const attr_read = this.globalsHandler()?.readAttribute(
 						output_node,
 						gl_type,
 						input_name,
@@ -359,7 +360,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		shadersCollectionController: ShadersCollectionController
 	) {
 		const gl_type = attribute_node.glType();
-		const new_var = this.globals_handler?.readAttribute(
+		const new_var = this.globalsHandler()?.readAttribute(
 			attribute_node,
 			gl_type,
 			attribute_node.attributeName(),
@@ -390,7 +391,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				this.handle_gl_PointCoord(options);
 				return;
 			default:
-				this.globals_handler?.handle_globals_node(
+				this.globalsHandler()?.handle_globals_node(
 					options.globals_node,
 					options.output_name,
 					options.shaders_collection_controller

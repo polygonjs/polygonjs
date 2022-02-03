@@ -134,7 +134,7 @@ export class ParticlesSystemGpuRenderController {
 					this._materialGlobalsHandler.set_texture_allocations_controller(
 						assembler.textureAllocationsController()
 					);
-					matNodeAssemblerController.set_assembler_globals_handler(this._materialGlobalsHandler);
+					matNodeAssemblerController.setAssemblerGlobalsHandler(this._materialGlobalsHandler);
 					this._matNodeAssembler = matNodeAssemblerController.assembler; //.setAdditionalUniformNames(this._allUniformNames);
 				}
 

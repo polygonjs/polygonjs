@@ -105,38 +105,29 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	}
 	private _default_instancePosition(shaders_collection_controller: ShadersCollectionController): string | undefined {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
-		return assembler.globals_handler?.readAttribute(
-			this,
-			GlConnectionPointType.VEC3,
-			VARS.instancePosition,
-			shaders_collection_controller
-		);
+		return assembler
+			.globalsHandler()
+			?.readAttribute(this, GlConnectionPointType.VEC3, VARS.instancePosition, shaders_collection_controller);
 		// return this.assembler()
-		// 	.globals_handler()
+		// 	.globalsHandler()
 		// 	.read_attribute(this, 'vec3', VARS.instancePosition, this._shader_name);
 	}
 	private _default_input_instanceOrientation(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
-		return assembler.globals_handler?.readAttribute(
-			this,
-			GlConnectionPointType.VEC4,
-			VARS.instanceOrientation,
-			shaders_collection_controller
-		);
+		return assembler
+			.globalsHandler()
+			?.readAttribute(this, GlConnectionPointType.VEC4, VARS.instanceOrientation, shaders_collection_controller);
 		// return this.assembler()
-		// 	.globals_handler()
+		// 	.globalsHandler()
 		// 	.read_attribute(this, 'vec4', VARS.instanceOrientation, this._shader_name);
 	}
 	private _default_input_instanceScale(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
-		return assembler.globals_handler?.readAttribute(
-			this,
-			GlConnectionPointType.VEC3,
-			VARS.instanceScale,
-			shaders_collection_controller
-		);
+		return assembler
+			.globalsHandler()
+			?.readAttribute(this, GlConnectionPointType.VEC3, VARS.instanceScale, shaders_collection_controller);
 		// return this.assembler()
-		// 	.globals_handler()
+		// 	.globalsHandler()
 		// 	.read_attribute(this, 'vec3', VARS.instanceScale, this._shader_name);
 	}
 }
