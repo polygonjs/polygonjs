@@ -1,9 +1,9 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 
 export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -14,9 +14,10 @@ export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class TextureSpecularMaterial extends Material {
-	specularMap!: Texture | null;
-}
+type TextureSpecularMaterial = MeshPhongMaterial;
+// class TextureSpecularMaterial extends Material {
+// 	specularMap!: Texture | null;
+// }
 type CurrentMaterial = TextureSpecularMaterial | Material;
 class TextureSpecularMapParamsConfig extends SpecularMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -28,8 +29,8 @@ abstract class TextureSpecularMapMatNode extends TypedMatNode<CurrentMaterial, T
 }
 
 export class TextureSpecularMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureSpecularMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureSpecularMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useSpecularMap, this.node.p.specularMap);

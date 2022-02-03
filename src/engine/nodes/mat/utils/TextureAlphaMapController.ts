@@ -1,9 +1,13 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an alpha map */
@@ -15,9 +19,13 @@ export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		alphaMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureAlphaMapController, 'useAlphaMap'));
 	};
 }
-class TextureAlphaMaterial extends Material {
-	alphaMap!: Texture | null;
-}
+
+type TextureAlphaMaterial =
+	| MeshBasicMaterial
+	| MeshLambertMaterial
+	| MeshPhongMaterial
+	| MeshStandardMaterial
+	| MeshPhysicalMaterial;
 type CurrentMaterial = TextureAlphaMaterial | Material;
 class TextureAlphaMapParamsConfig extends AlphaMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -29,8 +37,8 @@ abstract class TextureAlphaMapMatNode extends TypedMatNode<CurrentMaterial, Text
 }
 
 export class TextureAlphaMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureAlphaMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureAlphaMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useAlphaMap, this.node.p.alphaMap);

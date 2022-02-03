@@ -1,11 +1,10 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a bump map */
@@ -29,10 +28,12 @@ export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 	};
 }
-class TextureBumpMaterial extends Material {
-	bumpMap!: Texture | null;
-	bumpScale!: number;
-}
+
+type TextureBumpMaterial = MeshPhysicalMaterial | MeshStandardMaterial;
+// class TextureBumpMaterial extends Material {
+// 	bumpMap!: Texture | null;
+// 	bumpScale!: number;
+// }
 type CurrentMaterial = TextureBumpMaterial | Material;
 class TextureBumpMapParamsConfig extends BumpMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -44,24 +45,24 @@ abstract class TextureBumpMapMatNode extends TypedMatNode<CurrentMaterial, Textu
 }
 
 export class TextureBumpMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureBumpMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureBumpMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useBumpMap, this.node.p.bumpMap);
 	}
 	override async update() {
 		this._update(this.node.material, 'bumpMap', this.node.p.useBumpMap, this.node.p.bumpMap);
-		if (this._update_options.uniforms) {
-			const mat = this.node.material as ShaderMaterial;
-			if (mat.uniforms) {
-				mat.uniforms.bumpScale.value = this.node.pv.bumpScale;
-			}
-		}
-		if (this._update_options.directParams) {
-			const mat = this.node.material as MeshStandardMaterial;
-			mat.bumpScale = this.node.pv.bumpScale;
-		}
+		// if (this._update_options.uniforms) {
+		// 	const mat = this.node.material as ShaderMaterial;
+		// 	if (mat.uniforms) {
+		// 		mat.uniforms.bumpScale.value = this.node.pv.bumpScale;
+		// 	}
+		// }
+		// if (this._update_options.directParams) {
+		const mat = this.node.material as MeshStandardMaterial;
+		mat.bumpScale = this.node.pv.bumpScale;
+		// }
 	}
 	static override async update(node: TextureBumpMapMatNode) {
 		node.controllers.bumpMap.update();

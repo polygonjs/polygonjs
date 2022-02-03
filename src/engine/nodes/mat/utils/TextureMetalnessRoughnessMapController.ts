@@ -1,11 +1,10 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 
 export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -36,10 +35,11 @@ export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base
 	};
 }
 
-class TextureMetalnessMaterial extends Material {
-	metalnessMap!: Texture | null;
-	metalness!: number;
-}
+type TextureMetalnessMaterial = MeshStandardMaterial | MeshPhysicalMaterial;
+// class TextureMetalnessMaterial extends Material {
+// 	metalnessMap!: Texture | null;
+// 	metalness!: number;
+// }
 type CurrentMaterial = TextureMetalnessMaterial | Material;
 class TextureMetalnessMapParamsConfig extends MetalnessRoughnessMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -51,36 +51,36 @@ abstract class TextureMetalnessMapMatNode extends TypedMatNode<CurrentMaterial, 
 }
 
 export class TextureMetalnessRoughnessMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureMetalnessMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureMetalnessMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useMetalnessMap, this.node.p.metalnessMap);
 	}
 	override async update() {
 		this._update(this.node.material, 'metalnessMap', this.node.p.useMetalnessMap, this.node.p.metalnessMap);
-		if (this._update_options.uniforms) {
-			const mat = this.node.material as ShaderMaterial;
-			if (mat.uniforms) {
-				mat.uniforms.metalness.value = this.node.pv.metalness;
-			}
-		}
-		if (this._update_options.directParams) {
-			const mat = this.node.material as MeshStandardMaterial;
-			mat.metalness = this.node.pv.metalness;
-		}
+		// if (this._update_options.uniforms) {
+		// 	const mat = this.node.material as ShaderMaterial;
+		// 	if (mat.uniforms) {
+		// 		mat.uniforms.metalness.value = this.node.pv.metalness;
+		// 	}
+		// }
+		// if (this._update_options.directParams) {
+		const mat = this.node.material as MeshStandardMaterial;
+		mat.metalness = this.node.pv.metalness;
+		// }
 
 		this._update(this.node.material, 'roughnessMap', this.node.p.useRoughnessMap, this.node.p.roughnessMap);
-		if (this._update_options.uniforms) {
-			const mat = this.node.material as ShaderMaterial;
-			if (mat.uniforms) {
-				mat.uniforms.roughness.value = this.node.pv.roughness;
-			}
-		}
-		if (this._update_options.directParams) {
-			const mat = this.node.material as MeshStandardMaterial;
-			mat.roughness = this.node.pv.roughness;
-		}
+		// if (this._update_options.uniforms) {
+		// 	const mat = this.node.material as ShaderMaterial;
+		// 	if (mat.uniforms) {
+		// 		mat.uniforms.roughness.value = this.node.pv.roughness;
+		// 	}
+		// }
+		// if (this._update_options.directParams) {
+		// const mat = this.node.material as MeshStandardMaterial;
+		mat.roughness = this.node.pv.roughness;
+		// }
 	}
 	static override async update(node: TextureMetalnessMapMatNode) {
 		node.controllers.metalnessRoughnessMap.update();

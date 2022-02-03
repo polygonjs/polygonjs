@@ -11,7 +11,7 @@ import {videoCopPresetRegister} from './cop/Video';
 // // gl
 import {attributeGlPresetRegister} from './gl/Attribute';
 // // mat
-import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
+// import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
 // obj
 // sop
 import {attribCreateSopPresetRegister} from './sop/AttribCreate';
@@ -43,7 +43,7 @@ class PresetLibraryClass {
 		// gl
 		this._registerPreset(attributeGlPresetRegister);
 		// mat
-		this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
+		// this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
 		// sop
 		this._registerPreset(attribCreateSopPresetRegister);
 		this._registerPreset(colorSopPresetRegister);

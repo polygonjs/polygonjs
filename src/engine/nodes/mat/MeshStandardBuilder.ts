@@ -31,13 +31,9 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
-import {UpdateOptions} from './utils/_BaseTextureController';
 import {Material} from 'three/src/materials/Material';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-const CONTROLLER_OPTIONS: UpdateOptions = {
-	uniforms: true,
-};
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
@@ -118,16 +114,16 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	}
 	readonly controllers: Controllers = {
 		advancedCommon: new AdvancedCommonController(this),
-		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
-		bumpMap: new TextureBumpMapController(this, CONTROLLER_OPTIONS),
-		displacementMap: new TextureDisplacementMapController(this, CONTROLLER_OPTIONS),
-		emissiveMap: new TextureEmissiveMapController(this, CONTROLLER_OPTIONS),
-		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
-		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
-		map: new TextureMapController(this, CONTROLLER_OPTIONS),
-		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this, CONTROLLER_OPTIONS),
-		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
+		alphaMap: new TextureAlphaMapController(this),
+		aoMap: new TextureAOMapController(this),
+		bumpMap: new TextureBumpMapController(this),
+		displacementMap: new TextureDisplacementMapController(this),
+		emissiveMap: new TextureEmissiveMapController(this),
+		envMap: new TextureEnvMapController(this),
+		lightMap: new TextureLightMapController(this),
+		map: new TextureMapController(this),
+		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this),
+		normalMap: new TextureNormalMapController(this),
 		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;

@@ -17,20 +17,16 @@ import {Poly} from '../../Poly';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
-import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
+import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/TextureEnvMapSimpleController';
 import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
 import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {UpdateOptions} from './utils/_BaseTextureController';
 import {Material} from 'three/src/materials/Material';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-const CONTROLLER_OPTIONS: UpdateOptions = {
-	uniforms: true,
-};
 interface MeshLambertBuilderMaterial extends MeshLambertMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -44,7 +40,7 @@ interface Controllers {
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
 	emissiveMap: TextureEmissiveMapController;
-	envMap: TextureEnvMapController;
+	envMap: TextureEnvMapSimpleController;
 	lightMap: TextureLightMapController;
 	map: TextureMapController;
 	PCSS: PCSSController;
@@ -57,7 +53,7 @@ class MeshLambertMatParamsConfig extends PCSSParamConfig(
 					/* advanced */
 					AdvancedFolderParamConfig(
 						LightMapParamConfig(
-							EnvMapParamConfig(
+							EnvMapSimpleParamConfig(
 								EmissiveMapParamConfig(
 									AOMapParamConfig(
 										AlphaMapParamConfig(
@@ -100,12 +96,12 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<
 
 	readonly controllers: Controllers = {
 		advancedCommon: new AdvancedCommonController(this),
-		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
-		emissiveMap: new TextureEmissiveMapController(this, CONTROLLER_OPTIONS),
-		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
-		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
-		map: new TextureMapController(this, CONTROLLER_OPTIONS),
+		alphaMap: new TextureAlphaMapController(this),
+		aoMap: new TextureAOMapController(this),
+		emissiveMap: new TextureEmissiveMapController(this),
+		envMap: new TextureEnvMapSimpleController(this),
+		lightMap: new TextureLightMapController(this),
+		map: new TextureMapController(this),
 		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;

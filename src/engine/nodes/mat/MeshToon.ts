@@ -25,10 +25,6 @@ import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {UpdateOptions} from './utils/_BaseTextureController';
-const CONTROLLER_OPTIONS: UpdateOptions = {
-	directParams: true,
-};
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
@@ -90,15 +86,15 @@ export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatP
 	}
 	readonly controllers: Controllers = {
 		advancedCommon: new AdvancedCommonController(this),
-		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
-		bumpMap: new TextureBumpMapController(this, CONTROLLER_OPTIONS),
-		displacementMap: new TextureDisplacementMapController(this, CONTROLLER_OPTIONS),
-		emissiveMap: new TextureEmissiveMapController(this, CONTROLLER_OPTIONS),
-		gradientMap: new TextureGradientMapController(this, CONTROLLER_OPTIONS),
-		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
-		map: new TextureMapController(this, CONTROLLER_OPTIONS),
-		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
+		alphaMap: new TextureAlphaMapController(this),
+		aoMap: new TextureAOMapController(this),
+		bumpMap: new TextureBumpMapController(this),
+		displacementMap: new TextureDisplacementMapController(this),
+		emissiveMap: new TextureEmissiveMapController(this),
+		gradientMap: new TextureGradientMapController(this),
+		lightMap: new TextureLightMapController(this),
+		map: new TextureMapController(this),
+		normalMap: new TextureNormalMapController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 

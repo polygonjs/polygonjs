@@ -1,11 +1,12 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an ambient occlusion map */
@@ -20,10 +21,11 @@ export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class TextureAOMaterial extends Material {
-	aoMap!: Texture | null;
-	aoMapIntensity!: number;
-}
+type TextureAOMaterial = MeshLambertMaterial | MeshStandardMaterial | MeshPhysicalMaterial;
+// class TextureAOMaterial extends Material {
+// 	aoMap!: Texture | null;
+// 	aoMapIntensity!: number;
+// }
 type CurrentMaterial = TextureAOMaterial | Material;
 class TextureAOMapParamsConfig extends AOMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -35,24 +37,24 @@ abstract class TextureAOMapMatNode extends TypedMatNode<CurrentMaterial, Texture
 }
 
 export class TextureAOMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureAOMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureAOMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useAOMap, this.node.p.aoMap);
 	}
 	override async update() {
 		this._update(this.node.material, 'aoMap', this.node.p.useAOMap, this.node.p.aoMap);
-		if (this._update_options.uniforms) {
-			const mat = this.node.material as ShaderMaterial;
-			if (mat.uniforms) {
-				mat.uniforms.aoMapIntensity.value = this.node.pv.aoMapIntensity;
-			}
-		}
-		if (this._update_options.directParams) {
-			const mat = this.node.material as MeshBasicMaterial;
-			mat.aoMapIntensity = this.node.pv.aoMapIntensity;
-		}
+		// if (this._update_options.uniforms) {
+		// 	const mat = this.node.material as ShaderMaterial;
+		// 	if (mat.uniforms) {
+		// 		mat.uniforms.aoMapIntensity.value = this.node.pv.aoMapIntensity;
+		// 	}
+		// }
+		// if (this._update_options.directParams) {
+		const mat = this.node.material as MeshBasicMaterial;
+		mat.aoMapIntensity = this.node.pv.aoMapIntensity;
+		// }
 	}
 	static override async update(node: TextureAOMapMatNode) {
 		node.controllers.aoMap.update();

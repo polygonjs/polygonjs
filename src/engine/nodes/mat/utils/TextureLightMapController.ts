@@ -1,11 +1,10 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 
 export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -23,10 +22,11 @@ export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class TextureLightMaterial extends Material {
-	lightMap!: Texture | null;
-	lightMapIntensity!: number;
-}
+type TextureLightMaterial = MeshPhysicalMaterial;
+// class TextureLightMaterial extends Material {
+// 	lightMap!: Texture | null;
+// 	lightMapIntensity!: number;
+// }
 type CurrentMaterial = TextureLightMaterial | Material;
 class TextureLightMapParamsConfig extends LightMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -38,24 +38,24 @@ abstract class TextureLightMapMatNode extends TypedMatNode<CurrentMaterial, Text
 }
 
 export class TextureLightMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureLightMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureLightMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useLightMap, this.node.p.lightMap);
 	}
 	override async update() {
 		this._update(this.node.material, 'lightMap', this.node.p.useLightMap, this.node.p.lightMap);
-		if (this._update_options.uniforms) {
-			const mat = this.node.material as ShaderMaterial;
-			if (mat.uniforms) {
-				mat.uniforms.lightMapIntensity.value = this.node.pv.lightMapIntensity;
-			}
-		}
-		if (this._update_options.directParams) {
-			const mat = this.node.material as MeshStandardMaterial;
-			mat.lightMapIntensity = this.node.pv.lightMapIntensity;
-		}
+		// if (this._update_options.uniforms) {
+		// 	const mat = this.node.material as ShaderMaterial;
+		// 	if (mat.uniforms) {
+		// 		mat.uniforms.lightMapIntensity.value = this.node.pv.lightMapIntensity;
+		// 	}
+		// }
+		// if (this._update_options.directParams) {
+		const mat = this.node.material as MeshStandardMaterial;
+		mat.lightMapIntensity = this.node.pv.lightMapIntensity;
+		// }
 	}
 	static override async update(node: TextureLightMapMatNode) {
 		node.controllers.lightMap.update();

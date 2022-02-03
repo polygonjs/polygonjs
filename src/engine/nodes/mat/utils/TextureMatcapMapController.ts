@@ -1,10 +1,9 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {MeshMatcapMaterial} from 'three/src/materials/MeshMatcapMaterial';
 
 export function MatcapMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -15,9 +14,10 @@ export function MatcapMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class TextureMatcapMaterial extends Material {
-	matcap!: Texture | null;
-}
+type TextureMatcapMaterial = MeshMatcapMaterial;
+// class TextureMatcapMaterial extends Material {
+// 	matcap!: Texture | null;
+// }
 type CurrentMaterial = TextureMatcapMaterial | ShaderMaterial;
 class TextureMatcapMapParamsConfig extends MatcapMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -29,8 +29,8 @@ abstract class TextureMatcapMapMatNode extends TypedMatNode<CurrentMaterial, Tex
 }
 
 export class TextureMatcapMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureMatcapMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureMatcapMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useMatcapMap, this.node.p.matcapMap);

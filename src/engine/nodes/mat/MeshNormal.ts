@@ -17,10 +17,7 @@ import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureN
 import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
-import {UpdateOptions} from './utils/_BaseTextureController';
-const CONTROLLER_OPTIONS: UpdateOptions = {
-	directParams: true,
-};
+
 interface Controllers {
 	bumpMap: TextureBumpMapController;
 	displacementMap: TextureDisplacementMapController;
@@ -58,9 +55,9 @@ export class MeshNormalMatNode extends TypedMatNode<MeshNormalMaterial, MeshNorm
 
 	readonly controllers: Controllers = {
 		advancedCommon: new AdvancedCommonController(this),
-		bumpMap: new TextureBumpMapController(this, CONTROLLER_OPTIONS),
-		displacementMap: new TextureDisplacementMapController(this, CONTROLLER_OPTIONS),
-		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
+		bumpMap: new TextureBumpMapController(this),
+		displacementMap: new TextureDisplacementMapController(this),
+		normalMap: new TextureNormalMapController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 

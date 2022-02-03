@@ -17,11 +17,7 @@ import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {UpdateOptions} from './utils/_BaseTextureController';
 import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
-const CONTROLLER_OPTIONS: UpdateOptions = {
-	directParams: true,
-};
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
@@ -61,8 +57,8 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 	}
 	readonly controllers: Controllers = {
 		advancedCommon: new AdvancedCommonController(this),
-		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		map: new TextureMapController(this, CONTROLLER_OPTIONS),
+		alphaMap: new TextureAlphaMapController(this),
+		map: new TextureMapController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 

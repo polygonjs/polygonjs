@@ -1,11 +1,10 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a displacement map */
@@ -32,11 +31,12 @@ export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBas
 		});
 	};
 }
-class TextureDisplacementMaterial extends Material {
-	displacementMap!: Texture | null;
-	displacementScale!: number;
-	displacementBias!: number;
-}
+type TextureDisplacementMaterial = MeshPhysicalMaterial;
+// class TextureDisplacementMaterial extends Material {
+// 	displacementMap!: Texture | null;
+// 	displacementScale!: number;
+// 	displacementBias!: number;
+// }
 type CurrentMaterial = TextureDisplacementMaterial | Material;
 class TextureDisplacementMapParamsConfig extends DisplacementMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -48,8 +48,8 @@ abstract class TextureDisplacementMapMatNode extends TypedMatNode<CurrentMateria
 }
 
 export class TextureDisplacementMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureDisplacementMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureDisplacementMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useDisplacementMap, this.node.p.displacementMap);
@@ -61,18 +61,18 @@ export class TextureDisplacementMapController extends BaseTextureMapController {
 			this.node.p.useDisplacementMap,
 			this.node.p.displacementMap
 		);
-		if (this._update_options.uniforms) {
-			const mat = this.node.material as ShaderMaterial;
-			if (mat.uniforms) {
-				mat.uniforms.displacementScale.value = this.node.pv.displacementScale;
-				mat.uniforms.displacementBias.value = this.node.pv.displacementBias;
-			}
-		}
-		if (this._update_options.directParams) {
-			const mat = this.node.material as MeshStandardMaterial;
-			mat.displacementScale = this.node.pv.displacementScale;
-			mat.displacementBias = this.node.pv.displacementBias;
-		}
+		// if (this._update_options.uniforms) {
+		// 	const mat = this.node.material as ShaderMaterial;
+		// 	if (mat.uniforms) {
+		// 		mat.uniforms.displacementScale.value = this.node.pv.displacementScale;
+		// 		mat.uniforms.displacementBias.value = this.node.pv.displacementBias;
+		// 	}
+		// }
+		// if (this._update_options.directParams) {
+		const mat = this.node.material as MeshStandardMaterial;
+		mat.displacementScale = this.node.pv.displacementScale;
+		mat.displacementBias = this.node.pv.displacementBias;
+		// }
 	}
 	static override async update(node: TextureDisplacementMapMatNode) {
 		node.controllers.displacementMap.update();

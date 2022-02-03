@@ -18,22 +18,18 @@ import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapCont
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
-import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
+import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/TextureEnvMapSimpleController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {UpdateOptions} from './utils/_BaseTextureController';
 import {Material} from 'three/src/materials/Material';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-const CONTROLLER_OPTIONS: UpdateOptions = {
-	uniforms: true,
-};
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
-	envMap: TextureEnvMapController;
+	envMap: TextureEnvMapSimpleController;
 	map: TextureMapController;
 }
 
@@ -51,7 +47,7 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 			BaseBuilderParamConfig(
 				/* advanced */
 				AdvancedFolderParamConfig(
-					EnvMapParamConfig(
+					EnvMapSimpleParamConfig(
 						AOMapParamConfig(
 							AlphaMapParamConfig(
 								MapParamConfig(
@@ -87,10 +83,10 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 	}
 	readonly controllers: Controllers = {
 		advancedCommon: new AdvancedCommonController(this),
-		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
-		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
-		map: new TextureMapController(this, CONTROLLER_OPTIONS),
+		alphaMap: new TextureAlphaMapController(this),
+		aoMap: new TextureAOMapController(this),
+		envMap: new TextureEnvMapSimpleController(this),
+		map: new TextureMapController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 

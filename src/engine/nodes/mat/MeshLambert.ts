@@ -15,7 +15,7 @@ import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
 import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
-import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapSimpleController';
+import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/TextureEnvMapSimpleController';
 import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
 import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
@@ -24,16 +24,13 @@ import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {UpdateOptions} from './utils/_BaseTextureController';
-const CONTROLLER_OPTIONS: UpdateOptions = {
-	directParams: true,
-};
+
 interface Controllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
 	emissiveMap: TextureEmissiveMapController;
-	envMap: TextureEnvMapController;
+	envMap: TextureEnvMapSimpleController;
 	lightMap: TextureLightMapController;
 	map: TextureMapController;
 }
@@ -43,7 +40,7 @@ class MeshLambertMatParamsConfig extends FogParamConfig(
 			/* advanced */
 			AdvancedFolderParamConfig(
 				LightMapParamConfig(
-					EnvMapParamConfig(
+					EnvMapSimpleParamConfig(
 						EmissiveMapParamConfig(
 							AOMapParamConfig(
 								AlphaMapParamConfig(
@@ -80,12 +77,12 @@ export class MeshLambertMatNode extends TypedMatNode<MeshLambertMaterial, MeshLa
 	}
 	readonly controllers: Controllers = {
 		advancedCommon: new AdvancedCommonController(this),
-		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
-		emissiveMap: new TextureEmissiveMapController(this, CONTROLLER_OPTIONS),
-		envMap: new TextureEnvMapController(this, CONTROLLER_OPTIONS),
-		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
-		map: new TextureMapController(this, CONTROLLER_OPTIONS),
+		alphaMap: new TextureAlphaMapController(this),
+		aoMap: new TextureAOMapController(this),
+		emissiveMap: new TextureEmissiveMapController(this),
+		envMap: new TextureEnvMapSimpleController(this),
+		lightMap: new TextureLightMapController(this),
+		map: new TextureMapController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
 	override initializeNode() {

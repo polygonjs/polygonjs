@@ -33,13 +33,13 @@ import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {Constructor} from '../../../types/GlobalTypes';
-import {UpdateOptions} from './utils/_BaseTextureController';
+// import {UpdateOptions} from './utils/_BaseTextureController';
 import {Material} from 'three/src/materials/Material';
 import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-const CONTROLLER_OPTIONS: UpdateOptions = {
-	uniforms: true,
-};
+// const CONTROLLER_OPTIONS: UpdateOptions = {
+// 	directParams: true,
+// };
 interface MeshPhysicalBuilderMaterial extends MeshPhysicalMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -121,17 +121,17 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	}
 	readonly controllers: Controllers = {
 		advancedCommon: new AdvancedCommonController(this),
-		alphaMap: new TextureAlphaMapController(this, CONTROLLER_OPTIONS),
-		aoMap: new TextureAOMapController(this, CONTROLLER_OPTIONS),
-		bumpMap: new TextureBumpMapController(this, CONTROLLER_OPTIONS),
-		displacementMap: new TextureDisplacementMapController(this, CONTROLLER_OPTIONS),
-		emissiveMap: new TextureEmissiveMapController(this, CONTROLLER_OPTIONS),
-		envMap: new TextureEnvMapController(this, {uniforms: true, directParams: true}),
-		lightMap: new TextureLightMapController(this, CONTROLLER_OPTIONS),
-		map: new TextureMapController(this, CONTROLLER_OPTIONS),
-		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this, {uniforms: true, directParams: true}),
-		normalMap: new TextureNormalMapController(this, CONTROLLER_OPTIONS),
-		physical: new MeshPhysicalController(this, {uniforms: true, directParams: true}),
+		alphaMap: new TextureAlphaMapController(this),
+		aoMap: new TextureAOMapController(this),
+		bumpMap: new TextureBumpMapController(this),
+		displacementMap: new TextureDisplacementMapController(this),
+		emissiveMap: new TextureEmissiveMapController(this),
+		envMap: new TextureEnvMapController(this),
+		lightMap: new TextureLightMapController(this),
+		map: new TextureMapController(this),
+		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this),
+		normalMap: new TextureNormalMapController(this),
+		physical: new MeshPhysicalController(this),
 		PCSS: new PCSSController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;

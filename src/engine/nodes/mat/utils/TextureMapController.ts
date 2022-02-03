@@ -1,10 +1,11 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
 import {TypedMatNode} from '../_Base';
-import {BaseTextureMapController, BooleanParamOptions, NodePathOptions, UpdateOptions} from './_BaseTextureController';
-
+import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 export function MapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to use a map affecting color */
@@ -13,9 +14,11 @@ export function MapParamConfig<TBase extends Constructor>(Base: TBase) {
 		map = ParamConfig.NODE_PATH('', NodePathOptions(TextureMapController, 'useMap'));
 	};
 }
-class TextureMapMaterial extends Material {
-	map!: Texture | null;
-}
+
+type TextureMapMaterial = MeshBasicMaterial | MeshLambertMaterial | MeshPhongMaterial;
+// class TextureMapMaterial extends Material {
+// 	map!: Texture | null;
+// }
 type CurrentMaterial = TextureMapMaterial | Material;
 class TextureMapParamsConfig extends MapParamConfig(NodeParamsConfig) {}
 interface Controllers {
@@ -27,8 +30,8 @@ abstract class TextureMapMatNode extends TypedMatNode<CurrentMaterial, TextureMa
 }
 
 export class TextureMapController extends BaseTextureMapController {
-	constructor(protected override node: TextureMapMatNode, _update_options: UpdateOptions) {
-		super(node, _update_options);
+	constructor(protected override node: TextureMapMatNode) {
+		super(node);
 	}
 	initializeNode() {
 		this.add_hooks(this.node.p.useMap, this.node.p.map);

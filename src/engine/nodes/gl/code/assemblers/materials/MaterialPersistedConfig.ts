@@ -123,7 +123,6 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			// param_uniform_pairs: param_uniform_pairs,
 			customMaterials: customMaterialsData,
 		};
-		console.log(JSON.stringify(data));
 		return data;
 	}
 	override load(data: PersistedConfigBaseMaterialData) {
