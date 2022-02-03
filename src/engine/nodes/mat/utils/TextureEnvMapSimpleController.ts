@@ -21,7 +21,10 @@ const OperationByName = {
 export function EnvMapSimpleParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an environment map */
-		useEnvMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureEnvMapSimpleController));
+		useEnvMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			...BooleanParamOptions(TextureEnvMapSimpleController),
+		});
 		/** @param specify the environment map COP node. Note that this only works with CubeCamera */
 		envMap = ParamConfig.NODE_PATH(
 			'',
