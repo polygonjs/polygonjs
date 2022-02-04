@@ -3,9 +3,11 @@ import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {Material} from 'three/src/materials/Material';
 import {MultiplyOperation, MixOperation, AddOperation} from 'three/src/constants';
 import {CopType} from '../../../poly/registers/nodes/types/Cop';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
+
 enum CombineOperation {
 	MULT = 'mult',
 	ADD = 'add',
@@ -53,7 +55,7 @@ export function EnvMapSimpleParamConfig<TBase extends Constructor>(Base: TBase) 
 // 	envMap!: Texture | null;
 // 	envMapIntensity!: number;
 // }
-type CurrentMaterial = MeshBasicMaterial | Material;
+type CurrentMaterial = MeshBasicMaterial | MeshLambertMaterial | MeshPhongMaterial;
 class TextureEnvMapParamsConfig extends EnvMapSimpleParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	envMap: TextureEnvMapSimpleController;

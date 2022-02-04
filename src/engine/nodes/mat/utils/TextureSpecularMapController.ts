@@ -1,5 +1,4 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -14,11 +13,10 @@ export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-type TextureSpecularMaterial = MeshPhongMaterial;
 // class TextureSpecularMaterial extends Material {
 // 	specularMap!: Texture | null;
 // }
-type CurrentMaterial = TextureSpecularMaterial | Material;
+type CurrentMaterial = MeshPhongMaterial;
 class TextureSpecularMapParamsConfig extends SpecularMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	specularMap: TextureSpecularMapController;

@@ -9,7 +9,6 @@ import {NodePathParam} from '../../../params/NodePath';
 import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 // import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 // import {
 // 	IUniforms,
@@ -84,7 +83,7 @@ type TextureRemoveCallback<O extends Object> = (
 	mat_attrib_name: keyof SubType<O, Texture | null>
 ) => void;
 
-type CurrentMaterial = Material | ShaderMaterial;
+type CurrentMaterial = Material;
 
 // export interface UpdateOptions {
 // 	directParams?: boolean;

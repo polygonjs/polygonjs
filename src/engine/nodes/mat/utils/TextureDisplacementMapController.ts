@@ -2,9 +2,11 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {Material} from 'three/src/materials/Material';
+import {MeshMatcapMaterial} from 'three/src/materials/MeshMatcapMaterial';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {MeshNormalMaterial} from 'three/src/materials/MeshNormalMaterial';
+import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
 export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a displacement map */
@@ -31,13 +33,17 @@ export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBas
 		});
 	};
 }
-type TextureDisplacementMaterial = MeshPhysicalMaterial;
 // class TextureDisplacementMaterial extends Material {
 // 	displacementMap!: Texture | null;
 // 	displacementScale!: number;
 // 	displacementBias!: number;
 // }
-type CurrentMaterial = TextureDisplacementMaterial | Material;
+type CurrentMaterial =
+	| MeshMatcapMaterial
+	| MeshNormalMaterial
+	| MeshStandardMaterial
+	| MeshPhysicalMaterial
+	| MeshToonMaterial;
 class TextureDisplacementMapParamsConfig extends DisplacementMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	displacementMap: TextureDisplacementMapController;

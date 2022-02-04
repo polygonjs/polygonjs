@@ -1,12 +1,11 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
-import {Material} from 'three/src/materials/Material';
-import {Color} from 'three/src/math/Color';
-
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ColorConversion} from '../../../../core/Color';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {ShadowMaterial} from 'three/src/materials/ShadowMaterial';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -25,17 +24,18 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class ColoredMaterial extends Material {
-	public color!: Color;
-	// vertexColors!: boolean;
-	// transparent!: boolean;
-	// depthTest!: boolean;
-	// alphaTest!: number;
-}
+type ColoredMaterial = MeshBasicMaterial | ShadowMaterial;
+// class ColoredMaterial extends MeshB {
+// 	public color!: Color;
+// 	// vertexColors!: boolean;
+// 	// transparent!: boolean;
+// 	// depthTest!: boolean;
+// 	// alphaTest!: number;
+// }
 class ColorParamsConfig extends ColorParamConfig(NodeParamsConfig) {}
 class ColoredMatNode extends TypedMatNode<ColoredMaterial, ColorParamsConfig> {
-	override createMaterial() {
-		return new ColoredMaterial();
+	override createMaterial(): ColoredMaterial {
+		return new MeshBasicMaterial();
 	}
 }
 

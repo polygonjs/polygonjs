@@ -1,10 +1,12 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
 
 export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -22,12 +24,16 @@ export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-type TextureLightMaterial = MeshPhysicalMaterial;
 // class TextureLightMaterial extends Material {
 // 	lightMap!: Texture | null;
 // 	lightMapIntensity!: number;
 // }
-type CurrentMaterial = TextureLightMaterial | Material;
+type CurrentMaterial =
+	| MeshBasicMaterial
+	| MeshLambertMaterial
+	| MeshStandardMaterial
+	| MeshPhysicalMaterial
+	| MeshToonMaterial;
 class TextureLightMapParamsConfig extends LightMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	lightMap: TextureLightMapController;

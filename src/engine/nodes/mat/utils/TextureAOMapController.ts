@@ -1,12 +1,12 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
 export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an ambient occlusion map */
@@ -21,12 +21,16 @@ export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-type TextureAOMaterial = MeshLambertMaterial | MeshStandardMaterial | MeshPhysicalMaterial;
 // class TextureAOMaterial extends Material {
 // 	aoMap!: Texture | null;
 // 	aoMapIntensity!: number;
 // }
-type CurrentMaterial = TextureAOMaterial | Material;
+type CurrentMaterial =
+	| MeshBasicMaterial
+	| MeshLambertMaterial
+	| MeshStandardMaterial
+	| MeshPhysicalMaterial
+	| MeshToonMaterial;
 class TextureAOMapParamsConfig extends AOMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	aoMap: TextureAOMapController;

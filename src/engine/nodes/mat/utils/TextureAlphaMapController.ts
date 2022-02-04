@@ -1,5 +1,4 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -8,6 +7,9 @@ import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshMatcapMaterial} from 'three/src/materials/MeshMatcapMaterial';
+import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
+import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an alpha map */
@@ -20,13 +22,15 @@ export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-type TextureAlphaMaterial =
+type CurrentMaterial =
 	| MeshBasicMaterial
 	| MeshLambertMaterial
 	| MeshPhongMaterial
 	| MeshStandardMaterial
-	| MeshPhysicalMaterial;
-type CurrentMaterial = TextureAlphaMaterial | Material;
+	| MeshPhysicalMaterial
+	| MeshMatcapMaterial
+	| MeshToonMaterial
+	| PointsMaterial;
 class TextureAlphaMapParamsConfig extends AlphaMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	alphaMap: TextureAlphaMapController;

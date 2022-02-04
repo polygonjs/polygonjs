@@ -1,10 +1,12 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
-import {Material} from 'three/src/materials/Material';
-
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
 
 enum LineCapType {
 	ROUND = 'round',
@@ -44,16 +46,16 @@ export function WireframeParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 	};
 }
-
-class WireframedMaterial extends Material {
-	wireframe!: boolean;
-	wireframeLinecap!: string;
-	wireframeLinejoin!: string;
-}
+type WireframedMaterial = MeshToonMaterial | MeshBasicMaterial | MeshStandardMaterial | MeshPhysicalMaterial;
+// class WireframedMaterial extends Material {
+// 	wireframe!: boolean;
+// 	wireframeLinecap!: string;
+// 	wireframeLinejoin!: string;
+// }
 class WireframeParamsConfig extends WireframeParamConfig(NodeParamsConfig) {}
 class WireframedMatNode extends TypedMatNode<WireframedMaterial, WireframeParamsConfig> {
-	createMaterial() {
-		return new WireframedMaterial();
+	createMaterial(): WireframedMaterial {
+		return new MeshBasicMaterial();
 	}
 }
 

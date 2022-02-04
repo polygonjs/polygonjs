@@ -20,17 +20,18 @@ export function UniformsTransparencyParamConfig<TBase extends Constructor>(Base:
 	};
 }
 
-class TransparencyMaterial extends Material {
-	// transparent!: boolean;
-	// depthTest!: boolean;
-	// alphaTest!: number;
-	// uniforms!: IUniforms;
-}
+type TransparencyMaterial = Material;
+// class TransparencyMaterial extends Material {
+// 	// transparent!: boolean;
+// 	// depthTest!: boolean;
+// 	// alphaTest!: number;
+// 	// uniforms!: IUniforms;
+// }
 class TransparencyParamsConfig extends UniformsTransparencyParamConfig(NodeParamsConfig) {}
 
 class TransparencyMatNode extends TypedMatNode<TransparencyMaterial, TransparencyParamsConfig> {
 	createMaterial() {
-		return new TransparencyMaterial();
+		return new Material();
 	}
 }
 

@@ -1,12 +1,14 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
-import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {TangentSpaceNormalMap, ObjectSpaceNormalMap} from 'three/src/constants';
 import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
+import {MeshMatcapMaterial} from 'three/src/materials/MeshMatcapMaterial';
+import {MeshNormalMaterial} from 'three/src/materials/MeshNormalMaterial';
+import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
 enum NormalMapMode {
 	TANGENT = 'tangent',
 	OBJECT = 'object',
@@ -46,13 +48,18 @@ export function NormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-type TextureNormalMaterial = MeshPhysicalMaterial | MeshStandardMaterial;
 // class TextureNormalMaterial extends Material {
 // 	normalMap!: Texture | null;
 // 	normalMapType!: number;
 // 	normalScale!: Vector2;
 // }
-type CurrentMaterial = TextureNormalMaterial | Material;
+type CurrentMaterial =
+	| MeshPhongMaterial
+	| MeshNormalMaterial
+	| MeshMatcapMaterial
+	| MeshPhysicalMaterial
+	| MeshToonMaterial
+	| MeshStandardMaterial;
 class TextureNormalMapParamsConfig extends NormalMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	normalMap: TextureNormalMapController;

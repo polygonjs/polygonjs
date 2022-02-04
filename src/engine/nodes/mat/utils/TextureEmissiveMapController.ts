@@ -1,9 +1,11 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
+import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
 
 export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -18,13 +20,12 @@ export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-type TextureEmissiveMaterial = MeshPhysicalMaterial;
 // class TextureEmissiveMaterial extends Material {
 // 	emissive!: Color;
 // 	emissiveMap!: Texture | null;
 // 	emissiveIntensity!: number;
 // }
-type CurrentMaterial = TextureEmissiveMaterial | Material;
+type CurrentMaterial = MeshLambertMaterial | MeshStandardMaterial | MeshPhysicalMaterial | MeshToonMaterial;
 class TextureEmissiveMapParamsConfig extends EmissiveMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	emissiveMap: TextureEmissiveMapController;
@@ -51,7 +52,7 @@ export class TextureEmissiveMapController extends BaseTextureMapController {
 		// 	}
 		// }
 		// if (this._update_options.directParams) {
-		const mat = this.node.material as TextureEmissiveMaterial;
+		const mat = this.node.material as CurrentMaterial;
 		mat.emissive.copy(this.node.pv.emissive);
 		mat.emissiveIntensity = this.node.pv.emissiveIntensity;
 		// }

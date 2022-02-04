@@ -18,8 +18,6 @@ interface Controllers {
 class MeshBasicMatParamsConfig extends AdvancedCommonParamConfig(ColorParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
-// TODO: allow to add customDepthMaterial: https://stackoverflow.com/questions/43848330/three-js-shadows-cast-by-partially-transparent-mesh
-// this may need a mat/custom_depth and for the sop/material to select which material property to assign it to on the object3D
 export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {

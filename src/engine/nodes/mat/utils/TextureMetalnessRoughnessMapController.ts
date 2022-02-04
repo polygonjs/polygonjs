@@ -1,5 +1,4 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -35,12 +34,11 @@ export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base
 	};
 }
 
-type TextureMetalnessMaterial = MeshStandardMaterial | MeshPhysicalMaterial;
 // class TextureMetalnessMaterial extends Material {
 // 	metalnessMap!: Texture | null;
 // 	metalness!: number;
 // }
-type CurrentMaterial = TextureMetalnessMaterial | Material;
+type CurrentMaterial = MeshStandardMaterial | MeshPhysicalMaterial;
 class TextureMetalnessMapParamsConfig extends MetalnessRoughnessMapParamConfig(NodeParamsConfig) {}
 interface Controllers {
 	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
