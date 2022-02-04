@@ -232,6 +232,9 @@ export class OptionsController {
 	}
 
 	set(options: ParamOptions) {
+		if (CoreType.isString(options)) {
+			console.warn('options input invalid', options, typeof options);
+		}
 		this._default_options = options;
 		this._options = ObjectUtils.cloneDeep(this._default_options);
 		this.post_set_options();
@@ -406,10 +409,17 @@ export class OptionsController {
 		return this._options[JOIN_TO_PREVIOUS_PARAM];
 	}
 	// editable
-	editable() {
-		const editable = this._options[EDITABLE];
-		if (editable != null) {
-			return editable;
+	setEditableState(state: boolean) {
+		const currentState = this._options[EDITABLE];
+		if (currentState != state) {
+			this._options[EDITABLE] = state;
+			this.param().emit(ParamEvent.EDITABLE_UPDATED);
+		}
+	}
+	editable(): boolean {
+		const state = this._options[EDITABLE];
+		if (state != null) {
+			return state;
 		}
 		return true;
 	}

@@ -1,5 +1,4 @@
 import {NodeContext} from '../../../poly/NodeContext';
-import {ParamEvent} from '../../../poly/ParamEvent';
 import {TypedNode} from '../../_Base';
 
 export class ParamsEditableStateController<NC extends NodeContext> {
@@ -62,12 +61,8 @@ export class ParamsEditableStateController<NC extends NodeContext> {
 				if (params.has(paramName)) {
 					const param = params.get(paramName);
 					if (param) {
-						const currentEditableState = param.options.editable();
 						const requiredState = !isConnected;
-						if (currentEditableState != requiredState) {
-							param.options.setOption('editable', requiredState);
-							param.emit(ParamEvent.EDITABLE_UPDATED);
-						}
+						param.options.setEditableState(requiredState);
 					}
 				}
 			}
