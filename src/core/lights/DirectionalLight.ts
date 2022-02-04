@@ -22,6 +22,8 @@ export interface DirectionalLightParams extends DefaultOperationParams {
 	showHelper: boolean;
 	//
 	castShadow: boolean;
+	shadowAutoUpdate: boolean;
+	shadowUpdateOnNextRender: boolean;
 	shadowRes: Vector2;
 	shadowSize: Vector2;
 	shadowBias: number;
@@ -36,6 +38,8 @@ export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
 	showHelper: false,
 	//
 	castShadow: false,
+	shadowAutoUpdate: true,
+	shadowUpdateOnNextRender: false,
 	shadowRes: new Vector2(1024, 1024),
 	shadowSize: new Vector2(2, 2),
 	shadowBias: 0.001,
@@ -62,6 +66,14 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		shadow = ParamConfig.FOLDER();
 		/** @param toggle on to cast shadows */
 		castShadow = ParamConfig.BOOLEAN(DEFAULT.castShadow);
+		/** @param toggle off if the shadows do not need to be regenerated */
+		shadowAutoUpdate = ParamConfig.BOOLEAN(DEFAULT.shadowAutoUpdate, {
+			visibleIf: {castShadow: 1},
+		});
+		/** @param press button to update the shadows on next render */
+		shadowUpdateOnNextRender = ParamConfig.BOOLEAN(DEFAULT.shadowUpdateOnNextRender, {
+			visibleIf: {castShadow: 1, shadowAutoUpdate: 0},
+		});
 		/** @param shadow resolution */
 		shadowRes = ParamConfig.VECTOR2(DEFAULT.shadowRes.toArray(), {
 			visibleIf: {castShadow: true},

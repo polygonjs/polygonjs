@@ -9,6 +9,7 @@ import {
 	DirectionalLightContainerParams,
 } from '../../../core/lights/DirectionalLight';
 import {Object3D} from 'three/src/core/Object3D';
+import {NodeContext} from '../../poly/NodeContext';
 
 export class DirectionalLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: DirectionalLightParams = DEFAULT_DIRECTIONAL_LIGHT_PARAMS;
@@ -45,10 +46,17 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		light.intensity = params.intensity;
 		light.shadow.camera.far = params.distance;
 	}
-	updateShadowParams(container: DirectionalLightContainer, params: DirectionalLightParams) {
+	updateShadowParams<NC extends NodeContext>(container: DirectionalLightContainer, params: DirectionalLightParams) {
 		const light = container.light();
+		light.shadow.autoUpdate = isBooleanTrue(params.shadowAutoUpdate);
+		light.shadow.needsUpdate = isBooleanTrue(params.shadowUpdateOnNextRender);
+
 		light.castShadow = isBooleanTrue(params.castShadow);
 		light.shadow.mapSize.copy(params.shadowRes);
+		const map = light.shadow.map;
+		if (map) {
+			map.setSize(params.shadowRes.x, params.shadowRes.y);
+		}
 
 		light.shadow.bias = params.shadowBias;
 		light.shadow.radius = params.shadowRadius;
@@ -59,7 +67,7 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		shadowCamera.right = shadowSize.x * 0.5;
 		shadowCamera.top = shadowSize.y * 0.5;
 		shadowCamera.bottom = -shadowSize.y * 0.5;
-		light.shadow.camera.updateProjectionMatrix();
+		shadowCamera.updateProjectionMatrix();
 
 		container.updateHelper();
 	}

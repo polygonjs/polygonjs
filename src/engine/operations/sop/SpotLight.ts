@@ -64,6 +64,11 @@ export class SpotLightSopOperation extends BaseSopOperation {
 		light.shadow.needsUpdate = isBooleanTrue(params.shadowUpdateOnNextRender);
 
 		light.shadow.mapSize.copy(params.shadowRes);
+		const map = light.shadow.map;
+		if (map) {
+			map.setSize(params.shadowRes.x, params.shadowRes.y);
+			console.log(params.shadowRes, map);
+		}
 
 		light.shadow.bias = params.shadowBias;
 		light.shadow.radius = params.shadowRadius;

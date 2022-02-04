@@ -15,7 +15,10 @@ export interface PointLightParams extends DefaultOperationParams {
 	intensity: number;
 	decay: number;
 	distance: number;
+	//
 	castShadow: boolean;
+	shadowAutoUpdate: boolean;
+	shadowUpdateOnNextRender: boolean;
 	shadowRes: Vector2;
 	shadowBias: number;
 	shadowNear: number;
@@ -29,7 +32,10 @@ export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	intensity: 1,
 	decay: 0.1,
 	distance: 100,
+	//
 	castShadow: false,
+	shadowAutoUpdate: true,
+	shadowUpdateOnNextRender: false,
 	shadowRes: new Vector2(1024, 1024),
 	shadowBias: 0.001,
 	shadowNear: 1,
@@ -51,7 +57,10 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param light decay */
 		decay = ParamConfig.FLOAT(DEFAULT.decay);
 		/** @param light distance */
-		distance = ParamConfig.FLOAT(DEFAULT.distance);
+		distance = ParamConfig.FLOAT(DEFAULT.distance, {
+			range: [0, 100],
+			rangeLocked: [true, false],
+		});
 		// helper
 		/** @param toggle to show helper */
 		showHelper = ParamConfig.BOOLEAN(0);
@@ -62,6 +71,14 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		shadow = ParamConfig.FOLDER();
 		/** @param toggle to cast shadows */
 		castShadow = ParamConfig.BOOLEAN(DEFAULT.castShadow);
+		/** @param toggle off if the shadows do not need to be regenerated */
+		shadowAutoUpdate = ParamConfig.BOOLEAN(DEFAULT.shadowAutoUpdate, {
+			visibleIf: {castShadow: 1},
+		});
+		/** @param press button to update the shadows on next render */
+		shadowUpdateOnNextRender = ParamConfig.BOOLEAN(DEFAULT.shadowUpdateOnNextRender, {
+			visibleIf: {castShadow: 1, shadowAutoUpdate: 0},
+		});
 		/** @param shadow res */
 		shadowRes = ParamConfig.VECTOR2(DEFAULT.shadowRes.toArray() as Number2, {visibleIf: {castShadow: 1}});
 		/** @param shadow bias */

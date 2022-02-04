@@ -54,9 +54,21 @@ export class PointLightSopOperation extends BaseSopOperation {
 	}
 	updateShadowParams(light: PointLight, params: PointLightParams) {
 		light.castShadow = isBooleanTrue(params.castShadow);
+		light.shadow.autoUpdate = isBooleanTrue(params.shadowAutoUpdate);
+		light.shadow.needsUpdate = light.shadow.autoUpdate || isBooleanTrue(params.shadowUpdateOnNextRender);
+
 		light.shadow.mapSize.copy(params.shadowRes);
+		// console.log(light);
+		// const map = light.shadow.map;
+		// if (map) {
+		// 	map.setSize(params.shadowRes.x, params.shadowRes.y);
+		// 	console.log(map);
+		// }
+
 		light.shadow.camera.near = params.shadowNear;
 		light.shadow.camera.far = params.shadowFar;
 		light.shadow.bias = params.shadowBias;
+
+		light.shadow.camera.updateProjectionMatrix();
 	}
 }
