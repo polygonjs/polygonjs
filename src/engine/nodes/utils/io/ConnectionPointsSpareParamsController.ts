@@ -180,22 +180,4 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		}
 		// }
 	}
-
-	updateSpareParamsEditableStateIfNeeded() {
-		let i = 0;
-		const params = this.node.params;
-		for (let connectionPoint of this.node.io.inputs.namedInputConnectionPoints()) {
-			if (connectionPoint) {
-				const isConnected = this.node.io.inputs.input(i) != null;
-				const paramName = connectionPoint?.name();
-				if (params.has(paramName)) {
-					const param = params.get(paramName);
-					if (param) {
-						param.options.setOption('editable', !isConnected);
-					}
-				}
-			}
-			i++;
-		}
-	}
 }

@@ -16,6 +16,7 @@ import {Vector3Param} from '../../params/Vector3';
 import {Vector4Param} from '../../params/Vector4';
 import {ColorParam} from '../../params/Color';
 import {BooleanParam} from '../../params/Boolean';
+import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
 
 const REGEX_PATH_SANITIZE = /\/+/g;
 
@@ -30,12 +31,14 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 
 	protected _param_configs_controller: ParamConfigsController<GlParamConfig<ParamType>> | undefined;
 	protected _assembler: BaseGlShaderAssembler | undefined;
+	private _paramsEditableStatesController = new ParamsEditableStateController(this);
 
 	override initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
 		this.io.connections.initInputs();
 
 		this.io.connection_points.spare_params.initializeNode();
+		this._paramsEditableStatesController.initializeNode();
 	}
 
 	override cook() {

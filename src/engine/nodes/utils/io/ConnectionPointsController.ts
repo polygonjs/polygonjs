@@ -137,11 +137,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 
 	update_signature_if_required(dirty_trigger?: CoreGraphNode) {
-		if (
-			!this.node.lifecycle.creationCompleted() ||
-			!this._inputsOutputsMatchExpectations() ||
-			!this._spareParamsMatchEditableState()
-		) {
+		if (!this.node.lifecycle.creationCompleted() || !this._inputsOutputsMatchExpectations()) {
 			this.update_connection_types();
 			this.node.removeDirtyState();
 
@@ -150,7 +146,6 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			if (!this.node.scene().loadingController.isLoading()) {
 				this.make_successors_update_signatures();
 			}
-			this._spare_params_controller.updateSpareParamsEditableStateIfNeeded();
 		}
 	}
 
@@ -228,29 +223,6 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		);
 
 		return inputTypesMatch && outputTypesMatch && inputNamesMatch && outputNamesMatch;
-	}
-	private _spareParamsMatchEditableState(): boolean {
-		let i = 0;
-		const params = this.node.params;
-		for (let connectionPoint of this.node.io.inputs.namedInputConnectionPoints()) {
-			if (connectionPoint) {
-				const isConnected = this.node.io.inputs.input(i) != null;
-				const paramName = connectionPoint?.name();
-				const hasParam = params.has(paramName);
-				if (hasParam) {
-					const param = params.get(paramName);
-					if (param) {
-						const expectedEditableState = !isConnected;
-						const currentEditableState = param.options.editable();
-						if (expectedEditableState != currentEditableState) {
-							return false;
-						}
-					}
-				}
-			}
-			i++;
-		}
-		return true;
 	}
 
 	//

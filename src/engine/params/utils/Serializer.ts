@@ -18,6 +18,7 @@ export interface ParamSerializerData<T extends ParamType> {
 	// is_dirty: boolean;
 	error_message?: string;
 	is_visible: boolean;
+	editable: boolean;
 	folder_name?: string;
 	components?: CoreGraphNodeId[];
 }
@@ -37,6 +38,7 @@ export class ParamSerializer<T extends ParamType> {
 			// is_dirty: this.param.isDirty(),
 			error_message: this.error_message(),
 			is_visible: this.is_visible(),
+			editable: this.editable(),
 			// folder_name: this.param.uiData.folder_name,
 			components: undefined,
 		};
@@ -65,5 +67,8 @@ export class ParamSerializer<T extends ParamType> {
 	}
 	is_visible() {
 		return this.param.options.isVisible();
+	}
+	editable() {
+		return this.param.options.editable();
 	}
 }
