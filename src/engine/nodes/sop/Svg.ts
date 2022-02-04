@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ModuleName} from '../../poly/registers/modules/Common';
 import {SvgSopOperation} from '../../operations/sop/Svg';
+import {Poly} from '../../Poly';
 const DEFAULT = SvgSopOperation.DEFAULT_PARAMS;
 
 class SvgSopParamsConfig extends NodeParamsConfig {
@@ -43,7 +44,10 @@ export class SvgSopNode extends TypedSopNode<SvgSopParamsConfig> {
 	override async requiredModules() {
 		return [ModuleName.SVGLoader];
 	}
-
+	override dispose(): void {
+		super.dispose();
+		Poly.blobs.clearBlobsForNode(this);
+	}
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: SvgSopOperation | undefined;
 	override async cook(input_contents: CoreGroup[]) {

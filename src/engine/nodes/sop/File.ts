@@ -14,6 +14,7 @@ import {FileSopOperation} from '../../operations/sop/File';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
+import {Poly} from '../../Poly';
 const DEFAULT = FileSopOperation.DEFAULT_PARAMS;
 class FileSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
@@ -54,6 +55,10 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		const format = this.pv.format as GeometryFormat;
 		return CoreLoaderGeometry.moduleNamesFromFormat(format, ext);
 	}
+	override dispose(): void {
+		super.dispose();
+		Poly.blobs.clearBlobsForNode(this);
+	}
 
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: FileSopOperation | undefined;
@@ -69,7 +74,7 @@ export class FileSopNode extends TypedSopNode<FileSopParamsConfig> {
 		node._paramCallbackReload();
 	}
 	private _paramCallbackReload() {
-		this.operation().clearLoadedBlob(this.pv);
+		// this.operation().clearLoadedBlob(this.pv);
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		this.p.url.setDirty();
 		// this.setDirty()

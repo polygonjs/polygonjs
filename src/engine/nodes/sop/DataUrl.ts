@@ -16,6 +16,7 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {FileType} from '../../params/utils/OptionsController';
+import {Poly} from '../../Poly';
 
 export enum DataType {
 	JSON = 'json',
@@ -108,15 +109,18 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 				return this._loadCSV();
 		}
 	}
-	private _clearLoadedBlob() {
-		switch (DATA_TYPES[this.pv.dataType]) {
-			case DataType.JSON:
-				return this._resetJSON();
-			case DataType.CSV:
-				return this._resetCSV();
-		}
+	// private _clearLoadedBlob() {
+	// 	switch (DATA_TYPES[this.pv.dataType]) {
+	// 		case DataType.JSON:
+	// 			return this._resetJSON();
+	// 		case DataType.CSV:
+	// 			return this._resetCSV();
+	// 	}
+	// }
+	override dispose(): void {
+		super.dispose();
+		Poly.blobs.clearBlobsForNode(this);
 	}
-
 	private _url() {
 		const assets_root = this.scene().assets.root();
 		if (assets_root) {
@@ -145,10 +149,10 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 
 		loader.load(this._onLoad.bind(this), undefined, this._onError.bind(this));
 	}
-	private _resetJSON() {
-		const loader = new JsonDataLoader(this._url(), this.scene());
-		loader.deregisterUrl();
-	}
+	// private _resetJSON() {
+	// 	const loader = new JsonDataLoader(this._url(), this.scene());
+	// 	loader.deregisterUrl();
+	// }
 
 	private _onLoad(geometry: BufferGeometry) {
 		this.setGeometry(geometry, ObjectType.POINTS);
@@ -173,11 +177,11 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 			this.states.error.set('could not generate points');
 		}
 	}
-	private _resetCSV() {
-		const attribNames: string[] = [];
-		const loader = new CsvLoader(this._url(), this.scene(), attribNames, this);
-		loader.deregisterUrl();
-	}
+	// private _resetCSV() {
+	// 	const attribNames: string[] = [];
+	// 	const loader = new CsvLoader(this._url(), this.scene(), attribNames, this);
+	// 	loader.deregisterUrl();
+	// }
 
 	// async _on_open_url(){
 	// 	const url = await this.param('url').eval_p()
@@ -191,7 +195,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		node.param_callback_reload();
 	}
 	param_callback_reload() {
-		this._clearLoadedBlob();
+		// this._clearLoadedBlob();
 		// this._previous_param_url = null
 
 		// set the param dirty is preferable, in case this is used to refresh a local asset

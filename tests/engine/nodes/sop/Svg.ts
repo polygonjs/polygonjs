@@ -1,7 +1,7 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 
-async function with_file(path: string) {
+async function withFile(path: string) {
 	const geo1 = window.geo1;
 	const svg1 = geo1.createNode('svg');
 	svg1.p.url.set(`${ASSETS_ROOT}/${path}`);
@@ -11,13 +11,27 @@ async function with_file(path: string) {
 }
 
 QUnit.test('SOP svg with tiger', async (assert) => {
-	const container = await with_file('models/svg/tiger.svg');
+	const container = await withFile('models/svg/tiger.svg');
 	const core_content = container.coreContent()!;
 	assert.equal(container.objectsCount(), 152);
 	assert.equal(container.pointsCount(), 24292);
 	assert.deepEqual(container.objectsCountByType(), {Mesh: 152});
 	assert.equal(core_content.objects().length, 152);
 	assert.equal(core_content.pointsCount(), 24292);
+	const first_mesh = core_content.objectsWithGeo()[0];
+	assert.equal(first_mesh.children.length, 0);
+
+	const first_geometry = first_mesh.geometry as BufferGeometry;
+	assert.ok(first_geometry.index, 'geometry has index');
+});
+QUnit.test('SOP svg with wolf', async (assert) => {
+	const container = await withFile('models/svg/wolf.svg');
+	const core_content = container.coreContent()!;
+	assert.equal(container.objectsCount(), 6);
+	assert.equal(container.pointsCount(), 1160);
+	assert.deepEqual(container.objectsCountByType(), {Mesh: 6});
+	assert.equal(core_content.objects().length, 6);
+	assert.equal(core_content.pointsCount(), 1160);
 	const first_mesh = core_content.objectsWithGeo()[0];
 	assert.equal(first_mesh.children.length, 0);
 

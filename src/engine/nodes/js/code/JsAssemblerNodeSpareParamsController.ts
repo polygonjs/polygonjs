@@ -81,8 +81,8 @@ export class JsAssemblerNodeSpareParamsController {
 				params_update_options.toAdd.push({
 					name: param_config.name(),
 					type: param_config.type(),
-					init_value: init_value as any,
-					raw_input: raw_input as any,
+					initValue: init_value as any,
+					rawInput: raw_input as any,
 					options: options,
 				});
 			}

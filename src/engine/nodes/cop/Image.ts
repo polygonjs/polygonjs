@@ -19,6 +19,7 @@ import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
+import {Poly} from '../../Poly';
 
 function ImageCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -59,6 +60,10 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 	static override displayedInputNames(): string[] {
 		return ['optional texture to copy attributes from'];
 	}
+	override dispose(): void {
+		super.dispose();
+		Poly.blobs.clearBlobsForNode(this);
+	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
@@ -93,7 +98,7 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		node.paramCallbackReload();
 	}
 	private paramCallbackReload() {
-		this.clearLoadedBlob();
+		// this.clearLoadedBlob();
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
 		this.p.url.setDirty();
@@ -121,8 +126,8 @@ export class ImageCopNode extends TypedCopNode<ImageCopParamsConfig> {
 		}
 		return texture;
 	}
-	clearLoadedBlob() {
-		const loader = this._loader();
-		loader.deregisterUrl();
-	}
+	// clearLoadedBlob() {
+	// 	const loader = this._loader();
+	// 	loader.deregisterUrl();
+	// }
 }

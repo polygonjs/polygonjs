@@ -20,7 +20,7 @@ LOADING_MANAGER.setURLModifier((url) => {
 });
 
 interface MultipleDependenciesLoadFileOptions {
-	storedUrl: string;
+	// storedUrl: string;
 	fullUrl: string;
 }
 interface MultipleDependenciesLoadOptions {
@@ -67,46 +67,47 @@ export class CoreBaseLoader {
 	}
 
 	protected async _urlToLoad(): Promise<string> {
-		const {storedUrl, fullUrl} = this._urlData();
+		// const {storedUrl, fullUrl} = this._urlData();
 		// }
+		const fullUrl = this._url;
 		if (this._node) {
 			await Poly.blobs.fetchBlobForNode({
-				storedUrl,
+				// storedUrl,
 				fullUrl,
 				node: this._node,
 				multiAssetsForNode: this.blobOptions.multiAssetsForNode,
 			});
 		}
-		const blobUrl = Poly.blobs.blobUrl(storedUrl);
+		const blobUrl = Poly.blobs.blobUrl(fullUrl);
 		return blobUrl || fullUrl;
 	}
-	deregisterUrl() {
-		const {storedUrl} = this._urlData();
-		Poly.blobs.deregisterUrl(storedUrl);
-	}
-	private _urlData() {
-		let fullUrl = this._url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
-		const storedUrl = this._url.split('?')[0];
-		// const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
-		// if (blobUrl) {
-		// 	resolvedUrl = blobUrl;
-		// } else {
-		if (fullUrl[0] != 'h') {
-			const assets_root = this._scene.assets.root();
-			if (assets_root) {
-				fullUrl = `${assets_root}${fullUrl}`;
-			}
-		}
-		return {fullUrl, storedUrl};
-	}
+	// deregisterUrl() {
+	// 	const {storedUrl} = this._urlData();
+	// 	Poly.blobs.deregisterUrl(storedUrl);
+	// }
+	// private _urlData() {
+	// 	let fullUrl = this._url; //.includes('?') ? this.url : `${this.url}?${Date.now()}`;
+	// 	const storedUrl = this._url.split('?')[0];
+	// 	// const blobUrl = Poly.blobs.blobUrl(resolvedUrl);
+	// 	// if (blobUrl) {
+	// 	// 	resolvedUrl = blobUrl;
+	// 	// } else {
+	// 	if (fullUrl[0] != 'h') {
+	// 		const assets_root = this._scene.assets.root();
+	// 		if (assets_root) {
+	// 			fullUrl = `${assets_root}${fullUrl}`;
+	// 		}
+	// 	}
+	// 	return {fullUrl, storedUrl};
+	// }
 
 	protected static async _loadMultipleBlobGlobal(options: MultipleDependenciesLoadOptions) {
 		const promises: Promise<FetchBlobResponse>[] = [];
 		for (let file of options.files) {
-			const storedUrl = file.storedUrl;
+			// const storedUrl = file.storedUrl;
 			const fullUrl = file.fullUrl;
-			const node = options.node;
-			promises.push(Poly.blobs.fetchBlobGlobal({storedUrl, fullUrl, node}));
+			// const node = options.node;
+			promises.push(Poly.blobs.fetchBlobGlobal(fullUrl));
 		}
 		const responses = await Promise.all(promises);
 		for (let response of responses) {

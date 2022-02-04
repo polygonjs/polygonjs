@@ -4,6 +4,7 @@ import {NodeContext} from '../../src/engine/poly/NodeContext';
 import {propertyNameAnimPresetRegister} from './anim/PropertyName';
 // audio
 import {fileAudioPresetRegister} from './audio/File';
+import {samplerAudioPresetRegister} from './audio/Sampler';
 // cop
 import {audioAnalyserCopPresetRegister} from './cop/AudioAnalyser';
 import {imageCopPresetRegister} from './cop/Image';
@@ -23,6 +24,7 @@ import {fileSopPresetRegister} from './sop/File';
 import {transformSopPresetRegister} from './sop/Transform';
 import {pointSopPresetRegister} from './sop/Point';
 import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
+import {svgSopPresetRegister} from './sop/Svg';
 import {textSopPresetRegister} from './sop/Text';
 
 import {PresetRegister} from './BasePreset';
@@ -36,6 +38,7 @@ class PresetLibraryClass {
 		this._registerPreset(propertyNameAnimPresetRegister);
 		// audio
 		this._registerPreset(fileAudioPresetRegister);
+		this._registerPreset(samplerAudioPresetRegister);
 		// cop
 		this._registerPreset(audioAnalyserCopPresetRegister);
 		this._registerPreset(imageCopPresetRegister);
@@ -54,6 +57,7 @@ class PresetLibraryClass {
 		this._registerPreset(pointSopPresetRegister);
 		this._registerPreset(roundedBoxSopPresetRegister);
 		this._registerPreset(textSopPresetRegister);
+		this._registerPreset(svgSopPresetRegister);
 		this._registerPreset(transformSopPresetRegister);
 	}
 

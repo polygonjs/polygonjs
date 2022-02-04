@@ -44,10 +44,10 @@ export class FileSopOperation extends BaseSopOperation {
 			);
 		});
 	}
-	clearLoadedBlob(params: FileSopParams) {
-		const loader = FileSopOperation.loader(params, this.scene(), this._node);
-		loader.deregisterUrl();
-	}
+	// clearLoadedBlob(params: FileSopParams) {
+	// 	const loader = FileSopOperation.loader(params, this.scene(), this._node);
+	// 	loader.deregisterUrl();
+	// }
 
 	private _onLoad(objects: Object3D[], params: FileSopParams) {
 		// .flat() is overzealous and could break the hierarchy

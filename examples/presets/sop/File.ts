@@ -1,42 +1,8 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {FileSopNode} from '../../../src/engine/nodes/sop/File';
 import {ParamType} from '../../../src/engine/poly/ParamType';
+import {PolyDictionary} from '../../../src/types/GlobalTypes';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
-
-// export function FileSopNodePresets() {
-// 	return {
-// 		bunny_drc: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/bunny.drc`);
-// 		},
-// 		bunny_fbx: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/fbx/stanford-bunny.fbx`);
-// 		},
-// 		car_glb: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/car.glb`);
-// 		},
-// 		deer_obj: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/deer.obj`);
-// 		},
-// 		flamingo_glb: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/flamingo.glb`);
-// 		},
-// 		parrot_glb: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/parrot.glb`);
-// 		},
-// 		soldier_glb: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/soldier.glb`);
-// 		},
-// 		wolf_obj: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/wolf.obj`);
-// 		},
-// 		dolphin_obj: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/dolphin.obj`);
-// 		},
-// 		sphere_with_texture: function (node: FileSopNode) {
-// 			node.p.url.set(`${DEMO_ASSETS_ROOT_URL}/models/sphere_with_texture.glb`);
-// 		},
-// 	};
-// }
 
 const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode> = (node: FileSopNode) => {
 	const collection = new NodePresetsCollection();
@@ -72,6 +38,42 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 		node.p.url,
 		`${DEMO_ASSETS_ROOT_URL}/models/sphere_with_texture.glb`
 	);
+
+	function _3dscanstores() {
+		function _3dscanstore(fileName: string) {
+			return new BasePreset().addEntry<ParamType.STRING>(
+				node.p.url,
+				`${DEMO_ASSETS_ROOT_URL}/models/resources/3dscanstore.com/BaseMeshes/OBJ/${fileName}.obj`
+			);
+		}
+		const fileNames = ['Female-Average-Head', 'Male-Average-Head', 'Super-Average-Head'];
+		const dict: PolyDictionary<BasePreset> = {};
+		for (let fileName of fileNames) {
+			dict[`3dscanstore.com/${fileName}`] = _3dscanstore(fileName);
+		}
+		return dict;
+	}
+	function _renderPeoples() {
+		function _renderPeople(fileName: string) {
+			return new BasePreset().addEntry<ParamType.STRING>(
+				node.p.url,
+				`${DEMO_ASSETS_ROOT_URL}/models/resources/renderpeople.com/${fileName}.obj`
+			);
+		}
+		const fileNameDatas = [
+			{dennis: 'rp_dennis_posed_004_OBJ/rp_dennis_posed_004_30k'},
+			{fabienne: 'rp_fabienne_percy_posed_001_OBJ/rp_fabienne_percy_posed_001_60k'},
+			{mei: 'rp_mei_posed_001_OBJ/rp_mei_posed_001_30k'},
+		];
+		const dict: PolyDictionary<BasePreset> = {};
+		for (let fileNameData of fileNameDatas) {
+			const shortName = Object.keys(fileNameData)[0];
+			const fileName = Object.values(fileNameData)[0];
+			dict[`renderpeople.com/${shortName}`] = _renderPeople(fileName);
+		}
+		return dict;
+	}
+
 	collection.setPresets({
 		bunny_drc,
 		bunny_fbx,
@@ -83,6 +85,8 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 		wolf_obj,
 		dolphin_obj,
 		sphere_with_texture,
+		..._3dscanstores(),
+		..._renderPeoples(),
 	});
 
 	return collection;

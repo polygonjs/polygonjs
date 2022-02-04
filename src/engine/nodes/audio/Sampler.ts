@@ -11,6 +11,7 @@ import {PolyDictionary} from '../../../types/GlobalTypes';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {UrlHelper} from '../../../core/UrlHelper';
 import {CoreLoaderAudio} from '../../../core/loader/Audio';
+import {Poly} from '../../Poly';
 
 export const SAMPLER_DEFAULTS: Partial<SamplerOptions> = {
 	attack: 0.01,
@@ -71,6 +72,13 @@ export class SamplerAudioNode extends TypedAudioNode<SamplerAudioParamsConfig> {
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);
+	}
+	static override displayedInputNames(): string[] {
+		return ['envelope'];
+	}
+	override dispose(): void {
+		super.dispose();
+		Poly.blobs.clearBlobsForNode(this);
 	}
 
 	override async cook(inputContents: AudioBuilder[]) {

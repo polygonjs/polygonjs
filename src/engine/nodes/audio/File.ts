@@ -11,6 +11,7 @@ import {CoreLoaderAudio} from '../../../core/loader/Audio';
 import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {FileType} from '../../params/utils/OptionsController';
+import {Poly} from '../../Poly';
 
 const LOOP_OPTIONS = {
 	cook: false,
@@ -126,6 +127,15 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 
 	override initializeNode() {
 		this.io.inputs.setCount(0);
+	}
+
+	override dispose(): void {
+		super.dispose();
+		if (this._player) {
+			this.pause();
+			this._player.dispose();
+		}
+		Poly.blobs.clearBlobsForNode(this);
 	}
 
 	private _startedAt: number | undefined;

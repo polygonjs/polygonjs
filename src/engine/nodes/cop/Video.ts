@@ -29,6 +29,7 @@ import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
+import {Poly} from '../../Poly';
 
 function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -102,7 +103,6 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		return this._video;
 	}
 	// private _data_texture_controller: DataTextureController | undefined;
-	private _texture_loader: CoreLoaderTexture | undefined;
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 	static override displayedInputNames(): string[] {
 		return ['optional texture to copy attributes from'];
@@ -111,13 +111,26 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
+
+	override dispose(): void {
+		super.dispose();
+		this._disposeHTMLVideoElement();
+		Poly.blobs.clearBlobsForNode(this);
+	}
+	private _disposeHTMLVideoElement() {
+		if (this._video) {
+			this._video.parentElement?.removeChild(this._video);
+		}
+	}
+
 	override async cook(input_contents: Texture[]) {
 		if (isBooleanTrue(this.pv.checkFileType) && !isUrlVideo(this.pv.url)) {
 			this.states.error.set('url is not a video');
 		} else {
-			const texture = await this._load_texture(this.pv.url);
+			const texture = await this._loadTexture(this.pv.url);
 
 			if (texture) {
+				this._disposeHTMLVideoElement();
 				this._video = texture.image;
 				if (this._video) {
 					document.body.appendChild(this._video);
@@ -136,12 +149,6 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			} else {
 				this.cookController.endCook();
 			}
-		}
-	}
-	override dispose() {
-		super.dispose();
-		if (this._video) {
-			this._video.parentElement?.removeChild(this._video);
 		}
 	}
 
@@ -200,16 +207,14 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		this.p.url.setDirty();
 	}
 
-	private async _load_texture(url: string) {
+	private async _loadTexture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
 		const url_param = this.p.url;
-		this._texture_loader =
-			this._texture_loader ||
-			new CoreLoaderTexture(url, url_param, this, this.scene(), {
-				forceVideo: !isBooleanTrue(this.pv.checkFileType),
-			});
+		const loader = new CoreLoaderTexture(url, url_param, this, this.scene(), {
+			forceVideo: !isBooleanTrue(this.pv.checkFileType),
+		});
 		try {
-			texture = await this._texture_loader.load_texture_from_url_or_op({
+			texture = await loader.load_texture_from_url_or_op({
 				tdataType: this.pv.ttype && this.pv.tadvanced,
 				dataType: this.pv.type,
 			});

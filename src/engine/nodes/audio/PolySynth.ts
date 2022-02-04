@@ -22,6 +22,9 @@ export class PolySynthAudioNode extends TypedAudioNode<PolySynthAudioParamsConfi
 	override initializeNode() {
 		this.io.inputs.setCount(0);
 	}
+	static override displayedInputNames(): string[] {
+		return ['envelope'];
+	}
 
 	override cook(inputContents: AudioBuilder[]) {
 		const synth = new PolySynth(Synth, {

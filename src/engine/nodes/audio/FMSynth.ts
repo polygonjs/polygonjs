@@ -22,6 +22,9 @@ export class FMSynthAudioNode extends TypedAudioNode<FMSynthAudioParamsConfig> {
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
+	static override displayedInputNames(): string[] {
+		return ['envelope'];
+	}
 
 	override cook(inputContents: AudioBuilder[]) {
 		const envelopeBuilder = inputContents[0];

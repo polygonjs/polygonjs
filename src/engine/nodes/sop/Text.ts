@@ -16,6 +16,10 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Path} from 'three/src/extras/core/Path';
 import {Shape} from 'three/src/extras/core/Shape';
 import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {FileType} from '../../params/utils/OptionsController';
+import {CoreLoaderFont} from '../../../core/loader/Font';
+import {Poly} from '../../Poly';
 
 import {DEMO_ASSETS_ROOT_URL} from '../../../core/Assets';
 
@@ -35,9 +39,6 @@ interface FontByUrl {
 
 const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove some characters`;
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {FileType} from '../../params/utils/OptionsController';
-import {CoreLoaderFont} from '../../../core/loader/Font';
 class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font used */
 	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
@@ -115,6 +116,10 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 					console.warn('type is not valid');
 			}
 		}
+	}
+	override dispose(): void {
+		super.dispose();
+		Poly.blobs.clearBlobsForNode(this);
 	}
 
 	private _createGeometryFromTypeMesh(font: Font) {
