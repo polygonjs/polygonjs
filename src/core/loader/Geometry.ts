@@ -105,7 +105,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			const ext = this.extension();
 			if (ext == GeometryFormat.JSON && this._options.format == GeometryFormat.AUTO) {
 				CoreLoaderGeometry.incrementInProgressLoadsCount();
-				await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
+				await CoreLoaderGeometry.waitForMaxConcurrentLoadsQueueFreed();
 				fetch(url)
 					.then(async (response) => {
 						const data = await response.json();
@@ -123,7 +123,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 				const loader = await this._loaderForFormat();
 				if (loader) {
 					CoreLoaderGeometry.incrementInProgressLoadsCount();
-					await CoreLoaderGeometry.wait_for_max_concurrent_loads_queue_freed();
+					await CoreLoaderGeometry.waitForMaxConcurrentLoadsQueueFreed();
 
 					loader.load(
 						url,
@@ -463,15 +463,15 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	// CONCURRENT LOADS
 	//
 	//
-	private static MAX_CONCURRENT_LOADS_COUNT: number = CoreLoaderGeometry._init_max_concurrent_loads_count();
-	private static CONCURRENT_LOADS_DELAY: number = CoreLoaderGeometry._init_concurrent_loads_delay();
+	private static MAX_CONCURRENT_LOADS_COUNT: number = CoreLoaderGeometry._initMaxConcurrentLoadsCount();
+	private static CONCURRENT_LOADS_DELAY: number = CoreLoaderGeometry._initConcurrentLoadsDelay();
 	private static _inProgressLoadsCount: number = 0;
 	private static _queue: Array<() => void> = [];
 	private static _maxConcurrentLoadsCountMethod: MaxConcurrentLoadsCountMethod | undefined;
 	public static setMaxConcurrentLoadsCount(method: MaxConcurrentLoadsCountMethod | undefined) {
 		this._maxConcurrentLoadsCountMethod = method;
 	}
-	private static _init_max_concurrent_loads_count(): number {
+	private static _initMaxConcurrentLoadsCount(): number {
 		if (this._maxConcurrentLoadsCountMethod) {
 			return this._maxConcurrentLoadsCountMethod();
 		}
@@ -493,7 +493,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		// }
 		// return 1;
 	}
-	private static _init_concurrent_loads_delay(): number {
+	private static _initConcurrentLoadsDelay(): number {
 		return CoreUserAgent.isChrome() ? 1 : 10;
 		// const parser = new UAParser();
 		// const name = parser.getBrowser().name;
@@ -530,7 +530,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		}
 	}
 
-	private static async wait_for_max_concurrent_loads_queue_freed(): Promise<void> {
+	private static async waitForMaxConcurrentLoadsQueueFreed(): Promise<void> {
 		if (this._inProgressLoadsCount <= this.MAX_CONCURRENT_LOADS_COUNT) {
 			return;
 		} else {
