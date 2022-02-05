@@ -56,7 +56,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	}
 	protected override processRawInput() {
 		if (this._value.path() != this._raw_input) {
-			this._value.set_path(this._raw_input);
+			this._value.setPath(this._raw_input);
 			this._findTarget();
 			this.setDirty();
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
@@ -107,7 +107,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			if (node) {
 				this._assignFoundNode(node);
 			} else {
-				this._value.set_node(null);
+				this._value.setNode(null);
 			}
 
 			this.options.executeCallback();
@@ -124,17 +124,17 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	private _assignFoundNode(node: BaseNodeType) {
 		const dependentOnFoundNode = this.options.dependentOnFoundNode();
 		if (this._isNodeExpectedContext(node)) {
-			if (this._is_node_expected_type(node)) {
+			if (this._isNodeExpectedType(node)) {
 				this.states.error.clear();
-				this._value.set_node(node);
+				this._value.setNode(node);
 				if (dependentOnFoundNode) {
 					this.addGraphInput(node);
 				}
 			} else {
 				this.states.error.set(
-					`node type is ${node.type()} but the params expects one of ${(
-						this._expected_node_types() || []
-					).join(', ')}`
+					`node type is ${node.type()} but the params expects one of ${(this._expectedNodeTypes() || []).join(
+						', '
+					)}`
 				);
 			}
 		} else {
@@ -155,12 +155,12 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		const node_context = node.parent()?.childrenController?.context;
 		return expected_context == node_context;
 	}
-	private _expected_node_types() {
+	private _expectedNodeTypes() {
 		return this.options.nodeSelectionTypes();
 	}
 
-	private _is_node_expected_type(node: BaseNodeType) {
-		const expected_types = this._expected_node_types();
+	private _isNodeExpectedType(node: BaseNodeType) {
+		const expected_types = this._expectedNodeTypes();
 		if (expected_types == null) {
 			return true;
 		}

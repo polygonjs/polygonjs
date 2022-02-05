@@ -1,3 +1,5 @@
+type GroupByCallback<T, K> = (arg: T) => K;
+
 export class MapUtils {
 	static arrayFromValues<K, V>(map: Map<K, V>): Array<V> {
 		const array: Array<V> = [];
@@ -76,5 +78,13 @@ export class MapUtils {
 			const value = values[i];
 			await callback(value, key);
 		}
+	}
+	static groupBy<T, K>(array: readonly T[], callback: GroupByCallback<T, K>): Map<K, T[]> {
+		const map = new Map<K, T[]>();
+		array.forEach((element: T) => {
+			const key: K = callback(element);
+			this.pushOnArrayAtEntry(map, key, element);
+		});
+		return map;
 	}
 }

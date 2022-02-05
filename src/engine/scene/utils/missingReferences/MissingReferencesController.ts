@@ -65,11 +65,22 @@ export class MissingReferencesController {
 	}
 
 	// call this from node.create and node.rename
-	checkForMissingReferences(node: BaseNodeType) {
+	checkForMissingNodeReferences(node: BaseNodeType) {
+		if (!node.scene().loadingController.loaded()) {
+			return;
+		}
+
 		this._checkForMissingReferencesForNode(node);
 		for (let param of node.params.all) {
 			this._checkForMissingReferencesForParam(param);
 		}
+	}
+	// call this from spare params update
+	checkForMissingParamReferences(param: BaseParamType) {
+		if (!param.scene().loadingController.loaded()) {
+			return;
+		}
+		this._checkForMissingReferencesForParam(param);
 	}
 	private _checkForMissingReferencesForNode(node: BaseNodeType) {
 		const id = node.graphNodeId();

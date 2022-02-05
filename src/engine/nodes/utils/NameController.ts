@@ -61,7 +61,7 @@ export class NameController {
 		}
 
 		if (this.node.lifecycle.creationCompleted() && this.node.scene().loadingController.loaded()) {
-			this.node.scene().missingExpressionReferencesController.checkForMissingReferences(this.node);
+			this.node.scene().missingExpressionReferencesController.checkForMissingNodeReferences(this.node);
 			this.node.scene().expressionsController.regenerateReferringExpressions(this.node);
 		}
 		this.node.scene().referencesController.notifyNameUpdated(this.node);

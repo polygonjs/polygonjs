@@ -21,10 +21,10 @@ export const NODE_PATH_DEFAULT = {
 export class TypedNodePathParamValue {
 	private _node: BaseNodeType | null = null;
 	constructor(private _path: string = '') {}
-	set_path(path: string) {
+	setPath(path: string) {
 		this._path = path;
 	}
-	set_node(node: BaseNodeType | null) {
+	setNode(node: BaseNodeType | null) {
 		this._node = node;
 	}
 	path() {
@@ -34,13 +34,13 @@ export class TypedNodePathParamValue {
 		return this._node;
 	}
 
-	resolve(node_start: BaseNodeType) {
-		this._node = CoreWalker.findNode(node_start, this._path);
+	resolve(nodeStart: BaseNodeType) {
+		this._node = CoreWalker.findNode(nodeStart, this._path);
 	}
 
 	clone() {
 		const cloned = new TypedNodePathParamValue(this._path);
-		cloned.set_node(this._node);
+		cloned.setNode(this._node);
 		return cloned;
 	}
 
@@ -66,10 +66,10 @@ export class TypedNodePathParamValue {
 export class TypedParamPathParamValue {
 	private _param: BaseParamType | null = null;
 	constructor(private _path: string = '') {}
-	set_path(path: string) {
+	setPath(path: string) {
 		this._path = path;
 	}
-	set_param(param: BaseParamType | null) {
+	setParam(param: BaseParamType | null) {
 		this._param = param;
 	}
 	path() {
@@ -79,13 +79,13 @@ export class TypedParamPathParamValue {
 		return this._param;
 	}
 
-	resolve(node_start: BaseNodeType) {
-		this._param = CoreWalker.findParam(node_start, this._path);
+	resolve(nodeStart: BaseNodeType) {
+		this._param = CoreWalker.findParam(nodeStart, this._path);
 	}
 
 	clone() {
 		const cloned = new TypedParamPathParamValue(this._path);
-		cloned.set_param(this._param);
+		cloned.setParam(this._param);
 		return cloned;
 	}
 
@@ -123,7 +123,7 @@ export class CoreWalker {
 		return {parent: parent_path, child: child_path};
 	}
 
-	static findNode(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseNodeType | null {
+	static findNode(node_src: BaseNodeType, path: string, decomposedPath?: DecomposedPath): BaseNodeType | null {
 		if (!node_src) {
 			return null;
 		}
@@ -134,15 +134,15 @@ export class CoreWalker {
 		let next_node: BaseNodeType | null = null;
 		if (path[0] === CoreWalker.SEPARATOR) {
 			const path_from_root = path.substring(1);
-			next_node = this.findNode(node_src.root(), path_from_root, decomposed_path);
+			next_node = this.findNode(node_src.root(), path_from_root, decomposedPath);
 		} else {
 			switch (first_element) {
 				case CoreWalker.PARENT:
-					decomposed_path?.add_path_element(first_element);
+					decomposedPath?.add_path_element(first_element);
 					next_node = node_src.parent();
 					break;
 				case CoreWalker.CURRENT:
-					decomposed_path?.add_path_element(first_element);
+					decomposedPath?.add_path_element(first_element);
 					next_node = node_src;
 					break;
 				default:
@@ -151,7 +151,7 @@ export class CoreWalker {
 					// if (node_src.node != null) {
 					next_node = node_src.node(first_element);
 					if (next_node) {
-						decomposed_path?.add_node(first_element, next_node);
+						decomposedPath?.add_node(first_element, next_node);
 					}
 
 				// if (next_node == null) { this.find_node_warning(node_src, first_element); }
@@ -162,7 +162,7 @@ export class CoreWalker {
 
 			if (next_node != null && elements.length > 1) {
 				const remainder = elements.slice(1).join(CoreWalker.SEPARATOR);
-				next_node = this.findNode(next_node, remainder, decomposed_path);
+				next_node = this.findNode(next_node, remainder, decomposedPath);
 			}
 			return next_node;
 		}
@@ -170,7 +170,7 @@ export class CoreWalker {
 		return next_node;
 	}
 
-	static findParam(node_src: BaseNodeType, path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
+	static findParam(node_src: BaseNodeType, path: string, decomposedPath?: DecomposedPath): BaseParamType | null {
 		if (!node_src) {
 			return null;
 		}
@@ -185,13 +185,13 @@ export class CoreWalker {
 				node = node_src.root();
 			} else {
 				const node_path = elements.slice(0, +(elements.length - 2) + 1 || undefined).join(CoreWalker.SEPARATOR);
-				node = this.findNode(node_src, node_path, decomposed_path);
+				node = this.findNode(node_src, node_path, decomposedPath);
 			}
 			if (node != null) {
 				const param_name = elements[elements.length - 1];
 				const param = node.params.get(param_name);
-				if (decomposed_path && param) {
-					decomposed_path.add_node(param_name, param);
+				if (decomposedPath && param) {
+					decomposedPath.add_node(param_name, param);
 				}
 				return param;
 			} else {

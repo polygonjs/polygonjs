@@ -204,7 +204,7 @@ export class HierarchyChildrenController {
 			this.node.scene().webgl_controller.set_require_webgl2();
 		}
 
-		this.node.scene().missingExpressionReferencesController.checkForMissingReferences(child_node);
+		this.node.scene().missingExpressionReferencesController.checkForMissingNodeReferences(child_node);
 
 		return child_node;
 	}

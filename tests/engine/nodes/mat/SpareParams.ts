@@ -186,7 +186,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	// first compute with a float, and only after compute with a vector, to make sure the new val is okay
 	param1.setGlType(GlConnectionPointType.FLOAT);
 	await RendererUtils.compile(mesh_basic1, renderer);
-	let float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
+	const float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 	assert.equal(float_spare_param.type(), ParamType.FLOAT, 'param is float');
 
 	// not uniform yet as we have not yet recompiled the shader, since the compile key has not changed yet
@@ -198,12 +198,11 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	output1.setInput('alpha', param1);
 	await RendererUtils.compile(mesh_basic1, renderer);
 
-	assert.notEqual(
+	assert.equal(
 		float_spare_param.graphNodeId(),
 		mesh_basic1.params.get(param_name)?.graphNodeId(),
-		'param has changed'
+		'param has not been recreated'
 	);
-	float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 
 	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value, 0, 'uniform is 0');
 	float_spare_param.set(0.25);

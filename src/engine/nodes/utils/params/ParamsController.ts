@@ -128,6 +128,7 @@ export class ParamsController {
 	updateParams(options: ParamsUpdateOptions) {
 		let has_created_a_param = false;
 		let has_deleted_a_param = false;
+		const addedParams: BaseParamType[] = [];
 		if (options.namesToDelete) {
 			for (let param_name of options.namesToDelete) {
 				if (this.has(param_name)) {
@@ -144,12 +145,16 @@ export class ParamsController {
 						param.set(param_data.rawInput as never);
 					}
 					has_created_a_param = true;
+					addedParams.push(param);
 				}
 			}
 		}
 
 		if (has_deleted_a_param || has_created_a_param) {
 			this.postCreateSpareParams();
+		}
+		for (let param of addedParams) {
+			this.node.scene().missingExpressionReferencesController.checkForMissingParamReferences(param);
 		}
 	}
 

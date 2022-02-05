@@ -6,6 +6,11 @@ export class SetUtils {
 		});
 		return array;
 	}
+	static fromArray<T>(array: T[]): Set<T> {
+		const set = new Set<T>();
+		array.forEach((element) => set.add(element));
+		return set;
+	}
 	static union<T extends string | number>(set0: Set<T>, set1: Set<T>): Set<T> {
 		const newSet: Set<T> = new Set();
 		set0.forEach((val) => newSet.add(val));

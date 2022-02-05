@@ -13,7 +13,8 @@ import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
-const OUTPUT_NAME = 'float';
+const OUTPUT_NAME_VALUE = 'value';
+const OUTPUT_NAME_GRADIENT = 'gradient';
 class SphereGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0]);
 	center = ParamConfig.VECTOR3([0, 0, 0]);
@@ -31,7 +32,8 @@ export class SphereGlNode extends TypedGlNode<SphereGlParamsConfig> {
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME_VALUE, GlConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME_GRADIENT, GlConnectionPointType.VEC3),
 		]);
 	}
 
@@ -41,9 +43,11 @@ export class SphereGlNode extends TypedGlNode<SphereGlParamsConfig> {
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 		const feather = ThreeToGl.float(this.variableForInputParam(this.p.feather));
 
-		const float = this.glVarName('float');
-		const body_line = `float ${float} = disk3d(${position}, ${center}, ${radius}, ${feather})`;
-		shaders_collection_controller.addBodyLines(this, [body_line]);
+		const value = this.glVarName(OUTPUT_NAME_VALUE);
+		const gradient = this.glVarName(OUTPUT_NAME_GRADIENT);
+		const bodyLineValue = `float ${value} = disk3d(${position}, ${center}, ${radius}, ${feather})`;
+		const bodyLineGradient = `vec3 ${gradient} = ${value}*(${position}-${center})`;
+		shaders_collection_controller.addBodyLines(this, [bodyLineValue, bodyLineGradient]);
 
 		shaders_collection_controller.addDefinitions(this, [new FunctionGLDefinition(this, DiskMethods)]);
 	}

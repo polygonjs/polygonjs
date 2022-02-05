@@ -62,10 +62,10 @@ export class BaseOperation<NC extends NodeContext> {
 		if (CoreType.isString(paramData)) {
 			if (default_param) {
 				if (default_param instanceof TypedNodePathParamValue) {
-					return default_param.set_path(paramData);
+					return default_param.setPath(paramData);
 				}
 				if (default_param instanceof TypedParamPathParamValue) {
-					return default_param.set_path(paramData);
+					return default_param.setPath(paramData);
 				}
 			}
 			return paramData;

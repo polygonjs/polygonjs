@@ -1,4 +1,3 @@
-import {ObjectUtils} from '../../../../core/ObjectUtils';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
 import {ParamJsonExporterData} from '../../utils/io/IOController';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
@@ -6,14 +5,16 @@ import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
 import {GlAssemblerControllerType, AssemblerControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {SetUtils} from '../../../../core/SetUtils';
+import {MapUtils} from '../../../../core/MapUtils';
+import {GlParamConfig} from './utils/GLParamConfig';
 
 /*
 Create spare params on mat nodes
 */
 export class GlAssemblerNodeSpareParamsController {
 	private _deleted_params_data: Map<string, ParamJsonExporterData<ParamType>> = new Map();
-	private _created_spare_param_names: string[] = [];
+	private _created_spare_param_names: Set<string> = new Set();
 	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	private _init_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	constructor(private _controller: GlAssemblerControllerType, private _node: AssemblerControllerNode) {}
@@ -25,17 +26,31 @@ export class GlAssemblerNodeSpareParamsController {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
 		const paramConfigs = this.assembler.param_configs();
+		const paramConfigsByName = MapUtils.groupBy<GlParamConfig<ParamType>, string>(paramConfigs, (c) => c.name());
 		const assembler_param_names = paramConfigs.map((c) => c.name());
-		const spare_param_names_to_add = ObjectUtils.clone(assembler_param_names);
+		const spare_param_names_to_add = SetUtils.fromArray(assembler_param_names);
 		const validation_result = this._validateNames(spare_param_names_to_add);
 		if (validation_result == false) {
 			return;
 		}
 
 		// spare_param_names_to_remove is composed of previously created params, but also spare params with the same name, which may be created when loading the scene
-		const spare_param_names_to_remove = ObjectUtils.clone(this._created_spare_param_names).concat(
-			spare_param_names_to_add
-		);
+		const spare_param_names_to_remove = SetUtils.union(this._created_spare_param_names, spare_param_names_to_add);
+		// but if the param type has not changed, we do not need to remove it, nor add it
+		this._created_spare_param_names.forEach((paramName) => {
+			const currentParamType = this._node.params.get(paramName)?.type();
+			const paramConfigsWithName = paramConfigsByName.get(paramName);
+			if (paramConfigsWithName) {
+				const firstParamConfig = paramConfigsWithName[0];
+				if (firstParamConfig) {
+					const expectedParamType = firstParamConfig.type();
+					if (currentParamType == expectedParamType) {
+						spare_param_names_to_remove.delete(paramName);
+						spare_param_names_to_add.delete(paramName);
+					}
+				}
+			}
+		});
 
 		// keep track of raw_inputs so we can restore them
 		spare_param_names_to_remove.forEach((param_name) => {
@@ -50,15 +65,14 @@ export class GlAssemblerNodeSpareParamsController {
 					const params_data = param_exporter.data();
 					this._deleted_params_data.set(param.name(), params_data);
 				}
+				params_update_options.namesToDelete = params_update_options.namesToDelete || [];
+				params_update_options.namesToDelete.push(param_name);
 			}
-
-			params_update_options.namesToDelete = params_update_options.namesToDelete || [];
-			params_update_options.namesToDelete.push(param_name);
 		});
 
 		// this.within_param_folder('spare_params', () => {
 		for (let paramConfig of paramConfigs) {
-			if (spare_param_names_to_add.indexOf(paramConfig.name()) >= 0) {
+			if (spare_param_names_to_add.has(paramConfig.name())) {
 				// const config_options = ObjectUtils.clone(paramConfig.paramOptions());
 				const options: ParamOptions = {
 					spare: true,
@@ -92,26 +106,21 @@ export class GlAssemblerNodeSpareParamsController {
 		}
 
 		this._node.params.updateParams(params_update_options);
-		this._created_spare_param_names = params_update_options.toAdd?.map((o) => o.name) || [];
+		this._created_spare_param_names = SetUtils.fromArray(params_update_options.toAdd?.map((o) => o.name) || []);
 
 		for (let paramConfig of paramConfigs) {
 			paramConfig.applyToNode(this._node);
 		}
 	}
 
-	// TODO: handle the case where a param created by user already exists.
-	// we may then change the name of the new spare param.
-	private _validateNames(spare_param_names_to_add: string[]): boolean {
+	private _validateNames(spare_param_names_to_add: Set<string>): boolean {
 		// check that param_names_to_add does not include any currently existing param names (that are not spare)
-		const current_param_names = ObjectUtils.clone(this._node.params.non_spare_names);
-		const spare_params_with_same_name_as_params = ArrayUtils.intersection(
-			spare_param_names_to_add,
-			current_param_names
-		);
-		if (spare_params_with_same_name_as_params.length > 0) {
-			const error_message = `${this._node.path()} attempts to create spare params called '${spare_params_with_same_name_as_params.join(
-				', '
-			)}' with same name as params`;
+		const currentParamNames = SetUtils.fromArray(this._node.params.non_spare_names);
+		const spareParamsWithSameNameAsParams = SetUtils.intersection(spare_param_names_to_add, currentParamNames);
+		if (spareParamsWithSameNameAsParams.size > 0) {
+			const error_message = `${this._node.path()} attempts to create spare params called '${SetUtils.toArray(
+				spareParamsWithSameNameAsParams
+			).join(', ')}' with same name as params`;
 			this._node.states.error.set(error_message);
 			return false;
 		}

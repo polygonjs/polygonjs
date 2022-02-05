@@ -47,7 +47,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	}
 	protected override processRawInput() {
 		if (this._value.path() != this._raw_input) {
-			this._value.set_path(this._raw_input);
+			this._value.setPath(this._raw_input);
 			this.findTarget();
 			this.setDirty();
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
@@ -84,11 +84,11 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 		this._handleReferences(param, path);
 
 		if (currentFoundEntity?.graphNodeId() !== newlyFoundEntity?.graphNodeId()) {
-			const dependent_on_found_node = this.options.dependentOnFoundNode();
+			const dependentOnFoundNode = this.options.dependentOnFoundNode();
 
 			const previously_found_node = this._value.param();
 			if (previously_found_node) {
-				if (dependent_on_found_node) {
+				if (dependentOnFoundNode) {
 					this.removeGraphInput(previously_found_node);
 				} else {
 					// this._found_node.remove_param_referree(this) // TODO: typescript
@@ -98,7 +98,7 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 			if (param) {
 				this._assign_found_node(param);
 			} else {
-				this._value.set_param(null);
+				this._value.setParam(null);
 			}
 
 			this.options.executeCallback();
@@ -107,11 +107,11 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	}
 
 	private _assign_found_node(param: BaseParamType) {
-		const dependent_on_found_node = this.options.dependentOnFoundNode();
+		const dependentOnFoundNode = this.options.dependentOnFoundNode();
 		// if (this._is_node_expected_context(node)) {
 		// 	if (this._is_node_expected_type(node)) {
-		this._value.set_param(param);
-		if (dependent_on_found_node) {
+		this._value.setParam(param);
+		if (dependentOnFoundNode) {
 			this.addGraphInput(param);
 		}
 		// 	} else {
