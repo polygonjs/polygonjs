@@ -15,6 +15,9 @@ export class CoreLoaderFont extends CoreBaseLoader {
 	}
 
 	async load() {
+		if (this._node) {
+			Poly.blobs.clearBlobsForNode(this._node);
+		}
 		const ext = this.extension();
 		const url = await this._urlToLoad();
 		switch (ext) {

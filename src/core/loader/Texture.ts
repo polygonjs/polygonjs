@@ -70,6 +70,10 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 	}
 
 	async load_texture_from_url_or_op(options: TextureLoadOptions): Promise<Texture | VideoTexture | null> {
+		if (this._node) {
+			Poly.blobs.clearBlobsForNode(this._node);
+		}
+
 		let texture: Texture | null = null;
 		let foundNode: BaseNodeType | null = null;
 

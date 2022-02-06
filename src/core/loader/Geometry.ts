@@ -100,6 +100,10 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	}
 
 	private _load(): Promise<Object3D[]> {
+		if (this._node) {
+			Poly.blobs.clearBlobsForNode(this._node);
+		}
+
 		return new Promise(async (resolve, reject) => {
 			const url = await this._urlToLoad();
 			const ext = this.extension();

@@ -12,6 +12,7 @@ import {isBooleanTrue} from '../BooleanValue';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {LineSegments} from 'three/src/objects/LineSegments';
+import {Poly} from '../../engine/Poly';
 
 interface CoreSVGLoaderOptions {
 	// fill
@@ -38,6 +39,9 @@ export class CoreSVGLoader extends CoreBaseLoader {
 	}
 
 	load(options: CoreSVGLoaderOptions): Promise<Group> {
+		if (this._node) {
+			Poly.blobs.clearBlobsForNode(this._node);
+		}
 		return new Promise(async (resolve, reject) => {
 			const loader = new SVGLoader(this.loadingManager);
 
