@@ -85,13 +85,13 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 
 		this.setAudioBuilder(audioBuilder);
 	}
-	private _numberValue = new Float32Array(1);
+	private _arrayValue = new Float32Array(1);
 	getAnalyserValue() {
 		if (this.__effect__) {
 			const value = this.__effect__.getValue();
 			if (CoreType.isNumber(value)) {
-				this._numberValue[0] = value;
-				return this._numberValue;
+				this._arrayValue[0] = value;
+				return this._arrayValue;
 			} else {
 				return value;
 			}
@@ -137,24 +137,24 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 			return;
 		}
 		const value = this.getAnalyserValue();
-		if (CoreType.isNumber(value) && isFinite(value)) {
-			this.p.value.set(value);
-		} else {
-			if (CoreType.isArray(value)) {
-				const valueN = value[0];
-				// we check that we have a number again in case meter.getValue()
-				// returns Infinity
-				if (CoreType.isNumber(valueN) && isFinite(valueN)) {
-					this.p.value.set(valueN);
-				}
-			}
+		if (!value) {
+			return;
+		}
+		const valueN = value[0];
+		if (!isFinite(valueN)) {
+			return;
+		}
+		// we check that we have a number again in case meter.getValue()
+		// returns Infinity
+		if (CoreType.isNumber(valueN)) {
+			this.p.value.set(valueN);
 		}
 		// update max range
-		const newVal = this.pv.value;
-		if (newVal < this.pv.maxRange.x && CoreType.isNumber(newVal) && isFinite(newVal)) {
+		const newVal = valueN;
+		if (newVal < this.pv.maxRange.x) {
 			this.p.maxRange.x.set(newVal);
 		} else {
-			if (newVal > this.pv.maxRange.y && CoreType.isNumber(newVal) && isFinite(newVal)) {
+			if (newVal > this.pv.maxRange.y) {
 				this.p.maxRange.y.set(newVal);
 			}
 		}

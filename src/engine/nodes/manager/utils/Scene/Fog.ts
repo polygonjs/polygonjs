@@ -23,7 +23,10 @@ export const FOG_TYPES: FogType[] = [FogType.LINEAR, FogType.EXPONENTIAL];
 export function SceneFogParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to use fog */
-		useFog = ParamConfig.BOOLEAN(0, CallbackOptions);
+		useFog = ParamConfig.BOOLEAN(0, {
+			...CallbackOptions,
+			separatorBefore: true,
+		});
 		/** @param fog type */
 		fogType = ParamConfig.INTEGER(FOG_TYPES.indexOf(FogType.EXPONENTIAL), {
 			visibleIf: {useFog: 1},

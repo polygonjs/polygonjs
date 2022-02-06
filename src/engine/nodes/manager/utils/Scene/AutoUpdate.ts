@@ -14,7 +14,10 @@ const CallbackOptions = {
 export function SceneAutoUpdateParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param autoUpdate */
-		autoUpdate = ParamConfig.BOOLEAN(1, CallbackOptions);
+		autoUpdate = ParamConfig.BOOLEAN(1, {
+			...CallbackOptions,
+			separatorBefore: true,
+		});
 	};
 }
 // class SceneAutoUpdateParamsConfig extends SceneAutoUpdateParamConfig(NodeParamsConfig) {}

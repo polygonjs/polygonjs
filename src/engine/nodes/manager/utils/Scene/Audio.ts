@@ -17,6 +17,7 @@ export function RootAudioParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param set if a audio icon is shown in the viewer to toggle sound on/off */
 		displayAudioIcon = ParamConfig.BOOLEAN(0, {
 			...CallbackOptions,
+			separatorBefore: true,
 		});
 		/** @param set if a audio icon is shown in the viewer to toggle sound on/off */
 		audioIconColor = ParamConfig.COLOR([0, 0, 0], {

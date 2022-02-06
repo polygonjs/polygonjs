@@ -17,7 +17,7 @@ export const DEFAULT_AREA_LIGHT_PARAMS: AreaLightParams = {
 	intensity: 1,
 	width: 1,
 	height: 1,
-	showHelper: false,
+	showHelper: true,
 };
 const DEFAULT = DEFAULT_AREA_LIGHT_PARAMS;
 
@@ -29,11 +29,20 @@ export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 			conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
-		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {range: [0, 10]});
+		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 		/** @param grid width */
-		width = ParamConfig.FLOAT(DEFAULT.width, {range: [0, 10]});
+		width = ParamConfig.FLOAT(DEFAULT.width, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 		/** @param grid height */
-		height = ParamConfig.FLOAT(DEFAULT.height, {range: [0, 10]});
+		height = ParamConfig.FLOAT(DEFAULT.height, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 		// helper
 		/** @param toggle on to show helper */
 		showHelper = ParamConfig.BOOLEAN(DEFAULT.showHelper);

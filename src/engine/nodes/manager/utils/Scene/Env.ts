@@ -15,7 +15,10 @@ const CallbackOptions = {
 export function SceneEnvParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to use an environment map */
-		useEnvironment = ParamConfig.BOOLEAN(0, CallbackOptions);
+		useEnvironment = ParamConfig.BOOLEAN(0, {
+			...CallbackOptions,
+			separatorBefore: true,
+		});
 		/** @param environment map */
 		environment = ParamConfig.NODE_PATH('', {
 			visibleIf: {useEnvironment: 1},

@@ -40,7 +40,7 @@ export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	shadowBias: 0.001,
 	shadowNear: 1,
 	shadowFar: 100,
-	showHelper: false,
+	showHelper: true,
 	helperSize: 1,
 };
 const DEFAULT = DEFAULT_POINT_LIGHT_PARAMS;
@@ -53,9 +53,15 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 			conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
-		intensity = ParamConfig.FLOAT(DEFAULT.intensity);
+		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 		/** @param light decay */
-		decay = ParamConfig.FLOAT(DEFAULT.decay);
+		decay = ParamConfig.FLOAT(DEFAULT.decay, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
 		/** @param light distance */
 		distance = ParamConfig.FLOAT(DEFAULT.distance, {
 			range: [0, 100],

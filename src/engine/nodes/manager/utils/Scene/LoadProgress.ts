@@ -9,6 +9,7 @@ export function RootLoadProgressParamConfig<TBase extends Constructor>(Base: TBa
 		/** @param when the scene loads, nodes that match the mask will update the progress bar as they cook */
 		nodesMask = ParamConfig.STRING('*/file* */image* */envMap*', {
 			cook: false,
+			separatorBefore: true,
 		});
 		/** @param prints which nodes match the mask in the console */
 		printNodes = ParamConfig.BUTTON(null, {

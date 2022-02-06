@@ -31,6 +31,7 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 				}),
 			},
 			...CallbackOptions,
+			separatorBefore: true,
 		});
 		/** @param background color */
 		bgColor = ParamConfig.COLOR([0, 0, 0], {

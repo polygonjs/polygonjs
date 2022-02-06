@@ -69,7 +69,7 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 		...paramCallback(),
 	});
 	/** @param coneInnerAngle. See https://developer.mozilla.org/en-US/docs/Web/API/PannerNode */
-	coneInnerAngle = ParamConfig.FLOAT(180, {
+	coneInnerAngle = ParamConfig.FLOAT(360, {
 		range: [0, 360],
 		rangeLocked: [true, true],
 		...paramCallback(),
@@ -86,10 +86,8 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 		rangeLocked: [true, true],
 		...paramCallback(),
 	});
-	/** @param autoplay */
-	// autoplay = ParamConfig.BOOLEAN(1);
 	/** @param show helper */
-	showHelper = ParamConfig.BOOLEAN(0);
+	showHelper = ParamConfig.BOOLEAN(1);
 	/** @param helper size */
 	helperSize = ParamConfig.FLOAT(1, {
 		range: [0, 10],

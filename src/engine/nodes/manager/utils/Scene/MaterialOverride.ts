@@ -15,7 +15,10 @@ const CallbackOptions = {
 export function SceneMaterialOverrideParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to override all materials */
-		useOverrideMaterial = ParamConfig.BOOLEAN(0, CallbackOptions);
+		useOverrideMaterial = ParamConfig.BOOLEAN(0, {
+			...CallbackOptions,
+			separatorBefore: true,
+		});
 		/** @param material */
 		overrideMaterial = ParamConfig.NODE_PATH('', {
 			visibleIf: {useOverrideMaterial: 1},

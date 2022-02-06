@@ -35,7 +35,7 @@ export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
 	intensity: 1,
 	distance: 100,
 	//
-	showHelper: false,
+	showHelper: true,
 	//
 	castShadow: false,
 	shadowAutoUpdate: true,
@@ -55,9 +55,15 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 			conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
-		intensity = ParamConfig.FLOAT(DEFAULT.intensity);
+		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 		/** @param light distance */
-		distance = ParamConfig.FLOAT(DEFAULT.distance, {range: [0, 100]});
+		distance = ParamConfig.FLOAT(DEFAULT.distance, {
+			range: [0, 100],
+			rangeLocked: [true, false],
+		});
 		// helper
 		/** @param toggle to show helper */
 		showHelper = ParamConfig.BOOLEAN(DEFAULT.showHelper);

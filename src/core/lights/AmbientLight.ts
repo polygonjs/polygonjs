@@ -22,6 +22,9 @@ export function AmbientLightParamConfig<TBase extends Constructor>(Base: TBase) 
 			conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
-		intensity = ParamConfig.FLOAT(DEFAULT.intensity);
+		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 	};
 }
