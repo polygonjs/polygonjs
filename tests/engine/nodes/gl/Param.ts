@@ -6,7 +6,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {create_required_nodes_for_subnet_gl_node} from './Subnet';
 import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test('gl param updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
@@ -254,7 +254,7 @@ QUnit.test('gl param: 1 param node on top level and one in a subnet work ok', as
 
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	let uniform = materialUniforms(material)!['v_POLY_param_test'];
+	let uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_param_test'];
 	assert.ok(uniform);
 	assert.equal(uniform.value, 0);
 	let spareParam = meshBasicBuilder1.params.get('test')!;
@@ -298,7 +298,7 @@ uniform float v_POLY_param_test;`,
 	output1.setInput('color', floatToVec3_2);
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	uniform = materialUniforms(material)!['v_POLY_param_test'];
+	uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_param_test'];
 	assert.ok(uniform, 'uniform exists');
 	assert.equal(uniform.value, 0.5, 'uniform value is still previous one (0.5)');
 	spareParam = meshBasicBuilder1.params.get('test')!;
@@ -334,7 +334,7 @@ uniform float v_POLY_param_test;`
 	output1.setInput('color', add1);
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	uniform = materialUniforms(material)!['v_POLY_param_test'];
+	uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_param_test'];
 	assert.ok(uniform, 'uniform exists');
 	assert.equal(uniform.value, 0.7, 'uniform value is still previous one (0.7)');
 	spareParam = meshBasicBuilder1.params.get('test')!;

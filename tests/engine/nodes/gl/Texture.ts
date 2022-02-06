@@ -1,5 +1,5 @@
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
@@ -198,7 +198,7 @@ QUnit.test('gl texture: 1 texture node on top level and one in a subnet work ok'
 
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	let uniform = materialUniforms(material)!['v_POLY_texture_myTextureMap'];
+	let uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_texture_myTextureMap'];
 	assert.ok(uniform);
 	assert.equal(uniform.value, null);
 	let spareParam = meshBasicBuilder1.params.get('myTextureMap')! as NodePathParam;
@@ -239,7 +239,7 @@ uniform sampler2D v_POLY_texture_myTextureMap;`,
 	output1.setInput('color', vec4ToVec3_2);
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	uniform = materialUniforms(material)!['v_POLY_texture_myTextureMap'];
+	uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_texture_myTextureMap'];
 	assert.ok(uniform, 'uniform exists');
 	assert.equal(uniform.value.uuid, textureObject1.uuid, 'uniform value is still previous one');
 	spareParam = meshBasicBuilder1.params.get('myTextureMap')! as NodePathParam;
@@ -277,7 +277,7 @@ uniform sampler2D v_POLY_texture_myTextureMap;`
 	output1.setInput('color', add1);
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	uniform = materialUniforms(material)!['v_POLY_texture_myTextureMap'];
+	uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_texture_myTextureMap'];
 	assert.ok(uniform, 'uniform exists');
 	assert.equal(uniform.value.uuid, textureObject2.uuid, 'uniform value is still previous one');
 	spareParam = meshBasicBuilder1.params.get('myTextureMap')! as NodePathParam;

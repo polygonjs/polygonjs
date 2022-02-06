@@ -29,7 +29,7 @@ import LINE_BASIC_DEPTH_FRAGMENT from './templates/lineBasicBuilder/customDepthM
 import LINE_BASIC_DISTANCE_VERTEX from './templates/lineBasicBuilder/customDistanceMaterial.vert.glsl';
 import LINE_BASIC_DISTANCE_FRAGMENT from './templates/lineBasicBuilder/customDistanceMaterial.frag.glsl';
 import {BokehPass2} from '../../../src/modules/core/post_process/BokehPass2';
-import {materialUniforms} from '../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 // import LINE_BASIC_DOF_VERTEX from './templates/lineBasicBuilder/customDOFMaterial.vert.glsl';
 // import LINE_BASIC_DOF_FRAGMENT from './templates/lineBasicBuilder/customDOFMaterial.frag.glsl';
 
@@ -107,9 +107,9 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders', async (ass
 	// check that the material has the correct vertex and fragment
 	// check that creating a gl/param node creates and syncs the uniform
 	const uniforms = [
-		materialUniforms(customDepthMaterial)!['v_POLY_param_myCustomVec'],
-		materialUniforms(customDistanceMaterial)!['v_POLY_param_myCustomVec'],
-		materialUniforms(customDepthDOFMaterial)!['v_POLY_param_myCustomVec'],
+		MaterialUserDataUniforms.getUniforms(customDepthMaterial)!['v_POLY_param_myCustomVec'],
+		MaterialUserDataUniforms.getUniforms(customDistanceMaterial)!['v_POLY_param_myCustomVec'],
+		MaterialUserDataUniforms.getUniforms(customDepthDOFMaterial)!['v_POLY_param_myCustomVec'],
 	];
 	for (let uniform of uniforms) {
 		assert.ok(uniform);

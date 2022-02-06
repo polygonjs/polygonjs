@@ -6,9 +6,8 @@ import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {
 	assignOnBeforeCompileDataAndFunction,
-	onBeforeCompileDataFromJSON,
+	OnBeforeCompileDataConverter,
 	OnBeforeCompileDataJSON,
-	onBeforeCompileDataToJSON,
 } from './OnBeforeCompile';
 
 export interface PersistedConfigBaseMaterialData {
@@ -40,7 +39,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		if (!onBeforeCompileData) {
 			return;
 		}
-		const onBeforeCompileDataJSON = onBeforeCompileDataToJSON(onBeforeCompileData);
+		const onBeforeCompileDataJSON = OnBeforeCompileDataConverter.toJSON(onBeforeCompileData);
 
 		// custom materials
 		const customMaterialsData: PolyDictionary<PersistedConfigBaseMaterialData> = {};
@@ -58,7 +57,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 						if (customMaterialData) {
 							customMaterialsData[customMaterialName] = {
 								material: customMaterialData,
-								onBeforeCompileDataJSON: onBeforeCompileDataToJSON(customOnBeforeCompileData),
+								onBeforeCompileDataJSON: OnBeforeCompileDataConverter.toJSON(customOnBeforeCompileData),
 							};
 						}
 					}
@@ -108,7 +107,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 
 		// const shaderMaterial = this._material as ShaderMaterial;
 
-		const onBeforeCompileData = onBeforeCompileDataFromJSON(data.onBeforeCompileDataJSON);
+		const onBeforeCompileData = OnBeforeCompileDataConverter.fromJSON(data.onBeforeCompileDataJSON);
 		const material = this._material;
 		assignOnBeforeCompileDataAndFunction(this.node.scene(), material, onBeforeCompileData);
 
@@ -168,7 +167,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 				const customMatData = data.customMaterials[customMatName];
 				const customMat = this._loadMaterial(customMatData.material);
 				if (customMat) {
-					const customOnBeforeCompileData = onBeforeCompileDataFromJSON(
+					const customOnBeforeCompileData = OnBeforeCompileDataConverter.fromJSON(
 						customMatData.onBeforeCompileDataJSON
 					);
 					customOnBeforeCompileData.paramConfigs = onBeforeCompileData.paramConfigs;

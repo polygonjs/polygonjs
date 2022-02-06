@@ -9,7 +9,7 @@ import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {ColorParam} from '../../../../src/engine/params/Color';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test(
 	'MAT spare params:spare params are re-created as expected and the uniforms updated on change',
@@ -64,10 +64,10 @@ QUnit.test(
 		const uniform_name = param1.uniformName();
 		assert.equal(mesh_basic1.params.get(param_name)!.value, 0);
 		const mesh_basic1Material = mesh_basic1.material;
-		assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 0);
+		assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value, 0);
 		mesh_basic1.params.get(param_name)!.set(0.5);
 		assert.equal(
-			materialUniforms(mesh_basic1Material)![uniform_name].value,
+			MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value,
 			0.5,
 			'param updates the uniform when its value changes'
 		);
@@ -77,7 +77,7 @@ QUnit.test(
 		assert.equal(scene.frame(), 1);
 		await CoreSleep.sleep(100);
 		assert.equal(
-			materialUniforms(mesh_basic1Material)![uniform_name].value,
+			MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value,
 			1,
 			'param updates the uniform when its expression becomes dirty'
 		);
@@ -85,14 +85,14 @@ QUnit.test(
 		scene.setFrame(2);
 		await CoreSleep.sleep(100);
 		assert.equal(
-			materialUniforms(mesh_basic1Material)![uniform_name].value,
+			MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value,
 			2,
 			'param updates the uniform when its expression becomes dirty'
 		);
 		scene.setFrame(3);
 		await CoreSleep.sleep(20);
 		assert.equal(
-			materialUniforms(mesh_basic1Material)![uniform_name].value,
+			MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value,
 			3,
 			'param updates the uniform when its expression becomes dirty again'
 		);
@@ -110,11 +110,19 @@ QUnit.test(
 		assert.equal(scene.frame(), 35, 'scene frame is 35');
 		await spare_param.compute();
 		assert.equal(spare_param.value, 35, 'param is 35');
-		assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 35, 'uniforrm is 35');
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value,
+			35,
+			'uniforrm is 35'
+		);
 		scene.timeController.setMaxFrame(1000);
 		scene.setFrame(124);
 		await spare_param.compute();
-		assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 124, 'frame is 124');
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value,
+			124,
+			'frame is 124'
+		);
 
 		// we revert back to float for the rest of the test
 		param1.setGlType(GlConnectionPointType.FLOAT);
@@ -140,22 +148,26 @@ QUnit.test(
 		assert.equal(new_mesh_basic1.params.get(param_name)?.rawInput(), '$F', 'param raw input is $F');
 		await CoreSleep.sleep(100);
 		assert.equal(new_mesh_basic1.params.get(param_name)?.value, 124, 'param value is 124');
-		assert.equal(materialUniforms(new_mesh_basic1Material)![uniform_name].value, 124, 'uniform is 124');
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(new_mesh_basic1Material)![uniform_name].value,
+			124,
+			'uniform is 124'
+		);
 
 		// update the param to be sure dependency with frame has been created
 		scene2.setFrame(2);
 		await CoreSleep.sleep(100);
 		assert.equal(
-			materialUniforms(new_mesh_basic1Material)![uniform_name].value,
+			MaterialUserDataUniforms.getUniforms(new_mesh_basic1Material)![uniform_name].value,
 			2,
 			'param updates the uniform when its expression becomes dirty'
 		);
 		scene2.setFrame(10);
 		await CoreSleep.sleep(20);
 		assert.equal(
-			materialUniforms(new_mesh_basic1Material)![uniform_name].value,
+			MaterialUserDataUniforms.getUniforms(new_mesh_basic1Material)![uniform_name].value,
 			10,
-			'param updates the uniform when its expression becomes dirty again'
+			'param updates the uniform when its expression becomes dirty again on frame 10'
 		);
 		RendererUtils.dispose();
 	}
@@ -191,8 +203,8 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 
 	// not uniform yet as we have not yet recompiled the shader, since the compile key has not changed yet
 	// Update: it is recompiled everytime now
-	// assert.notOk(materialUniforms(mesh_basic1Material)![uniformName]);
-	assert.ok(materialUniforms(mesh_basic1Material)![uniformName]);
+	// assert.notOk(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName]);
+	assert.ok(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName]);
 	// but if we add the param to the output node, it will make the vertex or fragment updated,
 	// and therefore trigger a recompile
 	output1.setInput('alpha', param1);
@@ -204,9 +216,13 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 		'param has not been recreated'
 	);
 
-	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value, 0, 'uniform is 0');
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value, 0, 'uniform is 0');
 	float_spare_param.set(0.25);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value, 0.25, 'uniform is 0.25');
+	assert.equal(
+		MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value,
+		0.25,
+		'uniform is 0.25'
+	);
 
 	// now change to vec3
 	param1.setGlType(GlConnectionPointType.VEC3);
@@ -219,13 +235,13 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	assert.deepEqual(vec3_spare_param.valueSerialized(), [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
 	assert.deepEqual(vec3_spare_param.defaultValueSerialized(), [0, 0, 0], 'default_value_serialized is 0,0,0');
 	vec3_spare_param.set([0.1, 0.2, 0.3]);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.x, 0.1);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.y, 0.2);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.z, 0.3);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value.x, 0.1);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value.y, 0.2);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value.z, 0.3);
 	vec3_spare_param.y.set(0.8);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.x, 0.1);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.y, 0.8);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniformName].value.z, 0.3);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value.x, 0.1);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value.y, 0.8);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value.z, 0.3);
 
 	const data = new SceneJsonExporter(scene).data();
 
@@ -256,14 +272,14 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	assert.equal(vec3_spare_param2.value.y, 0.2);
 	assert.equal(vec3_spare_param2.value.z, 0.3);
 	const mesh_basic2Material = mesh_basic2.material;
-	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.x, 0.1);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.y, 0.2);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.z, 0.3);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.x, 0.1);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.y, 0.2);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.z, 0.3);
 	return;
 	vec3_spare_param2.y.set(0.8);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.x, 0.1);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.y, 0.8);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniformName].value.z, 0.3);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.x, 0.1);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.y, 0.8);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.z, 0.3);
 
 	RendererUtils.dispose();
 });
@@ -296,9 +312,9 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	let float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 	assert.equal(float_spare_param.type(), ParamType.FLOAT, 'param is float');
 	const mesh_basic1Material = mesh_basic1.material;
-	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 0);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value, 0);
 	float_spare_param.set(0.25);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value, 0.25);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value, 0.25);
 
 	// now change to vec3
 	param1.setGlType(GlConnectionPointType.VEC3);
@@ -309,13 +325,13 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	assert.deepEqual(vec3_spare_param.valueSerialized(), [0.25, 0.25, 0.25], 'value_serialized is 0.25,0.25,0.25');
 	assert.deepEqual(vec3_spare_param.defaultValueSerialized(), [0, 0, 0], 'default_value_serialized is 0,0,0');
 	vec3_spare_param.set([0.1, 0.2, 0.3]);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.r, 0.1);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.g, 0.2);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.b, 0.3);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value.r, 0.1);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value.g, 0.2);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value.b, 0.3);
 	vec3_spare_param.g.set(0.8);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.r, 0.1);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.g, 0.8);
-	assert.equal(materialUniforms(mesh_basic1Material)![uniform_name].value.b, 0.3);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value.r, 0.1);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value.g, 0.8);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value.b, 0.3);
 
 	const data = new SceneJsonExporter(scene).data();
 
@@ -349,13 +365,13 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	await RendererUtils.compile(mesh_basic2, renderer);
 	vec3_spare_param2.set([0.7, 0.2, 0.15]);
 	const mesh_basic2Material = mesh_basic2.material;
-	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.r, 0.7);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.g, 0.2);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.b, 0.15);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.r, 0.7);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.g, 0.2);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.b, 0.15);
 	vec3_spare_param2.g.set(0.6);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.r, 0.7);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.g, 0.6);
-	assert.equal(materialUniforms(mesh_basic2Material)![uniform_name].value.b, 0.15);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.r, 0.7);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.g, 0.6);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.b, 0.15);
 
 	RendererUtils.dispose();
 });

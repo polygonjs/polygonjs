@@ -12,7 +12,7 @@ import {Camera} from 'three/src/cameras/Camera';
 import {Vector2} from 'three/src/math/Vector2';
 import {BaseCameraObjNodeType} from '../../obj/_BaseCamera';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {RGBFormat, RGBAFormat, UnsignedByteType, HalfFloatType, FloatType} from 'three/src/constants';
+import {RGBAFormat, UnsignedByteType, HalfFloatType, FloatType} from 'three/src/constants';
 import {Poly} from '../../../Poly';
 
 import {
@@ -23,18 +23,18 @@ import {
 } from '../../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 
-const RENDER_TARGET_FORMATS_OPTIONS: PolyDictionary<number> = {
-	RGBFormat: RGBFormat,
-	RGBAFormat: RGBAFormat,
-};
-const RENDER_TARGET_FORMATS_MENU_ENTRIES = Object.keys(RENDER_TARGET_FORMATS_OPTIONS)
-	.sort()
-	.map((name) => {
-		return {
-			name,
-			value: RENDER_TARGET_FORMATS_OPTIONS[name] as number,
-		};
-	});
+// const RENDER_TARGET_FORMATS_OPTIONS: PolyDictionary<number> = {
+// 	RGBFormat: RGBFormat,
+// 	RGBAFormat: RGBAFormat,
+// };
+// const RENDER_TARGET_FORMATS_MENU_ENTRIES = Object.keys(RENDER_TARGET_FORMATS_OPTIONS)
+// 	.sort()
+// 	.map((name) => {
+// 		return {
+// 			name,
+// 			value: RENDER_TARGET_FORMATS_OPTIONS[name] as number,
+// 		};
+// 	});
 
 const RENDER_TARGET_TEXTURE_TYPE_OPTIONS: PolyDictionary<number> = {
 	UnsignedByteType: UnsignedByteType,
@@ -50,11 +50,11 @@ const RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES = Object.keys(RENDER_TARGET_TEXTUR
 
 export class PostProcessNetworkParamsConfig extends NodeParamsConfig {
 	prependRenderPass = ParamConfig.BOOLEAN(1);
-	format = ParamConfig.INTEGER(RGBAFormat, {
-		menu: {
-			entries: RENDER_TARGET_FORMATS_MENU_ENTRIES,
-		},
-	});
+	// format = ParamConfig.INTEGER(RGBAFormat, {
+	// 	menu: {
+	// 		entries: RENDER_TARGET_FORMATS_MENU_ENTRIES,
+	// 	},
+	// });
 	textureType = ParamConfig.INTEGER(UnsignedByteType, {
 		menu: {
 			entries: RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES,
@@ -149,7 +149,7 @@ export class EffectsComposerController {
 		renderer.autoClear = false;
 		const pv = this.node.pv;
 		const parameters: WebGLRenderTargetOptions = {
-			format: pv.format,
+			format: RGBAFormat,
 			type: pv.textureType,
 			stencilBuffer: isBooleanTrue(pv.stencilBuffer),
 		};

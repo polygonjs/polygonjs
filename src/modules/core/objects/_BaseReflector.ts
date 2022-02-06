@@ -6,7 +6,7 @@ import {isPowerOfTwo} from 'three/src/math/MathUtils';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Plane} from 'three/src/math/Plane';
-import {RGBFormat} from 'three/src/constants';
+import {RGBAFormat} from 'three/src/constants';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
@@ -41,7 +41,7 @@ export interface BaseReflectorOptions {
 export const renderTargetParams = {
 	minFilter: LinearFilter,
 	magFilter: LinearFilter,
-	format: RGBFormat,
+	format: RGBAFormat,
 };
 
 export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial extends Material> extends Mesh<

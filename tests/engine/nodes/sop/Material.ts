@@ -1,7 +1,7 @@
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
@@ -115,36 +115,62 @@ QUnit.test('materials clone preserves builder onBeforeCompile', async (assert) =
 
 		const currentUniformNames = LAMBERT_UNIFORM_NAMES.concat(['v_POLY_param_customAlpha']);
 		assert.deepEqual(
-			Object.keys(materialUniforms(srcMaterial)!).sort(),
+			Object.keys(MaterialUserDataUniforms.getUniforms(srcMaterial)!).sort(),
 			currentUniformNames,
 			'uniforms are as expected with sharing'
 		);
-		assert.deepEqual(Object.keys(materialUniforms(materialObject0)!).sort(), currentUniformNames);
-		assert.deepEqual(Object.keys(materialUniforms(materialObject1)!).sort(), currentUniformNames);
+		assert.deepEqual(
+			Object.keys(MaterialUserDataUniforms.getUniforms(materialObject0)!).sort(),
+			currentUniformNames
+		);
+		assert.deepEqual(
+			Object.keys(MaterialUserDataUniforms.getUniforms(materialObject1)!).sort(),
+			currentUniformNames
+		);
 
-		materialUniforms(srcMaterial)!.alphaTest.value = 0.7;
-		materialUniforms(srcMaterial)!.v_POLY_param_customAlpha.value = 0.55;
-		assert.equal(materialUniforms(materialObject0)!.alphaTest.value, 0.0, 'alphaTest is different');
+		MaterialUserDataUniforms.getUniforms(srcMaterial)!.alphaTest.value = 0.7;
+		MaterialUserDataUniforms.getUniforms(srcMaterial)!.v_POLY_param_customAlpha.value = 0.55;
 		assert.equal(
-			materialUniforms(materialObject0)!.v_POLY_param_customAlpha.value,
+			MaterialUserDataUniforms.getUniforms(materialObject0)!.alphaTest.value,
+			0.0,
+			'alphaTest is different'
+		);
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(materialObject0)!.v_POLY_param_customAlpha.value,
 			0.55,
 			'param uniform is the same'
 		);
-		assert.equal(materialUniforms(materialObject1)!.alphaTest.value, 0.0, 'alphaTest is different');
 		assert.equal(
-			materialUniforms(materialObject1)!.v_POLY_param_customAlpha.value,
+			MaterialUserDataUniforms.getUniforms(materialObject1)!.alphaTest.value,
+			0.0,
+			'alphaTest is different'
+		);
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(materialObject1)!.v_POLY_param_customAlpha.value,
 			0.55,
 			'param uniform is the same'
 		);
 
 		// and the cloned materials are different from each other
-		materialUniforms(materialObject0)!.alphaTest.value = 0.3;
-		assert.equal(materialUniforms(materialObject1)!.alphaTest.value, 0.0, 'alphaTest is different');
+		MaterialUserDataUniforms.getUniforms(materialObject0)!.alphaTest.value = 0.3;
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(materialObject1)!.alphaTest.value,
+			0.0,
+			'alphaTest is different'
+		);
 
 		// and if I changed the custom uniform of a cloned material, the other materials follow
-		materialUniforms(materialObject0)!.v_POLY_param_customAlpha.value = 0.4;
-		assert.equal(materialUniforms(srcMaterial)!.v_POLY_param_customAlpha.value, 0.4, 'main mat follows');
-		assert.equal(materialUniforms(materialObject1)!.v_POLY_param_customAlpha.value, 0.4, 'main mat follows');
+		MaterialUserDataUniforms.getUniforms(materialObject0)!.v_POLY_param_customAlpha.value = 0.4;
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(srcMaterial)!.v_POLY_param_customAlpha.value,
+			0.4,
+			'main mat follows'
+		);
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(materialObject1)!.v_POLY_param_customAlpha.value,
+			0.4,
+			'main mat follows'
+		);
 	}
 	async function testWithoutShareUniforms() {
 		material1.p.shareCustomUniforms.set(0);
@@ -152,32 +178,54 @@ QUnit.test('materials clone preserves builder onBeforeCompile', async (assert) =
 
 		const currentUniformNames = LAMBERT_UNIFORM_NAMES.concat(['v_POLY_param_customAlpha']);
 		assert.deepEqual(
-			Object.keys(materialUniforms(srcMaterial)!).sort(),
+			Object.keys(MaterialUserDataUniforms.getUniforms(srcMaterial)!).sort(),
 			currentUniformNames,
 			'uniforms are as expected when not sharing'
 		);
-		assert.deepEqual(Object.keys(materialUniforms(materialObject0)!).sort(), currentUniformNames);
-		assert.deepEqual(Object.keys(materialUniforms(materialObject1)!).sort(), currentUniformNames);
+		assert.deepEqual(
+			Object.keys(MaterialUserDataUniforms.getUniforms(materialObject0)!).sort(),
+			currentUniformNames
+		);
+		assert.deepEqual(
+			Object.keys(MaterialUserDataUniforms.getUniforms(materialObject1)!).sort(),
+			currentUniformNames
+		);
 
-		materialUniforms(srcMaterial)!.alphaTest.value = 0.7;
-		materialUniforms(srcMaterial)!.v_POLY_param_customAlpha.value = 0.55;
-		assert.equal(materialUniforms(materialObject0)!.alphaTest.value, 0, 'alphaTest is different');
+		MaterialUserDataUniforms.getUniforms(srcMaterial)!.alphaTest.value = 0.7;
+		MaterialUserDataUniforms.getUniforms(srcMaterial)!.v_POLY_param_customAlpha.value = 0.55;
 		assert.equal(
-			materialUniforms(materialObject0)!.v_POLY_param_customAlpha.value,
+			MaterialUserDataUniforms.getUniforms(materialObject0)!.alphaTest.value,
+			0,
+			'alphaTest is different'
+		);
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(materialObject0)!.v_POLY_param_customAlpha.value,
 			0,
 			'param uniform is different'
 		);
-		assert.equal(materialUniforms(materialObject1)!.alphaTest.value, 0, 'alphaTest is different');
 		assert.equal(
-			materialUniforms(materialObject1)!.v_POLY_param_customAlpha.value,
+			MaterialUserDataUniforms.getUniforms(materialObject1)!.alphaTest.value,
+			0,
+			'alphaTest is different'
+		);
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(materialObject1)!.v_POLY_param_customAlpha.value,
 			0,
 			'param uniform is different'
 		);
 
 		// and if I changed the custom uniform of a cloned material, the other materials do not follow
-		materialUniforms(materialObject0)!.v_POLY_param_customAlpha.value = 0.4;
-		assert.equal(materialUniforms(srcMaterial)!.v_POLY_param_customAlpha.value, 0.55, 'main mat follows');
-		assert.equal(materialUniforms(materialObject1)!.v_POLY_param_customAlpha.value, 0, 'main mat follows');
+		MaterialUserDataUniforms.getUniforms(materialObject0)!.v_POLY_param_customAlpha.value = 0.4;
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(srcMaterial)!.v_POLY_param_customAlpha.value,
+			0.55,
+			'main mat follows'
+		);
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(materialObject1)!.v_POLY_param_customAlpha.value,
+			0,
+			'main mat follows'
+		);
 	}
 
 	await testWithShareUniforms();

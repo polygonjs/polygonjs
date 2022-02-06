@@ -1,11 +1,17 @@
 import {BaseNodeType} from '../_Base';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Texture} from 'three/src/textures/Texture';
 import {Matrix3} from 'three/src/math/Matrix3';
 import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {MaterialLoader} from 'three/src/loaders/MaterialLoader';
 import {Material} from 'three/src/materials/Material';
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {
+	MaterialUserDataUniforms,
+	OnBeforeCompileData,
+	OnBeforeCompileDataHandler,
+} from '../gl/code/assemblers/materials/OnBeforeCompile';
+import {PolyDictionary} from '../../../types/GlobalTypes';
 interface MaterialData {
 	color?: boolean;
 	lights?: boolean;
@@ -25,8 +31,9 @@ export class BasePersistedConfig {
 	// SAVE MAT
 	//
 	//
-	protected _materialToJson(material: ShaderMaterial, options: ToJsonOptions): object | undefined {
+	protected _materialToJson(material: Material, options: ToJsonOptions): object | undefined {
 		this._unassignTextures(material);
+		this._unassignOnBeforeCompileUniforms(material);
 
 		let material_data: object | undefined = undefined;
 		try {
@@ -42,8 +49,8 @@ export class BasePersistedConfig {
 			console.error('failed to save material data');
 			console.log(material);
 		}
-		if (material_data && material.lights != null) {
-			(material_data as any).lights = material.lights;
+		if (material_data && (material as ShaderMaterial).lights != null) {
+			(material_data as any).lights = (material as ShaderMaterial).lights;
 		}
 		if (material_data) {
 			// here we force the uuid to an expected value,
@@ -51,20 +58,38 @@ export class BasePersistedConfig {
 			(material_data as any).uuid = `${options.node.path()}-${options.suffix}`;
 		}
 
+		this._reassignOnBeforeCompileUniforms(material);
 		this._reassignTextures(material);
 		return material_data;
+	}
+
+	private _uniforms: PolyDictionary<IUniform<any>> | undefined;
+	private _onBeforeCompileData: OnBeforeCompileData | undefined;
+	private _unassignOnBeforeCompileUniforms(material: Material) {
+		this._uniforms = MaterialUserDataUniforms.removeUniforms(material);
+		this._onBeforeCompileData = OnBeforeCompileDataHandler.removeData(material);
+	}
+	private _reassignOnBeforeCompileUniforms(material: Material) {
+		if (this._uniforms) {
+			MaterialUserDataUniforms.setUniforms(material, this._uniforms);
+			this._uniforms = undefined;
+		}
+		if (this._onBeforeCompileData) {
+			OnBeforeCompileDataHandler.setData(material, this._onBeforeCompileData);
+			this._onBeforeCompileData = undefined;
+		}
 	}
 
 	private _found_uniform_texture_by_id: Map<string, Texture> = new Map();
 	private _found_uniform_textures_id_by_uniform_name: Map<string, string> = new Map();
 	private _found_param_texture_by_id: Map<string, Texture> = new Map();
 	private _found_param_textures_id_by_uniform_name: Map<string, string> = new Map();
-	private _unassignTextures(material: ShaderMaterial) {
+	private _unassignTextures(material: Material) {
 		this._found_uniform_texture_by_id.clear();
 		this._found_uniform_textures_id_by_uniform_name.clear();
 		this._found_param_texture_by_id.clear();
 		this._found_param_textures_id_by_uniform_name.clear();
-		const uniforms = material.uniforms;
+		const uniforms = MaterialUserDataUniforms.getUniforms(material);
 		if (uniforms) {
 			const uniformNames = Object.keys(uniforms);
 			for (let uniformName of uniformNames) {
@@ -88,7 +113,7 @@ export class BasePersistedConfig {
 			}
 		}
 	}
-	private _reassignTextures(material: ShaderMaterial) {
+	private _reassignTextures(material: Material) {
 		const uniform_names_needing_reassignment: string[] = [];
 		const param_names_needing_reassignment: string[] = [];
 		this._found_uniform_textures_id_by_uniform_name.forEach((texture_id, name) => {
@@ -97,7 +122,7 @@ export class BasePersistedConfig {
 		this._found_param_textures_id_by_uniform_name.forEach((texture_id, name) => {
 			param_names_needing_reassignment.push(name);
 		});
-		const uniforms = material.uniforms;
+		const uniforms = MaterialUserDataUniforms.getUniforms(material);
 		if (uniforms) {
 			for (let name of uniform_names_needing_reassignment) {
 				const texture_id = this._found_uniform_textures_id_by_uniform_name.get(name);

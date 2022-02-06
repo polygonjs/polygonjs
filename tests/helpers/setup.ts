@@ -35,11 +35,13 @@ declare global {
 	}
 }
 QUnit.testStart(async () => {
+	// console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
+
 	Poly.renderersController.deregisterAllRenderers();
 	// return new Promise(async (resolve, reject) => {
 	window.scene = new PolyScene();
-	window.scene.setName('test scene');
-	window.scene.setUuid('test');
+	window.scene.setName(QUnit.config.current.testName);
+	window.scene.setUuid(QUnit.config.current.testName);
 	Poly.setEnv('test');
 
 	window.scene.loadingController.markAsLoading();
@@ -58,4 +60,7 @@ QUnit.testStart(async () => {
 	window.scene.loadingController.setAutoUpdate(true);
 	await window.scene.loadingController.markAsLoaded();
 	window.scene.cooker.unblock();
+});
+QUnit.testDone(() => {
+	console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
 });

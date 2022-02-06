@@ -7,7 +7,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {create_required_nodes_for_subnet_gl_node} from './Subnet';
 import {RampValue, RampPoint, RampInterpolation} from '../../../../src/engine/params/ramp/RampValue';
 import {DataTexture} from 'three/src/textures/DataTexture';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test('gl ramp updates its parent material with new spare parameters', async (assert) => {
 	const scene = window.scene;
@@ -136,7 +136,7 @@ QUnit.test('gl ramp: 1 ramp node on top level and one in a subnet work ok', asyn
 
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	let uniform = materialUniforms(material)!['v_POLY_ramp_myCustomRamp'];
+	let uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_ramp_myCustomRamp'];
 	assert.ok(uniform);
 	assert.ok(uniform.value.uuid);
 	let spareParam = meshBasicBuilder1.params.get('myCustomRamp')! as RampParam;
@@ -186,7 +186,7 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`,
 	output1.setInput('color', floatToVec3_2);
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	uniform = materialUniforms(material)!['v_POLY_ramp_myCustomRamp'];
+	uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_ramp_myCustomRamp'];
 	assert.ok(uniform, 'uniform exists');
 	assert.in_delta(firstPixelValue(uniform.value), 0.75, 0.05, 'uniform value is still previous one');
 	spareParam = meshBasicBuilder1.params.get('myCustomRamp')! as RampParam;
@@ -225,7 +225,7 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`
 	output1.setInput('color', add1);
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.notOk(meshBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is not required');
-	uniform = materialUniforms(material)!['v_POLY_ramp_myCustomRamp'];
+	uniform = MaterialUserDataUniforms.getUniforms(material)!['v_POLY_ramp_myCustomRamp'];
 	assert.ok(uniform, 'uniform exists');
 	assert.in_delta(firstPixelValue(uniform.value), 0.25, 0.05, 'uniform value is still previous one');
 	spareParam = meshBasicBuilder1.params.get('myCustomRamp')! as RampParam;

@@ -8,7 +8,7 @@ import {MeshStandardBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshS
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {Poly} from '../../../../src/engine/Poly';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test('mesh standard builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer();
@@ -51,18 +51,27 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 		assert.equal(material.vertexShader, mesh_standard1Material.vertexShader, 'vertex shader is as expected');
 
 		// float param callback
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 0);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);
 		float_param.set(2);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 2);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 2);
 		float_param.set(4);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 4);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 4);
 
 		// vector3 param callback
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[0, 0, 0]
+		);
 		vec3_param.set([1, 2, 3]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[1, 2, 3]
+		);
 		vec3_param.set([5, 6, 7]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[5, 6, 7]
+		);
 	});
 	RendererUtils.dispose();
 });

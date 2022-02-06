@@ -57,14 +57,14 @@ export class UniformsController {
 		}
 
 		if (timeDependent) {
-			uniforms[UniformName.TIME] = this.scene.timeController.timeUniform();
+			this.addTimeUniform(uniforms);
 		} else {
-			delete uniforms[UniformName.TIME];
+			this.removeTimeUniform(uniforms);
 		}
 		if (resolutionDependent) {
-			uniforms[UniformName.RESOLUTION] = GLOBAL_UNIFORMS[UniformName.RESOLUTION];
+			this.addResolutionUniforms(uniforms);
 		} else {
-			delete uniforms[UniformName.RESOLUTION];
+			this.removeResolutionUniform(uniforms);
 		}
 	}
 	addTimeUniform(uniforms: IUniforms) {

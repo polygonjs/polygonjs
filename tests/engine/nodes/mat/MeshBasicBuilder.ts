@@ -50,7 +50,7 @@ import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 // import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {CoreSleep} from '../../../../src/core/Sleep';
 
 const TEST_SHADER_LIB = {
@@ -90,7 +90,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.default.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
-	assert.deepEqual(Object.keys(materialUniforms(material)!).sort(), BASIC_UNIFORM_NAMES);
+	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), BASIC_UNIFORM_NAMES);
 
 	const constant1 = mesh_basic1.createNode('constant');
 	constant1.setGlType(GlConnectionPointType.VEC3);
@@ -128,7 +128,10 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	output1.setInput('position', float_to_vec3_2, 'vec3');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	// await mesh_basic1.compute();
-	assert.deepEqual(Object.keys(materialUniforms(material)!).sort(), BASIC_UNIFORM_NAMES.concat(['time']).sort());
+	assert.deepEqual(
+		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
+		BASIC_UNIFORM_NAMES.concat(['time']).sort()
+	);
 
 	RendererUtils.dispose();
 });
@@ -493,7 +496,6 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(mesh_basic1.usedAssembler(), async () => {
-		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
 
@@ -512,25 +514,33 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 		assert.equal(material.vertexShader, mesh_basic1Material.vertexShader);
 
 		// float param callback
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 0);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);
 		float_param.set(2);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 2);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 2);
 		float_param.set(4);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 4);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 4);
 
 		// vector3 param callback
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[0, 0, 0]
+		);
 		vec3_param.set([1, 2, 3]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[1, 2, 3]
+		);
 		vec3_param.set([5, 6, 7]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[5, 6, 7]
+		);
 	});
 
 	RendererUtils.dispose();
 });
 
 QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) => {
-	console.log('START - mesh basic builder frame dependent with custom mat')
 	const {renderer} = await RendererUtils.waitForRenderer();
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
@@ -560,42 +570,58 @@ QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) 
 	assert.ok(geoSopGroup);
 	assert.equal(geoSopGroup!.children.length, 1);
 
-	assert.notOk(materialUniforms(mesh_basic1.material), 'uniforms not created yet');
+	assert.notOk(MaterialUserDataUniforms.getUniforms(mesh_basic1.material), 'uniforms not created yet');
 
 	output1.setInput('alpha', globals1, 'time');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.ok(mesh_basic1.material.customMaterials.customDepthMaterial, 'custom mat created');
 	const customMat = mesh_basic1.material.customMaterials.customDepthMaterial!;
-	assert.notOk(materialUniforms(customMat), 'custom mat not compiled yet');
+	assert.notOk(MaterialUserDataUniforms.getUniforms(customMat), 'custom mat not compiled yet');
 	renderer.render(scene.threejsScene(), camera.object); // we also need to render to have the custom materials
-	assert.ok(materialUniforms(customMat), 'custom mat uniforms compiled');
-	assert.equal(scene.time(), 0)
-	assert.equal(scene.uniformsController.timeUniformValue(), 0)
-	assert.equal(materialUniforms(mesh_basic1.material)!.time.value, 0, 'time is 0 on main mat');
-	assert.equal(materialUniforms(customMat)!.time.value, 0);
+	assert.ok(MaterialUserDataUniforms.getUniforms(customMat), 'custom mat uniforms compiled');
+	assert.equal(scene.time(), 0);
+	assert.equal(scene.uniformsController.timeUniformValue(), 0);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1.material)!.time.value, 0, 'time is 0 on main mat');
+	assert.equal(MaterialUserDataUniforms.getUniforms(customMat)!.time.value, 0);
 
 	scene.setFrame(60);
-	assert.equal(materialUniforms(mesh_basic1.material)!.time.value, 1, 'time is 1 on main mat');
-	assert.equal(materialUniforms(customMat)!.time.value, 1);
+	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1.material)!.time.value, 1, 'time is 1 on main mat');
+	assert.equal(MaterialUserDataUniforms.getUniforms(customMat)!.time.value, 1);
 
-	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(mesh_basic1.usedAssembler(), async () => {
-		// console.log('************ LOAD **************');
-		const scene2 = await SceneJsonImporter.loadData(data);
-		await scene2.waitForCooksCompleted();
+		await saveAndLoadScene(scene, async (scene2) => {
+			scene.setFrame(10);
+			await scene2.waitForCooksCompleted();
 
-		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
-		const mesh_basic2 = new_mesh_basic1;
-		const customMat2 = mesh_basic2.material.customMaterials.customDepthMaterial!;
-		assert.equal(materialUniforms(mesh_basic2.material)!.time.value, 1, 'time is 1 on new main mat');
-		assert.equal(materialUniforms(customMat2)!.time.value, 1);
-		scene.setFrame(120);
-		assert.equal(materialUniforms(mesh_basic2.material)!.time.value, 2, 'time is 2 on new main mat');
-		assert.equal(materialUniforms(customMat2)!.time.value, 2, 'time is 2 on custom mat');
+			const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
+			const mesh_basic2 = new_mesh_basic1;
+			assert.notOk(mesh_basic2.assemblerController());
+			assert.ok(mesh_basic2.persisted_config);
+			assert.notOk(
+				MaterialUserDataUniforms.getUniforms(mesh_basic2.material),
+				'no time uniform before compilation'
+			);
+			await RendererUtils.compile(mesh_basic2, renderer);
+			const customMat2 = mesh_basic2.material.customMaterials.customDepthMaterial!;
+			assert.equal(
+				MaterialUserDataUniforms.getUniforms(mesh_basic2.material)!.time.value,
+				1,
+				'time is 1 on new main mat'
+			);
+			await RendererUtils.compile(customMat2, renderer);
+			assert.equal(MaterialUserDataUniforms.getUniforms(customMat2)!.time.value, 1);
+			scene2.setFrame(120);
+			assert.equal(scene2.uniformsController.timeUniformValue(), 2, 'time uniform is 2');
+			assert.equal(
+				MaterialUserDataUniforms.getUniforms(mesh_basic2.material)!.time.value,
+				2,
+				'time is 2 on new main mat'
+			);
+			assert.equal(MaterialUserDataUniforms.getUniforms(customMat2)!.time.value, 2, 'time is 2 on custom mat');
+		});
 	});
 
 	RendererUtils.dispose();
-	console.log('END - mesh basic builder frame dependent with custom mat')
 });
 
 QUnit.skip('mesh basic builder bbox dependent', (assert) => {});

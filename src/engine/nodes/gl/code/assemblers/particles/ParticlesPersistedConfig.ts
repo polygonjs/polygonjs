@@ -60,6 +60,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 		this._loaded_data = data;
+		console.log(this._loaded_data);
 		//
 		// for now, unlike the texture and material persistedconfigs,
 		// the callbacks are created in the GPUController

@@ -11,8 +11,9 @@ import BasicSSSVertex from './templates/meshPhysicalBuilder/Physical.sss.vert.gl
 import BasicSSSFragment from './templates/meshPhysicalBuilder/Physical.sss.frag.glsl';
 import BasicSetBuilderNodeVertex from './templates/meshPhysicalBuilder/Physical.setBuilderNode.vert.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {MeshPhysicalBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshPhysicalBuilder';
+import {checkConsolePrints} from '../../../helpers/Console';
 const TEST_SHADER_LIB_DEFAULT = {vert: BasicDefaultVertex, frag: BasicDefaultFragment};
 const TEST_SHADER_LIB_SSS = {vert: BasicSSSVertex, frag: BasicSSSFragment};
 const TEST_SHADER_LIB_SET_BUILDER_NODE = {vert: BasicSetBuilderNodeVertex};
@@ -58,18 +59,27 @@ QUnit.test('mesh physical builder persisted_config', async (assert) => {
 		assert.equal(material.vertexShader, mesh_physical1Material.vertexShader, 'vertex shader is as expected');
 
 		// float param callback
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 0);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);
 		float_param.set(2);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 2);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 2);
 		float_param.set(4);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 4);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 4);
 
 		// vector3 param callback
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[0, 0, 0]
+		);
 		vec3_param.set([1, 2, 3]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[1, 2, 3]
+		);
 		vec3_param.set([5, 6, 7]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[5, 6, 7]
+		);
 	});
 	RendererUtils.dispose();
 });
@@ -122,18 +132,27 @@ QUnit.test('mesh physical builder persisted_config with advanced params', async 
 		assert.equal(material.vertexShader, mesh_physical_mat.vertexShader, 'vertex shader is as expected');
 
 		// float param callback
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 0);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);
 		float_param.set(2);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 2);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 2);
 		float_param.set(4);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 4);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 4);
 
 		// vector3 param callback
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[0, 0, 0]
+		);
 		vec3_param.set([1, 2, 3]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[1, 2, 3]
+		);
 		vec3_param.set([5, 6, 7]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[5, 6, 7]
+		);
 	});
 	RendererUtils.dispose();
 });
@@ -190,7 +209,10 @@ QUnit.test('mesh physical builder can compile from another node', async (assert)
 	output1.setInput('position', noise);
 
 	await RendererUtils.compile(mesh_physical_SRC, renderer);
-	await RendererUtils.compile(mesh_physical_DEST, renderer);
+	const consoleHistory = await checkConsolePrints(async () => {
+		await RendererUtils.compile(mesh_physical_DEST, renderer);
+	});
+	assert.equal(consoleHistory.error.length, 1, 'dest mat compilation raised a webgl error');
 	const mat_SRC = mesh_physical_SRC.material;
 	const mat_DEST = mesh_physical_DEST.material;
 

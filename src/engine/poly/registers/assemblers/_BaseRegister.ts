@@ -19,18 +19,22 @@ export interface ControllerAssemblerPair {
 	controller: any;
 	assembler: any;
 }
-
+type TraverseCallback = (pair: ControllerAssemblerPair, name: AssemblerName) => void;
 export class BaseAssemblersRegister {
-	protected _controller_assembler_by_name: Map<AssemblerName, ControllerAssemblerPair> = new Map();
+	protected _controllerAssemblerByName: Map<AssemblerName, ControllerAssemblerPair> = new Map();
 
 	register(name: AssemblerName, controller: any, assembler: any) {
-		this._controller_assembler_by_name.set(name, {
+		this._controllerAssemblerByName.set(name, {
 			controller: controller,
 			assembler: assembler,
 		});
 	}
 
 	unregister(name: AssemblerName) {
-		this._controller_assembler_by_name.delete(name);
+		this._controllerAssemblerByName.delete(name);
+	}
+
+	traverse(callback: TraverseCallback) {
+		this._controllerAssemblerByName.forEach(callback);
 	}
 }

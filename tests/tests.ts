@@ -229,6 +229,8 @@ import './engine/nodes/sop/ObjectMerge';
 import './engine/nodes/sop/ObjectProperties';
 import './engine/nodes/sop/Palette';
 import './engine/nodes/sop/ParticlesSystemGpu';
+import './engine/nodes/sop/particlesSystemGPU/ParticlesAssembler';
+import './engine/nodes/sop/particlesSystemGPU/ParticlesPersistedConfig';
 import './engine/nodes/sop/Peak';
 import './engine/nodes/sop/Plane';
 import './engine/nodes/sop/Point';

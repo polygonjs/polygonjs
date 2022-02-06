@@ -3,7 +3,7 @@ import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Scene} from 'three/src/scenes/Scene';
-import {RGBFormat} from 'three/src/constants';
+import {RGBAFormat} from 'three/src/constants';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {Mesh} from 'three/src/objects/Mesh';
@@ -115,7 +115,7 @@ export class BokehPass2 {
 
 		this._processingScene.add(this._processingCamera);
 
-		var pars = {minFilter: LinearFilter, magFilter: LinearFilter, format: RGBFormat};
+		var pars = {minFilter: LinearFilter, magFilter: LinearFilter, format: RGBAFormat};
 		this._rtTextureDepth = new WebGLRenderTarget(this._resolution.x, this._resolution.y, pars);
 		this._rtTextureColor = new WebGLRenderTarget(this._resolution.x, this._resolution.y, pars);
 

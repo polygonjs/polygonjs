@@ -18,7 +18,7 @@ import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {ShaderMaterialWithCustomMaterials} from '../../../../src/core/geometry/Material';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {materialUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -40,7 +40,10 @@ QUnit.test('volume builder simple', async (assert) => {
 	await RendererUtils.compile(volume_builder1, renderer);
 	assert.equal(material.vertexShader, TEST_SHADER_LIB.default.vert);
 	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
-	assert.deepEqual(Object.keys(materialUniforms(material)!).sort(), Object.keys(VOLUME_UNIFORMS).sort());
+	assert.deepEqual(
+		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
+		Object.keys(VOLUME_UNIFORMS).sort()
+	);
 
 	const constant1 = volume_builder1.createNode('constant');
 	constant1.setGlType(GlConnectionPointType.FLOAT);
@@ -102,18 +105,27 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 		assert.equal(material.vertexShader, volume1Material.vertexShader);
 
 		// float param callback
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 0);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);
 		float_param.set(2);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 2);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 2);
 		float_param.set(4);
-		assert.equal(materialUniforms(material)!.v_POLY_param_float_param.value, 4);
+		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 4);
 
 		// vector3 param callback
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [0, 0, 0]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[0, 0, 0]
+		);
 		vec3_param.set([1, 2, 3]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [1, 2, 3]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[1, 2, 3]
+		);
 		vec3_param.set([5, 6, 7]);
-		assert.deepEqual(materialUniforms(material)!.v_POLY_param_vec3_param.value.toArray(), [5, 6, 7]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
+			[5, 6, 7]
+		);
 	});
 
 	RendererUtils.dispose();

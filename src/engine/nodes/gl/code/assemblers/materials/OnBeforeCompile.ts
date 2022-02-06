@@ -19,8 +19,8 @@ export interface OnBeforeCompileData {
 }
 type OnBeforeCompile = (shader: Shader) => void;
 
-export function assignUniformViaUserData(material: Material, uniformName: string, newUniform: IUniform) {
-	const uniforms = material.userData.uniforms;
+export function assignUniformViaUserData(material: Material, uniformName: string, newUniform: IUniformTexture) {
+	const uniforms = MaterialUserDataUniforms.getUniforms(material);
 	if (uniforms) {
 		const currentUniform = uniforms[uniformName];
 		if (currentUniform) {
@@ -28,13 +28,34 @@ export function assignUniformViaUserData(material: Material, uniformName: string
 		} else {
 			uniforms[uniformName] = newUniform;
 		}
+	} else {
+		// if there are no uniforms, the material has not been compiled yet.
+		// we therefore must add those to userData so that they are picked up in onBeforeCompile.
+		// For instance, this can be the case for materials assigned to particles, when run without assemblers.
+		// Since the assembler is responsible for assigning the additionalTextures, this is not done when they are not loaded.
+		// But for this to work, we also need to make sure that the persistedConfig will not contain the uniforms in the userData
+		// so those must be stripped out when saving it
+		OnBeforeCompileDataHandler.addAdditionalTexture(material, uniformName, newUniform);
 	}
 }
-export function materialUniforms(material: Material): PolyDictionary<IUniform> | undefined {
-	return material.userData?.uniforms;
+
+export class MaterialUserDataUniforms {
+	static getUniforms(material: Material): PolyDictionary<IUniform> | undefined {
+		return material.userData?.uniforms;
+	}
+	static setUniforms(material: Material, uniforms: PolyDictionary<IUniform>) {
+		material.userData.uniforms = uniforms;
+	}
+	static removeUniforms(material: Material) {
+		const uniforms = this.getUniforms(material);
+		const userData = material.userData;
+		delete userData['uniforms'];
+		return uniforms;
+	}
 }
+
 export function assignOnBeforeCompileDataAndFunction(scene: PolyScene, material: Material, data: OnBeforeCompileData) {
-	_setOnBeforeCompileData(material, data);
+	OnBeforeCompileDataHandler.setData(material, data);
 	material.onBeforeCompile = _createOnBeforeCompile(scene, material);
 }
 interface CopyParams {
@@ -44,11 +65,11 @@ interface CopyParams {
 }
 export function copyOnBeforeCompileData(scene: PolyScene, params: CopyParams) {
 	const {src, dest, shareCustomUniforms} = params;
-	const data = _getOnBeforeCompileData(src);
+	const data = OnBeforeCompileDataHandler.getData(src);
 	if (data) {
 		function cloneData(data: OnBeforeCompileData) {
-			const json = onBeforeCompileDataToJSON(data);
-			return onBeforeCompileDataFromJSON(json);
+			const json = OnBeforeCompileDataConverter.toJSON(data);
+			return OnBeforeCompileDataConverter.fromJSON(json);
 		}
 		const newData = shareCustomUniforms ? data : cloneData(data);
 		assignOnBeforeCompileDataAndFunction(scene, dest, newData);
@@ -57,7 +78,7 @@ export function copyOnBeforeCompileData(scene: PolyScene, params: CopyParams) {
 
 function _createOnBeforeCompile(scene: PolyScene, material: Material): OnBeforeCompile {
 	const onBeforeCompile = (shader: Shader) => {
-		const data = _getOnBeforeCompileData(material);
+		const data = OnBeforeCompileDataHandler.getData(material);
 		if (!data) {
 			return;
 		}
@@ -82,18 +103,38 @@ function _createOnBeforeCompile(scene: PolyScene, material: Material): OnBeforeC
 		const shaderMaterial = material as ShaderMaterial;
 		shaderMaterial.vertexShader = shader.vertexShader;
 		shaderMaterial.fragmentShader = shader.fragmentShader;
-		material.userData.uniforms = shader.uniforms;
+		MaterialUserDataUniforms.setUniforms(material, shader.uniforms);
 	};
 
 	return onBeforeCompile;
 }
 
-function _setOnBeforeCompileData(material: Material, data: OnBeforeCompileData) {
-	material.userData.onBeforeCompileData = data;
+export class OnBeforeCompileDataHandler {
+	static setData(material: Material, data: OnBeforeCompileData) {
+		material.userData.onBeforeCompileData = data;
+	}
+	static addAdditionalTexture(material: Material, uniformName: string, newUniform: IUniformTexture) {
+		const data = this.getData(material);
+		if (data) {
+			const currentUniform = data.additionalTextureUniforms[uniformName];
+			if (currentUniform == null) {
+				data.additionalTextureUniforms[uniformName] = newUniform;
+			}
+		} else {
+			console.warn('no data found on material', material);
+		}
+	}
+	static getData(material: Material): OnBeforeCompileData | undefined {
+		return material.userData.onBeforeCompileData;
+	}
+	static removeData(material: Material): OnBeforeCompileData | undefined {
+		const data = this.getData(material);
+		const userData = material.userData;
+		delete userData['onBeforeCompileData'];
+		return data;
+	}
 }
-function _getOnBeforeCompileData(material: Material): OnBeforeCompileData | undefined {
-	return material.userData.onBeforeCompileData;
-}
+
 // from https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
 type RemoveParamConfigField<Type> = {
 	[Property in keyof Type as Exclude<Property, 'paramConfigs' | 'additionalTextureUniforms'>]: Type[Property];
@@ -101,21 +142,24 @@ type RemoveParamConfigField<Type> = {
 export interface OnBeforeCompileDataJSON extends RemoveParamConfigField<OnBeforeCompileData> {
 	paramConfigs: GlParamConfigJSON<ParamType>[];
 }
-export function onBeforeCompileDataToJSON(onBeforeCompileData: OnBeforeCompileData): OnBeforeCompileDataJSON {
-	const onBeforeCompileDataJSON: OnBeforeCompileDataJSON = {
-		vertexShader: onBeforeCompileData.vertexShader,
-		fragmentShader: onBeforeCompileData.fragmentShader,
-		timeDependent: onBeforeCompileData.timeDependent,
-		resolutionDependent: onBeforeCompileData.resolutionDependent,
-		paramConfigs: onBeforeCompileData.paramConfigs.map((pc) => pc.toJSON()),
-	};
-	return onBeforeCompileDataJSON;
-}
-export function onBeforeCompileDataFromJSON(json: OnBeforeCompileDataJSON): OnBeforeCompileData {
-	const onBeforeCompileData: OnBeforeCompileData = {
-		...json,
-		additionalTextureUniforms: {},
-		paramConfigs: json.paramConfigs.map((json) => GlParamConfig.fromJSON(json)),
-	};
-	return onBeforeCompileData;
+
+export class OnBeforeCompileDataConverter {
+	static toJSON(onBeforeCompileData: OnBeforeCompileData): OnBeforeCompileDataJSON {
+		const onBeforeCompileDataJSON: OnBeforeCompileDataJSON = {
+			vertexShader: onBeforeCompileData.vertexShader,
+			fragmentShader: onBeforeCompileData.fragmentShader,
+			timeDependent: onBeforeCompileData.timeDependent,
+			resolutionDependent: onBeforeCompileData.resolutionDependent,
+			paramConfigs: onBeforeCompileData.paramConfigs.map((pc) => pc.toJSON()),
+		};
+		return onBeforeCompileDataJSON;
+	}
+	static fromJSON(json: OnBeforeCompileDataJSON): OnBeforeCompileData {
+		const onBeforeCompileData: OnBeforeCompileData = {
+			...json,
+			additionalTextureUniforms: {},
+			paramConfigs: json.paramConfigs.map((json) => GlParamConfig.fromJSON(json)),
+		};
+		return onBeforeCompileData;
+	}
 }
