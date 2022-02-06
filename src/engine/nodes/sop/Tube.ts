@@ -8,8 +8,10 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TubeSopOperation} from '../../operations/sop/Tube';
 import {CoreGroup} from '../../../core/geometry/Group';
 class TubeSopParamsConfig extends NodeParamsConfig {
-	/** @param tube radius */
-	radius = ParamConfig.FLOAT(1, {range: [0, 1]});
+	/** @param top radius */
+	radiusTop = ParamConfig.FLOAT(1, {range: [0, 1]});
+	/** @param bottom radius */
+	radiusBottom = ParamConfig.FLOAT(1, {range: [0, 1]});
 	/** @param tube height */
 	height = ParamConfig.FLOAT(1, {range: [0, 1]});
 	/** @param number of segments in the radial direction */

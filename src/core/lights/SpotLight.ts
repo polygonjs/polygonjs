@@ -301,7 +301,7 @@ export class CoreSpotLightHelper {
 
 	update(params: CoreSpotLightHelperParams) {
 		const light = this.container.light();
-		CoreSpotLightHelper.updateConeObject(this._cone, {
+		CoreSpotLightHelper.transformObject(this._cone, {
 			sizeMult: params.helperSize,
 			distance: light.distance,
 			angle: light.angle,
@@ -311,7 +311,7 @@ export class CoreSpotLightHelper {
 	}
 
 	private static _matrixScale = new Vector3();
-	static updateConeObject(object: Object3D, options: UpdateConeObjectOptions) {
+	static transformObject(object: Object3D, options: UpdateConeObjectOptions) {
 		const coneLength = (options.distance ? options.distance : 1000) * options.sizeMult;
 		const coneWidth = coneLength * Math.tan(options.angle);
 

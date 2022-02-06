@@ -36,7 +36,7 @@ export class VolumetricSpotLight {
 		if (isBooleanTrue(params.tvolumetric)) {
 			const object = this.object();
 
-			CoreSpotLightHelper.updateConeObject(object, {
+			CoreSpotLightHelper.transformObject(object, {
 				sizeMult: 1,
 				distance: light.distance,
 				angle: light.angle,
@@ -61,8 +61,8 @@ export class VolumetricSpotLight {
 	private _createMesh() {
 		const radius = 1;
 		const height = 1;
-		const radialSegments = 256;
-		const heightSegments = 1;
+		const radialSegments = 128;
+		const heightSegments = 32;
 		// TODO: consider using a tube instead of a cone, to allow:
 		// - to have base with non zero radius
 		// - possibly better normal interpolation

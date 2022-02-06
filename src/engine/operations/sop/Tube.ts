@@ -10,7 +10,8 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
 interface TubeSopParams extends DefaultOperationParams {
-	radius: number;
+	radiusTop: number;
+	radiusBottom: number;
 	height: number;
 	segmentsRadial: number;
 	segmentsHeight: number;
@@ -21,7 +22,8 @@ interface TubeSopParams extends DefaultOperationParams {
 
 export class TubeSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TubeSopParams = {
-		radius: 1,
+		radiusTop: 1,
+		radiusBottom: 1,
 		height: 1,
 		segmentsRadial: 12,
 		segmentsHeight: 1,
@@ -36,8 +38,8 @@ export class TubeSopOperation extends BaseSopOperation {
 	private _coreTransform = new CoreTransform();
 	override cook(input_contents: CoreGroup[], params: TubeSopParams) {
 		const geometry = new CylinderBufferGeometry(
-			params.radius,
-			params.radius,
+			params.radiusTop,
+			params.radiusBottom,
 			params.height,
 			params.segmentsRadial,
 			params.segmentsHeight,
