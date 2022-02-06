@@ -48,8 +48,10 @@ export class MaterialUserDataUniforms {
 	}
 	static removeUniforms(material: Material) {
 		const uniforms = this.getUniforms(material);
-		const userData = material.userData;
-		delete userData['uniforms'];
+		if (uniforms) {
+			const userData = material.userData;
+			delete userData['uniforms'];
+		}
 		return uniforms;
 	}
 }
@@ -57,6 +59,10 @@ export class MaterialUserDataUniforms {
 export function assignOnBeforeCompileDataAndFunction(scene: PolyScene, material: Material, data: OnBeforeCompileData) {
 	OnBeforeCompileDataHandler.setData(material, data);
 	material.onBeforeCompile = _createOnBeforeCompile(scene, material);
+	// it is important that customProgramCacheKey is also set when there are no assemblers
+	// as otherwise the material will all use the same key, and will override each other
+	const key = `${material.uuid}:${performance.now()}`;
+	material.customProgramCacheKey = () => key;
 }
 interface CopyParams {
 	src: Material;
@@ -129,8 +135,10 @@ export class OnBeforeCompileDataHandler {
 	}
 	static removeData(material: Material): OnBeforeCompileData | undefined {
 		const data = this.getData(material);
-		const userData = material.userData;
-		delete userData['onBeforeCompileData'];
+		if (data) {
+			const userData = material.userData;
+			delete userData['onBeforeCompileData'];
+		}
 		return data;
 	}
 }

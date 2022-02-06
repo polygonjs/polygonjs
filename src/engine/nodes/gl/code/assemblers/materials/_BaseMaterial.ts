@@ -220,13 +220,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				resolutionDependent: this.uniformsResolutionDependent(),
 			};
 			assignOnBeforeCompileDataAndFunction(scene, material, this._onBeforeCompileData);
-			// material.onBeforeCompile = createOnBeforeCompile(scene, material, this._onBeforeCompileData);
 			material.needsUpdate = true;
-			// const paramConfigsKey: string = this.param_configs()
-			// 	.map((p) => JSON.stringify(p.toJSON()))
-			// 	.join(',');
-			const key = `${performance.now()}`; //`${vertexShader}:${fragmentShader}`; //:${paramConfigsKey}`;
-			material.customProgramCacheKey = () => key;
 		}
 
 		// const material = await this._assembler.get_material();

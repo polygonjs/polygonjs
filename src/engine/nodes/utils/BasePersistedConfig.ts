@@ -6,12 +6,7 @@ import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material
 import {MaterialLoader} from 'three/src/loaders/MaterialLoader';
 import {Material} from 'three/src/materials/Material';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {
-	MaterialUserDataUniforms,
-	OnBeforeCompileData,
-	OnBeforeCompileDataHandler,
-} from '../gl/code/assemblers/materials/OnBeforeCompile';
-import {PolyDictionary} from '../../../types/GlobalTypes';
+import {MaterialUserDataUniforms, OnBeforeCompileDataHandler} from '../gl/code/assemblers/materials/OnBeforeCompile';
 interface MaterialData {
 	color?: boolean;
 	lights?: boolean;
@@ -21,6 +16,7 @@ interface ToJsonOptions {
 	node: BaseNodeType;
 	suffix: string;
 }
+
 export class BasePersistedConfig {
 	constructor(protected node: BaseNodeType) {}
 	toJSON(): object | void {}
@@ -32,117 +28,101 @@ export class BasePersistedConfig {
 	//
 	//
 	protected _materialToJson(material: Material, options: ToJsonOptions): object | undefined {
-		this._unassignTextures(material);
-		this._unassignOnBeforeCompileUniforms(material);
-
 		let material_data: object | undefined = undefined;
-		try {
-			material_data = material.toJSON({});
-			if (material_data) {
-				// those properties are currently not handled in three.js
-				// TODO: wait for https://github.com/mrdoob/three.js/pull/21428
-				// to be merged
-				(material_data as any).shadowSide = material.shadowSide;
-				(material_data as any).colorWrite = material.colorWrite;
+		this._withPreparedMaterial(material, () => {
+			try {
+				material_data = material.toJSON({});
+				if (material_data) {
+					// those properties are currently not handled in three.js
+					// TODO: wait for https://github.com/mrdoob/three.js/pull/21428
+					// to be merged
+					(material_data as any).shadowSide = material.shadowSide;
+					(material_data as any).colorWrite = material.colorWrite;
+				}
+			} catch (err) {
+				console.error('failed to save material data');
+				console.log(material);
+				console.log(err);
 			}
-		} catch (err) {
-			console.error('failed to save material data');
-			console.log(material);
-		}
-		if (material_data && (material as ShaderMaterial).lights != null) {
-			(material_data as any).lights = (material as ShaderMaterial).lights;
-		}
-		if (material_data) {
-			// here we force the uuid to an expected value,
-			// so that it does not get overriden at each load/save
-			(material_data as any).uuid = `${options.node.path()}-${options.suffix}`;
-		}
+			if (material_data && (material as ShaderMaterial).lights != null) {
+				(material_data as any).lights = (material as ShaderMaterial).lights;
+			}
+			if (material_data) {
+				// here we force the uuid to an expected value,
+				// so that it does not get overriden at each load/save
+				(material_data as any).uuid = `${options.node.path()}-${options.suffix}`;
+			}
+		});
 
-		this._reassignOnBeforeCompileUniforms(material);
-		this._reassignTextures(material);
 		return material_data;
 	}
 
-	private _uniforms: PolyDictionary<IUniform<any>> | undefined;
-	private _onBeforeCompileData: OnBeforeCompileData | undefined;
-	private _unassignOnBeforeCompileUniforms(material: Material) {
-		this._uniforms = MaterialUserDataUniforms.removeUniforms(material);
-		this._onBeforeCompileData = OnBeforeCompileDataHandler.removeData(material);
-	}
-	private _reassignOnBeforeCompileUniforms(material: Material) {
-		if (this._uniforms) {
-			MaterialUserDataUniforms.setUniforms(material, this._uniforms);
-			this._uniforms = undefined;
-		}
-		if (this._onBeforeCompileData) {
-			OnBeforeCompileDataHandler.setData(material, this._onBeforeCompileData);
-			this._onBeforeCompileData = undefined;
-		}
+	private _withPreparedMaterial(material: Material, callback: () => void) {
+		this._withUnassignedUniformTextures(material as ShaderMaterial, () => {
+			this._withUnassignedBasePropertyTextures(material, () => {
+				this._withUnassignedOnBeforeCompileData(material, () => {
+					callback();
+				});
+			});
+		});
 	}
 
-	private _found_uniform_texture_by_id: Map<string, Texture> = new Map();
-	private _found_uniform_textures_id_by_uniform_name: Map<string, string> = new Map();
-	private _found_param_texture_by_id: Map<string, Texture> = new Map();
-	private _found_param_textures_id_by_uniform_name: Map<string, string> = new Map();
-	private _unassignTextures(material: Material) {
-		this._found_uniform_texture_by_id.clear();
-		this._found_uniform_textures_id_by_uniform_name.clear();
-		this._found_param_texture_by_id.clear();
-		this._found_param_textures_id_by_uniform_name.clear();
-		const uniforms = MaterialUserDataUniforms.getUniforms(material);
+	private _withUnassignedOnBeforeCompileData(material: Material, callback: () => void) {
+		const uniforms = MaterialUserDataUniforms.removeUniforms(material);
+		const onBeforeCompileData = OnBeforeCompileDataHandler.removeData(material);
+
+		callback();
+
+		if (uniforms) {
+			MaterialUserDataUniforms.setUniforms(material, uniforms);
+		}
+		if (onBeforeCompileData) {
+			OnBeforeCompileDataHandler.setData(material, onBeforeCompileData);
+		}
+	}
+	private _withUnassignedUniformTextures(material: ShaderMaterial, callback: () => void) {
+		const textureByUniformName: Map<string, Texture> = new Map();
+		// we use material.uniforms and not material.userData.uniforms
+		// since userData.uniforms are removed in ._unassignOnBeforeCompileUniforms
+		const uniforms = (material as ShaderMaterial).uniforms;
 		if (uniforms) {
 			const uniformNames = Object.keys(uniforms);
 			for (let uniformName of uniformNames) {
 				const value = uniforms[uniformName].value;
 				if (value && value.uuid) {
 					const texture = value as Texture;
-					this._found_uniform_texture_by_id.set(texture.uuid, value);
-					this._found_uniform_textures_id_by_uniform_name.set(uniformName, texture.uuid);
+					textureByUniformName.set(uniformName, texture);
 					uniforms[uniformName].value = null;
 				}
 			}
 		}
-		const matPropertyNames = Object.keys(material) as Array<keyof Material>;
-		for (let matPropertyName of matPropertyNames) {
-			const propertyValue = material[matPropertyName];
-			if (propertyValue && propertyValue.uuid) {
-				const texture = propertyValue;
-				this._found_param_texture_by_id.set(texture.uuid, texture);
-				this._found_param_textures_id_by_uniform_name.set(matPropertyName, texture.uuid);
-				(material as any)[matPropertyName] = null;
-			}
+
+		callback();
+
+		if (uniforms) {
+			textureByUniformName.forEach((texture, uniformName) => {
+				uniforms[uniformName].value = texture;
+			});
 		}
 	}
-	private _reassignTextures(material: Material) {
-		const uniform_names_needing_reassignment: string[] = [];
-		const param_names_needing_reassignment: string[] = [];
-		this._found_uniform_textures_id_by_uniform_name.forEach((texture_id, name) => {
-			uniform_names_needing_reassignment.push(name);
-		});
-		this._found_param_textures_id_by_uniform_name.forEach((texture_id, name) => {
-			param_names_needing_reassignment.push(name);
-		});
-		const uniforms = MaterialUserDataUniforms.getUniforms(material);
-		if (uniforms) {
-			for (let name of uniform_names_needing_reassignment) {
-				const texture_id = this._found_uniform_textures_id_by_uniform_name.get(name);
-				if (texture_id) {
-					const texture = this._found_uniform_texture_by_id.get(texture_id);
-					if (texture) {
-						uniforms[name].value = texture;
-					}
-				}
+	private _withUnassignedBasePropertyTextures(material: Material, callback: () => void) {
+		const textureByPropertyName: Map<string, Texture> = new Map();
+		// we use material.uniforms and not material.userData.uniforms
+		// since userData.uniforms are removed in ._unassignOnBeforeCompileUniforms
+		const propertyNames = Object.keys(material);
+		for (let propertyName of propertyNames) {
+			const value = (material as any)[propertyName] as Texture | undefined;
+			if (value && value.uuid && value instanceof Texture) {
+				textureByPropertyName.set(propertyName, value);
+				(material as any)[propertyName] = null;
 			}
 		}
-		for (let name of param_names_needing_reassignment) {
-			const texture_id = this._found_param_textures_id_by_uniform_name.get(name);
-			if (texture_id) {
-				const texture = this._found_param_texture_by_id.get(texture_id);
-				if (texture) {
-					(material as any)[name] = texture;
-				}
-			}
-		}
+
+		callback();
+
+		textureByPropertyName.forEach((texture, uniformName) => {
+			(material as any)[uniformName] = texture;
+		});
 	}
 
 	//

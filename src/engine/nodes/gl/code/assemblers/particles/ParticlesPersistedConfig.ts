@@ -46,13 +46,14 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			node: this.node,
 			suffix: 'main',
 		});
-
-		return {
+		const data = {
 			shaders_by_name: shaders_by_name,
 			texture_allocations: texture_allocations_data,
 			param_uniform_pairs: param_uniform_pairs,
 			uniforms_owner: material_data || {},
 		};
+
+		return data;
 	}
 	override load(data: PersistedConfigBaseParticlesData) {
 		const assemblerController = this.node.assemblerController();
@@ -60,7 +61,6 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 		this._loaded_data = data;
-		console.log(this._loaded_data);
 		//
 		// for now, unlike the texture and material persistedconfigs,
 		// the callbacks are created in the GPUController

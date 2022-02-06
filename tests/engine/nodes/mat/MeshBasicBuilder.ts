@@ -624,6 +624,74 @@ QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) 
 	RendererUtils.dispose();
 });
 
+QUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheKey', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer();
+	const MAT = window.MAT;
+	const scene = window.scene;
+	scene.setFrame(0);
+	assert.equal(scene.time(), 0);
+
+	function createMatNode() {
+		const mesh_basic1 = MAT.createNode('meshBasicBuilder');
+		mesh_basic1.createNode('output');
+		mesh_basic1.createNode('globals');
+		const output1 = mesh_basic1.nodesByType('output')[0];
+		const globals1 = mesh_basic1.nodesByType('globals')[0];
+		output1.setInput('color', globals1, 'position');
+		return mesh_basic1;
+	}
+	const mesh_basic1 = createMatNode();
+	const mesh_basic2 = createMatNode();
+	await mesh_basic1.compute();
+	await mesh_basic2.compute();
+
+	assert.notEqual(
+		mesh_basic1.material.customProgramCacheKey(),
+		mesh_basic2.material.customProgramCacheKey(),
+		'cache keys are unique before compilation'
+	);
+
+	await RendererUtils.compile(mesh_basic1, renderer);
+	await RendererUtils.compile(mesh_basic2, renderer);
+
+	assert.notEqual(
+		mesh_basic1.material.customProgramCacheKey(),
+		mesh_basic2.material.customProgramCacheKey(),
+		'just in case, cache keys are also unique after compilation'
+	);
+
+	await AssemblersUtils.withUnregisteredAssembler(mesh_basic1.usedAssembler(), async () => {
+		await saveAndLoadScene(scene, async (scene2) => {
+			scene.setFrame(10);
+			await scene2.waitForCooksCompleted();
+
+			const new_mesh_basic1 = scene2.node(mesh_basic1.path()) as BaseBuilderMatNodeType;
+			const new_mesh_basic2 = scene2.node(mesh_basic2.path()) as BaseBuilderMatNodeType;
+			assert.notOk(new_mesh_basic1.assemblerController());
+			assert.notOk(new_mesh_basic2.assemblerController());
+			assert.ok(new_mesh_basic1.persisted_config);
+			assert.ok(new_mesh_basic2.persisted_config);
+			assert.notEqual(
+				mesh_basic1.material.customProgramCacheKey(),
+				mesh_basic2.material.customProgramCacheKey(),
+				'new cache keys are unique before compilation'
+			);
+
+			await RendererUtils.compile(new_mesh_basic1, renderer);
+			await RendererUtils.compile(new_mesh_basic2, renderer);
+
+			assert.notEqual(new_mesh_basic1.material.uuid, new_mesh_basic2.material.uuid);
+			assert.notEqual(
+				new_mesh_basic1.material.customProgramCacheKey(),
+				new_mesh_basic2.material.customProgramCacheKey(),
+				'new cache keys are unique after compilation'
+			);
+		});
+	});
+
+	RendererUtils.dispose();
+});
+
 QUnit.skip('mesh basic builder bbox dependent', (assert) => {});
 
 QUnit.skip('mesh basic builder basic instanced works without an input node', (assert) => {});

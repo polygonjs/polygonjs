@@ -8,6 +8,7 @@ import {AssemblersUtils} from '../../../../helpers/AssemblersUtils';
 import {AssertUtils} from '../../../../helpers/AssertUtils';
 import {ParticlesSystemGpuSopNode} from '../../../../../src/engine/nodes/sop/ParticlesSystemGpu';
 import {PointsBuilderMatNode} from '../../../../../src/engine/nodes/mat/PointsBuilder';
+import {CoreSleep} from '../../../../../src/core/Sleep';
 
 QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', async (assert) => {
 	const geo1 = window.geo1;
@@ -131,6 +132,12 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 				].sort(),
 				'position uniform is preset in the material after compilation'
 			);
+
+			const key1 = pointsBuilder2.customProgramCacheKey();
+			await CoreSleep.sleep(100);
+			const key2 = pointsBuilder2.customProgramCacheKey();
+			assert.equal(key1, key2);
+			assert.includes(key1, pointsBuilder2.uuid);
 		});
 	});
 
