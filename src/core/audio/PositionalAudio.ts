@@ -39,7 +39,7 @@ export class CorePositionalAudio extends Object3D {
 	private _currentAudioNode: ToneAudioNode | undefined;
 	setInput(audioNode: ToneAudioNode | undefined) {
 		if (this._currentAudioNode) {
-			this._currentAudioNode.disconnect();
+			this._currentAudioNode.disconnect(this.tonePanner);
 		}
 
 		if (audioNode) {

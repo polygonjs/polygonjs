@@ -43,7 +43,7 @@ class WaveformAudioParamsConfig extends NodeParamsConfig {
 		// ...effectParamsOptions(paramCallback)
 	});
 	/** @param display range param */
-	updateRangeParam = ParamConfig.BOOLEAN(0, {
+	updateRangeParam = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
 			WaveformAudioNode.PARAM_CALLBACK_updateUpdateRangeParam(node as WaveformAudioNode);

@@ -47,7 +47,7 @@ class FFTAudioParamsConfig extends NodeParamsConfig {
 	/** @param normalizes the output between 0 and 1. The value will be in decibel otherwise. */
 	normalRange = ParamConfig.BOOLEAN(1, effectParamsOptions(paramCallback));
 	/** @param groups the FFT frequency bands into octave bands */
-	asOctaves = ParamConfig.BOOLEAN(1, {
+	asOctaves = ParamConfig.BOOLEAN(0, {
 		// if cook is false, the materials reading the COP/audioAnalyser
 		// do not seem to update the texture when this is changed.
 		// I should investigate, as this should not be different than changing normalRange.
@@ -60,7 +60,7 @@ class FFTAudioParamsConfig extends NodeParamsConfig {
 		separatorAfter: true,
 	});
 	/** @param display range param */
-	updateRangeParam = ParamConfig.BOOLEAN(0, {
+	updateRangeParam = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
 			FFTAudioNode.PARAM_CALLBACK_updateUpdateRangeParam(node as FFTAudioNode);

@@ -192,7 +192,7 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		this._positionalAudio.setInput(undefined);
 	}
 	private async _connectAudioNode() {
-		this._positionalAudio.setInput(undefined);
+		this._resetAudioNode();
 
 		const baseAudioNode = this.pv.audioNode.nodeWithContext(NodeContext.AUDIO);
 		if (!baseAudioNode) {

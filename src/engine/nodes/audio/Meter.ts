@@ -31,7 +31,7 @@ class MeterAudioParamsConfig extends NodeParamsConfig {
 	/** @param normalizes the output between 0 and 1. The value will be in decibel otherwise. */
 	normalRange = ParamConfig.BOOLEAN(1, effectParamsOptions(paramCallback));
 	/** @param display meter param */
-	updateRangeParam = ParamConfig.BOOLEAN(0, {
+	updateRangeParam = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
 			MeterAudioNode.PARAM_CALLBACK_updateUpdateMeterParam(node as MeterAudioNode);

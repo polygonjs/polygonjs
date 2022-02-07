@@ -12,6 +12,7 @@ import {Poly} from '../../src/engine/Poly';
 // register
 import {AllRegister} from '../../src/engine/poly/registers/All';
 import {AllModulesRegister} from '../../src/engine/poly/registers/modules/All';
+import {waitForUserInteraction} from './UserInteraction';
 AllRegister.run();
 AllModulesRegister.run(Poly);
 
@@ -36,6 +37,8 @@ declare global {
 }
 QUnit.testStart(async () => {
 	// console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
+
+	await waitForUserInteraction();
 
 	Poly.renderersController.deregisterAllRenderers();
 	// return new Promise(async (resolve, reject) => {
