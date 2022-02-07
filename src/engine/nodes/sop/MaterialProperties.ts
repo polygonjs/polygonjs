@@ -20,7 +20,9 @@ class MaterialPropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow updating the side properties of the materials */
 	tside = ParamConfig.BOOLEAN(DEFAULT.tside);
 	/** @param defines if the material is double sided or not */
-	doubleSided = ParamConfig.BOOLEAN(0);
+	doubleSided = ParamConfig.BOOLEAN(0, {
+		visibleIf: {tside: true},
+	});
 	/** @param if the material is not double sided, it can be front sided, or back sided */
 	front = ParamConfig.BOOLEAN(1, {visibleIf: {tside: true, doubleSided: false}});
 	/** @param override the default shadowSide behavior */
