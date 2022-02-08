@@ -50,7 +50,7 @@ export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	decay: 0.1,
 	distance: 100,
 	//
-	showHelper: true,
+	showHelper: false,
 	helperSize: 1,
 	//
 	castShadow: false,

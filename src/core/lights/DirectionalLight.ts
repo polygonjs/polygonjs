@@ -35,7 +35,7 @@ export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
 	intensity: 1,
 	distance: 100,
 	//
-	showHelper: true,
+	showHelper: false,
 	//
 	castShadow: false,
 	shadowAutoUpdate: true,

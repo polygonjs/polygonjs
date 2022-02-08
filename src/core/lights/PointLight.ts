@@ -40,7 +40,7 @@ export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	shadowBias: 0.001,
 	shadowNear: 1,
 	shadowFar: 100,
-	showHelper: true,
+	showHelper: false,
 	helperSize: 1,
 };
 const DEFAULT = DEFAULT_POINT_LIGHT_PARAMS;
@@ -69,7 +69,7 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		// helper
 		/** @param toggle to show helper */
-		showHelper = ParamConfig.BOOLEAN(0);
+		showHelper = ParamConfig.BOOLEAN(DEFAULT.showHelper);
 		/** @param helper size */
 		helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
 

@@ -17,7 +17,7 @@ export const DEFAULT_AREA_LIGHT_PARAMS: AreaLightParams = {
 	intensity: 1,
 	width: 1,
 	height: 1,
-	showHelper: true,
+	showHelper: false,
 };
 const DEFAULT = DEFAULT_AREA_LIGHT_PARAMS;
 
