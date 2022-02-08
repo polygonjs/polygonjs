@@ -405,7 +405,17 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 			this.dracoLoader = this.dracoLoader || new DRACOLoader(this.loadingManager);
 			const root = Poly.libs.root();
 			const DRACOGLTFPath = Poly.libs.DRACOGLTFPath();
-			const useJs = false;
+			// if we fetch the url to give to the blobsController,
+			// it seems that when using the wasm, there is a crash when loading 2 urls
+			// one after the other.
+			// But it works fine if they are loaded in parallel.
+			// It seems that if the dracoLoader is different for each new url,
+			// it does not crash.
+			// So a possible way to improve this would be to have a sop/fileGLB
+			// which would only have a GLB loader, which would then be able to know
+			// when the files are completed loading, and we therefore dispose the dracoLoader,
+			// and re-created it if needed.
+			const useJs = true;
 			if (root || DRACOGLTFPath) {
 				const decoderPath = `${root || ''}${DRACOGLTFPath || ''}/`;
 
@@ -414,7 +424,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 					await this._loadMultipleBlobGlobal({
 						files: files.map((file) => {
 							return {
-								storedUrl: `${decoderPath}/${file}`,
+								// storedUrl: `${decoderPath}/${file}`,
 								fullUrl: `${decoderPath}${file}`,
 							};
 						}),

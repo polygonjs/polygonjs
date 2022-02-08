@@ -5,7 +5,7 @@ export async function waitForUserInteraction(): Promise<void> {
 	}
 	return new Promise((resolve) => {
 		const buttonElement = document.createElement('div');
-		buttonElement.innerText = 'CLICK TO STAR TEST';
+		buttonElement.innerText = 'CLICK TO START TEST';
 		buttonElement.onclick = () => {
 			document.body.removeChild(buttonElement);
 			_userHasInteractedWithPage = true;
@@ -22,5 +22,6 @@ export async function waitForUserInteraction(): Promise<void> {
 		buttonElement.style.cursor = 'pointer';
 		buttonElement.style.padding = '20px';
 		buttonElement.style.fontSize = '3rem';
+		buttonElement.style.whiteSpace = 'nowrap';
 	});
 }

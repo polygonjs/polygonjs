@@ -3,15 +3,35 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {GeometryFormat} from '../../../../src/core/loader/Geometry';
+import {Poly} from '../../../../src/engine/Poly';
+import {withPlayerMode} from '../../../helpers/PlayerMode';
+
+function _url(path: string) {
+	return `${ASSETS_ROOT}${path}`;
+}
 
 async function withFile(path: string, format: GeometryFormat = GeometryFormat.AUTO) {
 	const geo1 = window.geo1;
 	const fileNode = geo1.createNode('file');
-	fileNode.p.url.set(`${ASSETS_ROOT}${path}`);
+	fileNode.p.url.set(_url(path));
 	fileNode.p.format.set(format);
 
 	const container = await fileNode.compute();
 	return {container, fileNode};
+}
+
+async function withFileAndHierarchy(path: string, format: GeometryFormat = GeometryFormat.AUTO) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('file');
+	fileNode.p.url.set(_url(path));
+	fileNode.p.format.set(format);
+
+	const hierarchyNode = geo1.createNode('hierarchy');
+	hierarchyNode.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+	hierarchyNode.setInput(0, fileNode);
+
+	const container = await hierarchyNode.compute();
+	return {container, fileNode, hierarchyNode};
 }
 async function withHierarchy() {
 	const hierarchy1 = window.geo1.createNode('hierarchy');
@@ -153,3 +173,69 @@ QUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
 	);
 	assert.equal(container.pointsCount(), 0);
 });
+
+QUnit.test(
+	'SOP file can load multiple glb without conflicts, using the blobs controller in non player mode',
+	async (assert) => {
+		Poly.blobs.clear();
+		await withPlayerMode(false, async () => {
+			assert.ok(!Poly.playerMode());
+			const data1 = await withFileAndHierarchy('models/resources/threedscans.com/jenner.glb');
+			const data2 = await withFileAndHierarchy('models/resources/threedscans.com/eagle.glb');
+			const data3 = await withFileAndHierarchy('models/resources/threedscans.com/theodoric_the_great.glb');
+
+			assert.notOk(data1.hierarchyNode.states.error.active());
+			assert.notOk(data2.hierarchyNode.states.error.active());
+			assert.notOk(data3.hierarchyNode.states.error.active());
+
+			assert.equal(data1.container.pointsCount(), 153233);
+			assert.equal(data2.container.pointsCount(), 108882);
+			assert.equal(data3.container.pointsCount(), 283248);
+
+			data2.fileNode.p.url.set(_url('models/resources/threedscans.com/eagle.glb?t=2'));
+			let container = await data2.hierarchyNode.compute();
+			assert.equal(container.pointsCount(), 108882);
+
+			data2.fileNode.p.url.set(_url('models/resources/threedscans.com/jenner.glb'));
+			container = await data2.hierarchyNode.compute();
+			assert.equal(container.pointsCount(), 153233);
+
+			data2.fileNode.p.url.set(_url('models/resources/threedscans.com/jenner.glb?t=3'));
+			container = await data2.hierarchyNode.compute();
+			assert.equal(container.pointsCount(), 153233);
+		});
+	}
+);
+
+QUnit.test(
+	'SOP file can load multiple glb without conflicts, using the blobs controller in player mode',
+	async (assert) => {
+		Poly.blobs.clear();
+		await withPlayerMode(true, async () => {
+			assert.ok(Poly.playerMode());
+			const data1 = await withFileAndHierarchy('models/resources/threedscans.com/jenner.glb');
+			const data2 = await withFileAndHierarchy('models/resources/threedscans.com/eagle.glb');
+			const data3 = await withFileAndHierarchy('models/resources/threedscans.com/theodoric_the_great.glb');
+
+			assert.notOk(data1.hierarchyNode.states.error.active());
+			assert.notOk(data2.hierarchyNode.states.error.active());
+			assert.notOk(data3.hierarchyNode.states.error.active());
+
+			assert.equal(data1.container.pointsCount(), 153233);
+			assert.equal(data2.container.pointsCount(), 108882);
+			assert.equal(data3.container.pointsCount(), 283248);
+
+			data2.fileNode.p.url.set(_url('models/resources/threedscans.com/eagle.glb?t=2'));
+			let container = await data2.hierarchyNode.compute();
+			assert.equal(container.pointsCount(), 108882);
+
+			data2.fileNode.p.url.set(_url('models/resources/threedscans.com/jenner.glb'));
+			container = await data2.hierarchyNode.compute();
+			assert.equal(container.pointsCount(), 153233);
+
+			data2.fileNode.p.url.set(_url('models/resources/threedscans.com/jenner.glb?t=3'));
+			container = await data2.hierarchyNode.compute();
+			assert.equal(container.pointsCount(), 153233);
+		});
+	}
+);

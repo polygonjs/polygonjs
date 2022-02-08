@@ -48,6 +48,11 @@ export class BlobsController {
 	private _blobWrappersByUrl: Map<string, BlobWrapper> = new Map();
 	// private _nodeBlobWrappersByFullUrl: Map<string, NodeBlobWrapper> = new Map();
 	constructor() {}
+
+	recording() {
+		return !Poly.playerMode();
+	}
+
 	// private _blobUrlsByStoredUrl: Map<string, string> = new Map();
 	// private _blobsByStoredUrl: Map<string, Blob> = new Map();
 	// private _blobDataByNodeId: Map<number, BlobData[]> = new Map();
@@ -125,7 +130,7 @@ export class BlobsController {
 	}
 
 	async fetchBlobGlobal(url: string): Promise<FetchBlobResponse> {
-		if (Poly.playerMode()) {
+		if (!this.recording()) {
 			return {};
 		}
 		try {
@@ -142,7 +147,7 @@ export class BlobsController {
 
 				const blobWrapper: BlobWrapper = {
 					blob,
-					blobUrl: this.createBlobUrl(blob),
+					blobUrl: this._createBlobUrl(blob),
 					referringNodeIds: new Set(),
 				};
 				this._blobWrappersByUrl.set(url, blobWrapper);
@@ -162,7 +167,7 @@ export class BlobsController {
 	}
 
 	async fetchBlobForNode(options: FetchNodeBlobUrlOptions) {
-		if (Poly.playerMode()) {
+		if (!this.recording()) {
 			return {};
 		}
 
@@ -182,7 +187,7 @@ export class BlobsController {
 				referringNodeIds.add(nodeId);
 				const blobWrapper: BlobWrapper = {
 					blob,
-					blobUrl: this.createBlobUrl(blob),
+					blobUrl: this._createBlobUrl(blob),
 					referringNodeIds,
 				};
 				// this._nodeBlobWrappersByFullUrl.set(options.fullUrl, blobWrapper)
@@ -261,7 +266,7 @@ export class BlobsController {
 		// 	}
 		// });
 	}
-	createBlobUrl(blob: Blob) {
+	private _createBlobUrl(blob: Blob) {
 		return createObjectURL(blob);
 	}
 	assetsManifestWithBlobsMap() {
