@@ -65,6 +65,7 @@ class PropertyValueAnimParamsConfig extends NodeParamsConfig {
 		range: [1, 4],
 		rangeLocked: [true, true],
 		visibleIf: {mode: PROPERTY_VALUE_MODE_CUSTOM},
+		separatorAfter: true,
 	});
 	/** @param value for a float */
 	value1 = ParamConfig.FLOAT(0, {

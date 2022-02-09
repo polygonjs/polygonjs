@@ -1,4 +1,3 @@
-import {Number2, Number3, Number4} from '../../types/GlobalTypes';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
@@ -21,6 +20,15 @@ import {CoreType} from '../Type';
 import {ColorParam} from '../../engine/params/Color';
 import {IntegerParam} from '../../engine/params/Integer';
 import {AnimatedPropertiesRegister, RegisterableProperty} from './AnimatedPropertiesRegister';
+import {NodeParamProxiesRegister} from './NodeParamProxiesRegister';
+import {
+	ColorParamProxy,
+	FloatParamProxy,
+	IntegerParamProxy,
+	Vector2ParamProxy,
+	Vector3ParamProxy,
+	Vector4ParamProxy,
+} from './ParamProxy';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Color | Vector4 | Quaternion;
 
@@ -91,10 +99,11 @@ export class TimelineBuilderProperty {
 	addToTimeline(options: AddToTimelineOptions) {
 		const {target} = options;
 		const objects = target.objects();
+		const node = target.node();
+		this._printDebug(['addToTimeline', target, objects, node]);
 		if (objects) {
 			this._populateWithObjects(objects, options);
 		}
-		const node = target.node();
 		if (node) {
 			this._populateWithNode(node, options);
 		}
@@ -274,39 +283,31 @@ export class TimelineBuilderProperty {
 		}
 		Poly.warn(`param type cannot be animated (yet): '${param.type()}' '${param.path()}'`);
 	}
-	private _populateVarsForParamInteger(param: IntegerParam, options: AddToTimelineOptions) {
+	private _populateVarsForSingleNumericParam(param: IntegerParam | FloatParam, options: AddToTimelineOptions) {
 		if (!CoreType.isNumber(this._targetValue)) {
 			Poly.warn(
-				`TimelineBuilderProperty error: cannot animate integer param '${param.path()}' with targetValue`,
+				`TimelineBuilderProperty error: cannot animate float/integer param '${param.path()}' with targetValue`,
 				this._targetValue
 			);
 			return;
 		}
+		const proxy = NodeParamProxiesRegister.paramProxy(param) as FloatParamProxy | IntegerParamProxy;
+		if (!proxy) {
+			return;
+		}
 		const vars = this._commonVars(options.timelineBuilder);
-		const proxy = {num: param.value};
 		vars.onUpdate = () => {
-			param.set(proxy.num);
+			proxy.update();
 		};
 		const operation = options.timelineBuilder.operation();
-		vars.num = this.withOp(param.value, this._targetValue, operation);
+		vars.proxyValue = this.withOp(param.value, this._targetValue, operation);
 		this._startTimeline({...options, vars, target: proxy, registerableProp: param});
 	}
+	private _populateVarsForParamInteger(param: IntegerParam, options: AddToTimelineOptions) {
+		this._populateVarsForSingleNumericParam(param, options);
+	}
 	private _populateVarsForParamFloat(param: FloatParam, options: AddToTimelineOptions) {
-		if (!CoreType.isNumber(this._targetValue)) {
-			Poly.warn(
-				`TimelineBuilderProperty error: cannot animate float param '${param.path()}' with targetValue`,
-				this._targetValue
-			);
-			return;
-		}
-		const vars = this._commonVars(options.timelineBuilder);
-		const proxy = {num: param.value};
-		vars.onUpdate = () => {
-			param.set(proxy.num);
-		};
-		const operation = options.timelineBuilder.operation();
-		vars.num = this.withOp(param.value, this._targetValue, operation);
-		this._startTimeline({...options, vars, target: proxy, registerableProp: param});
+		this._populateVarsForSingleNumericParam(param, options);
 	}
 	private _populateVarsForParamVector2(param: Vector2Param, options: AddToTimelineOptions) {
 		if (!(this._targetValue instanceof Vector2)) {
@@ -316,17 +317,18 @@ export class TimelineBuilderProperty {
 			);
 			return;
 		}
+		const proxy = NodeParamProxiesRegister.paramProxy(param) as Vector2ParamProxy;
+		if (!proxy) {
+			return;
+		}
 		const vars = this._commonVars(options.timelineBuilder);
-		const proxy = param.value.clone();
-		const proxyArray: Number2 = [0, 0];
 		vars.onUpdate = () => {
-			proxy.toArray(proxyArray);
-			param.set(proxyArray);
+			proxy.update();
 		};
 		const operation = options.timelineBuilder.operation();
 		vars.x = this.withOp(param.value.x, this._targetValue.x, operation);
 		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
-		this._startTimeline({...options, vars, target: proxy, registerableProp: param});
+		this._startTimeline({...options, vars, target: proxy.proxyValue, registerableProp: param});
 	}
 	private _populateVarsForParamVector3(param: Vector3Param, options: AddToTimelineOptions) {
 		if (!(this._targetValue instanceof Vector3)) {
@@ -336,18 +338,19 @@ export class TimelineBuilderProperty {
 			);
 			return;
 		}
+		const proxy = NodeParamProxiesRegister.paramProxy(param) as Vector3ParamProxy;
+		if (!proxy) {
+			return;
+		}
 		const vars = this._commonVars(options.timelineBuilder);
-		const proxy = param.value.clone();
-		const proxyArray: Number3 = [0, 0, 0];
 		vars.onUpdate = () => {
-			proxy.toArray(proxyArray);
-			param.set(proxyArray);
+			proxy.update();
 		};
 		const operation = options.timelineBuilder.operation();
 		vars.x = this.withOp(param.value.x, this._targetValue.x, operation);
 		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
 		vars.z = this.withOp(param.value.z, this._targetValue.z, operation);
-		this._startTimeline({...options, vars, target: proxy, registerableProp: param});
+		this._startTimeline({...options, vars, target: proxy.proxyValue, registerableProp: param});
 	}
 
 	private _populateVarsForParamVector4(param: Vector4Param, options: AddToTimelineOptions) {
@@ -358,51 +361,55 @@ export class TimelineBuilderProperty {
 			);
 			return;
 		}
+		const proxy = NodeParamProxiesRegister.paramProxy(param) as Vector4ParamProxy;
+		if (!proxy) {
+			return;
+		}
 		const vars = this._commonVars(options.timelineBuilder);
-		const proxy = param.value.clone();
-		const proxyArray: Number4 = [0, 0, 0, 0];
 		vars.onUpdate = () => {
-			proxy.toArray(proxyArray);
-			param.set(proxyArray);
+			proxy.update();
 		};
 		const operation = options.timelineBuilder.operation();
 		vars.x = this.withOp(param.value.x, this._targetValue.x, operation);
 		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
 		vars.z = this.withOp(param.value.z, this._targetValue.z, operation);
 		vars.w = this.withOp(param.value.w, this._targetValue.w, operation);
-		this._startTimeline({...options, vars, target: proxy, registerableProp: param});
+		this._startTimeline({...options, vars, target: proxy.proxyValue, registerableProp: param});
 	}
 	private _populateVarsForParamColor(param: ColorParam, options: AddToTimelineOptions) {
-		if (!(this._targetValue instanceof Vector3)) {
+		if (!(this._targetValue instanceof Color || this._targetValue instanceof Vector3)) {
 			Poly.warn(
 				`TimelineBuilderProperty error: cannot animate color param '${param.path()}' with targetValue`,
 				this._targetValue
 			);
 			return;
 		}
+		const proxy = NodeParamProxiesRegister.paramProxy(param) as ColorParamProxy;
+		if (!proxy) {
+			return;
+		}
 		const vars = this._commonVars(options.timelineBuilder);
-		const valuePreConversion = param.valuePreConversion();
-		const proxy = new Vector3(valuePreConversion.r, valuePreConversion.g, valuePreConversion.b);
-		const proxyArray: Number3 = [0, 0, 0];
 		vars.onUpdate = () => {
-			proxy.toArray(proxyArray);
-			param.set(proxyArray);
+			proxy.update();
 		};
 		const operation = options.timelineBuilder.operation();
-		vars.x = this.withOp(param.value.r, this._targetValue.x, operation);
-		vars.y = this.withOp(param.value.g, this._targetValue.y, operation);
-		vars.z = this.withOp(param.value.b, this._targetValue.z, operation);
-		this._startTimeline({...options, vars, target: proxy, registerableProp: param});
+		const x = this._targetValue instanceof Color ? this._targetValue.r : this._targetValue.x;
+		const y = this._targetValue instanceof Color ? this._targetValue.g : this._targetValue.y;
+		const z = this._targetValue instanceof Color ? this._targetValue.b : this._targetValue.z;
+		vars.r = this.withOp(param.value.r, x, operation);
+		vars.g = this.withOp(param.value.g, y, operation);
+		vars.b = this.withOp(param.value.b, z, operation);
+		this._startTimeline({...options, vars, target: proxy.proxyValue, registerableProp: param});
 	}
 
-	private withOp(current_value: number, value: number, operation: Operation) {
+	private withOp(currentValue: number, value: number, operation: Operation) {
 		switch (operation) {
 			case Operation.SET:
 				return value;
 			case Operation.ADD:
-				return current_value + value;
+				return currentValue + value;
 			case Operation.SUBTRACT:
-				return current_value - value;
+				return currentValue - value;
 		}
 		TypeAssert.unreachable(operation);
 	}

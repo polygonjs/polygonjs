@@ -7,6 +7,8 @@ import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {
 	AnimationPosition,
+	AnimationPositionMode,
+	AnimationPositionRelativeTo,
 	ANIMATION_POSITION_MODES,
 	ANIMATION_POSITION_RELATIVE_TOS,
 } from '../../../core/animation/Position';
@@ -42,6 +44,13 @@ export class PositionAnimNode extends TypedAnimNode<PositionAnimParamsConfig> {
 
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
+	}
+
+	setMode(mode: AnimationPositionMode) {
+		this.p.mode.set(ANIMATION_POSITION_MODES.indexOf(mode));
+	}
+	setRelativeTo(relativeTo: AnimationPositionRelativeTo) {
+		this.p.relativeTo.set(ANIMATION_POSITION_RELATIVE_TOS.indexOf(relativeTo));
 	}
 
 	override cook(input_contents: TimelineBuilder[]) {

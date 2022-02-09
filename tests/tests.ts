@@ -81,6 +81,7 @@ import './engine/nodes/utils/ChildrenContext';
 import './engine/nodes/utils/Memory';
 
 QUnit.module('anim');
+import './engine/nodes/anim/Utils/ParamProxy';
 import './engine/nodes/anim/Delete';
 import './engine/nodes/anim/Merge';
 import './engine/nodes/anim/Null';

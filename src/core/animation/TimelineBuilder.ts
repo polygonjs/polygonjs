@@ -204,7 +204,7 @@ export class TimelineBuilder {
 	}
 
 	populate(timeline: gsap.core.Timeline, options: RegisterOptions) {
-		this._printDebug(['populate', this, timeline]);
+		this._printDebug(['populate', this, timeline, this._timelineBuilders]);
 		for (let timelineBuilder of this._timelineBuilders) {
 			const subTimeline = gsap.timeline();
 			timelineBuilder.setDebug(this._debug);
