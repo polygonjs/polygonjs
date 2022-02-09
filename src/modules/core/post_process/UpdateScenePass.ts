@@ -1,5 +1,5 @@
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {Pass} from 'three/examples/jsm/postprocessing/Pass.js';
+import {Pass} from '../../three/examples/jsm/postprocessing/Pass.js';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {isBooleanTrue} from '../../../core/Type';
 import {PolyScene} from '../../../engine/scene/PolyScene';

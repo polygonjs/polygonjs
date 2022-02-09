@@ -10,6 +10,7 @@ import {PostRegister, PostNodeChildrenMap} from './Post';
 import {RopRegister, RopNodeChildrenMap} from './Rop';
 import {SopRegister, GeoNodeChildrenMap} from './Sop';
 // import {AnimRegister, AnimNodeChildrenMap} from './AnimMini';
+// import {AudioRegister, AudioNodeChildrenMap} from './AudioMini';
 // import {CopRegister, CopNodeChildrenMap} from './CopMini';
 // import {EventRegister, EventNodeChildrenMap} from './EventMini';
 // import {GlRegister, GlNodeChildrenMap} from './GlMini';

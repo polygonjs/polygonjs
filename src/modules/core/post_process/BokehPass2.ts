@@ -9,7 +9,7 @@ import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LinearFilter} from 'three/src/constants';
 import {BokehShader, BokehDepthShader} from '../../three/examples/jsm/shaders/BokehShader2';
-import {TransformControls} from 'three/examples/jsm/controls/TransformControls';
+import {TransformControls} from '../../three/examples/jsm/controls/TransformControls';
 // import {CoreScene} from '../../../core/geometry/Scene';
 // import DepthInstanceVertex from './BokehPass2/DepthInstance.vert.glsl';
 import {IUniformN, IUniformTexture, IUniformV2} from '../../../engine/nodes/utils/code/gl/Uniforms';

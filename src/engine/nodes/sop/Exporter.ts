@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {GLTFExporter, GLTFExporterOptions} from 'three/examples/jsm/exporters/GLTFExporter';
+import {GLTFExporter, GLTFExporterOptions} from '../../../modules/three/examples/jsm/exporters/GLTFExporter';
 import {Scene} from 'three/src/scenes/Scene';
 import {Object3D} from 'three/src/core/Object3D';
 

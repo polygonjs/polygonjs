@@ -203,8 +203,8 @@ export interface GeoNodeChildrenMap {
 	lod: LodSopNode;
 	material: MaterialSopNode;
 	materialProperties: MaterialPropertiesSopNode;
-	metaball: MetaballSopNode;
 	merge: MergeSopNode;
+	metaball: MetaballSopNode;
 	noise: NoiseSopNode;
 	normals: NormalsSopNode;
 	normalsHelper: NormalsHelperSopNode;

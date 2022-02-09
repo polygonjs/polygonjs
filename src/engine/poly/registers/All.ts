@@ -22,7 +22,7 @@ export class AllRegister {
 			AllAssemblersRegister.run(Poly);
 		}
 
-		// modules are not registered separately
+		// modules are now registered separately
 		// AllModulesRegister.run(Poly);
 	}
 }

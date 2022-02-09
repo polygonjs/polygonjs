@@ -3,11 +3,11 @@ import {LinearFilter} from 'three/src/constants';
 import {RGBAFormat} from 'three/src/constants';
 import {Vector2} from 'three/src/math/Vector2';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {CopyShader} from 'three/examples/jsm/shaders/CopyShader.js';
-import {ShaderPass} from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import {MaskPass} from 'three/examples/jsm/postprocessing/MaskPass.js';
-import {ClearMaskPass} from 'three/examples/jsm/postprocessing/MaskPass.js';
-import {Pass} from 'three/examples/jsm/postprocessing/Pass.js';
+import {CopyShader} from '../../three/examples/jsm/shaders/CopyShader.js';
+import {ShaderPass} from '../../three/examples/jsm/postprocessing/ShaderPass.js';
+import {MaskPass} from '../../three/examples/jsm/postprocessing/MaskPass.js';
+import {ClearMaskPass} from '../../three/examples/jsm/postprocessing/MaskPass.js';
+import {Pass} from '../../three/examples/jsm/postprocessing/Pass.js';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {PassWithHooks} from './PassWithHooks';
 

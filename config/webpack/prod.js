@@ -21,6 +21,9 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 var {AggressiveMergingPlugin} = require('webpack').optimize;
 const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 
+// const USE_STATO_ANALYSE = false;
+// const StatoscopeWebpackPlugin = require('@statoscope/webpack-plugin').default;
+
 module.exports = (env) => {
 	const common_options = common(env);
 
@@ -84,6 +87,9 @@ module.exports = (env) => {
 	}
 
 	// common_options.plugins.push(new UglifyJsWebpackPlugin()); //minify everything // no need, terser (below is better)
+	// if (USE_STATO_ANALYSE) {
+	// 	common_options.plugins.push(new StatoscopeWebpackPlugin());
+	// }
 	if (MINIFY) {
 		common_options.plugins.push(new AggressiveMergingPlugin()); //Merge chunks
 		common_options.plugins.push(new FaviconsWebpackPlugin(LOGO_PATH));

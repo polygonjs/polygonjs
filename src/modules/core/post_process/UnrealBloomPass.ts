@@ -6,9 +6,9 @@ import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {Pass, FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass.js';
-import {CopyShader} from 'three/examples/jsm/shaders/CopyShader.js';
-import {LuminosityHighPassShader} from 'three/examples/jsm/shaders/LuminosityHighPassShader.js';
+import {Pass, FullScreenQuad} from '../../three/examples/jsm/postprocessing/Pass.js';
+import {CopyShader} from '../../three/examples/jsm/shaders/CopyShader.js';
+import {LuminosityHighPassShader} from '../../three/examples/jsm/shaders/LuminosityHighPassShader.js';
 import {
 	IUniformColor,
 	IUniformN,
