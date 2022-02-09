@@ -9,14 +9,14 @@ import {Points} from 'three/src/objects/Points';
 import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
-import {DRACOLoader} from '../../modules/three/examples/jsm/loaders/DRACOLoader';
-import {GLTF, GLTFLoader} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {GLTF} from '../../modules/three/examples/jsm/loaders/GLTFLoader';
 import {CoreUserAgent} from '../UserAgent';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {isBooleanTrue} from '../BooleanValue';
+import {GLTFLoaderHandler} from './geometry/GLTF';
 
 export enum GeometryFormat {
 	AUTO = 'auto',
@@ -84,7 +84,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	constructor(
 		protected _options: CoreLoaderGeometryOptions,
 		protected override _scene: PolyScene,
-		protected override _node?: BaseNodeType
+		protected override _node: BaseNodeType
 	) {
 		super(_options.url, _scene, _node);
 	}
@@ -192,9 +192,8 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		if (gltf.scene != null || gltf.scenes != null) {
 			switch (ext) {
 				case GeometryExtension.GLTF:
-					return this._onLoadSuccessGLTF(gltf);
 				case GeometryExtension.GLB:
-					return this._onLoadSuccessGLTF(gltf);
+					return GLTFLoaderHandler.onLoadSuccessGLTF(gltf);
 				default:
 					return [obj];
 			}
@@ -217,12 +216,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 
 		return [mesh];
 	}
-	private _onLoadSuccessGLTF(gltf: GLTF): Object3D[] {
-		const scene = gltf.scene || gltf.scenes[0];
-		scene.animations = gltf.animations;
 
-		return [scene];
-	}
 	private _onLoadSuccessPDB(pdb_object: PdbObject): Object3D[] {
 		const atoms = new Points(pdb_object.geometryAtoms, CoreLoaderGeometry._default_mat_point);
 		const bonds = new LineSegments(pdb_object.geometryBonds, CoreLoaderGeometry._default_mat_line);
@@ -395,55 +389,10 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		return CoreLoaderGeometry.loader_for_ldraw(node);
 	}
 
-	private static gltfLoader: GLTFLoader | undefined;
-	private static dracoLoader: DRACOLoader | undefined;
-	static async loader_for_glb(node?: BaseNodeType) {
-		const GLTFLoader = Poly.modulesRegister.module(ModuleName.GLTFLoader);
-		const DRACOLoader = Poly.modulesRegister.module(ModuleName.DRACOLoader);
-		if (GLTFLoader && DRACOLoader) {
-			this.gltfLoader = this.gltfLoader || new GLTFLoader(this.loadingManager);
-			this.dracoLoader = this.dracoLoader || new DRACOLoader(this.loadingManager);
-			const root = Poly.libs.root();
-			const DRACOGLTFPath = Poly.libs.DRACOGLTFPath();
-			// if we fetch the url to give to the blobsController,
-			// it seems that when using the wasm, there is a crash when loading 2 urls
-			// one after the other.
-			// But it works fine if they are loaded in parallel.
-			// It seems that if the dracoLoader is different for each new url,
-			// it does not crash.
-			// So a possible way to improve this would be to have a sop/fileGLB
-			// which would only have a GLB loader, which would then be able to know
-			// when the files are completed loading, and we therefore dispose the dracoLoader,
-			// and re-created it if needed.
-			const useJs = true;
-			if (root || DRACOGLTFPath) {
-				const decoderPath = `${root || ''}${DRACOGLTFPath || ''}/`;
-
-				if (node) {
-					const files = useJs ? ['draco_decoder.js'] : ['draco_decoder.wasm', 'draco_wasm_wrapper.js'];
-					await this._loadMultipleBlobGlobal({
-						files: files.map((file) => {
-							return {
-								// storedUrl: `${decoderPath}/${file}`,
-								fullUrl: `${decoderPath}${file}`,
-							};
-						}),
-						node,
-						error: 'failed to load draco libraries. Make sure to install them to load .glb files',
-					});
-				}
-
-				this.dracoLoader.setDecoderPath(decoderPath);
-			} else {
-				(this.dracoLoader as any).setDecoderPath(undefined);
-			}
-			// not having this uses wasm if the relevant libraries are found
-			this.dracoLoader.setDecoderConfig({type: useJs ? 'js' : 'wasm'});
-			this.gltfLoader.setDRACOLoader(this.dracoLoader);
-			return this.gltfLoader;
-		}
+	static async loader_for_glb(node: BaseNodeType) {
+		return await GLTFLoaderHandler.GLTFDRACOLoader(node);
 	}
-	loader_for_glb(node?: BaseNodeType) {
+	loader_for_glb(node: BaseNodeType) {
 		return CoreLoaderGeometry.loader_for_glb(node);
 	}
 

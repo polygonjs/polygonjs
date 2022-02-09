@@ -1,8 +1,26 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {FileSopNode} from '../../../src/engine/nodes/sop/File';
+import {FileGLTFSopNode} from '../../../src/engine/nodes/sop/FileGLTF';
 import {ParamType} from '../../../src/engine/poly/ParamType';
 import {PolyDictionary} from '../../../src/types/GlobalTypes';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
+
+function generateThreedScans(node: FileSopNode | FileGLTFSopNode) {
+	return function _threedscans() {
+		function _threedscan(fileName: string) {
+			return new BasePreset().addEntry<ParamType.STRING>(
+				node.p.url,
+				`${DEMO_ASSETS_ROOT_URL}/models/resources/threedscans.com/${fileName}.glb`
+			);
+		}
+		const fileNames = ['eagle', 'jenner', 'pan', 'theodoric_the_great', 'zenobia_in_chains'];
+		const dict: PolyDictionary<BasePreset> = {};
+		for (let fileName of fileNames) {
+			dict[`threedscans.com/${fileName}`] = _threedscan(fileName);
+		}
+		return dict;
+	};
+}
 
 const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode> = (node: FileSopNode) => {
 	const collection = new NodePresetsCollection();
@@ -73,20 +91,6 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 		}
 		return dict;
 	}
-	function _threedscans() {
-		function _threedscan(fileName: string) {
-			return new BasePreset().addEntry<ParamType.STRING>(
-				node.p.url,
-				`${DEMO_ASSETS_ROOT_URL}/models/resources/threedscans.com/${fileName}.glb`
-			);
-		}
-		const fileNames = ['eagle', 'jenner', 'pan', 'theodoric_the_great', 'zenobia_in_chains'];
-		const dict: PolyDictionary<BasePreset> = {};
-		for (let fileName of fileNames) {
-			dict[`threedscans.com/${fileName}`] = _threedscan(fileName);
-		}
-		return dict;
-	}
 
 	collection.setPresets({
 		bunny_drc,
@@ -101,7 +105,16 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 		sphere_with_texture,
 		..._3dscanstores(),
 		..._renderPeoples(),
-		..._threedscans(),
+		...generateThreedScans(node)(),
+	});
+
+	return collection;
+};
+
+const fileGLTFSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileGLTFSopNode> = (node: FileGLTFSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...generateThreedScans(node)(),
 	});
 
 	return collection;
@@ -110,4 +123,9 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 export const fileSopPresetRegister: PresetRegister<typeof FileSopNode, FileSopNode> = {
 	nodeClass: FileSopNode,
 	setupFunc: fileSopNodePresetsCollectionFactory,
+};
+
+export const fileGLTFSopPresetRegister: PresetRegister<typeof FileGLTFSopNode, FileGLTFSopNode> = {
+	nodeClass: FileGLTFSopNode,
+	setupFunc: fileGLTFSopNodePresetsCollectionFactory,
 };

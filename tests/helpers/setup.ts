@@ -13,6 +13,7 @@ import {Poly} from '../../src/engine/Poly';
 import {AllRegister} from '../../src/engine/poly/registers/All';
 import {AllModulesRegister} from '../../src/engine/poly/registers/modules/All';
 import {waitForUserInteraction} from './UserInteraction';
+import {GLTFLoaderHandler} from '../../src/core/loader/geometry/GLTF';
 AllRegister.run();
 AllModulesRegister.run(Poly);
 
@@ -41,6 +42,8 @@ QUnit.testStart(async () => {
 	await waitForUserInteraction();
 
 	Poly.renderersController.deregisterAllRenderers();
+	Poly.blobs.clear();
+	GLTFLoaderHandler.reset();
 	// return new Promise(async (resolve, reject) => {
 	window.scene = new PolyScene();
 	window.scene.setName(QUnit.config.current.testName);

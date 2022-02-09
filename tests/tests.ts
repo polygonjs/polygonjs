@@ -204,6 +204,7 @@ import './engine/nodes/sop/Delete';
 import './engine/nodes/sop/DrawRange';
 import './engine/nodes/sop/Face';
 import './engine/nodes/sop/File';
+import './engine/nodes/sop/FileGLTF';
 import './engine/nodes/sop/FileMulti';
 import './engine/nodes/sop/Fuse';
 import './engine/nodes/sop/HeightMap';

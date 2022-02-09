@@ -20,7 +20,7 @@ import {colorSopPresetRegister} from './sop/Color';
 import {CSS2DObjectPresetRegister} from './sop/CSS2DObject';
 import {dataSopPresetRegister} from './sop/Data';
 import {dataUrlSopPresetRegister} from './sop/DataUrl';
-import {fileSopPresetRegister} from './sop/File';
+import {fileSopPresetRegister, fileGLTFSopPresetRegister} from './sop/File';
 import {transformSopPresetRegister} from './sop/Transform';
 import {pointSopPresetRegister} from './sop/Point';
 import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
@@ -54,6 +54,7 @@ class PresetLibraryClass {
 		this._registerPreset(dataSopPresetRegister);
 		this._registerPreset(dataUrlSopPresetRegister);
 		this._registerPreset(fileSopPresetRegister);
+		this._registerPreset(fileGLTFSopPresetRegister);
 		this._registerPreset(pointSopPresetRegister);
 		this._registerPreset(roundedBoxSopPresetRegister);
 		this._registerPreset(textSopPresetRegister);

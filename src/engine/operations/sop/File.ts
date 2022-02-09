@@ -25,11 +25,14 @@ export class FileSopOperation extends BaseSopOperation {
 		return 'file';
 	}
 
-	static loader(params: FileSopParams, scene: PolyScene, node?: BaseNodeType) {
+	static loader(params: FileSopParams, scene: PolyScene, node: BaseNodeType) {
 		return new CoreLoaderGeometry({url: params.url, format: params.format as GeometryFormat}, scene, node);
 	}
 
-	override cook(input_contents: CoreGroup[], params: FileSopParams): Promise<CoreGroup> {
+	override cook(input_contents: CoreGroup[], params: FileSopParams): CoreGroup | Promise<CoreGroup> {
+		if (!this._node) {
+			return this.createCoreGroupFromObjects([]);
+		}
 		const loader = FileSopOperation.loader(params, this.scene(), this._node);
 
 		return new Promise((resolve) => {

@@ -4,20 +4,25 @@ import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
 import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
 
-const LOADING_MANAGER = new LoadingManager();
-LOADING_MANAGER.setURLModifier((url) => {
-	const remapedUrl = Poly.assetUrls.remapedUrl(url);
-	if (remapedUrl) {
-		return remapedUrl;
-	}
+export function createLoadingManager() {
+	const loadingManager = new LoadingManager();
+	loadingManager.setURLModifier((url) => {
+		const remapedUrl = Poly.assetUrls.remapedUrl(url);
+		if (remapedUrl) {
+			return remapedUrl;
+		}
 
-	const blobUrl = Poly.blobs.blobUrl(url);
-	if (blobUrl) {
-		return blobUrl;
-	}
+		const blobUrl = Poly.blobs.blobUrl(url);
+		if (blobUrl) {
+			return blobUrl;
+		}
 
-	return url;
-});
+		return url;
+	});
+	return loadingManager;
+}
+
+export const LOADING_MANAGER = createLoadingManager();
 
 interface MultipleDependenciesLoadFileOptions {
 	// storedUrl: string;
@@ -26,7 +31,7 @@ interface MultipleDependenciesLoadFileOptions {
 interface MultipleDependenciesLoadOptions {
 	files: MultipleDependenciesLoadFileOptions[];
 	error: string;
-	node: BaseNodeType;
+	node?: BaseNodeType;
 }
 
 export class CoreBaseLoader {
@@ -86,9 +91,11 @@ export class CoreBaseLoader {
 			promises.push(Poly.blobs.fetchBlobGlobal(fullUrl));
 		}
 		const responses = await Promise.all(promises);
-		for (let response of responses) {
-			if (response.error) {
-				options.node.states.error.set(options.error);
+		if (options.node) {
+			for (let response of responses) {
+				if (response.error) {
+					options.node.states.error.set(options.error);
+				}
 			}
 		}
 	}
