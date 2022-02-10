@@ -191,6 +191,13 @@ class Reflector extends Mesh {
 
 		};
 
+		this.dispose = function () {
+
+			renderTarget.dispose();
+			scope.material.dispose();
+
+		};
+
 	}
 
 }

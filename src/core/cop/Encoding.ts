@@ -1,24 +1,9 @@
-import {
-	LinearEncoding,
-	sRGBEncoding,
-	GammaEncoding,
-	RGBEEncoding,
-	RGBM7Encoding,
-	RGBM16Encoding,
-	RGBDEncoding,
-	BasicDepthPacking,
-	RGBADepthPacking,
-} from 'three/src/constants';
+import {LinearEncoding, sRGBEncoding, BasicDepthPacking, RGBADepthPacking} from 'three/src/constants';
 import {PolyDictionary} from '../../types/GlobalTypes';
 
 export const ENCODINGS: Array<PolyDictionary<number>> = [
 	{LinearEncoding},
 	{sRGBEncoding},
-	{GammaEncoding},
-	{RGBEEncoding},
-	{RGBM7Encoding},
-	{RGBM16Encoding},
-	{RGBDEncoding},
 	{BasicDepthPacking},
 	{RGBADepthPacking},
 ];

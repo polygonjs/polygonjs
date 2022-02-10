@@ -68,7 +68,7 @@ QUnit.test(
 		const param1 = color1.p.color;
 
 		assert.ok(param1.options.colorConversion() == null);
-		param1.options.setOption('conversion', ColorConversion.LINEAR_TO_GAMMA);
+		param1.options.setOption('conversion', ColorConversion.LINEAR_TO_SRGB);
 		assert.ok(param1.options.colorConversion());
 		assert.ok(param1.options.hasOptionsOverridden());
 
@@ -78,7 +78,7 @@ QUnit.test(
 		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.path()) as ColorSopNode;
 		const param2 = color2.p.color;
-		assert.equal(param2.options.colorConversion(), ColorConversion.LINEAR_TO_GAMMA);
+		assert.equal(param2.options.colorConversion(), ColorConversion.LINEAR_TO_SRGB);
 	}
 );
 
@@ -92,7 +92,7 @@ QUnit.test(
 		color1.params.postCreateSpareParams();
 
 		assert.ok(param1.options.colorConversion() == null);
-		param1.options.setOption('conversion', ColorConversion.LINEAR_TO_GAMMA);
+		param1.options.setOption('conversion', ColorConversion.LINEAR_TO_SRGB);
 		assert.ok(param1.options.colorConversion());
 		assert.ok(param1.options.hasOptionsOverridden());
 
@@ -102,6 +102,6 @@ QUnit.test(
 		await scene2.waitForCooksCompleted();
 		const color2 = scene2.node(color1.path()) as ColorSopNode;
 		const param2 = color2.params.get('color2')! as ColorParam;
-		assert.equal(param2.options.colorConversion(), ColorConversion.LINEAR_TO_GAMMA);
+		assert.equal(param2.options.colorConversion(), ColorConversion.LINEAR_TO_SRGB);
 	}
 );

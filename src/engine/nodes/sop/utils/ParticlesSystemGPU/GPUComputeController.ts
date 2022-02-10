@@ -448,6 +448,7 @@ export class ParticlesSystemGpuComputeController {
 					}
 				}
 			}
+			texture.needsUpdate = true;
 		});
 	}
 

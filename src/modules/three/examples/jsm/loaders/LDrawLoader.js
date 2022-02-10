@@ -8,7 +8,6 @@ import {LineSegments} from 'three/src/objects/LineSegments';
 import {Loader} from 'three/src/loaders/Loader';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Mesh} from 'three/src/objects/Mesh';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsLib} from 'three/src/renderers/shaders/UniformsLib';
@@ -965,13 +964,15 @@ class LDrawLoader extends Loader {
 			mainEdgeColourCode: parentScope ? parentScope.mainEdgeColourCode : '24',
 			currentMatrix: new Matrix4(),
 			matrix: new Matrix4(),
+			type: 'Model',
+			groupObject: null,
 
 			// If false, it is a root material scope previous to parse
 			isFromParse: true,
 
-			faces: null,
-			lineSegments: null,
-			conditionalSegments: null,
+			faces: [],
+			lineSegments: [],
+			conditionalSegments: [],
 			totalFaces: 0,
 
 			// If true, this object is the start of a construction step
@@ -1198,14 +1199,8 @@ class LDrawLoader extends Loader {
 
 			case FINISH_TYPE_PEARLESCENT:
 
-				// Try to imitate pearlescency by setting the specular to the complementary of the color, and low shininess
-				const specular = new Color( colour );
-				const hsl = specular.getHSL( { h: 0, s: 0, l: 0 } );
-				hsl.h = ( hsl.h + 0.5 ) % 1;
-				hsl.l = Math.min( 1, hsl.l + ( 1 - hsl.l ) * 0.7 );
-				specular.setHSL( hsl.h, hsl.s, hsl.l );
-
-				material = new MeshPhongMaterial( { color: colour, specular: specular, shininess: 10, reflectivity: 0.3 } );
+				// Try to imitate pearlescency by making the surface glossy
+				material = new MeshStandardMaterial( { color: colour, roughness: 0.3, metalness: 0.25 } );
 				break;
 
 			case FINISH_TYPE_CHROME:
@@ -1441,19 +1436,7 @@ class LDrawLoader extends Loader {
 
 								type = lp.getToken();
 
-								currentParseScope.faces = [];
-								currentParseScope.lineSegments = [];
-								currentParseScope.conditionalSegments = [];
 								currentParseScope.type = type;
-
-								const isRoot = ! parentParseScope.isFromParse;
-								if ( isRoot || scope.separateObjects && ! isPrimitiveType( type ) ) {
-
-									currentParseScope.groupObject = new Group();
-
-									currentParseScope.groupObject.userData.startingConstructionStep = currentParseScope.startingConstructionStep;
-
-								}
 
 								// If the scale of the object is negated then the triangle winding order
 								// needs to be flipped.
@@ -1824,6 +1807,14 @@ class LDrawLoader extends Loader {
 		currentParseScope.numSubobjects = subobjects.length;
 		currentParseScope.subobjectIndex = 0;
 
+		const isRoot = ! parentParseScope.isFromParse;
+		if ( isRoot || scope.separateObjects && ! isPrimitiveType( type ) ) {
+
+			currentParseScope.groupObject = new Group();
+			currentParseScope.groupObject.userData.startingConstructionStep = currentParseScope.startingConstructionStep;
+
+		}
+
 	}
 
 	computeConstructionSteps( model ) {
@@ -1853,6 +1844,13 @@ class LDrawLoader extends Loader {
 	}
 
 	finalizeObject( subobjectParseScope ) {
+
+		// fail gracefully if an object could not be loaded
+		if ( subobjectParseScope === null ) {
+
+			return;
+
+		}
 
 		const parentParseScope = subobjectParseScope.parentScope;
 
@@ -2043,6 +2041,7 @@ class LDrawLoader extends Loader {
 			} ).catch( function () {
 
 				console.warn( 'LDrawLoader: Subobject "' + subobject.fileName + '" could not be found.' );
+				return null;
 
 			} );
 

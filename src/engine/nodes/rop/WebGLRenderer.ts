@@ -13,11 +13,6 @@ import {
 	// encoding
 	LinearEncoding,
 	sRGBEncoding,
-	GammaEncoding,
-	RGBEEncoding,
-	RGBM7Encoding,
-	RGBM16Encoding,
-	RGBDEncoding,
 	// BasicDepthPacking,
 	// RGBADepthPacking,
 	// tone mapping
@@ -36,44 +31,25 @@ import {
 enum EncodingName {
 	Linear = 'Linear',
 	sRGB = 'sRGB',
-	Gamma = 'Gamma',
-	RGBE = 'RGBE',
 	RGBM7 = 'RGBM7',
-	RGBM16 = 'RGBM16',
-	RGBD = 'RGBD',
 	// BasicDepth = 'BasicDepth',
 	// RGBADepth = 'RGBADepth',
 }
 enum EncodingValue {
 	Linear = LinearEncoding as number,
 	sRGB = sRGBEncoding as number,
-	Gamma = GammaEncoding as number,
-	RGBE = RGBEEncoding as number,
-	RGBM7 = RGBM7Encoding as number,
-	RGBM16 = RGBM16Encoding as number,
-	RGBD = RGBDEncoding as number,
 	// BasicDepth = BasicDepthPacking as number,
 	// RGBADepth = RGBADepthPacking as number,
 }
 const ENCODING_NAMES: EncodingName[] = [
 	EncodingName.Linear,
 	EncodingName.sRGB,
-	EncodingName.Gamma,
-	EncodingName.RGBE,
-	EncodingName.RGBM7,
-	EncodingName.RGBM16,
-	EncodingName.RGBD,
 	// EncodingName.BasicDepth,
 	// EncodingName.RGBADepth,
 ];
 const ENCODING_VALUES: EncodingValue[] = [
 	EncodingValue.Linear,
 	EncodingValue.sRGB,
-	EncodingValue.Gamma,
-	EncodingValue.RGBE,
-	EncodingValue.RGBM7,
-	EncodingValue.RGBM16,
-	EncodingValue.RGBD,
 	// EncodingValue.BasicDepth,
 	// EncodingValue.RGBADepth,
 ];
