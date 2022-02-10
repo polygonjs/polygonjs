@@ -4,7 +4,7 @@ export enum ImageExtension {
 	JPEG = 'jpeg',
 	PNG = 'png',
 	EXR = 'exr',
-	BASIS = 'basis',
+	KTX2 = 'ktx2',
 	HDR = 'hdr',
 }
 export const IMAGE_EXTENSIONS: string[] = [
@@ -12,7 +12,7 @@ export const IMAGE_EXTENSIONS: string[] = [
 	ImageExtension.JPG,
 	ImageExtension.PNG,
 	ImageExtension.EXR,
-	ImageExtension.BASIS,
+	ImageExtension.KTX2,
 	ImageExtension.HDR,
 ];
 

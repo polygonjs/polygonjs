@@ -47,7 +47,7 @@ QUnit.test('COP image simple exr', async (assert) => {
 	assert.deepEqual(container.resolution(), [1024, 512]);
 });
 
-QUnit.test('COP image simple basis', async (assert) => {
+QUnit.test('COP image simple ktx2', async (assert) => {
 	const COP = window.COP;
 
 	// create renderer for basis loader
@@ -55,15 +55,15 @@ QUnit.test('COP image simple basis', async (assert) => {
 	assert.ok(renderer);
 
 	const file1 = COP.createNode('image');
-	file1.p.url.set(`${ASSETS_ROOT}/textures/PavingStones.basis`);
+	file1.p.url.set(`${ASSETS_ROOT}/textures/sample_uastc_zstd.ktx2`);
 
 	let container, texture;
 
 	container = await file1.compute();
 	assert.ok(!file1.states.error.message());
 	texture = container.texture();
-	assert.equal(texture.image.width, 2048);
-	assert.equal(texture.image.height, 2048);
+	assert.equal(texture.image.width, 1000);
+	assert.equal(texture.image.height, 1392);
 
 	RendererUtils.dispose();
 });

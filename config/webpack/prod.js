@@ -28,11 +28,11 @@ module.exports = (env) => {
 	const common_options = common(env);
 
 	const MODULES = [
-		'BasisTextureLoader',
 		'DRACOLoader',
 		'EXRLoader',
 		'FBXLoader',
 		'GLTFLoader',
+		'KTX2Loader',
 		'LDrawLoader',
 		'OBJLoader',
 		'PDBLoader',

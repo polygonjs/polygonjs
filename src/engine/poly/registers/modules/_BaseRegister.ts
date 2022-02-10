@@ -1,8 +1,8 @@
-import {BasisTextureLoader} from '../../../../modules/three/examples/jsm/loaders/BasisTextureLoader';
 import {DRACOLoader} from '../../../../modules/three/examples/jsm/loaders/DRACOLoader';
 import {EXRLoader} from '../../../../modules/three/examples/jsm/loaders/EXRLoader';
 import {FBXLoader} from '../../../../modules/three/examples/jsm/loaders/FBXLoader';
 import {GLTFLoader} from '../../../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {KTX2Loader} from '../../../../modules/three/examples/jsm/loaders/KTX2Loader';
 import {LDrawLoader} from '../../../../modules/three/examples/jsm/loaders/LDrawLoader';
 import {OBJLoader} from '../../../../modules/three/examples/jsm/loaders/OBJLoader';
 import {PDBLoader} from '../../../../modules/three/examples/jsm/loaders/PDBLoader';
@@ -14,11 +14,11 @@ import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoade
 import {ModuleName} from './Common';
 
 export interface ModulesMap {
-	[ModuleName.BasisTextureLoader]: typeof BasisTextureLoader;
 	[ModuleName.DRACOLoader]: typeof DRACOLoader;
 	[ModuleName.EXRLoader]: typeof EXRLoader;
 	[ModuleName.FBXLoader]: typeof FBXLoader;
 	[ModuleName.GLTFLoader]: typeof GLTFLoader;
+	[ModuleName.KTX2Loader]: typeof KTX2Loader;
 	[ModuleName.LDrawLoader]: typeof LDrawLoader;
 	[ModuleName.OBJLoader]: typeof OBJLoader;
 	[ModuleName.PDBLoader]: typeof PDBLoader;

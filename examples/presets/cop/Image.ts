@@ -35,7 +35,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 	const disk = linearImage(`disk.png`);
 	const envMap = linearImage(`piz_compressed.exr`);
 	const uv = sRGBImage(`uv.jpg`);
-	const PavingStones_basis = sRGBImage(`PavingStones.basis`);
+	const ktx2 = sRGBImage(`sample_uastc_zstd.ktx2`);
 
 	function artveeSet() {
 		function artvee(fileName: string) {
@@ -115,7 +115,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 		disk,
 		envMap,
 		uv,
-		PavingStones_basis,
+		ktx2,
 		...artveeSet(),
 		...polyhavenSets(),
 	});

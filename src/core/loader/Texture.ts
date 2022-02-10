@@ -24,7 +24,7 @@ interface VideoSourceTypeByExt {
 // }
 interface ThreeLoaderByExt {
 	exr: string;
-	basis: string;
+	ktx2: string;
 	hdr: string;
 }
 
@@ -234,8 +234,8 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 				return [ModuleName.EXRLoader];
 			case ImageExtension.HDR:
 				return [ModuleName.RGBELoader];
-			case ImageExtension.BASIS:
-				return [ModuleName.BasisTextureLoader];
+			case ImageExtension.KTX2:
+				return [ModuleName.KTX2Loader];
 		}
 	}
 
@@ -248,8 +248,8 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			case ImageExtension.HDR: {
 				return await this._hdr_loader(options);
 			}
-			case ImageExtension.BASIS: {
-				return await CoreLoaderTexture._basis_loader(this._node);
+			case ImageExtension.KTX2: {
+				return await CoreLoaderTexture._KTX2loader(this._node);
 			}
 		}
 		return new TextureLoader(this.loadingManager);
@@ -275,10 +275,10 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			return loader;
 		}
 	}
-	private static async _basis_loader(node: BaseNodeType) {
-		const BasisTextureLoader = await Poly.modulesRegister.module(ModuleName.BasisTextureLoader);
-		if (BasisTextureLoader) {
-			const BASISLoader = new BasisTextureLoader(this.loadingManager);
+	private static async _KTX2loader(node: BaseNodeType) {
+		const KTX2Loader = await Poly.modulesRegister.module(ModuleName.KTX2Loader);
+		if (KTX2Loader) {
+			const loader = new KTX2Loader(this.loadingManager);
 			const root = Poly.libs.root();
 			const BASISPath = Poly.libs.BASISPath();
 			if (root || BASISPath) {
@@ -289,7 +289,6 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 					await this._loadMultipleBlobGlobal({
 						files: files.map((file) => {
 							return {
-								storedUrl: `${BASISPath}/${file}`,
 								fullUrl: `${decoder_path}${file}`,
 							};
 						}),
@@ -298,17 +297,17 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 					});
 				}
 
-				BASISLoader.setTranscoderPath(decoder_path);
+				loader.setTranscoderPath(decoder_path);
 			} else {
-				(BASISLoader as any).setTranscoderPath(undefined);
+				(loader as any).setTranscoderPath(undefined);
 			}
 			const renderer = await Poly.renderersController.waitForRenderer();
 			if (renderer) {
-				BASISLoader.detectSupport(renderer);
+				loader.detectSupport(renderer);
 			} else {
-				Poly.warn('texture loader found no renderer for basis texture loader');
+				Poly.warn('texture loader found no renderer for KTX2Loader');
 			}
-			return BASISLoader;
+			return loader;
 		}
 	}
 

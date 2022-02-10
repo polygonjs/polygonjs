@@ -1,0 +1,3 @@
+app/views
+src/modules/three/examples/jsm/exporters/GLTFExporter.js
+*/loaders/KTX2Loader.js

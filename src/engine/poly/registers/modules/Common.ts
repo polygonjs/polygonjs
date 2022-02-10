@@ -1,9 +1,9 @@
 export enum ModuleName {
-	BasisTextureLoader = 'BasisTextureLoader',
 	DRACOLoader = 'DRACOLoader',
 	EXRLoader = 'EXRLoader',
 	FBXLoader = 'FBXLoader',
 	GLTFLoader = 'GLTFLoader',
+	KTX2Loader = 'KTX2Loader',
 	LDrawLoader = 'LDrawLoader',
 	OBJLoader = 'OBJLoader',
 	PDBLoader = 'PDBLoader',
