@@ -1,12 +1,9 @@
 import {Color} from 'three/src/math/Color';
 import {FrontSide} from 'three/src/constants';
-import {LinearFilter} from 'three/src/constants';
-import * as MathUtils from 'three/src/math/MathUtils';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Mesh} from 'three/src/objects/Mesh';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Plane} from 'three/src/math/Plane';
-import {RGBFormat} from 'three/src/constants';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsLib} from 'three/src/renderers/shaders/UniformsLib';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
@@ -62,19 +59,7 @@ class Water extends Mesh {
 
 		const mirrorCamera = new PerspectiveCamera();
 
-		const parameters = {
-			minFilter: LinearFilter,
-			magFilter: LinearFilter,
-			format: RGBFormat
-		};
-
-		const renderTarget = new WebGLRenderTarget( textureWidth, textureHeight, parameters );
-
-		if ( ! MathUtils.isPowerOfTwo( textureWidth ) || ! MathUtils.isPowerOfTwo( textureHeight ) ) {
-
-			renderTarget.texture.generateMipmaps = false;
-
-		}
+		const renderTarget = new WebGLRenderTarget( textureWidth, textureHeight );
 
 		const mirrorShader = {
 

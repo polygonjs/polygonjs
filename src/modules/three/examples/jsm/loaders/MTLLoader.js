@@ -10,6 +10,7 @@ import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
 import {RepeatWrapping} from 'three/src/constants';
 import {TextureLoader} from 'three/src/loaders/TextureLoader';
 import {Vector2} from 'three/src/math/Vector2';
+import {sRGBEncoding} from 'three/src/constants';
 
 /**
  * Loads a Wavefront .mtl file specifying materials
@@ -358,6 +359,12 @@ class MaterialCreator {
 			map.wrapS = scope.wrap;
 			map.wrapT = scope.wrap;
 
+			if ( mapType === 'map' || mapType === 'emissiveMap' ) {
+
+				map.encoding = sRGBEncoding;
+
+			}
+
 			params[ mapType ] = map;
 
 		}
@@ -377,21 +384,21 @@ class MaterialCreator {
 
 					// Diffuse color (color under white light) using RGB values
 
-					params.color = new Color().fromArray( value );
+					params.color = new Color().fromArray( value ).convertSRGBToLinear();
 
 					break;
 
 				case 'ks':
 
 					// Specular color (color when light is reflected from shiny surface) using RGB values
-					params.specular = new Color().fromArray( value );
+					params.specular = new Color().fromArray( value ).convertSRGBToLinear();
 
 					break;
 
 				case 'ke':
 
 					// Emissive using RGB values
-					params.emissive = new Color().fromArray( value );
+					params.emissive = new Color().fromArray( value ).convertSRGBToLinear();
 
 					break;
 

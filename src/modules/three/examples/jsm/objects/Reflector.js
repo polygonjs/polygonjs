@@ -1,11 +1,8 @@
 import {Color} from 'three/src/math/Color';
-import {LinearFilter} from 'three/src/constants';
-import * as MathUtils from 'three/src/math/MathUtils';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {Mesh} from 'three/src/objects/Mesh';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Plane} from 'three/src/math/Plane';
-import {RGBFormat} from 'three/src/constants';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector3} from 'three/src/math/Vector3';
@@ -45,19 +42,7 @@ class Reflector extends Mesh {
 		const textureMatrix = new Matrix4();
 		const virtualCamera = new PerspectiveCamera();
 
-		const parameters = {
-			minFilter: LinearFilter,
-			magFilter: LinearFilter,
-			format: RGBFormat
-		};
-
-		const renderTarget = new WebGLRenderTarget( textureWidth, textureHeight, parameters );
-
-		if ( ! MathUtils.isPowerOfTwo( textureWidth ) || ! MathUtils.isPowerOfTwo( textureHeight ) ) {
-
-			renderTarget.texture.generateMipmaps = false;
-
-		}
+		const renderTarget = new WebGLRenderTarget( textureWidth, textureHeight );
 
 		const material = new ShaderMaterial( {
 			uniforms: UniformsUtils.clone( shader.uniforms ),

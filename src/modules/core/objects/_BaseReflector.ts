@@ -1,12 +1,12 @@
 // converted to typescript from:
 // https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js
 
-import {LinearFilter} from 'three/src/constants';
-import {isPowerOfTwo} from 'three/src/math/MathUtils';
+// import {LinearFilter} from 'three/src/constants';
+// import {isPowerOfTwo} from 'three/src/math/MathUtils';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Plane} from 'three/src/math/Plane';
-import {RGBAFormat} from 'three/src/constants';
+// import {RGBAFormat} from 'three/src/constants';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
@@ -38,11 +38,11 @@ export interface BaseReflectorOptions {
 	scene: Scene;
 }
 
-export const renderTargetParams = {
-	minFilter: LinearFilter,
-	magFilter: LinearFilter,
-	format: RGBAFormat,
-};
+// export const renderTargetParams = {
+// 	minFilter: LinearFilter,
+// 	magFilter: LinearFilter,
+// 	format: RGBAFormat,
+// };
 
 export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial extends Material> extends Mesh<
 	TGeometry,
@@ -78,10 +78,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 
 		const {width, height} = this._getRendererSize(this._options.renderer);
 
-		this.renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
-		if (!isPowerOfTwo(width) || !isPowerOfTwo(height)) {
-			this.renderTarget.texture.generateMipmaps = false;
-		}
+		this.renderTarget = new WebGLRenderTarget(width, height);
 		this.material = this._createMaterial();
 		this._coreRenderBlur = new CoreRenderBlur(new Vector2(width, height));
 

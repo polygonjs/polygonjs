@@ -33,9 +33,10 @@ async function withFileAndHierarchy(path: string, format: GeometryFormat = Geome
 	const container = await hierarchyNode.compute();
 	return {container, fileNode, hierarchyNode};
 }
-async function withHierarchy() {
+async function withHierarchy(levels: number = 1) {
 	const hierarchy1 = window.geo1.createNode('hierarchy');
 	const file1 = window.geo1.nodesByType('file')[0];
+	hierarchy1.p.levels.set(levels);
 	hierarchy1.setInput(0, file1);
 	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
 	const container = await hierarchy1.compute();
@@ -162,8 +163,8 @@ QUnit.test('SOP file draco bunny with format DRC', async (assert) => {
 QUnit.test('SOP file Ldraw', async (assert) => {
 	const {container} = await withFile('models/889-1-RadarTruck.mpd_Packed.mpd', GeometryFormat.LDRAW);
 	assert.equal(container.pointsCount(), 0);
-	const container2 = await withHierarchy();
-	assert.equal(container2.pointsCount(), 122188);
+	const container2 = await withHierarchy(3);
+	assert.equal(container2.pointsCount(), 75218);
 });
 QUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
 	const {container, fileNode} = await withFile('models/bunny.drc', GeometryFormat.FBX);

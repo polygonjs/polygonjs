@@ -50,47 +50,52 @@ export class CSS2DRenderer {
 
 	renderObject(object: Object3D, scene: Scene, camera: Camera) {
 		if (object instanceof CSS2DObject) {
-			// object.onBeforeRender(this, scene, camera);
+			const visible =
+				object.visible && this.vector.z >= -1 && this.vector.z <= 1 && object.layers.test(camera.layers);
+			object.element.style.display = visible ? '' : 'none';
 
-			this.vector.setFromMatrixPosition(object.matrixWorld);
-			this.vector.applyMatrix4(this.viewProjectionMatrix);
+			if (visible) {
+				// object.onBeforeRender(this, scene, camera);
+				this.vector.setFromMatrixPosition(object.matrixWorld);
+				this.vector.applyMatrix4(this.viewProjectionMatrix);
 
-			var element = object.element;
-			var style =
-				'translate(-50%,-50%) translate(' +
-				(this.vector.x * this._widthHalf + this._widthHalf) +
-				'px,' +
-				(-this.vector.y * this._heightHalf + this._heightHalf) +
-				'px)';
+				var element = object.element;
+				var style =
+					'translate(-50%,-50%) translate(' +
+					(this.vector.x * this._widthHalf + this._widthHalf) +
+					'px,' +
+					(-this.vector.y * this._heightHalf + this._heightHalf) +
+					'px)';
 
-			element.style.webkitTransform = style;
-			// element.style.MozTransform = style;
-			// element.style.Transform = style;
-			element.style.transform = style;
+				element.style.webkitTransform = style;
+				// element.style.MozTransform = style;
+				// element.style.Transform = style;
+				element.style.transform = style;
 
-			element.style.display = object.visible && this.vector.z >= -1 && this.vector.z <= 1 ? '' : 'none';
-			// opacity was previously set here in case the _use_fog was changed from true to false and opacity had to be reset. But that causes problems for cases where css is app specific and is set in integrations in an app. So for now, for opacity to be updated correctly, a page reload will be needed. (an alternative could be to have a this._use_fog_updated and have an else clause below, but that could have an unwanted performance cost)
-			// element.style.opacity = `1`;
+				// element.style.display = object.visible && this.vector.z >= -1 && this.vector.z <= 1 ? '' : 'none';
+				// opacity was previously set here in case the _use_fog was changed from true to false and opacity had to be reset. But that causes problems for cases where css is app specific and is set in integrations in an app. So for now, for opacity to be updated correctly, a page reload will be needed. (an alternative could be to have a this._use_fog_updated and have an else clause below, but that could have an unwanted performance cost)
+				// element.style.opacity = `1`;
 
-			if (this._sort_objects || this._use_fog) {
-				const dist_to_squared = this.getDistanceToSquared(camera, object);
-				if (this._use_fog) {
-					const dist = Math.sqrt(dist_to_squared);
-					const dist_remapped = CoreMath.fit(dist, this._fog_near, this._fog_far, 0, 1);
-					const opacity = CoreMath.clamp(1 - dist_remapped, 0, 1);
-					element.style.opacity = `${opacity}`;
-					if (opacity == 0) {
-						element.style.display = 'none';
+				if (this._sort_objects || this._use_fog) {
+					const dist_to_squared = this.getDistanceToSquared(camera, object);
+					if (this._use_fog) {
+						const dist = Math.sqrt(dist_to_squared);
+						const dist_remapped = CoreMath.fit(dist, this._fog_near, this._fog_far, 0, 1);
+						const opacity = CoreMath.clamp(1 - dist_remapped, 0, 1);
+						element.style.opacity = `${opacity}`;
+						if (opacity == 0) {
+							element.style.display = 'none';
+						}
 					}
+
+					this.cache_distanceToCameraSquared.set(object, dist_to_squared);
+				}
+				if (element.parentNode !== this.domElement) {
+					this.domElement.appendChild(element);
 				}
 
-				this.cache_distanceToCameraSquared.set(object, dist_to_squared);
+				// object.onAfterRender(_this, scene, camera);
 			}
-			if (element.parentNode !== this.domElement) {
-				this.domElement.appendChild(element);
-			}
-
-			// object.onAfterRender(_this, scene, camera);
 		}
 
 		for (var i = 0, l = object.children.length; i < l; i++) {
