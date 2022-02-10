@@ -16,7 +16,6 @@ export enum ColorCorrectType {
 	RGBE = 'RGBE',
 	RGBM = 'RGBM',
 	RGBD = 'RGBD',
-	LogLuv = 'LogLuv',
 }
 const TYPES: Array<ColorCorrectType> = [
 	ColorCorrectType.LINEAR,
@@ -25,7 +24,6 @@ const TYPES: Array<ColorCorrectType> = [
 	ColorCorrectType.RGBE,
 	ColorCorrectType.RGBM,
 	ColorCorrectType.RGBD,
-	ColorCorrectType.LogLuv,
 ];
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';

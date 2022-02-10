@@ -1,5 +1,5 @@
 import {Color} from 'three/src/math/Color';
-import { Pass } from '../postprocessing/Pass.js';
+import { Pass } from './Pass.js';
 
 class RenderPass extends Pass {
 

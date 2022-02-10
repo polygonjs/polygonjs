@@ -486,10 +486,6 @@ class OrbitControls extends EventDispatcher {
 			scope.update();
 		}
 
-		function handleMouseUp(/*event*/) {
-			// no-op
-		}
-
 		function handleMouseWheel(event) {
 			if (event.deltaY < 0) {
 				dollyIn(getZoomScale());
@@ -647,10 +643,6 @@ class OrbitControls extends EventDispatcher {
 			if (scope.enableRotate) handleTouchMoveRotate(event);
 		}
 
-		function handleTouchEnd(/*event*/) {
-			// no-op
-		}
-
 		//
 		// event handlers - FSM: listen for events and reset state
 		//
@@ -687,17 +679,7 @@ class OrbitControls extends EventDispatcher {
 		}
 
 		function onPointerUp(event) {
-			if (scope.enabled === false) return;
-
-			if (event.pointerType === 'touch') {
-				onTouchEnd();
-			} else {
-				onMouseUp(event);
-			}
-
 			removePointer(event);
-
-			//
 
 			if (pointers.length === 0) {
 				scope.domElement.releasePointerCapture(event.pointerId);
@@ -705,6 +687,10 @@ class OrbitControls extends EventDispatcher {
 				scope.domElement.removeEventListener('pointermove', onPointerMove);
 				scope.domElement.removeEventListener('pointerup', onPointerUp);
 			}
+
+			scope.dispatchEvent(_endEvent);
+
+			state = STATE.NONE;
 		}
 
 		function onPointerCancel(event) {
@@ -809,14 +795,6 @@ class OrbitControls extends EventDispatcher {
 
 					break;
 			}
-		}
-
-		function onMouseUp(event) {
-			handleMouseUp(event);
-
-			scope.dispatchEvent(_endEvent);
-
-			state = STATE.NONE;
 		}
 
 		function onMouseWheel(event) {
@@ -945,14 +923,6 @@ class OrbitControls extends EventDispatcher {
 				default:
 					state = STATE.NONE;
 			}
-		}
-
-		function onTouchEnd(event) {
-			handleTouchEnd(event);
-
-			scope.dispatchEvent(_endEvent);
-
-			state = STATE.NONE;
 		}
 
 		function onContextMenu(event) {
