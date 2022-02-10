@@ -12,14 +12,20 @@ import {ColorParam} from '../../engine/params/Color';
 import {Vector4Param} from '../../engine/params/Vector4';
 import {Vector2Param} from '../../engine/params/Vector2';
 import {IntegerParam} from '../../engine/params/Integer';
+import {CubicInterpolant} from 'three';
 
 export class FloatParamProxy {
 	public proxyValue: number;
 	constructor(private param: FloatParam) {
 		this.proxyValue = param.value;
 	}
-	update() {
-		this.param.set(this.proxyValue);
+	update(interpolant?: CubicInterpolant) {
+		if (interpolant) {
+			const val = interpolant.evaluate(this.proxyValue)[0];
+			this.param.set(val);
+		} else {
+			this.param.set(this.proxyValue);
+		}
 	}
 }
 export class IntegerParamProxy {

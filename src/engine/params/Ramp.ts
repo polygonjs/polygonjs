@@ -7,7 +7,6 @@ import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
-import {ArrayUtils} from '../../core/ArrayUtils';
 import {clamp} from 'three/src/math/MathUtils';
 
 const STRIDE = 4;
@@ -191,28 +190,11 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 		}
 	}
 
-	static createInterpolant(positions: Float32Array, values: Float32Array) {
-		const valuesCount = 1;
-		const interpolatedValues = new Float32Array(valuesCount);
-		return new CubicInterpolant(positions, values, valuesCount, interpolatedValues);
-	}
 	interpolant() {
 		return (this._rampInterpolant = this._rampInterpolant || this._createInterpolant());
 	}
 	private _createInterpolant() {
-		const points = this.value.points();
-		const sortedPoints = ArrayUtils.sortBy(points, (point) => point.position());
-		const positions = new Float32Array(sortedPoints.length);
-		const values = new Float32Array(sortedPoints.length);
-
-		let i = 0;
-		for (let sortedPoint of sortedPoints) {
-			positions[i] = sortedPoint.position();
-			values[i] = sortedPoint.value();
-			i++;
-		}
-
-		return RampParam.createInterpolant(positions, values);
+		return this.value.createInterpolant();
 	}
 
 	valueAtPosition(position: number): number {

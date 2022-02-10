@@ -295,12 +295,21 @@ export class TimelineBuilderProperty {
 		if (!proxy) {
 			return;
 		}
+		const keyframes = options.timelineBuilder.keyframes();
+		const interpolant = keyframes ? keyframes.createInterpolant() : undefined;
 		const vars = this._commonVars(options.timelineBuilder);
 		vars.onUpdate = () => {
-			proxy.update();
+			proxy.update(interpolant);
 		};
+		let targetValue = this._targetValue;
+		if (keyframes) {
+			// TODO: keyframes should change duration
+			// vars.duration = 1
+			targetValue = 1;
+		}
+
 		const operation = options.timelineBuilder.operation();
-		vars.proxyValue = this.withOp(param.value, this._targetValue, operation);
+		vars.proxyValue = this.withOp(param.value, targetValue, operation);
 		this._startTimeline({...options, vars, target: proxy, registerableProp: param});
 	}
 	private _populateVarsForParamInteger(param: IntegerParam, options: AddToTimelineOptions) {

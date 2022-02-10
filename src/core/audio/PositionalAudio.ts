@@ -23,6 +23,7 @@ export const DISTANCE_MODELS: DistanceModel[] = [
 export class CorePositionalAudio extends Object3D {
 	private tonePanner: Panner3D;
 	private pannerNode: PannerNode;
+	public listenerTransformAutoUpdate: boolean = true;
 	constructor() {
 		super();
 
@@ -111,6 +112,9 @@ export class CorePositionalAudio extends Object3D {
 
 	override updateMatrixWorld(force: boolean) {
 		super.updateMatrixWorld(force);
+		if (!this.listenerTransformAutoUpdate) {
+			return;
+		}
 
 		// if (this.hasPlaybackControl === true && this.isPlaying === false) return;
 

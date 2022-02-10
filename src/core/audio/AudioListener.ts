@@ -17,6 +17,7 @@ export class CoreAudioListener extends Object3D {
 	private timeDelta = 0;
 	private _clock = new Clock();
 	private gain: Gain;
+	public listenerTransformAutoUpdate: boolean = true;
 
 	constructor() {
 		super();
@@ -84,6 +85,9 @@ export class CoreAudioListener extends Object3D {
 
 	override updateMatrixWorld(force: boolean) {
 		super.updateMatrixWorld(force);
+		if (!this.listenerTransformAutoUpdate) {
+			return;
+		}
 
 		const listener = this.context.listener;
 		const up = this.up;

@@ -1,4 +1,6 @@
+import {CubicInterpolant} from 'three';
 import {generateUUID} from 'three/src/math/MathUtils';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 
 export interface RampPointJson {
 	position: number;
@@ -74,6 +76,30 @@ export class RampValue {
 	points() {
 		return this._points;
 	}
+	static createInterpolantFromValues(positions: Float32Array, values: Float32Array) {
+		const valuesCount = 1;
+		const interpolatedValues = new Float32Array(valuesCount);
+		return new CubicInterpolant(positions, values, valuesCount, interpolatedValues);
+	}
+	createInterpolant() {
+		return RampValue.createInterpolant(this);
+	}
+	static createInterpolant(rampValue: RampValue) {
+		const points = rampValue.points();
+		const sortedPoints = ArrayUtils.sortBy(points, (point) => point.position());
+		const positions = new Float32Array(sortedPoints.length);
+		const values = new Float32Array(sortedPoints.length);
+
+		let i = 0;
+		for (let sortedPoint of sortedPoints) {
+			positions[i] = sortedPoint.position();
+			values[i] = sortedPoint.value();
+			i++;
+		}
+
+		return this.createInterpolantFromValues(positions, values);
+	}
+
 	static fromJSON(json: RampValueJson): RampValue {
 		const points = [];
 		for (let jsonPoint of json.points) {

@@ -86,6 +86,8 @@ class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig
 		rangeLocked: [true, true],
 		...paramCallback(),
 	});
+	/** @param ensures the transform of the audio listener is updated on very frame */
+	listenerTransformAutoUpdate = ParamConfig.BOOLEAN(1);
 	/** @param show helper */
 	showHelper = ParamConfig.BOOLEAN(1);
 	/** @param helper size */
@@ -171,6 +173,7 @@ export class PositionalAudioObjNode extends TypedObjNode<Group, PositionalAudioP
 		this._positionalAudio.setMaxDistance(this.pv.maxDistance);
 		this._positionalAudio.setDistanceModel(DISTANCE_MODELS[this.pv.distanceModel]);
 		this._positionalAudio.setDirectionalCone(this.pv.coneInnerAngle, this.pv.coneOuterAngle, this.pv.coneOuterGain);
+		this._positionalAudio.listenerTransformAutoUpdate = isBooleanTrue(this.pv.listenerTransformAutoUpdate);
 
 		if (isBooleanTrue(this.pv.showHelper)) {
 			this._helper = this._helper || this._createHelper(this._positionalAudio);

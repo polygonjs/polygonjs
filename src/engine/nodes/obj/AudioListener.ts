@@ -29,6 +29,8 @@ class AudioListenerParamConfig extends TransformedParamConfig(NodeParamsConfig) 
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
+	/** @param ensures the transform of the audio listener is updated on very frame */
+	listenerTransformAutoUpdate = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new AudioListenerParamConfig();
 
@@ -85,7 +87,7 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 	override cook() {
 		this.transformController.update();
 		this._validateUniq();
-		this._updateListenersAndViewers();
+		this._updateListenerAndViewers();
 		this.cookController.endCook();
 	}
 	private _validateUniq() {
@@ -98,18 +100,19 @@ export class AudioListenerObjNode extends TypedObjNode<CoreAudioListener, AudioL
 	private _updateAudioListener() {
 		const volume = isBooleanTrue(this.pv.soundOn) ? this.pv.masterVolume : 0;
 		this.object.setMasterVolume(volume);
+		this.object.listenerTransformAutoUpdate = isBooleanTrue(this.pv.listenerTransformAutoUpdate);
 	}
 
 	private _updateViewers() {
 		this.root().audioController.update();
 	}
-	private _updateListenersAndViewers() {
+	private _updateListenerAndViewers() {
 		this._updateAudioListener();
 		this._updateViewers();
 	}
 
 	static PARAM_CALLBACK_update(node: AudioListenerObjNode) {
-		node._updateListenersAndViewers();
+		node._updateListenerAndViewers();
 	}
 
 	/*

@@ -1,7 +1,6 @@
 import {PolyScene} from '../PolyScene';
 
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
-import '../../Poly';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {ParamEvent} from '../../poly/ParamEvent';

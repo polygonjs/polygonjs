@@ -3,6 +3,7 @@ import {PropertyTarget} from './PropertyTarget';
 import {AnimationPosition} from './Position';
 import {AnimationUpdateCallback} from './UpdateCallback';
 import gsap from 'gsap';
+import {RampValue} from '../../engine/params/ramp/RampValue';
 
 export enum Operation {
 	SET = 'set',
@@ -22,6 +23,7 @@ export class TimelineBuilder {
 	private _parent: TimelineBuilder | undefined;
 	private _target: PropertyTarget | undefined;
 	private _duration: number = 1;
+	private _keyframes: RampValue | undefined;
 	private _easing: string | undefined;
 	private _operation: Operation = Operation.SET;
 	private _repeatParams: AnimationRepeatParams | undefined;
@@ -76,6 +78,13 @@ export class TimelineBuilder {
 	duration() {
 		return this._duration;
 	}
+	setKeyframes(keyframes: RampValue) {
+		this._keyframes = keyframes;
+	}
+	keyframes() {
+		return this._keyframes;
+	}
+
 	setEasing(easing: string) {
 		this._easing = easing;
 		for (let builder of this._timelineBuilders) {
@@ -152,6 +161,9 @@ export class TimelineBuilder {
 		}
 		if (this._easing) {
 			newTimelineBuilder.setEasing(this._easing);
+		}
+		if (this._keyframes) {
+			newTimelineBuilder.setKeyframes(this._keyframes);
 		}
 		if (this._delay) {
 			newTimelineBuilder.setDelay(this._delay);

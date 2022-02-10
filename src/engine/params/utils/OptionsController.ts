@@ -21,6 +21,7 @@ const FILE_TYPE_OPTION = 'type';
 const EXPRESSION = 'expression';
 const FOR_ENTITIES = 'forEntities';
 const LABEL = 'label';
+const HIDE_LABEL = 'hideLabel';
 const LEVEL = 'level';
 const MENU = 'menu';
 const MENU_STRING = 'menuString';
@@ -133,6 +134,9 @@ interface CallbackParamOptions {
 interface LabelParamOptions {
 	label?: string;
 }
+interface LabelVisibilityParamOptions {
+	hideLabel?: boolean;
+}
 interface ColorConversionOptions {
 	conversion?: ColorConversion;
 }
@@ -178,7 +182,7 @@ export interface NodeOrParamPathParamOptions
 	dependentOnFoundNode?: boolean;
 	paramSelection?: ParamType | boolean;
 }
-export interface RampParamOptions extends BaseParamOptions {}
+export interface RampParamOptions extends BaseParamOptions, LabelVisibilityParamOptions {}
 export interface SeparatorParamOptions extends BaseParamOptions {}
 export interface StringParamOptions
 	extends BaseParamOptions,
@@ -208,7 +212,8 @@ export interface ParamOptions
 		FileParamOptions,
 		MenuNumericParamOptions,
 		StringParamOptions,
-		NodeOrParamPathParamOptions {
+		NodeOrParamPathParamOptions,
+		LabelVisibilityParamOptions {
 	texture?: {
 		env?: boolean;
 	};
@@ -584,10 +589,16 @@ export class OptionsController {
 	}
 	isLabelHidden(): boolean {
 		const type = this.param().type();
-		return (
-			// this._options[SHOW_LABEL_OPTION] === false ||
-			type === ParamType.BUTTON || (type === ParamType.BOOLEAN && this.isFieldHidden())
-		);
+		if (type === ParamType.BUTTON) {
+			return true;
+		}
+		if (type === ParamType.BOOLEAN) {
+			return this.isFieldHidden();
+		}
+		if (type == ParamType.RAMP) {
+			return this._options[HIDE_LABEL] || false;
+		}
+		return false;
 	}
 	isFieldHidden(): boolean {
 		return this._options[FIELD_OPTION] === false;

@@ -19,8 +19,12 @@ enum BlendMode {
 }
 const BLEND_MODES: BlendMode[] = [BlendMode.TOGETHER, BlendMode.SEPARATELY];
 
+// TODO: use an update mode choice, either on render, on tick, or manual, or param change (as opposed to now just on render or manual)
+// on tick will be a perf improvement when using post process render passes
+
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
+import {isBooleanTrue} from '../../../core/Type';
 class BlendObjParamConfig extends NodeParamsConfig {
 	/** @param object to blend transform from */
 	object0 = ParamConfig.NODE_PATH('', {
@@ -132,7 +136,7 @@ export class BlendObjNode extends TypedObjNode<Mesh, BlendObjParamConfig> {
 		this.cookController.endCook();
 	}
 	private _onBeforeRender() {
-		if (!this.pv.updateOnRender) {
+		if (!isBooleanTrue(this.pv.updateOnRender)) {
 			return;
 		}
 		this._computeBlendedMatrix();
