@@ -31,6 +31,8 @@ class OceanPlaneSopParamsConfig extends NodeParamsConfig {
 	waterColor = ParamConfig.COLOR(DEFAULT.waterColor.toArray() as Number3);
 	/** @param reflection color */
 	reflectionColor = ParamConfig.COLOR(DEFAULT.reflectionColor.toArray() as Number3);
+	/** @param reflection fresnel */
+	reflectionFresnel = ParamConfig.FLOAT(DEFAULT.reflectionFresnel);
 	/** @param waves Height */
 	wavesHeight = ParamConfig.FLOAT(DEFAULT.wavesHeight, {
 		range: [0, 10],
@@ -58,6 +60,11 @@ class OceanPlaneSopParamsConfig extends NodeParamsConfig {
 	normalBias = ParamConfig.FLOAT(DEFAULT.normalBias, {
 		range: [0, 0.1],
 		rangeLocked: [false, false],
+	});
+	/** @param multisamples */
+	multisamples = ParamConfig.INTEGER(DEFAULT.multisamples, {
+		range: [0, 4],
+		rangeLocked: [true, false],
 	});
 	/** @param reacts to fog */
 	useFog = ParamConfig.BOOLEAN(DEFAULT.useFog);

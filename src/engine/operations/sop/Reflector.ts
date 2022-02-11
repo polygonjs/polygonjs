@@ -14,6 +14,7 @@ interface ReflectorSopParams extends DefaultOperationParams {
 	color: Color;
 	opacity: number;
 	pixelRatio: number;
+	multisamples: number;
 	tblur: boolean;
 	blur: number;
 	verticalBlurMult: number;
@@ -22,16 +23,15 @@ interface ReflectorSopParams extends DefaultOperationParams {
 	verticalBlur2Mult: number;
 }
 
-const DEFAULT_UP = new Vector3(0, 0, 1);
-
 export class ReflectorSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: ReflectorSopParams = {
-		direction: DEFAULT_UP.clone(),
+		direction: new Vector3(0, 1, 0),
 		active: true,
 		clipBias: 0.003,
 		color: new Color(1, 1, 1),
 		opacity: 1,
 		pixelRatio: 1,
+		multisamples: 4,
 		tblur: false,
 		blur: 1,
 		verticalBlurMult: 1,
@@ -67,6 +67,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 				renderer,
 				scene: this.scene().threejsScene(),
 				pixelRatio: params.pixelRatio,
+				multisamples: params.multisamples,
 				color: params.color,
 				opacity: params.opacity,
 				active: params.active,

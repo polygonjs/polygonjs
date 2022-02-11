@@ -6,10 +6,11 @@
 import {Matrix4} from 'three/src/math/Matrix4';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Plane} from 'three/src/math/Plane';
-// import {RGBAFormat} from 'three/src/constants';
+import {LinearFilter} from 'three/src/constants';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
+import {WebGLMultisampleRenderTarget} from 'three/src/renderers/WebGLMultisampleRenderTarget';
 import {Mesh} from 'three/src/objects/Mesh';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -27,6 +28,7 @@ export interface BaseReflectorOptions {
 	// opacity: number;
 	renderer: WebGLRenderer;
 	pixelRatio: number;
+	multisamples: number;
 	clipBias: number;
 	active: boolean;
 	tblur: boolean;
@@ -38,11 +40,12 @@ export interface BaseReflectorOptions {
 	scene: Scene;
 }
 
-// export const renderTargetParams = {
-// 	minFilter: LinearFilter,
-// 	magFilter: LinearFilter,
-// 	format: RGBAFormat,
-// };
+export const renderTargetParams: WebGLRenderTargetOptions = {
+	minFilter: LinearFilter,
+	magFilter: LinearFilter,
+	// format: RGBAFormat,
+	// encoding: LinearEncoding,
+};
 
 export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial extends Material> extends Mesh<
 	TGeometry,
@@ -66,7 +69,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	protected textureMatrix = new Matrix4();
 	private virtualCamera = new PerspectiveCamera();
 
-	protected renderTarget: WebGLRenderTarget;
+	protected renderTarget: WebGLRenderTarget | WebGLMultisampleRenderTarget;
 	public override material: TMaterial;
 	protected _coreRenderBlur: CoreRenderBlur;
 
@@ -78,7 +81,14 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 
 		const {width, height} = this._getRendererSize(this._options.renderer);
 
-		this.renderTarget = new WebGLRenderTarget(width, height);
+		if (_options.multisamples > 0) {
+			const renderTarget = new WebGLMultisampleRenderTarget(width, height, renderTargetParams);
+			renderTarget.samples = _options.multisamples;
+			this.renderTarget = renderTarget;
+		} else {
+			this.renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
+		}
+
 		this.material = this._createMaterial();
 		this._coreRenderBlur = new CoreRenderBlur(new Vector2(width, height));
 

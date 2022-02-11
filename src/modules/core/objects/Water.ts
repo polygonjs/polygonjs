@@ -28,6 +28,7 @@ export interface WaterMaterial extends ShaderMaterial {
 		wavesHeight: IUniformN;
 		waterColor: IUniformColor;
 		reflectionColor: IUniformColor;
+		reflectionFresnel: IUniformN;
 		distortionScale: IUniformN;
 		size: IUniformN;
 		alpha: IUniformN;
@@ -53,6 +54,7 @@ export interface WaterOptions extends BaseReflectorOptions {
 	wavesHeight?: number;
 	waterColor?: Color;
 	reflectionColor?: Color;
+	reflectionFresnel?: number;
 	waterNormals?: Texture;
 	distortionScale?: number;
 	normalBias?: number;
@@ -81,6 +83,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 		const wavesHeight: number = options.wavesHeight !== undefined ? options.wavesHeight : 1;
 		const waterColor = new Color(options.waterColor !== undefined ? options.waterColor : 0x7f7f7f);
 		const reflectionColor = new Color(options.reflectionColor !== undefined ? options.reflectionColor : 0xffffff);
+		const reflectionFresnel = options.reflectionFresnel !== undefined ? options.reflectionFresnel : 1;
 
 		const distortionScale = options.distortionScale !== undefined ? options.distortionScale : 20.0;
 		const side = options.side !== undefined ? options.side : FrontSide;
@@ -106,6 +109,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 					wavesHeight: {value: wavesHeight},
 					waterColor: {value: new Color(0x555555)},
 					reflectionColor: {value: new Color(0xffffff)},
+					reflectionFresnel: {value: 1},
 					normalBias: {value: normalBias},
 				},
 			]),
@@ -120,6 +124,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 			lights: true,
 			side: side,
 			fog: useFog,
+			// transparent: true, // TODO: allow transparency when I have a good alpha model
 		}) as WaterMaterial;
 
 		material.uniforms['time'].value = time;
@@ -132,6 +137,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 		material.uniforms['wavesHeight'].value = wavesHeight;
 		material.uniforms['waterColor'].value = waterColor;
 		material.uniforms['reflectionColor'].value = reflectionColor;
+		material.uniforms['reflectionFresnel'].value = reflectionFresnel;
 		material.uniforms['direction'].value = direction;
 		material.uniforms['sunDirection'].value = sunDirection;
 		material.uniforms['distortionScale'].value = distortionScale;

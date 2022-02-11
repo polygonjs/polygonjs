@@ -88,10 +88,16 @@ function getOptions() {
 		// minifySyntax: false,
 		// bundle: true,
 		// external: ['require', 'fs', 'path'],
-		define: {__POLYGONJS_VERSION__: POLYGONJS_VERSION},
+		define: {
+			__POLYGONJS_VERSION__: POLYGONJS_VERSION,
+			'process.env.NODE_ENV': '"production"',
+		},
 		loader: {
 			'.glsl': 'text',
 		},
+
+		// options to debug threejs build
+		// bundle: true,
 	};
 	return options;
 }
@@ -118,10 +124,13 @@ function fix_glsl_files() {
 async function start() {
 	const options = getOptions();
 	console.log('options', options);
-	await build(options).catch(() => {
-		console.log('IN CATCH');
+	try {
+		await build(options);
+	} catch (err) {
+		console.error('ERROR');
+		// console.log(err);
 		process.exit(1);
-	});
+	}
 	fix_glsl_files();
 }
 

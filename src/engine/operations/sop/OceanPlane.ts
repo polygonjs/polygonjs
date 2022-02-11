@@ -17,11 +17,13 @@ interface OceanPlaneSopParams extends DefaultOperationParams {
 	wavesHeight: number;
 	waterColor: Color;
 	reflectionColor: Color;
+	reflectionFresnel: number;
 	size: number;
 	distortionScale: number;
 	timeScale: number;
 	renderReflection: boolean;
 	normalBias: number;
+	multisamples: number;
 	useFog: boolean;
 }
 
@@ -47,11 +49,13 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 		wavesHeight: 1,
 		waterColor: new Color(0x001e0f),
 		reflectionColor: new Color(0xffffff),
+		reflectionFresnel: 1,
 		distortionScale: 1,
 		timeScale: 1,
 		size: 10,
 		renderReflection: true,
 		normalBias: 0.001,
+		multisamples: 1,
 		useFog: false,
 	};
 
@@ -87,11 +91,13 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 				wavesHeight: params.wavesHeight,
 				waterColor: params.waterColor,
 				reflectionColor: params.reflectionColor,
+				reflectionFresnel: params.reflectionFresnel,
 				distortionScale: params.distortionScale,
 				timeScale: params.timeScale,
 				size: params.size,
 				// renderReflection: params.renderReflection,
 				normalBias: params.normalBias,
+				multisamples: params.multisamples,
 				useFog: params.useFog,
 			};
 			const water = new Water(object.geometry, waterOptions);
@@ -116,6 +122,7 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 			material.uniforms.wavesHeight.value = params.wavesHeight;
 			material.uniforms.waterColor.value.copy(params.waterColor);
 			material.uniforms.reflectionColor.value.copy(params.reflectionColor);
+			material.uniforms.reflectionFresnel.value = params.reflectionFresnel;
 			material.uniforms.distortionScale.value = params.distortionScale;
 			material.uniforms.timeScale.value = params.timeScale;
 			material.uniforms.size.value = params.size;

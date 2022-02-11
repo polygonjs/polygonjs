@@ -28,6 +28,11 @@ class ReflectorSopParamsConfig extends NodeParamsConfig {
 		range: [1, 4],
 		rangeLocked: [true, false],
 	});
+	/** @param multisamples */
+	multisamples = ParamConfig.INTEGER(DEFAULT.multisamples, {
+		range: [0, 4],
+		rangeLocked: [true, false],
+	});
 	/** @param toggle to activate blur */
 	tblur = ParamConfig.BOOLEAN(DEFAULT.tblur);
 	/** @param blur amount */

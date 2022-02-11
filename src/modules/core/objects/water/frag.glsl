@@ -12,6 +12,7 @@ uniform vec3 eye;
 uniform float wavesHeight;
 uniform vec3 waterColor;
 uniform vec3 reflectionColor;
+uniform float reflectionFresnel;
 uniform vec3 direction;
 
 varying vec4 mirrorCoord;
@@ -114,11 +115,13 @@ void main() {
 	float theta = max( dot( eyeDirection, surfaceNormal ), 0.0 );
 	float rf0 = 0.05;
 	float reflectance = rf0 + ( 1.0 - rf0 ) * pow( ( 1.0 - theta ), 2.0 );//rf0 + ( 1.0 - rf0 ) * pow( ( 1.0 - theta ), 5.0 );
+	reflectance = mix(1.0, reflectance, reflectionFresnel);
 	vec3 scatter = max( 0.0, dot( surfaceNormal, eyeDirection ) ) * waterColor;
 	vec3 reflection = ( vec3( 0.0 ) + reflectionSample * 0.9 + reflectionSample * specularLight ) * reflectionColor;
 	vec3 albedo = mix( ( sunColor * diffuseLight * 0.3 + scatter ) * getShadowMask(), reflection, reflectance);
 	vec3 outgoingLight = albedo;
-	gl_FragColor = vec4( outgoingLight, alpha );
+	// float alpha = clamp( pow(1.0 - theta, 2.0), 0.0, 1.0 );
+	gl_FragColor = vec4( outgoingLight, 1.0 );
 
 	#include <tonemapping_fragment>
 	#include <fog_fragment>
