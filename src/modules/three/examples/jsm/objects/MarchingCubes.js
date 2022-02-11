@@ -1,7 +1,7 @@
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
 import {Color} from 'three/src/math/Color';
-import {DynamicDrawUsage} from 'three/src/DynamicDrawUsage';
+import {DynamicDrawUsage} from 'three/src/constants';
 import {Mesh} from 'three/src/objects/Mesh';
 
 /**

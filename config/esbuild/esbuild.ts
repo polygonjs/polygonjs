@@ -3,6 +3,27 @@ import {BuildOptions} from 'esbuild/lib/main';
 
 import * as fs from 'fs';
 import * as path from 'path';
+const currentPath = path.resolve(__dirname, '../..');
+const srcPath = path.resolve(currentPath, 'src');
+const tsconfigPath = path.resolve(process.cwd(), './tsconfig.json');
+// const threePath = path.resolve(currentPath, 'node_modules/three');
+// const threeSrcPath = path.resolve(currentPath, 'node_modules/three/src');
+
+import {threeImportMapsOnResolvePlugin} from './threeImportMap';
+// import * as importMap from './importMap';
+
+// console.log(threePath);
+// console.log(threeSrcPath);
+// console.log(tsconfigPath);
+// importMap.load([
+// 	{
+// 		imports: {
+// 			three: threePath,
+// 			'three/src': threeSrcPath,
+// 		},
+// 	},
+// ]);
+// process.exit(1);
 
 const disallowed_long_extensions = ['d.ts'];
 const allowed_extensions = ['js', 'ts', 'glsl'];
@@ -41,10 +62,10 @@ function walk(dir: string, filter_callback: FileCallback) {
 	return accepted_file_list;
 }
 function esbuild_entries() {
-	return walk(path.resolve(__dirname, '../../src'), has_allowed_extension);
+	return walk(srcPath, has_allowed_extension);
 }
 function find_glsl_files() {
-	return walk(path.resolve(__dirname, '../../src'), is_glsl);
+	return walk(srcPath, is_glsl);
 }
 
 const files_list = esbuild_entries();
@@ -55,7 +76,7 @@ const outdir = './dist/src';
 const POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
 
 function getTarget() {
-	const tsconfig = fs.readFileSync(path.resolve(process.cwd(), './tsconfig.json'), 'utf-8');
+	const tsconfig = fs.readFileSync(tsconfigPath, 'utf-8');
 	const lines = tsconfig.split('\n');
 	let target: string = '2020';
 	for (let line of lines) {
@@ -64,7 +85,7 @@ function getTarget() {
 			target = new_target.toLowerCase();
 		}
 	}
-	console.log('target', target);
+	// console.log('target', target);
 
 	return target;
 }
@@ -95,6 +116,7 @@ function getOptions() {
 		loader: {
 			'.glsl': 'text',
 		},
+		plugins: [threeImportMapsOnResolvePlugin],
 
 		// options to debug threejs build
 		// bundle: true,
@@ -112,7 +134,7 @@ function fix_glsl_files() {
 		const short_path_js = `${short_path_no_ext}.js`;
 		const dest_path_js = `dist/${short_path_js}`;
 		const new_dest_path = `dist/${short_path_no_ext}.glsl.js`;
-		console.log(dest_path_js);
+		// console.log(dest_path_js);
 		if (fs.existsSync(dest_path_js)) {
 			fs.renameSync(dest_path_js, new_dest_path);
 		} else {

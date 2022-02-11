@@ -39,6 +39,25 @@ exports.__esModule = true;
 var esbuild_1 = require("esbuild");
 var fs = require("fs");
 var path = require("path");
+var currentPath = path.resolve(__dirname, '../..');
+var srcPath = path.resolve(currentPath, 'src');
+var tsconfigPath = path.resolve(process.cwd(), './tsconfig.json');
+// const threePath = path.resolve(currentPath, 'node_modules/three');
+// const threeSrcPath = path.resolve(currentPath, 'node_modules/three/src');
+var threeImportMap_1 = require("./threeImportMap");
+// import * as importMap from './importMap';
+// console.log(threePath);
+// console.log(threeSrcPath);
+// console.log(tsconfigPath);
+// importMap.load([
+// 	{
+// 		imports: {
+// 			three: threePath,
+// 			'three/src': threeSrcPath,
+// 		},
+// 	},
+// ]);
+// process.exit(1);
 var disallowed_long_extensions = ['d.ts'];
 var allowed_extensions = ['js', 'ts', 'glsl'];
 function has_allowed_extension(file_path) {
@@ -75,10 +94,10 @@ function walk(dir, filter_callback) {
     return accepted_file_list;
 }
 function esbuild_entries() {
-    return walk(path.resolve(__dirname, '../../src'), has_allowed_extension);
+    return walk(srcPath, has_allowed_extension);
 }
 function find_glsl_files() {
-    return walk(path.resolve(__dirname, '../../src'), is_glsl);
+    return walk(srcPath, is_glsl);
 }
 var files_list = esbuild_entries();
 console.log("esbuild: transpiling " + files_list.length + " files");
@@ -86,7 +105,7 @@ console.log("esbuild: transpiling " + files_list.length + " files");
 var outdir = './dist/src';
 var POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
 function getTarget() {
-    var tsconfig = fs.readFileSync(path.resolve(process.cwd(), './tsconfig.json'), 'utf-8');
+    var tsconfig = fs.readFileSync(tsconfigPath, 'utf-8');
     var lines = tsconfig.split('\n');
     var target = '2020';
     for (var _i = 0, lines_1 = lines; _i < lines_1.length; _i++) {
@@ -96,7 +115,7 @@ function getTarget() {
             target = new_target.toLowerCase();
         }
     }
-    console.log('target', target);
+    // console.log('target', target);
     return target;
 }
 function getOptions() {
@@ -124,7 +143,10 @@ function getOptions() {
         },
         loader: {
             '.glsl': 'text'
-        }
+        },
+        plugins: [threeImportMap_1.threeImportMapsOnResolvePlugin],
+        // options to debug threejs build
+        bundle: true
     };
     return options;
 }
@@ -139,7 +161,7 @@ function fix_glsl_files() {
         var short_path_js = short_path_no_ext + ".js";
         var dest_path_js = "dist/" + short_path_js;
         var new_dest_path = "dist/" + short_path_no_ext + ".glsl.js";
-        console.log(dest_path_js);
+        // console.log(dest_path_js);
         if (fs.existsSync(dest_path_js)) {
             fs.renameSync(dest_path_js, new_dest_path);
         }

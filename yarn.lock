@@ -2549,6 +2549,11 @@ esbuild-openbsd-64@0.14.21:
   resolved "https://registry.yarnpkg.com/esbuild-openbsd-64/-/esbuild-openbsd-64-0.14.21.tgz#f886b93feefddbe573528fa4b421c9c6e2bc969b"
   integrity sha512-h9zLMyVD0T73MDTVYIb/qUTokwI6EJH9O6wESuTNq6+XpMSr6C5aYZ4fvFKdNELW+Xsod+yDS2hV2JTUAbFrLA==
 
+esbuild-plugin-import-map@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/esbuild-plugin-import-map/-/esbuild-plugin-import-map-2.1.0.tgz#3c3d2a350d6109f3e4b4a97dd6fae9eeaeca61d5"
+  integrity sha512-rlI9H8f1saIqYEUNHxDmIMGZZFroANyD6q3Aht6aXyOq/aOdO6jp5VFF1+n3o9AUe+wAtQcn93Wv1Vuj9na0hg==
+
 esbuild-sunos-64@0.14.21:
   version "0.14.21"
   resolved "https://registry.yarnpkg.com/esbuild-sunos-64/-/esbuild-sunos-64-0.14.21.tgz#3829e4d57d4cb6950837fe90b0b67cdfb37cf13a"
