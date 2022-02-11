@@ -144,9 +144,7 @@ function getOptions() {
         loader: {
             '.glsl': 'text'
         },
-        plugins: [threeImportMap_1.threeImportMapsOnResolvePlugin],
-        // options to debug threejs build
-        bundle: true
+        plugins: [threeImportMap_1.threeImportMapsOnResolvePlugin]
     };
     return options;
 }
