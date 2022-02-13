@@ -55,6 +55,7 @@ void main() {
 	
 		// /MAT/meshBasicBuilder1/forLoop1/add1
 		vec3 v_POLY_forLoop1_add1_sum = (v_POLY_forLoop1_subnetInput1_position + vec3(0.1, 0.1, 0.1));
+	
 		// /MAT/meshBasicBuilder1/forLoop1/subnetOutput1
 		v_POLY_forLoop1_position = v_POLY_forLoop1_add1_sum;
 	}

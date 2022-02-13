@@ -25,6 +25,11 @@ import {LineType} from './code/utils/LineType';
 import {BaseGLDefinition, FunctionGLDefinition} from './utils/GLDefinition';
 import {CodeFormatter} from './code/utils/CodeFormatter';
 import {ShaderName} from '../utils/shaders/ShaderName';
+import {AddBodyLinesOptions} from './code/utils/LinesController';
+
+const ADD_BODY_LINES_OPTIONS: AddBodyLinesOptions = {
+	makeUniq: false,
+};
 
 function visibleIfInputsCountAtLeast(index: number) {
 	return {
@@ -283,7 +288,12 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 		const bodyLines = codeBuilder.lines(shadername, LineType.BODY);
 		this._setLinesPreBlock(shadersCollectionController);
 		this.setLinesBlockStart(shadersCollectionController);
-		shadersCollectionController.addBodyLines(this, this._sanitizeBodyLines(bodyLines));
+		shadersCollectionController.addBodyLines(
+			this,
+			this._sanitizeBodyLines(bodyLines),
+			undefined,
+			ADD_BODY_LINES_OPTIONS
+		);
 
 		shadersCollectionController.addBodyLines(this, ['}']);
 	}
@@ -356,7 +366,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 			const attribNodes = this.nodesByType(GlNodeType.ATTRIBUTE);
 			const bodyLines: string[] = [];
 			for (let attribNode of attribNodes) {
-				const linesForNode = internalShadersCollectionController.body_lines(ShaderName.VERTEX, attribNode);
+				const linesForNode = internalShadersCollectionController.bodyLines(ShaderName.VERTEX, attribNode);
 				if (linesForNode) {
 					bodyLines.push(...linesForNode);
 				}

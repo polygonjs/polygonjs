@@ -6,6 +6,10 @@ import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
 export type DefinitionTraverseCallback = (definition: BaseGLDefinition) => void;
 // export type BodyLinesTraverseCallback = (lines: string[]) => void;
+
+export interface AddBodyLinesOptions {
+	makeUniq: boolean;
+}
 export class LinesController {
 	private _definitionsByNodeId: Map<CoreGraphNodeId, BaseGLDefinition[]> = new Map();
 	private _bodyLinesByNodeId: Map<CoreGraphNodeId, string[]> = new Map();
@@ -54,15 +58,38 @@ export class LinesController {
 	// 	return nodes;
 	// }
 
-	addBodyLines(node: BaseGlNodeType, lines: string[]) {
+	addBodyLines(node: BaseGlNodeType, lines: string[], options?: AddBodyLinesOptions) {
 		this._addBodyLinesForNodeId(node.graphNodeId(), lines);
 	}
-	private _addBodyLinesForNodeId(nodeId: CoreGraphNodeId, lines: string[]) {
-		for (let line of lines) {
+	private _addBodyLinesForNodeId(nodeId: CoreGraphNodeId, lines: string[], options?: AddBodyLinesOptions) {
+		let makeUniq = true;
+		if (options && options.makeUniq != null) {
+			makeUniq = options.makeUniq;
+		}
+
+		const linesToUsed: string[] = [];
+		if (makeUniq) {
+			const currentLines = this._bodyLinesByNodeId.get(nodeId);
+			for (let line of lines) {
+				if (currentLines) {
+					if (!currentLines.includes(line)) {
+						linesToUsed.push(line);
+					}
+				} else {
+					linesToUsed.push(line);
+				}
+			}
+		} else {
+			for (let line of lines) {
+				linesToUsed.push(line);
+			}
+		}
+
+		for (let line of linesToUsed) {
 			MapUtils.pushOnArrayAtEntry(this._bodyLinesByNodeId, nodeId, line);
 		}
 	}
-	body_lines(node: BaseGlNodeType): string[] | undefined {
+	bodyLines(node: BaseGlNodeType): string[] | undefined {
 		return this._bodyLinesByNodeId.get(node.graphNodeId());
 	}
 	// traverseBodyLines(callback: BodyLinesTraverseCallback) {

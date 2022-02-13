@@ -282,8 +282,8 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThen.vert, 'vertex');
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag, 'fragment');
+	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThen.vert, 'vertex 1');
+	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag, 'fragment ');
 
 	// now add a node that would create a function
 	const rotate1 = ifThen1.createNode('rotate');
@@ -292,8 +292,8 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThenRotate.vert, 'vertex');
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThenRotate.frag, 'fragment');
+	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThenRotate.vert, 'vertex 2');
+	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThenRotate.frag, 'fragment 2');
 
 	RendererUtils.dispose();
 });

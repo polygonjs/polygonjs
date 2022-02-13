@@ -51,7 +51,7 @@ const CHANNELS: Channel[] = ['R', 'G', 'B', 'A'];
 
 const TEXTURE_ROWS = 2;
 const BYTE_SIZE = 1;
-const HALF_BYTE_SIZE = Math.floor(BYTE_SIZE * 0.5);
+// const HALF_BYTE_SIZE = Math.floor(BYTE_SIZE * 0.5);
 const DEFAULT_SPEED = 0.04;
 class AudioAnalyserCopParamsConfig extends NodeParamsConfig {
 	/** @param if off, the texture will not be updated */
@@ -266,7 +266,7 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 			const prevValue = data[arrayIndex];
 			data[arrayIndex] = v;
 			const speed = (speedMult * (v - prevValue)) / delta;
-			data[row2Offset + arrayIndex] = HALF_BYTE_SIZE + speed;
+			data[row2Offset + arrayIndex] = /*HALF_BYTE_SIZE +*/ speed;
 		}
 		texture.needsUpdate = true;
 	}

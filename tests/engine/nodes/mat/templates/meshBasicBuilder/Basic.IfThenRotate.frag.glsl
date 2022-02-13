@@ -253,6 +253,7 @@ void main() {
 	
 		// /MAT/meshBasicBuilder1/ifThen1/rotate1
 		vec3 v_POLY_ifThen1_rotate1_val = rotateWithAxisAngle(v_POLY_ifThen1_subnetInput1_position, vec3(0.0, 1.0, 0.0), 0.0);
+	
 		// /MAT/meshBasicBuilder1/ifThen1/subnetOutput1
 		v_POLY_ifThen1_position = v_POLY_ifThen1_rotate1_val;
 	}

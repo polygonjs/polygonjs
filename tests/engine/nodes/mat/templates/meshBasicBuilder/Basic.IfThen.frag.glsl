@@ -57,6 +57,7 @@ void main() {
 	
 		// /MAT/meshBasicBuilder1/ifThen1/multAdd1
 		vec3 v_POLY_ifThen1_multAdd1_val = (vec3(2.0, 2.0, 2.0)*(v_POLY_ifThen1_subnetInput1_position + vec3(0.0, 0.0, 0.0))) + vec3(0.0, 0.0, 0.0);
+	
 		// /MAT/meshBasicBuilder1/ifThen1/subnetOutput1
 		v_POLY_ifThen1_position = v_POLY_ifThen1_multAdd1_val;
 	}

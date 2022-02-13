@@ -44,20 +44,51 @@ void main() {
 
 
 	// /MAT/meshBasicBuilder1/subnet1
-	vec3 v_POLY_subnet1_position = v_POLY_globals1_position;
+	vec3 v_POLY_subnet1_input0 = v_POLY_globals1_position;
 	if(true){
 		// /MAT/meshBasicBuilder1/subnet1/subnetInput1
-		vec3 v_POLY_subnet1_subnetInput1_position = v_POLY_globals1_position;
+		vec3 v_POLY_subnet1_subnetInput1_input0 = v_POLY_globals1_position;
 	
-		// /MAT/meshBasicBuilder1/subnet1/add1
-		vec3 v_POLY_subnet1_add1_sum = (v_POLY_subnet1_subnetInput1_position + vec3(1.0, 0.5, 0.25));
+		// /MAT/meshBasicBuilder1/subnet1/constant1
+		vec3 v_POLY_subnet1_constant1_val = vec3(1.0, 0.0, 0.0);
+	
+		// /MAT/meshBasicBuilder1/subnet1/constant2
+		vec3 v_POLY_subnet1_constant2_val = vec3(0.0, 1.0, 0.06666666666666667);
+	
+		// /MAT/meshBasicBuilder1/subnet1/constant3
+		vec3 v_POLY_subnet1_constant3_val = vec3(0.0, 0.0, 1.0);
+	
+		// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
+		float v_POLY_subnet1_vec3ToFloat1_y = v_POLY_subnet1_subnetInput1_input0.y;
+	
+		// /MAT/meshBasicBuilder1/subnet1/compare1
+		bool v_POLY_subnet1_compare1_val = (v_POLY_subnet1_vec3ToFloat1_y > 0.0);
+	
+		// /MAT/meshBasicBuilder1/subnet1/compare2
+		bool v_POLY_subnet1_compare2_val = (v_POLY_subnet1_vec3ToFloat1_y > -0.5);
+	
+		// /MAT/meshBasicBuilder1/subnet1/twoWaySwitch1
+		vec3 v_POLY_subnet1_twoWaySwitch1_val;
+		if(v_POLY_subnet1_compare2_val){
+		v_POLY_subnet1_twoWaySwitch1_val = v_POLY_subnet1_constant2_val;
+		} else {
+		v_POLY_subnet1_twoWaySwitch1_val = v_POLY_subnet1_constant3_val;
+		}
+	
+		// /MAT/meshBasicBuilder1/subnet1/twoWaySwitch2
+		vec3 v_POLY_subnet1_twoWaySwitch2_val;
+		if(v_POLY_subnet1_compare1_val){
+		v_POLY_subnet1_twoWaySwitch2_val = v_POLY_subnet1_constant1_val;
+		} else {
+		v_POLY_subnet1_twoWaySwitch2_val = v_POLY_subnet1_twoWaySwitch1_val;
+		}
 	
 		// /MAT/meshBasicBuilder1/subnet1/subnetOutput1
-		v_POLY_subnet1_position = v_POLY_subnet1_add1_sum;
+		v_POLY_subnet1_input0 = v_POLY_subnet1_twoWaySwitch2_val;
 	}
 	
 	// /MAT/meshBasicBuilder1/output1
-	diffuseColor.xyz = v_POLY_subnet1_position;
+	diffuseColor.xyz = v_POLY_subnet1_input0;
 
 
 

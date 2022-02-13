@@ -59,21 +59,20 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const body_lines: string[] = [];
-
 		const value = this.glVarName(OUTPUT_NAME);
 		const condition = ThreeToGl.bool(this.variableForInput(InputName.CONDITION));
 		const ifTrue = ThreeToGl.any(this.variableForInput(InputName.IF_TRUE));
 		const ifFalse = ThreeToGl.any(this.variableForInput(InputName.IF_FALSE));
 
-		const gl_type = this._expected_output_types()[0];
-		body_lines.push(`${gl_type} ${value}`);
-		body_lines.push(`if(${condition}){`);
-		body_lines.push(`${value} = ${ifTrue}`);
-		body_lines.push(`} else {`);
+		const glType = this._expected_output_types()[0];
+		const bodyLines: string[] = [];
+		bodyLines.push(`${glType} ${value}`);
+		bodyLines.push(`if(${condition}){`);
+		bodyLines.push(`${value} = ${ifTrue}`);
+		bodyLines.push(`} else {`);
 		// TODO: why is this second line skipped, if both the true and false lines are the same?
-		body_lines.push(`${value} = ${ifFalse}`);
-		body_lines.push(`}`);
-		shaders_collection_controller.addBodyLines(this, body_lines);
+		bodyLines.push(`${value} = ${ifFalse}`);
+		bodyLines.push(`}`);
+		shaders_collection_controller.addBodyLines(this, bodyLines);
 	}
 }

@@ -237,7 +237,7 @@ export class CodeBuilder {
 	add_code_line_for_nodes_and_line_type(nodes: BaseGlNodeType[], shader_name: ShaderName, line_type: LineType) {
 		nodes = nodes.filter((node) => {
 			if (this._shadersCollectionController) {
-				const lines = this._shadersCollectionController.body_lines(shader_name, node);
+				const lines = this._shadersCollectionController.bodyLines(shader_name, node);
 				return lines && lines.length > 0;
 			}
 		});
@@ -257,13 +257,13 @@ export class CodeBuilder {
 		if (!this._shadersCollectionController) {
 			return;
 		}
-		const lines = this._shadersCollectionController.body_lines(shader_name, node);
+		const lines = this._shadersCollectionController.bodyLines(shader_name, node);
 
 		if (lines && lines.length > 0) {
 			const lines_for_shader = this._lines.get(shader_name)!;
 			const comment = CodeFormatter.node_comment(node, line_type);
 			MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, comment);
-			ArrayUtils.uniq(lines).forEach((line) => {
+			lines.forEach((line) => {
 				line = CodeFormatter.line_wrap(node, line, line_type);
 				MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, line);
 			});

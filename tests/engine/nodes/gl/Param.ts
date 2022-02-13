@@ -356,6 +356,7 @@ uniform float v_POLY_param_test;`
 	
 		// /MAT/meshBasicBuilder1/subnet1/vec3ToFloat1
 		float v_POLY_subnet1_vec3ToFloat1_x = v_POLY_subnet1_param1_val.x;
+	
 		// /MAT/meshBasicBuilder1/subnet1/subnetOutput1
 		v_POLY_subnet1_pos = v_POLY_subnet1_vec3ToFloat1_x;
 	}`,

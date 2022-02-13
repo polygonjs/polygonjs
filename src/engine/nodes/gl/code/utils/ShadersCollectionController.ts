@@ -1,6 +1,6 @@
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGLDefinition} from '../../utils/GLDefinition';
-import {LinesController, DefinitionTraverseCallback} from './LinesController';
+import {LinesController, DefinitionTraverseCallback, AddBodyLinesOptions} from './LinesController';
 import {BaseGlNodeType} from '../../_Base';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 import {NodeContext} from '../../../../poly/NodeContext';
@@ -73,20 +73,20 @@ export class ShadersCollectionController {
 	// 	return this._lines_controller_by_shader_name.get(shader_name)?.all_definition_nodes(scene) || [];
 	// }
 
-	addBodyLines(node: BaseGlNodeType, lines: string[], shaderName?: ShaderName) {
+	addBodyLines(node: BaseGlNodeType, lines: string[], shaderName?: ShaderName, options?: AddBodyLinesOptions) {
 		if (lines.length == 0) {
 			return;
 		}
 		shaderName = shaderName || this._currentShaderName;
 		const lines_controller = this._linesControllerByShaderName.get(shaderName);
 		if (lines_controller) {
-			lines_controller.addBodyLines(node, lines);
+			lines_controller.addBodyLines(node, lines, options);
 		}
 	}
-	body_lines(shaderName: ShaderName, node: BaseGlNodeType) {
+	bodyLines(shaderName: ShaderName, node: BaseGlNodeType) {
 		const lines_controller = this._linesControllerByShaderName.get(shaderName);
 		if (lines_controller) {
-			return lines_controller.body_lines(node);
+			return lines_controller.bodyLines(node);
 		}
 	}
 	// traverseBodyLines(shaderName: ShaderName, callback: BodyLinesTraverseCallback) {

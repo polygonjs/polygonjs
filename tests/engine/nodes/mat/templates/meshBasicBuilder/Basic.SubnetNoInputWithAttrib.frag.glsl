@@ -54,8 +54,10 @@ void main() {
 	
 		// /MAT/meshBasicBuilder1/subnet1/attribute2
 		vec3 v_POLY_subnet1_attribute2_val = v_POLY_attribute_attrib2;
+	
 		// /MAT/meshBasicBuilder1/subnet1/add1
 		vec3 v_POLY_subnet1_add1_sum = (v_POLY_subnet1_attribute1_val + v_POLY_subnet1_attribute2_val + vec3(0.0, 0.0, 0.0));
+	
 		// /MAT/meshBasicBuilder1/subnet1/subnetOutput1
 		v_POLY_subnet1_basecolor = v_POLY_subnet1_add1_sum;
 	}
