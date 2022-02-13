@@ -298,6 +298,10 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		scene.overrideMaterial = this._depthMaterial;
 		this._initVisibility(scene);
 
+		// set renderer clear alpha
+		const initialClearAlpha = renderer.getClearAlpha();
+		renderer.setClearAlpha(0);
+
 		// render to the render target to get the depths
 		renderer.setRenderTarget(this._renderTarget);
 		renderer.render(scene, this._shadowCamera);
@@ -313,6 +317,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		scene.overrideMaterial = null;
 		this._helper.visible = helperVisible;
 		renderer.setRenderTarget(null);
+		renderer.setClearAlpha(initialClearAlpha);
 		scene.background = initialBackground;
 		this._plane.onBeforeRender = previousOnBeforeRender;
 	}
