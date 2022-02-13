@@ -201,7 +201,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		const params_update_options: ParamsUpdateOptions = {};
 		for (let param_name of param_names) {
 			const param_data = data[param_name] as ComplexParamJsonExporterData<ParamType>;
-			if (param_data) {
+			if (param_data != null) {
 				const options = param_data['options'];
 				// const is_spare = options && options['spare'] === true;
 

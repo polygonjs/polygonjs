@@ -134,6 +134,7 @@ import './engine/nodes/gl/VaryingWrite';
 
 QUnit.module('manager');
 import './engine/nodes/manager/Root';
+import './engine/nodes/manager/root/BackgroundController';
 import './engine/nodes/manager/root/AudioController';
 
 QUnit.module('mat');
@@ -153,6 +154,7 @@ import './engine/nodes/obj/utils/DisplayNodeController';
 import './engine/nodes/obj/_BaseTransformed';
 import './engine/nodes/obj/AmbientLight';
 import './engine/nodes/obj/Blend';
+import './engine/nodes/obj/ContactShadow';
 import './engine/nodes/obj/Geo';
 import './engine/nodes/obj/HemisphereLight';
 import './engine/nodes/obj/PolarTransform';

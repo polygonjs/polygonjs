@@ -54,9 +54,14 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 
 export class SceneBackgroundController {
 	constructor(protected node: RootManagerNode) {}
-
+	setMode(mode: BackgroundMode) {
+		this.node.p.backgroundMode.set(BACKGROUND_MODES.indexOf(mode));
+	}
+	backgroundMode(): BackgroundMode {
+		return BACKGROUND_MODES[this.node.pv.backgroundMode];
+	}
 	async update() {
-		const backgroundMode = BACKGROUND_MODES[this.node.pv.backgroundMode];
+		const backgroundMode = this.backgroundMode();
 		switch (backgroundMode) {
 			case BackgroundMode.NONE: {
 				return this._setBackgroundNone();
@@ -70,6 +75,7 @@ export class SceneBackgroundController {
 		}
 		TypeAssert.unreachable(backgroundMode);
 	}
+
 	private _setBackgroundNone() {
 		const scene = this.node.object;
 		scene.background = null;
