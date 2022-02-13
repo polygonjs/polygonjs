@@ -171,7 +171,6 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 						customMatData.onBeforeCompileDataJSON
 					);
 					customOnBeforeCompileData.paramConfigs = onBeforeCompileData.paramConfigs;
-					this.node.scene(), material, onBeforeCompileData;
 
 					assignOnBeforeCompileDataAndFunction(this.node.scene(), customMat, customOnBeforeCompileData);
 					this._material.customMaterials[customMatName] = customMat;

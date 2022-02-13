@@ -75,18 +75,16 @@ export class ParticlesSystemGpuRenderController {
 				uniform = {value: null};
 				this._uniformByShaderName.set(shaderName, uniform);
 			}
-			if (uniform) {
-				const texture = this.node.gpuController.getCurrentRenderTarget(shaderName)?.texture;
-				uniform.value = texture || null;
-				// Setting needsUpdate to true was an attempt at fixing the bug
-				// where a particle system with no output on scene load
-				// fails to render when adding outputs later.
-				// At least until the scene is fully reloaded
-				// texture.needsUpdate = true;
-				CoreMaterial.assignUniforms(this._renderMaterial, uniformName, uniform, this._matNodeAssembler);
-				// this._renderMaterial.uniforms[uniformName].value = texture;
-				// CoreMaterial.assignCustomUniforms(this._renderMaterial, uniformName, texture);
-			}
+			const texture = this.node.gpuController.getCurrentRenderTarget(shaderName)?.texture;
+			uniform.value = texture || null;
+			// Setting needsUpdate to true was an attempt at fixing the bug
+			// where a particle system with no output on scene load
+			// fails to render when adding outputs later.
+			// At least until the scene is fully reloaded
+			// texture.needsUpdate = true;
+			CoreMaterial.assignUniforms(this._renderMaterial, uniformName, uniform, this._matNodeAssembler);
+			// this._renderMaterial.uniforms[uniformName].value = texture;
+			// CoreMaterial.assignCustomUniforms(this._renderMaterial, uniformName, texture);
 		}
 	}
 
