@@ -141,16 +141,16 @@ QUnit.test('gl ramp: 1 ramp node on top level and one in a subnet work ok', asyn
 	assert.ok(uniform.value.uuid);
 	let spareParam = meshBasicBuilder1.params.get('myCustomRamp')! as RampParam;
 	assert.ok(spareParam);
-	assert.notOk(spareParam.value.isEqual(rampValue1));
-	assert.notOk(spareParam.value.isEqual(rampValue2));
+	assert.notOk(spareParam.value.isEqual(rampValue1), 'value equals');
+	assert.notOk(spareParam.value.isEqual(rampValue2), 'value equals (2)');
 	function firstPixelValue(texture: DataTexture) {
-		return uniform.value.image.data[1] / 255;
+		return uniform.value.image.data[0];
 	}
 
 	assert.equal(firstPixelValue(uniform.value), 0);
 	spareParam.set(rampValue2);
-	assert.ok(spareParam.value.isEqual(rampValue2));
-	assert.in_delta(firstPixelValue(uniform.value), 0.75, 0.05);
+	assert.ok(spareParam.value.isEqual(rampValue2), 'value equals (3)');
+	assert.in_delta(firstPixelValue(uniform.value), 0.75, 0.01, 'first pixel value');
 	assert.includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/subnet1/ramp1
@@ -159,8 +159,8 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`
 	assert.includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/subnet1/ramp1
-		vec3 v_POLY_subnet1_ramp1_tmpTexureVarName = texture2D(v_POLY_ramp_myCustomRamp, vec2(0.0, 0.0)).xyz;
-		float v_POLY_subnet1_ramp1_val = -1.0 + v_POLY_subnet1_ramp1_tmpTexureVarName.x + v_POLY_subnet1_ramp1_tmpTexureVarName.y + v_POLY_subnet1_ramp1_tmpTexureVarName.z;`
+		float v_POLY_subnet1_ramp1_val = texture2D(v_POLY_ramp_myCustomRamp, vec2(0.0, 0.0)).x;`,
+		'fragment contains ramp code (1)'
 	);
 	assert.includes(
 		material.fragmentShader,
@@ -207,8 +207,8 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`
 	assert.includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/ramp1
-	vec3 v_POLY_ramp1_tmpTexureVarName = texture2D(v_POLY_ramp_myCustomRamp, vec2(0.0, 0.0)).xyz;
-	float v_POLY_ramp1_val = -1.0 + v_POLY_ramp1_tmpTexureVarName.x + v_POLY_ramp1_tmpTexureVarName.y + v_POLY_ramp1_tmpTexureVarName.z;`
+	float v_POLY_ramp1_val = texture2D(v_POLY_ramp_myCustomRamp, vec2(0.0, 0.0)).x;`,
+		'fragment contains ramp code (2)'
 	);
 	assert.includes(
 		material.fragmentShader,
@@ -240,14 +240,14 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`
 	assert.includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/subnet1/ramp1
-		vec3 v_POLY_subnet1_ramp1_tmpTexureVarName = texture2D(v_POLY_ramp_myCustomRamp, vec2(0.0, 0.0)).xyz;
-		float v_POLY_subnet1_ramp1_val = -1.0 + v_POLY_subnet1_ramp1_tmpTexureVarName.x + v_POLY_subnet1_ramp1_tmpTexureVarName.y + v_POLY_subnet1_ramp1_tmpTexureVarName.z;`
+		float v_POLY_subnet1_ramp1_val = texture2D(v_POLY_ramp_myCustomRamp, vec2(0.0, 0.0)).x;`,
+		'fragment contains ramp code (3)'
 	);
 	assert.includes(
 		material.fragmentShader,
 		`// /MAT/meshBasicBuilder1/ramp1
-	vec3 v_POLY_ramp1_tmpTexureVarName = texture2D(v_POLY_ramp_myCustomRamp, vec2(0.0, 0.0)).xyz;
-	float v_POLY_ramp1_val = -1.0 + v_POLY_ramp1_tmpTexureVarName.x + v_POLY_ramp1_tmpTexureVarName.y + v_POLY_ramp1_tmpTexureVarName.z;`
+	float v_POLY_ramp1_val = texture2D(v_POLY_ramp_myCustomRamp, vec2(0.0, 0.0)).x;`,
+		'fragment contains ramp code (4)'
 	);
 	assert.includes(
 		material.fragmentShader,
