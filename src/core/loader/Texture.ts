@@ -280,9 +280,9 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 		if (KTX2Loader) {
 			const loader = new KTX2Loader(this.loadingManager);
 			const root = Poly.libs.root();
-			const BASISPath = Poly.libs.BASISPath();
-			if (root || BASISPath) {
-				const decoder_path = `${root || ''}${BASISPath || ''}/`;
+			const KTX2Path = Poly.libs.KTX2Path();
+			if (root || KTX2Path) {
+				const decoder_path = `${root || ''}${KTX2Path || ''}/`;
 
 				if (node) {
 					const files = ['basis_transcoder.js', 'basis_transcoder.wasm'];

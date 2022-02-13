@@ -5,6 +5,7 @@ import {NodeContext} from '../../../../poly/NodeContext';
 import {RootManagerNode} from '../../Root';
 import {ColorConversion} from '../../../../../core/Color';
 import {Color} from 'three/src/math/Color';
+import {TypeAssert} from '../../../../poly/Assert';
 
 export enum BackgroundMode {
 	NONE = 'none',
@@ -23,8 +24,8 @@ const CallbackOptions = {
 export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		// background
-		/** @param set background mode (none, color or texture) */
-		backgroundMode = ParamConfig.INTEGER(BACKGROUND_MODES.indexOf(BackgroundMode.NONE), {
+		/** @param set background mode (none, color or texture). Note that in order to have a transparent background, you also need to set the renderer's alpha to true. In order to do so, you may need to create a rop/WebGLRenderer node, set it alpha parameter, and assign the node to your camera. */
+		backgroundMode = ParamConfig.INTEGER(BACKGROUND_MODES.indexOf(BackgroundMode.COLOR), {
 			menu: {
 				entries: BACKGROUND_MODES.map((mode, i) => {
 					return {name: mode, value: i};
@@ -34,7 +35,7 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 			separatorBefore: true,
 		});
 		/** @param background color */
-		bgColor = ParamConfig.COLOR([0, 0, 0], {
+		bgColor = ParamConfig.COLOR([0.09, 0.09, 0.09], {
 			visibleIf: {backgroundMode: BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)},
 			...CallbackOptions,
 			conversion: ColorConversion.SRGB_TO_LINEAR,
@@ -55,33 +56,46 @@ export class SceneBackgroundController {
 	constructor(protected node: RootManagerNode) {}
 
 	async update() {
-		const scene = this.node.object;
-		const pv = this.node.pv;
-
-		if (pv.backgroundMode == BACKGROUND_MODES.indexOf(BackgroundMode.NONE)) {
-			scene.background = null;
-		} else {
-			if (pv.backgroundMode == BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)) {
-				// without the compute,
-				// the color does not seem to update correctly when changing the conversion
-				await this.node.p.bgColor.compute();
-				if (scene.background && scene.background instanceof Color) {
-					scene.background.copy(pv.bgColor);
-				} else {
-					scene.background = pv.bgColor;
-				}
-			} else {
-				const node = pv.bgTexture.nodeWithContext(NodeContext.COP);
-				if (node) {
-					node.compute().then((container) => {
-						scene.background = container.texture();
-					});
-				} else {
-					this.node.states.error.set('bgTexture node not found');
-				}
+		const backgroundMode = BACKGROUND_MODES[this.node.pv.backgroundMode];
+		switch (backgroundMode) {
+			case BackgroundMode.NONE: {
+				return this._setBackgroundNone();
+			}
+			case BackgroundMode.COLOR: {
+				return await this._setBackgroundColor();
+			}
+			case BackgroundMode.TEXTURE: {
+				return await this._setBackgroundTexture();
 			}
 		}
+		TypeAssert.unreachable(backgroundMode);
 	}
+	private _setBackgroundNone() {
+		const scene = this.node.object;
+		scene.background = null;
+	}
+	private async _setBackgroundColor() {
+		const scene = this.node.object;
+		const pv = this.node.pv;
+		await this.node.p.bgColor.compute();
+		if (scene.background && scene.background instanceof Color) {
+			scene.background.copy(pv.bgColor);
+		} else {
+			scene.background = pv.bgColor;
+		}
+	}
+	private async _setBackgroundTexture() {
+		const scene = this.node.object;
+		const pv = this.node.pv;
+		const node = pv.bgTexture.nodeWithContext(NodeContext.COP);
+		if (node) {
+			const container = await node.compute();
+			scene.background = container.texture();
+		} else {
+			this.node.states.error.set('bgTexture node not found');
+		}
+	}
+
 	static update(node: RootManagerNode) {
 		node.sceneBackgroundController.update();
 	}

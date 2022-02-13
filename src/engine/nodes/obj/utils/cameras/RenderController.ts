@@ -246,7 +246,7 @@ export class RenderController {
 		const params: WebGLRendererParameters = {
 			canvas: canvas,
 			antialias: false, // no anti alias with a pixel ratio of 2 is more performant
-			alpha: false,
+			// alpha: true, // let's use threejs default alpha
 			context: gl,
 		};
 		const renderer = Poly.renderersController.createWebGLRenderer(params);

@@ -9,15 +9,12 @@ export class PolyLibsController {
 	}
 	//
 	//
-	// BASIS
+	// KTX2
 	//
 	//
-	private _BASISPath: string | null = '/basis';
-	// setBASISPath(path: string | null) {
-	// 	this._BASISPath = path;
-	// }
-	BASISPath() {
-		return this._BASISPath;
+	private _KTX2Path: string | null = '/ktx2';
+	KTX2Path() {
+		return this._KTX2Path;
 	}
 	//
 	//
