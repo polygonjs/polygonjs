@@ -1,4 +1,4 @@
-import {RGBAFormat} from 'three/src/constants';
+import {RGBAFormat, FloatType} from 'three/src/constants';
 import {DataTexture} from 'three/src/textures/DataTexture';
 import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
 import {TypedParam} from './_Base';
@@ -7,13 +7,12 @@ import {ParamType} from '../poly/ParamType';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamEvent} from '../poly/ParamEvent';
-import {clamp} from 'three/src/math/MathUtils';
 
 const STRIDE = 4;
 const TEXTURE_WIDTH = 1024;
 const TEXTURE_HEIGHT = 1;
 const TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
-const TEXTURE_BYTES_MULT = 255;
+const TEXTURE_BYTES_MULT = 1;
 
 export class RampParam extends TypedParam<ParamType.RAMP> {
 	static override type() {
@@ -21,8 +20,8 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 	}
 
 	private _rampInterpolant: CubicInterpolant | undefined;
-	private _textureData = new Uint8Array(STRIDE * TEXTURE_SIZE);
-	private _rampTexture = new DataTexture(this._textureData, TEXTURE_WIDTH, TEXTURE_HEIGHT, RGBAFormat);
+	private _textureData = new Float32Array(STRIDE * TEXTURE_SIZE);
+	private _rampTexture = new DataTexture(this._textureData, TEXTURE_WIDTH, TEXTURE_HEIGHT, RGBAFormat, FloatType);
 
 	static DEFAULT_VALUE = new RampValue(RampInterpolation.CUBIC, [new RampPoint(0, 0), new RampPoint(1, 1)]);
 	static DEFAULT_VALUE_JSON: RampValueJson = RampParam.DEFAULT_VALUE.toJSON();
@@ -171,22 +170,25 @@ export class RampParam extends TypedParam<ParamType.RAMP> {
 			stride = i * STRIDE;
 			position = i / TEXTURE_WIDTH;
 			value = this.valueAtPosition(position);
-			if (value <= 0) {
-				// if I set 256, a value of 1 will become 0
-				this._textureData[stride + 0] = (clamp(value, -1, 0) + 1) * TEXTURE_BYTES_MULT;
-				this._textureData[stride + 1] = 0;
-				this._textureData[stride + 2] = 0;
-			} else {
-				if (value <= 1) {
-					this._textureData[stride + 0] = TEXTURE_BYTES_MULT;
-					this._textureData[stride + 1] = clamp(value, 0, 1) * TEXTURE_BYTES_MULT;
-					this._textureData[stride + 2] = 0;
-				} else {
-					this._textureData[stride + 0] = TEXTURE_BYTES_MULT;
-					this._textureData[stride + 1] = TEXTURE_BYTES_MULT;
-					this._textureData[stride + 2] = (clamp(value, 1, 2) - 1) * TEXTURE_BYTES_MULT;
-				}
-			}
+			this._textureData[stride + 0] = value * TEXTURE_BYTES_MULT;
+			this._textureData[stride + 1] = 0;
+			this._textureData[stride + 2] = 0;
+			// if (value <= 0) {
+			// 	// if I set 256, a value of 1 will become 0
+			// 	this._textureData[stride + 0] = (clamp(value, -1, 0) + 1) * TEXTURE_BYTES_MULT;
+			// 	this._textureData[stride + 1] = 0;
+			// 	this._textureData[stride + 2] = 0;
+			// } else {
+			// 	if (value <= 1) {
+			// 		this._textureData[stride + 0] = TEXTURE_BYTES_MULT;
+			// 		this._textureData[stride + 1] = clamp(value, 0, 1) * TEXTURE_BYTES_MULT;
+			// 		this._textureData[stride + 2] = 0;
+			// 	} else {
+			// 		this._textureData[stride + 0] = TEXTURE_BYTES_MULT;
+			// 		this._textureData[stride + 1] = TEXTURE_BYTES_MULT;
+			// 		this._textureData[stride + 2] = (clamp(value, 1, 2) - 1) * TEXTURE_BYTES_MULT;
+			// 	}
+			// }
 		}
 	}
 

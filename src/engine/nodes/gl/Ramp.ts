@@ -40,8 +40,8 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const tmpTextureGlType = GlConnectionPointType.VEC3;
-		const tmpTexureVarName = super.glVarName('tmpTexureVarName');
+		// const tmpTextureGlType = GlConnectionPointType.VEC3;
+		// const tmpTexureVarName = super.glVarName('tmpTexureVarName');
 		const glType = GlConnectionPointType.FLOAT;
 		const texture_name = this.uniformName();
 		const varName = super.glVarName(OUTPUT_NAME);
@@ -50,10 +50,11 @@ export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 		shadersCollectionController.addDefinitions(this, [definition]);
 
 		const inputVal = this.variableForInputParam(this.p.input);
-		const bodyLines = [
-			`${tmpTextureGlType} ${tmpTexureVarName} = texture2D(${this.uniformName()}, vec2(${inputVal}, 0.0)).xyz`,
-			`${glType} ${varName} = -1.0 + ${tmpTexureVarName}.x + ${tmpTexureVarName}.y + ${tmpTexureVarName}.z`,
-		];
+		// const bodyLines = [
+		// 	`${tmpTextureGlType} ${tmpTexureVarName} = texture2D(${this.uniformName()}, vec2(${inputVal}, 0.0)).xyz`,
+		// 	`${glType} ${varName} = -1.0 + ${tmpTexureVarName}.x + ${tmpTexureVarName}.y + ${tmpTexureVarName}.z`,
+		// ];
+		const bodyLines = [`${glType} ${varName} = texture2D(${this.uniformName()}, vec2(${inputVal}, 0.0)).x`];
 		shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 	override paramsGenerating() {
