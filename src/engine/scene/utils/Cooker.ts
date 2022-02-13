@@ -25,7 +25,7 @@ export class Cooker {
 			this._blockLevel = 0;
 		}
 
-		this.process_queue();
+		this._processQueue();
 	}
 	// unblock_later: ->
 	// 	setTimeout( this.unblock.bind(this), 0 )
@@ -37,7 +37,7 @@ export class Cooker {
 		this._queue.set(node.graphNodeId(), original_trigger_graph_node);
 	}
 
-	process_queue() {
+	private _processQueue() {
 		if (this.blocked()) {
 			return;
 		}
