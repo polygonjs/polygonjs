@@ -1,4 +1,4 @@
-import {CubicInterpolant} from 'three';
+import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
 import {generateUUID} from 'three/src/math/MathUtils';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 

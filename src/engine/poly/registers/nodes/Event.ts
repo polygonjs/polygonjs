@@ -8,6 +8,7 @@ import {ButtonEventNode} from '../../../nodes/event/Button';
 // import {CameraDeviceOrientationControlsEventNode} from '../../../nodes/event/CameraDeviceOrientationControls';
 import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls';
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
+import {DebounceEventNode} from '../../../nodes/event/Debounce';
 import {DelayEventNode} from '../../../nodes/event/Delay';
 // import {CodeEventNode} from '../../../nodes/event/Code';
 import {DragEventNode} from '../../../nodes/event/Drag';
@@ -28,6 +29,7 @@ import {SceneEventNode} from '../../../nodes/event/Scene';
 import {SetFlagEventNode} from '../../../nodes/event/SetFlag';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
 import {SequenceEventNode} from '../../../nodes/event/Sequence';
+import {ThrottleEventNode} from '../../../nodes/event/Throttle';
 import {TimerEventNode} from '../../../nodes/event/Timer';
 import {TouchEventNode} from '../../../nodes/event/Touch';
 import {ViewerEventNode} from '../../../nodes/event/Viewer';
@@ -50,6 +52,7 @@ export interface EventNodeChildrenMap {
 	// cameraDeviceOrientationControls: CameraDeviceOrientationControlsEventNode;
 	cameraMapControls: CameraOrbitControlsEventNode;
 	cameraOrbitControls: CameraMapControlsEventNode;
+	debounce: DebounceEventNode;
 	delay: DelayEventNode;
 	drag: DragEventNode;
 	// code: CodeEventNode;
@@ -70,6 +73,7 @@ export interface EventNodeChildrenMap {
 	setFlag: SetFlagEventNode;
 	setParam: SetParamEventNode;
 	sequence: SequenceEventNode;
+	throttle: ThrottleEventNode;
 	timer: TimerEventNode;
 	touch: TouchEventNode;
 	viewer: ViewerEventNode;
@@ -96,6 +100,7 @@ export class EventRegister {
 		// poly.registerNode(CameraDeviceOrientationControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(CameraMapControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
+		poly.registerNode(DebounceEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(DelayEventNode, CATEGORY_EVENT.MISC);
 		// poly.registerNode(CodeEventNode, CATEGORY_EVENT.ADVANCED);
 		poly.registerNode(DragEventNode, CATEGORY_EVENT.INPUT);
@@ -116,6 +121,7 @@ export class EventRegister {
 		poly.registerNode(SetFlagEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(SetParamEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(SequenceEventNode, CATEGORY_EVENT.MISC);
+		poly.registerNode(ThrottleEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(TimerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(TouchEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);

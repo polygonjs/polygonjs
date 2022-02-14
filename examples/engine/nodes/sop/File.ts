@@ -1,4 +1,4 @@
-import {PolyScene} from '../../../../src/engine/index_all';
+import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {Poly} from '../../../../src/engine/Poly';
 
 import {OBJLoaderModule} from '../../../../src/engine/poly/registers/modules/entry_points/OBJLoader';

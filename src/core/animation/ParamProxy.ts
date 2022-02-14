@@ -12,7 +12,7 @@ import {ColorParam} from '../../engine/params/Color';
 import {Vector4Param} from '../../engine/params/Vector4';
 import {Vector2Param} from '../../engine/params/Vector2';
 import {IntegerParam} from '../../engine/params/Integer';
-import {CubicInterpolant} from 'three';
+import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
 
 export class FloatParamProxy {
 	public proxyValue: number;
