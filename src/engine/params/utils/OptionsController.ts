@@ -416,9 +416,15 @@ export class OptionsController {
 	// editable
 	setEditableState(state: boolean) {
 		const currentState = this._options[EDITABLE];
+		const param = this.param();
 		if (currentState != state) {
 			this._options[EDITABLE] = state;
-			this.param().emit(ParamEvent.EDITABLE_UPDATED);
+			param.emit(ParamEvent.EDITABLE_UPDATED);
+		}
+		if (param.components) {
+			for (let component of param.components) {
+				component.options.setEditableState(state);
+			}
 		}
 	}
 	editable(): boolean {

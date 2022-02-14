@@ -67,7 +67,6 @@ export class SpotLightSopOperation extends BaseSopOperation {
 		const map = light.shadow.map;
 		if (map) {
 			map.setSize(params.shadowRes.x, params.shadowRes.y);
-			console.log(params.shadowRes, map);
 		}
 
 		light.shadow.bias = params.shadowBias;
