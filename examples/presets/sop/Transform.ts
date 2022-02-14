@@ -8,9 +8,10 @@ const transformSopNodePresetsCollectionFactory: PresetsCollectionFactory<Transfo
 
 	const onGround = new BasePreset().addEntry(node.p.t.y, `-bbox(0, 'min').y`);
 	const centerToOrigin = new BasePreset().addEntry(node.p.t, ['-$CEX', '-$CEY', '-$CEZ']);
+	const pivotOnCenter = new BasePreset().addEntry(node.p.pivot, ['$CEX', '$CEY', '$CEZ']);
 	const scaleTo1 = new BasePreset().addEntry(node.p.scale, '1/bbox(0,"size").x');
 
-	collection.setPresets({onGround, centerToOrigin, scaleTo1});
+	collection.setPresets({onGround, centerToOrigin, scaleTo1, pivotOnCenter});
 
 	return collection;
 };

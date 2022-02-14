@@ -331,3 +331,15 @@ vec3 labToXyz( vec3 c ) {
 vec3 labToRgb( vec3 c ) {
 	return xyzToRgb( labToXyz( vec3(100.0 * c.x, 2.0 * 127.0 * (c.y - 0.5), 2.0 * 127.0 * (c.z - 0.5)) ) );
 }
+
+// adapted from
+// THREEjs math/Color.js
+float sRGBToLinear( float c ) {
+	return ( c < 0.04045 ) ? c * 0.0773993808 : pow( c * 0.9478672986 + 0.0521327014, 2.4 );
+}
+vec3 sRGBToLinear( vec3 c ) {
+	return vec3( sRGBToLinear(c.r), sRGBToLinear(c.g), sRGBToLinear(c.b) );
+}
+vec4 sRGBToLinear( vec4 c ) {
+	return vec4( sRGBToLinear(c.r), sRGBToLinear(c.g), sRGBToLinear(c.b), c.a );
+}
