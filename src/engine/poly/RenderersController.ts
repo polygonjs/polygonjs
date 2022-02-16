@@ -50,13 +50,13 @@ export class RenderersController {
 			this._require_webgl2 = true;
 		}
 	}
-	webgl2Available() {
+	webGL2Available() {
 		if (this._webgl2_available === undefined) {
-			this._webgl2_available = this._set_webgl2_available();
+			this._webgl2_available = this._setWebGL2Available();
 		}
 		return this._webgl2_available;
 	}
-	private _set_webgl2_available() {
+	private _setWebGL2Available() {
 		const canvas = document.createElement('canvas');
 		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
 	}
@@ -88,7 +88,7 @@ export class RenderersController {
 	}
 	private _getRenderingContextWebgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext | null {
 		let context_name: WebGLContext;
-		if (this.webgl2Available()) {
+		if (this.webGL2Available()) {
 			context_name = WebGLContext.WEBGL2;
 		} else {
 			context_name = webgl2 ? WebGLContext.WEBGL2 : WebGLContext.WEBGL;
@@ -169,7 +169,7 @@ export class RenderersController {
 	}
 
 	renderTarget(width: number, height: number, parameters: WebGLRenderTargetOptions) {
-		if (this.webgl2Available()) {
+		if (this.webGL2Available()) {
 			return new WebGLMultisampleRenderTarget(width, height, parameters);
 		} else {
 			return new WebGLRenderTarget(width, height, parameters);

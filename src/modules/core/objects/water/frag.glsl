@@ -34,23 +34,23 @@ varying vec2 geoUV;
 
 // from https://www.shadertoy.com/view/MdXyzX
 #define DRAG_MULT 0.048
-#define ITERATIONS_RAYMARCH 13
 #define ITERATIONS_NORMAL 48
 vec2 wavedx(vec2 position, vec2 direction, float speed, float frequency, float timeshift) {
 	float x = dot(direction, position) * frequency + timeshift * speed;
 	float wave = exp(sin(x) - 1.0);
 	float dx = wave * cos(x);
 	return vec2(wave, -dx);
+	// return vec2(1.0,0.0);
 }
 
-float getwaves(vec2 position, int iterations, float currentTime){
+float getwaves(vec2 position, float currentTime){
 	float iter = 0.0;
 	float phase = 6.0;
 	float speed = 2.0;
 	float weight = 1.0;
 	float w = 0.0;
 	float ws = 0.0;
-	for(int i=0;i<iterations;i++){
+	for(int i=0;i<ITERATIONS_NORMAL;i++){
 		vec2 p = vec2(sin(iter), cos(iter));
 		vec2 res = wavedx(position, p, speed, phase, currentTime);
 		position += p * res.y * weight * DRAG_MULT;
@@ -62,15 +62,16 @@ float getwaves(vec2 position, int iterations, float currentTime){
 		speed *= 1.07;
 	}
 	return w / ws;
+	// return 1.0;
 }
 
 float H = 0.0;
 vec3 normal(vec2 pos, float e, float depth, float currentTime){
 	vec2 ex = vec2(e, 0);
-	H = getwaves(pos.xy * 0.1, ITERATIONS_NORMAL, currentTime) * depth;
+	H = getwaves(pos.xy * 0.1, currentTime) * depth;
 	vec3 a = vec3(pos.x, H, pos.y);
-	return normalize(cross(a-vec3(pos.x - e, getwaves(pos.xy * 0.1 - ex.xy * 0.1, ITERATIONS_NORMAL, currentTime) * depth, pos.y), 
-						   a-vec3(pos.x, getwaves(pos.xy * 0.1 + ex.yx * 0.1, ITERATIONS_NORMAL, currentTime) * depth, pos.y + e)));
+	return normalize(cross(a-vec3(pos.x - e, getwaves(pos.xy * 0.1 - ex.xy * 0.1, currentTime) * depth, pos.y),
+						a-vec3(pos.x, getwaves(pos.xy * 0.1 + ex.yx * 0.1, currentTime) * depth, pos.y + e)));
 }
 
 
@@ -95,8 +96,6 @@ void sunLight( const vec3 surfaceNormal, const vec3 eyeDirection, float shiny, f
 void main() {
 
 	#include <logdepthbuf_fragment>
-	// vec4 noise = getNoise( geoUV * size );
-	// vec3 surfaceNormal = normalize( noise.xzy * vec3( 1.5, 1.0, 1.5 ) );
 	float waterDepth = -wavesHeight;
 	vec3 surfaceNormal = normal(geoUV * size, normalBias /*0.01*/, waterDepth, time * timeScale);
 
@@ -120,7 +119,6 @@ void main() {
 	vec3 reflection = ( vec3( 0.0 ) + reflectionSample * 0.9 + reflectionSample * specularLight ) * reflectionColor;
 	vec3 albedo = mix( ( sunColor * diffuseLight * 0.3 + scatter ) * getShadowMask(), reflection, reflectance);
 	vec3 outgoingLight = albedo;
-	// float alpha = clamp( pow(1.0 - theta, 2.0), 0.0, 1.0 );
 	gl_FragColor = vec4( outgoingLight, 1.0 );
 
 	#include <tonemapping_fragment>

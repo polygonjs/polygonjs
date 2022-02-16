@@ -22,6 +22,7 @@ import {Vector2} from 'three/src/math/Vector2';
 import {isBooleanTrue} from '../../../core/Type';
 import {Material} from 'three/src/materials/Material';
 import {CoreTransform} from '../../../core/Transform';
+import {Poly} from '../../../engine/Poly';
 
 export interface BaseReflectorOptions {
 	// color: Color;
@@ -82,9 +83,10 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 		const {width, height} = this._getRendererSize(this._options.renderer);
 
 		if (_options.multisamples > 0) {
-			const renderTarget = new WebGLMultisampleRenderTarget(width, height, renderTargetParams);
-			renderTarget.samples = _options.multisamples;
-			this.renderTarget = renderTarget;
+			this.renderTarget = Poly.renderersController.renderTarget(width, height, renderTargetParams);
+			if (this.renderTarget instanceof WebGLMultisampleRenderTarget) {
+				this.renderTarget.samples = _options.multisamples;
+			}
 		} else {
 			this.renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
 		}
