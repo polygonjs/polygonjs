@@ -14,7 +14,6 @@ import {ParamType} from '../../../../poly/ParamType';
 import {AttribType, ATTRIBUTE_TYPES} from '../../../../../core/geometry/Constant';
 import {BaseCameraObjNodeType} from '../../../obj/_BaseCamera';
 import {Vector3Param} from '../../../../params/Vector3';
-import {Poly} from '../../../../Poly';
 import {RaycastCPUVelocityController} from './VelocityController';
 import {CoreType} from '../../../../../core/Type';
 
@@ -22,21 +21,8 @@ import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {RaycasterForBVH} from '../../../../operations/sop/utils/Bvh/three-mesh-bvh';
 import {IntersectDataEventNode} from '../../IntersectData';
+import {MouseHelper, CursorOffset} from './MouseHelper';
 
-interface CursorOffset {
-	offsetX: number;
-	offsetY: number;
-}
-interface CursorPage {
-	pageX: number;
-	pageY: number;
-}
-
-function setEventOffset(cursorPage: CursorPage, canvas: HTMLCanvasElement, offset: CursorOffset) {
-	var rect = canvas.getBoundingClientRect();
-	offset.offsetX = cursorPage.pageX - rect.left;
-	offset.offsetY = cursorPage.pageY - rect.top;
-}
 function createRaycaster() {
 	const raycaster = new Raycaster() as RaycasterForBVH;
 	raycaster.firstHitOnly = true;
@@ -69,14 +55,14 @@ export class RaycastCPUController {
 		};
 		const event = context.event;
 		if (event instanceof MouseEvent || event instanceof DragEvent || event instanceof PointerEvent) {
-			setEventOffset(event, canvas, this._offset);
+			MouseHelper.setEventOffset(event, canvas, this._offset);
 		}
 		if (
 			window.TouchEvent /* check first that TouchEvent is defined, since it does on firefox desktop */ &&
 			event instanceof TouchEvent
 		) {
 			const touch = event.touches[0];
-			setEventOffset(touch, canvas, this._offset);
+			MouseHelper.setEventOffset(touch, canvas, this._offset);
 		}
 		updateFromCursor(this._offset);
 		this._raycaster.setFromCamera(this._mouse, cameraNode.object);
@@ -169,7 +155,7 @@ export class RaycastCPUController {
 	private _setPositionParam(hit_position: Vector3) {
 		hit_position.toArray(this._hit_position_array);
 		if (isBooleanTrue(this._node.pv.tpositionTarget)) {
-			if (Poly.playerMode()) {
+			if (this._node.scene().timeController.playing()) {
 				this._found_position_target_param =
 					this._found_position_target_param || this._node.pv.positionTarget.paramWithType(ParamType.VECTOR3);
 			} else {

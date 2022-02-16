@@ -14,7 +14,7 @@ import {
 import {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
 import {CoreType} from '../../../../core/Type';
-import {CoreString} from '../../../../core/String';
+// import {CoreString} from '../../../../core/String';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 const COMPLEX_PARAM_DATA_KEYS: Readonly<string[]> = ['overriden_options', 'type'];
@@ -206,9 +206,9 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 				// const is_spare = options && options['spare'] === true;
 
 				// make camelCase if required
-				if (false && param_name.includes('_')) {
-					param_name = CoreString.camelCase(param_name);
-				}
+				// if (false && param_name.includes('_')) {
+				// 	param_name = CoreString.camelCase(param_name);
+				// }
 
 				let param_type = param_data['type']!;
 				// backward compatibiity: ensure that old param of type 'operator_path'

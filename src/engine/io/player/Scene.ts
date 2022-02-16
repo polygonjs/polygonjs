@@ -13,6 +13,11 @@ import {SceneJsonImporter} from '../json/import/Scene';
 type ProgressBarUpdateCallback = (progressRatio: number) => void;
 type ConfigureSceneCallback = (scene: PolyScene) => void;
 
+export enum EventName {
+	VIEWER_MOUNTED = 'POLYViewerMounted',
+	SCENE_READY = 'POLYSceneReady',
+}
+
 export interface LoadSceneOptions {
 	onProgress?: ProgressBarUpdateCallback;
 }
@@ -28,6 +33,7 @@ interface ImportCommonOptions extends LoadSceneOptions {
 export interface SceneDataImportOptions extends ImportCommonOptions {
 	sceneData: SceneJsonExporterData;
 	assetsRoot: string;
+	autoPlay?: boolean;
 }
 export type LoadSceneData = (options: SceneDataImportOptions) => void;
 export interface SceneDataImportOptionsOnly {
@@ -101,7 +107,10 @@ export class ScenePlayerImporter {
 			this._scene.setFrame(TimeController.START_FRAME);
 			// we need to wait for node cooks to be completed
 			// otherwise, the play would be stale
-			this._scene.play();
+			if (this.options.autoPlay != false) {
+				this._scene.play();
+			}
+			this._dispatchEvent(EventName.SCENE_READY);
 		}
 	}
 	private _onNodesCookProgress(ratio: number) {
@@ -164,14 +173,35 @@ export class ScenePlayerImporter {
 		if (!cameraNode) {
 			console.warn('no main camera found, viewer is not mounted');
 		} else {
+			const domElement = this.options.domElement;
 			this._viewer = cameraNode.createViewer({
-				element: this.options.domElement,
+				element: domElement,
 				viewerProperties: {autoRender: false},
 			});
+			this._dispatchEvent(EventName.VIEWER_MOUNTED);
 		}
 		// watch progress of selected nodes
 		this._watchNodesProgress(this._scene);
 
 		return this._scene;
+	}
+	private _dispatchEvent(eventName: EventName) {
+		const elements = [this.options.domElement, document];
+		const createEvent = (customEventName: string) => {
+			return new CustomEvent(customEventName, {
+				detail: {
+					scene: this._scene,
+					viewer: this._viewer,
+				},
+			});
+		};
+		for (let element of elements) {
+			if (element) {
+				element.dispatchEvent(createEvent(eventName));
+				if (this._scene) {
+					element.dispatchEvent(createEvent(`${eventName}-${this._scene.name()}`));
+				}
+			}
+		}
 	}
 }

@@ -9,9 +9,21 @@ export class OutputsController<NC extends NodeContext> {
 	private _named_output_connection_points: ConnectionPointTypeMap[NC][] | undefined;
 	private _has_named_outputs: boolean = false;
 
-	constructor(private node: TypedNode<NC, any>) {}
+	constructor(private node: TypedNode<NC, any>) {
+		this.node.scene().timeController.onPlayingStateChange(this._onPlayingStateChangeBound);
+	}
+
+	private _onPlayingStateChangeBound = this._onPlayingStateChange.bind(this);
+	private _onPlayingStateChange() {
+		this._clearCache();
+	}
+	private _outputIndexCache: Map<number | string, number> = new Map();
+	private _clearCache() {
+		this._outputIndexCache.clear();
+	}
 
 	dispose() {
+		this.node.scene().timeController.removeOnPlayingStateChange(this._onPlayingStateChangeBound);
 		if (this._named_output_connection_points) {
 			this._named_output_connection_points.splice(0, this._named_output_connection_points.length);
 		}
@@ -44,15 +56,25 @@ export class OutputsController<NC extends NodeContext> {
 
 	getNamedOutputIndex(name: string): number {
 		if (this._named_output_connection_points) {
-			for (let i = 0; i < this._named_output_connection_points.length; i++) {
-				if (this._named_output_connection_points[i]?.name() == name) {
+			let i = 0;
+			for (let connectionPoint of this._named_output_connection_points) {
+				if (connectionPoint && connectionPoint.name() == name) {
 					return i;
 				}
+				i++;
 			}
 		}
 		return -1;
 	}
 	getOutputIndex(output_index_or_name: number | string): number {
+		let currentCache = this._outputIndexCache.get(output_index_or_name);
+		if (currentCache == null) {
+			currentCache = this._getOutputIndex(output_index_or_name);
+			this._outputIndexCache.set(output_index_or_name, currentCache);
+		}
+		return currentCache;
+	}
+	private _getOutputIndex(output_index_or_name: number | string): number {
 		if (output_index_or_name != null) {
 			if (CoreType.isString(output_index_or_name)) {
 				if (this.hasNamedOutputs()) {

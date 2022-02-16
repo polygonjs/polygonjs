@@ -14,7 +14,8 @@ import {
 	FloatParamOptions,
 	FolderParamOptions,
 	IntegerParamOptions,
-	NodeOrParamPathParamOptions,
+	NodePathParamOptions,
+	ParamPathParamOptions,
 	RampParamOptions,
 	StringParamOptions,
 	Vector2ParamOptions,
@@ -31,8 +32,8 @@ export interface ParamOptionsByTypeMap extends ParamOptionsByTypeMapGeneric {
 	[ParamType.FOLDER]: FolderParamOptions;
 	[ParamType.INTEGER]: IntegerParamOptions;
 	// [ParamType.OPERATOR_PATH]: OperatorPathParamOptions;
-	[ParamType.NODE_PATH]: NodeOrParamPathParamOptions;
-	[ParamType.PARAM_PATH]: NodeOrParamPathParamOptions;
+	[ParamType.NODE_PATH]: NodePathParamOptions;
+	[ParamType.PARAM_PATH]: ParamPathParamOptions;
 	[ParamType.RAMP]: RampParamOptions;
 	[ParamType.STRING]: StringParamOptions;
 	[ParamType.VECTOR2]: Vector2ParamOptions;

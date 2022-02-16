@@ -24,6 +24,8 @@ import {Poly} from '../Poly';
 type ComputeCallback = (value: void) => void;
 const TYPED_PARAM_DEFAULT_COMPONENT_NAMES: Readonly<string[]> = [];
 
+type OnDisposeCallback = () => void;
+
 export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _default_value!: ParamInitValuesTypeMap[T];
 	protected _raw_input!: ParamInitValuesTypeMap[T];
@@ -90,6 +92,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		this._options?.dispose();
 		this._node = undefined;
 		this._parent_param = undefined;
+		this._runOnDisposeCallbacks();
 	}
 	protected _initializeParam() {}
 	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))
@@ -179,6 +182,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 	protected processRawInput() {}
 	private _isComputing: boolean = false;
+	isComputing() {
+		return this._isComputing;
+	}
 	async compute(): Promise<void> {
 		if (this.scene().loadingController.isLoading()) {
 			// TODO:
@@ -197,7 +203,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 				if (this._computeResolves) {
 					const resolves = [...this._computeResolves];
-					this._computeResolves = [];
+					this._computeResolves = undefined;
 					for (let resolve of resolves) {
 						resolve();
 					}
@@ -328,6 +334,27 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// serialize
 	toJSON() {
 		return this.serializer.toJSON();
+	}
+
+	// dispose callbacks
+	private _onDisposeCallbacks: Set<OnDisposeCallback> | undefined;
+	onDispose(callback: OnDisposeCallback) {
+		this._onDisposeCallbacks = this._onDisposeCallbacks || new Set();
+		this._onDisposeCallbacks.add(callback);
+	}
+	deregisterOnDispose(callback: OnDisposeCallback) {
+		if (this._onDisposeCallbacks) {
+			this._onDisposeCallbacks.delete(callback);
+		}
+	}
+	private _runOnDisposeCallbacks() {
+		if (this._onDisposeCallbacks) {
+			this._onDisposeCallbacks.forEach((callback) => {
+				callback();
+			});
+			this._onDisposeCallbacks.clear();
+			this._onDisposeCallbacks = undefined;
+		}
 	}
 }
 export type BaseParamType = TypedParam<ParamType>;

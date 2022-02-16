@@ -23,6 +23,7 @@ const LOOP_OPTIONS = {
 type OnBeforePlayCallback = (offset: number) => void;
 type OnPlaySuccessCallback = () => void;
 type OnPlayErrorCallback = (err: unknown) => void;
+type OnStopCallback = () => void;
 
 class FileAudioParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the audio file from */
@@ -156,7 +157,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	private async _loadUrl(): Promise<Player | void> {
 		try {
 			const loader = new CoreLoaderAudio(this.pv.url, this.scene(), this);
-			const buffer = await loader.load();
+			const buffer: AudioBuffer = await loader.load();
 
 			return new Promise((resolve) => {
 				if (this._player) {
@@ -171,7 +172,13 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 					// onload: () => {
 					// 	resolve(player);
 					// },
+					// make sure to have the param loop set to false for the onstop callbacks to be run.
+					onstop: () => {
+						this._runOnStopCallbacks();
+					},
 				});
+
+				this._reset();
 				this.p.duration.set(buffer.duration);
 				// this.p.loopRange.set([0, buffer.duration]);
 				if (isBooleanTrue(this.pv.autostart)) {
@@ -215,14 +222,17 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 		this._player.stop();
 		this._stoppedAt = elapsed;
 	}
+	private _reset() {
+		this._stoppedAt = 0;
+		this._startedAt = undefined;
+		this.p.currentTime.set(0);
+	}
 	async restart() {
 		if (!this._player) {
 			return;
 		}
 		this._player.seek(0);
-		this._stoppedAt = 0;
-		this._startedAt = undefined;
-		this.p.currentTime.set(0);
+		this._reset();
 		this.play();
 	}
 	seekOffset(offset: number) {
@@ -329,6 +339,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	private _onBeforePlayCallbacks: Set<OnBeforePlayCallback> | undefined;
 	private _onPlaySuccessCallbacks: Set<OnPlaySuccessCallback> | undefined;
 	private _onPlayErrorCallbacks: Set<OnPlayErrorCallback> | undefined;
+	private _onStopCallbacks: Set<OnStopCallback> | undefined;
 	onBeforePlay(callback: OnBeforePlayCallback) {
 		this._onBeforePlayCallbacks = this._onBeforePlayCallbacks || new Set();
 		this._onBeforePlayCallbacks.add(callback);
@@ -358,5 +369,15 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 			return;
 		}
 		this._onPlayErrorCallbacks.forEach((callback) => callback(err));
+	}
+	onStop(callback: OnStopCallback) {
+		this._onStopCallbacks = this._onStopCallbacks || new Set();
+		this._onStopCallbacks.add(callback);
+	}
+	private _runOnStopCallbacks() {
+		if (!this._onStopCallbacks) {
+			return;
+		}
+		this._onStopCallbacks.forEach((callback) => callback());
 	}
 }

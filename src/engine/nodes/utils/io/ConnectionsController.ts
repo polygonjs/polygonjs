@@ -120,6 +120,9 @@ export class ConnectionsController<NC extends NodeContext> {
 		}
 		// delete this._output_connections[output_index][id];
 	}
+	outputConnectionsByOutputIndex(outputIndex: number) {
+		return this._outputConnections.get(outputIndex);
+	}
 
 	outputConnections() {
 		let list: TypedNodeConnection<NC>[] = [];

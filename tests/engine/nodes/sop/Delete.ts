@@ -6,6 +6,7 @@ import {
 	ATTRIBUTE_TYPES,
 } from '../../../../src/core/geometry/Constant';
 import {CorePoint} from '../../../../src/core/geometry/Point';
+import {TransformTargetType} from '../../../../src/core/Transform';
 
 QUnit.test('SOP delete: (class=points) simple plane', async (assert) => {
 	const geo1 = window.geo1;
@@ -143,7 +144,7 @@ QUnit.test('SOP delete: (class=point) string attrib', async (assert) => {
 	);
 });
 
-QUnit.test('SOP delete byBoundingObject', async (assert) => {
+QUnit.test('SOP delete byBoundingObject 1', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere = geo1.createNode('sphere');
@@ -160,4 +161,41 @@ QUnit.test('SOP delete byBoundingObject', async (assert) => {
 	delete1.p.byBoundingObject.set(1);
 	container = await delete1.compute();
 	assert.equal(container.pointsCount(), 719);
+});
+
+QUnit.test('SOP delete byBoundingObject 2', async (assert) => {
+	const geo1 = window.geo1;
+
+	const icosahedron1 = geo1.createNode('icosahedron');
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
+	const delete1 = geo1.createNode('delete');
+
+	delete1.setInput(0, icosahedron1);
+
+	icosahedron1.p.detail.set(9);
+	icosahedron1.p.pointsOnly.set(1);
+	transform1.setInput(0, box1);
+	delete1.setInput(0, icosahedron1);
+	delete1.setInput(1, transform1);
+
+	let container = await delete1.compute();
+	assert.equal(container.pointsCount(), 1110);
+
+	delete1.p.byBoundingObject.set(1);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 1110);
+
+	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.p.t.z.set(1);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 1110);
+
+	transform1.setApplyOn(TransformTargetType.GEOMETRIES);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 1005);
+
+	transform1.p.s.set([2, 2, 1]);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 823);
 });

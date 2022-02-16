@@ -67,14 +67,24 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		this.run_on_dispatch_hook(output_name, event_context);
 		const index = this.io.outputs.getOutputIndex(output_name);
 		if (index >= 0) {
-			const connections = this.io.connections.outputConnections();
-			const current_connections = connections.filter((connection) => connection.output_index == index);
-			let destNode: BaseEventNodeType;
-			for (let connection of current_connections) {
-				destNode = connection.node_dest;
-				const connection_point = destNode.io.inputs.namedInputConnectionPoints()[connection.input_index];
-				destNode.processEventViaConnectionPoint(event_context, connection_point);
+			// const connections = this.io.connections.outputConnections();
+			// const current_connections = connections.filter((connection) => connection.output_index == index);
+			const outputConnections = this.io.connections.outputConnectionsByOutputIndex(index);
+			if (outputConnections) {
+				let destNode: BaseEventNodeType;
+				outputConnections.forEach((connection) => {
+					destNode = connection.node_dest;
+					const connection_point = destNode.io.inputs.namedInputConnectionPoints()[connection.input_index];
+					destNode.processEventViaConnectionPoint(event_context, connection_point);
+				});
 			}
+
+			// let destNode: BaseEventNodeType;
+			// for (let connection of current_connections) {
+			// 	destNode = connection.node_dest;
+			// 	const connection_point = destNode.io.inputs.namedInputConnectionPoints()[connection.input_index];
+			// 	destNode.processEventViaConnectionPoint(event_context, connection_point);
+			// }
 			// const nodes = current_connections.map((connection) => connection.node_dest);
 			// for (let node of nodes) {
 			// 	node.processEvent(event_context);

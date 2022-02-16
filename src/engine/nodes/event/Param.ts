@@ -22,6 +22,7 @@ class ParamEventParamsConfig extends NodeParamsConfig {
 	active = ParamConfig.BOOLEAN(true);
 	/** @param the parameter to update */
 	param = ParamConfig.PARAM_PATH('', {
+		dependentOnFoundParam: false,
 		paramSelection: true,
 		computeOnDirty: true,
 	});

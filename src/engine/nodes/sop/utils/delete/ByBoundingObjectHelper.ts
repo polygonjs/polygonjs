@@ -44,8 +44,6 @@ export class ByBoundingObjectHelper {
 				) {
 					this.node.entitySelectionHelper.select(point);
 				}
-			} else {
-				this.node.entitySelectionHelper.select(point);
 			}
 		}
 

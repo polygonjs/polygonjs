@@ -57,6 +57,7 @@ const OUTPUT_NAME = 'output';
 class SetParamParamsConfig extends NodeParamsConfig {
 	/** @param the parameter to update */
 	param = ParamConfig.PARAM_PATH('', {
+		dependentOnFoundParam: false,
 		paramSelection: true,
 		computeOnDirty: true,
 	});

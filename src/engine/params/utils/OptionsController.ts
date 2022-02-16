@@ -35,6 +35,7 @@ const NODE_SELECTION_CONTEXT = 'context';
 const NODE_SELECTION_TYPES = 'types';
 // const PARAM_SELECTION = 'paramSelection';
 const DEPENDENT_ON_FOUND_NODE = 'dependentOnFoundNode';
+const DEPENDENT_ON_FOUND_PARAM = 'dependentOnFoundParam';
 const RANGE_OPTION = 'range';
 const RANGE_LOCKED_OPTION = 'rangeLocked';
 const STEP_OPTION = 'step';
@@ -170,7 +171,7 @@ export interface IntegerParamOptions
 		ComputeOnDirtyParamOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions {}
-export interface NodeOrParamPathParamOptions
+export interface NodePathParamOptions
 	extends BaseParamOptions,
 		FileParamOptions,
 		ComputeOnDirtyParamOptions,
@@ -180,6 +181,13 @@ export interface NodeOrParamPathParamOptions
 		types?: Readonly<string[]>;
 	};
 	dependentOnFoundNode?: boolean;
+}
+export interface ParamPathParamOptions
+	extends BaseParamOptions,
+		FileParamOptions,
+		ComputeOnDirtyParamOptions,
+		CallbackParamOptions {
+	dependentOnFoundParam?: boolean;
 	paramSelection?: ParamType | boolean;
 }
 export interface RampParamOptions extends BaseParamOptions, LabelVisibilityParamOptions {}
@@ -212,7 +220,8 @@ export interface ParamOptions
 		FileParamOptions,
 		MenuNumericParamOptions,
 		StringParamOptions,
-		NodeOrParamPathParamOptions,
+		NodePathParamOptions,
+		ParamPathParamOptions,
 		LabelVisibilityParamOptions {
 	texture?: {
 		env?: boolean;
@@ -503,6 +512,13 @@ export class OptionsController {
 	dependentOnFoundNode() {
 		if (DEPENDENT_ON_FOUND_NODE in this._options) {
 			return this._options[DEPENDENT_ON_FOUND_NODE];
+		} else {
+			return true;
+		}
+	}
+	dependentOnFoundParam() {
+		if (DEPENDENT_ON_FOUND_PARAM in this._options) {
+			return this._options[DEPENDENT_ON_FOUND_PARAM];
 		} else {
 			return true;
 		}

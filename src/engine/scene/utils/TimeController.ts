@@ -13,9 +13,10 @@ import {
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
 export type onTimeTickHook = (delta: number) => void;
+export type onPlayingStateChangeCallback = () => void;
 // const performance = Poly.performance.performanceManager();
 
-type CallbacksMap = Map<string, onTimeTickHook>;
+type onTimeTickCallbacksMap = Map<string, onTimeTickHook>;
 export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;
@@ -178,6 +179,9 @@ export class TimeController {
 		// TODO: try and unify the dispatch controller and events dispatcher
 		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PAUSE_EVENT_CONTEXT);
+		for (let callback of this._onPlayingStateChangeCallbacks) {
+			callback();
+		}
 	}
 	play() {
 		if (this._playing == true) {
@@ -186,6 +190,9 @@ export class TimeController {
 		this._playing = true;
 		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PLAY_EVENT_CONTEXT);
+		for (let callback of this._onPlayingStateChangeCallbacks) {
+			callback();
+		}
 	}
 	togglePlayPause() {
 		if (this.playing()) {
@@ -200,10 +207,12 @@ export class TimeController {
 	// CALLBACKS
 	//
 	//
-	private _onBeforeTickCallbacksMap: CallbacksMap | undefined;
-	private _onAfterTickCallbacksMap: CallbacksMap | undefined;
+	private _onBeforeTickCallbacksMap: onTimeTickCallbacksMap | undefined;
+	private _onAfterTickCallbacksMap: onTimeTickCallbacksMap | undefined;
+	private _onPlayingStateChangeCallbacksMap: Set<onPlayingStateChangeCallback> | undefined;
 	private _onBeforeTickCallbacks: Array<onTimeTickHook> = [];
 	private _onAfterTickCallbacks: Array<onTimeTickHook> = [];
+	private _onPlayingStateChangeCallbacks: Array<onPlayingStateChangeCallback> = [];
 
 	registerOnBeforeTick(callbackName: string, callback: onTimeTickHook) {
 		this._registerCallback(callbackName, callback, this.registeredBeforeTickCallbacks());
@@ -221,10 +230,33 @@ export class TimeController {
 		this._unregisterCallback(callbackName, this._onAfterTickCallbacksMap);
 	}
 	registeredAfterTickCallbacks() {
-		return (this._onAfterTickCallbacksMap = this._onAfterTickCallbacksMap || (new Map() as CallbacksMap));
+		return (this._onAfterTickCallbacksMap = this._onAfterTickCallbacksMap || (new Map() as onTimeTickCallbacksMap));
+	}
+	onPlayingStateChange(callback: onPlayingStateChangeCallback) {
+		this._onPlayingStateChangeCallbacksMap = this._onPlayingStateChangeCallbacksMap || new Set();
+		this._onPlayingStateChangeCallbacksMap.add(callback);
+		this._updateOnPlayingStateChangeCallbacks();
+	}
+	removeOnPlayingStateChange(callback: onPlayingStateChangeCallback) {
+		if (this._onPlayingStateChangeCallbacksMap) {
+			this._onPlayingStateChangeCallbacksMap.delete(callback);
+			this._updateOnPlayingStateChangeCallbacks();
+		}
+	}
+	private _updateOnPlayingStateChangeCallbacks() {
+		this._onPlayingStateChangeCallbacks = [];
+		if (this._onPlayingStateChangeCallbacksMap) {
+			this._onPlayingStateChangeCallbacksMap.forEach((callback) => {
+				this._onPlayingStateChangeCallbacks.push(callback);
+			});
+		}
 	}
 
-	private _registerCallback<C extends onTimeTickHook>(callbackName: string, callback: C, map: CallbacksMap) {
+	private _registerCallback<C extends onTimeTickHook>(
+		callbackName: string,
+		callback: C,
+		map: onTimeTickCallbacksMap
+	) {
 		if (map.has(callbackName)) {
 			console.warn(`callback ${callbackName} already registered`);
 			return;
@@ -232,7 +264,7 @@ export class TimeController {
 		map.set(callbackName, callback);
 		this._updateCallbacks();
 	}
-	private _unregisterCallback(callbackName: string, map?: CallbacksMap) {
+	private _unregisterCallback(callbackName: string, map?: onTimeTickCallbacksMap) {
 		if (!map) {
 			return;
 		}

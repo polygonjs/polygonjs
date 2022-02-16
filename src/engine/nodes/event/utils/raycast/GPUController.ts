@@ -9,7 +9,7 @@ import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseMatNodeType} from '../../../mat/_Base';
 import {Scene} from 'three/src/scenes/Scene';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Number2, Number4} from '../../../../../types/GlobalTypes';
+import {Number2, Number3} from '../../../../../types/GlobalTypes';
 
 interface SceneRestoreContext {
 	overrideMaterial: Material | null;
@@ -38,7 +38,8 @@ export class RaycastGPUController {
 	private _mouseArray: Number2 = [0, 0];
 	private _renderTarget: WebGLRenderTarget | undefined;
 	private _read = new Float32Array(4);
-	private _param_read: Number4 = [0, 0, 0, 0];
+	private _paramColor: Number3 = [0, 0, 0];
+	private _paramAlpha: number = 0;
 	constructor(private _node: RaycastEventNode) {}
 	updateMouse(context: EventContext<MouseEvent | DragEvent | PointerEvent>) {
 		const canvas = context.viewer?.canvas();
@@ -79,11 +80,11 @@ export class RaycastGPUController {
 					type: FloatType,
 				});
 
-			if (!this._resolved_material) {
-				this.update_material();
-				console.warn('no material found');
-				return;
-			}
+			// if (!this._resolved_material) {
+			// 	this.update_material();
+			// 	// console.warn('no material found');
+			// 	// return;
+			// }
 
 			// find renderer and use it
 			const threejs_camera = camera_node as BaseThreejsCameraObjNodeType;
@@ -108,13 +109,14 @@ export class RaycastGPUController {
 				1,
 				this._read
 			);
-			this._param_read[0] = this._read[0];
-			this._param_read[1] = this._read[1];
-			this._param_read[2] = this._read[2];
-			this._param_read[3] = this._read[3];
-			this._node.p.pixelValue.set(this._param_read);
+			this._paramColor[0] = this._read[0];
+			this._paramColor[1] = this._read[1];
+			this._paramColor[2] = this._read[2];
+			this._paramAlpha = this._read[3];
+			this._node.p.pixelColor.set(this._paramColor);
+			this._node.p.pixelAlpha.set(this._paramAlpha);
 
-			if (this._node.pv.pixelValue.x > this._node.pv.hitThreshold) {
+			if (this._node.pv.pixelColor.r > this._node.pv.hitThreshold) {
 				this._node.triggerHit(context);
 			} else {
 				this._node.triggerMiss(context);
@@ -127,7 +129,9 @@ export class RaycastGPUController {
 		this._restore_context.renderer.outputEncoding = renderer.outputEncoding;
 		this._restore_context.renderer.toneMapping = renderer.toneMapping;
 
-		scene.overrideMaterial = this._resolved_material;
+		if (this._resolved_material) {
+			scene.overrideMaterial = this._resolved_material;
+		}
 		renderer.toneMapping = NoToneMapping;
 		renderer.outputEncoding = LinearEncoding;
 	}

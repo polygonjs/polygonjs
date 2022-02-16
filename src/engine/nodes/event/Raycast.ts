@@ -71,7 +71,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	/** @param mouse coordinates (0,0) being the center of the screen, (-1,-1) being the bottom left corner and (1,1) being the top right corner */
 	mouse = ParamConfig.VECTOR2([0, 0], {cook: false});
 	/** @param by default the ray is sent from the current camera, but this allows to set another camera */
-	overrideCamera = ParamConfig.BOOLEAN(0);
+	overrideCamera = ParamConfig.BOOLEAN(0, visible_for_cpu());
 	/** @param by default the ray is sent from the current camera, but this allows to set a custom ray */
 	overrideRay = ParamConfig.BOOLEAN(0, {
 		visibleIf: {
@@ -86,10 +86,10 @@ class RaycastParamsConfig extends NodeParamsConfig {
 			types: CAMERA_TYPES,
 		},
 		dependentOnFoundNode: false,
-		visibleIf: {
+		...visible_for_cpu({
 			overrideCamera: 1,
 			overrideRay: 0,
-		},
+		}),
 	});
 	/** @param the ray origin */
 	rayOrigin = ParamConfig.VECTOR3([0, 0, 0], {
@@ -112,18 +112,26 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	/** @param the material to use on the scene for GPU detection */
+	overrideMaterial = ParamConfig.BOOLEAN(0, visible_for_gpu());
+	/** @param the material to use on the scene for GPU detection */
 	material = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},
 		dependentOnFoundNode: false,
+		computeOnDirty: true,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastGPUController.PARAM_CALLBACK_update_material(node as RaycastEventNode);
 		},
+		...visible_for_gpu({overrideMaterial: 1}),
+	});
+	/** @param the current pixel color being read */
+	pixelColor = ParamConfig.COLOR([0, 0, 0], {
+		cook: false,
 		...visible_for_gpu(),
 	});
-	/** @param the current pixel value being read */
-	pixelValue = ParamConfig.VECTOR4([0, 0, 0, 0], {
+	pixelAlpha = ParamConfig.FLOAT(0, {
+		range: [0, 1],
 		cook: false,
 		...visible_for_gpu(),
 	});
@@ -236,6 +244,10 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	});
 	/** @param this parameter will be set to the hit position */
 	positionTarget = ParamConfig.PARAM_PATH('', {
+		// positionTarget param should not be dependent
+		// on found Param, otherwise, as soon as the target param is change,
+		// this param would have to cook
+		dependentOnFoundParam: false,
 		cook: false,
 		...visible_for_cpu({tposition: 1, tpositionTarget: 1}),
 		paramSelection: ParamType.VECTOR3,
@@ -244,6 +256,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to set the param to the mouse velocity (experimental) */
 	tvelocity = ParamConfig.BOOLEAN(0, {
 		cook: false,
+		...visible_for_cpu(),
 		// callback: (node: BaseNodeType, param: BaseParamType) => {
 		// 	RaycastCPUVelocityController.PARAM_CALLBACK_update_timer(node as RaycastEventNode);
 		// },
@@ -260,6 +273,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	});
 	/** @param this will be set to the mouse velocity */
 	velocityTarget = ParamConfig.PARAM_PATH('', {
+		dependentOnFoundParam: false,
 		cook: false,
 		...visible_for_cpu({tvelocity: 1, tvelocityTarget: 1}),
 		paramSelection: ParamType.VECTOR3,

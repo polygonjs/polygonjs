@@ -74,7 +74,13 @@ QUnit.test(
 		assert.equal(setParam1.pv.param.path(), '/geo1/transform1/scale', 'param paths match');
 		assert.deepEqual(setParam1.pv.param.param(), transform1.p.scale, 'params match');
 
+		assert.ok(!setParam1.p.param.isDirty(), 'setParam/param is not dirty');
+		await CoreSleep.sleep(50);
+		assert.ok(!setParam1.p.param.isComputing(), 'setParam/param is not computing');
+
 		geo1.removeNode(transform1);
+		await CoreSleep.sleep(50);
+		await setParam1.compute();
 		assert.notOk(setParam1.pv.param.param(), 'ref is lost');
 
 		const transform2 = geo1.createNode('transform');

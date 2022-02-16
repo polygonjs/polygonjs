@@ -79,9 +79,11 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 			);
 		}
 		const fileNameDatas = [
-			{dennis: 'rp_dennis_posed_004_OBJ/rp_dennis_posed_004_30k'},
+			{dennis_30k: 'rp_dennis_posed_004_OBJ/rp_dennis_posed_004_30k'},
+			{dennis_2k: 'rp_dennis_posed_004_OBJ/rp_dennis_posed_004_2k'},
 			{fabienne: 'rp_fabienne_percy_posed_001_OBJ/rp_fabienne_percy_posed_001_60k'},
-			{mei: 'rp_mei_posed_001_OBJ/rp_mei_posed_001_30k'},
+			{mei_30k: 'rp_mei_posed_001_OBJ/rp_mei_posed_001_30k'},
+			{mei_2k: 'rp_mei_posed_001_OBJ/rp_mei_posed_001_2k'},
 		];
 		const dict: PolyDictionary<BasePreset> = {};
 		for (let fileNameData of fileNameDatas) {

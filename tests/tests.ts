@@ -87,6 +87,9 @@ import './engine/nodes/anim/Merge';
 import './engine/nodes/anim/Null';
 import './engine/nodes/anim/Subnet';
 
+QUnit.module('anim');
+import './engine/nodes/audio/File';
+
 QUnit.module('cop');
 import './engine/nodes/cop/AudioAnalyser';
 import './engine/nodes/cop/Builder';

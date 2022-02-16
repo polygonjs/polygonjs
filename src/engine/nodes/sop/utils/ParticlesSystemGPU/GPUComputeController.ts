@@ -20,12 +20,19 @@ import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {FloatType, HalfFloatType} from 'three/src/constants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {TextureAllocation} from '../../../gl/code/utils/TextureAllocation';
+import {CoreUserAgent} from '../../../../../core/UserAgent';
 export enum ParticlesDataType {
-	FLOAT = 'float',
-	HALF_FLOAT = 'half',
+	AUTO = 'Auto',
+	FLOAT = 'Float',
+	HALF_FLOAT = 'HalfFloat',
 }
-export const PARTICLE_DATA_TYPES: ParticlesDataType[] = [ParticlesDataType.FLOAT, ParticlesDataType.HALF_FLOAT];
+export const PARTICLE_DATA_TYPES: ParticlesDataType[] = [
+	ParticlesDataType.AUTO,
+	ParticlesDataType.FLOAT,
+	ParticlesDataType.HALF_FLOAT,
+];
 const DATA_TYPE_BY_ENUM = {
+	[ParticlesDataType.AUTO]: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
 	[ParticlesDataType.FLOAT]: FloatType,
 	[ParticlesDataType.HALF_FLOAT]: HalfFloatType,
 };
@@ -161,8 +168,8 @@ export class ParticlesSystemGpuComputeController {
 	}
 
 	private _dataType() {
-		const data_type_name = PARTICLE_DATA_TYPES[this.node.pv.dataType];
-		return DATA_TYPE_BY_ENUM[data_type_name];
+		const dataTypeName = PARTICLE_DATA_TYPES[this.node.pv.dataType];
+		return DATA_TYPE_BY_ENUM[dataTypeName];
 	}
 	private _textureNameForShaderName(shaderName: ShaderName) {
 		return `texture_${shaderName}`;

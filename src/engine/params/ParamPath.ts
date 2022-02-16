@@ -84,19 +84,20 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 		this._handleReferences(param, path);
 
 		if (currentFoundEntity?.graphNodeId() !== newlyFoundEntity?.graphNodeId()) {
-			const dependentOnFoundNode = this.options.dependentOnFoundNode();
+			const dependentOnFoundParam = this.options.dependentOnFoundParam();
 
-			const previously_found_node = this._value.param();
-			if (previously_found_node) {
-				if (dependentOnFoundNode) {
-					this.removeGraphInput(previously_found_node);
+			const previouslyFoundParam = this._value.param();
+			if (previouslyFoundParam) {
+				if (dependentOnFoundParam) {
+					this.removeGraphInput(previouslyFoundParam);
 				} else {
 					// this._found_node.remove_param_referree(this) // TODO: typescript
 				}
+				previouslyFoundParam.deregisterOnDispose(this._onResolvedParamDisposeBound);
 			}
 
 			if (param) {
-				this._assign_found_node(param);
+				this._assignFoundParam(param);
 			} else {
 				this._value.setParam(null);
 			}
@@ -106,14 +107,15 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 		this.removeDirtyState();
 	}
 
-	private _assign_found_node(param: BaseParamType) {
-		const dependentOnFoundNode = this.options.dependentOnFoundNode();
+	private _assignFoundParam(param: BaseParamType) {
+		const dependentOnFoundParam = this.options.dependentOnFoundParam();
 		// if (this._is_node_expected_context(node)) {
 		// 	if (this._is_node_expected_type(node)) {
 		this._value.setParam(param);
-		if (dependentOnFoundNode) {
+		if (dependentOnFoundParam) {
 			this.addGraphInput(param);
 		}
+		param.onDispose(this._onResolvedParamDisposeBound);
 		// 	} else {
 		// 		this.states.error.set(
 		// 			`node type is ${node.type} but the params expects one of ${(this._expected_node_types() || []).join(
@@ -158,5 +160,10 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	}
 	notifyTargetParamOwnerParamsUpdated(node: BaseNodeType) {
 		this.setDirty();
+	}
+	private _onResolvedParamDisposeBound = this._onResolvedParamDispose.bind(this);
+	private async _onResolvedParamDispose() {
+		this.setDirty();
+		await this.compute();
 	}
 }
