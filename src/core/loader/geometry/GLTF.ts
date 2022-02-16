@@ -4,6 +4,7 @@ import {Poly} from '../../../engine/Poly';
 import {ModuleName} from '../../../engine/poly/registers/modules/Common';
 import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
 import {GLTFLoader, GLTF} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {CoreLoaderGeometry} from '../Geometry';
 import {CoreBaseLoader, LOADING_MANAGER} from '../_Base';
 
 interface DRACOOptions {
@@ -49,15 +50,20 @@ export class GLTFLoaderHandler extends CoreBaseLoader {
 		}
 		const url = await this._urlToLoad();
 
-		return new Promise((resolve) => {
+		return new Promise(async (resolve) => {
+			CoreLoaderGeometry.incrementInProgressLoadsCount();
+			await CoreLoaderGeometry.waitForMaxConcurrentLoadsQueueFreed();
+
 			loader.load(
 				url,
 				(gltf: GLTF) => {
+					CoreLoaderGeometry.decrementInProgressLoadsCount();
 					const newObjects = GLTFLoaderHandler.onLoadSuccessGLTF(gltf);
 					resolve(newObjects);
 				},
 				(progress) => {},
 				(event: ErrorEvent) => {
+					CoreLoaderGeometry.decrementInProgressLoadsCount();
 					options.node?.states.error.set(event.message);
 				}
 			);

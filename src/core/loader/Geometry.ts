@@ -478,10 +478,10 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	// 	this.MAX_CONCURRENT_LOADS_COUNT = count;
 	// }
 
-	private static incrementInProgressLoadsCount() {
+	static incrementInProgressLoadsCount() {
 		this._inProgressLoadsCount++;
 	}
-	private static decrementInProgressLoadsCount() {
+	static decrementInProgressLoadsCount() {
 		this._inProgressLoadsCount--;
 
 		const queued_resolve = this._queue.pop();
@@ -493,7 +493,7 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 		}
 	}
 
-	private static async waitForMaxConcurrentLoadsQueueFreed(): Promise<void> {
+	static async waitForMaxConcurrentLoadsQueueFreed(): Promise<void> {
 		if (this._inProgressLoadsCount <= this.MAX_CONCURRENT_LOADS_COUNT) {
 			return;
 		} else {
