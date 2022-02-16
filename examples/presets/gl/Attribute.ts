@@ -1,3 +1,5 @@
+import {Attribute} from '../../../src/core/geometry/Attribute';
+import {InstanceAttrib} from '../../../src/core/geometry/Instancer';
 import {AttributeGlNode, ATTRIBUTE_NODE_AVAILABLE_GL_TYPES} from '../../../src/engine/nodes/gl/Attribute';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
@@ -47,19 +49,23 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 	const v3 = ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3);
 	const v4 = ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC4);
 
-	const color = new BasePreset().addEntry(node.p.name, `color`).addEntry(node.p.type, v3);
-	const instanceColor = new BasePreset().addEntry(node.p.name, `instanceColor`).addEntry(node.p.type, v3);
-	const instanceOrientation = new BasePreset().addEntry(node.p.name, `instanceOrientation`).addEntry(node.p.type, v4);
-	const instancePosition = new BasePreset().addEntry(node.p.name, `instancePosition`).addEntry(node.p.type, v3);
-	const instanceScale = new BasePreset().addEntry(node.p.name, `instanceScale`).addEntry(node.p.type, v3);
-	const position = new BasePreset().addEntry(node.p.name, `position`).addEntry(node.p.type, v3);
-	const normal = new BasePreset().addEntry(node.p.name, `normal`).addEntry(node.p.type, v3);
-	const uv = new BasePreset().addEntry(node.p.name, `uv`).addEntry(node.p.type, v2);
-	const id = new BasePreset().addEntry(node.p.name, `position`).addEntry(node.p.type, f);
+	const color = new BasePreset().addEntry(node.p.name, Attribute.COLOR).addEntry(node.p.type, v3);
+	const instanceColor = new BasePreset().addEntry(node.p.name, InstanceAttrib.COLOR).addEntry(node.p.type, v3);
+	const instanceOrientation = new BasePreset()
+		.addEntry(node.p.name, InstanceAttrib.ORIENTATION)
+		.addEntry(node.p.type, v4);
+	const instancePosition = new BasePreset().addEntry(node.p.name, InstanceAttrib.POSITION).addEntry(node.p.type, v3);
+	const instanceScale = new BasePreset().addEntry(node.p.name, InstanceAttrib.SCALE).addEntry(node.p.type, v3);
+	const instanceUv = new BasePreset().addEntry(node.p.name, InstanceAttrib.UV).addEntry(node.p.type, v2);
+	const position = new BasePreset().addEntry(node.p.name, Attribute.POSITION).addEntry(node.p.type, v3);
+	const normal = new BasePreset().addEntry(node.p.name, Attribute.NORMAL).addEntry(node.p.type, v3);
+	const uv = new BasePreset().addEntry(node.p.name, Attribute.UV).addEntry(node.p.type, v2);
+	const id = new BasePreset().addEntry(node.p.name, `id`).addEntry(node.p.type, f);
 	const pti = new BasePreset().addEntry(node.p.name, `pti`).addEntry(node.p.type, f);
 	const randomId = new BasePreset().addEntry(node.p.name, `randomId`).addEntry(node.p.type, f);
 	const restP = new BasePreset().addEntry(node.p.name, `restP`).addEntry(node.p.type, v3);
 	const restN = new BasePreset().addEntry(node.p.name, `restN`).addEntry(node.p.type, v3);
+	const velocity = new BasePreset().addEntry(node.p.name, `velocity`).addEntry(node.p.type, v3);
 
 	collection.setPresets({
 		color,
@@ -67,6 +73,7 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 		instanceOrientation,
 		instancePosition,
 		instanceScale,
+		instanceUv,
 		position,
 		normal,
 		uv,
@@ -75,6 +82,7 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 		restP,
 		restN,
 		randomId,
+		velocity,
 	});
 
 	return collection;

@@ -25,6 +25,10 @@ export class MultScalarGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 		return 'multScalar';
 	}
 
+	protected override _expected_input_types() {
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
+		return [type, GlConnectionPointType.FLOAT];
+	}
 	protected override _gl_input_name(index: number) {
 		return [InputName.VALUE, InputName.MULT][index];
 	}
@@ -41,9 +45,5 @@ export class MultScalarGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 		const out = this.glVarName(out_name);
 		const body_line = `${gl_type} ${out} = (${mult}*${value})`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);
-	}
-	protected override _expected_input_types() {
-		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
-		return [type, GlConnectionPointType.FLOAT];
 	}
 }

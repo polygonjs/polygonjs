@@ -18,15 +18,9 @@ const DEFAULT = {
 	EYE: new Vector3(0, 0, 0),
 	UP: new Vector3(0, 1, 0),
 };
-const SCALE_ATTRIB_NAME = 'scale';
-const PSCALE_ATTRIB_NAME = 'pscale';
-const NORMAL_ATTRIB_NAME = 'normal';
-const UP_ATTRIB_NAME = 'up';
 
 const DEFAULT_COLOR = new Vector3(1, 1, 1);
 const DEFAULT_UV = new Vector2(0, 0);
-const ATTRIB_NAME_UV = 'uv';
-const ATTRIB_NAME_COLOR = 'color';
 
 export enum InstanceAttrib {
 	POSITION = 'instancePosition',
@@ -93,12 +87,12 @@ export class CoreInstancer {
 		const t = point.position();
 		//r = new Vector3(0,0,0)
 		if (this._is_scale_present) {
-			point.attribValue(SCALE_ATTRIB_NAME, this._pointScale);
+			point.attribValue(Attribute.SCALE, this._pointScale);
 		} else {
 			this._pointScale.copy(DEFAULT.SCALE);
 		}
 		const pscale: number = this._is_pscale_present
-			? (point.attribValue(PSCALE_ATTRIB_NAME) as number)
+			? (point.attribValue(Attribute.PSCALE) as number)
 			: DEFAULT.PSCALE;
 		this._pointScale.multiplyScalar(pscale);
 
@@ -116,10 +110,10 @@ export class CoreInstancer {
 		if (this._do_rotate_matrices) {
 			const rotate_matrix = this._matrixR;
 			const eye = DEFAULT.EYE;
-			point.attribValue(NORMAL_ATTRIB_NAME, this._pointNormal);
+			point.attribValue(Attribute.NORMAL, this._pointNormal);
 			this._pointNormal.multiplyScalar(-1);
 			if (this._is_up_present) {
-				point.attribValue(UP_ATTRIB_NAME, this._pointUp);
+				point.attribValue(Attribute.UP, this._pointUp);
 			} else {
 				this._pointUp.copy(DEFAULT.UP);
 			}
@@ -173,11 +167,11 @@ export class CoreInstancer {
 	) {
 		const instancesCount = instancePts.length;
 		const colors = new Float32Array(instancesCount * 3);
-		const hasColor = templateCoreGroup.hasAttrib(ATTRIB_NAME_COLOR);
+		const hasColor = templateCoreGroup.hasAttrib(Attribute.COLOR);
 		let i = 0;
 		for (let instancePt of instancePts) {
 			const color = hasColor
-				? (instancePt.attribValue(ATTRIB_NAME_COLOR, this._point_color) as Vector3)
+				? (instancePt.attribValue(Attribute.COLOR, this._point_color) as Vector3)
 				: DEFAULT_COLOR;
 			color.toArray(colors, i * 3);
 
@@ -205,13 +199,13 @@ export class CoreInstancer {
 		const instancesCount = instancePts.length;
 
 		// if(this._param_add_uv_offset){
-		const has_uv = templateCoreGroup.hasAttrib(ATTRIB_NAME_UV);
+		const has_uv = templateCoreGroup.hasAttrib(Attribute.UV);
 		if (has_uv) {
 			const uvs = new Float32Array(instancesCount * 2);
 			let i = 0;
 			for (let instancePt of instancePts) {
 				const index2 = i * 2;
-				const uv = has_uv ? (instancePt.attribValue(ATTRIB_NAME_UV, this._point_uv) as Vector2) : DEFAULT_UV;
+				const uv = has_uv ? (instancePt.attribValue(Attribute.UV, this._point_uv) as Vector2) : DEFAULT_UV;
 				uv.toArray(uvs, index2);
 				i++;
 			}
