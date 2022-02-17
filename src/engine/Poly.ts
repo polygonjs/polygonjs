@@ -14,7 +14,7 @@ import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesReg
 import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
 import {BaseCoreLogger} from '../core/logger/Base';
 import {BaseOperation} from './operations/_Base';
-import {PluginsRegister} from './poly/registers/plugins/PluginsRegister';
+import {PluginsRegister, WrapConfigurePolygonjsCallback} from './poly/registers/plugins/PluginsRegister';
 import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
 import {PolyPluginInterface} from './poly/registers/plugins/Plugin';
 import {PolyDictionary} from '../types/GlobalTypes';
@@ -90,6 +90,10 @@ export class PolyEngine {
 	registerPlugin(plugin: PolyPluginInterface) {
 		this.pluginsRegister.register(plugin);
 	}
+	wrapConfigurePolygonjs(callback: WrapConfigurePolygonjsCallback) {
+		this.pluginsRegister.wrapConfigurePolygonjs(callback);
+	}
+
 	registeredNodes(parent_context: NodeContext, type: string): PolyDictionary<typeof BaseNodeClass> {
 		return this.nodesRegister.registeredNodes(parent_context, type);
 	}

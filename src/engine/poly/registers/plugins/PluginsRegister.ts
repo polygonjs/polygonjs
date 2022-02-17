@@ -1,5 +1,5 @@
 import {PolyEngine} from '../../../Poly';
-import {PolyPluginData, PolyPluginInterface} from './Plugin';
+import {PolyPlugin, PolyPluginData, PolyPluginInterface} from './Plugin';
 import {BaseNodeConstructor, BaseOperationConstructor} from '../nodes/NodesRegister';
 import {NodeContext} from '../../NodeContext';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
@@ -9,50 +9,66 @@ export interface PluginsRegisterData {
 	nodes: PolyDictionary<PolyDictionary<string>>;
 	operations: PolyDictionary<PolyDictionary<string>>;
 }
+export type WrapConfigurePolygonjsCallback = () => void | Promise<void>;
 
 export class PluginsRegister {
-	private _current_plugin: PolyPluginInterface | undefined;
-	private _plugins_by_name: Map<string, PolyPluginInterface> = new Map();
-	private _plugin_name_by_node_context_by_type: Map<NodeContext, Map<string, string>> = new Map();
-	private _plugin_name_by_operation_context_by_type: Map<NodeContext, Map<string, string>> = new Map();
+	// private _inConfigurePolygonjs: boolean = false;
+	private _configurePolygonjsPlugin: PolyPlugin | undefined;
+
+	private _currentPlugin: PolyPluginInterface | undefined;
+	private _pluginsByName: Map<string, PolyPluginInterface> = new Map();
+	private _pluginNameByNodeContextByType: Map<NodeContext, Map<string, string>> = new Map();
+	private _pluginNameByOperationContextByType: Map<NodeContext, Map<string, string>> = new Map();
 
 	constructor(private poly: PolyEngine) {}
 
+	async wrapConfigurePolygonjs(callback: WrapConfigurePolygonjsCallback) {
+		this._configurePolygonjsPlugin =
+			this._configurePolygonjsPlugin ||
+			new PolyPlugin('configurePolygonjs', () => {}, {libraryImportPath: '', libraryName: ''});
+
+		this._currentPlugin = this._configurePolygonjsPlugin;
+		this._pluginsByName.set(this._currentPlugin.name(), this._currentPlugin);
+		await callback();
+		this._currentPlugin = undefined;
+	}
+
 	register(plugin: PolyPluginInterface) {
-		this._current_plugin = plugin;
-		this._plugins_by_name.set(plugin.name(), plugin);
+		const previousCurrentPlugin = this._currentPlugin;
+		this._currentPlugin = plugin;
+		this._pluginsByName.set(plugin.name(), plugin);
 		plugin.init(this.poly);
-		this._current_plugin = undefined;
+		this._currentPlugin = previousCurrentPlugin;
 	}
 	pluginByName(pluginName: string) {
-		return this._plugins_by_name.get(pluginName);
+		return this._pluginsByName.get(pluginName);
 	}
 
 	registerNode(node: BaseNodeConstructor) {
-		if (!this._current_plugin) {
+		if (!this._currentPlugin) {
 			return;
 		}
 		const context = node.context();
 		const type = node.type();
-		let map_for_context = this._plugin_name_by_node_context_by_type.get(context);
-		if (!map_for_context) {
-			map_for_context = new Map();
-			this._plugin_name_by_node_context_by_type.set(context, map_for_context);
+		let mapForContext = this._pluginNameByNodeContextByType.get(context);
+		if (!mapForContext) {
+			mapForContext = new Map();
+			this._pluginNameByNodeContextByType.set(context, mapForContext);
 		}
-		map_for_context.set(type, this._current_plugin.name());
+		mapForContext.set(type, this._currentPlugin.name());
 	}
 	registerOperation(operation: BaseOperationConstructor) {
-		if (!this._current_plugin) {
+		if (!this._currentPlugin) {
 			return;
 		}
 		const context = operation.context();
 		const type = operation.type();
-		let map_for_context = this._plugin_name_by_operation_context_by_type.get(context);
-		if (!map_for_context) {
-			map_for_context = new Map();
-			this._plugin_name_by_operation_context_by_type.set(context, map_for_context);
+		let mapForContext = this._pluginNameByOperationContextByType.get(context);
+		if (!mapForContext) {
+			mapForContext = new Map();
+			this._pluginNameByOperationContextByType.set(context, mapForContext);
 		}
-		map_for_context.set(type, this._current_plugin.name());
+		mapForContext.set(type, this._currentPlugin.name());
 	}
 
 	toJson() {
@@ -62,20 +78,20 @@ export class PluginsRegister {
 			operations: {},
 		};
 
-		this._plugins_by_name.forEach((plugin, name) => {
+		this._pluginsByName.forEach((plugin, name) => {
 			data.plugins[name] = plugin.toJSON();
 		});
 
-		this._plugin_name_by_node_context_by_type.forEach((map_for_context, context) => {
+		this._pluginNameByNodeContextByType.forEach((mapForContext, context) => {
 			data.nodes[context] = {};
-			map_for_context.forEach((plugin_name, type) => {
-				data.nodes[context][type] = plugin_name;
+			mapForContext.forEach((pluginName, type) => {
+				data.nodes[context][type] = pluginName;
 			});
 		});
-		this._plugin_name_by_operation_context_by_type.forEach((map_for_context, context) => {
+		this._pluginNameByOperationContextByType.forEach((mapForContext, context) => {
 			data.operations[context] = {};
-			map_for_context.forEach((plugin_name, type) => {
-				data.operations[context][type] = plugin_name;
+			mapForContext.forEach((pluginName, type) => {
+				data.operations[context][type] = pluginName;
 			});
 		});
 
