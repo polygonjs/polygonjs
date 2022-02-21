@@ -1,5 +1,5 @@
 /**
- * useful to gather inputs together
+ * this node does not change its input, but displays a piano 🎹 to play the instrument (such as a synthetizer) from the input, if there is one.
  *
  *
  */

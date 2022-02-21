@@ -31,7 +31,7 @@ class MeterAudioParamsConfig extends NodeParamsConfig {
 	/** @param normalizes the output between 0 and 1. The value will be in decibel otherwise. */
 	normalRange = ParamConfig.BOOLEAN(1, effectParamsOptions(paramCallback));
 	/** @param display meter param */
-	updateRangeParam = ParamConfig.BOOLEAN(1, {
+	updateValueParam = ParamConfig.BOOLEAN(1, {
 		cook: false,
 		callback: (node: BaseNodeType) => {
 			MeterAudioNode.PARAM_CALLBACK_updateUpdateMeterParam(node as MeterAudioNode);
@@ -39,10 +39,17 @@ class MeterAudioParamsConfig extends NodeParamsConfig {
 	});
 	/** @param meter value */
 	value = ParamConfig.FLOAT(0, {
-		visibleIf: {updateRangeParam: 1},
+		visibleIf: {updateValueParam: 1},
 		range: [-100, 100],
 		editable: false,
 		cook: false,
+	});
+	/** @param display meter param */
+	updateRangeParam = ParamConfig.BOOLEAN(1, {
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			MeterAudioNode.PARAM_CALLBACK_updateUpdateMeterParam(node as MeterAudioNode);
+		},
 	});
 	/** @param accumulated range */
 	maxRange = ParamConfig.VECTOR2([10000, -10000], {
@@ -146,16 +153,21 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 		}
 		// we check that we have a number again in case meter.getValue()
 		// returns Infinity
-		if (CoreType.isNumber(valueN)) {
-			this.p.value.set(valueN);
+		if (isBooleanTrue(this.pv.updateValueParam)) {
+			if (CoreType.isNumber(valueN)) {
+				this.p.value.set(valueN);
+			}
 		}
-		// update max range
-		const newVal = valueN;
-		if (newVal < this.pv.maxRange.x) {
-			this.p.maxRange.x.set(newVal);
-		} else {
-			if (newVal > this.pv.maxRange.y) {
-				this.p.maxRange.y.set(newVal);
+
+		if (isBooleanTrue(this.pv.updateRangeParam)) {
+			// update max range
+			const newVal = valueN;
+			if (newVal < this.pv.maxRange.x) {
+				this.p.maxRange.x.set(newVal);
+			} else {
+				if (newVal > this.pv.maxRange.y) {
+					this.p.maxRange.y.set(newVal);
+				}
 			}
 		}
 	}
@@ -163,7 +175,7 @@ export class MeterAudioNode extends BaseAnalyserAudioNode<MeterAudioParamsConfig
 	 * REGISTER TICK CALLBACK
 	 */
 	private _updateOnTickHook() {
-		if (isBooleanTrue(this.pv.updateRangeParam)) {
+		if (isBooleanTrue(this.pv.updateValueParam) || isBooleanTrue(this.pv.updateRangeParam)) {
 			this._registerOnTickHook();
 		} else {
 			this._unRegisterOnTickHook();
