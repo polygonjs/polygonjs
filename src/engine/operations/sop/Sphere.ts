@@ -59,7 +59,7 @@ export class SphereSopOperation extends BaseSopOperation {
 		}
 	}
 	private _cookWithoutInput(params: SphereSopParams) {
-		const geometry = this._create_required_geometry(params);
+		const geometry = this._createRequiredGeometry(params);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		return this.createCoreGroupFromGeometry(geometry);
 	}
@@ -68,22 +68,22 @@ export class SphereSopOperation extends BaseSopOperation {
 		const size = bbox.max.clone().sub(bbox.min);
 		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
 
-		const geometry = this._create_required_geometry(params);
+		const geometry = this._createRequiredGeometry(params);
 		geometry.scale(size.x, size.y, size.z);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		geometry.translate(center.x, center.y, center.z);
 		return this.createCoreGroupFromGeometry(geometry);
 	}
 
-	private _create_required_geometry(params: SphereSopParams) {
+	private _createRequiredGeometry(params: SphereSopParams) {
 		if (params.type == SPHERE_TYPE.default) {
-			return this._create_default_sphere(params);
+			return this._createDefaultSphere(params);
 		} else {
-			return this._create_default_isocahedron(params);
+			return this._createDefaultIsocahedron(params);
 		}
 	}
 
-	private _create_default_sphere(params: SphereSopParams) {
+	private _createDefaultSphere(params: SphereSopParams) {
 		if (isBooleanTrue(params.open)) {
 			return new SphereBufferGeometry(
 				params.radius,
@@ -98,7 +98,7 @@ export class SphereSopOperation extends BaseSopOperation {
 			return new SphereBufferGeometry(params.radius, params.resolution.x, params.resolution.y);
 		}
 	}
-	_create_default_isocahedron(params: SphereSopParams) {
+	_createDefaultIsocahedron(params: SphereSopParams) {
 		return new IcosahedronBufferGeometry(params.radius, params.detail);
 	}
 }

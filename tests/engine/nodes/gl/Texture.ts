@@ -40,7 +40,7 @@ QUnit.test('gl texture updates it parent cop builder with new spare parameters',
 	await scene.waitForCooksCompleted();
 	const COP = window.COP;
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 	const builder1 = COP.createNode('builder');
 	builder1.createNode('output');
@@ -67,7 +67,7 @@ QUnit.test('gl texture updates it parent cop builder with new spare parameters',
 QUnit.test('gl texture updates it particle system with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 
 	const geo1 = window.geo1;
@@ -102,7 +102,7 @@ QUnit.test('gl texture generates an error on material if no name is given', asyn
 	const scene = window.scene;
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 
 	function createParticles() {
@@ -158,7 +158,7 @@ QUnit.test('gl texture generates an error on material if no name is given', asyn
 });
 
 QUnit.test('gl texture: 1 texture node on top level and one in a subnet work ok', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	meshBasicBuilder1.createNode('output');

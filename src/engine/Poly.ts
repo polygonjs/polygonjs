@@ -24,6 +24,7 @@ import {AssetUrlsController} from './poly/AssetUrlsController';
 import {PolyPerformanceformanceController} from './poly/PerformanceController';
 import {BaseModule} from './poly/registers/modules/_BaseModule';
 import {ModuleName} from './poly/registers/modules/Common';
+import {ScenesRegister} from './poly/ScenesRegister';
 
 declare global {
 	interface Window {
@@ -38,6 +39,7 @@ declare global {
 export class PolyEngine {
 	// static _instance: Poly | undefined;
 	public readonly renderersController: RenderersController = new RenderersController();
+	public readonly scenesRegister: ScenesRegister = new ScenesRegister();
 	public readonly nodesRegister: NodesRegister = new NodesRegister(this);
 	public readonly operationsRegister: OperationsRegister = new OperationsRegister(this);
 	public readonly expressionsRegister: ExpressionRegister = new ExpressionRegister();
@@ -51,7 +53,7 @@ export class PolyEngine {
 	public readonly performance: PolyPerformanceformanceController = new PolyPerformanceformanceController();
 	scenesByUuid: PolyDictionary<PolyScene> = {};
 	_env: string | undefined;
-	private _player_mode: boolean = true;
+	private _playerMode: boolean = true;
 	private _logger: BaseCoreLogger | null = null;
 
 	static _instance_() {
@@ -71,10 +73,10 @@ export class PolyEngine {
 	private constructor() {}
 
 	setPlayerMode(mode: boolean) {
-		this._player_mode = mode;
+		this._playerMode = mode;
 	}
 	playerMode() {
-		return this._player_mode;
+		return this._playerMode;
 	}
 
 	registerNode(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {

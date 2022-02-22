@@ -11,7 +11,7 @@ import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/ass
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
 QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const scene = window.scene;
 	const MAT = window.MAT;

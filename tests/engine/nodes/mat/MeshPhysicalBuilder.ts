@@ -19,7 +19,7 @@ const TEST_SHADER_LIB_SSS = {vert: BasicSSSVertex, frag: BasicSSSFragment};
 const TEST_SHADER_LIB_SET_BUILDER_NODE = {vert: BasicSetBuilderNodeVertex};
 
 QUnit.test('mesh physical builder persisted_config', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_physical1 = MAT.createNode('meshPhysicalBuilder');
 	mesh_physical1.createNode('output');
@@ -85,7 +85,7 @@ QUnit.test('mesh physical builder persisted_config', async (assert) => {
 });
 
 QUnit.test('mesh physical builder persisted_config with advanced params', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_physical1 = MAT.createNode('meshPhysicalBuilder');
 	mesh_physical1.createNode('output');
@@ -158,7 +158,7 @@ QUnit.test('mesh physical builder persisted_config with advanced params', async 
 });
 
 QUnit.test('mesh physical builder SSS Model', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_physical1 = MAT.createNode('meshPhysicalBuilder');
 	mesh_physical1.createNode('output');
@@ -195,7 +195,7 @@ QUnit.test('mesh physical builder SSS Model', async (assert) => {
 });
 
 QUnit.test('mesh physical builder can compile from another node', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_physical_SRC = MAT.createNode('meshPhysicalBuilder');
 	const mesh_physical_DEST = MAT.createNode('meshPhysicalBuilder');

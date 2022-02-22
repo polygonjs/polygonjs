@@ -51,7 +51,7 @@ QUnit.test('COP image simple ktx2', async (assert) => {
 	const COP = window.COP;
 
 	// create renderer for basis loader
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	assert.ok(renderer);
 
 	const file1 = COP.createNode('image');

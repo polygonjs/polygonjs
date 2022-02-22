@@ -81,6 +81,16 @@ export class BlobsController {
 		}
 	}
 
+	async setVirtualFile(file: File, uniqueId: string) {
+		const blob: Blob = file;
+		const blobWrapper: BlobWrapper = {
+			blob,
+			blobUrl: this._createBlobUrl(file),
+			referringNodeIds: new Set(),
+		};
+		this._blobWrappersByUrl.set(uniqueId, blobWrapper);
+	}
+
 	async fetchBlobGlobal(url: string): Promise<FetchBlobResponse> {
 		if (!this.recording()) {
 			return {};

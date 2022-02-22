@@ -10,7 +10,7 @@ const TEST_SHADER_LIB = {
 };
 
 QUnit.test('lineBasic builder persisted_config', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const lineBasicBuilder1 = MAT.createNode('lineBasicBuilder');
 	lineBasicBuilder1.createNode('output');

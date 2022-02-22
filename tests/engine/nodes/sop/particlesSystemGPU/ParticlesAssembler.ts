@@ -16,8 +16,9 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 	scene.setFrame(0);
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
-	assert.ok(renderer, 'renderer created');
+	const rendererData1 = await RendererUtils.waitForRenderer(window.scene);
+	const renderer1 = rendererData1.renderer;
+	assert.ok(renderer1, 'renderer created');
 
 	const plane1 = geo1.createNode('plane');
 	const delete1 = geo1.createNode('delete');
@@ -40,7 +41,7 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 	await particles1.compute();
 
 	const render_material = particles1.renderController.material()!;
-	await RendererUtils.compile(pointsBuilder1, renderer);
+	await RendererUtils.compile(pointsBuilder1, renderer1);
 	const uniform = MaterialUserDataUniforms.getUniforms(render_material)!.texture_position;
 	assert.ok(render_material, 'material ok');
 	assert.ok(uniform, 'uniform ok');
@@ -52,14 +53,14 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 	let render_target1 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
-	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-0.5, 0.1, -0.5, 0].join(':'), 'point start pos');
 
 	scene.setFrame(1);
 	let render_target2 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(
 		AssertUtils.arrayWithPrecision(pixelBuffer),
 		[-0.5, 0.2, -0.5, 0].join(':'),
@@ -68,7 +69,7 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 
 	scene.setFrame(2);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(
 		AssertUtils.arrayWithPrecision(pixelBuffer),
 		[-0.5, 0.3, -0.5, 0].join(':'),
@@ -79,6 +80,8 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 	await AssemblersUtils.withoutAssemblers(async () => {
 		await saveAndLoadScene(scene, async (scene2) => {
 			await scene2.waitForCooksCompleted();
+			const rendererData2 = await RendererUtils.waitForRenderer(scene2);
+			const renderer2 = rendererData2.renderer;
 
 			const new_particles1 = scene2.node('/geo1/particlesSystemGpu1') as ParticlesSystemGpuSopNode;
 			assert.notOk(new_particles1.assemblerController(), 'no assembler when loading scene');
@@ -98,20 +101,20 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 
 			render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 			assert.ok(render_target1, 'render_target1 ok');
-			renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-0.5, 0.1, -0.5, 0].join(':'), 'start pos');
 
 			scene2.setFrame(1);
 			render_target2 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 			assert.ok(render_target2, 'render_target2 ok');
-			renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+			renderer2.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
 				AssertUtils.arrayWithPrecision(pixelBuffer),
 				[-0.5, 0.2, -0.5, 0].join(':'),
 				'point with persisted config moved x'
 			);
 
-			await RendererUtils.compile(pointsBuilder2, renderer);
+			await RendererUtils.compile(pointsBuilder2, renderer2);
 			assert.deepEqual(
 				Object.keys(MaterialUserDataUniforms.getUniforms(pointsBuilder2)!).sort(),
 				[

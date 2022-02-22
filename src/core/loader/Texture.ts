@@ -301,7 +301,7 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 			} else {
 				(loader as any).setTranscoderPath(undefined);
 			}
-			const renderer = await Poly.renderersController.waitForRenderer();
+			const renderer = await node.scene().renderersRegister.waitForRenderer();
 			if (renderer) {
 				loader.detectSupport(renderer);
 			} else {

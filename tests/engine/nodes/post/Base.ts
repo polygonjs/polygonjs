@@ -14,7 +14,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
-	const {renderer, canvas} = await RendererUtils.waitForRenderer();
+	const {renderer, canvas} = await RendererUtils.waitForRenderer(window.scene);
 	assert.ok(renderer);
 
 	// start test

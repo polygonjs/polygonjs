@@ -27,7 +27,6 @@ import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
 import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {Vector2} from 'three/src/math/Vector2';
-import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
 import {Object3D} from 'three/src/core/Object3D';
@@ -391,7 +390,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		this._renderShadow(renderer, scene);
 	}
 	private _updateManual() {
-		const renderer = Poly.renderersController.firstRenderer();
+		const renderer = this.scene().renderersRegister.lastRegisteredRenderer();
 		if (!renderer) {
 			console.log('no renderer found');
 			return;

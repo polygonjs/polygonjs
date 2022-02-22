@@ -94,7 +94,7 @@ QUnit.test(
 QUnit.test(
 	'event/setParam finds a material spare param again material deletes it then recreates it',
 	async (assert) => {
-		const {renderer} = await RendererUtils.waitForRenderer();
+		const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 		const geo1 = window.geo1;
 		const MAT = window.MAT;

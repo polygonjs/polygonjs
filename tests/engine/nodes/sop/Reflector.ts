@@ -6,7 +6,7 @@ QUnit.test('reflectors can be cloned and keep unique material', async (assert) =
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	assert.ok(renderer, 'renderer created');
 
 	const plane = geo1.createNode('plane');

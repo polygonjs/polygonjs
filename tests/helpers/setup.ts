@@ -36,12 +36,23 @@ declare global {
 		COP: CopNetworkObjNode;
 	}
 }
+
 QUnit.testStart(async () => {
 	// console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
 
 	await waitForUserInteraction();
 
-	Poly.renderersController.deregisterAllRenderers();
+	function deregisterAllRenderers() {
+		const scenes = Poly.scenesRegister.scenes();
+		for (let scene of scenes) {
+			const renderers = [...scene.renderersRegister.renderers()];
+			for (let renderer of renderers) {
+				scene.renderersRegister.deregisterRenderer(renderer);
+			}
+		}
+	}
+
+	deregisterAllRenderers();
 	Poly.blobs.clear();
 	GLTFLoaderHandler.reset();
 	// return new Promise(async (resolve, reject) => {

@@ -14,7 +14,7 @@ import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/ass
 QUnit.test(
 	'MAT spare params:spare params are re-created as expected and the uniforms updated on change',
 	async (assert) => {
-		const {renderer} = await RendererUtils.waitForRenderer();
+		const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 		const scene = window.scene;
 		scene.setFrame(1);
 		const MAT = window.MAT;
@@ -174,7 +174,7 @@ QUnit.test(
 );
 
 QUnit.test('MAT spare params:creating a spare param as vector, saving and load back', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -284,7 +284,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	RendererUtils.dispose();
 });
 QUnit.test('MAT spare params: creating a spare param as color, saving and load back', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const scene = window.scene;
 	const MAT = window.MAT;

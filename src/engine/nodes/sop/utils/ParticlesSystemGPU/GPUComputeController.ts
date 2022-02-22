@@ -10,7 +10,6 @@ import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
 import {GPUComputationRenderer, GPUComputationRendererVariable} from './GPUComputationRenderer';
 import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Poly} from '../../../../Poly';
 import {CorePoint} from '../../../../../core/geometry/Point';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsController} from '../../../gl/code/utils/TextureAllocationsController';
@@ -201,9 +200,9 @@ export class ParticlesSystemGpuComputeController {
 		// we need to recreate the material if the texture allocation changes
 		this.node.renderController.resetRenderMaterial();
 
-		this.node.debugMessage('GPUComputeController: Poly.renderersController.waitForRenderer() START');
-		const renderer = await Poly.renderersController.waitForRenderer();
-		this.node.debugMessage('GPUComputeController: Poly.renderersController.waitForRenderer() END');
+		this.node.debugMessage('GPUComputeController: this.node.scene().renderersRegister.waitForRenderer() START');
+		const renderer = await this.node.scene().renderersRegister.waitForRenderer();
+		this.node.debugMessage('GPUComputeController: this.node.scene().renderersRegister.waitForRenderer() END');
 		if (renderer) {
 			this._renderer = renderer;
 		} else {
@@ -216,7 +215,7 @@ export class ParticlesSystemGpuComputeController {
 		const compute = new GPUComputationRenderer(this._usedTexturesSize.x, this._usedTexturesSize.y, this._renderer);
 
 		compute.setDataType(this._dataType());
-		this._gpuCompute = (<unknown>compute) as GPUComputationRenderer;
+		this._gpuCompute = compute;
 
 		if (!this._gpuCompute) {
 			this.node.states.error.set('failed to create the GPUComputationRenderer');

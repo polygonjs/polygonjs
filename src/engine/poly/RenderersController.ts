@@ -1,8 +1,9 @@
 import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
 import {WebGLMultisampleRenderTarget} from 'three/src/renderers/WebGLMultisampleRenderTarget';
-interface POLYWebGLRenderer extends WebGLRenderer {
-	_polygonId: number;
+// import {Poly} from '../Poly';
+export interface POLYWebGLRenderer extends WebGLRenderer {
+	_polygonId?: number;
 }
 
 const CONTEXT_OPTIONS = {
@@ -10,27 +11,22 @@ const CONTEXT_OPTIONS = {
 	// preserveDrawingBuffer: true, // this could only be useful to capture static images
 };
 
-type Callback = (value: WebGLRenderer) => void;
-
 enum WebGLContext {
 	WEBGL = 'webgl',
 	WEBGL2 = 'webgl2',
 	EXPERIMENTAL_WEBGL = 'experimental-webgl',
 	EXPERIMENTAL_WEBGL2 = 'experimental-webgl2',
 }
-
+let nextRendererId: number = 0;
 export class RenderersController {
-	private _next_renderer_id: number = 0;
-	private _renderers: Map<number, WebGLRenderer> = new Map();
-	private _firstRenderer: WebGLRenderer | null = null;
+	// private _firstRenderer: WebGLRenderer | null = null;
+	// private _lastRenderer: WebGLRenderer | null = null;
 	private _printDebug = false;
 	private _require_webgl2: boolean = false;
-	private _resolves: Callback[] = [];
+	// private _resolves: Callback[] = [];
 	private _webgl2_available: boolean | undefined;
 	// private _env_maps: TextureByString = {};
 	// private _next_env_map_id: number = 0;
-
-	constructor() {}
 
 	setPrintDebug(state: boolean = true) {
 		this._printDebug = state;
@@ -63,8 +59,24 @@ export class RenderersController {
 
 	createWebGLRenderer(params: WebGLRendererParameters) {
 		const renderer = new WebGLRenderer(params);
+
+		this._assignIdToRenderer(renderer);
+
 		this.printDebugMessage([`create renderer:`, params]);
 		return renderer;
+	}
+
+	private _assignIdToRenderer(renderer: WebGLRenderer) {
+		const nextId = (nextRendererId += 1);
+		(renderer as POLYWebGLRenderer)._polygonId = nextId;
+	}
+	rendererId(renderer: WebGLRenderer) {
+		const id = (renderer as POLYWebGLRenderer)._polygonId;
+		if (id == null) {
+			console.error('renderer has no _polygonId');
+			return;
+		}
+		return id;
 	}
 
 	getRenderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
@@ -104,69 +116,68 @@ export class RenderersController {
 		return gl as WebGLRenderingContext | null;
 	}
 
-	registerRenderer(renderer: WebGLRenderer) {
-		if ((renderer as POLYWebGLRenderer)._polygonId) {
-			throw new Error('render already registered');
-		}
-		const nextId = (this._next_renderer_id += 1);
-		(renderer as POLYWebGLRenderer)._polygonId = nextId;
+	// _registerRenderer(renderer: WebGLRenderer, scene: PolyScene) {
+	// 	// if ((renderer as POLYWebGLRenderer)._polygonId) {
+	// 	// 	throw new Error('render already registered');
+	// 	// }
 
-		this._renderers.set(nextId, renderer);
+	// 	// this._renderers.set(nextId, renderer);
 
-		if (this._renderers.size == 1) {
-			this._flushCallbacksWithRenderer(renderer);
-		}
-		this._updateCache();
-	}
-	deregisterRenderer(renderer: WebGLRenderer) {
-		const id = (renderer as POLYWebGLRenderer)._polygonId;
-		this._renderers.delete(id);
-		renderer.dispose();
-		this._updateCache();
-	}
-	deregisterAllRenderers() {
-		const renderers: WebGLRenderer[] = [];
-		this._renderers.forEach((renderer, id) => {
-			renderers.push(renderer);
-		});
-		for (let renderer of renderers) {
-			this.deregisterRenderer(renderer);
-		}
-	}
-	private _updateCache() {
-		this._firstRenderer = null;
-		this._renderers.forEach((renderer) => {
-			this._firstRenderer = this._firstRenderer || renderer;
-		});
-	}
-	firstRenderer(): WebGLRenderer | null {
-		return this._firstRenderer;
-	}
-	renderers(): WebGLRenderer[] {
-		return Object.values(this._renderers);
-	}
+	// 	// if (this._renderers.size == 1) {
+	// 	// 	this._flushCallbacksWithRenderer(renderer);
+	// 	// }
+	// 	this._updateCache();
+	// }
+	// _deregisterRenderer(renderer: WebGLRenderer) {
+	// 	// const id = (renderer as POLYWebGLRenderer)._polygonId;
+	// 	// this._renderers.delete(id);
+	// 	// renderer.dispose();
+	// 	this._updateCache();
+	// }
 
-	private _flushCallbacksWithRenderer(renderer: WebGLRenderer) {
-		const callbacks: Callback[] = [];
-		for (let r of this._resolves) {
-			callbacks.push(r);
-		}
-		this._resolves = [];
-		for (let c of callbacks) {
-			c(renderer);
-		}
-	}
+	// private _updateCache() {
+	// 	// this._firstRenderer = null;
+	// 	// this._lastRenderer = null;
+	// 	// this._renderers.forEach((renderer) => {
+	// 	// 	this._firstRenderer = this._firstRenderer || renderer;
+	// 	// 	this._lastRenderer = renderer;
+	// 	// });
+	// }
+	// firstRenderer(): WebGLRenderer | null {
+	// 	return this._firstRenderer;
+	// }
+	// lastRenderer(): WebGLRenderer | null {
+	// 	return this._lastRenderer;
+	// }
+	// renderers(): WebGLRenderer[] {
+	// 	return Object.values(this._renderers);
+	// }
 
-	async waitForRenderer(): Promise<WebGLRenderer> {
-		const renderer = this.firstRenderer();
-		if (renderer) {
-			return renderer;
-		} else {
-			return new Promise((resolve, reject) => {
-				this._resolves.push(resolve);
-			});
-		}
-	}
+	// private _flushCallbacksWithRenderer(renderer: WebGLRenderer) {
+	// 	const callbacks: Callback[] = [];
+	// 	for (let r of this._resolves) {
+	// 		callbacks.push(r);
+	// 	}
+	// 	this._resolves = [];
+	// 	for (let c of callbacks) {
+	// 		c(renderer);
+	// 	}
+	// }
+
+	// async waitForRenderer(): Promise<WebGLRenderer | void> {
+	// 	const lastScene = Poly.scenesRegister.lastRegisteredScene();
+	// 	if (lastScene) {
+	// 		return await lastScene.renderersRegister.waitForRenderer();
+	// 	}
+	// 	// const renderer = this.lastRenderer();
+	// 	// if (renderer) {
+	// 	// 	return renderer;
+	// 	// } else {
+	// 	// 	return new Promise((resolve, reject) => {
+	// 	// 		this._resolves.push(resolve);
+	// 	// 	});
+	// 	// }
+	// }
 
 	renderTarget(width: number, height: number, parameters: WebGLRenderTargetOptions) {
 		if (this.webGL2Available()) {

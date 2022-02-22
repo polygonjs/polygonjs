@@ -15,8 +15,9 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	const scene = window.scene;
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
-	assert.ok(renderer, 'renderer created');
+	const rendererData1 = await RendererUtils.waitForRenderer(window.scene);
+	const renderer1 = rendererData1.renderer;
+	assert.ok(renderer1, 'renderer created');
 
 	const plane1 = geo1.createNode('plane');
 	const delete1 = geo1.createNode('delete');
@@ -49,7 +50,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	await particles1.compute();
 
 	const render_material = particles1.renderController.material()!;
-	await RendererUtils.compile(pointsBuilder1, renderer);
+	await RendererUtils.compile(pointsBuilder1, renderer1);
 	const uniform = MaterialUserDataUniforms.getUniforms(render_material)!.texture_position;
 	assert.ok(render_material, 'material ok');
 	assert.ok(uniform, 'uniform ok');
@@ -64,43 +65,45 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	let render_target1 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
-	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 2, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(2);
 	let render_target2 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 3, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(3);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 4, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 0.5, 0]);
 	scene.setFrame(4);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 4.5, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 2, 0]);
 	scene.setFrame(5);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 6.5, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([1, 0, 0]);
 	scene.setFrame(6);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [0, 6.5, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(1);
 	await AssemblersUtils.withoutAssemblers(async () => {
 		await saveAndLoadScene(scene, async (scene2) => {
 			await scene2.waitForCooksCompleted();
+			const rendererData2 = await RendererUtils.waitForRenderer(scene2);
+			const renderer2 = rendererData2.renderer;
 
 			const new_particles1 = scene2.node('/geo1/particlesSystemGpu1') as ParticlesSystemGpuSopNode;
 			assert.notOk(new_particles1.assemblerController());
@@ -115,7 +118,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 
 			render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 			assert.ok(render_target1, 'render_target1 ok');
-			renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
 				AssertUtils.arrayWithPrecision(pixelBuffer),
 				[1, 0, -1, 0].join(':'),
@@ -124,7 +127,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 
 			scene2.setFrame(2);
 			render_target2 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-			renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+			renderer2.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
 				AssertUtils.arrayWithPrecision(pixelBuffer),
 				[2, 0, -1, 0].join(':'),
@@ -134,7 +137,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 			test_param2.set([0, 2, 0]);
 			scene2.setFrame(3);
 			render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-			renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
 				AssertUtils.arrayWithPrecision(pixelBuffer),
 				[2, 2, -1, 0].join(':'),
@@ -144,7 +147,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 			test_param2.set([-2, -4, -8]);
 			scene2.setFrame(4);
 			render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-			renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
 				AssertUtils.arrayWithPrecision(pixelBuffer),
 				[0, -2, -9, 0].join(':'),

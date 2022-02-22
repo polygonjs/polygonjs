@@ -68,7 +68,7 @@ function renderWithDOF(scene: Scene, renderer: WebGLRenderer, camera: Camera) {
 }
 
 QUnit.test('depth/distance shadows work for mesh, with mat builders', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const matNode = window.MAT.createNode('meshBasicBuilder');
 	const globals1 = matNode.createNode('globals');
 	const output1 = matNode.createNode('output');
@@ -124,7 +124,7 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders', async (ass
 });
 
 QUnit.test('depth/distance shadows work for point, with mat builders', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const matNode = window.MAT.createNode('pointsBuilder');
 	const globals1 = matNode.createNode('globals');
@@ -180,7 +180,7 @@ QUnit.test('depth/distance shadows work for point, with mat builders', async (as
 	RendererUtils.dispose();
 });
 QUnit.test('depth/distance shadows work for lines, with mat builders ', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const matNode = window.MAT.createNode('lineBasicBuilder');
 	const globals1 = matNode.createNode('globals');

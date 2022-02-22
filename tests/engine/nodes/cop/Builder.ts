@@ -19,7 +19,7 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	await scene.waitForCooksCompleted();
 
 	// create a renderer first
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer);
 
 	// start test

@@ -226,7 +226,7 @@ export class RenderController {
 		// renderer.extensions.get( 'WEBGL_color_buffer_float' );
 		// renderer.extensions.get( 'WEBGL_draw_buffers' );
 
-		Poly.renderersController.registerRenderer(renderer);
+		this.node.scene().renderersRegister.registerRenderer(renderer);
 		this._renderersByCanvasId.set(canvas.id, renderer);
 		this._super_sampling_size.copy(size);
 		this.setRendererSize(canvas, this._super_sampling_size);
@@ -277,7 +277,7 @@ export class RenderController {
 	deleteRenderer(canvas: HTMLCanvasElement) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
-			Poly.renderersController.deregisterRenderer(renderer);
+			this.node.scene().renderersRegister.deregisterRenderer(renderer);
 		}
 	}
 	canvasResolution(canvas: HTMLCanvasElement) {

@@ -4,7 +4,6 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {Texture} from 'three/src/textures/Texture';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Poly} from '../../../engine/Poly';
 
 import {LinearEncoding, UVMapping, RepeatWrapping} from 'three/src/constants';
 
@@ -126,7 +125,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 			return;
 		}
 		if (isBooleanTrue(params.useRendererMaxAnisotropy)) {
-			const renderer = Poly.renderersController.firstRenderer();
+			const renderer = this._node?.scene().renderersRegister.lastRegisteredRenderer();
 			if (!renderer) {
 				console.warn('no renderer found');
 				return;

@@ -2,7 +2,7 @@ import {GlConnectionPointType} from '../../../../../src/engine/nodes/utils/io/co
 import {RendererUtils} from '../../../../helpers/RendererUtils';
 
 QUnit.test('2 gl/attributes with same name can live on same level without conflict in a material', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -101,7 +101,7 @@ varying vec3 v_POLY_attribute_myAttrib;
 });
 
 QUnit.test('2 gl/param with same name can live on same level without conflict in a material', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');

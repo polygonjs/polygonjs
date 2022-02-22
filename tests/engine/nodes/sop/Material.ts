@@ -60,7 +60,7 @@ QUnit.test('materials clone', async (assert) => {
 });
 
 QUnit.test('materials clone preserves builder onBeforeCompile', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 

@@ -3,7 +3,6 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Color} from 'three/src/math/Color';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Reflector} from '../../../modules/core/objects/Reflector';
-import {Poly} from '../../Poly';
 import {Vector3} from 'three/src/math/Vector3';
 import {TransformResetSopOperation, TRANSFORM_RESET_MODES, TransformResetMode} from './TransformReset';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -53,8 +52,9 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});
 
 		const reflectors: Reflector[] = [];
-		const renderer = await Poly.renderersController.waitForRenderer();
+		const renderer = await this._node?.scene().renderersRegister.waitForRenderer();
 		if (!renderer) {
+			console.warn('reflector: no renderer found', this._node);
 			return this.createCoreGroupFromObjects(reflectors);
 		}
 

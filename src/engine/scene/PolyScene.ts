@@ -26,6 +26,8 @@ import {Constructor, valueof} from '../../types/GlobalTypes';
 import {Scene} from 'three/src/scenes/Scene';
 import {CoreString} from '../../core/String';
 import {Object3D} from 'three/src/core/Object3D';
+import {SceneRenderersRegister} from './utils/SceneRenderersRegister';
+import {Poly} from '../Poly';
 
 type SceneBatchUpdateCallback = () => void | Promise<void>;
 
@@ -134,6 +136,8 @@ export class PolyScene {
 	get nodesController() {
 		return this._nodes_controller;
 	}
+
+	public readonly renderersRegister = new SceneRenderersRegister(this);
 	/**
 	 * Creates a new node.
 	 *
@@ -319,10 +323,13 @@ export class PolyScene {
 		this._graph.setScene(this);
 		// this.time_controller.init();
 		this.nodesController.init();
+
+		Poly.scenesRegister.registerScene(this);
 	}
 
 	dispose() {
 		this._windowController?.dispose();
+		Poly.scenesRegister.deregisterScene(this);
 	}
 
 	//

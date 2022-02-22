@@ -6,7 +6,6 @@ import {CoreTransform} from '../../../core/Transform';
 // import {PlaneGeometry} from 'three/src/geometries/PlaneGeometry';
 import {IUniformsWithTime} from '../../scene/utils/UniformsController';
 import {isBooleanTrue} from '../../../core/Type';
-import {Poly} from '../../Poly';
 import {Water, WaterOptions} from '../../../modules/core/objects/Water';
 import {TransformResetMode, TransformResetSopOperation, TRANSFORM_RESET_MODES} from './TransformReset';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -70,9 +69,9 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 		const transformResetMode = TRANSFORM_RESET_MODES.indexOf(TransformResetMode.PROMOTE_GEO_TO_OBJECT);
 		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});
 
-		const renderer = await Poly.renderersController.waitForRenderer();
+		const renderer = await this._node?.scene().renderersRegister.waitForRenderer();
 		if (!renderer) {
-			console.warn('no renderer found');
+			console.warn('oceanPlane: no renderer found', this._node);
 			return this.createCoreGroupFromObjects([]);
 		}
 

@@ -9,7 +9,7 @@ import {PointsBuilderMatNode} from '../../../../src/engine/nodes/mat/PointsBuild
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test('points builder persisted_config', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const points1 = MAT.createNode('pointsBuilder');
 	points1.createNode('output');

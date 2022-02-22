@@ -5,10 +5,10 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {BaseBuilderMatNodeType} from '../../src/engine/nodes/mat/_BaseBuilder';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
-import {Poly} from '../../src/engine/Poly';
 import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
 import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
 import {Material} from 'three/src/materials/Material';
+import {PolyScene} from '../../src/engine/index_all';
 
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
@@ -44,16 +44,27 @@ export class RendererUtils {
 		document.body.removeChild(element);
 	}
 
-	static async waitForRenderer(): Promise<RendererConfig> {
+	static async waitForRenderer(scene: PolyScene): Promise<RendererConfig> {
 		return new Promise(async (resolve) => {
 			const canvas = document.createElement('canvas');
 			document.body.appendChild(canvas);
 			const size = new Vector2(canvas.width, canvas.height);
-			const viewer = await window.perspective_camera1.renderController().createRenderer(canvas, size);
-			const renderer = await Poly.renderersController.waitForRenderer();
-			const config = {canvas, viewer, renderer};
-			this._configs.push(config);
-			resolve(config);
+			const cameraNode = scene.mainCameraNode();
+			if (!cameraNode) {
+				console.warn(`no camera node found in scene '${scene.name()}'`);
+				return;
+			}
+			const viewer = await (cameraNode as PerspectiveCameraObjNode)
+				.renderController()
+				.createRenderer(canvas, size);
+			const renderer = await scene.renderersRegister.waitForRenderer();
+			if (renderer) {
+				const config = {canvas, viewer, renderer};
+				this._configs.push(config);
+				resolve(config);
+			} else {
+				console.error('no renderer from Poly');
+			}
 		});
 	}
 

@@ -1,9 +1,6 @@
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {TypedCopNode} from '../_Base';
 import {NodeParamsConfig} from '../../utils/params/ParamsConfig';
-import {Poly} from '../../../Poly';
-// import {LinearToneMapping} from 'three/src/constants';
-// import {isBooleanTrue} from '../../../../core/BooleanValue';
 class BaseCopRendererCopParamsConfig extends NodeParamsConfig {
 	// useCameraRenderer = ParamConfig.BOOLEAN(0);
 }
@@ -34,13 +31,7 @@ export class CopRendererController {
 	}
 
 	async cameraRenderer() {
-		let renderer = await Poly.renderersController.waitForRenderer();
-		if (renderer) {
-			return renderer;
-		} else {
-			const renderer = await Poly.renderersController.waitForRenderer();
-			return renderer;
-		}
+		return await this.node.scene().renderersRegister.waitForRenderer();
 	}
 
 	saveState() {

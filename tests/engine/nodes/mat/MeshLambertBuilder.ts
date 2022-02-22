@@ -9,7 +9,7 @@ import {MeshLambertBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshLa
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test('mesh lambert builder persisted_config', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_lambert1 = MAT.createNode('meshLambertBuilder');
 	mesh_lambert1.createNode('output');

@@ -77,7 +77,7 @@ const BASIC_UNIFORMS = UniformsUtils.clone(ShaderLib.basic.uniforms);
 const BASIC_UNIFORM_NAMES = Object.keys(BASIC_UNIFORMS).concat(['clippingPlanes']).sort();
 
 QUnit.test('mesh basic builder simple', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -137,7 +137,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 });
 
 QUnit.test('mesh basic builder can save and load param configs', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -190,7 +190,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 QUnit.test(
 	'mesh basic builder: attrib is declared accordingly and uses varying if used in fragment',
 	async (assert) => {
-		const {renderer} = await RendererUtils.waitForRenderer();
+		const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 		const MAT = window.MAT;
 		const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 		mesh_basic1.createNode('output');
@@ -248,7 +248,7 @@ QUnit.test(
 );
 
 QUnit.test('mesh basic builder with ifThen', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -299,7 +299,7 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 });
 
 QUnit.test('mesh basic builder with forLoop', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -333,7 +333,7 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 });
 
 QUnit.test('mesh basic builder with subnet', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -368,7 +368,7 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 });
 
 QUnit.test('mesh basic builder with subnet without input', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -401,7 +401,7 @@ QUnit.test('mesh basic builder with subnet without input', async (assert) => {
 });
 
 QUnit.test('mesh basic builder with subnet without input and attributes', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -473,7 +473,7 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 });
 
 QUnit.test('mesh basic builder persisted_config', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
@@ -541,7 +541,7 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 });
 
 QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
 	const scene = window.scene;
@@ -625,7 +625,7 @@ QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) 
 });
 
 QUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheKey', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const scene = window.scene;
 	scene.setFrame(0);

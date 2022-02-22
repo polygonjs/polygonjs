@@ -11,7 +11,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test('mesh standard builder persisted_config', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_standard1 = MAT.createNode('meshStandardBuilder');
 	mesh_standard1.createNode('output');
@@ -77,7 +77,7 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 });
 
 QUnit.test('mesh standard builder persisted_config with no node', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_standard1 = MAT.createNode('meshStandardBuilder');
 	mesh_standard1.createNode('output');
@@ -118,7 +118,7 @@ QUnit.test('mesh standard builder persisted_config with no node', async (assert)
 });
 
 QUnit.test('mesh standard builder persisted_config with no node but with assembler in player mode', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_standard1 = MAT.createNode('meshStandardBuilder');
 	mesh_standard1.createNode('output');

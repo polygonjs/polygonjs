@@ -10,7 +10,6 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {Object3D} from 'three/src/core/Object3D';
 import {Light} from 'three/src/lights/Light';
-import {Poly} from '../../Poly';
 import {LightMapController, DEFAULT_ITERATION_BLEND} from './utils/LightMapController';
 import {Mesh} from 'three/src/objects/Mesh';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -75,7 +74,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	}
 
 	private async _createLightMapController() {
-		const renderer = await Poly.renderersController.waitForRenderer();
+		const renderer = await this.scene().renderersRegister.waitForRenderer();
 		if (!renderer) {
 			console.warn('no renderer found');
 			return;

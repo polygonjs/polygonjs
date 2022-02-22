@@ -16,7 +16,7 @@ export function createRequiredNodesForSDFGradientGlNode(node: SDFGradientGlNode)
 }
 
 QUnit.test('gl SDFGradient simple', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const materialBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	const material = materialBasicBuilder1.material;

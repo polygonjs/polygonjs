@@ -36,7 +36,7 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	const scene = window.scene;
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 
 	const plane1 = geo1.createNode('plane');
@@ -102,8 +102,9 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	scene.setFrame(0);
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
-	assert.ok(renderer, 'renderer created');
+	const renderData1 = await RendererUtils.waitForRenderer(scene);
+	const renderer1 = renderData1.renderer;
+	assert.ok(renderer1, 'renderer created');
 
 	const plane1 = geo1.createNode('plane');
 	const delete1 = geo1.createNode('delete');
@@ -191,7 +192,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	assert.equal(gpuTexturesByName.size, 2, '2 textures');
 
 	const renderMaterial = particles1.renderController.material()!;
-	await RendererUtils.compile(pointsBuilder1, renderer);
+	await RendererUtils.compile(pointsBuilder1, renderer1);
 	assert.ok(renderMaterial, 'material ok');
 	const uniform = MaterialUserDataUniforms.getUniforms(renderMaterial)!.texture_position;
 	assert.ok(uniform, 'uniform ok');
@@ -206,37 +207,37 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	let render_target1 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
-	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-2, 1, -2, 0].join(':'), 'point moved');
 
 	scene.setFrame(1);
 	let render_target2 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-3, 2, -3, 0].join(':'), 'point moved');
 
 	scene.setFrame(2);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-4, 3, -4, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 0.5, 0]);
 	scene.setFrame(3);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-5, 3.5, -5, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 2, 0]);
 	scene.setFrame(4);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-6, 5.5, -6, 0].join(':'), 'point moved up');
 
 	test_param.set([1, 0, 0]);
 	scene.setFrame(5);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
-	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-6, 5.5, -7, 0].join(':'), 'point moved up');
 
 	scene.setFrame(0);
@@ -245,6 +246,8 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
+		const rendererData2 = await RendererUtils.waitForRenderer(scene2);
+		const renderer2 = rendererData2.renderer;
 
 		const new_particles1 = scene2.node('/geo1/particlesSystemGpu1') as ParticlesSystemGpuSopNode;
 		assert.notOk(new_particles1.assemblerController());
@@ -258,7 +261,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		await new_particles1.compute();
 
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
 			AssertUtils.arrayWithPrecision(pixelBuffer),
 			[-1, 0, -2, 0].join(':'),
@@ -267,7 +270,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 
 		scene2.setFrame(2);
 		render_target2 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-		renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		renderer2.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
 			AssertUtils.arrayWithPrecision(pixelBuffer),
 			[-1, 0, -4, 0].join(':'),
@@ -277,7 +280,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		test_param2.set([0, 2, 0]);
 		scene2.setFrame(3);
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
 			AssertUtils.arrayWithPrecision(pixelBuffer),
 			[-2, 2, -5, 0].join(':'),
@@ -287,22 +290,22 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		// and if we set the active param to 0, nothing moves
 		scene2.setFrame(4);
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-3, 4, -6, 0].join(':'), 'active still on');
 		new_particles1.p.active.set(0);
 		scene2.setFrame(5);
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-3, 4, -6, 0].join(':'), 'active now off');
 		scene2.setFrame(6);
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-3, 4, -6, 0].join(':'), 'active still off');
 		// and if we set the active param back to 1, particles move again
 		new_particles1.p.active.set(1);
 		scene2.setFrame(7);
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
 			AssertUtils.arrayWithPrecision(pixelBuffer),
 			[-4, 6, -7, 0].join(':'),
@@ -310,7 +313,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		);
 		scene2.setFrame(8);
 		render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
-		renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
+		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
 			AssertUtils.arrayWithPrecision(pixelBuffer),
 			[-5, 8, -8, 0].join(':'),
@@ -327,7 +330,7 @@ QUnit.test('ParticlesSystemGPU node can be deleted without error', async (assert
 	scene.setFrame(0);
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 
 	const plane1 = geo1.createNode('plane');
@@ -350,7 +353,7 @@ QUnit.test('texture allocation works as expected wih pos, vel, normal and bby fl
 
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer);
 	const box = geo1.createNode('box');
 	box.flags.display.set(true);
@@ -407,7 +410,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer);
 
 	await particlesSystemGpu1.compute();
@@ -563,7 +566,7 @@ QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', asy
 	scene.setFrame(0);
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 
 	const sopadd1 = geo1.createNode('add');
@@ -637,7 +640,7 @@ QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (
 	scene.setFrame(0);
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 
 	const sopadd1 = geo1.createNode('add');
@@ -717,7 +720,7 @@ QUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trig
 	scene.setFrame(0);
 
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 
 	const sopadd1 = geo1.createNode('add');

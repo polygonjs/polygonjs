@@ -17,7 +17,6 @@ import {WebGLCubeRenderTarget} from 'three/src/renderers/WebGLCubeRenderTarget';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
 import {TypedObjNode} from './_Base';
 import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-import {Poly} from '../../Poly';
 import {BaseNodeType} from '../_Base';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
 import {AxesHelper} from 'three/src/helpers/AxesHelper';
@@ -186,7 +185,7 @@ export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsCo
 	}
 
 	render() {
-		const renderer = Poly.renderersController.firstRenderer();
+		const renderer = this.scene().renderersRegister.lastRegisteredRenderer();
 		if (!renderer) {
 			console.warn(`no renderer found for ${this.path()}`);
 			return;

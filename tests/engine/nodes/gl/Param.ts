@@ -110,7 +110,7 @@ QUnit.test('gl param updates its parent cop builder with new spare parameters', 
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 	const COP = window.COP;
 	const builder1 = COP.createNode('builder');
@@ -166,7 +166,7 @@ QUnit.test('gl param updates its parent cop builder with new spare parameters', 
 QUnit.test('gl param updates its particles system with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 	const geo1 = window.geo1;
 	const particlesSystemGpu1 = geo1.createNode('particlesSystemGpu');
@@ -223,7 +223,7 @@ QUnit.test('gl param updates its particles system with new spare parameters', as
 });
 
 QUnit.test('gl param: 1 param node on top level and one in a subnet work ok', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	meshBasicBuilder1.createNode('output');

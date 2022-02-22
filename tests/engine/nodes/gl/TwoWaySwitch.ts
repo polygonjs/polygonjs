@@ -183,7 +183,7 @@ function create_meshBasicBuilder1(parentNode: MaterialsNetworkObjNode) {
 QUnit.test('2 twoWaySwitch gl node in a subnet function as expected', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = create_meshBasicBuilder1(MAT);
 	const material = meshBasicBuilder1.material;

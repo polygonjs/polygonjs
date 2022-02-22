@@ -2,7 +2,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 
 QUnit.test('COP env_map simple', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	assert.ok(renderer);
 
 	// start test

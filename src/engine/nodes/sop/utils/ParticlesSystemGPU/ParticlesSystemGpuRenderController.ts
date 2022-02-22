@@ -62,6 +62,7 @@ export class ParticlesSystemGpuRenderController {
 	}
 	updateRenderMaterialUniforms() {
 		if (!this._renderMaterial) {
+			console.warn('no renderMaterial');
 			return;
 		}
 

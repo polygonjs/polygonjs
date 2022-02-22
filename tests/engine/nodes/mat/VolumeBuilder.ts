@@ -27,7 +27,7 @@ const TEST_SHADER_LIB = {
 };
 
 QUnit.test('volume builder simple', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
 	const volume_builder1 = MAT.createNode('volumeBuilder');
@@ -66,7 +66,7 @@ QUnit.test('volume builder simple', async (assert) => {
 });
 
 QUnit.test('volume builder persisted_config', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer();
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const volume1 = MAT.createNode('volumeBuilder');
 	volume1.createNode('output');
