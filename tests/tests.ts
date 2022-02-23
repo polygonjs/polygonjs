@@ -192,6 +192,7 @@ import './engine/nodes/sop/BboxScatter';
 import './engine/nodes/sop/Blend';
 import './engine/nodes/sop/Boolean';
 import './engine/nodes/sop/Box';
+import './engine/nodes/sop/BoxLines';
 import './engine/nodes/sop/BVH';
 import './engine/nodes/sop/BVHVisualizer';
 import './engine/nodes/sop/Cache';

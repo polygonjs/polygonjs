@@ -28,6 +28,7 @@ import {BboxScatterSopNode} from '../../../nodes/sop/BboxScatter';
 import {BlendSopNode} from '../../../nodes/sop/Blend';
 import {BooleanSopNode} from '../../../nodes/sop/Boolean';
 import {BoxSopNode} from '../../../nodes/sop/Box';
+import {BoxLinesSopNode} from '../../../nodes/sop/BoxLines';
 import {BVHSopNode} from '../../../nodes/sop/BVH';
 import {BVHVisualizerSopNode} from '../../../nodes/sop/BVHVisualizer';
 import {CacheSopNode} from '../../../nodes/sop/Cache';
@@ -160,6 +161,7 @@ export interface GeoNodeChildrenMap {
 	blend: BlendSopNode;
 	boolean: BooleanSopNode;
 	box: BoxSopNode;
+	boxLines: BoxLinesSopNode;
 	BVH: BVHSopNode;
 	BVHVisualizer: BVHVisualizerSopNode;
 	cache: CacheSopNode;
@@ -283,6 +285,7 @@ import {AttribSetAtIndexSopOperation} from '../../../operations/sop/AttribSetAtI
 import {AudioNotesSopOperation} from '../../../operations/sop/AudioNotes';
 import {BooleanSopOperation} from '../../../operations/sop/Boolean';
 import {BoxSopOperation} from '../../../operations/sop/Box';
+import {BoxLinesSopOperation} from '../../../operations/sop/BoxLines';
 import {BVHSopOperation} from '../../../operations/sop/BVH';
 import {BVHVisualizerSopOperation} from '../../../operations/sop/BVHVisualizer';
 import {CameraProjectSopOperation} from '../../../operations/sop/CameraProject';
@@ -354,6 +357,7 @@ export class SopRegister {
 		poly.registerOperation(AudioNotesSopOperation);
 		poly.registerOperation(BooleanSopOperation);
 		poly.registerOperation(BoxSopOperation);
+		poly.registerOperation(BoxLinesSopOperation);
 		poly.registerOperation(BVHSopOperation);
 		poly.registerOperation(BVHVisualizerSopOperation);
 		poly.registerOperation(CameraProjectSopOperation);
@@ -433,6 +437,7 @@ export class SopRegister {
 		poly.registerNode(BlendSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(BooleanSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(BoxSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(BoxLinesSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(BVHSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(BVHVisualizerSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(CacheSopNode, CATEGORY_SOP.MISC);
