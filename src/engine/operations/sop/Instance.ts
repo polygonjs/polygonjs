@@ -39,11 +39,12 @@ export class InstanceSopOperation extends BaseSopOperation {
 		this._geometry = undefined;
 
 		const object_to_instance = core_group_to_instance.objectsWithGeo()[0];
+		console.log('object_to_instance', object_to_instance);
 		if (object_to_instance) {
 			const geometry_to_instance = object_to_instance.geometry;
 			if (geometry_to_instance) {
 				const core_group = input_contents[1];
-				this._create_instance(geometry_to_instance, core_group, params);
+				this._createInstance(geometry_to_instance, core_group, params);
 			}
 		}
 
@@ -53,7 +54,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 				const object = this.createObject(this._geometry, type);
 
 				if (isBooleanTrue(params.applyMaterial)) {
-					const material = await this._get_material(params);
+					const material = await this._getMaterial(params);
 					if (material) {
 						await this._applyMaterial(object as Mesh, material);
 					}
@@ -65,18 +66,18 @@ export class InstanceSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects([]);
 	}
 
-	private async _get_material(params: InstanceSopParams) {
+	private async _getMaterial(params: InstanceSopParams) {
 		if (isBooleanTrue(params.applyMaterial)) {
-			const material_node = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
-			if (material_node) {
+			const materialNode = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
+			if (materialNode) {
 				this._globalsHandler = this._globalsHandler || new GlobalsGeometryHandler();
-				const mat_builder_node = material_node as BaseBuilderMatNodeType;
-				const matNodeAssemblerController = mat_builder_node.assemblerController();
+				const matBuilderNode = materialNode as BaseBuilderMatNodeType;
+				const matNodeAssemblerController = matBuilderNode.assemblerController();
 				if (matNodeAssemblerController) {
 					matNodeAssemblerController.setAssemblerGlobalsHandler(this._globalsHandler);
 				}
 
-				const container = await material_node.compute();
+				const container = await materialNode.compute();
 				const material = container.material();
 				return material;
 			}
@@ -88,7 +89,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 		CoreMaterial.applyCustomMaterials(object, material);
 	}
 
-	private _create_instance(
+	private _createInstance(
 		geometry_to_instance: BufferGeometry,
 		template_core_group: CoreGroup,
 		params: InstanceSopParams
@@ -98,5 +99,6 @@ export class InstanceSopOperation extends BaseSopOperation {
 			template_core_group,
 			params.attributesToCopy
 		);
+		console.log('this._geometry', this._geometry);
 	}
 }

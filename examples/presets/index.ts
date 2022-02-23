@@ -24,9 +24,10 @@ import {CSS2DObjectPresetRegister} from './sop/CSS2DObject';
 import {dataSopPresetRegister} from './sop/Data';
 import {dataUrlSopPresetRegister} from './sop/DataUrl';
 import {fileSopPresetRegister, fileGLTFSopPresetRegister} from './sop/File';
-import {transformSopPresetRegister} from './sop/Transform';
 import {pointSopPresetRegister} from './sop/Point';
 import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
+import {scatterSopPresetRegister} from './sop/Scatter';
+import {transformSopPresetRegister} from './sop/Transform';
 import {svgSopPresetRegister} from './sop/Svg';
 import {textSopPresetRegister} from './sop/Text';
 
@@ -63,6 +64,7 @@ class PresetLibraryClass {
 		this._registerPreset(fileGLTFSopPresetRegister);
 		this._registerPreset(pointSopPresetRegister);
 		this._registerPreset(roundedBoxSopPresetRegister);
+		this._registerPreset(scatterSopPresetRegister);
 		this._registerPreset(textSopPresetRegister);
 		this._registerPreset(svgSopPresetRegister);
 		this._registerPreset(transformSopPresetRegister);

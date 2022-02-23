@@ -109,3 +109,29 @@ QUnit.test('SOP boolean with shared materials', async (assert) => {
 	assert.equal(geometry.groups[1].count, 30, 'group 1 count');
 	assert.equal(geometry.groups[2].count, 0, 'group 2 has 0');
 });
+
+QUnit.test('SOP boolean result can be instanciated', async (assert) => {
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+
+	const material = MAT.createNode('meshBasicBuilder');
+
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	box2.p.center.set([0.1, 0.2, 0.3]);
+	const boolean1 = geo1.createNode('boolean');
+
+	boolean1.setOperation(BooleanOperation.UNION);
+	boolean1.setInput(0, box1);
+	boolean1.setInput(1, box2);
+
+	const line1 = geo1.createNode('line');
+	const instance1 = geo1.createNode('instance');
+	instance1.p.material.setNode(material);
+	instance1.setInput(0, boolean1);
+	instance1.setInput(1, line1);
+
+	const container = await instance1.compute();
+	const coreGroup = container.coreContent();
+	assert.equal(coreGroup?.pointsCount(), 2);
+});
