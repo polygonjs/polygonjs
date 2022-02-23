@@ -83,6 +83,9 @@ import {ModelViewMatrixMultGlNode} from '../../../nodes/gl/ModelViewMatrixMult';
 import {MultAddGlNode} from '../../../nodes/gl/MultAdd';
 import {MultScalarGlNode} from '../../../nodes/gl/MultScalar';
 import {NegateGlNode} from '../../../nodes/gl/Negate';
+import {NeighbourAttractGlNode} from '../../../nodes/gl/NeighbourAttract';
+import {NeighbourDensityGlNode} from '../../../nodes/gl/NeighbourDensity';
+import {NeighbourRepulseGlNode} from '../../../nodes/gl/NeighbourRepulse';
 import {NoiseGlNode} from '../../../nodes/gl/Noise';
 import {NullGlNode} from '../../../nodes/gl/Null';
 import {OutputGlNode} from '../../../nodes/gl/Output';
@@ -97,6 +100,7 @@ import {SDFUnionGlNode} from '../../../nodes/gl/SDFUnion';
 import {SSSModelGlNode} from '../../../nodes/gl/SSSModel';
 import {QuatMultGlNode} from '../../../nodes/gl/QuatMult';
 import {QuatFromAxisAngleGlNode} from '../../../nodes/gl/QuatFromAxisAngle';
+import {QuatSlerpGlNode} from '../../../nodes/gl/QuatSlerp';
 import {QuatToAngleGlNode} from '../../../nodes/gl/QuatToAngle';
 import {QuatToAxisGlNode} from '../../../nodes/gl/QuatToAxis';
 import {RampGlNode} from '../../../nodes/gl/Ramp';
@@ -185,6 +189,9 @@ export interface GlNodeChildrenMap {
 	multAdd: MultAddGlNode;
 	multScalar: MultScalarGlNode;
 	negate: NegateGlNode;
+	neighbourAttract: NeighbourAttractGlNode;
+	neighbourDensity: NeighbourDensityGlNode;
+	neighbourRepulse: NeighbourRepulseGlNode;
 	noise: NoiseGlNode;
 	normalize: NormalizeGlNode;
 	null: NullGlNode;
@@ -194,6 +201,7 @@ export interface GlNodeChildrenMap {
 	pow: PowGlNode;
 	quatMult: QuatMultGlNode;
 	quatFromAxisAngle: QuatFromAxisAngleGlNode;
+	quatSlerp: QuatSlerpGlNode;
 	quatToAngle: QuatToAngleGlNode;
 	quatToAxis: QuatToAxisGlNode;
 	radians: RadiansGlNode;
@@ -241,6 +249,8 @@ export interface GlNodeChildrenMap {
 
 import {NodeContext} from '../../NodeContext';
 import {PolyEngine} from '../../../Poly';
+import {CopType} from './types/Cop';
+import {SopType} from './types/Sop';
 
 const SUBNET_CHILD_OPTION = {
 	only: [
@@ -260,7 +270,7 @@ export class GlRegister {
 		poly.registerNode(AndGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(AsinGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(AtanGlNode, CATEGORY_GL.TRIGO);
-		poly.registerNode(AttributeGlNode, CATEGORY_GL.GLOBALS, {except: [`${NodeContext.COP}/builder`]});
+		poly.registerNode(AttributeGlNode, CATEGORY_GL.GLOBALS, {except: [`${NodeContext.COP}/${CopType.BUILDER}`]});
 		poly.registerNode(BoolToIntGlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(CeilGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(ClampGlNode, CATEGORY_GL.MATH);
@@ -281,7 +291,13 @@ export class GlRegister {
 		poly.registerNode(Exp2GlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FaceforwardGlNode, CATEGORY_GL.GEOMETRY);
 		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(FlockingGlNode, CATEGORY_GL.ADVANCED);
+			const particlesOnlyOption = {
+				only: [`${NodeContext.SOP}/${SopType.PARTICLES_SYSTEM_GPU}`],
+			};
+			poly.registerNode(FlockingGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+			poly.registerNode(NeighbourAttractGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+			poly.registerNode(NeighbourDensityGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+			poly.registerNode(NeighbourRepulseGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
 		}
 		poly.registerNode(FitGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FitTo01GlNode, CATEGORY_GL.MATH);
@@ -330,6 +346,7 @@ export class GlRegister {
 		poly.registerNode(PowGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(QuatMultGlNode, CATEGORY_GL.QUAT);
 		poly.registerNode(QuatFromAxisAngleGlNode, CATEGORY_GL.QUAT);
+		poly.registerNode(QuatSlerpGlNode, CATEGORY_GL.QUAT);
 		poly.registerNode(QuatToAngleGlNode, CATEGORY_GL.QUAT);
 		poly.registerNode(QuatToAxisGlNode, CATEGORY_GL.QUAT);
 		poly.registerNode(RampGlNode, CATEGORY_GL.GLOBALS);

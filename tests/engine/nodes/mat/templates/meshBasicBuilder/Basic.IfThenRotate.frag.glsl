@@ -15,6 +15,63 @@ uniform float opacity;
 // /MAT/meshBasicBuilder1/ifThen1/rotate1
 
 
+// https://stackoverflow.com/questions/23793698/how-to-implement-slerp-in-glsl-hlsl
+// vec4 quatSlerp(vec4 p0, vec4 p1, float t)
+// {
+// 	float dotp = dot(normalize(p0), normalize(p1));
+// 	if ((dotp > 0.9999) || (dotp < -0.9999))
+// 	{
+// 		if (t<=0.5)
+// 			return p0;
+// 		return p1;
+// 	}
+// 	float theta = acos(dotp);
+// 	vec4 P = ((p0*sin((1.0-t)*theta) + p1*sin(t*theta)) / sin(theta));
+// 	P.w = 1.0;
+// 	return P;
+// }
+
+// https://devcry.heiho.net/html/2017/20170521-slerp.html
+// float lerp(float a, float b, float t) {
+// 	return (1.0 - t) * a + t * b;
+// }
+// vec4 quatSlerp(vec4 p0, vec4 p1, float t){
+// 	vec4 qb = p1;
+
+// 	// cos(a) = dot product
+// 	float cos_a = p0.x * qb.x + p0.y * qb.y + p0.z * qb.z + p0.w * qb.w;
+// 	if (cos_a < 0.0f) {
+// 		cos_a = -cos_a;
+// 		qb = -qb;
+// 	}
+
+// 	// close to zero, cos(a) ~= 1
+// 	// do linear interpolation
+// 	if (cos_a > 0.999) {
+// 		return vec4(
+// 			lerp(p0.x, qb.x, t),
+// 			lerp(p0.y, qb.y, t),
+// 			lerp(p0.z, qb.z, t),
+// 			lerp(p0.w, qb.w, t)
+// 		);
+// 	}
+
+// 	float alpha = acos(cos_a);
+// 	return (p0 * sin(1.0 - t) + p1 * sin(t * alpha)) / sin(alpha);
+// }
+
+// https://stackoverflow.com/questions/62943083/interpolate-between-two-quaternions-the-long-way
+vec4 quatSlerp(vec4 q1, vec4 q2, float t){
+	float angle = acos(dot(q1, q2));
+	float denom = sin(angle);
+	//check if denom is zero
+	return (q1*sin((1.0-t)*angle)+q2*sin(t*angle))/denom;
+}
+// TO CHECK:
+// this page https://www.reddit.com/r/opengl/comments/704la7/glsl_quaternion_library/
+// has a link to a potentially nice pdf:
+// http://web.mit.edu/2.998/www/QuaternionReport1.pdf
+
 // https://github.com/mattatz/ShibuyaCrowd/blob/master/source/shaders/common/quaternion.glsl
 vec4 quatMult(vec4 q1, vec4 q2)
 {

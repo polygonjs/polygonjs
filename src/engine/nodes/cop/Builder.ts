@@ -48,6 +48,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {BaseNodeType} from '../_Base';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 class BuilderCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */
@@ -67,7 +68,7 @@ const ParamsConfig = new BuilderCopParamsConfig();
 export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'builder';
+		return CopType.BUILDER;
 	}
 	override readonly persisted_config: TexturePersistedConfig = new TexturePersistedConfig(this);
 	protected _assemblerController = this._createAssemblerController();

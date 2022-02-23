@@ -36,6 +36,7 @@ import {Poly} from '../../Poly';
 import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/ParticlesPersistedConfig';
 import {TimeController} from '../../scene/utils/TimeController';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	/** @param frame the particles simulation starts */
@@ -82,7 +83,7 @@ const ParamsConfig = new ParticlesSystemGpuSopParamsConfig();
 export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'particlesSystemGpu';
+		return SopType.PARTICLES_SYSTEM_GPU;
 	}
 
 	override dispose() {

@@ -228,6 +228,11 @@ export interface ParamOptions
 	};
 }
 
+// we don't want to check if EDITABLE has been overriden,
+// as it is overriden dynamically for the gl nodes
+// and that override should therefore not be saved with the scene
+const NON_OVERRIDABLE_OPTIONS: Array<keyof ParamOptions> = [EDITABLE];
+
 export class OptionsController {
 	private _programatic_visible_state: boolean = true;
 	private _options!: ParamOptions;
@@ -288,11 +293,12 @@ export class OptionsController {
 	}
 	overriddenOptions(): ParamOptions {
 		const overriden: ParamOptions = {};
-		const option_names = Object.keys(this._options) as Array<keyof ParamOptions>;
-		for (let option_name of option_names) {
-			if (!ObjectUtils.isEqual(this._options[option_name], this._default_options[option_name])) {
-				const cloned_option = ObjectUtils.cloneDeep(this._options[option_name]);
-				Object.assign(overriden, {[option_name]: cloned_option});
+		const optionNames = Object.keys(this._options) as Array<keyof ParamOptions>;
+		const optionNamesToCheck = ArrayUtils.difference(optionNames, NON_OVERRIDABLE_OPTIONS);
+		for (let optionName of optionNamesToCheck) {
+			if (!ObjectUtils.isEqual(this._options[optionName], this._default_options[optionName])) {
+				const cloned_option = ObjectUtils.cloneDeep(this._options[optionName]);
+				Object.assign(overriden, {[optionName]: cloned_option});
 			}
 		}
 		return overriden;

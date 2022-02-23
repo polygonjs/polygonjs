@@ -11,6 +11,9 @@ import {imageCopPresetRegister} from './cop/Image';
 import {videoCopPresetRegister} from './cop/Video';
 // // gl
 import {attributeGlPresetRegister} from './gl/Attribute';
+import {flockingGlPresetRegister} from './gl/Flocking';
+import {neighbourAttractGlPresetRegister, neighbourRepulseGlPresetRegister} from './gl/Neighbour';
+
 // // mat
 // import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
 // obj
@@ -45,6 +48,9 @@ class PresetLibraryClass {
 		this._registerPreset(videoCopPresetRegister);
 		// gl
 		this._registerPreset(attributeGlPresetRegister);
+		this._registerPreset(flockingGlPresetRegister);
+		this._registerPreset(neighbourAttractGlPresetRegister);
+		this._registerPreset(neighbourRepulseGlPresetRegister);
 		// mat
 		// this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
 		// sop

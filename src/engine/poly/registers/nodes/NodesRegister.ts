@@ -92,7 +92,11 @@ export class NodesRegister {
 		nodeType = NodesRegister.filterType(nodeType);
 		return this._node_register_options.get(context)?.get(nodeType);
 	}
-	registeredNodesForContextAndParentType(context: NodeContext, parent_node_type: string) {
+	registeredNodesForParentNode(parentNode: BaseNodeType) {
+		const context = parentNode.childrenController?.context;
+		if (!context) {
+			return [];
+		}
 		const map = this._node_register.get(context);
 		if (map) {
 			const nodes_for_context: BaseNodeConstructor[] = [];
@@ -107,7 +111,7 @@ export class NodesRegister {
 				} else {
 					const option_only = options['only'];
 					const option_except = options['except'];
-					const context_and_type = `${context}/${parent_node_type}`;
+					const context_and_type = `${parentNode.context()}/${parentNode.type()}`;
 					if (option_only) {
 						return option_only.includes(context_and_type);
 					}
@@ -121,9 +125,9 @@ export class NodesRegister {
 			return [];
 		}
 	}
-	registeredNodes(context: NodeContext, parentNodeType: string): PolyDictionary<BaseNodeConstructor> {
+	registeredNodes(parentNode: BaseNodeType): PolyDictionary<BaseNodeConstructor> {
 		const nodesByType: PolyDictionary<BaseNodeConstructor> = {};
-		const nodes = this.registeredNodesForContextAndParentType(context, parentNodeType);
+		const nodes = this.registeredNodesForParentNode(parentNode);
 		for (let node of nodes) {
 			const nodeType = NodesRegister.type(node);
 			nodesByType[nodeType] = node;

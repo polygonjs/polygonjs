@@ -1,4 +1,4 @@
-import {BaseNodeClass} from './nodes/_Base';
+import {BaseNodeClass, BaseNodeType} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from './poly/RenderersController';
 import {PolyLibsController} from './poly/PolyLibsController';
@@ -96,8 +96,8 @@ export class PolyEngine {
 		this.pluginsRegister.wrapConfigurePolygonjs(callback);
 	}
 
-	registeredNodes(parent_context: NodeContext, type: string): PolyDictionary<typeof BaseNodeClass> {
-		return this.nodesRegister.registeredNodes(parent_context, type);
+	registeredNodes(parentNode: BaseNodeType): PolyDictionary<typeof BaseNodeClass> {
+		return this.nodesRegister.registeredNodes(parentNode);
 	}
 	registeredOperation(parent_context: NodeContext, operation_type: string): typeof BaseOperation | undefined {
 		return this.operationsRegister.registeredOperation(parent_context, operation_type);

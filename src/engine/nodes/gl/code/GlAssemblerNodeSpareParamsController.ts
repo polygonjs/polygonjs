@@ -1,5 +1,5 @@
-import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
-import {ParamJsonExporterData} from '../../utils/io/IOController';
+// import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
+// import {ParamJsonExporterData} from '../../utils/io/IOController';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
@@ -13,8 +13,8 @@ import {GlParamConfig} from './utils/GLParamConfig';
 Create spare params on mat nodes
 */
 export class GlAssemblerNodeSpareParamsController {
-	private _deleted_params_data: Map<string, ParamJsonExporterData<ParamType>> = new Map();
-	private _created_spare_param_names: Set<string> = new Set();
+	// private _deletedParamsData: Map<string, ParamJsonExporterData<ParamType>> = new Map();
+	private _createdSpareParamNames: Set<string> = new Set();
 	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	private _init_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	constructor(private _controller: GlAssemblerControllerType, private _node: AssemblerControllerNode) {}
@@ -24,7 +24,7 @@ export class GlAssemblerNodeSpareParamsController {
 
 	createSpareParameters() {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
-		const params_update_options: ParamsUpdateOptions = {};
+		const paramsUpdateOptions: ParamsUpdateOptions = {};
 		const paramConfigs = this.assembler.param_configs();
 		const paramConfigsByName = MapUtils.groupBy<GlParamConfig<ParamType>, string>(paramConfigs, (c) => c.name());
 		const assembler_param_names = paramConfigs.map((c) => c.name());
@@ -35,9 +35,9 @@ export class GlAssemblerNodeSpareParamsController {
 		}
 
 		// spare_param_names_to_remove is composed of previously created params, but also spare params with the same name, which may be created when loading the scene
-		const spare_param_names_to_remove = SetUtils.union(this._created_spare_param_names, spare_param_names_to_add);
+		const spare_param_names_to_remove = SetUtils.union(this._createdSpareParamNames, spare_param_names_to_add);
 		// but if the param type has not changed, we do not need to remove it, nor add it
-		this._created_spare_param_names.forEach((paramName) => {
+		this._createdSpareParamNames.forEach((paramName) => {
 			const currentParamType = this._node.params.get(paramName)?.type();
 			const paramConfigsWithName = paramConfigsByName.get(paramName);
 			if (paramConfigsWithName) {
@@ -60,13 +60,13 @@ export class GlAssemblerNodeSpareParamsController {
 			if (param) {
 				this._raw_input_serialized_by_param_name.set(param.name(), param.rawInputSerialized());
 				this._init_value_serialized_by_param_name.set(param.name(), param.defaultValueSerialized());
-				const param_exporter = JsonExportDispatcher.dispatch_param(param);
-				if (param_exporter.required()) {
-					const params_data = param_exporter.data();
-					this._deleted_params_data.set(param.name(), params_data);
-				}
-				params_update_options.namesToDelete = params_update_options.namesToDelete || [];
-				params_update_options.namesToDelete.push(param_name);
+				// const param_exporter = JsonExportDispatcher.dispatch_param(param);
+				// if (param_exporter.required()) {
+				// 	// const params_data = param_exporter.data();
+				// 	// this._deletedParamsData.set(param.name(), params_data);
+				// }
+				paramsUpdateOptions.namesToDelete = paramsUpdateOptions.namesToDelete || [];
+				paramsUpdateOptions.namesToDelete.push(param_name);
 			}
 		});
 
@@ -94,8 +94,8 @@ export class GlAssemblerNodeSpareParamsController {
 					raw_input = paramConfig.defaultValue() as any;
 				}
 
-				params_update_options.toAdd = params_update_options.toAdd || [];
-				params_update_options.toAdd.push({
+				paramsUpdateOptions.toAdd = paramsUpdateOptions.toAdd || [];
+				paramsUpdateOptions.toAdd.push({
 					name: paramConfig.name(),
 					type: paramConfig.type(),
 					initValue: init_value as any,
@@ -105,8 +105,8 @@ export class GlAssemblerNodeSpareParamsController {
 			}
 		}
 
-		this._node.params.updateParams(params_update_options);
-		this._created_spare_param_names = SetUtils.fromArray(params_update_options.toAdd?.map((o) => o.name) || []);
+		this._node.params.updateParams(paramsUpdateOptions);
+		this._createdSpareParamNames = SetUtils.fromArray(paramConfigs.map((c) => c.name()));
 
 		for (let paramConfig of paramConfigs) {
 			paramConfig.applyToNode(this._node);

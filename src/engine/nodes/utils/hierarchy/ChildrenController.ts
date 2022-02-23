@@ -106,7 +106,7 @@ export class HierarchyChildrenController {
 	}
 
 	availableChildrenClasses() {
-		return Poly.registeredNodes(this._context, this.node.type());
+		return Poly.registeredNodes(this.node);
 	}
 
 	isValidChildType(node_type: string): boolean {

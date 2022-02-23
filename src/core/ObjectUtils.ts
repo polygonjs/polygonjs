@@ -9,6 +9,16 @@ export class ObjectUtils {
 	// 	return value != null && (type == 'object' || type == 'function');
 	// }
 	static isEqual(object0: any, object1: any): boolean {
+		if (CoreType.isBoolean(object0) && CoreType.isBoolean(object1)) {
+			return object0 == object1;
+		}
+		if (CoreType.isNumber(object0) && CoreType.isNumber(object1)) {
+			return object0 == object1;
+		}
+		if (CoreType.isString(object0) && CoreType.isString(object1)) {
+			return object0 == object1;
+		}
+
 		if (CoreType.isObject(object0) && CoreType.isObject(object1)) {
 			const keys0 = Object.keys(object0);
 			const keys1 = Object.keys(object1);
