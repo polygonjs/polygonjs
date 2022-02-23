@@ -39,7 +39,6 @@ export class InstanceSopOperation extends BaseSopOperation {
 		this._geometry = undefined;
 
 		const object_to_instance = core_group_to_instance.objectsWithGeo()[0];
-		console.log('object_to_instance', object_to_instance);
 		if (object_to_instance) {
 			const geometry_to_instance = object_to_instance.geometry;
 			if (geometry_to_instance) {
