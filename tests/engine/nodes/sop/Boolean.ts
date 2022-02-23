@@ -91,7 +91,10 @@ QUnit.test('SOP boolean with shared materials', async (assert) => {
 		(mesh.material as Material[]).map((mat) => mat.uuid),
 		[meshBasic1, meshBasic2].map((matNode) => matNode.material.uuid)
 	);
-	assert.equal(geometry.groups.length, 2);
+	assert.equal(geometry.groups.length, 3, '3 groups');
+	assert.equal(geometry.groups[0].count, 105, 'group 0 count');
+	assert.equal(geometry.groups[1].count, 30, 'group 1 count');
+	assert.equal(geometry.groups[2].count, 0, 'group 2 has 0');
 	assert.equal(coreGroup.points().length, 135);
 
 	boolean.p.useBothMaterials.set(false);
@@ -101,5 +104,8 @@ QUnit.test('SOP boolean with shared materials', async (assert) => {
 	mesh = coreGroup.objectsWithGeo()[0] as Mesh;
 	assert.deepEqual((mesh.material as Material).uuid, meshBasic1.material.uuid);
 	geometry = mesh.geometry;
-	assert.equal(geometry.groups.length, 2);
+	assert.equal(geometry.groups.length, 3);
+	assert.equal(geometry.groups[0].count, 105, 'group 0 count');
+	assert.equal(geometry.groups[1].count, 30, 'group 1 count');
+	assert.equal(geometry.groups[2].count, 0, 'group 2 has 0');
 });
