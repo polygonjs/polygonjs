@@ -1,5 +1,6 @@
 // import {Camera} from 'three/src/cameras/Camera';
 import {isBooleanTrue} from '../../../core/Type';
+import {RootManagerNode} from '../../nodes/manager/Root';
 import {BaseViewerType} from '../_Base';
 
 const ICON = {
@@ -23,8 +24,7 @@ export class ViewerAudioController {
 
 		if (isBooleanTrue(root.pv.displayAudioIcon)) {
 			this._showIcon();
-			this._updateColor();
-			this._updateIcon();
+			this._updateIcon(root);
 		} else {
 			this._hideIcon();
 		}
@@ -38,12 +38,6 @@ export class ViewerAudioController {
 		this._offIcon = undefined;
 	}
 
-	private _updateColor() {
-		if (this.__iconContainer) {
-			const root = this._viewer.cameraNode().root();
-			this.__iconContainer.style.color = root.pv.audioIconColor.getStyle();
-		}
-	}
 	private _showIcon() {
 		const element = this._iconContainer();
 		if (element) {
@@ -70,12 +64,6 @@ export class ViewerAudioController {
 	}
 	private _createIconContainer() {
 		const element = document.createElement('div');
-		element.style.position = 'absolute';
-		element.style.top = '10px';
-		element.style.right = '10px';
-		element.style.width = '24px';
-		element.style.height = '24px';
-		element.style.cursor = 'pointer';
 
 		element.addEventListener('pointerdown', () => {
 			this._toggleSound();
@@ -83,6 +71,19 @@ export class ViewerAudioController {
 
 		return element;
 	}
+	private _setIconContainerStyle(element: HTMLElement, root: RootManagerNode) {
+		// const style = 'position: absolute; top: 10px; right: 10px; width: 24px; height: 24px; cursor: pointer'
+		const style = root.pv.audioIconStyle;
+		element.setAttribute('style', style);
+		element.style.color = root.pv.audioIconColor.getStyle();
+		// element.style.position = 'absolute';
+		// element.style.top = '10px';
+		// element.style.right = '10px';
+		// element.style.width = '24px';
+		// element.style.height = '24px';
+		// element.style.cursor = 'pointer';
+	}
+
 	private offIcon() {
 		function createIcon() {
 			const icon = document.createElement('div');
@@ -100,14 +101,16 @@ export class ViewerAudioController {
 		return (this._onIcon = this._onIcon || createIcon());
 	}
 	private _toggleSound() {
-		this._viewer.cameraNode().root().audioController.toggleSound();
-		this._updateIcon();
+		const root = this._viewer.cameraNode().root();
+		root.audioController.toggleSound();
+		this._updateIcon(root);
 	}
-	private _updateIcon() {
+	private _updateIcon(root: RootManagerNode) {
 		const container = this._iconContainer();
 		if (!container) {
 			return;
 		}
+		this._setIconContainerStyle(container, root);
 		const onIcon = this.onIcon();
 		const offIcon = this.offIcon();
 		if (this._viewer.cameraNode().root().audioController.soundOn()) {
