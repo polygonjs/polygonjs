@@ -26,6 +26,7 @@ import {PlayerControlsEventNode} from '../../../nodes/event/PlayerControls';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {RaycastEventNode} from '../../../nodes/event/Raycast';
 import {SceneEventNode} from '../../../nodes/event/Scene';
+import {ScrollTriggerEventNode} from '../../../nodes/event/ScrollTrigger';
 import {SetFlagEventNode} from '../../../nodes/event/SetFlag';
 import {SetParamEventNode} from '../../../nodes/event/SetParam';
 import {SequenceEventNode} from '../../../nodes/event/Sequence';
@@ -70,6 +71,7 @@ export interface EventNodeChildrenMap {
 	pointer: PointerEventNode;
 	raycast: RaycastEventNode;
 	scene: SceneEventNode;
+	scrollTrigger: ScrollTriggerEventNode;
 	setFlag: SetFlagEventNode;
 	setParam: SetParamEventNode;
 	sequence: SequenceEventNode;
@@ -118,6 +120,7 @@ export class EventRegister {
 		poly.registerNode(PointerEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(RaycastEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(SceneEventNode, CATEGORY_EVENT.SCENE);
+		poly.registerNode(ScrollTriggerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(SetFlagEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(SetParamEventNode, CATEGORY_EVENT.SCENE);
 		poly.registerNode(SequenceEventNode, CATEGORY_EVENT.MISC);

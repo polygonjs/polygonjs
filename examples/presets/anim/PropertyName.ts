@@ -18,6 +18,9 @@ const PropertyNameAnimNodePresetsCollectionFactory: PresetsCollectionFactory<Pro
 	const scaleX = new BasePreset().addEntry(node.p.name, `scale.x`);
 	const scaleY = new BasePreset().addEntry(node.p.name, `scale.y`);
 	const scaleZ = new BasePreset().addEntry(node.p.name, `scale.z`);
+	const materialColor = new BasePreset().addEntry(node.p.name, `material.color`);
+	const materialMetalness = new BasePreset().addEntry(node.p.name, `material.metalness`);
+	const materialRoughness = new BasePreset().addEntry(node.p.name, `material.roughness`);
 
 	collection.setPresets({
 		position,
@@ -32,6 +35,9 @@ const PropertyNameAnimNodePresetsCollectionFactory: PresetsCollectionFactory<Pro
 		scaleX,
 		scaleY,
 		scaleZ,
+		materialColor,
+		materialMetalness,
+		materialRoughness,
 	});
 
 	return collection;

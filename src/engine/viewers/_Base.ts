@@ -67,6 +67,11 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		canvas.id = `${this._canvasIdPrefix()}_${this._id}`;
 		canvas.style.display = 'block';
 		canvas.style.outline = 'none';
+		// we add 100% to the width and height
+		// to make it easy for the canvas to not grow larger
+		// than its container, without requiring css to enforce this
+		canvas.style.width = '100%';
+		canvas.style.height = '100%';
 		return canvas;
 	}
 	canvas() {
