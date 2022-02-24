@@ -25,6 +25,7 @@
 	"scripts": {
 		"start": "webpack-dev-server --env.NODE_ENV=development --env.production=false --config config/webpack/dev.js",
 		"build": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",
+		"build_fast": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack_fast && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",
 		"build_with_webpack": "webpack --env.NODE_ENV=production --env.production --progress --config config/webpack/prod.js",
 		"build_with_webpack_fast": "webpack --env.NODE_ENV=production --env.production --progress --env.FAST_COMPILE=true --config config/webpack/prod.js",
 		"build_unpkg": "webpack --env.NODE_ENV=production --env.production --env.PUBLIC_PATH='./' --progress --config config/webpack/prod.js",
@@ -33,7 +34,8 @@
 		"analyze": "webpack --env.NODE_ENV=production --env.production --config config/webpack/prod.js --profile --json > config/webpack/stats.json && node_modules/.bin/webpack-bundle-analyzer config/webpack/stats.json",
 		"concat_dts": "./node_modules/typescript/bin/tsc --allowSyntheticDefaultImports --esModuleInterop --moduleResolution node config/webpack/dts_concat.ts; node config/webpack/dts_concat.js",
 		"tsc_esbuild": "./node_modules/typescript/bin/tsc config/esbuild/esbuild.ts --moduleResolution node",
-		"build_with_esbuild": "yarn tsc_esbuild && node config/esbuild/esbuild.js",
+		"build_with_esbuild": "yarn tsc_esbuild && yarn esbuild",
+		"esbuild": "node config/esbuild/esbuild.js",
 		"build_folder_delete": "rm -rf dist/*",
 		"build_folder_remove_unneeded": "rm -rf dist/config && rm -rf dist/tests",
 		"copy_threejs_examples_to_dist": "cp -rf src/modules/three/* dist/src/modules/three/"

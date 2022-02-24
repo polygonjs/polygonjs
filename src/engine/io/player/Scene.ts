@@ -1,6 +1,7 @@
-import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
+import {SetUtils} from '../../../core/SetUtils';
 // import {SceneDataManifestImporter} from '../manifest/import/SceneData';
 import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
+import {BaseNodeType} from '../../nodes/_Base';
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
 import {BaseViewerType} from '../../viewers/_Base';
@@ -10,7 +11,13 @@ import {SceneJsonExporterData} from '../json/export/Scene';
 import {SceneJsonImporter, ConfigureSceneCallback} from '../json/import/Scene';
 // import {ManifestContent} from '../manifest/import/SceneData';
 
-type ProgressBarUpdateCallback = (progressRatio: number) => void;
+interface OnProgressArguments {
+	triggerNode?: BaseNodeType;
+	cookedNodes: BaseNodeType[];
+	remainingNodes: BaseNodeType[];
+}
+
+type ProgressBarUpdateCallback = (progressRatio: number, args: OnProgressArguments) => void;
 
 export enum EventName {
 	VIEWER_MOUNTED = 'POLYViewerMounted',
@@ -112,10 +119,10 @@ export class ScenePlayerImporter {
 			this._dispatchEvent(EventName.SCENE_READY);
 		}
 	}
-	private _onNodesCookProgress(ratio: number) {
-		const onProgress = (ratio: number) => {
+	private _onNodesCookProgress(ratio: number, args: OnProgressArguments) {
+		const onProgress = (ratio: number, args: OnProgressArguments) => {
 			if (this.options.onProgress) {
-				this.options.onProgress(progressRatio.start + progressRatio.mult * ratio);
+				this.options.onProgress(progressRatio.start + progressRatio.mult * ratio, args);
 			}
 		};
 		const progressRatio = PROGRESS_RATIO.nodes;
@@ -123,7 +130,7 @@ export class ScenePlayerImporter {
 		// even if ratio==1
 		// as there may still be important instructions
 		// in the user-defined options.onProgress
-		onProgress(ratio);
+		onProgress(ratio, args);
 
 		if (ratio >= 1) {
 			this._onLoadComplete();
@@ -134,22 +141,27 @@ export class ScenePlayerImporter {
 		const nodes = await scene.root().loadProgress.resolvedNodes();
 		const nodesCount = nodes.length;
 		if (nodesCount == 0) {
-			this._onNodesCookProgress(1);
+			this._onNodesCookProgress(1, {triggerNode: undefined, cookedNodes: [], remainingNodes: []});
 		}
+		const remainingNodes = SetUtils.fromArray(nodes);
+		const cookedNodes = new Set<BaseNodeType>();
 		const callbackName = 'ScenePlayerImporter';
-		const cookedNodeIds = new Set<CoreGraphNodeId>();
 		for (let node of nodes) {
-			const nodeId = node.graphNodeId();
 			// we force nodes to compute
 			// in case they do not have a display flag on, or are not connected
 			// as it would get the progress bar stuck
 			node.compute();
 			node.cookController.registerOnCookEnd(callbackName, () => {
-				if (!cookedNodeIds.has(nodeId)) {
-					cookedNodeIds.add(nodeId);
+				if (!cookedNodes.has(node)) {
+					cookedNodes.add(node);
+					remainingNodes.delete(node);
 
-					const ratio = cookedNodeIds.size / nodesCount;
-					this._onNodesCookProgress(ratio);
+					const ratio = cookedNodes.size / nodesCount;
+					this._onNodesCookProgress(ratio, {
+						triggerNode: node,
+						cookedNodes: SetUtils.toArray(cookedNodes),
+						remainingNodes: SetUtils.toArray(remainingNodes),
+					});
 
 					node.cookController.deregisterOnCookEnd(callbackName);
 				}
