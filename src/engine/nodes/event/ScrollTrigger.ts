@@ -2,6 +2,40 @@
  * Triggers events based on page scroll
  *
  *
+ * @remarks
+ *
+ * In order to test the [event/ScrollTrigger](/docs/nodes/event/ScrollTrigger) node, you can create the following setup:
+ *
+ * using Polygonjs [local app](/local), add the following line to the `EditorConfig.ts` file, inside the `configureEditor` function:
+ *
+ * ```
+ * options.api.panel.viewer.setData({viewerId: 'my-viewer', html: require('./viewer.html')})
+ * ```
+ *
+ * and create a file `viewer.html` in the same folder as `EditorConfig.ts`, containing the following:
+ *
+ * ```<div id="main-container" style="position: relative; height: 100%">
+ *	<div id="my-viewer" style="position: absolute; width: 100%; height: 100%"></div>
+ *	<div id="scroll-container" style="position: relative; height: 100%; overflow-y: scroll">
+ *		<div id="checkpoint1" style="height: 400px; color: white">checkpoint 1</div>
+ *		<div id="checkpoint2" style="height: 400px; color: red">checkpoint 2</div>
+ *		<div id="checkpoint3" style="height: 400px; color: green">checkpoint 3</div>
+ *		<div id="checkpoint4" style="height: 400px; color: lightred">checkpoint 4</div>
+ *	</div>
+ * </div>```
+ *
+ * Then reload the editor. You will then see the viewer with a scrollbar and other divs inside.
+ *
+ * Then create a [event/ScrollTrigger](/docs/nodes/event/ScrollTrigger) node, and set its parameters as follow:
+ *
+ * - param `element` to `#checkpoint2`
+ * - param `useViewport` to `false`
+ * - param `scroller` to `#scroll-container`
+ * - param `markers` to `true`
+ *
+ * You should now be able to connect other event nodes to the outputs of the scrollTrigger node,
+ * and have those be triggered as you scroll.
+ *
  */
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -58,9 +92,9 @@ class ScrollTriggerParamsConfig extends NodeParamsConfig {
 	/** @param selector of the element the scroll events are detected for */
 	element = ParamConfig.STRING('', UPDATE_SCROLL_TRIGGER_PARAM_OPTIONS);
 	/** @param use viewport as scroller */
-	tuseViewport = ParamConfig.BOOLEAN(1, UPDATE_SCROLL_TRIGGER_PARAM_OPTIONS);
+	useViewport = ParamConfig.BOOLEAN(1, UPDATE_SCROLL_TRIGGER_PARAM_OPTIONS);
 	/** @param override the scroller */
-	scroller = ParamConfig.STRING('', defaultParamOptions({visibleIf: {tuseViewport: 0}}));
+	scroller = ParamConfig.STRING('', defaultParamOptions({visibleIf: {useViewport: 0}}));
 	/** @param add markers for debugging */
 	markers = ParamConfig.BOOLEAN(0, {
 		...UPDATE_SCROLL_TRIGGER_PARAM_OPTIONS,
@@ -143,7 +177,7 @@ export class ScrollTriggerEventNode extends TypedEventNode<ScrollTriggerParamsCo
 		}
 
 		const _getScroller = () => {
-			if (isBooleanTrue(this.pv.tuseViewport)) {
+			if (isBooleanTrue(this.pv.useViewport)) {
 				return;
 			}
 			const scrollerElement = this._querySelector(this.pv.scroller);
