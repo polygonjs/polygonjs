@@ -7,11 +7,10 @@ import {BaseViewerType} from '../../viewers/_Base';
 // import {AssetsPreloader} from '../assets/PreLoader';
 import {PROGRESS_RATIO} from '../common/Progress';
 import {SceneJsonExporterData} from '../json/export/Scene';
-import {SceneJsonImporter} from '../json/import/Scene';
+import {SceneJsonImporter, ConfigureSceneCallback} from '../json/import/Scene';
 // import {ManifestContent} from '../manifest/import/SceneData';
 
 type ProgressBarUpdateCallback = (progressRatio: number) => void;
-type ConfigureSceneCallback = (scene: PolyScene) => void;
 
 export enum EventName {
 	VIEWER_MOUNTED = 'POLYViewerMounted',
@@ -32,13 +31,13 @@ interface ImportCommonOptions extends LoadSceneOptions {
 
 export interface SceneDataImportOptions extends ImportCommonOptions {
 	sceneData: SceneJsonExporterData;
-	assetsRoot: string;
+	// assetsRoot: string;
 	autoPlay?: boolean;
 }
 export type LoadSceneData = (options: SceneDataImportOptions) => void;
 export interface SceneDataImportOptionsOnly {
 	sceneData: SceneJsonExporterData;
-	assetsRoot: string;
+	// assetsRoot: string;
 }
 
 // interface ManifestImportOptions extends ImportCommonOptions {
@@ -158,15 +157,12 @@ export class ScenePlayerImporter {
 		}
 	}
 	async loadScene() {
-		const importer = new SceneJsonImporter(this.options.sceneData);
-		this._scene = await importer.scene();
-
-		// set name and configureScene after
-		this._scene.setName(this.options.sceneName);
 		const configureScene = this.options.configureScene;
-		if (configureScene) {
-			configureScene(this._scene);
-		}
+		const importer = new SceneJsonImporter(this.options.sceneData, {
+			configureScene,
+			sceneName: this.options.sceneName,
+		});
+		this._scene = await importer.scene();
 
 		// mount
 		const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;

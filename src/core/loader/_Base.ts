@@ -72,8 +72,10 @@ export class CoreBaseLoader {
 	}
 
 	protected async _urlToLoad(): Promise<string> {
-		const fullUrl = this._url;
+		let fullUrl = this._url;
 		if (this._node) {
+			const assetsRoot = this._node.scene().assets.root();
+			fullUrl = assetsRoot ? `${assetsRoot}/${fullUrl}` : fullUrl;
 			await Poly.blobs.fetchBlobForNode({
 				fullUrl,
 				node: this._node,

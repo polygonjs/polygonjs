@@ -98,6 +98,5 @@ export class InstanceSopOperation extends BaseSopOperation {
 			template_core_group,
 			params.attributesToCopy
 		);
-		console.log('this._geometry', this._geometry);
 	}
 }

@@ -1,3 +1,4 @@
 app/views
 src/modules/three/examples/jsm/exporters/GLTFExporter.js
+src/modules/three/examples/jsm/controls/TransformControls.js
 */loaders/KTX2Loader.js

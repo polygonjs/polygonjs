@@ -5,19 +5,27 @@ import {JsonImportDispatcher} from './Dispatcher';
 import {ImportReport} from './ImportReport';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {TimeController} from '../../../scene/utils/TimeController';
+export type ConfigureSceneCallback = (scene: PolyScene) => void;
 
+interface SceneJSONImporterOptions {
+	sceneName?: string;
+	configureScene?: ConfigureSceneCallback;
+}
 export class SceneJsonImporter {
 	public readonly report = new ImportReport(this);
 	private _base_operations_composer_nodes_with_resolve_required: OperationsComposerSopNode[] | undefined;
-	constructor(private _data: SceneJsonExporterData) {}
+	constructor(private _data: SceneJsonExporterData, private _options?: SceneJSONImporterOptions) {}
 
-	static async loadData(data: SceneJsonExporterData) {
-		const importer = new SceneJsonImporter(data);
+	static async loadData(data: SceneJsonExporterData, options?: SceneJSONImporterOptions) {
+		const importer = new SceneJsonImporter(data, options);
 		return await importer.scene();
 	}
 
 	async scene(): Promise<PolyScene> {
 		const scene = new PolyScene();
+		if (this._options && this._options.sceneName) {
+			scene.setName(this._options.sceneName);
+		}
 		scene.loadingController.markAsLoading();
 
 		// scene.set_js_version(this._data['__js_version'])
@@ -61,6 +69,10 @@ export class SceneJsonImporter {
 		this._resolve_operation_containers_with_path_param_resolve();
 
 		await scene.loadingController.markAsLoaded();
+		if (this._options && this._options.configureScene) {
+			// make sure configureScene is called after the setName above
+			this._options.configureScene(scene);
+		}
 		scene.cooker.unblock();
 		// DO NOT wait for cooks here,
 		// as a viewer will only be created once everything has cooked

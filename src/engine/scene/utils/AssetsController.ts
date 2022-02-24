@@ -27,14 +27,14 @@ export class SceneAssetsController {
 	// ASSETS ROOT
 	//
 	//
-	private _assets_root: string | null = null;
+	private _assetsRoot: string | null = null;
 	root() {
-		return this._assets_root;
+		return this._assetsRoot;
 	}
 	setRoot(url: string | null) {
 		if (url == '') {
 			url = null;
 		}
-		this._assets_root = url;
+		this._assetsRoot = url;
 	}
 }
