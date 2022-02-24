@@ -206,7 +206,7 @@ QUnit.test('pointsCount: if dependent is deleted, node becomes dirty', async (as
 	await box2.compute();
 	assert.ok(!box2.isDirty());
 
-	assert.equal(box2.p.size.graphAllPredecessors().length, 10, 'has 10 predecessors');
+	assert.equal(box2.p.size.graphAllPredecessors().length, 14, 'has 14 predecessors');
 	assert.equal(box2.p.size.graphPredecessors().length, 1);
 	assert.equal(box2.p.size.graphPredecessors()[0].name(), 'box1');
 
