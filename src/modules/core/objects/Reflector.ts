@@ -43,19 +43,17 @@ export class Reflector extends BaseReflector<BufferGeometry, ShaderMaterial> {
 			fragmentShader: ReflectorShader.fragmentShader,
 			vertexShader: ReflectorShader.vertexShader,
 		});
-		material.uniforms['tDiffuse'].value = this.renderTarget.texture;
+
 		material.uniforms['color'].value = this._options.color;
 		material.uniforms['textureMatrix'].value = this.textureMatrix;
 		material.uniforms['opacity'].value = this._options.opacity;
 		material.transparent = this._options.opacity < 1;
 		return material;
 	}
-
-	override dispose() {
-		this.renderTarget.dispose();
-		this.material.dispose();
-		this._coreRenderBlur.dispose();
-		super.dispose();
+	protected _assignMaterialRenderTarget() {
+		if (this.renderTarget) {
+			this.material.uniforms['tDiffuse'].value = this.renderTarget.texture;
+		}
 	}
 
 	override clone(recursive: boolean): this {

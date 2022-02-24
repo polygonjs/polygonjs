@@ -52,11 +52,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});
 
 		const reflectors: Reflector[] = [];
-		const renderer = await this._node?.scene().renderersRegister.waitForRenderer();
-		if (!renderer) {
-			console.warn('reflector: no renderer found', this._node);
-			return this.createCoreGroupFromObjects(reflectors);
-		}
+		const renderer = this._node?.scene().renderersRegister.lastRegisteredRenderer();
 
 		const objects = inputCoreGroup.objectsWithGeo();
 

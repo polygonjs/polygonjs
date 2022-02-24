@@ -238,6 +238,7 @@ import './engine/nodes/sop/NormalsHelper';
 import './engine/nodes/sop/Null';
 import './engine/nodes/sop/ObjectMerge';
 import './engine/nodes/sop/ObjectProperties';
+import './engine/nodes/sop/OceanPlane';
 import './engine/nodes/sop/Palette';
 import './engine/nodes/sop/ParticlesSystemGpu';
 import './engine/nodes/sop/particlesSystemGPU/ParticlesAssembler';
@@ -277,6 +278,7 @@ import './engine/nodes/sop/UvTransform';
 import './engine/nodes/sop/UvUnwrap';
 
 QUnit.module('viewer');
+import './engine/viewers/_Base';
 import './engine/viewers/Callbacks';
 import './engine/viewers/Controls';
 import './engine/viewers/Events';

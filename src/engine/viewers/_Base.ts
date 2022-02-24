@@ -7,15 +7,21 @@ import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/Contro
 import {Object3D} from 'three/src/core/Object3D';
 import {PolyScene} from '../scene/PolyScene';
 import {ViewerAudioController} from './utils/AudioController';
+import {Poly, PolyEngine} from '../Poly';
 
 const HOVERED_CLASS_NAME = 'hovered';
 type ViewerCallback = (delta: number) => void;
 type CallbacksMap = Map<string, ViewerCallback>;
+export interface HTMLElementWithViewer<C extends BaseCameraObjNodeType> extends HTMLElement {
+	scene: PolyScene;
+	viewer: TypedViewer<C>;
+	Poly: PolyEngine;
+}
 
 export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// protected _display_scene: Scene;
 	// protected _canvas: HTMLCanvasElement | undefined;
-	protected _domElement: HTMLElement | undefined;
+	protected _domElement: HTMLElementWithViewer<C> | undefined;
 	protected _active: boolean = false;
 	private static _nextViewerId = 0;
 	private _id: Readonly<number>;
@@ -29,7 +35,10 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 
 	protected _mounted = false;
 	mount(element: HTMLElement) {
-		this._domElement = element;
+		this._domElement = element as HTMLElementWithViewer<C>;
+		this._domElement.viewer = this;
+		this._domElement.scene = this._cameraNode.scene();
+		this._domElement.Poly = Poly;
 		this._mounted = true;
 	}
 	unmount() {

@@ -14,6 +14,7 @@ import FRAGMENT from './water/frag.glsl';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Scene} from 'three/src/scenes/Scene';
 import {Camera} from 'three/src/cameras/Camera';
+import {PolyScene} from '../../../engine/index_all';
 /**
  * Work based on :
  * http://slayvin.net : Flat mirror for three.js
@@ -44,8 +45,8 @@ export interface WaterMaterial extends ShaderMaterial {
 }
 
 export interface WaterOptions extends BaseReflectorOptions {
+	polyScene: PolyScene;
 	alpha?: number;
-	time?: number;
 	timeScale?: number;
 	size?: number;
 	direction?: Vector3;
@@ -73,7 +74,6 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 	protected _createMaterial() {
 		const options = this._options;
 		const alpha = options.alpha !== undefined ? options.alpha : 1.0;
-		const time = options.time !== undefined ? options.time : 0.0;
 		const timeScale = options.timeScale !== undefined ? options.timeScale : 1.0;
 		const size = options.size !== undefined ? options.size : 0.0;
 		const direction = options.direction !== undefined ? options.direction : new Vector3(0.0, 1.0, 0.0);
@@ -97,7 +97,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 				{
 					mirrorSampler: {value: null},
 					alpha: {value: 1.0},
-					time: {value: 0.0},
+					time: {value: 0.0}, // do not assign time uniform here, as the uniforms as cloned shortly after
 					timeScale: {value: 1.0},
 					size: {value: 1.0},
 					distortionScale: {value: 20.0},
@@ -127,10 +127,10 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 			// transparent: true, // TODO: allow transparency when I have a good alpha model
 		}) as WaterMaterial;
 
-		material.uniforms['time'].value = time;
+		material.uniforms['time'] = this._options.polyScene.timeController.timeUniform();
 		material.uniforms['timeScale'].value = timeScale;
 		material.uniforms['size'].value = size;
-		material.uniforms['mirrorSampler'].value = this.renderTarget.texture;
+
 		material.uniforms['textureMatrix'].value = this.textureMatrix;
 		material.uniforms['alpha'].value = alpha;
 		material.uniforms['sunColor'].value = sunColor;
@@ -147,6 +147,11 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 
 		return material;
 	}
+	protected _assignMaterialRenderTarget() {
+		if (this.renderTarget) {
+			this.material.uniforms['mirrorSampler'].value = this.renderTarget.texture;
+		}
+	}
 
 	protected override _onBeforeRender(renderer: WebGLRenderer, scene: Scene, anyCamera: Camera) {
 		super._onBeforeRender(renderer, scene, anyCamera);
@@ -158,7 +163,9 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 	setReflectionActive(state: boolean) {
 		this._options.active = state;
 		if (state) {
-			this.material.uniforms['mirrorSampler'].value = this.renderTarget.texture;
+			if (this.renderTarget) {
+				this.material.uniforms['mirrorSampler'].value = this.renderTarget.texture;
+			}
 		} else {
 			this.material.uniforms['mirrorSampler'].value = null;
 		}

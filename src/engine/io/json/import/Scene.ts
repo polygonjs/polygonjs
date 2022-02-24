@@ -6,10 +6,12 @@ import {ImportReport} from './ImportReport';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {TimeController} from '../../../scene/utils/TimeController';
 export type ConfigureSceneCallback = (scene: PolyScene) => void;
+export type NodeCookWatchCallback = (scene: PolyScene) => void;
 
 interface SceneJSONImporterOptions {
 	sceneName?: string;
 	configureScene?: ConfigureSceneCallback;
+	nodeCookWatcher?: NodeCookWatchCallback;
 }
 export class SceneJsonImporter {
 	public readonly report = new ImportReport(this);
@@ -69,9 +71,14 @@ export class SceneJsonImporter {
 		this._resolve_operation_containers_with_path_param_resolve();
 
 		await scene.loadingController.markAsLoaded();
-		if (this._options && this._options.configureScene) {
-			// make sure configureScene is called after the setName above
-			this._options.configureScene(scene);
+		if (this._options) {
+			if (this._options.nodeCookWatcher) {
+				this._options.nodeCookWatcher(scene);
+			}
+			if (this._options.configureScene) {
+				// make sure configureScene is called after the setName above
+				this._options.configureScene(scene);
+			}
 		}
 		scene.cooker.unblock();
 		// DO NOT wait for cooks here,

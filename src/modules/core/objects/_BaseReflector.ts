@@ -27,7 +27,7 @@ import {Poly} from '../../../engine/Poly';
 export interface BaseReflectorOptions {
 	// color: Color;
 	// opacity: number;
-	renderer: WebGLRenderer;
+	renderer?: WebGLRenderer;
 	pixelRatio: number;
 	multisamples: number;
 	clipBias: number;
@@ -70,9 +70,9 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	protected textureMatrix = new Matrix4();
 	private virtualCamera = new PerspectiveCamera();
 
-	protected renderTarget: WebGLRenderTarget | WebGLMultisampleRenderTarget;
-	public override material: TMaterial;
-	protected _coreRenderBlur: CoreRenderBlur;
+	protected renderTarget: WebGLRenderTarget | WebGLMultisampleRenderTarget | undefined;
+	public override material: TMaterial = this._createMaterial();
+	protected _coreRenderBlur: CoreRenderBlur | undefined;
 
 	public override onBeforeRender = this._onBeforeRender.bind(this);
 	protected _mirrorCameraMultipliedByMatrixWorld = true;
@@ -80,28 +80,35 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	constructor(public override geometry: TGeometry, protected _options: BaseReflectorOptions) {
 		super(geometry);
 
-		const {width, height} = this._getRendererSize(this._options.renderer);
+		if (this._options.renderer) {
+			this._createRenderTarget(this._options.renderer);
+		}
 
-		if (_options.multisamples > 0) {
+		this._addWindowResizeEvent();
+	}
+	private _createRenderTarget(renderer: WebGLRenderer) {
+		const {width, height} = this._getRendererSize(renderer);
+
+		if (this._options.multisamples > 0) {
 			this.renderTarget = Poly.renderersController.renderTarget(width, height, renderTargetParams);
 			if (this.renderTarget instanceof WebGLMultisampleRenderTarget) {
-				this.renderTarget.samples = _options.multisamples;
+				this.renderTarget.samples = this._options.multisamples;
 			}
 		} else {
 			this.renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
 		}
+		this._assignMaterialRenderTarget();
 
-		this.material = this._createMaterial();
 		this._coreRenderBlur = new CoreRenderBlur(new Vector2(width, height));
-
-		this._addWindowResizeEvent();
 	}
+
 	protected abstract _createMaterial(): TMaterial;
+	protected abstract _assignMaterialRenderTarget(): void;
 
 	dispose() {
 		this.geometry.dispose();
-		this.renderTarget.dispose();
-		this.material.dispose();
+		this.renderTarget?.dispose();
+		this.material?.dispose();
 		this.onBeforeRender = () => {};
 		this._removeWindowResizeEvent();
 	}
@@ -125,10 +132,13 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 			}
 		});
 
-		const {width, height} = this._getRendererSize(this._options.renderer);
+		const renderer = this._options.renderer;
+		if (renderer) {
+			const {width, height} = this._getRendererSize(renderer);
 
-		this.renderTarget.setSize(width, height);
-		this._coreRenderBlur.setSize(width, height);
+			this.renderTarget?.setSize(width, height);
+			this._coreRenderBlur?.setSize(width, height);
+		}
 	}
 
 	private _getRendererSize(renderer: WebGLRenderer) {
@@ -157,6 +167,13 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 		if (!this._options.active) {
 			return;
 		}
+		if (!this.renderTarget) {
+			this._createRenderTarget(renderer);
+		}
+		if (!(this.renderTarget && this._coreRenderBlur)) {
+			return;
+		}
+
 		const camera = anyCamera as PerspectiveCamera;
 
 		this.reflectorWorldPosition.setFromMatrixPosition(this.matrixWorld);

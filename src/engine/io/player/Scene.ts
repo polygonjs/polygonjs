@@ -171,8 +171,9 @@ export class ScenePlayerImporter {
 	async loadScene() {
 		const configureScene = this.options.configureScene;
 		const importer = new SceneJsonImporter(this.options.sceneData, {
-			configureScene,
 			sceneName: this.options.sceneName,
+			configureScene,
+			nodeCookWatcher: this._watchNodesProgress.bind(this),
 		});
 		this._scene = await importer.scene();
 
@@ -188,8 +189,6 @@ export class ScenePlayerImporter {
 			});
 			this._dispatchEvent(EventName.VIEWER_MOUNTED);
 		}
-		// watch progress of selected nodes
-		this._watchNodesProgress(this._scene);
 
 		return this._scene;
 	}
