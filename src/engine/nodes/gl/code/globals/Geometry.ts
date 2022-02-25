@@ -50,10 +50,18 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		if (!connection_point) {
 			return;
 		}
+		const glType = connection_point.type();
 
+		this.handleGlobalVar(globals_node, output_name, glType, shaders_collection_controller);
+	}
+	override handleGlobalVar(
+		globals_node: BaseGlNodeType,
+		output_name: string,
+		glType: GlConnectionPointType,
+		shaders_collection_controller: ShadersCollectionController
+	): void {
 		const var_name = globals_node.glVarName(output_name);
-		const gl_type = connection_point.type();
-		const definition = new VaryingGLDefinition(globals_node, gl_type, var_name);
+		const definition = new VaryingGLDefinition(globals_node, glType, var_name);
 
 		// MapUtils.push_on_array_at_entry(definitions_by_shader_name, shader_name, definition);
 		shaders_collection_controller.addDefinitions(globals_node, [definition]);
@@ -87,7 +95,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 			// 	break;
 			// }
 			default: {
-				body_lines.push(`${var_name} = ${gl_type}(${output_name})`);
+				body_lines.push(`${var_name} = ${glType}(${output_name})`);
 			}
 		}
 		for (let dependency of dependencies) {

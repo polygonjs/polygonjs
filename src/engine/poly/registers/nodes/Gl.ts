@@ -61,11 +61,13 @@ import {ConstantGlNode} from '../../../nodes/gl/Constant';
 import {CrossGlNode} from '../../../nodes/gl/Cross';
 import {CycleGlNode} from '../../../nodes/gl/Cycle';
 import {DiskGlNode} from '../../../nodes/gl/Disk';
+import {DitherGlNode} from '../../../nodes/gl/Dither';
 import {EasingGlNode} from '../../../nodes/gl/Easing';
 import {FlockingGlNode} from '../../../nodes/gl/Flocking';
 import {FitGlNode, FitTo01GlNode, FitFrom01GlNode, FitFrom01ToVarianceGlNode} from '../../../nodes/gl/Fit';
 import {FogGlNode} from '../../../nodes/gl/Fog';
 import {ForLoopGlNode} from '../../../nodes/gl/ForLoop';
+import {FresnelGlNode} from '../../../nodes/gl/Fresnel';
 import {GlobalsGlNode} from '../../../nodes/gl/Globals';
 import {HsluvToRgbGlNode} from '../../../nodes/gl/HsluvToRgb';
 import {HsvToRgbGlNode} from '../../../nodes/gl/HsvToRgb';
@@ -144,6 +146,7 @@ export interface GlNodeChildrenMap {
 	degrees: DegreesGlNode;
 	disk: DiskGlNode;
 	distance: DistanceGlNode;
+	dither: DitherGlNode;
 	divide: DivideGlNode;
 	dot: DotGlNode;
 	easing: EasingGlNode;
@@ -161,6 +164,7 @@ export interface GlNodeChildrenMap {
 	floatToVec4: FloatToVec4GlNode;
 	floor: FloorGlNode;
 	fract: FractGlNode;
+	fresnel: FresnelGlNode;
 	fog: FogGlNode;
 	forLoop: ForLoopGlNode;
 	globals: GlobalsGlNode;
@@ -284,6 +288,7 @@ export class GlRegister {
 		poly.registerNode(DegreesGlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(DiskGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(DistanceGlNode, CATEGORY_GL.GEOMETRY);
+		poly.registerNode(DitherGlNode, CATEGORY_GL.ADVANCED);
 		poly.registerNode(DivideGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(DotGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(EasingGlNode, CATEGORY_GL.MATH);
@@ -311,6 +316,7 @@ export class GlRegister {
 		poly.registerNode(FogGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(ForLoopGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(FractGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(FresnelGlNode, CATEGORY_GL.ADVANCED);
 		poly.registerNode(GlobalsGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(HsluvToRgbGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(HsvToRgbGlNode, CATEGORY_GL.COLOR);
