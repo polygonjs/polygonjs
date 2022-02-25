@@ -48,9 +48,26 @@ export class RaycastCPUController {
 			return;
 		}
 		const updateFromCursor = (cursor: CursorOffset) => {
-			this._mouse.x = (cursor.offsetX / canvas.offsetWidth) * 2 - 1;
-			this._mouse.y = -(cursor.offsetY / canvas.offsetHeight) * 2 + 1;
-			this._mouse.toArray(this._mouse_array);
+			if (canvas.offsetWidth <= 0 || canvas.offsetHeight <= 0) {
+				// the canvas can have a size of 0 if it has been removed from the scene
+				this._mouse.set(0, 0);
+			} else {
+				this._mouse.x = (cursor.offsetX / canvas.offsetWidth) * 2 - 1;
+				this._mouse.y = -(cursor.offsetY / canvas.offsetHeight) * 2 + 1;
+				this._mouse.toArray(this._mouse_array);
+			}
+			// there can be some conditions leading to an infinite mouse number, so we check here what we got
+			if (isNaN(this._mouse.x) || !isFinite(this._mouse.x) || isNaN(this._mouse.y) || !isFinite(this._mouse.y)) {
+				console.warn('invalid number detected');
+				console.warn(
+					this._mouse.toArray(),
+					cursor.offsetX,
+					cursor.offsetY,
+					canvas.offsetWidth,
+					canvas.offsetHeight
+				);
+				return;
+			}
 			this._node.p.mouse.set(this._mouse_array);
 		};
 		const event = context.event;

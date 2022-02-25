@@ -24,19 +24,26 @@ import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/GLParamConfig';
 import {isBooleanTrue} from '../../../core/Type';
+import {ParamOptions} from '../../params/utils/OptionsController';
+
+const blurParamVisibility: ParamOptions = {
+	visibleIf: {tblur: 1},
+};
 class TextureParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('texture1');
 	// defaultValue = ParamConfig.STRING('');
 	uv = ParamConfig.VECTOR2([0, 0]);
 	tblur = ParamConfig.BOOLEAN(0);
-	resolution = ParamConfig.VECTOR2([256, 256]);
+	resolution = ParamConfig.VECTOR2([256, 256], blurParamVisibility);
 	blurPixelsCountX = ParamConfig.INTEGER(1, {
 		range: [1, 5],
 		rangeLocked: [true, false],
+		...blurParamVisibility,
 	});
 	blurPixelsCountY = ParamConfig.INTEGER(1, {
 		range: [1, 5],
 		rangeLocked: [true, false],
+		...blurParamVisibility,
 	});
 }
 const ParamsConfig = new TextureParamsConfig();
