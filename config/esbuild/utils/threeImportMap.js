@@ -2,7 +2,7 @@
 exports.__esModule = true;
 exports.threeImportMapsOnResolvePlugin = void 0;
 var path = require("path");
-var currentPath = path.resolve(__dirname, '../..');
+var currentPath = path.resolve(__dirname, '../../..');
 var nodeModulesPath = path.resolve(currentPath, 'node_modules');
 exports.threeImportMapsOnResolvePlugin = {
     name: 'example',

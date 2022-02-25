@@ -6,6 +6,11 @@ import {DecomposedPath} from '../../core/DecomposedPath';
 export abstract class TypedPathParam<T extends ParamType> extends TypedParam<T> {
 	public readonly decomposed_path = new DecomposedPath();
 
+	override dispose(): void {
+		this.scene().referencesController.resetReferenceFromParam(this);
+		super.dispose();
+	}
+
 	abstract notifyPathRebuildRequired(node: BaseNodeType | BaseParamType): void;
 	abstract notifyTargetParamOwnerParamsUpdated(node: BaseNodeType | BaseParamType): void;
 

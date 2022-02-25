@@ -1,5 +1,5 @@
 import * as path from 'path';
-const currentPath = path.resolve(__dirname, '../..');
+const currentPath = path.resolve(__dirname, '../../..');
 const nodeModulesPath = path.resolve(currentPath, 'node_modules');
 // const threePath = path.resolve(currentPath, 'node_modules/three');
 // const threeSrcPath = path.resolve(currentPath, 'node_modules/three/src');

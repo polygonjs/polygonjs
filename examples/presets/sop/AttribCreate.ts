@@ -6,7 +6,7 @@ const attribCreateSopNodePresetsCollectionFactory: PresetsCollectionFactory<Attr
 ) => {
 	const collection = new NodePresetsCollection();
 
-	const ptnum = new BasePreset().addEntry(node.p.name, 'ptnum').addEntry(node.p.value1, '@ptnum');
+	const id = new BasePreset().addEntry(node.p.name, 'id').addEntry(node.p.value1, '@ptnum');
 	const pti = new BasePreset().addEntry(node.p.name, 'pti').addEntry(node.p.value1, '@ptnum / (pointsCount(0)-1)');
 	const bbx = new BasePreset()
 		.addEntry(node.p.name, 'bbx')
@@ -22,7 +22,7 @@ const attribCreateSopNodePresetsCollectionFactory: PresetsCollectionFactory<Attr
 		.addEntry(node.p.value1, `10000 * rand(@ptnum * 124.543)`);
 
 	collection.setPresets({
-		ptnum,
+		id,
 		pti,
 		bbx,
 		bby,
