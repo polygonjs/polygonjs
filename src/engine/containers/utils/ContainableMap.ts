@@ -5,8 +5,10 @@ import {Object3D} from 'three/src/core/Object3D';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {NodeContext} from '../../poly/NodeContext';
+import {ActorBuilder} from '../../../core/actor/ActorBuilder';
 
 export interface ContainableMap {
+	[NodeContext.ACTOR]: ActorBuilder;
 	[NodeContext.ANIM]: TimelineBuilder;
 	[NodeContext.AUDIO]: AudioBuilder;
 	[NodeContext.EVENT]: string;

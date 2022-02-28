@@ -8,6 +8,7 @@ import {
 	SCENE_EVENT_PAUSE_EVENT_CONTEXT,
 	// SCENE_EVENT_TICK_EVENT_CONTEXT,
 } from './events/SceneEventsController';
+import {ActorsManager} from '../../../core/actor/ActorsManager';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
@@ -91,6 +92,7 @@ export class TimeController {
 		for (const callback of this._onBeforeTickCallbacks) {
 			callback(delta);
 		}
+		ActorsManager.tick(this.scene.threejsScene());
 
 		if (updateFrame) {
 			const newFrame = Math.floor(this._timeUniform.value * FPS);

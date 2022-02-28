@@ -26,6 +26,7 @@ import {TypedNode} from '../nodes/_Base';
 // import { JsNodeChildrenMap } from './registers/nodes/Js';
 
 export enum NodeContext {
+	ACTOR = 'actor',
 	ANIM = 'anim',
 	AUDIO = 'audio',
 	COP = 'cop',
@@ -41,6 +42,7 @@ export enum NodeContext {
 }
 
 export type NodeContextUnion =
+	| NodeContext.ACTOR
 	| NodeContext.ANIM
 	| NodeContext.AUDIO
 	| NodeContext.COP
@@ -55,6 +57,7 @@ export type NodeContextUnion =
 	| NodeContext.SOP;
 
 export enum NetworkNodeType {
+	ACTOR = 'actorsNetwork',
 	ANIM = 'animationsNetwork',
 	AUDIO = 'audioNetwork',
 	COP = 'copNetwork',

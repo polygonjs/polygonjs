@@ -1,5 +1,9 @@
 const NETWORK = 'networks';
 
+export const CATEGORY_ACTOR = {
+	MISC: 'misc',
+};
+
 export const CATEGORY_ANIM = {
 	MISC: 'misc',
 	MODIFIER: 'modifiers',

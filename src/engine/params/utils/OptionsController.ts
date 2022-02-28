@@ -197,7 +197,8 @@ export interface StringParamOptions
 		MenuStringParamOptions,
 		FileParamOptions,
 		CallbackParamOptions,
-		ExpressionParamOptions {
+		ExpressionParamOptions,
+		LabelVisibilityParamOptions {
 	multiline?: boolean;
 	language?: StringParamLanguage;
 }

@@ -36,6 +36,7 @@ type ConnectionPointEnumMapGeneric = {
 };
 
 export interface ConnectionPointEnumMap extends ConnectionPointEnumMapGeneric {
+	[NodeContext.ACTOR]: undefined;
 	[NodeContext.ANIM]: undefined;
 	[NodeContext.AUDIO]: undefined;
 	[NodeContext.COP]: undefined;
@@ -53,6 +54,7 @@ export interface ConnectionPointEnumMap extends ConnectionPointEnumMapGeneric {
 type IConnectionPointEnumMap = {[key in NodeContextUnion]: ConnectionPointEnumMap[key]};
 
 export const DEFAULT_CONNECTION_POINT_ENUM_MAP: IConnectionPointEnumMap = {
+	[NodeContext.ACTOR]: undefined,
 	[NodeContext.ANIM]: undefined,
 	[NodeContext.AUDIO]: undefined,
 	[NodeContext.COP]: undefined,

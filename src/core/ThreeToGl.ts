@@ -4,8 +4,37 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {Color} from 'three/src/math/Color';
 import {CoreType} from './Type';
+import {GlConnectionPointType} from '../engine/nodes/utils/io/connections/Gl';
 
+export const COMPONENTS_BY_GL_TYPE = {
+	[GlConnectionPointType.BOOL]: undefined,
+	[GlConnectionPointType.INT]: undefined,
+	[GlConnectionPointType.FLOAT]: undefined,
+	[GlConnectionPointType.VEC2]: ['x', 'y'],
+	[GlConnectionPointType.VEC3]: ['x', 'y', 'z'],
+	[GlConnectionPointType.VEC4]: ['x', 'y', 'z', 'w'],
+	[GlConnectionPointType.SAMPLER_2D]: undefined,
+	[GlConnectionPointType.SSS_MODEL]: undefined,
+};
 export class ThreeToGl {
+	static glType(glType: GlConnectionPointType, value: string) {
+		switch (glType) {
+			case GlConnectionPointType.BOOL:
+				return this.bool(value);
+			case GlConnectionPointType.INT:
+				return this.integer(value);
+			case GlConnectionPointType.FLOAT:
+				return this.float(value);
+			case GlConnectionPointType.VEC2:
+				return this.vector2(value);
+			case GlConnectionPointType.VEC3:
+				return this.vector3(value);
+			case GlConnectionPointType.VEC4:
+				return this.vector4(value);
+		}
+		return `no matching implementation for glType '${glType}' in ThreeToGl.glType`;
+		// TypeAssert.unreachable(glType)
+	}
 	static any(value: any): string {
 		if (CoreType.isString(value)) {
 			return value;
@@ -30,6 +59,7 @@ export class ThreeToGl {
 		}
 		return `ThreeToGl error: unknown value type '${value}'`;
 	}
+
 	static numeric_array(values: number[]): string {
 		const values_str = new Array(values.length);
 		for (let i = 0; i < values.length; i++) {

@@ -1,3 +1,4 @@
+import {ActorRegister, ActorNodeChildrenMap} from './Actor';
 import {AnimRegister, AnimNodeChildrenMap} from './Anim';
 import {AudioRegister, AudioNodeChildrenMap} from './Audio';
 import {CopRegister, CopNodeChildrenMap} from './Cop';
@@ -9,6 +10,7 @@ import {ObjRegister, ObjNodeChildrenMap} from './Obj';
 import {PostRegister, PostNodeChildrenMap} from './Post';
 import {RopRegister, RopNodeChildrenMap} from './Rop';
 import {SopRegister, GeoNodeChildrenMap} from './Sop';
+// import {ActorRegister, ActorNodeChildrenMap} from './ActorMini';
 // import {AnimRegister, AnimNodeChildrenMap} from './AnimMini';
 // import {AudioRegister, AudioNodeChildrenMap} from './AudioMini';
 // import {CopRegister, CopNodeChildrenMap} from './CopMini';
@@ -25,6 +27,7 @@ import {PolyEngine} from '../../../Poly';
 import {NodeContext} from '../../NodeContext';
 
 export interface NodeChildrenMapByContext {
+	[NodeContext.ACTOR]: ActorNodeChildrenMap;
 	[NodeContext.ANIM]: AnimNodeChildrenMap;
 	[NodeContext.AUDIO]: AudioNodeChildrenMap;
 	[NodeContext.COP]: CopNodeChildrenMap;
@@ -41,6 +44,7 @@ export interface NodeChildrenMapByContext {
 
 export class AllNodesRegister {
 	static async run(poly: PolyEngine) {
+		ActorRegister.run(poly);
 		AnimRegister.run(poly);
 		AudioRegister.run(poly);
 		CopRegister.run(poly);

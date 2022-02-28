@@ -3,8 +3,9 @@
 // with webpackExclude to not bundle files like _Base.ts or what is under utils/
 // with webpackChunkName and [request] to ensure meaningful name
 // more on https://webpack.js.org/api/module-methods/
-// import {CATEGORY_SOP} from './Category';
+import {CATEGORY_SOP} from './Category';
 
+import {ActorSopNode} from '../../../nodes/sop/Actor';
 // import {AddSopNode} from '../../../nodes/sop/Add';
 // import {AmbientLightSopNode} from '../../../nodes/sop/AmbientLight';
 // import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
@@ -14,7 +15,7 @@
 // import {AttribAudioAnalyserSopNode} from '../../../nodes/sop/AttribAudioAnalyser';
 // import {AttribCastSopNode} from '../../../nodes/sop/AttribCast';
 // import {AttribCopySopNode} from '../../../nodes/sop/AttribCopy';
-// import {AttribCreateSopNode} from '../../../nodes/sop/AttribCreate';
+import {AttribCreateSopNode} from '../../../nodes/sop/AttribCreate';
 // import {AttribDeleteSopNode} from '../../../nodes/sop/AttribDelete';
 // import {AttribFromTextureSopNode} from '../../../nodes/sop/AttribFromTexture';
 // import {AttribNormalizeSopNode} from '../../../nodes/sop/AttribNormalize';
@@ -27,7 +28,7 @@
 // import {BboxScatterSopNode} from '../../../nodes/sop/BboxScatter';
 // import {BlendSopNode} from '../../../nodes/sop/Blend';
 // import {BooleanSopNode} from '../../../nodes/sop/Boolean';
-// import {BoxSopNode} from '../../../nodes/sop/Box';
+import {BoxSopNode} from '../../../nodes/sop/Box';
 // import {BVHSopNode} from '../../../nodes/sop/BVH';
 // import {BVHVisualizerSopNode} from '../../../nodes/sop/BVHVisualizer';
 // import {CacheSopNode} from '../../../nodes/sop/Cache';
@@ -40,7 +41,7 @@
 // // import {CodeSopNode} from '../../../nodes/sop/Code';
 // import {ColorSopNode} from '../../../nodes/sop/Color';
 // import {ConeSopNode} from '../../../nodes/sop/Cone';
-// import {CopySopNode} from '../../../nodes/sop/Copy';
+import {CopySopNode} from '../../../nodes/sop/Copy';
 // import {CSS2DObjectSopNode} from '../../../nodes/sop/CSS2DObject';
 // import {CSS3DObjectSopNode} from '../../../nodes/sop/CSS3DObject';
 // import {DataSopNode} from '../../../nodes/sop/Data';
@@ -69,7 +70,7 @@
 // import {LayerSopNode} from '../../../nodes/sop/Layer';
 // import {LineSopNode} from '../../../nodes/sop/Line';
 // import {LodSopNode} from '../../../nodes/sop/Lod';
-// import {MaterialSopNode} from '../../../nodes/sop/Material';
+import {MaterialSopNode} from '../../../nodes/sop/Material';
 // import {MaterialPropertiesSopNode} from '../../../nodes/sop/MaterialProperties';
 // import {MergeSopNode} from '../../../nodes/sop/Merge';
 // import {MetaballSopNode} from '../../../nodes/sop/Metaball';
@@ -84,7 +85,7 @@
 // import {PaletteSopNode} from '../../../nodes/sop/Palette';
 // import {ParticlesSystemGpuSopNode} from '../../../nodes/sop/ParticlesSystemGpu';
 // import {PeakSopNode} from '../../../nodes/sop/Peak';
-// import {PlaneSopNode} from '../../../nodes/sop/Plane';
+import {PlaneSopNode} from '../../../nodes/sop/Plane';
 // import {PlaneHelperSopNode} from '../../../nodes/sop/PlaneHelper';
 // import {PlayerCapsuleSopNode} from '../../../nodes/sop/PlayerCapsule';
 // import {PointSopNode} from '../../../nodes/sop/Point';
@@ -103,7 +104,7 @@
 // import {SortSopNode} from '../../../nodes/sop/Sort';
 // import {SolverSopNode} from '../../../nodes/sop/Solver';
 // import {SolverPreviousFrameSopNode} from '../../../nodes/sop/SolverPreviousFrame';
-// import {SphereSopNode} from '../../../nodes/sop/Sphere';
+import {SphereSopNode} from '../../../nodes/sop/Sphere';
 // import {SplitSopNode} from '../../../nodes/sop/Split';
 // import {SpotLightSopNode} from '../../../nodes/sop/SpotLight';
 // import {SubdivideSopNode} from '../../../nodes/sop/Subdivide';
@@ -128,15 +129,17 @@
 // import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 // import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 // // networks
+import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 // import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
 // import {AudioNetworkSopNode} from '../../../nodes/sop/AudioNetwork';
 // import {CopNetworkSopNode} from '../../../nodes/sop/CopNetwork';
-// import {EventsNetworkSopNode} from '../../../nodes/sop/EventsNetwork';
-// import {MaterialsNetworkSopNode} from '../../../nodes/sop/MaterialsNetwork';
+import {EventsNetworkSopNode} from '../../../nodes/sop/EventsNetwork';
+import {MaterialsNetworkSopNode} from '../../../nodes/sop/MaterialsNetwork';
 // import {PostProcessNetworkSopNode} from '../../../nodes/sop/PostProcessNetwork';
 // import {RenderersNetworkSopNode} from '../../../nodes/sop/RenderersNetwork';
 
 export interface GeoNodeChildrenMap {
+	actor: ActorSopNode;
 	// add: AddSopNode;
 	// ambientLight: AmbientLightSopNode;
 	// animationCopy: AnimationCopySopNode;
@@ -146,7 +149,7 @@ export interface GeoNodeChildrenMap {
 	// attribAudioAnalyser: AttribAudioAnalyserSopNode;
 	// attribCast: AttribCastSopNode;
 	// attribCopy: AttribCopySopNode;
-	// attribCreate: AttribCreateSopNode;
+	attribCreate: AttribCreateSopNode;
 	// attribDelete: AttribDeleteSopNode;
 	// attribFromTexture: AttribFromTextureSopNode;
 	// attribNormalize: AttribNormalizeSopNode;
@@ -159,7 +162,7 @@ export interface GeoNodeChildrenMap {
 	// bboxScatter: BboxScatterSopNode;
 	// blend: BlendSopNode;
 	// boolean: BooleanSopNode;
-	// box: BoxSopNode;
+	box: BoxSopNode;
 	// BVH: BVHSopNode;
 	// BVHVisualizer: BVHVisualizerSopNode;
 	// cache: CacheSopNode;
@@ -172,7 +175,7 @@ export interface GeoNodeChildrenMap {
 	// // code: CodeSopNode;
 	// color: ColorSopNode;
 	// cone: ConeSopNode;
-	// copy: CopySopNode;
+	copy: CopySopNode;
 	// CSS2DObject: CSS2DObjectSopNode;
 	// CSS3DObject: CSS3DObjectSopNode;
 	// data: DataSopNode;
@@ -201,7 +204,7 @@ export interface GeoNodeChildrenMap {
 	// layer: LayerSopNode;
 	// line: LineSopNode;
 	// lod: LodSopNode;
-	// material: MaterialSopNode;
+	material: MaterialSopNode;
 	// materialProperties: MaterialPropertiesSopNode;
 	// merge: MergeSopNode;
 	// metaball: MetaballSopNode;
@@ -216,7 +219,7 @@ export interface GeoNodeChildrenMap {
 	// palette: PaletteSopNode;
 	// particlesSystemGpu: ParticlesSystemGpuSopNode;
 	// peak: PeakSopNode;
-	// plane: PlaneSopNode;
+	plane: PlaneSopNode;
 	// planeHelper: PlaneHelperSopNode;
 	// playerCapsule: PlayerCapsuleSopNode;
 	// point: PointSopNode;
@@ -235,7 +238,7 @@ export interface GeoNodeChildrenMap {
 	// solver: SolverSopNode;
 	// solverPreviousFrame: SolverPreviousFrameSopNode;
 	// sort: SortSopNode;
-	// sphere: SphereSopNode;
+	sphere: SphereSopNode;
 	// split: SplitSopNode;
 	// subdivide: SubdivideSopNode;
 	// subnet: SubnetSopNode;
@@ -262,7 +265,7 @@ export interface GeoNodeChildrenMap {
 	// animationsNetwork: AnimationsNetworkSopNode;
 	// audioNetwork: AudioNetworkSopNode;
 	// copNetwork: CopNetworkSopNode;
-	// eventsNetwork: EventsNetworkSopNode;
+	eventsNetwork: EventsNetworkSopNode;
 	// materialsNetwork: MaterialsNetworkSopNode;
 	// postProcessNetwork: PostProcessNetworkSopNode;
 	// renderersNetwork: RenderersNetworkSopNode;
@@ -407,6 +410,7 @@ export class SopRegister {
 		// poly.registerOperation(UvTransformSopOperation);
 		// poly.registerOperation(UvUnwrapSopOperation);
 
+		poly.registerNode(ActorSopNode, CATEGORY_SOP.ADVANCED);
 		// poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
 		// poly.registerNode(AmbientLightSopNode, CATEGORY_SOP.LIGHTS);
 		// poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
@@ -418,7 +422,7 @@ export class SopRegister {
 		// }
 		// poly.registerNode(AttribCastSopNode, CATEGORY_SOP.ATTRIBUTE);
 		// poly.registerNode(AttribCopySopNode, CATEGORY_SOP.ATTRIBUTE);
-		// poly.registerNode(AttribCreateSopNode, CATEGORY_SOP.ATTRIBUTE);
+		poly.registerNode(AttribCreateSopNode, CATEGORY_SOP.ATTRIBUTE);
 		// poly.registerNode(AttribDeleteSopNode, CATEGORY_SOP.ATTRIBUTE);
 		// poly.registerNode(AttribFromTextureSopNode, CATEGORY_SOP.ATTRIBUTE);
 		// poly.registerNode(AttribNormalizeSopNode, CATEGORY_SOP.ATTRIBUTE);
@@ -431,7 +435,7 @@ export class SopRegister {
 		// poly.registerNode(BboxScatterSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(BlendSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(BooleanSopNode, CATEGORY_SOP.MODIFIER);
-		// poly.registerNode(BoxSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(BoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		// poly.registerNode(BVHSopNode, CATEGORY_SOP.ADVANCED);
 		// poly.registerNode(BVHVisualizerSopNode, CATEGORY_SOP.ADVANCED);
 		// poly.registerNode(CacheSopNode, CATEGORY_SOP.MISC);
@@ -444,7 +448,7 @@ export class SopRegister {
 		// // poly.registerNode(CodeSopNode, CATEGORY_SOP.ADVANCED);
 		// poly.registerNode(ColorSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(ConeSopNode, CATEGORY_SOP.PRIMITIVES);
-		// poly.registerNode(CopySopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(CopySopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(CSS2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		// // poly.registerNode(Css3DObjectSopNode, CATEGORY_SOP.PRIMITIVES); // not working yet
 		// poly.registerNode(DataSopNode, CATEGORY_SOP.INPUT);
@@ -475,7 +479,7 @@ export class SopRegister {
 		// poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		// poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);
-		// poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
 		// poly.registerNode(MaterialPropertiesSopNode, CATEGORY_SOP.RENDER);
 		// poly.registerNode(MergeSopNode, CATEGORY_SOP.MISC);
 		// poly.registerNode(MetaballSopNode, CATEGORY_SOP.PRIMITIVES);
@@ -490,7 +494,7 @@ export class SopRegister {
 		// poly.registerNode(PaletteSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
 		// poly.registerNode(PeakSopNode, CATEGORY_SOP.MODIFIER);
-		// poly.registerNode(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		// poly.registerNode(PlaneHelperSopNode, CATEGORY_SOP.HELPERS);
 		// poly.registerNode(PlayerCapsuleSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(PolarTransformSopNode, CATEGORY_SOP.MODIFIER);
@@ -509,7 +513,7 @@ export class SopRegister {
 		// poly.registerNode(SolverSopNode, CATEGORY_SOP.ADVANCED);
 		// poly.registerNode(SolverPreviousFrameSopNode, CATEGORY_SOP.ADVANCED);
 		// poly.registerNode(SortSopNode, CATEGORY_SOP.MODIFIER);
-		// poly.registerNode(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(SphereSopNode, CATEGORY_SOP.PRIMITIVES);
 		// poly.registerNode(SplitSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(SpotLightSopNode, CATEGORY_SOP.LIGHTS);
 		// poly.registerNode(SubdivideSopNode, CATEGORY_SOP.MODIFIER);
@@ -545,11 +549,12 @@ export class SopRegister {
 		// poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		// // networks
+		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		// poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		// poly.registerNode(AudioNetworkSopNode, CATEGORY_SOP.NETWORK);
 		// poly.registerNode(CopNetworkSopNode, CATEGORY_SOP.NETWORK);
-		// poly.registerNode(EventsNetworkSopNode, CATEGORY_SOP.NETWORK);
-		// poly.registerNode(MaterialsNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(EventsNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(MaterialsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		// poly.registerNode(PostProcessNetworkSopNode, CATEGORY_SOP.NETWORK);
 		// poly.registerNode(RenderersNetworkSopNode, CATEGORY_SOP.NETWORK);
 	}

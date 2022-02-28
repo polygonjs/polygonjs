@@ -12,7 +12,7 @@
  */
 
 import {TypedGlNode} from './_Base';
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {COMPONENTS_BY_GL_TYPE, ThreeToGl} from '../../../../src/core/ThreeToGl';
 
 // https://github.com/glslify/glsl-easings
 import CircularInOut from './gl/easing/circular-in-out.glsl';
@@ -158,6 +158,13 @@ const METHOD_NAMES_BY_EASE_NAME: PolyDictionary<string> = {
 	'sine-out': 'sineOut',
 };
 
+const ALLOWED_INPUTS: GlConnectionPointType[] = [
+	GlConnectionPointType.FLOAT,
+	GlConnectionPointType.VEC2,
+	GlConnectionPointType.VEC3,
+	GlConnectionPointType.VEC4,
+];
+const INPUT_NAME = 'in';
 const OUTPUT_NAME = 'out';
 const default_ease_type = EASE_NAMES.indexOf('sine-in-out');
 class EasingGlParamsConfig extends NodeParamsConfig {
@@ -168,7 +175,7 @@ class EasingGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	input = ParamConfig.FLOAT(0);
+	// input = ParamConfig.FLOAT(0);
 }
 const ParamsConfig = new EasingGlParamsConfig();
 export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
@@ -181,33 +188,74 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 		super.initializeNode();
 
 		this.io.connection_points.spare_params.set_inputless_param_names(['type']);
+		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
+		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
 	}
+	private _expected_input_types() {
+		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.FLOAT;
+		if (ALLOWED_INPUTS.includes(type)) {
+			return [type];
+		} else {
+			return [GlConnectionPointType.FLOAT];
+		}
+	}
+	private _expected_output_types() {
+		return [this._expected_input_types()[0]];
+	}
+	_gl_input_name(index: number): string {
+		return INPUT_NAME;
+	}
+	_gl_output_name(index: number): string {
+		return OUTPUT_NAME;
+	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const ease_name = EASE_NAMES[this.pv.type];
-		const method_name = METHOD_NAMES_BY_EASE_NAME[ease_name];
-		const glsl_function_code = IMPORT_BY_EASE_NAME[ease_name];
+		const easeName = EASE_NAMES[this.pv.type];
 
-		let ease_functions = [new FunctionGLDefinition(this, glsl_function_code)];
-		const function_dependencies = (IMPORT_DEPENDENCIES_BY_EASE_NAME[ease_name] || []).map(
+		const glslFunctionCode = IMPORT_BY_EASE_NAME[easeName];
+
+		let easeFunctions = [new FunctionGLDefinition(this, glslFunctionCode)];
+		const functionDependencies = (IMPORT_DEPENDENCIES_BY_EASE_NAME[easeName] || []).map(
 			(f) => new FunctionGLDefinition(this, f)
 		);
-		if (function_dependencies) {
-			ease_functions = function_dependencies.concat(ease_functions);
+		if (functionDependencies) {
+			easeFunctions = functionDependencies.concat(easeFunctions);
 		}
 		// ease_functions.forEach(ease_function=>{
 		// 	function_declaration_lines.push(ease_function)
 		// })
 
-		const in_value = ThreeToGl.float(this.variableForInputParam(this.p.input));
-		const out_value = this.glVarName(OUTPUT_NAME);
+		shaders_collection_controller.addDefinitions(this, easeFunctions);
+		shaders_collection_controller.addBodyLines(this, this._buildBodyLines(easeName));
+	}
 
-		const body_line = `float ${out_value} = ${method_name}(${in_value})`;
-		shaders_collection_controller.addDefinitions(this, ease_functions);
-		shaders_collection_controller.addBodyLines(this, [body_line]);
+	private _buildBodyLines(easeName: string): string[] {
+		const functionName = METHOD_NAMES_BY_EASE_NAME[easeName];
+		const outValue = this.glVarName(OUTPUT_NAME);
+		const outGlType = this._expected_output_types()[0];
+		switch (outGlType) {
+			case GlConnectionPointType.FLOAT: {
+				const inValue = ThreeToGl.float(this.variableForInput(INPUT_NAME));
+				return [`${outGlType} ${outValue} = ${functionName}(${inValue})`];
+			}
+			default: {
+				const bodyLines: string[] = [];
+				const inValue = ThreeToGl.glType(outGlType, this.variableForInput(INPUT_NAME));
+				const components = COMPONENTS_BY_GL_TYPE[outGlType];
+				if (components) {
+					const args = components.map((c) => `${functionName}(${inValue}.${c})`).join(', ');
+					bodyLines.push(`${outGlType} ${outValue} = ${outGlType}(${args})`);
+					return bodyLines;
+				} else {
+					return [];
+				}
+			}
+		}
 	}
 }

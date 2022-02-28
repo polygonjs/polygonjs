@@ -6,7 +6,7 @@
  *
  */
 
-import {ThreeToGl} from '../../../core/ThreeToGl';
+import {COMPONENTS_BY_GL_TYPE, ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
@@ -87,19 +87,11 @@ export class IsInfOrNanGlNode extends TypedGlNode<IsInfOrNanGlParamsConfig> {
 			return components.map((c) => testFunction(`${inValue}.${c}`)).join(' || ');
 		};
 
-		switch (glInType) {
-			case GlConnectionPointType.FLOAT: {
-				return `${testFunction(inValue)}`;
-			}
-			case GlConnectionPointType.VEC2: {
-				return testFunctionsForComponents(['x', 'y']);
-			}
-			case GlConnectionPointType.VEC3: {
-				return testFunctionsForComponents(['x', 'y', 'z']);
-			}
-			case GlConnectionPointType.VEC2: {
-				return testFunctionsForComponents(['x', 'y', 'z', 'w']);
-			}
+		const components = COMPONENTS_BY_GL_TYPE[glInType];
+		if (components) {
+			return testFunctionsForComponents(components);
+		} else {
+			return testFunction(inValue);
 		}
 	}
 }

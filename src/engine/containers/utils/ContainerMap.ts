@@ -39,6 +39,7 @@ import {RopContainer} from '../Rop';
 // }
 export type ContainerClassMapGeneric = {[key in NodeContext]: TypedContainer<key>};
 export const ContainerClassMap = {
+	[NodeContext.ACTOR]: AnimationContainer,
 	[NodeContext.ANIM]: AnimationContainer,
 	[NodeContext.AUDIO]: AudioContainer,
 	[NodeContext.COP]: TextureContainer,

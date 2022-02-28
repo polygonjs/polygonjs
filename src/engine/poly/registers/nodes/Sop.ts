@@ -5,6 +5,7 @@
 // more on https://webpack.js.org/api/module-methods/
 import {CATEGORY_SOP} from './Category';
 
+import {ActorSopNode} from '../../../nodes/sop/Actor';
 import {AddSopNode} from '../../../nodes/sop/Add';
 import {AmbientLightSopNode} from '../../../nodes/sop/AmbientLight';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
@@ -129,6 +130,7 @@ import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 // networks
+import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
 import {AudioNetworkSopNode} from '../../../nodes/sop/AudioNetwork';
 import {CopNetworkSopNode} from '../../../nodes/sop/CopNetwork';
@@ -138,6 +140,7 @@ import {PostProcessNetworkSopNode} from '../../../nodes/sop/PostProcessNetwork';
 import {RenderersNetworkSopNode} from '../../../nodes/sop/RenderersNetwork';
 
 export interface GeoNodeChildrenMap {
+	actor: ActorSopNode;
 	add: AddSopNode;
 	ambientLight: AmbientLightSopNode;
 	animationCopy: AnimationCopySopNode;
@@ -262,6 +265,7 @@ export interface GeoNodeChildrenMap {
 	uvUnwrap: UvUnwrapSopNode;
 
 	// networks
+	actorsNetwork: ActorsNetworkSopNode;
 	animationsNetwork: AnimationsNetworkSopNode;
 	audioNetwork: AudioNetworkSopNode;
 	copNetwork: CopNetworkSopNode;
@@ -341,6 +345,7 @@ import {UvTransformSopOperation} from '../../../operations/sop/UvTransform';
 import {UvUnwrapSopOperation} from '../../../operations/sop/UvUnwrap';
 
 import {PolyEngine} from '../../../Poly';
+import {ACTORS_IN_PROD} from './Actor';
 export class SopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerOperation(AddSopOperation);
@@ -412,6 +417,9 @@ export class SopRegister {
 		poly.registerOperation(UvTransformSopOperation);
 		poly.registerOperation(UvUnwrapSopOperation);
 
+		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
+			poly.registerNode(ActorSopNode, CATEGORY_SOP.MODIFIER);
+		}
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(AmbientLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
@@ -551,6 +559,9 @@ export class SopRegister {
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		// networks
+		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
+			poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
+		}
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AudioNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(CopNetworkSopNode, CATEGORY_SOP.NETWORK);
