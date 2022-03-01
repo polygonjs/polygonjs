@@ -44,13 +44,20 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 	}
 
 	protected _expected_input_types() {
-		const second_input_type = this.io.connection_points.input_connection_type(1);
-		const type = second_input_type || GlConnectionPointType.FLOAT;
+		const secondInputType = this.io.connection_points.input_connection_type(1);
+		const type = secondInputType || GlConnectionPointType.FLOAT;
 
-		const current_connections = this.io.connections.inputConnections();
-		const expected_count = current_connections
-			? CoreMath.clamp(current_connections.length, 2, MAX_INPUTS_COUNT)
-			: 2;
+		const currentConnections = this.io.connections.inputConnections() || [];
+		let lastValidConnectionIndex = 1;
+		let i = 0;
+		for (let connection of currentConnections) {
+			if (connection) {
+				lastValidConnectionIndex = i;
+			}
+			i++;
+		}
+
+		const expected_count = CoreMath.clamp(lastValidConnectionIndex + 1, 2, MAX_INPUTS_COUNT);
 		const expected_input_types = [GlConnectionPointType.INT];
 		for (let i = 0; i < expected_count; i++) {
 			expected_input_types.push(type);

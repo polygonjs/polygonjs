@@ -1,11 +1,23 @@
 export class PolyLibsController {
+	private _rootPrefix: string = '';
 	private _root: string | null = '/three/js/libs';
 
 	root() {
-		return this._root;
+		if (this._root) {
+			if (this._rootPrefix.length > 0) {
+				// remove heading dots if any
+				const root = this._root.replace(/^(\.)/, '');
+				return `${this._rootPrefix}${root}`;
+			} else {
+				return this._root;
+			}
+		}
 	}
 	setRoot(url: string | null) {
 		this._root = url;
+	}
+	setRootPrefix(prefix: string) {
+		this._rootPrefix = prefix;
 	}
 	//
 	//

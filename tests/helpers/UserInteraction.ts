@@ -6,11 +6,20 @@ export async function waitForUserInteraction(): Promise<void> {
 	return new Promise((resolve) => {
 		const buttonElement = document.createElement('div');
 		buttonElement.innerText = 'CLICK TO START TEST';
-		buttonElement.onclick = () => {
+
+		let elementRemoved = false;
+		function _removeElement() {
+			if (elementRemoved) {
+				return;
+			}
+			elementRemoved = true;
 			document.body.removeChild(buttonElement);
 			_userHasInteractedWithPage = true;
 			resolve();
-		};
+		}
+
+		buttonElement.onclick = _removeElement;
+		document.onkeydown = _removeElement;
 
 		document.body.prepend(buttonElement);
 		buttonElement.style.position = 'absolute';

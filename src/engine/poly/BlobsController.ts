@@ -25,11 +25,11 @@ interface BlobWrapper {
 	referringNodeIds: Set<CoreGraphNodeId>;
 }
 
-interface BlobCallbackParams {
+interface BlobData {
 	url: string;
 	blobWrapper: BlobWrapper;
 }
-type BlobCallback = (params: BlobCallbackParams) => void;
+type BlobDataCallback = (params: BlobData) => void;
 export class BlobsController {
 	private _blobWrappersByUrl: Map<string, BlobWrapper> = new Map();
 	constructor() {}
@@ -162,33 +162,34 @@ export class BlobsController {
 			return {error: `failed to fetch ${options.fullUrl}`};
 		}
 	}
-	traverse(callback: BlobCallback) {
+	traverse(callback: BlobDataCallback) {
 		// - 1 - we first go through the nodes and their assigned blobs
 		// - 2 - and then we go through the global blobs
 		// and sort the url to have the order being predictable
-		const _forEachBlob = (isGlobal: boolean, callback: BlobCallback) => {
-			const urls: string[] = [];
+		const _forEachBlob = (urls: string[], isGlobal: boolean) => {
 			this._blobWrappersByUrl.forEach((blobWrapper, url) => {
 				const isWrapperGlobal = blobWrapper.referringNodeIds.size == 0;
 				if (isWrapperGlobal == isGlobal) {
 					urls.push(url);
 				}
 			});
-			urls.sort();
-			for (let url of urls) {
-				const blobWrapper = this._blobWrappersByUrl.get(url);
-				if (blobWrapper) {
-					const params: BlobCallbackParams = {
-						url,
-						blobWrapper,
-					};
-					callback(params);
-				}
-			}
 		};
 
-		_forEachBlob(true, callback);
-		_forEachBlob(false, callback);
+		const urls: string[] = [];
+		_forEachBlob(urls, true);
+		_forEachBlob(urls, false);
+
+		urls.sort();
+		for (let url of urls) {
+			const blobWrapper = this._blobWrappersByUrl.get(url);
+			if (blobWrapper) {
+				const blobData: BlobData = {
+					url,
+					blobWrapper,
+				};
+				callback(blobData);
+			}
+		}
 	}
 	private _createBlobUrl(blob: Blob) {
 		return createObjectURL(blob);
@@ -198,9 +199,9 @@ export class BlobsController {
 		const blobsMap: Map<string, Blob> = new Map();
 		const blobs: Blob[] = [];
 		const fullUrls: string[] = [];
-		this.traverse((params) => {
-			blobs.push(params.blobWrapper.blob);
-			const fullUrl = params.url;
+		this.traverse((blobData) => {
+			blobs.push(blobData.blobWrapper.blob);
+			const fullUrl = blobData.url;
 			fullUrls.push(fullUrl);
 		});
 		for (let i = 0; i < blobs.length; i++) {

@@ -13,6 +13,7 @@ import {ObjectsCountExpression} from '../../../expressions/methods/objectsCount'
 import {OpdigitsExpression} from '../../../expressions/methods/opdigits';
 import {OpnameExpression} from '../../../expressions/methods/opname';
 import {PadzeroExpression} from '../../../expressions/methods/padzero';
+import {PlayerModeExpression} from '../../../expressions/methods/playerMode';
 import {PointExpression} from '../../../expressions/methods/point';
 import {PointsCountExpression} from '../../../expressions/methods/pointsCount';
 import {StrCharsCountExpression} from '../../../expressions/methods/strCharsCount';
@@ -38,6 +39,7 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	opdigits: typeof OpdigitsExpression;
 	opname: typeof OpnameExpression;
 	padzero: typeof PadzeroExpression;
+	playerMode: typeof PlayerModeExpression;
 	point: typeof PointExpression;
 	pointsCount: typeof PointsCountExpression;
 	strCharsCount: typeof StrCharsCountExpression;
@@ -66,6 +68,7 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(OpdigitsExpression, 'opdigits');
 		poly.expressionsRegister.register(OpnameExpression, 'opname');
 		poly.expressionsRegister.register(PadzeroExpression, 'padzero');
+		poly.expressionsRegister.register(PlayerModeExpression, 'playerMode');
 		poly.expressionsRegister.register(PointExpression, 'point');
 		poly.expressionsRegister.register(PointsCountExpression, 'pointsCount');
 		poly.expressionsRegister.register(StrCharsCountExpression, 'strCharsCount');

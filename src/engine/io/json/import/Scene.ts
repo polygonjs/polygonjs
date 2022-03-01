@@ -12,6 +12,7 @@ interface SceneJSONImporterOptions {
 	sceneName?: string;
 	configureScene?: ConfigureSceneCallback;
 	nodeCookWatcher?: NodeCookWatchCallback;
+	measurePerformanceOnLoad?: boolean;
 }
 export class SceneJsonImporter {
 	public readonly report = new ImportReport(this);
@@ -25,8 +26,13 @@ export class SceneJsonImporter {
 
 	async scene(): Promise<PolyScene> {
 		const scene = new PolyScene();
-		if (this._options && this._options.sceneName) {
-			scene.setName(this._options.sceneName);
+		if (this._options) {
+			if (this._options.sceneName) {
+				scene.setName(this._options.sceneName);
+			}
+			if (this._options.measurePerformanceOnLoad == true) {
+				scene.performance.start();
+			}
 		}
 		scene.loadingController.markAsLoading();
 

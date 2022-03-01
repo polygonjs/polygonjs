@@ -294,7 +294,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	private fbm_method_name() {
 		const noise_name = NOISE_NAMES[this.pv.type];
 		const method_name = METHOD_NAMES_BY_NOISE_NAME[noise_name];
-		return `fbm_${method_name}_${this.name()}`;
+		return `fbm_${method_name}_${this.graphNodeId()}`;
 	}
 
 	private fbm_function() {

@@ -76,7 +76,7 @@ const defaultParamOptions = (options?: DefaultParamOptionsOptions) => {
 	return {
 		visibleIf,
 		callback: (node: BaseNodeType) => {
-			ScrollTriggerEventNode.PARAM_CALLBACK_createScrollTrigger(node as ScrollTriggerEventNode);
+			ScrollTriggerEventNode.PARAM_CALLBACK_updateScrollTrigger(node as ScrollTriggerEventNode);
 		},
 	};
 };
@@ -86,7 +86,7 @@ class ScrollTriggerParamsConfig extends NodeParamsConfig {
 	/** @param active */
 	active = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType) => {
-			ScrollTriggerEventNode.PARAM_CALLBACK_createScrollTrigger(node as ScrollTriggerEventNode);
+			ScrollTriggerEventNode.PARAM_CALLBACK_updateScrollTrigger(node as ScrollTriggerEventNode);
 		},
 	});
 	/** @param selector of the element the scroll events are detected for */
@@ -232,6 +232,13 @@ export class ScrollTriggerEventNode extends TypedEventNode<ScrollTriggerParamsCo
 
 		this._scrollTrigger = ScrollTrigger.create(options);
 	}
+	private _updateScrollTrigger() {
+		if (!this._scrollTrigger) {
+			return;
+		}
+		this._onCreateTrigger({});
+	}
+
 	private _onDisposeTrigger(eventContext: EventContext<Event>) {
 		this._disposeScrollTrigger();
 	}
@@ -251,7 +258,7 @@ export class ScrollTriggerEventNode extends TypedEventNode<ScrollTriggerParamsCo
 		return element;
 	}
 
-	static PARAM_CALLBACK_createScrollTrigger(node: ScrollTriggerEventNode) {
-		node._onCreateTrigger({});
+	static PARAM_CALLBACK_updateScrollTrigger(node: ScrollTriggerEventNode) {
+		node._updateScrollTrigger();
 	}
 }
