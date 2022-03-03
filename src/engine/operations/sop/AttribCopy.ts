@@ -6,12 +6,34 @@ import {BufferAttribute, Float32BufferAttribute} from 'three/src/core/BufferAttr
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreString} from '../../../core/String';
 interface AttribCopySopParams extends DefaultOperationParams {
 	name: string;
 	tnewName: boolean;
 	newName: string;
 	srcOffset: number;
 	destOffset: number;
+}
+
+interface CopyArgs {
+	params: AttribCopySopParams;
+	attribName: {
+		src: string;
+		dest: string;
+	};
+}
+
+interface CopyBetweenCoreGroupsArgs extends CopyArgs {
+	coreGroup: {
+		src: CoreGroup;
+		dest: CoreGroup;
+	};
+}
+interface CopyBetweenGeometriesArgs extends CopyArgs {
+	geo: {
+		src: BufferGeometry;
+		dest: BufferGeometry;
+	};
 }
 
 export class AttribCopySopOperation extends BaseSopOperation {
@@ -31,22 +53,32 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		const coreGroupDest = inputCoreGroups[0];
 		const coreGroupSrc = inputCoreGroups[1] || coreGroupDest;
 
-		const attribNames = coreGroupSrc.attribNamesMatchingMask(params.name);
-		for (let attribName of attribNames) {
-			this._copyPointAttributeBetweenCoreGroups(coreGroupDest, coreGroupSrc, attribName, params);
+		const srcAttribNames = coreGroupSrc.attribNamesMatchingMask(params.name);
+		const newNames = CoreString.attribNames(params.newName);
+		for (let i = 0; i < srcAttribNames.length; i++) {
+			const srcAttribName = srcAttribNames[i];
+			let destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : srcAttribName;
+			if (!destAttribName) {
+				this.states?.error.set(`no matching new attribute name of ${srcAttribName}`);
+				return coreGroupDest;
+			}
+			this._copyPointAttributeBetweenCoreGroups({
+				attribName: {
+					src: srcAttribName,
+					dest: destAttribName,
+				},
+				params,
+				coreGroup: {src: coreGroupSrc, dest: coreGroupDest},
+			});
 		}
 
 		return coreGroupDest;
 	}
 
-	private _copyPointAttributeBetweenCoreGroups(
-		coreGroupDest: CoreGroup,
-		coreGroupSrc: CoreGroup,
-		attribName: string,
-		params: AttribCopySopParams
-	) {
-		const srcObjects = coreGroupSrc.objectsWithGeo();
-		const destObjects = coreGroupDest.objectsWithGeo();
+	private _copyPointAttributeBetweenCoreGroups(copyArgs: CopyBetweenCoreGroupsArgs) {
+		const {coreGroup, attribName, params} = copyArgs;
+		const srcObjects = coreGroup.src.objectsWithGeo();
+		const destObjects = coreGroup.dest.objectsWithGeo();
 
 		if (destObjects.length > srcObjects.length) {
 			this.states?.error.set('second input does not have enough objects to copy attributes from');
@@ -54,21 +86,20 @@ export class AttribCopySopOperation extends BaseSopOperation {
 			for (let i = 0; i < destObjects.length; i++) {
 				const destGeometry = destObjects[i].geometry;
 				const srcGeometry = srcObjects[i].geometry;
-				this._copyPointAttributesBetweenGeometries(destGeometry, srcGeometry, attribName, params);
+				this._copyPointAttributesBetweenGeometries({
+					geo: {src: srcGeometry, dest: destGeometry},
+					attribName,
+					params,
+				});
 			}
 		}
 	}
-	private _copyPointAttributesBetweenGeometries(
-		destGeometry: BufferGeometry,
-		srcGeometry: BufferGeometry,
-		attribName: string,
-		params: AttribCopySopParams
-	) {
-		const srcAttrib = srcGeometry.getAttribute(attribName);
+	private _copyPointAttributesBetweenGeometries(copyArgs: CopyBetweenGeometriesArgs) {
+		const {geo, attribName, params} = copyArgs;
+		const srcAttrib = geo.src.getAttribute(attribName.src);
 		if (srcAttrib) {
 			const size = srcAttrib.itemSize;
-			const destName = isBooleanTrue(params.tnewName) ? params.newName : attribName;
-			const destAttrib = destGeometry.getAttribute(destName);
+			const destAttrib = geo.dest.getAttribute(attribName.dest);
 			const srcPointsCount = srcAttrib.array.length / srcAttrib.itemSize;
 
 			if (destAttrib) {
@@ -81,9 +112,9 @@ export class AttribCopySopOperation extends BaseSopOperation {
 				}
 			} else {
 				const src_array = srcAttrib.array as number[];
-				const destPointsCount = destGeometry.getAttribute('position').array.length / 3;
+				const destPointsCount = geo.dest.getAttribute('position').array.length / 3;
 				const dest_array = src_array.slice(0, destPointsCount * size);
-				destGeometry.setAttribute(destName, new Float32BufferAttribute(dest_array, size));
+				geo.dest.setAttribute(attribName.dest, new Float32BufferAttribute(dest_array, size));
 			}
 		} else {
 			this.states?.error.set(`attribute '${attribName}' does not exist on second input`);

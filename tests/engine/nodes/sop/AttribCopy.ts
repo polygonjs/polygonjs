@@ -113,3 +113,37 @@ QUnit.test('attribcopy from input 2', async (assert) => {
 	assert.deepEqual(attribCopyP2, noiseP);
 	assert.deepEqual(attribCopyP, boxP);
 });
+
+QUnit.test('attribcopy multiple from input 2 and rename', async (assert) => {
+	const geo1 = window.geo1;
+	const box = geo1.createNode('box');
+	box.p.size.set(1.1); // non integer to allow the noise to have any effect
+	const restAttributes1 = geo1.createNode('restAttributes');
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const attribCopy = geo1.createNode('attribCopy');
+	restAttributes1.setInput(0, box);
+	attribCreate1.setInput(0, restAttributes1);
+
+	attribCreate1.p.name.set('pti');
+	attribCreate1.p.value1.set('@ptnum');
+
+	attribCopy.setInput(0, box);
+	attribCopy.setInput(1, attribCreate1);
+	attribCopy.p.name.set('restP pti restN');
+	attribCopy.p.tnewName.set(true);
+	attribCopy.p.newName.set('restP2 pti2 restN2');
+
+	let container = await attribCopy.compute();
+	assert.notOk(attribCopy.states.error.message());
+	let core_group = container.coreContent()!;
+	let geometry = core_group.objectsWithGeo()[0].geometry;
+	assert.notOk(geometry.getAttribute('restP'), 'no restP');
+	assert.notOk(geometry.getAttribute('restN'), 'no restN');
+	assert.notOk(geometry.getAttribute('pti'), 'no pti');
+	assert.ok(geometry.getAttribute('restP2'), 'ok restP2');
+	assert.ok(geometry.getAttribute('restN2'), 'ok restN2');
+	assert.ok(geometry.getAttribute('pti2'), 'ok pti2');
+	assert.equal(geometry.getAttribute('restP2').itemSize, 3);
+	assert.equal(geometry.getAttribute('restN2').itemSize, 3);
+	assert.equal(geometry.getAttribute('pti2').itemSize, 1);
+});

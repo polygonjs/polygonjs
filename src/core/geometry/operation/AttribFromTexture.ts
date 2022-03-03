@@ -34,6 +34,9 @@ export class AttribFromTexture {
 		const texture_component_size = data.length / (resx * resy);
 
 		const uv_attrib = geometry.getAttribute(params.uvAttribName);
+		if (!uv_attrib) {
+			return;
+		}
 		const uvs = uv_attrib.array;
 
 		const points_count = uvs.length / 2;

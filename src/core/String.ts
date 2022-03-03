@@ -221,21 +221,12 @@ export class CoreString {
 	}
 
 	static attribNames(word: string): string[] {
-		const elements = word.split(ATTRIB_NAMES_SEPARATOR);
-		const names_set: Set<string> = new Set();
-		for (let element of elements) {
-			element = element.trim();
-			if (element.length > 0) {
-				names_set.add(element);
-			}
-		}
-		const names: string[] = new Array(names_set.size);
-		let i = 0;
-		names_set.forEach((name) => {
-			names[i] = name;
-			i++;
-		});
-		return names;
+		return ArrayUtils.uniq(
+			word
+				.split(ATTRIB_NAMES_SEPARATOR)
+				.map((w) => w.trim())
+				.filter((w) => w.length > 0)
+		);
 	}
 
 	static indices(indices_string: string): number[] {

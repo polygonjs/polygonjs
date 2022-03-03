@@ -6,7 +6,6 @@ import {Vector3} from 'three/src/math/Vector3';
 import {MapUtils} from '../../../core/MapUtils';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {ArrayUtils} from '../../../core/ArrayUtils';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum Axis {
@@ -31,8 +30,8 @@ export class SortSopOperation extends BaseSopOperation {
 		return 'sort';
 	}
 
-	override cook(input_contents: CoreGroup[], params: SortSopParams) {
-		const coreGroup = input_contents[0];
+	override cook(inputCoreGroups: CoreGroup[], params: SortSopParams) {
+		const coreGroup = inputCoreGroups[0];
 
 		const objects = coreGroup.objectsWithGeo();
 		for (let object of objects) {
@@ -102,10 +101,11 @@ export class SortSopOperation extends BaseSopOperation {
 		// update the index attribute
 		const newIndices: number[] = new Array(points.length);
 		i = 0;
-		const uniqSortedPositions = ArrayUtils.uniq(sortedPositions);
-		for (let position of uniqSortedPositions) {
+		// const uniqSortedPositions = ArrayUtils.uniq(sortedPositions);
+		for (let position of sortedPositions) {
 			const indices = this._indicesByPos.get(position);
 			if (indices) {
+				this._indicesByPos.delete(position);
 				for (let index of indices) {
 					newIndices[i] = index;
 					this._indexDest.set(index, i);

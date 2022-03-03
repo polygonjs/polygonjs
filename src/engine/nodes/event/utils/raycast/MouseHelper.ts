@@ -3,8 +3,8 @@ export interface CursorOffset {
 	offsetY: number;
 }
 export interface CursorPage {
-	pageX: number;
-	pageY: number;
+	clientX: number;
+	clientY: number;
 }
 
 export class MouseHelperClass {
@@ -25,8 +25,10 @@ export class MouseHelperClass {
 			rect = canvas.getBoundingClientRect();
 			this._rectByCanvas.set(canvas, rect);
 		}
-		offset.offsetX = cursorPage.pageX - rect.left;
-		offset.offsetY = cursorPage.pageY - rect.top;
+		// this function used to use cursorPage.pageX/pageY
+		// but this was returning an incorrect position when the page was scrolled
+		offset.offsetX = cursorPage.clientX - rect.left;
+		offset.offsetY = cursorPage.clientY - rect.top;
 	}
 
 	private _resetCacheBound = this._resetCache.bind(this);

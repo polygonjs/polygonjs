@@ -5,21 +5,21 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {AttribClassMenuEntries, AttribClass} from '../../../core/geometry/Constant';
-import {InputCloneMode} from '../../poly/InputCloneMode';
+import {AttribClassMenuEntries} from '../../../core/geometry/Constant';
+import {AttribRenameSopOperation} from '../../operations/sop/AttribRename';
+const DEFAULT = AttribRenameSopOperation.DEFAULT_PARAMS;
 class AttribRenameSopParamsConfig extends NodeParamsConfig {
 	/** @param class of the attribute to rename (object or geometry) */
-	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
+	class = ParamConfig.INTEGER(DEFAULT.class, {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
 	});
 	/** @param old attribute name */
-	oldName = ParamConfig.STRING();
+	oldName = ParamConfig.STRING(DEFAULT.oldName);
 	/** @param new attribute name */
-	newName = ParamConfig.STRING();
+	newName = ParamConfig.STRING(DEFAULT.newName);
 }
 const ParamsConfig = new AttribRenameSopParamsConfig();
 
@@ -31,15 +31,13 @@ export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfi
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);
-		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
+		this.io.inputs.initInputsClonedState(AttribRenameSopOperation.INPUT_CLONED_STATE);
 	}
 
+	private _operation: AttribRenameSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		// const group = input_containers[0].group();
-		const core_group = input_contents[0];
-
-		core_group.renameAttrib(this.pv.oldName, this.pv.newName, this.pv.class);
-
+		this._operation = this._operation || new AttribRenameSopOperation(this._scene, this.states);
+		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}
 }

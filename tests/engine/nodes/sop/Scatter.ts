@@ -78,3 +78,25 @@ QUnit.test('scatter interpolates correctly a float attributes with value 0', asy
 	container = await scatter1.compute();
 	assert.deepEqual(delayValues(), [-17, -17]);
 });
+
+QUnit.test(
+	'scatter sets the buffer size correctly when transfering an attribute with size different than 3',
+	async (assert) => {
+		const geo1 = window.geo1;
+
+		const plane1 = geo1.createNode('plane');
+		const scatter1 = geo1.createNode('scatter');
+		scatter1.setInput(0, plane1);
+
+		scatter1.p.transferAttributes.set(1);
+		scatter1.p.attributesToTransfer.set('uv');
+
+		let container = await scatter1.compute();
+		assert.ok(!scatter1.states.error.active());
+		const geometry = container.coreContent()?.objectsWithGeo()[0].geometry;
+		assert.ok(geometry);
+
+		assert.equal(geometry?.getAttribute('uv').itemSize, 2);
+		assert.equal(geometry?.getAttribute('uv').count, 100);
+	}
+);

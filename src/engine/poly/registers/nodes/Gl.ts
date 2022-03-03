@@ -72,6 +72,7 @@ import {GlobalsGlNode} from '../../../nodes/gl/Globals';
 import {HsluvToRgbGlNode} from '../../../nodes/gl/HsluvToRgb';
 import {HsvToRgbGlNode} from '../../../nodes/gl/HsvToRgb';
 import {IfThenGlNode} from '../../../nodes/gl/IfThen';
+import {InRangeGlNode} from '../../../nodes/gl/InRange';
 import {IsInfOrNanGlNode} from '../../../nodes/gl/IsInfOrNan';
 import {ImpostorUvGlNode} from '../../../nodes/gl/ImpostorUv';
 import {InstanceTransformGlNode} from '../../../nodes/gl/InstanceTransform';
@@ -173,6 +174,7 @@ export interface GlNodeChildrenMap {
 	hsvToRgb: HsvToRgbGlNode;
 	ifThen: IfThenGlNode;
 	impostorUv: ImpostorUvGlNode;
+	inRange: InRangeGlNode;
 	intToBool: IntToBoolGlNode;
 	intToFloat: IntToFloatGlNode;
 	inverseSqrt: InverseSqrtGlNode;
@@ -325,6 +327,7 @@ export class GlRegister {
 		poly.registerNode(IfThenGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(IsInfOrNanGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(ImpostorUvGlNode, CATEGORY_GL.UTIL);
+		poly.registerNode(InRangeGlNode, CATEGORY_GL.UTIL);
 		poly.registerNode(IntToBoolGlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(IntToFloatGlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(InverseSqrtGlNode, CATEGORY_GL.MATH);

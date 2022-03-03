@@ -68,8 +68,13 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	// COMMON
 	//
 	//
+	/** @param defines if the mouse parameter is update when the cursor screen position changes */
+	tmouse = ParamConfig.BOOLEAN(1, {cook: false});
 	/** @param mouse coordinates (0,0) being the center of the screen, (-1,-1) being the bottom left corner and (1,1) being the top right corner */
-	mouse = ParamConfig.VECTOR2([0, 0], {cook: false});
+	mouse = ParamConfig.VECTOR2([0, 0], {
+		cook: false,
+		visibleIf: {tmouse: 1},
+	});
 	/** @param by default the ray is sent from the current camera, but this allows to set another camera */
 	overrideCamera = ParamConfig.BOOLEAN(0, visible_for_cpu());
 	/** @param by default the ray is sent from the current camera, but this allows to set a custom ray */
@@ -414,7 +419,7 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 
 	private _process_trigger_vel_reset(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
-			this.cpuController.velocity_controller.reset();
+			this.cpuController.velocityController.reset();
 		}
 	}
 }

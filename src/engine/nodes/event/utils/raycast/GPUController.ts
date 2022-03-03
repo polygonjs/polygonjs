@@ -3,13 +3,14 @@ import {RaycastEventNode} from '../../Raycast';
 import {BaseThreejsCameraObjNodeType} from '../../../obj/_BaseCamera';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
 import {Material} from 'three/src/materials/Material';
-import {Vector2} from 'three/src/math/Vector2';
 import {LinearFilter, NearestFilter, RGBAFormat, FloatType, NoToneMapping, LinearEncoding} from 'three/src/constants';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseMatNodeType} from '../../../mat/_Base';
 import {Scene} from 'three/src/scenes/Scene';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Number2, Number3} from '../../../../../types/GlobalTypes';
+import {isBooleanTrue} from '../../../../../core/Type';
+import {BaseRaycastController} from './BaseRaycastController';
 
 interface SceneRestoreContext {
 	overrideMaterial: Material | null;
@@ -23,7 +24,7 @@ interface RestoreContext {
 	renderer: RendererRestoreContext;
 }
 
-export class RaycastGPUController {
+export class RaycastGPUController extends BaseRaycastController {
 	private _resolved_material: Material | null = null;
 	private _restore_context: RestoreContext = {
 		scene: {
@@ -34,31 +35,40 @@ export class RaycastGPUController {
 			outputEncoding: -1,
 		},
 	};
-	private _mouse: Vector2 = new Vector2();
-	private _mouseArray: Number2 = [0, 0];
+	// private _mouse: Vector2 = new Vector2();
+	private _cursorArray: Number2 = [0, 0];
 	private _renderTarget: WebGLRenderTarget | undefined;
 	private _read = new Float32Array(4);
 	private _paramColor: Number3 = [0, 0, 0];
 	private _paramAlpha: number = 0;
-	constructor(private _node: RaycastEventNode) {}
+	constructor(private _node: RaycastEventNode) {
+		super();
+	}
 	updateMouse(context: EventContext<MouseEvent | DragEvent | PointerEvent>) {
-		const canvas = context.viewer?.canvas();
-		if (!(canvas && context.event)) {
-			return;
+		this._setCursor(context);
+		if (isBooleanTrue(this._node.pv.tmouse)) {
+			this._cursor.toArray(this._cursorArray);
+			this._node.p.mouse.set(this._cursorArray);
 		}
+		// const canvas = context.viewer?.canvas();
+		// if (!(canvas && context.event)) {
+		// 	return;
+		// }
 
-		if (
-			context.event instanceof MouseEvent ||
-			context.event instanceof DragEvent ||
-			context.event instanceof PointerEvent
-		) {
-			this._mouse.x = context.event.offsetX / canvas.offsetWidth;
-			this._mouse.y = 1 - context.event.offsetY / canvas.offsetHeight;
-			this._mouse.toArray(this._mouseArray);
-			this._node.p.mouse.set(this._mouseArray);
-		} else {
-			console.warn('event type not implemented');
-		}
+		// if (
+		// 	context.event instanceof MouseEvent ||
+		// 	context.event instanceof DragEvent ||
+		// 	context.event instanceof PointerEvent
+		// ) {
+		// 	this._mouse.x = context.event.offsetX / canvas.offsetWidth;
+		// 	this._mouse.y = 1 - context.event.offsetY / canvas.offsetHeight;
+		// 	this._mouse.toArray(this._mouseArray);
+		// 	if (isBooleanTrue(this._node.pv.tmouse)) {
+		// 		this._node.p.mouse.set(this._mouseArray);
+		// 	}
+		// } else {
+		// 	console.warn('event type not implemented');
+		// }
 	}
 
 	processEvent(context: EventContext<MouseEvent>) {
@@ -103,8 +113,8 @@ export class RaycastGPUController {
 			// read result
 			renderer.readRenderTargetPixels(
 				this._renderTarget,
-				Math.round(this._mouse.x * canvas.offsetWidth),
-				Math.round(this._mouse.y * canvas.offsetHeight),
+				Math.round(this._cursor.x * canvas.offsetWidth),
+				Math.round(this._cursor.y * canvas.offsetHeight),
 				1,
 				1,
 				this._read

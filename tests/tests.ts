@@ -183,6 +183,7 @@ import './engine/nodes/sop/AttribCopy';
 import './engine/nodes/sop/AttribCreate';
 import './engine/nodes/sop/AttribDelete';
 import './engine/nodes/sop/AttribFromTexture';
+import './engine/nodes/sop/AttribId';
 import './engine/nodes/sop/AttribNormalize';
 import './engine/nodes/sop/AttribPromote';
 import './engine/nodes/sop/AttribRemap';

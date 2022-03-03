@@ -423,8 +423,8 @@ export class CoreGroup {
 		const masks = CoreString.attribNames(masks_string);
 
 		const matching_attrib_names: string[] = [];
-		for (let attrib_name of this.attribNames()) {
-			for (let mask of masks) {
+		for (let mask of masks) {
+			for (let attrib_name of this.attribNames()) {
 				if (CoreString.matchMask(attrib_name, mask)) {
 					matching_attrib_names.push(attrib_name);
 				} else {

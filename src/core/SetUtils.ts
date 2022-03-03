@@ -8,7 +8,9 @@ export class SetUtils {
 	}
 	static fromArray<T>(array: T[]): Set<T> {
 		const set = new Set<T>();
-		array.forEach((element) => set.add(element));
+		for (let element of array) {
+			set.add(element);
+		}
 		return set;
 	}
 	static union<T extends string | number>(set0: Set<T>, set1: Set<T>): Set<T> {

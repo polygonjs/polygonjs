@@ -44,20 +44,44 @@ export class ArrayUtils {
 		return newArray;
 	}
 	static uniq<T>(array: Array<T>): Array<T> {
-		const tmpSet: Set<T> = new Set();
-
-		for (let elem of array) {
-			tmpSet.add(elem);
+		const newArray: Array<T> = [];
+		for (let element of array) {
+			if (!newArray.includes(element)) {
+				newArray.push(element);
+			}
 		}
-
-		const newArray: Array<T> = new Array(tmpSet.size);
-		let i = 0;
-		tmpSet.forEach((elem) => {
-			newArray[i] = elem;
-			i++;
-		});
-
 		return newArray;
+		// if we use a set, we lose the order
+		// const tmpSet: Set<T> = new Set();
+
+		// for (let elem of array) {
+		// 	tmpSet.add(elem);
+		// }
+
+		// const newArray: Array<T> = new Array(tmpSet.size);
+		// let i = 0;
+		// tmpSet.forEach((elem) => {
+		// 	newArray[i] = elem;
+		// 	i++;
+		// });
+
+		// return newArray;
+	}
+	static uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
+		return SetUtils.toArray(SetUtils.fromArray(array));
+
+		// for (let elem of array) {
+		// 	tmpSet.add(elem);
+		// }
+
+		// const newArray: Array<T> = new Array(tmpSet.size);
+		// let i = 0;
+		// tmpSet.forEach((elem) => {
+		// 	newArray[i] = elem;
+		// 	i++;
+		// });
+
+		// return newArray;
 	}
 	static chunk<T extends number | string>(array: Array<T>, chunkSize: number): Array<Array<T>> {
 		const newArray: Array<Array<T>> = [];

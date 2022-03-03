@@ -7,7 +7,9 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Mesh} from 'three/src/objects/Mesh';
+import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {MeshSurfaceSampler} from '../../../modules/core/math/MeshSurfaceSampler';
 import {CoreMath} from '../../../core/math/_Module';
@@ -23,6 +25,8 @@ interface ScatterSopParams extends DefaultOperationParams {
 	addIdAttribute: boolean;
 	addIdnAttribute: boolean;
 }
+const tmpV2 = new Vector2();
+const tmpV4 = new Vector4();
 
 export class ScatterSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: ScatterSopParams = {
@@ -107,7 +111,35 @@ export class ScatterSopOperation extends BaseSopOperation {
 			if (processAdditionalAttributes) {
 				let j = 0;
 				for (let additionalVector of additionalVectors) {
-					additionalVector.toArray(additionalAttribBuffers[j], i * additionalAttribSizes[j]);
+					const array = additionalAttribBuffers[j];
+					const attribSize = additionalAttribSizes[j];
+					const arrayIndex = i * attribSize;
+					if (i < pointsCount - 1) {
+						additionalVector.toArray(array, arrayIndex);
+					} else {
+						// when copying to the last point, we need to make sure not to use the vector3
+						// if the attribsize is not 3, otherwise we end up increasing the size of the buffer
+						if (attribSize == 3) {
+							additionalVector.toArray(array, arrayIndex);
+						} else {
+							switch (attribSize) {
+								case 1: {
+									array[arrayIndex] = additionalVector.x;
+									break;
+								}
+								case 2: {
+									tmpV2.set(additionalVector.x, additionalVector.y);
+									tmpV2.toArray(array, arrayIndex);
+									break;
+								}
+								case 4: {
+									tmpV4.set(additionalVector.x, additionalVector.y, additionalVector.z, 0);
+									tmpV4.toArray(array, arrayIndex);
+									break;
+								}
+							}
+						}
+					}
 					j++;
 				}
 			}

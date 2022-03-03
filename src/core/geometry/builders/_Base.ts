@@ -36,7 +36,7 @@ export abstract class CoreGeometryBuilderBase {
 				const is_attrib_indexed = attrib_values != null;
 
 				if (is_attrib_indexed) {
-					const new_values: string[] = ArrayUtils.uniq(
+					const new_values: string[] = ArrayUtils.uniqWithoutPreservingOrder(
 						points.map((point) => point.indexedAttribValue(attribute_name))
 					);
 					const new_index_by_value: PolyDictionary<number> = {};

@@ -5,13 +5,11 @@
  * This can be useful to quickly create points in a volume.
  *
  */
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {TypedSopNode} from './_Base';
-import {ObjectType} from '../../../core/geometry/Constant';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {BboxScatterSopOperation} from '../../operations/sop/BboxScatter';
 class BboxScatterSopParamsConfig extends NodeParamsConfig {
 	/** @param the smaller the step size, the more points this will create */
 	stepSize = ParamConfig.FLOAT(0.1);
@@ -30,29 +28,13 @@ export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig>
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
+	private _operation: BboxScatterSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		const container = input_contents[0];
-		const stepSize = this.pv.stepSize;
-		const bbox = container.boundingBox();
-		const min = bbox.min;
-		const max = bbox.max;
-
-		const positions: number[] = [];
-		for (let x = min.x; x <= max.x; x += stepSize) {
-			for (let y = min.y; y <= max.y; y += stepSize) {
-				for (let z = min.z; z <= max.z; z += stepSize) {
-					positions.push(x);
-					positions.push(y);
-					positions.push(z);
-				}
-			}
-		}
-
-		const geometry = new BufferGeometry();
-		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-
-		this.setGeometry(geometry, ObjectType.POINTS);
+		this._operation = this._operation || new BboxScatterSopOperation(this._scene, this.states);
+		const core_group = this._operation.cook(input_contents, this.pv);
+		this.setCoreGroup(core_group);
 	}
 }

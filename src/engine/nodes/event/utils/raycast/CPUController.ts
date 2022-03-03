@@ -2,7 +2,6 @@ import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode, TargetType, TARGET_TYPES} from '../../Raycast';
 import {Object3D} from 'three/src/core/Object3D';
-import {Vector2} from 'three/src/math/Vector2';
 import {Raycaster, Intersection} from 'three/src/core/Raycaster';
 import {CAMERA_TYPES, NodeContext} from '../../../../poly/NodeContext';
 import {BaseObjNodeType} from '../../../obj/_Base';
@@ -21,7 +20,7 @@ import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {RaycasterForBVH} from '../../../../operations/sop/utils/Bvh/three-mesh-bvh';
 import {IntersectDataEventNode} from '../../IntersectData';
-import {MouseHelper, CursorOffset} from './MouseHelper';
+import {BaseRaycastController} from './BaseRaycastController';
 
 function createRaycaster() {
 	const raycaster = new Raycaster() as RaycasterForBVH;
@@ -29,61 +28,62 @@ function createRaycaster() {
 	return raycaster;
 }
 
-export class RaycastCPUController {
-	private _offset: CursorOffset = {offsetX: 0, offsetY: 0};
-	private _mouse: Vector2 = new Vector2();
-	private _mouse_array: Number2 = [0, 0];
+export class RaycastCPUController extends BaseRaycastController {
+	// private _offset: CursorOffset = {offsetX: 0, offsetY: 0};
+	// private _mouse: Vector2 = new Vector2();
+	private _cursorArray: Number2 = [0, 0];
 	private _raycaster = createRaycaster();
-	private _resolved_targets: Object3D[] | undefined;
+	private _resolvedTargets: Object3D[] | undefined;
 
-	public readonly velocity_controller: RaycastCPUVelocityController;
+	public readonly velocityController: RaycastCPUVelocityController;
 	constructor(private _node: RaycastEventNode) {
-		this.velocity_controller = new RaycastCPUVelocityController(this._node);
+		super();
+		this.velocityController = new RaycastCPUVelocityController(this._node);
 	}
 
 	updateMouse(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>) {
-		const canvas = context.viewer?.canvas();
 		const cameraNode = context.cameraNode;
-		if (!(canvas && cameraNode)) {
+		if (!cameraNode) {
 			return;
 		}
-		const updateFromCursor = (cursor: CursorOffset) => {
-			if (canvas.offsetWidth <= 0 || canvas.offsetHeight <= 0) {
-				// the canvas can have a size of 0 if it has been removed from the scene
-				this._mouse.set(0, 0);
-			} else {
-				this._mouse.x = (cursor.offsetX / canvas.offsetWidth) * 2 - 1;
-				this._mouse.y = -(cursor.offsetY / canvas.offsetHeight) * 2 + 1;
-				this._mouse.toArray(this._mouse_array);
-			}
-			// there can be some conditions leading to an infinite mouse number, so we check here what we got
-			if (isNaN(this._mouse.x) || !isFinite(this._mouse.x) || isNaN(this._mouse.y) || !isFinite(this._mouse.y)) {
-				console.warn('invalid number detected');
-				console.warn(
-					this._mouse.toArray(),
-					cursor.offsetX,
-					cursor.offsetY,
-					canvas.offsetWidth,
-					canvas.offsetHeight
-				);
-				return;
-			}
-			this._node.p.mouse.set(this._mouse_array);
-		};
-		const event = context.event;
-		if (event instanceof MouseEvent || event instanceof DragEvent || event instanceof PointerEvent) {
-			MouseHelper.setEventOffset(event, canvas, this._offset);
+
+		this._setCursor(context);
+		if (isBooleanTrue(this._node.pv.tmouse)) {
+			this._cursor.toArray(this._cursorArray);
+			this._node.p.mouse.set(this._cursorArray);
 		}
-		if (
-			window.TouchEvent /* check first that TouchEvent is defined, since it does on firefox desktop */ &&
-			event instanceof TouchEvent
-		) {
-			const touch = event.touches[0];
-			MouseHelper.setEventOffset(touch, canvas, this._offset);
-		}
-		updateFromCursor(this._offset);
-		this._raycaster.setFromCamera(this._mouse, cameraNode.object);
+		// this._updateFromCursor(canvas);
+		this._raycaster.setFromCamera(this._cursor, cameraNode.object);
 	}
+	protected override _remapCursor() {
+		this._cursor.x = this._cursor.x * 2 - 1;
+		this._cursor.y = -this._cursor.y * 2 + 1;
+	}
+	// private _updateFromCursor(canvas: HTMLCanvasElement){
+	// 	if (canvas.offsetWidth <= 0 || canvas.offsetHeight <= 0) {
+	// 		// the canvas can have a size of 0 if it has been removed from the scene
+	// 		this._mouse.set(0, 0);
+	// 	} else {
+	// 		this._mouse.x = (this._offset.offsetX / canvas.offsetWidth) * 2 - 1;
+	// 		this._mouse.y = -(this._offset.offsetY / canvas.offsetHeight) * 2 + 1;
+	// 		this._mouse.toArray(this._mouse_array);
+	// 	}
+	// 	// there can be some conditions leading to an infinite mouse number, so we check here what we got
+	// 	if (isNaN(this._mouse.x) || !isFinite(this._mouse.x) || isNaN(this._mouse.y) || !isFinite(this._mouse.y)) {
+	// 		console.warn('invalid number detected');
+	// 		console.warn(
+	// 			this._mouse.toArray(),
+	// 			this._offset.offsetX,
+	// 			this._offset.offsetY,
+	// 			canvas.offsetWidth,
+	// 			canvas.offsetHeight
+	// 		);
+	// 		return;
+	// 	}
+	// 	if (isBooleanTrue(this._node.pv.tmouse)) {
+	// 		this._node.p.mouse.set(this._mouse_array);
+	// 	}
+	// };
 
 	processEvent(context: EventContext<MouseEvent>) {
 		this._prepareRaycaster(context);
@@ -113,14 +113,14 @@ export class RaycastCPUController {
 
 	private _intersections: Intersection[] = [];
 	private _intersectGeometry(context: EventContext<MouseEvent>) {
-		if (!this._resolved_targets) {
+		if (!this._resolvedTargets) {
 			this.update_target();
 		}
-		if (this._resolved_targets) {
+		if (this._resolvedTargets) {
 			// clear array before
 			this._intersections.length = 0;
 			const intersections = this._raycaster.intersectObjects(
-				this._resolved_targets,
+				this._resolvedTargets,
 				isBooleanTrue(this._node.pv.traverseChildren),
 				this._intersections
 			);
@@ -189,7 +189,7 @@ export class RaycastCPUController {
 			this._node.p.position.set(this._hit_position_array);
 		}
 
-		this.velocity_controller.process(hit_position);
+		this.velocityController.process(hit_position);
 	}
 
 	private _prepareRaycaster(context: EventContext<MouseEvent>) {
@@ -214,7 +214,7 @@ export class RaycastCPUController {
 		}
 
 		if (cameraNode && !isBooleanTrue(this._node.pv.overrideRay)) {
-			cameraNode.prepareRaycaster(this._mouse, this._raycaster);
+			cameraNode.prepareRaycaster(this._cursor, this._raycaster);
 		}
 	}
 
@@ -237,9 +237,9 @@ export class RaycastCPUController {
 				? node.object
 				: (node as GeoObjNode).childrenDisplayController.sopGroup();
 			if (found_obj) {
-				this._resolved_targets = [found_obj];
+				this._resolvedTargets = [found_obj];
 			} else {
-				this._resolved_targets = undefined;
+				this._resolvedTargets = undefined;
 			}
 		} else {
 			this._node.states.error.set('node is not an object');
@@ -248,9 +248,9 @@ export class RaycastCPUController {
 	private _update_target_from_scene_graph() {
 		const objects: Object3D[] = this._node.scene().objectsByMask(this._node.pv.objectMask);
 		if (objects.length > 0) {
-			this._resolved_targets = objects;
+			this._resolvedTargets = objects;
 		} else {
-			this._resolved_targets = undefined;
+			this._resolvedTargets = undefined;
 		}
 	}
 
@@ -271,6 +271,6 @@ export class RaycastCPUController {
 	}
 	private print_resolve() {
 		this.update_target();
-		console.log(this._resolved_targets);
+		console.log(this._resolvedTargets);
 	}
 }
