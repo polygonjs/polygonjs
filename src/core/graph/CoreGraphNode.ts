@@ -16,9 +16,11 @@ export class CoreGraphNode {
 		this._graph = _scene.graph;
 	}
 
+	public disposed = false;
 	dispose() {
 		this._dirtyController.dispose();
 		this.graphRemove();
+		this.disposed = true;
 	}
 
 	/**

@@ -114,7 +114,7 @@ export class RaycastCPUController extends BaseRaycastController {
 	private _intersections: Intersection[] = [];
 	private _intersectGeometry(context: EventContext<MouseEvent>) {
 		if (!this._resolvedTargets) {
-			this.update_target();
+			this.updateTarget();
 		}
 		if (this._resolvedTargets) {
 			// clear array before
@@ -218,19 +218,19 @@ export class RaycastCPUController extends BaseRaycastController {
 		}
 	}
 
-	update_target() {
+	updateTarget() {
 		const targetType = TARGET_TYPES[this._node.pv.targetType];
 		switch (targetType) {
 			case TargetType.NODE: {
-				return this._update_target_from_node();
+				return this._updateTargetFromNode();
 			}
 			case TargetType.SCENE_GRAPH: {
-				return this._update_target_from_scene_graph();
+				return this._updateTargetFromSceneGraph();
 			}
 		}
 		TypeAssert.unreachable(targetType);
 	}
-	private _update_target_from_node() {
+	private _updateTargetFromNode() {
 		const node = this._node.p.targetNode.value.nodeWithContext(NodeContext.OBJ) as BaseObjNodeType;
 		if (node) {
 			const found_obj = isBooleanTrue(this._node.pv.traverseChildren)
@@ -245,7 +245,7 @@ export class RaycastCPUController extends BaseRaycastController {
 			this._node.states.error.set('node is not an object');
 		}
 	}
-	private _update_target_from_scene_graph() {
+	private _updateTargetFromSceneGraph() {
 		const objects: Object3D[] = this._node.scene().objectsByMask(this._node.pv.objectMask);
 		if (objects.length > 0) {
 			this._resolvedTargets = objects;
@@ -260,7 +260,7 @@ export class RaycastCPUController extends BaseRaycastController {
 		}
 	}
 	static PARAM_CALLBACK_update_target(node: RaycastEventNode) {
-		node.cpuController.update_target();
+		node.cpuController.updateTarget();
 	}
 	// static PARAM_CALLBACK_update_position_target(node: RaycastEventNode) {
 	// 	node.cpu_controller.update_position_target();
@@ -270,7 +270,7 @@ export class RaycastCPUController extends BaseRaycastController {
 		node.cpuController.print_resolve();
 	}
 	private print_resolve() {
-		this.update_target();
+		this.updateTarget();
 		console.log(this._resolvedTargets);
 	}
 }

@@ -54,6 +54,7 @@ const ParamsConfig = new PlayAnimParamsConfig();
 
 export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 	override paramsConfig = ParamsConfig;
+	public gsap = gsap; // give access to gsap to external scripts
 	static override type() {
 		return 'play';
 	}

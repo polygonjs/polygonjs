@@ -9,6 +9,7 @@ import {CoreType} from '../../../core/Type';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {ObjectUtils} from '../../../core/ObjectUtils';
 import {Boolean2, Number2, PolyDictionary} from '../../../types/GlobalTypes';
+import {isFunction} from 'lodash';
 
 const CALLBACK_OPTION = 'callback';
 const CALLBACK_STRING_OPTION = 'callbackString';
@@ -264,14 +265,25 @@ export class OptionsController {
 		this._options = ObjectUtils.cloneDeep(options_controller.current());
 		this.post_set_options();
 	}
-	setOption<K extends keyof ParamOptions>(name: K, value: ParamOptions[K]) {
-		this._options[name] = value;
+	setOption<K extends keyof ParamOptions>(optionName: K, value: ParamOptions[K]) {
+		if (!this._validateOption(optionName, value)) {
+			return;
+		}
+
+		this._options[optionName] = value;
 		if (this._param.components) {
 			for (let component of this._param.components) {
-				component.options.setOption(name, value);
+				component.options.setOption(optionName, value);
 			}
 		}
 	}
+	private _validateOption<K extends keyof ParamOptions>(optionName: K, value: ParamOptions[K]) {
+		if (optionName == CALLBACK_OPTION) {
+			return isFunction(value);
+		}
+		return true;
+	}
+
 	private post_set_options() {
 		this._handleComputeOnDirty();
 	}

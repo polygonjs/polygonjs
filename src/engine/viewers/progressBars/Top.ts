@@ -78,13 +78,13 @@ const JS = (options: JSOptions) => `
 const container = document.getElementById('polygonjs-progress-bar-container');
 const barElement = document.getElementById('polygonjs-progress-bar');
 const poster = document.getElementById('polygonjs-loading-poster');
-export function onProgress(ratio) {
+export function updateProgressBarTop(progress) {
 	if (!(barElement && container && poster)) {
 		console.log('progress bar elements missing', barElement, container, poster);
 		return;
 	}
-	if (ratio < 1) {
-		const percent = Math.round(ratio * 100) + '%'
+	if (progress < 1) {
+		const percent = Math.round(progress * 100) + '%'
 		barElement.style.width = percent;
 	} else {
 		// when we reach 1, we can remove the progress bar and fade out the poster

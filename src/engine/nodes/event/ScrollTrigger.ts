@@ -132,6 +132,8 @@ const ParamsConfig = new ScrollTriggerParamsConfig();
 
 export class ScrollTriggerEventNode extends TypedEventNode<ScrollTriggerParamsConfig> {
 	override paramsConfig = ParamsConfig;
+	public gsap = gsap; // give access to gsap to external scripts
+	public ScrollTrigger = ScrollTrigger; // give access to ScrollTrigger to external scripts
 	static override type() {
 		return 'scrollTrigger';
 	}

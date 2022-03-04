@@ -98,13 +98,13 @@ const poster = document.getElementById('polygonjs-loading-poster');
 const container = document.getElementById('polygonjs-progress-bar-container');
 const mainElement = document.getElementById('polygonjs-progress');
 const barElement = document.getElementById('polygonjs-progress-bar-label');
-export function onProgress(ratio: number) {
+export function updateProgressBarCenterWithPercent(ratio: progress) {
 	if (!(mainElement && barElement && container && poster)) {
 		console.log('progress bar elements missing');
 		return;
 	}
-	if (ratio < 1) {
-		const percent = Math.round(ratio * 100) + '%';
+	if (progress < 1) {
+		const percent = Math.round(progress * 100) + '%';
 		mainElement.style.width = percent;
 		barElement.innerText = percent;
 	} else {

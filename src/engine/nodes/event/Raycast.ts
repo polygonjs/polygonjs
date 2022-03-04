@@ -413,7 +413,7 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 
 	private _process_trigger_update_objects(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
-			this.cpuController.update_target();
+			this.cpuController.updateTarget();
 		}
 	}
 
