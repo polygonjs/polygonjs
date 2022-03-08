@@ -5,10 +5,11 @@ var FileUtils_1 = require("./FileUtils");
 var ts_1 = require("./ts");
 var path = require("path");
 var threeImportMap_1 = require("./threeImportMap");
+var walk_1 = require("../../common/walk");
 var currentPath = path.resolve(__dirname, '../../..');
 exports.srcPath = path.resolve(currentPath, 'src');
 function esbuild_entries(srcPath) {
-    return (0, FileUtils_1.walk)(srcPath, FileUtils_1.has_allowed_extension);
+    return (0, walk_1.walk)(srcPath, FileUtils_1.has_allowed_extension);
 }
 exports.esbuild_entries = esbuild_entries;
 exports.outdir = './dist/src';
@@ -21,10 +22,10 @@ function getOptions() {
     if (typeof target != 'string') {
         throw 'target is not a string';
     }
-    console.log("currentPath: " + currentPath);
-    console.log("srcPath: " + exports.srcPath);
+    console.log("currentPath: ".concat(currentPath));
+    console.log("srcPath: ".concat(exports.srcPath));
     var files_list = esbuild_entries(exports.srcPath);
-    console.log("esbuild: transpiling " + files_list.length + " files");
+    console.log("esbuild: transpiling ".concat(files_list.length, " files"));
     var options = {
         // entryPoints: ['./src/engine/index.ts'],
         entryPoints: files_list,

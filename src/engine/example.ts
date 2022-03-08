@@ -212,7 +212,7 @@ function createExampleLinks() {
 				return;
 			}
 			const examplePath = `nodes/${context}/${exampleName}`;
-			const url = `/example?id=${encodeURI(examplePath)}`;
+			const url = `/example.html?id=${encodeURI(examplePath)}`;
 			linkElement.setAttribute('data-example-name', exampleName);
 			aEl.setAttribute('href', url);
 			aEl.innerText = examplePath;
@@ -229,7 +229,7 @@ function createExampleLinks() {
 			return;
 		}
 		const examplePath = `expressions/${expressionName}`;
-		const url = `/example?id=${encodeURI(examplePath)}`;
+		const url = `/example.html?id=${encodeURI(examplePath)}`;
 		linkElement.setAttribute('data-example-name', expressionName);
 		aEl.setAttribute('href', url);
 		aEl.innerText = examplePath;

@@ -17,7 +17,7 @@ module.exports = (env) => {
 		common_options.plugins.push(
 			new HtmlWebpackPlugin({
 				title: 'Example',
-				filename: 'example',
+				filename: 'example.html',
 				template: './src/engine/example.html',
 				chunks: ['example'],
 			})
@@ -31,7 +31,7 @@ module.exports = (env) => {
 		common_options.plugins.push(
 			new HtmlWebpackPlugin({
 				title: 'Test',
-				filename: 'test',
+				filename: 'test.html',
 				template: 'tests/index.html',
 				chunks: ['test'],
 			})
@@ -42,7 +42,7 @@ module.exports = (env) => {
 		mode: 'development',
 		devtool: 'inline-source-map', // 'cheap-module-eval-source-map',
 		devServer: {
-			contentBase: path.join(__dirname, '../public'),
+			static: path.join(__dirname, '../../public'),
 			hot: true,
 		},
 	});

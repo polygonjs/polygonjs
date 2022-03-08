@@ -37,47 +37,49 @@ declare global {
 	}
 }
 
-QUnit.testStart(async () => {
-	// console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
+export function setupQUnit(qUnit: QUnit) {
+	qUnit.testStart(async () => {
+		// console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
 
-	await waitForUserInteraction();
+		await waitForUserInteraction();
 
-	function deregisterAllRenderers() {
-		const scenes = Poly.scenesRegister.scenes();
-		for (let scene of scenes) {
-			const renderers = [...scene.renderersRegister.renderers()];
-			for (let renderer of renderers) {
-				scene.renderersRegister.deregisterRenderer(renderer);
+		function deregisterAllRenderers() {
+			const scenes = Poly.scenesRegister.scenes();
+			for (let scene of scenes) {
+				const renderers = [...scene.renderersRegister.renderers()];
+				for (let renderer of renderers) {
+					scene.renderersRegister.deregisterRenderer(renderer);
+				}
 			}
 		}
-	}
 
-	deregisterAllRenderers();
-	Poly.blobs.clear();
-	GLTFLoaderHandler.reset();
-	// return new Promise(async (resolve, reject) => {
-	window.scene = new PolyScene();
-	window.scene.setName(QUnit.config.current.testName);
-	window.scene.setUuid(QUnit.config.current.testName);
-	Poly.setEnv('test');
+		deregisterAllRenderers();
+		Poly.blobs.clear();
+		GLTFLoaderHandler.reset();
+		// return new Promise(async (resolve, reject) => {
+		window.scene = new PolyScene();
+		window.scene.setName(QUnit.config.current.testName);
+		window.scene.setUuid(QUnit.config.current.testName);
+		Poly.setEnv('test');
 
-	window.scene.loadingController.markAsLoading();
-	window.scene.cooker.block();
-	const root = window.scene.root();
-	window.root = root;
-	window.perspective_camera1 = root.createNode('perspectiveCamera');
-	window.geo1 = root.createNode('geo');
-	window.MAT = root.createNode('materialsNetwork');
-	window.MAT.setName('MAT');
-	window.POST = root.createNode('postProcessNetwork');
-	window.POST.setName('POST');
-	window.COP = root.createNode('copNetwork');
-	window.COP.setName('COP');
+		window.scene.loadingController.markAsLoading();
+		window.scene.cooker.block();
+		const root = window.scene.root();
+		window.root = root;
+		window.perspective_camera1 = root.createNode('perspectiveCamera');
+		window.geo1 = root.createNode('geo');
+		window.MAT = root.createNode('materialsNetwork');
+		window.MAT.setName('MAT');
+		window.POST = root.createNode('postProcessNetwork');
+		window.POST.setName('POST');
+		window.COP = root.createNode('copNetwork');
+		window.COP.setName('COP');
 
-	window.scene.loadingController.setAutoUpdate(true);
-	await window.scene.loadingController.markAsLoaded();
-	window.scene.cooker.unblock();
-});
-QUnit.testDone(() => {
-	console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
-});
+		window.scene.loadingController.setAutoUpdate(true);
+		await window.scene.loadingController.markAsLoaded();
+		window.scene.cooker.unblock();
+	});
+	qUnit.testDone(() => {
+		console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
+	});
+}

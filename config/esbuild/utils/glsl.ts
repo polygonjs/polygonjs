@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import {walk} from './FileUtils';
+import {walk} from '../../common/walk';
 
 export function fix_glsl_files(srcPath: string) {
 	// then we rename the glsl files that have been transpile from bla.glsl to bla.js into bla.glsl.js:

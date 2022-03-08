@@ -16,7 +16,7 @@ interface VecToGlOptions {
 	param_type: ParamType;
 }
 
-function VecToGlFactory(type: string, options: VecToGlOptions) {
+function VecToGlFactory(type: string, options: VecToGlOptions): typeof BaseVecToGlNode {
 	const components = options.components;
 	const param_type = options.param_type;
 	return class VecToGlNode extends BaseVecToGlNode {

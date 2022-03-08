@@ -6,7 +6,7 @@ interface MathArg1Options {
 	method?: string;
 }
 
-function MathFunctionArg1Factory(type: string, options: MathArg1Options = {}) {
+function MathFunctionArg1Factory(type: string, options: MathArg1Options = {}): typeof BaseNodeGlMathFunctionArg1GlNode {
 	const gl_method_name = options.method || type;
 	const gl_output_name = options.out || 'val';
 	const gl_input_name = options.in || 'in';

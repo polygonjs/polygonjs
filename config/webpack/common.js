@@ -7,7 +7,7 @@ const TYPESCRIPT_TRANSPILE_ONLY = FAST_COMPILE;
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+
 // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
@@ -19,7 +19,6 @@ const ts = require('./loaders/ts');
 const POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
 
 const plugins = [
-	new CleanWebpackPlugin(),
 	new HtmlWebpackPlugin({
 		title: 'Index',
 		// filename: 'index.html',
@@ -47,9 +46,6 @@ module.exports = (env = {}) => {
 		entry: {
 			all: './src/engine/index_all.ts',
 		},
-		node: {
-			fs: 'empty', // to attempt bundling ammo-typed without error in prod
-		},
 		plugins: plugins,
 
 		output: {
@@ -76,6 +72,9 @@ module.exports = (env = {}) => {
 		resolve: {
 			// modules: [path.resolve(__dirname, '../../node_modules')],
 			extensions: ['.ts', '.js'],
+			fallback: {
+				fs: false, // to attempt bundling ammo-typed without error in prod
+			},
 		},
 		module: {
 			rules: [

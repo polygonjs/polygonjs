@@ -10,7 +10,10 @@ interface MathArg2OperationOptions {
 	allowed_in_types?: GlConnectionPointType[];
 }
 
-function MathFunctionArg2OperationFactory(type: string, options: MathArg2OperationOptions) {
+function MathFunctionArg2OperationFactory(
+	type: string,
+	options: MathArg2OperationOptions
+): typeof BaseNodeGlMathFunctionArg2GlNode {
 	const in_prefix = options.in_prefix || type;
 	const output_name = options.out || 'val';
 	const operation = options.operation;

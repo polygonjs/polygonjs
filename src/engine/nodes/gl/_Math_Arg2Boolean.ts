@@ -4,7 +4,10 @@ interface MathArg2BooleanOptions {
 	op: string;
 }
 
-function MathFunctionArg2BooleanFactory(type: string, options: MathArg2BooleanOptions) {
+function MathFunctionArg2BooleanFactory(
+	type: string,
+	options: MathArg2BooleanOptions
+): typeof BaseNodeGlMathFunctionArgBoolean2GlNode {
 	return class Node extends BaseNodeGlMathFunctionArgBoolean2GlNode {
 		static override type() {
 			return type;
@@ -15,7 +18,7 @@ function MathFunctionArg2BooleanFactory(type: string, options: MathArg2BooleanOp
 			this.io.connection_points.set_output_name_function(this._gl_output_name.bind(this));
 		}
 
-		boolean_operation(): string {
+		override boolean_operation(): string {
 			return options.op;
 		}
 		protected _gl_output_name(index: number) {

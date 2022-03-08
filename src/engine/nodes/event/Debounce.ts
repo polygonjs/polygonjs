@@ -8,7 +8,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {TypedEventNode} from './_Base';
 import debounce from 'lodash/debounce';
-import {DebouncedFunc} from 'lodash';
+import type {DebouncedFunc} from 'lodash';
 import {BaseNodeType} from '../_Base';
 
 const callbackOption = {

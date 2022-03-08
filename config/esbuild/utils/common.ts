@@ -1,8 +1,9 @@
 import {BuildOptions} from 'esbuild';
-import {walk, has_allowed_extension} from './FileUtils';
+import {has_allowed_extension} from './FileUtils';
 import {getTarget} from './ts';
 import * as path from 'path';
 import {threeImportMapsOnResolvePlugin} from './threeImportMap';
+import {walk} from '../../common/walk';
 const currentPath = path.resolve(__dirname, '../../..');
 export const srcPath = path.resolve(currentPath, 'src');
 

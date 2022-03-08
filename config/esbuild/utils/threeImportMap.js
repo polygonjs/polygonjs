@@ -11,9 +11,9 @@ exports.threeImportMapsOnResolvePlugin = {
         build.onResolve({ filter: /^three\/src/ }, function (args) {
             var elements = args.path.split('.');
             var ext = elements[elements.length - 1];
-            var newPath = path.join(nodeModulesPath, "" + args.path);
+            var newPath = path.join(nodeModulesPath, "".concat(args.path));
             if (ext != 'js') {
-                newPath = newPath + ".js";
+                newPath = "".concat(newPath, ".js");
             }
             if (ext == 'html') {
                 return { path: newPath, external: true };

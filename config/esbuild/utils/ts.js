@@ -4,7 +4,7 @@ exports.getTarget = void 0;
 var fs = require("fs");
 var path = require("path");
 var tsconfigPath = path.resolve(process.cwd(), './tsconfig.json');
-console.log("tsconfigPath: " + tsconfigPath);
+console.log("tsconfigPath: ".concat(tsconfigPath));
 function getTarget() {
     var tsconfig = fs.readFileSync(tsconfigPath, 'utf-8');
     var lines = tsconfig.split('\n');

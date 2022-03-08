@@ -18,7 +18,9 @@ export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGl
 		return [GlConnectionPointType.BOOL];
 	}
 
-	abstract boolean_operation(): string;
+	boolean_operation(): string {
+		return 'boolean_operation to be defined';
+	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const args = this.io.inputs.namedInputConnectionPoints().map((named_input, i) => {

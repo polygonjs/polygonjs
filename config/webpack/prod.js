@@ -1,7 +1,7 @@
 const argv = require('yargs').argv;
 // const FAST_COMPILE = argv.env.FAST_COMPILE || false;
 const path = require('path');
-const LOGO_PATH = path.resolve(__dirname, '../../public/images/logo.256.png');
+// const LOGO_PATH = path.resolve(__dirname, '../../public/images/logo.256.png');
 const QUICK_N_DIRTY_BUILD = false;
 const MINIFY = !QUICK_N_DIRTY_BUILD;
 const BUILD_MODULES = !QUICK_N_DIRTY_BUILD;
@@ -20,9 +20,10 @@ const {merge} = require('webpack-merge');
 const common = require('./common.js');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+// const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 var {AggressiveMergingPlugin} = require('webpack').optimize;
-const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
+// const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
+// const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 // const USE_STATO_ANALYSE = false;
 // const StatoscopeWebpackPlugin = require('@statoscope/webpack-plugin').default;
@@ -99,7 +100,7 @@ module.exports = (env) => {
 	// }
 	if (MINIFY) {
 		common_options.plugins.push(new AggressiveMergingPlugin()); //Merge chunks
-		common_options.plugins.push(new FaviconsWebpackPlugin(LOGO_PATH));
+		// common_options.plugins.push(new FaviconsWebpackPlugin(LOGO_PATH));
 		common_options.plugins.push(
 			new CompressionPlugin({
 				test: /\.(js)$/,
@@ -117,27 +118,43 @@ module.exports = (env) => {
 		);
 	}
 
+	// https://github.com/johnagan/clean-webpack-plugin/issues/194
+	common_options.output.clean = true;
+	common_options.output.path = path.resolve(__dirname, '../../dist');
+	// common_options.plugins.unshift(
+	// 	new CleanWebpackPlugin({
+	// 		cleanOnceBeforeBuildPatterns: [path.join(__dirname, 'dist/**/*')],
+	// 	})
+	// );
+
 	// currently not using contenthash since we will fetch the generated file with a version anyway
 	// ie: https://unpkg.com/polygonjs-engine@1.1.23/dist/polygonjs-engine.js
-	common_options.output.chunkFilename = '[name].js'; //'[name].[contenthash].js';
+	// common_options.output.chunkFilename = '[name].js'; //'[name].[contenthash].js';
 	// common_options.output.publicPath = `https://unpkg.com/polygonjs-engine@${POLYGONJS_VERSION}/dist/`; // a default
 	common_options.output.publicPath = `https://unpkg.com/@polygonjs/polygonjs@${POLYGONJS_VERSION}/dist/`; // a default is neededis needed
 	if (env.PUBLIC_PATH) {
 		common_options.output.publicPath = env.PUBLIC_PATH; // this may be crucial to update depending on the build
 	}
 	// options for https://github.com/purtuga/esm-webpack-plugin
-	common_options.plugins.push(new EsmWebpackPlugin());
-	common_options.output.library = 'POLY';
-	common_options.output.libraryTarget = 'var';
+	// common_options.plugins.push(new EsmWebpackPlugin());
+	common_options.output.library = {
+		// name: 'POLY',
+		type: 'module',
+		// export: 'PolyScene',
+	};
+	// common_options.output.libraryTarget = 'var';
 
 	const config = merge(common_options, {
 		mode: 'production',
 		devtool: 'source-map',
+		experiments: {
+			outputModule: true,
+		},
 		optimization: {
 			// Currently the chunks are mostly the loaders, which are loaded via lazy imports.
 			// And those do not seem to be part of the chunks webpack detects via this function.
 			// Therefore they remain named 0.js, 1.js...
-			chunkIds: 'named',
+			// chunkIds: 'named',
 			// { automaticNameDelimiter?, automaticNameMaxLength?, cacheGroups?, chunks?, enforceSizeThreshold?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxInitialRequests?, maxSize?, minChunks?, minSize?, name? }
 			// splitChunks: {
 			// 	chunks: 'async', // if chunks is 'all', it seems that the first chunks, like vendors, need to be included manually, which isn't great.

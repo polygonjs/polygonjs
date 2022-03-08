@@ -11,7 +11,10 @@ interface MathArg3Options {
 	functions?: string[];
 }
 
-export function MathFunctionArg3Factory(type: string, options: MathArg3Options = {}) {
+export function MathFunctionArg3Factory(
+	type: string,
+	options: MathArg3Options = {}
+): typeof BaseNodeGlMathFunctionArg3GlNode {
 	const gl_method_name = options.method || type;
 	const gl_output_name = options.out || 'val';
 	const gl_input_names = options.in || ['in0', 'in1', 'in2'];
