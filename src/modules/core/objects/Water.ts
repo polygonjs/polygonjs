@@ -14,7 +14,7 @@ import FRAGMENT from './water/frag.glsl';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Scene} from 'three/src/scenes/Scene';
 import {Camera} from 'three/src/cameras/Camera';
-import {PolyScene} from '../../../engine/index_all';
+import {PolyScene} from '../../../engine/scene/PolyScene';
 /**
  * Work based on :
  * http://slayvin.net : Flat mirror for three.js

@@ -2,7 +2,10 @@ const argv = require('yargs').argv;
 // const FAST_COMPILE = argv.env.FAST_COMPILE || false;
 const path = require('path');
 const LOGO_PATH = path.resolve(__dirname, '../../public/images/logo.256.png');
-const MINIFY = true;
+const QUICK_N_DIRTY_BUILD = false;
+const MINIFY = !QUICK_N_DIRTY_BUILD;
+const BUILD_MODULES = !QUICK_N_DIRTY_BUILD;
+const BUILD_SCENE_DATA_LOADER = !QUICK_N_DIRTY_BUILD;
 // having one entry per node is very hard to generate with terser and no crash
 // (or it takes forever when increasing available ram for node,
 // last test at a whooping 804.15s (or 329.12s without compression)
@@ -42,11 +45,15 @@ module.exports = (env) => {
 		'STLLoader',
 		'TTFLoader',
 	];
-	for (let module of MODULES) {
-		common_options.entry[`modules/${module}`] = `./src/engine/poly/registers/modules/entry_points/${module}.ts`;
+	if (BUILD_MODULES) {
+		for (let module of MODULES) {
+			common_options.entry[`modules/${module}`] = `./src/engine/poly/registers/modules/entry_points/${module}.ts`;
+		}
 	}
 	// common_options.entry[`viewer`] = './src/engine/index_self_contained_importer.ts';
-	common_options.entry[`sceneDataLoader`] = './src/engine/index_sceneDataLoader.ts';
+	if (BUILD_SCENE_DATA_LOADER) {
+		common_options.entry[`sceneDataLoader`] = './src/engine/index_sceneDataLoader.ts';
+	}
 
 	if (ONE_ENTRY_PER_NODE) {
 		delete common_options.entry['all'];

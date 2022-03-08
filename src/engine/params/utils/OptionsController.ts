@@ -53,6 +53,10 @@ const SEPARATOR_BEFORE_OPTION = 'separatorBefore';
 const SEPARATOR_AFTER_OPTION = 'separatorAfter';
 const JOIN_TO_PREVIOUS_PARAM = 'joinToPreviousParam';
 
+export const PARAM_OPTION_NAMES = {
+	CALLBACK_OPTION,
+};
+
 const EDITABLE = 'editable';
 
 export interface NumericParamOptionsMenuEntry {

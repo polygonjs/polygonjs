@@ -8,7 +8,7 @@ import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCa
 import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
 import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
 import {Material} from 'three/src/materials/Material';
-import {PolyScene} from '../../src/engine/index_all';
+import {PolyScene} from '../../src/engine/scene/PolyScene';
 
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
