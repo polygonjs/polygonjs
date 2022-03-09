@@ -79,7 +79,7 @@ module.exports = (env = {}) => {
 		module: {
 			rules: [
 				// engine
-				ts(env, TYPESCRIPT_TRANSPILE_ONLY),
+				ts(TYPESCRIPT_TRANSPILE_ONLY),
 				glsl,
 			],
 		},

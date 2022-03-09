@@ -1,4 +1,4 @@
-module.exports = (env, transpile_only) => {
+module.exports = (transpile_only) => {
 	return {
 		test: /\.ts?$/,
 		exclude: /node_modules/,
