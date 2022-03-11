@@ -12,7 +12,7 @@ import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {CoreString} from '../../../core/String';
-import {CopyStamp} from './utils/CopyStamp';
+import {SopCopyStamp} from './utils/CopyStamp';
 import {Matrix4} from 'three/src/math/Matrix4';
 import {CorePoint} from '../../../core/geometry/Point';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -73,7 +73,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 	private _attribNamesToCopy: string[] = [];
 	private _objects: Object3D[] = [];
-	private _stampNode!: CopyStamp;
+	private _stampNode!: SopCopyStamp;
 
 	static override displayedInputNames(): string[] {
 		return ['geometry to be copied', 'points to copy to'];
@@ -266,7 +266,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		return (this._stampNode = this._stampNode || this._createStampNode());
 	}
 	private _createStampNode() {
-		const stampNode = new CopyStamp(this.scene());
+		const stampNode = new SopCopyStamp(this.scene());
 		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
 		return stampNode;
 	}

@@ -3,7 +3,7 @@ import {ParamJsonExporterData} from '../../utils/io/IOController';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
-import {JsAssemblerControllerType, AssemblerControllerNode} from './Controller';
+import {JsAssemblerControllerType, JsAssemblerControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
 import {ObjectUtils} from '../../../../core/ObjectUtils';
@@ -16,7 +16,7 @@ export class JsAssemblerNodeSpareParamsController {
 	private _created_spare_param_names: string[] = [];
 	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	private _init_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
-	constructor(private _controller: JsAssemblerControllerType, private _node: AssemblerControllerNode) {}
+	constructor(private _controller: JsAssemblerControllerType, private _node: JsAssemblerControllerNode) {}
 	get assembler() {
 		return this._controller.assembler;
 	}

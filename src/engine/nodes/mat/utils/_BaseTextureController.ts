@@ -83,7 +83,7 @@ type TextureRemoveCallback<O extends Object> = (
 	mat_attrib_name: keyof SubType<O, Texture | null>
 ) => void;
 
-type CurrentMaterial = Material;
+type BaseTextureControllerCurrentMaterial = Material;
 
 // export interface UpdateOptions {
 // 	directParams?: boolean;
@@ -112,7 +112,7 @@ export class BaseTextureMapController extends BaseController {
 	}
 	static update(node: BaseNodeType) {}
 
-	async _update<M extends CurrentMaterial>(
+	async _update<M extends BaseTextureControllerCurrentMaterial>(
 		material: M,
 		mat_attrib_name: string,
 		use_map_param: BooleanParam,

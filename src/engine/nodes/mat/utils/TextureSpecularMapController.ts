@@ -16,14 +16,17 @@ export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // class TextureSpecularMaterial extends Material {
 // 	specularMap!: Texture | null;
 // }
-type CurrentMaterial = MeshPhongMaterial;
+type TextureSpecularMapControllerCurrentMaterial = MeshPhongMaterial;
 class TextureSpecularMapParamsConfig extends SpecularMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface SpecularControllers {
 	specularMap: TextureSpecularMapController;
 }
-abstract class TextureSpecularMapMatNode extends TypedMatNode<CurrentMaterial, TextureSpecularMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureSpecularMapMatNode extends TypedMatNode<
+	TextureSpecularMapControllerCurrentMaterial,
+	TextureSpecularMapParamsConfig
+> {
+	controllers!: SpecularControllers;
+	abstract override createMaterial(): TextureSpecularMapControllerCurrentMaterial;
 }
 
 export class TextureSpecularMapController extends BaseTextureMapController {

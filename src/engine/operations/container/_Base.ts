@@ -7,7 +7,7 @@ import {Vector4} from 'three/src/math/Vector4';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {BaseOperation} from '../_Base';
-import {InputsController} from './utils/InputsController';
+import {OperationInputsController} from './utils/InputsController';
 import {CoreType} from '../../../core/Type';
 import {NodeContext} from '../../poly/NodeContext';
 import {DefaultOperationParam, DefaultOperationParams} from '../../../core/operations/_Base';
@@ -114,9 +114,9 @@ export class BaseOperationContainer<NC extends NodeContext> {
 		}
 	}
 
-	private _inputsController: InputsController<NC> | undefined;
+	private _inputsController: OperationInputsController<NC> | undefined;
 	protected inputsController() {
-		return (this._inputsController = this._inputsController || new InputsController<NC>(this));
+		return (this._inputsController = this._inputsController || new OperationInputsController<NC>(this));
 	}
 	private _initClonedStates() {
 		const default_cloned_states = (this.operation.constructor as typeof BaseOperation).INPUT_CLONED_STATE;

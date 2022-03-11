@@ -2,7 +2,7 @@ import {Poly} from '../../Poly';
 
 // import {PolyScene} from '../PolyScene';
 
-export class WebGLController {
+export class SceneWebGLController {
 	constructor() {}
 
 	_require_webgl2: boolean = false;

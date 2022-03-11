@@ -38,14 +38,17 @@ export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base
 // 	metalnessMap!: Texture | null;
 // 	metalness!: number;
 // }
-type CurrentMaterial = MeshStandardMaterial | MeshPhysicalMaterial;
+type TextureMetalnessRoughnessCurrentMaterial = MeshStandardMaterial | MeshPhysicalMaterial;
 class TextureMetalnessMapParamsConfig extends MetalnessRoughnessMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface MetalnessRoughnessControllers {
 	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
 }
-abstract class TextureMetalnessMapMatNode extends TypedMatNode<CurrentMaterial, TextureMetalnessMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureMetalnessMapMatNode extends TypedMatNode<
+	TextureMetalnessRoughnessCurrentMaterial,
+	TextureMetalnessMapParamsConfig
+> {
+	controllers!: MetalnessRoughnessControllers;
+	abstract override createMaterial(): TextureMetalnessRoughnessCurrentMaterial;
 }
 
 export class TextureMetalnessRoughnessMapController extends BaseTextureMapController {

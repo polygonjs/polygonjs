@@ -31,7 +31,7 @@ interface ParamSetByIndex {
 }
 type ParaSetIndex = keyof ParamSetByIndex;
 
-class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
+class AttribAudioAnalyserSopParamsConfig extends NodeParamsConfig {
 	/** @param the point or object index this applies to */
 	index = ParamConfig.INTEGER('$F', {
 		range: [0, 100],
@@ -78,8 +78,8 @@ class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 		visibleIf: {active2: 1},
 	});
 }
-const ParamsConfig = new AttribSetAtIndexSopParamsConfig();
-export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribSetAtIndexSopParamsConfig> {
+const ParamsConfig = new AttribAudioAnalyserSopParamsConfig();
+export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribAudioAnalyserSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'attribAudioAnalyser';

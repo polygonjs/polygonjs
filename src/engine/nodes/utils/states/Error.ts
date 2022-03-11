@@ -1,9 +1,9 @@
 import {NodeEvent} from '../../../poly/NodeEvent';
-import {BaseState} from './Base';
+import {NodeBaseState} from './Base';
 import {Poly} from '../../../Poly';
 import {NodeContext} from '../../../poly/NodeContext';
 
-export class NodeErrorState<NC extends NodeContext> extends BaseState<NC> {
+export class NodeErrorState<NC extends NodeContext> extends NodeBaseState<NC> {
 	private _message: string | undefined;
 
 	set(message: string | undefined) {

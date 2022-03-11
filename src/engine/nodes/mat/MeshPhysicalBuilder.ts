@@ -48,7 +48,7 @@ interface MeshPhysicalBuilderMaterial extends MeshPhysicalMaterial {
 		[key in CustomMaterialName]?: Material;
 	};
 }
-interface Controllers {
+interface MeshPhysicalBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -69,7 +69,7 @@ function AdvancedMeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase)
 		FogParamConfig(WireframeParamConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base))))
 	) {};
 }
-class MeshPhysicalMatParamsConfig extends AdvancedMeshPhysicalParamConfig(
+class MeshPhysicalBuilderMatParamsConfig extends AdvancedMeshPhysicalParamConfig(
 	/* advanced */
 	AdvancedFolderParamConfig(
 		MeshPhysicalParamConfig(
@@ -102,12 +102,12 @@ class MeshPhysicalMatParamsConfig extends AdvancedMeshPhysicalParamConfig(
 		)
 	)
 ) {}
-const ParamsConfig = new MeshPhysicalMatParamsConfig();
+const ParamsConfig = new MeshPhysicalBuilderMatParamsConfig();
 
 export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	MeshPhysicalBuilderMaterial,
 	ShaderAssemblerPhysical,
-	MeshPhysicalMatParamsConfig
+	MeshPhysicalBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -119,7 +119,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: MeshPhysicalBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -134,7 +134,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 		physical: new MeshPhysicalController(this),
 		PCSS: new PCSSController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshPhysicalBuilderControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

@@ -40,7 +40,7 @@ interface MeshPhongBuilderMaterial extends MeshPhongMaterial {
 		[key in CustomMaterialName]?: Material;
 	};
 }
-interface Controllers {
+interface MeshPhongBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -54,7 +54,7 @@ interface Controllers {
 	specularMap: TextureSpecularMapController;
 	PCSS: PCSSController;
 }
-class MeshPhongMatParamsConfig extends PCSSParamConfig(
+class MeshPhongBuilderMatParamsConfig extends PCSSParamConfig(
 	FogParamConfig(
 		WireframeParamConfig(
 			AdvancedCommonParamConfig(
@@ -93,12 +93,12 @@ class MeshPhongMatParamsConfig extends PCSSParamConfig(
 		)
 	)
 ) {}
-const ParamsConfig = new MeshPhongMatParamsConfig();
+const ParamsConfig = new MeshPhongBuilderMatParamsConfig();
 
 export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<
 	MeshPhongBuilderMaterial,
 	ShaderAssemblerPhong,
-	MeshPhongMatParamsConfig
+	MeshPhongBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -110,7 +110,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: MeshPhongBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -124,7 +124,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<
 		specularMap: new TextureSpecularMapController(this),
 		PCSS: new PCSSController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshPhongBuilderControllers>;
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {

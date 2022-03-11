@@ -35,7 +35,7 @@ interface MeshLambertBuilderMaterial extends MeshLambertMaterial {
 		[key in CustomMaterialName]?: Material;
 	};
 }
-interface Controllers {
+interface MeshLambertBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -45,7 +45,7 @@ interface Controllers {
 	map: TextureMapController;
 	PCSS: PCSSController;
 }
-class MeshLambertMatParamsConfig extends PCSSParamConfig(
+class MeshLambertBuilderMatParamsConfig extends PCSSParamConfig(
 	FogParamConfig(
 		WireframeParamConfig(
 			AdvancedCommonParamConfig(
@@ -76,12 +76,12 @@ class MeshLambertMatParamsConfig extends PCSSParamConfig(
 		)
 	)
 ) {}
-const ParamsConfig = new MeshLambertMatParamsConfig();
+const ParamsConfig = new MeshLambertBuilderMatParamsConfig();
 
 export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<
 	MeshLambertBuilderMaterial,
 	ShaderAssemblerLambert,
-	MeshLambertMatParamsConfig
+	MeshLambertBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -94,7 +94,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 
-	readonly controllers: Controllers = {
+	readonly controllers: MeshLambertBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -104,7 +104,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<
 		map: new TextureMapController(this),
 		PCSS: new PCSSController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshLambertBuilderControllers>;
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {

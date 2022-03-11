@@ -28,14 +28,17 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	envMap!: Texture | null;
 // 	envMapIntensity!: number;
 // }
-type CurrentMaterial = MeshPhongMaterial | MeshStandardMaterial | MeshPhysicalMaterial;
+type TextureEnvMapControllerCurrentMaterial = MeshPhongMaterial | MeshStandardMaterial | MeshPhysicalMaterial;
 class TextureEnvMapParamsConfig extends EnvMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface EnvMapControllers {
 	envMap: TextureEnvMapController;
 }
-abstract class TextureEnvMapMatNode extends TypedMatNode<CurrentMaterial, TextureEnvMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureEnvMapMatNode extends TypedMatNode<
+	TextureEnvMapControllerCurrentMaterial,
+	TextureEnvMapParamsConfig
+> {
+	controllers!: EnvMapControllers;
+	abstract override createMaterial(): TextureEnvMapControllerCurrentMaterial;
 }
 
 export class TextureEnvMapController extends BaseTextureMapController {

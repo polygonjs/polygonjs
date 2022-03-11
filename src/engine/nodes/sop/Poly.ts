@@ -4,7 +4,7 @@ import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeCont
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 
-export function createPolySopNode(node_type: string, definition: PolyNodeDefinition) {
+export function createPolySopNode(node_type: string, definition: PolyNodeDefinition): typeof SubnetSopNodeLike {
 	class PolySopParamsConfig extends NodeParamsConfig {
 		template = ParamConfig.NODE_PATH('');
 		debug = ParamConfig.BUTTON(null, {
@@ -30,8 +30,8 @@ export function createPolySopNode(node_type: string, definition: PolyNodeDefinit
 			this.polyNodeController.debug(this.p.template);
 		}
 	}
-	return BasePolySopNode;
+	return BasePolySopNode as typeof SubnetSopNodeLike;
 }
 
-const BasePolySopNode = createPolySopNode('poly', {nodeContext: NodeContext.SOP, inputs: [0, 4]});
-export class PolySopNode extends BasePolySopNode {}
+export const BasePolySopNode = createPolySopNode('poly', {nodeContext: NodeContext.SOP, inputs: [0, 4]});
+export class PolySopNode extends BasePolySopNode<any> {}

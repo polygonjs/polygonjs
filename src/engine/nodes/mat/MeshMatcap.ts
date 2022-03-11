@@ -22,7 +22,7 @@ import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-interface Controllers {
+interface MeshMatCapControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	bumpMap: TextureBumpMapController;
@@ -32,7 +32,7 @@ interface Controllers {
 	normalMap: TextureNormalMapController;
 }
 
-class MeshStandardMatParamsConfig extends FogParamConfig(
+class MeshMatCapMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
 		/* advanced */
 		AdvancedFolderParamConfig(
@@ -55,9 +55,9 @@ class MeshStandardMatParamsConfig extends FogParamConfig(
 		)
 	)
 ) {}
-const ParamsConfig = new MeshStandardMatParamsConfig();
+const ParamsConfig = new MeshMatCapMatParamsConfig();
 
-export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshStandardMatParamsConfig> {
+export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshMatCapMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshMatcap';
@@ -72,7 +72,7 @@ export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshStan
 		});
 	}
 
-	readonly controllers: Controllers = {
+	readonly controllers: MeshMatCapControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		bumpMap: new TextureBumpMapController(this),
@@ -81,7 +81,7 @@ export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshStan
 		matcap: new TextureMatcapMapController(this),
 		normalMap: new TextureNormalMapController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshMatCapControllers>;
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {

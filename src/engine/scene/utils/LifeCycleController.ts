@@ -2,7 +2,7 @@ import {PolyScene} from '../PolyScene';
 
 // TODO: considerer removing this module
 // since now the on create hooks should all be in the editor
-export class LifeCycleController {
+export class SceneLifeCycleController {
 	constructor(private scene: PolyScene) {}
 
 	private _lifecycleOnAfterCreatedAllowed: boolean = true;

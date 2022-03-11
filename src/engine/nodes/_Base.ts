@@ -2,10 +2,10 @@ import {PolyScene} from '../scene/PolyScene';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {UIData} from './utils/UIData';
 import {FlagsController, FlagsControllerD} from './utils/FlagsController';
-import {StatesController} from './utils/StatesController';
+import {NodeStatesController} from './utils/StatesController';
 import {HierarchyParentController} from './utils/hierarchy/ParentController';
 import {HierarchyChildrenController, NodeCreateOptions} from './utils/hierarchy/ChildrenController';
-import {LifeCycleController} from './utils/LifeCycleController';
+import {NodeLifeCycleController} from './utils/LifeCycleController';
 import {TypedContainerController} from './utils/ContainerController';
 import {NodeCookController, OnCookCompleteHook} from './utils/CookController';
 import {NameController} from './utils/NameController';
@@ -63,8 +63,8 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _uiData: UIData | undefined;
 
-	private _states: StatesController<NC> | undefined;
-	private _lifecycle: LifeCycleController | undefined;
+	private _states: NodeStatesController<NC> | undefined;
+	private _lifecycle: NodeLifeCycleController | undefined;
 	private _serializer: NodeSerializer | undefined;
 	private _cookController: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
@@ -115,11 +115,11 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return (this._uiData = this._uiData || new UIData(this));
 	}
 
-	get states(): StatesController<NC> {
-		return (this._states = this._states || new StatesController(this));
+	get states(): NodeStatesController<NC> {
+		return (this._states = this._states || new NodeStatesController(this));
 	}
-	get lifecycle(): LifeCycleController {
-		return (this._lifecycle = this._lifecycle || new LifeCycleController(this));
+	get lifecycle(): NodeLifeCycleController {
+		return (this._lifecycle = this._lifecycle || new NodeLifeCycleController(this));
 	}
 	get serializer(): NodeSerializer {
 		return (this._serializer = this._serializer || new NodeSerializer(this));

@@ -25,19 +25,22 @@ export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	aoMap!: Texture | null;
 // 	aoMapIntensity!: number;
 // }
-type CurrentMaterial =
+type TextureAOMapControllerCurrentMaterial =
 	| MeshBasicMaterial
 	| MeshLambertMaterial
 	| MeshStandardMaterial
 	| MeshPhysicalMaterial
 	| MeshToonMaterial;
 class TextureAOMapParamsConfig extends AOMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface TextureAOControllers {
 	aoMap: TextureAOMapController;
 }
-abstract class TextureAOMapMatNode extends TypedMatNode<CurrentMaterial, TextureAOMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureAOMapMatNode extends TypedMatNode<
+	TextureAOMapControllerCurrentMaterial,
+	TextureAOMapParamsConfig
+> {
+	controllers!: TextureAOControllers;
+	abstract override createMaterial(): TextureAOMapControllerCurrentMaterial;
 }
 
 export class TextureAOMapController extends BaseTextureMapController {

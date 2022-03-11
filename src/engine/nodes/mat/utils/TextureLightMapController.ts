@@ -28,19 +28,22 @@ export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	lightMap!: Texture | null;
 // 	lightMapIntensity!: number;
 // }
-type CurrentMaterial =
+type TextureLightMapCurrentMaterial =
 	| MeshBasicMaterial
 	| MeshLambertMaterial
 	| MeshStandardMaterial
 	| MeshPhysicalMaterial
 	| MeshToonMaterial;
 class TextureLightMapParamsConfig extends LightMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface LightMapControllers {
 	lightMap: TextureLightMapController;
 }
-abstract class TextureLightMapMatNode extends TypedMatNode<CurrentMaterial, TextureLightMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureLightMapMatNode extends TypedMatNode<
+	TextureLightMapCurrentMaterial,
+	TextureLightMapParamsConfig
+> {
+	controllers!: LightMapControllers;
+	abstract override createMaterial(): TextureLightMapCurrentMaterial;
 }
 
 export class TextureLightMapController extends BaseTextureMapController {

@@ -6,4 +6,5 @@ config/webpack/debug_prod_config.json
 config/webpack/stats.json
 config/webpack/dts_concat.js
 public/dist
+public/bundled_types.d.ts
 dist/

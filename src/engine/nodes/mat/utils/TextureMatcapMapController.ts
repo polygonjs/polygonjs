@@ -18,14 +18,17 @@ type TextureMatcapMaterial = MeshMatcapMaterial;
 // class TextureMatcapMaterial extends Material {
 // 	matcap!: Texture | null;
 // }
-type CurrentMaterial = TextureMatcapMaterial | ShaderMaterial;
+type TextureMatCapControllerCurrentMaterial = TextureMatcapMaterial | ShaderMaterial;
 class TextureMatcapMapParamsConfig extends MatcapMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface TextureMatCapControllers {
 	matcap: TextureMatcapMapController;
 }
-abstract class TextureMatcapMapMatNode extends TypedMatNode<CurrentMaterial, TextureMatcapMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureMatcapMapMatNode extends TypedMatNode<
+	TextureMatCapControllerCurrentMaterial,
+	TextureMatcapMapParamsConfig
+> {
+	controllers!: TextureMatCapControllers;
+	abstract override createMaterial(): TextureMatCapControllerCurrentMaterial;
 }
 
 export class TextureMatcapMapController extends BaseTextureMapController {

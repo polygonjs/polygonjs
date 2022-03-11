@@ -7,7 +7,7 @@
 import {TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Object3D} from 'three/src/core/Object3D';
-import {Vector3} from 'three';
+import {Vector3} from 'three/src/math/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
 import {CoreObject} from '../../../core/geometry/Object';
 class ScaleActorParamsConfig extends NodeParamsConfig {

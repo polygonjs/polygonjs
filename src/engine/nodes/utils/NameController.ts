@@ -3,12 +3,12 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {CoreType} from '../../../core/Type';
 
-type Callback = () => void;
+type NameControllerCallback = () => void;
 
 export class NameController {
 	private _graph_node: CoreGraphNode;
-	private _on_set_name_hooks: Callback[] | undefined;
-	private _on_set_fullPath_hooks: Callback[] | undefined;
+	private _on_set_name_hooks: NameControllerCallback[] | undefined;
+	private _on_set_fullPath_hooks: NameControllerCallback[] | undefined;
 
 	constructor(protected node: BaseNodeType) {
 		this._graph_node = new CoreGraphNode(node.scene(), 'nodeNameController');
@@ -68,11 +68,11 @@ export class NameController {
 		this.node.emit(NodeEvent.NAME_UPDATED);
 	}
 
-	add_post_set_name_hook(hook: Callback) {
+	add_post_set_name_hook(hook: NameControllerCallback) {
 		this._on_set_name_hooks = this._on_set_name_hooks || [];
 		this._on_set_name_hooks.push(hook);
 	}
-	add_post_set_fullPath_hook(hook: Callback) {
+	add_post_set_fullPath_hook(hook: NameControllerCallback) {
 		this._on_set_fullPath_hooks = this._on_set_fullPath_hooks || [];
 		this._on_set_fullPath_hooks.push(hook);
 	}

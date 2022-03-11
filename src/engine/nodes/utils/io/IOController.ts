@@ -1,4 +1,4 @@
-import {InputsController} from './InputsController';
+import {NodeInputsController} from './InputsController';
 import {OutputsController} from './OutputsController';
 import {ConnectionsController} from './ConnectionsController';
 import {SavedConnectionPointsDataController} from './SavedConnectionPointsDataController';
@@ -38,7 +38,7 @@ export interface ParamInitData<T extends ParamType> {
 export type ParamsInitData = PolyDictionary<ParamInitData<ParamType>>;
 
 export class IOController<NC extends NodeContext> {
-	protected _inputs: InputsController<NC> | undefined;
+	protected _inputs: NodeInputsController<NC> | undefined;
 	protected _outputs: OutputsController<NC> | undefined;
 	protected _connections: ConnectionsController<NC> = new ConnectionsController(this.node);
 	protected _saved_connection_points_data: SavedConnectionPointsDataController<NC> | undefined;
@@ -61,8 +61,8 @@ export class IOController<NC extends NodeContext> {
 	// inputs
 	//
 	//
-	get inputs(): InputsController<NC> {
-		return (this._inputs = this._inputs || new InputsController(this.node));
+	get inputs(): NodeInputsController<NC> {
+		return (this._inputs = this._inputs || new NodeInputsController(this.node));
 	}
 	hasInputs() {
 		return this._inputs != null;

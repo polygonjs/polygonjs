@@ -147,7 +147,7 @@ const DefaultValues: PolyDictionary<number> = {
 	freq: 1,
 };
 
-enum InputName {
+enum NoiseGlNodeInputName {
 	AMP = 'amp',
 	POSITION = 'position',
 	FREQ = 'freq',
@@ -210,7 +210,12 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	}
 
 	protected _gl_input_name(index: number) {
-		return [InputName.AMP, InputName.POSITION, InputName.FREQ, InputName.OFFSET][index];
+		return [
+			NoiseGlNodeInputName.AMP,
+			NoiseGlNodeInputName.POSITION,
+			NoiseGlNodeInputName.FREQ,
+			NoiseGlNodeInputName.OFFSET,
+		][index];
 	}
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
@@ -322,10 +327,10 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 		// const method_name = METHOD_NAMES_BY_NOISE_NAME[noise_name]
 		const method_name = this.fbm_method_name();
 
-		const amp = ThreeToGl.any(this.variableForInput(InputName.AMP));
-		const position = ThreeToGl.any(this.variableForInput(InputName.POSITION));
-		const freq = ThreeToGl.any(this.variableForInput(InputName.FREQ));
-		let offset = ThreeToGl.any(this.variableForInput(InputName.OFFSET));
+		const amp = ThreeToGl.any(this.variableForInput(NoiseGlNodeInputName.AMP));
+		const position = ThreeToGl.any(this.variableForInput(NoiseGlNodeInputName.POSITION));
+		const freq = ThreeToGl.any(this.variableForInput(NoiseGlNodeInputName.FREQ));
+		let offset = ThreeToGl.any(this.variableForInput(NoiseGlNodeInputName.OFFSET));
 		if (offset2) {
 			offset = `(${offset}+${offset2})`;
 		}

@@ -10,20 +10,20 @@ import Quaternion from './gl/quaternion.glsl';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
-enum InputName {
+enum AlignGlNodeInputName {
 	DIR = 'dir',
 	UP = 'up',
 }
-const InputNames: Array<InputName> = [InputName.DIR, InputName.UP];
+const InputNames: Array<AlignGlNodeInputName> = [AlignGlNodeInputName.DIR, AlignGlNodeInputName.UP];
 interface IDefaultValues {
-	[InputName.DIR]: Number3;
-	[InputName.UP]: Number3;
+	[AlignGlNodeInputName.DIR]: Number3;
+	[AlignGlNodeInputName.UP]: Number3;
 }
 const DEFAULT_DIR: Number3 = [0, 0, 1];
 const DEFAULT_UP: Number3 = [0, 1, 0];
 const DefaultValues: IDefaultValues = {
-	[InputName.DIR]: DEFAULT_DIR,
-	[InputName.UP]: DEFAULT_UP,
+	[AlignGlNodeInputName.DIR]: DEFAULT_DIR,
+	[AlignGlNodeInputName.UP]: DEFAULT_UP,
 };
 
 export class AlignGlNode extends BaseNodeGlMathFunctionArg2GlNode {
@@ -46,7 +46,7 @@ export class AlignGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	// 	return InputNames[index];
 	// }
 	override paramDefaultValue(name: string) {
-		return DefaultValues[name as InputName];
+		return DefaultValues[name as AlignGlNodeInputName];
 	}
 	override gl_method_name(): string {
 		return 'align';

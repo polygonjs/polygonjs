@@ -20,7 +20,7 @@ import {Material} from 'three/src/materials/Material';
 import {PointsMaterial} from 'three/src/materials/PointsMaterial';
 import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
 
-interface Controllers {
+interface PointsBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 }
 interface PointsBuilderMaterial extends PointsMaterial {
@@ -31,7 +31,7 @@ interface PointsBuilderMaterial extends PointsMaterial {
 	};
 }
 
-class PointsMatParamsConfig extends FogParamConfig(
+class PointsBuilderMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
 		BaseBuilderParamConfig(
 			/* advanced */ AdvancedFolderParamConfig(
@@ -40,12 +40,12 @@ class PointsMatParamsConfig extends FogParamConfig(
 		)
 	)
 ) {}
-const ParamsConfig = new PointsMatParamsConfig();
+const ParamsConfig = new PointsBuilderMatParamsConfig();
 
 export class PointsBuilderMatNode extends TypedBuilderMatNode<
 	PointsBuilderMaterial,
 	ShaderAssemblerPoints,
-	PointsMatParamsConfig
+	PointsBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -57,10 +57,10 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: PointsBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof PointsBuilderControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

@@ -12,16 +12,16 @@ const OUTPUT_NAME = 'out';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-class TimerEventParamsConfig extends NodeParamsConfig {
+class DelayEventParamsConfig extends NodeParamsConfig {
 	/** @param delay before dispatching */
 	delay = ParamConfig.INTEGER(1000, {
 		range: [0, 1000],
 		rangeLocked: [true, false],
 	});
 }
-const ParamsConfig = new TimerEventParamsConfig();
+const ParamsConfig = new DelayEventParamsConfig();
 
-export class DelayEventNode extends TypedEventNode<TimerEventParamsConfig> {
+export class DelayEventNode extends TypedEventNode<DelayEventParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'delay';

@@ -24,11 +24,11 @@ export function CanvasCopNodeParamConfig<TBase extends Constructor>(Base: TBase)
 		});
 	};
 }
-class RenderCopParamConfig extends TextureParamConfig(CanvasCopNodeParamConfig(NodeParamsConfig)) {}
+class CanvasCopParamConfig extends TextureParamConfig(CanvasCopNodeParamConfig(NodeParamsConfig)) {}
 
-const ParamsConfig = new RenderCopParamConfig();
+const ParamsConfig = new CanvasCopParamConfig();
 
-export class CanvasCopNode extends TypedCopNode<RenderCopParamConfig> {
+export class CanvasCopNode extends TypedCopNode<CanvasCopParamConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type(): Readonly<'canvas'> {
 		return 'canvas';

@@ -11,14 +11,14 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 
-interface Controllers {
+interface ShadowControllers {
 	advancedCommon: AdvancedCommonController;
 }
 
-class MeshBasicMatParamsConfig extends AdvancedCommonParamConfig(ColorParamConfig(NodeParamsConfig)) {}
-const ParamsConfig = new MeshBasicMatParamsConfig();
+class ShadowMatParamsConfig extends AdvancedCommonParamConfig(ColorParamConfig(NodeParamsConfig)) {}
+const ParamsConfig = new ShadowMatParamsConfig();
 
-export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatParamsConfig> {
+export class ShadowMatNode extends TypedMatNode<ShadowMaterial, ShadowMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'shadow';
@@ -32,10 +32,10 @@ export class ShadowMatNode extends TypedMatNode<ShadowMaterial, MeshBasicMatPara
 			opacity: 1,
 		});
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: ShadowControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof ShadowControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

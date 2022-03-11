@@ -9,7 +9,7 @@ import {TypedMatNode} from './_Base';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
-interface Controllers {
+interface LineBasicBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 }
 class LineBasicMatParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfig) {
@@ -35,10 +35,10 @@ export class LineBasicMatNode extends TypedMatNode<LineBasicMaterial, LineBasicM
 			linewidth: 1,
 		});
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: LineBasicBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof LineBasicBuilderControllers>;
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {

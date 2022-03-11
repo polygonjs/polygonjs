@@ -11,7 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamType} from '../../poly/ParamType';
 import {UniformJsDefinition} from './utils/JsDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
-import {LinesController} from './code/utils/LinesController';
+import {JsLinesController} from './code/utils/LinesController';
 import {JsParamConfig} from './code/utils/JsParamConfig';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -44,7 +44,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [JS_CONNECTION_POINT_TYPES[this.pv.type]]);
 	}
 
-	override setLines(lines_controller: LinesController) {
+	override setLines(lines_controller: JsLinesController) {
 		const definitions = [];
 
 		const gl_type = JS_CONNECTION_POINT_TYPES[this.pv.type];

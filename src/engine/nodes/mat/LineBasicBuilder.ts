@@ -19,7 +19,7 @@ import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
 import {CustomMaterialName} from '../../../core/geometry/Material';
 import {Material} from 'three/src/materials/Material';
 
-interface Controllers {
+interface LineBasicBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 }
 interface LineBasicBuilderMaterial extends LineBasicMaterial {
@@ -30,7 +30,7 @@ interface LineBasicBuilderMaterial extends LineBasicMaterial {
 	};
 }
 
-class LineBasicMatParamsConfig extends FogParamConfig(
+class LineBasicBuilderMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
 		BaseBuilderParamConfig(
 			/* advanced */ AdvancedFolderParamConfig(
@@ -44,12 +44,12 @@ class LineBasicMatParamsConfig extends FogParamConfig(
 		rangeLocked: [true, false],
 	});
 }
-const ParamsConfig = new LineBasicMatParamsConfig();
+const ParamsConfig = new LineBasicBuilderMatParamsConfig();
 
 export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
 	LineBasicBuilderMaterial,
 	ShaderAssemblerLine,
-	LineBasicMatParamsConfig
+	LineBasicBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -61,10 +61,10 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: LineBasicBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof LineBasicBuilderControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

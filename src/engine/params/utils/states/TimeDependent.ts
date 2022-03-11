@@ -1,6 +1,6 @@
 import {BaseParamType} from '../../_Base';
 
-export class TimeDependentState {
+export class ParamTimeDependentState {
 	constructor(protected param: BaseParamType) {}
 
 	active(): boolean {

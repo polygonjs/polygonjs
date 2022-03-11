@@ -29,7 +29,7 @@ import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-interface Controllers {
+interface MeshPhongControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -93,7 +93,7 @@ export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongM
 			opacity: 1,
 		});
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: MeshPhongControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -106,7 +106,7 @@ export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongM
 		normalMap: new TextureNormalMapController(this),
 		specularMap: new TextureSpecularMapController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshPhongControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

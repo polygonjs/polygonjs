@@ -11,10 +11,10 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseAnimNodeType} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {SubnetOutputAnimNode} from './SubnetOutput';
-class ParamLessNetworkAnimParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new ParamLessNetworkAnimParamsConfig();
+class ParamLessSubnetAnimParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new ParamLessSubnetAnimParamsConfig();
 
-export class SubnetAnimNode extends TypedAnimNode<ParamLessNetworkAnimParamsConfig> {
+export class SubnetAnimNode extends TypedAnimNode<ParamLessSubnetAnimParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return NetworkNodeType.SUBNET;

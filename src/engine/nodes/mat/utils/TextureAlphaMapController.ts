@@ -22,7 +22,7 @@ export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-type CurrentMaterial =
+type TextureAlphaMapControllerCurrentMaterial =
 	| MeshBasicMaterial
 	| MeshLambertMaterial
 	| MeshPhongMaterial
@@ -32,12 +32,15 @@ type CurrentMaterial =
 	| MeshToonMaterial
 	| PointsMaterial;
 class TextureAlphaMapParamsConfig extends AlphaMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface TextureAlphaControllers {
 	alphaMap: TextureAlphaMapController;
 }
-abstract class TextureAlphaMapMatNode extends TypedMatNode<CurrentMaterial, TextureAlphaMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureAlphaMapMatNode extends TypedMatNode<
+	TextureAlphaMapControllerCurrentMaterial,
+	TextureAlphaMapParamsConfig
+> {
+	controllers!: TextureAlphaControllers;
+	abstract override createMaterial(): TextureAlphaMapControllerCurrentMaterial;
 }
 
 export class TextureAlphaMapController extends BaseTextureMapController {

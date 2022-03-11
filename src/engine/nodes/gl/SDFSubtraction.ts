@@ -16,7 +16,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 import {isBooleanTrue} from '../../../core/Type';
 
 const OUTPUT_NAME = 'union';
-class SphereGlParamsConfig extends NodeParamsConfig {
+class SDFSubtractionGlParamsConfig extends NodeParamsConfig {
 	sdf0 = ParamConfig.FLOAT(0);
 	sdf1 = ParamConfig.FLOAT(0);
 	smooth = ParamConfig.BOOLEAN(0);
@@ -24,11 +24,11 @@ class SphereGlParamsConfig extends NodeParamsConfig {
 		visibleIf: {smooth: 1},
 	});
 }
-const ParamsConfig = new SphereGlParamsConfig();
-export class SDFSubtractionGlNode extends TypedGlNode<SphereGlParamsConfig> {
+const ParamsConfig = new SDFSubtractionGlParamsConfig();
+export class SDFSubtractionGlNode extends TypedGlNode<SDFSubtractionGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFSubtraction';
+		return 'SDFSubtract';
 	}
 
 	override initializeNode() {

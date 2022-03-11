@@ -105,14 +105,17 @@ When transmission is non-zero, opacity should be set to 1.  */
 	};
 }
 
-type CurrentMaterial = MeshPhysicalMaterial;
+type MeshPhysicalControllerCurrentMaterial = MeshPhysicalMaterial;
 class TextureClearCoatMapParamsConfig extends MeshPhysicalParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface MeshPhysicalControllers {
 	physical: MeshPhysicalController;
 }
-abstract class TextureClearCoatMapMatNode extends TypedMatNode<CurrentMaterial, TextureClearCoatMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureClearCoatMapMatNode extends TypedMatNode<
+	MeshPhysicalControllerCurrentMaterial,
+	TextureClearCoatMapParamsConfig
+> {
+	controllers!: MeshPhysicalControllers;
+	abstract override createMaterial(): MeshPhysicalControllerCurrentMaterial;
 }
 
 const tmpMeshPhysicalForIOR = new MeshPhysicalMaterial();

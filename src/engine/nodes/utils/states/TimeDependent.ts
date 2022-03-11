@@ -1,7 +1,7 @@
 import {NodeContext} from '../../../poly/NodeContext';
-import {BaseState} from './Base';
+import {NodeBaseState} from './Base';
 
-export class TimeDependentState<NC extends NodeContext> extends BaseState<NC> {
+export class NodeTimeDependentState<NC extends NodeContext> extends NodeBaseState<NC> {
 	active() {
 		return this.paramsTimeDependent() || this.inputsTimeDependent();
 	}

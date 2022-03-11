@@ -1,6 +1,6 @@
 import {BaseViewerType} from '../_Base';
 
-export class WebGLController {
+export class ViewerWebGLController {
 	public request_animation_frame_id: number | undefined;
 
 	constructor(protected viewer: BaseViewerType) {}

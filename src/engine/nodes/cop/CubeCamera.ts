@@ -20,7 +20,7 @@ enum MapMode {
 	REFRACTION = 'refraction',
 }
 const MAP_MODES: MapMode[] = [MapMode.REFLECTION, MapMode.REFRACTION];
-class EnvMapCopParamsConfig extends NodeParamsConfig {
+class CubeCameraCopParamsConfig extends NodeParamsConfig {
 	/** @param cube camera OBJ node */
 	cubeCamera = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
@@ -37,8 +37,8 @@ class EnvMapCopParamsConfig extends NodeParamsConfig {
 		},
 	});
 }
-const ParamsConfig = new EnvMapCopParamsConfig();
-export class CubeCameraCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
+const ParamsConfig = new CubeCameraCopParamsConfig();
+export class CubeCameraCopNode extends TypedCopNode<CubeCameraCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return CopType.CUBE_CAMERA;

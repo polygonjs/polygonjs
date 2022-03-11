@@ -25,10 +25,7 @@ import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {NodeContext} from '../../poly/NodeContext';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-export interface IUniforms {
-	[uniform: string]: IUniform;
-}
+import {IUniforms} from '../../../core/geometry/Material';
 
 const VERTEX_SHADER = `
 void main()	{

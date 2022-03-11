@@ -14,7 +14,7 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
-export function createPolyObjNode(node_type: string, definition: PolyNodeDefinition) {
+export function createPolyObjNode(node_type: string, definition: PolyNodeDefinition): typeof TypedObjNode {
 	class PolyObjParamConfig extends NodeParamsConfig {
 		display = ParamConfig.BOOLEAN(1);
 		template = ParamConfig.NODE_PATH('');
@@ -116,8 +116,8 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 			this.polyNodeController.debug(this.p.template);
 		}
 	}
-	return BasePolyObjNode;
+	return BasePolyObjNode as typeof TypedObjNode;
 }
 
-const BasePolyObjNode = createPolyObjNode('poly', {nodeContext: NodeContext.OBJ});
-export class PolyObjNode extends BasePolyObjNode {}
+export const BasePolyObjNode = createPolyObjNode('poly', {nodeContext: NodeContext.OBJ});
+export class PolyObjNode extends BasePolyObjNode<any, any> {}

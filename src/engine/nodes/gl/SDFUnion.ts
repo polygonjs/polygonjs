@@ -16,7 +16,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 import {isBooleanTrue} from '../../../core/Type';
 
 const OUTPUT_NAME = 'union';
-class SphereGlParamsConfig extends NodeParamsConfig {
+class SDFUnionGlParamsConfig extends NodeParamsConfig {
 	sdf0 = ParamConfig.FLOAT(0);
 	sdf1 = ParamConfig.FLOAT(0);
 	smooth = ParamConfig.BOOLEAN(0);
@@ -24,8 +24,8 @@ class SphereGlParamsConfig extends NodeParamsConfig {
 		visibleIf: {smooth: 1},
 	});
 }
-const ParamsConfig = new SphereGlParamsConfig();
-export class SDFUnionGlNode extends TypedGlNode<SphereGlParamsConfig> {
+const ParamsConfig = new SDFUnionGlParamsConfig();
+export class SDFUnionGlNode extends TypedGlNode<SDFUnionGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFUnion';

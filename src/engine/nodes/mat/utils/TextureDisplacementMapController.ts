@@ -38,19 +38,22 @@ export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBas
 // 	displacementScale!: number;
 // 	displacementBias!: number;
 // }
-type CurrentMaterial =
+type TextureDisplacementMapControllerCurrentMaterial =
 	| MeshMatcapMaterial
 	| MeshNormalMaterial
 	| MeshStandardMaterial
 	| MeshPhysicalMaterial
 	| MeshToonMaterial;
 class TextureDisplacementMapParamsConfig extends DisplacementMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface DisplacementControllers {
 	displacementMap: TextureDisplacementMapController;
 }
-abstract class TextureDisplacementMapMatNode extends TypedMatNode<CurrentMaterial, TextureDisplacementMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureDisplacementMapMatNode extends TypedMatNode<
+	TextureDisplacementMapControllerCurrentMaterial,
+	TextureDisplacementMapParamsConfig
+> {
+	controllers!: DisplacementControllers;
+	abstract override createMaterial(): TextureDisplacementMapControllerCurrentMaterial;
 }
 
 export class TextureDisplacementMapController extends BaseTextureMapController {

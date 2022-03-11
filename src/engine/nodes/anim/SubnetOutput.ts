@@ -9,10 +9,10 @@ import {TypedAnimNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NetworkChildNodeType} from '../../poly/NodeContext';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
-class SubnetOutputSopParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new SubnetOutputSopParamsConfig();
+class AnimSubnetOutputSopParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new AnimSubnetOutputSopParamsConfig();
 
-export class SubnetOutputAnimNode extends TypedAnimNode<SubnetOutputSopParamsConfig> {
+export class SubnetOutputAnimNode extends TypedAnimNode<AnimSubnetOutputSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type(): Readonly<NetworkChildNodeType.OUTPUT> {
 		return NetworkChildNodeType.OUTPUT;

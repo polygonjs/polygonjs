@@ -55,18 +55,21 @@ export function EnvMapSimpleParamConfig<TBase extends Constructor>(Base: TBase) 
 // 	envMap!: Texture | null;
 // 	envMapIntensity!: number;
 // }
-type CurrentMaterial = MeshBasicMaterial | MeshLambertMaterial | MeshPhongMaterial;
-class TextureEnvMapParamsConfig extends EnvMapSimpleParamConfig(NodeParamsConfig) {}
-interface Controllers {
+type TextureEnvMapSimpleCurrentMaterial = MeshBasicMaterial | MeshLambertMaterial | MeshPhongMaterial;
+class TextureEnvMapSimpleParamsConfig extends EnvMapSimpleParamConfig(NodeParamsConfig) {}
+interface EnvMapSimpleControllers {
 	envMap: TextureEnvMapSimpleController;
 }
-abstract class TextureEnvMapMatNode extends TypedMatNode<CurrentMaterial, TextureEnvMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureEnvMapSimpleMatNode extends TypedMatNode<
+	TextureEnvMapSimpleCurrentMaterial,
+	TextureEnvMapSimpleParamsConfig
+> {
+	controllers!: EnvMapSimpleControllers;
+	abstract override createMaterial(): TextureEnvMapSimpleCurrentMaterial;
 }
 
 export class TextureEnvMapSimpleController extends BaseTextureMapController {
-	constructor(protected override node: TextureEnvMapMatNode) {
+	constructor(protected override node: TextureEnvMapSimpleMatNode) {
 		super(node);
 	}
 	initializeNode() {
@@ -90,7 +93,7 @@ export class TextureEnvMapSimpleController extends BaseTextureMapController {
 		mat.refractionRatio = this.node.pv.refractionRatio;
 		// }
 	}
-	static override async update(node: TextureEnvMapMatNode) {
+	static override async update(node: TextureEnvMapSimpleMatNode) {
 		node.controllers.envMap.update();
 	}
 }

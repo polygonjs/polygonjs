@@ -14,12 +14,16 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 // import {GlConnectionsController} from './utils/GLConnectionsController';
 
 const OUTPUT_NAME = 'val';
-enum InputName {
+enum TwoWaySwitchGlNodeInputName {
 	CONDITION = 'condition',
 	IF_TRUE = 'ifTrue',
 	IF_FALSE = 'ifFalse',
 }
-const InputNames: Array<InputName> = [InputName.CONDITION, InputName.IF_TRUE, InputName.IF_FALSE];
+const InputNames: Array<TwoWaySwitchGlNodeInputName> = [
+	TwoWaySwitchGlNodeInputName.CONDITION,
+	TwoWaySwitchGlNodeInputName.IF_TRUE,
+	TwoWaySwitchGlNodeInputName.IF_FALSE,
+];
 
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -60,9 +64,9 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const value = this.glVarName(OUTPUT_NAME);
-		const condition = ThreeToGl.bool(this.variableForInput(InputName.CONDITION));
-		const ifTrue = ThreeToGl.any(this.variableForInput(InputName.IF_TRUE));
-		const ifFalse = ThreeToGl.any(this.variableForInput(InputName.IF_FALSE));
+		const condition = ThreeToGl.bool(this.variableForInput(TwoWaySwitchGlNodeInputName.CONDITION));
+		const ifTrue = ThreeToGl.any(this.variableForInput(TwoWaySwitchGlNodeInputName.IF_TRUE));
+		const ifFalse = ThreeToGl.any(this.variableForInput(TwoWaySwitchGlNodeInputName.IF_FALSE));
 
 		const glType = this._expected_output_types()[0];
 		const bodyLines: string[] = [];

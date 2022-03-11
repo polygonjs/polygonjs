@@ -6,8 +6,8 @@ import {NodeContext} from '../../../poly/NodeContext';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeJsonImporter} from '../../../io/json/import/Node';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
-import {createPolySopNode} from '../../sop/Poly';
-import {createPolyObjNode} from '../../obj/Poly';
+import {createPolySopNode, BasePolySopNode} from '../../sop/Poly';
+import {createPolyObjNode, BasePolyObjNode} from '../../obj/Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {NodePathParam} from '../../../params/NodePath';
 
@@ -17,6 +17,22 @@ export interface PolyNodeDefinition {
 	params?: ParamOptionToAdd<ParamType>[];
 	nodes?: PolyDictionary<NodeJsonExporterData>;
 	ui?: PolyDictionary<NodeJsonExporterUIData>;
+}
+
+type PolyNodeClassByContextMapGeneric = {[key in NodeContext]: any};
+export interface PolyNodeClassByContext extends PolyNodeClassByContextMapGeneric {
+	[NodeContext.ACTOR]: undefined;
+	[NodeContext.ANIM]: undefined;
+	[NodeContext.AUDIO]: undefined;
+	[NodeContext.COP]: undefined;
+	[NodeContext.EVENT]: undefined;
+	[NodeContext.GL]: undefined;
+	[NodeContext.JS]: undefined;
+	[NodeContext.MANAGER]: undefined;
+	[NodeContext.MAT]: undefined;
+	[NodeContext.OBJ]: typeof BasePolyObjNode;
+	[NodeContext.ROP]: undefined;
+	[NodeContext.SOP]: typeof BasePolySopNode;
 }
 
 export class PolyNodeController {
@@ -101,12 +117,16 @@ export class PolyNodeController {
 		}
 	}
 
-	static createNodeClass(node_type: string, node_context: NodeContext, definition: PolyNodeDefinition) {
-		switch (node_context) {
+	static createNodeClass<NC extends NodeContext>(
+		nodeType: string,
+		nodeContext: NC,
+		definition: PolyNodeDefinition
+	): PolyNodeClassByContext[NC] | undefined {
+		switch (nodeContext) {
 			case NodeContext.SOP:
-				return createPolySopNode(node_type, definition);
+				return createPolySopNode(nodeType, definition) as any;
 			case NodeContext.OBJ:
-				return createPolyObjNode(node_type, definition);
+				return createPolyObjNode(nodeType, definition) as any;
 		}
 	}
 }

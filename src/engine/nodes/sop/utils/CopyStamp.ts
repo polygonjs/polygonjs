@@ -1,7 +1,7 @@
 import {BaseCopyStamp} from '../../utils/BaseCopyStamp';
 import {CorePoint} from '../../../../core/geometry/Point';
 
-export class CopyStamp extends BaseCopyStamp {
+export class SopCopyStamp extends BaseCopyStamp {
 	protected _point: CorePoint | undefined;
 
 	override reset() {

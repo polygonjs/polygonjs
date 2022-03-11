@@ -2,13 +2,13 @@ import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {PolyScene} from '../PolyScene';
 import {Poly} from '../../Poly';
 
-type Callback = (value: WebGLRenderer) => void;
+type SceneRenderersRegisterCallback = (value: WebGLRenderer) => void;
 
 export class SceneRenderersRegister {
 	private _renderersById: Map<number, WebGLRenderer> = new Map();
 	private _registerTimeByRenderer: Map<WebGLRenderer, number> = new Map();
 	private _lastRegisteredRenderer: WebGLRenderer | undefined;
-	private _resolves: Callback[] = [];
+	private _resolves: SceneRenderersRegisterCallback[] = [];
 
 	constructor(protected scene: PolyScene) {}
 
@@ -67,7 +67,7 @@ export class SceneRenderersRegister {
 	}
 
 	private _flushCallbacksWithRenderer(renderer: WebGLRenderer) {
-		const callbacks: Callback[] = [];
+		const callbacks: SceneRenderersRegisterCallback[] = [];
 		for (let r of this._resolves) {
 			callbacks.push(r);
 		}

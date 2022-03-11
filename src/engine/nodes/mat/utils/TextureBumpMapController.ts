@@ -35,19 +35,22 @@ export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	bumpMap!: Texture | null;
 // 	bumpScale!: number;
 // }
-type CurrentMaterial =
+type TextureBumpMapControllerCurrentMaterial =
 	| MeshMatcapMaterial
 	| MeshNormalMaterial
 	| MeshPhysicalMaterial
 	| MeshStandardMaterial
 	| MeshToonMaterial;
 class TextureBumpMapParamsConfig extends BumpMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface TextureBumpControllers {
 	bumpMap: TextureBumpMapController;
 }
-abstract class TextureBumpMapMatNode extends TypedMatNode<CurrentMaterial, TextureBumpMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureBumpMapMatNode extends TypedMatNode<
+	TextureBumpMapControllerCurrentMaterial,
+	TextureBumpMapParamsConfig
+> {
+	controllers!: TextureBumpControllers;
+	abstract override createMaterial(): TextureBumpMapControllerCurrentMaterial;
 }
 
 export class TextureBumpMapController extends BaseTextureMapController {

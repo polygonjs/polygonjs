@@ -15,7 +15,7 @@ import {Material} from 'three/src/materials/Material';
 import {MeshDistanceMaterial} from 'three/src/materials/MeshDistanceMaterial';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {ShaderAssemblerCustomMeshDistance} from '../gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
-interface Controllers {
+interface MeshDistanceBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 }
 interface MeshDistanceBuilderMaterial extends MeshDistanceMaterial {
@@ -27,15 +27,15 @@ interface MeshDistanceBuilderMaterial extends MeshDistanceMaterial {
 	};
 }
 
-class MeshDistanceMatParamsConfig extends AdvancedCommonParamConfig(
+class MeshDistanceBuilderMatParamsConfig extends AdvancedCommonParamConfig(
 	BaseBuilderParamConfig(UniformsTransparencyParamConfig(NodeParamsConfig))
 ) {}
-const ParamsConfig = new MeshDistanceMatParamsConfig();
+const ParamsConfig = new MeshDistanceBuilderMatParamsConfig();
 
 export class MeshDistanceBuilderMatNode extends TypedBuilderMatNode<
 	MeshDistanceBuilderMaterial,
 	ShaderAssemblerCustomMeshDistance,
-	MeshDistanceMatParamsConfig
+	MeshDistanceBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -48,10 +48,10 @@ export class MeshDistanceBuilderMatNode extends TypedBuilderMatNode<
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 
-	readonly controllers: Controllers = {
+	readonly controllers: MeshDistanceBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshDistanceBuilderControllers>;
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {

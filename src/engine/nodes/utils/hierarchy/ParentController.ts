@@ -1,13 +1,13 @@
 import {BaseNodeType} from '../../_Base';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 
-type Callback = () => void;
+type NodeParentControllerCallback = () => void;
 import {CoreWalker} from '../../../../core/Walker';
 import {BaseNodeByContextMap, NodeContext} from '../../../poly/NodeContext';
 
 export class HierarchyParentController {
 	private _parent: BaseNodeType | null = null;
-	private _on_set_parent_hooks: Callback[] | undefined;
+	private _on_set_parent_hooks: NodeParentControllerCallback[] | undefined;
 
 	constructor(protected node: BaseNodeType) {}
 

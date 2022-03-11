@@ -1,10 +1,10 @@
 import {TypedNode} from '../_Base';
 import {BaseJsFunctionAssembler} from './code/assemblers/_Base';
-import {AssemblerControllerNode} from './code/Controller';
+import {JsAssemblerControllerNode} from './code/Controller';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
-import {LinesController} from './code/utils/LinesController';
+import {JsLinesController} from './code/utils/LinesController';
 import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 import {JsParamConfig} from './code/utils/JsParamConfig';
 import {ParamType} from '../../poly/ParamType';
@@ -30,13 +30,13 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _set_function_node_to_recompile() {
 		this.function_node?.assembler_controller.set_compilation_required_and_dirty(this);
 	}
-	get function_node(): AssemblerControllerNode | undefined {
+	get function_node(): JsAssemblerControllerNode | undefined {
 		const parent = this.parent();
 		if (parent) {
 			if (parent.type() == this.type()) {
 				return (parent as BaseJsNodeType)?.function_node;
 			} else {
-				return parent as AssemblerControllerNode;
+				return parent as JsAssemblerControllerNode;
 			}
 		}
 	}
@@ -74,7 +74,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// ADDED LINES
 	//
 	//
-	setLines(lines_controller: LinesController) {}
+	setLines(lines_controller: JsLinesController) {}
 
 	reset_code() {
 		this._param_configs_controller?.reset();

@@ -276,9 +276,9 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase, defau
 // 	};
 // }
 
-class TextureParamsConfig extends TextureParamConfig(NodeParamsConfig) {}
-const ParamsConfig = new TextureParamsConfig();
-class TextureCopNode extends TypedCopNode<TextureParamsConfig> {
+class CopTextureParamsConfig extends TextureParamConfig(NodeParamsConfig) {}
+const ParamsConfig = new CopTextureParamsConfig();
+class TextureCopNode extends TypedCopNode<CopTextureParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	public readonly textureParamsController = new TextureParamsController(this);
 }
@@ -296,7 +296,7 @@ export class TextureParamsController {
 		await this._updateAnisotropy(texture, pv);
 		this._updateTransform(texture);
 	}
-	private _updateEncoding(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
+	private _updateEncoding(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.tencoding)) {
 			texture.encoding = pv.encoding;
 		} else {
@@ -304,7 +304,7 @@ export class TextureParamsController {
 		}
 		texture.needsUpdate = true;
 	}
-	private _updateAdvanced(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
+	private _updateAdvanced(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.tadvanced)) {
 			if (isBooleanTrue(pv.tformat)) {
 				texture.format = pv.format;
@@ -319,7 +319,7 @@ export class TextureParamsController {
 		}
 		texture.needsUpdate = true;
 	}
-	private _updateMapping(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
+	private _updateMapping(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.tmapping)) {
 			texture.mapping = pv.mapping;
 		} else {
@@ -327,7 +327,7 @@ export class TextureParamsController {
 		}
 		texture.needsUpdate = true;
 	}
-	private _updateWrap(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
+	private _updateWrap(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.twrap)) {
 			texture.wrapS = pv.wrapS;
 			texture.wrapT = pv.wrapT;
@@ -337,7 +337,7 @@ export class TextureParamsController {
 		}
 		texture.needsUpdate = true;
 	}
-	private _updateFilter(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
+	private _updateFilter(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.tminFilter)) {
 			texture.minFilter = pv.minFilter;
 		} else {
@@ -356,7 +356,7 @@ export class TextureParamsController {
 		}
 		texture.needsUpdate = true;
 	}
-	private _updateFlip(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
+	private _updateFlip(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		// do not have this in an if block,
 		// as to be sure this is set to false in case it is set to true
 		// by the texture loader
@@ -365,7 +365,7 @@ export class TextureParamsController {
 	}
 
 	private _renderer_controller: CopRendererController | undefined;
-	private async _updateAnisotropy(texture: Texture, pv: ParamsValueAccessorType<TextureParamsConfig>) {
+	private async _updateAnisotropy(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (!isBooleanTrue(pv.tanisotropy)) {
 			texture.anisotropy = 1;
 			return;

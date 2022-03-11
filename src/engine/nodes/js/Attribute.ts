@@ -1,5 +1,5 @@
 import {TypedJsNode, BaseJsNodeType} from './_Base';
-import {LinesController} from './code/utils/LinesController';
+import {JsLinesController} from './code/utils/LinesController';
 import {JsConnectionPointType, BaseJsConnectionPoint} from '../utils/io/connections/Js';
 
 const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
@@ -55,7 +55,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		return AttributeJsNode.OUTPUT_NAME;
 	}
 
-	override setLines(lines_controller: LinesController) {
+	override setLines(lines_controller: JsLinesController) {
 		// if (lines_controller.shader_name) {
 		this.function_node?.assembler_controller.assembler.setNodeLinesAttribute(this, lines_controller);
 		// }

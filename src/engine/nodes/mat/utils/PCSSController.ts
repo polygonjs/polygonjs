@@ -30,11 +30,11 @@ export function PCSSParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 class PCSSParamsConfig extends PCSSParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface PCSSControllers {
 	PCSS: PCSSController;
 }
 abstract class PCSSMapMatNode extends TypedMatNode<Material, PCSSParamsConfig> {
-	controllers!: Controllers;
+	controllers!: PCSSControllers;
 	abstract override createMaterial(): Material;
 }
 

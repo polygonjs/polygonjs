@@ -25,7 +25,7 @@ import {FogController, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-interface Controllers {
+interface MeshToonControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -84,7 +84,7 @@ export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatP
 			opacity: 1,
 		});
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: MeshToonControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -96,7 +96,7 @@ export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatP
 		map: new TextureMapController(this),
 		normalMap: new TextureNormalMapController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshToonControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

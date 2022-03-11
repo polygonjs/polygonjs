@@ -1,18 +1,16 @@
 import {PolyScene} from '../PolyScene';
 import {Vector2} from 'three/src/math/Vector2';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {IUniformN, IUniformTexture, IUniformV2} from '../../nodes/utils/code/gl/Uniforms';
 import {GlParamConfig} from '../../nodes/gl/code/utils/GLParamConfig';
 import {ParamType} from '../../poly/ParamType';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {IUniforms} from '../../../core/geometry/Material';
 
 export enum UniformName {
 	TIME = 'time',
 	RESOLUTION = 'resolution',
 }
-export interface IUniforms {
-	[uniform: string]: IUniform;
-}
+
 export interface IUniformsWithTime extends IUniforms {
 	time: IUniformN;
 }

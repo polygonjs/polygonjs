@@ -53,7 +53,7 @@ export function NormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	normalMapType!: number;
 // 	normalScale!: Vector2;
 // }
-type CurrentMaterial =
+type TextureNormalMapControllerCurrentMaterial =
 	| MeshPhongMaterial
 	| MeshNormalMaterial
 	| MeshMatcapMaterial
@@ -61,12 +61,15 @@ type CurrentMaterial =
 	| MeshToonMaterial
 	| MeshStandardMaterial;
 class TextureNormalMapParamsConfig extends NormalMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface NormalMapControllers {
 	normalMap: TextureNormalMapController;
 }
-abstract class TextureNormalMapMatNode extends TypedMatNode<CurrentMaterial, TextureNormalMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureNormalMapMatNode extends TypedMatNode<
+	TextureNormalMapControllerCurrentMaterial,
+	TextureNormalMapParamsConfig
+> {
+	controllers!: NormalMapControllers;
+	abstract override createMaterial(): TextureNormalMapControllerCurrentMaterial;
 }
 
 export class TextureNormalMapController extends BaseTextureMapController {

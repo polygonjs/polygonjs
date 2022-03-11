@@ -10,7 +10,7 @@ import {CameraMapControlsEventNode} from '../../../nodes/event/CameraMapControls
 import {CameraOrbitControlsEventNode} from '../../../nodes/event/CameraOrbitControls';
 import {DebounceEventNode} from '../../../nodes/event/Debounce';
 import {DelayEventNode} from '../../../nodes/event/Delay';
-// import {CodeEventNode} from '../../../nodes/event/Code';
+import {CodeEventNode} from '../../../nodes/event/Code';
 import {DragEventNode} from '../../../nodes/event/Drag';
 import {FirstPersonControlsEventNode} from '../../../nodes/event/FirstPersonControls';
 import {IntersectDataEventNode} from '../../../nodes/event/IntersectData';
@@ -56,7 +56,7 @@ export interface EventNodeChildrenMap {
 	debounce: DebounceEventNode;
 	delay: DelayEventNode;
 	drag: DragEventNode;
-	// code: CodeEventNode;
+	code: CodeEventNode;
 	firstPersonControls: FirstPersonControlsEventNode;
 	intersectData: IntersectDataEventNode;
 	keyboard: KeyboardEventNode;
@@ -104,7 +104,7 @@ export class EventRegister {
 		poly.registerNode(CameraOrbitControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(DebounceEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(DelayEventNode, CATEGORY_EVENT.MISC);
-		// poly.registerNode(CodeEventNode, CATEGORY_EVENT.ADVANCED);
+		poly.registerNode(CodeEventNode, CATEGORY_EVENT.ADVANCED);
 		poly.registerNode(DragEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(FirstPersonControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(IntersectDataEventNode, CATEGORY_EVENT.MISC);

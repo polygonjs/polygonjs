@@ -1,10 +1,10 @@
 import {BaseParamType} from '../_Base';
 
-import {TimeDependentState} from './states/TimeDependent';
+import {ParamTimeDependentState} from './states/TimeDependent';
 import {ParamErrorState} from './states/Error';
 
-export class StatesController {
-	timeDependent = new TimeDependentState(this.param);
+export class ParamStatesController {
+	timeDependent = new ParamTimeDependentState(this.param);
 	error = new ParamErrorState(this.param);
 	constructor(protected param: BaseParamType) {}
 }

@@ -22,7 +22,7 @@ export function MapParamConfig<TBase extends Constructor>(Base: TBase) {
 // class TextureMapMaterial extends Material {
 // 	map!: Texture | null;
 // }
-type CurrentMaterial =
+type TextureMapCurrentMaterial =
 	| MeshBasicMaterial
 	| MeshLambertMaterial
 	| MeshMatcapMaterial
@@ -32,12 +32,12 @@ type CurrentMaterial =
 	| MeshToonMaterial
 	| PointsMaterial;
 class TextureMapParamsConfig extends MapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface TextureMapControllers {
 	map: TextureMapController;
 }
-abstract class TextureMapMatNode extends TypedMatNode<CurrentMaterial, TextureMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureMapMatNode extends TypedMatNode<TextureMapCurrentMaterial, TextureMapParamsConfig> {
+	controllers!: TextureMapControllers;
+	abstract override createMaterial(): TextureMapCurrentMaterial;
 }
 
 export class TextureMapController extends BaseTextureMapController {

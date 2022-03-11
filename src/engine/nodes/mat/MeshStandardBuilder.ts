@@ -34,7 +34,7 @@ import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {Material} from 'three/src/materials/Material';
 import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-interface Controllers {
+interface MeshStandardBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -56,7 +56,7 @@ interface MeshStandardBuilderMaterial extends MeshStandardMaterial {
 		[key in CustomMaterialName]?: Material;
 	};
 }
-class MeshStandardMatParamsConfig extends PCSSParamConfig(
+class MeshStandardBuilderMatParamsConfig extends PCSSParamConfig(
 	FogParamConfig(
 		WireframeParamConfig(
 			AdvancedCommonParamConfig(
@@ -95,12 +95,12 @@ class MeshStandardMatParamsConfig extends PCSSParamConfig(
 		)
 	)
 ) {}
-const ParamsConfig = new MeshStandardMatParamsConfig();
+const ParamsConfig = new MeshStandardBuilderMatParamsConfig();
 
 export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	MeshStandardBuilderMaterial,
 	ShaderAssemblerStandard,
-	MeshStandardMatParamsConfig
+	MeshStandardBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -112,7 +112,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: MeshStandardBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -126,7 +126,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		normalMap: new TextureNormalMapController(this),
 		PCSS: new PCSSController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshStandardBuilderControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

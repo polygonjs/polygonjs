@@ -23,7 +23,7 @@ import {CoreObject} from '../../../core/geometry/Object';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {MapUtils} from '../../../core/MapUtils';
-class DeleteSopParamsConfig extends NodeParamsConfig {
+class SplitSopParamsConfig extends NodeParamsConfig {
 	/** @param type of attribute to use */
 	attribType = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
 		menu: {
@@ -33,9 +33,9 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute */
 	attribName = ParamConfig.STRING('');
 }
-const ParamsConfig = new DeleteSopParamsConfig();
+const ParamsConfig = new SplitSopParamsConfig();
 
-export class SplitSopNode extends TypedSopNode<DeleteSopParamsConfig> {
+export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'split';

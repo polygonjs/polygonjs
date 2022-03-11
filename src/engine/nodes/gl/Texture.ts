@@ -29,7 +29,7 @@ import {ParamOptions} from '../../params/utils/OptionsController';
 const blurParamVisibility: ParamOptions = {
 	visibleIf: {tblur: 1},
 };
-class TextureParamsConfig extends NodeParamsConfig {
+class TextureGlParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('texture1');
 	// defaultValue = ParamConfig.STRING('');
 	uv = ParamConfig.VECTOR2([0, 0]);
@@ -46,8 +46,8 @@ class TextureParamsConfig extends NodeParamsConfig {
 		...blurParamVisibility,
 	});
 }
-const ParamsConfig = new TextureParamsConfig();
-export class TextureGlNode extends TypedGlNode<TextureParamsConfig> {
+const ParamsConfig = new TextureGlParamsConfig();
+export class TextureGlNode extends TypedGlNode<TextureGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type(): Readonly<'texture'> {
 		return 'texture';

@@ -30,7 +30,7 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 
-interface Controllers {
+interface MeshBasicControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -78,7 +78,7 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterialWithLightMap
 		}) as MeshBasicMaterialWithLightMap;
 	}
 
-	readonly controllers: Controllers = {
+	readonly controllers: MeshBasicControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -86,7 +86,7 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterialWithLightMap
 		lightMap: new TextureLightMapController(this),
 		map: new TextureMapController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshBasicControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

@@ -3,7 +3,7 @@
  *
  *
  */
-import {ACCEPTED_SCENE_EVENT_TYPES, SceneEventType} from '../../scene/utils/events/SceneEventsController';
+import {ACCEPTED_SCENE_EVENT_TYPES, PolySceneEventType} from '../../scene/utils/events/SceneEventsController';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {EventConnectionPoint, EventConnectionPointType, BaseEventConnectionPoint} from '../utils/io/connections/Event';
@@ -105,8 +105,8 @@ export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
 				EventConnectionPointType.BASE,
 				this._onSetFrame.bind(this)
 			),
-			new EventConnectionPoint(SceneEventType.PLAY, EventConnectionPointType.BASE, this._play.bind(this)),
-			new EventConnectionPoint(SceneEventType.PAUSE, EventConnectionPointType.BASE, this._pause.bind(this)),
+			new EventConnectionPoint(PolySceneEventType.PLAY, EventConnectionPointType.BASE, this._play.bind(this)),
+			new EventConnectionPoint(PolySceneEventType.PAUSE, EventConnectionPointType.BASE, this._pause.bind(this)),
 		]);
 		const outConnectionPoints: BaseEventConnectionPoint[] = ACCEPTED_SCENE_EVENT_TYPES.map((event_type) => {
 			return new EventConnectionPoint(event_type, EventConnectionPointType.BASE);
@@ -239,13 +239,13 @@ export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
 		// 	eventsController.addObserver(this, SceneEventType.TICK);
 		// }
 		if (isBooleanTrue(this.pv.sceneLoaded)) {
-			eventsController.addObserver(this, SceneEventType.LOADED);
+			eventsController.addObserver(this, PolySceneEventType.LOADED);
 		}
 		if (isBooleanTrue(this.pv.play)) {
-			eventsController.addObserver(this, SceneEventType.PLAY);
+			eventsController.addObserver(this, PolySceneEventType.PLAY);
 		}
 		if (isBooleanTrue(this.pv.pause)) {
-			eventsController.addObserver(this, SceneEventType.PAUSE);
+			eventsController.addObserver(this, PolySceneEventType.PAUSE);
 		}
 	}
 }

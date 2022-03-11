@@ -2,7 +2,7 @@ import {BaseCameraObjNodeType} from '../nodes/obj/_BaseCamera';
 import {ViewerCamerasController} from './utils/CamerasController';
 import {ViewerControlsController} from './utils/ControlsController';
 import {ViewerEventsController} from './utils/EventsController';
-import {WebGLController} from './utils/WebglController';
+import {ViewerWebGLController} from './utils/WebglController';
 import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/ControlsController';
 import {Object3D} from 'three/src/core/Object3D';
 import {PolyScene} from '../scene/PolyScene';
@@ -11,7 +11,7 @@ import {Poly, PolyEngine} from '../Poly';
 
 const HOVERED_CLASS_NAME = 'hovered';
 type ViewerCallback = (delta: number) => void;
-type CallbacksMap = Map<string, ViewerCallback>;
+type ViewerCallbacksMap = Map<string, ViewerCallback>;
 export interface HTMLElementWithViewer<C extends BaseCameraObjNodeType> extends HTMLElement {
 	scene: PolyScene;
 	viewer: TypedViewer<C>;
@@ -108,9 +108,9 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	eventsController(): ViewerEventsController {
 		return (this._eventsController = this._eventsController || new ViewerEventsController(this));
 	}
-	protected _webGLController: WebGLController | undefined;
-	webglController(): WebGLController {
-		return (this._webGLController = this._webGLController || new WebGLController(this));
+	protected _webGLController: ViewerWebGLController | undefined;
+	webglController(): ViewerWebGLController {
+		return (this._webGLController = this._webGLController || new ViewerWebGLController(this));
 	}
 	private _audioController: ViewerAudioController | undefined;
 	audioController(): ViewerAudioController {
@@ -161,13 +161,13 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	//
 	//
 	// tick callbacks
-	private _onBeforeTickCallbacksMap: CallbacksMap | undefined;
-	private _onAfterTickCallbacksMap: CallbacksMap | undefined;
+	private _onBeforeTickCallbacksMap: ViewerCallbacksMap | undefined;
+	private _onAfterTickCallbacksMap: ViewerCallbacksMap | undefined;
 	protected _onBeforeTickCallbacks: Array<ViewerCallback> = [];
 	protected _onAfterTickCallbacks: Array<ViewerCallback> = [];
 	// render callbacks
-	private _onBeforeRenderCallbacksMap: CallbacksMap | undefined;
-	private _onAfterRenderCallbacksMap: CallbacksMap | undefined;
+	private _onBeforeRenderCallbacksMap: ViewerCallbacksMap | undefined;
+	private _onAfterRenderCallbacksMap: ViewerCallbacksMap | undefined;
 	protected _onBeforeRenderCallbacks: Array<ViewerCallback> = [];
 	protected _onAfterRenderCallbacks: Array<ViewerCallback> = [];
 
@@ -207,7 +207,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	registeredAfterRenderCallbacks() {
 		return (this._onAfterRenderCallbacksMap = this._onAfterRenderCallbacksMap || new Map());
 	}
-	private _registerCallback<C extends ViewerCallback>(callbackName: string, callback: C, map: CallbacksMap) {
+	private _registerCallback<C extends ViewerCallback>(callbackName: string, callback: C, map: ViewerCallbacksMap) {
 		if (map.has(callbackName)) {
 			console.warn(`callback ${callbackName} already registered`);
 			return;
@@ -215,7 +215,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		map.set(callbackName, callback);
 		this._updateCallbacks();
 	}
-	private _unregisterCallback(callbackName: string, map?: CallbacksMap) {
+	private _unregisterCallback(callbackName: string, map?: ViewerCallbacksMap) {
 		if (!map) {
 			return;
 		}

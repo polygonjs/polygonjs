@@ -25,14 +25,21 @@ export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	emissiveMap!: Texture | null;
 // 	emissiveIntensity!: number;
 // }
-type CurrentMaterial = MeshLambertMaterial | MeshStandardMaterial | MeshPhysicalMaterial | MeshToonMaterial;
+type TextureEmissiveMapControllerCurrentMaterial =
+	| MeshLambertMaterial
+	| MeshStandardMaterial
+	| MeshPhysicalMaterial
+	| MeshToonMaterial;
 class TextureEmissiveMapParamsConfig extends EmissiveMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface EmissiveControllers {
 	emissiveMap: TextureEmissiveMapController;
 }
-abstract class TextureEmissiveMapMatNode extends TypedMatNode<CurrentMaterial, TextureEmissiveMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureEmissiveMapMatNode extends TypedMatNode<
+	TextureEmissiveMapControllerCurrentMaterial,
+	TextureEmissiveMapParamsConfig
+> {
+	controllers!: EmissiveControllers;
+	abstract override createMaterial(): TextureEmissiveMapControllerCurrentMaterial;
 }
 
 export class TextureEmissiveMapController extends BaseTextureMapController {
@@ -52,7 +59,7 @@ export class TextureEmissiveMapController extends BaseTextureMapController {
 		// 	}
 		// }
 		// if (this._update_options.directParams) {
-		const mat = this.node.material as CurrentMaterial;
+		const mat = this.node.material as TextureEmissiveMapControllerCurrentMaterial;
 		mat.emissive.copy(this.node.pv.emissive);
 		mat.emissiveIntensity = this.node.pv.emissiveIntensity;
 		// }

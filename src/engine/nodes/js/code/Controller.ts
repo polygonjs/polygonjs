@@ -8,7 +8,7 @@ import {BaseJsNodeType} from '../_Base';
 import {JsAssemblerNodeSpareParamsController} from './JsAssemblerNodeSpareParamsController';
 import {NodeCreateOptions} from '../../utils/hierarchy/ChildrenController';
 
-export class AssemblerControllerNode extends TypedNode<any, any> {
+export class JsAssemblerControllerNode extends TypedNode<any, any> {
 	override createNode<S extends keyof JsNodeChildrenMap>(
 		node_class: S,
 		options?: NodeCreateOptions
@@ -39,7 +39,7 @@ export class JsAssemblerController<A extends BaseJsFunctionAssembler> {
 	private _spare_params_controller!: JsAssemblerNodeSpareParamsController;
 	private _compile_required: boolean = true;
 
-	constructor(private node: AssemblerControllerNode, assembler_class: BaseJsFunctionAssemblerConstructor<A>) {
+	constructor(private node: JsAssemblerControllerNode, assembler_class: BaseJsFunctionAssemblerConstructor<A>) {
 		this._assembler = new assembler_class(this.node);
 		this._spare_params_controller = new JsAssemblerNodeSpareParamsController(this, this.node);
 	}

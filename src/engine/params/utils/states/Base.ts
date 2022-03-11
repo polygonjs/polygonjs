@@ -1,5 +1,5 @@
 import {BaseParamType} from '../../_Base';
 
-export class BaseState {
+export class ParamBaseState {
 	constructor(protected param: BaseParamType) {}
 }

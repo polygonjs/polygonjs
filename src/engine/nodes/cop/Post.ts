@@ -25,16 +25,11 @@ import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {Vector2} from 'three/src/math/Vector2';
 import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
 import {ParamConfig} from '../utils/params/ParamsConfig';
 import {CopRendererController} from './utils/RendererController';
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {isBooleanTrue} from '../../../core/Type';
-
-export interface IUniforms {
-	[uniform: string]: IUniform;
-}
 
 const VERTEX_SHADER = `
 void main()	{

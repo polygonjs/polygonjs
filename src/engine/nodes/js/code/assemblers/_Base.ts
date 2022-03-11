@@ -6,18 +6,18 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {OutputJsNode} from '../../Output';
 import {GlobalsJsNode} from '../../Globals';
 import {AttributeJsNode} from '../../Attribute';
-import {AssemblerControllerNode} from '../Controller';
-import {LinesController} from '../utils/LinesController';
+import {JsAssemblerControllerNode} from '../Controller';
+import {JsLinesController} from '../utils/LinesController';
 import {ParamJsNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {JsLineType} from '../utils/LineType';
 import {JsConnectionPoint, JsConnectionPointType} from '../../../utils/io/connections/Js';
 
-type StringArrayByShaderName = Map<ShaderName, string[]>;
+type JsStringArrayByShaderName = Map<ShaderName, string[]>;
 
 export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	protected _shaders_by_name: Map<ShaderName, string> = new Map();
-	protected _lines: StringArrayByShaderName = new Map();
+	protected _lines: JsStringArrayByShaderName = new Map();
 	protected _code_builder: JsCodeBuilder | undefined;
 	private _param_config_owner: JsCodeBuilder | undefined;
 	protected _root_nodes: BaseJsNodeType[] = [];
@@ -25,7 +25,7 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 	private _uniforms_time_dependent = false;
 	private _variable_configs: JsVariableConfig[] | undefined;
 
-	constructor(protected _js_parent_node: AssemblerControllerNode) {
+	constructor(protected _js_parent_node: JsAssemblerControllerNode) {
 		super();
 	}
 
@@ -121,9 +121,9 @@ export class BaseJsFunctionAssembler extends TypedAssembler<NodeContext.JS> {
 		}
 		return list;
 	}
-	set_node_lines_globals(globals_node: GlobalsJsNode, lines_controller: LinesController) {}
-	set_node_lines_output(output_node: OutputJsNode, lines_controller: LinesController) {}
-	setNodeLinesAttribute(attribute_node: AttributeJsNode, lines_controller: LinesController) {}
+	set_node_lines_globals(globals_node: GlobalsJsNode, lines_controller: JsLinesController) {}
+	set_node_lines_output(output_node: OutputJsNode, lines_controller: JsLinesController) {}
+	setNodeLinesAttribute(attribute_node: AttributeJsNode, lines_controller: JsLinesController) {}
 
 	//
 	//

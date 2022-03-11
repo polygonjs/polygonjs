@@ -25,7 +25,7 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {Material} from 'three/src/materials/Material';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-interface Controllers {
+interface MeshBasicBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -41,7 +41,7 @@ interface MeshBasicBuilderMaterial extends MeshBasicMaterial {
 		[key in CustomMaterialName]?: Material;
 	};
 }
-class MeshBasicMatParamsConfig extends FogParamConfig(
+class MeshBasicBuilderMatParamsConfig extends FogParamConfig(
 	WireframeParamConfig(
 		AdvancedCommonParamConfig(
 			BaseBuilderParamConfig(
@@ -64,12 +64,12 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 		)
 	)
 ) {}
-const ParamsConfig = new MeshBasicMatParamsConfig();
+const ParamsConfig = new MeshBasicBuilderMatParamsConfig();
 
 export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 	MeshBasicBuilderMaterial,
 	ShaderAssemblerBasic,
-	MeshBasicMatParamsConfig
+	MeshBasicBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -81,14 +81,14 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: MeshBasicBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
 		envMap: new TextureEnvMapSimpleController(this),
 		map: new TextureMapController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshBasicBuilderControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

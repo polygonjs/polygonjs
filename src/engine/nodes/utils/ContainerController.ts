@@ -2,11 +2,11 @@ import {TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {ContainerMap, ContainerClassMap} from '../../containers/utils/ContainerMap';
 
-type Callback<NC extends NodeContext> = (container: ContainerMap[NC] | undefined) => void;
+type NodeContainerControllerCallback<NC extends NodeContext> = (container: ContainerMap[NC] | undefined) => void;
 
 export class TypedContainerController<NC extends NodeContext> {
-	private _callbacks: Callback<NC>[] = [];
-	private _callbacks_tmp: Callback<NC>[] = [];
+	private _callbacks: NodeContainerControllerCallback<NC>[] = [];
+	private _callbacks_tmp: NodeContainerControllerCallback<NC>[] = [];
 	protected _container: ContainerMap[NC];
 
 	constructor(protected node: TypedNode<NC, any>) {
@@ -98,7 +98,7 @@ export class TypedContainerController<NC extends NodeContext> {
 		if (!container) {
 			container = this.node.containerController.container();
 		}
-		let callback: Callback<NC> | undefined;
+		let callback: NodeContainerControllerCallback<NC> | undefined;
 		while ((callback = this._callbacks_tmp.pop())) {
 			callback(container);
 		}

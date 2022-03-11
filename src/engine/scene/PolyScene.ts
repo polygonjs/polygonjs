@@ -1,11 +1,11 @@
 import {CamerasController} from './utils/CamerasController';
 import {Cooker} from './utils/Cooker';
-import {CookController} from './utils/CookController';
+import {SceneCookController} from './utils/CookController';
 import {CoreGraph} from '../../core/graph/CoreGraph';
 import {CorePerformance} from '../../core/performance/CorePerformance';
 import {DispatchController} from './utils/DispatchController';
 import {ExpressionsController} from './utils/ExpressionsController';
-import {LifeCycleController} from './utils/LifeCycleController';
+import {SceneLifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
 import {MissingReferencesController} from './utils/missingReferences/MissingReferencesController';
 import {NodesController} from './utils/NodesController';
@@ -16,7 +16,7 @@ import {ReferencesController} from './utils/ReferencesController';
 import {onTimeTickHook, TimeController} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
 import {ViewersRegister} from './utils/ViewersRegister';
-import {WebGLController} from './utils/WebGLController';
+import {SceneWebGLController} from './utils/WebGLController';
 import {WindowController} from './utils/WindowController';
 import {SceneAssetsController} from './utils/AssetsController';
 import {BaseNodeType} from '../nodes/_Base';
@@ -89,7 +89,7 @@ export class PolyScene {
 		return (this._assets_controller = this._assets_controller || new SceneAssetsController());
 	}
 
-	public readonly cookController = new CookController();
+	public readonly cookController = new SceneCookController();
 	/**
 	 * Returns a promise to wait for all nodes to have cooked when loading a scene.
 	 *
@@ -112,9 +112,9 @@ export class PolyScene {
 		return this._graph;
 	}
 
-	private _lifecycle_controller: LifeCycleController | undefined;
+	private _lifecycleController: SceneLifeCycleController | undefined;
 	get lifecycleController() {
-		return (this._lifecycle_controller = this._lifecycle_controller || new LifeCycleController(this));
+		return (this._lifecycleController = this._lifecycleController || new SceneLifeCycleController(this));
 	}
 	private _loading_controller: LoadingController | undefined;
 	get loadingController() {
@@ -298,9 +298,9 @@ export class PolyScene {
 	// webgl
 	//
 	//
-	private _webgl_controller: WebGLController | undefined;
+	private _webgl_controller: SceneWebGLController | undefined;
 	get webgl_controller() {
-		return (this._webgl_controller = this._webgl_controller || new WebGLController());
+		return (this._webgl_controller = this._webgl_controller || new SceneWebGLController());
 	}
 
 	//

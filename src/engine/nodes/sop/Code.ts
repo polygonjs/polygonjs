@@ -7,29 +7,27 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Poly} from '../../Poly';
 import * as THREE from 'three'; // three import required to give to the function builder
 
-const DEFAULT_FUNCTION_CODE = `import {BaseCodeSopProcessor, CoreGroup} from '@polygonjs/polygonjs'
+const DEFAULT_FUNCTION_CODE = `
+
 export class CodeSopProcessor extends BaseCodeSopProcessor {
-	initialize_processor(){
+	override initializeProcessor(){
 	}
-	cook(inputCoreGroups: CoreGroup[]){
+	override cook(inputCoreGroups: CoreGroup[]){
 		const inputCoreGroup = inputCoreGroups[0];
 		const object = inputCoreGroup.objects()[0];
 		object.position.y = 1;
-		this.setCoreGroup(inputCoreGroup[0]);
+		this.setCoreGroup(inputCoreGroup);
 	}
 }
 
 `;
 
 export class BaseCodeSopProcessor {
-	protected node!: CodeSopNode;
-	constructor() {}
-	setNode(node: CodeSopNode) {
-		this.node = node;
+	constructor(protected node: CodeSopNode) {
 		this.initializeProcessor();
 	}
-	cook(inputCoreGroups: CoreGroup[]) {}
 	initializeProcessor() {}
+	cook(inputCoreGroups: CoreGroup[]) {}
 	protected setCoreGroup(coreGroup: CoreGroup) {
 		this.node.setCoreGroup(coreGroup);
 	}
@@ -51,6 +49,8 @@ class CodeSopParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new CodeSopParamsConfig();
 export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
+	// adding BaseCodeSopProcessor seems necessary to have the bundled types include it
+	static BaseCodeSopProcessor = BaseCodeSopProcessor;
 	static override type() {
 		return 'code';
 	}
@@ -86,20 +86,19 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 
 	private _compile() {
 		try {
-			const function_body = `try {
+			const functionBody = `try {
 				${TranspiledFilter.filter(this.pv.codeJavascript)}
 			} catch(e) {
 				this.states.error.set(e)
 			}`;
 
-			const processorCreatorFunction = new Function('BaseCodeSopProcessor', 'THREE', function_body);
+			const processorCreatorFunction = new Function('BaseCodeSopProcessor', 'THREE', functionBody);
 			const ProcessorClass: typeof BaseCodeSopProcessor | undefined = processorCreatorFunction(
 				BaseCodeSopProcessor,
 				THREE
 			);
 			if (ProcessorClass) {
-				this._processor = new ProcessorClass();
-				this._processor.setNode(this);
+				this._processor = new ProcessorClass(this);
 				this._lastCompiledCode = this.pv.codeJavascript;
 			} else {
 				this.states.error.set(`cannot generate function`);

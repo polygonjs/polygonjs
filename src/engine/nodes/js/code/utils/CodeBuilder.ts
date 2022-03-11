@@ -6,7 +6,7 @@ import {MapUtils} from '../../../../../core/MapUtils';
 import {JsDefinitionType, BaseJsDefinition} from '../../utils/JsDefinition';
 import {TypedJsDefinitionCollection} from '../../utils/JsDefinitionCollection';
 import {ParamConfigsController} from '../../../../nodes/utils/code/controllers/ParamConfigsController';
-import {LinesController} from './LinesController';
+import {JsLinesController} from './LinesController';
 import {JsCodeFormatter} from './CodeFormatter';
 
 import {JsLineType} from './LineType';
@@ -21,7 +21,7 @@ export class JsCodeBuilder {
 	_param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> = new ParamConfigsController();
 	_param_configs_set_allowed: boolean = true;
 
-	private _lines_controller: LinesController | undefined;
+	private _lines_controller: JsLinesController | undefined;
 	_lines: Map<ShaderName, Map<JsLineType, string[]>> = new Map();
 
 	constructor(private _assembler: BaseJsFunctionAssembler, private _gl_parent_node: BaseNodeType) {}
@@ -70,7 +70,7 @@ export class JsCodeBuilder {
 			await node.params.evalAll();
 		}
 
-		this._lines_controller = new LinesController();
+		this._lines_controller = new JsLinesController();
 		this.reset();
 		for (let shader_name of this.shaderNames()) {
 			const nodes = ArrayUtils.uniq(nodes_by_shader_name.get(shader_name) || []);

@@ -15,7 +15,7 @@ import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {Material} from 'three/src/materials/Material';
 import {ShaderAssemblerCustomMeshDepth} from '../gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
-interface Controllers {
+interface MeshDepthBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 }
 interface MeshDepthBuilderMaterial extends MeshDepthMaterial {
@@ -27,15 +27,15 @@ interface MeshDepthBuilderMaterial extends MeshDepthMaterial {
 	};
 }
 
-class MeshDepthMatParamsConfig extends AdvancedCommonParamConfig(
+class MeshDepthBuilderMatParamsConfig extends AdvancedCommonParamConfig(
 	BaseBuilderParamConfig(UniformsTransparencyParamConfig(NodeParamsConfig))
 ) {}
-const ParamsConfig = new MeshDepthMatParamsConfig();
+const ParamsConfig = new MeshDepthBuilderMatParamsConfig();
 
 export class MeshDepthBuilderMatNode extends TypedBuilderMatNode<
 	MeshDepthBuilderMaterial,
 	ShaderAssemblerCustomMeshDepth,
-	MeshDepthMatParamsConfig
+	MeshDepthBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
@@ -48,10 +48,10 @@ export class MeshDepthBuilderMatNode extends TypedBuilderMatNode<
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 
-	readonly controllers: Controllers = {
+	readonly controllers: MeshDepthBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshDepthBuilderControllers>;
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {

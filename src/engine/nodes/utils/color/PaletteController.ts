@@ -12,9 +12,9 @@ import {
 	visibleIfColorsCountAtLeast,
 } from '../../../../core/color/chromotomeWrapper';
 
-type CallbackMethod = (node: PaletteAbstractNode<any>) => void;
+type PaletteControllerCallbackMethod = (node: PaletteAbstractNode<any>) => void;
 
-export const paletteControllerCallbackOptions = (method: CallbackMethod) => {
+export const paletteControllerCallbackOptions = (method: PaletteControllerCallbackMethod) => {
 	return {
 		callback: (node: BaseNodeType) => {
 			method(node as PaletteAbstractNode<NodeContext>);
@@ -39,12 +39,12 @@ export class PaletteController<NC extends NodeContext> {
 	}
 
 	PARAM_CALLBACK_pickNext() {
-		const currentIndex = SORTED_PALETTE_NAMES.indexOf(this.node.pv.paletteName)
+		const currentIndex = SORTED_PALETTE_NAMES.indexOf(this.node.pv.paletteName);
 		const nextIndex = currentIndex < SORTED_PALETTE_NAMES.length - 1 ? currentIndex + 1 : 0;
 		this._batchUpdatesWithPalette(nextIndex);
 	}
 	PARAM_CALLBACK_pickPrevious() {
-		const currentIndex = SORTED_PALETTE_NAMES.indexOf(this.node.pv.paletteName)
+		const currentIndex = SORTED_PALETTE_NAMES.indexOf(this.node.pv.paletteName);
 		const previousIndex = currentIndex == 0 ? SORTED_PALETTE_NAMES.length - 1 : currentIndex - 1;
 		this._batchUpdatesWithPalette(previousIndex);
 	}
@@ -54,7 +54,7 @@ export class PaletteController<NC extends NodeContext> {
 	}
 
 	private _batchUpdatesWithPalette(paletteIndex: number) {
-		const paletteName = SORTED_PALETTE_NAMES[paletteIndex]
+		const paletteName = SORTED_PALETTE_NAMES[paletteIndex];
 		this.node.scene().batchUpdates(() => {
 			this.node.p.paletteName.set(paletteName);
 			this._updateColors();
@@ -88,7 +88,10 @@ export class PaletteController<NC extends NodeContext> {
 
 class PaletteAbstractNodeParamsConfig extends NodeParamsConfig {
 	/** @param name of the palette */
-	paletteName = ParamConfig.STRING('', paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_updateColors));
+	paletteName = ParamConfig.STRING(
+		'',
+		paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_updateColors)
+	);
 	/** @param click to set the node to the next palette */
 	pickNext = ParamConfig.BUTTON(null, paletteControllerCallbackOptions(PaletteController.PARAM_CALLBACK_pickNext));
 	/** @param click to set the node to the previous palette */

@@ -18,7 +18,7 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
-interface Controllers {
+interface PointsControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	map: TextureMapController;
@@ -55,12 +55,12 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 			opacity: 1,
 		});
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: PointsControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		map: new TextureMapController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof PointsControllers>;
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

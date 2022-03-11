@@ -10,7 +10,7 @@ import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 
-interface Controllers {
+interface MeshDepthControllers {
 	advancedCommon: AdvancedCommonController;
 }
 class MeshDepthMatParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfig) {}
@@ -27,10 +27,10 @@ export class MeshDepthMatNode extends TypedMatNode<MeshDepthMaterial, MeshDepthM
 			side: FrontSide,
 		});
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: MeshDepthControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshDepthControllers>;
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {

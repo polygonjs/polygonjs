@@ -40,7 +40,7 @@ import {CenterSopNode} from '../../../nodes/sop/Center';
 import {CircleSopNode} from '../../../nodes/sop/Circle';
 import {Circle3PointsSopNode} from '../../../nodes/sop/Circle3Points';
 import {ClipSopNode} from '../../../nodes/sop/Clip';
-// import {CodeSopNode} from '../../../nodes/sop/Code';
+import {CodeSopNode} from '../../../nodes/sop/Code';
 import {ColorSopNode} from '../../../nodes/sop/Color';
 import {ConeSopNode} from '../../../nodes/sop/Cone';
 import {CopySopNode} from '../../../nodes/sop/Copy';
@@ -176,7 +176,7 @@ export interface GeoNodeChildrenMap {
 	circle: CircleSopNode;
 	circle3Points: Circle3PointsSopNode;
 	clip: ClipSopNode;
-	// code: CodeSopNode;
+	code: CodeSopNode;
 	color: ColorSopNode;
 	cone: ConeSopNode;
 	copy: CopySopNode;
@@ -464,9 +464,7 @@ export class SopRegister {
 		poly.registerNode(CircleSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(Circle3PointsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ClipSopNode, CATEGORY_SOP.MODIFIER);
-		if (process.env.NODE_ENV == 'development') {
-			// poly.registerNode(CodeSopNode, CATEGORY_SOP.ADVANCED);
-		}
+		poly.registerNode(CodeSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(ColorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ConeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CopySopNode, CATEGORY_SOP.MODIFIER);

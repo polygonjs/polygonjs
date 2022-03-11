@@ -73,11 +73,11 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 }
 
 class AdvancedCommonParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface AdvancedCommonControllers {
 	advancedCommon: AdvancedCommonController;
 }
 abstract class AdvancedCommonMapMatNode extends TypedMatNode<Material, AdvancedCommonParamsConfig> {
-	controllers!: Controllers;
+	controllers!: AdvancedCommonControllers;
 	abstract override createMaterial(): Material;
 }
 

@@ -39,7 +39,12 @@
 		"build_folder_remove_unneeded": "rm -rf dist/config && rm -rf dist/tests",
 		"copy_threejs_examples_to_dist": "cp -rf src/modules/three/* dist/src/modules/three/",
 		"build_renameMJS": "./node_modules/typescript/bin/tsc config/common/renameMJStoJS.ts --moduleResolution node",
-		"renameMJS": "node config/common/renameMJStoJS.js"
+		"renameMJS": "node config/common/renameMJStoJS.js",
+		"bundle_types_build": "tsc config/dts_bundle/dts_bundle_pre.ts && tsc config/dts_bundle/dts_bundle_post.ts",
+		"bundle_types_pre": "node config/dts_bundle/dts_bundle_pre.js",
+		"bundle_types_mid": "rm -f public/bundled_types.d.ts && node_modules/dts-bundle-generator/dist/bin/dts-bundle-generator.js --config config/dts_bundle/dts_bundle.config.json",
+		"bundle_types_post": "node config/dts_bundle/dts_bundle_post.js",
+		"bundle_types": "yarn bundle_types_pre && yarn bundle_types_mid; yarn bundle_types_post"
 	},
 	"dependencies": {
 		"@types/three": "0.137.0",
@@ -64,6 +69,7 @@
 		"@typescript-eslint/eslint-plugin": "5.14.0",
 		"@typescript-eslint/parser": "5.14.0",
 		"compression-webpack-plugin": "9.2.0",
+		"dts-bundle-generator": "6.5.0",
 		"esbuild": "0.14.25",
 		"esbuild-plugin-import-map": "2.1.0",
 		"eslint": "8.10.0",

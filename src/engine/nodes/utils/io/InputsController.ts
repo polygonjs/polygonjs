@@ -13,7 +13,7 @@ import {CoreType} from '../../../../core/Type';
 type OnUpdateHook = () => void;
 
 const MAX_INPUTS_COUNT_UNSET = 0;
-export class InputsController<NC extends NodeContext> {
+export class NodeInputsController<NC extends NodeContext> {
 	private _graphNode: CoreGraphNode | undefined;
 	private _graphNodeInputs: CoreGraphNode[] = [];
 	private _inputs: Array<BaseNodeByContextMap[NC] | null> = [];

@@ -11,20 +11,23 @@ import Quaternion from './gl/quaternion.glsl';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
-enum InputName {
+enum QuatFromAxisAngleGlNodeInputName {
 	AXIS = 'axis',
 	ANGLE = 'angle',
 }
-const InputNames: Array<InputName> = [InputName.AXIS, InputName.ANGLE];
+const InputNames: Array<QuatFromAxisAngleGlNodeInputName> = [
+	QuatFromAxisAngleGlNodeInputName.AXIS,
+	QuatFromAxisAngleGlNodeInputName.ANGLE,
+];
 interface IDefaultValues {
-	[InputName.AXIS]: Number3;
-	[InputName.ANGLE]: number;
+	[QuatFromAxisAngleGlNodeInputName.AXIS]: Number3;
+	[QuatFromAxisAngleGlNodeInputName.ANGLE]: number;
 }
 const DEFAULT_AXIS: Number3 = [0, 0, 1];
 const DEFAULT_ANGLE: number = 0;
 const DefaultValues: IDefaultValues = {
-	[InputName.AXIS]: DEFAULT_AXIS,
-	[InputName.ANGLE]: DEFAULT_ANGLE,
+	[QuatFromAxisAngleGlNodeInputName.AXIS]: DEFAULT_AXIS,
+	[QuatFromAxisAngleGlNodeInputName.ANGLE]: DEFAULT_ANGLE,
 };
 
 export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
@@ -47,7 +50,7 @@ export class QuatFromAxisAngleGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	// 	return InputNames[index];
 	// }
 	override paramDefaultValue(name: string) {
-		return DefaultValues[name as InputName];
+		return DefaultValues[name as QuatFromAxisAngleGlNodeInputName];
 	}
 	override gl_method_name(): string {
 		return 'quatFromAxisAngle';

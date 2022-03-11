@@ -1,117 +1,139 @@
-// import {TypedEventNode} from './_Base';
-// import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-// import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-// import {Poly} from '../../Poly';
-// import {StringParamLanguage} from '../../params/utils/OptionsController';
-// import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
-// import {Vector2} from 'three/src/math/Vector2';
-// import {Raycaster} from 'three/src/core/Raycaster';
-// import * as THREE from 'three'; // three import required to give to the function builder
+import {TypedEventNode} from './_Base';
+import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
+import {Poly} from '../../Poly';
+import {StringParamLanguage} from '../../params/utils/OptionsController';
+import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
+import * as THREE from 'three'; // three import required to give to the function builder
 
-// const DEFAULT_FUNCTION_CODE = `
-// import {BaseCodeEventProcessor, EventContext} from 'polygonjs-engine'
-// export class EventProcessor extends BaseCodeEventProcessor {
-// 	initialize_processor(){
-// 	}
-// 	process_mouse_event(event_context: EventContext<MouseEvent>){
-// 		this._set_mouse_from_event_and_canvas(event_context.event, event_context.canvas);
-// 		console.log(this.node.scene.time);
-// 		console.log("processing event", this.mouse.x, this.mouse.y);
-// 	}
-// }
+const DEFAULT_FUNCTION_CODE = `
+export class EventProcessor extends BaseCodeEventProcessor {
+	override initializeProcessor(){
+	}
+	override processTrigger0(eventContext: EventContext<MouseEvent>){
+		this.dispatchEventToOutput('output0', eventContext);
+	}
+	override processTrigger1(eventContext: EventContext<MouseEvent>){
+		this.dispatchEventToOutput('output1', eventContext);
+	}
+	override processTrigger2(eventContext: EventContext<MouseEvent>){
+		this.dispatchEventToOutput('output2', eventContext);
+	}
+	override processTrigger3(eventContext: EventContext<MouseEvent>){
+		this.dispatchEventToOutput('output3', eventContext);
+	}
+	override processTrigger4(eventContext: EventContext<MouseEvent>){
+		this.dispatchEventToOutput('output4', eventContext);
+	}
+}
 
-// `;
-// export class BaseCodeEventProcessor {
-// 	// it looks like I still need to import raycaster and vector2 without the three namespace
-// 	// otherwise they are seen as 'any' in the editor
-// 	protected raycaster = new Raycaster();
-// 	protected mouse = new Vector2();
-// 	constructor(protected node: CodeEventNode) {
-// 		this.initialize_processor();
-// 	}
-// 	processEvent(event_context: EventContext<Event>) {
-// 		if (event_context.event instanceof MouseEvent) {
-// 			this.process_mouse_event(event_context as EventContext<MouseEvent>);
-// 		} else if (event instanceof KeyboardEvent) {
-// 			this.process_keyboard_event(event_context as EventContext<KeyboardEvent>);
-// 		}
-// 	}
-// 	process_mouse_event(event_context: EventContext<MouseEvent>) {}
-// 	process_keyboard_event(event_context: EventContext<KeyboardEvent>) {}
-// 	set_node(node: CodeEventNode) {
-// 		this.node = node;
-// 	}
-// 	initialize_processor() {}
-// 	protected _set_mouse_from_event_and_canvas(event: MouseEvent, canvas: HTMLCanvasElement) {
-// 		this.mouse.x = (event.offsetX / canvas.offsetWidth) * 2 - 1;
-// 		this.mouse.y = -(event.offsetY / canvas.offsetHeight) * 2 + 1;
-// 	}
-// }
+`;
+export class BaseCodeEventProcessor {
+	constructor(protected node: CodeEventNode) {
+		this.initializeProcessor();
+	}
+	initializeProcessor() {}
+	processTrigger0(eventContext: EventContext<Event>) {}
+	processTrigger1(eventContext: EventContext<Event>) {}
+	processTrigger2(eventContext: EventContext<Event>) {}
+	processTrigger3(eventContext: EventContext<Event>) {}
+	processTrigger4(eventContext: EventContext<Event>) {}
+	dispatchEventToOutput(outputName: string, eventContext: EventContext<Event>) {
+		console.log('dispatch', outputName, eventContext);
+		this.node._dispatchEventToOutputFromProcessor(outputName, eventContext);
+	}
+}
 
-// // type EvaluatedFunction = (
-// // 	base_event_processor_class: typeof BaseCodeEventProcessor,
-// // 	THREE: any
-// // ) => typeof BaseCodeEventProcessor | undefined;
-// import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// class CodeEventParamsConfig extends NodeParamsConfig {
-// 	code_typescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
-// 		// show_label: false,
-// 		language: StringParamLanguage.TYPESCRIPT,
-// 	});
-// 	code_javascript = ParamConfig.STRING('', {hidden: true});
-// }
-// const ParamsConfig = new CodeEventParamsConfig();
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+class CodeEventParamsConfig extends NodeParamsConfig {
+	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
+		hideLabel: true,
+		language: StringParamLanguage.TYPESCRIPT,
+	});
+	codeJavascript = ParamConfig.STRING('', {hidden: true});
+}
+const ParamsConfig = new CodeEventParamsConfig();
 
-// export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
-// 	paramsConfig = ParamsConfig;
+export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
+	override paramsConfig = ParamsConfig;
+	// adding BaseCodeEventProcessor seems necessary to have the bundled types include it
+	static BaseCodeEventProcessor = BaseCodeEventProcessor;
+	static override type() {
+		return 'code';
+	}
+	private _lastCompiledCode: string | undefined;
+	private _processor: BaseCodeEventProcessor | undefined;
 
-// 	private _last_compiled_code: string | undefined;
-// 	private _processor: BaseCodeEventProcessor | undefined;
+	override initializeNode() {
+		this.io.inputs.setNamedInputConnectionPoints([
+			new EventConnectionPoint('trigger0', EventConnectionPointType.BASE, this._processTrigger0.bind(this)),
+			new EventConnectionPoint('trigger1', EventConnectionPointType.BASE, this._processTrigger1.bind(this)),
+			new EventConnectionPoint('trigger2', EventConnectionPointType.BASE, this._processTrigger2.bind(this)),
+			new EventConnectionPoint('trigger3', EventConnectionPointType.BASE, this._processTrigger3.bind(this)),
+			new EventConnectionPoint('trigger4', EventConnectionPointType.BASE, this._processTrigger4.bind(this)),
+		]);
+		this.io.outputs.setNamedOutputConnectionPoints([
+			new EventConnectionPoint('output0', EventConnectionPointType.BASE),
+			new EventConnectionPoint('output1', EventConnectionPointType.BASE),
+			new EventConnectionPoint('output2', EventConnectionPointType.BASE),
+			new EventConnectionPoint('output3', EventConnectionPointType.BASE),
+			new EventConnectionPoint('output4', EventConnectionPointType.BASE),
+		]);
+	}
 
-// 	static type() {
-// 		return 'code';
-// 	}
-// 	initializeNode() {
-// 		this.io.inputs.setNamedInputConnectionPoints([
-// 			new EventConnectionPoint('trigger', EventConnectionPointType.BASE),
-// 		]);
-// 	}
+	private _processTrigger0(event_context: EventContext<Event>) {
+		this._compileIfRequired();
+		this._processor?.processTrigger0(event_context);
+	}
+	private _processTrigger1(event_context: EventContext<Event>) {
+		this._compileIfRequired();
+		this._processor?.processTrigger1(event_context);
+	}
+	private _processTrigger2(event_context: EventContext<Event>) {
+		this._compileIfRequired();
+		this._processor?.processTrigger2(event_context);
+	}
+	private _processTrigger3(event_context: EventContext<Event>) {
+		this._compileIfRequired();
+		this._processor?.processTrigger3(event_context);
+	}
+	private _processTrigger4(event_context: EventContext<Event>) {
+		this._compileIfRequired();
+		this._processor?.processTrigger4(event_context);
+	}
+	_dispatchEventToOutputFromProcessor(outputName: string, eventContext: EventContext<Event>) {
+		this.dispatchEventToOutput(outputName, eventContext);
+	}
 
-// 	processEvent(event_context: EventContext<Event>) {
-// 		this._compileIfRequired();
-
-// 		if (this._processor) {
-// 			this._processor.processEvent(event_context);
-// 		}
-// 	}
-// 	private _compileIfRequired() {
-// 		if (!this._processor || this._last_compiled_code != this.pv.code_javascript) {
-// 			this._compile();
-// 		}
-// 	}
-// 	private _compile() {
-// 		try {
-// 			const function_body = `try {
-// 				${TranspiledFilter.filter(this.pv.code_javascript)}
-// 			} catch(e) {
-// 				this.states.error.set(e)
-// 			}`;
-// 			const processor_creator_function: Function = new Function('BaseCodeEventProcessor', 'THREE', function_body);
-// 			const processor_class: typeof BaseCodeEventProcessor | undefined = processor_creator_function(
-// 				BaseCodeEventProcessor,
-// 				THREE
-// 			);
-// 			if (processor_class) {
-// 				this._processor = new processor_class(this);
-// 				this._last_compiled_code = this.pv.code_javascript;
-// 			} else {
-// 				this.states.error.set(`cannot generate function`);
-// 				this._processor = undefined;
-// 			}
-// 		} catch (e) {
-// 			Poly.warn(e);
-// 			this.states.error.set(`cannot generate function (${e})`);
-// 			this._processor = undefined;
-// 		}
-// 	}
-// }
+	private _compileIfRequired() {
+		if (!this._processor || this._lastCompiledCode != this.pv.codeJavascript) {
+			this._compile();
+		}
+	}
+	private _compile() {
+		try {
+			const functionBody = `try {
+				${TranspiledFilter.filter(this.pv.codeJavascript)}
+			} catch(e) {
+				this.states.error.set(e)
+			}`;
+			const processorCreatorFunction: Function = new Function('BaseCodeEventProcessor', 'THREE', functionBody);
+			const ProcessorClass: typeof BaseCodeEventProcessor | undefined = processorCreatorFunction(
+				BaseCodeEventProcessor,
+				THREE
+			);
+			if (ProcessorClass) {
+				this._processor = new ProcessorClass(this);
+				this._lastCompiledCode = this.pv.codeJavascript;
+			} else {
+				this.states.error.set(`cannot generate function`);
+				console.log(functionBody);
+				this._processor = undefined;
+			}
+		} catch (e) {
+			Poly.warn(e);
+			this.states.error.set(`cannot generate function (${e})`);
+			this._processor = undefined;
+		}
+	}
+}

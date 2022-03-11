@@ -15,14 +15,17 @@ export function GradientMapParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 type TextureGradientMaterial = MeshToonMaterial;
-type CurrentMaterial = TextureGradientMaterial | ShaderMaterial;
+type TextureGradientMapCurrentMaterial = TextureGradientMaterial | ShaderMaterial;
 class TextureGradientMapParamsConfig extends GradientMapParamConfig(NodeParamsConfig) {}
-interface Controllers {
+interface GradientControllers {
 	gradientMap: TextureGradientMapController;
 }
-abstract class TextureGradientMapMatNode extends TypedMatNode<CurrentMaterial, TextureGradientMapParamsConfig> {
-	controllers!: Controllers;
-	abstract override createMaterial(): CurrentMaterial;
+abstract class TextureGradientMapMatNode extends TypedMatNode<
+	TextureGradientMapCurrentMaterial,
+	TextureGradientMapParamsConfig
+> {
+	controllers!: GradientControllers;
+	abstract override createMaterial(): TextureGradientMapCurrentMaterial;
 }
 
 export class TextureGradientMapController extends BaseTextureMapController {

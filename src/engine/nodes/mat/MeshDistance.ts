@@ -10,7 +10,7 @@ import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 
-interface Controllers {
+interface MeshDistanceControllers {
 	advancedCommon: AdvancedCommonController;
 }
 class MeshDistanceMatParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfig) {}
@@ -27,10 +27,10 @@ export class MeshDistanceMatNode extends TypedMatNode<MeshDistanceMaterial, Mesh
 			side: FrontSide,
 		});
 	}
-	readonly controllers: Controllers = {
+	readonly controllers: MeshDistanceControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof Controllers>;
+	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshDistanceControllers>;
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {

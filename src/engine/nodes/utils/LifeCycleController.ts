@@ -1,18 +1,18 @@
 import {BaseNodeType} from '../_Base';
 
-type Callback = () => void;
-type CallbackWithChildNode = (childNode: BaseNodeType) => void;
+type NodeLifeCycleControllerCallback = () => void;
+type NodeLifeCycleControllerCallbackWithChildNode = (childNode: BaseNodeType) => void;
 
-export class LifeCycleController {
+export class NodeLifeCycleController {
 	protected _creationCompleted = false;
-	protected _onChildAddCallbacks: CallbackWithChildNode[] | undefined;
-	private _onChildRemoveCallbacks: CallbackWithChildNode[] | undefined;
+	protected _onChildAddCallbacks: NodeLifeCycleControllerCallbackWithChildNode[] | undefined;
+	private _onChildRemoveCallbacks: NodeLifeCycleControllerCallbackWithChildNode[] | undefined;
 	// _on_creation_completed_hooks are used in the importer, once the node has been created, added and params are set
 	// private _on_creation_completed_hooks: Callback[] | undefined;
-	private _onAfterCreatedCallbacks: Callback[] | undefined;
-	private _onAfterAddedCallbacks: Callback[] | undefined;
-	private _onBeforeDeletedCallbacks: Callback[] | undefined;
-	private _onAfterDeletedCallbacks: Callback[] | undefined;
+	private _onAfterCreatedCallbacks: NodeLifeCycleControllerCallback[] | undefined;
+	private _onAfterAddedCallbacks: NodeLifeCycleControllerCallback[] | undefined;
+	private _onBeforeDeletedCallbacks: NodeLifeCycleControllerCallback[] | undefined;
+	private _onAfterDeletedCallbacks: NodeLifeCycleControllerCallback[] | undefined;
 	constructor(protected node: BaseNodeType) {}
 
 	dispose() {
@@ -53,7 +53,7 @@ export class LifeCycleController {
 	// ON CHILD ADD
 	//
 	//
-	onChildAdd(callback: CallbackWithChildNode) {
+	onChildAdd(callback: NodeLifeCycleControllerCallbackWithChildNode) {
 		this._onChildAddCallbacks = this._onChildAddCallbacks || [];
 		this._onChildAddCallbacks.push(callback);
 	}
@@ -66,7 +66,7 @@ export class LifeCycleController {
 	// ON CHILD REMOVE
 	//
 	//
-	onChildRemove(callback: CallbackWithChildNode) {
+	onChildRemove(callback: NodeLifeCycleControllerCallbackWithChildNode) {
 		this._onChildRemoveCallbacks = this._onChildRemoveCallbacks || [];
 		this._onChildRemoveCallbacks.push(callback);
 	}
@@ -79,7 +79,7 @@ export class LifeCycleController {
 	// ON CREATE
 	//
 	//
-	onAfterCreated(callback: Callback) {
+	onAfterCreated(callback: NodeLifeCycleControllerCallback) {
 		this._onAfterCreatedCallbacks = this._onAfterCreatedCallbacks || [];
 		this._onAfterCreatedCallbacks.push(callback);
 	}
@@ -92,7 +92,7 @@ export class LifeCycleController {
 	// ON ADD
 	//
 	//
-	onAfterAdded(callback: Callback) {
+	onAfterAdded(callback: NodeLifeCycleControllerCallback) {
 		this._onAfterAddedCallbacks = this._onAfterAddedCallbacks || [];
 		this._onAfterAddedCallbacks.push(callback);
 	}
@@ -105,7 +105,7 @@ export class LifeCycleController {
 	// ON DELETE
 	//
 	//
-	onBeforeDeleted(callback: Callback) {
+	onBeforeDeleted(callback: NodeLifeCycleControllerCallback) {
 		this._onBeforeDeletedCallbacks = this._onBeforeDeletedCallbacks || [];
 		this._onBeforeDeletedCallbacks.push(callback);
 	}
@@ -114,7 +114,7 @@ export class LifeCycleController {
 	}
 	// TODO: onAfterDeleted is not very different than methods in .dispose
 	// so this should probably be removed/refactored
-	onAfterDeleted(callback: Callback) {
+	onAfterDeleted(callback: NodeLifeCycleControllerCallback) {
 		this._onAfterDeletedCallbacks = this._onAfterDeletedCallbacks || [];
 		this._onAfterDeletedCallbacks.push(callback);
 	}
@@ -127,21 +127,24 @@ export class LifeCycleController {
 	// UTILS
 	//
 	//
-	protected _runCallbacks(hooks: Callback[] | undefined) {
+	protected _runCallbacks(hooks: NodeLifeCycleControllerCallback[] | undefined) {
 		if (!hooks) {
 			return;
 		}
-		let hook: Callback | undefined;
+		let hook: NodeLifeCycleControllerCallback | undefined;
 		// do not flush, as this MAY BE needed multiple times
 		for (hook of hooks) {
 			hook();
 		}
 	}
-	protected _runCallbacksWithChildNode(hooks: CallbackWithChildNode[] | undefined, childNode: BaseNodeType) {
+	protected _runCallbacksWithChildNode(
+		hooks: NodeLifeCycleControllerCallbackWithChildNode[] | undefined,
+		childNode: BaseNodeType
+	) {
 		if (!hooks) {
 			return;
 		}
-		let hook: CallbackWithChildNode | undefined;
+		let hook: NodeLifeCycleControllerCallbackWithChildNode | undefined;
 		// do not flush, as this is needed multiple times
 		for (hook of hooks) {
 			hook(childNode);

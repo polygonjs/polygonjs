@@ -3,7 +3,7 @@ import {BaseJsNodeType} from '../../_Base';
 import {MapUtils} from '../../../../../core/MapUtils';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 
-export class LinesController {
+export class JsLinesController {
 	private _definitions_by_node_id: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
 	private _body_lines_by_node_id: Map<CoreGraphNodeId, string[]> = new Map();
 

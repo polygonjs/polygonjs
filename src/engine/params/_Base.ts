@@ -5,7 +5,7 @@ import {OptionsController} from './utils/OptionsController';
 import {ExpressionController} from './utils/ExpressionController';
 import {EmitController} from './utils/EmitController';
 import {ParamSerializer} from './utils/Serializer';
-import {StatesController} from './utils/StatesController';
+import {ParamStatesController} from './utils/StatesController';
 import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
 import {ParamType} from '../poly/ParamType';
@@ -52,9 +52,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	get serializer(): ParamSerializer<T> {
 		return (this._serializer = this._serializer || new ParamSerializer(this));
 	}
-	private _states: StatesController | undefined;
-	get states(): StatesController {
-		return (this._states = this._states || new StatesController(this));
+	private _states: ParamStatesController | undefined;
+	get states(): ParamStatesController {
+		return (this._states = this._states || new ParamStatesController(this));
 	}
 	// private _ui_data: UIData | undefined;
 	// get ui_data(): UIData {

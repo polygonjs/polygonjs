@@ -13,13 +13,13 @@ import {VolumeController, VolumeParamConfig} from './utils/VolumeController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
-class VolumeMatParamsConfig extends BaseBuilderParamConfig(VolumeParamConfig(NodeParamsConfig)) {}
-const ParamsConfig = new VolumeMatParamsConfig();
+class VolumeBuilderMatParamsConfig extends BaseBuilderParamConfig(VolumeParamConfig(NodeParamsConfig)) {}
+const ParamsConfig = new VolumeBuilderMatParamsConfig();
 
 export class VolumeBuilderMatNode extends TypedBuilderMatNode<
 	ShaderMaterialWithCustomMaterials,
 	ShaderAssemblerVolume,
-	VolumeMatParamsConfig
+	VolumeBuilderMatParamsConfig
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {

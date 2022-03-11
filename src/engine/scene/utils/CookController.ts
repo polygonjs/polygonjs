@@ -1,11 +1,11 @@
 import {BaseNodeType} from '../../nodes/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
-type Callback = (value: void) => void;
+type SceneCookControllerCallback = (value: void) => void;
 
-export class CookController {
+export class SceneCookController {
 	private _cooking_nodes_by_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
-	private _resolves: Callback[] = [];
+	private _resolves: SceneCookControllerCallback[] = [];
 	constructor() {}
 
 	addNode(node: BaseNodeType) {
@@ -27,7 +27,7 @@ export class CookController {
 	}
 
 	private flush() {
-		let callback: Callback | undefined;
+		let callback: SceneCookControllerCallback | undefined;
 		while ((callback = this._resolves.pop())) {
 			callback();
 		}

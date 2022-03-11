@@ -15,7 +15,7 @@ const DefaultValues: PolyDictionary<number> = {
 	mult: 1,
 };
 
-enum InputName {
+enum MultScalarGlNodeInputName {
 	VALUE = 'value',
 	MULT = 'mult',
 }
@@ -30,15 +30,15 @@ export class MultScalarGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 		return [type, GlConnectionPointType.FLOAT];
 	}
 	protected override _gl_input_name(index: number) {
-		return [InputName.VALUE, InputName.MULT][index];
+		return [MultScalarGlNodeInputName.VALUE, MultScalarGlNodeInputName.MULT][index];
 	}
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const value = ThreeToGl.any(this.variableForInput(InputName.VALUE));
-		const mult = ThreeToGl.any(this.variableForInput(InputName.MULT));
+		const value = ThreeToGl.any(this.variableForInput(MultScalarGlNodeInputName.VALUE));
+		const mult = ThreeToGl.any(this.variableForInput(MultScalarGlNodeInputName.MULT));
 
 		const gl_type = this._expected_output_types()[0];
 		const out_name = this.io.outputs.namedOutputConnectionPoints()[0].name();

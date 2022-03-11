@@ -29,6 +29,7 @@ export const CATEGORY_COP = {
 	NETWORK,
 };
 export const CATEGORY_EVENT = {
+	ADVANCED: 'advanced',
 	CAMERA: 'cameras',
 	INPUT: 'inputs',
 	MISC: 'misc',

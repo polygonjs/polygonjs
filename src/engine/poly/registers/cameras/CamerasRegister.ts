@@ -1,7 +1,5 @@
-import {BaseNodeClass} from '../../../nodes/_Base';
 import {PolyEngine} from '../../../Poly';
-
-type BaseNodeConstructor = typeof BaseNodeClass;
+import {BaseNodeConstructor} from '../nodes/NodesRegister';
 
 export class CamerasRegister {
 	private _camera_types: string[] = [];

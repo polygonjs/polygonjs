@@ -33,8 +33,8 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 // Map to convert from a Js Data type to a ParamType
 //
 //
-type ConnectionPointTypeToParamTypeMapGeneric = {[key in JsConnectionPointType]: ParamType | undefined};
-export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeToParamTypeMapGeneric {
+type JSConnectionPointTypeToParamTypeMapGeneric = {[key in JsConnectionPointType]: ParamType | undefined};
+export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointTypeToParamTypeMapGeneric {
 	[JsConnectionPointType.BOOL]: ParamType.BOOLEAN;
 	[JsConnectionPointType.INT]: ParamType.INTEGER;
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT;
@@ -44,7 +44,7 @@ export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeT
 	// [JsConnectionPointType.MAT3]: undefined;
 	// [JsConnectionPointType.MAT4]: undefined;
 }
-export const JsConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParamTypeMap = {
+export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamTypeMap = {
 	[JsConnectionPointType.BOOL]: ParamType.BOOLEAN,
 	[JsConnectionPointType.INT]: ParamType.INTEGER,
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT,
@@ -100,7 +100,7 @@ export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointT
 //
 //
 export type ConnectionPointInitValueMapGeneric = {
-	[key in JsConnectionPointType]: ParamInitValuesTypeMap[IConnectionPointTypeToParamTypeMap[key]];
+	[key in JsConnectionPointType]: ParamInitValuesTypeMap[JsIConnectionPointTypeToParamTypeMap[key]];
 };
 export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
 	[JsConnectionPointType.BOOL]: false,
@@ -155,7 +155,7 @@ export class JsConnectionPoint<T extends JsConnectionPointType> extends BaseConn
 	override are_types_matched(src_type: string, dest_type: string): boolean {
 		return src_type == dest_type;
 	}
-	get param_type(): IConnectionPointTypeToParamTypeMap[T] {
+	get param_type(): JsIConnectionPointTypeToParamTypeMap[T] {
 		return JsConnectionPointTypeToParamTypeMap[this._type];
 	}
 	override get init_value() {

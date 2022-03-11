@@ -1,5 +1,5 @@
 import {TypedAnimNode} from './_Base';
-import {CopyStamp} from './utils/CopyStamp';
+import {AnimCopyStamp} from './utils/CopyStamp';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 class CopyAnimParamsConfig extends NodeParamsConfig {
@@ -16,7 +16,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 		return 'copy';
 	}
 
-	private _stampNode!: CopyStamp;
+	private _stampNode!: AnimCopyStamp;
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);
@@ -49,7 +49,7 @@ export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 		return (this._stampNode = this._stampNode || this._createStampNode());
 	}
 	private _createStampNode() {
-		const stampNode = new CopyStamp(this.scene());
+		const stampNode = new AnimCopyStamp(this.scene());
 		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
 		return stampNode;
 	}

@@ -3,7 +3,7 @@ import {InputCloneMode} from '../../../../engine/poly/InputCloneMode';
 import {BaseOperationContainer} from '../_Base';
 import {NodeContext} from '../../../poly/NodeContext';
 
-export class InputsController<NC extends NodeContext> {
+export class OperationInputsController<NC extends NodeContext> {
 	constructor(private operationContainer: BaseOperationContainer<NC>) {}
 	inputsCount() {
 		return this.operationContainer.inputsCount();

@@ -10,10 +10,10 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NetworkChildNodeType} from '../../poly/NodeContext';
-class SubnetOutputSopParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new SubnetOutputSopParamsConfig();
+class SopSubnetOutputSopParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new SopSubnetOutputSopParamsConfig();
 
-export class SubnetOutputSopNode extends TypedSopNode<SubnetOutputSopParamsConfig> {
+export class SubnetOutputSopNode extends TypedSopNode<SopSubnetOutputSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type(): Readonly<NetworkChildNodeType.OUTPUT> {
 		return NetworkChildNodeType.OUTPUT;

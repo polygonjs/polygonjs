@@ -2,9 +2,9 @@ import {BaseViewerType} from '../_Base';
 import {EventContext, BaseSceneEventsControllerType} from '../../scene/utils/events/_BaseEventsController';
 import {EventData} from '../../nodes/event/_BaseInput';
 import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../scene/utils/events/KeyboardEventsController';
-type EventListener = (e: Event) => void;
+type ViewerEventListener = (e: Event) => void;
 interface EventListenerWithData {
-	listener: EventListener;
+	listener: ViewerEventListener;
 	data: EventData;
 }
 type ListenerByEventType = Map<string, EventListenerWithData>;

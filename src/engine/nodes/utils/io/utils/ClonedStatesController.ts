@@ -1,6 +1,6 @@
 import {NodeContext} from '../../../../poly/NodeContext';
 import {InputCloneMode} from '../../../../poly/InputCloneMode';
-import {InputsController} from '../InputsController';
+import {NodeInputsController} from '../InputsController';
 import {TypeAssert} from '../../../../poly/Assert';
 import {NodeEvent} from '../../../../poly/NodeEvent';
 import {TypedNode} from '../../../_Base';
@@ -15,7 +15,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 	private _overridden: boolean = false;
 
 	private node: TypedNode<NC, any>;
-	constructor(private inputs_controller: InputsController<NC>) {
+	constructor(private inputs_controller: NodeInputsController<NC>) {
 		this.node = inputs_controller.node;
 	}
 	initInputsClonedState(states: InputCloneMode | InputCloneMode[]) {

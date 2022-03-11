@@ -14,7 +14,7 @@ const DefaultValues: PolyDictionary<number> = {
 	mult: 1,
 };
 
-enum InputName {
+enum MultAddGlNodeInputName {
 	VALUE = 'value',
 	PRE_ADD = 'preAdd',
 	MULT = 'mult',
@@ -27,17 +27,22 @@ export class MultAddGlNode extends BaseNodeGlMathFunctionArg4GlNode {
 	}
 
 	protected override _gl_input_name(index: number) {
-		return [InputName.VALUE, InputName.PRE_ADD, InputName.MULT, InputName.POST_ADD][index];
+		return [
+			MultAddGlNodeInputName.VALUE,
+			MultAddGlNodeInputName.PRE_ADD,
+			MultAddGlNodeInputName.MULT,
+			MultAddGlNodeInputName.POST_ADD,
+		][index];
 	}
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const value = ThreeToGl.any(this.variableForInput(InputName.VALUE));
-		const preAdd = ThreeToGl.any(this.variableForInput(InputName.PRE_ADD));
-		const mult = ThreeToGl.any(this.variableForInput(InputName.MULT));
-		const postAdd = ThreeToGl.any(this.variableForInput(InputName.POST_ADD));
+		const value = ThreeToGl.any(this.variableForInput(MultAddGlNodeInputName.VALUE));
+		const preAdd = ThreeToGl.any(this.variableForInput(MultAddGlNodeInputName.PRE_ADD));
+		const mult = ThreeToGl.any(this.variableForInput(MultAddGlNodeInputName.MULT));
+		const postAdd = ThreeToGl.any(this.variableForInput(MultAddGlNodeInputName.POST_ADD));
 
 		const gl_type = this._expected_output_types()[0];
 		const out_name = this.io.outputs.namedOutputConnectionPoints()[0].name();

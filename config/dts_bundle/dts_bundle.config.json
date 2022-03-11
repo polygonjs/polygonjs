@@ -1,0 +1,20 @@
+{
+	"compilationOptions": {
+		"preferredConfigPath": "../../tsconfig.json"
+	},
+	"entries": [
+		{
+			"filePath": "../../dist/src/engine/index_all.ts",
+			"outFile": "../../public/bundled_types.d.ts",
+			"libraries": {
+				"inlinedLibraries": ["three", "gsap"]
+			},
+			"output": {
+				"inlineDeclareGlobals": false,
+				"noBanner": true,
+				"respectPreserveConstEnum": false,
+				"exportReferencedTypes": true
+			}
+		}
+	]
+}

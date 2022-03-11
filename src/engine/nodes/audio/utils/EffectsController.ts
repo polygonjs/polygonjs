@@ -1,8 +1,8 @@
 import {BaseNodeType} from '../../_Base';
 
-type Callback = (node: BaseNodeType) => void;
+type AudioEffectsControllerCallback = (node: BaseNodeType) => void;
 
-export function effectParamsOptions(callback: Callback) {
+export function effectParamsOptions(callback: AudioEffectsControllerCallback) {
 	return {
 		cook: false,
 		callback: callback,

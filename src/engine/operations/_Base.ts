@@ -1,6 +1,6 @@
 import {NodeContext} from '../../engine/poly/NodeContext';
 import {ParamType} from '../../engine/poly/ParamType';
-import {StatesController} from '../../engine/nodes/utils/StatesController';
+import {NodeStatesController} from '../../engine/nodes/utils/StatesController';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {InputCloneMode} from '../../engine/poly/InputCloneMode';
 import {BaseNodeType} from '../nodes/_Base';
@@ -38,7 +38,11 @@ export class BaseOperation<NC extends NodeContext> {
 	static readonly DEFAULT_PARAMS: DefaultOperationParams = {};
 	static readonly INPUT_CLONED_STATE: InputCloneMode | InputCloneMode[] = [];
 
-	constructor(protected _scene: PolyScene, protected states?: StatesController<NC>, protected _node?: BaseNodeType) {}
+	constructor(
+		protected _scene: PolyScene,
+		protected states?: NodeStatesController<NC>,
+		protected _node?: BaseNodeType
+	) {}
 	scene() {
 		return this._scene;
 	}

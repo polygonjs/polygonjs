@@ -5,7 +5,7 @@ import {TypedJsNode} from './_Base';
 // import {ShaderName, LineType, LINE_TYPES} from './Assembler/Util/CodeBuilder';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {LinesController} from './code/utils/LinesController';
+import {JsLinesController} from './code/utils/LinesController';
 class OutputJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OutputJsParamsConfig();
 
@@ -24,7 +24,7 @@ export class OutputJsNode extends TypedJsNode<OutputJsParamsConfig> {
 		this.function_node?.assembler_controller.add_output_inputs(this);
 	}
 
-	override setLines(lines_controller: LinesController) {
+	override setLines(lines_controller: JsLinesController) {
 		this.function_node?.assembler_controller.assembler.set_node_lines_output(this, lines_controller);
 	}
 }
