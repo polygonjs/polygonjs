@@ -36,13 +36,13 @@ class TextureGlParamsConfig extends NodeParamsConfig {
 	tblur = ParamConfig.BOOLEAN(0);
 	resolution = ParamConfig.VECTOR2([256, 256], blurParamVisibility);
 	blurPixelsCountX = ParamConfig.INTEGER(1, {
-		range: [1, 5],
-		rangeLocked: [true, false],
+		range: [1, 4],
+		rangeLocked: [true, true],
 		...blurParamVisibility,
 	});
 	blurPixelsCountY = ParamConfig.INTEGER(1, {
-		range: [1, 5],
-		rangeLocked: [true, false],
+		range: [1, 4],
+		rangeLocked: [true, true],
 		...blurParamVisibility,
 	});
 }
@@ -76,7 +76,13 @@ export class TextureGlNode extends TypedGlNode<TextureGlParamsConfig> {
 			const resolution = ThreeToGl.vector2(this.variableForInputParam(this.p.resolution));
 			const blurPixelsCountX = ThreeToGl.integer(this.variableForInputParam(this.p.blurPixelsCountX));
 			const blurPixelsCountY = ThreeToGl.integer(this.variableForInputParam(this.p.blurPixelsCountY));
-			const body_line = `vec4 ${rgba} = textureBlur(${map}, ${uv}, ${resolution}, ${blurPixelsCountX}, ${blurPixelsCountY})`;
+			const body_line = `vec4 ${rgba} = textureBlur(
+				${map},
+				${uv},
+				${resolution},
+				${blurPixelsCountX},
+				${blurPixelsCountY}
+				)`;
 			bodyLines.push(body_line);
 			definitions.push(new FunctionGLDefinition(this, TextureBlur));
 		} else {
