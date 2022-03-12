@@ -101,13 +101,13 @@ export class ScenePlayerImporter {
 	// }
 
 	private _onLoadCompleteCalled = false;
-	private async _onLoadComplete(scene: PolyScene, viewer?: BaseViewerType) {
+	private async _onLoadComplete(scene: PolyScene) {
 		if (this._onLoadCompleteCalled == true) {
 			return;
 		}
 		this._onLoadCompleteCalled = true;
-		if (viewer) {
-			this._markViewerAsReady(viewer);
+		if (this._viewer) {
+			this._markViewerAsReady(this._viewer);
 		}
 		await this._markSceneAsReady(scene);
 	}
