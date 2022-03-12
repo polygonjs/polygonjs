@@ -12,6 +12,7 @@ import {SceneJsonImporter, ConfigureSceneCallback} from '../json/import/Scene';
 // import {ManifestContent} from '../manifest/import/SceneData';
 
 interface OnProgressArguments {
+	scene: PolyScene;
 	triggerNode?: BaseNodeType;
 	cookedNodes: BaseNodeType[];
 	remainingNodes: BaseNodeType[];
@@ -100,40 +101,55 @@ export class ScenePlayerImporter {
 	// }
 
 	private _onLoadCompleteCalled = false;
-	private async _onLoadComplete() {
+	private async _onLoadComplete(scene: PolyScene, viewer?: BaseViewerType) {
 		if (this._onLoadCompleteCalled == true) {
 			return;
 		}
 		this._onLoadCompleteCalled = true;
-		if (this._viewer) {
-			this._viewer.markAsReady();
+		if (viewer) {
+			this._markViewerAsReady(viewer);
 		}
-		if (this._scene) {
-			await this._scene.cookController.waitForCooksCompleted();
-			this._scene.setFrame(TimeController.START_FRAME);
-			// we need to wait for node cooks to be completed
-			// otherwise, the play would be stale
-			if (this.options.autoPlay != false) {
-				this._scene.play();
-			}
-			this._dispatchEvent(EventName.SCENE_READY);
-		}
+		await this._markSceneAsReady(scene);
 	}
-	private _onNodesCookProgress(ratio: number, args: OnProgressArguments) {
-		const onProgress = (ratio: number, args: OnProgressArguments) => {
+	private _viewerMarkedAsReady = false;
+	private _markViewerAsReady(viewer: BaseViewerType) {
+		if (this._viewerMarkedAsReady) {
+			return;
+		}
+		this._viewerMarkedAsReady = true;
+		viewer.markAsReady();
+	}
+	private _sceneMarkedAsReady = false;
+	private async _markSceneAsReady(scene: PolyScene) {
+		if (this._sceneMarkedAsReady) {
+			return;
+		}
+		this._sceneMarkedAsReady = true;
+		await scene.cookController.waitForCooksCompleted();
+		scene.setFrame(TimeController.START_FRAME);
+		// we need to wait for node cooks to be completed
+		// otherwise, the play would be stale
+		if (this.options.autoPlay != false) {
+			scene.play();
+		}
+		this._dispatchEvent(EventName.SCENE_READY);
+	}
+
+	private _onNodesCookProgress(nodesCookProgress: number, args: OnProgressArguments) {
+		const progressRatio = PROGRESS_RATIO.nodes;
+		const onProgress = (_ratio: number, args: OnProgressArguments) => {
 			if (this.options.onProgress) {
-				this.options.onProgress(progressRatio.start + progressRatio.mult * ratio, args);
+				this.options.onProgress(progressRatio.start + progressRatio.mult * _ratio, args);
 			}
 		};
-		const progressRatio = PROGRESS_RATIO.nodes;
 		// make sure to always call onProgress
 		// even if ratio==1
 		// as there may still be important instructions
 		// in the user-defined options.onProgress
-		onProgress(ratio, args);
+		onProgress(nodesCookProgress, args);
 
-		if (ratio >= 1) {
-			this._onLoadComplete();
+		if (nodesCookProgress >= 1) {
+			this._onLoadComplete(args.scene);
 		}
 	}
 
@@ -141,7 +157,7 @@ export class ScenePlayerImporter {
 		const nodes = await scene.root().loadProgress.resolvedNodes();
 		const nodesCount = nodes.length;
 		if (nodesCount == 0) {
-			this._onNodesCookProgress(1, {triggerNode: undefined, cookedNodes: [], remainingNodes: []});
+			this._onNodesCookProgress(1, {scene, triggerNode: undefined, cookedNodes: [], remainingNodes: []});
 		}
 		const remainingNodes = SetUtils.fromArray(nodes);
 		const cookedNodes = new Set<BaseNodeType>();
@@ -156,8 +172,9 @@ export class ScenePlayerImporter {
 					cookedNodes.add(node);
 					remainingNodes.delete(node);
 
-					const ratio = cookedNodes.size / nodesCount;
-					this._onNodesCookProgress(ratio, {
+					const nodesCookProgress = cookedNodes.size / nodesCount;
+					this._onNodesCookProgress(nodesCookProgress, {
+						scene,
 						triggerNode: node,
 						cookedNodes: SetUtils.toArray(cookedNodes),
 						remainingNodes: SetUtils.toArray(remainingNodes),
@@ -187,6 +204,13 @@ export class ScenePlayerImporter {
 				element: domElement,
 				viewerProperties: {autoRender: false},
 			});
+			// if the scene is marked as ready, and thew viewer hasn't been marked as ready yet,
+			// which can happen if there are no nodes to check the progress of,
+			// then the viewer should be marked as ready now
+			if (this._sceneMarkedAsReady == true) {
+				this._markViewerAsReady(this._viewer);
+			}
+
 			this._dispatchEvent(EventName.VIEWER_MOUNTED);
 		}
 
