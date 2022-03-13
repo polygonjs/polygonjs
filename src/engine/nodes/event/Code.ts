@@ -1,3 +1,9 @@
+/**
+ * processes input events with user-defined typescript.
+ *
+ *
+ */
+
 import {TypedEventNode} from './_Base';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
@@ -6,7 +12,8 @@ import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 import * as THREE from 'three'; // three import required to give to the function builder
 
-const DEFAULT_FUNCTION_CODE = `
+const DEFAULT_FUNCTION_CODE = {
+	TS: `
 export class EventProcessor extends BaseCodeEventProcessor {
 	override initializeProcessor(){
 	}
@@ -26,8 +33,30 @@ export class EventProcessor extends BaseCodeEventProcessor {
 		this.dispatchEventToOutput('output4', eventContext);
 	}
 }
+`,
+	JS: `
+export class EventProcessor extends BaseCodeEventProcessor {
+	initializeProcessor() {
+	}
+	processTrigger0(eventContext) {
+		this.dispatchEventToOutput('output0', eventContext);
+	}
+	processTrigger1(eventContext) {
+		this.dispatchEventTgfoOutput('output1', eventContext);
+	}
+	processTrigger2(eventContext) {
+		this.dispatchEventTgfoOutput('output2', eventContext);
+	}
+	processTrigger3(eventContext) {
+		this.dispatchEventTgfoOutput('output3', eventContext);
+	}
+	processTrigger4(eventContext) {
+		this.dispatchEventTgfoOutput('output4', eventContext);
+	}
+}
+`,
+};
 
-`;
 export class BaseCodeEventProcessor {
 	constructor(protected node: CodeEventNode) {
 		this.initializeProcessor();
@@ -46,11 +75,11 @@ export class BaseCodeEventProcessor {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CodeEventParamsConfig extends NodeParamsConfig {
-	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
+	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.TS, {
 		hideLabel: true,
 		language: StringParamLanguage.TYPESCRIPT,
 	});
-	codeJavascript = ParamConfig.STRING('', {hidden: true});
+	codeJavascript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.JS, {hidden: true});
 }
 const ParamsConfig = new CodeEventParamsConfig();
 
@@ -112,6 +141,7 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 	}
 	private _compile() {
 		try {
+			console.log(this.pv.codeJavascript);
 			const functionBody = `try {
 				${TranspiledFilter.filter(this.pv.codeJavascript)}
 			} catch(e) {

@@ -1,3 +1,9 @@
+/**
+ * processes input geometry with user-defined typescript.
+ *
+ *
+ */
+
 import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -7,8 +13,8 @@ import {Object3D} from 'three/src/core/Object3D';
 import {Poly} from '../../Poly';
 import * as THREE from 'three'; // three import required to give to the function builder
 
-const DEFAULT_FUNCTION_CODE = `
-
+const DEFAULT_FUNCTION_CODE = {
+	TS: `
 export class CodeSopProcessor extends BaseCodeSopProcessor {
 	override initializeProcessor(){
 	}
@@ -19,8 +25,20 @@ export class CodeSopProcessor extends BaseCodeSopProcessor {
 		this.setCoreGroup(inputCoreGroup);
 	}
 }
-
-`;
+`,
+	JS: `
+export class CodeSopProcessor extends BaseCodeSopProcessor {
+	initializeProcessor() {
+	}
+	cook(inputCoreGroups) {
+		const inputCoreGroup = inputCoreGroups[0];
+		const object = inputCoreGroup.objects()[0];
+		object.position.y = 0.5;
+		this.setCoreGroup(inputCoreGroup);
+	}
+}
+`,
+};
 
 export class BaseCodeSopProcessor {
 	constructor(protected node: CodeSopNode) {
@@ -40,11 +58,11 @@ export class BaseCodeSopProcessor {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CodeSopParamsConfig extends NodeParamsConfig {
-	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE, {
+	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.TS, {
 		hideLabel: true,
 		language: StringParamLanguage.TYPESCRIPT,
 	});
-	codeJavascript = ParamConfig.STRING('', {hidden: true});
+	codeJavascript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.JS, {hidden: true});
 }
 const ParamsConfig = new CodeSopParamsConfig();
 export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
@@ -102,6 +120,7 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 				this._lastCompiledCode = this.pv.codeJavascript;
 			} else {
 				this.states.error.set(`cannot generate function`);
+				console.warn(functionBody);
 				this._processor = undefined;
 			}
 		} catch (e) {
