@@ -21,9 +21,9 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		this.uiData.setLayoutHorizontal();
 		// this.addPostDirtyHook('_eval_all_params_on_dirty', this._eval_all_params_on_dirty_bound);
 		// cook is required for some nodes like event/animation
-		this.addPostDirtyHook('cook_without_inputs_on_dirty', this._cook_without_inputs_bound);
+		this.addPostDirtyHook('cookWithoutInputsOnDirty', this._cookWithoutInputsBound);
 
-		this.io.inputs.set_depends_on_inputs(false);
+		this.io.inputs.setDependsOnInputs(false);
 		this.io.connections.initInputs();
 		this.io.connection_points.spare_params.initializeNode();
 	}
@@ -33,8 +33,8 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	// _eval_all_params_on_dirty() {
 	// 	this.params.eval_all();
 	// }
-	private _cook_without_inputs_bound = this._cook_without_inputs.bind(this);
-	_cook_without_inputs() {
+	private _cookWithoutInputsBound = this._cookWithoutInputs.bind(this);
+	_cookWithoutInputs() {
 		this.cookController.cookMainWithoutInputs();
 	}
 	override cook() {

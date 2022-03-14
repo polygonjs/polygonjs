@@ -18,6 +18,8 @@ export abstract class BaseConnectionPoint {
 	protected _json: BaseConnectionPointData | undefined;
 	// protected _init_value: any;
 
+	protected _inNodeDefinition: boolean = false;
+
 	constructor(protected _name: string, protected _type: string, protected _init_value?: any) {
 		// if (this._init_value === undefined) {
 		// this._init_value = ConnectionPointInitValueMap[this._type];
@@ -34,6 +36,9 @@ export abstract class BaseConnectionPoint {
 	}
 	are_types_matched(src_type: string, dest_type: string): boolean {
 		return true;
+	}
+	inNodeDefinition() {
+		return this._inNodeDefinition;
 	}
 	abstract get param_type(): ParamType;
 	// get param_type(): IConnectionPointTypeToParamTypeMap[T] {

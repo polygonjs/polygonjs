@@ -1,7 +1,12 @@
 const NETWORK = 'networks';
 
 export const CATEGORY_ACTOR = {
+	ADVANCED: 'advanced',
+	EVENTS: 'events',
+	GET: 'get',
+	MATH: 'math',
 	MISC: 'misc',
+	SET: 'set',
 };
 
 export const CATEGORY_ANIM = {

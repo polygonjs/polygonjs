@@ -12,7 +12,7 @@ import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/connections/Gl';
 
-function typed_visible_options(type: GlConnectionPointType, otherParamVal: PolyDictionary<number | boolean> = {}) {
+function typedVisibleOptions(type: GlConnectionPointType, otherParamVal: PolyDictionary<number | boolean> = {}) {
 	const val = GL_CONNECTION_POINT_TYPES.indexOf(type);
 	return {visibleIf: {type: val, ...otherParamVal}};
 }
@@ -25,15 +25,15 @@ class ConstantGlParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	bool = ParamConfig.BOOLEAN(0, typed_visible_options(GlConnectionPointType.BOOL));
-	int = ParamConfig.INTEGER(0, typed_visible_options(GlConnectionPointType.INT));
-	float = ParamConfig.FLOAT(0, typed_visible_options(GlConnectionPointType.FLOAT));
-	vec2 = ParamConfig.VECTOR2([0, 0], typed_visible_options(GlConnectionPointType.VEC2));
-	vec3 = ParamConfig.VECTOR3([0, 0, 0], typed_visible_options(GlConnectionPointType.VEC3, {asColor: false}));
-	color = ParamConfig.COLOR([0, 0, 0], typed_visible_options(GlConnectionPointType.VEC3, {asColor: true}));
-	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typed_visible_options(GlConnectionPointType.VEC4));
+	bool = ParamConfig.BOOLEAN(0, typedVisibleOptions(GlConnectionPointType.BOOL));
+	int = ParamConfig.INTEGER(0, typedVisibleOptions(GlConnectionPointType.INT));
+	float = ParamConfig.FLOAT(0, typedVisibleOptions(GlConnectionPointType.FLOAT));
+	vec2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(GlConnectionPointType.VEC2));
+	vec3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(GlConnectionPointType.VEC3, {asColor: false}));
+	color = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(GlConnectionPointType.VEC3, {asColor: true}));
+	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(GlConnectionPointType.VEC4));
 	/** @param when using vec3, use toggle on it should be a color */
-	asColor = ParamConfig.BOOLEAN(0, typed_visible_options(GlConnectionPointType.VEC3));
+	asColor = ParamConfig.BOOLEAN(0, typedVisibleOptions(GlConnectionPointType.VEC3));
 }
 const ParamsConfig = new ConstantGlParamsConfig();
 export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {

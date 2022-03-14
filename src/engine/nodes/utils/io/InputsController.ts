@@ -51,7 +51,7 @@ export class NodeInputsController<NC extends NodeContext> {
 
 	constructor(public node: TypedNode<NC, any>) {}
 
-	set_depends_on_inputs(depends_on_inputs: boolean) {
+	setDependsOnInputs(depends_on_inputs: boolean) {
 		this._depends_on_inputs = depends_on_inputs;
 	}
 	private setMinCount(minInputsCount: number) {
@@ -79,8 +79,13 @@ export class NodeInputsController<NC extends NodeContext> {
 		}
 	}
 
-	setNamedInputConnectionPoints(connection_points: ConnectionPointTypeMap[NC][]) {
+	setNamedInputConnectionPoints(newConnectionPoints: ConnectionPointTypeMap[NC][]) {
 		this._has_named_inputs = true;
+
+		const connectionPointsToKeep =
+			this._named_input_connection_points?.filter((cp) => cp?.inNodeDefinition()) || [];
+
+		const allNewConnectionPoints = connectionPointsToKeep.concat(newConnectionPoints);
 
 		const connections = this.node.io.connections.inputConnections();
 		if (connections) {
@@ -88,7 +93,7 @@ export class NodeInputsController<NC extends NodeContext> {
 				if (connection) {
 					// assume we only work with indices for now, not with connection point names
 					// so we only need to check again the new max number of connection points.
-					if (connection.input_index >= connection_points.length) {
+					if (connection.input_index >= allNewConnectionPoints.length) {
 						connection.disconnect({setInput: true});
 					}
 				}
@@ -96,9 +101,9 @@ export class NodeInputsController<NC extends NodeContext> {
 		}
 
 		// update connections
-		this._named_input_connection_points = connection_points;
+		this._named_input_connection_points = allNewConnectionPoints;
 		this.setMinCount(0);
-		this.setMaxCount(connection_points.length);
+		this.setMaxCount(this._named_input_connection_points.length);
 		this._initGraphNodeInputs();
 		this.node.emit(NodeEvent.NAMED_INPUTS_UPDATED);
 	}

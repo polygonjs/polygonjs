@@ -1,9 +1,8 @@
 import {TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {FlagsControllerB} from '../utils/FlagsController';
-import {ActorBuilder} from '../../../core/actor/ActorBuilder';
 import {Object3D} from 'three/src/core/Object3D';
+import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
 
 const INPUT_NAME = 'input actor behaviors';
 const DEFAULT_INPUT_NAMES = [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
@@ -13,8 +12,6 @@ const DEFAULT_INPUT_NAMES = [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
  *
  */
 export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ACTOR, K> {
-	public override readonly flags: FlagsControllerB = new FlagsControllerB(this);
-
 	static override context(): NodeContext {
 		return NodeContext.ACTOR;
 	}
@@ -23,24 +20,24 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		return DEFAULT_INPUT_NAMES;
 	}
 
+	private _paramsEditableStatesController = new ParamsEditableStateController(this);
 	override initializeBaseNode() {
-		this.io.outputs.setHasOneOutput();
+		this.uiData.setLayoutHorizontal();
+		this.addPostDirtyHook('cookWithoutInputsOnDirty', this._cookWithoutInputsBound);
+
+		this.io.inputs.setDependsOnInputs(false);
+		this.io.connections.initInputs();
+		this.io.connection_points.spare_params.initializeNode();
+		this._paramsEditableStatesController.initializeNode();
 	}
-	protected setActorBuilder(actorBuilder: ActorBuilder) {
-		this._setContainer(actorBuilder);
+	private _cookWithoutInputsBound = this._cookWithoutInputs.bind(this);
+	_cookWithoutInputs() {
+		this.cookController.cookMainWithoutInputs();
+	}
+	override cook() {
+		this.cookController.endCook();
 	}
 
-	protected override initializeNode() {
-		this.io.inputs.setCount(0, 1);
-		this.io.inputs.set_depends_on_inputs(false);
-	}
-
-	override cook(actorBuilders: ActorBuilder[]) {
-		const actorBuilder = actorBuilders[0] || new ActorBuilder();
-		actorBuilder.addProcessor(this);
-
-		this.setActorBuilder(actorBuilder);
-	}
 	processActor(object: Object3D) {}
 }
 
