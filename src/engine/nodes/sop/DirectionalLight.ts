@@ -12,13 +12,14 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {DirectionalLightParamConfig} from '../../../core/lights/DirectionalLight';
 import {DirectionalLightSopOperation} from '../../operations/sop/DirectionalLight';
+import {LightType} from '../../poly/registers/nodes/types/Light';
 class DirectionalLightSopParamsConfig extends DirectionalLightParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new DirectionalLightSopParamsConfig();
 
 export class DirectionalLightSopNode extends TypedSopNode<DirectionalLightSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'directionalLight';
+		return LightType.DIRECTIONAL;
 	}
 
 	override initializeNode() {

@@ -4,7 +4,9 @@ export const CATEGORY_ACTOR = {
 	ADVANCED: 'advanced',
 	EVENTS: 'events',
 	GET: 'get',
+	LOGIC: 'logic',
 	MATH: 'math',
+	NETWORK,
 	MISC: 'misc',
 	SET: 'set',
 };

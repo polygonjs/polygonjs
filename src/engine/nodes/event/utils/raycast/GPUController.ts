@@ -44,8 +44,8 @@ export class RaycastGPUController extends BaseRaycastController {
 	constructor(private _node: RaycastEventNode) {
 		super();
 	}
-	updateMouse(context: EventContext<MouseEvent | DragEvent | PointerEvent>) {
-		this._setCursor(context);
+	updateMouse(eventContext: EventContext<MouseEvent | DragEvent | PointerEvent>) {
+		this._cursorHelper.setCursorForGPU(eventContext, this._cursor);
 		if (isBooleanTrue(this._node.pv.tmouse)) {
 			this._cursor.toArray(this._cursorArray);
 			this._node.p.mouse.set(this._cursorArray);

@@ -18,6 +18,9 @@ export enum Attribute {
 	SCALE = 'scale',
 	TANGENT = 'tangent',
 }
+export enum ObjectAttribute {
+	HOVERED = 'hovered',
+}
 
 const ATTRIB_NAME_MAP: PolyDictionary<string> = {
 	P: Attribute.POSITION,

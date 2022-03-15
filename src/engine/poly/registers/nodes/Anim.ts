@@ -19,6 +19,7 @@ import {SubnetOutputAnimNode} from '../../../nodes/anim/SubnetOutput';
 import {SwitchAnimNode} from '../../../nodes/anim/Switch';
 import {TargetAnimNode} from '../../../nodes/anim/Target';
 // networks
+import {ActorsNetworkAnimNode} from '../../../nodes/anim/ActorsNetwork';
 import {AnimationsNetworkAnimNode} from '../../../nodes/anim/AnimationsNetwork';
 import {AudioNetworkAnimNode} from '../../../nodes/anim/AudioNetwork';
 import {CopNetworkAnimNode} from '../../../nodes/anim/CopNetwork';
@@ -47,6 +48,7 @@ export interface AnimNodeChildrenMap {
 	switch: SwitchAnimNode;
 	target: TargetAnimNode;
 	// networks
+	actorsNetwork: ActorsNetworkAnimNode;
 	animationsNetwork: AnimationsNetworkAnimNode;
 	audioNetwork: AudioNetworkAnimNode;
 	copNetwork: CopNetworkAnimNode;
@@ -57,6 +59,7 @@ export interface AnimNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
+import {ACTORS_IN_PROD} from './Actor';
 export class AnimRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(CopyAnimNode, CATEGORY_ANIM.MODIFIER);
@@ -78,6 +81,9 @@ export class AnimRegister {
 		poly.registerNode(SwitchAnimNode, CATEGORY_ANIM.MISC);
 		poly.registerNode(TargetAnimNode, CATEGORY_ANIM.PROP);
 		// networks
+		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
+			poly.registerNode(ActorsNetworkAnimNode, CATEGORY_ANIM.NETWORK);
+		}
 		poly.registerNode(AnimationsNetworkAnimNode, CATEGORY_ANIM.NETWORK);
 		poly.registerNode(AudioNetworkAnimNode, CATEGORY_ANIM.NETWORK);
 		poly.registerNode(CopNetworkAnimNode, CATEGORY_ANIM.NETWORK);

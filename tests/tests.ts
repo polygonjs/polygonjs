@@ -80,6 +80,9 @@ import './engine/nodes/utils/CookController';
 import './engine/nodes/utils/ChildrenContext';
 import './engine/nodes/utils/Memory';
 
+QUnit.module('actor');
+import './engine/nodes/actor/TwoWaySwitch';
+
 QUnit.module('anim');
 import './engine/nodes/anim/Utils/ParamProxy';
 import './engine/nodes/anim/Delete';

@@ -48,14 +48,23 @@ const _offset: CursorOffset = {offsetX: 0, offsetY: 0};
 export class CursorHelper {
 	// protected _cursor: Vector2 = new Vector2();
 
-	setCursor(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>, target: Vector2) {
+	setCursorForCPU(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>, target: Vector2) {
+		this.setCursor(context, target);
+		target.x = target.x * 2 - 1;
+		target.y = -target.y * 2 + 1;
+	}
+	setCursorForGPU(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>, target: Vector2) {
+		this.setCursor(context, target);
+	}
+
+	private setCursor(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>, target: Vector2) {
 		const canvas = context.viewer?.canvas();
 		if (!canvas) {
 			return;
 		}
 
 		const event = context.event;
-		if (event instanceof MouseEvent || event instanceof DragEvent || event instanceof PointerEvent) {
+		if (event instanceof PointerEvent || event instanceof MouseEvent || event instanceof DragEvent) {
 			MouseHelper.setEventOffset(event, canvas, _offset);
 		}
 		if (
@@ -74,7 +83,7 @@ export class CursorHelper {
 		} else {
 			target.x = _offset.offsetX / canvas.offsetWidth;
 			target.y = _offset.offsetY / canvas.offsetHeight;
-			this._remapCursor();
+			// this._remapCursor();
 		}
 		// there can be some conditions leading to an infinite mouse number, so we check here what we got
 		if (!CoreVector.isVector2Valid(target)) {
@@ -83,5 +92,5 @@ export class CursorHelper {
 			return;
 		}
 	}
-	protected _remapCursor() {}
+	// protected _remapCursor() {}
 }

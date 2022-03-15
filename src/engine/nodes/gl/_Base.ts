@@ -75,8 +75,8 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		return this.variableForInput(param.name());
 	}
 
-	variableForInput(name: string): string {
-		const input_index = this.io.inputs.getInputIndex(name);
+	variableForInput(inputName: string): string {
+		const input_index = this.io.inputs.getInputIndex(inputName);
 		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {
 			const input_node = (<unknown>connection.node_src) as BaseGlNodeType;
@@ -86,12 +86,12 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 				const output_name = output_connection_point.name();
 				return input_node.glVarName(output_name);
 			} else {
-				console.warn(`no output called '${name}' for gl node ${input_node.path()}`);
+				console.warn(`no output called '${inputName}' for gl node ${input_node.path()}`);
 				throw 'variable_for_input ERROR';
 			}
 		} else {
-			if (this.params.has(name)) {
-				return ThreeToGl.any(this.params.get(name)?.value);
+			if (this.params.has(inputName)) {
+				return ThreeToGl.any(this.params.get(inputName)?.value);
 			} else {
 				const connection_point = this.io.inputs.namedInputConnectionPoints()[input_index];
 				return ThreeToGl.any(connection_point.init_value);

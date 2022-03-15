@@ -58,7 +58,9 @@ export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeT
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR;
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT;
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER;
+	[ActorConnectionPointType.OBJECT_3D]: ParamType.STRING; // to reconsider
 	[ActorConnectionPointType.STRING]: ParamType.STRING;
+	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON;
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2;
 	[ActorConnectionPointType.VECTOR3]: ParamType.VECTOR3;
 	[ActorConnectionPointType.VECTOR4]: ParamType.VECTOR4;
@@ -76,13 +78,15 @@ export const ActorConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParam
 	[ActorConnectionPointType.VECTOR4]: ParamType.VECTOR4,
 };
 
+ActorConnectionPointTypeToParamTypeMap[ActorConnectionPointType.BOOLEAN];
+
 //
 //
-// Map to convert from a ParamType to GL Data type
+// Map to convert from a ParamType to Actor Data type
 //
 //
 type ActorParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: ActorConnectionPointType | undefined};
-export interface IGLParamTypeToConnectionPointTypeMap extends ActorParamTypeToConnectionPointTypeMapGeneric {
+export interface IActorParamTypeToConnectionPointTypeMap extends ActorParamTypeToConnectionPointTypeMapGeneric {
 	[ParamType.BOOLEAN]: ActorConnectionPointType.BOOLEAN;
 	[ParamType.COLOR]: ActorConnectionPointType.COLOR;
 	[ParamType.FLOAT]: ActorConnectionPointType.FLOAT;
@@ -97,7 +101,7 @@ export interface IGLParamTypeToConnectionPointTypeMap extends ActorParamTypeToCo
 	[ParamType.RAMP]: undefined;
 	[ParamType.STRING]: undefined;
 }
-export const ActorParamTypeToConnectionPointTypeMap: IGLParamTypeToConnectionPointTypeMap = {
+export const ActorParamTypeToConnectionPointTypeMap: IActorParamTypeToConnectionPointTypeMap = {
 	[ParamType.BOOLEAN]: ActorConnectionPointType.BOOLEAN,
 	[ParamType.COLOR]: ActorConnectionPointType.COLOR,
 	[ParamType.FLOAT]: ActorConnectionPointType.FLOAT,
@@ -116,7 +120,7 @@ export const ActorParamTypeToConnectionPointTypeMap: IGLParamTypeToConnectionPoi
 
 //
 //
-// Map of GL Data type default values
+// Map of Data type default values
 //
 //
 export type ConnectionPointInitValueMapGeneric = {
@@ -124,20 +128,20 @@ export type ConnectionPointInitValueMapGeneric = {
 };
 export const ActorConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
 	[ActorConnectionPointType.BOOLEAN]: false,
-	[ActorConnectionPointType.COLOR]: [0, 0, 0],
+	[ActorConnectionPointType.COLOR]: new Color(),
 	[ActorConnectionPointType.FLOAT]: 0,
 	[ActorConnectionPointType.INTEGER]: 0,
 	[ActorConnectionPointType.OBJECT_3D]: '', // to reconsider
 	[ActorConnectionPointType.STRING]: '',
 	[ActorConnectionPointType.TRIGGER]: null,
-	[ActorConnectionPointType.VECTOR2]: [0, 0],
-	[ActorConnectionPointType.VECTOR3]: [0, 0, 0],
-	[ActorConnectionPointType.VECTOR4]: [0, 0, 0, 0],
+	[ActorConnectionPointType.VECTOR2]: new Vector2(),
+	[ActorConnectionPointType.VECTOR3]: new Vector3(),
+	[ActorConnectionPointType.VECTOR4]: new Vector4(),
 };
 
 //
 //
-// Map of GL Data type component counts
+// Map of Data type component counts
 //
 //
 export type ConnectionPointComponentsCountMapGeneric = {
@@ -156,12 +160,37 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.VECTOR4]: 4,
 };
 
+//
+//
+// Map of Actor Data type default values
+//
+//
+import {Object3D} from 'three/src/core/Object3D';
+import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
+import {CoreType} from '../../../../../core/Type';
+export type ReturnValueTypeByActorConnectionPointType = {
+	[ActorConnectionPointType.BOOLEAN]: boolean;
+	[ActorConnectionPointType.COLOR]: Color;
+	[ActorConnectionPointType.FLOAT]: number;
+	[ActorConnectionPointType.INTEGER]: number;
+	[ActorConnectionPointType.OBJECT_3D]: Object3D;
+	[ActorConnectionPointType.STRING]: string;
+	[ActorConnectionPointType.TRIGGER]: null;
+	[ActorConnectionPointType.VECTOR2]: Vector2;
+	[ActorConnectionPointType.VECTOR3]: Vector3;
+	[ActorConnectionPointType.VECTOR4]: Vector4;
+};
+
 export interface ActorConnectionPointData<T extends ActorConnectionPointType> {
 	name: string;
 	type: T;
 }
-interface ActorConnectionPointOptions {
+interface ActorConnectionPointOptions<T extends ActorConnectionPointType> {
 	inNodeDefinition?: boolean;
+	init_value?: ConnectionPointInitValueMapGeneric[T];
 }
 
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
@@ -169,19 +198,33 @@ import {ParamType} from '../../../../poly/ParamType';
 import {BaseConnectionPoint} from './_Base';
 export class ActorConnectionPoint<T extends ActorConnectionPointType> extends BaseConnectionPoint {
 	protected override _json: ActorConnectionPointData<T> | undefined;
+	protected override _init_value?: ConnectionPointInitValueMapGeneric[T];
 
-	constructor(protected override _name: string, protected override _type: T, _options?: ActorConnectionPointOptions) {
+	constructor(
+		protected override _name: string,
+		protected override _type: T,
+		_options?: ActorConnectionPointOptions<T>
+	) {
 		super(_name, _type);
 
 		if (_options) {
 			this._inNodeDefinition = _options.inNodeDefinition == true;
+			this._init_value = _options.init_value;
+		}
+		this._init_value = this._init_value || ActorConnectionPointInitValueMap[this._type];
+
+		if (CoreType.isColor(this._init_value) || CoreType.isVector(this._init_value)) {
+			this._init_value = this._init_value.clone() as ConnectionPointInitValueMapGeneric[T];
 		}
 	}
 	override type() {
 		return this._type;
 	}
-	get param_type() {
-		return ParamType.FLOAT; // should never be used anyway
+	get param_type(): IConnectionPointTypeToParamTypeMap[T] {
+		return ActorConnectionPointTypeToParamTypeMap[this._type];
+	}
+	override get init_value() {
+		return this._init_value;
 	}
 	override are_types_matched(srcType: string, destType: string): boolean {
 		return srcType == destType;

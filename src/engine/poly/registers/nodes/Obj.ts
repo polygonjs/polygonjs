@@ -23,6 +23,7 @@ import {PerspectiveCameraObjNode} from '../../../nodes/obj/PerspectiveCamera';
 import {CubeCameraObjNode} from '../../../nodes/obj/CubeCamera';
 
 // networks
+import {ActorsNetworkObjNode} from '../../../nodes/obj/ActorsNetwork';
 import {AnimationsNetworkObjNode} from '../../../nodes/obj/AnimationsNetwork';
 import {AudioNetworkObjNode} from '../../../nodes/obj/AudioNetwork';
 import {CopNetworkObjNode} from '../../../nodes/obj/CopNetwork';
@@ -52,6 +53,7 @@ export interface ObjNodeChildrenMap {
 	scene: SceneObjNode;
 	spotLight: SpotLightObjNode;
 	// networks
+	actorsNetwork: ActorsNetworkObjNode;
 	animationsNetwork: AnimationsNetworkObjNode;
 	audioNetwork: AudioNetworkObjNode;
 	copNetwork: CopNetworkObjNode;
@@ -62,6 +64,7 @@ export interface ObjNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
+import {ACTORS_IN_PROD} from './Actor';
 export class ObjRegister {
 	static run(poly: PolyEngine) {
 		// lights
@@ -90,6 +93,9 @@ export class ObjRegister {
 		poly.registerNode(CubeCameraObjNode, CATEGORY_OBJ.CAMERA);
 
 		// networks
+		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
+			poly.registerNode(ActorsNetworkObjNode, CATEGORY_OBJ.NETWORK);
+		}
 		poly.registerNode(AnimationsNetworkObjNode, CATEGORY_OBJ.NETWORK);
 		poly.registerNode(AudioNetworkObjNode, CATEGORY_OBJ.NETWORK);
 		poly.registerNode(CopNetworkObjNode, CATEGORY_OBJ.NETWORK);

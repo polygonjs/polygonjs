@@ -1,3 +1,4 @@
+import {Object3D} from 'three';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {PolyScene} from '../../engine/scene/PolyScene';
 
@@ -6,18 +7,28 @@ interface PropertyTargetOptions {
 		path: string;
 		relativeTo: BaseNodeType;
 	};
-	objectMask?: string;
+	object?: {
+		list?: Object3D[];
+		mask?: string;
+	};
 }
-export class PropertyTarget {
+export class AnimPropertyTarget {
 	constructor(private _scene: PolyScene, private _options: PropertyTargetOptions) {}
 
 	clone() {
-		const property_target = new PropertyTarget(this._scene, this._options);
+		const property_target = new AnimPropertyTarget(this._scene, this._options);
 		return property_target;
 	}
 
 	objects() {
-		const mask = this._options.objectMask;
+		const objectData = this._options.object;
+		if (!objectData) {
+			return;
+		}
+		if (objectData.list) {
+			return objectData.list;
+		}
+		const mask = objectData.mask;
 		if (!mask) {
 			return;
 		}

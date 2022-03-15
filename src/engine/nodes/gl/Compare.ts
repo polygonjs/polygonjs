@@ -88,7 +88,7 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 	override initializeNode() {
 		super.initializeNode();
 
-		this.io.connection_points.spare_params.set_inputless_param_names(['test']);
+		this.io.connection_points.spare_params.setInputlessParamNames(['test']);
 
 		this.io.connection_points.initializeNode();
 		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));

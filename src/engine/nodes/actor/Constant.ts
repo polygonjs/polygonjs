@@ -6,7 +6,11 @@
 
 import {TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ActorConnectionPointType, PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES} from '../utils/io/connections/Actor';
+import {
+	ActorConnectionPointType,
+	PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES,
+	ReturnValueTypeByActorConnectionPointType,
+} from '../utils/io/connections/Actor';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {BaseParamType} from '../../params/_Base';
 function typedVisibleOptions(type: ActorConnectionPointType, otherParamVal: PolyDictionary<number | boolean> = {}) {
@@ -47,11 +51,11 @@ export class ConstantActorNode extends TypedActorNode<ConstantActorParamsConfig>
 
 	private _currentConnectionType() {
 		if (this.pv.type == null) {
-			console.warn('constant actor node type if not valid');
+			console.warn(`${this.type()} actor node type not valid`);
 		}
 		const connection_type = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES[this.pv.type];
 		if (connection_type == null) {
-			console.warn('constant actor node type if not valid');
+			console.warn(`${this.type()} actor node type not valid`);
 		}
 		return connection_type;
 	}
@@ -87,5 +91,9 @@ export class ConstantActorNode extends TypedActorNode<ConstantActorParamsConfig>
 
 	setConstantType(type: ActorConnectionPointType) {
 		this.p.type.set(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type));
+	}
+
+	public override outputValue(inputName: string) {
+		return this.currentParam().value as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
 	}
 }

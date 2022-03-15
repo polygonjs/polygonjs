@@ -9,6 +9,7 @@ import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
 import {BaseConnectionPoint} from './connections/_Base';
 import {CoreType} from '../../../../core/Type';
+import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 type OnUpdateHook = () => void;
 
@@ -85,8 +86,24 @@ export class NodeInputsController<NC extends NodeContext> {
 		const connectionPointsToKeep =
 			this._named_input_connection_points?.filter((cp) => cp?.inNodeDefinition()) || [];
 
-		const allNewConnectionPoints = connectionPointsToKeep.concat(newConnectionPoints);
+		// ensure names are unique
+		const allNewConnectionPoints: ConnectionPointTypeMap[NC][] = ArrayUtils.shallowClone(connectionPointsToKeep);
+		const currentNames: Set<string> = new Set();
+		for (let connectionPointToKeep of connectionPointsToKeep) {
+			if (connectionPointToKeep) {
+				currentNames.add(connectionPointToKeep.name());
+			}
+		}
+		for (let newConnectionPoint of newConnectionPoints) {
+			if (newConnectionPoint) {
+				if (!currentNames.has(newConnectionPoint.name())) {
+					currentNames.add(newConnectionPoint.name());
+					allNewConnectionPoints.push(newConnectionPoint);
+				}
+			}
+		}
 
+		// disconnect if the number of inputs changes
 		const connections = this.node.io.connections.inputConnections();
 		if (connections) {
 			for (let connection of connections) {

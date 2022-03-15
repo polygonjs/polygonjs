@@ -5,7 +5,7 @@ import {Color} from 'three/src/math/Color';
 import {Quaternion} from 'three/src/math/Quaternion';
 import {Object3D} from 'three/src/core/Object3D';
 import {TimelineBuilder, Operation} from './TimelineBuilder';
-import {PropertyTarget} from './PropertyTarget';
+import {AnimPropertyTarget} from './PropertyTarget';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {BaseParamType} from '../../engine/params/_Base';
 import {ParamType} from '../../engine/poly/ParamType';
@@ -39,6 +39,7 @@ interface Object3DProps {
 }
 export interface RegisterOptions {
 	registerproperties?: boolean;
+	propertyTarget?: AnimPropertyTarget;
 }
 interface StartOptions extends RegisterOptions {
 	timelineBuilder: TimelineBuilder;
@@ -50,7 +51,7 @@ interface StartOptions extends RegisterOptions {
 interface AddToTimelineOptions extends RegisterOptions {
 	timelineBuilder: TimelineBuilder;
 	timeline: gsap.core.Timeline;
-	target: PropertyTarget;
+	target: AnimPropertyTarget;
 }
 
 const PROPERTY_SEPARATOR = '.';
@@ -97,7 +98,7 @@ export class TimelineBuilderProperty {
 	}
 
 	addToTimeline(options: AddToTimelineOptions) {
-		const {target} = options;
+		const target = options.propertyTarget || options.target;
 		const objects = target.objects();
 		const node = target.node();
 		this._printDebug(['addToTimeline', target, objects, node]);

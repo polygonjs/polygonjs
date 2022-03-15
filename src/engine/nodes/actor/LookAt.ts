@@ -1,12 +1,12 @@
 /**
- * Make object look at a position or target
+ * Make object look at a position
  *
  *
  */
 
 import {TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Object3D} from 'three/src/core/Object3D';
+// import {Object3D} from 'three/src/core/Object3D';
 class LookAtActorParamsConfig extends NodeParamsConfig {
 	/** @param targetPosition */
 	targetPosition = ParamConfig.VECTOR3([0, 0, 0]);
@@ -19,8 +19,8 @@ export class LookAtActorNode extends TypedActorNode<LookAtActorParamsConfig> {
 		return 'lookAt';
 	}
 
-	override processActor(object: Object3D) {
-		object.lookAt(this.pv.targetPosition);
-		object.updateMatrix();
-	}
+	// override processActor(object: Object3D) {
+	// 	object.lookAt(this.pv.targetPosition);
+	// 	object.updateMatrix();
+	// }
 }

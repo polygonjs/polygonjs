@@ -12,13 +12,14 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {AreaLightParamConfig} from '../../../core/lights/AreaLight';
 import {AreaLightSopOperation} from '../../operations/sop/AreaLight';
+import {LightType} from '../../poly/registers/nodes/types/Light';
 class AreaLightSopParamsConfig extends AreaLightParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new AreaLightSopParamsConfig();
 
 export class AreaLightSopNode extends TypedSopNode<AreaLightSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'areaLight';
+		return LightType.AREA;
 	}
 
 	override initializeNode() {

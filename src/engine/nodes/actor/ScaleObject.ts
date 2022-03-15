@@ -4,13 +4,12 @@
  *
  */
 
-import {TypedActorNode} from './_Base';
+import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Object3D} from 'three/src/core/Object3D';
 import {Vector3} from 'three/src/math/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
-import {CoreObject} from '../../../core/geometry/Object';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {ParamType} from '../../poly/ParamType';
 
 const CONNECTION_OPTIONS = {
 	inNodeDefinition: true,
@@ -18,12 +17,11 @@ const CONNECTION_OPTIONS = {
 
 class ScaleObjectActorParamsConfig extends NodeParamsConfig {
 	/** @param target scale */
-	s = ParamConfig.VECTOR3([1, 1, 1], {
-		expression: {forEntities: true},
-	});
+	s = ParamConfig.VECTOR3([1, 1, 1]);
 	/** @param target scale */
 	scale = ParamConfig.FLOAT(1, {
-		expression: {forEntities: true},
+		range: [0, 10],
+		rangeLocked: [false, false],
 	});
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
@@ -41,11 +39,7 @@ export class ScaleObjectActorNode extends TypedActorNode<ScaleObjectActorParamsC
 
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
-			new ActorConnectionPoint(
-				ActorConnectionPointType.TRIGGER,
-				ActorConnectionPointType.TRIGGER,
-				CONNECTION_OPTIONS
-			),
+			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new ActorConnectionPoint(
 				ActorConnectionPointType.OBJECT_3D,
 				ActorConnectionPointType.OBJECT_3D,
@@ -54,19 +48,20 @@ export class ScaleObjectActorNode extends TypedActorNode<ScaleObjectActorParamsC
 		]);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new ActorConnectionPoint(ActorConnectionPointType.TRIGGER, ActorConnectionPointType.TRIGGER),
+			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER),
 		]);
 	}
 
-	override processActor(object: Object3D) {
-		console.log('scale', this.p.s.y.expressionController, object);
-		this.p.s.y.expressionController?.computeExpressionForEntities([new CoreObject(object, 0)], (entity, val) => {
-			console.log(entity, val);
-			tmpS.copy(this.pv.s).multiplyScalar(this.pv.scale);
-			object.scale.lerp(tmpS, this.pv.lerp);
-			if (isBooleanTrue(this.pv.updateMatrix)) {
-				object.updateMatrix();
-			}
-		});
+	public override receiveTrigger(context: ActorNodeTriggerContext) {
+		const {Object3D} = context;
+		const s = this._inputValueFromParam<ParamType.VECTOR3>(this.p.s, context);
+		const scale = this._inputValueFromParam<ParamType.FLOAT>(this.p.scale, context);
+		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
+		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
+		tmpS.copy(s).multiplyScalar(scale);
+		Object3D.scale.lerp(tmpS, lerp);
+		if (isBooleanTrue(updateMatrix)) {
+			Object3D.updateMatrix();
+		}
 	}
 }

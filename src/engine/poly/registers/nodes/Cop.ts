@@ -19,6 +19,7 @@ import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
 import {VideoCopNode} from '../../../nodes/cop/Video';
 import {WebCamCopNode} from '../../../nodes/cop/WebCam';
 // networks
+import {ActorsNetworkCopNode} from '../../../nodes/cop/ActorsNetwork';
 import {AnimationsNetworkCopNode} from '../../../nodes/cop/AnimationsNetwork';
 import {AudioNetworkCopNode} from '../../../nodes/cop/AudioNetwork';
 import {EventsNetworkCopNode} from '../../../nodes/cop/EventsNetwork';
@@ -47,6 +48,7 @@ export interface CopNodeChildrenMap {
 	video: VideoCopNode;
 	webCam: WebCamCopNode;
 	// networks
+	actorsNetwork: ActorsNetworkCopNode;
 	animationsNetwork: AnimationsNetworkCopNode;
 	audioNetwork: AudioNetworkCopNode;
 	copNetwork: CopNetworkCopNode;
@@ -57,6 +59,7 @@ export interface CopNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
+import {ACTORS_IN_PROD} from './Actor';
 export class CopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AudioAnalyserCopNode, CATEGORY_COP.ADVANCED);
@@ -78,6 +81,9 @@ export class CopRegister {
 		poly.registerNode(VideoCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(WebCamCopNode, CATEGORY_COP.ADVANCED);
 		// networks
+		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
+			poly.registerNode(ActorsNetworkCopNode, CATEGORY_COP.NETWORK);
+		}
 		poly.registerNode(AnimationsNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(AudioNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(CopNetworkCopNode, CATEGORY_COP.NETWORK);

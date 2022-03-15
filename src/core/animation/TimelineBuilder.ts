@@ -1,5 +1,5 @@
 import {TimelineBuilderProperty, AnimPropertyTargetValue, RegisterOptions} from './TimelineBuilderProperty';
-import {PropertyTarget} from './PropertyTarget';
+import {AnimPropertyTarget} from './PropertyTarget';
 import {AnimationPosition} from './Position';
 import {AnimationUpdateCallback} from './UpdateCallback';
 import gsap from 'gsap';
@@ -21,7 +21,7 @@ export interface AnimationRepeatParams {
 export class TimelineBuilder {
 	private _timelineBuilders: TimelineBuilder[] = [];
 	private _parent: TimelineBuilder | undefined;
-	private _target: PropertyTarget | undefined;
+	private _target: AnimPropertyTarget | undefined;
 	private _duration: number = 1;
 	private _keyframes: RampValue | undefined;
 	private _easing: string | undefined;
@@ -58,7 +58,7 @@ export class TimelineBuilder {
 		return this._parent;
 	}
 
-	setTarget(target: PropertyTarget) {
+	setTarget(target: AnimPropertyTarget) {
 		this._target = target;
 		for (let builder of this._timelineBuilders) {
 			builder.setTarget(target);

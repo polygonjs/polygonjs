@@ -4,46 +4,70 @@
  *
  *
  */
-import {BaseNodeGlMathFunctionArg2GlNode} from './_BaseMathFunction';
-import {ThreeToGl} from '../../../core/ThreeToGl';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {BaseMathFunctionArg2ActorNode} from './_BaseMathFunction';
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {GlConnectionPointType} from '../utils/io/connections/Gl';
+import {ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
+import {ActorNodeTriggerContext} from './_Base';
 
 const DefaultValues: PolyDictionary<number> = {
 	value: 1,
 	mult: 1,
 };
 
-enum MultScalarGlNodeInputName {
+enum MultScalarActorNodeInputName {
 	VALUE = 'value',
 	MULT = 'mult',
 }
 
-export class MultScalarActorNode extends BaseNodeGlMathFunctionArg2GlNode {
+export class MultScalarActorNode extends BaseMathFunctionArg2ActorNode {
 	static override type() {
 		return 'multScalar';
 	}
 
-	protected override _expected_input_types() {
-		const type = this.io.connection_points.first_input_connection_type() || GlConnectionPointType.VEC3;
-		return [type, GlConnectionPointType.FLOAT];
+	protected override _expectedInputTypes() {
+		const type = this.io.connection_points.first_input_connection_type() || ActorConnectionPointType.VECTOR3;
+		return [type, ActorConnectionPointType.FLOAT];
 	}
-	protected override _gl_input_name(index: number) {
-		return [MultScalarGlNodeInputName.VALUE, MultScalarGlNodeInputName.MULT][index];
+	protected override _expectedInputName(index: number) {
+		return [MultScalarActorNodeInputName.VALUE, MultScalarActorNodeInputName.MULT][index];
 	}
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const value = ThreeToGl.any(this.variableForInput(MultScalarGlNodeInputName.VALUE));
-		const mult = ThreeToGl.any(this.variableForInput(MultScalarGlNodeInputName.MULT));
-
-		const gl_type = this._expected_output_types()[0];
-		const out_name = this.io.outputs.namedOutputConnectionPoints()[0].name();
-		const out = this.glVarName(out_name);
-		const body_line = `${gl_type} ${out} = (${mult}*${value})`;
-		shaders_collection_controller.addBodyLines(this, [body_line]);
+	private _tmpVec2 = new Vector2();
+	private _tmpVec3 = new Vector3();
+	private _tmpVec4 = new Vector4();
+	public override outputValue(inputName: string, context: ActorNodeTriggerContext) {
+		const vector = this._vectorInput(context);
+		if (!vector) {
+			return this._tmpVec3;
+		}
+		const mult = this._inputValue<ActorConnectionPointType.FLOAT>(MultScalarActorNodeInputName.MULT, context);
+		vector.multiplyScalar(mult);
+		return vector;
+	}
+	private _vectorInput(context: ActorNodeTriggerContext) {
+		const firstInputType = this._expectedInputTypes()[0];
+		switch (firstInputType) {
+			case ActorConnectionPointType.VECTOR2: {
+				return this._tmpVec2.copy(
+					this._inputValue<ActorConnectionPointType.VECTOR2>(MultScalarActorNodeInputName.VALUE, context)
+				);
+			}
+			case ActorConnectionPointType.VECTOR3: {
+				return this._tmpVec3.copy(
+					this._inputValue<ActorConnectionPointType.VECTOR3>(MultScalarActorNodeInputName.VALUE, context)
+				);
+			}
+			case ActorConnectionPointType.VECTOR4: {
+				return this._tmpVec4.copy(
+					this._inputValue<ActorConnectionPointType.VECTOR4>(MultScalarActorNodeInputName.VALUE, context)
+				);
+			}
+		}
 	}
 }

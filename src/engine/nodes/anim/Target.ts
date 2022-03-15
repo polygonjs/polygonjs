@@ -19,7 +19,7 @@ const TARGET_TYPE_NODE = ANIM_TARGET_TYPES.indexOf(AnimTargetNodeTargetType.NODE
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
-import {PropertyTarget} from '../../../core/animation/PropertyTarget';
+import {AnimPropertyTarget} from '../../../core/animation/PropertyTarget';
 import {AnimationUpdateCallback} from '../../../core/animation/UpdateCallback';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
@@ -80,7 +80,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 		const type = ANIM_TARGET_TYPES[this.pv.type];
 		switch (type) {
 			case AnimTargetNodeTargetType.NODE: {
-				return new PropertyTarget(this.scene(), {
+				return new AnimPropertyTarget(this.scene(), {
 					node: {
 						path: this.pv.nodePath.path(),
 						relativeTo: this,
@@ -88,7 +88,7 @@ export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 				});
 			}
 			case AnimTargetNodeTargetType.SCENE_GRAPH: {
-				return new PropertyTarget(this.scene(), {objectMask: this.pv.objectMask});
+				return new AnimPropertyTarget(this.scene(), {object: {mask: this.pv.objectMask}});
 			}
 		}
 		TypeAssert.unreachable(type);

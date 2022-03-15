@@ -37,6 +37,7 @@ import {VibratoAudioNode} from '../../../nodes/audio/Vibrato';
 import {VolumeAudioNode} from '../../../nodes/audio/Volume';
 import {WaveformAudioNode} from '../../../nodes/audio/Waveform';
 // networks
+import {ActorsNetworkAudioNode} from '../../../nodes/audio/ActorsNetwork';
 import {AnimationsNetworkAudioNode} from '../../../nodes/audio/AnimationsNetwork';
 import {AudioNetworkAudioNode} from '../../../nodes/audio/AudioNetwork';
 import {CopNetworkAudioNode} from '../../../nodes/audio/CopNetwork';
@@ -83,6 +84,7 @@ export interface AudioNodeChildrenMap {
 	volume: VolumeAudioNode;
 	waveform: WaveformAudioNode;
 	// networks
+	actorsNetwork: ActorsNetworkAudioNode;
 	animationsNetwork: AnimationsNetworkAudioNode;
 	audioNetwork: AudioNetworkAudioNode;
 	copNetwork: CopNetworkAudioNode;
@@ -93,6 +95,7 @@ export interface AudioNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
+import {ACTORS_IN_PROD} from './Actor';
 
 export class AudioRegister {
 	static run(poly: PolyEngine) {
@@ -133,6 +136,9 @@ export class AudioRegister {
 		poly.registerNode(VolumeAudioNode, CATEGORY_AUDIO.MISC);
 		poly.registerNode(WaveformAudioNode, CATEGORY_AUDIO.ANALYSER);
 		// networks
+		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
+			poly.registerNode(ActorsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
+		}
 		poly.registerNode(AnimationsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
 		poly.registerNode(AudioNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
 		poly.registerNode(CopNetworkAudioNode, CATEGORY_AUDIO.NETWORK);

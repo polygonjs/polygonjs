@@ -8,7 +8,6 @@ import {
 	SCENE_EVENT_PAUSE_EVENT_CONTEXT,
 	// SCENE_EVENT_TICK_EVENT_CONTEXT,
 } from './events/SceneEventsController';
-import {ActorsManager} from '../../../core/actor/ActorsManager';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
@@ -92,7 +91,9 @@ export class TimeController {
 		for (const callback of this._onBeforeTickCallbacks) {
 			callback(delta);
 		}
-		ActorsManager.tick(this.scene.threejsScene());
+		if (time > 0) {
+			this.scene.actorsManager.onEventTick();
+		}
 
 		if (updateFrame) {
 			const newFrame = Math.floor(this._timeUniform.value * FPS);
@@ -128,6 +129,10 @@ export class TimeController {
 			return;
 		}
 		this._frame = frame;
+		if (this._frame == TimeController.START_FRAME) {
+			this.scene.actorsManager.onEventSceneReset();
+		}
+
 		if (updateTime) {
 			this.setTime(this._frame / FPS, false);
 		}
@@ -190,6 +195,7 @@ export class TimeController {
 			return;
 		}
 		this._playing = true;
+		this.scene.actorsManager.onScenePlay();
 		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PLAY_EVENT_CONTEXT);
 		for (let callback of this._onPlayingStateChangeCallbacks) {

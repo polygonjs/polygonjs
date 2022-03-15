@@ -3,7 +3,6 @@ import {BaseInputEventNodeType, EventData} from '../../../nodes/event/_BaseInput
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
 import {Intersection} from 'three/src/core/Raycaster';
-import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 import {BaseViewerType} from '../../../viewers/_Base';
 
 interface EventContextValue {
@@ -19,16 +18,16 @@ export interface EventContext<E extends Event> {
 }
 
 export abstract class BaseSceneEventsController<E extends Event, T extends BaseInputEventNodeType> {
-	protected _nodesByGraphNodeId: Map<CoreGraphNodeId, T> = new Map();
+	protected _nodes: Set<T> = new Set();
 	protected _requireCanvasEventListeners: boolean = false;
 	constructor(private dispatcher: SceneEventsDispatcher) {}
 
 	registerNode(node: T) {
-		this._nodesByGraphNodeId.set(node.graphNodeId(), node);
+		this._nodes.add(node);
 		this.updateViewerEventListeners();
 	}
 	unregisterNode(node: T) {
-		this._nodesByGraphNodeId.delete(node.graphNodeId());
+		this._nodes.delete(node);
 		this.updateViewerEventListeners();
 	}
 	abstract type(): string;
@@ -49,7 +48,7 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 			}
 		}
 
-		this._nodesByGraphNodeId.forEach((node) => {
+		this._nodes.forEach((node) => {
 			node.processEvent(eventContext);
 		});
 	}
@@ -69,22 +68,35 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 	activeEventDatas() {
 		return this._activeEventDatas;
 	}
-	private _updateActiveEventTypes() {
-		const activeNodeEventTypesState: Map<EventData, boolean> = new Map();
+	private _resetActiveEventData() {
+		this._activeEventDatas.splice(0, this._activeEventDatas.length);
 		this._activeEventDataTypes.clear();
+		const persistentEventData = this._persistentEventData();
+		if (persistentEventData) {
+			this._storeEventData(persistentEventData);
+		}
+	}
+	protected _persistentEventData(): EventData | undefined {
+		return undefined;
+	}
+	private _storeEventData(eventData: EventData) {
+		this._activeEventDatas.push(eventData);
+		this._activeEventDataTypes.add(eventData.type);
+	}
+	private _updateActiveEventTypes() {
+		this._resetActiveEventData();
+		const activeNodeEventTypesState: Set<EventData> = new Set();
 
-		this._nodesByGraphNodeId.forEach((node) => {
+		this._nodes.forEach((node) => {
 			if (node.parent()) {
 				const nodeActiveEventDatas = node.activeEventDatas();
 				for (let data of nodeActiveEventDatas) {
-					activeNodeEventTypesState.set(data, true);
+					activeNodeEventTypesState.add(data);
 				}
 			}
 		});
-		this._activeEventDatas = [];
 		activeNodeEventTypesState.forEach((state, data) => {
-			this._activeEventDatas.push(data);
-			this._activeEventDataTypes.add(data.type);
+			this._storeEventData(data);
 		});
 	}
 }

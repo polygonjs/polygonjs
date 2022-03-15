@@ -23,6 +23,13 @@ import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
+const ATTRIBUTES_PREVIOUS_VALUES = 'attributesPreviousValues';
+
+type AttributeReactiveCallback<V extends AttribValue> = (newVal: V, oldVal: V) => void;
+interface AttributeProxy<V extends AttribValue> {
+	value: V;
+	previousValue: V;
+}
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -34,11 +41,16 @@ interface MaterialWithColor extends Material {
 // 	readonly isSkinnedMesh: boolean;
 // }
 
+type AttributeDictionary = PolyDictionary<AttribValue>;
+
 export class CoreObject extends CoreEntity {
 	constructor(private _object: Object3D, index: number) {
 		super(index);
 		if (this._object.userData[ATTRIBUTES] == null) {
 			this._object.userData[ATTRIBUTES] = {};
+		}
+		if (this._object.userData[ATTRIBUTES_PREVIOUS_VALUES] == null) {
+			this._object.userData[ATTRIBUTES_PREVIOUS_VALUES] = {};
 		}
 	}
 	dispose() {}
@@ -152,10 +164,17 @@ export class CoreObject extends CoreEntity {
 		}
 		this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
 	}
-
+	static attributesDictionary(object: Object3D) {
+		return object.userData[ATTRIBUTES] as AttributeDictionary;
+	}
+	static attributesPreviousValuesDictionary(object: Object3D) {
+		return object.userData[ATTRIBUTES_PREVIOUS_VALUES] as AttributeDictionary;
+	}
+	private _attributesDictionary() {
+		return CoreObject.attributesDictionary(this._object);
+	}
 	attributeNames(): string[] {
-		// TODO: to remove
-		return Object.keys(this._object.userData[ATTRIBUTES]);
+		return Object.keys(this._attributesDictionary());
 	}
 	attribNames(): string[] {
 		return this.attributeNames();
@@ -176,21 +195,22 @@ export class CoreObject extends CoreEntity {
 	}
 
 	deleteAttribute(name: string) {
-		delete this._object.userData[ATTRIBUTES][name];
+		delete this._attributesDictionary()[name];
 	}
 	static attribValue(
 		object: Object3D,
-		name: string,
+		attribName: string,
 		index: number = 0,
 		target?: Vector2 | Vector3 | Vector4
 	): AttribValue | undefined {
-		if (name === Attribute.OBJECT_INDEX) {
+		if (attribName === Attribute.OBJECT_INDEX) {
 			return index;
 		}
-		if (object.userData && object.userData[ATTRIBUTES]) {
-			const val = object.userData[ATTRIBUTES][name] as AttribValue;
+		if (object.userData) {
+			const dict = this.attributesDictionary(object);
+			const val = dict[attribName];
 			if (val == null) {
-				if (name == NAME_ATTR) {
+				if (attribName == NAME_ATTR) {
 					return object.name;
 				}
 			} else {
@@ -201,12 +221,17 @@ export class CoreObject extends CoreEntity {
 			}
 			return val;
 		}
-		if (name == NAME_ATTR) {
+		if (attribName == NAME_ATTR) {
 			return object.name;
 		}
 	}
-	static stringAttribValue(object: Object3D, name: string, index: number = 0): string | undefined {
-		const str = this.attribValue(object, name, index);
+	static previousAttribValue(object: Object3D, attribName: string): AttribValue | undefined {
+		const dict = this.attributesPreviousValuesDictionary(object);
+		return dict[attribName];
+	}
+
+	static stringAttribValue(object: Object3D, attribName: string, index: number = 0): string | undefined {
+		const str = this.attribValue(object, attribName, index);
 		if (str != null) {
 			if (CoreType.isString(str)) {
 				return str;
@@ -215,8 +240,45 @@ export class CoreObject extends CoreEntity {
 			}
 		}
 	}
-	attribValue(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {
-		return CoreObject.attribValue(this._object, name, this._index, target);
+	static makeAttribReactive<V extends AttribValue>(
+		object: Object3D,
+		attribName: string,
+		callback: AttributeReactiveCallback<V>
+	) {
+		const attributesDict = this.attributesDictionary(object);
+		const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
+		const proxy: AttributeProxy<V> = {
+			value: attributesDict[attribName] as V,
+			previousValue: attributesDict[attribName] as V,
+		};
+		Object.defineProperties(attributesDict, {
+			[attribName]: {
+				get: function () {
+					return proxy.value;
+				},
+				set: function (x) {
+					if (x != proxy.value) {
+						proxy.previousValue = proxy.value;
+						proxy.value = x;
+						callback(proxy.value, proxy.previousValue);
+					}
+					return proxy.value;
+				},
+				configurable: true,
+			},
+		});
+		Object.defineProperties(attributesPreviousValuesDict, {
+			[attribName]: {
+				get: function () {
+					return proxy.previousValue;
+				},
+				configurable: true,
+			},
+		});
+	}
+
+	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {
+		return CoreObject.attribValue(this._object, attribName, this._index, target);
 	}
 	stringAttribValue(name: string) {
 		return CoreObject.stringAttribValue(this._object, name, this._index);

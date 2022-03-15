@@ -12,6 +12,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {AreaLightParamConfig, CoreRectAreaLightHelper} from '../../../core/lights/AreaLight';
 import {AreaLightSopOperation} from '../../operations/sop/AreaLight';
 import {isBooleanTrue} from '../../../core/Type';
+import {LightType} from '../../poly/registers/nodes/types/Light';
 
 class AreaLightObjParamsConfig extends AreaLightParamConfig(TransformedParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new AreaLightObjParamsConfig();
@@ -19,7 +20,7 @@ const ParamsConfig = new AreaLightObjParamsConfig();
 export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight, AreaLightObjParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'areaLight';
+		return LightType.AREA;
 	}
 
 	private __operation__: AreaLightSopOperation | undefined;

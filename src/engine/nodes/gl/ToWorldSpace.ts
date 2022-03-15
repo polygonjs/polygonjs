@@ -37,7 +37,7 @@ export class ToWorldSpaceGlNode extends TypedGlNode<ToWorldSpaceGlParamsConfig> 
 	}
 
 	override initializeNode() {
-		this.io.connection_points.spare_params.set_inputless_param_names(['interpretation']);
+		this.io.connection_points.spare_params.setInputlessParamNames(['interpretation']);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);

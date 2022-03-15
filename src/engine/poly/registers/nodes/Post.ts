@@ -30,6 +30,7 @@ import {UpdateScenePostNode} from '../../../nodes/post/UpdateScene';
 import {VerticalBlurPostNode} from '../../../nodes/post/VerticalBlur';
 import {VignettePostNode} from '../../../nodes/post/Vignette';
 // networks
+import {ActorsNetworkPostNode} from '../../../nodes/post/ActorsNetwork';
 import {AnimationsNetworkPostNode} from '../../../nodes/post/AnimationsNetwork';
 import {AudioNetworkPostNode} from '../../../nodes/post/AudioNetwork';
 import {CopNetworkPostNode} from '../../../nodes/post/CopNetwork';
@@ -69,6 +70,7 @@ export interface PostNodeChildrenMap {
 	verticalBlur: VerticalBlurPostNode;
 	vignette: VignettePostNode;
 	// networks
+	actorsNetwork: ActorsNetworkPostNode;
 	animationsNetwork: AnimationsNetworkPostNode;
 	audioNetwork: AudioNetworkPostNode;
 	copNetwork: CopNetworkPostNode;
@@ -79,6 +81,7 @@ export interface PostNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
+import {ACTORS_IN_PROD} from './Actor';
 export class PostRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AdaptiveToneMappingPostNode, CATEGORY_POST.EFFECT);
@@ -111,6 +114,9 @@ export class PostRegister {
 		poly.registerNode(VerticalBlurPostNode, CATEGORY_POST.BLUR);
 		poly.registerNode(VignettePostNode, CATEGORY_POST.EFFECT);
 		// netwoks
+		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
+			poly.registerNode(ActorsNetworkPostNode, CATEGORY_POST.NETWORK);
+		}
 		poly.registerNode(AnimationsNetworkPostNode, CATEGORY_POST.NETWORK);
 		poly.registerNode(AudioNetworkPostNode, CATEGORY_POST.NETWORK);
 		poly.registerNode(CopNetworkPostNode, CATEGORY_POST.NETWORK);

@@ -61,7 +61,7 @@ export class TextureGlNode extends TypedGlNode<TextureGlParamsConfig> {
 			new GlConnectionPoint(TextureGlNode.OUTPUT_NAME, GlConnectionPointType.VEC4),
 		]);
 
-		this.io.connection_points.spare_params.set_inputless_param_names(['tblur', 'resolution']);
+		this.io.connection_points.spare_params.setInputlessParamNames(['tblur', 'resolution']);
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {

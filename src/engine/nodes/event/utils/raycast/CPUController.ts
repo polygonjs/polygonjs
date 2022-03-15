@@ -41,13 +41,13 @@ export class RaycastCPUController extends BaseRaycastController {
 		this.velocityController = new RaycastCPUVelocityController(this._node);
 	}
 
-	updateMouse(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>) {
-		const cameraNode = context.cameraNode;
+	updateMouse(eventContext: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>) {
+		const cameraNode = eventContext.cameraNode;
 		if (!cameraNode) {
 			return;
 		}
 
-		this._setCursor(context);
+		this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
 		if (isBooleanTrue(this._node.pv.tmouse)) {
 			this._cursor.toArray(this._cursorArray);
 			this._node.p.mouse.set(this._cursorArray);
@@ -55,10 +55,10 @@ export class RaycastCPUController extends BaseRaycastController {
 		// this._updateFromCursor(canvas);
 		this._raycaster.setFromCamera(this._cursor, cameraNode.object);
 	}
-	protected override _remapCursor() {
-		this._cursor.x = this._cursor.x * 2 - 1;
-		this._cursor.y = -this._cursor.y * 2 + 1;
-	}
+	// protected override _remapCursor() {
+	// 	this._cursor.x = this._cursor.x * 2 - 1;
+	// 	this._cursor.y = -this._cursor.y * 2 + 1;
+	// }
 	// private _updateFromCursor(canvas: HTMLCanvasElement){
 	// 	if (canvas.offsetWidth <= 0 || canvas.offsetHeight <= 0) {
 	// 		// the canvas can have a size of 0 if it has been removed from the scene
@@ -193,9 +193,9 @@ export class RaycastCPUController extends BaseRaycastController {
 	}
 
 	private _prepareRaycaster(context: EventContext<MouseEvent>) {
-		const points_param = this._raycaster.params.Points;
-		if (points_param) {
-			points_param.threshold = this._node.pv.pointsThreshold;
+		const pointsParam = this._raycaster.params.Points;
+		if (pointsParam) {
+			pointsParam.threshold = this._node.pv.pointsThreshold;
 		}
 
 		let cameraNode: Readonly<BaseCameraObjNodeType> | undefined = context.cameraNode;

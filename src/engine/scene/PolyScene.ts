@@ -1,3 +1,4 @@
+import {ActorsManager} from './utils/ActorsManager';
 import {CamerasController} from './utils/CamerasController';
 import {Cooker} from './utils/Cooker';
 import {SceneCookController} from './utils/CookController';
@@ -84,6 +85,11 @@ export class PolyScene {
 	// get cube_cameras_controller() {
 	// 	return (this._cube_cameras_controller = this._cube_cameras_controller || new CubeCamerasController(this));
 	// }
+	private _actorsManager: ActorsManager | undefined;
+	get actorsManager() {
+		return (this._actorsManager = this._actorsManager || new ActorsManager(this));
+	}
+
 	private _assets_controller: SceneAssetsController | undefined;
 	get assets() {
 		return (this._assets_controller = this._assets_controller || new SceneAssetsController());

@@ -81,7 +81,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		this.node.io.inputs.setNamedInputConnectionPoints(connection_points);
 	}
 
-	set_inputless_param_names(names: string[]) {
+	setInputlessParamNames(names: string[]) {
 		return (this._inputless_param_names = names);
 	}
 
@@ -109,6 +109,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		}
 
 		let i = 0;
+
 		for (let connection_point of this.node.io.inputs.namedInputConnectionPoints()) {
 			if (connection_point) {
 				const isConnected = this.node.io.inputs.input(i) != null;

@@ -36,6 +36,7 @@ import {TouchEventNode} from '../../../nodes/event/Touch';
 import {ViewerEventNode} from '../../../nodes/event/Viewer';
 import {WindowEventNode} from '../../../nodes/event/Window';
 // networks
+import {ActorsNetworkEventNode} from '../../../nodes/event/ActorsNetwork';
 import {AnimationsNetworkEventNode} from '../../../nodes/event/AnimationsNetwork';
 import {AudioNetworkEventNode} from '../../../nodes/event/AudioNetwork';
 import {CopNetworkEventNode} from '../../../nodes/event/CopNetwork';
@@ -82,6 +83,7 @@ export interface EventNodeChildrenMap {
 	window: WindowEventNode;
 
 	// networks
+	actorsNetwork: ActorsNetworkEventNode;
 	animationsNetwork: AnimationsNetworkEventNode;
 	audioNetwork: AudioNetworkEventNode;
 	copNetwork: CopNetworkEventNode;
@@ -92,6 +94,7 @@ export interface EventNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
+import {ACTORS_IN_PROD} from './Actor';
 export class EventRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AnimationEventNode, CATEGORY_EVENT.SCENE);
@@ -130,6 +133,9 @@ export class EventRegister {
 		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(WindowEventNode, CATEGORY_EVENT.INPUT);
 		// networks
+		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
+			poly.registerNode(ActorsNetworkEventNode, CATEGORY_EVENT.NETWORK);
+		}
 		poly.registerNode(AnimationsNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(AudioNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(CopNetworkEventNode, CATEGORY_EVENT.NETWORK);

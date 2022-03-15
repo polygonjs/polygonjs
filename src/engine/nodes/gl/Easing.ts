@@ -187,7 +187,7 @@ export class EasingGlNode extends TypedGlNode<EasingGlParamsConfig> {
 	override initializeNode() {
 		super.initializeNode();
 
-		this.io.connection_points.spare_params.set_inputless_param_names(['type']);
+		this.io.connection_points.spare_params.setInputlessParamNames(['type']);
 		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));

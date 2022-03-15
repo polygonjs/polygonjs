@@ -12,13 +12,14 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {PointLightParamConfig} from '../../../core/lights/PointLight';
 import {PointLightSopOperation} from '../../operations/sop/PointLight';
+import {LightType} from '../../poly/registers/nodes/types/Light';
 class PointLightSopParamsConfig extends PointLightParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new PointLightSopParamsConfig();
 
 export class PointLightSopNode extends TypedSopNode<PointLightSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'pointLight';
+		return LightType.POINT;
 	}
 
 	override initializeNode() {
