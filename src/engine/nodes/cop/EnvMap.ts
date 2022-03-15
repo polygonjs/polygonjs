@@ -50,10 +50,10 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 
 	override async cook(input_contents: Texture[]) {
 		const texture = input_contents[0];
-		this.convert_texture_to_env_map(texture);
+		this._convertTextureToEnvMap(texture);
 	}
 
-	private async convert_texture_to_env_map(input_texture: Texture) {
+	private async _convertTextureToEnvMap(input_texture: Texture) {
 		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
 		const renderer = await this._renderer_controller.renderer();
 
@@ -65,14 +65,14 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 			// texture.dispose();
 
 			if (isBooleanTrue(this.pv.useCameraRenderer)) {
-				this._set_mapping(exrCubeRenderTarget.texture);
+				this._setMapping(exrCubeRenderTarget.texture);
 				this.setTexture(exrCubeRenderTarget.texture);
 			} else {
 				this._data_texture_controller =
 					this._data_texture_controller ||
-					new DataTextureController(DataTextureControllerBufferType.Uint8Array);
+					new DataTextureController(DataTextureControllerBufferType.Uint16Array);
 				const texture = this._data_texture_controller.from_render_target(renderer, exrCubeRenderTarget);
-				this._set_mapping(texture);
+				this._setMapping(texture);
 				this.setTexture(texture);
 			}
 		} else {
@@ -80,7 +80,7 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 			this.cookController.endCook();
 		}
 	}
-	private _set_mapping(texture: Texture) {
+	private _setMapping(texture: Texture) {
 		if (MAP_MODES[this.pv.mode] == MapMode.REFLECTION) {
 			texture.mapping = CubeUVReflectionMapping;
 		} else {

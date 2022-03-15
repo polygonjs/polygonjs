@@ -8,6 +8,7 @@ import {CoreImage} from '../../../../core/Image';
 export enum DataTextureControllerBufferType {
 	Uint8Array = 'Uint8Array',
 	Uint8ClampedArray = 'Uint8ClampedArray',
+	Uint16Array = 'Uint16Array',
 	Float32Array = 'Float32Array',
 }
 
@@ -92,6 +93,8 @@ export class DataTextureController {
 				return new Uint8Array(size);
 			case DataTextureControllerBufferType.Uint8ClampedArray:
 				return new Uint8ClampedArray(size);
+			case DataTextureControllerBufferType.Uint16Array:
+				return new Uint16Array(size);
 			case DataTextureControllerBufferType.Float32Array:
 				return new Float32Array(size);
 		}

@@ -8,7 +8,3 @@ import {AllRegister} from './poly/registers/All';
 AllRegister.run();
 
 export {PolyScene, Poly, SceneJsonImporter, SceneDataManifestImporter, mountScene, ScenePlayerImporter};
-
-// const PolyScene = 'wherearemymodules';
-// const Poly = 'wherearemymodules 2';
-// export {PolyScene, Poly};
