@@ -57,6 +57,9 @@ export class TimeController {
 	time(): number {
 		return this._timeUniform.value;
 	}
+	timeDelta() {
+		return this._delta;
+	}
 	maxFrame() {
 		return this._maxFrame;
 	}
@@ -91,6 +94,7 @@ export class TimeController {
 		for (const callback of this._onBeforeTickCallbacks) {
 			callback(delta);
 		}
+		this.scene.actorsManager.runManualTrigger();
 		if (time > 0) {
 			this.scene.actorsManager.onEventTick();
 		}

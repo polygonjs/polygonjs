@@ -4,7 +4,7 @@
  *
  */
 
-import {ActorNodeTriggerContext, BaseActorNodeType, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
+import {TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
@@ -22,16 +22,5 @@ export class OnEventSceneResetActorNode extends TypedActorNode<OnEventSceneReset
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER),
 		]);
-	}
-
-	override runTrigger(context: ActorNodeTriggerContext) {
-		const triggerConnections = this.io.connections.outputConnectionsByOutputIndex(0);
-		if (!triggerConnections) {
-			return;
-		}
-		triggerConnections.forEach((triggerConnection) => {
-			const node = triggerConnection.node_dest as BaseActorNodeType;
-			node.receiveTrigger(context);
-		});
 	}
 }

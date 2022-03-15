@@ -4,7 +4,7 @@
  *
  */
 
-import {ActorNodeTriggerContext, BaseActorNodeType, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
+import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
@@ -73,18 +73,6 @@ export class OnObjectAttributeUpdatedActorNode extends TypedActorNode<OnObjectAt
 	}
 	attributeName() {
 		return this.pv.attribName;
-	}
-
-	override runTrigger(context: ActorNodeTriggerContext) {
-		const triggerConnections = this.io.connections.outputConnectionsByOutputIndex(0);
-		if (!triggerConnections) {
-			return;
-		}
-
-		triggerConnections.forEach((triggerConnection) => {
-			const node = triggerConnection.node_dest as BaseActorNodeType;
-			node.receiveTrigger(context);
-		});
 	}
 
 	public override outputValue(

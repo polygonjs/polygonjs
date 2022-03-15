@@ -33,6 +33,16 @@ export class HierarchyParentController {
 		}
 		return null;
 	}
+	findParent(callback: (parent: BaseNodeType) => boolean): BaseNodeType | null {
+		if (this._parent) {
+			if (callback(this._parent) == true) {
+				return this._parent;
+			} else {
+				return this._parent.parentController.findParent(callback);
+			}
+		}
+		return null;
+	}
 
 	path(relative_to_parent?: BaseNodeType): string {
 		const separator = CoreWalker.SEPARATOR;

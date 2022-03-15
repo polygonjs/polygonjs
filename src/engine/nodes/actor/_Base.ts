@@ -7,6 +7,7 @@ import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} fro
 import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../../params/types/ParamValuesTypeMap';
 import {ActorNodeParamConstructorMap} from './utils/ActorNodeInputParam';
+import {Poly} from '../../Poly';
 
 export interface ActorNodeTriggerContext {
 	Object3D: Object3D;
@@ -48,7 +49,30 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	}
 
 	public receiveTrigger(context: ActorNodeTriggerContext) {}
-	public runTrigger(context: ActorNodeTriggerContext) {}
+	runTrigger = Poly.playerMode() ? this._triggerConnectionForPlayer : this._triggerConnectionForEditor;
+	private _triggerConnectionForEditor(context: ActorNodeTriggerContext, outputIndex = 0) {
+		const triggerConnections = this.io.connections.outputConnectionsByOutputIndex(outputIndex);
+		if (!triggerConnections) {
+			return;
+		}
+		const dispatcher = this.scene().actorsManager.connectionTriggerDispatcher;
+		triggerConnections.forEach((triggerConnection) => {
+			dispatcher.dispatchTrigger(triggerConnection);
+			const node = triggerConnection.node_dest as BaseActorNodeType;
+			node.receiveTrigger(context);
+		});
+	}
+	private _triggerConnectionForPlayer(context: ActorNodeTriggerContext, outputIndex = 0) {
+		const triggerConnections = this.io.connections.outputConnectionsByOutputIndex(outputIndex);
+		if (!triggerConnections) {
+			return;
+		}
+		triggerConnections.forEach((triggerConnection) => {
+			const node = triggerConnection.node_dest as BaseActorNodeType;
+			node.receiveTrigger(context);
+		});
+	}
+
 	public outputValue(
 		inputName: string,
 		context: ActorNodeTriggerContext

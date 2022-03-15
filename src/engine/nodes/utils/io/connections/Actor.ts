@@ -5,6 +5,8 @@
 //
 
 export enum ActorConnectionPointType {
+	ANIMATION_MIXER = 'AnimationMixer',
+	ANIMATION_ACTION = 'AnimationAction',
 	BOOLEAN = 'boolean',
 	COLOR = 'color',
 	FLOAT = 'float',
@@ -54,6 +56,8 @@ export const PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnecti
 //
 type ConnectionPointTypeToParamTypeMapGeneric = {[key in ActorConnectionPointType]: ParamType};
 export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeToParamTypeMapGeneric {
+	[ActorConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON;
+	[ActorConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON;
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR;
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT;
@@ -66,6 +70,8 @@ export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeT
 	[ActorConnectionPointType.VECTOR4]: ParamType.VECTOR4;
 }
 export const ActorConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParamTypeMap = {
+	[ActorConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON,
+	[ActorConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON,
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR,
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT,
@@ -127,6 +133,8 @@ export type ConnectionPointInitValueMapGeneric = {
 	[key in ActorConnectionPointType]: ParamInitValuesTypeMap[IConnectionPointTypeToParamTypeMap[key]];
 };
 export const ActorConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
+	[ActorConnectionPointType.ANIMATION_MIXER]: null,
+	[ActorConnectionPointType.ANIMATION_ACTION]: null,
 	[ActorConnectionPointType.BOOLEAN]: false,
 	[ActorConnectionPointType.COLOR]: new Color(),
 	[ActorConnectionPointType.FLOAT]: 0,
@@ -148,6 +156,8 @@ export type ConnectionPointComponentsCountMapGeneric = {
 	[key in ActorConnectionPointType]: number;
 };
 export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCountMapGeneric = {
+	[ActorConnectionPointType.ANIMATION_MIXER]: 1,
+	[ActorConnectionPointType.ANIMATION_ACTION]: 1,
 	[ActorConnectionPointType.BOOLEAN]: 1,
 	[ActorConnectionPointType.COLOR]: 3,
 	[ActorConnectionPointType.FLOAT]: 1,
@@ -171,7 +181,11 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {CoreType} from '../../../../../core/Type';
+import {AnimationAction} from 'three/src/animation/AnimationAction';
+import {AnimationMixer} from 'three/src/animation/AnimationMixer';
 export type ReturnValueTypeByActorConnectionPointType = {
+	[ActorConnectionPointType.ANIMATION_MIXER]: AnimationMixer;
+	[ActorConnectionPointType.ANIMATION_ACTION]: AnimationAction;
 	[ActorConnectionPointType.BOOLEAN]: boolean;
 	[ActorConnectionPointType.COLOR]: Color;
 	[ActorConnectionPointType.FLOAT]: number;

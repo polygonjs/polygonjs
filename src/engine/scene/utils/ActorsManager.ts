@@ -8,6 +8,8 @@ import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {PolyScene} from '../PolyScene';
 import {CoreObject} from '../../../core/geometry/Object';
 import {MapUtils} from '../../../core/MapUtils';
+import {SceneManualActorTriggersController} from './actors/ManualActorTriggersController';
+import {SceneConnectionTriggerDispatcher} from './actors/ConnectionTriggerDispatcher';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -42,6 +44,8 @@ export class ActorsManager {
 	constructor(private _scene: PolyScene) {}
 
 	private _actorNodes: Set<ActorBuilderNode> = new Set();
+	private _manualActorTriggers: SceneManualActorTriggersController | undefined;
+	private _connectionTriggerDispatcher: SceneConnectionTriggerDispatcher | undefined;
 
 	assignActorBuilder(object: Object3D, node: ActorBuilderNode) {
 		object.userData[ACTOR_BUILDER_NODE_IDS_KEY] = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] || [];
@@ -49,6 +53,41 @@ export class ActorsManager {
 
 		this._actorNodes.add(node);
 		// this._findSceneEvents(node);
+	}
+
+	get manualActorTriggers() {
+		return (this._manualActorTriggers = this._manualActorTriggers || new SceneManualActorTriggersController(this));
+	}
+	get connectionTriggerDispatcher() {
+		return (this._connectionTriggerDispatcher =
+			this._connectionTriggerDispatcher || new SceneConnectionTriggerDispatcher(this));
+	}
+
+	runManualTrigger() {
+		if (!this._manualActorTriggers) {
+			return;
+		}
+		if (!this._manualActorTriggers.triggered()) {
+			return;
+		}
+		const triggerNode = this._manualActorTriggers.triggeredNode();
+		const triggeredNodeParent = this._manualActorTriggers.triggeredNodeParent();
+		if (!(triggerNode && triggeredNodeParent)) {
+			return;
+		}
+		this._manualActorTriggers.reset();
+
+		const nodeParentId = triggeredNodeParent.graphNodeId();
+		this._scene.threejsScene().traverse((object) => {
+			const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
+			if (!nodeIds) {
+				return;
+			}
+			if (!nodeIds.includes(nodeParentId)) {
+				return;
+			}
+			triggerNode.runTrigger({Object3D: object});
+		});
 	}
 
 	onEventTick() {

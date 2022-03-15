@@ -4,7 +4,7 @@
  *
  */
 
-import {ActorNodeTriggerContext, BaseActorNodeType, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
+import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
@@ -93,17 +93,6 @@ export class SetHoveredStateActorNode extends TypedActorNode<SetHoveredStateActo
 		} else {
 			dict[ObjectAttribute.HOVERED] = false;
 		}
-	}
-
-	override runTrigger(context: ActorNodeTriggerContext) {
-		const triggerConnections = this.io.connections.outputConnectionsByOutputIndex(0);
-		if (!triggerConnections) {
-			return;
-		}
-		triggerConnections.forEach((triggerConnection) => {
-			const node = triggerConnection.node_dest as BaseActorNodeType;
-			node.receiveTrigger(context);
-		});
 	}
 
 	static PARAM_CALLBACK_updateRaycast(node: SetHoveredStateActorNode) {

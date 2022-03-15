@@ -59,7 +59,7 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 		if (isBooleanTrue(this.pv.useChildNodes)) {
 			return this;
 		} else {
-			return this.pv.node.nodeWithContext(NodeContext.ACTOR, this.states?.error) as ActorBuilderNode | undefined;
+			return this.pv.node.node() as ActorBuilderNode | undefined;
 		}
 	}
 

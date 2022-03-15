@@ -1,3 +1,4 @@
+import {EventDispatcher} from 'three/src/core/EventDispatcher';
 import {BaseNodeByContextMap, NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
@@ -5,6 +6,10 @@ import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 interface DisconnectionOptions {
 	setInput?: boolean;
 }
+export const NODE_CONNECTION_TRIGGERED_EVENT_NAME = 'triggered';
+export const NODE_CONNECTION_UNTRIGGERED_EVENT_NAME = 'untriggered';
+export const NODE_CONNECTION_TRIGGERED_EVENT = {type: NODE_CONNECTION_TRIGGERED_EVENT_NAME};
+export const NODE_CONNECTION_UNTRIGGERED_EVENT = {type: NODE_CONNECTION_UNTRIGGERED_EVENT_NAME};
 
 export class TypedNodeConnection<NC extends NodeContext> {
 	private static _next_id: number = 0;
@@ -66,5 +71,14 @@ export class TypedNodeConnection<NC extends NodeContext> {
 		if (options.setInput === true) {
 			this._node_dest.io.inputs.setInput(this._input_index, null);
 		}
+	}
+
+	// observer
+	private __eventDispatcher: EventDispatcher | undefined;
+	_eventDispatcher() {
+		return this.__eventDispatcher;
+	}
+	eventDispatcher() {
+		return (this.__eventDispatcher = this.__eventDispatcher || new EventDispatcher());
 	}
 }

@@ -56,11 +56,4 @@ export class CopRendererController {
 		// renderer.setPixelRatio(prev_pixel_aspect_ratio);
 		// renderer.autoClear = prev_auto_clear;
 	}
-
-	// private _createRenderer() {
-	// 	const renderer = Poly.renderersController.createWebGLRenderer({});
-	// 	renderer.toneMapping = LinearToneMapping;
-	// 	renderer.setPixelRatio(1);
-	// 	return renderer;
-	// }
 }

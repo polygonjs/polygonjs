@@ -54,8 +54,6 @@ export class BaseCodeSopProcessor {
 	}
 }
 
-// type EvaluatedFunction = (base_processor_class: typeof BaseCodeSopProcessor) => typeof BaseCodeSopProcessor | undefined;
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CodeSopParamsConfig extends NodeParamsConfig {
 	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.TS, {
