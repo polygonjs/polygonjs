@@ -3,6 +3,7 @@ const NETWORK = 'networks';
 export const CATEGORY_ACTOR = {
 	ADVANCED: 'advanced',
 	ANIMATION: 'animation',
+	CONVERSION: 'conversion',
 	EVENTS: 'events',
 	GET: 'get',
 	LOGIC: 'logic',

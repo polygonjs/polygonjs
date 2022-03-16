@@ -10,6 +10,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
+import {EventInputType} from '../../poly/registers/nodes/types/Event';
 class TouchEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -40,7 +41,7 @@ const ParamsConfig = new TouchEventParamsConfig();
 export class TouchEventNode extends TypedInputEventNode<TouchEventParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'touch';
+		return EventInputType.TOUCH;
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_TOUCH_EVENT_TYPES.map((n) => `${n}`));

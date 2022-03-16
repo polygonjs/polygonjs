@@ -8,6 +8,7 @@ import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../../params/types/ParamValuesTypeMap';
 import {ActorNodeParamConstructorMap} from './utils/ActorNodeInputParam';
 import {Poly} from '../../Poly';
+import {CoreType} from '../../../core/Type';
 
 export interface ActorNodeTriggerContext {
 	Object3D: Object3D;
@@ -102,10 +103,12 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		return -1 as ParamValuesTypeMap[T];
 	}
 	protected _inputValue<T extends ActorConnectionPointType>(
-		inputName: string,
+		inputNameOrIndex: string | number,
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[T] {
-		const inputIndex = this.io.inputs.getInputIndex(inputName);
+		const inputIndex = CoreType.isNumber(inputNameOrIndex)
+			? inputNameOrIndex
+			: this.io.inputs.getInputIndex(inputNameOrIndex);
 		const connection = this.io.connections.inputConnection(inputIndex);
 		if (connection) {
 			const inputNode = (<unknown>connection.node_src) as BaseActorNodeType;
@@ -118,8 +121,8 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 				// }
 			}
 		} else {
-			if (this.params.has(inputName)) {
-				return this.params.get(inputName)!.value as ReturnValueTypeByActorConnectionPointType[T];
+			if (CoreType.isString(inputNameOrIndex) && this.params.has(inputNameOrIndex)) {
+				return this.params.get(inputNameOrIndex)!.value as ReturnValueTypeByActorConnectionPointType[T];
 			}
 		}
 		return -1 as ReturnValueTypeByActorConnectionPointType[T];

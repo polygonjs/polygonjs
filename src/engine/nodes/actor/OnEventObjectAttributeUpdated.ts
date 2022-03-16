@@ -17,7 +17,7 @@ import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {CoreObject} from '../../../core/geometry/Object';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-class OnObjectAttributeUpdatedActorParamsConfig extends NodeParamsConfig {
+class OnEventObjectAttributeUpdatedActorParamsConfig extends NodeParamsConfig {
 	attribName = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(ActorConnectionPointType.FLOAT), {
 		menu: {
@@ -27,12 +27,12 @@ class OnObjectAttributeUpdatedActorParamsConfig extends NodeParamsConfig {
 		},
 	});
 }
-const ParamsConfig = new OnObjectAttributeUpdatedActorParamsConfig();
+const ParamsConfig = new OnEventObjectAttributeUpdatedActorParamsConfig();
 
-export class OnObjectAttributeUpdatedActorNode extends TypedActorNode<OnObjectAttributeUpdatedActorParamsConfig> {
+export class OnEventObjectAttributeUpdatedActorNode extends TypedActorNode<OnEventObjectAttributeUpdatedActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return ActorType.ON_OBJECT_ATTRIBUTE_UPDATED;
+		return ActorType.ON_EVENT_OBJECT_ATTRIBUTE_UPDATED;
 	}
 
 	static readonly OUTPUT_PREV_VAL = 'previousValue';
@@ -47,8 +47,8 @@ export class OnObjectAttributeUpdatedActorNode extends TypedActorNode<OnObjectAt
 			(index: number) =>
 				[
 					TRIGGER_CONNECTION_NAME,
-					OnObjectAttributeUpdatedActorNode.OUTPUT_NEW_VAL,
-					OnObjectAttributeUpdatedActorNode.OUTPUT_PREV_VAL,
+					OnEventObjectAttributeUpdatedActorNode.OUTPUT_NEW_VAL,
+					OnEventObjectAttributeUpdatedActorNode.OUTPUT_PREV_VAL,
 				][index]
 		);
 		this.io.connection_points.set_expected_output_types_function(() => [
@@ -79,13 +79,13 @@ export class OnObjectAttributeUpdatedActorNode extends TypedActorNode<OnObjectAt
 		outputName: string
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
 		switch (outputName) {
-			case OnObjectAttributeUpdatedActorNode.OUTPUT_NEW_VAL: {
+			case OnEventObjectAttributeUpdatedActorNode.OUTPUT_NEW_VAL: {
 				const val = CoreObject.attribValue(context.Object3D, this.attributeName());
 				if (val != null) {
 					return val as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
 				}
 			}
-			case OnObjectAttributeUpdatedActorNode.OUTPUT_PREV_VAL: {
+			case OnEventObjectAttributeUpdatedActorNode.OUTPUT_PREV_VAL: {
 				const val = CoreObject.previousAttribValue(context.Object3D, this.attributeName());
 				if (val != null) {
 					return val as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];

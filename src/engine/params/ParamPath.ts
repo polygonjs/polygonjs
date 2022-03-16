@@ -65,9 +65,9 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 		const pathNonEmpty = path != null && path !== '';
 
 		this.scene().referencesController.resetReferenceFromParam(this); // must be before decomposed path is changed
-		this.decomposed_path.reset();
+		this.decomposedPath.reset();
 		if (pathNonEmpty) {
-			param = CoreWalker.findParam(this.node, path, this.decomposed_path);
+			param = CoreWalker.findParam(this.node, path, this.decomposedPath);
 		}
 
 		const currentFoundEntity = this._value.param();
@@ -154,8 +154,8 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	// }
 
 	notifyPathRebuildRequired(param: BaseParamType) {
-		this.decomposed_path.update_from_name_change(param);
-		const new_path = this.decomposed_path.to_path();
+		this.decomposedPath.update_from_name_change(param);
+		const new_path = this.decomposedPath.to_path();
 		this.set(new_path);
 	}
 	notifyTargetParamOwnerParamsUpdated(node: BaseNodeType) {

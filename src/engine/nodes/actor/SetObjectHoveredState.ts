@@ -4,7 +4,7 @@
  *
  */
 
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
+import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
@@ -18,6 +18,7 @@ import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/Type';
 import {CoreObject} from '../../../core/geometry/Object';
 import {ObjectAttribute} from '../../../core/geometry/Attribute';
+import {BaseUserInputActorNode} from './_BaseUserInput';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -45,7 +46,7 @@ class SetObjectHoveredStateActorParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SetObjectHoveredStateActorParamsConfig();
 
-export class SetObjectHoveredStateActorNode extends TypedActorNode<SetObjectHoveredStateActorParamsConfig> {
+export class SetObjectHoveredStateActorNode extends BaseUserInputActorNode<SetObjectHoveredStateActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	private _raycaster = createRaycaster();
 	private _raycastNeedsUpdated = true;
@@ -54,8 +55,12 @@ export class SetObjectHoveredStateActorNode extends TypedActorNode<SetObjectHove
 	static override type() {
 		return ActorType.SET_OBJECT_HOVERED_STATE;
 	}
+	userInputEventNames() {
+		return ['pointermove'];
+	}
 
 	override initializeNode() {
+		super.initializeNode();
 		this.io.inputs.setNamedInputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 		]);
@@ -64,9 +69,9 @@ export class SetObjectHoveredStateActorNode extends TypedActorNode<SetObjectHove
 
 	public override receiveTrigger(context: ActorNodeTriggerContext): void {
 		const pointerEventsController = this.scene().eventsDispatcher.pointerEventsController;
-		const cursor = pointerEventsController.cursor();
 		const camera = pointerEventsController.camera();
 		if (!camera) {
+			// console.warn('no camera found', this.path(), pointerEventsController.cursor());
 			return;
 		}
 
@@ -74,6 +79,7 @@ export class SetObjectHoveredStateActorNode extends TypedActorNode<SetObjectHove
 		if (this._raycastUpdatedOnFrame != frame) {
 			this._raycastUpdatedOnFrame = frame;
 			this._updateRaycast();
+			const cursor = pointerEventsController.cursor();
 			this._raycaster.setFromCamera(cursor, camera);
 		}
 

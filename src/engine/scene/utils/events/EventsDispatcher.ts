@@ -1,12 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {PolyScene} from '../../PolyScene';
 import {BaseEventNodeType} from '../../../nodes/event/_Base';
-import {MouseEventNode} from '../../../nodes/event/Mouse';
-import {PointerEventNode} from '../../../nodes/event/Pointer';
-import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
-import {WindowEventNode} from '../../../nodes/event/Window';
 import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
-
 import {BaseSceneEventsController, BaseSceneEventsControllerClass} from './_BaseEventsController';
 import {SceneEventsController} from './SceneEventsController';
 import {DragEventsController} from './DragEventsController';
@@ -15,10 +10,11 @@ import {MouseEventsController} from './MouseEventsController';
 import {PointerEventsController} from './PointerEventsController';
 import {WindowEventsController} from './WindowEventsController';
 import {TouchEventsController} from './TouchEventsController';
-import {DragEventNode} from '../../../nodes/event/Drag';
-import {TouchEventNode} from '../../../nodes/event/Touch';
 
 import {SceneConnectionTriggerDispatcher} from './ConnectionTriggerDispatcher';
+import {EventInputType} from '../../../poly/registers/nodes/types/Event';
+import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
+import {ActorType} from '../../../poly/registers/nodes/types/Actor';
 
 export class SceneEventsDispatcher {
 	public readonly sceneEventsController = new SceneEventsController();
@@ -31,20 +27,33 @@ export class SceneEventsDispatcher {
 	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
-	registerEventNode(node: BaseInputEventNodeType) {
-		const controller = this._findOrCreateControllerForNode(node);
+	registerActorNode(node: BaseUserInputActorNodeType) {
+		const controller = this._findOrCreateControllerForActorNode(node);
 		if (controller) {
-			controller.registerNode(node);
+			controller.registerActorNode(node);
+		}
+	}
+	unregisterActorNode(node: BaseUserInputActorNodeType) {
+		const controller = this._findOrCreateControllerForActorNode(node);
+		if (controller) {
+			controller.unregisterActorNode(node);
+		}
+	}
+
+	registerEventNode(node: BaseInputEventNodeType) {
+		const controller = this._findOrCreateControllerForEventNode(node);
+		if (controller) {
+			controller.registerEventNode(node);
 		}
 	}
 	unregisterEventNode(node: BaseInputEventNodeType) {
-		const controller = this._findOrCreateControllerForNode(node);
+		const controller = this._findOrCreateControllerForEventNode(node);
 		if (controller) {
-			controller.unregisterNode(node);
+			controller.unregisterEventNode(node);
 		}
 	}
 	updateViewerEventListeners(node: BaseInputEventNodeType) {
-		const controller = this._findOrCreateControllerForNode(node);
+		const controller = this._findOrCreateControllerForEventNode(node);
 		if (controller) {
 			controller.updateViewerEventListeners();
 		}
@@ -67,22 +76,30 @@ export class SceneEventsDispatcher {
 	// 	}
 	// }
 
-	private _findOrCreateControllerForNode<T extends BaseEventNodeType>(
+	private _findOrCreateControllerForEventNode<T extends BaseEventNodeType>(
 		node: T
 	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
 		switch (node.type()) {
-			case KeyboardEventNode.type():
+			case EventInputType.KEYBOARD:
 				return this.keyboardEventsController;
-			case MouseEventNode.type():
+			case EventInputType.MOUSE:
 				return this.mouseEventsController;
-			case DragEventNode.type():
+			case EventInputType.DRAG:
 				return this.dragEventsController;
-			case PointerEventNode.type():
+			case EventInputType.POINTER:
 				return this.pointerEventsController;
-			case TouchEventNode.type():
+			case EventInputType.TOUCH:
 				return this.touchEventsController;
-			case WindowEventNode.type():
+			case EventInputType.WINDOW:
 				return this.windowEventsController;
+		}
+	}
+	private _findOrCreateControllerForActorNode<T extends BaseUserInputActorNodeType>(
+		node: T
+	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
+		switch (node.type()) {
+			case ActorType.SET_OBJECT_HOVERED_STATE:
+				return this.pointerEventsController;
 		}
 	}
 

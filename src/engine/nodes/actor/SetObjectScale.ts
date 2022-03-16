@@ -1,5 +1,5 @@
 /**
- * Update the object's scale
+ * Update the object scale
  *
  *
  */
@@ -36,7 +36,7 @@ const tmpS = new Vector3();
 export class SetObjectScaleActorNode extends TypedActorNode<SetObjectScaleActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'scaleObject';
+		return 'setObjectScale';
 	}
 
 	override initializeNode() {
@@ -65,5 +65,6 @@ export class SetObjectScaleActorNode extends TypedActorNode<SetObjectScaleActorP
 		if (isBooleanTrue(updateMatrix)) {
 			Object3D.updateMatrix();
 		}
+		this.runTrigger(context);
 	}
 }

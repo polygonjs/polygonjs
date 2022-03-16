@@ -9,6 +9,7 @@ import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
+import {EventInputType} from '../../poly/registers/nodes/types/Event';
 class WindowEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -29,7 +30,7 @@ const ParamsConfig = new WindowEventParamsConfig();
 export class WindowEventNode extends TypedInputEventNode<WindowEventParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'window';
+		return EventInputType.WINDOW;
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_WINDOW_EVENT_TYPES.map((n) => `${n}`));

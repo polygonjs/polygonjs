@@ -71,12 +71,12 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		}
 		const path = this._raw_input;
 		let node: BaseNodeType | null = null;
-		const path_non_empty = path != null && path !== '';
+		const pathNonEmpty = path != null && path !== '';
 
 		this.scene().referencesController.resetReferenceFromParam(this); // must be before decomposed path is changed
-		this.decomposed_path.reset();
-		if (path_non_empty) {
-			node = CoreWalker.findNode(this.node, path, this.decomposed_path);
+		this.decomposedPath.reset();
+		if (pathNonEmpty) {
+			node = CoreWalker.findNode(this.node, path, this.decomposedPath);
 		}
 
 		const currentFoundEntity = this._value.node();
@@ -112,8 +112,8 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 
 			this.options.executeCallback();
 		}
-		if (path_non_empty && !node && this.scene().loadingController.loaded()) {
-			if (path_non_empty) {
+		if (pathNonEmpty && !node && this.scene().loadingController.loaded()) {
+			if (pathNonEmpty) {
 				this.states.error.set(`no node found at path '${path}'`);
 			}
 		}
@@ -148,12 +148,12 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		return this.options.nodeSelectionContext();
 	}
 	private _isNodeExpectedContext(node: BaseNodeType) {
-		const expected_context = this._expectedContext();
-		if (expected_context == null) {
+		const expectedContext = this._expectedContext();
+		if (expectedContext == null) {
 			return true;
 		}
-		const node_context = node.parent()?.childrenController?.context;
-		return expected_context == node_context;
+		const nodeContext = node.parent()?.childrenController?.context;
+		return expectedContext == nodeContext;
 	}
 	private _expectedNodeTypes() {
 		return this.options.nodeSelectionTypes();
@@ -168,8 +168,8 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	}
 
 	notifyPathRebuildRequired(node: BaseNodeType) {
-		this.decomposed_path.update_from_name_change(node);
-		const newPath = this.decomposed_path.to_path();
+		this.decomposedPath.update_from_name_change(node);
+		const newPath = this.decomposedPath.to_path();
 		this.set(newPath);
 	}
 	notifyTargetParamOwnerParamsUpdated(node: BaseNodeType) {

@@ -11,6 +11,7 @@ export enum ActorConnectionPointType {
 	COLOR = 'color',
 	FLOAT = 'float',
 	INTEGER = 'integer',
+	MATERIAL = 'Material',
 	OBJECT_3D = 'Object3D',
 	STRING = 'string',
 	TRIGGER = 'trigger',
@@ -18,6 +19,13 @@ export enum ActorConnectionPointType {
 	VECTOR3 = 'Vector3',
 	VECTOR4 = 'Vector4',
 }
+
+export const PRIMITIVE_ACTOR_CONNECTION_TYPES = [
+	ActorConnectionPointType.BOOLEAN,
+	ActorConnectionPointType.FLOAT,
+	ActorConnectionPointType.INTEGER,
+	ActorConnectionPointType.STRING,
+];
 
 //
 //
@@ -62,7 +70,8 @@ export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeT
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR;
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT;
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER;
-	[ActorConnectionPointType.OBJECT_3D]: ParamType.STRING; // to reconsider
+	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON; //
+	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON; //
 	[ActorConnectionPointType.STRING]: ParamType.STRING;
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON;
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2;
@@ -76,7 +85,8 @@ export const ActorConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParam
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR,
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT,
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER,
-	[ActorConnectionPointType.OBJECT_3D]: ParamType.STRING, // to reconsider
+	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON,
+	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON, // to reconsider
 	[ActorConnectionPointType.STRING]: ParamType.STRING,
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON,
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2,
@@ -94,34 +104,33 @@ ActorConnectionPointTypeToParamTypeMap[ActorConnectionPointType.BOOLEAN];
 type ActorParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: ActorConnectionPointType | undefined};
 export interface IActorParamTypeToConnectionPointTypeMap extends ActorParamTypeToConnectionPointTypeMapGeneric {
 	[ParamType.BOOLEAN]: ActorConnectionPointType.BOOLEAN;
+	[ParamType.BUTTON]: undefined;
 	[ParamType.COLOR]: ActorConnectionPointType.COLOR;
 	[ParamType.FLOAT]: ActorConnectionPointType.FLOAT;
-	[ParamType.INTEGER]: ActorConnectionPointType.INTEGER;
 	[ParamType.FOLDER]: undefined;
-	[ParamType.VECTOR2]: ActorConnectionPointType.VECTOR2;
-	[ParamType.VECTOR3]: ActorConnectionPointType.VECTOR3;
-	[ParamType.VECTOR4]: ActorConnectionPointType.VECTOR4;
-	[ParamType.BUTTON]: undefined;
+	[ParamType.INTEGER]: ActorConnectionPointType.INTEGER;
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
 	[ParamType.STRING]: undefined;
+	[ParamType.VECTOR2]: ActorConnectionPointType.VECTOR2;
+	[ParamType.VECTOR3]: ActorConnectionPointType.VECTOR3;
+	[ParamType.VECTOR4]: ActorConnectionPointType.VECTOR4;
 }
 export const ActorParamTypeToConnectionPointTypeMap: IActorParamTypeToConnectionPointTypeMap = {
 	[ParamType.BOOLEAN]: ActorConnectionPointType.BOOLEAN,
+	[ParamType.BUTTON]: undefined,
 	[ParamType.COLOR]: ActorConnectionPointType.COLOR,
 	[ParamType.FLOAT]: ActorConnectionPointType.FLOAT,
-	[ParamType.INTEGER]: ActorConnectionPointType.INTEGER,
 	[ParamType.FOLDER]: undefined,
-	[ParamType.VECTOR2]: ActorConnectionPointType.VECTOR2,
-	[ParamType.VECTOR3]: ActorConnectionPointType.VECTOR3,
-	[ParamType.VECTOR4]: ActorConnectionPointType.VECTOR4,
-	[ParamType.BUTTON]: undefined,
-	// [ParamType.OPERATOR_PATH]: undefined,
+	[ParamType.INTEGER]: ActorConnectionPointType.INTEGER,
 	[ParamType.PARAM_PATH]: undefined,
 	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,
 	[ParamType.STRING]: undefined,
+	[ParamType.VECTOR2]: ActorConnectionPointType.VECTOR2,
+	[ParamType.VECTOR3]: ActorConnectionPointType.VECTOR3,
+	[ParamType.VECTOR4]: ActorConnectionPointType.VECTOR4,
 };
 
 //
@@ -139,7 +148,8 @@ export const ActorConnectionPointInitValueMap: ConnectionPointInitValueMapGeneri
 	[ActorConnectionPointType.COLOR]: new Color(),
 	[ActorConnectionPointType.FLOAT]: 0,
 	[ActorConnectionPointType.INTEGER]: 0,
-	[ActorConnectionPointType.OBJECT_3D]: '', // to reconsider
+	[ActorConnectionPointType.MATERIAL]: null,
+	[ActorConnectionPointType.OBJECT_3D]: null,
 	[ActorConnectionPointType.STRING]: '',
 	[ActorConnectionPointType.TRIGGER]: null,
 	[ActorConnectionPointType.VECTOR2]: new Vector2(),
@@ -162,6 +172,7 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.COLOR]: 3,
 	[ActorConnectionPointType.FLOAT]: 1,
 	[ActorConnectionPointType.INTEGER]: 1,
+	[ActorConnectionPointType.MATERIAL]: 1,
 	[ActorConnectionPointType.OBJECT_3D]: 1, // to reconsider
 	[ActorConnectionPointType.STRING]: 1,
 	[ActorConnectionPointType.TRIGGER]: 1,
@@ -180,6 +191,7 @@ import {Color} from 'three/src/math/Color';
 import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
+import {Material} from 'three/src/materials/Material';
 import {CoreType} from '../../../../../core/Type';
 import {AnimationAction} from 'three/src/animation/AnimationAction';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
@@ -190,6 +202,7 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.COLOR]: Color;
 	[ActorConnectionPointType.FLOAT]: number;
 	[ActorConnectionPointType.INTEGER]: number;
+	[ActorConnectionPointType.MATERIAL]: Material;
 	[ActorConnectionPointType.OBJECT_3D]: Object3D;
 	[ActorConnectionPointType.STRING]: string;
 	[ActorConnectionPointType.TRIGGER]: null;
@@ -239,6 +252,9 @@ export class ActorConnectionPoint<T extends ActorConnectionPointType> extends Ba
 	}
 	get param_type(): IConnectionPointTypeToParamTypeMap[T] | null {
 		const type = ActorConnectionPointTypeToParamTypeMap[this._type];
+		// we can't (yet?) have buttons from connections
+		// and this test is just here so that some connection types (matrix/object/material)
+		// do not have a parameter created, since it would not make sense for those data types
 		if (type == ParamType.BUTTON) {
 			return null;
 		} else {

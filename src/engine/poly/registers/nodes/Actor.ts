@@ -2,6 +2,24 @@ import {CATEGORY_ACTOR} from './Category';
 
 export const ACTORS_IN_PROD = false;
 
+import {FloatToVec2ActorNode, FloatToVec3ActorNode, FloatToVec4ActorNode} from '../../../nodes/actor/_ConversionToVec';
+import {
+	Vec2ToFloatActorNode,
+	Vec3ToFloatActorNode,
+	Vec4ToFloatActorNode,
+	Vec4ToVec3ActorNode,
+	Vec3ToVec4ActorNode,
+	Vec3ToVec2ActorNode,
+	Vec2ToVec3ActorNode,
+} from '../../../nodes/actor/_ConversionVecTo';
+
+import {
+	AddActorNode,
+	DivideActorNode,
+	MultActorNode,
+	SubtractActorNode,
+} from '../../../nodes/actor/_Math_Arg2Operation';
+
 import {AnimationActionActorNode} from '../../../nodes/actor/AnimationAction';
 import {AnimationActionCrossFadeActorNode} from '../../../nodes/actor/AnimationActionCrossFade';
 import {AnimationActionFadeOutActorNode} from '../../../nodes/actor/AnimationActionFadeOut';
@@ -12,6 +30,7 @@ import {AnimationMixerActorNode} from '../../../nodes/actor/AnimationMixer';
 import {AnimationMixerUpdateActorNode} from '../../../nodes/actor/AnimationMixerUpdate';
 import {CodeActorNode} from '../../../nodes/actor/Code';
 import {ConstantActorNode} from '../../../nodes/actor/Constant';
+import {GetMaterialActorNode} from '../../../nodes/actor/GetMaterial';
 import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
 import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty';
@@ -22,7 +41,8 @@ import {NullActorNode} from '../../../nodes/actor/Null';
 import {OnEventScenePlayStateActorNode} from '../../../nodes/actor/OnEventScenePlayState';
 import {OnEventSceneResetActorNode} from '../../../nodes/actor/OnEventSceneReset';
 import {OnEventTickActorNode} from '../../../nodes/actor/OnEventTick';
-import {OnObjectAttributeUpdatedActorNode} from '../../../nodes/actor/OnObjectAttributeUpdated';
+import {OnEventObjectAttributeUpdatedActorNode} from '../../../nodes/actor/OnEventObjectAttributeUpdated';
+import {SetObjectMaterialActorNode} from '../../../nodes/actor/SetObjectMaterial';
 import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
 import {SetObjectHoveredStateActorNode} from '../../../nodes/actor/SetObjectHoveredState';
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
@@ -49,6 +69,10 @@ export interface ActorNodeChildrenMap {
 	animationMixerUpdate: AnimationMixerUpdateActorNode;
 	code: CodeActorNode;
 	constant: ConstantActorNode;
+	floatToVec2: FloatToVec2ActorNode;
+	floatToVec3: FloatToVec3ActorNode;
+	floatToVec4: FloatToVec4ActorNode;
+	getMaterial: GetMaterialActorNode;
 	getObject: GetObjectActorNode;
 	getObjectAttribute: GetObjectAttributeActorNode;
 	getObjectProperty: GetObjectPropertyActorNode;
@@ -56,16 +80,24 @@ export interface ActorNodeChildrenMap {
 	multScalar: MultScalarActorNode;
 	null: NullActorNode;
 	onEventManualTrigger: OnEventManualTriggerActorNode;
+	onEventObjectAttributeUpdated: OnEventObjectAttributeUpdatedActorNode;
 	onEventScenePlayState: OnEventScenePlayStateActorNode;
 	onEventSceneReset: OnEventSceneResetActorNode;
 	onEventTick: OnEventTickActorNode;
-	onObjectAttributeUpdated: OnObjectAttributeUpdatedActorNode;
 	setObjectHoveredState: SetObjectHoveredStateActorNode;
+	setObjectMaterial: SetObjectMaterialActorNode;
 	setObjectPosition: SetObjectPositionActorNode;
 	setObjectScale: SetObjectScaleActorNode;
 	playAnimation: PlayAnimationActorNode;
 	switch: SwitchActorNode;
 	twoWaySwitch: TwoWaySwitchActorNode;
+	vec2ToFloat: Vec2ToFloatActorNode;
+	vec2ToVec3: Vec2ToVec3ActorNode;
+	vec3ToFloat: Vec3ToFloatActorNode;
+	vec3ToVec2: Vec3ToVec2ActorNode;
+	vec3ToVec4: Vec3ToVec4ActorNode;
+	vec4ToFloat: Vec4ToFloatActorNode;
+	vec4ToVec3: Vec4ToVec3ActorNode;
 	// networks
 	actorsNetwork: ActorsNetworkActorNode;
 	animationsNetwork: AnimationsNetworkActorNode;
@@ -80,6 +112,7 @@ export interface ActorNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 export class ActorRegister {
 	static run(poly: PolyEngine) {
+		poly.registerNode(AddActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(AnimationActionActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(AnimationActionCrossFadeActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(AnimationActionFadeOutActorNode, CATEGORY_ACTOR.ANIMATION);
@@ -90,23 +123,38 @@ export class ActorRegister {
 		poly.registerNode(AnimationMixerUpdateActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(ConstantActorNode, CATEGORY_ACTOR.MISC);
+		poly.registerNode(DivideActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(FloatToVec2ActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(FloatToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(FloatToVec4ActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(GetMaterialActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectAttributeActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(LookAtActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(OnEventManualTriggerActorNode, CATEGORY_ACTOR.EVENTS);
+		poly.registerNode(MultActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultScalarActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NullActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(OnEventScenePlayStateActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnEventSceneResetActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnEventTickActorNode, CATEGORY_ACTOR.EVENTS);
-		poly.registerNode(OnObjectAttributeUpdatedActorNode, CATEGORY_ACTOR.EVENTS);
+		poly.registerNode(OnEventObjectAttributeUpdatedActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(SetObjectHoveredStateActorNode, CATEGORY_ACTOR.SET);
+		poly.registerNode(SetObjectMaterialActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.SET);
+		poly.registerNode(SubtractActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
+		poly.registerNode(Vec2ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(Vec2ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(Vec3ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(Vec3ToVec2ActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(Vec3ToVec4ActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(Vec4ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(Vec4ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
 
 		// networks
 		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {

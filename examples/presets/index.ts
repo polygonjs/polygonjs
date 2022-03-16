@@ -2,7 +2,7 @@ import {NodeContext} from '../../src/engine/poly/NodeContext';
 
 // actor
 import {getObjectAttributeActorPresetRegister} from './actor/GetObjectAttribute';
-import {onObjectAttributeUpdatedActorPresetRegister} from './actor/OnObjectAttributeUpdated';
+import {onEventObjectAttributeUpdatedActorPresetRegister} from './actor/OnEventObjectAttributeUpdated';
 // anim
 import {propertyNameAnimPresetRegister} from './anim/PropertyName';
 // audio
@@ -43,7 +43,7 @@ class PresetLibraryClass {
 	private constructor() {
 		// actor
 		this._registerPreset(getObjectAttributeActorPresetRegister);
-		this._registerPreset(onObjectAttributeUpdatedActorPresetRegister);
+		this._registerPreset(onEventObjectAttributeUpdatedActorPresetRegister);
 		// anim
 		this._registerPreset(propertyNameAnimPresetRegister);
 		// audio

@@ -159,7 +159,7 @@ export class ActorsManager {
 				.map((nodeId) => this._scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
 				.filter((node) => node);
 			const onObjectAttributeUpdatedNodes = actorBuilderNodes
-				.map((node) => node.nodesByType(ActorType.ON_OBJECT_ATTRIBUTE_UPDATED))
+				.map((node) => node.nodesByType(ActorType.ON_EVENT_OBJECT_ATTRIBUTE_UPDATED))
 				.flat();
 			const nodesByAttribName = MapUtils.groupBy(onObjectAttributeUpdatedNodes, (node) => node.attributeName());
 

@@ -4,7 +4,7 @@ import {ParamType} from '../poly/ParamType';
 import {DecomposedPath} from '../../core/DecomposedPath';
 
 export abstract class TypedPathParam<T extends ParamType> extends TypedParam<T> {
-	public readonly decomposed_path = new DecomposedPath();
+	public readonly decomposedPath = new DecomposedPath();
 
 	override dispose(): void {
 		this.scene().referencesController.resetReferenceFromParam(this);

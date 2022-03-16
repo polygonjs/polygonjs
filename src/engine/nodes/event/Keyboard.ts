@@ -13,6 +13,7 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
 import {CoreString} from '../../../core/String';
+import {EventInputType} from '../../poly/registers/nodes/types/Event';
 class KeyboardEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -54,7 +55,7 @@ const ParamsConfig = new KeyboardEventParamsConfig();
 export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'keyboard';
+		return EventInputType.KEYBOARD;
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_KEYBOARD_EVENT_TYPES.map((n) => `${n}`));

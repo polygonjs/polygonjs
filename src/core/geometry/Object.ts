@@ -46,12 +46,7 @@ type AttributeDictionary = PolyDictionary<AttribValue>;
 export class CoreObject extends CoreEntity {
 	constructor(private _object: Object3D, index: number) {
 		super(index);
-		if (this._object.userData[ATTRIBUTES] == null) {
-			this._object.userData[ATTRIBUTES] = {};
-		}
-		if (this._object.userData[ATTRIBUTES_PREVIOUS_VALUES] == null) {
-			this._object.userData[ATTRIBUTES_PREVIOUS_VALUES] = {};
-		}
+		CoreObject._createAttributesDictionaryIfNone(_object);
 	}
 	dispose() {}
 
@@ -170,6 +165,17 @@ export class CoreObject extends CoreEntity {
 	static attributesPreviousValuesDictionary(object: Object3D) {
 		return object.userData[ATTRIBUTES_PREVIOUS_VALUES] as AttributeDictionary;
 	}
+	private static _createAttributesDictionaryIfNone(object: Object3D) {
+		if (!object.userData[ATTRIBUTES]) {
+			object.userData[ATTRIBUTES] = {};
+		}
+	}
+	private static _createAttributesPreviousValuesDictionaryIfNone(object: Object3D) {
+		if (!object.userData[ATTRIBUTES_PREVIOUS_VALUES]) {
+			object.userData[ATTRIBUTES_PREVIOUS_VALUES] = {};
+		}
+	}
+
 	private _attributesDictionary() {
 		return CoreObject.attributesDictionary(this._object);
 	}
@@ -245,8 +251,14 @@ export class CoreObject extends CoreEntity {
 		attribName: string,
 		callback: AttributeReactiveCallback<V>
 	) {
+		this._createAttributesDictionaryIfNone(object);
+		this._createAttributesPreviousValuesDictionaryIfNone(object);
 		const attributesDict = this.attributesDictionary(object);
 		const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
+
+		// create a dummy val in case there is no attribute yet
+		attributesDict[attribName] = 0;
+
 		const proxy: AttributeProxy<V> = {
 			value: attributesDict[attribName] as V,
 			previousValue: attributesDict[attribName] as V,

@@ -4,6 +4,7 @@ import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
 import {Intersection} from 'three/src/core/Raycaster';
 import {BaseViewerType} from '../../../viewers/_Base';
+import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
 
 interface EventContextValue {
 	node?: BaseNodeType; // for node_cook
@@ -18,18 +19,28 @@ export interface EventContext<E extends Event> {
 }
 
 export abstract class BaseSceneEventsController<E extends Event, T extends BaseInputEventNodeType> {
-	protected _nodes: Set<T> = new Set();
+	protected _eventNodes: Set<T> = new Set();
+	protected _actorNodes: Set<BaseUserInputActorNodeType> = new Set();
 	protected _requireCanvasEventListeners: boolean = false;
 	constructor(private dispatcher: SceneEventsDispatcher) {}
 
-	registerNode(node: T) {
-		this._nodes.add(node);
+	registerEventNode(node: T) {
+		this._eventNodes.add(node);
 		this.updateViewerEventListeners();
 	}
-	unregisterNode(node: T) {
-		this._nodes.delete(node);
+	unregisterEventNode(node: T) {
+		this._eventNodes.delete(node);
 		this.updateViewerEventListeners();
 	}
+	registerActorNode(node: BaseUserInputActorNodeType) {
+		this._actorNodes.add(node);
+		this.updateViewerEventListeners();
+	}
+	unregisterActorNode(node: BaseUserInputActorNodeType) {
+		this._actorNodes.delete(node);
+		this.updateViewerEventListeners();
+	}
+
 	abstract type(): string;
 	abstract acceptedEventTypes(): Set<string>;
 	// abstract accepts_event(event: Event): boolean;
@@ -48,7 +59,7 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 			}
 		}
 
-		this._nodes.forEach((node) => {
+		this._eventNodes.forEach((node) => {
 			node.processEvent(eventContext);
 		});
 	}
@@ -87,7 +98,7 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 		this._resetActiveEventData();
 		const activeNodeEventTypesState: Set<EventData> = new Set();
 
-		this._nodes.forEach((node) => {
+		this._eventNodes.forEach((node) => {
 			if (node.parent()) {
 				const nodeActiveEventDatas = node.activeEventDatas();
 				for (let data of nodeActiveEventDatas) {

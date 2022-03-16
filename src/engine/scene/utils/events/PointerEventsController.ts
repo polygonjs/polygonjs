@@ -35,14 +35,19 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 
 	override processEvent(eventContext: EventContext<MouseEvent>) {
 		super.processEvent(eventContext);
-		if (eventContext.event && eventContext.event.type == PERSISTENT_EVENT_DATA.type) {
-			this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
-			this._camera = eventContext.viewer?.cameraNode().object;
+
+		if (this._actorNodes.size > 0) {
+			if (eventContext.event && eventContext.event.type == PERSISTENT_EVENT_DATA.type) {
+				this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
+				this._camera = eventContext.viewer?.cameraNode().object;
+			}
 		}
 	}
 
 	protected override _persistentEventData(): EventData | undefined {
-		return PERSISTENT_EVENT_DATA;
+		if (this._actorNodes.size > 0) {
+			return PERSISTENT_EVENT_DATA;
+		}
 	}
 
 	cursor() {

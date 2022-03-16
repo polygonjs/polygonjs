@@ -11,6 +11,7 @@ import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
+import {EventInputType} from '../../poly/registers/nodes/types/Event';
 class MouseEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -72,7 +73,7 @@ const ParamsConfig = new MouseEventParamsConfig();
 export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'mouse';
+		return EventInputType.MOUSE;
 	}
 	protected acceptedEventTypes() {
 		return new Set(ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`));
