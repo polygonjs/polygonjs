@@ -4,6 +4,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {BaseEventConnectionPoint} from '../utils/io/connections/Event';
 import {MapUtils} from '../../../core/MapUtils';
+import {Poly} from '../../Poly';
 
 type DispatchHook = (event_context: EventContext<Event>) => void;
 
@@ -72,6 +73,14 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 			const outputConnections = this.io.connections.outputConnectionsByOutputIndex(index);
 			if (outputConnections) {
 				let destNode: BaseEventNodeType;
+
+				if (!Poly.playerMode()) {
+					const dispatcher = this.scene().eventsDispatcher.connectionTriggerDispatcher;
+					outputConnections.forEach((connection) => {
+						dispatcher.dispatchTrigger(connection);
+					});
+				}
+
 				outputConnections.forEach((connection) => {
 					destNode = connection.node_dest;
 					const connection_point = destNode.io.inputs.namedInputConnectionPoints()[connection.input_index];

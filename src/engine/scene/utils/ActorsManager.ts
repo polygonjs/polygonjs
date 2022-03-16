@@ -9,7 +9,7 @@ import {PolyScene} from '../PolyScene';
 import {CoreObject} from '../../../core/geometry/Object';
 import {MapUtils} from '../../../core/MapUtils';
 import {SceneManualActorTriggersController} from './actors/ManualActorTriggersController';
-import {SceneConnectionTriggerDispatcher} from './actors/ConnectionTriggerDispatcher';
+import {NodeContext} from '../../poly/NodeContext';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -45,7 +45,6 @@ export class ActorsManager {
 
 	private _actorNodes: Set<ActorBuilderNode> = new Set();
 	private _manualActorTriggers: SceneManualActorTriggersController | undefined;
-	private _connectionTriggerDispatcher: SceneConnectionTriggerDispatcher | undefined;
 
 	assignActorBuilder(object: Object3D, node: ActorBuilderNode) {
 		object.userData[ACTOR_BUILDER_NODE_IDS_KEY] = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] || [];
@@ -58,10 +57,6 @@ export class ActorsManager {
 	get manualActorTriggers() {
 		return (this._manualActorTriggers = this._manualActorTriggers || new SceneManualActorTriggersController(this));
 	}
-	get connectionTriggerDispatcher() {
-		return (this._connectionTriggerDispatcher =
-			this._connectionTriggerDispatcher || new SceneConnectionTriggerDispatcher(this));
-	}
 
 	runManualTrigger() {
 		if (!this._manualActorTriggers) {
@@ -70,11 +65,13 @@ export class ActorsManager {
 		if (!this._manualActorTriggers.triggered()) {
 			return;
 		}
-		const triggerNode = this._manualActorTriggers.triggeredNode();
 		const triggeredNodeParent = this._manualActorTriggers.triggeredNodeParent();
-		if (!(triggerNode && triggeredNodeParent)) {
+		if (!triggeredNodeParent) {
 			return;
 		}
+		const nodeToRunTriggerFrom = this._manualActorTriggers.nodeToRunTriggerFrom();
+		const nodeToReceiveTrigger = this._manualActorTriggers.nodeToReceiveTrigger();
+
 		this._manualActorTriggers.reset();
 
 		const nodeParentId = triggeredNodeParent.graphNodeId();
@@ -86,8 +83,34 @@ export class ActorsManager {
 			if (!nodeIds.includes(nodeParentId)) {
 				return;
 			}
-			triggerNode.runTrigger({Object3D: object});
+			if (nodeToRunTriggerFrom) {
+				nodeToRunTriggerFrom.runTrigger({Object3D: object});
+			}
+			if (nodeToReceiveTrigger) {
+				nodeToReceiveTrigger.receiveTrigger({Object3D: object});
+			}
 		});
+	}
+	outputValueForFirstObject(node: BaseActorNodeType, outputName: string = '') {
+		let matchedObject: Object3D | undefined;
+		const parentNode = this.parentActorBuilderNode(node);
+		this._scene.threejsScene().traverse((object) => {
+			const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
+			if (!parentNode) {
+				return;
+			}
+			if (!nodeIds) {
+				return;
+			}
+			if (!nodeIds.includes(parentNode.graphNodeId())) {
+				return;
+			}
+			matchedObject = object;
+		});
+		if (!matchedObject) {
+			return;
+		}
+		return node.outputValue({Object3D: matchedObject}, outputName);
 	}
 
 	onEventTick() {
@@ -106,25 +129,26 @@ export class ActorsManager {
 	private _onEventSceneReset(object: Object3D) {
 		this._triggerEventNodes(object, ActorType.ON_EVENT_SCENE_RESET);
 	}
-
-	private _triggerEventNodes(object: Object3D, actorType: ActorType) {
-		const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
-		if (!nodeIds) {
-			return;
-		}
-		for (let nodeId of nodeIds) {
-			const node = this._scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
-			if (node) {
-				const onEventNodes = node.nodesByType(actorType);
-				for (let onEventNode of onEventNodes) {
-					onEventNode.runTrigger({Object3D: object});
-				}
-			}
-		}
+	private _onEventScenePlayBound = this._onEventScenePlay.bind(this);
+	private _onEventScenePlay(object: Object3D) {
+		this._triggerEventNodes(object, ActorType.ON_EVENT_SCENE_PLAY_STATE, 0);
+	}
+	private _onEventScenePauseBound = this._onEventScenePause.bind(this);
+	private _onEventScenePause(object: Object3D) {
+		this._triggerEventNodes(object, ActorType.ON_EVENT_SCENE_PLAY_STATE, 1);
 	}
 
-	onScenePlay() {
+	onEventScenePlay() {
+		this._scene.threejsScene().traverse(this._onEventScenePlayBound);
+
 		// any caching goes here
+		this._makeRequiredObjectAttributesReactive();
+	}
+	onEventScenePause() {
+		this._scene.threejsScene().traverse(this._onEventScenePauseBound);
+	}
+
+	private _makeRequiredObjectAttributesReactive() {
 		this._scene.threejsScene().traverse((object) => {
 			const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
 			if (!nodeIds) {
@@ -147,5 +171,25 @@ export class ActorsManager {
 				});
 			});
 		});
+	}
+
+	private _triggerEventNodes(object: Object3D, actorType: ActorType, outputIndex = 0) {
+		const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
+		if (!nodeIds) {
+			return;
+		}
+		for (let nodeId of nodeIds) {
+			const node = this._scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
+			if (node) {
+				const onEventNodes = node.nodesByType(actorType);
+				for (let onEventNode of onEventNodes) {
+					onEventNode.runTrigger({Object3D: object}, outputIndex);
+				}
+			}
+		}
+	}
+
+	public parentActorBuilderNode(node: BaseActorNodeType) {
+		return node.parentController.findParent((parent) => parent.childrenControllerContext() == NodeContext.ACTOR);
 	}
 }

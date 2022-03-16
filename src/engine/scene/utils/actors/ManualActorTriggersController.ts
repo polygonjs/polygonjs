@@ -1,29 +1,35 @@
-import {ManualTriggerActorNode} from '../../../nodes/actor/ManualTrigger';
-import {NodeContext} from '../../../poly/NodeContext';
+import {BaseActorNodeType} from '../../../nodes/actor/_Base';
 import {ActorsManager} from '../ActorsManager';
 
 export class SceneManualActorTriggersController {
-	private _triggeredNode: ManualTriggerActorNode | undefined;
+	private _nodeToRunTriggerFrom: BaseActorNodeType | undefined;
+	private _nodeToReceiveTrigger: BaseActorNodeType | undefined;
 	constructor(protected actorsManager: ActorsManager) {}
 
-	triggerWithNode(node: ManualTriggerActorNode) {
-		this._triggeredNode = node;
+	setNodeToRunTriggerFrom(node: BaseActorNodeType) {
+		this._nodeToRunTriggerFrom = node;
+	}
+	setNodeToReceiveTrigger(node: BaseActorNodeType) {
+		this._nodeToReceiveTrigger = node;
 	}
 	triggered() {
-		return this._triggeredNode != null;
+		return this._nodeToRunTriggerFrom != null || this._nodeToReceiveTrigger != null;
 	}
-	triggeredNode() {
-		return this._triggeredNode;
+	nodeToRunTriggerFrom() {
+		return this._nodeToRunTriggerFrom;
+	}
+	nodeToReceiveTrigger() {
+		return this._nodeToReceiveTrigger;
 	}
 	triggeredNodeParent() {
-		if (!this._triggeredNode) {
+		const node = this._nodeToRunTriggerFrom || this._nodeToReceiveTrigger;
+		if (!node) {
 			return;
 		}
-		return this._triggeredNode.parentController.findParent(
-			(parent) => parent.childrenControllerContext() == NodeContext.ACTOR
-		);
+		return this.actorsManager.parentActorBuilderNode(node);
 	}
 	reset() {
-		this._triggeredNode = undefined;
+		this._nodeToRunTriggerFrom = undefined;
+		this._nodeToReceiveTrigger = undefined;
 	}
 }

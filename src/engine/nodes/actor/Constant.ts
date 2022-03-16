@@ -4,7 +4,7 @@
  *
  */
 
-import {TypedActorNode} from './_Base';
+import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPointType,
@@ -93,7 +93,7 @@ export class ConstantActorNode extends TypedActorNode<ConstantActorParamsConfig>
 		this.p.type.set(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
-	public override outputValue(inputName: string) {
+	public override outputValue(context: ActorNodeTriggerContext) {
 		return this.currentParam().value as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
 	}
 }

@@ -4,7 +4,7 @@
  *
  */
 
-import {TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
+import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
@@ -31,8 +31,8 @@ export class OnEventTickActorNode extends TypedActorNode<OnEventTickActorParamsC
 		]);
 	}
 
-	public override outputValue(inputName: string): number {
-		switch (inputName as OnEventTickActorNodeOuput) {
+	public override outputValue(context: ActorNodeTriggerContext, outputName: string) {
+		switch (outputName as OnEventTickActorNodeOuput) {
 			case OnEventTickActorNodeOuput.TIME: {
 				return this.scene().timeController.time();
 			}

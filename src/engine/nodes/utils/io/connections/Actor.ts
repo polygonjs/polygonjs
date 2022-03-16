@@ -24,18 +24,18 @@ export enum ActorConnectionPointType {
 // ALL GL Data types in an array
 //
 //
-export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
-	ActorConnectionPointType.BOOLEAN,
-	ActorConnectionPointType.COLOR,
-	ActorConnectionPointType.FLOAT,
-	ActorConnectionPointType.INTEGER,
-	ActorConnectionPointType.OBJECT_3D,
-	ActorConnectionPointType.STRING,
-	ActorConnectionPointType.TRIGGER,
-	ActorConnectionPointType.VECTOR2,
-	ActorConnectionPointType.VECTOR3,
-	ActorConnectionPointType.VECTOR4,
-];
+// export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
+// 	ActorConnectionPointType.BOOLEAN,
+// 	ActorConnectionPointType.COLOR,
+// 	ActorConnectionPointType.FLOAT,
+// 	ActorConnectionPointType.INTEGER,
+// 	ActorConnectionPointType.OBJECT_3D,
+// 	ActorConnectionPointType.STRING,
+// 	ActorConnectionPointType.TRIGGER,
+// 	ActorConnectionPointType.VECTOR2,
+// 	ActorConnectionPointType.VECTOR3,
+// 	ActorConnectionPointType.VECTOR4,
+// ];
 export const PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
 	ActorConnectionPointType.BOOLEAN,
 	ActorConnectionPointType.COLOR,
@@ -206,6 +206,9 @@ interface ActorConnectionPointOptions<T extends ActorConnectionPointType> {
 	inNodeDefinition?: boolean;
 	init_value?: ConnectionPointInitValueMapGeneric[T];
 }
+export const ACTOR_CONNECTION_POINT_IN_NODE_DEF: ActorConnectionPointOptions<ActorConnectionPointType> = {
+	inNodeDefinition: true,
+};
 
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {ParamType} from '../../../../poly/ParamType';
@@ -234,8 +237,13 @@ export class ActorConnectionPoint<T extends ActorConnectionPointType> extends Ba
 	override type() {
 		return this._type;
 	}
-	get param_type(): IConnectionPointTypeToParamTypeMap[T] {
-		return ActorConnectionPointTypeToParamTypeMap[this._type];
+	get param_type(): IConnectionPointTypeToParamTypeMap[T] | null {
+		const type = ActorConnectionPointTypeToParamTypeMap[this._type];
+		if (type == ParamType.BUTTON) {
+			return null;
+		} else {
+			return type;
+		}
 	}
 	override get init_value() {
 		return this._init_value;

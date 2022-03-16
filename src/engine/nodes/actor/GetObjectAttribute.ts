@@ -4,15 +4,14 @@
  *
  */
 
-const CONNECTION_OPTIONS = {
-	inNodeDefinition: true,
-};
+const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
+	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
@@ -117,7 +116,7 @@ export class GetObjectAttributeActorNode extends TypedActorNode<GetObjectAttribu
 		this.p.type.set(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
-	public override outputValue(inputName: string, context: ActorNodeTriggerContext) {
+	public override outputValue(context: ActorNodeTriggerContext) {
 		const {Object3D} = context;
 		const attribValue = CoreObject.attribValue(Object3D, this.pv.attribName);
 		return attribValue as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];

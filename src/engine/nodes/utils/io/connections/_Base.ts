@@ -40,7 +40,7 @@ export abstract class BaseConnectionPoint {
 	inNodeDefinition() {
 		return this._inNodeDefinition;
 	}
-	abstract get param_type(): ParamType;
+	abstract get param_type(): ParamType | null;
 	// get param_type(): IConnectionPointTypeToParamTypeMap[T] {
 	// 	return ConnectionPointTypeToParamTypeMap[this._type];
 	// }

@@ -6,15 +6,20 @@
 
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {
+	ActorConnectionPoint,
+	ActorConnectionPointType,
+	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+} from '../utils/io/connections/Actor';
 import {Object3D} from 'three/src/core/Object3D';
+import {AnimationAction, AnimationMixer} from 'three';
+import {isBooleanTrue} from '../../../core/Type';
 
-const CONNECTION_OPTIONS = {
-	inNodeDefinition: true,
-};
+const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class AnimationActionActorParamsConfig extends NodeParamsConfig {
-	actionName = ParamConfig.STRING('');
+	clipName = ParamConfig.STRING('');
+	autoPlay = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new AnimationActionActorParamsConfig();
 
@@ -39,23 +44,37 @@ export class AnimationActionActorNode extends TypedActorNode<AnimationActionActo
 		]);
 	}
 
-	public override outputValue(inputName: string, context: ActorNodeTriggerContext) {
+	private _actionByNameByMixer: Map<AnimationMixer, Map<string, AnimationAction>> = new Map();
+	public override outputValue(context: ActorNodeTriggerContext) {
 		const mixer = this._inputValue<ActorConnectionPointType.ANIMATION_MIXER>(
 			ActorConnectionPointType.ANIMATION_MIXER,
 			context
 		);
-		const root = mixer.getRoot();
-		const animations = (root as Object3D).animations;
-		if (!animations) {
-			return -1;
+		let map = this._actionByNameByMixer.get(mixer);
+		if (!map) {
+			map = new Map();
+			this._actionByNameByMixer.set(mixer, map);
 		}
-		const animation = animations.find((animation) => animation.name == this.pv.actionName);
-		if (!animation) {
-			return -1;
+		const clipName = this.pv.clipName;
+		let action = map.get(clipName);
+		if (!action) {
+			const root = mixer.getRoot();
+			const animations = (root as Object3D).animations;
+			if (!animations) {
+				return -1;
+			}
+			const animation = animations.find((animation) => animation.name == clipName);
+			if (!animation) {
+				return -1;
+			}
+			action = mixer.existingAction(animation) || mixer.clipAction(animation);
+			if (isBooleanTrue(this.pv.autoPlay)) {
+				action.play();
+			}
+
+			map.set(clipName, action);
 		}
-		const action = mixer.clipAction(animation);
-		console.log('create action', action);
-		action.play();
+
 		return action;
 	}
 }

@@ -114,56 +114,58 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			if (connection_point) {
 				const isConnected = this.node.io.inputs.input(i) != null;
 				const param_name = connection_point.name();
-				const param_type: ParamType = connection_point.param_type;
-				let init_value = connection_point.init_value;
+				const param_type: ParamType | null = connection_point.param_type;
+				if (param_type) {
+					let init_value = connection_point.init_value;
 
-				const last_param_init_value = this._default_value_serialized_by_param_name.get(param_name);
-				let default_value_from_name = this.node.paramDefaultValue(param_name);
+					const last_param_init_value = this._default_value_serialized_by_param_name.get(param_name);
+					let default_value_from_name = this.node.paramDefaultValue(param_name);
 
-				if (default_value_from_name != null) {
-					init_value = default_value_from_name;
-				} else {
-					if (last_param_init_value != null) {
-						init_value = last_param_init_value;
+					if (default_value_from_name != null) {
+						init_value = default_value_from_name;
 					} else {
-						init_value = connection_point.init_value;
+						if (last_param_init_value != null) {
+							init_value = last_param_init_value;
+						} else {
+							init_value = connection_point.init_value;
+						}
 					}
-				}
-				if (CoreType.isArray(connection_point.init_value)) {
-					// if we need to use an init_value from a float to an array
-					if (CoreType.isNumber(init_value)) {
-						const array = new Array(connection_point.init_value.length) as Number2;
-						array.fill(init_value);
-						init_value = array;
-					}
-					// if we need to use an init_value from a array to an array, we need to check their length.
-					// if they are different, we need to match them.
-					else if (CoreType.isArray(init_value)) {
-						// if (init_value.length < connection_point.init_value.length) {
-						// }
-						// if (init_value.length > connection_point.init_value.length) {
-						// }
-						if (init_value.length == connection_point.init_value.length) {
-							if (last_param_init_value != null) {
-								init_value = connection_point.init_value;
+					if (CoreType.isArray(connection_point.init_value)) {
+						// if we need to use an init_value from a float to an array
+						if (CoreType.isNumber(init_value)) {
+							const array = new Array(connection_point.init_value.length) as Number2;
+							array.fill(init_value);
+							init_value = array;
+						}
+						// if we need to use an init_value from a array to an array, we need to check their length.
+						// if they are different, we need to match them.
+						else if (CoreType.isArray(init_value)) {
+							// if (init_value.length < connection_point.init_value.length) {
+							// }
+							// if (init_value.length > connection_point.init_value.length) {
+							// }
+							if (init_value.length == connection_point.init_value.length) {
+								if (last_param_init_value != null) {
+									init_value = connection_point.init_value;
+								}
 							}
 						}
 					}
-				}
 
-				if (init_value != null) {
-					params_update_options.toAdd = params_update_options.toAdd || [];
-					params_update_options.toAdd.push({
-						name: param_name,
-						type: param_type,
-						// TODO: I should really treat differently init_value and raw_input here
-						initValue: ObjectUtils.clone(init_value as any),
-						rawInput: ObjectUtils.clone(init_value as any),
-						options: {
-							spare: true,
-							editable: !isConnected,
-						},
-					});
+					if (init_value != null) {
+						params_update_options.toAdd = params_update_options.toAdd || [];
+						params_update_options.toAdd.push({
+							name: param_name,
+							type: param_type,
+							// TODO: I should really treat differently init_value and raw_input here
+							initValue: ObjectUtils.clone(init_value as any),
+							rawInput: ObjectUtils.clone(init_value as any),
+							options: {
+								spare: true,
+								editable: !isConnected,
+							},
+						});
+					}
 				}
 			}
 			i++;

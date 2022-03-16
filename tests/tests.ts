@@ -82,6 +82,7 @@ import './engine/nodes/utils/Memory';
 
 QUnit.module('actor');
 import './engine/nodes/actor/TwoWaySwitch';
+import './engine/nodes/actor/Switch';
 
 QUnit.module('anim');
 import './engine/nodes/anim/Utils/ParamProxy';

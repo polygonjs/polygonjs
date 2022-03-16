@@ -41,7 +41,7 @@ export class MultScalarActorNode extends BaseMathFunctionArg2ActorNode {
 	private _tmpVec2 = new Vector2();
 	private _tmpVec3 = new Vector3();
 	private _tmpVec4 = new Vector4();
-	public override outputValue(inputName: string, context: ActorNodeTriggerContext) {
+	public override outputValue(context: ActorNodeTriggerContext) {
 		const vector = this._vectorInput(context);
 		if (!vector) {
 			return this._tmpVec3;

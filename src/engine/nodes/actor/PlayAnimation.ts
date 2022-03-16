@@ -6,14 +6,16 @@
 
 import {ActorNodeTriggerContext, BaseActorNodeType, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {
+	ActorConnectionPoint,
+	ActorConnectionPointType,
+	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+} from '../utils/io/connections/Actor';
 import {NodeContext} from '../../poly/NodeContext';
 import {AnimPropertyTarget} from '../../../core/animation/PropertyTarget';
 import gsap from 'gsap';
 
-const CONNECTION_OPTIONS = {
-	inNodeDefinition: true,
-};
+const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 export enum AnimationActorOutput {
 	START = 'start',
 	COMPLETE = 'completed',

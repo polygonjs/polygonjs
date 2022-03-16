@@ -20,7 +20,7 @@ export class NullActorNode extends BaseMathFunctionArg1ActorNode {
 		const type = this.io.connection_points.first_input_connection_type() || ActorConnectionPointType.FLOAT;
 		return [type, ActorConnectionPointType.FLOAT];
 	}
-	public override outputValue(inputName: string, context: ActorNodeTriggerContext) {
+	public override outputValue(context: ActorNodeTriggerContext) {
 		return this._inputValue(this._expectedInputName(0), context);
 	}
 }

@@ -9,19 +9,19 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {BaseNodeType} from '../_Base';
 
-class ManualTriggerActorParamsConfig extends NodeParamsConfig {
+class OnEventManualTriggerActorParamsConfig extends NodeParamsConfig {
 	trigger = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			ManualTriggerActorNode.PARAM_CALLBACK_sendTrigger(node as ManualTriggerActorNode);
+			OnEventManualTriggerActorNode.PARAM_CALLBACK_sendTrigger(node as OnEventManualTriggerActorNode);
 		},
 	});
 }
-const ParamsConfig = new ManualTriggerActorParamsConfig();
+const ParamsConfig = new OnEventManualTriggerActorParamsConfig();
 
-export class ManualTriggerActorNode extends TypedActorNode<ManualTriggerActorParamsConfig> {
+export class OnEventManualTriggerActorNode extends TypedActorNode<OnEventManualTriggerActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'manualTrigger';
+		return 'onEventManualTrigger';
 	}
 
 	override initializeNode() {
@@ -30,11 +30,11 @@ export class ManualTriggerActorNode extends TypedActorNode<ManualTriggerActorPar
 		]);
 	}
 
-	static PARAM_CALLBACK_sendTrigger(node: ManualTriggerActorNode) {
+	static PARAM_CALLBACK_sendTrigger(node: OnEventManualTriggerActorNode) {
 		node._triggerWithNode();
 	}
 
 	private _triggerWithNode() {
-		this.scene().actorsManager.manualActorTriggers.triggerWithNode(this);
+		this.scene().actorsManager.manualActorTriggers.setNodeToRunTriggerFrom(this);
 	}
 }

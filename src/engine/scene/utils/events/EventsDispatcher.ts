@@ -18,6 +18,8 @@ import {TouchEventsController} from './TouchEventsController';
 import {DragEventNode} from '../../../nodes/event/Drag';
 import {TouchEventNode} from '../../../nodes/event/Touch';
 
+import {SceneConnectionTriggerDispatcher} from './ConnectionTriggerDispatcher';
+
 export class SceneEventsDispatcher {
 	public readonly sceneEventsController = new SceneEventsController();
 	private _keyboardEventsController: KeyboardEventsController | undefined;
@@ -114,5 +116,11 @@ export class SceneEventsDispatcher {
 			this._controllers.push(controller);
 		}
 		return controller;
+	}
+
+	private _connectionTriggerDispatcher: SceneConnectionTriggerDispatcher | undefined;
+	get connectionTriggerDispatcher() {
+		return (this._connectionTriggerDispatcher =
+			this._connectionTriggerDispatcher || new SceneConnectionTriggerDispatcher());
 	}
 }

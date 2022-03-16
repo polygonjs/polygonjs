@@ -54,7 +54,7 @@ export class TwoWaySwitchActorNode extends ParamlessTypedActorNode {
 		return [type];
 	}
 
-	public override outputValue(inputName: string, context: ActorNodeTriggerContext) {
+	public override outputValue(context: ActorNodeTriggerContext) {
 		const condition = this._inputValue<ActorConnectionPointType.BOOLEAN>(
 			TwoWaySwitchGlNodeInputName.CONDITION,
 			context

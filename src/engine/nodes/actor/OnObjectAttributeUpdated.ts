@@ -9,15 +9,14 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
+	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {CoreObject} from '../../../core/geometry/Object';
 
-const CONNECTION_OPTIONS = {
-	inNodeDefinition: true,
-};
+const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 class OnObjectAttributeUpdatedActorParamsConfig extends NodeParamsConfig {
 	attribName = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(ActorConnectionPointType.FLOAT), {
@@ -76,10 +75,10 @@ export class OnObjectAttributeUpdatedActorNode extends TypedActorNode<OnObjectAt
 	}
 
 	public override outputValue(
-		inputName: string,
-		context: ActorNodeTriggerContext
+		context: ActorNodeTriggerContext,
+		outputName: string
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		switch (inputName) {
+		switch (outputName) {
 			case OnObjectAttributeUpdatedActorNode.OUTPUT_NEW_VAL: {
 				const val = CoreObject.attribValue(context.Object3D, this.attributeName());
 				if (val != null) {

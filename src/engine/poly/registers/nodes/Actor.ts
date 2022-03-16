@@ -3,6 +3,11 @@ import {CATEGORY_ACTOR} from './Category';
 export const ACTORS_IN_PROD = false;
 
 import {AnimationActionActorNode} from '../../../nodes/actor/AnimationAction';
+import {AnimationActionCrossFadeActorNode} from '../../../nodes/actor/AnimationActionCrossFade';
+import {AnimationActionFadeOutActorNode} from '../../../nodes/actor/AnimationActionFadeOut';
+import {AnimationActionFadeInActorNode} from '../../../nodes/actor/AnimationActionFadeIn';
+import {AnimationActionPlayActorNode} from '../../../nodes/actor/AnimationActionPlay';
+import {AnimationActionStopActorNode} from '../../../nodes/actor/AnimationActionStop';
 import {AnimationMixerActorNode} from '../../../nodes/actor/AnimationMixer';
 import {AnimationMixerUpdateActorNode} from '../../../nodes/actor/AnimationMixerUpdate';
 import {CodeActorNode} from '../../../nodes/actor/Code';
@@ -11,16 +16,18 @@ import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
 import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty';
 import {LookAtActorNode} from '../../../nodes/actor/LookAt';
-import {ManualTriggerActorNode} from '../../../nodes/actor/ManualTrigger';
+import {OnEventManualTriggerActorNode} from '../../../nodes/actor/OnEventManualTrigger';
 import {MultScalarActorNode} from '../../../nodes/actor/MultScalar';
 import {NullActorNode} from '../../../nodes/actor/Null';
+import {OnEventScenePlayStateActorNode} from '../../../nodes/actor/OnEventScenePlayState';
 import {OnEventSceneResetActorNode} from '../../../nodes/actor/OnEventSceneReset';
 import {OnEventTickActorNode} from '../../../nodes/actor/OnEventTick';
 import {OnObjectAttributeUpdatedActorNode} from '../../../nodes/actor/OnObjectAttributeUpdated';
-import {ScaleObjectActorNode} from '../../../nodes/actor/ScaleObject';
-import {SetHoveredStateActorNode} from '../../../nodes/actor/SetHoveredState';
+import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
+import {SetObjectHoveredStateActorNode} from '../../../nodes/actor/SetObjectHoveredState';
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
+import {SwitchActorNode} from '../../../nodes/actor/Switch';
 import {TwoWaySwitchActorNode} from '../../../nodes/actor/TwoWaySwitch';
 // networks
 import {ActorsNetworkActorNode} from '../../../nodes/actor/ActorsNetwork';
@@ -33,6 +40,11 @@ import {PostProcessNetworkActorNode} from '../../../nodes/actor/PostProcessNetwo
 import {RenderersNetworkActorNode} from '../../../nodes/actor/RenderersNetwork';
 export interface ActorNodeChildrenMap {
 	animationAction: AnimationActionActorNode;
+	animationActionCrossFade: AnimationActionCrossFadeActorNode;
+	animationActionFadeOut: AnimationActionFadeOutActorNode;
+	animationActionFadeIn: AnimationActionFadeInActorNode;
+	animationActionPlay: AnimationActionPlayActorNode;
+	animationActionStop: AnimationActionStopActorNode;
 	animationMixer: AnimationMixerActorNode;
 	animationMixerUpdate: AnimationMixerUpdateActorNode;
 	code: CodeActorNode;
@@ -41,16 +53,18 @@ export interface ActorNodeChildrenMap {
 	getObjectAttribute: GetObjectAttributeActorNode;
 	getObjectProperty: GetObjectPropertyActorNode;
 	lookAt: LookAtActorNode;
-	manualTrigger: ManualTriggerActorNode;
 	multScalar: MultScalarActorNode;
 	null: NullActorNode;
+	onEventManualTrigger: OnEventManualTriggerActorNode;
+	onEventScenePlayState: OnEventScenePlayStateActorNode;
 	onEventSceneReset: OnEventSceneResetActorNode;
 	onEventTick: OnEventTickActorNode;
 	onObjectAttributeUpdated: OnObjectAttributeUpdatedActorNode;
-	scaleObject: ScaleObjectActorNode;
-	setHoveredState: SetHoveredStateActorNode;
+	setObjectHoveredState: SetObjectHoveredStateActorNode;
 	setObjectPosition: SetObjectPositionActorNode;
+	setObjectScale: SetObjectScaleActorNode;
 	playAnimation: PlayAnimationActorNode;
+	switch: SwitchActorNode;
 	twoWaySwitch: TwoWaySwitchActorNode;
 	// networks
 	actorsNetwork: ActorsNetworkActorNode;
@@ -67,6 +81,11 @@ import {PolyEngine} from '../../../Poly';
 export class ActorRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AnimationActionActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(AnimationActionCrossFadeActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(AnimationActionFadeOutActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(AnimationActionFadeInActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(AnimationActionPlayActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(AnimationActionStopActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(AnimationMixerActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(AnimationMixerUpdateActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
@@ -75,16 +94,18 @@ export class ActorRegister {
 		poly.registerNode(GetObjectAttributeActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(LookAtActorNode, CATEGORY_ACTOR.SET);
-		poly.registerNode(ManualTriggerActorNode, CATEGORY_ACTOR.EVENTS);
+		poly.registerNode(OnEventManualTriggerActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(MultScalarActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NullActorNode, CATEGORY_ACTOR.MISC);
+		poly.registerNode(OnEventScenePlayStateActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnEventSceneResetActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnEventTickActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnObjectAttributeUpdatedActorNode, CATEGORY_ACTOR.EVENTS);
-		poly.registerNode(ScaleObjectActorNode, CATEGORY_ACTOR.SET);
-		poly.registerNode(SetHoveredStateActorNode, CATEGORY_ACTOR.SET);
+		poly.registerNode(SetObjectHoveredStateActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.SET);
+		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
 
 		// networks

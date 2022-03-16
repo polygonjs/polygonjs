@@ -7,9 +7,9 @@ interface DisconnectionOptions {
 	setInput?: boolean;
 }
 export const NODE_CONNECTION_TRIGGERED_EVENT_NAME = 'triggered';
-export const NODE_CONNECTION_UNTRIGGERED_EVENT_NAME = 'untriggered';
+// export const NODE_CONNECTION_UNTRIGGERED_EVENT_NAME = 'untriggered';
 export const NODE_CONNECTION_TRIGGERED_EVENT = {type: NODE_CONNECTION_TRIGGERED_EVENT_NAME};
-export const NODE_CONNECTION_UNTRIGGERED_EVENT = {type: NODE_CONNECTION_UNTRIGGERED_EVENT_NAME};
+// export const NODE_CONNECTION_UNTRIGGERED_EVENT = {type: NODE_CONNECTION_UNTRIGGERED_EVENT_NAME};
 
 export class TypedNodeConnection<NC extends NodeContext> {
 	private static _next_id: number = 0;

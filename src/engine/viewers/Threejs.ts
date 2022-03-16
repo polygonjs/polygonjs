@@ -153,7 +153,7 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 			this._delta = delta;
 			this._requestAnimationFrameId = requestAnimationFrame(this._animateMethod);
 			this._runOnBeforeTickCallbacks(delta);
-			this._scene.actorsManager.connectionTriggerDispatcher.reset();
+			// this._scene.eventsDispatcher.connectionTriggerDispatcher.reset();
 			this._scene.timeController.incrementTimeIfPlaying(this._delta);
 			this._runOnAfterTickCallbacks(delta);
 			this.render(this._delta);

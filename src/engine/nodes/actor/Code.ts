@@ -10,9 +10,7 @@ import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 import {Poly} from '../../Poly';
 import * as THREE from 'three'; // three import required to give to the function builder
 
-const CONNECTION_OPTIONS = {
-	inNodeDefinition: true,
-};
+const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 const DEFAULT_FUNCTION_CODE = {
 	TS: `
@@ -37,7 +35,11 @@ export class BaseCodeActorProcessor {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {
+	ActorConnectionPoint,
+	ActorConnectionPointType,
+	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+} from '../utils/io/connections/Actor';
 class CodeActorParamsConfig extends NodeParamsConfig {
 	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.TS, {
 		hideLabel: true,

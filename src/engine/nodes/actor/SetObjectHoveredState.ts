@@ -6,7 +6,11 @@
 
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {
+	ActorConnectionPoint,
+	ActorConnectionPointType,
+	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {Raycaster, Intersection} from 'three/src/core/Raycaster';
 import {RaycasterForBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
@@ -15,9 +19,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {CoreObject} from '../../../core/geometry/Object';
 import {ObjectAttribute} from '../../../core/geometry/Attribute';
 
-const CONNECTION_OPTIONS = {
-	inNodeDefinition: true,
-};
+const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 function createRaycaster() {
 	const raycaster = new Raycaster() as RaycasterForBVH;
@@ -25,32 +27,32 @@ function createRaycaster() {
 	return raycaster;
 }
 
-class SetHoveredStateActorParamsConfig extends NodeParamsConfig {
+class SetObjectHoveredStateActorParamsConfig extends NodeParamsConfig {
 	/** @param include children */
 	traverseChildren = ParamConfig.BOOLEAN(1);
 	/** @param pointsThreshold */
 	pointsThreshold = ParamConfig.FLOAT(0.1, {
 		callback: (node: BaseNodeType) => {
-			SetHoveredStateActorNode.PARAM_CALLBACK_updateRaycast(node as SetHoveredStateActorNode);
+			SetObjectHoveredStateActorNode.PARAM_CALLBACK_updateRaycast(node as SetObjectHoveredStateActorNode);
 		},
 	});
 	/** @param lineThreshold */
 	lineThreshold = ParamConfig.FLOAT(0.1, {
 		callback: (node: BaseNodeType) => {
-			SetHoveredStateActorNode.PARAM_CALLBACK_updateRaycast(node as SetHoveredStateActorNode);
+			SetObjectHoveredStateActorNode.PARAM_CALLBACK_updateRaycast(node as SetObjectHoveredStateActorNode);
 		},
 	});
 }
-const ParamsConfig = new SetHoveredStateActorParamsConfig();
+const ParamsConfig = new SetObjectHoveredStateActorParamsConfig();
 
-export class SetHoveredStateActorNode extends TypedActorNode<SetHoveredStateActorParamsConfig> {
+export class SetObjectHoveredStateActorNode extends TypedActorNode<SetObjectHoveredStateActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	private _raycaster = createRaycaster();
 	private _raycastNeedsUpdated = true;
 	private _raycastUpdatedOnFrame = -1;
 	private _intersections: Intersection[] = [];
 	static override type() {
-		return ActorType.SET_HOVERED_STATE;
+		return ActorType.SET_OBJECT_HOVERED_STATE;
 	}
 
 	override initializeNode() {
@@ -68,10 +70,6 @@ export class SetHoveredStateActorNode extends TypedActorNode<SetHoveredStateActo
 			return;
 		}
 
-		// TODO: do not run setFromCamera for every object if camera and cursor have not changed
-		// or: if scene is playing, check the frame it was last done
-		// if scene is NOT playing, check the renderId it was last done (renderId not yet being implemented)
-		// or maybe check renderId in both cases?
 		const frame = this.scene().frame();
 		if (this._raycastUpdatedOnFrame != frame) {
 			this._raycastUpdatedOnFrame = frame;
@@ -95,7 +93,7 @@ export class SetHoveredStateActorNode extends TypedActorNode<SetHoveredStateActo
 		}
 	}
 
-	static PARAM_CALLBACK_updateRaycast(node: SetHoveredStateActorNode) {
+	static PARAM_CALLBACK_updateRaycast(node: SetObjectHoveredStateActorNode) {
 		node._raycastNeedsUpdated = true;
 		node._updateRaycast();
 	}

@@ -8,14 +8,16 @@ import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from '
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Vector3} from 'three/src/math/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
-import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {
+	ActorConnectionPoint,
+	ActorConnectionPointType,
+	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+} from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
 
-const CONNECTION_OPTIONS = {
-	inNodeDefinition: true,
-};
+const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-class ScaleObjectActorParamsConfig extends NodeParamsConfig {
+class SetObjectScaleActorParamsConfig extends NodeParamsConfig {
 	/** @param target scale */
 	s = ParamConfig.VECTOR3([1, 1, 1]);
 	/** @param target scale */
@@ -28,10 +30,10 @@ class ScaleObjectActorParamsConfig extends NodeParamsConfig {
 	/** @param sets if the matrix should be updated as the animation progresses */
 	updateMatrix = ParamConfig.BOOLEAN(1);
 }
-const ParamsConfig = new ScaleObjectActorParamsConfig();
+const ParamsConfig = new SetObjectScaleActorParamsConfig();
 
 const tmpS = new Vector3();
-export class ScaleObjectActorNode extends TypedActorNode<ScaleObjectActorParamsConfig> {
+export class SetObjectScaleActorNode extends TypedActorNode<SetObjectScaleActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return 'scaleObject';

@@ -55,7 +55,7 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		if (!triggerConnections) {
 			return;
 		}
-		const dispatcher = this.scene().actorsManager.connectionTriggerDispatcher;
+		const dispatcher = this.scene().eventsDispatcher.connectionTriggerDispatcher;
 		triggerConnections.forEach((triggerConnection) => {
 			dispatcher.dispatchTrigger(triggerConnection);
 			const node = triggerConnection.node_dest as BaseActorNodeType;
@@ -74,8 +74,8 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	}
 
 	public outputValue(
-		inputName: string,
-		context: ActorNodeTriggerContext
+		context: ActorNodeTriggerContext,
+		outputName: string = ''
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
 		return -1;
 	}
@@ -93,7 +93,7 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 				const outputName = output_connection_point.name();
 				// const type = ActorParamTypeToConnectionPointTypeMap[param.type()]
 				// if(type){
-				return inputNode.outputValue(outputName, context) as ParamValuesTypeMap[T];
+				return inputNode.outputValue(context, outputName) as ParamValuesTypeMap[T];
 				// }
 			}
 		} else {
@@ -114,7 +114,7 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 				const outputName = output_connection_point.name();
 				// const type = ActorParamTypeToConnectionPointTypeMap[param.type()]
 				// if(type){
-				return inputNode.outputValue(outputName, context) as ReturnValueTypeByActorConnectionPointType[T];
+				return inputNode.outputValue(context, outputName) as ReturnValueTypeByActorConnectionPointType[T];
 				// }
 			}
 		} else {
