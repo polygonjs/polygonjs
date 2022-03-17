@@ -172,6 +172,17 @@ export class ActorsManager {
 			});
 		});
 	}
+	actorNodesForObject(object: Object3D) {
+		const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
+		if (!nodeIds) {
+			return;
+		}
+
+		const actorBuilderNodes = nodeIds
+			.map((nodeId) => this._scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
+			.filter((node) => node);
+		return actorBuilderNodes;
+	}
 
 	private _triggerEventNodes(object: Object3D, actorType: ActorType, outputIndex = 0) {
 		const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
