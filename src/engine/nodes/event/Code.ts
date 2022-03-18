@@ -61,6 +61,15 @@ export class BaseCodeEventProcessor {
 	constructor(protected node: CodeEventNode) {
 		this.initializeProcessor();
 	}
+	get pv() {
+		return this.node.pv;
+	}
+	get p() {
+		return this.node.p;
+	}
+	get io() {
+		return this.node.io;
+	}
 	initializeProcessor() {}
 	processTrigger0(eventContext: EventContext<Event>) {}
 	processTrigger1(eventContext: EventContext<Event>) {}

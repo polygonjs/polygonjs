@@ -34,13 +34,13 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			return;
 		}
 		this._initialized = true;
-		this.node.params.onParamsCreated('create_inputs_from_params', this.create_inputs_from_params.bind(this));
+		this.node.params.onParamsCreated('createInputsFromParams', this._createInputsFromParams.bind(this));
 	}
 	initialized() {
 		return this._initialized;
 	}
 
-	create_inputs_from_params() {
+	private _createInputsFromParams() {
 		// if (!this._allow_inputs_created_from_params) {
 		// 	return;
 		// }
