@@ -209,6 +209,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
 			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
 		},
+		objectMask: true,
 		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)}),
 	});
 	/** @param prints which objects are targeted by this node, for debugging */

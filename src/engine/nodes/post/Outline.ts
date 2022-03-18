@@ -9,6 +9,7 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 	/** @param object mask of the objects that will have an outline */
 	objectsMask = ParamConfig.STRING('*outlined*', {
 		...PostParamOptions,
+		objectMask: true,
 	});
 	/** @param updates the cached objects found by objectMask  */
 	refreshObjects = ParamConfig.BUTTON(null, {

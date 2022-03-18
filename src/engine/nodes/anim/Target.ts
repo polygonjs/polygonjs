@@ -40,6 +40,7 @@ class TargetAnimParamsConfig extends NodeParamsConfig {
 	/** @param if set to a THREE object, this is a mask to find the objects */
 	objectMask = ParamConfig.STRING('/geo*', {
 		visibleIf: {type: TARGET_TYPE_SCENE_GRAPH},
+		objectMask: true,
 	});
 	/** @param sets if the matrix should be updated as the animation progresses */
 	updateMatrix = ParamConfig.BOOLEAN(1, {

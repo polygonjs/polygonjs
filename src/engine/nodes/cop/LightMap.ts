@@ -47,8 +47,8 @@ class LightMapCopParamConfig extends NodeParamsConfig {
 		range: [0, 10],
 	});
 
-	objectsMask = ParamConfig.STRING('');
-	lightsMask = ParamConfig.STRING('*');
+	objectsMask = ParamConfig.STRING('', {objectMask:true});
+	lightsMask = ParamConfig.STRING('*', {objectMask:true});
 
 	printResolveObjectsList = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {

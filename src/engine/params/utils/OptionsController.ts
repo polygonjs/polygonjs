@@ -34,6 +34,7 @@ const LANGUAGE_OPTION = 'language';
 const NODE_SELECTION = 'nodeSelection';
 const NODE_SELECTION_CONTEXT = 'context';
 const NODE_SELECTION_TYPES = 'types';
+const OBJECT_MASK = 'objectMask';
 // const PARAM_SELECTION = 'paramSelection';
 const DEPENDENT_ON_FOUND_NODE = 'dependentOnFoundNode';
 const DEPENDENT_ON_FOUND_PARAM = 'dependentOnFoundParam';
@@ -206,6 +207,7 @@ export interface StringParamOptions
 		LabelVisibilityParamOptions {
 	multiline?: boolean;
 	language?: StringParamLanguage;
+	objectMask?:boolean
 }
 interface VectorParamOptions
 	extends BaseParamOptions,
@@ -530,6 +532,9 @@ export class OptionsController {
 		if (options) {
 			return options[NODE_SELECTION_TYPES];
 		}
+	}
+	objectMask() {
+		return this._options[OBJECT_MASK] == true;
 	}
 
 	dependentOnFoundNode() {

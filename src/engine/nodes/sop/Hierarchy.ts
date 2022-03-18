@@ -30,6 +30,7 @@ class HierarchySopParamsConfig extends NodeParamsConfig {
 	/** @param when the mode is set to add_child, the mask defines which parent the children are added to. If the mask is an empty string, the children will be added to the objects at the top of the hierarchy. Also, the children are taken from the second input. */
 	objectMask = ParamConfig.STRING('', {
 		visibleIf: {mode: HIERARCHY_MODES.indexOf(HierarchyMode.ADD_CHILD)},
+		objectMask: true,
 	});
 	/** @param when the mode is set to add_child, the objects used as parent will be printed to the console */
 	debugObjectMask = ParamConfig.BOOLEAN(0, {

@@ -92,9 +92,11 @@ class ContactShadowObjParamConfig extends TransformedParamConfig(NodeParamsConfi
 	renderAllObjects = ParamConfig.BOOLEAN(true);
 	include = ParamConfig.STRING('', {
 		visibleIf: {renderAllObjects: 0},
+		objectMask:true
 	});
 	exclude = ParamConfig.STRING('', {
 		visibleIf: {renderAllObjects: 0},
+		objectMask:true
 	});
 	updateObjectsList = ParamConfig.BUTTON(null, {
 		visibleIf: {renderAllObjects: 0},

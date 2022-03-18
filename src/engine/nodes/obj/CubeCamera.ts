@@ -38,7 +38,9 @@ export function CubeCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param render resolution of each of the 6 faces */
 		resolution = ParamConfig.INTEGER(256);
 		/** @param objects to exclude in the render */
-		excludedObjects = ParamConfig.STRING('*`$OS`');
+		excludedObjects = ParamConfig.STRING('*`$OS`', {
+			objectMask: true,
+		});
 		/** @param object masks to select what will be visible in the scene */
 		printResolve = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {
