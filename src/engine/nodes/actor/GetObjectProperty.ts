@@ -11,6 +11,8 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
+import {Material} from 'three/src/materials/Material';
+import {Mesh} from 'three/src/objects/Mesh';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -22,7 +24,7 @@ enum GetObjectPropertyActorNodeInputName {
 	receiveShadow = 'receiveShadow',
 	frustumCulled = 'frustumCulled',
 	// ptnum = 'ptnum',
-	id = 'id',
+	// id = 'id',
 	uuid = 'uuid',
 	name = 'name',
 	// quaternion = 'quaternion',
@@ -30,6 +32,19 @@ enum GetObjectPropertyActorNodeInputName {
 	up = 'up',
 	matrixAutoUpdate = 'matrixAutoUpdate',
 }
+const OBJECT_PROPERTIES: GetObjectPropertyActorNodeInputName[] = [
+	GetObjectPropertyActorNodeInputName.position,
+	GetObjectPropertyActorNodeInputName.scale,
+	GetObjectPropertyActorNodeInputName.visible,
+	GetObjectPropertyActorNodeInputName.castShadow,
+	GetObjectPropertyActorNodeInputName.receiveShadow,
+	GetObjectPropertyActorNodeInputName.frustumCulled,
+	GetObjectPropertyActorNodeInputName.uuid,
+	GetObjectPropertyActorNodeInputName.name,
+	GetObjectPropertyActorNodeInputName.up,
+	GetObjectPropertyActorNodeInputName.matrixAutoUpdate,
+];
+const MATERIAL_OUTPUT = 'material';
 
 export class GetObjectPropertyActorNode extends ParamlessTypedActorNode {
 	static override type() {
@@ -63,17 +78,27 @@ export class GetObjectPropertyActorNode extends ParamlessTypedActorNode {
 				GetObjectPropertyActorNodeInputName.frustumCulled,
 				ActorConnectionPointType.BOOLEAN
 			),
-			new ActorConnectionPoint(GetObjectPropertyActorNodeInputName.id, ActorConnectionPointType.INTEGER),
+			// new ActorConnectionPoint(GetObjectPropertyActorNodeInputName.id, ActorConnectionPointType.INTEGER),
 			// new ActorConnectionPoint(GetObjectPropertyActorNodeInputName.uuid, ActorConnectionPointType.BOOLEAN),
+			new ActorConnectionPoint(MATERIAL_OUTPUT, ActorConnectionPointType.MATERIAL),
 		]);
 	}
 
 	public override outputValue(
 		context: ActorNodeTriggerContext,
-		outputName: GetObjectPropertyActorNodeInputName
+		outputName: GetObjectPropertyActorNodeInputName | string
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		const {Object3D} = context;
-		const propValue = Object3D[outputName];
-		return propValue;
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
+		if (OBJECT_PROPERTIES.includes(outputName as GetObjectPropertyActorNodeInputName)) {
+			const propValue = Object3D[outputName as GetObjectPropertyActorNodeInputName];
+			return propValue;
+		} else {
+			if (outputName == MATERIAL_OUTPUT) {
+				return (Object3D as Mesh).material as Material;
+			}
+		}
+		return -1;
 	}
 }

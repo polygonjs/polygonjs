@@ -1,14 +1,14 @@
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
-import {OnEventObjectAttributeUpdatedActorNode} from '../../../src/engine/nodes/actor/OnEventObjectAttributeUpdated';
+import {OnEventChildAttributeUpdatedActorNode} from '../../../src/engine/nodes/actor/OnEventChildAttributeUpdated';
 import {ObjectAttribute} from '../../../src/core/geometry/Attribute';
 import {
 	ActorConnectionPointType,
 	PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES,
 } from '../../../src/engine/nodes/utils/io/connections/Actor';
 
-const onEventObjectAttributeUpdatedActorNodePresetsCollectionFactory: PresetsCollectionFactory<
-	OnEventObjectAttributeUpdatedActorNode
-> = (node: OnEventObjectAttributeUpdatedActorNode) => {
+const onEventChildAttributeUpdatedActorNodePresetsCollectionFactory: PresetsCollectionFactory<
+	OnEventChildAttributeUpdatedActorNode
+> = (node: OnEventChildAttributeUpdatedActorNode) => {
 	const collection = new NodePresetsCollection();
 
 	const b = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(ActorConnectionPointType.BOOLEAN);
@@ -21,10 +21,10 @@ const onEventObjectAttributeUpdatedActorNodePresetsCollectionFactory: PresetsCol
 
 	return collection;
 };
-export const onEventObjectAttributeUpdatedActorPresetRegister: PresetRegister<
-	typeof OnEventObjectAttributeUpdatedActorNode,
-	OnEventObjectAttributeUpdatedActorNode
+export const onEventChildAttributeUpdatedActorPresetRegister: PresetRegister<
+	typeof OnEventChildAttributeUpdatedActorNode,
+	OnEventChildAttributeUpdatedActorNode
 > = {
-	nodeClass: OnEventObjectAttributeUpdatedActorNode,
-	setupFunc: onEventObjectAttributeUpdatedActorNodePresetsCollectionFactory,
+	nodeClass: OnEventChildAttributeUpdatedActorNode,
+	setupFunc: onEventChildAttributeUpdatedActorNodePresetsCollectionFactory,
 };

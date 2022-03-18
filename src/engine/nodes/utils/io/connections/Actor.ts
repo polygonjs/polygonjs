@@ -8,6 +8,7 @@ export enum ActorConnectionPointType {
 	ANIMATION_MIXER = 'AnimationMixer',
 	ANIMATION_ACTION = 'AnimationAction',
 	BOOLEAN = 'boolean',
+	BOOLEAN_ARRAY = 'boolean[]',
 	COLOR = 'color',
 	FLOAT = 'float',
 	INTEGER = 'integer',
@@ -67,6 +68,7 @@ export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeT
 	[ActorConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON;
 	[ActorConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON;
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR;
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT;
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER;
@@ -82,6 +84,7 @@ export const ActorConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParam
 	[ActorConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON,
 	[ActorConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON,
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR,
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT,
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER,
@@ -145,6 +148,7 @@ export const ActorConnectionPointInitValueMap: ConnectionPointInitValueMapGeneri
 	[ActorConnectionPointType.ANIMATION_MIXER]: null,
 	[ActorConnectionPointType.ANIMATION_ACTION]: null,
 	[ActorConnectionPointType.BOOLEAN]: false,
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: null,
 	[ActorConnectionPointType.COLOR]: new Color(),
 	[ActorConnectionPointType.FLOAT]: 0,
 	[ActorConnectionPointType.INTEGER]: 0,
@@ -169,6 +173,7 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.ANIMATION_MIXER]: 1,
 	[ActorConnectionPointType.ANIMATION_ACTION]: 1,
 	[ActorConnectionPointType.BOOLEAN]: 1,
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: 1,
 	[ActorConnectionPointType.COLOR]: 3,
 	[ActorConnectionPointType.FLOAT]: 1,
 	[ActorConnectionPointType.INTEGER]: 1,
@@ -199,6 +204,7 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.ANIMATION_MIXER]: AnimationMixer;
 	[ActorConnectionPointType.ANIMATION_ACTION]: AnimationAction;
 	[ActorConnectionPointType.BOOLEAN]: boolean;
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: boolean[];
 	[ActorConnectionPointType.COLOR]: Color;
 	[ActorConnectionPointType.FLOAT]: number;
 	[ActorConnectionPointType.INTEGER]: number;

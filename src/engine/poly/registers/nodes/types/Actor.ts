@@ -1,4 +1,5 @@
 export enum ActorType {
+	ON_EVENT_CHILD_ATTRIBUTE_UPDATED = 'onEventChildAttributeUpdated',
 	ON_EVENT_SCENE_RESET = 'onEventSceneReset',
 	ON_EVENT_SCENE_PLAY_STATE = 'onEventScenePlayState',
 	ON_EVENT_TICK = 'onEventTick',

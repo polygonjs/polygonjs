@@ -14,7 +14,7 @@ import {
 import {NodeContext} from '../../poly/NodeContext';
 class GetMaterialActorParamsConfig extends NodeParamsConfig {
 	/** @param the material node */
-	material = ParamConfig.NODE_PATH('', {
+	nodePath = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},
@@ -43,7 +43,7 @@ export class GetMaterialActorNode extends TypedActorNode<GetMaterialActorParamsC
 	public override outputValue(
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		const materialNode = this.pv.material.nodeWithContext(NodeContext.MAT, this.states?.error);
+		const materialNode = this.pv.nodePath.nodeWithContext(NodeContext.MAT, this.states?.error);
 		if (materialNode) {
 			return materialNode.material;
 		}

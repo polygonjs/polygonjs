@@ -150,23 +150,71 @@ export class ActorsManager {
 
 	private _makeRequiredObjectAttributesReactive() {
 		this._scene.threejsScene().traverse((object) => {
-			const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
-			if (!nodeIds) {
+			const getNodesByAttribName = () => {
+				const nodeIds = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
+				if (!nodeIds) {
+					return;
+				}
+
+				// check nodes listening to this object
+				const actorBuilderNodes = nodeIds
+					.map((nodeId) => this._scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
+					.filter((node) => node);
+				const onEventObjectAttributeUpdatedNodes = actorBuilderNodes
+					.map((node) => node.nodesByType(ActorType.ON_EVENT_OBJECT_ATTRIBUTE_UPDATED))
+					.flat();
+				const nodesByAttribName = MapUtils.groupBy(onEventObjectAttributeUpdatedNodes, (node) =>
+					node.attributeName()
+				);
+				return nodesByAttribName;
+			};
+
+			// check nodes listening to this parent
+			const getParentNodesByAttribName = () => {
+				const parent = object.parent;
+				if (!parent) {
+					return;
+				}
+				const nodeIds = parent.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
+				if (!nodeIds) {
+					return;
+				}
+
+				// check nodes listening to this object
+				const actorBuilderNodes = nodeIds
+					.map((nodeId) => this._scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
+					.filter((node) => node);
+				const onEventChildAttributeUpdatedNodes = actorBuilderNodes
+					.map((node) => node.nodesByType(ActorType.ON_EVENT_CHILD_ATTRIBUTE_UPDATED))
+					.flat();
+				const nodesByAttribName = MapUtils.groupBy(onEventChildAttributeUpdatedNodes, (node) =>
+					node.attributeName()
+				);
+				return nodesByAttribName;
+			};
+
+			const nodesByAttribName = getNodesByAttribName();
+			const parentNodesByAttribName = getParentNodesByAttribName();
+			if (!nodesByAttribName) {
 				return;
 			}
-
-			const actorBuilderNodes = nodeIds
-				.map((nodeId) => this._scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
-				.filter((node) => node);
-			const onObjectAttributeUpdatedNodes = actorBuilderNodes
-				.map((node) => node.nodesByType(ActorType.ON_EVENT_OBJECT_ATTRIBUTE_UPDATED))
-				.flat();
-			const nodesByAttribName = MapUtils.groupBy(onObjectAttributeUpdatedNodes, (node) => node.attributeName());
-
 			nodesByAttribName.forEach((nodes, attributeName) => {
+				const parentNodes = parentNodesByAttribName?.get(attributeName);
+
+				// apply callback
 				CoreObject.makeAttribReactive<AttribValue>(object, attributeName, (newVal, oldVal) => {
+					const context = {Object3D: object};
 					for (let node of nodes) {
-						node.runTrigger({Object3D: object});
+						node.runTrigger(context);
+					}
+					if (parentNodes) {
+						const parent = object.parent;
+						if (parent) {
+							const parentContext = {Object3D: parent};
+							for (let parentNode of parentNodes) {
+								parentNode.runTrigger(parentContext);
+							}
+						}
 					}
 				});
 			});

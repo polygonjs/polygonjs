@@ -35,7 +35,7 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 			separatorBefore: true,
 		});
 		/** @param background color */
-		bgColor = ParamConfig.COLOR([0.09, 0.09, 0.09], {
+		bgColor = ParamConfig.COLOR([0.4, 0.4, 0.4], {
 			visibleIf: {backgroundMode: BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)},
 			...CallbackOptions,
 			conversion: ColorConversion.SRGB_TO_LINEAR,

@@ -30,6 +30,7 @@ class ConstantActorParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(ActorConnectionPointType.COLOR));
 	float = ParamConfig.FLOAT(0, typedVisibleOptions(ActorConnectionPointType.FLOAT));
 	integer = ParamConfig.INTEGER(0, typedVisibleOptions(ActorConnectionPointType.INTEGER));
+	string = ParamConfig.STRING('', typedVisibleOptions(ActorConnectionPointType.STRING));
 	vector2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(ActorConnectionPointType.VECTOR2));
 	vector3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(ActorConnectionPointType.VECTOR3));
 	vector4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(ActorConnectionPointType.VECTOR4));
@@ -74,6 +75,9 @@ export class ConstantActorNode extends TypedActorNode<ConstantActorParamsConfig>
 			}
 			case ActorConnectionPointType.INTEGER: {
 				return this.p.integer;
+			}
+			case ActorConnectionPointType.STRING: {
+				return this.p.string;
 			}
 			case ActorConnectionPointType.VECTOR2: {
 				return this.p.vector2;
