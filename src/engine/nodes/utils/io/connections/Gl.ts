@@ -98,8 +98,8 @@ export const GL_CONNECTION_POINT_TYPES: Array<GlConnectionPointType> = [
 // Map to convert from a GL Data type to a ParamType
 //
 //
-type ConnectionPointTypeToParamTypeMapGeneric = {[key in GlConnectionPointType]: ParamType};
-export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeToParamTypeMapGeneric {
+type GlConnectionPointTypeToParamTypeMapGeneric = {[key in GlConnectionPointType]: ParamType};
+export interface GlIConnectionPointTypeToParamTypeMap extends GlConnectionPointTypeToParamTypeMapGeneric {
 	[GlConnectionPointType.BOOL]: ParamType.BOOLEAN;
 	// [ConnectionPointType.BVEC2]: [ParamType.BOOLEAN, ParamType.BOOLEAN]
 	// [ConnectionPointType.BVEC3]: [ParamType.BOOLEAN, ParamType.BOOLEAN, ParamType.BOOLEAN]
@@ -113,7 +113,7 @@ export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeT
 	[GlConnectionPointType.VEC3]: ParamType.VECTOR3;
 	[GlConnectionPointType.VEC4]: ParamType.VECTOR4;
 }
-export const GlConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParamTypeMap = {
+export const GlConnectionPointTypeToParamTypeMap: GlIConnectionPointTypeToParamTypeMap = {
 	[GlConnectionPointType.BOOL]: ParamType.BOOLEAN,
 	// [ConnectionPointType.BVEC2]: [ParamType.BOOLEAN, ParamType.BOOLEAN]
 	// [ConnectionPointType.BVEC3]: [ParamType.BOOLEAN, ParamType.BOOLEAN, ParamType.BOOLEAN]
@@ -187,10 +187,10 @@ export const GLParamTypeToConnectionPointTypeMap: IGLParamTypeToConnectionPointT
 // Map of GL Data type default values
 //
 //
-export type ConnectionPointInitValueMapGeneric = {
-	[key in GlConnectionPointType]: ParamInitValuesTypeMap[IConnectionPointTypeToParamTypeMap[key]];
+export type GlConnectionPointInitValueMapGeneric = {
+	[key in GlConnectionPointType]: ParamInitValuesTypeMap[GlIConnectionPointTypeToParamTypeMap[key]];
 };
-export const GlConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
+export const GlConnectionPointInitValueMap: GlConnectionPointInitValueMapGeneric = {
 	[GlConnectionPointType.BOOL]: false,
 	// [ConnectionPointType.BVEC2]: [ParamType.BOOLEAN, ParamType.BOOLEAN]
 	// [ConnectionPointType.BVEC3]: [ParamType.BOOLEAN, ParamType.BOOLEAN, ParamType.BOOLEAN]
@@ -255,7 +255,7 @@ export class GlConnectionPoint<T extends GlConnectionPointType> extends BaseConn
 	constructor(
 		protected override _name: string,
 		protected override _type: T,
-		protected override _init_value?: ConnectionPointInitValueMapGeneric[T]
+		protected override _init_value?: GlConnectionPointInitValueMapGeneric[T]
 	) {
 		super(_name, _type);
 		// if (this._init_value === undefined) {
@@ -268,7 +268,7 @@ export class GlConnectionPoint<T extends GlConnectionPointType> extends BaseConn
 	override are_types_matched(src_type: string, dest_type: string): boolean {
 		return src_type == dest_type;
 	}
-	get param_type(): IConnectionPointTypeToParamTypeMap[T] {
+	get param_type(): GlIConnectionPointTypeToParamTypeMap[T] {
 		return GlConnectionPointTypeToParamTypeMap[this._type];
 	}
 	override get init_value() {

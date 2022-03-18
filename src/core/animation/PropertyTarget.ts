@@ -1,4 +1,4 @@
-import {Object3D} from 'three';
+import {Object3D} from 'three/src/core/Object3D';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {PolyScene} from '../../engine/scene/PolyScene';
 

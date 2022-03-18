@@ -207,7 +207,7 @@ export interface StringParamOptions
 		LabelVisibilityParamOptions {
 	multiline?: boolean;
 	language?: StringParamLanguage;
-	objectMask?:boolean
+	objectMask?: boolean;
 }
 interface VectorParamOptions
 	extends BaseParamOptions,

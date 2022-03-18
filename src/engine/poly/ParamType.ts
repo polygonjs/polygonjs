@@ -5,7 +5,6 @@ export enum ParamType {
 	FLOAT = 'float',
 	FOLDER = 'folder',
 	INTEGER = 'integer',
-	// OPERATOR_PATH = 'operator_path',
 	PARAM_PATH = 'param_path',
 	NODE_PATH = 'node_path',
 	RAMP = 'ramp',

@@ -22,7 +22,7 @@ import {ParamType} from '../../poly/ParamType';
 import {existingAnimationActionsFromAnimationMixer} from './AnimationMixer';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {EventListener, Event} from 'three/src/core/EventDispatcher';
-import {AnimationAction} from 'three';
+import {AnimationAction} from 'three/src/animation/AnimationAction';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 

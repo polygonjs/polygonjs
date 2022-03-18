@@ -5,9 +5,9 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
-class VecToParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new VecToParamsConfig();
-class BaseVecToGlNode extends TypedGlNode<VecToParamsConfig> {
+class VecToParamsGlConfig extends NodeParamsConfig {}
+const ParamsConfig = new VecToParamsGlConfig();
+class BaseVecToGlNode extends TypedGlNode<VecToParamsGlConfig> {
 	override paramsConfig = ParamsConfig;
 }
 

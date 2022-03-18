@@ -18,12 +18,12 @@ const tmpV4 = new Vector4();
 // FLOAT TO VEC2
 //
 //
-class FloatToVec2GlParamsConfig extends NodeParamsConfig {
+class FloatToVec2ActorParamsConfig extends NodeParamsConfig {
 	x = ParamConfig.FLOAT(0);
 	y = ParamConfig.FLOAT(0);
 }
-const ParamsConfig2 = new FloatToVec2GlParamsConfig();
-export class FloatToVec2ActorNode extends TypedActorNode<FloatToVec2GlParamsConfig> {
+const ParamsConfig2 = new FloatToVec2ActorParamsConfig();
+export class FloatToVec2ActorNode extends TypedActorNode<FloatToVec2ActorParamsConfig> {
 	override paramsConfig = ParamsConfig2;
 	static override type() {
 		return 'floatToVec2';
@@ -52,13 +52,13 @@ export class FloatToVec2ActorNode extends TypedActorNode<FloatToVec2GlParamsConf
 // FLOAT TO VEC3
 //
 //
-class FloatToVec3GlParamsConfig extends NodeParamsConfig {
+class FloatToVec3ActorParamsConfig extends NodeParamsConfig {
 	x = ParamConfig.FLOAT(0);
 	y = ParamConfig.FLOAT(0);
 	z = ParamConfig.FLOAT(0);
 }
-const ParamsConfig3 = new FloatToVec3GlParamsConfig();
-export class FloatToVec3ActorNode extends TypedActorNode<FloatToVec3GlParamsConfig> {
+const ParamsConfig3 = new FloatToVec3ActorParamsConfig();
+export class FloatToVec3ActorNode extends TypedActorNode<FloatToVec3ActorParamsConfig> {
 	override paramsConfig = ParamsConfig3;
 	static override type() {
 		return 'floatToVec3';
@@ -88,14 +88,14 @@ export class FloatToVec3ActorNode extends TypedActorNode<FloatToVec3GlParamsConf
 // FLOAT TO VEC4
 //
 //
-class FloatToVec4GlParamsConfig extends NodeParamsConfig {
+class FloatToVec4ActorParamsConfig extends NodeParamsConfig {
 	x = ParamConfig.FLOAT(0);
 	y = ParamConfig.FLOAT(0);
 	z = ParamConfig.FLOAT(0);
 	w = ParamConfig.FLOAT(0);
 }
-const ParamsConfig4 = new FloatToVec4GlParamsConfig();
-export class FloatToVec4ActorNode extends TypedActorNode<FloatToVec4GlParamsConfig> {
+const ParamsConfig4 = new FloatToVec4ActorParamsConfig();
+export class FloatToVec4ActorNode extends TypedActorNode<FloatToVec4ActorParamsConfig> {
 	override paramsConfig = ParamsConfig4;
 	static override type() {
 		return 'floatToVec4';

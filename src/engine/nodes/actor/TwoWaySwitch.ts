@@ -8,15 +8,15 @@ import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext, ParamlessTypedActorNode} from './_Base';
 
 const OUTPUT_NAME = 'val';
-enum TwoWaySwitchGlNodeInputName {
+enum TwoWaySwitchActorNodeInputName {
 	CONDITION = 'condition',
 	IF_TRUE = 'ifTrue',
 	IF_FALSE = 'ifFalse',
 }
-const InputNames: Array<TwoWaySwitchGlNodeInputName> = [
-	TwoWaySwitchGlNodeInputName.CONDITION,
-	TwoWaySwitchGlNodeInputName.IF_TRUE,
-	TwoWaySwitchGlNodeInputName.IF_FALSE,
+const InputNames: Array<TwoWaySwitchActorNodeInputName> = [
+	TwoWaySwitchActorNodeInputName.CONDITION,
+	TwoWaySwitchActorNodeInputName.IF_TRUE,
+	TwoWaySwitchActorNodeInputName.IF_FALSE,
 ];
 
 export class TwoWaySwitchActorNode extends ParamlessTypedActorNode {
@@ -56,14 +56,14 @@ export class TwoWaySwitchActorNode extends ParamlessTypedActorNode {
 
 	public override outputValue(context: ActorNodeTriggerContext) {
 		const condition = this._inputValue<ActorConnectionPointType.BOOLEAN>(
-			TwoWaySwitchGlNodeInputName.CONDITION,
+			TwoWaySwitchActorNodeInputName.CONDITION,
 			context
 		);
 
 		if (condition) {
-			return this._inputValue(TwoWaySwitchGlNodeInputName.IF_TRUE, context);
+			return this._inputValue(TwoWaySwitchActorNodeInputName.IF_TRUE, context);
 		} else {
-			return this._inputValue(TwoWaySwitchGlNodeInputName.IF_FALSE, context);
+			return this._inputValue(TwoWaySwitchActorNodeInputName.IF_FALSE, context);
 		}
 	}
 }

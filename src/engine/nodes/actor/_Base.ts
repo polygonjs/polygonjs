@@ -134,8 +134,8 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 export type BaseActorNodeType = TypedActorNode<NodeParamsConfig>;
 export class BaseActorNodeClass extends TypedActorNode<NodeParamsConfig> {}
 
-class ParamlessParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new ParamlessParamsConfig();
-export class ParamlessTypedActorNode extends TypedActorNode<ParamlessParamsConfig> {
+class ParamlessActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new ParamlessActorParamsConfig();
+export class ParamlessTypedActorNode extends TypedActorNode<ParamlessActorParamsConfig> {
 	override paramsConfig = ParamsConfig;
 }

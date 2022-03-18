@@ -104,8 +104,8 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 export type BaseJsNodeType = TypedJsNode<NodeParamsConfig>;
 export class BaseJsNodeClass extends TypedJsNode<NodeParamsConfig> {}
 
-class ParamlessParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new ParamlessParamsConfig();
-export class ParamlessTypedJsNode extends TypedJsNode<ParamlessParamsConfig> {
+class ParamlessJsParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new ParamlessJsParamsConfig();
+export class ParamlessTypedJsNode extends TypedJsNode<ParamlessJsParamsConfig> {
 	override paramsConfig = ParamsConfig;
 }

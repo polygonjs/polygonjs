@@ -11,9 +11,9 @@ import {Vector2} from 'three/src/math/Vector2';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 
-class VecToParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new VecToParamsConfig();
-class BaseVecToActorNode extends TypedActorNode<VecToParamsConfig> {
+class VecToParamsActorConfig extends NodeParamsConfig {}
+const ParamsConfig = new VecToParamsActorConfig();
+class BaseVecToActorNode extends TypedActorNode<VecToParamsActorConfig> {
 	override paramsConfig = ParamsConfig;
 }
 

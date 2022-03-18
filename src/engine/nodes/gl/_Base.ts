@@ -137,8 +137,8 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 export type BaseGlNodeType = TypedGlNode<NodeParamsConfig>;
 export class BaseGlNodeClass extends TypedGlNode<NodeParamsConfig> {}
 
-class ParamlessParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new ParamlessParamsConfig();
-export class ParamlessTypedGlNode extends TypedGlNode<ParamlessParamsConfig> {
+class ParamlessGlParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new ParamlessGlParamsConfig();
+export class ParamlessTypedGlNode extends TypedGlNode<ParamlessGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 }

@@ -44,6 +44,12 @@ export class BaseCodeSopProcessor {
 	constructor(protected node: CodeSopNode) {
 		this.initializeProcessor();
 	}
+	get pv() {
+		return this.node.pv;
+	}
+	get p() {
+		return this.node.p;
+	}
 	initializeProcessor() {}
 	cook(inputCoreGroups: CoreGroup[]) {}
 	protected setCoreGroup(coreGroup: CoreGroup) {

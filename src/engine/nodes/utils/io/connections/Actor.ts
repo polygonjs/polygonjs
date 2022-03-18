@@ -63,8 +63,8 @@ export const PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnecti
 // Map to convert from a GL Data type to a ParamType
 //
 //
-type ConnectionPointTypeToParamTypeMapGeneric = {[key in ActorConnectionPointType]: ParamType};
-export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeToParamTypeMapGeneric {
+type ActorConnectionPointTypeToParamTypeMapGeneric = {[key in ActorConnectionPointType]: ParamType};
+export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnectionPointTypeToParamTypeMapGeneric {
 	[ActorConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON;
 	[ActorConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON;
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
@@ -80,7 +80,7 @@ export interface IConnectionPointTypeToParamTypeMap extends ConnectionPointTypeT
 	[ActorConnectionPointType.VECTOR3]: ParamType.VECTOR3;
 	[ActorConnectionPointType.VECTOR4]: ParamType.VECTOR4;
 }
-export const ActorConnectionPointTypeToParamTypeMap: IConnectionPointTypeToParamTypeMap = {
+export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeToParamTypeMap = {
 	[ActorConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON,
 	[ActorConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON,
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
@@ -141,10 +141,10 @@ export const ActorParamTypeToConnectionPointTypeMap: IActorParamTypeToConnection
 // Map of Data type default values
 //
 //
-export type ConnectionPointInitValueMapGeneric = {
-	[key in ActorConnectionPointType]: ParamInitValuesTypeMap[IConnectionPointTypeToParamTypeMap[key]];
+export type ActorConnectionPointInitValueMapGeneric = {
+	[key in ActorConnectionPointType]: ParamInitValuesTypeMap[ActorIConnectionPointTypeToParamTypeMap[key]];
 };
-export const ActorConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
+export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapGeneric = {
 	[ActorConnectionPointType.ANIMATION_MIXER]: null,
 	[ActorConnectionPointType.ANIMATION_ACTION]: null,
 	[ActorConnectionPointType.BOOLEAN]: false,
@@ -223,7 +223,7 @@ export interface ActorConnectionPointData<T extends ActorConnectionPointType> {
 }
 interface ActorConnectionPointOptions<T extends ActorConnectionPointType> {
 	inNodeDefinition?: boolean;
-	init_value?: ConnectionPointInitValueMapGeneric[T];
+	init_value?: ActorConnectionPointInitValueMapGeneric[T];
 }
 export const ACTOR_CONNECTION_POINT_IN_NODE_DEF: ActorConnectionPointOptions<ActorConnectionPointType> = {
 	inNodeDefinition: true,
@@ -234,7 +234,7 @@ import {ParamType} from '../../../../poly/ParamType';
 import {BaseConnectionPoint} from './_Base';
 export class ActorConnectionPoint<T extends ActorConnectionPointType> extends BaseConnectionPoint {
 	protected override _json: ActorConnectionPointData<T> | undefined;
-	protected override _init_value?: ConnectionPointInitValueMapGeneric[T];
+	protected override _init_value?: ActorConnectionPointInitValueMapGeneric[T];
 
 	constructor(
 		protected override _name: string,
@@ -250,13 +250,13 @@ export class ActorConnectionPoint<T extends ActorConnectionPointType> extends Ba
 		this._init_value = this._init_value || ActorConnectionPointInitValueMap[this._type];
 
 		if (CoreType.isColor(this._init_value) || CoreType.isVector(this._init_value)) {
-			this._init_value = this._init_value.clone() as ConnectionPointInitValueMapGeneric[T];
+			this._init_value = this._init_value.clone() as ActorConnectionPointInitValueMapGeneric[T];
 		}
 	}
 	override type() {
 		return this._type;
 	}
-	get param_type(): IConnectionPointTypeToParamTypeMap[T] | null {
+	get param_type(): ActorIConnectionPointTypeToParamTypeMap[T] | null {
 		const type = ActorConnectionPointTypeToParamTypeMap[this._type];
 		// we can't (yet?) have buttons from connections
 		// and this test is just here so that some connection types (matrix/object/material)
