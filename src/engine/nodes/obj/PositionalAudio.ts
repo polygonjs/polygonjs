@@ -33,7 +33,7 @@ const paramCallback = () => {
 
 class PositionalAudioParamConfig extends TransformedParamConfig(NodeParamsConfig) {
 	audio = ParamConfig.FOLDER();
-	/** @param url */
+	/** @param audio node */
 	audioNode = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.AUDIO,

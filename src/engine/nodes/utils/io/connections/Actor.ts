@@ -115,7 +115,7 @@ export interface IActorParamTypeToConnectionPointTypeMap extends ActorParamTypeT
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
-	[ParamType.STRING]: undefined;
+	[ParamType.STRING]: ActorConnectionPointType.STRING;
 	[ParamType.VECTOR2]: ActorConnectionPointType.VECTOR2;
 	[ParamType.VECTOR3]: ActorConnectionPointType.VECTOR3;
 	[ParamType.VECTOR4]: ActorConnectionPointType.VECTOR4;
@@ -130,7 +130,7 @@ export const ActorParamTypeToConnectionPointTypeMap: IActorParamTypeToConnection
 	[ParamType.PARAM_PATH]: undefined,
 	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,
-	[ParamType.STRING]: undefined,
+	[ParamType.STRING]: ActorConnectionPointType.STRING,
 	[ParamType.VECTOR2]: ActorConnectionPointType.VECTOR2,
 	[ParamType.VECTOR3]: ActorConnectionPointType.VECTOR3,
 	[ParamType.VECTOR4]: ActorConnectionPointType.VECTOR4,

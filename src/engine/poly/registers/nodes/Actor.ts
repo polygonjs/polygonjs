@@ -53,6 +53,7 @@ import {SetViewerActorNode} from '../../../nodes/actor/SetViewer';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
 import {SwitchActorNode} from '../../../nodes/actor/Switch';
+import {TriggerFilterActorNode} from '../../../nodes/actor/TriggerFilter';
 import {TwoWaySwitchActorNode} from '../../../nodes/actor/TwoWaySwitch';
 // networks
 import {ActorsNetworkActorNode} from '../../../nodes/actor/ActorsNetwork';
@@ -100,6 +101,7 @@ export interface ActorNodeChildrenMap {
 	playInstrumentNote: PlayInstrumentNoteActorNode;
 	setViewer: SetViewerActorNode;
 	switch: SwitchActorNode;
+	triggerFilter: TriggerFilterActorNode;
 	twoWaySwitch: TwoWaySwitchActorNode;
 	vec2ToFloat: Vec2ToFloatActorNode;
 	vec2ToVec3: Vec2ToVec3ActorNode;
@@ -162,6 +164,7 @@ export class ActorRegister {
 		poly.registerNode(SubtractActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
+		poly.registerNode(TriggerFilterActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(Vec2ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec2ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
