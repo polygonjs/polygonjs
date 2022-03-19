@@ -21,6 +21,34 @@ function generateThreedScans(node: FileSopNode | FileGLTFSopNode) {
 		return dict;
 	};
 }
+function _quaternius(node: FileSopNode | FileGLTFSopNode) {
+	function _quaterniusAnimal(animal: string) {
+		return new BasePreset().addEntry<ParamType.STRING>(
+			node.p.url,
+			`${DEMO_ASSETS_ROOT_URL}/models/resources/quaternius/animals/${animal}.gltf`
+		);
+	}
+
+	const animals: string[] = [
+		'Alpaca',
+		'Bull',
+		'Cow',
+		'Deer',
+		'Donkey',
+		'Fox',
+		'Horse',
+		'Horse_White',
+		'Husky',
+		'ShibaInu',
+		'Stag',
+		'Wolf',
+	];
+	const dict: PolyDictionary<BasePreset> = {};
+	for (let animal of animals) {
+		dict[`quaternius/${animal}`] = _quaterniusAnimal(animal);
+	}
+	return dict;
+}
 
 const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode> = (node: FileSopNode) => {
 	const collection = new NodePresetsCollection();
@@ -108,6 +136,7 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 		..._3dscanstores(),
 		..._renderPeoples(),
 		...generateThreedScans(node)(),
+		..._quaternius(node),
 	});
 
 	return collection;
@@ -117,6 +146,7 @@ const fileGLTFSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileGLTF
 	const collection = new NodePresetsCollection();
 	collection.setPresets({
 		...generateThreedScans(node)(),
+		..._quaternius(node),
 	});
 
 	return collection;
