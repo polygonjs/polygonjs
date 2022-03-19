@@ -81,6 +81,7 @@ export interface MenuStringParamOptions {
 export enum StringParamLanguage {
 	// JAVASCRIPT = 'javascript',
 	CSS = 'css',
+	GLSL = 'glsl',
 	HTML = 'html',
 	TYPESCRIPT = 'typescript',
 	JSON = 'json',
