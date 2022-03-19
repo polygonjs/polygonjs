@@ -45,7 +45,9 @@ class TextSopParamsConfig extends NodeParamsConfig {
 		fileBrowse: {type: [FileType.FONT]},
 	});
 	/** @param text created */
-	text = ParamConfig.STRING('polygonjs', {multiline: true});
+	text = ParamConfig.STRING('polygonjs', {
+		multiline: true,
+	});
 	/** @param type of geometry created */
 	type = ParamConfig.INTEGER(0, {
 		menu: {

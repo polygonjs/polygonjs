@@ -12,10 +12,11 @@ import {CSS2DRenderer} from '../../../modules/core/renderers/CSS2DRenderer';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {StringParamLanguage} from '../../params/utils/OptionsController';
 class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {
-		multiline: true,
+		language: StringParamLanguage.CSS,
 	});
 	/** @param toggle on to ensure objects z-index is set based on camera depth */
 	sortObjects = ParamConfig.BOOLEAN(0);

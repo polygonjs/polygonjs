@@ -25,12 +25,13 @@ const DEFAULT_VALUE = {
 };
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {StringParamLanguage} from '../../params/utils/OptionsController';
 class CSS3DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param html class */
 	className = ParamConfig.STRING(DEFAULT_VALUE.className);
 	/** @param text content */
 	text = ParamConfig.STRING(DEFAULT_VALUE.text, {
-		multiline: true,
+		language: StringParamLanguage.HTML,
 	});
 }
 const ParamsConfig = new CSS3DObjectSopParamsConfig();

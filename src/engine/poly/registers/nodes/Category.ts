@@ -3,6 +3,7 @@ const NETWORK = 'networks';
 export const CATEGORY_ACTOR = {
 	ADVANCED: 'advanced',
 	ANIMATION: 'animation',
+	AUDIO: 'audio',
 	CONVERSION: 'conversion',
 	EVENTS: 'events',
 	GET: 'get',

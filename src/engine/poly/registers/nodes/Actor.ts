@@ -51,6 +51,7 @@ import {SetObjectHoveredStateActorNode} from '../../../nodes/actor/SetObjectHove
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
 import {SetViewerActorNode} from '../../../nodes/actor/SetViewer';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
+import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
 import {SwitchActorNode} from '../../../nodes/actor/Switch';
 import {TwoWaySwitchActorNode} from '../../../nodes/actor/TwoWaySwitch';
 // networks
@@ -96,6 +97,7 @@ export interface ActorNodeChildrenMap {
 	setObjectPosition: SetObjectPositionActorNode;
 	setObjectScale: SetObjectScaleActorNode;
 	playAnimation: PlayAnimationActorNode;
+	playInstrumentNote: PlayInstrumentNoteActorNode;
 	setViewer: SetViewerActorNode;
 	switch: SwitchActorNode;
 	twoWaySwitch: TwoWaySwitchActorNode;
@@ -150,13 +152,14 @@ export class ActorRegister {
 		poly.registerNode(OnEventTickActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnEventObjectAttributeUpdatedActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
+		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(PlayInstrumentNoteActorNode, CATEGORY_ACTOR.AUDIO);
 		poly.registerNode(SetObjectHoveredStateActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectLookAtActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectMaterialActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SubtractActorNode, CATEGORY_ACTOR.MATH);
-		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);

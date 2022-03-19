@@ -54,7 +54,6 @@ const DEFAULT_NOTE_MAP = {
 class SamplerAudioParamsConfig extends NodeParamsConfig {
 	/** @param map of notes to load */
 	urlsMap = ParamConfig.STRING(JSON.stringify(DEFAULT_NOTE_MAP, null, 2), {
-		multiline: true,
 		language: StringParamLanguage.JSON,
 	});
 	/** @param base url */

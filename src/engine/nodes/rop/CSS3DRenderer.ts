@@ -4,10 +4,11 @@ import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {StringParamLanguage} from '../../params/utils/OptionsController';
 class Css3DRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {
-		multiline: true,
+		language: StringParamLanguage.CSS,
 	});
 }
 const ParamsConfig = new Css3DRendererRopParamsConfig();

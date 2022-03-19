@@ -12,6 +12,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {CSS2DObjectSopOperation} from '../../operations/sop/CSS2DObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {StringParamLanguage} from '../../params/utils/OptionsController';
 const DEFAULT = CSS2DObjectSopOperation.DEFAULT_PARAMS;
 class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param defines if the vertex id attribute is used to create the html id attribute */
@@ -31,7 +32,7 @@ class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param value of the html content */
 	html = ParamConfig.STRING(DEFAULT.html, {
 		visibleIf: {useHTMLAttrib: 0},
-		multiline: true,
+		language: StringParamLanguage.HTML,
 	});
 	/** @param toggles on if attributes are copied from the geometry to the html element */
 	copyAttributes = ParamConfig.BOOLEAN(DEFAULT.copyAttributes);
