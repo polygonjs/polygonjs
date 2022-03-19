@@ -35,7 +35,7 @@ import {GetMaterialActorNode} from '../../../nodes/actor/GetMaterial';
 import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
 import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty';
-import {LookAtActorNode} from '../../../nodes/actor/LookAt';
+import {SetObjectLookAtActorNode} from '../../../nodes/actor/SetObjectLookAt';
 import {OnEventManualTriggerActorNode} from '../../../nodes/actor/OnEventManualTrigger';
 import {MultScalarActorNode} from '../../../nodes/actor/MultScalar';
 import {NullActorNode} from '../../../nodes/actor/Null';
@@ -81,7 +81,6 @@ export interface ActorNodeChildrenMap {
 	getObject: GetObjectActorNode;
 	getObjectAttribute: GetObjectAttributeActorNode;
 	getObjectProperty: GetObjectPropertyActorNode;
-	lookAt: LookAtActorNode;
 	multScalar: MultScalarActorNode;
 	null: NullActorNode;
 	onEventChildAttributeUpdated: OnEventChildAttributeUpdatedActorNode;
@@ -92,6 +91,7 @@ export interface ActorNodeChildrenMap {
 	onEventTick: OnEventTickActorNode;
 	or: OrActorNode;
 	setObjectHoveredState: SetObjectHoveredStateActorNode;
+	setObjectLookAt: SetObjectLookAtActorNode;
 	setObjectMaterial: SetObjectMaterialActorNode;
 	setObjectPosition: SetObjectPositionActorNode;
 	setObjectScale: SetObjectScaleActorNode;
@@ -140,7 +140,6 @@ export class ActorRegister {
 		poly.registerNode(GetObjectActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectAttributeActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectPropertyActorNode, CATEGORY_ACTOR.GET);
-		poly.registerNode(LookAtActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(OnEventManualTriggerActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(MultActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultScalarActorNode, CATEGORY_ACTOR.MATH);
@@ -152,6 +151,7 @@ export class ActorRegister {
 		poly.registerNode(OnEventObjectAttributeUpdatedActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(SetObjectHoveredStateActorNode, CATEGORY_ACTOR.SET);
+		poly.registerNode(SetObjectLookAtActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectMaterialActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.SET);
