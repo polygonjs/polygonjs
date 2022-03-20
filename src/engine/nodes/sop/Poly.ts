@@ -1,18 +1,10 @@
-import {BaseNodeType} from '../_Base';
 import {SubnetSopNodeLike} from './utils/subnet/ChildrenDisplayController';
 import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeController';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 
 export function createPolySopNode(nodeType: string, definition: PolyNodeDefinition): typeof SubnetSopNodeLike {
-	class PolySopParamsConfig extends NodeParamsConfig {
-		template = ParamConfig.NODE_PATH('');
-		debug = ParamConfig.BUTTON(null, {
-			callback: (node: BaseNodeType) => {
-				BasePolySopNode.PARAM_CALLBACK_debug(node as BasePolySopNode);
-			},
-		});
-	}
+	class PolySopParamsConfig extends NodeParamsConfig {}
 	const ParamsConfig = new PolySopParamsConfig();
 	class BasePolySopNode extends SubnetSopNodeLike<PolySopParamsConfig> {
 		override paramsConfig = ParamsConfig;
@@ -21,14 +13,6 @@ export function createPolySopNode(nodeType: string, definition: PolyNodeDefiniti
 		}
 
 		public override readonly polyNodeController: PolyNodeController = new PolyNodeController(this, definition);
-
-		static PARAM_CALLBACK_debug(node: BasePolySopNode) {
-			node._debug();
-		}
-
-		private _debug() {
-			this.polyNodeController.debug(this.p.template);
-		}
 	}
 	return BasePolySopNode as typeof SubnetSopNodeLike;
 }

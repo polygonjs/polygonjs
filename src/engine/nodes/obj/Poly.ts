@@ -1,29 +1,19 @@
 import {TypedObjNode} from './_Base';
 import {Group} from 'three/src/objects/Group';
-import {BaseNodeType} from '../_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseSopNodeType} from '../sop/_Base';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {HierarchyController} from './utils/HierarchyController';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {isBooleanTrue} from '../../../core/BooleanValue';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export function createPolyObjNode(nodeType: string, definition: PolyNodeDefinition): typeof TypedObjNode {
-	class PolyObjParamConfig extends NodeParamsConfig {
-		display = ParamConfig.BOOLEAN(1);
-		template = ParamConfig.NODE_PATH('');
-		debug = ParamConfig.BUTTON(null, {
-			callback: (node: BaseNodeType) => {
-				BasePolyObjNode.PARAM_CALLBACK_debug(node as BasePolyObjNode);
-			},
-		});
-	}
+	class PolyObjParamConfig extends NodeParamsConfig {}
 	const ParamsConfig = new PolyObjParamConfig();
 
 	class BasePolyObjNode extends TypedObjNode<Group, PolyObjParamConfig> {
@@ -92,7 +82,7 @@ export function createPolyObjNode(nodeType: string, definition: PolyNodeDefiniti
 		//
 		//
 		override cook() {
-			this.object.visible = isBooleanTrue(this.pv.display);
+			// this.object.visible = isBooleanTrue(this.pv.display);
 			this.cookController.endCook();
 		}
 
@@ -102,19 +92,6 @@ export function createPolyObjNode(nodeType: string, definition: PolyNodeDefiniti
 		//
 		//
 		public override readonly polyNodeController: PolyNodeController = new PolyNodeController(this, definition);
-
-		//
-		//
-		// POLY TESTS
-		//
-		//
-		static PARAM_CALLBACK_debug(node: BasePolyObjNode) {
-			node._debug();
-		}
-
-		private _debug() {
-			this.polyNodeController.debug(this.p.template);
-		}
 	}
 	return BasePolyObjNode as typeof TypedObjNode;
 }

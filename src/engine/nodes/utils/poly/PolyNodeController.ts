@@ -9,7 +9,6 @@ import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
 import {createPolySopNode, BasePolySopNode} from '../../sop/Poly';
 import {createPolyObjNode, BasePolyObjNode} from '../../obj/Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {NodePathParam} from '../../../params/NodePath';
 
 export interface PolyNodeDefinition {
 	nodeContext: NodeContext;
@@ -102,13 +101,6 @@ export class PolyNodeController {
 		}
 	}
 
-	debug(param: NodePathParam) {
-		const node = param.value.node();
-		if (node) {
-			const data = PolyNodeController.polyNodeData(node);
-			console.log(JSON.stringify(data));
-		}
-	}
 	static polyNodeData(node: BaseNodeType): PolyNodeDefinition {
 		const rootExporter = JsonExportDispatcher.dispatch_node(node);
 		const nodesData = rootExporter.data({showPolyNodesData: true});
