@@ -29,7 +29,7 @@ export class SceneJsonExporter {
 		this._scene.nodesController.reset_node_context_signatures();
 		const root_exporter = JsonExportDispatcher.dispatch_node(this._scene.root());
 		const nodes_data = root_exporter.data();
-		const ui_data = root_exporter.ui_data();
+		const ui_data = root_exporter.uiData();
 
 		this._data = {
 			properties: {

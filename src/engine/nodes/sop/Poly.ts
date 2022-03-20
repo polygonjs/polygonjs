@@ -4,7 +4,7 @@ import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeCont
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 
-export function createPolySopNode(node_type: string, definition: PolyNodeDefinition): typeof SubnetSopNodeLike {
+export function createPolySopNode(nodeType: string, definition: PolyNodeDefinition): typeof SubnetSopNodeLike {
 	class PolySopParamsConfig extends NodeParamsConfig {
 		template = ParamConfig.NODE_PATH('');
 		debug = ParamConfig.BUTTON(null, {
@@ -17,7 +17,7 @@ export function createPolySopNode(node_type: string, definition: PolyNodeDefinit
 	class BasePolySopNode extends SubnetSopNodeLike<PolySopParamsConfig> {
 		override paramsConfig = ParamsConfig;
 		static override type() {
-			return node_type;
+			return nodeType;
 		}
 
 		public override readonly polyNodeController: PolyNodeController = new PolyNodeController(this, definition);

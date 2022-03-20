@@ -173,14 +173,14 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return this._data;
 	}
 
-	ui_data(options: DataRequestOption = {}): NodeJsonExporterUIData {
+	uiData(options: DataRequestOption = {}): NodeJsonExporterUIData {
 		const data: NodeJsonExporterUIData = this.ui_data_without_children();
 		const children = this._node.children();
 		if (children.length > 0) {
 			data['nodes'] = {};
 			children.forEach((child) => {
 				const node_exporter = JsonExportDispatcher.dispatch_node(child); //.visit(JsonExporterVisitor); //.json_exporter()
-				data['nodes'][child.name()] = node_exporter.ui_data(options);
+				data['nodes'][child.name()] = node_exporter.uiData(options);
 			});
 		}
 

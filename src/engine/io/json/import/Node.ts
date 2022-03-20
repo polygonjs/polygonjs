@@ -85,7 +85,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			ui_data.setComment(comment);
 		}
 		if (this._node.childrenAllowed()) {
-			this.process_nodes_ui_data(scene_importer, data['nodes']);
+			this.processNodesUiData(scene_importer, data['nodes']);
 		}
 	}
 
@@ -167,7 +167,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	process_nodes_ui_data(scene_importer: SceneJsonImporter, data: PolyDictionary<NodeJsonExporterUIData>) {
+	processNodesUiData(scene_importer: SceneJsonImporter, data: PolyDictionary<NodeJsonExporterUIData>) {
 		if (!data) {
 			return;
 		}

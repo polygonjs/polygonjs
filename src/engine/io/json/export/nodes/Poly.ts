@@ -8,9 +8,9 @@ export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
 		// the PolyNode does not save it children
 		return {};
 	}
-	override ui_data(options: DataRequestOption = {}): NodeJsonExporterUIData {
+	override uiData(options: DataRequestOption = {}): NodeJsonExporterUIData {
 		if (options.showPolyNodesData) {
-			return super.ui_data(options);
+			return super.uiData(options);
 		} else {
 			return this.ui_data_without_children();
 		}

@@ -35,67 +35,69 @@ export interface PolyNodeClassByContext extends PolyNodeClassByContextMapGeneric
 	[NodeContext.SOP]: typeof BasePolySopNode;
 }
 
+export const IS_POLY_NODE_BOOLEAN = 'isPolyNode';
+
 export class PolyNodeController {
 	constructor(private node: BaseNodeType, private _definition: PolyNodeDefinition) {}
 
 	initializeNode() {
-		this.init_inputs();
+		this._initInputs();
 
 		// add hooks
-		this.node.params.onParamsCreated('poly_node_init', () => {
-			this.create_params_from_definition();
+		this.node.params.onParamsCreated('PolyNodeInit', () => {
+			this._createParamsFromDefinition();
 		});
 
 		this.node.lifecycle.onAfterCreated(() => {
-			this.create_params_from_definition();
+			this._createParamsFromDefinition();
 			this.createChildNodesFromDefinition();
 		});
 	}
 
-	private init_inputs() {
-		const inputs_data = this._definition.inputs;
-		if (!inputs_data) {
+	private _initInputs() {
+		const inputsData = this._definition.inputs;
+		if (!inputsData) {
 			return;
 		}
-		this.node.io.inputs.setCount(inputs_data[0], inputs_data[1]);
+		this.node.io.inputs.setCount(inputsData[0], inputsData[1]);
 	}
 
-	create_params_from_definition() {
-		const params_data = this._definition.params;
-		if (!params_data) {
+	private _createParamsFromDefinition() {
+		const paramsData = this._definition.params;
+		if (!paramsData) {
 			return;
 		}
-		for (let param_data of params_data) {
-			param_data.options = param_data.options || {};
-			param_data.options.spare = true;
+		for (let paramData of paramsData) {
+			paramData.options = paramData.options || {};
+			paramData.options.spare = true;
 		}
-		this.node.params.updateParams({toAdd: params_data});
+		this.node.params.updateParams({toAdd: paramsData});
 	}
 
 	createChildNodesFromDefinition() {
-		const nodes_data = this._definition.nodes;
-		if (!nodes_data) {
+		const childrenData = this._definition.nodes;
+		if (!childrenData) {
 			return;
 		}
 		// TODO: this is to avoid creating gl globals and output nodes
 		// but there should be a better way, on a per-node basis.
 		// Especially since it can create problem when loading a scene with gl builders
 		// as those may trigger the creation of globals and output nodes too early, resulting in a broken load
-		const current_scene_loaded_state: boolean = this.node.scene().loadingController.loaded();
-		if (current_scene_loaded_state) {
+		const currentSceneLoadedState: boolean = this.node.scene().loadingController.loaded();
+		if (currentSceneLoadedState) {
 			this.node.scene().loadingController.markAsLoading();
 		}
 
-		const scene_importer = new SceneJsonImporter({});
-		const node_importer = new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
-		node_importer.create_nodes(scene_importer, nodes_data);
+		const sceneImporter = new SceneJsonImporter({});
+		const nodeImporter = new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
+		nodeImporter.create_nodes(sceneImporter, childrenData);
 
 		const ui_data = this._definition.ui;
 		if (ui_data) {
-			node_importer.process_nodes_ui_data(scene_importer, ui_data);
+			nodeImporter.processNodesUiData(sceneImporter, ui_data);
 		}
 
-		if (current_scene_loaded_state) {
+		if (currentSceneLoadedState) {
 			this.node.scene().loadingController.markAsLoaded();
 		}
 	}
@@ -103,18 +105,22 @@ export class PolyNodeController {
 	debug(param: NodePathParam) {
 		const node = param.value.node();
 		if (node) {
-			const root_exporter = JsonExportDispatcher.dispatch_node(node);
-			const nodes_data = root_exporter.data({showPolyNodesData: true});
-			const ui_data = root_exporter.ui_data({showPolyNodesData: true});
-			const data: PolyNodeDefinition = {
-				nodeContext: node.context(),
-				inputs: [0, 0],
-				params: [],
-				nodes: nodes_data.nodes,
-				ui: ui_data.nodes,
-			};
+			const data = PolyNodeController.polyNodeData(node);
 			console.log(JSON.stringify(data));
 		}
+	}
+	static polyNodeData(node: BaseNodeType): PolyNodeDefinition {
+		const rootExporter = JsonExportDispatcher.dispatch_node(node);
+		const nodesData = rootExporter.data({showPolyNodesData: true});
+		const uiData = rootExporter.uiData({showPolyNodesData: true});
+		const data: PolyNodeDefinition = {
+			nodeContext: node.context(),
+			inputs: [1, 4],
+			params: [],
+			nodes: nodesData.nodes,
+			ui: uiData.nodes,
+		};
+		return data;
 	}
 
 	static createNodeClass<NC extends NodeContext>(

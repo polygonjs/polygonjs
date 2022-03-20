@@ -14,7 +14,7 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
-export function createPolyObjNode(node_type: string, definition: PolyNodeDefinition): typeof TypedObjNode {
+export function createPolyObjNode(nodeType: string, definition: PolyNodeDefinition): typeof TypedObjNode {
 	class PolyObjParamConfig extends NodeParamsConfig {
 		display = ParamConfig.BOOLEAN(1);
 		template = ParamConfig.NODE_PATH('');
@@ -29,7 +29,7 @@ export function createPolyObjNode(node_type: string, definition: PolyNodeDefinit
 	class BasePolyObjNode extends TypedObjNode<Group, PolyObjParamConfig> {
 		override paramsConfig = ParamsConfig;
 		static override type() {
-			return node_type;
+			return nodeType;
 		}
 		override readonly hierarchyController: HierarchyController = new HierarchyController(this);
 		public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
