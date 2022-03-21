@@ -49,6 +49,13 @@ export class ScatterSopOperation extends BaseSopOperation {
 	override async cook(inputContents: CoreGroup[], params: ScatterSopParams) {
 		const coreGroup = inputContents[0];
 		let inputMesh = coreGroup.objectsWithGeo()[0] as Mesh;
+		if (inputMesh) {
+			return this._createPoints(inputMesh, coreGroup, params);
+		} else {
+			return this.createCoreGroupFromObjects([]);
+		}
+	}
+	private _createPoints(inputMesh: Mesh, coreGroup: CoreGroup, params: ScatterSopParams) {
 		const originalMesh = inputMesh;
 
 		let inputGeometry = inputMesh.geometry;
