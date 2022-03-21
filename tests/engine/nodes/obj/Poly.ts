@@ -1,10 +1,10 @@
-import {PolyNodeController, PolyNodeDefinition} from '../../../../src/engine/nodes/utils/poly/PolyNodeController';
+import {PolyNodeController} from '../../../../src/engine/nodes/utils/poly/PolyNodeController';
+import {PolyNodeDefinition} from '../../../../src/engine/nodes/utils/poly/PolyNodeDefinition';
 import {NodeContext} from '../../../../src/engine/poly/NodeContext';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
-import {Poly} from '../../../../src/engine/Poly';
 import {ObjNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/Obj';
 
-const definition: PolyNodeDefinition = {
+const data: PolyNodeDefinition = {
 	nodeContext: NodeContext.OBJ,
 	params: [
 		{
@@ -24,10 +24,7 @@ const definition: PolyNodeDefinition = {
 		},
 	},
 };
-const node_class = PolyNodeController.createNodeClass('poly_obj_test', NodeContext.OBJ, definition);
-if (node_class) {
-	Poly.registerNode(node_class);
-}
+PolyNodeController.createNodeClassAndRegister({context: NodeContext.OBJ, type: 'poly_obj_test', data});
 
 QUnit.test('poly obj simple', async (assert) => {
 	const root = window.root;

@@ -8,6 +8,7 @@ export interface RegisterOptions {
 	only?: string[];
 	except?: string[];
 	userAllowed?: boolean;
+	polyNode?: boolean;
 }
 
 // export interface BaseNodeConstructor {
@@ -48,10 +49,19 @@ export class NodesRegister {
 			this._node_register.set(context, current_nodes_for_context);
 		}
 
-		const already_registered_node = current_nodes_for_context.get(nodeType);
-		if (already_registered_node) {
-			console.error(`node ${context}/${nodeType} already registered`);
-			return;
+		const alreadyRegisteredNode = current_nodes_for_context.get(nodeType);
+		if (alreadyRegisteredNode) {
+			// if the node that is already registered is a polyNode, it can be overwritten by another polyNode.
+			const isAlreadyRegisteredNodePolyNode =
+				this._node_register_options.get(context)?.get(nodeType)?.polyNode == true;
+			const isNewNodePolyNode = options?.polyNode == true;
+			if (isAlreadyRegisteredNodePolyNode && isNewNodePolyNode) {
+				// we don't show a warning or return if both are polyNodes
+				console.log(`overwritting ${context}/${nodeType}`);
+			} else {
+				console.error(`node ${context}/${nodeType} already registered`);
+				return;
+			}
 		}
 		current_nodes_for_context.set(nodeType, node);
 

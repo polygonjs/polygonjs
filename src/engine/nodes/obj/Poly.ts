@@ -6,17 +6,17 @@ import {BaseSopNodeType} from '../sop/_Base';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {HierarchyController} from './utils/HierarchyController';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
-import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeController';
+import {PolyNodeController} from '../utils/poly/PolyNodeController';
+import {PolyNodeDefinition} from '../utils/poly/PolyNodeDefinition';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {PolyNodeParamsConfig} from '../utils/poly/PolyNodeParamsConfig';
 
 export function createPolyObjNode(nodeType: string, definition: PolyNodeDefinition): typeof TypedObjNode {
-	class PolyObjParamConfig extends NodeParamsConfig {}
-	const ParamsConfig = new PolyObjParamConfig();
+	const ParamsConfig = PolyNodeParamsConfig.ParamsConfig(definition);
 
-	class BasePolyObjNode extends TypedObjNode<Group, PolyObjParamConfig> {
+	class BasePolyObjNode extends TypedObjNode<Group, typeof ParamsConfig> {
 		override paramsConfig = ParamsConfig;
 		static override type() {
 			return nodeType;

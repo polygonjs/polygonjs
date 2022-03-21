@@ -1,41 +1,24 @@
-import {ParamOptionToAdd} from '../params/ParamsController';
-import {ParamType} from '../../../poly/ParamType';
-import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../../io/json/export/Node';
 import {BaseNodeType, TypedNode} from '../../_Base';
 import {NodeContext} from '../../../poly/NodeContext';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeJsonImporter} from '../../../io/json/import/Node';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
-import {createPolySopNode, BasePolySopNode} from '../../sop/Poly';
-import {createPolyObjNode, BasePolyObjNode} from '../../obj/Poly';
-import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {createPolySopNode} from '../../sop/Poly';
+import {createPolyObjNode} from '../../obj/Poly';
+import {NodeParamsConfig, ParamTemplate} from '../params/ParamsConfig';
+import {PolyNodeDefinition} from './PolyNodeDefinition';
+import {PolyNodeClassByContext} from './PolyNodeClassByContext';
+import {Poly} from '../../../Poly';
+import {ParamOptionToAdd} from '../params/ParamsController';
+import {ParamType} from '../../../poly/ParamType';
 
-export interface PolyNodeDefinition {
-	nodeContext: NodeContext;
-	inputs?: [number, number];
-	params?: ParamOptionToAdd<ParamType>[];
-	nodes?: PolyDictionary<NodeJsonExporterData>;
-	ui?: PolyDictionary<NodeJsonExporterUIData>;
+// export const IS_POLY_NODE_BOOLEAN = 'isPolyNode';
+
+export interface PolyNodeDataRegister<NC extends NodeContext> {
+	context: NC;
+	type: string;
+	data: PolyNodeDefinition;
 }
-
-type PolyNodeClassByContextMapGeneric = {[key in NodeContext]: any};
-export interface PolyNodeClassByContext extends PolyNodeClassByContextMapGeneric {
-	[NodeContext.ACTOR]: undefined;
-	[NodeContext.ANIM]: undefined;
-	[NodeContext.AUDIO]: undefined;
-	[NodeContext.COP]: undefined;
-	[NodeContext.EVENT]: undefined;
-	[NodeContext.GL]: undefined;
-	[NodeContext.JS]: undefined;
-	[NodeContext.MANAGER]: undefined;
-	[NodeContext.MAT]: undefined;
-	[NodeContext.OBJ]: typeof BasePolyObjNode;
-	[NodeContext.ROP]: undefined;
-	[NodeContext.SOP]: typeof BasePolySopNode;
-}
-
-export const IS_POLY_NODE_BOOLEAN = 'isPolyNode';
-
 export class PolyNodeController {
 	constructor(private node: BaseNodeType, private _definition: PolyNodeDefinition) {}
 
@@ -43,12 +26,12 @@ export class PolyNodeController {
 		this._initInputs();
 
 		// add hooks
-		this.node.params.onParamsCreated('PolyNodeInit', () => {
-			this._createParamsFromDefinition();
-		});
+		// this.node.params.onParamsCreated('PolyNodeInit', () => {
+		// 	this._createParamsFromDefinition();
+		// });
 
 		this.node.lifecycle.onAfterCreated(() => {
-			this._createParamsFromDefinition();
+			// this._createParamsFromDefinition();
 			this.createChildNodesFromDefinition();
 		});
 	}
@@ -61,16 +44,28 @@ export class PolyNodeController {
 		this.node.io.inputs.setCount(inputsData[0], inputsData[1]);
 	}
 
-	private _createParamsFromDefinition() {
-		const paramsData = this._definition.params;
-		if (!paramsData) {
+	// private _createParamsFromDefinition() {
+	// 	const paramsData = this._definition.params;
+	// 	if (!paramsData) {
+	// 		return;
+	// 	}
+	// 	for (let paramData of paramsData) {
+	// 		paramData.options = paramData.options || {};
+	// 		paramData.options.spare = true;
+	// 	}
+	// 	this.node.params.updateParams({toAdd: paramsData});
+	// }
+	static setupParamsConfig(paramsConfig: NodeParamsConfig, data: PolyNodeDefinition) {
+		if (!data.params) {
 			return;
 		}
-		for (let paramData of paramsData) {
-			paramData.options = paramData.options || {};
-			paramData.options.spare = true;
+		for (let paramData of data.params) {
+			const paramName = paramData.name;
+			const paramType = paramData.type;
+			const initValue = paramData.initValue;
+			const options = paramData.options;
+			(paramsConfig as any)[paramName] = new ParamTemplate(paramType, initValue, options); //ParamConfig.STRING('aa');
 		}
-		this.node.params.updateParams({toAdd: paramsData});
 	}
 
 	createChildNodesFromDefinition() {
@@ -108,23 +103,41 @@ export class PolyNodeController {
 		const data: PolyNodeDefinition = {
 			nodeContext: node.context(),
 			inputs: [1, 4],
-			params: [],
+			params: node.params.non_spare
+				.filter((p) => p.parentParam() == null)
+				.map((param) => {
+					const paramData: ParamOptionToAdd<ParamType> = {
+						name: param.name(),
+						type: param.type(),
+						initValue: param.defaultValueSerialized(),
+						rawInput: param.rawInputSerialized(),
+						options: param.options.current(),
+					};
+					return paramData;
+				}),
 			nodes: nodesData.nodes,
 			ui: uiData.nodes,
 		};
 		return data;
 	}
 
-	static createNodeClass<NC extends NodeContext>(
-		nodeType: string,
+	static _createNodeClass<NC extends NodeContext>(
 		nodeContext: NC,
-		definition: PolyNodeDefinition
+		nodeType: string,
+		data: PolyNodeDefinition
 	): PolyNodeClassByContext[NC] | undefined {
 		switch (nodeContext) {
 			case NodeContext.SOP:
-				return createPolySopNode(nodeType, definition) as any;
+				return createPolySopNode(nodeType, data) as any;
 			case NodeContext.OBJ:
-				return createPolyObjNode(nodeType, definition) as any;
+				return createPolyObjNode(nodeType, data) as any;
+		}
+	}
+	static createNodeClassAndRegister<NC extends NodeContext>(dataRegister: PolyNodeDataRegister<NC>) {
+		const {context, type, data} = dataRegister;
+		const nodeClass = this._createNodeClass(context, type, data);
+		if (nodeClass) {
+			Poly.registerNode(nodeClass, 'polyNodes', {polyNode: true});
 		}
 	}
 }

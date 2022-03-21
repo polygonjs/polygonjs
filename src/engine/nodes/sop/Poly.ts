@@ -1,12 +1,12 @@
 import {SubnetSopNodeLike} from './utils/subnet/ChildrenDisplayController';
-import {PolyNodeController, PolyNodeDefinition} from '../utils/poly/PolyNodeController';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {PolyNodeDefinition} from '../utils/poly/PolyNodeDefinition';
+import {PolyNodeParamsConfig} from '../utils/poly/PolyNodeParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
+import {PolyNodeController} from '../utils/poly/PolyNodeController';
 
 export function createPolySopNode(nodeType: string, definition: PolyNodeDefinition): typeof SubnetSopNodeLike {
-	class PolySopParamsConfig extends NodeParamsConfig {}
-	const ParamsConfig = new PolySopParamsConfig();
-	class BasePolySopNode extends SubnetSopNodeLike<PolySopParamsConfig> {
+	const ParamsConfig = PolyNodeParamsConfig.ParamsConfig(definition);
+	class BasePolySopNode extends SubnetSopNodeLike<typeof ParamsConfig> {
 		override paramsConfig = ParamsConfig;
 		static override type() {
 			return nodeType;
