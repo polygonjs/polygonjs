@@ -57,7 +57,6 @@ export class NodesRegister {
 			const isNewNodePolyNode = options?.polyNode == true;
 			if (isAlreadyRegisteredNodePolyNode && isNewNodePolyNode) {
 				// we don't show a warning or return if both are polyNodes
-				console.log(`overwritting ${context}/${nodeType}`);
 			} else {
 				console.error(`node ${context}/${nodeType} already registered`);
 				return;
@@ -115,10 +114,17 @@ export class NodesRegister {
 			});
 			return nodes_for_context.filter((node) => {
 				const nodeType = NodesRegister.type(node);
-				const options = this._node_register_options.get(context)?.get(nodeType);
+				const options = this.nodeOptions(context, nodeType);
 				if (!options) {
 					return true;
 				} else {
+					const parentOptions = this.nodeOptions(parentNode.context(), parentNode.type());
+					if (parentOptions?.polyNode == true) {
+						// if parentNode is a polyNode, we should be able to create any node,
+						// otherwise we would not be able to create gl/subnetInput and gl/subnetOutput
+						// which would be problematic
+						return true;
+					}
 					const option_only = options['only'];
 					const option_except = options['except'];
 					const context_and_type = `${parentNode.context()}/${parentNode.type()}`;

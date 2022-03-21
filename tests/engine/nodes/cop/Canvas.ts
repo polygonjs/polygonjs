@@ -83,25 +83,22 @@ QUnit.test('COP canvas simple', async (assert) => {
 	const pauseDuration = 100;
 
 	let data = await getRenderData();
-	console.log(data);
 	assert.in_delta(data[0], 0, 0.1);
 	assert.in_delta(data[1], 0, 0.1);
 	assert.in_delta(data[2], 0, 0.1);
 
 	setCanvasColor('black');
 	await CoreSleep.sleep(pauseDuration);
-	// I'm not entirely sure why it is not white here
 	data = await getRenderData();
-	console.log(data);
+	// the color of the root.backgroundColor seems to have an impact on this color, not sure why yet
 	assert.in_delta(data[0], 0.13, 0.1);
 	assert.in_delta(data[1], 0.13, 0.1);
 	assert.in_delta(data[2], 0.13, 0.1);
 
 	setCanvasColor('white');
 	await CoreSleep.sleep(pauseDuration);
-	// I'm not entirely sure why it is not white here
+	// I'm not entirely sure why it is not white here (sRGB conversion maybe?)
 	data = await getRenderData();
-	console.log(data);
 	assert.in_delta(data[0], 0.76, 0.1);
 	assert.in_delta(data[1], 0.76, 0.1);
 	assert.in_delta(data[2], 0.76, 0.1);

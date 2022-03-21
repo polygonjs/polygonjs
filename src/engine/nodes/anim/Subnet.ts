@@ -14,11 +14,7 @@ import {SubnetOutputAnimNode} from './SubnetOutput';
 class ParamLessSubnetAnimParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ParamLessSubnetAnimParamsConfig();
 
-export class SubnetAnimNode extends TypedAnimNode<ParamLessSubnetAnimParamsConfig> {
-	override paramsConfig = ParamsConfig;
-	static override type() {
-		return NetworkNodeType.SUBNET;
-	}
+export class BaseSubnetAnimNode<K extends NodeParamsConfig> extends TypedAnimNode<K> {
 	override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 	}
@@ -59,5 +55,12 @@ export class SubnetAnimNode extends TypedAnimNode<ParamLessSubnetAnimParamsConfi
 			return this.cookController.endCook();
 		}
 		this.setTimelineBuilder(timelineBuilder);
+	}
+}
+
+export class SubnetAnimNode extends BaseSubnetAnimNode<ParamLessSubnetAnimParamsConfig> {
+	override paramsConfig = ParamsConfig;
+	static override type() {
+		return NetworkNodeType.SUBNET;
 	}
 }

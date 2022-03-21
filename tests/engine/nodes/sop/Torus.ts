@@ -8,5 +8,5 @@ QUnit.test('torus simple', async (assert) => {
 	const {geometry} = core_group.objectsWithGeo()[0];
 
 	assert.ok(geometry);
-	assert.equal(container.pointsCount(), 273);
+	assert.equal(container.pointsCount(), 1071);
 });

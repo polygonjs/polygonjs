@@ -1,14 +1,14 @@
-import {NodeJsonExporter, NodeJsonExporterUIData, DataRequestOption} from '../Node';
+import {NodeJsonExporter, NodeJsonExporterUIData, JSONExporterDataRequestOption} from '../Node';
 
 export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
-	protected override nodes_data(options: DataRequestOption = {}) {
+	protected override nodes_data(options: JSONExporterDataRequestOption = {}) {
 		if (options.showPolyNodesData) {
 			return super.nodes_data(options);
 		}
 		// the PolyNode does not save it children
 		return {};
 	}
-	override uiData(options: DataRequestOption = {}): NodeJsonExporterUIData {
+	override uiData(options: JSONExporterDataRequestOption = {}): NodeJsonExporterUIData {
 		if (options.showPolyNodesData) {
 			return super.uiData(options);
 		} else {

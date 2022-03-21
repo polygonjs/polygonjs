@@ -11,14 +11,12 @@ import {PolyNodeClassByContext} from './PolyNodeClassByContext';
 import {Poly} from '../../../Poly';
 import {ParamOptionToAdd} from '../params/ParamsController';
 import {ParamType} from '../../../poly/ParamType';
+import {PolyNodeDataRegister} from './PolyNodeDataRegister';
+import {createPolyAnimNode} from '../../anim/Poly';
+import {createPolyGlNode} from '../../gl/Poly';
 
 // export const IS_POLY_NODE_BOOLEAN = 'isPolyNode';
 
-export interface PolyNodeDataRegister<NC extends NodeContext> {
-	context: NC;
-	type: string;
-	data: PolyNodeDefinition;
-}
 export class PolyNodeController {
 	constructor(private node: BaseNodeType, private _definition: PolyNodeDefinition) {}
 
@@ -127,10 +125,22 @@ export class PolyNodeController {
 		data: PolyNodeDefinition
 	): PolyNodeClassByContext[NC] | undefined {
 		switch (nodeContext) {
-			case NodeContext.SOP:
-				return createPolySopNode(nodeType, data) as any;
+			// actor
+			case NodeContext.ANIM:
+				return createPolyAnimNode(nodeType, data) as any;
+			// audio
+			// cop
+			// event
+			case NodeContext.GL:
+				return createPolyGlNode(nodeType, data) as any;
+			// mat
+			// obj
 			case NodeContext.OBJ:
 				return createPolyObjNode(nodeType, data) as any;
+			// post
+			// rop
+			case NodeContext.SOP:
+				return createPolySopNode(nodeType, data) as any;
 		}
 	}
 	static createNodeClassAndRegister<NC extends NodeContext>(dataRegister: PolyNodeDataRegister<NC>) {

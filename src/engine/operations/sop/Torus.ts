@@ -35,9 +35,9 @@ const normal = new Vector3();
 export class TorusSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TorusSopParams = {
 		radius: 1,
-		radiusTube: 1,
+		radiusTube: 0.25,
 		segmentsRadial: 20,
-		segmentsTube: 12,
+		segmentsTube: 50,
 		open: false,
 		arc: Math.PI * 2,
 		cap: true,

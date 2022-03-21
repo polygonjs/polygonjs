@@ -5,13 +5,16 @@ import {CoreString} from '../../../core/String';
 import {BaseNodeType} from '../../nodes/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeChildrenMapByContext} from '../../poly/registers/nodes/All';
+import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 
+type NodeByNodeId = Map<CoreGraphNodeId, BaseNodeType>;
+type NodeMapByType<NC extends NodeContext> = Map<keyof NodeChildrenMapByContext[NC], NodeByNodeId>;
 export class NodesController {
 	constructor(private scene: PolyScene) {}
 
 	_root!: RootManagerNode;
-	_node_context_signatures: PolyDictionary<boolean> = {};
-	_instanciated_nodes_by_context_and_type: PolyDictionary<PolyDictionary<PolyDictionary<BaseNodeType>>> = {};
+	_nodeContextSignatures: PolyDictionary<boolean> = {};
+	_instanciatedNodesByContextAndType: Map<NodeContext, NodeMapByType<NodeContext>> = new Map(); //PolyDictionary<PolyDictionary<PolyDictionary<BaseNodeType>>> = {};
 
 	init() {
 		this._root = new RootManagerNode(this.scene, ROOT_NODE_NAME);
@@ -99,34 +102,56 @@ export class NodesController {
 		return matching_nodes;
 	}
 
-	reset_node_context_signatures() {
-		this._node_context_signatures = {};
+	resetNodeContextSignatures() {
+		this._nodeContextSignatures = {};
 	}
-	register_node_context_signature(node: BaseNodeType) {
+	registerNodeContextSignature(node: BaseNodeType) {
 		if (node.childrenAllowed() && node.childrenController) {
-			this._node_context_signatures[node.childrenController.node_context_signature()] = true;
+			this._nodeContextSignatures[node.childrenController.nodeContextSignature()] = true;
 		}
 	}
-	node_context_signatures() {
-		return Object.keys(this._node_context_signatures)
+	nodeContextSignatures() {
+		return Object.keys(this._nodeContextSignatures)
 			.sort()
 			.map((s) => s.toLowerCase());
 	}
 
-	addToInstanciatedNode(node: BaseNodeType) {
-		const context = node.context();
-		const node_type = node.type();
-		this._instanciated_nodes_by_context_and_type[context] =
-			this._instanciated_nodes_by_context_and_type[context] || {};
-		this._instanciated_nodes_by_context_and_type[context][node_type] =
-			this._instanciated_nodes_by_context_and_type[context][node_type] || {};
-		this._instanciated_nodes_by_context_and_type[context][node_type][node.graphNodeId()] = node;
+	addToInstanciatedNode<NC extends NodeContext>(node: BaseNodeType) {
+		const context = node.context() as NC;
+		const nodeType = node.type() as keyof NodeChildrenMapByContext[NC];
+
+		let mapForContext: NodeMapByType<NC> | undefined = this._instanciatedNodesByContextAndType.get(context);
+		if (!mapForContext) {
+			mapForContext = new Map() as NodeMapByType<NC>;
+			this._instanciatedNodesByContextAndType.set(context, mapForContext as any);
+		}
+		let mapForType = mapForContext.get(nodeType);
+		if (!mapForType) {
+			mapForType = new Map() as NodeByNodeId;
+			mapForContext.set(nodeType, mapForType);
+		}
+		mapForType.set(node.graphNodeId(), node);
+
+		// this._instanciated_nodes_by_context_and_type[context] =
+		// 	this._instanciated_nodes_by_context_and_type[context] || {};
+		// this._instanciated_nodes_by_context_and_type[context][node_type] =
+		// 	this._instanciated_nodes_by_context_and_type[context][node_type] || {};
+		// this._instanciated_nodes_by_context_and_type[context][node_type][node.graphNodeId()] = node;
 	}
 
-	removeFromInstanciatedNode(node: BaseNodeType) {
-		const context = node.context();
-		const node_type = node.type();
-		delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graphNodeId()];
+	removeFromInstanciatedNode<NC extends NodeContext>(node: BaseNodeType) {
+		const context = node.context() as NC;
+		const nodeType = node.type() as keyof NodeChildrenMapByContext[NC];
+		const mapForContext: NodeMapByType<NC> | undefined = this._instanciatedNodesByContextAndType.get(context);
+		if (!mapForContext) {
+			return;
+		}
+		const mapForType = mapForContext.get(nodeType);
+		if (!mapForType) {
+			return;
+		}
+		mapForType.delete(node.graphNodeId());
+		// delete this._instanciated_nodes_by_context_and_type[context][node_type][node.graphNodeId()];
 	}
 	nodesByType(type: string): BaseNodeType[] {
 		const list: BaseNodeType[] = [];
@@ -140,10 +165,18 @@ export class NodesController {
 		return list;
 	}
 
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.ACTOR]>(
+		context: NodeContext.ACTOR,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.ACTOR][T][];
 	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.ANIM]>(
 		context: NodeContext.ANIM,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.ANIM][T][];
+	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.AUDIO]>(
+		context: NodeContext.AUDIO,
+		node_type: T
+	): NodeChildrenMapByContext[NodeContext.AUDIO][T][];
 	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.COP]>(
 		context: NodeContext.COP,
 		node_type: T
@@ -180,15 +213,15 @@ export class NodesController {
 		context: NodeContext.SOP,
 		node_type: T
 	): NodeChildrenMapByContext[NodeContext.SOP][T][];
-	nodesByContextAndType<NC extends NodeContext>(context: NC, node_type: string) {
-		const nodes = [];
-		const nodes_for_context = this._instanciated_nodes_by_context_and_type[context];
-		if (nodes_for_context) {
-			const nodes_by_ids = nodes_for_context[node_type];
-			if (nodes_by_ids) {
-				for (let id of Object.keys(nodes_by_ids)) {
-					nodes.push(nodes_by_ids[id]);
-				}
+	nodesByContextAndType<NC extends NodeContext>(context: NC, nodeType: string) {
+		const nodes: BaseNodeType[] = [];
+		const mapForContext: NodeMapByType<NC> | undefined = this._instanciatedNodesByContextAndType.get(context);
+		if (mapForContext) {
+			const mapForType = mapForContext.get(nodeType as any);
+			if (mapForType) {
+				mapForType.forEach((node) => {
+					nodes.push(node);
+				});
 			}
 		}
 		return nodes;

@@ -101,7 +101,7 @@ export class HierarchyChildrenController {
 			: nodeName;
 	}
 
-	node_context_signature() {
+	nodeContextSignature() {
 		return `${this.node.context()}/${this.node.type()}`;
 	}
 

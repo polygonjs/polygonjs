@@ -26,7 +26,7 @@ export class SceneJsonExporter {
 	constructor(private _scene: PolyScene) {}
 
 	data(versions?: Versions): SceneJsonExporterData {
-		this._scene.nodesController.reset_node_context_signatures();
+		this._scene.nodesController.resetNodeContextSignatures();
 		const root_exporter = JsonExportDispatcher.dispatch_node(this._scene.root());
 		const nodes_data = root_exporter.data();
 		const ui_data = root_exporter.uiData();

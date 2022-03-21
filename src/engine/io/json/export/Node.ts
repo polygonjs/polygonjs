@@ -50,7 +50,7 @@ export interface NodeJsonExporterUIData {
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
-export interface DataRequestOption {
+export interface JSONExporterDataRequestOption {
 	showPolyNodesData?: boolean;
 }
 
@@ -58,9 +58,9 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	private _data: NodeJsonExporterData | undefined; // = {} as NodeJsonExporterData;
 	constructor(protected _node: T) {}
 
-	data(options: DataRequestOption = {}): NodeJsonExporterData {
+	data(options: JSONExporterDataRequestOption = {}): NodeJsonExporterData {
 		if (!this.is_root()) {
-			this._node.scene().nodesController.register_node_context_signature(this._node);
+			this._node.scene().nodesController.registerNodeContextSignature(this._node);
 		}
 		this._data = {
 			type: this._node.type(),
@@ -173,7 +173,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return this._data;
 	}
 
-	uiData(options: DataRequestOption = {}): NodeJsonExporterUIData {
+	uiData(options: JSONExporterDataRequestOption = {}): NodeJsonExporterUIData {
 		const data: NodeJsonExporterUIData = this.ui_data_without_children();
 		const children = this._node.children();
 		if (children.length > 0) {
@@ -275,7 +275,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return data;
 	}
 
-	protected nodes_data(options: DataRequestOption = {}) {
+	protected nodes_data(options: JSONExporterDataRequestOption = {}) {
 		const data: PolyDictionary<NodeJsonExporterData> = {};
 		for (let child of this._node.children()) {
 			const node_exporter = JsonExportDispatcher.dispatch_node(child); //.json_exporter()

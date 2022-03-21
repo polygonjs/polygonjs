@@ -18,8 +18,8 @@ interface TorusKnotSopParams extends DefaultOperationParams {
 export class TorusKnotSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TorusKnotSopParams = {
 		radius: 1,
-		radiusTube: 1,
-		segmentsRadial: 64,
+		radiusTube: 0.25,
+		segmentsRadial: 128,
 		segmentsTube: 8,
 		p: 2,
 		q: 3,
