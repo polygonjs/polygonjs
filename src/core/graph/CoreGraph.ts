@@ -187,7 +187,8 @@ export class CoreGraph {
 	}
 	allSuccessorIds(node: CoreGraphNode): CoreGraphNodeId[] {
 		const method = this._boundSuccessorIds;
-		const ids: Set<CoreGraphNodeId> = new Set();
+		// const ids: Set<CoreGraphNodeId> = new Set();
+		const ids: Array<CoreGraphNodeId> = [];
 		let nextIds = method(node.graphNodeId());
 
 		while (nextIds.length > 0) {
@@ -195,20 +196,24 @@ export class CoreGraph {
 			for (let nextId of nextIds) {
 				const nextNode = this.nodeFromId(nextId);
 				if (nextNode && !nextNode.dirtyController.isForbiddenTriggerNodeId(node.graphNodeId())) {
-					ids.add(nextId);
+					// if the ids has already been encountered, we need to remove it and add it again.
+					// This is important, otherwise a node may receive a dirty event before all its dependencies have
+					// which currently leads to bad cooks
+					const currentIndex = ids.indexOf(nextId);
+					if (currentIndex >= 0) {
+						ids.splice(currentIndex, 1);
+					}
+					ids.push(nextId);
 					for (let nextNextId of method(nextId)) {
 						nextNextIds.push(nextNextId);
 					}
 				}
 			}
 
-			// for (let id of nextNextIds) {
-			// 	nextIds.push(id);
-			// }
 			nextIds = nextNextIds;
 		}
 
-		return SetUtils.toArray(ids);
+		return ids;
 	}
 	allPredecessors(node: CoreGraphNode): CoreGraphNode[] {
 		const ids = this.allPredecessorIds(node);

@@ -67,7 +67,6 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
-		// this.uiData.set_icon('dot-circle');
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
@@ -75,14 +74,8 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		await this._evalExpressionsForCoreGroup(coreGroup);
 	}
 
-	// group.traverse (object)=>
-	// 	if (geometry = object.geometry)?
-	// 		this._eval_expressions(geometry)
-	// 		geometry.computeVertexNormals()
-
 	async _evalExpressionsForCoreGroup(coreGroup: CoreGroup) {
 		const coreObjects = coreGroup.coreObjects();
-		// this._allocate_arrays(core_objects)
 
 		for (let i = 0; i < coreObjects.length; i++) {
 			await this._evalExpressionsForCoreObject(coreObjects[i]);
@@ -117,7 +110,6 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 		const tmp_array_x = await this._updateFromParam(
 			geometry,
-			array,
 			points,
 			this.p.updateX,
 			this.p.x,
@@ -127,7 +119,6 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		);
 		const tmp_array_y = await this._updateFromParam(
 			geometry,
-			array,
 			points,
 			this.p.updateY,
 			this.p.y,
@@ -137,7 +128,6 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		);
 		const tmp_array_z = await this._updateFromParam(
 			geometry,
-			array,
 			points,
 			this.p.updateZ,
 			this.p.z,
@@ -159,7 +149,6 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 	private async _updateFromParam(
 		geometry: BufferGeometry,
-		array: number[],
 		points: CorePoint[],
 		do_update_param: BooleanParam,
 		value_param: FloatParam,

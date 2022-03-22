@@ -115,6 +115,9 @@ export class DirtyController {
 	}
 
 	setSuccessorsDirty(original_trigger_graph_node?: CoreGraphNode): void {
+		if (original_trigger_graph_node == null) {
+			original_trigger_graph_node = this.node;
+		}
 		const propagate = false;
 		this._cachedSuccessors = this._cachedSuccessors || this.node.graphAllSuccessors();
 
