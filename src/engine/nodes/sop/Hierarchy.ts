@@ -60,4 +60,8 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}
+
+	setMode(mode: HierarchyMode) {
+		this.p.mode.set(HIERARCHY_MODES.indexOf(mode));
+	}
 }

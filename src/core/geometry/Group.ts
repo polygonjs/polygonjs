@@ -262,19 +262,19 @@ export class CoreGroup {
 		return core_group;
 	}
 
-	objectsFromGroup(group_name: string): Object3D[] {
-		return this.coreObjectsFromGroup(group_name).map((co) => co.object());
+	objectsFromGroup(groupName: string): Object3D[] {
+		return this.coreObjectsFromGroup(groupName).map((co) => co.object());
 	}
-	coreObjectsFromGroup(group_name: string): CoreObject[] {
-		group_name = group_name.trim();
+	coreObjectsFromGroup(groupString: string): CoreObject[] {
+		groupString = groupString.trim();
 
-		if (group_name !== '') {
-			const index = parseInt(group_name);
+		if (groupString !== '') {
+			const index = parseInt(groupString);
 			if (!CoreType.isNaN(index)) {
 				return ArrayUtils.compact([this.coreObjects()[index]]);
 			} else {
-				return this.coreObjects().filter((core_object) => {
-					return CoreString.matchMask(group_name, core_object.name());
+				return this.coreObjects().filter((coreObject) => {
+					return CoreObject.isInGroup(groupString, coreObject);
 				});
 			}
 		} else {

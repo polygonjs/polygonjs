@@ -46,7 +46,6 @@ type AttributeDictionary = PolyDictionary<AttribValue>;
 export class CoreObject extends CoreEntity {
 	constructor(private _object: Object3D, index: number) {
 		super(index);
-		CoreObject._createAttributesDictionaryIfNone(_object);
 	}
 	dispose() {}
 
@@ -90,17 +89,25 @@ export class CoreObject extends CoreEntity {
 			return this.points();
 		}
 	}
-	static isInGroup(groupString: string, object: Object3D) {
+	static isInGroup(groupString: string, coreObject: CoreObject) {
 		const group = groupString.trim();
 		if (group.length == 0) {
 			return true;
 		}
+
+		if (coreObject.object.name == group) {
+			return true;
+		}
+		if (CoreString.matchMask(groupString, coreObject.name())) {
+			return true;
+		}
+
 		const elements = group.split('=');
 		const attribNameWithPrefix = elements[0];
 		if (attribNameWithPrefix[0] == '@') {
 			const attribName = attribNameWithPrefix.substring(1);
 			const expectedAttribValue = elements[1];
-			const currentAttribValue = this.attribValue(object, attribName);
+			const currentAttribValue = coreObject.attribValue(attribName);
 			return expectedAttribValue == currentAttribValue;
 		}
 		return false;
@@ -133,16 +140,7 @@ export class CoreObject extends CoreEntity {
 			}
 		}
 
-		// let data: ParamInitValueSerialized;
-		// if (value != null && !CoreType.isNumber(value) && !CoreType.isArray(value) && !CoreType.isString(value)) {
-		// 	data = (value as Vector3).toArray() as Number3;
-		// } else {
-		// 	data = value;
-		// }
-		const data = value;
-		const user_data = object.userData;
-		user_data[ATTRIBUTES] = user_data[ATTRIBUTES] || {};
-		user_data[ATTRIBUTES][attrib_name] = data;
+		this.attributesDictionary(object)[attrib_name] = value;
 	}
 	addAttribute(name: string, value: AttribValue) {
 		CoreObject.addAttribute(this._object, name, value);
@@ -160,19 +158,22 @@ export class CoreObject extends CoreEntity {
 		this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
 	}
 	static attributesDictionary(object: Object3D) {
-		return object.userData[ATTRIBUTES] as AttributeDictionary;
+		return (object.userData[ATTRIBUTES] as AttributeDictionary) || this._createAttributesDictionaryIfNone(object);
 	}
 	static attributesPreviousValuesDictionary(object: Object3D) {
-		return object.userData[ATTRIBUTES_PREVIOUS_VALUES] as AttributeDictionary;
+		return (
+			(object.userData[ATTRIBUTES_PREVIOUS_VALUES] as AttributeDictionary) ||
+			this._createAttributesPreviousValuesDictionaryIfNone(object)
+		);
 	}
 	private static _createAttributesDictionaryIfNone(object: Object3D) {
 		if (!object.userData[ATTRIBUTES]) {
-			object.userData[ATTRIBUTES] = {};
+			return (object.userData[ATTRIBUTES] = {});
 		}
 	}
 	private static _createAttributesPreviousValuesDictionaryIfNone(object: Object3D) {
 		if (!object.userData[ATTRIBUTES_PREVIOUS_VALUES]) {
-			object.userData[ATTRIBUTES_PREVIOUS_VALUES] = {};
+			return (object.userData[ATTRIBUTES_PREVIOUS_VALUES] = {});
 		}
 	}
 
@@ -251,8 +252,6 @@ export class CoreObject extends CoreEntity {
 		attribName: string,
 		callback: AttributeReactiveCallback<V>
 	) {
-		this._createAttributesDictionaryIfNone(object);
-		this._createAttributesPreviousValuesDictionaryIfNone(object);
 		const attributesDict = this.attributesDictionary(object);
 		const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
 

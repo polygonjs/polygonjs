@@ -91,12 +91,15 @@ export class SetObjectHoveredStateActorNode extends BaseUserInputActorNode<SetOb
 			this._intersections
 		);
 		const intersection = intersections[0];
-		const dict = CoreObject.attributesDictionary(Object3D);
-		if (intersection) {
-			dict[ObjectAttribute.HOVERED] = true;
-		} else {
-			dict[ObjectAttribute.HOVERED] = false;
-		}
+		// const dict = CoreObject.attributesDictionary(Object3D);
+		// if(!dict){
+		CoreObject.addAttribute(Object3D, ObjectAttribute.HOVERED, intersection != null);
+		// }
+		// if (intersection) {
+		// 	dict[ObjectAttribute.HOVERED] = true;
+		// } else {
+		// 	dict[ObjectAttribute.HOVERED] = false;
+		// }
 	}
 
 	static PARAM_CALLBACK_updateRaycast(node: SetObjectHoveredStateActorNode) {

@@ -1,4 +1,4 @@
-import {HIERARCHY_MODES, HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
 QUnit.test('hierarchy simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -28,7 +28,7 @@ QUnit.test('hierarchy simple', async (assert) => {
 	core_group = container.coreContent()!;
 	assert.equal(core_group.objects()[0].children[0].children[0].children.length, 4);
 
-	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+	hierarchy1.setMode(HierarchyMode.REMOVE_PARENT);
 	hierarchy1.p.levels.set(0);
 	container = await hierarchy1.compute();
 	core_group = container.coreContent()!;

@@ -60,7 +60,7 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 
 	private _operation: MaterialSopOperation | undefined;
 	override async cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new MaterialSopOperation(this._scene, this.states);
+		this._operation = this._operation || new MaterialSopOperation(this._scene, this.states, this);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

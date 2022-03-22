@@ -5,6 +5,9 @@ import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/ass
 import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+import {Object3D} from 'three/src/core/Object3D';
+import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
 const LAMBERT_UNIFORMS = UniformsUtils.clone(ShaderLib.lambert.uniforms);
 const LAMBERT_UNIFORM_NAMES = Object.keys(LAMBERT_UNIFORMS).concat(['clippingPlanes']).sort();
@@ -57,6 +60,96 @@ QUnit.test('materials clone', async (assert) => {
 	const src_material = lambert1.material;
 	assert.notEqual(src_material.uuid, (objects[0].material as Material).uuid);
 	assert.notEqual(src_material.uuid, (objects[1].material as Material).uuid);
+});
+
+QUnit.test('materials access group by object name', async (assert) => {
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+
+	const file1 = geo1.createNode('fileGLTF');
+	file1.p.url.set(`${ASSETS_ROOT}/models/SheenChair.glb`);
+	const hierarchy1 = geo1.createNode('hierarchy');
+	hierarchy1.setMode(HierarchyMode.REMOVE_PARENT);
+	hierarchy1.setInput(0, file1);
+	const lambert1 = MAT.createNode('meshLambert');
+	const material1 = geo1.createNode('material');
+	material1.p.material.setNode(lambert1);
+	material1.setInput(0, hierarchy1);
+
+	const container1 = await hierarchy1.compute();
+	const coreContent = container1.coreContent()!;
+	const objects = coreContent.objects();
+	assert.equal(objects.length, 4);
+	const objectNames = objects.map((o: Object3D) => o.name);
+	const objectNamesSorted = [...objectNames].sort();
+	assert.deepEqual(
+		objectNamesSorted.sort(),
+		['SheenChair_metal', 'SheenChair_wood', 'SheenChair_label', 'SheenChair_fabric'].sort()
+	);
+
+	async function getObjects() {
+		const container1 = await material1.compute();
+		const coreContent = container1.coreContent()!;
+		const objects = coreContent.objects();
+		return objects as Mesh[];
+	}
+
+	material1.p.group.set('SheenChair_fabric');
+	const objects1 = await getObjects();
+	assert.notEqual((objects1[0].material as Material).uuid, lambert1.material.uuid, 'not assigned');
+	assert.equal(
+		(objects1[objectNames.indexOf('SheenChair_fabric')].material as Material).uuid,
+		lambert1.material.uuid,
+		'assigned'
+	);
+
+	material1.p.group.set('SheenChair_metal');
+	const objects2 = await getObjects();
+	assert.notEqual((objects2[3].material as Material).uuid, lambert1.material.uuid);
+	assert.equal((objects2[objectNames.indexOf('SheenChair_metal')].material as Material).uuid, lambert1.material.uuid);
+});
+
+QUnit.test('materials access group by object index', async (assert) => {
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+
+	const file1 = geo1.createNode('fileGLTF');
+	file1.p.url.set(`${ASSETS_ROOT}/models/SheenChair.glb`);
+	const hierarchy1 = geo1.createNode('hierarchy');
+	hierarchy1.setMode(HierarchyMode.REMOVE_PARENT);
+	hierarchy1.setInput(0, file1);
+	const lambert1 = MAT.createNode('meshLambert');
+	const material1 = geo1.createNode('material');
+	material1.p.material.setNode(lambert1);
+	material1.setInput(0, hierarchy1);
+
+	const container1 = await hierarchy1.compute();
+	const coreContent = container1.coreContent()!;
+	const objects = coreContent.objects();
+	assert.equal(objects.length, 4);
+	const objectNames = objects.map((o: Object3D) => o.name);
+	const objectNamesSorted = [...objectNames].sort();
+	assert.deepEqual(
+		objectNamesSorted.sort(),
+		['SheenChair_metal', 'SheenChair_wood', 'SheenChair_label', 'SheenChair_fabric'].sort()
+	);
+
+	async function getObjects() {
+		const container1 = await material1.compute();
+		const coreContent = container1.coreContent()!;
+		const objects = coreContent.objects();
+		return objects as Mesh[];
+	}
+
+	material1.p.group.set('@objnum=3');
+	const objects1 = await getObjects();
+	assert.notEqual((objects1[0].material as Material).uuid, lambert1.material.uuid, 'not assigned');
+	assert.equal((objects1[3].material as Material).uuid, lambert1.material.uuid, 'assigned');
+
+	material1.p.group.set('@objnum=0');
+	const objects2 = await getObjects();
+	assert.notEqual((objects2[3].material as Material).uuid, lambert1.material.uuid, 'not assigned');
+	assert.equal((objects2[0].material as Material).uuid, lambert1.material.uuid, 'assigned');
 });
 
 QUnit.test('materials clone preserves builder onBeforeCompile', async (assert) => {
