@@ -130,6 +130,7 @@ export class CoreObject extends CoreEntity {
 		}
 	}
 
+	static setAttribute = this.addAttribute;
 	static addAttribute(object: Object3D, attrib_name: string, value: AttribValue) {
 		if (CoreType.isArray(value)) {
 			const converted_value = this._convert_array_to_vector(value);

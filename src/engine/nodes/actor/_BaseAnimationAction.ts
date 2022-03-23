@@ -45,6 +45,6 @@ export abstract class AnimationActionBaseActorNode<K extends NodeParamsConfig> e
 	}
 
 	private _triggerWithNode() {
-		this.scene().actorsManager.manualActorTriggers.setNodeToReceiveTrigger(this);
+		this.scene().actorsManager.manualTriggerController.setNodeToReceiveTrigger(this);
 	}
 }

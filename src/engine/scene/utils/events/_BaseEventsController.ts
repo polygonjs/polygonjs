@@ -17,12 +17,13 @@ export interface EventContext<E extends Event> {
 	cameraNode?: Readonly<BaseCameraObjNodeType>;
 	value?: EventContextValue;
 }
-
 export abstract class BaseSceneEventsController<E extends Event, T extends BaseInputEventNodeType> {
 	protected _eventNodes: Set<T> = new Set();
-	protected _actorNodes: Set<BaseUserInputActorNodeType> = new Set();
 	protected _requireCanvasEventListeners: boolean = false;
-	constructor(private dispatcher: SceneEventsDispatcher) {}
+	protected _actorEventNamesByNode: Map<BaseUserInputActorNodeType, string[]> = new Map();
+	protected _actorEventNames: Set<string> = new Set();
+	protected _actorNodesByEventNames: Map<string, Set<BaseUserInputActorNodeType>> = new Map();
+	constructor(protected dispatcher: SceneEventsDispatcher) {}
 
 	registerEventNode(node: T) {
 		this._eventNodes.add(node);
@@ -33,12 +34,32 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 		this.updateViewerEventListeners();
 	}
 	registerActorNode(node: BaseUserInputActorNodeType) {
-		this._actorNodes.add(node);
+		const eventNames = node.userInputEventNames();
+		this._actorEventNamesByNode.set(node, eventNames);
+		this._updateActorCache();
 		this.updateViewerEventListeners();
 	}
 	unregisterActorNode(node: BaseUserInputActorNodeType) {
-		this._actorNodes.delete(node);
+		this._actorEventNamesByNode.delete(node);
+		this._updateActorCache();
 		this.updateViewerEventListeners();
+	}
+
+	private _updateActorCache() {
+		this._actorEventNames.clear();
+		this._actorNodesByEventNames.clear();
+		this._actorEventNamesByNode.forEach((nodeEventNames, node) => {
+			for (let eventName of nodeEventNames) {
+				this._actorEventNames.add(eventName);
+
+				let setForEventName = this._actorNodesByEventNames.get(eventName);
+				if (!setForEventName) {
+					setForEventName = new Set();
+					this._actorNodesByEventNames.set(eventName, setForEventName);
+				}
+				setForEventName.add(node);
+			}
+		});
 	}
 
 	abstract type(): string;
@@ -82,12 +103,14 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 	private _resetActiveEventData() {
 		this._activeEventDatas.splice(0, this._activeEventDatas.length);
 		this._activeEventDataTypes.clear();
-		const persistentEventData = this._persistentEventData();
-		if (persistentEventData) {
-			this._storeEventData(persistentEventData);
+		const actorEventDatas = this._actorEventDatas();
+		if (actorEventDatas) {
+			for (let data of actorEventDatas) {
+				this._storeEventData(data);
+			}
 		}
 	}
-	protected _persistentEventData(): EventData | undefined {
+	protected _actorEventDatas(): EventData[] | undefined {
 		return undefined;
 	}
 	private _storeEventData(eventData: EventData) {

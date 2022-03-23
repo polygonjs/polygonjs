@@ -98,9 +98,12 @@ export class SceneEventsDispatcher {
 		node: T
 	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
 		switch (node.type()) {
-			case ActorType.SET_OBJECT_HOVERED_STATE:
+			// case ActorType.SET_OBJECT_HOVERED_STATE:
+			case ActorType.ON_EVENT_OBJECT_CLICKED:
+			case ActorType.ON_EVENT_OBJECT_HOVERED:
 				return this.pointerEventsController;
 		}
+		console.warn(`no event controller defined for node`, node);
 	}
 
 	get keyboardEventsController() {

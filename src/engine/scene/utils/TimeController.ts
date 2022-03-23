@@ -94,9 +94,8 @@ export class TimeController {
 		for (const callback of this._onBeforeTickCallbacks) {
 			callback(delta);
 		}
-		this.scene.actorsManager.runManualTrigger();
 		if (time > 0) {
-			this.scene.actorsManager.onEventTick();
+			this.scene.actorsManager.tick();
 		}
 
 		if (updateFrame) {
@@ -134,7 +133,7 @@ export class TimeController {
 		}
 		this._frame = frame;
 		if (this._frame == TimeController.START_FRAME) {
-			this.scene.actorsManager.onEventSceneReset();
+			this.scene.actorsManager.runOnEventSceneReset();
 		}
 
 		if (updateTime) {
@@ -189,7 +188,7 @@ export class TimeController {
 		this._playing = false;
 		// TODO: try and unify the dispatch controller and events dispatcher
 		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
-		this.scene.actorsManager.onEventScenePause();
+		this.scene.actorsManager.runOnEventScenePause();
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PAUSE_EVENT_CONTEXT);
 		for (let callback of this._onPlayingStateChangeCallbacks) {
 			callback();
@@ -200,7 +199,7 @@ export class TimeController {
 			return;
 		}
 		this._playing = true;
-		this.scene.actorsManager.onEventScenePlay();
+		this.scene.actorsManager.runOnEventScenePlay();
 		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PLAY_EVENT_CONTEXT);
 		for (let callback of this._onPlayingStateChangeCallbacks) {
