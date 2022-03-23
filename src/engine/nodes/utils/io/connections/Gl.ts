@@ -245,6 +245,7 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 export interface GlConnectionPointData<T extends GlConnectionPointType> {
 	name: string;
 	type: T;
+	isArray?: boolean;
 }
 
 import {BaseConnectionPoint} from './_Base';
@@ -282,6 +283,7 @@ export class GlConnectionPoint<T extends GlConnectionPointType> extends BaseConn
 		return {
 			name: this._name,
 			type: this._type,
+			// isArray: false,
 		};
 	}
 }

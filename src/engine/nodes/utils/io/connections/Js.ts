@@ -133,6 +133,7 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 export interface JsConnectionPointData<T extends JsConnectionPointType> {
 	name: string;
 	type: T;
+	isArray?: boolean;
 }
 
 import {BaseConnectionPoint} from './_Base';
@@ -169,6 +170,7 @@ export class JsConnectionPoint<T extends JsConnectionPointType> extends BaseConn
 		return {
 			name: this._name,
 			type: this._type,
+			// isArray: false,
 		};
 	}
 }

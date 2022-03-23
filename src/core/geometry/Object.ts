@@ -256,7 +256,9 @@ export class CoreObject extends CoreEntity {
 		const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
 
 		// create a dummy val in case there is no attribute yet
-		attributesDict[attribName] = 0;
+		if (attributesDict[attribName] == null) {
+			attributesDict[attribName] = 0;
+		}
 
 		const proxy: AttributeProxy<V> = {
 			value: attributesDict[attribName] as V,

@@ -19,9 +19,9 @@ const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetObjectScaleActorParamsConfig extends NodeParamsConfig {
 	/** @param target scale */
-	s = ParamConfig.VECTOR3([1, 1, 1]);
+	scale = ParamConfig.VECTOR3([1, 1, 1]);
 	/** @param target scale */
-	scale = ParamConfig.FLOAT(1, {
+	mult = ParamConfig.FLOAT(1, {
 		range: [0, 10],
 		rangeLocked: [false, false],
 	});
@@ -56,11 +56,11 @@ export class SetObjectScaleActorNode extends TypedActorNode<SetObjectScaleActorP
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const {Object3D} = context;
-		const s = this._inputValueFromParam<ParamType.VECTOR3>(this.p.s, context);
-		const scale = this._inputValueFromParam<ParamType.FLOAT>(this.p.scale, context);
+		const scale = this._inputValueFromParam<ParamType.VECTOR3>(this.p.scale, context);
+		const mult = this._inputValueFromParam<ParamType.FLOAT>(this.p.mult, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
-		tmpS.copy(s).multiplyScalar(scale);
+		tmpS.copy(scale).multiplyScalar(mult);
 		Object3D.scale.lerp(tmpS, lerp);
 		if (isBooleanTrue(updateMatrix)) {
 			Object3D.updateMatrix();

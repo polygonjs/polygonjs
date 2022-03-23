@@ -12,6 +12,7 @@ import {ParamType} from '../../../../poly/ParamType';
 export interface BaseConnectionPointData {
 	name: string;
 	type: string;
+	isArray?: boolean;
 }
 
 export abstract class BaseConnectionPoint {
@@ -34,6 +35,7 @@ export abstract class BaseConnectionPoint {
 	type() {
 		return this._type;
 	}
+
 	are_types_matched(src_type: string, dest_type: string): boolean {
 		return true;
 	}
@@ -55,6 +57,7 @@ export abstract class BaseConnectionPoint {
 		return {
 			name: this._name,
 			type: this._type,
+			// isArray: false,
 		};
 	}
 }

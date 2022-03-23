@@ -9,6 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
+	ActorConnectionPointTypeToArrayTypeMap,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES,
 	ReturnValueTypeByActorConnectionPointType,
@@ -64,7 +65,8 @@ export class OnEventChildAttributeUpdatedActorNode extends TypedActorNode<OnEven
 		if (connectionType == null) {
 			console.warn(`${this.type()} actor node type not valid`);
 		}
-		return [connectionType, connectionType];
+		const arrayConnectionType = ActorConnectionPointTypeToArrayTypeMap[connectionType];
+		return [arrayConnectionType, arrayConnectionType];
 	}
 
 	setAttribType(type: ActorConnectionPointType) {

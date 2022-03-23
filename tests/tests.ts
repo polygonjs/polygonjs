@@ -207,7 +207,6 @@ import './engine/nodes/post/DepthOfField';
 QUnit.module('sop');
 import './engine/nodes/sop/Add';
 import './engine/nodes/sop/AnimationCopy';
-import './engine/nodes/sop/AnimationMixer';
 import './engine/nodes/sop/AttribAddMult';
 import './engine/nodes/sop/AttribCast';
 import './engine/nodes/sop/AttribCopy';

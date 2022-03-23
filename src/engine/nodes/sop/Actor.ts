@@ -19,10 +19,10 @@ import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 // import {ActorsManager} from '../../../core/actor/ActorsManager';
 class ActorSopParamsConfig extends NodeParamsConfig {
 	/** @param build actor from child nodes */
-	useOtherNode = ParamConfig.BOOLEAN(0);
+	useThisNode = ParamConfig.BOOLEAN(1);
 	/** @param actor node */
 	node = ParamConfig.NODE_PATH('', {
-		visibleIf: {useOtherNode: 1},
+		visibleIf: {useThisNode: 0},
 		// nodeSelection: {
 		// 	// context: NodeContext.ACTOR,
 		// },
@@ -56,10 +56,10 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 	private _findActorNode() {
-		if (isBooleanTrue(this.pv.useOtherNode)) {
-			return this.pv.node.node() as ActorBuilderNode | undefined;
-		} else {
+		if (isBooleanTrue(this.pv.useThisNode)) {
 			return this;
+		} else {
+			return this.pv.node.node() as ActorBuilderNode | undefined;
 		}
 	}
 

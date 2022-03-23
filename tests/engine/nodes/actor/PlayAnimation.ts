@@ -53,6 +53,9 @@ QUnit.test('actor/playAnimation', async (assert) => {
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0];
 
+	// wait to make sure objects are mounted to the scene
+	await CoreSleep.sleep(150);
+
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
 		assert.equal(scene.time(), 0);

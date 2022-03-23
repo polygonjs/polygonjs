@@ -7,6 +7,8 @@
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext, ParamlessTypedActorNode} from './_Base';
 
+// TODO: it would make typings easier of the switch node had a predefined index param
+// but this currently does not work with dynamic inputs/spare params
 export class SwitchActorNode extends ParamlessTypedActorNode {
 	static override type() {
 		return 'switch';

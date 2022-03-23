@@ -18,10 +18,13 @@ export class OnEventScenePlayStateActorNode extends TypedActorNode<OnEventSceneP
 		return ActorType.ON_EVENT_SCENE_PLAY_STATE;
 	}
 
+	static INPUT_NAME_PLAY = `${TRIGGER_CONNECTION_NAME}Play`;
+	static INPUT_NAME_PAUSE = `${TRIGGER_CONNECTION_NAME}Pause`;
+
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new ActorConnectionPoint(`${TRIGGER_CONNECTION_NAME}Play`, ActorConnectionPointType.TRIGGER),
-			new ActorConnectionPoint(`${TRIGGER_CONNECTION_NAME}Pause`, ActorConnectionPointType.TRIGGER),
+			new ActorConnectionPoint(OnEventScenePlayStateActorNode.INPUT_NAME_PLAY, ActorConnectionPointType.TRIGGER),
+			new ActorConnectionPoint(OnEventScenePlayStateActorNode.INPUT_NAME_PAUSE, ActorConnectionPointType.TRIGGER),
 		]);
 	}
 }

@@ -8,7 +8,7 @@ import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext, ParamlessTypedActorNode} from './_Base';
 
 const OUTPUT_NAME = 'val';
-enum TwoWaySwitchActorNodeInputName {
+export enum TwoWaySwitchActorNodeInputName {
 	CONDITION = 'condition',
 	IF_TRUE = 'ifTrue',
 	IF_FALSE = 'ifFalse',

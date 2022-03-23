@@ -22,9 +22,9 @@ import {AnimationMixer} from 'three/src/animation/AnimationMixer';
 import {EventListener, Event} from 'three/src/core/EventDispatcher';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-enum AnimationActionCrossFadeActorNodeInputName {
+export enum AnimationActionCrossFadeActorNodeInputName {
 	FROM = 'from',
-	to = 'to',
+	TO = 'to',
 }
 
 class AnimationActionCrossFadeActorParamsConfig extends NodeParamsConfig {
@@ -54,7 +54,7 @@ export class AnimationActionCrossFadeActorNode extends AnimationActionBaseActorN
 				CONNECTION_OPTIONS
 			),
 			new ActorConnectionPoint(
-				AnimationActionCrossFadeActorNodeInputName.to,
+				AnimationActionCrossFadeActorNodeInputName.TO,
 				ActorConnectionPointType.ANIMATION_ACTION,
 				CONNECTION_OPTIONS
 			),
@@ -82,7 +82,7 @@ export class AnimationActionCrossFadeActorNode extends AnimationActionBaseActorN
 			// as it would otherwise start playing before as soon as it is created,
 			// which could be way before this function is called
 			const animationActionTo = this._inputValue<ActorConnectionPointType.ANIMATION_ACTION>(
-				AnimationActionCrossFadeActorNodeInputName.to,
+				AnimationActionCrossFadeActorNodeInputName.TO,
 				context
 			);
 			if (!animationActionTo) {

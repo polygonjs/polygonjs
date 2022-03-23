@@ -12,31 +12,9 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
-import {AnimationAction} from 'three/src/animation/AnimationAction';
-import {AnimationClip} from 'three/src/animation/AnimationClip';
 import {Object3D} from 'three/src/core/Object3D';
-import {ArrayUtils} from '../../../core/ArrayUtils';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-
-export function animationClipsFromAnimationMixer(animationMixer: AnimationMixer): AnimationClip[] {
-	const root = animationMixer.getRoot();
-	const animations = (root as Object3D).animations;
-	if (!animations) {
-		return [];
-	}
-	return animations;
-	// return ArrayUtils.compact(animations.map((animation) => animationMixer.existingAction(animation)));
-}
-
-export function existingAnimationActionsFromAnimationMixer(animationMixer: AnimationMixer): AnimationAction[] {
-	const root = animationMixer.getRoot();
-	const animations = (root as Object3D).animations;
-	if (!animations) {
-		return [];
-	}
-	return ArrayUtils.compact(animations.map((animation) => animationMixer.existingAction(animation)));
-}
 
 class AnimationMixerActorParamsConfig extends NodeParamsConfig {
 	// time = ParamConfig.FLOAT(0);
@@ -97,5 +75,8 @@ export class AnimationMixerActorNode extends TypedActorNode<AnimationMixerActorP
 			// }
 		}
 		return animationMixer;
+	}
+	getAnimationMixer(object: Object3D) {
+		return this._mixerByObject.get(object);
 	}
 }

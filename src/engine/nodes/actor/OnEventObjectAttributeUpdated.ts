@@ -35,8 +35,8 @@ export class OnEventObjectAttributeUpdatedActorNode extends TypedActorNode<OnEve
 		return ActorType.ON_EVENT_OBJECT_ATTRIBUTE_UPDATED;
 	}
 
-	static readonly OUTPUT_PREV_VAL = 'previousValue';
 	static readonly OUTPUT_NEW_VAL = 'newValue';
+	static readonly OUTPUT_PREV_VAL = 'previousValue';
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),

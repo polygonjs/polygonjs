@@ -7,11 +7,11 @@
 import {
 	AnimationActionBaseActorNode,
 	AnimationActionEventListenerExtended,
-	AnimationActionFadeActorParamsConfig,
 	AnimationActionLoopEvent,
+	ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK,
 } from './_BaseAnimationAction';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
-import {ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME} from './_Base';
 import {
 	ActorConnectionPoint,
@@ -19,14 +19,17 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {existingAnimationActionsFromAnimationMixer} from './AnimationMixer';
-import {ArrayUtils} from '../../../core/ArrayUtils';
 import {EventListener, Event} from 'three/src/core/EventDispatcher';
 import {AnimationAction} from 'three/src/animation/AnimationAction';
+import {getMostActiveAnimationActionFromMixer} from '../../../core/actor/AnimationMixerUtils';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-class AnimationActionFadeInActorParamsConfig extends AnimationActionFadeActorParamsConfig {
+class AnimationActionFadeInActorParamsConfig extends NodeParamsConfig {
+	/** @param manual trigger */
+	trigger = ParamConfig.BUTTON(null, ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK);
+	/** @param fadeIn duration */
+	duration = ParamConfig.FLOAT(1);
 	/** @param fade out other actions */
 	fadeOutOtherActions = ParamConfig.BOOLEAN(1);
 	/** @param additional warping (gradually changes of the time scales) will be applied */
@@ -83,11 +86,11 @@ export class AnimationActionFadeInActorNode extends AnimationActionBaseActorNode
 		const warp = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.startOnFromActionEnd, context);
 		const startOnFromActionEnd = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.startOnFromActionEnd, context);
 		const mixer = animationActionTo.getMixer();
-		const otherActions = existingAnimationActionsFromAnimationMixer(mixer).filter(
-			(action) => action !== animationActionTo
+		const {otherActions, mostActiveAnimationAction} = getMostActiveAnimationActionFromMixer(
+			mixer,
+			animationActionTo
 		);
-		const actionsSortedByWeight = ArrayUtils.sortBy(otherActions, (action) => -action.getEffectiveWeight());
-		const animationActionFrom = actionsSortedByWeight[0];
+		const animationActionFrom = mostActiveAnimationAction;
 		const _fadeInCurrentAndFadeOutOtherActions = () => {
 			this._crossFade(animationActionFrom, animationActionTo, duration, warp);
 

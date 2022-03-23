@@ -10,15 +10,22 @@ export enum ActorConnectionPointType {
 	BOOLEAN = 'boolean',
 	BOOLEAN_ARRAY = 'boolean[]',
 	COLOR = 'color',
+	COLOR_ARRAY = 'color[]',
 	FLOAT = 'float',
+	FLOAT_ARRAY = 'float[]',
 	INTEGER = 'integer',
+	INTEGER_ARRAY = 'integer[]',
 	MATERIAL = 'Material',
 	OBJECT_3D = 'Object3D',
 	STRING = 'string',
+	STRING_ARRAY = 'string[]',
 	TRIGGER = 'trigger',
 	VECTOR2 = 'Vector2',
+	VECTOR2_ARRAY = 'Vector2[]',
 	VECTOR3 = 'Vector3',
+	VECTOR3_ARRAY = 'Vector3[]',
 	VECTOR4 = 'Vector4',
+	VECTOR4_ARRAY = 'Vector4[]',
 }
 
 export const PRIMITIVE_ACTOR_CONNECTION_TYPES = [
@@ -30,7 +37,7 @@ export const PRIMITIVE_ACTOR_CONNECTION_TYPES = [
 
 //
 //
-// ALL GL Data types in an array
+// ALL Actor Data types in an array
 //
 //
 // export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
@@ -60,7 +67,7 @@ export const PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnecti
 
 //
 //
-// Map to convert from a GL Data type to a ParamType
+// Map to convert from a Actor Data type to a ParamType
 //
 //
 type ActorConnectionPointTypeToParamTypeMapGeneric = {[key in ActorConnectionPointType]: ParamType};
@@ -70,15 +77,22 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR;
+	[ActorConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT;
+	[ActorConnectionPointType.FLOAT_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER;
+	[ActorConnectionPointType.INTEGER_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON; //
 	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON; //
 	[ActorConnectionPointType.STRING]: ParamType.STRING;
+	[ActorConnectionPointType.STRING_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON;
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2;
+	[ActorConnectionPointType.VECTOR2_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.VECTOR3]: ParamType.VECTOR3;
+	[ActorConnectionPointType.VECTOR3_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.VECTOR4]: ParamType.VECTOR4;
+	[ActorConnectionPointType.VECTOR4_ARRAY]: ParamType.BUTTON;
 }
 export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeToParamTypeMap = {
 	[ActorConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON,
@@ -86,18 +100,95 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR,
+	[ActorConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT,
+	[ActorConnectionPointType.FLOAT_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER,
+	[ActorConnectionPointType.INTEGER_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON,
 	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON, // to reconsider
 	[ActorConnectionPointType.STRING]: ParamType.STRING,
+	[ActorConnectionPointType.STRING_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON,
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2,
+	[ActorConnectionPointType.VECTOR2_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.VECTOR3]: ParamType.VECTOR3,
+	[ActorConnectionPointType.VECTOR3_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.VECTOR4]: ParamType.VECTOR4,
+	[ActorConnectionPointType.VECTOR4_ARRAY]: ParamType.BUTTON,
 };
 
-ActorConnectionPointTypeToParamTypeMap[ActorConnectionPointType.BOOLEAN];
+//
+//
+// Map to convert from a non array data Data type to a Array one
+//
+//
+type ActorConnectionPointTypeToArrayTypeMapGeneric = {[key in ActorConnectionPointType]: ActorConnectionPointType};
+export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnectionPointTypeToArrayTypeMapGeneric {
+	[ActorConnectionPointType.ANIMATION_MIXER]: ActorConnectionPointType.ANIMATION_MIXER;
+	[ActorConnectionPointType.ANIMATION_ACTION]: ActorConnectionPointType.ANIMATION_ACTION;
+	[ActorConnectionPointType.BOOLEAN]: ActorConnectionPointType.BOOLEAN_ARRAY;
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: ActorConnectionPointType.BOOLEAN_ARRAY;
+	[ActorConnectionPointType.COLOR]: ActorConnectionPointType.COLOR_ARRAY;
+	[ActorConnectionPointType.COLOR_ARRAY]: ActorConnectionPointType.COLOR_ARRAY;
+	[ActorConnectionPointType.FLOAT]: ActorConnectionPointType.FLOAT_ARRAY;
+	[ActorConnectionPointType.FLOAT_ARRAY]: ActorConnectionPointType.FLOAT_ARRAY;
+	[ActorConnectionPointType.INTEGER]: ActorConnectionPointType.INTEGER_ARRAY;
+	[ActorConnectionPointType.INTEGER_ARRAY]: ActorConnectionPointType.INTEGER_ARRAY;
+	[ActorConnectionPointType.MATERIAL]: ActorConnectionPointType.MATERIAL; //
+	[ActorConnectionPointType.OBJECT_3D]: ActorConnectionPointType.OBJECT_3D; //
+	[ActorConnectionPointType.STRING]: ActorConnectionPointType.STRING_ARRAY;
+	[ActorConnectionPointType.STRING_ARRAY]: ActorConnectionPointType.STRING_ARRAY;
+	[ActorConnectionPointType.TRIGGER]: ActorConnectionPointType.TRIGGER;
+	[ActorConnectionPointType.VECTOR2]: ActorConnectionPointType.VECTOR2_ARRAY;
+	[ActorConnectionPointType.VECTOR2_ARRAY]: ActorConnectionPointType.VECTOR2_ARRAY;
+	[ActorConnectionPointType.VECTOR3]: ActorConnectionPointType.VECTOR3_ARRAY;
+	[ActorConnectionPointType.VECTOR3_ARRAY]: ActorConnectionPointType.VECTOR3_ARRAY;
+	[ActorConnectionPointType.VECTOR4]: ActorConnectionPointType.VECTOR4_ARRAY;
+	[ActorConnectionPointType.VECTOR4_ARRAY]: ActorConnectionPointType.VECTOR4_ARRAY;
+}
+export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeToArrayTypeMap = {
+	[ActorConnectionPointType.ANIMATION_MIXER]: ActorConnectionPointType.ANIMATION_MIXER,
+	[ActorConnectionPointType.ANIMATION_ACTION]: ActorConnectionPointType.ANIMATION_ACTION,
+	[ActorConnectionPointType.BOOLEAN]: ActorConnectionPointType.BOOLEAN_ARRAY,
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: ActorConnectionPointType.BOOLEAN_ARRAY,
+	[ActorConnectionPointType.COLOR]: ActorConnectionPointType.COLOR_ARRAY,
+	[ActorConnectionPointType.COLOR_ARRAY]: ActorConnectionPointType.COLOR_ARRAY,
+	[ActorConnectionPointType.FLOAT]: ActorConnectionPointType.FLOAT_ARRAY,
+	[ActorConnectionPointType.FLOAT_ARRAY]: ActorConnectionPointType.FLOAT_ARRAY,
+	[ActorConnectionPointType.INTEGER]: ActorConnectionPointType.INTEGER_ARRAY,
+	[ActorConnectionPointType.INTEGER_ARRAY]: ActorConnectionPointType.INTEGER_ARRAY,
+	[ActorConnectionPointType.MATERIAL]: ActorConnectionPointType.MATERIAL,
+	[ActorConnectionPointType.OBJECT_3D]: ActorConnectionPointType.OBJECT_3D,
+	[ActorConnectionPointType.STRING]: ActorConnectionPointType.STRING_ARRAY,
+	[ActorConnectionPointType.STRING_ARRAY]: ActorConnectionPointType.STRING_ARRAY,
+	[ActorConnectionPointType.TRIGGER]: ActorConnectionPointType.TRIGGER,
+	[ActorConnectionPointType.VECTOR2]: ActorConnectionPointType.VECTOR2_ARRAY,
+	[ActorConnectionPointType.VECTOR2_ARRAY]: ActorConnectionPointType.VECTOR2_ARRAY,
+	[ActorConnectionPointType.VECTOR3]: ActorConnectionPointType.VECTOR3_ARRAY,
+	[ActorConnectionPointType.VECTOR3_ARRAY]: ActorConnectionPointType.VECTOR3_ARRAY,
+	[ActorConnectionPointType.VECTOR4]: ActorConnectionPointType.VECTOR4_ARRAY,
+	[ActorConnectionPointType.VECTOR4_ARRAY]: ActorConnectionPointType.VECTOR4_ARRAY,
+};
+type ArrayConnectionPointTypeArray =
+	| ActorConnectionPointType.BOOLEAN_ARRAY
+	| ActorConnectionPointType.COLOR_ARRAY
+	| ActorConnectionPointType.FLOAT_ARRAY
+	| ActorConnectionPointType.INTEGER_ARRAY
+	| ActorConnectionPointType.STRING_ARRAY
+	| ActorConnectionPointType.VECTOR2_ARRAY
+	| ActorConnectionPointType.VECTOR3_ARRAY
+	| ActorConnectionPointType.VECTOR4_ARRAY;
+const ARRAY_CONNECTION_TYPES: Set<ArrayConnectionPointTypeArray> = new Set([
+	ActorConnectionPointType.BOOLEAN_ARRAY,
+	ActorConnectionPointType.COLOR_ARRAY,
+	ActorConnectionPointType.FLOAT_ARRAY,
+	ActorConnectionPointType.INTEGER_ARRAY,
+	ActorConnectionPointType.STRING_ARRAY,
+	ActorConnectionPointType.VECTOR2_ARRAY,
+	ActorConnectionPointType.VECTOR3_ARRAY,
+	ActorConnectionPointType.VECTOR4_ARRAY,
+]);
 
 //
 //
@@ -150,15 +241,22 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.BOOLEAN]: false,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: null,
 	[ActorConnectionPointType.COLOR]: new Color(),
+	[ActorConnectionPointType.COLOR_ARRAY]: null,
 	[ActorConnectionPointType.FLOAT]: 0,
+	[ActorConnectionPointType.FLOAT_ARRAY]: null,
 	[ActorConnectionPointType.INTEGER]: 0,
+	[ActorConnectionPointType.INTEGER_ARRAY]: null,
 	[ActorConnectionPointType.MATERIAL]: null,
 	[ActorConnectionPointType.OBJECT_3D]: null,
 	[ActorConnectionPointType.STRING]: '',
+	[ActorConnectionPointType.STRING_ARRAY]: null,
 	[ActorConnectionPointType.TRIGGER]: null,
 	[ActorConnectionPointType.VECTOR2]: new Vector2(),
+	[ActorConnectionPointType.VECTOR2_ARRAY]: null,
 	[ActorConnectionPointType.VECTOR3]: new Vector3(),
+	[ActorConnectionPointType.VECTOR3_ARRAY]: null,
 	[ActorConnectionPointType.VECTOR4]: new Vector4(),
+	[ActorConnectionPointType.VECTOR4_ARRAY]: null,
 };
 
 //
@@ -175,15 +273,22 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.BOOLEAN]: 1,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: 1,
 	[ActorConnectionPointType.COLOR]: 3,
+	[ActorConnectionPointType.COLOR_ARRAY]: 1,
 	[ActorConnectionPointType.FLOAT]: 1,
+	[ActorConnectionPointType.FLOAT_ARRAY]: 1,
 	[ActorConnectionPointType.INTEGER]: 1,
+	[ActorConnectionPointType.INTEGER_ARRAY]: 1,
 	[ActorConnectionPointType.MATERIAL]: 1,
 	[ActorConnectionPointType.OBJECT_3D]: 1, // to reconsider
 	[ActorConnectionPointType.STRING]: 1,
+	[ActorConnectionPointType.STRING_ARRAY]: 1,
 	[ActorConnectionPointType.TRIGGER]: 1,
 	[ActorConnectionPointType.VECTOR2]: 2,
+	[ActorConnectionPointType.VECTOR2_ARRAY]: 2,
 	[ActorConnectionPointType.VECTOR3]: 3,
+	[ActorConnectionPointType.VECTOR3_ARRAY]: 3,
 	[ActorConnectionPointType.VECTOR4]: 4,
+	[ActorConnectionPointType.VECTOR4_ARRAY]: 4,
 };
 
 //
@@ -206,20 +311,28 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.BOOLEAN]: boolean;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: boolean[];
 	[ActorConnectionPointType.COLOR]: Color;
+	[ActorConnectionPointType.COLOR_ARRAY]: Color[];
 	[ActorConnectionPointType.FLOAT]: number;
+	[ActorConnectionPointType.FLOAT_ARRAY]: number[];
 	[ActorConnectionPointType.INTEGER]: number;
+	[ActorConnectionPointType.INTEGER_ARRAY]: number[];
 	[ActorConnectionPointType.MATERIAL]: Material;
 	[ActorConnectionPointType.OBJECT_3D]: Object3D;
 	[ActorConnectionPointType.STRING]: string;
+	[ActorConnectionPointType.STRING_ARRAY]: string[];
 	[ActorConnectionPointType.TRIGGER]: null;
 	[ActorConnectionPointType.VECTOR2]: Vector2;
+	[ActorConnectionPointType.VECTOR2_ARRAY]: Vector2[];
 	[ActorConnectionPointType.VECTOR3]: Vector3;
+	[ActorConnectionPointType.VECTOR3_ARRAY]: Vector3[];
 	[ActorConnectionPointType.VECTOR4]: Vector4;
+	[ActorConnectionPointType.VECTOR4_ARRAY]: Vector4[];
 };
 
 export interface ActorConnectionPointData<T extends ActorConnectionPointType> {
 	name: string;
 	type: T;
+	isArray: boolean;
 }
 interface ActorConnectionPointOptions<T extends ActorConnectionPointType> {
 	inNodeDefinition?: boolean;
@@ -235,6 +348,7 @@ import {BaseConnectionPoint} from './_Base';
 export class ActorConnectionPoint<T extends ActorConnectionPointType> extends BaseConnectionPoint {
 	protected override _json: ActorConnectionPointData<T> | undefined;
 	protected override _init_value?: ActorConnectionPointInitValueMapGeneric[T];
+	protected _isArray: boolean;
 
 	constructor(
 		protected override _name: string,
@@ -242,6 +356,8 @@ export class ActorConnectionPoint<T extends ActorConnectionPointType> extends Ba
 		_options?: ActorConnectionPointOptions<T>
 	) {
 		super(_name, _type);
+
+		this._isArray = ARRAY_CONNECTION_TYPES.has(_type as ArrayConnectionPointTypeArray);
 
 		if (_options) {
 			this._inNodeDefinition = _options.inNodeDefinition == true;
@@ -281,6 +397,7 @@ export class ActorConnectionPoint<T extends ActorConnectionPointType> extends Ba
 		return {
 			name: this._name,
 			type: this._type,
+			isArray: this._isArray,
 		};
 	}
 }

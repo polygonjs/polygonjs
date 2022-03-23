@@ -30,6 +30,7 @@ import {AnimationMixerActorNode} from '../../../nodes/actor/AnimationMixer';
 import {AnimationMixerUpdateActorNode} from '../../../nodes/actor/AnimationMixerUpdate';
 import {CodeActorNode} from '../../../nodes/actor/Code';
 import {ConstantActorNode} from '../../../nodes/actor/Constant';
+import {DebugActorNode} from '../../../nodes/actor/Debug';
 import {GetChildrenAttributesActorNode} from '../../../nodes/actor/GetChildrenAttributes';
 import {GetMaterialActorNode} from '../../../nodes/actor/GetMaterial';
 import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
@@ -76,6 +77,7 @@ export interface ActorNodeChildrenMap {
 	animationMixerUpdate: AnimationMixerUpdateActorNode;
 	code: CodeActorNode;
 	constant: ConstantActorNode;
+	debug: DebugActorNode;
 	divide: DivideActorNode;
 	floatToVec2: FloatToVec2ActorNode;
 	floatToVec3: FloatToVec3ActorNode;
@@ -139,6 +141,7 @@ export class ActorRegister {
 		poly.registerNode(AnimationMixerUpdateActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(ConstantActorNode, CATEGORY_ACTOR.MISC);
+		poly.registerNode(DebugActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(DivideActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(FloatToVec2ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(FloatToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);

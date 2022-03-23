@@ -37,6 +37,7 @@ export enum EventConnectionPointType {
 export interface EventConnectionPointData<T extends EventConnectionPointType> {
 	name: string;
 	type: T;
+	isArray?: boolean;
 }
 
 import {BaseConnectionPoint} from './_Base';
@@ -85,6 +86,7 @@ export class EventConnectionPoint<T extends EventConnectionPointType> extends Ba
 		return {
 			name: this._name,
 			type: this._type,
+			isArray: false,
 		};
 	}
 }

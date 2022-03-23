@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
+	ActorConnectionPointTypeToArrayTypeMap,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES,
 	ReturnValueTypeByActorConnectionPointType,
@@ -55,14 +56,12 @@ export class GetChildrenAttributesActorNode extends TypedActorNode<GetChildrenAt
 		if (this.pv.type == null) {
 			console.warn(`${this.type()} actor node type not valid`);
 		}
-		const connection_type = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES[this.pv.type];
-		if (connection_type == null) {
+		const connectionType = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES[this.pv.type];
+		if (connectionType == null) {
 			console.warn(`${this.type()} actor node type not valid`);
 		}
-		if (connection_type == ActorConnectionPointType.BOOLEAN) {
-			return ActorConnectionPointType.BOOLEAN_ARRAY;
-		}
-		return connection_type;
+		const arrayConnectionType = ActorConnectionPointTypeToArrayTypeMap[connectionType];
+		return arrayConnectionType;
 	}
 
 	setAttribType(type: ActorConnectionPointType) {

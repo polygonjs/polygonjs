@@ -1,17 +1,9 @@
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {
-	ActorConnectionPoint,
-	ActorConnectionPointType,
-	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
-} from '../utils/io/connections/Actor';
+import {TypedActorNode} from './_Base';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {AnimationAction} from 'three/src/animation/AnimationAction';
 import {BaseNodeType} from '../_Base';
-import {ParamType} from '../../poly/ParamType';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
 import {EventListener, Event} from 'three/src/core/EventDispatcher';
-
-const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 export type AnimationActionLoopEvent = Event & {
 	type: 'loop';
@@ -55,81 +47,4 @@ export abstract class AnimationActionBaseActorNode<K extends NodeParamsConfig> e
 	private _triggerWithNode() {
 		this.scene().actorsManager.manualActorTriggers.setNodeToReceiveTrigger(this);
 	}
-}
-
-/*
- *
- * PARAMLESS
- *
- */
-class AnimationActionActorEmptyParamsConfig extends NodeParamsConfig {}
-const EmptyParamsConfig = new AnimationActionActorEmptyParamsConfig();
-
-export abstract class ParamlessAnimationActionActorNode extends AnimationActionBaseActorNode<AnimationActionActorEmptyParamsConfig> {
-	override readonly paramsConfig = EmptyParamsConfig;
-
-	override initializeNode() {
-		this.io.inputs.setNamedInputConnectionPoints([
-			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new ActorConnectionPoint(
-				ActorConnectionPointType.ANIMATION_ACTION,
-				ActorConnectionPointType.ANIMATION_ACTION,
-				CONNECTION_OPTIONS
-			),
-		]);
-	}
-
-	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const animationAction = this._inputValue<ActorConnectionPointType.ANIMATION_ACTION>(
-			ActorConnectionPointType.ANIMATION_ACTION,
-			context
-		);
-		if (!animationAction) {
-			return;
-		}
-		this._receiveTriggerForAnimationAction(animationAction);
-	}
-	protected abstract _receiveTriggerForAnimationAction(animationAction: AnimationAction): void;
-}
-
-/*
- *
- * FADE
- *
- */
-
-export class AnimationActionFadeActorParamsConfig extends NodeParamsConfig {
-	/** @param manual trigger */
-	trigger = ParamConfig.BUTTON(null, ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK);
-	/** @param fadeIn duration */
-	duration = ParamConfig.FLOAT(1);
-}
-const ParamsConfig = new AnimationActionFadeActorParamsConfig();
-
-export abstract class AnimationActionFadeActorNode extends AnimationActionBaseActorNode<AnimationActionFadeActorParamsConfig> {
-	override readonly paramsConfig = ParamsConfig;
-
-	override initializeNode() {
-		this.io.inputs.setNamedInputConnectionPoints([
-			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new ActorConnectionPoint(
-				ActorConnectionPointType.ANIMATION_ACTION,
-				ActorConnectionPointType.ANIMATION_ACTION,
-				CONNECTION_OPTIONS
-			),
-		]);
-	}
-
-	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const animationAction = this._inputValue<ActorConnectionPointType.ANIMATION_ACTION>(
-			ActorConnectionPointType.ANIMATION_ACTION,
-			context
-		);
-		if (!animationAction) {
-			return;
-		}
-		const duration = this._inputValueFromParam<ParamType.FLOAT>(this.p.duration, context);
-		this._applyFade(animationAction, duration);
-	}
-	protected abstract _applyFade(action: AnimationAction, duration: number): void;
 }

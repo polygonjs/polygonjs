@@ -195,17 +195,27 @@ export class ActorsManager {
 
 			const nodesByAttribName = getNodesByAttribName();
 			const parentNodesByAttribName = getParentNodesByAttribName();
-			if (!nodesByAttribName) {
+			if (!(nodesByAttribName || parentNodesByAttribName)) {
 				return;
 			}
-			nodesByAttribName.forEach((nodes, attributeName) => {
+			const reactiveAttributeNames: Set<string> = new Set();
+			nodesByAttribName?.forEach((nodes, attributeName) => {
+				reactiveAttributeNames.add(attributeName);
+			});
+			parentNodesByAttribName?.forEach((nodes, attributeName) => {
+				reactiveAttributeNames.add(attributeName);
+			});
+			reactiveAttributeNames.forEach((attributeName) => {
+				const directActorNodes = nodesByAttribName?.get(attributeName);
 				const parentNodes = parentNodesByAttribName?.get(attributeName);
 
 				// apply callback
 				CoreObject.makeAttribReactive<AttribValue>(object, attributeName, (newVal, oldVal) => {
 					const context = {Object3D: object};
-					for (let node of nodes) {
-						node.runTrigger(context);
+					if (directActorNodes) {
+						for (let node of directActorNodes) {
+							node.runTrigger(context);
+						}
 					}
 					if (parentNodes) {
 						const parent = object.parent;
@@ -218,6 +228,28 @@ export class ActorsManager {
 					}
 				});
 			});
+
+			// nodesByAttribName.forEach((nodes, attributeName) => {
+			// 	const parentNodes = parentNodesByAttribName?.get(attributeName);
+			// 	console.log(object, parentNodes);
+
+			// 	// apply callback
+			// 	CoreObject.makeAttribReactive<AttribValue>(object, attributeName, (newVal, oldVal) => {
+			// 		const context = {Object3D: object};
+			// 		for (let node of nodes) {
+			// 			node.runTrigger(context);
+			// 		}
+			// 		if (parentNodes) {
+			// 			const parent = object.parent;
+			// 			if (parent) {
+			// 				const parentContext = {Object3D: parent};
+			// 				for (let parentNode of parentNodes) {
+			// 					parentNode.runTrigger(parentContext);
+			// 				}
+			// 			}
+			// 		}
+			// 	});
+			// });
 		});
 	}
 	actorNodesForObject(object: Object3D) {
