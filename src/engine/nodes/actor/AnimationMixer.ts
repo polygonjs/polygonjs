@@ -85,7 +85,7 @@ export class AnimationMixerActorNode extends TypedActorNode<AnimationMixerActorP
 			// const root = animationMixer.getRoot();
 			// const animations = (root as Object3D).animations;
 			// if (!animations) {
-			// 	return -1;
+			// 	return;
 			// }
 			// for (let animation of animations) {
 			// 	const action = animationMixer.clipAction(animation);

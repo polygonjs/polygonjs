@@ -61,9 +61,9 @@ export class TwoWaySwitchActorNode extends ParamlessTypedActorNode {
 		);
 
 		if (condition) {
-			return this._inputValue(TwoWaySwitchActorNodeInputName.IF_TRUE, context);
+			return this._inputValue(TwoWaySwitchActorNodeInputName.IF_TRUE, context) || 0;
 		} else {
-			return this._inputValue(TwoWaySwitchActorNodeInputName.IF_FALSE, context);
+			return this._inputValue(TwoWaySwitchActorNodeInputName.IF_FALSE, context) || 0;
 		}
 	}
 }

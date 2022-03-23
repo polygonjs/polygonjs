@@ -40,6 +40,5 @@ export class OnEventTickActorNode extends TypedActorNode<OnEventTickActorParamsC
 				return this.scene().timeController.timeDelta();
 			}
 		}
-		return -1;
 	}
 }

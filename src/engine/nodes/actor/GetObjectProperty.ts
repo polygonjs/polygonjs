@@ -87,7 +87,7 @@ export class GetObjectPropertyActorNode extends ParamlessTypedActorNode {
 	public override outputValue(
 		context: ActorNodeTriggerContext,
 		outputName: GetObjectPropertyActorNodeInputName | string
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const Object3D =
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
@@ -99,6 +99,5 @@ export class GetObjectPropertyActorNode extends ParamlessTypedActorNode {
 				return (Object3D as Mesh).material as Material;
 			}
 		}
-		return -1;
 	}
 }

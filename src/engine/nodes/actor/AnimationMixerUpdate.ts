@@ -49,6 +49,9 @@ export class AnimationMixerUpdateActorNode extends TypedActorNode<AnimationMixer
 			ActorConnectionPointType.ANIMATION_MIXER,
 			context
 		);
+		if (!mixer) {
+			return;
+		}
 		const delta = this.scene().timeController.timeDelta();
 
 		const root = mixer.getRoot();

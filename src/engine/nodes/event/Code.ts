@@ -12,8 +12,7 @@ import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 import * as THREE from 'three'; // three import required to give to the function builder
 
-const DEFAULT_FUNCTION_CODE = {
-	TS: `
+const DEFAULT_TS = `
 export class EventProcessor extends BaseCodeEventProcessor {
 	override initializeProcessor(){
 	}
@@ -33,29 +32,8 @@ export class EventProcessor extends BaseCodeEventProcessor {
 		this.dispatchEventToOutput('output4', eventContext);
 	}
 }
-`,
-	JS: `
-export class EventProcessor extends BaseCodeEventProcessor {
-	initializeProcessor() {
-	}
-	processTrigger0(eventContext) {
-		this.dispatchEventToOutput('output0', eventContext);
-	}
-	processTrigger1(eventContext) {
-		this.dispatchEventTgfoOutput('output1', eventContext);
-	}
-	processTrigger2(eventContext) {
-		this.dispatchEventTgfoOutput('output2', eventContext);
-	}
-	processTrigger3(eventContext) {
-		this.dispatchEventTgfoOutput('output3', eventContext);
-	}
-	processTrigger4(eventContext) {
-		this.dispatchEventTgfoOutput('output4', eventContext);
-	}
-}
-`,
-};
+`;
+const DEFAULT_JS = DEFAULT_TS.replace(/\:\sEventContext<MouseEvent>/g, '').replace(/override\s/g, '');
 
 export class BaseCodeEventProcessor {
 	constructor(protected node: CodeEventNode) {
@@ -77,18 +55,17 @@ export class BaseCodeEventProcessor {
 	processTrigger3(eventContext: EventContext<Event>) {}
 	processTrigger4(eventContext: EventContext<Event>) {}
 	dispatchEventToOutput(outputName: string, eventContext: EventContext<Event>) {
-		console.log('dispatch', outputName, eventContext);
 		this.node._dispatchEventToOutputFromProcessor(outputName, eventContext);
 	}
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CodeEventParamsConfig extends NodeParamsConfig {
-	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.TS, {
+	codeTypescript = ParamConfig.STRING(DEFAULT_TS, {
 		hideLabel: true,
 		language: StringParamLanguage.TYPESCRIPT,
 	});
-	codeJavascript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.JS, {hidden: true});
+	codeJavascript = ParamConfig.STRING(DEFAULT_JS, {hidden: true});
 }
 const ParamsConfig = new CodeEventParamsConfig();
 
@@ -149,8 +126,8 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 		}
 	}
 	private _compile() {
+		this._processor = undefined;
 		try {
-			console.log(this.pv.codeJavascript);
 			const functionBody = `try {
 				${TranspiledFilter.filter(this.pv.codeJavascript)}
 			} catch(e) {
@@ -166,13 +143,11 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 				this._lastCompiledCode = this.pv.codeJavascript;
 			} else {
 				this.states.error.set(`cannot generate function`);
-				console.log(functionBody);
-				this._processor = undefined;
+				Poly.warn(functionBody);
 			}
 		} catch (e) {
 			Poly.warn(e);
 			this.states.error.set(`cannot generate function (${e})`);
-			this._processor = undefined;
 		}
 	}
 }

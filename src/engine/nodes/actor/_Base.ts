@@ -77,8 +77,8 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	public outputValue(
 		context: ActorNodeTriggerContext,
 		outputName: string = ''
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		return -1;
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
+		return undefined;
 	}
 
 	protected _inputValueFromParam<T extends ParamType>(
@@ -92,20 +92,15 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 			const output_connection_point = inputNode.io.outputs.namedOutputConnectionPoints()[connection.output_index];
 			if (output_connection_point) {
 				const outputName = output_connection_point.name();
-				// const type = ActorParamTypeToConnectionPointTypeMap[param.type()]
-				// if(type){
 				return inputNode.outputValue(context, outputName) as ParamValuesTypeMap[T];
-				// }
 			}
-		} else {
-			return param.value as ParamValuesTypeMap[T];
 		}
-		return -1 as ParamValuesTypeMap[T];
+		return param.value as ParamValuesTypeMap[T];
 	}
 	protected _inputValue<T extends ActorConnectionPointType>(
 		inputNameOrIndex: string | number,
 		context: ActorNodeTriggerContext
-	): ReturnValueTypeByActorConnectionPointType[T] {
+	): ReturnValueTypeByActorConnectionPointType[T] | undefined {
 		const inputIndex = CoreType.isNumber(inputNameOrIndex)
 			? inputNameOrIndex
 			: this.io.inputs.getInputIndex(inputNameOrIndex);
@@ -125,7 +120,6 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 				return this.params.get(inputNameOrIndex)!.value as ReturnValueTypeByActorConnectionPointType[T];
 			}
 		}
-		return -1 as ReturnValueTypeByActorConnectionPointType[T];
 	}
 
 	// processActor(object: Object3D) {}

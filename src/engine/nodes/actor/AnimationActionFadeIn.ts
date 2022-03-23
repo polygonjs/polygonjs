@@ -65,7 +65,9 @@ export class AnimationActionFadeInActorNode extends AnimationActionBaseActorNode
 			ActorConnectionPointType.ANIMATION_ACTION,
 			context
 		);
-
+		if (!animationActionTo) {
+			return;
+		}
 		if (fadeOutOtherActions) {
 			this._fadeOutOtherActions(context, animationActionTo, duration);
 		} else {

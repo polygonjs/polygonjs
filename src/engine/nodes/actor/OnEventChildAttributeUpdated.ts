@@ -77,7 +77,7 @@ export class OnEventChildAttributeUpdatedActorNode extends TypedActorNode<OnEven
 	public override outputValue(
 		context: ActorNodeTriggerContext,
 		outputName: string
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		switch (outputName) {
 			case OnEventChildAttributeUpdatedActorNode.OUTPUT_NEW_VALUES: {
 				return context.Object3D.children.map((child) =>
@@ -90,6 +90,5 @@ export class OnEventChildAttributeUpdatedActorNode extends TypedActorNode<OnEven
 				) as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
 			}
 		}
-		return -1;
 	}
 }

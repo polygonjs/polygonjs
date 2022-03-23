@@ -77,7 +77,7 @@ export class OnEventObjectAttributeUpdatedActorNode extends TypedActorNode<OnEve
 	public override outputValue(
 		context: ActorNodeTriggerContext,
 		outputName: string
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		switch (outputName) {
 			case OnEventObjectAttributeUpdatedActorNode.OUTPUT_NEW_VAL: {
 				const val = CoreObject.attribValue(context.Object3D, this.attributeName());
@@ -92,6 +92,5 @@ export class OnEventObjectAttributeUpdatedActorNode extends TypedActorNode<OnEve
 				}
 			}
 		}
-		return -1;
 	}
 }

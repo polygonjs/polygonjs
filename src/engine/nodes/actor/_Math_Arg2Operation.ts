@@ -38,24 +38,26 @@ function MathFunctionArg2OperationFactory(
 		protected _applyOperation<T>(arg1: T, arg2: T): any {}
 		private _applyOperationForVector<T extends Vector2 | Vector3 | Vector4>(arg1: T, arg2: T): T {
 			if (arg1 instanceof Vector2) {
-				this._applyOperation(arg1.x, arg2.x);
-				this._applyOperation(arg1.y, arg2.y);
+				arg1.x = this._applyOperation(arg1.x, arg2.x);
+				arg1.y = this._applyOperation(arg1.y, arg2.y);
 			}
 			if (arg1 instanceof Vector3 && arg2 instanceof Vector3) {
-				this._applyOperation(arg1.x, arg2.x);
-				this._applyOperation(arg1.y, arg2.y);
-				this._applyOperation(arg1.z, arg2.z);
+				arg1.x = this._applyOperation(arg1.x, arg2.x);
+				arg1.y = this._applyOperation(arg1.y, arg2.y);
+				arg1.z = this._applyOperation(arg1.z, arg2.z);
 			}
 			if (arg1 instanceof Vector4 && arg2 instanceof Vector4) {
-				this._applyOperation(arg1.x, arg2.x);
-				this._applyOperation(arg1.y, arg2.y);
-				this._applyOperation(arg1.z, arg2.z);
-				this._applyOperation(arg1.w, arg2.w);
+				arg1.x = this._applyOperation(arg1.x, arg2.x);
+				arg1.y = this._applyOperation(arg1.y, arg2.y);
+				arg1.z = this._applyOperation(arg1.z, arg2.z);
+				arg1.w = this._applyOperation(arg1.w, arg2.w);
 			}
 
 			return arg1;
 		}
 
+		private _defaultVector4 = new Vector4();
+		private _defaultVector4Tmp = new Vector4();
 		public override outputValue(
 			context: ActorNodeTriggerContext,
 			outputName: string = ''
@@ -63,18 +65,25 @@ function MathFunctionArg2OperationFactory(
 			const isPrimitive = PRIMITIVE_ACTOR_CONNECTION_TYPES.includes(this._expectedInputTypes()[0]);
 
 			if (isPrimitive) {
-				let startValue = this._inputValue<ActorConnectionPointType.FLOAT>(0, context);
+				let startValue = this._inputValue<ActorConnectionPointType.FLOAT>(0, context) || 0;
 				const inputsCount = this.io.inputs.namedInputConnectionPoints().length;
 				for (let i = 1; i < inputsCount; i++) {
-					const nextValue = this._inputValue<ActorConnectionPointType.FLOAT>(1, context);
+					const nextValue = this._inputValue<ActorConnectionPointType.FLOAT>(
+						this._expectedInputName(i),
+						context
+					);
 					startValue = this._applyOperation(startValue, nextValue);
 				}
 				return startValue;
 			} else {
-				let startValue = this._inputValue<ActorConnectionPointType.VECTOR4>(0, context);
+				let startValue =
+					this._inputValue<ActorConnectionPointType.VECTOR4>(0, context) ||
+					this._defaultVector4.set(0, 0, 0, 0);
 				const inputsCount = this.io.inputs.namedInputConnectionPoints().length;
 				for (let i = 1; i < inputsCount; i++) {
-					const nextValue = this._inputValue<ActorConnectionPointType.VECTOR4>(1, context);
+					const nextValue =
+						this._inputValue<ActorConnectionPointType.VECTOR4>(this._expectedInputName(i), context) ||
+						this._defaultVector4Tmp.set(0, 0, 0, 0);
 					this._applyOperationForVector(startValue, nextValue);
 				}
 				return startValue;

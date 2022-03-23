@@ -1,12 +1,22 @@
+import {CoreSleep} from '../../../../src/core/Sleep';
+
 QUnit.test('event code simple', async (assert) => {
 	const geo1 = window.geo1;
+	const eventsNetwork1 = geo1.createNode('eventsNetwork');
 
 	const box1 = geo1.createNode('box');
-	const box2 = geo1.createNode('box');
-	assert.equal(box1.name(), 'box1');
-	assert.equal(box2.name(), 'box2');
 
-	const box2_sibling = box2.nodeSibling('box1')!;
-	assert.equal(box2_sibling.graphNodeId(), box1.graphNodeId());
-	// TODO: this test isn't complete at all
+	const button1 = eventsNetwork1.createNode('button');
+	const code1 = eventsNetwork1.createNode('code');
+	const setParam1 = eventsNetwork1.createNode('setParam');
+
+	code1.setInput(0, button1);
+	setParam1.setInput(0, code1);
+
+	setParam1.p.param.setParam(box1.p.divisions);
+	setParam1.p.number.set(10);
+
+	button1.p.dispatch.pressButton();
+	await CoreSleep.sleep(200);
+	assert.equal(box1.p.divisions.value, 10);
 });

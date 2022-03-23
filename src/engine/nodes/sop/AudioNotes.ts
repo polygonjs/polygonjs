@@ -46,7 +46,7 @@ const ParamsConfig = new AudioNotesSopParamsConfig();
 export class AudioNotesSopNode extends TypedSopNode<AudioNotesSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'AudioNotes';
+		return 'audioNotes';
 	}
 
 	override initializeNode() {

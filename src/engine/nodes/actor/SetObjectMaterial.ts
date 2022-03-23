@@ -45,7 +45,9 @@ export class SetObjectMaterialActorNode extends ParamlessTypedActorNode {
 			ActorConnectionPointType.MATERIAL,
 			context
 		);
-		(Object3D as Mesh).material = material;
+		if (material) {
+			(Object3D as Mesh).material = material;
+		}
 		this.runTrigger(context);
 	}
 }

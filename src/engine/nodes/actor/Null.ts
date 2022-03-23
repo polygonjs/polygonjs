@@ -24,6 +24,6 @@ export class NullActorNode extends BaseMathFunctionArg1ActorNode {
 		this.runTrigger(context);
 	}
 	public override outputValue(context: ActorNodeTriggerContext) {
-		return this._inputValue(this._expectedInputName(0), context);
+		return this._inputValue(this._expectedInputName(0), context) || 0;
 	}
 }

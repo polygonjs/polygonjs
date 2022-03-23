@@ -101,9 +101,9 @@ export class TimeController {
 
 		if (updateFrame) {
 			const newFrame = Math.floor(this._timeUniform.value * FPS);
-			const bounded_frame = this._ensureFrameWithinBounds(newFrame);
-			if (newFrame != bounded_frame) {
-				this.setFrame(bounded_frame, true);
+			const boundedFrame = this._ensureFrameWithinBounds(newFrame);
+			if (newFrame != boundedFrame) {
+				this.setFrame(boundedFrame, true);
 			} else {
 				this._frame = newFrame;
 			}

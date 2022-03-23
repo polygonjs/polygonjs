@@ -19,7 +19,7 @@ const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetObjectPositionActorParamsConfig extends NodeParamsConfig {
 	/** @param target position */
-	t = ParamConfig.VECTOR3([0, 0, 0]);
+	position = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
 	/** @param sets if the matrix should be updated as the animation progresses */
@@ -51,10 +51,10 @@ export class SetObjectPositionActorNode extends TypedActorNode<SetObjectPosition
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const {Object3D} = context;
-		const t = this._inputValueFromParam<ParamType.VECTOR3>(this.p.t, context);
+		const position = this._inputValueFromParam<ParamType.VECTOR3>(this.p.position, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
-		tmpT.copy(t);
+		tmpT.copy(position);
 		Object3D.position.lerp(tmpT, lerp);
 		if (isBooleanTrue(updateMatrix)) {
 			Object3D.updateMatrix();

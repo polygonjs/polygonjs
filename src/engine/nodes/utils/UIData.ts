@@ -74,6 +74,7 @@ export class UIData {
 			this._position.copy(newPosition);
 		}
 		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
+		return this;
 	}
 
 	translate(offset: Vector2, snap: boolean = false) {
@@ -85,6 +86,7 @@ export class UIData {
 		}
 
 		this.node.emit(NodeEvent.UI_DATA_POSITION_UPDATED);
+		return this;
 	}
 
 	toJSON(): NodeUIDataJson {

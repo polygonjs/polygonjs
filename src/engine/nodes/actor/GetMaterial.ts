@@ -42,11 +42,10 @@ export class GetMaterialActorNode extends TypedActorNode<GetMaterialActorParamsC
 
 	public override outputValue(
 		context: ActorNodeTriggerContext
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const materialNode = this.pv.node.nodeWithContext(NodeContext.MAT, this.states?.error);
 		if (materialNode) {
 			return materialNode.material;
 		}
-		return -1;
 	}
 }

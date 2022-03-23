@@ -12,32 +12,21 @@ import * as THREE from 'three'; // three import required to give to the function
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-const DEFAULT_FUNCTION_CODE = {
-	TS: `
-export class CodeSopProcessor extends BaseCodeActorProcessor {
+const DEFAULT_TS = `
+export class CodeActorProcessor extends BaseCodeActorProcessor {
 	override initializeProcessor(){
 		this.io.inputs.setNamedInputConnectionPoints([
 			new ActorConnectionPoint('myBool', ActorConnectionPointType.BOOLEAN),
 		]);
 	}
 	override receiveTrigger(context: ActorNodeTriggerContext){
-		console.log(context);
+		const {Object3D} = context;
+		Object3D.position.y += 1;
+		Object3D.updateMatrix();
 	}
 }
-`,
-	JS: `
-export class CodeSopProcessor extends BaseCodeActorProcessor {
-	initializeProcessor(){
-		this.io.inputs.setNamedInputConnectionPoints([
-			new ActorConnectionPoint('myBool', ActorConnectionPointType.BOOLEAN),
-		]);
-	}
-	receiveTrigger(context){
-		console.log(context);
-	}
-}
-`,
-};
+`;
+const DEFAULT_JS = DEFAULT_TS.replace(/\:\sActorNodeTriggerContext/g, '').replace(/override\s/g, '');
 
 export class BaseCodeActorProcessor {
 	constructor(protected node: CodeActorNode) {
@@ -52,6 +41,21 @@ export class BaseCodeActorProcessor {
 	get io() {
 		return this.node.io;
 	}
+	protected _inputValueFromParam<T extends ParamType>(
+		param: ActorNodeParamConstructorMap[T],
+		context: ActorNodeTriggerContext
+	): ParamValuesTypeMap[T] {
+		return this.node._processorHookInputValueFromParam(param, context);
+	}
+	protected _inputValue<T extends ActorConnectionPointType>(
+		inputNameOrIndex: string | number,
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[T] | undefined {
+		return this.node._processorHookInputValue(inputNameOrIndex, context);
+	}
+	runTrigger(context: ActorNodeTriggerContext, outputIndex = 0) {
+		this.node.runTrigger(context, outputIndex);
+	}
 	initializeProcessor() {}
 	receiveTrigger(context: ActorNodeTriggerContext) {}
 }
@@ -61,14 +65,23 @@ import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {BaseNodeType} from '../_Base';
+import {ParamType} from '../../poly/ParamType';
+import {ActorNodeParamConstructorMap} from './utils/ActorNodeInputParam';
+import {ParamValuesTypeMap} from '../../params/types/ParamValuesTypeMap';
 class CodeActorParamsConfig extends NodeParamsConfig {
-	codeTypescript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.TS, {
+	compile = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			CodeActorNode.PARAM_CALLBACK_compile(node as CodeActorNode);
+		},
+	});
+	codeTypescript = ParamConfig.STRING(DEFAULT_TS, {
 		hideLabel: true,
 		language: StringParamLanguage.TYPESCRIPT,
 	});
-	codeJavascript = ParamConfig.STRING(DEFAULT_FUNCTION_CODE.JS, {
+	codeJavascript = ParamConfig.STRING(DEFAULT_JS, {
 		hidden: true,
 		callback: (node: BaseNodeType) => {
 			CodeActorNode.PARAM_CALLBACK_compile(node as CodeActorNode);
@@ -84,10 +97,10 @@ export class CodeActorNode extends TypedActorNode<CodeActorParamsConfig> {
 		return 'code';
 	}
 
-	// private _lastCompiledCode: string | undefined;
 	private _processor: BaseCodeActorProcessor | undefined;
 
 	override initializeNode() {
+		this.io.connection_points.spare_params.setInputlessParamNames(['codeTypescript', 'codeJavascript']);
 		this.io.inputs.setNamedInputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new ActorConnectionPoint(
@@ -99,27 +112,23 @@ export class CodeActorNode extends TypedActorNode<CodeActorParamsConfig> {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER),
 		]);
+		this.params.onParamsCreated('compile', () => {
+			this._compile();
+		});
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		// this._compileIfRequired();
 		this._processor?.receiveTrigger(context);
 	}
 
-	// private _compileIfRequired() {
-	// 	if (!this._processor || this._lastCompiledCode != this.pv.codeJavascript) {
-	// 		this._compile();
-	// 	}
-	// }
-
 	private _compile() {
+		this._processor = undefined;
 		try {
 			const functionBody = `try {
 	${TranspiledFilter.filter(this.pv.codeJavascript)}
 } catch(e) {
 		this.states.error.set(e)
 }`;
-			console.log(this.pv.codeJavascript);
 
 			const processorCreatorFunction = new Function(
 				'ActorConnectionPoint',
@@ -139,16 +148,32 @@ export class CodeActorNode extends TypedActorNode<CodeActorParamsConfig> {
 				// this._lastCompiledCode = this.pv.codeJavascript;
 			} else {
 				this.states.error.set(`cannot generate function`);
-				console.warn(functionBody);
-				this._processor = undefined;
+				Poly.warn(functionBody);
 			}
 		} catch (e) {
 			Poly.warn(e);
 			this.states.error.set(`cannot generate function (${e})`);
-			this._processor = undefined;
 		}
 	}
 	static PARAM_CALLBACK_compile(node: CodeActorNode) {
 		node._compile();
+	}
+
+	/*
+	 *
+	 * hooks for the processor
+	 *
+	 */
+	public _processorHookInputValueFromParam<T extends ParamType>(
+		param: ActorNodeParamConstructorMap[T],
+		context: ActorNodeTriggerContext
+	): ParamValuesTypeMap[T] {
+		return this._inputValueFromParam(param, context);
+	}
+	public _processorHookInputValue<T extends ActorConnectionPointType>(
+		inputNameOrIndex: string | number,
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[T] | undefined {
+		return this._inputValue(inputNameOrIndex, context);
 	}
 }

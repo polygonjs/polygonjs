@@ -63,10 +63,8 @@ export class SwitchActorNode extends ParamlessTypedActorNode {
 	}
 
 	public override outputValue(context: ActorNodeTriggerContext) {
-		const inputIndex = this._inputValue<ActorConnectionPointType.INTEGER>(
-			SwitchActorNode.INPUT_INDEX_NAME,
-			context
-		);
-		return this._inputValue(this._expectedInputName(inputIndex + 1), context);
+		const inputIndex =
+			this._inputValue<ActorConnectionPointType.INTEGER>(SwitchActorNode.INPUT_INDEX_NAME, context) || 0;
+		return this._inputValue(this._expectedInputName(inputIndex + 1), context) || 0;
 	}
 }

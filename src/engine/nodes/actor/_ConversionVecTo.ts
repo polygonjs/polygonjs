@@ -44,11 +44,14 @@ function VecToActorFactory(type: string, options: VecToGlOptions): typeof BaseVe
 			this.addParam(param_type, this._inputVecName(), components.map((c) => 0) as Number2);
 		}
 
+		private _defaultVector4 = new Vector4();
 		public override outputValue(
 			context: ActorNodeTriggerContext,
 			outputName: Vector4Component = 'x'
 		): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-			const vec4 = this._inputValue<ActorConnectionPointType.VECTOR4>(this._inputVecName(), context);
+			const vec4 =
+				this._inputValue<ActorConnectionPointType.VECTOR4>(this._inputVecName(), context) ||
+				this._defaultVector4;
 			return vec4[outputName] as number;
 		}
 	};
@@ -95,11 +98,14 @@ export class Vec4ToVec3ActorNode extends BaseVecToActorNode {
 		this.addParam(ParamType.VECTOR4, Vec4ToVec3ActorNode.INPUT_NAME_VEC4, components_v4.map((c) => 0) as Number4);
 	}
 
+	private _defaultVector4 = new Vector4();
 	public override outputValue(
 		context: ActorNodeTriggerContext,
 		outputName: Vec4ToVec3ActorNodeInputName = Vec4ToVec3ActorNodeInputName.VEC3
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		const vec4 = this._inputValue<ActorConnectionPointType.VECTOR4>(Vec4ToVec3ActorNode.INPUT_NAME_VEC4, context);
+		const vec4 =
+			this._inputValue<ActorConnectionPointType.VECTOR4>(Vec4ToVec3ActorNode.INPUT_NAME_VEC4, context) ||
+			this._defaultVector4;
 		switch (outputName) {
 			case Vec4ToVec3ActorNodeInputName.VEC3: {
 				tmpV3.set(vec4.x, vec4.y, vec4.z);
@@ -133,11 +139,14 @@ export class Vec3ToVec2ActorNode extends BaseVecToActorNode {
 		this.addParam(ParamType.VECTOR3, Vec3ToVec2ActorNode.INPUT_NAME_VEC3, components_v3.map((c) => 0) as Number3);
 	}
 
+	private _defaultVector3 = new Vector3();
 	public override outputValue(
 		context: ActorNodeTriggerContext,
 		outputName: Vec3ToVec2ActorNodeInputName = Vec3ToVec2ActorNodeInputName.VEC2
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		const vec3 = this._inputValue<ActorConnectionPointType.VECTOR3>(Vec3ToVec2ActorNode.INPUT_NAME_VEC3, context);
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
+		const vec3 =
+			this._inputValue<ActorConnectionPointType.VECTOR3>(Vec3ToVec2ActorNode.INPUT_NAME_VEC3, context) ||
+			this._defaultVector3;
 		switch (outputName) {
 			case Vec3ToVec2ActorNodeInputName.VEC2: {
 				tmpV2.set(vec3.x, vec3.y);
@@ -147,7 +156,6 @@ export class Vec3ToVec2ActorNode extends BaseVecToActorNode {
 				return vec3.z;
 			}
 		}
-		return -1;
 	}
 }
 
@@ -171,12 +179,15 @@ export class Vec2ToVec3ActorNode extends BaseVecToActorNode {
 		this.addParam(ParamType.FLOAT, Vec2ToVec3ActorNode.INPUT_NAME_Z, 0);
 	}
 
+	private _defaultVector2 = new Vector2();
 	public override outputValue(
 		context: ActorNodeTriggerContext,
 		outputName: string = ''
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		const vec2 = this._inputValue<ActorConnectionPointType.VECTOR2>(Vec2ToVec3ActorNode.INPUT_NAME_VEC2, context);
-		const z = this._inputValue<ActorConnectionPointType.FLOAT>(Vec2ToVec3ActorNode.INPUT_NAME_Z, context);
+		const vec2 =
+			this._inputValue<ActorConnectionPointType.VECTOR2>(Vec2ToVec3ActorNode.INPUT_NAME_VEC2, context) ||
+			this._defaultVector2;
+		const z = this._inputValue<ActorConnectionPointType.FLOAT>(Vec2ToVec3ActorNode.INPUT_NAME_Z, context) || 0;
 		tmpV3.set(vec2.x, vec2.y, z);
 		return tmpV3;
 	}
@@ -201,12 +212,15 @@ export class Vec3ToVec4ActorNode extends BaseVecToActorNode {
 		this.addParam(ParamType.FLOAT, Vec3ToVec4ActorNode.INPUT_NAME_W, 0);
 	}
 
+	private _defaultVector3 = new Vector3();
 	public override outputValue(
 		context: ActorNodeTriggerContext,
 		outputName: string = ''
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		const vec3 = this._inputValue<ActorConnectionPointType.VECTOR3>(Vec3ToVec4ActorNode.INPUT_NAME_VEC3, context);
-		const w = this._inputValue<ActorConnectionPointType.FLOAT>(Vec3ToVec4ActorNode.INPUT_NAME_W, context);
+		const vec3 =
+			this._inputValue<ActorConnectionPointType.VECTOR3>(Vec3ToVec4ActorNode.INPUT_NAME_VEC3, context) ||
+			this._defaultVector3;
+		const w = this._inputValue<ActorConnectionPointType.FLOAT>(Vec3ToVec4ActorNode.INPUT_NAME_W, context) || 0;
 		tmpV4.set(vec3.x, vec3.y, vec3.z, w);
 		return tmpV4;
 	}

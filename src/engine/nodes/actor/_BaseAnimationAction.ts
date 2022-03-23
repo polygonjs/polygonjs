@@ -84,6 +84,9 @@ export abstract class ParamlessAnimationActionActorNode extends AnimationActionB
 			ActorConnectionPointType.ANIMATION_ACTION,
 			context
 		);
+		if (!animationAction) {
+			return;
+		}
 		this._receiveTriggerForAnimationAction(animationAction);
 	}
 	protected abstract _receiveTriggerForAnimationAction(animationAction: AnimationAction): void;
@@ -122,6 +125,9 @@ export abstract class AnimationActionFadeActorNode extends AnimationActionBaseAc
 			ActorConnectionPointType.ANIMATION_ACTION,
 			context
 		);
+		if (!animationAction) {
+			return;
+		}
 		const duration = this._inputValueFromParam<ParamType.FLOAT>(this.p.duration, context);
 		this._applyFade(animationAction, duration);
 	}

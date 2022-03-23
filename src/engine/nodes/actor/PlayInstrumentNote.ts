@@ -14,6 +14,7 @@ import {
 import {NodeContext} from '../../poly/NodeContext';
 import {ParamType} from '../../poly/ParamType';
 import {ALL_NOTES, DEFAULT_NOTE} from '../../../core/audio/Notes';
+import {InstrumentType} from '../../../core/audio/AudioBuilder';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -60,6 +61,8 @@ export class PlayInstrumentNoteActorNode extends TypedActorNode<PlayInstrumentNo
 		]);
 	}
 
+	private _lastInstrumentType: InstrumentType | undefined;
+	private _lastNote: string | undefined;
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const audioNode = this.pv.node.nodeWithContext(NodeContext.AUDIO, this.states?.error);
 		if (!audioNode) {
@@ -75,7 +78,15 @@ export class PlayInstrumentNoteActorNode extends TypedActorNode<PlayInstrumentNo
 				return;
 			}
 			const note = this._inputValueFromParam<ParamType.STRING>(this.p.note, context);
-			instrument.triggerAttackRelease(note, this.pv.duration);
+			this._lastInstrumentType = instrument.triggerAttackRelease(note, this.pv.duration);
+			this._lastNote = note;
 		});
+	}
+	// used for tests
+	__lastInstrumentType() {
+		return this._lastInstrumentType;
+	}
+	__lastNote() {
+		return this._lastNote;
 	}
 }

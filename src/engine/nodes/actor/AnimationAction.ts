@@ -51,6 +51,9 @@ export class AnimationActionActorNode extends TypedActorNode<AnimationActionActo
 			ActorConnectionPointType.ANIMATION_MIXER,
 			context
 		);
+		if (!mixer) {
+			return;
+		}
 		let map = this._actionByNameByMixer.get(mixer);
 		if (!map) {
 			map = new Map();
@@ -62,11 +65,11 @@ export class AnimationActionActorNode extends TypedActorNode<AnimationActionActo
 			const root = mixer.getRoot();
 			const animations = (root as Object3D).animations;
 			if (!animations) {
-				return -1;
+				return;
 			}
 			const animation = animations.find((animation) => animation.name == clipName);
 			if (!animation) {
-				return -1;
+				return;
 			}
 			action = mixer.existingAction(animation) || mixer.clipAction(animation);
 			if (isBooleanTrue(this.pv.autoPlay)) {

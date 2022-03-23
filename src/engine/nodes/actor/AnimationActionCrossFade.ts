@@ -66,6 +66,9 @@ export class AnimationActionCrossFadeActorNode extends AnimationActionBaseActorN
 			AnimationActionCrossFadeActorNodeInputName.FROM,
 			context
 		);
+		if (!animationActionFrom) {
+			return;
+		}
 		const duration = this._inputValueFromParam<ParamType.FLOAT>(this.p.duration, context);
 		const startOnFromActionEnd: boolean = this._inputValueFromParam<ParamType.BOOLEAN>(
 			this.p.startOnFromActionEnd,
@@ -82,6 +85,9 @@ export class AnimationActionCrossFadeActorNode extends AnimationActionBaseActorN
 				AnimationActionCrossFadeActorNodeInputName.to,
 				context
 			);
+			if (!animationActionTo) {
+				return;
+			}
 			this._crossFade(animationActionFrom, animationActionTo, duration, warp);
 		};
 

@@ -65,6 +65,7 @@ import {MaterialsNetworkActorNode} from '../../../nodes/actor/MaterialsNetwork';
 import {PostProcessNetworkActorNode} from '../../../nodes/actor/PostProcessNetwork';
 import {RenderersNetworkActorNode} from '../../../nodes/actor/RenderersNetwork';
 export interface ActorNodeChildrenMap {
+	add: AddActorNode;
 	animationAction: AnimationActionActorNode;
 	animationActionCrossFade: AnimationActionCrossFadeActorNode;
 	animationActionFadeOut: AnimationActionFadeOutActorNode;
@@ -75,6 +76,7 @@ export interface ActorNodeChildrenMap {
 	animationMixerUpdate: AnimationMixerUpdateActorNode;
 	code: CodeActorNode;
 	constant: ConstantActorNode;
+	divide: DivideActorNode;
 	floatToVec2: FloatToVec2ActorNode;
 	floatToVec3: FloatToVec3ActorNode;
 	floatToVec4: FloatToVec4ActorNode;
@@ -83,6 +85,7 @@ export interface ActorNodeChildrenMap {
 	getObject: GetObjectActorNode;
 	getObjectAttribute: GetObjectAttributeActorNode;
 	getObjectProperty: GetObjectPropertyActorNode;
+	mult: MultActorNode;
 	multScalar: MultScalarActorNode;
 	null: NullActorNode;
 	onEventChildAttributeUpdated: OnEventChildAttributeUpdatedActorNode;
@@ -100,6 +103,7 @@ export interface ActorNodeChildrenMap {
 	playAnimation: PlayAnimationActorNode;
 	playInstrumentNote: PlayInstrumentNoteActorNode;
 	setViewer: SetViewerActorNode;
+	subtract: SubtractActorNode;
 	switch: SwitchActorNode;
 	triggerFilter: TriggerFilterActorNode;
 	twoWaySwitch: TwoWaySwitchActorNode;

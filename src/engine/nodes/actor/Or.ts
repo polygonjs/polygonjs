@@ -44,7 +44,7 @@ export class OrActorNode extends ParamlessTypedActorNode {
 			context
 		);
 		let result = false;
-		if (booleanArray.length > 1) {
+		if (booleanArray && booleanArray.length > 1) {
 			for (let elem of booleanArray) {
 				result = result || elem;
 			}
