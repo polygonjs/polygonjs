@@ -2,6 +2,12 @@ import {CATEGORY_ACTOR} from './Category';
 
 export const ACTORS_IN_PROD = false;
 
+import {
+	FloatToIntActorNode,
+	IntToFloatActorNode,
+	IntToBoolActorNode,
+	BoolToIntActorNode,
+} from '../../../nodes/actor/_ConversionMisc';
 import {FloatToVec2ActorNode, FloatToVec3ActorNode, FloatToVec4ActorNode} from '../../../nodes/actor/_ConversionToVec';
 import {
 	Vec2ToFloatActorNode,
@@ -48,11 +54,13 @@ import {OnEventScenePlayStateActorNode} from '../../../nodes/actor/OnEventSceneP
 import {OnEventSceneResetActorNode} from '../../../nodes/actor/OnEventSceneReset';
 import {OnEventTickActorNode} from '../../../nodes/actor/OnEventTick';
 import {OrActorNode} from '../../../nodes/actor/Or';
+import {SetMaterialColorActorNode} from '../../../nodes/actor/SetMaterialColor';
 import {SetObjectAttributeActorNode} from '../../../nodes/actor/SetObjectAttribute';
 import {SetObjectMaterialActorNode} from '../../../nodes/actor/SetObjectMaterial';
-import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
 // import {SetObjectHoveredStateActorNode} from '../../../nodes/actor/SetObjectHoveredState';
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
+import {SetObjectRotationActorNode} from '../../../nodes/actor/SetObjectRotation';
+import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
 import {SetViewerActorNode} from '../../../nodes/actor/SetViewer';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
@@ -78,10 +86,12 @@ export interface ActorNodeChildrenMap {
 	animationActionStop: AnimationActionStopActorNode;
 	animationMixer: AnimationMixerActorNode;
 	animationMixerUpdate: AnimationMixerUpdateActorNode;
+	boolToInt: BoolToIntActorNode;
 	code: CodeActorNode;
 	constant: ConstantActorNode;
 	debug: DebugActorNode;
 	divide: DivideActorNode;
+	floatToInt: FloatToIntActorNode;
 	floatToVec2: FloatToVec2ActorNode;
 	floatToVec3: FloatToVec3ActorNode;
 	floatToVec4: FloatToVec4ActorNode;
@@ -90,6 +100,8 @@ export interface ActorNodeChildrenMap {
 	getObject: GetObjectActorNode;
 	getObjectAttribute: GetObjectAttributeActorNode;
 	getObjectProperty: GetObjectPropertyActorNode;
+	intToBool: IntToBoolActorNode;
+	intToFloat: IntToFloatActorNode;
 	mult: MultActorNode;
 	multScalar: MultScalarActorNode;
 	null: NullActorNode;
@@ -102,11 +114,13 @@ export interface ActorNodeChildrenMap {
 	onEventSceneReset: OnEventSceneResetActorNode;
 	onEventTick: OnEventTickActorNode;
 	or: OrActorNode;
+	setMaterialColor: SetMaterialColorActorNode;
 	// setObjectHoveredState: SetObjectHoveredStateActorNode;
 	setObjectAttribute: SetObjectAttributeActorNode;
 	setObjectLookAt: SetObjectLookAtActorNode;
 	setObjectMaterial: SetObjectMaterialActorNode;
 	setObjectPosition: SetObjectPositionActorNode;
+	setObjectRotation: SetObjectRotationActorNode;
 	setObjectScale: SetObjectScaleActorNode;
 	playAnimation: PlayAnimationActorNode;
 	playInstrumentNote: PlayInstrumentNoteActorNode;
@@ -145,10 +159,12 @@ export class ActorRegister {
 		poly.registerNode(AnimationActionStopActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(AnimationMixerActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(AnimationMixerUpdateActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(BoolToIntActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(ConstantActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(DebugActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(DivideActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(FloatToIntActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(FloatToVec2ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(FloatToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(FloatToVec4ActorNode, CATEGORY_ACTOR.CONVERSION);
@@ -157,6 +173,8 @@ export class ActorRegister {
 		poly.registerNode(GetObjectActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectAttributeActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectPropertyActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(OnEventManualTriggerActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(MultActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultScalarActorNode, CATEGORY_ACTOR.MATH);
@@ -171,11 +189,13 @@ export class ActorRegister {
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(PlayInstrumentNoteActorNode, CATEGORY_ACTOR.AUDIO);
+		poly.registerNode(SetMaterialColorActorNode, CATEGORY_ACTOR.AUDIO);
 		// poly.registerNode(SetObjectHoveredStateActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectAttributeActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectLookAtActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectMaterialActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.SET);
+		poly.registerNode(SetObjectRotationActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SubtractActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
