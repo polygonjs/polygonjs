@@ -181,14 +181,14 @@ For this, you can directly access the threejs objects. There are 2 ways to do so
 -   **From the scene**
 
 ```javascript
-const scene = new PolyScene();
-const threejsScene = scene.threejsScene();
+const scene = new PolyScene(); // this is the polygonjs scene
+const threejsScene = scene.threejsScene(); // and it contains the threejs scene
 ```
 
 -   **From any node**
 
 ```javascript
-const scene = new POLY.PolyScene();
+const scene = new PolyScene();
 const rootNode = scene.root();
 const geo = rootNode.createNode('geo');
 const plane = geo.createNode('plane');
@@ -199,7 +199,7 @@ const container = await plane.compute();
 const coreGroup = container.coreContent();
 // and we can now get an array of THREE.Object3D:
 const objects = coreGroup.objects();
-// and we can use THREE Api:
+// and we can use threejsjs Api:
 const object = objects[0];
 object.position.set(0, 1, 0);
 object.updateMatrix();
