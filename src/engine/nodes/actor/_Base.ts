@@ -1,4 +1,4 @@
-import {TypedNode} from '../_Base';
+import {BaseNodeType, TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
@@ -13,6 +13,11 @@ import {CoreType} from '../../../core/Type';
 export interface ActorNodeTriggerContext {
 	Object3D: Object3D;
 }
+export const ACTOR_NODE_SELF_TRIGGER_CALLBACK = {
+	callback: (node: BaseNodeType) => {
+		BaseActorNodeClass.PARAM_CALLBACK_selfTrigger(node as BaseActorNodeType);
+	},
+};
 
 const INPUT_NAME = 'input actor behaviors';
 const DEFAULT_INPUT_NAMES = [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
@@ -122,6 +127,9 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		}
 	}
 
+	static PARAM_CALLBACK_selfTrigger(node: BaseActorNodeType) {
+		node.scene().actorsManager.manualTriggerController.setNodeToReceiveTrigger(node);
+	}
 	// processActor(object: Object3D) {}
 }
 

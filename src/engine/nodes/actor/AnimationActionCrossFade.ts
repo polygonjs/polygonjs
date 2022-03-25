@@ -4,7 +4,7 @@
  *
  */
 
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME} from './_Base';
+import {ActorNodeTriggerContext, ACTOR_NODE_SELF_TRIGGER_CALLBACK, TRIGGER_CONNECTION_NAME} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
@@ -16,7 +16,6 @@ import {
 	AnimationActionBaseActorNode,
 	AnimationActionEventListenerExtended,
 	AnimationActionLoopEvent,
-	ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK,
 } from './_BaseAnimationAction';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
 import {EventListener, Event} from 'three/src/core/EventDispatcher';
@@ -29,7 +28,7 @@ export enum AnimationActionCrossFadeActorNodeInputName {
 
 class AnimationActionCrossFadeActorParamsConfig extends NodeParamsConfig {
 	/** @param manual trigger */
-	trigger = ParamConfig.BUTTON(null, ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK);
+	trigger = ParamConfig.BUTTON(null, ACTOR_NODE_SELF_TRIGGER_CALLBACK);
 	/** @param fadeIn duration */
 	duration = ParamConfig.FLOAT(1);
 	/** @param additional warping (gradually changes of the time scales) will be applied */

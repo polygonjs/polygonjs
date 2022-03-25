@@ -9,7 +9,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 
-enum OnEventTickActorNodeOuput {
+export enum OnEventTickActorNodeOuput {
 	TIME = 'time',
 	DELTA = 'delta',
 }

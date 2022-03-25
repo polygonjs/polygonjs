@@ -28,12 +28,15 @@ export enum ActorConnectionPointType {
 	VECTOR4_ARRAY = 'Vector4[]',
 }
 
-export const PRIMITIVE_ACTOR_CONNECTION_TYPES = [
+const PRIMITIVE_ACTOR_CONNECTION_TYPES = [
 	ActorConnectionPointType.BOOLEAN,
 	ActorConnectionPointType.FLOAT,
 	ActorConnectionPointType.INTEGER,
 	ActorConnectionPointType.STRING,
 ];
+export function isActorConnectionPointPrimitive(type: ActorConnectionPointType) {
+	return PRIMITIVE_ACTOR_CONNECTION_TYPES.includes(type);
+}
 
 //
 //

@@ -206,7 +206,8 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		const namedInputConnections = this.node.io.inputs.namedInputConnectionPoints();
 		const namedOutputConnections = this.node.io.outputs.namedOutputConnectionPoints();
 		const inputTypesMatch = arraysMatch(
-			namedInputConnections.map((c) => c?.type()),
+			// make sure to test the expected ones against all except the inNodeDefinition ones
+			namedInputConnections.filter((c) => !c?.inNodeDefinition()).map((c) => c?.type()),
 			this._wrapped_expected_input_types_function()
 		);
 		const outputTypesMatch = arraysMatch(
@@ -214,8 +215,11 @@ export class ConnectionPointsController<NC extends NodeContext> {
 			this._wrapped_expected_output_types_function()
 		);
 		const inputNamesMatch = arraysMatch(
-			namedInputConnections.map((c) => c?.name()),
-			namedInputConnections.map((c, i) => this._wrapped_input_name_function(i))
+			// make sure to test the expected ones against all except the inNodeDefinition ones
+			namedInputConnections.filter((c) => !c?.inNodeDefinition()).map((c) => c?.name()),
+			namedInputConnections
+				.filter((c) => !c?.inNodeDefinition())
+				.map((c, i) => this._wrapped_input_name_function(i))
 		);
 		const outputNamesMatch = arraysMatch(
 			namedOutputConnections.map((c) => c?.name()),

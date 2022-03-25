@@ -10,13 +10,13 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME} from './_Base';
-import {AnimationActionBaseActorNode, ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK} from './_BaseAnimationAction';
+import {ActorNodeTriggerContext, ACTOR_NODE_SELF_TRIGGER_CALLBACK, TRIGGER_CONNECTION_NAME} from './_Base';
+import {AnimationActionBaseActorNode} from './_BaseAnimationAction';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 class AnimationActionStopActorParamsConfig extends NodeParamsConfig {
 	/** @param manual trigger */
-	trigger = ParamConfig.BUTTON(null, ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK);
+	trigger = ParamConfig.BUTTON(null, ACTOR_NODE_SELF_TRIGGER_CALLBACK);
 }
 const ParamsConfig = new AnimationActionStopActorParamsConfig();
 

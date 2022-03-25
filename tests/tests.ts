@@ -87,6 +87,7 @@ import './engine/nodes/actor/AnimationActionPlay';
 import './engine/nodes/actor/AnimationActionStop';
 import './engine/nodes/actor/AnimationMixer';
 import './engine/nodes/actor/Code';
+import './engine/nodes/actor/Compare';
 import './engine/nodes/actor/GetChildrenAttributes';
 import './engine/nodes/actor/GetMaterial';
 import './engine/nodes/actor/GetObject';

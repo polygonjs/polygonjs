@@ -1,7 +1,7 @@
 import {BaseMathFunctionActorNode} from './_BaseMathFunction';
 import {
 	ActorConnectionPointType,
-	PRIMITIVE_ACTOR_CONNECTION_TYPES,
+	isActorConnectionPointPrimitive,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext} from './_Base';
@@ -62,7 +62,7 @@ function MathFunctionArg2OperationFactory(
 			context: ActorNodeTriggerContext,
 			outputName: string = ''
 		): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-			const isPrimitive = PRIMITIVE_ACTOR_CONNECTION_TYPES.includes(this._expectedInputTypes()[0]);
+			const isPrimitive = isActorConnectionPointPrimitive(this._expectedInputTypes()[0]);
 
 			if (isPrimitive) {
 				let startValue = this._inputValue<ActorConnectionPointType.FLOAT>(0, context) || 0;

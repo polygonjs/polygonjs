@@ -8,11 +8,10 @@ import {
 	AnimationActionBaseActorNode,
 	AnimationActionEventListenerExtended,
 	AnimationActionLoopEvent,
-	ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK,
 } from './_BaseAnimationAction';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME} from './_Base';
+import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, ACTOR_NODE_SELF_TRIGGER_CALLBACK} from './_Base';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
@@ -27,7 +26,7 @@ const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class AnimationActionFadeInActorParamsConfig extends NodeParamsConfig {
 	/** @param manual trigger */
-	trigger = ParamConfig.BUTTON(null, ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK);
+	trigger = ParamConfig.BUTTON(null, ACTOR_NODE_SELF_TRIGGER_CALLBACK);
 	/** @param fadeIn duration */
 	duration = ParamConfig.FLOAT(1);
 	/** @param fade out other actions */

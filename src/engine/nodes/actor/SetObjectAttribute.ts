@@ -4,7 +4,12 @@
  *
  */
 
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
+import {
+	ActorNodeTriggerContext,
+	ACTOR_NODE_SELF_TRIGGER_CALLBACK,
+	TRIGGER_CONNECTION_NAME,
+	TypedActorNode,
+} from './_Base';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
@@ -24,7 +29,11 @@ const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 // }
 
 class SetObjectAttributeActorParamsConfig extends NodeParamsConfig {
+	/** @param manual trigger */
+	trigger = ParamConfig.BUTTON(null, ACTOR_NODE_SELF_TRIGGER_CALLBACK);
+	/** @param attribute name */
 	attribName = ParamConfig.STRING('');
+	/** @param attribute type */
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(ActorConnectionPointType.FLOAT), {
 		menu: {
 			entries: PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.map((name, i) => {
@@ -75,7 +84,7 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 		if (connectionType == null) {
 			console.warn(`${this.type()} actor node type not valid`);
 		}
-		return connectionType;
+		return connectionType || ActorConnectionPointType.FLOAT;
 	}
 	// private _currentConnectionType() {
 	// 	if (this.pv.type == null) {

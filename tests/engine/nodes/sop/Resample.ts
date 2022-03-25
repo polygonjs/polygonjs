@@ -1,5 +1,5 @@
 import {METHOD, METHODS, CURVE_TYPE, CURVE_TYPES} from '../../../../src/engine/nodes/sop/Resample';
-import {TEXT_TYPE, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
+import {TextType, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
 
 QUnit.test('resample a line', async (assert) => {
 	const geo1 = window.geo1;
@@ -52,7 +52,7 @@ QUnit.test('resample a text', async (assert) => {
 	text1.p.text.set('flat');
 	let container;
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.LINE));
+	text1.p.type.set(TEXT_TYPES.indexOf(TextType.LINE));
 	container = await text1.compute();
 	assert.equal(container.pointsCount(), 738);
 

@@ -4,20 +4,20 @@
  *
  */
 
-import {AnimationActionBaseActorNode, ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK} from './_BaseAnimationAction';
+import {AnimationActionBaseActorNode} from './_BaseAnimationAction';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME} from './_Base';
+import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, ACTOR_NODE_SELF_TRIGGER_CALLBACK} from './_Base';
 import {ParamType} from '../../poly/ParamType';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 export class AnimationActionFadeOutActorParamsConfig extends NodeParamsConfig {
 	/** @param manual trigger */
-	trigger = ParamConfig.BUTTON(null, ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK);
+	trigger = ParamConfig.BUTTON(null, ACTOR_NODE_SELF_TRIGGER_CALLBACK);
 	/** @param fadeIn duration */
 	duration = ParamConfig.FLOAT(1);
 }

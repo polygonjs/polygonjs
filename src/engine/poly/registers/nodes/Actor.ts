@@ -35,6 +35,7 @@ import {AnimationActionStopActorNode} from '../../../nodes/actor/AnimationAction
 import {AnimationMixerActorNode} from '../../../nodes/actor/AnimationMixer';
 import {AnimationMixerUpdateActorNode} from '../../../nodes/actor/AnimationMixerUpdate';
 import {CodeActorNode} from '../../../nodes/actor/Code';
+import {CompareActorNode} from '../../../nodes/actor/Compare';
 import {ConstantActorNode} from '../../../nodes/actor/Constant';
 import {DebugActorNode} from '../../../nodes/actor/Debug';
 import {GetChildrenAttributesActorNode} from '../../../nodes/actor/GetChildrenAttributes';
@@ -66,6 +67,7 @@ import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
 import {SwitchActorNode} from '../../../nodes/actor/Switch';
 import {TriggerFilterActorNode} from '../../../nodes/actor/TriggerFilter';
+import {TriggerTwoWaySwitchActorNode} from '../../../nodes/actor/TriggerTwoWaySwitch';
 import {TwoWaySwitchActorNode} from '../../../nodes/actor/TwoWaySwitch';
 // networks
 import {ActorsNetworkActorNode} from '../../../nodes/actor/ActorsNetwork';
@@ -88,6 +90,7 @@ export interface ActorNodeChildrenMap {
 	animationMixerUpdate: AnimationMixerUpdateActorNode;
 	boolToInt: BoolToIntActorNode;
 	code: CodeActorNode;
+	compare: CompareActorNode;
 	constant: ConstantActorNode;
 	debug: DebugActorNode;
 	divide: DivideActorNode;
@@ -128,6 +131,7 @@ export interface ActorNodeChildrenMap {
 	subtract: SubtractActorNode;
 	switch: SwitchActorNode;
 	triggerFilter: TriggerFilterActorNode;
+	triggerTwoWaySwitch: TriggerTwoWaySwitchActorNode;
 	twoWaySwitch: TwoWaySwitchActorNode;
 	vec2ToFloat: Vec2ToFloatActorNode;
 	vec2ToVec3: Vec2ToVec3ActorNode;
@@ -161,6 +165,7 @@ export class ActorRegister {
 		poly.registerNode(AnimationMixerUpdateActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(BoolToIntActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
+		poly.registerNode(CompareActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(ConstantActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(DebugActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(DivideActorNode, CATEGORY_ACTOR.MATH);
@@ -201,6 +206,7 @@ export class ActorRegister {
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(TriggerFilterActorNode, CATEGORY_ACTOR.LOGIC);
+		poly.registerNode(TriggerTwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(Vec2ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec2ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);

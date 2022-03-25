@@ -14,6 +14,7 @@ import {
 import {NodeContext} from '../../poly/NodeContext';
 import {AnimPropertyTarget} from '../../../core/animation/PropertyTarget';
 import gsap from 'gsap';
+import {BaseNodeType} from '../_Base';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 export enum AnimationActorOutput {
@@ -22,6 +23,12 @@ export enum AnimationActorOutput {
 }
 
 class PlayAnimationActorParamsConfig extends NodeParamsConfig {
+	/** @param manual trigger */
+	trigger = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			PlayAnimationActorNode.PARAM_CALLBACK_selfTrigger(node as BaseActorNodeType);
+		},
+	});
 	/** @param include children */
 	node = ParamConfig.NODE_PATH('', {
 		nodeSelection: {context: NodeContext.ANIM},

@@ -1,7 +1,6 @@
 import {TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {AnimationAction} from 'three/src/animation/AnimationAction';
-import {BaseNodeType} from '../_Base';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
 import {EventListener, Event} from 'three/src/core/EventDispatcher';
 
@@ -15,12 +14,6 @@ export type AnimationActionLoopEvent = Event & {
 
 export type AnimationActionEventListenerExtended = EventListener<Event, 'loop', AnimationMixer> &
 	((e: AnimationActionLoopEvent) => void);
-
-export const ANIMATION_ACTION_ACTOR_NODE_TRIGGER_CALLBACK = {
-	callback: (node: BaseNodeType) => {
-		AnimationActionBaseActorNode.PARAM_CALLBACK_sendTrigger(node as AnimationActionBaseActorNode<any>);
-	},
-};
 
 /*
  *
@@ -39,12 +32,5 @@ export abstract class AnimationActionBaseActorNode<K extends NodeParamsConfig> e
 		to.syncWith(from);
 		to.play();
 		from.crossFadeTo(to, duration, warp);
-	}
-	static PARAM_CALLBACK_sendTrigger(node: AnimationActionBaseActorNode<any>) {
-		node._triggerWithNode();
-	}
-
-	private _triggerWithNode() {
-		this.scene().actorsManager.manualTriggerController.setNodeToReceiveTrigger(this);
 	}
 }

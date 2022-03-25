@@ -1,7 +1,9 @@
-import {TEXT_TYPE, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
+import {Object3D} from 'three/src/core/Object3D';
+import {CoreObject} from '../../../../src/core/geometry/Object';
+import {TextType, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
 import {checkConsolePrints} from '../../../helpers/Console';
 
-QUnit.test('text simple', async (assert) => {
+QUnit.test('sop/text simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -22,7 +24,7 @@ QUnit.test('text simple', async (assert) => {
 	assert.equal(container.pointsCount(), 3792);
 });
 
-QUnit.test('text prints no warning', async (assert) => {
+QUnit.test('sop/text prints no warning', async (assert) => {
 	const geo1 = window.geo1;
 
 	const consoleHistory = await checkConsolePrints(async () => {
@@ -56,7 +58,7 @@ QUnit.test('text prints no warning', async (assert) => {
 	assert.equal(consoleHistory.error.length, 0);
 });
 
-QUnit.test('text with json font', async (assert) => {
+QUnit.test('sop/text with json font', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -66,7 +68,7 @@ QUnit.test('text with json font', async (assert) => {
 	assert.equal(container.pointsCount(), 3324);
 });
 
-QUnit.test('text with ttf font', async (assert) => {
+QUnit.test('sop/text with ttf font', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -76,7 +78,7 @@ QUnit.test('text with ttf font', async (assert) => {
 	assert.equal(container.pointsCount(), 3204);
 });
 
-QUnit.test('text with a non existing font', async (assert) => {
+QUnit.test('sop/text with a non existing font', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -88,24 +90,60 @@ QUnit.test('text with a non existing font', async (assert) => {
 	assert.equal(container.pointsCount(), 0);
 });
 
-QUnit.test('text with multiline', async (assert) => {
+QUnit.test('sop/text with multiline', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
 	text1.p.text.set('line1line2');
 
 	let container = await text1.compute();
+	assert.equal(container.coreContent()?.objects().length, 1);
 	assert.more_than_or_equal(container.size().y, 1);
 	assert.less_than_or_equal(container.size().y, 1.2);
 
 	text1.p.text.set('line1\nline2');
 
 	container = await text1.compute();
-	assert.more_than_or_equal(container.size().y, 2.5);
+	assert.equal(container.coreContent()?.objects().length, 1);
+	assert.more_than_or_equal(container.size().y, 2.1);
 	assert.less_than_or_equal(container.size().y, 3.5);
 });
 
-QUnit.test('text as different types', async (assert) => {
+QUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
+	const geo1 = window.geo1;
+
+	const text1 = geo1.createNode('text');
+	text1.p.splitPerLine.set(1);
+	text1.p.text.set('line1line2');
+
+	let container = await text1.compute();
+	assert.equal(container.coreContent()?.objects().length, 1);
+	assert.more_than_or_equal(container.size().y, 1);
+	assert.less_than_or_equal(container.size().y, 1.2);
+
+	text1.p.text.set('line1\nli ne2');
+
+	container = await text1.compute();
+	assert.equal(container.coreContent()?.objects().length, 2);
+	assert.deepEqual(
+		container
+			.coreContent()
+			?.objects()
+			.map((o: Object3D) => o.name),
+		['line1', 'li_ne2']
+	);
+	assert.deepEqual(
+		container
+			.coreContent()
+			?.coreObjects()
+			.map((o: CoreObject) => o.attribValue('lineIndex')),
+		[0, 1]
+	);
+	assert.more_than_or_equal(container.size().y, 2.1);
+	assert.less_than_or_equal(container.size().y, 3.5);
+});
+
+QUnit.test('sop/text as different types', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -115,36 +153,38 @@ QUnit.test('text as different types', async (assert) => {
 	await scene.root().processQueue();
 	let container;
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.MESH));
+	text1.p.type.set(TEXT_TYPES.indexOf(TextType.MESH));
 	assert.ok(text1.isDirty());
 	container = await text1.compute();
 	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 4776);
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.FLAT));
+	text1.p.type.set(TEXT_TYPES.indexOf(TextType.FLAT));
 	assert.ok(text1.isDirty());
 	container = await text1.compute();
 	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 3773);
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.LINE));
+	text1.p.type.set(TEXT_TYPES.indexOf(TextType.LINE));
 	assert.ok(text1.isDirty());
 	container = await text1.compute();
 	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 3792);
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TEXT_TYPE.STROKE));
+	text1.p.type.set(TEXT_TYPES.indexOf(TextType.STROKE));
 	assert.ok(text1.isDirty());
 	container = await text1.compute();
 	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 22746);
 });
 
-QUnit.test('text can recover from generation errors', async (assert) => {
+QUnit.test('sop/text can recover from generation errors', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
+	const box = geo1.createNode('box');
+	box.flags.display.set(true);
 	const text1 = geo1.createNode('text');
 	await scene.root().processQueue();
 	let container;
@@ -153,17 +193,17 @@ QUnit.test('text can recover from generation errors', async (assert) => {
 
 	text1.p.text.set('test');
 	container = await text1.compute();
-	assert.notOk(text1.states.error.active());
-	assert.equal(container.pointsCount(), 4200);
+	assert.notOk(text1.states.error.active(), 'no error');
+	assert.equal(container.pointsCount(), 4200, 'points count is 4200');
 
 	text1.p.text.set('test!!');
 	container = await text1.compute();
-	assert.ok(text1.states.error.active());
+	assert.ok(text1.states.error.active(), 'error present');
 	assert.equal(text1.states.error.message(), 'failed to generate geometry. Try to remove some characters');
 	assert.equal(container.pointsCount(), 0);
 
 	text1.p.text.set('test');
 	container = await text1.compute();
-	assert.notOk(text1.states.error.active());
-	assert.equal(container.pointsCount(), 4200);
+	assert.notOk(text1.states.error.active(), 'no error');
+	assert.equal(container.pointsCount(), 4200, 'points count is 4200');
 });
