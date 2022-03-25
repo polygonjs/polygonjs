@@ -74,7 +74,6 @@ export interface MatNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
-import {ACTORS_IN_PROD} from './Actor';
 export class MatRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(LineBasicMatNode, CATEGORY_MAT.LINE);
@@ -105,9 +104,7 @@ export class MatRegister {
 		poly.registerNode(VolumeMatNode, CATEGORY_MAT.VOLUME);
 		poly.registerNode(VolumeBuilderMatNode, CATEGORY_MAT.VOLUME);
 		// networks
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorsNetworkMatNode, CATEGORY_MAT.NETWORK);
-		}
+		poly.registerNode(ActorsNetworkMatNode, CATEGORY_MAT.NETWORK);
 		poly.registerNode(AnimationsNetworkMatNode, CATEGORY_MAT.NETWORK);
 		poly.registerNode(AudioNetworkMatNode, CATEGORY_MAT.NETWORK);
 		poly.registerNode(CopNetworkMatNode, CATEGORY_MAT.NETWORK);

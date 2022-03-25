@@ -1,7 +1,5 @@
 import {CATEGORY_ACTOR} from './Category';
 
-export const ACTORS_IN_PROD = false;
-
 import {
 	FloatToIntActorNode,
 	IntToFloatActorNode,
@@ -217,9 +215,7 @@ export class ActorRegister {
 		poly.registerNode(Vec4ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
 
 		// networks
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorsNetworkActorNode, CATEGORY_ACTOR.NETWORK);
-		}
+		poly.registerNode(ActorsNetworkActorNode, CATEGORY_ACTOR.NETWORK);
 		poly.registerNode(AnimationsNetworkActorNode, CATEGORY_ACTOR.NETWORK);
 		poly.registerNode(AudioNetworkActorNode, CATEGORY_ACTOR.NETWORK);
 		poly.registerNode(CopNetworkActorNode, CATEGORY_ACTOR.NETWORK);

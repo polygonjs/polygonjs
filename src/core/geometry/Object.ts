@@ -21,6 +21,7 @@ import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
 import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
+import {ThreeMeshBVHHelper} from '../../engine/operations/sop/utils/Bvh/ThreeMeshBVHHelper';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
 const ATTRIBUTES_PREVIOUS_VALUES = 'attributesPreviousValues';
@@ -353,28 +354,29 @@ export class CoreObject extends CoreEntity {
 			cloneLookup.set(sourceNode, clonedNode);
 		});
 		clonedObject.traverse(function (node) {
-			const srcNode = sourceLookup.get(node) as SkinnedMesh;
-			const mesh_node = node as Mesh;
+			const srcNode = sourceLookup.get(node) as SkinnedMesh | undefined;
+			const meshNode = node as Mesh;
 
-			if (mesh_node.geometry && srcNode && srcNode.geometry) {
-				const src_node_geometry = srcNode.geometry as BufferGeometry;
-				mesh_node.geometry = CoreGeometry.clone(src_node_geometry);
-				const mesh_node_geometry = mesh_node.geometry as BufferGeometry;
-				if (mesh_node_geometry.userData) {
-					mesh_node_geometry.userData = ObjectUtils.cloneDeep(src_node_geometry.userData);
-				}
+			if (meshNode.geometry && srcNode && srcNode.geometry) {
+				const srcNodeGeometry = srcNode.geometry as BufferGeometry;
+				meshNode.geometry = CoreGeometry.clone(srcNodeGeometry);
+				ThreeMeshBVHHelper.copyBVH(meshNode, srcNode);
+				// const mesh_node_geometry = meshNode.geometry as BufferGeometry;
+				// if (mesh_node_geometry.userData) {
+				// 	mesh_node_geometry.userData = ObjectUtils.cloneDeep(srcNodeGeometry.userData);
+				// }
 			}
-			if (mesh_node.material) {
+			if (meshNode.material) {
 				// no need to assign the material here
 				// as this should already be done in the .clone() method.
 				// Otherwise, when this is assigned here, some objects that rely on their own mat
 				// such as sop/Reflector stop working when cloned
 				// mesh_node.material = src_node.material;
-				CoreMaterial.applyCustomMaterials(node, mesh_node.material as MaterialWithCustomMaterials);
+				CoreMaterial.applyCustomMaterials(node, meshNode.material as MaterialWithCustomMaterials);
 
 				// prevents crashes for linesegments with shader material such as the line dashed instance
 				// TODO: test
-				const material_with_color = mesh_node.material as MaterialWithColor;
+				const material_with_color = meshNode.material as MaterialWithColor;
 				if (material_with_color.color == null) {
 					material_with_color.color = new Color(1, 1, 1);
 				}

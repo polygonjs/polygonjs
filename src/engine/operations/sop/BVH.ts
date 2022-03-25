@@ -1,7 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH} from './utils/Bvh/three-mesh-bvh';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -9,6 +8,7 @@ import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {ThreeMeshBVHHelper} from './utils/Bvh/ThreeMeshBVHHelper';
 
 interface BVHSopParams extends DefaultOperationParams {
 	keepOnlyPosition: boolean;
@@ -49,9 +49,8 @@ export class BVHSopOperation extends BaseSopOperation {
 		const mergedMesh = this._makeCompact(allMeshes);
 		if (mergedMesh) {
 			mergedMesh.matrixAutoUpdate = false;
-			mergedMesh.raycast = acceleratedRaycast;
-			const bhv = new MeshBVH(mergedMesh.geometry, {verbose: false});
-			(mergedMesh.geometry as BufferGeometryWithBVH).boundsTree = bhv;
+
+			ThreeMeshBVHHelper.assignBVH(mergedMesh);
 
 			return this.createCoreGroupFromObjects([mergedMesh]);
 		} else {

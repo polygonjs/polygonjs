@@ -94,7 +94,6 @@ export interface EventNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
-import {ACTORS_IN_PROD} from './Actor';
 export class EventRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AnimationEventNode, CATEGORY_EVENT.SCENE);
@@ -133,9 +132,7 @@ export class EventRegister {
 		poly.registerNode(ViewerEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(WindowEventNode, CATEGORY_EVENT.INPUT);
 		// networks
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorsNetworkEventNode, CATEGORY_EVENT.NETWORK);
-		}
+		poly.registerNode(ActorsNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(AnimationsNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(AudioNetworkEventNode, CATEGORY_EVENT.NETWORK);
 		poly.registerNode(CopNetworkEventNode, CATEGORY_EVENT.NETWORK);

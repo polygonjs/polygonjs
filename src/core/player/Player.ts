@@ -3,11 +3,12 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Box3} from 'three/src/math/Box3';
 import {Line3} from 'three/src/math/Line3';
 import {Matrix4} from 'three/src/math/Matrix4';
-import {MeshWithBVH} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
+import {MeshWithBVH, ExtendedTriangle} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
 import {createPlayerGeometry, CapsuleOptions} from './PlayerGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {DEG2RAD} from 'three/src/math/MathUtils';
+import {ShapecastIntersection} from 'three-mesh-bvh';
 interface PlayerOptions {
 	object: Object3D;
 	collider: MeshWithBVH;
@@ -177,24 +178,37 @@ export class CorePlayer {
 		tempBox.min.addScalar(-capsuleInfo.radius);
 		tempBox.max.addScalar(capsuleInfo.radius);
 
+		const intersectsBounds = (
+			box: Box3,
+			isLeaf: boolean,
+			score: number | undefined,
+			depth: number,
+			nodeIndex: number
+		) => {
+			return box.intersectsBox(tempBox) as any as ShapecastIntersection; // TODO: three-mesh-bvh remove this when types are fixed
+		};
+
+		const intersectsTriangle = (tri: ExtendedTriangle) => {
+			// check if the triangle is intersecting the capsule and adjust the
+			// capsule position if it is.
+			const triPoint = tempVector;
+			const capsulePoint = tempVector2;
+
+			const distance = tri.closestPointToSegment(tempSegment, triPoint, capsulePoint) as number;
+			if (distance < capsuleInfo.radius) {
+				const depth = capsuleInfo.radius - distance;
+				const direction = capsulePoint.sub(triPoint).normalize();
+
+				tempSegment.start.addScaledVector(direction, depth);
+				tempSegment.end.addScaledVector(direction, depth);
+			}
+			return undefined as any as boolean; // TODO: three-mesh-bvh remove this when types are fixed
+		};
+
 		this.collider.geometry.boundsTree.shapecast({
-			intersectsBounds: (box) => box.intersectsBox(tempBox),
+			intersectsBounds,
 
-			intersectsTriangle: (tri) => {
-				// check if the triangle is intersecting the capsule and adjust the
-				// capsule position if it is.
-				const triPoint = tempVector;
-				const capsulePoint = tempVector2;
-
-				const distance = tri.closestPointToSegment(tempSegment, triPoint, capsulePoint);
-				if (distance < capsuleInfo.radius) {
-					const depth = capsuleInfo.radius - distance;
-					const direction = capsulePoint.sub(triPoint).normalize();
-
-					tempSegment.start.addScaledVector(direction, depth);
-					tempSegment.end.addScaledVector(direction, depth);
-				}
-			},
+			intersectsTriangle,
 		});
 
 		// get the adjusted position of the capsule collider in world space after checking

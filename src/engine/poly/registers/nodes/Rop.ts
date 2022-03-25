@@ -29,16 +29,13 @@ export interface RopNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
-import {ACTORS_IN_PROD} from './Actor';
 export class RopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(CSS2DRendererRopNode, CATEGORY_ROP.CSS);
 		// poly.registerNode(Css3DRendererRopNode, CATEGORY_ROP.CSS); // not registering, since sop/css3d_object is not yet working
 		poly.registerNode(WebGLRendererRopNode, CATEGORY_ROP.WEBGL);
 		// networks
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorsNetworkRopNode, CATEGORY_ROP.NETWORK);
-		}
+		poly.registerNode(ActorsNetworkRopNode, CATEGORY_ROP.NETWORK);
 		poly.registerNode(AnimationsNetworkRopNode, CATEGORY_ROP.NETWORK);
 		poly.registerNode(AudioNetworkRopNode, CATEGORY_ROP.NETWORK);
 		poly.registerNode(CopNetworkRopNode, CATEGORY_ROP.NETWORK);

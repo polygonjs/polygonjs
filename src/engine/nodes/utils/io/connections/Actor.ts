@@ -3,6 +3,18 @@
 // Data types
 //
 //
+import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
+import {ParamType} from '../../../../poly/ParamType';
+import {BaseConnectionPoint} from './_Base';
+import {Object3D} from 'three/src/core/Object3D';
+import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three/src/math/Vector4';
+import {Material} from 'three/src/materials/Material';
+import {CoreType} from '../../../../../core/Type';
+import {AnimationAction} from 'three/src/animation/AnimationAction';
+import {AnimationMixer} from 'three/src/animation/AnimationMixer';
 
 export enum ActorConnectionPointType {
 	ANIMATION_MIXER = 'AnimationMixer',
@@ -299,15 +311,7 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 // Map of Actor Data type default values
 //
 //
-import {Object3D} from 'three/src/core/Object3D';
-import {Color} from 'three/src/math/Color';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {Material} from 'three/src/materials/Material';
-import {CoreType} from '../../../../../core/Type';
-import {AnimationAction} from 'three/src/animation/AnimationAction';
-import {AnimationMixer} from 'three/src/animation/AnimationMixer';
+
 export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.ANIMATION_MIXER]: AnimationMixer;
 	[ActorConnectionPointType.ANIMATION_ACTION]: AnimationAction;
@@ -345,9 +349,6 @@ export const ACTOR_CONNECTION_POINT_IN_NODE_DEF: ActorConnectionPointOptions<Act
 	inNodeDefinition: true,
 };
 
-import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
-import {ParamType} from '../../../../poly/ParamType';
-import {BaseConnectionPoint} from './_Base';
 export class ActorConnectionPoint<T extends ActorConnectionPointType> extends BaseConnectionPoint {
 	protected override _json: ActorConnectionPointData<T> | undefined;
 	protected override _init_value?: ActorConnectionPointInitValueMapGeneric[T];

@@ -73,12 +73,6 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 			center,
 			mergeLines: params.mergeLines,
 		});
-
-		// const geometry = new BoxBufferGeometry(size.x, size.y, size.z, 1, 1, 1);
-		// const matrix = this._core_transform.translationMatrix(center);
-		// geometry.applyMatrix4(matrix);
-		// return geometry;
-		return this.createCoreGroupFromObjects([]);
 	}
 
 	private _createLines(params: BoxLinesSopParams) {

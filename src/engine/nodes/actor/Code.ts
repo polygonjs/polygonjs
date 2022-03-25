@@ -3,7 +3,17 @@
  *
  *
  */
-
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {
+	ActorConnectionPoint,
+	ActorConnectionPointType,
+	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+	ReturnValueTypeByActorConnectionPointType,
+} from '../utils/io/connections/Actor';
+import {BaseNodeType} from '../_Base';
+import {ParamType} from '../../poly/ParamType';
+import {ActorNodeParamConstructorMap} from './utils/ActorNodeInputParam';
+import {ParamValuesTypeMap} from '../../params/types/ParamValuesTypeMap';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
@@ -60,17 +70,6 @@ export class BaseCodeActorProcessor {
 	receiveTrigger(context: ActorNodeTriggerContext) {}
 }
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {
-	ActorConnectionPoint,
-	ActorConnectionPointType,
-	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
-	ReturnValueTypeByActorConnectionPointType,
-} from '../utils/io/connections/Actor';
-import {BaseNodeType} from '../_Base';
-import {ParamType} from '../../poly/ParamType';
-import {ActorNodeParamConstructorMap} from './utils/ActorNodeInputParam';
-import {ParamValuesTypeMap} from '../../params/types/ParamValuesTypeMap';
 class CodeActorParamsConfig extends NodeParamsConfig {
 	compile = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {

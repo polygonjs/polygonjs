@@ -4,8 +4,6 @@
  *
  */
 
-const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
@@ -17,6 +15,8 @@ import {
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {CoreObject} from '../../../core/geometry/Object';
+
+const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class GetChildrenAttributesActorParamsConfig extends NodeParamsConfig {
 	attribName = ParamConfig.STRING('');

@@ -95,7 +95,6 @@ export interface AudioNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
-import {ACTORS_IN_PROD} from './Actor';
 
 export class AudioRegister {
 	static run(poly: PolyEngine) {
@@ -136,9 +135,7 @@ export class AudioRegister {
 		poly.registerNode(VolumeAudioNode, CATEGORY_AUDIO.MISC);
 		poly.registerNode(WaveformAudioNode, CATEGORY_AUDIO.ANALYSER);
 		// networks
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
-		}
+		poly.registerNode(ActorsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
 		poly.registerNode(AnimationsNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
 		poly.registerNode(AudioNetworkAudioNode, CATEGORY_AUDIO.NETWORK);
 		poly.registerNode(CopNetworkAudioNode, CATEGORY_AUDIO.NETWORK);

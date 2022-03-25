@@ -98,7 +98,6 @@ module.exports = (env) => {
 	// if (USE_STATO_ANALYSE) {
 	// 	common_options.plugins.push(new StatoscopeWebpackPlugin());
 	// }
-	console.log('MINIFY', MINIFY);
 	if (MINIFY) {
 		common_options.plugins.push(new AggressiveMergingPlugin()); //Merge chunks
 		// common_options.plugins.push(new FaviconsWebpackPlugin(LOGO_PATH));

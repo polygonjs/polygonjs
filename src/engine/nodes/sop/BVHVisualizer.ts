@@ -18,6 +18,15 @@ class BVHVisualizerSopParamsConfig extends NodeParamsConfig {
 		range: [0, 20],
 		rangeLocked: [true, false],
 	});
+	/** @param opacity */
+	opacity = ParamConfig.FLOAT(DEFAULT.opacity, {
+		range: [0, 1],
+		rangeLocked: [true, true],
+	});
+	/** @param depth */
+	displayEdges = ParamConfig.BOOLEAN(DEFAULT.displayEdges);
+	/** @param depth */
+	displayParents = ParamConfig.BOOLEAN(DEFAULT.displayParents);
 }
 const ParamsConfig = new BVHVisualizerSopParamsConfig();
 

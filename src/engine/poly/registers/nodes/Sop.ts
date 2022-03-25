@@ -352,7 +352,6 @@ import {UvTransformSopOperation} from '../../../operations/sop/UvTransform';
 import {UvUnwrapSopOperation} from '../../../operations/sop/UvUnwrap';
 
 import {PolyEngine} from '../../../Poly';
-import {ACTORS_IN_PROD} from './Actor';
 export class SopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerOperation(AddSopOperation);
@@ -427,9 +426,7 @@ export class SopRegister {
 		poly.registerOperation(UvTransformSopOperation);
 		poly.registerOperation(UvUnwrapSopOperation);
 
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorSopNode, CATEGORY_SOP.MODIFIER);
-		}
+		poly.registerNode(ActorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(AmbientLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
@@ -571,9 +568,7 @@ export class SopRegister {
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		// networks
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
-		}
+		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AudioNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(CopNetworkSopNode, CATEGORY_SOP.NETWORK);

@@ -16,7 +16,7 @@ import {
 import {ParamType} from '../../poly/ParamType';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
-import {MeshBasicMaterial} from 'three';
+import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 

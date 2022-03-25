@@ -64,7 +64,6 @@ export interface ObjNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
-import {ACTORS_IN_PROD} from './Actor';
 export class ObjRegister {
 	static run(poly: PolyEngine) {
 		// lights
@@ -93,9 +92,7 @@ export class ObjRegister {
 		poly.registerNode(CubeCameraObjNode, CATEGORY_OBJ.CAMERA);
 
 		// networks
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorsNetworkObjNode, CATEGORY_OBJ.NETWORK);
-		}
+		poly.registerNode(ActorsNetworkObjNode, CATEGORY_OBJ.NETWORK);
 		poly.registerNode(AnimationsNetworkObjNode, CATEGORY_OBJ.NETWORK);
 		poly.registerNode(AudioNetworkObjNode, CATEGORY_OBJ.NETWORK);
 		poly.registerNode(CopNetworkObjNode, CATEGORY_OBJ.NETWORK);

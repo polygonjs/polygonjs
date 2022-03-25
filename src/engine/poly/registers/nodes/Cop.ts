@@ -59,7 +59,6 @@ export interface CopNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
-import {ACTORS_IN_PROD} from './Actor';
 export class CopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AudioAnalyserCopNode, CATEGORY_COP.ADVANCED);
@@ -81,9 +80,7 @@ export class CopRegister {
 		poly.registerNode(VideoCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(WebCamCopNode, CATEGORY_COP.ADVANCED);
 		// networks
-		if (ACTORS_IN_PROD || process.env.NODE_ENV == 'development') {
-			poly.registerNode(ActorsNetworkCopNode, CATEGORY_COP.NETWORK);
-		}
+		poly.registerNode(ActorsNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(AnimationsNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(AudioNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(CopNetworkCopNode, CATEGORY_COP.NETWORK);

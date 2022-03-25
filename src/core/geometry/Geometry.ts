@@ -286,22 +286,12 @@ export class CoreGeometry {
 		return CoreGeometry.clone(this._geometry);
 	}
 
-	static clone(src_geometry: BufferGeometry): BufferGeometry {
-		let src_userData;
-
-		// monkey path
-		// for (let attribute_name of Object.keys(src_geometry.attributes)) {
-		// 	const attribute = src_geometry.getAttribute(attribute_name);
-		// 	if (attribute.constructor.name == InterleavedBufferAttribute.name) {
-		// 		MonkeyPatcher.patch(attribute as InterleavedBufferAttribute);
-		// 	}
-		// }
-
-		const new_geometry = src_geometry.clone();
-		if ((src_userData = src_geometry.userData) != null) {
-			new_geometry.userData = ObjectUtils.cloneDeep(src_userData);
+	static clone(srcGeometry: BufferGeometry): BufferGeometry {
+		const clonedGeometry = srcGeometry.clone();
+		if (srcGeometry.userData) {
+			clonedGeometry.userData = ObjectUtils.cloneDeep(srcGeometry.userData);
 		}
-		return new_geometry;
+		return clonedGeometry;
 	}
 
 	pointsCount(): number {

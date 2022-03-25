@@ -4,7 +4,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Plane} from 'three/src/math/Plane';
 import {Line3} from 'three/src/math/Line3';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MeshWithBVH} from './utils/Bvh/three-mesh-bvh';
+import {MeshWithBVH, ShapecastIntersection, ExtendedTriangle} from './utils/Bvh/three-mesh-bvh';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -12,6 +12,7 @@ import {BufferAttribute} from 'three/src/core/BufferAttribute';
 import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
 import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {Box3} from 'three/src/math/Box3';
 
 interface ClipSopParams extends DefaultOperationParams {
 	origin: Vector3;
@@ -60,45 +61,55 @@ export class ClipSopOperation extends BaseSopOperation {
 
 		const performIntersection = (attrib?: BufferAttribute | InterleavedBufferAttribute) => {
 			let index = 0;
+
+			const intersectsBounds = (
+				box: Box3,
+				isLeaf: boolean,
+				score: number | undefined,
+				depth: number,
+				nodeIndex: number
+			) => {
+				return this._plane.intersectsBox(box) as any as ShapecastIntersection; // TODO: three-mesh-bvh remove this when types are fixed
+			};
+			const intersectsTriangle = (tri: ExtendedTriangle) => {
+				// check each triangle edge to see if it intersects with the plane. If so then
+				// add it to the list of segments.
+				let count = 0;
+				tempLine.start.copy(tri.a);
+				tempLine.end.copy(tri.b);
+				if (this._plane.intersectLine(tempLine, tempVector)) {
+					attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
+					index++;
+					count++;
+				}
+
+				tempLine.start.copy(tri.b);
+				tempLine.end.copy(tri.c);
+				if (this._plane.intersectLine(tempLine, tempVector)) {
+					attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
+					count++;
+					index++;
+				}
+
+				tempLine.start.copy(tri.c);
+				tempLine.end.copy(tri.a);
+				if (this._plane.intersectLine(tempLine, tempVector)) {
+					attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
+					count++;
+					index++;
+				}
+
+				// If we only intersected with one or three sides then just remove it. This could be handled
+				// more gracefully.
+				if (count !== 2) {
+					index -= count;
+				}
+				return undefined as any as boolean; //count > 0; // TODO: three-mesh-bvh remove this when types are fixed
+			};
+
 			meshBVH.shapecast({
-				intersectsBounds: (box) => {
-					return this._plane.intersectsBox(box);
-				},
-
-				intersectsTriangle: (tri) => {
-					// check each triangle edge to see if it intersects with the plane. If so then
-					// add it to the list of segments.
-					let count = 0;
-					tempLine.start.copy(tri.a);
-					tempLine.end.copy(tri.b);
-					if (this._plane.intersectLine(tempLine, tempVector)) {
-						attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
-						index++;
-						count++;
-					}
-
-					tempLine.start.copy(tri.b);
-					tempLine.end.copy(tri.c);
-					if (this._plane.intersectLine(tempLine, tempVector)) {
-						attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
-						count++;
-						index++;
-					}
-
-					tempLine.start.copy(tri.c);
-					tempLine.end.copy(tri.a);
-					if (this._plane.intersectLine(tempLine, tempVector)) {
-						attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
-						count++;
-						index++;
-					}
-
-					// If we only intersected with one or three sides then just remove it. This could be handled
-					// more gracefully.
-					if (count !== 2) {
-						index -= count;
-					}
-				},
+				intersectsBounds,
+				intersectsTriangle,
 			});
 			return {index};
 		};
