@@ -19,7 +19,7 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLightConta
 	}
 	private __operation__: SpotLightSopOperation | undefined;
 	private _operation() {
-		return (this.__operation__ = this.__operation__ || new SpotLightSopOperation(this._scene, this.states));
+		return (this.__operation__ = this.__operation__ || new SpotLightSopOperation(this._scene, this.states, this));
 	}
 	createLight() {
 		return this._operation().createLight(this.pv);

@@ -21,6 +21,7 @@ export class AmbientLightSopOperation extends BaseSopOperation {
 	createLight() {
 		const light = new AmbientLight();
 		light.matrixAutoUpdate = false;
+		light.name = `AmbientLight_${this._node?.name() || ''}`;
 		return light;
 	}
 	updateLightParams(light: AmbientLight, params: AmbientLightParams) {

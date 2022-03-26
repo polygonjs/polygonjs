@@ -25,7 +25,7 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 
 	private __operation__: AreaLightSopOperation | undefined;
 	private _operation() {
-		return (this.__operation__ = this.__operation__ || new AreaLightSopOperation(this._scene, this.states));
+		return (this.__operation__ = this.__operation__ || new AreaLightSopOperation(this._scene, this.states, this));
 	}
 	createLight() {
 		return this._operation().createLight();
@@ -35,7 +35,7 @@ export class AreaLightObjNode extends BaseLightTransformedObjNode<RectAreaLight,
 		this._operation().updateLightParams(this.light, this.pv);
 
 		if (isBooleanTrue(this.pv.showHelper)) {
-			this._helper = this._helper || new CoreRectAreaLightHelper(this.light);
+			this._helper = this._helper || new CoreRectAreaLightHelper(this.light, this.name());
 			this.light.add(this._helper);
 			this._helper.update();
 		} else {

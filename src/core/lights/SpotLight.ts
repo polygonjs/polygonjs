@@ -160,9 +160,10 @@ export interface SpotLightContainerParams extends CoreSpotLightHelperParams {
 	volAnglePower: number;
 	volAttenuation: number;
 }
+
 export class SpotLightContainer extends Group {
-	private _light = new SpotLight();
-	private _target = this._light.target;
+	private _light: SpotLight;
+	private _target: Object3D;
 	public override matrixAutoUpdate = false;
 	public params: SpotLightContainerParams = {
 		showHelper: false,
@@ -171,8 +172,9 @@ export class SpotLightContainer extends Group {
 		volAnglePower: 1,
 		volAttenuation: 1,
 	};
-	constructor(params: Partial<SpotLightContainerParams>) {
+	constructor(params: Partial<SpotLightContainerParams>, public readonly nodeName: string) {
 		super();
+
 		if (params.showHelper != null) {
 			this.params.showHelper = params.showHelper;
 		}
@@ -185,6 +187,9 @@ export class SpotLightContainer extends Group {
 		if (params.volAttenuation != null) {
 			this.params.volAttenuation = params.volAttenuation;
 		}
+		this._light = new SpotLight();
+		this._target = this._light.target;
+
 		// set light pos to 0,0,1
 		// in order to have it face z axis
 		this._light.position.set(0, 0, 1);
@@ -192,12 +197,16 @@ export class SpotLightContainer extends Group {
 		this._target.updateMatrix();
 		this._light.matrixAutoUpdate = false;
 		this._target.matrixAutoUpdate = false;
-		this._target.name = 'SpotLight Default Target';
+
+		this.name = `SpotLightContainer_${this.nodeName}`;
+		this._light.name = `SpotLight_${this.nodeName}`;
+		this._target.name = `SpotLightDefaultTarget_${this.nodeName}`;
 
 		this.add(this._light);
 		this.add(this._target);
 		this.updateHelper();
 	}
+
 	updateParams(params: Partial<SpotLightContainerParams>) {
 		if (params.showHelper != null) {
 			this.params.showHelper = params.showHelper;
@@ -220,7 +229,8 @@ export class SpotLightContainer extends Group {
 		return this._light;
 	}
 	override copy(source: this, recursive?: boolean): this {
-		this._light.copy(source.light());
+		const srcLight = source.light();
+		this._light.copy(srcLight);
 		this.position.copy(source.position);
 		this.rotation.copy(source.rotation);
 		this.scale.copy(source.scale);
@@ -230,14 +240,16 @@ export class SpotLightContainer extends Group {
 
 		this.updateParams(source.params);
 		this.updateHelper();
-		this.updateVolumetric();
 
-		this.add(this._light.target);
+		if (recursive) {
+			this.updateVolumetric();
+			this.add(this._light.target);
+		}
 		return this as this;
 	}
 
 	override clone(recursive?: boolean): this {
-		const cloned = new SpotLightContainer(this.params);
+		const cloned = new SpotLightContainer(this.params, this.nodeName);
 		cloned.copy(this);
 
 		return cloned as this;
@@ -283,6 +295,7 @@ export class CoreSpotLightHelper {
 	private _cone = new LineSegments();
 	private _lineMaterial = new LineBasicMaterial({fog: false});
 	constructor(public container: SpotLightContainer) {
+		this.object.name = `CoreSpotLightHelper_${this.container.nodeName}`;
 		this.createAndBuildObject({helperSize: 1});
 	}
 
@@ -295,6 +308,7 @@ export class CoreSpotLightHelper {
 		this._cone.geometry = CoreSpotLightHelper._buildConeGeometry();
 		this._cone.material = this._lineMaterial;
 		this._cone.matrixAutoUpdate = false;
+		this._cone.name = `CoreSpotLightHelperCone_${this.container.nodeName}`;
 
 		this.object.add(this._cone);
 	}

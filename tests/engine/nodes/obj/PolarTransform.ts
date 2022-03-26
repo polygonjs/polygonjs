@@ -1,4 +1,4 @@
-QUnit.test('polarTransform obj simple', async (assert) => {
+QUnit.test('obj/polarTransform simple', async (assert) => {
 	const root = window.root;
 
 	const polarTransform = root.createNode('polarTransform');

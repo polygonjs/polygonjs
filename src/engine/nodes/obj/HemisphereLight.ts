@@ -21,7 +21,8 @@ export class HemisphereLightObjNode extends TypedLightObjNode<HemisphereLight, H
 
 	private __operation__: HemisphereLightSopOperation | undefined;
 	private _operation() {
-		return (this.__operation__ = this.__operation__ || new HemisphereLightSopOperation(this._scene, this.states));
+		return (this.__operation__ =
+			this.__operation__ || new HemisphereLightSopOperation(this._scene, this.states, this));
 	}
 	override createLight() {
 		return this._operation().createLight();

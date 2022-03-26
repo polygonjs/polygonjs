@@ -93,7 +93,6 @@ import {PlayerCapsuleSopNode} from '../../../nodes/sop/PlayerCapsule';
 import {PointSopNode} from '../../../nodes/sop/Point';
 import {PointLightSopNode} from '../../../nodes/sop/PointLight';
 import {PolarTransformSopNode} from '../../../nodes/sop/PolarTransform';
-import {PolySopNode} from '../../../nodes/sop/Poly';
 import {PolywireSopNode} from '../../../nodes/sop/Polywire';
 import {RaySopNode} from '../../../nodes/sop/Ray';
 import {ReflectorSopNode} from '../../../nodes/sop/Reflector';
@@ -230,7 +229,6 @@ export interface GeoNodeChildrenMap {
 	point: PointSopNode;
 	pointLight: PointLightSopNode;
 	polarTransform: PolarTransformSopNode;
-	poly: PolySopNode;
 	polywire: PolywireSopNode;
 	ray: RaySopNode;
 	reflector: ReflectorSopNode;
@@ -246,6 +244,7 @@ export interface GeoNodeChildrenMap {
 	sort: SortSopNode;
 	sphere: SphereSopNode;
 	split: SplitSopNode;
+	spotLight: SpotLightSopNode
 	subdivide: SubdivideSopNode;
 	subnet: SubnetSopNode;
 	subnetInput: SubnetInputSopNode;
@@ -518,7 +517,6 @@ export class SopRegister {
 		poly.registerNode(PolarTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PointLightSopNode, CATEGORY_SOP.LIGHTS);
-		poly.registerNode(PolySopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(PolywireSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(RaySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ReflectorSopNode, CATEGORY_SOP.RENDER);

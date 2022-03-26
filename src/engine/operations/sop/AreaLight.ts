@@ -13,15 +13,27 @@ export class AreaLightSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'areaLight'> {
 		return 'areaLight';
 	}
-	override cook(input_contents: CoreGroup[], params: AreaLightParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: AreaLightParams) {
 		const light = this.createLight();
+
+		const nodeName = this._node?.name();
+		if (nodeName) {
+			light.name = `AreaLight_${nodeName}`;
+		}
 
 		this.updateLightParams(light, params);
 
 		if (isBooleanTrue(params.showHelper)) {
 			const group = new Group();
 			group.add(light);
-			group.add(this._createHelper(light));
+			const helper = this._createHelper(light);
+			if (helper) {
+				group.add(helper);
+			}
+			if (nodeName) {
+				group.name = `AreaLightGroup_${nodeName}`;
+			}
+
 			return this.createCoreGroupFromObjects([group]);
 		} else {
 			return this.createCoreGroupFromObjects([light]);
@@ -49,8 +61,11 @@ export class AreaLightSopOperation extends BaseSopOperation {
 	}
 
 	private _createHelper(light: RectAreaLight) {
-		const helper = new CoreRectAreaLightHelper(light);
-		helper.update();
-		return helper;
+		const nodeName = this._node?.name();
+		if (nodeName) {
+			const helper = new CoreRectAreaLightHelper(light, nodeName);
+			helper.update();
+			return helper;
+		}
 	}
 }

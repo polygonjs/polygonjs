@@ -109,7 +109,7 @@ export class DirectionalLightContainer extends Group {
 	private _target = this._light.target;
 	public showHelper = false;
 	public override matrixAutoUpdate = false;
-	constructor(options: DirectionalLightContainerParams) {
+	constructor(options: DirectionalLightContainerParams, public readonly nodeName: string) {
 		super();
 		this.showHelper = options.showHelper;
 		// set light pos to 0,0,1
@@ -119,7 +119,9 @@ export class DirectionalLightContainer extends Group {
 		this._target.updateMatrix();
 		this._light.matrixAutoUpdate = false;
 		this._target.matrixAutoUpdate = false;
-		this._target.name = 'DirectionalLight Default Target';
+		this.name = `DirectionalLightContainer_${nodeName}`;
+		this._light.name = `DirectionalLight_${nodeName}`;
+		this._target.name = `DirectionalLightTarget_${nodeName}`;
 
 		this.add(this._light);
 		this.add(this._target);
@@ -130,19 +132,23 @@ export class DirectionalLightContainer extends Group {
 		return this._light;
 	}
 	override copy(source: this, recursive?: boolean): this {
-		this._light.copy(source.light());
+		if (recursive) {
+			this._light.copy(source.light());
+		}
 		this.position.copy(source.position);
 		this.rotation.copy(source.rotation);
 		this.scale.copy(source.scale);
 		this.quaternion.copy(source.quaternion);
 		this.matrix.copy(source.matrix);
 		this.matrixWorld.copy(source.matrixWorld);
-		this.add(this._light.target);
+		if (recursive) {
+			this.add(this._light.target);
+		}
 		return this as this;
 	}
 
 	override clone(recursive?: boolean): this {
-		const cloned = new DirectionalLightContainer({showHelper: this.showHelper});
+		const cloned = new DirectionalLightContainer({showHelper: this.showHelper}, this.nodeName);
 		cloned.copy(this);
 
 		return cloned as this;
@@ -203,6 +209,10 @@ export class CoreDirectionalLightHelper {
 		this._cameraHelper.updateMatrix();
 		this._cameraHelper.matrixAutoUpdate = false;
 		this.object.add(this._cameraHelper);
+
+		this.object.name = `CoreDirectionalLightHelper_${this.container.nodeName}`;
+		this._square.name = `CoreDirectionalLightHelperSquare_${this.container.nodeName}`;
+		this._cameraHelper.name = `CoreDirectionalLightHelperCameraHelper_${this.container.nodeName}`;
 	}
 
 	update() {

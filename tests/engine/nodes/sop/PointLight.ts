@@ -1,3 +1,4 @@
+import {Object3D} from 'three/src/core/Object3D';
 import {PointLight} from 'three/src/lights/PointLight';
 import {TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../../src/core/Transform';
 
@@ -50,4 +51,50 @@ QUnit.test('pointLight with copy SOP', async (assert) => {
 	assert.in_delta(object0.position.x, -0.5, 0.01);
 	assert.in_delta(object0.position.y, 0, 0.01);
 	assert.in_delta(object0.position.z, -0.5, 0.01);
+});
+
+function objectsCount(object: Object3D, countStart: number = 0) {
+	countStart += 1;
+	for (let child of object.children) {
+		countStart += objectsCount(child);
+	}
+	return countStart;
+}
+function objectNames(object: Object3D, names: string[] = []) {
+	names.push(object.name);
+	for (let child of object.children) {
+		objectNames(child, names);
+	}
+	return names;
+}
+
+QUnit.test('sop/pointLight hierarchy is maintained as it is cloned', async (assert) => {
+	const geo1 = window.geo1;
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
+
+	const pointLight1 = geo1.createNode('pointLight');
+	const transform1 = geo1.createNode('transform');
+
+	pointLight1.p.showHelper.set(true);
+	transform1.setInput(0, pointLight1);
+
+	let container = await pointLight1.compute();
+	let coreGroup = container.coreContent();
+	let object = coreGroup?.objects()[0]!;
+	assert.equal(objectsCount(object), 3);
+	assert.deepEqual(objectNames(object), [
+		'PointLightGroup_pointLight1',
+		'PointLight_pointLight1',
+		'PointLightHelper_pointLight1',
+	]);
+
+	container = await transform1.compute();
+	coreGroup = container.coreContent();
+	object = coreGroup?.objects()[0]!;
+	assert.equal(objectsCount(object), 3);
+	assert.deepEqual(objectNames(object), [
+		'PointLightGroup_pointLight1',
+		'PointLight_pointLight1',
+		'PointLightHelper_pointLight1',
+	]);
 });

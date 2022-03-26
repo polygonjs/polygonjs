@@ -75,7 +75,7 @@ export class VolumetricSpotLight {
 		const material = this._createMaterial();
 		const mesh = new Mesh(geometry, material);
 		mesh.matrixAutoUpdate = false;
-		mesh.name = `Volumetric`;
+		mesh.name = `VolumetricSpotLight_${this.container.nodeName}`;
 		material.uniforms.lightColor.value.set('white');
 
 		return mesh;

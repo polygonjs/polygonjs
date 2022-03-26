@@ -8,7 +8,6 @@ import {
 	DirectionalLightContainer,
 	DirectionalLightContainerParams,
 } from '../../../core/lights/DirectionalLight';
-import {Object3D} from 'three/src/core/Object3D';
 import {NodeContext} from '../../poly/NodeContext';
 
 export class DirectionalLightSopOperation extends BaseSopOperation {
@@ -19,16 +18,18 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 	}
 	override cook(input_contents: CoreGroup[], params: DirectionalLightParams) {
 		const container = this.createLight(params);
-
+		if (!container) {
+			return this.createCoreGroupFromObjects([]);
+		}
 		this.updateLightParams(container, params);
 		this.updateShadowParams(container, params);
 
 		return this.createCoreGroupFromObjects([container]);
 	}
 
-	public readonly _targetObject!: Object3D;
 	createLight(params: DirectionalLightContainerParams) {
-		const container = new DirectionalLightContainer({showHelper: params.showHelper});
+		const nodeName = this._node?.name();
+		const container = new DirectionalLightContainer({showHelper: params.showHelper}, nodeName || '');
 		const light = container.light();
 		light.matrixAutoUpdate = false;
 

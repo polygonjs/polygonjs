@@ -24,7 +24,8 @@ export class DirectionalLightObjNode extends BaseLightTransformedObjNode<
 
 	private __operation__: DirectionalLightSopOperation | undefined;
 	private _operation() {
-		return (this.__operation__ = this.__operation__ || new DirectionalLightSopOperation(this._scene, this.states));
+		return (this.__operation__ =
+			this.__operation__ || new DirectionalLightSopOperation(this._scene, this.states, this));
 	}
 	override createLight() {
 		return this._operation().createLight({showHelper: this.pv.showHelper});

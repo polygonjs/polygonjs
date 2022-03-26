@@ -16,7 +16,7 @@ export class SpotLightSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'spotLight'> {
 		return 'spotLight';
 	}
-	override cook(input_contents: CoreGroup[], params: SpotLightParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: SpotLightParams) {
 		const container = this.createLight(params);
 
 		this.updateLightParams(container, params);
@@ -30,7 +30,7 @@ export class SpotLightSopOperation extends BaseSopOperation {
 
 	public readonly _targetObject!: Object3D;
 	createLight(params: SpotLightContainerParams) {
-		const container = new SpotLightContainer(params);
+		const container = new SpotLightContainer(params, this._node?.name() || '_');
 		const light = container.light();
 		light.matrixAutoUpdate = false;
 
@@ -44,6 +44,7 @@ export class SpotLightSopOperation extends BaseSopOperation {
 	}
 	updateLightParams(container: SpotLightContainer, params: SpotLightParams) {
 		const light = container.light();
+
 		light.color = params.color;
 		light.intensity = params.intensity;
 		light.angle = params.angle * (Math.PI / 180);
@@ -59,6 +60,7 @@ export class SpotLightSopOperation extends BaseSopOperation {
 	}
 	updateShadowParams(container: SpotLightContainer, params: SpotLightParams) {
 		const light = container.light();
+
 		light.castShadow = isBooleanTrue(params.castShadow);
 		light.shadow.autoUpdate = isBooleanTrue(params.shadowAutoUpdate);
 		light.shadow.needsUpdate = isBooleanTrue(params.shadowUpdateOnNextRender);

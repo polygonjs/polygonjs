@@ -10,7 +10,7 @@ export class HemisphereLightSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'hemisphereLight'> {
 		return 'hemisphereLight';
 	}
-	override cook(input_contents: CoreGroup[], params: HemisphereLightParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: HemisphereLightParams) {
 		const light = this.createLight();
 
 		this.updateLightParams(light, params);
@@ -20,7 +20,7 @@ export class HemisphereLightSopOperation extends BaseSopOperation {
 
 	createLight() {
 		const light = new HemisphereLight();
-		light.name = 'Hemisphere';
+		light.name = `HemisphereLight_${this._node?.name() || ''}`;
 		light.matrixAutoUpdate = false;
 		light.updateMatrix();
 		// make sure the light is initialized with same defaults as the node parameters

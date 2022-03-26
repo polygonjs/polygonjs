@@ -417,7 +417,11 @@ export class CoreObject extends CoreEntity {
 	static parallelTraverse(a: Object3D, b: Object3D, callback: (a: Object3D, b: Object3D) => void) {
 		callback(a, b);
 		for (var i = 0; i < a.children.length; i++) {
-			this.parallelTraverse(a.children[i], b.children[i], callback);
+			const childA = a.children[i];
+			const childB = b.children[i];
+			if (childA && childB) {
+				this.parallelTraverse(childA, childB, callback);
+			}
 		}
 	}
 }

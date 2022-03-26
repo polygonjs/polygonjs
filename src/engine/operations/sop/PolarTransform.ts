@@ -24,7 +24,7 @@ interface PolarTransformSopParams extends DefaultOperationParams {
 
 export class PolarTransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PolarTransformSopParams = {
-		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES),
+		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS),
 		center: new Vector3(0, 0, 0),
 		longitude: 0,
 		latitude: 0,
@@ -35,28 +35,28 @@ export class PolarTransformSopOperation extends BaseSopOperation {
 		return 'polarTransform';
 	}
 
-	override cook(input_contents: CoreGroup[], params: PolarTransformSopParams) {
-		const objects = input_contents[0].objects();
+	override cook(inputCoreGroups: CoreGroup[], params: PolarTransformSopParams) {
+		const objects = inputCoreGroups[0].objects();
 		const matrix = this.matrix(params);
 
-		this._apply_transform(objects, params, matrix);
+		this._applyTransform(objects, params, matrix);
 
-		return input_contents[0];
+		return inputCoreGroups[0];
 	}
-	private _apply_transform(objects: Object3D[], params: PolarTransformSopParams, matrix: Matrix4) {
+	private _applyTransform(objects: Object3D[], params: PolarTransformSopParams, matrix: Matrix4) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
 			case TransformTargetType.GEOMETRIES: {
-				return this._apply_matrix_to_geometries(objects, matrix);
+				return this._applyMatrixToGeometries(objects, matrix);
 			}
 			case TransformTargetType.OBJECTS: {
-				return this._apply_matrix_to_objects(objects, matrix);
+				return this._applyMatrixToObjects(objects, matrix);
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
 
-	private _apply_matrix_to_geometries(objects: Object3D[], matrix: Matrix4) {
+	private _applyMatrixToGeometries(objects: Object3D[], matrix: Matrix4) {
 		for (let object of objects) {
 			const geometry = (object as Object3DWithGeometry).geometry;
 			if (geometry) {
@@ -64,7 +64,7 @@ export class PolarTransformSopOperation extends BaseSopOperation {
 			}
 		}
 	}
-	private _apply_matrix_to_objects(objects: Object3D[], matrix: Matrix4) {
+	private _applyMatrixToObjects(objects: Object3D[], matrix: Matrix4) {
 		for (let object of objects) {
 			matrix.decompose(this._decomposed.t, this._decomposed.q, this._decomposed.s);
 			object.position.copy(this._decomposed.t);

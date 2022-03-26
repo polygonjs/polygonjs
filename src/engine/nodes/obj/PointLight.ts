@@ -33,7 +33,7 @@ export class PointLightObjNode extends BaseLightTransformedObjNode<PointLight, P
 
 	private __operation__: PointLightSopOperation | undefined;
 	private _operation() {
-		return (this.__operation__ = this.__operation__ || new PointLightSopOperation(this._scene, this.states));
+		return (this.__operation__ = this.__operation__ || new PointLightSopOperation(this._scene, this.states, this));
 	}
 	createLight() {
 		return this._operation().createLight();

@@ -15,13 +15,27 @@ export class PointLightSopOperation extends BaseSopOperation {
 	override cook(input_contents: CoreGroup[], params: PointLightParams) {
 		const light = this.createLight();
 
+		const nodeName = this._node?.name();
+		if (nodeName) {
+			light.name = `PointLight_${nodeName}`;
+		}
+
 		this.updateLightParams(light, params);
 		this.updateShadowParams(light, params);
 
 		if (isBooleanTrue(params.showHelper)) {
 			const group = new Group();
+			if (nodeName) {
+				group.name = `PointLightGroup_${nodeName}`;
+			}
 			group.add(light);
-			group.add(this._createHelper(light, params));
+			const helper = this._createHelper(light, params);
+			if (helper) {
+				group.add(helper);
+				if (nodeName) {
+					helper.name = `PointLightHelper_${nodeName}`;
+				}
+			}
 			return this.createCoreGroupFromObjects([group]);
 		} else {
 			return this.createCoreGroupFromObjects([light]);

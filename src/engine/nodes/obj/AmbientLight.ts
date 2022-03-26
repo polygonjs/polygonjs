@@ -26,7 +26,8 @@ export class AmbientLightObjNode extends TypedLightObjNode<AmbientLight, Ambient
 
 	private __operation__: AmbientLightSopOperation | undefined;
 	private _operation() {
-		return (this.__operation__ = this.__operation__ || new AmbientLightSopOperation(this._scene, this.states));
+		return (this.__operation__ =
+			this.__operation__ || new AmbientLightSopOperation(this._scene, this.states, this));
 	}
 	createLight() {
 		return this._operation().createLight();

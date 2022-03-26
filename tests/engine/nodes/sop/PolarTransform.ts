@@ -1,9 +1,13 @@
-QUnit.test('polarTransform simple', async (assert) => {
+import {TransformTargetType} from '../../../../src/core/Transform';
+
+QUnit.test('sop/polarTransform simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add1 = geo1.createNode('add');
 	const polarTransform1 = geo1.createNode('polarTransform');
 	polarTransform1.setInput(0, add1);
+
+	polarTransform1.setApplyOn(TransformTargetType.GEOMETRIES);
 
 	let container, core_group;
 	container = await polarTransform1.compute();

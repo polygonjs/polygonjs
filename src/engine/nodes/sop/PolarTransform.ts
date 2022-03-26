@@ -12,7 +12,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {PolarTransformSopOperation} from '../../operations/sop/PolarTransform';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
+import {TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
 const DEFAULT = PolarTransformSopOperation.DEFAULT_PARAMS;
 class PolarTransformSopParamConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
@@ -60,5 +60,9 @@ export class PolarTransformSopNode extends TypedSopNode<PolarTransformSopParamCo
 		this._operation = this._operation || new PolarTransformSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
+	}
+
+	setApplyOn(mode: TransformTargetType) {
+		this.p.applyOn.set(TRANSFORM_TARGET_TYPES.indexOf(mode));
 	}
 }
