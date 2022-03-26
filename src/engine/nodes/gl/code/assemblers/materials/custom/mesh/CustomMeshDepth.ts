@@ -47,9 +47,7 @@ export class ShaderAssemblerCustomMeshDepth extends ShaderAssemblerMaterial {
 	}
 
 	override createMaterial() {
-		const material = new MeshDepthMaterial();
-
-		material.depthPacking = this.depthPacking();
+		const material = new MeshDepthMaterial({depthPacking: this.depthPacking()});
 
 		return material;
 	}

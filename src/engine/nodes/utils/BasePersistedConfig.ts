@@ -7,6 +7,7 @@ import {MaterialLoader} from 'three/src/loaders/MaterialLoader';
 import {Material} from 'three/src/materials/Material';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {MaterialUserDataUniforms, OnBeforeCompileDataHandler} from '../gl/code/assemblers/materials/OnBeforeCompile';
+import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
 interface MaterialData {
 	color?: boolean;
 	lights?: boolean;
@@ -36,8 +37,10 @@ export class BasePersistedConfig {
 					// those properties are currently not handled in three.js
 					// TODO: wait for https://github.com/mrdoob/three.js/pull/21428
 					// to be merged
-					(material_data as any).shadowSide = material.shadowSide;
-					(material_data as any).colorWrite = material.colorWrite;
+					// (material_data as any).shadowSide = material.shadowSide;
+					// (material_data as any).colorWrite = material.colorWrite;
+					const depthPacking = (material as MeshDepthMaterial).depthPacking;
+					(material_data as any).depthPacking = depthPacking;
 				}
 			} catch (err) {
 				console.error('failed to save material data');
@@ -139,8 +142,12 @@ export class BasePersistedConfig {
 		const material = loader.parse(data) as ShaderMaterialWithCustomMaterials;
 		// TODO: wait for https://github.com/mrdoob/three.js/pull/21428
 		// to be merged
-		if ((data as any).shadowSide) {
-			material.shadowSide = (data as any).shadowSide;
+		// if ((data as any).shadowSide) {
+		// 	material.shadowSide = (data as any).shadowSide;
+		// }
+
+		if ((data as any).depthPacking) {
+			((<unknown>material) as MeshDepthMaterial).depthPacking = (data as any).depthPacking;
 		}
 
 		// TODO: compensates for lights not being saved (and therefore cannot be loaded correctly)

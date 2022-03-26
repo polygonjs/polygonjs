@@ -110,6 +110,8 @@ function _createOnBeforeCompile(scene: PolyScene, material: Material): OnBeforeC
 		shaderMaterial.vertexShader = shader.vertexShader;
 		shaderMaterial.fragmentShader = shader.fragmentShader;
 		MaterialUserDataUniforms.setUniforms(material, shader.uniforms);
+		shaderMaterial.userData.compilationsCount = shaderMaterial.userData.compilationsCount || 0;
+		shaderMaterial.userData.compilationsCount++;
 	};
 
 	return onBeforeCompile;
