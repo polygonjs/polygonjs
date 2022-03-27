@@ -1,29 +1,6 @@
 import {CATEGORY_ACTOR} from './Category';
 
-import {
-	FloatToIntActorNode,
-	IntToFloatActorNode,
-	IntToBoolActorNode,
-	BoolToIntActorNode,
-} from '../../../nodes/actor/_ConversionMisc';
-import {FloatToVec2ActorNode, FloatToVec3ActorNode, FloatToVec4ActorNode} from '../../../nodes/actor/_ConversionToVec';
-import {
-	Vec2ToFloatActorNode,
-	Vec3ToFloatActorNode,
-	Vec4ToFloatActorNode,
-	Vec4ToVec3ActorNode,
-	Vec3ToVec4ActorNode,
-	Vec3ToVec2ActorNode,
-	Vec2ToVec3ActorNode,
-} from '../../../nodes/actor/_ConversionVecTo';
-
-import {
-	AddActorNode,
-	DivideActorNode,
-	MultActorNode,
-	SubtractActorNode,
-} from '../../../nodes/actor/_Math_Arg2Operation';
-
+import {AddActorNode} from '../../../nodes/actor/Add';
 import {AnimationActionActorNode} from '../../../nodes/actor/AnimationAction';
 import {AnimationActionCrossFadeActorNode} from '../../../nodes/actor/AnimationActionCrossFade';
 import {AnimationActionFadeOutActorNode} from '../../../nodes/actor/AnimationActionFadeOut';
@@ -32,20 +9,28 @@ import {AnimationActionPlayActorNode} from '../../../nodes/actor/AnimationAction
 import {AnimationActionStopActorNode} from '../../../nodes/actor/AnimationActionStop';
 import {AnimationMixerActorNode} from '../../../nodes/actor/AnimationMixer';
 import {AnimationMixerUpdateActorNode} from '../../../nodes/actor/AnimationMixerUpdate';
+import {BoolToIntActorNode} from '../../../nodes/actor/BoolToInt';
 import {CodeActorNode} from '../../../nodes/actor/Code';
 import {CompareActorNode} from '../../../nodes/actor/Compare';
 import {ConstantActorNode} from '../../../nodes/actor/Constant';
 import {DebugActorNode} from '../../../nodes/actor/Debug';
+import {DivideActorNode} from '../../../nodes/actor/Divide';
+import {FloatToIntActorNode} from '../../../nodes/actor/FloatToInt';
+import {FloatToVec2ActorNode} from '../../../nodes/actor/FloatToVec2';
+import {FloatToVec3ActorNode} from '../../../nodes/actor/FloatToVec3';
+import {FloatToVec4ActorNode} from '../../../nodes/actor/FloatToVec4';
 import {GetChildrenAttributesActorNode} from '../../../nodes/actor/GetChildrenAttributes';
 import {GetMaterialActorNode} from '../../../nodes/actor/GetMaterial';
 import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
 import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty';
-import {SetObjectLookAtActorNode} from '../../../nodes/actor/SetObjectLookAt';
-import {OnEventManualTriggerActorNode} from '../../../nodes/actor/OnEventManualTrigger';
+import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
+import {IntToBoolActorNode} from '../../../nodes/actor/IntToBool';
+import {MultActorNode} from '../../../nodes/actor/Mult';
 import {MultScalarActorNode} from '../../../nodes/actor/MultScalar';
 import {NullActorNode} from '../../../nodes/actor/Null';
 import {OnEventChildAttributeUpdatedActorNode} from '../../../nodes/actor/OnEventChildAttributeUpdated';
+import {OnEventManualTriggerActorNode} from '../../../nodes/actor/OnEventManualTrigger';
 import {OnEventObjectAttributeUpdatedActorNode} from '../../../nodes/actor/OnEventObjectAttributeUpdated';
 import {OnEventObjectClickedActorNode} from '../../../nodes/actor/OnEventObjectClicked';
 import {OnEventObjectHoveredActorNode} from '../../../nodes/actor/OnEventObjectHovered';
@@ -55,18 +40,27 @@ import {OnEventTickActorNode} from '../../../nodes/actor/OnEventTick';
 import {OrActorNode} from '../../../nodes/actor/Or';
 import {SetMaterialColorActorNode} from '../../../nodes/actor/SetMaterialColor';
 import {SetObjectAttributeActorNode} from '../../../nodes/actor/SetObjectAttribute';
+import {SetObjectLookAtActorNode} from '../../../nodes/actor/SetObjectLookAt';
 import {SetObjectMaterialActorNode} from '../../../nodes/actor/SetObjectMaterial';
 // import {SetObjectHoveredStateActorNode} from '../../../nodes/actor/SetObjectHoveredState';
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
 import {SetObjectRotationActorNode} from '../../../nodes/actor/SetObjectRotation';
 import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
 import {SetViewerActorNode} from '../../../nodes/actor/SetViewer';
+import {SubtractActorNode} from '../../../nodes/actor/Subtract';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
 import {SwitchActorNode} from '../../../nodes/actor/Switch';
 import {TriggerFilterActorNode} from '../../../nodes/actor/TriggerFilter';
 import {TriggerTwoWaySwitchActorNode} from '../../../nodes/actor/TriggerTwoWaySwitch';
 import {TwoWaySwitchActorNode} from '../../../nodes/actor/TwoWaySwitch';
+import {Vec2ToFloatActorNode} from '../../../nodes/actor/Vec2ToFloat';
+import {Vec2ToVec3ActorNode} from '../../../nodes/actor/Vec2ToVec3';
+import {Vec3ToFloatActorNode} from '../../../nodes/actor/Vec3ToFloat';
+import {Vec3ToVec4ActorNode} from '../../../nodes/actor/Vec3ToVec4';
+import {Vec3ToVec2ActorNode} from '../../../nodes/actor/Vec3ToVec2';
+import {Vec4ToFloatActorNode} from '../../../nodes/actor/Vec4ToFloat';
+import {Vec4ToVec3ActorNode} from '../../../nodes/actor/Vec4ToVec3';
 // networks
 import {ActorsNetworkActorNode} from '../../../nodes/actor/ActorsNetwork';
 import {AnimationsNetworkActorNode} from '../../../nodes/actor/AnimationsNetwork';
