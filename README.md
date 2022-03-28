@@ -159,12 +159,14 @@ Polygonjs is designed to be extensible. You can create your own plugins to add c
 -   [Mediapipe Facemesh](https://github.com/polygonjs/polygonjs-plugin-mediapipe-facemesh) to track a face from a webcam feed
 -   [Physics](https://github.com/polygonjs/polygonjs-plugin-physics) to create and simulate rigid bodies.
 
-<p align="center">
+<div align="center">
   <a href="https://github.com/polygonjs/polygonjs-plugin-mapbox" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-mapbox/main/doc/mapbox_examples.256.jpg" /></a>
   <a href="https://github.com/polygonjs/polygonjs-plugin-occlusion" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-occlusion/main/doc/occlusion_examples.256.jpg" /></a>
-  <a href="https://github.com/polygonjs/polygonjs-plugin-mediapipe-facemesh" target="_blank"><img width="256" src="https://github.com/polygonjs/example-plugin-mediapipe_facemesh/blob/main/public/images/editor.jpg?raw=true" /></a>
+</div>
+<div align="center">
+  <a href="https://github.com/polygonjs/polygonjs-plugin-mediapipe-facemesh" target="_blank"><img width="256" src="https://github.com/polygonjs/example-plugin-mediapipe_facemesh/blob/main/public/images/metal.jpg?raw=true" /></a>
   <a href="https://github.com/polygonjs/polygonjs-plugin-physics" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-physics/main/doc/physics_examples.256.jpg" /></a>
-</p>
+</div>
 
 [npm]: https://img.shields.io/npm/v/@polygonjs/polygonjs.svg
 [npm-url]: https://www.npmjs.com/package/@polygonjs/polygonjs
