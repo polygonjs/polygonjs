@@ -156,13 +156,13 @@ Polygonjs is designed to be extensible. You can create your own plugins to add c
 
 -   [Mapbox](https://github.com/polygonjs/polygonjs-plugin-mapbox) to add 3D objects to Mapbox maps.
 -   [Occlusion](https://github.com/polygonjs/polygonjs-plugin-occlusion) to calculate occlusion on a geometry and get more pleasant lighting.
--   [Palette](https://github.com/polygonjs/polygonjs-plugin-palette) to add matching colors based on curated palettes.
+-   [Mediapipe Facemesh](https://github.com/polygonjs/polygonjs-plugin-mediapipe-facemesh) to track a face from a webcam feed
 -   [Physics](https://github.com/polygonjs/polygonjs-plugin-physics) to create and simulate rigid bodies.
 
 <p align="center">
   <a href="https://github.com/polygonjs/polygonjs-plugin-mapbox" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-mapbox/main/doc/mapbox_examples.256.jpg" /></a>
   <a href="https://github.com/polygonjs/polygonjs-plugin-occlusion" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-occlusion/main/doc/occlusion_examples.256.jpg" /></a>
-  <a href="https://github.com/polygonjs/polygonjs-plugin-palette" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-palette/main/doc/palette_examples.256.jpg" /></a>
+  <a href="https://github.com/polygonjs/polygonjs-plugin-mediapipe-facemesh" target="_blank"><img width="256" src="https://github.com/polygonjs/example-plugin-mediapipe_facemesh/blob/main/public/images/editor.jpg?raw=true" /></a>
   <a href="https://github.com/polygonjs/polygonjs-plugin-physics" target="_blank"><img width="256" src="https://raw.githubusercontent.com/polygonjs/example-plugin-physics/main/doc/physics_examples.256.jpg" /></a>
 </p>
 
