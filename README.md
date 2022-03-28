@@ -138,10 +138,11 @@ What we've done is essentially create a procedural network, where nodes depend o
 
 The nodes are grouped in contexts, each for a specific type of task:
 
+-   [ACTOR](https://polygonjs.com/docs/nodes/actor) nodes add state and events to scene objects.
 -   [ANIM](https://polygonjs.com/docs/nodes/anim) nodes are to create animations.
 -   [AUDIO](https://polygonjs.com/docs/nodes/audio) nodes are to generate and modify audio.
 -   [COP](https://polygonjs.com/docs/nodes/cop) nodes can import and update textures.
--   [EVENT](https://polygonjs.com/docs/nodes/event) nodes are to trigger or react to events.
+-   [EVENT](https://polygonjs.com/docs/nodes/event) nodes are to trigger or react to scene events.
 -   [GL](https://polygonjs.com/docs/nodes/gl) nodes help you create GLSL shaders.
 -   [MAT](https://polygonjs.com/docs/nodes/mat) nodes are to create materials.
 -   [OBJ](https://polygonjs.com/docs/nodes/obj) are to add objects to your scene.
