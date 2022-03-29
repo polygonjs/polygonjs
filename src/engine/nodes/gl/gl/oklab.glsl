@@ -101,3 +101,30 @@ vec3 linear_srgb_from_oklab(vec3 c) {
     return fwdB * (lms * lms * lms);
     
 }
+
+
+// https://www.shadertoy.com/view/WtccD7
+const float max_chroma = 0.33;
+vec3 uvToOklab(vec3 uvw){
+
+    // setup oklab color
+    float theta = 2.*3.141592653589793*uvw.x;
+    
+    float L = 0.8;
+    float chroma = 0.1;
+    
+    //if (max(iMouse.x, iMouse.y) > 0.05 * iResolution.y) {
+        L = uvw.y;//iMouse.x / iResolution.x;
+        chroma = uvw.z * max_chroma;// / iResolution.y;
+    //}
+    
+    float a = chroma*cos(theta);
+    float b = chroma*sin(theta);
+    
+    vec3 lab = vec3(L, a, b);
+	return lab;
+
+    // convert to rgb 
+    // vec3 rgb = linear_srgb_from_oklab(lab);
+
+}

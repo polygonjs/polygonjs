@@ -122,6 +122,7 @@ import {TextureGlNode} from '../../../nodes/gl/Texture';
 import {TileUvGlNode} from '../../../nodes/gl/TileUv';
 import {ToWorldSpaceGlNode} from '../../../nodes/gl/ToWorldSpace';
 import {TwoWaySwitchGlNode} from '../../../nodes/gl/TwoWaySwitch';
+import {UvToOklabGlNode} from '../../../nodes/gl/UvToOklab';
 import {VaryingWriteGlNode} from '../../../nodes/gl/VaryingWrite';
 import {VaryingReadGlNode} from '../../../nodes/gl/VaryingRead';
 import {VectorAlignGlNode} from '../../../nodes/gl/VectorAlign';
@@ -245,6 +246,7 @@ export interface GlNodeChildrenMap {
 	tileUv: TileUvGlNode;
 	toWorldSpace: ToWorldSpaceGlNode;
 	twoWaySwitch: TwoWaySwitchGlNode;
+	uvToOklab: UvToOklabGlNode;
 	varyingWrite: VaryingWriteGlNode;
 	varyingRead: VaryingReadGlNode;
 	vec2ToFloat: Vec2ToFloatGlNode;
@@ -396,6 +398,7 @@ export class GlRegister {
 		poly.registerNode(TileUvGlNode, CATEGORY_GL.UTIL);
 		poly.registerNode(ToWorldSpaceGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(TwoWaySwitchGlNode, CATEGORY_GL.LOGIC);
+		poly.registerNode(UvToOklabGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(VaryingWriteGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(VaryingReadGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(Vec2ToFloatGlNode, CATEGORY_GL.CONVERSION);
