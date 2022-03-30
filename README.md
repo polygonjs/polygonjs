@@ -3,6 +3,8 @@
 [![NPM package][npm]][npm-url]
 [![Language Grade][lgtm]][lgtm-url]
 [![Twitter][twitter-img]][twitter-url]
+[![Discord][discord-img]][discord-url]
+[![Forum][forum-img]][forum-url]
 
 Polygonjs is a node-based 3D Webgl engine. [Learn more](https://polygonjs.com/).
 
@@ -173,7 +175,11 @@ Polygonjs is designed to be extensible. You can create your own plugins to add c
 [lgtm]: https://img.shields.io/lgtm/grade/javascript/g/polygonjs/polygonjs.svg?label=code%20quality
 [lgtm-url]: https://lgtm.com/projects/g/polygonjs/polygonjs/
 [twitter-img]: https://img.shields.io/twitter/follow/polygonjs.svg?style=social&label=Follow
-[twitter-url]: https://twitter.com/intent/follow?screen_name=polygonjs
+[twitter-url]: https://twitter.com/polygonjs
+[discord-img]: https://img.shields.io/discord/957773366419406888
+[discord-url]: https://polygonjs.com/discord
+[forum-img]: https://img.shields.io/discourse/status?server=https%3A%2F%2Fforum.polygonjs.com
+[forum-url]: https://polygonjs.com/forum
 
 ## Based on Threejs
 
