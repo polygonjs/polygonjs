@@ -4,7 +4,7 @@ import {Vector3} from 'three/src/math/Vector3';
 import {Plane} from 'three/src/math/Plane';
 import {Line3} from 'three/src/math/Line3';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MeshWithBVH, ShapecastIntersection, ExtendedTriangle} from './utils/Bvh/three-mesh-bvh';
+import {MeshWithBVH, ExtendedTriangle} from './utils/Bvh/three-mesh-bvh';
 import {Mesh} from 'three/src/objects/Mesh';
 import {LineSegments} from 'three/src/objects/LineSegments';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -69,7 +69,7 @@ export class ClipSopOperation extends BaseSopOperation {
 				depth: number,
 				nodeIndex: number
 			) => {
-				return this._plane.intersectsBox(box) as any as ShapecastIntersection; // TODO: three-mesh-bvh remove this when types are fixed
+				return this._plane.intersectsBox(box);
 			};
 			const intersectsTriangle = (tri: ExtendedTriangle) => {
 				// check each triangle edge to see if it intersects with the plane. If so then
@@ -104,7 +104,6 @@ export class ClipSopOperation extends BaseSopOperation {
 				if (count !== 2) {
 					index -= count;
 				}
-				return undefined as any as boolean; //count > 0; // TODO: three-mesh-bvh remove this when types are fixed
 			};
 
 			meshBVH.shapecast({

@@ -24,7 +24,7 @@ export enum ActorCompareTestName {
 	GREATER_THAN_OR_EQUAL = 'Greater Than Or Equal',
 	NOT_EQUAL = 'Not Equal',
 }
-enum TestOperation {
+enum ActorCompareTestOperation {
 	EQUAL = '==',
 	LESS_THAN = '<',
 	GREATER_THAN = '>',
@@ -41,13 +41,13 @@ const TEST_NAMES: ActorCompareTestName[] = [
 	ActorCompareTestName.GREATER_THAN_OR_EQUAL,
 	ActorCompareTestName.NOT_EQUAL,
 ];
-const TEST_OPERATIONS_FLOAT: TestOperation[] = [
-	TestOperation.EQUAL,
-	TestOperation.LESS_THAN,
-	TestOperation.GREATER_THAN,
-	TestOperation.LESS_THAN_OR_EQUAL,
-	TestOperation.GREATER_THAN_OR_EQUAL,
-	TestOperation.NOT_EQUAL,
+const TEST_OPERATIONS_FLOAT: ActorCompareTestOperation[] = [
+	ActorCompareTestOperation.EQUAL,
+	ActorCompareTestOperation.LESS_THAN,
+	ActorCompareTestOperation.GREATER_THAN,
+	ActorCompareTestOperation.LESS_THAN_OR_EQUAL,
+	ActorCompareTestOperation.GREATER_THAN_OR_EQUAL,
+	ActorCompareTestOperation.NOT_EQUAL,
 ];
 
 const OUTPUT_NAME = 'val';
@@ -149,47 +149,47 @@ export class CompareActorNode extends TypedActorNode<CompareActorParamsConfig> {
 
 		return false;
 	}
-	private _testOperatorNumber(value0: number, value1: number, operator: TestOperation) {
+	private _testOperatorNumber(value0: number, value1: number, operator: ActorCompareTestOperation) {
 		switch (operator) {
-			case TestOperation.EQUAL: {
+			case ActorCompareTestOperation.EQUAL: {
 				return value0 == value1;
 			}
-			case TestOperation.LESS_THAN: {
+			case ActorCompareTestOperation.LESS_THAN: {
 				return value0 < value1;
 			}
-			case TestOperation.GREATER_THAN: {
+			case ActorCompareTestOperation.GREATER_THAN: {
 				return value0 > value1;
 			}
-			case TestOperation.LESS_THAN_OR_EQUAL: {
+			case ActorCompareTestOperation.LESS_THAN_OR_EQUAL: {
 				return value0 <= value1;
 			}
-			case TestOperation.GREATER_THAN_OR_EQUAL: {
+			case ActorCompareTestOperation.GREATER_THAN_OR_EQUAL: {
 				return value0 >= value1;
 			}
-			case TestOperation.NOT_EQUAL: {
+			case ActorCompareTestOperation.NOT_EQUAL: {
 				return value0 != value1;
 			}
 		}
 		TypeAssert.unreachable(operator);
 	}
-	private _testOperatorString(value0: string, value1: string, operator: TestOperation) {
+	private _testOperatorString(value0: string, value1: string, operator: ActorCompareTestOperation) {
 		switch (operator) {
-			case TestOperation.EQUAL: {
+			case ActorCompareTestOperation.EQUAL: {
 				return value0 == value1;
 			}
-			case TestOperation.LESS_THAN: {
+			case ActorCompareTestOperation.LESS_THAN: {
 				return value0 < value1;
 			}
-			case TestOperation.GREATER_THAN: {
+			case ActorCompareTestOperation.GREATER_THAN: {
 				return value0 > value1;
 			}
-			case TestOperation.LESS_THAN_OR_EQUAL: {
+			case ActorCompareTestOperation.LESS_THAN_OR_EQUAL: {
 				return value0 <= value1;
 			}
-			case TestOperation.GREATER_THAN_OR_EQUAL: {
+			case ActorCompareTestOperation.GREATER_THAN_OR_EQUAL: {
 				return value0 >= value1;
 			}
-			case TestOperation.NOT_EQUAL: {
+			case ActorCompareTestOperation.NOT_EQUAL: {
 				return value0 != value1;
 			}
 		}

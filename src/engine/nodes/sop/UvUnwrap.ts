@@ -3,18 +3,28 @@
  *
  * @remarks
  *
- * This node uses a very basic unwrap algorithm, and works much better preceded with a sop/Face node that will make every face separate from its neighbours
+ * This node can use 2 methods to unwrap UVs:
+ *
+ * - potpack: this uses a very basic unwrap algorithm, and works much better preceded with a sop/Face node that will make every face separate from its neighbours
+ * - xatlast: this gives better results on light geometries, but can run for a very long time on larger models.
  *
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {UvUnwrapSopOperation} from '../../operations/sop/UvUnwrap';
+import {UvUnwrapSopOperation, UV_UNWRAP_METHODS, UvUnwrapMethod} from '../../operations/sop/UvUnwrap';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+const DEFAULT = UvUnwrapSopOperation.DEFAULT_PARAMS;
 class UvUnwrapSopParamConfig extends NodeParamsConfig {
+	/** @param method */
+	method = ParamConfig.INTEGER(DEFAULT.method, {
+		menu: {
+			entries: UV_UNWRAP_METHODS.map((name, value) => ({name, value})),
+		},
+	});
 	/** @param attribute to unwrap */
-	uv = ParamConfig.STRING('uv');
+	uv = ParamConfig.STRING(DEFAULT.uv);
 }
 const ParamsConfig = new UvUnwrapSopParamConfig();
 
@@ -38,5 +48,8 @@ export class UvUnwrapSopNode extends TypedSopNode<UvUnwrapSopParamConfig> {
 		this._operation = this._operation || new UvUnwrapSopOperation(this.scene(), this.states, this);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
+	}
+	setMethod(method: UvUnwrapMethod) {
+		this.p.method.set(UV_UNWRAP_METHODS.indexOf(method));
 	}
 }

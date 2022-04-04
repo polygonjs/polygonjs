@@ -58,14 +58,11 @@ export class XAtlasLoaderHandler extends CoreBaseLoader {
 			// const wasmurl = new URL('./UvUnwrap/xatlas-web.wasm', import.meta.url);
 			// const wasmurl = new URL('../../../../node_modules/xatlas-web/dist/xatlas-web.wasm', import.meta.url);
 			// const wasmurl = new URL('xatlas-web/dist/xatlas-web.wasm', import.meta.url);
-			// console.log(wasmurl, import.meta.url);
 			this._module = XAtlas({
 				locateFile: (path: string) => {
-					console.log('locateFile', path, this._wasmUrl);
 					if (path.endsWith('.wasm')) {
 						return this._wasmUrl;
 					}
-					console.log(path);
 					return path;
 				},
 			});
@@ -97,7 +94,6 @@ export class XAtlasLoaderHandler extends CoreBaseLoader {
 			});
 
 			this._wasmUrl = modifyUrl(fullUrl);
-			console.log(`set`, this._wasmUrl);
 		}
 	}
 }

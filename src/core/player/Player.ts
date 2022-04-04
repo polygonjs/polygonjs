@@ -8,7 +8,6 @@ import {createPlayerGeometry, CapsuleOptions} from './PlayerGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {DEG2RAD} from 'three/src/math/MathUtils';
-import {ShapecastIntersection} from 'three-mesh-bvh';
 interface PlayerOptions {
 	object: Object3D;
 	collider: MeshWithBVH;
@@ -185,7 +184,7 @@ export class CorePlayer {
 			depth: number,
 			nodeIndex: number
 		) => {
-			return box.intersectsBox(tempBox) as any as ShapecastIntersection; // TODO: three-mesh-bvh remove this when types are fixed
+			return box.intersectsBox(tempBox);
 		};
 
 		const intersectsTriangle = (tri: ExtendedTriangle) => {
@@ -202,7 +201,6 @@ export class CorePlayer {
 				tempSegment.start.addScaledVector(direction, depth);
 				tempSegment.end.addScaledVector(direction, depth);
 			}
-			return undefined as any as boolean; // TODO: three-mesh-bvh remove this when types are fixed
 		};
 
 		this.collider.geometry.boundsTree.shapecast({

@@ -22,7 +22,7 @@ export enum GlCompareTestName {
 	GREATER_THAN_OR_EQUAL = 'Greater Than Or Equal',
 	NOT_EQUAL = 'Not Equal',
 }
-enum TestOperation {
+enum GlCompareTestOperation {
 	EQUAL = '==',
 	LESS_THAN = '<',
 	GREATER_THAN = '>',
@@ -39,13 +39,13 @@ const TEST_NAMES: GlCompareTestName[] = [
 	GlCompareTestName.GREATER_THAN_OR_EQUAL,
 	GlCompareTestName.NOT_EQUAL,
 ];
-const TEST_OPERATIONS_FLOAT: TestOperation[] = [
-	TestOperation.EQUAL,
-	TestOperation.LESS_THAN,
-	TestOperation.GREATER_THAN,
-	TestOperation.LESS_THAN_OR_EQUAL,
-	TestOperation.GREATER_THAN_OR_EQUAL,
-	TestOperation.NOT_EQUAL,
+const TEST_OPERATIONS_FLOAT: GlCompareTestOperation[] = [
+	GlCompareTestOperation.EQUAL,
+	GlCompareTestOperation.LESS_THAN,
+	GlCompareTestOperation.GREATER_THAN,
+	GlCompareTestOperation.LESS_THAN_OR_EQUAL,
+	GlCompareTestOperation.GREATER_THAN_OR_EQUAL,
+	GlCompareTestOperation.NOT_EQUAL,
 ];
 const AND_SEPARATOR = ' && ';
 // const VECTOR_COMPARISON_METHODS = {
