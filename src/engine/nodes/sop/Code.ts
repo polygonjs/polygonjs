@@ -11,7 +11,10 @@ import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 import {Object3D} from 'three/src/core/Object3D';
 import {Poly} from '../../Poly';
-import * as THREE from 'three'; // three import required to give to the function builder
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+
+import {removeTypes} from '../../../core/code/tsUtils';
+import {BaseCodeProcessor, buildCodeNodeFunction} from '../../../core/code/FunctionBuilderUtils';
 
 const DEFAULT_TS = `
 export class CodeSopProcessor extends BaseCodeSopProcessor {
@@ -25,10 +28,11 @@ export class CodeSopProcessor extends BaseCodeSopProcessor {
 	}
 }
 `;
-const DEFAULT_JS = DEFAULT_TS.replace(/:\sCoreGroup\[\]/g, '').replace(/override\s/g, '');
+const DEFAULT_JS = removeTypes(DEFAULT_TS);
 
-export class BaseCodeSopProcessor {
-	constructor(protected node: CodeSopNode) {
+export class BaseCodeSopProcessor extends BaseCodeProcessor {
+	constructor(protected override node: CodeSopNode) {
+		super(node);
 		this.initializeProcessor();
 	}
 	get pv() {
@@ -47,7 +51,6 @@ export class BaseCodeSopProcessor {
 	}
 }
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class CodeSopParamsConfig extends NodeParamsConfig {
 	codeTypescript = ParamConfig.STRING(DEFAULT_TS, {
 		hideLabel: true,
@@ -102,10 +105,10 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 				this.states.error.set(e)
 			}`;
 
-			const processorCreatorFunction = new Function('BaseCodeSopProcessor', 'THREE', functionBody);
-			const ProcessorClass: typeof BaseCodeSopProcessor | undefined = processorCreatorFunction(
+			const ProcessorClass = buildCodeNodeFunction<BaseCodeSopProcessor>(
 				BaseCodeSopProcessor,
-				THREE
+				'BaseCodeSopProcessor',
+				functionBody
 			);
 			if (ProcessorClass) {
 				this._processor = new ProcessorClass(this);

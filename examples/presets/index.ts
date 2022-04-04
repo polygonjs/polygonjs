@@ -24,6 +24,7 @@ import {neighbourAttractGlPresetRegister, neighbourRepulseGlPresetRegister} from
 // obj
 // sop
 import {attribCreateSopPresetRegister} from './sop/AttribCreate';
+import {codeSopPresetRegister} from './sop/Code';
 import {colorSopPresetRegister} from './sop/Color';
 import {CSS2DObjectPresetRegister} from './sop/CSS2DObject';
 import {dataSopPresetRegister} from './sop/Data';
@@ -66,6 +67,7 @@ class PresetLibraryClass {
 		// this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
 		// sop
 		this._registerPreset(attribCreateSopPresetRegister);
+		this._registerPreset(codeSopPresetRegister);
 		this._registerPreset(colorSopPresetRegister);
 		this._registerPreset(CSS2DObjectPresetRegister);
 		this._registerPreset(dataSopPresetRegister);

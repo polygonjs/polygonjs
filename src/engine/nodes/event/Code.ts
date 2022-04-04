@@ -10,7 +10,6 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {Poly} from '../../Poly';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
-import * as THREE from 'three'; // three import required to give to the function builder
 
 const DEFAULT_TS = `
 export class EventProcessor extends BaseCodeEventProcessor {
@@ -35,8 +34,9 @@ export class EventProcessor extends BaseCodeEventProcessor {
 `;
 const DEFAULT_JS = DEFAULT_TS.replace(/\:\sEventContext<MouseEvent>/g, '').replace(/override\s/g, '');
 
-export class BaseCodeEventProcessor {
-	constructor(protected node: CodeEventNode) {
+export class BaseCodeEventProcessor extends BaseCodeProcessor {
+	constructor(protected override node: CodeEventNode) {
+		super(node);
 		this.initializeProcessor();
 	}
 	get pv() {
@@ -60,6 +60,7 @@ export class BaseCodeEventProcessor {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {BaseCodeProcessor, buildCodeNodeFunction} from '../../../core/code/FunctionBuilderUtils';
 class CodeEventParamsConfig extends NodeParamsConfig {
 	codeTypescript = ParamConfig.STRING(DEFAULT_TS, {
 		hideLabel: true,
@@ -133,10 +134,11 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 			} catch(e) {
 				this.states.error.set(e)
 			}`;
-			const processorCreatorFunction: Function = new Function('BaseCodeEventProcessor', 'THREE', functionBody);
-			const ProcessorClass: typeof BaseCodeEventProcessor | undefined = processorCreatorFunction(
+
+			const ProcessorClass = buildCodeNodeFunction<BaseCodeEventProcessor>(
 				BaseCodeEventProcessor,
-				THREE
+				'BaseCodeEventProcessor',
+				functionBody
 			);
 			if (ProcessorClass) {
 				this._processor = new ProcessorClass(this);

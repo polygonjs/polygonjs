@@ -18,7 +18,7 @@ import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from '
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 import {Poly} from '../../Poly';
-import * as THREE from 'three'; // three import required to give to the function builder
+import {BaseCodeProcessor, buildCodeNodeFunction} from '../../../core/code/FunctionBuilderUtils';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -38,8 +38,9 @@ export class CodeActorProcessor extends BaseCodeActorProcessor {
 `;
 const DEFAULT_JS = DEFAULT_TS.replace(/\:\sActorNodeTriggerContext/g, '').replace(/override\s/g, '');
 
-export class BaseCodeActorProcessor {
-	constructor(protected node: CodeActorNode) {
+export class BaseCodeActorProcessor extends BaseCodeProcessor {
+	constructor(protected override node: CodeActorNode) {
+		super(node);
 		this.initializeProcessor();
 	}
 	get pv() {
@@ -129,18 +130,14 @@ export class CodeActorNode extends TypedActorNode<CodeActorParamsConfig> {
 		this.states.error.set(e)
 }`;
 
-			const processorCreatorFunction = new Function(
-				'ActorConnectionPoint',
-				'ActorConnectionPointType',
-				'BaseCodeActorProcessor',
-				'THREE',
-				functionBody
-			);
-			const ProcessorClass: typeof BaseCodeActorProcessor | undefined = processorCreatorFunction(
-				ActorConnectionPoint,
-				ActorConnectionPointType,
+			const ProcessorClass = buildCodeNodeFunction<BaseCodeActorProcessor>(
 				BaseCodeActorProcessor,
-				THREE
+				'BaseCodeActorProcessor',
+				functionBody,
+				{
+					['ActorConnectionPoint']: ActorConnectionPoint,
+					['ActorConnectionPointType']: ActorConnectionPointType,
+				}
 			);
 			if (ProcessorClass) {
 				this._processor = new ProcessorClass(this);
