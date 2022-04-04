@@ -245,13 +245,11 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			return;
 		}
 		const materialNode = this.pv.material.nodeWithContext(NodeContext.MAT);
-		if (!materialNode) {
-			this.states.error.set('material node not found');
-			return;
+		if (materialNode) {
+			const container = await materialNode.compute();
+			const material = container.material();
+			this._player.setMaterial(material);
 		}
-		const container = await materialNode.compute();
-		const material = container.material();
-		this._player.setMaterial(material);
 	}
 	private async _createPlayer() {
 		const playerObjectNode = this.pv.playerObject.nodeWithContext(NodeContext.OBJ);
@@ -283,10 +281,8 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		if (!(this._cameraObject && this._player)) {
 			return 0;
 		}
-		const cameraPosition = this._cameraObject.position;
-		const playerPosition = this._player.object.position;
-		tmpCameraPosition.copy(cameraPosition);
-		tmpPlayerPosition.copy(playerPosition);
+		this._cameraObject.getWorldPosition(tmpCameraPosition);
+		this._player.object.getWorldPosition(tmpPlayerPosition);
 		tmpCameraPosition.sub(tmpPlayerPosition);
 		spherical.setFromVector3(tmpCameraPosition);
 		return spherical.theta;

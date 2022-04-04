@@ -8,6 +8,7 @@ import {createPlayerGeometry, CapsuleOptions} from './PlayerGeometry';
 import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {DEG2RAD} from 'three/src/math/MathUtils';
+import {CoreConstant, ObjectType} from '../geometry/Constant';
 interface PlayerOptions {
 	object: Object3D;
 	collider: MeshWithBVH;
@@ -93,6 +94,7 @@ export class CorePlayer {
 		mesh.name = this._meshName || 'defaultPlayerMeshName';
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
+		mesh.material = CoreConstant.MATERIALS[ObjectType.MESH];
 		return mesh;
 	}
 	setMaterial(material: Material) {
