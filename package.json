@@ -58,7 +58,8 @@
 		"potpack": "1.0.2",
 		"three": "0.137.5",
 		"three-mesh-bvh": "0.5.7",
-		"tone": "14.7.77"
+		"tone": "14.7.77",
+		"xatlas-web": "^0.1.0"
 	},
 	"devDependencies": {
 		"@statoscope/webpack-plugin": "5.20.1",

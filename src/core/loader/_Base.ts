@@ -4,21 +4,23 @@ import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
 import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
 
+export function modifyUrl(url: string) {
+	const remapedUrl = Poly.assetUrls.remapedUrl(url);
+	if (remapedUrl) {
+		return remapedUrl;
+	}
+
+	const blobUrl = Poly.blobs.blobUrl(url);
+	if (blobUrl) {
+		return blobUrl;
+	}
+
+	return url;
+}
+
 export function createLoadingManager() {
 	const loadingManager = new LoadingManager();
-	loadingManager.setURLModifier((url) => {
-		const remapedUrl = Poly.assetUrls.remapedUrl(url);
-		if (remapedUrl) {
-			return remapedUrl;
-		}
-
-		const blobUrl = Poly.blobs.blobUrl(url);
-		if (blobUrl) {
-			return blobUrl;
-		}
-
-		return url;
-	});
+	loadingManager.setURLModifier(modifyUrl);
 	return loadingManager;
 }
 

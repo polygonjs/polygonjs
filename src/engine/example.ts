@@ -43,6 +43,7 @@ import SopTetrahedronHTML from '../../examples/engine/nodes/sop/Tetrahedron.html
 import {SopTorus} from '../../examples/engine/nodes/sop/Torus';
 import {SopTorusKnot} from '../../examples/engine/nodes/sop/TorusKnot';
 import SopTorusKnotHTML from '../../examples/engine/nodes/sop/TorusKnot.html';
+import {SopUvUnwrap} from '../../examples/engine/nodes/sop/UvUnwrap';
 // expressions
 import {ExpressionBbox} from '../../examples/engine/expressions/bbox';
 import ExpressionBboxHTML from '../../examples/engine/expressions/bbox.html';
@@ -79,6 +80,7 @@ const examples = {
 			Tetrahedron: [SopTetrahedron, SopTetrahedronHTML],
 			Torus: SopTorus,
 			TorusKnot: [SopTorusKnot, SopTorusKnotHTML],
+			UvUnwrap: [SopUvUnwrap],
 		},
 	},
 	expressions: {

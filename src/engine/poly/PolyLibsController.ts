@@ -52,4 +52,16 @@ export class PolyLibsController {
 	DRACOGLTFPath() {
 		return this._DRACOGLTFPath;
 	}
+	//
+	//
+	// DRACO GLTF
+	//
+	//
+	private _XATLASPath: string | null = '/xatlas';
+	// setDRACOGLTFPath(path: string | null) {
+	// 	this._DRACOGLTFPath = path;
+	// }
+	XATLASPath() {
+		return this._XATLASPath;
+	}
 }
