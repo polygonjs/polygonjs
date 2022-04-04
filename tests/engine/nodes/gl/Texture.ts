@@ -123,6 +123,7 @@ QUnit.test('gl texture generates an error on material if no name is given', asyn
 		createParticles(),
 		COP.createNode('builder'),
 	];
+
 	async function runTest() {
 		for (let builderNode of builderNodes) {
 			assert.equal(builderNode.nodesByType('output').length, 0);

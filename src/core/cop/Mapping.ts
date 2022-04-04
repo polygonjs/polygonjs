@@ -5,7 +5,7 @@ import {
 	EquirectangularReflectionMapping,
 	EquirectangularRefractionMapping,
 	CubeUVReflectionMapping,
-	CubeUVRefractionMapping,
+	// CubeUVRefractionMapping,
 } from 'three/src/constants';
 
 export const MAPPINGS = [
@@ -15,5 +15,5 @@ export const MAPPINGS = [
 	{EquirectangularReflectionMapping},
 	{EquirectangularRefractionMapping},
 	{CubeUVReflectionMapping},
-	{CubeUVRefractionMapping},
+	// {CubeUVRefractionMapping},
 ];

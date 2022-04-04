@@ -1,8 +1,6 @@
 import {AdditiveBlending} from 'three/src/constants';
 import {Color} from 'three/src/math/Color';
-import {LinearFilter} from 'three/src/constants';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {RGBAFormat} from 'three/src/constants';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {Vector2} from 'three/src/math/Vector2';
@@ -36,27 +34,26 @@ class UnrealBloomPass extends Pass {
 		this.clearColor = new Color( 0, 0, 0 );
 
 		// render targets
-		const pars = { minFilter: LinearFilter, magFilter: LinearFilter, format: RGBAFormat };
 		this.renderTargetsHorizontal = [];
 		this.renderTargetsVertical = [];
 		this.nMips = 5;
 		let resx = Math.round( this.resolution.x / 2 );
 		let resy = Math.round( this.resolution.y / 2 );
 
-		this.renderTargetBright = new WebGLRenderTarget( resx, resy, pars );
+		this.renderTargetBright = new WebGLRenderTarget( resx, resy );
 		this.renderTargetBright.texture.name = 'UnrealBloomPass.bright';
 		this.renderTargetBright.texture.generateMipmaps = false;
 
 		for ( let i = 0; i < this.nMips; i ++ ) {
 
-			const renderTargetHorizonal = new WebGLRenderTarget( resx, resy, pars );
+			const renderTargetHorizonal = new WebGLRenderTarget( resx, resy );
 
 			renderTargetHorizonal.texture.name = 'UnrealBloomPass.h' + i;
 			renderTargetHorizonal.texture.generateMipmaps = false;
 
 			this.renderTargetsHorizontal.push( renderTargetHorizonal );
 
-			const renderTargetVertical = new WebGLRenderTarget( resx, resy, pars );
+			const renderTargetVertical = new WebGLRenderTarget( resx, resy );
 
 			renderTargetVertical.texture.name = 'UnrealBloomPass.v' + i;
 			renderTargetVertical.texture.generateMipmaps = false;

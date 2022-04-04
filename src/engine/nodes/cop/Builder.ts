@@ -268,6 +268,9 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		if (!this._render_target) {
 			return;
 		}
+		if (this.states.error.active()) {
+			return;
+		}
 
 		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
 		const renderer = await this._renderer_controller.renderer();
@@ -275,6 +278,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		const prev_target = renderer.getRenderTarget();
 		renderer.setRenderTarget(this._render_target);
 		renderer.clear();
+
 		renderer.render(this._texture_scene, this._texture_camera);
 		renderer.setRenderTarget(prev_target);
 

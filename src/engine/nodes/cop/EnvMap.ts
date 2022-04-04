@@ -12,25 +12,25 @@ import {CopRendererController} from './utils/RendererController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
-import {CubeUVReflectionMapping, CubeUVRefractionMapping} from 'three/src/constants';
+import {CubeUVReflectionMapping} from 'three/src/constants';
 
-enum MapMode {
-	REFLECTION = 'reflection',
-	REFRACTION = 'refraction',
-}
-const MAP_MODES: MapMode[] = [MapMode.REFLECTION, MapMode.REFRACTION];
+// enum MapMode {
+// 	REFLECTION = 'reflection',
+// 	REFRACTION = 'refraction',
+// }
+// const MAP_MODES: MapMode[] = [MapMode.REFLECTION, MapMode.REFRACTION];
 
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
 	useCameraRenderer = ParamConfig.BOOLEAN(1);
 	/** @param defines if the texture is used for reflection or refraction */
-	mode = ParamConfig.INTEGER(0, {
-		menu: {
-			entries: MAP_MODES.map((name, value) => {
-				return {name, value};
-			}),
-		},
-	});
+	// mode = ParamConfig.INTEGER(0, {
+	// 	menu: {
+	// 		entries: MAP_MODES.map((name, value) => {
+	// 			return {name, value};
+	// 		}),
+	// 	},
+	// });
 }
 const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
@@ -81,10 +81,10 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 		}
 	}
 	private _setMapping(texture: Texture) {
-		if (MAP_MODES[this.pv.mode] == MapMode.REFLECTION) {
-			texture.mapping = CubeUVReflectionMapping;
-		} else {
-			texture.mapping = CubeUVRefractionMapping;
-		}
+		// if (MAP_MODES[this.pv.mode] == MapMode.REFLECTION) {
+		texture.mapping = CubeUVReflectionMapping;
+		// } else {
+		// 	texture.mapping = CubeUVRefractionMapping;
+		// }
 	}
 }

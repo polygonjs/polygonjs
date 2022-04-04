@@ -17,11 +17,11 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param environment intensity */
 		envMapIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
 		/** @param refraction ratio */
-		refractionRatio = ParamConfig.FLOAT(0.98, {
-			range: [-1, 1],
-			rangeLocked: [false, false],
-			visibleIf: {useEnvMap: 1},
-		});
+		// refractionRatio = ParamConfig.FLOAT(0.98, {
+		// 	range: [-1, 1],
+		// 	rangeLocked: [false, false],
+		// 	visibleIf: {useEnvMap: 1},
+		// });
 	};
 }
 // class TextureEnvMaterial extends Material {
@@ -50,18 +50,9 @@ export class TextureEnvMapController extends BaseTextureMapController {
 	}
 	override async update() {
 		this._update(this.node.material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
-		// if (this._update_options.uniforms) {
-		// 	const mat = this.node.material as ShaderMaterial;
-		// 	if (mat.uniforms) {
-		// 		mat.uniforms.envMapIntensity.value = this.node.pv.envMapIntensity;
-		// 		mat.uniforms.refractionRatio.value = this.node.pv.refractionRatio;
-		// 	}
-		// }
-		// if (this._update_options.directParams) {
 		const mat = this.node.material as MeshStandardMaterial;
 		mat.envMapIntensity = this.node.pv.envMapIntensity;
-		mat.refractionRatio = this.node.pv.refractionRatio;
-		// }
+		// mat.refractionRatio = this.node.pv.refractionRatio; // TODO: consider re-allowing this for Phong and Basic materials
 	}
 	static override async update(node: TextureEnvMapMatNode) {
 		node.controllers.envMap.update();

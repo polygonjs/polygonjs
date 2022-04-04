@@ -1,8 +1,6 @@
-import {LinearFilter} from 'three/src/constants';
 import {LinearMipmapLinearFilter} from 'three/src/constants';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 import {NoBlending} from 'three/src/constants';
-import {RGBAFormat} from 'three/src/constants';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
 import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
@@ -213,19 +211,19 @@ class AdaptiveToneMappingPass extends Pass {
 
 		}
 
-		const pars = { minFilter: LinearFilter, magFilter: LinearFilter, format: RGBAFormat }; // was RGB format. changed to RGBA format. see discussion in #8415 / #8450
 
-		this.luminanceRT = new WebGLRenderTarget( this.resolution, this.resolution, pars );
+		this.luminanceRT = new WebGLRenderTarget( this.resolution, this.resolution );
 		this.luminanceRT.texture.name = 'AdaptiveToneMappingPass.l';
 		this.luminanceRT.texture.generateMipmaps = false;
 
-		this.previousLuminanceRT = new WebGLRenderTarget( this.resolution, this.resolution, pars );
+		this.previousLuminanceRT = new WebGLRenderTarget( this.resolution, this.resolution );
 		this.previousLuminanceRT.texture.name = 'AdaptiveToneMappingPass.pl';
 		this.previousLuminanceRT.texture.generateMipmaps = false;
 
 		// We only need mipmapping for the current luminosity because we want a down-sampled version to sample in our adaptive shader
-		pars.minFilter = LinearMipmapLinearFilter;
-		pars.generateMipmaps = true;
+
+		const pars = { minFilter: LinearMipmapLinearFilter, generateMipmaps: true };
+
 		this.currentLuminanceRT = new WebGLRenderTarget( this.resolution, this.resolution, pars );
 		this.currentLuminanceRT.texture.name = 'AdaptiveToneMappingPass.cl';
 
