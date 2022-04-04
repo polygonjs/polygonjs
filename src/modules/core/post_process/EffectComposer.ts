@@ -11,7 +11,6 @@ import {Pass} from '../../three/examples/jsm/postprocessing/Pass.js';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {PassWithHooks} from './PassWithHooks';
 import {Poly} from '../../../engine/Poly';
-import {WebGLMultisampleRenderTarget} from 'three/src/renderers/WebGLMultisampleRenderTarget';
 
 export class EffectComposer {
 	private _pixelRatio: number;
@@ -38,18 +37,10 @@ export class EffectComposer {
 			this._width = size.width;
 			this._height = size.height;
 
+			renderTarget = Poly.renderersController.renderTarget(this._width, this._height, parameters);
+			renderTarget.texture.name = 'EffectComposer.rt1';
 			if (this._pixelRatio > 0) {
-				renderTarget = Poly.renderersController.renderTarget(this._width, this._height, parameters);
-				renderTarget.texture.name = 'EffectComposer.rt1';
-				if (renderTarget instanceof WebGLMultisampleRenderTarget) {
-					renderTarget.samples = this._pixelRatio;
-				}
-			} else {
-				renderTarget = new WebGLRenderTarget(
-					this._width * this._pixelRatio,
-					this._height * this._pixelRatio,
-					parameters
-				);
+				renderTarget.samples = this._pixelRatio;
 			}
 		} else {
 			this._pixelRatio = 1;

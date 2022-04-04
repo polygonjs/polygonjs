@@ -10,7 +10,6 @@ import {LinearFilter} from 'three/src/constants';
 import {Vector3} from 'three/src/math/Vector3';
 import {Vector4} from 'three/src/math/Vector4';
 import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
-import {WebGLMultisampleRenderTarget} from 'three/src/renderers/WebGLMultisampleRenderTarget';
 import {Mesh} from 'three/src/objects/Mesh';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
@@ -70,7 +69,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	protected textureMatrix = new Matrix4();
 	private virtualCamera = new PerspectiveCamera();
 
-	protected renderTarget: WebGLRenderTarget | WebGLMultisampleRenderTarget | undefined;
+	protected renderTarget: WebGLRenderTarget | undefined;
 	public override material: TMaterial = this._createMaterial();
 	protected _coreRenderBlur: CoreRenderBlur | undefined;
 
@@ -89,13 +88,9 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	private _createRenderTarget(renderer: WebGLRenderer) {
 		const {width, height} = this._getRendererSize(renderer);
 
+		this.renderTarget = Poly.renderersController.renderTarget(width, height, renderTargetParams);
 		if (this._options.multisamples > 0) {
-			this.renderTarget = Poly.renderersController.renderTarget(width, height, renderTargetParams);
-			if (this.renderTarget instanceof WebGLMultisampleRenderTarget) {
-				this.renderTarget.samples = this._options.multisamples;
-			}
-		} else {
-			this.renderTarget = new WebGLRenderTarget(width, height, renderTargetParams);
+			this.renderTarget.samples = this._options.multisamples;
 		}
 		this._assignMaterialRenderTarget();
 

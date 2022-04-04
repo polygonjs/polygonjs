@@ -832,7 +832,7 @@ function computeMorphedAttributes( object ) {
 
 		}
 
-	} else if ( positionAttribute !== undefined ) {
+	} else {
 
 		// non-indexed buffer geometry
 

@@ -1,4 +1,5 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Color} from 'three/src/math/Color';
 import {FileLoader} from 'three/src/loaders/FileLoader';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Group} from 'three/src/objects/Group';
@@ -27,6 +28,8 @@ const _vC = new Vector3();
 
 const _ab = new Vector3();
 const _cb = new Vector3();
+
+const _color = new Color();
 
 function ParserState() {
 
@@ -534,12 +537,13 @@ class OBJLoader extends Loader {
 						);
 						if ( data.length >= 7 ) {
 
-							state.colors.push(
+							_color.setRGB(
 								parseFloat( data[ 4 ] ),
 								parseFloat( data[ 5 ] ),
 								parseFloat( data[ 6 ] )
+							).convertSRGBToLinear();
 
-							);
+							state.colors.push( _color.r, _color.g, _color.b );
 
 						} else {
 
@@ -568,7 +572,7 @@ class OBJLoader extends Loader {
 
 			} else if ( lineFirstChar === 'f' ) {
 
-				const lineData = line.substr( 1 ).trim();
+				const lineData = line.slice( 1 ).trim();
 				const vertexData = lineData.split( /\s+/ );
 				const faceVertices = [];
 
@@ -631,7 +635,7 @@ class OBJLoader extends Loader {
 
 			} else if ( lineFirstChar === 'p' ) {
 
-				const lineData = line.substr( 1 ).trim();
+				const lineData = line.slice( 1 ).trim();
 				const pointData = lineData.split( ' ' );
 
 				state.addPointGeometry( pointData );
@@ -643,8 +647,8 @@ class OBJLoader extends Loader {
 				// g group_name
 
 				// WORKAROUND: https://bugs.chromium.org/p/v8/issues/detail?id=2869
-				// let name = result[ 0 ].substr( 1 ).trim();
-				const name = ( ' ' + result[ 0 ].substr( 1 ).trim() ).substr( 1 );
+				// let name = result[ 0 ].slice( 1 ).trim();
+				const name = ( ' ' + result[ 0 ].slice( 1 ).trim() ).slice( 1 );
 
 				state.startObject( name );
 

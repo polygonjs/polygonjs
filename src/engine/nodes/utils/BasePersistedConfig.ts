@@ -8,6 +8,51 @@ import {Material} from 'three/src/materials/Material';
 import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {MaterialUserDataUniforms, OnBeforeCompileDataHandler} from '../gl/code/assemblers/materials/OnBeforeCompile';
 import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
+import {
+	ShadowMaterial,
+	SpriteMaterial,
+	RawShaderMaterial,
+	PointsMaterial,
+	MeshPhysicalMaterial,
+	MeshStandardMaterial,
+	MeshPhongMaterial,
+	MeshToonMaterial,
+	MeshNormalMaterial,
+	MeshLambertMaterial,
+	MeshDistanceMaterial,
+	MeshBasicMaterial,
+	MeshMatcapMaterial,
+	LineDashedMaterial,
+	LineBasicMaterial,
+} from 'three/src/materials/Materials';
+
+function MonkeyPatchMaterial() {
+	const materialLib = {
+		ShadowMaterial,
+		SpriteMaterial,
+		RawShaderMaterial,
+		ShaderMaterial,
+		PointsMaterial,
+		MeshPhysicalMaterial,
+		MeshStandardMaterial,
+		MeshPhongMaterial,
+		MeshToonMaterial,
+		MeshNormalMaterial,
+		MeshLambertMaterial,
+		MeshDepthMaterial,
+		MeshDistanceMaterial,
+		MeshBasicMaterial,
+		MeshMatcapMaterial,
+		LineDashedMaterial,
+		LineBasicMaterial,
+		Material,
+	};
+
+	(Material as any).fromType = function (type: string) {
+		return new (materialLib as any)[type]();
+	};
+}
+
 interface MaterialData {
 	color?: boolean;
 	lights?: boolean;
@@ -139,6 +184,7 @@ export class BasePersistedConfig {
 		data.color = undefined;
 
 		const loader = new MaterialLoader();
+		MonkeyPatchMaterial();
 		const material = loader.parse(data) as ShaderMaterialWithCustomMaterials;
 		// TODO: wait for https://github.com/mrdoob/three.js/pull/21428
 		// to be merged

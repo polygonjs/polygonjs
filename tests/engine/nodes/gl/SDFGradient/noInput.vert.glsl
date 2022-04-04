@@ -56,6 +56,7 @@ void main() {
 
 
 
+	#include <morphcolor_vertex>
 
 	#if defined ( USE_ENVMAP ) || defined ( USE_SKINNING )
 

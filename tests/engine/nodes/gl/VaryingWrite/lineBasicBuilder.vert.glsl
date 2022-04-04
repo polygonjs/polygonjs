@@ -45,6 +45,7 @@ void main() {
 
 
 
+	#include <morphcolor_vertex>
 // removed:
 //	#include <begin_vertex>
 	#include <morphtarget_vertex>

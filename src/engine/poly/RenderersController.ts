@@ -1,7 +1,5 @@
 import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
 import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
-import {WebGLMultisampleRenderTarget} from 'three/src/renderers/WebGLMultisampleRenderTarget';
-// import {Poly} from '../Poly';
 export interface POLYWebGLRenderer extends WebGLRenderer {
 	_polygonId?: number;
 }
@@ -181,7 +179,9 @@ export class RenderersController {
 
 	renderTarget(width: number, height: number, parameters: WebGLRenderTargetOptions) {
 		if (this.webGL2Available()) {
-			return new WebGLMultisampleRenderTarget(width, height, parameters);
+			const multiSampleRenderTarget = new WebGLRenderTarget(width, height, parameters);
+			multiSampleRenderTarget.samples = 2;
+			return multiSampleRenderTarget;
 		} else {
 			return new WebGLRenderTarget(width, height, parameters);
 		}

@@ -111,15 +111,15 @@ class CSS2DRenderer {
 
 			if ( object.isCSS2DObject ) {
 
-				const visible = object.visible && _vector.z >= - 1 && _vector.z <= 1 && object.layers.test( camera.layers );
-				object.element.style.display = visible ? '' : 'none';
+				_vector.setFromMatrixPosition( object.matrixWorld );
+				_vector.applyMatrix4( _viewProjectionMatrix );
 
-				if ( visible ) {
+				const visible = ( object.visible === true ) && ( _vector.z >= - 1 && _vector.z <= 1 ) && ( object.layers.test( camera.layers ) === true );
+				object.element.style.display = ( visible === true ) ? '' : 'none';
+
+				if ( visible === true ) {
 
 					object.onBeforeRender( _this, scene, camera );
-
-					_vector.setFromMatrixPosition( object.matrixWorld );
-					_vector.applyMatrix4( _viewProjectionMatrix );
 
 					const element = object.element;
 
@@ -134,12 +134,6 @@ class CSS2DRenderer {
 
 					}
 
-					const objectData = {
-						distanceToCameraSquared: getDistanceToSquared( camera, object )
-					};
-
-					cache.objects.set( object, objectData );
-
 					if ( element.parentNode !== domElement ) {
 
 						domElement.appendChild( element );
@@ -149,6 +143,12 @@ class CSS2DRenderer {
 					object.onAfterRender( _this, scene, camera );
 
 				}
+
+				const objectData = {
+					distanceToCameraSquared: getDistanceToSquared( camera, object )
+				};
+
+				cache.objects.set( object, objectData );
 
 			}
 
@@ -186,6 +186,12 @@ class CSS2DRenderer {
 		function zOrder( scene ) {
 
 			const sorted = filterAndFlatten( scene ).sort( function ( a, b ) {
+
+				if ( a.renderOrder !== b.renderOrder ) {
+
+					return b.renderOrder - a.renderOrder;
+
+				}
 
 				const distanceA = cache.objects.get( a ).distanceToCameraSquared;
 				const distanceB = cache.objects.get( b ).distanceToCameraSquared;

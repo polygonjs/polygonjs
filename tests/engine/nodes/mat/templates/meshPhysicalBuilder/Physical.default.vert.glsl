@@ -57,6 +57,7 @@ void main() {
 
 
 
+	#include <morphcolor_vertex>
 
 // removed:
 //	#include <beginnormal_vertex>

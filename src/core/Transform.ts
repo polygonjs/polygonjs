@@ -40,6 +40,7 @@ export interface SetParamsFromMatrixOptions {
 	scale?: boolean;
 }
 
+const eulerArray: Number3 = [0, 0, 0];
 export class CoreTransform {
 	private static set_params_from_matrix_position = new Vector3();
 	private static set_params_from_matrix_quaternion = new Quaternion();
@@ -62,7 +63,8 @@ export class CoreTransform {
 		);
 
 		this.set_params_from_matrix_euler.setFromQuaternion(this.set_params_from_matrix_quaternion);
-		this.set_params_from_matrix_euler.toVector3(this.set_params_from_matrix_rotation);
+		this.set_params_from_matrix_euler.toArray(eulerArray);
+		this.set_params_from_matrix_rotation.fromArray(eulerArray);
 		this.set_params_from_matrix_rotation.divideScalar(Math.PI / 180);
 
 		this.set_params_from_matrix_position.toArray(this.set_params_from_matrix_t);

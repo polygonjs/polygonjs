@@ -1,4 +1,5 @@
 import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Color} from 'three/src/math/Color';
 import {FileLoader} from 'three/src/loaders/FileLoader';
 import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
 import {Loader} from 'three/src/loaders/Loader';
@@ -30,6 +31,7 @@ import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
  *
  */
 
+const _color = new Color();
 
 class PLYLoader extends Loader {
 
@@ -405,7 +407,13 @@ class PLYLoader extends Loader {
 
 				if ( attrR !== null && attrG !== null && attrB !== null ) {
 
-					buffer.colors.push( element[ attrR ] / 255.0, element[ attrG ] / 255.0, element[ attrB ] / 255.0 );
+					_color.setRGB(
+						element[ attrR ] / 255.0,
+						element[ attrG ] / 255.0,
+						element[ attrB ] / 255.0
+					).convertSRGBToLinear();
+
+					buffer.colors.push( _color.r, _color.g, _color.b );
 
 				}
 

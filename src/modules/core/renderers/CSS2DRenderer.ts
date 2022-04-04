@@ -50,14 +50,17 @@ export class CSS2DRenderer {
 
 	renderObject(object: Object3D, scene: Scene, camera: Camera) {
 		if (object instanceof CSS2DObject) {
+			this.vector.setFromMatrixPosition(object.matrixWorld);
+			this.vector.applyMatrix4(this.viewProjectionMatrix);
 			const visible =
-				object.visible && this.vector.z >= -1 && this.vector.z <= 1 && object.layers.test(camera.layers);
-			object.element.style.display = visible ? '' : 'none';
+				object.visible === true &&
+				this.vector.z >= -1 &&
+				this.vector.z <= 1 &&
+				object.layers.test(camera.layers) === true;
+			object.element.style.display = visible === true ? '' : 'none';
 
 			if (visible) {
 				// object.onBeforeRender(this, scene, camera);
-				this.vector.setFromMatrixPosition(object.matrixWorld);
-				this.vector.applyMatrix4(this.viewProjectionMatrix);
 
 				var element = object.element;
 				var style =
