@@ -25,6 +25,7 @@ import {PolyPerformanceformanceController} from './poly/PerformanceController';
 import {BaseModule} from './poly/registers/modules/_BaseModule';
 import {ModuleName} from './poly/registers/modules/Common';
 import {ScenesRegister} from './poly/ScenesRegister';
+import {LogoController} from './poly/LogoController';
 
 declare global {
 	interface Window {
@@ -49,6 +50,7 @@ export class PolyEngine {
 	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
 	public readonly blobs: BlobsController = new BlobsController();
 	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
+	public readonly logo = new LogoController();
 	// public readonly selfContainedScenesLoader: SelfContainedScenesLoader = new SelfContainedScenesLoader();
 	public readonly performance: PolyPerformanceformanceController = new PolyPerformanceformanceController();
 	scenesByUuid: PolyDictionary<PolyScene> = {};

@@ -75,6 +75,12 @@ export class PostProcessController {
 			composer.render();
 		}
 	}
+	renderer(canvas: HTMLCanvasElement) {
+		const composer = this.composer(canvas);
+		if (composer) {
+			return composer.renderer;
+		}
+	}
 
 	reset() {
 		this._composersByCanvasId.clear();

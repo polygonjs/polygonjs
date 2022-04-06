@@ -73,6 +73,25 @@ export class RenderController {
 	// render methods
 	//
 	//
+	getRenderer(canvas: HTMLCanvasElement) {
+		if (isBooleanTrue(this.node.pv.doPostProcess)) {
+			this.node.postProcessController().renderer(canvas);
+		} else {
+			return this.renderer(canvas);
+		}
+	}
+	renderer(canvas: HTMLCanvasElement) {
+		return this._renderersByCanvasId.get(canvas.id);
+	}
+	renderersByCanvasId() {
+		return this._renderersByCanvasId;
+	}
+
+	cssRenderer(canvas: HTMLCanvasElement) {
+		if (this._resolvedCSSRendererROP && isBooleanTrue(this.node.pv.setCSSRenderer)) {
+			return this._resolvedCSSRendererROP.renderer(canvas);
+		}
+	}
 	render(canvas: HTMLCanvasElement, size?: Vector2, aspect?: number, renderObjectOverride?: Object3D) {
 		if (isBooleanTrue(this.node.pv.doPostProcess)) {
 			this.node.postProcessController().render(canvas, size);
@@ -181,19 +200,6 @@ export class RenderController {
 			// this._resolved_cssRenderer_rop.remove_renderer_element(canvas);
 		}
 		this._resolvedCSSRendererROP = undefined;
-	}
-
-	renderer(canvas: HTMLCanvasElement) {
-		return this._renderersByCanvasId.get(canvas.id);
-	}
-	renderersByCanvasId() {
-		return this._renderersByCanvasId;
-	}
-
-	cssRenderer(canvas: HTMLCanvasElement) {
-		if (this._resolvedCSSRendererROP && isBooleanTrue(this.node.pv.setCSSRenderer)) {
-			return this._resolvedCSSRendererROP.renderer(canvas);
-		}
 	}
 
 	private _super_sampling_size = new Vector2();

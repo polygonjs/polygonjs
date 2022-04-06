@@ -3,7 +3,8 @@ import {ViewerControlsController} from './utils/ControlsController';
 import {TypedViewer} from './_Base';
 import {BaseThreejsCameraObjNodeType} from '../nodes/obj/_BaseCamera';
 import {Clock} from 'three/src/core/Clock';
-
+import {Poly} from '../Poly';
+import {ViewerLogoController} from './utils/logo/ViewerLogoController';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -46,6 +47,10 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this._domElement?.classList.add(CSS_CLASS);
 		this._build();
 		this._setEvents();
+
+		if (Poly.logo.displayed()) {
+			new ViewerLogoController(this);
+		}
 	}
 
 	override controlsController(): ViewerControlsController {
@@ -174,13 +179,18 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	render(delta: number) {
 		if (this._canvas) {
 			const delta = this._delta;
-			this._runOnBeforeRenderCallbacks(delta);
+			const renderController = this._cameraNode.renderController();
+			const renderer = renderController.getRenderer(this._canvas);
+			if (!renderer) {
+				return;
+			}
+			this._runOnBeforeRenderCallbacks(delta, renderer);
 
 			const size = this.camerasController().size;
 			const aspect = this.camerasController().aspect;
-			this._cameraNode.renderController().render(this._canvas, size, aspect, this._renderObjectOverride);
+			renderController.render(this._canvas, size, aspect, this._renderObjectOverride);
 
-			this._runOnAfterRenderCallbacks(delta);
+			this._runOnAfterRenderCallbacks(delta, renderer);
 		} else {
 			console.warn('no canvas to render onto');
 		}

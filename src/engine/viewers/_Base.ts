@@ -2,16 +2,28 @@ import {BaseCameraObjNodeType} from '../nodes/obj/_BaseCamera';
 import {ViewerCamerasController} from './utils/CamerasController';
 import {ViewerControlsController} from './utils/ControlsController';
 import {ViewerEventsController} from './utils/EventsController';
+
 import {ViewerWebGLController} from './utils/WebglController';
 import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/ControlsController';
 import {Object3D} from 'three/src/core/Object3D';
 import {PolyScene} from '../scene/PolyScene';
 import {ViewerAudioController} from './utils/AudioController';
 import {Poly, PolyEngine} from '../Poly';
+import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 
 const HOVERED_CLASS_NAME = 'hovered';
-type ViewerCallback = (delta: number) => void;
-type ViewerCallbacksMap = Map<string, ViewerCallback>;
+
+type ViewerTickCallback = (delta: number) => void;
+type ViewerRenderCallback = (delta: number, renderer: WebGLRenderer) => void;
+type ViewerBaseCallback = ViewerTickCallback | ViewerRenderCallback;
+interface ViewerCallbackOptions {
+	persistent?: boolean;
+}
+interface ViewerCallbackContainer<T extends ViewerBaseCallback> {
+	callback: T;
+	options: ViewerCallbackOptions;
+}
+type ViewerCallbacksMap<T extends ViewerBaseCallback> = Map<string, ViewerCallbackContainer<T>>;
 export interface HTMLElementWithViewer<C extends BaseCameraObjNodeType> extends HTMLElement {
 	scene: PolyScene;
 	viewer: TypedViewer<C>;
@@ -55,6 +67,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		// OR... those could have been created when an element is shared by multiple scenes
 		// at different times
 		this._audioController?.unmount();
+
 		this._domElement.removeChild(this.canvas());
 
 		this._mounted = false;
@@ -161,18 +174,19 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	//
 	//
 	// tick callbacks
-	private _onBeforeTickCallbacksMap: ViewerCallbacksMap | undefined;
-	private _onAfterTickCallbacksMap: ViewerCallbacksMap | undefined;
-	protected _onBeforeTickCallbacks: Array<ViewerCallback> = [];
-	protected _onAfterTickCallbacks: Array<ViewerCallback> = [];
+	private _onBeforeTickCallbacksMap: ViewerCallbacksMap<ViewerTickCallback> | undefined;
+	private _onAfterTickCallbacksMap: ViewerCallbacksMap<ViewerTickCallback> | undefined;
+	protected _onBeforeTickCallbacks: Array<ViewerTickCallback> = [];
+	protected _onAfterTickCallbacks: Array<ViewerTickCallback> = [];
 	// render callbacks
-	private _onBeforeRenderCallbacksMap: ViewerCallbacksMap | undefined;
-	private _onAfterRenderCallbacksMap: ViewerCallbacksMap | undefined;
-	protected _onBeforeRenderCallbacks: Array<ViewerCallback> = [];
-	protected _onAfterRenderCallbacks: Array<ViewerCallback> = [];
+	private _onBeforeRenderCallbacksMap: ViewerCallbacksMap<ViewerRenderCallback> | undefined;
+	private _onAfterRenderCallbacksMap: ViewerCallbacksMap<ViewerRenderCallback> | undefined;
+	protected _onBeforeRenderCallbacks: Array<ViewerRenderCallback> = [];
+	protected _onAfterRenderCallbacks: Array<ViewerRenderCallback> = [];
 
-	registerOnBeforeTick(callbackName: string, callback: ViewerCallback) {
-		this._registerCallback(callbackName, callback, this.registeredBeforeTickCallbacks());
+	// onBeforeTick
+	registerOnBeforeTick(callbackName: string, callback: ViewerTickCallback, options: ViewerCallbackOptions = {}) {
+		this._registerCallback(callbackName, callback, this.registeredBeforeTickCallbacks(), options);
 	}
 	unRegisterOnBeforeTick(callbackName: string) {
 		this._unregisterCallback(callbackName, this._onBeforeTickCallbacksMap);
@@ -180,8 +194,9 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	registeredBeforeTickCallbacks() {
 		return (this._onBeforeTickCallbacksMap = this._onBeforeTickCallbacksMap || new Map());
 	}
-	registerOnAfterTick(callbackName: string, callback: ViewerCallback) {
-		this._registerCallback(callbackName, callback, this.registeredAfterTickCallbacks());
+	// onAfterTick
+	registerOnAfterTick(callbackName: string, callback: ViewerTickCallback, options: ViewerCallbackOptions = {}) {
+		this._registerCallback(callbackName, callback, this.registeredAfterTickCallbacks(), options);
 	}
 	unRegisterOnAfterTick(callbackName: string) {
 		this._unregisterCallback(callbackName, this._onAfterTickCallbacksMap);
@@ -189,8 +204,9 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	registeredAfterTickCallbacks() {
 		return (this._onAfterTickCallbacksMap = this._onAfterTickCallbacksMap || new Map());
 	}
-	registerOnBeforeRender(callbackName: string, callback: ViewerCallback) {
-		this._registerCallback(callbackName, callback, this.registeredBeforeRenderCallbacks());
+	// onBeforeRender
+	registerOnBeforeRender(callbackName: string, callback: ViewerRenderCallback, options: ViewerCallbackOptions = {}) {
+		this._registerCallback(callbackName, callback, this.registeredBeforeRenderCallbacks(), options);
 	}
 	unRegisterOnBeforeRender(callbackName: string) {
 		this._unregisterCallback(callbackName, this._onBeforeRenderCallbacksMap);
@@ -198,8 +214,9 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	registeredBeforeRenderCallbacks() {
 		return (this._onBeforeRenderCallbacksMap = this._onBeforeRenderCallbacksMap || new Map());
 	}
-	registerOnAfterRender(callbackName: string, callback: ViewerCallback) {
-		this._registerCallback(callbackName, callback, this.registeredAfterRenderCallbacks());
+	// onAfterRender
+	registerOnAfterRender(callbackName: string, callback: ViewerRenderCallback, options: ViewerCallbackOptions = {}) {
+		this._registerCallback(callbackName, callback, this.registeredAfterRenderCallbacks(), options);
 	}
 	unRegisterOnAfterRender(callbackName: string) {
 		this._unregisterCallback(callbackName, this._onAfterRenderCallbacksMap);
@@ -207,16 +224,29 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	registeredAfterRenderCallbacks() {
 		return (this._onAfterRenderCallbacksMap = this._onAfterRenderCallbacksMap || new Map());
 	}
-	private _registerCallback<C extends ViewerCallback>(callbackName: string, callback: C, map: ViewerCallbacksMap) {
+	private _registerCallback<C extends ViewerBaseCallback>(
+		callbackName: string,
+		callback: C,
+		map: ViewerCallbacksMap<C>,
+		options: ViewerCallbackOptions = {}
+	) {
 		if (map.has(callbackName)) {
 			console.warn(`callback ${callbackName} already registered`);
 			return;
 		}
-		map.set(callbackName, callback);
+		map.set(callbackName, {callback, options});
 		this._updateCallbacks();
 	}
-	private _unregisterCallback(callbackName: string, map?: ViewerCallbacksMap) {
+	private _unregisterCallback<C extends ViewerBaseCallback>(callbackName: string, map?: ViewerCallbacksMap<C>) {
 		if (!map) {
+			return;
+		}
+		const callbackContainer = map.get(callbackName);
+		if (!callbackContainer) {
+			return;
+		}
+		const options = callbackContainer.options;
+		if (options.persistent == true) {
 			return;
 		}
 		map.delete(callbackName);
@@ -224,38 +254,43 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	}
 	private _updateCallbacks() {
 		this._onBeforeTickCallbacks = [];
-		this._onBeforeTickCallbacksMap?.forEach((callback) => {
-			this._onBeforeTickCallbacks.push(callback);
+		this._onBeforeTickCallbacksMap?.forEach((callbackContainer) => {
+			this._onBeforeTickCallbacks.push(callbackContainer.callback);
 		});
 		this._onAfterTickCallbacks = [];
-		this._onAfterTickCallbacksMap?.forEach((callback) => {
-			this._onAfterTickCallbacks.push(callback);
+		this._onAfterTickCallbacksMap?.forEach((callbackContainer) => {
+			this._onAfterTickCallbacks.push(callbackContainer.callback);
 		});
 		this._onBeforeRenderCallbacks = [];
-		this._onBeforeRenderCallbacksMap?.forEach((callback) => {
-			this._onBeforeRenderCallbacks.push(callback);
+		this._onBeforeRenderCallbacksMap?.forEach((callbackContainer) => {
+			this._onBeforeRenderCallbacks.push(callbackContainer.callback);
 		});
 		this._onAfterRenderCallbacks = [];
-		this._onAfterRenderCallbacksMap?.forEach((callback) => {
-			this._onAfterRenderCallbacks.push(callback);
+		this._onAfterRenderCallbacksMap?.forEach((callbackContainer) => {
+			this._onAfterRenderCallbacks.push(callbackContainer.callback);
 		});
 	}
-	private _runCallbacks(callbacks: ViewerCallback[], delta: number) {
+	private _runTickCallbacks(callbacks: ViewerTickCallback[], delta: number) {
 		for (const callback of callbacks) {
 			callback(delta);
 		}
 	}
+	private _runRenderCallbacks(callbacks: ViewerRenderCallback[], delta: number, renderer: WebGLRenderer) {
+		for (const callback of callbacks) {
+			callback(delta, renderer);
+		}
+	}
 	protected _runOnBeforeTickCallbacks(delta: number) {
-		this._runCallbacks(this._onBeforeTickCallbacks, delta);
+		this._runTickCallbacks(this._onBeforeTickCallbacks, delta);
 	}
 	protected _runOnAfterTickCallbacks(delta: number) {
-		this._runCallbacks(this._onAfterTickCallbacks, delta);
+		this._runTickCallbacks(this._onAfterTickCallbacks, delta);
 	}
-	protected _runOnBeforeRenderCallbacks(delta: number) {
-		this._runCallbacks(this._onBeforeRenderCallbacks, delta);
+	protected _runOnBeforeRenderCallbacks(delta: number, renderer: WebGLRenderer) {
+		this._runRenderCallbacks(this._onBeforeRenderCallbacks, delta, renderer);
 	}
-	protected _runOnAfterRenderCallbacks(delta: number) {
-		this._runCallbacks(this._onAfterRenderCallbacks, delta);
+	protected _runOnAfterRenderCallbacks(delta: number, renderer: WebGLRenderer) {
+		this._runRenderCallbacks(this._onAfterRenderCallbacks, delta, renderer);
 	}
 }
 
