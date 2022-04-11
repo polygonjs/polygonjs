@@ -10,6 +10,8 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {Poly} from '../../Poly';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
+import {BaseCodeProcessor, buildCodeNodeFunction} from '../../../core/code/FunctionBuilderUtils';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
 const DEFAULT_TS = `
 export class EventProcessor extends BaseCodeEventProcessor {
@@ -59,8 +61,6 @@ export class BaseCodeEventProcessor extends BaseCodeProcessor {
 	}
 }
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseCodeProcessor, buildCodeNodeFunction} from '../../../core/code/FunctionBuilderUtils';
 class CodeEventParamsConfig extends NodeParamsConfig {
 	codeTypescript = ParamConfig.STRING(DEFAULT_TS, {
 		hideLabel: true,

@@ -131,7 +131,7 @@
 			document.getElementById('displayedNodeInput').addEventListener('input', function(event){
 				const node = [box, plane, noise, scatter, copy][event.target.value];
 				node.flags.display.set(true);
-			})
+			});
 			document.getElementById('box-size').addEventListener('input', function (event) {
 				box.p.size.set([event.target.value, event.target.value]);
 			});
