@@ -2,6 +2,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {AbsActorNode} from '../../../../src/engine/nodes/actor/Abs';
 import {AcosActorNode} from '../../../../src/engine/nodes/actor/Acos';
 import {AsinActorNode} from '../../../../src/engine/nodes/actor/Asin';
+import {AtanActorNode} from '../../../../src/engine/nodes/actor/Atan';
 import {CeilActorNode} from '../../../../src/engine/nodes/actor/Ceil';
 import {CosActorNode} from '../../../../src/engine/nodes/actor/Cos';
 import {FloorActorNode} from '../../../../src/engine/nodes/actor/Floor';
@@ -51,6 +52,7 @@ QUnit.test('actor/Math_Arg1 simple', async (assert) => {
 			| AbsActorNode
 			| AcosActorNode
 			| AsinActorNode
+			| AtanActorNode
 			| CeilActorNode
 			| CosActorNode
 			| FloorActorNode
