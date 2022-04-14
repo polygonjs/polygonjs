@@ -6,17 +6,22 @@
  *
  */
 
-import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
+import {ActorNodeTriggerContext} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {ActorType} from '../../poly/registers/nodes/types/Actor';
+import {BaseUserInputActorNode} from './_BaseUserInput';
 
 const OUTPUT_NAME = 'ray';
 class RayFromCursorActorParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new RayFromCursorActorParamsConfig();
-export class RayFromCursorActorNode extends TypedActorNode<RayFromCursorActorParamsConfig> {
+export class RayFromCursorActorNode extends BaseUserInputActorNode<RayFromCursorActorParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'rayFromCursor';
+		return ActorType.RAY_FROM_CURSOR;
+	}
+	userInputEventNames() {
+		return ['pointermove'];
 	}
 	override initializeNode() {
 		super.initializeNode();

@@ -9,5 +9,6 @@ export enum ActorType {
 	ON_OBJECT_POINTER_DOWN = 'onObjectPointerDown',
 	ON_OBJECT_POINTER_UP = 'onObjectPointerUp',
 	ON_POINTER_UP = 'onPointerUp',
+	RAY_FROM_CURSOR = 'rayFromCursor',
 	// SET_OBJECT_HOVERED_STATE = 'setObjectHoveredState',
 }
