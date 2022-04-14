@@ -151,7 +151,7 @@ float snoise(vec3 v)
   }
 
 
-float fbm_snoise_341 (in vec3 st) {
+float fbm_snoise_339 (in vec3 st) {
 	float value = 0.0;
 	float amplitude = 1.0;
 	for (int i = 0; i < 3; i++) {

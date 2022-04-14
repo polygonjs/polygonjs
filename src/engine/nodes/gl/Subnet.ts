@@ -86,88 +86,34 @@ export function TypedSubnetGlParamsConfigMixin<TBase extends Constructor>(Base: 
 	};
 }
 class TypedSubnetGlParamsConfig extends TypedSubnetGlParamsConfigMixin(NodeParamsConfig) {}
-export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends TypedGlNode<K> {
+export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends TypedGlNode<K> {
 	protected override _childrenControllerContext = NodeContext.GL;
+
 	override initializeNode() {
 		this.childrenController?.setOutputNodeFindMethod(() => {
 			return this.nodesByType(SubnetOutputGlNode.type())[0];
 		});
 
 		this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
-		this.io.connection_points.set_output_name_function(this._expectedOutputName.bind(this));
+
 		this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
+		this.io.connection_points.set_output_name_function(this._expectedOutputName.bind(this));
 	}
-	protected _inputTypeParams(): IntegerParam[] {
-		return [
-			this.p.inputType0,
-			this.p.inputType1,
-			this.p.inputType2,
-			this.p.inputType3,
-			this.p.inputType4,
-			this.p.inputType5,
-			this.p.inputType6,
-			this.p.inputType7,
-			this.p.inputType8,
-			this.p.inputType9,
-		];
-	}
-	protected _inputNameParams(): StringParam[] {
-		return [
-			this.p.inputName0,
-			this.p.inputName1,
-			this.p.inputName2,
-			this.p.inputName3,
-			this.p.inputName4,
-			this.p.inputName5,
-			this.p.inputName6,
-			this.p.inputName7,
-			this.p.inputName8,
-			this.p.inputName9,
-		];
-	}
-
-	setInputType(index: number, type: GlConnectionPointType) {
-		const param = this._inputTypeParams()[index];
-		if (!param) {
-			return;
-		}
-		param.set(GL_CONNECTION_POINT_TYPES.indexOf(type));
-	}
-	setInputName(index: number, inputName: string) {
-		const param = this._inputNameParams()[index];
-		if (!param) {
-			return;
-		}
-		param.set(inputName);
-	}
-
-	protected _expectedInputsCount(): number {
-		return this.pv.inputsCount;
-	}
-
 	protected _expectedInputTypes(): GlConnectionPointType[] {
-		const count = this.pv.inputsCount;
-		const params: IntegerParam[] = this._inputTypeParams();
-		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
+		return [];
 	}
 	protected _expectedInputName(index: number) {
-		const params: StringParam[] = this._inputNameParams();
-		return params[index].value;
+		return 'default';
 	}
 
 	protected _expectedOutputTypes() {
-		const count = this.pv.inputsCount;
-		const params: IntegerParam[] = this._inputTypeParams();
-		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
+		return this._expectedInputTypes();
 	}
 
 	protected _expectedOutputName(index: number) {
-		// return this._expected_input_name(index);
-		const params: StringParam[] = this._inputNameParams();
-		return params[index].value;
+		return this._expectedInputName(index);
 	}
-
 	//
 	//
 	// defines the outputs for the child subnet input
@@ -388,6 +334,88 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Type
 				return `${prefix}${trimmed}`;
 			}
 		});
+	}
+}
+
+export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends AbstractTypedSubnetGlNode<K> {
+	override initializeNode() {
+		super.initializeNode();
+
+		this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
+
+		this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
+		this.io.connection_points.set_output_name_function(this._expectedOutputName.bind(this));
+	}
+	protected _inputTypeParams(): IntegerParam[] {
+		return [
+			this.p.inputType0,
+			this.p.inputType1,
+			this.p.inputType2,
+			this.p.inputType3,
+			this.p.inputType4,
+			this.p.inputType5,
+			this.p.inputType6,
+			this.p.inputType7,
+			this.p.inputType8,
+			this.p.inputType9,
+		];
+	}
+	protected _inputNameParams(): StringParam[] {
+		return [
+			this.p.inputName0,
+			this.p.inputName1,
+			this.p.inputName2,
+			this.p.inputName3,
+			this.p.inputName4,
+			this.p.inputName5,
+			this.p.inputName6,
+			this.p.inputName7,
+			this.p.inputName8,
+			this.p.inputName9,
+		];
+	}
+
+	setInputType(index: number, type: GlConnectionPointType) {
+		const param = this._inputTypeParams()[index];
+		if (!param) {
+			return;
+		}
+		param.set(GL_CONNECTION_POINT_TYPES.indexOf(type));
+	}
+	setInputName(index: number, inputName: string) {
+		const param = this._inputNameParams()[index];
+		if (!param) {
+			return;
+		}
+		param.set(inputName);
+	}
+
+	protected _expectedInputsCount(): number {
+		return this.pv.inputsCount;
+	}
+
+	protected override _expectedInputTypes(): GlConnectionPointType[] {
+		const count = this.pv.inputsCount;
+		const params: IntegerParam[] = this._inputTypeParams();
+		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
+	}
+	protected override _expectedInputName(index: number) {
+		const params: StringParam[] = this._inputNameParams();
+		const param = params[index];
+		return param ? param.value : GlConnectionPointType.FLOAT;
+	}
+
+	protected override _expectedOutputTypes() {
+		const count = this.pv.inputsCount;
+		const params: IntegerParam[] = this._inputTypeParams();
+		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
+	}
+
+	protected override _expectedOutputName(index: number) {
+		// return this._expected_input_name(index);
+		const params: StringParam[] = this._inputNameParams();
+		return params[index].value;
 	}
 }
 

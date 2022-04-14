@@ -17,5 +17,8 @@ export function createPolySopNode(nodeType: string, definition: PolyNodeDefiniti
 	return BasePolySopNode as typeof SubnetSopNodeLike;
 }
 
-export const BasePolySopNode = createPolySopNode('poly', {nodeContext: NodeContext.SOP, inputs: [0, 4]});
+export const BasePolySopNode = createPolySopNode('poly', {
+	nodeContext: NodeContext.SOP,
+	inputs: {simple: {min: 0, max: 4}},
+});
 export class PolySopNode extends BasePolySopNode<any> {}

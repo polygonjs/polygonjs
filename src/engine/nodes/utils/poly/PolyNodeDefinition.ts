@@ -4,9 +4,26 @@ import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../../io/json/exp
 import {NodeContext} from '../../../poly/NodeContext';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 
+export interface PolyNodeSimpleInputsData {
+	min: number;
+	max: number;
+}
+
+export interface PolyNodeTypedInputData {
+	type: string;
+	name: string;
+}
+export interface PolyNodeTypedInputsData {
+	types: PolyNodeTypedInputData[];
+}
+export interface PolyNodesInputsData {
+	simple?: PolyNodeSimpleInputsData;
+	typed?: PolyNodeTypedInputsData;
+}
+
 export interface PolyNodeDefinition {
 	nodeContext: NodeContext;
-	inputs?: [number, number];
+	inputs?: PolyNodesInputsData;
 	params?: ParamOptionToAdd<ParamType>[];
 	nodes?: PolyDictionary<NodeJsonExporterData>;
 	ui?: PolyDictionary<NodeJsonExporterUIData>;

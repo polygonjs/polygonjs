@@ -63,18 +63,33 @@ export function isActorConnectionPointPrimitive(type: ActorConnectionPointType) 
 // ALL Actor Data types in an array
 //
 //
-// export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
-// 	ActorConnectionPointType.BOOLEAN,
-// 	ActorConnectionPointType.COLOR,
-// 	ActorConnectionPointType.FLOAT,
-// 	ActorConnectionPointType.INTEGER,
-// 	ActorConnectionPointType.OBJECT_3D,
-// 	ActorConnectionPointType.STRING,
-// 	ActorConnectionPointType.TRIGGER,
-// 	ActorConnectionPointType.VECTOR2,
-// 	ActorConnectionPointType.VECTOR3,
-// 	ActorConnectionPointType.VECTOR4,
-// ];
+export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
+	ActorConnectionPointType.ANIMATION_MIXER,
+	ActorConnectionPointType.ANIMATION_ACTION,
+	ActorConnectionPointType.BOOLEAN,
+	ActorConnectionPointType.BOOLEAN_ARRAY,
+	ActorConnectionPointType.BOX3,
+	ActorConnectionPointType.COLOR,
+	ActorConnectionPointType.COLOR_ARRAY,
+	ActorConnectionPointType.FLOAT,
+	ActorConnectionPointType.FLOAT_ARRAY,
+	ActorConnectionPointType.INTEGER,
+	ActorConnectionPointType.INTEGER_ARRAY,
+	ActorConnectionPointType.MATERIAL,
+	ActorConnectionPointType.OBJECT_3D,
+	ActorConnectionPointType.PLANE,
+	ActorConnectionPointType.RAY,
+	ActorConnectionPointType.SPHERE,
+	ActorConnectionPointType.STRING,
+	ActorConnectionPointType.STRING_ARRAY,
+	ActorConnectionPointType.TRIGGER,
+	ActorConnectionPointType.VECTOR2,
+	ActorConnectionPointType.VECTOR2_ARRAY,
+	ActorConnectionPointType.VECTOR3,
+	ActorConnectionPointType.VECTOR3_ARRAY,
+	ActorConnectionPointType.VECTOR4,
+	ActorConnectionPointType.VECTOR4_ARRAY,
+];
 export const PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
 	ActorConnectionPointType.BOOLEAN,
 	ActorConnectionPointType.COLOR,

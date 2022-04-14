@@ -28,11 +28,13 @@ export enum EventConnectionPointType {
 // ALL Event Data types in an array
 //
 //
-// export const ConnectionPointTypesEVENT: Array<EventConnectionPointType> = [
-// 	EventConnectionPointType.BASE,
-// 	EventConnectionPointType.KEYBOARD,
-// 	EventConnectionPointType.MOUSE,
-// ];
+export const EVENT_CONNECTION_POINT_TYPES: Array<EventConnectionPointType> = [
+	EventConnectionPointType.BASE,
+	EventConnectionPointType.DRAG,
+	EventConnectionPointType.KEYBOARD,
+	EventConnectionPointType.MOUSE,
+	EventConnectionPointType.POINTER,
+];
 
 export interface EventConnectionPointData<T extends EventConnectionPointType> {
 	name: string;

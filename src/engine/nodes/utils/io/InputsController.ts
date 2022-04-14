@@ -12,6 +12,9 @@ import {CoreType} from '../../../../core/Type';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 type OnUpdateHook = () => void;
+export interface SetInputsOptions {
+	noExceptionOnInvalidInput?: boolean;
+}
 
 const MAX_INPUTS_COUNT_UNSET = 0;
 export class NodeInputsController<NC extends NodeContext> {
@@ -320,26 +323,35 @@ export class NodeInputsController<NC extends NodeContext> {
 	}
 
 	setInput(
-		input_index_or_name: number | string,
+		inputIndexOrName: number | string,
 		node: BaseNodeByContextMap[NC] | null,
-		output_index_or_name: number | string = 0
+		outputIndexOrName?: number | string,
+		options?: Readonly<SetInputsOptions>
 	) {
-		const input_index = this.getInputIndex(input_index_or_name) || 0;
+		if (outputIndexOrName == null) {
+			outputIndexOrName = 0;
+		}
+		const noExceptionOnInvalidInput = options?.noExceptionOnInvalidInput || false;
+		const input_index = this.getInputIndex(inputIndexOrName) || 0;
 		if (input_index < 0) {
-			const message = `invalid input (${input_index_or_name}) for node ${this.node.path()}`;
-			console.warn(message);
-			throw new Error(message);
+			const message = `invalid input (${inputIndexOrName}) for node ${this.node.path()}`;
+			if (!noExceptionOnInvalidInput) {
+				console.warn(message);
+				throw new Error(message);
+			} else {
+				return;
+			}
 		}
 
 		let output_index = 0;
 		if (node) {
 			if (node.io.outputs.hasNamedOutputs()) {
-				output_index = node.io.outputs.getOutputIndex(output_index_or_name);
+				output_index = node.io.outputs.getOutputIndex(outputIndexOrName);
 				if (output_index == null || output_index < 0) {
 					const connection_points = node.io.outputs.namedOutputConnectionPoints() as BaseConnectionPoint[];
 					const names = connection_points.map((cp) => cp.name());
 					console.warn(
-						`node ${node.path()} does not have an output named ${output_index_or_name}. inputs are: ${names.join(
+						`node ${node.path()} does not have an output named ${outputIndexOrName}. inputs are: ${names.join(
 							', '
 						)}`
 					);

@@ -6,7 +6,7 @@ import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
 import {createPolySopNode} from '../../sop/Poly';
 import {createPolyObjNode} from '../../obj/Poly';
 import {NodeParamsConfig, ParamTemplate} from '../params/ParamsConfig';
-import {PolyNodeDefinition} from './PolyNodeDefinition';
+import {PolyNodeDefinition, PolyNodesInputsData} from './PolyNodeDefinition';
 import {PolyNodeClassByContext} from './PolyNodeClassByContext';
 import {Poly} from '../../../Poly';
 import {ParamOptionToAdd} from '../params/ParamsController';
@@ -14,10 +14,13 @@ import {ParamType} from '../../../poly/ParamType';
 import {PolyNodeDataRegister} from './PolyNodeDataRegister';
 import {createPolyAnimNode} from '../../anim/Poly';
 import {createPolyGlNode} from '../../gl/Poly';
+import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {NodeInputsController} from '../io/InputsController';
 
 // export const IS_POLY_NODE_BOOLEAN = 'isPolyNode';
 
 export class PolyNodeController {
+	private static _definitionRegister: Map<NodeContext, Map<string, PolyNodeDefinition>> = new Map();
 	constructor(private node: BaseNodeType, private _definition: PolyNodeDefinition) {}
 
 	initializeNode() {
@@ -39,7 +42,10 @@ export class PolyNodeController {
 		if (!inputsData) {
 			return;
 		}
-		this.node.io.inputs.setCount(inputsData[0], inputsData[1]);
+		const simpleData = inputsData.simple;
+		if (simpleData) {
+			this.node.io.inputs.setCount(simpleData.min, simpleData.max);
+		}
 	}
 
 	// private _createParamsFromDefinition() {
@@ -94,13 +100,40 @@ export class PolyNodeController {
 		}
 	}
 
-	static polyNodeData(node: BaseNodeType): PolyNodeDefinition {
+	static inputsData(node: BaseNodeType): PolyNodesInputsData {
+		if (node.io.inputs.hasNamedInputs()) {
+			const inputs = node.io.inputs as NodeInputsController<NodeContext.GL>;
+			const connectionPoints = ArrayUtils.compact(inputs.namedInputConnectionPoints());
+			return {
+				typed: {
+					types: connectionPoints.map((cp) => {
+						return {
+							name: cp.name(),
+							type: cp.type(),
+						};
+					}),
+				},
+			};
+		} else {
+			return {
+				simple: {
+					min: node.io.inputs.minCount(),
+					max: node.io.inputs.maxInputsCount(),
+				},
+			};
+		}
+	}
+
+	static polyNodeData(node: BaseNodeType, inputsData?: PolyNodesInputsData): PolyNodeDefinition {
 		const rootExporter = JsonExportDispatcher.dispatch_node(node);
 		const nodesData = rootExporter.data({showPolyNodesData: true});
 		const uiData = rootExporter.uiData({showPolyNodesData: true});
+
+		const nodeInputsData = inputsData || this.inputsData(node);
+
 		const data: PolyNodeDefinition = {
 			nodeContext: node.context(),
-			inputs: [1, 4],
+			inputs: nodeInputsData,
 			params: node.params.non_spare
 				.filter((p) => p.parentParam() == null)
 				.map((param) => {
@@ -147,7 +180,16 @@ export class PolyNodeController {
 		const {context, type, data} = dataRegister;
 		const nodeClass = this._createNodeClass(context, type, data);
 		if (nodeClass) {
+			let registerMapForContext = this._definitionRegister.get(context);
+			if (!registerMapForContext) {
+				registerMapForContext = new Map();
+				this._definitionRegister.set(context, registerMapForContext);
+			}
+			registerMapForContext.set(type, data);
 			Poly.registerNode(nodeClass, 'polyNodes', {polyNode: true});
 		}
+	}
+	static definition<NC extends NodeContext>(context: NC, type: string) {
+		return this._definitionRegister.get(context)?.get(type);
 	}
 }

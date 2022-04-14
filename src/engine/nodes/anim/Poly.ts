@@ -17,5 +17,8 @@ export function createPolyAnimNode(nodeType: string, definition: PolyNodeDefinit
 	return BasePolyAnimNode as typeof BaseSubnetAnimNode;
 }
 
-export const BasePolyAnimNode = createPolyAnimNode('poly', {nodeContext: NodeContext.ANIM, inputs: [0, 4]});
+export const BasePolyAnimNode = createPolyAnimNode('poly', {
+	nodeContext: NodeContext.ANIM,
+	inputs: {simple: {min: 0, max: 4}},
+});
 export class PolyAnimNode extends BaseSubnetAnimNode<any> {}

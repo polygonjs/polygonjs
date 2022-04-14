@@ -6,7 +6,7 @@ import {GeoNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/So
 
 const data: PolyNodeDefinition = {
 	nodeContext: NodeContext.SOP,
-	inputs: [0, 4],
+	inputs: {simple: {min: 0, max: 4}},
 	params: [
 		{
 			name: 'id',

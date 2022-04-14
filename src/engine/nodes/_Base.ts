@@ -51,6 +51,7 @@ import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
 import {PolyNodeController} from './utils/poly/PolyNodeController';
 import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
 import {PolyDictionary} from '../../types/GlobalTypes';
+import {SetInputsOptions} from './utils/io/InputsController';
 
 /**
  * TypedNode is the base class that all nodes inherit from. This inherits from [CoreGraphNode](/docs/api/CoreGraphNode).
@@ -382,11 +383,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	 *
 	 */
 	setInput(
-		input_index_or_name: number | string,
+		inputIndexOrName: number | string,
 		node: BaseNodeByContextMap[NC] | null,
-		output_index_or_name: number | string = 0
+		outputIndexOrName?: number | string,
+		options?: SetInputsOptions
 	) {
-		this.io.inputs.setInput(input_index_or_name, node, output_index_or_name);
+		this.io.inputs.setInput(inputIndexOrName, node, outputIndexOrName, options);
 	}
 
 	// emit
