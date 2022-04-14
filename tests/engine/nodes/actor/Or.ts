@@ -25,7 +25,7 @@ QUnit.test('actor/Or', async (assert) => {
 	actor1.setInput(0, hierarchy1);
 	actor1.flags.display.set(true);
 
-	const onEventManualTrigger1 = actor1.createNode('onEventManualTrigger');
+	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const twoWaySwitch1 = actor1.createNode('twoWaySwitch');
@@ -36,7 +36,7 @@ QUnit.test('actor/Or', async (assert) => {
 	getChildrenAttributes1.p.attribName.set('selected');
 	getChildrenAttributes1.setAttribType(ActorConnectionPointType.BOOLEAN);
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onEventManualTrigger1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 	setObjectPosition1.setInput('position', floatToVec3_1);
 	floatToVec3_1.setInput(1, twoWaySwitch1);
 	twoWaySwitch1.setInput(0, or1);
@@ -56,19 +56,19 @@ QUnit.test('actor/Or', async (assert) => {
 		assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 		assert.equal(object.position.y, 0);
 
-		onEventManualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 1.0, 0.25, 'time is 1 sec');
 		assert.equal(object.position.y, 0, 'object still at 0');
 
 		new CoreObject(object.children[0], 0).setAttribValue('selected', 1);
-		onEventManualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 1.5, 0.25, 'time is 1.5 sec');
 		assert.equal(object.position.y, 1, 'object moved');
 
 		new CoreObject(object.children[0], 0).setAttribValue('selected', 0);
-		onEventManualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 2, 0.25, 'time is 2 sec');
 		assert.equal(object.position.y, 0, 'object moved back');

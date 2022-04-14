@@ -1,10 +1,10 @@
 import {Mesh} from 'three/src/objects/Mesh';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {OnEventScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnEventScenePlayState';
+import {OnScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnScenePlayState';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/onEventScenePlayState', async (assert) => {
+QUnit.test('actor/onScenePlayState', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -14,19 +14,19 @@ QUnit.test('actor/onEventScenePlayState', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventScenePlayState1 = actor1.createNode('onEventScenePlayState');
+	const onScenePlayState1 = actor1.createNode('onScenePlayState');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 	const setObjectPosition2 = actor1.createNode('setObjectPosition');
 
 	setObjectPosition1.setInput(
 		ActorConnectionPointType.TRIGGER,
-		onEventScenePlayState1,
-		OnEventScenePlayStateActorNode.INPUT_NAME_PLAY
+		onScenePlayState1,
+		OnScenePlayStateActorNode.INPUT_NAME_PLAY
 	);
 	setObjectPosition2.setInput(
 		ActorConnectionPointType.TRIGGER,
-		onEventScenePlayState1,
-		OnEventScenePlayStateActorNode.INPUT_NAME_PAUSE
+		onScenePlayState1,
+		OnScenePlayStateActorNode.INPUT_NAME_PAUSE
 	);
 
 	setObjectPosition1.p.position.set([0, 1, 0]);

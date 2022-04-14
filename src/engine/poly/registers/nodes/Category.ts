@@ -1,6 +1,7 @@
 const NETWORK = 'networks';
 
 export const CATEGORY_ACTOR = {
+	ACTION: 'action',
 	ADVANCED: 'advanced',
 	ANIMATION: 'animation',
 	AUDIO: 'audio',
@@ -11,7 +12,6 @@ export const CATEGORY_ACTOR = {
 	MATH: 'math',
 	NETWORK,
 	MISC: 'misc',
-	SET: 'set',
 };
 
 export const CATEGORY_ANIM = {

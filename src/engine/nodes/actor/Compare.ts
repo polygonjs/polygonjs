@@ -69,7 +69,6 @@ export class CompareActorNode extends TypedActorNode<CompareActorParamsConfig> {
 	static override type() {
 		return 'compare';
 	}
-	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);
 	override initializeNode() {
 		super.initializeNode();
 

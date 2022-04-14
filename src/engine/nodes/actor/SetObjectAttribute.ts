@@ -132,7 +132,9 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const {Object3D} = context;
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
 
 		const attribValue = this._inputValue(SetObjectAttributeActorNode.INPUT_NAME_VAL, context) as AttribValue;
 		CoreObject.setAttribute(Object3D, this.pv.attribName, attribValue);

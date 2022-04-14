@@ -14,10 +14,10 @@ QUnit.test('actor/setObjectRotation', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventManualTrigger1 = actor1.createNode('onEventManualTrigger');
+	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setObjectRotation1 = actor1.createNode('setObjectRotation');
 
-	setObjectRotation1.setInput(ActorConnectionPointType.TRIGGER, onEventManualTrigger1);
+	setObjectRotation1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 	setObjectRotation1.p.rotation.set([0, 1, 0]);
 
 	const container = await actor1.compute();
@@ -33,7 +33,7 @@ QUnit.test('actor/setObjectRotation', async (assert) => {
 		assert.equal(scene.time(), 0);
 		assert.equal(object.quaternion.angleTo(quat0), 0);
 
-		onEventManualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(200);
 		assert.in_delta(object.quaternion.angleTo(quat0), 1, 0.05);
 	});

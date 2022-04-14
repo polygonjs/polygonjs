@@ -12,10 +12,10 @@ QUnit.test('actor/setViewer', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventmanualTrigger1 = actor1.createNode('onEventManualTrigger');
+	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setViewer1 = actor1.createNode('setViewer');
 
-	setViewer1.setInput(ActorConnectionPointType.TRIGGER, onEventmanualTrigger1);
+	setViewer1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 
 	await actor1.compute();
 
@@ -29,12 +29,12 @@ QUnit.test('actor/setViewer', async (assert) => {
 		assert.equal(scene.time(), 0);
 		assert.notOk(canvas.classList.contains('active'));
 
-		onEventmanualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
 		assert.ok(canvas.classList.contains('active'));
 
 		setViewer1.p.set.set(0);
-		onEventmanualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
 		assert.notOk(canvas.classList.contains('active'));
 	});

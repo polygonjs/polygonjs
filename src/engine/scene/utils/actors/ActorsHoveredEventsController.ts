@@ -17,7 +17,7 @@ export class ActorHoveredEventsController {
 			for (let nodeId of nodeIds) {
 				const node = this._scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
 				if (node) {
-					const onEventNodes = node.nodesByType(ActorType.ON_EVENT_OBJECT_HOVERED);
+					const onEventNodes = node.nodesByType(ActorType.ON_OBJECT_HOVER);
 					for (let onEventNode of onEventNodes) {
 						onEventNode.receiveTrigger({Object3D: object});
 					}

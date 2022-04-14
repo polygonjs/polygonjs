@@ -55,7 +55,9 @@ export class SetObjectScaleActorNode extends TypedActorNode<SetObjectScaleActorP
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const {Object3D} = context;
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
 		const scale = this._inputValueFromParam<ParamType.VECTOR3>(this.p.scale, context);
 		const mult = this._inputValueFromParam<ParamType.FLOAT>(this.p.mult, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);

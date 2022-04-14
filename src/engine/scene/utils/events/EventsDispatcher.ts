@@ -99,8 +99,11 @@ export class SceneEventsDispatcher {
 	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
 		switch (node.type()) {
 			// case ActorType.SET_OBJECT_HOVERED_STATE:
-			case ActorType.ON_EVENT_OBJECT_CLICKED:
-			case ActorType.ON_EVENT_OBJECT_HOVERED:
+			case ActorType.ON_OBJECT_CLICK:
+			case ActorType.ON_OBJECT_HOVER:
+			case ActorType.ON_OBJECT_POINTER_DOWN:
+			case ActorType.ON_OBJECT_POINTER_UP:
+			case ActorType.ON_POINTER_UP:
 				return this.pointerEventsController;
 		}
 		console.warn(`no event controller defined for node`, node);

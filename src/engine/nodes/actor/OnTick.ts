@@ -9,34 +9,34 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 
-export enum OnEventTickActorNodeOuput {
+export enum OnTickActorNodeOuput {
 	TIME = 'time',
 	DELTA = 'delta',
 }
 
-class OnEventTickActorParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new OnEventTickActorParamsConfig();
+class OnTickActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new OnTickActorParamsConfig();
 
-export class OnEventTickActorNode extends TypedActorNode<OnEventTickActorParamsConfig> {
+export class OnTickActorNode extends TypedActorNode<OnTickActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return ActorType.ON_EVENT_TICK;
+		return ActorType.ON_TICK;
 	}
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER),
-			new ActorConnectionPoint(OnEventTickActorNodeOuput.TIME, ActorConnectionPointType.FLOAT),
-			new ActorConnectionPoint(OnEventTickActorNodeOuput.DELTA, ActorConnectionPointType.FLOAT),
+			new ActorConnectionPoint(OnTickActorNodeOuput.TIME, ActorConnectionPointType.FLOAT),
+			new ActorConnectionPoint(OnTickActorNodeOuput.DELTA, ActorConnectionPointType.FLOAT),
 		]);
 	}
 
 	public override outputValue(context: ActorNodeTriggerContext, outputName: string) {
-		switch (outputName as OnEventTickActorNodeOuput) {
-			case OnEventTickActorNodeOuput.TIME: {
+		switch (outputName as OnTickActorNodeOuput) {
+			case OnTickActorNodeOuput.TIME: {
 				return this.scene().timeController.time();
 			}
-			case OnEventTickActorNodeOuput.DELTA: {
+			case OnTickActorNodeOuput.DELTA: {
 				return this.scene().timeController.timeDelta();
 			}
 		}

@@ -15,12 +15,17 @@ import {Material} from 'three/src/materials/Material';
 import {CoreType} from '../../../../../core/Type';
 import {AnimationAction} from 'three/src/animation/AnimationAction';
 import {AnimationMixer} from 'three/src/animation/AnimationMixer';
+import {Plane} from 'three/src/math/Plane';
+import {Ray} from 'three/src/math/Ray';
+import {Box3} from 'three/src/math/Box3';
+import {Sphere} from 'three/src/math/Sphere';
 
 export enum ActorConnectionPointType {
 	ANIMATION_MIXER = 'AnimationMixer',
 	ANIMATION_ACTION = 'AnimationAction',
 	BOOLEAN = 'boolean',
 	BOOLEAN_ARRAY = 'boolean[]',
+	BOX3 = 'Box3',
 	COLOR = 'color',
 	COLOR_ARRAY = 'color[]',
 	FLOAT = 'float',
@@ -29,6 +34,9 @@ export enum ActorConnectionPointType {
 	INTEGER_ARRAY = 'integer[]',
 	MATERIAL = 'Material',
 	OBJECT_3D = 'Object3D',
+	PLANE = 'Plane',
+	RAY = 'Ray',
+	SPHERE = 'Sphere',
 	STRING = 'string',
 	STRING_ARRAY = 'string[]',
 	TRIGGER = 'trigger',
@@ -91,6 +99,7 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON;
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON;
+	[ActorConnectionPointType.BOX3]: ParamType.BUTTON;
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR;
 	[ActorConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT;
@@ -99,6 +108,9 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.INTEGER_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON; //
 	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON; //
+	[ActorConnectionPointType.PLANE]: ParamType.BUTTON; //
+	[ActorConnectionPointType.RAY]: ParamType.BUTTON; //
+	[ActorConnectionPointType.SPHERE]: ParamType.BUTTON; //
 	[ActorConnectionPointType.STRING]: ParamType.STRING;
 	[ActorConnectionPointType.STRING_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON;
@@ -114,6 +126,7 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON,
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON,
+	[ActorConnectionPointType.BOX3]: ParamType.BUTTON,
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR,
 	[ActorConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT,
@@ -122,6 +135,9 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.INTEGER_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON,
 	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON, // to reconsider
+	[ActorConnectionPointType.PLANE]: ParamType.BUTTON, //
+	[ActorConnectionPointType.RAY]: ParamType.BUTTON, //
+	[ActorConnectionPointType.SPHERE]: ParamType.BUTTON, //
 	[ActorConnectionPointType.STRING]: ParamType.STRING,
 	[ActorConnectionPointType.STRING_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON,
@@ -144,6 +160,7 @@ export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnection
 	[ActorConnectionPointType.ANIMATION_ACTION]: ActorConnectionPointType.ANIMATION_ACTION;
 	[ActorConnectionPointType.BOOLEAN]: ActorConnectionPointType.BOOLEAN_ARRAY;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ActorConnectionPointType.BOOLEAN_ARRAY;
+	[ActorConnectionPointType.BOX3]: ActorConnectionPointType.BOX3;
 	[ActorConnectionPointType.COLOR]: ActorConnectionPointType.COLOR_ARRAY;
 	[ActorConnectionPointType.COLOR_ARRAY]: ActorConnectionPointType.COLOR_ARRAY;
 	[ActorConnectionPointType.FLOAT]: ActorConnectionPointType.FLOAT_ARRAY;
@@ -152,6 +169,9 @@ export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnection
 	[ActorConnectionPointType.INTEGER_ARRAY]: ActorConnectionPointType.INTEGER_ARRAY;
 	[ActorConnectionPointType.MATERIAL]: ActorConnectionPointType.MATERIAL; //
 	[ActorConnectionPointType.OBJECT_3D]: ActorConnectionPointType.OBJECT_3D; //
+	[ActorConnectionPointType.PLANE]: ActorConnectionPointType.PLANE; //
+	[ActorConnectionPointType.RAY]: ActorConnectionPointType.RAY; //
+	[ActorConnectionPointType.SPHERE]: ActorConnectionPointType.SPHERE; //
 	[ActorConnectionPointType.STRING]: ActorConnectionPointType.STRING_ARRAY;
 	[ActorConnectionPointType.STRING_ARRAY]: ActorConnectionPointType.STRING_ARRAY;
 	[ActorConnectionPointType.TRIGGER]: ActorConnectionPointType.TRIGGER;
@@ -167,6 +187,7 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.ANIMATION_ACTION]: ActorConnectionPointType.ANIMATION_ACTION,
 	[ActorConnectionPointType.BOOLEAN]: ActorConnectionPointType.BOOLEAN_ARRAY,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ActorConnectionPointType.BOOLEAN_ARRAY,
+	[ActorConnectionPointType.BOX3]: ActorConnectionPointType.BOX3,
 	[ActorConnectionPointType.COLOR]: ActorConnectionPointType.COLOR_ARRAY,
 	[ActorConnectionPointType.COLOR_ARRAY]: ActorConnectionPointType.COLOR_ARRAY,
 	[ActorConnectionPointType.FLOAT]: ActorConnectionPointType.FLOAT_ARRAY,
@@ -175,6 +196,9 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.INTEGER_ARRAY]: ActorConnectionPointType.INTEGER_ARRAY,
 	[ActorConnectionPointType.MATERIAL]: ActorConnectionPointType.MATERIAL,
 	[ActorConnectionPointType.OBJECT_3D]: ActorConnectionPointType.OBJECT_3D,
+	[ActorConnectionPointType.PLANE]: ActorConnectionPointType.PLANE,
+	[ActorConnectionPointType.RAY]: ActorConnectionPointType.RAY,
+	[ActorConnectionPointType.SPHERE]: ActorConnectionPointType.SPHERE, //
 	[ActorConnectionPointType.STRING]: ActorConnectionPointType.STRING_ARRAY,
 	[ActorConnectionPointType.STRING_ARRAY]: ActorConnectionPointType.STRING_ARRAY,
 	[ActorConnectionPointType.TRIGGER]: ActorConnectionPointType.TRIGGER,
@@ -255,6 +279,7 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.ANIMATION_ACTION]: null,
 	[ActorConnectionPointType.BOOLEAN]: false,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: null,
+	[ActorConnectionPointType.BOX3]: null,
 	[ActorConnectionPointType.COLOR]: new Color(),
 	[ActorConnectionPointType.COLOR_ARRAY]: null,
 	[ActorConnectionPointType.FLOAT]: 0,
@@ -263,6 +288,9 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.INTEGER_ARRAY]: null,
 	[ActorConnectionPointType.MATERIAL]: null,
 	[ActorConnectionPointType.OBJECT_3D]: null,
+	[ActorConnectionPointType.PLANE]: null,
+	[ActorConnectionPointType.RAY]: null,
+	[ActorConnectionPointType.SPHERE]: null,
 	[ActorConnectionPointType.STRING]: '',
 	[ActorConnectionPointType.STRING_ARRAY]: null,
 	[ActorConnectionPointType.TRIGGER]: null,
@@ -287,6 +315,7 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.ANIMATION_ACTION]: 1,
 	[ActorConnectionPointType.BOOLEAN]: 1,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: 1,
+	[ActorConnectionPointType.BOX3]: 1,
 	[ActorConnectionPointType.COLOR]: 3,
 	[ActorConnectionPointType.COLOR_ARRAY]: 1,
 	[ActorConnectionPointType.FLOAT]: 1,
@@ -295,6 +324,9 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.INTEGER_ARRAY]: 1,
 	[ActorConnectionPointType.MATERIAL]: 1,
 	[ActorConnectionPointType.OBJECT_3D]: 1, // to reconsider
+	[ActorConnectionPointType.PLANE]: 1, //
+	[ActorConnectionPointType.RAY]: 1, //
+	[ActorConnectionPointType.SPHERE]: 1, //
 	[ActorConnectionPointType.STRING]: 1,
 	[ActorConnectionPointType.STRING_ARRAY]: 1,
 	[ActorConnectionPointType.TRIGGER]: 1,
@@ -317,6 +349,7 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.ANIMATION_ACTION]: AnimationAction;
 	[ActorConnectionPointType.BOOLEAN]: boolean;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: boolean[];
+	[ActorConnectionPointType.BOX3]: Box3;
 	[ActorConnectionPointType.COLOR]: Color;
 	[ActorConnectionPointType.COLOR_ARRAY]: Color[];
 	[ActorConnectionPointType.FLOAT]: number;
@@ -325,6 +358,9 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.INTEGER_ARRAY]: number[];
 	[ActorConnectionPointType.MATERIAL]: Material;
 	[ActorConnectionPointType.OBJECT_3D]: Object3D;
+	[ActorConnectionPointType.PLANE]: Plane;
+	[ActorConnectionPointType.RAY]: Ray;
+	[ActorConnectionPointType.SPHERE]: Sphere;
 	[ActorConnectionPointType.STRING]: string;
 	[ActorConnectionPointType.STRING_ARRAY]: string[];
 	[ActorConnectionPointType.TRIGGER]: null;

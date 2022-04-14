@@ -20,7 +20,7 @@ QUnit.test('actor/GetObjectAttribute', async (assert) => {
 	actor1.setInput(0, attributeCreate1);
 	actor1.flags.display.set(true);
 
-	const onEventTick1 = actor1.createNode('onEventTick');
+	const onTick1 = actor1.createNode('onTick');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
@@ -30,7 +30,7 @@ QUnit.test('actor/GetObjectAttribute', async (assert) => {
 
 	floatToVec3_1.setInput(1, getObjectAttribute1);
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onEventTick1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onTick1);
 	setObjectPosition1.setInput('position', floatToVec3_1);
 
 	const container = await actor1.compute();

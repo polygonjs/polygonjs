@@ -3,7 +3,7 @@ import {Mesh} from 'three/src/objects/Mesh';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {OnEventObjectAttributeUpdatedActorNode} from '../../../../src/engine/nodes/actor/OnEventObjectAttributeUpdated';
+import {OnObjectAttributeUpdateActorNode} from '../../../../src/engine/nodes/actor/OnObjectAttributeUpdate';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -26,23 +26,23 @@ QUnit.test('actor/GetMaterial', async (assert) => {
 	actor1.setInput(0, attributeCreate1);
 	actor1.flags.display.set(true);
 
-	const onEventObjectAttributeUpdated1 = actor1.createNode('onEventObjectAttributeUpdated');
+	const onObjectAttributeUpdate1 = actor1.createNode('onObjectAttributeUpdate');
 	const setObjectMaterial1 = actor1.createNode('setObjectMaterial');
 	const twoWaySwitch1 = actor1.createNode('twoWaySwitch');
 	const getMaterial1 = actor1.createNode('getMaterial');
 	const getMaterial2 = actor1.createNode('getMaterial');
 
-	onEventObjectAttributeUpdated1.p.attribName.set('selected');
-	onEventObjectAttributeUpdated1.setAttribType(ActorConnectionPointType.BOOLEAN);
+	onObjectAttributeUpdate1.p.attribName.set('selected');
+	onObjectAttributeUpdate1.setAttribType(ActorConnectionPointType.BOOLEAN);
 
 	getMaterial1.p.node.setNode(meshBasic1);
 	getMaterial2.p.node.setNode(meshBasic2);
 
-	twoWaySwitch1.setInput(0, onEventObjectAttributeUpdated1, OnEventObjectAttributeUpdatedActorNode.OUTPUT_NEW_VAL);
+	twoWaySwitch1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL);
 	twoWaySwitch1.setInput(1, getMaterial1);
 	twoWaySwitch1.setInput(2, getMaterial2);
 
-	setObjectMaterial1.setInput(ActorConnectionPointType.TRIGGER, onEventObjectAttributeUpdated1);
+	setObjectMaterial1.setInput(ActorConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
 	setObjectMaterial1.setInput(ActorConnectionPointType.MATERIAL, twoWaySwitch1);
 
 	const container = await actor1.compute();

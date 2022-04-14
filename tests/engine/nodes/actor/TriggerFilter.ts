@@ -12,11 +12,11 @@ QUnit.test('actor/triggerFilter', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventmanualTrigger1 = actor1.createNode('onEventManualTrigger');
+	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setViewer1 = actor1.createNode('setViewer');
 	const triggerFilter1 = actor1.createNode('triggerFilter');
 
-	triggerFilter1.setInput(ActorConnectionPointType.TRIGGER, onEventmanualTrigger1);
+	triggerFilter1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 	setViewer1.setInput(ActorConnectionPointType.TRIGGER, triggerFilter1);
 
 	await actor1.compute();
@@ -32,12 +32,12 @@ QUnit.test('actor/triggerFilter', async (assert) => {
 		assert.notOk(canvas.classList.contains('active'));
 
 		triggerFilter1.p.condition.set(0);
-		onEventmanualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
 		assert.notOk(canvas.classList.contains('active'));
 
 		triggerFilter1.p.condition.set(1);
-		onEventmanualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
 		assert.ok(canvas.classList.contains('active'));
 	});

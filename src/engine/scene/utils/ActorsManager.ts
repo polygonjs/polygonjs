@@ -111,19 +111,19 @@ export class ActorsManager {
 
 	private _onEventTickBound = this._onEventTick.bind(this);
 	private _onEventTick(object: Object3D) {
-		this._triggerEventNodes(object, ActorType.ON_EVENT_TICK);
+		this._triggerEventNodes(object, ActorType.ON_TICK);
 	}
 	private _onEventSceneResetBound = this._onEventSceneReset.bind(this);
 	private _onEventSceneReset(object: Object3D) {
-		this._triggerEventNodes(object, ActorType.ON_EVENT_SCENE_RESET);
+		this._triggerEventNodes(object, ActorType.ON_SCENE_RESET);
 	}
 	private _onEventScenePlayBound = this._onEventScenePlay.bind(this);
 	private _onEventScenePlay(object: Object3D) {
-		this._triggerEventNodes(object, ActorType.ON_EVENT_SCENE_PLAY_STATE, 0);
+		this._triggerEventNodes(object, ActorType.ON_SCENE_PLAY_STATE, 0);
 	}
 	private _onEventScenePauseBound = this._onEventScenePause.bind(this);
 	private _onEventScenePause(object: Object3D) {
-		this._triggerEventNodes(object, ActorType.ON_EVENT_SCENE_PLAY_STATE, 1);
+		this._triggerEventNodes(object, ActorType.ON_SCENE_PLAY_STATE, 1);
 	}
 	private _triggerEventNodes(object: Object3D, actorType: ActorType, outputIndex = 0) {
 		const nodeIds = this.objectActorNodeIds(object);
@@ -154,7 +154,7 @@ export class ActorsManager {
 					.map((nodeId) => this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
 					.filter((node) => node);
 				const onEventObjectAttributeUpdatedNodes = actorBuilderNodes
-					.map((node) => node.nodesByType(ActorType.ON_EVENT_OBJECT_ATTRIBUTE_UPDATED))
+					.map((node) => node.nodesByType(ActorType.ON_OBJECT_ATTRIBUTE_UPDATE))
 					.flat();
 				const nodesByAttribName = MapUtils.groupBy(onEventObjectAttributeUpdatedNodes, (node) =>
 					node.attributeName()
@@ -178,7 +178,7 @@ export class ActorsManager {
 					.map((nodeId) => this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
 					.filter((node) => node);
 				const onEventChildAttributeUpdatedNodes = actorBuilderNodes
-					.map((node) => node.nodesByType(ActorType.ON_EVENT_CHILD_ATTRIBUTE_UPDATED))
+					.map((node) => node.nodesByType(ActorType.ON_CHILD_ATTRIBUTE_UPDATE))
 					.flat();
 				const nodesByAttribName = MapUtils.groupBy(onEventChildAttributeUpdatedNodes, (node) =>
 					node.attributeName()

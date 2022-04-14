@@ -3,7 +3,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/onEventSceneReset', async (assert) => {
+QUnit.test('actor/onSceneReset', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -13,10 +13,10 @@ QUnit.test('actor/onEventSceneReset', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventSceneReset1 = actor1.createNode('onEventSceneReset');
+	const onSceneReset1 = actor1.createNode('onSceneReset');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onEventSceneReset1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onSceneReset1);
 
 	setObjectPosition1.p.position.set([0, 1, 0]);
 

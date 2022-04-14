@@ -1,5 +1,5 @@
 /**
- * sends a trigger when an object is Hovered
+ * sends a trigger when the viewer taps or clicks on an object
  *
  *
  */
@@ -15,10 +15,9 @@ import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 import {isBooleanTrue} from '../../../core/Type';
 import {Intersection} from 'three/src/core/Raycaster';
-import {Object3D} from 'three/src/core/Object3D';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-class OnEventObjectHoveredActorParamsConfig extends NodeParamsConfig {
+class OnObjectPointerUpActorParamsConfig extends NodeParamsConfig {
 	/** @param include children */
 	traverseChildren = ParamConfig.BOOLEAN(1);
 	/** @param pointsThreshold */
@@ -26,15 +25,15 @@ class OnEventObjectHoveredActorParamsConfig extends NodeParamsConfig {
 	/** @param lineThreshold */
 	lineThreshold = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new OnEventObjectHoveredActorParamsConfig();
+const ParamsConfig = new OnObjectPointerUpActorParamsConfig();
 
-export class OnEventObjectHoveredActorNode extends BaseUserInputActorNode<OnEventObjectHoveredActorParamsConfig> {
+export class OnObjectPointerUpActorNode extends BaseUserInputActorNode<OnObjectPointerUpActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return ActorType.ON_EVENT_OBJECT_HOVERED;
+		return ActorType.ON_OBJECT_POINTER_UP;
 	}
 	userInputEventNames() {
-		return ['pointermove'];
+		return ['pointerup'];
 	}
 	private _intersections: Intersection[] = [];
 
@@ -42,12 +41,10 @@ export class OnEventObjectHoveredActorNode extends BaseUserInputActorNode<OnEven
 		super.initializeNode();
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new ActorConnectionPoint('hovered', ActorConnectionPointType.BOOLEAN, CONNECTION_OPTIONS),
 		]);
 		this.io.connection_points.spare_params.setInputlessParamNames(['pointsThreshold', 'lineThreshold']);
 	}
 
-	private _lastIntersectionStateByObject: Map<Object3D, boolean> = new Map();
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const {Object3D} = context;
 
@@ -61,16 +58,9 @@ export class OnEventObjectHoveredActorNode extends BaseUserInputActorNode<OnEven
 			isBooleanTrue(this.pv.traverseChildren),
 			this._intersections
 		);
-		const newHoveredState = intersections[0] != null;
-		const previousHoveredState = this._lastIntersectionStateByObject.get(Object3D);
-		const hoveredStateChanged = previousHoveredState == null || newHoveredState != previousHoveredState;
-		if (hoveredStateChanged) {
-			this._lastIntersectionStateByObject.set(Object3D, newHoveredState);
+		const intersection = intersections[0];
+		if (intersection) {
 			this.runTrigger(context);
 		}
-	}
-	public override outputValue(context: ActorNodeTriggerContext) {
-		const {Object3D} = context;
-		return this._lastIntersectionStateByObject.get(Object3D);
 	}
 }

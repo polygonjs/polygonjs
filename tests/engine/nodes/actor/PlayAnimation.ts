@@ -45,10 +45,10 @@ QUnit.test('actor/playAnimation', async (assert) => {
 
 	const animationsNetwork1 = actor1.createNode('animationsNetwork');
 	const {end} = onCreateHookAnimationNetwork(animationsNetwork1);
-	const onEventManualTrigger1 = actor1.createNode('onEventManualTrigger');
+	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const playAnimation1 = actor1.createNode('playAnimation');
 	playAnimation1.p.node.setNode(end);
-	playAnimation1.setInput(ActorConnectionPointType.TRIGGER, onEventManualTrigger1);
+	playAnimation1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0];
@@ -63,7 +63,7 @@ QUnit.test('actor/playAnimation', async (assert) => {
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 0.5, 0.25, 'time is half second');
 		assert.equal(object.position.y, 0);
-		onEventManualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 1.0, 0.25, 'time is one sec');
 		assert.in_delta(object.position.y, 1, 0.1);

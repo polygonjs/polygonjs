@@ -1,6 +1,6 @@
 import {Mesh} from 'three/src/objects/Mesh';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {OnEventScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnEventScenePlayState';
+import {OnScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnScenePlayState';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -14,20 +14,20 @@ QUnit.test('actor/setObjectScale', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventScenePlayState1 = actor1.createNode('onEventScenePlayState');
+	const onScenePlayState1 = actor1.createNode('onScenePlayState');
 	const setObjectScale1 = actor1.createNode('setObjectScale');
 	const setObjectScale2 = actor1.createNode('setObjectScale');
 	const getObjectProperty1 = actor1.createNode('getObjectProperty');
 
 	setObjectScale1.setInput(
 		ActorConnectionPointType.TRIGGER,
-		onEventScenePlayState1,
-		OnEventScenePlayStateActorNode.INPUT_NAME_PLAY
+		onScenePlayState1,
+		OnScenePlayStateActorNode.INPUT_NAME_PLAY
 	);
 	setObjectScale2.setInput(
 		ActorConnectionPointType.TRIGGER,
-		onEventScenePlayState1,
-		OnEventScenePlayStateActorNode.INPUT_NAME_PAUSE
+		onScenePlayState1,
+		OnScenePlayStateActorNode.INPUT_NAME_PAUSE
 	);
 	setObjectScale2.setInput('scale', getObjectProperty1, 'scale');
 

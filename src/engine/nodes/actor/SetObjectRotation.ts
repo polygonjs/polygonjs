@@ -53,7 +53,9 @@ export class SetObjectRotationActorNode extends TypedActorNode<SetObjectRotation
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const {Object3D} = context;
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
 		const rotation = this._inputValueFromParam<ParamType.VECTOR3>(this.p.rotation, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);

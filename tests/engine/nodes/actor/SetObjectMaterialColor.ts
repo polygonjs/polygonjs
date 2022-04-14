@@ -3,7 +3,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/setMaterialColor', async (assert) => {
+QUnit.test('actor/setObjectMaterialColor', async (assert) => {
 	const MAT = window.MAT;
 	const meshBasic1 = MAT.createNode('meshBasic');
 	const scene = window.scene;
@@ -19,11 +19,11 @@ QUnit.test('actor/setMaterialColor', async (assert) => {
 
 	material1.p.material.setNode(meshBasic1);
 
-	const onEventManualTrigger1 = actor1.createNode('onEventManualTrigger');
-	const setMaterialColor1 = actor1.createNode('setMaterialColor');
+	const onManualTrigger1 = actor1.createNode('onManualTrigger');
+	const setObjectMaterialColor1 = actor1.createNode('setObjectMaterialColor');
 
-	setMaterialColor1.setInput(ActorConnectionPointType.TRIGGER, onEventManualTrigger1);
-	setMaterialColor1.p.color.set([0, 1, 0]);
+	setObjectMaterialColor1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
+	setObjectMaterialColor1.p.color.set([0, 1, 0]);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0] as Mesh;
@@ -37,7 +37,8 @@ QUnit.test('actor/setMaterialColor', async (assert) => {
 		assert.equal(scene.time(), 0);
 		assert.deepEqual(meshBasic1.material.color.toArray(), [1, 1, 1], 'color is default');
 
-		onEventManualTrigger1.p.trigger.pressButton();
+		await CoreSleep.sleep(60);
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(200);
 		assert.deepEqual(meshBasic1.material.color.toArray(), [0, 1, 0], 'color has been updated');
 	});

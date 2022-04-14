@@ -1,7 +1,7 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/onEventTick send an event when playing', async (assert) => {
+QUnit.test('actor/onTick send an event when playing', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -11,10 +11,10 @@ QUnit.test('actor/onEventTick send an event when playing', async (assert) => {
 	actor1.setInput(0, sphere1);
 	actor1.flags.display.set(true);
 
-	const onEventTick1 = actor1.createNode('onEventTick');
+	const onTick1 = actor1.createNode('onTick');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
-	setObjectPosition1.setInput('trigger', onEventTick1);
+	setObjectPosition1.setInput('trigger', onTick1);
 	setObjectPosition1.p.position.set([0, 1, 0]);
 
 	const container = await actor1.compute();
@@ -30,7 +30,7 @@ QUnit.test('actor/onEventTick send an event when playing', async (assert) => {
 	});
 });
 
-QUnit.test('actor/onEventTick with getObjectProperty and add', async (assert) => {
+QUnit.test('actor/onTick with getObjectProperty and add', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -40,14 +40,14 @@ QUnit.test('actor/onEventTick with getObjectProperty and add', async (assert) =>
 	actor1.setInput(0, sphere1);
 	actor1.flags.display.set(true);
 
-	const onEventTick1 = actor1.createNode('onEventTick');
+	const onTick1 = actor1.createNode('onTick');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 	const getObjectProperty1 = actor1.createNode('getObjectProperty');
 	const add1 = actor1.createNode('add');
 
 	add1.setInput(0, getObjectProperty1, 'position');
 	add1.params.get('add1')!.set([0, 0.1, 0]);
-	setObjectPosition1.setInput('trigger', onEventTick1);
+	setObjectPosition1.setInput('trigger', onTick1);
 	setObjectPosition1.setInput('position', add1);
 
 	const container = await actor1.compute();

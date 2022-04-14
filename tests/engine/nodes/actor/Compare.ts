@@ -1,6 +1,6 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorCompareTestName} from '../../../../src/engine/nodes/actor/Compare';
-import {OnEventTickActorNodeOuput} from '../../../../src/engine/nodes/actor/OnEventTick';
+import {OnTickActorNodeOuput} from '../../../../src/engine/nodes/actor/OnTick';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -17,13 +17,13 @@ QUnit.test('actor/compare', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventTick1 = actor1.createNode('onEventTick');
+	const onTick1 = actor1.createNode('onTick');
 	const compare1 = actor1.createNode('compare');
 	const twoWaySwitch1 = actor1.createNode('twoWaySwitch');
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
-	compare1.setInput(0, onEventTick1, OnEventTickActorNodeOuput.TIME);
+	compare1.setInput(0, onTick1, OnTickActorNodeOuput.TIME);
 	compare1.setTestName(ActorCompareTestName.GREATER_THAN);
 	compare1.params.get('value1')!.set(1);
 
@@ -32,7 +32,7 @@ QUnit.test('actor/compare', async (assert) => {
 
 	floatToVec3_1.setInput(1, twoWaySwitch1);
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onEventTick1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onTick1);
 	setObjectPosition1.setInput('position', floatToVec3_1);
 
 	const container = await actor1.compute();

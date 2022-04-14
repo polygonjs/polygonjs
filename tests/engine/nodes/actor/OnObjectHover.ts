@@ -2,17 +2,17 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-function triggerPointerdownInMiddle(canvas: HTMLCanvasElement) {
+function triggerPointerMoveInMiddle(canvas: HTMLCanvasElement) {
 	const rect = canvas.getBoundingClientRect();
 	canvas.dispatchEvent(
-		new PointerEvent('pointerdown', {clientX: rect.left + rect.width * 0.5, clientY: rect.top + rect.height * 0.5})
+		new PointerEvent('pointermove', {clientX: rect.left + rect.width * 0.5, clientY: rect.top + rect.height * 0.5})
 	);
 }
-function triggerPointerdownAside(canvas: HTMLCanvasElement) {
-	canvas.dispatchEvent(new PointerEvent('pointerdown', {clientX: 0, clientY: 0}));
+function triggerPointerMoveAside(canvas: HTMLCanvasElement) {
+	canvas.dispatchEvent(new PointerEvent('pointermove', {clientX: 0, clientY: 0}));
 }
 
-QUnit.test('actor/onEventObjectClicked', async (assert) => {
+QUnit.test('actor/OnObjectHover', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -25,10 +25,10 @@ QUnit.test('actor/onEventObjectClicked', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventObjectClicked1 = actor1.createNode('onEventObjectClicked');
+	const onObjectHover1 = actor1.createNode('onObjectHover');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onEventObjectClicked1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onObjectHover1);
 
 	setObjectPosition1.p.position.set([0, 0, 1]);
 
@@ -46,13 +46,18 @@ QUnit.test('actor/onEventObjectClicked', async (assert) => {
 
 		assert.deepEqual(object.position.toArray(), [0, 0, 0]);
 
-		triggerPointerdownInMiddle(canvas);
+		triggerPointerMoveInMiddle(canvas);
 		await CoreSleep.sleep(200);
 		assert.deepEqual(object.position.toArray(), [0, 0, 1]);
-
 		object.position.set(0, 0, 0);
 
-		triggerPointerdownAside(canvas);
+		// hover out of the object will also throw an event since it is a state change
+		triggerPointerMoveAside(canvas);
+		await CoreSleep.sleep(200);
+		assert.deepEqual(object.position.toArray(), [0, 0, 1]);
+		object.position.set(0, 0, 0);
+
+		triggerPointerMoveAside(canvas);
 		await CoreSleep.sleep(200);
 		assert.deepEqual(object.position.toArray(), [0, 0, 0]);
 	});

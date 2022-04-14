@@ -32,12 +32,12 @@ QUnit.test('actor/setObjectAttribute', async (assert) => {
 	actor1.setInput(0, attribCreate1);
 	actor1.flags.display.set(true);
 
-	const onEventObjectClicked1 = actor1.createNode('onEventObjectClicked');
+	const onObjectClick1 = actor1.createNode('onObjectClick');
 	const setObjectAttribute1 = actor1.createNode('setObjectAttribute');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
 	const add1 = actor1.createNode('add');
 
-	setObjectAttribute1.setInput(ActorConnectionPointType.TRIGGER, onEventObjectClicked1);
+	setObjectAttribute1.setInput(ActorConnectionPointType.TRIGGER, onObjectClick1);
 	setObjectAttribute1.setAttribType(ActorConnectionPointType.INTEGER);
 	setObjectAttribute1.p.attribName.set('increment');
 	setObjectAttribute1.setInput(SetObjectAttributeActorNode.INPUT_NAME_VAL, add1);

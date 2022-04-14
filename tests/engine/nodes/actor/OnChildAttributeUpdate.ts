@@ -4,7 +4,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/onEventChildAttributeUpdated', async (assert) => {
+QUnit.test('actor/onChildAttributeUpdate', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -25,7 +25,7 @@ QUnit.test('actor/onEventChildAttributeUpdated', async (assert) => {
 	actor1.setInput(0, hierarchy1);
 	actor1.flags.display.set(true);
 
-	const onEventChildAttributeUpdated1 = actor1.createNode('onEventChildAttributeUpdated');
+	const onChildAttributeUpdate1 = actor1.createNode('onChildAttributeUpdate');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const twoWaySwitch1 = actor1.createNode('twoWaySwitch');
@@ -36,9 +36,9 @@ QUnit.test('actor/onEventChildAttributeUpdated', async (assert) => {
 	getChildrenAttributes1.p.attribName.set('selected');
 	getChildrenAttributes1.setAttribType(ActorConnectionPointType.BOOLEAN);
 
-	onEventChildAttributeUpdated1.p.attribName.set('selected');
+	onChildAttributeUpdate1.p.attribName.set('selected');
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onEventChildAttributeUpdated1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onChildAttributeUpdate1);
 	setObjectPosition1.setInput('position', floatToVec3_1);
 	floatToVec3_1.setInput(1, twoWaySwitch1);
 	twoWaySwitch1.setInput(0, or1);

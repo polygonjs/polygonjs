@@ -53,7 +53,9 @@ export class SetObjectLookAtActorNode extends TypedActorNode<SetObjectLookAtActo
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const {Object3D} = context;
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
 		const targetPosition = this._inputValueFromParam<ParamType.VECTOR3>(this.p.targetPosition, context);
 		const up = this._inputValueFromParam<ParamType.VECTOR3>(this.p.up, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);

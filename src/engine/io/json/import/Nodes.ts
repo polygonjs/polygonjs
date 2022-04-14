@@ -35,39 +35,84 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				paramsInitValueOverrides,
 				nodeName,
 			};
-			try {
-				// try with current type
-				const node = this._node.createNode(nodeType, nodeCreateOptions);
-				if (node) {
-					// node.setName(node_name);
-					nonOptimizedNodes.push(node);
-				}
-			} catch (e) {
-				// try with camelCased type
-				console.error(`error importing node: cannot create with type ${nodeType}`, e);
-				const nodeTypeCamelCase = CoreString.camelCase(nodeType);
+
+			const loadNodeAttempt = (nodeType: string, nodeCreateOptions: NodeCreateOptions) => {
 				try {
-					const node = this._node.createNode(nodeTypeCamelCase, nodeCreateOptions);
+					// try with current type
+					const node = this._node.createNode(nodeType, nodeCreateOptions);
 					if (node) {
-						// node.setName(node_name);
-						nonOptimizedNodes.push(node);
+						return node;
 					}
 				} catch (e) {
-					// add Network
-					const nodeTypeWithNetwork = `${nodeType}Network`;
-					try {
-						const node = this._node.createNode(nodeTypeWithNetwork, nodeCreateOptions);
-						if (node) {
-							// node.setName(node_name);
-							nonOptimizedNodes.push(node);
-						}
-					} catch (e) {
-						const message = `failed to create node with type '${nodeType}', '${nodeTypeCamelCase}' or '${nodeTypeWithNetwork}'`;
-						scene_importer.report.addWarning(message);
-						Poly.warn(message, e);
-					}
+					// console.error(`error importing node: cannot create with type ${nodeType}`, e);
+				}
+			};
+			let node = loadNodeAttempt(nodeType, nodeCreateOptions);
+			if (!node) {
+				// remap event name
+				const newType = {
+					onEventchildattributeupdated: 'OnChildAttributeUpdate',
+					onEventmanualtrigger: 'OnManualTrigger',
+					onEventobjectattributeupdated: 'OnObjectAttributeUpdate',
+					oneventobjectclicked: 'OnObjectClick',
+					oneventobjecthovered: 'OnObjectHover',
+					oneventtick: 'OnTick',
+				}[nodeType];
+				if (newType) {
+					node = loadNodeAttempt(newType, nodeCreateOptions);
 				}
 			}
+			if (!node) {
+				// try with camelCased type
+				const nodeTypeCamelCase = CoreString.camelCase(nodeType);
+				node = loadNodeAttempt(nodeTypeCamelCase, nodeCreateOptions);
+			}
+			if (!node) {
+				// add Network
+				const nodeTypeWithNetwork = `${nodeType}Network`;
+				node = loadNodeAttempt(nodeTypeWithNetwork, nodeCreateOptions);
+			}
+			if (node) {
+				nonOptimizedNodes.push(node);
+			} else {
+				const message = `failed to create node with type '${nodeType}'`;
+				scene_importer.report.addWarning(message);
+				Poly.warn(message);
+			}
+
+			// try {
+			// 	// try with current type
+			// 	const node = this._node.createNode(nodeType, nodeCreateOptions);
+			// 	if (node) {
+			// 		// node.setName(node_name);
+			// 		nonOptimizedNodes.push(node);
+			// 	}
+			// } catch (e) {
+			// 	// try with camelCased type
+			// 	console.error(`error importing node: cannot create with type ${nodeType}`, e);
+			// 	const nodeTypeCamelCase = CoreString.camelCase(nodeType);
+			// 	try {
+			// 		const node = this._node.createNode(nodeTypeCamelCase, nodeCreateOptions);
+			// 		if (node) {
+			// 			// node.setName(node_name);
+			// 			nonOptimizedNodes.push(node);
+			// 		}
+			// 	} catch (e) {
+			// 		// add Network
+			// 		const nodeTypeWithNetwork = `${nodeType}Network`;
+			// 		try {
+			// 			const node = this._node.createNode(nodeTypeWithNetwork, nodeCreateOptions);
+			// 			if (node) {
+			// 				// node.setName(node_name);
+			// 				nonOptimizedNodes.push(node);
+			// 			}
+			// 		} catch (e) {
+			// 			const message = `failed to create node with type '${nodeType}', '${nodeTypeCamelCase}' or '${nodeTypeWithNetwork}'`;
+			// 			scene_importer.report.addWarning(message);
+			// 			Poly.warn(message, e);
+			// 		}
+			// 	}
+			// }
 		}
 
 		if (optimized_names.length > 0) {

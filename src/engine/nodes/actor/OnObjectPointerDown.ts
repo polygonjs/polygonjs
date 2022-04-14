@@ -1,5 +1,5 @@
 /**
- * sends a trigger when an object is clicked
+ * sends a trigger when the viewer taps or clicks on an object
  *
  *
  */
@@ -17,7 +17,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {Intersection} from 'three/src/core/Raycaster';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-class OnEventObjectClickedActorParamsConfig extends NodeParamsConfig {
+class OnObjectPointerDownActorParamsConfig extends NodeParamsConfig {
 	/** @param include children */
 	traverseChildren = ParamConfig.BOOLEAN(1);
 	/** @param pointsThreshold */
@@ -25,12 +25,12 @@ class OnEventObjectClickedActorParamsConfig extends NodeParamsConfig {
 	/** @param lineThreshold */
 	lineThreshold = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new OnEventObjectClickedActorParamsConfig();
+const ParamsConfig = new OnObjectPointerDownActorParamsConfig();
 
-export class OnEventObjectClickedActorNode extends BaseUserInputActorNode<OnEventObjectClickedActorParamsConfig> {
+export class OnObjectPointerDownActorNode extends BaseUserInputActorNode<OnObjectPointerDownActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return ActorType.ON_EVENT_OBJECT_CLICKED;
+		return ActorType.ON_OBJECT_POINTER_DOWN;
 	}
 	userInputEventNames() {
 		return ['pointerdown'];

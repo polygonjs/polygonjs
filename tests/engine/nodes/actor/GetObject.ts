@@ -37,7 +37,7 @@ QUnit.test('actor/GetObject', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventManualTrigger1 = actor1.createNode('onEventManualTrigger');
+	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 	const getObjectProperty1 = actor1.createNode('getObjectProperty');
 	const getObject1 = actor1.createNode('getObject');
@@ -50,7 +50,7 @@ QUnit.test('actor/GetObject', async (assert) => {
 	getObject1.setInput('mask', constant1);
 	getObject1.p.getCurrentObject.set(0);
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onEventManualTrigger1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 	setObjectPosition1.setInput('position', getObjectProperty1, 'position');
 
 	const container = await actor1.compute();
@@ -67,7 +67,7 @@ QUnit.test('actor/GetObject', async (assert) => {
 		assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 		assert.equal(object.position.x, 0, 'object still at 0');
 
-		onEventManualTrigger1.p.trigger.pressButton();
+		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
 		assert.equal(object.position.x, 1, 'object moved to 1');
 	});

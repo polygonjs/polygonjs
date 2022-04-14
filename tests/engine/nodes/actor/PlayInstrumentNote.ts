@@ -61,11 +61,11 @@ QUnit.test('actor/playInstrumentNote', async (assert) => {
 
 	const positionalAudio1 = scene.createNode('positionalAudio');
 	const {null1} = onCreateHookPositionalAudio(positionalAudio1, perspective_camera1);
-	const onEventObjectAttributeUpdated1 = actor1.createNode('onEventObjectAttributeUpdated');
-	onEventObjectAttributeUpdated1.p.attribName.set('selected');
+	const onObjectAttributeUpdate1 = actor1.createNode('onObjectAttributeUpdate');
+	onObjectAttributeUpdate1.p.attribName.set('selected');
 	const playInstrumentNote1 = actor1.createNode('playInstrumentNote');
 	playInstrumentNote1.p.node.setNode(null1);
-	playInstrumentNote1.setInput(ActorConnectionPointType.TRIGGER, onEventObjectAttributeUpdated1);
+	playInstrumentNote1.setInput(ActorConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
 	getObjectAttribute1.p.attribName.set('note');
 	playInstrumentNote1.setInput(playInstrumentNote1.p.note.name(), getObjectAttribute1);

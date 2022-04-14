@@ -7,14 +7,12 @@
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Color} from 'three/src/math/Color';
-import {CoreType} from '../../../core/Type';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {Mesh} from 'three/src/objects/Mesh';
 import {Material} from 'three/src/materials/Material';
 import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
 
@@ -38,8 +36,8 @@ export class SetMaterialColorActorNode extends TypedActorNode<SetMaterialColorAc
 		this.io.inputs.setNamedInputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new ActorConnectionPoint(
-				ActorConnectionPointType.OBJECT_3D,
-				ActorConnectionPointType.OBJECT_3D,
+				ActorConnectionPointType.MATERIAL,
+				ActorConnectionPointType.MATERIAL,
 				CONNECTION_OPTIONS
 			),
 		]);
@@ -50,20 +48,20 @@ export class SetMaterialColorActorNode extends TypedActorNode<SetMaterialColorAc
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const {Object3D} = context;
-		const color = this._inputValueFromParam<ParamType.COLOR>(this.p.color, context);
-		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
+		const material = this._inputValue<ActorConnectionPointType.MATERIAL>(
+			ActorConnectionPointType.MATERIAL,
+			context
+		);
 
-		const material = (Object3D as Mesh).material;
-		if (CoreType.isArray(material)) {
-			for (let mat of material) {
-				this._updateMaterial(mat, color, lerp);
-			}
-		} else {
+		console.log(material);
+		if (material) {
+			const color = this._inputValueFromParam<ParamType.COLOR>(this.p.color, context);
+			const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
+
 			this._updateMaterial(material, color, lerp);
-		}
 
-		this.runTrigger(context);
+			this.runTrigger(context);
+		}
 	}
 	private _updateMaterial(material: Material, targetColor: Color, lerp: number) {
 		const color = (material as MeshBasicMaterial).color;

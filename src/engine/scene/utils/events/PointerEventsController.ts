@@ -38,10 +38,15 @@ const ACTOR_EVENT_DATA_POINTERDOWN: EventData = {
 	type: PointerEventType.pointerdown,
 	emitter: CoreEventEmitter.CANVAS,
 };
-type PointerEventsControllerAvailableEventNames = 'pointermove' | 'pointerdown';
+const ACTOR_EVENT_DATA_POINTERUP: EventData = {
+	type: PointerEventType.pointerup,
+	emitter: CoreEventEmitter.CANVAS,
+};
+type PointerEventsControllerAvailableEventNames = 'pointermove' | 'pointerdown' | 'pointerup';
 const ACTOR_EVENT_DATA = {
 	[PointerEventType.pointermove]: ACTOR_EVENT_DATA_POINTERMOVE,
 	[PointerEventType.pointerdown]: ACTOR_EVENT_DATA_POINTERDOWN,
+	[PointerEventType.pointerup]: ACTOR_EVENT_DATA_POINTERUP,
 };
 
 export class PointerEventsController extends BaseSceneEventsController<MouseEvent, PointerEventNode> {

@@ -15,10 +15,10 @@ QUnit.test('actor/setObjectLookAt', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventTick1 = actor1.createNode('onEventTick');
+	const onTick1 = actor1.createNode('onTick');
 	const setObjectLookAt1 = actor1.createNode('setObjectLookAt');
 
-	setObjectLookAt1.setInput(ActorConnectionPointType.TRIGGER, onEventTick1);
+	setObjectLookAt1.setInput(ActorConnectionPointType.TRIGGER, onTick1);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0] as Mesh;

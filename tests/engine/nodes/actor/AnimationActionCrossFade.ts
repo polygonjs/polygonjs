@@ -20,11 +20,11 @@ QUnit.test('actor/animationActionCrossFade can fadeIn an action', async (assert)
 	actor1.flags.display.set(true);
 	await actor1.compute();
 
-	const onEventTick1 = actor1.createNode('onEventTick');
+	const onTick1 = actor1.createNode('onTick');
 	const animationMixer1 = actor1.createNode('animationMixer');
 	const animationMixerUpdate1 = actor1.createNode('animationMixerUpdate');
 	const animationActionFadeIn1 = actor1.createNode('animationActionFadeIn');
-	animationMixerUpdate1.setInput(ActorConnectionPointType.TRIGGER, onEventTick1);
+	animationMixerUpdate1.setInput(ActorConnectionPointType.TRIGGER, onTick1);
 	animationMixerUpdate1.setInput(ActorConnectionPointType.ANIMATION_MIXER, animationMixer1);
 
 	function createAnimationActionNode(clipName: string): AnimationActionActorNode {

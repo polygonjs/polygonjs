@@ -12,10 +12,10 @@ QUnit.test('actor/code simple', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventTick1 = actor1.createNode('onEventTick');
+	const onTick1 = actor1.createNode('onTick');
 	const code1 = actor1.createNode('code');
 
-	code1.setInput(ActorConnectionPointType.TRIGGER, onEventTick1);
+	code1.setInput(ActorConnectionPointType.TRIGGER, onTick1);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0];
@@ -43,7 +43,7 @@ QUnit.test('actor/code modified with new input', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onEventTick1 = actor1.createNode('onEventTick');
+	const onTick1 = actor1.createNode('onTick');
 	const code1 = actor1.createNode('code');
 
 	const JS = `
@@ -63,7 +63,7 @@ export class CodeSopProcessor extends BaseCodeActorProcessor {
 }
 `;
 	code1.p.codeJavascript.set(JS);
-	code1.setInput(ActorConnectionPointType.TRIGGER, onEventTick1);
+	code1.setInput(ActorConnectionPointType.TRIGGER, onTick1);
 	const constant1 = actor1.createNode('constant');
 	constant1.setConstantType(ActorConnectionPointType.BOOLEAN);
 	constant1.p.boolean.set(0);

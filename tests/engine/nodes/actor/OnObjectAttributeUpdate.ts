@@ -5,7 +5,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/onEventObjectAttributeUpdated', async (assert) => {
+QUnit.test('actor/onObjectAttributeUpdate', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -20,19 +20,19 @@ QUnit.test('actor/onEventObjectAttributeUpdated', async (assert) => {
 	actor1.setInput(0, attributeCreate1);
 	actor1.flags.display.set(true);
 
-	const onEventObjectAttributeUpdated1 = actor1.createNode('onEventObjectAttributeUpdated');
+	const onObjectAttributeUpdate1 = actor1.createNode('onObjectAttributeUpdate');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
 
-	onEventObjectAttributeUpdated1.p.attribName.set('height');
+	onObjectAttributeUpdate1.p.attribName.set('height');
 
 	getObjectAttribute1.p.attribName.set('height');
 	getObjectAttribute1.setAttribType(ActorConnectionPointType.FLOAT);
 
 	floatToVec3_1.setInput(1, getObjectAttribute1);
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onEventObjectAttributeUpdated1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
 	setObjectPosition1.setInput('position', floatToVec3_1);
 
 	const container = await actor1.compute();

@@ -9,13 +9,13 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 
-class OnEventScenePlayStateActorParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new OnEventScenePlayStateActorParamsConfig();
+class OnScenePlayStateActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new OnScenePlayStateActorParamsConfig();
 
-export class OnEventScenePlayStateActorNode extends TypedActorNode<OnEventScenePlayStateActorParamsConfig> {
+export class OnScenePlayStateActorNode extends TypedActorNode<OnScenePlayStateActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return ActorType.ON_EVENT_SCENE_PLAY_STATE;
+		return ActorType.ON_SCENE_PLAY_STATE;
 	}
 
 	static INPUT_NAME_PLAY = `${TRIGGER_CONNECTION_NAME}Play`;
@@ -23,8 +23,8 @@ export class OnEventScenePlayStateActorNode extends TypedActorNode<OnEventSceneP
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new ActorConnectionPoint(OnEventScenePlayStateActorNode.INPUT_NAME_PLAY, ActorConnectionPointType.TRIGGER),
-			new ActorConnectionPoint(OnEventScenePlayStateActorNode.INPUT_NAME_PAUSE, ActorConnectionPointType.TRIGGER),
+			new ActorConnectionPoint(OnScenePlayStateActorNode.INPUT_NAME_PLAY, ActorConnectionPointType.TRIGGER),
+			new ActorConnectionPoint(OnScenePlayStateActorNode.INPUT_NAME_PAUSE, ActorConnectionPointType.TRIGGER),
 		]);
 	}
 }

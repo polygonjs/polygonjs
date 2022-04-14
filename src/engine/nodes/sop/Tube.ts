@@ -15,7 +15,7 @@ class TubeSopParamsConfig extends NodeParamsConfig {
 	/** @param tube height */
 	height = ParamConfig.FLOAT(1, {range: [0, 1]});
 	/** @param number of segments in the radial direction */
-	segmentsRadial = ParamConfig.INTEGER(12, {range: [3, 20], rangeLocked: [true, false]});
+	segmentsRadial = ParamConfig.INTEGER(12, {range: [3, 50], rangeLocked: [true, false]});
 	/** @param number of segments in the height direction */
 	segmentsHeight = ParamConfig.INTEGER(1, {range: [1, 20], rangeLocked: [true, false]});
 	/** @param adds caps */
