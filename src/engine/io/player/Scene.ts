@@ -5,6 +5,7 @@ import {BaseNodeType} from '../../nodes/_Base';
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
 import {BaseViewerType} from '../../viewers/_Base';
+import {PolyEventsDispatcher, PolyEventName} from '../common/EventsDispatcher';
 // import {AssetsPreloader} from '../assets/PreLoader';
 import {PROGRESS_RATIO} from '../common/Progress';
 import {SceneJsonExporterData} from '../json/export/Scene';
@@ -19,11 +20,6 @@ interface OnProgressArguments {
 }
 
 type ProgressBarUpdateCallback = (progressRatio: number, args: OnProgressArguments) => void;
-
-export enum EventName {
-	VIEWER_MOUNTED = 'POLYViewerMounted',
-	SCENE_READY = 'POLYSceneReady',
-}
 
 export interface LoadSceneOptions {
 	onProgress?: ProgressBarUpdateCallback;
@@ -132,15 +128,17 @@ export class ScenePlayerImporter {
 		if (this.options.autoPlay != false) {
 			scene.play();
 		}
-		this._dispatchEvent(EventName.SCENE_READY);
+		this._dispatchEvent(PolyEventName.SCENE_READY);
 	}
 
 	private _onNodesCookProgress(nodesCookProgress: number, args: OnProgressArguments) {
 		const progressRatio = PROGRESS_RATIO.nodes;
 		const onProgress = (_ratio: number, args: OnProgressArguments) => {
+			const progress = progressRatio.start + progressRatio.mult * _ratio;
 			if (this.options.onProgress) {
-				this.options.onProgress(progressRatio.start + progressRatio.mult * _ratio, args);
+				this.options.onProgress(progress, args);
 			}
+			PolyEventsDispatcher.dispatchProgressEvent(progress, this._scene?.name());
 		};
 		// make sure to always call onProgress
 		// even if ratio==1
@@ -211,12 +209,12 @@ export class ScenePlayerImporter {
 				this._markViewerAsReady(this._viewer);
 			}
 
-			this._dispatchEvent(EventName.VIEWER_MOUNTED);
+			this._dispatchEvent(PolyEventName.VIEWER_MOUNTED);
 		}
 
 		return this._scene;
 	}
-	private _dispatchEvent(eventName: EventName) {
+	private _dispatchEvent(eventName: PolyEventName) {
 		const elements = [this.options.domElement, document];
 		const createEvent = (customEventName: string) => {
 			return new CustomEvent(customEventName, {

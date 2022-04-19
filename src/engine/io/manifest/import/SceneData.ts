@@ -1,5 +1,6 @@
 // import {CoreType} from '../../../../core/Type';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {PolyEventsDispatcher} from '../../common/EventsDispatcher';
 import {PROGRESS_RATIO} from '../../common/Progress';
 import {NodeJsonExporterData, NodeJsonExporterUIData} from '../../json/export/Node';
 import {SceneJsonExporterData, SceneJsonExporterDataProperties} from '../../json/export/Scene';
@@ -14,6 +15,7 @@ export interface ManifestContent {
 
 type ProgressCallback = (ratio: number) => void;
 interface ImportData {
+	sceneName?: string;
 	urlPrefix?: string;
 	manifest: ManifestContent;
 	editorMode?: boolean;
@@ -61,9 +63,11 @@ export class SceneDataManifestImporter {
 
 		const onProgress = (ratio: number) => {
 			const progressRatio = PROGRESS_RATIO.sceneData;
+			const progress = progressRatio.start + progressRatio.mult * ratio;
 			if (importData.onProgress) {
-				importData.onProgress(progressRatio.start + progressRatio.mult * ratio);
+				importData.onProgress(progress);
 			}
+			PolyEventsDispatcher.dispatchProgressEvent(progress, importData.sceneName);
 		};
 
 		const promises = all_urls.map(async (url) => {
