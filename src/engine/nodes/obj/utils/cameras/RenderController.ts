@@ -75,7 +75,7 @@ export class RenderController {
 	//
 	getRenderer(canvas: HTMLCanvasElement) {
 		if (isBooleanTrue(this.node.pv.doPostProcess)) {
-			this.node.postProcessController().renderer(canvas);
+			return this.node.postProcessController().renderer(canvas);
 		} else {
 			return this.renderer(canvas);
 		}
