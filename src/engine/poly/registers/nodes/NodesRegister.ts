@@ -4,11 +4,15 @@ import {NodeContext} from '../../NodeContext';
 import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 
-export interface RegisterOptions {
+export interface OperationRegisterOptions {
+	printWarnings?: boolean;
+}
+export interface NodeRegisterOptions {
 	only?: string[];
 	except?: string[];
 	userAllowed?: boolean;
 	polyNode?: boolean;
+	printWarnings?: boolean;
 }
 
 // export interface BaseNodeConstructor {
@@ -19,7 +23,7 @@ export type BaseNodeConstructor = typeof BaseNodeClass;
 type NodeConstructorByType = Map<string, BaseNodeConstructor>;
 type NodeConstructorByTypeByContext = Map<NodeContext, NodeConstructorByType>;
 type TabMenuByTypeByContext = Map<NodeContext, Map<string, string>>;
-type RegisterOptionsByTypeByContext = Map<NodeContext, Map<string, RegisterOptions>>;
+type RegisterOptionsByTypeByContext = Map<NodeContext, Map<string, NodeRegisterOptions>>;
 
 export type BaseOperationConstructor = typeof BaseOperation;
 type OperationConstructorByType = Map<string, BaseOperationConstructor>;
@@ -39,9 +43,13 @@ export class NodesRegister {
 		return nodeType.toLowerCase();
 	}
 
-	register(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
+	register(node: BaseNodeConstructor, tab_menu_category?: string, options?: NodeRegisterOptions) {
 		const context = node.context();
 		const nodeType = NodesRegister.type(node);
+		let printWarnings = options?.printWarnings;
+		if (printWarnings == null) {
+			printWarnings = true;
+		}
 
 		let current_nodes_for_context = this._node_register.get(context);
 		if (!current_nodes_for_context) {
@@ -58,7 +66,9 @@ export class NodesRegister {
 			if (isAlreadyRegisteredNodePolyNode && isNewNodePolyNode) {
 				// we don't show a warning or return if both are polyNodes
 			} else {
-				console.error(`node ${context}/${nodeType} already registered`);
+				if (printWarnings) {
+					console.warn(`node ${context}/${nodeType} already registered`);
+				}
 				return;
 			}
 		}
@@ -97,7 +107,7 @@ export class NodesRegister {
 		nodeType = NodesRegister.filterType(nodeType);
 		return nodes_for_context.get(nodeType) != null;
 	}
-	nodeOptions(context: NodeContext, nodeType: string): RegisterOptions | undefined {
+	nodeOptions(context: NodeContext, nodeType: string): NodeRegisterOptions | undefined {
 		nodeType = NodesRegister.filterType(nodeType);
 		return this._node_register_options.get(context)?.get(nodeType);
 	}
@@ -172,7 +182,12 @@ export class OperationsRegister {
 		return nodeType.toLowerCase();
 	}
 
-	register(operation: BaseOperationConstructor) {
+	register(operation: BaseOperationConstructor, options?: OperationRegisterOptions) {
+		let printWarnings = options?.printWarnings;
+		if (printWarnings == null) {
+			printWarnings = true;
+		}
+
 		const context = operation.context();
 		let current_operations_for_context = this._operation_register.get(context);
 		if (!current_operations_for_context) {
@@ -183,8 +198,10 @@ export class OperationsRegister {
 		const operationType = OperationsRegister.type(operation);
 		const already_registered_operation = current_operations_for_context.get(operationType);
 		if (already_registered_operation) {
-			const message = `operation ${context}/${operationType} already registered`;
-			console.error(message);
+			if (printWarnings) {
+				const message = `operation ${context}/${operationType} already registered`;
+				console.warn(message);
+			}
 			return;
 		}
 		current_operations_for_context.set(operationType, operation);

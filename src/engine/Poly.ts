@@ -4,7 +4,8 @@ import {RenderersController} from './poly/RenderersController';
 import {PolyLibsController} from './poly/PolyLibsController';
 import {
 	NodesRegister,
-	RegisterOptions,
+	NodeRegisterOptions,
+	OperationRegisterOptions,
 	BaseNodeConstructor,
 	OperationsRegister,
 } from './poly/registers/nodes/NodesRegister';
@@ -81,11 +82,11 @@ export class PolyEngine {
 		return this._playerMode;
 	}
 
-	registerNode(node: BaseNodeConstructor, tab_menu_category?: string, options?: RegisterOptions) {
+	registerNode(node: BaseNodeConstructor, tab_menu_category?: string, options?: NodeRegisterOptions) {
 		this.nodesRegister.register(node, tab_menu_category, options);
 	}
-	registerOperation(operation: typeof BaseOperation) {
-		this.operationsRegister.register(operation);
+	registerOperation(operation: typeof BaseOperation, options?: OperationRegisterOptions) {
+		this.operationsRegister.register(operation, options);
 	}
 
 	registerCamera(node: BaseNodeConstructor) {
