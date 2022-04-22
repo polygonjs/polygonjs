@@ -1,14 +1,14 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Object3D} from 'three/src/core/Object3D';
+import {Vector3} from 'three';
+import {Matrix4} from 'three';
+import {Object3D} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
 
 import {TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Quaternion} from 'three/src/math/Quaternion';
-import {degToRad} from 'three/src/math/MathUtils';
+import {Quaternion} from 'three';
+import {MathUtils} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 const AXIS_VERTICAL = new Vector3(0, 1, 0);
@@ -90,8 +90,8 @@ export class PolarTransformSopOperation extends BaseSopOperation {
 		this._latitudeMatrix.identity();
 		this._depthMatrix.identity();
 		this._centerMatrix.makeTranslation(params.center.x, params.center.y, params.center.z);
-		this._longitudeMatrix.makeRotationAxis(AXIS_VERTICAL, degToRad(params.longitude));
-		this._latitudeMatrix.makeRotationAxis(AXIS_HORIZONTAL, degToRad(params.latitude));
+		this._longitudeMatrix.makeRotationAxis(AXIS_VERTICAL, MathUtils.degToRad(params.longitude));
+		this._latitudeMatrix.makeRotationAxis(AXIS_HORIZONTAL, MathUtils.degToRad(params.latitude));
 		this._depthMatrix.makeTranslation(0, 0, params.depth);
 		this._fullMatrix
 			.copy(this._centerMatrix)

@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {BufferAttribute} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 interface AttribIdSopParams extends DefaultOperationParams {
 	id: boolean;

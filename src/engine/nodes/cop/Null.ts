@@ -3,7 +3,7 @@
  *
  */
 
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';

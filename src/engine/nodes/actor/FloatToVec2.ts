@@ -5,7 +5,7 @@ import {
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 import {ParamType} from '../../poly/ParamType';
 const tmpV2 = new Vector2();
 

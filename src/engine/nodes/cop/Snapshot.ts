@@ -4,11 +4,11 @@
  */
 import {Constructor} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
-import {VideoTexture} from 'three/src/textures/VideoTexture';
+import {VideoTexture} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TextureParamsController} from './utils/TextureParamsController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {BaseNodeType} from '../_Base';
 import {CoreDomUtils} from '../../../core/DomUtils';

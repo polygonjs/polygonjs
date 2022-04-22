@@ -11,7 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {VertexNormalsHelper} from '../../../modules/three/examples/jsm/helpers/VertexNormalsHelper';
 import {isBooleanTrue} from '../../../core/Type';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 class NormalsHelperSopParamsConfig extends NodeParamsConfig {
 	/** @param keep input */

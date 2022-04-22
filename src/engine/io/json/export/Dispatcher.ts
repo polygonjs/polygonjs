@@ -27,16 +27,16 @@ import {RampParam} from '../../../params/Ramp';
 import {PolyNodeJsonExporter} from './nodes/Poly';
 
 export class JsonExportDispatcher {
-	static dispatch_node(node: BaseNodeType) {
+	dispatchNode(node: BaseNodeType) {
 		// using PolySopNode and PolyObjNode seem to create circular dependency with webpack
 		// if (node instanceof PolySopNode || node instanceof PolyObjNode)
 		if (node.polyNodeController) {
-			return new PolyNodeJsonExporter(node);
+			return new PolyNodeJsonExporter(node, this);
 		}
-		return new NodeJsonExporter(node);
+		return new NodeJsonExporter(node, this);
 	}
 
-	static dispatch_param(param: BaseParamType) {
+	dispatchParam(param: BaseParamType) {
 		// if (param instanceof TypedMultipleParam) {
 		// 	return new ParamMultipleJsonExporter(param);
 		// }

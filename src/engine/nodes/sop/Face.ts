@@ -3,10 +3,10 @@
  *
  *
  */
-import {Vector3} from 'three/src/math/Vector3';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Vector3} from 'three';
+import {BufferGeometry} from 'three';
+import {BufferAttribute} from 'three';
+import {Mesh} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';

@@ -8,8 +8,8 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Mesh} from 'three';
+import {BufferGeometry} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 class DrawRangeSopParamsConfig extends NodeParamsConfig {

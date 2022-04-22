@@ -6,8 +6,8 @@
 
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Quaternion} from 'three/src/math/Quaternion';
-import {Euler} from 'three/src/math/Euler';
+import {Quaternion} from 'three';
+import {Euler} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {
 	ActorConnectionPoint,

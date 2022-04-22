@@ -3,16 +3,16 @@ import {FloatParam} from '../../engine/params/Float';
 import {Vector3Param} from '../../engine/params/Vector3';
 import {BaseParamType} from '../../engine/params/_Base';
 import {ParamType} from '../../engine/poly/ParamType';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
+import {Color} from 'three';
 import {Number2, Number3, Number4} from '../../types/GlobalTypes';
 import {ColorParam} from '../../engine/params/Color';
 import {Vector4Param} from '../../engine/params/Vector4';
 import {Vector2Param} from '../../engine/params/Vector2';
 import {IntegerParam} from '../../engine/params/Integer';
-import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
+import {CubicInterpolant} from 'three';
 
 export class FloatParamProxy {
 	public proxyValue: number;

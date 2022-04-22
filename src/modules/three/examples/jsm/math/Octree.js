@@ -1,9 +1,11 @@
-import {Box3} from 'three/src/math/Box3';
-import {Line3} from 'three/src/math/Line3';
-import {Plane} from 'three/src/math/Plane';
-import {Sphere} from 'three/src/math/Sphere';
-import {Triangle} from 'three/src/math/Triangle';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	Box3,
+	Line3,
+	Plane,
+	Sphere,
+	Triangle,
+	Vector3
+} from 'three';
 import { Capsule } from '../math/Capsule.js';
 
 

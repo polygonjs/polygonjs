@@ -6,11 +6,11 @@ enum Extension {
 }
 export const AUDIO_EXTENSIONS: Extension[] = [Extension.MP3, Extension.WAV];
 
-import {AudioContext} from 'three/src/audio/AudioContext';
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Loader} from 'three/src/loaders/Loader';
-// import { AudioLoader } from 'three/src/loaders/AudioLoader';
-import {LoadingManager} from 'three/src/loaders/LoadingManager';
+import {AudioContext} from 'three';
+import {FileLoader} from 'three';
+import {Loader} from 'three';
+// import { AudioLoader } from 'three';
+import {LoadingManager} from 'three';
 
 // rework three AudioLoader, as onError is not called when giving a url that cannot be decoded
 

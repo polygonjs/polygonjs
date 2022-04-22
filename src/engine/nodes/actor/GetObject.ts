@@ -13,7 +13,7 @@ import {
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {isBooleanTrue} from '../../../core/Type';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {BaseNodeType} from '../_Base';
 import {ParamType} from '../../poly/ParamType';
 

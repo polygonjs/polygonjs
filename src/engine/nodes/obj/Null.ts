@@ -6,10 +6,10 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {AxesHelper} from 'three/src/helpers/AxesHelper';
+import {AxesHelper} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {HierarchyController} from './utils/HierarchyController';
 class NullObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}

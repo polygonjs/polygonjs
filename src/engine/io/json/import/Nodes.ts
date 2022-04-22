@@ -1,5 +1,5 @@
 import type {TypedNode, BaseNodeType} from '../../../nodes/_Base';
-import {JsonImportDispatcher} from './Dispatcher';
+import type {JsonImportDispatcher} from './Dispatcher';
 import type {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
 import type {NodeJsonExporterData} from '../export/Node';
@@ -15,7 +15,7 @@ import {JsonImporterMigrateHelper} from './migrate/MigrateHelper';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
-	constructor(protected _node: T) {}
+	constructor(protected _node: T, protected dispatcher: JsonImportDispatcher) {}
 
 	process_data(scene_importer: SceneJsonImporter, data?: PolyDictionary<NodeJsonExporterData>) {
 		if (!data) {
@@ -147,7 +147,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		for (let node of nonOptimizedNodes) {
 			const child_data = data[node.name()];
 			if (child_data) {
-				const importer = JsonImportDispatcher.dispatch_node(node);
+				const importer = this.dispatcher.dispatchNode(node);
 				importers_by_node_name.set(node.name(), importer);
 				importer.process_data(scene_importer, data[node.name()]);
 			} else {

@@ -1,7 +1,9 @@
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Object3D} from 'three/src/core/Object3D';
-import {Quaternion} from 'three/src/math/Quaternion';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	Matrix4,
+	Object3D,
+	Quaternion,
+	Vector3
+} from 'three';
 
 /**
  * Based on http://www.emagix.net/academic/mscs-project/item/camera-sync-with-css3-and-webgl-threejs

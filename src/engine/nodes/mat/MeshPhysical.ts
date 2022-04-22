@@ -5,8 +5,8 @@
  * This material needs lights to be visible.
  *
  */
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-import {FrontSide} from 'three/src/constants';
+import {MeshPhysicalMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

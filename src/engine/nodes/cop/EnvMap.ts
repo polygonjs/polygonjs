@@ -3,8 +3,8 @@
  *
  *
  */
-import {Texture} from 'three/src/textures/Texture';
-import {PMREMGenerator} from 'three/src/extras/PMREMGenerator';
+import {Texture} from 'three';
+import {PMREMGenerator} from 'three';
 import {TypedCopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
@@ -12,7 +12,7 @@ import {CopRendererController} from './utils/RendererController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
-import {CubeUVReflectionMapping} from 'three/src/constants';
+import {CubeUVReflectionMapping} from 'three';
 
 // enum MapMode {
 // 	REFLECTION = 'reflection',

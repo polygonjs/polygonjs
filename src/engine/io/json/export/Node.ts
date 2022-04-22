@@ -1,11 +1,11 @@
 import {Number2, PolyDictionary} from '../../../../types/GlobalTypes';
 import {TypedNode} from '../../../nodes/_Base';
-import {SceneJsonExporter} from './Scene';
 import {NodeContext} from '../../../poly/NodeContext';
-import {JsonExportDispatcher} from './Dispatcher';
+import type {JsonExportDispatcher} from './Dispatcher';
 import {ParamJsonExporterData} from '../../../nodes/utils/io/IOController';
 import {ParamType} from '../../../poly/ParamType';
 import {BaseConnectionPointData} from '../../../nodes/utils/io/connections/_Base';
+import {sanitizeExportedString} from './sanitize';
 
 // revert to using index instead of name
 // for gl nodes such as the if node, whose input names
@@ -56,7 +56,7 @@ export interface JSONExporterDataRequestOption {
 
 export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	private _data: NodeJsonExporterData | undefined; // = {} as NodeJsonExporterData;
-	constructor(protected _node: T) {}
+	constructor(protected _node: T, protected dispatcher: JsonExportDispatcher) {}
 
 	data(options: JSONExporterDataRequestOption = {}): NodeJsonExporterData {
 		if (!this.is_root()) {
@@ -179,7 +179,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		if (children.length > 0) {
 			data['nodes'] = {};
 			children.forEach((child) => {
-				const node_exporter = JsonExportDispatcher.dispatch_node(child); //.visit(JsonExporterVisitor); //.json_exporter()
+				const node_exporter = this.dispatcher.dispatchNode(child); //.visit(JsonExporterVisitor); //.json_exporter()
 				data['nodes'][child.name()] = node_exporter.uiData(options);
 			});
 		}
@@ -193,7 +193,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			data['pos'] = ui_data.position().toArray() as Number2;
 			const comment = ui_data.comment();
 			if (comment) {
-				data['comment'] = SceneJsonExporter.sanitize_string(comment);
+				data['comment'] = sanitizeExportedString(comment);
 			}
 		}
 		return data;
@@ -264,7 +264,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		for (let param_name of this._node.params.names) {
 			const param = this._node.params.get(param_name);
 			if (param && !param.parentParam()) {
-				const param_exporter = JsonExportDispatcher.dispatch_param(param);
+				const param_exporter = this.dispatcher.dispatchParam(param);
 				if (param_exporter.required()) {
 					const params_data = param_exporter.data();
 					data[param.name()] = params_data;
@@ -278,7 +278,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	protected nodes_data(options: JSONExporterDataRequestOption = {}) {
 		const data: PolyDictionary<NodeJsonExporterData> = {};
 		for (let child of this._node.children()) {
-			const node_exporter = JsonExportDispatcher.dispatch_node(child); //.json_exporter()
+			const node_exporter = this.dispatcher.dispatchNode(child); //.json_exporter()
 			data[child.name()] = node_exporter.data(options);
 		}
 		return data;

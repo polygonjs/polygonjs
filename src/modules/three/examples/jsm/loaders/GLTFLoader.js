@@ -1,65 +1,67 @@
-import {AnimationClip} from 'three/src/animation/AnimationClip';
-import {Bone} from 'three/src/objects/Bone';
-import {Box3} from 'three/src/math/Box3';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {ClampToEdgeWrapping} from 'three/src/constants';
-import {Color} from 'three/src/math/Color';
-import {DirectionalLight} from 'three/src/lights/DirectionalLight';
-import {DoubleSide} from 'three/src/constants';
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {FrontSide} from 'three/src/constants';
-import {Group} from 'three/src/objects/Group';
-import {ImageBitmapLoader} from 'three/src/loaders/ImageBitmapLoader';
-import {InterleavedBuffer} from 'three/src/core/InterleavedBuffer';
-import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
-import {Interpolant} from 'three/src/math/Interpolant';
-import {InterpolateDiscrete} from 'three/src/constants';
-import {InterpolateLinear} from 'three/src/constants';
-import {Line} from 'three/src/objects/Line';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {LineLoop} from 'three/src/objects/LineLoop';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {LinearFilter} from 'three/src/constants';
-import {LinearMipmapLinearFilter} from 'three/src/constants';
-import {LinearMipmapNearestFilter} from 'three/src/constants';
-import {Loader} from 'three/src/loaders/Loader';
-import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
-import {Material} from 'three/src/materials/Material';
-import * as MathUtils from 'three/src/math/MathUtils';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Mesh} from 'three/src/objects/Mesh';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {MirroredRepeatWrapping} from 'three/src/constants';
-import {NearestFilter} from 'three/src/constants';
-import {NearestMipmapLinearFilter} from 'three/src/constants';
-import {NearestMipmapNearestFilter} from 'three/src/constants';
-import {NumberKeyframeTrack} from 'three/src/animation/tracks/NumberKeyframeTrack';
-import {Object3D} from 'three/src/core/Object3D';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-import {PointLight} from 'three/src/lights/PointLight';
-import {Points} from 'three/src/objects/Points';
-import {PointsMaterial} from 'three/src/materials/PointsMaterial';
-import {PropertyBinding} from 'three/src/animation/PropertyBinding';
-import {Quaternion} from 'three/src/math/Quaternion';
-import {QuaternionKeyframeTrack} from 'three/src/animation/tracks/QuaternionKeyframeTrack';
-import {RepeatWrapping} from 'three/src/constants';
-import {Skeleton} from 'three/src/objects/Skeleton';
-import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
-import {Sphere} from 'three/src/math/Sphere';
-import {SpotLight} from 'three/src/lights/SpotLight';
-import {TangentSpaceNormalMap} from 'three/src/constants';
-import {Texture} from 'three/src/textures/Texture';
-import {TextureLoader} from 'three/src/loaders/TextureLoader';
-import {TriangleFanDrawMode} from 'three/src/constants';
-import {TriangleStripDrawMode} from 'three/src/constants';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {VectorKeyframeTrack} from 'three/src/animation/tracks/VectorKeyframeTrack';
-import {sRGBEncoding} from 'three/src/constants';
+import {
+	AnimationClip,
+	Bone,
+	Box3,
+	BufferAttribute,
+	BufferGeometry,
+	ClampToEdgeWrapping,
+	Color,
+	DirectionalLight,
+	DoubleSide,
+	FileLoader,
+	FrontSide,
+	Group,
+	ImageBitmapLoader,
+	InterleavedBuffer,
+	InterleavedBufferAttribute,
+	Interpolant,
+	InterpolateDiscrete,
+	InterpolateLinear,
+	Line,
+	LineBasicMaterial,
+	LineLoop,
+	LineSegments,
+	LinearFilter,
+	LinearMipmapLinearFilter,
+	LinearMipmapNearestFilter,
+	Loader,
+	LoaderUtils,
+	Material,
+	MathUtils,
+	Matrix4,
+	Mesh,
+	MeshBasicMaterial,
+	MeshPhysicalMaterial,
+	MeshStandardMaterial,
+	MirroredRepeatWrapping,
+	NearestFilter,
+	NearestMipmapLinearFilter,
+	NearestMipmapNearestFilter,
+	NumberKeyframeTrack,
+	Object3D,
+	OrthographicCamera,
+	PerspectiveCamera,
+	PointLight,
+	Points,
+	PointsMaterial,
+	PropertyBinding,
+	Quaternion,
+	QuaternionKeyframeTrack,
+	RepeatWrapping,
+	Skeleton,
+	SkinnedMesh,
+	Sphere,
+	SpotLight,
+	TangentSpaceNormalMap,
+	Texture,
+	TextureLoader,
+	TriangleFanDrawMode,
+	TriangleStripDrawMode,
+	Vector2,
+	Vector3,
+	VectorKeyframeTrack,
+	sRGBEncoding
+} from 'three';
 
 class GLTFLoader extends Loader {
 

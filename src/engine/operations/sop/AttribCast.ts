@@ -13,8 +13,8 @@ import {
 	Uint8BufferAttribute,
 	Int8BufferAttribute,
 	BufferAttribute,
-} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+} from 'three';
+import {BufferGeometry} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';

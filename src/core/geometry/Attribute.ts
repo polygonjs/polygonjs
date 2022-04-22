@@ -1,7 +1,7 @@
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
+import {BufferAttribute} from 'three';
 import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {CoreType} from '../Type';
 import {AttribSize} from './Constant';

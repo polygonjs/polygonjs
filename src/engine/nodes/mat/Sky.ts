@@ -6,9 +6,9 @@
  * For best result, assign this material to a very large box.
  *
  */
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {ShaderMaterial} from 'three';
 import {TypedMatNode} from './_Base';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {Sky} from '../../../modules/three/examples/jsm/objects/Sky';
 
 interface ShaderMaterialWithSkyUniforms extends ShaderMaterial {

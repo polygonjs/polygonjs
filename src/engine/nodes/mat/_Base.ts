@@ -1,5 +1,5 @@
 import {TypedNode} from '../_Base';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 

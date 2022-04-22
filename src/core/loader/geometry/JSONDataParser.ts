@@ -1,5 +1,5 @@
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Float32BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
 import {CoreString} from '../../String';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {AttribType} from '../../geometry/Constant';
@@ -111,9 +111,8 @@ export class JSONDataParser {
 							const deep_attrib_value = attrib_value[attrib_name];
 
 							if (!CoreString.matchesOneMask(deep_attrib_name, masks)) {
-								this._attribute_datas_by_name[deep_attrib_name] = CoreAttributeData.from_value(
-									deep_attrib_value
-								);
+								this._attribute_datas_by_name[deep_attrib_name] =
+									CoreAttributeData.from_value(deep_attrib_value);
 							}
 						}
 					} else {

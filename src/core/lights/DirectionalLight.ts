@@ -1,18 +1,18 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three/src/math/Color';
-import {Vector2} from 'three/src/math/Vector2';
-import {DirectionalLight} from 'three/src/lights/DirectionalLight';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Line} from 'three/src/objects/Line';
-// import {CameraHelper} from 'three/src/helpers/CameraHelper';
+import {Color} from 'three';
+import {Vector2} from 'three';
+import {DirectionalLight} from 'three';
+import {LineBasicMaterial} from 'three';
+import {BufferGeometry} from 'three';
+import {Float32BufferAttribute} from 'three';
+import {Line} from 'three';
+// import {CameraHelper} from 'three';
 import {CoreCameraHelper} from '../helpers/CoreCameraHelper';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 
 export interface DirectionalLightParams extends DefaultOperationParams {
 	color: Color;

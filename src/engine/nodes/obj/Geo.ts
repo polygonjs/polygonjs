@@ -6,7 +6,7 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {BaseNodeType} from '../_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';

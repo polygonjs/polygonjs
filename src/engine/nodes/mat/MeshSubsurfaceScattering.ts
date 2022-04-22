@@ -5,12 +5,12 @@
 //  * This material needs lights to be visible.
 //  *
 //  */
-// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+// import {ShaderMaterial} from 'three';
 // import {TypedMatNode} from './_Base';
 // import {SubsurfaceScatteringShader} from '../../../modules/three/examples/jsm/shaders/SubsurfaceScatteringShader';
 // import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 // import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
-// import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+// import {UniformsUtils} from 'three';
 // import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
 // import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 // import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -18,7 +18,7 @@
 // import {BaseNodeType} from '../_Base';
 // import {BaseParamType} from '../../params/_Base';
 // import {IUniformN, IUniformTexture, IUniformColor} from '../utils/code/gl/Uniforms';
-// import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+// import {IUniform} from 'three';
 // import {NodeContext} from '../../poly/NodeContext';
 // import {BaseCopNodeType} from '../cop/_Base';
 // import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';

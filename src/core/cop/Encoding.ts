@@ -1,4 +1,4 @@
-import {LinearEncoding, sRGBEncoding, BasicDepthPacking, RGBADepthPacking} from 'three/src/constants';
+import {LinearEncoding, sRGBEncoding, BasicDepthPacking, RGBADepthPacking} from 'three';
 import {PolyDictionary} from '../../types/GlobalTypes';
 
 export const ENCODINGS: Array<PolyDictionary<number>> = [

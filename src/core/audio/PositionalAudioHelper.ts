@@ -1,8 +1,8 @@
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Line} from 'three/src/objects/Line';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {degToRad} from 'three/src/math/MathUtils';
+import {BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
+import {Line} from 'three';
+import {LineBasicMaterial} from 'three';
+import {MathUtils} from 'three';
 import {CorePositionalAudio} from './PositionalAudio';
 
 function createGeometry(divisionsInnerAngle: number, divisionsOuterAngle: number) {
@@ -41,8 +41,8 @@ export class CorePositionalAudioHelper extends Line {
 		const divisionsInnerAngle = this.divisionsInnerAngle;
 		const divisionsOuterAngle = this.divisionsOuterAngle;
 
-		const coneInnerAngle = degToRad(audio.coneInnerAngle());
-		const coneOuterAngle = degToRad(audio.coneOuterAngle());
+		const coneInnerAngle = MathUtils.degToRad(audio.coneInnerAngle());
+		const coneOuterAngle = MathUtils.degToRad(audio.coneOuterAngle());
 
 		const halfConeInnerAngle = coneInnerAngle / 2;
 		const halfConeOuterAngle = coneOuterAngle / 2;

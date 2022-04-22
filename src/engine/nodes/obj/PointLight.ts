@@ -3,13 +3,13 @@
  *
  *
  */
-import {PointLight} from 'three/src/lights/PointLight';
+import {PointLight} from 'three';
 import {PointLightHelper} from './utils/helpers/PointLightHelper';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {HelperController, HelperConstructor} from './utils/HelperController';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {LightType} from '../../poly/registers/nodes/types/Light';
 import {PointLightSopOperation} from '../../operations/sop/PointLight';
 import {PointLightParamConfig} from '../../../core/lights/PointLight';

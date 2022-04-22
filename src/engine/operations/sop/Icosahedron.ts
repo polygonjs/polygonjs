@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {IcosahedronBufferGeometry} from '../../../core/geometry/operation/Icosahedron';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {isBooleanTrue} from '../../../core/BooleanValue';

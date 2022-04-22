@@ -1,14 +1,14 @@
 import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode, TargetType, TARGET_TYPES} from '../../Raycast';
-import {Object3D} from 'three/src/core/Object3D';
-import {Raycaster, Intersection} from 'three/src/core/Raycaster';
+import {Object3D} from 'three';
+import {Raycaster, Intersection} from 'three';
 import {CAMERA_TYPES, NodeContext} from '../../../../poly/NodeContext';
 import {BaseObjNodeType} from '../../../obj/_Base';
 import {GeoObjNode} from '../../../obj/Geo';
 import {TypeAssert} from '../../../../poly/Assert';
-import {Plane} from 'three/src/math/Plane';
-import {Vector3} from 'three/src/math/Vector3';
+import {Plane} from 'three';
+import {Vector3} from 'three';
 import {ParamType} from '../../../../poly/ParamType';
 import {AttribType, ATTRIBUTE_TYPES} from '../../../../../core/geometry/Constant';
 import {BaseCameraObjNodeType} from '../../../obj/_BaseCamera';

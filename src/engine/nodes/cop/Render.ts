@@ -5,16 +5,9 @@
  * This node can be useful when you want to use what a camera sees as a texture.
  *
  */
-import {Scene} from 'three/src/scenes/Scene';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {
-	FloatType,
-	HalfFloatType,
-	RGBAFormat,
-	NearestFilter,
-	LinearFilter,
-	ClampToEdgeWrapping,
-} from 'three/src/constants';
+import {Scene} from 'three';
+import {WebGLRenderTarget} from 'three';
+import {FloatType, HalfFloatType, RGBAFormat, NearestFilter, LinearFilter, ClampToEdgeWrapping} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType, NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
@@ -27,8 +20,8 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {Poly} from '../../Poly';
 import {Constructor} from '../../../types/GlobalTypes';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
+import {OrthographicCamera} from 'three';
+import {PerspectiveCamera} from 'three';
 
 export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

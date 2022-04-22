@@ -30,8 +30,8 @@ import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureN
 import {TextureSpecularMapController, SpecularMapParamConfig} from './utils/TextureSpecularMapController';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-import {Material} from 'three/src/materials/Material';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
+import {Material} from 'three';
+import {MeshPhongMaterial} from 'three';
 interface MeshPhongBuilderMaterial extends MeshPhongMaterial {
 	vertexShader: string;
 	fragmentShader: string;

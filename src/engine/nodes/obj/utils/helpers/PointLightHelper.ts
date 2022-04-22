@@ -1,7 +1,7 @@
 import {PointLightObjNode} from '../../PointLight';
 import {BaseLightHelper} from './_BaseLightHelper';
-import {PointLight} from 'three/src/lights/PointLight';
-import {Mesh} from 'three/src/objects/Mesh';
+import {PointLight} from 'three';
+import {Mesh} from 'three';
 import {CorePointLightHelper} from '../../../../../core/lights/PointLight';
 
 export class PointLightHelper extends BaseLightHelper<Mesh, PointLight, PointLightObjNode> {

@@ -1,6 +1,6 @@
 import {BaseNodeType, TypedNode} from '../../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 import {Number3} from '../../../../types/GlobalTypes';
 import {ColorConversion} from '../../../../core/Color';
 import {NodeContext} from '../../../poly/NodeContext';

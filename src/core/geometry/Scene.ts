@@ -1,14 +1,14 @@
-// import {Scene} from 'three/src/scenes/Scene';
-// import {Mesh} from 'three/src/objects/Mesh';
-// import {Material} from 'three/src/materials/Material';
-// import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+// import {Scene} from 'three';
+// import {Mesh} from 'three';
+// import {Material} from 'three';
+// import {IUniform} from 'three';
 
 // import {CoreGeometry} from './Geometry';
 // import {MaterialWithUniforms} from './Material';
 
 // import {ObjectWithCustomMaterials} from './Material';
-// import {BufferGeometry} from 'three/src/core/BufferGeometry';
-// import {Object3D} from 'three/src/core/Object3D';
+// import {BufferGeometry} from 'three';
+// import {Object3D} from 'three';
 
 // interface Uniforms {
 // 	[propName: string]: IUniform;

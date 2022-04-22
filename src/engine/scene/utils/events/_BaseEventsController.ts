@@ -2,7 +2,7 @@ import {BaseCameraObjNodeType} from '../../../nodes/obj/_BaseCamera';
 import {BaseInputEventNodeType, EventData} from '../../../nodes/event/_BaseInput';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
-import {Intersection} from 'three/src/core/Raycaster';
+import {Intersection} from 'three';
 import {BaseViewerType} from '../../../viewers/_Base';
 import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
 

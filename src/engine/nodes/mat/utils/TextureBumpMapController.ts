@@ -2,11 +2,11 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-import {MeshMatcapMaterial} from 'three/src/materials/MeshMatcapMaterial';
-import {MeshNormalMaterial} from 'three/src/materials/MeshNormalMaterial';
-import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
+import {MeshStandardMaterial} from 'three';
+import {MeshPhysicalMaterial} from 'three';
+import {MeshMatcapMaterial} from 'three';
+import {MeshNormalMaterial} from 'three';
+import {MeshToonMaterial} from 'three';
 export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a bump map */

@@ -1,10 +1,10 @@
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {Camera} from 'three/src/cameras/Camera';
+import {Camera} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
 import {ThreejsCameraControlsController} from './utils/cameras/ControlsController';
 import {LayersController, LayerParamConfig} from './utils/LayersController';
-import {PostProcessController, CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
+import {PostProcessController} from './utils/cameras/PostProcessController';
 import {RenderController, CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
@@ -19,11 +19,15 @@ import {TypedObjNode} from './_Base';
 import {BaseViewerType} from '../../viewers/_Base';
 import {HierarchyController} from './utils/HierarchyController';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
-import {Raycaster} from 'three/src/core/Raycaster';
-import {Vector2} from 'three/src/math/Vector2';
+import {Raycaster} from 'three';
+import {Vector2} from 'three';
 import {CoreType} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
-
+import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessParamOptions';
+import {UpdateFromControlsMode, UPDATE_FROM_CONTROLS_MODES} from './utils/cameras/UpdateFromControlsMode';
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -37,21 +41,6 @@ export const BASE_CAMERA_DEFAULT = {
 	near: 0.1,
 	far: 100.0,
 };
-
-export enum UpdateFromControlsMode {
-	ON_END = 'on move end',
-	ALWAYS = 'always',
-	NEVER = 'never',
-}
-export const UPDATE_FROM_CONTROLS_MODES: UpdateFromControlsMode[] = [
-	UpdateFromControlsMode.ON_END,
-	UpdateFromControlsMode.ALWAYS,
-	UpdateFromControlsMode.NEVER,
-];
-
-import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/BooleanValue';
-import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export function CameraMainCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -340,9 +329,6 @@ export class TypedThreejsCameraObjNode<
 
 		this.scene().viewersRegister.registerViewer(viewer);
 		return viewer;
-	}
-	static PARAM_CALLBACK_reset_effects_composer(node: BaseThreejsCameraObjNodeType) {
-		node.postProcessController().reset();
 	}
 
 	//

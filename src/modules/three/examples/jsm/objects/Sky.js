@@ -1,9 +1,11 @@
-import {BackSide} from 'three/src/constants';
-import {BoxGeometry} from 'three/src/geometries/BoxGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	BackSide,
+	BoxGeometry,
+	Mesh,
+	ShaderMaterial,
+	UniformsUtils,
+	Vector3
+} from 'three';
 
 /**
  * Based on "A Practical Analytic Model for Daylight"

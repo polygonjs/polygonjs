@@ -3,7 +3,7 @@ import {BaseBuilderMatNodeType} from '../../../../mat/_BaseBuilder';
 import {CustomMaterialName} from './_BaseMaterial';
 import {ShaderMaterialWithCustomMaterials, MaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {ShaderMaterial} from 'three';
 import {
 	assignOnBeforeCompileDataAndFunction,
 	OnBeforeCompileDataConverter,

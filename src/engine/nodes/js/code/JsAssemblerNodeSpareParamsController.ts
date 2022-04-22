@@ -45,7 +45,8 @@ export class JsAssemblerNodeSpareParamsController {
 			if (param) {
 				this._raw_input_serialized_by_param_name.set(param.name(), param.rawInputSerialized());
 				this._init_value_serialized_by_param_name.set(param.name(), param.defaultValueSerialized());
-				const param_exporter = JsonExportDispatcher.dispatch_param(param);
+				const dispatcher = new JsonExportDispatcher();
+				const param_exporter = dispatcher.dispatchParam(param);
 				if (param_exporter.required()) {
 					const params_data = param_exporter.data();
 					this._deleted_params_data.set(param.name(), params_data);

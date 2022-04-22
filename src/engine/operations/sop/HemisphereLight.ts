@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {HemisphereLight} from 'three/src/lights/HemisphereLight';
+import {HemisphereLight} from 'three';
 import {HemisphereLightParams, DEFAULT_POINT_LIGHT_PARAMS} from '../../../core/lights/HemisphereLight';
 
 export class HemisphereLightSopOperation extends BaseSopOperation {

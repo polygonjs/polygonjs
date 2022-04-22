@@ -1,10 +1,10 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {UniformsUtils} from 'three';
+import {ShaderMaterial} from 'three';
 import {BaseShaderAssemblerVolume} from './_BaseVolume';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
-import {FrontSide} from 'three/src/constants';
+import {FrontSide} from 'three';
 import {CoreMaterial} from '../../../../../../core/geometry/Material';
 import {VolumeController} from '../../../../mat/utils/VolumeController';
 import {ShaderConfig} from '../../configs/ShaderConfig';

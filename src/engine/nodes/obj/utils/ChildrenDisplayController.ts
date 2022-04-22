@@ -1,7 +1,7 @@
 import {BaseObjNodeClass} from '../_Base';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {BaseSopNodeType} from '../../sop/_Base';
 
 const DISPLAY_PARAM_NAME = 'display';

@@ -6,8 +6,8 @@
  *
  */
 
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
-import {FrontSide} from 'three/src/constants';
+import {MeshLambertMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

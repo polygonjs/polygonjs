@@ -1,4 +1,4 @@
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {ShaderMaterial} from 'three';
 import {LineType} from '../utils/LineType';
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {VariableConfig} from '../configs/VariableConfig';
@@ -19,7 +19,7 @@ import {ShadersCollectionController} from '../utils/ShadersCollectionController'
 import {IUniforms} from '../../../../../core/geometry/Material';
 import {ParamGlNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
-import {ShaderChunk} from 'three/src/renderers/shaders/ShaderChunk';
+import {ShaderChunk} from 'three';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {GlNodeFinder} from '../utils/NodeFinder';
 import {VaryingWriteGlNode} from '../../VaryingWrite';

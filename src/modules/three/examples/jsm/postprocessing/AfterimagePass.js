@@ -1,8 +1,10 @@
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {NearestFilter} from 'three/src/constants';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {
+	MeshBasicMaterial,
+	NearestFilter,
+	ShaderMaterial,
+	UniformsUtils,
+	WebGLRenderTarget
+} from 'three';
 import { Pass, FullScreenQuad } from './Pass.js';
 import { AfterimageShader } from '../shaders/AfterimageShader.js';
 

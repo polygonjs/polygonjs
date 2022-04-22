@@ -1,19 +1,19 @@
-import {Camera} from 'three/src/cameras/Camera';
-import {Vector2} from 'three/src/math/Vector2';
+import {Camera} from 'three';
+import {Vector2} from 'three';
 import {TypedNode, BaseNodeType} from '../_Base';
 import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {Scene} from 'three/src/scenes/Scene';
+import {Scene} from 'three';
 import {FlagsControllerDB} from '../utils/FlagsController';
 import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 import {BaseNetworkPostProcessNodeType} from './utils/EffectsComposerController';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {WebGLRenderer} from 'three';
+import {WebGLRenderTarget} from 'three';
 import {RenderTargetCreateOptions} from './utils/EffectsComposerController';
 
 const INPUT_PASS_NAME = 'input pass';

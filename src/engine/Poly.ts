@@ -49,7 +49,7 @@ export class PolyEngine {
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
-	public readonly blobs: BlobsController = new BlobsController();
+	public readonly blobs: BlobsController = new BlobsController(this);
 	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
 	public readonly logo = new LogoController();
 	// public readonly selfContainedScenesLoader: SelfContainedScenesLoader = new SelfContainedScenesLoader();

@@ -1,21 +1,3 @@
-import {CompressedTexture} from 'three/src/textures/CompressedTexture';
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {LinearEncoding} from 'three/src/constants';
-import {LinearFilter} from 'three/src/constants';
-import {LinearMipmapLinearFilter} from 'three/src/constants';
-import {Loader} from 'three/src/loaders/Loader';
-import {RGBAFormat} from 'three/src/constants';
-import {RGBA_ASTC_4x4_Format} from 'three/src/constants';
-import {RGBA_BPTC_Format} from 'three/src/constants';
-import {RGBA_ETC2_EAC_Format} from 'three/src/constants';
-import {RGBA_PVRTC_4BPPV1_Format} from 'three/src/constants';
-import {RGBA_S3TC_DXT5_Format} from 'three/src/constants';
-import {RGB_ETC1_Format} from 'three/src/constants';
-import {RGB_ETC2_Format} from 'three/src/constants';
-import {RGB_PVRTC_4BPPV1_Format} from 'three/src/constants';
-import {RGB_S3TC_DXT1_Format} from 'three/src/constants';
-import {UnsignedByteType} from 'three/src/constants';
-import {sRGBEncoding} from 'three/src/constants';
 /**
  * Loader for KTX 2.0 GPU Texture containers.
  *
@@ -29,6 +11,26 @@ import {sRGBEncoding} from 'three/src/constants';
  * - DFD: https://www.khronos.org/registry/DataFormat/specs/1.3/dataformat.1.3.html#basicdescriptor
  */
 
+import {
+	CompressedTexture,
+	FileLoader,
+	LinearEncoding,
+	LinearFilter,
+	LinearMipmapLinearFilter,
+	Loader,
+	RGBAFormat,
+	RGBA_ASTC_4x4_Format,
+	RGBA_BPTC_Format,
+	RGBA_ETC2_EAC_Format,
+	RGBA_PVRTC_4BPPV1_Format,
+	RGBA_S3TC_DXT5_Format,
+	RGB_ETC1_Format,
+	RGB_ETC2_Format,
+	RGB_PVRTC_4BPPV1_Format,
+	RGB_S3TC_DXT1_Format,
+	sRGBEncoding,
+	UnsignedByteType
+} from 'three';
 import { WorkerPool } from '../utils/WorkerPool.js';
 
 const KTX2TransferSRGB = 2;

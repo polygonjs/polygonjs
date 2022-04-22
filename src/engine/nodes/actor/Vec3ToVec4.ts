@@ -1,5 +1,5 @@
-import {Vector4} from 'three/src/math/Vector4';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three';
+import {Vector3} from 'three';
 import {Number3} from '../../../types/GlobalTypes';
 import {ParamType} from '../../poly/ParamType';
 import {

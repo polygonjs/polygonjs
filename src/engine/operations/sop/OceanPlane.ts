@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Color} from 'three/src/math/Color';
-import {Vector3} from 'three/src/math/Vector3';
+import {Color} from 'three';
+import {Vector3} from 'three';
 import {CoreTransform} from '../../../core/Transform';
-// import {PlaneGeometry} from 'three/src/geometries/PlaneGeometry';
+// import {PlaneGeometry} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {Water, WaterOptions} from '../../../modules/core/objects/Water';
 import {TransformResetMode, TransformResetSopOperation, TRANSFORM_RESET_MODES} from './TransformReset';

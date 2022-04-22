@@ -14,7 +14,7 @@ import {
 	TRANSFORM_TARGET_TYPES,
 } from '../../../core/Transform';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {ParamOptions, MenuNumericParamOptions, VisibleIfParamOptions} from '../../params/utils/OptionsController';
 
 const max_transform_count = 6;
@@ -44,8 +44,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {IntegerParam} from '../../params/Integer';
 import {Vector3Param} from '../../params/Vector3';
 import {TypeAssert} from '../../poly/Assert';
-import {Object3D} from 'three/src/core/Object3D';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Object3D} from 'three';
+import {BufferAttribute} from 'three';
 import {CoreAttribute, Attribute} from '../../../core/geometry/Attribute';
 class TransformMultiSopParamConfig extends NodeParamsConfig {
 	/** @param defines if this applies to objects or geometries */

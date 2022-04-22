@@ -9,7 +9,7 @@
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
-import {Box3} from 'three/src/math/Box3';
+import {Box3} from 'three';
 import {BaseNodeType} from '../_Base';
 
 const OUTPUT_NAME = 'box3';

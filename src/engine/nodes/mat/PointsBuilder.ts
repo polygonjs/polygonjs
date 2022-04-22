@@ -16,8 +16,8 @@ import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {CustomMaterialName} from '../../../core/geometry/Material';
-import {Material} from 'three/src/materials/Material';
-import {PointsMaterial} from 'three/src/materials/PointsMaterial';
+import {Material} from 'three';
+import {PointsMaterial} from 'three';
 import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
 
 interface PointsBuilderControllers {

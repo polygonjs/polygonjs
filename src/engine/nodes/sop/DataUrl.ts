@@ -11,7 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {CsvLoader} from '../../../core/loader/geometry/Csv';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';

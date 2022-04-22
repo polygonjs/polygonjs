@@ -1,10 +1,10 @@
 import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {PlayerCollisionController} from './collisions/PlayerCollisionsController';
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Object3D} from 'three';
+import {Mesh} from 'three';
 import {Capsule} from '../../../modules/three/examples/jsm/math/Capsule';
-import {EventDispatcher} from 'three/src/core/EventDispatcher';
-import {Vector3} from 'three/src/math/Vector3';
+import {EventDispatcher} from 'three';
+import {Vector3} from 'three';
 
 export interface JumpParams {
 	duration: number;

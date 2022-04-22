@@ -5,8 +5,8 @@
  * This material needs lights to be visible. While not as photorealistic as the MeshStandardMaterial, it is very cheap to process.
  *
  */
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
-import {FrontSide} from 'three/src/constants';
+import {MeshPhongMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

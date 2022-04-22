@@ -2,8 +2,8 @@
  * Creates a line
  *
  */
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Float32BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 

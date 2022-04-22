@@ -1,9 +1,11 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Color} from 'three/src/math/Color';
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Loader} from 'three/src/loaders/Loader';
-import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
+import {
+	BufferGeometry,
+	FileLoader,
+	Float32BufferAttribute,
+	Loader,
+	LoaderUtils,
+	Color
+} from 'three';
 
 /**
  * Description: A THREE loader for PLY ASCII files (known as the Polygon

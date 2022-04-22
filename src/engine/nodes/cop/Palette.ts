@@ -4,7 +4,7 @@
  *
  */
 import {TypedCopNode} from './_Base';
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {DataTexture} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {
@@ -16,7 +16,7 @@ import {PaletteController, paletteControllerCallbackOptions} from '../utils/colo
 import {ColorConversion} from '../../../core/Color';
 import {NodeContext} from '../../poly/NodeContext';
 import {ColorParam} from '../../params/Color';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 
 class PaletteCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */

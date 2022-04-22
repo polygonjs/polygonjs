@@ -2,8 +2,8 @@
 // jimp.js is now async,
 // and created via packs/jimp.ts
 
-// import {Texture} from 'three/src/textures/Texture'
-// import {Color} from 'three/src/math/Color'
+// import {Texture} from 'three'
+// import {Color} from 'three'
 
 export class CoreImage {
 	// constructor() {}

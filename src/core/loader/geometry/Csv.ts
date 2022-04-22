@@ -1,5 +1,5 @@
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Float32BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
 import {CoreAttributeData} from '../../geometry/AttributeData';
 import {CoreAttribute} from '../../geometry/Attribute';
 import {AttribType} from '../../geometry/Constant';

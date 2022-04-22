@@ -1,17 +1,19 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Color} from 'three/src/math/Color';
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Group} from 'three/src/objects/Group';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {Loader} from 'three/src/loaders/Loader';
-import {Material} from 'three/src/materials/Material';
-import {Mesh} from 'three/src/objects/Mesh';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
-import {Points} from 'three/src/objects/Points';
-import {PointsMaterial} from 'three/src/materials/PointsMaterial';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	BufferGeometry,
+	FileLoader,
+	Float32BufferAttribute,
+	Group,
+	LineBasicMaterial,
+	LineSegments,
+	Loader,
+	Material,
+	Mesh,
+	MeshPhongMaterial,
+	Points,
+	PointsMaterial,
+	Vector3,
+	Color
+} from 'three';
 
 // o object_name | g group_name
 const _object_pattern = /^[og]\s*(.+)?/;

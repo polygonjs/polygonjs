@@ -1,8 +1,8 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
-import {Material} from 'three/src/materials/Material';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {Material} from 'three';
+import {ShaderMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {isBooleanTrue} from '../../../../core/BooleanValue';

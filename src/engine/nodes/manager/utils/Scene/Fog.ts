@@ -2,8 +2,8 @@ import {Constructor} from '../../../../../types/GlobalTypes';
 import {BaseNodeType} from '../../../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
-import {Fog} from 'three/src/scenes/Fog';
-import {FogExp2} from 'three/src/scenes/FogExp2';
+import {Fog} from 'three';
+import {FogExp2} from 'three';
 import {ParamsValueAccessorType} from '../../../utils/params/ParamsValueAccessor';
 import {RootManagerNode} from '../../Root';
 

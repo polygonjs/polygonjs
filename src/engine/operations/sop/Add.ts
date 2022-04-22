@@ -1,10 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {Object3D} from 'three/src/core/Object3D';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute, Float32BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Object3D} from 'three';
+import {BufferGeometry} from 'three';
+import {BufferAttribute, Float32BufferAttribute} from 'three';
 import {CorePoint} from '../../../core/geometry/Point';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';

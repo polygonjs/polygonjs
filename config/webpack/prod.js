@@ -4,7 +4,7 @@ const path = require('path');
 // const LOGO_PATH = path.resolve(__dirname, '../../public/images/logo.256.png');
 const QUICK_N_DIRTY_BUILD = false;
 const MINIFY = !QUICK_N_DIRTY_BUILD;
-const BUILD_MODULES = !QUICK_N_DIRTY_BUILD;
+const BUILD_MODULES = false; //!QUICK_N_DIRTY_BUILD;
 const BUILD_SCENE_DATA_LOADER = !QUICK_N_DIRTY_BUILD;
 // having one entry per node is very hard to generate with terser and no crash
 // (or it takes forever when increasing available ram for node,

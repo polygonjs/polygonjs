@@ -1,8 +1,8 @@
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
-import {Side} from 'three/src/constants';
-import {DoubleSide} from 'three/src/constants';
+import {Object3D} from 'three';
+import {Mesh} from 'three';
+import {Material} from 'three';
+import {Side} from 'three';
+import {DoubleSide} from 'three';
 import {CoreType} from '../Type';
 import {CoreGroup} from '../geometry/Group';
 

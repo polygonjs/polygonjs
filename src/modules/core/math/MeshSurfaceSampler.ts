@@ -1,9 +1,9 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
-import {Triangle} from 'three/src/math/Triangle';
-import {Vector3} from 'three/src/math/Vector3';
-import {Mesh} from 'three/src/objects/Mesh';
+import {BufferGeometry} from 'three';
+import {BufferAttribute} from 'three';
+import {InterleavedBufferAttribute} from 'three';
+import {Triangle} from 'three';
+import {Vector3} from 'three';
+import {Mesh} from 'three';
 
 /**
  * typescript port of https://github.com/mrdoob/three.js/blob/dev/examples/jsm/math/MeshSurfaceSampler.js

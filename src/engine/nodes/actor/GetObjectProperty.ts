@@ -11,8 +11,8 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {Material} from 'three/src/materials/Material';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Material} from 'three';
+import {Mesh} from 'three';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 

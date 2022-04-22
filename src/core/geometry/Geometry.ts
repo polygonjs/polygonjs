@@ -6,21 +6,16 @@ import {
 	Vector3Like,
 	Vector4Like,
 } from '../../types/GlobalTypes';
-import {Vector3} from 'three/src/math/Vector3';
-import {Int32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Box3} from 'three/src/math/Box3';
+import {Vector3} from 'three';
+import {Int32BufferAttribute} from 'three';
+import {Float32BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
+import {Box3} from 'three';
 import {CorePoint} from './Point';
 import {CoreFace} from './Face';
-import {ObjectType, AttribType, AttribSize} from './Constant';
+import {AttribType, AttribSize} from './Constant';
 import {Attribute, CoreAttribute} from './Attribute';
 import {CoreAttributeData} from './AttributeData';
-import {CoreGeometryBuilderPoints} from './builders/Points';
-import {CoreGeometryBuilderMerge} from './builders/Merge';
-import {CoreGeometryBuilderMesh} from './builders/Mesh';
-import {CoreGeometryBuilderLineSegments} from './builders/LineSegments';
-import {TypeAssert} from '../../engine/poly/Assert';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
@@ -336,35 +331,6 @@ export class CoreGeometry {
 		}
 
 		return points;
-	}
-
-	private static _mesh_builder = new CoreGeometryBuilderMesh();
-	private static _points_builder = new CoreGeometryBuilderPoints();
-	private static _lines_segment_builder = new CoreGeometryBuilderLineSegments();
-	static geometryFromPoints(points: CorePoint[], object_type: ObjectType) {
-		switch (object_type) {
-			case ObjectType.MESH:
-				return this._mesh_builder.from_points(points);
-			case ObjectType.POINTS:
-				return this._points_builder.from_points(points);
-			case ObjectType.LINE_SEGMENTS:
-				return this._lines_segment_builder.from_points(points);
-			case ObjectType.OBJECT3D:
-				return null;
-			case ObjectType.GROUP:
-				return null;
-			case ObjectType.LOD:
-				return null;
-		}
-		TypeAssert.unreachable(object_type);
-	}
-
-	static mergeGeometries(geometries: BufferGeometry[]) {
-		return CoreGeometryBuilderMerge.merge(geometries);
-	}
-	// legacy helper
-	static merge_geometries(geometries: BufferGeometry[]) {
-		return CoreGeometryBuilderMerge.merge(geometries);
 	}
 
 	segments() {

@@ -6,10 +6,10 @@ import {ParamValuesTypeMap} from '../../../params/types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';
 import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
 import {ParamOptionsByTypeMap} from '../../../params/types/ParamOptionsByTypeMap';
-import {Color} from 'three/src/math/Color';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
+import {Color} from 'three';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
 
 export class ParamTemplate<T extends ParamType> {
 	readonly value_type!: ParamValuesTypeMap[T];

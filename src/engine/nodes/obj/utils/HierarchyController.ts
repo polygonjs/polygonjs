@@ -1,6 +1,6 @@
 import {NodeParamsConfig} from '../../utils/params/ParamsConfig';
 import {TypedObjNode, BaseObjNodeType} from '../_Base';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {TransformController, TransformedObjNode} from './TransformController';
 
 class HierarchyParamsConfig extends NodeParamsConfig {}

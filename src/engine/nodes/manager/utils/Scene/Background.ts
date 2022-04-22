@@ -4,7 +4,7 @@ import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {RootManagerNode} from '../../Root';
 import {ColorConversion} from '../../../../../core/Color';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 import {TypeAssert} from '../../../../poly/Assert';
 
 export enum BackgroundMode {

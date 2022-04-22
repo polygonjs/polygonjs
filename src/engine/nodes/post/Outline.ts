@@ -1,10 +1,10 @@
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {OutlinePass} from '../../../modules/three/examples/jsm/postprocessing/OutlinePass';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 class OutlinePostParamsConfig extends NodeParamsConfig {
 	/** @param object mask of the objects that will have an outline */
 	objectsMask = ParamConfig.STRING('*outlined*', {

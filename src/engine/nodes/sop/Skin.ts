@@ -3,9 +3,9 @@
  *
  *
  */
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {LineSegments} from 'three/src/objects/LineSegments';
+import {BufferGeometry} from 'three';
+import {Mesh} from 'three';
+import {LineSegments} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';

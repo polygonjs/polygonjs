@@ -1,5 +1,5 @@
 import {BaseNodeType} from '../nodes/_Base';
-import {Poly} from '../Poly';
+import {PolyEngine} from '../Poly';
 import {createObjectURL} from '../../core/BlobUtils';
 import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
 import {PolyDictionary} from '../../types/GlobalTypes';
@@ -32,10 +32,10 @@ interface BlobData {
 type BlobDataCallback = (params: BlobData) => void;
 export class BlobsController {
 	private _blobWrappersByUrl: Map<string, BlobWrapper> = new Map();
-	constructor() {}
+	constructor(private poly: PolyEngine) {}
 
 	recording() {
-		return !Poly.playerMode();
+		return !this.poly.playerMode();
 	}
 
 	blobUrl(url: string) {
@@ -102,7 +102,7 @@ export class BlobsController {
 				return {blobWrapper: existingBlobWrapper};
 			}
 
-			const remapedUrl = Poly.assetUrls.remapedUrl(url) || url;
+			const remapedUrl = this.poly.assetUrls.remapedUrl(url) || url;
 			const response = await fetch(remapedUrl);
 			if (response.ok) {
 				const blob = await response.blob();
@@ -138,7 +138,7 @@ export class BlobsController {
 				existingBlobWrapper.referringNodeIds.add(nodeId);
 				return {blobWrapper: existingBlobWrapper};
 			}
-			const remapedUrl = Poly.assetUrls.remapedUrl(options.fullUrl) || options.fullUrl;
+			const remapedUrl = this.poly.assetUrls.remapedUrl(options.fullUrl) || options.fullUrl;
 			const response = await fetch(remapedUrl);
 			if (response.ok) {
 				const blob = await response.blob();

@@ -13,7 +13,7 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Scene} from 'three/src/scenes/Scene';
+import {Scene} from 'three';
 import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {SceneAutoUpdateParamConfig, SceneAutoUpdateController} from '../manager/utils/Scene/AutoUpdate';

@@ -1,9 +1,9 @@
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {Color} from 'three/src/math/Color';
-import {Quaternion} from 'three/src/math/Quaternion';
-import {Object3D} from 'three/src/core/Object3D';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
+import {Color} from 'three';
+import {Quaternion} from 'three';
+import {Object3D} from 'three';
 import {TimelineBuilder, Operation} from './TimelineBuilder';
 import {AnimPropertyTarget} from './PropertyTarget';
 import {BaseNodeType} from '../../engine/nodes/_Base';

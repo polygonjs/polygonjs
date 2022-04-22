@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {Quaternion} from 'three/src/math/Quaternion';
+import {Quaternion} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;

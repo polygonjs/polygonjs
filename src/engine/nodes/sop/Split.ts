@@ -16,13 +16,13 @@ import {
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CorePoint} from '../../../core/geometry/Point';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {MapUtils} from '../../../core/MapUtils';
+import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
 class SplitSopParamsConfig extends NodeParamsConfig {
 	/** @param type of attribute to use */
 	attribType = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
@@ -98,11 +98,14 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 
 			const object_type = objectTypeFromConstructor(object.constructor);
 			points_by_value.forEach((points, value) => {
-				const new_geometry = CoreGeometry.geometryFromPoints(points, object_type);
-				if (new_geometry) {
-					const object = this.createObject(new_geometry, object_type);
-					CoreObject.addAttribute(object, attribName, value);
-					this._new_objects.push(object);
+				const builder = geometryBuilder(object_type);
+				if (builder) {
+					const new_geometry = builder.from_points(points);
+					if (new_geometry) {
+						const object = this.createObject(new_geometry, object_type);
+						CoreObject.addAttribute(object, attribName, value);
+						this._new_objects.push(object);
+					}
 				}
 			});
 		}

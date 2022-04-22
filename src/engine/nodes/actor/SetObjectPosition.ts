@@ -6,7 +6,7 @@
 
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {
 	ActorConnectionPoint,

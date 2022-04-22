@@ -1,19 +1,21 @@
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Color} from 'three/src/math/Color';
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Group} from 'three/src/objects/Group';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {Loader} from 'three/src/loaders/Loader';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Mesh} from 'three/src/objects/Mesh';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {Ray} from 'three/src/math/Ray';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsLib} from 'three/src/renderers/shaders/UniformsLib';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	BufferAttribute,
+	BufferGeometry,
+	Color,
+	FileLoader,
+	Group,
+	LineBasicMaterial,
+	LineSegments,
+	Loader,
+	Matrix4,
+	Mesh,
+	MeshStandardMaterial,
+	ShaderMaterial,
+	UniformsLib,
+	UniformsUtils,
+	Vector3,
+	Ray
+} from 'three';
 
 // Special surface finish tag types.
 // Note: "MATERIAL" tag (e.g. GLITTER, SPECKLE) is not implemented

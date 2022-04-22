@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {AmbientLight} from 'three/src/lights/AmbientLight';
+import {AmbientLight} from 'three';
 import {AmbientLightParams, DEFAULT_AMBIENT_LIGHT_PARAMS} from '../../../core/lights/AmbientLight';
 
 export class AmbientLightSopOperation extends BaseSopOperation {

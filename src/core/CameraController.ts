@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 enum EVENT {
 	CHANGE = 'change',

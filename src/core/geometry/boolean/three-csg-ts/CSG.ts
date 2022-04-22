@@ -1,10 +1,10 @@
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Material} from 'three/src/materials/Material';
-import {Vector3} from 'three/src/math/Vector3';
-import {Matrix3} from 'three/src/math/Matrix3';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Mesh} from 'three/src/objects/Mesh';
+import {BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
+import {Material} from 'three';
+import {Vector3} from 'three';
+import {Matrix3} from 'three';
+import {Matrix4} from 'three';
+import {Mesh} from 'three';
 import {NBuf2, NBuf3} from './NBuf';
 import {Node} from './Node';
 import {Polygon} from './Polygon';

@@ -1,10 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import { SORTED_PALETTE_NAMES } from '../../../core/color/chromotomeWrapper';
+import {SORTED_PALETTE_NAMES} from '../../../core/color/chromotomeWrapper';
 
 interface PaletteSopParams extends DefaultOperationParams {
 	paletteName: string;

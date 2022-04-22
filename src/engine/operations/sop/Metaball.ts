@@ -4,10 +4,10 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 // import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
 // import {MarchingCubes} from '../../../modules/three/examples/jsm/objects/MarchingCubes';
 import {MarchingCubes} from '../../../modules/core/objects/MarchingCubes';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface MetaballSopParams extends DefaultOperationParams {

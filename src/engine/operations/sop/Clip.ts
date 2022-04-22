@@ -1,18 +1,18 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
-import {Plane} from 'three/src/math/Plane';
-import {Line3} from 'three/src/math/Line3';
+import {Vector3} from 'three';
+import {Plane} from 'three';
+import {Line3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {MeshWithBVH, ExtendedTriangle} from './utils/Bvh/three-mesh-bvh';
-import {Mesh} from 'three/src/objects/Mesh';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
+import {Mesh} from 'three';
+import {LineSegments} from 'three';
+import {BufferGeometry} from 'three';
+import {BufferAttribute} from 'three';
+import {InterleavedBufferAttribute} from 'three';
 import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {Box3} from 'three/src/math/Box3';
+import {Box3} from 'three';
 
 interface ClipSopParams extends DefaultOperationParams {
 	origin: Vector3;

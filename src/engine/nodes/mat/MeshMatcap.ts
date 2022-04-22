@@ -5,8 +5,8 @@
  * This material needs lights to be visible.
  *
  */
-import {MeshMatcapMaterial} from 'three/src/materials/MeshMatcapMaterial';
-import {FrontSide} from 'three/src/constants';
+import {MeshMatcapMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

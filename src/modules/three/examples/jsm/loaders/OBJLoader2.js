@@ -1,6 +1,6 @@
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Loader} from 'three/src/loaders/Loader';
-import {Object3D} from 'three/src/core/Object3D';
+import {FileLoader} from 'three';
+import {Loader} from 'three';
+import {Object3D} from 'three';
 /**
  * Development repository: https://github.com/kaisalmen/WWOBJLoader
  */

@@ -1,6 +1,6 @@
 import {PolyScene} from '../PolyScene';
 import {CoreString} from '../../../core/String';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 export const ROOT_NAME = '/';
 

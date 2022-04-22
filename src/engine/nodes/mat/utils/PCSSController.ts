@@ -1,5 +1,5 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {TypedMatNode} from '../_Base';
 import {BaseController} from './_BaseController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';

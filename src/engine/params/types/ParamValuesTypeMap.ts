@@ -6,10 +6,10 @@
 // import {OperatorPathParam} from '../OperatorPath';
 // import {RampParam} from '../Ramp';
 // import {SeparatorParam} from '../Separator';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
+import {Color} from 'three';
 import {RampValue} from '../ramp/RampValue';
 import {ParamType} from '../../poly/ParamType';
 import {TypedNodePathParamValue, TypedParamPathParamValue} from '../../../core/Walker';

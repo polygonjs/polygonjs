@@ -3,8 +3,8 @@
  *
  *
  */
-import {ShadowMaterial} from 'three/src/materials/ShadowMaterial';
-import {FrontSide} from 'three/src/constants';
+import {ShadowMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

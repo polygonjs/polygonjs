@@ -1,11 +1,11 @@
-import {AdditiveBlending, NoBlending, NormalBlending} from 'three/src/constants';
-import {Color} from 'three/src/math/Color';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {AdditiveBlending, NoBlending, NormalBlending} from 'three';
+import {Color} from 'three';
+import {MeshBasicMaterial} from 'three';
+import {ShaderMaterial} from 'three';
+import {UniformsUtils} from 'three';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {WebGLRenderTarget} from 'three';
 import {Pass, FullScreenQuad} from '../../three/examples/jsm/postprocessing/Pass.js';
 import {CopyShader} from '../../three/examples/jsm/shaders/CopyShader.js';
 import {LuminosityHighPassShader} from '../../three/examples/jsm/shaders/LuminosityHighPassShader.js';
@@ -18,8 +18,8 @@ import {
 	IUniformV3Array,
 	IUniformB,
 } from '../../../engine/nodes/utils/code/gl/Uniforms';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {IUniform} from 'three';
+import {WebGLRenderer} from 'three';
 
 /**
  * UnrealBloomPass is inspired by the bloom pass of Unreal Engine. It creates a

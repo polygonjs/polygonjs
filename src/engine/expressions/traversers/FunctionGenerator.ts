@@ -152,7 +152,7 @@ import {PolyDictionary} from '../../../types/GlobalTypes';
 // import {JsepsByString} from '../DependenciesController'
 import jsep from 'jsep';
 
-// import {Vector3} from 'three/src/math/Vector3'
+// import {Vector3} from 'three'
 type LiteralConstructDictionary = PolyDictionary<LiteralConstructMethod>;
 type AnyDictionary = PolyDictionary<any>;
 

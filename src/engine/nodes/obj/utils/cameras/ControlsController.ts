@@ -1,10 +1,11 @@
-import {BaseThreejsCameraObjNodeType, UpdateFromControlsMode, UPDATE_FROM_CONTROLS_MODES} from '../../_BaseCamera';
+import type {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {BaseCameraControlsEventNodeType, CameraControls} from '../../../event/_BaseCameraControls';
 import {CameraControlsConfig} from '../../../event/utils/CameraControlConfig';
 import {BaseParamType} from '../../../../params/_Base';
 import {TypeAssert} from '../../../../poly/Assert';
 import {CAMERA_CONTROLS_NODE_TYPES} from '../../../../poly/NodeContext';
 import {BaseViewerType} from '../../../../viewers/_Base';
+import {UpdateFromControlsMode, UPDATE_FROM_CONTROLS_MODES} from './UpdateFromControlsMode';
 
 const CONTROLS_PARAM_NAME = 'controls';
 
@@ -146,8 +147,8 @@ export class ThreejsCameraControlsController {
 		// this.controls_start_listener = () => {
 		// 	this.on_controls_start(controls);
 		// };
-		const update_mode = UPDATE_FROM_CONTROLS_MODES[this.node.pv.updateFromControlsMode];
-		switch (update_mode) {
+		const updateMode = UPDATE_FROM_CONTROLS_MODES[this.node.pv.updateFromControlsMode];
+		switch (updateMode) {
 			case UpdateFromControlsMode.ON_END:
 				return this._set_controls_events_to_update_on_end(controls);
 			case UpdateFromControlsMode.ALWAYS:
@@ -155,7 +156,7 @@ export class ThreejsCameraControlsController {
 			case UpdateFromControlsMode.NEVER:
 				return this._reset(controls);
 		}
-		TypeAssert.unreachable(update_mode);
+		TypeAssert.unreachable(updateMode);
 	}
 	private _reset(controls: CameraControls) {
 		if (this.controls_change_listener) {

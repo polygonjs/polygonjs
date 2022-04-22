@@ -1,6 +1,6 @@
-import {Vector3} from 'three/src/math/Vector3';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Vector3} from 'three';
+import {BufferGeometry} from 'three';
+import {BufferAttribute} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
 
 export enum PointsCountMode {

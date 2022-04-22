@@ -11,7 +11,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 

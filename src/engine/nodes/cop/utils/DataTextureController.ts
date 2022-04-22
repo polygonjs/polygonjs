@@ -1,8 +1,8 @@
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {WebGLRenderer} from 'three';
+import {WebGLRenderTarget} from 'three';
+import {DataTexture} from 'three';
 import {TypeAssert} from '../../../poly/Assert';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {CoreImage} from '../../../../core/Image';
 
 export enum DataTextureControllerBufferType {

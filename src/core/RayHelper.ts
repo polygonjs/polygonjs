@@ -1,10 +1,10 @@
-import {Vector3} from 'three/src/math/Vector3';
-import {Scene} from 'three/src/scenes/Scene';
-import {Raycaster} from 'three/src/core/Raycaster';
-import {Plane} from 'three/src/math/Plane';
-import {Object3D} from 'three/src/core/Object3D';
-import {Camera} from 'three/src/cameras/Camera';
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector3} from 'three';
+import {Scene} from 'three';
+import {Raycaster} from 'three';
+import {Plane} from 'three';
+import {Object3D} from 'three';
+import {Camera} from 'three';
+import {Vector2} from 'three';
 import {EventHelper} from './EventHelper';
 
 // interface MousePosition {

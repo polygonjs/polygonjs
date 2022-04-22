@@ -6,7 +6,7 @@
  *
  */
 import {Number3} from '../../../types/GlobalTypes';
-import {Camera} from 'three/src/cameras/Camera';
+import {Camera} from 'three';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';

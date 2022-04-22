@@ -1,10 +1,12 @@
-import {DataTexture} from 'three/src/textures/DataTexture';
-import {FloatType} from 'three/src/constants';
-import {LuminanceFormat} from 'three/src/constants';
-import * as MathUtils from 'three/src/math/MathUtils';
-import {RedFormat} from 'three/src/constants';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+import {
+	DataTexture,
+	FloatType,
+	MathUtils,
+	RedFormat,
+	LuminanceFormat,
+	ShaderMaterial,
+	UniformsUtils
+} from 'three';
 import { Pass, FullScreenQuad } from './Pass.js';
 import { DigitalGlitch } from '../shaders/DigitalGlitch.js';
 

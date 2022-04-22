@@ -95,14 +95,14 @@
  * @param {WebGLRenderer} renderer The renderer
  */
 
-import {Camera} from 'three/src/cameras/Camera';
-import {ClampToEdgeWrapping, FloatType, NearestFilter, RGBAFormat} from 'three/src/constants';
-import {DataTexture} from 'three/src/textures/DataTexture';
-import {Mesh} from 'three/src/objects/Mesh';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-import {Scene} from 'three/src/scenes/Scene';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {Camera} from 'three';
+import {ClampToEdgeWrapping, FloatType, NearestFilter, RGBAFormat} from 'three';
+import {DataTexture} from 'three';
+import {Mesh} from 'three';
+import {PlaneBufferGeometry} from 'three';
+import {Scene} from 'three';
+import {ShaderMaterial} from 'three';
+import {WebGLRenderTarget} from 'three';
 // const THREE = {Camera, ClampToEdgeWrapping, FloatType, HalfFloatType, NearestFilter, RGBAFormat, DataTexture, mesh, PlaneBufferGeometry, Scene, ShaderMaterial, WebGLRenderTarget}
 
 var GPUComputationRenderer = function (sizeX, sizeY, renderer) {

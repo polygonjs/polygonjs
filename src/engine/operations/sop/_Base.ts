@@ -1,7 +1,7 @@
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BaseOperation} from '../_Base';
 import {NodeContext} from '../../../engine/poly/NodeContext';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {
 	ObjectType,
 	ObjectByObjectType,
@@ -9,9 +9,9 @@ import {
 	CoreConstant,
 } from '../../../core/geometry/Constant';
 import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
-import {Material} from 'three/src/materials/Material';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Object3D} from 'three/src/core/Object3D';
+import {Material} from 'three';
+import {Mesh} from 'three';
+import {Object3D} from 'three';
 
 export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
 	static override context() {

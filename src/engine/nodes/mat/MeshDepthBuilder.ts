@@ -11,9 +11,9 @@ import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/Advan
 import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
+import {MeshDepthMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {ShaderAssemblerCustomMeshDepth} from '../gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
 interface MeshDepthBuilderControllers {
 	advancedCommon: AdvancedCommonController;

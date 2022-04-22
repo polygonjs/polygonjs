@@ -1,11 +1,11 @@
 // Helper for passes that need to fill the viewport with a single quad.
 
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Material} from 'three/src/materials/Material';
+import {BufferGeometry} from 'three';
+import {Mesh} from 'three';
+import {OrthographicCamera} from 'three';
+import {Float32BufferAttribute} from 'three';
+import {WebGLRenderer} from 'three';
+import {Material} from 'three';
 
 const _camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 

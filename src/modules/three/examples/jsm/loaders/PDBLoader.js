@@ -1,7 +1,9 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Loader} from 'three/src/loaders/Loader';
+import {
+	BufferGeometry,
+	FileLoader,
+	Float32BufferAttribute,
+	Loader
+} from 'three';
 
 class PDBLoader extends Loader {
 

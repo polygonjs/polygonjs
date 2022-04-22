@@ -1,4 +1,6 @@
-import {Vector2} from 'three/src/math/Vector2';
+import {
+	Vector2
+} from 'three';
 
 /**
  * Depth-of-field shader with bokeh

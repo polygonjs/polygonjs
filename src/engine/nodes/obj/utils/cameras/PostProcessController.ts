@@ -1,47 +1,8 @@
-import {Constructor} from '../../../../../types/GlobalTypes';
-import {Vector2} from 'three/src/math/Vector2';
-import {BaseThreejsCameraObjNodeType, BaseThreejsCameraObjNodeClass} from '../../_BaseCamera';
+import {Vector2} from 'three';
+import type {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {EffectComposer} from '../../../../../modules/core/post_process/EffectComposer';
 import {NetworkNodeType} from '../../../../poly/NodeContext';
 import {BaseNetworkPostProcessNodeType} from '../../../post/utils/EffectsComposerController';
-import {BaseNodeType} from '../../../_Base';
-
-// interface DisposablePass extends Pass {
-// 	dispose: () => void;
-// }
-const POST_PROCESS_PARAM_OPTIONS = {
-	callback: (node: BaseNodeType) => {
-		BaseThreejsCameraObjNodeClass.PARAM_CALLBACK_reset_effects_composer(node as BaseThreejsCameraObjNodeType);
-	},
-};
-
-import {ParamConfig} from '../../../utils/params/ParamsConfig';
-export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
-	return class Mixin extends Base {
-		doPostProcess = ParamConfig.BOOLEAN(0);
-		postProcessNode = ParamConfig.NODE_PATH('', {
-			visibleIf: {
-				doPostProcess: 1,
-			},
-			nodeSelection: {
-				types: [NetworkNodeType.POST],
-			},
-			// cook: false,
-			...POST_PROCESS_PARAM_OPTIONS,
-		});
-		// prepend_render_pass = ParamConfig.BOOLEAN(1, {
-		// 	visibleIf: {
-		// 		doPostProcess: 1,
-		// 	},
-		// });
-		// use_render_target = ParamConfig.BOOLEAN(0, {
-		// 	visibleIf: {
-		// 		doPostProcess: 1,
-		// 	},
-		// 	...POST_PROCESS_PARAM_OPTIONS,
-		// });
-	};
-}
 
 export class PostProcessController {
 	private _composersByCanvasId: Map<string, EffectComposer> = new Map();

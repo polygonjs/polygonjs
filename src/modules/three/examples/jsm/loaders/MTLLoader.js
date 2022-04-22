@@ -1,16 +1,16 @@
-import {Color} from 'three/src/math/Color';
-
-import {LoadingManager} from "three/src/loaders/LoadingManager";
-const DefaultLoadingManager = new LoadingManager();
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {FrontSide} from 'three/src/constants';
-import {Loader} from 'three/src/loaders/Loader';
-import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
-import {RepeatWrapping} from 'three/src/constants';
-import {TextureLoader} from 'three/src/loaders/TextureLoader';
-import {Vector2} from 'three/src/math/Vector2';
-import {sRGBEncoding} from 'three/src/constants';
+import {
+	Color,
+	DefaultLoadingManager,
+	FileLoader,
+	FrontSide,
+	Loader,
+	LoaderUtils,
+	MeshPhongMaterial,
+	RepeatWrapping,
+	TextureLoader,
+	Vector2,
+	sRGBEncoding
+} from 'three';
 
 /**
  * Loads a Wavefront .mtl file specifying materials

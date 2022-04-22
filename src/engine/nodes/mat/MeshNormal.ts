@@ -6,8 +6,8 @@
  *
  */
 
-import {MeshNormalMaterial} from 'three/src/materials/MeshNormalMaterial';
-import {FrontSide} from 'three/src/constants';
+import {MeshNormalMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FogController, FogParamConfig} from './utils/FogController';

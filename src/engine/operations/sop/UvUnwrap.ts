@@ -2,15 +2,15 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Float32BufferAttribute, Uint32BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Mesh} from 'three';
+import {Float32BufferAttribute, Uint32BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {BufferGeometry} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {XAtlasLoaderHandler, AddMeshStatus, XAtlasManager} from '../../../core/loader/geometry/XAtlas';
 import {TypeAssert} from '../../poly/Assert';
-import {Vector3} from 'three/src/math/Vector3';
-import {Line3} from 'three/src/math/Line3';
+import {Vector3} from 'three';
+import {Line3} from 'three';
 import {Potpack, PotPackBox, PotPackBoxResult} from '../../../core/libs/Potpack';
 
 export enum UvUnwrapMethod {

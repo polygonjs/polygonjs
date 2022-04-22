@@ -7,8 +7,8 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {TypedEventNode} from './_Base';
-import throttle from 'lodash/throttle';
-import {DebouncedFunc} from 'lodash';
+import throttle from 'lodash-es/throttle';
+import {DebouncedFunc} from 'lodash-es';
 import {BaseNodeType} from '../_Base';
 
 const callbackOption = {

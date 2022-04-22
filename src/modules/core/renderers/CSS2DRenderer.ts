@@ -1,10 +1,10 @@
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Object3D} from 'three/src/core/Object3D';
-import {Vector3} from 'three/src/math/Vector3';
+import {Matrix4} from 'three';
+import {Object3D} from 'three';
+import {Vector3} from 'three';
 
 import {CSS2DObject} from '../objects/CSS2DObject';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
+import {Scene} from 'three';
+import {Camera} from 'three';
 import {CoreMath} from '../../../core/math/_Module';
 
 // converted from threejs CSS2Drenderer https://github.com/mrdoob/three.js/blob/dev/examples/jsm/renderers/CSS2DRenderer.js

@@ -1,7 +1,7 @@
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Material} from 'three/src/materials/Material';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {Shader} from 'three/src/renderers/shaders/ShaderLib';
+import {ShaderMaterial} from 'three';
+import {Material} from 'three';
+import {IUniform} from 'three';
+import {Shader} from 'three';
 import {PolyScene} from '../../../../../scene/PolyScene';
 import {GlParamConfig, GlParamConfigJSON} from '../../utils/GLParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';

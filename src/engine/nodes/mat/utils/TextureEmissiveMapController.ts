@@ -2,10 +2,10 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
-import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
+import {MeshPhysicalMaterial} from 'three';
+import {MeshStandardMaterial} from 'three';
+import {MeshLambertMaterial} from 'three';
+import {MeshToonMaterial} from 'three';
 
 export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

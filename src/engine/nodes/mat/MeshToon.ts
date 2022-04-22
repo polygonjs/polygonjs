@@ -5,8 +5,8 @@
  * This material needs lights to be visible. While not as photorealistic as the MeshStandardMaterial, it is very cheap to process.
  *
  */
-import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
-import {FrontSide} from 'three/src/constants';
+import {MeshToonMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';

@@ -1,9 +1,9 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {MeshBasicMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
 import {TypedObjNode} from '../../_Base';
-import {Group} from 'three/src/objects/Group';
-import {Object3D} from 'three/src/core/Object3D';
+import {Group} from 'three';
+import {Object3D} from 'three';
 import {FlagsControllerD} from '../../../utils/FlagsController';
 export function BaseLightHelperParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

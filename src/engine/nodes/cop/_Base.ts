@@ -1,10 +1,10 @@
 import {TypedNode} from '../_Base';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {FlagsControllerBO} from '../utils/FlagsController';
-import {DataTexture} from 'three/src/textures/DataTexture';
-import {LuminanceFormat, HalfFloatType} from 'three/src/constants';
+import {DataTexture} from 'three';
+import {LuminanceFormat, HalfFloatType} from 'three';
 
 const INPUT_COP_NAME = 'input texture';
 const DEFAULT_INPUT_NAMES = [INPUT_COP_NAME, INPUT_COP_NAME, INPUT_COP_NAME, INPUT_COP_NAME];

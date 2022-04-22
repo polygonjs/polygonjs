@@ -6,9 +6,9 @@
  *
  */
 import {TypedRopNode} from './_Base';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
-import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderer, WebGLRendererParameters} from 'three';
 import {
 	// encoding
 	LinearEncoding,
@@ -26,7 +26,13 @@ import {
 	PCFShadowMap,
 	PCFSoftShadowMap,
 	VSMShadowMap,
-} from 'three/src/constants';
+} from 'three';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreType} from '../../../core/Type';
+import {Poly} from '../../Poly';
+import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
+import {defaultPixelRatio} from '../obj/utils/cameras/defaultPixelRatio';
 
 enum EncodingName {
 	Linear = 'Linear',
@@ -149,12 +155,6 @@ const DEFAULT_PARAMS: WebGLRendererParameters = {
 	logarithmicDepthBuffer: false,
 };
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreType} from '../../../core/Type';
-import {RenderController} from '../obj/utils/cameras/RenderController';
-import {Poly} from '../../Poly';
-import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
 class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to set the precision */
 	tprecision = ParamConfig.BOOLEAN(0);
@@ -323,7 +323,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 
 		renderer.sortObjects = this.pv.sortObjects;
 
-		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : RenderController.defaultPixelRatio();
+		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : defaultPixelRatio();
 
 		if (Poly.renderersController.printDebug()) {
 			Poly.renderersController.printDebugMessage(`set renderer pixelRatio from '${this.path()}'`);

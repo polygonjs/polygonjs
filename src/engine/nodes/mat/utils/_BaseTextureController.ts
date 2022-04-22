@@ -1,7 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
-import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
+import {Material} from 'three';
+import {Texture} from 'three';
 import {BaseMatNodeType} from '../_Base';
 import {ParamConfig} from '../../utils/params/ParamsConfig';
 import {NodeContext} from '../../../poly/NodeContext';
@@ -9,7 +9,7 @@ import {NodePathParam} from '../../../params/NodePath';
 import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
-// import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+// import {IUniform} from 'three';
 // import {
 // 	IUniforms,
 // 	MaterialWithCustomMaterials,

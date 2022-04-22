@@ -3,10 +3,10 @@
  *
  *
  */
-import {Camera} from 'three/src/cameras/Camera';
-import {Object3D} from 'three/src/core/Object3D';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Vector3} from 'three/src/math/Vector3';
+import {Camera} from 'three';
+import {Object3D} from 'three';
+import {Matrix4} from 'three';
+import {Vector3} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraController} from '../../../core/CameraController';

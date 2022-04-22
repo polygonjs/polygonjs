@@ -15,9 +15,9 @@ import {Poly} from '../../Poly';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
+import {LineBasicMaterial} from 'three';
 import {CustomMaterialName} from '../../../core/geometry/Material';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 
 interface LineBasicBuilderControllers {
 	advancedCommon: AdvancedCommonController;

@@ -1,19 +1,19 @@
-import {Color} from 'three/src/math/Color';
-import {FrontSide} from 'three/src/constants';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsLib} from 'three/src/renderers/shaders/UniformsLib';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {Vector3} from 'three/src/math/Vector3';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Texture} from 'three/src/textures/Texture';
+import {Color} from 'three';
+import {FrontSide} from 'three';
+import {Matrix4} from 'three';
+import {ShaderMaterial} from 'three';
+import {UniformsLib} from 'three';
+import {UniformsUtils} from 'three';
+import {Vector3} from 'three';
+import {BufferGeometry} from 'three';
+import {Texture} from 'three';
 import {IUniformColor, IUniformN, IUniformTexture, IUniformV3} from '../../../engine/nodes/utils/code/gl/Uniforms';
 import {BaseReflector, BaseReflectorOptions} from './_BaseReflector';
 import VERTEX from './water/vert.glsl';
 import FRAGMENT from './water/frag.glsl';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
+import {WebGLRenderer} from 'three';
+import {Scene} from 'three';
+import {Camera} from 'three';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 /**
  * Work based on :

@@ -1,8 +1,8 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Object3D} from 'three/src/core/Object3D';
+import {Mesh} from 'three';
+import {BufferGeometry} from 'three';
+import {Object3D} from 'three';
 import {CoreLoaderGeometry, GeometryFormat} from '../../../core/loader/Geometry';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {PolyScene} from '../../scene/PolyScene';

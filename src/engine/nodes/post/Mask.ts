@@ -8,8 +8,8 @@ import {MaskPass} from '../../../modules/three/examples/jsm/postprocessing/MaskP
 import {CameraNodeType, CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {SceneObjNode} from '../obj/Scene';
 import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
+import {Scene} from 'three';
+import {Camera} from 'three';
 
 interface MaskPassWithContext extends MaskPass {
 	context: {

@@ -1,8 +1,8 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface AttribAddMultSopParams extends DefaultOperationParams {
 	name: string;

@@ -1,9 +1,9 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {MeshPhysicalMaterial} from 'three';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 
 // interface MeshPhysicalWithUniforms extends ShaderMaterial {

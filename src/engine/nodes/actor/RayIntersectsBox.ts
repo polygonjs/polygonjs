@@ -8,8 +8,8 @@
 
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {BaseRayBox3ActorNode} from './_BaseRayBox3';
-import {Ray} from 'three/src/math/Ray';
-import {Box3} from 'three/src/math/Box3';
+import {Ray} from 'three';
+import {Box3} from 'three';
 
 const OUTPUT_NAME = 'intersects';
 export class RayIntersectsBoxActorNode extends BaseRayBox3ActorNode<ActorConnectionPointType.BOOLEAN> {

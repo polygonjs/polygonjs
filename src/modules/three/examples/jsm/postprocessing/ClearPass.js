@@ -1,4 +1,6 @@
-import {Color} from 'three/src/math/Color';
+import {
+	Color
+} from 'three';
 import { Pass } from './Pass.js';
 
 class ClearPass extends Pass {

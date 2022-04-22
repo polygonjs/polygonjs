@@ -1,4 +1,4 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {Poly} from '../../../engine/Poly';
 import {CoreBaseLoader} from '../_Base';
 import {PolyScene} from '../../../engine/scene/PolyScene';

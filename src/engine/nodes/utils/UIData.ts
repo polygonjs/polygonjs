@@ -1,5 +1,5 @@
-import {Vector2} from 'three/src/math/Vector2';
-import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three';
+import {Color} from 'three';
 import {BaseNodeType} from '../_Base';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {CoreType} from '../../../core/Type';

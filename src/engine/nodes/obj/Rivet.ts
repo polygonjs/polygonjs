@@ -4,22 +4,22 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {AxesHelper} from 'three/src/helpers/AxesHelper';
+import {AxesHelper} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {GeoObjNode} from './Geo';
 import {HierarchyController} from './utils/HierarchyController';
 import {NodeContext} from '../../poly/NodeContext';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {WebGLRenderer} from 'three';
+import {Scene} from 'three';
+import {Camera} from 'three';
+import {BufferGeometry} from 'three';
 import {Geometry} from '../../../modules/three/examples/jsm/deprecated/Geometry';
-import {Material} from 'three/src/materials/Material';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Vector3} from 'three/src/math/Vector3';
+import {Material} from 'three';
+import {Mesh} from 'three';
+import {Vector3} from 'three';
 import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {RenderHook} from '../../../core/geometry/Material';
 import {TypeAssert} from '../../poly/Assert';

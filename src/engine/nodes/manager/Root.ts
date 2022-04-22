@@ -7,7 +7,7 @@ import {BaseNodeType} from '../_Base';
 import {HierarchyObjNode} from '../obj/utils/HierarchyController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {ROOT_NAME} from '../../scene/utils/ObjectsController';
-import {Scene} from 'three/src/scenes/Scene';
+import {Scene} from 'three';
 
 import {RootAudioController, RootAudioParamConfig} from './utils/Scene/Audio';
 import {SceneAutoUpdateParamConfig, SceneAutoUpdateController} from './utils/Scene/AutoUpdate';

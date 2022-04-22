@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
 
-import {CubeReflectionMapping, CubeRefractionMapping} from 'three/src/constants';
+import {CubeReflectionMapping, CubeRefractionMapping} from 'three';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 enum MapMode {

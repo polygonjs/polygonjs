@@ -1,6 +1,6 @@
 import {Number4, StringOrNumber4} from '../../types/GlobalTypes';
 import {TypedMultipleParam} from './_Multiple';
-import {Vector4} from 'three/src/math/Vector4';
+import {Vector4} from 'three';
 import {ParamType} from '../poly/ParamType';
 import {FloatParam} from './Float';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';

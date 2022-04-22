@@ -2,7 +2,7 @@ import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
 import {ParticlesSystemGpuSopNode} from '../../../../sop/ParticlesSystemGpu';
 import {TextureAllocationsController, TextureAllocationsControllerData} from '../../utils/TextureAllocationsController';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {ShaderMaterial} from 'three';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 
 export interface PersistedConfigBaseParticlesData {

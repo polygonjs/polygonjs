@@ -9,7 +9,7 @@
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
-import {Sphere} from 'three/src/math/Sphere';
+import {Sphere} from 'three';
 import {BaseNodeType} from '../_Base';
 
 const OUTPUT_NAME = 'sphere';

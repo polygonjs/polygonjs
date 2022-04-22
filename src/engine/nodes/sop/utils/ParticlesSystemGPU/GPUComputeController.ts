@@ -1,22 +1,22 @@
-import {Vector2} from 'three/src/math/Vector2';
-import {isPowerOfTwo} from 'three/src/math/MathUtils';
-import {InstancedBufferAttribute} from 'three/src/core/InstancedBufferAttribute';
-import {DataTexture} from 'three/src/textures/DataTexture';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Vector2} from 'three';
+import {MathUtils} from 'three';
+import {InstancedBufferAttribute} from 'three';
+import {DataTexture} from 'three';
+import {BufferAttribute} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
 import {GlConstant} from '../../../../../core/geometry/GlConstant';
 import {CoreMath} from '../../../../../core/math/_Module';
 import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
 import {GPUComputationRenderer, GPUComputationRendererVariable} from './GPUComputationRenderer';
 import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderer} from 'three';
 import {CorePoint} from '../../../../../core/geometry/Point';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsController} from '../../../gl/code/utils/TextureAllocationsController';
 import {GlParamConfig} from '../../../gl/code/utils/GLParamConfig';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {ShaderMaterial} from 'three';
 // import {CoreGraphNode} from '../../../../../core/graph/CoreGraphNode';
-import {FloatType, HalfFloatType} from 'three/src/constants';
+import {FloatType, HalfFloatType} from 'three';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {TextureAllocation} from '../../../gl/code/utils/TextureAllocation';
 import {CoreUserAgent} from '../../../../../core/UserAgent';
@@ -180,7 +180,7 @@ export class ParticlesSystemGpuComputeController {
 			this._usedTexturesSize.x = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.x);
 			this._usedTexturesSize.y = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.y);
 		} else {
-			if (!(isPowerOfTwo(this.node.pv.texturesSize.x) && isPowerOfTwo(this.node.pv.texturesSize.y))) {
+			if (!(MathUtils.isPowerOfTwo(this.node.pv.texturesSize.x) && MathUtils.isPowerOfTwo(this.node.pv.texturesSize.y))) {
 				this.node.states.error.set('texture size must be a power of 2');
 				return;
 			}

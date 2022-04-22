@@ -1,9 +1,9 @@
 import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
-import {Object3D} from 'three/src/core/Object3D';
-import {Color} from 'three/src/math/Color';
+import {Object3D} from 'three';
+import {Color} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 
 export abstract class TypedLightObjNode<L extends Object3D, K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
 	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);

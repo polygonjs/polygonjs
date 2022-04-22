@@ -1,9 +1,9 @@
 // import {TypedSopNode} from './_Base';
-// import {AnimationMixer} from 'three/src/animation/AnimationMixer';
+// import {AnimationMixer} from 'three';
 // import {InputCloneMode} from '../../poly/InputCloneMode';
 // import {CoreGroup} from '../../../core/geometry/Group';
 // import {BaseNodeType} from '../_Base';
-// import {Object3D} from 'three/src/core/Object3D';
+// import {Object3D} from 'three';
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {BaseParamType} from '../../params/_Base';
 // class AnimationMixerSopParamsConfig extends NodeParamsConfig {

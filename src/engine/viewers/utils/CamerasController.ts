@@ -1,5 +1,5 @@
-// import {Camera} from 'three/src/cameras/Camera';
-import {Vector2} from 'three/src/math/Vector2';
+// import {Camera} from 'three';
+import {Vector2} from 'three';
 import {BaseViewerType} from '../_Base';
 
 export class ViewerCamerasController {

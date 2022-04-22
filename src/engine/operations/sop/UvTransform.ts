@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 

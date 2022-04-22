@@ -1,12 +1,12 @@
 import {CoreMath} from '../../../core/math/_Module';
-import {Camera} from 'three/src/cameras/Camera';
+import {Camera} from 'three';
 import {CoreDomUtils} from '../../../core/DomUtils';
-import {Euler} from 'three/src/math/Euler';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
+import {Euler} from 'three';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
 import {BaseCollisionHandler} from './BaseCollisionHandler';
 import {CorePlayer} from '../../../core/player/Player';
-import {Spherical} from 'three/src/math/Spherical';
+import {Spherical} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 
 interface TranslationData {

@@ -5,7 +5,7 @@
  * An ambient light will add a uniform light to every object. This can be useful to elevate the shadows slightly.
  *
  */
-import {AmbientLight} from 'three/src/lights/AmbientLight';
+import {AmbientLight} from 'three';
 import {TypedLightObjNode} from './_BaseLight';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

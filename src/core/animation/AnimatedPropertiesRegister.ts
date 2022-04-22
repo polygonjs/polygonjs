@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {ColorParam} from '../../engine/params/Color';
 import {FloatParam} from '../../engine/params/Float';
 import {IntegerParam} from '../../engine/params/Integer';

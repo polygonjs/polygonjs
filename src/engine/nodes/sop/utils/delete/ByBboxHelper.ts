@@ -1,7 +1,7 @@
 import {DeleteSopNode} from '../../Delete';
 import {CorePoint} from '../../../../../core/geometry/Point';
-import {Box3} from 'three/src/math/Box3';
-import {Vector3} from 'three/src/math/Vector3';
+import {Box3} from 'three';
+import {Vector3} from 'three';
 
 export class ByBboxHelper {
 	private _point_position = new Vector3();

@@ -7,7 +7,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
+import {InstancedBufferGeometry} from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';

@@ -7,13 +7,13 @@
  */
 import {TypedSopNode} from './_Base';
 
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
+import {BufferGeometry} from 'three';
+import {Mesh} from 'three';
 
 class BlendSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to blend */

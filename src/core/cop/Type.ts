@@ -10,7 +10,7 @@ import {
 	UnsignedShort4444Type,
 	UnsignedShort5551Type,
 	UnsignedInt248Type,
-} from 'three/src/constants';
+} from 'three';
 
 export const TEXTURE_TYPES = [
 	{UnsignedByteType},

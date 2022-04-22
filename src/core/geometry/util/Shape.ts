@@ -1,7 +1,7 @@
 // import {CoreGeometryUtilCircle} from './Circle';
-// import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
-// import {Shape} from 'three/src/extras/core/Shape';
-// import {Vector3} from 'three/src/math/Vector3';
+// import {ShapeBufferGeometry} from 'three';
+// import {Shape} from 'three';
+// import {Vector3} from 'three';
 
 // export class CoreGeometryUtilShape {
 // 	static geometry_from_points(positions: Vector3[]) {

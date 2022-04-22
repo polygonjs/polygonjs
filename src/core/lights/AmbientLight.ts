@@ -2,7 +2,7 @@ import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 
 export interface AmbientLightParams extends DefaultOperationParams {
 	color: Color;

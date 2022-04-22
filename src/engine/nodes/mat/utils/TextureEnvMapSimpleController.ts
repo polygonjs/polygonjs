@@ -1,12 +1,12 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {MeshBasicMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MultiplyOperation, MixOperation, AddOperation} from 'three/src/constants';
+import {MultiplyOperation, MixOperation, AddOperation} from 'three';
 import {CopType} from '../../../poly/registers/nodes/types/Cop';
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
+import {MeshLambertMaterial} from 'three';
+import {MeshPhongMaterial} from 'three';
 
 enum CombineOperation {
 	MULT = 'mult',

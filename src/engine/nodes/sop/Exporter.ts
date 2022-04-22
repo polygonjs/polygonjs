@@ -10,8 +10,8 @@ import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {GLTFExporter, GLTFExporterOptions} from '../../../modules/three/examples/jsm/exporters/GLTFExporter';
-import {Scene} from 'three/src/scenes/Scene';
-import {Object3D} from 'three/src/core/Object3D';
+import {Scene} from 'three';
+import {Object3D} from 'three';
 
 function save(blob: Blob, filename: string) {
 	const link = document.createElement('a');

@@ -1,13 +1,13 @@
 import {BaseNodeType} from '../_Base';
-import {Texture} from 'three/src/textures/Texture';
-import {Matrix3} from 'three/src/math/Matrix3';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
+import {Texture} from 'three';
+import {Matrix3} from 'three';
+import {IUniform} from 'three';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
-import {MaterialLoader} from 'three/src/loaders/MaterialLoader';
-import {Material} from 'three/src/materials/Material';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {MaterialLoader} from 'three';
+import {Material} from 'three';
+import {ShaderMaterial} from 'three';
 import {MaterialUserDataUniforms, OnBeforeCompileDataHandler} from '../gl/code/assemblers/materials/OnBeforeCompile';
-import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
+import {MeshDepthMaterial} from 'three';
 import {
 	ShadowMaterial,
 	SpriteMaterial,
@@ -24,7 +24,7 @@ import {
 	MeshMatcapMaterial,
 	LineDashedMaterial,
 	LineBasicMaterial,
-} from 'three/src/materials/Materials';
+} from 'three';
 
 function MonkeyPatchMaterial() {
 	const materialLib = {

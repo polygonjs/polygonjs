@@ -1,5 +1,5 @@
 import {TypedLightObjNode} from './_BaseLight';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 // import {CoreTransform} from '../../../core/Transform';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';

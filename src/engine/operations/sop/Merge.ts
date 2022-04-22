@@ -1,16 +1,16 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {MapUtils} from '../../../core/MapUtils';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {Object3D} from 'three/src/core/Object3D';
-import {Group} from 'three/src/objects/Group';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Object3D} from 'three';
+import {Group} from 'three';
+import {Mesh} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 
 interface MergeSopParams extends DefaultOperationParams {
 	compact: boolean;
@@ -98,7 +98,7 @@ export class MergeSopOperation extends BaseSopOperation {
 
 				// TODO: test that this works with geometries with same attributes
 				try {
-					const merged_geometry = CoreGeometry.mergeGeometries(geometries);
+					const merged_geometry = CoreGeometryBuilderMerge.merge(geometries);
 					if (merged_geometry) {
 						const material = materials_by_object_type.get(object_type);
 						const object = this.createObject(merged_geometry, object_type, material);

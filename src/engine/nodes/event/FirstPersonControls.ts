@@ -5,7 +5,7 @@
  * This allows you to create a First-Person navigation, using the WASD keys.
  *
  */
-import {Camera} from 'three/src/cameras/Camera';
+import {Camera} from 'three';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';

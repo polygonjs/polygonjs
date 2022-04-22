@@ -2,11 +2,11 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
+import {MeshBasicMaterial} from 'three';
+import {MeshLambertMaterial} from 'three';
+import {MeshStandardMaterial} from 'three';
+import {MeshPhysicalMaterial} from 'three';
+import {MeshToonMaterial} from 'three';
 
 export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

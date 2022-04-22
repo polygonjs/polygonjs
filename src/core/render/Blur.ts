@@ -1,10 +1,10 @@
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {Mesh} from 'three/src/objects/Mesh';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Vector2} from 'three/src/math/Vector2';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
+import {WebGLRenderTarget} from 'three';
+import {Mesh} from 'three';
+import {PlaneBufferGeometry} from 'three';
+import {ShaderMaterial} from 'three';
+import {Vector2} from 'three';
+import {WebGLRenderer} from 'three';
+import {OrthographicCamera} from 'three';
 import {HorizontalBlurShader} from '../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
 import {VerticalBlurShader} from '../../modules/three/examples/jsm/shaders/VerticalBlurShader';
 

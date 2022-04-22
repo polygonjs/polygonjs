@@ -1,17 +1,18 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreTransform, DEFAULT_ROTATION_ORDER} from '../../../core/Transform';
 import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {LineSegments} from 'three';
+import {BufferGeometry} from 'three';
 import {CorePoint} from '../../../core/geometry/Point';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;
@@ -51,7 +52,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 			}
 		}
 
-		const merged_geometry = CoreGeometry.mergeGeometries(this._geometries);
+		const merged_geometry = CoreGeometryBuilderMerge.merge(this._geometries);
 		for (let geometry of this._geometries) {
 			geometry.dispose();
 		}

@@ -12,13 +12,13 @@ import {BaseNodeType} from '../_Base';
 import {TypedEventNode} from './_Base';
 import {CorePlayer} from '../../../core/player/Player';
 import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CameraNodeType} from '../../poly/NodeContext';
-import {Camera} from 'three/src/cameras/Camera';
-import {Vector3} from 'three/src/math/Vector3';
-import {Spherical} from 'three/src/math/Spherical';
+import {Camera} from 'three';
+import {Vector3} from 'three';
+import {Spherical} from 'three';
 import {CollisionController} from './collision/CollisionController';
 
 const EVENT_INIT = 'init';

@@ -6,7 +6,7 @@
  * [https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491](https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491)
  */
 import {Constructor} from '../../../types/GlobalTypes';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {CoreLoaderTexture} from '../../../core/loader/Texture';
 import {BaseNodeType} from '../_Base';

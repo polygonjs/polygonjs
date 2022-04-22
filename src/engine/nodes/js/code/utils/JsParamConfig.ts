@@ -1,11 +1,11 @@
-import {Vector4} from 'three/src/math/Vector4';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector4} from 'three';
+import {Vector3} from 'three';
+import {Vector2} from 'three';
 import {ParamType} from '../../../../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {TypeAssert} from '../../../../poly/Assert';
 import {BaseParamConfig} from '../../../utils/code/configs/BaseParamConfig';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 
 export class JsParamConfig<T extends ParamType> extends BaseParamConfig<T> {
 	constructor(_type: T, _name: string, _default_value: ParamInitValuesTypeMap[T], private _uniform_name: string) {

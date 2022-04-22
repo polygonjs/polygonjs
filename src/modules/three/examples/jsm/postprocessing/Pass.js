@@ -1,7 +1,9 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Mesh} from 'three/src/objects/Mesh';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
+import {
+	BufferGeometry,
+	Float32BufferAttribute,
+	OrthographicCamera,
+	Mesh
+} from 'three';
 
 class Pass {
 

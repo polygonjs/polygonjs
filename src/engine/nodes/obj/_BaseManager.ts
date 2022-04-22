@@ -1,5 +1,5 @@
 import {TypedObjNode} from './_Base';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 export class BaseManagerObjNode<K extends NodeParamsConfig> extends TypedObjNode<Group, K> {

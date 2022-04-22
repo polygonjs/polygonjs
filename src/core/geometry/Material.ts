@@ -1,10 +1,10 @@
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
+import {ShaderMaterial} from 'three';
+import {Object3D} from 'three';
+import {Mesh} from 'three';
+import {Material} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
-import {IUniform} from 'three/src/renderers/shaders/UniformsLib';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+import {IUniform} from 'three';
+import {UniformsUtils} from 'three';
 export interface IUniforms {
 	[uniform: string]: IUniform;
 }
@@ -38,12 +38,12 @@ export interface MaterialWithSkinning extends Material {
 	morphTargets: boolean;
 }
 
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {WebGLRenderer} from 'three';
+import {Scene} from 'three';
+import {Camera} from 'three';
+import {BufferGeometry} from 'three';
 import {Geometry} from '../../modules/three/examples/jsm/deprecated/Geometry';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {ShaderAssemblerMaterial} from '../../engine/nodes/gl/code/assemblers/materials/_BaseMaterial';
 import {
 	assignUniformViaUserData,

@@ -1,10 +1,10 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedObjNode} from '../_Base';
-import {Matrix4} from 'three/src/math/Matrix4';
+import {Matrix4} from 'three';
 import {CoreTransform, SetParamsFromMatrixOptions, ROTATION_ORDERS, RotationOrder} from '../../../../core/Transform';
-import {Object3D} from 'three/src/core/Object3D';
-// import {Vector3} from 'three/src/math/Vector3';
-// import {Quaternion} from 'three/src/math/Quaternion';
+import {Object3D} from 'three';
+// import {Vector3} from 'three';
+// import {Quaternion} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../_Base';
 import {isBooleanTrue} from '../../../../core/BooleanValue';

@@ -1,4 +1,4 @@
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';

@@ -8,7 +8,7 @@ import {
 	SpotLightContainer,
 	SpotLightContainerParams,
 } from '../../../core/lights/SpotLight';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 export class SpotLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SpotLightParams = DEFAULT_SPOT_LIGHT_PARAMS;

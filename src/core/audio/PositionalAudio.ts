@@ -1,7 +1,7 @@
-import {Vector3} from 'three/src/math/Vector3';
-import {Quaternion} from 'three/src/math/Quaternion';
+import {Vector3} from 'three';
+import {Quaternion} from 'three';
 import {Panner3D} from 'tone/build/esm/component/channel/Panner3D';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {ToneAudioNode} from 'tone/build/esm/core/context/ToneAudioNode';
 
 const _position = new Vector3();

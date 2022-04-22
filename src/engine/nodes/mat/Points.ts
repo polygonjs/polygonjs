@@ -5,8 +5,8 @@
  * This material can be added to points.
  *
  */
-import {PointsMaterial} from 'three/src/materials/PointsMaterial';
-import {FrontSide} from 'three/src/constants';
+import {PointsMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';

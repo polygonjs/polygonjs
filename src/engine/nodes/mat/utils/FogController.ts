@@ -1,7 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';

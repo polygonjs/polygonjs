@@ -1,13 +1,15 @@
-import {ClampToEdgeWrapping} from 'three/src/constants';
-import {DataTexture} from 'three/src/textures/DataTexture';
-import {DataUtils} from 'three/src/extras/DataUtils';
-import {FloatType} from 'three/src/constants';
-import {HalfFloatType} from 'three/src/constants';
-import {LinearFilter} from 'three/src/constants';
-import {NearestFilter} from 'three/src/constants';
-import {RGBAFormat} from 'three/src/constants';
-import {UVMapping} from 'three/src/constants';
-import {UniformsLib} from 'three/src/renderers/shaders/UniformsLib';
+import {
+	ClampToEdgeWrapping,
+	DataTexture,
+	DataUtils,
+	FloatType,
+	HalfFloatType,
+	LinearFilter,
+	NearestFilter,
+	RGBAFormat,
+	UVMapping,
+	UniformsLib
+} from 'three';
 
 /**
  * Uniforms library for RectAreaLight shared webgl shaders

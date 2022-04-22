@@ -21,7 +21,6 @@ import {
 	ATTRIBUTE_SIZE_RANGE,
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -35,10 +34,11 @@ import {
 } from './utils/delete/ByAttributeHelper';
 import {ByExpressionHelper} from './utils/delete/ByExpressionHelper';
 import {ByBboxHelper} from './utils/delete/ByBboxHelper';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {ByObjectTypeHelper} from './utils/delete/ByObjectTypeHelper';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ByBoundingObjectHelper} from './utils/delete/ByBoundingObjectHelper';
+import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
@@ -286,13 +286,13 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				} else {
 					core_geometry.geometry().dispose();
 					if (kept_points.length > 0) {
-						const new_geo = CoreGeometry.geometryFromPoints(
-							kept_points,
-							objectTypeFromConstructor(object.constructor)
-						);
-						if (new_geo) {
-							object.geometry = new_geo;
-							objects.push(object);
+						const builder = geometryBuilder(objectTypeFromConstructor(object.constructor));
+						if (builder) {
+							const new_geo = builder.from_points(kept_points);
+							if (new_geo) {
+								object.geometry = new_geo;
+								objects.push(object);
+							}
 						}
 					}
 				}
@@ -303,7 +303,10 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 
 	private _point_object(core_object: CoreObject) {
 		const core_points = core_object.points();
-		const geometry = CoreGeometry.geometryFromPoints(core_points, ObjectType.POINTS);
-		if (geometry) return this.createObject(geometry, ObjectType.POINTS);
+		const builder = geometryBuilder(ObjectType.POINTS);
+		if (builder) {
+			const geometry = builder.from_points(core_points);
+			if (geometry) return this.createObject(geometry, ObjectType.POINTS);
+		}
 	}
 }

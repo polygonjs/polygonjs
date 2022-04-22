@@ -1,4 +1,4 @@
-import {Camera} from 'three/src/cameras/Camera';
+import {Camera} from 'three';
 
 import {TypedEventNode} from './_Base';
 // import {BaseCameraObjNodeType} from '../obj/_BaseCamera';

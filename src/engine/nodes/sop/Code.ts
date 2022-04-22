@@ -9,7 +9,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {Poly} from '../../Poly';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 

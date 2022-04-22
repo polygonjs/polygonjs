@@ -7,7 +7,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {NodeContext} from '../../poly/NodeContext';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

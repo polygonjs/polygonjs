@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Reflector} from '../../../modules/core/objects/Reflector';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {TransformResetSopOperation, TRANSFORM_RESET_MODES, TransformResetMode} from './TransformReset';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface ReflectorSopParams extends DefaultOperationParams {

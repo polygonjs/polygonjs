@@ -1,5 +1,5 @@
 import {PolyScene} from '../PolyScene';
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 import {IUniformN, IUniformTexture, IUniformV2} from '../../nodes/utils/code/gl/Uniforms';
 import {GlParamConfig} from '../../nodes/gl/code/utils/GLParamConfig';
 import {ParamType} from '../../poly/ParamType';

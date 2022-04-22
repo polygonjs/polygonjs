@@ -1,8 +1,8 @@
 import {CoreString} from './String';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
+import {Color} from 'three';
 import {CoreType} from './Type';
 import {GlConnectionPointType} from '../engine/nodes/utils/io/connections/Gl';
 

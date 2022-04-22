@@ -5,8 +5,8 @@
  * This nodes takes 1, 2 or 3 inputs. Depending on the distance to this object the camera is, one of those inputs will be displayed. This allows you to have low resolution objects displayed when the camera is far, and high resolution when the camera is close.
  */
 import {TypedSopNode} from './_Base';
-import {LOD} from 'three/src/objects/LOD';
-import {Object3D} from 'three/src/core/Object3D';
+import {LOD} from 'three';
+import {Object3D} from 'three';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
@@ -14,7 +14,7 @@ import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreTransform} from '../../../core/Transform';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Camera} from 'three/src/cameras/Camera';
+import {Camera} from 'three';
 class LODSopParamsConfig extends NodeParamsConfig {
 	/** @param distance when switching between high res and mid res (first input and second input) */
 	distance0 = ParamConfig.FLOAT(1);

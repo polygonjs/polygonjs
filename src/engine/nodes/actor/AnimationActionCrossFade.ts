@@ -17,8 +17,8 @@ import {
 	AnimationActionEventListenerExtended,
 	AnimationActionLoopEvent,
 } from './_BaseAnimationAction';
-import {AnimationMixer} from 'three/src/animation/AnimationMixer';
-import {EventListener, Event} from 'three/src/core/EventDispatcher';
+import {AnimationMixer} from 'three';
+import {EventListener, Event} from 'three';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 export enum AnimationActionCrossFadeActorNodeInputName {

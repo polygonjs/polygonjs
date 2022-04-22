@@ -3,7 +3,7 @@
  *
  */
 import {Constructor} from '../../../types/GlobalTypes';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {CoreLoaderTexture} from '../../../core/loader/Texture';
 import {BaseNodeType} from '../_Base';
@@ -13,7 +13,7 @@ import {FileType} from '../../params/utils/OptionsController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CanvasTexture} from 'three/src/textures/CanvasTexture';
+import {CanvasTexture} from 'three';
 import {parseGIF, decompressFrames, ParsedFrame} from 'gifuct-js';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {isUrlGif} from '../../../core/FileTypeController';

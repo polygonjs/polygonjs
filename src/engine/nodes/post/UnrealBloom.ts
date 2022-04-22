@@ -3,7 +3,7 @@
  *
  *
  */
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {UnrealBloomPass} from '../../../modules/three/examples/jsm/postprocessing/UnrealBloomPass';
 import {UnrealBloomPass} from '../../../modules/core/post_process/UnrealBloomPass';

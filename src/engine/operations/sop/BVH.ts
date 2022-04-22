@@ -1,14 +1,14 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {Mesh} from 'three';
+import {Material} from 'three';
+import {BufferGeometry} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ThreeMeshBVHHelper} from './utils/Bvh/ThreeMeshBVHHelper';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 
 interface BVHSopParams extends DefaultOperationParams {
 	keepOnlyPosition: boolean;
@@ -69,7 +69,7 @@ export class BVHSopOperation extends BaseSopOperation {
 
 		// TODO: test that this works with geometries with same attributes
 		try {
-			const mergedGeometry = CoreGeometry.mergeGeometries(geometries);
+			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
 			if (mergedGeometry) {
 				const mesh = this.createObject(mergedGeometry, ObjectType.MESH, material);
 				return mesh;

@@ -1,13 +1,13 @@
-import {Object3D} from 'three/src/core/Object3D';
-import {Vector3} from 'three/src/math/Vector3';
-import {Box3} from 'three/src/math/Box3';
-import {Line3} from 'three/src/math/Line3';
-import {Matrix4} from 'three/src/math/Matrix4';
+import {Object3D} from 'three';
+import {Vector3} from 'three';
+import {Box3} from 'three';
+import {Line3} from 'three';
+import {Matrix4} from 'three';
 import {MeshWithBVH, ExtendedTriangle} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
 import {createPlayerGeometry, CapsuleOptions} from './PlayerGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
-import {DEG2RAD} from 'three/src/math/MathUtils';
+import {Mesh} from 'three';
+import {Material} from 'three';
+import {MathUtils} from 'three';
 import {CoreConstant, ObjectType} from '../geometry/Constant';
 interface PlayerOptions {
 	object: Object3D;
@@ -105,7 +105,7 @@ export class CorePlayer {
 	reset() {
 		this.stop();
 		this.object.position.copy(this.startPosition);
-		startRotationRadians.copy(this.startRotation).multiplyScalar(DEG2RAD);
+		startRotationRadians.copy(this.startRotation).multiplyScalar(MathUtils.DEG2RAD);
 		this.object.rotation.setFromVector3(startRotationRadians);
 	}
 	stop() {

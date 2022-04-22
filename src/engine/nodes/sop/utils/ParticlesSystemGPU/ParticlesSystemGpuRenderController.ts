@@ -1,11 +1,11 @@
 import {ObjectUtils} from '../../../../../core/ObjectUtils';
-import {Material} from 'three/src/materials/Material';
-import {Object3D} from 'three/src/core/Object3D';
+import {Material} from 'three';
+import {Object3D} from 'three';
 import {BaseBuilderMatNodeType} from '../../../mat/_BaseBuilder';
 import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
 import {CoreMaterial, ShaderMaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsControllerData} from '../../../gl/code/utils/TextureAllocationsController';
 import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../../../gl/code/globals/Texture';

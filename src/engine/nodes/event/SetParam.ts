@@ -17,9 +17,9 @@ import {Vector3Param} from '../../params/Vector3';
 import {Vector4Param} from '../../params/Vector4';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
 import {IntegerParam} from '../../params/Integer';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 

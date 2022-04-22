@@ -1,11 +1,13 @@
-import {AdditiveBlending} from 'three/src/constants';
-import {Color} from 'three/src/math/Color';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {
+	AdditiveBlending,
+	Color,
+	MeshBasicMaterial,
+	ShaderMaterial,
+	UniformsUtils,
+	Vector2,
+	Vector3,
+	WebGLRenderTarget
+} from 'three';
 import { Pass, FullScreenQuad } from './Pass.js';
 import { CopyShader } from '../shaders/CopyShader.js';
 import { LuminosityHighPassShader } from '../shaders/LuminosityHighPassShader.js';

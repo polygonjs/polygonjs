@@ -1,4 +1,4 @@
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderer} from 'three';
 import {PolyScene} from '../PolyScene';
 import {Poly} from '../../Poly';
 

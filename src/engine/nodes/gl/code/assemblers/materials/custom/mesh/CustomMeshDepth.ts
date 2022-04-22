@@ -1,9 +1,9 @@
-import {RGBADepthPacking, BasicDepthPacking} from 'three/src/constants';
-import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
+import {RGBADepthPacking, BasicDepthPacking} from 'three';
+import {ShaderLib} from 'three';
 import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
 import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
 import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepth.frag.glsl';
-import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
+import {MeshDepthMaterial} from 'three';
 import {AssemblerControllerNode} from '../../../../Controller';
 import {includeSSSDeclarations} from '../../common/SSS';
 

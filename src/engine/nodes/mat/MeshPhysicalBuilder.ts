@@ -34,8 +34,8 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {Constructor} from '../../../types/GlobalTypes';
 // import {UpdateOptions} from './utils/_BaseTextureController';
-import {Material} from 'three/src/materials/Material';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
+import {Material} from 'three';
+import {MeshPhysicalMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 // const CONTROLLER_OPTIONS: UpdateOptions = {
 // 	directParams: true,

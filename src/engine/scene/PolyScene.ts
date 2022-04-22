@@ -24,9 +24,9 @@ import {BaseNodeType} from '../nodes/_Base';
 import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
 import {ParamsInitData} from '../nodes/utils/io/IOController';
 import {Constructor, valueof} from '../../types/GlobalTypes';
-import {Scene} from 'three/src/scenes/Scene';
+import {Scene} from 'three';
 import {CoreString} from '../../core/String';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {SceneRenderersRegister} from './utils/SceneRenderersRegister';
 import {Poly} from '../Poly';
 

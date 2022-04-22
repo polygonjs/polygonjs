@@ -9,8 +9,8 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {SkeletonHelper} from 'three/src/helpers/SkeletonHelper';
-import {Object3D} from 'three/src/core/Object3D';
+import {SkeletonHelper} from 'three';
+import {Object3D} from 'three';
 
 class SkeletonHelperSopParamsConfig extends NodeParamsConfig {
 	// no keepInput param for now, as there seems to be a bug

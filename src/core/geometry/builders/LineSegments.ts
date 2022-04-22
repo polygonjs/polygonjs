@@ -1,4 +1,4 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {CoreGeometryBuilderBase} from './_Base';
 import {CorePoint} from '../Point';
 import {PolyDictionary} from '../../../types/GlobalTypes';

@@ -1,11 +1,11 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {TypedMatNode} from '../_Base';
 import {BaseController} from './_BaseController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
-import {NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending} from 'three/src/constants';
+import {NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending} from 'three';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
 import {updateMaterialSide} from './helpers/MaterialSideHelper';
 const BLENDING_VALUES = {

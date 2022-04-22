@@ -15,20 +15,20 @@ import {
 	ObjectType,
 } from '../../../core/geometry/Constant';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {Intersection} from 'three/src/core/Raycaster';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector2} from 'three/src/math/Vector2';
+import {Intersection} from 'three';
+import {Vector3} from 'three';
+import {Vector2} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreType} from '../../../core/Type';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Triangle} from 'three/src/math/Triangle';
+import {BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
+import {Mesh} from 'three';
+import {Triangle} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {TypeAssert} from '../../poly/Assert';
-import {Points} from 'three/src/objects/Points';
+import {Points} from 'three';
 
 export enum TargetType {
 	SCENE_GRAPH = 'scene graph',

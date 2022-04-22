@@ -1,6 +1,6 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Raycaster} from 'three/src/core/Raycaster';
+import {BufferGeometry} from 'three';
+import {Mesh} from 'three';
+import {Raycaster} from 'three';
 import {
 	computeBoundsTree,
 	disposeBoundsTree,

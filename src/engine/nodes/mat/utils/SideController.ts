@@ -1,9 +1,9 @@
 // import {Constructor} from '../../../../types/GlobalTypes';
 // import {BaseController} from './_BaseController';
-// import {FrontSide} from 'three/src/constants';
-// import {DoubleSide, BackSide, FrontSide} from 'three/src/constants';
-// import {BackSide} from 'three/src/constants';
-// import {Material} from 'three/src/materials/Material';
+// import {FrontSide} from 'three';
+// import {DoubleSide, BackSide, FrontSide} from 'three';
+// import {BackSide} from 'three';
+// import {Material} from 'three';
 // import {TypedMatNode} from '../_Base';
 
 // import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';

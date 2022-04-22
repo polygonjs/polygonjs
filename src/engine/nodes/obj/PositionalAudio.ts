@@ -6,7 +6,7 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

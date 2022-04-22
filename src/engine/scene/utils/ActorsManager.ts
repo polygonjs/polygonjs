@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {TypedNode} from '../../nodes/_Base';
 import {BaseActorNodeType} from '../../nodes/actor/_Base';
 import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';

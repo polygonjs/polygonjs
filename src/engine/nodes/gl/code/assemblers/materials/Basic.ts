@@ -1,6 +1,6 @@
-import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
+import {ShaderLib} from 'three';
 import {ShaderAssemblerMesh} from './_BaseMesh';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {MeshBasicMaterial} from 'three';
 
 export class ShaderAssemblerBasic extends ShaderAssemblerMesh {
 	override templateShader() {

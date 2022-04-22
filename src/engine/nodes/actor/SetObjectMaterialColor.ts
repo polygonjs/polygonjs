@@ -6,7 +6,7 @@
 
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 import {CoreType} from '../../../core/Type';
 import {
 	ActorConnectionPoint,
@@ -14,9 +14,9 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {Mesh} from 'three';
+import {Material} from 'three';
+import {MeshBasicMaterial} from 'three';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 

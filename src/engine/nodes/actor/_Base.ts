@@ -2,7 +2,7 @@ import {BaseNodeType, TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../../params/types/ParamValuesTypeMap';

@@ -1,4 +1,4 @@
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 // import {CoreVector} from '../../../../../core/Vector';
 // import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {CursorHelper} from '../CursorHelper';

@@ -4,7 +4,7 @@
  * @remarks
  * This is very similar to the plane SOP, but with hexagonal patterns, which can be more visually pleasing.
  */
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreTransform} from '../../../core/Transform';
 import {ObjectType} from '../../../core/geometry/Constant';

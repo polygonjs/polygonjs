@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CSG} from '../../../core/geometry/boolean/three-csg-ts/CSG';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {TypeAssert} from '../../poly/Assert';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreType} from '../../../core/Type';

@@ -10,8 +10,8 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObject} from '../../../core/geometry/Object';
 import {Attribute} from '../../../core/geometry/Attribute';
-import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Mesh} from 'three';
+import {BufferGeometry} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

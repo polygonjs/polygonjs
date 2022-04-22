@@ -1,4 +1,4 @@
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderer} from 'three';
 import {TypedCopNode} from '../_Base';
 import {NodeParamsConfig} from '../../utils/params/ParamsConfig';
 class BaseCopRendererCopParamsConfig extends NodeParamsConfig {

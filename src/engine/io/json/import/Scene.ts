@@ -66,7 +66,8 @@ export class SceneJsonImporter {
 
 		this._base_operations_composer_nodes_with_resolve_required = undefined;
 
-		const importer = JsonImportDispatcher.dispatch_node(scene.root());
+		const dispatcher = new JsonImportDispatcher();
+		const importer = dispatcher.dispatchNode(scene.root());
 		if (this._data['root']) {
 			importer.process_data(this, this._data['root']);
 		}

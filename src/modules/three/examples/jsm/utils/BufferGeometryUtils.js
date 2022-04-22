@@ -1,13 +1,15 @@
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {InterleavedBuffer} from 'three/src/core/InterleavedBuffer';
-import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
-import * as MathUtils from 'three/src/math/MathUtils';
-import {TriangleFanDrawMode} from 'three/src/constants';
-import {TriangleStripDrawMode} from 'three/src/constants';
-import {TrianglesDrawMode} from 'three/src/constants';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	BufferAttribute,
+	BufferGeometry,
+	Float32BufferAttribute,
+	InterleavedBuffer,
+	InterleavedBufferAttribute,
+	MathUtils,
+	TriangleFanDrawMode,
+	TriangleStripDrawMode,
+	TrianglesDrawMode,
+	Vector3,
+} from 'three';
 
 
 function computeTangents( geometry, MikkTSpace, negateSign = true ) {

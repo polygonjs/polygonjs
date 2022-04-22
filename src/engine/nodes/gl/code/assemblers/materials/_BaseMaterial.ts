@@ -10,7 +10,7 @@ import {GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 import {MapUtils} from '../../../../../../core/MapUtils';
 import {MaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {GlNodeFinder} from '../../utils/NodeFinder';
 import {BaseGlNodeType} from '../../../_Base';
 import {assignOnBeforeCompileDataAndFunction, OnBeforeCompileData} from './OnBeforeCompile';

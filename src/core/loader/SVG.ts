@@ -1,17 +1,17 @@
 import {SVGLoader, SVGResult, StrokeStyle} from '../../modules/three/examples/jsm/loaders/SVGLoader';
-import {Color} from 'three/src/math/Color';
-import {Group} from 'three/src/objects/Group';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {DoubleSide} from 'three/src/constants';
-import {Mesh} from 'three/src/objects/Mesh';
-import {ShapeBufferGeometry} from 'three/src/geometries/ShapeGeometry';
-import {ShapePath} from 'three/src/extras/core/ShapePath';
+import {Color} from 'three';
+import {Group} from 'three';
+import {MeshBasicMaterial} from 'three';
+import {LineBasicMaterial} from 'three';
+import {DoubleSide} from 'three';
+import {Mesh} from 'three';
+import {ShapeBufferGeometry} from 'three';
+import {ShapePath} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {isBooleanTrue} from '../BooleanValue';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {LineSegments} from 'three/src/objects/LineSegments';
+import {LineSegments} from 'three';
 import {Poly} from '../../engine/Poly';
 
 interface CoreSVGLoaderOptions {

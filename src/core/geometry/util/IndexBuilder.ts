@@ -1,4 +1,4 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {ArrayUtils} from '../../ArrayUtils';
 
 const POSITION = 'position';

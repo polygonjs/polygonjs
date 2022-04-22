@@ -12,7 +12,7 @@ import {
 	// RGBEFormat, //  removing as it is set to same value as RGBAFormat, so can be confusing
 	DepthFormat,
 	DepthStencilFormat,
-} from 'three/src/constants';
+} from 'three';
 
 export const TEXTURE_FORMATS = [
 	{AlphaFormat},

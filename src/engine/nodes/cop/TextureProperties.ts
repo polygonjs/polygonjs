@@ -5,7 +5,7 @@
  * Performance tip: If possible, try to set min filter to LinearFilter in order to avoid the generation of mipmaps.
  * [https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491](https://discourse.threejs.org/t/threejs-app-performance-point-click-game/18491)
  */
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';

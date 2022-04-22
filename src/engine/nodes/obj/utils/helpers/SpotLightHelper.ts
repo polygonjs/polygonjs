@@ -1,13 +1,13 @@
 // import {SpotLightObjNode} from '../../SpotLight';
 // import {BaseLightHelper} from './_BaseLightHelper';
-// import {SpotLight} from 'three/src/lights/SpotLight';
-// import {BufferGeometry} from 'three/src/core/BufferGeometry';
-// import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-// import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-// import {LineSegments} from 'three/src/objects/LineSegments';
-// import {Vector3} from 'three/src/math/Vector3';
-// import {Mesh} from 'three/src/objects/Mesh';
-// import {Object3D} from 'three/src/core/Object3D';
+// import {SpotLight} from 'three';
+// import {BufferGeometry} from 'three';
+// import {Float32BufferAttribute} from 'three';
+// import {LineBasicMaterial} from 'three';
+// import {LineSegments} from 'three';
+// import {Vector3} from 'three';
+// import {Mesh} from 'three';
+// import {Object3D} from 'three';
 
 // interface UpdateConeObjectOptions {
 // 	sizeMult: number;

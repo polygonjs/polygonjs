@@ -1,5 +1,5 @@
-import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
-import {generateUUID} from 'three/src/math/MathUtils';
+import {CubicInterpolant} from 'three';
+import {MathUtils} from 'three';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 
 export interface RampPointJson {
@@ -64,7 +64,7 @@ export class RampValue {
 		private _interpolation: RampInterpolation = RampInterpolation.CUBIC,
 		private _points: RampPoint[] = []
 	) {
-		this._uuid = generateUUID();
+		this._uuid = MathUtils.generateUUID();
 	}
 
 	uuid() {

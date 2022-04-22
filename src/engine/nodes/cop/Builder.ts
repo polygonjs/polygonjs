@@ -4,20 +4,13 @@
  *
  */
 import {Constructor, valueof, Number2} from '../../../types/GlobalTypes';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Scene} from 'three/src/scenes/Scene';
-import {
-	FloatType,
-	HalfFloatType,
-	RGBAFormat,
-	NearestFilter,
-	LinearFilter,
-	ClampToEdgeWrapping,
-} from 'three/src/constants';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Camera} from 'three/src/cameras/Camera';
+import {WebGLRenderTarget} from 'three';
+import {ShaderMaterial} from 'three';
+import {Scene} from 'three';
+import {FloatType, HalfFloatType, RGBAFormat, NearestFilter, LinearFilter, ClampToEdgeWrapping} from 'three';
+import {PlaneBufferGeometry} from 'three';
+import {Mesh} from 'three';
+import {Camera} from 'three';
 import {TypedCopNode} from './_Base';
 // import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';

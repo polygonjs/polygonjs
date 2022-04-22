@@ -8,7 +8,7 @@ import {AdaptiveToneMappingPass} from '../../../modules/three/examples/jsm/postp
 
 // import VERTEX_SHADER from './gl/Adaptive.vert.glsl'
 // import FRAGMENT_SHADER from './gl/Adaptive.frag.glsl'
-// import {NoBlending} from 'three/src/constants'
+// import {NoBlending} from 'three'
 
 // const ADAPTIVE_LUMINANCE_MAT = new THREE.ShaderMaterial( {
 // 	uniforms: {

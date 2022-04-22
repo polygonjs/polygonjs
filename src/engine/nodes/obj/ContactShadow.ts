@@ -6,30 +6,30 @@
 
 // https://github.com/mrdoob/three.js/blob/master/examples/webgl_shadow_contact.html
 import {TypedObjNode} from './_Base';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {HierarchyController} from './utils/HierarchyController';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {WebGLRenderer} from 'three';
+import {Scene} from 'three';
+import {Camera} from 'three';
+import {BufferGeometry} from 'three';
 import {Geometry} from '../../../modules/three/examples/jsm/deprecated/Geometry';
-import {Material} from 'three/src/materials/Material';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Material} from 'three';
+import {Mesh} from 'three';
 import {RenderHook} from '../../../core/geometry/Material';
 import {TypeAssert} from '../../poly/Assert';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {Vector2} from 'three/src/math/Vector2';
+import {MeshBasicMaterial} from 'three';
+import {MeshDepthMaterial} from 'three';
+import {OrthographicCamera} from 'three';
+import {PlaneBufferGeometry} from 'three';
+import {WebGLRenderTarget} from 'three';
+import {Vector2} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {CoreRenderBlur} from '../../../core/render/Blur';
 
 enum ContactShadowUpdateMode {
@@ -92,11 +92,11 @@ class ContactShadowObjParamConfig extends TransformedParamConfig(NodeParamsConfi
 	renderAllObjects = ParamConfig.BOOLEAN(true);
 	include = ParamConfig.STRING('', {
 		visibleIf: {renderAllObjects: 0},
-		objectMask:true
+		objectMask: true,
 	});
 	exclude = ParamConfig.STRING('', {
 		visibleIf: {renderAllObjects: 0},
-		objectMask:true
+		objectMask: true,
 	});
 	updateObjectsList = ParamConfig.BUTTON(null, {
 		visibleIf: {renderAllObjects: 0},

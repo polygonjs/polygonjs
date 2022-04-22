@@ -1,19 +1,19 @@
-import {Scene} from 'three/src/scenes/Scene';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {HalfFloatType, FloatType} from 'three/src/constants';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {Material} from 'three/src/materials/Material';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Object3D} from 'three/src/core/Object3D';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Camera} from 'three/src/cameras/Camera';
-import {Light} from 'three/src/lights/Light';
-import {Texture} from 'three/src/textures/Texture';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Vector3} from 'three/src/math/Vector3';
-import {Quaternion} from 'three/src/math/Quaternion';
+import {Scene} from 'three';
+import {WebGLRenderTarget} from 'three';
+import {HalfFloatType, FloatType} from 'three';
+import {MeshPhongMaterial} from 'three';
+import {MeshBasicMaterial} from 'three';
+import {Material} from 'three';
+import {PlaneBufferGeometry} from 'three';
+import {Mesh} from 'three';
+import {Object3D} from 'three';
+import {WebGLRenderer} from 'three';
+import {Camera} from 'three';
+import {Light} from 'three';
+import {Texture} from 'three';
+import {Matrix4} from 'three';
+import {Vector3} from 'three';
+import {Quaternion} from 'three';
 import {CoreUserAgent} from '../../../../core/UserAgent';
 
 //

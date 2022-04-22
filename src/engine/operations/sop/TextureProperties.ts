@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
-import {Texture} from 'three/src/textures/Texture';
+import {Mesh} from 'three';
+import {Material} from 'three';
+import {Texture} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 
-import {LinearEncoding, UVMapping, RepeatWrapping} from 'three/src/constants';
+import {LinearEncoding, UVMapping, RepeatWrapping} from 'three';
 
 import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../core/BooleanValue';

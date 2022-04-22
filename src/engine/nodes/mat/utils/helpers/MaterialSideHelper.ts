@@ -1,6 +1,6 @@
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {isBooleanTrue} from '../../../../../core/Type';
-import {FrontSide, BackSide, DoubleSide} from 'three/src/constants';
+import {FrontSide, BackSide, DoubleSide} from 'three';
 import {MaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
 import {CustomMaterialName} from '../../../gl/code/assemblers/materials/_BaseMaterial';
 

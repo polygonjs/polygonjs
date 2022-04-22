@@ -5,7 +5,7 @@
  * An area light can be expensive to compute but can give a good result.
  *
  */
-import {RectAreaLight} from 'three/src/lights/RectAreaLight';
+import {RectAreaLight} from 'three';
 import {BaseLightTransformedObjNode} from './_BaseLightTransformed';
 import {TransformedParamConfig} from './utils/TransformController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

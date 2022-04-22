@@ -1,6 +1,6 @@
-import {Vector3} from 'three/src/math/Vector3';
-import {Sphere} from 'three/src/math/Sphere';
-import {Box3} from 'three/src/math/Box3';
+import {Vector3} from 'three';
+import {Sphere} from 'three';
+import {Box3} from 'three';
 import {CorePoint} from '../../geometry/Point';
 import {OctreeNode, OctreeNodeTraverseCallback} from './Node';
 import {ArrayUtils} from '../../ArrayUtils';

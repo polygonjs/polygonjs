@@ -1,9 +1,11 @@
-import {CompressedTextureLoader} from 'three/src/loaders/CompressedTextureLoader';
-import {RGBAFormat} from 'three/src/constants';
-import {RGBA_S3TC_DXT3_Format} from 'three/src/constants';
-import {RGBA_S3TC_DXT5_Format} from 'three/src/constants';
-import {RGB_ETC1_Format} from 'three/src/constants';
-import {RGB_S3TC_DXT1_Format} from 'three/src/constants';
+import {
+	CompressedTextureLoader,
+	RGBAFormat,
+	RGBA_S3TC_DXT3_Format,
+	RGBA_S3TC_DXT5_Format,
+	RGB_ETC1_Format,
+	RGB_S3TC_DXT1_Format
+} from 'three';
 
 class DDSLoader extends CompressedTextureLoader {
 

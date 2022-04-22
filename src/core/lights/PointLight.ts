@@ -1,14 +1,14 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number2, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
-import {SphereBufferGeometry} from 'three/src/geometries/SphereGeometry';
-import {PointLight} from 'three/src/lights/PointLight';
-import {Vector3} from 'three/src/math/Vector3';
-import {Mesh} from 'three/src/objects/Mesh';
+import {SphereBufferGeometry} from 'three';
+import {PointLight} from 'three';
+import {Vector3} from 'three';
+import {Mesh} from 'three';
 import {LIGHT_HELPER_MAT} from './_Base';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three/src/math/Color';
-import {Vector2} from 'three/src/math/Vector2';
+import {Color} from 'three';
+import {Vector2} from 'three';
 
 export interface PointLightParams extends DefaultOperationParams {
 	color: Color;

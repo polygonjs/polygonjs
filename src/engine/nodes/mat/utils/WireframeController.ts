@@ -3,10 +3,10 @@ import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
+import {MeshBasicMaterial} from 'three';
+import {MeshStandardMaterial} from 'three';
+import {MeshPhysicalMaterial} from 'three';
+import {MeshToonMaterial} from 'three';
 
 enum LineCapType {
 	ROUND = 'round',

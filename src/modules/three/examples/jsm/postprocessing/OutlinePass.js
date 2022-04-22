@@ -1,15 +1,17 @@
-import {AdditiveBlending} from 'three/src/constants';
-import {Color} from 'three/src/math/Color';
-import {DoubleSide} from 'three/src/constants';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {MeshDepthMaterial} from 'three/src/materials/MeshDepthMaterial';
-import {NoBlending} from 'three/src/constants';
-import {RGBADepthPacking} from 'three/src/constants';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {
+	AdditiveBlending,
+	Color,
+	DoubleSide,
+	Matrix4,
+	MeshDepthMaterial,
+	NoBlending,
+	RGBADepthPacking,
+	ShaderMaterial,
+	UniformsUtils,
+	Vector2,
+	Vector3,
+	WebGLRenderTarget
+} from 'three';
 import { Pass, FullScreenQuad } from './Pass.js';
 import { CopyShader } from '../shaders/CopyShader.js';
 

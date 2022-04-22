@@ -5,11 +5,11 @@ import {ViewerEventsController} from './utils/EventsController';
 
 import {ViewerWebGLController} from './utils/WebglController';
 import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/ControlsController';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {ViewerAudioController} from './utils/AudioController';
 import {Poly, PolyEngine} from '../Poly';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderer} from 'three';
 
 const HOVERED_CLASS_NAME = 'hovered';
 

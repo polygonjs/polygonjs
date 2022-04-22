@@ -10,9 +10,9 @@ import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {AttribClassMenuEntries, AttribClass} from '../../../core/geometry/Constant';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Object3D} from 'three/src/core/Object3D';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Object3D} from 'three';
+import {BufferGeometry} from 'three';
+import {Mesh} from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribDeleteSopParamsConfig extends NodeParamsConfig {

@@ -1,4 +1,4 @@
-import {EventDispatcher} from 'three/src/core/EventDispatcher';
+import {EventDispatcher} from 'three';
 import {BaseNodeByContextMap, NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';

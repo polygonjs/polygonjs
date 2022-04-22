@@ -1,14 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedCopNode} from '../_Base';
-import {Texture} from 'three/src/textures/Texture';
-import {
-	RGBAFormat,
-	UnsignedByteType,
-	LinearEncoding,
-	UVMapping,
-	RepeatWrapping,
-	LinearFilter,
-} from 'three/src/constants';
+import {Texture} from 'three';
+import {RGBAFormat, UnsignedByteType, LinearEncoding, UVMapping, RepeatWrapping, LinearFilter} from 'three';
 import {
 	MAG_FILTERS,
 	MAG_FILTER_DEFAULT_VALUE,

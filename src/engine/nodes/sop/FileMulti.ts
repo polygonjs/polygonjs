@@ -15,13 +15,13 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Group} from 'three/src/objects/Group';
+import {BufferGeometry} from 'three';
+import {Mesh} from 'three';
+import {Group} from 'three';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
-import {Matrix4} from 'three/src/math/Matrix4';
+import {Matrix4} from 'three';
 class FileMultiSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(`${ASSETS_ROOT}/models/\`@name\`.obj`, {

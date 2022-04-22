@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {PointLight} from 'three/src/lights/PointLight';
+import {PointLight} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {CorePointLightHelper, PointLightParams, DEFAULT_POINT_LIGHT_PARAMS} from '../../../core/lights/PointLight';
 
 export class PointLightSopOperation extends BaseSopOperation {

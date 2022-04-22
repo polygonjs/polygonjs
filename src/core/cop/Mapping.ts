@@ -6,7 +6,7 @@ import {
 	EquirectangularRefractionMapping,
 	CubeUVReflectionMapping,
 	// CubeUVRefractionMapping,
-} from 'three/src/constants';
+} from 'three';
 
 export const MAPPINGS = [
 	{UVMapping},

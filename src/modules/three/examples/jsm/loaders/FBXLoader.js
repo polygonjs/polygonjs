@@ -1,44 +1,46 @@
-import {AmbientLight} from 'three/src/lights/AmbientLight';
-import {AnimationClip} from 'three/src/animation/AnimationClip';
-import {Bone} from 'three/src/objects/Bone';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {ClampToEdgeWrapping} from 'three/src/constants';
-import {Color} from 'three/src/math/Color';
-import {DirectionalLight} from 'three/src/lights/DirectionalLight';
-import {EquirectangularReflectionMapping} from 'three/src/constants';
-import {Euler} from 'three/src/math/Euler';
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Group} from 'three/src/objects/Group';
-import {Line} from 'three/src/objects/Line';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {Loader} from 'three/src/loaders/Loader';
-import {LoaderUtils} from 'three/src/loaders/LoaderUtils';
-import * as MathUtils from 'three/src/math/MathUtils';
-import {Matrix3} from 'three/src/math/Matrix3';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Mesh} from 'three/src/objects/Mesh';
-import {MeshLambertMaterial} from 'three/src/materials/MeshLambertMaterial';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
-import {NumberKeyframeTrack} from 'three/src/animation/tracks/NumberKeyframeTrack';
-import {Object3D} from 'three/src/core/Object3D';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-import {PointLight} from 'three/src/lights/PointLight';
-import {PropertyBinding} from 'three/src/animation/PropertyBinding';
-import {Quaternion} from 'three/src/math/Quaternion';
-import {QuaternionKeyframeTrack} from 'three/src/animation/tracks/QuaternionKeyframeTrack';
-import {RepeatWrapping} from 'three/src/constants';
-import {Skeleton} from 'three/src/objects/Skeleton';
-import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
-import {SpotLight} from 'three/src/lights/SpotLight';
-import {Texture} from 'three/src/textures/Texture';
-import {TextureLoader} from 'three/src/loaders/TextureLoader';
-import {Uint16BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {VectorKeyframeTrack} from 'three/src/animation/tracks/VectorKeyframeTrack';
-import {sRGBEncoding} from 'three/src/constants';
+import {
+	AmbientLight,
+	AnimationClip,
+	Bone,
+	BufferGeometry,
+	ClampToEdgeWrapping,
+	Color,
+	DirectionalLight,
+	EquirectangularReflectionMapping,
+	Euler,
+	FileLoader,
+	Float32BufferAttribute,
+	Group,
+	Line,
+	LineBasicMaterial,
+	Loader,
+	LoaderUtils,
+	MathUtils,
+	Matrix3,
+	Matrix4,
+	Mesh,
+	MeshLambertMaterial,
+	MeshPhongMaterial,
+	NumberKeyframeTrack,
+	Object3D,
+	OrthographicCamera,
+	PerspectiveCamera,
+	PointLight,
+	PropertyBinding,
+	Quaternion,
+	QuaternionKeyframeTrack,
+	RepeatWrapping,
+	Skeleton,
+	SkinnedMesh,
+	SpotLight,
+	Texture,
+	TextureLoader,
+	Uint16BufferAttribute,
+	Vector3,
+	Vector4,
+	VectorKeyframeTrack,
+	sRGBEncoding
+} from 'three';
 import * as fflate from '../libs/fflate.module.js';
 import { NURBSCurve } from '../curves/NURBSCurve.js';
 

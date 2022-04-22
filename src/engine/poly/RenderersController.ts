@@ -1,5 +1,5 @@
-import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
+import {WebGLRenderer, WebGLRendererParameters} from 'three';
+import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three';
 export interface POLYWebGLRenderer extends WebGLRenderer {
 	_polygonId?: number;
 }

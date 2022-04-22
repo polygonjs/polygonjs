@@ -5,14 +5,14 @@
  * This is experimental
  *
  */
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {FrontSide} from 'three/src/constants';
+import {ShaderMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 
 import VERTEX from '../gl/gl/volume/vert.glsl';
 import FRAGMENT from '../gl/gl/volume/frag.glsl';
 import {VOLUME_UNIFORMS} from '../gl/gl/volume/uniforms';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+import {UniformsUtils} from 'three';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreMaterial} from '../../../core/geometry/Material';

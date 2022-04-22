@@ -1,9 +1,9 @@
 import {DeleteSopNode} from '../../Delete';
 import {ATTRIBUTE_TYPES, AttribType, AttribSize, ATTRIBUTE_SIZES} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
 import {CoreEntity} from '../../../../../core/geometry/Entity';
 import {ensureString} from '../../../../../core/Type';
 

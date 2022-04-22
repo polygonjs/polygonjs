@@ -6,15 +6,15 @@ import {
 	Vector3Like,
 	Vector4Like,
 } from '../../types/GlobalTypes';
-import {Vector4} from 'three/src/math/Vector4';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector2} from 'three/src/math/Vector2';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Vector4} from 'three';
+import {Vector3} from 'three';
+import {Vector2} from 'three';
+import {BufferGeometry} from 'three';
 import {Attribute, CoreAttribute} from './Attribute';
 import {CoreGeometry} from './Geometry';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
-import {Matrix4} from 'three/src/math/Matrix4';
+import {Matrix4} from 'three';
 
 const ATTRIB_NAMES = {
 	POSITION: 'position',

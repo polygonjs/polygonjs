@@ -5,8 +5,8 @@
  * Note that just like the attrib_create, it is possible to use an expression to set the attribute value
  *
  */
-import {Color} from 'three/src/math/Color';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {Color} from 'three';
+import {BufferAttribute} from 'three';
 import {CoreColor} from '../../../core/Color';
 import {TypedSopNode} from './_Base';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -14,8 +14,8 @@ import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
+import {BufferGeometry} from 'three';
+import {Mesh} from 'three';
 
 const DEFAULT_COLOR = new Color(1, 1, 1);
 const COLOR_ATTRIB_NAME = 'color';

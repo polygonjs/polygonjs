@@ -1,6 +1,6 @@
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Color} from 'three/src/math/Color';
+import {BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
+import {Color} from 'three';
 
 /**
  * Typescript Port of https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/MarchingCubes.js

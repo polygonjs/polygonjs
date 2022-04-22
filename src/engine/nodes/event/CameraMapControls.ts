@@ -5,7 +5,7 @@
  * This can be linked to a camera's controls parameter
  *
  */
-import {Camera} from 'three/src/cameras/Camera';
+import {Camera} from 'three';
 import {MapControls} from '../../../modules/core/controls/OrbitControls';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {CameraOrbitControlsEventNode} from './CameraOrbitControls';

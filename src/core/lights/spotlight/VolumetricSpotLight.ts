@@ -1,16 +1,17 @@
 // from
 // https://github.com/jeromeetienne/threex.volumetricspotlight
 
-import {ConeBufferGeometry} from 'three/src/geometries/ConeGeometry';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Color} from 'three/src/math/Color';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Mesh} from 'three/src/objects/Mesh';
+import {ConeBufferGeometry} from 'three';
+import {Matrix4} from 'three';
+import {Color} from 'three';
+import {ShaderMaterial} from 'three';
+import {Mesh} from 'three';
 
 import VERTEX from './glsl/vert.glsl';
 import FRAGMENT from './glsl/frag.glsl';
 import {isBooleanTrue} from '../../Type';
-import {CoreSpotLightHelper, SpotLightContainer} from '../SpotLight';
+import type {SpotLightContainer} from '../SpotLight';
+import {CoreSpotLightHelper} from './CoreSpotLightHelper';
 
 interface SpotLightVolumetricMaterial extends ShaderMaterial {
 	uniforms: {

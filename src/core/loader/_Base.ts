@@ -1,4 +1,4 @@
-import {LoadingManager} from 'three/src/loaders/LoadingManager';
+import {LoadingManager} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';

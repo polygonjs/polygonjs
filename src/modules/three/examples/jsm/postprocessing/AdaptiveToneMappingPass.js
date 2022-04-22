@@ -1,9 +1,11 @@
-import {LinearMipmapLinearFilter} from 'three/src/constants';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {NoBlending} from 'three/src/constants';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {
+	LinearMipmapLinearFilter,
+	MeshBasicMaterial,
+	NoBlending,
+	ShaderMaterial,
+	UniformsUtils,
+	WebGLRenderTarget
+} from 'three';
 import { Pass, FullScreenQuad } from './Pass.js';
 import { CopyShader } from '../shaders/CopyShader.js';
 import { LuminosityShader } from '../shaders/LuminosityShader.js';

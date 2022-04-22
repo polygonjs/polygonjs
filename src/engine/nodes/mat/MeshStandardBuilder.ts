@@ -31,8 +31,8 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
-import {Material} from 'three/src/materials/Material';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {Material} from 'three';
+import {MeshStandardMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 interface MeshStandardBuilderControllers {
 	advancedCommon: AdvancedCommonController;

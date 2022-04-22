@@ -1,9 +1,11 @@
-import {DataTextureLoader} from 'three/src/loaders/DataTextureLoader';
-import {DataUtils} from 'three/src/extras/DataUtils';
-import {FloatType} from 'three/src/constants';
-import {HalfFloatType} from 'three/src/constants';
-import {LinearEncoding} from 'three/src/constants';
-import {LinearFilter} from 'three/src/constants';
+import {
+	DataTextureLoader,
+	DataUtils,
+	FloatType,
+	HalfFloatType,
+	LinearEncoding,
+	LinearFilter
+} from 'three';
 
 // https://github.com/mrdoob/three.js/issues/5552
 // http://en.wikipedia.org/wiki/RGBE_image_format

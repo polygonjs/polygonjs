@@ -2,16 +2,16 @@
  * Creates a plane visible by a camera.
  *
  */
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector2} from 'three/src/math/Vector2';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
+import {Vector3} from 'three';
+import {Vector2} from 'three';
+import {PlaneBufferGeometry} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType, NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
 import {TypedSopNode} from './_Base';
-import {Plane} from 'three/src/math/Plane';
-import {Raycaster} from 'three/src/core/Raycaster';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
+import {Plane} from 'three';
+import {Raycaster} from 'three';
+import {OrthographicCamera} from 'three';
+import {PerspectiveCamera} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreTransform} from '../../../core/Transform';
 import {BaseNodeType} from '../_Base';

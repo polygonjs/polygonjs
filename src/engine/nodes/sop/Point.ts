@@ -5,14 +5,14 @@
  * This node is similar to the Color and Normal SOPs, and can update the vertex positions with expressions
  *
  */
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CorePoint} from '../../../core/geometry/Point';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Mesh} from 'three/src/objects/Mesh';
+import {BufferAttribute} from 'three';
+import {Mesh} from 'three';
 import {BooleanParam} from '../../params/Boolean';
 import {FloatParam} from '../../params/Float';
 

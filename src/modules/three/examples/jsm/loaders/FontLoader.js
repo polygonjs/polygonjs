@@ -1,6 +1,8 @@
-import {FileLoader} from 'three/src/loaders/FileLoader';
-import {Loader} from 'three/src/loaders/Loader';
-import {ShapePath} from 'three/src/extras/core/ShapePath';
+import {
+	FileLoader,
+	Loader,
+	ShapePath
+} from 'three';
 
 class FontLoader extends Loader {
 

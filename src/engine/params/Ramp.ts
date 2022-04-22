@@ -1,6 +1,6 @@
-import {RGBAFormat, FloatType} from 'three/src/constants';
-import {DataTexture} from 'three/src/textures/DataTexture';
-import {CubicInterpolant} from 'three/src/math/interpolants/CubicInterpolant';
+import {RGBAFormat, FloatType} from 'three';
+import {DataTexture} from 'three';
+import {CubicInterpolant} from 'three';
 import {TypedParam} from './_Base';
 import {RampValue, RampPoint, RampValueJson, RampInterpolation} from './ramp/RampValue';
 import {ParamType} from '../poly/ParamType';

@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
+import {MeshPhongMaterial} from 'three';
 
 export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

@@ -4,7 +4,7 @@
  *
  */
 import {TypedCopNode} from './_Base';
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {DataTexture} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AUDIO_ANALYSER_NODES, NodeContext} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/Type';
@@ -12,7 +12,7 @@ import {BooleanParam} from '../../params/Boolean';
 import {NodePathParam} from '../../params/NodePath';
 import {Vector2Param} from '../../params/Vector2';
 import {BaseAnalyserAudioNode} from '../audio/_BaseAnalyser';
-import {NearestFilter, RGBAFormat, FloatType} from 'three/src/constants';
+import {NearestFilter, RGBAFormat, FloatType} from 'three';
 import {FloatParam} from '../../params/Float';
 
 interface ToneAudioByChannel {

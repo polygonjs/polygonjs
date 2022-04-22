@@ -1,13 +1,13 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {BufferGeometry} from 'three';
+import {Float32BufferAttribute} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {isBooleanTrue} from '../../../core/Type';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 
 interface BoxLinesSopParams extends DefaultOperationParams {
 	size: number;
@@ -97,7 +97,7 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 		];
 
 		if (isBooleanTrue(params.mergeLines)) {
-			const mergedGeometry = CoreGeometry.mergeGeometries(geometries);
+			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
 			if (mergedGeometry) {
 				const object = this.createObject(mergedGeometry, ObjectType.LINE_SEGMENTS);
 				return this.createCoreGroupFromObjects([object]);

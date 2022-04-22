@@ -4,14 +4,14 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {AxesHelper} from 'three/src/helpers/AxesHelper';
+import {AxesHelper} from 'three';
 import {HierarchyController} from './utils/HierarchyController';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {NodeContext} from '../../poly/NodeContext';
-import {Vector3} from 'three/src/math/Vector3';
-import {Quaternion} from 'three/src/math/Quaternion';
+import {Vector3} from 'three';
+import {Quaternion} from 'three';
 
 enum BlendMode {
 	TOGETHER = 'translate + rotate together',

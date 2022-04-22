@@ -4,7 +4,7 @@
  *
  */
 import {Constructor} from '../../../types/GlobalTypes';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
+import {OrthographicCamera} from 'three';
 import {
 	TypedThreejsCameraObjNode,
 	BASE_CAMERA_DEFAULT,
@@ -24,11 +24,11 @@ const DEFAULT = {
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CameraRenderParamConfig} from './utils/cameras/RenderController';
-import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessController';
 import {LayerParamConfig} from './utils/LayersController';
 import {TransformedParamConfig} from './utils/TransformController';
 import {CameraNodeType} from '../../poly/NodeContext';
 import {TypeAssert} from '../../poly/Assert';
+import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessParamOptions';
 export function OrthographicCameraObjParamConfigMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		size = ParamConfig.FLOAT(1);

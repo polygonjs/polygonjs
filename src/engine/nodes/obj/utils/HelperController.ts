@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {BaseLightHelper, BaseLightHelperObjNode} from './helpers/_BaseLightHelper';
 
 // interface Helper<L extends Light> extends BaseLightHelper<L> {

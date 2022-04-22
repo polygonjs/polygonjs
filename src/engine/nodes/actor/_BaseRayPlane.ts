@@ -1,8 +1,8 @@
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} from '../utils/io/connections/Actor';
-import {Ray} from 'three/src/math/Ray';
-import {Plane} from 'three/src/math/Plane';
+import {Ray} from 'three';
+import {Plane} from 'three';
 
 class BaseRayPlaneActorParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseRayPlaneActorParamsConfig();

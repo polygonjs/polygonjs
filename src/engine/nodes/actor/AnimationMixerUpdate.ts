@@ -11,7 +11,7 @@ import {
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 

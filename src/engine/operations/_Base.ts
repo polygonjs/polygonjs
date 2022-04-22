@@ -6,7 +6,7 @@ import {InputCloneMode} from '../../engine/poly/InputCloneMode';
 import {BaseNodeType} from '../nodes/_Base';
 import {CoreType} from '../../core/Type';
 import {TypedNodePathParamValue, TypedParamPathParamValue} from '../../core/Walker';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {SimpleParamJsonExporterData} from '../nodes/utils/io/IOController';
 import {DefaultOperationParams} from '../../core/operations/_Base';
 

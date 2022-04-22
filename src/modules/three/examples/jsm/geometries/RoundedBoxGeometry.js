@@ -1,5 +1,7 @@
-import {BoxGeometry} from 'three/src/geometries/BoxGeometry';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	BoxGeometry,
+	Vector3
+} from 'three';
 
 const _tempNormal = new Vector3();
 

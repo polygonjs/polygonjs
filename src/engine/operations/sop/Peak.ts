@@ -1,10 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {BufferGeometry} from 'three';
+import {BufferAttribute} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CorePoint} from '../../../core/geometry/Point';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 const POSITION = 'position';

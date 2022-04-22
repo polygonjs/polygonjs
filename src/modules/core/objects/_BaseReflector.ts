@@ -1,25 +1,25 @@
 // converted to typescript from:
 // https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js
 
-// import {LinearFilter} from 'three/src/constants';
-// import {isPowerOfTwo} from 'three/src/math/MathUtils';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-import {Plane} from 'three/src/math/Plane';
-import {LinearFilter} from 'three/src/constants';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
-import {Mesh} from 'three/src/objects/Mesh';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Object3D} from 'three/src/core/Object3D';
-import {Camera} from 'three/src/cameras/Camera';
-import {Scene} from 'three/src/scenes/Scene';
+// import {LinearFilter} from 'three';
+// import {isPowerOfTwo} from 'three';
+import {Matrix4} from 'three';
+import {PerspectiveCamera} from 'three';
+import {Plane} from 'three';
+import {LinearFilter} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
+import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three';
+import {Mesh} from 'three';
+import {WebGLRenderer} from 'three';
+import {BufferGeometry} from 'three';
+import {Object3D} from 'three';
+import {Camera} from 'three';
+import {Scene} from 'three';
 import {CoreRenderBlur} from '../../../core/render/Blur';
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {Poly} from '../../../engine/Poly';
 

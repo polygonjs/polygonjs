@@ -1,19 +1,19 @@
 import {Number2} from '../../types/GlobalTypes';
-import {SkinnedMesh} from 'three/src/objects/SkinnedMesh';
-import {Scene} from 'three/src/scenes/Scene';
-import {Points} from 'three/src/objects/Points';
-import {Group} from 'three/src/objects/Group';
-import {FrontSide} from 'three/src/constants';
-import {Bone} from 'three/src/objects/Bone';
-import {Material} from 'three/src/materials/Material';
-import {PointsMaterial} from 'three/src/materials/PointsMaterial';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
+import {SkinnedMesh} from 'three';
+import {Scene} from 'three';
+import {Points} from 'three';
+import {Group} from 'three';
+import {FrontSide} from 'three';
+import {Bone} from 'three';
+import {Material} from 'three';
+import {PointsMaterial} from 'three';
+import {MeshStandardMaterial} from 'three';
+import {LineBasicMaterial} from 'three';
 // object types
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {LOD} from 'three/src/objects/LOD';
+import {Object3D} from 'three';
+import {Mesh} from 'three';
+import {LineSegments} from 'three';
+import {LOD} from 'three';
 import {Poly} from '../../engine/Poly';
 
 interface MaterialsByString {

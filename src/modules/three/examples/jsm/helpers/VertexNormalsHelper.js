@@ -1,9 +1,11 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {Matrix3} from 'three/src/math/Matrix3';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	BufferGeometry,
+	Float32BufferAttribute,
+	LineSegments,
+	LineBasicMaterial,
+	Matrix3,
+	Vector3
+} from 'three';
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();

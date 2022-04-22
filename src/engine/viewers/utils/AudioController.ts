@@ -1,4 +1,4 @@
-// import {Camera} from 'three/src/cameras/Camera';
+// import {Camera} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {RootManagerNode} from '../../nodes/manager/Root';
 import {BaseViewerType} from '../_Base';

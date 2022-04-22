@@ -7,7 +7,7 @@ import {
 	ActorConnectionPointType,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {Vector4} from 'three/src/math/Vector4';
+import {Vector4} from 'three';
 
 class VecToParamsActorConfig extends NodeParamsConfig {}
 const ParamsConfig = new VecToParamsActorConfig();

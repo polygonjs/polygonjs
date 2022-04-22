@@ -1,9 +1,9 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 
 export interface HemisphereLightParams extends DefaultOperationParams {
 	skyColor: Color;

@@ -1,7 +1,7 @@
 import {ArrayUtils} from './ArrayUtils';
 import {CoreType} from './Type';
-import lodash_cloneDeep from 'lodash/cloneDeep';
-import lodash_clone from 'lodash/clone';
+import cloneDeep from 'lodash-es/cloneDeep';
+import clone from 'lodash-es/clone';
 
 export class ObjectUtils {
 	// static isObject(value: any): boolean {
@@ -34,7 +34,7 @@ export class ObjectUtils {
 	}
 	static clone<T extends Array<any> | object | undefined>(value: T): T {
 		// return this.cloneDeep(value);
-		return lodash_clone(value);
+		return clone(value);
 		// if (value) {
 		// 	if (CoreType.isArray(value)) {
 		// 		const newValues: Array<any> = value.map((v) => v);
@@ -59,7 +59,7 @@ export class ObjectUtils {
 		// }
 		// return target as T;
 
-		return lodash_cloneDeep(value);
+		return cloneDeep(value);
 		// if (CoreType.isString(value) || CoreType.isNumber(value) || CoreType.isBoolean(value)) {
 		// 	return value;
 		// }

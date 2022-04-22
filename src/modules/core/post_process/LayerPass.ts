@@ -5,10 +5,10 @@
  */
 import {Pass, FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+import {WebGLRenderer} from 'three';
+import {WebGLRenderTarget} from 'three';
+import {ShaderMaterial} from 'three';
+import {UniformsUtils} from 'three';
 import {IUniformV2, IUniformN, IUniformTexture} from '../../../engine/nodes/utils/code/gl/Uniforms';
 import VERTEX from './Layer/vert.glsl';
 import FRAGMENT_ADD from './Layer/add.frag.glsl';

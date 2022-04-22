@@ -1,6 +1,6 @@
 // import {DirectionalLightObjNode} from '../../DirectionalLight';
 // import {BaseLightHelper} from './_BaseLightHelper';
-// import {Mesh} from 'three/src/objects/Mesh';
+// import {Mesh} from 'three';
 // import {CoreDirectionalLightHelper, DirectionalLightContainer} from '../../../../../core/lights/DirectionalLight';
 
 // export class DirectionalLightHelper extends BaseLightHelper<Mesh, DirectionalLightContainer, DirectionalLightObjNode> {

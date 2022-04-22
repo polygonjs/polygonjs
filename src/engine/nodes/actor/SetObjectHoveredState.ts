@@ -12,7 +12,7 @@
 // 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 // } from '../utils/io/connections/Actor';
 // import {ActorType} from '../../poly/registers/nodes/types/Actor';
-// import {Intersection} from 'three/src/core/Raycaster';
+// import {Intersection} from 'three';
 // import {BaseNodeType} from '../_Base';
 // import {isBooleanTrue} from '../../../core/Type';
 // import {CoreObject} from '../../../core/geometry/Object';

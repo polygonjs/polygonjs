@@ -1,16 +1,18 @@
-import {Box3} from 'three/src/math/Box3';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Color} from 'three/src/math/Color';
-import {EventDispatcher} from 'three/src/core/EventDispatcher';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import * as MathUtils from 'three/src/math/MathUtils';
-import {Matrix3} from 'three/src/math/Matrix3';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Object3D} from 'three/src/core/Object3D';
-import {Sphere} from 'three/src/math/Sphere';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	Box3,
+	BufferAttribute,
+	BufferGeometry,
+	Color,
+	EventDispatcher,
+	Float32BufferAttribute,
+	Matrix3,
+	Matrix4,
+	MathUtils,
+	Object3D,
+	Sphere,
+	Vector2,
+	Vector3
+} from 'three';
 
 const _m1 = new Matrix4();
 const _obj = new Object3D();

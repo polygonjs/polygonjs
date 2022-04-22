@@ -1,10 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface CenterSopParams extends DefaultOperationParams {}

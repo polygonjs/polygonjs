@@ -1,13 +1,13 @@
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {WebGLRenderTarget} from 'three';
 import {Pass} from '../../three/examples/jsm/postprocessing/Pass.js';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderer} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {PolyScene} from '../../../engine/scene/PolyScene';
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {Color} from 'three/src/math/Color';
+import {Object3D} from 'three';
+import {Mesh} from 'three';
+import {Material} from 'three';
+import {MeshBasicMaterial} from 'three';
+import {Color} from 'three';
 
 const MATTE_MATERIAL = new MeshBasicMaterial({color: new Color(0, 0, 0)});
 

@@ -1,8 +1,8 @@
 import {TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {AnimationAction} from 'three/src/animation/AnimationAction';
-import {AnimationMixer} from 'three/src/animation/AnimationMixer';
-import {EventListener, Event} from 'three/src/core/EventDispatcher';
+import {AnimationAction} from 'three';
+import {AnimationMixer} from 'three';
+import {EventListener, Event} from 'three';
 
 export type AnimationActionLoopEvent = Event & {
 	type: 'loop';

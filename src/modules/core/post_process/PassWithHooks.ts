@@ -1,5 +1,5 @@
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {WebGLRenderTarget} from 'three';
+import {WebGLRenderer} from 'three';
 export class PassWithHooks {
 	// if set to true, the pass is processed by the composer
 	public enabled = true;

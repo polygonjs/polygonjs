@@ -1,25 +1,21 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
-import {WebGLRenderer, WebGLRendererParameters} from 'three/src/renderers/WebGLRenderer';
-import {Vector2} from 'three/src/math/Vector2';
-import {Scene} from 'three/src/scenes/Scene';
+import {WebGLRenderer, WebGLRendererParameters} from 'three';
+import {Vector2} from 'three';
+import {Scene} from 'three';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {SceneObjNode} from '../../Scene';
 import {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {Poly} from '../../../../Poly';
-import {
-	WebGLRendererRopNode,
-	DEFAULT_SHADOW_MAP_TYPE,
-	DEFAULT_OUTPUT_ENCODING,
-	DEFAULT_TONE_MAPPING,
-} from '../../../rop/WebGLRenderer';
+import {DEFAULT_SHADOW_MAP_TYPE, DEFAULT_OUTPUT_ENCODING, DEFAULT_TONE_MAPPING} from '../../../rop/WebGLRenderer';
+import type {WebGLRendererRopNode} from '../../../rop/WebGLRenderer';
 import {CSS2DRendererRopNode} from '../../../rop/CSS2DRenderer';
 import {Css3DRendererRopNode} from '../../../rop/CSS3DRenderer';
 import {RopType} from '../../../../poly/registers/nodes/types/Rop';
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
-import {CoreUserAgent} from '../../../../../core/UserAgent';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
+import {defaultPixelRatio} from './defaultPixelRatio';
 export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		render = ParamConfig.FOLDER();
@@ -42,7 +38,7 @@ export function CameraRenderParamConfig<TBase extends Constructor>(Base: TBase) 
 			visibleIf: {setRenderer: 1},
 			nodeSelection: {
 				context: NodeContext.ROP,
-				types: [WebGLRendererRopNode.type()],
+				types: [RopType.WEBGL],
 			},
 		});
 
@@ -173,7 +169,7 @@ export class RenderController {
 				await param.compute();
 			}
 			const node = param.value.nodeWithContext(NodeContext.ROP, this.node.states.error);
-			if (node && node.type() == WebGLRendererRopNode.type()) {
+			if (node && node.type() == RopType.WEBGL) {
 				this._resolvedRendererROP = node as WebGLRendererRopNode;
 				return;
 			}
@@ -245,9 +241,7 @@ export class RenderController {
 
 		return renderer;
 	}
-	static defaultPixelRatio() {
-		return CoreUserAgent.isMobile() ? 1 : Math.max(2, window.devicePixelRatio);
-	}
+
 	private static _createDefaultRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
 		const params: WebGLRendererParameters = {
 			canvas: canvas,
@@ -256,7 +250,7 @@ export class RenderController {
 			context: gl,
 		};
 		const renderer = Poly.renderersController.createWebGLRenderer(params);
-		const pixelRatio = this.defaultPixelRatio();
+		const pixelRatio = defaultPixelRatio();
 		renderer.setPixelRatio(pixelRatio);
 
 		renderer.shadowMap.enabled = true;

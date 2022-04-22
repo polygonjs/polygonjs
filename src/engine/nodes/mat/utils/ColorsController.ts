@@ -4,8 +4,8 @@ import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ColorConversion} from '../../../../core/Color';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {ShadowMaterial} from 'three/src/materials/ShadowMaterial';
+import {MeshBasicMaterial} from 'three';
+import {ShadowMaterial} from 'three';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

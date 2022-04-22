@@ -1,12 +1,12 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreTransform} from '../../../core/Transform';
-import {CircleBufferGeometry} from 'three/src/geometries/CircleGeometry';
+import {CircleBufferGeometry} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface CircleSopParams extends DefaultOperationParams {

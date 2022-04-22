@@ -1,5 +1,5 @@
-import {Vector3} from 'three/src/math/Vector3';
-import {Color} from 'three/src/math/Color';
+import {Vector3} from 'three';
+import {Color} from 'three';
 
 export const VOLUME_UNIFORMS = {
 	u_Color: {value: new Color(1, 1, 1)},

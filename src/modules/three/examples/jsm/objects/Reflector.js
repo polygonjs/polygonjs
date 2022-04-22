@@ -1,13 +1,15 @@
-import {Color} from 'three/src/math/Color';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Mesh} from 'three/src/objects/Mesh';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-import {Plane} from 'three/src/math/Plane';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {
+	Color,
+	Matrix4,
+	Mesh,
+	PerspectiveCamera,
+	Plane,
+	ShaderMaterial,
+	UniformsUtils,
+	Vector3,
+	Vector4,
+	WebGLRenderTarget
+} from 'three';
 
 class Reflector extends Mesh {
 

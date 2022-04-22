@@ -7,9 +7,9 @@ import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 import {
 	PointsCountMode,

@@ -8,16 +8,16 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {AxesHelper} from 'three/src/helpers/AxesHelper';
+import {AxesHelper} from 'three';
 import {HierarchyController} from './utils/HierarchyController';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Vector3} from 'three/src/math/Vector3';
-import {degToRad} from 'three/src/math/MathUtils';
-import {Quaternion} from 'three/src/math/Quaternion';
+import {Matrix4} from 'three';
+import {Vector3} from 'three';
+import {MathUtils} from 'three';
+import {Quaternion} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {PolarGridHelper} from 'three/src/helpers/PolarGridHelper';
+import {PolarGridHelper} from 'three';
 class PolarTransformObjParamConfig extends NodeParamsConfig {
 	/** @param center of the transform */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
@@ -135,8 +135,8 @@ export class PolarTransformObjNode extends TypedObjNode<Group, PolarTransformObj
 		this._latitudeMatrix.identity();
 		this._depthMatrix.identity();
 		this._centerMatrix.makeTranslation(this.pv.center.x, this.pv.center.y, this.pv.center.z);
-		this._longitudeMatrix.makeRotationAxis(AXIS_VERTICAL, degToRad(this.pv.longitude));
-		this._latitudeMatrix.makeRotationAxis(AXIS_HORIZONTAL, degToRad(this.pv.latitude));
+		this._longitudeMatrix.makeRotationAxis(AXIS_VERTICAL, MathUtils.degToRad(this.pv.longitude));
+		this._latitudeMatrix.makeRotationAxis(AXIS_HORIZONTAL, MathUtils.degToRad(this.pv.latitude));
 		this._depthMatrix.makeTranslation(0, 0, this.pv.depth);
 		this._fullMatrix
 			.copy(this._centerMatrix)

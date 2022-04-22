@@ -3,10 +3,10 @@ import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {CoreEventEmitter} from '../../../viewers/utils/EventsController';
 import {EventData} from '../../../nodes/event/_BaseInput';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
-import {Vector2} from 'three/src/math/Vector2';
-import {Camera} from 'three/src/cameras/Camera';
+import {Vector2} from 'three';
+import {Camera} from 'three';
 
-import {Raycaster} from 'three/src/core/Raycaster';
+import {Raycaster} from 'three';
 import {RaycasterForBVH} from '../../../operations/sop/utils/Bvh/three-mesh-bvh';
 function createRaycaster() {
 	const raycaster = new Raycaster() as RaycasterForBVH;

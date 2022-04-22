@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';

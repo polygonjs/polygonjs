@@ -6,14 +6,14 @@
  *
  */
 
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {Texture} from 'three/src/textures/Texture';
+import {MeshBasicMaterial} from 'three';
+import {Texture} from 'three';
 interface MeshBasicMaterialWithLightMap extends MeshBasicMaterial {
 	lightMap: Texture | null;
 	lightMapIntensity: number;
 }
 
-import {FrontSide} from 'three/src/constants';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

@@ -1,18 +1,18 @@
 import {Constructor, PolyDictionary, valueof} from '../../../../types/GlobalTypes';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTargetOptions} from 'three/src/renderers/WebGLRenderTarget';
+import {WebGLRenderer} from 'three';
+import {WebGLRenderTargetOptions} from 'three';
 import {EffectComposer} from '../../../../modules/core/post_process/EffectComposer';
 import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
 import {PostNodeChildrenMap} from '../../../poly/registers/nodes/Post';
 import {TypedNode, BaseNodeType} from '../../_Base';
 import {BasePostProcessNodeType} from '../_Base';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
-import {Vector2} from 'three/src/math/Vector2';
+import {Scene} from 'three';
+import {Camera} from 'three';
+import {Vector2} from 'three';
 import {BaseCameraObjNodeType} from '../../obj/_BaseCamera';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {RGBAFormat, UnsignedByteType, HalfFloatType, FloatType} from 'three/src/constants';
+import {RGBAFormat, UnsignedByteType, HalfFloatType, FloatType} from 'three';
 import {Poly} from '../../../Poly';
 
 import {

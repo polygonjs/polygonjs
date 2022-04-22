@@ -13,8 +13,8 @@ In a future version of this node, it will also be possible to link it to a video
 
  */
 import {Constructor} from '../../../types/GlobalTypes';
-import {VideoTexture} from 'three/src/textures/VideoTexture';
-import {Texture} from 'three/src/textures/Texture';
+import {VideoTexture} from 'three';
+import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {CoreLoaderTexture} from '../../../core/loader/Texture';
 

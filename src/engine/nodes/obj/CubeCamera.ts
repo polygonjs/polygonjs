@@ -9,17 +9,17 @@
  */
 
 import {Constructor} from '../../../types/GlobalTypes';
-import {Group} from 'three/src/objects/Group';
-import {Object3D} from 'three/src/core/Object3D';
-import {CubeCamera} from 'three/src/cameras/CubeCamera';
-import {sRGBEncoding} from 'three/src/constants';
-import {WebGLCubeRenderTarget} from 'three/src/renderers/WebGLCubeRenderTarget';
+import {Group} from 'three';
+import {Object3D} from 'three';
+import {CubeCamera} from 'three';
+import {sRGBEncoding} from 'three';
+import {WebGLCubeRenderTarget} from 'three';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
 import {TypedObjNode} from './_Base';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
+import {PerspectiveCamera} from 'three';
 import {BaseNodeType} from '../_Base';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
-import {AxesHelper} from 'three/src/helpers/AxesHelper';
+import {AxesHelper} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HierarchyController} from './utils/HierarchyController';
 import {FlagsControllerD} from '../utils/FlagsController';

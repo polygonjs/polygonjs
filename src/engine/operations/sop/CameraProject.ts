@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../poly/NodeContext';

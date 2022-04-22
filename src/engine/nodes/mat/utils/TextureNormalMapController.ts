@@ -2,13 +2,13 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {TangentSpaceNormalMap, ObjectSpaceNormalMap} from 'three/src/constants';
-import {MeshPhysicalMaterial} from 'three/src/materials/MeshPhysicalMaterial';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
-import {MeshPhongMaterial} from 'three/src/materials/MeshPhongMaterial';
-import {MeshMatcapMaterial} from 'three/src/materials/MeshMatcapMaterial';
-import {MeshNormalMaterial} from 'three/src/materials/MeshNormalMaterial';
-import {MeshToonMaterial} from 'three/src/materials/MeshToonMaterial';
+import {TangentSpaceNormalMap, ObjectSpaceNormalMap} from 'three';
+import {MeshPhysicalMaterial} from 'three';
+import {MeshStandardMaterial} from 'three';
+import {MeshPhongMaterial} from 'three';
+import {MeshMatcapMaterial} from 'three';
+import {MeshNormalMaterial} from 'three';
+import {MeshToonMaterial} from 'three';
 enum NormalMapMode {
 	TANGENT = 'tangent',
 	OBJECT = 'object',

@@ -1,7 +1,7 @@
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Float32BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
 import {CoreGeometry} from '../Geometry';
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 import {ArrayUtils} from '../../ArrayUtils';
 
 export class CoreGeometryOperationSkin {

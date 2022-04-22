@@ -22,8 +22,8 @@ import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/Te
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {Material} from 'three/src/materials/Material';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {Material} from 'three';
+import {MeshBasicMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 interface MeshBasicBuilderControllers {
 	advancedCommon: AdvancedCommonController;

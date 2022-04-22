@@ -5,16 +5,16 @@
  * The noise can affect any attribute, not just the position.
  *
  */
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {CoreMath} from '../../../core/math/_Module';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypeAssert} from '../../poly/Assert';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {BufferAttribute} from 'three';
 import {SimplexNoise} from '../../../modules/three/examples/jsm/math/SimplexNoise';
 
 export enum NoiseOperation {

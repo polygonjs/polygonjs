@@ -1,6 +1,6 @@
-// import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
+// import {UniformsUtils} from 'three';
+// import {ShaderMaterial} from 'three';
+import {ShaderLib} from 'three';
 import {ShaderAssemblerMesh} from './_BaseMesh';
 import {BaseGlShaderAssembler} from '../_Base';
 import {ShaderConfig} from '../../configs/ShaderConfig';
@@ -13,7 +13,7 @@ import {GlConnectionPoint, GlConnectionPointType} from '../../../../utils/io/con
 import sss_default from '../../../gl/sss/init.glsl';
 import {AssemblerControllerNode} from '../../Controller';
 import {VaryingWriteGlNode} from '../../../VaryingWrite';
-import {MeshStandardMaterial} from 'three/src/materials/MeshStandardMaterial';
+import {MeshStandardMaterial} from 'three';
 import {includeSSSDeclarations} from './common/SSS';
 
 export class ShaderAssemblerStandard extends ShaderAssemblerMesh {

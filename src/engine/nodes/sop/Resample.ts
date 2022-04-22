@@ -2,10 +2,10 @@
  * Resample input lines
  *
  */
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {CatmullRomCurve3} from 'three/src/extras/curves/CatmullRomCurve3';
+import {LineSegments} from 'three';
+import {Float32BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
+import {CatmullRomCurve3} from 'three';
 import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
@@ -31,7 +31,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
 import {TypeAssert} from '../../poly/Assert';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 class ResampleSopParamsConfig extends NodeParamsConfig {
 	/** @param resampling method */
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {

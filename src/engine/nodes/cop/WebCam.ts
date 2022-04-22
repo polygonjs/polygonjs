@@ -4,13 +4,13 @@
  */
 import {Constructor} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
-import {VideoTexture} from 'three/src/textures/VideoTexture';
+import {VideoTexture} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
-import {sRGBEncoding} from 'three/src/constants';
+import {sRGBEncoding} from 'three';
 
 export function WebCamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

@@ -1,15 +1,17 @@
-import {Color} from 'three/src/math/Color';
-import {FrontSide} from 'three/src/constants';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Mesh} from 'three/src/objects/Mesh';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
-import {Plane} from 'three/src/math/Plane';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {UniformsLib} from 'three/src/renderers/shaders/UniformsLib';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {
+	Color,
+	FrontSide,
+	Matrix4,
+	Mesh,
+	PerspectiveCamera,
+	Plane,
+	ShaderMaterial,
+	UniformsLib,
+	UniformsUtils,
+	Vector3,
+	Vector4,
+	WebGLRenderTarget
+} from 'three';
 
 /**
  * Work based on :

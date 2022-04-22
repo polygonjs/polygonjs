@@ -1,10 +1,12 @@
-import {BackSide} from 'three/src/constants';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Line} from 'three/src/objects/Line';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {Mesh} from 'three/src/objects/Mesh';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
+import {
+	BackSide,
+	BufferGeometry,
+	Float32BufferAttribute,
+	Line,
+	LineBasicMaterial,
+	Mesh,
+	MeshBasicMaterial
+} from 'three';
 
 /**
  *  This helper must be added as a child of the light

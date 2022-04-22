@@ -1,28 +1,21 @@
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Scene} from 'three/src/scenes/Scene';
-import {
-	FloatType,
-	HalfFloatType,
-	NearestFilter,
-	ClampToEdgeWrapping,
-	RGBAFormat,
-	LinearFilter,
-} from 'three/src/constants';
-import {PlaneBufferGeometry} from 'three/src/geometries/PlaneGeometry';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Camera} from 'three/src/cameras/Camera';
+import {WebGLRenderTarget} from 'three';
+import {ShaderMaterial} from 'three';
+import {Scene} from 'three';
+import {FloatType, HalfFloatType, NearestFilter, ClampToEdgeWrapping, RGBAFormat, LinearFilter} from 'three';
+import {PlaneBufferGeometry} from 'three';
+import {Mesh} from 'three';
+import {Camera} from 'three';
 import {TypedCopNode} from './_Base';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {EffectsComposerController, PostProcessNetworkParamsConfig} from '../post/utils/EffectsComposerController';
 // import {Poly} from '../../Poly';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Vector2} from 'three/src/math/Vector2';
+import {WebGLRenderer} from 'three';
+import {Vector2} from 'three';
 import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 import {ParamConfig} from '../utils/params/ParamsConfig';

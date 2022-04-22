@@ -1,9 +1,9 @@
-import {Euler} from 'three/src/math/Euler';
-import {Camera} from 'three/src/cameras/Camera';
+import {Euler} from 'three';
+import {Camera} from 'three';
 import {CorePlayer} from '../../../core/player/Player';
-import {EventDispatcher} from 'three/src/core/EventDispatcher';
-import {Vector3} from 'three/src/math/Vector3';
-import {Spherical} from 'three/src/math/Spherical';
+import {EventDispatcher} from 'three';
+import {Vector3} from 'three';
+import {Spherical} from 'three';
 
 const changeEvent = {type: 'change'};
 const lockEvent = {type: 'lock'};

@@ -1,4 +1,4 @@
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 
 /**
  * Represents a 3D vector.

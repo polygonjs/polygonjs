@@ -1,13 +1,13 @@
-import {Vector3} from 'three/src/math/Vector3';
-// import {Object3D} from 'three/src/core/Object3D'
-// import {Group} from 'three/src/objects/Group'
-import {Mesh} from 'three/src/objects/Mesh';
-import {Box3} from 'three/src/math/Box3';
+import {Vector3} from 'three';
+// import {Object3D} from 'three'
+// import {Group} from 'three'
+import {Mesh} from 'three';
+import {Box3} from 'three';
 import {TypedContainer} from './_Base';
 import {CoreGroup} from '../../core/geometry/Group';
 import {CoreGeometry} from '../../core/geometry/Geometry';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-// import {Object3D} from 'three/src/core/Object3D';
+import {BufferGeometry} from 'three';
+// import {Object3D} from 'three';
 import {ContainableMap} from './utils/ContainableMap';
 import {CoreObject} from '../../core/geometry/Object';
 import {AttribType, ObjectData} from '../../core/geometry/Constant';

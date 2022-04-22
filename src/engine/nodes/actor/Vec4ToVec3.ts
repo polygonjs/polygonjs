@@ -6,8 +6,8 @@ import {
 	ActorConnectionPointType,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
 import {BaseVecToActorNode} from './_ConversionVecTo';
 
 const components_v4 = ['x', 'y', 'z', 'w'];

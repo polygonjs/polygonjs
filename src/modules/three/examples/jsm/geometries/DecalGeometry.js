@@ -1,7 +1,9 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	BufferGeometry,
+	Float32BufferAttribute,
+	Matrix4,
+	Vector3
+} from 'three';
 
 /**
  * You can use this geometry to create a decal mesh, that serves different kinds of purposes.

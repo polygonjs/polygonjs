@@ -3,7 +3,7 @@
  *
  *
  */
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
+import {LineBasicMaterial} from 'three';
 import {TypedMatNode} from './_Base';
 
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';

@@ -1,11 +1,11 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
-import {Euler} from 'three/src/math/Euler';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Vector3} from 'three';
+import {Euler} from 'three';
+import {Mesh} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DecalGeometry} from '../../../modules/three/examples/jsm/geometries/DecalGeometry';
-import {DEG2RAD} from 'three/src/math/MathUtils';
+import {MathUtils} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface DecalSopParams extends DefaultOperationParams {
@@ -33,7 +33,7 @@ export class DecalSopOperation extends BaseSopOperation {
 	override cook(inputContents: CoreGroup[], params: DecalSopParams) {
 		const inputCoreGroup = inputContents[0];
 
-		this._r.copy(params.r).multiplyScalar(DEG2RAD);
+		this._r.copy(params.r).multiplyScalar(MathUtils.DEG2RAD);
 		this._rotation.set(this._r.x, this._r.y, this._r.z);
 		this._scale.copy(params.s).multiplyScalar(params.scale);
 

@@ -2,7 +2,7 @@ import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 
 export interface AreaLightParams extends DefaultOperationParams {
 	color: Color;
@@ -49,14 +49,14 @@ export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-import {BackSide} from 'three/src/constants';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Line} from 'three/src/objects/Line';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import {Mesh} from 'three/src/objects/Mesh';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {RectAreaLight} from 'three/src/lights/RectAreaLight';
+import {BackSide} from 'three';
+import {BufferGeometry} from 'three';
+import {Float32BufferAttribute} from 'three';
+import {Line} from 'three';
+import {LineBasicMaterial} from 'three';
+import {Mesh} from 'three';
+import {MeshBasicMaterial} from 'three';
+import {RectAreaLight} from 'three';
 
 /**
  *  This helper must be added as a child of the light

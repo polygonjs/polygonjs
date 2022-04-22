@@ -6,7 +6,7 @@
  *
  */
 
-import {ObjectLoader} from 'three/src/loaders/ObjectLoader';
+import {ObjectLoader} from 'three';
 import {TypedSopNode} from './_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

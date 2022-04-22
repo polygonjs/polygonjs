@@ -1,6 +1,8 @@
-import {Euler} from 'three/src/math/Euler';
-import {EventDispatcher} from 'three/src/core/EventDispatcher';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	Euler,
+	EventDispatcher,
+	Vector3
+} from 'three';
 
 const _euler = new Euler( 0, 0, 0, 'YXZ' );
 const _vector = new Vector3();

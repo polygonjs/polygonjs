@@ -3,8 +3,8 @@ import {RenderPass} from '../../../modules/three/examples/jsm/postprocessing/Ren
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {SceneObjNode} from '../obj/Scene';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
+import {Scene} from 'three';
+import {Camera} from 'three';
 import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 

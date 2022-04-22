@@ -1,8 +1,10 @@
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Line} from 'three/src/objects/Line';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial';
-import * as MathUtils from 'three/src/math/MathUtils';
+import {
+	BufferGeometry,
+	BufferAttribute,
+	LineBasicMaterial,
+	Line,
+	MathUtils
+} from 'three';
 
 class PositionalAudioHelper extends Line {
 

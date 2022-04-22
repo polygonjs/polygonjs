@@ -1,5 +1,7 @@
-import {Triangle} from 'three/src/math/Triangle';
-import {Vector3} from 'three/src/math/Vector3';
+import {
+	Triangle,
+	Vector3
+} from 'three';
 
 /**
  * Utility class for sampling weighted random points on the surface of a mesh.

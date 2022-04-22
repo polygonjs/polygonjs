@@ -7,10 +7,10 @@
  */
 
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {BaseRayBox3ActorNode} from './_BaseRayBox3';
-import {Ray} from 'three/src/math/Ray';
-import {Box3} from 'three/src/math/Box3';
+import {Ray} from 'three';
+import {Box3} from 'three';
 
 const OUTPUT_NAME = 'position';
 export class RayIntersectBoxActorNode extends BaseRayBox3ActorNode<ActorConnectionPointType.VECTOR3> {

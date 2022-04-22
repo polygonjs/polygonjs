@@ -5,9 +5,9 @@
  * This is very handy when you have an attribute with values between 0 and 1, and you want to remap those values with a ramp.
  *
  */
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {AttribSize} from '../../../core/geometry/Constant';

@@ -4,7 +4,7 @@
  *
  */
 import {TypedCopNode} from './_Base';
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {DataTexture} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 

@@ -1,13 +1,13 @@
-// import {Color} from 'three/src/math/Color';
-// import {OctahedronBufferGeometry} from 'three/src/geometries/OctahedronGeometry';
-// import {BufferAttribute} from 'three/src/core/BufferAttribute';
+// import {Color} from 'three';
+// import {OctahedronBufferGeometry} from 'three';
+// import {BufferAttribute} from 'three';
 
 // import {HemisphereLightObjNode} from '../../HemisphereLight';
-// import {Quaternion} from 'three/src/math/Quaternion';
-// import {Vector3} from 'three/src/math/Vector3';
+// import {Quaternion} from 'three';
+// import {Vector3} from 'three';
 // import {BaseLightHelper} from './_BaseLightHelper';
-// import {HemisphereLight} from 'three/src/lights/HemisphereLight';
-// import {Mesh} from 'three/src/objects/Mesh';
+// import {HemisphereLight} from 'three';
+// import {Mesh} from 'three';
 
 // export class HemisphereLightHelper extends BaseLightHelper<Mesh, HemisphereLight, HemisphereLightObjNode> {
 // 	createObject() {

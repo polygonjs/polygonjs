@@ -3,7 +3,7 @@
  *
  *
  */
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {DataTexture} from 'three';
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
@@ -11,7 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {BaseCopNodeType} from '../cop/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObject} from '../../../core/geometry/Object';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 import {CoreImage} from '../../../core/Image';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
 	/** @param texture node to load the heightmap from */

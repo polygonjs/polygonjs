@@ -1,7 +1,7 @@
 import {Number3, StringOrNumber3} from '../../types/GlobalTypes';
 import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';

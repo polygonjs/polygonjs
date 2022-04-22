@@ -1,10 +1,10 @@
-import {Camera} from 'three/src/cameras/Camera.js';
-import {Vector3} from 'three/src/math/Vector3.js';
-import {LineSegments} from 'three/src/objects/LineSegments.js';
-import {Color} from 'three/src/math/Color.js';
-import {LineBasicMaterial} from 'three/src/materials/LineBasicMaterial.js';
-import {BufferGeometry} from 'three/src/core/BufferGeometry.js';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute.js';
+import {Camera} from 'three';
+import {Vector3} from 'three';
+import {LineSegments} from 'three';
+import {Color} from 'three';
+import {LineBasicMaterial} from 'three';
+import {BufferGeometry} from 'three';
+import {Float32BufferAttribute} from 'three';
 
 const _vector = /*@__PURE__*/ new Vector3();
 const _camera = /*@__PURE__*/ new Camera();

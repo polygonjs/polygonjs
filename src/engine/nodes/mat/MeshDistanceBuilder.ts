@@ -11,8 +11,8 @@ import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/Advan
 import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-import {Material} from 'three/src/materials/Material';
-import {MeshDistanceMaterial} from 'three/src/materials/MeshDistanceMaterial';
+import {Material} from 'three';
+import {MeshDistanceMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {ShaderAssemblerCustomMeshDistance} from '../gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
 interface MeshDistanceBuilderControllers {

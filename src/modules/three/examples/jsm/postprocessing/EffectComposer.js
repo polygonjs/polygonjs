@@ -1,10 +1,12 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {Clock} from 'three/src/core/Clock';
-import {Float32BufferAttribute} from 'three/src/core/BufferAttribute';
-import {Mesh} from 'three/src/objects/Mesh';
-import {OrthographicCamera} from 'three/src/cameras/OrthographicCamera';
-import {Vector2} from 'three/src/math/Vector2';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
+import {
+	BufferGeometry,
+	Clock,
+	Float32BufferAttribute,
+	Mesh,
+	OrthographicCamera,
+	Vector2,
+	WebGLRenderTarget
+} from 'three';
 import { CopyShader } from '../shaders/CopyShader.js';
 import { ShaderPass } from './ShaderPass.js';
 import { MaskPass } from './MaskPass.js';

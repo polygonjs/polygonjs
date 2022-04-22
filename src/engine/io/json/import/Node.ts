@@ -1,6 +1,6 @@
 import {TypedNode} from '../../../nodes/_Base';
-import {Vector2} from 'three/src/math/Vector2';
-import {JsonImportDispatcher} from './Dispatcher';
+import {Vector2} from 'three';
+import type {JsonImportDispatcher} from './Dispatcher';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../../../nodes/utils/params/ParamsController';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
@@ -11,7 +11,7 @@ import {
 	SimpleParamJsonExporterData,
 	ComplexParamJsonExporterData,
 } from '../../../nodes/utils/io/IOController';
-import {NodesJsonImporter} from './Nodes';
+import type {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
 import {CoreType} from '../../../../core/Type';
 // import {CoreString} from '../../../../core/String';
@@ -21,7 +21,11 @@ const COMPLEX_PARAM_DATA_KEYS: Readonly<string[]> = ['overriden_options', 'type'
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
-	constructor(protected _node: T) {}
+	constructor(
+		protected _node: T,
+		private dispatcher: JsonImportDispatcher,
+		protected nodesImporter: NodesJsonImporter<any>
+	) {}
 
 	process_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
 		this.set_connection_points(data['connection_points']);
@@ -93,8 +97,8 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
-		const nodes_importer = new NodesJsonImporter(this._node);
-		nodes_importer.process_data(scene_importer, data);
+		// const nodes_importer = new NodesJsonImporter(this._node);
+		this.nodesImporter.process_data(scene_importer, data);
 	}
 	set_selection(data?: string[]) {
 		if (this._node.childrenAllowed() && this._node.childrenController) {
@@ -180,7 +184,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			const node = this._node.node(node_name);
 			if (node) {
 				const node_data = data[node_name];
-				JsonImportDispatcher.dispatch_node(node).process_ui_data(scene_importer, node_data);
+				this.dispatcher.dispatchNode(node).process_ui_data(scene_importer, node_data);
 				// node.visit(JsonImporterVisitor).process_ui_data(node_data);
 			}
 		}
@@ -304,7 +308,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	private _process_param_data_complex(param_name: string, param_data: ComplexParamJsonExporterData<ParamType>) {
 		const param = this._node.params.get(param_name);
 		if (param) {
-			JsonImportDispatcher.dispatch_param(param).process_data(param_data);
+			this.dispatcher.dispatchParam(param).process_data(param_data);
 		}
 		// return
 		// const has_param = this._node.params.has_param(param_name);

@@ -14,7 +14,7 @@ import {
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 import {isBooleanTrue} from '../../../core/Type';
-import {Intersection} from 'three/src/core/Raycaster';
+import {Intersection} from 'three';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 class OnObjectPointerDownActorParamsConfig extends NodeParamsConfig {

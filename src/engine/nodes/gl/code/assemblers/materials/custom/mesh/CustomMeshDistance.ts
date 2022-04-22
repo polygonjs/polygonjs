@@ -1,8 +1,8 @@
-import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
+import {ShaderLib} from 'three';
 import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
 import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
 import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDistance.frag.glsl';
-import {MeshDistanceMaterial} from 'three/src/materials/MeshDistanceMaterial';
+import {MeshDistanceMaterial} from 'three';
 import {includeSSSDeclarations} from '../../common/SSS';
 import {AssemblerControllerNode} from '../../../../Controller';
 

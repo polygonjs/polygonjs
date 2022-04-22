@@ -1,36 +1,31 @@
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {LineSegments} from 'three/src/objects/LineSegments';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Points} from 'three/src/objects/Points';
+import {BufferAttribute} from 'three';
+import {BufferGeometry} from 'three';
+import {LineSegments} from 'three';
+import {Mesh} from 'three';
+import {Points} from 'three';
 /**
  * Development repository: https://github.com/kaisalmen/WWOBJLoader
  */
-
-
 
 /**
  *
  * @param {MaterialHandler} materialHandler
  * @constructor
  */
-const MeshReceiver = function ( materialHandler ) {
-
+const MeshReceiver = function (materialHandler) {
 	this.logging = {
 		enabled: false,
-		debug: false
+		debug: false,
 	};
 
 	this.callbacks = {
 		onProgress: null,
-		onMeshAlter: null
+		onMeshAlter: null,
 	};
 	this.materialHandler = materialHandler;
-
 };
 
 MeshReceiver.prototype = {
-
 	constructor: MeshReceiver,
 
 	/**
@@ -39,11 +34,9 @@ MeshReceiver.prototype = {
 	 * @param {boolean} enabled True or false.
 	 * @param {boolean} debug True or false.
 	 */
-	setLogging:	function ( enabled, debug ) {
-
+	setLogging: function (enabled, debug) {
 		this.logging.enabled = enabled === true;
 		this.logging.debug = debug === true;
-
 	},
 
 	/**
@@ -52,20 +45,14 @@ MeshReceiver.prototype = {
 	 * @param {Function} onMeshAlter
 	 * @private
 	 */
-	_setCallbacks: function ( onProgress, onMeshAlter ) {
-
-		if ( onProgress !== null && onProgress !== undefined && onProgress instanceof Function ) {
-
+	_setCallbacks: function (onProgress, onMeshAlter) {
+		if (onProgress !== null && onProgress !== undefined && onProgress instanceof Function) {
 			this.callbacks.onProgress = onProgress;
-
 		}
 
-		if ( onMeshAlter !== null && onMeshAlter !== undefined && onMeshAlter instanceof Function ) {
-
+		if (onMeshAlter !== null && onMeshAlter !== undefined && onMeshAlter instanceof Function) {
 			this.callbacks.onMeshAlter = onMeshAlter;
-
 		}
-
 	},
 
 	/**
@@ -74,56 +61,39 @@ MeshReceiver.prototype = {
 	 * @param {Object} meshPayload Raw mesh description (buffers, params, materials) used to build one to many meshes.
 	 * @returns {Mesh[]} mesh Array of {@link Mesh}
 	 */
-	buildMeshes: function ( meshPayload ) {
-
+	buildMeshes: function (meshPayload) {
 		const meshName = meshPayload.params.meshName;
 		const buffers = meshPayload.buffers;
 
 		const bufferGeometry = new BufferGeometry();
-		if ( buffers.vertices !== undefined && buffers.vertices !== null ) {
-
-			bufferGeometry.setAttribute( 'position', new BufferAttribute( new Float32Array( buffers.vertices ), 3 ) );
-
+		if (buffers.vertices !== undefined && buffers.vertices !== null) {
+			bufferGeometry.setAttribute('position', new BufferAttribute(new Float32Array(buffers.vertices), 3));
 		}
 
-		if ( buffers.indices !== undefined && buffers.indices !== null ) {
-
-			bufferGeometry.setIndex( new BufferAttribute( new Uint32Array( buffers.indices ), 1 ) );
-
+		if (buffers.indices !== undefined && buffers.indices !== null) {
+			bufferGeometry.setIndex(new BufferAttribute(new Uint32Array(buffers.indices), 1));
 		}
 
-		if ( buffers.colors !== undefined && buffers.colors !== null ) {
-
-			bufferGeometry.setAttribute( 'color', new BufferAttribute( new Float32Array( buffers.colors ), 3 ) );
-
+		if (buffers.colors !== undefined && buffers.colors !== null) {
+			bufferGeometry.setAttribute('color', new BufferAttribute(new Float32Array(buffers.colors), 3));
 		}
 
-		if ( buffers.normals !== undefined && buffers.normals !== null ) {
-
-			bufferGeometry.setAttribute( 'normal', new BufferAttribute( new Float32Array( buffers.normals ), 3 ) );
-
+		if (buffers.normals !== undefined && buffers.normals !== null) {
+			bufferGeometry.setAttribute('normal', new BufferAttribute(new Float32Array(buffers.normals), 3));
 		} else {
-
 			bufferGeometry.computeVertexNormals();
-
 		}
 
-		if ( buffers.uvs !== undefined && buffers.uvs !== null ) {
-
-			bufferGeometry.setAttribute( 'uv', new BufferAttribute( new Float32Array( buffers.uvs ), 2 ) );
-
+		if (buffers.uvs !== undefined && buffers.uvs !== null) {
+			bufferGeometry.setAttribute('uv', new BufferAttribute(new Float32Array(buffers.uvs), 2));
 		}
 
-		if ( buffers.skinIndex !== undefined && buffers.skinIndex !== null ) {
-
-			bufferGeometry.setAttribute( 'skinIndex', new BufferAttribute( new Uint16Array( buffers.skinIndex ), 4 ) );
-
+		if (buffers.skinIndex !== undefined && buffers.skinIndex !== null) {
+			bufferGeometry.setAttribute('skinIndex', new BufferAttribute(new Uint16Array(buffers.skinIndex), 4));
 		}
 
-		if ( buffers.skinWeight !== undefined && buffers.skinWeight !== null ) {
-
-			bufferGeometry.setAttribute( 'skinWeight', new BufferAttribute( new Float32Array( buffers.skinWeight ), 4 ) );
-
+		if (buffers.skinWeight !== undefined && buffers.skinWeight !== null) {
+			bufferGeometry.setAttribute('skinWeight', new BufferAttribute(new Float32Array(buffers.skinWeight), 4));
 		}
 
 		let material, materialName, key;
@@ -131,26 +101,20 @@ MeshReceiver.prototype = {
 		const createMultiMaterial = meshPayload.materials.multiMaterial;
 		const multiMaterials = [];
 
-		for ( key in materialNames ) {
-
-			materialName = materialNames[ key ];
-			material = this.materialHandler.getMaterial( materialName );
-			if ( createMultiMaterial ) multiMaterials.push( material );
-
+		for (key in materialNames) {
+			materialName = materialNames[key];
+			material = this.materialHandler.getMaterial(materialName);
+			if (createMultiMaterial) multiMaterials.push(material);
 		}
 
-		if ( createMultiMaterial ) {
-
+		if (createMultiMaterial) {
 			material = multiMaterials;
 			const materialGroups = meshPayload.materials.materialGroups;
 			let materialGroup;
-			for ( key in materialGroups ) {
-
-				materialGroup = materialGroups[ key ];
-				bufferGeometry.addGroup( materialGroup.start, materialGroup.count, materialGroup.index );
-
+			for (key in materialGroups) {
+				materialGroup = materialGroups[key];
+				bufferGeometry.addGroup(materialGroup.start, materialGroup.count, materialGroup.index);
 			}
-
 		}
 
 		const meshes = [];
@@ -159,95 +123,66 @@ MeshReceiver.prototype = {
 		let useOrgMesh = true;
 		const geometryType = meshPayload.geometryType === null ? 0 : meshPayload.geometryType;
 
-		if ( this.callbacks.onMeshAlter ) {
-
-			callbackOnMeshAlterResult = this.callbacks.onMeshAlter(
-				{
-					detail: {
-						meshName: meshName,
-						bufferGeometry: bufferGeometry,
-						material: material,
-						geometryType: geometryType
-					}
-				}
-			);
-
+		if (this.callbacks.onMeshAlter) {
+			callbackOnMeshAlterResult = this.callbacks.onMeshAlter({
+				detail: {
+					meshName: meshName,
+					bufferGeometry: bufferGeometry,
+					material: material,
+					geometryType: geometryType,
+				},
+			});
 		}
 
 		// here LoadedMeshUserOverride is required to be provided by the callback used to alter the results
-		if ( callbackOnMeshAlterResult ) {
-
-			if ( callbackOnMeshAlterResult.isDisregardMesh() ) {
-
+		if (callbackOnMeshAlterResult) {
+			if (callbackOnMeshAlterResult.isDisregardMesh()) {
 				useOrgMesh = false;
-
-			} else if ( callbackOnMeshAlterResult.providesAlteredMeshes() ) {
-
-				for ( const i in callbackOnMeshAlterResult.meshes ) {
-
-					meshes.push( callbackOnMeshAlterResult.meshes[ i ] );
-
+			} else if (callbackOnMeshAlterResult.providesAlteredMeshes()) {
+				for (const i in callbackOnMeshAlterResult.meshes) {
+					meshes.push(callbackOnMeshAlterResult.meshes[i]);
 				}
 
 				useOrgMesh = false;
-
 			}
-
 		}
 
-		if ( useOrgMesh ) {
-
-			if ( meshPayload.computeBoundingSphere ) bufferGeometry.computeBoundingSphere();
-			if ( geometryType === 0 ) {
-
-				mesh = new Mesh( bufferGeometry, material );
-
-			} else if ( geometryType === 1 ) {
-
-				mesh = new LineSegments( bufferGeometry, material );
-
+		if (useOrgMesh) {
+			if (meshPayload.computeBoundingSphere) bufferGeometry.computeBoundingSphere();
+			if (geometryType === 0) {
+				mesh = new Mesh(bufferGeometry, material);
+			} else if (geometryType === 1) {
+				mesh = new LineSegments(bufferGeometry, material);
 			} else {
-
-				mesh = new Points( bufferGeometry, material );
-
+				mesh = new Points(bufferGeometry, material);
 			}
 
 			mesh.name = meshName;
-			meshes.push( mesh );
-
+			meshes.push(mesh);
 		}
 
 		let progressMessage = meshPayload.params.meshName;
-		if ( meshes.length > 0 ) {
-
+		if (meshes.length > 0) {
 			const meshNames = [];
-			for ( const i in meshes ) {
-
-				mesh = meshes[ i ];
-				meshNames[ i ] = mesh.name;
-
+			for (const i in meshes) {
+				mesh = meshes[i];
+				meshNames[i] = mesh.name;
 			}
 
-			progressMessage += ': Adding mesh(es) (' + meshNames.length + ': ' + meshNames + ') from input mesh: ' + meshName;
-			progressMessage += ' (' + ( meshPayload.progress.numericalValue * 100 ).toFixed( 2 ) + '%)';
-
+			progressMessage +=
+				': Adding mesh(es) (' + meshNames.length + ': ' + meshNames + ') from input mesh: ' + meshName;
+			progressMessage += ' (' + (meshPayload.progress.numericalValue * 100).toFixed(2) + '%)';
 		} else {
-
 			progressMessage += ': Not adding mesh: ' + meshName;
-			progressMessage += ' (' + ( meshPayload.progress.numericalValue * 100 ).toFixed( 2 ) + '%)';
-
+			progressMessage += ' (' + (meshPayload.progress.numericalValue * 100).toFixed(2) + '%)';
 		}
 
-		if ( this.callbacks.onProgress ) {
-
-			this.callbacks.onProgress( 'progress', progressMessage, meshPayload.progress.numericalValue );
-
+		if (this.callbacks.onProgress) {
+			this.callbacks.onProgress('progress', progressMessage, meshPayload.progress.numericalValue);
 		}
 
 		return meshes;
-
-	}
-
+	},
 };
 
 /**
@@ -257,17 +192,13 @@ MeshReceiver.prototype = {
  * @param {boolean} disregardMesh=false Tell implementation to completely disregard this mesh
  * @param {boolean} disregardMesh=false Tell implementation that mesh(es) have been altered or added
  */
-const LoadedMeshUserOverride = function ( disregardMesh, alteredMesh ) {
-
+const LoadedMeshUserOverride = function (disregardMesh, alteredMesh) {
 	this.disregardMesh = disregardMesh === true;
 	this.alteredMesh = alteredMesh === true;
 	this.meshes = [];
-
 };
 
-
 LoadedMeshUserOverride.prototype = {
-
 	constructor: LoadedMeshUserOverride,
 
 	/**
@@ -275,11 +206,9 @@ LoadedMeshUserOverride.prototype = {
 	 *
 	 * @param {Mesh} mesh
 	 */
-	addMesh: function ( mesh ) {
-
-		this.meshes.push( mesh );
+	addMesh: function (mesh) {
+		this.meshes.push(mesh);
 		this.alteredMesh = true;
-
 	},
 
 	/**
@@ -288,9 +217,7 @@ LoadedMeshUserOverride.prototype = {
 	 * @returns {boolean}
 	 */
 	isDisregardMesh: function () {
-
 		return this.disregardMesh;
-
 	},
 
 	/**
@@ -299,13 +226,8 @@ LoadedMeshUserOverride.prototype = {
 	 * @returns {boolean}
 	 */
 	providesAlteredMeshes: function () {
-
 		return this.alteredMesh;
-
-	}
+	},
 };
 
-export {
-	MeshReceiver,
-	LoadedMeshUserOverride
-};
+export {MeshReceiver, LoadedMeshUserOverride};

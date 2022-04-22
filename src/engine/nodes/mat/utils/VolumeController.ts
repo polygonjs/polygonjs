@@ -1,16 +1,16 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {TypedMatNode} from '../_Base';
-import {Material} from 'three/src/materials/Material';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Scene} from 'three/src/scenes/Scene';
-import {Camera} from 'three/src/cameras/Camera';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Material} from 'three';
+import {ShaderMaterial} from 'three';
+import {WebGLRenderer} from 'three';
+import {Scene} from 'three';
+import {Camera} from 'three';
+import {BufferGeometry} from 'three';
 import {Geometry} from '../../../../modules/three/examples/jsm/deprecated/Geometry';
-import {Group} from 'three/src/objects/Group';
-import {Box3} from 'three/src/math/Box3';
-import {Object3D} from 'three/src/core/Object3D';
+import {Group} from 'three';
+import {Box3} from 'three';
+import {Object3D} from 'three';
 import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 
 export function VolumeParamConfig<TBase extends Constructor>(Base: TBase) {

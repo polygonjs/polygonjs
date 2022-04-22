@@ -1,7 +1,7 @@
 import {Octree} from '../../../three/examples/jsm/math/Octree';
 import {Capsule} from '../../../three/examples/jsm/math/Capsule';
-import {Vector3} from 'three/src/math/Vector3';
-import {Object3D} from 'three/src/core/Object3D';
+import {Vector3} from 'three';
+import {Object3D} from 'three';
 
 interface CapsuleCollisionResult {
 	normal: Vector3;

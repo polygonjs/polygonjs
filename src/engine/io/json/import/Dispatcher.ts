@@ -16,18 +16,20 @@ import {RampParam} from '../../../params/Ramp';
 // import {PolySopNode} from '../../../nodes/sop/Poly';
 // import {PolyObjNode} from '../../../nodes/obj/Poly';
 import {PolyNodeJsonImporter} from './nodes/Poly';
+import {NodesJsonImporter} from './Nodes';
 
 export class JsonImportDispatcher {
-	static dispatch_node(node: BaseNodeType) {
+	dispatchNode(node: BaseNodeType) {
 		// using PolySopNode and PolyObjNode seem to create circular dependency with webpack
 		// if (node instanceof PolySopNode || node instanceof PolyObjNode)
+		const nodesImporter = new NodesJsonImporter(node, this);
 		if (node.polyNodeController) {
-			return new PolyNodeJsonImporter(node);
+			return new PolyNodeJsonImporter(node, this, nodesImporter);
 		}
-		return new NodeJsonImporter(node);
+		return new NodeJsonImporter(node, this, nodesImporter);
 	}
 
-	static dispatch_param(param: BaseParamType) {
+	dispatchParam(param: BaseParamType) {
 		if (param instanceof TypedMultipleParam) {
 			return new ParamMultipleJsonImporter(param);
 		}

@@ -1,9 +1,9 @@
 import {DeleteSopNode} from '../../Delete';
 import {CorePoint} from '../../../../../core/geometry/Point';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {Raycaster, Intersection} from 'three/src/core/Raycaster';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Raycaster, Intersection} from 'three';
+import {Mesh} from 'three';
 import {MatDoubleSideTmpSetter} from '../../../../../core/render/MatDoubleSideTmpSetter';
 
 const UP = new Vector3(0, 1, 0);

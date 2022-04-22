@@ -1,4 +1,4 @@
-import {Vector2} from 'three/src/math/Vector2';
+import {Vector2} from 'three';
 
 export class CoreVector {
 	static isVector2Valid(vector: Vector2): boolean {

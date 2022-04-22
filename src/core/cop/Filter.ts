@@ -5,7 +5,7 @@ import {
 	NearestMipMapLinearFilter,
 	LinearMipMapNearestFilter,
 	LinearMipMapLinearFilter,
-} from 'three/src/constants';
+} from 'three';
 import {PolyDictionary} from '../../types/GlobalTypes';
 
 export const MAG_FILTERS: PolyDictionary<number>[] = [{LinearFilter}, {NearestFilter}];

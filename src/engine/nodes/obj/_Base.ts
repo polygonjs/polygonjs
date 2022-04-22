@@ -1,8 +1,8 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {TypedNode, BaseNodeType} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {Group} from 'three/src/objects/Group';
+import {Group} from 'three';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {TransformController} from './utils/TransformController';
 import {HierarchyController} from './utils/HierarchyController';

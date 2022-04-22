@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {Vector3} from 'three/src/math/Vector3';
-import {Object3D} from 'three/src/core/Object3D';
+import {Vector3} from 'three';
+import {Object3D} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
 
 import {
@@ -12,7 +12,7 @@ import {
 	TRANSFORM_TARGET_TYPES,
 } from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {DEG2RAD} from 'three/src/math/MathUtils';
+import {MathUtils} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 export enum TransformObjectMode {
@@ -117,7 +117,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		for (let object of objects) {
 			object.position.copy(params.t);
 			const order = ROTATION_ORDERS[params.rotationOrder];
-			this._r.copy(params.r).multiplyScalar(DEG2RAD);
+			this._r.copy(params.r).multiplyScalar(MathUtils.DEG2RAD);
 			object.rotation.set(this._r.x, this._r.y, this._r.z, order);
 			this._object_scale.copy(params.s).multiplyScalar(params.scale);
 			object.scale.copy(this._object_scale);

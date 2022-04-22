@@ -1,9 +1,9 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {ShaderMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshMatcapMaterial} from 'three/src/materials/MeshMatcapMaterial';
+import {MeshMatcapMaterial} from 'three';
 
 export function MatcapMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

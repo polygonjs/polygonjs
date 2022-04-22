@@ -4,8 +4,8 @@
  *
  */
 
-import {MeshDistanceMaterial} from 'three/src/materials/MeshDistanceMaterial';
-import {FrontSide} from 'three/src/constants';
+import {MeshDistanceMaterial} from 'three';
+import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';

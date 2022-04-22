@@ -1,8 +1,8 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-// import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib'
-// import {RGBADepthPacking} from 'three/src/constants'
-// import {BasicDepthPacking} from 'three/src/constants'
+import {UniformsUtils} from 'three';
+import {ShaderMaterial} from 'three';
+// import {ShaderLib} from 'three'
+// import {RGBADepthPacking} from 'three'
+// import {BasicDepthPacking} from 'three'
 
 import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
 

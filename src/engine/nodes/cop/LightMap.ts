@@ -8,10 +8,10 @@
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
-import {Object3D} from 'three/src/core/Object3D';
-import {Light} from 'three/src/lights/Light';
+import {Object3D} from 'three';
+import {Light} from 'three';
 import {LightMapController, DEFAULT_ITERATION_BLEND} from './utils/LightMapController';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 import {CopRendererController} from './utils/RendererController';
@@ -47,8 +47,8 @@ class LightMapCopParamConfig extends NodeParamsConfig {
 		range: [0, 10],
 	});
 
-	objectsMask = ParamConfig.STRING('', {objectMask:true});
-	lightsMask = ParamConfig.STRING('*', {objectMask:true});
+	objectsMask = ParamConfig.STRING('', {objectMask: true});
+	lightsMask = ParamConfig.STRING('*', {objectMask: true});
 
 	printResolveObjectsList = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {

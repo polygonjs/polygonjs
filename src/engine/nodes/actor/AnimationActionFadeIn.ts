@@ -9,7 +9,7 @@ import {
 	AnimationActionEventListenerExtended,
 	AnimationActionLoopEvent,
 } from './_BaseAnimationAction';
-import {AnimationMixer} from 'three/src/animation/AnimationMixer';
+import {AnimationMixer} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, ACTOR_NODE_SELF_TRIGGER_CALLBACK} from './_Base';
 import {
@@ -18,8 +18,8 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {EventListener, Event} from 'three/src/core/EventDispatcher';
-import {AnimationAction} from 'three/src/animation/AnimationAction';
+import {EventListener, Event} from 'three';
+import {AnimationAction} from 'three';
 import {getMostActiveAnimationActionFromMixer} from '../../../core/actor/AnimationMixerUtils';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;

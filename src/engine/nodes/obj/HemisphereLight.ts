@@ -3,7 +3,7 @@
  *
  *
  */
-import {HemisphereLight} from 'three/src/lights/HemisphereLight';
+import {HemisphereLight} from 'three';
 import {TypedLightObjNode} from './_BaseLight';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {LightType} from '../../poly/registers/nodes/types/Light';

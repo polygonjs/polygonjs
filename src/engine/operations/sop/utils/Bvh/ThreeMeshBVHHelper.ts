@@ -1,5 +1,5 @@
-import {Object3D} from 'three/src/core/Object3D';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Object3D} from 'three';
+import {Mesh} from 'three';
 import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH} from './three-mesh-bvh';
 
 export class ThreeMeshBVHHelper {

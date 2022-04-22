@@ -11,9 +11,9 @@ import {
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {Object3D} from 'three/src/core/Object3D';
-import {AnimationAction} from 'three/src/animation/AnimationAction';
-import {AnimationMixer} from 'three/src/animation/AnimationMixer';
+import {Object3D} from 'three';
+import {AnimationAction} from 'three';
+import {AnimationMixer} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;

@@ -1,8 +1,8 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {BufferGeometry} from 'three';
+import {BufferAttribute} from 'three';
 import {CoreImage} from '../../Image';
-import {Texture} from 'three/src/textures/Texture';
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {Texture} from 'three';
+import {DataTexture} from 'three';
 import {CoreAttribute} from '../../geometry/Attribute';
 import {CoreMath} from '../../math/_Module';
 

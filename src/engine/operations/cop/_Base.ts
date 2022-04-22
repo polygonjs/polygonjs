@@ -1,6 +1,6 @@
 import {BaseOperation} from '../_Base';
 import {NodeContext} from '../../../engine/poly/NodeContext';
-import {Texture} from 'three/src/textures/Texture';
+import {Texture} from 'three';
 
 export class BaseCopOperation extends BaseOperation<NodeContext.COP> {
 	static override context() {

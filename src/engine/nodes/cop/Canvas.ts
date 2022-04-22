@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {Constructor} from '../../../types/GlobalTypes';
-import {CanvasTexture} from 'three/src/textures/CanvasTexture';
+import {CanvasTexture} from 'three';
 
 export function CanvasCopNodeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

@@ -1,13 +1,13 @@
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode} from '../../Raycast';
 import {BaseThreejsCameraObjNodeType} from '../../../obj/_BaseCamera';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {Material} from 'three/src/materials/Material';
-import {LinearFilter, NearestFilter, RGBAFormat, FloatType, NoToneMapping, LinearEncoding} from 'three/src/constants';
+import {WebGLRenderTarget} from 'three';
+import {Material} from 'three';
+import {LinearFilter, NearestFilter, RGBAFormat, FloatType, NoToneMapping, LinearEncoding} from 'three';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseMatNodeType} from '../../../mat/_Base';
-import {Scene} from 'three/src/scenes/Scene';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
+import {Scene} from 'three';
+import {WebGLRenderer} from 'three';
 import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../../../core/Type';
 import {BaseRaycastController} from './BaseRaycastController';

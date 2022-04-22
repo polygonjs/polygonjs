@@ -1,8 +1,8 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
-import {BufferAttribute, Float32BufferAttribute} from 'three/src/core/BufferAttribute';
+import {BufferGeometry} from 'three';
+import {BufferAttribute, Float32BufferAttribute} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';

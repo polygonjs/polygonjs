@@ -1,10 +1,8 @@
-import {BaseNodeType, TypedNode} from '../../_Base';
+import {BaseNodeType} from '../../_Base';
 import {NodeContext} from '../../../poly/NodeContext';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
-import {NodeJsonImporter} from '../../../io/json/import/Node';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
-import {createPolySopNode} from '../../sop/Poly';
-import {createPolyObjNode} from '../../obj/Poly';
+import {createPolySopNode} from '../../sop/utils/poly/createPolySopNode';
 import {NodeParamsConfig, ParamTemplate} from '../params/ParamsConfig';
 import {PolyNodeDefinition, PolyNodesInputsData} from './PolyNodeDefinition';
 import {PolyNodeClassByContext} from './PolyNodeClassByContext';
@@ -12,10 +10,12 @@ import {Poly} from '../../../Poly';
 import {ParamOptionToAdd} from '../params/ParamsController';
 import {ParamType} from '../../../poly/ParamType';
 import {PolyNodeDataRegister} from './PolyNodeDataRegister';
-import {createPolyAnimNode} from '../../anim/Poly';
-import {createPolyGlNode} from '../../gl/Poly';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
 import {NodeInputsController} from '../io/InputsController';
+import {JsonImportDispatcher} from '../../../io/json/import/Dispatcher';
+import {createPolyObjNode} from '../../obj/utils/poly/createPolyObjNode';
+import {createPolyAnimNode} from '../../anim/utils/poly/createPolyAnimNode';
+import {createPolyGlNode} from '../../gl/utils/poly/createPolyGlNode';
 
 // export const IS_POLY_NODE_BOOLEAN = 'isPolyNode';
 
@@ -87,7 +87,8 @@ export class PolyNodeController {
 		}
 
 		const sceneImporter = new SceneJsonImporter({});
-		const nodeImporter = new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
+		const dispatcher = new JsonImportDispatcher();
+		const nodeImporter = dispatcher.dispatchNode(this.node); // new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
 		nodeImporter.create_nodes(sceneImporter, childrenData);
 
 		const ui_data = this._definition.ui;
@@ -125,7 +126,8 @@ export class PolyNodeController {
 	}
 
 	static polyNodeData(node: BaseNodeType, inputsData?: PolyNodesInputsData): PolyNodeDefinition {
-		const rootExporter = JsonExportDispatcher.dispatch_node(node);
+		const dispatcher = new JsonExportDispatcher();
+		const rootExporter = dispatcher.dispatchNode(node);
 		const nodesData = rootExporter.data({showPolyNodesData: true});
 		const uiData = rootExporter.uiData({showPolyNodesData: true});
 
@@ -160,20 +162,20 @@ export class PolyNodeController {
 		switch (nodeContext) {
 			// actor
 			case NodeContext.ANIM:
-				return createPolyAnimNode(nodeType, data) as any;
+				return createPolyAnimNode(nodeType, data, PolyNodeController) as any;
 			// audio
 			// cop
 			// event
 			case NodeContext.GL:
-				return createPolyGlNode(nodeType, data) as any;
+				return createPolyGlNode(nodeType, data, PolyNodeController) as any;
 			// mat
 			// obj
 			case NodeContext.OBJ:
-				return createPolyObjNode(nodeType, data) as any;
+				return createPolyObjNode(nodeType, data, PolyNodeController) as any;
 			// post
 			// rop
 			case NodeContext.SOP:
-				return createPolySopNode(nodeType, data) as any;
+				return createPolySopNode(nodeType, data, PolyNodeController) as any;
 		}
 	}
 	static createNodeClassAndRegister<NC extends NodeContext>(dataRegister: PolyNodeDataRegister<NC>) {

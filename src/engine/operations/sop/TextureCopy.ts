@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh} from 'three/src/objects/Mesh';
-import {Texture} from 'three/src/textures/Texture';
+import {Mesh} from 'three';
+import {Texture} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {ShaderMaterial} from 'three';
 import {CoreType} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface TextureCopySopParams extends DefaultOperationParams {
