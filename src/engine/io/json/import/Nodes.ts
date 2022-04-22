@@ -1,16 +1,16 @@
-import {TypedNode, BaseNodeType} from '../../../nodes/_Base';
+import type {TypedNode, BaseNodeType} from '../../../nodes/_Base';
 import {JsonImportDispatcher} from './Dispatcher';
-import {SceneJsonImporter} from '../../../io/json/import/Scene';
+import type {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {NodeContext} from '../../../poly/NodeContext';
-import {NodeJsonExporterData} from '../export/Node';
+import type {NodeJsonExporterData} from '../export/Node';
 import {ParamJsonImporter} from './Param';
 import {OptimizedNodesJsonImporter} from './OptimizedNodes';
-import {PolyNodeJsonImporter} from './nodes/Poly';
+import type {PolyNodeJsonImporter} from './nodes/Poly';
 import {Poly} from '../../../Poly';
-import {NodeJsonImporter} from './Node';
+import type {NodeJsonImporter} from './Node';
 import {CoreString} from '../../../../core/String';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {NodeCreateOptions} from '../../../nodes/utils/hierarchy/ChildrenController';
+import type {NodeCreateOptions} from '../../../nodes/utils/hierarchy/ChildrenController';
 import {JsonImporterMigrateHelper} from './migrate/MigrateHelper';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
@@ -29,7 +29,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		const nonOptimizedNodes: BaseNodeTypeWithIO[] = [];
 		for (let nodeName of non_optimized_names) {
 			const node_data = data[nodeName];
-			const nodeType = JsonImporterMigrateHelper.migrateNodeType(this._node, node_data['type'].toLowerCase());
+			const nodeType = JsonImporterMigrateHelper.migrateNodeType(this._node, node_data['type']);
 			const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 			const nodeCreateOptions: NodeCreateOptions = {
 				paramsInitValueOverrides,
@@ -48,20 +48,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				}
 			};
 			let node = loadNodeAttempt(nodeType, nodeCreateOptions);
-			if (!node) {
-				// remap event name
-				const newType = {
-					onEventchildattributeupdated: 'OnChildAttributeUpdate',
-					onEventmanualtrigger: 'OnManualTrigger',
-					onEventobjectattributeupdated: 'OnObjectAttributeUpdate',
-					oneventobjectclicked: 'OnObjectClick',
-					oneventobjecthovered: 'OnObjectHover',
-					oneventtick: 'OnTick',
-				}[nodeType];
-				if (newType) {
-					node = loadNodeAttempt(newType, nodeCreateOptions);
-				}
-			}
+
 			if (!node) {
 				// try with camelCased type
 				const nodeTypeCamelCase = CoreString.camelCase(nodeType);
