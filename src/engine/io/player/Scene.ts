@@ -37,6 +37,7 @@ export interface SceneDataImportOptions extends ImportCommonOptions {
 	sceneData: SceneJsonExporterData;
 	// assetsRoot: string;
 	autoPlay?: boolean;
+	createViewer?: boolean;
 }
 export type LoadSceneData = (options: SceneDataImportOptions) => void;
 export interface SceneDataImportOptionsOnly {
@@ -193,23 +194,25 @@ export class ScenePlayerImporter {
 		this._scene = await importer.scene();
 
 		// mount
-		const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;
-		if (!cameraNode) {
-			console.warn('no main camera found, viewer is not mounted');
-		} else {
-			const domElement = this.options.domElement;
-			this._viewer = cameraNode.createViewer({
-				element: domElement,
-				viewerProperties: {autoRender: false},
-			});
-			// if the scene is marked as ready, and thew viewer hasn't been marked as ready yet,
-			// which can happen if there are no nodes to check the progress of,
-			// then the viewer should be marked as ready now
-			if (this._sceneMarkedAsReady == true) {
-				this._markViewerAsReady(this._viewer);
-			}
+		if (this.options.createViewer) {
+			const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;
+			if (!cameraNode) {
+				console.warn('no main camera found, viewer is not mounted');
+			} else {
+				const domElement = this.options.domElement;
+				this._viewer = cameraNode.createViewer({
+					element: domElement,
+					viewerProperties: {autoRender: false},
+				});
+				// if the scene is marked as ready, and thew viewer hasn't been marked as ready yet,
+				// which can happen if there are no nodes to check the progress of,
+				// then the viewer should be marked as ready now
+				if (this._sceneMarkedAsReady == true) {
+					this._markViewerAsReady(this._viewer);
+				}
 
-			this._dispatchEvent(PolyEventName.VIEWER_MOUNTED);
+				this._dispatchEvent(PolyEventName.VIEWER_MOUNTED);
+			}
 		}
 
 		return this._scene;

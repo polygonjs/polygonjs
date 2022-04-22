@@ -53,7 +53,6 @@ export class SetMaterialColorActorNode extends TypedActorNode<SetMaterialColorAc
 			context
 		);
 
-		console.log(material);
 		if (material) {
 			const color = this._inputValueFromParam<ParamType.COLOR>(this.p.color, context);
 			const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);

@@ -5,7 +5,7 @@
 		"node": ">=16.13.1",
 		"yarn": "1.22.17"
 	},
-	"description": "node-based webgl 3D engine https://polygonjs.com",
+	"description": "node-based WebGL 3D engine https://polygonjs.com",
 	"homepage": "https://polygonjs.com",
 	"repository": {
 		"url": "git@github.com:polygonjs/polygonjs.git",
@@ -20,7 +20,7 @@
 	],
 	"author": "Guillaume Fradin <gui@polygonjs.com>",
 	"license": "MIT",
-	"main": "./dist/polygonjs.js",
+	"main": "./dist/all.js",
 	"scripts": {
 		"start": "webpack-dev-server --env NODE_ENV=development --env production=false --config config/webpack/dev.js",
 		"build": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",

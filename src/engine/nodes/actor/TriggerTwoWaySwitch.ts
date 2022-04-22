@@ -50,7 +50,6 @@ export class TriggerTwoWaySwitchActorNode extends TypedActorNode<TriggerTwoWaySw
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const condition = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.condition, context);
-		console.log('receiveTrigger', condition);
 		if (condition) {
 			this.runTrigger(context, 0);
 		} else {
