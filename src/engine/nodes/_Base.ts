@@ -45,7 +45,6 @@ import {ParamType} from '../poly/ParamType';
 import {DisplayNodeController} from './utils/DisplayNodeController';
 // import {NodeTypeMap} from '../containers/utils/ContainerMap';
 import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
-import {ModuleName} from '../poly/registers/modules/Common';
 import {BasePersistedConfig} from './utils/BasePersistedConfig';
 import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
 import {PolyNodeController} from './utils/poly/PolyNodeController';
@@ -417,7 +416,6 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// modules
-	public async requiredModules(): Promise<ModuleName[] | void> {}
 	public usedAssembler(): AssemblerName | void {}
 	public integrationData(): IntegrationData | void {}
 

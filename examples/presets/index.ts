@@ -29,12 +29,21 @@ import {colorSopPresetRegister} from './sop/Color';
 import {CSS2DObjectPresetRegister} from './sop/CSS2DObject';
 import {dataSopPresetRegister} from './sop/Data';
 import {dataUrlSopPresetRegister} from './sop/DataUrl';
-import {fileSopPresetRegister, fileGLTFSopPresetRegister} from './sop/File';
+import {
+	fileDRCSopPresetRegister,
+	fileGLTFSopPresetRegister,
+	fileFBXSopPresetRegister,
+	fileMPDSopPresetRegister,
+	fileOBJSopPresetRegister,
+	filePDBSopPresetRegister,
+	filePLYSopPresetRegister,
+	fileSTLSopPresetRegister,
+} from './sop/File';
 import {pointSopPresetRegister} from './sop/Point';
 import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
 import {scatterSopPresetRegister} from './sop/Scatter';
 import {transformSopPresetRegister} from './sop/Transform';
-import {svgSopPresetRegister} from './sop/Svg';
+import {fileSVGSopPresetRegister} from './sop/FileSVG';
 import {textSopPresetRegister} from './sop/Text';
 
 import {PresetRegister} from './BasePreset';
@@ -72,13 +81,19 @@ class PresetLibraryClass {
 		this._registerPreset(CSS2DObjectPresetRegister);
 		this._registerPreset(dataSopPresetRegister);
 		this._registerPreset(dataUrlSopPresetRegister);
-		this._registerPreset(fileSopPresetRegister);
+		this._registerPreset(fileDRCSopPresetRegister);
 		this._registerPreset(fileGLTFSopPresetRegister);
+		this._registerPreset(fileFBXSopPresetRegister);
+		this._registerPreset(fileMPDSopPresetRegister);
+		this._registerPreset(fileOBJSopPresetRegister);
+		this._registerPreset(filePDBSopPresetRegister);
+		this._registerPreset(filePLYSopPresetRegister);
+		this._registerPreset(fileSTLSopPresetRegister);
+		this._registerPreset(fileSVGSopPresetRegister);
 		this._registerPreset(pointSopPresetRegister);
 		this._registerPreset(roundedBoxSopPresetRegister);
 		this._registerPreset(scatterSopPresetRegister);
 		this._registerPreset(textSopPresetRegister);
-		this._registerPreset(svgSopPresetRegister);
 		this._registerPreset(transformSopPresetRegister);
 	}
 

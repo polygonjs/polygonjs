@@ -2,6 +2,7 @@ import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';
 import {Number2} from '../../types/GlobalTypes';
+import {CoreType} from '../../core/Type';
 
 export class TextureContainer extends TypedContainer<NodeContext.COP> {
 	override set_content(content: ContainableMap[NodeContext.COP]) {
@@ -46,13 +47,25 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 				}
 
 				// check if image data
-				if (image.data && image.width != null && image.height != null) {
+				if (CoreType.isNumber(image.width) && CoreType.isNumber(image.height)) {
 					return [image.width, image.height];
 				}
 
 				// check if video
-				const video = image as HTMLVideoElement;
-				return [video.videoWidth, video.videoHeight];
+				if (image instanceof HTMLVideoElement) {
+					const video = image as HTMLVideoElement;
+					return [video.videoWidth, video.videoHeight];
+				}
+
+				// if just an object like {width: 2, height: 2}
+				// which can be returned by
+			}
+			const source = this._content.source;
+			if (source) {
+				const data = source.data;
+				if (data && CoreType.isNumber(data.width) && CoreType.isNumber(data.height)) {
+					return [data.width, data.height];
+				}
 			}
 		}
 		return [-1, -1];

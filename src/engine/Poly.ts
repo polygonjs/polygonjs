@@ -11,7 +11,6 @@ import {
 } from './poly/registers/nodes/NodesRegister';
 import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
 import {NodeContext} from './poly/NodeContext';
-import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
 import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
 import {BaseCoreLogger} from '../core/logger/Base';
 import {BaseOperation} from './operations/_Base';
@@ -23,8 +22,6 @@ import {BlobsController} from './poly/BlobsController';
 import {AssetUrlsController} from './poly/AssetUrlsController';
 // import {SelfContainedScenesLoader} from './poly/SelfContainedSceneLoader';
 import {PolyPerformanceformanceController} from './poly/PerformanceController';
-import {BaseModule} from './poly/registers/modules/_BaseModule';
-import {ModuleName} from './poly/registers/modules/Common';
 import {ScenesRegister} from './poly/ScenesRegister';
 import {LogoController} from './poly/LogoController';
 
@@ -45,7 +42,6 @@ export class PolyEngine {
 	public readonly nodesRegister: NodesRegister = new NodesRegister(this);
 	public readonly operationsRegister: OperationsRegister = new OperationsRegister(this);
 	public readonly expressionsRegister: ExpressionRegister = new ExpressionRegister();
-	public readonly modulesRegister: DynamicModulesRegister = new DynamicModulesRegister();
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
@@ -107,9 +103,6 @@ export class PolyEngine {
 	}
 	registeredCameraTypes() {
 		return this.camerasRegister.registeredTypes();
-	}
-	registerModule(module: BaseModule<ModuleName>) {
-		this.modulesRegister.register(module.moduleName, module.module);
 	}
 
 	inWorkerThread() {

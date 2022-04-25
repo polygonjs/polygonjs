@@ -7,7 +7,6 @@ import {DoubleSide} from 'three';
 import {Mesh} from 'three';
 import {ShapeBufferGeometry} from 'three';
 import {ShapePath} from 'three';
-import {PolyScene} from '../../engine/scene/PolyScene';
 import {isBooleanTrue} from '../BooleanValue';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
@@ -34,8 +33,8 @@ interface SVGPathUserData {
 }
 
 export class CoreSVGLoader extends CoreBaseLoader {
-	constructor(url: string, scene: PolyScene, _node?: BaseNodeType) {
-		super(url, scene, _node);
+	constructor(url: string, _node?: BaseNodeType) {
+		super(url, _node);
 	}
 
 	load(options: CoreSVGLoaderOptions): Promise<Group> {

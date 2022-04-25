@@ -102,7 +102,7 @@ export class SamplerAudioNode extends TypedAudioNode<SamplerAudioParamsConfig> {
 
 		// preload urls for export
 		const loaders: CoreLoaderAudio[] = urls.map(
-			(url) => new CoreLoaderAudio(url, this.scene(), this, {multiAssetsForNode: true})
+			(url) => new CoreLoaderAudio(url, this, {multiAssetsForNode: true})
 		);
 		await Promise.all(loaders.map((loader) => loader.load()));
 

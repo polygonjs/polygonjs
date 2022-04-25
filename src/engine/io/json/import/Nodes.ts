@@ -29,7 +29,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		const nonOptimizedNodes: BaseNodeTypeWithIO[] = [];
 		for (let nodeName of non_optimized_names) {
 			const node_data = data[nodeName];
-			const nodeType = JsonImporterMigrateHelper.migrateNodeType(this._node, node_data['type']);
+			const nodeType = JsonImporterMigrateHelper.migrateNodeType(this._node, node_data);
 			const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 			const nodeCreateOptions: NodeCreateOptions = {
 				paramsInitValueOverrides,

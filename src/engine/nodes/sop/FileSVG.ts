@@ -6,23 +6,23 @@
 import {TypedSopNode} from './_Base';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
-import {FileType} from '../../params/utils/OptionsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {ModuleName} from '../../poly/registers/modules/Common';
-import {SvgSopOperation} from '../../operations/sop/Svg';
+import {FileSVGSopOperation} from '../../operations/sop/FileSVG';
 import {Poly} from '../../Poly';
-const DEFAULT = SvgSopOperation.DEFAULT_PARAMS;
+import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
+import {GeometryExtension} from '../../../core/loader/Geometry';
+const DEFAULT = FileSVGSopOperation.DEFAULT_PARAMS;
 
-class SvgSopParamsConfig extends NodeParamsConfig {
+class FileSVGSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
-		fileBrowse: {type: [FileType.SVG]},
+		fileBrowse: {extensions: [GeometryExtension.SVG]},
 	});
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			SvgSopNode.PARAM_CALLBACK_reload(node as SvgSopNode);
+			FileSVGSopNode.PARAM_CALLBACK_reload(node as FileSVGSopNode);
 		},
 	});
 	/** @param toggle on to draw the fillShapes */
@@ -34,29 +34,27 @@ class SvgSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to draw the strokes as wireframe */
 	strokesWireframe = ParamConfig.BOOLEAN(DEFAULT.strokesWireframe);
 }
-const ParamsConfig = new SvgSopParamsConfig();
+const ParamsConfig = new FileSVGSopParamsConfig();
 
-export class SvgSopNode extends TypedSopNode<SvgSopParamsConfig> {
+export class FileSVGSopNode extends TypedSopNode<FileSVGSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'svg';
+		return SopTypeFile.FILE_SVG;
 	}
-	override async requiredModules() {
-		return [ModuleName.SVGLoader];
-	}
+
 	override dispose(): void {
 		super.dispose();
 		Poly.blobs.clearBlobsForNode(this);
 	}
 	// TODO: no error when trying to load a non existing zip file??
-	private _operation: SvgSopOperation | undefined;
+	private _operation: FileSVGSopOperation | undefined;
 	override async cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new SvgSopOperation(this.scene(), this.states, this);
+		this._operation = this._operation || new FileSVGSopOperation(this.scene(), this.states, this);
 		const core_group = await this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}
 
-	static PARAM_CALLBACK_reload(node: SvgSopNode) {
+	static PARAM_CALLBACK_reload(node: FileSVGSopNode) {
 		node.param_callback_reload();
 	}
 	private param_callback_reload() {

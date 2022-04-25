@@ -15,7 +15,6 @@ import {BufferGeometry} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {FileType} from '../../params/utils/OptionsController';
 import {Poly} from '../../Poly';
 
 export enum DataType {
@@ -39,7 +38,7 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param the url to fetch the data from */
 	url = ParamConfig.STRING(DEFAULT_URL, {
-		fileBrowse: {type: [FileType.JSON]},
+		fileBrowse: {extensions: ['json']},
 	});
 
 	//
@@ -137,7 +136,6 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	private _loadJSON() {
 		const loader = new JsonDataLoader(
 			this._url(),
-			this.scene(),
 			{
 				dataKeysPrefix: this.pv.jsonDataKeysPrefix,
 				skipEntries: this.pv.skipEntries,
@@ -169,7 +167,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	//
 	private async _loadCSV() {
 		const attribNames = isBooleanTrue(this.pv.readAttribNamesFromFile) ? undefined : this.pv.attribNames.split(' ');
-		const loader = new CsvLoader(this._url(), this.scene(), attribNames, this);
+		const loader = new CsvLoader(this._url(), attribNames, this);
 		const geometry = await loader.load();
 		if (geometry) {
 			this.setGeometry(geometry, ObjectType.POINTS);

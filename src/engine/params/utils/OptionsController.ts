@@ -17,7 +17,7 @@ const CALLBACK_STRING_OPTION = 'callbackString';
 const COMPUTE_ON_DIRTY = 'computeOnDirty';
 const COOK_OPTION = 'cook';
 const FILE_BROWSE_OPTION = 'fileBrowse';
-const FILE_TYPE_OPTION = 'type';
+const FILE_BROWSE_EXTENSIONS = 'extensions';
 // const EXPRESSION_ONLY_OPTION = 'expression_only';
 const EXPRESSION = 'expression';
 const FOR_ENTITIES = 'forEntities';
@@ -131,7 +131,7 @@ interface NumberParamOptions extends BaseParamOptions {
 
 interface FileParamOptions {
 	fileBrowse?: {
-		type: FileType[];
+		extensions: string[];
 	};
 }
 interface ComputeOnDirtyParamOptions {
@@ -431,10 +431,10 @@ export class OptionsController {
 	fileBrowseAllowed(): boolean {
 		return this.fileBrowseOption() != null;
 	}
-	fileBrowseType(): FileType[] | null {
+	fileBrowseExtensions(): string[] | null {
 		const option = this.fileBrowseOption();
 		if (option) {
-			return option[FILE_TYPE_OPTION];
+			return option[FILE_BROWSE_EXTENSIONS];
 		} else {
 			return null;
 		}

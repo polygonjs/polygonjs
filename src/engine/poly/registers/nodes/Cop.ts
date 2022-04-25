@@ -8,6 +8,9 @@ import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
 import {GifCopNode} from '../../../nodes/cop/Gif';
 import {ImageCopNode} from '../../../nodes/cop/Image';
+import {ImageEXRCopNode} from '../../../nodes/cop/ImageEXR';
+import {ImageHDRCopNode} from '../../../nodes/cop/ImageHDR';
+import {ImageKTX2CopNode} from '../../../nodes/cop/ImageKTX2';
 import {LightMapCopNode} from '../../../nodes/cop/LightMap';
 import {NullCopNode} from '../../../nodes/cop/Null';
 // import {PostCopNode} from '../../../nodes/cop/Post';
@@ -37,6 +40,9 @@ export interface CopNodeChildrenMap {
 	envMap: EnvMapCopNode;
 	gif: GifCopNode;
 	image: ImageCopNode;
+	imageEXR: ImageEXRCopNode;
+	imageHDR: ImageHDRCopNode;
+	imageKTX2: ImageKTX2CopNode;
 	lightMap: LightMapCopNode;
 	null: NullCopNode;
 	// post: PostCopNode;
@@ -69,6 +75,9 @@ export class CopRegister {
 		poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(GifCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ImageCopNode, CATEGORY_COP.INPUT);
+		poly.registerNode(ImageEXRCopNode, CATEGORY_COP.INPUT);
+		poly.registerNode(ImageHDRCopNode, CATEGORY_COP.INPUT);
+		poly.registerNode(ImageKTX2CopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(LightMapCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
 		// poly.registerNode(PostCopNode, CATEGORY_COP.FILTER); // removed until usable

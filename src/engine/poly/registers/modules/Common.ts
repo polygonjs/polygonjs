@@ -1,15 +1,5 @@
 export enum ModuleName {
-	DRACOLoader = 'DRACOLoader',
 	EXRLoader = 'EXRLoader',
-	FBXLoader = 'FBXLoader',
-	GLTFLoader = 'GLTFLoader',
 	KTX2Loader = 'KTX2Loader',
-	LDrawLoader = 'LDrawLoader',
-	OBJLoader = 'OBJLoader',
-	PDBLoader = 'PDBLoader',
-	PLYLoader = 'PLYLoader',
 	RGBELoader = 'RGBELoader',
-	SVGLoader = 'SVGLoader',
-	STLLoader = 'STLLoader',
-	TTFLoader = 'TTFLoader',
 }

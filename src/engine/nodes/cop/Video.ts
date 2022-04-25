@@ -16,26 +16,24 @@ import {Constructor} from '../../../types/GlobalTypes';
 import {VideoTexture} from 'three';
 import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
-import {CoreLoaderTexture} from '../../../core/loader/Texture';
 
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {FileType} from '../../params/utils/OptionsController';
-import {isUrlVideo} from '../../../core/FileTypeController';
+import {isUrlVideo, VIDEO_EXTENSIONS} from '../../../core/FileTypeController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
 import {Poly} from '../../Poly';
+import {VideoTextureLoader} from '../../../core/loader/texture/Video';
 
 function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the video from */
 		url = ParamConfig.STRING('', {
-			fileBrowse: {type: [FileType.TEXTURE_VIDEO]},
+			fileBrowse: {extensions: VIDEO_EXTENSIONS},
 		});
 		/** @param reload the video */
 		reload = ParamConfig.BUTTON(null, {
@@ -89,13 +87,6 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return CopType.VIDEO;
-	}
-	override async requiredModules() {
-		if (this.p.url.isDirty()) {
-			await this.p.url.compute();
-		}
-		const ext = CoreBaseLoader.extension(this.pv.url || '');
-		return CoreLoaderTexture.module_names(ext);
 	}
 
 	private _video: HTMLVideoElement | undefined;
@@ -209,15 +200,9 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 
 	private async _loadTexture(url: string) {
 		let texture: Texture | VideoTexture | null = null;
-		const url_param = this.p.url;
-		const loader = new CoreLoaderTexture(url, url_param, this, this.scene(), {
-			forceVideo: !isBooleanTrue(this.pv.checkFileType),
-		});
+		const loader = new VideoTextureLoader(url, this);
 		try {
-			texture = await loader.load_texture_from_url_or_op({
-				tdataType: this.pv.ttype && this.pv.tadvanced,
-				dataType: this.pv.type,
-			});
+			texture = await loader.loadVideo();
 			if (texture) {
 				texture.matrixAutoUpdate = false;
 			}

@@ -100,7 +100,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	const obj = main_group.children.filter((c) => c.name == '/geo1')[0];
 	assert.ok(obj);
 	assert.equal(obj.uuid, geo1.object.uuid);
-	const file1 = geo1.createNode('file');
+	const file1 = geo1.createNode('fileOBJ');
 	file1.p.url.set('/examples/models/wolf.obj');
 
 	file1.flags.display.set(true);

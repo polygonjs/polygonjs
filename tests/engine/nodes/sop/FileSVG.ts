@@ -3,10 +3,10 @@ import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 
 async function withFile(path: string) {
 	const geo1 = window.geo1;
-	const svg1 = geo1.createNode('svg');
-	svg1.p.url.set(`${ASSETS_ROOT}/${path}`);
+	const fileSVG1 = geo1.createNode('fileSVG');
+	fileSVG1.p.url.set(`${ASSETS_ROOT}/${path}`);
 
-	const container = await svg1.compute();
+	const container = await fileSVG1.compute();
 	return container;
 }
 

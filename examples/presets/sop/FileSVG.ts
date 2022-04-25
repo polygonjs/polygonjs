@@ -1,9 +1,9 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {ParamType} from '../../../src/engine/poly/ParamType';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
-import {SvgSopNode} from '../../../src/engine/nodes/sop/Svg';
+import {FileSVGSopNode} from '../../../src/engine/nodes/sop/FileSVG';
 
-const svgSopNodePresetsCollectionFactory: PresetsCollectionFactory<SvgSopNode> = (node: SvgSopNode) => {
+const fileSVGSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSVGSopNode> = (node: FileSVGSopNode) => {
 	const collection = new NodePresetsCollection();
 
 	const tiger = new BasePreset().addEntry<ParamType.STRING>(
@@ -20,7 +20,7 @@ const svgSopNodePresetsCollectionFactory: PresetsCollectionFactory<SvgSopNode> =
 	return collection;
 };
 
-export const svgSopPresetRegister: PresetRegister<typeof SvgSopNode, SvgSopNode> = {
-	nodeClass: SvgSopNode,
-	setupFunc: svgSopNodePresetsCollectionFactory,
+export const fileSVGSopPresetRegister: PresetRegister<typeof FileSVGSopNode, FileSVGSopNode> = {
+	nodeClass: FileSVGSopNode,
+	setupFunc: fileSVGSopNodePresetsCollectionFactory,
 };

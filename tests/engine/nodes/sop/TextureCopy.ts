@@ -21,7 +21,7 @@ async function findTexture(node: BaseSopNodeType, textureName: string) {
 QUnit.test('textureCopy simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
-	const file1 = geo1.createNode('file');
+	const file1 = geo1.createNode('fileGLTF');
 	const sphere1 = geo1.createNode('sphere');
 	const textureCopy1 = geo1.createNode('textureCopy');
 	file1.p.url.set(`${ASSETS_ROOT}/models/sphere_with_texture.glb`);

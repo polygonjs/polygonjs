@@ -1,7 +1,7 @@
 QUnit.test('animation_copy simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const file1 = geo1.createNode('file');
+	const file1 = geo1.createNode('fileGLTF');
 	const hierarchy1 = geo1.createNode('hierarchy');
 	const animation_copy1 = geo1.createNode('animationCopy');
 	// const animation_mixer1 = geo1.createNode('animationMixer');

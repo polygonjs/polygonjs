@@ -6,7 +6,6 @@ import {AttribType} from '../../geometry/Constant';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {CoreType} from '../../Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {PolyScene} from '../../../engine/scene/PolyScene';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {CoreBaseLoader} from '../_Base';
 
@@ -26,13 +25,8 @@ export class CsvLoader extends CoreBaseLoader {
 	private attribute_data_by_name: PolyDictionary<CoreAttributeData> = {};
 	private _loading = false;
 
-	constructor(
-		url: string,
-		scene: PolyScene,
-		private attribute_names?: string[],
-		protected override _node?: BaseNodeType
-	) {
-		super(url, scene, _node);
+	constructor(url: string, private attribute_names?: string[], protected override _node?: BaseNodeType) {
+		super(url, _node);
 		if (!this.attribute_names) {
 			this.attribute_names_from_first_line = true;
 		}

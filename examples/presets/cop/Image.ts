@@ -33,7 +33,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 		.addEntry(node.p.encoding, LinearEncoding)
 		.addEntry(node.p.encoding, LinearEncoding);
 	const disk = linearImage(`disk.png`);
-	const envMap = linearImage(`piz_compressed.exr`);
+	// const envMap = linearImage(`piz_compressed.exr`);
 	const uv = sRGBImage(`uv.jpg`);
 	const ktx2 = sRGBImage(`sample_uastc_zstd.ktx2`);
 
@@ -113,7 +113,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 		asphalt,
 		bunny_SSS_thickness,
 		disk,
-		envMap,
+		// envMap,
 		uv,
 		ktx2,
 		...artveeSet(),

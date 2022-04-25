@@ -7,7 +7,7 @@ QUnit.test('COP env_map simple', async (assert) => {
 
 	// start test
 	const COP = window.COP;
-	const file1 = COP.createNode('image');
+	const file1 = COP.createNode('imageEXR');
 	const env_map1 = COP.createNode('envMap');
 
 	env_map1.setInput(0, file1);

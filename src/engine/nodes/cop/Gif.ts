@@ -9,20 +9,18 @@ import {CoreLoaderTexture} from '../../../core/loader/Texture';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {FileType} from '../../params/utils/OptionsController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
-import {CoreBaseLoader} from '../../../core/loader/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CanvasTexture} from 'three';
 import {parseGIF, decompressFrames, ParsedFrame} from 'gifuct-js';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {isUrlGif} from '../../../core/FileTypeController';
+import {ImageExtension, isUrlGif} from '../../../core/FileTypeController';
 
 export function GifCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the gif from */
-		url = ParamConfig.STRING(CoreLoaderTexture.PARAM_DEFAULT, {
-			fileBrowse: {type: [FileType.TEXTURE_IMAGE]},
+		url = ParamConfig.STRING('', {
+			fileBrowse: {extensions: [ImageExtension.GIF]},
 		});
 		/** @param reload the image */
 		reload = ParamConfig.BUTTON(null, {
@@ -56,13 +54,6 @@ export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'gif';
-	}
-	override async requiredModules() {
-		if (this.p.url.isDirty()) {
-			await this.p.url.compute();
-		}
-		const ext = CoreBaseLoader.extension(this.pv.url || '');
-		return CoreLoaderTexture.module_names(ext);
 	}
 
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);

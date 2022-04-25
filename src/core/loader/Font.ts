@@ -1,15 +1,15 @@
 import {Poly} from '../../engine/Poly';
-import {ModuleName} from '../../engine/poly/registers/modules/Common';
-import {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreBaseLoader} from './_Base';
 import {FontLoader, Font} from '../../modules/three/examples/jsm/loaders/FontLoader';
 import {BaseNodeType} from '../../engine/nodes/_Base';
+import {SVGLoader} from '../../modules/three/examples/jsm/loaders/SVGLoader';
+import {TTFLoader} from '../../modules/three/examples/jsm/loaders/TTFLoader';
 
 export class CoreLoaderFont extends CoreBaseLoader {
 	private _font_loader: FontLoader;
 
-	constructor(url: string, scene: PolyScene, _node?: BaseNodeType) {
-		super(url, scene, _node);
+	constructor(url: string, _node?: BaseNodeType) {
+		super(url, _node);
 
 		this._font_loader = new FontLoader(this.loadingManager);
 	}
@@ -29,17 +29,6 @@ export class CoreLoaderFont extends CoreBaseLoader {
 			}
 			default: {
 				return null;
-			}
-		}
-	}
-	static requiredModules(url: string) {
-		const ext = this.extension(url);
-		switch (ext) {
-			case 'ttf': {
-				return [ModuleName.TTFLoader];
-			}
-			case 'json': {
-				return [ModuleName.SVGLoader];
 			}
 		}
 	}
@@ -79,15 +68,9 @@ export class CoreLoaderFont extends CoreBaseLoader {
 	}
 
 	private async _loadTTFLoader() {
-		const TTFLoader = await Poly.modulesRegister.module(ModuleName.TTFLoader);
-		if (TTFLoader) {
-			return new TTFLoader(this.loadingManager);
-		}
+		return new TTFLoader(this.loadingManager);
 	}
 	static async loadSVGLoader() {
-		const SVGLoader = await Poly.modulesRegister.module(ModuleName.SVGLoader);
-		if (SVGLoader) {
-			return SVGLoader;
-		}
+		return SVGLoader;
 	}
 }

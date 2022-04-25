@@ -4,7 +4,7 @@ const path = require('path');
 // const LOGO_PATH = path.resolve(__dirname, '../../public/images/logo.256.png');
 const QUICK_N_DIRTY_BUILD = false;
 const MINIFY = !QUICK_N_DIRTY_BUILD;
-const BUILD_MODULES = !QUICK_N_DIRTY_BUILD;
+// const BUILD_MODULES = !QUICK_N_DIRTY_BUILD;
 const BUILD_SCENE_DATA_LOADER = !QUICK_N_DIRTY_BUILD;
 // having one entry per node is very hard to generate with terser and no crash
 // (or it takes forever when increasing available ram for node,
@@ -31,26 +31,22 @@ var {AggressiveMergingPlugin} = require('webpack').optimize;
 module.exports = (env) => {
 	const common_options = common(env);
 
-	const MODULES = [
-		'DRACOLoader',
-		'EXRLoader',
-		'FBXLoader',
-		'GLTFLoader',
-		'KTX2Loader',
-		'LDrawLoader',
-		'OBJLoader',
-		'PDBLoader',
-		'PLYLoader',
-		'RGBELoader',
-		'SVGLoader',
-		'STLLoader',
-		'TTFLoader',
-	];
-	if (BUILD_MODULES) {
-		for (let module of MODULES) {
-			common_options.entry[`modules/${module}`] = `./src/engine/poly/registers/modules/entry_points/${module}.ts`;
-		}
-	}
+	// const MODULES = [
+	// 	'EXRLoader',
+	// 	'KTX2Loader',
+	// 	'OBJLoader',
+	// 	'PDBLoader',
+	// 	'PLYLoader',
+	// 	'RGBELoader',
+	// 	'SVGLoader',
+	// 	'STLLoader',
+	// 	'TTFLoader',
+	// ];
+	// if (BUILD_MODULES) {
+	// 	for (let module of MODULES) {
+	// 		common_options.entry[`modules/${module}`] = `./src/engine/poly/registers/modules/entry_points/${module}.ts`;
+	// 	}
+	// }
 	// common_options.entry[`viewer`] = './src/engine/index_self_contained_importer.ts';
 	if (BUILD_SCENE_DATA_LOADER) {
 		common_options.entry[`sceneDataLoader`] = './src/engine/index_sceneDataLoader.ts';

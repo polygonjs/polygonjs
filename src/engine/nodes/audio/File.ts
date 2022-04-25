@@ -7,10 +7,9 @@ import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {Player} from 'tone/build/esm/source/buffer/Player';
-import {CoreLoaderAudio} from '../../../core/loader/Audio';
+import {AUDIO_EXTENSIONS, CoreLoaderAudio} from '../../../core/loader/Audio';
 import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
-import {FileType} from '../../params/utils/OptionsController';
 import {Poly} from '../../Poly';
 
 const LOOP_OPTIONS = {
@@ -28,7 +27,7 @@ type OnStopCallback = () => void;
 class FileAudioParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the audio file from */
 	url = ParamConfig.STRING('', {
-		fileBrowse: {type: [FileType.AUDIO]},
+		fileBrowse: {extensions: AUDIO_EXTENSIONS},
 	});
 	/** @param auto start */
 	autostart = ParamConfig.BOOLEAN(1);
@@ -156,7 +155,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	private _player: Player | undefined;
 	private async _loadUrl(): Promise<Player | void> {
 		try {
-			const loader = new CoreLoaderAudio(this.pv.url, this.scene(), this);
+			const loader = new CoreLoaderAudio(this.pv.url, this);
 			const buffer: AudioBuffer = await loader.load();
 
 			return new Promise((resolve) => {

@@ -1,8 +1,5 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
-import {Poly} from '../../../../src/engine/Poly';
 
-import {OBJLoaderModule} from '../../../../src/engine/poly/registers/modules/entry_points/OBJLoader';
-Poly.registerModule(OBJLoaderModule);
 export function SopInstance() {
 	// create a scene
 	const scene = new PolyScene();
@@ -12,7 +9,7 @@ export function SopInstance() {
 	const geo = root.createNode('geo');
 
 	// import dolphin geo
-	const file = geo.createNode('file');
+	const file = geo.createNode('fileOBJ');
 	file.p.url.set('https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/models/dolphin.obj');
 
 	// hierarchy to remove the parent and only keep the object with a geometry

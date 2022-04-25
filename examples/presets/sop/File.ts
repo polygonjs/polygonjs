@@ -1,11 +1,17 @@
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
-import {FileSopNode} from '../../../src/engine/nodes/sop/File';
+import {FileDRCSopNode} from '../../../src/engine/nodes/sop/FileDRC';
+import {FileFBXSopNode} from '../../../src/engine/nodes/sop/FileFBX';
 import {FileGLTFSopNode} from '../../../src/engine/nodes/sop/FileGLTF';
+import {FileMPDSopNode} from '../../../src/engine/nodes/sop/FileMPD';
+import {FileOBJSopNode} from '../../../src/engine/nodes/sop/FileOBJ';
+import {FilePDBSopNode} from '../../../src/engine/nodes/sop/FilePDB';
+import {FilePLYSopNode} from '../../../src/engine/nodes/sop/FilePLY';
+import {FileSTLSopNode} from '../../../src/engine/nodes/sop/FileSTL';
 import {ParamType} from '../../../src/engine/poly/ParamType';
 import {PolyDictionary} from '../../../src/types/GlobalTypes';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
-function generateThreedScans(node: FileSopNode | FileGLTFSopNode) {
+function generateThreedScans(node: FileGLTFSopNode) {
 	return function _threedscans() {
 		function _threedscan(fileName: string) {
 			return new BasePreset().addEntry<ParamType.STRING>(
@@ -21,7 +27,7 @@ function generateThreedScans(node: FileSopNode | FileGLTFSopNode) {
 		return dict;
 	};
 }
-function _quaternius(node: FileSopNode | FileGLTFSopNode) {
+function _quaternius(node: FileGLTFSopNode) {
 	function _quaterniusAnimal(animal: string) {
 		return new BasePreset().addEntry<ParamType.STRING>(
 			node.p.url,
@@ -50,41 +56,94 @@ function _quaternius(node: FileSopNode | FileGLTFSopNode) {
 	return dict;
 }
 
-const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode> = (node: FileSopNode) => {
-	const collection = new NodePresetsCollection();
+const drc = (node: FileDRCSopNode) => {
+	return {
+		bunny_drc: new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/bunny.drc`),
+	};
+};
 
-	const bunny_drc = new BasePreset().addEntry<ParamType.STRING>(
-		node.p.url,
-		`${DEMO_ASSETS_ROOT_URL}/models/bunny.drc`
-	);
-	const bunny_fbx = new BasePreset().addEntry<ParamType.STRING>(
-		node.p.url,
-		`${DEMO_ASSETS_ROOT_URL}/models/fbx/stanford-bunny.fbx`
-	);
-	const car_glb = new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/car.glb`);
-	const deer_obj = new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/deer.obj`);
-	const flamingo_glb = new BasePreset().addEntry<ParamType.STRING>(
+const fbx = (node: FileFBXSopNode) => {
+	return {
+		bunny_fbx: new BasePreset().addEntry<ParamType.STRING>(
+			node.p.url,
+			`${DEMO_ASSETS_ROOT_URL}/models/fbx/stanford-bunny.fbx`
+		),
+	};
+};
+const mpd = (node: FileMPDSopNode) => {
+	const list = [
+		`10174-1-ImperialAT-ST-UCS.mpd_Packed`,
+		`1621-1-LunarMPVVehicle.mpd_Packed`,
+		`30023-1-Lighthouse.ldr_Packed`,
+		`30051-1-X-wingFighter-Mini.mpd_Packed`,
+		`30054-1-AT-ST-Mini.mpd_Packed`,
+		`4489-1-AT-AT-Mini.mpd_Packed`,
+		`4494-1-Imperial Shuttle-Mini.mpd_Packed`,
+		`4838-1-MiniVehicles.mpd_Packed`,
+		`4915-1-MiniConstruction.mpd_Packed`,
+		`4918-1-MiniFlyers.mpd_Packed`,
+		`5935-1-IslandHopper.mpd_Packed`,
+		`6965-1-TIEIntercep_4h4MXk5.mpd_Packed`,
+		`6966-1-JediStarfighter-Mini.mpd_Packed`,
+		`7140-1-X-wingFighter.mpd_Packed`,
+		`889-1-RadarTruck.mpd_Packed`,
+		`car.ldr_Packed`,
+	];
+
+	const data: PolyDictionary<BasePreset> = {};
+	for (let elem of list) {
+		data[elem] = new BasePreset().addEntry<ParamType.STRING>(
+			node.p.url,
+			`${DEMO_ASSETS_ROOT_URL}/models/ldraw/officialLibrary/models/${elem}.mpd`
+		);
+	}
+
+	return data;
+};
+
+const pdb = (node: FileMPDSopNode) => {
+	return {
+		ethanol: new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/ethanol.pdb`),
+	};
+};
+const ply = (node: FileMPDSopNode) => {
+	return {
+		dolphine: new BasePreset().addEntry<ParamType.STRING>(
+			node.p.url,
+			`${DEMO_ASSETS_ROOT_URL}/models/dolphins_be.ply`
+		),
+	};
+};
+const gltf = (node: FileGLTFSopNode) => {
+	const car = new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/car.glb`);
+	const flamingo = new BasePreset().addEntry<ParamType.STRING>(
 		node.p.url,
 		`${DEMO_ASSETS_ROOT_URL}/models/flamingo.glb`
 	);
-	const parrot_glb = new BasePreset().addEntry<ParamType.STRING>(
-		node.p.url,
-		`${DEMO_ASSETS_ROOT_URL}/models/parrot.glb`
-	);
-	const soldier_glb = new BasePreset().addEntry<ParamType.STRING>(
+	const parrot = new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/parrot.glb`);
+	const soldier = new BasePreset().addEntry<ParamType.STRING>(
 		node.p.url,
 		`${DEMO_ASSETS_ROOT_URL}/models/soldier.glb`
-	);
-	const wolf_obj = new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/wolf.obj`);
-	const dolphin_obj = new BasePreset().addEntry<ParamType.STRING>(
-		node.p.url,
-		`${DEMO_ASSETS_ROOT_URL}/models/dolphin.obj`
 	);
 	const sphere_with_texture = new BasePreset().addEntry<ParamType.STRING>(
 		node.p.url,
 		`${DEMO_ASSETS_ROOT_URL}/models/sphere_with_texture.glb`
 	);
-
+	return {
+		car,
+		flamingo,
+		parrot,
+		soldier,
+		sphere_with_texture,
+	};
+};
+const obj = (node: FileOBJSopNode) => {
+	const deer = new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/deer.obj`);
+	const wolf = new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/wolf.obj`);
+	const dolphin = new BasePreset().addEntry<ParamType.STRING>(
+		node.p.url,
+		`${DEMO_ASSETS_ROOT_URL}/models/dolphin.obj`
+	);
 	function _3dscanstores() {
 		function _3dscanstore(fileName: string) {
 			return new BasePreset().addEntry<ParamType.STRING>(
@@ -121,43 +180,115 @@ const fileSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSopNode>
 		}
 		return dict;
 	}
-
-	collection.setPresets({
-		bunny_drc,
-		bunny_fbx,
-		car_glb,
-		deer_obj,
-		flamingo_glb,
-		parrot_glb,
-		soldier_glb,
-		wolf_obj,
-		dolphin_obj,
-		sphere_with_texture,
+	return {
+		deer,
+		wolf,
+		dolphin,
 		..._3dscanstores(),
 		..._renderPeoples(),
-		...generateThreedScans(node)(),
-		..._quaternius(node),
+	};
+};
+const stl = (node: FileSTLSopNode) => {
+	return {
+		warrior: new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/warrior.stl`),
+	};
+};
+
+const fileDRCSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileDRCSopNode> = (node: FileDRCSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...drc(node),
 	});
 
 	return collection;
 };
-
 const fileGLTFSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileGLTFSopNode> = (node: FileGLTFSopNode) => {
 	const collection = new NodePresetsCollection();
 	collection.setPresets({
+		...gltf(node),
 		...generateThreedScans(node)(),
 		..._quaternius(node),
 	});
 
 	return collection;
 };
+const fileFBXSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileFBXSopNode> = (node: FileFBXSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...fbx(node),
+	});
 
-export const fileSopPresetRegister: PresetRegister<typeof FileSopNode, FileSopNode> = {
-	nodeClass: FileSopNode,
-	setupFunc: fileSopNodePresetsCollectionFactory,
+	return collection;
 };
+const fileMPDSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileMPDSopNode> = (node: FileMPDSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...mpd(node),
+	});
 
+	return collection;
+};
+const fileOBJSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileOBJSopNode> = (node: FileOBJSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...obj(node),
+	});
+
+	return collection;
+};
+const filePDBSopNodePresetsCollectionFactory: PresetsCollectionFactory<FilePDBSopNode> = (node: FilePDBSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...pdb(node),
+	});
+
+	return collection;
+};
+const filePLYSopNodePresetsCollectionFactory: PresetsCollectionFactory<FilePDBSopNode> = (node: FilePLYSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...ply(node),
+	});
+
+	return collection;
+};
+const fileSTLSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileSTLSopNode> = (node: FileSTLSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...stl(node),
+	});
+
+	return collection;
+};
+export const fileDRCSopPresetRegister: PresetRegister<typeof FileDRCSopNode, FileDRCSopNode> = {
+	nodeClass: FileDRCSopNode,
+	setupFunc: fileDRCSopNodePresetsCollectionFactory,
+};
 export const fileGLTFSopPresetRegister: PresetRegister<typeof FileGLTFSopNode, FileGLTFSopNode> = {
 	nodeClass: FileGLTFSopNode,
 	setupFunc: fileGLTFSopNodePresetsCollectionFactory,
+};
+export const fileFBXSopPresetRegister: PresetRegister<typeof FileFBXSopNode, FileFBXSopNode> = {
+	nodeClass: FileFBXSopNode,
+	setupFunc: fileFBXSopNodePresetsCollectionFactory,
+};
+export const fileMPDSopPresetRegister: PresetRegister<typeof FileMPDSopNode, FileMPDSopNode> = {
+	nodeClass: FileMPDSopNode,
+	setupFunc: fileMPDSopNodePresetsCollectionFactory,
+};
+export const fileOBJSopPresetRegister: PresetRegister<typeof FileOBJSopNode, FileOBJSopNode> = {
+	nodeClass: FileOBJSopNode,
+	setupFunc: fileOBJSopNodePresetsCollectionFactory,
+};
+export const filePDBSopPresetRegister: PresetRegister<typeof FilePDBSopNode, FilePDBSopNode> = {
+	nodeClass: FilePDBSopNode,
+	setupFunc: filePDBSopNodePresetsCollectionFactory,
+};
+export const filePLYSopPresetRegister: PresetRegister<typeof FilePLYSopNode, FilePLYSopNode> = {
+	nodeClass: FilePLYSopNode,
+	setupFunc: filePLYSopNodePresetsCollectionFactory,
+};
+export const fileSTLSopPresetRegister: PresetRegister<typeof FileSTLSopNode, FileSTLSopNode> = {
+	nodeClass: FileSTLSopNode,
+	setupFunc: fileSTLSopNodePresetsCollectionFactory,
 };

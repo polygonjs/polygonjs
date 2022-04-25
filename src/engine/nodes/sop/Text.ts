@@ -17,7 +17,6 @@ import {Path} from 'three';
 import {Shape} from 'three';
 import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {FileType} from '../../params/utils/OptionsController';
 import {CoreLoaderFont} from '../../../core/loader/Font';
 import {Poly} from '../../Poly';
 import {DEMO_ASSETS_ROOT_URL} from '../../../core/Assets';
@@ -56,7 +55,7 @@ const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove som
 class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font used */
 	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
-		fileBrowse: {type: [FileType.FONT]},
+		fileBrowse: {extensions: ['ttf', 'json']},
 	});
 	/** @param text created */
 	text = ParamConfig.STRING('polygonjs', {
@@ -394,13 +393,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	}
 
 	private _loadFont() {
-		const loader = new CoreLoaderFont(this.pv.font, this.scene(), this);
+		const loader = new CoreLoaderFont(this.pv.font, this);
 		return loader.load();
-	}
-	override async requiredModules() {
-		if (this.p.font.isDirty()) {
-			await this.p.font.compute();
-		}
-		return CoreLoaderFont.requiredModules(this.pv.font);
 	}
 }

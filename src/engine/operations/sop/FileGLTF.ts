@@ -1,63 +1,34 @@
-import {BaseSopOperation} from './_Base';
-import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh} from 'three';
-import {BufferGeometry} from 'three';
-import {Object3D} from 'three';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {GLTFLoaderHandler} from '../../../core/loader/geometry/GLTF';
-import {Poly} from '../../Poly';
-
+import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
+import {BaseFileSopOperation, BaseFileSopParams} from './utils/File/_BaseFileOperation';
+import {GLTF} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
 interface FileGLTFSopParams extends DefaultOperationParams {
 	url: string;
 	draco: boolean;
 	matrixAutoUpdate: boolean;
 }
 
-export class FileGLTFSopOperation extends BaseSopOperation {
+export class FileGLTFSopOperation extends BaseFileSopOperation<GLTF> {
 	static override readonly DEFAULT_PARAMS: FileGLTFSopParams = {
 		url: `${ASSETS_ROOT}/models/resources/threedscans.com/eagle.glb`,
 		draco: true,
 		matrixAutoUpdate: false,
 	};
-	static override type(): Readonly<'fileGLTF'> {
-		return 'fileGLTF';
+	static override type(): Readonly<SopTypeFile.FILE_GLTF> {
+		return SopTypeFile.FILE_GLTF;
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[], params: FileGLTFSopParams): Promise<CoreGroup> {
+	protected _createGeoLoaderHandler(params: BaseFileSopParams) {
+		return new GLTFLoaderHandler(params.url, this._node);
+	}
+	protected override async _load(loader: GLTFLoaderHandler, params: FileGLTFSopParams) {
 		if (this._node) {
-			Poly.blobs.clearBlobsForNode(this._node);
-			const loader = new GLTFLoaderHandler(params.url, this.scene(), this._node);
-			const result = await loader.load({
+			return await loader.load({
 				draco: params.draco,
 				node: this._node,
 			});
-			if (result) {
-				const processedObjects = this._onLoad(result, params);
-				return this.createCoreGroupFromObjects(processedObjects);
-			}
-		}
-		return this.createCoreGroupFromObjects([]);
-	}
-
-	private _onLoad(objects: Object3D[], params: FileGLTFSopParams) {
-		for (let object of objects) {
-			object.traverse((child) => {
-				this._ensureGeometryHasIndex(child);
-				if (!params.matrixAutoUpdate) {
-					child.updateMatrix();
-				}
-				child.matrixAutoUpdate = params.matrixAutoUpdate;
-			});
-		}
-		return objects;
-	}
-
-	private _ensureGeometryHasIndex(object: Object3D) {
-		const mesh = object as Mesh;
-		const geometry = mesh.geometry;
-		if (geometry) {
-			this.createIndexIfNone(geometry as BufferGeometry);
 		}
 	}
 }

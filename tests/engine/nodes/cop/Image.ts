@@ -1,6 +1,8 @@
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {CopTypeImage} from '../../../../src/engine/poly/registers/nodes/types/Cop';
+import {Number2} from '../../../../src/types/GlobalTypes';
 
 QUnit.test('COP image simple default', async (assert) => {
 	const COP = window.COP;
@@ -34,7 +36,7 @@ QUnit.test('COP image simple with bad path', async (assert) => {
 QUnit.test('COP image simple exr', async (assert) => {
 	const COP = window.COP;
 
-	const file1 = COP.createNode('image');
+	const file1 = COP.createNode('imageEXR');
 	file1.p.url.set(`${ASSETS_ROOT}/textures/piz_compressed.exr`);
 
 	let container, texture;
@@ -54,7 +56,7 @@ QUnit.test('COP image simple ktx2', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	assert.ok(renderer);
 
-	const file1 = COP.createNode('image');
+	const file1 = COP.createNode('imageKTX2');
 	file1.p.url.set(`${ASSETS_ROOT}/textures/sample_uastc_zstd.ktx2`);
 
 	let container, texture;
@@ -71,7 +73,7 @@ QUnit.test('COP image simple ktx2', async (assert) => {
 QUnit.test('COP image simple hdr', async (assert) => {
 	const COP = window.COP;
 
-	const file1 = COP.createNode('image');
+	const file1 = COP.createNode('imageHDR');
 	file1.p.url.set(`${ASSETS_ROOT}/textures/equirectangular/spot1Lux.hdr`);
 
 	let container, texture;
@@ -111,6 +113,26 @@ QUnit.test('COP image transform param can be time dependent', async (assert) => 
 	scene.setFrame(4);
 	await CoreSleep.sleep(100);
 	assert.deepEqual(texture.offset.toArray(), [4, 8], 'C');
+});
+
+QUnit.test('COP images with default values', async (assert) => {
+	const COP = window.COP;
+
+	// create renderer for basis loader
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	assert.ok(renderer);
+
+	async function testFileType(fileType: CopTypeImage, res: Number2) {
+		const fileNode = COP.createNode(fileType);
+
+		const container = await fileNode.compute();
+		assert.deepEqual(container.resolution(), res, fileType);
+	}
+
+	await testFileType(CopTypeImage.IMAGE, [512, 512]);
+	await testFileType(CopTypeImage.IMAGE_EXR, [1024, 512]);
+	await testFileType(CopTypeImage.IMAGE_HDR, [2048, 1024]);
+	await testFileType(CopTypeImage.IMAGE_KTX2, [1000, 1392]);
 });
 
 QUnit.skip('COP refers a path in another node', async (assert) => {

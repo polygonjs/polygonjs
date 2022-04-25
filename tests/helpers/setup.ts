@@ -11,11 +11,11 @@ import {Poly} from '../../src/engine/Poly';
 
 // register
 import {AllRegister} from '../../src/engine/poly/registers/All';
-import {AllModulesRegister} from '../../src/engine/poly/registers/modules/All';
+// import {AllModulesRegister} from '../../src/engine/poly/registers/modules/All';
 import {waitForUserInteraction} from './UserInteraction';
-import {GLTFLoaderHandler} from '../../src/core/loader/geometry/GLTF';
+// import {GLTFLoaderHandler} from '../../src/core/loader/geometry/GLTF';
 AllRegister.run();
-AllModulesRegister.run(Poly);
+// AllModulesRegister.run(Poly);
 
 // window.create_renderer_if_none = () => {
 // 	const first_renderer = POLY.renderers_controller.first_renderer();
@@ -55,7 +55,7 @@ export function setupQUnit(qUnit: QUnit) {
 
 		deregisterAllRenderers();
 		Poly.blobs.clear();
-		GLTFLoaderHandler.reset();
+		// GLTFLoaderHandler.reset();
 		// return new Promise(async (resolve, reject) => {
 		window.scene = new PolyScene();
 		window.scene.setName(QUnit.config.current.testName);

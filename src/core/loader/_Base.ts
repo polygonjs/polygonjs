@@ -1,5 +1,4 @@
 import {LoadingManager} from 'three';
-import {PolyScene} from '../../engine/scene/PolyScene';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
 import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
@@ -42,7 +41,6 @@ export class CoreBaseLoader {
 
 	constructor(
 		protected _url: string,
-		protected _scene: PolyScene,
 		protected _node?: BaseNodeType,
 		public blobOptions: BlobsControllerFetchNodeOptions = {}
 	) {}

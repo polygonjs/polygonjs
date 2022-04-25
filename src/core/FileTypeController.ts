@@ -1,5 +1,6 @@
 export const VIDEO_EXTENSIONS = ['mp4', 'ogv', 'ogg'];
 export enum ImageExtension {
+	GIF = 'gif',
 	JPG = 'jpg',
 	JPEG = 'jpeg',
 	PNG = 'png',
@@ -8,6 +9,7 @@ export enum ImageExtension {
 	HDR = 'hdr',
 }
 export const IMAGE_EXTENSIONS: string[] = [
+	ImageExtension.GIF,
 	ImageExtension.JPEG,
 	ImageExtension.JPG,
 	ImageExtension.PNG,

@@ -7,7 +7,7 @@ import {BufferAttribute, Uint16BufferAttribute} from 'three';
 QUnit.test('attribCast simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const file1 = geo1.createNode('file');
+	const file1 = geo1.createNode('fileGLTF');
 	const path = 'models/Hundepaar.glb';
 	file1.p.url.set(`${ASSETS_ROOT}/${path}`);
 

@@ -1,24 +1,22 @@
 /**
  * Loads a GLTF from a url.
  *
- * @remarks
- * This node is a specialised version of the [sop/file](/docs/nodes/sop/file), used to load GLTF or GLB files.
  *
  */
 import {TypedSopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
-import {FileType} from '../../params/utils/OptionsController';
 import {FileGLTFSopOperation} from '../../operations/sop/FileGLTF';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Poly} from '../../Poly';
-import {ModuleName} from '../../poly/registers/modules/Common';
+import {GeometryExtension} from '../../../core/loader/Geometry';
+import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = FileGLTFSopOperation.DEFAULT_PARAMS;
 class FileGLTFParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
-		fileBrowse: {type: [FileType.GEOMETRY]},
+		fileBrowse: {extensions: [GeometryExtension.GLB, GeometryExtension.GLTF]},
 	});
 	/** @param uses draco compression */
 	draco = ParamConfig.BOOLEAN(DEFAULT.draco);
@@ -36,19 +34,7 @@ const ParamsConfig = new FileGLTFParamsConfig();
 export class FileGLTFSopNode extends TypedSopNode<FileGLTFParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'fileGLTF';
-	}
-	override async requiredModules() {
-		for (let p of [this.p.draco]) {
-			if (p.isDirty()) {
-				await p.compute();
-			}
-		}
-		const formats: ModuleName[] = [ModuleName.GLTFLoader];
-		if (this.pv.draco) {
-			formats.push(ModuleName.DRACOLoader);
-		}
-		return formats;
+		return SopTypeFile.FILE_GLTF;
 	}
 	override dispose(): void {
 		super.dispose();

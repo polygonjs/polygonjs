@@ -2,29 +2,102 @@ import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/operations/
 import {Mesh} from 'three';
 import {BufferGeometry} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
-import {GeometryFormat} from '../../../../src/core/loader/Geometry';
 import {Poly} from '../../../../src/engine/Poly';
 import {withPlayerMode} from '../../../helpers/PlayerMode';
+import {FileGLTFSopNode} from '../../../../src/engine/nodes/sop/FileGLTF';
+import {FileMPDSopNode} from '../../../../src/engine/nodes/sop/FileMPD';
+import {SopTypeFile} from '../../../../src/engine/poly/registers/nodes/types/Sop';
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
 }
 
-async function withFile(path: string, format: GeometryFormat = GeometryFormat.AUTO) {
+// async function withFile(path: string, format: GeometryFormat = GeometryFormat.AUTO) {
+// 	const geo1 = window.geo1;
+// 	const fileNode = geo1.createNode('file');
+// 	fileNode.p.url.set(_url(path));
+// 	fileNode.p.format.set(format);
+
+// 	const container = await fileNode.compute();
+// 	return {container, fileNode};
+// }
+async function withFileDRC(path: string) {
 	const geo1 = window.geo1;
-	const fileNode = geo1.createNode('file');
+	const fileNode = geo1.createNode('fileDRC');
 	fileNode.p.url.set(_url(path));
-	fileNode.p.format.set(format);
+
+	const container = await fileNode.compute();
+	return {container, fileNode};
+}
+async function withFileFBX(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('fileFBX');
+	fileNode.p.url.set(_url(path));
+
+	const container = await fileNode.compute();
+	return {container, fileNode};
+}
+async function withFileGLTF(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('fileGLTF');
+	fileNode.p.url.set(_url(path));
+
+	const container = await fileNode.compute();
+	return {container, fileNode};
+}
+async function withFileJSON(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('fileJSON');
+	fileNode.p.url.set(_url(path));
+
+	const container = await fileNode.compute();
+	return {container, fileNode};
+}
+async function withFileMPD(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('fileMPD');
+	fileNode.p.url.set(_url(path));
+
+	const container = await fileNode.compute();
+	return {container, fileNode};
+}
+async function withFileOBJ(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('fileOBJ');
+	fileNode.p.url.set(_url(path));
+
+	const container = await fileNode.compute();
+	return {container, fileNode};
+}
+async function withFilePDB(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('filePDB');
+	fileNode.p.url.set(_url(path));
+
+	const container = await fileNode.compute();
+	return {container, fileNode};
+}
+async function withFilePLY(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('filePLY');
+	fileNode.p.url.set(_url(path));
+
+	const container = await fileNode.compute();
+	return {container, fileNode};
+}
+async function withFileSTL(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('fileSTL');
+	fileNode.p.url.set(_url(path));
 
 	const container = await fileNode.compute();
 	return {container, fileNode};
 }
 
-async function withFileAndHierarchy(path: string, format: GeometryFormat = GeometryFormat.AUTO) {
+async function withFileAndHierarchyGLTF(path: string) {
 	const geo1 = window.geo1;
-	const fileNode = geo1.createNode('file');
+	const fileNode = geo1.createNode('fileGLTF');
 	fileNode.p.url.set(_url(path));
-	fileNode.p.format.set(format);
 
 	const hierarchyNode = geo1.createNode('hierarchy');
 	hierarchyNode.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
@@ -33,9 +106,9 @@ async function withFileAndHierarchy(path: string, format: GeometryFormat = Geome
 	const container = await hierarchyNode.compute();
 	return {container, fileNode, hierarchyNode};
 }
-async function withHierarchy(levels: number = 1) {
+async function withHierarchy(fileNode: FileGLTFSopNode | FileMPDSopNode, levels: number = 1) {
 	const hierarchy1 = window.geo1.createNode('hierarchy');
-	const file1 = window.geo1.nodesByType('file')[0];
+	const file1 = fileNode;
 	hierarchy1.p.levels.set(levels);
 	hierarchy1.setInput(0, file1);
 	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
@@ -46,7 +119,7 @@ async function withHierarchy(levels: number = 1) {
 QUnit.test('SOP file simple', async (assert) => {
 	const geo1 = window.geo1;
 
-	const file1 = geo1.createNode('file');
+	const file1 = geo1.createNode('fileOBJ');
 	file1.p.url.set(`${ASSETS_ROOT}/models/male.obj`);
 	assert.ok(file1.isDirty());
 
@@ -96,7 +169,7 @@ QUnit.test('SOP file simple', async (assert) => {
 });
 
 QUnit.test('SOP file obj wolf', async (assert) => {
-	const {container} = await withFile('/models/wolf.obj');
+	const {container} = await withFileOBJ('/models/wolf.obj');
 	const core_content = container.coreContent()!;
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.pointsCount(), 0);
@@ -111,63 +184,66 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 	assert.ok(first_geometry.index, 'geometry has index');
 });
 QUnit.test('SOP file json wolf', async (assert) => {
-	const {container} = await withFile('models/wolf.json');
+	const {container} = await withFileJSON('models/wolf.json');
 	assert.equal(container.totalPointsCount(), 5352);
 });
 QUnit.test('SOP file glb stork', async (assert) => {
-	const {container} = await withFile('models/stork.glb');
+	const {container} = await withFileGLTF('models/stork.glb');
 	assert.equal(container.totalPointsCount(), 358);
 });
 QUnit.test('SOP file glb soldier', async (assert) => {
-	const {container} = await withFile('models/soldier.glb');
+	const {container} = await withFileGLTF('models/soldier.glb');
 	assert.equal(container.totalPointsCount(), 7434);
 });
 QUnit.test('SOP file glb json', async (assert) => {
-	const {container} = await withFile('models/parrot.glb');
+	const {container} = await withFileGLTF('models/parrot.glb');
 	assert.equal(container.totalPointsCount(), 497);
 });
 QUnit.test('SOP file glb horse', async (assert) => {
-	const {container} = await withFile('models/horse.glb');
+	const {container} = await withFileGLTF('models/horse.glb');
 	assert.equal(container.totalPointsCount(), 796);
 });
 QUnit.test('SOP file glb flamingo', async (assert) => {
-	const {container} = await withFile('models/flamingo.glb');
+	const {container} = await withFileGLTF('models/flamingo.glb');
 	assert.equal(container.totalPointsCount(), 337);
 });
 QUnit.test('SOP file z3 glb with draco', async (assert) => {
-	const {container} = await withFile('models/z3.glb');
+	const {container, fileNode} = await withFileGLTF('models/z3.glb');
 	assert.equal(container.pointsCount(), 0);
-	const container2 = await withHierarchy();
+	const container2 = await withHierarchy(fileNode);
 	assert.equal(container2.pointsCount(), 498800);
 });
-QUnit.test('SOP file draco bunny', async (assert) => {
-	const {container} = await withFile('models/bunny.drc');
+QUnit.test('SOP file draco bunny with format FBX', async (assert) => {
+	const {container, fileNode} = await withFileFBX('models/stanford-bunny.fbx');
+	assert.equal(container.pointsCount(), 0);
+	const container2 = await withHierarchy(fileNode);
+	assert.equal(container2.pointsCount(), 91014);
+});
+QUnit.test('SOP file draco bunny with format DRC', async (assert) => {
+	const {container} = await withFileDRC('models/bunny.drc');
 	assert.equal(container.pointsCount(), 34834);
 });
 QUnit.test('SOP file format pdb', async (assert) => {
-	const {container} = await withFile('models/ethanol.pdb');
+	const {container} = await withFilePDB('models/ethanol.pdb');
 	assert.equal(container.pointsCount(), 25);
 });
 QUnit.test('SOP file format ply', async (assert) => {
-	const {container} = await withFile('models/dolphins_be.ply');
+	const {container} = await withFilePLY('models/dolphins_be.ply');
 	assert.equal(container.pointsCount(), 855);
 });
 QUnit.test('SOP file format stl', async (assert) => {
-	const {container} = await withFile('models/warrior.stl');
+	const {container} = await withFileSTL('models/warrior.stl');
 	assert.equal(container.pointsCount(), 154059);
 });
-QUnit.test('SOP file draco bunny with format DRC', async (assert) => {
-	const {container} = await withFile('models/bunny.drc', GeometryFormat.DRC);
-	assert.equal(container.pointsCount(), 34834);
-});
+
 QUnit.test('SOP file Ldraw', async (assert) => {
-	const {container} = await withFile('models/889-1-RadarTruck.mpd_Packed.mpd', GeometryFormat.LDRAW);
+	const {container, fileNode} = await withFileMPD('models/889-1-RadarTruck.mpd_Packed.mpd');
 	assert.equal(container.pointsCount(), 0);
-	const container2 = await withHierarchy(3);
+	const container2 = await withHierarchy(fileNode, 3);
 	assert.equal(container2.pointsCount(), 75218);
 });
 QUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
-	const {container, fileNode} = await withFile('models/bunny.drc', GeometryFormat.FBX);
+	const {container, fileNode} = await withFileFBX('models/bunny.drc');
 	assert.equal(
 		fileNode.states.error.message(),
 		'could not load geometry from https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/models/bunny.drc (Error: THREE.FBXLoader: Cannot find the version number for the file given.)'
@@ -181,9 +257,9 @@ QUnit.test(
 		Poly.blobs.clear();
 		await withPlayerMode(false, async () => {
 			assert.ok(!Poly.playerMode());
-			const data1 = await withFileAndHierarchy('models/resources/threedscans.com/jenner.glb');
-			const data2 = await withFileAndHierarchy('models/resources/threedscans.com/eagle.glb');
-			const data3 = await withFileAndHierarchy('models/resources/threedscans.com/theodoric_the_great.glb');
+			const data1 = await withFileAndHierarchyGLTF('models/resources/threedscans.com/jenner.glb');
+			const data2 = await withFileAndHierarchyGLTF('models/resources/threedscans.com/eagle.glb');
+			const data3 = await withFileAndHierarchyGLTF('models/resources/threedscans.com/theodoric_the_great.glb');
 
 			assert.notOk(data1.hierarchyNode.states.error.active());
 			assert.notOk(data2.hierarchyNode.states.error.active());
@@ -214,9 +290,9 @@ QUnit.test(
 		Poly.blobs.clear();
 		await withPlayerMode(true, async () => {
 			assert.ok(Poly.playerMode());
-			const data1 = await withFileAndHierarchy('models/resources/threedscans.com/jenner.glb');
-			const data2 = await withFileAndHierarchy('models/resources/threedscans.com/eagle.glb');
-			const data3 = await withFileAndHierarchy('models/resources/threedscans.com/theodoric_the_great.glb');
+			const data1 = await withFileAndHierarchyGLTF('models/resources/threedscans.com/jenner.glb');
+			const data2 = await withFileAndHierarchyGLTF('models/resources/threedscans.com/eagle.glb');
+			const data3 = await withFileAndHierarchyGLTF('models/resources/threedscans.com/theodoric_the_great.glb');
 
 			assert.notOk(data1.hierarchyNode.states.error.active());
 			assert.notOk(data2.hierarchyNode.states.error.active());
@@ -240,3 +316,33 @@ QUnit.test(
 		});
 	}
 );
+
+QUnit.test('SOP file nodes work with their default url', async (assert) => {
+	const geo1 = window.geo1;
+	async function testFileType(fileType: SopTypeFile, pointsCount: number, hierarchyLevels: number = 0) {
+		const fileNode = geo1.createNode(fileType);
+
+		if (hierarchyLevels > 0) {
+			const hierarchy1 = window.geo1.createNode('hierarchy');
+			hierarchy1.p.levels.set(hierarchyLevels);
+			hierarchy1.setInput(0, fileNode);
+			hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+			const container = await hierarchy1.compute();
+			assert.equal(container.pointsCount(), pointsCount, fileType);
+		} else {
+			const container = await fileNode.compute();
+			assert.equal(container.pointsCount(), pointsCount, fileType);
+		}
+	}
+
+	await testFileType(SopTypeFile.FILE_DRC, 34834);
+	await testFileType(SopTypeFile.FILE_FBX, 91014, 1);
+	await testFileType(SopTypeFile.FILE_GLTF, 108882, 1);
+	await testFileType(SopTypeFile.FILE_JSON, 5352, 2);
+	await testFileType(SopTypeFile.FILE_MPD, 118371, 2);
+	await testFileType(SopTypeFile.FILE_OBJ, 1404, 1);
+	await testFileType(SopTypeFile.FILE_PDB, 25);
+	await testFileType(SopTypeFile.FILE_PLY, 855);
+	await testFileType(SopTypeFile.FILE_STL, 154059, 0);
+	await testFileType(SopTypeFile.FILE_SVG, 48118);
+});

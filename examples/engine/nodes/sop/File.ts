@@ -1,8 +1,5 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
-import {Poly} from '../../../../src/engine/Poly';
 
-import {OBJLoaderModule} from '../../../../src/engine/poly/registers/modules/entry_points/OBJLoader';
-Poly.registerModule(OBJLoaderModule);
 export function SopFile() {
 	// create a scene
 	const scene = new PolyScene();
@@ -10,7 +7,7 @@ export function SopFile() {
 
 	// create a file node
 	const geo = root.createNode('geo');
-	const file = geo.createNode('file');
+	const file = geo.createNode('fileOBJ');
 	file.p.url.set('https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/models/wolf.obj');
 
 	// add a light
