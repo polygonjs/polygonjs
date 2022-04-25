@@ -1,6 +1,6 @@
 import {CoreMath} from '../../src/core/math/_Module';
-import {Triangle} from 'three/src/math/Triangle';
-import {Vector3} from 'three/src/math/Vector3';
+import {Triangle} from 'three';
+import {Vector3} from 'three';
 
 QUnit.test('triangle expand', (assert) => {
 	const p0 = new Vector3(0, 0, 0);

@@ -1,4 +1,4 @@
-import {sRGBEncoding} from 'three/src/constants';
+import {sRGBEncoding} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 

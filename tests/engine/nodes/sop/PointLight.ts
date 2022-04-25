@@ -1,5 +1,5 @@
-import {Object3D} from 'three/src/core/Object3D';
-import {PointLight} from 'three/src/lights/PointLight';
+import {Object3D} from 'three';
+import {PointLight} from 'three';
 import {TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../../src/core/Transform';
 
 QUnit.test('pointLight simple', async (assert) => {

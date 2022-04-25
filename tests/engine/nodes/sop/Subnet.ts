@@ -1,4 +1,4 @@
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SubnetSopNode} from '../../../../src/engine/nodes/sop/Subnet';
 

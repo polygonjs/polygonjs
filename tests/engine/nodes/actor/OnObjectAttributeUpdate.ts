@@ -1,4 +1,4 @@
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';

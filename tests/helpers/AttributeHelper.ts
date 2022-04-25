@@ -1,5 +1,5 @@
-import {InterleavedBufferAttribute} from 'three/src/core/InterleavedBufferAttribute';
-import {BufferAttribute} from 'three/src/core/BufferAttribute';
+import {InterleavedBufferAttribute} from 'three';
+import {BufferAttribute} from 'three';
 
 export class AttributeHelper {
 	static toArray(attribute: BufferAttribute | InterleavedBufferAttribute) {

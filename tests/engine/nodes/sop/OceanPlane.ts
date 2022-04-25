@@ -1,4 +1,4 @@
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {Water} from '../../../../src/modules/core/objects/Water';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 

@@ -1,9 +1,9 @@
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {Quaternion} from 'three/src/math/Quaternion';
-import {Vector3} from 'three/src/math/Vector3';
+import {Quaternion} from 'three';
+import {Vector3} from 'three';
 
 QUnit.test('actor/setObjectLookAt', async (assert) => {
 	const scene = window.scene;

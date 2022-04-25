@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 
 function objectsCount(object: Object3D, countStart: number = 0) {
 	countStart += 1;

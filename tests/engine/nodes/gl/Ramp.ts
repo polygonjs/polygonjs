@@ -6,7 +6,7 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {create_required_nodes_for_subnet_gl_node} from './Subnet';
 import {RampValue, RampPoint, RampInterpolation} from '../../../../src/engine/params/ramp/RampValue';
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {DataTexture} from 'three';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 QUnit.test('gl ramp updates its parent material with new spare parameters', async (assert) => {

@@ -7,6 +7,7 @@ import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PointsBuilderMatNode} from '../../../../src/engine/nodes/mat/PointsBuilder';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 QUnit.test('points builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
@@ -45,8 +46,8 @@ QUnit.test('points builder persisted_config', async (assert) => {
 		assert.ok(vec3_param);
 		const material = new_points1.material;
 		await RendererUtils.compile(new_points1, renderer);
-		assert.equal(material.fragmentShader, points1Material.fragmentShader);
-		assert.equal(material.vertexShader, points1Material.vertexShader);
+		assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(points1Material.fragmentShader));
+		assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(points1Material.vertexShader));
 
 		// float param callback
 		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);

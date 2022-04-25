@@ -88,7 +88,7 @@ export class PolyNodeController {
 
 		const sceneImporter = new SceneJsonImporter({});
 		const dispatcher = new JsonImportDispatcher();
-		const nodeImporter = dispatcher.dispatchNode(this.node); // new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
+		const nodeImporter = dispatcher.dispatchNonPolyNode(this.node); // new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
 		nodeImporter.create_nodes(sceneImporter, childrenData);
 
 		const ui_data = this._definition.ui;

@@ -22,10 +22,17 @@ export class JsonImportDispatcher {
 	dispatchNode(node: BaseNodeType) {
 		// using PolySopNode and PolyObjNode seem to create circular dependency with webpack
 		// if (node instanceof PolySopNode || node instanceof PolyObjNode)
-		const nodesImporter = new NodesJsonImporter(node, this);
 		if (node.polyNodeController) {
-			return new PolyNodeJsonImporter(node, this, nodesImporter);
+			return this._dispatchPolyNode(node);
 		}
+		return this.dispatchNonPolyNode(node);
+	}
+	private _dispatchPolyNode(node: BaseNodeType) {
+		const nodesImporter = new NodesJsonImporter(node, this);
+		return new PolyNodeJsonImporter(node, this, nodesImporter);
+	}
+	dispatchNonPolyNode(node: BaseNodeType) {
+		const nodesImporter = new NodesJsonImporter(node, this);
 		return new NodeJsonImporter(node, this, nodesImporter);
 	}
 

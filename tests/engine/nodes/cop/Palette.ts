@@ -1,5 +1,5 @@
-import {Color} from 'three/src/math/Color';
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {Color} from 'three';
+import {DataTexture} from 'three';
 import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 
 QUnit.test('cop/palette simple', async (assert) => {

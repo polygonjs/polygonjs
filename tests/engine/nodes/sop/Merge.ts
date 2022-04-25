@@ -1,5 +1,5 @@
-import {Points} from 'three/src/objects/Points';
-import {Mesh} from 'three/src/objects/Mesh';
+import {Points} from 'three';
+import {Mesh} from 'three';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';

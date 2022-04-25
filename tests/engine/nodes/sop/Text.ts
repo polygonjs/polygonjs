@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {TextType, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
 import {checkConsolePrints} from '../../../helpers/Console';

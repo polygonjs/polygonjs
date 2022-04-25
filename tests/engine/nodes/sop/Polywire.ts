@@ -1,4 +1,4 @@
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 
 QUnit.test('polywire simple', async (assert) => {
 	const geo1 = window.geo1;

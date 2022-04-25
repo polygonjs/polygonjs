@@ -1,4 +1,4 @@
-import {Mesh} from 'three/src/objects/Mesh';
+import {Mesh} from 'three';
 
 QUnit.test('BVHVisualizer simple', async (assert) => {
 	const geo1 = window.geo1;

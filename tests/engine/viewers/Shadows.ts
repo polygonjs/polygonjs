@@ -4,10 +4,10 @@ import {BaseBuilderMatNodeType} from '../../../src/engine/nodes/mat/_BaseBuilder
 import {CoreSleep} from '../../../src/core/Sleep';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {Vector3Param} from '../../../src/engine/params/Vector3';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
-import {Scene} from 'three/src/scenes/Scene';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Camera} from 'three/src/cameras/Camera';
+import {ShaderMaterial} from 'three';
+import {Scene} from 'three';
+import {WebGLRenderer} from 'three';
+import {Camera} from 'three';
 
 // mesh
 import MESH_BASIC_DEPTH_VERTEX from './templates/meshBasicBuilder/customDepthMaterial.vert.glsl';
@@ -30,6 +30,7 @@ import LINE_BASIC_DISTANCE_VERTEX from './templates/lineBasicBuilder/customDista
 import LINE_BASIC_DISTANCE_FRAGMENT from './templates/lineBasicBuilder/customDistanceMaterial.frag.glsl';
 import {BokehPass2} from '../../../src/modules/core/post_process/BokehPass2';
 import {MaterialUserDataUniforms} from '../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {GLSLHelper} from '../../helpers/GLSLHelper';
 // import LINE_BASIC_DOF_VERTEX from './templates/lineBasicBuilder/customDOFMaterial.vert.glsl';
 // import LINE_BASIC_DOF_FRAGMENT from './templates/lineBasicBuilder/customDOFMaterial.frag.glsl';
 
@@ -98,12 +99,36 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders', async (ass
 	assert.ok(customDepthMaterial);
 	assert.ok(customDistanceMaterial);
 	assert.ok(customDepthDOFMaterial);
-	assert.equal(customDepthMaterial.vertexShader, MESH_BASIC_DEPTH_VERTEX, 'depth vert ok');
-	assert.equal(customDepthMaterial.fragmentShader, MESH_BASIC_DEPTH_FRAGMENT, 'depth frag ok');
-	assert.equal(customDistanceMaterial.vertexShader, MESH_BASIC_DISTANCE_VERTEX, 'dist vert ok');
-	assert.equal(customDistanceMaterial.fragmentShader, MESH_BASIC_DISTANCE_FRAGMENT, 'dist frag ok');
-	assert.equal(customDepthDOFMaterial.vertexShader, MESH_BASIC_DOF_VERTEX, 'DOF vert ok');
-	assert.equal(customDepthDOFMaterial.fragmentShader, MESH_BASIC_DOF_FRAGMENT, 'DOF frag ok');
+	assert.equal(
+		GLSLHelper.compress(customDepthMaterial.vertexShader),
+		GLSLHelper.compress(MESH_BASIC_DEPTH_VERTEX),
+		'depth vert ok'
+	);
+	assert.equal(
+		GLSLHelper.compress(customDepthMaterial.fragmentShader),
+		GLSLHelper.compress(MESH_BASIC_DEPTH_FRAGMENT),
+		'depth frag ok'
+	);
+	assert.equal(
+		GLSLHelper.compress(customDistanceMaterial.vertexShader),
+		GLSLHelper.compress(MESH_BASIC_DISTANCE_VERTEX),
+		'dist vert ok'
+	);
+	assert.equal(
+		GLSLHelper.compress(customDistanceMaterial.fragmentShader),
+		GLSLHelper.compress(MESH_BASIC_DISTANCE_FRAGMENT),
+		'dist frag ok'
+	);
+	assert.equal(
+		GLSLHelper.compress(customDepthDOFMaterial.vertexShader),
+		GLSLHelper.compress(MESH_BASIC_DOF_VERTEX),
+		'DOF vert ok'
+	);
+	assert.equal(
+		GLSLHelper.compress(customDepthDOFMaterial.fragmentShader),
+		GLSLHelper.compress(MESH_BASIC_DOF_FRAGMENT),
+		'DOF frag ok'
+	);
 	// check that the material has the correct vertex and fragment
 	// check that creating a gl/param node creates and syncs the uniform
 	const uniforms = [

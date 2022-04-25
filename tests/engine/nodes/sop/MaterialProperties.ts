@@ -1,6 +1,6 @@
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
-import {FrontSide, BackSide, DoubleSide} from 'three/src/constants';
+import {Mesh} from 'three';
+import {Material} from 'three';
+import {FrontSide, BackSide, DoubleSide} from 'three';
 import {BaseNodeType} from '../../../../src/engine/nodes/_Base';
 
 async function getMaterial(node: BaseNodeType) {

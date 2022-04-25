@@ -1,4 +1,4 @@
-import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
+import {InstancedBufferGeometry} from 'three';
 import {Attribute} from '../../../../src/core/geometry/Attribute';
 import {InstanceAttrib} from '../../../../src/core/geometry/Instancer';
 import {InstanceUpdateMode} from '../../../../src/engine/operations/sop/InstanceUpdate';

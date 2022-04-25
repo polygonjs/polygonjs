@@ -1,4 +1,4 @@
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 
 QUnit.test('face simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -22,9 +22,8 @@ QUnit.test('face simple', async (assert) => {
 	face1.p.scale.set(2);
 	container = await face1.compute();
 	assert.equal(container.pointsCount(), 240);
-	assert.deepEqual(container.boundingBox().getSize(bbox_size).toArray(), [
-		2.4536805152893066,
-		2.2200846672058105,
-		2.4536805152893066,
-	]);
+	assert.deepEqual(
+		container.boundingBox().getSize(bbox_size).toArray(),
+		[2.4536805152893066, 2.2200846672058105, 2.4536805152893066]
+	);
 });

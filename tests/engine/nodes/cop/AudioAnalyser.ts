@@ -148,7 +148,7 @@ QUnit.test('COP audioAnalyser with Meter', async (assert) => {
 		let texture = container.texture();
 		assert.equal(texture.image.width, 1);
 		assert.deepEqual(container.resolution(), [1, 2]);
-		assert.in_delta(texture.image.data[0], 0.4, 0.3);
+		assert.in_delta(texture.image.data[0], 0.4, 0.3, 'data');
 
 		null1.setInput(0, null);
 

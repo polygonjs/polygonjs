@@ -9,6 +9,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {Poly} from '../../../../src/engine/Poly';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 QUnit.test('mesh standard builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
@@ -47,8 +48,16 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 		assert.ok(vec3_param, 'vec3_param exists');
 		const material = new_mesh_standard1.material;
 		await RendererUtils.compile(new_mesh_standard1, renderer);
-		assert.equal(material.fragmentShader, mesh_standard1Material.fragmentShader, 'fragment shader is as expected');
-		assert.equal(material.vertexShader, mesh_standard1Material.vertexShader, 'vertex shader is as expected');
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(mesh_standard1Material.fragmentShader),
+			'fragment shader is as expected'
+		);
+		assert.equal(
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(mesh_standard1Material.vertexShader),
+			'vertex shader is as expected'
+		);
 
 		// float param callback
 		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);
@@ -101,8 +110,16 @@ QUnit.test('mesh standard builder persisted_config with no node', async (assert)
 		assert.ok(new_mesh_standard1.persisted_config);
 		const material = new_mesh_standard1.material;
 		await RendererUtils.compile(new_mesh_standard1, renderer);
-		assert.equal(material.fragmentShader, mesh_standard1Material.fragmentShader, 'fragment shader is as expected');
-		assert.equal(material.vertexShader, mesh_standard1Material.vertexShader, 'vertex shader is as expected');
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(mesh_standard1Material.fragmentShader),
+			'fragment shader is as expected'
+		);
+		assert.equal(
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(mesh_standard1Material.vertexShader),
+			'vertex shader is as expected'
+		);
 
 		// let's ensure that a recompile is not required
 		new_mesh_standard1.p.shadowPCSS.set(1);
@@ -111,8 +128,16 @@ QUnit.test('mesh standard builder persisted_config with no node', async (assert)
 		assert.notOk(new_mesh_standard1.assemblerController()?.compileRequired());
 		await RendererUtils.compile(new_mesh_standard1, renderer);
 		await CoreSleep.sleep(100);
-		assert.equal(material.fragmentShader, mesh_standard1Material.fragmentShader, 'fragment shader is as expected');
-		assert.equal(material.vertexShader, mesh_standard1Material.vertexShader, 'vertex shader is as expected');
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(mesh_standard1Material.fragmentShader),
+			'fragment shader is as expected'
+		);
+		assert.equal(
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(mesh_standard1Material.vertexShader),
+			'vertex shader is as expected'
+		);
 	});
 	RendererUtils.dispose();
 });
@@ -141,8 +166,16 @@ QUnit.test('mesh standard builder persisted_config with no node but with assembl
 	assert.ok(new_mesh_standard1.persisted_config);
 	const material = new_mesh_standard1.material;
 	await RendererUtils.compile(new_mesh_standard1, renderer);
-	assert.equal(material.fragmentShader, mesh_standard1Material.fragmentShader, 'fragment shader is as expected');
-	assert.equal(material.vertexShader, mesh_standard1Material.vertexShader, 'vertex shader is as expected');
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(mesh_standard1Material.fragmentShader),
+		'fragment shader is as expected'
+	);
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(mesh_standard1Material.vertexShader),
+		'vertex shader is as expected'
+	);
 
 	// let's ensure that a recompile is not required
 	new_mesh_standard1.p.shadowPCSS.set(1);
@@ -151,8 +184,16 @@ QUnit.test('mesh standard builder persisted_config with no node but with assembl
 	await CoreSleep.sleep(10);
 	await RendererUtils.compile(new_mesh_standard1, renderer);
 	await CoreSleep.sleep(100);
-	assert.equal(material.fragmentShader, mesh_standard1Material.fragmentShader, 'fragment shader is as expected');
-	assert.equal(material.vertexShader, mesh_standard1Material.vertexShader, 'vertex shader is as expected');
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(mesh_standard1Material.fragmentShader),
+		'fragment shader is as expected'
+	);
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(mesh_standard1Material.vertexShader),
+		'vertex shader is as expected'
+	);
 
 	RendererUtils.dispose();
 });

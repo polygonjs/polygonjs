@@ -1,4 +1,4 @@
-import {Color} from 'three/src/math/Color';
+import {Color} from 'three';
 
 QUnit.test('hemisphere light simple', async (assert) => {
 	const scene = window.scene;

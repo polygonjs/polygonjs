@@ -23,6 +23,7 @@ import {MeshPhongBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshPhon
 import {MeshLambertBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshLambertBuilder';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 function createMeshBasicBuilder(parentNode: MaterialsNetworkSopNode): MeshBasicBuilderMatNode {
 	const meshBasicBuilder1 = parentNode.createNode('meshBasicBuilder');
@@ -678,8 +679,8 @@ QUnit.test('gl VaryingWrite works inside a meshBasicBuilder', async (assert) => 
 	const matNode = createMeshBasicBuilder(MAT);
 	await RendererUtils.compile(matNode, renderer);
 	const material = matNode.material;
-	assert.equal(material.vertexShader, MESH_BASIC_BUILDER_VERTEX);
-	assert.equal(material.fragmentShader, MESH_BASIC_BUILDER_FRAGMENT);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(MESH_BASIC_BUILDER_VERTEX));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(MESH_BASIC_BUILDER_FRAGMENT));
 
 	RendererUtils.dispose();
 });
@@ -691,8 +692,8 @@ QUnit.test('gl VaryingWrite works inside a meshLambertBuilder', async (assert) =
 	const matNode = createMeshLambertBuilder(MAT);
 	await RendererUtils.compile(matNode, renderer);
 	const material = matNode.material;
-	assert.equal(material.vertexShader, MESH_LAMBERT_BUILDER_VERTEX);
-	assert.equal(material.fragmentShader, MESH_LAMBERT_BUILDER_FRAGMENT);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(MESH_LAMBERT_BUILDER_VERTEX));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(MESH_LAMBERT_BUILDER_FRAGMENT));
 	RendererUtils.dispose();
 });
 QUnit.test('gl VaryingWrite works inside a meshPhongBuilder', async (assert) => {
@@ -702,8 +703,8 @@ QUnit.test('gl VaryingWrite works inside a meshPhongBuilder', async (assert) => 
 	const matNode = createMeshPhongBuilder(MAT);
 	await RendererUtils.compile(matNode, renderer);
 	const material = matNode.material;
-	assert.equal(material.vertexShader, MESH_PHONG_BUILDER_VERTEX);
-	assert.equal(material.fragmentShader, MESH_PHONG_BUILDER_FRAGMENT);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(MESH_PHONG_BUILDER_VERTEX));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(MESH_PHONG_BUILDER_FRAGMENT));
 	RendererUtils.dispose();
 });
 
@@ -714,8 +715,8 @@ QUnit.test('gl VaryingWrite works inside a meshStandardBuilder', async (assert) 
 	const matNode = createMeshStandardBuilder(MAT);
 	await RendererUtils.compile(matNode, renderer);
 	const material = matNode.material;
-	assert.equal(material.vertexShader, MESH_STANDARD_BUILDER_VERTEX);
-	assert.equal(material.fragmentShader, MESH_STANDARD_BUILDER_FRAGMENT);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(MESH_STANDARD_BUILDER_VERTEX));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(MESH_STANDARD_BUILDER_FRAGMENT));
 	RendererUtils.dispose();
 });
 
@@ -726,8 +727,8 @@ QUnit.test('gl VaryingWrite works inside a meshPhysicalBuilder', async (assert) 
 	const matNode = createMeshPhysicalBuilder(MAT);
 	await RendererUtils.compile(matNode, renderer);
 	const material = matNode.material;
-	assert.equal(material.vertexShader, MESH_PHYSICAL_BUILDER_VERTEX);
-	assert.equal(material.fragmentShader, MESH_PHYSICAL_BUILDER_FRAGMENT);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(MESH_PHYSICAL_BUILDER_VERTEX));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(MESH_PHYSICAL_BUILDER_FRAGMENT));
 	RendererUtils.dispose();
 });
 
@@ -738,8 +739,8 @@ QUnit.test('gl VaryingWrite works inside a lineBasicBuilder', async (assert) => 
 	const lineBuilder1 = createLineBuilder(MAT);
 	await RendererUtils.compile(lineBuilder1, renderer);
 	const material = lineBuilder1.material;
-	assert.equal(material.vertexShader, LINE_BASIC_BUILDER_VERTEX);
-	assert.equal(material.fragmentShader, LINE_BASIC_BUILDER_FRAGMENT);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(LINE_BASIC_BUILDER_VERTEX));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(LINE_BASIC_BUILDER_FRAGMENT));
 	RendererUtils.dispose();
 });
 
@@ -750,7 +751,7 @@ QUnit.test('gl VaryingWrite works inside a pointsBuilder', async (assert) => {
 	const pointsBuilder1 = createPointsBuilder(MAT);
 	await RendererUtils.compile(pointsBuilder1, renderer);
 	const material = pointsBuilder1.material;
-	assert.equal(material.vertexShader, POINTS_BUILDER_VERTEX);
-	assert.equal(material.fragmentShader, POINTS_BUILDER_FRAGMENT);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(POINTS_BUILDER_VERTEX));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(POINTS_BUILDER_FRAGMENT));
 	RendererUtils.dispose();
 });

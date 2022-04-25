@@ -1,5 +1,5 @@
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
+import {Mesh} from 'three';
+import {Material} from 'three';
 import {BooleanOperation, BOOLEAN_OPERATIONS} from '../../../../src/engine/operations/sop/Boolean';
 
 QUnit.test('SOP boolean simple', async (assert) => {

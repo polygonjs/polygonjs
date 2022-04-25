@@ -9,7 +9,7 @@ export class ThreeMeshBVHHelper {
 		(mesh.geometry as BufferGeometryWithBVH).boundsTree = bvh;
 	}
 	static copyBVH(meshDest: Mesh, meshSrc: Object3D) {
-		const existingBVH = (meshSrc as Mesh).geometry?.boundsTree;
+		const existingBVH = ((meshSrc as Mesh).geometry as BufferGeometryWithBVH).boundsTree;
 		if (existingBVH) {
 			meshDest.raycast = acceleratedRaycast;
 			this.assignBVH(meshDest, existingBVH);

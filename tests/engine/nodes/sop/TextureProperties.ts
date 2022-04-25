@@ -1,6 +1,6 @@
-import {Mesh} from 'three/src/objects/Mesh';
-import {MeshBasicMaterial} from 'three/src/materials/MeshBasicMaterial';
-import {Texture} from 'three/src/textures/Texture';
+import {Mesh} from 'three';
+import {MeshBasicMaterial} from 'three';
+import {Texture} from 'three';
 import {CoreLoaderTexture} from '../../../../src/core/loader/Texture';
 
 QUnit.test('texture_properties simple', async (assert) => {

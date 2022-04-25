@@ -5,6 +5,7 @@ import BasicVertex from './templates/lineBasic/Basic.vert.glsl';
 import BasicFragment from './templates/lineBasic/Basic.frag.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {LineBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/LineBasicBuilder';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 const TEST_SHADER_LIB = {
 	basic: {vert: BasicVertex, frag: BasicFragment},
 };
@@ -22,8 +23,8 @@ QUnit.test('lineBasic builder persisted_config', async (assert) => {
 	await RendererUtils.compile(lineBasicBuilder1, renderer);
 	const mat1 = lineBasicBuilder1.material;
 
-	assert.equal(mat1.vertexShader, TEST_SHADER_LIB.basic.vert);
-	assert.equal(mat1.fragmentShader, TEST_SHADER_LIB.basic.frag);
+	assert.equal(GLSLHelper.compress(mat1.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.basic.vert));
+	assert.equal(GLSLHelper.compress(mat1.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.basic.frag));
 
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
@@ -37,8 +38,8 @@ QUnit.test('lineBasic builder persisted_config', async (assert) => {
 		const mat2 = lineBasicBuilder2.material;
 		await RendererUtils.compile(lineBasicBuilder2, renderer);
 
-		assert.equal(mat2.vertexShader, TEST_SHADER_LIB.basic.vert);
-		assert.equal(mat2.fragmentShader, TEST_SHADER_LIB.basic.frag);
+		assert.equal(GLSLHelper.compress(mat2.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.basic.vert));
+		assert.equal(GLSLHelper.compress(mat2.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.basic.frag));
 	});
 
 	RendererUtils.dispose();

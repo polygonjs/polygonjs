@@ -1,5 +1,5 @@
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 import {OperationsComposerSopNode} from '../../../../src/engine/nodes/sop/OperationsComposer';
 

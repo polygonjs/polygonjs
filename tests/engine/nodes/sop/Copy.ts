@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../../src/core/geometry/Constant';
 import {CopySopNode} from '../../../../src/engine/nodes/sop/Copy';
 

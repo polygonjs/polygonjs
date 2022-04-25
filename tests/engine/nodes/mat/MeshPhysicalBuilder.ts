@@ -4,7 +4,7 @@ import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
-import {DoubleSide} from 'three/src/constants';
+import {DoubleSide} from 'three';
 import BasicDefaultVertex from './templates/meshPhysicalBuilder/Physical.default.vert.glsl';
 import BasicDefaultFragment from './templates/meshPhysicalBuilder/Physical.default.frag.glsl';
 import BasicSSSVertex from './templates/meshPhysicalBuilder/Physical.sss.vert.glsl';
@@ -14,6 +14,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {MeshPhysicalBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshPhysicalBuilder';
 import {checkConsolePrints} from '../../../helpers/Console';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 const TEST_SHADER_LIB_DEFAULT = {vert: BasicDefaultVertex, frag: BasicDefaultFragment};
 const TEST_SHADER_LIB_SSS = {vert: BasicSSSVertex, frag: BasicSSSFragment};
 const TEST_SHADER_LIB_SET_BUILDER_NODE = {vert: BasicSetBuilderNodeVertex};
@@ -55,8 +56,16 @@ QUnit.test('mesh physical builder persisted_config', async (assert) => {
 		assert.ok(vec3_param, 'vec3_param exists');
 		const material = new_mesh_physical1.material;
 		await RendererUtils.compile(new_mesh_physical1, renderer);
-		assert.equal(material.fragmentShader, mesh_physical1Material.fragmentShader, 'fragment shader is as expected');
-		assert.equal(material.vertexShader, mesh_physical1Material.vertexShader, 'vertex shader is as expected');
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(mesh_physical1Material.fragmentShader),
+			'fragment shader is as expected'
+		);
+		assert.equal(
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(mesh_physical1Material.vertexShader),
+			'vertex shader is as expected'
+		);
 
 		// float param callback
 		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);
@@ -128,8 +137,16 @@ QUnit.test('mesh physical builder persisted_config with advanced params', async 
 		const material = new_mesh_physical1.material;
 		await RendererUtils.compile(new_mesh_physical1, renderer);
 		assert.equal(material.shadowSide, DoubleSide);
-		assert.equal(material.fragmentShader, mesh_physical_mat.fragmentShader, 'fragment shader is as expected');
-		assert.equal(material.vertexShader, mesh_physical_mat.vertexShader, 'vertex shader is as expected');
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(mesh_physical_mat.fragmentShader),
+			'fragment shader is as expected'
+		);
+		assert.equal(
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(mesh_physical_mat.vertexShader),
+			'vertex shader is as expected'
+		);
 
 		// float param callback
 		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);
@@ -182,15 +199,15 @@ QUnit.test('mesh physical builder SSS Model', async (assert) => {
 	await RendererUtils.compile(mesh_physical1, renderer);
 	const material = mesh_physical1.material;
 
-	assert.equal(material.vertexShader, TEST_SHADER_LIB_DEFAULT.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB_DEFAULT.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB_DEFAULT.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB_DEFAULT.frag));
 
 	const SSSModel = mesh_physical1.createNode('SSSModel');
 	output1.setInput('SSSModel', SSSModel);
 	await RendererUtils.compile(mesh_physical1, renderer);
 
-	assert.equal(material.vertexShader, TEST_SHADER_LIB_SSS.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB_SSS.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB_SSS.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB_SSS.frag));
 	RendererUtils.dispose();
 });
 
@@ -216,12 +233,12 @@ QUnit.test('mesh physical builder can compile from another node', async (assert)
 	const mat_SRC = mesh_physical_SRC.material;
 	const mat_DEST = mesh_physical_DEST.material;
 
-	assert.equal(mat_SRC.vertexShader, TEST_SHADER_LIB_SET_BUILDER_NODE.vert);
-	assert.notEqual(mat_SRC.vertexShader, mat_DEST.vertexShader);
+	assert.equal(GLSLHelper.compress(mat_SRC.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB_SET_BUILDER_NODE.vert));
+	assert.notEqual(GLSLHelper.compress(mat_SRC.vertexShader), GLSLHelper.compress(mat_DEST.vertexShader));
 
 	mesh_physical_DEST.p.setBuilderNode.set(true);
 	mesh_physical_DEST.p.builderNode.setNode(mesh_physical_SRC);
 	await RendererUtils.compile(mesh_physical_DEST, renderer);
-	assert.equal(mat_SRC.vertexShader, mat_DEST.vertexShader);
+	assert.equal(GLSLHelper.compress(mat_SRC.vertexShader), GLSLHelper.compress(mat_DEST.vertexShader));
 	RendererUtils.dispose();
 });

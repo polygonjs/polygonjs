@@ -1,4 +1,4 @@
-import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
+import {InstancedBufferGeometry} from 'three';
 import {InstancesCountSopNode} from '../../../../src/engine/nodes/sop/InstancesCount';
 import {createRequiredNodes} from './Instance';
 

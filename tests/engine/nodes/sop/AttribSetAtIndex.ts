@@ -1,6 +1,6 @@
-import {Vector4} from 'three/src/math/Vector4';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector4} from 'three';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
 import {AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';
 import {CoreEntity} from '../../../../src/core/geometry/Entity';
 import {CoreType} from '../../../../src/core/Type';

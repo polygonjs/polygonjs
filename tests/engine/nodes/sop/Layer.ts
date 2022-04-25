@@ -1,4 +1,4 @@
-import {Layers} from 'three/src/core/Layers';
+import {Layers} from 'three';
 
 QUnit.test('layer simple', async (assert) => {
 	const geo1 = window.geo1;

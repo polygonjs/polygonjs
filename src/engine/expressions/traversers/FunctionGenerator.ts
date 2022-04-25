@@ -465,17 +465,17 @@ export class FunctionGenerator extends BaseTraverser {
 		// }
 		return `(${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)})`;
 	}
-	protected override traverse_LogicalExpression(node: jsep.LogicalExpression): string {
-		// || or &&
-		// if(node.right.type == 'Identifier'){
-		// 	this.set_error(`cannot have identifier after ${node.operator}`)
-		// 	return ""
-		// }
-		return `(${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)})`;
-	}
-	protected override traverse_MemberExpression(node: jsep.MemberExpression): string {
-		return `${this.traverse_node(node.object)}.${this.traverse_node(node.property)}`;
-	}
+	// protected override traverse_LogicalExpression(node: jsep.LogicalExpression): string {
+	// 	// || or &&
+	// 	// if(node.right.type == 'Identifier'){
+	// 	// 	this.set_error(`cannot have identifier after ${node.operator}`)
+	// 	// 	return ""
+	// 	// }
+	// 	return `(${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)})`;
+	// }
+	// protected override traverse_MemberExpression(node: jsep.MemberExpression): string {
+	// 	return `${this.traverse_node(node.object)}.${this.traverse_node(node.property)}`;
+	// }
 	protected traverse_UnaryExpression(node: jsep.UnaryExpression): string {
 		if (node.operator === ATTRIBUTE_PREFIX) {
 			let argument = node.argument;
@@ -528,9 +528,9 @@ export class FunctionGenerator extends BaseTraverser {
 		}
 	}
 
-	protected override traverse_Literal(node: jsep.Literal): string {
-		return `${node.raw}`; // 5 or 'string' (raw will include quotes)
-	}
+	// protected override traverse_Literal(node: jsep.Literal): string {
+	// 	return `${node.raw}`; // 5 or 'string' (raw will include quotes)
+	// }
 
 	protected traverse_Identifier(node: jsep.Identifier): string | undefined {
 		const identifier_first_char = node.name[0];

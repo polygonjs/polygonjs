@@ -1,4 +1,4 @@
-import {DataTexture} from 'three/src/textures/DataTexture';
+import {DataTexture} from 'three';
 
 QUnit.test('cop/color simple', async (assert) => {
 	const COP = window.COP;

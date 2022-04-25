@@ -1,4 +1,4 @@
-import {Matrix4} from 'three/src/math/Matrix4';
+import {Matrix4} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 
 QUnit.test('geo obj simple', async (assert) => {

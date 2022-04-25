@@ -8,6 +8,7 @@ import INPUT_POS_BASIC_VERTEX from './SDFGradient/inputPosBasic.vert.glsl';
 import TWO_INPUTS_BASIC_VERTEX from './SDFGradient/twoInputsBasic.vert.glsl';
 import ALPHA_FRAGMENT from './SDFGradient/alpha.frag.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 export function createRequiredNodesForSDFGradientGlNode(node: SDFGradientGlNode) {
 	const subnetOutput1 = node.createNode('subnetOutput');
@@ -36,18 +37,34 @@ QUnit.test('gl SDFGradient simple', async (assert) => {
 	assert.ok(materialBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(materialBasicBuilder1, renderer);
 	assert.notOk(materialBasicBuilder1.assemblerController()?.compileRequired(), 'compiled is required');
-	assert.equal(material.vertexShader, NO_INPUT_EMPTY_VERTEX, 'no input empty vertex');
-	assert.equal(material.fragmentShader, DEFAULT_FRAGMENT, 'default fragment');
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(NO_INPUT_EMPTY_VERTEX),
+		'no input empty vertex'
+	);
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(DEFAULT_FRAGMENT),
+		'default fragment'
+	);
 
 	const SDFSphere1 = SDFGradient1.createNode('SDFSphere');
 	SDFSphere1.setInput(0, subnetInput1);
 	subnetOutput1.setInput(0, SDFSphere1);
 	await RendererUtils.compile(materialBasicBuilder1, renderer);
-	assert.equal(material.vertexShader, NO_INPUT_BASIC_VERTEX, 'no input basic vertex');
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(NO_INPUT_BASIC_VERTEX),
+		'no input basic vertex'
+	);
 
 	SDFGradient1.setInput(0, globals1, 'position');
 	await RendererUtils.compile(materialBasicBuilder1, renderer);
-	assert.equal(material.vertexShader, INPUT_POS_BASIC_VERTEX, 'input pos basic vertex');
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(INPUT_POS_BASIC_VERTEX),
+		'input pos basic vertex'
+	);
 
 	SDFGradient1.p.inputsCount.set(1);
 	SDFGradient1.setInputType(0, GlConnectionPointType.VEC2);
@@ -60,12 +77,16 @@ QUnit.test('gl SDFGradient simple', async (assert) => {
 	SDFSphere1.setInput(0, add1);
 	await RendererUtils.compile(materialBasicBuilder1, renderer);
 
-	assert.equal(material.vertexShader, TWO_INPUTS_BASIC_VERTEX, 'two inputs basic vertex');
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(TWO_INPUTS_BASIC_VERTEX),
+		'two inputs basic vertex'
+	);
 
 	output1.setInput('alpha', SDFGradient1, 'sdf');
 	await RendererUtils.compile(materialBasicBuilder1, renderer);
 
-	assert.equal(material.fragmentShader, ALPHA_FRAGMENT, 'alpha fragment');
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(ALPHA_FRAGMENT), 'alpha fragment');
 
 	RendererUtils.dispose();
 });

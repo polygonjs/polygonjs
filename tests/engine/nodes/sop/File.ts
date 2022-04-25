@@ -1,6 +1,6 @@
 import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/operations/sop/Hierarchy';
-import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Mesh} from 'three';
+import {BufferGeometry} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {GeometryFormat} from '../../../../src/core/loader/Geometry';
 import {Poly} from '../../../../src/engine/Poly';

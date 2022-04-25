@@ -1,4 +1,4 @@
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {BufferGeometry} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 
 async function withFile(path: string) {

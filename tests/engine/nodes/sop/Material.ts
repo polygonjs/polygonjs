@@ -1,12 +1,12 @@
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
+import {Mesh} from 'three';
+import {Material} from 'three';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
-import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
+import {ShaderLib} from 'three';
+import {UniformsUtils} from 'three';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
 const LAMBERT_UNIFORMS = UniformsUtils.clone(ShaderLib.lambert.uniforms);

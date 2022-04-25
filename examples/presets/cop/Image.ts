@@ -1,4 +1,4 @@
-import {sRGBEncoding, LinearEncoding} from 'three/src/constants';
+import {sRGBEncoding, LinearEncoding} from 'three';
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {ImageCopNode} from '../../../src/engine/nodes/cop/Image';
 import {PolyDictionary} from '../../../src/types/GlobalTypes';

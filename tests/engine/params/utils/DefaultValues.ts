@@ -1,8 +1,8 @@
 import {ParamType} from '../../../../src/engine/poly/ParamType';
-import {Vector2} from 'three/src/math/Vector2';
-import {Vector3} from 'three/src/math/Vector3';
-import {Vector4} from 'three/src/math/Vector4';
-import {Color} from 'three/src/math/Color';
+import {Vector2} from 'three';
+import {Vector3} from 'three';
+import {Vector4} from 'three';
+import {Color} from 'three';
 
 async function ensure_default_value<T extends ParamType>(
 	assert: Assert,

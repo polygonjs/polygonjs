@@ -1,6 +1,6 @@
-import {Mesh} from 'three/src/objects/Mesh';
-import {LOD} from 'three/src/objects/LOD';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Mesh} from 'three';
+import {LOD} from 'three';
+import {BufferGeometry} from 'three';
 
 QUnit.test('LOD simple', async (assert) => {
 	const geo1 = window.geo1;

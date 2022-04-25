@@ -1,5 +1,5 @@
 import {TransformTargetType} from '../../../../src/core/Transform';
-import {Matrix4} from 'three/src/math/Matrix4';
+import {Matrix4} from 'three';
 import {TransformObjectMode} from '../../../../src/engine/operations/sop/Transform';
 
 QUnit.test('transform reset simple', async (assert) => {

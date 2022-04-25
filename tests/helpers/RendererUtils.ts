@@ -1,13 +1,13 @@
-import {Vector2} from 'three/src/math/Vector2';
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {Scene} from 'three/src/scenes/Scene';
-import {Mesh} from 'three/src/objects/Mesh';
-import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
+import {Vector2} from 'three';
+import {WebGLRenderer} from 'three';
+import {Scene} from 'three';
+import {Mesh} from 'three';
+import {PerspectiveCamera} from 'three';
 import {BaseBuilderMatNodeType} from '../../src/engine/nodes/mat/_BaseBuilder';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
 import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
-import {BoxBufferGeometry} from 'three/src/geometries/BoxGeometry';
-import {Material} from 'three/src/materials/Material';
+import {BoxBufferGeometry} from 'three';
+import {Material} from 'three';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
 
 interface RendererConfig {

@@ -1,6 +1,6 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ShaderPass} from '../../../../src/modules/three/examples/jsm/postprocessing/ShaderPass';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import {ShaderMaterial} from 'three';
 import {HorizontalBlurShader} from '../../../../src/modules/three/examples/jsm/shaders/HorizontalBlurShader';
 import {VerticalBlurShader} from '../../../../src/modules/three/examples/jsm/shaders/VerticalBlurShader';
 import {UnrealBloomPass} from '../../../../src/modules/three/examples/jsm/postprocessing/UnrealBloomPass';

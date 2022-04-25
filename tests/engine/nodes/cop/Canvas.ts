@@ -1,4 +1,4 @@
-import {sRGBEncoding} from 'three/src/constants';
+import {sRGBEncoding} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 

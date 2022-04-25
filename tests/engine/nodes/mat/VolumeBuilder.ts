@@ -19,6 +19,7 @@ import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {ShaderMaterialWithCustomMaterials} from '../../../../src/core/geometry/Material';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -38,8 +39,8 @@ QUnit.test('volume builder simple', async (assert) => {
 	const output1: OutputGlNode = volume_builder1.node('output1')! as OutputGlNode;
 
 	await RendererUtils.compile(volume_builder1, renderer);
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.default.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.default.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.default.frag));
 	assert.deepEqual(
 		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
 		Object.keys(VOLUME_UNIFORMS).sort()
@@ -51,16 +52,16 @@ QUnit.test('volume builder simple', async (assert) => {
 	output1.setInput('density', constant1, ConstantGlNode.OUTPUT_NAME);
 	// output1.p.color.set([1, 0, 0.5]);
 	await RendererUtils.compile(volume_builder1, renderer);
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.minimal.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.minimal.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.minimal.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.minimal.frag));
 
 	const vec3ToFloat1 = volume_builder1.createNode('vec3ToFloat');
 	output1.setInput('density', vec3ToFloat1, 'y');
 	vec3ToFloat1.setInput(0, globals1, 'position');
 
 	await RendererUtils.compile(volume_builder1, renderer);
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.position.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.position.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.position.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.position.frag));
 
 	RendererUtils.dispose();
 });
@@ -101,8 +102,8 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 		assert.ok(vec3_param);
 		const material = new_volume1.material as ShaderMaterialWithCustomMaterials;
 		await RendererUtils.compile(new_volume1, renderer);
-		assert.equal(material.fragmentShader, volume1Material.fragmentShader);
-		assert.equal(material.vertexShader, volume1Material.vertexShader);
+		assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(volume1Material.fragmentShader));
+		assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(volume1Material.vertexShader));
 
 		// float param callback
 		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);

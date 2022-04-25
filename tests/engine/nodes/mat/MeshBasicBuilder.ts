@@ -1,5 +1,5 @@
-import {UniformsUtils} from 'three/src/renderers/shaders/UniformsUtils';
-import {ShaderLib} from 'three/src/renderers/shaders/ShaderLib';
+import {UniformsUtils} from 'three';
+import {ShaderLib} from 'three';
 
 import {GlobalsGlNode} from '../../../../src/engine/nodes/gl/Globals';
 import {OutputGlNode} from '../../../../src/engine/nodes/gl/Output';
@@ -47,11 +47,12 @@ import {create_required_nodes_for_ifThen_gl_node} from '../gl/IfThen';
 import {create_required_nodes_for_forLoop_gl_node} from '../gl/ForLoop';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
-// import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+// import {ShaderMaterial} from 'three';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -88,8 +89,8 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	const output1: OutputGlNode = mesh_basic1.node('output1')! as OutputGlNode;
 
 	await RendererUtils.compile(mesh_basic1, renderer);
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.default.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.default.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.default.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.default.frag));
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), BASIC_UNIFORM_NAMES);
 
 	const constant1 = mesh_basic1.createNode('constant');
@@ -99,14 +100,14 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	// output1.p.color.set([1, 0, 0.5]);
 	await RendererUtils.compile(mesh_basic1, renderer);
 	// await mesh_basic1.compute();
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.minimal.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.minimal.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.minimal.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.minimal.frag));
 	output1.setInput('color', globals1, 'position');
 
 	await RendererUtils.compile(mesh_basic1, renderer);
 	// await mesh_basic1.compute();
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.position.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.position.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.position.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.position.frag));
 
 	const vec3ToFloat1 = mesh_basic1.createNode('vec3ToFloat');
 	const float_to_vec3_1 = mesh_basic1.createNode('floatToVec3');
@@ -119,8 +120,8 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	// await mesh_basic1.compute();
 
 	//assert.equal(material.lights, false);
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.positionXZ.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.positionXZ.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.positionXZ.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.positionXZ.frag));
 
 	// add frame dependency
 	const float_to_vec3_2 = mesh_basic1.createNode('floatToVec3');
@@ -210,10 +211,14 @@ QUnit.test(
 		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
-		assert.equal(material.vertexShader, TEST_SHADER_LIB.attribInVertex.vert, 'TEST_SHADER_LIB.attribInVertex.vert');
 		assert.equal(
-			material.fragmentShader,
-			TEST_SHADER_LIB.attribInVertex.frag,
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(TEST_SHADER_LIB.attribInVertex.vert),
+			'TEST_SHADER_LIB.attribInVertex.vert'
+		);
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(TEST_SHADER_LIB.attribInVertex.frag),
 			'TEST_SHADER_LIB.attribInVertex.frag'
 		);
 
@@ -221,26 +226,26 @@ QUnit.test(
 		output1.setInput('color', float_to_vec31);
 		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.equal(
-			material.vertexShader,
-			TEST_SHADER_LIB.attribInFragment.vert,
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(TEST_SHADER_LIB.attribInFragment.vert),
 			'TEST_SHADER_LIB.attribInFragment.vert'
 		);
 		assert.equal(
-			material.fragmentShader,
-			TEST_SHADER_LIB.attribInFragment.frag,
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(TEST_SHADER_LIB.attribInFragment.frag),
 			'TEST_SHADER_LIB.attribInFragment.frag'
 		);
 		// remove uv from position, to have it declared ONLY to the fragment shader
 		output1.setInput('position', null);
 		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.equal(
-			material.vertexShader,
-			TEST_SHADER_LIB.attribInFragmentOnly.vert,
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(TEST_SHADER_LIB.attribInFragmentOnly.vert),
 			'TEST_SHADER_LIB.attribInFragmentOnly.vert'
 		);
 		assert.equal(
-			material.fragmentShader,
-			TEST_SHADER_LIB.attribInFragmentOnly.frag,
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(TEST_SHADER_LIB.attribInFragmentOnly.frag),
 			'TEST_SHADER_LIB.attribInFragmentOnly.frag'
 		);
 		RendererUtils.dispose();
@@ -282,8 +287,16 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThen.vert, 'vertex 1');
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThen.frag, 'fragment ');
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.IfThen.vert),
+		'vertex 1'
+	);
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.IfThen.frag),
+		'fragment '
+	);
 
 	// now add a node that would create a function
 	const rotate1 = ifThen1.createNode('rotate');
@@ -292,8 +305,16 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.IfThenRotate.vert, 'vertex 2');
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.IfThenRotate.frag, 'fragment 2');
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.IfThenRotate.vert),
+		'vertex 2'
+	);
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.IfThenRotate.frag),
+		'fragment 2'
+	);
 
 	RendererUtils.dispose();
 });
@@ -327,8 +348,8 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.ForLoop.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.ForLoop.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.ForLoop.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.ForLoop.frag));
 	RendererUtils.dispose();
 });
 
@@ -361,8 +382,8 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.Subnet.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.Subnet.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.Subnet.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.Subnet.frag));
 
 	RendererUtils.dispose();
 });
@@ -394,8 +415,8 @@ QUnit.test('mesh basic builder with subnet without input', async (assert) => {
 	assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
-	assert.equal(material.vertexShader, TEST_SHADER_LIB.SubnetNoInput.vert);
-	assert.equal(material.fragmentShader, TEST_SHADER_LIB.SubnetNoInput.frag);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.SubnetNoInput.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.SubnetNoInput.frag));
 
 	RendererUtils.dispose();
 });
@@ -436,13 +457,13 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	assert.equal(
-		material.vertexShader,
-		TEST_SHADER_LIB.SubnetNoInputWithAttrib.vert,
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.SubnetNoInputWithAttrib.vert),
 		'TEST_SHADER_LIB.SubnetNoInputWithAttrib.vert'
 	);
 	assert.equal(
-		material.fragmentShader,
-		TEST_SHADER_LIB.SubnetNoInputWithAttrib.frag,
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.SubnetNoInputWithAttrib.frag),
 		'TEST_SHADER_LIB.SubnetNoInputWithAttrib.frag'
 	);
 
@@ -459,13 +480,13 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 	await RendererUtils.compile(mesh_basic1, renderer);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 	assert.equal(
-		material.vertexShader,
-		TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.vert,
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.vert),
 		'TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.vert'
 	);
 	assert.equal(
-		material.fragmentShader,
-		TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.frag,
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.frag),
 		'TEST_SHADER_LIB.SubnetNoInputWithAttribOneOut.frag'
 	);
 
@@ -510,8 +531,11 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 		const material = new_mesh_basic1.material;
 		await RendererUtils.compile(new_mesh_basic1, renderer);
 
-		assert.equal(material.fragmentShader, mesh_basic1Material.fragmentShader);
-		assert.equal(material.vertexShader, mesh_basic1Material.vertexShader);
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(mesh_basic1Material.fragmentShader)
+		);
+		assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(mesh_basic1Material.vertexShader));
 
 		// float param callback
 		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);

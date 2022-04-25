@@ -1,6 +1,6 @@
-import {Matrix4} from 'three/src/math/Matrix4';
-import {Mesh} from 'three/src/objects/Mesh';
-import {BufferGeometry} from 'three/src/core/BufferGeometry';
+import {Matrix4} from 'three';
+import {Mesh} from 'three';
+import {BufferGeometry} from 'three';
 import {CoreSleep} from '../../../../../src/core/Sleep';
 
 QUnit.test('geo obj display flag off does not cook', async (assert) => {

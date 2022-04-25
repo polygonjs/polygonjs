@@ -1,4 +1,4 @@
-import {Vector3} from 'three/src/math/Vector3';
+import {Vector3} from 'three';
 import {SolverSopNode} from '../../../../src/engine/nodes/sop/Solver';
 import {BooleanOperation} from '../../../../src/engine/operations/sop/Boolean';
 

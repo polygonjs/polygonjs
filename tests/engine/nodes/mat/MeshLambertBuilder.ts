@@ -7,6 +7,7 @@ import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MeshLambertBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshLambertBuilder';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
@@ -45,8 +46,14 @@ QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 		assert.ok(vec3_param);
 		const material = new_mesh_lambert1.material;
 		await RendererUtils.compile(new_mesh_lambert1, renderer);
-		assert.equal(material.fragmentShader, mesh_lambert1Material.fragmentShader);
-		assert.equal(material.vertexShader, mesh_lambert1Material.vertexShader);
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(mesh_lambert1Material.fragmentShader)
+		);
+		assert.equal(
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(mesh_lambert1Material.vertexShader)
+		);
 
 		// float param callback
 		assert.equal(MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_float_param.value, 0);

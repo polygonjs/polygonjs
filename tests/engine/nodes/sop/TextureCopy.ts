@@ -1,5 +1,5 @@
-import {Mesh} from 'three/src/objects/Mesh';
-import {Texture} from 'three/src/textures/Texture';
+import {Mesh} from 'three';
+import {Texture} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 

@@ -1,4 +1,4 @@
-import {Object3D} from 'three/src/core/Object3D';
+import {Object3D} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 
 QUnit.test('sop/objectProperties simple', async (assert) => {

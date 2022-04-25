@@ -7,6 +7,7 @@ import {BuilderCopNode} from '../../../../src/engine/nodes/cop/Builder';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
+import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 function create_required_nodes(node: BuilderCopNode) {
 	const output1 = node.createNode('output');
@@ -136,8 +137,14 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 			assert.ok(float_param, 'float param does not exist');
 			assert.ok(vec3_param, 'vec3 param does not exist');
 			const material = new_builder1.texture_material;
-			assert.equal(material.fragmentShader, builder1.texture_material.fragmentShader);
-			assert.equal(material.vertexShader, builder1.texture_material.vertexShader);
+			assert.equal(
+				GLSLHelper.compress(material.fragmentShader),
+				GLSLHelper.compress(builder1.texture_material.fragmentShader)
+			);
+			assert.equal(
+				GLSLHelper.compress(material.vertexShader),
+				GLSLHelper.compress(builder1.texture_material.vertexShader)
+			);
 
 			// float param callback
 			assert.equal(material.uniforms.v_POLY_param_float_param.value, 0);

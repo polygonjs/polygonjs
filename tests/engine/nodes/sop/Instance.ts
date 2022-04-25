@@ -1,4 +1,4 @@
-import {InstancedBufferGeometry} from 'three/src/core/InstancedBufferGeometry';
+import {InstancedBufferGeometry} from 'three';
 import {InstanceSopNode} from '../../../../src/engine/nodes/sop/Instance';
 
 export function createRequiredNodes(node: InstanceSopNode) {

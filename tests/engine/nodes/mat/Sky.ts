@@ -1,5 +1,5 @@
-import {Mesh} from 'three/src/objects/Mesh';
-import {Material} from 'three/src/materials/Material';
+import {Mesh} from 'three';
+import {Material} from 'three';
 
 QUnit.test('mat sky simple', async (assert) => {
 	const MAT = window.MAT;

@@ -42,15 +42,13 @@ export abstract class BaseTraverser {
 		}
 	}
 
-	protected abstract traverse_CallExpression(node: jsep.CallExpression): string | undefined; //{
-
 	protected traverse_BinaryExpression(node: jsep.BinaryExpression): string {
 		return `${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)}`;
 	}
-	protected traverse_LogicalExpression(node: jsep.LogicalExpression): string {
-		// || or &&
-		return `${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)}`;
-	}
+	// protected traverse_LogicalExpression(node: jsep.LogicalExpression): string {
+	// 	// || or &&
+	// 	return `${this.traverse_node(node.left)} ${node.operator} ${this.traverse_node(node.right)}`;
+	// }
 	protected traverse_MemberExpression(node: jsep.MemberExpression): string {
 		return `${this.traverse_node(node.object)}.${this.traverse_node(node.property)}`;
 	}
@@ -79,11 +77,12 @@ export abstract class BaseTraverser {
 		}
 		return traversed_args.join(' + ');
 	}
-	protected abstract traverse_UnaryExpression(node: jsep.UnaryExpression): string; //{
 
 	protected traverse_Literal(node: jsep.Literal): string {
 		return `${node.raw}`; // 5 or 'string' (raw will include quotes)
 	}
 
-	protected abstract traverse_Identifier(node: jsep.Identifier): string | undefined; //{
+	protected abstract traverse_Identifier(node: jsep.Identifier): string | undefined;
+	protected abstract traverse_CallExpression(node: jsep.CallExpression): string | undefined;
+	protected abstract traverse_UnaryExpression(node: jsep.UnaryExpression): string;
 }

@@ -1,4 +1,4 @@
-import {Material} from 'three/src/materials/Material';
+import {Material} from 'three';
 import {Reflector} from '../../../../src/modules/three/examples/jsm/objects/Reflector';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 

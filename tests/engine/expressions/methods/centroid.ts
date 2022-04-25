@@ -1,4 +1,4 @@
-import {Box3} from 'three/src/math/Box3';
+import {Box3} from 'three';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {TextSopNode} from '../../../../src/engine/nodes/sop/Text';

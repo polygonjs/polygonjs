@@ -17,6 +17,9 @@ function fix_glsl_files(srcPath) {
         // console.log(dest_path_js);
         if (fs.existsSync(dest_path_js)) {
             fs.renameSync(dest_path_js, new_dest_path);
+            // replace `module.exports = ` by `export default `
+            var content = fs.readFileSync(new_dest_path, 'utf-8').replace("module.exports = ", "export default ");
+            fs.writeFileSync(new_dest_path, content);
         }
         else {
             console.error("!!! ".concat(dest_path_js, " not found"));
