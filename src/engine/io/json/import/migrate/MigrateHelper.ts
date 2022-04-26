@@ -9,12 +9,12 @@ import {SopTypeFile, SopTypeFileMulti} from '../../../../poly/registers/nodes/ty
 import {NodeJsonExporterData} from '../../export/Node';
 
 const ACTOR_NEW_TYPES: PolyDictionary<string> = {
-	onEventchildattributeupdated: 'OnChildAttributeUpdate',
-	onEventmanualtrigger: 'OnManualTrigger',
-	onEventobjectattributeupdated: 'OnObjectAttributeUpdate',
-	oneventobjectclicked: 'OnObjectClick',
-	oneventobjecthovered: 'OnObjectHover',
-	oneventtick: 'OnTick',
+	onEventChildAttributeUpdated: 'OnChildAttributeUpdate',
+	onEventManualTrigger: 'OnManualTrigger',
+	onEventObjectAttributeUpdated: 'OnObjectAttributeUpdate',
+	onEventObjectClicked: 'OnObjectClick',
+	onEventObjectHovered: 'OnObjectHover',
+	onEventTick: 'OnTick',
 };
 
 function migrateCop(nodeData: NodeJsonExporterData) {
