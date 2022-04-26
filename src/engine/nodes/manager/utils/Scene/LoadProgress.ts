@@ -7,7 +7,7 @@ export function RootLoadProgressParamConfig<TBase extends Constructor>(Base: TBa
 	return class Mixin extends Base {
 		// audio
 		/** @param when the scene loads, nodes that match the mask will update the progress bar as they cook */
-		nodesMask = ParamConfig.STRING('*/file* */image* */envMap*', {
+		nodesMask = ParamConfig.STRING('*/OUT* */image* */envMap*', {
 			cook: false,
 			separatorBefore: true,
 		});
