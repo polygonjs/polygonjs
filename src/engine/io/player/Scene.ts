@@ -196,9 +196,13 @@ export class ScenePlayerImporter {
 
 		// mount
 		const domElement = this._domElement();
+		let createViewer = false;
+		if (this.options.createViewer != null) {
+			createViewer = this.options.createViewer;
+		}
 		// - if domElement is given, but createViewer is not specified, we assume that the intent is to create the viewer and mount it.
 		// - if domElement is null but createViewer is true, we create the viewer, but it will not be mounted.
-		if (domElement || this.options.createViewer != false) {
+		if (domElement || createViewer) {
 			const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;
 			if (!cameraNode) {
 				console.warn('no main camera found, viewer is not mounted');
