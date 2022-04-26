@@ -14,7 +14,7 @@ import {PolySceneSerializer} from './utils/Serializer';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
 import {ObjectsController} from './utils/ObjectsController';
 import {ReferencesController} from './utils/ReferencesController';
-import {onTimeTickHook, TimeController} from './utils/TimeController';
+import {onTimeTickHook, TimeController, TimeControllerUpdateTimeOptions} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
 import {ViewersRegister} from './utils/ViewersRegister';
 import {SceneWebGLController} from './utils/WebGLController';
@@ -259,6 +259,20 @@ export class PolyScene {
 	 */
 	pause() {
 		this.timeController.pause();
+	}
+	/**
+	 * increments the time
+	 *
+	 */
+	incrementTime(options?: TimeControllerUpdateTimeOptions) {
+		this.timeController.incrementTime(options);
+	}
+	/**
+	 * increments the time if the scene is playing()
+	 *
+	 */
+	incrementTimeIfPlaying(options?: TimeControllerUpdateTimeOptions) {
+		this.timeController.incrementTimeIfPlaying(options);
 	}
 
 	//

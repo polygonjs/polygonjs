@@ -33,6 +33,10 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 		}
 	}
 	resolution(): Number2 {
+		function _resolutionFromHTMLVideoElement(video: HTMLVideoElement): Number2 {
+			return [video.videoWidth, video.videoHeight];
+		}
+
 		if (this._content) {
 			const image = this._content.image;
 			if (image) {
@@ -45,16 +49,13 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 				) {
 					return [image.width, image.height];
 				}
-
+				// check if video
+				if (image instanceof HTMLVideoElement) {
+					return _resolutionFromHTMLVideoElement(image);
+				}
 				// check if image data
 				if (CoreType.isNumber(image.width) && CoreType.isNumber(image.height)) {
 					return [image.width, image.height];
-				}
-
-				// check if video
-				if (image instanceof HTMLVideoElement) {
-					const video = image as HTMLVideoElement;
-					return [video.videoWidth, video.videoHeight];
 				}
 
 				// if just an object like {width: 2, height: 2}
@@ -62,6 +63,10 @@ export class TextureContainer extends TypedContainer<NodeContext.COP> {
 			}
 			const source = this._content.source;
 			if (source) {
+				if (source instanceof HTMLVideoElement) {
+					return _resolutionFromHTMLVideoElement(source);
+				}
+
 				const data = source.data;
 				if (data && CoreType.isNumber(data.width) && CoreType.isNumber(data.height)) {
 					return [data.width, data.height];

@@ -1,5 +1,3 @@
-import {ModuleName} from '../../poly/registers/modules/Common';
-
 export enum SelfContainedFileName {
 	EXPORT_MANIFEST = 'scene/export_manifest.json',
 	// SCENE_MANIFEST = 'scene/scene_manifest.json',
@@ -14,7 +12,7 @@ export enum SelfContainedFileName {
 	POSTER = 'images/poster.png',
 }
 export type JsFilesManifest = {
-	modules: ModuleName[];
+	modules: string[];
 };
 export interface SelfContainedManifestContent {
 	source: string;

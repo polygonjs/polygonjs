@@ -1,3 +1,5 @@
+import {TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT} from '../../../../src/engine/scene/utils/TimeController';
+
 QUnit.skip('a param sets its node to timedependent and back', async (assert) => {});
 
 // assert !geo1.is_time_dependent()
@@ -58,7 +60,8 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	// sets the node as dirty
 	assert.ok(!box1.isDirty());
 	const delta = 1000 / 60;
-	scene.timeController.incrementTime(delta);
+	scene.timeController.setDelta(delta);
+	scene.timeController.incrementTime(TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT);
 	assert.ok(!box1.isDirty());
 
 	size.set('$F+1');
@@ -66,7 +69,8 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	assert.ok(box1.states.timeDependent.active());
 	await box1.compute();
 	assert.ok(!box1.isDirty());
-	scene.timeController.incrementTime(delta);
+	scene.timeController.setDelta(delta);
+	scene.timeController.incrementTime(TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT);
 	assert.ok(box1.isDirty());
 
 	size.set('17');
@@ -75,7 +79,8 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	assert.ok(!box1.states.timeDependent.active());
 	await box1.compute();
 	assert.ok(!box1.isDirty());
-	scene.timeController.incrementTime(delta);
+	scene.timeController.setDelta(delta);
+	scene.timeController.incrementTime(TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT);
 	assert.ok(!box1.isDirty());
 });
 

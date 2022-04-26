@@ -1,4 +1,5 @@
 import {SetUtils} from '../../../core/SetUtils';
+import {CoreType} from '../../../core/Type';
 // import {SceneDataManifestImporter} from '../manifest/import/SceneData';
 import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
 import {BaseNodeType} from '../../nodes/_Base';
@@ -27,7 +28,7 @@ export interface LoadSceneOptions {
 export type LoadScene = (options: LoadSceneOptions) => void;
 
 interface ImportCommonOptions extends LoadSceneOptions {
-	domElement?: HTMLElement;
+	domElement?: HTMLElement | string;
 	sceneName: string;
 	configureScene?: ConfigureSceneCallback;
 	assetUrls?: string[];
@@ -194,12 +195,14 @@ export class ScenePlayerImporter {
 		this._scene = await importer.scene();
 
 		// mount
-		if (this.options.createViewer) {
+		const domElement = this._domElement();
+		// - if domElement is given, but createViewer is not specified, we assume that the intent is to create the viewer and mount it.
+		// - if domElement is null but createViewer is true, we create the viewer, but it will not be mounted.
+		if (domElement || this.options.createViewer != false) {
 			const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;
 			if (!cameraNode) {
 				console.warn('no main camera found, viewer is not mounted');
 			} else {
-				const domElement = this.options.domElement;
 				this._viewer = cameraNode.createViewer({
 					element: domElement,
 					viewerProperties: {autoRender: false},
@@ -217,8 +220,22 @@ export class ScenePlayerImporter {
 
 		return this._scene;
 	}
+	private _domElement(): HTMLElement | undefined {
+		const domElement = this.options.domElement;
+		if (domElement) {
+			if (CoreType.isString(domElement)) {
+				const element = document.getElementById(domElement);
+				if (element) {
+					return element;
+				}
+			} else {
+				return domElement;
+			}
+		}
+	}
+
 	private _dispatchEvent(eventName: PolyEventName) {
-		const elements = [this.options.domElement, document];
+		const elements = [this._domElement(), document];
 		const createEvent = (customEventName: string) => {
 			return new CustomEvent(customEventName, {
 				detail: {

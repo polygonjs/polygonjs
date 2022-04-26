@@ -2,9 +2,9 @@ import {Vector2} from 'three';
 import {ViewerControlsController} from './utils/ControlsController';
 import {TypedViewer} from './_Base';
 import {BaseThreejsCameraObjNodeType} from '../nodes/obj/_BaseCamera';
-import {Clock} from 'three';
 import {Poly} from '../Poly';
 import {ViewerLogoController} from './utils/logo/ViewerLogoController';
+import {TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT} from '../scene/utils/TimeController';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -21,8 +21,6 @@ export interface ThreejsViewerProperties {
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _requestAnimationFrameId: number | undefined;
 	private _doRender: boolean = true;
-	private _clock = new Clock();
-	private _delta: number = 0;
 
 	private _animateMethod: () => void = this.animate.bind(this);
 	protected override _canvasIdPrefix() {
@@ -154,15 +152,14 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 	animate() {
 		if (this._doRender) {
-			const delta = this._clock.getDelta();
-			this._delta = delta;
+			const delta = this._scene.timeController.updateClockDelta();
 			this._requestAnimationFrameId = requestAnimationFrame(this._animateMethod);
 			this._runOnBeforeTickCallbacks(delta);
 			// this._scene.eventsDispatcher.connectionTriggerDispatcher.reset();
-			this._scene.timeController.incrementTimeIfPlaying(this._delta);
+			this._scene.timeController.incrementTimeIfPlaying(TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT);
 			this._runOnAfterTickCallbacks(delta);
-			this.render(this._delta);
-			this.controlsController()?.update(this._delta);
+			this.render(delta);
+			this.controlsController()?.update(delta);
 		}
 	}
 
@@ -178,7 +175,6 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 	render(delta: number) {
 		if (this._canvas) {
-			const delta = this._delta;
 			const renderController = this._cameraNode.renderController();
 			const renderer = renderController.getRenderer(this._canvas);
 			if (!renderer) {

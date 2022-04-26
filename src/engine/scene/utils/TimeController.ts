@@ -1,13 +1,8 @@
 import {PolyScene} from '../PolyScene';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
-// import {SceneEventType} from './events/SceneEventsController';
-// import {EventContext} from './events/_BaseEventsController';
-import {
-	SCENE_EVENT_PLAY_EVENT_CONTEXT,
-	SCENE_EVENT_PAUSE_EVENT_CONTEXT,
-	// SCENE_EVENT_TICK_EVENT_CONTEXT,
-} from './events/SceneEventsController';
+import {Clock} from 'three';
+import {SCENE_EVENT_PLAY_EVENT_CONTEXT, SCENE_EVENT_PAUSE_EVENT_CONTEXT} from './events/SceneEventsController';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
@@ -15,6 +10,13 @@ const FPS = 60.0;
 export type onTimeTickHook = (delta: number) => void;
 export type onPlayingStateChangeCallback = () => void;
 // const performance = Poly.performance.performanceManager();
+
+export interface TimeControllerUpdateTimeOptions {
+	updateClockDelta?: boolean;
+}
+export const TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT: TimeControllerUpdateTimeOptions = {
+	updateClockDelta: false,
+};
 
 type onTimeTickCallbacksMap = Map<string, onTimeTickHook>;
 export class TimeController {
@@ -26,6 +28,7 @@ export class TimeController {
 	private _maxFrame = 600;
 	private _maxFrameLocked = false;
 	private _playing: boolean = false;
+	private _clock = new Clock();
 	private _delta: number = 0;
 
 	// private _PLAY_EVENT_CONTEXT: EventContext<SceneEvent> | undefined;
@@ -46,6 +49,16 @@ export class TimeController {
 	}
 	get graphNode() {
 		return this._graphNode;
+	}
+
+	updateClockDelta() {
+		return (this._delta = this._clock.getDelta());
+	}
+	delta() {
+		return this._delta;
+	}
+	setDelta(delta: number) {
+		this._delta = delta;
 	}
 
 	frame(): number {
@@ -143,17 +156,20 @@ export class TimeController {
 	setFrameToStart() {
 		this.setFrame(TimeController.START_FRAME, true);
 	}
-	incrementTimeIfPlaying(delta: number) {
+	incrementTimeIfPlaying(options?: TimeControllerUpdateTimeOptions) {
 		if (this._playing) {
 			if (!this.scene.root().areChildrenCooking()) {
-				this.incrementTime(delta);
+				this.incrementTime(options);
 			}
 		}
 	}
-	incrementTime(delta: number) {
+	incrementTime(options?: TimeControllerUpdateTimeOptions) {
+		if (!(options?.updateClockDelta == false)) {
+			this.updateClockDelta();
+		}
+
 		if (this._realtimeState) {
 			// const performance_now = performance.now();
-			this._delta = delta;
 			const newTime = this._timeUniform.value + this._delta;
 			// this._prev_performance_now = performance_now;
 			this.setTime(newTime, false);
