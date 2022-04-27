@@ -24,10 +24,10 @@ import {BaseNodeType} from '../nodes/_Base';
 import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
 import {ParamsInitData} from '../nodes/utils/io/IOController';
 import {Constructor, valueof} from '../../types/GlobalTypes';
-import {Scene} from 'three';
+import {Scene, WebGLRenderer} from 'three';
 import {CoreString} from '../../core/String';
 import {Object3D} from 'three';
-import {SceneRenderersRegister} from './utils/SceneRenderersRegister';
+import {SceneRenderersRegister, RegisterRendererOptions} from './utils/SceneRenderersRegister';
 import {Poly} from '../Poly';
 
 type SceneBatchUpdateCallback = () => void | Promise<void>;
@@ -274,7 +274,13 @@ export class PolyScene {
 	incrementTimeIfPlaying(options?: TimeControllerUpdateTimeOptions) {
 		this.timeController.incrementTimeIfPlaying(options);
 	}
-
+	/**
+	 * registers a renderer
+	 *
+	 */
+	registerRenderer(renderer: WebGLRenderer, options?: RegisterRendererOptions) {
+		return this.renderersRegister.registerRenderer(renderer, options);
+	}
 	//
 	//
 	// serializer

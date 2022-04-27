@@ -16,6 +16,9 @@ enum WebGLContext {
 	EXPERIMENTAL_WEBGL2 = 'experimental-webgl2',
 }
 let nextRendererId: number = 0;
+interface RendererIdOptions {
+	printWarning: boolean;
+}
 export class RenderersController {
 	// private _firstRenderer: WebGLRenderer | null = null;
 	// private _lastRenderer: WebGLRenderer | null = null;
@@ -58,19 +61,29 @@ export class RenderersController {
 	createWebGLRenderer(params: WebGLRendererParameters) {
 		const renderer = new WebGLRenderer(params);
 
-		this._assignIdToRenderer(renderer);
+		this.assignIdToRenderer(renderer);
 
 		this.printDebugMessage([`create renderer:`, params]);
 		return renderer;
 	}
 
-	private _assignIdToRenderer(renderer: WebGLRenderer) {
+	assignIdToRenderer(renderer: WebGLRenderer) {
+		if (this.rendererId(renderer, {printWarning: false})) {
+			// we do not re-assign the id if there is already one
+			return;
+		}
+
 		const nextId = (nextRendererId += 1);
 		(renderer as POLYWebGLRenderer)._polygonId = nextId;
 	}
-	rendererId(renderer: WebGLRenderer) {
+	rendererId(renderer: WebGLRenderer, options?: RendererIdOptions) {
 		const id = (renderer as POLYWebGLRenderer)._polygonId;
-		if (id == null) {
+
+		let printWarning = true;
+		if (options?.printWarning == false) {
+			printWarning = false;
+		}
+		if (id == null && printWarning == true) {
 			console.error('renderer has no _polygonId');
 			return;
 		}

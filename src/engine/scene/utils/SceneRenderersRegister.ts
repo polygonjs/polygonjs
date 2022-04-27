@@ -4,6 +4,9 @@ import {Poly} from '../../Poly';
 
 type SceneRenderersRegisterCallback = (value: WebGLRenderer) => void;
 
+export interface RegisterRendererOptions {
+	assignId: boolean;
+}
 export class SceneRenderersRegister {
 	private _renderersById: Map<number, WebGLRenderer> = new Map();
 	private _registerTimeByRenderer: Map<WebGLRenderer, number> = new Map();
@@ -12,7 +15,15 @@ export class SceneRenderersRegister {
 
 	constructor(protected scene: PolyScene) {}
 
-	registerRenderer(renderer: WebGLRenderer) {
+	registerRenderer(renderer: WebGLRenderer, options?: RegisterRendererOptions) {
+		let assignId = true;
+		if (options?.assignId == false) {
+			assignId = false;
+		}
+		if (assignId) {
+			Poly.renderersController.assignIdToRenderer(renderer);
+		}
+
 		const id = Poly.renderersController.rendererId(renderer);
 		if (id == null) {
 			return;
