@@ -13,13 +13,21 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 	}
 
 	protected async _getLoader(options: TextureLoadOptions) {
+		return KTX2TextureLoader._getLoader(this._node);
+	}
+
+	private static _loader: KTX2Loader | undefined;
+	static async _getLoader(node: BaseNodeType) {
+		return (this._loader = this._loader || (await this._createLoader(node)));
+	}
+	static async _createLoader(node: BaseNodeType) {
 		const loader = new KTX2Loader(this.loadingManager);
 		const root = Poly.libs.root();
 		const KTX2Path = Poly.libs.KTX2Path();
 		if (root || KTX2Path) {
 			const decoderPath = `${root || ''}${KTX2Path || ''}/`;
 
-			if (this._node) {
+			if (node) {
 				const files = ['basis_transcoder.js', 'basis_transcoder.wasm'];
 				await CoreBaseLoader._loadMultipleBlobGlobal({
 					files: files.map((file) => {
@@ -27,7 +35,7 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 							fullUrl: `${decoderPath}${file}`,
 						};
 					}),
-					node: this._node,
+					node: node,
 					error: 'failed to load basis libraries. Make sure to install them to load .basis files',
 				});
 			}
@@ -36,7 +44,7 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 		} else {
 			(loader as any).setTranscoderPath(undefined);
 		}
-		const renderer = await this._node.scene().renderersRegister.waitForRenderer();
+		const renderer = await node.scene().renderersRegister.waitForRenderer();
 		if (renderer) {
 			loader.detectSupport(renderer);
 		} else {
