@@ -180,7 +180,12 @@ export class ParticlesSystemGpuComputeController {
 			this._usedTexturesSize.x = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.x);
 			this._usedTexturesSize.y = Math.min(nearest_power_of_two, this.node.pv.maxTexturesSize.y);
 		} else {
-			if (!(MathUtils.isPowerOfTwo(this.node.pv.texturesSize.x) && MathUtils.isPowerOfTwo(this.node.pv.texturesSize.y))) {
+			if (
+				!(
+					MathUtils.isPowerOfTwo(this.node.pv.texturesSize.x) &&
+					MathUtils.isPowerOfTwo(this.node.pv.texturesSize.y)
+				)
+			) {
 				this.node.states.error.set('texture size must be a power of 2');
 				return;
 			}
@@ -511,6 +516,8 @@ export class ParticlesSystemGpuComputeController {
 		}
 	}
 	private _restartSimulation() {
+		this.node.debugMessage(`restartSimulation`);
+
 		// this._lastSimulatedTime = undefined;
 
 		this._createTextureRenderTargets();

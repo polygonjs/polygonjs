@@ -189,6 +189,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this.scene().frame() == this.pv.startFrame;
 	}
 
+	private _coreGroupSet: boolean = false;
 	override async cook(inputContents: CoreGroup[]) {
 		this.gpuController.setRestartNotRequired();
 		const coreGroup = inputContents[0];
@@ -197,6 +198,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		const isOnStartFrame = this.isOnStartFrame();
 
 		if (isOnStartFrame) {
+			this._coreGroupSet = false;
 			this.gpuController.resetParticleGroups();
 		}
 
@@ -215,7 +217,9 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		this.gpuController.restartSimulationIfRequired();
 		this.gpuController.computeSimulationIfRequired(0);
-		if (isOnStartFrame) {
+		if (!this._coreGroupSet) {
+			this._coreGroupSet = true;
+			this.debugMessage('particles:setCoreGroup');
 			this.setCoreGroup(coreGroup);
 		} else {
 			this.cookController.endCook();
