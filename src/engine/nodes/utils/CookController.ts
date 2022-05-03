@@ -123,7 +123,7 @@ export class NodeCookController<NC extends NodeContext> {
 
 			// setTimeout(this.node.containerController.notifyRequesters.bind(this.node.containerController), 0);
 			this.node.containerController.notifyRequesters();
-			this._run_on_cook_complete_hooks();
+			this._runOnCookCompleteHooks();
 		}
 	}
 
@@ -186,44 +186,45 @@ export class NodeCookController<NC extends NodeContext> {
 	// HOOK
 	//
 	//
-	private _on_cook_complete_hook_names: string[] | undefined;
-	private _on_cook_complete_hooks: OnCookCompleteHook[] | undefined;
+	private _onCookCompleteHookNames: string[] | undefined;
+	private _onCookCompleteHooks: OnCookCompleteHook[] | undefined;
 	registerOnCookEnd(callbackName: string, callback: OnCookCompleteHook) {
-		this._on_cook_complete_hook_names = this._on_cook_complete_hook_names || [];
-		this._on_cook_complete_hooks = this._on_cook_complete_hooks || [];
-		this._on_cook_complete_hook_names.push(callbackName);
-		this._on_cook_complete_hooks.push(callback);
+		this._onCookCompleteHookNames = this._onCookCompleteHookNames || [];
+		this._onCookCompleteHooks = this._onCookCompleteHooks || [];
+		this._onCookCompleteHookNames.push(callbackName);
+		this._onCookCompleteHooks.push(callback);
 	}
 	private _clearHooks() {
-		if (!this._on_cook_complete_hook_names || !this._on_cook_complete_hooks) {
+		if (!this._onCookCompleteHookNames || !this._onCookCompleteHooks) {
 			return;
 		}
-		for (let hookName of this._on_cook_complete_hook_names) {
+		for (let hookName of this._onCookCompleteHookNames) {
 			this.deregisterOnCookEnd(hookName);
 		}
 	}
 	deregisterOnCookEnd(callbackName: string) {
-		if (!this._on_cook_complete_hook_names || !this._on_cook_complete_hooks) {
+		if (!this._onCookCompleteHookNames || !this._onCookCompleteHooks) {
 			return;
 		}
-		const index = this._on_cook_complete_hook_names?.indexOf(callbackName);
-		this._on_cook_complete_hook_names.splice(index, 1);
-		this._on_cook_complete_hooks.splice(index, 1);
-		if (this._on_cook_complete_hook_names.length == 0) {
-			this._on_cook_complete_hook_names = undefined;
+		const index = this._onCookCompleteHookNames?.indexOf(callbackName);
+		this._onCookCompleteHookNames.splice(index, 1);
+		this._onCookCompleteHooks.splice(index, 1);
+		if (this._onCookCompleteHookNames.length == 0) {
+			this._onCookCompleteHookNames = undefined;
 		}
-		if (this._on_cook_complete_hooks.length == 0) {
-			this._on_cook_complete_hooks = undefined;
+		if (this._onCookCompleteHooks.length == 0) {
+			this._onCookCompleteHooks = undefined;
 		}
 	}
-	private _run_on_cook_complete_hooks() {
-		if (this._on_cook_complete_hooks) {
-			for (let hook of this._on_cook_complete_hooks) {
+	private _runOnCookCompleteHooks() {
+		if (this._onCookCompleteHooks) {
+			const hooks = [...this._onCookCompleteHooks];
+			for (let hook of hooks) {
 				hook();
 			}
 		}
 	}
 	onCookEndCallbackNames() {
-		return this._on_cook_complete_hook_names;
+		return this._onCookCompleteHookNames;
 	}
 }

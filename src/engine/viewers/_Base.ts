@@ -30,6 +30,10 @@ export interface HTMLElementWithViewer<C extends BaseCameraObjNodeType> extends 
 	Poly: PolyEngine;
 }
 
+/**
+ * Base class to create a viewer. It is used for the [Threejs viewer](/docs/api/ThreejsViewer) as well as the [Mapbox Viewer](https://github.com/polygonjs/plugin-mapbox)
+ *
+ */
 export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	// protected _display_scene: Scene;
 	// protected _canvas: HTMLCanvasElement | undefined;
@@ -46,6 +50,11 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	}
 
 	protected _mounted = false;
+	/**
+	 * mounts the viewer onto an element
+	 *
+	 *
+	 */
 	mount(element: HTMLElement) {
 		this._domElement = element as HTMLElementWithViewer<C>;
 		this._domElement.viewer = this;
@@ -53,6 +62,11 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		this._domElement.Poly = Poly;
 		this._mounted = true;
 	}
+	/**
+	 * unmounts the viewer
+	 *
+	 *
+	 */
 	unmount() {
 		if (!this._domElement) {
 			return;
@@ -87,6 +101,11 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		canvas.style.height = '100%';
 		return canvas;
 	}
+	/**
+	 * return the canvas and create one if none yet
+	 *
+	 *
+	 */
 	canvas() {
 		return (this._canvas = this._canvas || this._createCanvas());
 	}
@@ -137,6 +156,11 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		return this._scene;
 	}
 
+	/**
+	 * return the camera node the viewer was created with
+	 *
+	 *
+	 */
 	cameraNode() {
 		return this._cameraNode;
 	}
@@ -147,6 +171,11 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		return this._id;
 	}
 
+	/**
+	 * disposes the viewer
+	 *
+	 *
+	 */
 	dispose() {
 		this._scene.viewersRegister.unregisterViewer(this);
 		this.eventsController().dispose();
@@ -185,42 +214,93 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	protected _onAfterRenderCallbacks: Array<ViewerRenderCallback> = [];
 
 	// onBeforeTick
+	/**
+	 * registers a BeforeTick callback. BeforeTick callbacks are run before updating the frame (and therefore before any time dependent node has changed)
+	 *
+	 */
 	registerOnBeforeTick(callbackName: string, callback: ViewerTickCallback, options: ViewerCallbackOptions = {}) {
 		this._registerCallback(callbackName, callback, this.registeredBeforeTickCallbacks(), options);
 	}
+	/**
+	 * unregisters BeforeTick callback
+	 *
+	 */
 	unRegisterOnBeforeTick(callbackName: string) {
 		this._unregisterCallback(callbackName, this._onBeforeTickCallbacksMap);
 	}
+	/**
+	 * Returns the list registered BeforeTick callback names
+	 *
+	 */
 	registeredBeforeTickCallbacks() {
 		return (this._onBeforeTickCallbacksMap = this._onBeforeTickCallbacksMap || new Map());
 	}
 	// onAfterTick
+	/**
+	 * registers AfterTick callback. AfterTick callbacks are run after updating the frame (and therefore after any time dependent node has changed)
+	 *
+	 */
 	registerOnAfterTick(callbackName: string, callback: ViewerTickCallback, options: ViewerCallbackOptions = {}) {
 		this._registerCallback(callbackName, callback, this.registeredAfterTickCallbacks(), options);
 	}
+	/**
+	 * unregisters AfterTick callback
+	 *
+	 */
 	unRegisterOnAfterTick(callbackName: string) {
 		this._unregisterCallback(callbackName, this._onAfterTickCallbacksMap);
 	}
+	/**
+	 * Returns the list registered AfterTick callback names
+	 *
+	 */
 	registeredAfterTickCallbacks() {
 		return (this._onAfterTickCallbacksMap = this._onAfterTickCallbacksMap || new Map());
 	}
 	// onBeforeRender
+	/**
+	 * registers a BeforeRender callback. BeforeRender callbacks are run before the frame is rendered
+	 *
+	 */
 	registerOnBeforeRender(callbackName: string, callback: ViewerRenderCallback, options: ViewerCallbackOptions = {}) {
 		this._registerCallback(callbackName, callback, this.registeredBeforeRenderCallbacks(), options);
 	}
+	/**
+	 * unregisters BeforeRender callback
+	 *
+	 */
 	unRegisterOnBeforeRender(callbackName: string) {
 		this._unregisterCallback(callbackName, this._onBeforeRenderCallbacksMap);
 	}
+	/**
+	 * Returns the list registered BeforeRender callback names
+	 *
+	 */
 	registeredBeforeRenderCallbacks() {
 		return (this._onBeforeRenderCallbacksMap = this._onBeforeRenderCallbacksMap || new Map());
 	}
 	// onAfterRender
-	registerOnAfterRender(callbackName: string, callback: ViewerRenderCallback, options: ViewerCallbackOptions = {}) {
+	/**
+	 * registers a AfterRender callback. AfterRender callbacks are run after the frame is rendered
+	 *
+	 */ registerOnAfterRender(
+		callbackName: string,
+		callback: ViewerRenderCallback,
+		options: ViewerCallbackOptions = {}
+	) {
 		this._registerCallback(callbackName, callback, this.registeredAfterRenderCallbacks(), options);
 	}
+	/**
+	 * unregisters AfterRender callback
+	 *
+	 */
 	unRegisterOnAfterRender(callbackName: string) {
 		this._unregisterCallback(callbackName, this._onAfterRenderCallbacksMap);
 	}
+	/**
+	 * Returns the list AfterRender BeforeRender callback names
+	 *
+	 */
 	registeredAfterRenderCallbacks() {
 		return (this._onAfterRenderCallbacksMap = this._onAfterRenderCallbacksMap || new Map());
 	}

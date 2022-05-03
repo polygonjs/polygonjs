@@ -1,29 +1,16 @@
-import {SetUtils} from '../../../core/SetUtils';
 import {CoreType} from '../../../core/Type';
-// import {SceneDataManifestImporter} from '../manifest/import/SceneData';
+import {OnProgressArguments, OnProgressUpdateCallback} from '../../nodes/manager/utils/Scene/LoadProgress';
 import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
-import {BaseNodeType} from '../../nodes/_Base';
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
 import {BaseViewerType} from '../../viewers/_Base';
 import {PolyEventsDispatcher, PolyEventName} from '../common/EventsDispatcher';
-// import {AssetsPreloader} from '../assets/PreLoader';
 import {PROGRESS_RATIO} from '../common/Progress';
 import {SceneJsonExporterData} from '../json/export/Scene';
 import {SceneJsonImporter, ConfigureSceneCallback} from '../json/import/Scene';
-// import {ManifestContent} from '../manifest/import/SceneData';
-
-interface OnProgressArguments {
-	scene: PolyScene;
-	triggerNode?: BaseNodeType;
-	cookedNodes: BaseNodeType[];
-	remainingNodes: BaseNodeType[];
-}
-
-type ProgressBarUpdateCallback = (progressRatio: number, args: OnProgressArguments) => void;
 
 export interface LoadSceneOptions {
-	onProgress?: ProgressBarUpdateCallback;
+	onProgress?: OnProgressUpdateCallback;
 }
 export type LoadScene = (options: LoadSceneOptions) => void;
 
@@ -154,36 +141,9 @@ export class ScenePlayerImporter {
 	}
 
 	private async _watchNodesProgress(scene: PolyScene) {
-		const nodes = await scene.root().loadProgress.resolvedNodes();
-		const nodesCount = nodes.length;
-		if (nodesCount == 0) {
-			this._onNodesCookProgress(1, {scene, triggerNode: undefined, cookedNodes: [], remainingNodes: []});
-		}
-		const remainingNodes = SetUtils.fromArray(nodes);
-		const cookedNodes = new Set<BaseNodeType>();
-		const callbackName = 'ScenePlayerImporter';
-		for (let node of nodes) {
-			// we force nodes to compute
-			// in case they do not have a display flag on, or are not connected
-			// as it would get the progress bar stuck
-			node.compute();
-			node.cookController.registerOnCookEnd(callbackName, () => {
-				if (!cookedNodes.has(node)) {
-					cookedNodes.add(node);
-					remainingNodes.delete(node);
-
-					const nodesCookProgress = cookedNodes.size / nodesCount;
-					this._onNodesCookProgress(nodesCookProgress, {
-						scene,
-						triggerNode: node,
-						cookedNodes: SetUtils.toArray(cookedNodes),
-						remainingNodes: SetUtils.toArray(remainingNodes),
-					});
-
-					node.cookController.deregisterOnCookEnd(callbackName);
-				}
-			});
-		}
+		scene.root().loadProgress.watchNodesProgress((nodesCookProgress: number, args: OnProgressArguments) => {
+			this._onNodesCookProgress(nodesCookProgress, args);
+		});
 	}
 	async loadScene() {
 		const configureScene = this.options.configureScene;

@@ -18,6 +18,10 @@ export interface ThreejsViewerProperties {
 	autoRender?: boolean;
 }
 
+/**
+ * threejs viewers are created by the [PerspectiveCamera](/docs/nodes/obj/perspectivecamera) and [OrthographicCamera](/docs/nodes/obj/orthographiccamera) object nodes. They inherit from [TypedViewer](/docs/api/TypedViewer).
+ *
+ */
 export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 	private _requestAnimationFrameId: number | undefined;
 	private _doRender: boolean = true;
@@ -39,6 +43,11 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 
 		// this._container.style.height = '100%'; // this should be app specific
 	}
+	/**
+	 * mounts the viewer onto an element
+	 *
+	 *
+	 */
 	override mount(element: HTMLElement) {
 		super.mount(element);
 		this._domElement?.appendChild(this.canvas());
@@ -60,6 +69,11 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this.activate();
 	}
 
+	/**
+	 * disposes the viewer
+	 *
+	 *
+	 */
 	override dispose() {
 		this.setAutoRender(false);
 		this.scene().viewersRegister.unregisterViewer(this);
@@ -140,6 +154,11 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		this.animate();
 	}
 
+	/**
+	 * setAutoRender to false will stop the rendering. This can be useful if you know that nothing has changed in the scene, or if the renderer is currently not visible.
+	 *
+	 *
+	 */
 	setAutoRender(state = true) {
 		this._doRender = state;
 		if (this._doRender) {
@@ -192,6 +211,11 @@ export class ThreejsViewer extends TypedViewer<BaseThreejsCameraObjNodeType> {
 		}
 	}
 
+	/**
+	 * returns the current renderer
+	 *
+	 *
+	 */
 	renderer() {
 		if (this._canvas) {
 			return this._cameraNode.renderController().renderer(this._canvas);

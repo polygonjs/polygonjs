@@ -162,7 +162,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		}
 	}
 	private _callbackNameForNode(node: BaseNodeType) {
-		return `owner-${this.graphNodeId()}-target-${node.graphNodeId()}`;
+		return `[event/nodeCook] nodeCook=${this.graphNodeId()} target=${node.graphNodeId()}`;
 	}
 
 	private _dispatchedFirstNodeCooked: boolean = false;
