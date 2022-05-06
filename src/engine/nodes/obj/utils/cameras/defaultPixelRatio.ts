@@ -1,5 +1,5 @@
-import {CoreUserAgent} from '../../../../../core/UserAgent';
+// import {CoreUserAgent} from '../../../../../core/UserAgent';
 
-export function defaultPixelRatio() {
-	return CoreUserAgent.isMobile() ? 1 : Math.max(2, window.devicePixelRatio);
-}
+// export function defaultPixelRatio() {
+// 	return CoreUserAgent.isMobile() ? 1 : Math.max(2, window.devicePixelRatio);
+// }

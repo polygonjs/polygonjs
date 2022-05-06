@@ -1,15 +1,15 @@
-import {BaseCameraObjNodeType} from '../nodes/obj/_BaseCamera';
-import {ViewerCamerasController} from './utils/CamerasController';
-import {ViewerControlsController} from './utils/ControlsController';
-import {ViewerEventsController} from './utils/EventsController';
-
-import {ViewerWebGLController} from './utils/WebglController';
-import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/ControlsController';
-import {Object3D} from 'three';
+import {ViewerCamerasController} from './utils/ViewerCamerasController';
+import {ViewerControlsController} from './utils/ViewerControlsController';
+import {ViewerEventsController} from './utils/ViewerEventsController';
+import {ViewerWebGLController} from './utils/ViewerWebglController';
+import {ViewerAudioController} from './utils/ViewerAudioController';
+// import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/CameraControlsController';
+import {Camera, Object3D, Raycaster} from 'three';
 import {PolyScene} from '../scene/PolyScene';
-import {ViewerAudioController} from './utils/AudioController';
 import {Poly, PolyEngine} from '../Poly';
 import {WebGLRenderer} from 'three';
+import {TypedCameraControlsEventNode} from '../nodes/event/_BaseCameraControls';
+import {RaycasterForBVH} from '../operations/sop/utils/Bvh/three-mesh-bvh';
 
 const HOVERED_CLASS_NAME = 'hovered';
 
@@ -24,29 +24,55 @@ interface ViewerCallbackContainer<T extends ViewerBaseCallback> {
 	options: ViewerCallbackOptions;
 }
 type ViewerCallbacksMap<T extends ViewerBaseCallback> = Map<string, ViewerCallbackContainer<T>>;
-export interface HTMLElementWithViewer<C extends BaseCameraObjNodeType> extends HTMLElement {
+export interface HTMLElementWithViewer<C extends Camera> extends HTMLElement {
 	scene: PolyScene;
 	viewer: TypedViewer<C>;
 	Poly: PolyEngine;
+}
+type UpdateCameraAspectCallback = (aspect: number) => void;
+
+export interface CreateViewerOptions {
+	canvas?: HTMLCanvasElement;
+	autoRender?: boolean;
+}
+export interface TypedViewerOptions<C extends Camera> extends CreateViewerOptions {
+	camera: C;
+	scene: PolyScene;
+	updateCameraAspect: UpdateCameraAspectCallback;
 }
 
 /**
  * Base class to create a viewer. It is used for the [Threejs viewer](/docs/api/ThreejsViewer) as well as the [Mapbox Viewer](https://github.com/polygonjs/plugin-mapbox)
  *
  */
-export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
+export abstract class TypedViewer<C extends Camera> {
 	// protected _display_scene: Scene;
 	// protected _canvas: HTMLCanvasElement | undefined;
 	protected _domElement: HTMLElementWithViewer<C> | undefined;
 	protected _active: boolean = false;
 	private static _nextViewerId = 0;
-	private _id: Readonly<number>;
+	private _id: Readonly<string>;
 	protected _renderObjectOverride: Object3D | undefined;
-	protected _scene: PolyScene;
 	protected _canvas: HTMLCanvasElement | undefined;
-	constructor(protected _cameraNode: C) {
-		this._id = TypedViewer._nextViewerId++;
-		this._scene = this._cameraNode.scene();
+	protected _camera: C;
+	protected _scene: PolyScene;
+	public readonly updateCameraAspect: UpdateCameraAspectCallback;
+	protected _doRender: boolean = true;
+	protected _controlsNode: TypedCameraControlsEventNode<any> | undefined;
+	public readonly raycaster = this.createRaycaster();
+	constructor(options: TypedViewerOptions<C>) {
+		this._id = TypedViewer._nextId();
+		this._camera = options.camera;
+		this._scene = options.scene;
+		this._canvas = options.canvas;
+		if (options.autoRender != null) {
+			this._doRender = options.autoRender;
+		}
+		this.updateCameraAspect = options.updateCameraAspect;
+		this.scene().viewersRegister.registerViewer(this);
+	}
+	private static _nextId() {
+		return `${TypedViewer._nextViewerId++}`;
 	}
 
 	protected _mounted = false;
@@ -58,8 +84,9 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	mount(element: HTMLElement) {
 		this._domElement = element as HTMLElementWithViewer<C>;
 		this._domElement.viewer = this;
-		this._domElement.scene = this._cameraNode.scene();
+		this._domElement.scene = this._scene;
 		this._domElement.Poly = Poly;
+		this.controlsController().mount();
 		this._mounted = true;
 	}
 	/**
@@ -83,15 +110,17 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		this._audioController?.unmount();
 
 		this._domElement.removeChild(this.canvas());
+		this.controlsController().unmount();
 
 		this._mounted = false;
 	}
-	protected _canvasIdPrefix() {
+	static _canvasIdPrefix() {
 		return 'TypedViewer';
 	}
-	private _createCanvas() {
+	static createCanvas(id?: string) {
+		id = id || TypedViewer._nextId();
 		const canvas = document.createElement('canvas');
-		canvas.id = `${this._canvasIdPrefix()}_${this._id}`;
+		canvas.id = `${this._canvasIdPrefix()}_${id}`;
 		canvas.style.display = 'block';
 		canvas.style.outline = 'none';
 		// we add 100% to the width and height
@@ -101,13 +130,17 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		canvas.style.height = '100%';
 		return canvas;
 	}
+
+	controlsNode() {
+		return this._controlsNode;
+	}
 	/**
 	 * return the canvas and create one if none yet
 	 *
 	 *
 	 */
 	canvas() {
-		return (this._canvas = this._canvas || this._createCanvas());
+		return (this._canvas = this._canvas || TypedViewer.createCanvas(this._id));
 	}
 
 	setRenderObjectOverride(object?: Object3D | null) {
@@ -132,7 +165,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	camerasController(): ViewerCamerasController {
 		return (this._camerasController = this._camerasController || new ViewerCamerasController(this));
 	}
-	protected _controlsController: ViewerControlsController | undefined;
+	protected _controlsController: ViewerControlsController<C> = new ViewerControlsController(this);
 	controlsController() {
 		return this._controlsController;
 	}
@@ -156,17 +189,23 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		return this._scene;
 	}
 
+	createRaycaster() {
+		const raycaster = new Raycaster() as RaycasterForBVH;
+		raycaster.firstHitOnly = true;
+		return raycaster;
+	}
+
 	/**
-	 * return the camera node the viewer was created with
+	 * return the camera the viewer was created with
 	 *
 	 *
 	 */
-	cameraNode() {
-		return this._cameraNode;
+	camera() {
+		return this._camera;
 	}
-	cameraControlsController(): ThreejsCameraControlsController | undefined {
-		return undefined;
-	}
+	// cameraControlsController(): ThreejsCameraControlsController | undefined {
+	// 	return undefined;
+	// }
 	id() {
 		return this._id;
 	}
@@ -179,6 +218,7 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	dispose() {
 		this._scene.viewersRegister.unregisterViewer(this);
 		this.eventsController().dispose();
+		this.controlsController().unmount();
 		if (!this._domElement) {
 			return;
 		}
@@ -196,6 +236,18 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 		this.domElement()?.classList.add(HOVERED_CLASS_NAME);
 	}
 	markAsReady() {}
+
+	/**
+	 * sets auto render state. If falls, the viewer will not render.
+	 *
+	 *
+	 */
+	setAutoRender(state = true) {
+		this._doRender = state;
+	}
+	autoRenderState(): boolean {
+		return this._doRender;
+	}
 
 	//
 	//
@@ -374,4 +426,4 @@ export abstract class TypedViewer<C extends BaseCameraObjNodeType> {
 	}
 }
 
-export type BaseViewerType = TypedViewer<BaseCameraObjNodeType>;
+export type BaseViewerType = TypedViewer<Camera>;

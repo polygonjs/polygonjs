@@ -24,7 +24,7 @@ export class SceneJsonImporter {
 		return await importer.scene();
 	}
 
-	async scene(): Promise<PolyScene> {
+	scene(): PolyScene {
 		const scene = new PolyScene();
 		if (this._options) {
 			if (this._options.sceneName) {
@@ -54,8 +54,9 @@ export class SceneJsonImporter {
 			scene.setFrame(properties['frame'] || TimeController.START_FRAME);
 
 			// scene.time_controller.set_fps(properties['fps'] || 30);
-			if (properties['mainCameraNodePath']) {
-				scene.camerasController.setMainCameraNodePath(properties['mainCameraNodePath']);
+			const mainCameraPath = properties['mainCameraNodePath'] || properties['mainCameraPath'];
+			if (mainCameraPath) {
+				scene.camerasController.setMainCameraPath(mainCameraPath);
 			}
 		}
 
@@ -77,7 +78,7 @@ export class SceneJsonImporter {
 
 		this._resolve_operation_containers_with_path_param_resolve();
 
-		await scene.loadingController.markAsLoaded();
+		scene.loadingController.markAsLoaded();
 		if (this._options) {
 			if (this._options.nodeCookWatcher) {
 				this._options.nodeCookWatcher(scene);

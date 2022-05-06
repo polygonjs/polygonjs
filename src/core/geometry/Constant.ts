@@ -74,7 +74,7 @@ export function objectTypeFromConstructor(constructor: Function) {
 		case LOD:
 			return ObjectType.LOD;
 		default:
-			Poly.warn('object type not supported', constructor);
+			// Poly.warn('object type not supported', constructor);
 			return ObjectType.MESH;
 	}
 }

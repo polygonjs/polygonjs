@@ -39,9 +39,11 @@ export class UnrealBloomPostNode extends TypedPostProcessNode<UnrealBloomPass, U
 		return 'unrealBloom';
 	}
 
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
+		context.renderer.getSize(this._rendererSize);
 		const pass = new UnrealBloomPass({
-			resolution: new Vector2(context.resolution.x, context.resolution.y),
+			resolution: this._rendererSize,
 			strength: this.pv.strength,
 			radius: this.pv.radius,
 			threshold: this.pv.threshold,

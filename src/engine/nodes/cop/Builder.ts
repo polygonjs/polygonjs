@@ -90,8 +90,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private _texture_scene: Scene = new Scene();
 	private _texture_camera: Camera = new Camera();
 	private _render_target: WebGLRenderTarget | undefined;
-	private _data_texture_controller: DataTextureController | undefined;
-	private _renderer_controller: CopRendererController | undefined;
+	private _dataTextureController: DataTextureController | undefined;
+	private _rendererController: CopRendererController | undefined;
 
 	protected override _childrenControllerContext = NodeContext.GL;
 	override initializeNode() {
@@ -265,8 +265,8 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			return;
 		}
 
-		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
-		const renderer = await this._renderer_controller.renderer();
+		this._rendererController = this._rendererController || new CopRendererController(this);
+		const renderer = await this._rendererController.waitForRenderer();
 
 		const prev_target = renderer.getRenderTarget();
 		renderer.setRenderTarget(this._render_target);
@@ -284,10 +284,10 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				// this._data_texture = this._data_texture || this._create_data_texture(w, h);
 				// renderer.readRenderTargetPixels(this._render_target, 0, 0, w, h, this._data_texture.image.data);
 				// this._data_texture.needsUpdate = true;
-				this._data_texture_controller =
-					this._data_texture_controller ||
+				this._dataTextureController =
+					this._dataTextureController ||
 					new DataTextureController(DataTextureControllerBufferType.Float32Array);
-				const data_texture = this._data_texture_controller.from_render_target(renderer, this._render_target);
+				const data_texture = this._dataTextureController.from_render_target(renderer, this._render_target);
 
 				this.setTexture(data_texture);
 			}
@@ -303,7 +303,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private createRenderTargetIfRequired() {
 		if (!this._render_target || !this._renderTargetResolutionValid()) {
 			this._render_target = this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
-			this._data_texture_controller?.reset();
+			this._dataTextureController?.reset();
 		}
 	}
 	private _renderTargetResolutionValid() {

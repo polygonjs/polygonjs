@@ -69,8 +69,8 @@ export class ViewerEventsController {
 		}
 	}
 
-	cameraNode() {
-		return this.viewer.camerasController().cameraNode();
+	camera() {
+		return this.viewer.camera();
 	}
 	canvas() {
 		return this.viewer.canvas();
@@ -112,7 +112,7 @@ export class ViewerEventsController {
 		const eventContext: EventContext<Event> = {
 			viewer: this.viewer,
 			event: event,
-			cameraNode: this.cameraNode(),
+			// camera: this.camera(),
 		};
 		controller.processEvent(eventContext);
 	}

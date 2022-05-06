@@ -63,14 +63,10 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 	}
 
 	private _resolvedObjects: Object3D[] = [];
-
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
-		const pass = new OutlinePass(
-			new Vector2(context.resolution.x, context.resolution.y),
-			context.scene,
-			context.camera,
-			context.scene.children
-		);
+		context.renderer.getSize(this._rendererSize);
+		const pass = new OutlinePass(this._rendererSize, context.scene, context.camera, context.scene.children);
 		this.updatePass(pass);
 		return pass;
 	}

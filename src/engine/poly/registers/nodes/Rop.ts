@@ -2,7 +2,7 @@ import {CATEGORY_ROP} from './Category';
 
 import {CopNetworkRopNode} from '../../../nodes/rop/CopNetwork';
 import {CSS2DRendererRopNode} from '../../../nodes/rop/CSS2DRenderer';
-import {Css3DRendererRopNode} from '../../../nodes/rop/CSS3DRenderer';
+// import {CSS3DRendererRopNode} from '../../../nodes/rop/CSS3DRenderer';
 // networks
 import {ActorsNetworkRopNode} from '../../../nodes/rop/ActorsNetwork';
 import {AnimationsNetworkRopNode} from '../../../nodes/rop/AnimationsNetwork';
@@ -15,7 +15,7 @@ import {WebGLRendererRopNode} from '../../../nodes/rop/WebGLRenderer';
 
 export interface RopNodeChildrenMap {
 	CSS2DRenderer: CSS2DRendererRopNode;
-	CSS3DRenderer: Css3DRendererRopNode;
+	// CSS3DRenderer: CSS3DRendererRopNode;
 	WebGLRenderer: WebGLRendererRopNode;
 	// networks
 	actorsNetwork: ActorsNetworkRopNode;

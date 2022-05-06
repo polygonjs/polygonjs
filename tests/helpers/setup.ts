@@ -67,6 +67,7 @@ export function setupQUnit(qUnit: QUnit) {
 		const root = window.scene.root();
 		window.root = root;
 		window.perspective_camera1 = root.createNode('perspectiveCamera');
+		window.scene.camerasController.setMainCamera(window.perspective_camera1.object);
 		window.geo1 = root.createNode('geo');
 		window.MAT = root.createNode('materialsNetwork');
 		window.MAT.setName('MAT');

@@ -28,10 +28,10 @@ function onCreateHookPositionalAudio(node: PositionalAudioObjNode, cameraNode: P
 	let listener: AudioListenerObjNode | undefined = node.root().audioController.audioListeners()[0];
 	if (!listener) {
 		listener = node.root().createNode('audioListener');
-		const cameraNode = node.scene().mainCameraNode();
-		if (cameraNode) {
-			listener.setInput(0, cameraNode);
-		}
+		// const cameraNode = node.scene().mainCameraNode();
+		// if (cameraNode) {
+		// 	listener.setInput(0, cameraNode);
+		// }
 	}
 	return {null1, playInstrument1};
 }

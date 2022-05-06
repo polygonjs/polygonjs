@@ -5,7 +5,6 @@
  * This node can be useful when you want to use what a camera sees as a texture.
  *
  */
-import {Scene} from 'three';
 import {WebGLRenderTarget} from 'three';
 import {FloatType, HalfFloatType, RGBAFormat, NearestFilter, LinearFilter, ClampToEdgeWrapping} from 'three';
 import {TypedCopNode} from './_Base';
@@ -55,25 +54,22 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	private _texture_camera: OrthographicCamera | PerspectiveCamera | undefined;
-	private _texture_scene: Scene | undefined;
-	private _camera_node: TypedCameraObjNode<any, any> | undefined;
-	private _render_target: WebGLRenderTarget | undefined;
-	private _renderer_controller: CopRendererController | undefined;
-	private _data_texture_controller: DataTextureController | undefined;
+	private _textureCamera: OrthographicCamera | PerspectiveCamera | undefined;
+	private _cameraNode: TypedCameraObjNode<any, any> | undefined;
+	private _renderTarget: WebGLRenderTarget | undefined;
+	private _rendererController: CopRendererController | undefined;
+	private _dataTextureController: DataTextureController | undefined;
 
 	override async cook() {
-		this._texture_scene = this.scene().threejsScene();
-
-		this._camera_node = this.pv.camera.nodeWithContext(NodeContext.OBJ) as TypedCameraObjNode<any, any>;
+		this._cameraNode = this.pv.camera.nodeWithContext(NodeContext.OBJ) as TypedCameraObjNode<any, any>;
 		// Walker.find_node(<unknown>this as Node, this._param_camera)
-		if (this._camera_node && CAMERA_TYPES.includes(this._camera_node.type() as CameraNodeType)) {
-			this._texture_camera = this._camera_node.object as OrthographicCamera | PerspectiveCamera;
-			await this._camera_node.compute();
+		if (this._cameraNode && CAMERA_TYPES.includes(this._cameraNode.type() as CameraNodeType)) {
+			this._textureCamera = this._cameraNode.object as OrthographicCamera | PerspectiveCamera;
+			await this._cameraNode.compute();
 			// this.start_animate();
 			this.renderOnTarget();
 		} else {
-			this._texture_camera = undefined;
+			this._textureCamera = undefined;
 		}
 	}
 
@@ -84,34 +80,38 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	//
 	async renderOnTarget() {
 		await this.createRenderTargetIfRequired();
-		if (!(this._render_target && this._texture_scene && this._texture_camera)) {
+		if (!(this._renderTarget && this._textureCamera)) {
 			return;
 		}
 
-		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
-		const renderer = await this._renderer_controller.renderer();
+		this._rendererController = this._rendererController || new CopRendererController(this);
+		const renderer = await this._rendererController.waitForRenderer();
 
-		const prev_target = renderer.getRenderTarget();
-		renderer.setRenderTarget(this._render_target);
+		const prevTarget = renderer.getRenderTarget();
+		const prevEncoding = renderer.outputEncoding;
+		renderer.setRenderTarget(this._renderTarget);
+		renderer.outputEncoding = this.pv.encoding;
 		// this._texture_camera.updateMatrix();
 		// this._texture_camera.updateMatrixWorld();
 		// this._texture_camera.updateWorldMatrix(true, true);
 		// this._texture_camera.updateProjectionMatrix();
 		// this._texture_scene.updateWorldMatrix(true, true);
 		renderer.clear();
-		renderer.render(this._texture_scene, this._texture_camera);
-		renderer.setRenderTarget(prev_target);
+		renderer.render(this.scene().threejsScene(), this._textureCamera);
+		renderer.setRenderTarget(prevTarget);
+		renderer.outputEncoding = prevEncoding;
 
-		if (this._render_target.texture) {
+		if (this._renderTarget.texture) {
 			if (isBooleanTrue(this.pv.useCameraRenderer)) {
-				this.setTexture(this._render_target.texture);
+				this.setTexture(this._renderTarget.texture);
+				await this.textureParamsController.update(this._renderTarget.texture);
 			} else {
-				this._data_texture_controller =
-					this._data_texture_controller ||
+				this._dataTextureController =
+					this._dataTextureController ||
 					new DataTextureController(DataTextureControllerBufferType.Float32Array);
-				const data_texture = this._data_texture_controller.from_render_target(renderer, this._render_target);
-				await this.textureParamsController.update(data_texture);
-				this.setTexture(data_texture);
+				const dataTexture = this._dataTextureController.from_render_target(renderer, this._renderTarget);
+				await this.textureParamsController.update(dataTexture);
+				this.setTexture(dataTexture);
 			}
 		} else {
 			this.cookController.endCook();
@@ -119,18 +119,18 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	}
 
 	async renderTarget() {
-		return (this._render_target =
-			this._render_target || (await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y)));
+		return (this._renderTarget =
+			this._renderTarget || (await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y)));
 	}
 	private async createRenderTargetIfRequired() {
-		if (!this._render_target || !this._renderTargetResolutionValid()) {
-			this._render_target = await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
-			this._data_texture_controller?.reset();
+		if (!this._renderTarget || !this._renderTargetResolutionValid()) {
+			this._renderTarget = await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
+			this._dataTextureController?.reset();
 		}
 	}
 	private _renderTargetResolutionValid() {
-		if (this._render_target) {
-			const image = this._render_target.texture.image;
+		if (this._renderTarget) {
+			const image = this._renderTarget.texture.image;
 			if (image.width != this.pv.resolution.x || image.height != this.pv.resolution.y) {
 				return false;
 			} else {
@@ -142,10 +142,10 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	}
 
 	private async _createRenderTarget(width: number, height: number) {
-		if (this._render_target) {
-			const image = this._render_target.texture.image;
+		if (this._renderTarget) {
+			const image = this._renderTarget.texture.image;
 			if (image.width == width && image.height == height) {
-				return this._render_target;
+				return this._renderTarget;
 			}
 		}
 
@@ -156,10 +156,10 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		const magFilter = NearestFilter;
 
 		var renderTarget = new WebGLRenderTarget(width, height, {
-			wrapS: wrapS,
-			wrapT: wrapT,
-			minFilter: minFilter,
-			magFilter: magFilter,
+			wrapS,
+			wrapT,
+			minFilter,
+			magFilter,
 			format: RGBAFormat,
 			generateMipmaps: true,
 			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,

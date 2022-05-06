@@ -9,6 +9,7 @@ import {TypedNodePathParamValue, TypedParamPathParamValue} from '../../core/Walk
 import {Vector3} from 'three';
 import {SimpleParamJsonExporterData} from '../nodes/utils/io/IOController';
 import {DefaultOperationParams} from '../../core/operations/_Base';
+import {OnOperationRegisterCallback} from '../poly/registers/nodes/NodesRegister';
 
 export interface ConvertExportParamDataParams {
 	paramName: string;
@@ -26,6 +27,7 @@ export class BaseOperation<NC extends NodeContext> {
 		const c = this.constructor as typeof BaseOperation;
 		return c.type();
 	}
+	static onRegister: OnOperationRegisterCallback | undefined;
 	static context(): NodeContext {
 		console.error('operation has no node_context', this);
 		throw 'context requires override';

@@ -2,8 +2,11 @@ import {Constructor} from '../../../../../types/GlobalTypes';
 import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {RootManagerNode} from '../../Root';
-import {PolyScene} from '../../../../index_all';
+import {PolyScene} from '../../../../scene/PolyScene';
 import {SetUtils} from '../../../../../core/SetUtils';
+import {Poly} from '../../../../Poly';
+import {GeoObjNode} from '../../../obj/Geo';
+import {ArrayUtils} from '../../../../../core/ArrayUtils';
 
 export interface OnProgressArguments {
 	scene: PolyScene;
@@ -15,9 +18,8 @@ export type OnProgressUpdateCallback = (progressRatio: number, args: OnProgressA
 
 export function RootLoadProgressParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		// audio
 		/** @param when the scene loads, nodes that match the mask will update the progress bar as they cook */
-		nodesMask = ParamConfig.STRING('*/OUT* */image* */envMap*', {
+		nodesMask = ParamConfig.STRING('*/image* */envMap*', {
 			cook: false,
 			separatorBefore: true,
 		});
@@ -46,11 +48,39 @@ export class RootLoadProgressController {
 			await param.compute();
 		}
 		const mask = param.value;
-		const nodes = this.node.scene().nodesController.nodesFromMask(mask || '');
-		return nodes;
+		const scene = this.node.scene();
+		const nodes = scene.nodesController.nodesFromMask(mask || '');
+
+		return ArrayUtils.uniq(nodes.concat(await this._loadDisplayNodes()));
 	}
+	private async _loadDisplayNodes() {
+		const scene = this.node.scene();
+		// we also need to get the cameras at the obj level
+		const cameraNodeTypes = Poly.camerasRegister.registeredNodeTypes();
+		const cameraNodes = cameraNodeTypes.map((type) => scene.nodesByType(type)).flat();
+		// and we also need to get the displayed nodes
+		const objNodesWithDisplayNodeController = scene
+			.root()
+			.children()
+			.filter((node) => (node as GeoObjNode).displayNodeController != null)
+			.filter((node) => node.flags?.display?.active());
+		const displayNodes = ArrayUtils.compact(
+			objNodesWithDisplayNodeController.map((node) => (node as GeoObjNode).displayNodeController.displayNode())
+		);
+		const nodes = cameraNodes.concat(displayNodes);
+		const cameraCreatorNode = await this.cameraCreatorNode();
+		if (cameraCreatorNode) {
+			nodes.push(cameraCreatorNode);
+		}
+		return ArrayUtils.uniq(nodes);
+	}
+	public cameraCreatorNode() {
+		return this.node.mainCameraController.cameraCreatorNode();
+	}
+
 	async watchNodesProgress(callback: OnProgressUpdateCallback) {
 		const nodes = await this.resolvedNodes();
+
 		const nodesCount = nodes.length;
 		if (nodesCount == 0) {
 			callback(1, {scene: this.node.scene(), triggerNode: undefined, cookedNodes: [], remainingNodes: []});

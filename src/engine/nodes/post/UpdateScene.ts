@@ -21,6 +21,7 @@ class UpdateScenePostParamsConfig extends NodeParamsConfig {
 	objectsMask = ParamConfig.STRING('*', {
 		...PostParamOptions,
 		visibleIf: {reset: 0},
+		objectMask: true,
 	});
 	/** @param invertMask */
 	invertMask = ParamConfig.BOOLEAN(0, {
@@ -86,7 +87,7 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 		const pass = new UpdateScenePass({
 			scene: this.scene(),
 			reset: isBooleanTrue(this.pv.reset),
-			passToReset: this._passToReset(context.requester),
+			passToReset: this._passToReset(context),
 			objectsMask: this.pv.objectsMask,
 			invertMask: isBooleanTrue(this.pv.invertMask),
 			setMatteMaterial: isBooleanTrue(this.pv.setMatteMaterial),
@@ -103,13 +104,17 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 		pass.setVisible = isBooleanTrue(this.pv.setVisible);
 		pass.visible = isBooleanTrue(this.pv.visible);
 	}
-	private _passToReset(requester: BaseNodeType): UpdateScenePass | undefined {
+	private _passToReset(context: TypedPostNodeContext): UpdateScenePass | undefined {
 		const input2 = this.io.inputs.input(1);
 		if (!input2) {
 			return;
 		}
 		if (input2 instanceof UpdateScenePostNode) {
-			return input2.passesByRequester(requester);
+			const pass = context.composerController.passByNodeInBuildPassesProcess(input2) as
+				| UpdateScenePass
+				| undefined; //input2.passesByRequester(requester);
+			console.log(pass);
+			return pass;
 		}
 	}
 
@@ -118,7 +123,7 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 	}
 	private _printResolve() {
 		let firstPass: UpdateScenePass | undefined;
-		this._passesByRequesterId.forEach((pass) => {
+		this._passesByEffectsComposer.forEach((pass) => {
 			firstPass = firstPass || pass;
 		});
 		if (firstPass) {
@@ -131,7 +136,7 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 		node._resetMat();
 	}
 	private _resetMat() {
-		this._passesByRequesterId.forEach((pass) => {
+		this._passesByEffectsComposer.forEach((pass) => {
 			pass.resetChanges();
 		});
 	}

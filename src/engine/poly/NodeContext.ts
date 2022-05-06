@@ -75,13 +75,21 @@ export enum CameraNodeType {
 	PERSPECTIVE = 'perspectiveCamera',
 	ORTHOGRAPHIC = 'orthographicCamera',
 }
+export enum CameraSopNodeType {
+	CONTROLS = 'cameraControls',
+	CSS_RENDERER = 'cameraCSSRenderer',
+	FRAME_MODE = 'cameraFrameMode',
+	POST_PROCESS = 'cameraPostProcess',
+	RENDER_SCENE = 'cameraRenderScene',
+	RENDERER = 'cameraRenderer',
+}
 export const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
 export enum GlNodeType {
 	ATTRIBUTE = 'attribute',
 }
 
 export enum CameraControlsNodeType {
-	DEVICE_ORIENTATION = 'cameraDeviceOrientationControls',
+	// DEVICE_ORIENTATION = 'cameraDeviceOrientationControls',
 	MAP = 'cameraMapControls',
 	ORBIT = 'cameraOrbitControls',
 	FIRST_PERSON = 'firstPersonControls',
@@ -89,7 +97,7 @@ export enum CameraControlsNodeType {
 	MOBILE_JOYSTICK = 'mobileJoystickControls',
 }
 export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [
-	CameraControlsNodeType.DEVICE_ORIENTATION,
+	// CameraControlsNodeType.DEVICE_ORIENTATION,
 	CameraControlsNodeType.MAP,
 	CameraControlsNodeType.ORBIT,
 	CameraControlsNodeType.FIRST_PERSON,

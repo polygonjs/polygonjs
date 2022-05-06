@@ -35,16 +35,16 @@ export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
 				this._process_trigger_unsetClass.bind(this)
 			),
 			// controls
-			new EventConnectionPoint(
-				'createControls',
-				EventConnectionPointType.BASE,
-				this._process_trigger_createControls.bind(this)
-			),
-			new EventConnectionPoint(
-				'disposeControls',
-				EventConnectionPointType.BASE,
-				this._process_trigger_disposeControls.bind(this)
-			),
+			// new EventConnectionPoint(
+			// 	'createControls',
+			// 	EventConnectionPointType.BASE,
+			// 	this._process_trigger_createControls.bind(this)
+			// ),
+			// new EventConnectionPoint(
+			// 	'disposeControls',
+			// 	EventConnectionPointType.BASE,
+			// 	this._process_trigger_disposeControls.bind(this)
+			// ),
 		]);
 	}
 
@@ -69,14 +69,14 @@ export class ViewerEventNode extends TypedEventNode<ViewerParamsConfig> {
 			canvas.classList.remove(this.pv.className);
 		}
 	}
-	private _process_trigger_createControls(context: EventContext<Event>) {
-		this.scene().viewersRegister.traverseViewers((v) => {
-			v.controlsController()?.create_controls();
-		});
-	}
-	private _process_trigger_disposeControls(context: EventContext<Event>) {
-		this.scene().viewersRegister.traverseViewers((v) => {
-			v.controlsController()?.dispose_controls();
-		});
-	}
+	// private _process_trigger_createControls(context: EventContext<Event>) {
+	// 	this.scene().viewersRegister.traverseViewers((v) => {
+	// 		v.controlsController()?.create_controls();
+	// 	});
+	// }
+	// private _process_trigger_disposeControls(context: EventContext<Event>) {
+	// 	this.scene().viewersRegister.traverseViewers((v) => {
+	// 		v.controlsController()?.dispose_controls();
+	// 	});
+	// }
 }

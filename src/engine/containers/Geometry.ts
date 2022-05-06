@@ -170,7 +170,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 			return 0;
 		}
 	}
-	objectsData(): ObjectData[] {
+	objectsData(): Array<ObjectData> {
 		if (this._content) {
 			return this._content.objectsData();
 		} else {

@@ -357,7 +357,7 @@ export class TextureParamsController {
 		texture.needsUpdate = true;
 	}
 
-	private _renderer_controller: CopRendererController | undefined;
+	private _rendererController: CopRendererController | undefined;
 	private async _updateAnisotropy(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (!isBooleanTrue(pv.tanisotropy)) {
 			texture.anisotropy = 1;
@@ -380,8 +380,8 @@ export class TextureParamsController {
 		texture.needsUpdate = true;
 	}
 	private async _maxRendererAnisotropy() {
-		this._renderer_controller = this._renderer_controller || new CopRendererController(this.node);
-		const renderer = await this._renderer_controller.renderer();
+		this._rendererController = this._rendererController || new CopRendererController(this.node);
+		const renderer = await this._rendererController.waitForRenderer();
 		const max_anisotropy = renderer.capabilities.getMaxAnisotropy();
 		return max_anisotropy;
 	}

@@ -24,6 +24,7 @@ export class PlaneHelperSopOperation extends BaseSopOperation {
 
 	override cook(input_contents: CoreGroup[], params: PlaneHelperSopParams) {
 		const helper = new GridHelper(params.size, params.size, params.colorCenterLine, params.colorGrid);
+		helper.matrixAutoUpdate = false;
 		return this.createCoreGroupFromObjects([helper]);
 	}
 }

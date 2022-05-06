@@ -129,11 +129,11 @@ QUnit.test('event nodeCook can trigger a node cook multiple times', async (asser
 
 		box1_2.p.size.set(box1_2.pv.size + 1);
 		await CoreSleep.sleep(100);
-		assert.equal(box2_2.pv.size, 6);
+		assert.equal(box2_2.pv.size, 7);
 
 		box1_2.p.size.set(box1_2.pv.size + 1);
 		await CoreSleep.sleep(100);
-		assert.equal(box2_2.pv.size, 7);
+		assert.equal(box2_2.pv.size, 8);
 	});
 });
 
@@ -159,39 +159,44 @@ QUnit.test('event nodeCook functions event if the node is part of the root loadi
 	setParam1.p.increment.set(true);
 	setParam1.setInput(0, nodeCook1, NodeCookEventNode.OUTPUT_EACH_NODE);
 
-	assert.ok(scene.loadingController.loaded());
+	assert.ok(scene.loadingController.loaded(), 'loaded');
 	nodeCook1.p.mask.set(box1.path());
 	nodeCook1.p.updateResolve.pressButton();
 	await CoreSleep.sleep(100);
-	assert.equal(nodeCook1.resolvedNodes().length, 1);
-	assert.equal(nodeCook1.resolvedNodes()[0].graphNodeId(), box1.graphNodeId());
+	assert.equal(nodeCook1.resolvedNodes().length, 1, '1 resolved node');
+	assert.equal(nodeCook1.resolvedNodes()[0].graphNodeId(), box1.graphNodeId(), 'save node');
 
 	box1.p.size.set(box1.pv.size + 1);
 	await CoreSleep.sleep(100);
-	assert.equal(box2.pv.size, 3);
+	assert.equal(box2.pv.size, 3, '3');
 
 	box1.p.size.set(box1.pv.size + 1);
 	await CoreSleep.sleep(100);
-	assert.equal(box2.pv.size, 4);
+	assert.equal(box2.pv.size, 4, '4');
 
 	box1.p.size.set(box1.pv.size + 1);
 	await CoreSleep.sleep(100);
-	assert.equal(box2.pv.size, 5);
+	assert.equal(box2.pv.size, 5, '5');
 
 	await saveAndLoadScene(scene, async (scene2) => {
+		const box1_2 = scene2.node(box1.path()) as BoxSopNode;
+		const box2_2 = scene2.node(box2.path()) as BoxSopNode;
+		assert.equal(box2_2.pv.size, 5, '5 (b)');
+
 		await scene2.waitForCooksCompleted();
+		assert.equal(box2_2.pv.size, 5, '5 (c)');
 		await scene2.root().loadProgress.watchNodesProgress((nodesCookProgress, args) => {
 			// this._onNodesCookProgress(nodesCookProgress, args);
 		});
-		const box1_2 = scene2.node(box1.path()) as BoxSopNode;
-		const box2_2 = scene2.node(box2.path()) as BoxSopNode;
+
+		assert.equal(box2_2.pv.size, 6, '6');
 
 		box1_2.p.size.set(box1_2.pv.size + 1);
 		await CoreSleep.sleep(100);
-		assert.equal(box2_2.pv.size, 6);
+		assert.equal(box2_2.pv.size, 7, '7');
 
 		box1_2.p.size.set(box1_2.pv.size + 1);
 		await CoreSleep.sleep(100);
-		assert.equal(box2_2.pv.size, 7);
+		assert.equal(box2_2.pv.size, 8, '8');
 	});
 });

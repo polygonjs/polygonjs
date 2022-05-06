@@ -286,12 +286,15 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				} else {
 					core_geometry.geometry().dispose();
 					if (kept_points.length > 0) {
-						const builder = geometryBuilder(objectTypeFromConstructor(object.constructor));
-						if (builder) {
-							const new_geo = builder.from_points(kept_points);
-							if (new_geo) {
-								object.geometry = new_geo;
-								objects.push(object);
+						const objectType = objectTypeFromConstructor(object.constructor);
+						if (objectType) {
+							const builder = geometryBuilder(objectType);
+							if (builder) {
+								const new_geo = builder.from_points(kept_points);
+								if (new_geo) {
+									object.geometry = new_geo;
+									objects.push(object);
+								}
 							}
 						}
 					}

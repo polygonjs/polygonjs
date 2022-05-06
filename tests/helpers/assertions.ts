@@ -54,14 +54,19 @@ QUnit.assert.not_includes = function (arrayOrString: string | any[], element: an
 	this.pushResult({result, actual, expected, message});
 };
 
-QUnit.assert.in_delta = function (val1: number, val2: number, max_delta: number = 0.001, message: string = 'in delta') {
+QUnit.assert.in_delta = function (val1: number, val2: number, maxDelta: number = 0.001, message: string = 'in delta') {
 	// var actual = haystack.indexOf(needle) > -1;
 	const delta = Math.abs(val1 - val2);
-	const in_delta = delta < max_delta;
-	const result = in_delta;
+	const inDelta = delta < maxDelta;
+	const result = inDelta;
 	const actual = delta;
-	const expected = max_delta;
-	this.pushResult({result, actual, expected, message: `${message} (result: ${val1})`});
+	const expected = maxDelta;
+	this.pushResult({
+		result,
+		actual,
+		expected,
+		message: `${message} (result: ${val1}, val2: ${val2}, maxDelta: ${maxDelta}, delta: ${delta})`,
+	});
 };
 QUnit.assert.vector3_in_delta = function (
 	val1: Vector3,

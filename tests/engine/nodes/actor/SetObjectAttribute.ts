@@ -57,6 +57,8 @@ QUnit.test('actor/setObjectAttribute', async (assert) => {
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		const {viewer} = args;
+		perspective_camera1.object.updateProjectionMatrix();
+		assert.ok(viewer, 'viewer exists');
 		const canvas = viewer.canvas();
 		scene.play();
 		assert.equal(scene.time(), 0);

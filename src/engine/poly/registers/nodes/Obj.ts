@@ -13,7 +13,6 @@ import {ContactShadowObjNode} from '../../../nodes/obj/ContactShadow';
 import {GeoObjNode} from '../../../nodes/obj/Geo';
 import {NullObjNode} from '../../../nodes/obj/Null';
 import {PolarTransformObjNode} from '../../../nodes/obj/PolarTransform';
-import {PolyObjNode} from '../../../nodes/obj/Poly';
 import {PositionalAudioObjNode} from '../../../nodes/obj/PositionalAudio';
 import {RivetObjNode} from '../../../nodes/obj/Rivet';
 import {SceneObjNode} from '../../../nodes/obj/Scene';
@@ -47,7 +46,6 @@ export interface ObjNodeChildrenMap {
 	perspectiveCamera: PerspectiveCameraObjNode;
 	polarTransform: PolarTransformObjNode;
 	pointLight: PointLightObjNode;
-	poly: PolyObjNode;
 	positionalAudio: PositionalAudioObjNode;
 	rivet: RivetObjNode;
 	scene: SceneObjNode;
@@ -81,7 +79,6 @@ export class ObjRegister {
 		poly.registerNode(GeoObjNode, CATEGORY_OBJ.GEOMETRY);
 		poly.registerNode(NullObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.registerNode(PolarTransformObjNode, CATEGORY_OBJ.TRANSFORM);
-		poly.registerNode(PolyObjNode, CATEGORY_OBJ.ADVANCED);
 		poly.registerNode(PositionalAudioObjNode, CATEGORY_OBJ.AUDIO);
 		poly.registerNode(RivetObjNode, CATEGORY_OBJ.TRANSFORM);
 		poly.registerNode(SceneObjNode, CATEGORY_OBJ.ADVANCED);

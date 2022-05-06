@@ -6,46 +6,60 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
 
-	const perspective_camera1 = window.perspective_camera1;
+	const cameraNode = window.perspective_camera1;
 	const events = scene.root().createNode('eventsNetwork');
 	const camera_orbit_controls1 = events.createNode('cameraOrbitControls');
 	const camera_orbit_controls2 = events.createNode('cameraOrbitControls');
 
 	camera_orbit_controls1.p.tdamping.set(1);
 	camera_orbit_controls2.p.tdamping.set(0);
+	let id1: string | undefined;
+	let id2: string | undefined;
+	let id3: string | undefined;
 
-	await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async ({viewer, element}) => {
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		// no controls initially
 		CoreSleep.sleep(100);
 		assert.ok(!viewer.controlsController().controls());
-
+	});
+	cameraNode.p.controls.setNode(camera_orbit_controls1);
+	await cameraNode.compute();
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		// set controls to the first camera_orbit_controls
-		perspective_camera1.p.controls.set(camera_orbit_controls1.path());
 		await CoreSleep.sleep(100);
 		assert.ok(viewer.controlsController().controls());
-		const id1 = viewer.controlsController().controls()?.name;
+		id1 = viewer.controlsController().controls()?.name;
 		assert.ok(id1);
+	});
 
-		// change control node
-		perspective_camera1.p.controls.set(camera_orbit_controls2.path());
+	// change control node
+	cameraNode.p.controls.setNode(camera_orbit_controls2);
+	await cameraNode.compute();
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		await CoreSleep.sleep(100);
 		assert.ok(viewer.controlsController().controls());
-		const id2 = viewer.controlsController().controls()?.name;
+		id2 = viewer.controlsController().controls()?.name;
 		assert.ok(id2);
 		assert.notEqual(id1, id2);
+	});
 
-		// update the currently use control node
-		camera_orbit_controls2.p.tdamping.set(1);
+	// update the currently use control node
+	camera_orbit_controls2.p.tdamping.set(1);
+	await cameraNode.compute();
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		await CoreSleep.sleep(100);
 		assert.ok(viewer.controlsController().controls());
-		const id3 = viewer.controlsController().controls()?.name;
-		assert.ok(id3);
+		id3 = viewer.controlsController().controls()?.name;
+		assert.ok(id3, 'id3 ok');
 		assert.notEqual(id1, id3);
 		assert.notEqual(id2, id3);
+	});
 
-		// remove controls path
-		perspective_camera1.p.controls.set('');
+	// remove controls path
+	cameraNode.p.controls.set('');
+	await cameraNode.compute();
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		await CoreSleep.sleep(100);
-		assert.ok(!viewer.controlsController().controls());
+		assert.ok(!viewer.controlsController().controls(), 'no controls');
 	});
 });

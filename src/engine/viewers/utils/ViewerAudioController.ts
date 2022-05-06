@@ -20,7 +20,7 @@ export class ViewerAudioController {
 	constructor(private _viewer: BaseViewerType) {}
 
 	update() {
-		const root = this._viewer.cameraNode().root();
+		const root = this._viewer.scene().root();
 
 		if (isBooleanTrue(root.pv.displayAudioIcon)) {
 			this._showIcon();
@@ -101,7 +101,7 @@ export class ViewerAudioController {
 		return (this._onIcon = this._onIcon || createIcon());
 	}
 	private _toggleSound() {
-		const root = this._viewer.cameraNode().root();
+		const root = this._viewer.scene().root();
 		root.audioController.toggleSound();
 		this._updateIcon(root);
 	}
@@ -113,7 +113,7 @@ export class ViewerAudioController {
 		this._setIconContainerStyle(container, root);
 		const onIcon = this.onIcon();
 		const offIcon = this.offIcon();
-		if (this._viewer.cameraNode().root().audioController.soundOn()) {
+		if (this._viewer.scene().root().audioController.soundOn()) {
 			container.appendChild(onIcon);
 			offIcon.parentElement?.removeChild(offIcon);
 		} else {

@@ -96,18 +96,20 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 				}
 			}
 
-			const object_type = objectTypeFromConstructor(object.constructor);
-			points_by_value.forEach((points, value) => {
-				const builder = geometryBuilder(object_type);
-				if (builder) {
-					const new_geometry = builder.from_points(points);
-					if (new_geometry) {
-						const object = this.createObject(new_geometry, object_type);
-						CoreObject.addAttribute(object, attribName, value);
-						this._new_objects.push(object);
+			const objectType = objectTypeFromConstructor(object.constructor);
+			if (objectType) {
+				points_by_value.forEach((points, value) => {
+					const builder = geometryBuilder(objectType);
+					if (builder) {
+						const new_geometry = builder.from_points(points);
+						if (new_geometry) {
+							const object = this.createObject(new_geometry, objectType);
+							CoreObject.addAttribute(object, attribName, value);
+							this._new_objects.push(object);
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 }

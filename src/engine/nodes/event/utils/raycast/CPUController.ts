@@ -2,8 +2,8 @@ import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode, TargetType, TARGET_TYPES} from '../../Raycast';
 import {Object3D} from 'three';
-import {Raycaster, Intersection} from 'three';
-import {CAMERA_TYPES, NodeContext} from '../../../../poly/NodeContext';
+import {Intersection} from 'three';
+import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseObjNodeType} from '../../../obj/_Base';
 import {GeoObjNode} from '../../../obj/Geo';
 import {TypeAssert} from '../../../../poly/Assert';
@@ -11,28 +11,20 @@ import {Plane} from 'three';
 import {Vector3} from 'three';
 import {ParamType} from '../../../../poly/ParamType';
 import {AttribType, ATTRIBUTE_TYPES} from '../../../../../core/geometry/Constant';
-import {BaseCameraObjNodeType} from '../../../obj/_BaseCamera';
 import {Vector3Param} from '../../../../params/Vector3';
 import {RaycastCPUVelocityController} from './VelocityController';
 import {CoreType} from '../../../../../core/Type';
 
 import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
-import {RaycasterForBVH} from '../../../../operations/sop/utils/Bvh/three-mesh-bvh';
 import {IntersectDataEventNode} from '../../IntersectData';
 import {BaseRaycastController} from './BaseRaycastController';
-
-function createRaycaster() {
-	const raycaster = new Raycaster() as RaycasterForBVH;
-	raycaster.firstHitOnly = true;
-	return raycaster;
-}
 
 export class RaycastCPUController extends BaseRaycastController {
 	// private _offset: CursorOffset = {offsetX: 0, offsetY: 0};
 	// private _mouse: Vector2 = new Vector2();
 	private _cursorArray: Number2 = [0, 0];
-	private _raycaster = createRaycaster();
+	// private _raycaster = createRaycaster();
 	private _resolvedTargets: Object3D[] | undefined;
 
 	public readonly velocityController: RaycastCPUVelocityController;
@@ -42,8 +34,12 @@ export class RaycastCPUController extends BaseRaycastController {
 	}
 
 	updateMouse(eventContext: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>) {
-		const cameraNode = eventContext.cameraNode;
-		if (!cameraNode) {
+		const viewer = eventContext.viewer;
+		if (!viewer) {
+			return;
+		}
+		const camera = viewer.camera();
+		if (!camera) {
 			return;
 		}
 
@@ -53,7 +49,7 @@ export class RaycastCPUController extends BaseRaycastController {
 			this._node.p.mouse.set(this._cursorArray);
 		}
 		// this._updateFromCursor(canvas);
-		this._raycaster.setFromCamera(this._cursor, cameraNode.object);
+		viewer.raycaster.setFromCamera(this._cursor, camera);
 	}
 	// protected override _remapCursor() {
 	// 	this._cursor.x = this._cursor.x * 2 - 1;
@@ -102,24 +98,32 @@ export class RaycastCPUController extends BaseRaycastController {
 
 	private _plane = new Plane();
 	private _plane_intersect_target = new Vector3();
-	private _intersectPlane(context: EventContext<MouseEvent>) {
+	private _intersectPlane(eventContext: EventContext<MouseEvent>) {
+		const viewer = eventContext.viewer;
+		if (!viewer) {
+			return;
+		}
 		this._plane.normal.copy(this._node.pv.planeDirection);
 		this._plane.constant = this._node.pv.planeOffset;
-		this._raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
+		viewer.raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
 
 		this._setPositionParam(this._plane_intersect_target);
-		this._node.triggerHit(context);
+		this._node.triggerHit(eventContext);
 	}
 
 	private _intersections: Intersection[] = [];
-	private _intersectGeometry(context: EventContext<MouseEvent>) {
+	private _intersectGeometry(eventContext: EventContext<MouseEvent>) {
+		const viewer = eventContext.viewer;
+		if (!viewer) {
+			return;
+		}
 		if (!this._resolvedTargets) {
 			this.updateTarget();
 		}
 		if (this._resolvedTargets) {
 			// clear array before
 			this._intersections.length = 0;
-			const intersections = this._raycaster.intersectObjects(
+			const intersections = viewer.raycaster.intersectObjects(
 				this._resolvedTargets,
 				isBooleanTrue(this._node.pv.traverseChildren),
 				this._intersections
@@ -133,10 +137,10 @@ export class RaycastCPUController extends BaseRaycastController {
 				if (isBooleanTrue(this._node.pv.geoAttribute)) {
 					this._resolveIntersectAttribute(intersection);
 				}
-				context.value = {intersect: intersection};
-				this._node.triggerHit(context);
+				eventContext.value = {intersect: intersection};
+				this._node.triggerHit(eventContext);
 			} else {
-				this._node.triggerMiss(context);
+				this._node.triggerMiss(eventContext);
 			}
 		}
 	}
@@ -168,9 +172,9 @@ export class RaycastCPUController extends BaseRaycastController {
 	}
 
 	private _found_position_target_param: Vector3Param | undefined;
-	private _hit_position_array: Number3 = [0, 0, 0];
+	private _hitPositionArray: Number3 = [0, 0, 0];
 	private _setPositionParam(hit_position: Vector3) {
-		hit_position.toArray(this._hit_position_array);
+		hit_position.toArray(this._hitPositionArray);
 		if (isBooleanTrue(this._node.pv.tpositionTarget)) {
 			if (this._node.scene().timeController.playing()) {
 				this._found_position_target_param =
@@ -183,39 +187,43 @@ export class RaycastCPUController extends BaseRaycastController {
 				this._found_position_target_param = target_param.paramWithType(ParamType.VECTOR3);
 			}
 			if (this._found_position_target_param) {
-				this._found_position_target_param.set(this._hit_position_array);
+				this._found_position_target_param.set(this._hitPositionArray);
 			}
 		} else {
-			this._node.p.position.set(this._hit_position_array);
+			this._node.p.position.set(this._hitPositionArray);
 		}
 
 		this.velocityController.process(hit_position);
 	}
 
-	private _prepareRaycaster(context: EventContext<MouseEvent>) {
-		const pointsParam = this._raycaster.params.Points;
+	private _prepareRaycaster(eventContext: EventContext<MouseEvent>) {
+		const viewer = eventContext.viewer;
+		if (!viewer) {
+			return;
+		}
+		const pointsParam = viewer.raycaster.params.Points;
 		if (pointsParam) {
 			pointsParam.threshold = this._node.pv.pointsThreshold;
 		}
 
-		let cameraNode: Readonly<BaseCameraObjNodeType> | undefined = context.cameraNode;
-		if (isBooleanTrue(this._node.pv.overrideCamera)) {
-			if (isBooleanTrue(this._node.pv.overrideRay)) {
-				this._raycaster.ray.origin.copy(this._node.pv.rayOrigin);
-				this._raycaster.ray.direction.copy(this._node.pv.rayDirection);
-			} else {
-				const foundCameraNode = this._node.pv.camera.nodeWithContext(NodeContext.OBJ, this._node.states.error);
-				if (foundCameraNode) {
-					if ((CAMERA_TYPES as string[]).includes(foundCameraNode.type())) {
-						cameraNode = (<unknown>foundCameraNode) as Readonly<BaseCameraObjNodeType>;
-					}
-				}
-			}
-		}
+		// let camera = context.camera;
+		// if (isBooleanTrue(this._node.pv.overrideCamera)) {
+		// 	if (isBooleanTrue(this._node.pv.overrideRay)) {
+		// 		this._raycaster.ray.origin.copy(this._node.pv.rayOrigin);
+		// 		this._raycaster.ray.direction.copy(this._node.pv.rayDirection);
+		// 	} else {
+		// 		const foundCameraNode = this._node.pv.camera.nodeWithContext(NodeContext.OBJ, this._node.states.error);
+		// 		if (foundCameraNode) {
+		// 			if ((CAMERA_TYPES as string[]).includes(foundCameraNode.type())) {
+		// 				cameraNode = (<unknown>foundCameraNode) as Readonly<BaseCameraObjNodeType>;
+		// 			}
+		// 		}
+		// 	}
+		// }
 
-		if (cameraNode && !isBooleanTrue(this._node.pv.overrideRay)) {
-			cameraNode.prepareRaycaster(this._cursor, this._raycaster);
-		}
+		// if (cameraNode && !isBooleanTrue(this._node.pv.overrideRay)) {
+		// 	cameraNode.prepareRaycaster(this._cursor, this._raycaster);
+		// }
 	}
 
 	updateTarget() {
@@ -254,12 +262,12 @@ export class RaycastCPUController extends BaseRaycastController {
 		}
 	}
 
-	async update_position_target() {
-		if (this._node.p.positionTarget.isDirty()) {
-			await this._node.p.positionTarget.compute();
-		}
-	}
-	static PARAM_CALLBACK_update_target(node: RaycastEventNode) {
+	// async updatePositionTarget() {
+	// 	if (this._node.p.positionTarget.isDirty()) {
+	// 		await this._node.p.positionTarget.compute();
+	// 	}
+	// }
+	static PARAM_CALLBACK_updateTarget(node: RaycastEventNode) {
 		node.cpuController.updateTarget();
 	}
 	// static PARAM_CALLBACK_update_position_target(node: RaycastEventNode) {

@@ -3,7 +3,7 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNodeType} from '../_Base';
-import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
+import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/ViewerEventsController';
 
 export interface EventData {
 	type: string;

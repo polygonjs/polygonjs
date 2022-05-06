@@ -129,7 +129,7 @@ export class CoreGroup {
 		return [];
 		// return list;
 	}
-	objectsData(): ObjectData[] {
+	objectsData(): Array<ObjectData> {
 		if (this._objects) {
 			return this._objects.map((object) => this._objectData(object));
 		}
@@ -140,8 +140,9 @@ export class CoreGroup {
 		if ((object as Mesh).geometry) {
 			points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
 		}
+		const objectType = objectTypeFromConstructor(object.constructor);
 		return {
-			type: objectTypeFromConstructor(object.constructor),
+			type: objectType,
 			name: object.name,
 			children_count: object.children.length,
 			points_count: points_count,

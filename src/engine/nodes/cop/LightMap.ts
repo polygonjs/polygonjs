@@ -66,8 +66,8 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	private lightMapController: LightMapController | undefined;
 	private _includedObjects: Mesh[] = [];
 	private _includedLights: Light[] = [];
-	private _data_texture_controller: DataTextureController | undefined;
-	private _renderer_controller: CopRendererController | undefined;
+	private _dataTextureController: DataTextureController | undefined;
+	private _rendererController: CopRendererController | undefined;
 
 	override async cook() {
 		this._updateManual();
@@ -102,14 +102,14 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 		if (!this.lightMapController) {
 			return;
 		}
-		const mainCameraNode = this.scene().mainCameraNode();
-		if (!mainCameraNode) {
+		const mainCamera = await this.scene().mainCamera();
+		if (!mainCamera) {
 			return;
 		}
 		this._updateObjectsAndLightsList();
 		this.lightMapController.init(this._includedObjects, this._includedLights);
 
-		const camera = mainCameraNode.camera();
+		// const camera = mainCameraNode.camera();
 		this.lightMapController.setParams({
 			lightRadius: this.pv.lightRadius,
 			iterations: this.pv.iterations,
@@ -117,7 +117,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 			blur: this.pv.blur,
 			blurAmount: this.pv.blurAmount,
 		});
-		this.lightMapController.runUpdates(camera);
+		this.lightMapController.runUpdates(mainCamera);
 		this.lightMapController.restoreState();
 		// this.setTexture();
 
@@ -125,12 +125,11 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 		if (isBooleanTrue(this.pv.useCameraRenderer)) {
 			this.setTexture(renderTarget.texture);
 		} else {
-			this._data_texture_controller =
-				this._data_texture_controller ||
-				new DataTextureController(DataTextureControllerBufferType.Float32Array);
-			this._renderer_controller = this._renderer_controller || new CopRendererController(this);
-			const renderer = await this._renderer_controller.renderer();
-			const texture = this._data_texture_controller.from_render_target(renderer, renderTarget);
+			this._dataTextureController =
+				this._dataTextureController || new DataTextureController(DataTextureControllerBufferType.Float32Array);
+			this._rendererController = this._rendererController || new CopRendererController(this);
+			const renderer = await this._rendererController.waitForRenderer();
+			const texture = this._dataTextureController.from_render_target(renderer, renderTarget);
 			this.setTexture(texture);
 		}
 	}

@@ -33,6 +33,7 @@ import {AdaptiveToneMappingPass} from '../../../modules/three/examples/jsm/postp
 // } );
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Vector2} from 'three';
 class AdaptiveToneMappingPostParamsConfig extends NodeParamsConfig {
 	/** @param adaptive */
 	adaptive = ParamConfig.BOOLEAN(1, {
@@ -67,8 +68,10 @@ export class AdaptiveToneMappingPostNode extends TypedPostProcessNode<
 		return 'adaptiveToneMapping';
 	}
 
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
-		const pass = new AdaptiveToneMappingPass(this.pv.adaptive, context.resolution.x);
+		context.renderer.getSize(this._rendererSize);
+		const pass = new AdaptiveToneMappingPass(this.pv.adaptive, this._rendererSize.x);
 		this.updatePass(pass);
 		return pass;
 	}

@@ -18,6 +18,7 @@ enum WebGLContext {
 let nextRendererId: number = 0;
 
 export class RenderersController {
+	private static _nextGlContextId = 0;
 	// private _firstRenderer: WebGLRenderer | null = null;
 	// private _lastRenderer: WebGLRenderer | null = null;
 	private _printDebug = false;
@@ -86,14 +87,18 @@ export class RenderersController {
 
 	getRenderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
 		let gl: WebGLRenderingContext | null = null;
-		if (this._require_webgl2) {
-			gl = this._getRenderingContextWebgl(canvas, true);
-			if (!gl) {
-				console.warn('failed to create webgl2 context');
-			}
+		// if (this._require_webgl2) {
+		gl = this._getRenderingContextWebgl(canvas, true);
+		if (!gl) {
+			console.warn('failed to create webgl2 context');
 		}
+		// }
 		if (!gl) {
 			gl = this._getRenderingContextWebgl(canvas, false);
+		}
+
+		if ((gl as any).contextId == null) {
+			(gl as any).contextId = RenderersController._nextGlContextId++;
 		}
 
 		// gl.getExtension('OES_standard_derivatives') // for derivative normals, but it cannot work at the moment (see node Gl/DerivativeNormals)

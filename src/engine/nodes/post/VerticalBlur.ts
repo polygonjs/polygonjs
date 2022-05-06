@@ -16,6 +16,7 @@ interface VerticalBlurPassWithUniforms extends ShaderPass {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Vector2} from 'three';
 class VerticalBlurPostParamsConfig extends NodeParamsConfig {
 	/** @param amount */
 	amount = ParamConfig.FLOAT(2, {
@@ -34,9 +35,11 @@ export class VerticalBlurPostNode extends TypedPostProcessNode<ShaderPass, Verti
 		return 'verticalBlur';
 	}
 
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
 		const pass = new ShaderPass(VerticalBlurShader) as VerticalBlurPassWithUniforms;
-		pass.resolution_y = context.resolution.y;
+		context.renderer.getSize(this._rendererSize);
+		pass.resolution_y = this._rendererSize.y;
 		this.updatePass(pass);
 
 		return pass;

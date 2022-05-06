@@ -29,6 +29,9 @@ export type BaseOperationConstructor = typeof BaseOperation;
 type OperationConstructorByType = Map<string, BaseOperationConstructor>;
 type OperationConstructorByTypeByContext = Map<NodeContext, OperationConstructorByType>;
 
+export type OnNodeRegisterCallback = (poly: PolyEngine) => void;
+export type OnOperationRegisterCallback = (poly: PolyEngine) => void;
+
 export class NodesRegister {
 	private _node_register: NodeConstructorByTypeByContext = new Map();
 	private _node_register_categories: TabMenuByTypeByContext = new Map();
@@ -73,6 +76,9 @@ export class NodesRegister {
 			}
 		}
 		current_nodes_for_context.set(nodeType, node);
+		if (node.onRegister) {
+			node.onRegister(this.poly);
+		}
 
 		if (tab_menu_category) {
 			let current_categories = this._node_register_categories.get(context);
@@ -205,6 +211,9 @@ export class OperationsRegister {
 			return;
 		}
 		current_operations_for_context.set(operationType, operation);
+		if (operation.onRegister) {
+			operation.onRegister(this.poly);
+		}
 		this.poly.pluginsRegister.registerOperation(operation);
 	}
 

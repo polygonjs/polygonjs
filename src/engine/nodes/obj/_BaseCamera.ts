@@ -2,15 +2,15 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {Camera} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {ObjNodeRenderOrder} from './_Base';
-import {ThreejsCameraControlsController} from './utils/cameras/ControlsController';
+// import {ThreejsCameraControlsController} from './utils/cameras/CameraControlsController';
 import {LayersController, LayerParamConfig} from './utils/LayersController';
-import {PostProcessController} from './utils/cameras/PostProcessController';
-import {RenderController, CameraRenderParamConfig} from './utils/cameras/RenderController';
+// import {PostProcessController} from './utils/cameras/PostProcessController';
+import {/*RenderController,*/ CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';
-import {ThreejsViewer, ThreejsViewerProperties} from '../../viewers/Threejs';
+import {ThreejsViewer} from '../../viewers/Threejs';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
@@ -21,13 +21,21 @@ import {HierarchyController} from './utils/HierarchyController';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {Raycaster} from 'three';
 import {Vector2} from 'three';
-import {CoreType} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {CameraPostProcessParamConfig} from './utils/cameras/PostProcessParamOptions';
 import {UpdateFromControlsMode, UPDATE_FROM_CONTROLS_MODES} from './utils/cameras/UpdateFromControlsMode';
+import {Poly} from '../../Poly';
+import {CORE_CAMERA_DEFAULT} from '../../../core/camera/CoreCamera';
+import {CameraControlsSopOperation} from '../../operations/sop/CameraControls';
+import {CameraRendererSopOperation} from '../../operations/sop/CameraRenderer';
+import {CameraCSSRendererSopOperation} from '../../operations/sop/CameraCSSRenderer';
+import {CameraPostProcessSopOperation} from '../../operations/sop/CameraPostProcess';
+import {CameraRenderSceneSopOperation} from '../../operations/sop/CameraRenderScene';
+import {CameraFrameModeSopOperation} from '../../operations/sop/CameraFrameMode';
+import {CoreCameraFrameParamConfig} from '../../../core/camera/CoreCameraFrameMode';
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -37,16 +45,11 @@ export interface OrthoOrPerspCamera extends Camera {
 
 const EVENT_CHANGE = {type: 'change'};
 
-export const BASE_CAMERA_DEFAULT = {
-	near: 0.1,
-	far: 100.0,
-};
-
 export function CameraMainCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		setMainCamera = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType, param: BaseParamType) => {
-				BaseCameraObjNodeClass.PARAM_CALLBACK_setMasterCamera(node as BaseCameraObjNodeType);
+				BaseCameraObjNodeClass.PARAM_CALLBACK_setMainCamera(node as BaseCameraObjNodeType);
 			},
 		});
 	};
@@ -75,7 +78,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 		// allowUpdateFromControls = ParamConfig.BOOLEAN(1);
 
 		/** @param near */
-		near = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.near, {
+		near = ParamConfig.FLOAT(CORE_CAMERA_DEFAULT.near, {
 			range: [0.1, 100],
 			cook: false,
 			computeOnDirty: true,
@@ -87,7 +90,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 			},
 		});
 		/** @param far */
-		far = ParamConfig.FLOAT(BASE_CAMERA_DEFAULT.far, {
+		far = ParamConfig.FLOAT(CORE_CAMERA_DEFAULT.far, {
 			range: [0, 100],
 			cook: false,
 			computeOnDirty: true,
@@ -108,41 +111,13 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 	};
 }
 
-export enum FOVAdjustMode {
-	DEFAULT = 'default',
-	COVER = 'cover',
-	CONTAIN = 'contain',
-}
-export const FOV_ADJUST_MODES: FOVAdjustMode[] = [FOVAdjustMode.DEFAULT, FOVAdjustMode.COVER, FOVAdjustMode.CONTAIN];
-export function ThreejsCameraFOVParamConfig<TBase extends Constructor>(Base: TBase) {
-	return class Mixin extends Base {
-		/** @param fov adjust mode */
-		fovAdjustMode = ParamConfig.INTEGER(FOV_ADJUST_MODES.indexOf(FOVAdjustMode.DEFAULT), {
-			menu: {
-				entries: FOV_ADJUST_MODES.map((name, value) => {
-					return {name, value};
-				}),
-			},
-		});
-		/** @param expected aspect ratio */
-		expectedAspectRatio = ParamConfig.FLOAT('16/9', {
-			visibleIf: [
-				{fovAdjustMode: FOV_ADJUST_MODES.indexOf(FOVAdjustMode.COVER)},
-				{fovAdjustMode: FOV_ADJUST_MODES.indexOf(FOVAdjustMode.CONTAIN)},
-			],
-			range: [0, 2],
-			rangeLocked: [true, false],
-		});
-		// vertical_fov_range = ParamConfig.VECTOR2([0, 100], {visibleIf: {lock_width: 1}});
-		// horizontal_fov_range = ParamConfig.VECTOR2([0, 100], {visibleIf: {lock_width: 0}});
-	};
-}
-
 export class BaseCameraObjParamsConfig extends CameraMainCameraParamConfig(NodeParamsConfig) {}
 export class BaseThreejsCameraObjParamsConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
-		TransformedParamConfig(
-			LayerParamConfig(ThreejsCameraTransformParamConfig(CameraMainCameraParamConfig(NodeParamsConfig)))
+		CoreCameraFrameParamConfig(
+			TransformedParamConfig(
+				LayerParamConfig(ThreejsCameraTransformParamConfig(CameraMainCameraParamConfig(NodeParamsConfig)))
+			)
 		)
 	)
 ) {}
@@ -169,9 +144,6 @@ export abstract class TypedCameraObjNode<
 		this.cookController.endCook();
 	}
 
-	on_create() {}
-	on_delete() {}
-
 	prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {}
 
 	camera() {
@@ -179,30 +151,31 @@ export abstract class TypedCameraObjNode<
 	}
 	updateCamera() {}
 
-	static PARAM_CALLBACK_setMasterCamera(node: BaseCameraObjNodeType) {
-		node.set_as_master_camera();
+	static PARAM_CALLBACK_setMainCamera(node: BaseCameraObjNodeType) {
+		node.setAsMainCamera();
 	}
-	set_as_master_camera() {
-		this.scene().camerasController.setMainCameraNodePath(this.path());
+	setAsMainCamera() {
+		const path = this.scene().objectsController.objectPath(this.object);
+		this.scene().camerasController.setMainCameraPath(path);
 	}
 
 	setupForAspectRatio(aspect: number) {}
-	protected _updateForAspectRatio(): void {}
+	// protected _updateForAspectRatio(): void {}
 
 	update_transform_params_from_object() {
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
 		CoreTransform.setParamsFromObject(this._object, this);
 	}
-	abstract createViewer(options?: BaseViewerOptions | HTMLElement): BaseViewerType;
+	abstract createViewer(options?: BaseViewerOptions | HTMLElement): BaseViewerType | undefined;
 
 	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeType, param: BaseParamType) {
 		(node.object as any)[param.name()] = (node.pv as any)[param.name()];
 	}
 }
 
-interface ThreejsViewerOptions extends BaseViewerOptions {
-	viewerProperties?: ThreejsViewerProperties;
-}
+// interface ThreejsViewerOptions extends BaseViewerOptions {
+// 	viewerProperties?: ThreejsViewerProperties;
+// }
 export class TypedThreejsCameraObjNode<
 	O extends OrthoOrPerspCamera,
 	K extends BaseThreejsCameraObjParamsConfig
@@ -210,22 +183,22 @@ export class TypedThreejsCameraObjNode<
 	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	override readonly hierarchyController: HierarchyController = new HierarchyController(this);
 	override readonly transformController: TransformController = new TransformController(this);
-	protected _controlsController: ThreejsCameraControlsController | undefined;
-	controlsController(): ThreejsCameraControlsController {
-		return (this._controlsController = this._controlsController || new ThreejsCameraControlsController(this));
-	}
+	// protected _controlsController: ThreejsCameraControlsController | undefined;
+	// controlsController(): ThreejsCameraControlsController {
+	// 	return (this._controlsController = this._controlsController || new ThreejsCameraControlsController(this));
+	// }
 	protected __layersController__: LayersController | undefined;
 	private _layersController() {
 		return (this.__layersController__ = this.__layersController__ || new LayersController(this));
 	}
-	protected _renderController: RenderController | undefined;
-	renderController(): RenderController {
-		return (this._renderController = this._renderController || new RenderController(this));
-	}
-	protected _postProcessController: PostProcessController | undefined;
-	postProcessController(): PostProcessController {
-		return (this._postProcessController = this._postProcessController || new PostProcessController(this));
-	}
+	// protected _renderController: RenderController | undefined;
+	// renderController(): RenderController {
+	// 	return (this._renderController = this._renderController || new RenderController(this));
+	// }
+	// protected _postProcessController: PostProcessController | undefined;
+	// postProcessController(): PostProcessController {
+	// 	return (this._postProcessController = this._postProcessController || new PostProcessController(this));
+	// }
 
 	// display_node and children_display controllers
 	public override readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
@@ -278,16 +251,49 @@ export class TypedThreejsCameraObjNode<
 
 		this.updateNearFar();
 
-		this.renderController().update();
+		// this.renderController().update();
 		this.updateCamera();
 		this._updateHelper();
-		this.controlsController().update_controls();
+		// this.controlsController().update_controls();
+
+		const objects = [this._object];
+		const node = this;
+		CameraControlsSopOperation.updateObject({objects, params: {node: this.pv.controls}, node, active: true});
+		CameraRendererSopOperation.updateObject({
+			objects,
+			params: {node: this.pv.renderer},
+			node,
+			active: this.pv.setRenderer,
+		});
+		CameraCSSRendererSopOperation.updateObject({
+			objects,
+			params: {node: this.pv.CSSRenderer},
+			node,
+			active: this.pv.setCSSRenderer,
+		});
+		CameraPostProcessSopOperation.updateObject({
+			objects,
+			params: {node: this.pv.postProcessNode, useOtherNode: false},
+			node,
+			active: this.pv.doPostProcess,
+		});
+		CameraRenderSceneSopOperation.updateObject({
+			objects,
+			params: {node: this.pv.scene},
+			node,
+			active: this.pv.setScene,
+		});
+		CameraFrameModeSopOperation.updateObject({
+			objects,
+			params: {frameMode: this.pv.frameMode, expectedAspectRatio: this.pv.expectedAspectRatio},
+		});
 
 		// TODO: ideally the update transform and update camera
 		// can both return if the camera has changed
 		// and we can run this here instead of inside the update_transform and update_camera
 		// this._object.dispatchEvent( EVENT_CHANGE )
 		this._object.dispatchEvent(EVENT_CHANGE);
+		this.scene().camerasController.updateFromChangeInObject(this.object);
 		this.cookController.endCook();
 	}
 
@@ -303,31 +309,32 @@ export class TypedThreejsCameraObjNode<
 		}
 	}
 
-	override setupForAspectRatio(aspect: number) {
-		if (CoreType.isNaN(aspect)) {
-			return;
-		}
-		if (aspect && this._aspect != aspect) {
-			this._aspect = aspect;
-			this._updateForAspectRatio();
-		}
-	}
+	// override setupForAspectRatio(aspect: number) {
+	// 	if (CoreType.isNaN(aspect)) {
+	// 		return;
+	// 	}
+	// 	if (aspect && this._aspect != aspect) {
+	// 		this._aspect = aspect;
+	// 		this._updateForAspectRatio();
+	// 	}
+	// }
 
-	createViewer(options?: ThreejsViewerOptions | HTMLElement): ThreejsViewer {
-		let viewer: ThreejsViewer;
+	createViewer(options?: BaseViewerOptions | HTMLElement): ThreejsViewer<Camera> | undefined {
+		const viewer = Poly.camerasRegister.createViewer({camera: this.object, scene: this.scene()}) as
+			| ThreejsViewer<Camera>
+			| undefined;
 		let element: HTMLElement | undefined;
+
 		if (options && options instanceof HTMLElement) {
-			viewer = new ThreejsViewer(this);
 			element = options;
 		} else {
-			viewer = new ThreejsViewer(this, options?.viewerProperties || {});
 			element = options?.element;
 		}
-		if (element) {
-			viewer.mount(element);
+		if (viewer) {
+			if (element) {
+				viewer.mount(element);
+			}
 		}
-
-		this.scene().viewersRegister.registerViewer(viewer);
 		return viewer;
 	}
 

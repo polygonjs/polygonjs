@@ -3,40 +3,55 @@ import {CSS3DRenderer} from '../../../modules/three/examples/jsm/renderers/CSS3D
 import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {PolyDictionary} from '../../../types/GlobalTypes';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
-class Css3DRendererRopParamsConfig extends NodeParamsConfig {
+class CSS3DRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {
 		language: StringParamLanguage.CSS,
 	});
 }
-const ParamsConfig = new Css3DRendererRopParamsConfig();
+const ParamsConfig = new CSS3DRendererRopParamsConfig();
 
-export class Css3DRendererRopNode extends TypedRopNode<Css3DRendererRopParamsConfig> {
+export class CSS3DRendererRopNode extends TypedRopNode<CSS3DRendererRopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type(): Readonly<RopType.CSS3D> {
 		return RopType.CSS3D;
 	}
-
-	private _renderers_by_canvas_id: PolyDictionary<CSS3DRenderer> = {};
+	private _renderersByCanvasId: Map<string, CSS3DRenderer> = new Map();
 	createRenderer(canvas: HTMLCanvasElement) {
 		const renderer = new CSS3DRenderer();
-		this._renderers_by_canvas_id[canvas.id] = renderer;
-		const parent = canvas.parentElement;
-		if (parent) {
-			parent.prepend(renderer.domElement);
-			parent.style.position = 'relative';
-		}
+		this._renderersByCanvasId.set(canvas.id, renderer);
+
 		renderer.domElement.style.position = 'absolute';
 		renderer.domElement.style.top = '0px';
 		renderer.domElement.style.left = '0px';
 		renderer.domElement.style.pointerEvents = 'none';
-		renderer.setSize(canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+
 		return renderer;
 	}
+	mountRenderer(canvas: HTMLCanvasElement) {
+		const renderer = this._renderersByCanvasId.get(canvas.id);
+		if (!renderer) {
+			return;
+		}
+		const parent = canvas.parentElement;
+		if (parent) {
+			parent.prepend(renderer.domElement);
+			parent.style.position = 'relative';
+		} else {
+			console.warn('canvas has no parent');
+		}
+		renderer.setSize(canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+	}
+	unmountRenderer(canvas: HTMLCanvasElement) {
+		const renderer = this._renderersByCanvasId.get(canvas.id);
+		if (!renderer) {
+			return;
+		}
+		renderer.domElement.parentElement?.removeChild(renderer.domElement);
+	}
 	renderer(canvas: HTMLCanvasElement) {
-		return this._renderers_by_canvas_id[canvas.id] || this.createRenderer(canvas);
+		return this._renderersByCanvasId.get(canvas.id) || this.createRenderer(canvas);
 	}
 	// remove_renderer_element(canvas: HTMLCanvasElement) {
 	// 	// not ideal, because I could not re-add it back

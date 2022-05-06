@@ -59,9 +59,11 @@ export class TriangleBlurPostNode extends TypedPostProcessNode<ShaderPass, Trian
 		return 'triangleBlur';
 	}
 
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
+		context.renderer.getSize(this._rendererSize);
 		const pass = new ShaderPass(Shader) as TriangleBlurPassWithUniforms;
-		pass.resolution = context.resolution.clone();
+		pass.resolution = this._rendererSize;
 		this.updatePass(pass);
 
 		return pass;

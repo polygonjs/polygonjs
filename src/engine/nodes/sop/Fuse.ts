@@ -83,11 +83,14 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		(object as Mesh).geometry.dispose();
 		if (keptPoints.length > 0) {
-			const builder = geometryBuilder(objectTypeFromConstructor(object.constructor));
-			if (builder) {
-				const geometry = builder.from_points(keptPoints);
-				if (geometry) {
-					(object as Mesh).geometry = geometry;
+			const objectType = objectTypeFromConstructor(object.constructor);
+			if (objectType) {
+				const builder = geometryBuilder(objectType);
+				if (builder) {
+					const geometry = builder.from_points(keptPoints);
+					if (geometry) {
+						(object as Mesh).geometry = geometry;
+					}
 				}
 			}
 			return object;

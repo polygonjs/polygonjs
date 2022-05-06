@@ -3,7 +3,7 @@
  *
  */
 import {TypedEventNode} from './_Base';
-import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {VisibleIfParamOptions, ParamOptions} from '../../params/utils/OptionsController';
@@ -76,40 +76,40 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		visibleIf: {tmouse: 1},
 	});
 	/** @param by default the ray is sent from the current camera, but this allows to set another camera */
-	overrideCamera = ParamConfig.BOOLEAN(0, visible_for_cpu());
+	// overrideCamera = ParamConfig.BOOLEAN(0, visible_for_cpu());
 	/** @param by default the ray is sent from the current camera, but this allows to set a custom ray */
-	overrideRay = ParamConfig.BOOLEAN(0, {
-		visibleIf: {
-			mode: RAYCAST_MODES.indexOf(RaycastMode.CPU),
-			overrideCamera: 1,
-		},
-	});
+	// overrideRay = ParamConfig.BOOLEAN(0, {
+	// 	visibleIf: {
+	// 		mode: RAYCAST_MODES.indexOf(RaycastMode.CPU),
+	// 		overrideCamera: 1,
+	// 	},
+	// });
 	/** @param the camera to override to */
-	camera = ParamConfig.NODE_PATH('', {
-		nodeSelection: {
-			context: NodeContext.OBJ,
-			types: CAMERA_TYPES,
-		},
-		dependentOnFoundNode: false,
-		...visible_for_cpu({
-			overrideCamera: 1,
-			overrideRay: 0,
-		}),
-	});
+	// camera = ParamConfig.NODE_PATH('', {
+	// 	nodeSelection: {
+	// 		context: NodeContext.OBJ,
+	// 		types: CAMERA_TYPES,
+	// 	},
+	// 	dependentOnFoundNode: false,
+	// 	...visible_for_cpu({
+	// 		overrideCamera: 1,
+	// 		overrideRay: 0,
+	// 	}),
+	// });
 	/** @param the ray origin */
-	rayOrigin = ParamConfig.VECTOR3([0, 0, 0], {
-		visibleIf: {
-			overrideCamera: 1,
-			overrideRay: 1,
-		},
-	});
+	// rayOrigin = ParamConfig.VECTOR3([0, 0, 0], {
+	// 	visibleIf: {
+	// 		overrideCamera: 1,
+	// 		overrideRay: 1,
+	// 	},
+	// });
 	/** @param the ray direction */
-	rayDirection = ParamConfig.VECTOR3([0, 0, 1], {
-		visibleIf: {
-			overrideCamera: 1,
-			overrideRay: 1,
-		},
-	});
+	// rayDirection = ParamConfig.VECTOR3([0, 0, 1], {
+	// 	visibleIf: {
+	// 		overrideCamera: 1,
+	// 		overrideRay: 1,
+	// 	},
+	// });
 
 	//
 	//
@@ -200,14 +200,14 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		},
 		dependentOnFoundNode: false,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
+			RaycastCPUController.PARAM_CALLBACK_updateTarget(node as RaycastEventNode);
 		},
 		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.NODE)}),
 	});
 	/** @param objects to test hit against, when testing against geometries */
 	objectMask = ParamConfig.STRING('*geo1*', {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
+			RaycastCPUController.PARAM_CALLBACK_updateTarget(node as RaycastEventNode);
 		},
 		objectMask: true,
 		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)}),
@@ -222,7 +222,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	/** @param toggle to hit if tested against children */
 	traverseChildren = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			RaycastCPUController.PARAM_CALLBACK_update_target(node as RaycastEventNode);
+			RaycastCPUController.PARAM_CALLBACK_updateTarget(node as RaycastEventNode);
 		},
 		...visible_for_cpu_geometry(),
 		separatorAfter: true,
@@ -353,12 +353,12 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 			new EventConnectionPoint(
 				RaycastEventNode.INPUT_UPDATE_OBJECTS,
 				EventConnectionPointType.BASE,
-				this._process_trigger_update_objects.bind(this)
+				this._processTriggerUpdateObjects.bind(this)
 			),
 			new EventConnectionPoint(
 				RaycastEventNode.INPUT_TRIGGER_VEL_RESET,
 				EventConnectionPointType.BASE,
-				this._process_trigger_vel_reset.bind(this)
+				this._processTriggerVelReset.bind(this)
 			),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -412,13 +412,13 @@ export class RaycastEventNode extends TypedEventNode<RaycastParamsConfig> {
 		}
 	}
 
-	private _process_trigger_update_objects(context: EventContext<MouseEvent>) {
+	private _processTriggerUpdateObjects(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
 			this.cpuController.updateTarget();
 		}
 	}
 
-	private _process_trigger_vel_reset(context: EventContext<MouseEvent>) {
+	private _processTriggerVelReset(context: EventContext<MouseEvent>) {
 		if (this.pv.mode == RAYCAST_MODES.indexOf(RaycastMode.CPU)) {
 			this.cpuController.velocityController.reset();
 		}

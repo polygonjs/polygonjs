@@ -11,7 +11,7 @@ import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {ACCEPTED_KEYBOARD_EVENT_TYPES} from '../../scene/utils/events/KeyboardEventsController';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
+import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/ViewerEventsController';
 import {CoreString} from '../../../core/String';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
 class KeyboardEventParamsConfig extends NodeParamsConfig {

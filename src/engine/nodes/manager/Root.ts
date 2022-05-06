@@ -16,6 +16,7 @@ import {SceneEnvParamConfig, SceneEnvController} from './utils/Scene/Env';
 import {SceneFogParamConfig, SceneFogController} from './utils/Scene/Fog';
 import {RootLoadProgressParamConfig, RootLoadProgressController} from './utils/Scene/LoadProgress';
 import {SceneMaterialOverrideParamConfig, SceneMaterialOverrideController} from './utils/Scene/MaterialOverride';
+import {RootMainCameraController, RootMainCameraParamConfig} from './utils/Scene/RootMainCamera';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export const ROOT_NODE_NAME = 'RootNode';
@@ -23,7 +24,9 @@ class ObjectsManagerParamsConfig extends RootLoadProgressParamConfig(
 	RootAudioParamConfig(
 		SceneMaterialOverrideParamConfig(
 			SceneEnvParamConfig(
-				SceneFogParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig)))
+				SceneFogParamConfig(
+					RootMainCameraParamConfig(SceneBackgroundParamConfig(SceneAutoUpdateParamConfig(NodeParamsConfig)))
+				)
 			)
 		)
 	)
@@ -49,6 +52,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	readonly sceneMaterialOverrideController: SceneMaterialOverrideController = new SceneMaterialOverrideController(
 		this as any
 	);
+	readonly mainCameraController: RootMainCameraController = new RootMainCameraController(this);
 
 	override cook() {
 		// the cook method is necessary here,
@@ -117,7 +121,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 		return node;
 	}
 
-	async processQueue() {
+	processQueue() {
 		this._updateScene();
 
 		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();

@@ -1,7 +1,7 @@
 import {PolyScene} from './scene/PolyScene';
 import {SceneJsonImporter} from './io/json/import/Scene';
 import {SceneDataManifestImporter} from './io/manifest/import/SceneData';
-import {mountScene} from './io/player/MountScene';
+// import {mountScene} from './io/player/MountScene';
 import {ScenePlayerImporter} from './io/player/Scene';
 import {Poly} from './Poly';
 import {PolyNodeController} from './nodes/utils/poly/PolyNodeController';
@@ -13,7 +13,7 @@ export {
 	Poly,
 	SceneJsonImporter,
 	SceneDataManifestImporter,
-	mountScene,
+	// mountScene,
 	ScenePlayerImporter,
 	PolyNodeController,
 };

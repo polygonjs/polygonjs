@@ -23,18 +23,23 @@ QUnit.test('viewer has a viewer with and without post processing', async (assert
 	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		const canvas = viewer.canvas();
 		assert.ok(canvas);
-		const renderController = cameraNode.renderController();
-		const renderer = renderController.getRenderer(canvas)!;
+		const renderer = viewer.renderer()!;
 		assert.ok(renderer);
+	});
 
-		const postProcessingNetwork = cameraNode.createNode('postProcessNetwork');
-		const unrealBloom1 = postProcessingNetwork.createNode('unrealBloom');
-		unrealBloom1.flags.display.set(true);
-		cameraNode.p.postProcessNode.setNode(postProcessingNetwork);
-		cameraNode.p.doPostProcess.set(true);
-		await cameraNode.compute();
-
-		const effectComposerRenderer = renderController.getRenderer(canvas)!;
-		assert.ok(effectComposerRenderer);
+	const postProcessingNetwork = cameraNode.createNode('postProcessNetwork');
+	const unrealBloom1 = postProcessingNetwork.createNode('unrealBloom');
+	unrealBloom1.flags.display.set(true);
+	cameraNode.p.postProcessNode.setNode(postProcessingNetwork);
+	cameraNode.p.doPostProcess.set(true);
+	await cameraNode.compute();
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
+		const canvas = viewer.canvas();
+		assert.ok(canvas);
+		const renderer = viewer.renderer()!;
+		assert.ok(renderer);
+		const effectComposer = viewer.effectComposer()!;
+		assert.ok(effectComposer);
+		assert.ok(effectComposer.renderer);
 	});
 });

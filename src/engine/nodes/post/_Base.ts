@@ -1,30 +1,32 @@
 import {Camera} from 'three';
-import {Vector2} from 'three';
 import {TypedNode, BaseNodeType} from '../_Base';
 import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
-import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Scene} from 'three';
 import {FlagsControllerDB} from '../utils/FlagsController';
 import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
-import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
-import {BaseNetworkPostProcessNodeType} from './utils/EffectsComposerController';
+import {
+	BaseNetworkPostProcessNodeType,
+	EffectComposerController,
+	RenderTargetCreateOptions,
+} from './utils/EffectComposerController';
 import {WebGLRenderer} from 'three';
 import {WebGLRenderTarget} from 'three';
-import {RenderTargetCreateOptions} from './utils/EffectsComposerController';
+import {CoreCameraPostProcessController} from '../../../core/camera/CoreCameraPostProcessController';
 
 const INPUT_PASS_NAME = 'input pass';
 const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
 export interface TypedPostNodeContext {
+	composerController: EffectComposerController;
 	composer: EffectComposer;
 	camera: Camera;
-	resolution: Vector2;
+	renderer: WebGLRenderer;
+	// resolution: Vector2;
 	scene: Scene;
-	requester: BaseNodeType;
-	camera_node?: BaseCameraObjNodeType;
+	// requester: BaseNodeType;
 }
 
 function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
@@ -48,7 +50,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 
 	public override readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
-	protected _passesByRequesterId: Map<CoreGraphNodeId, P> = new Map();
+	protected _passesByEffectsComposer: Map<EffectComposer, P> = new Map();
 
 	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
@@ -75,20 +77,21 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this._addPassFromInput(0, context);
 
 		if (!this.flags.bypass.active()) {
-			let pass = this._passesByRequesterId.get(context.requester.graphNodeId());
+			let pass = this._passesByEffectsComposer.get(context.composer);
 			if (!pass) {
 				pass = this._createPass(context);
 				if (pass) {
-					this._passesByRequesterId.set(context.requester.graphNodeId(), pass);
+					this._passesByEffectsComposer.set(context.composer, pass);
 				}
 			}
 			if (pass) {
+				context.composerController.addPassByNodeInBuildPassesProcess(this, pass);
 				context.composer.addPass(pass);
 			}
 		}
 	}
-	passesByRequester(requester: BaseNodeType) {
-		return this._passesByRequesterId.get(requester.graphNodeId());
+	passesByComposer(composer: EffectComposer) {
+		return this._passesByEffectsComposer.get(composer);
 	}
 
 	protected _addPassFromInput(index: number, context: TypedPostNodeContext) {
@@ -105,20 +108,18 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	static PARAM_CALLBACK_updatePasses(node: BasePostProcessNodeType) {
 		node._updatePasses();
 	}
-	private _update_pass_bound = this.updatePass.bind(this);
+	private _updatePassBound = this.updatePass.bind(this);
 	private _updatePasses() {
-		this._passesByRequesterId.forEach(this._update_pass_bound);
+		this._passesByEffectsComposer.forEach(this._updatePassBound);
 	}
 	protected updatePass(pass: P) {}
 
 	private _postProcessNetworkNode(): BaseNetworkPostProcessNodeType {
 		const parentNode = this.parent()!;
-		if (parentNode.type() == NetworkNodeType.POST) {
+		if (CoreCameraPostProcessController.isPostProcessNetworkNode(parentNode)) {
 			return parentNode as BaseNetworkPostProcessNodeType;
 		} else {
-			if (parentNode.context() != NodeContext.POST) {
-				console.error('parent is neighter a POST NETWORK or a POST node');
-			}
+			console.error('parent is neither a POST NETWORK or a POST node', parentNode);
 			const parentPostNode = parentNode as BasePostProcessNodeType;
 			return parentPostNode._postProcessNetworkNode();
 		}

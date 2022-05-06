@@ -92,7 +92,7 @@ export class BokehPass2 {
 	public displayDepth = false;
 
 	constructor(
-		private _depthIfFieldNode: DepthOfFieldPostNode,
+		private _depthIOfFieldNode: DepthOfFieldPostNode,
 		private _scene: Scene,
 		private _camera: PerspectiveCamera,
 		private _resolution: Vector2
@@ -163,8 +163,6 @@ export class BokehPass2 {
 		// 	vertexShader: DepthInstanceVertex,
 		// 	fragmentShader: depthShader.fragmentShader,
 		// });
-
-		this.updateCameraUniformsWithNode(this._depthIfFieldNode, this._camera);
 	}
 
 	setSize(width: number, height: number) {
@@ -182,6 +180,8 @@ export class BokehPass2 {
 
 	private _prevClearColor = new Color();
 	render(renderer: WebGLRenderer, writeBuffer: WebGLRenderTarget, readBuffer: WebGLRenderTarget) {
+		this._updateCameraUniformsWithNode();
+
 		renderer.getClearColor(this._prevClearColor);
 		renderer.setClearColor(this.clearColor);
 
@@ -298,7 +298,9 @@ export class BokehPass2 {
 		this._originalMaterialByObjectId.clear();
 	}
 
-	updateCameraUniformsWithNode(node: DepthOfFieldPostNode, camera: PerspectiveCamera) {
+	private _updateCameraUniformsWithNode() {
+		const node = this._depthIOfFieldNode;
+		const camera = this._camera;
 		// from camera
 		this.bokehUniforms['focalLength'].value = camera.getFocalLength();
 		this.bokehUniforms['znear'].value = camera.near;

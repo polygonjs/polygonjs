@@ -55,12 +55,12 @@ export class MergeSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects(allObjects);
 	}
 	private _makeCompact(all_objects: Object3D[]): Object3DWithGeometry[] {
-		const materials_by_object_type: Map<ObjectType, Material> = new Map();
-		const objects_by_type: Map<ObjectType, Object3DWithGeometry[]> = new Map();
+		const materialsByObjectType: Map<ObjectType, Material> = new Map();
+		const objectsByType: Map<ObjectType, Object3DWithGeometry[]> = new Map();
 		// objects_by_type.set(ObjectType.MESH, []);
 		// objects_by_type.set(ObjectType.POINTS, []);
 		// objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
-		const ordered_object_types: ObjectType[] = [];
+		const orderedObjectTypes: ObjectType[] = [];
 
 		for (let object of all_objects) {
 			object.traverse((object3d: Object3D) => {
@@ -71,23 +71,25 @@ export class MergeSopOperation extends BaseSopOperation {
 				}
 				const object = object3d as Object3DWithGeometry;
 				if (object.geometry) {
-					const object_type = objectTypeFromConstructor(object.constructor);
-					if (!ordered_object_types.includes(object_type)) {
-						ordered_object_types.push(object_type);
-					}
-					if (object_type) {
-						const found_mat = materials_by_object_type.get(object_type);
-						if (!found_mat) {
-							materials_by_object_type.set(object_type, (object as Mesh).material as Material);
+					const objectType = objectTypeFromConstructor(object.constructor);
+					if (objectType) {
+						if (!orderedObjectTypes.includes(objectType)) {
+							orderedObjectTypes.push(objectType);
 						}
-						MapUtils.pushOnArrayAtEntry(objects_by_type, object_type, object);
+						if (objectType) {
+							const found_mat = materialsByObjectType.get(objectType);
+							if (!found_mat) {
+								materialsByObjectType.set(objectType, (object as Mesh).material as Material);
+							}
+							MapUtils.pushOnArrayAtEntry(objectsByType, objectType, object);
+						}
 					}
 				}
 			});
 		}
 		const merged_objects: Object3DWithGeometry[] = [];
-		ordered_object_types.forEach((object_type) => {
-			const objects = objects_by_type.get(object_type);
+		orderedObjectTypes.forEach((objectType) => {
+			const objects = objectsByType.get(objectType);
 			if (objects) {
 				const geometries: BufferGeometry[] = [];
 				for (let object of objects) {
@@ -100,8 +102,8 @@ export class MergeSopOperation extends BaseSopOperation {
 				try {
 					const merged_geometry = CoreGeometryBuilderMerge.merge(geometries);
 					if (merged_geometry) {
-						const material = materials_by_object_type.get(object_type);
-						const object = this.createObject(merged_geometry, object_type, material);
+						const material = materialsByObjectType.get(objectType);
+						const object = this.createObject(merged_geometry, objectType, material);
 						object.matrixAutoUpdate = false;
 						merged_objects.push(object as Object3DWithGeometry);
 					} else {

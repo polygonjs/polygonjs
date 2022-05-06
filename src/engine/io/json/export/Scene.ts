@@ -11,7 +11,8 @@ export interface SceneJsonExporterDataProperties {
 	maxFrame: number;
 	maxFrameLocked: boolean;
 	realtimeState: boolean;
-	mainCameraNodePath: string | null;
+	mainCameraPath?: string | null;
+	mainCameraNodePath?: string | null;
 	versions?: Versions;
 }
 export interface SceneJsonExporterData {
@@ -37,7 +38,7 @@ export class SceneJsonExporter {
 				maxFrame: this._scene.maxFrame(),
 				maxFrameLocked: this._scene.timeController.maxFrameLocked(),
 				realtimeState: this._scene.timeController.realtimeState(),
-				mainCameraNodePath: this._scene.camerasController.mainCameraNodePath(),
+				mainCameraPath: this._scene.camerasController.mainCameraPath(),
 				versions: versions,
 			},
 			root: nodes_data,

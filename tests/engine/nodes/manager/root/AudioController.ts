@@ -1,11 +1,12 @@
+import {Camera} from 'three';
 import {CoreSleep} from '../../../../../src/core/Sleep';
 import {ThreejsViewer} from '../../../../../src/engine/viewers/Threejs';
 import {RendererUtils} from '../../../../helpers/RendererUtils';
 
-function soundIcon(viewer: ThreejsViewer) {
+function soundIcon(viewer: ThreejsViewer<Camera>) {
 	return viewer.domElement()?.querySelector('svg') as HTMLElement | undefined;
 }
-function soundIconIsDisplayAndOn(assert: Assert, viewer: ThreejsViewer, state: boolean) {
+function soundIconIsDisplayAndOn(assert: Assert, viewer: ThreejsViewer<Camera>, state: boolean) {
 	const icon = soundIcon(viewer)!;
 	if (state) {
 		assert.ok(icon.classList.contains('soundOn'), `classes: ${icon.classList}`);
@@ -15,7 +16,7 @@ function soundIconIsDisplayAndOn(assert: Assert, viewer: ThreejsViewer, state: b
 		assert.notOk(icon.classList.contains('soundOn'), `classes: ${icon.classList}`);
 	}
 }
-function clickOnSoundIcon(viewer: ThreejsViewer) {
+function clickOnSoundIcon(viewer: ThreejsViewer<Camera>) {
 	const icon = soundIcon(viewer)!;
 	icon.parentElement?.dispatchEvent(new PointerEvent('pointerdown'));
 }

@@ -6,18 +6,15 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {BokehPass2} from '../../../modules/core/post_process/BokehPass2';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {PerspectiveCamera} from 'three';
-import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
-import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
+import {PerspectiveCamera, Vector2} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BaseParamType} from '../../params/_Base';
 class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	/** @param focalDepth */
 	focalDepth = ParamConfig.FLOAT(10, {
 		range: [0, 50],
 		rangeLocked: [true, false],
 		step: 0.001,
-		...PostParamOptions,
+		cook: false,
 	});
 	/** @param fStep */
 	fStep = ParamConfig.FLOAT(10, {
@@ -125,50 +122,25 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<BokehPass2, Depth
 		return x * x * (3 - 2 * x);
 	}
 
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
 		const camera = context.camera;
 		if ((camera as PerspectiveCamera).isPerspectiveCamera) {
-			const cameraNode = context.camera_node as PerspectiveCameraObjNode;
-			if (cameraNode) {
-				const pass = new BokehPass2(this, context.scene, cameraNode.object, context.resolution);
+			const perspectiveCamera = camera as PerspectiveCamera;
+			context.renderer.getSize(this._rendererSize);
+			const pass = new BokehPass2(this, context.scene, perspectiveCamera, this._rendererSize);
 
-				this.updatePass(pass);
+			// UPDATE: now that cameras can be created at the geometry level,
+			// we cannot track when the camera node is updated,
+			// so it seems best to update the camera uniforms on every render.
+			// (and that is done inside the pass)
+			// if (camera instanceof PerspectiveCamera) {
+			// pass.updateCameraUniformsWithNode(this, camera);
+			// }
+			this.updatePass(pass);
 
-				// TODO: add a dispose to get rid of those connections when the node is deleted
-				// or when the camera is deleted
-				// and maybe the graph node should be on the pass itself?
-				// so that it can be called when we call .dispose() on it?
-				const coreGraphNode = new CoreGraphNode(this.scene(), 'DOF');
-				const params: BaseParamType[] = [
-					cameraNode.p.near,
-					cameraNode.p.far,
-					cameraNode.p.fov,
-					this.p.focalDepth,
-				];
-				for (let param of params) {
-					coreGraphNode.addGraphInput(param);
-				}
-				coreGraphNode.addPostDirtyHook('post/DOF', async (triggerNode: CoreGraphNode | undefined) => {
-					if (triggerNode) {
-						const triggerParam: BaseParamType = triggerNode as BaseParamType;
-						if (params.includes(triggerParam)) {
-							await triggerParam.compute();
-						}
-					}
-					this._updatePassFromCameraNode(pass, cameraNode);
-				});
-				// on scene initialization,
-				// we need to make sure the camera is cooked properly
-				cameraNode.compute().then(() => {
-					this._updatePassFromCameraNode(pass, cameraNode);
-				});
-
-				return pass;
-			}
+			return pass;
 		}
-	}
-	private async _updatePassFromCameraNode(pass: BokehPass2, camera: PerspectiveCameraObjNode) {
-		pass.updateCameraUniformsWithNode(this, camera.object);
 	}
 	override updatePass(pass: BokehPass2) {
 		pass.bokehUniforms['fstop'].value = this.pv.fStep;

@@ -111,6 +111,8 @@ export class ChildrenDisplayController {
 		}
 		this._children_uuids_dict.clear();
 		this._children_length = 0;
+
+		this._notifyCamerasController();
 	}
 
 	async _setContentUnderSopGroup() {
@@ -143,9 +145,13 @@ export class ChildrenDisplayController {
 					}
 					this._children_length = new_objects.length;
 				}
+				this._notifyCamerasController();
 				return;
 			}
 		}
 		this.remove_children();
+	}
+	private _notifyCamerasController() {
+		this.node.scene().camerasController.updateFromChangeInObject(this._sopGroup);
 	}
 }

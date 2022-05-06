@@ -1,4 +1,4 @@
-import type {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
+// import type {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
 import {BaseNodeType} from '../../../_Base';
 import {Constructor} from '../../../../../types/GlobalTypes';
 import {NetworkNodeType} from '../../../../poly/NodeContext';
@@ -7,12 +7,12 @@ import {NetworkNodeType} from '../../../../poly/NodeContext';
 // }
 const POST_PROCESS_PARAM_OPTIONS = {
 	callback: (node: BaseNodeType) => {
-		PARAM_CALLBACK_reset_effects_composer(node as BaseThreejsCameraObjNodeType);
+		// PARAM_CALLBACK_reset_effects_composer(node as BaseThreejsCameraObjNodeType);
 	},
 };
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
-import {PARAM_CALLBACK_reset_effects_composer} from './postProcessParamCallback';
+// import {PARAM_CALLBACK_reset_effects_composer} from './postProcessParamCallback';
 export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		doPostProcess = ParamConfig.BOOLEAN(0);

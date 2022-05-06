@@ -8,7 +8,7 @@ import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
-import {EffectsComposerController, PostProcessNetworkParamsConfig} from '../post/utils/EffectsComposerController';
+import {EffectComposerController, PostProcessNetworkParamsConfig} from '../post/utils/EffectComposerController';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 
 export class PostProcessNetworkActorNode extends BaseNetworkActorNode<PostProcessNetworkParamsConfig> {
@@ -16,7 +16,7 @@ export class PostProcessNetworkActorNode extends BaseNetworkActorNode<PostProces
 	static override type() {
 		return NetworkNodeType.POST;
 	}
-	readonly effectsComposerController: EffectsComposerController = new EffectsComposerController(this);
+	readonly effectsComposerController: EffectComposerController = new EffectComposerController(this);
 	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.effectsComposerController.displayNodeControllerCallbacks()

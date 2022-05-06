@@ -15,6 +15,7 @@ interface FXAAPassWithUniforms extends ShaderPass {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Vector2} from 'three';
 class FXAAPostParamsConfig extends NodeParamsConfig {
 	/** @param transparent */
 	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
@@ -25,10 +26,11 @@ export class FXAAPostNode extends TypedPostProcessNode<ShaderPass, FXAAPostParam
 	static override type() {
 		return 'FXAA';
 	}
-
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
+		context.renderer.getSize(this._rendererSize);
 		const pass = new ShaderPass(FXAAShader) as FXAAPassWithUniforms;
-		pass.uniforms.resolution.value.set(1 / context.resolution.x, 1 / context.resolution.y);
+		pass.uniforms.resolution.value.set(1 / this._rendererSize.x, 1 / this._rendererSize.y);
 		pass.material.transparent = true;
 		this.updatePass(pass);
 

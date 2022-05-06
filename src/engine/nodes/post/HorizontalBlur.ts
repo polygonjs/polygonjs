@@ -16,6 +16,7 @@ interface HorizontalBlurPassWithUniforms extends ShaderPass {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Vector2} from 'three';
 class HorizontalBlurPostParamsConfig extends NodeParamsConfig {
 	/** @param amount */
 	amount = ParamConfig.FLOAT(2, {
@@ -34,9 +35,11 @@ export class HorizontalBlurPostNode extends TypedPostProcessNode<ShaderPass, Hor
 		return 'horizontalBlur';
 	}
 
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
+		context.renderer.getSize(this._rendererSize);
 		const pass = new ShaderPass(HorizontalBlurShader) as HorizontalBlurPassWithUniforms;
-		pass.resolution_x = context.resolution.x;
+		pass.resolution_x = this._rendererSize.x;
 		this.updatePass(pass);
 		return pass;
 	}

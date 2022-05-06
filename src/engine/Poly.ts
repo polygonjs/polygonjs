@@ -15,7 +15,7 @@ import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry
 import {BaseCoreLogger} from '../core/logger/Base';
 import {BaseOperation} from './operations/_Base';
 import {PluginsRegister, WrapConfigurePolygonjsCallback} from './poly/registers/plugins/PluginsRegister';
-import {CamerasRegister} from './poly/registers/cameras/CamerasRegister';
+import {PolyCamerasRegister, ViewerCreateCallback} from './poly/registers/cameras/PolyCamerasRegister';
 import {PolyPluginInterface} from './poly/registers/plugins/Plugin';
 import {PolyDictionary} from '../types/GlobalTypes';
 import {BlobsController} from './poly/BlobsController';
@@ -24,6 +24,7 @@ import {AssetUrlsController} from './poly/AssetUrlsController';
 import {PolyPerformanceformanceController} from './poly/PerformanceController';
 import {ScenesRegister} from './poly/ScenesRegister';
 import {LogoController} from './poly/LogoController';
+import {Camera} from 'three';
 
 declare global {
 	interface Window {
@@ -44,7 +45,7 @@ export class PolyEngine {
 	public readonly expressionsRegister: ExpressionRegister = new ExpressionRegister();
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
-	public readonly camerasRegister: CamerasRegister = new CamerasRegister(this);
+	public readonly camerasRegister: PolyCamerasRegister = new PolyCamerasRegister(this);
 	public readonly blobs: BlobsController = new BlobsController(this);
 	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
 	public readonly logo = new LogoController();
@@ -85,8 +86,11 @@ export class PolyEngine {
 		this.operationsRegister.register(operation, options);
 	}
 
-	registerCamera(node: BaseNodeConstructor) {
-		this.camerasRegister.register(node);
+	registerCamera<C extends Camera>(cameraClass: any, viewerCreateCallback: ViewerCreateCallback<C>) {
+		this.camerasRegister.register(cameraClass, viewerCreateCallback);
+	}
+	registerCameraNodeType(nodeType: string) {
+		this.camerasRegister.registerNodeType(nodeType);
 	}
 	registerPlugin(plugin: PolyPluginInterface) {
 		this.pluginsRegister.register(plugin);
@@ -101,9 +105,9 @@ export class PolyEngine {
 	registeredOperation(parent_context: NodeContext, operation_type: string): typeof BaseOperation | undefined {
 		return this.operationsRegister.registeredOperation(parent_context, operation_type);
 	}
-	registeredCameraTypes() {
-		return this.camerasRegister.registeredTypes();
-	}
+	// registeredCameraTypes() {
+	// 	return this.camerasRegister.registeredTypes();
+	// }
 
 	inWorkerThread() {
 		return false;

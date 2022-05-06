@@ -10,7 +10,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/EventsController';
+import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/ViewerEventsController';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
 class PointerEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */

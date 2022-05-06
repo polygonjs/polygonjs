@@ -1,4 +1,3 @@
-import {BaseCameraObjNodeType} from '../../../nodes/obj/_BaseCamera';
 import {BaseInputEventNodeType, EventData} from '../../../nodes/event/_BaseInput';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
@@ -14,7 +13,7 @@ interface EventContextValue {
 export interface EventContext<E extends Event> {
 	viewer?: Readonly<BaseViewerType>;
 	event?: Readonly<E>;
-	cameraNode?: Readonly<BaseCameraObjNodeType>;
+	// camera?: Readonly<Camera>;
 	value?: EventContextValue;
 }
 export abstract class BaseSceneEventsController<E extends Event, T extends BaseInputEventNodeType> {

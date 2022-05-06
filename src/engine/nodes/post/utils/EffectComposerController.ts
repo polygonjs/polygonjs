@@ -5,12 +5,11 @@ import {EffectComposer} from '../../../../modules/core/post_process/EffectCompos
 import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
 import {PostNodeChildrenMap} from '../../../poly/registers/nodes/Post';
-import {TypedNode, BaseNodeType} from '../../_Base';
+import {BaseNodeType, TypedNode} from '../../_Base';
 import {BasePostProcessNodeType} from '../_Base';
 import {Scene} from 'three';
 import {Camera} from 'three';
 import {Vector2} from 'three';
-import {BaseCameraObjNodeType} from '../../obj/_BaseCamera';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {RGBAFormat, UnsignedByteType, HalfFloatType, FloatType} from 'three';
 import {Poly} from '../../../Poly';
@@ -22,6 +21,7 @@ import {
 	MIN_FILTER_MENU_ENTRIES,
 } from '../../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 
 // const RENDER_TARGET_FORMATS_OPTIONS: PolyDictionary<number> = {
 // 	RGBFormat: RGBFormat,
@@ -48,38 +48,41 @@ const RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES = Object.keys(RENDER_TARGET_TEXTUR
 	};
 });
 
-export class PostProcessNetworkParamsConfig extends NodeParamsConfig {
-	prependRenderPass = ParamConfig.BOOLEAN(1);
-	// format = ParamConfig.INTEGER(RGBAFormat, {
-	// 	menu: {
-	// 		entries: RENDER_TARGET_FORMATS_MENU_ENTRIES,
-	// 	},
-	// });
-	textureType = ParamConfig.INTEGER(UnsignedByteType, {
-		menu: {
-			entries: RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES,
-		},
-	});
-	tmagFilter = ParamConfig.BOOLEAN(0);
-	magFilter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
-		visibleIf: {tmagFilter: 1},
-		menu: {
-			entries: MAG_FILTER_MENU_ENTRIES,
-		},
-	});
-	tminFilter = ParamConfig.BOOLEAN(0);
-	minFilter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
-		visibleIf: {tminFilter: 1},
-		menu: {
-			entries: MIN_FILTER_MENU_ENTRIES,
-		},
-	});
-	stencilBuffer = ParamConfig.BOOLEAN(0);
-	sampling = ParamConfig.INTEGER(1, {
-		range: [1, 4],
-		rangeLocked: [true, false],
-	});
+export function PostProcessNetworkParamsConfigMixin<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		prependRenderPass = ParamConfig.BOOLEAN(1);
+		// format = ParamConfig.INTEGER(RGBAFormat, {
+		// 	menu: {
+		// 		entries: RENDER_TARGET_FORMATS_MENU_ENTRIES,
+		// 	},
+		// });
+		textureType = ParamConfig.INTEGER(UnsignedByteType, {
+			menu: {
+				entries: RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES,
+			},
+		});
+		tmagFilter = ParamConfig.BOOLEAN(0);
+		magFilter = ParamConfig.INTEGER(MAG_FILTER_DEFAULT_VALUE, {
+			visibleIf: {tmagFilter: 1},
+			menu: {
+				entries: MAG_FILTER_MENU_ENTRIES,
+			},
+		});
+		tminFilter = ParamConfig.BOOLEAN(0);
+		minFilter = ParamConfig.INTEGER(MIN_FILTER_DEFAULT_VALUE, {
+			visibleIf: {tminFilter: 1},
+			menu: {
+				entries: MIN_FILTER_MENU_ENTRIES,
+			},
+		});
+		stencilBuffer = ParamConfig.BOOLEAN(0);
+		sampling = ParamConfig.INTEGER(1, {
+			range: [1, 4],
+			rangeLocked: [true, false],
+		});
+	};
 }
+export class PostProcessNetworkParamsConfig extends PostProcessNetworkParamsConfigMixin(NodeParamsConfig) {}
 export interface BaseNetworkPostProcessNodeType extends TypedNode<any, PostProcessNetworkParamsConfig> {
 	readonly displayNodeController: DisplayNodeController;
 	createNode<S extends keyof PostNodeChildrenMap>(node_class: S): PostNodeChildrenMap[S];
@@ -87,17 +90,16 @@ export interface BaseNetworkPostProcessNodeType extends TypedNode<any, PostProce
 	children(): BasePostProcessNodeType[];
 	nodesByType<K extends keyof PostNodeChildrenMap>(type: K): PostNodeChildrenMap[K][];
 
-	readonly effectsComposerController: EffectsComposerController;
+	readonly effectsComposerController: EffectComposerController;
 }
 
 interface CreateEffectsComposerOptions {
 	renderer: WebGLRenderer;
 	scene: Scene;
 	camera: Camera;
-	resolution: Vector2;
+	// resolution: Vector2;
 	// render_target?: WebGLRenderTarget;
-	requester: BaseNodeType;
-	camera_node?: BaseCameraObjNodeType;
+	// requester: BaseNodeType;
 	// useRenderTarget?: boolean;
 	// prepend_render_pass?: boolean;
 }
@@ -106,7 +108,7 @@ export interface RenderTargetCreateOptions {
 	height: number;
 }
 
-export class EffectsComposerController {
+export class EffectComposerController {
 	constructor(private node: BaseNetworkPostProcessNodeType) {}
 
 	displayNodeControllerCallbacks(): DisplayNodeControllerCallbacks {
@@ -169,7 +171,16 @@ export class EffectsComposerController {
 		return renderTarget;
 	}
 
+	private _passByNodeInBuildPassesProcess: Map<BaseNodeType, Pass> = new Map();
+	addPassByNodeInBuildPassesProcess(node: BaseNodeType, pass: Pass) {
+		this._passByNodeInBuildPassesProcess.set(node, pass);
+	}
+	passByNodeInBuildPassesProcess(node: BaseNodeType) {
+		return this._passByNodeInBuildPassesProcess.get(node);
+	}
 	private _buildPasses(composer: EffectComposer, options: CreateEffectsComposerOptions) {
+		this._passByNodeInBuildPassesProcess.clear();
+
 		if (isBooleanTrue(this.node.pv.prependRenderPass)) {
 			const renderPass = new RenderPass(options.scene, options.camera);
 			composer.addPass(renderPass);
@@ -178,13 +189,15 @@ export class EffectsComposerController {
 		const postNode = this.node.displayNodeController.displayNode() as BasePostProcessNodeType;
 		if (postNode) {
 			postNode.setupComposer({
+				composerController: this,
 				composer: composer,
 				camera: options.camera,
-				resolution: options.resolution,
-				camera_node: options.camera_node,
+				renderer: options.renderer,
+				// resolution: options.resolution,
 				scene: options.scene,
-				requester: options.requester,
+				// requester: options.requester,
 			});
 		}
+		this._passByNodeInBuildPassesProcess.clear();
 	}
 }

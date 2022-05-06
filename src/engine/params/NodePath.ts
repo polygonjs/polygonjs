@@ -152,8 +152,7 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 		if (expectedContext == null) {
 			return true;
 		}
-		const nodeContext = node.parent()?.childrenController?.context;
-		return expectedContext == nodeContext;
+		return expectedContext == node.context();
 	}
 	private _expectedNodeTypes() {
 		return this.options.nodeSelectionTypes();

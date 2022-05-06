@@ -26,10 +26,10 @@ QUnit.test('actor/code simple', async (assert) => {
 		assert.equal(object.position.y, 0);
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 0.5, 0.25, 'time is half second');
-		assert.in_delta(object.position.y, 27, 6);
+		assert.in_delta(object.position.y, 27, 6, 'pos is 27');
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 1, 0.25, 'time is one sec');
-		assert.in_delta(object.position.y, 54, 10);
+		assert.in_delta(object.position.y, 54, 10, 'pos is 54');
 	});
 });
 

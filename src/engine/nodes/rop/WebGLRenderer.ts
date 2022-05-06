@@ -6,7 +6,7 @@
  *
  */
 import {TypedRopNode} from './_Base';
-import {Mesh} from 'three';
+import {Camera, Mesh} from 'three';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
 import {WebGLRenderer, WebGLRendererParameters} from 'three';
 import {
@@ -31,8 +31,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-import {defaultPixelRatio} from '../obj/utils/cameras/defaultPixelRatio';
+import {defaultPixelRatio} from '../../../core/camera/defaultPixelRatio';
 
 enum EncodingName {
 	Linear = 'Linear',
@@ -252,12 +251,8 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		return RopType.WEBGL;
 	}
 
-	private _renderersbyCameraNode: Map<BaseCameraObjNodeType, WebGLRenderer> = new Map();
-	createRenderer(
-		cameraNode: BaseCameraObjNodeType,
-		canvas: HTMLCanvasElement,
-		gl: WebGLRenderingContext
-	): WebGLRenderer {
+	// private _renderersbyCamera: Map<Camera, WebGLRenderer> = new Map();
+	createRenderer(camera: Camera, canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<
 			keyof WebGLRendererParameters
@@ -293,22 +288,22 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 			});
 		}
 
-		this._update_renderer(renderer);
+		this._updateRenderer(renderer);
 
-		this._renderersbyCameraNode.set(cameraNode, renderer);
+		// this._renderersbyCamera.set(camera, renderer);
 		return renderer;
 	}
 
 	override cook() {
-		this._renderersbyCameraNode.forEach((renderer, cameraNode) => {
-			this._update_renderer(renderer);
-		});
+		// this._renderersbyCamera.forEach((renderer, cameraNode) => {
+		// 	this._updateRenderer(renderer);
+		// });
 
 		this._traverse_scene_and_update_materials();
 
 		this.cookController.endCook();
 	}
-	_update_renderer(renderer: WebGLRenderer) {
+	_updateRenderer(renderer: WebGLRenderer) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
 		renderer.physicallyCorrectLights = this.pv.physicallyCorrectLights;
 		renderer.outputEncoding = this.pv.outputEncoding;

@@ -42,7 +42,7 @@ interface MaterialWithColor extends Material {
 // 	readonly isSkinnedMesh: boolean;
 // }
 
-type AttributeDictionary = PolyDictionary<AttribValue>;
+export type AttributeDictionary = PolyDictionary<AttribValue>;
 
 export class CoreObject extends CoreEntity {
 	constructor(private _object: Object3D, index: number) {
@@ -132,7 +132,7 @@ export class CoreObject extends CoreEntity {
 	}
 
 	static setAttribute = this.addAttribute;
-	static addAttribute(object: Object3D, attrib_name: string, value: AttribValue) {
+	static addAttribute(object: Object3D, attribName: string, value: AttribValue) {
 		if (CoreType.isArray(value)) {
 			const converted_value = this._convert_array_to_vector(value);
 			if (!converted_value) {
@@ -142,7 +142,7 @@ export class CoreObject extends CoreEntity {
 			}
 		}
 
-		this.attributesDictionary(object)[attrib_name] = value;
+		this.attributesDictionary(object)[attribName] = value;
 	}
 	addAttribute(name: string, value: AttribValue) {
 		CoreObject.addAttribute(this._object, name, value);
@@ -205,6 +205,9 @@ export class CoreObject extends CoreEntity {
 
 	deleteAttribute(name: string) {
 		delete this._attributesDictionary()[name];
+	}
+	static deleteAttribute(object: Object3D, attribName: string) {
+		delete this.attributesDictionary(object)[attribName];
 	}
 	static attribValue(
 		object: Object3D,

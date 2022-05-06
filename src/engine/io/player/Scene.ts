@@ -1,6 +1,7 @@
 import {CoreType} from '../../../core/Type';
 import {OnProgressArguments, OnProgressUpdateCallback} from '../../nodes/manager/utils/Scene/LoadProgress';
-import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
+// import {BaseNodeType} from '../../nodes/_Base';
+// import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
 import {BaseViewerType} from '../../viewers/_Base';
@@ -42,10 +43,15 @@ export interface SceneDataImportOptionsOnly {
 
 // type PreloadPromises = [Promise<void>, Promise<SceneJsonExporterData>];
 // type PreloadPromises = [Promise<SceneJsonExporterData>];
+type OnCameraCreatorNodeLoadedResolve = () => void;
+type CreateScenePromiseCallback = () => Promise<PolyScene>;
 
 export class ScenePlayerImporter {
 	private _scene: PolyScene | undefined;
 	private _viewer: BaseViewerType | undefined;
+	private _onLoadCompleteCalled = false;
+	private _onCameraCreatorNodeLoadedResolve: OnCameraCreatorNodeLoadedResolve | undefined;
+	// private _cameraCreatorNode: BaseNodeType | null = null;
 	constructor(private options: SceneDataImportOptions) {}
 
 	static async loadSceneData(options: SceneDataImportOptions) {
@@ -85,12 +91,12 @@ export class ScenePlayerImporter {
 	// 	return scene;
 	// }
 
-	private _onLoadCompleteCalled = false;
 	private async _onLoadComplete(scene: PolyScene) {
 		if (this._onLoadCompleteCalled == true) {
 			return;
 		}
 		this._onLoadCompleteCalled = true;
+
 		if (this._viewer) {
 			this._markViewerAsReady(this._viewer);
 		}
@@ -146,43 +152,80 @@ export class ScenePlayerImporter {
 		});
 	}
 	async loadScene() {
-		const configureScene = this.options.configureScene;
-		const importer = new SceneJsonImporter(this.options.sceneData, {
-			sceneName: this.options.sceneName,
-			configureScene,
-			nodeCookWatcher: this._watchNodesProgress.bind(this),
-		});
-		this._scene = await importer.scene();
-
-		// mount
-		const domElement = this._domElement();
-		let createViewer = false;
-		if (this.options.createViewer != null) {
-			createViewer = this.options.createViewer;
-		}
-		// - if domElement is given, but createViewer is not specified, we assume that the intent is to create the viewer and mount it.
-		// - if domElement is null but createViewer is true, we create the viewer, but it will not be mounted.
-		if (domElement || createViewer) {
-			const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;
-			if (!cameraNode) {
-				console.warn('no main camera found, viewer is not mounted');
-			} else {
-				this._viewer = cameraNode.createViewer({
-					element: domElement,
-					viewerProperties: {autoRender: false},
+		const createSceneAndWaitForCameraCreatorNode: CreateScenePromiseCallback = () => {
+			return new Promise(async (resolve) => {
+				const configureScene = this.options.configureScene;
+				const importer = new SceneJsonImporter(this.options.sceneData, {
+					sceneName: this.options.sceneName,
+					configureScene,
+					nodeCookWatcher: (scene) => {
+						this._watchNodesProgress(scene);
+					},
 				});
-				// if the scene is marked as ready, and thew viewer hasn't been marked as ready yet,
-				// which can happen if there are no nodes to check the progress of,
-				// then the viewer should be marked as ready now
-				if (this._sceneMarkedAsReady == true) {
-					this._markViewerAsReady(this._viewer);
-				}
 
-				this._dispatchEvent(PolyEventName.VIEWER_MOUNTED);
+				const scene = importer.scene();
+				// now we must wait that a camera matching the mainCamera is found in the hierarchy.
+				this._onCameraCreatorNodeLoadedResolve = () => resolve(scene);
+				scene.camerasController.onCameraObjectsUpdated(async () => {
+					const camera = await scene.camerasController.mainCamera({findAnyCamera: false});
+					if (camera) {
+						if (this._onCameraCreatorNodeLoadedResolve) {
+							this._onCameraCreatorNodeLoadedResolve();
+						}
+					}
+				});
+				// this._cameraCreatorNode = await scene.root().loadProgress.cameraCreatorNode();
+			});
+		};
+		this._scene = await createSceneAndWaitForCameraCreatorNode();
+		const scene = this._scene;
+
+		const createViewer = async () => {
+			// mount
+			const domElement = this._domElement();
+			let createViewer = false;
+			if (this.options.createViewer != null) {
+				createViewer = this.options.createViewer;
 			}
-		}
+			// - if domElement is given, but createViewer is not specified, we assume that the intent is to create the viewer and mount it.
+			// - if domElement is null but createViewer is true, we create the viewer, but it will not be mounted.
+			if (domElement || createViewer) {
+				this._viewer = await scene.camerasController.createMainViewer({
+					autoRender: false,
+				});
+				if (this._viewer) {
+					if (domElement) {
+						this._viewer.mount(domElement);
+					}
 
-		return this._scene;
+					if (this._sceneMarkedAsReady == true) {
+						this._markViewerAsReady(this._viewer);
+					}
+
+					this._dispatchEvent(PolyEventName.VIEWER_MOUNTED);
+				}
+				// const cameraNode = this._scene.mainCameraNode() as PerspectiveCameraObjNode;
+				// if (!cameraNode) {
+				// 	console.warn('no main camera found, viewer is not mounted');
+				// } else {
+				// 	this._viewer = cameraNode.createViewer({
+				// 		element: domElement,
+				// 		viewerProperties: {autoRender: false},
+				// 	});
+				// 	// if the scene is marked as ready, and thew viewer hasn't been marked as ready yet,
+				// 	// which can happen if there are no nodes to check the progress of,
+				// 	// then the viewer should be marked as ready now
+				// 	if (this._sceneMarkedAsReady == true) {
+				// 		this._markViewerAsReady(this._viewer);
+				// 	}
+
+				// 	this._dispatchEvent(PolyEventName.VIEWER_MOUNTED);
+				// }
+			}
+		};
+
+		await createViewer();
+		return scene;
 	}
 	private _domElement(): HTMLElement | undefined {
 		const domElement = this.options.domElement;

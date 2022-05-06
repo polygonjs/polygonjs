@@ -1,6 +1,5 @@
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode} from '../../Raycast';
-import {BaseThreejsCameraObjNodeType} from '../../../obj/_BaseCamera';
 import {WebGLRenderTarget} from 'three';
 import {Material} from 'three';
 import {LinearFilter, NearestFilter, RGBAFormat, FloatType, NoToneMapping, LinearEncoding} from 'three';
@@ -73,65 +72,67 @@ export class RaycastGPUController extends BaseRaycastController {
 
 	processEvent(context: EventContext<MouseEvent>) {
 		const canvas = context.viewer?.canvas();
-		if (!(canvas && context.cameraNode)) {
+		const camera = context.viewer?.camera();
+		if (!(canvas && camera)) {
 			return;
 		}
 
-		const camera_node = context.cameraNode;
-		const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).renderController();
+		// const camera_node = context.cameraNode;
+		// const renderer_controller = (camera_node as BaseThreejsCameraObjNodeType).renderController();
 
-		if (renderer_controller) {
-			this._renderTarget =
-				this._renderTarget ||
-				new WebGLRenderTarget(canvas.offsetWidth, canvas.offsetHeight, {
-					minFilter: LinearFilter,
-					magFilter: NearestFilter,
-					format: RGBAFormat,
-					type: FloatType,
-				});
+		// if (renderer_controller) {
+		this._renderTarget =
+			this._renderTarget ||
+			new WebGLRenderTarget(canvas.offsetWidth, canvas.offsetHeight, {
+				minFilter: LinearFilter,
+				magFilter: NearestFilter,
+				format: RGBAFormat,
+				type: FloatType,
+			});
 
-			// if (!this._resolved_material) {
-			// 	this.update_material();
-			// 	// console.warn('no material found');
-			// 	// return;
-			// }
+		// if (!this._resolved_material) {
+		// 	this.update_material();
+		// 	// console.warn('no material found');
+		// 	// return;
+		// }
 
-			// find renderer and use it
-			const threejs_camera = camera_node as BaseThreejsCameraObjNodeType;
-			const scene = renderer_controller.resolvedScene() || camera_node.scene().threejsScene();
-			const renderer = renderer_controller.renderer(canvas);
-			if (!renderer) {
-				return;
-			}
-			this._modify_scene_and_renderer(scene, renderer);
-			renderer.setRenderTarget(this._renderTarget);
-			renderer.clear();
-			renderer.render(scene, threejs_camera.object);
-			renderer.setRenderTarget(null);
-			this._restore_scene_and_renderer(scene, renderer);
-
-			// read result
-			renderer.readRenderTargetPixels(
-				this._renderTarget,
-				Math.round(this._cursor.x * canvas.offsetWidth),
-				Math.round(this._cursor.y * canvas.offsetHeight),
-				1,
-				1,
-				this._read
-			);
-			this._paramColor[0] = this._read[0];
-			this._paramColor[1] = this._read[1];
-			this._paramColor[2] = this._read[2];
-			this._paramAlpha = this._read[3];
-			this._node.p.pixelColor.set(this._paramColor);
-			this._node.p.pixelAlpha.set(this._paramAlpha);
-
-			if (this._node.pv.pixelColor.r > this._node.pv.hitThreshold) {
-				this._node.triggerHit(context);
-			} else {
-				this._node.triggerMiss(context);
-			}
+		// find renderer and use it
+		// const threejs_camera = camera_node as BaseThreejsCameraObjNodeType;
+		// const scene = renderer_controller.resolvedScene() || camera_node.scene().threejsScene();
+		const scene = this._node.scene().threejsScene();
+		const renderer = this._node.scene().renderersRegister.lastRegisteredRenderer();
+		if (!renderer) {
+			return;
 		}
+		this._modify_scene_and_renderer(scene, renderer);
+		renderer.setRenderTarget(this._renderTarget);
+		renderer.clear();
+		renderer.render(scene, camera);
+		renderer.setRenderTarget(null);
+		this._restore_scene_and_renderer(scene, renderer);
+
+		// read result
+		renderer.readRenderTargetPixels(
+			this._renderTarget,
+			Math.round(this._cursor.x * canvas.offsetWidth),
+			Math.round(this._cursor.y * canvas.offsetHeight),
+			1,
+			1,
+			this._read
+		);
+		this._paramColor[0] = this._read[0];
+		this._paramColor[1] = this._read[1];
+		this._paramColor[2] = this._read[2];
+		this._paramAlpha = this._read[3];
+		this._node.p.pixelColor.set(this._paramColor);
+		this._node.p.pixelAlpha.set(this._paramAlpha);
+
+		if (this._node.pv.pixelColor.r > this._node.pv.hitThreshold) {
+			this._node.triggerHit(context);
+		} else {
+			this._node.triggerMiss(context);
+		}
+		// }
 	}
 
 	private _modify_scene_and_renderer(scene: Scene, renderer: WebGLRenderer) {

@@ -22,7 +22,7 @@ import {CubeUVReflectionMapping} from 'three';
 
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	useCameraRenderer = ParamConfig.BOOLEAN(1);
+	useCameraRenderer = ParamConfig.BOOLEAN(0);
 	/** @param defines if the texture is used for reflection or refraction */
 	// mode = ParamConfig.INTEGER(0, {
 	// 	menu: {
@@ -38,8 +38,8 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	static override type() {
 		return 'envMap';
 	}
-	private _data_texture_controller: DataTextureController | undefined;
-	private _renderer_controller: CopRendererController | undefined;
+	private _dataTextureController: DataTextureController | undefined;
+	private _rendererController: CopRendererController | undefined;
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);
@@ -54,8 +54,8 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	}
 
 	private async _convertTextureToEnvMap(input_texture: Texture) {
-		this._renderer_controller = this._renderer_controller || new CopRendererController(this);
-		const renderer = await this._renderer_controller.renderer();
+		this._rendererController = this._rendererController || new CopRendererController(this);
+		const renderer = await this._rendererController.waitForRenderer();
 
 		if (renderer) {
 			const pmremGenerator = new PMREMGenerator(renderer);
@@ -68,10 +68,10 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 				this._setMapping(exrCubeRenderTarget.texture);
 				this.setTexture(exrCubeRenderTarget.texture);
 			} else {
-				this._data_texture_controller =
-					this._data_texture_controller ||
+				this._dataTextureController =
+					this._dataTextureController ||
 					new DataTextureController(DataTextureControllerBufferType.Uint16Array);
-				const texture = this._data_texture_controller.from_render_target(renderer, exrCubeRenderTarget);
+				const texture = this._dataTextureController.from_render_target(renderer, exrCubeRenderTarget);
 				this._setMapping(texture);
 				this.setTexture(texture);
 			}

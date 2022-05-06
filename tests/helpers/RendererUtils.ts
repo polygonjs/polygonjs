@@ -1,4 +1,4 @@
-import {Vector2} from 'three';
+import {Camera} from 'three';
 import {WebGLRenderer} from 'three';
 import {Scene} from 'three';
 import {Mesh} from 'three';
@@ -9,19 +9,24 @@ import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
 import {BoxBufferGeometry} from 'three';
 import {Material} from 'three';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
+import {TypedViewer} from '../../src/engine/viewers/_Base';
+import {OrthographicCameraObjNode} from '../../src/engine/nodes/obj/OrthographicCamera';
 
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
 	renderer: WebGLRenderer;
-	viewer?: WebGLRenderer;
+	viewer?: TypedViewer<Camera>;
 }
 
 interface WithViewerCallbackArgs {
-	viewer: ThreejsViewer;
+	viewer: ThreejsViewer<Camera>;
 	element: HTMLElement;
+	canvas: HTMLCanvasElement;
+	renderer?: WebGLRenderer;
 }
 interface WithViewerOptions {
-	cameraNode: PerspectiveCameraObjNode;
+	cameraNode: PerspectiveCameraObjNode | OrthographicCameraObjNode;
+	mount?: boolean;
 }
 type WithViewerCallback = (args: WithViewerCallbackArgs) => Promise<void>;
 export class RendererUtils {
@@ -29,16 +34,27 @@ export class RendererUtils {
 
 	static async withViewer(options: WithViewerOptions, callback: WithViewerCallback) {
 		const element = document.createElement('div');
-		// element.style.position = 'absolute';
-		// element.style.top = '0px';
-		// element.style.left = '0px';
-		// element.style.width = '200px';
-		// element.style.height = '200px';
-		// element.style.zIndex = '9999999';
+		element.style.position = 'absolute';
+		element.style.top = '0px';
+		element.style.left = '0px';
+		element.style.width = '200px';
+		element.style.height = '200px';
+		element.style.zIndex = '9999999';
 		document.body.appendChild(element);
-		const viewer = options.cameraNode.createViewer({element});
+		const viewer = options.cameraNode.createViewer({element})!;
+		const canvas = viewer.canvas();
+		const renderer = viewer.renderer();
+
+		let mount = false;
+		if (options.mount != null) {
+			mount = options.mount;
+		}
+		if (mount) {
+			viewer.mount(element);
+		}
+
 		// options.cameraNode.scene().viewersRegister.viewerWithCamera(options.cameraNode)
-		await callback({viewer, element});
+		await callback({viewer, element, canvas, renderer});
 
 		viewer.dispose();
 		document.body.removeChild(element);
@@ -48,15 +64,15 @@ export class RendererUtils {
 		return new Promise(async (resolve) => {
 			const canvas = document.createElement('canvas');
 			document.body.appendChild(canvas);
-			const size = new Vector2(canvas.width, canvas.height);
-			const cameraNode = scene.mainCameraNode();
-			if (!cameraNode) {
-				console.warn(`no camera node found in scene '${scene.name()}'`);
-				return;
-			}
-			const viewer = await (cameraNode as PerspectiveCameraObjNode)
-				.renderController()
-				.createRenderer(canvas, size);
+			// const size = new Vector2(canvas.width, canvas.height);
+			// const cameraNode = scene.mainCameraNode();
+			// if (!cameraNode) {
+			// 	console.warn(`no camera node found in scene '${scene.name()}'`);
+			// 	return;
+			// }
+			const viewer = (await scene.camerasController.createMainViewer())!; //await (cameraNode as PerspectiveCameraObjNode)
+			// .renderController()
+			// .createRenderer(canvas, size);
 			const renderer = await scene.renderersRegister.waitForRenderer();
 			if (renderer) {
 				const config = {canvas, viewer, renderer};

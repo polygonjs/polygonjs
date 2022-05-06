@@ -1,18 +1,11 @@
 import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
-import {CoreEventEmitter} from '../../../viewers/utils/EventsController';
+import {CoreEventEmitter} from '../../../viewers/utils/ViewerEventsController';
 import {EventData} from '../../../nodes/event/_BaseInput';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
-import {Vector2} from 'three';
+import {Raycaster, Vector2} from 'three';
 import {Camera} from 'three';
 
-import {Raycaster} from 'three';
-import {RaycasterForBVH} from '../../../operations/sop/utils/Bvh/three-mesh-bvh';
-function createRaycaster() {
-	const raycaster = new Raycaster() as RaycasterForBVH;
-	raycaster.firstHitOnly = true;
-	return raycaster;
-}
 interface RaycasterUpdateOptions {
 	pointsThreshold: number;
 	lineThreshold: number;
@@ -54,7 +47,7 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 	private _cursorHelper: CursorHelper = new CursorHelper();
 	protected _cursor: Vector2 = new Vector2();
 	protected _camera: Camera | undefined;
-	private _raycaster = createRaycaster();
+	private _raycaster: Raycaster = new Raycaster();
 	type() {
 		return 'pointer';
 	}
@@ -64,21 +57,23 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 
 	override processEvent(eventContext: EventContext<MouseEvent>) {
 		super.processEvent(eventContext);
+		const {viewer, event} = eventContext;
 
 		if (this._actorEventNames.size == 0) {
 			return;
 		}
-		if (!eventContext.event) {
+		if (!(event && viewer)) {
 			return;
 		}
-		const eventType = eventContext.event.type;
+		const eventType = event.type;
 		if (!this._actorEventNames.has(eventType)) {
 			return;
 		}
-		this._camera = eventContext.viewer?.cameraNode().object;
+		this._camera = viewer.camera();
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
 		if (this._camera) {
-			this._raycaster.setFromCamera(this._cursor, this._camera);
+			viewer.raycaster.setFromCamera(this._cursor, this._camera);
+			this._raycaster = viewer.raycaster;
 		}
 		const nodesToTrigger = this._actorNodesByEventNames.get(eventType);
 		if (nodesToTrigger) {
@@ -118,6 +113,9 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 	// }
 
 	updateRaycast(options: RaycasterUpdateOptions) {
+		if (!this._raycaster) {
+			return;
+		}
 		const pointsParam = this._raycaster.params.Points;
 		if (pointsParam) {
 			pointsParam.threshold = options.pointsThreshold;

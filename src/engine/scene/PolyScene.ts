@@ -1,5 +1,5 @@
 import {ActorsManager} from './utils/ActorsManager';
-import {CamerasController} from './utils/CamerasController';
+import {SceneCamerasController} from './utils/SceneCamerasController';
 import {Cooker} from './utils/Cooker';
 import {SceneCookController} from './utils/CookController';
 import {CoreGraph} from '../../core/graph/CoreGraph';
@@ -64,16 +64,16 @@ export class PolyScene {
 		return this._name;
 	}
 
-	protected _cameras_controller = new CamerasController(this);
+	protected _camerasController: SceneCamerasController | undefined;
 	get camerasController() {
-		return this._cameras_controller;
+		return (this._camerasController = this._camerasController || new SceneCamerasController(this));
 	}
 	/**
-	 * Returns the cameraNode that has been set as main
+	 * Returns the camera object that has been set as main
 	 *
 	 */
-	mainCameraNode() {
-		return this.camerasController.mainCameraNode();
+	mainCamera() {
+		return this.camerasController.mainCamera();
 	}
 
 	private _cooker = new Cooker(this);
@@ -293,20 +293,20 @@ export class PolyScene {
 	toJSON() {
 		return this.serializer.toJSON();
 	}
-	private _read_only = false;
-	private _read_only_requester: BaseNodeType | undefined;
+	private _readOnly = false;
+	private _readOnlyRequester: BaseNodeType | undefined;
 	markAsReadOnly(requester: BaseNodeType) {
-		if (this._read_only) {
+		if (this._readOnly) {
 			return;
 		}
-		this._read_only_requester = requester;
-		this._read_only = true;
+		this._readOnlyRequester = requester;
+		this._readOnly = true;
 	}
 	readOnly() {
-		return this._read_only;
+		return this._readOnly;
 	}
 	readOnlyRequester() {
-		return this._read_only_requester;
+		return this._readOnlyRequester;
 	}
 
 	//

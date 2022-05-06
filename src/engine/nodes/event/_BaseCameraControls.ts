@@ -28,12 +28,12 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 	// }
 	private _controls_by_viewer: Map<BaseViewerType, CameraControls> = new Map();
 
-	async apply_controls(camera: Camera, viewer: BaseViewerType) {
+	async applyControls(camera: Camera, viewer: BaseViewerType) {
 		// I don't think I can just assign the camera at the moment
 		// so the controls may need to be re-created everytime
 		// TODO: the controls should be created (and disposed?) by the viewer
 		//this.dispose_controls()
-		viewer.controlsController()?.dispose_controls();
+		// viewer.controlsController()?.dispose_controls();
 		const canvas = viewer.canvas();
 		if (!canvas) {
 			return;

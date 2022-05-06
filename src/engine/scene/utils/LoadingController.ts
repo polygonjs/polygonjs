@@ -16,9 +16,9 @@ export class LoadingController {
 	markAsLoading() {
 		this._setLoadingState(true);
 	}
-	async markAsLoaded() {
+	markAsLoaded() {
 		this.scene.missingExpressionReferencesController.resolveMissingReferences();
-		await this._setLoadingState(false);
+		this._setLoadingState(false);
 		this._triggerLoadedEvent();
 	}
 	private _triggerLoadedEvent() {
@@ -28,9 +28,9 @@ export class LoadingController {
 		}
 	}
 
-	private async _setLoadingState(state: boolean) {
+	private _setLoadingState(state: boolean) {
 		this._loadingState = state;
-		await this.setAutoUpdate(!this._loadingState);
+		this.setAutoUpdate(!this._loadingState);
 	}
 	isLoading() {
 		return this._loadingState;
@@ -41,7 +41,7 @@ export class LoadingController {
 	autoUpdating() {
 		return this._autoUpdating;
 	}
-	async setAutoUpdate(newState: boolean) {
+	setAutoUpdate(newState: boolean) {
 		if (this._autoUpdating !== newState) {
 			this._autoUpdating = newState;
 			if (this._autoUpdating) {
@@ -50,7 +50,7 @@ export class LoadingController {
 
 				const root = this.scene.root();
 				if (root) {
-					await root.processQueue();
+					root.processQueue();
 				}
 			}
 		}

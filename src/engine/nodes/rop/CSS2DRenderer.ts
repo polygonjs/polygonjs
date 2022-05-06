@@ -43,28 +43,43 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 		return RopType.CSS2D;
 	}
 
-	private _renderers_by_canvas_id: Map<string, CSS2DRenderer> = new Map();
+	private _renderersByCanvasId: Map<string, CSS2DRenderer> = new Map();
 	createRenderer(canvas: HTMLCanvasElement) {
 		const renderer = new CSS2DRenderer();
-		this._renderers_by_canvas_id.set(canvas.id, renderer);
-		const parent = canvas.parentElement;
-		if (parent) {
-			parent.prepend(renderer.domElement);
-			parent.style.position = 'relative';
-		}
+		this._renderersByCanvasId.set(canvas.id, renderer);
+
 		renderer.domElement.style.position = 'absolute';
 		renderer.domElement.style.top = '0px';
 		renderer.domElement.style.left = '0px';
 		renderer.domElement.style.pointerEvents = 'none';
 
-		const rect = canvas.getBoundingClientRect();
-
-		renderer.setSize(rect.width, rect.height);
 		this._update_renderer(renderer);
 		return renderer;
 	}
+	mountRenderer(canvas: HTMLCanvasElement) {
+		const renderer = this._renderersByCanvasId.get(canvas.id);
+		if (!renderer) {
+			return;
+		}
+		const parent = canvas.parentElement;
+		if (parent) {
+			parent.prepend(renderer.domElement);
+			parent.style.position = 'relative';
+		} else {
+			console.warn('canvas has no parent');
+		}
+		const rect = canvas.getBoundingClientRect();
+		renderer.setSize(rect.width, rect.height);
+	}
+	unmountRenderer(canvas: HTMLCanvasElement) {
+		const renderer = this._renderersByCanvasId.get(canvas.id);
+		if (!renderer) {
+			return;
+		}
+		renderer.domElement.parentElement?.removeChild(renderer.domElement);
+	}
 	renderer(canvas: HTMLCanvasElement) {
-		return this._renderers_by_canvas_id.get(canvas.id) || this.createRenderer(canvas);
+		return this._renderersByCanvasId.get(canvas.id) || this.createRenderer(canvas);
 	}
 	// remove_renderer_element(canvas: HTMLCanvasElement) {
 	// 	// not ideal, because I could not re-add it back
@@ -80,7 +95,7 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 	override cook() {
 		this._update_css();
 
-		this._renderers_by_canvas_id.forEach((renderer) => {
+		this._renderersByCanvasId.forEach((renderer) => {
 			this._update_renderer(renderer);
 		});
 

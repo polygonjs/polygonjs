@@ -16,6 +16,7 @@ interface PixelPassWithUniforms extends ShaderPass {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {Vector2} from 'three';
 class PixelPostParamsConfig extends NodeParamsConfig {
 	/** @param pixelSize */
 	pixelSize = ParamConfig.INTEGER(16, {
@@ -31,9 +32,11 @@ export class PixelPostNode extends TypedPostProcessNode<ShaderPass, PixelPostPar
 		return 'pixel';
 	}
 
+	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
+		context.renderer.getSize(this._rendererSize);
 		const pass = new ShaderPass(PixelShader) as PixelPassWithUniforms;
-		pass.uniforms.resolution.value = context.resolution;
+		pass.uniforms.resolution.value = this._rendererSize;
 		pass.uniforms.resolution.value.multiplyScalar(window.devicePixelRatio);
 		this.updatePass(pass);
 

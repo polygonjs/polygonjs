@@ -51,6 +51,7 @@ import {PolyNodeController} from './utils/poly/PolyNodeController';
 import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {SetInputsOptions} from './utils/io/InputsController';
+import {OnNodeRegisterCallback} from '../poly/registers/nodes/NodesRegister';
 
 /**
  * TypedNode is the base class that all nodes inherit from. This inherits from [CoreGraphNode](/docs/api/CoreGraphNode).
@@ -179,6 +180,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	static type(): string {
 		throw 'type to be overriden';
 	}
+	static onRegister: OnNodeRegisterCallback | undefined;
 	/**
 	 * returns the type of the node.
 	 *
