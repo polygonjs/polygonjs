@@ -38,6 +38,15 @@ export const CATEGORY_COP = {
 	MISC: 'misc',
 	NETWORK,
 };
+export const CATEGORY_CSG = {
+	ADVANCED: 'advanced',
+	EXTRUDE: 'extrude',
+	FLOW: 'flow',
+	MODIFIER: 'modifiers',
+	PRIMITIVES: 'primitives',
+	TRANSFORM: 'transform',
+	NETWORK,
+};
 export const CATEGORY_EVENT = {
 	ADVANCED: 'advanced',
 	CAMERA: 'cameras',
@@ -106,6 +115,7 @@ export const CATEGORY_SOP = {
 	ATTRIBUTE: 'attributes',
 	AUDIO: 'audio',
 	DYNAMICS: 'dynamics',
+	FLOW: 'flow',
 	HELPERS: 'helpers',
 	INPUT: 'inputs',
 	LIGHTS: 'lights',

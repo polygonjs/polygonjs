@@ -1,5 +1,4 @@
 // nodes
-import {BaseSopNodeType} from '../nodes/sop/_Base';
 import {BaseAnimNodeType} from '../nodes/anim/_Base';
 import {BaseAudioNodeType} from '../nodes/audio/_Base';
 import {BaseCopNodeType} from '../nodes/cop/_Base';
@@ -11,6 +10,7 @@ import {BaseMatNodeType} from '../nodes/mat/_Base';
 import {BaseObjNodeType} from '../nodes/obj/_Base';
 import {BasePostProcessNodeType} from '../nodes/post/_Base';
 import {BaseRopNodeType} from '../nodes/rop/_Base';
+import {BaseSopNodeType} from '../nodes/sop/_Base';
 // registers
 // import {GeoNodeChildrenMap} from './registers/nodes/Sop';
 // import {GlNodeChildrenMap} from './registers/nodes/Gl';
@@ -30,6 +30,7 @@ export enum NodeContext {
 	ANIM = 'anim',
 	AUDIO = 'audio',
 	COP = 'cop',
+	CSG = 'csg',
 	EVENT = 'event',
 	GL = 'gl',
 	JS = 'js',
@@ -46,6 +47,7 @@ export type NodeContextUnion =
 	| NodeContext.ANIM
 	| NodeContext.AUDIO
 	| NodeContext.COP
+	| NodeContext.CSG
 	| NodeContext.EVENT
 	| NodeContext.GL
 	| NodeContext.JS
@@ -61,6 +63,7 @@ export enum NetworkNodeType {
 	ANIM = 'animationsNetwork',
 	AUDIO = 'audioNetwork',
 	COP = 'copNetwork',
+	CSG = 'csgNetwork',
 	EVENT = 'eventsNetwork',
 	MAT = 'materialsNetwork',
 	POST = 'postProcessNetwork',

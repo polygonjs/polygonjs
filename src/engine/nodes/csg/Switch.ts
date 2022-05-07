@@ -1,51 +1,41 @@
 /**
- * Allows to switch between different inputs.
- *
+ * switches the input geometry
  *
  *
  */
-
-import {TypedSopNode} from './_Base';
-
-const INPUT_NAME = 'geometry to switch to';
-
+import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-class SwitchSopParamsConfig extends NodeParamsConfig {
+
+class SwitchCsgParamsConfig extends NodeParamsConfig {
 	/** @param sets which input is used */
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],
 		rangeLocked: [true, true],
 	});
 }
-const ParamsConfig = new SwitchSopParamsConfig();
+const ParamsConfig = new SwitchCsgParamsConfig();
 
-export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
+export class SwitchCsgNode extends TypedCsgNode<SwitchCsgParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'switch';
 	}
-
-	static override displayedInputNames(): string[] {
-		return [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
-	}
-
-	override initializeNode() {
+	protected override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
-		// this.uiData.set_icon('code-branch');
-
 		this.cookController.disallowInputsEvaluation();
 	}
 
-	override async cook() {
+	override async cook(inputCoreGroups: CsgCoreGroup[]) {
 		const inputIndex = this.pv.input;
 		if (this.io.inputs.hasInput(inputIndex)) {
 			const container = await this.containerController.requestInputContainer(inputIndex);
 			if (container) {
 				const coreGroup = container.coreContent();
 				if (coreGroup) {
-					this.setCoreGroup(coreGroup);
+					this.setCsgCoreGroup(coreGroup);
 					return;
 				}
 			}

@@ -197,16 +197,20 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-		const core_group2 = input_contents[1];
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup0 = inputCoreGroups[0];
+		const coreGroup1 = inputCoreGroups[1];
 
+		if (!coreGroup0) {
+			this.cookController.endCook();
+			return;
+		}
 		switch (this.pv.class) {
 			case AttribClass.VERTEX:
-				await this._eval_for_points(core_group, core_group2);
+				await this._evalForPoints(coreGroup0, coreGroup1);
 				break;
 			case AttribClass.OBJECT:
-				await this._eval_for_objects(core_group);
+				await this._evalForObjects(coreGroup0);
 				break;
 		}
 	}
@@ -215,8 +219,8 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		this.p.class.set(attribClass);
 	}
 
-	private async _eval_for_objects(core_group: CoreGroup) {
-		const core_objects = core_group.coreObjects();
+	private async _evalForObjects(coreGroup: CoreGroup) {
+		const core_objects = coreGroup.coreObjects();
 		this.entitySelectionHelper.init(core_objects);
 
 		this._marked_for_deletion_per_object_index = new Map();
@@ -252,7 +256,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		this.setObjects(objects_to_keep);
 	}
 
-	private async _eval_for_points(core_group: CoreGroup, core_group2?: CoreGroup) {
+	private async _evalForPoints(core_group: CoreGroup, core_group2?: CoreGroup) {
 		const core_objects = core_group.coreObjects();
 		let core_object;
 		let objects: Object3D[] = [];

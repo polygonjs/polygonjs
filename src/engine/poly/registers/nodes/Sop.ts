@@ -151,6 +151,7 @@ import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
 import {AudioNetworkSopNode} from '../../../nodes/sop/AudioNetwork';
 import {CopNetworkSopNode} from '../../../nodes/sop/CopNetwork';
+import {CsgNetworkSopNode} from '../../../nodes/sop/CsgNetwork';
 import {EventsNetworkSopNode} from '../../../nodes/sop/EventsNetwork';
 import {MaterialsNetworkSopNode} from '../../../nodes/sop/MaterialsNetwork';
 import {PostProcessNetworkSopNode} from '../../../nodes/sop/PostProcessNetwork';
@@ -304,6 +305,7 @@ export interface GeoNodeChildrenMap {
 	animationsNetwork: AnimationsNetworkSopNode;
 	audioNetwork: AudioNetworkSopNode;
 	copNetwork: CopNetworkSopNode;
+	csgNetwork: CsgNetworkSopNode;
 	eventsNetwork: EventsNetworkSopNode;
 	materialsNetwork: MaterialsNetworkSopNode;
 	postProcessNetwork: PostProcessNetworkSopNode;
@@ -577,7 +579,7 @@ export class SopRegister {
 		poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MaterialPropertiesSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(MergeSopNode, CATEGORY_SOP.MISC);
+		poly.registerNode(MergeSopNode, CATEGORY_SOP.FLOW);
 		poly.registerNode(MetaballSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
@@ -629,7 +631,7 @@ export class SopRegister {
 			// only: [`${NodeContext.SOP}/${SubnetSopNode.type()}`, `${NodeContext.SOP}/poly`],
 		}*/
 		);
-		poly.registerNode(SwitchSopNode, CATEGORY_SOP.MISC);
+		poly.registerNode(SwitchSopNode, CATEGORY_SOP.FLOW);
 		poly.registerNode(TetrahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextureCopySopNode, CATEGORY_SOP.MODIFIER);
@@ -650,6 +652,7 @@ export class SopRegister {
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AudioNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(CopNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(CsgNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(EventsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(MaterialsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(PostProcessNetworkSopNode, CATEGORY_SOP.NETWORK);

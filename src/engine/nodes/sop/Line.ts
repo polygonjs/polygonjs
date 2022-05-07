@@ -2,7 +2,7 @@
  * Creates a line
  *
  */
-import {Float32BufferAttribute} from 'three';
+import {Float32BufferAttribute, Vector3} from 'three';
 import {BufferGeometry} from 'three';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
@@ -12,7 +12,7 @@ class LineSopParamsConfig extends NodeParamsConfig {
 	/** @param length of the line */
 	length = ParamConfig.FLOAT(1, {range: [0, 10]});
 	/** @param number of points */
-	pointsCount = ParamConfig.INTEGER(1, {
+	pointsCount = ParamConfig.INTEGER(2, {
 		range: [2, 100],
 		rangeLocked: [true, false],
 	});
@@ -31,19 +31,21 @@ export class LineSopNode extends TypedSopNode<LineSopParamsConfig> {
 
 	override initializeNode() {}
 
+	private _lastPt = new Vector3();
+	private _current = new Vector3();
 	override cook() {
 		const pointsCount = Math.max(2, this.pv.pointsCount);
 
 		const positions: number[] = new Array(pointsCount * 3);
 		const indices: number[] = new Array(pointsCount);
 
-		const last_pt = this.pv.direction.clone().normalize().multiplyScalar(this.pv.length);
+		this._lastPt.copy(this.pv.direction).normalize().multiplyScalar(this.pv.length);
 
 		for (let i = 0; i < pointsCount; i++) {
 			const i_n = i / (pointsCount - 1);
-			const point = last_pt.clone().multiplyScalar(i_n);
-			point.add(this.pv.origin);
-			point.toArray(positions, i * 3);
+			this._current.copy(this._lastPt).multiplyScalar(i_n);
+			this._current.add(this.pv.origin);
+			this._current.toArray(positions, i * 3);
 
 			if (i > 0) {
 				indices[(i - 1) * 2] = i - 1;

@@ -76,7 +76,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	private _stampNode!: SopCopyStamp;
 
 	static override displayedInputNames(): string[] {
-		return ['geometry to be copied', 'points to copy to'];
+		return ['geometry to be copied', 'points to copy to (optional)'];
 	}
 
 	override initializeNode() {
