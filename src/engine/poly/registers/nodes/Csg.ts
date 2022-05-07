@@ -17,7 +17,6 @@ import {ExpandCsgNode} from '../../../nodes/csg/Expand';
 import {ExtrudeLinearCsgNode} from '../../../nodes/csg/ExtrudeLinear';
 import {ExtrudeRectangularCsgNode} from '../../../nodes/csg/ExtrudeRectangular';
 import {ExtrudeRotateCsgNode} from '../../../nodes/csg/ExtrudeRotate';
-import {GeodesicSphereCsgNode} from '../../../nodes/csg/GeodesicSphere';
 import {HullCsgNode} from '../../../nodes/csg/Hull';
 import {LineCsgNode} from '../../../nodes/csg/Line';
 import {MergeCsgNode} from '../../../nodes/csg/Merge';
@@ -55,7 +54,6 @@ export interface CsgNodeChildrenMap {
 	extrudeLinear: ExtrudeLinearCsgNode;
 	extrudeRectangular: ExtrudeRectangularCsgNode;
 	extrudeRotate: ExtrudeRotateCsgNode;
-	geodesicSphere: GeodesicSphereCsgNode;
 	hull: HullCsgNode;
 	line: LineCsgNode;
 	merge: MergeCsgNode;
@@ -96,7 +94,6 @@ export class CsgRegister {
 		poly.registerNode(ExtrudeLinearCsgNode, CATEGORY_CSG.EXTRUDE);
 		poly.registerNode(ExtrudeRectangularCsgNode, CATEGORY_CSG.EXTRUDE);
 		poly.registerNode(ExtrudeRotateCsgNode, CATEGORY_CSG.EXTRUDE);
-		poly.registerNode(GeodesicSphereCsgNode, CATEGORY_CSG.PRIMITIVES);
 		poly.registerNode(HullCsgNode, CATEGORY_CSG.MODIFIER);
 		poly.registerNode(LineCsgNode, CATEGORY_CSG.PRIMITIVES);
 		poly.registerNode(MergeCsgNode, CATEGORY_CSG.FLOW);
