@@ -8,7 +8,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
-import {Vector3} from 'three';
+import {Object3D, Vector3} from 'three';
 import {Mesh} from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -41,27 +41,26 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const inputCoreGroup = inputCoreGroups[0];
 
-		const new_objects = [];
-		let new_object;
-		for (let core_object of core_group.coreObjects()) {
-			new_object = this._fuse_core_object(core_object);
-			if (new_object) {
-				new_objects.push(new_object);
+		const newObjects: Object3D[] = [];
+		for (let coreObject of inputCoreGroup.coreObjects()) {
+			const newObject = this._fuseCoreObject(coreObject);
+			if (newObject) {
+				newObjects.push(newObject);
 			}
 		}
 
-		this.setObjects(new_objects);
+		this.setObjects(newObjects);
 	}
 
-	private _fuse_core_object(core_object: CoreObject) {
-		const object = core_object.object();
+	private _fuseCoreObject(coreObject: CoreObject) {
+		const object = coreObject.object();
 		if (!object) {
 			return;
 		}
-		const points = core_object.points();
+		const points = coreObject.points();
 
 		const precision = this.pv.dist;
 		const pointsByPosition: Map<string, CorePoint[]> = new Map();

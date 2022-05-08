@@ -61,6 +61,7 @@ import {DirectionalLightSopNode} from '../../../nodes/sop/DirectionalLight';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
 import {ExporterSopNode} from '../../../nodes/sop/Exporter';
 import {FaceSopNode} from '../../../nodes/sop/Face';
+import {FacetSopNode} from '../../../nodes/sop/Facet';
 // import {FileSopNode} from '../../../nodes/sop/File';
 import {FileDRCSopNode} from '../../../nodes/sop/FileDRC';
 import {FileFBXSopNode} from '../../../nodes/sop/FileFBX';
@@ -214,6 +215,7 @@ export interface GeoNodeChildrenMap {
 	drawRange: DrawRangeSopNode;
 	exporter: ExporterSopNode;
 	face: FaceSopNode;
+	facet: FacetSopNode;
 	// file: FileSopNode;
 	fileDRC: FileDRCSopNode;
 	fileFBX: FileFBXSopNode;
@@ -549,6 +551,7 @@ export class SopRegister {
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ExporterSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(FaceSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(FacetSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(FileSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileDRCSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileFBXSopNode, CATEGORY_SOP.INPUT);
