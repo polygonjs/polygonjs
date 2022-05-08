@@ -35,6 +35,7 @@ export class NormalsHelperSopNode extends TypedSopNode<NormalsHelperSopParamsCon
 	}
 
 	override initializeNode() {
+		this.io.outputs.setHasNoOutput();
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
