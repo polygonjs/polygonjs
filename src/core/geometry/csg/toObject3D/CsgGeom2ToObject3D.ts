@@ -1,15 +1,19 @@
-import {BufferGeometry, BufferAttribute, Matrix4, Vector3} from 'three';
+import {BufferGeometry, BufferAttribute, Matrix4, Vector3, Quaternion} from 'three';
 import jscad from '@jscad/modeling';
 import {ObjectType} from '../../Constant';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {CSG_MATERIAL} from '../CsgConstant';
 
 const matrix = new Matrix4();
+const t = new Vector3();
+const q = new Quaternion();
+const s = new Vector3();
 
-export function geom2ToMesh(csg: jscad.geometries.geom2.Geom2) {
+export function geom2ToObject3D(csg: jscad.geometries.geom2.Geom2) {
 	const geometry = geom2ToBufferGeometry(csg);
 	return BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, CSG_MATERIAL[ObjectType.LINE_SEGMENTS]);
 }
+
 export function geom2ToBufferGeometry(csg: jscad.geometries.geom2.Geom2) {
 	const vertices: number[] = [];
 	const colors: number[] = [];
@@ -43,6 +47,10 @@ export function geom2ToBufferGeometry(csg: jscad.geometries.geom2.Geom2) {
 	geo.setIndex(indices);
 
 	matrix.elements = csg.transforms;
+	// remove the translate y of the matrix
+	matrix.decompose(t, q, s);
+	t.y = 0;
+	matrix.compose(t, q, s);
 	geo.applyMatrix4(matrix);
 
 	return geo;

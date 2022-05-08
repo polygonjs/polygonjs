@@ -1,8 +1,8 @@
 import jscad from '@jscad/modeling';
 import {CsgObject} from './CsgCoreObject';
-import {geom3ToMesh} from './toObject3D/CsgGeom3ToObject3D';
-import {geom2ToMesh} from './toObject3D/CsgGeom2ToObject3D';
-import {path2ToLineSegments} from './toObject3D/CsgPath2ToObject3D';
+import {geom3ToObject3D} from './toObject3D/CsgGeom3ToObject3D';
+import {geom2ToObject3D} from './toObject3D/CsgGeom2ToObject3D';
+import {path2ToObject3D} from './toObject3D/CsgPath2ToObject3D';
 
 export enum CsgObjectType {
 	GEOM3 = 'geom3',
@@ -26,13 +26,13 @@ export function csgObjectType(csg: CsgObject) {
 
 export function csgToObject3D(csg: CsgObject) {
 	if (jscad.geometries.geom3.isA(csg)) {
-		return geom3ToMesh(csg);
+		return geom3ToObject3D(csg);
 	}
 	if (jscad.geometries.geom2.isA(csg)) {
-		return geom2ToMesh(csg);
+		return geom2ToObject3D(csg);
 	}
 	if (jscad.geometries.path2.isA(csg)) {
-		return path2ToLineSegments(csg);
+		return path2ToObject3D(csg);
 	}
 	console.warn('no conversion method for', csg);
 }

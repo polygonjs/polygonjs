@@ -28,7 +28,10 @@ const dodecahedron = (h: number) => {
 
 class DodecahedronCsgParamsConfig extends NodeParamsConfig {
 	/** @param radius */
-	radius = ParamConfig.FLOAT(1);
+	radius = ParamConfig.FLOAT(1, {
+		range: [jscad.maths.constants.EPS, 1],
+		rangeLocked: [true, false],
+	});
 }
 const ParamsConfig = new DodecahedronCsgParamsConfig();
 
