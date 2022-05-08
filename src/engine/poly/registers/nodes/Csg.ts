@@ -21,6 +21,7 @@ import {HullCsgNode} from '../../../nodes/csg/Hull';
 import {LineCsgNode} from '../../../nodes/csg/Line';
 import {MergeCsgNode} from '../../../nodes/csg/Merge';
 import {MirrorCsgNode} from '../../../nodes/csg/Mirror';
+import {NullCsgNode} from '../../../nodes/csg/Null';
 import {OffsetCsgNode} from '../../../nodes/csg/Offset';
 import {PolygonCsgNode} from '../../../nodes/csg/Polygon';
 import {PolyhedronCsgNode} from '../../../nodes/csg/PolyHedron';
@@ -58,6 +59,7 @@ export interface CsgNodeChildrenMap {
 	line: LineCsgNode;
 	merge: MergeCsgNode;
 	mirror: MirrorCsgNode;
+	null: NullCsgNode;
 	offset: OffsetCsgNode;
 	polygon: PolygonCsgNode;
 	polyhedron: PolyhedronCsgNode;
@@ -98,6 +100,7 @@ export class CsgRegister {
 		poly.registerNode(LineCsgNode, CATEGORY_CSG.PRIMITIVES);
 		poly.registerNode(MergeCsgNode, CATEGORY_CSG.FLOW);
 		poly.registerNode(MirrorCsgNode, CATEGORY_CSG.TRANSFORM);
+		poly.registerNode(NullCsgNode, CATEGORY_CSG.FLOW);
 		poly.registerNode(OffsetCsgNode, CATEGORY_CSG.MODIFIER);
 		poly.registerNode(PolygonCsgNode, CATEGORY_CSG.PRIMITIVES);
 		poly.registerNode(PolyhedronCsgNode, CATEGORY_CSG.PRIMITIVES);

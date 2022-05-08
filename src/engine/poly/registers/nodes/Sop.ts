@@ -587,7 +587,7 @@ export class SopRegister {
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(NormalsHelperSopNode, CATEGORY_SOP.HELPERS);
-		poly.registerNode(NullSopNode, CATEGORY_SOP.MISC);
+		poly.registerNode(NullSopNode, CATEGORY_SOP.FLOW);
 		poly.registerNode(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ObjectPropertiesSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(OceanPlaneSopNode, CATEGORY_SOP.ADVANCED);

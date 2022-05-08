@@ -45,22 +45,27 @@ export class HullCsgNode extends TypedCsgNode<HullCsgParamsConfig> {
 			}
 		}
 
+		// add the first element to the list if there is only a single element
+		if (geom3.length == 1) {
+			geom3.push(geom3[0]);
+		}
+		if (geom2.length == 1) {
+			geom2.push(geom2[0]);
+		}
+		if (path2.length == 1) {
+			path2.push(path2[0]);
+		}
+
 		const method = this.pv.chain ? hullChain : hull;
 		const newObjects: CsgObject[] = [];
-		if (geom3.length > 1) {
+		if (geom3.length >= 2) {
 			newObjects.push(method(geom3));
-		} else {
-			if (geom3[0]) newObjects.push(geom3[0]);
 		}
-		if (geom2.length > 1) {
+		if (geom2.length >= 2) {
 			newObjects.push(method(geom2));
-		} else {
-			if (geom2[0]) newObjects.push(geom2[0]);
 		}
-		if (path2.length > 1) {
+		if (path2.length >= 2) {
 			newObjects.push(method(path2));
-		} else {
-			if (path2[0]) newObjects.push(path2[0]);
 		}
 		this.setCsgCoreObjects(newObjects);
 	}
