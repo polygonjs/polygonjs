@@ -32,6 +32,11 @@ async function getIndex(node: BaseSopNodeType) {
 	const object = container.coreContent()!.objectsWithGeo()[0];
 	return [...(object.geometry.getIndex()!.array as number[])];
 }
+async function getPosition(node: BaseSopNodeType) {
+	const container = await node.compute();
+	const object = container.coreContent()!.objectsWithGeo()[0];
+	return [...(object.geometry.getAttribute('position')!.array as number[])];
+}
 
 QUnit.test('fuse on simple mesh', async (assert) => {
 	const geo1 = window.geo1;
@@ -45,9 +50,14 @@ QUnit.test('fuse on simple mesh', async (assert) => {
 
 	transform1.p.group.set('0');
 	transform1.p.t.set([0.96, 0, 0]);
-	fuse1.p.dist.set(0.3);
 
+	fuse1.p.dist.set(0.3);
 	assert.deepEqual(await getIndex(fuse1), [1, 2, 0]);
+	assert.deepEqual((await getPosition(fuse1)).length, 9);
+
+	fuse1.p.dist.set(2);
+	assert.deepEqual(await getIndex(fuse1), []);
+	assert.deepEqual((await getPosition(fuse1)).length, 0);
 });
 
 QUnit.test('fuse on simple line', async (assert) => {

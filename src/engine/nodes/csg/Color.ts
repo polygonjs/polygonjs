@@ -8,21 +8,21 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
 import jscad from '@jscad/modeling';
 import {colorToCsgRGB} from '../../../core/geometry/csg/CsgVecToVector';
-import {CsgObject} from '../../../core/geometry/csg/CsgCoreObject';
+// import {CsgObject} from '../../../core/geometry/csg/CsgCoreObject';
 // const {colorize} = jscad.colors;
 
-function colorize(color: jscad.colors.RGB, object: CsgObject) {
-	if (jscad.geometries.geom3.isA(object)) {
-		geom3Colorize(color, object);
-	} else {
-		object.color = color;
-	}
-}
-function geom3Colorize(color: jscad.colors.RGB, object: jscad.geometries.geom3.Geom3) {
-	for (let poly of object.polygons) {
-		poly.color = color;
-	}
-}
+// function colorize(color: jscad.colors.RGB, object: CsgObject) {
+// 	if (jscad.geometries.geom3.isA(object)) {
+// 		geom3Colorize(color, object);
+// 	} else {
+// 		object.color = color;
+// 	}
+// }
+// function geom3Colorize(color: jscad.colors.RGB, object: jscad.geometries.geom3.Geom3) {
+// 	for (let poly of object.polygons) {
+// 		poly.color = color;
+// 	}
+// }
 
 class ColorCsgParamsConfig extends NodeParamsConfig {
 	/** @param color */
@@ -44,8 +44,11 @@ export class ColorCsgNode extends TypedCsgNode<ColorCsgParamsConfig> {
 		colorToCsgRGB(this.pv.color, this._color);
 		const objects = inputCoreGroups[0].objects();
 		for (let object of objects) {
-			colorize(this._color, object);
+			// do not use colorize as it clones the geo, which is not wanted here
+			// colorize(this._color, object);
+			object.color = this._color;
 		}
+		console.log(objects);
 		this.setCsgCoreObjects(objects);
 	}
 }

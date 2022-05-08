@@ -27,9 +27,10 @@ export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3) {
 	const positions: number[] = [];
 	const colors: number[] = [];
 	const indices: number[] = [];
-	console.log(JSON.parse(JSON.stringify(csg)));
 	const polygons = csg.polygons;
 	let currentIndex = 0;
+	console.log(csg);
+	const color = csg.color;
 	const indexByPosition: Map<string, number> = new Map();
 	for (let polygon of polygons) {
 		const polygonVertices = polygon.vertices as jscadVertexWithIndex[];
@@ -40,11 +41,10 @@ export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3) {
 			let index = indexByPosition.get(positionAsString);
 			if (index == null) {
 				index = currentIndex;
-				console.log('newindex', index);
 				indexByPosition.set(positionAsString, index);
 				positions.push(vertex[0], vertex[1], vertex[2]);
-				if (polygon.color) {
-					colors.push(polygon.color[0], polygon.color[1], polygon.color[2]);
+				if (color) {
+					colors.push(color[0], color[1], color[2]);
 				} else {
 					colors.push(1, 1, 1);
 				}

@@ -20,6 +20,20 @@ const vector2 = new Vector2();
 const vector3 = new Vector3();
 const vector4 = new Vector4();
 
+function clearAttributes(geometry: BufferGeometry) {
+	const attributeNames = Object.keys(geometry.attributes);
+	for (let attributeName of attributeNames) {
+		const attribute = geometry.getAttribute(attributeName);
+		if (attribute instanceof BufferAttribute) {
+			const newAttribValues: number[] = [];
+			geometry.setAttribute(
+				attributeName,
+				new BufferAttribute(new Float32Array(newAttribValues), attribute.itemSize)
+			);
+		}
+	}
+}
+
 class FuseSopParamsConfig extends NodeParamsConfig {
 	/** @param distance threshold */
 	dist = ParamConfig.FLOAT(0.1, {
@@ -137,6 +151,10 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 			}
 		}
 		geometry.setIndex(newIndices);
+
+		if (newIndices.length == 0) {
+			clearAttributes(geometry);
+		}
 	}
 	private _filterLineSegments(object: LineSegments) {
 		const geometry = object.geometry;
@@ -157,6 +175,9 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 			}
 		}
 		geometry.setIndex(newIndices);
+		if (newIndices.length == 0) {
+			clearAttributes(geometry);
+		}
 	}
 
 	private _filterPoints(object: Points) {
@@ -168,6 +189,9 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		const indexArray = index.array as number[];
 		const newIndices = ArrayUtils.uniq(indexArray).sort((a, b) => a - b);
 		geometry.setIndex(newIndices);
+		if (newIndices.length == 0) {
+			clearAttributes(geometry);
+		}
 	}
 
 	private _fuseGeometry(geometry: BufferGeometry) {
