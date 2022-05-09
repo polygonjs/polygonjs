@@ -60,13 +60,22 @@ export class NodeCookController<NC extends NodeContext> {
 		this.node.states.error.clear();
 		this.node.scene().cookController.addNode(this.node);
 
-		const inputContents: ContainableMap[NC][] | undefined = this._inputsEvaluationRequired
-			? await this._evaluateInputs()
-			: undefined;
-		if (this.node.params.paramsEvalRequired()) {
-			await this._evaluateParams();
+		try {
+			// we need to try/catch inputs fetching,
+			// as some nodes like the sop/normalsHelper
+			// currently fail when being cloned
+			const inputContents: ContainableMap[NC][] | undefined = this._inputsEvaluationRequired
+				? await this._evaluateInputs()
+				: undefined;
+			if (this.node.params.paramsEvalRequired()) {
+				await this._evaluateParams();
+			}
+			this._startCookIfNoErrors(inputContents);
+		} catch (e) {
+			this.node.states.error.set(`node inputs error: '${e}'.`);
+			Poly.warn(e);
+			this.endCook();
 		}
-		this._startCookIfNoErrors(inputContents);
 	}
 	async cookMainWithoutInputs() {
 		this.node.scene().cookController.addNode(this.node);
