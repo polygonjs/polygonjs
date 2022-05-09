@@ -29,7 +29,6 @@ export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3) {
 	const indices: number[] = [];
 	const polygons = csg.polygons;
 	let currentIndex = 0;
-	console.log(csg);
 	const color = csg.color;
 	const indexByPosition: Map<string, number> = new Map();
 	for (let polygon of polygons) {

@@ -59,11 +59,6 @@ export class BooleanCsgNode extends TypedCsgNode<BooleanCsgParamsConfig> {
 	}
 	private _applyOperation(object0: CsgObject, object1: CsgObject) {
 		const method = this._method();
-		// - the transforms are applied for:
-		// - for geom2, as otherwise the matrix is not taken into account
-		// - for geom3, as otherwise the color seems to not be propagated in boolean operations (pending PR)
-		csgApplyTransform(object0);
-		csgApplyTransform(object1);
 
 		const bothAreGeom3 = jscad.geometries.geom3.isA(object0) && jscad.geometries.geom3.isA(object1);
 		if (bothAreGeom3) {
@@ -71,6 +66,9 @@ export class BooleanCsgNode extends TypedCsgNode<BooleanCsgParamsConfig> {
 		}
 		const bothAreGeom2 = jscad.geometries.geom2.isA(object0) && jscad.geometries.geom2.isA(object1);
 		if (bothAreGeom2) {
+			// the transforms are applied for geom2, as otherwise the matrix is not taken into account
+			csgApplyTransform(object0);
+			csgApplyTransform(object1);
 			const result = method(object0, object1);
 			return result;
 		}
