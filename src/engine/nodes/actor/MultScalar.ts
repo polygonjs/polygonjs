@@ -22,13 +22,21 @@ enum MultScalarActorNodeInputName {
 	MULT = 'mult',
 }
 
+const ALLOWED_INPUT_TYPES: ActorConnectionPointType[] = [
+	ActorConnectionPointType.VECTOR2,
+	ActorConnectionPointType.VECTOR3,
+	ActorConnectionPointType.VECTOR4,
+];
+
 export class MultScalarActorNode extends BaseMathFunctionArg2ActorNode {
 	static override type() {
 		return 'multScalar';
 	}
 
 	protected override _expectedInputTypes() {
-		const type = this.io.connection_points.first_input_connection_type() || ActorConnectionPointType.VECTOR3;
+		const firstType = this.io.connection_points.first_input_connection_type();
+		const type =
+			firstType && ALLOWED_INPUT_TYPES.includes(firstType) ? firstType : ActorConnectionPointType.VECTOR3;
 		return [type, ActorConnectionPointType.FLOAT];
 	}
 	protected override _expectedInputName(index: number) {
