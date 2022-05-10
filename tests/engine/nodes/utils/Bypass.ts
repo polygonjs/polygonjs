@@ -1,4 +1,4 @@
-import {Vector3} from 'three';
+import {Object3D, Vector3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 
@@ -57,4 +57,131 @@ QUnit.test('bypass flag simple', async (assert) => {
 	assert.deepEqual((await firstPos(transform2)).toArray(), [1, 1, 0]);
 	assert.ok(!transform1.cookController.isCooking());
 	assert.ok(!transform2.cookController.isCooking());
+});
+
+QUnit.test('bypass a node that has no input returns an empty container', async (assert) => {
+	const geo1 = window.geo1;
+	const spotlight1 = geo1.createNode('spotLight');
+	const polarTransform1 = geo1.createNode('polarTransform');
+	const hemisphereLight1 = geo1.createNode('hemisphereLight');
+	const merge1 = geo1.createNode('merge');
+
+	polarTransform1.setInput(0, spotlight1);
+	merge1.setInput(0, polarTransform1);
+	merge1.setInput(1, hemisphereLight1);
+
+	let container = await merge1.compute();
+	let objects = container.coreContent()!.objects();
+	assert.notOk(merge1.states.error.active());
+	assert.notOk(hemisphereLight1.states.error.active());
+	assert.equal(objects.length, 2);
+	assert.deepEqual(
+		objects.map((o: Object3D) => o.name),
+		['SpotLightContainer_spotLight1', 'HemisphereLight_hemisphereLight1']
+	);
+
+	hemisphereLight1.flags.bypass.set(true);
+	container = await merge1.compute();
+	objects = container.coreContent()!.objects();
+	assert.notOk(merge1.states.error.active());
+	assert.notOk(hemisphereLight1.states.error.active());
+	assert.equal(objects.length, 1);
+	assert.deepEqual(
+		objects.map((o: Object3D) => o.name),
+		['SpotLightContainer_spotLight1']
+	);
+});
+
+QUnit.test('bypass a node that has no input but requires one sets the node as errored', async (assert) => {
+	const geo1 = window.geo1;
+	const spotlight1 = geo1.createNode('spotLight');
+	const polarTransform1 = geo1.createNode('polarTransform');
+	const hemisphereLight1 = geo1.createNode('hemisphereLight');
+	const transform1 = geo1.createNode('transform');
+	const merge1 = geo1.createNode('merge');
+
+	polarTransform1.setInput(0, spotlight1);
+	transform1.setInput(0, hemisphereLight1);
+	merge1.setInput(0, polarTransform1);
+	merge1.setInput(1, transform1);
+
+	let container = await merge1.compute();
+	assert.notOk(hemisphereLight1.states.error.active());
+	assert.notOk(transform1.states.error.active());
+	assert.notOk(merge1.states.error.active());
+	assert.ok(container.coreContent());
+	let objects = container.coreContent()!.objects();
+	assert.equal(objects.length, 2);
+	assert.deepEqual(
+		objects.map((o: Object3D) => o.name),
+		['SpotLightContainer_spotLight1', 'HemisphereLight_hemisphereLight1']
+	);
+
+	hemisphereLight1.flags.bypass.set(true);
+	container = await merge1.compute();
+	assert.notOk(hemisphereLight1.states.error.active(), 'hemisphere not errored');
+	assert.ok(transform1.states.error.active(), 'transformed errored after bypassing hemisphereLight');
+	assert.ok(merge1.states.error.active());
+	assert.notOk(container.coreContent());
+
+	transform1.flags.bypass.set(true);
+	container = await merge1.compute();
+	assert.notOk(hemisphereLight1.states.error.active());
+	assert.notOk(transform1.states.error.active(), 'transformed NOT errored after bypassing transform');
+	assert.notOk(merge1.states.error.active());
+	assert.ok(container.coreContent());
+	objects = container.coreContent()!.objects();
+	assert.equal(objects.length, 1);
+	assert.deepEqual(
+		objects.map((o: Object3D) => o.name),
+		['SpotLightContainer_spotLight1']
+	);
+
+	hemisphereLight1.flags.bypass.set(false);
+	await CoreSleep.sleep(50); // TODO: ideally that should not be needed
+	container = await merge1.compute();
+	assert.notOk(hemisphereLight1.states.error.active());
+	assert.notOk(transform1.states.error.active(), 'transformed NOT errored after un-bypassing hemisphereLight');
+	assert.notOk(merge1.states.error.active());
+	assert.ok(container.coreContent());
+	objects = container.coreContent()!.objects();
+	assert.equal(objects.length, 2);
+	assert.deepEqual(
+		objects.map((o: Object3D) => o.name),
+		['SpotLightContainer_spotLight1', 'HemisphereLight_hemisphereLight1']
+	);
+
+	transform1.flags.bypass.set(false);
+	container = await merge1.compute();
+	assert.notOk(hemisphereLight1.states.error.active());
+	assert.notOk(transform1.states.error.active(), 'transform NOT errored after un-bypassing transform');
+	assert.notOk(merge1.states.error.active());
+	assert.ok(container.coreContent());
+	objects = container.coreContent()!.objects();
+	assert.equal(objects.length, 2);
+	assert.deepEqual(
+		objects.map((o: Object3D) => o.name),
+		['SpotLightContainer_spotLight1', 'HemisphereLight_hemisphereLight1']
+	);
+
+	hemisphereLight1.flags.bypass.set(true);
+	transform1.flags.bypass.set(true);
+	container = await merge1.compute();
+	assert.notOk(hemisphereLight1.states.error.active());
+	assert.notOk(transform1.states.error.active(), 'transform NOT errored after bypassing transform & hemisphereLight');
+	assert.notOk(merge1.states.error.active());
+	assert.ok(container.coreContent());
+	objects = container.coreContent()!.objects();
+	assert.equal(objects.length, 1);
+	assert.deepEqual(
+		objects.map((o: Object3D) => o.name),
+		['SpotLightContainer_spotLight1']
+	);
+
+	transform1.flags.bypass.set(false);
+	container = await merge1.compute();
+	assert.notOk(hemisphereLight1.states.error.active(), 'transform errored after un-bypassing transform');
+	assert.ok(transform1.states.error.active());
+	assert.ok(merge1.states.error.active());
+	assert.notOk(container.coreContent());
 });

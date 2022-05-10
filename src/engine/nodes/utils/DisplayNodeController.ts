@@ -21,9 +21,9 @@ export class DisplayNodeController {
 	private _initialized: boolean = false;
 	private _graph_node: CoreGraphNode;
 	private _display_node: BaseNodeClassWithDisplayFlag | undefined = undefined;
-	private _on_display_node_remove_callback: DisplayControllerCallback | undefined;
-	private _on_display_node_set_callback: DisplayControllerCallback | undefined;
-	private _on_display_node_update_callback: DisplayControllerCallback | undefined;
+	private _onDisplayNodeRemoveCallback: DisplayControllerCallback | undefined;
+	private _onDisplayNodeSetCallback: DisplayControllerCallback | undefined;
+	private _onDisplayNodeUpdateCallback: DisplayControllerCallback | undefined;
 
 	// TODO: the node could be a different than BaseNodeType
 	// at least there should be a way to infer that it is a node
@@ -35,9 +35,9 @@ export class DisplayNodeController {
 	) {
 		this._graph_node = new CoreGraphNode(node.scene(), 'DisplayNodeController');
 		(this._graph_node as any).node = node;
-		this._on_display_node_remove_callback = callbacks.onDisplayNodeRemove;
-		this._on_display_node_set_callback = callbacks.onDisplayNodeSet;
-		this._on_display_node_update_callback = callbacks.onDisplayNodeUpdate;
+		this._onDisplayNodeRemoveCallback = callbacks.onDisplayNodeRemove;
+		this._onDisplayNodeSetCallback = callbacks.onDisplayNodeSet;
+		this._onDisplayNodeUpdateCallback = callbacks.onDisplayNodeUpdate;
 	}
 
 	dispose() {
@@ -71,9 +71,9 @@ export class DisplayNodeController {
 				}
 			}
 		});
-		this._graph_node.dirtyController.addPostDirtyHook('_request_display_node_container', () => {
-			if (this._on_display_node_update_callback) {
-				this._on_display_node_update_callback();
+		this._graph_node.dirtyController.addPostDirtyHook('_requestDisplayNodeContainer', () => {
+			if (this._onDisplayNodeUpdateCallback) {
+				this._onDisplayNodeUpdateCallback();
 			}
 		});
 	}
@@ -90,8 +90,8 @@ export class DisplayNodeController {
 				if (this.options.dependsOnDisplayNode) {
 					this._graph_node.removeGraphInput(old_display_node);
 				}
-				if (this._on_display_node_remove_callback) {
-					this._on_display_node_remove_callback();
+				if (this._onDisplayNodeRemoveCallback) {
+					this._onDisplayNodeRemoveCallback();
 				}
 			}
 			this._display_node = new_display_node;
@@ -99,8 +99,8 @@ export class DisplayNodeController {
 				if (this.options.dependsOnDisplayNode) {
 					this._graph_node.addGraphInput(this._display_node);
 				}
-				if (this._on_display_node_set_callback) {
-					this._on_display_node_set_callback();
+				if (this._onDisplayNodeSetCallback) {
+					this._onDisplayNodeSetCallback();
 				}
 			}
 		}

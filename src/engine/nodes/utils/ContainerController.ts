@@ -6,22 +6,29 @@ type NodeContainerControllerCallback<NC extends NodeContext> = (container: Conta
 
 export class TypedContainerController<NC extends NodeContext> {
 	private _callbacks: NodeContainerControllerCallback<NC>[] = [];
-	private _callbacks_tmp: NodeContainerControllerCallback<NC>[] = [];
+	private _callbacksTmp: NodeContainerControllerCallback<NC>[] = [];
 	protected _container: ContainerMap[NC];
 
 	constructor(protected node: TypedNode<NC, any>) {
-		const container_class = ContainerClassMap[node.context()];
-		this._container = new container_class(this.node as any) as ContainerMap[NC];
+		this._container = this._createContainer();
 	}
 
 	container() {
 		return this._container;
 	}
+	private _createContainer() {
+		const ContainerClass = ContainerClassMap[this.node.context()];
+		return new ContainerClass(this.node as any) as ContainerMap[NC];
+	}
+
 	containerUnlessBypassed(): ContainerMap[NC] | undefined {
 		if (this.node.flags?.bypass?.active()) {
+			this.node.states.error.clear();
 			const inputNode = (<unknown>this.node.io.inputs.input(0)) as TypedNode<NC, any>;
 			if (inputNode) {
 				return inputNode.containerController.containerUnlessBypassed();
+			} else {
+				return this._createContainer();
 			}
 		} else {
 			return this.container();
@@ -30,9 +37,15 @@ export class TypedContainerController<NC extends NodeContext> {
 
 	async compute(): Promise<ContainerMap[NC]> {
 		if (this.node.flags?.bypass?.active()) {
-			const container = (await this.requestInputContainer(0)) || this._container;
-			this.node.cookController.endCook();
-			return container;
+			this.node.states.error.clear();
+			const inputNode = (<unknown>this.node.io.inputs.input(0)) as TypedNode<NC, any>;
+			if (inputNode) {
+				const container = (await this.requestInputContainer(0)) || this._container;
+				this.node.cookController.endCook();
+				return container;
+			} else {
+				return this._createContainer();
+			}
 		}
 		if (this.node.isDirty()) {
 			return new Promise((resolve, reject) => {
@@ -77,12 +90,12 @@ export class TypedContainerController<NC extends NodeContext> {
 	// 	}
 	// }
 
-	async requestInputContainer(input_index: number) {
-		const inputNode = (<unknown>this.node.io.inputs.input(input_index)) as TypedNode<NC, any>;
+	async requestInputContainer(inputIndex: number) {
+		const inputNode = (<unknown>this.node.io.inputs.input(inputIndex)) as TypedNode<NC, any>;
 		if (inputNode) {
 			return await inputNode.compute();
 		} else {
-			this.node.states.error.set(`input ${input_index} required`);
+			this.node.states.error.set(`input ${inputIndex} required`);
 			this.notifyRequesters();
 			return null;
 		}
@@ -92,14 +105,14 @@ export class TypedContainerController<NC extends NodeContext> {
 		// to ensure that new ones are not added to this list
 		// in side effects from those callbacks
 		// (the test suite for the File SOP is a good test for this)
-		this._callbacks_tmp = this._callbacks.slice(); // clone
+		this._callbacksTmp = this._callbacks.slice(); // clone
 		this._callbacks.splice(0, this._callbacks.length); // empty
 
 		if (!container) {
 			container = this.node.containerController.container();
 		}
 		let callback: NodeContainerControllerCallback<NC> | undefined;
-		while ((callback = this._callbacks_tmp.pop())) {
+		while ((callback = this._callbacksTmp.pop())) {
 			callback(container);
 		}
 		this.node.scene().cookController.removeNode(this.node);

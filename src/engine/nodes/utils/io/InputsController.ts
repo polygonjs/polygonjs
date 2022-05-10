@@ -271,29 +271,29 @@ export class NodeInputsController<NC extends NodeContext> {
 		return containers;
 	}
 
-	async evalRequiredInput(input_index: number) {
+	async evalRequiredInput(inputIndex: number) {
 		let container: ContainerMap[NC] | undefined = undefined;
-		const input_node = this.input(input_index);
+		const inputNode = this.input(inputIndex);
 		// if (input_node && !input_node.isDirty()) {
 		// 	container = input_node.containerController.container as ContainerMap[NC] | null;
 		// } else {
 		// 	container = await this.node.containerController.requestInputContainer(input_index);
 		// 	this._graph_node_inputs[input_index].removeDirtyState();
 		// }
-		if (input_node) {
-			container = (await input_node.compute()) as ContainerMap[NC];
-			this._graphNodeInputs[input_index].removeDirtyState();
+		if (inputNode) {
+			container = (await inputNode.compute()) as ContainerMap[NC];
+			this._graphNodeInputs[inputIndex].removeDirtyState();
 		}
 
 		// we do not clone here, as we just check if a group is present
 		if (container && container.coreContent()) {
 			// return container;
 		} else {
-			const input_node = this.input(input_index);
-			if (input_node) {
-				const input_error_message = input_node.states.error.message();
-				if (input_error_message) {
-					this.node.states.error.set(`input ${input_index} is invalid (error: ${input_error_message})`);
+			// const input_node = this.input(input_index);
+			if (inputNode) {
+				const inputErrorMessage = inputNode.states.error.message();
+				if (inputErrorMessage) {
+					this.node.states.error.set(`input ${inputIndex} is invalid (error: ${inputErrorMessage})`);
 				}
 			}
 		}

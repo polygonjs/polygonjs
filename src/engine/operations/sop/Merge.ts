@@ -87,7 +87,7 @@ export class MergeSopOperation extends BaseSopOperation {
 				}
 			});
 		}
-		const merged_objects: Object3DWithGeometry[] = [];
+		const mergedObjects: Object3DWithGeometry[] = [];
 		orderedObjectTypes.forEach((objectType) => {
 			const objects = objectsByType.get(objectType);
 			if (objects) {
@@ -105,7 +105,7 @@ export class MergeSopOperation extends BaseSopOperation {
 						const material = materialsByObjectType.get(objectType);
 						const object = this.createObject(merged_geometry, objectType, material);
 						object.matrixAutoUpdate = false;
-						merged_objects.push(object as Object3DWithGeometry);
+						mergedObjects.push(object as Object3DWithGeometry);
 					} else {
 						this.states?.error.set('merge failed, check that input geometries have the same attributes');
 					}
@@ -115,6 +115,6 @@ export class MergeSopOperation extends BaseSopOperation {
 			}
 		});
 
-		return merged_objects;
+		return mergedObjects;
 	}
 }

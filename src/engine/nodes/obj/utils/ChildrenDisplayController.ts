@@ -42,11 +42,11 @@ export class ChildrenDisplayController {
 				// use a timeout here, so that the node isn't cooked too early when being copy/pasted, if it had the display flag on.
 				// This would make nodes error
 				setTimeout(() => {
-					this.request_display_node_container();
+					this.requestDisplayNodeContainer();
 				}, 0);
 			},
 			onDisplayNodeUpdate: () => {
-				this.request_display_node_container();
+				this.requestDisplayNodeContainer();
 			},
 		};
 	}
@@ -61,7 +61,7 @@ export class ChildrenDisplayController {
 			display_flag.onUpdate(() => {
 				this._updateSopGroupHierarchy();
 				if (display_flag.active()) {
-					this.request_display_node_container();
+					this.requestDisplayNodeContainer();
 				}
 			});
 		}
@@ -92,7 +92,7 @@ export class ChildrenDisplayController {
 		return used_in_scene && display_flag_on && param_active_on;
 	}
 
-	async request_display_node_container() {
+	async requestDisplayNodeContainer() {
 		if (!this.node.scene().loadingController.loaded()) {
 			return;
 		}

@@ -208,7 +208,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 					// to take care of it itself.
 					// node.compute();
 
-					node.childrenDisplayController?.request_display_node_container();
+					node.childrenDisplayController?.requestDisplayNodeContainer();
 					node.addObjectToParent(parent_object);
 				} else {
 					node.removeObjectFromParent();
