@@ -52,7 +52,7 @@ export class OrthographicCameraSopNode extends TypedSopNode<OrthographicCameraSo
 
 	private _operation: OrthographicCameraSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new OrthographicCameraSopOperation(this._scene, this.states);
+		this._operation = this._operation || new OrthographicCameraSopOperation(this._scene, this.states, this);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

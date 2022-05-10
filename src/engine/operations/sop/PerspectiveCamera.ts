@@ -5,15 +5,18 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CameraNodeType} from '../../poly/NodeContext';
 import {PERSPECTIVE_CAMERA_DEFAULT, registerPerspectiveCamera} from '../../../core/camera/CorePerspectiveCamera';
-import {CORE_CAMERA_DEFAULT, PerspectiveCameraAttribute} from '../../../core/camera/CoreCamera';
+import {CameraAttribute, CORE_CAMERA_DEFAULT, PerspectiveCameraAttribute} from '../../../core/camera/CoreCamera';
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {CoreObject} from '../../../core/geometry/Object';
+import type {BaseNodeType} from '../../nodes/_Base';
 
-interface PerspectiveCameraSopParams extends DefaultOperationParams {
+interface CreatePerspectiveCameraParams {
 	fov: number;
 	near: number;
 	far: number;
+}
+interface PerspectiveCameraSopParams extends CreatePerspectiveCameraParams, DefaultOperationParams {
 	position: Vector3;
 	rotation: Vector3;
 	showHelper: boolean;
@@ -39,7 +42,7 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 	}
 	static override onRegister = registerPerspectiveCamera;
 	override cook(inputCoreGroups: CoreGroup[], params: PerspectiveCameraSopParams) {
-		const camera = new PerspectiveCamera(params.fov, 1, params.near, params.far);
+		const camera = PerspectiveCameraSopOperation.createCamera(params, this._node);
 		camera.name = CameraNodeType.PERSPECTIVE;
 
 		camera.position.copy(params.position);
@@ -63,6 +66,13 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 		}
 
 		return this.createCoreGroupFromObjects(objects);
+	}
+	static createCamera(params: CreatePerspectiveCameraParams, nodeGenerator?: BaseNodeType) {
+		const camera = new PerspectiveCamera(params.fov, 1, params.near, params.far);
+		if (nodeGenerator) {
+			CoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
+		}
+		return camera;
 	}
 	static setCameraAttributes(camera: PerspectiveCamera, options: AttributeOptions) {
 		CoreObject.addAttribute(camera, PerspectiveCameraAttribute.FOV, options.fov);

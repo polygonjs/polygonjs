@@ -51,11 +51,12 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 	static override onRegister: OnNodeRegisterCallback = registerPerspectiveCamera;
 
 	override createObject() {
-		const camera = new PerspectiveCamera(
-			PERSPECTIVE_CAMERA_DEFAULT.fov,
-			1,
-			CORE_CAMERA_DEFAULT.near,
-			CORE_CAMERA_DEFAULT.far
+		const camera = PerspectiveCameraSopOperation.createCamera(
+			{
+				...PERSPECTIVE_CAMERA_DEFAULT,
+				...CORE_CAMERA_DEFAULT,
+			},
+			this
 		);
 		PerspectiveCameraSopOperation.setCameraAttributes(camera, {fov: PERSPECTIVE_CAMERA_DEFAULT.fov});
 		return camera;

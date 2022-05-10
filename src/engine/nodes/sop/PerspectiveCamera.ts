@@ -52,7 +52,7 @@ export class PerspectiveCameraSopNode extends TypedSopNode<PerspectiveCameraSopP
 
 	private _operation: PerspectiveCameraSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new PerspectiveCameraSopOperation(this._scene, this.states);
+		this._operation = this._operation || new PerspectiveCameraSopOperation(this._scene, this.states, this);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

@@ -49,20 +49,37 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 	static override onRegister = registerOrthographicCamera;
 
 	override createObject() {
-		return new OrthographicCamera(
-			ORTHOGRAPHIC_CAMERA_DEFAULT.left * 2,
-			ORTHOGRAPHIC_CAMERA_DEFAULT.right * 2,
-			ORTHOGRAPHIC_CAMERA_DEFAULT.top * 2,
-			ORTHOGRAPHIC_CAMERA_DEFAULT.bottom * 2,
-			CORE_CAMERA_DEFAULT.near,
-			CORE_CAMERA_DEFAULT.far
+		const camera = OrthographicCameraSopOperation.createCamera(
+			{
+				size: this.pv.size,
+				...CORE_CAMERA_DEFAULT,
+			},
+			this
 		);
+		OrthographicCameraSopOperation.setCameraAttributes(camera, {size: this.pv.size});
+		return camera;
+		// return new OrthographicCamera(
+		// 	ORTHOGRAPHIC_CAMERA_DEFAULT.left * 2,
+		// 	ORTHOGRAPHIC_CAMERA_DEFAULT.right * 2,
+		// 	ORTHOGRAPHIC_CAMERA_DEFAULT.top * 2,
+		// 	ORTHOGRAPHIC_CAMERA_DEFAULT.bottom * 2,
+		// 	CORE_CAMERA_DEFAULT.near,
+		// 	CORE_CAMERA_DEFAULT.far
+		// );
 	}
 
 	override updateCamera() {
+		const {size} = this.pv;
+		this._object.left = ORTHOGRAPHIC_CAMERA_DEFAULT.left * size;
+		this._object.right = ORTHOGRAPHIC_CAMERA_DEFAULT.right * size;
+		this._object.top = ORTHOGRAPHIC_CAMERA_DEFAULT.top * size;
+		this._object.bottom = ORTHOGRAPHIC_CAMERA_DEFAULT.bottom * size;
+
 		OrthographicCameraSopOperation.setCameraAttributes(this._object, this.pv);
 
 		// this._updateForAspectRatio();
+
+		this._object.updateProjectionMatrix();
 	}
 
 	// protected override _updateForAspectRatio() {
