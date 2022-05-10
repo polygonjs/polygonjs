@@ -37,6 +37,8 @@ import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
 import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
 import {IntToBoolActorNode} from '../../../nodes/actor/IntToBool';
+import {MaxActorNode} from '../../../nodes/actor/Max';
+import {MinActorNode} from '../../../nodes/actor/Min';
 import {MultActorNode} from '../../../nodes/actor/Mult';
 import {MultScalarActorNode} from '../../../nodes/actor/MultScalar';
 import {NullActorNode} from '../../../nodes/actor/Null';
@@ -141,6 +143,8 @@ export interface ActorNodeChildrenMap {
 	getSphereProperty: GetSpherePropertyActorNode;
 	intToBool: IntToBoolActorNode;
 	intToFloat: IntToFloatActorNode;
+	max: MaxActorNode;
+	min: MinActorNode;
 	mult: MultActorNode;
 	multScalar: MultScalarActorNode;
 	null: NullActorNode;
@@ -249,6 +253,8 @@ export class ActorRegister {
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(MaxActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(MinActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultScalarActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NullActorNode, CATEGORY_ACTOR.MISC);

@@ -1,10 +1,10 @@
 import {MathFunctionArgNOperationFactory} from './_Math_ArgNOperation';
 
-export class AddActorNode extends MathFunctionArgNOperationFactory('add', {
-	inputPrefix: 'add',
-	out: 'sum',
+export class MinActorNode extends MathFunctionArgNOperationFactory('min', {
+	inputPrefix: 'min',
+	out: 'min',
 }) {
 	protected _applyOperation<T extends number>(arg1: T, arg2: T): any {
-		return arg1 + arg2;
+		return Math.min(arg1, arg2);
 	}
 }

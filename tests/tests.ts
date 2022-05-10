@@ -81,6 +81,7 @@ import './engine/nodes/utils/ChildrenContext';
 import './engine/nodes/utils/Memory';
 
 QUnit.module('actor');
+import './engine/nodes/actor/Add';
 import './engine/nodes/actor/AnimationActionCrossFade';
 import './engine/nodes/actor/AnimationActionFadeOut';
 import './engine/nodes/actor/AnimationActionPlay';
@@ -94,6 +95,8 @@ import './engine/nodes/actor/GetMaterial';
 import './engine/nodes/actor/GetObject';
 import './engine/nodes/actor/GetObjectAttribute';
 import './engine/nodes/actor/Math_Arg1';
+import './engine/nodes/actor/Max';
+import './engine/nodes/actor/Min';
 import './engine/nodes/actor/MultScalar';
 import './engine/nodes/actor/OnChildAttributeUpdate';
 import './engine/nodes/actor/OnManualTrigger';

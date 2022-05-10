@@ -1,7 +1,7 @@
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
-import {MathFunctionArg2OperationFactory} from './_Math_Arg2Operation';
+import {MathFunctionArgNOperationFactory} from './_Math_ArgNOperation';
 
-export class MultActorNode extends MathFunctionArg2OperationFactory('mult', {
+export class MultActorNode extends MathFunctionArgNOperationFactory('mult', {
 	inputPrefix: 'mult',
 	out: 'product',
 }) {

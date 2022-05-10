@@ -9,15 +9,15 @@ import {Vector2} from 'three';
 import {Vector3} from 'three';
 import {Vector4} from 'three';
 
-interface MathArg2OperationOptions {
+interface MathArgNOperationOptions {
 	inputPrefix: string;
 	out: string;
 	allowed_in_types?: ActorConnectionPointType[];
 }
 
-export function MathFunctionArg2OperationFactory(
+export function MathFunctionArgNOperationFactory(
 	type: string,
-	options: MathArg2OperationOptions
+	options: MathArgNOperationOptions
 ): typeof BaseMathFunctionActorNode {
 	const inputPrefix = options.inputPrefix || type;
 	const output_name = options.out || 'val';
@@ -111,9 +111,9 @@ export function MathFunctionArg2OperationFactory(
 			}
 			const type = first_input_type || ActorConnectionPointType.FLOAT;
 
-			// const current_connections = this.io.connections.existingInputConnections();
+			const current_connections = this.io.connections.existingInputConnections();
 
-			const expected_count = 2; //current_connections ? Math.max(current_connections.length + 1, 2) : 2;
+			const expected_count = current_connections ? Math.max(current_connections.length + 1, 2) : 2;
 			const expected_input_types = [];
 			for (let i = 0; i < expected_count; i++) {
 				expected_input_types.push(type);
