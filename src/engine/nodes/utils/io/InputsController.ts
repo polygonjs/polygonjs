@@ -198,8 +198,34 @@ export class NodeInputsController<NC extends NodeContext> {
 		this.node.io.connections.initInputs();
 	}
 
-	isAnyInputDirty() {
+	isGraphNodeDirty() {
+		// Update:
+		// we cannot simply check if this._graphNode is dirty,
+		// as with the following case:
+		// a merge node has 2 nodes as input
+		// both those nodes are set to dirty (without using the scene batching)
+		// then
+		// - the merge node with be set dirty a first time as the first input is made dirty.
+		// - the merge node starts cooking
+		// - the merge node is made dirty a second time
+		// - the merge node completes its first cook, having only processed the new content of the first input
+		// - when the merge node completes, it realises it needs to cook a second time, since it was made dirty after starting the cook
+		// - but when it attempts to get the content of the second node, the .isAnyInputDirty returns false when it should return true
+		// because this._graphNode is not dirty anymore
+		// OR...
+		// we can instead make sure that this._graphNode is only made un-dirty if all inputs are clean too.
+
 		return this._graphNode?.isDirty() || false;
+	}
+	private _isAnyInputDirty() {
+		// let anyDirty=false
+		// const inputNodes = this.inputs()
+		for (let input of this._inputs) {
+			if (input && input.isDirty()) {
+				return true;
+			}
+		}
+		return false;
 		// if (this._maxInputsCount > 0) {
 		// 	for (let i = 0; i < this._inputs.length; i++) {
 		// 		if (this._inputs[i]?.isDirty()) {
@@ -264,7 +290,10 @@ export class NodeInputsController<NC extends NodeContext> {
 					}
 					containers = await Promise.all(promises);
 					// containers = containers.concat(promised_containers);
-					this._graphNode?.removeDirtyState();
+
+					if (!this._isAnyInputDirty()) {
+						this._graphNode?.removeDirtyState();
+					}
 				}
 			}
 		}

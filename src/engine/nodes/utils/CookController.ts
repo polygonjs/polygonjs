@@ -142,7 +142,7 @@ export class NodeCookController<NC extends NodeContext> {
 		const ioOnputs = this.node.io.inputs;
 
 		const inputContainers: (ContainerMap[NC] | null)[] = this._inputsEvaluationRequired
-			? ioOnputs.isAnyInputDirty()
+			? ioOnputs.isGraphNodeDirty()
 				? await ioOnputs.evalRequiredInputs()
 				: ioOnputs.containersWithoutEvaluation()
 			: [];

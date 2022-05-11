@@ -39,6 +39,9 @@ export class NodesController {
 			}
 		}
 	}
+	traverseNodes(callback: (node: BaseNodeType) => void) {
+		this._traverseNode(this._root, callback);
+	}
 
 	// objectsFromMask(mask: string): Object3D[] {
 	// 	const masks = mask.split(' ');

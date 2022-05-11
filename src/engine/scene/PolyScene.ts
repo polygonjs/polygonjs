@@ -138,9 +138,9 @@ export class PolyScene {
 		return this._expressions_controller;
 	}
 
-	protected _nodes_controller = new NodesController(this);
+	protected _nodesController = new NodesController(this);
 	get nodesController() {
-		return this._nodes_controller;
+		return this._nodesController;
 	}
 
 	public readonly renderersRegister = new SceneRenderersRegister(this);
@@ -395,6 +395,13 @@ export class PolyScene {
 	 */
 	root() {
 		return this.nodesController.root();
+	}
+	/**
+	 * traverse all nodes and runs a callback for each
+	 *
+	 */
+	traverseNodes(callback: (node: BaseNodeType) => void) {
+		this._nodesController.traverseNodes(callback);
 	}
 
 	//
