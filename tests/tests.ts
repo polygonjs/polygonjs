@@ -88,6 +88,7 @@ import './engine/nodes/actor/AnimationActionPlay';
 import './engine/nodes/actor/AnimationActionStop';
 import './engine/nodes/actor/AnimationMixer';
 import './engine/nodes/actor/Box3';
+import './engine/nodes/actor/Clamp';
 import './engine/nodes/actor/Code';
 import './engine/nodes/actor/Compare';
 import './engine/nodes/actor/GetChildrenAttributes';

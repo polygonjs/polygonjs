@@ -72,9 +72,7 @@ export class MixActorNode extends TypedActorNode<MixActorParamsConfig> {
 		return [MixActorNodeInputName.VALUE0, MixActorNodeInputName.VALUE1, MixActorNodeInputName.BLEND][index];
 	}
 	protected _expectedOutputTypes() {
-		const inputTypes = this._expectedInputTypes();
-		const type = inputTypes[0];
-		return [type];
+		return [this._expectedInputTypes()[0]];
 	}
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
@@ -85,7 +83,10 @@ export class MixActorNode extends TypedActorNode<MixActorParamsConfig> {
 	public override outputValue(context: ActorNodeTriggerContext) {
 		const value0 = this._inputValue<MixedType>(MixActorNodeInputName.VALUE0, context);
 		const value1 = this._inputValue<MixedType>(MixActorNodeInputName.VALUE1, context);
-		const blend = this._inputValue<ActorConnectionPointType.FLOAT>(MixActorNodeInputName.BLEND, context) || 0.5;
+		let blend = this._inputValue<ActorConnectionPointType.FLOAT>(MixActorNodeInputName.BLEND, context);
+		if (blend == null) {
+			blend = 0.5;
+		}
 
 		if (CoreType.isVector(value0) && CoreType.isVector(value1)) {
 			const val0Tmp = this._vectorTmp(value0, this._val0Tmp) as Vector3;

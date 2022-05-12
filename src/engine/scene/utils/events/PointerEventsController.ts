@@ -55,6 +55,11 @@ export class PointerEventsController extends BaseSceneEventsController<MouseEven
 		return new Set(ACCEPTED_POINTER_EVENT_TYPES.map((n) => `${n}`));
 	}
 
+	setRaycaster(raycaster: Raycaster) {
+		// giving a raycaster here is useful to still benefit from mouse events, even if not viewer has been created
+		this._raycaster = raycaster;
+	}
+
 	override processEvent(eventContext: EventContext<MouseEvent>) {
 		super.processEvent(eventContext);
 		const {viewer, event} = eventContext;

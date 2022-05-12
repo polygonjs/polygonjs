@@ -15,6 +15,7 @@ import {SceneConnectionTriggerDispatcher} from './ConnectionTriggerDispatcher';
 import {EventInputType} from '../../../poly/registers/nodes/types/Event';
 import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
 import {ActorType} from '../../../poly/registers/nodes/types/Actor';
+import {Raycaster} from 'three';
 
 export class SceneEventsDispatcher {
 	public readonly sceneEventsController = new SceneEventsController();
@@ -62,6 +63,11 @@ export class SceneEventsDispatcher {
 		for (let controller of this._controllers) {
 			callback(controller);
 		}
+	}
+
+	setRaycaster(raycaster: Raycaster) {
+		// giving a raycaster here is useful to still benefit from mouse events, even if not viewer has been created
+		this.pointerEventsController.setRaycaster(raycaster);
 	}
 
 	// processEvent(event_content: EventContext<Event>) {

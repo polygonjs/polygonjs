@@ -16,6 +16,7 @@ import {AnimationMixerUpdateActorNode} from '../../../nodes/actor/AnimationMixer
 import {BoolToIntActorNode} from '../../../nodes/actor/BoolToInt';
 import {Box3ActorNode} from '../../../nodes/actor/Box3';
 import {CeilActorNode} from '../../../nodes/actor/Ceil';
+import {ClampActorNode} from '../../../nodes/actor/Clamp';
 import {CodeActorNode} from '../../../nodes/actor/Code';
 import {CompareActorNode} from '../../../nodes/actor/Compare';
 import {ConstantActorNode} from '../../../nodes/actor/Constant';
@@ -124,6 +125,7 @@ export interface ActorNodeChildrenMap {
 	boolToInt: BoolToIntActorNode;
 	box3: Box3ActorNode;
 	ceil: CeilActorNode;
+	clamp: ClampActorNode;
 	code: CodeActorNode;
 	compare: CompareActorNode;
 	constant: ConstantActorNode;
@@ -236,6 +238,7 @@ export class ActorRegister {
 		poly.registerNode(BoolToIntActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Box3ActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(CeilActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(ClampActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(CompareActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(ConstantActorNode, CATEGORY_ACTOR.MISC);

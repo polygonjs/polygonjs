@@ -24,7 +24,7 @@ import {BaseNodeType} from '../nodes/_Base';
 import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
 import {ParamsInitData} from '../nodes/utils/io/IOController';
 import {Constructor, valueof} from '../../types/GlobalTypes';
-import {Scene, WebGLRenderer} from 'three';
+import {Raycaster, Scene, WebGLRenderer} from 'three';
 import {CoreString} from '../../core/String';
 import {Object3D} from 'three';
 import {SceneRenderersRegister, RegisterRendererOptions} from './utils/SceneRenderersRegister';
@@ -111,6 +111,16 @@ export class PolyScene {
 	private _events_dispatcher: SceneEventsDispatcher | undefined;
 	get eventsDispatcher() {
 		return (this._events_dispatcher = this._events_dispatcher || new SceneEventsDispatcher(this));
+	}
+	/**
+	 * When using Polygonjs viewers, a raycaster is created to use mouse events
+	 * and detect if there are any object under the cursor.
+	 * But if no viewer is created, such as when [importing a scene in react three fiber](https://polygonjs.com/docs/integrations/react_three_fiber),
+	 * It is then useful to give a raycaster.
+	 *
+	 */
+	setRaycaster(raycaster: Raycaster) {
+		this.eventsDispatcher.setRaycaster(raycaster);
 	}
 
 	private _graph = new CoreGraph();
