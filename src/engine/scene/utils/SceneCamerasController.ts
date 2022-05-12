@@ -80,11 +80,15 @@ export class SceneCamerasController {
 	}
 
 	async createMainViewer(options?: CreateViewerOptions) {
-		const mainCamera = await this.mainCamera();
-		if (!mainCamera) {
+		const camera = await this.mainCamera();
+		if (!camera) {
 			return;
 		}
-		return Poly.camerasRegister.createViewer({...options, camera: mainCamera, scene: this.scene});
+		return Poly.camerasRegister.createViewer({
+			...options,
+			camera,
+			scene: this.scene,
+		});
 	}
 
 	private _onCameraObjectsUpdated: OnCameraObjectsUpdated | undefined;

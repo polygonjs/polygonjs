@@ -2,6 +2,7 @@ import {PerspectiveCamera} from 'three';
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {PolyEngine} from '../../engine/Poly';
 import {CameraNodeType} from '../../engine/poly/NodeContext';
+import {ViewerCallbackOptions} from '../../engine/poly/registers/cameras/PolyCamerasRegister';
 import {OnNodeRegisterCallback} from '../../engine/poly/registers/nodes/NodesRegister';
 import {ThreejsViewer} from '../../engine/viewers/Threejs';
 import {Constructor, Number2} from '../../types/GlobalTypes';
@@ -25,15 +26,12 @@ export function PerspectiveCameraParamConfigMixin<TBase extends Constructor>(Bas
 
 export const registerPerspectiveCamera: OnNodeRegisterCallback = (poly: PolyEngine) => {
 	poly.registerCameraNodeType(CameraNodeType.PERSPECTIVE);
-	poly.registerCamera<PerspectiveCamera>(PerspectiveCamera, (options) => {
-		const {camera, scene, canvas} = options;
+	poly.registerCamera<PerspectiveCamera>(PerspectiveCamera, (options: ViewerCallbackOptions<PerspectiveCamera>) => {
 		const viewer = new ThreejsViewer<PerspectiveCamera>({
-			camera,
-			scene,
+			...options,
 			updateCameraAspect: (aspect) => {
-				CoreCameraPerspectiveFrameMode.updateCameraAspect(camera, aspect);
+				CoreCameraPerspectiveFrameMode.updateCameraAspect(options.camera, aspect);
 			},
-			canvas,
 		});
 		return viewer;
 	});

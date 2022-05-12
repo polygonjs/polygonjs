@@ -76,7 +76,6 @@ export class RaySopOperation extends BaseSopOperation {
 				}
 				if (isBooleanTrue(params.addDistAttribute)) {
 					const dist = this._pointPos.distanceTo(first_intersect.point);
-					console.log(dist);
 					point.setAttribValue(DIST_ATTRIB_NAME, dist);
 				}
 				if (isBooleanTrue(params.transferFaceNormals) && first_intersect.face) {

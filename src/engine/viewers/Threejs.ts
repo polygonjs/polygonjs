@@ -25,6 +25,7 @@ declare global {
 
 export interface ThreejsViewerOptions<C extends Camera> extends TypedViewerOptions<C> {
 	// properties?: ThreejsViewerProperties;
+	renderer?: WebGLRenderer;
 }
 
 type RenderFuncWithDelta = (delta: number) => void;
@@ -52,20 +53,22 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	}
 	constructor(options: ThreejsViewerOptions<C>) {
 		super(options);
-		this._setupFunctions();
+		this._setupFunctions(options);
 		// this._container.style.height = '100%'; // this should be app specific
 	}
-	private _setupFunctions() {
+	private _setupFunctions(options: ThreejsViewerOptions<C>) {
 		const camera = this.camera();
 		const scene = this.scene();
 		const canvas = this.canvas();
 		const threejsScene = scene.threejsScene();
 
-		this._renderer = CoreCameraRendererController.createRenderer({
-			camera,
-			scene,
-			canvas,
-		});
+		this._renderer =
+			options.renderer ||
+			CoreCameraRendererController.createRenderer({
+				camera,
+				scene,
+				canvas,
+			});
 		const renderer = this._renderer;
 		if (renderer) {
 			this._rendererScene = CoreCameraRenderSceneController.renderScene({camera, scene});

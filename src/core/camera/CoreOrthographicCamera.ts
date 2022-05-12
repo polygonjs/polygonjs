@@ -2,6 +2,7 @@ import {OrthographicCamera} from 'three';
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {PolyEngine} from '../../engine/Poly';
 import {CameraNodeType} from '../../engine/poly/NodeContext';
+import {ViewerCallbackOptions} from '../../engine/poly/registers/cameras/PolyCamerasRegister';
 import {OnNodeRegisterCallback} from '../../engine/poly/registers/nodes/NodesRegister';
 import {ThreejsViewer} from '../../engine/viewers/Threejs';
 import {Constructor} from '../../types/GlobalTypes';
@@ -24,16 +25,16 @@ export function OrthographicCameraParamConfigMixin<TBase extends Constructor>(Ba
 export const registerOrthographicCamera: OnNodeRegisterCallback = (poly: PolyEngine) => {
 	poly.registerCameraNodeType(CameraNodeType.ORTHOGRAPHIC);
 
-	poly.registerCamera<OrthographicCamera>(OrthographicCamera, (options) => {
-		const {camera, scene, canvas} = options;
-		const viewer = new ThreejsViewer<OrthographicCamera>({
-			camera,
-			scene,
-			updateCameraAspect: (aspect) => {
-				CoreCameraOrthographicFrameMode.updateCameraAspect(camera, aspect);
-			},
-			canvas,
-		});
-		return viewer;
-	});
+	poly.registerCamera<OrthographicCamera>(
+		OrthographicCamera,
+		(options: ViewerCallbackOptions<OrthographicCamera>) => {
+			const viewer = new ThreejsViewer<OrthographicCamera>({
+				...options,
+				updateCameraAspect: (aspect) => {
+					CoreCameraOrthographicFrameMode.updateCameraAspect(options.camera, aspect);
+				},
+			});
+			return viewer;
+		}
+	);
 };

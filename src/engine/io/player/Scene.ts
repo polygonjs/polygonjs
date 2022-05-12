@@ -1,3 +1,4 @@
+import {WebGLRenderer} from 'three';
 import {CoreType} from '../../../core/Type';
 import {OnProgressArguments, OnProgressUpdateCallback} from '../../nodes/manager/utils/Scene/LoadProgress';
 // import {BaseNodeType} from '../../nodes/_Base';
@@ -27,6 +28,7 @@ export interface SceneDataImportOptions extends ImportCommonOptions {
 	// assetsRoot: string;
 	autoPlay?: boolean;
 	createViewer?: boolean;
+	renderer?: WebGLRenderer;
 }
 export type LoadSceneData = (options: SceneDataImportOptions) => void;
 export interface SceneDataImportOptionsOnly {
@@ -164,6 +166,9 @@ export class ScenePlayerImporter {
 				});
 
 				const scene = importer.scene();
+				if (this.options.renderer) {
+					scene.renderersRegister.registerRenderer(this.options.renderer);
+				}
 				// now we must wait that a camera matching the mainCamera is found in the hierarchy.
 				this._onCameraCreatorNodeLoadedResolve = () => resolve(scene);
 				scene.camerasController.onCameraObjectsUpdated(async () => {
@@ -192,6 +197,7 @@ export class ScenePlayerImporter {
 			if (domElement || createViewer) {
 				this._viewer = await scene.camerasController.createMainViewer({
 					autoRender: false,
+					renderer: this.options.renderer,
 				});
 				if (this._viewer) {
 					if (domElement) {

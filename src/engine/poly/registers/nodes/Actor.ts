@@ -69,6 +69,7 @@ import {RayIntersectsPlaneActorNode} from '../../../nodes/actor/RayIntersectsPla
 import {RayIntersectsSphereActorNode} from '../../../nodes/actor/RayIntersectsSphere';
 import {RoundActorNode} from '../../../nodes/actor/Round';
 import {SetMaterialColorActorNode} from '../../../nodes/actor/SetMaterialColor';
+import {SetMaterialEmissiveColorActorNode} from '../../../nodes/actor/SetMaterialEmissiveColor';
 import {SetObjectMaterialColorActorNode} from '../../../nodes/actor/SetObjectMaterialColor';
 import {SetObjectAttributeActorNode} from '../../../nodes/actor/SetObjectAttribute';
 import {SetObjectLookAtActorNode} from '../../../nodes/actor/SetObjectLookAt';
@@ -175,6 +176,7 @@ export interface ActorNodeChildrenMap {
 	rayIntersectsSphere: RayIntersectsSphereActorNode;
 	round: RoundActorNode;
 	setMaterialColor: SetMaterialColorActorNode;
+	setMaterialEmissiveColor: SetMaterialEmissiveColorActorNode;
 	setObjectMaterialColor: SetObjectMaterialColorActorNode;
 	// setObjectHoveredState: SetObjectHoveredStateActorNode;
 	setObjectAttribute: SetObjectAttributeActorNode;
@@ -285,6 +287,7 @@ export class ActorRegister {
 		poly.registerNode(RayIntersectsSphereActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RoundActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SetMaterialColorActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetMaterialEmissiveColorActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectMaterialColorActorNode, CATEGORY_ACTOR.ACTION);
 		// poly.registerNode(SetObjectHoveredStateActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectAttributeActorNode, CATEGORY_ACTOR.ACTION);

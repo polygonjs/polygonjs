@@ -34,6 +34,7 @@ type UpdateCameraAspectCallback = (aspect: number) => void;
 export interface CreateViewerOptions {
 	canvas?: HTMLCanvasElement;
 	autoRender?: boolean;
+	renderer?: WebGLRenderer;
 }
 export interface TypedViewerOptions<C extends Camera> extends CreateViewerOptions {
 	camera: C;
