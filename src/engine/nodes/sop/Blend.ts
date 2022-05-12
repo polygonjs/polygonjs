@@ -6,14 +6,13 @@
  *
  */
 import {TypedSopNode} from './_Base';
-
 import {Object3D} from 'three';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferGeometry} from 'three';
 import {Mesh} from 'three';
+import {isBooleanTrue} from '../../../core/Type';
 
 class BlendSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to blend */
@@ -23,6 +22,8 @@ class BlendSopParamsConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [true, true],
 	});
+	/** @param update normals */
+	updateNormals = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new BlendSopParamsConfig();
 
@@ -40,38 +41,19 @@ export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		// this.request_input_container 0, (container0)=>
-		// 	if container0? && (group0 = container0.group())?
-		// 		this.request_input_container 1, (container1)=>
-		// 			if container1? && (group1 = container1.group({clone: false}))?
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup0 = inputCoreGroups[0];
+		const coreGroup1 = inputCoreGroups[1];
 
-		//this.eval_all_params =>
-		// const container0 = input_containers[0];
-		// const container1 = input_containers[1];
+		const objects0 = coreGroup0.objects();
+		const objects1 = coreGroup1.objects();
 
-		// const group0 = container0.group();
-		// const group1 = container1.group();
-		const core_group0 = input_contents[0];
-		const core_group1 = input_contents[1];
-
-		const objects0 = core_group0.objects();
-		const objects1 = core_group1.objects();
-
-		let object0, object1;
 		for (let i = 0; i < objects0.length; i++) {
-			object0 = objects0[i];
-			object1 = objects1[i];
-			this.blend(object0, object1, this.pv.blend);
+			this.blend(objects0[i], objects1[i], this.pv.blend);
 		}
-		this.setCoreGroup(core_group0);
+		this.setCoreGroup(coreGroup0);
 	}
 
-	// 		else
-	// 			this.set_error("input 1 required")
-
-	// else
-	// 	this.set_error("input 0 required")
 	private blend(object0: Object3D, object1: Object3D, blend: number) {
 		const geometry0 = (object0 as Mesh).geometry as BufferGeometry;
 		const geometry1 = (object1 as Mesh).geometry as BufferGeometry;
@@ -97,6 +79,8 @@ export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 			}
 		}
 
-		geometry0.computeVertexNormals();
+		if (isBooleanTrue(this.pv.updateNormals)) {
+			geometry0.computeVertexNormals();
+		}
 	}
 }

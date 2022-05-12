@@ -188,7 +188,7 @@ export class CorePoint extends CoreEntity {
 		return target.fromArray(array, this._index * 3);
 	}
 	setPosition(new_position: Vector3) {
-		this.setAttribValueVector3(ATTRIB_NAMES.POSITION, new_position);
+		this.setAttribValueFromVector3(ATTRIB_NAMES.POSITION, new_position);
 	}
 
 	normal(): Vector3 {
@@ -199,7 +199,7 @@ export class CorePoint extends CoreEntity {
 		return target.fromArray(array, this._index * 3);
 	}
 	setNormal(new_normal: Vector3) {
-		return this.setAttribValueVector3(ATTRIB_NAMES.NORMAL, new_normal);
+		return this.setAttribValueFromVector3(ATTRIB_NAMES.NORMAL, new_normal);
 	}
 
 	setAttribValue(attribName: string, value: NumericAttribValue | string) {
@@ -269,23 +269,19 @@ export class CorePoint extends CoreEntity {
 		const attrib = this._geometry.getAttribute(attribName);
 		value.toArray(attrib.array, this._index * 4);
 	}
-	setAttribValueVector3(name: string, value: Vector3) {
-		// TODO: this fails if the value is null
-		if (value == null) {
-			return;
-		}
-		if (name == null) {
-			throw 'Point.set_attrib_value requires a name';
-		}
+	// setAttribValueVector3(name: string, value: Vector3) {
+	// 	// TODO: this fails if the value is null
+	// 	if (value == null) {
+	// 		return;
+	// 	}
+	// 	if (name == null) {
+	// 		throw 'Point.set_attrib_value requires a name';
+	// 	}
 
-		const attrib = this._geometry.getAttribute(name);
-		const array = attrib.array as number[];
-		const i = this._index * 3;
-
-		array[i] = value.x;
-		array[i + 1] = value.y;
-		array[i + 2] = value.z;
-	}
+	// 	const attrib = this._geometry.getAttribute(name);
+	// 	const array = attrib.array as number[];
+	// 	value.toArray(array, this._index * 3);
+	// }
 
 	setAttribIndex(name: string, new_value_index: number) {
 		const array = this._geometry.getAttribute(name).array as number[];

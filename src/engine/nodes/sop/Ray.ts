@@ -5,10 +5,16 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {RaySopOperation} from '../../operations/sop/Ray';
+import {RaySopMode, RaySopOperation, RAY_SOP_MODES} from '../../operations/sop/Ray';
 const DEFAULT = RaySopOperation.DEFAULT_PARAMS;
 
 class RaySopParamsConfig extends NodeParamsConfig {
+	/** @param method used to ray points onto the collision geometry */
+	mode = ParamConfig.INTEGER(DEFAULT.mode, {
+		menu: {
+			entries: RAY_SOP_MODES.map((name, value) => ({name, value})),
+		},
+	});
 	/** @param toggle on to use the normals as the ray direction */
 	useNormals = ParamConfig.BOOLEAN(DEFAULT.useNormals);
 	/** @param if the normals are not used as the ray direction, this define the direction used */
@@ -40,9 +46,13 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 	}
 
 	private _operation: RaySopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new RaySopOperation(this._scene, this.states);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+	override cook(inputCoreGroups: CoreGroup[]) {
+		this._operation = this._operation || new RaySopOperation(this._scene, this.states, this);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
+	}
+
+	setMode(mode: RaySopMode) {
+		this.p.mode.set(RAY_SOP_MODES.indexOf(mode));
 	}
 }
