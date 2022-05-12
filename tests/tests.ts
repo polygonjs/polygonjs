@@ -97,6 +97,7 @@ import './engine/nodes/actor/GetObjectAttribute';
 import './engine/nodes/actor/Math_Arg1';
 import './engine/nodes/actor/Max';
 import './engine/nodes/actor/Min';
+import './engine/nodes/actor/Mix';
 import './engine/nodes/actor/MultScalar';
 import './engine/nodes/actor/OnChildAttributeUpdate';
 import './engine/nodes/actor/OnManualTrigger';

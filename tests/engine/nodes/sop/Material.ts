@@ -8,11 +8,12 @@ import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {Object3D} from 'three';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+import {CoreType} from '../../../../src/core/Type';
 
 const LAMBERT_UNIFORMS = UniformsUtils.clone(ShaderLib.lambert.uniforms);
 const LAMBERT_UNIFORM_NAMES = Object.keys(LAMBERT_UNIFORMS).concat(['clippingPlanes']).sort();
 
-QUnit.test('materials simple', async (assert) => {
+QUnit.test('sop/material simple', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -31,7 +32,7 @@ QUnit.test('materials simple', async (assert) => {
 	assert.equal(material.uuid, lambert1.material.uuid);
 });
 
-QUnit.test('materials clone', async (assert) => {
+QUnit.test('sop/material clone', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -62,7 +63,7 @@ QUnit.test('materials clone', async (assert) => {
 	assert.notEqual(src_material.uuid, (objects[1].material as Material).uuid);
 });
 
-QUnit.test('materials access group by object name', async (assert) => {
+QUnit.test('sop/material access group by object name', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -109,7 +110,7 @@ QUnit.test('materials access group by object name', async (assert) => {
 	assert.equal((objects2[objectNames.indexOf('SheenChair_metal')].material as Material).uuid, lambert1.material.uuid);
 });
 
-QUnit.test('materials access group by object index', async (assert) => {
+QUnit.test('sop/material access group by object index', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -152,7 +153,46 @@ QUnit.test('materials access group by object index', async (assert) => {
 	assert.equal((objects2[0].material as Material).uuid, lambert1.material.uuid, 'assigned');
 });
 
-QUnit.test('materials clone preserves builder onBeforeCompile', async (assert) => {
+QUnit.test('sop/material applies to children correctly', async (assert) => {
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+	const fileGLTF1 = geo1.createNode('fileGLTF');
+	const material1 = geo1.createNode('material');
+
+	const basicMesh = MAT.createNode('meshBasic');
+	const matUuid = basicMesh.material.uuid;
+	material1.setInput(0, fileGLTF1);
+	material1.p.material.setNode(basicMesh);
+	material1.p.applyToChildren.set(true);
+	material1.p.group.set('');
+
+	const container = await material1.compute();
+	const objects = container.coreContent()!.objects();
+	assert.ok(objects);
+
+	let anyWithAdifferentMat = false;
+	for (let object of objects) {
+		object.traverse((child: Object3D) => {
+			const childMat = (child as Mesh).material;
+			if (childMat) {
+				if (CoreType.isArray(childMat)) {
+					for (let childSubMAt of childMat) {
+						if (childSubMAt.uuid != matUuid) {
+							anyWithAdifferentMat = true;
+						}
+					}
+				} else {
+					if (childMat.uuid != matUuid) {
+						anyWithAdifferentMat = true;
+					}
+				}
+			}
+		});
+	}
+	assert.notOk(anyWithAdifferentMat);
+});
+
+QUnit.test('sop/material clone preserves builder onBeforeCompile', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = window.MAT;

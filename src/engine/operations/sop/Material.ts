@@ -72,7 +72,9 @@ export class MaterialSopOperation extends BaseSopOperation {
 			if (material) {
 				const coreObjects = coreGroup.coreObjectsFromGroup(params.group);
 				for (let coreObject of coreObjects) {
-					this._applyMaterial(coreObject, material, params);
+					if (params.group == '' || CoreObject.isInGroup(params.group, coreObject)) {
+						this._applyMaterial(coreObject, material, params);
+					}
 				}
 
 				if (isBooleanTrue(params.applyToChildren)) {
@@ -82,10 +84,8 @@ export class MaterialSopOperation extends BaseSopOperation {
 						callback: TraverseCallback,
 						level: number = 0
 					) {
-						if (params.group) {
-							if (CoreObject.isInGroup(params.group, coreObject)) {
-								callback(coreObject);
-							}
+						if (params.group == '' || CoreObject.isInGroup(params.group, coreObject)) {
+							callback(coreObject);
 						}
 						const childCoreObjects = coreObject
 							.object()

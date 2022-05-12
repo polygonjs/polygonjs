@@ -39,6 +39,7 @@ import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
 import {IntToBoolActorNode} from '../../../nodes/actor/IntToBool';
 import {MaxActorNode} from '../../../nodes/actor/Max';
 import {MinActorNode} from '../../../nodes/actor/Min';
+import {MixActorNode} from '../../../nodes/actor/Mix';
 import {MultActorNode} from '../../../nodes/actor/Mult';
 import {MultScalarActorNode} from '../../../nodes/actor/MultScalar';
 import {NullActorNode} from '../../../nodes/actor/Null';
@@ -146,6 +147,7 @@ export interface ActorNodeChildrenMap {
 	intToFloat: IntToFloatActorNode;
 	max: MaxActorNode;
 	min: MinActorNode;
+	mix: MixActorNode;
 	mult: MultActorNode;
 	multScalar: MultScalarActorNode;
 	null: NullActorNode;
@@ -257,6 +259,7 @@ export class ActorRegister {
 		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(MaxActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MinActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(MixActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultScalarActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NullActorNode, CATEGORY_ACTOR.MISC);

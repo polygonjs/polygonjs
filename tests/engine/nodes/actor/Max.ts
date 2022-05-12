@@ -8,7 +8,6 @@ QUnit.test('actor/max', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
-	// geo2
 	const geo1 = scene.createNode('geo');
 	const box1 = geo1.createNode('box');
 	const attribCreate1 = geo1.createNode('attribCreate');
@@ -25,7 +24,6 @@ QUnit.test('actor/max', async (assert) => {
 	attribCreate2.p.name.set('b');
 	attribCreate2.p.value1.set(1);
 
-	// geo1
 	const actor1 = geo1.createNode('actor');
 
 	actor1.setInput(0, attribCreate2);
@@ -72,7 +70,6 @@ QUnit.test('actor/max for more than 2 inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
-	// geo2
 	const geo1 = scene.createNode('geo');
 	const box1 = geo1.createNode('box');
 	const attribCreate1 = geo1.createNode('attribCreate');
@@ -97,7 +94,6 @@ QUnit.test('actor/max for more than 2 inputs', async (assert) => {
 		i++;
 	}
 
-	// geo1
 	const actor1 = geo1.createNode('actor');
 
 	actor1.setInput(0, attribCreate4);
