@@ -63,6 +63,7 @@ export function ThreejsCameraTransformParamConfig<TBase extends Constructor>(Bas
 			nodeSelection: {
 				context: NodeContext.EVENT,
 			},
+			dependentOnFoundNode: false,
 		});
 		/** @param define when the camera node transform parameters are updated after the controls have moved the internal camera object */
 		updateFromControlsMode = ParamConfig.INTEGER(

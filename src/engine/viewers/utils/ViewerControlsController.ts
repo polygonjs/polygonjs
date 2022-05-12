@@ -29,7 +29,10 @@ export class ViewerControlsController<C extends Camera> {
 		}
 		controlsNode.applyControls(camera, this.viewer).then((controls) => {
 			this._controls = controls;
-			this._updateControlsFunc = controls ? controls.update : undefined;
+			// make sure that the function is (delta) => controls.update(delta)
+			// and not just "controls.update", as this would prevent the controls from binding "this" properly.
+			// This messes up with the FirstPersoControls for instance.
+			this._updateControlsFunc = controls ? (delta) => controls.update(delta) : undefined;
 
 			if (this._unmounted) {
 				this._disposeControls();

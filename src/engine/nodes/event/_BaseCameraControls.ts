@@ -55,18 +55,16 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		return JSON.stringify(this.params.all.map((p) => p.valueSerialized()));
 	}
 	abstract updateRequired(): boolean;
-	//this.cook()
-
-	// dispose_controls: (controls_instance)->
-	// 	if controls_instance?
-	// 		controls_instance.dispose()
+	override cook(): void {
+		this._controls_by_viewer.forEach((controls) => {
+			this.setupControls(controls);
+		});
+		this.cookController.endCook();
+	}
 
 	abstract setupControls(controls: CameraControls): void;
-	//
 	abstract disposeControlsForHtmlElementId(html_element_id: string): void;
-
 	abstract createControlsInstance(camera: Camera, element: HTMLElement): Promise<CameraControls>;
-	// abstract set_from_camera_node(controls: CameraControls, camera_node: BaseCameraObjNodeType): void;
 	abstract endEventName(): string;
 }
 
