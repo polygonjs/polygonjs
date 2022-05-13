@@ -12,6 +12,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = SphereSopOperation.DEFAULT_PARAMS;
+const step = 0.00001;
 class SphereSopParamsConfig extends NodeParamsConfig {
 	/** @param type of sphere (default sphere or isocahedron) */
 	type = ParamConfig.INTEGER(DEFAULT.type, {
@@ -31,21 +32,25 @@ class SphereSopParamsConfig extends NodeParamsConfig {
 	phiStart = ParamConfig.FLOAT(DEFAULT.phiStart, {
 		range: [0, Math.PI * 2],
 		visibleIf: {type: SPHERE_TYPE.default, open: true},
+		step,
 	});
 	/** @param length of phi opening */
 	phiLength = ParamConfig.FLOAT('$PI*2', {
 		range: [0, Math.PI * 2],
 		visibleIf: {type: SPHERE_TYPE.default, open: true},
+		step,
 	});
 	/** @param start of theta angle */
 	thetaStart = ParamConfig.FLOAT(DEFAULT.thetaStart, {
 		range: [0, Math.PI],
 		visibleIf: {type: SPHERE_TYPE.default, open: true},
+		step,
 	});
 	/** @param length of theta opening */
 	thetaLength = ParamConfig.FLOAT('$PI', {
 		range: [0, Math.PI],
 		visibleIf: {type: SPHERE_TYPE.default, open: true},
+		step,
 	});
 	/** @param resolution of the sphere when the type is isocahedron */
 	detail = ParamConfig.INTEGER(DEFAULT.detail, {
@@ -55,6 +60,8 @@ class SphereSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param center of the sphere */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
+	/** @param create lines instead of polygons */
+	asLines = ParamConfig.BOOLEAN(DEFAULT.asLines);
 }
 const ParamsConfig = new SphereSopParamsConfig();
 

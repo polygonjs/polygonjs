@@ -27,6 +27,8 @@ class PlaneSopParamsConfig extends NodeParamsConfig {
 	direction = ParamConfig.VECTOR3(DEFAULT.direction);
 	/** @param center of the plane */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
+	/** @param create lines instead of polygons */
+	asLines = ParamConfig.BOOLEAN(DEFAULT.asLines);
 }
 const ParamsConfig = new PlaneSopParamsConfig();
 

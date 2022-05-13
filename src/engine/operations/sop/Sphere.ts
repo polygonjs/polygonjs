@@ -1,12 +1,14 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {SphereBufferGeometry} from 'three';
 import {IcosahedronBufferGeometry} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {ObjectType} from '../../../core/geometry/Constant';
+import {BufferGeometry} from 'three';
+import {SphereBufferGeometry} from '../../../core/geometry/builders/SphereBufferGeometry';
 
 interface SphereSopParams extends DefaultOperationParams {
 	type: number;
@@ -19,6 +21,7 @@ interface SphereSopParams extends DefaultOperationParams {
 	thetaLength: number;
 	detail: number;
 	center: Vector3;
+	asLines: boolean;
 }
 
 enum SphereType {
@@ -44,6 +47,7 @@ export class SphereSopOperation extends BaseSopOperation {
 		thetaLength: Math.PI,
 		detail: 1,
 		center: new Vector3(0, 0, 0),
+		asLines: false,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<'sphere'> {
@@ -61,7 +65,8 @@ export class SphereSopOperation extends BaseSopOperation {
 	private _cookWithoutInput(params: SphereSopParams) {
 		const geometry = this._createRequiredGeometry(params);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
-		return this.createCoreGroupFromGeometry(geometry);
+		const object = this._createSphereObject(geometry, params);
+		return this.createCoreGroupFromObjects([object]);
 	}
 	private _cookWithInput(core_group: CoreGroup, params: SphereSopParams) {
 		const bbox = core_group.boundingBox();
@@ -72,7 +77,11 @@ export class SphereSopOperation extends BaseSopOperation {
 		geometry.scale(size.x, size.y, size.z);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		geometry.translate(center.x, center.y, center.z);
-		return this.createCoreGroupFromGeometry(geometry);
+		const object = this._createSphereObject(geometry, params);
+		return this.createCoreGroupFromObjects([object]);
+	}
+	private _createSphereObject(geometry: BufferGeometry, params: SphereSopParams) {
+		return BaseSopOperation.createObject(geometry, params.asLines ? ObjectType.LINE_SEGMENTS : ObjectType.MESH);
 	}
 
 	private _createRequiredGeometry(params: SphereSopParams) {
@@ -84,21 +93,61 @@ export class SphereSopOperation extends BaseSopOperation {
 	}
 
 	private _createDefaultSphere(params: SphereSopParams) {
-		if (isBooleanTrue(params.open)) {
-			return new SphereBufferGeometry(
-				params.radius,
-				params.resolution.x,
-				params.resolution.y,
-				params.phiStart,
-				params.phiLength,
-				params.thetaStart,
-				params.thetaLength
-			);
-		} else {
-			return new SphereBufferGeometry(params.radius, params.resolution.x, params.resolution.y);
-		}
+		const geometry = isBooleanTrue(params.open)
+			? new SphereBufferGeometry({
+					radius: params.radius,
+					widthSegments: params.resolution.x,
+					heightSegments: params.resolution.y,
+					phiStart: params.phiStart,
+					phiLength: params.phiLength,
+					thetaStart: params.thetaStart,
+					thetaLength: params.thetaLength,
+					asLines: params.asLines,
+					open: true,
+			  })
+			: new SphereBufferGeometry({
+					radius: params.radius,
+					widthSegments: params.resolution.x,
+					heightSegments: params.resolution.y,
+					asLines: params.asLines,
+					open: false,
+			  });
+
+		// if (isBooleanTrue(params.asLines)) {
+		// 	// const widthSegments = Math.max( 3, Math.floor( params.resolution.x ) );
+		// 	// const heightSegments = Math.max( 2, Math.floor( params.resolution.y ) );
+
+		// 	const newIndices: number[] = [];
+		// 	// for ( let iy = 0; iy < heightSegments; iy ++ ) {
+
+		// 	// 	for ( let ix = 0; ix < widthSegments; ix ++ ) {
+
+		// 	// 		const a = grid[ iy ][ ix + 1 ];
+		// 	// 		const b = grid[ iy ][ ix ];
+		// 	// 		const c = grid[ iy + 1 ][ ix ];
+		// 	// 		const d = grid[ iy + 1 ][ ix + 1 ];
+
+		// 	// 		if ( iy !== 0 || thetaStart > 0 ) indices.push( a, b, d );
+		// 	// 		if ( iy !== heightSegments - 1 || thetaEnd < Math.PI ) indices.push( b, c, d );
+
+		// 	// 	}
+
+		// 	// }
+		// 	// geometry.setIndex(indices);
+		// 	const currentIndices: number[] = geometry.getIndex()!.array as number[];
+		// 	const facesCount = currentIndices.length / 3;
+		// 	for (let faceIndex = 0; faceIndex < facesCount; faceIndex += 2) {
+		// 		const a = currentIndices[faceIndex];
+		// 		const b = currentIndices[faceIndex + 1];
+		// 		// const c = currentIndices[faceIndex+2]
+		// 		newIndices.push(a, b);
+		// 		// newIndices.push(a,c)
+		// 	}
+		// }
+
+		return geometry;
 	}
-	_createDefaultIsocahedron(params: SphereSopParams) {
+	private _createDefaultIsocahedron(params: SphereSopParams) {
 		return new IcosahedronBufferGeometry(params.radius, params.detail);
 	}
 }
