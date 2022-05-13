@@ -162,10 +162,10 @@ export class ParamsController {
 		const paramsConfig = this.node.paramsConfig as PolyDictionary<ParamTemplate<ParamType>>;
 		let init_values_used = false;
 		if (paramsConfig) {
+			const paramsInitValueOverrides = this.node.createOptions?.paramsInitValueOverrides;
 			for (let name of Object.keys(paramsConfig)) {
 				const config = paramsConfig[name];
 				let init_value: ParamInitData<ParamType> | undefined;
-				const paramsInitValueOverrides = this.node.createOptions?.paramsInitValueOverrides;
 				if (paramsInitValueOverrides) {
 					init_value = paramsInitValueOverrides[name];
 					init_values_used = true;

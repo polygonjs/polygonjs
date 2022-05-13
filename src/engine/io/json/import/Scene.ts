@@ -5,6 +5,9 @@ import {JsonImportDispatcher} from './Dispatcher';
 import {ImportReport} from './ImportReport';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {TimeController} from '../../../scene/utils/TimeController';
+import {ParamJsonImporter} from './Param';
+import {NodeCreateOptions} from '../../../nodes/utils/hierarchy/ChildrenController';
+import {ROOT_NODE_NAME} from '../../../nodes/manager/Root';
 export type ConfigureSceneCallback = (scene: PolyScene) => void;
 export type NodeCookWatchCallback = (scene: PolyScene) => void;
 
@@ -25,7 +28,13 @@ export class SceneJsonImporter {
 	}
 
 	scene(): PolyScene {
-		const scene = new PolyScene();
+		const rootData = this._data['root']!;
+		const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(rootData['params']);
+		const nodeCreateOptions: NodeCreateOptions = {
+			paramsInitValueOverrides,
+			nodeName: ROOT_NODE_NAME,
+		};
+		const scene = new PolyScene({root: nodeCreateOptions});
 		if (this._options) {
 			if (this._options.sceneName) {
 				scene.setName(this._options.sceneName);
@@ -69,11 +78,13 @@ export class SceneJsonImporter {
 
 		const dispatcher = new JsonImportDispatcher();
 		const importer = dispatcher.dispatchNode(scene.root());
-		if (this._data['root']) {
-			importer.process_data(this, this._data['root']);
+
+		if (rootData) {
+			importer.process_data(this, rootData);
 		}
-		if (this._data['ui']) {
-			importer.process_ui_data(this, this._data['ui']);
+		const uiData = this._data['ui'];
+		if (uiData) {
+			importer.process_ui_data(this, uiData);
 		}
 
 		this._resolve_operation_containers_with_path_param_resolve();
@@ -89,6 +100,7 @@ export class SceneJsonImporter {
 			}
 		}
 		scene.cooker.unblock();
+
 		// DO NOT wait for cooks here,
 		// as a viewer will only be created once everything has cooked
 		// which would be a problem for envMap or other nodes relying on the renderer being created

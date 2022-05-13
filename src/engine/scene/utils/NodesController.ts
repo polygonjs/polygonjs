@@ -6,6 +6,7 @@ import {BaseNodeType} from '../../nodes/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeChildrenMapByContext} from '../../poly/registers/nodes/All';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
+import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
 
 type NodeByNodeId = Map<CoreGraphNodeId, BaseNodeType>;
 type NodeMapByType<NC extends NodeContext> = Map<keyof NodeChildrenMapByContext[NC], NodeByNodeId>;
@@ -14,10 +15,10 @@ export class NodesController {
 
 	_root!: RootManagerNode;
 	_nodeContextSignatures: PolyDictionary<boolean> = {};
-	_instanciatedNodesByContextAndType: Map<NodeContext, NodeMapByType<NodeContext>> = new Map(); //PolyDictionary<PolyDictionary<PolyDictionary<BaseNodeType>>> = {};
+	_instanciatedNodesByContextAndType: Map<NodeContext, NodeMapByType<NodeContext>> = new Map();
 
-	init() {
-		this._root = new RootManagerNode(this.scene, ROOT_NODE_NAME);
+	createRoot(options?: NodeCreateOptions) {
+		this._root = new RootManagerNode(this.scene, ROOT_NODE_NAME, options);
 		this._root.initializeBaseAndNode();
 		this._root.params.init();
 	}

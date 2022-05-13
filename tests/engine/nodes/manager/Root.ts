@@ -2,6 +2,8 @@ import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {ColorConversion} from '../../../../src/core/Color';
+import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 
 function create_scene() {
 	const scene = new PolyScene();
@@ -77,4 +79,26 @@ QUnit.test('it is possible to link to root params', async (assert) => {
 	rootColorR.set(0.5);
 	await matColorR.compute();
 	assert.equal(matColorR.value, 0.5);
+});
+
+QUnit.test('root node: bgColor colorConversion is properly saved and loaded', async (assert) => {
+	const scene = create_scene();
+	assert.ok(!scene.loadingController.isLoading());
+
+	const root = scene.root();
+	const param = root.p.bgColor;
+	param.options.setOption('conversion', ColorConversion.NONE);
+	await saveAndLoadScene(scene, async (scene2) => {
+		assert.equal(scene2.root().p.bgColor.options.colorConversion(), ColorConversion.NONE);
+	});
+
+	param.options.setOption('conversion', ColorConversion.LINEAR_TO_SRGB);
+	await saveAndLoadScene(scene, async (scene2) => {
+		assert.equal(scene2.root().p.bgColor.options.colorConversion(), ColorConversion.LINEAR_TO_SRGB);
+	});
+
+	param.options.setOption('conversion', ColorConversion.SRGB_TO_LINEAR);
+	await saveAndLoadScene(scene, async (scene2) => {
+		assert.equal(scene2.root().p.bgColor.options.colorConversion(), ColorConversion.SRGB_TO_LINEAR);
+	});
 });

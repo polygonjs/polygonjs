@@ -6,7 +6,7 @@
  *
  */
 
-import {ObjectLoader} from 'three';
+import {Object3D, ObjectLoader} from 'three';
 import {TypedSopNode} from './_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -39,28 +39,26 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 		this.io.inputs.setCount(0, 1);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const is_cache_empty = this.pv.cache == '' || this.pv.cache == null;
-		const core_group = input_contents[0];
-		if (is_cache_empty && core_group) {
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const isCacheEmpty = this.pv.cache == '' || this.pv.cache == null;
+		const coreGroup = inputCoreGroups[0];
+		if (isCacheEmpty && coreGroup) {
 			const json = [];
-			for (let object of core_group.objects()) {
+			for (let object of coreGroup.objects()) {
 				json.push(object.toJSON());
 			}
-			this.setCoreGroup(core_group);
+			this.setCoreGroup(coreGroup);
 			this.p.cache.set(JSON.stringify(json));
 		} else {
 			if (this.pv.cache) {
-				const obj_loader = new ObjectLoader();
+				const objLoader = new ObjectLoader();
 				const jsons = JSON.parse(this.pv.cache);
-				const all_objects = [];
+				const allObjects: Object3D[] = [];
 				for (let json of jsons) {
-					const parent = obj_loader.parse(json);
-					// for(let child of parent.children){
-					all_objects.push(parent);
-					// }
+					const parent = objLoader.parse(json);
+					allObjects.push(parent);
 				}
-				this.setObjects(all_objects);
+				this.setObjects(allObjects);
 			} else {
 				this.setObjects([]);
 			}

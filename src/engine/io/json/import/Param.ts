@@ -35,12 +35,7 @@ export class ParamJsonImporter<T extends BaseParamType> {
 	static spare_params_data(params_data?: ParamsJsonExporterData) {
 		return this.params_data(true, params_data);
 	}
-	// static non_spare_params_value(params_data?: PolyDictionary<ParamJsonExporterData<ParamType>>) {
-	// 	return this.params_data(false, params_data);
-	// }
-	// static spare_params_data_value(params_data?: PolyDictionary<ParamJsonExporterData<ParamType>>) {
-	// 	return this.params_data_value(true, params_data);
-	// }
+
 	static non_spare_params_data_value(params_data?: ParamsJsonExporterData): ParamsInitData | undefined {
 		return this.params_data_value(false, params_data);
 	}

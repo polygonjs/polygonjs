@@ -29,6 +29,11 @@ import {CoreString} from '../../core/String';
 import {Object3D} from 'three';
 import {SceneRenderersRegister, RegisterRendererOptions} from './utils/SceneRenderersRegister';
 import {Poly} from '../Poly';
+import {NodeCreateOptions} from '../nodes/utils/hierarchy/ChildrenController';
+
+interface PolySceneCreateOptions {
+	root: NodeCreateOptions;
+}
 
 type SceneBatchUpdateCallback = () => void | Promise<void>;
 
@@ -354,12 +359,9 @@ export class PolyScene {
 	// constructor
 	//
 	//
-	constructor() {
-		// this.mark_as_loaded()
+	constructor(options?: PolySceneCreateOptions) {
 		this._graph.setScene(this);
-		// this.time_controller.init();
-		this.nodesController.init();
-
+		this.nodesController.createRoot(options?.root);
 		Poly.scenesRegister.registerScene(this);
 	}
 

@@ -8,7 +8,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {BufferGeometry} from 'three';
-import {SphereBufferGeometry} from '../../../core/geometry/builders/SphereBufferGeometry';
+import {SphereBuilder} from '../../../core/geometry/builders/SphereBuilder';
 
 interface SphereSopParams extends DefaultOperationParams {
 	type: number;
@@ -94,7 +94,7 @@ export class SphereSopOperation extends BaseSopOperation {
 
 	private _createDefaultSphere(params: SphereSopParams) {
 		const geometry = isBooleanTrue(params.open)
-			? new SphereBufferGeometry({
+			? SphereBuilder.create({
 					radius: params.radius,
 					widthSegments: params.resolution.x,
 					heightSegments: params.resolution.y,
@@ -105,7 +105,7 @@ export class SphereSopOperation extends BaseSopOperation {
 					asLines: params.asLines,
 					open: true,
 			  })
-			: new SphereBufferGeometry({
+			: SphereBuilder.create({
 					radius: params.radius,
 					widthSegments: params.resolution.x,
 					heightSegments: params.resolution.y,
