@@ -8,6 +8,7 @@ import {CircleBufferGeometry} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {degToRad} from 'three/src/math/MathUtils';
 
 interface CircleSopParams extends DefaultOperationParams {
 	radius: number;
@@ -34,7 +35,7 @@ export class CircleSopOperation extends BaseSopOperation {
 		return 'circle';
 	}
 
-	private _core_transform = new CoreTransform();
+	private _coreTransform = new CoreTransform();
 	override cook(input_contents: CoreGroup[], params: CircleSopParams) {
 		if (isBooleanTrue(params.open)) {
 			return this._createCircle(params);
@@ -54,7 +55,11 @@ export class CircleSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromGeometry(geometry);
 	}
 	private _setCenterAndDirection(geometry: BufferGeometry, params: CircleSopParams) {
-		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		// rotate 30 deg to:
+		// - align with the tube
+		// - so that copying circles on hexagon points gives an hexagon grid immediately
+		geometry.rotateY(degToRad(30));
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 	}
 }
