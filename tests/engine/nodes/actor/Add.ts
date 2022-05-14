@@ -2,6 +2,7 @@ import {Mesh} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
+import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
 QUnit.test('actor/add for more than 2 inputs', async (assert) => {
@@ -64,6 +65,8 @@ QUnit.test('actor/add for more than 2 inputs', async (assert) => {
 	add.setInput(2, getObjectAttribute3);
 	add.setInput(3, getObjectAttribute4);
 
+	assert.notOk(add.params.get('add4')!.states.error.active());
+
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0] as Mesh;
 
@@ -82,4 +85,29 @@ QUnit.test('actor/add for more than 2 inputs', async (assert) => {
 		await CoreSleep.sleep(100);
 		assert.equal(object.position.y, 12, 'object moved to 12');
 	});
+});
+
+QUnit.test('actor/add with 2 inputs', async (assert) => {
+	const scene = window.scene;
+
+	const geo1 = scene.createNode('geo');
+	const box1 = geo1.createNode('box');
+	const actor1 = geo1.createNode('actor');
+
+	actor1.setInput(0, box1);
+	actor1.flags.display.set(true);
+
+	const getObjectProperty1 = actor1.createNode('getObjectProperty');
+	const add = actor1.createNode('add');
+
+	add.setInput(0, getObjectProperty1, 'position');
+	await CoreSleep.sleep(50);
+	assert.notOk(add.params.get('add2'));
+
+	add.setInput(1, getObjectProperty1, 'position');
+	await CoreSleep.sleep(50);
+	assert.ok(add.params.get('add2'));
+	assert.equal(add.params.get('add2')!.type(), ParamType.VECTOR3);
+	assert.notOk(add.params.get('add2')!.states.error.active());
+	assert.deepEqual(add.params.get('add2')?.valueSerialized(), [0, 0, 0]);
 });

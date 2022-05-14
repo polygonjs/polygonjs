@@ -2,14 +2,9 @@ import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
-
 import {FloatParam} from '../../../params/Float';
-// import {OperatorPathParam} from '../../../params/OperatorPath';
-
 import {ParamType} from '../../../poly/ParamType';
-// import {ParamEvent} from '../../../poly/ParamEvent';
 import {ParamTemplate} from './ParamsConfig';
-
 import {ParamConstructorMap} from '../../../params/types/ParamConstructorMap';
 import {ParamConstructorByType} from '../../../params/types/ParamConstructorByType';
 import {ParamInitValuesTypeMap} from '../../../params/types/ParamInitValuesTypeMap';

@@ -8,6 +8,7 @@ import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR4: Readonly<string[]> = ['x', 'y', 'z', 'w'];
+const tmp: Number4 = [0, 0, 0, 0];
 export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	protected override _value = new Vector4();
 	x!: FloatParam;
@@ -26,6 +27,13 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 		} else {
 			return this._default_value.toArray() as Number4;
 		}
+	}
+	override _prefilterInvalidRawInput(rawInput: any) {
+		if (rawInput instanceof Vector4) {
+			rawInput.toArray(tmp);
+			return tmp;
+		}
+		return super._prefilterInvalidRawInput(rawInput);
 	}
 	// get raw_input_serialized() {
 	// 	if (this._raw_input instanceof Vector4) {

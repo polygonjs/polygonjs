@@ -10,6 +10,7 @@ import {TypeAssert} from '../poly/Assert';
 import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
+const tmp: Number3 = [0, 0, 0];
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	protected override _value = new Color();
 	protected _value_pre_conversion = new Color();
@@ -31,6 +32,13 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		} else {
 			return this._default_value.toArray() as Number3;
 		}
+	}
+	override _prefilterInvalidRawInput(rawInput: any) {
+		if (rawInput instanceof Color) {
+			rawInput.toArray(tmp);
+			return tmp;
+		}
+		return super._prefilterInvalidRawInput(rawInput);
 	}
 	// rawInputSerialized() {
 	// 	if (this._raw_input instanceof Color) {

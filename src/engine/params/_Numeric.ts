@@ -43,6 +43,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 					this.emitController.emit(ParamEvent.EXPRESSION_UPDATED);
 				}
 			} else {
+				console.log('this._raw_input', this._raw_input);
 				this.states.error.set(`param input is invalid (${this.path()})`);
 			}
 		}

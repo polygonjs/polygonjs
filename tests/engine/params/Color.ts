@@ -4,6 +4,7 @@ import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
 import {ColorSopNode} from '../../../src/engine/nodes/sop/Color';
 import {ColorParam} from '../../../src/engine/params/Color';
+import {Color} from 'three';
 
 QUnit.test('color eval correctly when set to different values', async (assert) => {
 	const scene = window.scene;
@@ -105,3 +106,12 @@ QUnit.test(
 		assert.equal(param2.options.colorConversion(), ColorConversion.LINEAR_TO_SRGB);
 	}
 );
+
+QUnit.test('params/color accepts a color', async (assert) => {
+	const geo1 = window.geo1;
+	const color1 = geo1.createNode('color');
+
+	const color = color1.p.color;
+	color.set(new Color(1, 2, 3));
+	assert.deepEqual(color.value.toArray(), [1, 2, 3]);
+});
