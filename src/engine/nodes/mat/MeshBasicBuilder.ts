@@ -17,7 +17,10 @@ import {Poly} from '../../Poly';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
-import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {
+	WireframeShaderMaterialController,
+	WireframeShaderMaterialParamsConfig,
+} from './utils/WireframeShaderMaterialController';
 import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/TextureEnvMapSimpleController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -42,7 +45,7 @@ interface MeshBasicBuilderMaterial extends MeshBasicMaterial {
 	};
 }
 class MeshBasicBuilderMatParamsConfig extends FogParamConfig(
-	WireframeParamConfig(
+	WireframeShaderMaterialParamsConfig(
 		AdvancedCommonParamConfig(
 			BaseBuilderParamConfig(
 				/* advanced */
@@ -104,7 +107,7 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 		}
 		UniformsTransparencyController.update(this);
 		FogController.update(this);
-		WireframeController.update(this);
+		WireframeShaderMaterialController.update(this);
 
 		this.compileIfRequired();
 

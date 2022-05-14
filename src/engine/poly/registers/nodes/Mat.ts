@@ -1,5 +1,6 @@
 import {CATEGORY_MAT} from './Category';
 
+import {CodeMatNode} from '../../../nodes/mat/Code';
 import {LineBasicMatNode} from '../../../nodes/mat/LineBasic';
 import {LineBasicBuilderMatNode} from '../../../nodes/mat/LineBasicBuilder';
 import {MeshBasicMatNode} from '../../../nodes/mat/MeshBasic';
@@ -37,6 +38,7 @@ import {PostProcessNetworkMatNode} from '../../../nodes/mat/PostProcessNetwork';
 import {RenderersNetworkMatNode} from '../../../nodes/mat/RenderersNetwork';
 
 export interface MatNodeChildrenMap {
+	code: CodeMatNode;
 	lineBasic: LineBasicMatNode;
 	lineBasicBuilder: LineBasicBuilderMatNode;
 	meshBasic: MeshBasicMatNode;
@@ -76,6 +78,7 @@ export interface MatNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 export class MatRegister {
 	static run(poly: PolyEngine) {
+		poly.registerNode(CodeMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(LineBasicMatNode, CATEGORY_MAT.LINE);
 		poly.registerNode(LineBasicBuilderMatNode, CATEGORY_MAT.LINE);
 		poly.registerNode(MeshBasicMatNode, CATEGORY_MAT.MESH);

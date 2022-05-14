@@ -26,7 +26,10 @@ import {ShaderAssemblerStandard} from '../gl/code/assemblers/materials/Standard'
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
-import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {
+	WireframeShaderMaterialController,
+	WireframeShaderMaterialParamsConfig,
+} from './utils/WireframeShaderMaterialController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
@@ -58,7 +61,7 @@ interface MeshStandardBuilderMaterial extends MeshStandardMaterial {
 }
 class MeshStandardBuilderMatParamsConfig extends PCSSParamConfig(
 	FogParamConfig(
-		WireframeParamConfig(
+		WireframeShaderMaterialParamsConfig(
 			AdvancedCommonParamConfig(
 				BaseBuilderParamConfig(
 					/* advanced */
@@ -142,7 +145,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 		}
 		UniformsTransparencyController.update(this);
 		FogController.update(this);
-		WireframeController.update(this);
+		WireframeShaderMaterialController.update(this);
 
 		this.compileIfRequired();
 

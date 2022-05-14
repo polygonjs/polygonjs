@@ -26,6 +26,12 @@ export function WireframeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to set material to wireframe */
 		wireframe = ParamConfig.BOOLEAN(0, {separatorBefore: true});
+		/** @param wireframe line width */
+		wireframeLinewidth = ParamConfig.FLOAT(1, {
+			range: [0, 5],
+			rangeLocked: [true, false],
+			visibleIf: {wireframe: 1},
+		});
 		/** @param define appearance of line ends */
 		wireframeLinecap = ParamConfig.INTEGER(0, {
 			menu: {
@@ -43,6 +49,7 @@ export function WireframeParamConfig<TBase extends Constructor>(Base: TBase) {
 				}),
 			},
 			visibleIf: {wireframe: 1},
+			separatorAfter: true,
 		});
 	};
 }
@@ -68,6 +75,7 @@ export class WireframeController extends BaseController {
 		const pv = node.pv;
 
 		material.wireframe = isBooleanTrue(pv.wireframe);
+		material.wireframeLinewidth = pv.wireframeLinewidth;
 		material.wireframeLinecap = LINE_CAP_TYPES[pv.wireframeLinecap];
 		material.wireframeLinejoin = LINE_JOIN_TYPES[pv.wireframeLinejoin];
 		material.needsUpdate = true;

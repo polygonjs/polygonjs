@@ -27,7 +27,10 @@ import {ShaderAssemblerPhysical} from '../gl/code/assemblers/materials/Physical'
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
-import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {
+	WireframeShaderMaterialController,
+	WireframeShaderMaterialParamsConfig,
+} from './utils/WireframeShaderMaterialController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
@@ -66,7 +69,7 @@ interface MeshPhysicalBuilderControllers {
 
 function AdvancedMeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends PCSSParamConfig(
-		FogParamConfig(WireframeParamConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base))))
+		FogParamConfig(WireframeShaderMaterialParamsConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base))))
 	) {};
 }
 class MeshPhysicalBuilderMatParamsConfig extends AdvancedMeshPhysicalParamConfig(
@@ -157,7 +160,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 		}
 		UniformsTransparencyController.update(this);
 		FogController.update(this);
-		WireframeController.update(this);
+		WireframeShaderMaterialController.update(this);
 
 		this.compileIfRequired();
 

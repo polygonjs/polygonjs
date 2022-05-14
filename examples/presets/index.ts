@@ -21,6 +21,7 @@ import {neighbourAttractGlPresetRegister, neighbourRepulseGlPresetRegister} from
 
 // // mat
 // import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
+import {codeMatPresetRegister} from './mat/Code';
 // obj
 // sop
 import {attribCreateSopPresetRegister} from './sop/AttribCreate';
@@ -74,6 +75,7 @@ class PresetLibraryClass {
 		this._registerPreset(neighbourRepulseGlPresetRegister);
 		// mat
 		// this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
+		this._registerPreset(codeMatPresetRegister);
 		// sop
 		this._registerPreset(attribCreateSopPresetRegister);
 		this._registerPreset(codeSopPresetRegister);

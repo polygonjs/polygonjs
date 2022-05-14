@@ -642,14 +642,19 @@ export class OptionsController {
 	}
 	isLabelHidden(): boolean {
 		const type = this.param().type();
-		if (type === ParamType.BUTTON) {
-			return true;
-		}
-		if (type === ParamType.BOOLEAN) {
-			return this.isFieldHidden();
-		}
-		if (type == ParamType.RAMP) {
-			return this._options[HIDE_LABEL] || false;
+		switch (type) {
+			case ParamType.BUTTON: {
+				return true;
+			}
+			case ParamType.BOOLEAN: {
+				return this.isFieldHidden();
+			}
+			case ParamType.RAMP: {
+				return this._options[HIDE_LABEL] || false;
+			}
+			case ParamType.STRING: {
+				return (this.isCode() && this._options[HIDE_LABEL]) || false;
+			}
 		}
 		return false;
 	}

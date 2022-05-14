@@ -14,10 +14,6 @@ import {RopType} from '../../poly/registers/nodes/types/Rop';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
-	/** @param css rules to be added in the html document */
-	css = ParamConfig.STRING('', {
-		language: StringParamLanguage.CSS,
-	});
 	/** @param toggle on to ensure objects z-index is set based on camera depth */
 	sortObjects = ParamConfig.BOOLEAN(0);
 	/** @param toggle on to have css opacity be set from camera depth */
@@ -33,6 +29,11 @@ class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
 		range: [0, 100],
 		rangeLocked: [true, false],
 		visibleIf: {useFog: 1},
+		separatorAfter: true,
+	});
+	/** @param css rules to be added in the html document */
+	css = ParamConfig.STRING('', {
+		language: StringParamLanguage.CSS,
 	});
 }
 const ParamsConfig = new CSS2DRendererRopParamsConfig();

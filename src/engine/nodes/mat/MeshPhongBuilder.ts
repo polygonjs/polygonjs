@@ -15,7 +15,10 @@ import {ShaderAssemblerPhong} from '../gl/code/assemblers/materials/Phong';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {FogParamConfig, FogController} from './utils/UniformsFogController';
-import {WireframeController, WireframeParamConfig} from './utils/WireframeShaderMaterialController';
+import {
+	WireframeShaderMaterialController,
+	WireframeShaderMaterialParamsConfig,
+} from './utils/WireframeShaderMaterialController';
 import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
 import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/TextureEnvMapSimpleController';
 import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
@@ -56,7 +59,7 @@ interface MeshPhongBuilderControllers {
 }
 class MeshPhongBuilderMatParamsConfig extends PCSSParamConfig(
 	FogParamConfig(
-		WireframeParamConfig(
+		WireframeShaderMaterialParamsConfig(
 			AdvancedCommonParamConfig(
 				BaseBuilderParamConfig(
 					/* advanced */
@@ -139,7 +142,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<
 		}
 		UniformsTransparencyController.update(this);
 		FogController.update(this);
-		WireframeController.update(this);
+		WireframeShaderMaterialController.update(this);
 
 		this.compileIfRequired();
 
