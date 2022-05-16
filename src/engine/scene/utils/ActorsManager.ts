@@ -13,6 +13,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
 import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsController';
 import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsController';
+import {AttributeProxy} from '../../../core/geometry/attribute/_Base';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -210,23 +211,34 @@ export class ActorsManager {
 				const parentNodes = parentNodesByAttribName?.get(attributeName);
 
 				// apply callback
-				CoreObject.makeAttribReactive<AttribValue>(object, attributeName, (newVal, oldVal) => {
-					const context = {Object3D: object};
-					if (directActorNodes) {
-						for (let node of directActorNodes) {
-							node.runTrigger(context);
+				CoreObject.makeAttribReactive<AttribValue>(
+					object,
+					attributeName,
+					(proxy: AttributeProxy<AttribValue>) => {
+						// console.log('callback', object);
+						// if (proxy.callbackRanAtFrame >= this.scene.frame()) {
+						// 	console.log('already reacted at frame', this.scene.frame());
+						// 	return;
+						// }
+						// proxy.callbackRanAtFrame = this.scene.frame();
+
+						const context = {Object3D: object};
+						if (directActorNodes) {
+							for (let node of directActorNodes) {
+								node.runTrigger(context);
+							}
 						}
-					}
-					if (parentNodes) {
-						const parent = object.parent;
-						if (parent) {
-							const parentContext = {Object3D: parent};
-							for (let parentNode of parentNodes) {
-								parentNode.runTrigger(parentContext);
+						if (parentNodes) {
+							const parent = object.parent;
+							if (parent) {
+								const parentContext = {Object3D: parent};
+								for (let parentNode of parentNodes) {
+									parentNode.runTrigger(parentContext);
+								}
 							}
 						}
 					}
-				});
+				);
 			});
 		});
 	}

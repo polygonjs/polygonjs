@@ -22,15 +22,15 @@ import {CoreType} from '../Type';
 import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
 import {ThreeMeshBVHHelper} from '../../engine/operations/sop/utils/Bvh/ThreeMeshBVHHelper';
+import {makeAttribReactiveVector4} from './attribute/Vector4';
+import {AttributeReactiveCallback} from './attribute/_Base';
+import {makeAttribReactiveVector3} from './attribute/Vector3';
+import {makeAttribReactiveVector2} from './attribute/Vector2';
+import {makeAttribReactiveSimple} from './attribute/Simple';
+import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
 const NAME_ATTR = 'name';
 const ATTRIBUTES = 'attributes';
 const ATTRIBUTES_PREVIOUS_VALUES = 'attributesPreviousValues';
-
-type AttributeReactiveCallback<V extends AttribValue> = (newVal: V, oldVal: V) => void;
-interface AttributeProxy<V extends AttribValue> {
-	value: V;
-	previousValue: V;
-}
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -131,7 +131,9 @@ export class CoreObject extends CoreEntity {
 		}
 	}
 
-	static setAttribute = this.addAttribute;
+	static setAttribute(object: Object3D, attribName: string, value: AttribValue) {
+		this.addAttribute(object, attribName, value);
+	}
 	static addAttribute(object: Object3D, attribName: string, value: AttribValue) {
 		if (CoreType.isArray(value)) {
 			const converted_value = this._convert_array_to_vector(value);
@@ -142,7 +144,30 @@ export class CoreObject extends CoreEntity {
 			}
 		}
 
-		this.attributesDictionary(object)[attribName] = value;
+		const dict = this.attributesDictionary(object);
+		const currentValue = dict[attribName];
+		if (currentValue != null) {
+			if (CoreType.isVector(currentValue) && CoreType.isVector(value)) {
+				AttributeCallbackQueue.block();
+				if (currentValue instanceof Vector2 && value instanceof Vector2) {
+					currentValue.copy(value);
+				}
+				if (currentValue instanceof Vector3 && value instanceof Vector3) {
+					currentValue.copy(value);
+				}
+				if (currentValue instanceof Vector4 && value instanceof Vector4) {
+					currentValue.copy(value);
+				}
+				AttributeCallbackQueue.unblock();
+				return;
+			}
+		}
+		if (CoreType.isVector(value)) {
+			// make sure to clone it, otherwise editing the attrib of one object would update another object's
+			dict[attribName] = value.clone();
+		} else {
+			dict[attribName] = value;
+		}
 	}
 	addAttribute(name: string, value: AttribValue) {
 		CoreObject.addAttribute(this._object, name, value);
@@ -258,41 +283,69 @@ export class CoreObject extends CoreEntity {
 		callback: AttributeReactiveCallback<V>
 	) {
 		const attributesDict = this.attributesDictionary(object);
-		const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
+		// const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
 
-		// create a dummy val in case there is no attribute yet
-		if (attributesDict[attribName] == null) {
-			attributesDict[attribName] = 0;
+		const currentValue = attributesDict[attribName];
+		if (currentValue instanceof Vector4) {
+			return makeAttribReactiveVector4(
+				object,
+				attribName,
+				(<unknown>callback) as AttributeReactiveCallback<Vector4>
+			);
 		}
+		if (currentValue instanceof Vector3) {
+			return makeAttribReactiveVector3(
+				object,
+				attribName,
+				(<unknown>callback) as AttributeReactiveCallback<Vector3>
+			);
+		}
+		if (currentValue instanceof Vector2) {
+			return makeAttribReactiveVector2(
+				object,
+				attribName,
+				(<unknown>callback) as AttributeReactiveCallback<Vector2>
+			);
+		}
+		return makeAttribReactiveSimple(
+			object,
+			attribName,
+			(<unknown>callback) as AttributeReactiveCallback<string | number>
+		);
 
-		const proxy: AttributeProxy<V> = {
-			value: attributesDict[attribName] as V,
-			previousValue: attributesDict[attribName] as V,
-		};
-		Object.defineProperties(attributesDict, {
-			[attribName]: {
-				get: function () {
-					return proxy.value;
-				},
-				set: function (x) {
-					if (x != proxy.value) {
-						proxy.previousValue = proxy.value;
-						proxy.value = x;
-						callback(proxy.value, proxy.previousValue);
-					}
-					return proxy.value;
-				},
-				configurable: true,
-			},
-		});
-		Object.defineProperties(attributesPreviousValuesDict, {
-			[attribName]: {
-				get: function () {
-					return proxy.previousValue;
-				},
-				configurable: true,
-			},
-		});
+		// // create a dummy val in case there is no attribute yet
+		// if (attributesDict[attribName] == null) {
+		// 	attributesDict[attribName] = 0;
+		// }
+
+		// const proxy: AttributeProxy<V> = {
+		// 	value: attributesDict[attribName] as V,
+		// 	previousValue: attributesDict[attribName] as V,
+		// };
+		// Object.defineProperties(attributesDict, {
+		// 	[attribName]: {
+		// 		get: function () {
+		// 			return proxy.value;
+		// 		},
+		// 		set: function (x) {
+		// 			if (x != proxy.value) {
+		// 				proxy.previousValue = proxy.value;
+		// 				proxy.value = x;
+		// 				callback(proxy.value, proxy.previousValue);
+		// 			}
+		// 			return proxy.value;
+		// 		},
+		// 		configurable: true,
+		// 	},
+		// });
+		// Object.defineProperties(attributesPreviousValuesDict, {
+		// 	[attribName]: {
+		// 		get: function () {
+		// 			return proxy.previousValue;
+		// 		},
+		// 		configurable: true,
+		// 	},
+		// });
 	}
 
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {
