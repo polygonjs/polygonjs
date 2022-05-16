@@ -52,13 +52,13 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		return coreGroup;
 	}
 	private _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
-		const attrib_type = ATTRIBUTE_TYPES[params.type];
+		const attribType = ATTRIBUTE_TYPES[params.type];
 		switch (attribClass) {
 			case AttribClass.VERTEX:
-				this._addPointAttribute(attrib_type, coreGroup, params);
+				this._addPointAttribute(attribType, coreGroup, params);
 				return;
 			case AttribClass.OBJECT:
-				this._addObjectAttribute(attrib_type, coreGroup, params);
+				this._addObjectAttribute(attribType, coreGroup, params);
 				return;
 		}
 		TypeAssert.unreachable(attribClass);
