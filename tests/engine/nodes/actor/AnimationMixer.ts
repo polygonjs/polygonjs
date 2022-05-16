@@ -6,10 +6,26 @@ import {Vector3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
 import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+import {PolyScene} from '../../../../src/engine/index_all';
+
+function addReflector(scene: PolyScene) {
+	const geo2 = scene.root().createNode('geo');
+	const plane = geo2.createNode('plane');
+	const reflector = geo2.createNode('reflector');
+	reflector.setInput(0, plane);
+	plane.p.size.set([10, 10]);
+
+	reflector.flags.display.set(true);
+}
 
 QUnit.test('actor/animationMixer can fadeIn an action', async (assert) => {
 	const scene = window.scene;
+
+	scene.root().createNode('hemisphereLight');
+	addReflector(scene);
+
 	const perspective_camera1 = window.perspective_camera1;
+	perspective_camera1.p.t.set([1, 1, 5]);
 	const geo1 = window.geo1;
 	const file1 = geo1.createNode('fileGLTF');
 	file1.p.url.set(`${ASSETS_ROOT}/models/resources/quaternius/animals/Fox.gltf`);

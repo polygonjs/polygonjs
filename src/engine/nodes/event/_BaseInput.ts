@@ -3,12 +3,8 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNodeType} from '../_Base';
-import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/ViewerEventsController';
-
-export interface EventData {
-	type: string;
-	emitter: CoreEventEmitter;
-}
+import {EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
+import {EventData} from '../../../core/event/EventData';
 
 export const EVENT_PARAM_OPTIONS: ParamOptions = {
 	visibleIf: {active: 1},

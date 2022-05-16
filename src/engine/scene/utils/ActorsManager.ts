@@ -12,6 +12,7 @@ import {ActorManualTriggersController} from './actors/ManualTriggersController';
 import {NodeContext} from '../../poly/NodeContext';
 import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
 import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsController';
+import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsController';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -46,6 +47,7 @@ export class ActorsManager {
 	constructor(public readonly scene: PolyScene) {}
 
 	private _actorNodes: Set<ActorBuilderNode> = new Set();
+	private _keyboardEventsController: ActorKeyboardEventsController | undefined;
 	private _manualTriggerController: ActorManualTriggersController | undefined;
 	private _pointerEventsController: ActorPointerEventsController | undefined;
 	private _hoveredEventsController: ActorHoveredEventsController | undefined;
@@ -60,9 +62,13 @@ export class ActorsManager {
 
 	/*
 	 *
-	 * MANUAL TRIGGERS
+	 * EVENTS
 	 *
 	 */
+	get keyboardEventsController() {
+		return (this._keyboardEventsController =
+			this._keyboardEventsController || new ActorKeyboardEventsController(this));
+	}
 	get manualTriggerController() {
 		return (this._manualTriggerController =
 			this._manualTriggerController || new ActorManualTriggersController(this));
@@ -84,6 +90,7 @@ export class ActorsManager {
 	tick() {
 		this._manualTriggerController?.runTriggers();
 		this._pointerEventsController?.runTriggers();
+		this._keyboardEventsController?.runTriggers();
 		this.hoveredEventsController.runTriggers();
 		this._runOnEventTick();
 	}

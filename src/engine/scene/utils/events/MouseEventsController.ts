@@ -1,5 +1,6 @@
 import {BaseSceneEventsController} from './_BaseEventsController';
 import {MouseEventNode} from '../../../nodes/event/Mouse';
+import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
 
 // https://developer.mozilla.org/en-US/docs/Web/Events
 enum MouseEventType {
@@ -37,7 +38,11 @@ export const ACCEPTED_MOUSE_EVENT_TYPES: MouseEventType[] = [
 	MouseEventType.wheel,
 ];
 
-export class MouseEventsController extends BaseSceneEventsController<MouseEvent, MouseEventNode> {
+export class MouseEventsController extends BaseSceneEventsController<
+	MouseEvent,
+	MouseEventNode,
+	BaseUserInputActorNodeType
+> {
 	protected override _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'mouse';

@@ -7,10 +7,26 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
 import {AnimationActionCrossFadeActorNodeInputName} from '../../../../src/engine/nodes/actor/AnimationActionCrossFade';
 import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+import {PolyScene} from '../../../../src/engine/index_all';
+
+function addWater(scene: PolyScene) {
+	const geo2 = scene.root().createNode('geo');
+	const plane = geo2.createNode('plane');
+	const oceanPlane = geo2.createNode('oceanPlane');
+	oceanPlane.setInput(0, plane);
+	plane.p.size.set([10, 10]);
+
+	oceanPlane.flags.display.set(true);
+}
 
 QUnit.test('actor/animationActionCrossFade can fadeIn an action', async (assert) => {
 	const scene = window.scene;
+
+	scene.root().createNode('hemisphereLight');
+	addWater(scene);
+
 	const perspective_camera1 = window.perspective_camera1;
+	perspective_camera1.p.t.set([1, 1, 5]);
 	const geo1 = window.geo1;
 	const file1 = geo1.createNode('fileGLTF');
 	file1.p.url.set(`${ASSETS_ROOT}/models/resources/quaternius/animals/Fox.gltf`);

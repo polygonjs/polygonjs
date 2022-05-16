@@ -3,17 +3,8 @@ import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SetObjectAttributeActorNode} from '../../../../src/engine/nodes/actor/SetObjectAttribute';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
+import {triggerPointerdownAside, triggerPointerdownInMiddle} from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-
-function triggerPointerdownInMiddle(canvas: HTMLCanvasElement) {
-	const rect = canvas.getBoundingClientRect();
-	canvas.dispatchEvent(
-		new PointerEvent('pointerdown', {clientX: rect.left + rect.width * 0.5, clientY: rect.top + rect.height * 0.5})
-	);
-}
-function triggerPointerdownAside(canvas: HTMLCanvasElement) {
-	canvas.dispatchEvent(new PointerEvent('pointerdown', {clientX: 0, clientY: 0}));
-}
 
 QUnit.test('actor/setObjectAttribute', async (assert) => {
 	const scene = window.scene;

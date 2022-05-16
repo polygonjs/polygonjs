@@ -1,5 +1,6 @@
 import {BaseSceneEventsController} from './_BaseEventsController';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
+import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
 enum DragEventType {
@@ -7,7 +8,11 @@ enum DragEventType {
 }
 export const ACCEPTED_DRAG_EVENT_TYPES: DragEventType[] = [DragEventType.dragover];
 
-export class DragEventsController extends BaseSceneEventsController<MouseEvent, PointerEventNode> {
+export class DragEventsController extends BaseSceneEventsController<
+	MouseEvent,
+	PointerEventNode,
+	BaseUserInputActorNodeType
+> {
 	protected override _requireCanvasEventListeners: boolean = true;
 	type() {
 		return 'drag';

@@ -1,10 +1,11 @@
 import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
-import {CoreEventEmitter} from '../../../viewers/utils/ViewerEventsController';
-import {EventData} from '../../../nodes/event/_BaseInput';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {Raycaster, Vector2} from 'three';
 import {Camera} from 'three';
+import type {PointerEventActorNode} from '../actors/ActorsPointerEventsController';
+import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
+import {EventData} from '../../../../core/event/EventData';
 
 interface RaycasterUpdateOptions {
 	pointsThreshold: number;
@@ -42,7 +43,11 @@ const ACTOR_EVENT_DATA = {
 	[PointerEventType.pointerup]: ACTOR_EVENT_DATA_POINTERUP,
 };
 
-export class PointerEventsController extends BaseSceneEventsController<MouseEvent, PointerEventNode> {
+export class PointerEventsController extends BaseSceneEventsController<
+	MouseEvent,
+	PointerEventNode,
+	PointerEventActorNode
+> {
 	protected override _requireCanvasEventListeners: boolean = true;
 	private _cursorHelper: CursorHelper = new CursorHelper();
 	protected _cursor: Vector2 = new Vector2();

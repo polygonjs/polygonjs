@@ -1,4 +1,4 @@
-import {CoreEventEmitter} from '../../../../src/engine/viewers/utils/ViewerEventsController';
+import {CoreEventEmitter} from '../../../../src/core/event/CoreEventEmitter';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 

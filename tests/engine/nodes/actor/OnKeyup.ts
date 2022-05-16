@@ -1,9 +1,9 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
-import {triggerPointerdownAside, triggerPointerdownInMiddle} from '../../../helpers/EventsHelper';
+import {triggerKeyup} from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/onObjectClick', async (assert) => {
+QUnit.test('actor/onKeyup', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -16,10 +16,11 @@ QUnit.test('actor/onObjectClick', async (assert) => {
 	actor1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onObjectClick1 = actor1.createNode('onObjectClick');
+	const onKeydown1 = actor1.createNode('onKeyup');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onObjectClick1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onKeydown1);
+	onKeydown1.p.keyCodes.set('keyE');
 
 	setObjectPosition1.p.position.set([0, 0, 1]);
 
@@ -37,14 +38,12 @@ QUnit.test('actor/onObjectClick', async (assert) => {
 
 		assert.deepEqual(object.position.toArray(), [0, 0, 0]);
 
-		triggerPointerdownInMiddle(canvas);
+		triggerKeyup(canvas, {code: 'keyA'});
 		await CoreSleep.sleep(200);
-		assert.deepEqual(object.position.toArray(), [0, 0, 1]);
+		assert.deepEqual(object.position.toArray(), [0, 0, 0], 'no moved');
 
-		object.position.set(0, 0, 0);
-
-		triggerPointerdownAside(canvas);
+		triggerKeyup(canvas, {code: 'keyE'});
 		await CoreSleep.sleep(200);
-		assert.deepEqual(object.position.toArray(), [0, 0, 0]);
+		assert.deepEqual(object.position.toArray(), [0, 0, 1], 'moved');
 	});
 });

@@ -25,7 +25,7 @@ export class SceneEventsDispatcher {
 	private _pointerEventsController: PointerEventsController | undefined;
 	private _windowEventsController: WindowEventsController | undefined;
 	private _touchEventsController: TouchEventsController | undefined;
-	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
+	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
 	registerActorNode(node: BaseUserInputActorNodeType) {
@@ -59,7 +59,11 @@ export class SceneEventsDispatcher {
 			controller.updateViewerEventListeners();
 		}
 	}
-	traverseControllers(callback: (controller: BaseSceneEventsController<Event, BaseInputEventNodeType>) => void) {
+	traverseControllers(
+		callback: (
+			controller: BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType>
+		) => void
+	) {
 		for (let controller of this._controllers) {
 			callback(controller);
 		}
@@ -84,7 +88,7 @@ export class SceneEventsDispatcher {
 
 	private _findOrCreateControllerForEventNode<T extends BaseEventNodeType>(
 		node: T
-	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
+	): BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType> | undefined {
 		switch (node.type()) {
 			case EventInputType.KEYBOARD:
 				return this.keyboardEventsController;
@@ -102,7 +106,7 @@ export class SceneEventsDispatcher {
 	}
 	private _findOrCreateControllerForActorNode<T extends BaseUserInputActorNodeType>(
 		node: T
-	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
+	): BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType> | undefined {
 		switch (node.type()) {
 			case ActorType.ON_OBJECT_CLICK:
 			case ActorType.ON_OBJECT_HOVER:
@@ -111,6 +115,10 @@ export class SceneEventsDispatcher {
 			case ActorType.ON_POINTER_UP:
 			case ActorType.RAY_FROM_CURSOR:
 				return this.pointerEventsController;
+			case ActorType.ON_KEYDOWN:
+			case ActorType.ON_KEYPRESS:
+			case ActorType.ON_KEYUP:
+				return this.keyboardEventsController;
 		}
 		console.warn(`no event controller defined for node`, node);
 	}
@@ -127,7 +135,7 @@ export class SceneEventsDispatcher {
 		return (this._dragEventsController =
 			this._dragEventsController || this._createController(DragEventsController));
 	}
-	get pointerEventsController() {
+	get pointerEventsController(): PointerEventsController {
 		return (this._pointerEventsController =
 			this._pointerEventsController || this._createController(PointerEventsController));
 	}

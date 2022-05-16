@@ -8,12 +8,12 @@ import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
-import {ACCEPTED_KEYBOARD_EVENT_TYPES} from '../../scene/utils/events/KeyboardEventsController';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {EVENT_EMITTERS, CoreEventEmitter} from '../../viewers/utils/ViewerEventsController';
 import {CoreString} from '../../../core/String';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
+import {CoreEventEmitter, EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
+import {ACCEPTED_KEYBOARD_EVENT_TYPES} from '../../../core/event/KeyboardEventType';
 class KeyboardEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {

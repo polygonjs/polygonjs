@@ -1,9 +1,10 @@
-import {BaseInputEventNodeType, EventData} from '../../../nodes/event/_BaseInput';
+import {BaseInputEventNodeType} from '../../../nodes/event/_BaseInput';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
 import {Intersection} from 'three';
 import {BaseViewerType} from '../../../viewers/_Base';
-import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
+import type {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
+import {EventData} from '../../../../core/event/EventData';
 
 interface EventContextValue {
 	node?: BaseNodeType; // for node_cook
@@ -16,12 +17,16 @@ export interface EventContext<E extends Event> {
 	// camera?: Readonly<Camera>;
 	value?: EventContextValue;
 }
-export abstract class BaseSceneEventsController<E extends Event, T extends BaseInputEventNodeType> {
+export abstract class BaseSceneEventsController<
+	E extends Event,
+	T extends BaseInputEventNodeType,
+	ActorType extends BaseUserInputActorNodeType
+> {
 	protected _eventNodes: Set<T> = new Set();
 	protected _requireCanvasEventListeners: boolean = false;
-	protected _actorEventNamesByNode: Map<BaseUserInputActorNodeType, string[]> = new Map();
+	protected _actorEventNamesByNode: Map<ActorType, string[]> = new Map();
 	protected _actorEventNames: Set<string> = new Set();
-	protected _actorNodesByEventNames: Map<string, Set<BaseUserInputActorNodeType>> = new Map();
+	protected _actorNodesByEventNames: Map<string, Set<ActorType>> = new Map();
 	constructor(protected dispatcher: SceneEventsDispatcher) {}
 
 	registerEventNode(node: T) {
@@ -32,13 +37,13 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 		this._eventNodes.delete(node);
 		this.updateViewerEventListeners();
 	}
-	registerActorNode(node: BaseUserInputActorNodeType) {
+	registerActorNode(node: ActorType) {
 		const eventNames = node.userInputEventNames();
 		this._actorEventNamesByNode.set(node, eventNames);
 		this._updateActorCache();
 		this.updateViewerEventListeners();
 	}
-	unregisterActorNode(node: BaseUserInputActorNodeType) {
+	unregisterActorNode(node: ActorType) {
 		this._actorEventNamesByNode.delete(node);
 		this._updateActorCache();
 		this.updateViewerEventListeners();
@@ -134,8 +139,16 @@ export abstract class BaseSceneEventsController<E extends Event, T extends BaseI
 	}
 }
 
-export type BaseSceneEventsControllerType = BaseSceneEventsController<Event, BaseInputEventNodeType>;
-export class BaseSceneEventsControllerClass extends BaseSceneEventsController<Event, BaseInputEventNodeType> {
+export type BaseSceneEventsControllerType = BaseSceneEventsController<
+	Event,
+	BaseInputEventNodeType,
+	BaseUserInputActorNodeType
+>;
+export class BaseSceneEventsControllerClass extends BaseSceneEventsController<
+	Event,
+	BaseInputEventNodeType,
+	BaseUserInputActorNodeType
+> {
 	type() {
 		return '';
 	}

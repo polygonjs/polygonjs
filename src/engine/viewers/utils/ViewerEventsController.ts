@@ -1,7 +1,10 @@
 import {BaseViewerType} from '../_Base';
 import {EventContext, BaseSceneEventsControllerType} from '../../scene/utils/events/_BaseEventsController';
-import {EventData} from '../../nodes/event/_BaseInput';
-import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../scene/utils/events/KeyboardEventsController';
+import {EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
+import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../../core/event/KeyboardEventType';
+import {allowCanvasKeyEventsListener} from '../../../core/event/CanvasKeyFocus';
+import {getEventOwner} from '../../../core/event/EventOwner';
+import {EventData} from '../../../core/event/EventData';
 type ViewerEventListener = (e: Event) => void;
 interface EventListenerWithData {
 	listener: ViewerEventListener;
@@ -9,15 +12,6 @@ interface EventListenerWithData {
 }
 type ListenerByEventType = Map<string, EventListenerWithData>;
 
-export enum CoreEventEmitter {
-	CANVAS = 'canvas',
-	DOCUMENT = 'document',
-}
-export const EVENT_EMITTERS: CoreEventEmitter[] = [CoreEventEmitter.CANVAS, CoreEventEmitter.DOCUMENT];
-
-function elementFromEmitterType(emitter: CoreEventEmitter, canvas: HTMLCanvasElement) {
-	return emitter == CoreEventEmitter.CANVAS ? canvas : document;
-}
 export class ViewerEventsController {
 	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();
 
@@ -37,7 +31,7 @@ export class ViewerEventsController {
 		}
 		map.forEach((listenerWithData, eventType) => {
 			for (let emitter of EVENT_EMITTERS) {
-				const element = this._eventOwner({emitter, type: eventType}, canvas);
+				const element = getEventOwner({emitter, type: eventType}, canvas);
 				element.removeEventListener(eventType, listenerWithData.listener);
 			}
 		});
@@ -47,25 +41,18 @@ export class ViewerEventsController {
 			this.processEvent(event, eventsController, canvas);
 		};
 		for (let eventData of eventsController.activeEventDatas()) {
-			const eventOwner = this._eventOwner(eventData, canvas);
+			const eventOwner = getEventOwner(eventData, canvas);
 			eventOwner.addEventListener(eventData.type, listener);
 
 			// if the event being added is a keyboard type,
 			// we need to add tabindex to the canvas to allow it to have focus
 			if (eventOwner != document) {
 				if (ACCEPTED_KEYBOARD_EVENT_TYPES.includes(eventData.type as KeyboardEventType)) {
-					(eventOwner as HTMLElement).setAttribute('tabindex', '0');
+					allowCanvasKeyEventsListener(eventOwner as HTMLCanvasElement);
 				}
 			}
 
 			map.set(eventData.type, {listener, data: eventData});
-		}
-	}
-	private _eventOwner(eventData: EventData, canvas: HTMLCanvasElement) {
-		if (eventData.type == 'resize') {
-			return window;
-		} else {
-			return elementFromEmitterType(eventData.emitter, canvas);
 		}
 	}
 
@@ -101,7 +88,7 @@ export class ViewerEventsController {
 		this._bound_listener_map_by_event_controller_type.forEach((map) => {
 			if (canvas) {
 				map.forEach((listenerWithData, eventType) => {
-					const eventOwner = this._eventOwner(listenerWithData.data, canvas);
+					const eventOwner = getEventOwner(listenerWithData.data, canvas);
 					eventOwner.removeEventListener(eventType, listenerWithData.listener);
 				});
 			}
