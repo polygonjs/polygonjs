@@ -69,8 +69,8 @@ export class SmoothstepActorNode extends TypedActorNode<SmoothstepActorParamsCon
 	}
 
 	protected _expectedInputTypes() {
-		const firstType = this.io.connection_points.first_input_connection_type();
-		const type = firstType && ALLOWED_INPUT_TYPES.includes(firstType) ? firstType : ActorConnectionPointType.FLOAT;
+		const input2 = this.io.connection_points.input_connection_type(2);
+		const type = input2 && ALLOWED_INPUT_TYPES.includes(input2) ? input2 : ActorConnectionPointType.FLOAT;
 		return [type, type, type];
 	}
 	protected _expectedInputName(index: number) {
@@ -97,7 +97,7 @@ export class SmoothstepActorNode extends TypedActorNode<SmoothstepActorParamsCon
 			this._valTmp.v2.x = smoothstep((edge0 as Vector2).x, (edge1 as Vector2).x, this._valTmp.v2.x);
 			this._valTmp.v2.y = smoothstep((edge0 as Vector2).y, (edge1 as Vector2).y, this._valTmp.v2.y);
 
-			this._valTmp.v2;
+			return this._valTmp.v2;
 		}
 		if (x instanceof Vector3) {
 			this._valTmp.v3.copy(x);
@@ -106,7 +106,7 @@ export class SmoothstepActorNode extends TypedActorNode<SmoothstepActorParamsCon
 			this._valTmp.v3.y = smoothstep((edge0 as Vector3).y, (edge1 as Vector3).y, this._valTmp.v3.y);
 			this._valTmp.v3.z = smoothstep((edge0 as Vector3).z, (edge1 as Vector3).z, this._valTmp.v3.z);
 
-			this._valTmp.v3;
+			return this._valTmp.v3;
 		}
 		if (x instanceof Vector4) {
 			this._valTmp.v4.copy(x);
@@ -114,9 +114,9 @@ export class SmoothstepActorNode extends TypedActorNode<SmoothstepActorParamsCon
 			this._valTmp.v4.x = smoothstep((edge0 as Vector4).x, (edge1 as Vector4).x, this._valTmp.v4.x);
 			this._valTmp.v4.y = smoothstep((edge0 as Vector4).y, (edge1 as Vector4).y, this._valTmp.v4.y);
 			this._valTmp.v4.z = smoothstep((edge0 as Vector4).z, (edge1 as Vector4).z, this._valTmp.v4.z);
-			this._valTmp.v4.w = smoothstep((edge0 as Vector4).w, (edge1 as Vector4).z, this._valTmp.v4.w);
+			this._valTmp.v4.w = smoothstep((edge0 as Vector4).w, (edge1 as Vector4).w, this._valTmp.v4.w);
 
-			this._valTmp.v4;
+			return this._valTmp.v4;
 		}
 		if (CoreType.isNumber(x)) {
 			return smoothstep(edge0 as number, edge1 as number, x as number);

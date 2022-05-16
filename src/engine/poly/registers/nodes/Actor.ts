@@ -64,6 +64,8 @@ import {PlaneActorNode} from '../../../nodes/actor/Plane';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
 import {PowActorNode} from '../../../nodes/actor/Pow';
+import {RandActorNode} from '../../../nodes/actor/Rand';
+import {RandomActorNode} from '../../../nodes/actor/Random';
 import {RayDistanceToPlaneActorNode} from '../../../nodes/actor/RayDistanceToPlane';
 import {RayFromCursorActorNode} from '../../../nodes/actor/RayFromCursor';
 import {RayIntersectBoxActorNode} from '../../../nodes/actor/RayIntersectBox';
@@ -177,6 +179,8 @@ export interface ActorNodeChildrenMap {
 	playAnimation: PlayAnimationActorNode;
 	playInstrumentNote: PlayInstrumentNoteActorNode;
 	pow: PowActorNode;
+	rand: RandActorNode;
+	random: RandomActorNode;
 	rayDistanceToPlaneActorNode: RayDistanceToPlaneActorNode;
 	rayFromCursor: RayFromCursorActorNode;
 	rayIntersectBox: RayIntersectBoxActorNode;
@@ -295,6 +299,8 @@ export class ActorRegister {
 		poly.registerNode(PlayInstrumentNoteActorNode, CATEGORY_ACTOR.AUDIO);
 		poly.registerNode(PowActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayDistanceToPlaneActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(RandActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(RandomActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayFromCursorActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayIntersectBoxActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayIntersectPlaneActorNode, CATEGORY_ACTOR.MATH);

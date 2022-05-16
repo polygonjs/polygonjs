@@ -167,7 +167,7 @@ export abstract class TypedCameraObjNode<
 		// CoreTransform.set_params_from_matrix(this._object.matrix, this, {scale: false})
 		CoreTransform.setParamsFromObject(this._object, this);
 	}
-	abstract createViewer(options?: BaseViewerOptions | HTMLElement): BaseViewerType | undefined;
+	abstract createViewer(options?: BaseViewerOptions | HTMLElement): Promise<BaseViewerType | undefined>;
 
 	static PARAM_CALLBACK_update_from_param(node: BaseCameraObjNodeType, param: BaseParamType) {
 		(node.object as any)[param.name()] = (node.pv as any)[param.name()];
@@ -320,7 +320,13 @@ export class TypedThreejsCameraObjNode<
 	// 	}
 	// }
 
-	createViewer(options?: BaseViewerOptions | HTMLElement): ThreejsViewer<Camera> | undefined {
+	async createViewer(options?: BaseViewerOptions | HTMLElement): Promise<ThreejsViewer<Camera> | undefined> {
+		if (this.isDirty()) {
+			// make sure that every parameter is cooked,
+			// so that the camera object has all the attributes required
+			await this.compute();
+		}
+
 		const viewer = Poly.camerasRegister.createViewer({camera: this.object, scene: this.scene()}) as
 			| ThreejsViewer<Camera>
 			| undefined;

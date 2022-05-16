@@ -41,7 +41,7 @@ export class RendererUtils {
 		element.style.height = '200px';
 		element.style.zIndex = '9999999';
 		document.body.appendChild(element);
-		const viewer = options.cameraNode.createViewer({element})!;
+		const viewer = (await options.cameraNode.createViewer({element}))!;
 		const canvas = viewer.canvas();
 		const renderer = viewer.renderer();
 
