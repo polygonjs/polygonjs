@@ -1,5 +1,5 @@
 /**
- * clamps the input value between a min and a max
+ * applies the smoothstep glsl function to its input
  *
  *
  *
