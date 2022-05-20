@@ -55,11 +55,11 @@ export class CircleSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromGeometry(geometry);
 	}
 	private _setCenterAndDirection(geometry: BufferGeometry, params: CircleSopParams) {
-		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		// rotate 30 deg to:
 		// - align with the tube
 		// - so that copying circles on hexagon points gives an hexagon grid immediately
 		geometry.rotateY(degToRad(30));
+		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 	}
 }
