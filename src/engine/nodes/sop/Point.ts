@@ -82,7 +82,12 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		}
 
 		if (isBooleanTrue(this.pv.updateNormals)) {
-			coreGroup.computeVertexNormals();
+			const objects = coreGroup.objectsWithGeo();
+			for (let object of objects) {
+				if ((object as Mesh).isMesh) {
+					coreGroup.computeVertexNormals();
+				}
+			}
 		}
 
 		const geometries = coreGroup.geometries();

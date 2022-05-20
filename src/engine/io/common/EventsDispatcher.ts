@@ -2,6 +2,7 @@ export enum PolyEventName {
 	POLY_PROGRESS = 'POLYProgress',
 	VIEWER_MOUNTED = 'POLYViewerMounted',
 	SCENE_READY = 'POLYSceneReady',
+	VIEWER_READY = 'POLYViewerReady',
 }
 
 export class PolyEventsDispatcher {

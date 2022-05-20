@@ -111,6 +111,7 @@ export class ScenePlayerImporter {
 		}
 		this._viewerMarkedAsReady = true;
 		viewer.markAsReady();
+		this._dispatchEvent(PolyEventName.VIEWER_READY);
 	}
 	private _sceneMarkedAsReady = false;
 	private async _markSceneAsReady(scene: PolyScene) {
