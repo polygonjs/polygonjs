@@ -167,6 +167,8 @@ export class ScenePlayerImporter {
 				});
 
 				const scene = importer.scene();
+				this._scene = scene;
+				this._dispatchEvent(PolyEventName.SCENE_CREATED);
 				if (this.options.renderer) {
 					scene.renderersRegister.registerRenderer(this.options.renderer);
 				}
@@ -174,6 +176,7 @@ export class ScenePlayerImporter {
 				this._onCameraCreatorNodeLoadedResolve = () => resolve(scene);
 				scene.camerasController.onCameraObjectsUpdated(async () => {
 					const camera = await scene.camerasController.mainCamera({findAnyCamera: false});
+					// if we do not find the camera object, we need to
 					if (camera) {
 						if (this._onCameraCreatorNodeLoadedResolve) {
 							this._onCameraCreatorNodeLoadedResolve();

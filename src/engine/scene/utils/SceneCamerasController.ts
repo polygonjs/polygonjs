@@ -72,6 +72,10 @@ export class SceneCamerasController {
 		if (findAnyCamera) {
 			return this._findAnyCameraObject();
 		}
+
+		const cameraPath = await this.scene.root().mainCameraController.cameraPath();
+		console.warn(`no camera found for path '${cameraPath}'`);
+
 		return null;
 	}
 
