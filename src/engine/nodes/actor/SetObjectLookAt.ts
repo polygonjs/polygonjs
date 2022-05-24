@@ -14,6 +14,7 @@ import {
 import {ParamType} from '../../poly/ParamType';
 import {Quaternion} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
+import {CoreLookAt} from '../../../core/LookAt';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -24,6 +25,8 @@ class SetObjectLookAtActorParamsConfig extends NodeParamsConfig {
 	up = ParamConfig.VECTOR3([0, 1, 0]);
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
+	/** @param invertDirection */
+	invertDirection = ParamConfig.BOOLEAN(0);
 	/** @param sets if the matrix should be updated as the animation progresses */
 	updateMatrix = ParamConfig.BOOLEAN(1);
 }
@@ -59,15 +62,16 @@ export class SetObjectLookAtActorNode extends TypedActorNode<SetObjectLookAtActo
 		const targetPosition = this._inputValueFromParam<ParamType.VECTOR3>(this.p.targetPosition, context);
 		const up = this._inputValueFromParam<ParamType.VECTOR3>(this.p.up, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
+		const invertDirection = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.invertDirection, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
 
 		Object3D.up.copy(up);
 
 		if (lerp >= 1) {
-			Object3D.lookAt(targetPosition);
+			CoreLookAt.applyLookAt(Object3D, targetPosition, invertDirection);
 		} else {
 			q1.copy(Object3D.quaternion);
-			Object3D.lookAt(targetPosition);
+			CoreLookAt.applyLookAt(Object3D, targetPosition, invertDirection);
 			q2.copy(Object3D.quaternion);
 			q1.slerp(q2, lerp);
 			Object3D.quaternion.copy(q1);

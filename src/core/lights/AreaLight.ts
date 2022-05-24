@@ -88,6 +88,7 @@ export class CoreRectAreaLightHelper extends Group {
 
 		this.matrixAutoUpdate = false;
 		this._childMesh.matrixAutoUpdate = false;
+		this._childLine.matrixAutoUpdate = false;
 
 		this.name = `CoreRectAreaLightHelper_${this.nodeName}`;
 		this._childMesh.name = `CoreRectAreaLightHelperChildMesh_${this.nodeName}`;
