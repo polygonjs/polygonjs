@@ -4,31 +4,28 @@ import {Vector4} from 'three';
 import {Color} from 'three';
 import {Quaternion} from 'three';
 import {Object3D} from 'three';
-import {TimelineBuilder, Operation} from './TimelineBuilder';
-import {AnimPropertyTarget} from './PropertyTarget';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {BaseParamType} from '../../engine/params/_Base';
 import {ParamType} from '../../engine/poly/ParamType';
-import {FloatParam} from '../../engine/params/Float';
 import {Vector2Param} from '../../engine/params/Vector2';
 import {Vector3Param} from '../../engine/params/Vector3';
 import {Vector4Param} from '../../engine/params/Vector4';
-import {TypeAssert} from '../../engine/poly/Assert';
-import {AnimNodeEasing} from './Constant';
 import {Poly} from '../../engine/Poly';
 import {CoreType} from '../Type';
 import {ColorParam} from '../../engine/params/Color';
 import {IntegerParam} from '../../engine/params/Integer';
-import {AnimatedPropertiesRegister, RegisterableProperty} from './AnimatedPropertiesRegister';
-import {NodeParamProxiesRegister} from './NodeParamProxiesRegister';
-import {
-	ColorParamProxy,
-	FloatParamProxy,
-	IntegerParamProxy,
-	Vector2ParamProxy,
-	Vector3ParamProxy,
-	Vector4ParamProxy,
-} from './ParamProxy';
+import {RegisterableProperty} from './AnimatedPropertiesRegister';
+import {animBuilderCommonVars} from './vars/Common';
+import {AddToTimelineOptions, Operation} from './vars/AnimBuilderTypes';
+import {animBuilderStartTimeline} from './vars/StartTimeline';
+import {populateVarsForParamVector4} from './vars/type/Vector4';
+import {populateVarsForColor, populateVarsForParamColor} from './vars/type/Color';
+import {populateVarsForParamVector3} from './vars/type/Vector3';
+import {populateVarsForParamVector2} from './vars/type/Vector2';
+import {populateVarsForNumber, populateVarsForSingleNumber} from './vars/type/Number';
+import {populateVarsForVector} from './vars/type/Vector';
+import {populateVarsAndCreateProxyForQuaternion} from './vars/type/Quaternion';
+import {populateVarsForEuler} from './vars/type/Euler';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Color | Vector4 | Quaternion;
 
@@ -37,21 +34,12 @@ interface Object3DProps {
 	toTarget: object;
 	propertyNames: string[];
 }
-export interface RegisterOptions {
-	registerproperties?: boolean;
-	propertyTarget?: AnimPropertyTarget;
-}
-interface StartOptions extends RegisterOptions {
-	timelineBuilder: TimelineBuilder;
-	timeline: gsap.core.Timeline;
+interface PopulateVarsOptions {
 	vars: gsap.TweenVars;
-	target: object;
-	registerableProp: RegisterableProperty;
-}
-interface AddToTimelineOptions extends RegisterOptions {
-	timelineBuilder: TimelineBuilder;
-	timeline: gsap.core.Timeline;
-	target: AnimPropertyTarget;
+	targetValue: AnimPropertyTargetValue;
+	targetProperty: AnimPropertyTargetValue;
+	propertyNames: string[];
+	operation: Operation;
 }
 
 const PROPERTY_SEPARATOR = '.';
@@ -133,7 +121,7 @@ export class TimelineBuilderProperty {
 					propertyName: this._propertyName,
 				};
 				let {targetProperty, toTarget, propertyNames} = props;
-				const vars = this._commonVars(timelineBuilder);
+				const vars = animBuilderCommonVars(timelineBuilder);
 
 				// add update_matrix
 				if (updateCallback && updateCallback.updateMatrix()) {
@@ -157,51 +145,72 @@ export class TimelineBuilderProperty {
 				}
 				// handle quaternions as a special case
 				if (targetProperty instanceof Quaternion && this._targetValue instanceof Quaternion) {
-					const proxy = {value: 0};
-					const qTarget = targetProperty;
-					const qStart = new Quaternion().copy(targetProperty);
-					const qEnd = this._targetValue;
-					vars.onUpdate = () => {
-						qTarget.slerpQuaternions(qStart, qEnd, proxy.value);
-					};
-					toTarget = proxy;
-					vars.value = 1;
+					toTarget = populateVarsAndCreateProxyForQuaternion({
+						targetValue: this._targetValue,
+						vars,
+						targetProperty,
+					});
 				}
 
-				if (CoreType.isNumber(this._targetValue)) {
-					if (CoreType.isNumber(targetProperty)) {
-						for (let property_name of propertyNames) {
-							vars[property_name] = this.withOp(targetProperty, this._targetValue, operation);
-						}
-					}
-				} else {
-					if (CoreType.isVector(targetProperty) && CoreType.isVector(this._targetValue)) {
-						for (let propertyName of propertyNames) {
-							vars[propertyName] = this.withOp(
-								targetProperty[propertyName as 'x'],
-								this._targetValue[propertyName as 'x'],
-								operation
-							);
-						}
-					} else {
-						if (CoreType.isColor(targetProperty) && CoreType.isColor(this._targetValue)) {
-							for (let propertyName of propertyNames) {
-								vars[propertyName] = this.withOp(
-									targetProperty[propertyName as 'r'],
-									this._targetValue[propertyName as 'r'],
-									operation
-								);
-							}
-						}
-					}
-				}
+				this._populateVarsForObjectProperty({
+					targetValue: this._targetValue,
+					vars,
+					targetProperty,
+					propertyNames,
+					operation,
+				});
 
 				if (toTarget) {
-					this._startTimeline({...options, vars, target: toTarget, registerableProp});
+					animBuilderStartTimeline({...options, vars, target: toTarget, registerableProp});
 				}
 			}
 		}
 	}
+	private _populateVarsForObjectProperty(options: PopulateVarsOptions) {
+		const {vars, targetValue, targetProperty, propertyNames, operation} = options;
+		function warnMismatch(expectedType: string) {
+			Poly.warn(
+				`mismatch between targetValue and targetProperty (expected ${expectedType})`,
+				targetValue,
+				targetProperty
+			);
+		}
+		// number
+		if (CoreType.isNumber(targetProperty)) {
+			if (CoreType.isNumber(targetValue)) {
+				return populateVarsForNumber({targetValue, vars, targetProperty, propertyNames, operation});
+			}
+			return warnMismatch('number');
+		}
+		// euler (needs to be positioned before the CoreType.isVector, as it would other be caught in the isVector )
+		// note that for euler, we first test targetProperty, as otherwise a 'position' property would test true here
+		if (CoreType.isEuler(targetProperty)) {
+			if (targetValue instanceof Vector3) {
+				return populateVarsForEuler({targetValue, vars, targetProperty, propertyNames, operation});
+			}
+			return warnMismatch('euler');
+		}
+		// vector
+		if (CoreType.isVector(targetProperty)) {
+			if (CoreType.isVector(targetValue)) {
+				return populateVarsForVector({targetValue, vars, targetProperty, propertyNames, operation});
+			}
+			return warnMismatch('vector');
+		}
+		// color
+		if (CoreType.isColor(targetProperty)) {
+			if (CoreType.isColor(targetValue)) {
+				return populateVarsForColor({targetValue, vars, targetProperty, propertyNames, operation});
+			}
+			return warnMismatch('color');
+		}
+
+		if (CoreType.isQuaternion(targetProperty)) {
+			//
+		}
+		Poly.warn(`targetValue and targetProp are not recognized types`, targetValue, targetProperty);
+	}
+
 	private _sceneGraphProps(object: object, propertyName: string): Object3DProps | undefined {
 		const elements = propertyName.split(PROPERTY_SEPARATOR);
 		if (elements.length > 1) {
@@ -211,7 +220,7 @@ export class TimelineBuilderProperty {
 				const subPropertyName = elements.join(PROPERTY_SEPARATOR);
 				return this._sceneGraphProps(subObject, subPropertyName);
 			} else {
-				console.warn(`property ${firstElement} not found on object`, object);
+				Poly.warn(`property ${firstElement} not found on object`, object);
 			}
 		} else {
 			const targetProperty = (object as any)[propertyName as any] as AnimPropertyTargetValue;
@@ -262,240 +271,27 @@ export class TimelineBuilderProperty {
 
 	private _populateVarsForParam(param: BaseParamType, options: AddToTimelineOptions) {
 		this._printDebug(['_populateVarsForParam', param]);
+		if (!this._targetValue) {
+			return;
+		}
 		switch (param.type()) {
-			case ParamType.INTEGER: {
-				return this._populateVarsForParamInteger(param as IntegerParam, options);
-			}
+			case ParamType.INTEGER:
 			case ParamType.FLOAT: {
-				return this._populateVarsForParamFloat(param as FloatParam, options);
+				return populateVarsForSingleNumber(param as IntegerParam, this._targetValue, options);
 			}
 			case ParamType.VECTOR2: {
-				return this._populateVarsForParamVector2(param as Vector2Param, options);
+				return populateVarsForParamVector2(param as Vector2Param, this._targetValue, options);
 			}
 			case ParamType.VECTOR3: {
-				return this._populateVarsForParamVector3(param as Vector3Param, options);
+				return populateVarsForParamVector3(param as Vector3Param, this._targetValue, options);
 			}
 			case ParamType.COLOR: {
-				return this._populateVarsForParamColor(param as ColorParam, options);
+				return populateVarsForParamColor(param as ColorParam, this._targetValue, options);
 			}
 			case ParamType.VECTOR4: {
-				return this._populateVarsForParamVector4(param as Vector4Param, options);
+				return populateVarsForParamVector4(param as Vector4Param, this._targetValue, options);
 			}
 		}
 		Poly.warn(`param type cannot be animated (yet): '${param.type()}' '${param.path()}'`);
-	}
-	private _populateVarsForSingleNumericParam(param: IntegerParam | FloatParam, options: AddToTimelineOptions) {
-		if (!CoreType.isNumber(this._targetValue)) {
-			Poly.warn(
-				`TimelineBuilderProperty error: cannot animate float/integer param '${param.path()}' with targetValue`,
-				this._targetValue
-			);
-			return;
-		}
-		const proxy = NodeParamProxiesRegister.paramProxy(param) as FloatParamProxy | IntegerParamProxy;
-		if (!proxy) {
-			return;
-		}
-		const keyframes = options.timelineBuilder.keyframes();
-		const interpolant = keyframes ? keyframes.createInterpolant() : undefined;
-		const vars = this._commonVars(options.timelineBuilder);
-		vars.onUpdate = () => {
-			proxy.update(interpolant);
-		};
-		let targetValue = this._targetValue;
-		if (keyframes) {
-			// TODO: keyframes should change duration
-			// vars.duration = 1
-			targetValue = 1;
-		}
-
-		const operation = options.timelineBuilder.operation();
-		vars.proxyValue = this.withOp(param.value, targetValue, operation);
-		this._startTimeline({...options, vars, target: proxy, registerableProp: param});
-	}
-	private _populateVarsForParamInteger(param: IntegerParam, options: AddToTimelineOptions) {
-		this._populateVarsForSingleNumericParam(param, options);
-	}
-	private _populateVarsForParamFloat(param: FloatParam, options: AddToTimelineOptions) {
-		this._populateVarsForSingleNumericParam(param, options);
-	}
-	private _populateVarsForParamVector2(param: Vector2Param, options: AddToTimelineOptions) {
-		if (!(this._targetValue instanceof Vector2)) {
-			Poly.warn(
-				`TimelineBuilderProperty error: cannot animate vector2 param '${param.path()}' with targetValue`,
-				this._targetValue
-			);
-			return;
-		}
-		const proxy = NodeParamProxiesRegister.paramProxy(param) as Vector2ParamProxy;
-		if (!proxy) {
-			return;
-		}
-		const vars = this._commonVars(options.timelineBuilder);
-		vars.onUpdate = () => {
-			proxy.update();
-		};
-		const operation = options.timelineBuilder.operation();
-		vars.x = this.withOp(param.value.x, this._targetValue.x, operation);
-		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
-		this._startTimeline({...options, vars, target: proxy.proxyValue, registerableProp: param});
-	}
-	private _populateVarsForParamVector3(param: Vector3Param, options: AddToTimelineOptions) {
-		if (!(this._targetValue instanceof Vector3)) {
-			Poly.warn(
-				`TimelineBuilderProperty error: cannot animate vector3 param '${param.path()}' with targetValue`,
-				this._targetValue
-			);
-			return;
-		}
-		const proxy = NodeParamProxiesRegister.paramProxy(param) as Vector3ParamProxy;
-		if (!proxy) {
-			return;
-		}
-		const vars = this._commonVars(options.timelineBuilder);
-		vars.onUpdate = () => {
-			proxy.update();
-		};
-		const operation = options.timelineBuilder.operation();
-		vars.x = this.withOp(param.value.x, this._targetValue.x, operation);
-		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
-		vars.z = this.withOp(param.value.z, this._targetValue.z, operation);
-		this._startTimeline({...options, vars, target: proxy.proxyValue, registerableProp: param});
-	}
-
-	private _populateVarsForParamVector4(param: Vector4Param, options: AddToTimelineOptions) {
-		if (!(this._targetValue instanceof Vector4)) {
-			Poly.warn(
-				`TimelineBuilderProperty error: cannot animate vector4 param '${param.path()}' with targetValue`,
-				this._targetValue
-			);
-			return;
-		}
-		const proxy = NodeParamProxiesRegister.paramProxy(param) as Vector4ParamProxy;
-		if (!proxy) {
-			return;
-		}
-		const vars = this._commonVars(options.timelineBuilder);
-		vars.onUpdate = () => {
-			proxy.update();
-		};
-		const operation = options.timelineBuilder.operation();
-		vars.x = this.withOp(param.value.x, this._targetValue.x, operation);
-		vars.y = this.withOp(param.value.y, this._targetValue.y, operation);
-		vars.z = this.withOp(param.value.z, this._targetValue.z, operation);
-		vars.w = this.withOp(param.value.w, this._targetValue.w, operation);
-		this._startTimeline({...options, vars, target: proxy.proxyValue, registerableProp: param});
-	}
-	private _populateVarsForParamColor(param: ColorParam, options: AddToTimelineOptions) {
-		if (!(this._targetValue instanceof Color || this._targetValue instanceof Vector3)) {
-			Poly.warn(
-				`TimelineBuilderProperty error: cannot animate color param '${param.path()}' with targetValue`,
-				this._targetValue
-			);
-			return;
-		}
-		const proxy = NodeParamProxiesRegister.paramProxy(param) as ColorParamProxy;
-		if (!proxy) {
-			return;
-		}
-		const vars = this._commonVars(options.timelineBuilder);
-		vars.onUpdate = () => {
-			proxy.update();
-		};
-		const operation = options.timelineBuilder.operation();
-		const x = this._targetValue instanceof Color ? this._targetValue.r : this._targetValue.x;
-		const y = this._targetValue instanceof Color ? this._targetValue.g : this._targetValue.y;
-		const z = this._targetValue instanceof Color ? this._targetValue.b : this._targetValue.z;
-		vars.r = this.withOp(param.value.r, x, operation);
-		vars.g = this.withOp(param.value.g, y, operation);
-		vars.b = this.withOp(param.value.b, z, operation);
-		this._startTimeline({...options, vars, target: proxy.proxyValue, registerableProp: param});
-	}
-
-	private withOp(currentValue: number, value: number, operation: Operation) {
-		switch (operation) {
-			case Operation.SET:
-				return value;
-			case Operation.ADD:
-				return currentValue + value;
-			case Operation.SUBTRACT:
-				return currentValue - value;
-		}
-		TypeAssert.unreachable(operation);
-	}
-	private _commonVars(timelineBuilder: TimelineBuilder) {
-		const duration = timelineBuilder.duration();
-		const vars: gsap.TweenVars = {duration: duration};
-
-		// easing
-		const easing = timelineBuilder.easing() || AnimNodeEasing.NONE;
-		if (easing) {
-			vars.ease = easing;
-		}
-
-		// delay
-		const delay = timelineBuilder.delay();
-		if (delay != null) {
-			vars.delay = delay;
-		}
-
-		// repeat
-		const repeatParams = timelineBuilder.repeatParams();
-		if (repeatParams) {
-			vars.repeat = repeatParams.count;
-			vars.repeatDelay = repeatParams.delay;
-			vars.yoyo = repeatParams.yoyo;
-		}
-
-		return vars;
-	}
-	private _startTimeline(options: StartOptions) {
-		const {timelineBuilder, timeline, vars, target, registerableProp, registerproperties} = options;
-
-		const position = timelineBuilder.position();
-		const positionParam = position ? position.toParameter() : undefined;
-		const existingTimeline = AnimatedPropertiesRegister.registeredTimelineForProperty(registerableProp);
-		const newTimeline = timeline.to(target, vars, positionParam);
-
-		const onStart = () => {
-			if (existingTimeline) {
-				if (existingTimeline.stoppable) {
-					existingTimeline.timeline.kill();
-					AnimatedPropertiesRegister.deRegisterProp(registerableProp);
-				} else {
-					newTimeline.kill();
-					return;
-				}
-			}
-			if (registerproperties) {
-				AnimatedPropertiesRegister.registerProp(registerableProp, {
-					timeline: newTimeline,
-					stoppable: timelineBuilder.stoppable(),
-				});
-			}
-		};
-		const onComplete = () => {
-			AnimatedPropertiesRegister.deRegisterProp(registerableProp);
-		};
-
-		if (vars.onStart) {
-			const prevOnStart = vars.onStart;
-			vars.onStart = () => {
-				onStart();
-				prevOnStart();
-			};
-		} else {
-			vars.onStart = onStart;
-		}
-
-		if (vars.onComplete) {
-			const prevOnComplete = vars.onComplete;
-			vars.onComplete = () => {
-				onComplete();
-				prevOnComplete();
-			};
-		} else {
-			vars.onComplete = onComplete;
-		}
 	}
 }

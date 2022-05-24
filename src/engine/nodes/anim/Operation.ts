@@ -10,9 +10,9 @@
  *
  */
 import {TypedAnimNode} from './_Base';
-import {TimelineBuilder, OPERATIONS} from '../../../core/animation/TimelineBuilder';
-
+import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {OPERATIONS} from '../../../core/animation/vars/AnimBuilderTypes';
 class OperationAnimParamsConfig extends NodeParamsConfig {
 	/** @param sets the operation (set, add or subtract) */
 	operation = ParamConfig.INTEGER(0, {

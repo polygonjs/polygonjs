@@ -4,10 +4,11 @@
  *
  */
 import {TypedAnimNode} from './_Base';
-import {TimelineBuilder, AnimationRepeatParams} from '../../../core/animation/TimelineBuilder';
+import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {AnimationRepeatParams} from '../../../core/animation/vars/AnimBuilderTypes';
 class RepeatAnimParamsConfig extends NodeParamsConfig {
 	/** @param sets if it should repeat indefinitely */
 	unlimited = ParamConfig.BOOLEAN(0);

@@ -1,22 +1,10 @@
-import {TimelineBuilderProperty, AnimPropertyTargetValue, RegisterOptions} from './TimelineBuilderProperty';
+import {TimelineBuilderProperty, AnimPropertyTargetValue} from './TimelineBuilderProperty';
 import {AnimPropertyTarget} from './PropertyTarget';
 import {AnimationPosition} from './Position';
 import {AnimationUpdateCallback} from './UpdateCallback';
 import gsap from 'gsap';
 import {RampValue} from '../../engine/params/ramp/RampValue';
-
-export enum Operation {
-	SET = 'set',
-	ADD = 'add',
-	SUBTRACT = 'subtract',
-}
-export const OPERATIONS: Operation[] = [Operation.SET, Operation.ADD, Operation.SUBTRACT];
-
-export interface AnimationRepeatParams {
-	count: number;
-	delay: number;
-	yoyo: boolean;
-}
+import {AnimationRepeatParams, Operation, RegisterOptions} from './vars/AnimBuilderTypes';
 
 export class TimelineBuilder {
 	private _timelineBuilders: TimelineBuilder[] = [];

@@ -1,8 +1,4 @@
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
-import {Color} from 'three';
-import {Quaternion} from 'three';
+import {Euler, Vector2, Vector3, Vector4, Quaternion, Color} from 'three';
 
 export class CoreType {
 	static isNumber(value: any): value is number {
@@ -13,6 +9,9 @@ export class CoreType {
 	}
 	static isColor(value: any): value is Color {
 		return value instanceof Color;
+	}
+	static isEuler(value: any): value is Euler {
+		return value instanceof Euler;
 	}
 	static isQuaternion(value: any): value is Quaternion {
 		return value instanceof Quaternion;

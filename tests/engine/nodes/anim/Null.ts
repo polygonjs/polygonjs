@@ -45,6 +45,132 @@ QUnit.test('anim null simple', async (assert) => {
 	assert.deepEqual(object.position.toArray(), [3, 4, 7]);
 });
 
+QUnit.test('anim null object property vector3 element', async (assert) => {
+	// setup objects
+	const geo = window.geo1;
+	const box = geo.createNode('box');
+	const objectProperties = geo.createNode('objectProperties');
+	objectProperties.setInput(0, box);
+	objectProperties.p.tname.set(true);
+	objectProperties.p.name.set('test');
+	objectProperties.flags.display.set(true);
+
+	// we wait to ensure that the created objects
+	// are attached to the scene.
+	// otherwise the anim nodes will not find them.
+	await CoreSleep.sleep(100);
+
+	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	assert.equal(object.name, 'test');
+
+	// setup anim
+	const ANIM = window.scene.root().createNode('animationsNetwork');
+	const target = ANIM.createNode('target');
+	target.setTargetType(AnimTargetNodeTargetType.SCENE_GRAPH);
+	target.p.objectMask.set('*test');
+	target.p.updateMatrix.set(true);
+
+	const propertyName = ANIM.createNode('propertyName');
+	propertyName.setInput(0, target);
+	propertyName.p.name.set('position.y');
+
+	const propertyValue = ANIM.createNode('propertyValue');
+	propertyValue.setInput(0, propertyName);
+	propertyValue.setMode(AnimPropertyValueNodeMode.CUSTOM);
+	propertyValue.p.size.set(1);
+	propertyValue.p.value1.set(4);
+	const null1 = ANIM.createNode('null');
+	null1.setInput(0, propertyValue);
+
+	assert.deepEqual(object.position.toArray(), [0, 0, 0]);
+	await null1.play();
+	assert.deepEqual(object.position.toArray(), [0, 4, 0]);
+});
+
+QUnit.test('anim null object property euler', async (assert) => {
+	// setup objects
+	const geo = window.geo1;
+	const box = geo.createNode('box');
+	const objectProperties = geo.createNode('objectProperties');
+	objectProperties.setInput(0, box);
+	objectProperties.p.tname.set(true);
+	objectProperties.p.name.set('test');
+	objectProperties.flags.display.set(true);
+
+	// we wait to ensure that the created objects
+	// are attached to the scene.
+	// otherwise the anim nodes will not find them.
+	await CoreSleep.sleep(100);
+
+	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	assert.equal(object.name, 'test');
+
+	// setup anim
+	const ANIM = window.scene.root().createNode('animationsNetwork');
+	const target = ANIM.createNode('target');
+	target.setTargetType(AnimTargetNodeTargetType.SCENE_GRAPH);
+	target.p.objectMask.set('*test');
+	target.p.updateMatrix.set(true);
+
+	const propertyName = ANIM.createNode('propertyName');
+	propertyName.setInput(0, target);
+	propertyName.p.name.set('rotation');
+
+	const propertyValue = ANIM.createNode('propertyValue');
+	propertyValue.setInput(0, propertyName);
+	propertyValue.setMode(AnimPropertyValueNodeMode.CUSTOM);
+	propertyValue.p.size.set(3);
+	propertyValue.p.value3.set([0, 1, 0]);
+	const null1 = ANIM.createNode('null');
+	null1.setInput(0, propertyValue);
+
+	assert.deepEqual(object.rotation.toArray(), [0, 0, 0, 'XYZ']);
+	await null1.play();
+	assert.deepEqual(object.rotation.toArray(), [0, 1, 0, 'XYZ']);
+});
+
+QUnit.test('anim null object property euler component', async (assert) => {
+	// setup objects
+	const geo = window.geo1;
+	const box = geo.createNode('box');
+	const objectProperties = geo.createNode('objectProperties');
+	objectProperties.setInput(0, box);
+	objectProperties.p.tname.set(true);
+	objectProperties.p.name.set('test');
+	objectProperties.flags.display.set(true);
+
+	// we wait to ensure that the created objects
+	// are attached to the scene.
+	// otherwise the anim nodes will not find them.
+	await CoreSleep.sleep(100);
+
+	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	assert.equal(object.name, 'test');
+
+	// setup anim
+	const ANIM = window.scene.root().createNode('animationsNetwork');
+	const target = ANIM.createNode('target');
+	target.setTargetType(AnimTargetNodeTargetType.SCENE_GRAPH);
+	target.p.objectMask.set('*test');
+	target.p.updateMatrix.set(true);
+
+	const propertyName = ANIM.createNode('propertyName');
+	propertyName.setInput(0, target);
+	propertyName.p.name.set('rotation.y');
+
+	const propertyValue = ANIM.createNode('propertyValue');
+	propertyValue.setInput(0, propertyName);
+	propertyValue.setMode(AnimPropertyValueNodeMode.CUSTOM);
+	propertyValue.p.size.set(1);
+	propertyValue.p.value1.set(1);
+	const null1 = ANIM.createNode('null');
+	null1.setInput(0, propertyValue);
+
+	assert.deepEqual(object.rotation.toArray(), [0, 0, 0, 'XYZ']);
+	await null1.play();
+	assert.deepEqual(object.rotation.toArray(), [0, 1, 0, 'XYZ']);
+});
+
 QUnit.test('anim null node integer param', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
