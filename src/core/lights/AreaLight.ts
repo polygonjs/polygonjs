@@ -2,7 +2,7 @@ import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three';
+import {Color, Group} from 'three';
 
 export interface AreaLightParams extends DefaultOperationParams {
 	color: Color;
@@ -61,7 +61,7 @@ import {RectAreaLight} from 'three';
 /**
  *  This helper must be added as a child of the light
  */
-function createGeometry() {
+function createLineGeo() {
 	const geometry = new BufferGeometry();
 	const positions = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1, 0].map((i) => i * 0.5);
 	geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
@@ -69,7 +69,7 @@ function createGeometry() {
 	return geometry;
 }
 
-function createGeo2() {
+function createMeshGeo() {
 	const positions = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0].map((i) => i * 0.5);
 
 	const geometry = new BufferGeometry();
@@ -78,11 +78,10 @@ function createGeo2() {
 	return geometry;
 }
 
-export class CoreRectAreaLightHelper extends Line {
-	public override geometry = createGeometry();
-	public override material = new LineBasicMaterial({fog: false});
-	public override type = 'RectAreaLightHelper';
-	public _childMesh = new Mesh(createGeo2(), new MeshBasicMaterial({side: BackSide, fog: false}));
+// inherits from Group and not Line, to ensure that .copy can pass the recursive argument
+export class CoreRectAreaLightHelper extends Group {
+	public _childMesh = new Mesh(createMeshGeo(), new MeshBasicMaterial({side: BackSide, fog: false}));
+	public _childLine = new Line(createLineGeo(), new LineBasicMaterial({fog: false}));
 
 	constructor(public light: RectAreaLight, public readonly nodeName: string) {
 		super();
@@ -92,22 +91,24 @@ export class CoreRectAreaLightHelper extends Line {
 
 		this.name = `CoreRectAreaLightHelper_${this.nodeName}`;
 		this._childMesh.name = `CoreRectAreaLightHelperChildMesh_${this.nodeName}`;
+		this._childLine.name = `CoreRectAreaLightHelperChildLine_${this.nodeName}`;
 
 		this.add(this._childMesh);
+		this.add(this._childLine);
 	}
 
 	update() {
 		this.scale.set(1 * this.light.width, 1 * this.light.height, 1);
 		this.updateMatrix();
 
-		this.material.color.copy(this.light.color).multiplyScalar(this.light.intensity);
+		this._childLine.material.color.copy(this.light.color).multiplyScalar(this.light.intensity);
 
 		// prevent hue shift
-		const c = this.material.color;
+		const c = this._childLine.material.color;
 		const max = Math.max(c.r, c.g, c.b);
 		if (max > 1) c.multiplyScalar(1 / max);
 
-		this._childMesh.material.color.copy(this.material.color);
+		this._childMesh.material.color.copy(this._childLine.material.color);
 
 		// ignore world scale on light
 		this.matrixWorld.extractRotation(this.light.matrixWorld).scale(this.scale).copyPosition(this.light.matrixWorld);
@@ -116,26 +117,22 @@ export class CoreRectAreaLightHelper extends Line {
 	}
 
 	override copy(source: this, recursive?: boolean): this {
-		this.position.copy(source.position);
-		this.rotation.copy(source.rotation);
-		this.scale.copy(source.scale);
-		this.quaternion.copy(source.quaternion);
-		this.matrix.copy(source.matrix);
-		this.matrixWorld.copy(source.matrixWorld);
+		super.copy(source, false);
 
 		return this as this;
 	}
 
 	dispose() {
-		this.geometry.dispose();
-		this.material.dispose();
+		this._childLine.geometry.dispose();
+		this._childLine.material.dispose();
 		this._childMesh.geometry.dispose();
 		this._childMesh.material.dispose();
 	}
 	override clone(recursive?: boolean): this {
 		const cloned = new CoreRectAreaLightHelper(this.light, this.nodeName) as this;
 		cloned.updateMatrixWorld();
-		cloned.copy(this);
+		cloned.copy(this, false);
+		cloned.update();
 		return cloned;
 	}
 }

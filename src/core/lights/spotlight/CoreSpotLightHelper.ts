@@ -16,6 +16,7 @@ export class CoreSpotLightHelper {
 	private _lineMaterial = new LineBasicMaterial({fog: false});
 	constructor(public container: SpotLightContainer) {
 		this.object.name = `CoreSpotLightHelper_${this.container.nodeName}`;
+		this.object.matrixAutoUpdate = false;
 		this.createAndBuildObject({helperSize: 1});
 	}
 

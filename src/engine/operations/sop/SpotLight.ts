@@ -8,7 +8,6 @@ import {
 	SpotLightContainer,
 	SpotLightContainerParams,
 } from '../../../core/lights/SpotLight';
-import {Object3D} from 'three';
 
 export class SpotLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SpotLightParams = DEFAULT_SPOT_LIGHT_PARAMS;
@@ -28,7 +27,6 @@ export class SpotLightSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects([container]);
 	}
 
-	public readonly _targetObject!: Object3D;
 	createLight(params: SpotLightContainerParams) {
 		const container = new SpotLightContainer(params, this._node?.name() || '_');
 		const light = container.light();

@@ -2,11 +2,7 @@ import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number2, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three';
-import {Vector2} from 'three';
-import {SpotLight} from 'three';
-import {Group} from 'three';
-import {Object3D} from 'three';
+import {Object3D, Group, SpotLight, Vector2, Color} from 'three';
 import {VolumetricSpotLight} from './spotlight/VolumetricSpotLight';
 import {isBooleanTrue} from '../Type';
 import {CoreSpotLightHelper, CoreSpotLightHelperParams} from './spotlight/CoreSpotLightHelper';
@@ -158,7 +154,7 @@ export interface SpotLightContainerParams extends CoreSpotLightHelperParams {
 
 export class SpotLightContainer extends Group {
 	private _light: SpotLight;
-	private _target: Object3D;
+	private _target: Object3D = new Object3D();
 	public override matrixAutoUpdate = false;
 	public params: SpotLightContainerParams = {
 		showHelper: false,
@@ -183,7 +179,8 @@ export class SpotLightContainer extends Group {
 			this.params.volAttenuation = params.volAttenuation;
 		}
 		this._light = new SpotLight();
-		this._target = this._light.target;
+		this._target.copy(this._light.target, false);
+		this._light.target = this._target;
 
 		// set light pos to 0,0,1
 		// in order to have it face z axis
@@ -226,19 +223,15 @@ export class SpotLightContainer extends Group {
 	override copy(source: this, recursive?: boolean): this {
 		const srcLight = source.light();
 		this._light.copy(srcLight);
-		this.position.copy(source.position);
-		this.rotation.copy(source.rotation);
-		this.scale.copy(source.scale);
-		this.quaternion.copy(source.quaternion);
-		this.matrix.copy(source.matrix);
-		this.matrixWorld.copy(source.matrixWorld);
+		super.copy(source, false);
 
 		this.updateParams(source.params);
 		this.updateHelper();
 
+		this._light.target = this._target;
+
 		if (recursive) {
 			this.updateVolumetric();
-			this.add(this._light.target);
 		}
 		return this as this;
 	}

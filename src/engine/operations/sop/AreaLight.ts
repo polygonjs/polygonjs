@@ -25,6 +25,7 @@ export class AreaLightSopOperation extends BaseSopOperation {
 
 		if (isBooleanTrue(params.showHelper)) {
 			const group = new Group();
+			group.matrixAutoUpdate = false;
 			group.add(light);
 			const helper = this._createHelper(light);
 			if (helper) {

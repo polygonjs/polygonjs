@@ -1,4 +1,6 @@
-import {Object3D} from 'three';
+import {DirectionalLight, Object3D} from 'three';
+import {ColorConversion} from '../../../../src/core/Color';
+import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 
 function objectsCount(object: Object3D, countStart: number = 0) {
 	countStart += 1;
@@ -14,6 +16,12 @@ function objectNames(object: Object3D, names: string[] = []) {
 	}
 	return names;
 }
+async function getObject(node: BaseSopNodeType) {
+	const container = await node.compute();
+	const coreGroup = container.coreContent();
+	const object = coreGroup?.objects()[0]!;
+	return object;
+}
 
 QUnit.test('sop/directionalLight hierarchy is maintained as it is cloned', async (assert) => {
 	const geo1 = window.geo1;
@@ -23,13 +31,13 @@ QUnit.test('sop/directionalLight hierarchy is maintained as it is cloned', async
 	const transform1 = geo1.createNode('transform');
 
 	directionalLight1.p.showHelper.set(true);
+	directionalLight1.p.color.set([0.2, 0.4, 0.7]);
+	directionalLight1.p.color.options.setOption('conversion', ColorConversion.NONE);
 	transform1.setInput(0, directionalLight1);
 
-	let container = await directionalLight1.compute();
-	let coreGroup = container.coreContent();
-	let object = coreGroup?.objects()[0]!;
-	assert.equal(objectsCount(object), 6);
-	assert.deepEqual(objectNames(object), [
+	const object1 = await getObject(directionalLight1);
+	assert.equal(objectsCount(object1), 6);
+	assert.deepEqual(objectNames(object1), [
 		'DirectionalLightContainer_directionalLight1',
 		'DirectionalLight_directionalLight1',
 		'DirectionalLightTarget_directionalLight1',
@@ -37,12 +45,11 @@ QUnit.test('sop/directionalLight hierarchy is maintained as it is cloned', async
 		'CoreDirectionalLightHelperSquare_directionalLight1',
 		'CoreDirectionalLightHelperCameraHelper_directionalLight1',
 	]);
+	assert.deepEqual((object1.children[0] as DirectionalLight).color.toArray(), [0.2, 0.4, 0.7]);
 
-	container = await transform1.compute();
-	coreGroup = container.coreContent();
-	object = coreGroup?.objects()[0]!;
-	assert.equal(objectsCount(object), 6);
-	assert.deepEqual(objectNames(object), [
+	const object2 = await getObject(transform1);
+	assert.equal(objectsCount(object2), 6);
+	assert.deepEqual(objectNames(object2), [
 		'DirectionalLightContainer_directionalLight1',
 		'DirectionalLight_directionalLight1',
 		'DirectionalLightTarget_directionalLight1',
@@ -50,4 +57,5 @@ QUnit.test('sop/directionalLight hierarchy is maintained as it is cloned', async
 		'CoreDirectionalLightHelperSquare_directionalLight1',
 		'CoreDirectionalLightHelperCameraHelper_directionalLight1',
 	]);
+	assert.deepEqual((object2.children[0] as DirectionalLight).color.toArray(), [0.2, 0.4, 0.7]);
 });

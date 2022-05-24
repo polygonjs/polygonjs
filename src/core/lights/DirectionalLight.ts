@@ -132,18 +132,12 @@ export class DirectionalLightContainer extends Group {
 		return this._light;
 	}
 	override copy(source: this, recursive?: boolean): this {
-		if (recursive) {
-			this._light.copy(source.light());
-		}
-		this.position.copy(source.position);
-		this.rotation.copy(source.rotation);
-		this.scale.copy(source.scale);
-		this.quaternion.copy(source.quaternion);
-		this.matrix.copy(source.matrix);
-		this.matrixWorld.copy(source.matrixWorld);
-		if (recursive) {
-			this.add(this._light.target);
-		}
+		this._light.copy(source.light(), false);
+		super.copy(source, false);
+
+		this._light.target = this._target;
+		this.updateHelper();
+
 		return this as this;
 	}
 
