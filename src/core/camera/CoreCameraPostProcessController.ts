@@ -1,7 +1,7 @@
 import {Camera, Scene, WebGLRenderer} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import type {BaseNetworkPostProcessNodeType} from '../../engine/nodes/post/utils/EffectComposerController';
-import {BaseNodeType} from '../../engine/nodes/_Base';
+import {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
 import {CameraSopNodeType, NetworkNodeType, NodeContext} from '../../engine/poly/NodeContext';
 import {CoreObject} from '../geometry/Object';
 import {CoreType} from '../Type';
@@ -26,10 +26,10 @@ export class CoreCameraPostProcessController {
 		const {renderer, scene, renderScene, camera} = options;
 
 		let postProcessNode: BaseNetworkPostProcessNodeType | undefined;
-		const postProcessNodePath = CoreObject.attribValue(camera, CameraAttribute.POST_PROCESS_PATH);
-		if (postProcessNodePath && CoreType.isString(postProcessNodePath)) {
-			const foundNode = scene.node(postProcessNodePath);
-			if (foundNode && this.isPostProcessNetworkNode(foundNode)) {
+		const postProcessNodeId = CoreObject.attribValue(camera, CameraAttribute.POST_PROCESS_NODE_ID);
+		if (postProcessNodeId && CoreType.isNumber(postProcessNodeId)) {
+			const foundNode = scene.graph.nodeFromId(postProcessNodeId);
+			if (foundNode && foundNode instanceof TypedNode && this.isPostProcessNetworkNode(foundNode)) {
 				postProcessNode = foundNode as BaseNetworkPostProcessNodeType;
 			}
 		}

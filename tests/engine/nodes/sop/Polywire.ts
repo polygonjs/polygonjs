@@ -17,15 +17,15 @@ QUnit.test('polywire simple', async (assert) => {
 	polywire1.p.closed.set(0);
 	container = await polywire1.compute();
 	assert.equal(container.pointsCount(), 192);
-	assert.equal(container.boundingBox().getSize(size).y, 2);
+	assert.equal(container.boundingBox().getSize(size).y, 2, 'bbox');
 
 	polywire1.p.closed.set(1);
 	container = await polywire1.compute();
 	assert.equal(container.pointsCount(), 208);
-	assert.equal(container.boundingBox().getSize(size).y, 2);
+	assert.equal(container.boundingBox().getSize(size).y, 2, 'bbox');
 
 	polywire1.p.radius.set(0.5);
 	container = await polywire1.compute();
 	assert.equal(container.pointsCount(), 208);
-	assert.equal(container.boundingBox().getSize(size).y, 1);
+	assert.equal(container.boundingBox().getSize(size).y, 1, 'bbox');
 });

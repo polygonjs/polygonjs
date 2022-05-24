@@ -1,15 +1,15 @@
 // import type {BaseThreejsCameraObjNodeType} from '../../_BaseCamera';
-import {BaseNodeType} from '../../../_Base';
+// import {BaseNodeType} from '../../../_Base';
 import {Constructor} from '../../../../../types/GlobalTypes';
 import {NetworkNodeType} from '../../../../poly/NodeContext';
 // interface DisposablePass extends Pass {
 // 	dispose: () => void;
 // }
-const POST_PROCESS_PARAM_OPTIONS = {
-	callback: (node: BaseNodeType) => {
-		// PARAM_CALLBACK_reset_effects_composer(node as BaseThreejsCameraObjNodeType);
-	},
-};
+// const POST_PROCESS_PARAM_OPTIONS = {
+// 	callback: (node: BaseNodeType) => {
+// 		// PARAM_CALLBACK_reset_effects_composer(node as BaseThreejsCameraObjNodeType);
+// 	},
+// };
 
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 // import {PARAM_CALLBACK_reset_effects_composer} from './postProcessParamCallback';
@@ -24,7 +24,8 @@ export function CameraPostProcessParamConfig<TBase extends Constructor>(Base: TB
 				types: [NetworkNodeType.POST],
 			},
 			// cook: false,
-			...POST_PROCESS_PARAM_OPTIONS,
+			// ...POST_PROCESS_PARAM_OPTIONS,
+			dependentOnFoundNode: false,
 		});
 		// prepend_render_pass = ParamConfig.BOOLEAN(1, {
 		// 	visibleIf: {

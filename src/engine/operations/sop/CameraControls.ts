@@ -44,13 +44,16 @@ export class CameraControlsSopOperation extends BaseSopOperation {
 		if (foundNode && active) {
 			// we need to give the absolute path, so that the creation of the viewer can find the node
 			// without having to know which node set the path
-			const absolutePath = foundNode.path();
+			// Update: the absolute path on its own fails if some node in that path gets renamed.
+			// Using the node id: this would fail if the target node was to be deleted and replaced.
+			// Although that should really recook the camera
+			const nodeId = foundNode.graphNodeId();
 			for (let object of objects) {
-				CoreObject.addAttribute(object, CameraAttribute.CONTROLS_PATH, absolutePath);
+				CoreObject.addAttribute(object, CameraAttribute.CONTROLS_NODE_ID, nodeId);
 			}
 		} else {
 			for (let object of objects) {
-				CoreObject.deleteAttribute(object, CameraAttribute.CONTROLS_PATH);
+				CoreObject.deleteAttribute(object, CameraAttribute.CONTROLS_NODE_ID);
 			}
 		}
 	}

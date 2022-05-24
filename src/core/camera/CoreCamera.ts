@@ -9,23 +9,23 @@ export const CORE_CAMERA_DEFAULT = {
 
 export enum CameraAttribute {
 	NODE_ID = '_Camera_nodeGeneratorId__',
-	CONTROLS_PATH = '_Camera_controlsPath',
-	CSS_RENDERER_PATH = '_Camera_CSSRendererPath',
+	CONTROLS_NODE_ID = '_Camera_controlsNodeId',
+	CSS_RENDERER_NODE_ID = '_Camera_CSSRendererNodeId',
 	FRAME_MODE = '_Camera_frameMode',
 	FRAME_MODE_EXPECTED_ASPECT_RATIO = '_Camera_frameModeExpectedAspectRatio',
-	POST_PROCESS_PATH = '_Camera_postProcessPath',
-	RENDER_SCENE_PATH = '_Camera_renderScenePath',
-	RENDERER_PATH = '_Camera_rendererPath',
+	POST_PROCESS_NODE_ID = '_Camera_postProcessNodeId',
+	RENDER_SCENE_NODE_ID = '_Camera_renderSceneNodeId',
+	RENDERER_NODE_ID = '_Camera_rendererNodeId',
 }
 export const CAMERA_ATTRIBUTES: CameraAttribute[] = [
 	CameraAttribute.NODE_ID,
-	CameraAttribute.CONTROLS_PATH,
-	CameraAttribute.CSS_RENDERER_PATH,
+	CameraAttribute.CONTROLS_NODE_ID,
+	CameraAttribute.CSS_RENDERER_NODE_ID,
 	CameraAttribute.FRAME_MODE,
 	CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO,
-	CameraAttribute.POST_PROCESS_PATH,
-	CameraAttribute.RENDER_SCENE_PATH,
-	CameraAttribute.RENDERER_PATH,
+	CameraAttribute.POST_PROCESS_NODE_ID,
+	CameraAttribute.RENDER_SCENE_NODE_ID,
+	CameraAttribute.RENDERER_NODE_ID,
 ];
 export enum PerspectiveCameraAttribute {
 	FOV = '_PerspectiveCamera_fov',

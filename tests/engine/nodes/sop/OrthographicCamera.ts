@@ -37,14 +37,14 @@ QUnit.test('sop/orthographicCamera simple', async (assert) => {
 	const object = container.coreContent()!.objects()[0];
 	assert.ok(object);
 	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.CONTROLS_PATH),
-		'/geo1/cameraControls1/cameraOrbitControls1',
-		CameraAttribute.CONTROLS_PATH
+		CoreObject.attribValue(object, CameraAttribute.CONTROLS_NODE_ID),
+		cameraOrbitControls1.graphNodeId(),
+		CameraAttribute.CONTROLS_NODE_ID
 	);
 	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.CSS_RENDERER_PATH),
-		'/geo1/cameraCSSRenderer1/CSS2DRenderer1',
-		CameraAttribute.CSS_RENDERER_PATH
+		CoreObject.attribValue(object, CameraAttribute.CSS_RENDERER_NODE_ID),
+		CSS2DRenderer1.graphNodeId(),
+		CameraAttribute.CSS_RENDERER_NODE_ID
 	);
 	assert.equal(CoreObject.attribValue(object, CameraAttribute.FRAME_MODE), 0, CameraAttribute.FRAME_MODE);
 	assert.equal(
@@ -53,19 +53,19 @@ QUnit.test('sop/orthographicCamera simple', async (assert) => {
 		CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO
 	);
 	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.POST_PROCESS_PATH),
-		'/geo1/cameraPostProcess1',
-		CameraAttribute.POST_PROCESS_PATH
+		CoreObject.attribValue(object, CameraAttribute.POST_PROCESS_NODE_ID),
+		cameraPostProcess1.graphNodeId(),
+		CameraAttribute.POST_PROCESS_NODE_ID
 	);
 	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.RENDERER_PATH),
-		'/geo1/cameraRenderer1/WebGLRenderer1',
-		CameraAttribute.RENDERER_PATH
+		CoreObject.attribValue(object, CameraAttribute.RENDERER_NODE_ID),
+		WebGLRenderer1.graphNodeId(),
+		CameraAttribute.RENDERER_NODE_ID
 	);
 	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.RENDER_SCENE_PATH),
-		'/scene1',
-		CameraAttribute.RENDER_SCENE_PATH
+		CoreObject.attribValue(object, CameraAttribute.RENDER_SCENE_NODE_ID),
+		sceneNode.graphNodeId(),
+		CameraAttribute.RENDER_SCENE_NODE_ID
 	);
 	assert.equal(
 		CoreObject.attribValue(object, OrthographicCameraAttribute.SIZE),

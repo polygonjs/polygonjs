@@ -13,6 +13,7 @@ import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
 import {NodeContext} from '../../engine/poly/NodeContext';
+import {TypedNode} from '../../engine/nodes/_Base';
 
 interface CreateRendererOptions {
 	camera: Camera;
@@ -47,10 +48,15 @@ export class CoreCameraRendererController {
 		// if (isBooleanTrue(this.node.pv.setRenderer)) {
 		// await this._updateRenderer();
 
-		const rendererROPPath = CoreObject.attribValue(camera, CameraAttribute.RENDERER_PATH);
-		if (rendererROPPath && CoreType.isString(rendererROPPath)) {
-			const rendererROP = scene.node(rendererROPPath);
-			if (rendererROP && rendererROP.type() == RopType.WEBGL && rendererROP.context() == NodeContext.ROP) {
+		const rendererROPId = CoreObject.attribValue(camera, CameraAttribute.RENDERER_NODE_ID);
+		if (rendererROPId && CoreType.isNumber(rendererROPId)) {
+			const rendererROP = scene.graph.nodeFromId(rendererROPId);
+			if (
+				rendererROP &&
+				rendererROP instanceof TypedNode &&
+				rendererROP.type() == RopType.WEBGL &&
+				rendererROP.context() == NodeContext.ROP
+			) {
 				renderer = (rendererROP as WebGLRendererRopNode).createRenderer(camera, canvas, gl);
 			}
 		}

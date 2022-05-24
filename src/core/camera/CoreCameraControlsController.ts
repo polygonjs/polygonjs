@@ -1,6 +1,6 @@
 import {Camera} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
-import {BaseNodeType} from '../../engine/nodes/_Base';
+import {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
 import {CAMERA_CONTROLS_NODE_TYPES} from '../../engine/poly/NodeContext';
 import {TypedCameraControlsEventNode} from '../../engine/nodes/event/_BaseCameraControls';
 import {CoreObject} from '../geometry/Object';
@@ -21,10 +21,10 @@ export class CoreCameraControlsController {
 		const {scene, camera} = options;
 
 		let controlsNode: TypedCameraControlsEventNode<any> | undefined;
-		const foundNodePath = CoreObject.attribValue(camera, CameraAttribute.CONTROLS_PATH);
-		if (foundNodePath && CoreType.isString(foundNodePath)) {
-			const foundNode = scene.node(foundNodePath);
-			if (foundNode && this.isCameraControlsNode(foundNode)) {
+		const foundNodeId = CoreObject.attribValue(camera, CameraAttribute.CONTROLS_NODE_ID);
+		if (foundNodeId && CoreType.isNumber(foundNodeId)) {
+			const foundNode = scene.graph.nodeFromId(foundNodeId);
+			if (foundNode && foundNode instanceof TypedNode && this.isCameraControlsNode(foundNode)) {
 				controlsNode = foundNode as TypedCameraControlsEventNode<any>;
 			}
 		}

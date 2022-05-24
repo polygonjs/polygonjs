@@ -16,6 +16,7 @@ export class PostProcessNetworkSopNode extends BaseNetworkSopNode<PostProcessNet
 	static override type() {
 		return NetworkNodeType.POST;
 	}
+
 	readonly effectsComposerController: EffectComposerController = new EffectComposerController(this);
 	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,

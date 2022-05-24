@@ -36,11 +36,9 @@ export class CameraPostProcessSopOperation extends BaseSopOperation {
 		const relativeOrAbsolutePath = params.node.path();
 		const node = isBooleanTrue(params.useOtherNode) ? this._node?.node(relativeOrAbsolutePath) : this._node;
 		if (node) {
-			// we need to give the absolute path, so that the creation of the viewer can find the node
-			// without having to know which node set the path
-			const absolutePath = node.path();
+			const nodeId = node.graphNodeId();
 			for (let object of objects) {
-				CoreObject.addAttribute(object, CameraAttribute.POST_PROCESS_PATH, absolutePath);
+				CoreObject.addAttribute(object, CameraAttribute.POST_PROCESS_NODE_ID, nodeId);
 			}
 		}
 
@@ -51,15 +49,14 @@ export class CameraPostProcessSopOperation extends BaseSopOperation {
 		const relativeOrAbsolutePath = params.node.path();
 		const foundNode = node.node(relativeOrAbsolutePath);
 		if (foundNode && active) {
-			// we need to give the absolute path, so that the creation of the viewer can find the node
-			// without having to know which node set the path
-			const absolutePath = foundNode.path();
+			// see CameraControls for why this method of storing the node is preferable
+			const nodeId = foundNode.graphNodeId();
 			for (let object of objects) {
-				CoreObject.addAttribute(object, CameraAttribute.POST_PROCESS_PATH, absolutePath);
+				CoreObject.addAttribute(object, CameraAttribute.POST_PROCESS_NODE_ID, nodeId);
 			}
 		} else {
 			for (let object of objects) {
-				CoreObject.deleteAttribute(object, CameraAttribute.POST_PROCESS_PATH);
+				CoreObject.deleteAttribute(object, CameraAttribute.POST_PROCESS_NODE_ID);
 			}
 		}
 	}

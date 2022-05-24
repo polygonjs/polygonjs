@@ -103,13 +103,22 @@ interface CreateEffectsComposerOptions {
 	// useRenderTarget?: boolean;
 	// prepend_render_pass?: boolean;
 }
+interface ComposerAndOptions {
+	options: CreateEffectsComposerOptions;
+	composer: EffectComposer;
+}
 export interface RenderTargetCreateOptions {
 	width: number;
 	height: number;
 }
 
 export class EffectComposerController {
-	constructor(private node: BaseNetworkPostProcessNodeType) {}
+	private _composerAndOptionsByCamera: Map<Camera, ComposerAndOptions> = new Map();
+	constructor(private node: BaseNetworkPostProcessNodeType) {
+		this.node.dirtyController.addPostDirtyHook('EffectComposerController', () => {
+			this._updateComposers();
+		});
+	}
 
 	displayNodeControllerCallbacks(): DisplayNodeControllerCallbacks {
 		return {
@@ -126,10 +135,10 @@ export class EffectComposerController {
 	createEffectsComposer(options: CreateEffectsComposerOptions) {
 		const renderer = options.renderer;
 
-		let composer: EffectComposer;
 		//if (isBooleanTrue(this.node.pv.useRenderTarget)) {
 		const renderTarget = this.createRenderTarget(renderer);
-		composer = new EffectComposer(renderer, renderTarget);
+		const composer = new EffectComposer(renderer, renderTarget);
+		this._composerAndOptionsByCamera.set(options.camera, {composer, options});
 		// } else {
 		// 	composer = new EffectComposer(renderer);
 		// }
@@ -144,6 +153,12 @@ export class EffectComposerController {
 		this._buildPasses(composer, options);
 
 		return composer;
+	}
+
+	private _updateComposers() {
+		this._composerAndOptionsByCamera.forEach(({composer, options}) => {
+			this._buildPasses(composer, options);
+		});
 	}
 
 	private _rendererSize = new Vector2();
@@ -180,6 +195,8 @@ export class EffectComposerController {
 	}
 	private _buildPasses(composer: EffectComposer, options: CreateEffectsComposerOptions) {
 		this._passByNodeInBuildPassesProcess.clear();
+
+		composer.clearPasses();
 
 		if (isBooleanTrue(this.node.pv.prependRenderPass)) {
 			const renderPass = new RenderPass(options.scene, options.camera);

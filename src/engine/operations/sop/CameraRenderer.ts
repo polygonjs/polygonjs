@@ -41,15 +41,14 @@ export class CameraRendererSopOperation extends BaseSopOperation {
 		const relativeOrAbsolutePath = params.node.path();
 		const foundNode = node.node(relativeOrAbsolutePath);
 		if (foundNode && active) {
-			// we need to give the absolute path, so that the creation of the viewer can find the node
-			// without having to know which node set the path
-			const absolutePath = foundNode.path();
+			// see CameraControls for why this method of storing the node is preferable
+			const nodeId = foundNode.graphNodeId();
 			for (let object of objects) {
-				CoreObject.addAttribute(object, CameraAttribute.RENDERER_PATH, absolutePath);
+				CoreObject.addAttribute(object, CameraAttribute.RENDERER_NODE_ID, nodeId);
 			}
 		} else {
 			for (let object of objects) {
-				CoreObject.deleteAttribute(object, CameraAttribute.RENDERER_PATH);
+				CoreObject.deleteAttribute(object, CameraAttribute.RENDERER_NODE_ID);
 			}
 		}
 	}

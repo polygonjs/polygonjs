@@ -1,6 +1,6 @@
 import {Camera} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
-import {BaseNodeType} from '../../engine/nodes/_Base';
+import {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
 import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
@@ -21,10 +21,10 @@ export class CoreCameraRenderSceneController {
 		const {scene, camera} = options;
 
 		let sceneNode: SceneObjNode | undefined;
-		const foundNodePath = CoreObject.attribValue(camera, CameraAttribute.RENDER_SCENE_PATH);
-		if (foundNodePath && CoreType.isString(foundNodePath)) {
-			const foundNode = scene.node(foundNodePath);
-			if (foundNode && this.isRenderSceneNode(foundNode)) {
+		const foundNodeId = CoreObject.attribValue(camera, CameraAttribute.RENDER_SCENE_NODE_ID);
+		if (foundNodeId && CoreType.isNumber(foundNodeId)) {
+			const foundNode = scene.graph.nodeFromId(foundNodeId);
+			if (foundNode && foundNode instanceof TypedNode && this.isRenderSceneNode(foundNode)) {
 				sceneNode = foundNode as SceneObjNode;
 				return sceneNode.object;
 			}

@@ -12,7 +12,7 @@ QUnit.test('circle simple', async (assert) => {
 
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 14);
-	assert.equal(container.boundingBox().min.x, -1);
+	assert.equal(container.boundingBox().min.z, -1);
 
 	scene.batchUpdates(() => {
 		circle1.p.radius.set(2);
@@ -24,5 +24,5 @@ QUnit.test('circle simple', async (assert) => {
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 52);
-	assert.in_delta(container.boundingBox().min.x, -2.0, 0.01);
+	assert.in_delta(container.boundingBox().min.z, -2.0, 0.01);
 });

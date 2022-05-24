@@ -95,6 +95,9 @@ export class EffectComposer {
 			this.passes.splice(index, 1);
 		}
 	}
+	clearPasses() {
+		this.passes.splice(0, this.passes.length);
+	}
 
 	private _isLastEnabledPass(passIndex: number) {
 		for (let i = passIndex + 1; i < this.passes.length; i++) {

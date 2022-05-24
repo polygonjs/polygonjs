@@ -2,7 +2,7 @@ import {Camera} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import type {CSS2DRendererRopNode} from '../../engine/nodes/rop/CSS2DRenderer';
 import type {CSS3DRendererRopNode} from '../../engine/nodes/rop/CSS3DRenderer';
-import {BaseNodeType} from '../../engine/nodes/_Base';
+import {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
 import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
@@ -32,10 +32,10 @@ export class CoreCameraCSSRendererController {
 		const {canvas, scene, camera} = options;
 
 		let cssRendererNode: CSSRendererRopNode | undefined;
-		const postProcessNodePath = CoreObject.attribValue(camera, CameraAttribute.CSS_RENDERER_PATH);
-		if (postProcessNodePath && CoreType.isString(postProcessNodePath)) {
-			const foundNode = scene.node(postProcessNodePath);
-			if (foundNode && this.isCSSRendererNode(foundNode)) {
+		const postProcessNodeId = CoreObject.attribValue(camera, CameraAttribute.CSS_RENDERER_NODE_ID);
+		if (postProcessNodeId && CoreType.isNumber(postProcessNodeId)) {
+			const foundNode = scene.graph.nodeFromId(postProcessNodeId);
+			if (foundNode && foundNode instanceof TypedNode && this.isCSSRendererNode(foundNode)) {
 				cssRendererNode = foundNode as CSSRendererRopNode;
 			}
 		}
