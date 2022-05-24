@@ -60,3 +60,47 @@ QUnit.test('sop/spotLight hierarchy is maintained as it is cloned', async (asser
 	]);
 	assert.deepEqual((object2.children[0] as SpotLight).color.toArray(), [0.2, 0.4, 0.7]);
 });
+
+QUnit.test('sop/spotLight name change is maintained', async (assert) => {
+	const geo1 = window.geo1;
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
+
+	const spotLight1 = geo1.createNode('spotLight');
+	const transform1 = geo1.createNode('transform');
+	const objectProperties1 = geo1.createNode('objectProperties');
+	const transform2 = geo1.createNode('transform');
+
+	transform1.setInput(0, spotLight1);
+	objectProperties1.setInput(0, transform1);
+	transform2.setInput(0, objectProperties1);
+
+	objectProperties1.p.tname.set(true);
+	objectProperties1.p.name.set('myLight');
+
+	const object1 = await getObject(transform2);
+	assert.equal(objectsCount(object1), 3);
+	assert.deepEqual(objectNames(object1), ['myLight', 'SpotLight_spotLight1', 'SpotLightDefaultTarget_spotLight1']);
+
+	spotLight1.p.showHelper.set(true);
+	const object2 = await getObject(transform2);
+	assert.equal(objectsCount(object2), 5);
+	assert.deepEqual(objectNames(object2), [
+		'myLight',
+		'SpotLight_spotLight1',
+		'SpotLightDefaultTarget_spotLight1',
+		'CoreSpotLightHelper_spotLight1',
+		'CoreSpotLightHelperCone_spotLight1',
+	]);
+
+	spotLight1.p.tvolumetric.set(true);
+	const object3 = await getObject(transform2);
+	assert.equal(objectsCount(object3), 6);
+	assert.deepEqual(objectNames(object3), [
+		'myLight',
+		'SpotLight_spotLight1',
+		'VolumetricSpotLight_spotLight1',
+		'SpotLightDefaultTarget_spotLight1',
+		'CoreSpotLightHelper_spotLight1',
+		'CoreSpotLightHelperCone_spotLight1',
+	]);
+});

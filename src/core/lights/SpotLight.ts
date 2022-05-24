@@ -184,7 +184,8 @@ export class SpotLightContainer extends Group {
 
 		// set light pos to 0,0,1
 		// in order to have it face z axis
-		this._light.position.set(0, 0, 1);
+		// update: set z to 0.01 so that the spotligh volume can appear to be in the same position
+		this._light.position.set(0, 0, 0.01);
 		this._light.updateMatrix();
 		this._target.updateMatrix();
 		this._light.matrixAutoUpdate = false;
