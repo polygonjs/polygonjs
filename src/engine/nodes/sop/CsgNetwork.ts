@@ -43,7 +43,6 @@ export class CsgNetworkSopNode extends TypedSopNode<CsgNetworkParamsConfig> {
 		const csgCoreGroup = container.coreContent();
 		if (!csgCoreGroup) {
 			return this.setCoreGroup(inputCoreGroups[0]);
-			return;
 		}
 		const csgObjects = csgCoreGroup.objects();
 		const objects: Object3D[] = [];
