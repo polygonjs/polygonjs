@@ -7,7 +7,8 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface RoundedBoxSopParams extends DefaultOperationParams {
-	size: Vector3;
+	size: number;
+	sizes: Vector3;
 	divisions: number;
 	bevel: number;
 	center: Vector3;
@@ -15,7 +16,8 @@ interface RoundedBoxSopParams extends DefaultOperationParams {
 
 export class RoundedBoxSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: RoundedBoxSopParams = {
-		size: new Vector3(1, 1, 1),
+		size: 1,
+		sizes: new Vector3(1, 1, 1),
 		divisions: 2,
 		bevel: 0.1,
 		center: new Vector3(0, 0, 0),
@@ -34,8 +36,14 @@ export class RoundedBoxSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromGeometry(geometry);
 	}
 	private _cook_without_input(params: RoundedBoxSopParams) {
-		const size = params.size;
-		const geometry = new RoundedBoxGeometry(size.x, size.y, size.z, params.divisions, params.bevel);
+		const {sizes, size} = params;
+		const geometry = new RoundedBoxGeometry(
+			sizes.x * size,
+			sizes.y * size,
+			sizes.z * size,
+			params.divisions,
+			params.bevel
+		);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		geometry.computeVertexNormals();
 		return geometry;

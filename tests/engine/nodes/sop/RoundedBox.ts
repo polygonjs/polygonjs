@@ -1,4 +1,4 @@
-QUnit.test('rounded_box simple', async (assert) => {
+QUnit.test('roundedBox simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -11,7 +11,7 @@ QUnit.test('rounded_box simple', async (assert) => {
 	assert.equal(container.boundingBox().min.y, -0.5);
 	assert.notOk(rounded_box1.isDirty(), 'box is dirty');
 
-	rounded_box1.p.size.set([2, 2, 2]);
+	rounded_box1.p.sizes.set([2, 2, 2]);
 	assert.ok(rounded_box1.isDirty(), 'box is dirty');
 	container = await rounded_box1.compute();
 	assert.ok(!rounded_box1.isDirty(), 'box is not dirty anymore');
@@ -24,7 +24,7 @@ QUnit.test('rounded_box simple', async (assert) => {
 	assert.equal(geometry?.getAttribute('position').array.length, 47628);
 });
 
-QUnit.test('rounded_box with input', async (assert) => {
+QUnit.test('roundedBox with input', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
