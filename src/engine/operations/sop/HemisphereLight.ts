@@ -12,6 +12,7 @@ export class HemisphereLightSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: HemisphereLightParams) {
 		const light = this.createLight();
+		light.name = params.name;
 
 		this.updateLightParams(light, params);
 		this.updateLightParams(light, params);

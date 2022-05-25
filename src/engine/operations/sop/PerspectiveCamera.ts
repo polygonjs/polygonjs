@@ -21,6 +21,7 @@ interface PerspectiveCameraSopParams extends CreatePerspectiveCameraParams, Defa
 	rotation: Vector3;
 	showHelper: boolean;
 	matrixAutoUpdate: boolean;
+	name: string;
 }
 interface AttributeOptions {
 	fov: number;
@@ -35,6 +36,7 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 		rotation: new Vector3(0, 0, 0),
 		showHelper: false,
 		matrixAutoUpdate: true,
+		name: CameraNodeType.PERSPECTIVE,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static override type(): Readonly<CameraNodeType.PERSPECTIVE> {
@@ -43,7 +45,7 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 	static override onRegister = registerPerspectiveCamera;
 	override cook(inputCoreGroups: CoreGroup[], params: PerspectiveCameraSopParams) {
 		const camera = PerspectiveCameraSopOperation.createCamera(params, this._node);
-		camera.name = CameraNodeType.PERSPECTIVE;
+		camera.name = params.name || CameraNodeType.PERSPECTIVE;
 
 		camera.position.copy(params.position);
 		camera.rotation.set(

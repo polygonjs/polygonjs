@@ -12,6 +12,7 @@ export class AmbientLightSopOperation extends BaseSopOperation {
 	}
 	override cook(input_contents: CoreGroup[], params: AmbientLightParams) {
 		const light = this.createLight();
+		light.name = params.name;
 
 		this.updateLightParams(light, params);
 		this.updateLightParams(light, params);

@@ -22,6 +22,7 @@ interface OrthographicCameraSopParams extends CreateOrthographicCameraParams, De
 	rotation: Vector3;
 	showHelper: boolean;
 	matrixAutoUpdate: boolean;
+	name: string;
 }
 interface AttributeOptions {
 	size: number;
@@ -36,6 +37,7 @@ export class OrthographicCameraSopOperation extends BaseSopOperation {
 		rotation: new Vector3(0, 0, 0),
 		showHelper: false,
 		matrixAutoUpdate: true,
+		name: CameraNodeType.ORTHOGRAPHIC,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static override type(): Readonly<CameraNodeType.ORTHOGRAPHIC> {
@@ -48,7 +50,7 @@ export class OrthographicCameraSopOperation extends BaseSopOperation {
 		camera.right = ORTHOGRAPHIC_CAMERA_DEFAULT.right * params.size;
 		camera.top = ORTHOGRAPHIC_CAMERA_DEFAULT.top * params.size;
 		camera.bottom = ORTHOGRAPHIC_CAMERA_DEFAULT.bottom * params.size;
-		camera.name = CameraNodeType.ORTHOGRAPHIC;
+		camera.name = params.name || CameraNodeType.ORTHOGRAPHIC;
 
 		camera.position.copy(params.position);
 		camera.rotation.set(

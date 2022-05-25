@@ -14,27 +14,19 @@ export class PointLightSopOperation extends BaseSopOperation {
 	}
 	override cook(input_contents: CoreGroup[], params: PointLightParams) {
 		const light = this.createLight();
-
-		const nodeName = this._node?.name();
-		if (nodeName) {
-			light.name = `PointLight_${nodeName}`;
-		}
+		light.name = params.name;
 
 		this.updateLightParams(light, params);
 		this.updateShadowParams(light, params);
 
 		if (isBooleanTrue(params.showHelper)) {
 			const group = new Group();
-			if (nodeName) {
-				group.name = `PointLightGroup_${nodeName}`;
-			}
+			group.name = `PointLightGroup_${light.name}`;
 			group.add(light);
 			const helper = this._createHelper(light, params);
 			if (helper) {
 				group.add(helper);
-				if (nodeName) {
-					helper.name = `PointLightHelper_${nodeName}`;
-				}
+				helper.name = `PointLightHelper_${light.name}`;
 			}
 			return this.createCoreGroupFromObjects([group]);
 		} else {
@@ -50,6 +42,11 @@ export class PointLightSopOperation extends BaseSopOperation {
 
 	createLight() {
 		const light = new PointLight();
+		const nodeName = this._node?.name();
+		if (nodeName) {
+			light.name = `PointLight_${nodeName}`;
+		}
+
 		light.matrixAutoUpdate = false;
 
 		light.castShadow = true;

@@ -4,12 +4,12 @@ QUnit.test('expression opname works', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
-	const attrib_create1 = geo1.createNode('attribCreate');
-	attrib_create1.p.name.set('`opname("..")`');
-	attrib_create1.p.value1.set(1);
-	attrib_create1.setInput(0, line1);
+	const attribCreate1 = geo1.createNode('attribCreate');
+	attribCreate1.p.name.set('`opname("..")`');
+	attribCreate1.p.value1.set(1);
+	attribCreate1.setInput(0, line1);
 
-	let container = await attrib_create1.compute();
+	let container = await attribCreate1.compute();
 	assert.deepEqual(
 		container
 			.coreContent()!
@@ -17,4 +17,31 @@ QUnit.test('expression opname works', async (assert) => {
 			.map((p: CorePoint) => p.attribValue('geo1')),
 		[1, 1]
 	);
+
+	geo1.setName('myGeo');
+	container = await attribCreate1.compute();
+	assert.deepEqual(
+		container
+			.coreContent()!
+			.points()
+			.map((p: CorePoint) => p.attribValue('myGeo')),
+		[1, 1]
+	);
+});
+
+QUnit.test('expression $OS', async (assert) => {
+	const geo1 = window.geo1;
+
+	const perspectiveCamera1 = geo1.createNode('perspectiveCamera');
+
+	async function getName() {
+		const container = await perspectiveCamera1.compute();
+		const object = container.coreContent()!.objects()[0];
+		return object.name;
+	}
+
+	assert.equal(await getName(), 'perspectiveCamera1');
+
+	perspectiveCamera1.setName('myCam');
+	assert.equal(await getName(), 'myCam');
 });

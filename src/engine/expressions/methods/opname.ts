@@ -25,13 +25,13 @@ export class OpnameExpression extends BaseMethod {
 		return [['string', 'path to node']];
 	}
 
-	override findDependency(index_or_path: number | string): MethodDependency | null {
-		const graph_node = this.findReferencedGraphNode(index_or_path);
-		if (graph_node) {
-			const node = graph_node as BaseNodeType;
+	override findDependency(indexOrPath: number | string): MethodDependency | null {
+		const graphNode = this.findReferencedGraphNode(indexOrPath);
+		if (graphNode) {
+			const node = graphNode as BaseNodeType;
 			if (node.nameController) {
-				const name_node = node.nameController.graph_node;
-				return this.createDependency(name_node, index_or_path);
+				const nameNode = node.nameController.graphNode();
+				return this.createDependency(nameNode, indexOrPath);
 			}
 		}
 		return null;

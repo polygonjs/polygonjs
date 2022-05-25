@@ -10,6 +10,7 @@ export interface HemisphereLightParams extends DefaultOperationParams {
 	groundColor: Color;
 	intensity: number;
 	position: Vector3;
+	name: string;
 }
 
 export const DEFAULT_POINT_LIGHT_PARAMS: HemisphereLightParams = {
@@ -17,6 +18,7 @@ export const DEFAULT_POINT_LIGHT_PARAMS: HemisphereLightParams = {
 	groundColor: new Color(0, 0, 0),
 	intensity: 1,
 	position: new Vector3(0, 0, 0),
+	name: 'hemisphereLight',
 };
 const DEFAULT = DEFAULT_POINT_LIGHT_PARAMS;
 
@@ -32,10 +34,12 @@ export function HemisphereLightParamConfig<TBase extends Constructor>(Base: TBas
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
-			range: [0, 10],
+			range: [0, 2],
 			rangeLocked: [true, false],
 		});
 		/** @param light position */
 		position = ParamConfig.VECTOR3(DEFAULT.position.toArray() as Number3);
+		/** @param light name */
+		name = ParamConfig.STRING('`$OS`');
 	};
 }

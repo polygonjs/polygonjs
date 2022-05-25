@@ -15,11 +15,7 @@ export class AreaLightSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: AreaLightParams) {
 		const light = this.createLight();
-
-		const nodeName = this._node?.name();
-		if (nodeName) {
-			light.name = `AreaLight_${nodeName}`;
-		}
+		light.name = params.name;
 
 		this.updateLightParams(light, params);
 
@@ -31,9 +27,7 @@ export class AreaLightSopOperation extends BaseSopOperation {
 			if (helper) {
 				group.add(helper);
 			}
-			if (nodeName) {
-				group.name = `AreaLightGroup_${nodeName}`;
-			}
+			group.name = `AreaLightGroup_${light.name}`;
 
 			return this.createCoreGroupFromObjects([group]);
 		} else {
@@ -44,6 +38,10 @@ export class AreaLightSopOperation extends BaseSopOperation {
 	createLight() {
 		const light = new RectAreaLight(0xffffff, 1, 1, 1);
 		light.matrixAutoUpdate = false;
+		const nodeName = this._node?.name();
+		if (nodeName) {
+			light.name = `AreaLight_${nodeName}`;
+		}
 
 		if (!(RectAreaLightUniformsLib as any).initialized) {
 			RectAreaLightUniformsLib.init();

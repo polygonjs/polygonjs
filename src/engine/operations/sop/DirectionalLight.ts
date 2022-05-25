@@ -21,6 +21,7 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		if (!container) {
 			return this.createCoreGroupFromObjects([]);
 		}
+		container.light().name = params.name;
 		this.updateLightParams(container, params);
 		this.updateShadowParams(container, params);
 
@@ -31,6 +32,7 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		const nodeName = this._node?.name();
 		const container = new DirectionalLightContainer({showHelper: params.showHelper}, nodeName || '');
 		const light = container.light();
+
 		light.matrixAutoUpdate = false;
 
 		light.castShadow = true;

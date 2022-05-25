@@ -17,6 +17,7 @@ export class SpotLightSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: SpotLightParams) {
 		const container = this.createLight(params);
+		container.light().name = params.name;
 
 		this.updateLightParams(container, params);
 		this.updateShadowParams(container, params);

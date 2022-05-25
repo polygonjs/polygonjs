@@ -36,6 +36,8 @@ class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 	showHelper = ParamConfig.BOOLEAN(DEFAULT.showHelper);
 	/** @param matrixAutoUpdate */
 	matrixAutoUpdate = ParamConfig.BOOLEAN(DEFAULT.matrixAutoUpdate);
+	/** @param camera name */
+	name = ParamConfig.STRING('`$OS`');
 }
 const ParamsConfig = new PerspectiveCameraSopParamsConfig();
 

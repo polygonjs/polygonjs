@@ -574,7 +574,12 @@ export class FunctionGenerator extends BaseTraverser {
 		return `param.scene().timeController.time()`;
 	}
 	protected traverse_Identifier_OS(): string {
-		return `${QUOTE}${this.param.node.name()}${QUOTE}`;
+		const nameNode = this.param.node.nameController.graphNode();
+		this.param.addGraphInput(nameNode);
+
+		return `param.node.name()`;
+
+		// return `${QUOTE}${this.param.node.name()}${QUOTE}`;
 	}
 	protected traverse_Identifier_CH(): string {
 		return `${QUOTE}${this.param.name()}${QUOTE}`;

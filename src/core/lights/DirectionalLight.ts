@@ -20,6 +20,7 @@ export interface DirectionalLightParams extends DefaultOperationParams {
 	distance: number;
 	//
 	showHelper: boolean;
+	name: string;
 	//
 	castShadow: boolean;
 	shadowAutoUpdate: boolean;
@@ -36,6 +37,7 @@ export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
 	distance: 100,
 	//
 	showHelper: false,
+	name: 'directionalLight',
 	//
 	castShadow: false,
 	shadowAutoUpdate: true,
@@ -56,7 +58,7 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
-			range: [0, 10],
+			range: [0, 2],
 			rangeLocked: [true, false],
 		});
 		/** @param light distance */
@@ -67,6 +69,8 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		// helper
 		/** @param toggle to show helper */
 		showHelper = ParamConfig.BOOLEAN(DEFAULT.showHelper);
+		/** @param light name */
+		name = ParamConfig.STRING('`$OS`');
 
 		// shadows
 		shadow = ParamConfig.FOLDER();

@@ -31,7 +31,7 @@ export class OpdigitsExpression extends BaseMethod {
 		if (graph_node) {
 			const node = graph_node as BaseNodeType;
 			if (node.nameController) {
-				const name_node = node.nameController.graph_node;
+				const name_node = node.nameController.graphNode();
 				return this.createDependency(name_node, index_or_path);
 			}
 		}

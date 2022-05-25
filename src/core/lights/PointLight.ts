@@ -15,6 +15,7 @@ export interface PointLightParams extends DefaultOperationParams {
 	intensity: number;
 	decay: number;
 	distance: number;
+	name: string;
 	//
 	castShadow: boolean;
 	shadowAutoUpdate: boolean;
@@ -32,6 +33,7 @@ export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	intensity: 1,
 	decay: 0.1,
 	distance: 100,
+	name: 'pointLight',
 	//
 	castShadow: false,
 	shadowAutoUpdate: true,
@@ -54,7 +56,7 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
-			range: [0, 10],
+			range: [0, 2],
 			rangeLocked: [true, false],
 		});
 		/** @param light decay */
@@ -72,6 +74,8 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		showHelper = ParamConfig.BOOLEAN(DEFAULT.showHelper);
 		/** @param helper size */
 		helperSize = ParamConfig.FLOAT(1, {visibleIf: {showHelper: 1}});
+		/** @param light name */
+		name = ParamConfig.STRING('`$OS`');
 
 		// shadows
 		shadow = ParamConfig.FOLDER();

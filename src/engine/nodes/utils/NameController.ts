@@ -6,23 +6,23 @@ import {CoreType} from '../../../core/Type';
 type NameControllerCallback = () => void;
 
 export class NameController {
-	private _graph_node: CoreGraphNode;
-	private _on_set_name_hooks: NameControllerCallback[] | undefined;
-	private _on_set_fullPath_hooks: NameControllerCallback[] | undefined;
+	private _graphNode: CoreGraphNode;
+	private _onSetNameHooks: NameControllerCallback[] | undefined;
+	private _onSetFullPathHooks: NameControllerCallback[] | undefined;
 
 	constructor(protected node: BaseNodeType) {
-		this._graph_node = new CoreGraphNode(node.scene(), 'nodeNameController');
+		this._graphNode = new CoreGraphNode(node.scene(), 'nodeNameController');
 		// this._graph_node.setScene(this.node.scene);
 	}
 
 	dispose() {
-		this._graph_node.dispose();
-		this._on_set_name_hooks = undefined;
-		this._on_set_fullPath_hooks = undefined;
+		this._graphNode.dispose();
+		this._onSetNameHooks = undefined;
+		this._onSetFullPathHooks = undefined;
 	}
 
-	get graph_node() {
-		return this._graph_node;
+	graphNode() {
+		return this._graphNode;
 	}
 
 	static baseName(node: BaseNodeType | typeof BaseNodeClass) {
@@ -69,24 +69,24 @@ export class NameController {
 	}
 
 	add_post_set_name_hook(hook: NameControllerCallback) {
-		this._on_set_name_hooks = this._on_set_name_hooks || [];
-		this._on_set_name_hooks.push(hook);
+		this._onSetNameHooks = this._onSetNameHooks || [];
+		this._onSetNameHooks.push(hook);
 	}
 	add_post_set_fullPath_hook(hook: NameControllerCallback) {
-		this._on_set_fullPath_hooks = this._on_set_fullPath_hooks || [];
-		this._on_set_fullPath_hooks.push(hook);
+		this._onSetFullPathHooks = this._onSetFullPathHooks || [];
+		this._onSetFullPathHooks.push(hook);
 	}
 
 	private _postSetName() {
-		if (this._on_set_name_hooks) {
-			for (let hook of this._on_set_name_hooks) {
+		if (this._onSetNameHooks) {
+			for (let hook of this._onSetNameHooks) {
 				hook();
 			}
 		}
 	}
 	runPostSetFullPathHooks() {
-		if (this._on_set_fullPath_hooks) {
-			for (let hook of this._on_set_fullPath_hooks) {
+		if (this._onSetFullPathHooks) {
+			for (let hook of this._onSetFullPathHooks) {
 				hook();
 			}
 		}

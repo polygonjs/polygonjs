@@ -10,6 +10,7 @@ export interface AreaLightParams extends DefaultOperationParams {
 	width: number;
 	height: number;
 	showHelper: boolean;
+	name: string;
 }
 
 export const DEFAULT_AREA_LIGHT_PARAMS: AreaLightParams = {
@@ -18,6 +19,7 @@ export const DEFAULT_AREA_LIGHT_PARAMS: AreaLightParams = {
 	width: 1,
 	height: 1,
 	showHelper: false,
+	name: 'areaLight',
 };
 const DEFAULT = DEFAULT_AREA_LIGHT_PARAMS;
 
@@ -30,7 +32,7 @@ export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
-			range: [0, 10],
+			range: [0, 2],
 			rangeLocked: [true, false],
 		});
 		/** @param grid width */
@@ -46,6 +48,8 @@ export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		// helper
 		/** @param toggle on to show helper */
 		showHelper = ParamConfig.BOOLEAN(DEFAULT.showHelper);
+		/** @param light name */
+		name = ParamConfig.STRING('`$OS`');
 	};
 }
 
