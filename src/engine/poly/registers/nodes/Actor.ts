@@ -15,6 +15,7 @@ import {AnimationMixerActorNode} from '../../../nodes/actor/AnimationMixer';
 import {AnimationMixerUpdateActorNode} from '../../../nodes/actor/AnimationMixerUpdate';
 import {BoolToIntActorNode} from '../../../nodes/actor/BoolToInt';
 import {Box3ActorNode} from '../../../nodes/actor/Box3';
+import {CacheActorNode} from '../../../nodes/actor/Cache';
 import {CeilActorNode} from '../../../nodes/actor/Ceil';
 import {ClampActorNode} from '../../../nodes/actor/Clamp';
 import {CodeActorNode} from '../../../nodes/actor/Code';
@@ -140,6 +141,7 @@ export interface ActorNodeChildrenMap {
 	animationMixerUpdate: AnimationMixerUpdateActorNode;
 	boolToInt: BoolToIntActorNode;
 	box3: Box3ActorNode;
+	cache: CacheActorNode;
 	ceil: CeilActorNode;
 	clamp: ClampActorNode;
 	code: CodeActorNode;
@@ -269,6 +271,7 @@ export class ActorRegister {
 		poly.registerNode(AnimationMixerUpdateActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(BoolToIntActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Box3ActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(CacheActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(CeilActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(ClampActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
