@@ -87,6 +87,7 @@ import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
 import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
+import {LightMixerSopNode} from '../../../nodes/sop/LightMixer';
 import {LineSopNode} from '../../../nodes/sop/Line';
 import {LodSopNode} from '../../../nodes/sop/Lod';
 import {LookAtSopNode} from '../../../nodes/sop/LookAt';
@@ -243,6 +244,7 @@ export interface GeoNodeChildrenMap {
 	jitter: JitterSopNode;
 	jsPoint: JsPointSopNode;
 	layer: LayerSopNode;
+	lightMixer: LightMixerSopNode;
 	line: LineSopNode;
 	lod: LodSopNode;
 	lookAt: LookAtSopNode;
@@ -589,6 +591,7 @@ export class SopRegister {
 			poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
 		}
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(LightMixerSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(LookAtSopNode, CATEGORY_SOP.MODIFIER);

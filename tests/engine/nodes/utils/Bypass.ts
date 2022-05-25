@@ -77,7 +77,7 @@ QUnit.test('bypass a node that has no input returns an empty container', async (
 	assert.equal(objects.length, 2);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
-		['SpotLightContainer_spotLight1', 'HemisphereLight_hemisphereLight1']
+		['SpotLightContainer_spotLight1', 'hemisphereLight1']
 	);
 
 	hemisphereLight1.flags.bypass.set(true);
@@ -114,7 +114,7 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.equal(objects.length, 2);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
-		['SpotLightContainer_spotLight1', 'HemisphereLight_hemisphereLight1']
+		['SpotLightContainer_spotLight1', 'hemisphereLight1']
 	);
 
 	hemisphereLight1.flags.bypass.set(true);
@@ -148,7 +148,7 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.equal(objects.length, 2);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
-		['SpotLightContainer_spotLight1', 'HemisphereLight_hemisphereLight1']
+		['SpotLightContainer_spotLight1', 'hemisphereLight1']
 	);
 
 	transform1.flags.bypass.set(false);
@@ -161,7 +161,7 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.equal(objects.length, 2);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
-		['SpotLightContainer_spotLight1', 'HemisphereLight_hemisphereLight1']
+		['SpotLightContainer_spotLight1', 'hemisphereLight1']
 	);
 
 	hemisphereLight1.flags.bypass.set(true);

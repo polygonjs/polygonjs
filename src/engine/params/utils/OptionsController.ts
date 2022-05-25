@@ -356,7 +356,7 @@ export class OptionsController {
 		this._callbackAllowed = true;
 	}
 
-	executeCallback() {
+	async executeCallback() {
 		if (!this._callbackAllowed) {
 			return;
 		}
@@ -387,7 +387,7 @@ export class OptionsController {
 			// and also for the components. But they would have to be assigned correctly by the multiple param
 			parentParam.options.executeCallback();
 		} else {
-			callback(this.node(), this.param());
+			await callback(this.node(), this.param());
 		}
 	}
 	private getCallback() {

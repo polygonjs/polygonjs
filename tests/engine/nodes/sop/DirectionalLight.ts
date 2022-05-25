@@ -39,7 +39,7 @@ QUnit.test('sop/directionalLight hierarchy is maintained as it is cloned', async
 	assert.equal(objectsCount(object1), 6);
 	assert.deepEqual(objectNames(object1), [
 		'DirectionalLightContainer_directionalLight1',
-		'DirectionalLight_directionalLight1',
+		'directionalLight1',
 		'DirectionalLightTarget_directionalLight1',
 		'CoreDirectionalLightHelper_directionalLight1',
 		'CoreDirectionalLightHelperSquare_directionalLight1',
@@ -51,7 +51,7 @@ QUnit.test('sop/directionalLight hierarchy is maintained as it is cloned', async
 	assert.equal(objectsCount(object2), 6);
 	assert.deepEqual(objectNames(object2), [
 		'DirectionalLightContainer_directionalLight1',
-		'DirectionalLight_directionalLight1',
+		'directionalLight1',
 		'DirectionalLightTarget_directionalLight1',
 		'CoreDirectionalLightHelper_directionalLight1',
 		'CoreDirectionalLightHelperSquare_directionalLight1',

@@ -40,7 +40,7 @@ QUnit.test('sop/spotLight hierarchy is maintained as it is cloned', async (asser
 	assert.equal(objectsCount(object1), 6);
 	assert.deepEqual(objectNames(object1), [
 		'SpotLightContainer_spotLight1',
-		'SpotLight_spotLight1',
+		'spotLight1',
 		'VolumetricSpotLight_spotLight1',
 		'SpotLightDefaultTarget_spotLight1',
 		'CoreSpotLightHelper_spotLight1',
@@ -52,7 +52,7 @@ QUnit.test('sop/spotLight hierarchy is maintained as it is cloned', async (asser
 	assert.equal(objectsCount(object2), 6);
 	assert.deepEqual(objectNames(object2), [
 		'SpotLightContainer_spotLight1',
-		'SpotLight_spotLight1',
+		'spotLight1',
 		'VolumetricSpotLight_spotLight1',
 		'SpotLightDefaultTarget_spotLight1',
 		'CoreSpotLightHelper_spotLight1',
@@ -79,14 +79,14 @@ QUnit.test('sop/spotLight name change is maintained', async (assert) => {
 
 	const object1 = await getObject(transform2);
 	assert.equal(objectsCount(object1), 3);
-	assert.deepEqual(objectNames(object1), ['myLight', 'SpotLight_spotLight1', 'SpotLightDefaultTarget_spotLight1']);
+	assert.deepEqual(objectNames(object1), ['myLight', 'spotLight1', 'SpotLightDefaultTarget_spotLight1']);
 
 	spotLight1.p.showHelper.set(true);
 	const object2 = await getObject(transform2);
 	assert.equal(objectsCount(object2), 5);
 	assert.deepEqual(objectNames(object2), [
 		'myLight',
-		'SpotLight_spotLight1',
+		'spotLight1',
 		'SpotLightDefaultTarget_spotLight1',
 		'CoreSpotLightHelper_spotLight1',
 		'CoreSpotLightHelperCone_spotLight1',
@@ -97,7 +97,7 @@ QUnit.test('sop/spotLight name change is maintained', async (assert) => {
 	assert.equal(objectsCount(object3), 6);
 	assert.deepEqual(objectNames(object3), [
 		'myLight',
-		'SpotLight_spotLight1',
+		'spotLight1',
 		'VolumetricSpotLight_spotLight1',
 		'SpotLightDefaultTarget_spotLight1',
 		'CoreSpotLightHelper_spotLight1',

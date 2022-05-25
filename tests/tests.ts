@@ -298,6 +298,7 @@ import './engine/nodes/sop/InstancesCount';
 import './engine/nodes/sop/InstanceUpdate';
 import './engine/nodes/sop/Jitter';
 import './engine/nodes/sop/Layer';
+import './engine/nodes/sop/LightMixer';
 import './engine/nodes/sop/Line';
 import './engine/nodes/sop/Lod';
 import './engine/nodes/sop/LookAt';

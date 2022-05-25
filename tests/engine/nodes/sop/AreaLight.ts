@@ -41,7 +41,7 @@ QUnit.test('sop/areaLight hierarchy is maintained as it is cloned', async (asser
 	assert.equal(objectsCount(object1), 5);
 	assert.deepEqual(objectNames(object1), [
 		'AreaLightGroup_areaLight1',
-		'AreaLight_areaLight1',
+		'areaLight1',
 		'CoreRectAreaLightHelper_areaLight1',
 		'CoreRectAreaLightHelperChildMesh_areaLight1',
 		'CoreRectAreaLightHelperChildLine_areaLight1',
@@ -54,7 +54,7 @@ QUnit.test('sop/areaLight hierarchy is maintained as it is cloned', async (asser
 	assert.equal(objectsCount(object2), 5);
 	assert.deepEqual(objectNames(object2), [
 		'AreaLightGroup_areaLight1',
-		'AreaLight_areaLight1',
+		'areaLight1',
 		'CoreRectAreaLightHelper_areaLight1',
 		'CoreRectAreaLightHelperChildMesh_areaLight1',
 		'CoreRectAreaLightHelperChildLine_areaLight1',

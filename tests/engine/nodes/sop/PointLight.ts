@@ -84,7 +84,7 @@ QUnit.test('sop/pointLight hierarchy is maintained as it is cloned', async (asse
 	assert.equal(objectsCount(object), 3);
 	assert.deepEqual(objectNames(object), [
 		'PointLightGroup_pointLight1',
-		'PointLight_pointLight1',
+		'pointLight1',
 		'PointLightHelper_pointLight1',
 	]);
 
@@ -94,7 +94,7 @@ QUnit.test('sop/pointLight hierarchy is maintained as it is cloned', async (asse
 	assert.equal(objectsCount(object), 3);
 	assert.deepEqual(objectNames(object), [
 		'PointLightGroup_pointLight1',
-		'PointLight_pointLight1',
+		'pointLight1',
 		'PointLightHelper_pointLight1',
 	]);
 });
