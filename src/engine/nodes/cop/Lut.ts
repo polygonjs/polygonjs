@@ -3,7 +3,7 @@
  *
  */
 
-import {Texture, TextureLoader} from 'three';
+import {ClampToEdgeWrapping, LinearFilter, Texture, TextureLoader} from 'three';
 import {TypedCopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
@@ -12,6 +12,7 @@ import {ImageExtension} from '../../../core/FileTypeController';
 import {LUT3dlLoader, LUTCubeLoader} from 'postprocessing';
 import {LOADING_MANAGER} from '../../../core/loader/_Base';
 
+type OnTextureLoad = (texture: Texture) => void;
 class LutCopParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the gif from */
 	url = ParamConfig.STRING('', {
@@ -40,15 +41,31 @@ export class LutCopNode extends TypedCopNode<LutCopParamsConfig> {
 		const textureLoader = new TextureLoader(LOADING_MANAGER);
 
 		let loader: TextureLoader | LUT3dlLoader | LUTCubeLoader = textureLoader;
+		let onLoad: OnTextureLoad | null = (texture) => {
+			texture.generateMipmaps = false;
+			texture.minFilter = LinearFilter;
+			texture.magFilter = LinearFilter;
+			texture.wrapS = ClampToEdgeWrapping;
+			texture.wrapT = ClampToEdgeWrapping;
+			texture.flipY = false;
+		};
 		const {url} = this.pv;
 		if (/.3dl$/im.test(url)) {
 			loader = new LUT3dlLoader(LOADING_MANAGER);
+			onLoad = null;
 		}
 		if (/.cube$/im.test(url)) {
 			loader = new LUTCubeLoader(LOADING_MANAGER);
+			onLoad = null;
 		}
 		loader.load(this.pv.url, (texture: Texture) => {
 			console.log(texture);
+			if (loader instanceof TextureLoader)
+				if (onLoad) {
+					// texture.name = entry[0];
+					onLoad(texture);
+				}
+
 			this.setTexture(texture);
 		});
 	}
