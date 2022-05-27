@@ -1,12 +1,6 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {ShaderMaterial} from 'three';
-import {HorizontalBlurShader} from '../../../../src/modules/three/examples/jsm/shaders/HorizontalBlurShader';
-import {VerticalBlurShader} from '../../../../src/modules/three/examples/jsm/shaders/VerticalBlurShader';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-
-function trimEmptySpace(word: string) {
-	return word.replace(/\s|\t|\r\n|\n|\r/gm, '');
-}
+import {RenderPass, KawaseBlurPass, BloomEffect, EffectPass} from 'postprocessing';
 
 QUnit.test('Post nodes simple', async (assert) => {
 	const scene = window.scene;
@@ -32,10 +26,8 @@ QUnit.test('Post nodes simple', async (assert) => {
 		const composer = viewer.effectComposer()!;
 		assert.ok(composer, 'composer exists');
 		assert.equal(composer.passes.length, 2, 'composer has two passes');
-		assert.equal(
-			((composer.passes[1] as any).material as ShaderMaterial).fragmentShader,
-			HorizontalBlurShader.fragmentShader
-		);
+		assert.ok(composer.passes[0] instanceof RenderPass);
+		assert.ok(composer.passes[1] instanceof KawaseBlurPass);
 	});
 
 	// 1 pass if no prepend
@@ -45,29 +37,20 @@ QUnit.test('Post nodes simple', async (assert) => {
 		const {viewer} = args;
 		const composer = viewer.effectComposer()!;
 		assert.ok(composer, 'composer exists');
-		assert.equal(composer.passes.length, 1, 'composer one pass');
-		assert.equal(
-			((composer.passes[0] as any).material as ShaderMaterial).fragmentShader,
-			HorizontalBlurShader.fragmentShader
-		);
+		assert.equal(composer.passes.length, 1, 'composer has one pass (1)');
+		assert.ok(composer.passes[0] instanceof KawaseBlurPass);
 	});
 
 	// add another pass and add as input to the first one
 	const blur2 = post_process1.createNode('blur');
-	blur2.setInput(0, blur2);
+	blur1.setInput(0, blur2);
 	await CoreSleep.sleep(20);
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
 		const composer = viewer.effectComposer()!;
-		assert.equal(composer.passes.length, 2, 'composer has two passes');
-		assert.equal(
-			((composer.passes[1] as any).material as ShaderMaterial).fragmentShader,
-			HorizontalBlurShader.fragmentShader
-		);
-		assert.equal(
-			((composer.passes[0] as any).material as ShaderMaterial).fragmentShader,
-			VerticalBlurShader.fragmentShader
-		);
+		assert.equal(composer.passes.length, 2, 'composer has two passes (2)');
+		assert.ok(composer.passes[0] instanceof KawaseBlurPass);
+		assert.ok(composer.passes[1] instanceof KawaseBlurPass);
 	});
 
 	// add another and set the display flag to it
@@ -76,13 +59,9 @@ QUnit.test('Post nodes simple', async (assert) => {
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
 		const composer = viewer.effectComposer()!;
-		assert.equal(composer.passes.length, 1, 'composer has one pass');
-		assert.equal(
-			trimEmptySpace((composer.passes[0] as any).compositeMaterial.fragmentShader),
-			trimEmptySpace(
-				`varyingvec2vUv;uniformsampler2DblurTexture1;uniformsampler2DblurTexture2;uniformsampler2DblurTexture3;uniformsampler2DblurTexture4;uniformsampler2DblurTexture5;uniformsampler2DdirtTexture;uniformfloatbloomStrength;uniformfloatbloomRadius;uniformfloatbloomFactors[NUM_MIPS];uniformvec3bloomTintColors[NUM_MIPS];//uniformboolbloomPremult;floatlerpBloomFactor(constinfloatfactor){floatmirrorFactor=1.2-factor;returnmix(factor,mirrorFactor,bloomRadius);}vec3LUMA=vec3(0.2125,0.7154,0.0721);floatluminance(vec3rgb){returndot(rgb,LUMA);}voidmain(){gl_FragColor=bloomStrength*(lerpBloomFactor(bloomFactors[0])*vec4(bloomTintColors[0],1.0)*texture2D(blurTexture1,vUv)+lerpBloomFactor(bloomFactors[1])*vec4(bloomTintColors[1],1.0)*texture2D(blurTexture2,vUv)+lerpBloomFactor(bloomFactors[2])*vec4(bloomTintColors[2],1.0)*texture2D(blurTexture3,vUv)+lerpBloomFactor(bloomFactors[3])*vec4(bloomTintColors[3],1.0)*texture2D(blurTexture4,vUv)+lerpBloomFactor(bloomFactors[4])*vec4(bloomTintColors[4],1.0)*texture2D(blurTexture5,vUv));//if(bloomPremult){//gl_FragColor.a=luminance(gl_FragColor.rgb);gl_FragColor.a=max(max(gl_FragColor.r,gl_FragColor.g),gl_FragColor.b);//gl_FragColor.rgb*=gl_FragColor.a;//}}`
-			)
-		);
+		assert.equal(composer.passes.length, 1, 'composer has one pass (2)');
+		assert.ok(composer.passes[0] instanceof EffectPass);
+		assert.ok((composer.passes[0] as any).effects[0] instanceof BloomEffect);
 	});
 
 	// change display flag again
@@ -90,11 +69,8 @@ QUnit.test('Post nodes simple', async (assert) => {
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
 		const composer = viewer.effectComposer()!;
-		assert.equal(composer.passes.length, 1, 'composer has one pass');
-		assert.equal(
-			trimEmptySpace(((composer.passes[0] as any).material as ShaderMaterial).fragmentShader),
-			trimEmptySpace(VerticalBlurShader.fragmentShader)
-		);
+		assert.equal(composer.passes.length, 1, 'composer has one pass (3)');
+		assert.ok(composer.passes[0] instanceof KawaseBlurPass);
 	});
 
 	// change display flag again
@@ -102,15 +78,9 @@ QUnit.test('Post nodes simple', async (assert) => {
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
 		const composer = viewer.effectComposer()!;
-		assert.equal(composer.passes.length, 2, 'composer has two passes');
-		assert.equal(
-			trimEmptySpace(((composer.passes[1] as any).material as ShaderMaterial).fragmentShader),
-			trimEmptySpace(HorizontalBlurShader.fragmentShader)
-		);
-		assert.equal(
-			trimEmptySpace(((composer.passes[0] as any).material as ShaderMaterial).fragmentShader),
-			trimEmptySpace(VerticalBlurShader.fragmentShader)
-		);
+		assert.equal(composer.passes.length, 2, 'composer has two passes (3)');
+		assert.ok(composer.passes[0] instanceof KawaseBlurPass);
+		assert.ok(composer.passes[1] instanceof KawaseBlurPass);
 	});
 
 	RendererUtils.dispose();

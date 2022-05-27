@@ -80,7 +80,6 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 				renderScene,
 				renderer,
 			});
-			console.log(this._effectComposer?.passes);
 			this._cssRendererConfig = CoreCameraCSSRendererController.cssRendererConfig({scene, camera, canvas});
 			this._controlsNode = CoreCameraControlsController.controlsNode({camera, scene});
 			const cssRenderer = this._cssRendererConfig?.cssRenderer;

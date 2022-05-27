@@ -105,7 +105,7 @@ const POST_NEW_TYPES: PolyDictionary<string> = {
 	RGBShift: 'chromaticAberration',
 	image: 'texture',
 	film: 'noise',
-	fXAA: 'antialiasing',
+	FXAA: 'antialiasing',
 	horizontalBlur: 'blur',
 	triangleBlur: 'blur',
 	unrealBloom: 'bloom',
