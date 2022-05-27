@@ -98,7 +98,6 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders', async (ass
 	assert.ok(customDepthMaterial);
 	assert.ok(customDistanceMaterial);
 	assert.ok(customDepthDOFMaterial);
-	console.log(customDepthDOFMaterial);
 	assert.equal(
 		GLSLHelper.compress(customDepthMaterial.vertexShader),
 		GLSLHelper.compress(MESH_BASIC_DEPTH_VERTEX),
