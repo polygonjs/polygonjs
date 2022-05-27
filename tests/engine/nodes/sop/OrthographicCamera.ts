@@ -24,7 +24,7 @@ QUnit.test('sop/orthographicCamera simple', async (assert) => {
 	cameraControls1.p.node.setNode(cameraOrbitControls1, {relative: true});
 	const CSS2DRenderer1 = cameraCSSRenderer1.createNode('CSS2DRenderer');
 	cameraCSSRenderer1.p.node.setNode(CSS2DRenderer1, {relative: true});
-	cameraPostProcess1.createNode('unrealBloom');
+	cameraPostProcess1.createNode('bloom');
 	cameraPostProcess1.p.useOtherNode.set(false);
 	const WebGLRenderer1 = cameraRenderer1.createNode('WebGLRenderer');
 	cameraRenderer1.p.node.setNode(WebGLRenderer1, {relative: true});

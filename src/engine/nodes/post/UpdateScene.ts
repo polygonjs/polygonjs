@@ -9,7 +9,7 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {UpdateScenePass} from '../../../modules/core/post_process/UpdateScenePass';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/Type';
+import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 
 class UpdateScenePostParamsConfig extends NodeParamsConfig {
@@ -123,8 +123,9 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 	}
 	private _printResolve() {
 		let firstPass: UpdateScenePass | undefined;
-		this._passesByEffectsComposer.forEach((pass) => {
-			firstPass = firstPass || pass;
+		this._passesByEffectsComposer.forEach((passOrPasses) => {
+			const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
+			firstPass = firstPass || passes[0];
 		});
 		if (firstPass) {
 			console.log(firstPass.objectsList());
@@ -136,8 +137,11 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 		node._resetMat();
 	}
 	private _resetMat() {
-		this._passesByEffectsComposer.forEach((pass) => {
-			pass.resetChanges();
+		this._passesByEffectsComposer.forEach((passOrPasses) => {
+			const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
+			for (let pass of passes) {
+				pass.resetChanges();
+			}
 		});
 	}
 

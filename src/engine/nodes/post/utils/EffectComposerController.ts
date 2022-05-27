@@ -1,8 +1,9 @@
 import {Constructor, PolyDictionary, valueof} from '../../../../types/GlobalTypes';
 import {WebGLRenderer} from 'three';
 import {WebGLRenderTargetOptions} from 'three';
-import {EffectComposer} from '../../../../modules/core/post_process/EffectComposer';
-import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
+// import {EffectComposer} from '../../../../modules/core/post_process/EffectComposer';
+// import {RenderPass} from '../../../../modules/three/examples/jsm/postprocessing/RenderPass';
+import {EffectComposer, RenderPass, Pass} from 'postprocessing';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
 import {PostNodeChildrenMap} from '../../../poly/registers/nodes/Post';
 import {BaseNodeType, TypedNode} from '../../_Base';
@@ -21,7 +22,7 @@ import {
 	MIN_FILTER_MENU_ENTRIES,
 } from '../../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
-import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
+// import {Pass} from '../../../../modules/three/examples/jsm/postprocessing/EffectComposer';
 
 // const RENDER_TARGET_FORMATS_OPTIONS: PolyDictionary<number> = {
 // 	RGBFormat: RGBFormat,
@@ -145,7 +146,7 @@ export class EffectComposerController {
 
 		// to achieve better antialiasing
 		// while using post:
-		composer.setPixelRatio(window.devicePixelRatio * this.node.pv.sampling);
+		composer.multisampling = this.node.pv.sampling;
 		// be careful, as this messes up with the renderer
 		// and when using in cop/post has the output texture be 2x as large
 		// composer.setPixelRatio(window.devicePixelRatio * 1);
@@ -196,7 +197,7 @@ export class EffectComposerController {
 	private _buildPasses(composer: EffectComposer, options: CreateEffectsComposerOptions) {
 		this._passByNodeInBuildPassesProcess.clear();
 
-		composer.clearPasses();
+		composer.removeAllPasses();
 
 		if (isBooleanTrue(this.node.pv.prependRenderPass)) {
 			const renderPass = new RenderPass(options.scene, options.camera);

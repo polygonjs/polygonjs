@@ -27,6 +27,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 			.addEntry(node.p.encoding, LinearEncoding);
 	}
 	const asphalt = sRGBImage(`asphalt.jpg`);
+	const scratches = sRGBImage(`lens-dirt/scratches.jpg`);
 	const bunny_SSS_thickness = new BasePreset()
 		.addEntry(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/fbx/bunny_thickness.jpg`)
 		.addEntry(node.p.tencoding, 0)
@@ -111,6 +112,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 
 	collection.setPresets({
 		asphalt,
+		scratches,
 		bunny_SSS_thickness,
 		disk,
 		// envMap,

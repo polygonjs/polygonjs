@@ -5,9 +5,7 @@ import {CoreSleep} from '../../../src/core/Sleep';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {Vector3Param} from '../../../src/engine/params/Vector3';
 import {ShaderMaterial} from 'three';
-import {Scene} from 'three';
-import {WebGLRenderer} from 'three';
-import {Camera} from 'three';
+import {Scene, WebGLRenderer, Camera} from 'three';
 
 // mesh
 import MESH_BASIC_DEPTH_VERTEX from './templates/meshBasicBuilder/customDepthMaterial.vert.glsl';
@@ -28,9 +26,10 @@ import LINE_BASIC_DEPTH_VERTEX from './templates/lineBasicBuilder/customDepthMat
 import LINE_BASIC_DEPTH_FRAGMENT from './templates/lineBasicBuilder/customDepthMaterial.frag.glsl';
 import LINE_BASIC_DISTANCE_VERTEX from './templates/lineBasicBuilder/customDistanceMaterial.vert.glsl';
 import LINE_BASIC_DISTANCE_FRAGMENT from './templates/lineBasicBuilder/customDistanceMaterial.frag.glsl';
-import {BokehPass2} from '../../../src/modules/core/post_process/BokehPass2';
+// import {BokehPass2} from '../../../src/modules/core/post_process/BokehPass2';
 import {MaterialUserDataUniforms} from '../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {GLSLHelper} from '../../helpers/GLSLHelper';
+import {updateObjectsWithDepthMaterial} from '../../../src/modules/core/post_process/DOFUtils';
 // import LINE_BASIC_DOF_VERTEX from './templates/lineBasicBuilder/customDOFMaterial.vert.glsl';
 // import LINE_BASIC_DOF_FRAGMENT from './templates/lineBasicBuilder/customDOFMaterial.frag.glsl';
 
@@ -63,7 +62,7 @@ async function addLightCastingShadow(assert: Assert, scene: PolyScene, builderMa
 }
 
 function renderWithDOF(scene: Scene, renderer: WebGLRenderer, camera: Camera) {
-	BokehPass2.updateObjectsWithDepthMaterial(scene, () => {
+	updateObjectsWithDepthMaterial(scene, () => {
 		renderer.render(window.scene.threejsScene(), camera);
 	});
 }
@@ -99,6 +98,7 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders', async (ass
 	assert.ok(customDepthMaterial);
 	assert.ok(customDistanceMaterial);
 	assert.ok(customDepthDOFMaterial);
+	console.log(customDepthDOFMaterial);
 	assert.equal(
 		GLSLHelper.compress(customDepthMaterial.vertexShader),
 		GLSLHelper.compress(MESH_BASIC_DEPTH_VERTEX),

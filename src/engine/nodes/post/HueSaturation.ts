@@ -4,19 +4,20 @@
  *
  */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {BlendFunction, BrightnessContrastEffect, EffectPass} from 'postprocessing';
+import {HueSaturationEffect, EffectPass, BlendFunction} from 'postprocessing';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
-class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
-	/** @param brightness */
-	brightness = ParamConfig.FLOAT(0, {
-		range: [-1, 1],
+class HueSaturationPostParamsConfig extends NodeParamsConfig {
+	/** @param hue */
+	hue = ParamConfig.FLOAT(0, {
+		range: [0, Math.PI],
 		rangeLocked: [false, false],
+		step: 0.00001,
 		...PostParamOptions,
 	});
-	/** @param contrast */
-	contrast = ParamConfig.FLOAT(0, {
+	/** @param saturation */
+	saturation = ParamConfig.FLOAT(0, {
 		range: [-1, 1],
 		rangeLocked: [false, false],
 		...PostParamOptions,
@@ -33,15 +34,15 @@ class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
 		...BLEND_FUNCTION_MENU_OPTIONS,
 	});
 }
-const ParamsConfig = new BrightnessContrastPostParamsConfig();
-export class BrightnessContrastPostNode extends TypedPostProcessNode<EffectPass, BrightnessContrastPostParamsConfig> {
+const ParamsConfig = new HueSaturationPostParamsConfig();
+export class HueSaturationPostNode extends TypedPostProcessNode<EffectPass, HueSaturationPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'brightnessContrast';
+		return 'hueSaturation';
 	}
 
 	protected override _createPass(context: TypedPostNodeContext) {
-		const effect = new BrightnessContrastEffect();
+		const effect = new HueSaturationEffect();
 		const camera = context.camera;
 		const pass = new EffectPass(camera, effect);
 		this.updatePass(pass);
@@ -49,9 +50,9 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<EffectPass,
 		return pass;
 	}
 	override updatePass(pass: EffectPass) {
-		const effect = (pass as any).effects[0] as BrightnessContrastEffect;
-		effect.brightness = this.pv.brightness;
-		effect.contrast = this.pv.contrast;
+		const effect = (pass as any).effects[0] as HueSaturationEffect;
+		effect.hue = this.pv.hue;
+		effect.saturation = this.pv.saturation;
 		effect.blendMode.opacity.value = this.pv.opacity;
 		effect.blendMode.blendFunction = BLEND_FUNCTIONS[this.pv.blendFunction];
 	}

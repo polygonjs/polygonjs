@@ -101,6 +101,16 @@ function migrateSop(nodeData: NodeJsonExporterData) {
 		}
 	}
 }
+const POST_NEW_TYPES: PolyDictionary<string> = {
+	RGBShift: 'chromaticAberration',
+	image: 'texture',
+	film: 'noise',
+	fXAA: 'antialiasing',
+	horizontalBlur: 'blur',
+	triangleBlur: 'blur',
+	unrealBloom: 'bloom',
+	verticalBlur: 'blur',
+};
 export class JsonImporterMigrateHelper {
 	static migrateNodeType(parentNode: BaseNodeType, nodeData: NodeJsonExporterData) {
 		const nodeType = nodeData.type;
@@ -116,6 +126,9 @@ export class JsonImporterMigrateHelper {
 			}
 			case NodeContext.SOP: {
 				return migrateSop(nodeData) || nodeType;
+			}
+			case NodeContext.POST: {
+				return POST_NEW_TYPES[nodeType] || nodeType;
 			}
 		}
 		return nodeType;

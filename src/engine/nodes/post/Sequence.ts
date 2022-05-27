@@ -1,5 +1,5 @@
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
-import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
+import {Pass} from 'postprocessing';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
@@ -16,7 +16,7 @@ export class SequencePostNode extends TypedPostProcessNode<Pass, SequencePostPar
 		this.io.inputs.setCount(0, 4);
 	}
 
-	override setupComposer(context: TypedPostNodeContext): void {
+	override setupComposer(context: TypedPostNodeContext) {
 		this._addPassFromInput(0, context);
 		this._addPassFromInput(1, context);
 		this._addPassFromInput(2, context);

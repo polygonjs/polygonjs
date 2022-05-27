@@ -1,11 +1,12 @@
 import {Camera} from 'three';
 import {TypedNode, BaseNodeType} from '../_Base';
-import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
+// import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
+import {EffectComposer, Pass} from 'postprocessing';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Scene} from 'three';
 import {FlagsControllerDB} from '../utils/FlagsController';
-import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
+// import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {
@@ -16,6 +17,7 @@ import {
 import {WebGLRenderer} from 'three';
 import {WebGLRenderTarget} from 'three';
 import {CoreCameraPostProcessController} from '../../../core/camera/CoreCameraPostProcessController';
+import {CoreType} from '../../../core/Type';
 
 const INPUT_PASS_NAME = 'input pass';
 const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
@@ -50,7 +52,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 
 	public override readonly flags: FlagsControllerDB = new FlagsControllerDB(this);
 
-	protected _passesByEffectsComposer: Map<EffectComposer, P> = new Map();
+	protected _passesByEffectsComposer: Map<EffectComposer, P | P[]> = new Map();
 
 	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
@@ -73,7 +75,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	override cook() {
 		this.cookController.endCook();
 	}
-	setupComposer(context: TypedPostNodeContext): void {
+	setupComposer(context: TypedPostNodeContext) {
 		this._addPassFromInput(0, context);
 
 		if (!this.flags.bypass.active()) {
@@ -85,8 +87,11 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 				}
 			}
 			if (pass) {
-				context.composerController.addPassByNodeInBuildPassesProcess(this, pass);
-				context.composer.addPass(pass);
+				const array = CoreType.isArray(pass) ? pass : [pass];
+				for (let p of array) {
+					context.composerController.addPassByNodeInBuildPassesProcess(this, p);
+					context.composer.addPass(p);
+				}
 			}
 		}
 	}
@@ -101,16 +106,20 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		}
 	}
 
-	protected _createPass(context: TypedPostNodeContext): P | undefined {
+	protected _createPass(context: TypedPostNodeContext): P | P[] | undefined {
 		return undefined;
 	}
 
 	static PARAM_CALLBACK_updatePasses(node: BasePostProcessNodeType) {
 		node._updatePasses();
 	}
-	private _updatePassBound = this.updatePass.bind(this);
 	private _updatePasses() {
-		this._passesByEffectsComposer.forEach(this._updatePassBound);
+		this._passesByEffectsComposer.forEach((passOrPasses) => {
+			const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
+			for (let pass of passes) {
+				this.updatePass(pass);
+			}
+		});
 	}
 	protected updatePass(pass: P) {}
 

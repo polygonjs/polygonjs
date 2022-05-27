@@ -28,8 +28,8 @@ QUnit.test('viewer has a viewer with and without post processing', async (assert
 	});
 
 	const postProcessingNetwork = cameraNode.createNode('postProcessNetwork');
-	const unrealBloom1 = postProcessingNetwork.createNode('unrealBloom');
-	unrealBloom1.flags.display.set(true);
+	const bloom1 = postProcessingNetwork.createNode('bloom');
+	bloom1.flags.display.set(true);
 	cameraNode.p.postProcessNode.setNode(postProcessingNetwork);
 	cameraNode.p.doPostProcess.set(true);
 	await cameraNode.compute();
@@ -40,6 +40,6 @@ QUnit.test('viewer has a viewer with and without post processing', async (assert
 		assert.ok(renderer);
 		const effectComposer = viewer.effectComposer()!;
 		assert.ok(effectComposer);
-		assert.ok(effectComposer.renderer);
+		assert.ok(effectComposer.getRenderer());
 	});
 });

@@ -28,6 +28,7 @@ export function CameraPostProcessParamsMixin<TBase extends Constructor>(Base: TB
 				types: [NetworkNodeType.POST],
 			},
 			dependentOnFoundNode: true,
+			separatorAfter: true,
 		});
 	};
 }

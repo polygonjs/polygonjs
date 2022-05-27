@@ -1,10 +1,13 @@
-import {Vector2} from 'three';
+/**
+ * Creates an outline
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {OutlinePass} from '../../../modules/three/examples/jsm/postprocessing/OutlinePass';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseNodeType} from '../_Base';
+import {BlendFunction, EffectPass, KernelSize, OutlineEffect} from 'postprocessing';
 import {Object3D} from 'three';
+import {KERNEL_SIZE_MENU_OPTIONS} from '../../../core/post/KernelSize';
 class OutlinePostParamsConfig extends NodeParamsConfig {
 	/** @param object mask of the objects that will have an outline */
 	objectsMask = ParamConfig.STRING('*outlined*', {
@@ -15,33 +18,24 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 	refreshObjects = ParamConfig.BUTTON(null, {
 		...PostParamOptions,
 	});
-	/** @param debug print the objects to the dev console */
-	printObjects = ParamConfig.BUTTON(null, {
-		cook: false,
-		callback: (node: BaseNodeType) => {
-			OutlinePostNode.PARAM_CALLBACK_printResolve(node as OutlinePostNode);
-		},
-	});
 	/** @param edgeStrenth */
 	edgeStrength = ParamConfig.FLOAT(3, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 		...PostParamOptions,
 	});
-	/** @param edgeThickness */
-	edgeThickness = ParamConfig.FLOAT(1.0, {
-		range: [0, 4],
-		rangeLocked: [true, false],
+	/** @param blur */
+	blur = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 	});
-	/** @param adds a blur to the edges */
-	edgeGlow = ParamConfig.FLOAT(0, {
-		range: [0, 1],
-		rangeLocked: [true, false],
+	kernelSize = ParamConfig.INTEGER(KernelSize.VERY_SMALL, {
 		...PostParamOptions,
+		...KERNEL_SIZE_MENU_OPTIONS,
+		visibleIf: {blur: 1},
 	});
+
 	/** @param defines if the edges pulsate */
-	pulsePeriod = ParamConfig.FLOAT(0, {
+	pulseSpeed = ParamConfig.FLOAT(0, {
 		range: [0, 5],
 		rangeLocked: [true, false],
 		...PostParamOptions,
@@ -50,38 +44,55 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 	visibleEdgeColor = ParamConfig.COLOR([1, 1, 1], {
 		...PostParamOptions,
 	});
+	/** @param shows outline for hidden parts of objects */
+	xRay = ParamConfig.BOOLEAN(1, {
+		...PostParamOptions,
+	});
 	/** @param hiddenEdgeColor */
 	hiddenEdgeColor = ParamConfig.COLOR([0.2, 0.1, 0.4], {
 		...PostParamOptions,
+		visibleIf: {xRay: 1},
 	});
 }
 const ParamsConfig = new OutlinePostParamsConfig();
-export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePostParamsConfig> {
+export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'outline';
 	}
 
 	private _resolvedObjects: Object3D[] = [];
-	private _rendererSize = new Vector2();
+	// private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
-		context.renderer.getSize(this._rendererSize);
-		const pass = new OutlinePass(this._rendererSize, context.scene, context.camera, context.scene.children);
+		const effect = new OutlineEffect(context.scene, context.camera, {
+			blendFunction: BlendFunction.SCREEN,
+			patternScale: 40,
+			visibleEdgeColor: 0xffffff,
+			hiddenEdgeColor: 0x22090a,
+			height: 480,
+			blur: false,
+			xRay: true,
+		});
+		effect.selection.add(context.scene.children[0]);
+		// context.renderer.getSize(this._rendererSize);
+		const pass = new EffectPass(context.camera, effect);
 		this.updatePass(pass);
 		return pass;
 	}
-	override updatePass(pass: OutlinePass) {
-		pass.edgeStrength = this.pv.edgeStrength;
-		pass.edgeThickness = this.pv.edgeThickness;
-		pass.edgeGlow = this.pv.edgeGlow;
-		pass.pulsePeriod = this.pv.pulsePeriod;
-		pass.visibleEdgeColor = this.pv.visibleEdgeColor;
-		pass.hiddenEdgeColor = this.pv.hiddenEdgeColor;
+	override updatePass(pass: EffectPass) {
+		const effect = (pass as any).effects[0] as OutlineEffect;
 
-		this._setSelectedObjects(pass);
+		effect.edgeStrength = this.pv.edgeStrength;
+		effect.blur = this.pv.blur;
+		effect.kernelSize = this.pv.kernelSize;
+		effect.xRay = this.pv.xRay;
+		effect.pulseSpeed = this.pv.pulseSpeed;
+		effect.visibleEdgeColor = this.pv.visibleEdgeColor;
+		effect.hiddenEdgeColor = this.pv.hiddenEdgeColor;
+		this._setSelectedObjects(effect);
 	}
-	private _map: Map<string, Object> = new Map();
-	private _setSelectedObjects(pass: OutlinePass) {
+	private _map: Map<string, Object3D> = new Map();
+	private _setSelectedObjects(effect: OutlineEffect) {
 		const foundObjects = this.scene().objectsByMask(this.pv.objectsMask);
 
 		// Ensure that we only give the top most parents to the pass.
@@ -101,12 +112,9 @@ export class OutlinePostNode extends TypedPostProcessNode<OutlinePass, OutlinePo
 			return !isAncestorInList;
 		};
 		this._resolvedObjects = foundObjects.filter(isAncestorNotInList);
-		pass.selectedObjects = this._resolvedObjects;
-	}
-	static PARAM_CALLBACK_printResolve(node: OutlinePostNode) {
-		node.printResolve();
-	}
-	private printResolve() {
-		console.log(this._resolvedObjects);
+		effect.selection.clear();
+		for (let object of this._resolvedObjects) {
+			effect.selection.add(object);
+		}
 	}
 }

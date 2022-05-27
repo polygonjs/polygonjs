@@ -1,70 +1,70 @@
-/**
- * Adds a film effect
- *
- *
- */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {FilmPass} from '../../../modules/three/examples/jsm/postprocessing/FilmPass';
-import {IUniformN} from '../utils/code/gl/Uniforms';
+// /**
+//  * Adds a film effect
+//  *
+//  *
+//  */
+// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {FilmPass} from '../../../modules/three/examples/jsm/postprocessing/FilmPass';
+// import {IUniformN} from '../utils/code/gl/Uniforms';
 
-interface FilmPassWithUniforms extends FilmPass {
-	uniforms: {
-		time: IUniformN;
-		nIntensity: IUniformN;
-		sIntensity: IUniformN;
-		sCount: IUniformN;
-		grayscale: IUniformN;
-	};
-}
+// interface FilmPassWithUniforms extends FilmPass {
+// 	uniforms: {
+// 		time: IUniformN;
+// 		nIntensity: IUniformN;
+// 		sIntensity: IUniformN;
+// 		sCount: IUniformN;
+// 		grayscale: IUniformN;
+// 	};
+// }
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/BooleanValue';
-class FilmPostParamsConfig extends NodeParamsConfig {
-	/** @param noise intensity */
-	noiseIntensity = ParamConfig.FLOAT(0.5, {
-		range: [0, 1],
-		rangeLocked: [false, false],
-		...PostParamOptions,
-	});
-	/** @param scanlines intensity */
-	scanlinesIntensity = ParamConfig.FLOAT(0.05, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-		...PostParamOptions,
-	});
-	/** @param scanlines count */
-	scanlinesCount = ParamConfig.FLOAT(4096, {
-		range: [0, 4096],
-		rangeLocked: [true, false],
-		...PostParamOptions,
-	});
-	/** @param toggle on to be grayscale */
-	grayscale = ParamConfig.BOOLEAN(1, {
-		...PostParamOptions,
-	});
-}
-const ParamsConfig = new FilmPostParamsConfig();
-export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsConfig> {
-	override paramsConfig = ParamsConfig;
-	static override type() {
-		return 'film';
-	}
+// import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+// import {isBooleanTrue} from '../../../core/BooleanValue';
+// class FilmPostParamsConfig extends NodeParamsConfig {
+// 	/** @param noise intensity */
+// 	noiseIntensity = ParamConfig.FLOAT(0.5, {
+// 		range: [0, 1],
+// 		rangeLocked: [false, false],
+// 		...PostParamOptions,
+// 	});
+// 	/** @param scanlines intensity */
+// 	scanlinesIntensity = ParamConfig.FLOAT(0.05, {
+// 		range: [0, 1],
+// 		rangeLocked: [true, false],
+// 		...PostParamOptions,
+// 	});
+// 	/** @param scanlines count */
+// 	scanlinesCount = ParamConfig.FLOAT(4096, {
+// 		range: [0, 4096],
+// 		rangeLocked: [true, false],
+// 		...PostParamOptions,
+// 	});
+// 	/** @param toggle on to be grayscale */
+// 	grayscale = ParamConfig.BOOLEAN(1, {
+// 		...PostParamOptions,
+// 	});
+// }
+// const ParamsConfig = new FilmPostParamsConfig();
+// export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsConfig> {
+// 	override paramsConfig = ParamsConfig;
+// 	static override type() {
+// 		return 'film';
+// 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
-		const pass = new FilmPass(
-			this.pv.noiseIntensity,
-			this.pv.scanlinesIntensity,
-			this.pv.scanlinesCount,
-			isBooleanTrue(this.pv.grayscale) ? 1 : 0
-		) as FilmPassWithUniforms;
-		this.updatePass(pass);
+// 	protected override _createPass(context: TypedPostNodeContext) {
+// 		const pass = new FilmPass(
+// 			this.pv.noiseIntensity,
+// 			this.pv.scanlinesIntensity,
+// 			this.pv.scanlinesCount,
+// 			isBooleanTrue(this.pv.grayscale) ? 1 : 0
+// 		) as FilmPassWithUniforms;
+// 		this.updatePass(pass);
 
-		return pass;
-	}
-	override updatePass(pass: FilmPassWithUniforms) {
-		pass.uniforms.nIntensity.value = this.pv.noiseIntensity;
-		pass.uniforms.sIntensity.value = this.pv.scanlinesIntensity;
-		pass.uniforms.sCount.value = this.pv.scanlinesCount;
-		pass.uniforms.grayscale.value = isBooleanTrue(this.pv.grayscale) ? 1 : 0;
-	}
-}
+// 		return pass;
+// 	}
+// 	override updatePass(pass: FilmPassWithUniforms) {
+// 		pass.uniforms.nIntensity.value = this.pv.noiseIntensity;
+// 		pass.uniforms.sIntensity.value = this.pv.scanlinesIntensity;
+// 		pass.uniforms.sCount.value = this.pv.scanlinesCount;
+// 		pass.uniforms.grayscale.value = isBooleanTrue(this.pv.grayscale) ? 1 : 0;
+// 	}
+// }

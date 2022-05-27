@@ -12,6 +12,7 @@ import {ImageEXRCopNode} from '../../../nodes/cop/ImageEXR';
 import {ImageHDRCopNode} from '../../../nodes/cop/ImageHDR';
 import {ImageKTX2CopNode} from '../../../nodes/cop/ImageKTX2';
 import {LightMapCopNode} from '../../../nodes/cop/LightMap';
+import {LutCopNode} from '../../../nodes/cop/Lut';
 import {NullCopNode} from '../../../nodes/cop/Null';
 // import {PostCopNode} from '../../../nodes/cop/Post';
 import {PaletteCopNode} from '../../../nodes/cop/Palette';
@@ -44,6 +45,7 @@ export interface CopNodeChildrenMap {
 	imageHDR: ImageHDRCopNode;
 	imageKTX2: ImageKTX2CopNode;
 	lightMap: LightMapCopNode;
+	lut: LutCopNode;
 	null: NullCopNode;
 	// post: PostCopNode;
 	palette: PaletteCopNode;
@@ -79,6 +81,7 @@ export class CopRegister {
 		poly.registerNode(ImageHDRCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ImageKTX2CopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(LightMapCopNode, CATEGORY_COP.MISC);
+		poly.registerNode(LutCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
 		// poly.registerNode(PostCopNode, CATEGORY_COP.FILTER); // removed until usable
 		poly.registerNode(PaletteCopNode, CATEGORY_COP.INPUT);

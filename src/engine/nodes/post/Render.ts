@@ -1,5 +1,5 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {RenderPass} from '../../../modules/three/examples/jsm/postprocessing/RenderPass';
+import {RenderPass} from 'postprocessing';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {SceneObjNode} from '../obj/Scene';
@@ -8,11 +8,16 @@ import {Camera} from 'three';
 import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
-interface RenderPassWithContext extends RenderPass {
-	context: {
-		camera: Camera;
-		scene: Scene;
-	};
+interface RenderPassContext {
+	camera: Camera;
+	scene: Scene;
+}
+class RenderPassWithContext extends RenderPass {
+	public context: RenderPassContext;
+	constructor(public override scene: Scene, public override camera: Camera) {
+		super(scene, camera);
+		this.context = {scene, camera};
+	}
 }
 class RenderPostParamsConfig extends NodeParamsConfig {
 	/** @param overrideScene */
