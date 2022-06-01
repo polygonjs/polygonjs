@@ -8,7 +8,6 @@ QUnit.test('attrib_delete simple', async (assert) => {
 	const attrib_delete1 = geo1.createNode('attribDelete');
 	attrib_create1.setInput(0, plane1);
 	attrib_delete1.setInput(0, attrib_create1);
-	console.log(attrib_delete1);
 
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.value1.set('@ptnum');
