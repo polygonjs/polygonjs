@@ -89,7 +89,6 @@ export class SceneJsonImporter {
 
 		this._resolve_operation_containers_with_path_param_resolve();
 
-		scene.loadingController.markAsLoaded();
 		if (this._options) {
 			if (this._options.nodeCookWatcher) {
 				this._options.nodeCookWatcher(scene);
@@ -99,6 +98,7 @@ export class SceneJsonImporter {
 				this._options.configureScene(scene);
 			}
 		}
+		scene.loadingController.markAsLoaded();
 		scene.cooker.unblock();
 
 		// DO NOT wait for cooks here,

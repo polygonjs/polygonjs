@@ -79,7 +79,7 @@ export class RootLoadProgressController {
 	}
 
 	async watchNodesProgress(callback: OnProgressUpdateCallback) {
-		const nodes = await this.resolvedNodes();
+		const nodes = (await this.resolvedNodes()).filter((node) => node.isDirty());
 
 		const nodesCount = nodes.length;
 		if (nodesCount == 0) {
