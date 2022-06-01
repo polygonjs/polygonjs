@@ -62,7 +62,7 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	merge1.p.compact.set(0);
 	delete1.setInput(0, merge1);
 
-	delete1.p.class.set(AttribClass.OBJECT);
+	delete1.setAttribClass(AttribClass.OBJECT);
 	delete1.p.byExpression.set(1);
 	delete1.p.expression.set('@ptnum==1');
 
@@ -75,6 +75,7 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	// now with keep_points on
 	delete1.p.keepPoints.set(1);
 	container = await delete1.compute();
+	assert.notOk(delete1.states.error.message());
 	core_object = container.coreContent()!;
 	assert.equal(core_object.coreObjects().length, 2);
 	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[0].object().constructor), ObjectType.MESH);
@@ -83,6 +84,7 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	// now with keep_points off
 	delete1.p.keepPoints.set(0);
 	container = await delete1.compute();
+	assert.notOk(delete1.states.error.message());
 	core_object = container.coreContent()!;
 	assert.equal(core_object.coreObjects().length, 1);
 	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[0].object().constructor), ObjectType.MESH);

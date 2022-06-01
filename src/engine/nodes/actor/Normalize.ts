@@ -41,10 +41,10 @@ function _createVectors(): Vectors {
 	};
 }
 
-class LengthParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new LengthParamsConfig();
+class NormalizeActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new NormalizeActorParamsConfig();
 
-export class NormalizeActorNode extends TypedActorNode<LengthParamsConfig> {
+export class NormalizeActorNode extends TypedActorNode<NormalizeActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return 'normalize';

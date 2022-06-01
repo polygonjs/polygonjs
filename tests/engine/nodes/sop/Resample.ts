@@ -1,5 +1,6 @@
-import {METHOD, METHODS, CURVE_TYPE, CURVE_TYPES} from '../../../../src/engine/nodes/sop/Resample';
-import {TextType, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
+import {SplineCurveType} from '../../../../src/core/geometry/Curve';
+import {METHOD, METHODS} from '../../../../src/engine/nodes/sop/Resample';
+import {TextType} from '../../../../src/engine/nodes/sop/Text';
 
 QUnit.test('resample a line', async (assert) => {
 	const geo1 = window.geo1;
@@ -16,15 +17,15 @@ QUnit.test('resample a line', async (assert) => {
 	// try all curve types for method pointsCount
 	resample1.p.method.set(METHODS.indexOf(METHOD.POINTS_COUNT));
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
+	resample1.setCurveType(SplineCurveType.CENTRIPETAL);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 101);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
+	resample1.setCurveType(SplineCurveType.CHORDAL);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 101);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
+	resample1.setCurveType(SplineCurveType.CATMULLROM);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 101);
 
@@ -32,15 +33,15 @@ QUnit.test('resample a line', async (assert) => {
 	resample1.p.method.set(METHODS.indexOf(METHOD.SEGMENT_LENGTH));
 	resample1.p.segmentLength.set(0.05);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
+	resample1.setCurveType(SplineCurveType.CENTRIPETAL);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 22);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
+	resample1.setCurveType(SplineCurveType.CHORDAL);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 22);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
+	resample1.setCurveType(SplineCurveType.CATMULLROM);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 22);
 });
@@ -52,7 +53,7 @@ QUnit.test('resample a text', async (assert) => {
 	text1.p.text.set('flat');
 	let container;
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TextType.LINE));
+	text1.setTextType(TextType.LINE);
 	container = await text1.compute();
 	assert.equal(container.pointsCount(), 738);
 
@@ -62,15 +63,15 @@ QUnit.test('resample a text', async (assert) => {
 	// try all curve types for method pointsCount
 	resample1.p.method.set(METHODS.indexOf(METHOD.POINTS_COUNT));
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
+	resample1.setCurveType(SplineCurveType.CENTRIPETAL);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 505);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
+	resample1.setCurveType(SplineCurveType.CHORDAL);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 505);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
+	resample1.setCurveType(SplineCurveType.CATMULLROM);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 505);
 
@@ -82,15 +83,15 @@ QUnit.test('resample a text', async (assert) => {
 	// try all curve types for method segmentLength
 	resample1.p.method.set(METHODS.indexOf(METHOD.SEGMENT_LENGTH));
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CENTRIPETAL));
+	resample1.setCurveType(SplineCurveType.CENTRIPETAL);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 21);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CHORDAL));
+	resample1.setCurveType(SplineCurveType.CHORDAL);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 21);
 
-	resample1.p.curveType.set(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM));
+	resample1.setCurveType(SplineCurveType.CATMULLROM);
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 21);
 

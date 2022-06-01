@@ -23,11 +23,11 @@ class BaseFileMultiParamsConfigResult extends NodeParamsConfig {
 	reload = ParamConfig.BUTTON(null);
 }
 
-export class BaseFileSopNodeFactoryResult extends TypedSopNode<BaseFileMultiParamsConfigResult> {}
+export class BaseFileMultiSopNodeFactoryResult extends TypedSopNode<BaseFileMultiParamsConfigResult> {}
 
 export function fileMultiSopNodeFactory<O extends BaseGeoLoaderOutput>(
 	options: FileMultSopNodeOptions<O>
-): typeof BaseFileSopNodeFactoryResult {
+): typeof BaseFileMultiSopNodeFactoryResult {
 	class BaseFileMultiParamsConfig extends NodeParamsConfig {
 		/** @param url to load the geometry from */
 		url = ParamConfig.STRING(options.defaultUrlExpression, {

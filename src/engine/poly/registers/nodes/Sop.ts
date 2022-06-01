@@ -51,6 +51,8 @@ import {CodeSopNode} from '../../../nodes/sop/Code';
 import {ColorSopNode} from '../../../nodes/sop/Color';
 import {ConeSopNode} from '../../../nodes/sop/Cone';
 import {CopySopNode} from '../../../nodes/sop/Copy';
+import {CurveFromPointsSopNode} from '../../../nodes/sop/CurveFromPoints';
+import {CurveGetPointSopNode} from '../../../nodes/sop/CurveGetPoint';
 import {CSS2DObjectSopNode} from '../../../nodes/sop/CSS2DObject';
 import {CSS3DObjectSopNode} from '../../../nodes/sop/CSS3DObject';
 import {DataSopNode} from '../../../nodes/sop/Data';
@@ -208,6 +210,8 @@ export interface GeoNodeChildrenMap {
 	color: ColorSopNode;
 	cone: ConeSopNode;
 	copy: CopySopNode;
+	curveFromPoints: CurveFromPointsSopNode;
+	curveGetPoint: CurveGetPointSopNode;
 	CSS2DObject: CSS2DObjectSopNode;
 	CSS3DObject: CSS3DObjectSopNode;
 	data: DataSopNode;
@@ -351,6 +355,8 @@ import {CameraRenderSceneSopOperation} from '../../../operations/sop/CameraRende
 import {CenterSopOperation} from '../../../operations/sop/Center';
 import {CircleSopOperation} from '../../../operations/sop/Circle';
 import {ClipSopOperation} from '../../../operations/sop/Clip';
+import {CurveFromPointsSopOperation} from '../../../operations/sop/CurveFromPoints';
+import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
 import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
@@ -444,6 +450,8 @@ export class SopRegister {
 		poly.registerOperation(CenterSopOperation);
 		poly.registerOperation(CircleSopOperation);
 		poly.registerOperation(ClipSopOperation);
+		poly.registerOperation(CurveFromPointsSopOperation);
+		poly.registerOperation(CurveGetPointSopOperation);
 		poly.registerOperation(CSS2DObjectSopOperation);
 		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
@@ -551,6 +559,8 @@ export class SopRegister {
 		poly.registerNode(ColorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ConeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CopySopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(CurveFromPointsSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(CurveGetPointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CSS2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		// poly.registerNode(Css3DObjectSopNode, CATEGORY_SOP.PRIMITIVES); // not working yet
 		poly.registerNode(DataSopNode, CATEGORY_SOP.INPUT);

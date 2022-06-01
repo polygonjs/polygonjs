@@ -16,12 +16,12 @@ const HOVERED_CLASS_NAME = 'hovered';
 type ViewerTickCallback = (delta: number) => void;
 type ViewerRenderCallback = (delta: number, renderer: WebGLRenderer) => void;
 type ViewerBaseCallback = ViewerTickCallback | ViewerRenderCallback;
-interface ViewerCallbackOptions {
+interface BaseViewerCallbackOptions {
 	persistent?: boolean;
 }
 interface ViewerCallbackContainer<T extends ViewerBaseCallback> {
 	callback: T;
-	options: ViewerCallbackOptions;
+	options: BaseViewerCallbackOptions;
 }
 type ViewerCallbacksMap<T extends ViewerBaseCallback> = Map<string, ViewerCallbackContainer<T>>;
 export interface HTMLElementWithViewer<C extends Camera> extends HTMLElement {
@@ -271,7 +271,7 @@ export abstract class TypedViewer<C extends Camera> {
 	 * registers a BeforeTick callback. BeforeTick callbacks are run before updating the frame (and therefore before any time dependent node has changed)
 	 *
 	 */
-	registerOnBeforeTick(callbackName: string, callback: ViewerTickCallback, options: ViewerCallbackOptions = {}) {
+	registerOnBeforeTick(callbackName: string, callback: ViewerTickCallback, options: BaseViewerCallbackOptions = {}) {
 		this._registerCallback(callbackName, callback, this.registeredBeforeTickCallbacks(), options);
 	}
 	/**
@@ -293,7 +293,7 @@ export abstract class TypedViewer<C extends Camera> {
 	 * registers AfterTick callback. AfterTick callbacks are run after updating the frame (and therefore after any time dependent node has changed)
 	 *
 	 */
-	registerOnAfterTick(callbackName: string, callback: ViewerTickCallback, options: ViewerCallbackOptions = {}) {
+	registerOnAfterTick(callbackName: string, callback: ViewerTickCallback, options: BaseViewerCallbackOptions = {}) {
 		this._registerCallback(callbackName, callback, this.registeredAfterTickCallbacks(), options);
 	}
 	/**
@@ -315,7 +315,11 @@ export abstract class TypedViewer<C extends Camera> {
 	 * registers a BeforeRender callback. BeforeRender callbacks are run before the frame is rendered
 	 *
 	 */
-	registerOnBeforeRender(callbackName: string, callback: ViewerRenderCallback, options: ViewerCallbackOptions = {}) {
+	registerOnBeforeRender(
+		callbackName: string,
+		callback: ViewerRenderCallback,
+		options: BaseViewerCallbackOptions = {}
+	) {
 		this._registerCallback(callbackName, callback, this.registeredBeforeRenderCallbacks(), options);
 	}
 	/**
@@ -339,7 +343,7 @@ export abstract class TypedViewer<C extends Camera> {
 	 */ registerOnAfterRender(
 		callbackName: string,
 		callback: ViewerRenderCallback,
-		options: ViewerCallbackOptions = {}
+		options: BaseViewerCallbackOptions = {}
 	) {
 		this._registerCallback(callbackName, callback, this.registeredAfterRenderCallbacks(), options);
 	}
@@ -361,7 +365,7 @@ export abstract class TypedViewer<C extends Camera> {
 		callbackName: string,
 		callback: C,
 		map: ViewerCallbacksMap<C>,
-		options: ViewerCallbackOptions = {}
+		options: BaseViewerCallbackOptions = {}
 	) {
 		if (map.has(callbackName)) {
 			console.warn(`callback ${callbackName} already registered`);

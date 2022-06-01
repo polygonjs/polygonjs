@@ -68,7 +68,9 @@ export class GetChildrenAttributesActorNode extends TypedActorNode<GetChildrenAt
 		this.p.type.set(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const {Object3D} = context;
 		return Object3D.children.map((child) =>
 			CoreObject.attribValue(child, this.pv.attribName)

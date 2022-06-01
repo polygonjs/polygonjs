@@ -135,25 +135,19 @@ const materials: MaterialsByString = {
 };
 
 export enum AttribClass {
-	VERTEX = 0,
-	OBJECT = 1,
+	VERTEX = 'vertex',
+	OBJECT = 'object',
 }
 export const ATTRIBUTE_CLASSES: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT];
 
-export const AttribClassMenuEntries = [
-	{name: 'vertex', value: AttribClass.VERTEX},
-	{name: 'object', value: AttribClass.OBJECT},
-];
+export const AttribClassMenuEntries = ATTRIBUTE_CLASSES.map((name, value) => ({name, value}));
 
 export enum AttribType {
-	NUMERIC = 0,
-	STRING = 1,
+	NUMERIC = 'numeric',
+	STRING = 'string',
 }
 export const ATTRIBUTE_TYPES: Array<AttribType> = [AttribType.NUMERIC, AttribType.STRING];
-export const AttribTypeMenuEntries = [
-	{name: 'numeric', value: AttribType.NUMERIC},
-	{name: 'string', value: AttribType.STRING},
-];
+export const AttribTypeMenuEntries = ATTRIBUTE_TYPES.map((name, value) => ({name, value}));
 
 export enum AttribSize {
 	FLOAT = 1,

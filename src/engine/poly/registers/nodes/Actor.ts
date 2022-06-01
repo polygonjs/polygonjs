@@ -16,6 +16,7 @@ import {AnimationMixerUpdateActorNode} from '../../../nodes/actor/AnimationMixer
 import {BoolToIntActorNode} from '../../../nodes/actor/BoolToInt';
 import {Box3ActorNode} from '../../../nodes/actor/Box3';
 import {CacheActorNode} from '../../../nodes/actor/Cache';
+import {CatmullRomCurve3GetPointActorNode} from '../../../nodes/actor/CatmullRomCurve3GetPoint';
 import {CeilActorNode} from '../../../nodes/actor/Ceil';
 import {ClampActorNode} from '../../../nodes/actor/Clamp';
 import {CodeActorNode} from '../../../nodes/actor/Code';
@@ -39,6 +40,7 @@ import {GetMaterialActorNode} from '../../../nodes/actor/GetMaterial';
 import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
 import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty';
+import {GetObjectUserDataActorNode} from '../../../nodes/actor/GetObjectUserData';
 import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
 import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
@@ -142,6 +144,7 @@ export interface ActorNodeChildrenMap {
 	boolToInt: BoolToIntActorNode;
 	box3: Box3ActorNode;
 	cache: CacheActorNode;
+	catmullRomCurve3GetPoint: CatmullRomCurve3GetPointActorNode;
 	ceil: CeilActorNode;
 	clamp: ClampActorNode;
 	code: CodeActorNode;
@@ -165,6 +168,7 @@ export interface ActorNodeChildrenMap {
 	getObject: GetObjectActorNode;
 	getObjectAttribute: GetObjectAttributeActorNode;
 	getObjectProperty: GetObjectPropertyActorNode;
+	getObjectUserData: GetObjectUserDataActorNode;
 	getPlaneProperty: GetPlanePropertyActorNode;
 	getSphereProperty: GetSpherePropertyActorNode;
 	intToBool: IntToBoolActorNode;
@@ -274,6 +278,7 @@ export class ActorRegister {
 		poly.registerNode(CacheActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(CeilActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(ClampActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(CatmullRomCurve3GetPointActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(CompareActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(ComplementActorNode, CATEGORY_ACTOR.MATH);
@@ -295,6 +300,7 @@ export class ActorRegister {
 		poly.registerNode(GetObjectActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectAttributeActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectPropertyActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetObjectUserDataActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetPlanePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);

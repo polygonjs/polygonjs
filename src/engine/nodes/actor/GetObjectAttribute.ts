@@ -114,7 +114,9 @@ export class GetObjectAttributeActorNode extends TypedActorNode<GetObjectAttribu
 		this.p.type.set(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const {Object3D} = context;
 		const attribValue = CoreObject.attribValue(Object3D, this.pv.attribName);
 		return attribValue as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];

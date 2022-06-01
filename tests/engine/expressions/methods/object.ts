@@ -6,7 +6,7 @@ QUnit.test('expression object with float attr', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	const attribCreate = geo1.createNode('attribCreate');
 	attribCreate.setInput(0, plane1);
-	attribCreate.p.class.set(AttribClass.OBJECT);
+	attribCreate.setAttribClass(AttribClass.OBJECT);
 	attribCreate.p.name.set('test');
 	attribCreate.p.value1.set(17.4);
 
@@ -23,7 +23,7 @@ QUnit.test('expression object with vector attr', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 	const attribCreate = geo1.createNode('attribCreate');
 	attribCreate.setInput(0, plane1);
-	attribCreate.p.class.set(AttribClass.OBJECT);
+	attribCreate.setAttribClass(AttribClass.OBJECT);
 	attribCreate.p.size.set(3);
 	attribCreate.p.name.set('test');
 	attribCreate.p.value3.set([17.4, 5.12, 21.3]);

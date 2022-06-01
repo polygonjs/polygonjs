@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {AttribClass} from '../../../core/geometry/Constant';
+import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 
 interface AttribRenameSopParams extends DefaultOperationParams {
 	class: number;
@@ -12,7 +12,7 @@ interface AttribRenameSopParams extends DefaultOperationParams {
 
 export class AttribRenameSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribRenameSopParams = {
-		class: AttribClass.VERTEX,
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		oldName: '',
 		newName: '',
 	};
@@ -22,7 +22,7 @@ export class AttribRenameSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: AttribRenameSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
-		inputCoreGroup.renameAttrib(params.oldName, params.newName, params.class);
+		inputCoreGroup.renameAttrib(params.oldName, params.newName, ATTRIBUTE_CLASSES[params.class]);
 		return inputCoreGroup;
 	}
 }

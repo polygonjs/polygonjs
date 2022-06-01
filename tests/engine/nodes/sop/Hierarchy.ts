@@ -40,9 +40,9 @@ QUnit.test('hierarchy simple', async (assert) => {
 	assert.equal(core_group.objects().length, 4);
 
 	// testing hierarchy2 on more than 1 level
-	hierarchy1.p.mode.set(0); // add parent
+	hierarchy1.setMode(HierarchyMode.ADD_PARENT); // add parent
 	hierarchy1.p.levels.set(2);
-	hierarchy2.p.mode.set(1); // remove parent
+	hierarchy2.setMode(HierarchyMode.REMOVE_PARENT); // remove parent
 	hierarchy2.p.levels.set(3);
 	container = await hierarchy2.compute();
 	core_group = container.coreContent()!;

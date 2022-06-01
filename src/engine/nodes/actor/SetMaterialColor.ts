@@ -4,7 +4,7 @@
  *
  */
 
-import {Material, MeshBasicMaterial} from 'three';
+import {Color, Material, MeshBasicMaterial} from 'three';
 import {BaseSetMaterialColorActorNode} from './_BaseSetMaterialColor';
 
 export class SetMaterialColorActorNode extends BaseSetMaterialColorActorNode {
@@ -12,7 +12,7 @@ export class SetMaterialColorActorNode extends BaseSetMaterialColorActorNode {
 		return 'setMaterialColor';
 	}
 
-	protected _getMaterialColorProperty(material: Material) {
+	protected _getMaterialColorProperty(material: Material): Color {
 		return (material as MeshBasicMaterial).color;
 	}
 }

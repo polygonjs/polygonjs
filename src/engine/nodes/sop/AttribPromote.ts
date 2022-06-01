@@ -6,15 +6,9 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {AttribClassMenuEntries} from '../../../core/geometry/Constant';
+import {AttribClass, AttribClassMenuEntries, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {AttribPromoteSopOperation, AttribPromoteMode} from '../../operations/sop/AttribPromote';
-
-const PromoteModeMenuEntries = [
-	{name: 'min', value: AttribPromoteMode.MIN},
-	{name: 'max', value: AttribPromoteMode.MAX},
-	{name: 'first_found', value: AttribPromoteMode.FIRST_FOUND},
-];
+import {AttribPromoteSopOperation, AttribPromoteMode, ATTRIB_PROMOTE_MODES} from '../../operations/sop/AttribPromote';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribPromoteSopOperation.DEFAULT_PARAMS;
@@ -34,7 +28,7 @@ class AttribPromoteSopParamsConfig extends NodeParamsConfig {
 	/** @param mode used to promote the attribute (min, max or first_found) */
 	mode = ParamConfig.INTEGER(DEFAULT.mode, {
 		menu: {
-			entries: PromoteModeMenuEntries,
+			entries: ATTRIB_PROMOTE_MODES.map((name, value) => ({name, value})),
 		},
 	});
 	/** @param name of the attribute to promote */
@@ -58,5 +52,14 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 		this._operation = this._operation || new AttribPromoteSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
+	}
+	setAttribClassFrom(attribClass: AttribClass) {
+		this.p.classFrom.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
+	}
+	setAttribClassTo(attribClass: AttribClass) {
+		this.p.classTo.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
+	}
+	setPromoteMode(mode: AttribPromoteMode) {
+		this.p.mode.set(ATTRIB_PROMOTE_MODES.indexOf(mode));
 	}
 }

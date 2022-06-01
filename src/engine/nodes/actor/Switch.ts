@@ -4,7 +4,7 @@
  *
  *
  */
-import {ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext, ParamlessTypedActorNode} from './_Base';
 
 // TODO: it would make typings easier of the switch node had a predefined index param
@@ -64,7 +64,9 @@ export class SwitchActorNode extends ParamlessTypedActorNode {
 		return [type];
 	}
 
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const inputIndex =
 			this._inputValue<ActorConnectionPointType.INTEGER>(SwitchActorNode.INPUT_INDEX_NAME, context) || 0;
 		return this._inputValue(this._expectedInputName(inputIndex + 1), context) || 0;

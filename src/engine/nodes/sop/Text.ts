@@ -124,6 +124,10 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 		Poly.blobs.clearBlobsForNode(this);
 	}
 
+	setTextType(type: TextType) {
+		this.p.type.set(TEXT_TYPES.indexOf(type));
+	}
+
 	private _loadedFonts: Map<string, Font> = new Map();
 
 	override async cook(): Promise<void> {

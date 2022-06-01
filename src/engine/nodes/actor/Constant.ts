@@ -97,7 +97,9 @@ export class ConstantActorNode extends TypedActorNode<ConstantActorParamsConfig>
 		this.p.type.set(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		return this.currentParam().value as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
 	}
 }

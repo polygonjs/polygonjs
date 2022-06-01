@@ -6,7 +6,7 @@
 
 import {BaseMathFunctionArg1ActorNode} from './_BaseMathFunction';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext} from './_Base';
 class DebugActorParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new DebugActorParamsConfig();
@@ -24,7 +24,9 @@ export class DebugActorNode extends BaseMathFunctionArg1ActorNode {
 		console.log('receiveTrigger', this.path(), context);
 		this.runTrigger(context);
 	}
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const val = this._inputValue(this._expectedInputName(0), context) || 0;
 		console.log('outputValue', this.path(), context, val);
 		return val;

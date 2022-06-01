@@ -16,16 +16,16 @@ const vector2 = new Vector2();
 const vector3 = new Vector3();
 const vector4 = new Vector4();
 
-class NormalsSopParamsConfig extends NodeParamsConfig {
+class FacetSopParamsConfig extends NodeParamsConfig {
 	/** @param angle threshold to separate vertices */
 	angle = ParamConfig.FLOAT(20, {
 		range: [0, 90],
 		rangeLocked: [true, false],
 	});
 }
-const ParamsConfig = new NormalsSopParamsConfig();
+const ParamsConfig = new FacetSopParamsConfig();
 
-export class FacetSopNode extends TypedSopNode<NormalsSopParamsConfig> {
+export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'facet';

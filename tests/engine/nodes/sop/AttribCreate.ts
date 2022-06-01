@@ -242,7 +242,7 @@ QUnit.test('sop/attribCreate simple float object', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
-	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
+	attrib_create1.setAttribClass(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set(3.5);
 	attrib_create1.setInput(0, box1);
@@ -262,7 +262,7 @@ QUnit.test('sop/attribCreate simple vector2 object', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
-	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
+	attrib_create1.setAttribClass(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(2);
 	attrib_create1.p.value2.set([3.5, 12]);
 	attrib_create1.setInput(0, box1);
@@ -292,7 +292,7 @@ QUnit.test('sop/attribCreate simple vector object', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
-	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
+	attrib_create1.setAttribClass(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(3);
 	attrib_create1.p.value3.set([3.5, 12, 17]);
 	attrib_create1.setInput(0, box1);
@@ -314,9 +314,9 @@ QUnit.test('sop/attribCreate simple string object', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test_string');
-	attrib_create1.p.class.set(CoreConstant.ATTRIB_CLASS.OBJECT);
+	attrib_create1.setAttribClass(CoreConstant.ATTRIB_CLASS.OBJECT);
 	attrib_create1.p.size.set(1);
-	attrib_create1.p.type.set(AttribType.STRING);
+	attrib_create1.setAttribType(AttribType.STRING);
 	attrib_create1.p.string.set('pt_`$F`');
 	attrib_create1.setInput(0, box1);
 
@@ -400,7 +400,7 @@ QUnit.test('sop/attribCreate for string on vertices with expr', async (assert) =
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.setInput(0, box1);
 	attrib_create1.p.name.set('ids');
-	attrib_create1.p.type.set(AttribType.STRING);
+	attrib_create1.setAttribType(AttribType.STRING);
 	attrib_create1.p.string.set('pt_`@ptnum*2`');
 
 	let container = await attrib_create1.compute();
@@ -434,7 +434,7 @@ QUnit.test('sop/attribCreate for string on vertices without expr', async (assert
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.setInput(0, box1);
 	attrib_create1.p.name.set('ids');
-	attrib_create1.p.type.set(AttribType.STRING);
+	attrib_create1.setAttribType(AttribType.STRING);
 	attrib_create1.p.string.set('test');
 
 	let container = await attrib_create1.compute();

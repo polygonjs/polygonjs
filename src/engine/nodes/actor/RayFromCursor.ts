@@ -8,7 +8,7 @@
 
 import {ActorNodeTriggerContext} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 
@@ -33,7 +33,9 @@ export class RayFromCursorActorNode extends BaseUserInputActorNode<RayFromCursor
 		this.io.connection_points.set_expected_output_types_function(() => [ActorConnectionPointType.RAY]);
 	}
 
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.RAY] | undefined {
 		const pointerEventsController = this.scene().eventsDispatcher.pointerEventsController;
 		const raycaster = pointerEventsController.raycaster();
 		return raycaster.ray;

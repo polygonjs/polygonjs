@@ -13,9 +13,9 @@ QUnit.test('attrib promote vertex to vertex with min', async (assert) => {
 
 	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_promote1.setInput(0, attrib_create1);
-	attrib_promote1.p.classFrom.set(AttribClass.VERTEX);
-	attrib_promote1.p.classTo.set(AttribClass.VERTEX);
-	attrib_promote1.p.mode.set(AttribPromoteMode.MIN);
+	attrib_promote1.setAttribClassFrom(AttribClass.VERTEX);
+	attrib_promote1.setAttribClassTo(AttribClass.VERTEX);
+	attrib_promote1.setPromoteMode(AttribPromoteMode.MIN);
 	attrib_promote1.p.name.set('test');
 
 	let container = await attrib_promote1.compute();
@@ -42,9 +42,9 @@ QUnit.test('attrib promote vertex to vertex with max', async (assert) => {
 
 	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_promote1.setInput(0, attrib_create1);
-	attrib_promote1.p.classFrom.set(AttribClass.VERTEX);
-	attrib_promote1.p.classTo.set(AttribClass.VERTEX);
-	attrib_promote1.p.mode.set(1); // max
+	attrib_promote1.setAttribClassFrom(AttribClass.VERTEX);
+	attrib_promote1.setAttribClassTo(AttribClass.VERTEX);
+	attrib_promote1.setPromoteMode(AttribPromoteMode.MAX); // max
 	attrib_promote1.p.name.set('test');
 
 	let container = await attrib_promote1.compute();
@@ -71,9 +71,9 @@ QUnit.test('attrib promote vertex to object with max', async (assert) => {
 
 	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_promote1.setInput(0, attrib_create1);
-	attrib_promote1.p.classFrom.set(AttribClass.VERTEX);
-	attrib_promote1.p.classTo.set(AttribClass.OBJECT);
-	attrib_promote1.p.mode.set(1); // max
+	attrib_promote1.setAttribClassFrom(AttribClass.VERTEX);
+	attrib_promote1.setAttribClassTo(AttribClass.OBJECT);
+	attrib_promote1.setPromoteMode(AttribPromoteMode.MAX); // max
 	attrib_promote1.p.name.set('test');
 
 	let container = await attrib_promote1.compute();
@@ -90,7 +90,7 @@ QUnit.test('attrib promote object to vertex with max', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
-	attrib_create1.p.class.set(AttribClass.OBJECT);
+	attrib_create1.setAttribClass(AttribClass.OBJECT);
 	attrib_create1.p.name.set('test');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set('@ptnum+12');
@@ -98,9 +98,9 @@ QUnit.test('attrib promote object to vertex with max', async (assert) => {
 
 	const attrib_promote1 = geo1.createNode('attribPromote');
 	attrib_promote1.setInput(0, attrib_create1);
-	attrib_promote1.p.classFrom.set(AttribClass.OBJECT);
-	attrib_promote1.p.classTo.set(AttribClass.VERTEX);
-	attrib_promote1.p.mode.set(1); // max
+	attrib_promote1.setAttribClassFrom(AttribClass.OBJECT);
+	attrib_promote1.setAttribClassTo(AttribClass.VERTEX);
+	attrib_promote1.setPromoteMode(AttribPromoteMode.MAX); // max
 	attrib_promote1.p.name.set('test');
 
 	let container = await attrib_promote1.compute();
@@ -120,22 +120,22 @@ QUnit.test('attrib promote multiple attributes from objects to vertex', async (a
 	const attrib_create1 = geo1.createNode('attribCreate');
 	const attrib_create2 = geo1.createNode('attribCreate');
 	const attrib_promote1 = geo1.createNode('attribPromote');
-	attrib_create1.p.class.set(AttribClass.OBJECT);
+	attrib_create1.setAttribClass(AttribClass.OBJECT);
 	attrib_create1.p.name.set('id');
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set(0.1);
 	attrib_create1.setInput(0, box1);
 
-	attrib_create2.p.class.set(AttribClass.OBJECT);
+	attrib_create2.setAttribClass(AttribClass.OBJECT);
 	attrib_create2.p.name.set('role');
 	attrib_create2.p.size.set(1);
 	attrib_create2.p.value1.set(0.2);
 	attrib_create2.setInput(0, attrib_create1);
 
 	attrib_promote1.setInput(0, attrib_create2);
-	attrib_promote1.p.classFrom.set(AttribClass.OBJECT);
-	attrib_promote1.p.classTo.set(AttribClass.VERTEX);
-	attrib_promote1.p.mode.set(1); // max
+	attrib_promote1.setAttribClassFrom(AttribClass.OBJECT);
+	attrib_promote1.setAttribClassTo(AttribClass.VERTEX);
+	attrib_promote1.setPromoteMode(AttribPromoteMode.MAX); // max
 	attrib_promote1.p.name.set('id role');
 
 	let container = await attrib_promote1.compute();

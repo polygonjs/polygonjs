@@ -6,7 +6,7 @@
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {ParamType} from '../../../../poly/ParamType';
 import {BaseConnectionPoint} from './_Base';
-import {Object3D} from 'three';
+import {CatmullRomCurve3, Object3D} from 'three';
 import {Color} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
@@ -26,6 +26,7 @@ export enum ActorConnectionPointType {
 	BOOLEAN = 'boolean',
 	BOOLEAN_ARRAY = 'boolean[]',
 	BOX3 = 'Box3',
+	CATMULL_ROM_CURVE3 = 'CatmullRomCurve3',
 	COLOR = 'color',
 	COLOR_ARRAY = 'color[]',
 	FLOAT = 'float',
@@ -69,6 +70,7 @@ export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
 	ActorConnectionPointType.BOOLEAN,
 	ActorConnectionPointType.BOOLEAN_ARRAY,
 	ActorConnectionPointType.BOX3,
+	ActorConnectionPointType.CATMULL_ROM_CURVE3,
 	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.COLOR_ARRAY,
 	ActorConnectionPointType.FLOAT,
@@ -115,6 +117,7 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.BOX3]: ParamType.BUTTON;
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: ParamType.BUTTON;
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR;
 	[ActorConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT;
@@ -142,6 +145,7 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.BOX3]: ParamType.BUTTON,
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: ParamType.BUTTON,
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR,
 	[ActorConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.FLOAT]: ParamType.FLOAT,
@@ -176,6 +180,7 @@ export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnection
 	[ActorConnectionPointType.BOOLEAN]: ActorConnectionPointType.BOOLEAN_ARRAY;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ActorConnectionPointType.BOOLEAN_ARRAY;
 	[ActorConnectionPointType.BOX3]: ActorConnectionPointType.BOX3;
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: ActorConnectionPointType.CATMULL_ROM_CURVE3;
 	[ActorConnectionPointType.COLOR]: ActorConnectionPointType.COLOR_ARRAY;
 	[ActorConnectionPointType.COLOR_ARRAY]: ActorConnectionPointType.COLOR_ARRAY;
 	[ActorConnectionPointType.FLOAT]: ActorConnectionPointType.FLOAT_ARRAY;
@@ -203,6 +208,7 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.BOOLEAN]: ActorConnectionPointType.BOOLEAN_ARRAY,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ActorConnectionPointType.BOOLEAN_ARRAY,
 	[ActorConnectionPointType.BOX3]: ActorConnectionPointType.BOX3,
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: ActorConnectionPointType.CATMULL_ROM_CURVE3,
 	[ActorConnectionPointType.COLOR]: ActorConnectionPointType.COLOR_ARRAY,
 	[ActorConnectionPointType.COLOR_ARRAY]: ActorConnectionPointType.COLOR_ARRAY,
 	[ActorConnectionPointType.FLOAT]: ActorConnectionPointType.FLOAT_ARRAY,
@@ -295,6 +301,7 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.BOOLEAN]: false,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: null,
 	[ActorConnectionPointType.BOX3]: null,
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: null,
 	[ActorConnectionPointType.COLOR]: new Color(),
 	[ActorConnectionPointType.COLOR_ARRAY]: null,
 	[ActorConnectionPointType.FLOAT]: 0,
@@ -331,6 +338,7 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.BOOLEAN]: 1,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: 1,
 	[ActorConnectionPointType.BOX3]: 1,
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: 1,
 	[ActorConnectionPointType.COLOR]: 3,
 	[ActorConnectionPointType.COLOR_ARRAY]: 1,
 	[ActorConnectionPointType.FLOAT]: 1,
@@ -365,6 +373,7 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.BOOLEAN]: boolean;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: boolean[];
 	[ActorConnectionPointType.BOX3]: Box3;
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: CatmullRomCurve3;
 	[ActorConnectionPointType.COLOR]: Color;
 	[ActorConnectionPointType.COLOR_ARRAY]: Color[];
 	[ActorConnectionPointType.FLOAT]: number;

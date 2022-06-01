@@ -67,7 +67,9 @@ export class CacheActorNode extends TypedActorNode<CacheActorParamsConfig> {
 	}
 
 	private _cache: ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined;
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		if (this._cache == null) {
 			const input = this._inputValue<MixedVector>(CacheActorNodeInputName.IN, context);
 			this._cache = input;

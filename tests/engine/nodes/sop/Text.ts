@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 import {CoreObject} from '../../../../src/core/geometry/Object';
-import {TextType, TEXT_TYPES} from '../../../../src/engine/nodes/sop/Text';
+import {TextType} from '../../../../src/engine/nodes/sop/Text';
 import {checkConsolePrints} from '../../../helpers/Console';
 
 QUnit.test('sop/text simple', async (assert) => {
@@ -153,25 +153,25 @@ QUnit.test('sop/text as different types', async (assert) => {
 	await scene.root().processQueue();
 	let container;
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TextType.MESH));
+	text1.setTextType(TextType.MESH);
 	assert.ok(text1.isDirty());
 	container = await text1.compute();
 	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 4776);
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TextType.FLAT));
+	text1.setTextType(TextType.FLAT);
 	assert.ok(text1.isDirty());
 	container = await text1.compute();
 	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 3773);
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TextType.LINE));
+	text1.setTextType(TextType.LINE);
 	assert.ok(text1.isDirty());
 	container = await text1.compute();
 	assert.notOk(text1.isDirty());
 	assert.equal(container.pointsCount(), 3792);
 
-	text1.p.type.set(TEXT_TYPES.indexOf(TextType.STROKE));
+	text1.setTextType(TextType.STROKE);
 	assert.ok(text1.isDirty());
 	container = await text1.compute();
 	assert.notOk(text1.isDirty());

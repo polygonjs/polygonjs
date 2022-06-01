@@ -7,7 +7,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {AttribClassMenuEntries, AttribClass} from '../../../core/geometry/Constant';
+import {AttribClassMenuEntries, AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three';
@@ -17,7 +17,7 @@ import {Mesh} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribDeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param attribute class (geometry or object) */
-	class = ParamConfig.INTEGER(AttribClass.VERTEX, {
+	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
@@ -42,23 +42,28 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
+	setAttribClass(attribClass: AttribClass) {
+		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
+	}
+
 	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const attrib_names = core_group.attribNamesMatchingMask(this.pv.name);
 
+		const attribClass = ATTRIBUTE_CLASSES[this.pv.class];
 		for (let attrib_name of attrib_names) {
-			switch (this.pv.class) {
+			switch (attribClass) {
 				case AttribClass.VERTEX:
-					this.delete_vertex_attribute(core_group, attrib_name);
+					this._deleteVertexAttribute(core_group, attrib_name);
 				case AttribClass.OBJECT:
-					this.delete_object_attribute(core_group, attrib_name);
+					this._deleteObjectAttribute(core_group, attrib_name);
 			}
 		}
 
 		this.setCoreGroup(core_group);
 	}
 
-	delete_vertex_attribute(core_group: CoreGroup, attrib_name: string) {
+	private _deleteVertexAttribute(core_group: CoreGroup, attrib_name: string) {
 		for (let object of core_group.objects()) {
 			object.traverse((object3d: Object3D) => {
 				const child = object3d as Mesh;
@@ -69,7 +74,7 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 			});
 		}
 	}
-	delete_object_attribute(core_group: CoreGroup, attrib_name: string) {
+	private _deleteObjectAttribute(core_group: CoreGroup, attrib_name: string) {
 		for (let object of core_group.objects()) {
 			let index = 0;
 			object.traverse((object3d: Object3D) => {

@@ -1,5 +1,5 @@
 import {AttribType, ATTRIB_TYPES} from '../../../../src/engine/operations/sop/AttribCast';
-import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/operations/sop/Hierarchy';
+import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {BufferAttribute, Uint16BufferAttribute} from 'three';
@@ -13,7 +13,7 @@ QUnit.test('attribCast simple', async (assert) => {
 
 	const hierarchy = geo1.createNode('hierarchy');
 	hierarchy.setInput(0, file1);
-	hierarchy.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+	hierarchy.setMode(HierarchyMode.REMOVE_PARENT);
 
 	let container = await hierarchy.compute();
 	let core_group = container.coreContent()!;

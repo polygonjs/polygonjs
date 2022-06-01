@@ -1,4 +1,4 @@
-import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/operations/sop/Hierarchy';
+import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {Mesh} from 'three';
 import {BufferGeometry} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
@@ -100,7 +100,7 @@ async function withFileAndHierarchyGLTF(path: string) {
 	fileNode.p.url.set(_url(path));
 
 	const hierarchyNode = geo1.createNode('hierarchy');
-	hierarchyNode.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+	hierarchyNode.setMode(HierarchyMode.REMOVE_PARENT);
 	hierarchyNode.setInput(0, fileNode);
 
 	const container = await hierarchyNode.compute();
@@ -111,7 +111,7 @@ async function withHierarchy(fileNode: FileGLTFSopNode | FileMPDSopNode, levels:
 	const file1 = fileNode;
 	hierarchy1.p.levels.set(levels);
 	hierarchy1.setInput(0, file1);
-	hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+	hierarchy1.setMode(HierarchyMode.REMOVE_PARENT);
 	const container = await hierarchy1.compute();
 	return container;
 }
@@ -326,7 +326,7 @@ QUnit.test('SOP file nodes work with their default url', async (assert) => {
 			const hierarchy1 = window.geo1.createNode('hierarchy');
 			hierarchy1.p.levels.set(hierarchyLevels);
 			hierarchy1.setInput(0, fileNode);
-			hierarchy1.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+			hierarchy1.setMode(HierarchyMode.REMOVE_PARENT);
 			const container = await hierarchy1.compute();
 			assert.equal(container.pointsCount(), pointsCount, fileType);
 		} else {

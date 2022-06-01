@@ -19,19 +19,12 @@ export enum METHOD {
 }
 export const METHODS = [METHOD.POINTS_COUNT, METHOD.SEGMENT_LENGTH];
 
-// matches threejs curve type in CatmullRomCurve3.js
-export enum CURVE_TYPE {
-	CENTRIPETAL = 'centripetal',
-	CHORDAL = 'chordal',
-	CATMULLROM = 'catmullrom',
-}
-export const CURVE_TYPES = [CURVE_TYPE.CENTRIPETAL, CURVE_TYPE.CHORDAL, CURVE_TYPE.CATMULLROM];
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePoint} from '../../../core/geometry/Point';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three';
+import {SplineCurveType, SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
 class ResampleSopParamsConfig extends NodeParamsConfig {
 	/** @param resampling method */
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {
@@ -45,11 +38,11 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param type of curve this will generate */
-	curveType = ParamConfig.INTEGER(CURVE_TYPES.indexOf(CURVE_TYPE.CATMULLROM), {
+	curveType = ParamConfig.INTEGER(SPLINE_CURVE_TYPES.indexOf(SplineCurveType.CATMULLROM), {
 		range: [0, 2],
 		rangeLocked: [true, true],
 		menu: {
-			entries: CURVE_TYPES.map((name, i) => {
+			entries: SPLINE_CURVE_TYPES.map((name, i) => {
 				return {
 					name: name,
 					value: i,
@@ -61,6 +54,7 @@ class ResampleSopParamsConfig extends NodeParamsConfig {
 	tension = ParamConfig.FLOAT(0.01, {
 		range: [0, 1],
 		rangeLocked: [true, true],
+		visibleIf: {curveType: SPLINE_CURVE_TYPES.indexOf(SplineCurveType.CATMULLROM)},
 	});
 	/** @param points count */
 	pointsCount = ParamConfig.INTEGER(100, {
@@ -106,6 +100,9 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 
 		this.setObjects(resampled_objects);
 	}
+	setCurveType(curveType: SplineCurveType) {
+		this.p.curveType.set(SPLINE_CURVE_TYPES.indexOf(curveType));
+	}
 
 	_resample(line_segment: LineSegments) {
 		const geometry = line_segment.geometry as BufferGeometry;
@@ -136,7 +133,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 
 		const old_curve_positions = points.map((point) => point.attribValue(POSITION_ATTRIBUTE_NAME)) as Vector3[];
 		const closed = false;
-		const curveType = CURVE_TYPES[this.pv.curveType];
+		const curveType = SPLINE_CURVE_TYPES[this.pv.curveType];
 		const tension = this.pv.tension;
 		const curve = new CatmullRomCurve3(old_curve_positions, closed, curveType, tension);
 		// const curve = new LineCurve3(old_curve_positions);

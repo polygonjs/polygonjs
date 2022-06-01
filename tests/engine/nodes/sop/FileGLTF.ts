@@ -1,4 +1,4 @@
-import {HierarchyMode, HIERARCHY_MODES} from '../../../../src/engine/operations/sop/Hierarchy';
+import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {Poly} from '../../../../src/engine/Poly';
 import {withPlayerMode} from '../../../helpers/PlayerMode';
@@ -24,7 +24,7 @@ async function withFileAndHierarchy(path: string) {
 	fileNode.p.draco.set(1);
 
 	const hierarchyNode = geo1.createNode('hierarchy');
-	hierarchyNode.p.mode.set(HIERARCHY_MODES.indexOf(HierarchyMode.REMOVE_PARENT));
+	hierarchyNode.setMode(HierarchyMode.REMOVE_PARENT);
 	hierarchyNode.setInput(0, fileNode);
 
 	const container = await hierarchyNode.compute();

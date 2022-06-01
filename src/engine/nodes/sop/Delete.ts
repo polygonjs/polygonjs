@@ -200,12 +200,15 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
+		console.log('cook', coreGroup0, coreGroup1);
 
 		if (!coreGroup0) {
 			this.cookController.endCook();
 			return;
 		}
-		switch (this.pv.class) {
+		const attribClass = ATTRIBUTE_CLASSES[this.pv.class];
+		console.log({attribClass});
+		switch (attribClass) {
 			case AttribClass.VERTEX:
 				await this._evalForPoints(coreGroup0, coreGroup1);
 				break;
@@ -216,7 +219,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	}
 
 	setAttribClass(attribClass: AttribClass) {
-		this.p.class.set(attribClass);
+		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
 	}
 
 	private async _evalForObjects(coreGroup: CoreGroup) {

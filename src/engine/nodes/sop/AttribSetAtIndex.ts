@@ -49,27 +49,27 @@ class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.INTEGER(DEFAULT.size, {
 		range: [1, 4],
 		rangeLocked: [true, true],
-		visibleIf: {type: AttribType.NUMERIC},
+		visibleIf: {type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC)},
 	});
 	/** @param the value for a float attribute */
 	value1 = ParamConfig.FLOAT(DEFAULT.value1, {
-		visibleIf: {type: AttribType.NUMERIC, size: 1},
+		visibleIf: {type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), size: 1},
 	});
 	/** @param the value for a vector2 */
 	value2 = ParamConfig.VECTOR2(DEFAULT.value2, {
-		visibleIf: {type: AttribType.NUMERIC, size: 2},
+		visibleIf: {type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), size: 2},
 	});
 	/** @param the value for a vector3 */
 	value3 = ParamConfig.VECTOR3(DEFAULT.value3, {
-		visibleIf: {type: AttribType.NUMERIC, size: 3},
+		visibleIf: {type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), size: 3},
 	});
 	/** @param the value for a vector4 */
 	value4 = ParamConfig.VECTOR4(DEFAULT.value4, {
-		visibleIf: {type: AttribType.NUMERIC, size: 4},
+		visibleIf: {type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), size: 4},
 	});
 	/** @param the value for a string attribute */
 	string = ParamConfig.STRING(DEFAULT.string, {
-		visibleIf: {type: AttribType.STRING},
+		visibleIf: {type: ATTRIBUTE_TYPES.indexOf(AttribType.STRING)},
 	});
 }
 const ParamsConfig = new AttribSetAtIndexSopParamsConfig();

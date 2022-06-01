@@ -1,5 +1,5 @@
 import {Object3D} from 'three';
-import {AttribClass, ATTRIBUTE_CLASSES} from '../../../../src/core/geometry/Constant';
+import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CopySopNode} from '../../../../src/engine/nodes/sop/Copy';
 
 QUnit.test('copy sop simple', async (assert) => {
@@ -107,7 +107,7 @@ QUnit.test('copy sop objects with template and stamp', async (assert) => {
 	const plane1 = geo1.createNode('plane');
 
 	const copy1 = geo1.createNode('copy');
-	attrib_create1.p.class.set(ATTRIBUTE_CLASSES[AttribClass.OBJECT]);
+	attrib_create1.setAttribClass(AttribClass.OBJECT);
 	attrib_create1.setInput(0, box1);
 	copy1.setInput(0, attrib_create1);
 	copy1.setInput(1, plane1);

@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {AttribClass} from '../../../core/geometry/Constant';
+import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CorePoint} from '../../../core/geometry/Point';
 import {CoreString} from '../../../core/String';
@@ -17,16 +17,21 @@ interface AttribPromoteSopParams extends DefaultOperationParams {
 }
 
 export enum AttribPromoteMode {
-	MIN = 0,
-	MAX = 1,
-	FIRST_FOUND = 2,
+	MIN = 'min',
+	MAX = 'max',
+	FIRST_FOUND = 'first_round',
 }
+export const ATTRIB_PROMOTE_MODES: AttribPromoteMode[] = [
+	AttribPromoteMode.MIN,
+	AttribPromoteMode.MAX,
+	AttribPromoteMode.FIRST_FOUND,
+];
 
 export class AttribPromoteSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribPromoteSopParams = {
-		classFrom: AttribClass.VERTEX,
-		classTo: AttribClass.OBJECT,
-		mode: AttribPromoteMode.FIRST_FOUND,
+		classFrom: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		classTo: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT),
+		mode: ATTRIB_PROMOTE_MODES.indexOf(AttribPromoteMode.FIRST_FOUND),
 		name: '',
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
@@ -62,7 +67,8 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		}
 	}
 	private _find_values_for_attrib_name(attrib_name: string, params: AttribPromoteSopParams) {
-		switch (params.classFrom) {
+		const classFrom = ATTRIBUTE_CLASSES[params.classFrom];
+		switch (classFrom) {
 			case AttribClass.VERTEX:
 				return this.find_values_from_points(attrib_name, params);
 			case AttribClass.OBJECT:
@@ -99,7 +105,8 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		const attrib_names = Object.keys(this._values_per_attrib_name);
 		for (let attrib_name of attrib_names) {
 			const values = this._values_per_attrib_name[attrib_name];
-			switch (params.mode) {
+			const mode = ATTRIB_PROMOTE_MODES[params.mode];
+			switch (mode) {
 				case AttribPromoteMode.MIN:
 					this._filtered_values_per_attrib_name[attrib_name] = ArrayUtils.min(values);
 					break;
@@ -120,7 +127,8 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		for (let attrib_name of attrib_names) {
 			const new_value = this._filtered_values_per_attrib_name[attrib_name];
 			if (new_value != null) {
-				switch (params.classTo) {
+				const classTo = ATTRIBUTE_CLASSES[params.classTo];
+				switch (classTo) {
 					case AttribClass.VERTEX:
 						this.set_values_to_points(attrib_name, new_value, params);
 						break;

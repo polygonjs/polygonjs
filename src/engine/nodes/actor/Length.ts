@@ -27,10 +27,10 @@ type MixedVector =
 	| ActorConnectionPointType.VECTOR3
 	| ActorConnectionPointType.VECTOR4;
 
-class LengthParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new LengthParamsConfig();
+class LengthActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new LengthActorParamsConfig();
 
-export class LengthActorNode extends TypedActorNode<LengthParamsConfig> {
+export class LengthActorNode extends TypedActorNode<LengthActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return 'length';
