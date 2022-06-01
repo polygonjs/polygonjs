@@ -49,7 +49,12 @@ QUnit.test('actor/multAdd with float inputs', async (assert) => {
 
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
-		assert.equal(object.position.y, -13, 'object moved');
+		assert.equal(object.position.y, -9, 'object moved');
+
+		constant1.p.float.set(4);
+		onManualTrigger1.p.trigger.pressButton();
+		await CoreSleep.sleep(100);
+		assert.equal(object.position.y, -7, 'object moved');
 	});
 });
 

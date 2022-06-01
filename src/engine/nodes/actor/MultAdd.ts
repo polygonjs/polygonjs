@@ -1,5 +1,5 @@
 /**
- * clamps the input value between a min and a max
+ * applies a simple addition and multiplication to the input value
  *
  *
  *
@@ -114,7 +114,7 @@ export class MultAddActorNode extends TypedActorNode<MultAddActorParamsConfig> {
 				.add(postAdd as Vector4);
 		}
 		if (CoreType.isNumber(value)) {
-			return (1 + (preAdd as number)) * (mult as number) + (postAdd as number);
+			return (value + (preAdd as number)) * (mult as number) + (postAdd as number);
 		}
 		return 0;
 	}
