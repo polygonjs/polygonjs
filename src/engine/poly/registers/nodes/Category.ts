@@ -7,6 +7,7 @@ export const CATEGORY_ACTOR = {
 	AUDIO: 'audio',
 	CONVERSION: 'conversion',
 	EVENTS: 'events',
+	FLOW: 'flow',
 	GET: 'get',
 	LOGIC: 'logic',
 	MATH: 'math',

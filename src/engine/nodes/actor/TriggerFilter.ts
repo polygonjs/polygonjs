@@ -16,7 +16,7 @@ import {ParamType} from '../../poly/ParamType';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class TriggerFilterActorParamsConfig extends NodeParamsConfig {
-	/** @param audio node */
+	/** @param If true, the trigger will be forwarded. If false, it will not be. */
 	condition = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new TriggerFilterActorParamsConfig();

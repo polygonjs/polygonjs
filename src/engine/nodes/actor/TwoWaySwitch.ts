@@ -4,7 +4,7 @@
  *
  *
  */
-import {ActorConnectionPointType} from '../utils/io/connections/Actor';
+import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext, ParamlessTypedActorNode} from './_Base';
 
 const OUTPUT_NAME = 'val';
@@ -54,7 +54,9 @@ export class TwoWaySwitchActorNode extends ParamlessTypedActorNode {
 		return [type];
 	}
 
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const condition = this._inputValue<ActorConnectionPointType.BOOLEAN>(
 			TwoWaySwitchActorNodeInputName.CONDITION,
 			context

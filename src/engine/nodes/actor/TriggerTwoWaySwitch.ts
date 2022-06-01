@@ -15,7 +15,7 @@ import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from '
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class TriggerTwoWaySwitchActorParamsConfig extends NodeParamsConfig {
-	/** @param condition */
+	/** @param if true, trigger will be forward through the 1st output. If false, it will be forwarded through the 2nd output. */
 	condition = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new TriggerTwoWaySwitchActorParamsConfig();

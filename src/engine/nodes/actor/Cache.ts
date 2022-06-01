@@ -18,19 +18,6 @@ const DefaultValues: PolyDictionary<number> = {
 	[CacheActorNodeInputName.IN]: 0,
 };
 
-const ALLOWED_INPUT_TYPES: ActorConnectionPointType[] = [
-	ActorConnectionPointType.FLOAT,
-	ActorConnectionPointType.INTEGER,
-	ActorConnectionPointType.VECTOR2,
-	ActorConnectionPointType.VECTOR3,
-	ActorConnectionPointType.VECTOR4,
-];
-
-type MixedVector =
-	| ActorConnectionPointType.VECTOR2
-	| ActorConnectionPointType.VECTOR3
-	| ActorConnectionPointType.VECTOR4;
-
 class CacheActorParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CacheActorParamsConfig();
 
@@ -47,10 +34,8 @@ export class CacheActorNode extends TypedActorNode<CacheActorParamsConfig> {
 	}
 
 	protected _expectedInputTypes() {
-		const secondType = this.io.connection_points.input_connection_type(1);
-		const type =
-			secondType && ALLOWED_INPUT_TYPES.includes(secondType) ? secondType : ActorConnectionPointType.VECTOR3;
-		return [ActorConnectionPointType.TRIGGER, type];
+		const secondType = this.io.connection_points.input_connection_type(1) || ActorConnectionPointType.FLOAT;
+		return [ActorConnectionPointType.TRIGGER, secondType];
 	}
 	protected _expectedInputName(index: number) {
 		return [CacheActorNodeInputName.RESET, CacheActorNodeInputName.IN][index];
@@ -71,7 +56,7 @@ export class CacheActorNode extends TypedActorNode<CacheActorParamsConfig> {
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		if (this._cache == null) {
-			const input = this._inputValue<MixedVector>(CacheActorNodeInputName.IN, context);
+			const input = this._inputValue<ActorConnectionPointType>(CacheActorNodeInputName.IN, context);
 			this._cache = input;
 		}
 		return this._cache;

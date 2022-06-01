@@ -3,6 +3,7 @@ import {CATEGORY_ACTOR} from './Category';
 import {AbsActorNode} from '../../../nodes/actor/Abs';
 import {AcosActorNode} from '../../../nodes/actor/Acos';
 import {AddActorNode} from '../../../nodes/actor/Add';
+import {AnyTriggerActorNode} from '../../../nodes/actor/AnyTrigger';
 import {AsinActorNode} from '../../../nodes/actor/Asin';
 import {AtanActorNode} from '../../../nodes/actor/Atan';
 import {AnimationActionActorNode} from '../../../nodes/actor/AnimationAction';
@@ -131,6 +132,7 @@ export interface ActorNodeChildrenMap {
 	abs: AbsActorNode;
 	acos: AcosActorNode;
 	add: AddActorNode;
+	anyTrigger: AnyTriggerActorNode;
 	asin: AsinActorNode;
 	atan: AtanActorNode;
 	animationAction: AnimationActionActorNode;
@@ -263,6 +265,7 @@ export class ActorRegister {
 		poly.registerNode(AbsActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(AcosActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(AddActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(AnyTriggerActorNode, CATEGORY_ACTOR.FLOW);
 		poly.registerNode(AsinActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(AtanActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(AnimationActionActorNode, CATEGORY_ACTOR.ANIMATION);
@@ -367,8 +370,8 @@ export class ActorRegister {
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(TanActorNode, CATEGORY_ACTOR.MATH);
-		poly.registerNode(TriggerFilterActorNode, CATEGORY_ACTOR.LOGIC);
-		poly.registerNode(TriggerTwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
+		poly.registerNode(TriggerFilterActorNode, CATEGORY_ACTOR.FLOW);
+		poly.registerNode(TriggerTwoWaySwitchActorNode, CATEGORY_ACTOR.FLOW);
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(Vec2ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec2ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);

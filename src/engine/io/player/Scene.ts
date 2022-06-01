@@ -48,6 +48,11 @@ export interface SceneDataImportOptionsOnly {
 type OnCameraCreatorNodeLoadedResolve = () => void;
 type CreateScenePromiseCallback = () => Promise<PolyScene>;
 
+export interface SceneLoadReturnData {
+	scene: PolyScene;
+	viewer: BaseViewerType | undefined;
+}
+
 export class ScenePlayerImporter {
 	private _scene: PolyScene | undefined;
 	private _viewer: BaseViewerType | undefined;
@@ -56,7 +61,7 @@ export class ScenePlayerImporter {
 	// private _cameraCreatorNode: BaseNodeType | null = null;
 	constructor(private options: SceneDataImportOptions) {}
 
-	static async loadSceneData(options: SceneDataImportOptions) {
+	static async loadSceneData(options: SceneDataImportOptions): Promise<SceneLoadReturnData> {
 		const importer = new ScenePlayerImporter(options);
 		const scene = await importer.loadScene();
 		const viewer = importer._viewer;
@@ -253,12 +258,17 @@ export class ScenePlayerImporter {
 
 	private _dispatchEvent(eventName: PolyEventName) {
 		const elements = [this._domElement(), document];
+		if (!this._scene) {
+			console.warn(`no event emitted as no scene preset`);
+			return;
+		}
+		const detail: SceneLoadReturnData = {
+			scene: this._scene,
+			viewer: this._viewer,
+		};
 		const createEvent = (customEventName: string) => {
 			return new CustomEvent(customEventName, {
-				detail: {
-					scene: this._scene,
-					viewer: this._viewer,
-				},
+				detail,
 			});
 		};
 		for (let element of elements) {
