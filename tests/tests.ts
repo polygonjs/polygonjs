@@ -133,6 +133,8 @@ import './engine/nodes/actor/PlayInstrumentNote';
 // import './engine/nodes/actor/SetObjectHoveredState';
 import './engine/nodes/actor/Rand';
 import './engine/nodes/actor/Random';
+import './engine/nodes/actor/SetMaterialColor';
+import './engine/nodes/actor/SetMaterialUniform';
 import './engine/nodes/actor/SetObjectMaterialColor';
 import './engine/nodes/actor/SetObjectAttribute';
 import './engine/nodes/actor/SetObjectLookAt';

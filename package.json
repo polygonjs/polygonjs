@@ -3,7 +3,7 @@
 	"version": "1.1.266",
 	"engines": {
 		"node": ">=16.13.1",
-		"yarn": ">=1.22.17"
+		"yarn": ">=1.22.15"
 	},
 	"description": "node-based WebGL 3D engine https://polygonjs.com",
 	"homepage": "https://polygonjs.com",

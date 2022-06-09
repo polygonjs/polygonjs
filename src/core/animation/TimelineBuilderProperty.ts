@@ -271,7 +271,7 @@ export class TimelineBuilderProperty {
 
 	private _populateVarsForParam(param: BaseParamType, options: AddToTimelineOptions) {
 		this._printDebug(['_populateVarsForParam', param]);
-		if (!this._targetValue) {
+		if (this._targetValue == null) {
 			return;
 		}
 		switch (param.type()) {

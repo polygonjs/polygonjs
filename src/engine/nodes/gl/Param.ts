@@ -20,6 +20,8 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 // import {GlConnectionsController} from './utils/GLConnectionsController';
 import {GlParamConfig} from './code/utils/GLParamConfig';
 import {CoreType} from '../../../core/Type';
+import {UNIFORM_PARAM_PREFIX} from '../../../core/material/uniform';
+
 class ParamGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('param1');
 	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
@@ -101,7 +103,7 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	// 	return `v_POLY_param_${this.pv.name}`;
 	// }
 	uniformName() {
-		return `v_POLY_param_${this.pv.name}`;
+		return `${UNIFORM_PARAM_PREFIX}${this.pv.name}`;
 		// const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
 		// const var_name = this.glVarName(/*output_connection_point.name()*/);
 		// return var_name;

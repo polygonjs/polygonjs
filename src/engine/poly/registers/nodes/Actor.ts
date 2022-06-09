@@ -91,6 +91,7 @@ import {RayIntersectsSphereActorNode} from '../../../nodes/actor/RayIntersectsSp
 import {RoundActorNode} from '../../../nodes/actor/Round';
 import {SetMaterialColorActorNode} from '../../../nodes/actor/SetMaterialColor';
 import {SetMaterialEmissiveColorActorNode} from '../../../nodes/actor/SetMaterialEmissiveColor';
+import {SetMaterialUniformActorNode} from '../../../nodes/actor/SetMaterialUniform';
 import {SetObjectMaterialColorActorNode} from '../../../nodes/actor/SetObjectMaterialColor';
 import {SetObjectAttributeActorNode} from '../../../nodes/actor/SetObjectAttribute';
 import {SetObjectLookAtActorNode} from '../../../nodes/actor/SetObjectLookAt';
@@ -220,6 +221,7 @@ export interface ActorNodeChildrenMap {
 	round: RoundActorNode;
 	setMaterialColor: SetMaterialColorActorNode;
 	setMaterialEmissiveColor: SetMaterialEmissiveColorActorNode;
+	setMaterialUniform: SetMaterialUniformActorNode;
 	setObjectMaterialColor: SetObjectMaterialColorActorNode;
 	// setObjectHoveredState: SetObjectHoveredStateActorNode;
 	setObjectAttribute: SetObjectAttributeActorNode;
@@ -353,6 +355,7 @@ export class ActorRegister {
 		poly.registerNode(RoundActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SetMaterialColorActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetMaterialEmissiveColorActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetMaterialUniformActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectMaterialColorActorNode, CATEGORY_ACTOR.ACTION);
 		// poly.registerNode(SetObjectHoveredStateActorNode, CATEGORY_ACTOR.SET);
 		poly.registerNode(SetObjectAttributeActorNode, CATEGORY_ACTOR.ACTION);
@@ -361,6 +364,7 @@ export class ActorRegister {
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectRotationActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(SignActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SinActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SmoothstepActorNode, CATEGORY_ACTOR.MATH);
@@ -368,7 +372,6 @@ export class ActorRegister {
 		poly.registerNode(SqrtActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SubtractActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
-		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(TanActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(TriggerFilterActorNode, CATEGORY_ACTOR.FLOW);
 		poly.registerNode(TriggerTwoWaySwitchActorNode, CATEGORY_ACTOR.FLOW);

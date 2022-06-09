@@ -107,7 +107,7 @@ export class TimeController {
 		for (const callback of this._onBeforeTickCallbacks) {
 			callback(delta);
 		}
-		if (time > 0) {
+		if (this._playing == true && time > 0) {
 			this.scene.actorsManager.tick();
 		}
 

@@ -137,14 +137,14 @@ export class MaterialSopOperation extends BaseSopOperation {
 		});
 	}
 
-	private _applyMaterial(coreObject: CoreObject, src_material: Material, params: MaterialSopParams) {
-		const used_material = isBooleanTrue(params.cloneMat)
-			? CoreMaterial.clone(this.scene(), src_material, {shareCustomUniforms: params.shareCustomUniforms})
-			: src_material;
+	private _applyMaterial(coreObject: CoreObject, srcMaterial: Material, params: MaterialSopParams) {
+		const usedMaterial = isBooleanTrue(params.cloneMat)
+			? CoreMaterial.clone(this.scene(), srcMaterial, {shareCustomUniforms: params.shareCustomUniforms})
+			: srcMaterial;
 
-		if (src_material instanceof ShaderMaterial && used_material instanceof ShaderMaterial) {
-			for (let uniform_name in src_material.uniforms) {
-				used_material.uniforms[uniform_name] = src_material.uniforms[uniform_name];
+		if (srcMaterial instanceof ShaderMaterial && usedMaterial instanceof ShaderMaterial) {
+			for (let uniform_name in srcMaterial.uniforms) {
+				usedMaterial.uniforms[uniform_name] = srcMaterial.uniforms[uniform_name];
 			}
 		}
 
@@ -154,11 +154,11 @@ export class MaterialSopOperation extends BaseSopOperation {
 		// if (current_mat && params.swapCurrentTex) {
 		// 	this._swap_texture(used_material, current_mat, params);
 		// }
-		this._old_mat_by_old_new_id.set(used_material.uuid, object_with_material.material as Material);
-		object_with_material.material = used_material;
+		this._old_mat_by_old_new_id.set(usedMaterial.uuid, object_with_material.material as Material);
+		object_with_material.material = usedMaterial;
 
-		CoreMaterial.apply_render_hook(object, used_material);
-		CoreMaterial.applyCustomMaterials(object, used_material);
+		CoreMaterial.apply_render_hook(object, usedMaterial);
+		CoreMaterial.applyCustomMaterials(object, usedMaterial);
 	}
 
 	private _swap_texture(target_mat: Material, params: MaterialSopParams) {
