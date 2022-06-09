@@ -111,8 +111,8 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 
 	isDisplayNodeCooking(): boolean {
-		if (this.displayNodeController) {
-			const displayNode = this.displayNodeController.displayNode();
+		if (this.flags?.display?.active()) {
+			const displayNode = this.displayNodeController?.displayNode();
 			if (displayNode) {
 				return displayNode.cookController.isCooking();
 			}

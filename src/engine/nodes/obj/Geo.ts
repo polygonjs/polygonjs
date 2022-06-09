@@ -67,14 +67,14 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.childrenDisplayController.initializeNode();
 	}
 
-	override isDisplayNodeCooking(): boolean {
-		if (this.flags.display.active()) {
-			const display_node = this.displayNodeController.displayNode();
-			return display_node ? display_node.isDirty() : false;
-		} else {
-			return false;
-		}
-	}
+	// override isDisplayNodeCooking(): boolean {
+	// 	if (this.flags.display.active()) {
+	// 		const displayNode = this.displayNodeController.displayNode();
+	// 		return displayNode ? displayNode.isDirty() : false;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// }
 
 	override createNode<S extends keyof GeoNodeChildrenMap>(
 		node_class: S,

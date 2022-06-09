@@ -185,3 +185,31 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.ok(merge1.states.error.active());
 	assert.notOk(container.coreContent());
 });
+
+import {RendererUtils} from '../../../helpers/RendererUtils';
+
+QUnit.test('a display node that is bypass does not prevent the scene from playing', async (assert) => {
+	const scene = window.scene;
+	const perspective_camera1 = window.perspective_camera1;
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
+
+	transform1.setInput(0, box1);
+	transform1.flags.display.set(true);
+
+	// wait to make sure objects are mounted to the scene
+	await CoreSleep.sleep(150);
+
+	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
+		scene.play();
+		assert.equal(scene.time(), 0);
+		await CoreSleep.sleep(500);
+		const time = scene.time();
+		assert.in_delta(time, 0.5, 0.25, 'time is 0.5 sec');
+
+		transform1.flags.bypass.set(true);
+		await CoreSleep.sleep(500);
+		assert.in_delta(scene.time(), time + 0.5, 0.25, 'time is 1 sec');
+	});
+});
