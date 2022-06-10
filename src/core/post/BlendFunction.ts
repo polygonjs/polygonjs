@@ -19,6 +19,7 @@ export const BLEND_FUNCTIONS: BlendFunction[] = [
 	BlendFunction.OVERLAY,
 	BlendFunction.REFLECT,
 	BlendFunction.SCREEN,
+	BlendFunction.SET,
 	BlendFunction.SOFT_LIGHT,
 	BlendFunction.SUBTRACT,
 ];
@@ -41,6 +42,7 @@ const BLEND_FUNCTION_NAME_BY_INDEX = [
 	'OVERLAY',
 	'REFLECT',
 	'SCREEN',
+	'SET',
 	'SOFT_LIGHT',
 	'SUBTRACT',
 ];

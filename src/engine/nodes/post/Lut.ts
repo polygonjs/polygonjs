@@ -4,7 +4,7 @@
  *
  */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {EffectPass, BlendFunction, LUTEffect} from 'postprocessing';
+import {EffectPass, BlendFunction, LUT3DEffect} from 'postprocessing';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
@@ -44,7 +44,7 @@ export class LutPostNode extends TypedPostProcessNode<EffectPass, LutPostParamsC
 		// if (texture) {
 		// 	console.log(context.renderer.capabilities.isWebGL2, texture);
 		const texture: Texture | any = null;
-		const effect = context.renderer.capabilities.isWebGL2 ? new LUTEffect(texture) : new LUTEffect(null as any);
+		const effect = context.renderer.capabilities.isWebGL2 ? new LUT3DEffect(texture) : new LUT3DEffect(null as any);
 
 		const pass = new EffectPass(context.camera, effect);
 		passes.push(pass);
@@ -55,7 +55,7 @@ export class LutPostNode extends TypedPostProcessNode<EffectPass, LutPostParamsC
 		return passes;
 	}
 	override async updatePass(pass: EffectPass) {
-		const effect = (pass as any).effects[0] as LUTEffect;
+		const effect = (pass as any).effects[0] as LUT3DEffect;
 		if (!effect) {
 			return;
 		}

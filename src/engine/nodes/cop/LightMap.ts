@@ -24,7 +24,7 @@ class LightMapCopParamConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	useCameraRenderer = ParamConfig.BOOLEAN(1);
+	useCameraRenderer = ParamConfig.BOOLEAN(1); // needs to be 1, as it does not work on firefox otherwise
 	/** @param shadow resolution */
 	lightMapRes = ParamConfig.INTEGER(1024, {range: [1, 2048], rangeLocked: [true, false]});
 	/** @param iterations */

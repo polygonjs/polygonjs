@@ -34,7 +34,7 @@ export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase)
 		/** @param render resolution */
 		resolution = ParamConfig.VECTOR2([1024, 1024]);
 		/** @param defines if the shader is rendered via the same camera used to render the scene */
-		useCameraRenderer = ParamConfig.BOOLEAN(1);
+		useCameraRenderer = ParamConfig.BOOLEAN(1); // needs to be 1, as it does not work on firefox otherwise
 		/** @param render button */
 		render = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {

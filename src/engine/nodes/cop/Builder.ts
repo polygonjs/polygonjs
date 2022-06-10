@@ -44,7 +44,7 @@ class BuilderCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */
 	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	useCameraRenderer = ParamConfig.BOOLEAN(0);
+	useCameraRenderer = ParamConfig.BOOLEAN(1); // needs to be 1, as it does not work on firefox otherwise
 	/** @param force Render */
 	render = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {

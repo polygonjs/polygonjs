@@ -6,9 +6,10 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EffectPass, VignetteEffect, VignetteTechnique} from 'postprocessing';
+import {IUniform} from 'three';
 class VignettePostParamsConfig extends NodeParamsConfig {
 	/** @param offset */
-	offset = ParamConfig.FLOAT(1, {
+	offset = ParamConfig.FLOAT(0, {
 		range: [0, 1],
 		rangeLocked: [false, false],
 		...PostParamOptions,
@@ -31,8 +32,8 @@ export class VignettePostNode extends TypedPostProcessNode<EffectPass, VignetteP
 	protected override _createPass(context: TypedPostNodeContext) {
 		const effect = new VignetteEffect({
 			technique: VignetteTechnique.DEFAULT,
-			offset: 0.0,
-			darkness: 1.0,
+			offset: this.pv.offset,
+			darkness: this.pv.darkness,
 		});
 
 		const pass = new EffectPass(context.camera, effect);
@@ -41,7 +42,9 @@ export class VignettePostNode extends TypedPostProcessNode<EffectPass, VignetteP
 		return pass;
 	}
 	override updatePass(pass: EffectPass) {
-		// pass.uniforms.offset.value = this.pv.offset;
-		// pass.uniforms.darkness.value = this.pv.darkness;
+		const effect = (pass as any).effects[0] as VignetteTechnique;
+		const uniforms = (effect as any).uniforms as Map<string, IUniform>;
+		uniforms.get('offset')!.value = this.pv.offset;
+		uniforms.get('darkness')!.value = this.pv.darkness;
 	}
 }

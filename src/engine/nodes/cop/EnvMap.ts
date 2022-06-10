@@ -22,7 +22,7 @@ import {CubeUVReflectionMapping} from 'three';
 
 class EnvMapCopParamsConfig extends NodeParamsConfig {
 	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	useCameraRenderer = ParamConfig.BOOLEAN(0);
+	useCameraRenderer = ParamConfig.BOOLEAN(1); // needs to be 1, as it does not work on firefox otherwise
 	/** @param defines if the texture is used for reflection or refraction */
 	// mode = ParamConfig.INTEGER(0, {
 	// 	menu: {
