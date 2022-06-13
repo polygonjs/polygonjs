@@ -4,7 +4,11 @@
 	"editor.insertSpaces": false,
 	"editor.wordWrap": "on",
 	"[plaintext]": {
-		"editor.quickSuggestions": false
+		"editor.quickSuggestions": {
+			"comments": "off",
+			"strings": "off",
+			"other": "off"
+		}
 	},
 	"workbench.statusBar.feedback.visible": false,
 	"window.zoomLevel": 0,

@@ -20,6 +20,9 @@ class PolywireSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param toggle on for the geometry to close back on itself */
 	closed = ParamConfig.BOOLEAN(DEFAULT.closed);
+	/** @param attributesToCopy */
+	attributesToCopy = ParamConfig.STRING(DEFAULT.attributesToCopy);
+	
 }
 const ParamsConfig = new PolywireSopParamsConfig();
 

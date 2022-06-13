@@ -51,12 +51,15 @@ export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
 		const object_constructor = OBJECT_CONSTRUCTOR_BY_OBJECT_TYPE[type] as any; //THREE[type];
 		material = material || CoreConstant.MATERIALS[type].clone();
 		const object: Mesh = new object_constructor(geometry, material);
+		this.applyObjectDefault(object);
+
+		return object as ObjectByObjectType[OT];
+	}
+	static applyObjectDefault(object: Object3D) {
 		object.castShadow = true;
 		object.receiveShadow = true;
 		object.frustumCulled = false;
 		object.matrixAutoUpdate = false;
-
-		return object as ObjectByObjectType[OT];
 	}
 	protected createIndexIfNone(geometry: BufferGeometry) {
 		BaseSopOperation.createIndexIfNone(geometry);

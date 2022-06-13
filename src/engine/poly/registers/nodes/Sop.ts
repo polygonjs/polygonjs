@@ -62,6 +62,7 @@ import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
 import {DirectionalLightSopNode} from '../../../nodes/sop/DirectionalLight';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
+import {EmptyObjectSopNode} from '../../../nodes/sop/EmptyObject';
 import {ExporterSopNode} from '../../../nodes/sop/Exporter';
 import {FaceSopNode} from '../../../nodes/sop/Face';
 import {FacetSopNode} from '../../../nodes/sop/Facet';
@@ -71,6 +72,7 @@ import {FileFBXSopNode} from '../../../nodes/sop/FileFBX';
 import {FileGLTFSopNode} from '../../../nodes/sop/FileGLTF';
 import {FileJSONSopNode} from '../../../nodes/sop/FileJSON';
 import {FileMPDSopNode} from '../../../nodes/sop/FileMPD';
+import {FileMultiGLTFSopNode} from '../../../nodes/sop/FileMultiGLTF';
 import {FileMultiOBJSopNode} from '../../../nodes/sop/FileMultiOBJ';
 import {FileOBJSopNode} from '../../../nodes/sop/FileOBJ';
 import {FilePDBSopNode} from '../../../nodes/sop/FilePDB';
@@ -123,6 +125,7 @@ import {ResampleSopNode} from '../../../nodes/sop/Resample';
 import {RestAttributesSopNode} from '../../../nodes/sop/RestAttributes';
 import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
 import {ScatterSopNode} from '../../../nodes/sop/Scatter';
+import {SetGeometrySopNode} from '../../../nodes/sop/SetGeometry';
 import {ShearSopNode} from '../../../nodes/sop/Shear';
 import {SkeletonHelperSopNode} from '../../../nodes/sop/SkeletonHelper';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
@@ -221,6 +224,7 @@ export interface GeoNodeChildrenMap {
 	delete: DeleteSopNode;
 	directionalLight: DirectionalLightSopNode;
 	drawRange: DrawRangeSopNode;
+	emptyObject: EmptyObjectSopNode;
 	exporter: ExporterSopNode;
 	face: FaceSopNode;
 	facet: FacetSopNode;
@@ -230,6 +234,7 @@ export interface GeoNodeChildrenMap {
 	fileGLTF: FileGLTFSopNode;
 	fileJSON: FileJSONSopNode;
 	fileMPD: FileMPDSopNode;
+	fileMultiGLTF: FileMultiGLTFSopNode;
 	fileMultiOBJ: FileMultiOBJSopNode;
 	fileOBJ: FileOBJSopNode;
 	filePDB: FilePDBSopNode;
@@ -254,6 +259,7 @@ export interface GeoNodeChildrenMap {
 	lookAt: LookAtSopNode;
 	material: MaterialSopNode;
 	materialProperties: MaterialPropertiesSopNode;
+
 	merge: MergeSopNode;
 	metaball: MetaballSopNode;
 	noise: NoiseSopNode;
@@ -282,6 +288,7 @@ export interface GeoNodeChildrenMap {
 	restAttributes: RestAttributesSopNode;
 	roundedBox: RoundedBoxSopNode;
 	scatter: ScatterSopNode;
+	setGeometry: SetGeometrySopNode;
 	shear: ShearSopNode;
 	skin: SkinSopNode;
 	skeletonHelper: SkeletonHelperSopNode;
@@ -360,6 +367,7 @@ import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
 import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
+import {EmptyObjectSopOperation} from '../../../operations/sop/EmptyObject';
 // import {FileSopOperation} from '../../../operations/sop/File';
 import {FileDRCSopOperation} from '../../../operations/sop/FileDRC';
 import {FileFBXSopOperation} from '../../../operations/sop/FileFBX';
@@ -379,6 +387,7 @@ import {InstanceUpdateSopOperation} from '../../../operations/sop/InstanceUpdate
 import {JitterSopOperation} from '../../../operations/sop/Jitter';
 import {LookAtSopOperation} from '../../../operations/sop/LookAt';
 import {MergeSopOperation} from '../../../operations/sop/Merge';
+
 import {MetaballSopOperation} from '../../../operations/sop/Metaball';
 import {MaterialSopOperation} from '../../../operations/sop/Material';
 import {MaterialPropertiesSopOperation} from '../../../operations/sop/MaterialProperties';
@@ -400,6 +409,7 @@ import {ReflectorSopOperation} from '../../../operations/sop/Reflector';
 import {RestAttributesSopOperation} from '../../../operations/sop/RestAttributes';
 import {RoundedBoxSopOperation} from '../../../operations/sop/RoundedBox';
 import {ScatterSopOperation} from '../../../operations/sop/Scatter';
+import {SetGeometrySopOperation} from '../../../operations/sop/SetGeometry';
 import {ShearSopOperation} from '../../../operations/sop/Shear';
 import {SortSopOperation} from '../../../operations/sop/Sort';
 import {SphereSopOperation} from '../../../operations/sop/Sphere';
@@ -455,6 +465,7 @@ export class SopRegister {
 		poly.registerOperation(CSS2DObjectSopOperation);
 		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
+		poly.registerOperation(EmptyObjectSopOperation);
 		// poly.registerOperation(FileSopOperation);
 		poly.registerOperation(FileDRCSopOperation);
 		poly.registerOperation(FileFBXSopOperation);
@@ -495,6 +506,7 @@ export class SopRegister {
 		poly.registerOperation(RestAttributesSopOperation);
 		poly.registerOperation(RoundedBoxSopOperation);
 		poly.registerOperation(ScatterSopOperation);
+		poly.registerOperation(SetGeometrySopOperation);
 		poly.registerOperation(ShearSopOperation);
 		poly.registerOperation(SortSopOperation);
 		poly.registerOperation(SphereSopOperation);
@@ -570,6 +582,7 @@ export class SopRegister {
 		poly.registerNode(DeleteSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DirectionalLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(EmptyObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ExporterSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(FaceSopNode, CATEGORY_SOP.MODIFIER);
 		if (process.env.NODE_ENV == 'development') {
@@ -581,6 +594,7 @@ export class SopRegister {
 		poly.registerNode(FileGLTFSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileJSONSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileMPDSopNode, CATEGORY_SOP.INPUT);
+		poly.registerNode(FileMultiGLTFSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileMultiOBJSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileOBJSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FilePDBSopNode, CATEGORY_SOP.INPUT);
@@ -608,6 +622,7 @@ export class SopRegister {
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MaterialPropertiesSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.FLOW);
+
 		poly.registerNode(MetaballSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
@@ -635,6 +650,7 @@ export class SopRegister {
 		poly.registerNode(RestAttributesSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(SetGeometrySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SkeletonHelperSopNode, CATEGORY_SOP.HELPERS);
 		poly.registerNode(SkinSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ShearSopNode, CATEGORY_SOP.MODIFIER);

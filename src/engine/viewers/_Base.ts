@@ -35,6 +35,7 @@ export interface CreateViewerOptions {
 	canvas?: HTMLCanvasElement;
 	autoRender?: boolean;
 	renderer?: WebGLRenderer;
+	cameraMaskOverride?: string;
 }
 export interface TypedViewerOptions<C extends Camera> extends CreateViewerOptions {
 	camera: C;

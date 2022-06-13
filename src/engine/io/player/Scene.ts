@@ -29,6 +29,7 @@ export interface SceneDataImportOptions extends ImportCommonOptions {
 	autoPlay?: boolean;
 	createViewer?: boolean;
 	renderer?: WebGLRenderer;
+	cameraMaskOverride?: string;
 }
 export type LoadSceneData = (options: SceneDataImportOptions) => void;
 export interface SceneDataImportOptionsOnly {
@@ -180,7 +181,11 @@ export class ScenePlayerImporter {
 				// now we must wait that a camera matching the mainCamera is found in the hierarchy.
 				this._onCameraCreatorNodeLoadedResolve = () => resolve(scene);
 				scene.camerasController.onCameraObjectsUpdated(async () => {
-					const camera = await scene.camerasController.mainCamera({findAnyCamera: false});
+					const camera = await scene.camerasController.mainCamera({
+						findAnyCamera: false,
+						printWarning: false,
+						cameraMaskOverride: this.options.cameraMaskOverride,
+					});
 					// if we do not find the camera object, we need to
 					if (camera) {
 						if (this._onCameraCreatorNodeLoadedResolve) {
@@ -207,6 +212,7 @@ export class ScenePlayerImporter {
 				this._viewer = await scene.camerasController.createMainViewer({
 					autoRender: false,
 					renderer: this.options.renderer,
+					cameraMaskOverride: this.options.cameraMaskOverride,
 				});
 				if (this._viewer) {
 					if (domElement) {

@@ -7,18 +7,44 @@
  */
 import {GeometryExtension} from '../../../core/loader/Geometry';
 import {BaseNodeType} from '../_Base';
-import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {Object3D} from 'three';
-import {fileMultiSopNodeFactory} from './utils/file/_BaseSopFileMulti';
+import {BaseFileMultiSopNode} from './utils/file/_BaseSopFileMulti';
 import {SopTypeFileMulti} from '../../poly/registers/nodes/types/Sop';
 import {OBJLoaderHandler} from '../../../core/loader/geometry/OBJ';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
+// export class FileMultiOBJSopNode extends fileMultiSopNodeFactory<Object3D>({
+// 	type: SopTypeFileMulti.FILE_OBJ,
+// 	extensions: [GeometryExtension.OBJ],
+// 	defaultUrlExpression: `${ASSETS_ROOT}/models/\`@name\`.obj`,
+// 	createLoader: (url: string, node: BaseNodeType) => new OBJLoaderHandler(url, node),
+// }) {}
+class FileMultiOBJParamsConfig extends NodeParamsConfig {
+	/** @param url to load the geometry from */
+	url = ParamConfig.STRING(`${ASSETS_ROOT}/models/\`@name\`.obj`, {
+		fileBrowse: {extensions: [GeometryExtension.OBJ]},
+		expression: {forEntities: true},
+	});
+	/** @param sets the matrixAutoUpdate attribute for the objects loaded */
+	matrixAutoUpdate = ParamConfig.BOOLEAN(false);
+	/** @param reload the geometry */
+	reload = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			BaseFileMultiSopNode.PARAM_CALLBACK_reload(node as FileMultiOBJSopNode);
+		},
+	});
+}
 
-export class FileMultiOBJSopNode extends fileMultiSopNodeFactory<Object3D>({
-	type: SopTypeFileMulti.FILE_OBJ,
-	extensions: [GeometryExtension.OBJ],
-	defaultUrlExpression: `${ASSETS_ROOT}/models/\`@name\`.obj`,
-	createLoader: (url: string, node: BaseNodeType) => new OBJLoaderHandler(url, node),
-}) {}
+const ParamsConfig = new FileMultiOBJParamsConfig();
+export class FileMultiOBJSopNode extends BaseFileMultiSopNode<Object3D, FileMultiOBJParamsConfig> {
+	override paramsConfig = ParamsConfig;
+	static override type() {
+		return SopTypeFileMulti.FILE_OBJ;
+	}
+	protected _createLoader(url: string) {
+		return new OBJLoaderHandler(url, this);
+	}
+}
 
 // class FileMultiSopParamsConfig extends NodeParamsConfig {
 // 	/** @param url to load the geometry from */

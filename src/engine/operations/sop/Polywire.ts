@@ -13,11 +13,13 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
+import {addAttributesFromPoint} from '../../../core/geometry/util/addAttributesFromPoint';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;
 	segmentsRadial: number;
 	closed: boolean;
+	attributesToCopy: string;
 }
 const DEFAULT_R = new Vector3(0, 0, 0);
 const DEFAULT_S = new Vector3(1, 1, 1);
@@ -35,6 +37,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 		radius: 1,
 		segmentsRadial: 8,
 		closed: true,
+		attributesToCopy: '*',
 	};
 	static override type(): Readonly<'polywire'> {
 		return 'polywire';
@@ -42,30 +45,31 @@ export class PolywireSopOperation extends BaseSopOperation {
 
 	private _coreTransform = new CoreTransform();
 	private _geometries: BufferGeometry[] = [];
-	override cook(input_contents: CoreGroup[], params: PolywireSopParams) {
-		const core_group = input_contents[0];
+	override cook(inputCoreGroups: CoreGroup[], params: PolywireSopParams) {
+		const coreGroup = inputCoreGroups[0];
 
 		this._geometries = [];
-		for (let object of core_group.objects()) {
+		for (let object of coreGroup.objects()) {
 			if (object instanceof LineSegments) {
 				this._createTube(object, params);
 			}
 		}
 
-		const merged_geometry = CoreGeometryBuilderMerge.merge(this._geometries);
+		const mergedGeometry = CoreGeometryBuilderMerge.merge(this._geometries);
 		for (let geometry of this._geometries) {
 			geometry.dispose();
 		}
-		if (merged_geometry) {
-			const object = this.createObject(merged_geometry, ObjectType.MESH);
+		if (mergedGeometry) {
+			const object = this.createObject(mergedGeometry, ObjectType.MESH);
 			return this.createCoreGroupFromObjects([object]);
 		} else {
 			return this.createCoreGroupFromObjects([]);
 		}
 	}
 
-	private _createTube(line_segment: LineSegments, params: PolywireSopParams) {
-		const geometry = line_segment.geometry as BufferGeometry;
+	private _createTube(lineSegment: LineSegments, params: PolywireSopParams) {
+		const geometry = lineSegment.geometry as BufferGeometry;
+		const attributeNames = CoreGeometry.attribNamesMatchingMask(geometry, params.attributesToCopy);
 		const wrapper = new CoreGeometry(geometry);
 		const points = wrapper.points();
 		const indices = geometry.getIndex()?.array as number[];
@@ -74,11 +78,11 @@ export class PolywireSopOperation extends BaseSopOperation {
 
 		for (let curvePointIndices of accumulatedCurvePointIndices) {
 			const currentPoints = curvePointIndices.map((index) => points[index]);
-			this._createTubeFromPoints(currentPoints, params);
+			this._createTubeFromPoints(currentPoints, attributeNames, params);
 		}
 	}
 
-	private _createTubeFromPoints(points: CorePoint[], params: PolywireSopParams) {
+	private _createTubeFromPoints(points: CorePoint[], attributeNames: string[], params: PolywireSopParams) {
 		if (points.length <= 1) {
 			return;
 		}
@@ -118,6 +122,13 @@ export class PolywireSopOperation extends BaseSopOperation {
 			this._coreTransform.rotateGeometry(newCircle, DEFAULT_DIR, delta);
 			const matrix = this._coreTransform.matrix(currentPos, DEFAULT_R, DEFAULT_S, scale, DEFAULT_ROTATION_ORDER);
 			newCircle.applyMatrix4(matrix);
+
+			// remove position before transfering the attribute
+			const positionIndex = attributeNames.indexOf('position');
+			if (positionIndex >= 0) {
+				attributeNames.splice(positionIndex, 1);
+			}
+			addAttributesFromPoint(newCircle, point, attributeNames);
 
 			circles.push(newCircle);
 			i++;

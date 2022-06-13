@@ -30,7 +30,7 @@ class BloomPostParamsConfig extends NodeParamsConfig {
 	// 	...PostParamOptions,
 	// });
 	/** @param kernel size */
-	kernelSize = ParamConfig.INTEGER(KernelSize.VERY_SMALL, {
+	kernelSize = ParamConfig.INTEGER(KernelSize.LARGE, {
 		...PostParamOptions,
 		...KERNEL_SIZE_MENU_OPTIONS,
 	});
@@ -58,7 +58,6 @@ export class BloomPostNode extends TypedPostProcessNode<EffectPass, BloomPostPar
 	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
 		context.renderer.getSize(this._rendererSize);
-		console.log(KERNEL_SIZES[this.pv.kernelSize]);
 		const bloomEffect = new BloomEffect({
 			blendFunction: BlendFunction.SCREEN,
 			kernelSize: KERNEL_SIZES[this.pv.kernelSize],
@@ -79,10 +78,5 @@ export class BloomPostNode extends TypedPostProcessNode<EffectPass, BloomPostPar
 		(effect.blurPass.blurMaterial as any).kernelSize = KERNEL_SIZES[this.pv.kernelSize];
 		effect.blurPass.resolution.scale = this.pv.resolutionScale;
 		effect.blurPass.scale = this.pv.scale;
-		// effect.blurPass.resolution.height = 1024
-		// pass.strength = this.pv.strength;
-		// pass.radius = this.pv.radius;
-		// pass.threshold = this.pv.threshold;
-		// pass.bloomOnly = this.pv.bloomOnly;
 	}
 }

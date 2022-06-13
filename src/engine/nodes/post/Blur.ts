@@ -5,7 +5,8 @@
  */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {KawaseBlurPass} from 'postprocessing';
+import {KawaseBlurPass, KernelSize} from 'postprocessing';
+import {KERNEL_SIZES, KERNEL_SIZE_MENU_OPTIONS} from '../../../core/post/KernelSize';
 
 class BlurPostParamsConfig extends NodeParamsConfig {
 	/** @param amount */
@@ -14,6 +15,11 @@ class BlurPostParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		step: 0.01,
 		...PostParamOptions,
+	});
+	/** @param kernel size */
+	kernelSize = ParamConfig.INTEGER(KernelSize.LARGE, {
+		...PostParamOptions,
+		...KERNEL_SIZE_MENU_OPTIONS,
 	});
 }
 const ParamsConfig = new BlurPostParamsConfig();
@@ -30,5 +36,6 @@ export class BlurPostNode extends TypedPostProcessNode<KawaseBlurPass, BlurPostP
 	}
 	override updatePass(pass: KawaseBlurPass) {
 		pass.scale = this.pv.amount;
+		(pass.blurMaterial as any).kernelSize = KERNEL_SIZES[this.pv.kernelSize];
 	}
 }

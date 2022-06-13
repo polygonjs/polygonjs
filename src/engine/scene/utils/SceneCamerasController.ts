@@ -6,7 +6,9 @@ import {CreateViewerOptions} from '../../viewers/_Base';
 
 type OnCameraObjectsUpdated = () => void;
 interface MainCameraOptions {
+	cameraMaskOverride?: string;
 	findAnyCamera?: boolean;
+	printWarning?: boolean;
 }
 
 export class SceneCamerasController {
@@ -61,6 +63,11 @@ export class SceneCamerasController {
 	// 	return this._mainCameraObjectPath;
 	// }
 	async mainCamera(options?: MainCameraOptions): Promise<Camera | null> {
+		const cameraMaskOverride = options?.cameraMaskOverride;
+		if (cameraMaskOverride != null) {
+			this.scene.root().mainCameraController.setCameraPath(cameraMaskOverride);
+		}
+
 		const camera = await this.scene.root().mainCameraController.camera();
 		if (camera) {
 			return camera;
@@ -74,7 +81,13 @@ export class SceneCamerasController {
 		}
 
 		const cameraPath = await this.scene.root().mainCameraController.cameraPath();
-		console.warn(`no camera found for path '${cameraPath}'`);
+		let printWarning = true;
+		if (options?.printWarning != null) {
+			printWarning = options.printWarning;
+		}
+		if (printWarning) {
+			console.warn(`no camera found for path '${cameraPath}'`);
+		}
 
 		return null;
 	}
@@ -84,7 +97,7 @@ export class SceneCamerasController {
 	}
 
 	async createMainViewer(options?: CreateViewerOptions) {
-		const camera = await this.mainCamera();
+		const camera = await this.mainCamera({cameraMaskOverride: options?.cameraMaskOverride});
 		if (!camera) {
 			return;
 		}
