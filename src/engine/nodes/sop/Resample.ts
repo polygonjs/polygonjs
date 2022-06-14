@@ -25,6 +25,7 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three';
 import {SplineCurveType, SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class ResampleSopParamsConfig extends NodeParamsConfig {
 	/** @param resampling method */
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {
@@ -75,39 +76,36 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		return 'resample';
 	}
 
-	// private _objects: Object3D
-
 	override initializeNode() {
 		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
 
-		// this._objects = [];
-		const resampled_objects = [];
+		const resampledObjects = [];
 		if (this.pv.pointsCount >= 2) {
-			const core_objects = core_group.coreObjects();
-			for (let i = 0; i < core_objects.length; i++) {
-				const core_object = core_objects[i];
-				const object = core_object.object();
+			const coreObjects = coreGroup.coreObjects();
+			for (let coreObject of coreObjects) {
+				const object = coreObject.object();
 				if (object instanceof LineSegments) {
 					const resampled_object = this._resample(object);
-					resampled_objects.push(resampled_object);
+					resampledObjects.push(resampled_object);
 				}
 			}
 		}
 
-		this.setObjects(resampled_objects);
+		this.setObjects(resampledObjects);
 	}
 	setCurveType(curveType: SplineCurveType) {
 		this.p.curveType.set(SPLINE_CURVE_TYPES.indexOf(curveType));
 	}
 
-	_resample(line_segment: LineSegments) {
-		const geometry = line_segment.geometry as BufferGeometry;
-		const core_geometry = new CoreGeometry(geometry);
-		const points = core_geometry.points();
+	_resample(lineSegment: LineSegments) {
+		const geometry = lineSegment.geometry as BufferGeometry;
+		const coreGeometry = new CoreGeometry(geometry);
+		const points = coreGeometry.points();
 		const indices = geometry.getIndex()?.array as number[];
 
 		const accumulated_curve_point_indices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);
