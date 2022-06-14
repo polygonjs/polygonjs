@@ -67,13 +67,14 @@ export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 	override async cook(input_contents: Texture[]) {
-		if (!isUrlGif(this.pv.url)) {
+		const url = this.pv.url;
+		if (!isUrlGif(url)) {
 			this.states.error.set('url is not an image');
 		} else {
 			CoreLoaderTexture.incrementInProgressLoadsCount();
 			await CoreLoaderTexture.waitForMaxConcurrentLoadsQueueFreed();
 
-			const response = await fetch(this.pv.url);
+			const response = await fetch(url);
 			const buffer = await response.arrayBuffer();
 			const gif = await parseGIF(buffer);
 			const buildImagePatches = true;
@@ -83,13 +84,13 @@ export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
 			this._frameIndex = this.pv.gifFrame - 1;
 
 			this._createCanvas();
-			CoreLoaderTexture.decrementInProgressLoadsCount();
-			if (!this._gifCanvasElement) {
-				this.states.error.set('failed to create canvas');
-			} else {
-				const texture = new CanvasTexture(this._gifCanvasElement);
+			const texture = this._gifCanvasElement ? new CanvasTexture(this._gifCanvasElement) : undefined;
+			CoreLoaderTexture.decrementInProgressLoadsCount(url, texture);
+			if (texture) {
 				await this.textureParamsController.update(texture);
 				this.setTexture(texture);
+			} else {
+				this.states.error.set('failed to create canvas');
 			}
 		}
 	}

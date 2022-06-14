@@ -42,13 +42,13 @@ export abstract class BaseGeoLoaderHandler<O extends BaseGeoLoaderOutput> extend
 			loader.load(
 				url,
 				(object: O) => {
-					CoreLoaderGeometry.decrementInProgressLoadsCount();
-					const newObjects = this._onLoadSuccessGLTF(object);
+					CoreLoaderGeometry.decrementInProgressLoadsCount(url, object);
+					const newObjects = this._onLoadSuccess(object);
 					resolve(newObjects);
 				},
 				(progress) => {},
 				(event: ErrorEvent) => {
-					CoreLoaderGeometry.decrementInProgressLoadsCount();
+					CoreLoaderGeometry.decrementInProgressLoadsCount(url);
 					const message = `could not load geometry from ${url} (Error: ${event.message})`;
 					options.node?.states.error.set(message);
 				}
@@ -56,7 +56,7 @@ export abstract class BaseGeoLoaderHandler<O extends BaseGeoLoaderOutput> extend
 		});
 	}
 	protected abstract _getLoader(options: BaseLoaderLoadOptions): Promise<BaseGeoLoader<O>>;
-	protected _onLoadSuccessGLTF(o: O): Object3D[] {
+	protected _onLoadSuccess(o: O): Object3D[] {
 		if (o instanceof Object3D) {
 			return [o];
 		} else {

@@ -1,4 +1,9 @@
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+
+function _url(path: string) {
+	return `${ASSETS_ROOT}${path}`;
+}
 
 QUnit.test('animation_copy simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -13,7 +18,7 @@ QUnit.test('animation_copy simple', async (assert) => {
 	animation_copy1.setInput(1, file1);
 
 	hierarchy1.setMode(HierarchyMode.REMOVE_PARENT); // remove parent
-	file1.p.url.set('/examples/models/soldier.glb');
+	file1.p.url.set(_url('models/soldier.glb'));
 
 	let container = await animation_copy1.compute();
 	assert.equal(container.totalPointsCount(), 7434); // I should really do a better test

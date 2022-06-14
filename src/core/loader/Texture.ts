@@ -4,16 +4,10 @@ import {CoreUserAgent} from '../UserAgent';
 import {CoreBaseLoader} from './_Base';
 
 type MaxConcurrentLoadsCountMethod = () => number;
-type OnTextureLoadedCallback = (url: string, texture: Texture) => void;
 
 export class CoreLoaderTexture extends CoreBaseLoader {
 	constructor(_url: string, protected override _node: BaseNodeType) {
 		super(_url, _node);
-	}
-
-	static _onTextureLoadedCallback: OnTextureLoadedCallback | undefined;
-	static onTextureLoaded(callback: OnTextureLoadedCallback | undefined) {
-		this._onTextureLoadedCallback = callback;
 	}
 
 	// static pixelData(texture: Texture) {
@@ -96,16 +90,17 @@ export class CoreLoaderTexture extends CoreBaseLoader {
 	static incrementInProgressLoadsCount() {
 		this.in_progress_loads_count++;
 	}
-	static decrementInProgressLoadsCount() {
+	static decrementInProgressLoadsCount(url: string, texture?: Texture) {
 		this.in_progress_loads_count--;
 
-		const queued_resolve = this._queue.pop();
-		if (queued_resolve) {
+		const queuedResolve = this._queue.pop();
+		if (queuedResolve) {
 			const delay = this.CONCURRENT_LOADS_DELAY;
 			setTimeout(() => {
-				queued_resolve();
+				queuedResolve();
 			}, delay);
 		}
+		this._runOnAssetLoadedCallbacks(url, texture);
 	}
 
 	static async waitForMaxConcurrentLoadsQueueFreed(): Promise<void> {

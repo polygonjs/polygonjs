@@ -1,4 +1,9 @@
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+
+function _url(path: string) {
+	return `${ASSETS_ROOT}${path}`;
+}
 
 QUnit.test('hierarchy simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -10,7 +15,7 @@ QUnit.test('hierarchy simple', async (assert) => {
 	hierarchy1.setInput(0, file1);
 	hierarchy2.setInput(0, hierarchy1);
 
-	file1.p.url.set('/examples/models/wolf.obj');
+	file1.p.url.set(_url('models/wolf.obj'));
 
 	let container = await file1.compute();
 	let core_group = container.coreContent()!;

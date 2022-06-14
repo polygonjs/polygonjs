@@ -1,5 +1,10 @@
 import {Matrix4} from 'three';
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+
+function _url(path: string) {
+	return `${ASSETS_ROOT}${path}`;
+}
 
 QUnit.test('geo obj simple', async (assert) => {
 	const scene = window.scene;
@@ -101,7 +106,7 @@ QUnit.test('geo obj: only the top group from a file sop with hierarchy is added 
 	assert.ok(obj);
 	assert.equal(obj.uuid, geo1.object.uuid);
 	const file1 = geo1.createNode('fileOBJ');
-	file1.p.url.set('/examples/models/wolf.obj');
+	file1.p.url.set(_url('models/wolf.obj'));
 
 	file1.flags.display.set(true);
 	await scene.waitForCooksCompleted();

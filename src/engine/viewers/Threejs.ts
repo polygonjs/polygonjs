@@ -237,6 +237,12 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	 *
 	 */
 	override setAutoRender(state = true) {
+		if (this._doRender == true) {
+			// if this._doRender is already true,
+			// calling this a second time would start another requestAnimationFrame
+			// and we would therefore render at twice the rate
+			return;
+		}
 		super.setAutoRender(state);
 		if (this._doRender) {
 			this.animate();

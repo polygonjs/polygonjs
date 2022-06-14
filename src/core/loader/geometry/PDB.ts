@@ -10,7 +10,7 @@ export class PDBLoaderHandler extends BaseGeoLoaderHandler<PDB> {
 	protected async _getLoader(): Promise<BaseGeoLoader<PDB>> {
 		return (this._loader = this._loader || (await new PDBLoader(this.loadingManager)));
 	}
-	protected override _onLoadSuccessGLTF(o: PDB): Object3D[] {
+	protected override _onLoadSuccess(o: PDB): Object3D[] {
 		const atoms = new Points(o.geometryAtoms, matPoints);
 		const bonds = new LineSegments(o.geometryBonds, matLines);
 

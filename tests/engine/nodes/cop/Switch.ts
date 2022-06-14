@@ -1,4 +1,9 @@
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+
+function _url(path: string) {
+	return `${ASSETS_ROOT}${path}`;
+}
 
 QUnit.test('COP switch simple', async (assert) => {
 	window.scene.performance.start();
@@ -15,10 +20,10 @@ QUnit.test('COP switch simple', async (assert) => {
 	const file_env1 = COP.createNode('image');
 	const file_env2 = COP.createNode('image');
 
-	file_diffuse1.p.url.set('/examples/textures/uv.jpg');
-	file_diffuse2.p.url.set('/examples/textures/hardwood2_diffuse.jpg');
-	file_env1.p.url.set('/examples/textures/piz_compressed.exr');
-	file_env2.p.url.set('/examples/textures/equirectangular/quarry_01_1k.hdr');
+	file_diffuse1.p.url.set(_url('textures/uv.jpg'));
+	file_diffuse2.p.url.set(_url('textures/doesnotexists.jpg'));
+	file_env1.p.url.set(_url('textures/piz_compressed.exr'));
+	file_env2.p.url.set(_url('textures/equirectangular/quarry_01_1k.hdr'));
 	const texture_diffuse1 = (await file_diffuse1.compute()).texture();
 	const texture_diffuse2 = (await file_diffuse2.compute()).texture();
 	const texture_env1 = (await file_env1.compute()).texture();
@@ -80,7 +85,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	assert.equal(material.envMap!.uuid, texture_env1.uuid);
 
 	// and finally change the path of a file node, to renew its texture completely
-	file_diffuse1.p.url.set('/examples/textures/equirectangular.png');
+	file_diffuse1.p.url.set(_url('textures/equirectangular.png'));
 	const file_diffuse1_old_uuid = texture_diffuse1.uuid;
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
@@ -90,7 +95,7 @@ QUnit.test('COP switch simple', async (assert) => {
 	assert.equal(material.map!.uuid, texture_diffuse1B.uuid);
 
 	// and the env node
-	file_env1.p.url.set('/examples/textures/equirectangular.png');
+	file_env1.p.url.set(_url('textures/equirectangular.png'));
 	const file_env1_old_uuid = texture_env1.uuid;
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);

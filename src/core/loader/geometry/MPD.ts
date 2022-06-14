@@ -6,7 +6,7 @@ export class MPDLoaderHandler extends BaseGeoLoaderHandler<Group> {
 	protected async _getLoader(): Promise<BaseGeoLoader<Group>> {
 		return (this._loader = this._loader || (await new LDrawLoader(this.loadingManager)));
 	}
-	protected override _onLoadSuccessGLTF(o: Group): Group[] {
+	protected override _onLoadSuccess(o: Group): Group[] {
 		o.rotation.x = Math.PI;
 		o.updateMatrix();
 		return [o];

@@ -1,58 +1,63 @@
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {DataType, DATA_TYPES} from '../../../../src/engine/nodes/sop/DataUrl';
 
-QUnit.test('data_url json', async (assert) => {
+function _url(path: string) {
+	return `${ASSETS_ROOT}nodes/sop/DataUrl/${path}?t=${performance.now()}`;
+}
+
+QUnit.test('dataUrl json', async (assert) => {
 	const geo1 = window.geo1;
 
-	const data_url1 = geo1.createNode('dataUrl');
+	const dataUrl1 = geo1.createNode('dataUrl');
 
 	let container;
-	container = await data_url1.compute();
-	assert.ok(!data_url1.isDirty());
+	container = await dataUrl1.compute();
+	assert.ok(!dataUrl1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 
 	await window.scene.root().processQueue();
 
-	data_url1.p.url.set('/examples/sop/data_url/default.json');
-	container = await data_url1.compute();
+	dataUrl1.p.url.set(_url('default.json'));
+	container = await dataUrl1.compute();
 
-	assert.ok(!data_url1.isDirty());
+	assert.ok(!dataUrl1.isDirty());
 	assert.equal(container.pointsCount(), 8);
 
-	data_url1.p.url.set('/examples/sop/data_url/basic.json');
-	container = await data_url1.compute();
+	dataUrl1.p.url.set(_url('basic.json'));
+	container = await dataUrl1.compute();
 
-	assert.ok(!data_url1.isDirty());
+	assert.ok(!dataUrl1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 
 	// and a non existing
-	data_url1.p.url.set('/dataurl_doesnotexist.json');
-	container = await data_url1.compute();
+	dataUrl1.p.url.set('/dataurl_doesnotexist.json');
+	container = await dataUrl1.compute();
 
-	assert.ok(!data_url1.isDirty());
+	assert.ok(!dataUrl1.isDirty());
 	assert.equal(container.pointsCount(), 0);
 	assert.equal(
-		data_url1.states.error.message(),
+		dataUrl1.states.error.message(),
 		'could not load geometry from /dataurl_doesnotexist.json (SyntaxError: Unexpected token < in JSON at position 0)'
 	);
 
 	// restore it with a good url
-	data_url1.p.url.set('/examples/sop/data_url/default.json');
-	container = await data_url1.compute();
+	dataUrl1.p.url.set(_url('default.json'));
+	container = await dataUrl1.compute();
 	assert.equal(container.pointsCount(), 8);
 });
 
-QUnit.test('data_url csv without reading names from file', async (assert) => {
+QUnit.test('dataUrl csv without reading names from file', async (assert) => {
 	const geo1 = window.geo1;
 
-	const data_url1 = geo1.createNode('dataUrl');
-	data_url1.p.url.set('/examples/sop/data_url/without_attrib_names.csv');
-	data_url1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
-	data_url1.p.readAttribNamesFromFile.set(0);
-	data_url1.p.attribNames.set('attr1 attr2 attr3');
+	const dataUrl1 = geo1.createNode('dataUrl');
+	dataUrl1.p.url.set(_url('without_attrib_names.csv'));
+	dataUrl1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
+	dataUrl1.p.readAttribNamesFromFile.set(0);
+	dataUrl1.p.attribNames.set('attr1 attr2 attr3');
 
 	let container;
-	container = await data_url1.compute();
-	assert.ok(!data_url1.isDirty());
+	container = await dataUrl1.compute();
+	assert.ok(!dataUrl1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
 	const point0 = core_group.points()[0];
@@ -70,16 +75,16 @@ QUnit.test('data_url csv without reading names from file', async (assert) => {
 	assert.deepEqual(geometry.attributes.attr3.array.length, 2);
 	assert.deepEqual(Object.keys(geometry.attributes).sort(), ['attr1', 'attr2', 'attr3', 'position']);
 });
-QUnit.test('data_url csv with reading names from file', async (assert) => {
+QUnit.test('dataUrl csv with reading names from file', async (assert) => {
 	const geo1 = window.geo1;
 
-	const data_url1 = geo1.createNode('dataUrl');
-	data_url1.p.url.set('/examples/sop/data_url/with_attrib_names.csv');
-	data_url1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
-	data_url1.p.readAttribNamesFromFile.set(1);
+	const dataUrl1 = geo1.createNode('dataUrl');
+	dataUrl1.p.url.set(_url('with_attrib_names.csv'));
+	dataUrl1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
+	dataUrl1.p.readAttribNamesFromFile.set(1);
 
-	let container = await data_url1.compute();
-	assert.ok(!data_url1.isDirty());
+	let container = await dataUrl1.compute();
+	assert.ok(!dataUrl1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
 	const point0 = core_group.points()[0];
@@ -100,16 +105,16 @@ QUnit.test('data_url csv with reading names from file', async (assert) => {
 	assert.deepEqual(geometry.attributes.add.array.length, 2);
 	assert.deepEqual(Object.keys(geometry.attributes).sort(), ['rot', 'mult', 'add', 'position', 'scale'].sort());
 });
-QUnit.test('data_url csv with empty line', async (assert) => {
+QUnit.test('dataUrl csv with empty line', async (assert) => {
 	const geo1 = window.geo1;
 
-	const data_url1 = geo1.createNode('dataUrl');
-	data_url1.p.url.set('/examples/sop/data_url/with_empty_line.csv');
-	data_url1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
-	data_url1.p.readAttribNamesFromFile.set(1);
+	const dataUrl1 = geo1.createNode('dataUrl');
+	dataUrl1.p.url.set(_url('with_empty_line.csv'));
+	dataUrl1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
+	dataUrl1.p.readAttribNamesFromFile.set(1);
 
-	let container = await data_url1.compute();
-	assert.ok(!data_url1.isDirty());
+	let container = await dataUrl1.compute();
+	assert.ok(!dataUrl1.isDirty());
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;

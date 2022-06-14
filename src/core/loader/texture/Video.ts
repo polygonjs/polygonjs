@@ -36,11 +36,7 @@ export class VideoTextureLoader extends BaseTextureLoader {
 				const texture = new VideoTexture(video);
 				// video.setAttribute('controls', true)
 				// video.style="display:none"
-				CoreLoaderTexture.decrementInProgressLoadsCount();
-				const callback = CoreLoaderTexture._onTextureLoadedCallback;
-				if (callback) {
-					callback(url, texture);
-				}
+				CoreLoaderTexture.decrementInProgressLoadsCount(url, texture);
 				resolve(texture);
 			};
 

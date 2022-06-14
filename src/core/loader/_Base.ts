@@ -1,7 +1,8 @@
-import {LoadingManager} from 'three';
+import {LoadingManager, Texture} from 'three';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
 import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
+import {BaseGeoLoaderOutput} from './geometry/_BaseLoaderHandler';
 
 export function modifyUrl(url: string) {
 	const remapedUrl = Poly.assetUrls.remapedUrl(url);
@@ -34,6 +35,8 @@ interface MultipleDependenciesLoadOptions {
 	error: string;
 	node?: BaseNodeType;
 }
+
+type OnAssetLoadedCallback = (url: string, asset?: BaseGeoLoaderOutput | Texture) => void;
 
 export class CoreBaseLoader {
 	static readonly loadingManager = LOADING_MANAGER; // static
@@ -101,6 +104,20 @@ export class CoreBaseLoader {
 					options.node.states.error.set(options.error);
 				}
 			}
+		}
+	}
+
+	private static _onAssetLoadedCallbacks: OnAssetLoadedCallback[] | undefined;
+	static onAssetLoaded(callback: OnAssetLoadedCallback) {
+		this._onAssetLoadedCallbacks = this._onAssetLoadedCallbacks || [];
+		this._onAssetLoadedCallbacks.push(callback);
+	}
+	static _runOnAssetLoadedCallbacks(url: string, asset?: BaseGeoLoaderOutput | Texture) {
+		if (!this._onAssetLoadedCallbacks) {
+			return;
+		}
+		for (let callback of this._onAssetLoadedCallbacks) {
+			callback(url, asset);
 		}
 	}
 }

@@ -39,7 +39,7 @@ export class DRCLoaderHandler extends BaseGeoLoaderHandler<BufferGeometry> {
 		dracoLoader.setDecoderConfig({type: useJS ? 'js' : 'wasm'});
 		return dracoLoader;
 	}
-	protected override _onLoadSuccessGLTF(geometry: BufferGeometry): Object3D[] {
+	protected override _onLoadSuccess(geometry: BufferGeometry): Object3D[] {
 		return [new Mesh(geometry, _defaultMatMesh)];
 	}
 }

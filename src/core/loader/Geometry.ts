@@ -1,6 +1,7 @@
 import {CoreUserAgent} from '../UserAgent';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
+import {BaseGeoLoaderOutput} from './geometry/_BaseLoaderHandler';
 
 export enum GeometryFormat {
 	AUTO = 'auto',
@@ -104,16 +105,17 @@ export class CoreLoaderGeometry extends CoreBaseLoader {
 	static incrementInProgressLoadsCount() {
 		this._inProgressLoadsCount++;
 	}
-	static decrementInProgressLoadsCount() {
+	static decrementInProgressLoadsCount(url: string, object?: BaseGeoLoaderOutput) {
 		this._inProgressLoadsCount--;
 
-		const queued_resolve = this._queue.pop();
-		if (queued_resolve) {
+		const queuedResolve = this._queue.pop();
+		if (queuedResolve) {
 			const delay = this.CONCURRENT_LOADS_DELAY;
 			setTimeout(() => {
-				queued_resolve();
+				queuedResolve();
 			}, delay);
 		}
+		this._runOnAssetLoadedCallbacks(url, object);
 	}
 
 	static async waitForMaxConcurrentLoadsQueueFreed(): Promise<void> {

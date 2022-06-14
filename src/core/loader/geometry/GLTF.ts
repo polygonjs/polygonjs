@@ -74,7 +74,7 @@ export class GLTFLoaderHandler extends BaseGeoLoaderHandler<GLTF> {
 		dracoLoader.preload();
 		return dracoLoader;
 	}
-	protected override _onLoadSuccessGLTF(gltf: GLTF): Object3D[] {
+	protected override _onLoadSuccess(gltf: GLTF): Object3D[] {
 		const scene = gltf.scene || gltf.scenes[0];
 		scene.animations = gltf.animations;
 

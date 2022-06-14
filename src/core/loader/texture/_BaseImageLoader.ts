@@ -31,20 +31,14 @@ export abstract class BaseCoreImageLoader extends BaseTextureLoader {
 			loader.load(
 				url,
 				(texture: Texture) => {
-					CoreLoaderTexture.decrementInProgressLoadsCount();
-
 					texture.matrixAutoUpdate = false;
-
-					const callback = CoreLoaderTexture._onTextureLoadedCallback;
-					if (callback) {
-						callback(url, texture);
-					}
+					CoreLoaderTexture.decrementInProgressLoadsCount(url, texture);
 
 					resolve(texture);
 				},
 				undefined,
 				(error: any) => {
-					CoreLoaderTexture.decrementInProgressLoadsCount();
+					CoreLoaderTexture.decrementInProgressLoadsCount(url);
 					Poly.warn('error', error);
 					reject();
 				}

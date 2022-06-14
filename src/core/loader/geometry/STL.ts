@@ -8,7 +8,7 @@ export class STLLoaderHandler extends BaseGeoLoaderHandler<BufferGeometry> {
 	protected async _getLoader(): Promise<BaseGeoLoader<BufferGeometry>> {
 		return (this._loader = this._loader || (await new STLLoader(this.loadingManager)));
 	}
-	protected override _onLoadSuccessGLTF(o: BufferGeometry): Object3D[] {
+	protected override _onLoadSuccess(o: BufferGeometry): Object3D[] {
 		return [new Mesh(o, matMesh)];
 	}
 }

@@ -73,6 +73,7 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async ({viewer, element}) => {
 		const COP = window.COP;
 		const builder1 = COP.createNode('builder');
+		builder1.p.useCameraRenderer.set(0); // we need to set this to 0 for the pixelBuffer below to exists.
 		const {output1, globals1} = create_required_nodes(builder1);
 		// currently no need to tie it to a material to have it recook
 		// currently use a mat to have the builder recook
