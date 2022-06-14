@@ -54,13 +54,22 @@ export class ActorsManager {
 	private _hoveredEventsController: ActorHoveredEventsController | undefined;
 
 	assignActorBuilder(object: Object3D, node: ActorBuilderNode) {
-		object.userData[ACTOR_BUILDER_NODE_IDS_KEY] = object.userData[ACTOR_BUILDER_NODE_IDS_KEY] || [];
-		object.userData[ACTOR_BUILDER_NODE_IDS_KEY].push(node.graphNodeId());
+		let ids = this.objectActorNodeIds(object);
+		if (!ids) {
+			ids = [];
+			object.userData[ACTOR_BUILDER_NODE_IDS_KEY] = ids;
+		}
+		const id = node.graphNodeId();
+		if (!ids.includes(id)) {
+			ids.push(id);
+		}
 
 		this._actorNodes.add(node);
 		// this._findSceneEvents(node);
 	}
-
+	objectActorNodeIds(object: Object3D) {
+		return object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
+	}
 	/*
 	 *
 	 * EVENTS
@@ -138,6 +147,7 @@ export class ActorsManager {
 		if (!nodeIds) {
 			return;
 		}
+
 		for (let nodeId of nodeIds) {
 			const node = this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
 			if (node) {
@@ -241,10 +251,6 @@ export class ActorsManager {
 				);
 			});
 		});
-	}
-
-	objectActorNodeIds(object: Object3D) {
-		return object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
 	}
 
 	parentActorBuilderNode(node: BaseActorNodeType) {
