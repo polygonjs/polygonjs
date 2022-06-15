@@ -3,12 +3,14 @@
  *
  *
  */
-import {Vector2} from 'three';
+import {Texture, Vector2} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, EffectPass, TextureEffect} from 'postprocessing';
 import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
 import {NodeContext} from '../../poly/NodeContext';
+
+const tmpTexture = new Texture();
 class TexturePostParamsConfig extends NodeParamsConfig {
 	/** @param texture */
 	texture = ParamConfig.NODE_PATH('', {
@@ -40,7 +42,7 @@ export class TexturePostNode extends TypedPostProcessNode<EffectPass, TexturePos
 	private _rendererSize = new Vector2();
 	protected override _createPass(context: TypedPostNodeContext) {
 		context.renderer.getSize(this._rendererSize);
-		const effect = new TextureEffect({});
+		const effect = new TextureEffect({texture: tmpTexture});
 		const pass = new EffectPass(context.camera, effect);
 		this.updatePass(pass);
 		return pass;
