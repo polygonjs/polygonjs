@@ -8,7 +8,6 @@ import {CircleBufferGeometry} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {degToRad} from 'three/src/math/MathUtils';
 
 interface CircleSopParams extends DefaultOperationParams {
 	radius: number;
@@ -58,7 +57,8 @@ export class CircleSopOperation extends BaseSopOperation {
 		// rotate 30 deg to:
 		// - align with the tube
 		// - so that copying circles on hexagon points gives an hexagon grid immediately
-		geometry.rotateZ(degToRad(30));
+		// update: do not rotate, as it creates a poor shape when using 3, 4 or 5 sides
+		// geometry.rotateZ(degToRad(30));
 		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 	}

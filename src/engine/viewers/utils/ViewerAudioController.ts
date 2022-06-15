@@ -65,8 +65,11 @@ export class ViewerAudioController {
 	private _createIconContainer() {
 		const element = document.createElement('div');
 
-		element.addEventListener('pointerdown', () => {
+		element.addEventListener('pointerdown', (event) => {
 			this._toggleSound();
+			event.preventDefault();
+			event.stopPropagation();
+			return false;
 		});
 
 		return element;
