@@ -19,7 +19,7 @@
 		"node-based"
 	],
 	"author": "Guillaume Fradin <gui@polygonjs.com>",
-	"license": "MIT",
+	"license": "PolyForm Shield",
 	"main": "./dist/src/engine/index_all.js",
 	"scripts": {
 		"start": "webpack-dev-server --env NODE_ENV=development --env production=false --config config/webpack/dev.js",
