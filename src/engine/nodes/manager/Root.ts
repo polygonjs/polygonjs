@@ -40,7 +40,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	}
 
 	protected _object: Scene = this._createScene();
-	private _queued_nodes_by_id: Map<number, BaseObjNodeType> = new Map();
+	private _queuedNodesById: Map<number, BaseObjNodeType> = new Map();
 	// private _expected_geo_nodes: PolyDictionary<GeoObjNode> = {};
 	// private _process_queue_start: number = -1;
 	readonly audioController: RootAudioController = new RootAudioController(this);
@@ -67,8 +67,8 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 		// this.children_controller?.init({dependent: false});
 		this._object.matrixAutoUpdate = false;
 
-		this.lifecycle.onChildAdd(this._on_child_add.bind(this));
-		this.lifecycle.onChildRemove(this._on_child_remove.bind(this));
+		this.lifecycle.onChildAdd(this._onChildAdd.bind(this));
+		this.lifecycle.onChildRemove(this._onChildRemove.bind(this));
 	}
 
 	private _createScene() {
@@ -115,8 +115,8 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 
 	private _addToQueue(node: BaseObjNodeType) {
 		const id = node.graphNodeId();
-		if (!this._queued_nodes_by_id.has(id)) {
-			this._queued_nodes_by_id.set(id, node);
+		if (!this._queuedNodesById.has(id)) {
+			this._queuedNodesById.set(id, node);
 		}
 		return node;
 	}
@@ -126,12 +126,12 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 
 		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();
 		const paths: string[] = [];
-		this._queued_nodes_by_id.forEach((node, id) => {
+		this._queuedNodesById.forEach((node, id) => {
 			const fullPath = `_____${node.renderOrder}__${node.path()}`;
 			paths.push(fullPath);
 			queued_nodes_by_path.set(fullPath, node);
 		});
-		this._queued_nodes_by_id.clear();
+		this._queuedNodesById.clear();
 
 		// const promises = [];
 		for (let path_id of paths) {
@@ -158,7 +158,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 		// });
 	}
 
-	private _update_object(node: BaseObjNodeType) {
+	private _updateObject(node: BaseObjNodeType) {
 		if (!this.scene().loadingController.autoUpdating()) {
 			return this._addToQueue(node);
 		} else {
@@ -256,19 +256,19 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	// }
 
 	addToParentTransform(node: HierarchyObjNode) {
-		this._update_object(node);
+		this._updateObject(node);
 	}
 
 	removeFromParentTransform(node: HierarchyObjNode) {
-		this._update_object(node);
+		this._updateObject(node);
 	}
 
-	private _on_child_add(node?: BaseNodeType) {
+	private _onChildAdd(node?: BaseNodeType) {
 		if (node) {
-			this._update_object(node as BaseObjNodeType);
+			this._updateObject(node as BaseObjNodeType);
 		}
 	}
-	private _on_child_remove(node?: BaseNodeType) {
+	private _onChildRemove(node?: BaseNodeType) {
 		if (node) {
 			this._removeFromScene(node as BaseObjNodeType);
 		}

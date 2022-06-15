@@ -28,11 +28,12 @@ interface WithViewerOptions {
 	cameraNode: PerspectiveCameraObjNode | OrthographicCameraObjNode;
 	mount?: boolean;
 }
+type WithViewerContainerCallback = (element: HTMLElement) => Promise<void>;
 type WithViewerCallback = (args: WithViewerCallbackArgs) => Promise<void>;
 export class RendererUtils {
 	private static _configs: RendererConfig[] = [];
 
-	static async withViewer(options: WithViewerOptions, callback: WithViewerCallback) {
+	static async withViewerContainer(callback: WithViewerContainerCallback) {
 		const element = document.createElement('div');
 		element.style.position = 'absolute';
 		element.style.top = '0px';
@@ -41,23 +42,29 @@ export class RendererUtils {
 		element.style.height = '200px';
 		element.style.zIndex = '9999999';
 		document.body.appendChild(element);
-		const viewer = (await options.cameraNode.createViewer({element}))!;
-		const canvas = viewer.canvas();
-		const renderer = viewer.renderer();
-
-		let mount = false;
-		if (options.mount != null) {
-			mount = options.mount;
-		}
-		if (mount) {
-			viewer.mount(element);
-		}
-
-		// options.cameraNode.scene().viewersRegister.viewerWithCamera(options.cameraNode)
-		await callback({viewer, element, canvas, renderer});
-
-		viewer.dispose();
+		await callback(element);
 		document.body.removeChild(element);
+	}
+
+	static async withViewer(options: WithViewerOptions, callback: WithViewerCallback) {
+		await this.withViewerContainer(async (element) => {
+			const viewer = (await options.cameraNode.createViewer({element}))!;
+			const canvas = viewer.canvas();
+			const renderer = viewer.renderer();
+
+			let mount = false;
+			if (options.mount != null) {
+				mount = options.mount;
+			}
+			if (mount) {
+				viewer.mount(element);
+			}
+
+			// options.cameraNode.scene().viewersRegister.viewerWithCamera(options.cameraNode)
+			await callback({viewer, element, canvas, renderer});
+
+			viewer.dispose();
+		});
 	}
 
 	static async waitForRenderer(scene: PolyScene): Promise<RendererConfig> {

@@ -237,15 +237,15 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	 *
 	 */
 	override setAutoRender(state = true) {
-		if (this._doRender == true) {
-			// if this._doRender is already true,
-			// calling this a second time would start another requestAnimationFrame
-			// and we would therefore render at twice the rate
-			return;
-		}
 		super.setAutoRender(state);
-		if (this._doRender) {
+		// if this._requestAnimationFrameId is already defined,
+		// calling this a second time would start another requestAnimationFrame
+		// and we would therefore render at twice the rate
+		if (this._doRender && this._requestAnimationFrameId == null) {
 			this.animate();
+		}
+		if (!this._doRender) {
+			this._cancelAnimate();
 		}
 	}
 
@@ -264,8 +264,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 
 	private _cancelAnimate() {
 		this._doRender = false;
-		if (this._requestAnimationFrameId) {
+		if (this._requestAnimationFrameId != null) {
 			cancelAnimationFrame(this._requestAnimationFrameId);
+			this._requestAnimationFrameId = undefined;
 		}
 		if (this._canvas) {
 			// this._cameraNode.renderController().deleteRenderer(this._canvas);

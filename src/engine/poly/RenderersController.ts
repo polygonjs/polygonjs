@@ -4,7 +4,8 @@ export interface POLYWebGLRenderer extends WebGLRenderer {
 	_polygonId?: number;
 }
 
-const CONTEXT_OPTIONS = {
+const CONTEXT_OPTIONS: WebGLContextAttributes = {
+	// powerPreference: 'high-performance', // attempt to fix issues in safari
 	// antialias: false, // leave that to the renderer node
 	// preserveDrawingBuffer: true, // this could only be useful to capture static images
 };

@@ -5,14 +5,38 @@ import {RootManagerNode} from '../../Root';
 import {PolyScene} from '../../../../scene/PolyScene';
 import {SetUtils} from '../../../../../core/SetUtils';
 import {Poly} from '../../../../Poly';
-import {GeoObjNode} from '../../../obj/Geo';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
+import {BaseObjNodeType} from '../../../obj/_Base';
+import {GeoObjNode} from '../../../obj/Geo';
+
+class NodeGroup {
+	public readonly totalCount: number;
+	private _processed: Set<BaseNodeType>;
+	private _remaining: Set<BaseNodeType>;
+	constructor(public readonly nodes: BaseNodeType[]) {
+		this.totalCount = nodes.length;
+		this._processed = new Set();
+		this._remaining = SetUtils.fromArray(nodes);
+	}
+	markNodeAsProcessed(node: BaseNodeType) {
+		this._processed.add(node);
+		this._remaining.delete(node);
+	}
+	isNodeProcessed(node: BaseNodeType) {
+		return this._processed.has(node);
+	}
+	processedCount(): number {
+		return this._processed.size;
+	}
+}
 
 export interface OnProgressArguments {
 	scene: PolyScene;
 	triggerNode?: BaseNodeType;
-	cookedNodes: BaseNodeType[];
-	remainingNodes: BaseNodeType[];
+	groups: {
+		cook: NodeGroup;
+		sopGroup: NodeGroup;
+	};
 }
 export type OnProgressUpdateCallback = (progressRatio: number, args: OnProgressArguments) => void;
 
@@ -59,14 +83,7 @@ export class RootLoadProgressController {
 		const cameraNodeTypes = Poly.camerasRegister.registeredNodeTypes();
 		const cameraNodes = cameraNodeTypes.map((type) => scene.nodesByType(type)).flat();
 		// and we also need to get the displayed nodes
-		const objNodesWithDisplayNodeController = scene
-			.root()
-			.children()
-			.filter((node) => (node as GeoObjNode).displayNodeController != null)
-			.filter((node) => node.flags?.display?.active());
-		const displayNodes = ArrayUtils.compact(
-			objNodesWithDisplayNodeController.map((node) => (node as GeoObjNode).displayNodeController.displayNode())
-		);
+		const displayNodes = this._displayNodes();
 		const nodes = cameraNodes.concat(displayNodes);
 		const cameraCreatorNode = await this.cameraCreatorNode();
 		if (cameraCreatorNode) {
@@ -74,40 +91,123 @@ export class RootLoadProgressController {
 		}
 		return ArrayUtils.uniq(nodes);
 	}
+	private _displayNodes() {
+		const objNodesWithDisplayNodeController = this._objectNodesWithDisplayNodeController();
+		const displayNodes = ArrayUtils.compact(
+			objNodesWithDisplayNodeController.map((node) => (node as GeoObjNode).displayNodeController.displayNode())
+		);
+		return displayNodes;
+	}
+	private _objectNodesWithDisplayNodeController() {
+		const scene = this.node.scene();
+		const objNodesWithDisplayNodeController = scene
+			.root()
+			.children()
+			.filter((node) => (node as BaseObjNodeType).displayNodeController != null)
+			.filter((node) => node.flags?.display?.active());
+		return objNodesWithDisplayNodeController;
+	}
+	// private _getNodesWithSopGroup() {
+	// 	return this._displayNodes().filter((node) => (node as GeoObjNode).childrenDisplayController != null);
+	// }
 	public cameraCreatorNode() {
 		return this.node.mainCameraController.cameraCreatorNode();
 	}
 
-	async watchNodesProgress(callback: OnProgressUpdateCallback) {
-		const nodes = (await this.resolvedNodes()).filter((node) => node.isDirty());
-
-		const nodesCount = nodes.length;
-		if (nodesCount == 0) {
-			callback(1, {scene: this.node.scene(), triggerNode: undefined, cookedNodes: [], remainingNodes: []});
+	private _toCook: NodeGroup | undefined;
+	private _sopGroupToUpdate: NodeGroup | undefined;
+	private _onProgressUpdateCallback: OnProgressUpdateCallback | undefined;
+	private _runCallback(progress: number, nodeTrigger?: BaseNodeType) {
+		if (!(this._onProgressUpdateCallback && this._toCook && this._sopGroupToUpdate)) {
+			return;
 		}
-		const remainingNodes = SetUtils.fromArray(nodes);
-		const cookedNodes = new Set<BaseNodeType>();
+		this._onProgressUpdateCallback(progress, {
+			scene: this.node.scene(),
+			triggerNode: undefined,
+			groups: {
+				cook: this._toCook,
+				sopGroup: this._sopGroupToUpdate,
+			},
+		});
+	}
+	private _updateProgressAndRunCallback(nodeTrigger: BaseNodeType) {
+		if (!(this._onProgressUpdateCallback && this._toCook && this._sopGroupToUpdate)) {
+			return;
+		}
+		const totalNodesCount = this._toCook.totalCount + this._sopGroupToUpdate.totalCount;
+		const processedNodesCount = this._toCook.processedCount() + this._sopGroupToUpdate.processedCount();
+		const progress = processedNodesCount / totalNodesCount;
+		this._runCallback(progress, nodeTrigger);
+	}
+
+	async watchNodesProgress(callback: OnProgressUpdateCallback) {
+		this._onProgressUpdateCallback = callback;
+		const nodesToCook = (await this.resolvedNodes()).filter((node) => node.isDirty());
+		this._toCook = new NodeGroup(nodesToCook);
+		const nodesToUpdateSopGroup = this._objectNodesWithDisplayNodeController()
+			.filter((node) => {
+				const displayNode = (node as GeoObjNode).displayNodeController.displayNode();
+				return displayNode != null && !displayNode.flags.bypass?.active();
+			})
+			.filter((node) => node.isDirty());
+		this._sopGroupToUpdate = new NodeGroup(nodesToUpdateSopGroup);
+		const totalNodesCount = this._toCook.totalCount + this._sopGroupToUpdate.totalCount;
+		if (totalNodesCount == 0) {
+			this._runCallback(1);
+			return;
+		}
+		this._watchNodesWithSopGroup();
+		this._watchNodesToCook();
+	}
+	private async _watchNodesToCook() {
+		const nodesGroup = this._toCook;
+		if (!nodesGroup) {
+			return;
+		}
 		const callbackName = 'RootLoadProgressController';
-		for (let node of nodes) {
+
+		const onNodeCooked = (node: BaseNodeType) => {
+			if (!nodesGroup.isNodeProcessed(node)) {
+				nodesGroup.markNodeAsProcessed(node);
+
+				this._updateProgressAndRunCallback(node);
+
+				node.cookController.deregisterOnCookEnd(callbackName);
+			}
+		};
+
+		for (let node of nodesGroup.nodes) {
+			node.cookController.registerOnCookEnd(callbackName, () => {
+				onNodeCooked(node);
+			});
 			// we force nodes to compute
 			// in case they do not have a display flag on, or are not connected
 			// as it would get the loading stuck
 			node.compute();
-			node.cookController.registerOnCookEnd(callbackName, () => {
-				if (!cookedNodes.has(node)) {
-					cookedNodes.add(node);
-					remainingNodes.delete(node);
+		}
+	}
+	private _watchNodesWithSopGroup() {
+		const nodesGroup = this._sopGroupToUpdate;
+		if (!nodesGroup) {
+			return;
+		}
+		const callbackName = 'RootLoadProgressController';
 
-					const nodesCookProgress = cookedNodes.size / nodesCount;
-					callback(nodesCookProgress, {
-						scene: this.node.scene(),
-						triggerNode: node,
-						cookedNodes: SetUtils.toArray(cookedNodes),
-						remainingNodes: SetUtils.toArray(remainingNodes),
-					});
+		const onNodeCooked = (node: BaseNodeType) => {
+			if (!nodesGroup.isNodeProcessed(node)) {
+				nodesGroup.markNodeAsProcessed(node);
 
-					node.cookController.deregisterOnCookEnd(callbackName);
-				}
+				this._updateProgressAndRunCallback(node);
+
+				const childrenDisplayController = (node as GeoObjNode).childrenDisplayController;
+				childrenDisplayController.deregisterOnSopGroupUpdated(callbackName);
+			}
+		};
+
+		for (let node of nodesGroup.nodes) {
+			const childrenDisplayController = (node as GeoObjNode).childrenDisplayController;
+			childrenDisplayController.registerOnSopGroupUpdated(callbackName, () => {
+				onNodeCooked(node);
 			});
 		}
 	}

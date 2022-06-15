@@ -77,6 +77,10 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 
 	public readonly childrenDisplayController: ChildrenDisplayController | undefined;
+	override dispose(): void {
+		super.dispose();
+		this.childrenDisplayController?.dispose();
+	}
 
 	override initializeBaseNode() {
 		this._object = this._create_object_with_attributes();

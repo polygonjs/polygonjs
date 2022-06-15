@@ -6,13 +6,13 @@ import {BaseSopNodeType} from '../../sop/_Base';
 
 const DISPLAY_PARAM_NAME = 'display';
 
+export type OnSopGroupUpdatedHook = () => void;
 interface BaseObjNodeClassWithDisplayNode extends BaseObjNodeClass {
 	displayNodeController: DisplayNodeController;
 }
 
 export class ChildrenDisplayController {
-	_children_uuids_dict: Map<string, boolean> = new Map();
-	_children_length: number = 0;
+	_childrenUuids: Set<string> = new Set();
 	private _sopGroup = this._createSopGroup();
 
 	constructor(private node: BaseObjNodeClassWithDisplayNode) {}
@@ -32,11 +32,14 @@ export class ChildrenDisplayController {
 	setSopGroupName() {
 		this._sopGroup.name = `${this.node.name()}:sopGroup`;
 	}
+	dispose() {
+		this._clearHooks();
+	}
 
 	displayNodeControllerCallbacks(): DisplayNodeControllerCallbacks {
 		return {
 			onDisplayNodeRemove: () => {
-				this.remove_children();
+				this.removeChildren();
 			},
 			onDisplayNodeSet: () => {
 				// use a timeout here, so that the node isn't cooked too early when being copy/pasted, if it had the display flag on.
@@ -67,8 +70,8 @@ export class ChildrenDisplayController {
 		}
 	}
 	private _updateSopGroupHierarchy() {
-		const display_flag = this.node.flags?.display;
-		if (display_flag) {
+		const displayFlag = this.node.flags?.display;
+		if (displayFlag) {
 			const sopGroup = this.sopGroup();
 			if (this.usedInScene()) {
 				sopGroup.visible = true;
@@ -101,7 +104,7 @@ export class ChildrenDisplayController {
 		}
 	}
 
-	remove_children() {
+	private removeChildren() {
 		if (this._sopGroup.children.length == 0) {
 			return;
 		}
@@ -109,8 +112,7 @@ export class ChildrenDisplayController {
 		while ((child = this._sopGroup.children[0])) {
 			this._sopGroup.remove(child);
 		}
-		this._children_uuids_dict.clear();
-		this._children_length = 0;
+		this._childrenUuids.clear();
 
 		this._notifyCamerasController();
 	}
@@ -118,40 +120,88 @@ export class ChildrenDisplayController {
 	async _setContentUnderSopGroup() {
 		// we also check that the parent are the same, in case the node has been deleted
 		// TODO: there should be a wider refactor where deleted node cannot raise callbacks such as flags update
-		const display_node = this.node.displayNodeController.displayNode() as BaseSopNodeType;
+		const displayNode = this.node.displayNodeController.displayNode() as BaseSopNodeType;
 
-		if (display_node && display_node.parent()?.graphNodeId() == this.node.graphNodeId()) {
-			const container = await display_node.compute();
-			const core_group = container.coreContent();
-			if (core_group) {
+		if (displayNode && displayNode.parent()?.graphNodeId() == this.node.graphNodeId()) {
+			const container = await displayNode.compute();
+			const coreGroup = container.coreContent();
+			if (coreGroup) {
 				// check if the new objects are different
-				const new_objects = core_group.objects();
-				let new_objects_are_different = new_objects.length != this._children_length;
+				const newObjects = coreGroup.objects();
+				let new_objects_are_different = newObjects.length != this._childrenUuids.size;
 				if (!new_objects_are_different) {
-					for (let object of new_objects) {
-						if (!this._children_uuids_dict.get(object.uuid)) {
+					for (let object of newObjects) {
+						if (!this._childrenUuids.has(object.uuid)) {
 							new_objects_are_different = true;
 						}
 					}
 				}
 				// update hierarchy if different
 				if (new_objects_are_different) {
-					this.remove_children();
-					for (let object of new_objects) {
+					this.removeChildren();
+					for (let object of newObjects) {
 						this._sopGroup.add(object);
 						// ensure the matrix of the parent is used
 						object.updateMatrix();
-						this._children_uuids_dict.set(object.uuid, true);
+						this._childrenUuids.add(object.uuid);
 					}
-					this._children_length = new_objects.length;
 				}
 				this._notifyCamerasController();
+				this._runOnSopGroupUpdatedHooks();
 				return;
 			}
 		}
-		this.remove_children();
+		this.removeChildren();
+		this._runOnSopGroupUpdatedHooks();
 	}
 	private _notifyCamerasController() {
 		this.node.scene().camerasController.updateFromChangeInObject(this._sopGroup);
+	}
+
+	//
+	//
+	// CALLBACKS
+	//
+	//
+	private _onSopGroupUpdatedHookNames: string[] | undefined;
+	private _onSopGroupUpdatedHooks: OnSopGroupUpdatedHook[] | undefined;
+	registerOnSopGroupUpdated(callbackName: string, callback: OnSopGroupUpdatedHook) {
+		this._onSopGroupUpdatedHookNames = this._onSopGroupUpdatedHookNames || [];
+		this._onSopGroupUpdatedHooks = this._onSopGroupUpdatedHooks || [];
+		this._onSopGroupUpdatedHookNames.push(callbackName);
+		this._onSopGroupUpdatedHooks.push(callback);
+	}
+	private _clearHooks() {
+		if (!this._onSopGroupUpdatedHookNames || !this._onSopGroupUpdatedHooks) {
+			return;
+		}
+		for (let hookName of this._onSopGroupUpdatedHookNames) {
+			this.deregisterOnSopGroupUpdated(hookName);
+		}
+	}
+	deregisterOnSopGroupUpdated(callbackName: string) {
+		if (!this._onSopGroupUpdatedHookNames || !this._onSopGroupUpdatedHooks) {
+			return;
+		}
+		const index = this._onSopGroupUpdatedHookNames?.indexOf(callbackName);
+		this._onSopGroupUpdatedHookNames.splice(index, 1);
+		this._onSopGroupUpdatedHooks.splice(index, 1);
+		if (this._onSopGroupUpdatedHookNames.length == 0) {
+			this._onSopGroupUpdatedHookNames = undefined;
+		}
+		if (this._onSopGroupUpdatedHooks.length == 0) {
+			this._onSopGroupUpdatedHooks = undefined;
+		}
+	}
+	private _runOnSopGroupUpdatedHooks() {
+		if (this._onSopGroupUpdatedHooks) {
+			const hooks = [...this._onSopGroupUpdatedHooks];
+			for (let hook of hooks) {
+				hook();
+			}
+		}
+	}
+	onSopGroupUpdatedCallbackNames() {
+		return this._onSopGroupUpdatedHookNames;
 	}
 }
