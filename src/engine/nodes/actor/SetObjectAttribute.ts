@@ -19,6 +19,9 @@ import {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreObject} from '../../../core/geometry/Object';
 import {AttribValue} from '../../../types/GlobalTypes';
+import {ParamType} from '../../poly/ParamType';
+import {CoreType} from '../../../core/Type';
+import {Color, Vector3} from 'three';
 // import {PolyDictionary} from '../../../types/GlobalTypes';
 // import {BaseParamType} from '../../params/_Base';
 
@@ -27,7 +30,7 @@ const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 // 	const val = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type);
 // 	return {visibleIf: {type: val, ...otherParamVal}};
 // }
-
+const tmpColor = new Color();
 class SetObjectAttributeActorParamsConfig extends NodeParamsConfig {
 	/** @param manual trigger */
 	trigger = ParamConfig.BUTTON(null, ACTOR_NODE_SELF_TRIGGER_CALLBACK);
@@ -40,6 +43,11 @@ class SetObjectAttributeActorParamsConfig extends NodeParamsConfig {
 				return {name: name, value: i};
 			}),
 		},
+	});
+	/** @param lerp */
+	lerp = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+		rangeLocked: [false, false],
 	});
 	// boolean = ParamConfig.BOOLEAN(0, typedVisibleOptions(ActorConnectionPointType.BOOLEAN));
 	// color = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(ActorConnectionPointType.COLOR));
@@ -136,7 +144,37 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
 
+		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const attribValue = this._inputValue(SetObjectAttributeActorNode.INPUT_NAME_VAL, context) as AttribValue;
-		CoreObject.setAttribute(Object3D, this.pv.attribName, attribValue);
+		console.log(attribValue);
+
+		const attribName = this.pv.attribName;
+		if (lerp >= 1) {
+			return CoreObject.setAttribute(Object3D, attribName, attribValue);
+		} else {
+			const currentValue = CoreObject.attribValue(Object3D, attribName);
+			if (CoreType.isNumber(attribValue) && CoreType.isNumber(currentValue)) {
+				const newValue = lerp * attribValue + (1 - lerp) * currentValue;
+				console.log(lerp, attribValue, newValue);
+				return CoreObject.setAttribute(Object3D, attribName, newValue);
+			}
+			if (CoreType.isVector(attribValue) && CoreType.isVector(currentValue)) {
+				return currentValue.lerp(attribValue as any, lerp);
+			}
+			if ((CoreType.isColor(attribValue) || attribValue instanceof Vector3) && CoreType.isColor(currentValue)) {
+				// since the objects do not yet have a color attribute, we check here if it is either a vector or a color
+				// and if it is a vector3, we copy it to tmpColor
+				if (CoreType.isColor(attribValue)) {
+					return currentValue.lerp(attribValue, lerp);
+				} else {
+					tmpColor.r = attribValue.x;
+					tmpColor.g = attribValue.y;
+					tmpColor.b = attribValue.z;
+					return currentValue.lerp(tmpColor, lerp);
+				}
+			}
+			// if the value cannot be lerp, we set it directly
+			return CoreObject.setAttribute(Object3D, attribName, attribValue);
+		}
 	}
 }
