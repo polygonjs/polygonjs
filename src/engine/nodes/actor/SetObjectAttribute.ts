@@ -146,7 +146,6 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const attribValue = this._inputValue(SetObjectAttributeActorNode.INPUT_NAME_VAL, context) as AttribValue;
-		console.log(attribValue);
 
 		const attribName = this.pv.attribName;
 		if (lerp >= 1) {
@@ -155,7 +154,6 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 			const currentValue = CoreObject.attribValue(Object3D, attribName);
 			if (CoreType.isNumber(attribValue) && CoreType.isNumber(currentValue)) {
 				const newValue = lerp * attribValue + (1 - lerp) * currentValue;
-				console.log(lerp, attribValue, newValue);
 				return CoreObject.setAttribute(Object3D, attribName, newValue);
 			}
 			if (CoreType.isVector(attribValue) && CoreType.isVector(currentValue)) {
