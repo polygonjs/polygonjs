@@ -1,9 +1,8 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
-import {Vector3} from 'three';
+import {Mesh, Object3D, Vector3} from 'three';
 import {Matrix4} from 'three';
-
 import {CoreTransform} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -23,10 +22,17 @@ interface TransformResetSopParams extends DefaultOperationParams {
 	mode: number;
 }
 
-export interface CenterGeosOptions {
+export interface CenterCoreGroupOptions {
 	applyMatrixToObject: boolean;
 	refCoreGroup?: CoreGroup;
 }
+export interface CenterObjectOptions {
+	applyMatrixToObject: boolean;
+	refObject?: Object3D;
+}
+
+const bboxCenter = new Vector3();
+const translateMatrix = new Matrix4();
 
 export class TransformResetSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TransformResetSopParams = {
@@ -36,8 +42,7 @@ export class TransformResetSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'transformReset'> {
 		return 'transformReset';
 	}
-	private _bboxCenter = new Vector3();
-	private _translateMatrix = new Matrix4();
+
 	override cook(inputCoreGroups: CoreGroup[], params: TransformResetSopParams) {
 		const mode = TRANSFORM_RESET_MODES[params.mode];
 		return this._selectMode(mode, inputCoreGroups);
@@ -48,10 +53,16 @@ export class TransformResetSopOperation extends BaseSopOperation {
 				return this._resetObjects(coreGroups[0]);
 			}
 			case TransformResetMode.CENTER_GEO: {
-				return this._centerGeos(coreGroups[0], {applyMatrixToObject: false, refCoreGroup: coreGroups[1]});
+				return TransformResetSopOperation.centerCoreGroup(coreGroups[0], {
+					applyMatrixToObject: false,
+					refCoreGroup: coreGroups[1],
+				});
 			}
 			case TransformResetMode.PROMOTE_GEO_TO_OBJECT: {
-				return this._centerGeos(coreGroups[0], {applyMatrixToObject: true, refCoreGroup: coreGroups[1]});
+				return TransformResetSopOperation.centerCoreGroup(coreGroups[0], {
+					applyMatrixToObject: true,
+					refCoreGroup: coreGroups[1],
+				});
 			}
 		}
 		TypeAssert.unreachable(mode);
@@ -66,8 +77,8 @@ export class TransformResetSopOperation extends BaseSopOperation {
 
 		return coreGroup;
 	}
-	private _centerGeos(coreGroup: CoreGroup, options: CenterGeosOptions) {
-		const objects = coreGroup.objectsWithGeo();
+	static centerCoreGroup(coreGroup: CoreGroup, options: CenterCoreGroupOptions) {
+		const objects = coreGroup.objects();
 		let refObjects = objects;
 		if (options.refCoreGroup) {
 			refObjects = options.refCoreGroup.objectsWithGeo();
@@ -75,42 +86,41 @@ export class TransformResetSopOperation extends BaseSopOperation {
 		for (let i = 0; i < objects.length; i++) {
 			const object = objects[i];
 			const refObject = refObjects[i] || refObjects[refObjects.length - 1];
-			const geometry = object.geometry;
-			const refGeometry = refObject.geometry;
-			if (geometry && refGeometry) {
-				// TODO: this current does not take into account the object transform,
-				// and it's possible that it has been, especially if we used another transform_reset
-				// just before
-				refGeometry.computeBoundingBox();
-				const bbox = refGeometry.boundingBox;
-				if (bbox) {
-					bbox.getCenter(this._bboxCenter);
-					refObject.updateMatrixWorld();
-					this._bboxCenter.applyMatrix4(refObject.matrixWorld);
-
-					if (options.applyMatrixToObject) {
-						this._translateMatrix.identity();
-						this._translateMatrix.makeTranslation(
-							this._bboxCenter.x,
-							this._bboxCenter.y,
-							this._bboxCenter.z
-						);
-						object.matrix.multiply(this._translateMatrix);
-						CoreTransform.decomposeMatrix(object);
-						object.updateWorldMatrix(false, false);
-						// object.updateMatrixWorld();
-					}
-					this._translateMatrix.identity();
-					this._translateMatrix.makeTranslation(
-						-this._bboxCenter.x,
-						-this._bboxCenter.y,
-						-this._bboxCenter.z
-					);
-					geometry.applyMatrix4(this._translateMatrix);
-				}
-			}
+			TransformResetSopOperation.centerObject(object, {
+				applyMatrixToObject: options.applyMatrixToObject,
+				refObject,
+			});
 		}
 
 		return coreGroup;
+	}
+	static centerObject(object: Object3D, options: CenterObjectOptions) {
+		const refObject = options.refObject || object;
+		const geometry = (object as Mesh).geometry;
+		const refGeometry = (refObject as Mesh).geometry;
+		if (geometry && refGeometry) {
+			// TODO: this current does not take into account the object transform,
+			// and it's possible that it has been, especially if we used another transform_reset
+			// just before
+			refGeometry.computeBoundingBox();
+			const bbox = refGeometry.boundingBox;
+			if (bbox) {
+				bbox.getCenter(bboxCenter);
+				refObject.updateMatrixWorld();
+				bboxCenter.applyMatrix4(refObject.matrixWorld);
+
+				if (options.applyMatrixToObject) {
+					translateMatrix.identity();
+					translateMatrix.makeTranslation(bboxCenter.x, bboxCenter.y, bboxCenter.z);
+					object.matrix.multiply(translateMatrix);
+					CoreTransform.decomposeMatrix(object);
+					object.updateWorldMatrix(false, false);
+					// object.updateMatrixWorld();
+				}
+				translateMatrix.identity();
+				translateMatrix.makeTranslation(-bboxCenter.x, -bboxCenter.y, -bboxCenter.z);
+				geometry.applyMatrix4(translateMatrix);
+			}
+		}
 	}
 }

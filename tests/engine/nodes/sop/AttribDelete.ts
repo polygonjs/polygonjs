@@ -1,6 +1,6 @@
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 
-QUnit.test('attrib_delete simple', async (assert) => {
+QUnit.test('attrib_delete simple vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -29,4 +29,8 @@ QUnit.test('attrib_delete simple', async (assert) => {
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.notOk(geometry.getAttribute('test') != null);
+});
+
+QUnit.test('attrib_delete simple object', async (assert) => {
+	assert.equal(1, 2);
 });

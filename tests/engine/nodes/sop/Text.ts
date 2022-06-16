@@ -1,6 +1,5 @@
-import {Object3D} from 'three';
 import {CoreObject} from '../../../../src/core/geometry/Object';
-import {TextType} from '../../../../src/engine/nodes/sop/Text';
+import {TextType} from '../../../../src/engine/nodes/sop/utils/text/TextType';
 import {checkConsolePrints} from '../../../helpers/Console';
 
 QUnit.test('sop/text simple', async (assert) => {
@@ -113,31 +112,39 @@ QUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
-	text1.p.splitPerLine.set(1);
+	text1.p.splitPerLetter.set(1);
 	text1.p.text.set('line1line2');
 
 	let container = await text1.compute();
-	assert.equal(container.coreContent()?.objects().length, 1);
+	// TODO: at the moment, letters like i (lowercase) generate 2 objects, when it should be 1
+	assert.equal(container.coreContent()?.objects().length, 10);
 	assert.more_than_or_equal(container.size().y, 1);
-	assert.less_than_or_equal(container.size().y, 1.2);
+	assert.less_than_or_equal(container.size().y, 1.6);
 
 	text1.p.text.set('line1\nli ne2');
 
 	container = await text1.compute();
-	assert.equal(container.coreContent()?.objects().length, 2);
+	assert.equal(container.coreContent()?.objects().length, 11);
 	assert.deepEqual(
 		container
 			.coreContent()
-			?.objects()
-			.map((o: Object3D) => o.name),
-		['line1', 'li_ne2']
+			?.coreObjects()
+			.map((o: CoreObject) => o.attribValue('character')),
+		['l', 'i', 'n', 'e', '1', 'l', 'i', ' ', 'n', 'e', '2']
 	);
 	assert.deepEqual(
 		container
 			.coreContent()
 			?.coreObjects()
-			.map((o: CoreObject) => o.attribValue('lineIndex')),
-		[0, 1]
+			.map((o: CoreObject) => o.attribValue('lineId')),
+		[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+	);
+	assert.deepEqual(
+		container
+			.coreContent()
+			?.coreObjects()
+			.map((o: CoreObject) => o.attribValue('characterId')),
+		[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11]
 	);
 	assert.more_than_or_equal(container.size().y, 2.1);
 	assert.less_than_or_equal(container.size().y, 3.5);
@@ -196,7 +203,7 @@ QUnit.test('sop/text can recover from generation errors', async (assert) => {
 	assert.notOk(text1.states.error.active(), 'no error');
 	assert.equal(container.pointsCount(), 4200, 'points count is 4200');
 
-	text1.p.text.set('test!!');
+	text1.p.text.set('ぁぃぅえおがぎぐげござじずぜぞだぢつでどなに');
 	container = await text1.compute();
 	assert.ok(text1.states.error.active(), 'error present');
 	assert.equal(text1.states.error.message(), 'failed to generate geometry. Try to remove some characters');

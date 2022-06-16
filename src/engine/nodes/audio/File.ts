@@ -12,6 +12,8 @@ import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
 
+const EPSILON = 1e-6;
+
 const LOOP_OPTIONS = {
 	cook: false,
 	callback: (node: BaseNodeType) => {
@@ -198,7 +200,9 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 		// using pv.currentTime is useful when reloading the page
 		// and still starting from where we were
 		const offset = isBooleanTrue(this.pv.updateCurrentTimeParam) ? this.pv.currentTime : this._currentTime();
-		const sanitizedOffset = Math.max(offset, 0);
+		// always add 2 * EPSILON in the offset, which will not be noticeable
+		// but helps avoiding errors when restarting
+		const sanitizedOffset = Math.max(offset + 2 * EPSILON, 0);
 		try {
 			this._runOnBeforePlayCallbacks(sanitizedOffset);
 			this._player.start(0, sanitizedOffset);
@@ -230,7 +234,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 		if (!this._player) {
 			return;
 		}
-		this._player.seek(0);
+		this._player.seek(0, 0);
 		this._reset();
 		this.play();
 	}

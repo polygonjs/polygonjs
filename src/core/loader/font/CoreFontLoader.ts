@@ -1,17 +1,18 @@
-import {Poly} from '../../engine/Poly';
-import {CoreBaseLoader} from './_Base';
-import {FontLoader, Font} from '../../modules/three/examples/jsm/loaders/FontLoader';
-import {BaseNodeType} from '../../engine/nodes/_Base';
-import {SVGLoader} from '../../modules/three/examples/jsm/loaders/SVGLoader';
-import {TTFLoader} from '../../modules/three/examples/jsm/loaders/TTFLoader';
+import {Poly} from '../../../engine/Poly';
+import {CoreBaseLoader} from './../_Base';
+import {FontLoader} from './FontLoader';
+import {Font, FontData} from './Font';
+import {BaseNodeType} from '../../../engine/nodes/_Base';
+import {SVGLoader} from '../../../modules/three/examples/jsm/loaders/SVGLoader';
+import {TTFLoader} from '../../../modules/three/examples/jsm/loaders/TTFLoader';
 
 export class CoreLoaderFont extends CoreBaseLoader {
-	private _font_loader: FontLoader;
+	private _fontLoader: FontLoader;
 
 	constructor(url: string, _node?: BaseNodeType) {
 		super(url, _node);
 
-		this._font_loader = new FontLoader(this.loadingManager);
+		this._fontLoader = new FontLoader(this.loadingManager);
 	}
 
 	async load() {
@@ -35,14 +36,14 @@ export class CoreLoaderFont extends CoreBaseLoader {
 
 	private _loadTTF(url: string): Promise<Font> {
 		return new Promise(async (resolve, reject) => {
-			const loaded_module = await this._loadTTFLoader();
-			if (!loaded_module) {
+			const loadedModule = await this._loadTTFLoader();
+			if (!loadedModule) {
 				return;
 			}
-			loaded_module.load(
+			loadedModule.load(
 				url,
 				(fnt: object) => {
-					const parsed = this._font_loader.parse(fnt);
+					const parsed = this._fontLoader.parse(fnt as FontData);
 					resolve(parsed);
 				},
 				undefined,
@@ -54,7 +55,7 @@ export class CoreLoaderFont extends CoreBaseLoader {
 	}
 	private _loadJSON(url: string): Promise<Font> {
 		return new Promise((resolve, reject) => {
-			this._font_loader.load(
+			this._fontLoader.load(
 				url,
 				(font: Font) => {
 					resolve(font);
