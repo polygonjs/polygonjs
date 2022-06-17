@@ -33,11 +33,7 @@ export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBas
 		});
 	};
 }
-// class TextureDisplacementMaterial extends Material {
-// 	displacementMap!: Texture | null;
-// 	displacementScale!: number;
-// 	displacementBias!: number;
-// }
+
 type TextureDisplacementMapControllerCurrentMaterial =
 	| MeshMatcapMaterial
 	| MeshNormalMaterial
@@ -70,18 +66,10 @@ export class TextureDisplacementMapController extends BaseTextureMapController {
 			this.node.p.useDisplacementMap,
 			this.node.p.displacementMap
 		);
-		// if (this._update_options.uniforms) {
-		// 	const mat = this.node.material as ShaderMaterial;
-		// 	if (mat.uniforms) {
-		// 		mat.uniforms.displacementScale.value = this.node.pv.displacementScale;
-		// 		mat.uniforms.displacementBias.value = this.node.pv.displacementBias;
-		// 	}
-		// }
-		// if (this._update_options.directParams) {
+
 		const mat = this.node.material as MeshStandardMaterial;
 		mat.displacementScale = this.node.pv.displacementScale;
 		mat.displacementBias = this.node.pv.displacementBias;
-		// }
 	}
 	static override async update(node: TextureDisplacementMapMatNode) {
 		node.controllers.displacementMap.update();

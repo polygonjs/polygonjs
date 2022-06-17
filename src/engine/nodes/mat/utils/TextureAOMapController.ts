@@ -21,10 +21,6 @@ export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-// class TextureAOMaterial extends Material {
-// 	aoMap!: Texture | null;
-// 	aoMapIntensity!: number;
-// }
 type TextureAOMapControllerCurrentMaterial =
 	| MeshBasicMaterial
 	| MeshLambertMaterial
@@ -52,16 +48,9 @@ export class TextureAOMapController extends BaseTextureMapController {
 	}
 	override async update() {
 		this._update(this.node.material, 'aoMap', this.node.p.useAOMap, this.node.p.aoMap);
-		// if (this._update_options.uniforms) {
-		// 	const mat = this.node.material as ShaderMaterial;
-		// 	if (mat.uniforms) {
-		// 		mat.uniforms.aoMapIntensity.value = this.node.pv.aoMapIntensity;
-		// 	}
-		// }
-		// if (this._update_options.directParams) {
+
 		const mat = this.node.material as MeshBasicMaterial;
 		mat.aoMapIntensity = this.node.pv.aoMapIntensity;
-		// }
 	}
 	static override async update(node: TextureAOMapMatNode) {
 		node.controllers.aoMap.update();

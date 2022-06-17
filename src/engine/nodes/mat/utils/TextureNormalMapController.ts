@@ -48,11 +48,6 @@ export function NormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-// class TextureNormalMaterial extends Material {
-// 	normalMap!: Texture | null;
-// 	normalMapType!: number;
-// 	normalScale!: Vector2;
-// }
 type TextureNormalMapControllerCurrentMaterial =
 	| MeshPhongMaterial
 	| MeshNormalMaterial
@@ -83,20 +78,10 @@ export class TextureNormalMapController extends BaseTextureMapController {
 		const {p, pv, material} = this.node;
 		this._update(this.node.material, 'normalMap', p.useNormalMap, p.normalMap);
 		const normalMapType = NormalMapModeByName[NORMAL_MAP_MODES[pv.normalMapType]];
-		// if (this._update_options.uniforms) {
-		// 	const mat = material as ShaderMaterial;
-		// 	if (mat.uniforms) {
-		// 		// mat.uniforms.normalMapType.value = normalMapType; // not present in uniforms
-		// 		(mat.uniforms.normalScale as IUniformV2).value.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
-		// 	}
-		// }
+
 		const mat = material as MeshPhongMaterial;
-		// normalMapType is set for uniforms AND directParams
-		// to ensure that the USE_* defines are set
 		mat.normalMapType = normalMapType;
-		// if (this._update_options.directParams) {
 		mat.normalScale.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
-		// }
 	}
 	static override async update(node: TextureNormalMapMatNode) {
 		node.controllers.normalMap.update();

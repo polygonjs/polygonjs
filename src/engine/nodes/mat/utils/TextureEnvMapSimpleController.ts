@@ -51,10 +51,7 @@ export function EnvMapSimpleParamConfig<TBase extends Constructor>(Base: TBase) 
 		});
 	};
 }
-// class TextureEnvMaterial extends Material {
-// 	envMap!: Texture | null;
-// 	envMapIntensity!: number;
-// }
+
 type TextureEnvMapSimpleCurrentMaterial = MeshBasicMaterial | MeshLambertMaterial | MeshPhongMaterial;
 class TextureEnvMapSimpleParamsConfig extends EnvMapSimpleParamConfig(NodeParamsConfig) {}
 interface EnvMapSimpleControllers {
@@ -78,20 +75,11 @@ export class TextureEnvMapSimpleController extends BaseTextureMapController {
 	override async update() {
 		this._update(this.node.material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
 		const combine = OperationByName[COMBINE_OPERATIONS[this.node.pv.combine]];
-		// if (this._update_options.uniforms) {
-		// 	const mat = this.node.material as ShaderMaterial;
-		// 	if (mat.uniforms) {
-		// 		// mat.uniforms.combine.value = combine; // combine is not present in the uniforms
-		// 		mat.uniforms.reflectivity.value = this.node.pv.reflectivity;
-		// 		mat.uniforms.refractionRatio.value = this.node.pv.refractionRatio;
-		// 	}
-		// }
-		// if (this._update_options.directParams) {
+
 		const mat = this.node.material as MeshBasicMaterial;
 		mat.combine = combine;
 		mat.reflectivity = this.node.pv.reflectivity;
 		mat.refractionRatio = this.node.pv.refractionRatio;
-		// }
 	}
 	static override async update(node: TextureEnvMapSimpleMatNode) {
 		node.controllers.envMap.update();

@@ -37,14 +37,6 @@ export class TextureGradientMapController extends BaseTextureMapController {
 	}
 	override async update() {
 		this._update(this.node.material, 'gradientMap', this.node.p.useGradientMap, this.node.p.gradientMap);
-		// if (this._update_options.uniforms) {
-		// 	const mat = this.node.material as ShaderMaterial;
-		// 	mat.uniforms.gradientMapIntensity.value = this.node.pv.gradientMapIntensity;
-		// }
-		// if (this._update_options.directParams) {
-		// 	const mat = this.node.material as MeshStandardMaterial;
-		// 	mat.gradientMapIntensity = this.node.pv.gradientMapIntensity;
-		// }
 	}
 	static override async update(node: TextureGradientMapMatNode) {
 		node.controllers.gradientMap.update();

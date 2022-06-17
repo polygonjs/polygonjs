@@ -24,10 +24,6 @@ export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-// class TextureLightMaterial extends Material {
-// 	lightMap!: Texture | null;
-// 	lightMapIntensity!: number;
-// }
 type TextureLightMapCurrentMaterial =
 	| MeshBasicMaterial
 	| MeshLambertMaterial
@@ -55,16 +51,9 @@ export class TextureLightMapController extends BaseTextureMapController {
 	}
 	override async update() {
 		this._update(this.node.material, 'lightMap', this.node.p.useLightMap, this.node.p.lightMap);
-		// if (this._update_options.uniforms) {
-		// 	const mat = this.node.material as ShaderMaterial;
-		// 	if (mat.uniforms) {
-		// 		mat.uniforms.lightMapIntensity.value = this.node.pv.lightMapIntensity;
-		// 	}
-		// }
-		// if (this._update_options.directParams) {
+
 		const mat = this.node.material as MeshStandardMaterial;
 		mat.lightMapIntensity = this.node.pv.lightMapIntensity;
-		// }
 	}
 	static override async update(node: TextureLightMapMatNode) {
 		node.controllers.lightMap.update();

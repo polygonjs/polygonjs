@@ -6,24 +6,6 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Color} from 'three';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 
-// interface MeshPhysicalWithUniforms extends ShaderMaterial {
-// 	uniforms: {
-// 		clearcoat: IUniformN;
-// 		clearcoatNormalScale: IUniformV2;
-// 		clearcoatRoughness: IUniformN;
-// 		reflectivity: IUniformN;
-// 		transmission: IUniformN;
-// 		thickness: IUniformN;
-// 		attenuationDistance: IUniformN;
-// 		attenuationColor: IUniformColor;
-// 		sheen: IUniformN;
-// 		sheenRoughness: IUniformN;
-// 		sheenColor: IUniformColor;
-// 		specularColor: IUniformColor;
-// 		ior: IUniformN;
-// 	};
-// }
-
 export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param Represents the thickness of the clear coat layer, from 0.0 to 1.0 */
@@ -159,40 +141,6 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		tmpMeshPhysicalForIOR.ior = pv.ior;
 		const reflectivity = tmpMeshPhysicalForIOR.reflectivity;
 
-		// if (this._update_options.uniforms) {
-		// 	const mat = this.node.material as MeshPhysicalWithUniforms;
-		// 	if (mat.uniforms) {
-		// 		mat.uniforms.clearcoat.value = pv.clearcoat;
-		// 		mat.uniforms.clearcoatNormalScale.value.copy(pv.clearcoatNormalScale);
-		// 		mat.uniforms.clearcoatRoughness.value = pv.clearcoatRoughness;
-		// 		mat.uniforms.reflectivity.value = reflectivity;
-		// 		mat.uniforms.transmission.value = pv.transmission;
-		// 		mat.uniforms.thickness.value = pv.thickness;
-		// 		mat.uniforms.attenuationDistance.value = pv.attenuationDistance;
-		// 		mat.uniforms.attenuationColor.value = pv.attenuationColor;
-
-		// 		if (isBooleanTrue(pv.useSheen)) {
-		// 			this._sheenColorClone.copy(pv.sheenColor);
-		// 			mat.uniforms.sheen.value = pv.sheen;
-		// 			mat.uniforms.sheenRoughness.value = pv.sheenRoughness;
-		// 			mat.uniforms.sheenColor.value = this._sheenColorClone;
-		// 		} else {
-		// 			mat.uniforms.sheen.value = 0;
-		// 		}
-		// 		mat.uniforms.ior.value = pv.ior;
-		// 	}
-
-		// 	// to ensure compilation goes through
-		// 	if (mat.uniforms) {
-		// 		(mat as any).specularColor = mat.uniforms.specularColor.value;
-		// 		(mat as any).ior = mat.uniforms.ior.value;
-		// 	}
-
-		// 	// mat.defines['CLEARCOAT'] = isBooleanTrue(this.node.pv.useClearCoatNormalMap);
-		// 	// mat.defines['USE_CLEARCOAT_ROUGHNESSMAP'] = isBooleanTrue(this.node.pv.useClearCoatRoughnessMap);
-		// 	// mat.defines['TRANSMISSION'] = isBooleanTrue(this.node.pv.useTransmissionMap);
-		// }
-		// if (this._update_options.directParams) {
 		const mat = this.node.material as MeshPhysicalMaterial;
 		mat.clearcoat = pv.clearcoat;
 		if (mat.clearcoatNormalScale != null) {

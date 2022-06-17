@@ -9,15 +9,6 @@ import {NodePathParam} from '../../../params/NodePath';
 import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
-// import {IUniform} from 'three';
-// import {
-// 	IUniforms,
-// 	MaterialWithCustomMaterials,
-// 	ShaderMaterialWithCustomMaterials,
-// } from '../../../../core/geometry/Material';
-// import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
-// import {Poly} from '../../../Poly';
-// import {isBooleanTrue} from '../../../../core/Type';
 
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -25,25 +16,12 @@ export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		map = ParamConfig.NODE_PATH('', {visibleIf: {useMap: 1}});
 	};
 }
-// class TextureMapMaterial<T extends string> extends Material {
-// 	[T]!: Texture | null;
-// }
-// class TextureMapParamsConfig extends TextureMapParamConfig(NodeParamsConfig) {}
-// class TextureMapMatNode extends TypedMatNode<TextureMapMaterial, TextureMapParamsConfig> {
-// 	createMaterial() {
-// 		return new TextureMapMaterial();
-// 	}
-// }
 
 type FilterFlags<Base, Condition> = {
 	[Key in keyof Base]: Base[Key] extends Condition ? Key : never;
 };
 type AllowedNames<Base, Condition> = FilterFlags<Base, Condition>[keyof Base];
 type SubType<Base, Condition> = Pick<Base, AllowedNames<Base, Condition>>;
-
-// type test = FilterFlags<MeshLambertMaterial, Texture|null>
-// type test2 = AllowedNames<MeshLambertMaterial, Texture|null>
-// type test3 = SubType<MeshLambertMaterial, Texture|null>
 
 export function BooleanParamOptions(controller_class: typeof BaseTextureMapController) {
 	return {
@@ -85,21 +63,9 @@ type TextureRemoveCallback<O extends Object> = (
 
 type BaseTextureControllerCurrentMaterial = Material;
 
-// export interface UpdateOptions {
-// 	directParams?: boolean;
-// 	uniforms?: boolean;
-// 	// define?: boolean;
-// 	// define_uv?: boolean;
-// }
 export class BaseTextureMapController extends BaseController {
 	constructor(protected override node: BaseMatNodeType) {
 		super(node);
-		// if (this._update_options.define == null) {
-		// 	this._update_options.define = true;
-		// }
-		// if (this._update_options.define_uv == null) {
-		// 	this._update_options.define_uv = true;
-		// }
 	}
 
 	protected add_hooks(use_map_param: BooleanParam, path_param: NodePathParam) {
@@ -118,139 +84,10 @@ export class BaseTextureMapController extends BaseController {
 		use_map_param: BooleanParam,
 		path_param: NodePathParam
 	) {
-		// const {uniforms, directParams} = this._update_options;
-		// if (uniforms && isBooleanTrue(uniforms)) {
-		// 	const shader_material = material as ShaderMaterial;
-		// 	const attr_name = mat_attrib_name as keyof SubType<IUniforms, Texture | null>;
-		// 	await this._update_texture_on_uniforms(shader_material, attr_name, use_map_param, path_param);
-		// }
-		// if (directParams && isBooleanTrue(directParams)) {
 		const mat = material as Material;
 		const attr_name = mat_attrib_name as keyof SubType<Material, Texture | null>;
 		await this._update_texture_on_material(mat, attr_name, use_map_param, path_param);
-		// }
 	}
-
-	//
-	//
-	// FOR CASES WHERE THE TEXTURE IS ON THE UNIFORMS
-	//
-	//
-	// private async _update_texture_on_uniforms<O extends IUniform>(
-	// 	material: ShaderMaterial,
-	// 	mat_attrib_name: keyof SubType<O, Texture | null>,
-	// 	use_map_param: BooleanParam,
-	// 	path_param: NodePathParam
-	// ) {
-	// 	this._update_required_attribute(
-	// 		material,
-	// 		material.uniforms,
-	// 		mat_attrib_name as never,
-	// 		use_map_param,
-	// 		path_param,
-	// 		this._apply_texture_on_uniforms.bind(this),
-	// 		this._remove_texture_from_uniforms.bind(this)
-	// 	);
-	// }
-	// private _apply_texture_on_uniforms<O extends IUniforms>(
-	// 	material: Material,
-	// 	uniforms: O,
-	// 	mat_attrib_name: keyof SubType<O, Texture | null>,
-	// 	texture: Texture
-	// ) {
-	// 	if (!uniforms) {
-	// 		return;
-	// 	}
-	// 	const has_texture = uniforms[mat_attrib_name] != null && uniforms[mat_attrib_name].value != null;
-	// 	let new_texture_is_different = false;
-	// 	if (has_texture) {
-	// 		const current_texture: Texture = (<unknown>uniforms[mat_attrib_name].value) as Texture;
-	// 		if (current_texture.uuid != texture.uuid) {
-	// 			new_texture_is_different = true;
-	// 		}
-	// 	}
-	// 	if (!has_texture || new_texture_is_different) {
-	// 		const uniform = uniforms[mat_attrib_name];
-	// 		// check as the uniform may not exist on a customMaterial
-	// 		if (uniform) {
-	// 			uniforms[mat_attrib_name].value = texture as any;
-	// 		}
-	// 		// currently removing the settings of defines USE_MAP or USE_UV
-	// 		// as this seems to conflict with setting .map on the material itself.
-	// 		// ideally I should test if .alphaMap and .envMap still work
-	// 		// if (this._do_update_define()) {
-	// 		// 	if (material.defines) {
-	// 		// 		const define_name = this._define_name(`${mat_attrib_name}`);
-	// 		// 		material.defines[define_name] = 3;
-	// 		// 	}
-	// 		// }
-	// 		// if (this._update_options.define_uv) {
-	// 		// 	if (material.defines) {
-	// 		// 		material.defines['USE_UV'] = 5;
-	// 		// 	}
-	// 		// }
-	// 		this._apply_texture_on_material(material, material, mat_attrib_name as any, texture);
-	// 		material.needsUpdate = true;
-
-	// 		const customMaterials = (material as ShaderMaterialWithCustomMaterials).customMaterials;
-	// 		if (customMaterials) {
-	// 			const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
-	// 			for (let customName of customNames) {
-	// 				const customMaterial = customMaterials[customName] as ShaderMaterial;
-	// 				if (customMaterial) {
-	// 					this._apply_texture_on_uniforms(
-	// 						customMaterial,
-	// 						customMaterial.uniforms as O,
-	// 						mat_attrib_name,
-	// 						texture
-	// 					);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
-	// private _remove_texture_from_uniforms<U extends IUniforms>(
-	// 	material: Material,
-	// 	uniforms: U,
-	// 	mat_attrib_name: keyof SubType<U, Texture | null>
-	// ) {
-	// 	if (!uniforms) {
-	// 		return;
-	// 	}
-	// 	if (!uniforms[mat_attrib_name]) {
-	// 		Poly.warn(`'${mat_attrib_name}' uniform not found. existing uniforms are:`, Object.keys(uniforms).sort());
-	// 		return;
-	// 	}
-	// 	if (uniforms[mat_attrib_name].value) {
-	// 		uniforms[mat_attrib_name].value = null;
-	// 		// if (this._do_update_define()) {
-	// 		// 	if (material.defines) {
-	// 		// 		// const define_name = this._define_name(`${mat_attrib_name}`);
-	// 		// 		// delete material.defines[define_name];
-	// 		// 	}
-	// 		// }
-	// 		this._remove_texture_from_material(material, material, mat_attrib_name as any);
-	// 		material.needsUpdate = true;
-
-	// 		const customMaterials = (material as MaterialWithCustomMaterials).customMaterials;
-	// 		if (customMaterials) {
-	// 			const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
-	// 			for (let customName of customNames) {
-	// 				const customMaterial = customMaterials[customName] as ShaderMaterial;
-	// 				if (customMaterial) {
-	// 					this._remove_texture_from_uniforms(
-	// 						customMaterial,
-	// 						customMaterial.uniforms as U,
-	// 						mat_attrib_name
-	// 					);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
-	// private _define_name(mat_attrib_name: string): string {
-	// 	return 'USE_' + mat_attrib_name.replace('_', '').toUpperCase();
-	// }
 
 	//
 	//
@@ -341,11 +178,4 @@ export class BaseTextureMapController extends BaseController {
 		// as we should come here after any of the errors above, if any is triggered
 		remove_callback(material, texture_owner, mat_attrib_name);
 	}
-
-	// private _do_update_define(): boolean {
-	// 	if (this._update_options.define == null) {
-	// 		return true;
-	// 	}
-	// 	return this._update_options.define;
-	// }
 }

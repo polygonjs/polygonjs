@@ -31,10 +31,6 @@ export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-// class TextureBumpMaterial extends Material {
-// 	bumpMap!: Texture | null;
-// 	bumpScale!: number;
-// }
 type TextureBumpMapControllerCurrentMaterial =
 	| MeshMatcapMaterial
 	| MeshNormalMaterial
@@ -62,16 +58,9 @@ export class TextureBumpMapController extends BaseTextureMapController {
 	}
 	override async update() {
 		this._update(this.node.material, 'bumpMap', this.node.p.useBumpMap, this.node.p.bumpMap);
-		// if (this._update_options.uniforms) {
-		// 	const mat = this.node.material as ShaderMaterial;
-		// 	if (mat.uniforms) {
-		// 		mat.uniforms.bumpScale.value = this.node.pv.bumpScale;
-		// 	}
-		// }
-		// if (this._update_options.directParams) {
+
 		const mat = this.node.material as MeshStandardMaterial;
 		mat.bumpScale = this.node.pv.bumpScale;
-		// }
 	}
 	static override async update(node: TextureBumpMapMatNode) {
 		node.controllers.bumpMap.update();
