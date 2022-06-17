@@ -18,7 +18,7 @@ export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base
 			NodePathOptions(TextureMetalnessRoughnessMapController, 'useMetalnessMap')
 		);
 		/** @param metalness. It's recommended to either set this value to 0 or to 1, as objects are either metallic or not. Any value in between tends to look like an alien plastic */
-		metalness = ParamConfig.FLOAT(1);
+		metalness = ParamConfig.FLOAT(0); // a default of 0 is good to non builder materials, but 1 should be better for builders, in case metalness is multiplied with this param from its child output node
 		/** @param toggle if you want to use a roughness map */
 		useRoughnessMap = ParamConfig.BOOLEAN(0, {
 			separatorBefore: true,
@@ -30,7 +30,7 @@ export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base
 			NodePathOptions(TextureMetalnessRoughnessMapController, 'useRoughnessMap')
 		);
 		/** @param roughness. When set to 0, reflections from environment maps will be very sharp, or blurred when 1. Any value between 0 and 1 can help modulate this. */
-		roughness = ParamConfig.FLOAT(0.5);
+		roughness = ParamConfig.FLOAT(1);
 	};
 }
 
