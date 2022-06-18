@@ -1,21 +1,12 @@
-import {Camera} from 'three';
+import {Camera, Scene, WebGLRenderer} from 'three';
 import {TypedNode, BaseNodeType} from '../_Base';
-// import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 import {EffectComposer, Pass} from 'postprocessing';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {Scene} from 'three';
 import {FlagsControllerDB} from '../utils/FlagsController';
-// import {Pass} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {BaseParamType} from '../../params/_Base';
 import {ParamOptions} from '../../params/utils/OptionsController';
-import {
-	BaseNetworkPostProcessNodeType,
-	EffectComposerController,
-	RenderTargetCreateOptions,
-} from './utils/EffectComposerController';
-import {WebGLRenderer} from 'three';
-import {WebGLRenderTarget} from 'three';
+import {BaseNetworkPostProcessNodeType, EffectComposerController} from './utils/EffectComposerController';
 import {CoreCameraPostProcessController} from '../../../core/camera/CoreCameraPostProcessController';
 import {CoreType} from '../../../core/Type';
 
@@ -133,13 +124,13 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			return parentPostNode._postProcessNetworkNode();
 		}
 	}
-	protected _createRenderTarget(renderer: WebGLRenderer, options?: RenderTargetCreateOptions) {
-		const parentNode = this._postProcessNetworkNode();
-		return parentNode.effectsComposerController.createRenderTarget(renderer);
-	}
-	protected _createEffectComposer(renderer: WebGLRenderer, renderTarget?: WebGLRenderTarget) {
-		return new EffectComposer(renderer, renderTarget);
-	}
+	// protected _createRenderTarget(renderer: WebGLRenderer, options?: RenderTargetCreateOptions) {
+	// 	const parentNode = this._postProcessNetworkNode();
+	// 	return parentNode.effectsComposerController.createRenderTarget(renderer);
+	// }
+	// protected _createEffectComposer(renderer: WebGLRenderer, renderTarget?: WebGLRenderTarget) {
+	// 	return new EffectComposer(renderer, renderTarget);
+	// }
 }
 
 export type BasePostProcessNodeType = TypedPostProcessNode<Pass, NodeParamsConfig>;
