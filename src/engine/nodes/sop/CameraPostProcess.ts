@@ -20,8 +20,9 @@ const DEFAULT = CameraPostProcessSopOperation.DEFAULT_PARAMS;
 
 export function CameraPostProcessParamsMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param set to true to define the post process nodes from a different node than this one */
 		useOtherNode = ParamConfig.BOOLEAN(DEFAULT.useOtherNode);
-		/** @param renderer */
+		/** @param other parent node containing the post process nodes that will make up the passes used */
 		node = ParamConfig.NODE_PATH('', {
 			visibleIf: {useOtherNode: 1},
 			nodeSelection: {
