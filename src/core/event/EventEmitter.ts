@@ -5,7 +5,7 @@ function elementFromEmitterType(emitter: CoreEventEmitter, canvas: HTMLCanvasEle
 	return emitter == CoreEventEmitter.CANVAS ? canvas : document;
 }
 
-export function getEventOwner(eventData: EventData, canvas: HTMLCanvasElement) {
+export function getEventEmitter(eventData: EventData, canvas: HTMLCanvasElement) {
 	if (eventData.type == 'resize') {
 		return window;
 	} else {

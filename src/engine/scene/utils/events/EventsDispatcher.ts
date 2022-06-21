@@ -108,11 +108,13 @@ export class SceneEventsDispatcher {
 		node: T
 	): BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType> | undefined {
 		switch (node.type()) {
+			case ActorType.CURSOR:
 			case ActorType.ON_OBJECT_CLICK:
 			case ActorType.ON_OBJECT_HOVER:
-			case ActorType.ON_OBJECT_POINTER_DOWN:
-			case ActorType.ON_OBJECT_POINTER_UP:
-			case ActorType.ON_POINTER_UP:
+			case ActorType.ON_OBJECT_POINTERDOWN:
+			case ActorType.ON_OBJECT_POINTERUP:
+			case ActorType.ON_POINTERDOWN:
+			case ActorType.ON_POINTERUP:
 			case ActorType.RAY_FROM_CURSOR:
 				return this.pointerEventsController;
 			case ActorType.ON_KEYDOWN:

@@ -151,7 +151,7 @@ float snoise(vec3 v)
   }
 
 
-float fbm_snoise_343 (in vec3 st) {
+float fbm_snoise_341 (in vec3 st) {
 	float value = 0.0;
 	float amplitude = 1.0;
 	for (int i = 0; i < 3; i++) {
@@ -199,9 +199,9 @@ void main() {
 	v_POLY_globals1_position = vec3(position);
 	
 	// /MAT/meshPhysicalBuilder1/noise1
-	float v_POLY_noise1_noisex = (vec3(1.0, 1.0, 1.0)*fbm_snoise_343((v_POLY_globals1_position*vec3(1.0, 1.0, 1.0))+(vec3(0.0, 0.0, 0.0)+vec3(0.0, 0.0, 0.0)))).x;
-	float v_POLY_noise1_noisey = (vec3(1.0, 1.0, 1.0)*fbm_snoise_343((v_POLY_globals1_position*vec3(1.0, 1.0, 1.0))+(vec3(0.0, 0.0, 0.0)+vec3(1000.0, 1000.0, 1000.0)))).y;
-	float v_POLY_noise1_noisez = (vec3(1.0, 1.0, 1.0)*fbm_snoise_343((v_POLY_globals1_position*vec3(1.0, 1.0, 1.0))+(vec3(0.0, 0.0, 0.0)+vec3(2000.0, 2000.0, 2000.0)))).z;
+	float v_POLY_noise1_noisex = (vec3(1.0, 1.0, 1.0)*fbm_snoise_341((v_POLY_globals1_position*vec3(1.0, 1.0, 1.0))+(vec3(0.0, 0.0, 0.0)+vec3(0.0, 0.0, 0.0)))).x;
+	float v_POLY_noise1_noisey = (vec3(1.0, 1.0, 1.0)*fbm_snoise_341((v_POLY_globals1_position*vec3(1.0, 1.0, 1.0))+(vec3(0.0, 0.0, 0.0)+vec3(1000.0, 1000.0, 1000.0)))).y;
+	float v_POLY_noise1_noisez = (vec3(1.0, 1.0, 1.0)*fbm_snoise_341((v_POLY_globals1_position*vec3(1.0, 1.0, 1.0))+(vec3(0.0, 0.0, 0.0)+vec3(2000.0, 2000.0, 2000.0)))).z;
 	vec3 v_POLY_noise1_noise = vec3(v_POLY_noise1_noisex, v_POLY_noise1_noisey, v_POLY_noise1_noisez);
 	
 	// /MAT/meshPhysicalBuilder1/output1

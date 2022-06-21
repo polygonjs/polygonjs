@@ -3,7 +3,7 @@ import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNodeType} from '../_Base';
-import {EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
+import {EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 import {EventData} from '../../../core/event/EventData';
 
 export const EVENT_PARAM_OPTIONS: ParamOptions = {
@@ -74,11 +74,7 @@ class BaseInputEventParamsConfig extends NodeParamsConfig {
 	active = ParamConfig.BOOLEAN(true);
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(0, {
-		menu: {
-			entries: EVENT_EMITTERS.map((name, value) => {
-				return {name, value};
-			}),
-		},
+		...EVENT_EMITTER_PARAM_MENU_OPTIONS,
 		separatorAfter: true,
 	});
 }

@@ -1,4 +1,5 @@
 export enum ActorType {
+	CURSOR = 'cursor',
 	ON_CHILD_ATTRIBUTE_UPDATE = 'onChildAttributeUpdate',
 	ON_KEYDOWN = 'onKeydown',
 	ON_KEYPRESS = 'onKeypress',
@@ -9,9 +10,10 @@ export enum ActorType {
 	ON_OBJECT_ATTRIBUTE_UPDATE = 'onObjectAttributeUpdate',
 	ON_OBJECT_CLICK = 'onObjectClick',
 	ON_OBJECT_HOVER = 'onObjectHover',
-	ON_OBJECT_POINTER_DOWN = 'onObjectPointerDown',
-	ON_OBJECT_POINTER_UP = 'onObjectPointerUp',
-	ON_POINTER_UP = 'onPointerUp',
+	ON_OBJECT_POINTERDOWN = 'onObjectPointerdown',
+	ON_OBJECT_POINTERUP = 'onObjectPointerup',
+	ON_POINTERDOWN = 'onPointerdown',
+	ON_POINTERUP = 'onPointerup',
 	RAY_FROM_CURSOR = 'rayFromCursor',
 	// SET_OBJECT_HOVERED_STATE = 'setObjectHoveredState',
 }

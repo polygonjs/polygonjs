@@ -10,7 +10,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
-import {CoreEventEmitter, EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
+import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 class TouchEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -21,11 +21,7 @@ class TouchEventParamsConfig extends NodeParamsConfig {
 	});
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
-		menu: {
-			entries: EVENT_EMITTERS.map((name, value) => {
-				return {name, value};
-			}),
-		},
+		...EVENT_EMITTER_PARAM_MENU_OPTIONS,
 		separatorAfter: true,
 	});
 

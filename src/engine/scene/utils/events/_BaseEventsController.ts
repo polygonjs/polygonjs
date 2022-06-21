@@ -5,6 +5,8 @@ import {Intersection} from 'three';
 import {BaseViewerType} from '../../../viewers/_Base';
 import type {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
 import {EventData} from '../../../../core/event/EventData';
+import {MapUtils} from '../../../../core/MapUtils';
+import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
 
 interface EventContextValue {
 	node?: BaseNodeType; // for node_cook
@@ -14,6 +16,7 @@ interface EventContextValue {
 export interface EventContext<E extends Event> {
 	viewer?: Readonly<BaseViewerType>;
 	event?: Readonly<E>;
+	emitter?: CoreEventEmitter;
 	// camera?: Readonly<Camera>;
 	value?: EventContextValue;
 }
@@ -22,11 +25,13 @@ export abstract class BaseSceneEventsController<
 	T extends BaseInputEventNodeType,
 	ActorType extends BaseUserInputActorNodeType
 > {
+	private _activeEventDatas: EventData[] = [];
+	private _activeEventDataTypes: Set<string> = new Set();
 	protected _eventNodes: Set<T> = new Set();
 	protected _requireCanvasEventListeners: boolean = false;
-	protected _actorEventNamesByNode: Map<ActorType, string[]> = new Map();
-	protected _actorEventNames: Set<string> = new Set();
-	protected _actorNodesByEventNames: Map<string, Set<ActorType>> = new Map();
+	protected _actorEventNodes: Set<ActorType> = new Set();
+	// protected _actorEventNames: Set<string> = new Set();
+	protected _actorNodesByEventNames: Map<string, Map<CoreEventEmitter, Set<ActorType>>> = new Map();
 	constructor(protected dispatcher: SceneEventsDispatcher) {}
 
 	registerEventNode(node: T) {
@@ -38,30 +43,31 @@ export abstract class BaseSceneEventsController<
 		this.updateViewerEventListeners();
 	}
 	registerActorNode(node: ActorType) {
-		const eventNames = node.userInputEventNames();
-		this._actorEventNamesByNode.set(node, eventNames);
+		this._actorEventNodes.add(node);
 		this._updateActorCache();
 		this.updateViewerEventListeners();
 	}
 	unregisterActorNode(node: ActorType) {
-		this._actorEventNamesByNode.delete(node);
+		this._actorEventNodes.delete(node);
 		this._updateActorCache();
 		this.updateViewerEventListeners();
 	}
 
 	private _updateActorCache() {
-		this._actorEventNames.clear();
+		// this._actorEventNames.clear();
 		this._actorNodesByEventNames.clear();
-		this._actorEventNamesByNode.forEach((nodeEventNames, node) => {
+		this._actorEventNodes.forEach((node) => {
+			const nodeEventNames = node.userInputEventNames();
+			const emitter = node.eventEmitter();
 			for (let eventName of nodeEventNames) {
-				this._actorEventNames.add(eventName);
+				// this._actorEventNames.add(eventName);
 
-				let setForEventName = this._actorNodesByEventNames.get(eventName);
-				if (!setForEventName) {
-					setForEventName = new Set();
-					this._actorNodesByEventNames.set(eventName, setForEventName);
+				let mapForEventName = this._actorNodesByEventNames.get(eventName);
+				if (!mapForEventName) {
+					mapForEventName = new Map();
+					this._actorNodesByEventNames.set(eventName, mapForEventName);
 				}
-				setForEventName.add(node);
+				MapUtils.addToSetAtEntry(mapForEventName, emitter, node);
 			}
 		});
 	}
@@ -99,43 +105,65 @@ export abstract class BaseSceneEventsController<
 		}
 	}
 
-	private _activeEventDatas: EventData[] = [];
-	private _activeEventDataTypes: Set<string> = new Set();
 	activeEventDatas() {
 		return this._activeEventDatas;
 	}
-	private _resetActiveEventData() {
-		this._activeEventDatas.splice(0, this._activeEventDatas.length);
-		this._activeEventDataTypes.clear();
-		const actorEventDatas = this._actorEventDatas();
-		if (actorEventDatas) {
-			for (let data of actorEventDatas) {
-				this._storeEventData(data);
-			}
-		}
-	}
-	protected _actorEventDatas(): EventData[] | undefined {
-		return undefined;
-	}
-	private _storeEventData(eventData: EventData) {
-		this._activeEventDatas.push(eventData);
-		this._activeEventDataTypes.add(eventData.type);
-	}
-	private _updateActiveEventTypes() {
-		this._resetActiveEventData();
-		const activeNodeEventTypesState: Set<EventData> = new Set();
 
-		this._eventNodes.forEach((node) => {
-			if (node.parent()) {
-				const nodeActiveEventDatas = node.activeEventDatas();
-				for (let data of nodeActiveEventDatas) {
-					activeNodeEventTypesState.add(data);
+	private _updateActiveEventTypes() {
+		const _storeEventData = (eventData: EventData) => {
+			this._activeEventDatas.push(eventData);
+			this._activeEventDataTypes.add(eventData.type);
+		};
+
+		const _reset = () => {
+			this._activeEventDatas.splice(0, this._activeEventDatas.length);
+			this._activeEventDataTypes.clear();
+		};
+
+		const _actorEventDatas = () => {
+			const eventDatas: EventData[] = [];
+
+			this._actorNodesByEventNames.forEach((mapForEventName, eventName) => {
+				mapForEventName.forEach((nodes, emitter) => {
+					nodes.forEach((node) => {
+						const eventData: EventData = {
+							type: eventName,
+							emitter,
+						};
+						eventDatas.push(eventData);
+					});
+				});
+			});
+			return eventDatas;
+		};
+
+		const _updateActorNodesEventData = () => {
+			const actorEventDatas = _actorEventDatas();
+			if (actorEventDatas) {
+				for (let data of actorEventDatas) {
+					_storeEventData(data);
 				}
 			}
-		});
-		activeNodeEventTypesState.forEach((state, data) => {
-			this._storeEventData(data);
-		});
+		};
+
+		const _updateEventNodesEventData = () => {
+			const activeNodeEventTypesState: Set<EventData> = new Set();
+			this._eventNodes.forEach((node) => {
+				if (node.parent()) {
+					const nodeActiveEventDatas = node.activeEventDatas();
+					for (let data of nodeActiveEventDatas) {
+						activeNodeEventTypesState.add(data);
+					}
+				}
+			});
+			activeNodeEventTypesState.forEach((state, data) => {
+				_storeEventData(data);
+			});
+		};
+
+		_reset();
+		_updateActorNodesEventData();
+		_updateEventNodesEventData();
 	}
 }
 

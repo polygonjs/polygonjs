@@ -4,7 +4,6 @@
  *
  */
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {ACCEPTED_POINTER_EVENT_TYPES} from '../../scene/utils/events/PointerEventsController';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
@@ -12,6 +11,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
 import {CoreEventEmitter, EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
+import {ACCEPTED_POINTER_EVENT_TYPES} from '../../../core/event/PointerEventType';
 class PointerEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {

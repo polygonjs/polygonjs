@@ -15,9 +15,15 @@ import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 import {isBooleanTrue} from '../../../core/Type';
 import {Intersection} from 'three';
+import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-class OnObjectPointerDownActorParamsConfig extends NodeParamsConfig {
+class OnObjectPointerupActorParamsConfig extends NodeParamsConfig {
+	/** @param set which element triggers the event */
+	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
+		...EVENT_EMITTER_PARAM_MENU_OPTIONS,
+		separatorAfter: true,
+	});
 	/** @param include children */
 	traverseChildren = ParamConfig.BOOLEAN(1);
 	/** @param pointsThreshold */
@@ -25,15 +31,18 @@ class OnObjectPointerDownActorParamsConfig extends NodeParamsConfig {
 	/** @param lineThreshold */
 	lineThreshold = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new OnObjectPointerDownActorParamsConfig();
+const ParamsConfig = new OnObjectPointerupActorParamsConfig();
 
-export class OnObjectPointerDownActorNode extends BaseUserInputActorNode<OnObjectPointerDownActorParamsConfig> {
+export class OnObjectPointerupActorNode extends BaseUserInputActorNode<OnObjectPointerupActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return ActorType.ON_OBJECT_POINTER_DOWN;
+		return ActorType.ON_OBJECT_POINTERUP;
 	}
 	userInputEventNames() {
-		return ['pointerdown'];
+		return ['pointerup'];
+	}
+	override eventEmitter() {
+		return EVENT_EMITTERS[this.pv.element];
 	}
 	private _intersections: Intersection[] = [];
 
@@ -42,7 +51,7 @@ export class OnObjectPointerDownActorNode extends BaseUserInputActorNode<OnObjec
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 		]);
-		this.io.connection_points.spare_params.setInputlessParamNames(['pointsThreshold', 'lineThreshold']);
+		this.io.connection_points.spare_params.setInputlessParamNames(['pointsThreshold', 'lineThreshold', 'element']);
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {

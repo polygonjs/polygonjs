@@ -113,6 +113,7 @@ import './engine/nodes/actor/Min';
 import './engine/nodes/actor/Mix';
 import './engine/nodes/actor/MultAdd';
 import './engine/nodes/actor/MultScalar';
+import './engine/nodes/actor/Negate';
 import './engine/nodes/actor/Normalize';
 import './engine/nodes/actor/OnChildAttributeUpdate';
 import './engine/nodes/actor/OnKeydown';

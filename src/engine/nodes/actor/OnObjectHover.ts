@@ -16,9 +16,15 @@ import {BaseUserInputActorNode} from './_BaseUserInput';
 import {isBooleanTrue} from '../../../core/Type';
 import {Intersection} from 'three';
 import {Object3D} from 'three';
+import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 class OnObjectHoverActorParamsConfig extends NodeParamsConfig {
+	/** @param set which element triggers the event */
+	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
+		...EVENT_EMITTER_PARAM_MENU_OPTIONS,
+		separatorAfter: true,
+	});
 	/** @param include children */
 	traverseChildren = ParamConfig.BOOLEAN(1);
 	/** @param pointsThreshold */
@@ -35,6 +41,9 @@ export class OnObjectHoverActorNode extends BaseUserInputActorNode<OnObjectHover
 	}
 	userInputEventNames() {
 		return ['pointermove'];
+	}
+	override eventEmitter() {
+		return EVENT_EMITTERS[this.pv.element];
 	}
 	private _intersections: Intersection[] = [];
 

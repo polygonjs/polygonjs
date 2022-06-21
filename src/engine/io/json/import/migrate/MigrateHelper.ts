@@ -15,6 +15,10 @@ const ACTOR_NEW_TYPES: PolyDictionary<string> = {
 	onEventObjectClicked: 'OnObjectClick',
 	onEventObjectHovered: 'OnObjectHover',
 	onEventTick: 'OnTick',
+	OnObjectPointerDown: 'OnObjectPointerdown',
+	OnObjectPointerUp: 'OnObjectPointerup',
+	OnPointerDown: 'OnPointerdown',
+	OnPointerUp: 'OnPointerup',
 };
 
 function migrateCop(nodeData: NodeJsonExporterData) {

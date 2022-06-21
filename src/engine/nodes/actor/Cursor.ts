@@ -1,5 +1,5 @@
 /**
- * gets the ray from the cursor
+ * gets the 2D position of the cursor
  *
  * @remarks
  *
@@ -13,18 +13,18 @@ import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 
-const OUTPUT_NAME = 'ray';
-class RayFromCursorActorParamsConfig extends NodeParamsConfig {
+const OUTPUT_NAME = 'cursor';
+class CursorActorParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
 		...EVENT_EMITTER_PARAM_MENU_OPTIONS,
 	});
 }
-const ParamsConfig = new RayFromCursorActorParamsConfig();
-export class RayFromCursorActorNode extends BaseUserInputActorNode<RayFromCursorActorParamsConfig> {
+const ParamsConfig = new CursorActorParamsConfig();
+export class CursorActorNode extends BaseUserInputActorNode<CursorActorParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return ActorType.RAY_FROM_CURSOR;
+		return ActorType.CURSOR;
 	}
 	userInputEventNames() {
 		return ['pointermove'];
@@ -36,15 +36,14 @@ export class RayFromCursorActorNode extends BaseUserInputActorNode<RayFromCursor
 		// this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
 		this.io.connection_points.set_output_name_function((index: number) => OUTPUT_NAME);
 		this.io.connection_points.set_expected_input_types_function(() => []);
-		this.io.connection_points.set_expected_output_types_function(() => [ActorConnectionPointType.RAY]);
+		this.io.connection_points.set_expected_output_types_function(() => [ActorConnectionPointType.VECTOR2]);
 	}
 
 	public override outputValue(
 		context: ActorNodeTriggerContext
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.RAY] | undefined {
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.VECTOR2] | undefined {
 		const pointerEventsController = this.scene().eventsDispatcher.pointerEventsController;
-		const raycaster = pointerEventsController.raycaster();
-		return raycaster.ray;
+		return pointerEventsController.cursor();
 	}
 	override eventEmitter() {
 		return EVENT_EMITTERS[this.pv.element];

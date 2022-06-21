@@ -8,7 +8,7 @@ import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
-import {CoreEventEmitter, EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
+import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 import {CoreString} from '../../../core/String';
 import {isBooleanTrue} from '../../../core/Type';
 import {ParamType} from '../../poly/ParamType';
@@ -16,11 +16,7 @@ import {ParamType} from '../../poly/ParamType';
 class BaseOnKeyEventActorParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
-		menu: {
-			entries: EVENT_EMITTERS.map((name, value) => {
-				return {name, value};
-			}),
-		},
+		...EVENT_EMITTER_PARAM_MENU_OPTIONS,
 		separatorAfter: true,
 	});
 	/** @param space separated list of accepted key codes. If this is empty then any key is accepted. */

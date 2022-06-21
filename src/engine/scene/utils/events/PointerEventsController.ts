@@ -4,44 +4,14 @@ import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {Raycaster, Vector2} from 'three';
 import {Camera} from 'three';
 import type {PointerEventActorNode} from '../actors/ActorsPointerEventsController';
-import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
-import {EventData} from '../../../../core/event/EventData';
+import {ACCEPTED_POINTER_EVENT_TYPES} from '../../../../core/event/PointerEventType';
 
 interface RaycasterUpdateOptions {
 	pointsThreshold: number;
 	lineThreshold: number;
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/Events
-enum PointerEventType {
-	pointerdown = 'pointerdown',
-	pointermove = 'pointermove',
-	pointerup = 'pointerup',
-}
-export const ACCEPTED_POINTER_EVENT_TYPES: PointerEventType[] = [
-	PointerEventType.pointerdown,
-	PointerEventType.pointermove,
-	PointerEventType.pointerup,
-];
-
-const ACTOR_EVENT_DATA_POINTERMOVE: EventData = {
-	type: PointerEventType.pointermove,
-	emitter: CoreEventEmitter.CANVAS,
-};
-const ACTOR_EVENT_DATA_POINTERDOWN: EventData = {
-	type: PointerEventType.pointerdown,
-	emitter: CoreEventEmitter.CANVAS,
-};
-const ACTOR_EVENT_DATA_POINTERUP: EventData = {
-	type: PointerEventType.pointerup,
-	emitter: CoreEventEmitter.CANVAS,
-};
-type PointerEventsControllerAvailableEventNames = 'pointermove' | 'pointerdown' | 'pointerup';
-const ACTOR_EVENT_DATA = {
-	[PointerEventType.pointermove]: ACTOR_EVENT_DATA_POINTERMOVE,
-	[PointerEventType.pointerdown]: ACTOR_EVENT_DATA_POINTERDOWN,
-	[PointerEventType.pointerup]: ACTOR_EVENT_DATA_POINTERUP,
-};
+// type PointerEventsControllerAvailableEventNames = 'pointermove' | 'pointerdown' | 'pointerup';
 
 export class PointerEventsController extends BaseSceneEventsController<
 	MouseEvent,
@@ -67,28 +37,40 @@ export class PointerEventsController extends BaseSceneEventsController<
 
 	override processEvent(eventContext: EventContext<MouseEvent>) {
 		super.processEvent(eventContext);
-		const {viewer, event} = eventContext;
 
-		if (this._actorEventNames.size == 0) {
+		// if (this._actorEventNames.size == 0) {
+		// 	return;
+		// }
+		const eventEmitter = eventContext.emitter;
+		if (!eventEmitter) {
 			return;
 		}
+		const {viewer, event} = eventContext;
 		if (!(event && viewer)) {
 			return;
 		}
 		const eventType = event.type;
-		if (!this._actorEventNames.has(eventType)) {
+		const mapForEvent = this._actorNodesByEventNames.get(eventType);
+		if (!mapForEvent) {
 			return;
 		}
+		const nodesToTrigger = mapForEvent.get(eventEmitter);
+		if (!nodesToTrigger) {
+			return;
+		}
+		// if (!this._actorEventNames.has(eventType)) {
+		// 	return;
+		// }
 		this._camera = viewer.camera();
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
 		if (this._camera) {
 			viewer.raycaster.setFromCamera(this._cursor, this._camera);
 			this._raycaster = viewer.raycaster;
 		}
-		const nodesToTrigger = this._actorNodesByEventNames.get(eventType);
-		if (nodesToTrigger) {
-			this.dispatcher.scene.actorsManager.pointerEventsController.setTriggeredNodes(nodesToTrigger);
-		}
+
+		// if (nodesToTrigger) {
+		this.dispatcher.scene.actorsManager.pointerEventsController.setTriggeredNodes(nodesToTrigger);
+		// }
 		// switch (eventType) {
 		// 	case PointerEventType.pointerdown: {
 		// 		this._pointerdownRegistered = true;
@@ -101,23 +83,24 @@ export class PointerEventsController extends BaseSceneEventsController<
 		// }
 	}
 
-	protected override _actorEventDatas(): EventData[] | undefined {
-		const eventDatas: EventData[] = [];
-		this._actorEventNames.forEach((eventName) => {
-			const eventData = ACTOR_EVENT_DATA[eventName as PointerEventsControllerAvailableEventNames];
-			if (eventData) {
-				eventDatas.push(eventData);
-			}
-		});
-		return eventDatas;
-	}
+	// protected override _actorEventDatas(): EventData[] | undefined {
+	// 	const eventDatas: EventData[] = [];
+	// 	this._actorEventNames.forEach((eventName) => {
+	// 		const eventData = ACTOR_EVENT_DATA[eventName as PointerEventsControllerAvailableEventNames];
+	// 		if (eventData) {
+	// 			eventDatas.push(eventData);
+	// 		}
+	// 	});
+	// 	console.log(eventDatas);
+	// 	return eventDatas;
+	// }
 
 	raycaster() {
 		return this._raycaster;
 	}
-	// cursor() {
-	// 	return this._cursor;
-	// }
+	cursor() {
+		return this._cursor;
+	}
 	// camera() {
 	// 	return this._camera;
 	// }

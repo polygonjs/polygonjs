@@ -9,6 +9,7 @@ export const CATEGORY_ACTOR = {
 	EVENTS: 'events',
 	FLOW: 'flow',
 	GET: 'get',
+	INPUTS: 'inputs',
 	LOGIC: 'logic',
 	MATH: 'math',
 	NETWORK,

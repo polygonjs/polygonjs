@@ -4,16 +4,18 @@ import {ActorsManager} from '../ActorsManager';
 
 import type {OnObjectClickActorNode} from '../../../nodes/actor/OnObjectClick';
 import type {OnObjectHoverActorNode} from '../../../nodes/actor/OnObjectHover';
-import type {OnObjectPointerDownActorNode} from '../../../nodes/actor/OnObjectPointerDown';
-import type {OnObjectPointerUpActorNode} from '../../../nodes/actor/OnObjectPointerUp';
-import type {OnPointerUpActorNode} from '../../../nodes/actor/OnPointerUp';
+import type {OnObjectPointerdownActorNode} from '../../../nodes/actor/OnObjectPointerdown';
+import type {OnObjectPointerupActorNode} from '../../../nodes/actor/OnObjectPointerup';
+import type {OnPointerdownActorNode} from '../../../nodes/actor/OnPointerdown';
+import type {OnPointerupActorNode} from '../../../nodes/actor/OnPointerup';
 import type {RayFromCursorActorNode} from '../../../nodes/actor/RayFromCursor';
 export type PointerEventActorNode =
 	| OnObjectClickActorNode
 	| OnObjectHoverActorNode
-	| OnObjectPointerDownActorNode
-	| OnObjectPointerUpActorNode
-	| OnPointerUpActorNode
+	| OnObjectPointerdownActorNode
+	| OnObjectPointerupActorNode
+	| OnPointerdownActorNode
+	| OnPointerupActorNode
 	| RayFromCursorActorNode;
 export class ActorPointerEventsController {
 	private _scene: PolyScene;
