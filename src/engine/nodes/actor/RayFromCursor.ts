@@ -29,6 +29,9 @@ export class RayFromCursorActorNode extends BaseUserInputActorNode<RayFromCursor
 	userInputEventNames() {
 		return ['pointermove'];
 	}
+	override eventEmitter() {
+		return EVENT_EMITTERS[this.pv.element];
+	}
 	override initializeNode() {
 		super.initializeNode();
 
@@ -45,8 +48,5 @@ export class RayFromCursorActorNode extends BaseUserInputActorNode<RayFromCursor
 		const pointerEventsController = this.scene().eventsDispatcher.pointerEventsController;
 		const raycaster = pointerEventsController.raycaster();
 		return raycaster.ray;
-	}
-	override eventEmitter() {
-		return EVENT_EMITTERS[this.pv.element];
 	}
 }

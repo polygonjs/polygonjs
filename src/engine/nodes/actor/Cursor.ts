@@ -12,13 +12,17 @@ import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} fro
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
+import {Number2} from '../../../types/GlobalTypes';
 
 const OUTPUT_NAME = 'cursor';
+const tmpVector2Array: Number2 = [0, 0];
 class CursorActorParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
 		...EVENT_EMITTER_PARAM_MENU_OPTIONS,
 	});
+	/** @param cursor */
+	cursor = ParamConfig.VECTOR2([0, 0]);
 }
 const ParamsConfig = new CursorActorParamsConfig();
 export class CursorActorNode extends BaseUserInputActorNode<CursorActorParamsConfig> {
@@ -28,6 +32,9 @@ export class CursorActorNode extends BaseUserInputActorNode<CursorActorParamsCon
 	}
 	userInputEventNames() {
 		return ['pointermove'];
+	}
+	override eventEmitter() {
+		return EVENT_EMITTERS[this.pv.element];
 	}
 	override initializeNode() {
 		super.initializeNode();
@@ -43,9 +50,14 @@ export class CursorActorNode extends BaseUserInputActorNode<CursorActorParamsCon
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.VECTOR2] | undefined {
 		const pointerEventsController = this.scene().eventsDispatcher.pointerEventsController;
-		return pointerEventsController.cursor();
-	}
-	override eventEmitter() {
-		return EVENT_EMITTERS[this.pv.element];
+		const eventCursor = pointerEventsController.cursor();
+
+		const currentCursor = this.pv.cursor;
+		if (eventCursor.x != currentCursor.x || eventCursor.y != currentCursor.y) {
+			eventCursor.toArray(tmpVector2Array);
+			this.p.cursor.set(tmpVector2Array);
+		}
+
+		return eventCursor;
 	}
 }
