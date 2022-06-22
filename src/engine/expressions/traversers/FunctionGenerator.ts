@@ -391,9 +391,6 @@ export class FunctionGenerator extends BaseTraverser {
 		return this.function != null;
 	}
 	evalFunction() {
-		// this.param.entity_attrib_values = this.param.entity_attrib_values || {}
-		// this.param.entity_attrib_values.position =
-		// 	this.param.entity_attrib_values.position || new THREE.Vector3()
 		if (this.function) {
 			this.clear_error();
 

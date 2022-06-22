@@ -341,6 +341,8 @@ import './engine/nodes/sop/Reflector';
 import './engine/nodes/sop/Resample';
 import './engine/nodes/sop/RoundedBox';
 import './engine/nodes/sop/Scatter';
+import './engine/nodes/sop/SetChildren';
+import './engine/nodes/sop/SetGeometry';
 import './engine/nodes/sop/Shear';
 import './engine/nodes/sop/Skin';
 import './engine/nodes/sop/Solver';

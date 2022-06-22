@@ -6,7 +6,13 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {HierarchyMode, HierarchySopOperation, HIERARCHY_MODES} from '../../operations/sop/Hierarchy';
+import {
+	HierarchyMode,
+	HierarchySopOperation,
+	HIERARCHY_MODES,
+	ADD_CHILD_MODES,
+	AddChildMode,
+} from '../../operations/sop/Hierarchy';
 export const MODES_WITH_LEVEL = [HierarchyMode.ADD_PARENT, HierarchyMode.REMOVE_PARENT];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = HierarchySopOperation.DEFAULT_PARAMS;
@@ -32,9 +38,14 @@ class HierarchySopParamsConfig extends NodeParamsConfig {
 		visibleIf: {mode: HIERARCHY_MODES.indexOf(HierarchyMode.ADD_CHILD)},
 		objectMask: true,
 	});
-	/** @param when the mode is set to add_child, the objects used as parent will be printed to the console */
-	debugObjectMask = ParamConfig.BOOLEAN(0, {
+	/** @param defines how the children are added to the parents */
+	addChildMode = ParamConfig.INTEGER(DEFAULT.addChildMode, {
 		visibleIf: {mode: HIERARCHY_MODES.indexOf(HierarchyMode.ADD_CHILD)},
+		menu: {
+			entries: ADD_CHILD_MODES.map((m, i) => {
+				return {name: m, value: i};
+			}),
+		},
 	});
 }
 const ParamsConfig = new HierarchySopParamsConfig();
@@ -63,5 +74,8 @@ export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 
 	setMode(mode: HierarchyMode) {
 		this.p.mode.set(HIERARCHY_MODES.indexOf(mode));
+	}
+	setAddChildMode(mode: AddChildMode) {
+		this.p.addChildMode.set(ADD_CHILD_MODES.indexOf(mode));
 	}
 }

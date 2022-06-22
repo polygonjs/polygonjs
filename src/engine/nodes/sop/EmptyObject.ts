@@ -48,4 +48,8 @@ export class EmptyObjectSopNode extends TypedSopNode<EmptyObjectSopParamsConfig>
 	setObjectType(objectType: ObjectType) {
 		this.p.type.set(objectType);
 	}
+	objectType(): ObjectType | undefined {
+		const included = OBJECT_TYPES.includes(this.pv.type as ObjectType);
+		return included ? (this.pv.type as ObjectType) : undefined;
+	}
 }
