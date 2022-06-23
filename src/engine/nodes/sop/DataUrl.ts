@@ -121,12 +121,14 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 		Poly.blobs.clearBlobsForNode(this);
 	}
 	private _url() {
-		const assets_root = this.scene().assets.root();
-		if (assets_root) {
-			return `${assets_root}${this.pv.url}`;
-		} else {
-			return this.pv.url;
-		}
+		// do not use assetsRoot here, as it would use it twice
+		// as it is already used in the loader.
+		// const assets_root = this.scene().assets.root();
+		// if (assets_root) {
+		// 	return `${assets_root}${this.pv.url}`;
+		// } else {
+		return this.pv.url;
+		// }
 	}
 	//
 	//

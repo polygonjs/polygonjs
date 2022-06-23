@@ -122,3 +122,26 @@ QUnit.test('dataUrl csv with empty line', async (assert) => {
 	assert.deepEqual(geometry.attributes.rot.array.length, 2);
 	assert.deepEqual(Object.keys(geometry.attributes).sort(), ['rot', 'mult', 'add', 'position', 'scale'].sort());
 });
+QUnit.test('dataUrl with assetsRoot', async (assert) => {
+	const geo1 = window.geo1;
+
+	const dataUrl1 = geo1.createNode('dataUrl');
+	dataUrl1.p.url.set('curve_data.json');
+
+	async function pointsCount() {
+		let container = await dataUrl1.compute();
+		assert.ok(!dataUrl1.isDirty());
+		return container.pointsCount();
+	}
+
+	window.scene.assets.setRoot('/clients/me');
+	assert.equal(await pointsCount(), 1);
+
+	window.scene.assets.setRoot('/clients/me2');
+	dataUrl1.p.reload.pressButton();
+	assert.equal(await pointsCount(), 0);
+
+	window.scene.assets.setRoot('/clients/me');
+	dataUrl1.p.reload.pressButton();
+	assert.equal(await pointsCount(), 1);
+});
