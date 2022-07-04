@@ -14,6 +14,7 @@ import {ChromaticAberrationPostNode} from '../../../nodes/post/ChromaticAberrati
 import {DepthOfFieldPostNode} from '../../../nodes/post/DepthOfField';
 // import {DotScreenPostNode} from '../../../nodes/post/DotScreen';
 // import {GammaCorrectionPostNode} from '../../../nodes/post/GammaCorrection';
+import {GlitchPostNode} from '../../../nodes/post/Glitch';
 import {HueSaturationPostNode} from '../../../nodes/post/HueSaturation';
 // import {LayerPostNode} from '../../../nodes/post/Layer';
 // import {MaskPostNode} from '../../../nodes/post/Mask';
@@ -55,6 +56,7 @@ export interface PostNodeChildrenMap {
 	depthOfField: DepthOfFieldPostNode;
 	// dotScreen: DotScreenPostNode;
 	// gammaCorrection: GammaCorrectionPostNode;
+	glitch: GlitchPostNode;
 	hueSaturation: HueSaturationPostNode;
 	// layer: LayerPostNode;
 	// mask: MaskPostNode;
@@ -99,6 +101,7 @@ export class PostRegister {
 		// poly.registerNode(DotScreenPostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(DepthOfFieldPostNode, CATEGORY_POST.EFFECT);
 		// poly.registerNode(GammaCorrectionPostNode, CATEGORY_POST.COLOR);
+		poly.registerNode(GlitchPostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(HueSaturationPostNode, CATEGORY_POST.COLOR);
 		// poly.registerNode(LayerPostNode, CATEGORY_POST.MISC);
 		// poly.registerNode(MaskPostNode, CATEGORY_POST.MISC);
