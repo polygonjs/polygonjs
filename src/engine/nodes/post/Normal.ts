@@ -15,7 +15,7 @@ export class NormalPostNode extends TypedPostProcessNode<NormalPass, NormalParam
 		return 'Normal';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const normalPass = new NormalPass(context.scene, context.camera);
 
 		return normalPass;

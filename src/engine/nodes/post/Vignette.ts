@@ -29,7 +29,7 @@ export class VignettePostNode extends TypedPostProcessNode<EffectPass, VignetteP
 		return 'vignette';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const effect = new VignetteEffect({
 			technique: VignetteTechnique.DEFAULT,
 			offset: this.pv.offset,

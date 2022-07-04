@@ -40,7 +40,7 @@ export class TexturePostNode extends TypedPostProcessNode<EffectPass, TexturePos
 	}
 
 	private _rendererSize = new Vector2();
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		context.renderer.getSize(this._rendererSize);
 		const effect = new TextureEffect({texture: tmpTexture});
 		const pass = new EffectPass(context.camera, effect);

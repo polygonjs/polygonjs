@@ -38,7 +38,7 @@ export class LutPostNode extends TypedPostProcessNode<EffectPass, LutPostParamsC
 		return 'lut';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		// const texture = await this._fetchTexture();
 		const passes: EffectPass[] = [];
 		// if (texture) {

@@ -22,7 +22,7 @@ export class PixelPostNode extends TypedPostProcessNode<EffectPass, PixelPostPar
 		return 'pixel';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const effect = new PixelationEffect(5);
 		// context.renderer.getSize(this._rendererSize);
 		const pass = new EffectPass(context.camera, effect);

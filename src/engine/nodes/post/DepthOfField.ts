@@ -100,7 +100,7 @@ export class DepthOfFieldPostNode extends TypedPostProcessNode<EffectPass, Depth
 		return 'depthOfField';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		// const smaaEffect = new SMAAEffect(
 		// 	{
 		// 		preset: SMAAPreset.HIGH,

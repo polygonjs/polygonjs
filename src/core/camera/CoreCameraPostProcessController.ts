@@ -6,12 +6,14 @@ import {CameraSopNodeType, NetworkNodeType, NodeContext} from '../../engine/poly
 import {CoreObject} from '../geometry/Object';
 import {CoreType} from '../Type';
 import {CameraAttribute} from './CoreCamera';
+import {BaseViewerType} from '../../engine/viewers/_Base';
 
 interface CreateComposerOptions {
 	renderer: WebGLRenderer;
 	scene: PolyScene;
 	camera: Camera;
 	renderScene: Scene;
+	viewer: BaseViewerType;
 }
 
 export class CoreCameraPostProcessController {
@@ -23,7 +25,7 @@ export class CoreCameraPostProcessController {
 	}
 
 	static createComposer(options: CreateComposerOptions) {
-		const {renderer, scene, renderScene, camera} = options;
+		const {renderer, scene, renderScene, camera, viewer} = options;
 
 		let postProcessNode: BaseNetworkPostProcessNodeType | undefined;
 		const postProcessNodeId = CoreObject.attribValue(camera, CameraAttribute.POST_PROCESS_NODE_ID);
@@ -41,6 +43,7 @@ export class CoreCameraPostProcessController {
 			renderer,
 			scene: renderScene,
 			camera,
+			viewer,
 			// resolution,
 			// requester: this.node,
 			// render_target: render_target,

@@ -56,7 +56,7 @@ export class BloomPostNode extends TypedPostProcessNode<EffectPass, BloomPostPar
 	}
 
 	private _rendererSize = new Vector2();
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		context.renderer.getSize(this._rendererSize);
 		const bloomEffect = new BloomEffect({
 			blendFunction: BlendFunction.SCREEN,

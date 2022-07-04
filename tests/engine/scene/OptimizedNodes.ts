@@ -96,10 +96,12 @@ QUnit.test(
 
 		Poly.setPlayerMode(true);
 		const scene_player = await SceneJsonImporter.loadData(data);
-		assert.equal(scene_player.graph.nextId(), scene_no_player.graph.nextId() - 76);
+		const diff = scene_no_player.graph.nextId() - scene_player.graph.nextId();
+		assert.equal(diff, 76, '76 diff');
 		assert.equal(
 			scene_player.nodesController.allNodes().length,
-			scene_no_player.nodesController.allNodes().length - 4
+			scene_no_player.nodesController.allNodes().length - 4,
+			'4 less'
 		);
 
 		const merge2_player = scene_player.node(merge2.path()) as TransformSopNode;

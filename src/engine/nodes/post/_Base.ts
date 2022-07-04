@@ -9,6 +9,7 @@ import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNetworkPostProcessNodeType, EffectComposerController} from './utils/EffectComposerController';
 import {CoreCameraPostProcessController} from '../../../core/camera/CoreCameraPostProcessController';
 import {CoreType} from '../../../core/Type';
+import {BaseViewerType} from '../../viewers/_Base';
 
 const INPUT_PASS_NAME = 'input pass';
 const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
@@ -20,6 +21,7 @@ export interface TypedPostNodeContext {
 	// resolution: Vector2;
 	scene: Scene;
 	// requester: BaseNodeType;
+	viewer: BaseViewerType;
 }
 
 function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
@@ -70,19 +72,16 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		this._addPassFromInput(0, context);
 
 		if (!this.flags.bypass.active()) {
-			let pass = this._passesByEffectsComposer.get(context.composer);
-			if (!pass) {
-				pass = this._createPass(context);
-				if (pass) {
-					this._passesByEffectsComposer.set(context.composer, pass);
-				}
-			}
-			if (pass) {
-				const array = CoreType.isArray(pass) ? pass : [pass];
-				for (let p of array) {
-					context.composerController.addPassByNodeInBuildPassesProcess(this, p);
-					context.composer.addPass(p);
-				}
+			this._setupComposerIfActive(context);
+		}
+	}
+	protected _setupComposerIfActive(context: TypedPostNodeContext) {
+		const pass = this.createPassForContext(context);
+		if (pass) {
+			const array = CoreType.isArray(pass) ? pass : [pass];
+			for (let p of array) {
+				context.composerController.addPassByNodeInBuildPassesProcess(this, p);
+				context.composer.addPass(p);
 			}
 		}
 	}
@@ -96,8 +95,17 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 			input.setupComposer(context);
 		}
 	}
-
-	protected _createPass(context: TypedPostNodeContext): P | P[] | undefined {
+	createPassForContext(context: TypedPostNodeContext) {
+		let pass = this._passesByEffectsComposer.get(context.composer);
+		if (!pass) {
+			pass = this.createPass(context);
+			if (pass) {
+				this._passesByEffectsComposer.set(context.composer, pass);
+			}
+		}
+		return pass;
+	}
+	createPass(context: TypedPostNodeContext): P | P[] | undefined {
 		return undefined;
 	}
 

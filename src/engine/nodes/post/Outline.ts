@@ -63,7 +63,7 @@ export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePos
 
 	private _resolvedObjects: Object3D[] = [];
 	// private _rendererSize = new Vector2();
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const effect = new OutlineEffect(context.scene, context.camera, {
 			blendFunction: BlendFunction.SCREEN,
 			patternScale: 40,

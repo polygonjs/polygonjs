@@ -21,7 +21,7 @@ export class AntialiasingPostNode extends TypedPostProcessNode<EffectPass, Antia
 		return 'antialiasing';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const smaaEffect = new SMAAEffect(
 			{}
 			// assets.get("smaa-search"),

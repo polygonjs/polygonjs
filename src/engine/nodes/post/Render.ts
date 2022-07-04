@@ -53,7 +53,7 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 		return 'render';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const pass = new RenderPass(context.scene, context.camera) as RenderPassWithContext;
 
 		pass.context = {

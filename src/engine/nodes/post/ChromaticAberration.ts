@@ -29,7 +29,7 @@ export class ChromaticAberrationPostNode extends TypedPostProcessNode<EffectPass
 		return 'chromaticAberration';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const effect = new ChromaticAberrationEffect();
 		const pass = new EffectPass(context.camera, effect);
 		this.updatePass(pass);

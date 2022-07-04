@@ -29,7 +29,7 @@ export class BlurPostNode extends TypedPostProcessNode<KawaseBlurPass, BlurPostP
 		return 'blur';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const pass = new KawaseBlurPass();
 		this.updatePass(pass);
 		return pass;

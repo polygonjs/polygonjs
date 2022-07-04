@@ -107,7 +107,7 @@ export class ScreenSpaceAmbientOcclusionPostNode extends TypedPostProcessNode<
 		return 'screenSpaceAmbientOcclusion';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const normalPass = new NormalPass(context.scene, context.camera);
 		const depthDownsamplingPass = new DepthDownsamplingPass({
 			normalBuffer: normalPass.texture,

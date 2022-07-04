@@ -40,7 +40,7 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<EffectPass,
 		return 'brightnessContrast';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const effect = new BrightnessContrastEffect();
 		const camera = context.camera;
 		const pass = new EffectPass(camera, effect);

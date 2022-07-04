@@ -83,7 +83,7 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 		return ['previous pass', 'updateScene node to reset changes of'];
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const pass = new UpdateScenePass({
 			scene: this.scene(),
 			reset: isBooleanTrue(this.pv.reset),

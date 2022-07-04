@@ -16,7 +16,7 @@ export class SepiaPostNode extends TypedPostProcessNode<EffectPass, SepiaPostPar
 		return 'sepia';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const effect = new SepiaEffect();
 		const pass = new EffectPass(context.camera, effect);
 

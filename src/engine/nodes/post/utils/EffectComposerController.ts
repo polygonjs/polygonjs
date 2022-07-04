@@ -7,6 +7,7 @@ import {BaseNodeType, TypedNode} from '../../_Base';
 import {BasePostProcessNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+import {BaseViewerType} from '../../../viewers/_Base';
 
 const RENDER_TARGET_TEXTURE_TYPE_OPTIONS: PolyDictionary<number> = {
 	UnsignedByteType: UnsignedByteType,
@@ -55,6 +56,7 @@ interface CreateEffectsComposerOptions {
 	renderer: WebGLRenderer;
 	scene: Scene;
 	camera: Camera;
+	viewer: BaseViewerType;
 	// resolution: Vector2;
 	// render_target?: WebGLRenderTarget;
 	// requester: BaseNodeType;
@@ -141,6 +143,7 @@ export class EffectComposerController {
 				// resolution: options.resolution,
 				scene: options.scene,
 				// requester: options.requester,
+				viewer: options.viewer,
 			});
 		}
 		this._passByNodeInBuildPassesProcess.clear();

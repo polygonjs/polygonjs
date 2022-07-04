@@ -41,7 +41,7 @@ export class HueSaturationPostNode extends TypedPostProcessNode<EffectPass, HueS
 		return 'hueSaturation';
 	}
 
-	protected override _createPass(context: TypedPostNodeContext) {
+	override createPass(context: TypedPostNodeContext) {
 		const effect = new HueSaturationEffect();
 		const camera = context.camera;
 		const pass = new EffectPass(camera, effect);
