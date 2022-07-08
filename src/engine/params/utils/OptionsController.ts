@@ -60,14 +60,13 @@ export const PARAM_OPTION_NAMES = {
 
 const EDITABLE = 'editable';
 
-export interface NumericParamOptionsMenuEntry {
+export interface GenericParamOptionsMenuEntry<T> {
 	name: string;
-	value: number;
+	value: T;
 }
-export interface StringParamOptionsMenuEntry {
-	name: string;
-	value: string;
-}
+export type StringParamOptionsMenuEntry = GenericParamOptionsMenuEntry<string>;
+export type NumericParamOptionsMenuEntry = GenericParamOptionsMenuEntry<number>;
+
 export interface MenuNumericParamOptions {
 	menu?: {
 		entries: NumericParamOptionsMenuEntry[];
