@@ -16,6 +16,7 @@ import {DepthOfFieldPostNode} from '../../../nodes/post/DepthOfField';
 import {EffectPassPostNode} from '../../../nodes/post/EffectPass';
 // import {GammaCorrectionPostNode} from '../../../nodes/post/GammaCorrection';
 import {GlitchPostNode} from '../../../nodes/post/Glitch';
+import {GodRaysPostNode} from '../../../nodes/post/GodRays';
 import {HueSaturationPostNode} from '../../../nodes/post/HueSaturation';
 // import {LayerPostNode} from '../../../nodes/post/Layer';
 // import {MaskPostNode} from '../../../nodes/post/Mask';
@@ -59,6 +60,7 @@ export interface PostNodeChildrenMap {
 	effectPass: EffectPassPostNode;
 	// gammaCorrection: GammaCorrectionPostNode;
 	glitch: GlitchPostNode;
+	godRays: GodRaysPostNode;
 	hueSaturation: HueSaturationPostNode;
 	// layer: LayerPostNode;
 	// mask: MaskPostNode;
@@ -105,6 +107,7 @@ export class PostRegister {
 		poly.registerNode(EffectPassPostNode, CATEGORY_POST.EFFECT);
 		// poly.registerNode(GammaCorrectionPostNode, CATEGORY_POST.COLOR);
 		poly.registerNode(GlitchPostNode, CATEGORY_POST.EFFECT);
+		poly.registerNode(GodRaysPostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(HueSaturationPostNode, CATEGORY_POST.COLOR);
 		// poly.registerNode(LayerPostNode, CATEGORY_POST.MISC);
 		// poly.registerNode(MaskPostNode, CATEGORY_POST.MISC);

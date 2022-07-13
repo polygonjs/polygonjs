@@ -51,7 +51,6 @@ export class LutPostNode extends TypedPostProcessNode<EffectPass, LutPostParamsC
 		this.updatePass(pass);
 		// }
 
-		console.log(passes);
 		return passes;
 	}
 	override async updatePass(pass: EffectPass) {
