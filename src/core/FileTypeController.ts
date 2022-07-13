@@ -17,20 +17,66 @@ export const IMAGE_EXTENSIONS: string[] = [
 	ImageExtension.KTX2,
 	ImageExtension.HDR,
 ];
+export enum GeometryExtension {
+	DRC = 'drc',
+	FBX = 'fbx',
+	GLTF = 'gltf',
+	GLB = 'glb',
+	JSON = 'json',
+	MPD = 'mpd',
+	OBJ = 'obj',
+	PDB = 'pdb',
+	PLY = 'ply',
+	STL = 'stl',
+	SVG = 'svg',
+}
+export const GEOMETRY_EXTENSIONS: string[] = [
+	GeometryExtension.DRC,
+	GeometryExtension.FBX,
+	GeometryExtension.GLTF,
+	GeometryExtension.GLB,
+	GeometryExtension.JSON,
+	GeometryExtension.MPD,
+	GeometryExtension.OBJ,
+	GeometryExtension.PDB,
+	GeometryExtension.PLY,
+	GeometryExtension.STL,
+];
 
 function urlExt(url: string) {
 	const url_without_query_params = url.split('?')[0];
 	const url_elements = url_without_query_params.split('.');
+	if (url_elements.length == 1) {
+		return;
+	}
 	const ext = url_elements[url_elements.length - 1];
 	return ext;
 }
-
-export function isUrlVideo(url: string) {
-	return VIDEO_EXTENSIONS.includes(urlExt(url).toLowerCase());
+export function isExtVideo(ext: string) {
+	return VIDEO_EXTENSIONS.includes(ext);
+}
+export function isExtStaticImage(ext: string) {
+	return IMAGE_EXTENSIONS.includes(ext);
+}
+export function isExtGif(ext: string) {
+	return ext == 'gif';
+}
+export function isExtGeometry(ext: string) {
+	return GEOMETRY_EXTENSIONS.includes(ext);
+}
+export function isUrlVideo(url: string): boolean {
+	const ext = urlExt(url);
+	return ext != null ? isExtVideo(ext.toLowerCase()) : false;
 }
 export function isUrlStaticImage(url: string) {
-	return IMAGE_EXTENSIONS.includes(urlExt(url).toLowerCase());
+	const ext = urlExt(url);
+	return ext != null ? isExtStaticImage(ext.toLowerCase()) : false;
 }
 export function isUrlGif(url: string) {
-	return urlExt(url).toLowerCase() == 'gif';
+	const ext = urlExt(url);
+	return ext != null ? isExtGif(ext.toLowerCase()) : false;
+}
+export function isUrlGeometry(url: string) {
+	const ext = urlExt(url);
+	return ext != null ? isExtGeometry(ext.toLowerCase()) : false;
 }

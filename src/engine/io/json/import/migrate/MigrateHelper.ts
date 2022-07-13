@@ -1,5 +1,5 @@
 import {ImageExtension} from '../../../../../core/FileTypeController';
-import {GeometryExtension} from '../../../../../core/loader/Geometry';
+import {GeometryExtension} from '../../../../../core/FileTypeController';
 import {CoreBaseLoader} from '../../../../../core/loader/_Base';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 import {BaseNodeType} from '../../../../nodes/_Base';

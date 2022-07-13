@@ -11,7 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {FileSVGSopOperation} from '../../operations/sop/FileSVG';
 import {Poly} from '../../Poly';
 import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
-import {GeometryExtension} from '../../../core/loader/Geometry';
+import {GeometryExtension} from '../../../core/FileTypeController';
 const DEFAULT = FileSVGSopOperation.DEFAULT_PARAMS;
 
 class FileSVGSopParamsConfig extends NodeParamsConfig {

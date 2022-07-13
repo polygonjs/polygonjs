@@ -9,32 +9,6 @@ export enum GeometryFormat {
 }
 export const GEOMETRY_FORMATS: GeometryFormat[] = [GeometryFormat.AUTO, GeometryFormat.JSON];
 
-export enum GeometryExtension {
-	DRC = 'drc',
-	FBX = 'fbx',
-	GLTF = 'gltf',
-	GLB = 'glb',
-	JSON = 'json',
-	MPD = 'mpd',
-	OBJ = 'obj',
-	PDB = 'pdb',
-	PLY = 'ply',
-	STL = 'stl',
-	SVG = 'svg',
-}
-export const GEOMETRY_EXTENSIONS: GeometryExtension[] = [
-	GeometryExtension.DRC,
-	GeometryExtension.FBX,
-	GeometryExtension.GLTF,
-	GeometryExtension.GLB,
-	GeometryExtension.JSON,
-	GeometryExtension.MPD,
-	GeometryExtension.OBJ,
-	GeometryExtension.PDB,
-	GeometryExtension.PLY,
-	GeometryExtension.STL,
-];
-
 type MaxConcurrentLoadsCountMethod = () => number;
 interface CoreLoaderGeometryOptions {
 	url: string;

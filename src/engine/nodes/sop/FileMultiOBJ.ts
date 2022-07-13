@@ -5,7 +5,7 @@
  * Note that this node will automatically use a specific loader depending on the extension of the url.
  *
  */
-import {GeometryExtension} from '../../../core/loader/Geometry';
+import {GeometryExtension} from '../../../core/FileTypeController';
 import {BaseNodeType} from '../_Base';
 import {Object3D} from 'three';
 import {BaseFileMultiSopNode} from './utils/file/_BaseSopFileMulti';

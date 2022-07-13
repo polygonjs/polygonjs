@@ -7,7 +7,7 @@ import {FilePLYSopOperation} from '../../operations/sop/FilePLY';
 import {fileSopNodeFactory} from './utils/file/_BaseSopFile';
 import {BaseFileSopOperation} from '../../operations/sop/utils/File/_BaseFileOperation';
 import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
-import {GeometryExtension} from '../../../core/loader/Geometry';
+import {GeometryExtension} from '../../../core/FileTypeController';
 
 export class FilePLYSopNode extends fileSopNodeFactory({
 	type: SopTypeFile.FILE_PLY,

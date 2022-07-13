@@ -10,7 +10,7 @@ import {FileGLTFSopOperation} from '../../operations/sop/FileGLTF';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Poly} from '../../Poly';
-import {GeometryExtension} from '../../../core/loader/Geometry';
+import {GeometryExtension} from '../../../core/FileTypeController';
 import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = FileGLTFSopOperation.DEFAULT_PARAMS;
 class FileGLTFParamsConfig extends NodeParamsConfig {
