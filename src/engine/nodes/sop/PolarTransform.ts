@@ -27,7 +27,7 @@ class PolarTransformSopParamConfig extends NodeParamsConfig {
 	center = ParamConfig.VECTOR3(DEFAULT.center.toArray());
 	/** @param moves the objects along the longitude, which is equivalent to a rotation on the y axis */
 	longitude = ParamConfig.FLOAT(DEFAULT.longitude, {
-		range: [0, 360],
+		range: [-360, 360],
 	});
 	/** @param moves the objects along the latitude, which is equivalent to a rotation on the z or x axis */
 	latitude = ParamConfig.FLOAT(DEFAULT.latitude, {
