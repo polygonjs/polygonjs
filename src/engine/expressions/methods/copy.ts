@@ -1,3 +1,4 @@
+import {SopType} from './../../poly/registers/nodes/types/Sop';
 /**
  * The copy expression allows the copy SOP node to evaluates its input graph multiple times, and vary its result each time.
  *
@@ -41,7 +42,7 @@ export class CopyExpression extends BaseMethod {
 		const node = this.findReferencedGraphNode(indexOrPath) as BaseNodeType;
 		// I'd prefer testing with if(node instanceof CopySopNode || node instanceof CopyAnimNode)
 		// but tslib generates an error when doing so
-		if (node && node.type() == 'copy') {
+		if (node && node.type() == SopType.COPY) {
 			const stampNode = (node as CopyNode).stampNode();
 			return this.createDependency(stampNode, indexOrPath);
 		}

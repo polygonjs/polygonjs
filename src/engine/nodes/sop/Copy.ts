@@ -1,3 +1,4 @@
+import {SopType} from './../../poly/registers/nodes/types/Sop';
 /**
  * Copies a geometry onto every point from the right input.
  *
@@ -68,7 +69,7 @@ const ParamsConfig = new CopySopParamsConfig();
 export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'copy';
+		return SopType.COPY;
 	}
 
 	private _attribNamesToCopy: string[] = [];
