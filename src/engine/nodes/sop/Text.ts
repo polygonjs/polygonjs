@@ -162,6 +162,10 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			return;
 		}
 
+		const textWithoutSpaces = this.pv.text.replace(/\s/g, '');
+		if (textWithoutSpaces.length == 0) {
+			return this.setObjects([]);
+		}
 		const geometries = await await textBuildGeometries({
 			text: this.pv.text,
 			textType,
