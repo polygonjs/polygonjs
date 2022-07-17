@@ -83,5 +83,8 @@ module.exports = (env = {}) => {
 				glsl,
 			],
 		},
+		experiments: {
+			asyncWebAssembly: true, // wasm (rapier physics)
+		},
 	};
 };
