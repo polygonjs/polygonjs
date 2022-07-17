@@ -19,7 +19,6 @@ import {CoreAttributeData} from './AttributeData';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
-import {CoreString} from '../String';
 import {GroupString} from './Group';
 
 const IS_INSTANCE_KEY = 'isInstance';
@@ -112,19 +111,11 @@ export class CoreGeometry {
 	attribNames(): string[] {
 		return CoreGeometry.attribNames(this._geometry);
 	}
-	static attribNamesMatchingMask(geometry: BufferGeometry, masks_string: GroupString) {
-		const masks = CoreString.attribNames(masks_string);
-
-		const matching_attrib_names: string[] = [];
-		for (let attrib_name of this.attribNames(geometry)) {
-			for (let mask of masks) {
-				if (CoreString.matchMask(attrib_name, mask)) {
-					matching_attrib_names.push(attrib_name);
-				}
-			}
-		}
-
-		return ArrayUtils.uniq(matching_attrib_names);
+	static attribNamesMatchingMask(geometry: BufferGeometry, masksString: GroupString) {
+		return CoreAttribute.attribNamesMatchingMask(masksString, this.attribNames(geometry));
+	}
+	attribNamesMatchingMask(masksString: GroupString) {
+		return CoreGeometry.attribNamesMatchingMask(this._geometry, masksString);
 	}
 
 	attribSizes() {

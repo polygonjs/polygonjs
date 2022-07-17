@@ -19,7 +19,6 @@ import {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreObject} from '../../../core/geometry/Object';
 import {AttribValue} from '../../../types/GlobalTypes';
-import {ParamType} from '../../poly/ParamType';
 import {CoreType} from '../../../core/Type';
 import {Color, Vector3} from 'three';
 // import {PolyDictionary} from '../../../types/GlobalTypes';
@@ -45,10 +44,10 @@ class SetObjectAttributeActorParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param lerp */
-	lerp = ParamConfig.FLOAT(1, {
-		range: [0, 1],
-		rangeLocked: [false, false],
-	});
+	// lerp = ParamConfig.FLOAT(1, {
+	// 	range: [0, 1],
+	// 	rangeLocked: [false, false],
+	// });
 	// boolean = ParamConfig.BOOLEAN(0, typedVisibleOptions(ActorConnectionPointType.BOOLEAN));
 	// color = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(ActorConnectionPointType.COLOR));
 	// float = ParamConfig.FLOAT(0, typedVisibleOptions(ActorConnectionPointType.FLOAT));
@@ -77,6 +76,10 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 				ActorConnectionPointType.OBJECT_3D,
 				CONNECTION_OPTIONS
 			),
+			new ActorConnectionPoint<ActorConnectionPointType.FLOAT>('lerp', ActorConnectionPointType.FLOAT, {
+				...CONNECTION_OPTIONS,
+				init_value: 1,
+			}),
 		]);
 
 		// this.io.connection_points.set_output_name_function((index: number) => ConstantActorNode.OUTPUT_NAME);
@@ -144,7 +147,7 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
 
-		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
+		const lerp = this._inputValue('lerp', context) as number;
 		const attribValue = this._inputValue(SetObjectAttributeActorNode.INPUT_NAME_VAL, context) as AttribValue;
 
 		const attribName = this.pv.attribName;

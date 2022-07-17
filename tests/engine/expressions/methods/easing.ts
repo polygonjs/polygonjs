@@ -129,79 +129,79 @@ function ensureAllValuesValid(ys: number[]) {
 // 	assert.deepEqual(valuesAtKeyPos(ys4), [0, 0.0625, 0.25, 0.5625, 1]);
 // });
 
-QUnit.test('expression ease_i2', async (assert) => {
-	const ys = await createScene('ease_i2(@pti)');
+QUnit.test('expression easeI2', async (assert) => {
+	const ys = await createScene('easeI2(@pti)');
 
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.0625, 0.25, 0.5625, 1]);
 });
 
-QUnit.test('expression ease_o2', async (assert) => {
-	const ys = await createScene('ease_o2(@pti)');
+QUnit.test('expression easeO2', async (assert) => {
+	const ys = await createScene('easeO2(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.4375, 0.75, 0.9375, 1]);
 });
 
-QUnit.test('expression ease_io2', async (assert) => {
-	const ys = await createScene('ease_io2(@pti)');
+QUnit.test('expression easeIO2', async (assert) => {
+	const ys = await createScene('easeIO2(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.125, 0.5, 0.875, 1]);
 });
 
-QUnit.test('expression ease_i3', async (assert) => {
-	const ys = await createScene('ease_i3(@pti)');
+QUnit.test('expression easeI3', async (assert) => {
+	const ys = await createScene('easeI3(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.015625, 0.125, 0.421875, 1]);
 });
 
-QUnit.test('expression ease_o3', async (assert) => {
-	const ys = await createScene('ease_o3(@pti)');
+QUnit.test('expression easeO3', async (assert) => {
+	const ys = await createScene('easeO3(@pti)');
 
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.578125, 0.875, 0.984375, 1]);
 });
 
-QUnit.test('expression ease_io3', async (assert) => {
-	const ys = await createScene('ease_io3(@pti)');
+QUnit.test('expression easeIO3', async (assert) => {
+	const ys = await createScene('easeIO3(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.0625, 0.5, 0.9375, 1]);
 });
 
-QUnit.test('expression ease_i4', async (assert) => {
-	const ys = await createScene('ease_i4(@pti)');
+QUnit.test('expression easeI4', async (assert) => {
+	const ys = await createScene('easeI4(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.00390625, 0.0625, 0.31640625, 1]);
 });
 
-QUnit.test('expression ease_o4', async (assert) => {
-	const ys = await createScene('ease_o4(@pti)');
+QUnit.test('expression easeO4', async (assert) => {
+	const ys = await createScene('easeO4(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.68359375, 0.9375, 0.99609375, 1]);
 });
 
-QUnit.test('expression ease_io4', async (assert) => {
-	const ys = await createScene('ease_io4(@pti)');
+QUnit.test('expression easeIO4', async (assert) => {
+	const ys = await createScene('easeIO4(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.03125, 0.5, 0.96875, 1]);
 });
 
-QUnit.test('expression ease_i_sin', async (assert) => {
-	const ys = await createScene('ease_i_sin(@pti)');
+QUnit.test('expression easeSinI', async (assert) => {
+	const ys = await createScene('easeSinI(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.07612046599388123, 0.2928932309150696, 0.6173165440559387, 1]);
 });
 
-QUnit.test('expression ease_o_sin', async (assert) => {
-	const ys = await createScene('ease_o_sin(@pti)');
+QUnit.test('expression easeSinO', async (assert) => {
+	const ys = await createScene('easeSinO(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.3826834261417389, 0.7071067690849304, 0.9238795042037964, 1]);
 });
 
-QUnit.test('expression ease_io_sin', async (assert) => {
-	const ys = await createScene('ease_io_sin(@pti)');
+QUnit.test('expression easeSinIO', async (assert) => {
+	const ys = await createScene('easeSinIO(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.1464466154575348, 0.5, 0.8535534143447876, 1]);
 });
 
-QUnit.test('expression ease_i_elastic', async (assert) => {
-	const ys = await createScene('ease_i_elastic(@pti)');
+QUnit.test('expression easeElasticI', async (assert) => {
+	const ys = await createScene('easeElasticI(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 1.0039814710617065, 1.002652883529663, 1.001325249671936, 1]);
 });
 
-QUnit.test('expression ease_o_elastic', async (assert) => {
-	const ys = await createScene('ease_o_elastic(@pti)');
+QUnit.test('expression easeElasticO', async (assert) => {
+	const ys = await createScene('easeElasticO(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, -0.0013252205681055784, -0.0026528758462518454, -0.003981505986303091, 1]);
 });
 
-QUnit.test('expression ease_io_elastic', async (assert) => {
-	const ys = await createScene('ease_io_elastic(@pti)');
+QUnit.test('expression easeElasticIO', async (assert) => {
+	const ys = await createScene('easeElasticIO(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, -0.0013264379231259227, 0, 1.0013264417648315, 1]);
 });

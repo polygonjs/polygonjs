@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferGeometry, CatmullRomCurve3, Float32BufferAttribute, Object3D, Vector3} from 'three';
+import {BufferGeometry, CatmullRomCurve3, Float32BufferAttribute, Object3D, Vector3, Vector2} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
@@ -14,7 +14,11 @@ interface CurveFromPointsSopParams extends DefaultOperationParams {
 	tension: number;
 	tTangent: boolean;
 	tangentName: string;
+	// attributesToInterpolate: string;
 }
+const tmpV2 = new Vector2();
+const current = new Vector3();
+const next = new Vector3();
 
 export class CurveFromPointsSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CurveFromPointsSopParams = {
@@ -24,13 +28,12 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 		tension: 0.5,
 		tTangent: false,
 		tangentName: 'tangent',
+		// attributesToInterpolate: '',
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static override type(): Readonly<'curveFromPoint'> {
 		return 'curveFromPoint';
 	}
-	private _current = new Vector3();
-	private _next = new Vector3();
 	override cook(inputCoreGroups: CoreGroup[], params: CurveFromPointsSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
@@ -52,51 +55,112 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 		if (!coreGeo) {
 			return;
 		}
-		const points = coreGeo.points().map((p) => p.getPosition(new Vector3()));
-		if (points.length < 2) {
+		const geoPoints = coreGeo.points();
+		const pointPositions = geoPoints.map((p) => p.getPosition(new Vector3()));
+		if (pointPositions.length < 2) {
 			return;
 		}
 		const curveTypeName = SPLINE_CURVE_TYPES[curveType];
-		const curve = new CatmullRomCurve3(points, closed, curveTypeName, tension);
+		const curve = new CatmullRomCurve3(pointPositions, closed, curveTypeName, tension);
 
-		const positions: number[] = new Array(pointsCount * 3);
+		// const positions: number[] = new Array(pointsCount * 3);
 
+		// create indices
 		const indices: number[] = new Array(pointsCount);
 		for (let i = 0; i < pointsCount; i++) {
-			const t = i / (pointsCount - 1);
-			curve.getPoint(t, this._current);
-			this._current.toArray(positions, i * 3);
+			// const t = i / (pointsCount - 1);
+			// curve.getPoint(t, this._current);
+			// this._current.toArray(positions, i * 3);
 
 			if (i > 0) {
 				indices[(i - 1) * 2] = i - 1;
 				indices[(i - 1) * 2 + 1] = i;
 			}
-			if (tTangent) {
-			}
 		}
 
+		// create geo
 		const geometry = new BufferGeometry();
-		geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+		// geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 		geometry.setIndex(indices);
+
+		// attributes (position + attributesToInterpolate)
+		const attribNamesToInterpolate = ['position']; //.concat(
+		// coreGeo.attribNamesMatchingMask(params.attributesToInterpolate)
+		// );
+		for (const attribName of attribNamesToInterpolate) {
+			const attribSize = coreGeo.attribSize(attribName);
+			let attribPositions: Vector3[] = [];
+			switch (attribSize) {
+				case 1: {
+					attribPositions = geoPoints.map((p) => new Vector3(p.attribValue(attribName) as number, 0, 0));
+					break;
+				}
+				case 2: {
+					attribPositions = geoPoints.map((p) => {
+						p.attribValue(attribName, tmpV2);
+						return new Vector3(tmpV2.x, tmpV2.y, 0);
+					});
+					break;
+				}
+				case 3: {
+					attribPositions = geoPoints.map((p) => {
+						p.attribValue(attribName, current);
+						return current.clone();
+					});
+					break;
+				}
+			}
+			const curveTypeName = SPLINE_CURVE_TYPES[curveType];
+			const curve = new CatmullRomCurve3(attribPositions, closed, curveTypeName, tension);
+
+			const attribValues: number[] = new Array(pointsCount * attribSize);
+
+			for (let i = 0; i < pointsCount; i++) {
+				const t = i / (pointsCount - 1);
+				curve.getPoint(t, current);
+
+				switch (attribSize) {
+					case 1: {
+						attribValues[i] = current.x;
+						break;
+					}
+					case 2: {
+						attribValues[2 * i] = current.x;
+						attribValues[2 * i + 1] = current.y;
+						break;
+					}
+					case 3: {
+						current.toArray(attribValues, i * 3);
+						break;
+					}
+				}
+			}
+			geometry.setAttribute(attribName, new Float32BufferAttribute(attribValues, attribSize));
+		}
+
+		// compute tangent
 		if (tTangent) {
+			const positions = geometry.getAttribute('position').array;
 			const tangentName = params.tangentName;
 			const tangents: number[] = new Array(pointsCount * 3);
 			for (let i = 0; i < pointsCount - 1; i++) {
-				this._current.fromArray(positions, i * 3);
-				this._next.fromArray(positions, (i + 1) * 3);
-				this._next.sub(this._current).normalize();
-				this._next.toArray(tangents, i * 3);
+				current.fromArray(positions, i * 3);
+				next.fromArray(positions, (i + 1) * 3);
+				next.sub(current).normalize();
+				next.toArray(tangents, i * 3);
 			}
 			// and last
-			this._current.fromArray(positions, (pointsCount - 1) * 3);
-			this._next.fromArray(positions, (pointsCount - 2) * 3);
-			this._current.sub(this._next).normalize();
-			this._next.toArray(tangents, (pointsCount - 1) * 3);
+			current.fromArray(positions, (pointsCount - 1) * 3);
+			next.fromArray(positions, (pointsCount - 2) * 3);
+			current.sub(next).normalize();
+			next.toArray(tangents, (pointsCount - 1) * 3);
 			geometry.setAttribute(tangentName, new Float32BufferAttribute(tangents, 3));
 		}
 
+		// add curve as userData to the object, to make it possible to use the curve from actor nodes
 		const object = BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS);
 		object.userData['path'] = curve;
+
 		return object;
 	}
 }

@@ -420,24 +420,8 @@ export class CoreGroup {
 		}
 	}
 
-	attribNamesMatchingMask(masks_string: GroupString) {
-		const masks = CoreString.attribNames(masks_string);
-
-		const matching_attrib_names: string[] = [];
-		for (let mask of masks) {
-			for (let attrib_name of this.attribNames()) {
-				if (CoreString.matchMask(attrib_name, mask)) {
-					matching_attrib_names.push(attrib_name);
-				} else {
-					const remapped = CoreAttribute.remapName(mask);
-					if (attrib_name == remapped) {
-						matching_attrib_names.push(attrib_name);
-					}
-				}
-			}
-		}
-
-		return ArrayUtils.uniq(matching_attrib_names);
+	attribNamesMatchingMask(masksString: GroupString) {
+		return CoreAttribute.attribNamesMatchingMask(masksString, this.attribNames());
 	}
 
 	attribSizes() {

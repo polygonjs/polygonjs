@@ -28,7 +28,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		group: '',
 		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
-		name: 'new_attrib',
+		name: 'newAttrib',
 		size: 1,
 		value1: 0,
 		value2: new Vector2(0, 0),

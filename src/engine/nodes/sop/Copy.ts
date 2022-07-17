@@ -12,7 +12,6 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
-import {CoreString} from '../../../core/String';
 import {SopCopyStamp} from './utils/CopyStamp';
 import {Matrix4} from 'three';
 import {CorePoint} from '../../../core/geometry/Point';
@@ -21,7 +20,6 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D} from 'three';
 import {TypeAssert} from '../../poly/Assert';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {CoreTransform, RotationOrder} from '../../../core/Transform';
 
 enum TransformMode {
@@ -104,19 +102,14 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	private _instancer = new CoreInstancer();
-	private async cookWithTemplate(instanceCoreGroup: CoreGroup, template_core_group: CoreGroup) {
+	private async cookWithTemplate(instanceCoreGroup: CoreGroup, templateCoreGroup: CoreGroup) {
 		this._objects = [];
 
-		const templatePoints = template_core_group.points();
+		const templatePoints = templateCoreGroup.points();
 
-		this._instancer.setCoreGroup(template_core_group);
+		this._instancer.setCoreGroup(templateCoreGroup);
 
-		this._attribNamesToCopy = CoreString.attribNames(this.pv.attributesToCopy).map((attribName) =>
-			CoreAttribute.remapName(attribName)
-		);
-		this._attribNamesToCopy = this._attribNamesToCopy.filter((attrib_name) =>
-			template_core_group.hasAttrib(attrib_name)
-		);
+		this._attribNamesToCopy = templateCoreGroup.attribNamesMatchingMask(this.pv.attributesToCopy);
 		await this._copyMovedObjectsOnTemplatePoints(instanceCoreGroup, templatePoints);
 		this.setObjects(this._objects);
 	}

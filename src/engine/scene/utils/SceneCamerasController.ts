@@ -8,7 +8,7 @@ type OnCameraObjectsUpdated = () => void;
 interface MainCameraOptions {
 	cameraMaskOverride?: string;
 	findAnyCamera?: boolean;
-	printWarning?: boolean;
+	printCameraNotFoundError?: boolean;
 }
 
 export class SceneCamerasController {
@@ -63,6 +63,10 @@ export class SceneCamerasController {
 	// 	return this._mainCameraObjectPath;
 	// }
 	async mainCamera(options?: MainCameraOptions): Promise<Camera | null> {
+		let printCameraNotFoundError = true;
+		if (options?.printCameraNotFoundError != null) {
+			printCameraNotFoundError = options.printCameraNotFoundError;
+		}
 		const cameraMaskOverride = options?.cameraMaskOverride;
 		if (cameraMaskOverride != null) {
 			this.scene.root().mainCameraController.setCameraPath(cameraMaskOverride);
@@ -76,17 +80,20 @@ export class SceneCamerasController {
 		if (options?.findAnyCamera != null) {
 			findAnyCamera = options.findAnyCamera;
 		}
+		const cameraPath = await this.scene.root().mainCameraController.cameraPath();
+		const warningMessage = `No camera found at path '${cameraPath}'. Make sure to set the root parameter 'mainCameraPath' to match a camera (from the top menu Windows->Root Node Params)`;
 		if (findAnyCamera) {
-			return this._findAnyCameraObject();
+			const firstAnyCamera = this._findAnyCameraObject();
+			if (firstAnyCamera) {
+				if (printCameraNotFoundError) {
+					console.error(warningMessage);
+				}
+				return firstAnyCamera;
+			}
 		}
 
-		const cameraPath = await this.scene.root().mainCameraController.cameraPath();
-		let printWarning = true;
-		if (options?.printWarning != null) {
-			printWarning = options.printWarning;
-		}
-		if (printWarning) {
-			console.warn(`no camera found for path '${cameraPath}'`);
+		if (printCameraNotFoundError) {
+			console.error(warningMessage);
 		}
 
 		return null;
@@ -97,7 +104,9 @@ export class SceneCamerasController {
 	}
 
 	async createMainViewer(options?: CreateViewerOptions) {
-		const camera = await this.mainCamera({cameraMaskOverride: options?.cameraMaskOverride});
+		const camera = await this.mainCamera({
+			cameraMaskOverride: options?.cameraMaskOverride,
+		});
 		if (!camera) {
 			return;
 		}

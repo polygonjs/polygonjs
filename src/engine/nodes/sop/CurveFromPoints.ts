@@ -36,6 +36,8 @@ class CurveFromPointsSopParamsConfig extends NodeParamsConfig {
 	tangentName = ParamConfig.STRING(DEFAULT.tangentName, {
 		visibleIf: {tTangent: true},
 	});
+	/** @param attributes */
+	// attributesToInterpolate = ParamConfig.STRING(DEFAULT.attributesToInterpolate);
 }
 const ParamsConfig = new CurveFromPointsSopParamsConfig();
 

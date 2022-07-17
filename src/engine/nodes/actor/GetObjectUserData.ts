@@ -44,7 +44,7 @@ export class GetObjectUserDataActorNode extends TypedActorNode<GetObjectUserData
 			),
 		]);
 		this.io.connection_points.set_output_name_function((index: number) => GetObjectUserDataActorNode.OUTPUT_NAME);
-		// this.io.connection_points.set_expected_input_types_function(() => []);
+		this.io.connection_points.set_expected_input_types_function(() => []);
 		this.io.connection_points.set_expected_output_types_function(() => [this._currentConnectionType()]);
 	}
 	private _currentConnectionType() {

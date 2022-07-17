@@ -125,7 +125,8 @@ export function copImageNodeFactoryFactory(
 			let texture: Texture | null = null;
 
 			try {
-				texture = await this._loader().loadImage({
+				const loader = this._loader();
+				texture = await loader.loadImage({
 					tdataType: this.pv.ttype && this.pv.tadvanced,
 					dataType: this.pv.type,
 				});

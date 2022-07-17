@@ -3,8 +3,11 @@ import {Vector3} from 'three';
 import {Vector4} from 'three';
 import {BufferAttribute} from 'three';
 import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
+import {ArrayUtils} from '../ArrayUtils';
+import {CoreString} from '../String';
 import {CoreType} from '../Type';
 import {AttribSize} from './Constant';
+import {GroupString} from './Group';
 
 export enum Attribute {
 	POINT_INDEX = 'ptnum',
@@ -107,5 +110,24 @@ export class CoreAttribute {
 				return AttribSize.VECTOR4;
 		}
 		return 0;
+	}
+	static attribNamesMatchingMask(masksString: GroupString, existingAttribNames: string[]) {
+		const masks = CoreString.attribNames(masksString);
+
+		const matchingAttribNames: string[] = [];
+		for (const mask of masks) {
+			for (const attribName of existingAttribNames) {
+				if (CoreString.matchMask(attribName, mask)) {
+					matchingAttribNames.push(attribName);
+				} else {
+					const remapped = CoreAttribute.remapName(mask);
+					if (attribName == remapped) {
+						matchingAttribNames.push(attribName);
+					}
+				}
+			}
+		}
+
+		return ArrayUtils.uniq(matchingAttribNames);
 	}
 }

@@ -4,23 +4,59 @@
 // const ease_on = function(t:number, power:number){return 1 - Math.abs(Math.pow(t-1, power))}
 // const ease_ion = function(t:number, power:number){return t<.5 ? ease_i(power)(t*2)/2 : ease_o(power)(t*2 - 1)/2+0.5}
 
-const ease_i = function (power: number) {
+const easeI = function (power: number) {
 	return function (t: number) {
 		return Math.pow(t, power);
 	};
 };
-const ease_o = function (power: number) {
+const easeO = function (power: number) {
 	return function (t: number) {
 		return 1 - Math.abs(Math.pow(t - 1, power));
 	};
 };
-const ease_io = function (power: number) {
+const easeIO = function (power: number) {
 	return function (t: number) {
-		return t < 0.5 ? ease_i(power)(t * 2) / 2 : ease_o(power)(t * 2 - 1) / 2 + 0.5;
+		return t < 0.5 ? easeI(power)(t * 2) / 2 : easeO(power)(t * 2 - 1) / 2 + 0.5;
 	};
 };
 
-export const Easing = {
+type EasingFunction = (num: number) => number;
+export interface EasingDictionary {
+	easeI2: EasingFunction;
+	easeO2: EasingFunction;
+	easeIO2: EasingFunction;
+	easeI3: EasingFunction;
+	easeO3: EasingFunction;
+	easeIO3: EasingFunction;
+	easeI4: EasingFunction;
+	easeO4: EasingFunction;
+	easeIO4: EasingFunction;
+	easeSinI: EasingFunction;
+	easeSinO: EasingFunction;
+	easeSinIO: EasingFunction;
+	easeElasticI: EasingFunction;
+	easeElasticO: EasingFunction;
+	easeElasticIO: EasingFunction;
+}
+export const EASING_NAMES: Array<keyof EasingDictionary> = [
+	'easeI2',
+	'easeO2',
+	'easeIO2',
+	'easeI3',
+	'easeO3',
+	'easeIO3',
+	'easeI4',
+	'easeO4',
+	'easeIO4',
+	'easeSinI',
+	'easeSinO',
+	'easeSinIO',
+	'easeElasticI',
+	'easeElasticO',
+	'easeElasticIO',
+];
+
+export const Easing: EasingDictionary = {
 	// linear: ease_io(1),
 
 	// ease_i: function (t: number, power: number) {
@@ -33,17 +69,17 @@ export const Easing = {
 	// 	return ease_io(power)(t);
 	// },
 
-	ease_i2: ease_i(2),
-	ease_o2: ease_o(2),
-	ease_io2: ease_io(2),
+	easeI2: easeI(2),
+	easeO2: easeO(2),
+	easeIO2: easeIO(2),
 
-	ease_i3: ease_i(3),
-	ease_o3: ease_o(3),
-	ease_io3: ease_io(3),
+	easeI3: easeI(3),
+	easeO3: easeO(3),
+	easeIO3: easeIO(3),
 
-	ease_i4: ease_i(4),
-	ease_o4: ease_o(4),
-	ease_io4: ease_io(4),
+	easeI4: easeI(4),
+	easeO4: easeO(4),
+	easeIO4: easeIO(4),
 	// easeInQuart: EaseIn(4),
 	// easeOutQuart: EaseOut(4),
 	// easeInOutQuart: EaseInOut(4),
@@ -51,23 +87,23 @@ export const Easing = {
 	// easeOutQuint: EaseOut(5),
 	// easeInOutQuint: EaseInOut(5)
 
-	ease_i_sin: function (t: number) {
+	easeSinI: function (t: number) {
 		return 1 + Math.sin((Math.PI / 2) * t - Math.PI / 2);
 	},
-	ease_o_sin: function (t: number) {
+	easeSinO: function (t: number) {
 		return Math.sin((Math.PI / 2) * t);
 	},
-	ease_io_sin: function (t: number) {
+	easeSinIO: function (t: number) {
 		return (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2;
 	},
 
-	ease_i_elastic: function (t: number) {
+	easeElasticI: function (t: number) {
 		return t == 0 ? 0 : (0.04 - 0.04 / t) * Math.sin(25 * t) + 1;
 	},
-	ease_o_elastic: function (t: number) {
+	easeElasticO: function (t: number) {
 		return t == 1 ? 1 : ((0.04 * t) / --t) * Math.sin(25 * t);
 	},
-	ease_io_elastic: function (t: number) {
+	easeElasticIO: function (t: number) {
 		return t == 0.5
 			? 0
 			: (t -= 0.5) < 0

@@ -59,6 +59,7 @@ export class ScenePlayerImporter {
 	private _viewer: BaseViewerType | undefined;
 	private _onLoadCompleteCalled = false;
 	private _onCameraCreatorNodeLoadedResolve: OnCameraCreatorNodeLoadedResolve | undefined;
+	private _progress = 0;
 	// private _cameraCreatorNode: BaseNodeType | null = null;
 	constructor(private options: SceneDataImportOptions) {}
 
@@ -139,6 +140,8 @@ export class ScenePlayerImporter {
 		const progressRatio = PROGRESS_RATIO.nodes;
 		const onProgress = (_ratio: number, args: OnProgressArguments) => {
 			const progress = progressRatio.start + progressRatio.mult * _ratio;
+			this._progress = progress;
+
 			if (this.options.onProgress) {
 				this.options.onProgress(progress, args);
 			}
@@ -183,10 +186,9 @@ export class ScenePlayerImporter {
 				scene.camerasController.onCameraObjectsUpdated(async () => {
 					const camera = await scene.camerasController.mainCamera({
 						findAnyCamera: false,
-						printWarning: false,
+						printCameraNotFoundError: this._progress >= 1, // we display a warning if progress is 1
 						cameraMaskOverride: this.options.cameraMaskOverride,
 					});
-					// if we do not find the camera object, we need to
 					if (camera) {
 						if (this._onCameraCreatorNodeLoadedResolve) {
 							this._onCameraCreatorNodeLoadedResolve();

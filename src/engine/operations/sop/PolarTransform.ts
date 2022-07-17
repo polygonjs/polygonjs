@@ -1,25 +1,14 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
-import {Matrix4} from 'three';
-import {Object3D} from 'three';
+import {Vector3, Matrix4, Object3D} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
-
 import {TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Quaternion} from 'three';
-import {MathUtils} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CorePolarTransform, PolarTransformMatrixParams} from '../../../core/PolarTransform';
 
-const AXIS_VERTICAL = new Vector3(0, 1, 0);
-const AXIS_HORIZONTAL = new Vector3(-1, 0, 0);
-
-interface PolarTransformSopParams extends DefaultOperationParams {
+interface PolarTransformSopParams extends DefaultOperationParams, PolarTransformMatrixParams {
 	applyOn: number;
-	center: Vector3;
-	longitude: number;
-	latitude: number;
-	depth: number;
 }
 
 export class PolarTransformSopOperation extends BaseSopOperation {
@@ -37,9 +26,9 @@ export class PolarTransformSopOperation extends BaseSopOperation {
 
 	override cook(inputCoreGroups: CoreGroup[], params: PolarTransformSopParams) {
 		const objects = inputCoreGroups[0].objects();
-		const matrix = this.matrix(params);
+		CorePolarTransform.matrix(params, this._fullMatrix);
 
-		this._applyTransform(objects, params, matrix);
+		this._applyTransform(objects, params, this._fullMatrix);
 
 		return inputCoreGroups[0];
 	}
@@ -66,39 +55,9 @@ export class PolarTransformSopOperation extends BaseSopOperation {
 	}
 	private _applyMatrixToObjects(objects: Object3D[], matrix: Matrix4) {
 		for (let object of objects) {
-			matrix.decompose(this._decomposed.t, this._decomposed.q, this._decomposed.s);
-			object.position.copy(this._decomposed.t);
-			object.quaternion.copy(this._decomposed.q);
-			object.scale.copy(this._decomposed.s);
-			object.updateMatrix();
+			CorePolarTransform.applyMatrixToObject(object, matrix);
 		}
 	}
 
-	private _centerMatrix = new Matrix4();
-	private _longitudeMatrix = new Matrix4();
-	private _latitudeMatrix = new Matrix4();
-	private _depthMatrix = new Matrix4();
 	private _fullMatrix = new Matrix4();
-	private _decomposed = {
-		t: new Vector3(),
-		q: new Quaternion(),
-		s: new Vector3(),
-	};
-	matrix(params: PolarTransformSopParams) {
-		this._centerMatrix.identity();
-		this._longitudeMatrix.identity();
-		this._latitudeMatrix.identity();
-		this._depthMatrix.identity();
-		this._centerMatrix.makeTranslation(params.center.x, params.center.y, params.center.z);
-		this._longitudeMatrix.makeRotationAxis(AXIS_VERTICAL, MathUtils.degToRad(params.longitude));
-		this._latitudeMatrix.makeRotationAxis(AXIS_HORIZONTAL, MathUtils.degToRad(params.latitude));
-		this._depthMatrix.makeTranslation(0, 0, params.depth);
-		this._fullMatrix
-			.copy(this._centerMatrix)
-			.multiply(this._longitudeMatrix)
-			.multiply(this._latitudeMatrix)
-			.multiply(this._depthMatrix);
-
-		return this._fullMatrix;
-	}
 }

@@ -86,24 +86,21 @@ export class ClampActorNode extends TypedActorNode<ClampActorParamsConfig> {
 		const max = this._inputValue<MixedType>(ClampActorNodeInputName.MAX, context);
 
 		if (value instanceof Vector2) {
-			this._valTmp.v2.copy(value);
-			this._valTmp.v2.x = CoreMath.clamp(this._valTmp.v2.x, (min as Vector2).x, (max as Vector2).x);
-			this._valTmp.v2.y = CoreMath.clamp(this._valTmp.v2.y, (min as Vector2).y, (max as Vector2).y);
+			this._valTmp.v2.x = CoreMath.clamp(value.x, (min as Vector2).x, (max as Vector2).x);
+			this._valTmp.v2.y = CoreMath.clamp(value.y, (min as Vector2).y, (max as Vector2).y);
 			return this._valTmp.v2;
 		}
 		if (value instanceof Vector3) {
-			this._valTmp.v3.copy(value);
-			this._valTmp.v3.x = CoreMath.clamp(this._valTmp.v3.x, (min as Vector3).x, (max as Vector3).x);
-			this._valTmp.v3.y = CoreMath.clamp(this._valTmp.v3.y, (min as Vector3).y, (max as Vector3).y);
-			this._valTmp.v3.z = CoreMath.clamp(this._valTmp.v3.z, (min as Vector3).z, (max as Vector3).z);
+			this._valTmp.v3.x = CoreMath.clamp(value.x, (min as Vector3).x, (max as Vector3).x);
+			this._valTmp.v3.y = CoreMath.clamp(value.y, (min as Vector3).y, (max as Vector3).y);
+			this._valTmp.v3.z = CoreMath.clamp(value.z, (min as Vector3).z, (max as Vector3).z);
 			return this._valTmp.v3;
 		}
 		if (value instanceof Vector4) {
-			this._valTmp.v4.copy(value);
-			this._valTmp.v4.x = CoreMath.clamp(this._valTmp.v4.x, (min as Vector4).x, (max as Vector4).x);
-			this._valTmp.v4.y = CoreMath.clamp(this._valTmp.v4.y, (min as Vector4).y, (max as Vector4).y);
-			this._valTmp.v4.z = CoreMath.clamp(this._valTmp.v4.z, (min as Vector4).z, (max as Vector4).z);
-			this._valTmp.v4.w = CoreMath.clamp(this._valTmp.v4.w, (min as Vector4).w, (max as Vector4).w);
+			this._valTmp.v4.x = CoreMath.clamp(value.x, (min as Vector4).x, (max as Vector4).x);
+			this._valTmp.v4.y = CoreMath.clamp(value.y, (min as Vector4).y, (max as Vector4).y);
+			this._valTmp.v4.z = CoreMath.clamp(value.z, (min as Vector4).z, (max as Vector4).z);
+			this._valTmp.v4.w = CoreMath.clamp(value.w, (min as Vector4).w, (max as Vector4).w);
 			return this._valTmp.v4;
 		}
 		if (CoreType.isNumber(value)) {
