@@ -26,12 +26,21 @@ class MaterialPropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param if the material is not double sided, it can be front sided, or back sided */
 	front = ParamConfig.BOOLEAN(1, {visibleIf: {tside: true, doubleSided: false}});
 	/** @param override the default shadowSide behavior */
-	overrideShadowSide = ParamConfig.BOOLEAN(0, {visibleIf: {tside: true}});
+	overrideShadowSide = ParamConfig.BOOLEAN(DEFAULT.overrideShadowSide, {visibleIf: {tside: true}});
 	/** @param defines which side(s) are used when rendering shadows */
-	shadowDoubleSided = ParamConfig.BOOLEAN(0, {visibleIf: {tside: true, overrideShadowSide: true}});
+	shadowDoubleSided = ParamConfig.BOOLEAN(DEFAULT.shadowDoubleSided, {
+		visibleIf: {tside: true, overrideShadowSide: true},
+	});
 	/** @param if the material is not double sided, it can be front sided, or back sided, when computing shadows */
 	shadowFront = ParamConfig.BOOLEAN(1, {
 		visibleIf: {tside: true, overrideShadowSide: true, shadowDoubleSided: false},
+	});
+
+	/** @param toggle on to allow updating the wireframe properties of the materials */
+	twireframe = ParamConfig.BOOLEAN(DEFAULT.twireframe);
+	/** @param defines if the material is double sided or not */
+	wireframe = ParamConfig.BOOLEAN(DEFAULT.wireframe, {
+		visibleIf: {twireframe: true},
 	});
 }
 const ParamsConfig = new MaterialPropertiesSopParamsConfig();

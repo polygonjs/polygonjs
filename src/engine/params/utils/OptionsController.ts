@@ -97,7 +97,7 @@ export enum FileType {
 	JSON = 'json',
 }
 
-export type VisibleIfParamOptions = PolyDictionary<number | boolean>;
+export type VisibleIfParamOptions = PolyDictionary<number | boolean | string>;
 interface BaseParamOptions {
 	// cook
 	cook?: boolean;

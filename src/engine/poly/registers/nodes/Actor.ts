@@ -80,6 +80,9 @@ import {OnScenePlayStateActorNode} from '../../../nodes/actor/OnScenePlayState';
 import {OnSceneResetActorNode} from '../../../nodes/actor/OnSceneReset';
 import {OnTickActorNode} from '../../../nodes/actor/OnTick';
 import {OrActorNode} from '../../../nodes/actor/Or';
+import {PhysicsRBDApplyImpulseActorNode} from '../../../nodes/actor/PhysicsRBDApplyImpulse';
+import {PhysicsWorldInitActorNode} from '../../../nodes/actor/PhysicsWorldInit';
+import {PhysicsWorldStepSimulationActorNode} from '../../../nodes/actor/PhysicsWorldStepSimulation';
 import {PlaneActorNode} from '../../../nodes/actor/Plane';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
@@ -107,6 +110,8 @@ import {SetObjectPolarTransformActorNode} from '../../../nodes/actor/SetObjectPo
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
 import {SetObjectRotationActorNode} from '../../../nodes/actor/SetObjectRotation';
 import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
+import {SetPhysicsRBDPositionActorNode} from '../../../nodes/actor/SetPhysicsRBDPosition';
+import {SetPhysicsWorldGravityActorNode} from '../../../nodes/actor/SetPhysicsWorldGravity';
 import {SetViewerActorNode} from '../../../nodes/actor/SetViewer';
 import {SignActorNode} from '../../../nodes/actor/Sign';
 import {SinActorNode} from '../../../nodes/actor/Sin';
@@ -217,6 +222,9 @@ export interface ActorNodeChildrenMap {
 	onSceneReset: OnSceneResetActorNode;
 	onTick: OnTickActorNode;
 	or: OrActorNode;
+	physicsRBDApplyImpulse: PhysicsRBDApplyImpulseActorNode;
+	physicsWorldInit: PhysicsWorldInitActorNode;
+	physicsWorldStepSimulation: PhysicsWorldStepSimulationActorNode;
 	plane: PlaneActorNode;
 	playAnimation: PlayAnimationActorNode;
 	playInstrumentNote: PlayInstrumentNoteActorNode;
@@ -244,6 +252,8 @@ export interface ActorNodeChildrenMap {
 	setObjectPosition: SetObjectPositionActorNode;
 	setObjectRotation: SetObjectRotationActorNode;
 	setObjectScale: SetObjectScaleActorNode;
+	setPhysicsRBDPosition: SetPhysicsRBDPositionActorNode;
+	setPhysicsWorldGravity: SetPhysicsWorldGravityActorNode;
 	setViewer: SetViewerActorNode;
 	sign: SignActorNode;
 	sin: SinActorNode;
@@ -358,6 +368,9 @@ export class ActorRegister {
 		poly.registerNode(OnSceneResetActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnTickActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
+		poly.registerNode(PhysicsRBDApplyImpulseActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(PhysicsWorldInitActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(PhysicsWorldStepSimulationActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(PlayInstrumentNoteActorNode, CATEGORY_ACTOR.AUDIO);
@@ -385,6 +398,8 @@ export class ActorRegister {
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectRotationActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetPhysicsRBDPositionActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(SetPhysicsWorldGravityActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(SignActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SinActorNode, CATEGORY_ACTOR.MATH);

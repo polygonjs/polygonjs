@@ -251,6 +251,17 @@ export class CoreObject extends CoreEntity {
 					return object.name;
 				}
 			} else {
+				if (CoreType.isVector(val) && target) {
+					if (val instanceof Vector3 && target instanceof Vector3) {
+						return target.copy(val);
+					}
+					if (val instanceof Vector2 && target instanceof Vector2) {
+						return target.copy(val);
+					}
+					if (val instanceof Vector4 && target instanceof Vector4) {
+						return target.copy(val);
+					}
+				}
 				if (CoreType.isArray(val) && target) {
 					target.fromArray(val);
 					return target;
