@@ -20,6 +20,13 @@ const RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES = Object.keys(RENDER_TARGET_TEXTUR
 		value: RENDER_TARGET_TEXTURE_TYPE_OPTIONS[name] as number,
 	};
 });
+export function postProcessTextureTypeLabel(value: number) {
+	for (let entry of RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES) {
+		if (entry.value == value) {
+			return entry.name;
+		}
+	}
+}
 
 export function PostProcessNetworkParamsConfigMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
