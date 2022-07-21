@@ -1,3 +1,20 @@
+/**
+ * the node to rull them all
+ *
+ * @remarks
+ *
+ * The root node is unique in the scene. it is the higest parent, just above the [obj](/docs/nodes/obj) nodes.
+ *
+ * It allows you to control the following scene properties:
+ *
+ * - the scene background (which can be nothing, a plain color, or a texture)
+ * - which camera is used when exporting the scene
+ * - the fog
+ * - an environment map which would override every material's environment map
+ * - a material which would override every other material
+ * - the display of an audio icon in the viewer, which is useful when using sound in your scene, and allowing users to turn it on/off
+ *
+ */
 import {TypedBaseManagerNode} from './_Base';
 import {BaseObjNodeType} from '../obj/_Base';
 import {NodeContext} from '../../poly/NodeContext';

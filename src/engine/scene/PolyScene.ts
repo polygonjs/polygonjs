@@ -190,23 +190,23 @@ export class PolyScene {
 	nodesByType(type: string): BaseNodeType[] {
 		return this.nodesController.nodesByType(type);
 	}
-	protected _objects_controller = new ObjectsController(this);
+	protected _objectsController = new ObjectsController(this);
 	get objectsController() {
-		return this._objects_controller;
+		return this._objectsController;
 	}
 	/**
 	 * returns a THREE.Object3D whose name matches the mask
 	 *
 	 */
 	findObjectByMask(mask: string): Object3D | undefined {
-		return this._objects_controller.findObjectByMask(mask);
+		return this._objectsController.findObjectByMask(mask);
 	}
 	/**
 	 * returns a list THREE.Object3Ds whose names matche the mask
 	 *
 	 */
 	objectsByMask(mask: string): Object3D[] {
-		return this._objects_controller.objectsByMask(mask);
+		return this._objectsController.objectsByMask(mask);
 	}
 
 	protected _references_controller = new ReferencesController(this);

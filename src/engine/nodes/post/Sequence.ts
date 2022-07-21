@@ -1,3 +1,8 @@
+/**
+ * Allows to sequence several passes
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
 import {Pass} from 'postprocessing';
 

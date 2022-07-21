@@ -1,3 +1,8 @@
+/**
+ * applies the math function atan(x)
+ *
+ *
+ */
 import {MathFunctionArg1OperationFactory} from './_Math_Arg1Operation';
 
 export class AtanActorNode extends MathFunctionArg1OperationFactory('atan', {

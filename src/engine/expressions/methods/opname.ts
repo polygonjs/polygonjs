@@ -10,7 +10,7 @@
  *
  * ## Usage
  *
- * - `opnane('/geo1')` - returns 'geo1'
+ * - `opname('/geo1')` - returns 'geo1'
  * - `opname('..')` - returns the name of the parent
  *
  */

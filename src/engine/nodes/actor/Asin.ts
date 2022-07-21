@@ -1,3 +1,8 @@
+/**
+ * applies the math function asin(x)
+ *
+ *
+ */
 import {MathFunctionArg1OperationFactory} from './_Math_Arg1Operation';
 
 export class AsinActorNode extends MathFunctionArg1OperationFactory('asin', {

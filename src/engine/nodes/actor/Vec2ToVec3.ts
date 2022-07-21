@@ -1,3 +1,8 @@
+/**
+ * converts a vector2 to a vector3
+ *
+ *
+ */
 import {Vector2} from 'three';
 import {Vector3} from 'three';
 import {Number2} from '../../../types/GlobalTypes';

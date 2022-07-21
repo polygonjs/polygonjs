@@ -41,7 +41,7 @@ export class BoxLinesSopNode extends TypedSopNode<BoxLinesSopParamsConfig> {
 
 	private _operation: BoxLinesSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new BoxLinesSopOperation(this._scene, this.states);
+		this._operation = this._operation || new BoxLinesSopOperation(this._scene, this.states, this);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

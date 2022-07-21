@@ -1,3 +1,8 @@
+/**
+ * applies the math function 1-x
+ *
+ *
+ */
 import {Vector2, Vector3, Vector4} from 'three';
 import {MathFunctionArg1OperationFactory} from './_Math_Arg1Operation';
 

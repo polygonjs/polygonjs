@@ -6,7 +6,9 @@
 [![Discord][discord-img]][discord-url]
 [![Forum][forum-img]][forum-url]
 
-Polygonjs is a node-based 3D Webgl engine. [Learn more](https://polygonjs.com/).
+Polygonjs is a node-based **3D WebGL design tool**.
+
+It allows you to create 3D scenes in a non-destructive worflow. You can use it from the web, or locally. [Learn more](https://polygonjs.com/).
 
 ![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.002.png?v=2)
 

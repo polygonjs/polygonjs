@@ -1,3 +1,4 @@
+import {ObjectType} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three';
@@ -29,7 +30,12 @@ export class BoxSopOperation extends BaseSopOperation {
 		const inputCoreGroup = inputCoreGroups[0];
 		const geometry = inputCoreGroup ? this._cookWithInput(inputCoreGroup, params) : this._cookWithoutInput(params);
 
-		return this.createCoreGroupFromGeometry(geometry);
+		const object = BaseSopOperation.createObject(geometry, ObjectType.MESH);
+		if (this._node) {
+			object.name = this._node.name();
+		}
+
+		return this.createCoreGroupFromObjects([object]);
 	}
 	private _cookWithoutInput(params: BoxSopParams) {
 		const {divisions, size, sizes} = params;

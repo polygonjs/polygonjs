@@ -1,3 +1,8 @@
+/**
+ * applies the math function abs(x)
+ *
+ *
+ */
 import {MathFunctionArg1OperationFactory} from './_Math_Arg1Operation';
 
 export class AbsActorNode extends MathFunctionArg1OperationFactory('abs', {

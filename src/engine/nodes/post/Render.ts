@@ -1,3 +1,8 @@
+/**
+ * creates a render pass
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {RenderPass} from 'postprocessing';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

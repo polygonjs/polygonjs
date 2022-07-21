@@ -1,3 +1,8 @@
+/**
+ * converts a vector4 to a vector3
+ *
+ *
+ */
 import {Number4} from '../../../types/GlobalTypes';
 import {ActorNodeTriggerContext} from './_Base';
 import {ParamType} from '../../poly/ParamType';

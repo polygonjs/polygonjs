@@ -1,3 +1,14 @@
+/**
+ * return x*-1.
+ *
+ * @remarks
+ *
+ * So if the input positive, it returns its negative value, or vice versa.
+ * If it 7, this returns -7.
+ * Or if it is -5, it returns 5.
+ *
+ *
+ */
 import {Vector2, Vector3, Vector4} from 'three';
 import {MathFunctionArg1OperationFactory} from './_Math_Arg1Operation';
 

@@ -1,3 +1,8 @@
+/**
+ * adds 2 inputs together
+ *
+ *
+ */
 import {MathFunctionArgNOperationFactory} from './_Math_ArgNOperation';
 
 export class AddActorNode extends MathFunctionArgNOperationFactory('add', {

@@ -38,6 +38,11 @@ QUnit.test('string matchMask', (assert) => {
 	assert.ok(CoreString.matchMask('abc', 'a* d*'));
 	assert.notOk(CoreString.matchMask('abc', 'e* d*'));
 });
+QUnit.test('string matchMask with exclusion', (assert) => {
+	assert.notOk(CoreString.matchMask('abc', '* ^ab*'));
+	assert.ok(CoreString.matchMask('abc', 'abc* ^de*'));
+	assert.notOk(CoreString.matchMask('abcdef', 'abc* ^de*'));
+});
 
 QUnit.test('string attrib_names', (assert) => {
 	assert.deepEqual(CoreString.attribNames('position, normal'), ['position', 'normal']);

@@ -1,9 +1,9 @@
-import {Vector2} from 'three';
 /**
  * allows to set up complex animations using keyframes
  *
  *
  */
+import {Vector2} from 'three';
 import {ChannelData, cubicBezierCurveFromKeyframes, getPointFromCurves} from './../../../core/animation/Keyframe';
 import {StringParamLanguage} from './../../params/utils/OptionsController';
 import {NodeParamsConfig, ParamConfig} from './../utils/params/ParamsConfig';

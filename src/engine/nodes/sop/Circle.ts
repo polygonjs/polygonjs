@@ -49,7 +49,7 @@ export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 
 	private _operation: CircleSopOperation | undefined;
 	override cook() {
-		this._operation = this._operation || new CircleSopOperation(this._scene, this.states);
+		this._operation = this._operation || new CircleSopOperation(this._scene, this.states, this);
 		const coreGroup = this._operation.cook([], this.pv);
 		this.setCoreGroup(coreGroup);
 	}

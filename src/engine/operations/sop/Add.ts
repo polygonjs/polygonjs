@@ -36,6 +36,14 @@ export class AddSopOperation extends BaseSopOperation {
 		this._create_point(objects, params);
 		this._create_polygon(input_contents[0], objects, params);
 
+		if (this._node) {
+			let i = 0;
+			for (let object of objects) {
+				object.name = `${this._node.name()}-${i}`;
+				i++;
+			}
+		}
+
 		return this.createCoreGroupFromObjects(objects);
 	}
 	private _create_point(objects: Object3D[], params: AddSopParams) {

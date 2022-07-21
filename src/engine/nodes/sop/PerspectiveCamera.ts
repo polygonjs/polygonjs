@@ -11,6 +11,8 @@ import {PerspectiveCameraSopOperation} from '../../operations/sop/PerspectiveCam
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType} from '../../poly/NodeContext';
 import {PERSPECTIVE_CAMERA_DEFAULT, registerPerspectiveCamera} from '../../../core/camera/CorePerspectiveCamera';
+import {BaseNodeType} from '../_Base';
+import {setSopMainCamera} from './utils/camera/setSopMainCamera';
 const DEFAULT = PerspectiveCameraSopOperation.DEFAULT_PARAMS;
 class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 	/** @param camera fov */
@@ -38,6 +40,12 @@ class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 	matrixAutoUpdate = ParamConfig.BOOLEAN(DEFAULT.matrixAutoUpdate);
 	/** @param camera name */
 	name = ParamConfig.STRING('`$OS`');
+	/** @param set main camera */
+	setMainCamera = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			setSopMainCamera(node as PerspectiveCameraSopNode);
+		},
+	});
 }
 const ParamsConfig = new PerspectiveCameraSopParamsConfig();
 
@@ -53,9 +61,9 @@ export class PerspectiveCameraSopNode extends TypedSopNode<PerspectiveCameraSopP
 	}
 
 	private _operation: PerspectiveCameraSopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new PerspectiveCameraSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

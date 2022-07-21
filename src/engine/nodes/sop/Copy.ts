@@ -1,4 +1,3 @@
-import {SopType} from './../../poly/registers/nodes/types/Sop';
 /**
  * Copies a geometry onto every point from the right input.
  *
@@ -7,7 +6,7 @@ import {SopType} from './../../poly/registers/nodes/types/Sop';
  *
  *
  */
-
+import {SopType} from './../../poly/registers/nodes/types/Sop';
 import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';

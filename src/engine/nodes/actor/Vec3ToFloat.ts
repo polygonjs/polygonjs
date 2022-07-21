@@ -1,3 +1,8 @@
+/**
+ * converts a vector3 to a float
+ *
+ *
+ */
 import {ParamType} from '../../poly/ParamType';
 import {VecToActorFactory} from './_ConversionVecTo';
 

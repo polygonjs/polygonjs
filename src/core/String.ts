@@ -186,6 +186,16 @@ export class CoreString {
 			return true;
 		}
 		const elements = mask.split(SPACE);
+		const exclusionFilters = elements
+			.filter((element) => element.startsWith('^'))
+			.map((element) => element.substring(1));
+		for (let exclusionFilter of exclusionFilters) {
+			const match = this.matchMask(word, exclusionFilter);
+			if (match) {
+				return false;
+			}
+		}
+
 		if (elements.length > 1) {
 			for (let element of elements) {
 				const match = this.matchMask(word, element);

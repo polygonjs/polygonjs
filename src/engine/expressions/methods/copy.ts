@@ -1,4 +1,3 @@
-import {SopType} from './../../poly/registers/nodes/types/Sop';
 /**
  * The copy expression allows the copy SOP node to evaluates its input graph multiple times, and vary its result each time.
  *
@@ -18,14 +17,20 @@ import {SopType} from './../../poly/registers/nodes/types/Sop';
  * - `copy('../copy1')` - returns the index of each evaluation
  *
  */
+import {SopType} from './../../poly/registers/nodes/types/Sop';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {CoreWalker} from '../../../core/Walker';
-import {CopySopNode} from '../../nodes/sop/Copy';
-import {CopyAnimNode} from '../../nodes/anim/Copy';
+import type {CopySopNode} from '../../nodes/sop/Copy';
+import type {CopyAnimNode} from '../../nodes/anim/Copy';
 import {BaseNodeType} from '../../nodes/_Base';
+import {AnimType} from '../../poly/registers/nodes/types/Anim';
 
 type CopyNode = CopyAnimNode | CopySopNode;
+
+function isCopyNode(node?: BaseNodeType | null) {
+	return node && node.type() == SopType.COPY && node.type() == AnimType.COPY;
+}
 export class CopyExpression extends BaseMethod {
 	protected override _requireDependency = true;
 	static override requiredArguments() {
@@ -42,7 +47,7 @@ export class CopyExpression extends BaseMethod {
 		const node = this.findReferencedGraphNode(indexOrPath) as BaseNodeType;
 		// I'd prefer testing with if(node instanceof CopySopNode || node instanceof CopyAnimNode)
 		// but tslib generates an error when doing so
-		if (node && node.type() == SopType.COPY) {
+		if (isCopyNode(node)) {
 			const stampNode = (node as CopyNode).stampNode();
 			return this.createDependency(stampNode, indexOrPath);
 		}
@@ -60,7 +65,7 @@ export class CopyExpression extends BaseMethod {
 				const node = currentNode ? CoreWalker.findNode(currentNode, path) : null;
 
 				let value;
-				if (node && node.type() == CopySopNode.type()) {
+				if (isCopyNode(node)) {
 					value = (node as CopySopNode).stampValue(attributeName);
 				}
 

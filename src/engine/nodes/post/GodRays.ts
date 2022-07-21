@@ -1,12 +1,12 @@
+/**
+ * Adds god rays from a source object.
+ *
+ *
+ */
 import {CoreType} from './../../../core/Type';
 import {PolyScene} from './../../scene/PolyScene';
 import {Points} from 'three/src/objects/Points';
 import {BLEND_FUNCTION_MENU_OPTIONS} from './../../../core/post/BlendFunction';
-/**
- * Adds an Unreal Bloom effect.
- *
- *
- */
 import {Vector2, Mesh, BufferGeometry, MeshBasicMaterial, Object3D, Material, Group} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

@@ -1,3 +1,8 @@
+/**
+ * multiplies multiple inputs together
+ *
+ *
+ */
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {MathFunctionArgNOperationFactory} from './_Math_ArgNOperation';
 
