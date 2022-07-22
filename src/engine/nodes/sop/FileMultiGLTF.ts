@@ -24,6 +24,8 @@ class FileMultiGLTFParamsConfig extends NodeParamsConfig {
 	});
 	/** @param uses draco compression */
 	draco = ParamConfig.BOOLEAN(DEFAULT.draco);
+	/** @param uses ktx2 compression */
+	ktx2 = ParamConfig.BOOLEAN(DEFAULT.ktx2);
 	/** @param sets the matrixAutoUpdate attribute for the objects loaded */
 	matrixAutoUpdate = ParamConfig.BOOLEAN(false);
 	/** @param reload the geometry */
@@ -46,6 +48,7 @@ export class FileMultiGLTFSopNode extends BaseFileMultiSopNode<GLTF, FileMultiGL
 	protected override _loadWithLoader(loader: GLTFLoaderHandler) {
 		return loader.load({
 			draco: this.pv.draco,
+			ktx2: this.pv.ktx2,
 			node: this,
 		});
 	}

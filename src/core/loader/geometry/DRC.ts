@@ -1,8 +1,8 @@
 import {BufferGeometry, Mesh, MeshLambertMaterial, Object3D} from 'three';
 import {Poly} from '../../../engine/Poly';
 import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
-import {CoreBaseLoader} from '../_Base';
-import {BaseGeoLoaderHandler, BaseGeoLoader, BaseLoaderLoadOptions} from './_BaseLoaderHandler';
+import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
+import {BaseGeoLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
 
 const _defaultMatMesh = new MeshLambertMaterial();
 

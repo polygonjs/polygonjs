@@ -4,6 +4,10 @@ import {Poly} from '../../engine/Poly';
 import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
 import {BaseGeoLoaderOutput} from './geometry/_BaseLoaderHandler';
 
+export interface BaseLoaderLoadOptions {
+	node: BaseNodeType;
+}
+
 export function modifyUrl(url: string) {
 	const remapedUrl = Poly.assetUrls.remapedUrl(url);
 	if (remapedUrl) {
