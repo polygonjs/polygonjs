@@ -39,9 +39,10 @@ QUnit.test('string matchMask', (assert) => {
 	assert.notOk(CoreString.matchMask('abc', 'e* d*'));
 });
 QUnit.test('string matchMask with exclusion', (assert) => {
-	assert.notOk(CoreString.matchMask('abc', '* ^ab*'));
-	assert.ok(CoreString.matchMask('abc', 'abc* ^de*'));
-	assert.notOk(CoreString.matchMask('abcdef', 'abc* ^de*'));
+	assert.notOk(CoreString.matchMask('abc', '* ^ab*'), '* ^ab*');
+	assert.ok(CoreString.matchMask('abc', 'abc* ^de*'), 'abc* ^de*');
+	assert.ok(CoreString.matchMask('abcdef', 'abc* ^de*'), 'abc* ^de*');
+	assert.notOk(CoreString.matchMask('abcdef', 'abc* ^*de*'), 'abc* ^*de*');
 });
 
 QUnit.test('string attrib_names', (assert) => {

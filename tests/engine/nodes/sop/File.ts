@@ -143,7 +143,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	assert.equal(container.totalPointsCount(), 36);
 
 	// set error state
-	file1.p.url.set('/test/file_sop_doesnotexist.obj');
+	file1.p.url.set('/examples/file_sop_doesnotexist.obj');
 	assert.ok(file1.isDirty());
 	container = await file1.compute();
 	assert.ok(!file1.isDirty());
