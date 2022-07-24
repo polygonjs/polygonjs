@@ -60,6 +60,7 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 	mountRenderer(canvas: HTMLCanvasElement) {
 		const renderer = this._renderersByCanvasId.get(canvas.id);
 		if (!renderer) {
+			console.warn(`no render found for canvas ${canvas.id}. cannot mount CSS2DRenderer`);
 			return;
 		}
 		const parent = canvas.parentElement;

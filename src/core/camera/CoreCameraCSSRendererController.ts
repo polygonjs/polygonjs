@@ -32,9 +32,9 @@ export class CoreCameraCSSRendererController {
 		const {canvas, scene, camera} = options;
 
 		let cssRendererNode: CSSRendererRopNode | undefined;
-		const postProcessNodeId = CoreObject.attribValue(camera, CameraAttribute.CSS_RENDERER_NODE_ID);
-		if (postProcessNodeId && CoreType.isNumber(postProcessNodeId)) {
-			const foundNode = scene.graph.nodeFromId(postProcessNodeId);
+		const nodeId = CoreObject.attribValue(camera, CameraAttribute.CSS_RENDERER_NODE_ID);
+		if (nodeId && CoreType.isNumber(nodeId)) {
+			const foundNode = scene.graph.nodeFromId(nodeId);
 			if (foundNode && foundNode instanceof TypedNode && this.isCSSRendererNode(foundNode)) {
 				cssRendererNode = foundNode as CSSRendererRopNode;
 			}
