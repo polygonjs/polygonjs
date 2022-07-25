@@ -1,9 +1,9 @@
 /**
- * get an object
+ * get the parent object
  *
  *
  */
-import {PolyScene} from './../../scene/PolyScene';
+
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
@@ -13,15 +13,12 @@ import {
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {isBooleanTrue} from '../../../core/Type';
-import {Object3D} from 'three';
 import {ParamType} from '../../poly/ParamType';
+import {GetObjectActorNode} from './GetObject';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-interface CachedObjectResult {
-	object: Object3D | null;
-}
-class GetObjectActorParamsConfig extends NodeParamsConfig {
+class GetParentActorParamsConfig extends NodeParamsConfig {
 	/** @param use current object */
 	getCurrentObject = ParamConfig.BOOLEAN(1);
 	/** @param object mask */
@@ -31,16 +28,16 @@ class GetObjectActorParamsConfig extends NodeParamsConfig {
 		},
 		objectMask: true,
 		callback: () => {
-			GetObjectActorNode.PARAM_CALLBACK_clearCache();
+			GetParentActorNode.PARAM_CALLBACK_clearCache();
 		},
 	});
 }
-const ParamsConfig = new GetObjectActorParamsConfig();
+const ParamsConfig = new GetParentActorParamsConfig();
 
-export class GetObjectActorNode extends TypedActorNode<GetObjectActorParamsConfig> {
+export class GetParentActorNode extends TypedActorNode<GetParentActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'getObject';
+		return 'getParent';
 	}
 
 	override initializeNode() {
@@ -58,36 +55,15 @@ export class GetObjectActorNode extends TypedActorNode<GetObjectActorParamsConfi
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.OBJECT_3D] {
 		const getCurrentObject = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.getCurrentObject, context);
 		if (isBooleanTrue(getCurrentObject)) {
-			return context.Object3D;
+			return context.Object3D.parent!;
 		} else {
 			const mask = this._inputValueFromParam<ParamType.STRING>(this.p.mask, context);
-			return GetObjectActorNode.objectFromMask(mask, this.scene()) || context.Object3D;
+			const object = GetObjectActorNode.objectFromMask(mask, this.scene()) || context.Object3D;
+			return object.parent!;
 		}
 	}
 
-	static objectFromMask(mask: string, scene: PolyScene) {
-		const frame = scene.frame();
-		if (this._cacheClearedOnFrame != frame) {
-			// we clear the cache if we are on a new frame
-			this._clearOutputValueCache();
-			this._cacheClearedOnFrame = frame;
-		}
-		const cachedObject = this._cachedObjectByMask.get(mask);
-		if (!cachedObject) {
-			const matchedObject = scene.findObjectByMask(mask) || null;
-			this._cachedObjectByMask.set(mask, {object: matchedObject});
-		}
-
-		return this._cachedObjectByMask.get(mask)?.object;
-	}
-
-	// cache
-	private static _cacheClearedOnFrame = -1;
-	private static _cachedObjectByMask: Map<string, CachedObjectResult> = new Map();
-	private static _clearOutputValueCache() {
-		this._cachedObjectByMask.clear();
-	}
 	static PARAM_CALLBACK_clearCache() {
-		this._clearOutputValueCache();
+		GetObjectActorNode.PARAM_CALLBACK_clearCache();
 	}
 }

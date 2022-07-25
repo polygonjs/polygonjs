@@ -4,7 +4,7 @@ import {BaseNodeType} from './nodes/_Base';
 import {PerspectiveCameraObjNode} from './nodes/obj/PerspectiveCamera';
 
 import {AllRegister} from './poly/registers/All';
-AllRegister.run();
+AllRegister.registerAll();
 // anim
 import {AnimPosition} from '../../examples/engine/nodes/anim/Position';
 import AnimPositionHTML from '../../examples/engine/nodes/anim/Position.html';

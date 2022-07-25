@@ -5,7 +5,7 @@
  */
 import {CoreType} from './../../../core/Type';
 import {PolyScene} from './../../scene/PolyScene';
-import {Points} from 'three/src/objects/Points';
+import {Points} from 'three';
 import {BLEND_FUNCTION_MENU_OPTIONS} from './../../../core/post/BlendFunction';
 import {Vector2, Mesh, BufferGeometry, MeshBasicMaterial, Object3D, Material, Group} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';

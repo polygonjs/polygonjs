@@ -14,7 +14,7 @@ import {AllRegister} from '../../src/engine/poly/registers/All';
 // import {AllModulesRegister} from '../../src/engine/poly/registers/modules/All';
 import {waitForUserInteraction} from './UserInteraction';
 // import {GLTFLoaderHandler} from '../../src/core/loader/geometry/GLTF';
-AllRegister.run();
+AllRegister.registerAll();
 // AllModulesRegister.run(Poly);
 
 // window.create_renderer_if_none = () => {

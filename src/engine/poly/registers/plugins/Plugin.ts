@@ -1,4 +1,4 @@
-import {PolyEngine} from '../../../Poly';
+import type {PolyEngine} from '../../../Poly';
 
 type PolyPluginCallback = (poly: PolyEngine) => void;
 interface PolyPluginOptions {

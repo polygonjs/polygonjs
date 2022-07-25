@@ -45,6 +45,7 @@ import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
 import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty';
 import {GetObjectUserDataActorNode} from '../../../nodes/actor/GetObjectUserData';
+import {GetParentActorNode} from '../../../nodes/actor/GetParent';
 import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
 import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
@@ -107,6 +108,9 @@ import {SetObjectPolarTransformActorNode} from '../../../nodes/actor/SetObjectPo
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
 import {SetObjectRotationActorNode} from '../../../nodes/actor/SetObjectRotation';
 import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
+import {SetPerspectiveCameraFovActorNode} from '../../../nodes/actor/SetPerspectiveCameraFov';
+import {SetPerspectiveCameraNearFarActorNode} from '../../../nodes/actor/SetPerspectiveCameraNearFar';
+import {SetSpotLightIntensityActorNode} from '../../../nodes/actor/SetSpotLightIntensity';
 import {SetViewerActorNode} from '../../../nodes/actor/SetViewer';
 import {SignActorNode} from '../../../nodes/actor/Sign';
 import {SinActorNode} from '../../../nodes/actor/Sin';
@@ -182,6 +186,7 @@ export interface ActorNodeChildrenMap {
 	getObjectAttribute: GetObjectAttributeActorNode;
 	getObjectProperty: GetObjectPropertyActorNode;
 	getObjectUserData: GetObjectUserDataActorNode;
+	getParent: GetParentActorNode;
 	getPlaneProperty: GetPlanePropertyActorNode;
 	getSphereProperty: GetSpherePropertyActorNode;
 	intToBool: IntToBoolActorNode;
@@ -244,6 +249,9 @@ export interface ActorNodeChildrenMap {
 	setObjectPosition: SetObjectPositionActorNode;
 	setObjectRotation: SetObjectRotationActorNode;
 	setObjectScale: SetObjectScaleActorNode;
+	setPerspectiveCameraFov: SetPerspectiveCameraFovActorNode;
+	setPerspectiveCameraNearFar: SetPerspectiveCameraNearFarActorNode;
+	SetSpotLightIntensity: SetSpotLightIntensityActorNode;
 	setViewer: SetViewerActorNode;
 	sign: SignActorNode;
 	sin: SinActorNode;
@@ -324,6 +332,7 @@ export class ActorRegister {
 		poly.registerNode(GetObjectPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectUserDataActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetPlanePropertyActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetParentActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
@@ -385,6 +394,9 @@ export class ActorRegister {
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectRotationActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetPerspectiveCameraFovActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetPerspectiveCameraNearFarActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetSpotLightIntensityActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(SignActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SinActorNode, CATEGORY_ACTOR.MATH);

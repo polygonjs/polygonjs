@@ -6,7 +6,7 @@ import {Vector3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
 import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
-import {PolyScene} from '../../../../src/engine/index_all';
+import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 
 function addReflector(scene: PolyScene) {
 	const geo2 = scene.root().createNode('geo');
