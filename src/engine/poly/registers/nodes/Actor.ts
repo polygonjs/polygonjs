@@ -251,7 +251,7 @@ export interface ActorNodeChildrenMap {
 	setObjectScale: SetObjectScaleActorNode;
 	setPerspectiveCameraFov: SetPerspectiveCameraFovActorNode;
 	setPerspectiveCameraNearFar: SetPerspectiveCameraNearFarActorNode;
-	SetSpotLightIntensity: SetSpotLightIntensityActorNode;
+	setSpotLightIntensity: SetSpotLightIntensityActorNode;
 	setViewer: SetViewerActorNode;
 	sign: SignActorNode;
 	sin: SinActorNode;
