@@ -1,5 +1,5 @@
 import {BevelParams, createGeometriesFromTypeMesh} from './TextMesh';
-import {getShapes} from './TextShapes';
+import {getShapes, TextShapesParams} from './TextShapes';
 import {createGeometriesFromTypeFlat} from './TextFlat';
 import {createGeometriesFromTypeStroke} from './TextStroke';
 import {shapesFromFont} from './TextShapesFromFont';
@@ -9,11 +9,9 @@ import {TextType} from './TextType';
 import {BufferGeometry} from 'three';
 import {Font} from '../../../../../core/loader/font/Font';
 
-interface TextBuildGeometriesParams extends BevelParams {
-	text: string;
+interface TextBuildGeometriesParams extends BevelParams, TextShapesParams {
 	textType: TextType;
 	font: Font;
-	size: number;
 	extrude: number;
 	curveSegments: number;
 	strokeWidth: number;

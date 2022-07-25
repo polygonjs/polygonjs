@@ -33,8 +33,8 @@ export class AddSopOperation extends BaseSopOperation {
 
 	override cook(input_contents: CoreGroup[], params: AddSopParams) {
 		const objects: Object3D[] = [];
-		this._create_point(objects, params);
-		this._create_polygon(input_contents[0], objects, params);
+		this._createPoint(objects, params);
+		this._createPolygon(input_contents[0], objects, params);
 
 		if (this._node) {
 			let i = 0;
@@ -46,7 +46,7 @@ export class AddSopOperation extends BaseSopOperation {
 
 		return this.createCoreGroupFromObjects(objects);
 	}
-	private _create_point(objects: Object3D[], params: AddSopParams) {
+	private _createPoint(objects: Object3D[], params: AddSopParams) {
 		if (!isBooleanTrue(params.createPoint)) {
 			return;
 		}
@@ -63,7 +63,7 @@ export class AddSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _create_polygon(core_group: CoreGroup, objects: Object3D[], params: AddSopParams) {
+	private _createPolygon(core_group: CoreGroup, objects: Object3D[], params: AddSopParams) {
 		if (!isBooleanTrue(params.connectInputPoints)) {
 			return;
 		}

@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh} from 'three';
+import {Mesh, BufferGeometry} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface SetGeometrySopParams extends DefaultOperationParams {}
@@ -19,12 +19,19 @@ export class SetGeometrySopOperation extends BaseSopOperation {
 		const destObjects = coreGroupDest.objects();
 		const srcObjects = coreGroupSrc.objects();
 		for (let i = 0; i < destObjects.length; i++) {
-			const destObject = destObjects[i] as Mesh;
-			const srcObject = srcObjects[i] as Mesh;
+			const destObject = destObjects[i] as Mesh | undefined;
+			const srcObject = srcObjects[i] as Mesh | undefined;
 
-			destObject.geometry = srcObject.geometry;
+			if (destObject) {
+				destObject.geometry = srcObject ? srcObject.geometry : SetGeometrySopOperation._emptyGeometry();
+			}
 		}
 
 		return coreGroupDest;
+	}
+
+	private static __emptyGeometry: BufferGeometry | undefined;
+	private static _emptyGeometry() {
+		return (this.__emptyGeometry = this.__emptyGeometry || new BufferGeometry());
 	}
 }
