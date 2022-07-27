@@ -5,6 +5,13 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {ObjNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/Obj';
 
 const data: PolyNodeDefinition = {
+	metadata: {
+		version: {
+			polyNode: 1,
+			polygonjs: 1,
+		},
+		createdAt: 1,
+	},
 	nodeContext: NodeContext.OBJ,
 	params: [
 		{

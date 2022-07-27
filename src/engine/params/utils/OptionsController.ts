@@ -98,7 +98,7 @@ export enum FileType {
 }
 
 export type VisibleIfParamOptions = PolyDictionary<number | boolean>;
-interface BaseParamOptions {
+export interface BaseParamOptions {
 	// cook
 	cook?: boolean;
 	// spare

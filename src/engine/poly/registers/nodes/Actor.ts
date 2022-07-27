@@ -84,6 +84,7 @@ import {OrActorNode} from '../../../nodes/actor/Or';
 import {PlaneActorNode} from '../../../nodes/actor/Plane';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
+import {PressButtonParamActorNode} from '../../../nodes/actor/PressButtonParam';
 import {PowActorNode} from '../../../nodes/actor/Pow';
 import {RandActorNode} from '../../../nodes/actor/Rand';
 import {RandomActorNode} from '../../../nodes/actor/Random';
@@ -108,6 +109,7 @@ import {SetObjectPolarTransformActorNode} from '../../../nodes/actor/SetObjectPo
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
 import {SetObjectRotationActorNode} from '../../../nodes/actor/SetObjectRotation';
 import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
+import {SetParamActorNode} from '../../../nodes/actor/SetParam';
 import {SetPerspectiveCameraFovActorNode} from '../../../nodes/actor/SetPerspectiveCameraFov';
 import {SetPerspectiveCameraNearFarActorNode} from '../../../nodes/actor/SetPerspectiveCameraNearFar';
 import {SetSpotLightIntensityActorNode} from '../../../nodes/actor/SetSpotLightIntensity';
@@ -225,6 +227,7 @@ export interface ActorNodeChildrenMap {
 	plane: PlaneActorNode;
 	playAnimation: PlayAnimationActorNode;
 	playInstrumentNote: PlayInstrumentNoteActorNode;
+	pressButtonParam: PressButtonParamActorNode;
 	pow: PowActorNode;
 	rand: RandActorNode;
 	random: RandomActorNode;
@@ -249,6 +252,7 @@ export interface ActorNodeChildrenMap {
 	setObjectPosition: SetObjectPositionActorNode;
 	setObjectRotation: SetObjectRotationActorNode;
 	setObjectScale: SetObjectScaleActorNode;
+	setParam: SetParamActorNode;
 	setPerspectiveCameraFov: SetPerspectiveCameraFovActorNode;
 	setPerspectiveCameraNearFar: SetPerspectiveCameraNearFarActorNode;
 	setSpotLightIntensity: SetSpotLightIntensityActorNode;
@@ -370,6 +374,7 @@ export class ActorRegister {
 		poly.registerNode(PlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(PlayInstrumentNoteActorNode, CATEGORY_ACTOR.AUDIO);
+		poly.registerNode(PressButtonParamActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(PowActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayDistanceToPlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RandActorNode, CATEGORY_ACTOR.MATH);
@@ -394,6 +399,7 @@ export class ActorRegister {
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectRotationActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetParamActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetPerspectiveCameraFovActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetPerspectiveCameraNearFarActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetSpotLightIntensityActorNode, CATEGORY_ACTOR.ACTION);

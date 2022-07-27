@@ -5,6 +5,13 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {GeoNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/Sop';
 
 const data: PolyNodeDefinition = {
+	metadata: {
+		version: {
+			polyNode: 1,
+			polygonjs: 1,
+		},
+		createdAt: 1,
+	},
 	nodeContext: NodeContext.SOP,
 	inputs: {simple: {min: 0, max: 4}},
 	params: [

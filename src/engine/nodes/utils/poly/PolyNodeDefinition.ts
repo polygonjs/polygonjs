@@ -20,8 +20,16 @@ export interface PolyNodesInputsData {
 	simple?: PolyNodeSimpleInputsData;
 	typed?: PolyNodeTypedInputsData;
 }
+export interface PolyNodeMetadata {
+	version: {
+		polyNode: number;
+		polygonjs: number;
+	};
+	createdAt: number;
+}
 
 export interface PolyNodeDefinition {
+	metadata: PolyNodeMetadata;
 	nodeContext: NodeContext;
 	inputs?: PolyNodesInputsData;
 	params?: ParamOptionToAdd<ParamType>[];

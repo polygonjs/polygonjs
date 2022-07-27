@@ -134,6 +134,13 @@ export class PolyNodeController {
 		const nodeInputsData = inputsData || this.inputsData(node);
 
 		const data: PolyNodeDefinition = {
+			metadata: {
+				version: {
+					polyNode: 1,
+					polygonjs: 1,
+				},
+				createdAt: 1,
+			},
 			nodeContext: node.context(),
 			inputs: nodeInputsData,
 			params: node.params.non_spare
