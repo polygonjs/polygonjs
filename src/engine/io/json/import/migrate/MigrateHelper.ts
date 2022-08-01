@@ -23,6 +23,9 @@ const ACTOR_NEW_TYPES: PolyDictionary<string> = {
 
 function migrateCop(nodeData: NodeJsonExporterData) {
 	const nodeType = nodeData.type;
+	if (nodeType == 'imageSequence') {
+		return 'video';
+	}
 	if (nodeType == 'image') {
 		const url = nodeData.params?.url as string;
 		if (url) {
