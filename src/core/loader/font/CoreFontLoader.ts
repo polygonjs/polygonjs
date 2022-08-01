@@ -56,8 +56,8 @@ export class CoreLoaderFont extends CoreBaseLoader {
 					resolve(parsed);
 				},
 				undefined,
-				() => {
-					reject();
+				(err) => {
+					reject(err);
 				}
 			);
 		});

@@ -159,7 +159,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			}
 		} catch (err) {
 			console.warn('error:', err);
-			this.states.error.set(`count not load font (${this.pv.font})`);
+			this.states.error.set(`count not load font (${this.pv.font}, reason:${(err as Error).message})`);
 			this.cookController.endCook();
 			return;
 		}
