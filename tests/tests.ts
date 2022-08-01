@@ -332,6 +332,7 @@ import './engine/nodes/sop/NormalsHelper';
 import './engine/nodes/sop/Null';
 import './engine/nodes/sop/ObjectMerge';
 import './engine/nodes/sop/ObjectProperties';
+import './engine/nodes/sop/ObjectsLayout';
 import './engine/nodes/sop/OceanPlane';
 import './engine/nodes/sop/OrthographicCamera';
 import './engine/nodes/sop/Palette';
