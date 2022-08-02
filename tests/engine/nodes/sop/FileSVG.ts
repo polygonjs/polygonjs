@@ -27,11 +27,11 @@ QUnit.test('SOP svg with tiger', async (assert) => {
 QUnit.test('SOP svg with wolf', async (assert) => {
 	const container = await withFile('models/svg/wolf.svg');
 	const core_content = container.coreContent()!;
-	assert.equal(container.objectsCount(), 62);
-	assert.equal(container.pointsCount(), 43236);
-	assert.deepEqual(container.objectsCountByType(), {Mesh: 62});
-	assert.equal(core_content.objects().length, 62);
-	assert.equal(core_content.pointsCount(), 43236);
+	assert.equal(container.objectsCount(), 60);
+	assert.equal(container.pointsCount(), 43260);
+	assert.deepEqual(container.objectsCountByType(), {Mesh: 60});
+	assert.equal(core_content.objects().length, 60);
+	assert.equal(core_content.pointsCount(), 43260);
 	const first_mesh = core_content.objectsWithGeo()[0];
 	assert.equal(first_mesh.children.length, 0);
 

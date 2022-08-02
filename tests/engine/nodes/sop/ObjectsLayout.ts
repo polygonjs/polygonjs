@@ -41,8 +41,8 @@ QUnit.test('sop/objectsLayout simple', async (assert) => {
 
 	objectsLayout1.p.maxLayoutWidth.set(3);
 	assert.deepEqual(await getPositions(objectsLayout1), [
-		[-3, 0.5, 0],
 		[-1.5, 0.5, 0],
-		[-1.5, -0.5, 0],
+		[0, 0.5, 0],
+		[0, -0.5, 0],
 	]);
 });
