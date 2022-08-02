@@ -16,6 +16,13 @@ interface SvgSopParams extends DefaultOperationParams {
 	// strokes
 	drawStrokes: boolean;
 	strokesWireframe: boolean;
+	// style override
+	tStyleOverride: boolean;
+	strokeWidth: number;
+	// advanced
+	tadvanced: boolean;
+	isCCW: boolean;
+	noHoles: boolean;
 }
 
 const DEFAULT_URL = `${ASSETS_ROOT}/models/svg/tiger.svg`;
@@ -26,26 +33,29 @@ export class FileSVGSopOperation extends BaseSopOperation {
 		fillShapesWireframe: false,
 		drawStrokes: true,
 		strokesWireframe: false,
+		tStyleOverride: false,
+		strokeWidth: 1,
+		tadvanced: false,
+		isCCW: false,
+		noHoles: false,
 	};
 	static override type(): Readonly<SopTypeFile.FILE_SVG> {
 		return SopTypeFile.FILE_SVG;
 	}
 
-	override cook(input_contents: CoreGroup[], params: SvgSopParams): Promise<CoreGroup> {
+	override async cook(input_contents: CoreGroup[], params: SvgSopParams): Promise<CoreGroup> {
 		const loader = new CoreSVGLoader(params.url, this._node);
 
-		return new Promise(async (resolve) => {
-			const group = await loader.load(params);
+		const group = await loader.load(params);
 
-			for (let child of group.children) {
-				this._ensure_geometry_has_index(child);
-			}
+		for (let child of group.children) {
+			this._ensureGeometryHasIndex(child);
+		}
 
-			resolve(this.createCoreGroupFromObjects(group.children));
-		});
+		return this.createCoreGroupFromObjects([...group.children]);
 	}
 
-	private _ensure_geometry_has_index(object: Object3D) {
+	private _ensureGeometryHasIndex(object: Object3D) {
 		const mesh = object as Mesh;
 		const geometry = mesh.geometry;
 		if (geometry) {

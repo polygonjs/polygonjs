@@ -20,6 +20,13 @@ interface CoreSVGLoaderOptions {
 	// strokes
 	drawStrokes: boolean;
 	strokesWireframe: boolean;
+	// style override
+	tStyleOverride: boolean;
+	strokeWidth: number;
+	// advanced
+	tadvanced: boolean;
+	isCCW: boolean;
+	noHoles: boolean;
 }
 
 interface StrokeStyleExtended extends StrokeStyle {
@@ -64,7 +71,7 @@ export class CoreSVGLoader extends CoreBaseLoader {
 					const group = this._onLoaded(data, options);
 					resolve(group);
 				} catch (err) {
-					reject([]);
+					reject(err);
 				}
 			});
 		});
@@ -90,9 +97,9 @@ export class CoreSVGLoader extends CoreBaseLoader {
 				this._drawShapes(group, path, options);
 			}
 
-			const strokeColor = userData.style.stroke;
+			// const strokeColor = userData.style.stroke;
 
-			if (isBooleanTrue(options.drawStrokes) && strokeColor !== undefined && strokeColor !== 'none') {
+			if (isBooleanTrue(options.drawStrokes)) {
 				this._drawStrokes(group, path, options);
 			}
 		}
@@ -111,7 +118,10 @@ export class CoreSVGLoader extends CoreBaseLoader {
 			wireframe: options.fillShapesWireframe,
 		});
 
-		const shapes = path.toShapes(true);
+		const isCCW = options.tadvanced && options.isCCW;
+		const noHoles = options.tadvanced && options.noHoles;
+
+		const shapes = path.toShapes(isCCW, noHoles);
 
 		for (let j = 0; j < shapes.length; j++) {
 			const shape = shapes[j];
@@ -125,6 +135,10 @@ export class CoreSVGLoader extends CoreBaseLoader {
 
 	private _drawStrokes(group: Group, path: ShapePath, options: CoreSVGLoaderOptions) {
 		const userData: SVGPathUserData = (path as any).userData;
+		if (options.tStyleOverride) {
+			userData.style.strokeWidth = options.strokeWidth;
+		}
+
 		if (options.strokesWireframe) {
 			const material = new LineBasicMaterial({
 				color: new Color().setStyle(userData.style.stroke),
@@ -154,7 +168,6 @@ export class CoreSVGLoader extends CoreBaseLoader {
 				depthWrite: false,
 				// wireframe: options.strokesWireframe,
 			});
-
 			for (let j = 0, jl = path.subPaths.length; j < jl; j++) {
 				const subPath = path.subPaths[j];
 

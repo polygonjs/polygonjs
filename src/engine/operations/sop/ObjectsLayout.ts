@@ -28,8 +28,8 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 
 	override cook(inputCoreGroups: CoreGroup[], params: ObjectsLayoutSopParams) {
 		const objects = inputCoreGroups[0].objects();
-
 		currentPos.set(0, 0);
+		maxPos.set(0, 0);
 		for (let object of objects) {
 			// get size before scale adjustment
 			object.updateMatrix();
@@ -64,8 +64,6 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 
 			maxPos.x = Math.max(maxPos.x, object.position.x + boxSize.x * 0.5);
 			maxPos.y = Math.min(maxPos.y, object.position.y - boxSize.y * 0.5);
-
-			object.updateMatrix();
 		}
 		for (let object of objects) {
 			object.position.x -= maxPos.x * 0.5;

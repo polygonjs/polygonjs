@@ -41,6 +41,7 @@ export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.PDB,
 	GeometryExtension.PLY,
 	GeometryExtension.STL,
+	GeometryExtension.SVG,
 ];
 
 function urlExt(url: string) {

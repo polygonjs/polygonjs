@@ -33,6 +33,28 @@ class FileSVGSopParamsConfig extends NodeParamsConfig {
 	drawStrokes = ParamConfig.BOOLEAN(DEFAULT.drawStrokes);
 	/** @param toggle on to draw the strokes as wireframe */
 	strokesWireframe = ParamConfig.BOOLEAN(DEFAULT.strokesWireframe);
+	/** @param style override */
+	tStyleOverride = ParamConfig.BOOLEAN(DEFAULT.tStyleOverride, {
+		separatorBefore: true,
+	});
+	/** @param stroke width */
+	strokeWidth = ParamConfig.FLOAT(DEFAULT.strokeWidth, {
+		visibleIf: {
+			tStyleOverride: true,
+		},
+	});
+	/** @param advanced */
+	tadvanced = ParamConfig.BOOLEAN(DEFAULT.tadvanced, {
+		separatorBefore: true,
+	});
+	/** @param is counter clock wise: defines the vertex order when parsing the font */
+	isCCW = ParamConfig.BOOLEAN(0, {
+		visibleIf: {tadvanced: true},
+	});
+	/** @param defines if holes should be found when parsing the font */
+	noHoles = ParamConfig.BOOLEAN(0, {
+		visibleIf: {tadvanced: true},
+	});
 }
 const ParamsConfig = new FileSVGSopParamsConfig();
 

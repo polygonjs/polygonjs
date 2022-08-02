@@ -157,50 +157,12 @@ export abstract class BaseFileMultiSopNode<
 	}
 
 	private _loadObject(url: string) {
-		// const loader = new CoreLoaderGeometry({url: url, format: this.pv.format as GeometryFormat}, this.scene(), this);
 		const loader = this._createLoader(url);
-
 		return this._loadWithLoader(loader);
-
-		// return new Promise((resolve) => {
-		// 	loader.load(
-		// 		(objects: Object3D[]) => {
-		// 			const new_objects = this._onLoad(objects);
-		// 			resolve(new_objects);
-		// 		},
-		// 		()=>{},
-		// 		(message: ErrorEvent) => {
-		// 			this._onError(message, url);
-		// 		}
-		// 	);
-		// });
 	}
 	protected _loadWithLoader(loader: BaseGeoLoaderHandler<O>) {
 		return loader.load({node: this});
 	}
-
-	// private _onLoad(objects: Object3D[]) {
-	// 	objects = objects.flat();
-
-	// 	for (let object of objects) {
-	// 		object.traverse((child) => {
-	// 			this._ensureGeometryHasIndex(child);
-	// 			child.matrixAutoUpdate = false;
-	// 		});
-	// 	}
-	// 	return objects;
-	// }
-	// private _onError(message: string, url: string) {
-	// 	this.states?.error.set(`could not load geometry from ${url} (${message})`);
-	// }
-
-	// private _ensureGeometryHasIndex(object: Object3D) {
-	// 	const mesh = object as Mesh;
-	// 	const geometry = mesh.geometry;
-	// 	if (geometry) {
-	// 		CoreGeometryIndexBuilder.createIndexIfNone(geometry as BufferGeometry);
-	// 	}
-	// }
 
 	static PARAM_CALLBACK_reload(node: BaseFileMultiSopNode<BaseGeoLoaderOutput, BaseFileMultiParamsConfig>) {
 		node._paramCallbackReload();

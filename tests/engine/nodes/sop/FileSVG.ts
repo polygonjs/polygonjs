@@ -13,11 +13,11 @@ async function withFile(path: string) {
 QUnit.test('SOP svg with tiger', async (assert) => {
 	const container = await withFile('models/svg/tiger.svg');
 	const core_content = container.coreContent()!;
-	assert.equal(container.objectsCount(), 152);
-	assert.equal(container.pointsCount(), 24292);
-	assert.deepEqual(container.objectsCountByType(), {Mesh: 152});
-	assert.equal(core_content.objects().length, 152);
-	assert.equal(core_content.pointsCount(), 24292);
+	assert.equal(container.objectsCount(), 466);
+	assert.equal(container.pointsCount(), 164050);
+	assert.deepEqual(container.objectsCountByType(), {Mesh: 466});
+	assert.equal(core_content.objects().length, 466);
+	assert.equal(core_content.pointsCount(), 164050);
 	const first_mesh = core_content.objectsWithGeo()[0];
 	assert.equal(first_mesh.children.length, 0);
 
@@ -27,11 +27,11 @@ QUnit.test('SOP svg with tiger', async (assert) => {
 QUnit.test('SOP svg with wolf', async (assert) => {
 	const container = await withFile('models/svg/wolf.svg');
 	const core_content = container.coreContent()!;
-	assert.equal(container.objectsCount(), 5);
-	assert.equal(container.pointsCount(), 1156);
-	assert.deepEqual(container.objectsCountByType(), {Mesh: 5});
-	assert.equal(core_content.objects().length, 5);
-	assert.equal(core_content.pointsCount(), 1156);
+	assert.equal(container.objectsCount(), 62);
+	assert.equal(container.pointsCount(), 43236);
+	assert.deepEqual(container.objectsCountByType(), {Mesh: 62});
+	assert.equal(core_content.objects().length, 62);
+	assert.equal(core_content.pointsCount(), 43236);
 	const first_mesh = core_content.objectsWithGeo()[0];
 	assert.equal(first_mesh.children.length, 0);
 
