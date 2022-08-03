@@ -26,7 +26,9 @@ export class SopCopyStamp extends BaseCopyStamp {
 				return this._point.index();
 			}
 		} else {
-			return this._globalIndex;
+			if (attribName == null || attribName == 'i') {
+				return this._globalIndex;
+			}
 		}
 	}
 }

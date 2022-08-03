@@ -3,7 +3,7 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {PolyScene} from '../../scene/PolyScene';
 
 export class BaseCopyStamp extends CoreGraphNode {
-	protected _globalIndex: number = 0;
+	protected _globalIndex: number | undefined;
 
 	constructor(scene: PolyScene) {
 		super(scene, 'CopyStamp');
@@ -22,7 +22,7 @@ export class BaseCopyStamp extends CoreGraphNode {
 		}
 	}
 
-	value(attribName?: string): AttribValue {
+	value(attribName?: string): AttribValue | undefined {
 		return this._globalIndex;
 	}
 }

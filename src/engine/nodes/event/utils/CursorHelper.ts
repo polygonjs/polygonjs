@@ -55,6 +55,7 @@ export class CursorHelper {
 	}
 	setCursorForGPU(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>, target: Vector2) {
 		this.setCursor(context, target);
+		target.y = 1 - target.y;
 	}
 
 	private setCursor(context: EventContext<MouseEvent | DragEvent | PointerEvent | TouchEvent>, target: Vector2) {

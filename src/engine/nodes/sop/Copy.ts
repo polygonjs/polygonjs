@@ -98,6 +98,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			return;
 		}
 		await this.cookWithTemplate(coreGroup0, coreGroup1);
+		this.stampNode().reset();
 	}
 
 	private _instancer = new CoreInstancer();
@@ -252,8 +253,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	// STAMP
 	//
 	//
-	stampValue(attrib_name?: string) {
-		return this.stampNode().value(attrib_name);
+	stampValue(attribName?: string) {
+		return this.stampNode().value(attribName);
 	}
 	stampNode() {
 		return (this._stampNode = this._stampNode || this._createStampNode());

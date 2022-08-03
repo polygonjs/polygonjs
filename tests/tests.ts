@@ -26,6 +26,7 @@ import './engine/expressions/methods/ceil';
 import './engine/expressions/methods/centroid';
 import './engine/expressions/methods/ch';
 import './engine/expressions/methods/copRes';
+import './engine/expressions/methods/copy';
 import './engine/expressions/methods/cos';
 import './engine/expressions/methods/easing';
 import './engine/expressions/methods/floor';

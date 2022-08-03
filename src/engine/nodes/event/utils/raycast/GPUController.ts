@@ -24,8 +24,8 @@ interface RestoreContext {
 }
 
 export class RaycastGPUController extends BaseRaycastController {
-	private _resolved_material: Material | null = null;
-	private _restore_context: RestoreContext = {
+	private _resolvedMaterial: Material | null = null;
+	private _restoreContext: RestoreContext = {
 		scene: {
 			overrideMaterial: null,
 		},
@@ -49,25 +49,6 @@ export class RaycastGPUController extends BaseRaycastController {
 			this._cursor.toArray(this._cursorArray);
 			this._node.p.mouse.set(this._cursorArray);
 		}
-		// const canvas = context.viewer?.canvas();
-		// if (!(canvas && context.event)) {
-		// 	return;
-		// }
-
-		// if (
-		// 	context.event instanceof MouseEvent ||
-		// 	context.event instanceof DragEvent ||
-		// 	context.event instanceof PointerEvent
-		// ) {
-		// 	this._mouse.x = context.event.offsetX / canvas.offsetWidth;
-		// 	this._mouse.y = 1 - context.event.offsetY / canvas.offsetHeight;
-		// 	this._mouse.toArray(this._mouseArray);
-		// 	if (isBooleanTrue(this._node.pv.tmouse)) {
-		// 		this._node.p.mouse.set(this._mouseArray);
-		// 	}
-		// } else {
-		// 	console.warn('event type not implemented');
-		// }
 	}
 
 	processEvent(context: EventContext<MouseEvent>) {
@@ -104,12 +85,12 @@ export class RaycastGPUController extends BaseRaycastController {
 		if (!renderer) {
 			return;
 		}
-		this._modify_scene_and_renderer(scene, renderer);
+		this._modifySceneAndRenderer(scene, renderer);
 		renderer.setRenderTarget(this._renderTarget);
 		renderer.clear();
 		renderer.render(scene, camera);
 		renderer.setRenderTarget(null);
-		this._restore_scene_and_renderer(scene, renderer);
+		this._restoreSceneAndRenderer(scene, renderer);
 
 		// read result
 		renderer.readRenderTargetPixels(
@@ -132,40 +113,43 @@ export class RaycastGPUController extends BaseRaycastController {
 		} else {
 			this._node.triggerMiss(context);
 		}
-		// }
 	}
 
-	private _modify_scene_and_renderer(scene: Scene, renderer: WebGLRenderer) {
-		this._restore_context.scene.overrideMaterial = scene.overrideMaterial;
-		this._restore_context.renderer.outputEncoding = renderer.outputEncoding;
-		this._restore_context.renderer.toneMapping = renderer.toneMapping;
+	private _modifySceneAndRenderer(scene: Scene, renderer: WebGLRenderer) {
+		this._restoreContext.scene.overrideMaterial = scene.overrideMaterial;
+		this._restoreContext.renderer.outputEncoding = renderer.outputEncoding;
+		this._restoreContext.renderer.toneMapping = renderer.toneMapping;
 
-		if (this._resolved_material) {
-			scene.overrideMaterial = this._resolved_material;
+		if (isBooleanTrue(this._node.pv.overrideMaterial)) {
+			if (this._resolvedMaterial == null) {
+				this._updateMaterial();
+			}
+			scene.overrideMaterial = this._resolvedMaterial;
 		}
+
 		renderer.toneMapping = NoToneMapping;
 		renderer.outputEncoding = LinearEncoding;
 	}
-	private _restore_scene_and_renderer(scene: Scene, renderer: WebGLRenderer) {
-		scene.overrideMaterial = this._restore_context.scene.overrideMaterial;
-		renderer.outputEncoding = this._restore_context.renderer.outputEncoding;
-		renderer.toneMapping = this._restore_context.renderer.toneMapping;
+	private _restoreSceneAndRenderer(scene: Scene, renderer: WebGLRenderer) {
+		scene.overrideMaterial = this._restoreContext.scene.overrideMaterial;
+		renderer.outputEncoding = this._restoreContext.renderer.outputEncoding;
+		renderer.toneMapping = this._restoreContext.renderer.toneMapping;
 	}
 
-	update_material() {
+	private _updateMaterial() {
 		const node = this._node.pv.material.nodeWithContext(NodeContext.MAT, this._node.states.error);
 		if (node) {
 			if (node.context() == NodeContext.MAT) {
-				this._resolved_material = (node as BaseMatNodeType).material;
+				this._resolvedMaterial = (node as BaseMatNodeType).material;
 			} else {
-				this._node.states.error.set('target is not an obj');
+				this._node.states.error.set('material is not a mat node');
 			}
 		} else {
-			this._node.states.error.set('no target found');
+			this._node.states.error.set('no override material found');
 		}
 	}
 
-	static PARAM_CALLBACK_update_material(node: RaycastEventNode) {
-		node.gpuController.update_material();
+	static PARAM_CALLBACK_updateMaterial(node: RaycastEventNode) {
+		node.gpuController._updateMaterial();
 	}
 }

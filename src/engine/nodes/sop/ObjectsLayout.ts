@@ -16,6 +16,8 @@ class ObjectsLayoutSopParamConfig extends NodeParamsConfig {
 	rowHeight = ParamConfig.FLOAT(DEFAULT.rowHeight, {range: [0, 10]});
 	/** @param padding between objects */
 	padding = ParamConfig.VECTOR2(DEFAULT.padding.toArray());
+	/** @param add row attribute */
+	addRowAttrib = ParamConfig.BOOLEAN(DEFAULT.addRowAttrib);
 }
 const ParamsConfig = new ObjectsLayoutSopParamConfig();
 

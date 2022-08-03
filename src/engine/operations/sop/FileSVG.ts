@@ -46,13 +46,18 @@ export class FileSVGSopOperation extends BaseSopOperation {
 	override async cook(input_contents: CoreGroup[], params: SvgSopParams): Promise<CoreGroup> {
 		const loader = new CoreSVGLoader(params.url, this._node);
 
-		const group = await loader.load(params);
+		try {
+			const group = await loader.load(params);
 
-		for (let child of group.children) {
-			this._ensureGeometryHasIndex(child);
+			for (let child of group.children) {
+				this._ensureGeometryHasIndex(child);
+			}
+
+			return this.createCoreGroupFromObjects([...group.children]);
+		} catch (err) {
+			this.states?.error.set(`fail to load SVG (${(err as Error).message})`);
+			return this.createCoreGroupFromObjects([]);
 		}
-
-		return this.createCoreGroupFromObjects([...group.children]);
 	}
 
 	private _ensureGeometryHasIndex(object: Object3D) {

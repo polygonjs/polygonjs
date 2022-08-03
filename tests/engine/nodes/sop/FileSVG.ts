@@ -1,10 +1,13 @@
 import {BufferGeometry} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 
+function assetPath(path: string) {
+	return `${ASSETS_ROOT}/${path}`;
+}
 async function withFile(path: string) {
 	const geo1 = window.geo1;
 	const fileSVG1 = geo1.createNode('fileSVG');
-	fileSVG1.p.url.set(`${ASSETS_ROOT}/${path}`);
+	fileSVG1.p.url.set(assetPath(path));
 
 	const container = await fileSVG1.compute();
 	return container;
@@ -37,4 +40,22 @@ QUnit.test('SOP svg with wolf', async (assert) => {
 
 	const first_geometry = first_mesh.geometry as BufferGeometry;
 	assert.ok(first_geometry.index, 'geometry has index');
+});
+
+QUnit.test('SOP svg can error and still be usable', async (assert) => {
+	const geo1 = window.geo1;
+	const fileSVG1 = geo1.createNode('fileSVG');
+
+	fileSVG1.p.url.set(assetPath('models/svg/doesnotexist.svg'));
+	let container = await fileSVG1.compute();
+	assert.equal(container.objectsCount(), 0);
+	assert.equal(
+		fileSVG1.states.error.message(),
+		'fail to load SVG (fetch for "https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/models/svg/doesnotexist.svg" responded with 404: )'
+	);
+
+	fileSVG1.p.url.set(assetPath('models/svg/wolf.svg'));
+	container = await fileSVG1.compute();
+	assert.equal(container.objectsCount(), 60);
+	assert.notOk(fileSVG1.states.error.message());
 });

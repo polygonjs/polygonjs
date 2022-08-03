@@ -117,7 +117,12 @@ class RaycastParamsConfig extends NodeParamsConfig {
 	//
 	//
 	/** @param the material to use on the scene for GPU detection */
-	overrideMaterial = ParamConfig.BOOLEAN(0, visible_for_gpu());
+	overrideMaterial = ParamConfig.BOOLEAN(0, {
+		callback: (node: BaseNodeType, param: BaseParamType) => {
+			RaycastGPUController.PARAM_CALLBACK_updateMaterial(node as RaycastEventNode);
+		},
+		...visible_for_gpu(),
+	});
 	/** @param the material to use on the scene for GPU detection */
 	material = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
@@ -126,7 +131,7 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		dependentOnFoundNode: false,
 		computeOnDirty: true,
 		callback: (node: BaseNodeType, param: BaseParamType) => {
-			RaycastGPUController.PARAM_CALLBACK_update_material(node as RaycastEventNode);
+			RaycastGPUController.PARAM_CALLBACK_updateMaterial(node as RaycastEventNode);
 		},
 		...visible_for_gpu({overrideMaterial: 1}),
 	});

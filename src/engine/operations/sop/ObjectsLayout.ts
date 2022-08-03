@@ -1,13 +1,16 @@
+import {CoreObject} from './../../../core/geometry/Object';
 import {Vector2, Vector3, Box3} from 'three';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {isBooleanTrue} from '../../../core/Type';
 
 interface ObjectsLayoutSopParams extends DefaultOperationParams {
 	maxLayoutWidth: number;
 	rowHeight: number;
 	padding: Vector2;
+	addRowAttrib: boolean;
 }
 
 const currentPos = new Vector2(0, 0);
@@ -20,6 +23,7 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 		maxLayoutWidth: 10,
 		rowHeight: 1,
 		padding: new Vector2(0, 0),
+		addRowAttrib: false,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<'objectsLayout'> {
@@ -30,6 +34,7 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 		const objects = inputCoreGroups[0].objects();
 		currentPos.set(0, 0);
 		maxPos.set(0, 0);
+		let rowIndex = 0;
 		for (let object of objects) {
 			// get size before scale adjustment
 			object.updateMatrix();
@@ -56,11 +61,15 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 			if (currentPos.x > params.maxLayoutWidth) {
 				currentPos.x = boxSize.x;
 				currentPos.y -= boxSize.y;
+				rowIndex++;
 			}
 
 			// move current object
 			object.position.x = currentPos.x - boxSize.x * 0.5;
 			object.position.y = currentPos.y - boxSize.y * 0.5;
+			if (isBooleanTrue(params.addRowAttrib)) {
+				CoreObject.addAttribute(object, 'row', rowIndex);
+			}
 
 			maxPos.x = Math.max(maxPos.x, object.position.x + boxSize.x * 0.5);
 			maxPos.y = Math.min(maxPos.y, object.position.y - boxSize.y * 0.5);

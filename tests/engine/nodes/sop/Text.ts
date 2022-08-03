@@ -129,7 +129,10 @@ QUnit.test('sop/text with a non existing font', async (assert) => {
 
 	let container = await text1.compute();
 	assert.ok(container, 'container exists');
-	assert.equal(text1.states.error.message(), 'count not load font (/fonts/doesnotexist.ttf)');
+	assert.equal(
+		text1.states.error.message(),
+		'could not load font (/fonts/doesnotexist.ttf, reason:fetch for "http://localhost:5000/fonts/doesnotexist.ttf" responded with 406: Not Acceptable)'
+	);
 	assert.equal(container.pointsCount(), 0);
 });
 

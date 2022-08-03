@@ -68,7 +68,6 @@ export class CopyExpression extends BaseMethod {
 				if (isCopyNode(node)) {
 					value = (node as CopySopNode).stampValue(attributeName);
 				}
-
 				if (value == null) {
 					value = defaultValue;
 				}

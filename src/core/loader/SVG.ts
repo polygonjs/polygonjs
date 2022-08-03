@@ -66,14 +66,21 @@ export class CoreSVGLoader extends CoreBaseLoader {
 			// }
 			const url = await this._urlToLoad();
 
-			loader.load(url, (data) => {
-				try {
-					const group = this._onLoaded(data, options);
-					resolve(group);
-				} catch (err) {
+			loader.load(
+				url,
+				(data) => {
+					try {
+						const group = this._onLoaded(data, options);
+						resolve(group);
+					} catch (err) {
+						reject(err);
+					}
+				},
+				undefined,
+				(err) => {
 					reject(err);
 				}
-			});
+			);
 		});
 	}
 	parse(text: string, options: CoreSVGLoaderOptions) {

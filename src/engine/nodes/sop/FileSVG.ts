@@ -72,8 +72,8 @@ export class FileSVGSopNode extends TypedSopNode<FileSVGSopParamsConfig> {
 	private _operation: FileSVGSopOperation | undefined;
 	override async cook(input_contents: CoreGroup[]) {
 		this._operation = this._operation || new FileSVGSopOperation(this.scene(), this.states, this);
-		const core_group = await this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = await this._operation.cook(input_contents, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 
 	static PARAM_CALLBACK_reload(node: FileSVGSopNode) {

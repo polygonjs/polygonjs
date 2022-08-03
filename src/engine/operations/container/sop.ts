@@ -54,9 +54,9 @@ export class SopOperationContainer extends BaseOperationContainer<NodeContext.SO
 		const operationInputContents: CoreGroup[] = [];
 
 		// process node inputs
-		const node_inputs_map = operation_inputs_map.get(this);
-		if (node_inputs_map) {
-			node_inputs_map.forEach((node_input_index: number, operation_input_index: number) => {
+		const nodeInputsMap = operation_inputs_map.get(this);
+		if (nodeInputsMap) {
+			nodeInputsMap.forEach((node_input_index: number, operation_input_index: number) => {
 				operationInputContents[operation_input_index] = input_contents[node_input_index];
 			});
 		}

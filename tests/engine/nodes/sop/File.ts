@@ -344,5 +344,5 @@ QUnit.test('SOP file nodes work with their default url', async (assert) => {
 	await testFileType(SopTypeFile.FILE_PDB, 25);
 	await testFileType(SopTypeFile.FILE_PLY, 855);
 	await testFileType(SopTypeFile.FILE_STL, 154059, 0);
-	await testFileType(SopTypeFile.FILE_SVG, 48118);
+	await testFileType(SopTypeFile.FILE_SVG, 164050);
 });
