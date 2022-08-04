@@ -35,7 +35,7 @@ abstract class VolumeMatNode extends TypedMatNode<VolumeMaterial, VolumeParamsCo
 export class VolumeController {
 	constructor(private node: VolumeMatNode) {}
 
-	private static _object_bbox = new Box3();
+	private static _objectBbox = new Box3();
 	static render_hook(
 		renderer: WebGLRenderer,
 		scene: Scene,
@@ -46,14 +46,14 @@ export class VolumeController {
 		object: Object3D
 	) {
 		if (object) {
-			this._object_bbox.setFromObject(object);
+			this._objectBbox.setFromObject(object);
 			const shader_material = material as ShaderMaterial;
-			shader_material.uniforms.u_BoundingBoxMin.value.copy(this._object_bbox.min);
-			shader_material.uniforms.u_BoundingBoxMax.value.copy(this._object_bbox.max);
+			shader_material.uniforms.u_BoundingBoxMin.value.copy(this._objectBbox.min);
+			shader_material.uniforms.u_BoundingBoxMax.value.copy(this._objectBbox.max);
 		}
 	}
 
-	update_uniforms_from_params() {
+	updateUniformsFromParams() {
 		const shaderMaterial = this.node.material as ShaderMaterialWithCustomMaterials;
 		const uniforms = shaderMaterial.uniforms;
 		if (!uniforms) {

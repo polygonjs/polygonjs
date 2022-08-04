@@ -178,6 +178,10 @@ export class ScrollTriggerEventNode extends TypedEventNode<ScrollTriggerParamsCo
 			return;
 		}
 
+		// If the scroller element is not found, this function returns undefined,
+		// and then the scroll container will be assumed to be the window by gsap.
+		// This can be handy in cases where we want to use a container in the editor,
+		// but want to use the window once deployed
 		const _getScroller = () => {
 			if (isBooleanTrue(this.pv.useViewport)) {
 				return;

@@ -42,7 +42,6 @@ import {WebGLRenderer} from 'three';
 import {Scene} from 'three';
 import {Camera} from 'three';
 import {BufferGeometry} from 'three';
-import {Geometry} from '../../modules/three/examples/jsm/deprecated/Geometry';
 import {Group} from 'three';
 import {ShaderAssemblerMaterial} from '../../engine/nodes/gl/code/assemblers/materials/_BaseMaterial';
 import {
@@ -55,7 +54,7 @@ export type RenderHook = (
 	renderer: WebGLRenderer,
 	scene: Scene,
 	camera: Camera,
-	geometry: BufferGeometry | Geometry,
+	geometry: BufferGeometry,
 	material: Material,
 	group: Group | null // it's only 'Group', and not 'Group|null' in threejs types, but got null sometimes
 ) => void;
@@ -63,7 +62,7 @@ export type RenderHookWithObject = (
 	renderer: WebGLRenderer,
 	scene: Scene,
 	camera: Camera,
-	geometry: BufferGeometry | Geometry,
+	geometry: BufferGeometry,
 	material: Material,
 	group: Group | null, // it's only 'Group', and not 'Group|null' in threejs types, but got null sometimes
 	object: Object3D
@@ -80,7 +79,7 @@ const EMPTY_RENDER_HOOK: RenderHook = (
 	renderer: WebGLRenderer,
 	scene: Scene,
 	camera: Camera,
-	geometry: BufferGeometry | Geometry,
+	geometry: BufferGeometry,
 	material: Material,
 	group: Group | null
 ) => {};
@@ -127,7 +126,7 @@ export class CoreMaterial {
 					renderer: WebGLRenderer,
 					scene: Scene,
 					camera: Camera,
-					geometry: BufferGeometry | Geometry,
+					geometry: BufferGeometry,
 					material: Material,
 					group: Group | null
 				) => {

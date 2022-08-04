@@ -194,16 +194,16 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (!this.compileAllowed()) {
 			return;
 		}
-		const output_nodes: BaseGlNodeType[] = GlNodeFinder.findOutputNodes(this.currentGlParentNode());
-		if (output_nodes.length == 0) {
+		const outputNodes: BaseGlNodeType[] = GlNodeFinder.findOutputNodes(this.currentGlParentNode());
+		if (outputNodes.length == 0) {
 			this.currentGlParentNode().states.error.set('one output node is required');
 		}
-		if (output_nodes.length > 1) {
+		if (outputNodes.length > 1) {
 			this.currentGlParentNode().states.error.set('only one output node allowed');
 		}
-		const varying_nodes = GlNodeFinder.findVaryingNodes(this.currentGlParentNode());
-		const root_nodes = output_nodes.concat(varying_nodes);
-		this.set_root_nodes(root_nodes);
+		const varyingNodes = GlNodeFinder.findVaryingNodes(this.currentGlParentNode());
+		const rootNodes = outputNodes.concat(varyingNodes);
+		this.set_root_nodes(rootNodes);
 		this._update_shaders();
 
 		const scene = this.currentGlParentNode().scene();

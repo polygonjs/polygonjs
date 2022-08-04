@@ -8,6 +8,7 @@ import {ShaderAssemblerPhysical} from '../../../nodes/gl/code/assemblers/materia
 import {ShaderAssemblerPoints} from '../../../nodes/gl/code/assemblers/materials/Points';
 import {ShaderAssemblerLine} from '../../../nodes/gl/code/assemblers/materials/Line';
 import {ShaderAssemblerParticles} from '../../../nodes/gl/code/assemblers/particles/Particles';
+import {ShaderAssemblerRayMarching} from '../../../nodes/gl/code/assemblers/materials/RayMarching';
 import {ShaderAssemblerTexture} from '../../../nodes/gl/code/assemblers/textures/Texture';
 import {ShaderAssemblerVolume} from '../../../nodes/gl/code/assemblers/materials/Volume';
 import {ShaderAssemblerCustomMeshDepthForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
@@ -54,6 +55,10 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 		controller: GlAssemblerController<ShaderAssemblerLine>;
 		assembler: typeof ShaderAssemblerLine;
 	};
+	[AssemblerName.GL_RAYMARCHING]: {
+		controller: GlAssemblerController<ShaderAssemblerRayMarching>;
+		assembler: typeof ShaderAssemblerRayMarching;
+	};
 	[AssemblerName.GL_TEXTURE]: {
 		controller: GlAssemblerController<ShaderAssemblerTexture>;
 		assembler: typeof ShaderAssemblerTexture;
@@ -94,6 +99,11 @@ export class AllAssemblersRegister {
 		poly.assemblersRegister.register(AssemblerName.GL_PARTICLES, GlAssemblerController, ShaderAssemblerParticles);
 		poly.assemblersRegister.register(AssemblerName.GL_POINTS, GlAssemblerController, ShaderAssemblerPoints);
 		poly.assemblersRegister.register(AssemblerName.GL_LINE, GlAssemblerController, ShaderAssemblerLine);
+		poly.assemblersRegister.register(
+			AssemblerName.GL_RAYMARCHING,
+			GlAssemblerController,
+			ShaderAssemblerRayMarching
+		);
 		poly.assemblersRegister.register(AssemblerName.GL_TEXTURE, GlAssemblerController, ShaderAssemblerTexture);
 		poly.assemblersRegister.register(AssemblerName.GL_VOLUME, GlAssemblerController, ShaderAssemblerVolume);
 	}
