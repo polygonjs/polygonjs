@@ -15,6 +15,8 @@ export const COMPONENTS_BY_GL_TYPE = {
 	[GlConnectionPointType.VEC4]: ['x', 'y', 'z', 'w'],
 	[GlConnectionPointType.SAMPLER_2D]: undefined,
 	[GlConnectionPointType.SSS_MODEL]: undefined,
+	[GlConnectionPointType.SDF_CONTEXT]: undefined,
+	[GlConnectionPointType.SDF_MATERIAL]: undefined,
 };
 export class ThreeToGl {
 	static glType(glType: GlConnectionPointType, value: string) {

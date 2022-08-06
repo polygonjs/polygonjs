@@ -17,10 +17,12 @@ import FRAGMENT from '../../../gl/raymarching/frag.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../gl/raymarching/uniforms';
 
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
-	[ShaderName.VERTEX, '// start builder body code'],
+	// [ShaderName.VERTEX, '// start builder body code'],
 	[ShaderName.FRAGMENT, '// start builder body code'],
 ]);
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([[ShaderName.FRAGMENT, []]]);
+
+const SDF_CONTEXT_INPUT_NAME = GlConnectionPointType.SDF_CONTEXT;
 
 export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 	override templateShader() {
@@ -60,7 +62,7 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 	// }
 	override add_output_inputs(output_child: OutputGlNode) {
 		output_child.io.inputs.setNamedInputConnectionPoints([
-			new GlConnectionPoint('sdf', GlConnectionPointType.FLOAT, 1),
+			new GlConnectionPoint(SDF_CONTEXT_INPUT_NAME, GlConnectionPointType.SDF_CONTEXT, 'SDFContext(0.0, 0)'),
 		]);
 	}
 	static override create_globals_node_output_connections() {
@@ -82,7 +84,7 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 	override create_shader_configs(): ShaderConfig[] {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, [], []),
-			new ShaderConfig(ShaderName.FRAGMENT, [/*'color', */ 'sdf'], [ShaderName.VERTEX]),
+			new ShaderConfig(ShaderName.FRAGMENT, [/*'color', */ SDF_CONTEXT_INPUT_NAME], [ShaderName.VERTEX]),
 		];
 	}
 	static override create_variable_configs() {
@@ -94,8 +96,8 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 			// new VariableConfig('color', {
 			// 	prefix: 'BUILDER_color.xyz = ',
 			// }),
-			new VariableConfig('sdf', {
-				prefix: 'sdf = ',
+			new VariableConfig(SDF_CONTEXT_INPUT_NAME, {
+				prefix: 'sdfContext = ',
 			}),
 		];
 	}
