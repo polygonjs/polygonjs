@@ -28,10 +28,26 @@ The API is designed to be very simple. Here is how you create a minimal scene wi
 
 ```html
 <script type="module">
-	// import from the CDN
-	import {PolyScene} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
-	// or import from the npm module
+	// import from the CDN with all nodes
+	import {PolyScene, AllRegister} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
+	AllRegister.registerAll();
+	// or import from the npm module. This is the recommended method,
+	// since you can then import only what you need, which will create a much smaller bundle.
 	// import {PolyScene} from '@polygonjs/polygonjs/dist/src/engine/scene/PolyScene';
+	// import {Poly} from '@polygonjs/polygonjs/dist/src/engine/Poly';
+	// import the nodes you need, one by one (NOTE: this will be auto generated when using the visual editor. See more on https://polygonjs.com )
+	// import {GeoObjNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/obj/Geo'
+	// Poly.registerNode(GeoObjNode);
+	// import {BoxSopNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/sop/Box'
+	// Poly.registerNode(BoxSopNode);
+	// import {HemisphereLightObjNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/obj/HemisphereLight'
+	// Poly.registerNode(HemisphereLightObjNode);
+	// import {PerspectiveCameraObjNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/obj/PerspectiveCamera'
+	// Poly.registerNode(PerspectiveCameraObjNode);
+	// import {EventsNetworkSopNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/sop/EventsNetwork'
+	// Poly.registerNode(EventsNetworkSopNode);
+	// import {CameraOrbitControlsEventNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/event/CameraOrbitControls'
+	// Poly.registerNode(CameraOrbitControlsEventNode);
 
 	// create a scene
 	const scene = new PolyScene();
@@ -64,7 +80,9 @@ which should give you this (you can try it on [this page](https://polygonjs.com/
 Let's now look at an example that demonstrates how powerful a node-based engine can be:
 
 ```javascript
-import {PolyScene} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
+import {PolyScene, AllRegister} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
+// import all nodes
+AllRegister.registerAll();
 // create a scene
 const scene = new PolyScene();
 const rootNode = scene.root();
@@ -110,7 +128,7 @@ const orbitsControls = events1.createNode('cameraOrbitControls');
 perspectiveCamera1.p.controls.setNode(orbitsControls);
 
 const element = document.getElementById('app');
-perspectiveCamera1.createViewer({element);
+perspectiveCamera1.createViewer({element});
 ```
 
 And we can also create some html inputs:
