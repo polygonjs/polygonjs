@@ -4,7 +4,7 @@
  *
  */
 import {TypedGlNode} from './_Base';
-
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 // list of globals
 // https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)
 // gl_PointCoord
@@ -18,7 +18,7 @@ const ParamsConfig = new GlobalsGlParamsConfig();
 export class GlobalsGlNode extends TypedGlNode<GlobalsGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'globals';
+		return GlType.GLOBALS;
 	}
 
 	override initializeNode() {

@@ -1,8 +1,9 @@
+import {SDFMaterialGlNode} from './SDFMaterial';
 /**
  * Creates an SDF context
  *
  */
-
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -13,13 +14,13 @@ const INPUT_NAME = {
 	SDF: 'sdf',
 	MATERIAL: 'material',
 };
-const OUTPUT_NAME = 'SDFContext';
+const OUTPUT_NAME = GlType.SDF_CONTEXT;
 class SDFContextGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SDFContextGlParamsConfig();
 export class SDFContextGlNode extends TypedGlNode<SDFContextGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFContext';
+		return GlType.SDF_CONTEXT;
 	}
 
 	override initializeNode() {
@@ -45,11 +46,16 @@ export class SDFContextGlNode extends TypedGlNode<SDFContextGlParamsConfig> {
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const sdf = ThreeToGl.float(this.variableForInput(INPUT_NAME.SDF));
-		const mat = ThreeToGl.integer(this.variableForInput(INPUT_NAME.MATERIAL));
+		// const mat = ThreeToGl.integer(this.variableForInput(INPUT_NAME.MATERIAL));
+		const materialNode = this.io.inputs.input(1);
+		let matId: number | string = -1;
+		if (materialNode && materialNode instanceof SDFMaterialGlNode) {
+			matId = materialNode.materialIdName();
+		}
 
 		const sdfContext = this.glVarName(OUTPUT_NAME);
 
-		const body_line = `SDFContext ${sdfContext} = SDFContext(${sdf}, ${mat})`;
+		const body_line = `SDFContext ${sdfContext} = SDFContext(${sdf}, ${matId})`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }

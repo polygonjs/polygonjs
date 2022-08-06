@@ -1,3 +1,4 @@
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 /**
  * this node works alongside [gl/varyingRead](/docs/nodes/gl/varyingRead) and they allow a finer grained control over
  * what is computed in the vertex or the fragment shader
@@ -33,8 +34,8 @@ class VaryingWriteGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new VaryingWriteGlParamsConfig();
 export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'varyingWrite'> {
-		return 'varyingWrite';
+	static override type(): Readonly<GlType.VARYING_WRITE> {
+		return GlType.VARYING_WRITE;
 	}
 	static readonly INPUT_NAME = 'vertex';
 

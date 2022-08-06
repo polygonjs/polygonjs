@@ -32,7 +32,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		return this._uniforms;
 	}
 
-	update_fragment_shader() {
+	updateFragmentShader() {
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
 		for (let shader_name of this.shaderNames()) {
@@ -42,8 +42,8 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			}
 		}
 		if (this._root_nodes.length > 0) {
-			this.build_code_from_nodes(this._root_nodes);
-			this._build_lines();
+			this.buildCodeFromNodes(this._root_nodes);
+			this._buildLines();
 		}
 
 		this._uniforms = this._uniforms || {};

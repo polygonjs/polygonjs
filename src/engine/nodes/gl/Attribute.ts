@@ -1,3 +1,4 @@
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 /**
  * Allows to feed a vertex attribute into the shader
  *
@@ -15,7 +16,6 @@ export const ATTRIBUTE_NODE_AVAILABLE_GL_TYPES = [
 ];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {GlNodeType} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 class AttributeGlParamsConfig extends NodeParamsConfig {
@@ -38,8 +38,8 @@ const ParamsConfig = new AttributeGlParamsConfig();
 
 export class AttributeGlNode extends TypedGlNode<AttributeGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<GlNodeType.ATTRIBUTE> {
-		return GlNodeType.ATTRIBUTE;
+	static override type(): Readonly<GlType.ATTRIBUTE> {
+		return GlType.ATTRIBUTE;
 	}
 	static readonly INPUT_NAME = 'in';
 	static readonly OUTPUT_NAME = 'val';

@@ -7,14 +7,15 @@ precision highp int;
 #include <lights_pars_begin>
 #include <lights_physical_pars_fragment>
 
-#define DIR_LIGHTS_COUNT 1
-#define MAX_STEPS 100
-#define MAX_DIST 100.
-#define SURF_DIST .01
+// --- applyMaterial constants definition
+
+uniform int MAX_STEPS;
+uniform float MAX_DIST;
+uniform float SURF_DIST;
 #define ZERO 0
 
-uniform vec3 u_BoundingBoxMin;
-uniform vec3 u_BoundingBoxMax;
+// uniform vec3 u_BoundingBoxMin;
+// uniform vec3 u_BoundingBoxMax;
 
 
 varying vec3 vPw;
@@ -40,38 +41,12 @@ int DefaultSDFMaterial(){
 
 
 
-// const int MAT_FLOOR=1;
-// const int MAT_BALL1=2;
-// const int MAT_BALL2=3;
-
-
-// vec2 sphere1(vec3 p){
-// 	vec4 s1 = vec4(0, 0.4, 0, 0.2);
-// 	float sphereDist1 = length(p-s1.xyz)-s1.w;
-// 	return vec2(sphereDist1, MAT_BALL1);
-// }
-// vec2 sphere2(vec3 p){
-// 	vec4 s2 = vec4(0.55, 0.35, 0, 0.2);
-// 	float sphereDist2 = length(p-s2.xyz)-s2.w;
-// 	return vec2(sphereDist2, MAT_BALL1);
-// }
-// vec2 sphere3(vec3 p){
-// 	vec4 s3 = vec4(0.45, 0.65, .50, 0.15);
-// 	float sphereDist3 = length(p-s3.xyz)-s3.w;
-// 	return vec2(sphereDist3, MAT_BALL2);
-// }
-// vec2 groundPlane(vec3 p){
-// 	float planeDist = p.y;
-// 	return vec2(planeDist, MAT_FLOOR);
-// }
-
 SDFContext GetDist(vec3 p) {
 	SDFContext sdfContext = SDFContext(0.0, 0);
 
-	// start builder body code
+	// start GetDist builder body code
 	
 
-	// int mat = 1;
 	return sdfContext;
 }
 
@@ -134,41 +109,23 @@ vec3 GetLight(vec3 p) {
 // https://iquilezles.org/articles/rmshadows
 float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 {
-    float res = 1.0;
-    float ph = 1e20;
-    for( float t=mint; t<maxt; )
-    {
-        float h = GetDist(ro + rd*t).d;
-        if( h<0.001 )
-            return 0.0;
-        float y = h*h/(2.0*ph);
-        float d = sqrt(h*h-y*y);
-        res = min( res, k*d/max(0.0,t-y) );
-        ph = h;
-        t += h;
-    }
-    return res;
-}
-
-vec3 applyMat(vec3 p, vec3 col, int mat){
-	// vec3 lig = normalize( -u_DirectionalLightDirection );
-	col *= vec3(1.0,1.0,1.0);
-
-	if(mat == _RAYMARCHED_MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col *= applySDFMaterial_962();
+	float res = 1.0;
+	float ph = 1e20;
+	for( float t=mint; t<maxt; )
+	{
+		float h = GetDist(ro + rd*t).d;
+		if( h<0.001 )
+			return 0.0;
+		float y = h*h/(2.0*ph);
+		float d = sqrt(h*h-y*y);
+		res = min( res, k*d/max(0.0,t-y) );
+		ph = h;
+		t += h;
 	}
-	// if(mat==MAT_FLOOR) {
-	// 	col *= vec3(1.0,.2,.4);
-	// 	// col *= calcSoftshadow( p, lig, 0.02, 2.5, 0.1 );
-	// } else if(mat==MAT_BALL1) {
-	// 	col *= vec3(0,.8,.8);
-	// 	// col *= calcSoftshadow( p, lig, 0.02, 2.5, 0.1 );
-	// } else if(mat==MAT_BALL2) {
-	// 	col *= vec3(0,.0,.8);
-	// 	// col *= calcSoftshadow( p, lig, 0.02, 2.5, 0.1 );
-	// }
-	return col;
+	return res;
 }
+
+// --- applyMaterial function definition
 
 vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	vec3 p = rayOrigin + rayDir * sdfContext.d;
@@ -180,7 +137,7 @@ vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	
 	vec3 diffuse = GetLight(p);
 
-	vec3 col = applyMat(p, diffuse, sdfContext.matId);
+	vec3 col = applyMaterial(p, diffuse, sdfContext.matId);
 		
 	// gamma
 	col = pow( col, vec3(0.4545) ); 

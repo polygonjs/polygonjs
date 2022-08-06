@@ -3,6 +3,7 @@
  *
  *
  */
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -13,7 +14,7 @@ const ParamsConfig = new OutputGlParamsConfig();
 export class OutputGlNode extends TypedGlNode<OutputGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'output';
+		return GlType.OUTPUT;
 	}
 
 	override initializeNode() {

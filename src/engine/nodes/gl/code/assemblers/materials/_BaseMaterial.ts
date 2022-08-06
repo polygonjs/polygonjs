@@ -99,7 +99,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (class_by_custom_name) {
 			class_by_custom_name.forEach(
 				(assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
-					if (this._code_builder) {
+					if (this._codeBuilder) {
 						let assembler: ShaderAssemblerMaterial | undefined =
 							this._assemblersByCustomName.get(custom_name);
 						if (!assembler) {
@@ -109,7 +109,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 						assembler._setAdditionalTextureUniforms(this._additionalTextureUniforms);
 						assembler.set_root_nodes(this._root_nodes);
-						assembler.set_param_configs_owner(this._code_builder);
+						assembler.set_param_configs_owner(this._codeBuilder);
 						assembler.set_shader_configs(this.shaderConfigs());
 						assembler.set_variable_configs(this.variable_configs());
 
@@ -204,24 +204,8 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		const varyingNodes = GlNodeFinder.findVaryingNodes(this.currentGlParentNode());
 		const rootNodes = outputNodes.concat(varyingNodes);
 		this.set_root_nodes(rootNodes);
-		this._update_shaders();
-
-		const scene = this.currentGlParentNode().scene();
-		const vertexShader = this._shaders_by_name.get(ShaderName.VERTEX);
-		const fragmentShader = this._shaders_by_name.get(ShaderName.FRAGMENT);
-		if (vertexShader && fragmentShader) {
-			const processedFragmentShader = this.processFilterFragmentShader(fragmentShader);
-			this._onBeforeCompileData = {
-				vertexShader,
-				fragmentShader: processedFragmentShader,
-				paramConfigs: this.param_configs(),
-				additionalTextureUniforms: this._additionalTextureUniforms,
-				timeDependent: this.uniformsTimeDependent(),
-				resolutionDependent: this.uniformsResolutionDependent(),
-			};
-			assignOnBeforeCompileDataAndFunction(scene, material, this._onBeforeCompileData);
-			material.needsUpdate = true;
-		}
+		this.updateShaders();
+		this.prepareOnBeforeCompileData(material);
 
 		// const material = await this._assembler.get_material();
 		// if (material) {
@@ -246,20 +230,39 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// this.createSpareParameters();
 	}
-	private _update_shaders() {
-		this._shaders_by_name = new Map();
-		this._lines = new Map();
-		for (let shader_name of this.shaderNames()) {
-			const template = this._template_shader_for_shader_name(shader_name);
+	prepareOnBeforeCompileData(material: Material) {
+		const scene = this.currentGlParentNode().scene();
+		const vertexShader = this._shaders_by_name.get(ShaderName.VERTEX);
+		const fragmentShader = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		if (vertexShader && fragmentShader) {
+			const processedFragmentShader = this.processFilterFragmentShader(fragmentShader);
+			this._onBeforeCompileData = {
+				vertexShader,
+				fragmentShader: processedFragmentShader,
+				paramConfigs: this.param_configs(),
+				additionalTextureUniforms: this._additionalTextureUniforms,
+				timeDependent: this.uniformsTimeDependent(),
+				resolutionDependent: this.uniformsResolutionDependent(),
+			};
+			assignOnBeforeCompileDataAndFunction(scene, material, this._onBeforeCompileData);
+			material.needsUpdate = true;
+		}
+	}
+
+	protected updateShaders() {
+		this._shaders_by_name.clear();
+		this._lines.clear();
+		for (let shaderName of this.shaderNames()) {
+			const template = this._template_shader_for_shader_name(shaderName);
 			if (template) {
-				this._lines.set(shader_name, template.split('\n'));
+				this._lines.set(shaderName, template.split('\n'));
 			}
 		}
 		if (this._root_nodes.length > 0) {
 			// this._output_node.set_assembler(this)
-			this.build_code_from_nodes(this._root_nodes);
+			this.buildCodeFromNodes(this._root_nodes);
 
-			this._build_lines();
+			this._buildLines();
 		}
 		// this._material.uniforms = this.build_uniforms(template_shader)
 		for (let shader_name of this.shaderNames()) {

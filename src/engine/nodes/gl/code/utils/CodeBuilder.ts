@@ -32,42 +32,45 @@ export class CodeBuilder {
 		private _root_nodes_for_shader_method: RootNodesForShaderMethod,
 		private _assembler: TypedAssembler<NodeContext.GL>
 	) {}
+	nodeTraverser() {
+		return this._nodeTraverser;
+	}
 	shaderNames() {
 		return this._nodeTraverser.shaderNames();
 	}
-	buildFromNodes(rootNodes: BaseGlNodeType[], param_nodes: BaseGlNodeType[]) {
+	buildFromNodes(rootNodes: BaseGlNodeType[], paramNodes: BaseGlNodeType[]) {
 		this._nodeTraverser.traverse(rootNodes);
 
-		const nodes_by_shader_name: Map<ShaderName, BaseGlNodeType[]> = new Map();
-		for (let shader_name of this.shaderNames()) {
-			const nodes = this._nodeTraverser.nodesForShaderName(shader_name);
-			nodes_by_shader_name.set(shader_name, nodes);
+		const nodesByShaderName: Map<ShaderName, BaseGlNodeType[]> = new Map();
+		for (let shaderName of this.shaderNames()) {
+			const nodes = this._nodeTraverser.nodesForShaderName(shaderName);
+			nodesByShaderName.set(shaderName, nodes);
 		}
-		const sorted_nodes = this._nodeTraverser.sortedNodes();
-		for (let shader_name of this.shaderNames()) {
-			const root_nodes_for_shader = this._root_nodes_for_shader_method(shader_name, rootNodes);
+		const sortedNodes = this._nodeTraverser.sortedNodes();
+		for (let shaderName of this.shaderNames()) {
+			const rootNodesForShader = this._root_nodes_for_shader_method(shaderName, rootNodes);
 
-			for (let root_node of root_nodes_for_shader) {
-				MapUtils.pushOnArrayAtEntry(nodes_by_shader_name, shader_name, root_node);
+			for (let rootNode of rootNodesForShader) {
+				MapUtils.pushOnArrayAtEntry(nodesByShaderName, shaderName, rootNode);
 			}
 		}
 
 		// ensure nodes are not added if already present
 		const sorted_node_ids: Map<CoreGraphNodeId, boolean> = new Map();
-		for (let node of sorted_nodes) {
+		for (let node of sortedNodes) {
 			sorted_node_ids.set(node.graphNodeId(), true);
 		}
 
 		for (let rootNode of rootNodes) {
 			if (!sorted_node_ids.get(rootNode.graphNodeId())) {
-				sorted_nodes.push(rootNode);
+				sortedNodes.push(rootNode);
 				sorted_node_ids.set(rootNode.graphNodeId(), true);
 			}
 		}
-		for (let node of sorted_nodes) {
+		for (let node of sortedNodes) {
 			node.reset_code();
 		}
-		for (let node of param_nodes) {
+		for (let node of paramNodes) {
 			node.reset_code();
 		}
 		// for (let node of sorted_nodes) {
@@ -85,11 +88,11 @@ export class CodeBuilder {
 			this._assembler
 		);
 		this.reset();
-		for (let shader_name of this.shaderNames()) {
-			let nodes = nodes_by_shader_name.get(shader_name) || [];
+		for (let shaderName of this.shaderNames()) {
+			let nodes = nodesByShaderName.get(shaderName) || [];
 			nodes = ArrayUtils.uniq(nodes);
 
-			this._shadersCollectionController.setCurrentShaderName(shader_name);
+			this._shadersCollectionController.setCurrentShaderName(shaderName);
 			if (nodes) {
 				for (let node of nodes) {
 					node.setLines(this._shadersCollectionController);
@@ -98,7 +101,7 @@ export class CodeBuilder {
 		}
 		// set param configs
 		if (this._param_configs_set_allowed) {
-			for (let param_node of param_nodes) {
+			for (let param_node of paramNodes) {
 				try {
 					param_node.states.error.clear();
 					param_node.setParamConfigs();
@@ -108,11 +111,11 @@ export class CodeBuilder {
 					throw new Error(`${param_node.name()} cannot create spare parameter`);
 				}
 			}
-			this.setParamConfigs(param_nodes);
+			this.setParamConfigs(paramNodes);
 		}
 
 		// finalize
-		this.set_code_lines(sorted_nodes);
+		this.set_code_lines(sortedNodes);
 	}
 
 	shadersCollectionController() {

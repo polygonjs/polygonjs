@@ -11,7 +11,11 @@ import {RayMarchingController, RayMarchingParamConfig} from './utils/RayMarching
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
-class RayMarchingBuilderMatParamsConfig extends BaseBuilderParamConfig(RayMarchingParamConfig(NodeParamsConfig)) {}
+import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+class RayMarchingBuilderMatParamsConfig extends BaseBuilderParamConfig(
+	AdvancedFolderParamConfig(RayMarchingParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+) {}
 const ParamsConfig = new RayMarchingBuilderMatParamsConfig();
 
 export class RayMarchingBuilderMatNode extends TypedBuilderMatNode<

@@ -1,3 +1,4 @@
+import {RayMarchingUniforms, RAYMARCHING_UNIFORMS} from './../../gl/gl/raymarching/uniforms';
 import {Constructor} from '../../../../types/GlobalTypes';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {TypedMatNode} from '../_Base';
@@ -16,12 +17,26 @@ import {
 	SpotLight,
 } from 'three';
 
-// import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
+import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 
 export function RayMarchingParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		/** @param this volume material currently can only use a single white light, whose direction is defined by this parameter */
-		lightDir = ParamConfig.VECTOR3([-1, -1, -1]);
+		/** @param maximum number of steps the raymarcher will run */
+		maxSteps = ParamConfig.INTEGER(RAYMARCHING_UNIFORMS.MAX_STEPS.value, {
+			range: [1, 1024],
+			rangeLocked: [true, false],
+		});
+		/** @param maximum distance the raymarcher will step through */
+		maxDist = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.MAX_DIST.value, {
+			range: [1, 100],
+			rangeLocked: [true, false],
+		});
+		/** @param when the ray reaches this distance from a surface it will stop marching. You can lower this value to increase the precision of the raymarcher */
+		surfDist = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.SURF_DIST.value, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+			step: 0.0000001,
+		});
 	};
 }
 class RayMarchingMaterial extends Material {}
@@ -73,21 +88,14 @@ export class RayMarchingController {
 	}
 
 	updateUniformsFromParams() {
-		// const shaderMaterial = this.node.material as ShaderMaterialWithCustomMaterials;
-		// const uniforms = shaderMaterial.uniforms;
-		// if (!uniforms) {
-		// 	return;
-		// }
-		// const dir_light = uniforms.u_DirectionalLightDirection.value; //[0];
-		// const pv_dir_light = this.node.pv.lightDir;
-		// if (dir_light) {
-		// 	/*
-		// 	do not use Vector3.copy, as it fails when the volume material is loaded again after
-		// 	being persisted in the persisted config, as the MaterialLoader fails to load a vector array in the uniforms
-		// 	*/
-		// 	dir_light.x = pv_dir_light.x;
-		// 	dir_light.y = pv_dir_light.y;
-		// 	dir_light.z = pv_dir_light.z;
-		// }
+		const shaderMaterial = this.node.material as ShaderMaterialWithCustomMaterials;
+		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
+		if (!uniforms) {
+			return;
+		}
+
+		uniforms.MAX_STEPS.value = this.node.pv.maxSteps;
+		uniforms.MAX_DIST.value = this.node.pv.maxDist;
+		uniforms.SURF_DIST.value = this.node.pv.surfDist;
 	}
 }

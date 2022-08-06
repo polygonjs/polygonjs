@@ -87,9 +87,6 @@ export enum CameraSopNodeType {
 	RENDERER = 'cameraRenderer',
 }
 export const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
-export enum GlNodeType {
-	ATTRIBUTE = 'attribute',
-}
 
 export enum CameraControlsNodeType {
 	// DEVICE_ORIENTATION = 'cameraDeviceOrientationControls',

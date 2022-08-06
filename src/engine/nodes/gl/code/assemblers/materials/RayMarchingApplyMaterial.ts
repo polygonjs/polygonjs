@@ -1,6 +1,5 @@
 import {GlType} from './../../../../../poly/registers/nodes/types/Gl';
-import {ShaderAssemblerRayMarchingApplyMaterial} from './RayMarchingApplyMaterial';
-import {BackSide, UniformsUtils, ShaderMaterial, ShaderLib, Material} from 'three';
+import {BackSide, UniformsUtils, ShaderMaterial, ShaderLib} from 'three';
 import {BaseShaderAssemblerRayMarching} from './_BaseRayMarching';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
@@ -11,26 +10,22 @@ import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 
 import VERTEX from '../../../gl/raymarching/vert.glsl';
-import FRAGMENT from '../../../gl/raymarching/frag.glsl';
+import FRAGMENT from '../../../gl/raymarching/fragApplyMaterial.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../gl/raymarching/uniforms';
-import {AssemblerControllerNode} from '../../Controller';
 
+const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([
+	// [ShaderName.VERTEX, '#include <common>'],
+	[ShaderName.FRAGMENT, '// start applyMaterial builder define code'],
+]);
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	// [ShaderName.VERTEX, '// start builder body code'],
-	[ShaderName.FRAGMENT, '// start GetDist builder body code'],
+	[ShaderName.FRAGMENT, '// start applyMaterial builder body code'],
 ]);
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([[ShaderName.FRAGMENT, []]]);
 
 const SDF_CONTEXT_INPUT_NAME = GlConnectionPointType.SDF_CONTEXT;
 
-export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
-	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
-		super(_gl_parent_node);
-
-		this._addFilterFragmentShaderCallback('applyMaterialAssembler', (fragmentShader) =>
-			this.applyMaterialAssemblerFilterFragmentShader(fragmentShader)
-		);
-	}
+export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssemblerRayMarching {
 	override templateShader() {
 		return {
 			vertexShader: VERTEX,
@@ -78,9 +73,11 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 		];
 	}
 	override create_globals_node_output_connections() {
-		return ShaderAssemblerRayMarching.create_globals_node_output_connections();
+		return ShaderAssemblerRayMarchingApplyMaterial.create_globals_node_output_connections();
 	}
-
+	protected override insertDefineAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_DEFINE_AFTER_MAP.get(shaderName);
+	}
 	protected override insertBodyAfter(shader_name: ShaderName): string | undefined {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
@@ -90,7 +87,7 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 	override create_shader_configs(): ShaderConfig[] {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, [], []),
-			new ShaderConfig(ShaderName.FRAGMENT, [/*'color', */ SDF_CONTEXT_INPUT_NAME], [ShaderName.VERTEX]),
+			new ShaderConfig(ShaderName.FRAGMENT, [/*'color', */ 'color'], [ShaderName.VERTEX]),
 		];
 	}
 	static override create_variable_configs() {
@@ -108,7 +105,7 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 		];
 	}
 	override create_variable_configs(): VariableConfig[] {
-		return ShaderAssemblerRayMarching.create_variable_configs();
+		return ShaderAssemblerRayMarchingApplyMaterial.create_variable_configs();
 	}
 
 	//
@@ -116,35 +113,27 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 	//
 	//
 	//
-	private _applyMaterialAssembler: ShaderAssemblerRayMarchingApplyMaterial =
-		new ShaderAssemblerRayMarchingApplyMaterial(this._gl_parent_node);
-	private _applyMaterialMaterial = new ShaderMaterial();
-	override setGlParentNode(gl_parent_node: AssemblerControllerNode) {
-		super.setGlParentNode(gl_parent_node);
-		this._applyMaterialAssembler.setGlParentNode(gl_parent_node);
-	}
-	override compileMaterial(material: Material) {
-		this._applyMaterialAssembler.updateShaders();
-		this._applyMaterialAssembler.prepareOnBeforeCompileData(this._applyMaterialMaterial);
-
-		this.codeBuilder().nodeTraverser().setBlockedInputNames(GlType.SDF_CONTEXT, ['material']);
-		super.compileMaterial(material);
-	}
-	applyMaterialAssemblerFilterFragmentShader(fragmentShader: string) {
-		const applyMaterial = this._applyMaterialAssembler.onBeforeCompileData()?.fragmentShader;
-		if (applyMaterial) {
-			const elements = applyMaterial.split('// --- applyMaterial SPLIT ---');
-			const applyMaterialConstants = elements[0];
-			const applyMaterialFunctionDefinition = elements[1];
-			fragmentShader = fragmentShader.replace(
-				'// --- applyMaterial constants definition',
-				applyMaterialConstants
-			);
-			fragmentShader = fragmentShader.replace(
-				'// --- applyMaterial function definition',
-				applyMaterialFunctionDefinition
-			);
+	override updateShaders() {
+		this._shaders_by_name.clear();
+		this._lines.clear();
+		for (let shaderName of this.shaderNames()) {
+			const template = this._template_shader_for_shader_name(shaderName);
+			if (template) {
+				this._lines.set(shaderName, template.split('\n'));
+			}
 		}
-		return fragmentShader;
+
+		const rootNodes = this.currentGlParentNode().nodesByType(GlType.SDF_MATERIAL);
+		if (rootNodes.length > 0) {
+			this.buildCodeFromNodes(rootNodes);
+
+			this._buildLines();
+		}
+		for (let shaderName of this.shaderNames()) {
+			const lines = this._lines.get(shaderName);
+			if (lines) {
+				this._shaders_by_name.set(shaderName, lines.join('\n'));
+			}
+		}
 	}
 }

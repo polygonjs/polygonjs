@@ -1,3 +1,4 @@
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 /**
  * Allows to create a uniform which can be modified from the material params panel
  *
@@ -39,8 +40,8 @@ const ParamsConfig = new ParamGlParamsConfig();
 
 export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'param'> {
-		return 'param';
+	static override type(): Readonly<GlType.PARAM> {
+		return GlType.PARAM;
 	}
 	// protected _allow_inputs_created_from_params: boolean = false;
 	override initializeNode() {

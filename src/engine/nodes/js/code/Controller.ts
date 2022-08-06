@@ -58,14 +58,6 @@ export class JsAssemblerController<A extends BaseJsFunctionAssembler> {
 		return this._assembler.allow_attribute_exports();
 	}
 
-	on_create() {
-		const globals = this.node.createNode('globals');
-		const output = this.node.createNode('output');
-
-		globals.uiData.setPosition(-200, 0);
-		output.uiData.setPosition(200, 0);
-	}
-
 	set_compilation_required(new_state = true) {
 		this._compile_required = new_state;
 	}

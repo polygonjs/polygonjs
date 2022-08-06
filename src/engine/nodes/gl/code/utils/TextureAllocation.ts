@@ -1,8 +1,8 @@
+import {GlType} from './../../../../poly/registers/nodes/types/Gl';
 import {TextureVariable, TextureVariableData} from './TextureVariable';
 import {BaseGlNodeType} from '../../_Base';
 import {PolyScene} from '../../../../scene/PolyScene';
 import {AttributeGlNode} from '../../Attribute';
-import {GlNodeType} from '../../../../poly/NodeContext';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 export type TextureAllocationData = TextureVariableData[];
 
@@ -44,7 +44,7 @@ export class TextureAllocation {
 	inputNamesForNode(root_node: BaseGlNodeType): string[] | undefined {
 		const variables = this.variablesForInputNode(root_node);
 		if (variables) {
-			if (root_node.type() == GlNodeType.ATTRIBUTE) {
+			if (root_node.type() == GlType.ATTRIBUTE) {
 				// if the AttributeGlNode exports an attribute called restP,
 				// the variable will be named also restP.
 				// And the input of the AttributeGlNode will not be called restP,

@@ -196,7 +196,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			assemblerController.assembler.set_root_nodes(root_nodes);
 
 			// main compilation
-			assemblerController.assembler.update_fragment_shader();
+			assemblerController.assembler.updateFragmentShader();
 
 			// receives fragment and uniforms
 			const fragment_shader = assemblerController.assembler.fragment_shader();

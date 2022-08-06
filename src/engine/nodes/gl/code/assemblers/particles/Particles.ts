@@ -31,7 +31,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 
 	override compile() {
 		this.setup_shader_names_and_variables();
-		this.update_shaders();
+		this._updateShaders();
 	}
 
 	override rootNodesByShaderName(shader_name: ShaderName, rootNodes: BaseGlNodeType[]): BaseGlNodeType[] {
@@ -134,7 +134,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 
 		this._reset_shader_configs();
 	}
-	update_shaders() {
+	private _updateShaders() {
 		this._shaders_by_name.clear();
 		this._lines.clear();
 		for (let shader_name of this.shaderNames()) {
@@ -145,9 +145,9 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			// the code builder needs to be reset here,
 			// as otherwise it will not know that the shader names may have changed
 			this._resetCodeBuilder();
-			this.build_code_from_nodes(this._root_nodes);
+			this.buildCodeFromNodes(this._root_nodes);
 
-			this._build_lines();
+			this._buildLines();
 		}
 		// this._material.uniforms = this.build_uniforms(template_shader)
 		for (let shader_name of this.shaderNames()) {

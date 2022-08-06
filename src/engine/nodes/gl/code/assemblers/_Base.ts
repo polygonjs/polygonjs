@@ -51,7 +51,7 @@ const SPACED_LINES = 3;
 export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	protected _shaders_by_name: Map<ShaderName, string> = new Map();
 	protected _lines: StringArrayByShaderName = new Map();
-	protected _code_builder: CodeBuilder | undefined;
+	protected _codeBuilder: CodeBuilder | undefined;
 	private _param_config_owner: CodeBuilder | undefined;
 	protected _root_nodes: BaseGlNodeType[] = [];
 	protected _leaf_nodes: BaseGlNodeType[] = [];
@@ -108,11 +108,11 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// protected createMaterial(): ShaderMaterial | undefined {
 	// 	return undefined;
 	// }
-	protected _build_lines() {
-		for (let shader_name of this.shaderNames()) {
-			const template = this._template_shader_for_shader_name(shader_name);
+	protected _buildLines() {
+		for (let shaderName of this.shaderNames()) {
+			const template = this._template_shader_for_shader_name(shaderName);
 			if (template) {
-				this._replace_template(template, shader_name);
+				this._replaceTemplate(template, shaderName);
 			}
 		}
 	}
@@ -212,12 +212,12 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	//
 	//
 	codeBuilder() {
-		return (this._code_builder = this._code_builder || this._create_code_builder());
+		return (this._codeBuilder = this._codeBuilder || this._createCodeBuilder());
 	}
 	protected _resetCodeBuilder() {
-		this._code_builder = undefined;
+		this._codeBuilder = undefined;
 	}
-	private _create_code_builder() {
+	private _createCodeBuilder() {
 		const nodeTraverser = new TypedNodeTraverser<NodeContext.GL>(
 			this.currentGlParentNode(),
 			this.shaderNames(),
@@ -233,9 +233,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			this
 		);
 	}
-	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
-		const param_nodes = GlNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
-		this.codeBuilder().buildFromNodes(root_nodes, param_nodes);
+	protected buildCodeFromNodes(rootNodes: BaseGlNodeType[]) {
+		const paramNodes = GlNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
+		this.codeBuilder().buildFromNodes(rootNodes, paramNodes);
 	}
 	allow_new_param_configs() {
 		this.codeBuilder().allow_new_param_configs();
@@ -438,7 +438,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	//
 	//
 
-	private _replace_template(template: string, shader_name: ShaderName) {
+	private _replaceTemplate(template: string, shader_name: ShaderName) {
 		const function_declaration = this.builder_lines(shader_name, LineType.FUNCTION_DECLARATION);
 		const define = this.builder_lines(shader_name, LineType.DEFINE);
 		// let all_define = function_declaration.concat(define);
