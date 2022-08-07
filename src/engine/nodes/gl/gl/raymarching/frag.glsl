@@ -76,12 +76,12 @@ vec3 GetNormal(vec3 p) {
 	return normalize(n);
 }
 
-vec3 GetLight(vec3 p) {
+vec3 GetLight(vec3 p, vec3 n) {
 	#if NUM_SPOT_LIGHTS > 0
 		vec3 dif = vec3(0.,0.,0.);
 		SpotLightRayMarching spotLightRayMarching;
 		SpotLight spotLight;
-		vec3 lightPos,lightCol, l, n;
+		vec3 lightPos,lightCol, l;
 		float lighDif;
 		SDFContext sdfContext;
 		#pragma unroll_loop_start
@@ -91,8 +91,6 @@ vec3 GetLight(vec3 p) {
 			lightPos = spotLightRayMarching.worldPos;
 			lightCol = spotLight.color;
 			l = normalize(lightPos-p);
-			n = GetNormal(p);
-
 			lighDif = clamp(dot(n, l), 0., 1.);
 			sdfContext = RayMarch(p+n*SURF_DIST*2., l);
 			if(sdfContext.d<length(lightPos-p)) lighDif *= .1;
@@ -134,10 +132,10 @@ vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	// https://www.shadertoy.com/view/ltjGDd (sphere lights, accumulated shader properties)
 	// https://www.shadertoy.com/view/4ddcRn (stochastic path tracer)
 	// https://www.shadertoy.com/view/sllGDN (refraction, cube map look up)
-	
-	vec3 diffuse = GetLight(p);
+	vec3 n = GetNormal(p);
+	vec3 diffuse = GetLight(p, n);
 
-	vec3 col = applyMaterial(p, diffuse, sdfContext.matId);
+	vec3 col = applyMaterial(p, n, rayDir, diffuse, sdfContext.matId);
 		
 	// gamma
 	col = pow( col, vec3(0.4545) ); 
