@@ -16,6 +16,7 @@ import {BaseGlNodeType} from '../../../_Base';
 import {assignOnBeforeCompileDataAndFunction, OnBeforeCompileData} from './OnBeforeCompile';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 import {IUniformTexture} from '../../../../utils/code/gl/Uniforms';
+import {CodeBuilderSetCodeLinesOptions} from '../../utils/CodeBuilder';
 
 export enum CustomMaterialName {
 	DISTANCE = 'customDistanceMaterial', // for point lights
@@ -189,7 +190,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 	}
 
-	compileMaterial(material: Material) {
+	compileMaterial(material: Material, codeBuilderOptions?: CodeBuilderSetCodeLinesOptions) {
 		// no need to compile if the globals handler has not been declared
 		if (!this.compileAllowed()) {
 			return;
@@ -204,7 +205,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		const varyingNodes = GlNodeFinder.findVaryingNodes(this.currentGlParentNode());
 		const rootNodes = outputNodes.concat(varyingNodes);
 		this.set_root_nodes(rootNodes);
-		this.updateShaders();
+		this.updateShaders(codeBuilderOptions);
 		this.prepareOnBeforeCompileData(material);
 
 		// const material = await this._assembler.get_material();
@@ -249,7 +250,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 	}
 
-	protected updateShaders() {
+	protected updateShaders(codeBuilderOptions?: CodeBuilderSetCodeLinesOptions) {
 		this._shaders_by_name.clear();
 		this._lines.clear();
 		for (let shaderName of this.shaderNames()) {
@@ -260,7 +261,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 		if (this._root_nodes.length > 0) {
 			// this._output_node.set_assembler(this)
-			this.buildCodeFromNodes(this._root_nodes);
+			this.buildCodeFromNodes(this._root_nodes, codeBuilderOptions);
 
 			this._buildLines();
 		}

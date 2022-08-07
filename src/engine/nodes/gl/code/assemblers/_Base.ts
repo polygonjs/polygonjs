@@ -2,7 +2,7 @@ import {ShaderMaterial} from 'three';
 import {LineType} from '../utils/LineType';
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {VariableConfig} from '../configs/VariableConfig';
-import {CodeBuilder} from '../utils/CodeBuilder';
+import {CodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
 import {BaseGlNodeType} from '../../_Base';
 import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
@@ -233,9 +233,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			this
 		);
 	}
-	protected buildCodeFromNodes(rootNodes: BaseGlNodeType[]) {
+	protected buildCodeFromNodes(rootNodes: BaseGlNodeType[], codeBuilderOptions?:CodeBuilderSetCodeLinesOptions) {
 		const paramNodes = GlNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
-		this.codeBuilder().buildFromNodes(rootNodes, paramNodes);
+		this.codeBuilder().buildFromNodes(rootNodes, paramNodes, codeBuilderOptions);
 	}
 	allow_new_param_configs() {
 		this.codeBuilder().allow_new_param_configs();

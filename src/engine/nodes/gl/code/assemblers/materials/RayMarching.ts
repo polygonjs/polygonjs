@@ -128,18 +128,20 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 		this._applyMaterialAssembler.prepareOnBeforeCompileData(this._applyMaterialMaterial);
 
 		this.codeBuilder().nodeTraverser().setBlockedInputNames(GlType.SDF_CONTEXT, ['material']);
-		super.compileMaterial(material);
+		super.compileMaterial(material, {
+			otherShadersCollectionController: this._applyMaterialAssembler.codeBuilder().shadersCollectionController(),
+		});
 	}
 	applyMaterialAssemblerFilterFragmentShader(fragmentShader: string) {
 		const applyMaterial = this._applyMaterialAssembler.onBeforeCompileData()?.fragmentShader;
 		if (applyMaterial) {
 			const elements = applyMaterial.split('// --- applyMaterial SPLIT ---');
-			const applyMaterialConstants = elements[0];
+			// const applyMaterialConstants = elements[0];
 			const applyMaterialFunctionDefinition = elements[1];
-			fragmentShader = fragmentShader.replace(
-				'// --- applyMaterial constants definition',
-				applyMaterialConstants
-			);
+			// fragmentShader = fragmentShader.replace(
+			// 	'// --- applyMaterial constants definition',
+			// 	applyMaterialConstants
+			// );
 			fragmentShader = fragmentShader.replace(
 				'// --- applyMaterial function definition',
 				applyMaterialFunctionDefinition

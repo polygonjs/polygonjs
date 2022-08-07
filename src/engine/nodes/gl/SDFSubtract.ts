@@ -1,5 +1,5 @@
 /**
- * Union of 2 SDFs
+ * Subtracts 2 SDFs
  *
  * @remarks
  *
@@ -7,7 +7,7 @@
  */
 
 import {TypedGlNode} from './_Base';
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
@@ -19,19 +19,19 @@ enum InputName {
 	SDF0 = 'sdf0',
 	SDF1 = 'sdf1',
 }
-const OUTPUT_NAME = 'union';
+const OUTPUT_NAME = 'subtract';
 const ALLOWED_TYPES = [GlConnectionPointType.FLOAT, GlConnectionPointType.SDF_CONTEXT];
-class SDFUnionGlParamsConfig extends NodeParamsConfig {
+class SDFSubtractGlParamsConfig extends NodeParamsConfig {
 	smooth = ParamConfig.BOOLEAN(0);
 	smoothFactor = ParamConfig.FLOAT(0, {
 		visibleIf: {smooth: 1},
 	});
 }
-const ParamsConfig = new SDFUnionGlParamsConfig();
-export class SDFUnionGlNode extends TypedGlNode<SDFUnionGlParamsConfig> {
+const ParamsConfig = new SDFSubtractGlParamsConfig();
+export class SDFSubtractGlNode extends TypedGlNode<SDFSubtractGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFUnion';
+		return 'SDFSubtract';
 	}
 
 	override initializeNode() {
@@ -70,17 +70,17 @@ export class SDFUnionGlNode extends TypedGlNode<SDFUnionGlParamsConfig> {
 		}
 	}
 	private _setLinesFloat(shadersCollectionController: ShadersCollectionController) {
-		const sdf0 = ThreeToGl.vector2(this.variableForInput(InputName.SDF0));
-		const sdf1 = ThreeToGl.vector2(this.variableForInput(InputName.SDF1));
+		const sdf0 = ThreeToGl.float(this.variableForInput(InputName.SDF0));
+		const sdf1 = ThreeToGl.float(this.variableForInput(InputName.SDF1));
 
 		const float = this.glVarName(OUTPUT_NAME);
 
 		if (isBooleanTrue(this.pv.smooth)) {
-			const smoothFactor = ThreeToGl.float(this.variableForInputParam(this.p.smoothFactor));
-			const bodyLine = `float ${float} = opSmoothUnion(${sdf0}, ${sdf1}, ${smoothFactor})`;
+			const smoothFactor = ThreeToGl.vector2(this.variableForInputParam(this.p.smoothFactor));
+			const bodyLine = `float ${float} = opSmoothSubtraction(${sdf0}, ${sdf1}, ${smoothFactor})`;
 			shadersCollectionController.addBodyLines(this, [bodyLine]);
 		} else {
-			const bodyLine = `float ${float} = opUnion(${sdf0}, ${sdf1})`;
+			const bodyLine = `float ${float} = opSubtraction(${sdf0}, ${sdf1})`;
 			shadersCollectionController.addBodyLines(this, [bodyLine]);
 		}
 
@@ -91,13 +91,14 @@ export class SDFUnionGlNode extends TypedGlNode<SDFUnionGlParamsConfig> {
 		const sdf1 = ThreeToGl.vector2(this.variableForInput(InputName.SDF1));
 
 		const sdfContext = this.glVarName(OUTPUT_NAME);
+
 		const matId = `${sdf0}.d < ${sdf1}.d ? ${sdf0}.matId : ${sdf1}.matId`;
 		if (isBooleanTrue(this.pv.smooth)) {
-			const smoothFactor = ThreeToGl.float(this.variableForInputParam(this.p.smoothFactor));
-			const bodyLine = `SDFContext ${sdfContext} = SDFContext(opSmoothUnion(${sdf0}.d, ${sdf1}.d, ${smoothFactor}), ${matId})`;
+			const smoothFactor = ThreeToGl.vector2(this.variableForInputParam(this.p.smoothFactor));
+			const bodyLine = `SDFContext ${sdfContext} = SDFContext(opSmoothSubtraction(${sdf0}.d, ${sdf1}.d, ${smoothFactor}), ${matId})`;
 			shadersCollectionController.addBodyLines(this, [bodyLine]);
 		} else {
-			const bodyLine = `SDFContext ${sdfContext} = SDFContext(opUnion(${sdf0}.d, ${sdf1}.d), ${matId})`;
+			const bodyLine = `SDFContext ${sdfContext} = SDFContext(opSubtraction(${sdf0}.d, ${sdf1}.d), ${matId})`;
 			shadersCollectionController.addBodyLines(this, [bodyLine]);
 		}
 
