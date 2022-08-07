@@ -22,7 +22,7 @@ import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder
 import {MeshToonMatNode} from '../../../nodes/mat/MeshToon';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
-import {RayMarchingMatNode} from '../../../nodes/mat/RayMarching';
+// import {RayMarchingMatNode} from '../../../nodes/mat/RayMarching';
 import {RayMarchingBuilderMatNode} from '../../../nodes/mat/RayMarchingBuilder';
 import {ShadowMatNode} from '../../../nodes/mat/Shadow';
 import {SkyMatNode} from '../../../nodes/mat/Sky';
@@ -62,7 +62,7 @@ export interface MatNodeChildrenMap {
 	meshToon: MeshToonMatNode;
 	points: PointsMatNode;
 	pointsBuilder: PointsBuilderMatNode;
-	rayMarching: RayMarchingMatNode;
+	// rayMarching: RayMarchingMatNode;
 	rayMarchingBuilder: RayMarchingBuilderMatNode;
 	shadow: ShadowMatNode;
 	sky: SkyMatNode;
@@ -106,10 +106,10 @@ export class MatRegister {
 		poly.registerNode(MeshToonMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(PointsMatNode, CATEGORY_MAT.POINTS);
 		poly.registerNode(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(RayMarchingMatNode, CATEGORY_MAT.ADVANCED);
-			poly.registerNode(RayMarchingBuilderMatNode, CATEGORY_MAT.ADVANCED);
-		}
+		// if (process.env.NODE_ENV == 'development') {
+		// 	poly.registerNode(RayMarchingMatNode, CATEGORY_MAT.ADVANCED);
+		// }
+		poly.registerNode(RayMarchingBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(ShadowMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(SkyMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(VolumeMatNode, CATEGORY_MAT.VOLUME);

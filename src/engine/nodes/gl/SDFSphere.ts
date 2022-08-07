@@ -3,7 +3,7 @@
  *
  * @remarks
  *
- * based on [https://iquilezles.org/www/articles/distfunctions/distfunctions.htm](https://iquilezles.org/www/articles/distfunctions/distfunctions.htm)
+ * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
 import {TypedGlNode} from './_Base';

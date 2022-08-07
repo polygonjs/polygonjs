@@ -3,7 +3,7 @@
 
 
 // /MAT/meshBasicBuilder1/SDFGradient1/SDFSphere1
-// https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
+// https://iquilezles.org/articles/distfunctions/
 
 float sdSphere( vec3 p, float s )
 {
@@ -17,21 +17,21 @@ float sdBox( vec3 p, vec3 b )
 }
 
 
-float opUnion( float d1, float d2 ) { return min(d1,d2); }
-float opSubtraction( float d1, float d2 ) { return max(-d1,d2); }
-float opIntersection( float d1, float d2 ) { return max(d1,d2); }
+float SDFUnion( float d1, float d2 ) { return min(d1,d2); }
+float SDFSubtract( float d1, float d2 ) { return max(-d1,d2); }
+float SDFIntersect( float d1, float d2 ) { return max(d1,d2); }
 
-float opSmoothUnion( float d1, float d2, float k ) {
+float SDFSmoothUnion( float d1, float d2, float k ) {
 	float h = clamp( 0.5 + 0.5*(d2-d1)/k, 0.0, 1.0 );
 	return mix( d2, d1, h ) - k*h*(1.0-h);
 }
 
-float opSmoothSubtraction( float d1, float d2, float k ) {
+float SDFSmoothSubtract( float d1, float d2, float k ) {
 	float h = clamp( 0.5 - 0.5*(d2+d1)/k, 0.0, 1.0 );
 	return mix( d2, -d1, h ) + k*h*(1.0-h);
 }
 
-float opSmoothIntersection( float d1, float d2, float k ) {
+float SDFSmoothIntersect( float d1, float d2, float k ) {
 	float h = clamp( 0.5 - 0.5*(d2-d1)/k, 0.0, 1.0 );
 	return mix( d2, d1, h ) + k*h*(1.0-h);
 }

@@ -1,5 +1,5 @@
 /**
- * Function of SDF box
+ * Function of SDF box frame
  *
  * @remarks
  *
@@ -7,7 +7,7 @@
  */
 
 import {TypedGlNode} from './_Base';
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
@@ -15,16 +15,17 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
-class SDFBoxGlParamsConfig extends NodeParamsConfig {
+class SDFBoxFrameGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0]);
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	size = ParamConfig.VECTOR3([1, 1, 1]);
+	width = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new SDFBoxGlParamsConfig();
-export class SDFBoxGlNode extends TypedGlNode<SDFBoxGlParamsConfig> {
+const ParamsConfig = new SDFBoxFrameGlParamsConfig();
+export class SDFBoxFrameGlNode extends TypedGlNode<SDFBoxFrameGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFBox';
+		return 'SDFBoxFrame';
 	}
 
 	override initializeNode() {
@@ -39,9 +40,10 @@ export class SDFBoxGlNode extends TypedGlNode<SDFBoxGlParamsConfig> {
 		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const size = ThreeToGl.vector3(this.variableForInputParam(this.p.size));
+		const width = ThreeToGl.vector3(this.variableForInputParam(this.p.width));
 
 		const float = this.glVarName('float');
-		const bodyLine = `float ${float} = sdBox(${position} - ${center}, ${size})`;
+		const bodyLine = `float ${float} = sdBoxFrame(${position} - ${center}, ${size}, ${width})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);

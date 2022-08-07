@@ -1,5 +1,5 @@
 /**
- * Function of SDF box
+ * Function of SDF round box
  *
  * @remarks
  *
@@ -15,16 +15,17 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
-class SDFBoxGlParamsConfig extends NodeParamsConfig {
+class SDFRoundBoxGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0]);
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	size = ParamConfig.VECTOR3([1, 1, 1]);
+	radius = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new SDFBoxGlParamsConfig();
-export class SDFBoxGlNode extends TypedGlNode<SDFBoxGlParamsConfig> {
+const ParamsConfig = new SDFRoundBoxGlParamsConfig();
+export class SDFRoundBoxGlNode extends TypedGlNode<SDFRoundBoxGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFBox';
+		return 'SDFRoundBox';
 	}
 
 	override initializeNode() {
@@ -39,9 +40,10 @@ export class SDFBoxGlNode extends TypedGlNode<SDFBoxGlParamsConfig> {
 		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const size = ThreeToGl.vector3(this.variableForInputParam(this.p.size));
+		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
 		const float = this.glVarName('float');
-		const bodyLine = `float ${float} = sdBox(${position} - ${center}, ${size})`;
+		const bodyLine = `float ${float} = sdRoundBox(${position} - ${center}, ${size}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);

@@ -3,30 +3,26 @@
  *
  * @remarks
  *
- * based on [https://iquilezles.org/www/articles/distfunctions/distfunctions.htm](https://iquilezles.org/www/articles/distfunctions/distfunctions.htm)
+ * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
-import {isBooleanTrue} from '../../../core/Type';
 
 enum InputName {
 	SDF0 = 'sdf0',
 	SDF1 = 'sdf1',
+	SMOOTH = 'smooth',
+	SMOOTH_FACTOR = 'smoothFactor',
 }
 const OUTPUT_NAME = 'union';
 const ALLOWED_TYPES = [GlConnectionPointType.FLOAT, GlConnectionPointType.SDF_CONTEXT];
-class SDFUnionGlParamsConfig extends NodeParamsConfig {
-	smooth = ParamConfig.BOOLEAN(0);
-	smoothFactor = ParamConfig.FLOAT(0, {
-		visibleIf: {smooth: 1},
-	});
-}
+class SDFUnionGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SDFUnionGlParamsConfig();
 export class SDFUnionGlNode extends TypedGlNode<SDFUnionGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
@@ -43,64 +39,44 @@ export class SDFUnionGlNode extends TypedGlNode<SDFUnionGlParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 	}
 	private _glInputName(index: number) {
-		return [InputName.SDF0, InputName.SDF1][index];
+		return [InputName.SDF0, InputName.SDF1, InputName.SMOOTH, InputName.SMOOTH_FACTOR][index];
 	}
 	private _glOutputName(index: number) {
 		return OUTPUT_NAME;
 	}
 	private _expectedInputTypes() {
 		let firstInputType = this.io.connection_points.first_input_connection_type();
-		if (firstInputType && ALLOWED_TYPES.includes(firstInputType)) {
-			return [firstInputType, firstInputType];
+		if (!firstInputType || ALLOWED_TYPES.includes(firstInputType)) {
+			firstInputType = GlConnectionPointType.FLOAT;
 		}
-		return [GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT];
+		return [firstInputType, firstInputType, GlConnectionPointType.BOOL, GlConnectionPointType.FLOAT];
 	}
 	private _expectedOutputTypes() {
 		return [this._expectedInputTypes()[0]];
 	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const sdf0 = ThreeToGl.float(this.variableForInput(InputName.SDF0));
+		const sdf1 = ThreeToGl.float(this.variableForInput(InputName.SDF1));
+		const smooth = ThreeToGl.bool(this.variableForInput(InputName.SMOOTH));
+		const smoothFactor = ThreeToGl.float(this.variableForInput(InputName.SMOOTH_FACTOR));
+
 		const firstInputType = this._expectedInputTypes()[0];
-		switch (firstInputType) {
-			case GlConnectionPointType.FLOAT: {
-				return this._setLinesFloat(shadersCollectionController);
-			}
-			case GlConnectionPointType.SDF_CONTEXT: {
-				return this._setLinesSDFContext(shadersCollectionController);
-			}
-		}
-	}
-	private _setLinesFloat(shadersCollectionController: ShadersCollectionController) {
-		const sdf0 = ThreeToGl.vector2(this.variableForInput(InputName.SDF0));
-		const sdf1 = ThreeToGl.vector2(this.variableForInput(InputName.SDF1));
-
-		const float = this.glVarName(OUTPUT_NAME);
-
-		if (isBooleanTrue(this.pv.smooth)) {
-			const smoothFactor = ThreeToGl.float(this.variableForInputParam(this.p.smoothFactor));
-			const bodyLine = `float ${float} = opSmoothUnion(${sdf0}, ${sdf1}, ${smoothFactor})`;
-			shadersCollectionController.addBodyLines(this, [bodyLine]);
+		const bodyLines: string[] = [];
+		if (firstInputType == GlConnectionPointType.FLOAT) {
+			const float = this.glVarName(OUTPUT_NAME);
+			const withSmooth = `SDFSmoothUnion(${sdf0}, ${sdf1}, ${smoothFactor})`;
+			const withoutSmooth = `SDFUnion(${sdf0}, ${sdf1})`;
+			const bodyLine = `float ${float} = ${smooth} ? ${withSmooth} : ${withoutSmooth}`;
+			bodyLines.push(bodyLine);
 		} else {
-			const bodyLine = `float ${float} = opUnion(${sdf0}, ${sdf1})`;
-			shadersCollectionController.addBodyLines(this, [bodyLine]);
+			const sdfContext = this.glVarName(OUTPUT_NAME);
+			const matId = `${sdf0}.d < ${sdf1}.d ? ${sdf0}.matId : ${sdf1}.matId`;
+			const withSmooth = `SDFContext(SDFSmoothUnion(${sdf0}.d, ${sdf1}.d, ${smoothFactor}), ${matId})`;
+			const withoutSmooth = `SDFContext(SDFUnion(${sdf0}.d, ${sdf1}.d), ${matId})`;
+			const bodyLine = `SDFContext ${sdfContext} = ${smooth} ? ${withSmooth} : ${withoutSmooth}`;
+			bodyLines.push(bodyLine);
 		}
-
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
-	}
-	private _setLinesSDFContext(shadersCollectionController: ShadersCollectionController) {
-		const sdf0 = ThreeToGl.vector2(this.variableForInput(InputName.SDF0));
-		const sdf1 = ThreeToGl.vector2(this.variableForInput(InputName.SDF1));
-
-		const sdfContext = this.glVarName(OUTPUT_NAME);
-		const matId = `${sdf0}.d < ${sdf1}.d ? ${sdf0}.matId : ${sdf1}.matId`;
-		if (isBooleanTrue(this.pv.smooth)) {
-			const smoothFactor = ThreeToGl.float(this.variableForInputParam(this.p.smoothFactor));
-			const bodyLine = `SDFContext ${sdfContext} = SDFContext(opSmoothUnion(${sdf0}.d, ${sdf1}.d, ${smoothFactor}), ${matId})`;
-			shadersCollectionController.addBodyLines(this, [bodyLine]);
-		} else {
-			const bodyLine = `SDFContext ${sdfContext} = SDFContext(opUnion(${sdf0}.d, ${sdf1}.d), ${matId})`;
-			shadersCollectionController.addBodyLines(this, [bodyLine]);
-		}
-
+		shadersCollectionController.addBodyLines(this, bodyLines);
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
 	}
 }

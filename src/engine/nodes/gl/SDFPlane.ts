@@ -1,5 +1,5 @@
 /**
- * Function of SDF box
+ * Function of SDF plane
  *
  * @remarks
  *
@@ -15,16 +15,19 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
-class SDFBoxGlParamsConfig extends NodeParamsConfig {
+class SDFPlaneGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0]);
-	center = ParamConfig.VECTOR3([0, 0, 0]);
-	size = ParamConfig.VECTOR3([1, 1, 1]);
+	normal = ParamConfig.VECTOR3([0, 1, 0]);
+	offset = ParamConfig.FLOAT(0, {
+		range: [-1, 1],
+		rangeLocked: [false, false],
+	});
 }
-const ParamsConfig = new SDFBoxGlParamsConfig();
-export class SDFBoxGlNode extends TypedGlNode<SDFBoxGlParamsConfig> {
+const ParamsConfig = new SDFPlaneGlParamsConfig();
+export class SDFPlaneGlNode extends TypedGlNode<SDFPlaneGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFBox';
+		return 'SDFPlane';
 	}
 
 	override initializeNode() {
@@ -37,11 +40,11 @@ export class SDFBoxGlNode extends TypedGlNode<SDFBoxGlParamsConfig> {
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
-		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
-		const size = ThreeToGl.vector3(this.variableForInputParam(this.p.size));
+		const normal = ThreeToGl.vector3(this.variableForInputParam(this.p.normal));
+		const offset = ThreeToGl.float(this.variableForInputParam(this.p.offset));
 
 		const float = this.glVarName('float');
-		const bodyLine = `float ${float} = sdBox(${position} - ${center}, ${size})`;
+		const bodyLine = `float ${float} = sdPlane(${position}, ${normal}, ${offset})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
