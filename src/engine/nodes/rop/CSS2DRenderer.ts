@@ -8,29 +8,29 @@
  *
  */
 import {TypedRopNode} from './_Base';
-import {CSS2DRenderer} from '../../../modules/core/renderers/CSS2DRenderer';
+import {CSS2DRenderer} from 'three/examples/jsm/renderers/CSS2DRenderer';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to ensure objects z-index is set based on camera depth */
-	sortObjects = ParamConfig.BOOLEAN(0);
-	/** @param toggle on to have css opacity be set from camera depth */
-	useFog = ParamConfig.BOOLEAN(0);
-	/** @param fog near */
-	fogNear = ParamConfig.FLOAT(1, {
-		range: [0, 100],
-		rangeLocked: [true, false],
-		visibleIf: {useFog: 1},
-	});
-	/** @param fog far */
-	fogFar = ParamConfig.FLOAT(100, {
-		range: [0, 100],
-		rangeLocked: [true, false],
-		visibleIf: {useFog: 1},
-		separatorAfter: true,
-	});
+	// sortObjects = ParamConfig.BOOLEAN(0);
+	// /** @param toggle on to have css opacity be set from camera depth */
+	// useFog = ParamConfig.BOOLEAN(0);
+	// /** @param fog near */
+	// fogNear = ParamConfig.FLOAT(1, {
+	// 	range: [0, 100],
+	// 	rangeLocked: [true, false],
+	// 	visibleIf: {useFog: 1},
+	// });
+	// /** @param fog far */
+	// fogFar = ParamConfig.FLOAT(100, {
+	// 	range: [0, 100],
+	// 	rangeLocked: [true, false],
+	// 	visibleIf: {useFog: 1},
+	// 	separatorAfter: true,
+	// });
 	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {
 		language: StringParamLanguage.CSS,
@@ -54,7 +54,7 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 		renderer.domElement.style.left = '0px';
 		renderer.domElement.style.pointerEvents = 'none';
 
-		this._update_renderer(renderer);
+		this._updateRenderer(renderer);
 		return renderer;
 	}
 	mountRenderer(canvas: HTMLCanvasElement) {
@@ -95,23 +95,23 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 	// }
 
 	override cook() {
-		this._update_css();
+		this._updateCSS();
 
 		this._renderersByCanvasId.forEach((renderer) => {
-			this._update_renderer(renderer);
+			this._updateRenderer(renderer);
 		});
 
 		this.cookController.endCook();
 	}
 
-	private _update_renderer(renderer: CSS2DRenderer) {
-		renderer.set_sorting(this.pv.sortObjects);
-		renderer.set_use_fog(this.pv.useFog);
-		renderer.set_fog_range(this.pv.fogNear, this.pv.fogFar);
+	private _updateRenderer(renderer: CSS2DRenderer) {
+		// renderer.set_sorting(this.pv.sortObjects);
+		// renderer.set_use_fog(this.pv.useFog);
+		// renderer.set_fog_range(this.pv.fogNear, this.pv.fogFar);
 	}
 
-	private _update_css() {
-		const element = this.css_element();
+	private _updateCSS() {
+		const element = this._CSSElement();
 		// console.log(element);
 		// if (element.rules.length > 0) {
 		// 	element.deleteRule(0);
@@ -121,14 +121,14 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 		element.innerHTML = this.pv.css;
 	}
 
-	private _css_element: HTMLElement | undefined; // = new CSSStyleSheet();
-	private css_element() {
-		return (this._css_element = this._css_element || this._find_element() || this._create_element());
+	private __CSSElement: HTMLElement | undefined; // = new CSSStyleSheet();
+	private _CSSElement() {
+		return (this.__CSSElement = this.__CSSElement || this._findElement() || this._createElement());
 	}
-	private _find_element() {
-		return document.getElementById(this._css_element_id());
+	private _findElement() {
+		return document.getElementById(this._CSSElementId());
 	}
-	private _create_element() {
+	private _createElement() {
 		const style = document.createElement('style');
 		// document.body.append(element);
 		// https://davidwalsh.name/add-rules-stylesheets
@@ -136,10 +136,10 @@ export class CSS2DRendererRopNode extends TypedRopNode<CSS2DRendererRopParamsCon
 		style.appendChild(document.createTextNode(''));
 		document.head.appendChild(style);
 
-		style.id = this._css_element_id();
+		style.id = this._CSSElementId();
 		return style;
 	}
-	private _css_element_id() {
-		return `css_2d_renderer-${this.graphNodeId()}`;
+	private _CSSElementId() {
+		return `CSS2DRenderer-${this.graphNodeId()}`;
 	}
 }
