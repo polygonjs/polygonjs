@@ -140,6 +140,9 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			case AttribClass.OBJECT:
 				await this._addObjectAttribute(attribType, coreGroup);
 				return this.setCoreGroup(coreGroup);
+			case AttribClass.CORE_GROUP:
+				await this._addCoreGroupAttribute(attribType, coreGroup);
+				return this.setCoreGroup(coreGroup);
 		}
 		TypeAssert.unreachable(attribClass);
 	}
@@ -183,6 +186,17 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				return;
 			case AttribType.STRING:
 				await this._addStringAttributeToObject(coreObjects);
+				return;
+		}
+		TypeAssert.unreachable(attribType);
+	}
+	private async _addCoreGroupAttribute(attribType: AttribType, coreGroup: CoreGroup) {
+		switch (attribType) {
+			case AttribType.NUMERIC:
+				await this._addNumericAttributeToCoreGroup(coreGroup);
+				return;
+			case AttribType.STRING:
+				await this._addStringAttributeToCoreGroup(coreGroup);
 				return;
 		}
 		TypeAssert.unreachable(attribType);
@@ -283,9 +297,9 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 					for (let coreObject of coreObjects) {
 						valuesByCoreObjectIndex.set(coreObject.index(), initVector.clone());
 					}
-					for (let component_index = 0; component_index < params.length; component_index++) {
-						const component_param = params[component_index];
-						const component_name = COMPONENT_NAMES[component_index];
+					for (let componentIndex = 0; componentIndex < params.length; componentIndex++) {
+						const component_param = params[componentIndex];
+						const component_name = COMPONENT_NAMES[componentIndex];
 						if (component_param.hasExpression() && component_param.expressionController) {
 							await component_param.expressionController.computeExpressionForObjects(
 								coreObjects,
@@ -308,6 +322,62 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 							coreObject.setAttribValue(attribName, value);
 						}
 					}
+				}
+			}
+		} else {
+			// no need to do work here, as this will be done in the operation
+		}
+	}
+	private async _addNumericAttributeToCoreGroup(coreGroup: CoreGroup) {
+		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
+		const attribName = this.pv.name;
+		if (param.hasExpression()) {
+			if (this.pv.size == 1) {
+				if (this.p.value1.expressionController) {
+					await this.p.value1.expressionController.computeExpressionForCoreGroup(
+						coreGroup,
+						(coreGroup, value) => {
+							coreGroup.setAttribValue(attribName, value);
+						}
+					);
+				}
+			} else {
+				const vparam = [this.p.value2, this.p.value3, this.p.value4][this.pv.size - 2];
+				let params = vparam.components;
+				let valuesByCoreObjectIndex: Map<number, Vector2 | Vector3 | Vector4> = new Map();
+				// for (let component_param of params) {
+				// 	values.push(component_param.value);
+				// }
+				const initVector = this._vectorByAttribSize(this.pv.size);
+				if (initVector) {
+					// for (let coreObject of coreObjects) {
+					valuesByCoreObjectIndex.set(coreGroup.index(), initVector.clone());
+					// }
+					for (let componentIndex = 0; componentIndex < params.length; componentIndex++) {
+						const component_param = params[componentIndex];
+						const component_name = COMPONENT_NAMES[componentIndex];
+						if (component_param.hasExpression() && component_param.expressionController) {
+							await component_param.expressionController.computeExpressionForCoreGroup(
+								coreGroup,
+								(coreGroup, value) => {
+									const vector = valuesByCoreObjectIndex.get(coreGroup.index()) as Vector4;
+									vector[component_name] = value;
+								}
+							);
+						} else {
+							// for (let coreObject of coreObjects) {
+							const vector = valuesByCoreObjectIndex.get(coreGroup.index()) as Vector4;
+							vector[component_name] = component_param.value;
+							// }
+						}
+					}
+					// for (let i = 0; i < coreObjects.length; i++) {
+					// const coreObject = coreObjects[i];
+					const value = valuesByCoreObjectIndex.get(coreGroup.index());
+					if (value != null) {
+						coreGroup.setAttribValue(attribName, value);
+					}
+					// }
 				}
 			}
 		} else {
@@ -365,6 +435,17 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		if (param.hasExpression() && param.expressionController) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
 				coreObject.setAttribValue(attribName, value);
+			});
+		} else {
+			// no need to do work here, as this will be done in the operation
+		}
+	}
+	private async _addStringAttributeToCoreGroup(coreGroup: CoreGroup) {
+		const param = this.p.string;
+		const attribName = this.pv.name;
+		if (param.hasExpression() && param.expressionController) {
+			await param.expressionController.computeExpressionForCoreGroup(coreGroup, (coreGroup, value) => {
+				coreGroup.setAttribValue(attribName, value);
 			});
 		} else {
 			// no need to do work here, as this will be done in the operation

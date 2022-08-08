@@ -1,26 +1,96 @@
-QUnit.test('attrib_names_matching_mask', async (assert) => {
+import {AttribClass} from '../../../src/core/geometry/Constant';
+
+QUnit.test('geoAttribNamesMatchingMask', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 
-	const attrib_create_blend1 = geo1.createNode('attribCreate');
-	attrib_create_blend1.p.name.set('blend');
-	attrib_create_blend1.setInput(0, box1);
+	const attribCreate1 = geo1.createNode('attribCreate');
+	attribCreate1.p.name.set('blend');
+	attribCreate1.setInput(0, box1);
 
-	const attrib_create_blend2 = geo1.createNode('attribCreate');
-	attrib_create_blend2.p.name.set('blend2');
-	attrib_create_blend2.setInput(0, attrib_create_blend1);
+	const attribCreate2 = geo1.createNode('attribCreate');
+	attribCreate2.p.name.set('blend2');
+	attribCreate2.setInput(0, attribCreate1);
 
-	const attrib_create_blend3 = geo1.createNode('attribCreate');
-	attrib_create_blend3.p.name.set('restP');
-	attrib_create_blend3.setInput(0, attrib_create_blend2);
+	const attribCreate3 = geo1.createNode('attribCreate');
+	attribCreate3.p.name.set('restP');
+	attribCreate3.setInput(0, attribCreate2);
 
-	const container = await attrib_create_blend3.compute();
-	const core_group = container.coreContent()!;
+	const container = await attribCreate3.compute();
+	const coreGroup = container.coreContent()!;
 
-	assert.deepEqual(core_group.attribNames().sort(), ['position', 'normal', 'uv', 'blend', 'blend2', 'restP'].sort());
-	assert.deepEqual(core_group.attribNamesMatchingMask('blend*').sort(), ['blend', 'blend2'].sort());
-	assert.deepEqual(core_group.attribNamesMatchingMask('pos*').sort(), ['position'].sort());
-	assert.deepEqual(core_group.attribNamesMatchingMask('pos').sort(), [].sort());
-	assert.deepEqual(core_group.attribNamesMatchingMask('blend*,pos').sort(), ['blend', 'blend2'].sort());
-	assert.deepEqual(core_group.attribNamesMatchingMask('blend*,pos*').sort(), ['blend', 'blend2', 'position'].sort());
+	assert.deepEqual(
+		coreGroup.geoAttribNames().sort(),
+		['position', 'normal', 'uv', 'blend', 'blend2', 'restP'].sort()
+	);
+	assert.deepEqual(coreGroup.geoAttribNamesMatchingMask('blend*').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(coreGroup.geoAttribNamesMatchingMask('pos*').sort(), ['position'].sort());
+	assert.deepEqual(coreGroup.geoAttribNamesMatchingMask('pos').sort(), [].sort());
+	assert.deepEqual(coreGroup.geoAttribNamesMatchingMask('blend*,pos').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(
+		coreGroup.geoAttribNamesMatchingMask('blend*,pos*').sort(),
+		['blend', 'blend2', 'position'].sort()
+	);
+});
+
+QUnit.test('objectAttribNamesMatchingMask', async (assert) => {
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+
+	const attribCreate1 = geo1.createNode('attribCreate');
+	attribCreate1.p.name.set('blend');
+	attribCreate1.setInput(0, box1);
+
+	const attribCreate2 = geo1.createNode('attribCreate');
+	attribCreate2.p.name.set('blend2');
+	attribCreate2.setInput(0, attribCreate1);
+
+	const attribCreate3 = geo1.createNode('attribCreate');
+	attribCreate3.p.name.set('restP');
+	attribCreate3.setInput(0, attribCreate2);
+
+	attribCreate1.setAttribClass(AttribClass.OBJECT);
+	attribCreate2.setAttribClass(AttribClass.OBJECT);
+	attribCreate3.setAttribClass(AttribClass.OBJECT);
+
+	const container = await attribCreate3.compute();
+	const coreGroup = container.coreContent()!;
+
+	assert.deepEqual(coreGroup.objectAttribNames().sort(), ['blend', 'blend2', 'restP'].sort());
+	assert.deepEqual(coreGroup.objectAttribNamesMatchingMask('blend*').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(coreGroup.objectAttribNamesMatchingMask('pos*').sort(), [].sort());
+	assert.deepEqual(coreGroup.objectAttribNamesMatchingMask('pos').sort(), [].sort());
+	assert.deepEqual(coreGroup.objectAttribNamesMatchingMask('blend*,pos').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(coreGroup.objectAttribNamesMatchingMask('blend*,pos*').sort(), ['blend', 'blend2'].sort());
+});
+
+QUnit.test('coreGroupAttribNamesMatchingMask', async (assert) => {
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+
+	const attribCreate1 = geo1.createNode('attribCreate');
+	attribCreate1.p.name.set('blend');
+	attribCreate1.setInput(0, box1);
+
+	const attribCreate2 = geo1.createNode('attribCreate');
+	attribCreate2.p.name.set('blend2');
+	attribCreate2.setInput(0, attribCreate1);
+
+	const attribCreate3 = geo1.createNode('attribCreate');
+	attribCreate3.p.name.set('restP');
+	attribCreate3.setInput(0, attribCreate2);
+
+	attribCreate1.setAttribClass(AttribClass.CORE_GROUP);
+	attribCreate2.setAttribClass(AttribClass.CORE_GROUP);
+	attribCreate3.setAttribClass(AttribClass.CORE_GROUP);
+
+	const container = await attribCreate3.compute();
+	const coreGroup = container.coreContent()!;
+
+	assert.deepEqual(coreGroup.attribNames().sort(), ['blend', 'blend2', 'restP'].sort());
+	assert.deepEqual(coreGroup.attribNamesMatchingMask('blend*').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(coreGroup.attribNamesMatchingMask('pos*').sort(), [].sort());
+	assert.deepEqual(coreGroup.attribNamesMatchingMask('pos').sort(), [].sort());
+	assert.deepEqual(coreGroup.attribNamesMatchingMask('blend*,pos').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(coreGroup.attribNamesMatchingMask('blend*,pos*').sort(), ['blend', 'blend2'].sort());
 });

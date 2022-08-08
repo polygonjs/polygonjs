@@ -1,3 +1,4 @@
+import {TypeAssert} from './../../poly/Assert';
 /**
  * Deletes an attribute from the geometry or object.
  *
@@ -46,43 +47,64 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-		const attrib_names = core_group.attribNamesMatchingMask(this.pv.name);
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
 
 		const attribClass = ATTRIBUTE_CLASSES[this.pv.class];
-		for (let attrib_name of attrib_names) {
-			switch (attribClass) {
-				case AttribClass.VERTEX:
-					this._deleteVertexAttribute(core_group, attrib_name);
-				case AttribClass.OBJECT:
-					this._deleteObjectAttribute(core_group, attrib_name);
-			}
+		const attribNames = this._attribNames(coreGroup, attribClass);
+		for (let attribName of attribNames) {
+			this._deleteAttrib(coreGroup, attribName, attribClass);
 		}
 
-		this.setCoreGroup(core_group);
+		this.setCoreGroup(coreGroup);
 	}
 
-	private _deleteVertexAttribute(core_group: CoreGroup, attrib_name: string) {
+	private _attribNames(coreGroup: CoreGroup, attribClass: AttribClass) {
+		switch (attribClass) {
+			case AttribClass.VERTEX:
+				return coreGroup.geoAttribNamesMatchingMask(this.pv.name);
+			case AttribClass.OBJECT:
+				return coreGroup.objectAttribNamesMatchingMask(this.pv.name);
+			case AttribClass.CORE_GROUP:
+				return coreGroup.attribNamesMatchingMask(this.pv.name);
+		}
+		TypeAssert.unreachable(attribClass);
+	}
+	private _deleteAttrib(coreGroup: CoreGroup, attribName: string, attribClass: AttribClass) {
+		switch (attribClass) {
+			case AttribClass.VERTEX:
+				return this._deleteVertexAttribute(coreGroup, attribName);
+			case AttribClass.OBJECT:
+				return this._deleteObjectAttribute(coreGroup, attribName);
+			case AttribClass.CORE_GROUP:
+				return this._deleteCoreGroupAttribute(coreGroup, attribName);
+		}
+		TypeAssert.unreachable(attribClass);
+	}
+
+	private _deleteVertexAttribute(core_group: CoreGroup, attribName: string) {
 		for (let object of core_group.objects()) {
 			object.traverse((object3d: Object3D) => {
 				const child = object3d as Mesh;
 				if (child.geometry) {
 					const core_geometry = new CoreGeometry(child.geometry as BufferGeometry);
-					core_geometry.deleteAttribute(attrib_name);
+					core_geometry.deleteAttribute(attribName);
 				}
 			});
 		}
 	}
-	private _deleteObjectAttribute(core_group: CoreGroup, attrib_name: string) {
+	private _deleteObjectAttribute(core_group: CoreGroup, attribName: string) {
 		for (let object of core_group.objects()) {
 			let index = 0;
 			object.traverse((object3d: Object3D) => {
 				const child = object3d as Mesh;
 				const core_object = new CoreObject(child, index);
-				core_object.deleteAttribute(attrib_name);
+				core_object.deleteAttribute(attribName);
 				index++;
 			});
 		}
+	}
+	private _deleteCoreGroupAttribute(coreGroup: CoreGroup, attribName: string) {
+		coreGroup.deleteAttribute(attribName);
 	}
 }

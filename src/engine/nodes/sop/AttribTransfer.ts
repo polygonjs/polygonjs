@@ -62,7 +62,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 
 		this._core_group_src = input_contents[1];
 
-		this._attrib_names = this._core_group_src.attribNamesMatchingMask(this.pv.name);
+		this._attrib_names = this._core_group_src.geoAttribNamesMatchingMask(this.pv.name);
 		this._error_if_attribute_not_found_on_second_input();
 		this._build_octree_if_required(this._core_group_src);
 		this._add_attribute_if_required();
@@ -98,8 +98,8 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 	private _add_attribute_if_required() {
 		for (let attrib_name of this._attrib_names) {
 			if (!this._core_group_dest.hasAttrib(attrib_name)) {
-				const attrib_size = this._core_group_src.attribSize(attrib_name);
-				this._core_group_dest.addNumericVertexAttrib(attrib_name, attrib_size, 0);
+				const attrib_size = this._core_group_src.geoAttribSize(attrib_name);
+				this._core_group_dest.addGeoNumericVertexAttrib(attrib_name, attrib_size, 0);
 			}
 		}
 	}

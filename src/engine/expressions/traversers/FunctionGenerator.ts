@@ -295,6 +295,7 @@ export class FunctionGenerator extends BaseTraverser {
 					this.function = new Function(
 						'CorePoint',
 						'Core',
+						'CoreType',
 						'param',
 						'methods',
 						'_set_error_from_error',
@@ -344,7 +345,12 @@ export class FunctionGenerator extends BaseTraverser {
 				return array[entity.index()*attributeSize+propertyOffset];
 			}
 			function getCoreObjectAttribValue(entity, attribName, array, attributeSize, propertyOffset){
-				return entity.attribValue(attribName)
+				const value = entity.attribValue(attribName);
+				if(CoreType.isArray(value)){
+					return value[propertyOffset]
+				} else {
+					return value
+				}
 			}
 			if(entities){
 				return new Promise( async (resolve, reject)=>{
@@ -394,7 +400,14 @@ export class FunctionGenerator extends BaseTraverser {
 		if (this.function) {
 			this.clear_error();
 
-			const result = this.function(CorePoint, Core, this.param, this.methods, this._set_error_from_error_bound);
+			const result = this.function(
+				CorePoint,
+				Core,
+				CoreType,
+				this.param,
+				this.methods,
+				this._set_error_from_error_bound
+			);
 			return result;
 		}
 	}

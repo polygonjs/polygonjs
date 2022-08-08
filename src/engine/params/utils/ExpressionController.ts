@@ -1,3 +1,4 @@
+import {CoreGroup} from './../../../core/geometry/Group';
 import {BaseParamType} from '../_Base';
 import {ExpressionManager} from '../../expressions/ExpressionManager';
 import {CorePoint} from '../../../core/geometry/Point';
@@ -19,6 +20,10 @@ type PointEntityCallback<T extends ParamType> = (
 ) => void;
 type ObjectEntityCallback<T extends ParamType> = (
 	entity: CoreObject,
+	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
+) => void;
+type CoreGroupEntityCallback<T extends ParamType> = (
+	entity: CoreGroup,
 	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
 ) => void;
 
@@ -121,6 +126,9 @@ export class ExpressionController<T extends ParamType> {
 	}
 	computeExpressionForObjects(entities: CoreObject[], callback: ObjectEntityCallback<T>) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
+	}
+	computeExpressionForCoreGroup(entity: CoreGroup, callback: CoreGroupEntityCallback<T>) {
+		return this.computeExpressionForEntities([entity], callback as EntityCallback<T>);
 	}
 	entities() {
 		return this._entities;

@@ -53,7 +53,7 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 		const instanceObject = instanceCoreGroup.objects()[0] as Mesh;
 		const instanceBufferGeo = instanceObject.geometry as InstancedBufferGeometry;
 		const updatingMesh = inputCoreGroups[1].objectsWithGeo()[0] as Mesh;
-		const attribNames = instanceCoreGroup.attribNamesMatchingMask(params.geoAttributes);
+		const attribNames = instanceCoreGroup.geoAttribNamesMatchingMask(params.geoAttributes);
 		for (let attribName of attribNames) {
 			const instanceAttrib = instanceBufferGeo.getAttribute(attribName);
 			const updatingAttribArray = updatingMesh.geometry.getAttribute(attribName).array as number[];
@@ -68,7 +68,7 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 		const updatingCoreGroup = inputCoreGroups[1];
 
 		const attribNames = instanceCoreGroup
-			.attribNamesMatchingMask(params.pointAttributes)
+			.geoAttribNamesMatchingMask(params.pointAttributes)
 			.map((attribName) => CoreInstancer.remapName(attribName));
 
 		let updateTransforms = false;

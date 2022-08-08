@@ -215,10 +215,10 @@ export class CoreInstancer {
 		this.updateTransformInstanceAttributes(instancePts, templateCoreGroup, geometry);
 		this.updateColorInstanceAttribute(instancePts, templateCoreGroup, geometry);
 
-		const attribNames = templateCoreGroup.attribNamesMatchingMask(attributesToCopy);
+		const attribNames = templateCoreGroup.geoAttribNamesMatchingMask(attributesToCopy);
 
 		attribNames.forEach((attribName) => {
-			const attribSize = templateCoreGroup.attribSize(attribName);
+			const attribSize = templateCoreGroup.geoAttribSize(attribName);
 			const values = new Float32Array(instancesCount * attribSize);
 			instancePts.forEach((pt, i) => {
 				const value = pt.attribValue(attribName);

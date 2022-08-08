@@ -53,7 +53,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		const coreGroupDest = inputCoreGroups[0];
 		const coreGroupSrc = inputCoreGroups[1] || coreGroupDest;
 
-		const srcAttribNames = coreGroupSrc.attribNamesMatchingMask(params.name);
+		const srcAttribNames = coreGroupSrc.geoAttribNamesMatchingMask(params.name);
 		const newNames = CoreString.attribNames(params.newName);
 		for (let i = 0; i < srcAttribNames.length; i++) {
 			const srcAttribName = srcAttribNames[i];

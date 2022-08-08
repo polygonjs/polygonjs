@@ -109,7 +109,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 		this._instancer.setCoreGroup(templateCoreGroup);
 
-		this._attribNamesToCopy = templateCoreGroup.attribNamesMatchingMask(this.pv.attributesToCopy);
+		this._attribNamesToCopy = templateCoreGroup.geoAttribNamesMatchingMask(this.pv.attributesToCopy);
 		await this._copyMovedObjectsOnTemplatePoints(instanceCoreGroup, templatePoints);
 		this.setObjects(this._objects);
 	}

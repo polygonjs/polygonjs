@@ -28,7 +28,11 @@ import {makeAttribReactiveVector3} from './attribute/Vector3';
 import {makeAttribReactiveVector2} from './attribute/Vector2';
 import {makeAttribReactiveSimple} from './attribute/Simple';
 import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
-const NAME_ATTR = 'name';
+
+enum PropertyName {
+	NAME = 'name',
+	POSITION = 'position',
+}
 const ATTRIBUTES = 'attributes';
 const ATTRIBUTES_PREVIOUS_VALUES = 'attributesPreviousValues';
 
@@ -37,6 +41,18 @@ interface Object3DWithAnimations extends Object3D {
 }
 interface MaterialWithColor extends Material {
 	color: Color;
+}
+function _convertArrayToVector(value: number[]) {
+	switch (value.length) {
+		case 1:
+			return value[0];
+		case 2:
+			return new Vector2(value[0], value[1]);
+		case 3:
+			return new Vector3(value[0], value[1], value[2]);
+		case 4:
+			return new Vector4(value[0], value[1], value[2], value[3]);
+	}
 }
 // interface SkinnedMeshWithisSkinnedMesh extends SkinnedMesh {
 // 	readonly isSkinnedMesh: boolean;
@@ -118,26 +134,13 @@ export class CoreObject extends CoreEntity {
 		this.coreGeometry()?.computeVertexNormals();
 	}
 
-	private static _convert_array_to_vector(value: number[]) {
-		switch (value.length) {
-			case 1:
-				return value[0];
-			case 2:
-				return new Vector2(value[0], value[1]);
-			case 3:
-				return new Vector3(value[0], value[1], value[2]);
-			case 4:
-				return new Vector4(value[0], value[1], value[2], value[3]);
-		}
-	}
-
 	static setAttribute(object: Object3D, attribName: string, value: AttribValue) {
 		this.addAttribute(object, attribName, value);
 	}
 	static addAttribute(object: Object3D, attribName: string, value: AttribValue) {
 		if (CoreType.isArray(value)) {
-			const converted_value = this._convert_array_to_vector(value);
-			if (!converted_value) {
+			const convertedValue = _convertArrayToVector(value);
+			if (!convertedValue) {
 				const message = `attribute_value invalid`;
 				console.error(message, value);
 				throw new Error(message);
@@ -240,6 +243,14 @@ export class CoreObject extends CoreEntity {
 		index: number = 0,
 		target?: Vector2 | Vector3 | Vector4
 	): AttribValue | undefined {
+		function _attribFromProperty() {
+			if (attribName == PropertyName.NAME) {
+				return object.name;
+			}
+			if (attribName == PropertyName.POSITION) {
+				return object.position.toArray();
+			}
+		}
 		if (attribName === Attribute.OBJECT_INDEX) {
 			return index;
 		}
@@ -247,9 +258,7 @@ export class CoreObject extends CoreEntity {
 			const dict = this.attributesDictionary(object);
 			const val = dict[attribName];
 			if (val == null) {
-				if (attribName == NAME_ATTR) {
-					return object.name;
-				}
+				return _attribFromProperty();
 			} else {
 				if (CoreType.isArray(val) && target) {
 					target.fromArray(val);
@@ -258,9 +267,7 @@ export class CoreObject extends CoreEntity {
 			}
 			return val;
 		}
-		if (attribName == NAME_ATTR) {
-			return object.name;
-		}
+		return _attribFromProperty();
 	}
 	static previousAttribValue(object: Object3D, attribName: string): AttribValue | undefined {
 		const dict = this.attributesPreviousValuesDictionary(object);
@@ -355,7 +362,7 @@ export class CoreObject extends CoreEntity {
 		return CoreObject.stringAttribValue(this._object, name, this._index);
 	}
 	name(): string {
-		return this.attribValue(NAME_ATTR) as string;
+		return this.attribValue(PropertyName.NAME) as string;
 	}
 	humanType(): string {
 		return CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[this._object.constructor.name];

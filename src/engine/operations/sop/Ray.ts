@@ -87,7 +87,7 @@ export class RaySopOperation extends BaseSopOperation {
 
 		if (isBooleanTrue(params.addDistAttribute)) {
 			if (!coreGroup.hasAttrib(DIST_ATTRIB_NAME)) {
-				coreGroup.addNumericVertexAttrib(DIST_ATTRIB_NAME, 1, -1);
+				coreGroup.addGeoNumericVertexAttrib(DIST_ATTRIB_NAME, 1, -1);
 			}
 		}
 
