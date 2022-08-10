@@ -127,11 +127,6 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 
 vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	vec3 p = rayOrigin + rayDir * sdfContext.d;
-	// https://www.shadertoy.com/view/Xds3zN (sdf prims and materials)
-	// https://www.shadertoy.com/view/sdsXWr (newton craddle)
-	// https://www.shadertoy.com/view/ltjGDd (sphere lights, accumulated shader properties)
-	// https://www.shadertoy.com/view/4ddcRn (stochastic path tracer)
-	// https://www.shadertoy.com/view/sllGDN (refraction, cube map look up)
 	vec3 n = GetNormal(p);
 	vec3 diffuse = GetLight(p, n);
 

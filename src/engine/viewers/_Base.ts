@@ -1,3 +1,4 @@
+import {ApplicableControlsNode} from './../../core/camera/CoreCameraControlsController';
 import {ViewerCamerasController} from './utils/ViewerCamerasController';
 import {ViewerControlsController} from './utils/ViewerControlsController';
 import {ViewerEventsController} from './utils/ViewerEventsController';
@@ -8,7 +9,7 @@ import {Camera, Object3D, Raycaster} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {Poly, PolyEngine} from '../Poly';
 import {WebGLRenderer} from 'three';
-import {TypedCameraControlsEventNode} from '../nodes/event/_BaseCameraControls';
+// import {TypedCameraControlsEventNode} from '../nodes/event/_BaseCameraControls';
 import {RaycasterForBVH} from '../operations/sop/utils/Bvh/three-mesh-bvh';
 
 const HOVERED_CLASS_NAME = 'hovered';
@@ -60,7 +61,7 @@ export abstract class TypedViewer<C extends Camera> {
 	protected _scene: PolyScene;
 	public readonly updateCameraAspect: UpdateCameraAspectCallback;
 	protected _doRender: boolean = true;
-	protected _controlsNode: TypedCameraControlsEventNode<any> | undefined;
+	protected _controlsNode: ApplicableControlsNode | undefined;
 	public readonly raycaster = this.createRaycaster();
 	constructor(options: TypedViewerOptions<C>) {
 		this._id = TypedViewer._nextId();
