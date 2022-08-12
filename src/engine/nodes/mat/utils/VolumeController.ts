@@ -36,7 +36,7 @@ export class VolumeController {
 	constructor(private node: VolumeMatNode) {}
 
 	private static _objectBbox = new Box3();
-	static render_hook(
+	static renderHook(
 		renderer: WebGLRenderer,
 		scene: Scene,
 		camera: Camera,

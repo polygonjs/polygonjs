@@ -4,8 +4,8 @@ import {BaseShaderAssemblerRayMarching} from './_BaseRayMarching';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
-import {CoreMaterial} from '../../../../../../core/geometry/Material';
-import {RayMarchingController} from '../../../../mat/utils/RayMarchingController';
+// import {CoreMaterial} from '../../../../../../core/geometry/Material';
+// import {RayMarchingController} from '../../../../mat/utils/RayMarchingController';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 
@@ -49,9 +49,9 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 			},
 		});
 
-		CoreMaterial.add_user_data_render_hook(material, RayMarchingController.render_hook.bind(RayMarchingController));
+		// CoreMaterial.addUserDataRenderHook(material, RayMarchingController.render_hook.bind(RayMarchingController));
 
-		this._addCustomMaterials(material);
+		// this._addCustomMaterials(material);
 		return material;
 	}
 
@@ -87,7 +87,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 	override create_shader_configs(): ShaderConfig[] {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, [], []),
-			new ShaderConfig(ShaderName.FRAGMENT, [/*'color', */ 'color'], [ShaderName.VERTEX]),
+			new ShaderConfig(ShaderName.FRAGMENT, [/*'color', */ 'color'], []),
 		];
 	}
 	static override create_variable_configs() {

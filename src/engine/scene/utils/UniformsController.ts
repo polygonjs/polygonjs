@@ -9,6 +9,7 @@ import {IUniforms} from '../../../core/geometry/Material';
 export enum UniformName {
 	TIME = 'time',
 	RESOLUTION = 'resolution',
+	SPOTLIGHTS_RAYMARCHING = 'spotLightsRayMarching',
 }
 
 export interface IUniformsWithTime extends IUniforms {

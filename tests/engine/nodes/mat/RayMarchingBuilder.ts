@@ -1,3 +1,7 @@
+import {SpotLightRayMarchingUniformElement} from './../../../../src/engine/scene/utils/SceneTraverser';
+import {UniformName} from './../../../../src/engine/scene/utils/UniformsController';
+import {Vector3} from 'three';
+import {CoreSleep} from './../../../../src/core/Sleep';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 
 import BasicDefaultVertex from './templates/raymarching/default.vert.glsl';
@@ -6,6 +10,8 @@ import BasicMinimalVertex from './templates/raymarching/minimal.vert.glsl';
 import BasicMinimalFragment from './templates/raymarching/minimal.frag.glsl';
 import BasicPositionVertex from './templates/raymarching/position.vert.glsl';
 import BasicPositionFragment from './templates/raymarching/position.frag.glsl';
+import SimpleVertexVertex from './templates/raymarching/simple_vertex.vert.glsl';
+import SimpleVertexFragment from './templates/raymarching/simple_vertex.frag.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../../src/engine/nodes/gl/gl/raymarching/uniforms';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -22,10 +28,11 @@ const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
 	minimal: {vert: BasicMinimalVertex, frag: BasicMinimalFragment},
 	position: {vert: BasicPositionVertex, frag: BasicPositionFragment},
+	simple_vertex: {vert: SimpleVertexVertex, frag: SimpleVertexFragment},
 };
 
 const ALL_UNIFORMS = [
-	...Object.keys(RAYMARCHING_UNIFORMS),
+	...Object.keys(RAYMARCHING_UNIFORMS).concat(['spotLightsRayMarching']),
 	'alphaMap',
 	'alphaTest',
 	'ambientLightColor',
@@ -73,6 +80,7 @@ const ALL_UNIFORMS = [
 	'roughness',
 	'roughnessMap',
 	'spotLightShadows',
+
 	'spotLights',
 	'spotShadowMap',
 	'spotShadowMatrix',
@@ -108,7 +116,7 @@ export function onCreateHook(node: RayMarchingBuilderMatNode) {
 	sdfMaterial.uiData.setPosition(-100, 200);
 	constant.uiData.setPosition(-300, 200);
 
-	return {globals, output, sdfSphere, sdfMaterial};
+	return {globals, output, sdfSphere, sdfMaterial, constant};
 }
 
 QUnit.test('mat/rayMarchingBuilder simple', async (assert) => {
@@ -136,6 +144,96 @@ QUnit.test('mat/rayMarchingBuilder simple', async (assert) => {
 	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.position.frag));
 
 	RendererUtils.dispose();
+});
+
+QUnit.test('mat/rayMarchingBuilder vertex shader remains simple', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const MAT = window.MAT;
+	// const debug = MAT.createNode('test')
+	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+	const {sdfSphere, sdfMaterial, constant} = onCreateHook(rayMarchingBuilder1);
+	const multScalar1 = rayMarchingBuilder1.createNode('multScalar');
+	sdfMaterial.setInput('color', multScalar1);
+	multScalar1.setInput(0, constant);
+	multScalar1.setInput(1, sdfSphere);
+	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+
+	await RendererUtils.compile(rayMarchingBuilder1, renderer);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.simple_vertex.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.simple_vertex.frag));
+	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
+});
+QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayMarching uniforms', async (assert) => {
+	const scene = window.scene;
+	// const geo1 = window.geo1;
+
+	const perspective_camera1 = window.perspective_camera1;
+	perspective_camera1.p.t.set([1, 1, 5]);
+	// const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const MAT = window.MAT;
+	// const debug = MAT.createNode('test')
+	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+	const rayMarchingBuilder1Nodes = onCreateHook(rayMarchingBuilder1);
+	rayMarchingBuilder1Nodes.sdfSphere.p.radius.set(0.1);
+	const rayMarchingBuilder2 = MAT.createNode('rayMarchingBuilder');
+	onCreateHook(rayMarchingBuilder2);
+	const material1 = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	const material2 = rayMarchingBuilder2.material as ShaderMaterialWithCustomMaterials;
+
+	function createBox(materialNode: RayMarchingBuilderMatNode, pos: Vector3) {
+		const geo = scene.root().createNode('geo');
+		const box1 = geo.createNode('box');
+		const material1 = geo.createNode('material');
+		material1.setInput(0, box1);
+		material1.p.material.setNode(materialNode);
+		material1.flags.display.set(true);
+	}
+	function getMaterialSpotLightRayMarchingUniform(material: ShaderMaterialWithCustomMaterials) {
+		const uniform = material.uniforms[UniformName.SPOTLIGHTS_RAYMARCHING];
+		return uniform.value.map((u: SpotLightRayMarchingUniformElement) => u.worldPos.toArray());
+	}
+	createBox(rayMarchingBuilder1, new Vector3(0, 0, 0));
+	createBox(rayMarchingBuilder2, new Vector3(2, 0, 0));
+
+	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
+		scene.play();
+		await CoreSleep.sleep(50);
+		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material1), []);
+		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material2), []);
+
+		const spotLight1 = scene.root().createNode('spotLight');
+		spotLight1.p.t.set([2, 0, 0]);
+		spotLight1.p.color.set([1, 0, 0]);
+		await CoreSleep.sleep(50);
+		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material1), [[2, 0, 0.01]]);
+		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material2), [[2, 0, 0.01]]);
+
+		const spotLight2 = scene.root().createNode('spotLight');
+		spotLight2.p.t.set([0, 4, 0]);
+		spotLight2.p.color.set([0, 0, 1]);
+		await CoreSleep.sleep(50);
+		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material1), [
+			[2, 0, 0.01],
+			[0, 4, 0.01],
+		]);
+		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material2), [
+			[2, 0, 0.01],
+			[0, 4, 0.01],
+		]);
+
+		scene.root().removeNode(spotLight1);
+		await CoreSleep.sleep(50);
+		// it's probably ok that the uniforms do not get resized down,
+		// since threejs still sets the number of spotlights to iterate
+		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material1), [
+			[0, 4, 0.01],
+			[0, 4, 0.01],
+		]);
+		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material2), [
+			[0, 4, 0.01],
+			[0, 4, 0.01],
+		]);
+	});
 });
 
 QUnit.test('mat/rayMarchingBuilder persisted_config', async (assert) => {

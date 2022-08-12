@@ -20,6 +20,7 @@ import {ViewersRegister} from './utils/ViewersRegister';
 import {SceneWebGLController} from './utils/WebGLController';
 import {WindowController} from './utils/WindowController';
 import {SceneAssetsController} from './utils/AssetsController';
+import {SceneTraverserController} from './utils/SceneTraverser';
 import {BaseNodeType} from '../nodes/_Base';
 import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
 import {ParamsInitData} from '../nodes/utils/io/IOController';
@@ -223,6 +224,7 @@ export class PolyScene {
 	get viewersRegister() {
 		return (this._viewers_register = this._viewers_register || new ViewersRegister(this));
 	}
+	public readonly sceneTraverser = new SceneTraverserController(this);
 
 	//
 	//

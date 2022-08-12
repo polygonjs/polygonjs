@@ -1,11 +1,10 @@
-import {GlType} from './../../poly/registers/nodes/types/Gl';
 /**
  * a subnet can contain many nodes and is very useful to organise your shaders
  *
  *
  *
  */
-
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/connections/Gl';

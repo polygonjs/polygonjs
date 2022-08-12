@@ -1,9 +1,9 @@
-import {TypeAssert} from './../../poly/Assert';
 /**
  * Deletes an attribute from the geometry or object.
  *
  *
  */
+import {TypeAssert} from './../../poly/Assert';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';

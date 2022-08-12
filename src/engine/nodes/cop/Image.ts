@@ -14,6 +14,6 @@ import {CopTypeImage} from '../../poly/registers/nodes/types/Cop';
 export class ImageCopNode extends copImageNodeFactoryFactory({
 	type: CopTypeImage.IMAGE,
 	defaultUrl: ImageDefaultTextureLoader.PARAM_DEFAULT,
-	browseExtensions: [ImageExtension.PNG, ImageExtension.JPEG, ImageExtension.JPG],
+	browseExtensions: [ImageExtension.PNG, ImageExtension.JPEG, ImageExtension.JPG, ImageExtension.WEBP],
 	getLoader: (url: string, node: BaseNodeType) => new ImageDefaultTextureLoader(url, node),
 }) {}

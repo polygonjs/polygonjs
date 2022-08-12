@@ -20,7 +20,7 @@ type RootNodesForShaderMethod = (shader_name: ShaderName, rootNodes: BaseGlNodeT
 // let nextId = 1;
 
 export interface CodeBuilderSetCodeLinesOptions {
-	otherShadersCollectionController?: ShadersCollectionController;
+	otherFragmentShaderCollectionController?: ShadersCollectionController;
 }
 
 export class CodeBuilder {
@@ -172,21 +172,22 @@ export class CodeBuilder {
 	}
 
 	private _setCodeLines(nodes: BaseGlNodeType[], options?: CodeBuilderSetCodeLinesOptions) {
-		let additionalDefinitions: BaseGLDefinition[] | undefined;
-		if (this._shadersCollectionController && options && options.otherShadersCollectionController) {
-			for (let shaderName of options.otherShadersCollectionController.shaderNames()) {
-				// this._linesControllerByShaderName.set(shaderName, new LinesController(shaderName));
-				options.otherShadersCollectionController.traverseDefinitions(
-					shaderName,
-					(definition: BaseGLDefinition) => {
-						additionalDefinitions = additionalDefinitions || [];
-						additionalDefinitions.push(definition);
-					}
-				);
-			}
-		}
-
 		for (let shaderName of this.shaderNames()) {
+			const additionalDefinitions: BaseGLDefinition[] = [];
+			if (shaderName == ShaderName.FRAGMENT) {
+				if (this._shadersCollectionController && options && options.otherFragmentShaderCollectionController) {
+					// for (let shaderName of options.otherShadersCollectionController.shaderNames()) {
+					// this._linesControllerByShaderName.set(shaderName, new LinesController(shaderName));
+					options.otherFragmentShaderCollectionController.traverseDefinitions(
+						ShaderName.FRAGMENT,
+						(definition: BaseGLDefinition) => {
+							additionalDefinitions.push(definition);
+						}
+					);
+					// }
+				}
+			}
+
 			this._addCodeLines(nodes, shaderName, additionalDefinitions);
 		}
 	}

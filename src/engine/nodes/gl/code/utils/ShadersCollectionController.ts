@@ -32,15 +32,6 @@ export class ShadersCollectionController {
 		return this._assembler;
 	}
 
-	// merge(otherShadersCollectionController: ShadersCollectionController) {
-	// 	for (let shaderName of this._shaderNames) {
-	// 		const otherLinesController = otherShadersCollectionController.linesController(shaderName);
-	// 		const linesController = this._linesControllerByShaderName.get(shaderName);
-	// 		if (linesController && otherLinesController) {
-	// 			linesController.merge(otherLinesController);
-	// 		}
-	// 	}
-	// }
 	linesController(shaderName: ShaderName) {
 		return this._linesControllerByShaderName.get(shaderName);
 	}

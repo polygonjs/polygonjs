@@ -1,9 +1,9 @@
-import {GlType} from './../../poly/registers/nodes/types/Gl';
 /**
  * Allows to create a uniform which can be modified from the material params panel
  *
  *
  */
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode} from './_Base';
 import {
 	GL_CONNECTION_POINT_TYPES,

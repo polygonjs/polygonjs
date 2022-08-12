@@ -281,6 +281,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			if (!renderer) {
 				return;
 			}
+			this.scene().sceneTraverser.traverseScene();
 			this._runOnBeforeRenderCallbacks(delta, renderer);
 			// const size = this.camerasController().size;
 			// const aspect = this.camerasController().aspect;

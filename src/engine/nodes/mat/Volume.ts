@@ -38,7 +38,7 @@ export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsC
 			uniforms: UniformsUtils.clone(VOLUME_UNIFORMS),
 		});
 
-		CoreMaterial.add_user_data_render_hook(mat, VolumeController.render_hook.bind(VolumeController));
+		CoreMaterial.addUserDataRenderHook(mat, VolumeController.renderHook.bind(VolumeController));
 
 		return mat;
 	}

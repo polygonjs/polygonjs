@@ -1,9 +1,9 @@
-import {GlType} from './../../poly/registers/nodes/types/Gl';
 /**
  * Allows to feed a vertex attribute into the shader
  *
  *
  */
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, BaseGlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';

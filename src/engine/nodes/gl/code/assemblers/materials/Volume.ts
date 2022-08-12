@@ -43,7 +43,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 			uniforms: UniformsUtils.clone(template_shader.uniforms),
 		});
 
-		CoreMaterial.add_user_data_render_hook(material, VolumeController.render_hook.bind(VolumeController));
+		CoreMaterial.addUserDataRenderHook(material, VolumeController.renderHook.bind(VolumeController));
 
 		this._addCustomMaterials(material);
 		return material;

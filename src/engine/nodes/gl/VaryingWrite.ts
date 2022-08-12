@@ -1,11 +1,10 @@
-import {GlType} from './../../poly/registers/nodes/types/Gl';
 /**
  * this node works alongside [gl/varyingRead](/docs/nodes/gl/varyingRead) and they allow a finer grained control over
  * what is computed in the vertex or the fragment shader
  *
  *
  */
-
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';

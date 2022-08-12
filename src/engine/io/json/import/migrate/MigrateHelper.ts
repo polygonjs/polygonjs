@@ -53,6 +53,8 @@ function migrateCop(nodeData: NodeJsonExporterData) {
 
 const GL_NEW_TYPES: PolyDictionary<string> = {
 	substract: 'subtract',
+	SDFSubtraction: 'SDFSubtract',
+	SDFIntersection: 'SDFIntersect',
 };
 
 function migrateSop(nodeData: NodeJsonExporterData) {

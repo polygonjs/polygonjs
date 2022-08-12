@@ -1,8 +1,8 @@
-import {SDFMaterialGlNode} from './SDFMaterial';
 /**
  * Creates an SDF context
  *
  */
+import {SDFMaterialGlNode} from './SDFMaterial';
 import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';

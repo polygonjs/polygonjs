@@ -1,5 +1,9 @@
 precision highp float;
 precision highp int;
+uniform int MAX_STEPS;
+uniform float MAX_DIST;
+uniform float SURF_DIST;
+#define ZERO 0
 #include <common>
 float sdSphere( vec3 p, float s )
 {
@@ -61,10 +65,6 @@ uniform sampler2D v_POLY_texture_envTexture1;
 #include <bsdfs>
 #include <lights_pars_begin>
 #include <lights_physical_pars_fragment>
-uniform int MAX_STEPS;
-uniform float MAX_DIST;
-uniform float SURF_DIST;
-#define ZERO 0
 varying vec3 vPw;
 #if NUM_SPOT_LIGHTS > 0
 	struct SpotLightRayMarching {

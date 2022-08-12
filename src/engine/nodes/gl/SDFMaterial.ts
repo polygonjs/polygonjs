@@ -1,13 +1,12 @@
+/**
+ * Creates an SDF material
+ *
+ */
 import {ParamType} from './../../poly/ParamType';
 import {GlParamConfig} from './code/utils/GLParamConfig';
 import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {ParamConfig} from './../utils/params/ParamsConfig';
 import {FunctionGLDefinition, BaseGLDefinition, UniformGLDefinition} from './utils/GLDefinition';
-/**
- * Creates an SDF material
- *
- */
-
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';

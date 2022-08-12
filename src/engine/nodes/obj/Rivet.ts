@@ -142,7 +142,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 
 	override async cook() {
 		await this._update_resolved_object();
-		this._update_render_hook();
+		this._updateRenderHook();
 		// this._update_updateMode();
 		this.cookController.endCook();
 	}
@@ -179,20 +179,20 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	// 	this.addGraphInput(frame_graph_node)
 	// }
 
-	private _update_render_hook() {
+	private _updateRenderHook() {
 		const mode = UPDATE_MODES[this.pv.updateMode];
 		switch (mode) {
 			case RivetUpdateMode.ON_RENDER: {
-				return this._add_render_hook();
+				return this._addRenderHook();
 			}
 			case RivetUpdateMode.MANUAL: {
-				return this._remove_render_hook();
+				return this._removeRenderHook();
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
 
-	private _add_render_hook() {
+	private _addRenderHook() {
 		// check if the new hook is different than the current one
 		// because if we were to add it 2x, previous hook would not be valid anymore
 		// if (this.object.onBeforeRender !== this._on_object_before_render_bound) {
@@ -201,7 +201,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		// not being frustumCulled ensures that the render hook is still used even though when the object is not on screen (as the children might very well be)
 		this.object.frustumCulled = false;
 	}
-	private _remove_render_hook() {
+	private _removeRenderHook() {
 		this.object.onBeforeRender = () => {};
 	}
 	private _on_object_before_render_bound: RenderHook = this._update.bind(this);
@@ -214,7 +214,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		material?: Material,
 		group?: Group | null
 	) {
-		const resolved_object = this._resolved_object();
+		const resolved_object = this._resolvedObject();
 		if (resolved_object) {
 			const geometry = resolved_object.geometry;
 			if (geometry) {
@@ -262,7 +262,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 			}
 		}
 	}
-	private _resolved_object() {
+	private _resolvedObject() {
 		if (!this._resolvedSopGroup) {
 			return;
 		}
@@ -278,7 +278,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 	//
 	//
 	static PARAM_CALLBACK_update_updateMode(node: RivetObjNode) {
-		node._update_render_hook();
+		node._updateRenderHook();
 	}
 	// private async _update_active_state() {
 	// 	// await this.p.active.compute();

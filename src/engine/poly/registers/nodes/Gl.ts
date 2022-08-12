@@ -109,6 +109,7 @@ import {RoundGlNode} from '../../../nodes/gl/Round';
 import {SDFBoxGlNode} from '../../../nodes/gl/SDFBox';
 import {SDFBoxFrameGlNode} from '../../../nodes/gl/SDFBoxFrame';
 import {SDFContextGlNode} from '../../../nodes/gl/SDFContext';
+import {SDFFractalMandelbrotGlNode} from '../../../nodes/gl/SDFFractalMandelbrot';
 import {SDFGradientGlNode} from '../../../nodes/gl/SDFGradient';
 import {SDFIntersectGlNode} from '../../../nodes/gl/SDFIntersect';
 import {SDFMaterialGlNode} from '../../../nodes/gl/SDFMaterial';
@@ -239,6 +240,7 @@ export interface GlNodeChildrenMap {
 	SDFBox: SDFBoxGlNode;
 	SDFBoxFrame: SDFBoxFrameGlNode;
 	SDFContext: SDFContextGlNode;
+	SDFFractalMandelbrot: SDFFractalMandelbrotGlNode;
 	SDFGradient: SDFGradientGlNode;
 	SDFIntersect: SDFIntersectGlNode;
 	SDFMaterial: SDFMaterialGlNode;
@@ -394,6 +396,7 @@ export class GlRegister {
 		poly.registerNode(SDFBoxGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SDFBoxFrameGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SDFContextGlNode, CATEGORY_GL.SDF);
+		poly.registerNode(SDFFractalMandelbrotGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SDFGradientGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SDFIntersectGlNode, CATEGORY_GL.SDF);
 		poly.registerNode(SDFMaterialGlNode, CATEGORY_GL.SDF);

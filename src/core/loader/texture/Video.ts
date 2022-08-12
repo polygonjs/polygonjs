@@ -57,9 +57,9 @@ export class VideoTextureLoader extends BaseTextureLoader {
 			video.setAttribute('autoplay', `${true}`); // to ensure it loads
 			video.setAttribute('loop', `${true}`);
 			// wait for onloadedmetadata to ensure that we have a duration
-			video.onloadeddata = function (e) {
-				console.log('onloadeddata', e);
-			};
+			// video.onloadeddata = function (e) {
+			// 	console.log('onloadeddata', e);
+			// };
 			video.onloadedmetadata = function () {
 				video.pause();
 				const texture = new VideoTexture(video);

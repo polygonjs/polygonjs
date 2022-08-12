@@ -5,8 +5,8 @@ import {BaseShaderAssemblerRayMarching} from './_BaseRayMarching';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
-import {CoreMaterial} from '../../../../../../core/geometry/Material';
-import {RayMarchingController} from '../../../../mat/utils/RayMarchingController';
+// import {CoreMaterial} from '../../../../../../core/geometry/Material';
+// import {RayMarchingController} from '../../../../mat/utils/RayMarchingController';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 
@@ -54,7 +54,8 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 			},
 		});
 
-		CoreMaterial.add_user_data_render_hook(material, RayMarchingController.render_hook.bind(RayMarchingController));
+		this._gl_parent_node.scene().sceneTraverser.addSpotlightsRayMarchingUniform(material.uniforms);
+		// CoreMaterial.addUserDataRenderHook(material, RayMarchingController.renderHook.bind(RayMarchingController));
 
 		this._addCustomMaterials(material);
 		return material;
@@ -129,7 +130,9 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 
 		this.codeBuilder().nodeTraverser().setBlockedInputNames(GlType.SDF_CONTEXT, ['material']);
 		super.compileMaterial(material, {
-			otherShadersCollectionController: this._applyMaterialAssembler.codeBuilder().shadersCollectionController(),
+			otherFragmentShaderCollectionController: this._applyMaterialAssembler
+				.codeBuilder()
+				.shadersCollectionController(),
 		});
 	}
 	applyMaterialAssemblerFilterFragmentShader(fragmentShader: string) {

@@ -1,11 +1,10 @@
-import {IUniformN, IUniformV3Array} from './../../../../../../dist/src/engine/nodes/utils/code/gl/Uniforms.d';
-// import {Vector3} from 'three';
+import {IUniformN} from './../../../../../../dist/src/engine/nodes/utils/code/gl/Uniforms.d';
 
 export interface RayMarchingUniforms {
 	MAX_STEPS: IUniformN;
 	MAX_DIST: IUniformN;
 	SURF_DIST: IUniformN;
-	spotLightsRayMarching: IUniformV3Array;
+	// spotLightsRayMarching: IUniformV3Array;
 }
 
 export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
@@ -24,10 +23,10 @@ export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
 	SURF_DIST: {
 		value: 0.001,
 	},
-	spotLightsRayMarching: {
-		value: [],
-		// properties: {
-		// 	worldPos: {},
-		// },
-	},
+	// spotLightsRayMarching: {
+	// 	value: [],
+	// 	// properties: {
+	// 	// 	worldPos: {},
+	// 	// },
+	// },
 };

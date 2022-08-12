@@ -7,6 +7,7 @@ export enum ImageExtension {
 	EXR = 'exr',
 	KTX2 = 'ktx2',
 	HDR = 'hdr',
+	WEBP = 'webp',
 }
 export const IMAGE_EXTENSIONS: string[] = [
 	ImageExtension.GIF,
@@ -16,6 +17,7 @@ export const IMAGE_EXTENSIONS: string[] = [
 	ImageExtension.EXR,
 	ImageExtension.KTX2,
 	ImageExtension.HDR,
+	ImageExtension.WEBP,
 ];
 export enum GeometryExtension {
 	DRC = 'drc',
