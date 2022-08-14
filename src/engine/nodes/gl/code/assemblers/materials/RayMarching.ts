@@ -76,6 +76,7 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 		return [
 			new GlConnectionPoint('position', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
+			new GlConnectionPoint('cameraPosition', GlConnectionPointType.VEC3),
 		];
 	}
 	override create_globals_node_output_connections() {
@@ -96,10 +97,14 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 	}
 	static override create_variable_configs() {
 		return [
-			new VariableConfig('position', {
-				// default_from_attribute: true,
-				// prefix: 'vec3 transformed = ',
-			}),
+			// new VariableConfig('position', {
+			// 	// default_from_attribute: true,
+			// 	// prefix: 'vec3 transformed = ',
+			// }),
+			// new VariableConfig('cameraPosition', {
+			// 	// default_from_attribute: true,
+			// 	// prefix: 'vec3 transformed = ',
+			// }),
 			// new VariableConfig('color', {
 			// 	prefix: 'BUILDER_color.xyz = ',
 			// }),

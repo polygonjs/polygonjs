@@ -79,15 +79,15 @@ export class ShadersCollectionController {
 			return;
 		}
 		shaderName = shaderName || this._currentShaderName;
-		const lines_controller = this._linesControllerByShaderName.get(shaderName);
-		if (lines_controller) {
-			lines_controller.addBodyLines(node, lines, options);
+		const linesController = this._linesControllerByShaderName.get(shaderName);
+		if (linesController) {
+			linesController.addBodyLines(node, lines, options);
 		}
 	}
 	bodyLines(shaderName: ShaderName, node: BaseGlNodeType) {
-		const lines_controller = this._linesControllerByShaderName.get(shaderName);
-		if (lines_controller) {
-			return lines_controller.bodyLines(node);
+		const linesController = this._linesControllerByShaderName.get(shaderName);
+		if (linesController) {
+			return linesController.bodyLines(node);
 		}
 	}
 	// traverseBodyLines(shaderName: ShaderName, callback: BodyLinesTraverseCallback) {

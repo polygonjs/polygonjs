@@ -8,8 +8,7 @@ export const BasePolyAnimNode = createPolyAnimNode(
 	{
 		metadata: {
 			version: {
-				polyNode: 1,
-				polygonjs: 1,
+				polygonjs: '1',
 			},
 			createdAt: 1,
 		},

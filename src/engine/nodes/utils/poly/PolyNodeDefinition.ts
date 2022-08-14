@@ -22,8 +22,9 @@ export interface PolyNodesInputsData {
 }
 export interface PolyNodeMetadata {
 	version: {
-		polyNode: number;
-		polygonjs: number;
+		marketplace?: number;
+		editor?: string;
+		polygonjs: string;
 	};
 	createdAt: number;
 }

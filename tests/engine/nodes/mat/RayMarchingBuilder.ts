@@ -12,6 +12,8 @@ import BasicPositionVertex from './templates/raymarching/position.vert.glsl';
 import BasicPositionFragment from './templates/raymarching/position.frag.glsl';
 import SimpleVertexVertex from './templates/raymarching/simple_vertex.vert.glsl';
 import SimpleVertexFragment from './templates/raymarching/simple_vertex.frag.glsl';
+import CameraPositionVertex from './templates/raymarching/cameraPosition.vert.glsl';
+import CameraPositionFragment from './templates/raymarching/cameraPosition.frag.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../../src/engine/nodes/gl/gl/raymarching/uniforms';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -28,7 +30,8 @@ const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
 	minimal: {vert: BasicMinimalVertex, frag: BasicMinimalFragment},
 	position: {vert: BasicPositionVertex, frag: BasicPositionFragment},
-	simple_vertex: {vert: SimpleVertexVertex, frag: SimpleVertexFragment},
+	simpleVertex: {vert: SimpleVertexVertex, frag: SimpleVertexFragment},
+	cameraPosition: {vert: CameraPositionVertex, frag: CameraPositionFragment},
 };
 
 const ALL_UNIFORMS = [
@@ -159,8 +162,65 @@ QUnit.test('mat/rayMarchingBuilder vertex shader remains simple', async (assert)
 	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
-	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.simple_vertex.vert));
-	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.simple_vertex.frag));
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.simpleVertex.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.simpleVertex.frag));
+	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
+});
+
+QUnit.test('mat/rayMarchingBuilder uses cameraPosition for fresnel on envMap', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const MAT = window.MAT;
+	// const debug = MAT.createNode('test')
+	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+
+	const globals = rayMarchingBuilder1.createNode('globals');
+	const output = rayMarchingBuilder1.createNode('output');
+	const sdfGradient1 = rayMarchingBuilder1.createNode('SDFGradient');
+	const sdfGradientSubnetInput = sdfGradient1.createNode('subnetInput');
+	const sdfGradientSubnetOutput = sdfGradient1.createNode('subnetOutput');
+	const sdfSphere = sdfGradient1.createNode('SDFSphere');
+	sdfSphere.setInput(0, sdfGradientSubnetInput);
+	sdfGradientSubnetOutput.setInput(0, sdfSphere);
+
+	const sdfContext = rayMarchingBuilder1.createNode('SDFContext');
+	const sdfMaterial = rayMarchingBuilder1.createNode('SDFMaterial');
+
+	const constant = rayMarchingBuilder1.createNode('constant');
+
+	output.setInput(0, sdfContext);
+	sdfContext.setInput(0, sdfGradient1);
+	sdfContext.setInput(1, sdfMaterial);
+	sdfGradient1.setInput('position', globals, 'position');
+	sdfMaterial.setInput('color', constant);
+
+	constant.setGlType(GlConnectionPointType.VEC3);
+	constant.p.asColor.set(1);
+	constant.p.color.set([1, 1, 1]);
+
+	//
+	const normalize1 = rayMarchingBuilder1.createNode('normalize');
+	const dot1 = rayMarchingBuilder1.createNode('dot');
+	const complement1 = rayMarchingBuilder1.createNode('complement');
+	const pow1 = rayMarchingBuilder1.createNode('pow');
+	const abs1 = rayMarchingBuilder1.createNode('abs');
+
+	sdfMaterial.p.useEnvMap.set(1);
+	sdfMaterial.setInput('envMapIntensity', abs1);
+	abs1.setInput(0, pow1);
+	pow1.setInput(0, complement1);
+	complement1.setInput(0, dot1);
+	dot1.setInput(0, sdfGradient1, 'gradient');
+	dot1.setInput(1, normalize1);
+	normalize1.setInput(0, globals, 'cameraPosition');
+
+	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+
+	await RendererUtils.compile(rayMarchingBuilder1, renderer);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.cameraPosition.vert));
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.cameraPosition.frag)
+	);
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });
 QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayMarching uniforms', async (assert) => {

@@ -7,8 +7,7 @@ import {GeoNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/So
 const data: PolyNodeDefinition = {
 	metadata: {
 		version: {
-			polyNode: 1,
-			polygonjs: 1,
+			polygonjs: '1',
 		},
 		createdAt: 1,
 	},
@@ -41,7 +40,7 @@ const data: PolyNodeDefinition = {
 		},
 	},
 };
-PolyNodeController.createNodeClassAndRegister({context: NodeContext.SOP, type: 'poly_sop_test', data});
+PolyNodeController.createNodeClassAndRegister({node_context: NodeContext.SOP, node_type: 'poly_sop_test', data});
 
 QUnit.test('poly sop simple', async (assert) => {
 	const geo1 = window.geo1;

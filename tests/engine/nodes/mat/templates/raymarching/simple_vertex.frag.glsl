@@ -166,16 +166,14 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, vec3 col, int mat){
 	vec3 v_POLY_multScalar1_val = (v_POLY_SDFSphere1_float*v_POLY_constant1_val);
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-			col *= v_POLY_multScalar1_val;
-			if(false){
-				vec3 r = normalize(reflect(rayDir, n));
-				vec2 uv;
-				uv.x = atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5;
-				uv.y = r.y * 0.5 + 0.5;
-				vec3 env = texture2D(v_POLY_texture_envTexture1, uv).rgb;
-				col += env;
-			}
-		}
+		col *= v_POLY_multScalar1_val;
+		vec3 r = normalize(reflect(rayDir, n));
+		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
+		float fresnel = pow(1.-dot(normalize(cameraPosition), n), 5.0);
+		float fresnelFactor = (1.-0.0) + 0.0*fresnel;
+		vec3 env = texture2D(v_POLY_texture_envTexture1, uv).rgb * vec3(1.0, 1.0, 1.0) * 1.0 * fresnelFactor;
+		col += env;
+	}
 	
 	return col;
 }

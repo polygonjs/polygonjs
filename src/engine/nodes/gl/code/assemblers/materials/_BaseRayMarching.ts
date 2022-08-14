@@ -59,6 +59,11 @@ export abstract class BaseShaderAssemblerRayMarching extends ShaderAssemblerMate
 						body_lines.push(`vec3 ${var_name} = p`);
 					}
 					break;
+				case 'cameraPosition':
+					if (shader_name == ShaderName.FRAGMENT) {
+						body_lines.push(`vec3 ${var_name} = cameraPosition`);
+					}
+					break;
 			}
 		}
 		definitions_by_shader_name.forEach((definitions, shader_name) => {

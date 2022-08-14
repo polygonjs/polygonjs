@@ -136,8 +136,7 @@ export class PolyNodeController {
 		const data: PolyNodeDefinition = {
 			metadata: {
 				version: {
-					polyNode: 1,
-					polygonjs: 1,
+					polygonjs: '1',
 				},
 				createdAt: 1,
 			},
@@ -186,16 +185,18 @@ export class PolyNodeController {
 		}
 	}
 	static createNodeClassAndRegister<NC extends NodeContext>(dataRegister: PolyNodeDataRegister<NC>) {
-		const {context, type, data} = dataRegister;
-		const nodeClass = this._createNodeClass(context, type, data);
+		const {node_context, node_type, data} = dataRegister;
+		const nodeClass = this._createNodeClass(node_context, node_type, data);
 		if (nodeClass) {
-			let registerMapForContext = this._definitionRegister.get(context);
+			let registerMapForContext = this._definitionRegister.get(node_context);
 			if (!registerMapForContext) {
 				registerMapForContext = new Map();
-				this._definitionRegister.set(context, registerMapForContext);
+				this._definitionRegister.set(node_context, registerMapForContext);
 			}
-			registerMapForContext.set(type, data);
+			registerMapForContext.set(node_type, data);
 			Poly.registerNode(nodeClass, 'polyNodes', {polyNode: true});
+		} else {
+			console.warn('failed to create node from definition', node_context, node_type, data);
 		}
 	}
 	static definition<NC extends NodeContext>(context: NC, type: string) {

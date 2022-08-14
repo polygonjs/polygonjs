@@ -7,8 +7,7 @@ export const BasePolySopNode = createPolySopNode(
 	{
 		metadata: {
 			version: {
-				polyNode: 1,
-				polygonjs: 1,
+				polygonjs: '1',
 			},
 			createdAt: 1,
 		},
