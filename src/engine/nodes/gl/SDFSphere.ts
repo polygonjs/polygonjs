@@ -6,13 +6,13 @@
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
-import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {BaseSDFGlNode} from './_BaseSDF';
 
 const OUTPUT_NAME = 'float';
 class SDFSphereGlParamsConfig extends NodeParamsConfig {
@@ -21,7 +21,7 @@ class SDFSphereGlParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(1);
 }
 const ParamsConfig = new SDFSphereGlParamsConfig();
-export class SDFSphereGlNode extends TypedGlNode<SDFSphereGlParamsConfig> {
+export class SDFSphereGlNode extends BaseSDFGlNode<SDFSphereGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFSphere';
@@ -36,7 +36,7 @@ export class SDFSphereGlNode extends TypedGlNode<SDFSphereGlParamsConfig> {
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const position = ThreeToGl.vector2(this.variableForInputParam(this.p.position));
+		const position = this.position();
 		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 

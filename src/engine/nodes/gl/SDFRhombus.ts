@@ -6,7 +6,7 @@
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
-import {TypedGlNode} from './_Base';
+import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -24,7 +24,7 @@ class SDFRhombusGlParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(0.05);
 }
 const ParamsConfig = new SDFRhombusGlParamsConfig();
-export class SDFRhombusGlNode extends TypedGlNode<SDFRhombusGlParamsConfig> {
+export class SDFRhombusGlNode extends BaseSDFGlNode<SDFRhombusGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFRhombus';
@@ -39,7 +39,7 @@ export class SDFRhombusGlNode extends TypedGlNode<SDFRhombusGlParamsConfig> {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
+		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const length1 = ThreeToGl.float(this.variableForInputParam(this.p.length1));
 		const length2 = ThreeToGl.float(this.variableForInputParam(this.p.length2));

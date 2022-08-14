@@ -7,7 +7,7 @@
  *
  * Learn more: [https://en.wikipedia.org/wiki/Mandelbrot_set](https://en.wikipedia.org/wiki/Mandelbrot_set)
  */
-import {TypedGlNode} from './_Base';
+import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import Mandelbrot from './gl/fractal/mandelbrot.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -42,7 +42,7 @@ class SDFFractalMandelbrotGlParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new SDFFractalMandelbrotGlParamsConfig();
-export class SDFFractalMandelbrotGlNode extends TypedGlNode<SDFFractalMandelbrotGlParamsConfig> {
+export class SDFFractalMandelbrotGlNode extends BaseSDFGlNode<SDFFractalMandelbrotGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFFractalMandelbrot';
@@ -58,7 +58,7 @@ export class SDFFractalMandelbrotGlNode extends TypedGlNode<SDFFractalMandelbrot
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
+		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const power = ThreeToGl.float(this.variableForInputParam(this.p.power));
 		const externalBoundingRadius = ThreeToGl.float(this.variableForInputParam(this.p.externalBoundingRadius));

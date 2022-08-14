@@ -6,6 +6,8 @@ import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 
 import BasicDefaultVertex from './templates/raymarching/default.vert.glsl';
 import BasicDefaultFragment from './templates/raymarching/default.frag.glsl';
+import GlobalsNotNeededVertex from './templates/raymarching/globalsNotNeeded.vert.glsl';
+import GlobalsNotNeededFragment from './templates/raymarching/globalsNotNeeded.frag.glsl';
 import BasicMinimalVertex from './templates/raymarching/minimal.vert.glsl';
 import BasicMinimalFragment from './templates/raymarching/minimal.frag.glsl';
 import BasicPositionVertex from './templates/raymarching/position.vert.glsl';
@@ -28,6 +30,7 @@ import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
+	globalsNotNeeded: {vert: GlobalsNotNeededVertex, frag: GlobalsNotNeededFragment},
 	minimal: {vert: BasicMinimalVertex, frag: BasicMinimalFragment},
 	position: {vert: BasicPositionVertex, frag: BasicPositionFragment},
 	simpleVertex: {vert: SimpleVertexVertex, frag: SimpleVertexFragment},
@@ -166,6 +169,29 @@ QUnit.test('mat/rayMarchingBuilder vertex shader remains simple', async (assert)
 	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.simpleVertex.frag));
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });
+QUnit.test(
+	'mat/rayMarchingBuilder SDF functions are still valid without being connected to globals',
+	async (assert) => {
+		const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+		const MAT = window.MAT;
+		// const debug = MAT.createNode('test')
+		const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+		const {sdfSphere} = onCreateHook(rayMarchingBuilder1);
+		sdfSphere.setInput(0, null);
+		const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+
+		await RendererUtils.compile(rayMarchingBuilder1, renderer);
+		assert.equal(
+			GLSLHelper.compress(material.vertexShader),
+			GLSLHelper.compress(TEST_SHADER_LIB.globalsNotNeeded.vert)
+		);
+		assert.equal(
+			GLSLHelper.compress(material.fragmentShader),
+			GLSLHelper.compress(TEST_SHADER_LIB.globalsNotNeeded.frag)
+		);
+		assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
+	}
+);
 
 QUnit.test('mat/rayMarchingBuilder uses cameraPosition for fresnel on envMap', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
@@ -212,6 +238,18 @@ QUnit.test('mat/rayMarchingBuilder uses cameraPosition for fresnel on envMap', a
 	dot1.setInput(0, sdfGradient1, 'gradient');
 	dot1.setInput(1, normalize1);
 	normalize1.setInput(0, globals, 'cameraPosition');
+
+	// add inputs to the SDFMaterial, to make sure those are properly parsed
+	const envMapTint = rayMarchingBuilder1.createNode('constant');
+	envMapTint.setName('envMapTint');
+	envMapTint.setGlType(GlConnectionPointType.VEC3);
+	sdfMaterial.setInput('envMapTint', envMapTint);
+	const envMapFresnel = rayMarchingBuilder1.createNode('constant');
+	envMapFresnel.setName('envMapFresnel');
+	sdfMaterial.setInput('envMapFresnel', envMapFresnel);
+	const envMapFresnelPower = rayMarchingBuilder1.createNode('constant');
+	envMapFresnelPower.setName('envMapFresnelPower');
+	sdfMaterial.setInput('envMapFresnelPower', envMapFresnelPower);
 
 	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
 

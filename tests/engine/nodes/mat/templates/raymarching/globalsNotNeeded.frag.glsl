@@ -87,29 +87,7 @@ float SDFSmoothIntersect( float d1, float d2, float k ) {
 	float h = clamp( 0.5 - 0.5*(d2-d1)/k, 0.0, 1.0 );
 	return mix( d2, d1, h ) + k*h*(1.0-h);
 }
-float v_POLY_SDFGradient1_sdfFunction(vec3 position, float input0){
-	vec3 v_POLY_SDFGradient1_subnetInput1_position = position;
-	float v_POLY_SDFGradient1_subnetInput1_input0 = input0;
-	float v_POLY_SDFGradient1_SDFSphere1_float = sdSphere(v_POLY_SDFGradient1_subnetInput1_position - vec3(0.0, 0.0, 0.0), 1.0);
-	return v_POLY_SDFGradient1_SDFSphere1_float;
-}
-vec3 v_POLY_SDFGradient1_gradientFunction( in vec3 p, float input0 )
-{
-	const float eps = 0.0001;
-	const vec2 h = vec2(eps,0);
-	return normalize(
-		vec3(
-			v_POLY_SDFGradient1_sdfFunction(p+h.xyy, input0) - v_POLY_SDFGradient1_sdfFunction(p-h.xyy, input0),
-			v_POLY_SDFGradient1_sdfFunction(p+h.yxy, input0) - v_POLY_SDFGradient1_sdfFunction(p-h.yxy, input0),
-			v_POLY_SDFGradient1_sdfFunction(p+h.yyx, input0) - v_POLY_SDFGradient1_sdfFunction(p-h.yyx, input0)
-		)
-	);
-}
-float complement(float x){return 1.0-x;}
-vec2 complement(vec2 x){return vec2(1.0-x.x, 1.0-x.y);}
-vec3 complement(vec3 x){return vec3(1.0-x.x, 1.0-x.y, 1.0-x.z);}
-vec4 complement(vec4 x){return vec4(1.0-x.x, 1.0-x.y, 1.0-x.z, 1.0-x.w);}
-const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 216;
+const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 147;
 uniform sampler2D v_POLY_texture_envTexture1;
 #include <lightmap_pars_fragment>
 #include <bsdfs>
@@ -134,13 +112,9 @@ int DefaultSDFMaterial(){
 }
 SDFContext GetDist(vec3 p) {
 	SDFContext sdfContext = SDFContext(0.0, 0);
-	vec3 v_POLY_globals1_position = p;
-	vec3 v_POLY_globals1_cameraPosition = cameraPosition;
+	float v_POLY_SDFSphere1_float = sdSphere(p - vec3(0.0, 0.0, 0.0), 1.0);
 	
-	float v_POLY_SDFGradient1_sdf = v_POLY_SDFGradient1_sdfFunction(v_POLY_globals1_position, 0.0);
-	vec3 v_POLY_SDFGradient1_gradient = v_POLY_SDFGradient1_gradientFunction(v_POLY_globals1_position, 0.0);
-	
-	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFGradient1_sdf, _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1);
+	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFSphere1_float, _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1);
 	
 	sdfContext = v_POLY_SDFContext1_SDFContext;
 	
@@ -212,35 +186,13 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, vec3 col, int mat){
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
-	vec3 v_POLY_envMapTint_val = vec3(0.0, 0.0, 0.0);
-	
-	vec3 v_POLY_globals1_position = p;
-	vec3 v_POLY_globals1_cameraPosition = cameraPosition;
-	
-	float v_POLY_envMapFresnel_val = 0.0;
-	
-	float v_POLY_envMapFresnelPower_val = 0.0;
-	
-	float v_POLY_SDFGradient1_sdf = v_POLY_SDFGradient1_sdfFunction(v_POLY_globals1_position, 0.0);
-	vec3 v_POLY_SDFGradient1_gradient = v_POLY_SDFGradient1_gradientFunction(v_POLY_globals1_position, 0.0);
-	
-	vec3 v_POLY_normalize1_normalized = normalize(v_POLY_globals1_cameraPosition);
-	
-	float v_POLY_dot1_val = dot(v_POLY_SDFGradient1_gradient, v_POLY_normalize1_normalized);
-	
-	float v_POLY_complement1_val = complement(v_POLY_dot1_val);
-	
-	float v_POLY_pow1_val = pow(v_POLY_complement1_val, 0.0);
-	
-	float v_POLY_abs1_val = abs(v_POLY_pow1_val);
-	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
 		col *= v_POLY_constant1_val;
 		vec3 r = normalize(reflect(rayDir, n));
 		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
-		float fresnel = pow(1.-dot(normalize(cameraPosition), n), v_POLY_envMapFresnelPower_val);
-		float fresnelFactor = (1.-v_POLY_envMapFresnel_val) + v_POLY_envMapFresnel_val*fresnel;
-		vec3 env = texture2D(v_POLY_texture_envTexture1, uv).rgb * v_POLY_envMapTint_val * v_POLY_abs1_val * fresnelFactor;
+		float fresnel = pow(1.-dot(normalize(cameraPosition), n), 5.0);
+		float fresnelFactor = (1.-0.0) + 0.0*fresnel;
+		vec3 env = texture2D(v_POLY_texture_envTexture1, uv).rgb * vec3(1.0, 1.0, 1.0) * 1.0 * fresnelFactor;
 		col += env;
 	}
 	

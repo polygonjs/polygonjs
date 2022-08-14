@@ -6,7 +6,7 @@
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
-import {TypedGlNode} from './_Base';
+import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -25,7 +25,7 @@ class SDFTorusGlParamsConfig extends NodeParamsConfig {
 	// rb = ParamConfig.FLOAT(0.2);
 }
 const ParamsConfig = new SDFTorusGlParamsConfig();
-export class SDFTorusGlNode extends TypedGlNode<SDFTorusGlParamsConfig> {
+export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFTorus';
@@ -40,7 +40,7 @@ export class SDFTorusGlNode extends TypedGlNode<SDFTorusGlParamsConfig> {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
+		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const radius1 = ThreeToGl.float(this.variableForInputParam(this.p.radius1));
 		const radius2 = ThreeToGl.float(this.variableForInputParam(this.p.radius2));

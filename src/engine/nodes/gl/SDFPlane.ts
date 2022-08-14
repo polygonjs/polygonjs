@@ -6,7 +6,7 @@
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
-import {TypedGlNode} from './_Base';
+import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -24,7 +24,7 @@ class SDFPlaneGlParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new SDFPlaneGlParamsConfig();
-export class SDFPlaneGlNode extends TypedGlNode<SDFPlaneGlParamsConfig> {
+export class SDFPlaneGlNode extends BaseSDFGlNode<SDFPlaneGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFPlane';
@@ -39,7 +39,7 @@ export class SDFPlaneGlNode extends TypedGlNode<SDFPlaneGlParamsConfig> {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
+		const position = this.position();
 		const normal = ThreeToGl.vector3(this.variableForInputParam(this.p.normal));
 		const offset = ThreeToGl.float(this.variableForInputParam(this.p.offset));
 

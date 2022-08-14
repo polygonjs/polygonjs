@@ -88,7 +88,11 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 	override create_shader_configs(): ShaderConfig[] {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, [], []),
-			new ShaderConfig(ShaderName.FRAGMENT, [/*'color', */ 'color', 'envMapIntensity'], []),
+			new ShaderConfig(
+				ShaderName.FRAGMENT,
+				[/*'color', */ 'color', 'envMapTint', 'envMapIntensity', 'envMapFresnel', 'envMapFresnelPower'],
+				[]
+			),
 		];
 	}
 	static override create_variable_configs() {

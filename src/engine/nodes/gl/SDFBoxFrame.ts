@@ -6,7 +6,7 @@
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
-import {TypedGlNode} from './_Base';
+import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import SDFMethods from './gl/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -22,7 +22,7 @@ class SDFBoxFrameGlParamsConfig extends NodeParamsConfig {
 	width = ParamConfig.FLOAT(0.1);
 }
 const ParamsConfig = new SDFBoxFrameGlParamsConfig();
-export class SDFBoxFrameGlNode extends TypedGlNode<SDFBoxFrameGlParamsConfig> {
+export class SDFBoxFrameGlNode extends BaseSDFGlNode<SDFBoxFrameGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFBoxFrame';
@@ -37,7 +37,7 @@ export class SDFBoxFrameGlNode extends TypedGlNode<SDFBoxFrameGlParamsConfig> {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
+		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const size = ThreeToGl.vector3(this.variableForInputParam(this.p.size));
 		const width = ThreeToGl.vector3(this.variableForInputParam(this.p.width));
