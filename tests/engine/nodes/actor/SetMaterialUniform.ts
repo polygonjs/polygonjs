@@ -36,6 +36,11 @@ QUnit.test('actor/setMaterialUniform', async (assert) => {
 	setMaterialUniform1.setUniformType(ActorConnectionPointType.VECTOR3);
 	setMaterialUniform1.params.get(ActorConnectionPointType.VECTOR3)!.set([0.2, 0.3, 0.4]);
 
+	const lerpConstant = actor1.createNode('constant');
+	lerpConstant.setConstantType(ActorConnectionPointType.FLOAT);
+	setMaterialUniform1.setInput('lerp', lerpConstant);
+	lerpConstant.p.float.set(1);
+
 	const uniformName = `${UNIFORM_PARAM_PREFIX}myUniform`;
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -53,5 +58,16 @@ QUnit.test('actor/setMaterialUniform', async (assert) => {
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
 		assert.equal(MaterialUserDataUniforms.getUniforms(material)![uniformName].value.x, 0.2, 'color changed');
+
+		lerpConstant.p.float.set(0.5);
+		setMaterialUniform1.params.get(ActorConnectionPointType.VECTOR3)!.set([0.4, 0.3, 0.8]);
+		onManualTrigger1.p.trigger.pressButton();
+		await CoreSleep.sleep(100);
+		assert.in_delta(
+			MaterialUserDataUniforms.getUniforms(material)![uniformName].value.x,
+			0.3,
+			0.0001,
+			'color changed'
+		);
 	});
 });
