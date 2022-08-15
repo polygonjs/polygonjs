@@ -21,6 +21,7 @@ import {CatmullRomCurve3GetPointActorNode} from '../../../nodes/actor/CatmullRom
 import {CeilActorNode} from '../../../nodes/actor/Ceil';
 import {ClampActorNode} from '../../../nodes/actor/Clamp';
 import {CodeActorNode} from '../../../nodes/actor/Code';
+import {ColorToVec3ActorNode} from '../../../nodes/actor/ColorToVec3';
 import {CompareActorNode} from '../../../nodes/actor/Compare';
 import {ComplementActorNode} from '../../../nodes/actor/Complement';
 import {ConstantActorNode} from '../../../nodes/actor/Constant';
@@ -127,6 +128,7 @@ import {TriggerTwoWaySwitchActorNode} from '../../../nodes/actor/TriggerTwoWaySw
 import {TwoWaySwitchActorNode} from '../../../nodes/actor/TwoWaySwitch';
 import {Vec2ToFloatActorNode} from '../../../nodes/actor/Vec2ToFloat';
 import {Vec2ToVec3ActorNode} from '../../../nodes/actor/Vec2ToVec3';
+import {Vec3ToColorActorNode} from '../../../nodes/actor/Vec3ToColor';
 import {Vec3ToFloatActorNode} from '../../../nodes/actor/Vec3ToFloat';
 import {Vec3ToVec4ActorNode} from '../../../nodes/actor/Vec3ToVec4';
 import {Vec3ToVec2ActorNode} from '../../../nodes/actor/Vec3ToVec2';
@@ -164,6 +166,7 @@ export interface ActorNodeChildrenMap {
 	ceil: CeilActorNode;
 	clamp: ClampActorNode;
 	code: CodeActorNode;
+	colorToVec3: ColorToVec3ActorNode;
 	compare: CompareActorNode;
 	complement: ComplementActorNode;
 	constant: ConstantActorNode;
@@ -270,6 +273,7 @@ export interface ActorNodeChildrenMap {
 	twoWaySwitch: TwoWaySwitchActorNode;
 	vec2ToFloat: Vec2ToFloatActorNode;
 	vec2ToVec3: Vec2ToVec3ActorNode;
+	vec3ToColor: Vec3ToColorActorNode;
 	vec3ToFloat: Vec3ToFloatActorNode;
 	vec3ToVec2: Vec3ToVec2ActorNode;
 	vec3ToVec4: Vec3ToVec4ActorNode;
@@ -311,6 +315,7 @@ export class ActorRegister {
 		poly.registerNode(ClampActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(CatmullRomCurve3GetPointActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
+		poly.registerNode(ColorToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(CompareActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(ComplementActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(ConstantActorNode, CATEGORY_ACTOR.MISC);
@@ -417,6 +422,7 @@ export class ActorRegister {
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(Vec2ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec2ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(Vec3ToColorActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec3ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec3ToVec2ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec3ToVec4ActorNode, CATEGORY_ACTOR.CONVERSION);

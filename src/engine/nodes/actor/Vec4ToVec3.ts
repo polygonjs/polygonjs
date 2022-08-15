@@ -17,7 +17,7 @@ import {BaseVecToActorNode} from './_ConversionVecTo';
 
 const components_v4 = ['x', 'y', 'z', 'w'];
 
-enum Vec4ToVec3ActorNodeInputName {
+enum Vec4ToVec3ActorNodeOutputName {
 	VEC3 = 'Vector3',
 	W = 'w',
 }
@@ -30,8 +30,8 @@ export class Vec4ToVec3ActorNode extends BaseVecToActorNode {
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new ActorConnectionPoint(Vec4ToVec3ActorNodeInputName.VEC3, ActorConnectionPointType.VECTOR3),
-			new ActorConnectionPoint(Vec4ToVec3ActorNodeInputName.W, ActorConnectionPointType.FLOAT),
+			new ActorConnectionPoint(Vec4ToVec3ActorNodeOutputName.VEC3, ActorConnectionPointType.VECTOR3),
+			new ActorConnectionPoint(Vec4ToVec3ActorNodeOutputName.W, ActorConnectionPointType.FLOAT),
 		]);
 	}
 	override createParams() {
@@ -41,17 +41,17 @@ export class Vec4ToVec3ActorNode extends BaseVecToActorNode {
 	private _defaultVector4 = new Vector4();
 	public override outputValue(
 		context: ActorNodeTriggerContext,
-		outputName: Vec4ToVec3ActorNodeInputName = Vec4ToVec3ActorNodeInputName.VEC3
+		outputName: Vec4ToVec3ActorNodeOutputName = Vec4ToVec3ActorNodeOutputName.VEC3
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
 		const vec4 =
 			this._inputValue<ActorConnectionPointType.VECTOR4>(Vec4ToVec3ActorNode.INPUT_NAME_VEC4, context) ||
 			this._defaultVector4;
 		switch (outputName) {
-			case Vec4ToVec3ActorNodeInputName.VEC3: {
+			case Vec4ToVec3ActorNodeOutputName.VEC3: {
 				tmpV3.set(vec4.x, vec4.y, vec4.z);
 				return tmpV3;
 			}
-			case Vec4ToVec3ActorNodeInputName.W: {
+			case Vec4ToVec3ActorNodeOutputName.W: {
 				return vec4.w;
 			}
 		}

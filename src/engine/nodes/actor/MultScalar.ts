@@ -7,9 +7,7 @@
 import {BaseMathFunctionArg2ActorNode} from './_BaseMathFunction';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
+import {Color, Vector2, Vector3, Vector4} from 'three';
 import {ActorNodeTriggerContext} from './_Base';
 
 const DefaultValues: PolyDictionary<number> = {
@@ -23,6 +21,7 @@ enum MultScalarActorNodeInputName {
 }
 
 const ALLOWED_INPUT_TYPES: ActorConnectionPointType[] = [
+	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.VECTOR2,
 	ActorConnectionPointType.VECTOR3,
 	ActorConnectionPointType.VECTOR4,
@@ -46,45 +45,53 @@ export class MultScalarActorNode extends BaseMathFunctionArg2ActorNode {
 		return DefaultValues[name];
 	}
 
+	private _tmpColor = new Color();
 	private _tmpVec2 = new Vector2();
 	private _tmpVec3 = new Vector3();
 	private _tmpVec4 = new Vector4();
 	public override outputValue(context: ActorNodeTriggerContext) {
-		const vector = this._vectorInput(context);
-		if (!vector) {
+		const inputVal = this._inputColorOrVector(context);
+		if (!inputVal) {
 			return this._tmpVec3;
 		}
 		let mult = this._inputValue<ActorConnectionPointType.FLOAT>(MultScalarActorNodeInputName.MULT, context);
 		if (mult == null) {
 			mult = 1;
 		}
-		vector.multiplyScalar(mult);
-		return vector;
+		inputVal.multiplyScalar(mult);
+		return inputVal;
 	}
-	private _defaultVector = {
+	private _defaultInput = {
+		c: new Color(),
 		v2: new Vector2(),
 		v3: new Vector3(),
 		v4: new Vector4(),
 	};
-	private _vectorInput(context: ActorNodeTriggerContext) {
+	private _inputColorOrVector(context: ActorNodeTriggerContext) {
 		const firstInputType = this._expectedInputTypes()[0];
 		switch (firstInputType) {
+			case ActorConnectionPointType.COLOR: {
+				return this._tmpColor.copy(
+					this._inputValue<ActorConnectionPointType.COLOR>(MultScalarActorNodeInputName.VALUE, context) ||
+						this._defaultInput.c
+				);
+			}
 			case ActorConnectionPointType.VECTOR2: {
 				return this._tmpVec2.copy(
 					this._inputValue<ActorConnectionPointType.VECTOR2>(MultScalarActorNodeInputName.VALUE, context) ||
-						this._defaultVector.v2
+						this._defaultInput.v2
 				);
 			}
 			case ActorConnectionPointType.VECTOR3: {
 				return this._tmpVec3.copy(
 					this._inputValue<ActorConnectionPointType.VECTOR3>(MultScalarActorNodeInputName.VALUE, context) ||
-						this._defaultVector.v3
+						this._defaultInput.v3
 				);
 			}
 			case ActorConnectionPointType.VECTOR4: {
 				return this._tmpVec4.copy(
 					this._inputValue<ActorConnectionPointType.VECTOR4>(MultScalarActorNodeInputName.VALUE, context) ||
-						this._defaultVector.v4
+						this._defaultInput.v4
 				);
 			}
 		}
