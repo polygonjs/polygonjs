@@ -3,6 +3,7 @@
  *
  *
  */
+import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from './../../../core/post/BlendFunction';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, EffectPass, KernelSize, OutlineEffect} from 'postprocessing';
@@ -53,6 +54,17 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 		visibleIf: {xRay: 1},
 	});
+	/** @param opacity */
+	opacity = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+		...PostParamOptions,
+	});
+	/** @param render mode */
+	blendFunction = ParamConfig.INTEGER(BLEND_FUNCTIONS.indexOf(BlendFunction.SCREEN), {
+		...PostParamOptions,
+		...BLEND_FUNCTION_MENU_OPTIONS,
+	});
 }
 const ParamsConfig = new OutlinePostParamsConfig();
 export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePostParamsConfig> {
@@ -81,6 +93,8 @@ export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePos
 	}
 	override updatePass(pass: EffectPass) {
 		const effect = (pass as any).effects[0] as OutlineEffect;
+		effect.blendMode.opacity.value = this.pv.opacity;
+		effect.blendMode.blendFunction = BLEND_FUNCTIONS[this.pv.blendFunction];
 
 		effect.edgeStrength = this.pv.edgeStrength;
 		effect.blur = this.pv.blur;

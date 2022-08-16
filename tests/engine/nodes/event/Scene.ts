@@ -31,12 +31,12 @@ QUnit.test('scene event nodes simple tick event', async (assert) => {
 	eventScene.p.active.set(0);
 	assert.equal(await logPrintsCount(), 0);
 });
-QUnit.test('scene event nodes simple loaded event', async (assert) => {
+QUnit.test('scene event nodes simple created event', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
 	const message = eventsNetwork.createNode('message');
-	message.setInput(0, eventScene, 'sceneLoaded');
+	message.setInput(0, eventScene, 'created');
 
 	async function logPrintsCount() {
 		const consoleHistory = await checkConsolePrints(async () => {
@@ -46,11 +46,11 @@ QUnit.test('scene event nodes simple loaded event', async (assert) => {
 		return consoleHistory.log.length;
 	}
 	eventScene.p.active.set(1);
-	eventScene.p.sceneLoaded.set(0);
+	eventScene.p.created.set(0);
 
 	assert.equal(await logPrintsCount(), 0);
 
-	eventScene.p.sceneLoaded.set(1);
+	eventScene.p.created.set(1);
 	assert.equal(await logPrintsCount(), 1);
 });
 

@@ -33,6 +33,7 @@ varying vec2 geoUV;
 // }
 
 // from https://www.shadertoy.com/view/MdXyzX
+// https://www.shadertoy.com/view/Xdlczl
 #define DRAG_MULT 0.048
 #define ITERATIONS_NORMAL 48
 vec2 wavedx(vec2 position, vec2 direction, float speed, float frequency, float timeshift) {

@@ -6,7 +6,8 @@ import {OnProgressArguments, OnProgressUpdateCallback} from '../../nodes/manager
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
 import {BaseViewerType} from '../../viewers/_Base';
-import {PolyEventsDispatcher, PolyEventName} from '../common/EventsDispatcher';
+import {PolyEventsDispatcher} from '../common/EventsDispatcher';
+import {PolyEventName} from '../../poly/utils/PolyEventName';
 import {PROGRESS_RATIO} from '../common/Progress';
 import {SceneJsonExporterData} from '../json/export/Scene';
 import {SceneJsonImporter, ConfigureSceneCallback} from '../json/import/Scene';
@@ -133,6 +134,7 @@ export class ScenePlayerImporter {
 		if (this.options.autoPlay != false) {
 			scene.play();
 		}
+		scene.loadingController.dispatchReadyEvent();
 		this._dispatchEvent(PolyEventName.SCENE_READY);
 	}
 
