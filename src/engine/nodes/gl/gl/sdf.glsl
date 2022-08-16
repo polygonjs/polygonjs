@@ -57,6 +57,18 @@ float sdLink( vec3 p, float le, float r1, float r2 )
   vec3 q = vec3( p.x, max(abs(p.y)-le,0.0), p.z );
   return length(vec2(length(q.xy)-r1,q.z)) - r2;
 }
+// c is the sin/cos of the desired cone angle
+float sdSolidAngle(vec3 pos, vec2 c, float radius)
+{
+	vec2 p = vec2( length(pos.xz), pos.y );
+	float l = length(p) - radius;
+	float m = length(p - c*clamp(dot(p,c),0.0,radius) );
+	return max(l,m*sign(c.y*p.x-c.x*p.y));
+}
+float sdSolidAngleWrapped(vec3 pos, float angle, float radius){
+	return sdSolidAngle(pos, vec2(sin(angle), cos(angle)), radius);
+}
+
 float sdRhombus(vec3 p, float la, float lb, float h, float ra)
 {
   p = abs(p);
@@ -101,4 +113,19 @@ float SDFSmoothSubtract( float d1, float d2, float k ) {
 float SDFSmoothIntersect( float d1, float d2, float k ) {
 	float h = clamp( 0.5 - 0.5*(d2-d1)/k, 0.0, 1.0 );
 	return mix( d2, d1, h ) + k*h*(1.0-h);
+}
+
+vec4 SDFElongateFast( in vec3 p, in vec3 h )
+{
+	return vec4( p-clamp(p,-h,h), 0.0 );
+}
+vec4 SDFElongateSlow( in vec3 p, in vec3 h )
+{
+	vec3 q = abs(p)-h;
+	return vec4( max(q,0.0), min(max(q.x,max(q.y,q.z)),0.0) );
+}
+
+float SDFOnion( in float sdf, in float thickness )
+{
+	return abs(sdf)-thickness;
 }

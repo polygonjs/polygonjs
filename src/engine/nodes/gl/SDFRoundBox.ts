@@ -42,7 +42,7 @@ export class SDFRoundBoxGlNode extends BaseSDFGlNode<SDFRoundBoxGlParamsConfig> 
 		const size = ThreeToGl.vector3(this.variableForInputParam(this.p.size));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
-		const float = this.glVarName('float');
+		const float = this.glVarName(OUTPUT_NAME);
 		const bodyLine = `float ${float} = sdRoundBox(${position} - ${center}, ${size}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 

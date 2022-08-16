@@ -1,5 +1,5 @@
 /**
- * Function of SDF plane
+ * Function of SDF solid angle
  *
  * @remarks
  *
@@ -15,19 +15,21 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
-class SDFPlaneGlParamsConfig extends NodeParamsConfig {
+class SDFSolidAngleGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0]);
-	normal = ParamConfig.VECTOR3([0, 1, 0]);
-	offset = ParamConfig.FLOAT(0, {
-		range: [-1, 1],
-		rangeLocked: [false, false],
+	center = ParamConfig.VECTOR3([0, 0, 0]);
+	angle = ParamConfig.FLOAT(0.25 * Math.PI, {
+		range: [0, 2 * Math.PI],
+		rangeLocked: [true, false],
+		step: 0.00001,
 	});
+	radius = ParamConfig.FLOAT(0.5);
 }
-const ParamsConfig = new SDFPlaneGlParamsConfig();
-export class SDFPlaneGlNode extends BaseSDFGlNode<SDFPlaneGlParamsConfig> {
+const ParamsConfig = new SDFSolidAngleGlParamsConfig();
+export class SDFSolidAngleGlNode extends BaseSDFGlNode<SDFSolidAngleGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFPlane';
+		return 'SDFSolidAngle';
 	}
 
 	override initializeNode() {
@@ -40,11 +42,12 @@ export class SDFPlaneGlNode extends BaseSDFGlNode<SDFPlaneGlParamsConfig> {
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
-		const normal = ThreeToGl.vector3(this.variableForInputParam(this.p.normal));
-		const offset = ThreeToGl.float(this.variableForInputParam(this.p.offset));
+		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
+		const angle = ThreeToGl.vector2(this.variableForInputParam(this.p.angle));
+		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdPlane(${position}, ${normal}, ${offset})`;
+		const bodyLine = `float ${float} = sdSolidAngleWrapped(${position} - ${center}, ${angle}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);

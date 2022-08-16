@@ -42,7 +42,7 @@ export class SDFBoxFrameGlNode extends BaseSDFGlNode<SDFBoxFrameGlParamsConfig> 
 		const size = ThreeToGl.vector3(this.variableForInputParam(this.p.size));
 		const width = ThreeToGl.vector3(this.variableForInputParam(this.p.width));
 
-		const float = this.glVarName('float');
+		const float = this.glVarName(OUTPUT_NAME);
 		const bodyLine = `float ${float} = sdBoxFrame(${position} - ${center}, ${size}, ${width})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 

@@ -46,7 +46,7 @@ export class SDFRhombusGlNode extends BaseSDFGlNode<SDFRhombusGlParamsConfig> {
 		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
-		const float = this.glVarName('float');
+		const float = this.glVarName(OUTPUT_NAME);
 		const bodyLine = `float ${float} = sdRhombus(${position} - ${center}, ${length1}, ${length2}, ${height}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 

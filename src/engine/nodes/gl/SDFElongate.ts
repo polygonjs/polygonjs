@@ -1,5 +1,5 @@
 /**
- * Function of SDF plane
+ * stretches P before using it as an input for an SDF
  *
  * @remarks
  *
@@ -13,38 +13,39 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {isBooleanTrue} from '../../../core/Type';
 
-const OUTPUT_NAME = 'float';
-class SDFPlaneGlParamsConfig extends NodeParamsConfig {
+const OUTPUT_NAME = 'p';
+class SDFElongateGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0]);
-	normal = ParamConfig.VECTOR3([0, 1, 0]);
-	offset = ParamConfig.FLOAT(0, {
-		range: [-1, 1],
-		rangeLocked: [false, false],
-	});
+	center = ParamConfig.VECTOR3([0, 0, 0]);
+	mult = ParamConfig.VECTOR3([0, 0, 0]);
+	fast = ParamConfig.BOOLEAN(1);
 }
-const ParamsConfig = new SDFPlaneGlParamsConfig();
-export class SDFPlaneGlNode extends BaseSDFGlNode<SDFPlaneGlParamsConfig> {
+const ParamsConfig = new SDFElongateGlParamsConfig();
+export class SDFElongateGlNode extends BaseSDFGlNode<SDFElongateGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFPlane';
+		return 'SDFElongate';
 	}
 
 	override initializeNode() {
 		super.initializeNode();
-
+		this.io.connection_points.spare_params.setInputlessParamNames(['fast']);
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
-		const normal = ThreeToGl.vector3(this.variableForInputParam(this.p.normal));
-		const offset = ThreeToGl.float(this.variableForInputParam(this.p.offset));
+		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
+		const mult = ThreeToGl.vector3(this.variableForInputParam(this.p.mult));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdPlane(${position}, ${normal}, ${offset})`;
+		const functionName = isBooleanTrue(this.pv.fast) ? 'SDFElongateFast' : 'SDFElongateSlow';
+		const suffix = isBooleanTrue(this.pv.fast) ? '.xyz' : '.xyz';
+		const bodyLine = `vec3 ${float} = ${functionName}(${position} - ${center}, ${mult})${suffix}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);

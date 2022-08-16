@@ -40,7 +40,7 @@ export class SDFSphereGlNode extends BaseSDFGlNode<SDFSphereGlParamsConfig> {
 		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
-		const float = this.glVarName('float');
+		const float = this.glVarName(OUTPUT_NAME);
 		const body_line = `float ${float} = sdSphere(${position} - ${center}, ${radius})`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);
 

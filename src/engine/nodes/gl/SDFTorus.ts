@@ -48,7 +48,7 @@ export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
 		// const ra = ThreeToGl.float(this.variableForInputParam(this.p.ra));
 		// const rb = ThreeToGl.float(this.variableForInputParam(this.p.rb));
 
-		const float = this.glVarName('float');
+		const float = this.glVarName(OUTPUT_NAME);
 		const torus = `sdTorus(${position} - ${center}, vec2(${radius1},${radius2}))`;
 		// const torusCapped = `sdCappedTorus(${position} - ${center}, vec2(${radius1},${radius2}), ${ra}, ${rb})`;
 		// const bodyLine = `float ${float} = ${cap} ? ${torusCapped} : ${torus}`;

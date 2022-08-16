@@ -44,7 +44,7 @@ export class SDFLinkGlNode extends BaseSDFGlNode<SDFLinkGlParamsConfig> {
 		const radius1 = ThreeToGl.float(this.variableForInputParam(this.p.radius1));
 		const radius2 = ThreeToGl.float(this.variableForInputParam(this.p.radius2));
 
-		const float = this.glVarName('float');
+		const float = this.glVarName(OUTPUT_NAME);
 		const bodyLine = `float ${float} = sdLink(${position} - ${center}, ${halfLength}, ${radius1}, ${radius2})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 

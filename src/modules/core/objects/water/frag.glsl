@@ -19,20 +19,6 @@ varying vec4 mirrorCoord;
 varying vec4 worldPosition;
 varying vec2 geoUV;
 
-// vec4 getNoise( vec2 uv ) {
-// 	float t = time * timeScale;
-// 	vec2 uv0 = ( uv / 103.0 ) + vec2(t / 17.0, t / 29.0);
-// 	vec2 uv1 = uv / 107.0-vec2( t / -19.0, t / 31.0 );
-// 	vec2 uv2 = uv / vec2( 8907.0, 9803.0 ) + vec2( t / 101.0, t / 97.0 );
-// 	vec2 uv3 = uv / vec2( 1091.0, 1027.0 ) - vec2( t / 109.0, t / -113.0 );
-// 	vec4 noise = texture2D( normalSampler, uv0 ) +
-// 		texture2D( normalSampler, uv1 ) +
-// 		texture2D( normalSampler, uv2 ) +
-// 		texture2D( normalSampler, uv3 );
-// 	return noise * 0.5 - 1.0;
-// }
-
-// from https://www.shadertoy.com/view/MdXyzX
 // https://www.shadertoy.com/view/Xdlczl
 #define DRAG_MULT 0.048
 #define ITERATIONS_NORMAL 48
@@ -41,9 +27,7 @@ vec2 wavedx(vec2 position, vec2 direction, float speed, float frequency, float t
 	float wave = exp(sin(x) - 1.0);
 	float dx = wave * cos(x);
 	return vec2(wave, -dx);
-	// return vec2(1.0,0.0);
 }
-
 float getwaves(vec2 position, float currentTime){
 	float iter = 0.0;
 	float phase = 6.0;
@@ -62,8 +46,7 @@ float getwaves(vec2 position, float currentTime){
 		phase *= 1.18;
 		speed *= 1.07;
 	}
-	return w / ws;
-	// return 1.0;
+	return (w / ws);
 }
 
 float H = 0.0;
@@ -82,7 +65,6 @@ void sunLight( const vec3 surfaceNormal, const vec3 eyeDirection, float shiny, f
 	specularColor += pow( direction, shiny ) * sunColor * spec;
 	diffuseColor += max( dot( sunDirection, surfaceNormal ), 0.0 ) * sunColor * diffuse;
 }
-
 
 
 #include <common>

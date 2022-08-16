@@ -40,7 +40,7 @@ export class SDFOctahedronGlNode extends BaseSDFGlNode<SDFOctahedronGlParamsConf
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const size = ThreeToGl.float(this.variableForInputParam(this.p.size));
 
-		const float = this.glVarName('float');
+		const float = this.glVarName(OUTPUT_NAME);
 		const bodyLine = `float ${float} = sdOctahedron(${position} - ${center}, ${size})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
