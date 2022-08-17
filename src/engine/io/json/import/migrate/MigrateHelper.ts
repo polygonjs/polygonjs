@@ -1,3 +1,7 @@
+import {CoreType} from './../../../../../core/Type';
+import {ParamType} from './../../../../poly/ParamType';
+import {SimpleParamJsonExporterData} from './../../../../nodes/utils/io/IOController';
+import {SceneJsonImporter} from '../Scene';
 import {ImageExtension} from '../../../../../core/FileTypeController';
 import {GeometryExtension} from '../../../../../core/FileTypeController';
 import {CoreBaseLoader} from '../../../../../core/loader/_Base';
@@ -120,6 +124,48 @@ const POST_NEW_TYPES: PolyDictionary<string> = {
 	unrealBloom: 'bloom',
 	verticalBlur: 'blur',
 };
+import {BlendFunction} from 'postprocessing';
+function migratePostNodeBlendFunction(nodeData: NodeJsonExporterData) {
+	const paramsData = nodeData['params'];
+	if (!paramsData) {
+		return;
+	}
+	const blendFunction = paramsData['blendFunction'] as SimpleParamJsonExporterData<ParamType.INTEGER> | undefined;
+	if (!blendFunction) {
+		return;
+	}
+	if (!CoreType.isNumber(blendFunction)) {
+		return;
+	}
+
+	const BLEND_FUNCTIONS_LEGACY: BlendFunction[] = [
+		BlendFunction.SKIP,
+		BlendFunction.ADD,
+		BlendFunction.ALPHA,
+		BlendFunction.AVERAGE,
+		BlendFunction.COLOR_BURN,
+		BlendFunction.COLOR_DODGE,
+		BlendFunction.DARKEN,
+		BlendFunction.DIFFERENCE,
+		BlendFunction.EXCLUSION,
+		BlendFunction.LIGHTEN,
+		BlendFunction.MULTIPLY,
+		BlendFunction.DIVIDE,
+		BlendFunction.NEGATION,
+		BlendFunction.NORMAL,
+		BlendFunction.OVERLAY,
+		BlendFunction.REFLECT,
+		BlendFunction.SCREEN,
+		BlendFunction.SET,
+		BlendFunction.SOFT_LIGHT,
+		BlendFunction.SUBTRACT,
+	];
+	const newBlendFunction = BLEND_FUNCTIONS_LEGACY[blendFunction];
+	if (newBlendFunction == null) {
+		return;
+	}
+	paramsData['blendFunction'] = newBlendFunction;
+}
 export class JsonImporterMigrateHelper {
 	static migrateNodeType(parentNode: BaseNodeType, nodeData: NodeJsonExporterData) {
 		const nodeType = nodeData.type;
@@ -141,5 +187,14 @@ export class JsonImporterMigrateHelper {
 			}
 		}
 		return nodeType;
+	}
+	static migrateParams(sceneImporter: SceneJsonImporter, parentNode: BaseNodeType, nodeData: NodeJsonExporterData) {
+		switch (parentNode.childrenControllerContext()) {
+			case NodeContext.POST: {
+				if (sceneImporter.isPolygonjsVersionLessThan('1.2.11')) {
+					migratePostNodeBlendFunction(nodeData);
+				}
+			}
+		}
 	}
 }

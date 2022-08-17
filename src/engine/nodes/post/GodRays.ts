@@ -12,7 +12,6 @@ import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_B
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, GodRaysEffect, EffectPass, KernelSize} from 'postprocessing';
 import {KERNEL_SIZES, KERNEL_SIZE_MENU_OPTIONS} from '../../../core/post/KernelSize';
-import {BLEND_FUNCTIONS} from './../../../core/post/BlendFunction';
 
 const tmpParent = new Group();
 const tmpLightSource = new Mesh(new BufferGeometry(), new MeshBasicMaterial());
@@ -91,7 +90,7 @@ class GodRaysPostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 	});
 	/** @param render mode */
-	blendFunction = ParamConfig.INTEGER(BLEND_FUNCTIONS.indexOf(BlendFunction.SCREEN), {
+	blendFunction = ParamConfig.INTEGER(BlendFunction.SCREEN, {
 		...PostParamOptions,
 		...BLEND_FUNCTION_MENU_OPTIONS,
 	});
@@ -133,7 +132,7 @@ export class GodRaysPostNode extends TypedPostProcessNode<EffectPass, GodRaysPos
 		effect.blurPass.resolution.scale = this.pv.resolutionScale;
 
 		effect.blendMode.opacity.value = this.pv.opacity;
-		effect.blendMode.blendFunction = BLEND_FUNCTIONS[this.pv.blendFunction];
+		effect.blendMode.blendFunction = this.pv.blendFunction;
 
 		const lightSource = _findLightSource(this.scene(), this.pv.objectMask);
 

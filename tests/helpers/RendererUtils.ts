@@ -25,7 +25,8 @@ interface WithViewerCallbackArgs {
 	renderer?: WebGLRenderer;
 }
 interface WithViewerOptions {
-	cameraNode: PerspectiveCameraObjNode | OrthographicCameraObjNode;
+	viewer?: ThreejsViewer<Camera>;
+	cameraNode?: PerspectiveCameraObjNode | OrthographicCameraObjNode;
 	mount?: boolean;
 }
 type WithViewerContainerCallback = (element: HTMLElement) => Promise<void>;
@@ -48,7 +49,7 @@ export class RendererUtils {
 
 	static async withViewer(options: WithViewerOptions, callback: WithViewerCallback) {
 		await this.withViewerContainer(async (element) => {
-			const viewer = (await options.cameraNode.createViewer({element}))!;
+			const viewer = (options.viewer || (await options.cameraNode?.createViewer({element})))!;
 			const canvas = viewer.canvas();
 			const renderer = viewer.renderer();
 

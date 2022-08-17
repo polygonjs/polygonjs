@@ -17,6 +17,9 @@ import './engine/scene/ObjectsController';
 import './engine/scene/OptimizedNodes';
 import './engine/scene/TimeController';
 
+QUnit.module('io');
+import './engine/io/json/import/Scene';
+
 QUnit.module('expressions');
 import './engine/expressions/methods/abs';
 import './engine/expressions/methods/arg';
@@ -255,6 +258,7 @@ import './engine/nodes/obj/SpotLight';
 
 QUnit.module('post');
 import './engine/nodes/post/Base';
+import './engine/nodes/post/BrightnessContrast';
 import './engine/nodes/post/DepthOfField';
 
 QUnit.module('sop');

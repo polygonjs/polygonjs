@@ -7,7 +7,7 @@ import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_B
 import {HueSaturationEffect, EffectPass, BlendFunction} from 'postprocessing';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
+import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
 class HueSaturationPostParamsConfig extends NodeParamsConfig {
 	/** @param hue */
 	hue = ParamConfig.FLOAT(0, {
@@ -29,7 +29,7 @@ class HueSaturationPostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 	});
 	/** @param render mode */
-	blendFunction = ParamConfig.INTEGER(BLEND_FUNCTIONS.indexOf(BlendFunction.MULTIPLY), {
+	blendFunction = ParamConfig.INTEGER(BlendFunction.MULTIPLY, {
 		...PostParamOptions,
 		...BLEND_FUNCTION_MENU_OPTIONS,
 	});
@@ -54,6 +54,6 @@ export class HueSaturationPostNode extends TypedPostProcessNode<EffectPass, HueS
 		effect.hue = this.pv.hue;
 		effect.saturation = this.pv.saturation;
 		effect.blendMode.opacity.value = this.pv.opacity;
-		effect.blendMode.blendFunction = BLEND_FUNCTIONS[this.pv.blendFunction];
+		effect.blendMode.blendFunction = this.pv.blendFunction;
 	}
 }

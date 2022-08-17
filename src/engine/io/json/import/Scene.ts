@@ -17,6 +17,14 @@ interface SceneJSONImporterOptions {
 	nodeCookWatcher?: NodeCookWatchCallback;
 	measurePerformanceOnLoad?: boolean;
 }
+function versionStrToNum(v: string) {
+	const elements = v.split('.').map((e) => parseInt(e));
+	const a = elements[0];
+	const b = elements[1];
+	const c = elements[2];
+	return 1000 * a + b + c / 1000;
+}
+
 export class SceneJsonImporter {
 	public readonly report = new ImportReport(this);
 	private _base_operations_composer_nodes_with_resolve_required: OperationsComposerSopNode[] | undefined;
@@ -25,6 +33,22 @@ export class SceneJsonImporter {
 	static async loadData(data: SceneJsonExporterData, options?: SceneJSONImporterOptions) {
 		const importer = new SceneJsonImporter(data, options);
 		return await importer.scene();
+	}
+
+	polygonjsSceneVersion() {
+		const properties = this._data['properties'];
+		if (properties) {
+			return properties.versions?.polygonjs;
+		}
+	}
+	isPolygonjsVersionLessThan(polygonVersionStr: string) {
+		const sceneVersionStr = this.polygonjsSceneVersion();
+		if (!sceneVersionStr) {
+			return false;
+		}
+		const sceneVersion = versionStrToNum(sceneVersionStr);
+		const polygonVersion = versionStrToNum(polygonVersionStr);
+		return sceneVersion < polygonVersion;
 	}
 
 	scene(): PolyScene {
@@ -48,6 +72,7 @@ export class SceneJsonImporter {
 		// scene.set_js_version(this._data['__js_version'])
 		const properties = this._data['properties'];
 		if (properties) {
+			// properties.versions?.polygonjs
 			// scene.setName(properties['name'])
 			const maxFrame = properties['maxFrame'] || 600;
 			scene.timeController.setMaxFrame(maxFrame);

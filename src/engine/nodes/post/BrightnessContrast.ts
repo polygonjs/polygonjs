@@ -7,7 +7,7 @@ import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_B
 import {BlendFunction, BrightnessContrastEffect, EffectPass} from 'postprocessing';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
+import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
 class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
 	/** @param brightness */
 	brightness = ParamConfig.FLOAT(0, {
@@ -28,7 +28,7 @@ class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 	});
 	/** @param render mode */
-	blendFunction = ParamConfig.INTEGER(BLEND_FUNCTIONS.indexOf(BlendFunction.MULTIPLY), {
+	blendFunction = ParamConfig.INTEGER(BlendFunction.NORMAL, {
 		...PostParamOptions,
 		...BLEND_FUNCTION_MENU_OPTIONS,
 	});
@@ -53,6 +53,6 @@ export class BrightnessContrastPostNode extends TypedPostProcessNode<EffectPass,
 		effect.brightness = this.pv.brightness;
 		effect.contrast = this.pv.contrast;
 		effect.blendMode.opacity.value = this.pv.opacity;
-		effect.blendMode.blendFunction = BLEND_FUNCTIONS[this.pv.blendFunction];
+		effect.blendMode.blendFunction = this.pv.blendFunction;
 	}
 }

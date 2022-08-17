@@ -7,7 +7,7 @@ import {Texture, Vector2} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, EffectPass, TextureEffect} from 'postprocessing';
-import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
+import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
 import {NodeContext} from '../../poly/NodeContext';
 
 const tmpTexture = new Texture();
@@ -27,7 +27,7 @@ class TexturePostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 	});
 	/** @param render mode */
-	blendFunction = ParamConfig.INTEGER(BLEND_FUNCTIONS.indexOf(BlendFunction.COLOR_DODGE), {
+	blendFunction = ParamConfig.INTEGER(BlendFunction.COLOR_DODGE, {
 		...PostParamOptions,
 		...BLEND_FUNCTION_MENU_OPTIONS,
 	});
@@ -50,7 +50,7 @@ export class TexturePostNode extends TypedPostProcessNode<EffectPass, TexturePos
 	override async updatePass(pass: EffectPass) {
 		const effect = (pass as any).effects[0] as TextureEffect;
 		effect.blendMode.opacity.value = this.pv.opacity;
-		effect.blendMode.blendFunction = BLEND_FUNCTIONS[this.pv.blendFunction];
+		effect.blendMode.blendFunction = this.pv.blendFunction;
 
 		const textureNode = this.pv.texture.nodeWithContext(NodeContext.COP, this.states?.error);
 		if (textureNode) {
