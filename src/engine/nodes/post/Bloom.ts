@@ -1,9 +1,9 @@
-import {SelectionController} from './utils/SelectionController';
 /**
  * Adds an Unreal Bloom effect.
  *
  *
  */
+import {SelectionController} from './utils/SelectionController';
 import {Vector2} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
