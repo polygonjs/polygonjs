@@ -65,13 +65,14 @@ export class SetParamActorNode extends TypedActorNode<SetParamActorParamsConfig>
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 		]);
 
-		this.io.outputs.setNamedOutputConnectionPoints([
-			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER),
-		]);
+		// this.io.outputs.setNamedOutputConnectionPoints([
+		// 	new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+		// ]);
 
 		this.io.connection_points.set_input_name_function(() => SetParamActorNode.INPUT_NAME_VAL);
 		this.io.connection_points.set_expected_input_types_function(() => [this._currentConnectionType()]);
-		this.io.connection_points.set_expected_output_types_function(() => []);
+		this.io.connection_points.set_output_name_function(() => TRIGGER_CONNECTION_NAME);
+		this.io.connection_points.set_expected_output_types_function(() => [ActorConnectionPointType.TRIGGER]);
 	}
 	private _currentConnectionType() {
 		if (this.pv.type == null) {

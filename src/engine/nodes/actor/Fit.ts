@@ -12,12 +12,16 @@ import {CoreType} from '../../../core/Type';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreMath} from '../../../core/math/_Module';
 
+const {fit, fitClamp} = CoreMath;
+const {isNumber, isVector} = CoreType;
+
 enum FitActorNodeInputName {
 	VALUE = 'val',
 	SRC_MIN = 'srcMin',
 	SRC_MAX = 'srcMax',
 	DEST_MIN = 'destMin',
 	DEST_MAX = 'destMax',
+	CLAMP_TO_DEST_RANGE = 'clampToDestRange',
 }
 const DefaultValues: PolyDictionary<number> = {
 	[FitActorNodeInputName.VALUE]: 0,
@@ -25,6 +29,7 @@ const DefaultValues: PolyDictionary<number> = {
 	[FitActorNodeInputName.SRC_MAX]: 1,
 	[FitActorNodeInputName.DEST_MIN]: 0,
 	[FitActorNodeInputName.DEST_MAX]: 1,
+	[FitActorNodeInputName.CLAMP_TO_DEST_RANGE]: 0,
 };
 
 const ALLOWED_INPUT_TYPES: ActorConnectionPointType[] = [
@@ -71,7 +76,7 @@ export class FitActorNode extends TypedActorNode<FitActorParamsConfig> {
 	protected _expectedInputTypes() {
 		const firstType = this.io.connection_points.first_input_connection_type();
 		const type = firstType && ALLOWED_INPUT_TYPES.includes(firstType) ? firstType : ActorConnectionPointType.FLOAT;
-		return [type, type, type, type, type];
+		return [type, type, type, type, type, ActorConnectionPointType.BOOLEAN];
 	}
 	protected _expectedInputName(index: number) {
 		return [
@@ -80,6 +85,7 @@ export class FitActorNode extends TypedActorNode<FitActorParamsConfig> {
 			FitActorNodeInputName.SRC_MAX,
 			FitActorNodeInputName.DEST_MIN,
 			FitActorNodeInputName.DEST_MAX,
+			FitActorNodeInputName.CLAMP_TO_DEST_RANGE,
 		][index];
 	}
 	protected _expectedOutputTypes() {
@@ -96,17 +102,16 @@ export class FitActorNode extends TypedActorNode<FitActorParamsConfig> {
 		const srcMax = this._inputValue<MixedType>(FitActorNodeInputName.SRC_MAX, context);
 		const destMin = this._inputValue<MixedType>(FitActorNodeInputName.DEST_MIN, context);
 		const destMax = this._inputValue<MixedType>(FitActorNodeInputName.DEST_MAX, context);
+		const clampToDestRange = this._inputValue<ActorConnectionPointType.BOOLEAN>(
+			FitActorNodeInputName.CLAMP_TO_DEST_RANGE,
+			context
+		);
+		const fitFunction = (clampToDestRange ? fitClamp : fit).bind(CoreMath);
 
-		if (
-			CoreType.isNumber(inputValue) &&
-			CoreType.isNumber(srcMin) &&
-			CoreType.isNumber(srcMax) &&
-			CoreType.isNumber(destMin) &&
-			CoreType.isNumber(destMax)
-		) {
-			return CoreMath.fit(inputValue, srcMin, srcMax, destMin, destMax);
+		if (isNumber(inputValue) && isNumber(srcMin) && isNumber(srcMax) && isNumber(destMin) && isNumber(destMax)) {
+			return fitFunction(inputValue, srcMin, srcMax, destMin, destMax);
 		}
-		if (CoreType.isVector(inputValue)) {
+		if (isVector(inputValue)) {
 			if (
 				inputValue instanceof Vector2 &&
 				srcMin instanceof Vector2 &&
@@ -114,8 +119,8 @@ export class FitActorNode extends TypedActorNode<FitActorParamsConfig> {
 				destMin instanceof Vector2 &&
 				destMax instanceof Vector2
 			) {
-				this._valTmp.v2.x = CoreMath.fit(inputValue.x, srcMin.x, srcMax.x, destMin.x, destMax.x);
-				this._valTmp.v2.y = CoreMath.fit(inputValue.y, srcMin.y, srcMax.y, destMin.y, destMax.y);
+				this._valTmp.v2.x = fitFunction(inputValue.x, srcMin.x, srcMax.x, destMin.x, destMax.x);
+				this._valTmp.v2.y = fitFunction(inputValue.y, srcMin.y, srcMax.y, destMin.y, destMax.y);
 				return this._valTmp.v2;
 			}
 			if (
@@ -125,9 +130,9 @@ export class FitActorNode extends TypedActorNode<FitActorParamsConfig> {
 				destMin instanceof Vector3 &&
 				destMax instanceof Vector3
 			) {
-				this._valTmp.v3.x = CoreMath.fit(inputValue.x, srcMin.x, srcMax.x, destMin.x, destMax.x);
-				this._valTmp.v3.y = CoreMath.fit(inputValue.y, srcMin.y, srcMax.y, destMin.y, destMax.y);
-				this._valTmp.v3.z = CoreMath.fit(inputValue.z, srcMin.z, srcMax.z, destMin.z, destMax.z);
+				this._valTmp.v3.x = fitFunction(inputValue.x, srcMin.x, srcMax.x, destMin.x, destMax.x);
+				this._valTmp.v3.y = fitFunction(inputValue.y, srcMin.y, srcMax.y, destMin.y, destMax.y);
+				this._valTmp.v3.z = fitFunction(inputValue.z, srcMin.z, srcMax.z, destMin.z, destMax.z);
 				return this._valTmp.v3;
 			}
 			if (
@@ -137,10 +142,10 @@ export class FitActorNode extends TypedActorNode<FitActorParamsConfig> {
 				destMin instanceof Vector4 &&
 				destMax instanceof Vector4
 			) {
-				this._valTmp.v4.x = CoreMath.fit(inputValue.x, srcMin.x, srcMax.x, destMin.x, destMax.x);
-				this._valTmp.v4.y = CoreMath.fit(inputValue.y, srcMin.y, srcMax.y, destMin.y, destMax.y);
-				this._valTmp.v4.z = CoreMath.fit(inputValue.z, srcMin.z, srcMax.z, destMin.z, destMax.z);
-				this._valTmp.v4.w = CoreMath.fit(inputValue.w, srcMin.w, srcMax.w, destMin.w, destMax.w);
+				this._valTmp.v4.x = fitFunction(inputValue.x, srcMin.x, srcMax.x, destMin.x, destMax.x);
+				this._valTmp.v4.y = fitFunction(inputValue.y, srcMin.y, srcMax.y, destMin.y, destMax.y);
+				this._valTmp.v4.z = fitFunction(inputValue.z, srcMin.z, srcMax.z, destMin.z, destMax.z);
+				this._valTmp.v4.w = fitFunction(inputValue.w, srcMin.w, srcMax.w, destMin.w, destMax.w);
 				return this._valTmp.v4;
 			}
 		}

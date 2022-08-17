@@ -1,3 +1,4 @@
+import {CoreFeaturesController} from './../../../../../core/FeaturesController';
 import {Constructor} from '../../../../../types/GlobalTypes';
 import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
@@ -29,14 +30,15 @@ class NodeGroup {
 		return this._processed.size;
 	}
 }
+interface NodeGroups {
+	toCook: NodeGroup;
+	sopGroupToUpdate: NodeGroup;
+}
 
 export interface OnProgressArguments {
 	scene: PolyScene;
 	triggerNode?: BaseNodeType;
-	groups: {
-		cook: NodeGroup;
-		sopGroup: NodeGroup;
-	};
+	groups: NodeGroups;
 }
 export type OnProgressUpdateCallback = (progressRatio: number, args: OnProgressArguments) => void;
 
@@ -46,6 +48,7 @@ export function RootLoadProgressParamConfig<TBase extends Constructor>(Base: TBa
 		nodesMask = ParamConfig.STRING('*/image* */envMap*', {
 			cook: false,
 			separatorBefore: true,
+			objectMask: true,
 		});
 		/** @param prints which nodes match the mask in the console */
 		printNodes = ParamConfig.BUTTON(null, {
@@ -53,6 +56,7 @@ export function RootLoadProgressParamConfig<TBase extends Constructor>(Base: TBa
 			callback: (node: BaseNodeType) => {
 				RootLoadProgressController.PARAM_CALLBACK_printResolve(node as RootManagerNode);
 			},
+			// objectMask: false // do not use objectMask, since it is a node mask, not object
 		});
 	};
 }
@@ -114,28 +118,29 @@ export class RootLoadProgressController {
 		return this.node.mainCameraController.cameraCreatorNode();
 	}
 
-	private _toCook: NodeGroup | undefined;
-	private _sopGroupToUpdate: NodeGroup | undefined;
+	private _nodeGroups: NodeGroups | undefined;
+	// private _toCook: NodeGroup | undefined;
+	// private _sopGroupToUpdate: NodeGroup | undefined;
 	private _onProgressUpdateCallback: OnProgressUpdateCallback | undefined;
 	private _runCallback(progress: number, nodeTrigger?: BaseNodeType) {
-		if (!(this._onProgressUpdateCallback && this._toCook && this._sopGroupToUpdate)) {
+		this._debug2('_runCallback', {progress, nodeTrigger});
+		if (!(this._onProgressUpdateCallback && this._nodeGroups)) {
 			return;
 		}
+		this._debug2('_onProgressUpdateCallback', this._nodeGroups);
 		this._onProgressUpdateCallback(progress, {
 			scene: this.node.scene(),
 			triggerNode: undefined,
-			groups: {
-				cook: this._toCook,
-				sopGroup: this._sopGroupToUpdate,
-			},
+			groups: this._nodeGroups,
 		});
 	}
 	private _updateProgressAndRunCallback(nodeTrigger: BaseNodeType) {
-		if (!(this._onProgressUpdateCallback && this._toCook && this._sopGroupToUpdate)) {
+		if (!(this._onProgressUpdateCallback && this._nodeGroups)) {
 			return;
 		}
-		const totalNodesCount = this._toCook.totalCount + this._sopGroupToUpdate.totalCount;
-		const processedNodesCount = this._toCook.processedCount() + this._sopGroupToUpdate.processedCount();
+		const totalNodesCount = this._nodeGroups.toCook.totalCount + this._nodeGroups.sopGroupToUpdate.totalCount;
+		const processedNodesCount =
+			this._nodeGroups.toCook.processedCount() + this._nodeGroups.sopGroupToUpdate.processedCount();
 		const progress = processedNodesCount / totalNodesCount;
 		this._runCallback(progress, nodeTrigger);
 	}
@@ -143,15 +148,20 @@ export class RootLoadProgressController {
 	async watchNodesProgress(callback: OnProgressUpdateCallback) {
 		this._onProgressUpdateCallback = callback;
 		const nodesToCook = (await this.resolvedNodes()).filter((node) => node.isDirty());
-		this._toCook = new NodeGroup(nodesToCook);
+		this._debug({nodesToCook});
 		const nodesToUpdateSopGroup = this._objectNodesWithDisplayNodeController()
 			.filter((node) => {
 				const displayNode = (node as GeoObjNode).displayNodeController.displayNode();
 				return displayNode != null && !displayNode.flags.bypass?.active();
 			})
 			.filter((node) => node.isDirty());
-		this._sopGroupToUpdate = new NodeGroup(nodesToUpdateSopGroup);
-		const totalNodesCount = this._toCook.totalCount + this._sopGroupToUpdate.totalCount;
+		this._debug({nodesToUpdateSopGroup});
+		this._nodeGroups = {
+			toCook: new NodeGroup(nodesToCook),
+			sopGroupToUpdate: new NodeGroup(nodesToUpdateSopGroup),
+		};
+		const totalNodesCount = this._nodeGroups.toCook.totalCount + this._nodeGroups.sopGroupToUpdate.totalCount;
+		this._debug({totalNodesCount});
 		if (totalNodesCount == 0) {
 			this._runCallback(1);
 			return;
@@ -160,7 +170,7 @@ export class RootLoadProgressController {
 		this._watchNodesToCook();
 	}
 	private async _watchNodesToCook() {
-		const nodesGroup = this._toCook;
+		const nodesGroup = this._nodeGroups?.toCook;
 		if (!nodesGroup) {
 			return;
 		}
@@ -178,16 +188,18 @@ export class RootLoadProgressController {
 
 		for (let node of nodesGroup.nodes) {
 			node.cookController.registerOnCookEnd(callbackName, () => {
+				this._debug2('nodeToCook - completed', node.path());
 				onNodeCooked(node);
 			});
 			// we force nodes to compute
 			// in case they do not have a display flag on, or are not connected
 			// as it would get the loading stuck
+			this._debug2('nodeToCook - start', node.path());
 			node.compute();
 		}
 	}
 	private _watchNodesWithSopGroup() {
-		const nodesGroup = this._sopGroupToUpdate;
+		const nodesGroup = this._nodeGroups?.sopGroupToUpdate;
 		if (!nodesGroup) {
 			return;
 		}
@@ -206,9 +218,33 @@ export class RootLoadProgressController {
 
 		for (let node of nodesGroup.nodes) {
 			const childrenDisplayController = (node as GeoObjNode).childrenDisplayController;
+			this._debug2('nodeWithSopGroup - watch', node.path());
 			childrenDisplayController.registerOnSopGroupUpdated(callbackName, () => {
+				this._debug2('nodeWithSopGroup - completed', node.path());
 				onNodeCooked(node);
 			});
 		}
+	}
+
+	protected static debugActive(): boolean {
+		return CoreFeaturesController.urlParam('debugLoadProgress') == '1';
+	}
+	static debug(arg0: any) {
+		if (!this.debugActive()) {
+			return;
+		}
+		console.log(arg0);
+	}
+	static debug2(arg0: any, arg1: any) {
+		if (!this.debugActive()) {
+			return;
+		}
+		console.log(arg0, arg1);
+	}
+	protected _debug(arg0: any) {
+		RootLoadProgressController.debug(arg0);
+	}
+	protected _debug2(arg0: any, arg1: any) {
+		RootLoadProgressController.debug2(arg0, arg1);
 	}
 }
