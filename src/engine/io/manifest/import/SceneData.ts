@@ -1,4 +1,5 @@
 // import {CoreType} from '../../../../core/Type';
+import {UrlHelper} from '../../../../core/UrlHelper';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {PolyEventsDispatcher} from '../../common/EventsDispatcher';
 import {PROGRESS_RATIO} from '../../common/Progress';
@@ -35,31 +36,31 @@ export class SceneDataManifestImporter {
 		}
 		const manifest = importData.manifest;
 		const urlPrefix = importData.urlPrefix || SelfContainedFileName.CODE_PREFIX;
-		const node_paths = Object.keys(manifest.nodes);
-		const node_urls: string[] = [];
-		for (let node_path of node_paths) {
+		const nodePaths = Object.keys(manifest.nodes);
+		const nodeUrls: string[] = [];
+		for (let node_path of nodePaths) {
 			const timestamp = manifest.nodes[node_path];
 			const url = `${urlPrefix}/root/${node_path}.json?t=${timestamp}`;
-			node_urls.push(url);
+			nodeUrls.push(url);
 		}
 		const root_url = `${urlPrefix}/root.json?t=${manifest.root}`;
 		const properties_url = `${urlPrefix}/properties.json?t=${manifest.properties}`;
-		const all_urls = [root_url, properties_url];
+		const allUrls = [root_url, properties_url];
 
 		// add editor urls if needed
 		if (importData.editorMode) {
 			const now = Date.now();
-			all_urls.push(`${urlPrefix}/ui.json?t=${now}`);
+			allUrls.push(`${urlPrefix}/ui.json?t=${now}`);
 			//all_urls.push(`${url_prefix}/editor.json?t=${now}`);
 		}
 
 		// add all nodes
-		for (let node_url of node_urls) {
-			all_urls.push(node_url);
+		for (let nodeUrl of nodeUrls) {
+			allUrls.push(nodeUrl);
 		}
 
 		let count = 0;
-		const total = all_urls.length;
+		const total = allUrls.length;
 
 		const onProgress = (ratio: number) => {
 			const progressRatio = PROGRESS_RATIO.sceneData;
@@ -70,7 +71,8 @@ export class SceneDataManifestImporter {
 			PolyEventsDispatcher.dispatchProgressEvent(progress, importData.sceneName);
 		};
 
-		const promises = all_urls.map(async (url) => {
+		const sanitizedUrls = allUrls.map((url) => UrlHelper.sanitize(url));
+		const promises = sanitizedUrls.map(async (url) => {
 			const response = await fetch(url);
 			count++;
 			onProgress(count / total);
