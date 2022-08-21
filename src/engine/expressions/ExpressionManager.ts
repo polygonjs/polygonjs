@@ -1,52 +1,45 @@
 import {BaseParamType} from '../params/_Base';
 import {ParsedTree} from './traversers/ParsedTree';
-// import {MissingReferencesController} from './MissingReferencesController'
-// import CoreWalker from 'src/core/Walker'
-
 import {FunctionGenerator} from './traversers/FunctionGenerator';
 import {ExpressionStringGenerator} from './traversers/ExpressionStringGenerator';
 import {DependenciesController} from './DependenciesController';
-import {ParamType} from '../poly/ParamType';
 
 export class ExpressionManager {
-	public parse_completed: boolean = false;
-	private parse_started: boolean = false;
+	private _parseStarted: boolean = false;
 	private _functionGenerator: FunctionGenerator;
-	private expression_string_generator: ExpressionStringGenerator | undefined;
-	public dependencies_controller: DependenciesController;
+	private _expressionStringGenerator: ExpressionStringGenerator | undefined;
+	public dependenciesController: DependenciesController;
 	// private _error_message: string | undefined;
-	private parsed_tree: ParsedTree = new ParsedTree();
+	private parsedTree: ParsedTree = new ParsedTree();
 
 	constructor(
 		public param: BaseParamType // public element_index: number=0
 	) {
 		this._functionGenerator = new FunctionGenerator(this.param);
-		this.dependencies_controller = new DependenciesController(this.param);
+		this.dependenciesController = new DependenciesController(this.param);
 	}
 
 	parseExpression(expression: string) {
-		if (this.parse_started) {
+		if (this._parseStarted) {
 			throw new Error(`parse in progress for param ${this.param.path()}`);
 		}
-		this.parse_started = true;
-		this.parse_completed = false;
-		this.parsed_tree = this.parsed_tree || new ParsedTree();
+		this._parseStarted = true;
+		this.parsedTree = this.parsedTree || new ParsedTree();
 
 		this.reset();
-		if (this.param.type() == ParamType.STRING) {
-			this.parsed_tree.parse_expression_for_string_param(expression);
+		if (this.param.expressionParsedAsString()) {
+			this.parsedTree.parseExpressionForStringParam(expression);
 		} else {
-			this.parsed_tree.parse_expression(expression);
+			this.parsedTree.parseExpression(expression);
 		}
-		this._functionGenerator.parse_tree(this.parsed_tree);
+		this._functionGenerator.parseTree(this.parsedTree);
 
 		if (this._functionGenerator.error_message() == null) {
-			this.dependencies_controller.update(this._functionGenerator);
-			if (this.dependencies_controller.error_message) {
-				this.param.states.error.set(this.dependencies_controller.error_message);
+			this.dependenciesController.update(this._functionGenerator);
+			if (this.dependenciesController.error_message) {
+				this.param.states.error.set(this.dependenciesController.error_message);
 			} else {
-				this.parse_completed = true;
-				this.parse_started = false;
+				this._parseStarted = false;
 			}
 		} //else {
 		//this.set_error(this.function_generator.error_message);
@@ -74,11 +67,10 @@ export class ExpressionManager {
 	}
 
 	reset() {
-		this.parse_completed = false;
-		this.parse_started = false;
+		this._parseStarted = false;
 		// this._error_message = undefined;
 		// if(force){ // || this.element_index <= 1){
-		this.dependencies_controller.reset();
+		this.dependenciesController.reset();
 		// }
 		this._functionGenerator.reset();
 	}
@@ -111,10 +103,9 @@ export class ExpressionManager {
 	// }
 
 	updateFromMethodDependencyNameChange() {
-		this.expression_string_generator =
-			this.expression_string_generator || new ExpressionStringGenerator(this.param);
+		this._expressionStringGenerator = this._expressionStringGenerator || new ExpressionStringGenerator(this.param);
 
-		const new_expression_string = this.expression_string_generator.parse_tree(this.parsed_tree);
+		const new_expression_string = this._expressionStringGenerator.parse_tree(this.parsedTree);
 
 		if (new_expression_string) {
 			this.param.set(new_expression_string);

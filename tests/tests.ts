@@ -66,6 +66,8 @@ import './engine/params/Color';
 import './engine/params/Float';
 import './engine/params/Integer';
 import './engine/params/Multiple';
+import './engine/params/NodePath';
+import './engine/params/ParamPath';
 import './engine/params/String';
 import './engine/params/Vector2';
 import './engine/params/Vector3';

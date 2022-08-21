@@ -19,7 +19,7 @@ export class ParsedTree {
 
 	constructor() {}
 
-	parse_expression(string: string) {
+	parseExpression(string: string) {
 		try {
 			this.reset();
 			this.node = jsep(string);
@@ -28,11 +28,11 @@ export class ParsedTree {
 			this.error_message = message;
 		}
 	}
-	parse_expression_for_string_param(string: string) {
+	parseExpressionForStringParam(string: string) {
 		try {
 			this.reset();
 
-			const elements = ParsedTree.string_value_elements(string);
+			const elements = ParsedTree.stringValueElements(string);
 			const nodes = [];
 			for (let i = 0; i < elements.length; i++) {
 				const element = elements[i];
@@ -93,7 +93,7 @@ export class ParsedTree {
 		}
 	}
 
-	static string_value_elements(v: string): string[] {
+	static stringValueElements(v: string): string[] {
 		if (v != null) {
 			if (CoreType.isString(v)) {
 				return v.split(STRING_EXPRESSION_SEPARATOR);

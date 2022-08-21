@@ -3,6 +3,7 @@ import {ArgcExpression} from '../../../expressions/methods/argc';
 import {BboxExpression} from '../../../expressions/methods/bbox';
 import {CentroidExpression} from '../../../expressions/methods/centroid';
 import {ChExpression} from '../../../expressions/methods/ch';
+import {ChsopExpression} from '../../../expressions/methods/chsop';
 import {CopyExpression} from '../../../expressions/methods/copy';
 import {CopResExpression} from '../../../expressions/methods/copRes';
 import {isDeviceMobileExpression} from '../../../expressions/methods/isDeviceMobile';
@@ -29,6 +30,7 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	bbox: typeof BboxExpression;
 	centroid: typeof CentroidExpression;
 	ch: typeof ChExpression;
+	chsop: typeof ChsopExpression;
 	copy: typeof CopyExpression;
 	copRes: typeof CopResExpression;
 	isDeviceMobile: typeof isDeviceMobileExpression;
@@ -58,6 +60,7 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(BboxExpression, 'bbox');
 		poly.expressionsRegister.register(CentroidExpression, 'centroid');
 		poly.expressionsRegister.register(ChExpression, 'ch');
+		poly.expressionsRegister.register(ChsopExpression, 'chsop');
 		poly.expressionsRegister.register(CopyExpression, 'copy');
 		poly.expressionsRegister.register(CopResExpression, 'copRes');
 		poly.expressionsRegister.register(isDeviceMobileExpression, 'isDeviceMobile');

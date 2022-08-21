@@ -1,3 +1,5 @@
+import {Constructor} from './../types/GlobalTypes';
+import {CoreGraphNode} from './graph/CoreGraphNode';
 import {BaseNodeType} from '../engine/nodes/_Base';
 import {BaseParamType} from '../engine/params/_Base';
 import {DecomposedPath} from './DecomposedPath';
@@ -18,30 +20,39 @@ export const NODE_PATH_DEFAULT = {
 	},
 };
 
-export class TypedNodePathParamValue {
-	private _node: BaseNodeType | null = null;
-	constructor(private _path: string = '') {}
-	setPath(path: string) {
-		this._path = path;
+class GraphNodePathParamValue<T extends CoreGraphNode> {
+	protected _graphNode: T | null = null;
+	constructor(protected _path: string = '') {}
+	graphNode() {
+		return this._graphNode;
 	}
-	setNode(node: BaseNodeType | null) {
-		this._node = node;
+	private _setGraphNode(graphNode: T | null) {
+		this._graphNode = graphNode;
 	}
 	path() {
 		return this._path;
 	}
+	setPath(path: string) {
+		this._path = path;
+	}
+	clone(): this {
+		const cloned = new (this.constructor as Constructor<GraphNodePathParamValue<T>>)(this._path);
+		cloned._setGraphNode(this._graphNode);
+		return cloned as this;
+	}
+}
+
+export class TypedNodePathParamValue extends GraphNodePathParamValue<BaseNodeType> {
+	setNode(node: BaseNodeType | null) {
+		this._graphNode = node;
+	}
+
 	node() {
-		return this._node;
+		return this._graphNode;
 	}
 
 	resolve(nodeStart: BaseNodeType) {
-		this._node = CoreWalker.findNode(nodeStart, this._path);
-	}
-
-	clone() {
-		const cloned = new TypedNodePathParamValue(this._path);
-		cloned.setNode(this._node);
-		return cloned;
+		this._graphNode = CoreWalker.findNode(nodeStart, this._path);
 	}
 
 	nodeWithContext<N extends NodeContext, K extends NodeContext>(
@@ -63,30 +74,16 @@ export class TypedNodePathParamValue {
 	}
 }
 
-export class TypedParamPathParamValue {
-	private _param: BaseParamType | null = null;
-	constructor(private _path: string = '') {}
-	setPath(path: string) {
-		this._path = path;
-	}
+export class TypedParamPathParamValue extends GraphNodePathParamValue<BaseParamType> {
 	setParam(param: BaseParamType | null) {
-		this._param = param;
-	}
-	path() {
-		return this._path;
+		this._graphNode = param;
 	}
 	param() {
-		return this._param;
+		return this._graphNode;
 	}
 
 	resolve(nodeStart: BaseNodeType) {
-		this._param = CoreWalker.findParam(nodeStart, this._path);
-	}
-
-	clone() {
-		const cloned = new TypedParamPathParamValue(this._path);
-		cloned.setParam(this._param);
-		return cloned;
+		this._graphNode = CoreWalker.findParam(nodeStart, this._path);
 	}
 
 	paramWithType<T extends ParamType>(

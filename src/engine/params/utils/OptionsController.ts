@@ -397,9 +397,9 @@ export class OptionsController {
 	private createCallbackFromString() {
 		const callbackString = this._options[CALLBACK_STRING_OPTION];
 		if (callbackString) {
-			const callback_function = new Function('node', 'scene', 'window', 'location', callbackString);
+			const callbackFunction = new Function('node', 'scene', 'window', 'location', callbackString);
 			return () => {
-				callback_function(this.node(), this.node().scene(), null, null);
+				callbackFunction(this.node(), this.node().scene(), null, null);
 			};
 		}
 	}

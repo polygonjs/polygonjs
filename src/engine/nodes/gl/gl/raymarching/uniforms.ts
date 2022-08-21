@@ -1,4 +1,4 @@
-import {IUniformN} from './../../../../../../dist/src/engine/nodes/utils/code/gl/Uniforms.d';
+import {IUniformN} from '../../../utils/code/gl/Uniforms';
 
 export interface RayMarchingUniforms {
 	MAX_STEPS: IUniformN;

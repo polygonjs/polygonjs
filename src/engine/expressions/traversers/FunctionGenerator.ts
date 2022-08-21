@@ -267,21 +267,21 @@ export class FunctionGenerator extends BaseTraverser {
 		super(param);
 	}
 
-	public parse_tree(parsed_tree: ParsedTree) {
+	public parseTree(parsedTree: ParsedTree) {
 		this.reset();
 
-		if (parsed_tree.error_message == null) {
+		if (parsedTree.error_message == null) {
 			try {
 				// this.function_pre_entities_loop_lines = [];
 				this._attribute_requirements_controller = new AttributeRequirementsController();
 				// this.function_pre_body = ''
-				if (parsed_tree.node) {
-					const function_main_string = this.traverse_node(parsed_tree.node);
+				if (parsedTree.node) {
+					const function_main_string = this.traverse_node(parsedTree.node);
 					if (function_main_string && !this.is_errored()) {
 						this.function_main_string = function_main_string;
 					}
 				} else {
-					console.warn('no parsed_tree.node');
+					console.warn('no parsedTree.node');
 				}
 			} catch (e) {
 				console.warn(`error in expression for param ${this.param.path()}`);
@@ -408,6 +408,7 @@ export class FunctionGenerator extends BaseTraverser {
 				this.methods,
 				this._set_error_from_error_bound
 			);
+
 			return result;
 		}
 	}
