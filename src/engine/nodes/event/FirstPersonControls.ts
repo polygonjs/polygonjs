@@ -12,9 +12,8 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {PointerLockControls} from '../../../modules/core/controls/PointerLockControls';
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
-import {ParamOptions} from '../../params/utils/OptionsController';
+import {ParamOptions, StringParamLanguage} from '../../params/utils/OptionsController';
 import {CorePlayer} from '../../../core/player/Player';
-import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CollisionController} from './collision/CollisionController';
 
@@ -22,47 +21,23 @@ const EVENT_LOCK = 'lock';
 const EVENT_CHANGE = 'change';
 const EVENT_UNLOCK = 'unlock';
 
-// function testOverlay(controls: PointerLockControls) {
-// 	const overlay = document.createElement('div');
-// 	const overlayBody = document.createElement('div');
-// 	const body = document.body;
-
-// 	overlay.appendChild(overlayBody);
-// 	overlay.style.position = 'absolute';
-// 	overlay.style.top = '0px';
-// 	overlay.style.left = '0px';
-// 	overlay.style.width = '100%';
-// 	overlay.style.height = '100%';
-// 	overlay.style.padding = '50px';
-// 	overlay.style.zIndex = '9999999';
-// 	overlayBody.style.width = '100%';
-// 	overlayBody.style.height = '100%';
-// 	overlayBody.style.backgroundColor = 'white';
-// 	overlayBody.innerText = 'overlay';
-// 	let overlayActive = false;
-// 	function removeOverlay() {
-// 		console.log('remove');
-// 		body.removeChild(overlay);
-// 		controls.lock();
-// 		overlayActive = false;
-// 	}
-// 	function addOverlay() {
-// 		console.log('add');
-// 		body.appendChild(overlay);
-// 		controls.unlock();
-// 		overlayActive = true;
-// 	}
-
-// 	document.body.addEventListener('keydown', (e) => {
-// 		console.log(e.code, e.key, overlayActive);
-// 		if (!overlayActive && e.key == 'e') {
-// 			addOverlay();
-// 		}
-// 		if (overlayActive && e.key == 'Escape') {
-// 			removeOverlay();
-// 		}
-// 	});
-// }
+const lockElementDefault = `
+<div style="
+	text-align:center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	cursor: pointer;
+	padding: 5px 10px;
+	background:gray;
+	border:white;
+	color: white;
+	">
+	<div style="font-size: 1rem">CLICK TO START</div>
+	<div style="font-size: 0.6rem">press ESC to show your cursor</div>
+</div>
+`;
 
 function updatePlayerParamsCallbackOption(): ParamOptions {
 	return {
@@ -191,6 +166,17 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 		range: [0, Math.PI],
 		rangeLocked: [true, true],
 	});
+	html = ParamConfig.FOLDER();
+	/** @param create clickable html element to lock the cursor */
+	createHTMLLockElement = ParamConfig.BOOLEAN(1, {
+		...updatePlayerParamsCallbackOption(),
+	});
+	/** @param html used for the lock element */
+	htmlLockElement = ParamConfig.STRING(lockElementDefault, {
+		...updatePlayerParamsCallbackOption(),
+		visibleIf: {createHTMLLockElement: 1},
+		language: StringParamLanguage.HTML,
+	});
 }
 const ParamsConfig = new FirstPersonEventParamsConfig();
 
@@ -203,6 +189,7 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		return 'unlock';
 	}
 	static readonly INPUT_UPDATE_COLLIDER = 'updateCollider';
+	static readonly INPUT_RESET = 'reset';
 	private _collisionController: CollisionController | undefined;
 	collisionController(): CollisionController {
 		return (this._collisionController = this._collisionController || new CollisionController(this));
@@ -215,6 +202,11 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 				EventConnectionPointType.BASE,
 				this._updateCollider.bind(this)
 			),
+			new EventConnectionPoint(
+				FirstPersonControlsEventNode.INPUT_RESET,
+				EventConnectionPointType.BASE,
+				this._resetPlayer.bind(this)
+			),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new EventConnectionPoint(EVENT_LOCK, EventConnectionPointType.BASE),
@@ -225,11 +217,15 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 
 	protected _controls_by_element_id: PointerLockControlsMap = new Map();
 	private _player: CorePlayer | undefined;
-	private _corePlayerKeyEvents: CorePlayerKeyEvents | undefined;
 
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		await this._initPlayer(camera);
-		const controls = new PointerLockControls(camera, element, this._player);
+		const controls = new PointerLockControls(
+			camera,
+			element,
+			{createLockHTMLElement: this.pv.createHTMLLockElement, lockHTMLElement: this.pv.htmlLockElement},
+			this._player
+		);
 
 		this._controls_by_element_id.set(element.id, controls);
 		this._bind_listeners_to_controls_instance(controls);
@@ -306,11 +302,11 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		controls.maxPolarAngle = this.pv.maxPolarAngle;
 		controls.rotateSpeed = this.pv.rotateSpeed;
 	}
-	disposeControlsForHtmlElementId(html_element_id: string) {
-		const controls = this._controls_by_element_id.get(html_element_id);
+	disposeControlsForHtmlElementId(htmlElementId: string) {
+		const controls = this._controls_by_element_id.get(htmlElementId);
 		if (controls) {
 			controls.dispose();
-			this._controls_by_element_id.delete(html_element_id);
+			this._controls_by_element_id.delete(htmlElementId);
 		}
 	}
 	unlockControls() {
@@ -330,24 +326,6 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		const controls = this._firstControls();
 		if (!controls) {
 			return;
-		}
-		if (this._player) {
-			this._corePlayerKeyEvents = this._corePlayerKeyEvents || new CorePlayerKeyEvents(this._player);
-			this._corePlayerKeyEvents.addEvents();
-
-			// here we need to detect when the pointerLock is removed, potentially with ESC key,
-			// so that we can remove the key events and properly stop the player
-			const onPointerlockChange = () => {
-				if (!controls) {
-					return;
-				}
-				if (controls.domElement.ownerDocument.pointerLockElement != controls.domElement) {
-					controls.domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange);
-					this._corePlayerKeyEvents?.removeEvents();
-					this._player?.stop();
-				}
-			};
-			controls.domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange);
 		}
 		controls.lock();
 	}

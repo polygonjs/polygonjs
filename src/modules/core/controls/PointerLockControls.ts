@@ -4,6 +4,7 @@ import {CorePlayer} from '../../../core/player/Player';
 import {EventDispatcher} from 'three';
 import {Vector3} from 'three';
 import {Spherical} from 'three';
+import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
 
 const changeEvent = {type: 'change'};
 const lockEvent = {type: 'lock'};
@@ -12,6 +13,11 @@ const PI_2 = Math.PI / 2;
 const tmpCameraUnproject = new Vector3();
 const spherical = new Spherical();
 
+interface PointerLockControlsOptions {
+	createLockHTMLElement: boolean;
+	lockHTMLElement: string;
+}
+
 export class PointerLockControls extends EventDispatcher {
 	private isLocked = false;
 	public minPolarAngle = 0; // radians
@@ -19,15 +25,23 @@ export class PointerLockControls extends EventDispatcher {
 	public rotateSpeed = 1;
 	private euler = new Euler(0, 0, 0, 'YXZ');
 	private boundMethods = {
+		lock: this.lock.bind(this),
 		onMouseMove: this.onMouseMove.bind(this),
 		onPointerlockChange: this.onPointerlockChange.bind(this),
 		onPointerlockError: this.onPointerlockError.bind(this),
 	};
 	private _azimuthalAngle: number = 0;
+	private _corePlayerKeyEvents: CorePlayerKeyEvents | undefined;
 
-	constructor(private camera: Camera, public readonly domElement: HTMLElement, private player?: CorePlayer) {
+	constructor(
+		private camera: Camera,
+		public readonly domElement: HTMLElement,
+		private options: PointerLockControlsOptions,
+		private player?: CorePlayer
+	) {
 		super();
 		this.connect();
+		this._showUnlockHTMLElement();
 	}
 
 	onMouseMove(event: MouseEvent) {
@@ -63,9 +77,16 @@ export class PointerLockControls extends EventDispatcher {
 			this.dispatchEvent(lockEvent);
 
 			this.isLocked = true;
+			if (this.player) {
+				this._corePlayerKeyEvents = this._corePlayerKeyEvents || new CorePlayerKeyEvents(this.player);
+				this._corePlayerKeyEvents.addEvents();
+			}
 		} else {
 			this.dispatchEvent(unlockEvent);
 			this.isLocked = false;
+			this._showUnlockHTMLElement();
+			this._corePlayerKeyEvents?.removeEvents();
+			this.player?.stop();
 		}
 	}
 
@@ -88,6 +109,7 @@ export class PointerLockControls extends EventDispatcher {
 
 	dispose() {
 		this.disconnect();
+		this._removeHTMLElement();
 	}
 
 	getObject() {
@@ -98,6 +120,7 @@ export class PointerLockControls extends EventDispatcher {
 
 	lock() {
 		this.domElement.requestPointerLock();
+		this._removeHTMLElement();
 	}
 
 	unlock() {
@@ -109,5 +132,43 @@ export class PointerLockControls extends EventDispatcher {
 			this.player.setAzimuthalAngle(this._azimuthalAngle);
 			this.player.update(delta);
 		}
+	}
+
+	//
+	//
+	// HTML Element
+	//
+	//
+	private __unlockHTMLElement: HTMLElement | undefined;
+	private _unlockHTMLElementParent() {
+		return this.domElement.parentElement;
+	}
+	private _unlockHTMLElement() {
+		return (this.__unlockHTMLElement = this.__unlockHTMLElement || this._createUnlockHTMLElement());
+	}
+	private _showUnlockHTMLElement() {
+		const el = this._unlockHTMLElement();
+		if (!el) {
+			return;
+		}
+		this._unlockHTMLElementParent()?.append(el);
+	}
+
+	private _createUnlockHTMLElement(): HTMLElement | undefined {
+		if (!this.options.createLockHTMLElement) {
+			return;
+		}
+		const div = document.createElement('div');
+		div.innerHTML = this.options.lockHTMLElement;
+		div.addEventListener('pointerdown', this.boundMethods.lock);
+		return div;
+	}
+	private _removeHTMLElement() {
+		if (!this.__unlockHTMLElement) {
+			return;
+		}
+		this._unlockHTMLElementParent()?.removeChild(this.__unlockHTMLElement);
+		this.__unlockHTMLElement.removeEventListener('pointerdown', this.boundMethods.lock);
+		this.__unlockHTMLElement = undefined;
 	}
 }
