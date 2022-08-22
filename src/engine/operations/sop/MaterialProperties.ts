@@ -5,7 +5,7 @@ import {Material} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {updateMaterialSide} from '../../nodes/mat/utils/helpers/MaterialSideHelper';
+import {updateMaterialSideWithShadow} from '../../nodes/mat/utils/helpers/MaterialSideHelper';
 interface MaterialPropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
 	// side
@@ -59,7 +59,7 @@ export class MaterialPropertiesSopOperation extends BaseSopOperation {
 	}
 	private async _updateMaterial(material: Material, params: MaterialPropertiesSopParams) {
 		if (isBooleanTrue(params.tside)) {
-			updateMaterialSide(material, params);
+			updateMaterialSideWithShadow(material, params);
 		}
 	}
 }

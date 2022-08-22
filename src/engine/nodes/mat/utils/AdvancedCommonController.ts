@@ -7,7 +7,7 @@ import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending} from 'three';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
-import {updateMaterialSide} from './helpers/MaterialSideHelper';
+import {updateMaterialSideWithShadow} from './helpers/MaterialSideHelper';
 const BLENDING_VALUES = {
 	NoBlending,
 	NormalBlending,
@@ -108,7 +108,7 @@ export class AdvancedCommonController extends BaseController {
 	}
 
 	private _updateSides(mat: Material, pv: ParamsValueAccessorType<AdvancedCommonParamsConfig>) {
-		updateMaterialSide(mat, pv);
+		updateMaterialSideWithShadow(mat, pv);
 	}
 
 	static async update(node: AdvancedCommonMapMatNode) {

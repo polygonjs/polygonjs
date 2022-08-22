@@ -7,11 +7,13 @@ import {CustomMaterialName} from '../../../gl/code/assemblers/materials/_BaseMat
 interface SideUpdateParams {
 	doubleSided: boolean;
 	front: boolean;
+}
+
+interface SideWithShadowUpdateParams extends SideUpdateParams {
 	overrideShadowSide: boolean;
 	shadowDoubleSided: boolean;
 	shadowFront: boolean;
 }
-
 export function updateMaterialSide(mat: Material, params: SideUpdateParams) {
 	// normal render
 	const singleSide = isBooleanTrue(params.front) ? FrontSide : BackSide;
@@ -20,6 +22,11 @@ export function updateMaterialSide(mat: Material, params: SideUpdateParams) {
 		mat.side = newSide;
 		mat.needsUpdate = true;
 	}
+}
+
+export function updateMaterialSideWithShadow(mat: Material, params: SideWithShadowUpdateParams) {
+	// normal render
+	updateMaterialSide(mat, params);
 	// shadow render
 	if (isBooleanTrue(params.overrideShadowSide)) {
 		const singleSide = isBooleanTrue(params.shadowFront) ? FrontSide : BackSide;
@@ -39,7 +46,7 @@ export function updateMaterialSide(mat: Material, params: SideUpdateParams) {
 		for (let customName of customNames) {
 			const customMaterial = customMaterials[customName];
 			if (customMaterial) {
-				updateMaterialSide(customMaterial, params);
+				updateMaterialSideWithShadow(customMaterial, params);
 			}
 		}
 	}

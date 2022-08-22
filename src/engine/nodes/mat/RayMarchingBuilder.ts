@@ -6,15 +6,32 @@
 import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerRayMarching} from '../gl/code/assemblers/materials/RayMarching';
 
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {RayMarchingController, RayMarchingParamConfig} from './utils/RayMarchingController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-class RayMarchingBuilderMatParamsConfig extends BaseBuilderParamConfig(
-	AdvancedFolderParamConfig(RayMarchingParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+import {Constructor} from '../../../types/GlobalTypes';
+import {updateMaterialSide} from './utils/helpers/MaterialSideHelper';
+
+export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param defines if the material is double sided or not */
+		doubleSided = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+		});
+		/** @param if the material is not double sided, it can be front sided, or back sided */
+		front = ParamConfig.BOOLEAN(1, {
+			visibleIf: {doubleSided: false},
+		});
+	};
+}
+class RayMarchingBuilderMatParamsConfig extends AdvancedCommonParamConfig(
+	BaseBuilderParamConfig(
+		AdvancedFolderParamConfig(RayMarchingParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+	)
 ) {}
 const ParamsConfig = new RayMarchingBuilderMatParamsConfig();
 
@@ -42,6 +59,7 @@ export class RayMarchingBuilderMatNode extends TypedBuilderMatNode<
 
 		this.compileIfRequired();
 
+		updateMaterialSide(this.material, this.pv);
 		this.setMaterial(this.material);
 	}
 }
