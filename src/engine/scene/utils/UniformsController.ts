@@ -10,6 +10,7 @@ export enum UniformName {
 	TIME = 'time',
 	RESOLUTION = 'resolution',
 	SPOTLIGHTS_RAYMARCHING = 'spotLightsRayMarching',
+	DIRECTIONALLIGHTS_RAYMARCHING = 'directionalLightsRayMarching',
 }
 
 export interface IUniformsWithTime extends IUniforms {

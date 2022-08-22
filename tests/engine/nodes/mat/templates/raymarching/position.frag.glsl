@@ -124,6 +124,12 @@ varying vec3 vPw;
 	};
 	uniform SpotLightRayMarching spotLightsRayMarching[ NUM_SPOT_LIGHTS ];
 #endif
+#if NUM_DIR_LIGHTS > 0
+	struct DirectionalLightRayMarching {
+		vec3 direction;
+	};
+	uniform DirectionalLightRayMarching directionalLightsRayMarching[ NUM_DIR_LIGHTS ];
+#endif
 struct SDFContext {
 	float d;
 	int matId;
@@ -168,26 +174,45 @@ vec3 GetNormal(vec3 p) {
 	return normalize(n);
 }
 vec3 GetLight(vec3 p, vec3 n) {
-	#if NUM_SPOT_LIGHTS > 0
+	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0
 		vec3 dif = vec3(0.,0.,0.);
-		SpotLightRayMarching spotLightRayMarching;
-		SpotLight spotLight;
-		vec3 lightPos,lightCol, l;
+		vec3 lightPos,lightCol,lightDir, l;
 		float lighDif;
 		SDFContext sdfContext;
-		#pragma unroll_loop_start
-		for ( int i = 0; i < NUM_SPOT_LIGHTS; i ++ ) {
-			spotLightRayMarching = spotLightsRayMarching[ i ];
-			spotLight = spotLights[ i ];
-			lightPos = spotLightRayMarching.worldPos;
-			lightCol = spotLight.color;
-			l = normalize(lightPos-p);
-			lighDif = clamp(dot(n, l), 0., 1.);
-			sdfContext = RayMarch(p+n*SURF_DIST*2., l);
-			if(sdfContext.d<length(lightPos-p)) lighDif *= .1;
-			dif += lightCol * lighDif;
-		}
-		#pragma unroll_loop_end
+		#if NUM_SPOT_LIGHTS > 0
+			SpotLightRayMarching spotLightRayMarching;
+			SpotLight spotLight;
+			#pragma unroll_loop_start
+			for ( int i = 0; i < NUM_SPOT_LIGHTS; i ++ ) {
+				spotLightRayMarching = spotLightsRayMarching[ i ];
+				spotLight = spotLights[ i ];
+				lightPos = spotLightRayMarching.worldPos;
+				lightCol = spotLight.color;
+				l = normalize(lightPos-p);
+				lighDif = clamp(dot(n, l), 0., 1.);
+				sdfContext = RayMarch(p+n*SURF_DIST*2., l);
+				if(sdfContext.d<length(lightPos-p)) lighDif *= .1;
+				dif += lightCol * lighDif;
+			}
+			#pragma unroll_loop_end
+		#endif
+		#if NUM_DIR_LIGHTS > 0
+			DirectionalLightRayMarching directionalLightRayMarching;
+			DirectionalLight directionalLight;
+			#pragma unroll_loop_start
+			for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {
+				directionalLightRayMarching = directionalLightsRayMarching[ i ];
+				directionalLight = directionalLights[ i ];
+				lightDir = directionalLightRayMarching.direction;
+				lightCol = directionalLight.color;
+				l = lightDir;
+				lighDif = clamp(dot(n, l), 0., 1.);
+				sdfContext = RayMarch(p+n*SURF_DIST*2., l);
+				if(sdfContext.d<length(lightDir)) lighDif *= .1;
+				dif += lightCol * lighDif;
+			}
+			#pragma unroll_loop_end
+		#endif
 		return dif;
 	#else
 		return vec3(1.0, 1.0, 1.0);

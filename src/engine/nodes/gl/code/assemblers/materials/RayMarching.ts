@@ -54,7 +54,7 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 			},
 		});
 
-		this._gl_parent_node.scene().sceneTraverser.addSpotlightsRayMarchingUniform(material.uniforms);
+		this._gl_parent_node.scene().sceneTraverser.addlightsRayMarchingUniform(material.uniforms);
 		// CoreMaterial.addUserDataRenderHook(material, RayMarchingController.renderHook.bind(RayMarchingController));
 
 		this._addCustomMaterials(material);
