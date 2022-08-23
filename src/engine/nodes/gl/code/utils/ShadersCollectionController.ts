@@ -58,8 +58,8 @@ export class ShadersCollectionController {
 			linesController.addDefinitions(node, definitions);
 		}
 	}
-	definitions(shader_name: ShaderName, node: BaseGlNodeType) {
-		const linesController = this._linesControllerByShaderName.get(shader_name);
+	definitions(shaderName: ShaderName, node: BaseGlNodeType) {
+		const linesController = this._linesControllerByShaderName.get(shaderName);
 		if (linesController) {
 			return linesController.definitions(node);
 		}

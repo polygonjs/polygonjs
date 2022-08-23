@@ -1,5 +1,5 @@
 /**
- * Function of SDF box
+ * twists the position before passing it to and SDF
  *
  * @remarks
  *
@@ -8,42 +8,52 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
+import SDFTwistMethods from './gl/raymarching/sdfTwist.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
-const OUTPUT_NAME = 'float';
-class SDFOctahedronGlParamsConfig extends NodeParamsConfig {
+const AXISES = ['x', 'y', 'z'];
+const OUTPUT_NAME = 'p';
+class SDFTwistGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
-	size = ParamConfig.FLOAT(1);
+	twist = ParamConfig.FLOAT(0, {
+		range: [-1, 1],
+	});
+	axis = ParamConfig.INTEGER(1, {
+		menu: {entries: [0, 1, 2].map((i) => ({name: AXISES[i], value: i}))},
+	});
 }
-const ParamsConfig = new SDFOctahedronGlParamsConfig();
-export class SDFOctahedronGlNode extends BaseSDFGlNode<SDFOctahedronGlParamsConfig> {
+const ParamsConfig = new SDFTwistGlParamsConfig();
+export class SDFTwistGlNode extends BaseSDFGlNode<SDFTwistGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFOctahedron';
+		return 'SDFTwist';
 	}
 
 	override initializeNode() {
 		super.initializeNode();
-
+		this.io.connection_points.spare_params.setInputlessParamNames(['axis']);
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
-		const size = ThreeToGl.float(this.variableForInputParam(this.p.size));
+		const twist = ThreeToGl.float(this.variableForInputParam(this.p.twist));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdOctahedron(${position} - ${center}, ${size})`;
+		const functionName = `SDFTwist${this._functionSuffix()}`;
+		const bodyLine = `vec3 ${float} = ${functionName}(${position} - ${center}, ${twist})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFTwistMethods)]);
+	}
+	private _functionSuffix() {
+		return AXISES[this.pv.axis].toUpperCase();
 	}
 }

@@ -11,7 +11,7 @@
 
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/sdf.glsl';
+import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';

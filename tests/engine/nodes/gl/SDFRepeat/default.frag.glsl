@@ -5,6 +5,54 @@ uniform float MAX_DIST;
 uniform float SURF_DIST;
 #define ZERO 0
 #include <common>
+float SDFRepeat( in float p, in float c )
+{
+	return mod(p+0.5*c,c)-0.5*c;
+}
+vec3 SDFRepeat( in vec3 p, in vec3 c )
+{
+	return mod(p+0.5*c,c)-0.5*c;
+}
+vec3 SDFRepeatX( in vec3 p, in vec3 c ){
+	return vec3(
+		SDFRepeat(p.x, c.x),
+		p.yz
+	);
+}
+vec3 SDFRepeatY( in vec3 p, in vec3 c ){
+	return vec3(
+		p.x,
+		SDFRepeat(p.y, c.y),
+		p.z
+	);
+}
+vec3 SDFRepeatZ( in vec3 p, in vec3 c ){
+	return vec3(
+		p.xy,
+		SDFRepeat(p.z, c.z)
+	);
+}
+vec3 SDFRepeatXY( in vec3 p, in vec3 c ){
+	return vec3(
+		SDFRepeat(p.x, c.x),
+		SDFRepeat(p.y, c.y),
+		p.z
+	);
+}
+vec3 SDFRepeatXZ( in vec3 p, in vec3 c ){
+	return vec3(
+		SDFRepeat(p.x, c.x),
+		p.z,
+		SDFRepeat(p.z, c.z)
+	);
+}
+vec3 SDFRepeatYZ( in vec3 p, in vec3 c ){
+	return vec3(
+		p.x,
+		SDFRepeat(p.y, c.y),
+		SDFRepeat(p.z, c.z)
+	);
+}
 float dot2( in vec2 v ) { return dot(v,v); }
 float dot2( in vec3 v ) { return dot(v,v); }
 float ndot( in vec2 a, in vec2 b ) { return a.x*b.x - a.y*b.y; }
@@ -134,13 +182,10 @@ float SDFOnion( in float sdf, in float thickness )
 {
 	return abs(sdf)-thickness;
 }
-const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 149;
-uniform sampler2D v_POLY_texture_envTexture1;
 #include <lightmap_pars_fragment>
 #include <bsdfs>
 #include <lights_pars_begin>
 #include <lights_physical_pars_fragment>
-
 varying vec3 vPw;
 #if NUM_SPOT_LIGHTS > 0
 	struct SpotLightRayMarching {
@@ -172,11 +217,11 @@ int DefaultSDFMaterial(){
 }
 SDFContext GetDist(vec3 p) {
 	SDFContext sdfContext = SDFContext(0.0, 0);
-	vec3 v_POLY_globals1_position = p;
+	vec3 v_POLY_SDFRepeat1_p = SDFRepeat(p - vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
 	
-	float v_POLY_SDFSphere1_float = sdSphere(v_POLY_globals1_position - vec3(0.0, 0.0, 0.0), 1.0);
+	float v_POLY_SDFSphere1_float = sdSphere(v_POLY_SDFRepeat1_p - vec3(0.0, 0.0, 0.0), 1.0);
 	
-	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFSphere1_float, _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1);
+	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFSphere1_float, -1);
 	
 	sdfContext = v_POLY_SDFContext1_SDFContext;
 	
@@ -276,17 +321,6 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 	return res;
 }
 vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, vec3 col, int mat){
-	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
-	
-	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col *= v_POLY_constant1_val;
-		vec3 r = normalize(reflect(rayDir, n));
-		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
-		float fresnel = pow(1.-dot(normalize(cameraPosition), n), 5.0);
-		float fresnelFactor = (1.-0.0) + 0.0*fresnel;
-		vec3 env = texture2D(v_POLY_texture_envTexture1, uv).rgb * vec3(1.0, 1.0, 1.0) * 1.0 * fresnelFactor;
-		col += env;
-	}
 	
 	return col;
 }

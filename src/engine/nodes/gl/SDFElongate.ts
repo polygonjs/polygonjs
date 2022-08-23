@@ -8,7 +8,7 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/sdf.glsl';
+import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -17,7 +17,7 @@ import {isBooleanTrue} from '../../../core/Type';
 
 const OUTPUT_NAME = 'p';
 class SDFElongateGlParamsConfig extends NodeParamsConfig {
-	position = ParamConfig.VECTOR3([0, 0, 0]);
+	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	mult = ParamConfig.VECTOR3([0, 0, 0]);
 	fast = ParamConfig.BOOLEAN(1);

@@ -38,7 +38,11 @@ const TEST_SHADER_LIB = {
 };
 
 const ALL_UNIFORMS = [
-	...Object.keys(RAYMARCHING_UNIFORMS).concat(['spotLightsRayMarching', 'directionalLightsRayMarching']),
+	...Object.keys(RAYMARCHING_UNIFORMS).concat([
+		'spotLightsRayMarching',
+		'directionalLightsRayMarching',
+		'hemisphereLightsRayMarching',
+	]),
 	'alphaMap',
 	'alphaTest',
 	'ambientLightColor',

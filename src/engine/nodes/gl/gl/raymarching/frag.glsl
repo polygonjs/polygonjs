@@ -33,6 +33,12 @@ varying vec3 vPw;
 	};
 	uniform DirectionalLightRayMarching directionalLightsRayMarching[ NUM_DIR_LIGHTS ];
 #endif
+#if NUM_HEMI_LIGHTS > 0
+	struct HemisphereLightRayMarching {
+		vec3 direction;
+	};
+	uniform HemisphereLightRayMarching hemisphereLightsRayMarching[ NUM_HEMI_LIGHTS ];
+#endif
 
 struct SDFContext {
 	float d;
@@ -84,7 +90,7 @@ vec3 GetNormal(vec3 p) {
 }
 
 vec3 GetLight(vec3 p, vec3 n) {
-	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0
+	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0 || NUM_HEMI_LIGHTS > 0
 		vec3 dif = vec3(0.,0.,0.);
 		vec3 lightPos,lightCol,lightDir, l;
 		float lighDif;
@@ -124,6 +130,25 @@ vec3 GetLight(vec3 p, vec3 n) {
 				dif += lightCol * lighDif;
 			}
 			#pragma unroll_loop_end
+		#endif
+		// vec3 irradiance = getAmbientLightIrradiance( ambientLightColor );
+
+		// irradiance += getLightProbeIrradiance( lightProbe, geometry.normal );
+
+		#if ( NUM_HEMI_LIGHTS > 0 )
+
+			#pragma unroll_loop_start
+			HemisphereLight hemiLight;
+			for ( int i = 0; i < NUM_HEMI_LIGHTS; i ++ ) {
+
+				hemiLight.skyColor = hemisphereLights[ i ].skyColor;
+				hemiLight.groundColor = hemisphereLights[ i ].groundColor;
+				hemiLight.direction = hemisphereLightsRayMarching[ i ].direction;
+				dif += getHemisphereLightIrradiance( hemiLight, n );
+
+			}
+			#pragma unroll_loop_end
+
 		#endif
 		return dif;
 	#else

@@ -31,6 +31,30 @@ float sdBoxFrame( vec3 p, vec3 b, float e )
 		length(max(vec3(q.x,p.y,q.z),0.0))+min(max(q.x,max(p.y,q.z)),0.0)),
 		length(max(vec3(q.x,q.y,p.z),0.0))+min(max(q.x,max(q.y,p.z)),0.0));
 }
+float sdCone( in vec3 p, in vec2 c, float h )
+{
+	vec2 q = h*vec2(c.x/c.y,-1.0);
+	vec2 w = vec2( length(p.xz), p.y );
+	vec2 a = w - q*clamp( dot(w,q)/dot(q,q), 0.0, 1.0 );
+	vec2 b = w - q*vec2( clamp( w.x/q.x, 0.0, 1.0 ), 1.0 );
+	float k = sign( q.y );
+	float d = min(dot( a, a ),dot(b, b));
+	float s = max( k*(w.x*q.y-w.y*q.x),k*(w.y-q.y)  );
+	return sqrt(d)*sign(s);
+}
+float sdConeWrapped(vec3 pos, float angle, float height){
+	return sdCone(pos, vec2(sin(angle), cos(angle)), height);
+}
+float sdRoundCone( vec3 p, float r1, float r2, float h )
+{
+	float b = (r1-r2)/h;
+	float a = sqrt(1.0-b*b);
+	vec2 q = vec2( length(p.xz), p.y );
+	float k = dot(q,vec2(-b,a));
+	if( k<0.0 ) return length(q) - r1;
+	if( k>a*h ) return length(q-vec2(0.0,h)) - r2;
+	return dot(q, vec2(a,b) ) - r1;
+}
 float sdPlane( vec3 p, vec3 n, float h )
 {
 	return dot(p,n) + h;
@@ -110,7 +134,7 @@ float SDFOnion( in float sdf, in float thickness )
 {
 	return abs(sdf)-thickness;
 }
-const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 147;
+const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 149;
 uniform sampler2D v_POLY_texture_envTexture1;
 #include <lightmap_pars_fragment>
 #include <bsdfs>
@@ -128,6 +152,12 @@ varying vec3 vPw;
 		vec3 direction;
 	};
 	uniform DirectionalLightRayMarching directionalLightsRayMarching[ NUM_DIR_LIGHTS ];
+#endif
+#if NUM_HEMI_LIGHTS > 0
+	struct HemisphereLightRayMarching {
+		vec3 direction;
+	};
+	uniform HemisphereLightRayMarching hemisphereLightsRayMarching[ NUM_HEMI_LIGHTS ];
 #endif
 struct SDFContext {
 	float d;
@@ -172,7 +202,7 @@ vec3 GetNormal(vec3 p) {
 	return normalize(n);
 }
 vec3 GetLight(vec3 p, vec3 n) {
-	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0
+	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0 || NUM_HEMI_LIGHTS > 0
 		vec3 dif = vec3(0.,0.,0.);
 		vec3 lightPos,lightCol,lightDir, l;
 		float lighDif;
@@ -208,6 +238,17 @@ vec3 GetLight(vec3 p, vec3 n) {
 				sdfContext = RayMarch(p+n*SURF_DIST*2., l);
 				if(sdfContext.d<length(lightDir)) lighDif *= .1;
 				dif += lightCol * lighDif;
+			}
+			#pragma unroll_loop_end
+		#endif
+		#if ( NUM_HEMI_LIGHTS > 0 )
+			#pragma unroll_loop_start
+			HemisphereLight hemiLight;
+			for ( int i = 0; i < NUM_HEMI_LIGHTS; i ++ ) {
+				hemiLight.skyColor = hemisphereLights[ i ].skyColor;
+				hemiLight.groundColor = hemisphereLights[ i ].groundColor;
+				hemiLight.direction = hemisphereLightsRayMarching[ i ].direction;
+				dif += getHemisphereLightIrradiance( hemiLight, n );
 			}
 			#pragma unroll_loop_end
 		#endif

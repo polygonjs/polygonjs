@@ -19,8 +19,8 @@ const DEFAULT_DISPLAY_NODE_CONTROLLER_OPTIONS: DisplayNodeControllerOptions = {
 };
 export class DisplayNodeController {
 	private _initialized: boolean = false;
-	private _graph_node: CoreGraphNode;
-	private _display_node: BaseNodeClassWithDisplayFlag | undefined = undefined;
+	private _graphNode: CoreGraphNode;
+	private _displayNode: BaseNodeClassWithDisplayFlag | undefined = undefined;
 	private _onDisplayNodeRemoveCallback: DisplayControllerCallback | undefined;
 	private _onDisplayNodeSetCallback: DisplayControllerCallback | undefined;
 	private _onDisplayNodeUpdateCallback: DisplayControllerCallback | undefined;
@@ -33,19 +33,19 @@ export class DisplayNodeController {
 		callbacks: DisplayNodeControllerCallbacks,
 		private options: DisplayNodeControllerOptions = DEFAULT_DISPLAY_NODE_CONTROLLER_OPTIONS
 	) {
-		this._graph_node = new CoreGraphNode(node.scene(), 'DisplayNodeController');
-		(this._graph_node as any).node = node;
+		this._graphNode = new CoreGraphNode(node.scene(), 'DisplayNodeController');
+		(this._graphNode as any).node = node;
 		this._onDisplayNodeRemoveCallback = callbacks.onDisplayNodeRemove;
 		this._onDisplayNodeSetCallback = callbacks.onDisplayNodeSet;
 		this._onDisplayNodeUpdateCallback = callbacks.onDisplayNodeUpdate;
 	}
 
 	dispose() {
-		this._graph_node.dispose();
+		this._graphNode.dispose();
 	}
 
 	displayNode() {
-		return this._display_node;
+		return this._displayNode;
 	}
 
 	initializeNode() {
@@ -55,49 +55,49 @@ export class DisplayNodeController {
 		}
 		this._initialized = true;
 
-		this.node.lifecycle.onChildAdd((child_node) => {
-			if (!this._display_node) {
-				child_node.flags?.display?.set(true);
+		this.node.lifecycle.onChildAdd((childNode) => {
+			if (!this._displayNode) {
+				childNode.flags?.display?.set(true);
 			}
 		});
-		this.node.lifecycle.onChildRemove((child_node) => {
-			if (child_node.graphNodeId() == this._display_node?.graphNodeId()) {
+		this.node.lifecycle.onChildRemove((childNode) => {
+			if (childNode.graphNodeId() == this._displayNode?.graphNodeId()) {
 				const children = this.node.children();
-				const last_child = children[children.length - 1];
-				if (last_child) {
-					last_child.flags?.display?.set(true);
+				const lastChild = children[children.length - 1];
+				if (lastChild) {
+					lastChild.flags?.display?.set(true);
 				} else {
 					this.setDisplayNode(undefined);
 				}
 			}
 		});
-		this._graph_node.dirtyController.addPostDirtyHook('_requestDisplayNodeContainer', () => {
+		this._graphNode.dirtyController.addPostDirtyHook('_requestDisplayNodeContainer', () => {
 			if (this._onDisplayNodeUpdateCallback) {
 				this._onDisplayNodeUpdateCallback();
 			}
 		});
 	}
 
-	async setDisplayNode(new_display_node: BaseNodeClassWithDisplayFlag | undefined) {
+	async setDisplayNode(newDisplayNode: BaseNodeClassWithDisplayFlag | undefined) {
 		if (!this._initialized) {
 			console.error('display node controller not initialized', this.node);
 		}
 
-		if (this._display_node != new_display_node) {
-			const old_display_node = this._display_node;
-			if (old_display_node) {
-				old_display_node.flags.display.set(false);
+		if (this._displayNode != newDisplayNode) {
+			const oldDisplayNode = this._displayNode;
+			if (oldDisplayNode) {
+				oldDisplayNode.flags.display.set(false);
 				if (this.options.dependsOnDisplayNode) {
-					this._graph_node.removeGraphInput(old_display_node);
+					this._graphNode.removeGraphInput(oldDisplayNode);
 				}
 				if (this._onDisplayNodeRemoveCallback) {
 					this._onDisplayNodeRemoveCallback();
 				}
 			}
-			this._display_node = new_display_node;
-			if (this._display_node) {
+			this._displayNode = newDisplayNode;
+			if (this._displayNode) {
 				if (this.options.dependsOnDisplayNode) {
-					this._graph_node.addGraphInput(this._display_node);
+					this._graphNode.addGraphInput(this._displayNode);
 				}
 				if (this._onDisplayNodeSetCallback) {
 					this._onDisplayNodeSetCallback();

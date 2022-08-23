@@ -1,5 +1,5 @@
 /**
- * Function of SDF torus
+ * Function of SDF round box
  *
  * @remarks
  *
@@ -7,7 +7,7 @@
  */
 
 import {BaseSDFGlNode} from './_BaseSDF';
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
@@ -15,20 +15,18 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
-class SDFTorusGlParamsConfig extends NodeParamsConfig {
+class SDFBoxRoundGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
-	radius1 = ParamConfig.FLOAT(1);
-	radius2 = ParamConfig.FLOAT(0.1);
-	// cap = ParamConfig.BOOLEAN(0);
-	// ra = ParamConfig.FLOAT(0.1);
-	// rb = ParamConfig.FLOAT(0.2);
+	size = ParamConfig.FLOAT(1);
+	sizes = ParamConfig.VECTOR3([1, 1, 1]);
+	radius = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new SDFTorusGlParamsConfig();
-export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
+const ParamsConfig = new SDFBoxRoundGlParamsConfig();
+export class SDFBoxRoundGlNode extends BaseSDFGlNode<SDFBoxRoundGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFTorus';
+		return 'SDFBoxRound';
 	}
 
 	override initializeNode() {
@@ -42,17 +40,12 @@ export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
-		const radius1 = ThreeToGl.float(this.variableForInputParam(this.p.radius1));
-		const radius2 = ThreeToGl.float(this.variableForInputParam(this.p.radius2));
-		// const cap = ThreeToGl.bool(this.variableForInputParam(this.p.cap));
-		// const ra = ThreeToGl.float(this.variableForInputParam(this.p.ra));
-		// const rb = ThreeToGl.float(this.variableForInputParam(this.p.rb));
+		const size = ThreeToGl.float(this.variableForInputParam(this.p.size));
+		const sizes = ThreeToGl.vector3(this.variableForInputParam(this.p.sizes));
+		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const torus = `sdTorus(${position} - ${center}, vec2(${radius1},${radius2}))`;
-		// const torusCapped = `sdCappedTorus(${position} - ${center}, vec2(${radius1},${radius2}), ${ra}, ${rb})`;
-		// const bodyLine = `float ${float} = ${cap} ? ${torusCapped} : ${torus}`;
-		const bodyLine = `float ${float} = ${torus}`;
+		const bodyLine = `float ${float} = sdRoundBox(${position} - ${center}, ${sizes}*${size}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);

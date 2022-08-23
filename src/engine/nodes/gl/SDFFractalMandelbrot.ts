@@ -20,7 +20,7 @@ enum OutputName {
 	AO = 'ao',
 }
 class SDFFractalMandelbrotGlParamsConfig extends NodeParamsConfig {
-	position = ParamConfig.VECTOR3([0, 0, 0]);
+	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	power = ParamConfig.FLOAT(8, {
 		range: [0, 10],

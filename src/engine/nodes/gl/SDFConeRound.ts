@@ -1,5 +1,5 @@
 /**
- * Function of SDF torus
+ * Function of SDF cone round
  *
  * @remarks
  *
@@ -15,20 +15,18 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
-class SDFTorusGlParamsConfig extends NodeParamsConfig {
+class SDFConeRoundGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
-	radius1 = ParamConfig.FLOAT(1);
-	radius2 = ParamConfig.FLOAT(0.1);
-	// cap = ParamConfig.BOOLEAN(0);
-	// ra = ParamConfig.FLOAT(0.1);
-	// rb = ParamConfig.FLOAT(0.2);
+	height = ParamConfig.FLOAT(1);
+	radius1 = ParamConfig.FLOAT(0.5);
+	radius2 = ParamConfig.FLOAT(0.2);
 }
-const ParamsConfig = new SDFTorusGlParamsConfig();
-export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
+const ParamsConfig = new SDFConeRoundGlParamsConfig();
+export class SDFConeRoundGlNode extends BaseSDFGlNode<SDFConeRoundGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFTorus';
+		return 'SDFConeRound';
 	}
 
 	override initializeNode() {
@@ -42,17 +40,12 @@ export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
+		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
 		const radius1 = ThreeToGl.float(this.variableForInputParam(this.p.radius1));
 		const radius2 = ThreeToGl.float(this.variableForInputParam(this.p.radius2));
-		// const cap = ThreeToGl.bool(this.variableForInputParam(this.p.cap));
-		// const ra = ThreeToGl.float(this.variableForInputParam(this.p.ra));
-		// const rb = ThreeToGl.float(this.variableForInputParam(this.p.rb));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const torus = `sdTorus(${position} - ${center}, vec2(${radius1},${radius2}))`;
-		// const torusCapped = `sdCappedTorus(${position} - ${center}, vec2(${radius1},${radius2}), ${ra}, ${rb})`;
-		// const bodyLine = `float ${float} = ${cap} ? ${torusCapped} : ${torus}`;
-		const bodyLine = `float ${float} = ${torus}`;
+		const bodyLine = `float ${float} = sdRoundCone(${position} - ${center}, ${radius1}, ${radius2}, ${height})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
