@@ -20,7 +20,7 @@ export const NODE_PATH_DEFAULT = {
 	},
 };
 
-class GraphNodePathParamValue<T extends CoreGraphNode> {
+abstract class GraphNodePathParamValue<T extends CoreGraphNode> {
 	protected _graphNode: T | null = null;
 	constructor(protected _path: string = '') {}
 	graphNode() {
@@ -29,6 +29,7 @@ class GraphNodePathParamValue<T extends CoreGraphNode> {
 	private _setGraphNode(graphNode: T | null) {
 		this._graphNode = graphNode;
 	}
+	abstract graphNodePath():string|undefined
 	path() {
 		return this._path;
 	}
@@ -50,6 +51,9 @@ export class TypedNodePathParamValue extends GraphNodePathParamValue<BaseNodeTyp
 	node() {
 		return this._graphNode;
 	}
+	graphNodePath(){
+		return this.node()?.path()
+	}
 
 	resolve(nodeStart: BaseNodeType) {
 		this._graphNode = CoreWalker.findNode(nodeStart, this._path);
@@ -59,14 +63,14 @@ export class TypedNodePathParamValue extends GraphNodePathParamValue<BaseNodeTyp
 		context: N,
 		errorState?: NodeErrorState<K>
 	): BaseNodeByContextMap[N] | undefined {
-		const found_node = this.node();
-		if (!found_node) {
+		const foundNode = this.node();
+		if (!foundNode) {
 			errorState?.set(`no node found at ${this.path()}`);
 			return;
 		}
-		const node_context = found_node.context();
+		const node_context = foundNode.context();
 		if (node_context == context) {
-			return found_node as BaseNodeByContextMap[N];
+			return foundNode as BaseNodeByContextMap[N];
 		} else {
 			errorState?.set(`expected ${context} node, but got a ${node_context}`);
 			return;
@@ -80,6 +84,9 @@ export class TypedParamPathParamValue extends GraphNodePathParamValue<BaseParamT
 	}
 	param() {
 		return this._graphNode;
+	}
+	graphNodePath(){
+		return this.param()?.path()
 	}
 
 	resolve(nodeStart: BaseNodeType) {

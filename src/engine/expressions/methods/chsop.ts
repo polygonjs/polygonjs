@@ -54,7 +54,7 @@ export class ChsopExpression extends BaseMethod {
 						paramValue instanceof TypedParamPathParamValue ||
 						paramValue instanceof TypedNodePathParamValue
 					) {
-						const result = paramValue.path();
+						const result = paramValue.graphNodePath();
 						if (result != null) {
 							val = result;
 							resolve(val);
