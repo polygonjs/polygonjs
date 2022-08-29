@@ -26,7 +26,20 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
 		}
 		if (CoreType.isString(raw_input) && CoreString.isNumber(raw_input)) {
-			return parseInt(raw_input);
+			// we check here that we have a string AND that the string can be converted to a valid number
+			const num = parseInt(raw_input);
+			if (num != null) {
+				const converted = this.convert(num);
+				if (converted != null) {
+					return converted;
+				}
+			}
+		}
+		if (CoreType.isNumber(raw_input)) {
+			const converted = this.convert(raw_input);
+			if (converted != null) {
+				return converted;
+			}
 		}
 		return raw_input;
 	}
@@ -62,7 +75,7 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	}
 	override convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
 		const result = IntegerParam.convert(raw_val);
-		if (result) {
+		if (result != null) {
 			return this.options.ensureInRange(result);
 		} else {
 			return result;

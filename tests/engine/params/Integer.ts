@@ -91,8 +91,8 @@ QUnit.test('integer param can take an expression returning a boolean', async (as
 QUnit.test('serialized value is integer if numerical value entered as a string', async (assert) => {
 	const geo1 = window.geo1;
 
-	const switch1 = geo1.createNode('switch');
-	const param = switch1.p.input;
+	const icosahedron1 = geo1.createNode('icosahedron');
+	const param = icosahedron1.p.detail;
 
 	param.set('12');
 	// this is important when saving nodes,

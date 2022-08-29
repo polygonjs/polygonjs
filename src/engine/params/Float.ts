@@ -25,7 +25,20 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 			return raw_input[0] as ParamInitValuesTypeMap[ParamType.INTEGER];
 		}
 		if (CoreType.isString(raw_input) && CoreString.isNumber(raw_input)) {
-			return parseFloat(raw_input);
+			// we check here that we have a string AND that the string can be converted to a valid number
+			const num = parseFloat(raw_input);
+			if (num != null) {
+				const converted = this.convert(num);
+				if (converted != null) {
+					return converted;
+				}
+			}
+		}
+		if (CoreType.isNumber(raw_input)) {
+			const converted = this.convert(raw_input);
+			if (converted != null) {
+				return converted;
+			}
 		}
 		return raw_input;
 	}
@@ -61,7 +74,7 @@ export class FloatParam extends TypedNumericParam<ParamType.FLOAT> {
 	}
 	override convert(raw_val: ParamInitValuesTypeMap[ParamType.FLOAT]): number | null {
 		const result = FloatParam.convert(raw_val);
-		if (result) {
+		if (result != null) {
 			return this.options.ensureInRange(result);
 		} else {
 			return result;
