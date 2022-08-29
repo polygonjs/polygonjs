@@ -111,6 +111,8 @@ import {RoundGlNode} from '../../../nodes/gl/Round';
 import {SDFBoxGlNode} from '../../../nodes/gl/SDFBox';
 import {SDFBoxFrameGlNode} from '../../../nodes/gl/SDFBoxFrame';
 import {SDFBoxRoundGlNode} from '../../../nodes/gl/SDFBoxRound';
+import {SDFCapsuleGlNode} from '../../../nodes/gl/SDFCapsule';
+import {SDFCapsuleVerticalGlNode} from '../../../nodes/gl/SDFCapsuleVertical';
 import {SDFConeGlNode} from '../../../nodes/gl/SDFCone';
 import {SDFConeRoundGlNode} from '../../../nodes/gl/SDFConeRound';
 import {SDFContextGlNode} from '../../../nodes/gl/SDFContext';
@@ -256,6 +258,8 @@ export interface GlNodeChildrenMap {
 	SDFBox: SDFBoxGlNode;
 	SDFBoxFrame: SDFBoxFrameGlNode;
 	SDFBoxRound: SDFBoxRoundGlNode;
+	SDFCapsule: SDFCapsuleGlNode;
+	SDFCapsuleVertical: SDFCapsuleVerticalGlNode;
 	SDFCone: SDFConeGlNode;
 	SDFConeRound: SDFConeRoundGlNode;
 	SDFContext: SDFContextGlNode;
@@ -426,6 +430,8 @@ export class GlRegister {
 		poly.registerNode(SDFBoxGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFBoxFrameGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFBoxRoundGlNode, CATEGORY_GL.SDF_PRIMITIVES);
+		poly.registerNode(SDFCapsuleGlNode, CATEGORY_GL.SDF_PRIMITIVES);
+		poly.registerNode(SDFCapsuleVerticalGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFConeGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFConeRoundGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFContextGlNode, CATEGORY_GL.SDF_MODIFIERS);
