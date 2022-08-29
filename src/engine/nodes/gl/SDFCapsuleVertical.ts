@@ -1,5 +1,5 @@
 /**
- * Function of SDF cone
+ * Function of SDF vertical capsule
  *
  * @remarks
  *
