@@ -5,6 +5,7 @@ import {TypedNode} from '../../_Base';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 interface DisconnectionOptions {
 	setInput?: boolean;
+	ignoreLockedState?: boolean;
 }
 export const NODE_CONNECTION_TRIGGERED_EVENT_NAME = 'triggered';
 // export const NODE_CONNECTION_UNTRIGGERED_EVENT_NAME = 'untriggered';
@@ -69,7 +70,9 @@ export class TypedNodeConnection<NC extends NodeContext> {
 		}
 
 		if (options.setInput === true) {
-			this._node_dest.io.inputs.setInput(this._input_index, null);
+			this._node_dest.io.inputs.setInput(this._input_index, null, undefined, {
+				ignoreLockedState: options.ignoreLockedState,
+			});
 		}
 	}
 

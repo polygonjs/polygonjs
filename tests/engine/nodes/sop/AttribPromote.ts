@@ -106,7 +106,6 @@ QUnit.test('sop/attribPromote object to vertex with max', async (assert) => {
 	attribPromote1.p.name.set('test');
 
 	let container = await attribPromote1.compute();
-	console.log(attribPromote1.states.error.message());
 	const coreGroup = container.coreContent()!;
 	const geometry = coreGroup.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);

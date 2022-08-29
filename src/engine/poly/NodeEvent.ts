@@ -15,4 +15,5 @@ export enum NodeEvent {
 	FLAG_DISPLAY_UPDATED = 'display_flag_updated',
 	FLAG_OPTIMIZE_UPDATED = 'optimize_flag_updated',
 	SELECTION_UPDATED = 'selection_updated',
+	POLY_NODE_LOCK_STATE_UPDATED = 'lock_state_updated',
 }

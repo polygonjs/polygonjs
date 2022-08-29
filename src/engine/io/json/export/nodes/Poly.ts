@@ -2,7 +2,7 @@ import {NodeJsonExporter, NodeJsonExporterUIData, JSONExporterDataRequestOption}
 
 export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
 	protected override nodes_data(options: JSONExporterDataRequestOption = {}) {
-		if (options.showPolyNodesData) {
+		if (options.showPolyNodesData || !this._node.polyNodeController?.locked()) {
 			return super.nodes_data(options);
 		}
 		// the PolyNode does not save it children

@@ -27,6 +27,9 @@ export interface NodeSerializerData {
 		optimize?: boolean;
 	};
 	selection?: CoreGraphNodeId[];
+	polyNode?: {
+		locked: boolean;
+	};
 }
 
 export class NodeSerializer {
@@ -74,6 +77,11 @@ export class NodeSerializer {
 
 		if (this.node.childrenAllowed() && this.node.childrenController) {
 			data['selection'] = this.node.childrenController.selection.toJSON();
+		}
+		if (this.node.polyNodeController) {
+			data['polyNode'] = {
+				locked: this.node.polyNodeController.locked(),
+			};
 		}
 
 		return data;

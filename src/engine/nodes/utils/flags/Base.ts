@@ -11,11 +11,20 @@ export class BaseFlag {
 		this._hooks = this._hooks || [];
 		this._hooks.push(hook);
 	}
-	protected _on_update() {}
-	set(new_state: boolean) {
-		if (this._state != new_state) {
-			this._state = new_state;
-			this._on_update();
+	protected _onUpdate() {}
+	set(newState: boolean) {
+		if (this._state != newState) {
+			if (this.node.insideALockedParent()) {
+				const lockedParent = this.node.lockedParent();
+				console.warn(
+					`node '${this.node.path()}' cannot have its flag changed, since it is inside '${
+						lockedParent ? lockedParent.path() : ''
+					}', which is locked`
+				);
+				return;
+			}
+			this._state = newState;
+			this._onUpdate();
 			this.runHooks();
 		}
 	}
