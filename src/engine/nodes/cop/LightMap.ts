@@ -129,7 +129,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 				this._dataTextureController || new DataTextureController(DataTextureControllerBufferType.Float32Array);
 			this._rendererController = this._rendererController || new CopRendererController(this);
 			const renderer = await this._rendererController.waitForRenderer();
-			const texture = this._dataTextureController.from_render_target(renderer, renderTarget);
+			const texture = this._dataTextureController.fromRenderTarget(renderer, renderTarget);
 			this.setTexture(texture);
 		}
 	}

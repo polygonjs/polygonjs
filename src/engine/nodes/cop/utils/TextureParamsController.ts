@@ -295,6 +295,7 @@ export class TextureParamsController {
 		} else {
 			texture.encoding = DEFAULT.ENCODING;
 		}
+		console.log('set encoding', texture.encoding);
 		texture.needsUpdate = true;
 	}
 	private _updateAdvanced(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {

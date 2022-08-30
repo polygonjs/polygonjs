@@ -1,25 +1,43 @@
+import {DataTextureControllerBufferType} from './utils/DataTextureController';
 /**
  * Allows to create a shader with GLSL nodes to create the texture values.
  *
  *
  */
+import {
+	Camera,
+	Mesh,
+	PlaneBufferGeometry,
+	WebGLRenderer,
+	WebGLRenderTarget,
+	ShaderMaterial,
+	Scene,
+	FloatType,
+	HalfFloatType,
+	LinearEncoding,
+	NoToneMapping,
+} from 'three';
 import {Constructor, valueof, Number2} from '../../../types/GlobalTypes';
-import {WebGLRenderTarget} from 'three';
-import {ShaderMaterial} from 'three';
-import {Scene} from 'three';
-import {FloatType, HalfFloatType, RGBAFormat, NearestFilter, LinearFilter, ClampToEdgeWrapping} from 'three';
-import {PlaneBufferGeometry} from 'three';
-import {Mesh} from 'three';
-import {Camera} from 'three';
 import {TypedCopNode} from './_Base';
-// import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {NodeContext} from '../../poly/NodeContext';
 import {IUniforms} from '../../../core/geometry/Material';
-
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {DataTextureController} from './utils/DataTextureController';
+import {CopRendererController} from './utils/RendererController';
+import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
+import {Poly} from '../../Poly';
+import {TexturePersistedConfig} from '../gl/code/assemblers/textures/TexturePersistedConfig';
+import {IUniformsWithTime} from '../../scene/utils/UniformsController';
+import {CoreUserAgent} from '../../../core/UserAgent';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {BaseNodeType} from '../_Base';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
+import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
+import {isBooleanTrue} from '../../../core/Type';
 const VERTEX_SHADER = `
 void main()	{
 	gl_Position = vec4( position, 1.0 );
@@ -27,31 +45,21 @@ void main()	{
 `;
 const RESOLUTION_DEFAULT: Number2 = [256, 256];
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
-import {CopRendererController} from './utils/RendererController';
-import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
-import {Poly} from '../../Poly';
-import {TexturePersistedConfig} from '../gl/code/assemblers/textures/TexturePersistedConfig';
-import {IUniformsWithTime} from '../../scene/utils/UniformsController';
-import {isBooleanTrue} from '../../../core/BooleanValue';
-import {CoreUserAgent} from '../../../core/UserAgent';
-import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {BaseNodeType} from '../_Base';
-import {CopType} from '../../poly/registers/nodes/types/Cop';
-
-class BuilderCopParamsConfig extends NodeParamsConfig {
-	/** @param texture resolution */
-	resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
-	/** @param defines if the shader is rendered via the same camera used to render the scene */
-	useCameraRenderer = ParamConfig.BOOLEAN(1); // needs to be 1, as it does not work on firefox otherwise
-	/** @param force Render */
-	render = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			BuilderCopNode.PARAM_CALLBACK_render(node as BuilderCopNode);
-		},
-	});
+function BuilderCopParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param texture resolution */
+		resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
+		/** @param use a data texture instead of a render target, which can be useful when using that texture as and envMap */
+		useDataTexture = ParamConfig.BOOLEAN(0);
+		/** @param force Render */
+		render = ParamConfig.BUTTON(null, {
+			callback: (node: BaseNodeType) => {
+				BuilderCopNode.PARAM_CALLBACK_render(node as BuilderCopNode);
+			},
+		});
+	};
 }
+class BuilderCopParamsConfig extends TextureParamConfig(BuilderCopParamConfig(NodeParamsConfig)) {}
 
 const ParamsConfig = new BuilderCopParamsConfig();
 
@@ -79,26 +87,27 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		return this._assemblerController;
 	}
 
-	private _texture_mesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
-	private _fragment_shader: string | undefined;
+	private _textureMesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
+	private _fragmentShader: string | undefined;
 	private _uniforms: IUniforms | undefined;
-	public readonly texture_material: ShaderMaterial = new ShaderMaterial({
+	public readonly textureMaterial: ShaderMaterial = new ShaderMaterial({
 		uniforms: {},
 		vertexShader: VERTEX_SHADER,
 		fragmentShader: '',
 	});
-	private _texture_scene: Scene = new Scene();
-	private _texture_camera: Camera = new Camera();
-	private _render_target: WebGLRenderTarget | undefined;
+	private _textureScene: Scene = new Scene();
+	private _textureCamera: Camera = new Camera();
+	private _renderTarget: WebGLRenderTarget | undefined;
 	private _dataTextureController: DataTextureController | undefined;
 	private _rendererController: CopRendererController | undefined;
-
+	private _usedRenderer: WebGLRenderer | undefined;
+	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 	protected override _childrenControllerContext = NodeContext.GL;
 	override initializeNode() {
-		this._texture_mesh.material = this.texture_material;
-		this._texture_mesh.scale.multiplyScalar(0.25);
-		this._texture_scene.add(this._texture_mesh);
-		this._texture_camera.position.z = 1;
+		this._textureMesh.material = this.textureMaterial;
+		this._textureMesh.scale.multiplyScalar(0.25);
+		this._textureScene.add(this._textureMesh);
+		this._textureCamera.position.z = 1;
 
 		// this ensures the builder recooks when its children are changed
 		// and not just when a material that use it requests it
@@ -156,12 +165,12 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 
 	override async cook() {
 		this.compileIfRequired();
-		this.renderOnTarget();
+		await this._renderOnTarget(true);
 	}
 
 	shaders_by_name() {
 		return {
-			fragment: this._fragment_shader,
+			fragment: this._fragmentShader,
 		};
 	}
 
@@ -202,18 +211,18 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			const fragment_shader = assemblerController.assembler.fragment_shader();
 			const uniforms = assemblerController.assembler.uniforms();
 			if (fragment_shader && uniforms) {
-				this._fragment_shader = fragment_shader;
+				this._fragmentShader = fragment_shader;
 				this._uniforms = uniforms;
 			}
 
 			BuilderCopNode.handleDependencies(this, assemblerController.assembler.uniformsTimeDependent());
 		}
 
-		if (this._fragment_shader && this._uniforms) {
-			this.texture_material.fragmentShader = this._fragment_shader;
-			this.texture_material.uniforms = this._uniforms;
-			this.texture_material.needsUpdate = true;
-			this.texture_material.uniforms.resolution = {
+		if (this._fragmentShader && this._uniforms) {
+			this.textureMaterial.fragmentShader = this._fragmentShader;
+			this.textureMaterial.uniforms = this._uniforms;
+			this.textureMaterial.needsUpdate = true;
+			this.textureMaterial.uniforms.resolution = {
 				value: this.pv.resolution,
 			};
 		}
@@ -255,60 +264,85 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	// RENDER + RENDER TARGET
 	//
 	//
-	private _boundRenderOnTarget = this.renderOnTarget.bind(this);
-	async renderOnTarget() {
-		this.createRenderTargetIfRequired();
-		if (!this._render_target) {
-			return;
-		}
+	private _boundRenderOnTarget = this.renderOnTargetWithoutUpdatingTextureFromParams.bind(this);
+	async renderOnTargetWithoutUpdatingTextureFromParams() {
+		this._renderOnTarget(false);
+	}
+	private async _renderOnTarget(updateTextureFromParams: boolean) {
+		await this.createRenderTargetIfRequired();
+
 		if (this.states.error.active()) {
 			return;
 		}
 
 		this._rendererController = this._rendererController || new CopRendererController(this);
 		const renderer = await this._rendererController.waitForRenderer();
+		this._usedRenderer = renderer;
 
-		const prev_target = renderer.getRenderTarget();
-		renderer.setRenderTarget(this._render_target);
-		renderer.clear();
-
-		renderer.render(this._texture_scene, this._texture_camera);
-		renderer.setRenderTarget(prev_target);
-
-		if (this._render_target.texture) {
-			if (isBooleanTrue(this.pv.useCameraRenderer)) {
-				this.setTexture(this._render_target.texture);
-			} else {
-				// const w = this.pv.resolution.x;
-				// const h = this.pv.resolution.y;
-				// this._data_texture = this._data_texture || this._create_data_texture(w, h);
-				// renderer.readRenderTargetPixels(this._render_target, 0, 0, w, h, this._data_texture.image.data);
-				// this._data_texture.needsUpdate = true;
+		this._saveRendererState(renderer);
+		this._prepareRenderer(renderer);
+		renderer.render(this._textureScene, this._textureCamera);
+		await this._postRender(updateTextureFromParams);
+		this._restoreRendererState(renderer);
+	}
+	private async _postRender(updateTextureFromParams: boolean) {
+		if (this._renderTarget?.texture) {
+			if (isBooleanTrue(this.pv.useDataTexture) && this._renderTarget && this._usedRenderer) {
 				this._dataTextureController =
 					this._dataTextureController ||
 					new DataTextureController(DataTextureControllerBufferType.Float32Array);
-				const data_texture = this._dataTextureController.from_render_target(renderer, this._render_target);
-
-				this.setTexture(data_texture);
+				const texture = this._dataTextureController.fromRenderTarget(this._usedRenderer, this._renderTarget);
+				if (updateTextureFromParams) {
+					await this.textureParamsController.update(texture);
+				}
+				this.setTexture(texture);
+			} else {
+				const texture = this._renderTarget?.texture;
+				if (updateTextureFromParams) {
+					await this.textureParamsController.update(texture);
+				}
+				this.setTexture(texture);
 			}
 		} else {
 			this.cookController.endCook();
 		}
 	}
-
-	renderTarget() {
-		return (this._render_target =
-			this._render_target || this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y));
+	private _prevTarget: WebGLRenderTarget | null = null;
+	private _prevOutputEncoding: number = -1;
+	private _prevToneMapping: number = -1;
+	private _saveRendererState(renderer: WebGLRenderer) {
+		this._prevTarget = renderer.getRenderTarget();
+		this._prevOutputEncoding = renderer.outputEncoding;
+		this._prevToneMapping = renderer.toneMapping;
 	}
-	private createRenderTargetIfRequired() {
-		if (!this._render_target || !this._renderTargetResolutionValid()) {
-			this._render_target = this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
+	private _prepareRenderer(renderer: WebGLRenderer) {
+		if (!this._renderTarget) {
+			return;
+		}
+		renderer.setRenderTarget(this._renderTarget);
+		renderer.outputEncoding = LinearEncoding;
+		renderer.toneMapping = NoToneMapping;
+		renderer.clear();
+	}
+	private _restoreRendererState(renderer: WebGLRenderer) {
+		renderer.setRenderTarget(this._prevTarget);
+		renderer.outputEncoding = this._prevOutputEncoding;
+		renderer.toneMapping = this._prevToneMapping;
+	}
+
+	async renderTarget() {
+		return (this._renderTarget =
+			this._renderTarget || (await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y)));
+	}
+	private async createRenderTargetIfRequired() {
+		if (!this._renderTarget || !this._renderTargetResolutionValid()) {
+			this._renderTarget = await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
 			this._dataTextureController?.reset();
 		}
 	}
 	private _renderTargetResolutionValid() {
-		if (this._render_target) {
-			const image = this._render_target.texture.image;
+		if (this._renderTarget) {
+			const image = this._renderTarget.texture.image;
 			if (image.width != this.pv.resolution.x || image.height != this.pv.resolution.y) {
 				return false;
 			} else {
@@ -319,35 +353,36 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 
-	private _createRenderTarget(width: number, height: number) {
-		if (this._render_target) {
-			const image = this._render_target.texture.image;
+	private async _createRenderTarget(width: number, height: number) {
+		if (this._renderTarget) {
+			const image = this._renderTarget.texture.image;
 			if (image.width == width && image.height == height) {
-				return this._render_target;
+				return this._renderTarget;
 			}
 		}
 
-		const wrapS = ClampToEdgeWrapping;
-		const wrapT = ClampToEdgeWrapping;
+		// const wrapS = ClampToEdgeWrapping;
+		// const wrapT = ClampToEdgeWrapping;
 
-		const minFilter = LinearFilter;
-		const magFilter = NearestFilter;
+		// const minFilter = LinearFilter;
+		// const magFilter = NearestFilter;
 
 		var renderTarget = new WebGLRenderTarget(width, height, {
-			wrapS: wrapS,
-			wrapT: wrapT,
-			minFilter: minFilter,
-			magFilter: magFilter,
-			format: RGBAFormat,
+			// wrapS: wrapS,
+			// wrapT: wrapT,
+			// minFilter: minFilter,
+			// magFilter: magFilter,
+			// format: RGBAFormat,
 			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
 			stencilBuffer: false,
 			depthBuffer: false,
 		});
+		await this.textureParamsController.update(renderTarget.texture);
 		Poly.warn('created render target', this.path(), width, height);
 		return renderTarget;
 	}
 
 	static PARAM_CALLBACK_render(node: BuilderCopNode) {
-		node.renderOnTarget();
+		node._renderOnTarget(true);
 	}
 }

@@ -33,8 +33,8 @@ export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase)
 		});
 		/** @param render resolution */
 		resolution = ParamConfig.VECTOR2([1024, 1024]);
-		/** @param defines if the shader is rendered via the same camera used to render the scene */
-		useCameraRenderer = ParamConfig.BOOLEAN(1); // needs to be 1, as it does not work on firefox otherwise
+		/** @param use a data texture instead of a render target, which can be useful when using that texture as and envMap */
+		useDataTexture = ParamConfig.BOOLEAN(0);
 		/** @param render button */
 		render = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {
@@ -102,16 +102,16 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		renderer.outputEncoding = prevEncoding;
 
 		if (this._renderTarget.texture) {
-			if (isBooleanTrue(this.pv.useCameraRenderer)) {
-				this.setTexture(this._renderTarget.texture);
-				await this.textureParamsController.update(this._renderTarget.texture);
-			} else {
+			if (isBooleanTrue(this.pv.useDataTexture)) {
 				this._dataTextureController =
 					this._dataTextureController ||
 					new DataTextureController(DataTextureControllerBufferType.Float32Array);
-				const dataTexture = this._dataTextureController.from_render_target(renderer, this._renderTarget);
+				const dataTexture = this._dataTextureController.fromRenderTarget(renderer, this._renderTarget);
 				await this.textureParamsController.update(dataTexture);
 				this.setTexture(dataTexture);
+			} else {
+				this.setTexture(this._renderTarget.texture);
+				await this.textureParamsController.update(this._renderTarget.texture);
 			}
 		} else {
 			this.cookController.endCook();

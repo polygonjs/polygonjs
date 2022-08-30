@@ -45,7 +45,7 @@ QUnit.test('COP render simple', async (assert) => {
 		// start test
 		const COP = window.COP;
 		const render1 = COP.createNode('render');
-		render1.p.useCameraRenderer.set(0);
+		render1.p.useDataTexture.set(1);
 		render1.p.resolution.set([16, 16]);
 		render1.p.camera.setNode(camera);
 		render1.p.tencoding.set(true);

@@ -9,7 +9,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
 
-function create_required_nodes(node: BuilderCopNode) {
+function createRequiredNodes(node: BuilderCopNode) {
 	const output1 = node.createNode('output');
 	const globals1 = node.createNode('globals');
 	return {output1, globals1};
@@ -27,8 +27,8 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	const COP = window.COP;
 	// const MAT = window.MAT
 	const builder1 = COP.createNode('builder');
-	const {output1, globals1} = create_required_nodes(builder1);
-	builder1.p.useCameraRenderer.set(1);
+	const {output1, globals1} = createRequiredNodes(builder1);
+	builder1.p.useDataTexture.set(0);
 	// currently no need to tie it to a material to have it recook
 	// currently use a mat to have the builder recook
 	// const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder')
@@ -41,11 +41,11 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	assert.equal(texture.image.width, 256);
 	assert.equal(texture.image.height, 256);
 
-	const render_target = builder1.renderTarget();
+	const renderTarget = await builder1.renderTarget();
 	const buffer_width = 1;
 	const buffer_height = 1;
 	const pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
-	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer.readRenderTargetPixels(renderTarget, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [0, 0, 0, 1].join(':'), 'black with alpha 1');
 
 	const float_to_vec31 = builder1.createNode('floatToVec3');
@@ -54,13 +54,13 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	scene.setFrame(30);
 	assert.equal(scene.time(), 0.5);
 	await CoreSleep.sleep(10);
-	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer.readRenderTargetPixels(renderTarget, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [0.5, 0, 0, 1].join(':'));
 
 	scene.setFrame(60);
 	assert.equal(scene.time(), 1);
 	await CoreSleep.sleep(10);
-	renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
+	renderer.readRenderTargetPixels(renderTarget, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [1.0, 0, 0, 1].join(':'));
 
 	RendererUtils.dispose();
@@ -73,8 +73,8 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async ({viewer, element}) => {
 		const COP = window.COP;
 		const builder1 = COP.createNode('builder');
-		builder1.p.useCameraRenderer.set(0); // we need to set this to 0 for the pixelBuffer below to exists.
-		const {output1, globals1} = create_required_nodes(builder1);
+		builder1.p.useDataTexture.set(1); // we need to set this to 0 for the pixelBuffer below to exists.
+		const {output1, globals1} = createRequiredNodes(builder1);
 		// currently no need to tie it to a material to have it recook
 		// currently use a mat to have the builder recook
 		// const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder')
@@ -87,6 +87,7 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 		assert.equal(texture.image.width, 256);
 		assert.equal(texture.image.height, 256);
 
+		console.log(texture);
 		const pixelBuffer = texture.image.data;
 		assert.deepEqual(pixelBuffer.slice(0, 4).join(':'), [0, 0, 0, 1].join(':'), 'black with alpha 1');
 
@@ -112,7 +113,7 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 	await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async ({viewer, element}) => {
 		const COP = window.COP;
 		const builder1 = COP.createNode('builder');
-		const {output1, globals1} = create_required_nodes(builder1);
+		const {output1, globals1} = createRequiredNodes(builder1);
 		const param1 = builder1.createNode('param');
 		param1.p.name.set('float_param');
 		const param2 = builder1.createNode('param');
@@ -137,14 +138,14 @@ QUnit.test('COP builder with persisted_config', async (assert) => {
 			const vec3_param = new_builder1.params.get('vec3_param') as Vector3Param;
 			assert.ok(float_param, 'float param does not exist');
 			assert.ok(vec3_param, 'vec3 param does not exist');
-			const material = new_builder1.texture_material;
+			const material = new_builder1.textureMaterial;
 			assert.equal(
 				GLSLHelper.compress(material.fragmentShader),
-				GLSLHelper.compress(builder1.texture_material.fragmentShader)
+				GLSLHelper.compress(builder1.textureMaterial.fragmentShader)
 			);
 			assert.equal(
 				GLSLHelper.compress(material.vertexShader),
-				GLSLHelper.compress(builder1.texture_material.vertexShader)
+				GLSLHelper.compress(builder1.textureMaterial.vertexShader)
 			);
 
 			// float param callback

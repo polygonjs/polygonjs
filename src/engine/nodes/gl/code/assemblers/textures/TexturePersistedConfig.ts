@@ -30,8 +30,8 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 		}
 
 		const data = {
-			fragment_shader: this.node.texture_material.fragmentShader,
-			uniforms: this.node.texture_material.uniforms,
+			fragment_shader: this.node.textureMaterial.fragmentShader,
+			uniforms: this.node.textureMaterial.uniforms,
 			param_uniform_pairs: param_uniform_pairs,
 			uniforms_time_dependent: assemblerController.assembler.uniformsTimeDependent(),
 			uniforms_resolution_dependent: assemblerController.assembler.uniformsResolutionDependent(),
@@ -45,8 +45,8 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 			return;
 		}
 
-		this.node.texture_material.fragmentShader = data.fragment_shader;
-		this.node.texture_material.uniforms = data.uniforms;
+		this.node.textureMaterial.fragmentShader = data.fragment_shader;
+		this.node.textureMaterial.uniforms = data.uniforms;
 
 		BuilderCopNode.handleDependencies(
 			this.node,

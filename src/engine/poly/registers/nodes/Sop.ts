@@ -657,7 +657,7 @@ export class SopRegister {
 		poly.registerNode(ReflectorSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(ResampleSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(RestAttributesSopNode, CATEGORY_SOP.ATTRIBUTE);
-		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.INPUT);
+		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetChildrenSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetGeometrySopNode, CATEGORY_SOP.MODIFIER);

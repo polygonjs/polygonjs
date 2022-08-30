@@ -42,9 +42,19 @@ export class NameController {
 			console.warn('requestNameToParent failed, no parent found');
 		}
 	}
-	setName(new_name: string) {
-		if (new_name != this.node.name()) {
-			this.requestNameToParent(new_name);
+	setName(newName: string) {
+		if (newName != this.node.name()) {
+			if (this.node.insideALockedParent()) {
+				const lockedParent = this.node.lockedParent();
+				console.warn(
+					`node '${this.node.path()}' cannot have its name changed, since it is inside '${
+						lockedParent ? lockedParent.path() : ''
+					}', which is locked`
+				);
+				return;
+			}
+
+			this.requestNameToParent(newName);
 		}
 	}
 	updateNameFromParent(new_name: string) {
