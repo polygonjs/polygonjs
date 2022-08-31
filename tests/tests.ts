@@ -224,6 +224,8 @@ import './engine/nodes/gl/Rotate';
 import './engine/nodes/gl/SDFGradient';
 import './engine/nodes/gl/SDFRepeat';
 import './engine/nodes/gl/SDFRepeatPolar';
+import './engine/nodes/gl/SDFTransform';
+import './engine/nodes/gl/SDFTwist';
 import './engine/nodes/gl/Switch';
 import './engine/nodes/gl/Texture';
 import './engine/nodes/gl/TwoWaySwitch';

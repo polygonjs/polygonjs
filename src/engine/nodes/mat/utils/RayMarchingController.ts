@@ -24,6 +24,8 @@ export function RayMarchingParamConfig<TBase extends Constructor>(Base: TBase) {
 			rangeLocked: [true, false],
 			step: 0.0000001,
 		});
+		/** @param center */
+		center = ParamConfig.VECTOR3(RAYMARCHING_UNIFORMS.CENTER.value.toArray());
 	};
 }
 class RayMarchingMaterial extends Material {}
@@ -46,5 +48,6 @@ export class RayMarchingController {
 		uniforms.MAX_STEPS.value = this.node.pv.maxSteps;
 		uniforms.MAX_DIST.value = this.node.pv.maxDist;
 		uniforms.SURF_DIST.value = this.node.pv.surfDist;
+		uniforms.CENTER.value.copy(this.node.pv.center);
 	}
 }

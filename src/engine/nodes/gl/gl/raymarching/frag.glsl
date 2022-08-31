@@ -5,6 +5,7 @@ precision highp int;
 uniform int MAX_STEPS;
 uniform float MAX_DIST;
 uniform float SURF_DIST;
+uniform vec3 CENTER;
 #define ZERO 0
 
 #include <common>
@@ -192,7 +193,7 @@ vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 void main()	{
 
 	vec3 rayDir = normalize(vPw - cameraPosition);
-	vec3 rayOrigin = cameraPosition;
+	vec3 rayOrigin = cameraPosition - CENTER;
 
 	SDFContext sdfContext = RayMarch(rayOrigin, rayDir);
 

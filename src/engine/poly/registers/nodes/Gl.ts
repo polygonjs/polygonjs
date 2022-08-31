@@ -135,6 +135,7 @@ import {SDFSolidAngleGlNode} from '../../../nodes/gl/SDFSolidAngle';
 import {SDFSphereGlNode} from '../../../nodes/gl/SDFSphere';
 import {SDFSubtractGlNode} from '../../../nodes/gl/SDFSubtract';
 import {SDFTorusGlNode} from '../../../nodes/gl/SDFTorus';
+import {SDFTransformGlNode} from '../../../nodes/gl/SDFTransform';
 import {SDFTwistGlNode} from '../../../nodes/gl/SDFTwist';
 import {SDFUnionGlNode} from '../../../nodes/gl/SDFUnion';
 import {SSSModelGlNode} from '../../../nodes/gl/SSSModel';
@@ -282,6 +283,7 @@ export interface GlNodeChildrenMap {
 	SDFSphere: SDFSphereGlNode;
 	SDFSubtract: SDFSubtractGlNode;
 	SDFTorus: SDFTorusGlNode;
+	SDFTransform: SDFTransformGlNode;
 	SDFTwist: SDFTwistGlNode;
 	SDFUnion: SDFUnionGlNode;
 	SSSModel: SSSModelGlNode;
@@ -454,6 +456,7 @@ export class GlRegister {
 		poly.registerNode(SDFSphereGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFSubtractGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFTorusGlNode, CATEGORY_GL.SDF_PRIMITIVES);
+		poly.registerNode(SDFTransformGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFTwistGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFUnionGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SignGlNode, CATEGORY_GL.MATH);
