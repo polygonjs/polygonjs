@@ -31,6 +31,7 @@ export enum GlConnectionPointType {
 	// MAT3 = 'mat3',
 	// MAT4 = 'mat4',
 	SAMPLER_2D = 'sampler2D',
+	SAMPLER_3D = 'sampler3D',
 	SAMPLER_CUBE = 'samplerCube',
 	SSS_MODEL = 'SSSModel',
 	SDF_CONTEXT = 'SDFContext',
@@ -135,6 +136,7 @@ export const GlConnectionPointTypeToParamTypeMap: GlIConnectionPointTypeToParamT
 	[GlConnectionPointType.VEC4]: ParamType.VECTOR4,
 
 	[GlConnectionPointType.SAMPLER_2D]: ParamType.RAMP,
+	[GlConnectionPointType.SAMPLER_3D]: ParamType.RAMP,
 	[GlConnectionPointType.SAMPLER_CUBE]: ParamType.RAMP,
 	[GlConnectionPointType.SSS_MODEL]: ParamType.STRING,
 	[GlConnectionPointType.SDF_CONTEXT]: ParamType.STRING,
@@ -215,6 +217,7 @@ export const GlConnectionPointInitValueMap: GlConnectionPointInitValueMapGeneric
 	[GlConnectionPointType.VEC4]: [0, 0, 0, 0],
 
 	[GlConnectionPointType.SAMPLER_2D]: RampParam.DEFAULT_VALUE_JSON,
+	[GlConnectionPointType.SAMPLER_3D]: RampParam.DEFAULT_VALUE_JSON,
 	[GlConnectionPointType.SAMPLER_CUBE]: RampParam.DEFAULT_VALUE_JSON,
 	[GlConnectionPointType.SSS_MODEL]: 'SSSModel()',
 	[GlConnectionPointType.SDF_CONTEXT]: 'DefaultSDFContext()',
@@ -243,6 +246,7 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[GlConnectionPointType.VEC3]: 3,
 	[GlConnectionPointType.VEC4]: 4,
 	[GlConnectionPointType.SAMPLER_2D]: 1,
+	[GlConnectionPointType.SAMPLER_3D]: 1,
 	[GlConnectionPointType.SAMPLER_CUBE]: 1,
 	[GlConnectionPointType.SSS_MODEL]: 1,
 	[GlConnectionPointType.SDF_CONTEXT]: 1,

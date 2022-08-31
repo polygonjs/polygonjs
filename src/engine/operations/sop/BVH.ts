@@ -1,9 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Mesh} from 'three';
-import {Material} from 'three';
-import {BufferGeometry} from 'three';
+import {Mesh, Material, BufferGeometry} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -11,11 +9,17 @@ import {ThreeMeshBVHHelper} from './utils/Bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 
 interface BVHSopParams extends DefaultOperationParams {
+	// strategy:number;
+	maxLeafTris: number;
+	verbose: boolean;
 	keepOnlyPosition: boolean;
 }
 
 export class BVHSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BVHSopParams = {
+		// strategy:0,
+		maxLeafTris: 10,
+		verbose: false,
 		keepOnlyPosition: false,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.ALWAYS;
@@ -50,7 +54,11 @@ export class BVHSopOperation extends BaseSopOperation {
 		if (mergedMesh) {
 			mergedMesh.matrixAutoUpdate = false;
 
-			ThreeMeshBVHHelper.assignBVH(mergedMesh);
+			const bvh = ThreeMeshBVHHelper.createBVH(mergedMesh, {
+				maxLeafTris: params.maxLeafTris,
+				verbose: params.verbose,
+			});
+			ThreeMeshBVHHelper.assignBVH(mergedMesh, bvh);
 
 			return this.createCoreGroupFromObjects([mergedMesh]);
 		} else {

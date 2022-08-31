@@ -13,6 +13,11 @@ import {BVHSopOperation} from '../../operations/sop/BVH';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = BVHSopOperation.DEFAULT_PARAMS;
 class BVHSopParamsConfig extends NodeParamsConfig {
+	maxLeafTris = ParamConfig.INTEGER(DEFAULT.maxLeafTris, {
+		range: [1, 16],
+		rangeLocked: [true, false],
+	});
+	verbose = ParamConfig.BOOLEAN(DEFAULT.verbose);
 	keepOnlyPosition = ParamConfig.BOOLEAN(DEFAULT.keepOnlyPosition);
 }
 const ParamsConfig = new BVHSopParamsConfig();

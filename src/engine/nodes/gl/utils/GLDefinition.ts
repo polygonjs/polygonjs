@@ -5,6 +5,7 @@ import {GlConnectionPointType} from '../../utils/io/connections/Gl';
 export enum GLDefinitionType {
 	ATTRIBUTE = 'attribute',
 	FUNCTION = 'function',
+	PRECISION = 'precision',
 	UNIFORM = 'uniform',
 	VARYING = 'varying',
 }
@@ -74,6 +75,18 @@ export class UniformGLDefinition extends TypedGLDefinition<GLDefinitionType.UNIF
 	}
 	get line() {
 		return `uniform ${this.data_type} ${this.name()}`;
+	}
+}
+export class PrecisionGLDefinition extends TypedGLDefinition<GLDefinitionType.PRECISION> {
+	constructor(
+		protected override _node: BaseGlNodeType,
+		protected override _data_type: GlConnectionPointType,
+		protected override _name: string = 'highp'
+	) {
+		super(GLDefinitionType.PRECISION, _data_type, _node, _name);
+	}
+	get line() {
+		return `precision ${this.name()} ${this.data_type}`;
 	}
 }
 

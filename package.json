@@ -59,7 +59,7 @@
 		"postprocessing": "6.28.5",
 		"potpack": "1.0.2",
 		"three": "0.139.2",
-		"three-mesh-bvh": "0.5.8",
+		"three-mesh-bvh": "0.5.15",
 		"tone": "14.7.77",
 		"xatlas-web": "0.1.0"
 	},

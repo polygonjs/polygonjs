@@ -130,7 +130,7 @@ export class RaySopOperation extends BaseSopOperation {
 		// find or create bvh
 		let bvh = collisionGeometry.boundsTree;
 		if (!bvh) {
-			ThreeMeshBVHHelper.assignBVH(coreGroupCollisionObject as Mesh);
+			ThreeMeshBVHHelper.assignDefaultBVHIfNone(coreGroupCollisionObject as Mesh);
 			bvh = collisionGeometry.boundsTree;
 		}
 

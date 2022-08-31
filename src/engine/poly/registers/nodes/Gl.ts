@@ -145,6 +145,7 @@ import {SubnetInputGlNode} from '../../../nodes/gl/SubnetInput';
 import {SubnetOutputGlNode} from '../../../nodes/gl/SubnetOutput';
 import {SwitchGlNode} from '../../../nodes/gl/Switch';
 import {TextureGlNode} from '../../../nodes/gl/Texture';
+import {TextureSDFGlNode} from '../../../nodes/gl/TextureSDF';
 import {TileUvGlNode} from '../../../nodes/gl/TileUv';
 import {ToWorldSpaceGlNode} from '../../../nodes/gl/ToWorldSpace';
 import {TwoWaySwitchGlNode} from '../../../nodes/gl/TwoWaySwitch';
@@ -295,6 +296,7 @@ export interface GlNodeChildrenMap {
 	switch: SwitchGlNode;
 	tan: TanGlNode;
 	texture: TextureGlNode;
+	textureSDF: TextureSDFGlNode;
 	tileUv: TileUvGlNode;
 	toWorldSpace: ToWorldSpaceGlNode;
 	twoWaySwitch: TwoWaySwitchGlNode;
@@ -473,6 +475,7 @@ export class GlRegister {
 		poly.registerNode(SwitchGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(TanGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(TextureGlNode, CATEGORY_GL.COLOR);
+		poly.registerNode(TextureSDFGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(TileUvGlNode, CATEGORY_GL.UTIL);
 		poly.registerNode(ToWorldSpaceGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(TwoWaySwitchGlNode, CATEGORY_GL.LOGIC);

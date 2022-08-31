@@ -18,6 +18,7 @@ import {NullCopNode} from '../../../nodes/cop/Null';
 // import {PostCopNode} from '../../../nodes/cop/Post';
 import {PaletteCopNode} from '../../../nodes/cop/Palette';
 import {RenderCopNode} from '../../../nodes/cop/Render';
+import {SDFFromObjectCopNode} from '../../../nodes/cop/SDFFromObject';
 import {SnapshotCopNode} from '../../../nodes/cop/Snapshot';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
@@ -52,6 +53,7 @@ export interface CopNodeChildrenMap {
 	// post: PostCopNode;
 	palette: PaletteCopNode;
 	render: RenderCopNode;
+	sdfFromObject: SDFFromObjectCopNode;
 	snapshot: SnapshotCopNode;
 	switch: SwitchCopNode;
 	textureProperties: TexturePropertiesCopNode;
@@ -89,6 +91,7 @@ export class CopRegister {
 		// poly.registerNode(PostCopNode, CATEGORY_COP.FILTER); // removed until usable
 		poly.registerNode(PaletteCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(RenderCopNode, CATEGORY_COP.MISC);
+		poly.registerNode(SDFFromObjectCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(SnapshotCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);

@@ -14,6 +14,7 @@ export const COMPONENTS_BY_GL_TYPE = {
 	[GlConnectionPointType.VEC3]: ['x', 'y', 'z'],
 	[GlConnectionPointType.VEC4]: ['x', 'y', 'z', 'w'],
 	[GlConnectionPointType.SAMPLER_2D]: undefined,
+	[GlConnectionPointType.SAMPLER_3D]: undefined,
 	[GlConnectionPointType.SAMPLER_CUBE]: undefined,
 	[GlConnectionPointType.SSS_MODEL]: undefined,
 	[GlConnectionPointType.SDF_CONTEXT]: undefined,

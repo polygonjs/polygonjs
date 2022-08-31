@@ -193,6 +193,7 @@ export class CodeBuilder {
 	}
 
 	private _addCodeLines(nodes: BaseGlNodeType[], shaderName: ShaderName, additionalDefinitions?: BaseGLDefinition[]) {
+		this.addDefinitions(nodes, shaderName, GLDefinitionType.PRECISION, LineType.DEFINE, additionalDefinitions);
 		this.addDefinitions(
 			nodes,
 			shaderName,
