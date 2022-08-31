@@ -238,6 +238,8 @@ export interface ParamOptions
 	};
 }
 
+// type OptionChangeCallback = () => void;
+
 // we don't want to check if EDITABLE has been overriden,
 // as it is overriden dynamically for the gl nodes
 // and that override should therefore not be saved with the scene
@@ -266,12 +268,12 @@ export class OptionsController {
 		}
 		this._default_options = options;
 		this._options = ObjectUtils.cloneDeep(this._default_options);
-		this.post_set_options();
+		this.postSetOptions();
 	}
 	copy(options_controller: OptionsController) {
 		this._default_options = ObjectUtils.cloneDeep(options_controller.default());
 		this._options = ObjectUtils.cloneDeep(options_controller.current());
-		this.post_set_options();
+		this.postSetOptions();
 	}
 	setOption<K extends keyof ParamOptions>(optionName: K, value: ParamOptions[K]) {
 		if (!this._validateOption(optionName, value)) {
@@ -284,7 +286,9 @@ export class OptionsController {
 				component.options.setOption(optionName, value);
 			}
 		}
+		// this._runOptionCallback(optionName);
 	}
+
 	private _validateOption<K extends keyof ParamOptions>(optionName: K, value: ParamOptions[K]) {
 		if (optionName == CALLBACK_OPTION) {
 			return isFunction(value);
@@ -292,7 +296,7 @@ export class OptionsController {
 		return true;
 	}
 
-	private post_set_options() {
+	private postSetOptions() {
 		this._handleComputeOnDirty();
 	}
 	param() {
@@ -332,12 +336,12 @@ export class OptionsController {
 	computeOnDirty(): boolean {
 		return this._options[COMPUTE_ON_DIRTY] || false;
 	}
-	private _computeOnDirty_callback_added: boolean | undefined;
+	private _computeOnDirtyCallbackAdded: boolean | undefined;
 	private _handleComputeOnDirty() {
 		if (this.computeOnDirty()) {
-			if (!this._computeOnDirty_callback_added) {
+			if (!this._computeOnDirtyCallbackAdded) {
 				this.param().addPostDirtyHook('computeOnDirty', this._computeParam.bind(this));
-				this._computeOnDirty_callback_added = true;
+				this._computeOnDirtyCallbackAdded = true;
 			}
 		}
 	}
@@ -406,7 +410,7 @@ export class OptionsController {
 
 	// color
 	colorConversion() {
-		return this._options[COLOR_CONVERSION];
+		return this._options[COLOR_CONVERSION] || ColorConversion.NONE;
 	}
 
 	// cook
@@ -744,4 +748,25 @@ export class OptionsController {
 			this.param().emit(ParamEvent.VISIBLE_UPDATED);
 		}
 	}
+
+	/*
+	 *
+	 *
+	 *
+	 */
+	// private _callbacksByOptionName: Map<keyof ParamOptions, OptionChangeCallback> | undefined;
+	// onOptionChange<K extends keyof ParamOptions>(optionName: K, callback: OptionChangeCallback) {
+	// 	this._callbacksByOptionName = this._callbacksByOptionName || new Map();
+	// 	this._callbacksByOptionName.set(optionName, callback);
+	// }
+	// private _runOptionCallback(optionName: keyof ParamOptions) {
+	// 	if (!this._callbacksByOptionName) {
+	// 		return;
+	// 	}
+	// 	const callback = this._callbacksByOptionName.get(optionName);
+	// 	if (!callback) {
+	// 		return;
+	// 	}
+	// 	callback();
+	// }
 }

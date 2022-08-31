@@ -13,10 +13,10 @@ const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
 const tmp: Number3 = [0, 0, 0];
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	protected override _value = new Color();
-	protected _value_pre_conversion = new Color();
-	private _value_serialized_dirty: boolean = false;
-	private _value_serialized: Number3 = [0, 0, 0];
-	private _value_pre_conversion_serialized: Number3 = [0, 0, 0];
+	private _valuePreConversion = new Color();
+	private _valueSerializedDirty: boolean = false;
+	private _valueSerialized: Number3 = [0, 0, 0];
+	private _valuePreConversionSerialized: Number3 = [0, 0, 0];
 	r!: FloatParam;
 	g!: FloatParam;
 	b!: FloatParam;
@@ -49,17 +49,17 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	// 	}
 	// }
 	override valueSerialized() {
-		this._update_value_serialized_if_required();
-		return this._value_serialized;
+		this._updateValueSerializedIfRequired();
+		return this._valueSerialized;
 	}
 	override valuePreConversionSerialized() {
-		this._update_value_serialized_if_required();
-		return this._value_pre_conversion_serialized;
+		this._updateValueSerializedIfRequired();
+		return this._valuePreConversionSerialized;
 	}
-	private _copied_value: Number3 = [0, 0, 0];
+	private _copiedValue: Number3 = [0, 0, 0];
 	protected override _copyValue(param: ColorParam) {
-		param.value.toArray(this._copied_value);
-		this.set(this._copied_value);
+		param.value.toArray(this._copiedValue);
+		this.set(this._copiedValue);
 	}
 	// protected _prefilterInvalidRawInput(
 	// 	raw_input: ParamInitValuesTypeMap[ParamType.COLOR]
@@ -115,79 +115,57 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 		this.r = this.components[0];
 		this.g = this.components[1];
 		this.b = this.components[2];
-		this._value_serialized_dirty = true;
+		this._valueSerializedDirty = true;
+		// this.options.onOptionChange('conversion', () => {
+		// 	this.setValueFromComponents();
+		// });
+	}
+	override postOptionsInitialize() {
+		this.setValueFromComponents();
 	}
 
-	private _update_value_serialized_if_required() {
-		if (!this._value_serialized_dirty) {
+	private _updateValueSerializedIfRequired() {
+		if (!this._valueSerializedDirty) {
 			return;
 		}
-		this._value_serialized[0] = this._value.r;
-		this._value_serialized[1] = this._value.g;
-		this._value_serialized[2] = this._value.b;
-		this._value_pre_conversion_serialized[0] = this._value_pre_conversion.r;
-		this._value_pre_conversion_serialized[1] = this._value_pre_conversion.g;
-		this._value_pre_conversion_serialized[2] = this._value_pre_conversion.b;
+		this._valueSerialized[0] = this._value.r;
+		this._valueSerialized[1] = this._value.g;
+		this._valueSerialized[2] = this._value.b;
+		this._valuePreConversionSerialized[0] = this._valuePreConversion.r;
+		this._valuePreConversionSerialized[1] = this._valuePreConversion.g;
+		this._valuePreConversionSerialized[2] = this._valuePreConversion.b;
 	}
-	// set_raw_input_from_components() {
-	// 	if (this._raw_input instanceof Color) {
-	// 		if (
-	// 			CoreType.isNumber(this.r.raw_input) &&
-	// 			CoreType.isNumber(this.g.raw_input) &&
-	// 			CoreType.isNumber(this.b.raw_input)
-	// 		) {
-	// 			this._raw_input.r = this.r.raw_input;
-	// 			this._raw_input.g = this.g.raw_input;
-	// 			this._raw_input.b = this.b.raw_input;
-	// 		} else {
-	// 			this._raw_input = [this.r.raw_input, this.g.raw_input, this.b.raw_input];
-	// 		}
-	// 	} else {
-	// 		this._raw_input[0] = this.r.raw_input;
-	// 		this._raw_input[1] = this.g.raw_input;
-	// 		this._raw_input[2] = this.b.raw_input;
-	// 	}
-	// }
+
 	valuePreConversion() {
-		return this._value_pre_conversion;
+		return this._valuePreConversion;
 	}
 
-	override set_value_from_components() {
-		this._value_pre_conversion.r = this.r.value;
-		this._value_pre_conversion.g = this.g.value;
-		this._value_pre_conversion.b = this.b.value;
+	override setValueFromComponents() {
+		this._valuePreConversion.r = this.r.value;
+		this._valuePreConversion.g = this.g.value;
+		this._valuePreConversion.b = this.b.value;
+		this._value.copy(this._valuePreConversion);
 
-		this._value.copy(this._value_pre_conversion);
+		this._applyColorConversion();
 
+		this._valueSerializedDirty = true;
+	}
+	private _applyColorConversion() {
 		const conversion = this.options.colorConversion();
-		if (conversion != null && conversion != ColorConversion.NONE) {
-			switch (conversion) {
-				case ColorConversion.SRGB_TO_LINEAR: {
-					this._value.convertSRGBToLinear();
-					return;
-				}
-				case ColorConversion.LINEAR_TO_SRGB: {
-					this._value.convertLinearToSRGB();
-					return;
-				}
+
+		switch (conversion) {
+			case ColorConversion.NONE: {
+				return;
 			}
-			TypeAssert.unreachable(conversion);
+			case ColorConversion.SRGB_TO_LINEAR: {
+				this._value.convertSRGBToLinear();
+				return;
+			}
+			case ColorConversion.LINEAR_TO_SRGB: {
+				this._value.convertLinearToSRGB();
+				return;
+			}
 		}
-		this._value_serialized_dirty = true;
+		TypeAssert.unreachable(conversion);
 	}
-	// convert(input: ParamInitValuesTypeMap[ParamType.COLOR]): Color | null {
-	// 	if (CoreType.isArray(input)) {
-	// 		if(input.length == 3){
-	// 			if( input.filter(CoreType.isNumber).length > 0 ){
-	// 				return new Color().fromArray(input);
-	// 			}
-	// 			if(first){
-	// 				if(CoreType.isNumber(first)){
-	// 					return new Color().fromArray(input);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	return new Color();
-	// }
 }

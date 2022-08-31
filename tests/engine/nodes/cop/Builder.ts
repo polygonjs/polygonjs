@@ -20,15 +20,22 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	await scene.waitForCooksCompleted();
 
 	// create a renderer first
-	const {renderer} = await RendererUtils.waitForRenderer(scene);
-	assert.ok(renderer);
+	// const {renderer} = await RendererUtils.waitForRenderer(scene);
+	// assert.ok(renderer);
 
 	// start test
 	const COP = window.COP;
 	// const MAT = window.MAT
 	const builder1 = COP.createNode('builder');
 	const {output1, globals1} = createRequiredNodes(builder1);
+	builder1.p.useCameraRenderer.set(0);
 	builder1.p.useDataTexture.set(0);
+	await CoreSleep.sleep(100);
+	const renderer = builder1.renderer();
+	if (!renderer) {
+		assert.equal(1, 2);
+		return;
+	}
 	// currently no need to tie it to a material to have it recook
 	// currently use a mat to have the builder recook
 	// const mesh_basic_builder1 = MAT.createNode('meshBasicBuilder')
@@ -87,7 +94,6 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 		assert.equal(texture.image.width, 256);
 		assert.equal(texture.image.height, 256);
 
-		console.log(texture);
 		const pixelBuffer = texture.image.data;
 		assert.deepEqual(pixelBuffer.slice(0, 4).join(':'), [0, 0, 0, 1].join(':'), 'black with alpha 1');
 

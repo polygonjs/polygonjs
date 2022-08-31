@@ -96,9 +96,7 @@ export class SceneBackgroundController {
 		const node = pv.bgTexture.nodeWithContext(NodeContext.COP);
 		if (node) {
 			const container = await node.compute();
-			const texture = container.texture();
-			console.log(texture, texture.encoding);
-			scene.background = texture;
+			scene.background = container.texture();
 		} else {
 			this.node.states.error.set('bgTexture node not found');
 		}

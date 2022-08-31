@@ -445,6 +445,7 @@ export class ParamsController {
 					}
 				}
 			}
+			param.postOptionsInitialize()
 			param._setupNodeDependencies(this.node);
 
 			this._params_by_name[param.name()] = param as BaseParamType;

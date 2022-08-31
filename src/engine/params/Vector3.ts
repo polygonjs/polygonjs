@@ -122,7 +122,7 @@ export class Vector3Param extends TypedMultipleParam<ParamType.VECTOR3> {
 	// 		this._raw_input[2] = this.z.raw_input;
 	// 	}
 	// }
-	override set_value_from_components() {
+	override setValueFromComponents() {
 		this._value.x = this.x.value;
 		this._value.y = this.y.value;
 		this._value.z = this.z.value;

@@ -6,10 +6,10 @@
  *
  */
 import {TypedRopNode} from './_Base';
-import {Camera, Mesh} from 'three';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
 import {WebGLRenderer, WebGLRendererParameters} from 'three';
 import {
+	Mesh,
 	// encoding
 	LinearEncoding,
 	sRGBEncoding,
@@ -252,7 +252,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	}
 
 	// private _renderersbyCamera: Map<Camera, WebGLRenderer> = new Map();
-	createRenderer(camera: Camera, canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
+	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<
 			keyof WebGLRendererParameters

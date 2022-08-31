@@ -98,6 +98,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		this._runOnDisposeCallbacks();
 	}
 	protected _initializeParam() {}
+	postOptionsInitialize(){}
 	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))
 	// }
 	// initialize() {

@@ -177,7 +177,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		let newColor: Color;
 		if (isBooleanTrue(this.pv.asHsv)) {
 			newColor = new Color();
-			CoreColor.set_hsv(this.pv.color.r, this.pv.color.g, this.pv.color.b, newColor);
+			CoreColor.setHSV(this.pv.color.r, this.pv.color.g, this.pv.color.b, newColor);
 		} else {
 			newColor = this.pv.color; //.clone();
 		}
@@ -217,7 +217,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 				for (let point of points) {
 					index = point.index() * 3;
 					current.fromArray(array, index);
-					CoreColor.set_hsv(current.r, current.g, current.b, target);
+					CoreColor.setHSV(current.r, current.g, current.b, target);
 					target.toArray(array, index);
 				}
 			}

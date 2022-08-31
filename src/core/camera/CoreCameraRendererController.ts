@@ -57,7 +57,7 @@ export class CoreCameraRendererController {
 				rendererROP.type() == RopType.WEBGL &&
 				rendererROP.context() == NodeContext.ROP
 			) {
-				renderer = (rendererROP as WebGLRendererRopNode).createRenderer(camera, canvas, gl);
+				renderer = (rendererROP as WebGLRendererRopNode).createRenderer(canvas, gl);
 			}
 		}
 		// }

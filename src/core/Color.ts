@@ -19,7 +19,7 @@ export class CoreColor {
 	// }
 
 	// from THREE.js examples ColorConverter.js
-	static set_hsv(h: number, s: number, v: number, target: Color) {
+	static setHSV(h: number, s: number, v: number, target: Color) {
 		h = MathUtils.euclideanModulo(h, 1);
 		s = MathUtils.clamp(s, 0, 1);
 		v = MathUtils.clamp(v, 0, 1);

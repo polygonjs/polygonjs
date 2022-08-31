@@ -73,7 +73,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		this._value = new_value;
 		const parentParam = this.parentParam();
 		if (parentParam) {
-			parentParam.set_value_from_components();
+			parentParam.setValueFromComponents();
 		}
 		this.options.executeCallback();
 		this.emitController.emit(ParamEvent.VALUE_UPDATED);

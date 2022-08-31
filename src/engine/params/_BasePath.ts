@@ -21,6 +21,7 @@ export abstract class TypedPathParam<T extends ParamType.NODE_PATH | ParamType.P
 		this.scene().referencesController.setNamedNodesFromParam(this);
 		if (node) {
 			this.scene().referencesController.setReferenceFromParam(this, node);
+			this.scene().missingExpressionReferencesController.deregisterParam(this);
 		} else {
 			this.scene().missingExpressionReferencesController.register(this, path);
 		}

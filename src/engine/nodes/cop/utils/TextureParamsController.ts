@@ -222,6 +222,7 @@ export function TextureParamConfig<TBase extends Constructor>(Base: TBase, defau
 		/** @param toggle on to display advanced parameters */
 		tadvanced = ParamConfig.BOOLEAN(0, {
 			...CALLBACK_PARAMS_ADVANCED,
+			separatorBefore: true,
 		});
 		/** @param toggle on to allow overriding the texture format */
 		tformat = ParamConfig.BOOLEAN(0, {
@@ -295,7 +296,6 @@ export class TextureParamsController {
 		} else {
 			texture.encoding = DEFAULT.ENCODING;
 		}
-		console.log('set encoding', texture.encoding);
 		texture.needsUpdate = true;
 	}
 	private _updateAdvanced(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
@@ -383,8 +383,8 @@ export class TextureParamsController {
 	private async _maxRendererAnisotropy() {
 		this._rendererController = this._rendererController || new CopRendererController(this.node);
 		const renderer = await this._rendererController.waitForRenderer();
-		const max_anisotropy = renderer.capabilities.getMaxAnisotropy();
-		return max_anisotropy;
+		const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+		return maxAnisotropy;
 	}
 
 	private _updateTransform(texture: Texture) {

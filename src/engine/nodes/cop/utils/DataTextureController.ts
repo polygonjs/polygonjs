@@ -15,7 +15,7 @@ export enum DataTextureControllerBufferType {
 export class DataTextureController {
 	private _dataTexture: DataTexture | undefined;
 
-	constructor(private buffer_type: DataTextureControllerBufferType) {}
+	constructor(private bufferType: DataTextureControllerBufferType) {}
 
 	fromRenderTarget(renderer: WebGLRenderer, renderTarget: WebGLRenderTarget) {
 		if (!this._dataTexture || !this._sameDimensions(renderTarget.texture)) {
@@ -57,8 +57,6 @@ export class DataTextureController {
 		const image = renderTarget.texture.image;
 		this._dataTexture = this._dataTexture || this._createDataTexture(renderTarget.texture);
 		renderer.readRenderTargetPixels(renderTarget, 0, 0, image.width, image.height, this._dataTexture.image.data);
-		const pixelBuffer = this._dataTexture.image.data;
-		console.log(pixelBuffer.slice(0, 4).join(':'));
 		this._dataTexture.needsUpdate = true;
 	}
 
@@ -90,7 +88,7 @@ export class DataTextureController {
 		// using Float32 array gives the following error when calling readRenderTargetPixels:
 		// WebGL: INVALID_OPERATION: texImage2D: type UNSIGNED_BYTE but ArrayBufferView not Uint8Array or Uint8ClampedArray
 
-		switch (this.buffer_type) {
+		switch (this.bufferType) {
 			case DataTextureControllerBufferType.Uint8Array:
 				return new Uint8Array(size);
 			case DataTextureControllerBufferType.Uint8ClampedArray:
@@ -100,7 +98,7 @@ export class DataTextureController {
 			case DataTextureControllerBufferType.Float32Array:
 				return new Float32Array(size);
 		}
-		TypeAssert.unreachable(this.buffer_type);
+		TypeAssert.unreachable(this.bufferType);
 	}
 
 	private _sameDimensions(texture: Texture): boolean {

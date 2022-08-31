@@ -14,7 +14,6 @@ export class MissingReferencesController {
 
 	register(param: BaseParamType, path: string): MissingReference {
 		const missingReference = new MissingReference(param, path);
-
 		MapUtils.addToSetAtEntry(this.references, param.graphNodeId(), missingReference);
 
 		return missingReference;
@@ -31,11 +30,11 @@ export class MissingReferencesController {
 	resolveMissingReferences() {
 		const resolvedReferences: MissingReference[] = [];
 		this.references.forEach((references) => {
-			for (let reference of references) {
+			references.forEach((reference) => {
 				if (this._isReferenceResolvable(reference)) {
 					resolvedReferences.push(reference);
 				}
-			}
+			});
 		});
 		for (let reference of resolvedReferences) {
 			reference.resolveMissingDependencies();
