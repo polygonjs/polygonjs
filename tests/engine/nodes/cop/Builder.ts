@@ -15,7 +15,7 @@ function createRequiredNodes(node: BuilderCopNode) {
 	return {output1, globals1};
 }
 
-QUnit.test('COP builder simple with render target', async (assert) => {
+QUnit.test('COP/builder simple with render target', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -43,10 +43,10 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	// mesh_basic_builder1.p.map.set(builder1.path())
 
 	let container = await builder1.compute();
-	assert.ok(!builder1.states.error.message());
+	assert.ok(!builder1.states.error.message(), 'no error message');
 	let texture = container.texture();
-	assert.equal(texture.image.width, 256);
-	assert.equal(texture.image.height, 256);
+	assert.equal(texture.image.width, 256, 'res ok');
+	assert.equal(texture.image.height, 256, 'res ok');
 
 	const renderTarget = await builder1.renderTarget();
 	const buffer_width = 1;
@@ -73,7 +73,7 @@ QUnit.test('COP builder simple with render target', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('COP builder simple with data texture', async (assert) => {
+QUnit.test('COP/builder simple with data texture', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -112,7 +112,7 @@ QUnit.test('COP builder simple with data texture', async (assert) => {
 	});
 });
 
-QUnit.test('COP builder with persisted_config', async (assert) => {
+QUnit.test('COP/builder with persisted_config', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 

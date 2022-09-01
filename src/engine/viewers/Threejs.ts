@@ -1,5 +1,4 @@
-import {Camera, Scene, WebGLRenderer} from 'three';
-// import {ViewerControlsController} from './utils/ViewerControlsController';
+import {Camera, WebGLRenderer} from 'three';
 import {TypedViewer, TypedViewerOptions} from './_Base';
 import {Poly} from '../Poly';
 import {ViewerLogoController} from './utils/logo/ViewerLogoController';
@@ -9,7 +8,6 @@ import {CoreCameraPostProcessController} from '../../core/camera/CoreCameraPostP
 import {CoreCameraCSSRendererController, CSSRendererConfig} from '../../core/camera/CoreCameraCSSRendererController';
 import {CoreCameraControlsController} from '../../core/camera/CoreCameraControlsController';
 import {CoreCameraRenderSceneController} from '../../core/camera/CoreCameraRenderSceneController';
-// import type {EffectComposer} from '../../modules/core/post_process/EffectComposer';
 import type {EffectComposer} from 'postprocessing';
 const CSS_CLASS = 'CoreThreejsViewer';
 
@@ -41,7 +39,6 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _requestAnimationFrameId: number | undefined;
 
 	private _renderer: WebGLRenderer | undefined;
-	private _rendererScene: Scene | undefined;
 	private _renderFunc: RenderFuncWithDelta | undefined;
 	private _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;
@@ -72,8 +69,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			});
 		const renderer = this._renderer;
 		if (renderer) {
-			this._rendererScene = CoreCameraRenderSceneController.renderScene({camera, scene});
-			const renderScene = this._rendererScene || threejsScene;
+			const rendererScene = CoreCameraRenderSceneController.renderScene({camera, scene});
+			const renderScene = rendererScene || threejsScene;
 			this._effectComposer = CoreCameraPostProcessController.createComposer({
 				camera,
 				scene,

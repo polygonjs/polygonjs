@@ -45,20 +45,29 @@ export class SceneObjNode extends TypedObjNode<Scene, SceneObjParamConfig> {
 
 	override initializeNode() {
 		this.hierarchyController.initializeNode();
+
+		this.dirtyController.addPostDirtyHook(
+			'cookMainWithoutInputsOnDirty',
+			this._cook_main_without_inputs_when_dirty_bound
+		);
+	}
+	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
+	private async _cook_main_without_inputs_when_dirty() {
+		await this.cookController.cookMainWithoutInputs();
 	}
 
-	readonly SceneAutoUpdateController: SceneAutoUpdateController = new SceneAutoUpdateController(this as any);
+	readonly sceneAutoUpdateController: SceneAutoUpdateController = new SceneAutoUpdateController(this as any);
 	readonly sceneBackgroundController: SceneBackgroundController = new SceneBackgroundController(this as any);
-	readonly SceneEnvController: SceneEnvController = new SceneEnvController(this as any);
+	readonly sceneEnvController: SceneEnvController = new SceneEnvController(this as any);
 	readonly sceneFogController: SceneFogController = new SceneFogController(this as any);
 	readonly sceneMaterialOverrideController: SceneMaterialOverrideController = new SceneMaterialOverrideController(
 		this as any
 	);
 
 	override cook() {
-		this.SceneAutoUpdateController.update();
+		this.sceneAutoUpdateController.update();
 		this.sceneBackgroundController.update();
-		this.SceneEnvController.update();
+		this.sceneEnvController.update();
 		this.sceneFogController.update();
 		this.sceneMaterialOverrideController.update();
 

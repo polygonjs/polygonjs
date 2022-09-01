@@ -209,8 +209,8 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 
 	private _addToScene(node: BaseObjNodeType): void {
 		if (node.attachableToHierarchy()) {
-			const parent_object = this.getParentForNode(node);
-			if (parent_object) {
+			const parentObject = this.getParentForNode(node);
+			if (parentObject) {
 				// await node.params.eval_all().then((params_eval_key) => {
 				// 	node.compute();
 				// });
@@ -225,8 +225,13 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 					// to take care of it itself.
 					// node.compute();
 
-					node.childrenDisplayController?.requestDisplayNodeContainer();
-					node.addObjectToParent(parent_object);
+					if (node.childrenDisplayController) {
+						node.childrenDisplayController.requestDisplayNodeContainer();
+					} else {
+						node.compute();
+					}
+
+					node.addObjectToParent(parentObject);
 				} else {
 					node.removeObjectFromParent();
 					// parent_object.remove(node.object);

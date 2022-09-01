@@ -146,7 +146,7 @@ float SDFOnion( in float sdf, in float thickness )
 {
 	return abs(sdf)-thickness;
 }
-const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 149;
+const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 153;
 uniform sampler2D v_POLY_texture_envTexture1;
 #include <lightmap_pars_fragment>
 #include <bsdfs>

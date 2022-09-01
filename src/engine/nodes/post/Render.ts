@@ -6,11 +6,10 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {RenderPass} from 'postprocessing';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 import {SceneObjNode} from '../obj/Scene';
 import {Scene} from 'three';
 import {Camera} from 'three';
-import {PerspectiveCameraObjNode} from '../obj/PerspectiveCamera';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
 interface RenderPassContext {
@@ -39,12 +38,15 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 	/** @param overrideCamera */
 	overrideCamera = ParamConfig.BOOLEAN(0, PostParamOptions);
 	/** @param camera */
-	camera = ParamConfig.NODE_PATH('', {
+	camera = ParamConfig.STRING('', {
 		visibleIf: {overrideCamera: 1},
-		nodeSelection: {
-			context: NodeContext.OBJ,
-			types: CAMERA_TYPES,
-		},
+		// nodeSelection: {
+		// 	context: NodeContext.OBJ,
+		// 	types: CAMERA_TYPES,
+		// },
+		// cook: false,
+		// separatorBefore: true,
+		objectMask: true,
 		...PostParamOptions,
 	});
 	// clear_color = ParamConfig.COLOR([0, 0, 0]);
@@ -74,26 +76,24 @@ export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostP
 		this._updateScene(pass);
 	}
 
-	private async _updateCamera(pass: RenderPassWithContext) {
+	protected async _updateCamera(pass: RenderPassWithContext) {
 		if (isBooleanTrue(this.pv.overrideCamera)) {
 			if (this.p.camera.isDirty()) {
 				await this.p.camera.compute();
 			}
-			const objNode = this.pv.camera.nodeWithContext(NodeContext.OBJ);
-			if (objNode) {
-				if ((CAMERA_TYPES as string[]).includes(objNode.type())) {
-					const camera = (objNode as PerspectiveCameraObjNode).object;
-					pass.camera = camera;
-				}
+			const path = this.pv.camera;
+			const object = this.scene().objectsController.findObjectByMask(path) as Camera | undefined;
+			if (object) {
+				pass.camera = object;
 			}
 		} else {
 			pass.camera = pass.context.camera;
 		}
 	}
 
-	private async _updateScene(pass: RenderPassWithContext) {
+	protected async _updateScene(pass: RenderPassWithContext) {
 		if (isBooleanTrue(this.pv.overrideScene)) {
-			if (this.p.camera.isDirty()) {
+			if (this.p.scene.isDirty()) {
 				await this.p.scene.compute();
 			}
 			const objNode = this.pv.scene.nodeWithContext(NodeContext.OBJ);

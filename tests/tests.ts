@@ -124,6 +124,9 @@ import './engine/nodes/actor/MultAdd';
 import './engine/nodes/actor/MultScalar';
 import './engine/nodes/actor/Negate';
 import './engine/nodes/actor/Normalize';
+import './engine/nodes/actor/ObjectDispatchEvent';
+import './engine/nodes/actor/ObjectUpdateMatrix';
+import './engine/nodes/actor/ObjectUpdateWorldMatrix';
 import './engine/nodes/actor/OnChildAttributeUpdate';
 import './engine/nodes/actor/OnKeydown';
 import './engine/nodes/actor/OnKeypress';
@@ -266,6 +269,7 @@ import './engine/nodes/obj/SpotLight';
 
 QUnit.module('post');
 import './engine/nodes/post/Base';
+import './engine/nodes/post/Builder';
 import './engine/nodes/post/BrightnessContrast';
 import './engine/nodes/post/DepthOfField';
 

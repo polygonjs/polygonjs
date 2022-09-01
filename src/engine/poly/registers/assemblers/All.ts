@@ -8,6 +8,7 @@ import {ShaderAssemblerPhysical} from '../../../nodes/gl/code/assemblers/materia
 import {ShaderAssemblerPoints} from '../../../nodes/gl/code/assemblers/materials/Points';
 import {ShaderAssemblerLine} from '../../../nodes/gl/code/assemblers/materials/Line';
 import {ShaderAssemblerParticles} from '../../../nodes/gl/code/assemblers/particles/Particles';
+import {ShaderAssemblerPost} from '../../../nodes/gl/code/assemblers/post/Post';
 import {ShaderAssemblerRayMarching} from '../../../nodes/gl/code/assemblers/materials/RayMarching';
 import {ShaderAssemblerTexture} from '../../../nodes/gl/code/assemblers/textures/Texture';
 import {ShaderAssemblerVolume} from '../../../nodes/gl/code/assemblers/materials/Volume';
@@ -55,6 +56,10 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 		controller: GlAssemblerController<ShaderAssemblerLine>;
 		assembler: typeof ShaderAssemblerLine;
 	};
+	[AssemblerName.GL_POST]: {
+		controller: GlAssemblerController<ShaderAssemblerPost>;
+		assembler: typeof ShaderAssemblerPost;
+	};
 	[AssemblerName.GL_RAYMARCHING]: {
 		controller: GlAssemblerController<ShaderAssemblerRayMarching>;
 		assembler: typeof ShaderAssemblerRayMarching;
@@ -99,6 +104,7 @@ export class AllAssemblersRegister {
 		poly.assemblersRegister.register(AssemblerName.GL_PARTICLES, GlAssemblerController, ShaderAssemblerParticles);
 		poly.assemblersRegister.register(AssemblerName.GL_POINTS, GlAssemblerController, ShaderAssemblerPoints);
 		poly.assemblersRegister.register(AssemblerName.GL_LINE, GlAssemblerController, ShaderAssemblerLine);
+		poly.assemblersRegister.register(AssemblerName.GL_POST, GlAssemblerController, ShaderAssemblerPost);
 		poly.assemblersRegister.register(
 			AssemblerName.GL_RAYMARCHING,
 			GlAssemblerController,

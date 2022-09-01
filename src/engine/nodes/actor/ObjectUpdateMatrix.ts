@@ -1,29 +1,25 @@
 /**
- * dispatches an event
+ * updates the matrix of an object
  *
  *
  */
 
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {ParamType} from '../../poly/ParamType';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-class ObjectDispatchEventActorParamsConfig extends NodeParamsConfig {
-	/** @param event name */
-	eventName = ParamConfig.STRING('my-event');
-}
-const ParamsConfig = new ObjectDispatchEventActorParamsConfig();
+class ObjectUpdateMatrixActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new ObjectUpdateMatrixActorParamsConfig();
 
-export class ObjectDispatchEventActorNode extends TypedActorNode<ObjectDispatchEventActorParamsConfig> {
+export class ObjectUpdateMatrixActorNode extends TypedActorNode<ObjectUpdateMatrixActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'objectDispatchEvent';
+		return 'objectUpdateMatrix';
 	}
 
 	override initializeNode() {
@@ -43,9 +39,7 @@ export class ObjectDispatchEventActorNode extends TypedActorNode<ObjectDispatchE
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const {Object3D} = context;
-		const eventName = this._inputValueFromParam<ParamType.STRING>(this.p.eventName, context);
-
-		Object3D.dispatchEvent({type: eventName});
+		Object3D.updateMatrix();
 		this.runTrigger(context);
 	}
 }

@@ -98,7 +98,6 @@ export class EffectComposerController {
 			},
 		};
 	}
-
 	createEffectsComposer(options: CreateEffectsComposerOptions) {
 		const renderer = options.renderer;
 
@@ -110,6 +109,12 @@ export class EffectComposerController {
 			multisampling: pv.sampling,
 			frameBufferType: isBooleanTrue(pv.tTextureType) ? pv.textureType : undefined,
 		});
+
+		return composer;
+	}
+
+	createEffectsComposerAndBuildPasses(options: CreateEffectsComposerOptions) {
+		const composer = this.createEffectsComposer(options);
 		this._composerAndOptionsByCamera.set(options.camera, {composer, options});
 
 		this._buildPasses(composer, options);
@@ -152,6 +157,8 @@ export class EffectComposerController {
 				// requester: options.requester,
 				viewer: options.viewer,
 			});
+		} else {
+			console.warn(`no displayNode found inside '${this.node.path()}'`);
 		}
 		this._passByNodeInBuildPassesProcess.clear();
 	}

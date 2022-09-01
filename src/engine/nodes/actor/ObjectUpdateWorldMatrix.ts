@@ -1,5 +1,5 @@
 /**
- * dispatches an event
+ * updates the matrix of an object
  *
  *
  */
@@ -14,16 +14,18 @@ import {
 import {ParamType} from '../../poly/ParamType';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-class ObjectDispatchEventActorParamsConfig extends NodeParamsConfig {
-	/** @param event name */
-	eventName = ParamConfig.STRING('my-event');
+class ObjectUpdateWorldMatrixActorParamsConfig extends NodeParamsConfig {
+	/** @param updates the matrix of the parents */
+	updateParents = ParamConfig.BOOLEAN(1);
+	/** @param updates the matrix of the children */
+	updateChildren = ParamConfig.BOOLEAN(1);
 }
-const ParamsConfig = new ObjectDispatchEventActorParamsConfig();
+const ParamsConfig = new ObjectUpdateWorldMatrixActorParamsConfig();
 
-export class ObjectDispatchEventActorNode extends TypedActorNode<ObjectDispatchEventActorParamsConfig> {
+export class ObjectUpdateWorldMatrixActorNode extends TypedActorNode<ObjectUpdateWorldMatrixActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'objectDispatchEvent';
+		return 'objectUpdateWorldMatrix';
 	}
 
 	override initializeNode() {
@@ -43,9 +45,10 @@ export class ObjectDispatchEventActorNode extends TypedActorNode<ObjectDispatchE
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const {Object3D} = context;
-		const eventName = this._inputValueFromParam<ParamType.STRING>(this.p.eventName, context);
-
-		Object3D.dispatchEvent({type: eventName});
+		const updateParents = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateParents, context);
+		const updateChildren = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateChildren, context);
+		console.log(Object3D, updateParents, updateChildren);
+		Object3D.updateWorldMatrix(updateParents, updateChildren);
 		this.runTrigger(context);
 	}
 }

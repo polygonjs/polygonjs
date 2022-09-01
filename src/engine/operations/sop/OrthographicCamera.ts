@@ -61,7 +61,7 @@ export class OrthographicCameraSopOperation extends BaseSopOperation {
 
 		OrthographicCameraSopOperation.setCameraAttributes(camera, params);
 
-		camera.updateMatrix();
+		camera.updateWorldMatrix(false, false);
 		camera.updateProjectionMatrix();
 		camera.matrixAutoUpdate = params.matrixAutoUpdate;
 

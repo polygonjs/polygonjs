@@ -112,7 +112,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	static PARAM_CALLBACK_updatePasses(node: BasePostProcessNodeType) {
 		node._updatePasses();
 	}
-	private _updatePasses() {
+	protected _updatePasses() {
 		this._passesByEffectsComposer.forEach((passOrPasses) => {
 			const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
 			for (let pass of passes) {
@@ -122,7 +122,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	}
 	protected updatePass(pass: P) {}
 
-	private _postProcessNetworkNode(): BaseNetworkPostProcessNodeType {
+	protected _postProcessNetworkNode(): BaseNetworkPostProcessNodeType {
 		const parentNode = this.parent()!;
 		if (CoreCameraPostProcessController.isPostProcessNetworkNode(parentNode)) {
 			return parentNode as BaseNetworkPostProcessNodeType;

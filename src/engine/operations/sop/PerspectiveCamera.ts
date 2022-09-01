@@ -54,7 +54,10 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 			MathUtils.degToRad(params.rotation.z)
 		);
 
-		camera.updateMatrix();
+		// this needs to be .updateWorldMatrix and not .updateMatrix
+		// as otherwise the camera appears to behave find in most cases,
+		// except when using the sop/cameraRenderScene
+		camera.updateWorldMatrix(false, false);
 		camera.updateProjectionMatrix();
 		camera.matrixAutoUpdate = params.matrixAutoUpdate;
 

@@ -1,7 +1,7 @@
 import {BaseGlShaderAssembler} from '../_Base';
 import {IUniforms} from '../../../../../../core/geometry/Material';
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
-import TemplateDefault from '../../templates/textures/Default.frag.glsl';
+import TemplateDefault from '../../templates/post/Default.frag.glsl';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
@@ -10,10 +10,10 @@ import {GlobalsGlNode} from '../../../Globals';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {UniformGLDefinition} from '../../../utils/GLDefinition';
-import {BuilderCopNode} from '../../../../cop/Builder';
+import {BuilderPostNode} from '../../../../post/Builder';
 import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 
-export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
+export class ShaderAssemblerPost extends BaseGlShaderAssembler {
 	private _uniforms: IUniforms | undefined;
 
 	override templateShader() {
@@ -61,8 +61,8 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			}
 		}
 
-		BuilderCopNode.handleDependencies(
-			this.currentGlParentNode() as BuilderCopNode,
+		BuilderPostNode.handleDependencies(
+			this.currentGlParentNode() as BuilderPostNode,
 			this.uniformsTimeDependent(),
 			this._uniforms as IUniformsWithTime
 		);
@@ -83,6 +83,8 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	}
 	override add_globals_outputs(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.setNamedOutputConnectionPoints([
+			new GlConnectionPoint('input0', GlConnectionPointType.VEC4),
+			new GlConnectionPoint('input1', GlConnectionPointType.VEC4),
 			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
 			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
 			new GlConnectionPoint('resolution', GlConnectionPointType.VEC2),
@@ -126,9 +128,9 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		return ['// INSERT DEFINE', '// INSERT BODY'];
 	}
 
-	private _handle_gl_FragCoord(body_lines: string[], shaderName: ShaderName, var_name: string) {
+	private _handle_gl_FragCoord(bodyLines: string[], shaderName: ShaderName, var_name: string) {
 		if (shaderName == ShaderName.FRAGMENT) {
-			body_lines.push(`vec4 ${var_name} = gl_FragCoord`);
+			bodyLines.push(`vec4 ${var_name} = gl_FragCoord`);
 		}
 	}
 	private _handle_resolution(bodyLines: string[], shaderName: ShaderName, var_name: string) {
@@ -138,7 +140,9 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	}
 	private _handleUV(bodyLines: string[], shaderName: ShaderName, var_name: string) {
 		if (shaderName == ShaderName.FRAGMENT) {
-			bodyLines.push(`vec2 ${var_name} = vec2(gl_FragCoord.x / resolution.x, gl_FragCoord.y / resolution.y)`);
+			bodyLines.push(
+				`vec2 ${var_name} = vec2(0.5*gl_FragCoord.x / resolution.x, 0.5*gl_FragCoord.y / resolution.y)`
+			);
 		}
 	}
 
@@ -188,14 +192,23 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			const var_name = globals_node.glVarName(output_name);
 
 			switch (output_name) {
+				case 'input0':
+					body_lines.push(`vec4 ${var_name} = inputColor`);
+
+					this.setUniformsTimeDependent();
+					break;
+				case 'input1':
+					body_lines.push(`vec4 ${var_name} = texture2D( textureInput1, vUv)`);
+
+					this.setUniformsTimeDependent();
+					break;
 				case 'time':
-					definitions.push(new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name));
+					// definitions.push(new UniformGLDefinition(globals_node, GlConnectionPointType.FLOAT, output_name));
 
 					body_lines.push(`float ${var_name} = ${output_name}`);
 
 					this.setUniformsTimeDependent();
 					break;
-
 				case 'uv':
 					this._handleUV(body_lines, shader_name, var_name);
 					break;

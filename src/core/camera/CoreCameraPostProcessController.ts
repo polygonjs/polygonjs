@@ -39,7 +39,7 @@ export class CoreCameraPostProcessController {
 		if (!postProcessNode) {
 			return;
 		}
-		return postProcessNode.effectsComposerController.createEffectsComposer({
+		return postProcessNode.effectsComposerController.createEffectsComposerAndBuildPasses({
 			renderer,
 			scene: renderScene,
 			camera,

@@ -189,6 +189,8 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	depth = ParamConfig.BOOLEAN(1);
 	/** @param logarithmicDepthBuffer */
 	logarithmicDepthBuffer = ParamConfig.BOOLEAN(0);
+	/** @param preserveDrawingBuffer */
+	preserveDrawingBuffer = ParamConfig.BOOLEAN(0);
 	/** @param tone mapping */
 	toneMapping = ParamConfig.INTEGER(DEFAULT_TONE_MAPPING, {
 		menu: {
@@ -278,7 +280,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		params.logarithmicDepthBuffer = isBooleanTrue(this.pv.logarithmicDepthBuffer);
 		params.canvas = canvas;
 		params.context = gl;
-		// (params as WebGLRendererParameters).preserveDrawingBuffer = this.pv.preserve_drawing_buffer;
+		params.preserveDrawingBuffer = this.pv.preserveDrawingBuffer;
 		const renderer = Poly.renderersController.createWebGLRenderer(params);
 
 		if (Poly.renderersController.printDebug()) {

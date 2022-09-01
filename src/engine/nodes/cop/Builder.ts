@@ -42,11 +42,9 @@ import {BaseNodeType} from '../_Base';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {isBooleanTrue} from '../../../core/Type';
-const VERTEX_SHADER = `
-void main()	{
-	gl_Position = vec4( position, 1.0 );
-}
-`;
+import FRAGMENT_SHADER from '../gl/code/templates/textures/Default.frag.glsl';
+import VERTEX_SHADER from '../gl/code/templates/textures/Default.vert.glsl';
+
 const RESOLUTION_DEFAULT: Number2 = [256, 256];
 
 function BuilderCopParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -54,7 +52,7 @@ function BuilderCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param texture resolution */
 		resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
 		/** @param use the main camera renderer. This can save memory, but can also lead to colors being affected by the renderer.outputEncoding */
-		useCameraRenderer = ParamConfig.BOOLEAN(0, {
+		useCameraRenderer = ParamConfig.BOOLEAN(1, {
 			callback: (node: BaseNodeType) => {
 				BuilderCopNode.PARAM_CALLBACK_render(node as BuilderCopNode);
 			},
@@ -103,7 +101,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	public readonly textureMaterial: ShaderMaterial = new ShaderMaterial({
 		uniforms: {},
 		vertexShader: VERTEX_SHADER,
-		fragmentShader: '',
+		fragmentShader: FRAGMENT_SHADER,
 	});
 	private _textureScene: Scene = new Scene();
 	private _textureCamera: Camera = new Camera();

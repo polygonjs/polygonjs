@@ -65,6 +65,8 @@ import {NegateActorNode} from '../../../nodes/actor/Negate';
 import {NormalizeActorNode} from '../../../nodes/actor/Normalize';
 import {NullActorNode} from '../../../nodes/actor/Null';
 import {ObjectDispatchEventActorNode} from '../../../nodes/actor/ObjectDispatchEvent';
+import {ObjectUpdateMatrixActorNode} from '../../../nodes/actor/ObjectUpdateMatrix';
+import {ObjectUpdateWorldMatrixActorNode} from '../../../nodes/actor/ObjectUpdateWorldMatrix';
 import {OnChildAttributeUpdateActorNode} from '../../../nodes/actor/OnChildAttributeUpdate';
 import {OnKeydownActorActorNode} from '../../../nodes/actor/OnKeydown';
 import {OnKeypressActorActorNode} from '../../../nodes/actor/OnKeypress';
@@ -210,6 +212,8 @@ export interface ActorNodeChildrenMap {
 	normalize: NormalizeActorNode;
 	null: NullActorNode;
 	objectDispatchEvent: ObjectDispatchEventActorNode;
+	objectUpdateMatrix: ObjectUpdateMatrixActorNode;
+	objectUpdateWorldMatrix: ObjectUpdateWorldMatrixActorNode;
 	onChildAttributeUpdate: OnChildAttributeUpdateActorNode;
 	onKeydown: OnKeydownActorActorNode;
 	onKeypress: OnKeypressActorActorNode;
@@ -359,6 +363,8 @@ export class ActorRegister {
 		poly.registerNode(NormalizeActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NullActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(ObjectDispatchEventActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(ObjectUpdateMatrixActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(ObjectUpdateWorldMatrixActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(OnChildAttributeUpdateActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnKeydownActorActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnKeypressActorActorNode, CATEGORY_ACTOR.EVENTS);
