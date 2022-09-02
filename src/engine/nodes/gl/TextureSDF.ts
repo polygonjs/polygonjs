@@ -6,7 +6,6 @@
  *
  */
 
-import {TypedGlNode} from './_Base';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {BaseGLDefinition, PrecisionGLDefinition, UniformGLDefinition} from './utils/GLDefinition';
@@ -15,13 +14,15 @@ import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsCont
 import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/GLParamConfig';
+import {BaseSDFGlNode} from './_BaseSDF';
 
 class TextureSDFGlParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('texture1');
-	p = ParamConfig.VECTOR3([0, 0, 0]);
+	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
+	center = ParamConfig.VECTOR3([0, 0, 0]);
 }
 const ParamsConfig = new TextureSDFGlParamsConfig();
-export class TextureSDFGlNode extends TypedGlNode<TextureSDFGlParamsConfig> {
+export class TextureSDFGlNode extends BaseSDFGlNode<TextureSDFGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type(): Readonly<'textureSDF'> {
 		return 'textureSDF';
@@ -37,7 +38,8 @@ export class TextureSDFGlNode extends TypedGlNode<TextureSDFGlParamsConfig> {
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const p = ThreeToGl.vector2(this.variableForInputParam(this.p.p));
+		const position = this.position();
+		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 
 		const rgba = this.glVarName(TextureSDFGlNode.OUTPUT_NAME);
 		const map = this.uniformName();
@@ -47,7 +49,7 @@ export class TextureSDFGlNode extends TypedGlNode<TextureSDFGlParamsConfig> {
 		];
 		const bodyLines: string[] = [];
 
-		const bodyLine = `float ${rgba} = texture(${map}, ${p}).r`;
+		const bodyLine = `float ${rgba} = texture(${map}, ${position}- ${center}).r`;
 		bodyLines.push(bodyLine);
 
 		shaders_collection_controller.addDefinitions(this, definitions);

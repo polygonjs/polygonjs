@@ -12,30 +12,31 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {GLTFExporter, GLTFExporterOptions} from '../../../modules/three/examples/jsm/exporters/GLTFExporter';
 import {Scene} from 'three';
 import {Object3D} from 'three';
+import {downloadBlob} from '../../../core/BlobUtils';
 
-function save(blob: Blob, filename: string) {
-	const link = document.createElement('a');
-	link.style.display = 'none';
-	document.body.appendChild(link); // Firefox workaround, see #6594
+// function save(blob: Blob, filename: string) {
+// 	const link = document.createElement('a');
+// 	link.style.display = 'none';
+// 	document.body.appendChild(link); // Firefox workaround, see #6594
 
-	link.href = URL.createObjectURL(blob);
-	link.download = filename;
-	link.click();
+// 	link.href = URL.createObjectURL(blob);
+// 	link.download = filename;
+// 	link.click();
 
-	// URL.revokeObjectURL( url ); breaks Firefox...
+// 	// URL.revokeObjectURL( url ); breaks Firefox...
 
-	// remove link
-	setTimeout(() => {
-		document.body.removeChild(link);
-	}, 10);
-}
+// 	// remove link
+// 	setTimeout(() => {
+// 		document.body.removeChild(link);
+// 	}, 10);
+// }
 
 function saveString(text: string, filename: string) {
-	save(new Blob([text], {type: 'text/plain'}), filename);
+	downloadBlob(new Blob([text], {type: 'text/plain'}), filename);
 }
 
 function saveArrayBuffer(buffer: ArrayBuffer, filename: string) {
-	save(new Blob([buffer], {type: 'application/octet-stream'}), filename);
+	downloadBlob(new Blob([buffer], {type: 'application/octet-stream'}), filename);
 }
 
 class ExporterSopParamsConfig extends NodeParamsConfig {

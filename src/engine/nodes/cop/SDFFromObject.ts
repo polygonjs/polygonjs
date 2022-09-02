@@ -3,19 +3,20 @@
  *
  *
  */
-import {CoreUserAgent} from './../../../core/UserAgent';
 import {MeshWithBVH} from './../../operations/sop/utils/Bvh/three-mesh-bvh';
-import {Vector3, FloatType, HalfFloatType} from 'three';
-import {Texture, Data3DTexture, RedFormat, LinearFilter} from 'three';
+import {Vector3, Ray, Texture, Data3DTexture, DoubleSide} from 'three';
 import {NodeContext} from './../../poly/NodeContext';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {HitPointInfo} from 'three-mesh-bvh';
+import {createSDFTexture} from '../../../core/loader/geometry/SDF';
 
+const rayDir = new Vector3();
+const ray = new Ray();
 class SDFFromObjectCopParamsConfig extends NodeParamsConfig {
 	/** @param texture resolution */
-	resolution = ParamConfig.INTEGER(256, {
+	resolution = ParamConfig.INTEGER(16, {
 		range: [4, 256],
 		rangeLocked: [true, false],
 	});
@@ -38,7 +39,7 @@ const ParamsConfig = new SDFFromObjectCopParamsConfig();
 export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'sdfFromObject';
+		return 'SDFFromObject';
 	}
 
 	override async cook(inputContents: Texture[]) {
@@ -87,9 +88,6 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		const texture = this._dataTexture();
 		const {resolution} = this.pv;
 		const data = texture.image.data as Float32Array;
-		// const halfRes = resolution * 0.5;
-		let i = 0;
-		// const radius = 0.4;
 		const pos = new Vector3();
 		const distanceResult: HitPointInfo = {
 			point: new Vector3(),
@@ -97,6 +95,7 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 			faceIndex: -1,
 		};
 
+		let i = 0;
 		for (let x = 0; x < resolution; x++) {
 			for (let y = 0; y < resolution; y++) {
 				for (let z = 0; z < resolution; z++) {
@@ -111,10 +110,14 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 					// const z2 = zd * zd;
 					// const d = Math.sqrt(x2 + y2 + z2);
 					boundsTree.closestPointToPoint(pos, distanceResult);
-					// console.log(i, distanceResult.distance);
+					// check if we are inside
+					rayDir.copy(distanceResult.point).sub(pos);
+					ray.origin.copy(pos);
+					const res = boundsTree.raycastFirst(ray, DoubleSide);
+					const inside = res && res.face && res.face.normal.dot(ray.direction) > 0.0;
 
 					const d = distanceResult.distance;
-					data[i] = d;
+					data[i] = inside ? -d : d;
 					i++;
 				}
 			}
@@ -151,19 +154,7 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 	}
 
 	private _createTexture(resolution: number) {
-		const texture = new Data3DTexture(
-			new Float32Array(resolution * resolution * resolution).fill(0),
-			resolution,
-			resolution,
-			resolution
-		);
-		texture.format = RedFormat;
-		texture.minFilter = LinearFilter;
-		texture.magFilter = LinearFilter;
-		texture.unpackAlignment = 1;
-		texture.needsUpdate = true;
-		texture.type = CoreUserAgent.isiOS() ? HalfFloatType : FloatType;
-		return texture;
+		return createSDFTexture(resolution, resolution, resolution);
 	}
 
 	/*

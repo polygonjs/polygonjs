@@ -13,6 +13,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPoint, GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
+import {isBooleanTrue} from '../../../core/Type';
 
 // const INPUT_NAME = {
 // 	COLOR: 'color',
@@ -75,7 +76,7 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const color = ThreeToGl.vector3(this.variableForInputParam(this.p.color));
-		const useEnvMap = ThreeToGl.bool(this.variableForInputParam(this.p.useEnvMap));
+		const useEnvMap = isBooleanTrue(this.pv.useEnvMap);
 		const envMapTint = ThreeToGl.vector3(this.variableForInputParam(this.p.envMapTint));
 		const envMapIntensity = ThreeToGl.float(this.variableForInputParam(this.p.envMapIntensity));
 		const envMapFresnel = ThreeToGl.float(this.variableForInputParam(this.p.envMapFresnel));

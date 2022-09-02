@@ -35,6 +35,7 @@ export const CATEGORY_AUDIO = {
 
 export const CATEGORY_COP = {
 	ADVANCED: 'advanced',
+	SDF: 'SDF',
 	FILTER: 'filters',
 	INPUT: 'inputs',
 	MISC: 'misc',
