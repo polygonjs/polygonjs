@@ -36,6 +36,10 @@ export class TypedContainerController<NC extends NodeContext> {
 	}
 
 	async compute(): Promise<ContainerMap[NC]> {
+		if (this.node.disposed) {
+			console.warn('.compute() requested from a disposed node', this.node);
+		}
+
 		if (this.node.flags?.bypass?.active()) {
 			this.node.states.error.clear();
 			const inputNode = (<unknown>this.node.io.inputs.input(0)) as TypedNode<NC, any>;

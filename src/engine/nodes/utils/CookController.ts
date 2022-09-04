@@ -56,6 +56,7 @@ export class NodeCookController<NC extends NodeContext> {
 		if (this.isCooking()) {
 			return;
 		}
+
 		this._initCookingState();
 		this.node.states.error.clear();
 		this.node.scene().cookController.addNode(this.node);

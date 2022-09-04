@@ -9,7 +9,7 @@ export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
 		return {};
 	}
 	override uiData(options: JSONExporterDataRequestOption = {}): NodeJsonExporterUIData {
-		if (options.showPolyNodesData) {
+		if (options.showPolyNodesData || !this._node.polyNodeController?.locked()) {
 			return super.uiData(options);
 		} else {
 			return this.ui_data_without_children();

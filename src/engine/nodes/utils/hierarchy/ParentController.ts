@@ -44,13 +44,17 @@ export class HierarchyParentController {
 		return null;
 	}
 
-	path(relative_to_parent?: BaseNodeType): string {
+	path(relativeToParent?: BaseNodeType): string {
+		if (this.node.disposed) {
+			console.warn('.path() called from a disposed node, this may return an invalid path', this.node);
+		}
+
 		const separator = CoreWalker.SEPARATOR;
 		if (this._parent != null) {
-			if (this._parent == relative_to_parent) {
+			if (this._parent == relativeToParent) {
 				return this.node.name();
 			} else {
-				const parent_fullPath = this._parent.path(relative_to_parent);
+				const parent_fullPath = this._parent.path(relativeToParent);
 				if (parent_fullPath === separator) {
 					return parent_fullPath + this.node.name();
 				} else {
