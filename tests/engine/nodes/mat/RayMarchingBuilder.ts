@@ -117,6 +117,7 @@ export function onCreateHook(node: RayMarchingBuilderMatNode) {
 	constant.setGlType(GlConnectionPointType.VEC3);
 	constant.p.asColor.set(1);
 	constant.p.color.set([1, 1, 1]);
+	sdfMaterial.p.useEnvMap.set(1);
 
 	globals.uiData.setPosition(-300, -0);
 	output.uiData.setPosition(300, 0);

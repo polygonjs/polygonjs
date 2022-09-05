@@ -14,7 +14,7 @@ QUnit.test('transform copy simple', async (assert) => {
 	transform_copy1.setInput(1, transform1);
 
 	transform1.setApplyOn(TransformTargetType.OBJECTS);
-	transform1.setObjectMode(TransformObjectMode.UPDATE_MATRIX);
+	transform1.setObjectMode(TransformObjectMode.MULT);
 	transform1.p.t.x.set(2);
 	transform1.p.r.y.set(Math.PI);
 

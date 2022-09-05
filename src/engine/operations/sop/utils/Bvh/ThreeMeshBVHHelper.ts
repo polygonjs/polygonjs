@@ -1,9 +1,11 @@
 import {Object3D} from 'three';
 import {Mesh} from 'three';
-import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH} from './three-mesh-bvh';
+import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH, CENTER} from './three-mesh-bvh';
 
 interface ThreeMeshBVHHelperOptions {
+	strategy: number;
 	maxLeafTris: number;
+	maxDepth: number;
 	verbose: boolean;
 }
 export class ThreeMeshBVHHelper {
@@ -20,7 +22,7 @@ export class ThreeMeshBVHHelper {
 		return new MeshBVH(mesh.geometry, options);
 	}
 	private static defaultBVH(mesh: Mesh) {
-		return this.createBVH(mesh, {maxLeafTris: 10, verbose: false});
+		return this.createBVH(mesh, {strategy: CENTER, maxLeafTris: 10, maxDepth: 40, verbose: false});
 	}
 	static copyBVH(meshDest: Mesh, meshSrc: Object3D) {
 		const existingBVH = ((meshSrc as Mesh).geometry as BufferGeometryWithBVH).boundsTree;

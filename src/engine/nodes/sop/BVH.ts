@@ -8,11 +8,20 @@
 
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BVHSopOperation} from '../../operations/sop/BVH';
+import {BVHSopOperation, STRAGERY_MENU_ENTRIES} from '../../operations/sop/BVH';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = BVHSopOperation.DEFAULT_PARAMS;
 class BVHSopParamsConfig extends NodeParamsConfig {
+	strategy = ParamConfig.INTEGER(DEFAULT.strategy, {
+		menu: {
+			entries: STRAGERY_MENU_ENTRIES,
+		},
+	});
+	maxDepth = ParamConfig.INTEGER(DEFAULT.maxDepth, {
+		range: [1, 128],
+		rangeLocked: [true, false],
+	});
 	maxLeafTris = ParamConfig.INTEGER(DEFAULT.maxLeafTris, {
 		range: [1, 16],
 		rangeLocked: [true, false],

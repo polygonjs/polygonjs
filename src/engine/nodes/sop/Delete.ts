@@ -221,24 +221,24 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	}
 
 	private async _evalForObjects(coreGroup: CoreGroup) {
-		const core_objects = coreGroup.coreObjects();
-		this.entitySelectionHelper.init(core_objects);
+		const coreObjects = coreGroup.coreObjects();
+		this.entitySelectionHelper.init(coreObjects);
 
 		this._marked_for_deletion_per_object_index = new Map();
-		for (let core_object of core_objects) {
+		for (let core_object of coreObjects) {
 			this._marked_for_deletion_per_object_index.set(core_object.index(), false);
 		}
 
 		if (isBooleanTrue(this.pv.byExpression)) {
-			await this.byExpressionHelper.evalForEntities(core_objects);
+			await this.byExpressionHelper.evalForEntities(coreObjects);
 		}
 
 		if (isBooleanTrue(this.pv.byObjectType)) {
-			this.byObjectTypeHelper.eval_for_objects(core_objects);
+			this.byObjectTypeHelper.eval_for_objects(coreObjects);
 		}
 
 		if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
-			this.byAttributeHelper.evalForEntities(core_objects);
+			this.byAttributeHelper.evalForEntities(coreObjects);
 		}
 
 		const core_objects_to_keep = this.entitySelectionHelper.entities_to_keep() as CoreObject[];

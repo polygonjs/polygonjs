@@ -1,7 +1,5 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
-import {Object3D} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
 
 import {
@@ -12,21 +10,24 @@ import {
 	TRANSFORM_TARGET_TYPES,
 } from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MathUtils} from 'three';
+import {MathUtils, Vector3, Object3D} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {
+	OBJECT_TRANSFORM_SPACES,
+	ObjectTransformSpace,
+	applyTransformWithSpaceToObject,
+} from '../../../core/TransformSpace';
 
 export enum TransformObjectMode {
-	SET_PARAMS = 'set params',
-	UPDATE_MATRIX = 'update matrix',
+	SET = 'set matrix',
+	MULT = 'multiply matrix',
 }
-export const TRANSFORM_OBJECT_MODES: TransformObjectMode[] = [
-	TransformObjectMode.SET_PARAMS,
-	TransformObjectMode.UPDATE_MATRIX,
-];
+export const TRANSFORM_OBJECT_MODES: TransformObjectMode[] = [TransformObjectMode.SET, TransformObjectMode.MULT];
 
 interface TransformSopParams extends DefaultOperationParams {
 	applyOn: number;
 	objectMode: number;
+	objectTransformSpace: number;
 	group: string;
 	rotationOrder: number;
 	t: Vector3;
@@ -39,7 +40,8 @@ interface TransformSopParams extends DefaultOperationParams {
 export class TransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES),
-		objectMode: TRANSFORM_OBJECT_MODES.indexOf(TransformObjectMode.SET_PARAMS),
+		objectMode: TRANSFORM_OBJECT_MODES.indexOf(TransformObjectMode.SET),
+		objectTransformSpace: OBJECT_TRANSFORM_SPACES.indexOf(ObjectTransformSpace.PARENT),
 		group: '',
 		rotationOrder: ROTATION_ORDERS.indexOf(RotationOrder.XYZ),
 		t: new Vector3(0, 0, 0),
@@ -55,11 +57,12 @@ export class TransformSopOperation extends BaseSopOperation {
 
 	private _coreTransform = new CoreTransform();
 	override cook(inputCoreGroups: CoreGroup[], params: TransformSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const coreGroup = inputCoreGroups[0];
+		const objects = coreGroup.objects();
 
 		this._applyTransform(objects, params);
-
-		return inputCoreGroups[0];
+		coreGroup.resetBoundingBox();
+		return coreGroup;
 	}
 	private _applyTransform(objects: Object3D[], params: TransformSopParams) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
@@ -80,16 +83,18 @@ export class TransformSopOperation extends BaseSopOperation {
 
 		if (params.group.trim() === '') {
 			for (let object of objects) {
-				const geometry = (object as Object3DWithGeometry).geometry;
-				if (geometry) {
-					geometry.translate(-params.pivot.x, -params.pivot.y, -params.pivot.z);
-					geometry.applyMatrix4(matrix);
-					geometry.translate(params.pivot.x, params.pivot.y, params.pivot.z);
-				}
+				object.traverse((childObject) => {
+					const geometry = (childObject as Object3DWithGeometry).geometry;
+					if (geometry) {
+						geometry.translate(-params.pivot.x, -params.pivot.y, -params.pivot.z);
+						geometry.applyMatrix4(matrix);
+						geometry.translate(params.pivot.x, params.pivot.y, params.pivot.z);
+					}
+				});
 			}
 		} else {
-			const core_group = CoreGroup._fromObjects(objects);
-			const points = core_group.pointsFromGroup(params.group);
+			const coreGroup = CoreGroup._fromObjects(objects);
+			const points = coreGroup.pointsFromGroup(params.group);
 			for (let point of points) {
 				const position = point.getPosition(this._point_pos).sub(params.pivot);
 				position.applyMatrix4(matrix);
@@ -101,43 +106,47 @@ export class TransformSopOperation extends BaseSopOperation {
 	private _updateObjects(objects: Object3D[], params: TransformSopParams) {
 		const objectMode = TRANSFORM_OBJECT_MODES[params.objectMode];
 		switch (objectMode) {
-			case TransformObjectMode.SET_PARAMS: {
-				return this._update_objects_params(objects, params);
+			case TransformObjectMode.SET: {
+				return this._setMatrix(objects, params);
 			}
-			case TransformObjectMode.UPDATE_MATRIX: {
-				return this._update_objects_matrix(objects, params);
+			case TransformObjectMode.MULT: {
+				return this._multMatrix(objects, params);
 			}
 		}
 		TypeAssert.unreachable(objectMode);
 	}
 
-	private _object_scale = new Vector3();
+	private _objectScale = new Vector3();
 	private _r = new Vector3();
-	private _update_objects_params(objects: Object3D[], params: TransformSopParams) {
+	private _setMatrix(objects: Object3D[], params: TransformSopParams) {
 		for (let object of objects) {
 			object.position.copy(params.t);
 			const order = ROTATION_ORDERS[params.rotationOrder];
 			this._r.copy(params.r).multiplyScalar(MathUtils.DEG2RAD);
 			object.rotation.set(this._r.x, this._r.y, this._r.z, order);
-			this._object_scale.copy(params.s).multiplyScalar(params.scale);
-			object.scale.copy(this._object_scale);
+			this._objectScale.copy(params.s).multiplyScalar(params.scale);
+			object.scale.copy(this._objectScale);
 			object.updateMatrix();
 		}
 	}
 
-	private _object_position = new Vector3();
-	private _update_objects_matrix(objects: Object3D[], params: TransformSopParams) {
+	// private _objectPosition = new Vector3();
+	private _multMatrix(objects: Object3D[], params: TransformSopParams) {
 		const matrix = this._matrix(params);
+		const transformSpace = OBJECT_TRANSFORM_SPACES[params.objectTransformSpace];
 		for (let object of objects) {
-			// center to origin
-			this._object_position.copy(object.position);
-			object.position.multiplyScalar(0);
-			object.updateMatrix();
-			// apply matrix
-			object.applyMatrix4(matrix);
-			// revert to position
-			object.position.add(this._object_position);
-			object.updateMatrix();
+			applyTransformWithSpaceToObject(object, matrix, transformSpace);
+			// // center to origin
+			// // this._objectPosition.copy(object.position);
+			// // object.position.set(0, 0, 0);
+			// object.updateMatrix();
+			// // apply matrix
+			// // object.applyMatrix4(matrix);
+			// object.matrix.multiply(matrix);
+			// // revert to position
+			// // object.position.add(this._objectPosition);
+			// // object.updateMatrix();
+			// object.matrix.decompose(object.position, object.quaternion, object.scale);
 		}
 	}
 

@@ -80,7 +80,6 @@ export class CoreBaseLoader {
 
 	protected async _urlToLoad(): Promise<string> {
 		let fullUrl = this._url;
-		console.log({fullUrl});
 		if (this._node) {
 			const assetsRoot = this._node.scene().assets.root();
 			if (!fullUrl.startsWith('http')) {

@@ -39,6 +39,8 @@ const POSITIONS = {
 	},
 };
 
+const _sizes = new Vector3();
+const _center = new Vector3();
 export class BoxLinesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BoxLinesSopParams = {
 		size: 1,
@@ -70,13 +72,13 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 
 	private _cookWithInput(coreGroup: CoreGroup, params: BoxLinesSopParams) {
 		const bbox = coreGroup.boundingBox();
-		const sizes = bbox.max.clone().sub(bbox.min);
-		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
+		bbox.getSize(_sizes);
+		bbox.getCenter(_center);
 
 		return this._createLines({
 			size: 1,
-			sizes,
-			center,
+			sizes: _sizes,
+			center: _center,
 			mergeLines: params.mergeLines,
 		});
 	}

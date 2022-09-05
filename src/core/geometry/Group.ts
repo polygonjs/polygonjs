@@ -28,13 +28,13 @@ export class CoreGroup extends CoreEntity {
 	private _timestamp: number | undefined;
 	// _core_objects:
 	private _objects: Object3D[] = [];
-	private _objects_with_geo: Object3DWithGeometry[] = [];
-	private _core_objects: CoreObject[] | undefined;
+	private _objectsWithGeo: Object3DWithGeometry[] = [];
+	private _coreObjects: CoreObject[] | undefined;
 
 	// _geometries: BufferGeometry[];
-	private _core_geometries: CoreGeometry[] | undefined;
+	private _coreGeometries: CoreGeometry[] | undefined;
 
-	private _bounding_box: Box3 | undefined;
+	private _boundingBox: Box3 | undefined;
 	// private _bounding_sphere: Sphere | undefined;
 
 	constructor() {
@@ -45,18 +45,18 @@ export class CoreGroup extends CoreEntity {
 	}
 	dispose() {
 		this._objects = [];
-		this._objects_with_geo = [];
-		if (this._core_objects) {
-			for (let co of this._core_objects) {
-				co.dispose();
+		this._objectsWithGeo = [];
+		if (this._coreObjects) {
+			for (let coreObject of this._coreObjects) {
+				coreObject.dispose();
 			}
-			this._core_objects = undefined;
+			this._coreObjects = undefined;
 		}
-		if (this._core_geometries) {
-			for (let cg of this._core_geometries) {
-				cg.dispose();
+		if (this._coreGeometries) {
+			for (let coreGeometry of this._coreGeometries) {
+				coreGeometry.dispose();
 			}
-			this._core_geometries = undefined;
+			this._coreGeometries = undefined;
 		}
 	}
 
@@ -74,10 +74,13 @@ export class CoreGroup extends CoreEntity {
 		this.reset();
 	}
 	reset() {
-		this._bounding_box = undefined;
+		this.resetBoundingBox();
 		// this._bounding_sphere = undefined;
-		this._core_geometries = undefined;
-		this._core_objects = undefined;
+		this._coreGeometries = undefined;
+		this._coreObjects = undefined;
+	}
+	resetBoundingBox() {
+		this._boundingBox = undefined;
 	}
 
 	//
@@ -110,17 +113,17 @@ export class CoreGroup extends CoreEntity {
 	//
 	setObjects(objects: Object3D[]) {
 		this._objects = objects;
-		this._objects_with_geo = objects.filter((obj) => (obj as Mesh).geometry != null) as Object3DWithGeometry[];
+		this._objectsWithGeo = objects.filter((obj) => (obj as Mesh).geometry != null) as Object3DWithGeometry[];
 		this.touch();
 	}
 	objects() {
 		return this._objects;
 	}
 	objectsWithGeo() {
-		return this._objects_with_geo;
+		return this._objectsWithGeo;
 	}
 	coreObjects() {
-		return (this._core_objects = this._core_objects || this._create_core_objects());
+		return (this._coreObjects = this._coreObjects || this._create_core_objects());
 	}
 	private _create_core_objects(): CoreObject[] {
 		// const list: CoreObject[] = [];
@@ -186,7 +189,7 @@ export class CoreGroup extends CoreEntity {
 		return list;
 	}
 	coreGeometries(): CoreGeometry[] {
-		return (this._core_geometries = this._core_geometries || this._createCoreGeometries());
+		return (this._coreGeometries = this._coreGeometries || this._createCoreGeometries());
 	}
 	private _createCoreGeometries() {
 		const list: CoreGeometry[] = [];
@@ -294,38 +297,70 @@ export class CoreGroup extends CoreEntity {
 
 	boundingBox(forceUpdate: boolean = false): Box3 {
 		if (forceUpdate) {
-			return (this._bounding_box = this._computeBoundingBox());
+			return (this._boundingBox = this._computeBoundingBox());
 		}
-		return (this._bounding_box = this._bounding_box || this._computeBoundingBox());
+		return (this._boundingBox = this._boundingBox || this._computeBoundingBox());
 	}
 	// bounding_sphere(): Sphere {
 	// 	return (this._bounding_sphere = this._bounding_sphere || this._compute_bounding_sphere());
 	// }
+	private _center = new Vector3();
+	private _size = new Vector3();
 	center(): Vector3 {
-		const center = new Vector3();
-		this.boundingBox().getCenter(center);
-		return center;
+		this.boundingBox().getCenter(this._center);
+		return this._center;
 	}
 	size(): Vector3 {
-		const size = new Vector3();
-		this.boundingBox().getSize(size);
-		return size;
+		this.boundingBox().getSize(this._size);
+		return this._size;
 	}
 
+	// private _geometriesWithComputedBoundingBox: Set<BufferGeometry> = new Set();
 	private _computeBoundingBox() {
-		let bbox: Box3 | undefined; // = new Box3();
+		let bbox: Box3 | undefined;
+		// this._geometriesWithComputedBoundingBox.clear();
 		if (this._objects) {
+			// 1. Initialize bbox to the first found object
 			for (let object of this._objects) {
-				const geometry = (object as Object3DWithGeometry).geometry;
-				if (geometry) {
-					geometry.computeBoundingBox();
-					if (bbox) {
-						bbox.expandByObject(object);
-					} else {
-						if (geometry.boundingBox) {
-							bbox = geometry.boundingBox.clone();
+				object.traverse((childObject) => {
+					if (!bbox) {
+						const geometry = (childObject as Object3DWithGeometry).geometry;
+						if (geometry) {
+							// if we do not set updateParents to true,
+							// the bounding box calculation appears fine
+							// when checking node by node,
+							// but will be unreliable when processing multiple transform nodes before
+							// rendering the objects
+							childObject.updateWorldMatrix(true, false);
+							geometry.computeBoundingBox();
+							// this._geometriesWithComputedBoundingBox.add(geometry);
+							if (geometry.boundingBox) {
+								bbox = geometry.boundingBox.clone();
+								bbox.applyMatrix4(childObject.matrixWorld);
+							}
+							// if (bbox) {
+							// 	bbox.expandByObject(object);
+							// }
 						}
 					}
+				});
+			}
+
+			// 2. Now that it is initialized, we can loop through the object.
+			// If we had not initialized it, this would have skipped objects
+			// that have no geometry, but have children that do
+			if (bbox) {
+				for (let object of this._objects) {
+					// const geometry = (object as Object3DWithGeometry).geometry;
+					// if (geometry) {
+					// if (!this._geometriesWithComputedBoundingBox.has(geometry)) {
+					// 	geometry.computeBoundingBox();
+					// }
+
+					if (bbox) {
+						bbox.expandByObject(object);
+					}
+					// }
 				}
 			}
 		}

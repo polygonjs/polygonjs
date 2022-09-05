@@ -47,7 +47,6 @@ export class ObjectUpdateWorldMatrixActorNode extends TypedActorNode<ObjectUpdat
 		const {Object3D} = context;
 		const updateParents = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateParents, context);
 		const updateChildren = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateChildren, context);
-		console.log(Object3D, updateParents, updateChildren);
 		Object3D.updateWorldMatrix(updateParents, updateChildren);
 		this.runTrigger(context);
 	}
