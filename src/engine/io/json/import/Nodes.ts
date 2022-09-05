@@ -159,7 +159,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		for (let node of nonOptimizedNodes) {
 			const importer = importers_by_node_name.get(node.name());
 			if (importer) {
-				importer.process_inputs_data(data[node.name()]);
+				importer.process_inputs_data(scene_importer, data[node.name()]);
 			}
 		}
 	}

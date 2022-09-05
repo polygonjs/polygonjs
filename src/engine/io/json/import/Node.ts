@@ -61,14 +61,20 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		// already called in create_node()
 		// this._node.lifecycle.set_creation_completed();
 	}
-	process_inputs_data(data: NodeJsonExporterData) {
+	process_inputs_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
 		const maxInputsCount = data.maxInputsCount;
 		if (maxInputsCount != null) {
 			const minCount = this._node.io.inputs.minCount();
 			this._node.io.inputs.setCount(minCount, maxInputsCount);
 		}
 
-		this.setInputs(data['inputs']);
+		try {
+			this.setInputs(data['inputs']);
+		} catch (err) {
+			const message = (err as ErrorEvent).message || `failed connecting inputs of node ${data['type']}`;
+			scene_importer.report.addWarning(message);
+			console.warn(data['inputs']);
+		}
 	}
 
 	process_ui_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterUIData) {

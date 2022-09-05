@@ -1,4 +1,4 @@
-import {Data3DTexture, RedFormat, LinearFilter, HalfFloatType, FloatType} from 'three';
+import {Data3DTexture, RedFormat, LinearFilter, HalfFloatType, FloatType, ClampToEdgeWrapping} from 'three';
 import {CoreBaseLoader} from '../_Base';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {CoreUserAgent} from '../../UserAgent';
@@ -121,6 +121,9 @@ export function createSDFTexture(width: number, height: number, depth: number) {
 	texture.format = RedFormat;
 	texture.minFilter = LinearFilter;
 	texture.magFilter = LinearFilter;
+	texture.wrapS = ClampToEdgeWrapping;
+	texture.wrapT = ClampToEdgeWrapping;
+	(texture as any).wrapR = ClampToEdgeWrapping;
 	texture.unpackAlignment = 1;
 	texture.needsUpdate = true;
 	texture.type = CoreUserAgent.isiOS() ? HalfFloatType : FloatType;

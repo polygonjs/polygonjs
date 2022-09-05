@@ -14,6 +14,7 @@ import {saveSDFMetadata} from '../../../core/loader/geometry/SDF';
 class SDFExporterCopParamsConfig extends NodeParamsConfig {
 	/** @param download texture */
 	download = ParamConfig.BUTTON(null, {
+		hidden: true,
 		callback: (node: BaseNodeType) => {
 			SDFExporterCopNode.PARAM_CALLBACK_download(node as SDFExporterCopNode);
 		},

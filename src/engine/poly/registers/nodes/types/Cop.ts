@@ -1,9 +1,10 @@
 export enum CopType {
 	BUILDER = 'builder',
 	CUBE_CAMERA = 'cubeCamera',
+	SDF_FROM_OBJECT = 'SDFFromObject',
+	SNAPSHOT = 'snapshot',
 	VIDEO = 'video',
 	WEB_CAM = 'webCam',
-	SNAPSHOT = 'snapshot',
 }
 
 export enum CopTypeImage {

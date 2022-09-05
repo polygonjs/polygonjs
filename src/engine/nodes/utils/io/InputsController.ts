@@ -403,7 +403,7 @@ export class NodeInputsController<NC extends NodeContext> {
 
 		const graphInputNode = this._graphNodeInputs[inputIndex];
 		if (graphInputNode == null) {
-			const message = `graphInputNode not found at index ${inputIndex}`;
+			const message = `no input at index ${inputIndex} (name: ${inputIndexOrName}) for node '${this.node.name()}' at path '${this.node.path()}'`;
 			console.warn(message);
 			throw new Error(message);
 		}

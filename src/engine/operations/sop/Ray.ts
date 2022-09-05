@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Mesh, Triangle, Vector3} from 'three';
+import {Matrix4, Mesh, Triangle, Vector3} from 'three';
 import {Raycaster, Intersection} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MatDoubleSideTmpSetter} from '../../../core/render/MatDoubleSideTmpSetter';
@@ -34,6 +34,9 @@ function createRaycaster() {
 	raycaster.firstHitOnly = true;
 	return raycaster;
 }
+
+const objectWorldMat = new Matrix4();
+const objectWorldMatInverse = new Matrix4();
 
 export class RaySopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: RaySopParams = {
@@ -134,20 +137,28 @@ export class RaySopOperation extends BaseSopOperation {
 			bvh = collisionGeometry.boundsTree;
 		}
 
+		coreGroupCollisionObject.updateMatrixWorld(true);
+		objectWorldMat.copy(coreGroupCollisionObject.matrixWorld);
+		objectWorldMatInverse.copy(objectWorldMat).invert();
+
 		// find closest pt
 		const position = collisionGeometry.getAttribute('position');
 		const points = coreGroup.points();
 		for (let point of points) {
 			point.getPosition(this._pointPos);
+			// apply object inverse matrix
+			this._pointPos.applyMatrix4(objectWorldMatInverse);
 			bvh.closestPointToPoint(this._pointPos, this._hitPointInfo);
-
 			if (isBooleanTrue(params.transformPoints)) {
+				// apply object matrix when setting the position
+				this._hitPointInfo.point.applyMatrix4(objectWorldMat);
 				point.setPosition(this._hitPointInfo.point);
 			}
 			if (isBooleanTrue(params.addDistAttribute)) {
 				point.setAttribValue(DIST_ATTRIB_NAME, this._hitPointInfo.distance);
 			}
 			if (isBooleanTrue(params.transferFaceNormals)) {
+				// TODO: test if applying the object matrix is necessary (probably is)
 				this._triangle.setFromAttributeAndIndices(
 					position,
 					indexArray[3 * this._hitPointInfo.faceIndex],
