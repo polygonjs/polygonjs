@@ -1,4 +1,3 @@
-import {FunctionGLDefinition} from './utils/GLDefinition';
 /**
  * texture SDF
  *
@@ -6,7 +5,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
  *
  *
  */
-
+import {FunctionGLDefinition} from './utils/GLDefinition';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {BaseGLDefinition, PrecisionGLDefinition, UniformGLDefinition} from './utils/GLDefinition';

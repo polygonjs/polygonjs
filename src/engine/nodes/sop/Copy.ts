@@ -1,4 +1,3 @@
-import {ObjectTransformSpace} from './../../../core/TransformSpace';
 /**
  * Copies a geometry onto every point from the right input.
  *
@@ -7,6 +6,7 @@ import {ObjectTransformSpace} from './../../../core/TransformSpace';
  *
  *
  */
+import {ObjectTransformSpace} from './../../../core/TransformSpace';
 import {SopType} from './../../poly/registers/nodes/types/Sop';
 import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
