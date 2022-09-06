@@ -1,4 +1,4 @@
-import {Data3DTexture, RedFormat, LinearFilter, HalfFloatType, FloatType, ClampToEdgeWrapping} from 'three';
+import {Data3DTexture, RedFormat, LinearFilter, HalfFloatType, FloatType, ClampToEdgeWrapping, Vector3} from 'three';
 import {CoreBaseLoader} from '../_Base';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {CoreUserAgent} from '../../UserAgent';
@@ -25,7 +25,6 @@ export class SDFLoader extends CoreBaseLoader {
 
 			var fileReader = new FileReader();
 			fileReader.onload = function (event) {
-				console.log(event.target?.result);
 				const arrayBuffer = event.target?.result;
 				if (arrayBuffer && arrayBuffer instanceof ArrayBuffer) {
 					const texture = loadSDFMetadata(arrayBuffer);
@@ -41,57 +40,85 @@ export class SDFLoader extends CoreBaseLoader {
 		} catch (err) {
 			errorCallback(err as ErrorEvent);
 		}
-
-		// loader.setPath(url);
-		// loader.setResponseType('arraybuffer');
-		// // loader.setRequestHeader( this.requestHeader );
-		// // loader.setWithCredentials( this.withCredentials );
-
-		// loader.load(
-		// 	url,
-		// 	function (data) {
-		// 		try {
-		// 			console.log(data);
-		// 		} catch (e) {
-		// 			errorCallback(e as ErrorEvent);
-		// 		}
-		// 	},
-		// 	progressCallback,
-		// 	errorCallback
-		// );
 	}
 }
 
-const MEDADATA_LENGTH = 9;
-export function saveSDFMetadata(texture: Data3DTexture) {
-	console.log(texture);
-	const dataContainer = texture?.image;
+interface MetadataOptions {
+	boundMin: Vector3;
+	boundMax: Vector3;
+	resolution: Vector3;
+}
+export interface SDFDataContainer {
+	width: number;
+	height: number;
+	depth: number;
+	boundMinx: number;
+	boundMiny: number;
+	boundMinz: number;
+	boundMaxx: number;
+	boundMaxy: number;
+	boundMaxz: number;
+	resolutionx: number;
+	resolutiony: number;
+	resolutionz: number;
+	data: Float32Array;
+}
+export function addSDFMetadataToContainer(texture: Data3DTexture, options: MetadataOptions) {
+	const dataContainer = texture?.image as SDFDataContainer;
 	if (!dataContainer) {
 		throw new Error('the input must be a 3D texture');
 		return;
 	}
-	const width: number = dataContainer.width;
-	const height: number = dataContainer.height;
-	const depth: number = dataContainer.depth;
+	dataContainer.boundMinx = options.boundMin.x;
+	dataContainer.boundMiny = options.boundMin.y;
+	dataContainer.boundMinz = options.boundMin.z;
+	dataContainer.boundMaxx = options.boundMax.x;
+	dataContainer.boundMaxy = options.boundMax.y;
+	dataContainer.boundMaxz = options.boundMax.z;
+	dataContainer.resolutionx = options.resolution.x;
+	dataContainer.resolutiony = options.resolution.y;
+	dataContainer.resolutionz = options.resolution.z;
+}
+export function saveSDFMetadata(texture: Data3DTexture) {
+	const dataContainer = texture?.image as SDFDataContainer;
+	if (!dataContainer) {
+		throw new Error('the input must be a 3D texture');
+		return;
+	}
 	const data: Float32Array = dataContainer.data;
+
+	const metadataSizes = {
+		metadataLength: 1,
+		dimensions: 3,
+		bounds: 6,
+		resolution: 3,
+	};
+	const metadataLength =
+		metadataSizes.metadataLength + metadataSizes.dimensions + metadataSizes.bounds + metadataSizes.resolution;
 
 	// add metadata
 	const currentLength = data.length;
-	const dataWithMetadata = new Float32Array(currentLength + MEDADATA_LENGTH);
-	// 1. numbers 0 to 2 are the resolution
-	dataWithMetadata[0] = width;
-	dataWithMetadata[1] = height;
-	dataWithMetadata[2] = depth;
-	// 2. numbers 3 to 8 are the bounds
-	dataWithMetadata[3] = 0;
-	dataWithMetadata[4] = 0;
-	dataWithMetadata[5] = 0;
-	dataWithMetadata[6] = 1;
-	dataWithMetadata[7] = 1;
-	dataWithMetadata[8] = 1;
-	// 3. create new array
+	const dataWithMetadata = new Float32Array(currentLength + metadataLength);
+	// 1. numbers 0 is length of metadata
+	dataWithMetadata[0] = metadataLength;
+	// 2. numbers 1 to 3 are the resolution
+	dataWithMetadata[1] = dataContainer.width;
+	dataWithMetadata[2] = dataContainer.height;
+	dataWithMetadata[3] = dataContainer.depth;
+	// 3. numbers 4 to 9 are the bounds
+	dataWithMetadata[4] = dataContainer.boundMinx;
+	dataWithMetadata[5] = dataContainer.boundMiny;
+	dataWithMetadata[6] = dataContainer.boundMinz;
+	dataWithMetadata[7] = dataContainer.boundMaxx;
+	dataWithMetadata[8] = dataContainer.boundMaxy;
+	dataWithMetadata[9] = dataContainer.boundMaxz;
+	// 4. numbers 10 to 12 are the resolution
+	dataWithMetadata[10] = dataContainer.resolutionx;
+	dataWithMetadata[11] = dataContainer.resolutiony;
+	dataWithMetadata[12] = dataContainer.resolutionz;
+	// 5. create new array
 	for (let i = 0; i < currentLength; i++) {
-		dataWithMetadata[i + MEDADATA_LENGTH] = data[i];
+		dataWithMetadata[i + metadataLength] = data[i];
 	}
 	return dataWithMetadata;
 }
@@ -99,19 +126,41 @@ export function saveSDFMetadata(texture: Data3DTexture) {
 function loadSDFMetadata(arrayBuffer: ArrayBuffer): Data3DTexture {
 	const float32Array = new Float32Array(arrayBuffer);
 	const currentLength = float32Array.length;
-	// 1. numbers 0 to 2 are the resolution
-	const width = float32Array[0];
-	const height = float32Array[1];
-	const depth = float32Array[2];
-	// 2. numbers 3 to 8 are the bounds
-	// TODO
+	// 1. numbers 0 is length of metadata
+	const metadataLength = float32Array[0];
+	// 2. numbers 1 to 3 are the resolution
+	const width = float32Array[1];
+	const height = float32Array[2];
+	const depth = float32Array[3];
+	// 3. numbers 4 to 9 are the bounds
+	const boundMinx = float32Array[4];
+	const boundMiny = float32Array[5];
+	const boundMinz = float32Array[6];
+	const boundMaxx = float32Array[7];
+	const boundMaxy = float32Array[8];
+	const boundMaxz = float32Array[9];
+	// 4. numbers 10 to 12 are the resolution
+	const resolutionx = float32Array[10];
+	const resolutiony = float32Array[11];
+	const resolutionz = float32Array[12];
 
 	// 3. create new array
 	const texture = createSDFTexture(width, height, depth);
 	const dataWithoutMetadata = texture.image.data;
 	for (let i = 0; i < currentLength; i++) {
-		dataWithoutMetadata[i] = float32Array[i + MEDADATA_LENGTH];
+		dataWithoutMetadata[i] = float32Array[i + metadataLength];
 	}
+
+	const dataContainer = texture.image as SDFDataContainer;
+	dataContainer.boundMinx = boundMinx;
+	dataContainer.boundMiny = boundMiny;
+	dataContainer.boundMinz = boundMinz;
+	dataContainer.boundMaxx = boundMaxx;
+	dataContainer.boundMaxy = boundMaxy;
+	dataContainer.boundMaxz = boundMaxz;
+	dataContainer.resolutionx = resolutionx;
+	dataContainer.resolutiony = resolutiony;
+	dataContainer.resolutionz = resolutionz;
 
 	return texture;
 }

@@ -3,7 +3,7 @@
  *
  *
  */
-import {SDFLoader} from './../../../core/loader/geometry/SDF';
+import {SDFDataContainer, SDFLoader} from './../../../core/loader/geometry/SDF';
 import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -21,6 +21,22 @@ class SDFFromUrlCopParamsConfig extends NodeParamsConfig {
 			SDFFromUrlCopNode.PARAM_CALLBACK_reload(node as SDFFromUrlCopNode);
 		},
 	});
+	/** @param resolution */
+	resolution = ParamConfig.VECTOR3([-1, -1, -1], {
+		cook: false,
+		editable: false,
+		separatorBefore: true,
+	});
+	/** @param boundMin */
+	boundMin = ParamConfig.VECTOR3([-1, -1, -1], {
+		cook: false,
+		editable: false,
+	});
+	/** @param boundMax */
+	boundMax = ParamConfig.VECTOR3([1, 1, 1], {
+		cook: false,
+		editable: false,
+	});
 }
 
 const ParamsConfig = new SDFFromUrlCopParamsConfig();
@@ -36,7 +52,15 @@ export class SDFFromUrlCopNode extends TypedCopNode<SDFFromUrlCopParamsConfig> {
 		const loader = new SDFLoader(url, this);
 		loader.load(
 			(texture) => {
-				console.log(texture);
+				const dataContainer = texture.image as SDFDataContainer;
+				this.p.resolution.set([
+					dataContainer.resolutionx,
+					dataContainer.resolutiony,
+					dataContainer.resolutionz,
+				]);
+				this.p.boundMin.set([dataContainer.boundMinx, dataContainer.boundMiny, dataContainer.boundMinz]);
+				this.p.boundMax.set([dataContainer.boundMaxx, dataContainer.boundMaxy, dataContainer.boundMaxz]);
+
 				this.setTexture(texture);
 			},
 			() => {},

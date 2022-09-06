@@ -12,7 +12,7 @@ import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {BaseNodeType} from '../_Base';
 import {HitPointInfo} from 'three-mesh-bvh';
-import {createSDFTexture} from '../../../core/loader/geometry/SDF';
+import {addSDFMetadataToContainer, createSDFTexture} from '../../../core/loader/geometry/SDF';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 const _bbox = new Box3();
@@ -55,7 +55,7 @@ class SDFFromObjectCopParamsConfig extends NodeParamsConfig {
 	resolution = ParamConfig.VECTOR3([-1, -1, -1], {
 		cook: false,
 		editable: false,
-		separatorAfter: true,
+		separatorBefore: true,
 	});
 	/** @param boundMin */
 	boundMin = ParamConfig.VECTOR3([-1, -1, -1], {
@@ -67,11 +67,11 @@ class SDFFromObjectCopParamsConfig extends NodeParamsConfig {
 		cook: false,
 		editable: false,
 	});
-	/** @param boundMax */
-	voxelSizes = ParamConfig.VECTOR3([1, 1, 1], {
-		cook: false,
-		editable: false,
-	});
+	/** @param voxelSizes */
+	// voxelSizes = ParamConfig.VECTOR3([1, 1, 1], {
+	// 	cook: false,
+	// 	editable: false,
+	// });
 	/** @param force Render */
 	// render = ParamConfig.BUTTON(null, {
 	// 	callback: (node: BaseNodeType) => {
@@ -215,7 +215,6 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		const sizey = bboxSize.y;
 		const sizez = bboxSize.z;
 
-		// let insideVoxelsCount = 0;
 		let i = 0;
 		for (let z = 0; z < resz; z++) {
 			for (let y = 0; y < resy; y++) {
@@ -231,10 +230,8 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 					_ray.origin.copy(pos);
 					const res = boundsTree.raycastFirst(_ray, DoubleSide);
 					const inside = res && res.face && res.face.normal.dot(_ray.direction) > 0.0;
-					// if (inside) {
-					// 	insideVoxelsCount++;
-					// }
-					// get distance scale by object matrix
+
+					// TODO: get distance scale by object matrix
 					// _rayDir.applyMatrix4(objectWorldMat);
 					// const d = _rayDir.length();
 
@@ -244,6 +241,11 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 				}
 			}
 		}
+		addSDFMetadataToContainer(texture, {
+			boundMin: bbox.min,
+			boundMax: bbox.max,
+			resolution,
+		});
 		return texture;
 	}
 

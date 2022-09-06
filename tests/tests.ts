@@ -190,6 +190,9 @@ import './engine/nodes/cop/Image';
 import './engine/nodes/cop/Palette';
 import './engine/nodes/cop/Render';
 import './engine/nodes/cop/Snapshot';
+import './engine/nodes/cop/SDFBlur';
+import './engine/nodes/cop/SDFFromObject';
+import './engine/nodes/cop/SDFFromUrl';
 import './engine/nodes/cop/Switch';
 import './engine/nodes/cop/Video';
 
@@ -231,6 +234,7 @@ import './engine/nodes/gl/SDFTransform';
 import './engine/nodes/gl/SDFTwist';
 import './engine/nodes/gl/Switch';
 import './engine/nodes/gl/Texture';
+import './engine/nodes/gl/TextureSDF';
 import './engine/nodes/gl/TwoWaySwitch';
 import './engine/nodes/gl/VaryingWrite';
 

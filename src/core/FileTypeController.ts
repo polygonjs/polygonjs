@@ -45,6 +45,10 @@ export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.STL,
 	GeometryExtension.SVG,
 ];
+export enum SDFExtension {
+	BIN = 'bin',
+}
+export const SDF_EXTENSIONS: string[] = [SDFExtension.BIN];
 
 function urlExt(url: string) {
 	const url_without_query_params = url.split('?')[0];
@@ -66,6 +70,9 @@ export function isExtGif(ext: string) {
 }
 export function isExtGeometry(ext: string) {
 	return GEOMETRY_EXTENSIONS.includes(ext);
+}
+export function isExtSDF(ext: string) {
+	return SDF_EXTENSIONS.includes(ext);
 }
 export function isUrlVideo(url: string): boolean {
 	const ext = urlExt(url);

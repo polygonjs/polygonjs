@@ -16,7 +16,6 @@ QUnit.test('sop/BVHVisualizer simple', async (assert) => {
 	let container = await BVHVisualizer1.compute();
 	let coreGroup = container.coreContent()!;
 	assert.equal(coreGroup.objects().length, 2, '2 objects');
-	console.log(coreGroup.objects());
 	let geo = (coreGroup.objects()[0] as Mesh).geometry;
 	assert.equal(geo.attributes.position.array.length, 2883, '2883');
 	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
