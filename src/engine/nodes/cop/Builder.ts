@@ -20,7 +20,6 @@ import {
 	LinearEncoding,
 	NoToneMapping,
 } from 'three';
-import {DataTextureControllerBufferType} from './utils/DataTextureController';
 import {Constructor, valueof, Number2} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
@@ -299,9 +298,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	private async _postRender(updateTextureFromParams: boolean) {
 		if (this._renderTarget?.texture) {
 			if (isBooleanTrue(this.pv.useDataTexture) && this._renderTarget && this._renderer) {
-				this._dataTextureController =
-					this._dataTextureController ||
-					new DataTextureController(DataTextureControllerBufferType.Float32Array);
+				this._dataTextureController = this._dataTextureController || new DataTextureController();
 				const texture = this._dataTextureController.fromRenderTarget(this._renderer, this._renderTarget);
 				if (updateTextureFromParams) {
 					await this.textureParamsController.update(texture);

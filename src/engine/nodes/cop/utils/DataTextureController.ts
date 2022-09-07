@@ -1,3 +1,4 @@
+import {CoreUserAgent} from './../../../../core/UserAgent';
 import {WebGLRenderer} from 'three';
 import {WebGLRenderTarget} from 'three';
 import {DataTexture} from 'three';
@@ -15,7 +16,14 @@ export enum DataTextureControllerBufferType {
 export class DataTextureController {
 	private _dataTexture: DataTexture | undefined;
 
-	constructor(private bufferType: DataTextureControllerBufferType) {}
+	private bufferType: DataTextureControllerBufferType;
+	constructor(bufferType?: DataTextureControllerBufferType) {
+		this.bufferType =
+			bufferType ||
+			(CoreUserAgent.isiOS()
+				? DataTextureControllerBufferType.Uint16Array
+				: DataTextureControllerBufferType.Float32Array);
+	}
 
 	fromRenderTarget(renderer: WebGLRenderer, renderTarget: WebGLRenderTarget) {
 		if (!this._dataTexture || !this._sameDimensions(renderTarget.texture)) {
@@ -62,9 +70,9 @@ export class DataTextureController {
 
 	private _createDataTexture(texture: Texture) {
 		const image = texture.image;
-		const pixel_buffer = this._createPixelBuffer(image.width, image.height);
-		const data_texture = new DataTexture(
-			pixel_buffer,
+		const pixelBuffer = this._createPixelBuffer(image.width, image.height);
+		const dataTexture = new DataTexture(
+			pixelBuffer,
 			image.width,
 			image.height,
 			texture.format,
@@ -77,7 +85,7 @@ export class DataTextureController {
 			texture.anisotropy,
 			texture.encoding
 		);
-		return data_texture;
+		return dataTexture;
 	}
 
 	private _createPixelBuffer(width: number, height: number) {

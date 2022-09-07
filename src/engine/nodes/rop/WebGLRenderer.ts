@@ -146,7 +146,7 @@ const DEFAULT_PARAMS: WebGLRendererParameters = {
 	alpha: false,
 	precision: RendererPrecision.HIGH,
 	premultipliedAlpha: true,
-	antialias: false,
+	antialias: true,
 	stencil: true,
 	preserveDrawingBuffer: false,
 	powerPreference: PowerPreference.DEFAULT,
