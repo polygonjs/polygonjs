@@ -6,7 +6,7 @@
  *
  * In order to test the [event/ScrollTrigger](/docs/nodes/event/ScrollTrigger) node, you can create the following setup:
  *
- * using Polygonjs [local app](/local), add the following line to the `EditorConfig.ts` file, inside the `configureEditor` function:
+ * Using Polygonjs [local app](/local), add the following line to the `EditorConfig.ts` file, inside the `configureEditor` function:
  *
  * ```
  * options.api.panel.viewer.setData({viewerId: 'my-viewer', html: require('./viewer.html')})
@@ -96,7 +96,7 @@ class ScrollTriggerParamsConfig extends NodeParamsConfig {
 	/** @param override the scroller */
 	scroller = ParamConfig.STRING('', defaultParamOptions({visibleIf: {useViewport: 0}}));
 	/** @param add markers for debugging */
-	markers = ParamConfig.BOOLEAN(0, {
+	markers = ParamConfig.BOOLEAN('!playerMode()', {
 		...UPDATE_SCROLL_TRIGGER_PARAM_OPTIONS,
 		separatorAfter: true,
 	});
