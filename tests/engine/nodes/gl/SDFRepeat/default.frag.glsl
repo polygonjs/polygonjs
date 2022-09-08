@@ -241,6 +241,7 @@ SDFContext GetDist(vec3 p) {
 }
 SDFContext RayMarch(vec3 ro, vec3 rd) {
 	SDFContext dO = SDFContext(0.,0);
+	#pragma unroll_loop_start
 	for(int i=0; i<MAX_STEPS; i++) {
 		vec3 p = ro + rd*dO.d;
 		SDFContext sdfContext = GetDist(p);
@@ -248,6 +249,7 @@ SDFContext RayMarch(vec3 ro, vec3 rd) {
 		dO.matId = sdfContext.matId;
 		if(dO.d>MAX_DIST || sdfContext.d<SURF_DIST) break;
 	}
+	#pragma unroll_loop_end
 	return dO;
 }
 vec3 GetNormal(vec3 p) {
@@ -332,15 +334,21 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 	}
 	return res;
 }
-vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, vec3 col, int mat){
+vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
+	vec3 col = vec3(1.);
+	
+	return col;
+}
+vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
+	vec3 col = vec3(0.);
 	
 	return col;
 }
 vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	vec3 p = rayOrigin + rayDir * sdfContext.d;
 	vec3 n = GetNormal(p);
-	vec3 diffuse = GetLight(p, n);
-	vec3 col = applyMaterial(p, n, rayDir, diffuse, sdfContext.matId);
+	
+	vec3 col = applyMaterial(p, n, rayDir, sdfContext.matId);
 		
 	col = pow( col, vec3(0.4545) ); 
 	return vec4(col, 1.);
@@ -349,5 +357,7 @@ void main()	{
 	vec3 rayDir = normalize(vPw - cameraPosition);
 	vec3 rayOrigin = cameraPosition - CENTER;
 	SDFContext sdfContext = RayMarch(rayOrigin, rayDir);
-	gl_FragColor = sdfContext.d<MAX_DIST ? applyShading(rayOrigin, rayDir, sdfContext) : vec4(.0,.0,.0,.0);
+	gl_FragColor = vec4(0.);
+	if( sdfContext.d >= MAX_DIST ){ discard; }
+	gl_FragColor = applyShading(rayOrigin, rayDir, sdfContext);
 }

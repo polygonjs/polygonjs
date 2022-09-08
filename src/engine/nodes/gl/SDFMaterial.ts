@@ -21,7 +21,9 @@ import {isBooleanTrue} from '../../../core/Type';
 const OUTPUT_NAME = GlType.SDF_MATERIAL;
 class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([1, 1, 1]);
-	useEnvMap = ParamConfig.BOOLEAN(0);
+	useEnvMap = ParamConfig.BOOLEAN(0, {
+		separatorBefore: true,
+	});
 	envMapParam = ParamConfig.STRING('envTexture1', {
 		visibleIf: {useEnvMap: 1},
 	});
@@ -39,6 +41,19 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		visibleIf: {useEnvMap: 1},
 	});
+	useReflection = ParamConfig.BOOLEAN(0, {
+		separatorBefore: true,
+	});
+	reflectivity = ParamConfig.FLOAT(0.5, {
+		visibleIf: {useReflection: 1},
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
+	reflectionDepth = ParamConfig.INTEGER(3, {
+		visibleIf: {useReflection: 1},
+		range: [0, 10],
+		rangeLocked: [true, false],
+	});
 }
 const ParamsConfig = new SDFMaterialGlParamsConfig();
 export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
@@ -49,7 +64,7 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 
 	override initializeNode() {
 		super.initializeNode();
-		// this.io.connection_points.spare_params.setInputlessParamNames(['color']);
+		this.io.connection_points.spare_params.setInputlessParamNames(['useEnvMap', 'useReflection']);
 		// this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
 		// this.io.connection_points.set_input_name_function(this._glInputNames.bind(this));
 		// this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
@@ -76,15 +91,6 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const color = ThreeToGl.vector3(this.variableForInputParam(this.p.color));
-		const useEnvMap = isBooleanTrue(this.pv.useEnvMap);
-		const envMapTint = ThreeToGl.vector3(this.variableForInputParam(this.p.envMapTint));
-		const envMapIntensity = ThreeToGl.float(this.variableForInputParam(this.p.envMapIntensity));
-		const envMapFresnel = ThreeToGl.float(this.variableForInputParam(this.p.envMapFresnel));
-		const envMapFresnelPower = ThreeToGl.float(this.variableForInputParam(this.p.envMapFresnelPower));
-		const envMap = this.uniformName();
-		const definitions: BaseGLDefinition[] = [
-			new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, envMap),
-		];
 		const matId = this.graphNodeId();
 		const matIdName = this.materialIdName();
 		// const matIdVarName = this.glVarName(OUTPUT_NAME);
@@ -98,17 +104,68 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		// shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, functionDeclaration)]);
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, defineDeclaration)]);
 
+		const definitions: BaseGLDefinition[] = [];
 		const bodyLines: string[] = [`if(mat == ${matIdName}){`];
-		bodyLines.push(`	col *= ${color};`);
+		bodyLines.push(`	col = ${color};`);
+		bodyLines.push(`	vec3 diffuse = GetLight(p, n);`);
+		bodyLines.push(`	col *= diffuse;`);
+
+		/**
+		 *
+		 * ENV MAP
+		 *
+		 */
+		const useEnvMap = isBooleanTrue(this.pv.useEnvMap);
 		if (useEnvMap) {
+			const envMapTint = ThreeToGl.vector3(this.variableForInputParam(this.p.envMapTint));
+			const envMapIntensity = ThreeToGl.float(this.variableForInputParam(this.p.envMapIntensity));
+			const envMapFresnel = ThreeToGl.float(this.variableForInputParam(this.p.envMapFresnel));
+			const envMapFresnelPower = ThreeToGl.float(this.variableForInputParam(this.p.envMapFresnelPower));
+			const envMap = this.uniformName();
+			definitions.push(new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, envMap));
 			bodyLines.push(`	vec3 r = normalize(reflect(rayDir, n));
 		// http://www.pocketgl.com/reflections/
 		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
 		float fresnel = pow(1.-dot(normalize(cameraPosition), n), ${envMapFresnelPower});
 		float fresnelFactor = (1.-${envMapFresnel}) + ${envMapFresnel}*fresnel;
 		vec3 env = texture2D(${envMap}, uv).rgb * ${envMapTint} * ${envMapIntensity} * fresnelFactor;
-		col += env;`);
+		col += env`);
 		}
+		/**
+		 *
+		 * REFLECTION
+		 *
+		 */
+		const useReflection = isBooleanTrue(this.pv.useReflection);
+		if (useReflection) {
+			const reflectivity = ThreeToGl.float(this.variableForInputParam(this.p.reflectivity));
+			const reflectionDepth = ThreeToGl.integer(this.variableForInputParam(this.p.reflectionDepth));
+			bodyLines.push(`
+			
+		// --- REFLECTION - START
+		bool hit = true;
+		#pragma unroll_loop_start
+		for(int i=0; i<${reflectionDepth}; i++) {
+			if(hit){
+				rayDir = reflect(rayDir, n);
+				SDFContext sdfContext = RayMarch(p+n*0.01, rayDir);
+				if( sdfContext.d >= MAX_DIST){ hit = false; }
+				if(hit){
+					p += rayDir * sdfContext.d;
+					n = GetNormal(p);
+					vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId);
+					// vec4 pass = Render(ro, rd, ref, i==numBounces-1.);
+					col += matCol*${reflectivity};
+				}
+				
+				// fil*=ref;
+			}
+		}
+		#pragma unroll_loop_end
+		// --- REFLECTION - END
+		`);
+		}
+
 		bodyLines.push(`}`);
 
 		shadersCollectionController.addBodyLines(this, bodyLines);

@@ -16,6 +16,8 @@ import SimpleVertexVertex from './templates/raymarching/simple_vertex.vert.glsl'
 import SimpleVertexFragment from './templates/raymarching/simple_vertex.frag.glsl';
 import CameraPositionVertex from './templates/raymarching/cameraPosition.vert.glsl';
 import CameraPositionFragment from './templates/raymarching/cameraPosition.frag.glsl';
+import ReflectionVertex from './templates/raymarching/reflection.vert.glsl';
+import ReflectionFragment from './templates/raymarching/reflection.frag.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../../src/engine/nodes/gl/gl/raymarching/uniforms';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -35,6 +37,7 @@ const TEST_SHADER_LIB = {
 	position: {vert: BasicPositionVertex, frag: BasicPositionFragment},
 	simpleVertex: {vert: SimpleVertexVertex, frag: SimpleVertexFragment},
 	cameraPosition: {vert: CameraPositionVertex, frag: CameraPositionFragment},
+	reflection: {vert: ReflectionVertex, frag: ReflectionFragment},
 };
 
 const ALL_UNIFORMS = [
@@ -264,6 +267,57 @@ QUnit.test('mat/rayMarchingBuilder uses cameraPosition for fresnel on envMap', a
 		GLSLHelper.compress(material.fragmentShader),
 		GLSLHelper.compress(TEST_SHADER_LIB.cameraPosition.frag)
 	);
+	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
+});
+
+QUnit.test('mat/rayMarchingBuilder with raymarched reflections', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const MAT = window.MAT;
+	// const debug = MAT.createNode('test')
+	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+
+	const globals = rayMarchingBuilder1.createNode('globals');
+	const output = rayMarchingBuilder1.createNode('output');
+	const sdfGradient1 = rayMarchingBuilder1.createNode('SDFGradient');
+	const sdfGradientSubnetInput = sdfGradient1.createNode('subnetInput');
+	const sdfGradientSubnetOutput = sdfGradient1.createNode('subnetOutput');
+	const sdfSphere = sdfGradient1.createNode('SDFSphere');
+	sdfSphere.setInput(0, sdfGradientSubnetInput);
+	sdfGradientSubnetOutput.setInput(0, sdfSphere);
+
+	const sdfContext = rayMarchingBuilder1.createNode('SDFContext');
+	const sdfMaterial = rayMarchingBuilder1.createNode('SDFMaterial');
+
+	const constant = rayMarchingBuilder1.createNode('constant');
+
+	output.setInput(0, sdfContext);
+	sdfContext.setInput(0, sdfGradient1);
+	sdfContext.setInput(1, sdfMaterial);
+	sdfGradient1.setInput('position', globals, 'position');
+	sdfMaterial.setInput('color', constant);
+	sdfMaterial.p.useReflection.set(1);
+
+	constant.setGlType(GlConnectionPointType.VEC3);
+	constant.p.asColor.set(1);
+	constant.p.color.set([1, 1, 1]);
+
+	// add inputs to the SDFMaterial, to make sure those are properly parsed
+	const reflectivity = rayMarchingBuilder1.createNode('constant');
+	reflectivity.setName('reflectivity');
+	reflectivity.setGlType(GlConnectionPointType.FLOAT);
+	reflectivity.p.float.set(0.74);
+	sdfMaterial.setInput('reflectivity', reflectivity);
+	const reflectionDepth = rayMarchingBuilder1.createNode('constant');
+	reflectionDepth.p.int.set(11);
+	reflectionDepth.setGlType(GlConnectionPointType.INT);
+	reflectionDepth.setName('reflectionDepth');
+	sdfMaterial.setInput('reflectionDepth', reflectionDepth);
+
+	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+
+	await RendererUtils.compile(rayMarchingBuilder1, renderer);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.frag));
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });
 QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayMarching uniforms', async (assert) => {

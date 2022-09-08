@@ -219,6 +219,7 @@ SDFContext GetDist(vec3 p) {
 }
 SDFContext RayMarch(vec3 ro, vec3 rd) {
 	SDFContext dO = SDFContext(0.,0);
+	#pragma unroll_loop_start
 	for(int i=0; i<MAX_STEPS; i++) {
 		vec3 p = ro + rd*dO.d;
 		SDFContext sdfContext = GetDist(p);
@@ -226,6 +227,7 @@ SDFContext RayMarch(vec3 ro, vec3 rd) {
 		dO.matId = sdfContext.matId;
 		if(dO.d>MAX_DIST || sdfContext.d<SURF_DIST) break;
 	}
+	#pragma unroll_loop_end
 	return dO;
 }
 vec3 GetNormal(vec3 p) {
@@ -310,7 +312,8 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 	}
 	return res;
 }
-vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, vec3 col, int mat){
+vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
+	vec3 col = vec3(1.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
 	vec3 v_POLY_envMapTint_val = vec3(0.0, 0.0, 0.0);
@@ -336,7 +339,49 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, vec3 col, int mat){
 	float v_POLY_abs1_val = abs(v_POLY_pow1_val);
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col *= v_POLY_constant1_val;
+		col = v_POLY_constant1_val;
+		vec3 diffuse = GetLight(p, n);
+		col *= diffuse;
+		vec3 r = normalize(reflect(rayDir, n));
+		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
+		float fresnel = pow(1.-dot(normalize(cameraPosition), n), v_POLY_envMapFresnelPower_val);
+		float fresnelFactor = (1.-v_POLY_envMapFresnel_val) + v_POLY_envMapFresnel_val*fresnel;
+		vec3 env = texture2D(v_POLY_texture_envTexture1, uv).rgb * v_POLY_envMapTint_val * v_POLY_abs1_val * fresnelFactor;
+		col += env;
+	}
+	
+	return col;
+}
+vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
+	vec3 col = vec3(0.);
+	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
+	
+	vec3 v_POLY_envMapTint_val = vec3(0.0, 0.0, 0.0);
+	
+	vec3 v_POLY_globals1_position = p;
+	vec3 v_POLY_globals1_cameraPosition = cameraPosition;
+	
+	float v_POLY_envMapFresnel_val = 0.0;
+	
+	float v_POLY_envMapFresnelPower_val = 0.0;
+	
+	float v_POLY_SDFGradient1_sdf = v_POLY_SDFGradient1_sdfFunction(v_POLY_globals1_position, 0.0);
+	vec3 v_POLY_SDFGradient1_gradient = v_POLY_SDFGradient1_gradientFunction(v_POLY_globals1_position, 0.0);
+	
+	vec3 v_POLY_normalize1_normalized = normalize(v_POLY_globals1_cameraPosition);
+	
+	float v_POLY_dot1_val = dot(v_POLY_SDFGradient1_gradient, v_POLY_normalize1_normalized);
+	
+	float v_POLY_complement1_val = complement(v_POLY_dot1_val);
+	
+	float v_POLY_pow1_val = pow(v_POLY_complement1_val, 0.0);
+	
+	float v_POLY_abs1_val = abs(v_POLY_pow1_val);
+	
+	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
+		col = v_POLY_constant1_val;
+		vec3 diffuse = GetLight(p, n);
+		col *= diffuse;
 		vec3 r = normalize(reflect(rayDir, n));
 		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
 		float fresnel = pow(1.-dot(normalize(cameraPosition), n), v_POLY_envMapFresnelPower_val);
@@ -350,8 +395,8 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, vec3 col, int mat){
 vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	vec3 p = rayOrigin + rayDir * sdfContext.d;
 	vec3 n = GetNormal(p);
-	vec3 diffuse = GetLight(p, n);
-	vec3 col = applyMaterial(p, n, rayDir, diffuse, sdfContext.matId);
+	
+	vec3 col = applyMaterial(p, n, rayDir, sdfContext.matId);
 		
 	col = pow( col, vec3(0.4545) ); 
 	return vec4(col, 1.);
@@ -360,5 +405,7 @@ void main()	{
 	vec3 rayDir = normalize(vPw - cameraPosition);
 	vec3 rayOrigin = cameraPosition - CENTER;
 	SDFContext sdfContext = RayMarch(rayOrigin, rayDir);
-	gl_FragColor = sdfContext.d<MAX_DIST ? applyShading(rayOrigin, rayDir, sdfContext) : vec4(.0,.0,.0,.0);
+	gl_FragColor = vec4(0.);
+	if( sdfContext.d >= MAX_DIST ){ discard; }
+	gl_FragColor = applyShading(rayOrigin, rayDir, sdfContext);
 }

@@ -25,6 +25,15 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([[ShaderName.FRAG
 
 const SDF_CONTEXT_INPUT_NAME = GlConnectionPointType.SDF_CONTEXT;
 
+const REFLECTION_NOT_ALLOWED = {
+	START: '// --- REFLECTION NOT ALLOWED - START',
+	END: '// --- REFLECTION NOT ALLOWED - END',
+};
+const REFLECTION = {
+	START: '// --- REFLECTION - START',
+	END: '// --- REFLECTION - END',
+};
+
 export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssemblerRayMarching {
 	override templateShader() {
 		return {
@@ -79,18 +88,28 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 	protected override insertDefineAfter(shaderName: ShaderName): string | undefined {
 		return INSERT_DEFINE_AFTER_MAP.get(shaderName);
 	}
-	protected override insertBodyAfter(shader_name: ShaderName): string | undefined {
-		return INSERT_BODY_AFTER_MAP.get(shader_name);
+	protected override insertBodyAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_BODY_AFTER_MAP.get(shaderName);
 	}
-	protected override linesToRemove(shader_name: ShaderName): string[] | undefined {
-		return LINES_TO_REMOVE_MAP.get(shader_name);
+	protected override linesToRemove(shaderName: ShaderName): string[] | undefined {
+		return LINES_TO_REMOVE_MAP.get(shaderName);
 	}
 	override create_shader_configs(): ShaderConfig[] {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, [], []),
 			new ShaderConfig(
 				ShaderName.FRAGMENT,
-				[/*'color', */ 'color', 'envMapTint', 'envMapIntensity', 'envMapFresnel', 'envMapFresnelPower'],
+				[
+					/*'color', */ 'color',
+					/*env map*/
+					'envMapTint',
+					'envMapIntensity',
+					'envMapFresnel',
+					'envMapFresnelPower',
+					/*reflection*/
+					'reflectivity',
+					'reflectionDepth',
+				],
 				[]
 			),
 		];
@@ -144,5 +163,42 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 				this._shaders_by_name.set(shaderName, lines.join('\n'));
 			}
 		}
+		this._removeNestedReflection();
+	}
+
+	private _removeNestedReflection() {
+		const fragmentShader = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		if (!fragmentShader) {
+			return;
+		}
+		const lines = fragmentShader.split('\n');
+		const newLines: string[] = [];
+		let inReflectionNotAllowed = false;
+		let inReflection = false;
+
+		for (let line of lines) {
+			if (line.includes(REFLECTION_NOT_ALLOWED.START)) {
+				inReflectionNotAllowed = true;
+			}
+			if (line.includes(REFLECTION_NOT_ALLOWED.END)) {
+				inReflectionNotAllowed = false;
+			}
+			if (line.includes(REFLECTION.START)) {
+				inReflection = true;
+			}
+			if (line.includes(REFLECTION.END)) {
+				inReflection = false;
+			}
+			if (
+				!(inReflectionNotAllowed && inReflection) &&
+				!line.includes(REFLECTION_NOT_ALLOWED.START) &&
+				!line.includes(REFLECTION_NOT_ALLOWED.END) &&
+				!line.includes(REFLECTION.START) &&
+				!line.includes(REFLECTION.END)
+			) {
+				newLines.push(line);
+			}
+		}
+		this._shaders_by_name.set(ShaderName.FRAGMENT, newLines.join('\n'));
 	}
 }
