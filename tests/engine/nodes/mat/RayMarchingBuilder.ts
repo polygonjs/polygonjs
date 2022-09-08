@@ -40,7 +40,7 @@ const TEST_SHADER_LIB = {
 	reflection: {vert: ReflectionVertex, frag: ReflectionFragment},
 };
 
-const ALL_UNIFORMS = [
+const ALL_UNIFORMS_WITHOUT_ENV = [
 	...Object.keys(RAYMARCHING_UNIFORMS).concat([
 		'spotLightsRayMarching',
 		'directionalLightsRayMarching',
@@ -93,14 +93,14 @@ const ALL_UNIFORMS = [
 	'roughness',
 	'roughnessMap',
 	'spotLightShadows',
-
 	'spotLights',
 	'spotShadowMap',
 	'spotShadowMatrix',
 	'uv2Transform',
 	'uvTransform',
-	'v_POLY_texture_envTexture1',
 ];
+
+const ALL_UNIFORMS = [...ALL_UNIFORMS_WITHOUT_ENV, 'v_POLY_texture_envTexture1'];
 
 export function onCreateHook(node: RayMarchingBuilderMatNode) {
 	const globals = node.createNode('globals');
@@ -318,7 +318,10 @@ QUnit.test('mat/rayMarchingBuilder with raymarched reflections', async (assert) 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.vert));
 	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.frag));
-	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
+	assert.deepEqual(
+		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
+		ALL_UNIFORMS_WITHOUT_ENV.sort()
+	);
 });
 QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayMarching uniforms', async (assert) => {
 	const scene = window.scene;

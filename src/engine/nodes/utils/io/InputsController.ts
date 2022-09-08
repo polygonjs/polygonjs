@@ -170,7 +170,6 @@ export class NodeInputsController<NC extends NodeContext> {
 			this._graphNode = new CoreGraphNode(this.node.scene(), 'inputs');
 			this.node.addGraphInput(this._graphNode, false);
 		}
-
 		this._graphNode.addGraphInput(graph_input_node, false);
 		return graph_input_node;
 	}
@@ -431,7 +430,8 @@ export class NodeInputsController<NC extends NodeContext> {
 			}
 
 			if (node != null) {
-				if (graphInputNode.addGraphInput(node)) {
+				const connectionResult = graphInputNode.addGraphInput(node);
+				if (connectionResult) {
 					// we do test if we can create the graph connection
 					// to ensure we are not in a cyclical graph,
 					// but we delete it right after
@@ -439,7 +439,7 @@ export class NodeInputsController<NC extends NodeContext> {
 						graphInputNode.removeGraphInput(node);
 					}
 
-					//this._input_connections[input_index] = new NodeConnection(node, this.self, outputIndex, input_index);
+					// this._input_connections[input_index] = new NodeConnection(node, this.self, outputIndex, input_index);
 					if (oldConnection) {
 						oldConnection.disconnect({setInput: false});
 					}

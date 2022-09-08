@@ -21,6 +21,9 @@ import {isBooleanTrue} from '../../../core/Type';
 const OUTPUT_NAME = GlType.SDF_MATERIAL;
 class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([1, 1, 1]);
+	useLights = ParamConfig.BOOLEAN(1, {
+		separatorBefore: true,
+	});
 	useEnvMap = ParamConfig.BOOLEAN(0, {
 		separatorBefore: true,
 	});
@@ -100,15 +103,22 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		// 	return ${color};
 		// }`;
 		const defineDeclaration = `const int ${matIdName} = ${matId};`;
-
-		// shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, functionDeclaration)]);
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, defineDeclaration)]);
 
 		const definitions: BaseGLDefinition[] = [];
 		const bodyLines: string[] = [`if(mat == ${matIdName}){`];
 		bodyLines.push(`	col = ${color};`);
-		bodyLines.push(`	vec3 diffuse = GetLight(p, n);`);
-		bodyLines.push(`	col *= diffuse;`);
+
+		/**
+		 *
+		 * LIGHTS
+		 *
+		 */
+		const useLights = isBooleanTrue(this.pv.useLights);
+		if (useLights) {
+			bodyLines.push(`	vec3 diffuse = GetLight(p, n);`);
+			bodyLines.push(`	col *= diffuse;`);
+		}
 
 		/**
 		 *
@@ -184,14 +194,16 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 	override setParamConfigs() {
 		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
 		this._param_configs_controller.reset();
-
-		const param_config = new GlParamConfig(
-			ParamType.NODE_PATH,
-			this.pv.envMapParam,
-			'', //this.pv.defaultValue,
-			this.uniformName()
-		);
-		this._param_configs_controller.push(param_config);
+		const useEnvMap = isBooleanTrue(this.pv.useEnvMap);
+		if (useEnvMap) {
+			const paramConfig = new GlParamConfig(
+				ParamType.NODE_PATH,
+				this.pv.envMapParam,
+				'', //this.pv.defaultValue,
+				this.uniformName()
+			);
+			this._param_configs_controller.push(paramConfig);
+		}
 	}
 	// override glVarName(name?: string) {
 	// 	if (name) {

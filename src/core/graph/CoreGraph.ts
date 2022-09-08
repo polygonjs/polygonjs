@@ -6,11 +6,11 @@ export type CoreGraphNodeId = number;
 
 type TraverseCallback = (id: CoreGraphNodeId) => CoreGraphNodeId[];
 export class CoreGraph {
-	private _next_id: CoreGraphNodeId = 0;
+	private _nextId: CoreGraphNodeId = 0;
 	private _scene: PolyScene | undefined;
 	private _successors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
 	private _predecessors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
-	private _nodes_by_id: Map<number, CoreGraphNode> = new Map();
+	private _nodesById: Map<number, CoreGraphNode> = new Map();
 	private _nodesCount = 0;
 
 	private _debugging = false;
@@ -35,8 +35,8 @@ export class CoreGraph {
 	}
 
 	nextId(): CoreGraphNodeId {
-		this._next_id += 1;
-		return this._next_id;
+		this._nextId += 1;
+		return this._nextId;
 	}
 
 	nodesFromIds(ids: number[]) {
@@ -50,20 +50,20 @@ export class CoreGraph {
 		return nodes;
 	}
 	nodeFromId(id: number): CoreGraphNode | undefined {
-		return this._nodes_by_id.get(id);
+		return this._nodesById.get(id);
 	}
 	hasNode(node: CoreGraphNode): boolean {
-		return this._nodes_by_id.get(node.graphNodeId()) != null;
+		return this._nodesById.get(node.graphNodeId()) != null;
 	}
 	addNode(node: CoreGraphNode) {
-		this._nodes_by_id.set(node.graphNodeId(), node);
+		this._nodesById.set(node.graphNodeId(), node);
 		this._nodesCount += 1;
 		if (this._debugging) {
 			this._addedNodesDuringDebugging.set(node.graphNodeId(), node);
 		}
 	}
 	removeNode(node: CoreGraphNode) {
-		this._nodes_by_id.delete(node.graphNodeId());
+		this._nodesById.delete(node.graphNodeId());
 		this._successors.delete(node.graphNodeId());
 		this._predecessors.delete(node.graphNodeId());
 		this._nodesCount -= 1;
@@ -75,37 +75,34 @@ export class CoreGraph {
 	nodesCount() {
 		return this._nodesCount;
 	}
-	connect(src: CoreGraphNode, dest: CoreGraphNode, check_if_graph_may_have_cycle = true): boolean {
-		const src_id = src.graphNodeId();
-		const dest_id = dest.graphNodeId();
+	connect(src: CoreGraphNode, dest: CoreGraphNode, checkCycle = true): boolean {
+		const srcId = src.graphNodeId();
+		const destId = dest.graphNodeId();
 
 		if (this.hasNode(src) && this.hasNode(dest)) {
-			// this._graph.setEdge(src_id, dest_id);
-
-			// if check_if_graph_may_have_cycle is passed as false, that means we never check.
+			// if checkCycle is passed as false, that means we never check.
 			// this can be useful when we know that the connection will not create a cycle,
 			// such as when connecting params or inputs to a node
-			if (check_if_graph_may_have_cycle) {
-				const scene_loading = this._scene ? this._scene.loadingController.isLoading() : true;
-				check_if_graph_may_have_cycle = !scene_loading;
+			if (checkCycle) {
+				const sceneLoading = this._scene ? this._scene.loadingController.isLoading() : true;
+				checkCycle = !sceneLoading;
 			}
-			let graph_would_have_cycle = false;
-			if (check_if_graph_may_have_cycle) {
+			let graphWouldHaveCycle = false;
+			if (checkCycle) {
 				// graph_has_cycle = !alg.isAcyclic(this._graph);
-				graph_would_have_cycle = this._hasPredecessor(src_id, dest_id);
+				graphWouldHaveCycle = this._hasPredecessor(srcId, destId);
 			}
 
-			if (graph_would_have_cycle) {
-				// this._graph.removeEdge(src_id, dest_id);
+			if (graphWouldHaveCycle) {
 				return false;
 			} else {
-				this._createConnection(src_id, dest_id);
+				this._createConnection(srcId, destId);
 				src.dirtyController.clearSuccessorsCacheWithPredecessors();
 
 				return true;
 			}
 		} else {
-			console.warn(`attempt to connect non existing node ${src_id} or ${dest_id}`);
+			console.warn(`attempt to connect non existing node ${srcId} or ${destId}`);
 			return false;
 		}
 	}
@@ -114,7 +111,7 @@ export class CoreGraph {
 		// const src_id_s = src.graphNodeId();
 		// const dest_id_s = dest.graphNodeId();
 		// this._graph.removeEdge(src_id_s, dest_id_s);
-		this._remove_connection(src.graphNodeId(), dest.graphNodeId());
+		this._removeConnection(src.graphNodeId(), dest.graphNodeId());
 
 		src.dirtyController.clearSuccessorsCacheWithPredecessors();
 	}
@@ -223,53 +220,56 @@ export class CoreGraph {
 		const ids = this.allSuccessorIds(node);
 		return this.nodesFromIds(ids);
 	}
-	private _createConnection(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId) {
+	private _createConnection(srcId: CoreGraphNodeId, destId: CoreGraphNodeId) {
 		// set successors
-		let node_successors = this._successors.get(src_id);
-		if (!node_successors) {
-			node_successors = new Set();
-			this._successors.set(src_id, node_successors);
+		let successors = this._successors.get(srcId);
+		if (!successors) {
+			successors = new Set();
+			this._successors.set(srcId, successors);
 		}
-		if (node_successors.has(dest_id)) {
+		if (successors.has(destId)) {
 			return;
 		}
-		node_successors.add(dest_id);
+		successors.add(destId);
 
 		// set predecessors
-		let node_predecessors = this._predecessors.get(dest_id);
-		if (!node_predecessors) {
-			node_predecessors = new Set();
-			this._predecessors.set(dest_id, node_predecessors);
+		let predecessors = this._predecessors.get(destId);
+		if (!predecessors) {
+			predecessors = new Set();
+			this._predecessors.set(destId, predecessors);
 		}
-		node_predecessors.add(src_id);
+		predecessors.add(srcId);
 	}
-	private _remove_connection(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId) {
+	private _removeConnection(srcId: CoreGraphNodeId, destId: CoreGraphNodeId) {
 		// remove successors
-		let node_successors = this._successors.get(src_id);
-		if (node_successors) {
-			node_successors.delete(dest_id);
-			if (node_successors.size == 0) {
-				this._successors.delete(src_id);
+		let successors = this._successors.get(srcId);
+		if (successors) {
+			successors.delete(destId);
+			if (successors.size == 0) {
+				this._successors.delete(srcId);
 			}
 		}
 		// remove predecessors
-		let node_predecessors = this._predecessors.get(dest_id);
-		if (node_predecessors) {
-			node_predecessors.delete(src_id);
-			if (node_predecessors.size == 0) {
-				this._predecessors.delete(dest_id);
+		let predecessors = this._predecessors.get(destId);
+		if (predecessors) {
+			predecessors.delete(srcId);
+			if (predecessors.size == 0) {
+				this._predecessors.delete(destId);
 			}
 		}
 	}
 
-	private _hasPredecessor(src_id: CoreGraphNodeId, dest_id: CoreGraphNodeId): boolean {
-		const ids = this.predecessorIds(src_id);
+	private _hasPredecessor(srcId: CoreGraphNodeId, destId: CoreGraphNodeId): boolean {
+		const ids = this.predecessorIds(srcId);
+
 		if (ids) {
-			if (ids.includes(dest_id)) {
+			if (ids.includes(destId)) {
 				return true;
 			} else {
 				for (let id of ids) {
-					return this._hasPredecessor(id, dest_id);
+					if (this._hasPredecessor(id, destId)) {
+						return true;
+					}
 				}
 			}
 		}
