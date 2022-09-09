@@ -14,10 +14,42 @@ import {GlConnectionPoint, GlConnectionPointType} from '../utils/io/connections/
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {isBooleanTrue} from '../../../core/Type';
+import {PolyDictionary} from '../../../types/GlobalTypes';
+import SDF_ENV_MAP from './gl/raymarching/sdfEnvMap.glsl';
+import SDF_REFLECTION from './gl/raymarching/sdfReflection.glsl';
 
-// const INPUT_NAME = {
-// 	COLOR: 'color',
-// };
+// interface ReplacementOptions{
+// 	content:string, varName:string, replacement:string
+// }
+// function _replaceVar(options:ReplacementOptions){
+// 	return options.content.replace(`__${options.varName}__`,options.replacement)
+// }
+class BodyLine {
+	constructor(private _content: string) {}
+	lines() {
+		return this._content.split('\n');
+	}
+	replaceVars(vars: PolyDictionary<string>) {
+		const varNames = Object.keys(vars);
+		for (let varName of varNames) {
+			this._replaceVar(varName, vars[varName]);
+		}
+	}
+	addTabs(tabsCount: number) {
+		const lines = this._content.split('\n');
+		const newLines: string[] = [];
+		for (let line of lines) {
+			const prefix = '\t'.repeat(tabsCount);
+			newLines.push(`${prefix}${line}`);
+		}
+		this._content = newLines.join('\n');
+	}
+	private _replaceVar(varName: string, replacement: string) {
+		const regex = new RegExp(`__${varName}__`, 'g');
+		this._content = this._content.replace(regex, replacement);
+	}
+}
+
 const OUTPUT_NAME = GlType.SDF_MATERIAL;
 class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 	color = ParamConfig.COLOR([1, 1, 1]);
@@ -133,13 +165,10 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 			const envMapFresnelPower = ThreeToGl.float(this.variableForInputParam(this.p.envMapFresnelPower));
 			const envMap = this.uniformName();
 			definitions.push(new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, envMap));
-			bodyLines.push(`	vec3 r = normalize(reflect(rayDir, n));
-		// http://www.pocketgl.com/reflections/
-		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
-		float fresnel = pow(1.-dot(normalize(cameraPosition), n), ${envMapFresnelPower});
-		float fresnelFactor = (1.-${envMapFresnel}) + ${envMapFresnel}*fresnel;
-		vec3 env = texture2D(${envMap}, uv).rgb * ${envMapTint} * ${envMapIntensity} * fresnelFactor;
-		col += env`);
+			const lineEnvMap = new BodyLine(SDF_ENV_MAP);
+			lineEnvMap.replaceVars({envMapTint, envMapIntensity, envMapFresnel, envMapFresnelPower, envMap});
+			lineEnvMap.addTabs(1);
+			bodyLines.push(...lineEnvMap.lines());
 		}
 		/**
 		 *
@@ -150,34 +179,13 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		if (useReflection) {
 			const reflectivity = ThreeToGl.float(this.variableForInputParam(this.p.reflectivity));
 			const reflectionDepth = ThreeToGl.integer(this.variableForInputParam(this.p.reflectionDepth));
-			bodyLines.push(`
-			
-		// --- REFLECTION - START
-		bool hit = true;
-		#pragma unroll_loop_start
-		for(int i=0; i<${reflectionDepth}; i++) {
-			if(hit){
-				rayDir = reflect(rayDir, n);
-				SDFContext sdfContext = RayMarch(p+n*0.01, rayDir);
-				if( sdfContext.d >= MAX_DIST){ hit = false; }
-				if(hit){
-					p += rayDir * sdfContext.d;
-					n = GetNormal(p);
-					vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId);
-					// vec4 pass = Render(ro, rd, ref, i==numBounces-1.);
-					col += matCol*${reflectivity};
-				}
-				
-				// fil*=ref;
-			}
-		}
-		#pragma unroll_loop_end
-		// --- REFLECTION - END
-		`);
+			const lineReflection = new BodyLine(SDF_REFLECTION);
+			lineReflection.replaceVars({reflectivity, reflectionDepth});
+			lineReflection.addTabs(1);
+			bodyLines.push(...lineReflection.lines());
 		}
 
 		bodyLines.push(`}`);
-
 		shadersCollectionController.addBodyLines(this, bodyLines);
 		shadersCollectionController.addDefinitions(this, definitions);
 	}

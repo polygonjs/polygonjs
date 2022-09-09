@@ -199,6 +199,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 				newLines.push(line);
 			}
 		}
-		this._shaders_by_name.set(ShaderName.FRAGMENT, newLines.join('\n'));
+		const newFragmentShader = newLines.join('\n');
+		this._shaders_by_name.set(ShaderName.FRAGMENT, newFragmentShader);
 	}
 }

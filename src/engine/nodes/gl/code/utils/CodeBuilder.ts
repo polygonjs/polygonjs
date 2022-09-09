@@ -261,11 +261,11 @@ export class CodeBuilder {
 					const first_definition = definitions[0];
 
 					if (first_definition) {
-						const comment = CodeFormatter.node_comment(first_definition.node, lineType);
+						const comment = CodeFormatter.nodeComment(first_definition.node, lineType);
 						MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
 
 						for (let definition of definitions) {
-							const line = CodeFormatter.line_wrap(first_definition.node, definition.line, lineType);
+							const line = CodeFormatter.lineWrap(first_definition.node, definition.line, lineType);
 							MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
 						}
 						const separator = CodeFormatter.post_line_separator(lineType);
@@ -302,10 +302,10 @@ export class CodeBuilder {
 
 		if (lines && lines.length > 0) {
 			const lines_for_shader = this._lines.get(shader_name)!;
-			const comment = CodeFormatter.node_comment(node, line_type);
+			const comment = CodeFormatter.nodeComment(node, line_type);
 			MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, comment);
 			lines.forEach((line) => {
-				line = CodeFormatter.line_wrap(node, line, line_type);
+				line = CodeFormatter.lineWrap(node, line, line_type);
 				MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, line);
 			});
 			if (!(line_type == LineType.BODY && is_last)) {

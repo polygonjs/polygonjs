@@ -317,9 +317,6 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 		col = v_POLY_constant1_val;
 		vec3 diffuse = GetLight(p, n);
 		col *= diffuse;
-	
-			
-		
 	}
 	
 	return col;
@@ -336,11 +333,9 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 		col = v_POLY_constant1_val;
 		vec3 diffuse = GetLight(p, n);
 		col *= diffuse;
-	
-			
 		bool hit = true;
 		#pragma unroll_loop_start
-		for(int i=0; i<v_POLY_reflectionDepth_val; i++) {
+		for(int i=0; i < v_POLY_reflectionDepth_val; i++) {
 			if(hit){
 				rayDir = reflect(rayDir, n);
 				SDFContext sdfContext = RayMarch(p+n*0.01, rayDir);
@@ -349,13 +344,12 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 					p += rayDir * sdfContext.d;
 					n = GetNormal(p);
 					vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId);
-					col += matCol*v_POLY_reflectivity_val;
+					col += matCol * v_POLY_reflectivity_val;
 				}
 				
 			}
 		}
 		#pragma unroll_loop_end
-		
 	}
 	
 	return col;
