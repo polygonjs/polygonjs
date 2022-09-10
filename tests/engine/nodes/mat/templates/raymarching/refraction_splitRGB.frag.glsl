@@ -175,7 +175,7 @@ vec3 envMapSampleWithFresnel(vec3 rayDir, sampler2D map, EnvMap envMap, vec3 n, 
 	float fresnelFactor = (1.-envMap.fresnel) + envMap.fresnel*fresnel;
 	return env * envMap.tint * envMap.intensity * fresnelFactor;
 }
-#define RAYMARCHED_REFLECTIONS 1
+#define RAYMARCHED_REFRACTIONS 1
 uniform sampler2D v_POLY_texture_envTexture1;
 #include <lightmap_pars_fragment>
 #include <bsdfs>
@@ -321,16 +321,24 @@ vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
 	vec3 col = vec3(1.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
-	vec3 v_POLY_reflectionTint_val = vec3(0.0, 0.0, 0.0);
+	vec3 v_POLY_refractionTint_val = vec3(0.0, 0.0, 0.0);
 	
-	float v_POLY_reflectivity_val = 0.74;
+	float v_POLY_ior_val = 1.45;
 	
-	float v_POLY_reflectionBiasMult_val = 0.0;
+	vec3 v_POLY_iorOffset_val = vec3(-0.01, 0.0, 0.01);
+	
+	float v_POLY_transmission_val = 0.7;
+	
+	float v_POLY_absorbtion_val = 0.7;
+	
+	float v_POLY_refractionBiasMult_val = 0.0;
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
 		col = v_POLY_constant1_val;
 		vec3 diffuse = GetLight(p, n);
 		col *= diffuse;
+	
+	;
 	}
 	
 	return col;
@@ -339,16 +347,24 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 	vec3 col = vec3(1.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
-	vec3 v_POLY_reflectionTint_val = vec3(0.0, 0.0, 0.0);
+	vec3 v_POLY_refractionTint_val = vec3(0.0, 0.0, 0.0);
 	
-	float v_POLY_reflectivity_val = 0.74;
+	float v_POLY_ior_val = 1.45;
 	
-	float v_POLY_reflectionBiasMult_val = 0.0;
+	vec3 v_POLY_iorOffset_val = vec3(-0.01, 0.0, 0.01);
+	
+	float v_POLY_transmission_val = 0.7;
+	
+	float v_POLY_absorbtion_val = 0.7;
+	
+	float v_POLY_refractionBiasMult_val = 0.0;
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
 		col = v_POLY_constant1_val;
 		vec3 diffuse = GetLight(p, n);
 		col *= diffuse;
+	
+	;
 	}
 	
 	return col;
@@ -435,18 +451,41 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 	vec3 col = vec3(0.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
-	vec3 v_POLY_reflectionTint_val = vec3(0.0, 0.0, 0.0);
+	vec3 v_POLY_refractionTint_val = vec3(0.0, 0.0, 0.0);
 	
-	float v_POLY_reflectivity_val = 0.74;
+	float v_POLY_ior_val = 1.45;
 	
-	float v_POLY_reflectionBiasMult_val = 0.0;
+	vec3 v_POLY_iorOffset_val = vec3(-0.01, 0.0, 0.01);
+	
+	float v_POLY_transmission_val = 0.7;
+	
+	float v_POLY_absorbtion_val = 0.7;
+	
+	float v_POLY_refractionBiasMult_val = 0.0;
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
 		col = v_POLY_constant1_val;
 		vec3 diffuse = GetLight(p, n);
 		col *= diffuse;
-		vec3 reflectedColor = GetReflection(p, n, rayDir, v_POLY_reflectionBiasMult_val, v_POLY_texture_envTexture1, 3);
-		col += reflectedColor * v_POLY_reflectionTint_val * v_POLY_reflectivity_val;
+	
+		vec3 refractedColor = vec3(0.);
+		float ior = v_POLY_ior_val;
+		float biasMult = v_POLY_refractionBiasMult_val;
+		vec3 tint = v_POLY_refractionTint_val;
+		float absorbtion = v_POLY_absorbtion_val;
+			
+	
+		vec3 offset = v_POLY_iorOffset_val;
+		vec4 refractedDataR = GetRefractedData(p, n, rayDir, ior+offset.x, biasMult, v_POLY_texture_envTexture1, 3);
+		vec4 refractedDataG = GetRefractedData(p, n, rayDir, ior+offset.y, biasMult, v_POLY_texture_envTexture1, 3);
+		vec4 refractedDataB = GetRefractedData(p, n, rayDir, ior+offset.z, biasMult, v_POLY_texture_envTexture1, 3);
+		refractedColor.r = applyRefractionAbsorbtion(refractedDataR, tint, absorbtion).r;
+		refractedColor.g = applyRefractionAbsorbtion(refractedDataG, tint, absorbtion).g;
+		refractedColor.b = applyRefractionAbsorbtion(refractedDataB, tint, absorbtion).b;
+				;
+	
+		col += refractedColor * v_POLY_transmission_val;
+	;
 	}
 	
 	return col;

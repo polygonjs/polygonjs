@@ -15,7 +15,45 @@ vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
 	return col;
 }
 
+vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 
+	vec3 col = vec3(1.);
+	// --- REFLECTION NOT ALLOWED - START
+	// --- REFRACTION NOT ALLOWED - START
+	// start applyMaterial builder body code
+	
+	// --- REFLECTION NOT ALLOWED - END
+	// --- REFRACTION NOT ALLOWED - END
+	return col;
+}
+#ifdef RAYMARCHED_REFLECTIONS
+vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth){
+	bool hitReflection = true;
+	vec3 reflectedColor = vec3(0.);
+	#pragma unroll_loop_start
+	for(int i=0; i < reflectionDepth; i++) {
+		if(hitReflection){
+			rayDir = reflect(rayDir, n);
+			p += n*SURF_DIST*biasMult;
+			SDFContext sdfContext = RayMarch(p, rayDir, 1.);
+			if( sdfContext.d >= MAX_DIST){
+				hitReflection = false;
+				reflectedColor = envMapSample(rayDir, envMap);
+			}
+			if(hitReflection){
+				p += rayDir * sdfContext.d;
+				n = GetNormal(p);
+				vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId);
+				reflectedColor += matCol;
+			}
+		}
+	}
+	#pragma unroll_loop_end
+	return reflectedColor;
+}
+#endif
+
+#ifdef RAYMARCHED_REFRACTIONS
 // xyz for color, w for distanceInsideMedium
 vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, int refractionDepth){
 	bool hitRefraction = true;
@@ -69,18 +107,7 @@ vec3 applyRefractionAbsorbtion(vec4 refractedData, vec3 tint, float absorbtion){
 	refractedColor = refractedColor * tint;
 	return refractedColor;
 }
-
-vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
-
-	vec3 col = vec3(1.);
-	// --- REFLECTION NOT ALLOWED - START
-	// --- REFRACTION NOT ALLOWED - START
-	// start applyMaterial builder body code
-	
-	// --- REFLECTION NOT ALLOWED - END
-	// --- REFRACTION NOT ALLOWED - END
-	return col;
-}
+#endif
 
 vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 

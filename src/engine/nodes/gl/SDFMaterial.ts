@@ -56,7 +56,8 @@ class BodyLine {
 
 const OUTPUT_NAME = GlType.SDF_MATERIAL;
 class SDFMaterialGlParamsConfig extends NodeParamsConfig {
-	default = ParamConfig.FOLDER();
+	// globals
+	globals = ParamConfig.FOLDER();
 	color = ParamConfig.COLOR([1, 1, 1]);
 	useLights = ParamConfig.BOOLEAN(1);
 	useEnvMap = ParamConfig.BOOLEAN(0);
@@ -65,6 +66,7 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 	envMapParam = ParamConfig.STRING('envTexture1', {
 		visibleIf: {useEnvMap: 1},
 	});
+	// envMap
 	envMap = ParamConfig.FOLDER();
 	envMapTint = ParamConfig.COLOR([1, 1, 1], {
 		visibleIf: {useEnvMap: 1},
@@ -80,7 +82,11 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		visibleIf: {useEnvMap: 1},
 	});
+	// reflection
 	reflection = ParamConfig.FOLDER();
+	reflectionTint = ParamConfig.COLOR([1, 1, 1], {
+		visibleIf: {useReflection: 1},
+	});
 	reflectionDepth = ParamConfig.INTEGER(3, {
 		visibleIf: {useReflection: 1},
 		range: [0, 10],
@@ -96,6 +102,7 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 		range: [0, 10],
 		rangeLocked: [true, false],
 	});
+	// refraction
 	refraction = ParamConfig.FOLDER();
 	refractionTint = ParamConfig.COLOR([1, 1, 1], {
 		visibleIf: {useRefraction: 1},
@@ -189,7 +196,7 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		definitions.push(new FunctionGLDefinition(this, defineDeclaration));
 		definitions.push(new FunctionGLDefinition(this, SDF_ENV_MAP_SAMPLE));
 
-		if (useEnvMap || useRefraction) {
+		if (useEnvMap || useReflection || useRefraction) {
 			definitions.push(new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, envMap));
 		}
 
@@ -232,12 +239,14 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 
 		if (useReflection) {
 			const reflectionDepth = `${this.pv.reflectionDepth}`;
+			const reflectionTint = ThreeToGl.vector3(this.variableForInputParam(this.p.reflectionTint));
 			const reflectivity = ThreeToGl.float(this.variableForInputParam(this.p.reflectivity));
 			const reflectionBiasMult = ThreeToGl.float(this.variableForInputParam(this.p.reflectionBiasMult));
 			const lineReflection = new BodyLine(SDF_REFLECTION);
-			lineReflection.replaceVars({reflectionDepth, reflectivity, reflectionBiasMult});
+			lineReflection.replaceVars({reflectionTint, reflectionDepth, reflectivity, reflectionBiasMult, envMap});
 			lineReflection.addTabs(1);
 			bodyLines.push(...lineReflection.lines());
+			definitions.push(new FunctionGLDefinition(this, '#define RAYMARCHED_REFLECTIONS 1'));
 		}
 		/**
 		 *
@@ -254,18 +263,7 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 			const refractionBiasMult = ThreeToGl.float(this.variableForInputParam(this.p.refractionBiasMult));
 			const splitRGB = isBooleanTrue(this.pv.splitRGB);
 			const iorOffset = ThreeToGl.vector3(this.variableForInputParam(this.p.iorOffset));
-			// const lineRefraction = new BodyLine(SDF_REFRACTION);
-			// lineRefraction.replaceVars({
-			// 	refractionTint,
-			// 	refractionDepth,
-			// 	ior,
-			// 	transmission,
-			// 	absorbtion,
-			// 	refractionBiasMult,
-			// 	envMap,
-			// 	iorOffset,
-			// });
-			// lineRefraction.addTabs(1);
+
 			bodyLines.push(`
 		// --- REFRACTION - START
 		vec3 refractedColor = vec3(0.);
@@ -294,13 +292,7 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		col += refractedColor * ${transmission};
 		// --- REFRACTION - END
 	`);
-			// bodyLines.push(...lineRefraction.lines());
-
-			// const lineRefractionSample = new BodyLine(SDF_REFRACTION_SAMPLE);
-			// lineRefractionSample.replaceVars({
-			// 	refractionDepth,
-			// });
-			// definitions.push(new FunctionGLDefinition(this, lineRefractionSample.content()));
+			definitions.push(new FunctionGLDefinition(this, '#define RAYMARCHED_REFRACTIONS 1'));
 		}
 
 		bodyLines.push(`}`);

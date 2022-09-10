@@ -139,44 +139,21 @@ float SDFOnion( in float sdf, in float thickness )
 {
 	return abs(sdf)-thickness;
 }
-float v_POLY_SDFGradient1_sdfFunction(vec3 position, float input0){
-	vec3 v_POLY_SDFGradient1_subnetInput1_position = position;
-	float v_POLY_SDFGradient1_subnetInput1_input0 = input0;
-	float v_POLY_SDFGradient1_SDFSphere1_float = sdSphere(v_POLY_SDFGradient1_subnetInput1_position - vec3(0.0, 0.0, 0.0), 1.0);
-	return v_POLY_SDFGradient1_SDFSphere1_float;
-}
-vec3 v_POLY_SDFGradient1_gradientFunction( in vec3 p, float input0 )
+float sdRhombusTriacontahedron(vec3 p, float m1, float m2, float f)
 {
-	const float eps = 0.0001;
-	const vec2 h = vec2(eps,0);
-	return normalize(
-		vec3(
-			v_POLY_SDFGradient1_sdfFunction(p+h.xyy, input0) - v_POLY_SDFGradient1_sdfFunction(p-h.xyy, input0),
-			v_POLY_SDFGradient1_sdfFunction(p+h.yxy, input0) - v_POLY_SDFGradient1_sdfFunction(p-h.yxy, input0),
-			v_POLY_SDFGradient1_sdfFunction(p+h.yyx, input0) - v_POLY_SDFGradient1_sdfFunction(p-h.yyx, input0)
-		)
-	);
+	float d = sdBox(p, vec3(1));
+	float c = cos(3.1415 * m1);
+	float s=sqrt(m2-c*c);
+	vec3 n = vec3(-0.5, -c, s);
+	p = abs(p);
+	p -= f*min(0., dot(p, n))*n;
+	p.xy = abs(p.xy);
+	p -= f*min(0., dot(p, n))*n;
+	p.xy = abs(p.xy);
+	p -= f*min(0., dot(p, n))*n;
+	d = p.z-1.;
+	return d;
 }
-const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 223;
-struct EnvMap {
-	vec3 tint;
-	float intensity;
-	float fresnel;
-	float fresnelPower;
-};
-vec3 envMapSample(vec3 rayDir, sampler2D map){
-	vec2 uv = vec2( atan( -rayDir.z, -rayDir.x ) * RECIPROCAL_PI2 + 0.5, rayDir.y * 0.5 + 0.5 );
-	vec3 env = texture2D(map, uv).rgb;
-	return env;
-}
-vec3 envMapSampleWithFresnel(vec3 rayDir, sampler2D map, EnvMap envMap, vec3 n, vec3 cameraPosition){
-	vec3 env = envMapSample(rayDir, map).rgb;
-	float fresnel = pow(1.-dot(normalize(cameraPosition), n), envMap.fresnelPower);
-	float fresnelFactor = (1.-envMap.fresnel) + envMap.fresnel*fresnel;
-	return env * envMap.tint * envMap.intensity * fresnelFactor;
-}
-#define RAYMARCHED_REFLECTIONS 1
-uniform sampler2D v_POLY_texture_envTexture1;
 #include <lightmap_pars_fragment>
 #include <bsdfs>
 #include <lights_pars_begin>
@@ -212,11 +189,9 @@ int DefaultSDFMaterial(){
 }
 SDFContext GetDist(vec3 p) {
 	SDFContext sdfContext = SDFContext(0.0, 0);
-	vec3 v_POLY_globals1_position = p;
+	float v_POLY_SDFRhombusTriacontahedron1_float = sdRhombusTriacontahedron(p - vec3(0.0, 0.0, 0.0), 0.2, 0.75, 2.0);
 	
-	float v_POLY_SDFGradient1_sdf = v_POLY_SDFGradient1_sdfFunction(v_POLY_globals1_position, 0.0);
-	
-	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFGradient1_sdf, _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1);
+	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFRhombusTriacontahedron1_float, -1);
 	
 	sdfContext = v_POLY_SDFContext1_SDFContext;
 	
@@ -319,37 +294,11 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 }
 vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
 	vec3 col = vec3(1.);
-	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
-	
-	vec3 v_POLY_reflectionTint_val = vec3(0.0, 0.0, 0.0);
-	
-	float v_POLY_reflectivity_val = 0.74;
-	
-	float v_POLY_reflectionBiasMult_val = 0.0;
-	
-	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n);
-		col *= diffuse;
-	}
 	
 	return col;
 }
 vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 	vec3 col = vec3(1.);
-	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
-	
-	vec3 v_POLY_reflectionTint_val = vec3(0.0, 0.0, 0.0);
-	
-	float v_POLY_reflectivity_val = 0.74;
-	
-	float v_POLY_reflectionBiasMult_val = 0.0;
-	
-	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n);
-		col *= diffuse;
-	}
 	
 	return col;
 }
@@ -433,21 +382,6 @@ vec3 applyRefractionAbsorbtion(vec4 refractedData, vec3 tint, float absorbtion){
 #endif
 vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 	vec3 col = vec3(0.);
-	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
-	
-	vec3 v_POLY_reflectionTint_val = vec3(0.0, 0.0, 0.0);
-	
-	float v_POLY_reflectivity_val = 0.74;
-	
-	float v_POLY_reflectionBiasMult_val = 0.0;
-	
-	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n);
-		col *= diffuse;
-		vec3 reflectedColor = GetReflection(p, n, rayDir, v_POLY_reflectionBiasMult_val, v_POLY_texture_envTexture1, 3);
-		col += reflectedColor * v_POLY_reflectionTint_val * v_POLY_reflectivity_val;
-	}
 	
 	return col;
 }

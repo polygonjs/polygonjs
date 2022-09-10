@@ -231,6 +231,8 @@ import './engine/nodes/gl/Rotate';
 import './engine/nodes/gl/SDFGradient';
 import './engine/nodes/gl/SDFRepeat';
 import './engine/nodes/gl/SDFRepeatPolar';
+import './engine/nodes/gl/SDFRhombus';
+import './engine/nodes/gl/SDFRhombusTriacontahedron';
 import './engine/nodes/gl/SDFTransform';
 import './engine/nodes/gl/SDFTwist';
 import './engine/nodes/gl/Switch';

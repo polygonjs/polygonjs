@@ -3,6 +3,7 @@ precision highp int;
 uniform int MAX_STEPS;
 uniform float MAX_DIST;
 uniform float SURF_DIST;
+uniform float NORMALS_BIAS;
 uniform vec3 CENTER;
 #define ZERO 0
 #include <common>
@@ -97,14 +98,6 @@ float sdSolidAngle(vec3 pos, vec2 c, float radius)
 float sdSolidAngleWrapped(vec3 pos, float angle, float radius){
 	return sdSolidAngle(pos, vec2(sin(angle), cos(angle)), radius);
 }
-float sdRhombus(vec3 p, float la, float lb, float h, float ra)
-{
-  p = abs(p);
-  vec2 b = vec2(la,lb);
-  float f = clamp( (ndot(b,b-2.0*p.xz))/dot(b,b), -1.0, 1.0 );
-  vec2 q = vec2(length(p.xz-0.5*b*vec2(1.0-f,1.0+f))*sign(p.x*b.y+p.z*b.x-b.x*b.y)-ra, p.y-h);
-  return min(max(q.x,q.y),0.0) + length(max(q,0.0));
-}
 float sdOctahedron( vec3 p, float s)
 {
   p = abs(p);
@@ -146,7 +139,24 @@ float SDFOnion( in float sdf, in float thickness )
 {
 	return abs(sdf)-thickness;
 }
-const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 153;
+const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 154;
+struct EnvMap {
+	vec3 tint;
+	float intensity;
+	float fresnel;
+	float fresnelPower;
+};
+vec3 envMapSample(vec3 rayDir, sampler2D map){
+	vec2 uv = vec2( atan( -rayDir.z, -rayDir.x ) * RECIPROCAL_PI2 + 0.5, rayDir.y * 0.5 + 0.5 );
+	vec3 env = texture2D(map, uv).rgb;
+	return env;
+}
+vec3 envMapSampleWithFresnel(vec3 rayDir, sampler2D map, EnvMap envMap, vec3 n, vec3 cameraPosition){
+	vec3 env = envMapSample(rayDir, map).rgb;
+	float fresnel = pow(1.-dot(normalize(cameraPosition), n), envMap.fresnelPower);
+	float fresnelFactor = (1.-envMap.fresnel) + envMap.fresnel*fresnel;
+	return env * envMap.tint * envMap.intensity * fresnelFactor;
+}
 uniform sampler2D v_POLY_texture_envTexture1;
 #include <lightmap_pars_fragment>
 #include <bsdfs>
@@ -191,22 +201,22 @@ SDFContext GetDist(vec3 p) {
 	
 	return sdfContext;
 }
-SDFContext RayMarch(vec3 ro, vec3 rd) {
+SDFContext RayMarch(vec3 ro, vec3 rd, float side) {
 	SDFContext dO = SDFContext(0.,0);
 	#pragma unroll_loop_start
 	for(int i=0; i<MAX_STEPS; i++) {
 		vec3 p = ro + rd*dO.d;
 		SDFContext sdfContext = GetDist(p);
-		dO.d += sdfContext.d;
+		dO.d += sdfContext.d * side;
 		dO.matId = sdfContext.matId;
-		if(dO.d>MAX_DIST || sdfContext.d<SURF_DIST) break;
+		if(dO.d>MAX_DIST || abs(sdfContext.d)<SURF_DIST) break;
 	}
 	#pragma unroll_loop_end
 	return dO;
 }
 vec3 GetNormal(vec3 p) {
 	SDFContext sdfContext = GetDist(p);
-	vec2 e = vec2(.01, 0);
+	vec2 e = vec2(NORMALS_BIAS, 0);
 	vec3 n = sdfContext.d - vec3(
 		GetDist(p-e.xyy).d,
 		GetDist(p-e.yxy).d,
@@ -230,7 +240,7 @@ vec3 GetLight(vec3 p, vec3 n) {
 				lightCol = spotLight.color;
 				l = normalize(lightPos-p);
 				lighDif = clamp(dot(n, l), 0., 1.);
-				sdfContext = RayMarch(p+n*SURF_DIST*2., l);
+				sdfContext = RayMarch(p+n*SURF_DIST*2., l, 1.);
 				if(sdfContext.d<length(lightPos-p)) lighDif *= .1;
 				dif += lightCol * lighDif;
 			}
@@ -247,7 +257,7 @@ vec3 GetLight(vec3 p, vec3 n) {
 				lightCol = directionalLight.color;
 				l = lightDir;
 				lighDif = clamp(dot(n, l), 0., 1.);
-				sdfContext = RayMarch(p+n*SURF_DIST*2., l);
+				sdfContext = RayMarch(p+n*SURF_DIST*2., l, 1.);
 				if(sdfContext.d<length(lightDir)) lighDif *= .1;
 				dif += lightCol * lighDif;
 			}
@@ -286,6 +296,25 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 	}
 	return res;
 }
+vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
+	vec3 col = vec3(1.);
+	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
+	
+	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
+		col = v_POLY_constant1_val;
+		vec3 diffuse = GetLight(p, n);
+		col *= diffuse;
+		vec3 rayDir = normalize(reflect(rayDir, n));
+		EnvMap envMap;
+		envMap.tint = vec3(1.0, 1.0, 1.0);
+		envMap.intensity = 1.0;
+		envMap.fresnel = 0.0;
+		envMap.fresnelPower = 5.0;
+		col += envMapSampleWithFresnel(rayDir, v_POLY_texture_envTexture1, envMap, n, cameraPosition);
+	}
+	
+	return col;
+}
 vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 	vec3 col = vec3(1.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
@@ -294,16 +323,95 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 		col = v_POLY_constant1_val;
 		vec3 diffuse = GetLight(p, n);
 		col *= diffuse;
-		vec3 r = normalize(reflect(rayDir, n));
-		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
-		float fresnel = pow(1.-dot(normalize(cameraPosition), n), 5.0);
-		float fresnelFactor = (1.-0.0) + 0.0*fresnel;
-		vec3 env = texture2D(v_POLY_texture_envTexture1, uv).rgb * vec3(1.0, 1.0, 1.0) * 1.0 * fresnelFactor;
-		col += env;
+		vec3 rayDir = normalize(reflect(rayDir, n));
+		EnvMap envMap;
+		envMap.tint = vec3(1.0, 1.0, 1.0);
+		envMap.intensity = 1.0;
+		envMap.fresnel = 0.0;
+		envMap.fresnelPower = 5.0;
+		col += envMapSampleWithFresnel(rayDir, v_POLY_texture_envTexture1, envMap, n, cameraPosition);
 	}
 	
 	return col;
 }
+#ifdef RAYMARCHED_REFLECTIONS
+vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth){
+	bool hitReflection = true;
+	vec3 reflectedColor = vec3(0.);
+	#pragma unroll_loop_start
+	for(int i=0; i < reflectionDepth; i++) {
+		if(hitReflection){
+			rayDir = reflect(rayDir, n);
+			p += n*SURF_DIST*biasMult;
+			SDFContext sdfContext = RayMarch(p, rayDir, 1.);
+			if( sdfContext.d >= MAX_DIST){
+				hitReflection = false;
+				reflectedColor = envMapSample(rayDir, envMap);
+			}
+			if(hitReflection){
+				p += rayDir * sdfContext.d;
+				n = GetNormal(p);
+				vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId);
+				reflectedColor += matCol;
+			}
+		}
+	}
+	#pragma unroll_loop_end
+	return reflectedColor;
+}
+#endif
+#ifdef RAYMARCHED_REFRACTIONS
+vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, int refractionDepth){
+	bool hitRefraction = true;
+	bool changeSide = true;
+	float side = -1.;
+	float iorInverted = 1. / ior;
+	vec3 refractedColor = vec3(0.);
+	float distanceInsideMedium=0.;
+	#pragma unroll_loop_start
+	for(int i=0; i < refractionDepth; i++) {
+		if(hitRefraction){
+			float currentIor = side<0. ? iorInverted : ior;
+			vec3 rayDirPreRefract = rayDir;
+			rayDir = refract(rayDir, n, currentIor);
+			changeSide = dot(rayDir, rayDir)!=0.;
+			if(changeSide == true) {
+				p -= n*SURF_DIST*(2.+biasMult);
+			} else {
+				p += n*SURF_DIST*(   biasMult);
+				rayDir = reflect(rayDirPreRefract, n);
+			}
+			SDFContext sdfContext = RayMarch(p, rayDir, side);
+			if( abs(sdfContext.d) >= MAX_DIST ){
+				hitRefraction = false;
+				refractedColor = envMapSample(rayDir, envMap);
+			}
+			if(hitRefraction){
+				p += rayDir * sdfContext.d;
+				n = GetNormal(p) * side;
+				vec3 matCol = applyMaterialWithoutRefraction(p, n, rayDir, sdfContext.matId);
+				refractedColor = matCol;
+				distanceInsideMedium += side < 0. ? abs(sdfContext.d) : 0.;
+				if( changeSide ){
+					side *= -1.;
+				}
+			}
+		}
+	}
+	#pragma unroll_loop_end
+	return vec4(refractedColor, distanceInsideMedium);
+}
+vec3 applyRefractionAbsorbtion(vec4 refractedData, vec3 tint, float absorbtion){
+	vec3 refractedColor = refractedData.rgb;
+	float distanceInsideMedium = refractedData.w;
+	float tintFactor = 1.+(distanceInsideMedium * absorbtion);
+	tint.r = pow(tint.r, tintFactor);
+	tint.g = pow(tint.g, tintFactor);
+	tint.b = pow(tint.b, tintFactor);
+	refractedColor = refractedColor * tint;
+	return refractedColor;
+}
+#endif
 vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 	vec3 col = vec3(0.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
@@ -312,12 +420,13 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 		col = v_POLY_constant1_val;
 		vec3 diffuse = GetLight(p, n);
 		col *= diffuse;
-		vec3 r = normalize(reflect(rayDir, n));
-		vec2 uv = vec2( atan( -r.z, -r.x ) * RECIPROCAL_PI2 + 0.5, r.y * 0.5 + 0.5 );
-		float fresnel = pow(1.-dot(normalize(cameraPosition), n), 5.0);
-		float fresnelFactor = (1.-0.0) + 0.0*fresnel;
-		vec3 env = texture2D(v_POLY_texture_envTexture1, uv).rgb * vec3(1.0, 1.0, 1.0) * 1.0 * fresnelFactor;
-		col += env;
+		vec3 rayDir = normalize(reflect(rayDir, n));
+		EnvMap envMap;
+		envMap.tint = vec3(1.0, 1.0, 1.0);
+		envMap.intensity = 1.0;
+		envMap.fresnel = 0.0;
+		envMap.fresnelPower = 5.0;
+		col += envMapSampleWithFresnel(rayDir, v_POLY_texture_envTexture1, envMap, n, cameraPosition);
 	}
 	
 	return col;
@@ -334,7 +443,7 @@ vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 void main()	{
 	vec3 rayDir = normalize(vPw - cameraPosition);
 	vec3 rayOrigin = cameraPosition - CENTER;
-	SDFContext sdfContext = RayMarch(rayOrigin, rayDir);
+	SDFContext sdfContext = RayMarch(rayOrigin, rayDir, 1.);
 	gl_FragColor = vec4(0.);
 	if( sdfContext.d >= MAX_DIST ){ discard; }
 	gl_FragColor = applyShading(rayOrigin, rayDir, sdfContext);

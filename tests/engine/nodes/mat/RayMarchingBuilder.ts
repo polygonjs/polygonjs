@@ -18,6 +18,9 @@ import CameraPositionVertex from './templates/raymarching/cameraPosition.vert.gl
 import CameraPositionFragment from './templates/raymarching/cameraPosition.frag.glsl';
 import ReflectionVertex from './templates/raymarching/reflection.vert.glsl';
 import ReflectionFragment from './templates/raymarching/reflection.frag.glsl';
+import RefractionVertex from './templates/raymarching/refraction.vert.glsl';
+import RefractionFragment from './templates/raymarching/refraction.frag.glsl';
+import RefractionSplitRGBFragment from './templates/raymarching/refraction_splitRGB.frag.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../../src/engine/nodes/gl/gl/raymarching/uniforms';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -38,6 +41,7 @@ const TEST_SHADER_LIB = {
 	simpleVertex: {vert: SimpleVertexVertex, frag: SimpleVertexFragment},
 	cameraPosition: {vert: CameraPositionVertex, frag: CameraPositionFragment},
 	reflection: {vert: ReflectionVertex, frag: ReflectionFragment},
+	refraction: {vert: RefractionVertex, frag: RefractionFragment, fragSplitRGB: RefractionSplitRGBFragment},
 };
 
 const ALL_UNIFORMS_WITHOUT_ENV = [
@@ -307,11 +311,16 @@ QUnit.test('mat/rayMarchingBuilder with raymarched reflections', async (assert) 
 	reflectivity.setGlType(GlConnectionPointType.FLOAT);
 	reflectivity.p.float.set(0.74);
 	sdfMaterial.setInput('reflectivity', reflectivity);
-	const reflectionDepth = rayMarchingBuilder1.createNode('constant');
-	reflectionDepth.p.int.set(11);
-	reflectionDepth.setGlType(GlConnectionPointType.INT);
-	reflectionDepth.setName('reflectionDepth');
-	sdfMaterial.setInput('reflectionDepth', reflectionDepth);
+	const reflectionTint = rayMarchingBuilder1.createNode('constant');
+	reflectionTint.p.int.set(11);
+	reflectionTint.setGlType(GlConnectionPointType.VEC3);
+	reflectionTint.setName('reflectionTint');
+	sdfMaterial.setInput('reflectionTint', reflectionTint);
+	const reflectionBiasMult = rayMarchingBuilder1.createNode('constant');
+	reflectionBiasMult.p.int.set(4);
+	reflectionBiasMult.setGlType(GlConnectionPointType.FLOAT);
+	reflectionBiasMult.setName('reflectionBiasMult');
+	sdfMaterial.setInput('reflectionBiasMult', reflectionBiasMult);
 
 	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
 
@@ -323,6 +332,137 @@ QUnit.test('mat/rayMarchingBuilder with raymarched reflections', async (assert) 
 		ALL_UNIFORMS_WITHOUT_ENV.sort()
 	);
 });
+
+QUnit.test('mat/rayMarchingBuilder with raymarched refractions', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const MAT = window.MAT;
+	// const debug = MAT.createNode('test')
+	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+
+	const globals = rayMarchingBuilder1.createNode('globals');
+	const output = rayMarchingBuilder1.createNode('output');
+	const sdfGradient1 = rayMarchingBuilder1.createNode('SDFGradient');
+	const sdfGradientSubnetInput = sdfGradient1.createNode('subnetInput');
+	const sdfGradientSubnetOutput = sdfGradient1.createNode('subnetOutput');
+	const sdfSphere = sdfGradient1.createNode('SDFSphere');
+	sdfSphere.setInput(0, sdfGradientSubnetInput);
+	sdfGradientSubnetOutput.setInput(0, sdfSphere);
+
+	const sdfContext = rayMarchingBuilder1.createNode('SDFContext');
+	const sdfMaterial = rayMarchingBuilder1.createNode('SDFMaterial');
+
+	const constant = rayMarchingBuilder1.createNode('constant');
+
+	output.setInput(0, sdfContext);
+	sdfContext.setInput(0, sdfGradient1);
+	sdfContext.setInput(1, sdfMaterial);
+	sdfGradient1.setInput('position', globals, 'position');
+	sdfMaterial.setInput('color', constant);
+	sdfMaterial.p.useRefraction.set(1);
+
+	constant.setGlType(GlConnectionPointType.VEC3);
+	constant.p.asColor.set(1);
+	constant.p.color.set([1, 1, 1]);
+
+	// add inputs to the SDFMaterial, to make sure those are properly parsed
+
+	const refractionTint = rayMarchingBuilder1.createNode('constant');
+	refractionTint.p.int.set(11);
+	refractionTint.setGlType(GlConnectionPointType.VEC3);
+	refractionTint.setName('refractionTint');
+	sdfMaterial.setInput('refractionTint', refractionTint);
+	const ior = rayMarchingBuilder1.createNode('constant');
+	ior.setName('ior');
+	ior.setGlType(GlConnectionPointType.FLOAT);
+	ior.p.float.set(1.45);
+	sdfMaterial.setInput('ior', ior);
+	const iorOffset = rayMarchingBuilder1.createNode('constant');
+	iorOffset.setName('iorOffset');
+	iorOffset.setGlType(GlConnectionPointType.VEC3);
+	iorOffset.p.vec3.set([-0.01, 0, 0.01]);
+	sdfMaterial.setInput('iorOffset', iorOffset);
+	const transmission = rayMarchingBuilder1.createNode('constant');
+	transmission.setName('transmission');
+	transmission.setGlType(GlConnectionPointType.FLOAT);
+	transmission.p.float.set(0.7);
+	sdfMaterial.setInput('transmission', transmission);
+	const absorbtion = rayMarchingBuilder1.createNode('constant');
+	absorbtion.setName('absorbtion');
+	absorbtion.setGlType(GlConnectionPointType.FLOAT);
+	absorbtion.p.float.set(0.7);
+	sdfMaterial.setInput('absorbtion', absorbtion);
+	const refractionBiasMult = rayMarchingBuilder1.createNode('constant');
+	refractionBiasMult.p.int.set(4);
+	refractionBiasMult.setGlType(GlConnectionPointType.FLOAT);
+	refractionBiasMult.setName('refractionBiasMult');
+	sdfMaterial.setInput('refractionBiasMult', refractionBiasMult);
+
+	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+
+	// without splitRGB
+	await RendererUtils.compile(rayMarchingBuilder1, renderer);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.refraction.vert));
+	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.refraction.frag));
+	assert.deepEqual(
+		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
+		ALL_UNIFORMS_WITHOUT_ENV.sort()
+	);
+
+	// with splitRGB
+	sdfMaterial.p.splitRGB.set(1);
+	await RendererUtils.compile(rayMarchingBuilder1, renderer);
+	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.refraction.vert));
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.refraction.fragSplitRGB)
+	);
+	assert.deepEqual(
+		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
+		ALL_UNIFORMS_WITHOUT_ENV.sort()
+	);
+});
+
+QUnit.test(
+	'mat/rayMarchingBuilder can be time dependent if only the materials have time dependency',
+	async (assert) => {
+		const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+		const scene = window.scene;
+		const MAT = window.MAT;
+		// const debug = MAT.createNode('test')
+		const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+
+		const globals = rayMarchingBuilder1.createNode('globals');
+		const output = rayMarchingBuilder1.createNode('output');
+		const sdfGradient1 = rayMarchingBuilder1.createNode('SDFGradient');
+		const sdfGradientSubnetInput = sdfGradient1.createNode('subnetInput');
+		const sdfGradientSubnetOutput = sdfGradient1.createNode('subnetOutput');
+		const sdfSphere = sdfGradient1.createNode('SDFSphere');
+		sdfSphere.setInput(0, sdfGradientSubnetInput);
+		sdfGradientSubnetOutput.setInput(0, sdfSphere);
+
+		const sdfContext = rayMarchingBuilder1.createNode('SDFContext');
+		const sdfMaterial = rayMarchingBuilder1.createNode('SDFMaterial');
+
+		output.setInput(0, sdfContext);
+		sdfContext.setInput(0, sdfGradient1);
+		sdfContext.setInput(1, sdfMaterial);
+
+		const color = rayMarchingBuilder1.createNode('constant');
+		color.setGlType(GlConnectionPointType.VEC3);
+		sdfMaterial.setInput('color', color);
+
+		await RendererUtils.compile(rayMarchingBuilder1, renderer);
+		const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+
+		scene.timeController.setTime(17);
+		assert.notOk(material.uniforms['time'], 'no time uniform');
+
+		sdfMaterial.setInput('envMapIntensity', globals, 'time');
+		await RendererUtils.compile(rayMarchingBuilder1, renderer);
+		scene.timeController.setTime(18);
+		assert.equal(material.uniforms['time'].value, 18);
+	}
+);
 QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayMarching uniforms', async (assert) => {
 	const scene = window.scene;
 	// const geo1 = window.geo1;

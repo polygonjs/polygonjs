@@ -56,7 +56,6 @@ export class UniformsController {
 			const uniformValue = additionalTextureUniforms[uniformName];
 			uniforms[uniformName] = uniformValue;
 		}
-
 		if (timeDependent) {
 			this.addTimeUniform(uniforms);
 		} else {

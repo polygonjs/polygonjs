@@ -115,9 +115,12 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 					'envMapFresnel',
 					'envMapFresnelPower',
 					/*reflection*/
+					'reflectionTint',
 					'reflectionDepth',
 					'reflectivity',
+					'reflectionBiasMult',
 					/*refraction*/
+					'refractionTint',
 					'refractionDepth',
 					'ior',
 					'iorOffset',

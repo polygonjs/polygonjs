@@ -155,9 +155,11 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarching {
 				applyMaterialFunctionDefinition
 			);
 		}
-
 		if (this._applyMaterialAssembler.uniformsTimeDependent()) {
 			this.setUniformsTimeDependent();
+		}
+		if (this._applyMaterialAssembler.uniformsResolutionDependent()) {
+			this.setUniformsResolutionDependent();
 		}
 
 		return fragmentShader;

@@ -60,8 +60,8 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	private _shader_configs: ShaderConfig[] | undefined;
 	private _variable_configs: VariableConfig[] | undefined;
 
-	private _uniforms_time_dependent: boolean = false;
-	private _uniforms_resolution_dependent: boolean = false;
+	private _uniformsTimeDependent: boolean = false;
+	private _uniformsResolutionDependent: boolean = false;
 
 	constructor(protected _gl_parent_node: AssemblerControllerNode) {
 		super();
@@ -233,7 +233,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			this
 		);
 	}
-	protected buildCodeFromNodes(rootNodes: BaseGlNodeType[], codeBuilderOptions?:CodeBuilderSetCodeLinesOptions) {
+	protected buildCodeFromNodes(rootNodes: BaseGlNodeType[], codeBuilderOptions?: CodeBuilderSetCodeLinesOptions) {
 		const paramNodes = GlNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
 		this.codeBuilder().buildFromNodes(rootNodes, paramNodes, codeBuilderOptions);
 	}
@@ -323,7 +323,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		this._reset_shader_configs();
 		this._reset_variable_configs();
 		this._resetUniformsTimeDependency();
-		this._reset_uniforms_resolution_dependency();
+		this._resetUniformsResolutionDependency();
 	}
 	shaderConfigs() {
 		return (this._shader_configs = this._shader_configs || this.create_shader_configs());
@@ -398,23 +398,23 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 
 	// time dependency
 	protected _resetUniformsTimeDependency() {
-		this._uniforms_time_dependent = false;
+		this._uniformsTimeDependent = false;
 	}
 	setUniformsTimeDependent() {
-		this._uniforms_time_dependent = true;
+		this._uniformsTimeDependent = true;
 	}
 	uniformsTimeDependent(): boolean {
-		return this._uniforms_time_dependent;
+		return this._uniformsTimeDependent;
 	}
 	// resolution dependency
-	protected _reset_uniforms_resolution_dependency() {
-		this._uniforms_resolution_dependent = false;
+	protected _resetUniformsResolutionDependency() {
+		this._uniformsResolutionDependent = false;
 	}
 	setUniformsResolutionDependent() {
-		this._uniforms_resolution_dependent = true;
+		this._uniformsResolutionDependent = true;
 	}
 	uniformsResolutionDependent(): boolean {
-		return this._uniforms_resolution_dependent;
+		return this._uniformsResolutionDependent;
 	}
 
 	//
