@@ -34,6 +34,13 @@ uniform float opacity;
 	uniform float clearcoatRoughness;
 #endif
 
+#ifdef USE_IRIDESCENCE
+	uniform float iridescence;
+	uniform float iridescenceIOR;
+	uniform float iridescenceThicknessMinimum;
+	uniform float iridescenceThicknessMaximum;
+#endif
+
 #ifdef USE_SHEEN
 	uniform vec3 sheenColor;
 	uniform float sheenRoughness;
@@ -74,6 +81,7 @@ uniform float time;
 #include <lightmap_pars_fragment>
 #include <emissivemap_pars_fragment>
 #include <bsdfs>
+#include <iridescence_fragment>
 #include <cube_uv_reflection_fragment>
 #include <envmap_common_pars_fragment>
 #include <envmap_physical_pars_fragment>
@@ -86,6 +94,7 @@ uniform float time;
 #include <bumpmap_pars_fragment>
 #include <normalmap_pars_fragment>
 #include <clearcoat_pars_fragment>
+#include <iridescence_pars_fragment>
 #include <roughnessmap_pars_fragment>
 #include <metalnessmap_pars_fragment>
 #include <logdepthbuf_pars_fragment>
