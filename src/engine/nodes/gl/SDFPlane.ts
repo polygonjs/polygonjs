@@ -17,6 +17,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 const OUTPUT_NAME = 'float';
 class SDFPlaneGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
+	center = ParamConfig.VECTOR3([0, 0, 0]);
 	normal = ParamConfig.VECTOR3([0, 1, 0]);
 	offset = ParamConfig.FLOAT(0, {
 		range: [-1, 1],
@@ -40,11 +41,12 @@ export class SDFPlaneGlNode extends BaseSDFGlNode<SDFPlaneGlParamsConfig> {
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
+		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const normal = ThreeToGl.vector3(this.variableForInputParam(this.p.normal));
 		const offset = ThreeToGl.float(this.variableForInputParam(this.p.offset));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdPlane(${position}, ${normal}, ${offset})`;
+		const bodyLine = `float ${float} = sdPlane(${position}-${center}, ${normal}, ${offset})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);

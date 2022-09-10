@@ -26,6 +26,7 @@ varying vec3 vPw;
 #if NUM_SPOT_LIGHTS > 0
 	struct SpotLightRayMarching {
 		vec3 worldPos;
+		vec3 direction;
 	};
 	uniform SpotLightRayMarching spotLightsRayMarching[ NUM_SPOT_LIGHTS ];
 #endif
@@ -41,6 +42,13 @@ varying vec3 vPw;
 	};
 	uniform HemisphereLightRayMarching hemisphereLightsRayMarching[ NUM_HEMI_LIGHTS ];
 #endif
+#if NUM_POINT_LIGHTS > 0
+	struct PointLightRayMarching {
+		vec3 worldPos;
+	};
+	uniform PointLightRayMarching pointLightsRayMarching[ NUM_POINT_LIGHTS ];
+#endif
+
 
 struct SDFContext {
 	float d;
@@ -92,12 +100,25 @@ vec3 GetNormal(vec3 p) {
 
 	return normalize(n);
 }
-
 vec3 GetLight(vec3 p, vec3 n) {
-	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0 || NUM_HEMI_LIGHTS > 0
-		vec3 dif = vec3(0.,0.,0.);
+	vec3 dif = vec3(0.,0.,0.);
+	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0 || NUM_HEMI_LIGHTS > 0 || NUM_POINT_LIGHTS > 0 || NUM_RECT_AREA_LIGHTS > 0
+		GeometricContext geometry;
+		geometry.position = p;
+		geometry.normal = n;
+		// geometry.viewDir = rayDir;
+
+		// vec4 mvPosition = vec4( p, 1.0 );
+		// mvPosition = modelViewMatrix * mvPosition;
+		// vec3 vViewPosition = - mvPosition.xyz;
+		// geometry.position = p;
+		// geometry.normal = n;
+		// geometry.viewDir = ( isOrthographic ) ? vec3( 0, 0, 1 ) : normalize( cameraPosition - p );
+
+		IncidentLight directLight;
+		ReflectedLight reflectedLight;
 		vec3 lightPos,lightCol,lightDir, l;
-		float lighDif;
+		vec3 lighDif;
 		SDFContext sdfContext;
 		#if NUM_SPOT_LIGHTS > 0
 			SpotLightRayMarching spotLightRayMarching;
@@ -106,14 +127,18 @@ vec3 GetLight(vec3 p, vec3 n) {
 			for ( int i = 0; i < NUM_SPOT_LIGHTS; i ++ ) {
 				spotLightRayMarching = spotLightsRayMarching[ i ];
 				spotLight = spotLights[ i ];
+				spotLight.position = spotLightRayMarching.worldPos;
+				spotLight.direction = spotLightRayMarching.direction;
+				getSpotLightInfo( spotLight, geometry, directLight );
+				
 				lightPos = spotLightRayMarching.worldPos;
 				lightCol = spotLight.color;
 				l = normalize(lightPos-p);
-				lighDif = clamp(dot(n, l), 0., 1.);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.);
 				sdfContext = RayMarch(p+n*SURF_DIST*2., l, 1.);
-				if(sdfContext.d<length(lightPos-p)) lighDif *= .1;
+				if(sdfContext.d<length(lightPos-p)) lighDif *= .0;
 
-				dif += lightCol * lighDif;
+				dif += lighDif;
 			}
 			#pragma unroll_loop_end
 		#endif
@@ -127,17 +152,15 @@ vec3 GetLight(vec3 p, vec3 n) {
 				lightDir = directionalLightRayMarching.direction;
 				lightCol = directionalLight.color;
 				l = lightDir;
-				lighDif = clamp(dot(n, l), 0., 1.);
+				lighDif = lightCol * clamp(dot(n, l), 0., 1.);
 				sdfContext = RayMarch(p+n*SURF_DIST*2., l, 1.);
-				if(sdfContext.d<length(lightDir)) lighDif *= .1;
+				if(sdfContext.d<length(lightDir)) lighDif *= .0;
 
-				dif += lightCol * lighDif;
+				dif += lighDif;
 			}
 			#pragma unroll_loop_end
 		#endif
-		// vec3 irradiance = getAmbientLightIrradiance( ambientLightColor );
-
-		// irradiance += getLightProbeIrradiance( lightProbe, geometry.normal );
+		
 
 		#if ( NUM_HEMI_LIGHTS > 0 )
 
@@ -154,10 +177,58 @@ vec3 GetLight(vec3 p, vec3 n) {
 			#pragma unroll_loop_end
 
 		#endif
-		return dif;
-	#else
-		return vec3(1.0, 1.0, 1.0);
+
+		#if NUM_POINT_LIGHTS > 0
+			PointLightRayMarching pointLightRayMarching;
+			PointLight pointLight;
+			#pragma unroll_loop_start
+			for ( int i = 0; i < NUM_POINT_LIGHTS; i ++ ) {
+				pointLightRayMarching = pointLightsRayMarching[ i ];
+				pointLight = pointLights[ i ];
+				pointLight.position = pointLightRayMarching.worldPos;
+				getPointLightInfo( pointLight, geometry, directLight );
+				
+				lightPos = pointLightRayMarching.worldPos;
+				lightCol = pointLight.color;
+				l = normalize(lightPos-p);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.);
+				sdfContext = RayMarch(p+n*SURF_DIST*2., l, 1.);
+				if(sdfContext.d<length(lightPos-p)) lighDif *= .0;
+
+				dif += lighDif;
+			}
+			#pragma unroll_loop_end
+		#endif
+
+		// #if ( NUM_RECT_AREA_LIGHTS > 0 ) && defined( RE_Direct_RectArea )
+
+		// 	RectAreaLight rectAreaLight;
+		// 	AreaLightRayMarching areaLightRayMarching;
+		// 	PhysicalMaterial material;
+		// 	material.roughness = 1.;
+		// 	material.specularColor = vec3(1.);
+		// 	material.diffuseColor = vec3(1.);
+
+		// 	#pragma unroll_loop_start
+		// 	for ( int i = 0; i < NUM_RECT_AREA_LIGHTS; i ++ ) {
+		// 		areaLightRayMarching = areaLightsRayMarching[ i ];
+		// 		rectAreaLight = rectAreaLights[ i ];
+		// 		rectAreaLight.position = areaLightRayMarching.worldPos;
+
+				
+		// 		RE_Direct_RectArea( rectAreaLight, geometry, material, reflectedLight );
+		// 	}
+		// 	#pragma unroll_loop_end
+		// 	dif += reflectedLight.directDiffuse;
+
+		// #endif
 	#endif
+
+	vec3 irradiance = getAmbientLightIrradiance( ambientLightColor );
+
+	// irradiance += getLightProbeIrradiance( lightProbe, geometry.normal );
+	dif += irradiance;
+	return dif;
 }
 
 // https://iquilezles.org/articles/rmshadows

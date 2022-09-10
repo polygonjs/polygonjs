@@ -12,6 +12,8 @@ export enum UniformName {
 	SPOTLIGHTS_RAYMARCHING = 'spotLightsRayMarching',
 	DIRECTIONALLIGHTS_RAYMARCHING = 'directionalLightsRayMarching',
 	HEMISPHERELIGHTS_RAYMARCHING = 'hemisphereLightsRayMarching',
+	POINTLIGHTS_RAYMARCHING = 'pointLightsRayMarching',
+	// AREALIGHTS_RAYMARCHING = 'areaLightsRayMarching',
 }
 
 export interface IUniformsWithTime extends IUniforms {

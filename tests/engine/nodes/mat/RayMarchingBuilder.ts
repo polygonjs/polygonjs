@@ -49,6 +49,7 @@ const ALL_UNIFORMS_WITHOUT_ENV = [
 		'spotLightsRayMarching',
 		'directionalLightsRayMarching',
 		'hemisphereLightsRayMarching',
+		'pointLightsRayMarching',
 	]),
 	'alphaMap',
 	'alphaTest',
