@@ -20,7 +20,13 @@ export function RayMarchingParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		/** @param when the ray reaches this distance from a surface it will stop marching. You can lower this value to increase the precision of the raymarcher */
 		surfDist = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.SURF_DIST.value, {
-			range: [0, 1],
+			range: [0, 0.1],
+			rangeLocked: [true, false],
+			step: 0.0000001,
+		});
+		/** @param precision for normals computation */
+		normalsBias = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.NORMALS_BIAS.value, {
+			range: [0, 0.1],
 			rangeLocked: [true, false],
 			step: 0.0000001,
 		});
@@ -48,6 +54,7 @@ export class RayMarchingController {
 		uniforms.MAX_STEPS.value = this.node.pv.maxSteps;
 		uniforms.MAX_DIST.value = this.node.pv.maxDist;
 		uniforms.SURF_DIST.value = this.node.pv.surfDist;
+		uniforms.NORMALS_BIAS.value = this.node.pv.normalsBias;
 		uniforms.CENTER.value.copy(this.node.pv.center);
 	}
 }

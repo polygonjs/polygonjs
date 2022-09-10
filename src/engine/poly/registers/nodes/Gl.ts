@@ -131,6 +131,7 @@ import {SDFPlaneGlNode} from '../../../nodes/gl/SDFPlane';
 import {SDFRepeatGlNode} from '../../../nodes/gl/SDFRepeat';
 import {SDFRepeatPolarGlNode} from '../../../nodes/gl/SDFRepeatPolar';
 import {SDFRhombusGlNode} from '../../../nodes/gl/SDFRhombus';
+import {SDFRhombusTriacontahedronGlNode} from '../../../nodes/gl/SDFRhombusTriacontahedron';
 import {SDFSolidAngleGlNode} from '../../../nodes/gl/SDFSolidAngle';
 import {SDFSphereGlNode} from '../../../nodes/gl/SDFSphere';
 import {SDFSubtractGlNode} from '../../../nodes/gl/SDFSubtract';
@@ -280,6 +281,7 @@ export interface GlNodeChildrenMap {
 	SDFRepeat: SDFRepeatGlNode;
 	SDFRepeatPolar: SDFRepeatPolarGlNode;
 	SDFRhombus: SDFRhombusGlNode;
+	SDFRhombusTriacontahedron: SDFRhombusTriacontahedronGlNode;
 	SDFSolidAngle: SDFSolidAngleGlNode;
 	SDFSphere: SDFSphereGlNode;
 	SDFSubtract: SDFSubtractGlNode;
@@ -454,6 +456,7 @@ export class GlRegister {
 		poly.registerNode(SDFRepeatGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFRepeatPolarGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFRhombusGlNode, CATEGORY_GL.SDF_PRIMITIVES);
+		poly.registerNode(SDFRhombusTriacontahedronGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFSolidAngleGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFSphereGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFSubtractGlNode, CATEGORY_GL.SDF_MODIFIERS);

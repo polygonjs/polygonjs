@@ -1,20 +1,17 @@
 // --- REFLECTION - START
-bool hit = true;
+bool hitReflection = true;
 #pragma unroll_loop_start
 for(int i=0; i < __reflectionDepth__; i++) {
-	if(hit){
+	if(hitReflection){
 		rayDir = reflect(rayDir, n);
-		SDFContext sdfContext = RayMarch(p+n*0.01, rayDir);
-		if( sdfContext.d >= MAX_DIST){ hit = false; }
-		if(hit){
+		SDFContext sdfContext = RayMarch(p+n*SURF_DIST*__reflectionBiasMult__, rayDir, 1.);
+		if( sdfContext.d >= MAX_DIST){ hitReflection = false; }
+		if(hitReflection){
 			p += rayDir * sdfContext.d;
 			n = GetNormal(p);
 			vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId);
-			// vec4 pass = Render(ro, rd, ref, i==numBounces-1.);
 			col += matCol * __reflectivity__;
 		}
-		
-		// fil*=ref;
 	}
 }
 #pragma unroll_loop_end

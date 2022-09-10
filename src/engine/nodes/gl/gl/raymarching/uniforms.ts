@@ -5,6 +5,7 @@ export interface RayMarchingUniforms {
 	MAX_STEPS: IUniformN;
 	MAX_DIST: IUniformN;
 	SURF_DIST: IUniformN;
+	NORMALS_BIAS: IUniformN;
 	CENTER: IUniformV3;
 	// spotLightsRayMarching: IUniformV3Array;
 }
@@ -24,6 +25,9 @@ export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
 	},
 	SURF_DIST: {
 		value: 0.001,
+	},
+	NORMALS_BIAS: {
+		value: 0.01,
 	},
 	CENTER: {
 		value: new Vector3(0, 0, 0),

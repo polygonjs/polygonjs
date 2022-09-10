@@ -5,6 +5,7 @@ precision highp int;
 uniform int MAX_STEPS;
 uniform float MAX_DIST;
 uniform float SURF_DIST;
+uniform float NORMALS_BIAS;
 uniform vec3 CENTER;
 #define ZERO 0
 
@@ -64,16 +65,16 @@ SDFContext GetDist(vec3 p) {
 	return sdfContext;
 }
 
-SDFContext RayMarch(vec3 ro, vec3 rd) {
+SDFContext RayMarch(vec3 ro, vec3 rd, float side) {
 	SDFContext dO = SDFContext(0.,0);
 
 	#pragma unroll_loop_start
 	for(int i=0; i<MAX_STEPS; i++) {
 		vec3 p = ro + rd*dO.d;
 		SDFContext sdfContext = GetDist(p);
-		dO.d += sdfContext.d;
+		dO.d += sdfContext.d * side;
 		dO.matId = sdfContext.matId;
-		if(dO.d>MAX_DIST || sdfContext.d<SURF_DIST) break;
+		if(dO.d>MAX_DIST || abs(sdfContext.d)<SURF_DIST) break;
 	}
 	#pragma unroll_loop_end
 
@@ -82,7 +83,7 @@ SDFContext RayMarch(vec3 ro, vec3 rd) {
 
 vec3 GetNormal(vec3 p) {
 	SDFContext sdfContext = GetDist(p);
-	vec2 e = vec2(.01, 0);
+	vec2 e = vec2(NORMALS_BIAS, 0);
 
 	vec3 n = sdfContext.d - vec3(
 		GetDist(p-e.xyy).d,
@@ -109,7 +110,7 @@ vec3 GetLight(vec3 p, vec3 n) {
 				lightCol = spotLight.color;
 				l = normalize(lightPos-p);
 				lighDif = clamp(dot(n, l), 0., 1.);
-				sdfContext = RayMarch(p+n*SURF_DIST*2., l);
+				sdfContext = RayMarch(p+n*SURF_DIST*2., l, 1.);
 				if(sdfContext.d<length(lightPos-p)) lighDif *= .1;
 
 				dif += lightCol * lighDif;
@@ -127,7 +128,7 @@ vec3 GetLight(vec3 p, vec3 n) {
 				lightCol = directionalLight.color;
 				l = lightDir;
 				lighDif = clamp(dot(n, l), 0., 1.);
-				sdfContext = RayMarch(p+n*SURF_DIST*2., l);
+				sdfContext = RayMarch(p+n*SURF_DIST*2., l, 1.);
 				if(sdfContext.d<length(lightDir)) lighDif *= .1;
 
 				dif += lightCol * lighDif;
@@ -179,9 +180,9 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 }
 
 
-
-
 // --- applyMaterial function definition
+
+
 
 vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	vec3 p = rayOrigin + rayDir * sdfContext.d;
@@ -200,7 +201,7 @@ void main()	{
 	vec3 rayDir = normalize(vPw - cameraPosition);
 	vec3 rayOrigin = cameraPosition - CENTER;
 
-	SDFContext sdfContext = RayMarch(rayOrigin, rayDir);
+	SDFContext sdfContext = RayMarch(rayOrigin, rayDir, 1.);
 
 	gl_FragColor = vec4(0.);
 	if( sdfContext.d >= MAX_DIST ){ discard; }

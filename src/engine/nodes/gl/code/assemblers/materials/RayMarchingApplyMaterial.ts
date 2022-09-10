@@ -33,6 +33,14 @@ const REFLECTION = {
 	START: '// --- REFLECTION - START',
 	END: '// --- REFLECTION - END',
 };
+const REFRACTION_NOT_ALLOWED = {
+	START: '// --- REFRACTION NOT ALLOWED - START',
+	END: '// --- REFRACTION NOT ALLOWED - END',
+};
+const REFRACTION = {
+	START: '// --- REFRACTION - START',
+	END: '// --- REFRACTION - END',
+};
 
 export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssemblerRayMarching {
 	override templateShader() {
@@ -107,8 +115,15 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 					'envMapFresnel',
 					'envMapFresnelPower',
 					/*reflection*/
-					'reflectivity',
 					'reflectionDepth',
+					'reflectivity',
+					/*refraction*/
+					'refractionDepth',
+					'ior',
+					'iorOffset',
+					'transmission',
+					'absorbtion',
+					'refractionBiasMult',
 				],
 				[]
 			),
@@ -164,6 +179,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 			}
 		}
 		this._removeNestedReflection();
+		this._removeNestedRefraction();
 	}
 
 	private _removeNestedReflection() {
@@ -173,28 +189,64 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 		}
 		const lines = fragmentShader.split('\n');
 		const newLines: string[] = [];
-		let inReflectionNotAllowed = false;
-		let inReflection = false;
+		let inNotAllowed = false;
+		let inAllowed = false;
 
 		for (let line of lines) {
 			if (line.includes(REFLECTION_NOT_ALLOWED.START)) {
-				inReflectionNotAllowed = true;
+				inNotAllowed = true;
 			}
 			if (line.includes(REFLECTION_NOT_ALLOWED.END)) {
-				inReflectionNotAllowed = false;
+				inNotAllowed = false;
 			}
 			if (line.includes(REFLECTION.START)) {
-				inReflection = true;
+				inAllowed = true;
 			}
 			if (line.includes(REFLECTION.END)) {
-				inReflection = false;
+				inAllowed = false;
 			}
 			if (
-				!(inReflectionNotAllowed && inReflection) &&
+				!(inNotAllowed && inAllowed) &&
 				!line.includes(REFLECTION_NOT_ALLOWED.START) &&
 				!line.includes(REFLECTION_NOT_ALLOWED.END) &&
 				!line.includes(REFLECTION.START) &&
 				!line.includes(REFLECTION.END)
+			) {
+				newLines.push(line);
+			}
+		}
+		const newFragmentShader = newLines.join('\n');
+		this._shaders_by_name.set(ShaderName.FRAGMENT, newFragmentShader);
+	}
+	private _removeNestedRefraction() {
+		const fragmentShader = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		if (!fragmentShader) {
+			return;
+		}
+		const lines = fragmentShader.split('\n');
+		const newLines: string[] = [];
+		let inNotAllowed = false;
+		let inAllowed = false;
+
+		for (let line of lines) {
+			if (line.includes(REFRACTION_NOT_ALLOWED.START)) {
+				inNotAllowed = true;
+			}
+			if (line.includes(REFRACTION_NOT_ALLOWED.END)) {
+				inNotAllowed = false;
+			}
+			if (line.includes(REFRACTION.START)) {
+				inAllowed = true;
+			}
+			if (line.includes(REFRACTION.END)) {
+				inAllowed = false;
+			}
+			if (
+				!(inNotAllowed && inAllowed) &&
+				!line.includes(REFRACTION_NOT_ALLOWED.START) &&
+				!line.includes(REFRACTION_NOT_ALLOWED.END) &&
+				!line.includes(REFRACTION.START) &&
+				!line.includes(REFRACTION.END)
 			) {
 				newLines.push(line);
 			}
