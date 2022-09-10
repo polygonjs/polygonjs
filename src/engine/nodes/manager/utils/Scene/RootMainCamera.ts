@@ -46,7 +46,7 @@ export class RootMainCameraController {
 		const elements = path.split(CoreWalker.SEPARATOR);
 		const nodeName = elements[1];
 		const objNode = this.node.node(nodeName);
-		if (elements.length != 2) {
+		if (objNode && elements.length != 2) {
 			const displayNodeController = (objNode as GeoObjNode).displayNodeController;
 			if (displayNodeController) {
 				return (objNode as GeoObjNode).displayNodeController.displayNode() || objNode;

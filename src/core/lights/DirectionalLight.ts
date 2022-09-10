@@ -169,7 +169,7 @@ export class DirectionalLightContainer extends Group {
 
 export class CoreDirectionalLightHelper {
 	public object: Mesh = new Mesh();
-	private _lineMaterial = new LineBasicMaterial({fog: false});
+	private _lineMaterial = new LineBasicMaterial();
 	private _cameraHelper!: CoreCameraHelper;
 	private _square = new Line();
 

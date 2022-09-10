@@ -6,6 +6,15 @@ import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {SVGLoader} from '../../../modules/three/examples/jsm/loaders/SVGLoader';
 import {TTFLoader} from '../../../modules/three/examples/jsm/loaders/TTFLoader';
 
+enum FileFontFormat {
+	JSON = 'json',
+	TTF = 'ttf',
+}
+
+const FILE_FONT_FORMATS: string[] = [FileFontFormat.JSON, FileFontFormat.TTF];
+export function isExtFont(ext: string) {
+	return FILE_FONT_FORMATS.includes(ext);
+}
 export class CoreLoaderFont extends CoreBaseLoader {
 	private _fontLoader: FontLoader;
 
@@ -47,8 +56,8 @@ export class CoreLoaderFont extends CoreBaseLoader {
 					resolve(parsed);
 				},
 				undefined,
-				() => {
-					reject();
+				(err) => {
+					reject(err);
 				}
 			);
 		});

@@ -4,7 +4,7 @@
  *
  *
  */
-
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
@@ -33,8 +33,8 @@ class VaryingWriteGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new VaryingWriteGlParamsConfig();
 export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'varyingWrite'> {
-		return 'varyingWrite';
+	static override type(): Readonly<GlType.VARYING_WRITE> {
+		return GlType.VARYING_WRITE;
 	}
 	static readonly INPUT_NAME = 'vertex';
 

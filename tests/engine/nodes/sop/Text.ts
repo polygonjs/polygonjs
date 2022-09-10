@@ -57,6 +57,50 @@ QUnit.test('sop/text prints no warning', async (assert) => {
 	assert.equal(consoleHistory.error.length, 0);
 });
 
+QUnit.test('sop/text does not fail with an empty text', async (assert) => {
+	const geo1 = window.geo1;
+
+	const text1 = geo1.createNode('text');
+	text1.p.font.set('/fonts/SourceCodePro-Regular.ttf');
+	text1.p.text.set('');
+
+	let container = await text1.compute();
+	assert.equal(container.pointsCount(), 0);
+	assert.equal(container.objectsCount(), 0);
+	assert.notOk(text1.states.error.active());
+	assert.notOk(text1.states.error.message());
+});
+
+QUnit.test('sop/text does not fail with just spaces', async (assert) => {
+	const geo1 = window.geo1;
+
+	const text1 = geo1.createNode('text');
+	text1.p.font.set('/fonts/SourceCodePro-Regular.ttf');
+	text1.p.text.set(' ');
+
+	let container = await text1.compute();
+	assert.equal(container.pointsCount(), 0);
+	assert.equal(container.objectsCount(), 0);
+	assert.notOk(text1.states.error.active());
+	assert.notOk(text1.states.error.message());
+});
+
+QUnit.test('sop/text does not fail with just spaces and newlines', async (assert) => {
+	const geo1 = window.geo1;
+
+	const text1 = geo1.createNode('text');
+	text1.p.font.set('/fonts/SourceCodePro-Regular.ttf');
+	text1.p.text.set(` 
+	 
+	`);
+
+	let container = await text1.compute();
+	assert.equal(container.pointsCount(), 0);
+	assert.equal(container.objectsCount(), 0);
+	assert.notOk(text1.states.error.active());
+	assert.notOk(text1.states.error.message());
+});
+
 QUnit.test('sop/text with json font', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -85,7 +129,10 @@ QUnit.test('sop/text with a non existing font', async (assert) => {
 
 	let container = await text1.compute();
 	assert.ok(container, 'container exists');
-	assert.equal(text1.states.error.message(), 'count not load font (/fonts/doesnotexist.ttf)');
+	assert.equal(
+		text1.states.error.message(),
+		'could not load font (/fonts/doesnotexist.ttf, reason:fetch for "http://localhost:5000/fonts/doesnotexist.ttf" responded with 406: Not Acceptable)'
+	);
 	assert.equal(container.pointsCount(), 0);
 });
 

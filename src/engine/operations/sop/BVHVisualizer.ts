@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {MeshBVHVisualizer} from './utils/Bvh/three-mesh-bvh';
-import {Mesh} from 'three';
+import {Mesh, Object3D} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface BVHVisualizerSopParams extends DefaultOperationParams {
@@ -19,19 +19,36 @@ export class BVHVisualizerSopOperation extends BaseSopOperation {
 		displayEdges: true,
 		displayParents: false,
 	};
-	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.ALWAYS;
 	static override type(): Readonly<'BVHVisualizer'> {
 		return 'BVHVisualizer';
 	}
-	override cook(input_contents: CoreGroup[], params: BVHVisualizerSopParams) {
-		const coreGroup = input_contents[0];
-		const object = coreGroup.objects()[0] as Mesh;
-		const visualizer = new MeshBVHVisualizer(object, params.depth);
-		visualizer.opacity = params.opacity;
-		visualizer.displayEdges = params.displayEdges;
-		visualizer.displayParents = params.displayParents;
-		visualizer.update();
+	override cook(inputCoreGroups: CoreGroup[], params: BVHVisualizerSopParams) {
+		const inputCoreGroup = inputCoreGroups[0];
+		const objects = inputCoreGroup.objects();
+		const newObjects: Object3D[] = [];
+		for (let object of objects) {
+			newObjects.push(object);
+			object.traverse((childObject) => {
+				const mesh = childObject as Mesh;
+				if (mesh.isMesh) {
+					const visualizer = new MeshBVHVisualizer(mesh, params.depth);
+					visualizer.opacity = params.opacity;
+					visualizer.displayEdges = params.displayEdges;
+					visualizer.displayParents = params.displayParents;
+					visualizer.update();
 
-		return this.createCoreGroupFromObjects([visualizer]);
+					const parent = mesh.parent;
+					if (parent) {
+						parent.add(visualizer);
+					} else {
+						newObjects.push(visualizer);
+					}
+					mesh.visible = false;
+				}
+			});
+		}
+
+		return this.createCoreGroupFromObjects(newObjects);
 	}
 }

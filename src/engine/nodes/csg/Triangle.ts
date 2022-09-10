@@ -7,7 +7,8 @@ import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
 import jscad from '@jscad/modeling';
-import {degToRad} from 'three/src/math/MathUtils';
+import {MathUtils} from 'three';
+const {degToRad} = MathUtils;
 const {triangle} = jscad.primitives;
 
 enum TriangleType {

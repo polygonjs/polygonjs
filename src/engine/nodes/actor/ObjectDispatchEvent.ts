@@ -36,6 +36,9 @@ export class ObjectDispatchEventActorNode extends TypedActorNode<ObjectDispatchE
 				CONNECTION_OPTIONS
 			),
 		]);
+		this.io.outputs.setNamedOutputConnectionPoints([
+			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER),
+		]);
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
@@ -43,5 +46,6 @@ export class ObjectDispatchEventActorNode extends TypedActorNode<ObjectDispatchE
 		const eventName = this._inputValueFromParam<ParamType.STRING>(this.p.eventName, context);
 
 		Object3D.dispatchEvent({type: eventName});
+		this.runTrigger(context);
 	}
 }

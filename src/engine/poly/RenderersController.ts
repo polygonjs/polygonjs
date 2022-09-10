@@ -1,5 +1,11 @@
-import {WebGLRenderer, WebGLRendererParameters} from 'three';
-import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three';
+import {
+	WebGLRenderer,
+	WebGLRendererParameters,
+	WebGLRenderTarget,
+	WebGLRenderTargetOptions,
+	LinearEncoding,
+	NoToneMapping,
+} from 'three';
 export interface POLYWebGLRenderer extends WebGLRenderer {
 	_polygonId?: number;
 }
@@ -198,5 +204,34 @@ export class RenderersController {
 		} else {
 			return new WebGLRenderTarget(width, height, parameters);
 		}
+	}
+
+	/*
+	 *
+	 * Linear renderer, used for cop/builder, cop/render
+	 *
+	 */
+	private _linearRenderer: WebGLRenderer | undefined;
+	linearRenderer() {
+		return (this._linearRenderer = this._linearRenderer || this._createLinearRenderer());
+	}
+	private _createLinearRenderer() {
+		const canvas = document.createElement('canvas');
+		const gl = this.getRenderingContext(canvas);
+		if (!gl) {
+			return;
+		}
+		const renderer = this.createWebGLRenderer({
+			// antialias: true,
+			// stencil: true,
+			// depth: false,
+			alpha: true,
+			premultipliedAlpha: true,
+			canvas,
+			context: gl,
+		});
+		renderer.outputEncoding = LinearEncoding;
+		renderer.toneMapping = NoToneMapping;
+		return renderer;
 	}
 }

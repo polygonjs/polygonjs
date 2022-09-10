@@ -7,7 +7,7 @@ import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_B
 import {EffectPass, BlendFunction, LUT3DEffect} from 'postprocessing';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
+import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
 import {NodeContext} from '../../poly/NodeContext';
 import {Texture} from 'three';
 class LutPostParamsConfig extends NodeParamsConfig {
@@ -26,7 +26,7 @@ class LutPostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 	});
 	/** @param render mode */
-	blendFunction = ParamConfig.INTEGER(BLEND_FUNCTIONS.indexOf(BlendFunction.NORMAL), {
+	blendFunction = ParamConfig.INTEGER(BlendFunction.NORMAL, {
 		...PostParamOptions,
 		...BLEND_FUNCTION_MENU_OPTIONS,
 	});
@@ -59,7 +59,7 @@ export class LutPostNode extends TypedPostProcessNode<EffectPass, LutPostParamsC
 			return;
 		}
 		effect.blendMode.opacity.value = this.pv.opacity;
-		effect.blendMode.blendFunction = BLEND_FUNCTIONS[this.pv.blendFunction];
+		effect.blendMode.blendFunction = this.pv.blendFunction;
 		const texture = await this._fetchTexture();
 		if (texture) {
 			effect.lut = texture;

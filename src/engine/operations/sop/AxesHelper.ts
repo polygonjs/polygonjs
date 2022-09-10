@@ -16,6 +16,9 @@ export class AxesHelperSopOperation extends BaseSopOperation {
 	override cook(input_contents: CoreGroup[], params: AxesHelperSopParams) {
 		const helper = new AxesHelper();
 		helper.matrixAutoUpdate = false;
+		if (this._node) {
+			helper.name = this._node.name();
+		}
 		return this.createCoreGroupFromObjects([helper]);
 	}
 }

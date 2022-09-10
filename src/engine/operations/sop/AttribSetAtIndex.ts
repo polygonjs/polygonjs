@@ -60,6 +60,9 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 			case AttribClass.OBJECT:
 				this._addObjectAttribute(attribType, coreGroup, params);
 				return;
+			case AttribClass.CORE_GROUP:
+				this._addCoreGroupAttribute(attribType, coreGroup, params);
+				return;
 		}
 		TypeAssert.unreachable(attribClass);
 	}
@@ -105,6 +108,17 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 				return;
 			case AttribType.STRING:
 				this._addStringAttributeToObject(coreObject, params);
+				return;
+		}
+		TypeAssert.unreachable(attribType);
+	}
+	private _addCoreGroupAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
+		switch (attribType) {
+			case AttribType.NUMERIC:
+				this._addNumericAttributeToCoreGroup(coreGroup, params);
+				return;
+			case AttribType.STRING:
+				this._addStringAttributeToCoreGroup(coreGroup, params);
 				return;
 		}
 		TypeAssert.unreachable(attribType);
@@ -163,6 +177,11 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		const attribName = params.name;
 		coreObject.setAttribValue(attribName, value);
 	}
+	private _addNumericAttributeToCoreGroup(coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
+		const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
+		const attribName = params.name;
+		coreGroup.setAttribValue(attribName, value);
+	}
 
 	private _addStringAttributeToPoints(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
 		const coreGeometry = coreObject.coreGeometry();
@@ -207,6 +226,10 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 	private _addStringAttributeToObject(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
 		const value = params.string;
 		coreObject.setAttribValue(params.name, value);
+	}
+	private _addStringAttributeToCoreGroup(coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
+		const value = params.string;
+		coreGroup.setAttribValue(params.name, value);
 	}
 
 	//

@@ -11,7 +11,6 @@ import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {Material} from 'three';
 import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {UNIFORM_PARAM_PREFIX} from '../../../core/material/uniform';
-import {ParamType} from '../../poly/ParamType';
 import {MaterialUserDataUniforms} from '../gl/code/assemblers/materials/OnBeforeCompile';
 
 type AvailableActorType =
@@ -45,10 +44,12 @@ class SetMaterialUniformActorParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param lerp */
-	lerp = ParamConfig.FLOAT(1, {
-		range: [0, 1],
-		rangeLocked: [false, false],
-	});
+	// lerp cannot yet be a parameter,
+	// otherwise it will not appear as a named input
+	// lerp = ParamConfig.FLOAT(1, {
+	// 	range: [0, 1],
+	// 	rangeLocked: [false, false],
+	// });
 }
 const ParamsConfig = new SetMaterialUniformActorParamsConfig();
 
@@ -61,14 +62,20 @@ export class SetMaterialUniformActorNode extends TypedActorNode<SetMaterialUnifo
 	override initializeNode() {
 		this.io.connection_points.spare_params.setInputlessParamNames(['name', 'type']);
 		this.io.connection_points.set_input_name_function(
-			(index: number) => [TRIGGER_CONNECTION_NAME, ActorConnectionPointType.MATERIAL, this.uniformType()][index]
+			(index: number) =>
+				[TRIGGER_CONNECTION_NAME, ActorConnectionPointType.MATERIAL, this.uniformType(), 'lerp'][index]
 		);
 		this.io.connection_points.set_expected_input_types_function(() => this._expectedInputType());
 		this.io.connection_points.set_output_name_function((index: number) => TRIGGER_CONNECTION_NAME);
 		this.io.connection_points.set_expected_output_types_function(() => [ActorConnectionPointType.TRIGGER]);
 	}
 	private _expectedInputType() {
-		return [ActorConnectionPointType.TRIGGER, ActorConnectionPointType.MATERIAL, this.uniformType()];
+		return [
+			ActorConnectionPointType.TRIGGER,
+			ActorConnectionPointType.MATERIAL,
+			this.uniformType(),
+			ActorConnectionPointType.FLOAT,
+		];
 	}
 	uniformType() {
 		return GL_CONNECTION_POINT_TYPES[this.pv.type] || ActorConnectionPointType.FLOAT;
@@ -83,7 +90,7 @@ export class SetMaterialUniformActorNode extends TypedActorNode<SetMaterialUnifo
 			(context.Object3D as Mesh).material;
 
 		if (material) {
-			const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
+			const lerp = this._inputValue<ActorConnectionPointType.FLOAT>('lerp', context) || 1;
 			const prefix = isBooleanTrue(this.pv.addPrefix) ? UNIFORM_PARAM_PREFIX : ``;
 			const uniformName = `${prefix}${this.pv.name}`;
 			const paramValue = this._inputValue<any>(this.uniformType(), context);

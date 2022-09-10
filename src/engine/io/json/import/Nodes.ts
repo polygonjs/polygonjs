@@ -30,6 +30,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		for (let nodeName of non_optimized_names) {
 			const node_data = data[nodeName];
 			const nodeType = JsonImporterMigrateHelper.migrateNodeType(this._node, node_data);
+			JsonImporterMigrateHelper.migrateParams(scene_importer, this._node, node_data);
 			const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 			const nodeCreateOptions: NodeCreateOptions = {
 				paramsInitValueOverrides,
@@ -158,7 +159,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		for (let node of nonOptimizedNodes) {
 			const importer = importers_by_node_name.get(node.name());
 			if (importer) {
-				importer.process_inputs_data(data[node.name()]);
+				importer.process_inputs_data(scene_importer, data[node.name()]);
 			}
 		}
 	}

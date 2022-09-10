@@ -1,12 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
 import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreTransform} from '../../../core/Transform';
-import {CircleBufferGeometry} from 'three';
+import {Vector3, CircleGeometry, BufferGeometry} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface CircleSopParams extends DefaultOperationParams {
@@ -49,7 +47,7 @@ export class CircleSopOperation extends BaseSopOperation {
 	}
 
 	private _createDisk(params: CircleSopParams) {
-		const geometry = new CircleBufferGeometry(params.radius, params.segments);
+		const geometry = new CircleGeometry(params.radius, params.segments);
 		this._setCenterAndDirection(geometry, params);
 		return this.createCoreGroupFromGeometry(geometry);
 	}

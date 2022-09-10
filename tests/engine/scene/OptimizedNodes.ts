@@ -47,7 +47,7 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 
 	Poly.setPlayerMode(true);
 	const scene_player = await SceneJsonImporter.loadData(data);
-	assert.equal(scene_player.graph.nextId(), scene_no_player.graph.nextId() - 38);
+	assert.equal(scene_player.graph.nextId(), scene_no_player.graph.nextId() - 39);
 	assert.equal(scene_player.nodesController.allNodes().length, scene_no_player.nodesController.allNodes().length - 1);
 
 	const transform1_player = scene_player.node(transform1.path()) as TransformSopNode;
@@ -97,7 +97,7 @@ QUnit.test(
 		Poly.setPlayerMode(true);
 		const scene_player = await SceneJsonImporter.loadData(data);
 		const diff = scene_no_player.graph.nextId() - scene_player.graph.nextId();
-		assert.equal(diff, 76, '76 diff');
+		assert.equal(diff, 78, '78 diff');
 		assert.equal(
 			scene_player.nodesController.allNodes().length,
 			scene_no_player.nodesController.allNodes().length - 4,

@@ -8,8 +8,21 @@ import {
 	MeshBVH,
 	MeshBVHVisualizer,
 	ExtendedTriangle,
+	CENTER,
+	AVERAGE,
+	SAH,
 } from 'three-mesh-bvh';
-export {computeBoundsTree, disposeBoundsTree, acceleratedRaycast, MeshBVH, MeshBVHVisualizer, ExtendedTriangle};
+export {
+	computeBoundsTree,
+	disposeBoundsTree,
+	acceleratedRaycast,
+	MeshBVH,
+	MeshBVHVisualizer,
+	ExtendedTriangle,
+	CENTER,
+	AVERAGE,
+	SAH,
+};
 export type ShapecastIntersection = number;
 
 export interface BufferGeometryWithBVH extends BufferGeometry {

@@ -3,6 +3,7 @@
  *
  *
  */
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {TypedGlNode} from './_Base';
 import {
 	GL_CONNECTION_POINT_TYPES,
@@ -39,8 +40,8 @@ const ParamsConfig = new ParamGlParamsConfig();
 
 export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'param'> {
-		return 'param';
+	static override type(): Readonly<GlType.PARAM> {
+		return GlType.PARAM;
 	}
 	// protected _allow_inputs_created_from_params: boolean = false;
 	override initializeNode() {

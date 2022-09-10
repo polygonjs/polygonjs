@@ -37,7 +37,7 @@ QUnit.test('dataUrl json', async (assert) => {
 	assert.equal(container.pointsCount(), 0);
 	assert.equal(
 		dataUrl1.states.error.message(),
-		'could not load geometry from /dataurl_doesnotexist.json (SyntaxError: Unexpected token < in JSON at position 0)'
+		'could not load geometry from /dataurl_doesnotexist.json (SyntaxError: Unexpected token \'<\', "<!DOCTYPE "... is not valid JSON)'
 	);
 
 	// restore it with a good url

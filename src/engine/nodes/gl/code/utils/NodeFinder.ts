@@ -1,11 +1,10 @@
+import {GlType} from './../../../../poly/registers/nodes/types/Gl';
 import {BaseGlParentNode} from '../Controller';
 import {BaseGlNodeType} from '../../_Base';
-import {VaryingWriteGlNode} from '../../VaryingWrite';
-import {AttributeGlNode} from '../../Attribute';
 
 export class GlNodeFinder {
 	static findOutputNodes(node: BaseGlParentNode) {
-		const output_nodes = node.nodesByType('output');
+		const output_nodes = node.nodesByType(GlType.OUTPUT);
 		return output_nodes;
 	}
 	static findParamGeneratingNodes(node: BaseGlParentNode) {
@@ -20,11 +19,11 @@ export class GlNodeFinder {
 		return list;
 	}
 	static findVaryingNodes(node: BaseGlParentNode) {
-		const nodes = node.nodesByType(VaryingWriteGlNode.type());
+		const nodes = node.nodesByType(GlType.VARYING_WRITE);
 		return nodes;
 	}
 	static findAttributeExportNodes(node: BaseGlParentNode) {
-		const nodes = node.nodesByType(AttributeGlNode.type());
+		const nodes = node.nodesByType(GlType.ATTRIBUTE);
 		return nodes.filter((node) => {
 			// do not use attributes that are used as an input, as export
 			// return (node.used_output_names().length == 0) &&

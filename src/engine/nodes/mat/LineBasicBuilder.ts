@@ -12,7 +12,6 @@ import {ShaderAssemblerLine} from '../gl/code/assemblers/materials/Line';
 import {TypedBuilderMatNode, BaseBuilderParamConfig} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-import {FogParamConfig, FogController} from './utils/UniformsFogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {LineBasicMaterial} from 'three';
@@ -30,12 +29,10 @@ interface LineBasicBuilderMaterial extends LineBasicMaterial {
 	};
 }
 
-class LineBasicBuilderMatParamsConfig extends FogParamConfig(
-	AdvancedCommonParamConfig(
-		BaseBuilderParamConfig(
-			/* advanced */ AdvancedFolderParamConfig(
-				UniformsTransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-			)
+class LineBasicBuilderMatParamsConfig extends AdvancedCommonParamConfig(
+	BaseBuilderParamConfig(
+		/* advanced */ AdvancedFolderParamConfig(
+			UniformsTransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 		)
 	)
 ) {
@@ -79,7 +76,6 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
 		}
 
 		UniformsTransparencyController.update(this);
-		FogController.update(this);
 
 		this.compileIfRequired();
 

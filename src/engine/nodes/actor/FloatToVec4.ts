@@ -1,3 +1,8 @@
+/**
+ * converts a float to a vector4
+ *
+ *
+ */
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {
 	ActorConnectionPointType,

@@ -39,9 +39,9 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 			return;
 		}
 		const controls = await this.createControlsInstance(camera, canvas);
-		const current_controls = this._controls_by_viewer.get(viewer);
-		if (current_controls) {
-			current_controls.dispose();
+		const currentControls = this._controls_by_viewer.get(viewer);
+		if (currentControls) {
+			currentControls.dispose();
 		}
 		this._controls_by_viewer.set(viewer, controls);
 		const performance = Poly.performance.performanceManager();

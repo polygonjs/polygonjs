@@ -288,12 +288,18 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 	input_connection_type(index: number): ConnectionPointEnumMap[NC] | undefined {
 		const connections = this.node.io.connections.inputConnections();
-		if (connections) {
-			const connection = connections[index];
-			if (connection) {
-				return connection.src_connection_point()!.type() as ConnectionPointEnumMap[NC];
-			}
+		if (!connections) {
+			return;
 		}
+		const connection = connections[index];
+		if (!connection) {
+			return;
+		}
+		const connectionPoint = connection.src_connection_point();
+		if (!connectionPoint) {
+			return;
+		}
+		return connectionPoint.type() as ConnectionPointEnumMap[NC];
 	}
 	// input_connection_point_from_connection(connection: TypedNodeConnection<NC>): ConnectionPointTypeMap[NC] {
 	// 	const node_dest = connection.node_dest;

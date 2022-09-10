@@ -1,3 +1,8 @@
+/**
+ * returns the math function pow(x,y)
+ *
+ *
+ */
 import {MathFunctionArg2OperationFactory} from './_Math_Arg2Operation';
 
 export class PowActorNode extends MathFunctionArg2OperationFactory('pow', {

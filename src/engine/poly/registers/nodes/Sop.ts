@@ -105,6 +105,7 @@ import {NormalsHelperSopNode} from '../../../nodes/sop/NormalsHelper';
 import {NullSopNode} from '../../../nodes/sop/Null';
 import {ObjectMergeSopNode} from '../../../nodes/sop/ObjectMerge';
 import {ObjectPropertiesSopNode} from '../../../nodes/sop/ObjectProperties';
+import {ObjectsLayoutSopNode} from '../../../nodes/sop/ObjectsLayout';
 import {OceanPlaneSopNode} from '../../../nodes/sop/OceanPlane';
 import {OperationsComposerSopNode} from '../../../nodes/sop/OperationsComposer';
 import {OrthographicCameraSopNode} from '../../../nodes/sop/OrthographicCamera';
@@ -273,6 +274,7 @@ export interface GeoNodeChildrenMap {
 	null: NullSopNode;
 	objectMerge: ObjectMergeSopNode;
 	objectProperties: ObjectPropertiesSopNode;
+	objectsLayout: ObjectsLayoutSopNode;
 	oceanPlane: OceanPlaneSopNode;
 	operationsComposer: OperationsComposerSopNode;
 	orthographicCamera: OrthographicCameraSopNode;
@@ -403,6 +405,7 @@ import {MaterialSopOperation} from '../../../operations/sop/Material';
 import {MaterialPropertiesSopOperation} from '../../../operations/sop/MaterialProperties';
 import {NullSopOperation} from '../../../operations/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../operations/sop/ObjectProperties';
+import {ObjectsLayoutSopOperation} from '../../../operations/sop/ObjectsLayout';
 import {OceanPlaneSopOperation} from '../../../operations/sop/OceanPlane';
 import {OrthographicCameraSopOperation} from '../../../operations/sop/OrthographicCamera';
 import {PaletteSopOperation} from '../../../operations/sop/Palette';
@@ -501,6 +504,7 @@ export class SopRegister {
 		poly.registerOperation(MaterialPropertiesSopOperation);
 		poly.registerOperation(NullSopOperation);
 		poly.registerOperation(ObjectPropertiesSopOperation);
+		poly.registerOperation(ObjectsLayoutSopOperation);
 		poly.registerOperation(OceanPlaneSopOperation);
 		poly.registerOperation(OrthographicCameraSopOperation);
 		poly.registerOperation(PaletteSopOperation);
@@ -642,6 +646,7 @@ export class SopRegister {
 		poly.registerNode(NullSopNode, CATEGORY_SOP.FLOW);
 		poly.registerNode(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ObjectPropertiesSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(ObjectsLayoutSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(OceanPlaneSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(OperationsComposerSopNode, CATEGORY_SOP.ADVANCED, {userAllowed: false});
 		poly.registerNode(OrthographicCameraSopNode, CATEGORY_SOP.RENDER);
@@ -664,7 +669,7 @@ export class SopRegister {
 		poly.registerNode(ReflectorSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(ResampleSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(RestAttributesSopNode, CATEGORY_SOP.ATTRIBUTE);
-		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.INPUT);
+		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetChildrenSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetGeometrySopNode, CATEGORY_SOP.MODIFIER);

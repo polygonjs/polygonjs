@@ -1,36 +1,92 @@
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 
-QUnit.test('attrib_delete simple vertex', async (assert) => {
+QUnit.test('sop/attribDelete simple vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
-	const attrib_create1 = geo1.createNode('attribCreate');
-	const attrib_delete1 = geo1.createNode('attribDelete');
-	attrib_create1.setInput(0, plane1);
-	attrib_delete1.setInput(0, attrib_create1);
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const attribDelete1 = geo1.createNode('attribDelete');
+	attribCreate1.setInput(0, plane1);
+	attribDelete1.setInput(0, attribCreate1);
 
-	attrib_create1.p.name.set('test');
-	attrib_create1.p.value1.set('@ptnum');
-	attrib_delete1.p.name.set('test');
-	attrib_delete1.setAttribClass(AttribClass.VERTEX);
+	attribCreate1.p.name.set('test');
+	attribCreate1.p.value1.set('@ptnum');
+	attribDelete1.p.name.set('test');
+	attribDelete1.setAttribClass(AttribClass.VERTEX);
 
-	let container, core_group, geometry;
-	container = await attrib_create1.compute();
-	console.log(attrib_create1.states.error.message());
-	assert.notOk(attrib_create1.states.error.active());
-	assert.notOk(attrib_create1.states.error.message());
-	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	let container = await attribCreate1.compute();
+	assert.notOk(attribCreate1.states.error.active());
+	assert.notOk(attribCreate1.states.error.message());
+	let coreGroup = container.coreContent()!;
+	let geometry = coreGroup.objectsWithGeo()[0].geometry;
 	assert.ok(geometry.getAttribute('test') != null);
 
-	container = await attrib_delete1.compute();
-	assert.notOk(attrib_delete1.states.error.active());
-	assert.notOk(attrib_delete1.states.error.message());
-	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	container = await attribDelete1.compute();
+	assert.notOk(attribDelete1.states.error.active());
+	assert.notOk(attribDelete1.states.error.message());
+	coreGroup = container.coreContent()!;
+	geometry = coreGroup.objectsWithGeo()[0].geometry;
 	assert.notOk(geometry.getAttribute('test') != null);
 });
 
-QUnit.test('attrib_delete simple object', async (assert) => {
-	assert.equal(1, 2);
+QUnit.test('sop/attribDelete simple object', async (assert) => {
+	const geo1 = window.geo1;
+	const plane1 = geo1.createNode('plane');
+
+	const attribCreate1 = geo1.createNode('attribCreate');
+	attribCreate1.setInput(0, plane1);
+	attribCreate1.setAttribClass(AttribClass.OBJECT);
+	attribCreate1.p.name.set('test');
+	attribCreate1.p.value1.set(2);
+
+	let container = await attribCreate1.compute();
+	assert.notOk(attribCreate1.states.error.active());
+	assert.notOk(attribCreate1.states.error.message());
+	let coreGroup = container.coreContent()!;
+	let coreObject = coreGroup.coreObjects()[0];
+	assert.equal(coreObject.attribValue('test'), 2);
+	assert.deepEqual(coreObject.attribNames(), ['test']);
+
+	const attribDelete1 = geo1.createNode('attribDelete');
+	attribDelete1.p.name.set('test');
+	attribDelete1.setAttribClass(AttribClass.OBJECT);
+	attribDelete1.setInput(0, attribCreate1);
+
+	container = await attribDelete1.compute();
+	assert.notOk(attribDelete1.states.error.active());
+	assert.notOk(attribDelete1.states.error.message());
+	coreGroup = container.coreContent()!;
+	coreObject = coreGroup.coreObjects()[0];
+	assert.notOk(coreObject.attribValue('test'));
+	assert.deepEqual(coreObject.attribNames(), []);
+});
+
+QUnit.test('sop/attribDelete simple coreGroup', async (assert) => {
+	const geo1 = window.geo1;
+	const plane1 = geo1.createNode('plane');
+
+	const attribCreate1 = geo1.createNode('attribCreate');
+	attribCreate1.setInput(0, plane1);
+	attribCreate1.setAttribClass(AttribClass.CORE_GROUP);
+	attribCreate1.p.name.set('test');
+	attribCreate1.p.value1.set(2);
+
+	let container = await attribCreate1.compute();
+	assert.notOk(attribCreate1.states.error.active());
+	assert.notOk(attribCreate1.states.error.message());
+	let coreGroup = container.coreContent()!;
+	assert.equal(coreGroup.attribValue('test'), 2);
+	assert.deepEqual(coreGroup.attribNames(), ['test']);
+
+	const attribDelete1 = geo1.createNode('attribDelete');
+	attribDelete1.p.name.set('test');
+	attribDelete1.setAttribClass(AttribClass.CORE_GROUP);
+	attribDelete1.setInput(0, attribCreate1);
+
+	container = await attribDelete1.compute();
+	assert.notOk(attribDelete1.states.error.active());
+	assert.notOk(attribDelete1.states.error.message());
+	coreGroup = container.coreContent()!;
+	assert.notOk(coreGroup.attribValue('test'));
+	assert.deepEqual(coreGroup.attribNames(), []);
 });

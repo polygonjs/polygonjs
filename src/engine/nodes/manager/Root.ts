@@ -1,3 +1,20 @@
+/**
+ * the node to rull them all
+ *
+ * @remarks
+ *
+ * The root node is unique in the scene. it is the higest parent, just above the [obj](/docs/nodes/obj) nodes.
+ *
+ * It allows you to control the following scene properties:
+ *
+ * - the scene background (which can be nothing, a plain color, or a texture)
+ * - which camera is used when exporting the scene
+ * - the fog
+ * - an environment map which would override every material's environment map
+ * - a material which would override every other material
+ * - the display of an audio icon in the viewer, which is useful when using sound in your scene, and allowing users to turn it on/off
+ *
+ */
 import {TypedBaseManagerNode} from './_Base';
 import {BaseObjNodeType} from '../obj/_Base';
 import {NodeContext} from '../../poly/NodeContext';
@@ -192,8 +209,8 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 
 	private _addToScene(node: BaseObjNodeType): void {
 		if (node.attachableToHierarchy()) {
-			const parent_object = this.getParentForNode(node);
-			if (parent_object) {
+			const parentObject = this.getParentForNode(node);
+			if (parentObject) {
 				// await node.params.eval_all().then((params_eval_key) => {
 				// 	node.compute();
 				// });
@@ -208,8 +225,13 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 					// to take care of it itself.
 					// node.compute();
 
-					node.childrenDisplayController?.requestDisplayNodeContainer();
-					node.addObjectToParent(parent_object);
+					if (node.childrenDisplayController) {
+						node.childrenDisplayController.requestDisplayNodeContainer();
+					} else {
+						node.compute();
+					}
+
+					node.addObjectToParent(parentObject);
 				} else {
 					node.removeObjectFromParent();
 					// parent_object.remove(node.object);

@@ -1,8 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh} from 'three';
-import {BufferGeometry} from 'three';
-import {Object3D} from 'three';
+import {Mesh, BufferGeometry, Object3D} from 'three';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {CoreSVGLoader} from '../../../core/loader/SVG';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -16,6 +14,13 @@ interface SvgSopParams extends DefaultOperationParams {
 	// strokes
 	drawStrokes: boolean;
 	strokesWireframe: boolean;
+	// style override
+	tStyleOverride: boolean;
+	strokeWidth: number;
+	// advanced
+	tadvanced: boolean;
+	isCCW: boolean;
+	// noHoles: boolean;
 }
 
 const DEFAULT_URL = `${ASSETS_ROOT}/models/svg/tiger.svg`;
@@ -26,26 +31,34 @@ export class FileSVGSopOperation extends BaseSopOperation {
 		fillShapesWireframe: false,
 		drawStrokes: true,
 		strokesWireframe: false,
+		tStyleOverride: false,
+		strokeWidth: 1,
+		tadvanced: false,
+		isCCW: false,
+		// noHoles: false,
 	};
 	static override type(): Readonly<SopTypeFile.FILE_SVG> {
 		return SopTypeFile.FILE_SVG;
 	}
 
-	override cook(input_contents: CoreGroup[], params: SvgSopParams): Promise<CoreGroup> {
+	override async cook(input_contents: CoreGroup[], params: SvgSopParams): Promise<CoreGroup> {
 		const loader = new CoreSVGLoader(params.url, this._node);
 
-		return new Promise(async (resolve) => {
+		try {
 			const group = await loader.load(params);
 
 			for (let child of group.children) {
-				this._ensure_geometry_has_index(child);
+				this._ensureGeometryHasIndex(child);
 			}
 
-			resolve(this.createCoreGroupFromObjects(group.children));
-		});
+			return this.createCoreGroupFromObjects([...group.children]);
+		} catch (err) {
+			this.states?.error.set(`fail to load SVG (${(err as Error).message})`);
+			return this.createCoreGroupFromObjects([]);
+		}
 	}
 
-	private _ensure_geometry_has_index(object: Object3D) {
+	private _ensureGeometryHasIndex(object: Object3D) {
 		const mesh = object as Mesh;
 		const geometry = mesh.geometry;
 		if (geometry) {

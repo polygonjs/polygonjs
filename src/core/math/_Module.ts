@@ -24,18 +24,22 @@ export class CoreMath {
 		}
 	}
 
-	static fit01(val: number, dest_min: number, dest_max: number): number {
+	static fit01(val: number, destMin: number, destMax: number): number {
 		// const size = max - min;
 		// return (val - min) / size;
-		return this.fit(val, 0, 1, dest_min, dest_max);
+		return this.fit(val, 0, 1, destMin, destMax);
 	}
 
-	static fit(val: number, src_min: number, src_max: number, dest_min: number, dest_max: number): number {
-		const src_range = src_max - src_min;
-		const dest_range = dest_max - dest_min;
+	static fit(val: number, srcMin: number, srcMax: number, destMin: number, destMax: number): number {
+		const src_range = srcMax - srcMin;
+		const dest_range = destMax - destMin;
 
-		const r = (val - src_min) / src_range;
-		return r * dest_range + dest_min;
+		const r = (val - srcMin) / src_range;
+		return r * dest_range + destMin;
+	}
+	static fitClamp(val: number, srcMin: number, srcMax: number, destMin: number, destMax: number): number {
+		const r = this.fit(val, srcMin, srcMax, destMin, destMax);
+		return this.clamp(r, destMin, destMax);
 	}
 	static blend(num0: number, num1: number, blend: number) {
 		return (1 - blend) * num0 + blend * num1;

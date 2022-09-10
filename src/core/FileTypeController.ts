@@ -7,6 +7,7 @@ export enum ImageExtension {
 	EXR = 'exr',
 	KTX2 = 'ktx2',
 	HDR = 'hdr',
+	WEBP = 'webp',
 }
 export const IMAGE_EXTENSIONS: string[] = [
 	ImageExtension.GIF,
@@ -16,6 +17,7 @@ export const IMAGE_EXTENSIONS: string[] = [
 	ImageExtension.EXR,
 	ImageExtension.KTX2,
 	ImageExtension.HDR,
+	ImageExtension.WEBP,
 ];
 export enum GeometryExtension {
 	DRC = 'drc',
@@ -41,7 +43,12 @@ export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.PDB,
 	GeometryExtension.PLY,
 	GeometryExtension.STL,
+	GeometryExtension.SVG,
 ];
+export enum SDFExtension {
+	BIN = 'bin',
+}
+export const SDF_EXTENSIONS: string[] = [SDFExtension.BIN];
 
 function urlExt(url: string) {
 	const url_without_query_params = url.split('?')[0];
@@ -63,6 +70,9 @@ export function isExtGif(ext: string) {
 }
 export function isExtGeometry(ext: string) {
 	return GEOMETRY_EXTENSIONS.includes(ext);
+}
+export function isExtSDF(ext: string) {
+	return SDF_EXTENSIONS.includes(ext);
 }
 export function isUrlVideo(url: string): boolean {
 	const ext = urlExt(url);

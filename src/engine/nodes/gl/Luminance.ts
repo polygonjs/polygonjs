@@ -33,7 +33,7 @@ export class LuminanceGlNode extends TypedGlNode<LuminanceGlParamsConfig> {
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const value = ThreeToGl.vector3(this.variableForInputParam(this.p.color));
 
-		const lum = this.glVarName('lum');
+		const lum = this.glVarName(OUTPUT_NAME);
 		// linearToRelativeLuminance is declared in threejs common.glsl.js
 		const body_line = `float ${lum} = linearToRelativeLuminance(${value})`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);

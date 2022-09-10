@@ -1,3 +1,8 @@
+/**
+ * converts an integer to a boolean
+ *
+ *
+ */
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {

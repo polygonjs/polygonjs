@@ -1,3 +1,8 @@
+/**
+ * divides the 1st input by the 2nd one
+ *
+ *
+ */
 import {MathFunctionArg2OperationFactory} from './_Math_Arg2Operation';
 
 export class DivideActorNode extends MathFunctionArg2OperationFactory('divide', {

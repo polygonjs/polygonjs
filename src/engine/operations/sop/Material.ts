@@ -133,7 +133,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		}
 
 		this._materials_by_uuid.forEach((mat, mat_uuid) => {
-			this._swap_texture(mat, params);
+			this._swapTexture(mat, params);
 		});
 	}
 
@@ -157,11 +157,11 @@ export class MaterialSopOperation extends BaseSopOperation {
 		this._old_mat_by_old_new_id.set(usedMaterial.uuid, object_with_material.material as Material);
 		object_with_material.material = usedMaterial;
 
-		CoreMaterial.apply_render_hook(object, usedMaterial);
+		CoreMaterial.applyRenderHook(object, usedMaterial);
 		CoreMaterial.applyCustomMaterials(object, usedMaterial);
 	}
 
-	private _swap_texture(target_mat: Material, params: MaterialSopParams) {
+	private _swapTexture(target_mat: Material, params: MaterialSopParams) {
 		if (params.texSrc0 == '' || params.texDest0 == '') {
 			return;
 		}

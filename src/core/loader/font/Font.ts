@@ -21,21 +21,37 @@ export interface FontData {
 	glyphs: PolyDictionary<Glyph>;
 	familyName: string;
 }
-const isCCW = false;
+
+export interface FontGenerateShapesOptions {
+	size?: number;
+	isCCW?: boolean;
+	// noHoles?: boolean;
+}
 
 export class Font {
 	public readonly isFont = true;
 	public readonly type = 'font';
 	constructor(private data: FontData) {}
 
-	generateShapes(text: string, size: number = 100) {
+	generateShapes(text: string, options: FontGenerateShapesOptions = {}) {
+		if (options.size == null) {
+			options.size = 100;
+		}
+		if (options.isCCW == null) {
+			options.isCCW = false;
+		}
+		// if (options.noHoles == null) {
+		// 	options.noHoles = false;
+		// }
+
 		const allShapes: Array<Shape[]> = [];
-		const allPaths = createPaths(text, size, this.data);
+		const allPaths = createPaths(text, options.size, this.data);
 
 		for (let pathsForChar of allPaths) {
 			const shapesForChar: Shape[] = [];
 			for (let path of pathsForChar) {
-				Array.prototype.push.apply(shapesForChar, path.toShapes(isCCW));
+				const shapes = path.toShapes(options.isCCW);
+				shapesForChar.push(...shapes);
 			}
 			allShapes.push(shapesForChar);
 		}
@@ -92,7 +108,6 @@ function createPath(char: string, scale: number, offsetX: number, offsetY: numbe
 
 		for (let i = 0, l = outline.length; i < l; ) {
 			const action = outline[i++];
-
 			switch (action) {
 				case 'm': // moveTo
 					x = outline[i++] * scale + offsetX;
@@ -134,6 +149,5 @@ function createPath(char: string, scale: number, offsetX: number, offsetY: numbe
 			}
 		}
 	}
-
 	return {offsetX: glyph.ha * scale, path: path};
 }

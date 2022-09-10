@@ -1,3 +1,8 @@
+/**
+ * returns the max value of 2 inputs
+ *
+ *
+ */
 import {MathFunctionArgNOperationFactory} from './_Math_ArgNOperation';
 
 export class MaxActorNode extends MathFunctionArgNOperationFactory('max', {

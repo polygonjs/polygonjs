@@ -220,6 +220,28 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	parent() {
 		return this.parentController.parent();
 	}
+	insideALockedParent(): boolean {
+		return this.lockedParent() != null;
+	}
+	lockedOrInsideALockedParent(): boolean {
+		return this.polyNodeController?.locked() || this.insideALockedParent();
+	}
+	selfOrLockedParent(): BaseNodeType | null {
+		if (this.polyNodeController?.locked()) {
+			return this;
+		}
+		return this.lockedParent();
+	}
+	lockedParent(): BaseNodeType | null {
+		const parent = this.parent();
+		if (!parent) {
+			return null;
+		}
+		if (parent.polyNodeController && parent.polyNodeController.locked()) {
+			return parent;
+		}
+		return parent.lockedParent();
+	}
 	firstAncestorWithContext<N extends NodeContext>(context: N) {
 		return this.parentController.firstAncestorWithContext(context);
 	}
@@ -408,6 +430,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	emit(event_name: NodeEvent.FLAG_DISPLAY_UPDATED): void;
 	emit(event_name: NodeEvent.FLAG_OPTIMIZE_UPDATED): void;
 	emit(event_name: NodeEvent.SELECTION_UPDATED): void;
+	emit(event_name: NodeEvent.POLY_NODE_LOCK_STATE_UPDATED): void;
 	emit(event_name: NodeEvent, data: object | null = null): void {
 		this.scene().dispatchController.dispatch(this, event_name, data);
 	}

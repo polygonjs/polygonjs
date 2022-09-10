@@ -23,21 +23,21 @@ export class AttribAddMultSopOperation extends BaseSopOperation {
 		return 'attribAddMult';
 	}
 
-	override cook(input_contents: CoreGroup[], params: AttribAddMultSopParams) {
-		const core_group = input_contents[0];
-		const attrib_names = core_group.attribNamesMatchingMask(params.name);
+	override cook(inputCoreGroups: CoreGroup[], params: AttribAddMultSopParams) {
+		const coreGroup = inputCoreGroups[0];
+		const attribNames = coreGroup.geoAttribNamesMatchingMask(params.name);
 
-		for (let attrib_name of attrib_names) {
-			const geometries = core_group.geometries();
+		for (let attribName of attribNames) {
+			const geometries = coreGroup.geometries();
 			for (let geometry of geometries) {
-				this._update_attrib(attrib_name, geometry, params);
+				this._updateAttrib(attribName, geometry, params);
 			}
 		}
 
-		return core_group;
+		return coreGroup;
 	}
-	private _update_attrib(attrib_name: string, geometry: BufferGeometry, params: AttribAddMultSopParams) {
-		const attribute = geometry.getAttribute(attrib_name) as BufferAttribute;
+	private _updateAttrib(attribName: string, geometry: BufferGeometry, params: AttribAddMultSopParams) {
+		const attribute = geometry.getAttribute(attribName) as BufferAttribute;
 		if (attribute) {
 			const values = attribute.array as number[];
 

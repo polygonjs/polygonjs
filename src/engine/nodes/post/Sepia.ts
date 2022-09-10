@@ -1,3 +1,8 @@
+/**
+ * applies a sepia look
+ *
+ *
+ */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EffectPass, SepiaEffect} from 'postprocessing';

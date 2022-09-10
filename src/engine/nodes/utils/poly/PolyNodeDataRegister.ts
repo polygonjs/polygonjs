@@ -2,7 +2,7 @@ import {NodeContext} from '../../../poly/NodeContext';
 import {PolyNodeDefinition} from './PolyNodeDefinition';
 
 export interface PolyNodeDataRegister<NC extends NodeContext> {
-	context: NC;
-	type: string;
+	node_context: NC;
+	node_type: string;
 	data: PolyNodeDefinition;
 }

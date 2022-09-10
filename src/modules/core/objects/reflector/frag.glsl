@@ -1,7 +1,10 @@
-uniform vec3 color;
+uniform bool useVertexColor;
+uniform vec3 globalColor;
 uniform sampler2D tDiffuse;
 varying vec4 vUv;
 uniform float opacity;
+uniform float reflectionBlend;
+varying vec3 vertexColor;
 
 #include <logdepthbuf_pars_fragment>
 
@@ -22,8 +25,10 @@ void main() {
 
 	#include <logdepthbuf_fragment>
 
-	vec4 base = texture2DProj( tDiffuse, vUv );
+	vec3 definedColor = useVertexColor ? vertexColor * globalColor : globalColor;
+	vec3 base = texture2DProj( tDiffuse, vUv ).rgb * definedColor;
 	// gl_FragColor = vec4( blendOverlay( base.rgb, color ), opacity );
-	gl_FragColor = vec4( base.rgb * color, opacity );
+	vec3 finalColor = reflectionBlend * base + (1.-reflectionBlend) * definedColor;
+	gl_FragColor = vec4( finalColor, opacity );
 
 }

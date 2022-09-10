@@ -26,7 +26,7 @@ export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsC
 		return 'volume';
 	}
 
-	private _volume_controller = new VolumeController(this);
+	private _volumeController = new VolumeController(this);
 
 	override createMaterial() {
 		const mat = new ShaderMaterial({
@@ -38,14 +38,14 @@ export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsC
 			uniforms: UniformsUtils.clone(VOLUME_UNIFORMS),
 		});
 
-		CoreMaterial.add_user_data_render_hook(mat, VolumeController.render_hook.bind(VolumeController));
+		CoreMaterial.addUserDataRenderHook(mat, VolumeController.renderHook.bind(VolumeController));
 
 		return mat;
 	}
 
 	override initializeNode() {}
 	override async cook() {
-		this._volume_controller.update_uniforms_from_params();
+		this._volumeController.updateUniformsFromParams();
 
 		this.setMaterial(this.material);
 	}

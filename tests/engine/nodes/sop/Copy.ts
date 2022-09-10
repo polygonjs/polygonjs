@@ -1,8 +1,11 @@
-import {Object3D} from 'three';
+import {Mesh, Object3D, Vector3} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CopySopNode} from '../../../../src/engine/nodes/sop/Copy';
+import {TransformTargetType} from '../../../../src/core/Transform';
+import {ObjectTransformSpace} from '../../../../src/core/TransformSpace';
+import {CopySopNode, TransformMode} from '../../../../src/engine/nodes/sop/Copy';
+import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
-QUnit.test('copy sop simple', async (assert) => {
+QUnit.test('sop/copy simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -30,7 +33,7 @@ QUnit.test('copy sop simple', async (assert) => {
 	assert.equal(container.boundingBox().min.y, -1.5);
 });
 
-QUnit.test('copy sop with template and stamp', async (assert) => {
+QUnit.test('sop/copy with template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -70,7 +73,7 @@ QUnit.test('copy sop with template and stamp', async (assert) => {
 	assert.equal(objects[1].geometry.attributes.test.array[0], 3);
 });
 
-QUnit.test('copy sop without template and stamp', async (assert) => {
+QUnit.test('sop/copy without template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -99,7 +102,7 @@ QUnit.test('copy sop without template and stamp', async (assert) => {
 	assert.equal(container.pointsCount(), 32);
 });
 
-QUnit.test('copy sop objects with template and stamp', async (assert) => {
+QUnit.test('sop/copy objects with template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -129,7 +132,7 @@ QUnit.test('copy sop objects with template and stamp', async (assert) => {
 	assert.equal(objects[3].userData.attributes.test, 3);
 });
 
-QUnit.test('copy sop using a copy stamp expression only triggers the successors once per cook', async (assert) => {
+QUnit.test('sop/copy using a copy stamp expression only triggers the successors once per cook', async (assert) => {
 	const geo1 = window.geo1;
 
 	window.scene.performance.start();
@@ -160,7 +163,7 @@ QUnit.test('copy sop using a copy stamp expression only triggers the successors 
 
 	window.scene.performance.stop();
 });
-QUnit.test('copy sop switching from useCopyExpr from true to false will give expected results', async (assert) => {
+QUnit.test('sop/copy switching from useCopyExpr from true to false will give expected results', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere = geo1.createNode('sphere');
@@ -200,7 +203,7 @@ QUnit.test('copy sop switching from useCopyExpr from true to false will give exp
 	assert.deepEqual(await objectNames(), ['box_0', 'box_1', 'box_2', 'box_3', 'box_4']);
 });
 
-QUnit.test('copy sop accumulated transform without template points', async (assert) => {
+QUnit.test('sop/copy accumulated transform without template points', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box = geo1.createNode('box');
@@ -218,7 +221,7 @@ QUnit.test('copy sop accumulated transform without template points', async (asse
 	assert.equal(objects[2].position.z, 2);
 	assert.equal(objects[3].position.z, 3);
 });
-QUnit.test('copy sop accumulated transform with template points', async (assert) => {
+QUnit.test('sop/copy accumulated transform with template points and local transform space', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane = geo1.createNode('plane');
@@ -227,17 +230,63 @@ QUnit.test('copy sop accumulated transform with template points', async (assert)
 	copy.setInput(0, box);
 	copy.setInput(1, plane);
 	copy.p.t.z.set(1);
+	copy.setObjectTransformSpace(ObjectTransformSpace.LOCAL);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
 		return container.coreContent()?.objects()!;
 	}
 	const objects = await computeCopy(copy);
 	assert.in_delta(objects[0].position.y, 0, 0.05);
-	assert.equal(objects[1].position.y, 1);
-	assert.equal(objects[2].position.y, 2);
-	assert.equal(objects[3].position.y, 3);
+	assert.in_delta(objects[1].position.y, 1, 0.0001);
+	assert.in_delta(objects[2].position.y, 2, 0.0001);
+	assert.in_delta(objects[3].position.y, 3, 0.0001);
 });
-QUnit.test('copy sop transform only with not enough points or objects', async (assert) => {
+QUnit.test('sop/copy accumulated transform with template points and parent transform space', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane = geo1.createNode('plane');
+	const box = geo1.createNode('box');
+	const copy = geo1.createNode('copy');
+	copy.setInput(0, box);
+	copy.setInput(1, plane);
+	copy.p.t.z.set(1);
+	copy.setObjectTransformSpace(ObjectTransformSpace.PARENT);
+	async function computeCopy(copy: CopySopNode) {
+		const container = await copy.compute();
+		return container.coreContent()?.objects()!;
+	}
+	const objects = await computeCopy(copy);
+	assert.in_delta(objects[0].position.z, -0.5, 0.0001);
+	assert.in_delta(objects[1].position.z, 0.5, 0.0001);
+	assert.in_delta(objects[2].position.z, 2.5, 0.0001);
+	assert.in_delta(objects[3].position.z, 3.5, 0.0001);
+});
+QUnit.test('sop/copy accumulated transform with template points and geometry mode', async (assert) => {
+	const geo1 = window.geo1;
+
+	const plane = geo1.createNode('plane');
+	const box = geo1.createNode('box');
+	const copy = geo1.createNode('copy');
+	copy.setInput(0, box);
+	copy.setInput(1, plane);
+	copy.p.t.z.set(1);
+	copy.setTransformMode(TransformMode.GEOMETRY);
+	async function computeCopy(copy: CopySopNode) {
+		const container = await copy.compute();
+		return container.coreContent()?.objects()!;
+	}
+	const objects = await computeCopy(copy);
+	assert.in_delta(objects[0].position.z, 0, 0.0001);
+	assert.in_delta(objects[1].position.z, 0, 0.0001);
+	assert.in_delta(objects[2].position.z, 0, 0.0001);
+	assert.in_delta(objects[3].position.z, 0, 0.0001);
+	objects.forEach((o) => (o as Mesh).geometry.computeBoundingBox());
+	assert.in_delta((objects[0] as Mesh).geometry!.boundingBox!.getCenter(new Vector3()).z, -0.5, 0.0001);
+	assert.in_delta((objects[1] as Mesh).geometry!.boundingBox!.getCenter(new Vector3()).z, 0.5, 0.0001);
+	assert.in_delta((objects[2] as Mesh).geometry!.boundingBox!.getCenter(new Vector3()).z, 2.5, 0.0001);
+	assert.in_delta((objects[3] as Mesh).geometry!.boundingBox!.getCenter(new Vector3()).z, 3.5, 0.0001);
+});
+QUnit.test('sop/copy transform only with not enough points or objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
@@ -282,7 +331,7 @@ QUnit.test('copy sop transform only with not enough points or objects', async (a
 	objects = await computeCopy(copy2);
 	assert.equal(objects.length, 2);
 });
-QUnit.test('copy sop transform only with accumulated transform', async (assert) => {
+QUnit.test('sop/copy transform only with accumulated transform in local space', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane = geo1.createNode('plane');
@@ -300,6 +349,7 @@ QUnit.test('copy sop transform only with accumulated transform', async (assert) 
 	copy2.setInput(1, plane);
 	copy2.p.t.z.set(1);
 	copy2.p.transformOnly.set(true);
+	copy2.setObjectTransformSpace(ObjectTransformSpace.LOCAL);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
 		return container.coreContent()?.objects()!;
@@ -310,8 +360,77 @@ QUnit.test('copy sop transform only with accumulated transform', async (assert) 
 	assert.equal(objects[2].position.y, 2);
 	assert.equal(objects[3].position.y, 3);
 });
+QUnit.test('sop/copy transform only with accumulated transform in parent space', async (assert) => {
+	const geo1 = window.geo1;
 
-QUnit.skip('copy sop with group sets an error', (assert) => {});
+	const plane = geo1.createNode('plane');
+	const box = geo1.createNode('box');
+	const transform = geo1.createNode('transform');
+	const copy1 = geo1.createNode('copy');
+	const copy2 = geo1.createNode('copy');
+
+	transform.setInput(0, plane);
+	transform.p.scale.set(0);
+	copy1.setInput(0, box);
+	copy1.setInput(1, transform);
+
+	copy2.setInput(0, copy1);
+	copy2.setInput(1, plane);
+	copy2.p.t.y.set(1);
+	copy2.p.transformOnly.set(true);
+	copy2.setObjectTransformSpace(ObjectTransformSpace.PARENT);
+	async function computeCopy(copy: CopySopNode) {
+		const container = await copy.compute();
+		return container.coreContent()?.objects()!;
+	}
+	const objects = await computeCopy(copy2);
+	assert.in_delta(objects[0].position.y, 0, 0.05);
+	assert.equal(objects[1].position.y, 1);
+	assert.equal(objects[2].position.y, 2);
+	assert.equal(objects[3].position.y, 3);
+});
+QUnit.test('sop/copy can copy and move a hierarchy', async (assert) => {
+	const geo1 = window.geo1;
+
+	// hierarchy
+	const box1 = geo1.createNode('box');
+	const merge1 = geo1.createNode('merge');
+	const hierarchy1 = geo1.createNode('hierarchy');
+	merge1.setInput(0, box1);
+	merge1.setInput(1, box1);
+	merge1.setCompactMode(false);
+	hierarchy1.setInput(0, merge1);
+	hierarchy1.setMode(HierarchyMode.ADD_PARENT);
+	hierarchy1.p.levels.set(2);
+	const transform1 = geo1.createNode('transform');
+	transform1.setInput(0, hierarchy1);
+	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.p.scale.set(10);
+
+	// template pts
+	const add1 = geo1.createNode('add');
+	const transform2 = geo1.createNode('transform');
+	transform2.setInput(0, add1);
+	transform2.p.t.set([1, 0, 0]);
+
+	// copy
+	const copy1 = geo1.createNode('copy');
+	copy1.setInput(0, transform1);
+	copy1.setInput(1, transform2);
+
+	// test result
+	copy1.setObjectTransformSpace(ObjectTransformSpace.PARENT);
+	let container = await copy1.compute();
+	let center = container.coreContent()!.boundingBox().getCenter(new Vector3())!;
+	assert.in_delta(center.x, 1, 0.1);
+
+	copy1.setObjectTransformSpace(ObjectTransformSpace.LOCAL);
+	container = await copy1.compute();
+	center = container.coreContent()!.boundingBox().getCenter(new Vector3())!;
+	assert.in_delta(center.x, 10, 0.1);
+});
+
+QUnit.skip('sop/copy with group sets an error', (assert) => {});
 QUnit.skip(
 	'copy with transform_only can update the input 0 with different scale multiple times and give reliable scale',
 	(assert) => {

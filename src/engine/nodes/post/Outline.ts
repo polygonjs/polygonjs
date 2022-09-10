@@ -3,10 +3,11 @@
  *
  *
  */
+import {SelectionController} from './utils/SelectionController';
+import {BLEND_FUNCTION_MENU_OPTIONS} from './../../../core/post/BlendFunction';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, EffectPass, KernelSize, OutlineEffect} from 'postprocessing';
-import {Object3D} from 'three';
 import {KERNEL_SIZE_MENU_OPTIONS} from '../../../core/post/KernelSize';
 class OutlinePostParamsConfig extends NodeParamsConfig {
 	/** @param object mask of the objects that will have an outline */
@@ -53,6 +54,17 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 		visibleIf: {xRay: 1},
 	});
+	/** @param opacity */
+	opacity = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+		...PostParamOptions,
+	});
+	/** @param render mode */
+	blendFunction = ParamConfig.INTEGER(BlendFunction.SCREEN, {
+		...PostParamOptions,
+		...BLEND_FUNCTION_MENU_OPTIONS,
+	});
 }
 const ParamsConfig = new OutlinePostParamsConfig();
 export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePostParamsConfig> {
@@ -61,7 +73,6 @@ export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePos
 		return 'outline';
 	}
 
-	private _resolvedObjects: Object3D[] = [];
 	// private _rendererSize = new Vector2();
 	override createPass(context: TypedPostNodeContext) {
 		const effect = new OutlineEffect(context.scene, context.camera, {
@@ -81,6 +92,8 @@ export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePos
 	}
 	override updatePass(pass: EffectPass) {
 		const effect = (pass as any).effects[0] as OutlineEffect;
+		effect.blendMode.opacity.value = this.pv.opacity;
+		effect.blendMode.blendFunction = this.pv.blendFunction;
 
 		effect.edgeStrength = this.pv.edgeStrength;
 		effect.blur = this.pv.blur;
@@ -91,30 +104,8 @@ export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePos
 		effect.hiddenEdgeColor = this.pv.hiddenEdgeColor;
 		this._setSelectedObjects(effect);
 	}
-	private _map: Map<string, Object3D> = new Map();
+	private _selectionController = new SelectionController();
 	private _setSelectedObjects(effect: OutlineEffect) {
-		const foundObjects = this.scene().objectsByMask(this.pv.objectsMask);
-
-		// Ensure that we only give the top most parents to the pass.
-		// Meaning that if foundObjects contains a node A and one of its children B,
-		// only A is given.
-		this._map.clear();
-		for (let object of foundObjects) {
-			this._map.set(object.uuid, object);
-		}
-		const isAncestorNotInList = (object: Object3D) => {
-			let isAncestorInList = false;
-			object.traverseAncestors((ancestor) => {
-				if (this._map.has(ancestor.uuid)) {
-					isAncestorInList = true;
-				}
-			});
-			return !isAncestorInList;
-		};
-		this._resolvedObjects = foundObjects.filter(isAncestorNotInList);
-		effect.selection.clear();
-		for (let object of this._resolvedObjects) {
-			effect.selection.add(object);
-		}
+		this._selectionController.updateSelection(this.scene(), this.pv.objectsMask, effect.selection);
 	}
 }

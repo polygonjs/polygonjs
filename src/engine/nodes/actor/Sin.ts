@@ -1,3 +1,8 @@
+/**
+ * returns the math function sin(x)
+ *
+ *
+ */
 import {MathFunctionArg1OperationFactory} from './_Math_Arg1Operation';
 
 export class SinActorNode extends MathFunctionArg1OperationFactory('sin', {

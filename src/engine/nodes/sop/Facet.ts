@@ -10,7 +10,8 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BufferAttribute, BufferGeometry, InterleavedBufferAttribute, Triangle, Vector2, Vector3, Vector4} from 'three';
 import {MapUtils} from '../../../core/MapUtils';
-import {degToRad} from 'three/src/math/MathUtils';
+import {MathUtils} from 'three';
+const {degToRad} = MathUtils;
 
 const vector2 = new Vector2();
 const vector3 = new Vector3();

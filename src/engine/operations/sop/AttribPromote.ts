@@ -1,13 +1,16 @@
+import {CorePoint} from './../../../core/geometry/Point';
+import {CoreObject} from './../../../core/geometry/Object';
+import {CoreAttribute} from './../../../core/geometry/Attribute';
+import {AttribValue, NumericAttribValue} from './../../../types/GlobalTypes';
+import {TypeAssert} from './../../poly/Assert';
+import {CoreType} from './../../../core/Type';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
-import {CoreObject} from '../../../core/geometry/Object';
-import {CorePoint} from '../../../core/geometry/Point';
-import {CoreString} from '../../../core/String';
+
 import {ArrayUtils} from '../../../core/ArrayUtils';
-import {NumericAttribValue, PolyDictionary} from '../../../types/GlobalTypes';
-import {CoreAttribute} from '../../../core/geometry/Attribute';
+
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface AttribPromoteSopParams extends DefaultOperationParams {
 	classFrom: number;
@@ -39,125 +42,219 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		return 'attribPromote';
 	}
 
-	private _core_group: CoreGroup | undefined;
-	private _core_object: CoreObject | undefined;
-	private _values_per_attrib_name: PolyDictionary<NumericAttribValue[]> = {};
-	private _filtered_values_per_attrib_name: PolyDictionary<NumericAttribValue | undefined> = {};
-	override cook(input_contents: CoreGroup[], params: AttribPromoteSopParams) {
-		this._core_group = input_contents[0];
+	override cook(inputCoreGroups: CoreGroup[], params: AttribPromoteSopParams) {
+		const coreGroup = inputCoreGroups[0];
 
-		this._values_per_attrib_name = {};
-		this._filtered_values_per_attrib_name = {};
-
-		for (let core_object of this._core_group.coreObjects()) {
-			this._core_object = core_object;
-			this.find_values(params);
-			this.filter_values(params);
-			this.set_values(params);
-		}
-
-		return this._core_group;
-	}
-	private find_values(params: AttribPromoteSopParams) {
-		const attrib_names = CoreString.attribNames(params.name).map((attribName) =>
-			CoreAttribute.remapName(attribName)
-		);
-		for (let attrib_name of attrib_names) {
-			this._find_values_for_attrib_name(attrib_name, params);
-		}
-	}
-	private _find_values_for_attrib_name(attrib_name: string, params: AttribPromoteSopParams) {
 		const classFrom = ATTRIBUTE_CLASSES[params.classFrom];
-		switch (classFrom) {
-			case AttribClass.VERTEX:
-				return this.find_values_from_points(attrib_name, params);
-			case AttribClass.OBJECT:
-				return this.find_values_from_object(attrib_name, params);
+		const classTo = ATTRIBUTE_CLASSES[params.classTo];
+
+		const attribNames = _attribNames(coreGroup, classFrom, params.name);
+
+		for (let attribName of attribNames) {
+			promoteAttribute(coreGroup, classFrom, classTo, attribName, params);
+		}
+
+		return coreGroup;
+	}
+}
+
+function _attribNames(coreGroup: CoreGroup, attribClass: AttribClass, mask: string) {
+	switch (attribClass) {
+		case AttribClass.VERTEX:
+			return coreGroup.geoAttribNamesMatchingMask(mask);
+		case AttribClass.OBJECT:
+			return coreGroup.objectAttribNamesMatchingMask(mask);
+		case AttribClass.CORE_GROUP:
+			return coreGroup.attribNamesMatchingMask(mask);
+	}
+	TypeAssert.unreachable(attribClass);
+}
+function promoteAttribute(
+	coreGroup: CoreGroup,
+	classFrom: AttribClass,
+	classTo: AttribClass,
+	attribName: string,
+	params: AttribPromoteSopParams
+) {
+	switch (classFrom) {
+		case AttribClass.VERTEX:
+			return promoteAttributeFromPoints(coreGroup, classTo, attribName, params);
+		case AttribClass.OBJECT:
+			return promoteAttributeFromObjects(coreGroup, classTo, attribName, params);
+		case AttribClass.CORE_GROUP:
+			return promoteAttributeFromCoreGroup(coreGroup, classTo, attribName);
+	}
+	TypeAssert.unreachable(classFrom);
+}
+function promoteAttributeFromPoints(
+	coreGroup: CoreGroup,
+	classTo: AttribClass,
+	attribName: string,
+	params: AttribPromoteSopParams
+) {
+	switch (classTo) {
+		case AttribClass.VERTEX:
+			return pointsToPoints(coreGroup, attribName, params);
+		case AttribClass.OBJECT:
+			return pointsToObject(coreGroup, attribName, params);
+		case AttribClass.CORE_GROUP:
+			return pointsToCoreGroup(coreGroup, attribName, params);
+	}
+	TypeAssert.unreachable(classTo);
+}
+function promoteAttributeFromObjects(
+	coreGroup: CoreGroup,
+	classTo: AttribClass,
+	attribName: string,
+	params: AttribPromoteSopParams
+) {
+	switch (classTo) {
+		case AttribClass.VERTEX:
+			return objectsToPoints(coreGroup, attribName);
+		case AttribClass.OBJECT:
+			return objectsToObjects(coreGroup, attribName, params);
+		case AttribClass.CORE_GROUP:
+			return objectsToCoreGroup(coreGroup, attribName, params);
+	}
+	TypeAssert.unreachable(classTo);
+}
+function promoteAttributeFromCoreGroup(coreGroup: CoreGroup, classTo: AttribClass, attribName: string) {
+	switch (classTo) {
+		case AttribClass.VERTEX:
+			return coreGroupToPoints(coreGroup, attribName);
+		case AttribClass.OBJECT:
+			return coreGroupToObjects(coreGroup, attribName);
+		case AttribClass.CORE_GROUP:
+			// nothing can be promoted from group to group
+			return;
+	}
+	TypeAssert.unreachable(classTo);
+}
+function pointsToPoints(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
+	const values = findValuesFromPoints(coreGroup.points(), attribName);
+	const value = filterValues(values, params);
+	const coreObjects = coreGroup.coreObjects();
+	for (let coreObject of coreObjects) {
+		setValuesToPoints(coreObject, attribName, value as NumericAttribValue);
+	}
+}
+function pointsToObject(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
+	const coreObjects = coreGroup.coreObjects();
+	for (let coreObject of coreObjects) {
+		const values = findValuesFromPoints(coreObject.points(), attribName);
+		const value = filterValues(values, params);
+		coreObject.setAttribValue(attribName, value);
+	}
+}
+function pointsToCoreGroup(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
+	const values = findValuesFromPoints(coreGroup.points(), attribName);
+	const value = filterValues(values, params);
+	coreGroup.setAttribValue(attribName, value);
+}
+function objectsToPoints(coreGroup: CoreGroup, attribName: string) {
+	const coreObjects = coreGroup.coreObjects();
+	for (let coreObject of coreObjects) {
+		const value = coreObject.attribValue(attribName);
+		if (value == null) {
+			return;
+		}
+		setValuesToPoints(coreObject, attribName, value as NumericAttribValue);
+	}
+}
+function objectsToObjects(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
+	const values = findValuesFromObjects(coreGroup, attribName);
+	const value = filterValues(values, params);
+	setValuesToObjects(coreGroup, attribName, value);
+}
+function objectsToCoreGroup(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
+	const values = findValuesFromObjects(coreGroup, attribName);
+	const value = filterValues(values, params);
+	coreGroup.setAttribValue(attribName, value);
+}
+function coreGroupToPoints(coreGroup: CoreGroup, attribName: string) {
+	const value = coreGroup.attribValue(attribName);
+	if (value == null) {
+		return;
+	}
+	const coreObjects = coreGroup.coreObjects();
+	for (let coreObject of coreObjects) {
+		setValuesToPoints(coreObject, attribName, value as NumericAttribValue);
+	}
+}
+function coreGroupToObjects(coreGroup: CoreGroup, attribName: string) {
+	const value = coreGroup.attribValue(attribName);
+	if (value == null) {
+		return;
+	}
+	setValuesToObjects(coreGroup, attribName, value);
+}
+
+function filterValues(values: number[], params: AttribPromoteSopParams) {
+	const mode = ATTRIB_PROMOTE_MODES[params.mode];
+	switch (mode) {
+		case AttribPromoteMode.MIN: {
+			return ArrayUtils.min(values);
+		}
+		case AttribPromoteMode.MAX: {
+			return ArrayUtils.max(values);
+		}
+		case AttribPromoteMode.FIRST_FOUND: {
+			return values[0];
 		}
 	}
+	TypeAssert.unreachable(mode);
+}
 
-	private find_values_from_points(attrib_name: string, params: AttribPromoteSopParams) {
-		if (this._core_object) {
-			const points = this._core_object.points();
-			const first_point = points[0];
-			if (first_point) {
-				if (!first_point.isAttribIndexed(attrib_name)) {
-					const values: NumericAttribValue[] = new Array(points.length);
-					let point: CorePoint;
-					for (let i = 0; i < points.length; i++) {
-						point = points[i];
-						values[i] = point.attribValue(attrib_name) as NumericAttribValue;
-					}
-					this._values_per_attrib_name[attrib_name] = values;
-				}
+//
+//
+// VERTICES
+//
+//
+function findValuesFromPoints(corePoints: CorePoint[], attribName: string) {
+	const values: number[] = new Array(corePoints.length);
+	const firstPoint = corePoints[0];
+	if (firstPoint) {
+		if (!firstPoint.isAttribIndexed(attribName)) {
+			let point: CorePoint;
+			for (let i = 0; i < corePoints.length; i++) {
+				point = corePoints[i];
+				values[i] = point.attribValue(attribName) as number;
 			}
 		}
 	}
-
-	private find_values_from_object(attrib_name: string, params: AttribPromoteSopParams) {
-		this._values_per_attrib_name[attrib_name] = [];
-		if (this._core_object) {
-			this._values_per_attrib_name[attrib_name].push(this._core_object.attribValue(attrib_name) as number);
+	return values;
+}
+function setValuesToPoints(coreObject: CoreObject, attribName: string, newValue: NumericAttribValue) {
+	const attributeExists = coreObject.coreGeometry()?.hasAttrib(attribName);
+	if (!attributeExists) {
+		const attribSize = CoreAttribute.attribSizeFromValue(newValue);
+		if (attribSize) {
+			coreObject.addNumericVertexAttrib(attribName, attribSize, newValue);
 		}
 	}
 
-	private filter_values(params: AttribPromoteSopParams) {
-		const attrib_names = Object.keys(this._values_per_attrib_name);
-		for (let attrib_name of attrib_names) {
-			const values = this._values_per_attrib_name[attrib_name];
-			const mode = ATTRIB_PROMOTE_MODES[params.mode];
-			switch (mode) {
-				case AttribPromoteMode.MIN:
-					this._filtered_values_per_attrib_name[attrib_name] = ArrayUtils.min(values);
-					break;
-				case AttribPromoteMode.MAX:
-					this._filtered_values_per_attrib_name[attrib_name] = ArrayUtils.max(values);
-					break;
-				case AttribPromoteMode.FIRST_FOUND:
-					this._filtered_values_per_attrib_name[attrib_name] = values[0];
-					break;
-				default:
-					break;
-			}
-		}
+	const points = coreObject.points();
+	for (let point of points) {
+		point.setAttribValue(attribName, newValue);
 	}
+}
 
-	private set_values(params: AttribPromoteSopParams) {
-		const attrib_names = Object.keys(this._filtered_values_per_attrib_name);
-		for (let attrib_name of attrib_names) {
-			const new_value = this._filtered_values_per_attrib_name[attrib_name];
-			if (new_value != null) {
-				const classTo = ATTRIBUTE_CLASSES[params.classTo];
-				switch (classTo) {
-					case AttribClass.VERTEX:
-						this.set_values_to_points(attrib_name, new_value, params);
-						break;
-					case AttribClass.OBJECT:
-						this.set_values_to_object(attrib_name, new_value, params);
-						break;
-				}
-			}
-		}
-	}
+//
+//
+// OBJECTS
+//
+//
+function findValuesFromObjects(coreGroup: CoreGroup, attribName: string) {
+	const values = coreGroup.coreObjects().map((coreObject: CoreObject) => coreObject.attribValue(attribName));
 
-	private set_values_to_points(attrib_name: string, new_value: NumericAttribValue, params: AttribPromoteSopParams) {
-		if (this._core_group && this._core_object) {
-			const attribute_exists = this._core_group.hasAttrib(attrib_name);
-			if (!attribute_exists) {
-				const attribSize = CoreAttribute.attribSizeFromValue(new_value);
-				if (attribSize) {
-					this._core_group.addNumericVertexAttrib(attrib_name, attribSize, new_value);
-				}
-			}
+	const nonNullValues = ArrayUtils.compact(values);
+	const numericValues = nonNullValues.filter((value) => CoreType.isNumber(value)) as number[];
+	return numericValues;
+}
 
-			const points = this._core_object.points();
-			for (let point of points) {
-				point.setAttribValue(attrib_name, new_value);
-			}
-		}
-	}
-
-	private set_values_to_object(attrib_name: string, new_value: NumericAttribValue, params: AttribPromoteSopParams) {
-		this._core_object?.setAttribValue(attrib_name, new_value);
+function setValuesToObjects(coreGroup: CoreGroup, attribName: string, newValue: AttribValue) {
+	const coreObjects = coreGroup.coreObjects();
+	for (let coreObject of coreObjects) {
+		coreObject.setAttribValue(attribName, newValue);
 	}
 }

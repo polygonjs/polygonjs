@@ -1,3 +1,8 @@
+/**
+ * returns the math function tan(x)
+ *
+ *
+ */
 import {MathFunctionArg1OperationFactory} from './_Math_Arg1Operation';
 
 export class TanActorNode extends MathFunctionArg1OperationFactory('tan', {

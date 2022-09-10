@@ -71,7 +71,7 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 				this._dataTextureController =
 					this._dataTextureController ||
 					new DataTextureController(DataTextureControllerBufferType.Uint16Array);
-				const texture = this._dataTextureController.from_render_target(renderer, exrCubeRenderTarget);
+				const texture = this._dataTextureController.fromRenderTarget(renderer, exrCubeRenderTarget);
 				this._setMapping(texture);
 				this.setTexture(texture);
 			}

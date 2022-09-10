@@ -18,7 +18,7 @@ QUnit.test('COP env_map simple', async (assert) => {
 	assert.ok(!env_map1.states.error.active());
 	let texture = container.coreContent();
 	assert.equal(texture.image.width, 768);
-	assert.equal(texture.image.height, 992);
+	assert.equal(texture.image.height, 1024);
 
 	RendererUtils.dispose();
 });

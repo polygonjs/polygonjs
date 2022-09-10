@@ -1,13 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {IcosahedronBufferGeometry} from 'three';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
+import {IcosahedronGeometry, BufferGeometry, Vector2, Vector3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {BufferGeometry} from 'three';
 import {SphereBuilder} from '../../../core/geometry/builders/SphereBuilder';
 
 interface SphereSopParams extends DefaultOperationParams {
@@ -54,19 +51,19 @@ export class SphereSopOperation extends BaseSopOperation {
 		return 'sphere';
 	}
 
-	override cook(input_contents: CoreGroup[], params: SphereSopParams) {
-		const core_group = input_contents[0];
-		if (core_group) {
-			return this._cookWithInput(core_group, params);
-		} else {
-			return this._cookWithoutInput(params);
+	override cook(inputCoreGroups: CoreGroup[], params: SphereSopParams) {
+		const coreGroup = inputCoreGroups[0];
+		const object = coreGroup ? this._cookWithInput(coreGroup, params) : this._cookWithoutInput(params);
+		if (this._node) {
+			object.name = this._node.name();
 		}
+		return this.createCoreGroupFromObjects([object]);
 	}
 	private _cookWithoutInput(params: SphereSopParams) {
 		const geometry = this._createRequiredGeometry(params);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		const object = this._createSphereObject(geometry, params);
-		return this.createCoreGroupFromObjects([object]);
+		return object;
 	}
 	private _cookWithInput(core_group: CoreGroup, params: SphereSopParams) {
 		const bbox = core_group.boundingBox();
@@ -78,7 +75,7 @@ export class SphereSopOperation extends BaseSopOperation {
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		geometry.translate(center.x, center.y, center.z);
 		const object = this._createSphereObject(geometry, params);
-		return this.createCoreGroupFromObjects([object]);
+		return object;
 	}
 	private _createSphereObject(geometry: BufferGeometry, params: SphereSopParams) {
 		return BaseSopOperation.createObject(geometry, params.asLines ? ObjectType.LINE_SEGMENTS : ObjectType.MESH);
@@ -148,6 +145,6 @@ export class SphereSopOperation extends BaseSopOperation {
 		return geometry;
 	}
 	private _createDefaultIsocahedron(params: SphereSopParams) {
-		return new IcosahedronBufferGeometry(params.radius, params.detail);
+		return new IcosahedronGeometry(params.radius, params.detail);
 	}
 }

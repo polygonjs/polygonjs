@@ -14,6 +14,8 @@ class SubdivideSopParamsConfig extends NodeParamsConfig {
 		range: [0, 5],
 		rangeLocked: [true, false],
 	});
+	/** @param merge vertices */
+	mergeVertices = ParamConfig.BOOLEAN(DEFAULT.mergeVertices);
 }
 const ParamsConfig = new SubdivideSopParamsConfig();
 

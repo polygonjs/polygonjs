@@ -85,7 +85,7 @@ export class XAtlasLoaderHandler extends CoreBaseLoader {
 					},
 				],
 				node,
-				error: 'failed to load draco libraries. Make sure to install them to load .glb files',
+				error: 'failed to load xatlas libraries. Make sure to install them use the uvUnwrap',
 			});
 			await Poly.blobs.fetchBlobForNode({
 				fullUrl,

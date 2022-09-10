@@ -1,4 +1,7 @@
-QUnit.test('transform simple', async (assert) => {
+import {Vector3} from 'three';
+import {TransformTargetType} from '../../../../src/core/Transform';
+import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+QUnit.test('sop/transform simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -37,4 +40,28 @@ QUnit.test('transform simple', async (assert) => {
 	container = await transform1.compute();
 	assert.equal(container.boundingBox().min.y, +1);
 	assert.equal(container.boundingBox().max.y, +3);
+});
+
+QUnit.test('sop/transform can scale geometries down a hierarchy', async (assert) => {
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	const merge1 = geo1.createNode('merge');
+	const hierarchy1 = geo1.createNode('hierarchy');
+	merge1.setInput(0, box1);
+	merge1.setInput(1, box1);
+	merge1.setCompactMode(false);
+	hierarchy1.setInput(0, merge1);
+	hierarchy1.setMode(HierarchyMode.ADD_PARENT);
+	hierarchy1.p.levels.set(2);
+
+	const transform1 = geo1.createNode('transform');
+	transform1.setInput(0, hierarchy1);
+	transform1.setApplyOn(TransformTargetType.GEOMETRIES);
+	transform1.p.scale.set(0.1);
+	const container = await transform1.compute();
+	const coreContent = container.coreContent();
+	const bbox = coreContent!.boundingBox()!;
+	const size = bbox.getSize(new Vector3());
+	assert.in_delta(size.x, 0.1, 0.00001);
+	assert.in_delta(size.y, 0.1, 0.00001);
 });

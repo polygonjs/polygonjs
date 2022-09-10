@@ -8,8 +8,9 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
 import jscad from '@jscad/modeling';
 import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
-import {degToRad} from 'three/src/math/MathUtils';
+import {MathUtils} from 'three';
 const {rotate} = jscad.transforms;
+const {degToRad} = MathUtils;
 
 class RotateCsgParamsConfig extends NodeParamsConfig {
 	/** @param rotate */

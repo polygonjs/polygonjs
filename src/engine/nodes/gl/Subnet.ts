@@ -4,13 +4,13 @@
  *
  *
  */
-
+import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedGlNode, BaseGlNodeType} from './_Base';
 import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/connections/Gl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {GlNodeType, NetworkChildNodeType, NetworkNodeType, NodeContext} from '../../poly/NodeContext';
+import {NetworkChildNodeType, NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
@@ -309,7 +309,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		}
 		// 2- add vertex body lines if current shader name is fragment
 		if (currentShaderName != ShaderName.VERTEX) {
-			const attribNodes = this.nodesByType(GlNodeType.ATTRIBUTE);
+			const attribNodes = this.nodesByType(GlType.ATTRIBUTE);
 			const bodyLines: string[] = [];
 			for (let attribNode of attribNodes) {
 				const linesForNode = internalShadersCollectionController.bodyLines(ShaderName.VERTEX, attribNode);

@@ -48,6 +48,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		return this._expression_controller; // =
 		//this._expression_controller || new ExpressionController(this);
 	}
+	expressionParsedAsString() {
+		return false;
+	}
 	private _serializer: ParamSerializer<T> | undefined;
 	get serializer(): ParamSerializer<T> {
 		return (this._serializer = this._serializer || new ParamSerializer(this));
@@ -95,6 +98,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		this._runOnDisposeCallbacks();
 	}
 	protected _initializeParam() {}
+	postOptionsInitialize(){}
 	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))
 	// }
 	// initialize() {
@@ -144,7 +148,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	valuePreConversionSerialized(): ParamValuePreConversionSerializedTypeMap[T] {
 		return undefined as never;
 	}
-	convert(raw_val: any): ParamValuesTypeMap[T] | null {
+	convert(rawVal: any): ParamValuesTypeMap[T] | null {
 		return null;
 	}
 	static areRawInputEqual(val1: any, val2: any) {

@@ -1,9 +1,9 @@
+import {CoreType} from './../../core/Type';
 import {TypedPathParam} from './_BasePath';
 import {CoreWalker} from '../../core/Walker';
 import {BaseNodeType} from '../nodes/_Base';
 import {ParamType} from '../poly/ParamType';
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
-import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {TypedNodePathParamValue} from '../../core/Walker';
 
@@ -11,6 +11,7 @@ interface SetNodeOptions {
 	relative: boolean;
 }
 
+const tmpConvertedValue = new TypedNodePathParamValue();
 export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 	static override type() {
 		return ParamType.NODE_PATH;
@@ -54,22 +55,33 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 			this.set(node.path());
 		}
 	}
-	protected override processRawInput() {
+	protected override processRawInputWithoutExpression() {
 		if (this._value.path() != this._raw_input) {
-			this._value.setPath(this._raw_input);
-			this._findTarget();
-			this.setDirty();
-			this.emitController.emit(ParamEvent.VALUE_UPDATED);
+			this._setValuePathAndFindTarget(this._raw_input);
 		}
 	}
-	protected override async processComputation() {
-		this._findTarget();
+	protected _assignValue(value: ParamValuesTypeMap[ParamType.NODE_PATH] | string): void {
+		const path = CoreType.isString(value) ? value : value.path();
+		if (this._value.path() != path) {
+			this._setValuePathAndFindTarget(path);
+		}
 	}
-	private _findTarget() {
+	override convert(rawVal: any): ParamValuesTypeMap[ParamType.NODE_PATH] | null {
+		if (CoreType.isString(rawVal)) {
+			tmpConvertedValue.setPath(rawVal);
+			return tmpConvertedValue;
+		} else {
+			return null;
+		}
+	}
+	// protected override async processComputation() {
+	// 	this._findTarget();
+	// }
+	protected _findTarget() {
 		if (!this.node) {
 			return;
 		}
-		const path = this._raw_input;
+		const path = this._value.path();
 		let node: BaseNodeType | null = null;
 		const pathNonEmpty = path != null && path !== '';
 
@@ -103,7 +115,6 @@ export class NodePathParam extends TypedPathParam<ParamType.NODE_PATH> {
 					// this._found_node.remove_param_referree(this) // TODO: typescript
 				}
 			}
-
 			if (node) {
 				this._assignFoundNode(node);
 			} else {

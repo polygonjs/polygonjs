@@ -6,11 +6,12 @@ import {PerspectiveCamera} from 'three';
 import {BaseBuilderMatNodeType} from '../../src/engine/nodes/mat/_BaseBuilder';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
 import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
-import {BoxBufferGeometry} from 'three';
+import {BoxGeometry} from 'three';
 import {Material} from 'three';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
 import {TypedViewer} from '../../src/engine/viewers/_Base';
 import {OrthographicCameraObjNode} from '../../src/engine/nodes/obj/OrthographicCamera';
+// import {CoreImage} from '../../src/core/Image';
 
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
@@ -25,7 +26,8 @@ interface WithViewerCallbackArgs {
 	renderer?: WebGLRenderer;
 }
 interface WithViewerOptions {
-	cameraNode: PerspectiveCameraObjNode | OrthographicCameraObjNode;
+	viewer?: ThreejsViewer<Camera>;
+	cameraNode?: PerspectiveCameraObjNode | OrthographicCameraObjNode;
 	mount?: boolean;
 }
 type WithViewerContainerCallback = (element: HTMLElement) => Promise<void>;
@@ -48,7 +50,7 @@ export class RendererUtils {
 
 	static async withViewer(options: WithViewerOptions, callback: WithViewerCallback) {
 		await this.withViewerContainer(async (element) => {
-			const viewer = (await options.cameraNode.createViewer({element}))!;
+			const viewer = (options.viewer || (await options.cameraNode?.createViewer({element})))!;
 			const canvas = viewer.canvas();
 			const renderer = viewer.renderer();
 
@@ -91,6 +93,86 @@ export class RendererUtils {
 		});
 	}
 
+	// static readCanvasPixelValue(canvas: HTMLCanvasElement, pos: Vector2): Promise<ImageData> {
+	// 	return new Promise((resolve, reject) => {
+	// 		canvas.toBlob(async (blob: Blob | null) => {
+	// 			const blobToImage: (blob: Blob) => Promise<HTMLImageElement> = (blob: Blob) => {
+	// 				return new Promise((resolve) => {
+	// 					const url = URL.createObjectURL(blob);
+	// 					let img = new Image();
+	// 					img.onload = () => {
+	// 						URL.revokeObjectURL(url);
+	// 						resolve(img);
+	// 					};
+	// 					img.src = url;
+	// 				});
+	// 			};
+	// 			function downloadBlob(blob: Blob, filename: string) {
+	// 				const urlCreator = window.URL || window.webkitURL;
+	// 				const blobUrl = urlCreator.createObjectURL(blob);
+
+	// 				const element = document.createElement('a');
+	// 				element.setAttribute('href', blobUrl);
+	// 				element.setAttribute('target', '_blank');
+	// 				element.setAttribute('download', filename);
+
+	// 				element.style.display = 'none';
+	// 				document.body.appendChild(element);
+	// 				element.click();
+
+	// 				document.body.removeChild(element);
+	// 			}
+
+	// 			if (!blob) {
+	// 				return reject();
+	// 			}
+	// 			downloadBlob(blob, 'test.png');
+	// 			const img = await blobToImage(blob);
+	// 			const data = CoreImage.data_from_image(img);
+	// 			return resolve(data);
+	// 		});
+	// 	});
+	// }
+
+	// private static _renderTarget: WebGLRenderTarget | undefined;
+	// private static _read = new Float32Array(4);
+	// static pixelValue(viewer: ThreejsViewer<Camera>, scene: PolyScene, pos: Vector2) {
+	// 	const canvas = viewer.canvas();
+	// 	const renderer = viewer.renderer();
+	// 	const camera = viewer.camera();
+	// 	if (!renderer) {
+	// 		console.error('no renderer to run .pixelValue');
+	// 		return;
+	// 	}
+	// 	this._renderTarget =
+	// 		this._renderTarget ||
+	// 		new WebGLRenderTarget(canvas.offsetWidth, canvas.offsetHeight, {
+	// 			minFilter: LinearFilter,
+	// 			magFilter: NearestFilter,
+	// 			format: RGBAFormat,
+	// 			type: FloatType,
+	// 		});
+
+	// 	const threejsScene = scene.threejsScene();
+	// 	const prevRenderTarget = renderer.getRenderTarget();
+	// 	renderer.setRenderTarget(this._renderTarget);
+	// 	renderer.clear();
+	// 	renderer.render(threejsScene, camera);
+	// 	renderer.setRenderTarget(prevRenderTarget);
+
+	// 	console.log(Math.round(pos.x * canvas.offsetWidth), Math.round(pos.y * canvas.offsetHeight));
+	// 	// read result
+	// 	renderer.readRenderTargetPixels(
+	// 		this._renderTarget,
+	// 		Math.round(pos.x * canvas.offsetWidth),
+	// 		Math.round(pos.y * canvas.offsetHeight),
+	// 		1,
+	// 		1,
+	// 		this._read
+	// 	);
+	// 	return [this._read[0], this._read[1], this._read[2], this._read[3]];
+	// }
+
 	private static _scene = this._createMatCompileScene();
 	private static _camera = new PerspectiveCamera();
 	private static _mesh = new Mesh();
@@ -107,7 +189,7 @@ export class RendererUtils {
 	}
 	private static _createMatCompileScene(): Scene {
 		this._scene = new Scene();
-		this._mesh = new Mesh(new BoxBufferGeometry(1, 1, 1));
+		this._mesh = new Mesh(new BoxGeometry(1, 1, 1));
 		this._mesh.frustumCulled = false;
 		this._camera = new PerspectiveCamera();
 		this._camera.position.z = 5;

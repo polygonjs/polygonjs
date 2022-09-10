@@ -1,3 +1,8 @@
+/**
+ * returns the math function sign(x)
+ *
+ *
+ */
 import {MathFunctionArg1OperationFactory} from './_Math_Arg1Operation';
 
 export class SignActorNode extends MathFunctionArg1OperationFactory('sign', {

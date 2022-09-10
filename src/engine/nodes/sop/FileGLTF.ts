@@ -20,6 +20,8 @@ class FileGLTFParamsConfig extends NodeParamsConfig {
 	});
 	/** @param uses draco compression */
 	draco = ParamConfig.BOOLEAN(DEFAULT.draco);
+	/** @param uses ktx2 compression */
+	ktx2 = ParamConfig.BOOLEAN(DEFAULT.ktx2);
 	/** @param sets the matrixAutoUpdate attribute for the objects loaded */
 	matrixAutoUpdate = ParamConfig.BOOLEAN(0);
 	/** @param reload the geometry */
@@ -45,9 +47,9 @@ export class FileGLTFSopNode extends TypedSopNode<FileGLTFParamsConfig> {
 	private operation() {
 		return (this._operation = this._operation || new FileGLTFSopOperation(this.scene(), this.states, this));
 	}
-	override async cook(input_contents: CoreGroup[]) {
-		const core_group = await this.operation().cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = await this.operation().cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 
 	static PARAM_CALLBACK_reload(node: FileGLTFSopNode) {

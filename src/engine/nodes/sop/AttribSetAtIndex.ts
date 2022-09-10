@@ -111,6 +111,9 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 			case AttribClass.OBJECT:
 				this._addObjectAttribute(attribType, coreGroup);
 				return this.setCoreGroup(coreGroup);
+			case AttribClass.CORE_GROUP:
+				this._addCoreGroupAttribute(attribType, coreGroup);
+				return this.setCoreGroup(coreGroup);
 		}
 		TypeAssert.unreachable(attribClass);
 	}
@@ -158,6 +161,17 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 				return;
 			case AttribType.STRING:
 				this._addStringAttributeToObject(coreObject);
+				return;
+		}
+		TypeAssert.unreachable(attribType);
+	}
+	private _addCoreGroupAttribute(attribType: AttribType, coreGroup: CoreGroup) {
+		switch (attribType) {
+			case AttribType.NUMERIC:
+				this._addNumericAttributeToCoreGroup(coreGroup);
+				return;
+			case AttribType.STRING:
+				this._addStringAttributeToCoreGroup(coreGroup);
 				return;
 		}
 		TypeAssert.unreachable(attribType);
@@ -224,6 +238,11 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		const attribName = this.pv.name;
 		coreObject.setAttribValue(attribName, param.value);
 	}
+	private _addNumericAttributeToCoreGroup(coreGroup: CoreGroup) {
+		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
+		const attribName = this.pv.name;
+		coreGroup.setAttribValue(attribName, param.value);
+	}
 
 	private _addStringAttributeToPoints(coreObject: CoreObject) {
 		const coreGeometry = coreObject.coreGeometry();
@@ -265,6 +284,11 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		const param = this.p.string;
 		const attribName = this.pv.name;
 		coreObject.setAttribValue(attribName, param.value);
+	}
+	private _addStringAttributeToCoreGroup(coreGroup: CoreGroup) {
+		const param = this.p.string;
+		const attribName = this.pv.name;
+		coreGroup.setAttribValue(attribName, param.value);
 	}
 
 	//

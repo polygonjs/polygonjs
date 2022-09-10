@@ -21,6 +21,7 @@ import {CatmullRomCurve3GetPointActorNode} from '../../../nodes/actor/CatmullRom
 import {CeilActorNode} from '../../../nodes/actor/Ceil';
 import {ClampActorNode} from '../../../nodes/actor/Clamp';
 import {CodeActorNode} from '../../../nodes/actor/Code';
+import {ColorToVec3ActorNode} from '../../../nodes/actor/ColorToVec3';
 import {CompareActorNode} from '../../../nodes/actor/Compare';
 import {ComplementActorNode} from '../../../nodes/actor/Complement';
 import {ConstantActorNode} from '../../../nodes/actor/Constant';
@@ -45,6 +46,7 @@ import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
 import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty';
 import {GetObjectUserDataActorNode} from '../../../nodes/actor/GetObjectUserData';
+import {GetParentActorNode} from '../../../nodes/actor/GetParent';
 import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
 import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
@@ -63,6 +65,8 @@ import {NegateActorNode} from '../../../nodes/actor/Negate';
 import {NormalizeActorNode} from '../../../nodes/actor/Normalize';
 import {NullActorNode} from '../../../nodes/actor/Null';
 import {ObjectDispatchEventActorNode} from '../../../nodes/actor/ObjectDispatchEvent';
+import {ObjectUpdateMatrixActorNode} from '../../../nodes/actor/ObjectUpdateMatrix';
+import {ObjectUpdateWorldMatrixActorNode} from '../../../nodes/actor/ObjectUpdateWorldMatrix';
 import {OnChildAttributeUpdateActorNode} from '../../../nodes/actor/OnChildAttributeUpdate';
 import {OnKeydownActorActorNode} from '../../../nodes/actor/OnKeydown';
 import {OnKeypressActorActorNode} from '../../../nodes/actor/OnKeypress';
@@ -86,6 +90,7 @@ import {PhysicsWorldStepSimulationActorNode} from '../../../nodes/actor/PhysicsW
 import {PlaneActorNode} from '../../../nodes/actor/Plane';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
+import {PressButtonParamActorNode} from '../../../nodes/actor/PressButtonParam';
 import {PowActorNode} from '../../../nodes/actor/Pow';
 import {RandActorNode} from '../../../nodes/actor/Rand';
 import {RandomActorNode} from '../../../nodes/actor/Random';
@@ -112,6 +117,10 @@ import {SetObjectRotationActorNode} from '../../../nodes/actor/SetObjectRotation
 import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
 import {SetPhysicsRBDPositionActorNode} from '../../../nodes/actor/SetPhysicsRBDPosition';
 import {SetPhysicsWorldGravityActorNode} from '../../../nodes/actor/SetPhysicsWorldGravity';
+import {SetParamActorNode} from '../../../nodes/actor/SetParam';
+import {SetPerspectiveCameraFovActorNode} from '../../../nodes/actor/SetPerspectiveCameraFov';
+import {SetPerspectiveCameraNearFarActorNode} from '../../../nodes/actor/SetPerspectiveCameraNearFar';
+import {SetSpotLightIntensityActorNode} from '../../../nodes/actor/SetSpotLightIntensity';
 import {SetViewerActorNode} from '../../../nodes/actor/SetViewer';
 import {SignActorNode} from '../../../nodes/actor/Sign';
 import {SinActorNode} from '../../../nodes/actor/Sin';
@@ -126,6 +135,7 @@ import {TriggerTwoWaySwitchActorNode} from '../../../nodes/actor/TriggerTwoWaySw
 import {TwoWaySwitchActorNode} from '../../../nodes/actor/TwoWaySwitch';
 import {Vec2ToFloatActorNode} from '../../../nodes/actor/Vec2ToFloat';
 import {Vec2ToVec3ActorNode} from '../../../nodes/actor/Vec2ToVec3';
+import {Vec3ToColorActorNode} from '../../../nodes/actor/Vec3ToColor';
 import {Vec3ToFloatActorNode} from '../../../nodes/actor/Vec3ToFloat';
 import {Vec3ToVec4ActorNode} from '../../../nodes/actor/Vec3ToVec4';
 import {Vec3ToVec2ActorNode} from '../../../nodes/actor/Vec3ToVec2';
@@ -163,6 +173,7 @@ export interface ActorNodeChildrenMap {
 	ceil: CeilActorNode;
 	clamp: ClampActorNode;
 	code: CodeActorNode;
+	colorToVec3: ColorToVec3ActorNode;
 	compare: CompareActorNode;
 	complement: ComplementActorNode;
 	constant: ConstantActorNode;
@@ -187,6 +198,7 @@ export interface ActorNodeChildrenMap {
 	getObjectAttribute: GetObjectAttributeActorNode;
 	getObjectProperty: GetObjectPropertyActorNode;
 	getObjectUserData: GetObjectUserDataActorNode;
+	getParent: GetParentActorNode;
 	getPlaneProperty: GetPlanePropertyActorNode;
 	getSphereProperty: GetSpherePropertyActorNode;
 	intToBool: IntToBoolActorNode;
@@ -205,6 +217,8 @@ export interface ActorNodeChildrenMap {
 	normalize: NormalizeActorNode;
 	null: NullActorNode;
 	objectDispatchEvent: ObjectDispatchEventActorNode;
+	objectUpdateMatrix: ObjectUpdateMatrixActorNode;
+	objectUpdateWorldMatrix: ObjectUpdateWorldMatrixActorNode;
 	onChildAttributeUpdate: OnChildAttributeUpdateActorNode;
 	onKeydown: OnKeydownActorActorNode;
 	onKeypress: OnKeypressActorActorNode;
@@ -228,6 +242,7 @@ export interface ActorNodeChildrenMap {
 	plane: PlaneActorNode;
 	playAnimation: PlayAnimationActorNode;
 	playInstrumentNote: PlayInstrumentNoteActorNode;
+	pressButtonParam: PressButtonParamActorNode;
 	pow: PowActorNode;
 	rand: RandActorNode;
 	random: RandomActorNode;
@@ -254,6 +269,10 @@ export interface ActorNodeChildrenMap {
 	setObjectScale: SetObjectScaleActorNode;
 	setPhysicsRBDPosition: SetPhysicsRBDPositionActorNode;
 	setPhysicsWorldGravity: SetPhysicsWorldGravityActorNode;
+	setParam: SetParamActorNode;
+	setPerspectiveCameraFov: SetPerspectiveCameraFovActorNode;
+	setPerspectiveCameraNearFar: SetPerspectiveCameraNearFarActorNode;
+	setSpotLightIntensity: SetSpotLightIntensityActorNode;
 	setViewer: SetViewerActorNode;
 	sign: SignActorNode;
 	sin: SinActorNode;
@@ -268,6 +287,7 @@ export interface ActorNodeChildrenMap {
 	twoWaySwitch: TwoWaySwitchActorNode;
 	vec2ToFloat: Vec2ToFloatActorNode;
 	vec2ToVec3: Vec2ToVec3ActorNode;
+	vec3ToColor: Vec3ToColorActorNode;
 	vec3ToFloat: Vec3ToFloatActorNode;
 	vec3ToVec2: Vec3ToVec2ActorNode;
 	vec3ToVec4: Vec3ToVec4ActorNode;
@@ -309,6 +329,7 @@ export class ActorRegister {
 		poly.registerNode(ClampActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(CatmullRomCurve3GetPointActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(CodeActorNode, CATEGORY_ACTOR.ADVANCED);
+		poly.registerNode(ColorToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(CompareActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(ComplementActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(ConstantActorNode, CATEGORY_ACTOR.MISC);
@@ -334,6 +355,7 @@ export class ActorRegister {
 		poly.registerNode(GetObjectPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectUserDataActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetPlanePropertyActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetParentActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
@@ -351,6 +373,8 @@ export class ActorRegister {
 		poly.registerNode(NormalizeActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NullActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(ObjectDispatchEventActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(ObjectUpdateMatrixActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(ObjectUpdateWorldMatrixActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(OnChildAttributeUpdateActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnKeydownActorActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnKeypressActorActorNode, CATEGORY_ACTOR.EVENTS);
@@ -374,6 +398,7 @@ export class ActorRegister {
 		poly.registerNode(PlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(PlayInstrumentNoteActorNode, CATEGORY_ACTOR.AUDIO);
+		poly.registerNode(PressButtonParamActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(PowActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayDistanceToPlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RandActorNode, CATEGORY_ACTOR.MATH);
@@ -400,6 +425,10 @@ export class ActorRegister {
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetPhysicsRBDPositionActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsWorldGravityActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(SetParamActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetPerspectiveCameraFovActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetPerspectiveCameraNearFarActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetSpotLightIntensityActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
 		poly.registerNode(SignActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SinActorNode, CATEGORY_ACTOR.MATH);
@@ -414,6 +443,7 @@ export class ActorRegister {
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(Vec2ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec2ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
+		poly.registerNode(Vec3ToColorActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec3ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec3ToVec2ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec3ToVec4ActorNode, CATEGORY_ACTOR.CONVERSION);

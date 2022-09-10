@@ -118,6 +118,12 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 			objects.push(this.createObject(created_geometries.center, ObjectType.POINTS));
 		}
 
+		let i = 0;
+		for (let object of objects) {
+			object.name = `${this.name()}-${i}`;
+			i++;
+		}
+
 		this.setObjects(objects);
 	}
 }

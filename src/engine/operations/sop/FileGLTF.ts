@@ -7,6 +7,7 @@ import {GLTF} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
 interface FileGLTFSopParams extends DefaultOperationParams {
 	url: string;
 	draco: boolean;
+	ktx2: boolean;
 	matrixAutoUpdate: boolean;
 }
 
@@ -14,6 +15,7 @@ export class FileGLTFSopOperation extends BaseFileSopOperation<GLTF> {
 	static override readonly DEFAULT_PARAMS: FileGLTFSopParams = {
 		url: `${ASSETS_ROOT}/models/resources/threedscans.com/eagle.glb`,
 		draco: true,
+		ktx2: false,
 		matrixAutoUpdate: false,
 	};
 	static override type(): Readonly<SopTypeFile.FILE_GLTF> {
@@ -27,6 +29,7 @@ export class FileGLTFSopOperation extends BaseFileSopOperation<GLTF> {
 		if (this._node) {
 			return await loader.load({
 				draco: params.draco,
+				ktx2: params.ktx2,
 				node: this._node,
 			});
 		}

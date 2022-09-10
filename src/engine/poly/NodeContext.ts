@@ -87,9 +87,6 @@ export enum CameraSopNodeType {
 	RENDERER = 'cameraRenderer',
 }
 export const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
-export enum GlNodeType {
-	ATTRIBUTE = 'attribute',
-}
 
 export enum CameraControlsNodeType {
 	// DEVICE_ORIENTATION = 'cameraDeviceOrientationControls',
@@ -99,13 +96,13 @@ export enum CameraControlsNodeType {
 	PLAYER = 'playerControls',
 	MOBILE_JOYSTICK = 'mobileJoystickControls',
 }
-export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [
-	// CameraControlsNodeType.DEVICE_ORIENTATION,
-	CameraControlsNodeType.MAP,
-	CameraControlsNodeType.ORBIT,
-	CameraControlsNodeType.FIRST_PERSON,
-	CameraControlsNodeType.MOBILE_JOYSTICK,
-];
+// export const CAMERA_CONTROLS_NODE_TYPES: Readonly<string[]> = [
+// 	// CameraControlsNodeType.DEVICE_ORIENTATION,
+// 	CameraControlsNodeType.MAP,
+// 	CameraControlsNodeType.ORBIT,
+// 	CameraControlsNodeType.FIRST_PERSON,
+// 	CameraControlsNodeType.MOBILE_JOYSTICK,
+// ];
 export enum AudioNodeAnalyserType {
 	FFT = 'FFT',
 	METER = 'meter',

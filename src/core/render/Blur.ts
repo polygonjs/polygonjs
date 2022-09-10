@@ -1,10 +1,12 @@
-import {WebGLRenderTarget} from 'three';
-import {Mesh} from 'three';
-import {PlaneBufferGeometry} from 'three';
-import {ShaderMaterial} from 'three';
-import {Vector2} from 'three';
-import {WebGLRenderer} from 'three';
-import {OrthographicCamera} from 'three';
+import {
+	OrthographicCamera,
+	WebGLRenderer,
+	Vector2,
+	ShaderMaterial,
+	Mesh,
+	WebGLRenderTarget,
+	PlaneGeometry,
+} from 'three';
 import {HorizontalBlurShader} from '../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
 import {VerticalBlurShader} from '../../modules/three/examples/jsm/shaders/VerticalBlurShader';
 
@@ -58,7 +60,7 @@ export class CoreRenderBlur {
 		return camera;
 	}
 	private _createBlurPlane() {
-		const planeGeometry = new PlaneBufferGeometry(PLANE_WIDTH, PLANE_HEIGHT);
+		const planeGeometry = new PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
 		const plane = new Mesh(planeGeometry);
 		return plane;
 	}

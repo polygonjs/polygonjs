@@ -48,10 +48,10 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 	}
 
 	private _operation: AttribPromoteSopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new AttribPromoteSopOperation(this.scene(), this.states);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+	override cook(inputCoreGroups: CoreGroup[]) {
+		this._operation = this._operation || new AttribPromoteSopOperation(this.scene(), this.states, this);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 	setAttribClassFrom(attribClass: AttribClass) {
 		this.p.classFrom.set(ATTRIBUTE_CLASSES.indexOf(attribClass));

@@ -1,13 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {CoreTransform} from '../../../core/Transform';
 import {isBooleanTrue} from '../../../core/Type';
 import {Attribute} from '../../../core/geometry/Attribute';
-import {Triangle} from 'three';
-import {BufferGeometry} from 'three';
-import {Float32BufferAttribute} from 'three';
+import {Vector3, Triangle, BufferGeometry, Float32BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface TorusSopParams extends DefaultOperationParams {

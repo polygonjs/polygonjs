@@ -40,6 +40,9 @@ export interface NodeJsonExporterData {
 	flags?: FlagsData;
 	cloned_state_overriden?: boolean;
 	persisted_config?: object;
+	polyNode?: {
+		locked: boolean;
+	};
 }
 
 export interface NodeJsonExporterUIData {
@@ -65,6 +68,12 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		this._data = {
 			type: this._node.type(),
 		} as NodeJsonExporterData;
+
+		if (this._node.polyNodeController) {
+			this._data['polyNode'] = {
+				locked: this._node.polyNodeController.locked(),
+			};
+		}
 
 		// const required_imports = this._node.required_imports()
 		// if(required_imports){

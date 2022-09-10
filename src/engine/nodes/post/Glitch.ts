@@ -7,7 +7,7 @@ import {Vector2} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, GlitchEffect, EffectPass, GlitchMode} from 'postprocessing';
-import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
+import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
 import {MenuNumericParamOptions} from '../../params/utils/OptionsController';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseViewerType} from '../../viewers/_Base';
@@ -104,7 +104,7 @@ class GlitchPostParamsConfig extends NodeParamsConfig {
 	});
 
 	/** @param blend function */
-	blendFunction = ParamConfig.INTEGER(BLEND_FUNCTIONS.indexOf(BlendFunction.SCREEN), {
+	blendFunction = ParamConfig.INTEGER(BlendFunction.SCREEN, {
 		...PostParamOptions,
 		...BLEND_FUNCTION_MENU_OPTIONS,
 	});

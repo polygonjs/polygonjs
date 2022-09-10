@@ -14,6 +14,7 @@ import {TextSopJustifiyMode, TEXT_SOP_JUSTIFY_MODES} from './utils/text/TextJust
 import {textBuildGeometries} from './utils/text/TextGeometries';
 import {TextType, TEXT_TYPES} from './utils/text/TextType';
 import {textMergeLetters} from './utils/text/TextMergeLetters';
+import {isBooleanTrue} from '../../../core/Type';
 
 const DEFAULT_FONT_URL = `${DEMO_ASSETS_ROOT_URL}/fonts/droid_sans_regular.typeface.json`;
 
@@ -115,6 +116,16 @@ class TextSopParamsConfig extends NodeParamsConfig {
 			entries: TEXT_SOP_JUSTIFY_MODES.map((name, value) => ({name, value})),
 		},
 	});
+	/** @param open advanced options */
+	tadvanced = ParamConfig.BOOLEAN(0);
+	/** @param is counter clock wise: defines the vertex order when parsing the font */
+	isCCW = ParamConfig.BOOLEAN(0, {
+		visibleIf: {tadvanced: true},
+	});
+	/** @param defines if holes should be found when parsing the font */
+	// noHoles = ParamConfig.BOOLEAN(0, {
+	// 	visibleIf: {tadvanced: true},
+	// });
 }
 
 const ParamsConfig = new TextSopParamsConfig();
@@ -148,7 +159,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			}
 		} catch (err) {
 			console.warn('error:', err);
-			this.states.error.set(`count not load font (${this.pv.font})`);
+			this.states.error.set(`could not load font (${this.pv.font}, reason:${(err as Error).message})`);
 			this.cookController.endCook();
 			return;
 		}
@@ -162,6 +173,10 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			return;
 		}
 
+		const textWithoutSpaces = this.pv.text.replace(/\s/g, '');
+		if (textWithoutSpaces.length == 0) {
+			return this.setObjects([]);
+		}
 		const geometries = await await textBuildGeometries({
 			text: this.pv.text,
 			textType,
@@ -176,6 +191,9 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			bevelSize: this.pv.bevelSize,
 			bevelOffset: this.pv.bevelOffset,
 			bevelSegments: this.pv.bevelSegments,
+			//
+			isCCW: isBooleanTrue(this.pv.tadvanced) ? this.pv.isCCW : undefined,
+			// noHoles: isBooleanTrue(this.pv.tadvanced) ? this.pv.noHoles : undefined,
 		});
 		if (geometries) {
 			const objects = textMergeLetters({

@@ -1,3 +1,8 @@
+/**
+ * multiplies multiple inputs together
+ *
+ *
+ */
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {MathFunctionArgNOperationFactory} from './_Math_ArgNOperation';
 
@@ -21,8 +26,8 @@ export class MultActorNode extends MathFunctionArgNOperationFactory('mult', {
 		this.io.connection_points.set_expected_output_types_function(this._expectedOutputType.bind(this));
 	}
 	protected _expectedOutputType() {
-		const input_types = this._expectedInputTypes();
-		const type = input_types[input_types.length - 1];
+		const inputTypes = this._expectedInputTypes();
+		const type = inputTypes[inputTypes.length - 1];
 		return [type];
 	}
 

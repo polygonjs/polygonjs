@@ -9,6 +9,11 @@ import {IUniforms} from '../../../core/geometry/Material';
 export enum UniformName {
 	TIME = 'time',
 	RESOLUTION = 'resolution',
+	SPOTLIGHTS_RAYMARCHING = 'spotLightsRayMarching',
+	DIRECTIONALLIGHTS_RAYMARCHING = 'directionalLightsRayMarching',
+	HEMISPHERELIGHTS_RAYMARCHING = 'hemisphereLightsRayMarching',
+	POINTLIGHTS_RAYMARCHING = 'pointLightsRayMarching',
+	// AREALIGHTS_RAYMARCHING = 'areaLightsRayMarching',
 }
 
 export interface IUniformsWithTime extends IUniforms {
@@ -53,7 +58,6 @@ export class UniformsController {
 			const uniformValue = additionalTextureUniforms[uniformName];
 			uniforms[uniformName] = uniformValue;
 		}
-
 		if (timeDependent) {
 			this.addTimeUniform(uniforms);
 		} else {

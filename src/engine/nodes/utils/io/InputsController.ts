@@ -14,6 +14,7 @@ import {ArrayUtils} from '../../../../core/ArrayUtils';
 type OnUpdateHook = () => void;
 export interface SetInputsOptions {
 	noExceptionOnInvalidInput?: boolean;
+	ignoreLockedState?: boolean;
 }
 
 const MAX_INPUTS_COUNT_UNSET = 0;
@@ -114,7 +115,7 @@ export class NodeInputsController<NC extends NodeContext> {
 					// assume we only work with indices for now, not with connection point names
 					// so we only need to check again the new max number of connection points.
 					if (connection.input_index >= allNewConnectionPoints.length) {
-						connection.disconnect({setInput: true});
+						connection.disconnect({setInput: true, ignoreLockedState: true});
 					}
 				}
 			}
@@ -169,7 +170,6 @@ export class NodeInputsController<NC extends NodeContext> {
 			this._graphNode = new CoreGraphNode(this.node.scene(), 'inputs');
 			this.node.addGraphInput(this._graphNode, false);
 		}
-
 		this._graphNode.addGraphInput(graph_input_node, false);
 		return graph_input_node;
 	}
@@ -357,12 +357,23 @@ export class NodeInputsController<NC extends NodeContext> {
 		outputIndexOrName?: number | string,
 		options?: Readonly<SetInputsOptions>
 	) {
+		const ignoreLockedState = options?.ignoreLockedState || false;
+		if (ignoreLockedState == false && this.node.insideALockedParent()) {
+			const lockedParent = this.node.lockedParent();
+			console.warn(
+				`node '${this.node.path()}' cannot have its inputs changed, since it is inside '${
+					lockedParent ? lockedParent.path() : ''
+				}', which is locked`
+			);
+			return;
+		}
+
 		if (outputIndexOrName == null) {
 			outputIndexOrName = 0;
 		}
 		const noExceptionOnInvalidInput = options?.noExceptionOnInvalidInput || false;
-		const input_index = this.getInputIndex(inputIndexOrName) || 0;
-		if (input_index < 0) {
+		const inputIndex = this.getInputIndex(inputIndexOrName) || 0;
+		if (inputIndex < 0) {
 			const message = `invalid input (${inputIndexOrName}) for node ${this.node.path()}`;
 			if (!noExceptionOnInvalidInput) {
 				console.warn(message);
@@ -372,11 +383,11 @@ export class NodeInputsController<NC extends NodeContext> {
 			}
 		}
 
-		let output_index = 0;
+		let outputIndex = 0;
 		if (node) {
 			if (node.io.outputs.hasNamedOutputs()) {
-				output_index = node.io.outputs.getOutputIndex(outputIndexOrName);
-				if (output_index == null || output_index < 0) {
+				outputIndex = node.io.outputs.getOutputIndex(outputIndexOrName);
+				if (outputIndex == null || outputIndex < 0) {
 					const connection_points = node.io.outputs.namedOutputConnectionPoints() as BaseConnectionPoint[];
 					const names = connection_points.map((cp) => cp.name());
 					console.warn(
@@ -389,9 +400,9 @@ export class NodeInputsController<NC extends NodeContext> {
 			}
 		}
 
-		const graph_input_node = this._graphNodeInputs[input_index];
-		if (graph_input_node == null) {
-			const message = `graph_input_node not found at index ${input_index}`;
+		const graphInputNode = this._graphNodeInputs[inputIndex];
+		if (graphInputNode == null) {
+			const message = `no input at index ${inputIndex} (name: ${inputIndexOrName}) for node '${this.node.name()}' at path '${this.node.path()}'`;
 			console.warn(message);
 			throw new Error(message);
 		}
@@ -400,74 +411,75 @@ export class NodeInputsController<NC extends NodeContext> {
 			return;
 		}
 
-		const old_input_node = this._inputs[input_index];
-		let old_output_index: number | null = null;
-		let old_connection: TypedNodeConnection<NC> | undefined = undefined;
+		const oldInputNode = this._inputs[inputIndex];
+		let oldOutputIndex: number | null = null;
+		let oldConnection: TypedNodeConnection<NC> | undefined = undefined;
 		if (this.node.io.connections) {
-			old_connection = this.node.io.connections.inputConnection(input_index);
+			oldConnection = this.node.io.connections.inputConnection(inputIndex);
 		}
-		if (old_connection) {
-			old_output_index = old_connection.output_index;
+		if (oldConnection) {
+			oldOutputIndex = oldConnection.output_index;
 		}
 
-		if (node !== old_input_node || output_index != old_output_index) {
+		if (node !== oldInputNode || outputIndex != oldOutputIndex) {
 			// TODO: test: add test to make sure this is necessary
-			if (old_input_node != null) {
+			if (oldInputNode != null) {
 				if (this._depends_on_inputs) {
-					graph_input_node.removeGraphInput(old_input_node);
+					graphInputNode.removeGraphInput(oldInputNode);
 				}
 			}
 
 			if (node != null) {
-				if (graph_input_node.addGraphInput(node)) {
+				const connectionResult = graphInputNode.addGraphInput(node);
+				if (connectionResult) {
 					// we do test if we can create the graph connection
 					// to ensure we are not in a cyclical graph,
 					// but we delete it right after
 					if (!this._depends_on_inputs) {
-						graph_input_node.removeGraphInput(node);
+						graphInputNode.removeGraphInput(node);
 					}
 
-					//this._input_connections[input_index] = new NodeConnection(node, this.self, output_index, input_index);
-					if (old_connection) {
-						old_connection.disconnect({setInput: false});
+					// this._input_connections[input_index] = new NodeConnection(node, this.self, outputIndex, input_index);
+					if (oldConnection) {
+						oldConnection.disconnect({setInput: false});
 					}
-					this._inputs[input_index] = node;
+					this._inputs[inputIndex] = node;
 					new TypedNodeConnection<NC>(
 						(<unknown>node) as TypedNode<NC, any>,
 						this.node,
-						output_index,
-						input_index
+						outputIndex,
+						inputIndex
 					);
 				} else {
 					console.warn(`cannot connect ${node.path()} to ${this.node.path()}`);
 				}
 			} else {
-				this._inputs[input_index] = null;
-				if (old_connection) {
-					old_connection.disconnect({setInput: false});
+				this._inputs[inputIndex] = null;
+				if (oldConnection) {
+					oldConnection.disconnect({setInput: false});
 				}
 				// this._input_connections[input_index] = null;
 			}
 
 			this._run_on_set_input_hooks();
-			graph_input_node.setSuccessorsDirty();
+			graphInputNode.setSuccessorsDirty();
 			// this.node.set_dirty(node);
 			this.node.emit(NodeEvent.INPUTS_UPDATED);
 		}
 	}
 
-	remove_input(node: BaseNodeByContextMap[NC]) {
-		const inputs = this.inputs();
-		let input: BaseNodeByContextMap[NC] | null;
-		for (let i = 0; i < inputs.length; i++) {
-			input = inputs[i];
-			if (input != null && node != null) {
-				if (input.graphNodeId() === node.graphNodeId()) {
-					this.setInput(i, null);
-				}
-			}
-		}
-	}
+	// remove_input(node: BaseNodeByContextMap[NC]) {
+	// 	const inputs = this.inputs();
+	// 	let input: BaseNodeByContextMap[NC] | null;
+	// 	for (let i = 0; i < inputs.length; i++) {
+	// 		input = inputs[i];
+	// 		if (input != null && node != null) {
+	// 			if (input.graphNodeId() === node.graphNodeId()) {
+	// 				this.setInput(i, null);
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	input(input_index: number): BaseNodeByContextMap[NC] | null {
 		return this._inputs[input_index];

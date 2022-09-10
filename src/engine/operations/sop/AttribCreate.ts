@@ -60,6 +60,9 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 			case AttribClass.OBJECT:
 				this._addObjectAttribute(attrib_type, coreGroup, params);
 				return;
+			case AttribClass.CORE_GROUP:
+				this._addCoreGroupAttribute(attrib_type, coreGroup, params);
+				return;
 		}
 		TypeAssert.unreachable(attribClass);
 	}
@@ -107,6 +110,17 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		}
 		TypeAssert.unreachable(attribType);
 	}
+	private _addCoreGroupAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
+		switch (attribType) {
+			case AttribType.NUMERIC:
+				this._addNumericAttributeToCoreGroup(coreGroup, params);
+				return;
+			case AttribType.STRING:
+				this._addStringAttributeToCoreGroup(coreGroup, params);
+				return;
+		}
+		TypeAssert.unreachable(attribType);
+	}
 
 	private _addNumericAttributeToPoints(coreObject: CoreObject, params: AttribCreateSopParams) {
 		const coreGeometry = coreObject.coreGeometry();
@@ -138,6 +152,11 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		for (let coreObject of coreObjects) {
 			coreObject.setAttribValue(attribName, value);
 		}
+	}
+	private _addNumericAttributeToCoreGroup(coreGroup: CoreGroup, params: AttribCreateSopParams) {
+		const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
+		const attribName = params.name;
+		coreGroup.setAttribValue(attribName, value);
 	}
 
 	private _addStringAttributeToPoints(coreObject: CoreObject, params: AttribCreateSopParams) {
@@ -184,6 +203,10 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		for (let coreObject of coreObjects) {
 			coreObject.setAttribValue(params.name, value);
 		}
+	}
+	private _addStringAttributeToCoreGroup(coreGroup: CoreGroup, params: AttribCreateSopParams) {
+		const value = params.string;
+		coreGroup.setAttribValue(params.name, value);
 	}
 	private _hasGroup(params: AttribCreateSopParams) {
 		return params.group.trim() != '';

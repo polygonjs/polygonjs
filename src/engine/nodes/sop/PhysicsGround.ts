@@ -5,7 +5,7 @@
  */
 import {CoreTransform} from './../../../core/Transform';
 import {ObjectType} from './../../../core/geometry/Constant';
-import {BoxBufferGeometry, Mesh, Vector3} from 'three';
+import {BoxGeometry, Mesh, Vector3} from 'three';
 import {CorePhysicsAttribute, PhysicsRBDColliderType, PhysicsRBDType} from './../../../core/physics/PhysicsAttribute';
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -54,7 +54,7 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 	override async cook() {
 		const thickness = this.pv.thickness;
 		const object = new Mesh(
-			new BoxBufferGeometry(this.pv.size.x, thickness, this.pv.size.y),
+			new BoxGeometry(this.pv.size.x, thickness, this.pv.size.y),
 			CoreConstant.MATERIALS[ObjectType.MESH]
 		);
 		// object.matrixAutoUpdate = false;

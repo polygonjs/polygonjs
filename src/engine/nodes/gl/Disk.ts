@@ -44,7 +44,7 @@ export class DiskGlNode extends TypedGlNode<DiskGlParamsConfig> {
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 		const feather = ThreeToGl.float(this.variableForInputParam(this.p.feather));
 
-		const float = this.glVarName('float');
+		const float = this.glVarName(OUTPUT_NAME);
 		const body_line = `float ${float} = disk2d(${position}, ${center}, ${radius}, ${feather})`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);
 

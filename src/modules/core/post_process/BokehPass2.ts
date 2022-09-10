@@ -4,7 +4,7 @@
 // import {ShaderMaterial} from 'three';
 // import {Scene} from 'three';
 // import {RGBAFormat} from 'three';
-// import {PlaneBufferGeometry} from 'three';
+// import {PlaneGeometry} from 'three';
 // import {OrthographicCamera} from 'three';
 // import {Mesh} from 'three';
 // import {LinearFilter} from 'three';
@@ -141,7 +141,7 @@
 // 			},
 // 		}) as BokehShaderMaterial;
 
-// 		this._quad = new Mesh(new PlaneBufferGeometry(this._resolution.x, this._resolution.y), this.bokehMaterial);
+// 		this._quad = new Mesh(new PlaneGeometry(this._resolution.x, this._resolution.y), this.bokehMaterial);
 // 		this._quad.position.z = -500;
 // 		this._processingScene.add(this._quad);
 

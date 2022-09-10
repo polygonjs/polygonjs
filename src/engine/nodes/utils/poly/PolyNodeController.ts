@@ -1,3 +1,5 @@
+import {NodeJsonExporterData} from './../../../io/json/export/Node';
+import {NodeEvent} from './../../../poly/NodeEvent';
 import {BaseNodeType} from '../../_Base';
 import {NodeContext} from '../../../poly/NodeContext';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
@@ -21,6 +23,7 @@ import {createPolyGlNode} from '../../gl/utils/poly/createPolyGlNode';
 
 export class PolyNodeController {
 	private static _definitionRegister: Map<NodeContext, Map<string, PolyNodeDefinition>> = new Map();
+	private _locked = true;
 	constructor(private node: BaseNodeType, private _definition: PolyNodeDefinition) {}
 
 	initializeNode() {
@@ -35,6 +38,16 @@ export class PolyNodeController {
 			// this._createParamsFromDefinition();
 			this.createChildNodesFromDefinition();
 		});
+	}
+	locked() {
+		return this._locked;
+	}
+	setLockedState(state: boolean) {
+		if (state == this._locked) {
+			return;
+		}
+		this._locked = state;
+		this.node.emit(NodeEvent.POLY_NODE_LOCK_STATE_UPDATED);
 	}
 
 	private _initInputs() {
@@ -85,11 +98,20 @@ export class PolyNodeController {
 		if (currentSceneLoadedState) {
 			this.node.scene().loadingController.markAsLoading();
 		}
+		const oldLockedState = this.locked();
+		this.setLockedState(false);
 
 		const sceneImporter = new SceneJsonImporter({});
 		const dispatcher = new JsonImportDispatcher();
 		const nodeImporter = dispatcher.dispatchNonPolyNode(this.node); // new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
-		nodeImporter.create_nodes(sceneImporter, childrenData);
+		const exporterData: NodeJsonExporterData = {
+			// ...this._definition,
+			type: this.node.type(),
+			polyNode: {
+				locked: true,
+			},
+		};
+		nodeImporter.create_nodes(sceneImporter, childrenData, exporterData);
 
 		const ui_data = this._definition.ui;
 		if (ui_data) {
@@ -99,6 +121,9 @@ export class PolyNodeController {
 		if (currentSceneLoadedState) {
 			this.node.scene().loadingController.markAsLoaded();
 		}
+
+		// console.log('set old locked state', oldLockedState);
+		this.setLockedState(oldLockedState);
 	}
 
 	static inputsData(node: BaseNodeType): PolyNodesInputsData {
@@ -134,6 +159,12 @@ export class PolyNodeController {
 		const nodeInputsData = inputsData || this.inputsData(node);
 
 		const data: PolyNodeDefinition = {
+			metadata: {
+				version: {
+					polygonjs: '1',
+				},
+				createdAt: 1,
+			},
 			nodeContext: node.context(),
 			inputs: nodeInputsData,
 			params: node.params.non_spare
@@ -179,16 +210,18 @@ export class PolyNodeController {
 		}
 	}
 	static createNodeClassAndRegister<NC extends NodeContext>(dataRegister: PolyNodeDataRegister<NC>) {
-		const {context, type, data} = dataRegister;
-		const nodeClass = this._createNodeClass(context, type, data);
+		const {node_context, node_type, data} = dataRegister;
+		const nodeClass = this._createNodeClass(node_context, node_type, data);
 		if (nodeClass) {
-			let registerMapForContext = this._definitionRegister.get(context);
+			let registerMapForContext = this._definitionRegister.get(node_context);
 			if (!registerMapForContext) {
 				registerMapForContext = new Map();
-				this._definitionRegister.set(context, registerMapForContext);
+				this._definitionRegister.set(node_context, registerMapForContext);
 			}
-			registerMapForContext.set(type, data);
+			registerMapForContext.set(node_type, data);
 			Poly.registerNode(nodeClass, 'polyNodes', {polyNode: true});
+		} else {
+			console.warn('failed to create node from definition', node_context, node_type, data);
 		}
 	}
 	static definition<NC extends NodeContext>(context: NC, type: string) {

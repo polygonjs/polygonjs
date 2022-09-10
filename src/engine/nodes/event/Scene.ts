@@ -3,7 +3,7 @@
  *
  *
  */
-import {ACCEPTED_SCENE_EVENT_TYPES, PolySceneEventType} from '../../scene/utils/events/SceneEventsController';
+import {PolyEventName} from './../../poly/utils/PolyEventName';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {EventConnectionPoint, EventConnectionPointType, BaseEventConnectionPoint} from '../utils/io/connections/Event';
@@ -40,6 +40,14 @@ interface OnTickCallbackBuilderOptions {
 	reachedTime: number;
 }
 
+enum EventName {
+	CREATED = 'created',
+	READY = 'ready',
+	PLAY = 'play',
+	PAUSE = 'pause',
+}
+export const ACCEPTED_EVENT_TYPES: EventName[] = [EventName.CREATED, EventName.READY, EventName.PLAY, EventName.PAUSE];
+
 class SceneEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -52,8 +60,10 @@ class SceneEventParamsConfig extends NodeParamsConfig {
 	element = ParamConfig.INTEGER(0, {
 		hidden: true,
 	});
-	/** @param toggle on to trigger an event when the scene has loaded. This can be useful to initialize other nodes */
-	sceneLoaded = ParamConfig.BOOLEAN(1, UPDATE_SCENE_EVENT_PARAM_OPTIONS);
+	/** @param toggle on to trigger an event when the scene has been created. This can be useful to initialize other nodes */
+	created = ParamConfig.BOOLEAN(1, UPDATE_SCENE_EVENT_PARAM_OPTIONS);
+	/** @param toggle on to trigger an event when every object in the scene has been loaded. This can be useful to initialize other nodes */
+	ready = ParamConfig.BOOLEAN(1, UPDATE_SCENE_EVENT_PARAM_OPTIONS);
 	/** @param toggle on to trigger an event when the scene starts playing */
 	play = ParamConfig.BOOLEAN(1, UPDATE_SCENE_EVENT_PARAM_OPTIONS);
 	/** @param toggle on to trigger an event when the scene pauses */
@@ -105,10 +115,10 @@ export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
 				EventConnectionPointType.BASE,
 				this._onSetFrame.bind(this)
 			),
-			new EventConnectionPoint(PolySceneEventType.PLAY, EventConnectionPointType.BASE, this._play.bind(this)),
-			new EventConnectionPoint(PolySceneEventType.PAUSE, EventConnectionPointType.BASE, this._pause.bind(this)),
+			new EventConnectionPoint(EventName.PLAY, EventConnectionPointType.BASE, this._play.bind(this)),
+			new EventConnectionPoint(EventName.PAUSE, EventConnectionPointType.BASE, this._pause.bind(this)),
 		]);
-		const outConnectionPoints: BaseEventConnectionPoint[] = ACCEPTED_SCENE_EVENT_TYPES.map((event_type) => {
+		const outConnectionPoints: BaseEventConnectionPoint[] = ACCEPTED_EVENT_TYPES.map((event_type) => {
 			return new EventConnectionPoint(event_type, EventConnectionPointType.BASE);
 		});
 		outConnectionPoints.push(new EventConnectionPoint(SceneNodeOutput.TICK, EventConnectionPointType.BASE));
@@ -138,6 +148,21 @@ export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
 		}
 		if (!eventContext.event) {
 			return;
+		}
+		const eventType = eventContext.event.type;
+		switch (eventType) {
+			case PolyEventName.SCENE_CREATED: {
+				return this.dispatchEventToOutput(EventName.CREATED, eventContext);
+			}
+			case PolyEventName.SCENE_READY: {
+				return this.dispatchEventToOutput(EventName.READY, eventContext);
+			}
+			case PolyEventName.SCENE_PLAY: {
+				return this.dispatchEventToOutput(EventName.PLAY, eventContext);
+			}
+			case PolyEventName.SCENE_PAUSE: {
+				return this.dispatchEventToOutput(EventName.PAUSE, eventContext);
+			}
 		}
 
 		this.dispatchEventToOutput(eventContext.event.type, eventContext);
@@ -238,14 +263,17 @@ export class SceneEventNode extends TypedEventNode<SceneEventParamsConfig> {
 		// if (isBooleanTrue(this.pv.tick)) {
 		// 	eventsController.addObserver(this, SceneEventType.TICK);
 		// }
-		if (isBooleanTrue(this.pv.sceneLoaded)) {
-			eventsController.addObserver(this, PolySceneEventType.LOADED);
+		if (isBooleanTrue(this.pv.created)) {
+			eventsController.addObserver(this, PolyEventName.SCENE_CREATED);
+		}
+		if (isBooleanTrue(this.pv.ready)) {
+			eventsController.addObserver(this, PolyEventName.SCENE_READY);
 		}
 		if (isBooleanTrue(this.pv.play)) {
-			eventsController.addObserver(this, PolySceneEventType.PLAY);
+			eventsController.addObserver(this, PolyEventName.SCENE_PLAY);
 		}
 		if (isBooleanTrue(this.pv.pause)) {
-			eventsController.addObserver(this, PolySceneEventType.PAUSE);
+			eventsController.addObserver(this, PolyEventName.SCENE_PAUSE);
 		}
 	}
 }

@@ -39,6 +39,8 @@ const POSITIONS = {
 	},
 };
 
+const _sizes = new Vector3();
+const _center = new Vector3();
 export class BoxLinesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BoxLinesSopParams = {
 		size: 1,
@@ -52,25 +54,31 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: BoxLinesSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
-		if (inputCoreGroup) {
-			return this._cookWithInput(inputCoreGroup, params);
-		} else {
-			return this._cookWithoutInput(params);
+		const objects = inputCoreGroup ? this._cookWithInput(inputCoreGroup, params) : this._cookWithoutInput(params);
+
+		if (this._node) {
+			let i = 0;
+			for (let object of objects) {
+				object.name = `${this._node.name()}-${i}`;
+				i++;
+			}
 		}
+
+		return this.createCoreGroupFromObjects(objects);
 	}
 	private _cookWithoutInput(params: BoxLinesSopParams) {
 		return this._createLines(params);
 	}
 
-	private _cookWithInput(core_group: CoreGroup, params: BoxLinesSopParams) {
-		const bbox = core_group.boundingBox();
-		const sizes = bbox.max.clone().sub(bbox.min);
-		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
+	private _cookWithInput(coreGroup: CoreGroup, params: BoxLinesSopParams) {
+		const bbox = coreGroup.boundingBox();
+		bbox.getSize(_sizes);
+		bbox.getCenter(_center);
 
 		return this._createLines({
 			size: 1,
-			sizes,
-			center,
+			sizes: _sizes,
+			center: _center,
 			mergeLines: params.mergeLines,
 		});
 	}
@@ -100,13 +108,13 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
 			if (mergedGeometry) {
 				const object = this.createObject(mergedGeometry, ObjectType.LINE_SEGMENTS);
-				return this.createCoreGroupFromObjects([object]);
+				return [object];
 			}
 		} else {
 			const objects = geometries.map((geometry) => this.createObject(geometry, ObjectType.LINE_SEGMENTS));
-			return this.createCoreGroupFromObjects(objects);
+			return objects;
 		}
-		return this.createCoreGroupFromObjects([]);
+		return [];
 	}
 
 	private _tmpV = new Vector3();

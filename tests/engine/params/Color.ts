@@ -1,3 +1,6 @@
+import {Number3} from './../../../src/types/GlobalTypes';
+import {OnBeforeCompileDataHandler} from './../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {MeshBasicBuilderMatNode} from './../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {ParamType} from '../../../src/engine/poly/ParamType';
 import {ColorConversion} from '../../../src/core/Color';
 import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
@@ -5,6 +8,8 @@ import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
 import {ColorSopNode} from '../../../src/engine/nodes/sop/Color';
 import {ColorParam} from '../../../src/engine/params/Color';
 import {Color} from 'three';
+import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
+import {saveAndLoadScene} from '../../helpers/ImportHelper';
 
 QUnit.test('color eval correctly when set to different values', async (assert) => {
 	const scene = window.scene;
@@ -68,7 +73,7 @@ QUnit.test(
 		const color1 = geo1.createNode('color');
 		const param1 = color1.p.color;
 
-		assert.ok(param1.options.colorConversion() == null);
+		assert.ok(param1.options.colorConversion() == ColorConversion.NONE);
 		param1.options.setOption('conversion', ColorConversion.LINEAR_TO_SRGB);
 		assert.ok(param1.options.colorConversion());
 		assert.ok(param1.options.hasOptionsOverridden());
@@ -92,7 +97,7 @@ QUnit.test(
 		const param1 = color1.addParam(ParamType.COLOR, 'color2', [0, 0, 0], {spare: true})!;
 		color1.params.postCreateSpareParams();
 
-		assert.ok(param1.options.colorConversion() == null);
+		assert.ok(param1.options.colorConversion() == ColorConversion.NONE);
 		param1.options.setOption('conversion', ColorConversion.LINEAR_TO_SRGB);
 		assert.ok(param1.options.colorConversion());
 		assert.ok(param1.options.hasOptionsOverridden());
@@ -114,4 +119,84 @@ QUnit.test('params/color accepts a color', async (assert) => {
 	const color = color1.p.color;
 	color.set(new Color(1, 2, 3));
 	assert.deepEqual(color.value.toArray(), [1, 2, 3]);
+});
+
+QUnit.test('params/color colorConversion is saved and loaded correctly', async (assert) => {
+	const scene = window.scene;
+	const MAT = scene.createNode('materialsNetwork');
+	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
+	const constant1 = meshBasicBuilder1.createNode('constant');
+	const output1 = meshBasicBuilder1.createNode('output');
+
+	constant1.setGlType(GlConnectionPointType.VEC3);
+	constant1.p.asColor.set(1);
+	constant1.p.color.set([0.4, 0.6, 0.8]);
+	output1.setInput('color', constant1);
+
+	const lineStart = 'vec3 v_POLY_constant1_val = vec3(';
+	async function declaredColor(matNode: MeshBasicBuilderMatNode): Promise<Number3> {
+		await matNode.compute();
+		const fragmentShader = OnBeforeCompileDataHandler.getData(matNode.material)!.fragmentShader;
+		const lines = fragmentShader.split('\n');
+		for (let line of lines) {
+			if (line.includes(lineStart)) {
+				const lineEnd = line.split(lineStart)[1];
+				return lineEnd
+					.replace(');', '')
+					.split(',')
+					.map((is) => parseFloat(is)) as Number3;
+			}
+		}
+		return [-1, -1, -1];
+	}
+
+	assert.deepEqual(await declaredColor(meshBasicBuilder1), [0.4, 0.6, 0.8]);
+	await saveAndLoadScene(scene, async (scene2) => {
+		const meshBasicBuilder2 = scene2.node(meshBasicBuilder1.path()) as MeshBasicBuilderMatNode;
+		assert.deepEqual(await declaredColor(meshBasicBuilder2), [0.4, 0.6, 0.8], 'new scene no conversion ok');
+	});
+
+	constant1.p.color.options.setOption('conversion', ColorConversion.LINEAR_TO_SRGB);
+	constant1.p.color.setDirty();
+	await constant1.p.color.compute();
+
+	assert.deepEqual(
+		await declaredColor(meshBasicBuilder1),
+		[0.665189483970395, 0.7977406370381005, 0.9063331834449992]
+	);
+	await saveAndLoadScene(scene, async (scene2) => {
+		const meshBasicBuilder2 = scene2.node(meshBasicBuilder1.path()) as MeshBasicBuilderMatNode;
+		assert.deepEqual(
+			await declaredColor(meshBasicBuilder2),
+			[0.665189483970395, 0.7977406370381005, 0.9063331834449992],
+			'new scene LINEAR_TO_SRGB ok'
+		);
+	});
+
+	constant1.p.color.options.setOption('conversion', ColorConversion.SRGB_TO_LINEAR);
+	constant1.p.color.setDirty();
+	await constant1.p.color.compute();
+
+	assert.deepEqual(
+		await declaredColor(meshBasicBuilder1),
+		[0.13286832154414627, 0.31854677811435356, 0.6038273388475408]
+	);
+	await saveAndLoadScene(scene, async (scene2) => {
+		const meshBasicBuilder2 = scene2.node(meshBasicBuilder1.path()) as MeshBasicBuilderMatNode;
+		assert.deepEqual(
+			await declaredColor(meshBasicBuilder2),
+			[0.13286832154414627, 0.31854677811435356, 0.6038273388475408],
+			'new scene SRGB_TO_LINEAR ok'
+		);
+	});
+
+	constant1.p.color.options.setOption('conversion', ColorConversion.NONE);
+	constant1.p.color.setDirty();
+	await constant1.p.color.compute();
+
+	assert.deepEqual(await declaredColor(meshBasicBuilder1), [0.4, 0.6, 0.8]);
+	await saveAndLoadScene(scene, async (scene2) => {
+		const meshBasicBuilder2 = scene2.node(meshBasicBuilder1.path()) as MeshBasicBuilderMatNode;
+		assert.deepEqual(await declaredColor(meshBasicBuilder2), [0.4, 0.6, 0.8], 'new scene no conversion ok');
+	});
 });

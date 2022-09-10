@@ -4,7 +4,7 @@
  *
  */
 import {CorePolarTransform, PolarTransformMatrixParams} from './../../../core/PolarTransform';
-import {Matrix4} from 'three/src/math/Matrix4';
+import {Matrix4} from 'three';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Vector3} from 'three';

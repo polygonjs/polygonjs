@@ -18,10 +18,10 @@ const BLOCK_START_LAST_CHAR = '{';
 const BLOCK_END_LAST_CHAR = '}';
 
 export class CodeFormatter {
-	static node_comment(node: BaseGlNodeType, line_type: LineType): string {
+	static nodeComment(node: BaseGlNodeType, lineType: LineType): string {
 		let line = `// ${node.path()}`;
-		let prefix: string = LINE_PREFIXES[line_type];
-		if (line_type == LineType.BODY) {
+		let prefix: string = LINE_PREFIXES[lineType];
+		if (lineType == LineType.BODY) {
 			let distance = this.nodeDistanceToMaterial(node);
 			// special case for subnet_output, so that the comment is offset correctly
 			if (node.type() == NetworkChildNodeType.OUTPUT) {
@@ -29,24 +29,24 @@ export class CodeFormatter {
 			}
 			prefix = prefix.repeat(distance);
 		}
-		if (line_type == LineType.BODY) {
+		if (lineType == LineType.BODY) {
 			line = `${prefix}${line}`;
 		}
 		return line;
 	}
-	static line_wrap(node: BaseGlNodeType, line: string, line_type: LineType) {
+	static lineWrap(node: BaseGlNodeType, line: string, lineType: LineType) {
 		let add_suffix = true;
-		if (line.indexOf('#if') == 0 || line.indexOf('#endif') == 0) {
+		if (line.includes('#if') || line.includes('#endif') || line.includes('#pragma unroll_loop_')) {
 			add_suffix = false;
 		}
-		let prefix: string = LINE_PREFIXES[line_type];
-		if (line_type == LineType.BODY) {
+		let prefix: string = LINE_PREFIXES[lineType];
+		if (lineType == LineType.BODY) {
 			prefix = prefix.repeat(this.nodeDistanceToMaterial(node));
 		}
 		line = `${prefix}${line}`;
 		if (add_suffix) {
 			const last_char = line[line.length - 1];
-			const suffix = LINE_SUFFIXES[line_type];
+			const suffix = LINE_SUFFIXES[lineType];
 			const lineIsEmpty = line.trim().length == 0;
 			const lineIsComment = line.trim().startsWith('//');
 			if (
@@ -61,8 +61,8 @@ export class CodeFormatter {
 		}
 		return line;
 	}
-	static post_line_separator(line_type: LineType) {
-		return line_type == LineType.BODY ? '	' : '';
+	static post_line_separator(lineType: LineType) {
+		return lineType == LineType.BODY ? '	' : '';
 	}
 
 	static nodeDistanceToMaterial(node: BaseNodeType): number {

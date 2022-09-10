@@ -1,14 +1,9 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number2, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
-import {SphereBufferGeometry} from 'three';
-import {PointLight} from 'three';
-import {Vector3} from 'three';
-import {Mesh} from 'three';
+import {Vector2, Color, Mesh, Vector3, PointLight, SphereGeometry} from 'three';
 import {LIGHT_HELPER_MAT} from './_Base';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three';
-import {Vector2} from 'three';
 
 export interface PointLightParams extends DefaultOperationParams {
 	color: Color;
@@ -119,7 +114,7 @@ export class CorePointLightHelper {
 
 	buildHelper(object: Mesh) {
 		const size = 1;
-		object.geometry = new SphereBufferGeometry(size, 4, 2);
+		object.geometry = new SphereGeometry(size, 4, 2);
 		object.matrixAutoUpdate = false;
 		object.material = this._material;
 		return object;

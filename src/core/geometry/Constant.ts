@@ -137,8 +137,9 @@ const materials: MaterialsByString = {
 export enum AttribClass {
 	VERTEX = 'vertex',
 	OBJECT = 'object',
+	CORE_GROUP = 'container',
 }
-export const ATTRIBUTE_CLASSES: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT];
+export const ATTRIBUTE_CLASSES: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT, AttribClass.CORE_GROUP];
 
 export const AttribClassMenuEntries = ATTRIBUTE_CLASSES.map((name, value) => ({name, value}));
 

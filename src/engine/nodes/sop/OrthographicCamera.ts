@@ -11,6 +11,8 @@ import {OrthographicCameraSopOperation} from '../../operations/sop/OrthographicC
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType} from '../../poly/NodeContext';
 import {registerOrthographicCamera} from '../../../core/camera/CoreOrthographicCamera';
+import {BaseNodeType} from '../_Base';
+import {setSopMainCamera} from './utils/camera/setSopMainCamera';
 const DEFAULT = OrthographicCameraSopOperation.DEFAULT_PARAMS;
 class OrthographicCameraSopParamsConfig extends NodeParamsConfig {
 	/** @param camera view size */
@@ -38,6 +40,12 @@ class OrthographicCameraSopParamsConfig extends NodeParamsConfig {
 	matrixAutoUpdate = ParamConfig.BOOLEAN(DEFAULT.matrixAutoUpdate);
 	/** @param camera name */
 	name = ParamConfig.STRING('`$OS`');
+	/** @param set main camera */
+	setMainCamera = ParamConfig.BUTTON(null, {
+		callback: (node: BaseNodeType) => {
+			setSopMainCamera(node as OrthographicCameraSopNode);
+		},
+	});
 }
 const ParamsConfig = new OrthographicCameraSopParamsConfig();
 

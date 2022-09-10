@@ -68,7 +68,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 		const transferAttributes = params.transferAttributes;
 		let attribNames: string[] = [];
 		if (isBooleanTrue(transferAttributes)) {
-			attribNames = coreGroup.attribNamesMatchingMask(params.attributesToTransfer);
+			attribNames = coreGroup.geoAttribNamesMatchingMask(params.attributesToTransfer);
 		}
 
 		const sampler = new MeshSurfaceSampler(inputMesh, attribNames);

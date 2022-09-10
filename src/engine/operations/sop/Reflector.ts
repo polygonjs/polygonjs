@@ -8,10 +8,13 @@ import {TransformResetSopOperation, TRANSFORM_RESET_MODES, TransformResetMode} f
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface ReflectorSopParams extends DefaultOperationParams {
 	direction: Vector3;
+	directionOffset: number;
 	active: boolean;
 	clipBias: number;
 	color: Color;
 	opacity: number;
+	useVertexColor: boolean;
+	reflectionBlend: number;
 	pixelRatio: number;
 	multisamples: number;
 	tblur: boolean;
@@ -21,14 +24,17 @@ interface ReflectorSopParams extends DefaultOperationParams {
 	blur2: number;
 	verticalBlur2Mult: number;
 }
-
+const tmpV3 = new Vector3();
 export class ReflectorSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: ReflectorSopParams = {
 		direction: new Vector3(0, 1, 0),
+		directionOffset: 0,
 		active: true,
 		clipBias: 0.003,
 		color: new Color(1, 1, 1),
 		opacity: 1,
+		useVertexColor: false,
+		reflectionBlend: 1,
 		pixelRatio: 1,
 		multisamples: 4,
 		tblur: false,
@@ -57,7 +63,11 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		const objects = inputCoreGroup.objectsWithGeo();
 
 		for (let object of objects) {
+			tmpV3.copy(params.direction).normalize().multiplyScalar(params.directionOffset);
+
+			object.geometry.translate(-tmpV3.x, -tmpV3.y, -tmpV3.z);
 			Reflector.rotateGeometry(object.geometry, params.direction);
+
 			const reflector = new Reflector(object.geometry, {
 				clipBias: params.clipBias,
 				renderer,
@@ -66,6 +76,8 @@ export class ReflectorSopOperation extends BaseSopOperation {
 				multisamples: params.multisamples,
 				color: params.color,
 				opacity: params.opacity,
+				useVertexColor: params.useVertexColor,
+				reflectionBlend: params.reflectionBlend,
 				active: params.active,
 				tblur: params.tblur,
 				blur: params.blur,
@@ -77,7 +89,8 @@ export class ReflectorSopOperation extends BaseSopOperation {
 			reflector.matrixAutoUpdate = false;
 			// make sure object attributes are up to date
 			object.matrix.decompose(object.position, object.quaternion, object.scale);
-			reflector.position.copy(object.position);
+			tmpV3.add(object.position);
+			reflector.position.copy(tmpV3);
 			reflector.rotation.copy(object.rotation);
 			reflector.scale.copy(object.scale);
 			reflector.updateMatrix();

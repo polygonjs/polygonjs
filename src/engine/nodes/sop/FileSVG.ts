@@ -33,6 +33,28 @@ class FileSVGSopParamsConfig extends NodeParamsConfig {
 	drawStrokes = ParamConfig.BOOLEAN(DEFAULT.drawStrokes);
 	/** @param toggle on to draw the strokes as wireframe */
 	strokesWireframe = ParamConfig.BOOLEAN(DEFAULT.strokesWireframe);
+	/** @param style override */
+	tStyleOverride = ParamConfig.BOOLEAN(DEFAULT.tStyleOverride, {
+		separatorBefore: true,
+	});
+	/** @param stroke width */
+	strokeWidth = ParamConfig.FLOAT(DEFAULT.strokeWidth, {
+		visibleIf: {
+			tStyleOverride: true,
+		},
+	});
+	/** @param advanced */
+	tadvanced = ParamConfig.BOOLEAN(DEFAULT.tadvanced, {
+		separatorBefore: true,
+	});
+	/** @param is counter clock wise: defines the vertex order when parsing the font */
+	isCCW = ParamConfig.BOOLEAN(0, {
+		visibleIf: {tadvanced: true},
+	});
+	/** @param defines if holes should be found when parsing the font */
+	// noHoles = ParamConfig.BOOLEAN(0, {
+	// 	visibleIf: {tadvanced: true},
+	// });
 }
 const ParamsConfig = new FileSVGSopParamsConfig();
 
@@ -48,10 +70,10 @@ export class FileSVGSopNode extends TypedSopNode<FileSVGSopParamsConfig> {
 	}
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: FileSVGSopOperation | undefined;
-	override async cook(input_contents: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new FileSVGSopOperation(this.scene(), this.states, this);
-		const core_group = await this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 
 	static PARAM_CALLBACK_reload(node: FileSVGSopNode) {

@@ -21,6 +21,32 @@ export class VideoTextureLoader extends BaseTextureLoader {
 	}
 
 	loadVideo(): Promise<VideoTexture> {
+		// if (1 + 1) {
+		// 	return this._loadVideoFull();
+		// } else {
+		return this._loadVideoDefault();
+		// }
+	}
+	// private _loadVideoFull(): Promise<VideoTexture> {
+	// 	return new Promise(async (resolve) => {
+	// 		const url = await this._urlToLoad();
+	// 		console.log(url);
+	// 		fetch(url, {mode: 'no-cors'}).then(async (response) => {
+	// 			console.log({response});
+	// 			const blob = await response.blob();
+	// 			console.log({blob});
+	// 			const source = URL.createObjectURL(blob);
+	// 			console.log(source);
+	// 			const video = document.createElement('video');
+	// 			video.src = source;
+
+	// 			const texture = new VideoTexture(video);
+	// 			//    document.body.append(video)
+	// 			resolve(texture);
+	// 		});
+	// 	});
+	// }
+	private _loadVideoDefault(): Promise<VideoTexture> {
 		return new Promise(async (resolve, reject) => {
 			const url = await this._urlToLoad();
 			CoreLoaderTexture.incrementInProgressLoadsCount();
@@ -31,6 +57,9 @@ export class VideoTextureLoader extends BaseTextureLoader {
 			video.setAttribute('autoplay', `${true}`); // to ensure it loads
 			video.setAttribute('loop', `${true}`);
 			// wait for onloadedmetadata to ensure that we have a duration
+			// video.onloadeddata = function (e) {
+			// 	console.log('onloadeddata', e);
+			// };
 			video.onloadedmetadata = function () {
 				video.pause();
 				const texture = new VideoTexture(video);
@@ -41,25 +70,25 @@ export class VideoTextureLoader extends BaseTextureLoader {
 			};
 
 			// add source as is
-			const original_source = document.createElement('source');
-			const original_ext = CoreBaseLoader.extension(url) as keyof VideoSourceTypeByExt;
-			let type: string = VideoTextureLoader.VIDEO_SOURCE_TYPE_BY_EXT[original_ext];
+			const originalSource = document.createElement('source');
+			const originalExt = CoreBaseLoader.extension(url) as keyof VideoSourceTypeByExt;
+			let type: string = VideoTextureLoader.VIDEO_SOURCE_TYPE_BY_EXT[originalExt];
 			type = type || VideoTextureLoader._default_video_source_type(url);
-			original_source.setAttribute('type', type);
-			original_source.setAttribute('src', url);
-			video.appendChild(original_source);
+			originalSource.setAttribute('type', type);
+			originalSource.setAttribute('src', url);
+			video.appendChild(originalSource);
 
 			// add secondary source, either mp4 or ogv depending on the first url
-			let secondary_url: string | undefined;
-			if (original_ext == 'mp4') {
+			let secondaryUrl: string | undefined;
+			if (originalExt == 'mp4') {
 				// add ogv
-				secondary_url = CoreLoaderTexture.replaceExtension(url, 'ogv');
+				secondaryUrl = CoreLoaderTexture.replaceExtension(url, 'ogv');
 			} else {
 				// add mp4
-				secondary_url = CoreLoaderTexture.replaceExtension(url, 'mp4');
+				secondaryUrl = CoreLoaderTexture.replaceExtension(url, 'mp4');
 			}
 			const secondary_source = document.createElement('source');
-			const secondary_ext = CoreBaseLoader.extension(secondary_url) as keyof VideoSourceTypeByExt;
+			const secondary_ext = CoreBaseLoader.extension(secondaryUrl) as keyof VideoSourceTypeByExt;
 			type = VideoTextureLoader.VIDEO_SOURCE_TYPE_BY_EXT[secondary_ext];
 			type = type || VideoTextureLoader._default_video_source_type(url);
 			secondary_source.setAttribute('type', type);

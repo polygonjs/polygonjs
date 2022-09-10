@@ -6,6 +6,7 @@ import {AntialiasingPostNode} from '../../../nodes/post/Antialiasing';
 import {BloomPostNode} from '../../../nodes/post/Bloom';
 import {BlurPostNode} from '../../../nodes/post/Blur';
 import {BrightnessContrastPostNode} from '../../../nodes/post/BrightnessContrast';
+import {BuilderPostNode} from '../../../nodes/post/Builder';
 import {ChromaticAberrationPostNode} from '../../../nodes/post/ChromaticAberration';
 // import {ClearPostNode} from '../../../nodes/post/Clear';
 // import {ClearMaskPostNode} from '../../../nodes/post/ClearMask';
@@ -50,6 +51,7 @@ export interface PostNodeChildrenMap {
 	bloom: BloomPostNode;
 	blur: BlurPostNode;
 	brightnessContrast: BrightnessContrastPostNode;
+	builder: BuilderPostNode;
 	chromaticAberration: ChromaticAberrationPostNode;
 	// clear: ClearPostNode;
 	// clearMask: ClearMaskPostNode;
@@ -97,6 +99,7 @@ export class PostRegister {
 		poly.registerNode(BloomPostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(BlurPostNode, CATEGORY_POST.BLUR);
 		poly.registerNode(BrightnessContrastPostNode, CATEGORY_POST.COLOR);
+		poly.registerNode(BuilderPostNode, CATEGORY_POST.ADVANCED);
 		poly.registerNode(ChromaticAberrationPostNode, CATEGORY_POST.EFFECT);
 		// poly.registerNode(ClearPostNode, CATEGORY_POST.MISC);
 		// poly.registerNode(ClearMaskPostNode, CATEGORY_POST.MISC);

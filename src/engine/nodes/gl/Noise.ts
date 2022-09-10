@@ -268,7 +268,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 			// } else {
 			const lines_count_required = requested_components_count;
 			const assembly_args: string[] = [];
-			const noise = this.glVarName('noise');
+			const noise = this.glVarName(OUTPUT_NAME);
 			for (let i = 0; i < lines_count_required; i++) {
 				const component = ALL_COMPONENTS[i];
 				assembly_args.push(`${noise}${component}`);

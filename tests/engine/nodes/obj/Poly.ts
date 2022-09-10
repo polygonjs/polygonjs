@@ -5,6 +5,12 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {ObjNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/Obj';
 
 const data: PolyNodeDefinition = {
+	metadata: {
+		version: {
+			polygonjs: '1',
+		},
+		createdAt: 1,
+	},
 	nodeContext: NodeContext.OBJ,
 	params: [
 		{
@@ -24,7 +30,7 @@ const data: PolyNodeDefinition = {
 		},
 	},
 };
-PolyNodeController.createNodeClassAndRegister({context: NodeContext.OBJ, type: 'poly_obj_test', data});
+PolyNodeController.createNodeClassAndRegister({node_context: NodeContext.OBJ, node_type: 'poly_obj_test', data});
 
 QUnit.test('poly obj simple', async (assert) => {
 	const root = window.root;

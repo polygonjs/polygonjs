@@ -1,11 +1,3 @@
-// import {BooleanParam} from '../Boolean';
-// import {ButtonParam} from '../Button';
-// import {ColorParam} from '../Color';
-// import {FloatParam} from '../Float';
-// import {IntegerParam} from '../Integer';
-// import {OperatorPathParam} from '../OperatorPath';
-// import {RampParam} from '../Ramp';
-// import {SeparatorParam} from '../Separator';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
 import {Vector4} from 'three';
@@ -22,7 +14,6 @@ export interface ParamValuesTypeMap extends ParamValuesTypeMapGeneric {
 	[ParamType.FLOAT]: number;
 	[ParamType.FOLDER]: null;
 	[ParamType.INTEGER]: number;
-	// [ParamType.OPERATOR_PATH]: string;
 	[ParamType.PARAM_PATH]: TypedParamPathParamValue;
 	[ParamType.NODE_PATH]: TypedNodePathParamValue;
 	[ParamType.RAMP]: RampValue;

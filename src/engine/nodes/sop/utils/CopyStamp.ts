@@ -18,15 +18,17 @@ export class SopCopyStamp extends BaseCopyStamp {
 		}
 	}
 
-	override value(attrib_name?: string) {
+	override value(attribName?: string) {
 		if (this._point) {
-			if (attrib_name) {
-				return this._point.attribValue(attrib_name);
+			if (attribName) {
+				return this._point.attribValue(attribName);
 			} else {
 				return this._point.index();
 			}
 		} else {
-			return this._globalIndex;
+			if (attribName == null || attribName == 'i') {
+				return this._globalIndex;
+			}
 		}
 	}
 }

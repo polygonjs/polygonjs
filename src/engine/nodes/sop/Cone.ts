@@ -3,16 +3,16 @@
  *
  *
  */
+import {ObjectType} from './../../../core/geometry/Constant';
 import {TypedSopNode} from './_Base';
-
 import {Vector3} from 'three';
-import {ConeBufferGeometry} from 'three';
+import {ConeGeometry} from 'three';
 import {CoreTransform} from '../../../core/Transform';
-
-const DEFAULT_UP = new Vector3(0, 1, 0);
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {BaseSopOperation} from '../../operations/sop/_Base';
+const DEFAULT_UP = new Vector3(0, 1, 0);
+
 class ConeSopParamsConfig extends NodeParamsConfig {
 	/** @param cone radius */
 	radius = ParamConfig.FLOAT(1, {range: [0, 1]});
@@ -44,7 +44,7 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 	private _core_transform = new CoreTransform();
 
 	override cook() {
-		const geometry = new ConeBufferGeometry(
+		const geometry = new ConeGeometry(
 			this.pv.radius,
 			this.pv.height,
 			this.pv.segmentsRadial,
@@ -57,6 +57,9 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 
-		this.setGeometry(geometry);
+		const object = BaseSopOperation.createObject(geometry, ObjectType.MESH);
+		object.name = this.name();
+
+		this.setObject(object);
 	}
 }

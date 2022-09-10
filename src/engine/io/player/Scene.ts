@@ -1,3 +1,4 @@
+import {RootLoadProgressController} from './../../nodes/manager/utils/Scene/LoadProgress';
 import {WebGLRenderer} from 'three';
 import {CoreType} from '../../../core/Type';
 import {OnProgressArguments, OnProgressUpdateCallback} from '../../nodes/manager/utils/Scene/LoadProgress';
@@ -6,7 +7,8 @@ import {OnProgressArguments, OnProgressUpdateCallback} from '../../nodes/manager
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
 import {BaseViewerType} from '../../viewers/_Base';
-import {PolyEventsDispatcher, PolyEventName} from '../common/EventsDispatcher';
+import {PolyEventsDispatcher} from '../common/EventsDispatcher';
+import {PolyEventName} from '../../poly/utils/PolyEventName';
 import {PROGRESS_RATIO} from '../common/Progress';
 import {SceneJsonExporterData} from '../json/export/Scene';
 import {SceneJsonImporter, ConfigureSceneCallback} from '../json/import/Scene';
@@ -61,11 +63,14 @@ export class ScenePlayerImporter {
 	private _onCameraCreatorNodeLoadedResolve: OnCameraCreatorNodeLoadedResolve | undefined;
 	private _progress = 0;
 	// private _cameraCreatorNode: BaseNodeType | null = null;
-	constructor(private options: SceneDataImportOptions) {}
+	constructor(private options: SceneDataImportOptions) {
+		this._debug2('new ScenePlayerImporter', options);
+	}
 
 	static async loadSceneData(options: SceneDataImportOptions): Promise<SceneLoadReturnData> {
 		const importer = new ScenePlayerImporter(options);
 		const scene = await importer.loadScene();
+
 		const viewer = importer._viewer;
 		return {scene, viewer};
 	}
@@ -133,6 +138,7 @@ export class ScenePlayerImporter {
 		if (this.options.autoPlay != false) {
 			scene.play();
 		}
+		scene.loadingController.dispatchReadyEvent();
 		this._dispatchEvent(PolyEventName.SCENE_READY);
 	}
 
@@ -188,6 +194,10 @@ export class ScenePlayerImporter {
 						findAnyCamera: false,
 						printCameraNotFoundError: this._progress >= 1, // we display a warning if progress is 1
 						cameraMaskOverride: this.options.cameraMaskOverride,
+					});
+					this._debug2('scene.camerasController:', {
+						camera,
+						cameraPath: scene.root().mainCameraController.rawCameraPath(),
 					});
 					if (camera) {
 						if (this._onCameraCreatorNodeLoadedResolve) {
@@ -265,6 +275,7 @@ export class ScenePlayerImporter {
 	}
 
 	private _dispatchEvent(eventName: PolyEventName) {
+		this._debug2('_dispatchEvent', {eventName, scene: this._scene, viewer: this._viewer});
 		const elements = [this._domElement(), document];
 		if (!this._scene) {
 			console.warn(`no event emitted as no scene preset`);
@@ -287,5 +298,18 @@ export class ScenePlayerImporter {
 				}
 			}
 		}
+	}
+
+	protected _debug(arg0: any) {
+		ScenePlayerImporter._debug(arg0);
+	}
+	protected _debug2(arg0: any, arg1: any) {
+		ScenePlayerImporter._debug2(arg0, arg1);
+	}
+	protected static _debug(arg0: any) {
+		RootLoadProgressController.debug(arg0);
+	}
+	protected static _debug2(arg0: any, arg1: any) {
+		RootLoadProgressController.debug2(arg0, arg1);
 	}
 }

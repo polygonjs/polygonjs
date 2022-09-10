@@ -32,7 +32,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		return this._uniforms;
 	}
 
-	update_fragment_shader() {
+	updateFragmentShader() {
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
 		for (let shader_name of this.shaderNames()) {
@@ -42,8 +42,8 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			}
 		}
 		if (this._root_nodes.length > 0) {
-			this.build_code_from_nodes(this._root_nodes);
-			this._build_lines();
+			this.buildCodeFromNodes(this._root_nodes);
+			this._buildLines();
 		}
 
 		this._uniforms = this._uniforms || {};
@@ -83,7 +83,9 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	}
 	override add_globals_outputs(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.setNamedOutputConnectionPoints([
-			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC2),
+			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
+			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
+			new GlConnectionPoint('resolution', GlConnectionPointType.VEC2),
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
 			// new Connection.Vec2('resolution'),
 		]);
@@ -124,9 +126,19 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		return ['// INSERT DEFINE', '// INSERT BODY'];
 	}
 
-	handle_gl_FragCoord(body_lines: string[], shader_name: ShaderName, var_name: string) {
-		if (shader_name == 'fragment') {
-			body_lines.push(`vec2 ${var_name} = vec2(gl_FragCoord.x / resolution.x, gl_FragCoord.y / resolution.y)`);
+	private _handle_gl_FragCoord(body_lines: string[], shaderName: ShaderName, var_name: string) {
+		if (shaderName == ShaderName.FRAGMENT) {
+			body_lines.push(`vec4 ${var_name} = gl_FragCoord`);
+		}
+	}
+	private _handle_resolution(bodyLines: string[], shaderName: ShaderName, var_name: string) {
+		if (shaderName == ShaderName.FRAGMENT) {
+			bodyLines.push(`vec2 ${var_name} = resolution`);
+		}
+	}
+	private _handleUV(bodyLines: string[], shaderName: ShaderName, var_name: string) {
+		if (shaderName == ShaderName.FRAGMENT) {
+			bodyLines.push(`vec2 ${var_name} = vec2(gl_FragCoord.x / resolution.x, gl_FragCoord.y / resolution.y)`);
 		}
 	}
 
@@ -184,8 +196,14 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 					this.setUniformsTimeDependent();
 					break;
 
+				case 'uv':
+					this._handleUV(body_lines, shader_name, var_name);
+					break;
 				case 'gl_FragCoord':
-					this.handle_gl_FragCoord(body_lines, shader_name, var_name);
+					this._handle_gl_FragCoord(body_lines, shader_name, var_name);
+					break;
+				case 'resolution':
+					this._handle_resolution(body_lines, shader_name, var_name);
 					break;
 			}
 		}

@@ -143,7 +143,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	assert.equal(container.totalPointsCount(), 36);
 
 	// set error state
-	file1.p.url.set('/test/file_sop_doesnotexist.obj');
+	file1.p.url.set('/examples/file_sop_doesnotexist.obj');
 	assert.ok(file1.isDirty());
 	container = await file1.compute();
 	assert.ok(!file1.isDirty());
@@ -344,5 +344,5 @@ QUnit.test('SOP file nodes work with their default url', async (assert) => {
 	await testFileType(SopTypeFile.FILE_PDB, 25);
 	await testFileType(SopTypeFile.FILE_PLY, 855);
 	await testFileType(SopTypeFile.FILE_STL, 154059, 0);
-	await testFileType(SopTypeFile.FILE_SVG, 48118);
+	await testFileType(SopTypeFile.FILE_SVG, 164050);
 });

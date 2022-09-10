@@ -8,7 +8,7 @@ export abstract class CoreEntity {
 		return this._index;
 	}
 
-	abstract setAttribValue(name: string, value: NumericAttribValue | string): void;
-	abstract attribValue(name: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined;
-	abstract stringAttribValue(name: string): string | undefined;
+	abstract setAttribValue(attribName: string, attribValue: NumericAttribValue | string): void;
+	abstract attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined;
+	abstract stringAttribValue(attribName: string): string | undefined;
 }

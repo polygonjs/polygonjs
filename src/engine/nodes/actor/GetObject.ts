@@ -3,7 +3,7 @@
  *
  *
  */
-
+import {PolyScene} from './../../scene/PolyScene';
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
@@ -14,7 +14,6 @@ import {
 } from '../utils/io/connections/Actor';
 import {isBooleanTrue} from '../../../core/Type';
 import {Object3D} from 'three';
-import {BaseNodeType} from '../_Base';
 import {ParamType} from '../../poly/ParamType';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
@@ -31,8 +30,8 @@ class GetObjectActorParamsConfig extends NodeParamsConfig {
 			getCurrentObject: 0,
 		},
 		objectMask: true,
-		callback: (node: BaseNodeType) => {
-			GetObjectActorNode.PARAM_CALLBACK_clearCache(node as GetObjectActorNode);
+		callback: () => {
+			GetObjectActorNode.PARAM_CALLBACK_clearCache();
 		},
 	});
 }
@@ -62,30 +61,33 @@ export class GetObjectActorNode extends TypedActorNode<GetObjectActorParamsConfi
 			return context.Object3D;
 		} else {
 			const mask = this._inputValueFromParam<ParamType.STRING>(this.p.mask, context);
-
-			const frame = this.scene().frame();
-			if (this._cacheClearedOnFrame != frame) {
-				// we clear the cache if we are on a new frame
-				this._clearOutputValueCache();
-				this._cacheClearedOnFrame = frame;
-			}
-			const cachedObject = this._cachedObjectByMask.get(mask);
-			if (!cachedObject) {
-				const matchedObject = this.scene().findObjectByMask(mask) || null;
-				this._cachedObjectByMask.set(mask, {object: matchedObject});
-			}
-
-			return this._cachedObjectByMask.get(mask)?.object || context.Object3D;
+			return GetObjectActorNode.objectFromMask(mask, this.scene()) || context.Object3D;
 		}
 	}
 
+	static objectFromMask(mask: string, scene: PolyScene) {
+		const frame = scene.frame();
+		if (this._cacheClearedOnFrame != frame) {
+			// we clear the cache if we are on a new frame
+			this._clearOutputValueCache();
+			this._cacheClearedOnFrame = frame;
+		}
+		const cachedObject = this._cachedObjectByMask.get(mask);
+		if (!cachedObject) {
+			const matchedObject = scene.findObjectByMask(mask) || null;
+			this._cachedObjectByMask.set(mask, {object: matchedObject});
+		}
+
+		return this._cachedObjectByMask.get(mask)?.object;
+	}
+
 	// cache
-	private _cacheClearedOnFrame = -1;
-	private _cachedObjectByMask: Map<string, CachedObjectResult> = new Map();
-	private _clearOutputValueCache() {
+	private static _cacheClearedOnFrame = -1;
+	private static _cachedObjectByMask: Map<string, CachedObjectResult> = new Map();
+	private static _clearOutputValueCache() {
 		this._cachedObjectByMask.clear();
 	}
-	static PARAM_CALLBACK_clearCache(node: GetObjectActorNode) {
-		node._clearOutputValueCache();
+	static PARAM_CALLBACK_clearCache() {
+		this._clearOutputValueCache();
 	}
 }

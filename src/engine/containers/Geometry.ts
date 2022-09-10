@@ -1,3 +1,4 @@
+import {AttribValue} from './../../types/GlobalTypes';
 import {Vector3} from 'three';
 // import {Object3D} from 'three'
 // import {Group} from 'three'
@@ -126,6 +127,18 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return sizes_by_name;
 	}
+	coreGroupAttributeSizesByName() {
+		let sizes_by_name: PolyDictionary<number> = {};
+		const coreGroup = this._content;
+		const attribNames = coreGroup.attribNames();
+		for (let name of attribNames) {
+			const size = coreGroup.attribSize(name);
+			if (size != null) {
+				sizes_by_name[name] = size;
+			}
+		}
+		return sizes_by_name;
+	}
 	pointAttributeTypesByName() {
 		let types_by_name: PolyDictionary<AttribType> = {};
 		const geometry = this.firstGeometry();
@@ -146,6 +159,22 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 			}
 		}
 		return types_by_name;
+	}
+	coreGroupAttributeTypesByName() {
+		let types_by_name: PolyDictionary<AttribType> = {};
+		const coreGroup = this._content;
+		for (let name of coreGroup.attribNames()) {
+			types_by_name[name] = coreGroup.attribType(name);
+		}
+		return types_by_name;
+	}
+	coreGroupAttributeValuesByName() {
+		let valuesByName: PolyDictionary<AttribValue> = {};
+		const coreGroup = this._content;
+		for (let name of coreGroup.attribNames()) {
+			valuesByName[name] = coreGroup.attribValue(name);
+		}
+		return valuesByName;
 	}
 	objectAttributeNames() {
 		let names: string[] = [];

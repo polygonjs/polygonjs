@@ -1,4 +1,3 @@
-import {SopType} from './../../poly/registers/nodes/types/Sop';
 /**
  * Copies a geometry onto every point from the right input.
  *
@@ -7,7 +6,8 @@ import {SopType} from './../../poly/registers/nodes/types/Sop';
  *
  *
  */
-
+import {ObjectTransformSpace} from './../../../core/TransformSpace';
+import {SopType} from './../../poly/registers/nodes/types/Sop';
 import {TypedSopNode} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -21,16 +21,22 @@ import {Object3D} from 'three';
 import {TypeAssert} from '../../poly/Assert';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreTransform, RotationOrder} from '../../../core/Transform';
+import {
+	OBJECT_TRANSFORM_SPACE_MENU_ENTRIES,
+	OBJECT_TRANSFORM_SPACES,
+	applyTransformWithSpaceToObject,
+} from '../../../core/TransformSpace';
 
-enum TransformMode {
-	OBJECT = 0,
-	GEOMETRY = 1,
+export enum TransformMode {
+	OBJECT = 'object',
+	GEOMETRY = 'geometry',
 }
-const TRANSFORM_MODES: TransformMode[] = [TransformMode.OBJECT, TransformMode.GEOMETRY];
+export const TRANSFORM_MODES: TransformMode[] = [TransformMode.OBJECT, TransformMode.GEOMETRY];
 const TransformModeMenuEntries = [
-	{name: 'object', value: TransformMode.OBJECT},
-	{name: 'geometry', value: TransformMode.GEOMETRY},
+	{name: 'object', value: TRANSFORM_MODES.indexOf(TransformMode.OBJECT)},
+	{name: 'geometry', value: TRANSFORM_MODES.indexOf(TransformMode.GEOMETRY)},
 ];
+
 class CopySopParamsConfig extends NodeParamsConfig {
 	/** @param copies count, used when the second input is not given */
 	count = ParamConfig.INTEGER(1, {
@@ -51,6 +57,13 @@ class CopySopParamsConfig extends NodeParamsConfig {
 	transformMode = ParamConfig.INTEGER(0, {
 		menu: {
 			entries: TransformModeMenuEntries,
+		},
+	});
+	/** @param defines how the objects are transformed */
+	objectTransformSpace = ParamConfig.INTEGER(0, {
+		visibleIf: {transformMode: TRANSFORM_MODES.indexOf(TransformMode.OBJECT)},
+		menu: {
+			entries: OBJECT_TRANSFORM_SPACE_MENU_ENTRIES,
 		},
 	});
 	/** @param toggles on to copy attributes from the input points to the created objects. Note that the vertex attributes from the points become object attributes */
@@ -83,6 +96,13 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
+	setTransformMode(transformMode: TransformMode) {
+		this.p.transformMode.set(TRANSFORM_MODES.indexOf(transformMode));
+	}
+	setObjectTransformSpace(transformSpace: ObjectTransformSpace) {
+		this.p.objectTransformSpace.set(OBJECT_TRANSFORM_SPACES.indexOf(transformSpace));
+	}
+
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		if (!isBooleanTrue(this.pv.useCopyExpr)) {
 			this.stampNode().reset();
@@ -99,6 +119,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			return;
 		}
 		await this.cookWithTemplate(coreGroup0, coreGroup1);
+		this.stampNode().reset();
 	}
 
 	private _instancer = new CoreInstancer();
@@ -109,7 +130,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 		this._instancer.setCoreGroup(templateCoreGroup);
 
-		this._attribNamesToCopy = templateCoreGroup.attribNamesMatchingMask(this.pv.attributesToCopy);
+		this._attribNamesToCopy = templateCoreGroup.geoAttribNamesMatchingMask(this.pv.attributesToCopy);
 		await this._copyMovedObjectsOnTemplatePoints(instanceCoreGroup, templatePoints);
 		this.setObjects(this._objects);
 	}
@@ -253,8 +274,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	// STAMP
 	//
 	//
-	stampValue(attrib_name?: string) {
-		return this.stampNode().value(attrib_name);
+	stampValue(attribName?: string) {
+		return this.stampNode().value(attribName);
 	}
 	stampNode() {
 		return (this._stampNode = this._stampNode || this._createStampNode());
@@ -319,16 +340,6 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 	// private _object_position = new Vector3();
 	private _applyMatrixToObject(object: Object3D, matrix: Matrix4) {
-		object.matrix.multiply(matrix);
-		object.matrix.decompose(object.position, object.quaternion, object.scale);
-		// center to origin
-		// this._object_position.copy(object.position);
-		// object.position.multiplyScalar(0);
-		// object.updateMatrix();
-		// // apply matrix
-		// object.applyMatrix4(matrix);
-		// // revert to position
-		// object.position.add(this._object_position);
-		// object.updateMatrix();
+		applyTransformWithSpaceToObject(object, matrix, OBJECT_TRANSFORM_SPACES[this.pv.objectTransformSpace]);
 	}
 }

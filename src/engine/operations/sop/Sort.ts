@@ -1,12 +1,26 @@
+import {CoreMath} from './../../../core/math/_Module';
+import {CoreObject} from './../../../core/geometry/Object';
+import {TypeAssert} from './../../poly/Assert';
+import {AttribClass} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {CoreObject} from '../../../core/geometry/Object';
-import {Vector3} from 'three';
+import {Vector3, Object3D} from 'three';
 import {MapUtils} from '../../../core/MapUtils';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+
+export enum SortMode {
+	RANDOM = 'random',
+	AXIS = 'axis',
+}
+export const SORT_MODES: SortMode[] = [SortMode.AXIS, SortMode.RANDOM];
+
+export const SORT_TARGET_TYPES: Array<AttribClass.VERTEX | AttribClass.OBJECT> = [
+	AttribClass.VERTEX,
+	AttribClass.OBJECT,
+];
 
 export enum Axis {
 	X = 'x',
@@ -16,12 +30,21 @@ export enum Axis {
 export const AXISES: Axis[] = [Axis.X, Axis.Y, Axis.Z];
 
 interface SortSopParams extends DefaultOperationParams {
+	mode: number;
+	targetType: number;
+	// random
+	seed: number;
+	// axis
 	axis: number;
+	// commpn
 	invert: boolean;
 }
 
 export class SortSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SortSopParams = {
+		mode: SORT_MODES.indexOf(SortMode.AXIS),
+		targetType: SORT_TARGET_TYPES.indexOf(AttribClass.VERTEX),
+		seed: 0,
 		axis: AXISES.indexOf(Axis.X),
 		invert: false,
 	};
@@ -32,13 +55,127 @@ export class SortSopOperation extends BaseSopOperation {
 
 	override cook(inputCoreGroups: CoreGroup[], params: SortSopParams) {
 		const coreGroup = inputCoreGroups[0];
+		this._sort(coreGroup, params);
+		return coreGroup;
+	}
+	private _sort(coreGroup: CoreGroup, params: SortSopParams) {
+		const targetType = SORT_TARGET_TYPES[params.targetType];
+		switch (targetType) {
+			case AttribClass.VERTEX:
+				return this._sortPoints(coreGroup, params);
+			case AttribClass.OBJECT:
+				return this._sortObjects(coreGroup, params);
+		}
+	}
 
-		const objects = coreGroup.objectsWithGeo();
-		for (let object of objects) {
-			this._sortObject(object, params);
+	private _sortObjects(coreGroup: CoreGroup, params: SortSopParams) {
+		const sortMode = SORT_MODES[params.mode];
+		switch (sortMode) {
+			case SortMode.AXIS:
+				return this._sortObjectsByAxis(coreGroup, params);
+			case SortMode.RANDOM:
+				return this._sortObjectsByRandom(coreGroup, params);
+		}
+		TypeAssert.unreachable(sortMode);
+	}
+	private _sortObjectsByAxis(coreGroup: CoreGroup, params: SortSopParams) {
+		const coreObjects = coreGroup.coreObjects();
+		const objectsByPos: Map<number, CoreObject[]> = new Map();
+		const positions: number[] = [];
+
+		// accumulate axisValue
+		const axis = AXISES[params.axis];
+		let axisValue: number = 0;
+		let i = 0;
+		for (let coreObject of coreObjects) {
+			const position = coreObject.object().position;
+			switch (axis) {
+				case Axis.X: {
+					axisValue = position.x;
+					break;
+				}
+				case Axis.Y: {
+					axisValue = position.y;
+					break;
+				}
+				case Axis.Z: {
+					axisValue = position.z;
+					break;
+				}
+			}
+			positions[i] = axisValue;
+			MapUtils.pushOnArrayAtEntry(objectsByPos, axisValue, coreObject);
+			i++;
 		}
 
-		return coreGroup;
+		// sort
+		let sortedPositions: number[] = positions.sort((a, b) => a - b);
+		if (params.invert) {
+			sortedPositions.reverse();
+		}
+
+		const sortedObjects: Object3D[] = [];
+		for (let position of sortedPositions) {
+			const coreObjectsForPosition = objectsByPos.get(position);
+			if (coreObjectsForPosition) {
+				for (let coreObjectForPosition of coreObjectsForPosition) {
+					sortedObjects.push(coreObjectForPosition.object());
+				}
+			}
+		}
+		coreGroup.setObjects(sortedObjects);
+	}
+	private _sortObjectsByRandom(coreGroup: CoreGroup, params: SortSopParams) {
+		const coreObjects = coreGroup.coreObjects();
+		const objectsByPos: Map<number, CoreObject[]> = new Map();
+		const positions: number[] = [];
+
+		// accumulate axisValue
+		let sortValue: number = 0;
+		let i = 0;
+		for (let coreObject of coreObjects) {
+			sortValue = CoreMath.randFloat(params.seed, i);
+			positions[i] = sortValue;
+			MapUtils.pushOnArrayAtEntry(objectsByPos, sortValue, coreObject);
+			i++;
+		}
+
+		// sort
+		let sortedPositions: number[] = positions.sort((a, b) => a - b);
+		if (params.invert) {
+			sortedPositions.reverse();
+		}
+
+		const sortedObjects: Object3D[] = [];
+		for (let position of sortedPositions) {
+			const coreObjectsForPosition = objectsByPos.get(position);
+			if (coreObjectsForPosition) {
+				for (let coreObjectForPosition of coreObjectsForPosition) {
+					sortedObjects.push(coreObjectForPosition.object());
+				}
+			}
+		}
+		coreGroup.setObjects(sortedObjects);
+	}
+
+	private _sortPoints(coreGroup: CoreGroup, params: SortSopParams) {
+		const sortMode = SORT_MODES[params.mode];
+		switch (sortMode) {
+			case SortMode.AXIS:
+				return this._sortPointsByAxis(coreGroup, params);
+			case SortMode.RANDOM:
+				return this._sortPointsByRandom(coreGroup, params);
+		}
+		TypeAssert.unreachable(sortMode);
+	}
+	private _sortPointsByAxis(coreGroup: CoreGroup, params: SortSopParams) {
+		const objects = coreGroup.objectsWithGeo();
+		for (let object of objects) {
+			this._sortPointsForObject(object, params);
+		}
+	}
+	private _sortPointsByRandom(coreGroup: CoreGroup, params: SortSopParams) {
+		this.states?.error.set('sorting points in random mode is not yet implemented');
 	}
 
 	private _pointPos = new Vector3();
@@ -51,7 +188,7 @@ export class SortSopOperation extends BaseSopOperation {
 			return;
 		}
 	}
-	private _sortObject(object: Object3DWithGeometry, params: SortSopParams) {
+	private _sortPointsForObject(object: Object3DWithGeometry, params: SortSopParams) {
 		const coreObject = new CoreObject(object, 0);
 		const points = coreObject.points();
 

@@ -39,6 +39,11 @@ export class BboxScatterSopOperation extends BaseSopOperation {
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 
-		return this.createCoreGroupFromGeometry(geometry, ObjectType.POINTS);
+		const object = BaseSopOperation.createObject(geometry, ObjectType.POINTS);
+		if (this._node) {
+			object.name = this._node.name();
+		}
+
+		return this.createCoreGroupFromObjects([object]);
 	}
 }

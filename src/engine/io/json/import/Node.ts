@@ -33,7 +33,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		// rather than having the children creation dependent on the persisted config and player mode, use the childrenAllowed() method
 		// const skip_create_children = Poly.playerMode() && data.persisted_config;
 		if (this._node.childrenAllowed()) {
-			this.create_nodes(scene_importer, data['nodes']);
+			this.create_nodes(scene_importer, data['nodes'], data);
 		}
 		this.set_selection(data['selection']);
 
@@ -56,19 +56,25 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			this.set_persisted_config(data.persisted_config);
 		}
 
-		this.from_data_custom(data);
+		this.setCustomData(data);
 
 		// already called in create_node()
 		// this._node.lifecycle.set_creation_completed();
 	}
-	process_inputs_data(data: NodeJsonExporterData) {
+	process_inputs_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
 		const maxInputsCount = data.maxInputsCount;
 		if (maxInputsCount != null) {
 			const minCount = this._node.io.inputs.minCount();
 			this._node.io.inputs.setCount(minCount, maxInputsCount);
 		}
 
-		this.setInputs(data['inputs']);
+		try {
+			this.setInputs(data['inputs']);
+		} catch (err) {
+			const message = (err as ErrorEvent).message || `failed connecting inputs of node ${data['type']}`;
+			scene_importer.report.addWarning(message);
+			console.warn(data['inputs']);
+		}
 	}
 
 	process_ui_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterUIData) {
@@ -93,7 +99,11 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	create_nodes(scene_importer: SceneJsonImporter, data?: PolyDictionary<NodeJsonExporterData>) {
+	create_nodes(
+		scene_importer: SceneJsonImporter,
+		data: PolyDictionary<NodeJsonExporterData> | undefined,
+		nodeData: NodeJsonExporterData
+	) {
 		if (!data) {
 			return;
 		}
@@ -375,5 +385,5 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	from_data_custom(data: NodeJsonExporterData) {}
+	setCustomData(data: NodeJsonExporterData) {}
 }

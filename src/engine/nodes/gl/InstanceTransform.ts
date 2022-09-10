@@ -47,48 +47,46 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const body_lines = [];
-		const function_declaration_lines = [];
+		const bodyLines = [];
+		const functionDeclarationLines = [];
 
-		function_declaration_lines.push(new FunctionGLDefinition(this, QuaternionMethods));
+		functionDeclarationLines.push(new FunctionGLDefinition(this, QuaternionMethods));
 
-		const input_position = this.io.inputs.named_input(this.p.position.name());
-		const position = input_position
+		const inputPosition = this.io.inputs.named_input(this.p.position.name());
+		const position = inputPosition
 			? ThreeToGl.float(this.variableForInputParam(this.p.position))
-			: this._default_position();
+			: this._defaultPosition();
 
-		const input_normal = this.io.inputs.named_input(this.p.normal.name());
-		const normal = input_normal
-			? ThreeToGl.float(this.variableForInputParam(this.p.normal))
-			: this._default_normal();
+		const inputNormal = this.io.inputs.named_input(this.p.normal.name());
+		const normal = inputNormal ? ThreeToGl.float(this.variableForInputParam(this.p.normal)) : this._defaultNormal();
 
-		const input_instancePosition = this.io.inputs.named_input(this.p.instancePosition.name());
-		const instancePosition = input_instancePosition
+		const inputInstancePosition = this.io.inputs.named_input(this.p.instancePosition.name());
+		const instancePosition = inputInstancePosition
 			? ThreeToGl.float(this.variableForInputParam(this.p.instancePosition))
-			: this._default_instancePosition(shaders_collection_controller);
+			: this._defaultInstancePosition(shaders_collection_controller);
 		// const instancePosition = ThreeToGl.float(this.variableForInput('instancePosition'))
 
-		const input_instanceOrientation = this.io.inputs.named_input(this.p.instanceOrientation.name());
-		const instanceOrientation = input_instanceOrientation
+		const inputInstanceOrientation = this.io.inputs.named_input(this.p.instanceOrientation.name());
+		const instanceOrientation = inputInstanceOrientation
 			? ThreeToGl.float(this.variableForInputParam(this.p.instanceOrientation))
-			: this._default_input_instanceOrientation(shaders_collection_controller);
+			: this._defaultInputInstanceOrientation(shaders_collection_controller);
 
-		const input_instanceScale = this.io.inputs.named_input(this.p.instanceScale.name());
-		const instanceScale = input_instanceScale
+		const inputInstanceScale = this.io.inputs.named_input(this.p.instanceScale.name());
+		const instanceScale = inputInstanceScale
 			? ThreeToGl.float(this.variableForInputParam(this.p.instanceScale))
-			: this._default_input_instanceScale(shaders_collection_controller);
+			: this._defaultInputInstanceScale(shaders_collection_controller);
 
-		const result_position = this.glVarName(this.gl_output_name_position());
-		const result_normal = this.glVarName(this.gl_output_name_normal());
-		body_lines.push(`vec3 ${result_position} = vec3(${position})`);
-		body_lines.push(`${result_position} *= ${instanceScale}`);
-		body_lines.push(`${result_position} = rotateWithQuat( ${result_position}, ${instanceOrientation} )`);
-		body_lines.push(`${result_position} += ${instancePosition}`);
-		body_lines.push(`vec3 ${result_normal} = vec3(${normal})`);
-		body_lines.push(`${result_normal} = rotateWithQuat( ${result_normal}, ${instanceOrientation} )`);
+		const resultPosition = this.glVarName(this.gl_output_name_position());
+		const resultNormal = this.glVarName(this.gl_output_name_normal());
+		bodyLines.push(`vec3 ${resultPosition} = vec3(${position})`);
+		bodyLines.push(`${resultPosition} *= ${instanceScale}`);
+		bodyLines.push(`${resultPosition} = rotateWithQuat( ${resultPosition}, ${instanceOrientation} )`);
+		bodyLines.push(`${resultPosition} += ${instancePosition}`);
+		bodyLines.push(`vec3 ${resultNormal} = vec3(${normal})`);
+		bodyLines.push(`${resultNormal} = rotateWithQuat( ${resultNormal}, ${instanceOrientation} )`);
 
-		shaders_collection_controller.addBodyLines(this, body_lines);
-		shaders_collection_controller.addDefinitions(this, function_declaration_lines);
+		shaders_collection_controller.addBodyLines(this, bodyLines);
+		shaders_collection_controller.addDefinitions(this, functionDeclarationLines);
 	}
 	gl_output_name_position() {
 		return 'position';
@@ -97,13 +95,13 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		return 'normal';
 	}
 
-	private _default_position(): string {
+	private _defaultPosition(): string {
 		return VARS.position;
 	}
-	private _default_normal(): string {
+	private _defaultNormal(): string {
 		return VARS.normal;
 	}
-	private _default_instancePosition(shaders_collection_controller: ShadersCollectionController): string | undefined {
+	private _defaultInstancePosition(shaders_collection_controller: ShadersCollectionController): string | undefined {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
 		return assembler
 			.globalsHandler()
@@ -112,7 +110,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		// 	.globalsHandler()
 		// 	.read_attribute(this, 'vec3', VARS.instancePosition, this._shader_name);
 	}
-	private _default_input_instanceOrientation(shaders_collection_controller: ShadersCollectionController) {
+	private _defaultInputInstanceOrientation(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
 		return assembler
 			.globalsHandler()
@@ -121,7 +119,7 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		// 	.globalsHandler()
 		// 	.read_attribute(this, 'vec4', VARS.instanceOrientation, this._shader_name);
 	}
-	private _default_input_instanceScale(shaders_collection_controller: ShadersCollectionController) {
+	private _defaultInputInstanceScale(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
 		return assembler
 			.globalsHandler()

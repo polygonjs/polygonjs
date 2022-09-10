@@ -54,6 +54,8 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 				return this._addPointAttribute(coreGroup, params);
 			case AttribClass.OBJECT:
 				return this._addObjectAttribute(coreGroup, params);
+			case AttribClass.CORE_GROUP:
+				return this._addCoreGroupAttribute(coreGroup, params);
 		}
 		TypeAssert.unreachable(attribClass);
 	}
@@ -93,6 +95,13 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 			if (isBooleanTrue(params.toctave)) {
 				coreObject.addAttribute(params.octaveName, values[i].octave);
 			}
+		}
+	}
+	private _addCoreGroupAttribute(coreGroup: CoreGroup, params: AudioNotesSopParams) {
+		const values = this._values([coreGroup], params);
+		coreGroup.addAttribute(params.name, values[0].note);
+		if (isBooleanTrue(params.toctave)) {
+			coreGroup.addAttribute(params.octaveName, values[0].octave);
 		}
 	}
 

@@ -34,7 +34,9 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		);
 
 		/** @param toggle if you want to use sheen */
-		useSheen = ParamConfig.BOOLEAN(0);
+		useSheen = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+		});
 		/** @param The intensity of the sheen layer, from 0.0 to 1.0. Default is 0.0. */
 		sheen = ParamConfig.FLOAT(0, {
 			range: [0, 1],
@@ -52,10 +54,32 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 			visibleIf: {useSheen: 1},
 		});
 
+		/** @param toggle if you want to use iridescence */
+		// useIridescence = ParamConfig.BOOLEAN(0, {
+		// 	separatorBefore: true,
+		// });
+		// /** @param iridescence index of refraction */
+		// iridescenceIOR = ParamConfig.FLOAT(1.3, {
+		// 	range: [0, 2],
+		// 	rangeLocked: [true, false],
+		// 	visibleIf: {useIridescence: 1},
+		// });
+		// /** @param toggle if you want to use an iridescence map */
+		// useIridescenceMap = ParamConfig.BOOLEAN(0, {
+		// 	...BooleanParamOptions(MeshPhysicalController),
+		// 	visibleIf: {useIridescence: 1},
+		// });
+		// /** @param specify the iridescence map COP node */
+		// iridescenceMap = ParamConfig.NODE_PATH('', {
+		// 	...NodePathOptions(MeshPhysicalController, 'useIridescenceMap'),
+		// 	visibleIf: {useIridescence: 1, useIridescenceMap: 1},
+		// });
+
 		/** @param Degree of transmission (or optical transparency), from 0.0 to 1.0. Default is 0.0.
 Thin, transparent or semitransparent, plastic or glass materials remain largely reflective even if they are fully transmissive. The transmission property can be used to model these materials.
 When transmission is non-zero, opacity should be set to 1.  */
 		transmission = ParamConfig.FLOAT(0, {
+			separatorBefore: true,
 			range: [0, 1],
 		});
 		/** @param toggle if you want to use a transmission map */
@@ -112,6 +136,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		this.add_hooks(this.node.p.useClearCoatRoughnessMap, this.node.p.clearcoatRoughnessMap);
 		this.add_hooks(this.node.p.useTransmissionMap, this.node.p.transmissionMap);
 		this.add_hooks(this.node.p.useThicknessMap, this.node.p.thicknessMap);
+		// this.add_hooks(this.node.p.useIridescenceMap, this.node.p.iridescenceMap);
 	}
 	private _sheenColorClone = new Color();
 	override async update() {
@@ -135,6 +160,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			this.node.p.transmissionMap
 		);
 		this._update(this.node.material, 'thicknessMap', this.node.p.useThicknessMap, this.node.p.thicknessMap);
+		// this._update(this.node.material, 'iridescenceMap', this.node.p.useIridescenceMap, this.node.p.iridescenceMap);
 		const pv = this.node.pv;
 
 		// this is to get the reflectivity value
@@ -158,6 +184,13 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		} else {
 			mat.sheen = 0;
 		}
+		// if (isBooleanTrue(pv.useIridescence)) {
+		// 	(mat as any).iridescence = 1;
+		// 	mat.iridescenceIOR = pv.iridescenceIOR;
+		// } else {
+		// 	(mat as any).iridescence = 0;
+		// }
+
 		mat.transmission = pv.transmission;
 		mat.thickness = pv.thickness;
 		mat.attenuationDistance = pv.attenuationDistance;

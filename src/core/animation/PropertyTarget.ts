@@ -16,8 +16,7 @@ export class AnimPropertyTarget {
 	constructor(private _scene: PolyScene, private _options: PropertyTargetOptions) {}
 
 	clone() {
-		const property_target = new AnimPropertyTarget(this._scene, this._options);
-		return property_target;
+		return new AnimPropertyTarget(this._scene, this._options);
 	}
 
 	objects() {

@@ -1,10 +1,4 @@
-export enum PolyEventName {
-	POLY_PROGRESS = 'POLYProgress',
-	SCENE_CREATED = 'POLYSceneCreated',
-	VIEWER_MOUNTED = 'POLYViewerMounted',
-	SCENE_READY = 'POLYSceneReady',
-	VIEWER_READY = 'POLYViewerReady',
-}
+import {PolyEventName} from '../../poly/utils/PolyEventName';
 
 export class PolyEventsDispatcher {
 	static dispatchProgressEvent(progress: number, sceneName?: string) {

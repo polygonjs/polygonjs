@@ -42,7 +42,6 @@ import {WebGLRenderer} from 'three';
 import {Scene} from 'three';
 import {Camera} from 'three';
 import {BufferGeometry} from 'three';
-import {Geometry} from '../../modules/three/examples/jsm/deprecated/Geometry';
 import {Group} from 'three';
 import {ShaderAssemblerMaterial} from '../../engine/nodes/gl/code/assemblers/materials/_BaseMaterial';
 import {
@@ -55,7 +54,7 @@ export type RenderHook = (
 	renderer: WebGLRenderer,
 	scene: Scene,
 	camera: Camera,
-	geometry: BufferGeometry | Geometry,
+	geometry: BufferGeometry,
 	material: Material,
 	group: Group | null // it's only 'Group', and not 'Group|null' in threejs types, but got null sometimes
 ) => void;
@@ -63,14 +62,14 @@ export type RenderHookWithObject = (
 	renderer: WebGLRenderer,
 	scene: Scene,
 	camera: Camera,
-	geometry: BufferGeometry | Geometry,
+	geometry: BufferGeometry,
 	material: Material,
 	group: Group | null, // it's only 'Group', and not 'Group|null' in threejs types, but got null sometimes
 	object: Object3D
 ) => void;
 const RENDER_HOOK_USER_DATA_KEY = 'POLY_render_hook';
 
-interface MaterialWithRenderHook {
+interface MaterialWithRenderHook extends Material {
 	userData: {
 		[RENDER_HOOK_USER_DATA_KEY]: RenderHookWithObject;
 	};
@@ -80,7 +79,7 @@ const EMPTY_RENDER_HOOK: RenderHook = (
 	renderer: WebGLRenderer,
 	scene: Scene,
 	camera: Camera,
-	geometry: BufferGeometry | Geometry,
+	geometry: BufferGeometry,
 	material: Material,
 	group: Group | null
 ) => {};
@@ -115,23 +114,33 @@ export class CoreMaterial {
 	// 	return material;
 	// }
 
-	static add_user_data_render_hook(material: Material, render_hook: RenderHookWithObject) {
-		material.userData[RENDER_HOOK_USER_DATA_KEY] = render_hook;
+	/*
+	//
+	// TODO:
+	// this render hook system has a big limitation,
+	// which is that if we clone the object, it may not be propagated correctly,
+	// since this is assigned at render time.
+	// This means that if we clone an object before it has been rendered,
+	// it won't have the onBeforeRender function, and therefore won't pass it on to its clone.
+	//
+	*/
+	static addUserDataRenderHook(material: Material, renderHook: RenderHookWithObject) {
+		material.userData[RENDER_HOOK_USER_DATA_KEY] = renderHook;
 	}
 
-	static apply_render_hook(object: Object3D, material: MaterialWithRenderHook) {
+	static applyRenderHook(object: Object3D, material: MaterialWithRenderHook) {
 		if (material.userData) {
-			const render_hook: RenderHookWithObject = material.userData[RENDER_HOOK_USER_DATA_KEY];
-			if (render_hook) {
+			const renderHook: RenderHookWithObject = material.userData[RENDER_HOOK_USER_DATA_KEY];
+			if (renderHook) {
 				object.onBeforeRender = (
 					renderer: WebGLRenderer,
 					scene: Scene,
 					camera: Camera,
-					geometry: BufferGeometry | Geometry,
+					geometry: BufferGeometry,
 					material: Material,
 					group: Group | null
 				) => {
-					render_hook(renderer, scene, camera, geometry, material, group, object);
+					renderHook(renderer, scene, camera, geometry, material, group, object);
 				};
 				return;
 			}

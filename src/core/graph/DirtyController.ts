@@ -131,7 +131,8 @@ export class DirtyController {
 	}
 	clearSuccessorsCacheWithPredecessors() {
 		this.clearSuccessorsCache();
-		for (let predecessor of this.node.graphAllPredecessors()) {
+		const predecessors = this.node.graphAllPredecessors();
+		for (let predecessor of predecessors) {
 			predecessor.dirtyController.clearSuccessorsCache();
 		}
 	}

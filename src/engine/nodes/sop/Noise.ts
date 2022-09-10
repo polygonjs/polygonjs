@@ -136,7 +136,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			this.cookController.endCook();
 			return;
 		}
-		const attribType = coreGroup.attribType(destAttribName);
+		const attribType = coreGroup.geoAttribType(destAttribName);
 		if (attribType != AttribType.NUMERIC) {
 			this.states.error.set(`attribute ${destAttribName} is not a numeric attribute`);
 			this.cookController.endCook();
@@ -145,7 +145,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 
 		// const simplex = this._getSimplex();
 		// const useNormals = isBooleanTrue(this.pv.useNormals) && coreGroup.hasAttrib(ATTRIB_NORMAL);
-		const targetAttribSize = coreGroup.attribSize(this.pv.attribName);
+		const targetAttribSize = coreGroup.geoAttribSize(this.pv.attribName);
 		// const operation = OPERATIONS[this.pv.operation];
 		// const useRestAttributes: boolean = isBooleanTrue(this.pv.useRestAttributes);
 		// const baseAmplitude: number = this.pv.amplitude;

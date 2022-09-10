@@ -27,7 +27,7 @@ const TEST_SHADER_LIB = {
 	position: {vert: BasicPositionVertex, frag: BasicPositionFragment},
 };
 
-QUnit.test('volume builder simple', async (assert) => {
+QUnit.test('mat/volumeBuilder simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
@@ -66,7 +66,7 @@ QUnit.test('volume builder simple', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('volume builder persisted_config', async (assert) => {
+QUnit.test('mat/volumeBuilder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const volume1 = MAT.createNode('volumeBuilder');
@@ -80,12 +80,13 @@ QUnit.test('volume builder persisted_config', async (assert) => {
 	param2.setGlType(GlConnectionPointType.VEC3);
 	param2.p.name.set('vec3_param');
 	const float_to_vec31 = volume1.createNode('floatToVec3');
+	const vec3ToFloat1 = volume1.createNode('vec3ToFloat');
 	float_to_vec31.setInput(0, param1);
 	float_to_vec31.setInput(1, globals1, 'time');
-	output1.setInput(0, param2);
+	vec3ToFloat1.setInput(0, float_to_vec31);
+	output1.setInput(0, vec3ToFloat1, 'x');
 	await RendererUtils.compile(volume1, renderer);
 	const volume1Material = volume1.material as ShaderMaterialWithCustomMaterials;
-
 	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(volume1.usedAssembler(), async () => {

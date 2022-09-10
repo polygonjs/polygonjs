@@ -2,6 +2,7 @@ import {TypedAnimNode} from './_Base';
 import {AnimCopyStamp} from './utils/CopyStamp';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
+import {AnimType} from '../../poly/registers/nodes/types/Anim';
 class CopyAnimParamsConfig extends NodeParamsConfig {
 	count = ParamConfig.INTEGER(1, {
 		range: [1, 20],
@@ -13,7 +14,7 @@ const ParamsConfig = new CopyAnimParamsConfig();
 export class CopyAnimNode extends TypedAnimNode<CopyAnimParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'copy';
+		return AnimType.COPY;
 	}
 
 	private _stampNode!: AnimCopyStamp;

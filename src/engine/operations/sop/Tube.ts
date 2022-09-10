@@ -1,8 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
+import {Vector3, CylinderGeometry} from 'three';
 import {CoreTransform} from '../../../core/Transform';
-import {CylinderBufferGeometry} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -37,7 +36,7 @@ export class TubeSopOperation extends BaseSopOperation {
 	}
 	private _coreTransform = new CoreTransform();
 	override cook(input_contents: CoreGroup[], params: TubeSopParams) {
-		const geometry = new CylinderBufferGeometry(
+		const geometry = new CylinderGeometry(
 			params.radiusTop,
 			params.radiusBottom,
 			params.height,

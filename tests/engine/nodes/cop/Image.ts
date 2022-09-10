@@ -18,6 +18,31 @@ QUnit.test('COP image simple default', async (assert) => {
 	assert.deepEqual(container.resolution(), [512, 512]);
 });
 
+QUnit.test('cop/image with webp', async (assert) => {
+	const COP = window.COP;
+
+	const file1 = COP.createNode('image');
+	file1.p.url.set(`${ASSETS_ROOT}/textures/uv.webp`);
+
+	const container = await file1.compute();
+	assert.notOk(file1.states.error.message());
+	const texture = container.texture();
+	assert.equal(texture.image.width, 512);
+	assert.equal(texture.image.height, 512);
+});
+QUnit.test('cop/image with png', async (assert) => {
+	const COP = window.COP;
+
+	const file1 = COP.createNode('image');
+	file1.p.url.set(`${ASSETS_ROOT}/textures/road_diffuse.001.png`);
+
+	const container = await file1.compute();
+	assert.notOk(file1.states.error.message());
+	const texture = container.texture();
+	assert.equal(texture.image.width, 2048);
+	assert.equal(texture.image.height, 1024);
+});
+
 QUnit.test('COP image simple with bad path', async (assert) => {
 	const COP = window.COP;
 

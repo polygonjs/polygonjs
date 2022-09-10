@@ -1,8 +1,8 @@
+import {ObjectType} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
+import {Vector3, BoxGeometry} from 'three';
 import {CoreTransform} from '../../../core/Transform';
-import {BoxBufferGeometry} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
@@ -12,6 +12,9 @@ interface BoxSopParams extends DefaultOperationParams {
 	divisions: number;
 	center: Vector3;
 }
+
+const _size = new Vector3();
+const _center = new Vector3();
 
 export class BoxSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BoxSopParams = {
@@ -24,16 +27,21 @@ export class BoxSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'box'> {
 		return 'box';
 	}
-	private _core_transform = new CoreTransform();
+	private _coreTransform = new CoreTransform();
 	override cook(inputCoreGroups: CoreGroup[], params: BoxSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 		const geometry = inputCoreGroup ? this._cookWithInput(inputCoreGroup, params) : this._cookWithoutInput(params);
 
-		return this.createCoreGroupFromGeometry(geometry);
+		const object = BaseSopOperation.createObject(geometry, ObjectType.MESH);
+		if (this._node) {
+			object.name = this._node.name();
+		}
+
+		return this.createCoreGroupFromObjects([object]);
 	}
 	private _cookWithoutInput(params: BoxSopParams) {
 		const {divisions, size, sizes} = params;
-		const geometry = new BoxBufferGeometry(
+		const geometry = new BoxGeometry(
 			size * sizes.x,
 			size * sizes.y,
 			size * sizes.z,
@@ -46,15 +54,15 @@ export class BoxSopOperation extends BaseSopOperation {
 		return geometry;
 	}
 
-	private _cookWithInput(core_group: CoreGroup, params: BoxSopParams) {
+	private _cookWithInput(coreGroup: CoreGroup, params: BoxSopParams) {
 		const divisions = params.divisions;
 
-		const bbox = core_group.boundingBox();
-		const size = bbox.max.clone().sub(bbox.min);
-		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
+		const bbox = coreGroup.boundingBox();
+		_size.copy(bbox.max).sub(bbox.min);
+		_center.copy(bbox.max).add(bbox.min).multiplyScalar(0.5);
 
-		const geometry = new BoxBufferGeometry(size.x, size.y, size.z, divisions, divisions, divisions);
-		const matrix = this._core_transform.translationMatrix(center);
+		const geometry = new BoxGeometry(_size.x, _size.y, _size.z, divisions, divisions, divisions);
+		const matrix = this._coreTransform.translationMatrix(_center);
 		geometry.applyMatrix4(matrix);
 		return geometry;
 	}

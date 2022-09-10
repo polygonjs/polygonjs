@@ -15,7 +15,7 @@ const DEFAULT = BVHVisualizerSopOperation.DEFAULT_PARAMS;
 class BVHVisualizerSopParamsConfig extends NodeParamsConfig {
 	/** @param depth */
 	depth = ParamConfig.INTEGER(DEFAULT.depth, {
-		range: [0, 20],
+		range: [0, 128],
 		rangeLocked: [true, false],
 	});
 	/** @param opacity */

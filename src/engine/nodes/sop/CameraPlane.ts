@@ -4,7 +4,7 @@
  */
 import {Vector3} from 'three';
 import {Vector2} from 'three';
-import {PlaneBufferGeometry} from 'three';
+import {PlaneGeometry} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType, NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
 import {TypedSopNode} from './_Base';
@@ -149,7 +149,7 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 				size.y = this.segments_count.y * this.pv.stepSize;
 			}
 		}
-		return new PlaneBufferGeometry(size.x, size.y, this.segments_count.x, this.segments_count.y);
+		return new PlaneGeometry(size.x, size.y, this.segments_count.x, this.segments_count.y);
 	}
 
 	//

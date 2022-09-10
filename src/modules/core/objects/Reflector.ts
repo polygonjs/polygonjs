@@ -11,7 +11,10 @@ import FRAGMENT from './reflector/frag.glsl';
 
 const ReflectorShader = {
 	uniforms: {
-		color: {
+		useVertexColor: {
+			value: null,
+		},
+		globalColor: {
 			value: null,
 		},
 		tDiffuse: {
@@ -23,6 +26,9 @@ const ReflectorShader = {
 		opacity: {
 			value: 0.5,
 		},
+		reflectionBlend: {
+			value: 1,
+		},
 	},
 	vertexShader: VERTEX,
 	fragmentShader: FRAGMENT,
@@ -31,6 +37,8 @@ const ReflectorShader = {
 interface ReflectorOptions extends BaseReflectorOptions {
 	color: Color;
 	opacity: number;
+	useVertexColor: boolean;
+	reflectionBlend: number;
 }
 
 export class Reflector extends BaseReflector<BufferGeometry, ShaderMaterial> {
@@ -44,9 +52,11 @@ export class Reflector extends BaseReflector<BufferGeometry, ShaderMaterial> {
 			vertexShader: ReflectorShader.vertexShader,
 		});
 
-		material.uniforms['color'].value = this._options.color;
+		material.uniforms['useVertexColor'].value = this._options.useVertexColor;
+		material.uniforms['globalColor'].value = this._options.color;
 		material.uniforms['textureMatrix'].value = this.textureMatrix;
 		material.uniforms['opacity'].value = this._options.opacity;
+		material.uniforms['reflectionBlend'].value = this._options.reflectionBlend;
 		material.transparent = this._options.opacity < 1;
 		return material;
 	}

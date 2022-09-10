@@ -1,16 +1,18 @@
 import {SVGLoader, SVGResult, StrokeStyle} from '../../modules/three/examples/jsm/loaders/SVGLoader';
-import {Color} from 'three';
-import {Group} from 'three';
-import {MeshBasicMaterial} from 'three';
-import {LineBasicMaterial} from 'three';
-import {DoubleSide} from 'three';
-import {Mesh} from 'three';
-import {ShapeBufferGeometry} from 'three';
-import {ShapePath} from 'three';
+import {
+	ShapeGeometry,
+	LineSegments,
+	ShapePath,
+	Mesh,
+	DoubleSide,
+	LineBasicMaterial,
+	MeshBasicMaterial,
+	Group,
+	Color,
+} from 'three';
 import {isBooleanTrue} from '../BooleanValue';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {LineSegments} from 'three';
 import {Poly} from '../../engine/Poly';
 
 interface CoreSVGLoaderOptions {
@@ -20,6 +22,13 @@ interface CoreSVGLoaderOptions {
 	// strokes
 	drawStrokes: boolean;
 	strokesWireframe: boolean;
+	// style override
+	tStyleOverride: boolean;
+	strokeWidth: number;
+	// advanced
+	tadvanced: boolean;
+	isCCW: boolean;
+	// noHoles: boolean;
 }
 
 interface StrokeStyleExtended extends StrokeStyle {
@@ -59,14 +68,21 @@ export class CoreSVGLoader extends CoreBaseLoader {
 			// }
 			const url = await this._urlToLoad();
 
-			loader.load(url, (data) => {
-				try {
-					const group = this._onLoaded(data, options);
-					resolve(group);
-				} catch (err) {
-					reject([]);
+			loader.load(
+				url,
+				(data) => {
+					try {
+						const group = this._onLoaded(data, options);
+						resolve(group);
+					} catch (err) {
+						reject(err);
+					}
+				},
+				undefined,
+				(err) => {
+					reject(err);
 				}
-			});
+			);
 		});
 	}
 	parse(text: string, options: CoreSVGLoaderOptions) {
@@ -90,9 +106,9 @@ export class CoreSVGLoader extends CoreBaseLoader {
 				this._drawShapes(group, path, options);
 			}
 
-			const strokeColor = userData.style.stroke;
+			// const strokeColor = userData.style.stroke;
 
-			if (isBooleanTrue(options.drawStrokes) && strokeColor !== undefined && strokeColor !== 'none') {
+			if (isBooleanTrue(options.drawStrokes)) {
 				this._drawStrokes(group, path, options);
 			}
 		}
@@ -111,12 +127,15 @@ export class CoreSVGLoader extends CoreBaseLoader {
 			wireframe: options.fillShapesWireframe,
 		});
 
-		const shapes = path.toShapes(true);
+		const isCCW = options.tadvanced && options.isCCW;
+		// const noHoles = options.tadvanced && options.noHoles;
+
+		const shapes = path.toShapes(isCCW);
 
 		for (let j = 0; j < shapes.length; j++) {
 			const shape = shapes[j];
 
-			const geometry = new ShapeBufferGeometry(shape);
+			const geometry = new ShapeGeometry(shape);
 			const mesh = new Mesh(geometry, material);
 
 			group.add(mesh);
@@ -125,6 +144,10 @@ export class CoreSVGLoader extends CoreBaseLoader {
 
 	private _drawStrokes(group: Group, path: ShapePath, options: CoreSVGLoaderOptions) {
 		const userData: SVGPathUserData = (path as any).userData;
+		if (options.tStyleOverride) {
+			userData.style.strokeWidth = options.strokeWidth;
+		}
+
 		if (options.strokesWireframe) {
 			const material = new LineBasicMaterial({
 				color: new Color().setStyle(userData.style.stroke),
@@ -154,7 +177,6 @@ export class CoreSVGLoader extends CoreBaseLoader {
 				depthWrite: false,
 				// wireframe: options.strokesWireframe,
 			});
-
 			for (let j = 0, jl = path.subPaths.length; j < jl; j++) {
 				const subPath = path.subPaths[j];
 

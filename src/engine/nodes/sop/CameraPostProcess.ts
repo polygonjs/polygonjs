@@ -26,7 +26,7 @@ export function CameraPostProcessParamsMixin<TBase extends Constructor>(Base: TB
 		node = ParamConfig.NODE_PATH('', {
 			visibleIf: {useOtherNode: 1},
 			nodeSelection: {
-				types: [NetworkNodeType.POST],
+				types: [NetworkNodeType.POST, CameraSopNodeType.POST_PROCESS],
 			},
 			dependentOnFoundNode: true,
 			separatorAfter: true,

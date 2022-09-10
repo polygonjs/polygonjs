@@ -6,10 +6,10 @@ export class CSS2DObject extends Object3D {
 
 		this._element.style.position = 'absolute';
 
-		this.addEventListener('removed', this._on_removed.bind(this));
+		this.addEventListener('removed', this._onRemoved.bind(this));
 	}
 
-	private _on_removed() {
+	private _onRemoved() {
 		this.traverse(function (object) {
 			if (object instanceof CSS2DObject) {
 				if (object.element instanceof Element && object.element.parentNode !== null) {

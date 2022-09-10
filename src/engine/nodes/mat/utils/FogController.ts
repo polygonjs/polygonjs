@@ -1,7 +1,16 @@
+import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
-import {Material} from 'three';
+import {
+	MeshPhysicalMaterial,
+	MeshToonMaterial,
+	MeshStandardMaterial,
+	MeshPhongMaterial,
+	MeshMatcapMaterial,
+	MeshLambertMaterial,
+	MeshBasicMaterial,
+} from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
@@ -12,12 +21,20 @@ export function FogParamConfig<TBase extends Constructor>(Base: TBase) {
 		useFog = ParamConfig.BOOLEAN(0);
 	};
 }
-
+type FoggableMaterial =
+	| ShaderMaterial
+	| MeshToonMaterial
+	| MeshStandardMaterial
+	| MeshPhysicalMaterial
+	| MeshPhongMaterial
+	| MeshMatcapMaterial
+	| MeshLambertMaterial
+	| MeshBasicMaterial;
 class FogParamsConfig extends FogParamConfig(NodeParamsConfig) {}
-class FogMatNode extends TypedMatNode<Material, FogParamsConfig> {
-	override createMaterial() {
-		return new Material();
-	}
+abstract class FogMatNode extends TypedMatNode<FoggableMaterial, FogParamsConfig> {
+	// override createMaterial() {
+	// 	return new Material();
+	// }
 }
 
 export class FogController extends BaseController {

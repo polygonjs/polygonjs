@@ -1,9 +1,8 @@
 import {BufferGeometry, Object3D} from 'three';
-import {BaseNodeType} from '../../../engine/nodes/_Base';
 import type {GLTF} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
 import type {PDB} from '../../../modules/three/examples/jsm/loaders/PDBLoader';
 import {CoreLoaderGeometry} from '../Geometry';
-import {CoreBaseLoader} from '../_Base';
+import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
 
 export type BaseGeoLoaderOutput = Object3D | BufferGeometry | PDB | GLTF;
 
@@ -13,10 +12,6 @@ type OnError = (event: any) => void;
 
 export abstract class BaseGeoLoader<O extends BaseGeoLoaderOutput> {
 	abstract load: (url: string, onSuccess: OnSuccess<O>, onProgress?: OnProgress, onError?: OnError) => void;
-}
-
-export interface BaseLoaderLoadOptions {
-	node: BaseNodeType;
 }
 
 export abstract class BaseGeoLoaderHandler<O extends BaseGeoLoaderOutput> extends CoreBaseLoader {

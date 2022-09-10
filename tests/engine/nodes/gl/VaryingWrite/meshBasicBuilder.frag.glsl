@@ -24,7 +24,6 @@ varying vec3 ptColor;
 #include <lightmap_pars_fragment>
 #include <envmap_common_pars_fragment>
 #include <envmap_pars_fragment>
-#include <cube_uv_reflection_fragment>
 #include <fog_pars_fragment>
 #include <specularmap_pars_fragment>
 #include <logdepthbuf_pars_fragment>

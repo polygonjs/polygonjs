@@ -2,7 +2,7 @@ import {ShaderMaterial} from 'three';
 import {LineType} from '../utils/LineType';
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {VariableConfig} from '../configs/VariableConfig';
-import {CodeBuilder} from '../utils/CodeBuilder';
+import {CodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
 import {BaseGlNodeType} from '../../_Base';
 import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
@@ -51,7 +51,7 @@ const SPACED_LINES = 3;
 export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	protected _shaders_by_name: Map<ShaderName, string> = new Map();
 	protected _lines: StringArrayByShaderName = new Map();
-	protected _code_builder: CodeBuilder | undefined;
+	protected _codeBuilder: CodeBuilder | undefined;
 	private _param_config_owner: CodeBuilder | undefined;
 	protected _root_nodes: BaseGlNodeType[] = [];
 	protected _leaf_nodes: BaseGlNodeType[] = [];
@@ -60,8 +60,8 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	private _shader_configs: ShaderConfig[] | undefined;
 	private _variable_configs: VariableConfig[] | undefined;
 
-	private _uniforms_time_dependent: boolean = false;
-	private _uniforms_resolution_dependent: boolean = false;
+	private _uniformsTimeDependent: boolean = false;
+	private _uniformsResolutionDependent: boolean = false;
 
 	constructor(protected _gl_parent_node: AssemblerControllerNode) {
 		super();
@@ -108,11 +108,11 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	// protected createMaterial(): ShaderMaterial | undefined {
 	// 	return undefined;
 	// }
-	protected _build_lines() {
-		for (let shader_name of this.shaderNames()) {
-			const template = this._template_shader_for_shader_name(shader_name);
+	protected _buildLines() {
+		for (let shaderName of this.shaderNames()) {
+			const template = this._template_shader_for_shader_name(shaderName);
 			if (template) {
-				this._replace_template(template, shader_name);
+				this._replaceTemplate(template, shaderName);
 			}
 		}
 	}
@@ -212,12 +212,12 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	//
 	//
 	codeBuilder() {
-		return (this._code_builder = this._code_builder || this._create_code_builder());
+		return (this._codeBuilder = this._codeBuilder || this._createCodeBuilder());
 	}
 	protected _resetCodeBuilder() {
-		this._code_builder = undefined;
+		this._codeBuilder = undefined;
 	}
-	private _create_code_builder() {
+	private _createCodeBuilder() {
 		const nodeTraverser = new TypedNodeTraverser<NodeContext.GL>(
 			this.currentGlParentNode(),
 			this.shaderNames(),
@@ -233,9 +233,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			this
 		);
 	}
-	build_code_from_nodes(root_nodes: BaseGlNodeType[]) {
-		const param_nodes = GlNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
-		this.codeBuilder().buildFromNodes(root_nodes, param_nodes);
+	protected buildCodeFromNodes(rootNodes: BaseGlNodeType[], codeBuilderOptions?: CodeBuilderSetCodeLinesOptions) {
+		const paramNodes = GlNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
+		this.codeBuilder().buildFromNodes(rootNodes, paramNodes, codeBuilderOptions);
 	}
 	allow_new_param_configs() {
 		this.codeBuilder().allow_new_param_configs();
@@ -323,7 +323,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		this._reset_shader_configs();
 		this._reset_variable_configs();
 		this._resetUniformsTimeDependency();
-		this._reset_uniforms_resolution_dependency();
+		this._resetUniformsResolutionDependency();
 	}
 	shaderConfigs() {
 		return (this._shader_configs = this._shader_configs || this.create_shader_configs());
@@ -398,23 +398,23 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 
 	// time dependency
 	protected _resetUniformsTimeDependency() {
-		this._uniforms_time_dependent = false;
+		this._uniformsTimeDependent = false;
 	}
 	setUniformsTimeDependent() {
-		this._uniforms_time_dependent = true;
+		this._uniformsTimeDependent = true;
 	}
 	uniformsTimeDependent(): boolean {
-		return this._uniforms_time_dependent;
+		return this._uniformsTimeDependent;
 	}
 	// resolution dependency
-	protected _reset_uniforms_resolution_dependency() {
-		this._uniforms_resolution_dependent = false;
+	protected _resetUniformsResolutionDependency() {
+		this._uniformsResolutionDependent = false;
 	}
 	setUniformsResolutionDependent() {
-		this._uniforms_resolution_dependent = true;
+		this._uniformsResolutionDependent = true;
 	}
 	uniformsResolutionDependent(): boolean {
-		return this._uniforms_resolution_dependent;
+		return this._uniformsResolutionDependent;
 	}
 
 	//
@@ -438,7 +438,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	//
 	//
 
-	private _replace_template(template: string, shader_name: ShaderName) {
+	private _replaceTemplate(template: string, shader_name: ShaderName) {
 		const function_declaration = this.builder_lines(shader_name, LineType.FUNCTION_DECLARATION);
 		const define = this.builder_lines(shader_name, LineType.DEFINE);
 		// let all_define = function_declaration.concat(define);

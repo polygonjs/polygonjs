@@ -83,14 +83,14 @@ export function copImageNodeFactoryFactory(
 			this.io.inputs.setCount(0, 1);
 			this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 		}
-		override async cook(input_contents: Texture[]) {
+		override async cook(inputContents: Texture[]) {
 			if (isBooleanTrue(this.pv.checkFileType) && !isUrlStaticImage(this.pv.url)) {
 				this.states.error.set('url is not an image');
 			} else {
 				const texture = await this._loadTexture();
 
 				if (texture) {
-					const inputTexture = input_contents[0];
+					const inputTexture = inputContents[0];
 					if (inputTexture) {
 						TextureParamsController.copyTextureAttributes(texture, inputTexture);
 					}

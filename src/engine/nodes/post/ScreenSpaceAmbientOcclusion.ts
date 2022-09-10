@@ -6,7 +6,7 @@
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {BlendFunction, DepthDownsamplingPass, Effect, EffectPass, NormalPass, SSAOEffect, Pass} from 'postprocessing';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BLEND_FUNCTIONS, BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
+import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
 
 // enum RenderMode {
 // 	DEFAULT = 'DEFAULT',
@@ -92,7 +92,7 @@ class ScreenSpaceAmbientOcclusionParamsConfig extends NodeParamsConfig {
 	// 	},
 	// });
 	/** @param render mode */
-	blendFunction = ParamConfig.INTEGER(BLEND_FUNCTIONS.indexOf(BlendFunction.MULTIPLY), {
+	blendFunction = ParamConfig.INTEGER(BlendFunction.MULTIPLY, {
 		...PostParamOptions,
 		...BLEND_FUNCTION_MENU_OPTIONS,
 	});
@@ -208,7 +208,7 @@ export class ScreenSpaceAmbientOcclusionPostNode extends TypedPostProcessNode<
 		// 	renderMode !== RenderMode.DEFAULT ? BlendFunction.NORMAL : BlendFunction.SKIP;
 
 		// pass.encodeOutput = renderMode === RenderMode.DEFAULT;
-		ssaoEffect.blendMode.blendFunction = BLEND_FUNCTIONS[this.pv.blendFunction];
+		ssaoEffect.blendMode.blendFunction = this.pv.blendFunction;
 
 		ssaoEffect.samples = this.pv.samples;
 		ssaoEffect.rings = this.pv.rings;

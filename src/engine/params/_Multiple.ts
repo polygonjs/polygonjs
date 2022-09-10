@@ -44,19 +44,19 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 		let index = 0;
 		this._components = new Array(this.componentNames().length);
-		for (let component_name of this.componentNames()) {
+		for (let componentName of this.componentNames()) {
 			const component = new this._components_contructor(this.scene(), this.node); //, `${this.name}${name}`);
 			let default_val;
 			if (CoreType.isArray(this._default_value)) {
 				default_val = this._default_value[index];
 			} else {
-				default_val = (this._default_value as any)[component_name];
+				default_val = (this._default_value as any)[componentName];
 			}
 			component.options.copy(this.options);
 			component.setInitValue(default_val);
 
 			// component.setScene(this.scene);
-			component.setName(`${this.name()}${component_name}`);
+			component.setName(`${this.name()}${componentName}`);
 			component.set_parent_param(this);
 
 			// this.addGraphInput(component, false); // already called in set_parent_param
@@ -69,9 +69,10 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 
 	protected override async processComputation(): Promise<void> {
 		await this.compute_components();
-		this.set_value_from_components();
+		this.setValueFromComponents();
 	}
-	set_value_from_components() {}
+
+	abstract setValueFromComponents(): void;
 	// set_raw_input_from_components() {}
 
 	override hasExpression() {

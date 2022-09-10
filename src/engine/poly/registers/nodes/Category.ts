@@ -36,6 +36,7 @@ export const CATEGORY_AUDIO = {
 
 export const CATEGORY_COP = {
 	ADVANCED: 'advanced',
+	SDF: 'SDF',
 	FILTER: 'filters',
 	INPUT: 'inputs',
 	MISC: 'misc',
@@ -70,7 +71,8 @@ export const CATEGORY_GL = {
 	MATH: 'math',
 	PHYSICS: 'physics',
 	QUAT: 'quat',
-	SDF: 'sdf',
+	SDF_PRIMITIVES: 'SDF prims',
+	SDF_MODIFIERS: 'SDF modifiers',
 	TRIGO: 'trigo',
 	UTIL: 'util',
 	INSTANCE: 'instance',

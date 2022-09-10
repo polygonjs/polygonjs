@@ -1,3 +1,4 @@
+import {BaseGlConnectionPoint} from './../io/connections/Gl';
 import {CoreGraph} from '../../../../core/graph/CoreGraph';
 import {MapUtils} from '../../../../core/MapUtils';
 import {ShaderName} from './ShaderName';
@@ -67,8 +68,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	traverse(rootNodes: BaseNodeByContextMap[NC][]) {
 		this.reset();
 
-		for (let shader_name of this.shaderNames()) {
-			this._leaves_graph_id.set(shader_name, new Map());
+		for (let shaderName of this.shaderNames()) {
+			this._leaves_graph_id.set(shaderName, new Map());
 		}
 
 		for (let shader_name of this.shaderNames()) {
@@ -104,7 +105,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		return this._graph.nodesFromIds(node_ids) as BaseNodeByContextMap[NC][];
 	}
 
-	nodesForShaderName(shader_name: ShaderName) {
+	nodesForShaderName(shaderName: ShaderName) {
 		const depths: number[] = [];
 		this._graph_id_by_depth.forEach((value: CoreGraphNodeId[], key: number) => {
 			depths.push(key);
@@ -116,11 +117,11 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
 				graph_ids_for_depth.forEach((graph_id: CoreGraphNodeId) => {
-					const is_present = this._graph_ids_by_shader_name.get(shader_name)?.get(graph_id);
+					const is_present = this._graph_ids_by_shader_name.get(shaderName)?.get(graph_id);
 					if (is_present) {
 						const node = this._graph.nodeFromId(graph_id) as BaseNodeByContextMap[NC];
 
-						this._addNodesWithChildren(node, node_id_used_state, nodes, shader_name);
+						this._addNodesWithChildren(node, node_id_used_state, nodes, shaderName);
 					}
 				});
 			}
@@ -208,19 +209,15 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	// 	return nodes;
 	// }
 
-	private _findLeavesFromRootNode(root_node: BaseNodeByContextMap[NC]) {
-		this._graph_ids_by_shader_name.get(this._shader_name)?.set(root_node.graphNodeId(), true);
+	private _findLeavesFromRootNode(rootNode: BaseNodeByContextMap[NC]) {
+		this._graph_ids_by_shader_name.get(this._shader_name)?.set(rootNode.graphNodeId(), true);
 
-		const input_names = this.input_names_for_shader_name(root_node, this._shader_name);
-		if (input_names) {
-			for (let input_name of input_names) {
-				const input = root_node.io.inputs.named_input(input_name) as BaseNodeByContextMap[NC];
+		const inputNames = this.input_names_for_shader_name(rootNode, this._shader_name);
+		if (inputNames) {
+			for (let inputName of inputNames) {
+				const input = rootNode.io.inputs.named_input(inputName) as BaseNodeByContextMap[NC];
 				if (input) {
-					MapUtils.pushOnArrayAtEntry(
-						this._outputs_by_graph_id,
-						input.graphNodeId(),
-						root_node.graphNodeId()
-					);
+					MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), rootNode.graphNodeId());
 					this._findLeaves(input);
 				}
 			}
@@ -230,18 +227,24 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			this._outputs_by_graph_id.set(graph_id, ArrayUtils.uniq(outputs));
 		});
 	}
+	private _blockedInputNames: Map<string, string[]> | undefined;
+	setBlockedInputNames(nodeType: string, inputNames: string[]) {
+		this._blockedInputNames = this._blockedInputNames || new Map();
+		this._blockedInputNames.set(nodeType, inputNames);
+	}
 
 	private _findLeaves(node: BaseNodeByContextMap[NC]) {
 		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graphNodeId(), true);
 
 		const inputs = this._findInputs(node) as BaseNodeByContextMap[NC][];
-		const compact_inputs: BaseNodeByContextMap[NC][] = ArrayUtils.compact(inputs);
-		const input_graph_ids = ArrayUtils.uniq(compact_inputs.map((n) => n.graphNodeId()));
-		const unique_inputs = input_graph_ids.map((graph_id) =>
+		const compactInputs: BaseNodeByContextMap[NC][] = ArrayUtils.compact(inputs);
+		const inputGraphIds = ArrayUtils.uniq(compactInputs.map((n) => n.graphNodeId()));
+		const uniqueInputs = inputGraphIds.map((graph_id) =>
 			this._graph.nodeFromId(graph_id)
 		) as BaseNodeByContextMap[NC][];
-		if (unique_inputs.length > 0) {
-			for (let input of unique_inputs) {
+
+		if (uniqueInputs.length > 0) {
+			for (let input of uniqueInputs) {
 				MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
 
 				this._findLeaves(input);
@@ -250,22 +253,39 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			this._leaves_graph_id.get(this._shader_name)!.set(node.graphNodeId(), true);
 		}
 	}
+	getNodeInputs(node: BaseNodeByContextMap[NC]) {
+		if (this._blockedInputNames == null || !this._blockedInputNames.has(node.type())) {
+			return node.io.inputs.inputs();
+		} else {
+			const blockedInputNames = this._blockedInputNames.get(node.type()) as string[];
+			const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints() as BaseGlConnectionPoint[];
+			const inputConnectionPointNames = inputConnectionPoints.map((c) => c.name());
+			const allowedInputNames = ArrayUtils.difference(inputConnectionPointNames, blockedInputNames);
+			const inputs = allowedInputNames.map((inputName) => {
+				const inputIndex = node.io.inputs.getNamedInputIndex(inputName);
+				return node.io.inputs.input(inputIndex);
+			});
+			return inputs;
+		}
+	}
 
 	private _findInputs(node: BaseNodeByContextMap[NC]) {
 		if (this._traverseChildren()) {
 			if (node.type() == NetworkChildNodeType.INPUT) {
-				return node.parent()?.io.inputs.inputs() || [];
+				const parent = node.parent() as BaseNodeByContextMap[NC];
+				return parent ? this.getNodeInputs(parent) : [];
+				// return node.parent()?.io.inputs.inputs() || [];
 			} else {
 				if (node.childrenAllowed()) {
 					// this._subnets_by_id.set(node.graphNodeId(), node);
-					const output_node = node.childrenController?.outputNode();
-					return [output_node];
+					const outputNode = node.childrenController?.outputNode();
+					return [outputNode];
 				} else {
-					return node.io.inputs.inputs();
+					return this.getNodeInputs(node); //node.io.inputs.inputs();
 				}
 			}
 		} else {
-			return node.io.inputs.inputs();
+			return this.getNodeInputs(node); //node.io.inputs.inputs();
 		}
 	}
 

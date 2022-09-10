@@ -132,6 +132,16 @@ export class HierarchyChildrenController {
 	// 	}
 	// }
 	createNode<K extends BaseNodeType>(nodeClassOrString: string | Constructor<K>, options?: NodeCreateOptions): K {
+		// if (this.node.insideALockedParent()) {
+		// 	const lockedParent = this.node.lockedParent();
+		// 	console.error(
+		// 		`node '${this.node.path()}' cannot create nodes, since it is inside '${
+		// 			lockedParent ? lockedParent.path() : ''
+		// 		}', which is locked`
+		// 	);
+		// 	return;
+		// }
+
 		if (typeof nodeClassOrString == 'string') {
 			const nodeClass = this._findNodeClass(nodeClassOrString);
 			return this._createAndInitNode(nodeClass, options) as K;
@@ -210,9 +220,22 @@ export class HierarchyChildrenController {
 	}
 
 	removeNode(childNode: BaseNodeType): void {
+		if (this.node.lockedOrInsideALockedParent()) {
+			const lockedNode = this.node.selfOrLockedParent();
+			const reason =
+				lockedNode == this.node
+					? `it is locked`
+					: `it is inside '${lockedNode ? lockedNode.path() : ''}', which is locked`;
+			console.warn(`node '${this.node.path()}' cannot remove nodes, since ${reason}`);
+			console.log(this.node.graphNodeId(), this.node.name());
+			return;
+		}
+
 		if (childNode.parent() != this.node) {
 			return console.warn(`node ${childNode.name()} not under parent ${this.node.path()}`);
 		} else {
+			childNode.polyNodeController?.setLockedState(false); // makes it easier to dispose its content
+
 			childNode.lifecycle.runOnBeforeDeleteCallbacks();
 			if (this.selection.contains(childNode)) {
 				this.selection.remove([childNode]);

@@ -18,19 +18,20 @@ export class ShadersCollectionController {
 		}
 	}
 
+	// mergeDefinitions(shadersCollectionController: ShadersCollectionController) {
+	// 	for (let shaderName of this._shaderNames) {
+	// 		// this._linesControllerByShaderName.set(shaderName, new LinesController(shaderName));
+	// 		shadersCollectionController.traverseDefinitions(shaderName, (definition: BaseGLDefinition) => {
+	// 			this.addDefinitions(definition.node, [definition], shaderName);
+	// 			console.log('add', definition.node, definition);
+	// 		});
+	// 	}
+	// }
+
 	assembler() {
 		return this._assembler;
 	}
 
-	// merge(otherShadersCollectionController: ShadersCollectionController) {
-	// 	for (let shaderName of this._shaderNames) {
-	// 		const otherLinesController = otherShadersCollectionController.linesController(shaderName);
-	// 		const linesController = this._linesControllerByShaderName.get(shaderName);
-	// 		if (linesController && otherLinesController) {
-	// 			linesController.merge(otherLinesController);
-	// 		}
-	// 	}
-	// }
 	linesController(shaderName: ShaderName) {
 		return this._linesControllerByShaderName.get(shaderName);
 	}
@@ -52,21 +53,21 @@ export class ShadersCollectionController {
 		}
 
 		shaderName = shaderName || this._currentShaderName;
-		const lines_controller = this._linesControllerByShaderName.get(shaderName);
-		if (lines_controller) {
-			lines_controller.addDefinitions(node, definitions);
+		const linesController = this._linesControllerByShaderName.get(shaderName);
+		if (linesController) {
+			linesController.addDefinitions(node, definitions);
 		}
 	}
-	definitions(shader_name: ShaderName, node: BaseGlNodeType) {
-		const lines_controller = this._linesControllerByShaderName.get(shader_name);
-		if (lines_controller) {
-			return lines_controller.definitions(node);
+	definitions(shaderName: ShaderName, node: BaseGlNodeType) {
+		const linesController = this._linesControllerByShaderName.get(shaderName);
+		if (linesController) {
+			return linesController.definitions(node);
 		}
 	}
 	traverseDefinitions(shaderName: ShaderName, callback: DefinitionTraverseCallback) {
-		const lines_controller = this._linesControllerByShaderName.get(shaderName);
-		if (lines_controller) {
-			lines_controller.traverseDefinitions(callback);
+		const linesController = this._linesControllerByShaderName.get(shaderName);
+		if (linesController) {
+			linesController.traverseDefinitions(callback);
 		}
 	}
 	// all_definition_nodes(shader_name: ShaderName, scene: PolyScene) {
@@ -78,15 +79,15 @@ export class ShadersCollectionController {
 			return;
 		}
 		shaderName = shaderName || this._currentShaderName;
-		const lines_controller = this._linesControllerByShaderName.get(shaderName);
-		if (lines_controller) {
-			lines_controller.addBodyLines(node, lines, options);
+		const linesController = this._linesControllerByShaderName.get(shaderName);
+		if (linesController) {
+			linesController.addBodyLines(node, lines, options);
 		}
 	}
 	bodyLines(shaderName: ShaderName, node: BaseGlNodeType) {
-		const lines_controller = this._linesControllerByShaderName.get(shaderName);
-		if (lines_controller) {
-			return lines_controller.bodyLines(node);
+		const linesController = this._linesControllerByShaderName.get(shaderName);
+		if (linesController) {
+			return linesController.bodyLines(node);
 		}
 	}
 	// traverseBodyLines(shaderName: ShaderName, callback: BodyLinesTraverseCallback) {

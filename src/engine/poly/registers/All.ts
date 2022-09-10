@@ -8,7 +8,7 @@ import {UrlHelper} from '../../../core/UrlHelper';
 
 export class AllRegister {
 	private static _started = false;
-	static async run() {
+	static async registerAll() {
 		if (this._started) {
 			return;
 		}
