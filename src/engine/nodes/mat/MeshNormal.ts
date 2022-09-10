@@ -10,7 +10,6 @@ import {MeshNormalMaterial} from 'three';
 import {FrontSide} from 'three';
 import {TypedMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {FogController, FogParamConfig} from './utils/FogController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
 import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
@@ -24,15 +23,13 @@ interface MeshNormalControllers {
 	normalMap: TextureNormalMapController;
 	advancedCommon: AdvancedCommonController;
 }
-class MeshNormalMatParamsConfig extends FogParamConfig(
-	AdvancedCommonParamConfig(
-		/* advanced */
-		NormalMapParamConfig(
-			DisplacementMapParamConfig(
-				BumpMapParamConfig(
-					/* textures */
-					TexturesFolderParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
-				)
+class MeshNormalMatParamsConfig extends AdvancedCommonParamConfig(
+	/* advanced */
+	NormalMapParamConfig(
+		DisplacementMapParamConfig(
+			BumpMapParamConfig(
+				/* textures */
+				TexturesFolderParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
 			)
 		)
 	)
@@ -72,7 +69,6 @@ export class MeshNormalMatNode extends TypedMatNode<MeshNormalMaterial, MeshNorm
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
-		FogController.update(this);
 
 		this.setMaterial(this.material);
 	}

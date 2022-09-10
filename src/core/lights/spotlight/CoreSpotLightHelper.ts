@@ -13,7 +13,7 @@ export interface UpdateSpotLightConeObjectOptions {
 export class CoreSpotLightHelper {
 	public object: Mesh = new Mesh();
 	private _cone = new LineSegments();
-	private _lineMaterial = new LineBasicMaterial({fog: false});
+	private _lineMaterial = new LineBasicMaterial();
 	constructor(public container: SpotLightContainer) {
 		this.object.name = `CoreSpotLightHelper_${this.container.nodeName}`;
 		this.object.matrixAutoUpdate = false;

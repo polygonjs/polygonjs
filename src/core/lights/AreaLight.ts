@@ -85,7 +85,7 @@ function createMeshGeo() {
 // inherits from Group and not Line, to ensure that .copy can pass the recursive argument
 export class CoreRectAreaLightHelper extends Group {
 	public _childMesh = new Mesh(createMeshGeo(), new MeshBasicMaterial({side: BackSide, fog: false}));
-	public _childLine = new Line(createLineGeo(), new LineBasicMaterial({fog: false}));
+	public _childLine = new Line(createLineGeo(), new LineBasicMaterial());
 
 	constructor(public light: RectAreaLight, public readonly nodeName: string) {
 		super();

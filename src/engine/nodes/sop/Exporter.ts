@@ -25,7 +25,7 @@ import {downloadBlob} from '../../../core/BlobUtils';
 class ExporterSopParamsConfig extends NodeParamsConfig {
 	/** @param export */
 	download = ParamConfig.BUTTON(null, {
-		hidden:true,
+		hidden: true,
 		callback: (node: BaseNodeType) => {
 			ExporterSopNode.PARAM_CALLBACK_download(node as ExporterSopNode);
 		},
@@ -52,32 +52,32 @@ export class ExporterSopNode extends TypedSopNode<ExporterSopParamsConfig> {
 		node._paramCallbackDownload();
 	}
 	private async _paramCallbackDownload() {
-		const blob = await this.createBlob()
-		const fileName = `${this.name()}.glb`
+		const blob = await this.createBlob();
+		const fileName = `${this.name()}.glb`;
 		downloadBlob(blob, fileName);
 	}
-	createBlob():Promise<Blob> {
-		return new Promise(async (resolve)=>{
+	createBlob(): Promise<Blob> {
+		return new Promise(async (resolve) => {
 			const container = await this.compute();
 			const coreGroup = container.coreContent();
 			if (!coreGroup) {
 				console.error('input invalid');
 				return;
 			}
-	
+
 			// save current parents
 			const previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
 			const objects = coreGroup.objects();
 			for (let object of objects) {
 				previousParentByObject.set(object, object.parent);
 			}
-	
+
 			// add to exported scene
 			const scene = new Scene();
 			for (let object of objects) {
 				scene.add(object);
 			}
-	
+
 			const options: GLTFExporterOptions = {
 				embedImages: true,
 				// trs: true,
@@ -91,16 +91,16 @@ export class ExporterSopNode extends TypedSopNode<ExporterSopParamsConfig> {
 				scene,
 				(result) => {
 					if (result instanceof ArrayBuffer) {
-						const blob = new Blob([result], {type: 'application/octet-stream'})
-						resolve(blob)
+						const blob = new Blob([result], {type: 'application/octet-stream'});
+						resolve(blob);
 						// saveArrayBuffer(result, 'scene.glb');
 					} else {
 						const output = JSON.stringify(result, null, 2);
-						const blob = new Blob([output], {type: 'text/plain'})
-						resolve(blob)
+						const blob = new Blob([output], {type: 'text/plain'});
+						resolve(blob);
 						// saveString(output, 'scene.gltf');
 					}
-	
+
 					// restore parents
 					for (let object of objects) {
 						const previousParent = previousParentByObject.get(object);
@@ -109,9 +109,9 @@ export class ExporterSopNode extends TypedSopNode<ExporterSopParamsConfig> {
 						}
 					}
 				},
+				(err) => {},
 				options
 			);
-		})
-
+		});
 	}
 }

@@ -123,9 +123,11 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 			uniforms: UniformsUtils.clone(mirrorShader.uniforms),
 			lights: true,
 			side: side,
-			fog: useFog,
+			// fog: useFog,
 			// transparent: true, // TODO: allow transparency when I have a good alpha model
 		}) as WaterMaterial;
+
+		material.fog = useFog;
 
 		material.uniforms['time'] = this._options.polyScene.timeController.timeUniform();
 		material.uniforms['timeScale'].value = timeScale;
