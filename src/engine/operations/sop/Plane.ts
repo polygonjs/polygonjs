@@ -1,7 +1,5 @@
 import {BaseSopOperation} from './_Base';
-import {BufferGeometry, Vector2} from 'three';
-import {Vector3} from 'three';
-import {PlaneBufferGeometry} from 'three';
+import {BufferGeometry, Vector2, Vector3, PlaneGeometry} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -99,7 +97,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 				size.y = this._segmentsCount.y * params.stepSize;
 			}
 		}
-		const geometry = new PlaneBufferGeometry(size.x, size.y, this._segmentsCount.x, this._segmentsCount.y);
+		const geometry = new PlaneGeometry(size.x, size.y, this._segmentsCount.x, this._segmentsCount.y);
 		if (isBooleanTrue(params.asLines)) {
 			const gridX = Math.floor(this._segmentsCount.x);
 			const gridY = Math.floor(this._segmentsCount.y);

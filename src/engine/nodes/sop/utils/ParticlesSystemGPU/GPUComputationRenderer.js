@@ -95,15 +95,19 @@
  * @param {WebGLRenderer} renderer The renderer
  */
 
-import {Camera} from 'three';
-import {ClampToEdgeWrapping, FloatType, NearestFilter, RGBAFormat} from 'three';
-import {DataTexture} from 'three';
-import {Mesh} from 'three';
-import {PlaneBufferGeometry} from 'three';
-import {Scene} from 'three';
-import {ShaderMaterial} from 'three';
-import {WebGLRenderTarget} from 'three';
-// const THREE = {Camera, ClampToEdgeWrapping, FloatType, HalfFloatType, NearestFilter, RGBAFormat, DataTexture, mesh, PlaneBufferGeometry, Scene, ShaderMaterial, WebGLRenderTarget}
+import {
+	Camera,
+	ClampToEdgeWrapping,
+	FloatType,
+	NearestFilter,
+	RGBAFormat,
+	DataTexture,
+	Mesh,
+	PlaneGeometry,
+	Scene,
+	ShaderMaterial,
+	WebGLRenderTarget,
+} from 'three';
 
 var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 	this.variables = [];
@@ -126,7 +130,7 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 
 	var passThruShader = createShaderMaterial(getPassThroughFragmentShader(), passThruUniforms);
 
-	const plane = new PlaneBufferGeometry(2, 2);
+	const plane = new PlaneGeometry(2, 2);
 	var mesh = new Mesh(plane, passThruShader);
 	mesh.matrixAutoUpdate = false;
 	mesh.updateMatrix();

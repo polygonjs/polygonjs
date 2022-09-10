@@ -6,7 +6,7 @@
 import {
 	Camera,
 	Mesh,
-	PlaneBufferGeometry,
+	PlaneGeometry,
 	WebGLRenderer,
 	WebGLRenderTarget,
 	ShaderMaterial,
@@ -94,7 +94,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		return this._assemblerController;
 	}
 
-	private _textureMesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
+	private _textureMesh: Mesh = new Mesh(new PlaneGeometry(2, 2));
 	private _fragmentShader: string | undefined;
 	private _uniforms: IUniforms | undefined;
 	public readonly textureMaterial: ShaderMaterial = new ShaderMaterial({

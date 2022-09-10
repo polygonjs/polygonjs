@@ -1,13 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {IcosahedronBufferGeometry} from 'three';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
+import {IcosahedronGeometry, BufferGeometry, Vector2, Vector3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {BufferGeometry} from 'three';
 import {SphereBuilder} from '../../../core/geometry/builders/SphereBuilder';
 
 interface SphereSopParams extends DefaultOperationParams {
@@ -148,6 +145,6 @@ export class SphereSopOperation extends BaseSopOperation {
 		return geometry;
 	}
 	private _createDefaultIsocahedron(params: SphereSopParams) {
-		return new IcosahedronBufferGeometry(params.radius, params.detail);
+		return new IcosahedronGeometry(params.radius, params.detail);
 	}
 }

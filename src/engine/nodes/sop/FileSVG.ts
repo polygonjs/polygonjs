@@ -52,9 +52,9 @@ class FileSVGSopParamsConfig extends NodeParamsConfig {
 		visibleIf: {tadvanced: true},
 	});
 	/** @param defines if holes should be found when parsing the font */
-	noHoles = ParamConfig.BOOLEAN(0, {
-		visibleIf: {tadvanced: true},
-	});
+	// noHoles = ParamConfig.BOOLEAN(0, {
+	// 	visibleIf: {tadvanced: true},
+	// });
 }
 const ParamsConfig = new FileSVGSopParamsConfig();
 
@@ -70,9 +70,9 @@ export class FileSVGSopNode extends TypedSopNode<FileSVGSopParamsConfig> {
 	}
 	// TODO: no error when trying to load a non existing zip file??
 	private _operation: FileSVGSopOperation | undefined;
-	override async cook(input_contents: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new FileSVGSopOperation(this.scene(), this.states, this);
-		const coreGroup = await this._operation.cook(input_contents, this.pv);
+		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}
 

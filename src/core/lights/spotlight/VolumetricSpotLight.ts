@@ -1,11 +1,7 @@
 // from
 // https://github.com/jeromeetienne/threex.volumetricspotlight
 
-import {ConeBufferGeometry} from 'three';
-import {Matrix4} from 'three';
-import {Color} from 'three';
-import {ShaderMaterial} from 'three';
-import {Mesh} from 'three';
+import {Mesh, ShaderMaterial, Color, Matrix4, ConeGeometry} from 'three';
 
 import VERTEX from './glsl/vert.glsl';
 import FRAGMENT from './glsl/frag.glsl';
@@ -29,7 +25,7 @@ export interface VolumetricSpotLightParams {
 }
 
 export class VolumetricSpotLight {
-	private _mesh: Mesh<ConeBufferGeometry, SpotLightVolumetricMaterial> | undefined;
+	private _mesh: Mesh<ConeGeometry, SpotLightVolumetricMaterial> | undefined;
 	constructor(public readonly container: SpotLightContainer) {}
 
 	update(params: VolumetricSpotLightParams) {
@@ -70,7 +66,7 @@ export class VolumetricSpotLight {
 		// TODO: refactor the attenuation and anglePower in glsl
 		// TODO: add a color ramp, or at least 2 colors, to allow for a brighter base
 		// TODO: attenuation should depend on light.distance, not just on world distance
-		const geometry = new ConeBufferGeometry(radius, height, radialSegments, heightSegments);
+		const geometry = new ConeGeometry(radius, height, radialSegments, heightSegments);
 		geometry.applyMatrix4(new Matrix4().makeTranslation(0, -0.5 * height, 0));
 		geometry.applyMatrix4(new Matrix4().makeRotationX(-Math.PI / 2));
 		const material = this._createMaterial();

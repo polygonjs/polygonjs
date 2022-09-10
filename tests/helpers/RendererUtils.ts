@@ -6,7 +6,7 @@ import {PerspectiveCamera} from 'three';
 import {BaseBuilderMatNodeType} from '../../src/engine/nodes/mat/_BaseBuilder';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
 import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
-import {BoxBufferGeometry} from 'three';
+import {BoxGeometry} from 'three';
 import {Material} from 'three';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
 import {TypedViewer} from '../../src/engine/viewers/_Base';
@@ -189,7 +189,7 @@ export class RendererUtils {
 	}
 	private static _createMatCompileScene(): Scene {
 		this._scene = new Scene();
-		this._mesh = new Mesh(new BoxBufferGeometry(1, 1, 1));
+		this._mesh = new Mesh(new BoxGeometry(1, 1, 1));
 		this._mesh.frustumCulled = false;
 		this._camera = new PerspectiveCamera();
 		this._camera.position.z = 5;

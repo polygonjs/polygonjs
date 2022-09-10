@@ -1,8 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh} from 'three';
-import {BufferGeometry} from 'three';
-import {Object3D} from 'three';
+import {Mesh, BufferGeometry, Object3D} from 'three';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {CoreSVGLoader} from '../../../core/loader/SVG';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -22,7 +20,7 @@ interface SvgSopParams extends DefaultOperationParams {
 	// advanced
 	tadvanced: boolean;
 	isCCW: boolean;
-	noHoles: boolean;
+	// noHoles: boolean;
 }
 
 const DEFAULT_URL = `${ASSETS_ROOT}/models/svg/tiger.svg`;
@@ -37,7 +35,7 @@ export class FileSVGSopOperation extends BaseSopOperation {
 		strokeWidth: 1,
 		tadvanced: false,
 		isCCW: false,
-		noHoles: false,
+		// noHoles: false,
 	};
 	static override type(): Readonly<SopTypeFile.FILE_SVG> {
 		return SopTypeFile.FILE_SVG;

@@ -5,31 +5,32 @@
  */
 
 // https://github.com/mrdoob/three.js/blob/master/examples/webgl_shadow_contact.html
+import {
+	WebGLRenderer,
+	Object3D,
+	Vector2,
+	Group,
+	Scene,
+	Camera,
+	BufferGeometry,
+	Material,
+	Mesh,
+	MeshBasicMaterial,
+	MeshDepthMaterial,
+	OrthographicCamera,
+	PlaneGeometry,
+	WebGLRenderTarget,
+} from 'three';
 import {TypedObjNode} from './_Base';
-import {Group} from 'three';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {HierarchyController} from './utils/HierarchyController';
-import {WebGLRenderer} from 'three';
-import {Scene} from 'three';
-import {Camera} from 'three';
-import {BufferGeometry} from 'three';
-import {Geometry} from '../../../modules/three/examples/jsm/deprecated/Geometry';
-import {Material} from 'three';
-import {Mesh} from 'three';
 import {RenderHook} from '../../../core/geometry/Material';
 import {TypeAssert} from '../../poly/Assert';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
-import {MeshBasicMaterial} from 'three';
-import {MeshDepthMaterial} from 'three';
-import {OrthographicCamera} from 'three';
-import {PlaneBufferGeometry} from 'three';
-import {WebGLRenderTarget} from 'three';
-import {Vector2} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
-import {Object3D} from 'three';
 import {CoreRenderBlur} from '../../../core/render/Blur';
 
 enum ContactShadowUpdateMode {
@@ -142,8 +143,6 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 	private _shadowGroup: Group | undefined;
 	private _plane: Mesh | undefined;
 	private _planeMaterial: MeshBasicMaterial | undefined;
-	// private _fillPlaneMaterial: MeshBasicMaterial | undefined;
-
 	private _includedObjects: Object3D[] = [];
 	private _includedAncestors: Object3D[] = [];
 	private _excludedObjects: Object3D[] = [];
@@ -154,7 +153,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		group.add(this._shadowGroup);
 		this._shadowGroup.name = 'shadowGroup';
 
-		const planeGeometry = new PlaneBufferGeometry(PLANE_WIDTH, PLANE_HEIGHT).rotateX(-Math.PI / 2);
+		const planeGeometry = new PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT).rotateX(-Math.PI / 2);
 		// update uvs
 		const uvArray = planeGeometry.getAttribute('uv').array as number[];
 		for (let index of [1, 3, 5, 7]) {
@@ -381,7 +380,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 		renderer?: WebGLRenderer,
 		scene?: Scene,
 		camera?: Camera,
-		geometry?: BufferGeometry | Geometry,
+		geometry?: BufferGeometry,
 		material?: Material,
 		group?: Group | null
 	) {

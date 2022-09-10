@@ -1,19 +1,22 @@
-import {Scene} from 'three';
-import {WebGLRenderTarget} from 'three';
-import {HalfFloatType, FloatType} from 'three';
-import {MeshPhongMaterial} from 'three';
-import {MeshBasicMaterial} from 'three';
-import {Material} from 'three';
-import {PlaneBufferGeometry} from 'three';
-import {Mesh} from 'three';
-import {Object3D} from 'three';
-import {WebGLRenderer} from 'three';
-import {Camera} from 'three';
-import {Light} from 'three';
-import {Texture} from 'three';
-import {Matrix4} from 'three';
-import {Vector3} from 'three';
-import {Quaternion} from 'three';
+import {
+	Quaternion,
+	Vector3,
+	Matrix4,
+	Texture,
+	Light,
+	Camera,
+	WebGLRenderer,
+	Object3D,
+	Mesh,
+	WebGLRenderTarget,
+	Scene,
+	HalfFloatType,
+	FloatType,
+	MeshPhongMaterial,
+	MeshBasicMaterial,
+	PlaneGeometry,
+	Material,
+} from 'three';
 import {CoreUserAgent} from '../../../../core/UserAgent';
 
 //
@@ -271,7 +274,7 @@ export class LightMapController {
 	private _initializeBlurPlane(res: number, lightMap: WebGLRenderTarget) {
 		this.blurMaterial = this._createBlurPlaneMaterial(res, lightMap);
 
-		this.blurringPlane = new Mesh(new PlaneBufferGeometry(1, 1), this.blurMaterial);
+		this.blurringPlane = new Mesh(new PlaneGeometry(1, 1), this.blurMaterial);
 		this.blurringPlane.name = 'Blurring Plane';
 		this.blurringPlane.frustumCulled = false;
 		this.blurringPlane.renderOrder = 0;

@@ -1,9 +1,8 @@
 import {ObjectType} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
+import {Vector3, BoxGeometry} from 'three';
 import {CoreTransform} from '../../../core/Transform';
-import {BoxBufferGeometry} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
@@ -42,7 +41,7 @@ export class BoxSopOperation extends BaseSopOperation {
 	}
 	private _cookWithoutInput(params: BoxSopParams) {
 		const {divisions, size, sizes} = params;
-		const geometry = new BoxBufferGeometry(
+		const geometry = new BoxGeometry(
 			size * sizes.x,
 			size * sizes.y,
 			size * sizes.z,
@@ -62,7 +61,7 @@ export class BoxSopOperation extends BaseSopOperation {
 		_size.copy(bbox.max).sub(bbox.min);
 		_center.copy(bbox.max).add(bbox.min).multiplyScalar(0.5);
 
-		const geometry = new BoxBufferGeometry(_size.x, _size.y, _size.z, divisions, divisions, divisions);
+		const geometry = new BoxGeometry(_size.x, _size.y, _size.z, divisions, divisions, divisions);
 		const matrix = this._coreTransform.translationMatrix(_center);
 		geometry.applyMatrix4(matrix);
 		return geometry;

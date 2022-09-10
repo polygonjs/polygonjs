@@ -1,16 +1,18 @@
 import {SVGLoader, SVGResult, StrokeStyle} from '../../modules/three/examples/jsm/loaders/SVGLoader';
-import {Color} from 'three';
-import {Group} from 'three';
-import {MeshBasicMaterial} from 'three';
-import {LineBasicMaterial} from 'three';
-import {DoubleSide} from 'three';
-import {Mesh} from 'three';
-import {ShapeBufferGeometry} from 'three';
-import {ShapePath} from 'three';
+import {
+	ShapeGeometry,
+	LineSegments,
+	ShapePath,
+	Mesh,
+	DoubleSide,
+	LineBasicMaterial,
+	MeshBasicMaterial,
+	Group,
+	Color,
+} from 'three';
 import {isBooleanTrue} from '../BooleanValue';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {LineSegments} from 'three';
 import {Poly} from '../../engine/Poly';
 
 interface CoreSVGLoaderOptions {
@@ -26,7 +28,7 @@ interface CoreSVGLoaderOptions {
 	// advanced
 	tadvanced: boolean;
 	isCCW: boolean;
-	noHoles: boolean;
+	// noHoles: boolean;
 }
 
 interface StrokeStyleExtended extends StrokeStyle {
@@ -126,14 +128,14 @@ export class CoreSVGLoader extends CoreBaseLoader {
 		});
 
 		const isCCW = options.tadvanced && options.isCCW;
-		const noHoles = options.tadvanced && options.noHoles;
+		// const noHoles = options.tadvanced && options.noHoles;
 
-		const shapes = path.toShapes(isCCW, noHoles);
+		const shapes = path.toShapes(isCCW);
 
 		for (let j = 0; j < shapes.length; j++) {
 			const shape = shapes[j];
 
-			const geometry = new ShapeBufferGeometry(shape);
+			const geometry = new ShapeGeometry(shape);
 			const mesh = new Mesh(geometry, material);
 
 			group.add(mesh);

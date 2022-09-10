@@ -97,10 +97,11 @@ const ALL_UNIFORMS_WITHOUT_ENV = [
 	'refractionRatio',
 	'roughness',
 	'roughnessMap',
+	'spotLightMap',
+	'spotLightMatrix',
 	'spotLightShadows',
 	'spotLights',
 	'spotShadowMap',
-	'spotShadowMatrix',
 	'uv2Transform',
 	'uvTransform',
 ];

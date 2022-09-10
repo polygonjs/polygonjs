@@ -6,6 +6,7 @@ import {CSS2DObject} from '../objects/CSS2DObject';
 import {Scene} from 'three';
 import {Camera} from 'three';
 import {CoreMath} from '../../../core/math/_Module';
+import {SceneWithAutoUpdateRenamed} from '../../../engine/nodes/manager/utils/Scene/AutoUpdate';
 
 // converted from threejs CSS2Drenderer https://github.com/mrdoob/three.js/blob/dev/examples/jsm/renderers/CSS2DRenderer.js
 // original @author mrdoob / http://mrdoob.com/
@@ -126,7 +127,7 @@ export class CSS2DRenderer {
 	}
 
 	render(scene: Scene, camera: Camera) {
-		if (scene.autoUpdate === true) scene.updateMatrixWorld();
+		if ((scene as SceneWithAutoUpdateRenamed).autoUpdate === true) scene.updateMatrixWorld();
 		if (camera.parent === null) camera.updateMatrixWorld();
 
 		this.viewMatrix.copy(camera.matrixWorldInverse);

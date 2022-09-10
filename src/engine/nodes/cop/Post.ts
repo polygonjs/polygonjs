@@ -3,7 +3,7 @@
 // import {ShaderMaterial} from 'three';
 // import {Scene} from 'three';
 // import {FloatType, HalfFloatType, NearestFilter, ClampToEdgeWrapping, RGBAFormat, LinearFilter} from 'three';
-// import {PlaneBufferGeometry} from 'three';
+// import {PlaneGeometry} from 'three';
 // import {Mesh} from 'three';
 // import {Camera} from 'three';
 // import {TypedCopNode} from './_Base';
@@ -95,7 +95,7 @@
 // 		return 'post';
 // 	}
 
-// 	private _textureMesh: Mesh = new Mesh(new PlaneBufferGeometry(2, 2));
+// 	private _textureMesh: Mesh = new Mesh(new PlaneGeometry(2, 2));
 // 	private _textureMaterial: ShaderMaterial = new ShaderMaterial({
 // 		uniforms: {
 // 			map: {value: null},

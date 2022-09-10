@@ -123,9 +123,9 @@ class TextSopParamsConfig extends NodeParamsConfig {
 		visibleIf: {tadvanced: true},
 	});
 	/** @param defines if holes should be found when parsing the font */
-	noHoles = ParamConfig.BOOLEAN(0, {
-		visibleIf: {tadvanced: true},
-	});
+	// noHoles = ParamConfig.BOOLEAN(0, {
+	// 	visibleIf: {tadvanced: true},
+	// });
 }
 
 const ParamsConfig = new TextSopParamsConfig();
@@ -193,7 +193,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 			bevelSegments: this.pv.bevelSegments,
 			//
 			isCCW: isBooleanTrue(this.pv.tadvanced) ? this.pv.isCCW : undefined,
-			noHoles: isBooleanTrue(this.pv.tadvanced) ? this.pv.noHoles : undefined,
+			// noHoles: isBooleanTrue(this.pv.tadvanced) ? this.pv.noHoles : undefined,
 		});
 		if (geometries) {
 			const objects = textMergeLetters({

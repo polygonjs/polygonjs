@@ -1,7 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {TorusKnotBufferGeometry} from 'three';
-import {Vector3} from 'three';
+import {Vector3, TorusKnotGeometry} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
@@ -38,7 +37,7 @@ export class TorusKnotSopOperation extends BaseSopOperation {
 		const p = params.p;
 		const q = params.q;
 
-		const geometry = new TorusKnotBufferGeometry(radius, radiusTube, segmentsRadial, segmentsTube, p, q);
+		const geometry = new TorusKnotGeometry(radius, radiusTube, segmentsRadial, segmentsTube, p, q);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		return this.createCoreGroupFromGeometry(geometry);
 	}

@@ -6,7 +6,7 @@
 import {ObjectType} from './../../../core/geometry/Constant';
 import {TypedSopNode} from './_Base';
 import {Vector3} from 'three';
-import {ConeBufferGeometry} from 'three';
+import {ConeGeometry} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -44,7 +44,7 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 	private _core_transform = new CoreTransform();
 
 	override cook() {
-		const geometry = new ConeBufferGeometry(
+		const geometry = new ConeGeometry(
 			this.pv.radius,
 			this.pv.height,
 			this.pv.segmentsRadial,

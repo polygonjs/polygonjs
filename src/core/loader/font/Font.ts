@@ -25,7 +25,7 @@ export interface FontData {
 export interface FontGenerateShapesOptions {
 	size?: number;
 	isCCW?: boolean;
-	noHoles?: boolean;
+	// noHoles?: boolean;
 }
 
 export class Font {
@@ -40,9 +40,9 @@ export class Font {
 		if (options.isCCW == null) {
 			options.isCCW = false;
 		}
-		if (options.noHoles == null) {
-			options.noHoles = false;
-		}
+		// if (options.noHoles == null) {
+		// 	options.noHoles = false;
+		// }
 
 		const allShapes: Array<Shape[]> = [];
 		const allPaths = createPaths(text, options.size, this.data);
@@ -50,7 +50,7 @@ export class Font {
 		for (let pathsForChar of allPaths) {
 			const shapesForChar: Shape[] = [];
 			for (let path of pathsForChar) {
-				const shapes = path.toShapes(options.isCCW, options.noHoles);
+				const shapes = path.toShapes(options.isCCW);
 				shapesForChar.push(...shapes);
 			}
 			allShapes.push(shapesForChar);
