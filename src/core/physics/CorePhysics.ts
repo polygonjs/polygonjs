@@ -1,10 +1,18 @@
-import type {World, ColliderDesc, RigidBodyDesc, JointData} from '@dimforge/rapier3d';
+import type {World, RigidBody, ColliderDesc, RigidBodyDesc, JointData} from '@dimforge/rapier3d';
 
+interface RigidBodyType {
+	Dynamic: number;
+	Fixed: number;
+	KinematicPositionBased: number;
+	KinematicVelocityBased: number;
+}
 export interface PhysicsLib {
 	World: typeof World;
+	RigidBody: typeof RigidBody;
 	ColliderDesc: typeof ColliderDesc;
 	RigidBodyDesc: typeof RigidBodyDesc;
 	JointData: typeof JointData;
+	RigidBodyType: RigidBodyType;
 }
 
 let physics: PhysicsLib | undefined;
@@ -33,4 +41,9 @@ export async function CorePhysics(): Promise<PhysicsLib> {
 			}
 		});
 	});
+}
+export function CorePhysicsLoaded(): PhysicsLib | undefined {
+	if (physics) {
+		return physics;
+	}
 }

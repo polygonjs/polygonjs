@@ -1,5 +1,6 @@
-import {World, RigidBody} from '@dimforge/rapier3d';
+import type {World, RigidBody} from '@dimforge/rapier3d';
 import {Object3D} from 'three';
+import {CorePhysicsLoaded} from './CorePhysics';
 export enum PhysicsUserData {
 	WORLD = 'physicsWorld',
 	RBD_BODY = 'physicsRBDBody',
@@ -11,8 +12,11 @@ export class CorePhysicsUserData {
 	}
 	static world(object: Object3D) {
 		const world = object.userData[PhysicsUserData.WORLD];
-		if (world && world instanceof World) {
-			return world;
+		if (world) {
+			const World = CorePhysicsLoaded()?.World;
+			if (World && world instanceof World) {
+				return world;
+			}
 		}
 	}
 	static setRigidBody(object: Object3D, rigidBody: RigidBody) {
@@ -20,8 +24,11 @@ export class CorePhysicsUserData {
 	}
 	static rigidBody(object: Object3D) {
 		const rigidBody = object.userData[PhysicsUserData.RBD_BODY];
-		if (rigidBody && rigidBody instanceof RigidBody) {
-			return rigidBody;
+		if (rigidBody) {
+			const RigidBody = CorePhysicsLoaded()?.RigidBody;
+			if (RigidBody && rigidBody instanceof RigidBody) {
+				return rigidBody;
+			}
 		}
 	}
 }

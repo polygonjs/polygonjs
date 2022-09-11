@@ -64,6 +64,9 @@ export class PolyScene {
 	private _name: string | undefined;
 	setName(newName: string) {
 		newName = CoreString.sanitizeName(newName);
+		// force lower case for now, as the editor export uses this
+		// and it may be safer to use lowercase to make it work across OSes
+		newName = newName.toLowerCase();
 		return (this._name = newName);
 	}
 	name() {

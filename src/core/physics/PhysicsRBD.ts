@@ -2,15 +2,15 @@ import {TypeAssert} from './../../engine/poly/Assert';
 import {CorePhysicsUserData} from './PhysicsUserData';
 import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute} from './PhysicsAttribute';
 import {Object3D, Vector3} from 'three';
-import {World, RigidBodyType} from '@dimforge/rapier3d';
-import {PhysicsLib} from './CorePhysics';
+import type {World, RigidBodyType} from '@dimforge/rapier3d';
+import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
 export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: Object3D) {
 	const type = CorePhysicsAttribute.getRBDType(object);
 	const colliderType = CorePhysicsAttribute.getColliderType(object);
 	if (!(type != null && colliderType != null)) {
 		return;
 	}
-	const rbdType: RigidBodyType = PhysicsRBDTypeToRigidBodyType(type);
+	const rbdType: RigidBodyType | undefined = PhysicsRBDTypeToRigidBodyType(type);
 	if (rbdType == null) {
 		return;
 	}
@@ -76,8 +76,8 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: O
 // }
 
 // private _updateRBDBound = this._updateRBD.bind(this);
-export function physicsUpdateRBD(object: Object3D) {
-	const body = CorePhysicsUserData.rigidBody(object);
+export async function physicsUpdateRBD(object: Object3D) {
+	const body = await CorePhysicsUserData.rigidBody(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -123,6 +123,10 @@ export function setPhysicsRBDKinematicPosition(object: Object3D, targetPosition:
 }
 
 function PhysicsRBDTypeToRigidBodyType(type: PhysicsRBDType) {
+	const RigidBodyType = CorePhysicsLoaded()?.RigidBodyType;
+	if (!RigidBodyType) {
+		return;
+	}
 	switch (type) {
 		case PhysicsRBDType.FIXED: {
 			return RigidBodyType.Fixed;

@@ -1,4 +1,4 @@
-import {RigidBody, World} from '@dimforge/rapier3d';
+import type {RigidBody, World} from '@dimforge/rapier3d';
 import {Object3D, Vector3} from 'three';
 import {PhysicsLib} from './CorePhysics';
 import {CorePhysicsBaseAttribute} from './PhysicsAttribute';

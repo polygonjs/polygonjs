@@ -1,5 +1,5 @@
 import {CorePhysics} from './CorePhysics';
-import {World, RigidBody, Collider} from '@dimforge/rapier3d';
+import type {World, RigidBody, Collider} from '@dimforge/rapier3d';
 import {CorePhysicsUserData} from './PhysicsUserData';
 import {Object3D, Vector3} from 'three';
 import {physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';
