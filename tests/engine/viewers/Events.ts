@@ -14,7 +14,7 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 		const events = scene.root().createNode('eventsNetwork');
 		const mouse1 = events.createNode('mouse');
 		await mouse1.compute();
-		CoreSleep.sleep(100);
+		await CoreSleep.sleep(100);
 
 		assert.deepEqual(
 			viewer.eventsController().registeredEventTypes(),
@@ -89,7 +89,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 		const events = scene.root().createNode('eventsNetwork');
 		const mouse1 = events.createNode('mouse');
 		await mouse1.compute();
-		CoreSleep.sleep(100);
+		await CoreSleep.sleep(100);
 		// TODO: those 3 requestContainer should not be necessary
 		mouse1.p.mousedown.set(0);
 		await mouse1.compute();

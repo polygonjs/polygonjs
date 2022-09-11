@@ -1,6 +1,6 @@
 import {CorePoint} from '../../../../src/core/geometry/Point';
 
-QUnit.test('attrib_add_mult simple', async (assert) => {
+QUnit.test('sop/attribAddMult simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');

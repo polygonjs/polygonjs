@@ -329,10 +329,7 @@ QUnit.test('mat/rayMarchingBuilder with raymarched reflections', async (assert) 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.vert));
 	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.frag));
-	assert.deepEqual(
-		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
-		ALL_UNIFORMS_WITHOUT_ENV.sort()
-	);
+	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });
 
 QUnit.test('mat/rayMarchingBuilder with raymarched refractions', async (assert) => {
@@ -405,10 +402,7 @@ QUnit.test('mat/rayMarchingBuilder with raymarched refractions', async (assert) 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.refraction.vert));
 	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.refraction.frag));
-	assert.deepEqual(
-		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
-		ALL_UNIFORMS_WITHOUT_ENV.sort()
-	);
+	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 
 	// with splitRGB
 	sdfMaterial.p.splitRGB.set(1);
@@ -418,10 +412,7 @@ QUnit.test('mat/rayMarchingBuilder with raymarched refractions', async (assert) 
 		GLSLHelper.compress(material.fragmentShader),
 		GLSLHelper.compress(TEST_SHADER_LIB.refraction.fragSplitRGB)
 	);
-	assert.deepEqual(
-		Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(),
-		ALL_UNIFORMS_WITHOUT_ENV.sort()
-	);
+	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });
 
 QUnit.test(

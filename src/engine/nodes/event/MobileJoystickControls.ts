@@ -206,7 +206,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		this._player.runSpeedMult = this.pv.runSpeedMult;
 		this._player.gravity.copy(this.pv.gravity);
 		this._player.speed = this.pv.translateSpeed;
-		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight});
+		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight, divisions: 5});
 
 		this._controls_by_element_id.forEach((controls) => controls.updateElements());
 	}

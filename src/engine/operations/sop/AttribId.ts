@@ -54,8 +54,15 @@ export class AttribIdSopOperation extends BaseSopOperation {
 		}
 		if (isBooleanTrue(params.idn)) {
 			const idnValues = new Array(pointsCount);
-			for (let i = 0; i < pointsCount; i++) {
-				idnValues[i] = i / (pointsCount - 1);
+			const pointsCountMinus1 = pointsCount - 1;
+			if (pointsCountMinus1 == 0) {
+				for (let i = 0; i < pointsCount; i++) {
+					idnValues[i] = 0;
+				}
+			} else {
+				for (let i = 0; i < pointsCount; i++) {
+					idnValues[i] = i / (pointsCount - 1);
+				}
 			}
 			const idnArray = new Float32Array(idnValues);
 			geometry.setAttribute(params.idnName, new BufferAttribute(idnArray, 1));

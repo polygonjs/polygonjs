@@ -112,6 +112,9 @@ function migrateSop(nodeData: NodeJsonExporterData) {
 		case 'svg': {
 			return SopTypeFile.FILE_SVG;
 		}
+		case 'playerCapsule': {
+			return 'capsule';
+		}
 	}
 }
 const POST_NEW_TYPES: PolyDictionary<string> = {

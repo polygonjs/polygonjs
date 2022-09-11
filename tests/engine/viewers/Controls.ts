@@ -19,7 +19,7 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 
 	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		// no controls initially
-		CoreSleep.sleep(100);
+		await CoreSleep.sleep(100);
 		assert.ok(!viewer.controlsController().controls());
 	});
 	cameraNode.p.controls.setNode(camera_orbit_controls1);

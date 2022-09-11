@@ -1,9 +1,12 @@
-import {PHYSICS_GRAVITY_DEFAULT} from './../../../core/physics/PhysicsWorld';
 /**
  * Create a physics world
  *
  *
  */
+import {PolyScene} from '../../scene/PolyScene';
+import {CoreObject} from './../../../core/geometry/Object';
+import {Object3D} from 'three/src/core/Object3D';
+import {initCorePhysicsWorld, PHYSICS_GRAVITY_DEFAULT} from './../../../core/physics/PhysicsWorld';
 import {Group} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -15,6 +18,7 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseActorNodeType} from '../actor/_Base';
 import {createWorld} from '../../../core/physics/PhysicsWorld';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class PhysicsWorldSopParamsConfig extends NodeParamsConfig {
 	/** @param gravity */
 	gravity = ParamConfig.VECTOR3(PHYSICS_GRAVITY_DEFAULT);
@@ -32,12 +36,13 @@ const ParamsConfig = new PhysicsWorldSopParamsConfig();
 export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'physicsWorld';
+		return SopType.PHYSICS_WORLD;
 	}
 
 	protected override initializeNode() {
 		this.io.inputs.setCount(1);
-		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
+		// set to always clone, so that the
+		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
@@ -46,7 +51,7 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 		const group = new Group();
 		group.matrixAutoUpdate = false;
 
-		createWorld(group, this.pv.gravity);
+		await createWorld(group, this.pv.gravity);
 
 		const actorNode = this._findActorNode();
 		// if (actorNode) {
@@ -57,6 +62,8 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 		for (let object of objects) {
 			group.add(object);
 		}
+		assignPhysicsWorldNodeToWorldObject(group, this);
+		initCorePhysicsWorld(group);
 
 		this.setObject(group);
 	}
@@ -96,4 +103,29 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 	override childrenAllowed() {
 		return true;
 	}
+}
+
+const PHYSICS_WORLD_NODE_PATH_ATTRIB_NAME = 'physicsWorldNodePath';
+function assignPhysicsWorldNodeToWorldObject(worldObject: Object3D, node: PhysicsWorldSopNode) {
+	CoreObject.addAttribute(worldObject, PHYSICS_WORLD_NODE_PATH_ATTRIB_NAME, node.path());
+}
+export function getPhysicsWorldNodeFromWorldObject(
+	worldObject: Object3D,
+	scene: PolyScene
+): PhysicsWorldSopNode | undefined {
+	const nodePath = CoreObject.stringAttribValue(worldObject, PHYSICS_WORLD_NODE_PATH_ATTRIB_NAME);
+	if (!nodePath) {
+		return;
+	}
+	const node = scene.node(nodePath);
+	if (!node) {
+		return;
+	}
+	if (node.context() != NodeContext.SOP) {
+		return;
+	}
+	if (node.type() != SopType.PHYSICS_WORLD) {
+		return;
+	}
+	return node as PhysicsWorldSopNode;
 }

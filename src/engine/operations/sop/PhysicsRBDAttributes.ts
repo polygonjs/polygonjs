@@ -1,4 +1,8 @@
-import {CorePhysicsAttribute} from './../../../core/physics/PhysicsAttribute';
+import {
+	CorePhysicsAttribute,
+	PHYSICS_RBD_COLLIDER_TYPES,
+	PHYSICS_RBD_TYPES,
+} from './../../../core/physics/PhysicsAttribute';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -8,8 +12,8 @@ import {Vector3} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 
 interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
-	type: string;
-	colliderType: string;
+	RBDType: number;
+	colliderType: number;
 	taddId: boolean;
 	id: string;
 	// cuboid
@@ -17,7 +21,7 @@ interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
 	// sphere
 	radius: number;
 	// capsule
-	halfHeight: number;
+	height: number;
 	// common
 	restitution: number;
 	linearDamping: number;
@@ -26,8 +30,8 @@ interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
 
 export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PhysicsRBDAttributesSopParams = {
-		type: PhysicsRBDType.DYNAMIC,
-		colliderType: PhysicsRBDColliderType.CUBOID,
+		RBDType: PHYSICS_RBD_TYPES.indexOf(PhysicsRBDType.DYNAMIC),
+		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CUBOID),
 		taddId: true,
 		id: '',
 		// cuboid
@@ -35,13 +39,13 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 		// sphere
 		radius: 1,
 		// capsule
-		halfHeight: 0.5,
+		height: 0.5,
 		// common
 		restitution: 0.5,
 		linearDamping: 0,
 		angularDamping: 0,
 	};
-	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<'physicsRBDAttributes'> {
 		return 'physicsRBDAttributes';
 	}
@@ -49,8 +53,9 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 		const inputCoreGroup = inputCoreGroups[0];
 		const objects = inputCoreGroup.objects();
 		for (let object of objects) {
-			CorePhysicsAttribute.setRBDType(object, params.type as PhysicsRBDType);
-			CorePhysicsAttribute.setColliderType(object, params.colliderType as PhysicsRBDColliderType.CUBOID);
+			const colliderType = PHYSICS_RBD_COLLIDER_TYPES[params.colliderType];
+			CorePhysicsAttribute.setRBDType(object, PHYSICS_RBD_TYPES[params.RBDType]);
+			CorePhysicsAttribute.setColliderType(object, colliderType);
 			CorePhysicsAttribute.setRestitution(object, params.restitution);
 			CorePhysicsAttribute.setLinearDamping(object, params.linearDamping);
 			CorePhysicsAttribute.setAngularDamping(object, params.angularDamping);
@@ -59,7 +64,7 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 				CorePhysicsAttribute.setRBDId(object, params.id);
 			}
 
-			switch (params.colliderType as PhysicsRBDColliderType) {
+			switch (colliderType) {
 				case PhysicsRBDColliderType.CUBOID: {
 					CorePhysicsAttribute.setCuboidSize(object, params.size);
 					break;
@@ -69,7 +74,7 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 					break;
 				}
 				case PhysicsRBDColliderType.CAPSULE: {
-					CorePhysicsAttribute.setHalfHeight(object, params.halfHeight);
+					CorePhysicsAttribute.setHeight(object, params.height);
 					CorePhysicsAttribute.setRadius(object, params.radius);
 					break;
 				}

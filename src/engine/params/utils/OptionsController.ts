@@ -246,7 +246,7 @@ export interface ParamOptions
 const NON_OVERRIDABLE_OPTIONS: Array<keyof ParamOptions> = [EDITABLE];
 
 export class OptionsController {
-	private _programatic_visible_state: boolean = true;
+	private _programaticVisibleState: boolean = true;
 	private _options!: ParamOptions;
 	private _default_options!: ParamOptions;
 	constructor(private _param: BaseParamType) {
@@ -630,7 +630,7 @@ export class OptionsController {
 
 	// visible
 	isHidden(): boolean {
-		return this._options[HIDDEN_OPTION] === true || this._programatic_visible_state === false;
+		return this._options[HIDDEN_OPTION] === true || this._programaticVisibleState === false;
 	}
 	isVisible(): boolean {
 		return !this.isHidden();
@@ -670,19 +670,19 @@ export class OptionsController {
 		return VISIBLE_IF_OPTION in this._options;
 	}
 	visibilityPredecessors() {
-		const visibility_options = this._options[VISIBLE_IF_OPTION];
-		if (!visibility_options) {
+		const visibilityOptions = this._options[VISIBLE_IF_OPTION];
+		if (!visibilityOptions) {
 			return [];
 		}
-		let predecessor_names: string[] = [];
-		if (CoreType.isArray(visibility_options)) {
-			predecessor_names = ArrayUtils.uniq(visibility_options.map((options) => Object.keys(options)).flat());
+		let predecessorNames: string[] = [];
+		if (CoreType.isArray(visibilityOptions)) {
+			predecessorNames = ArrayUtils.uniq(visibilityOptions.map((options) => Object.keys(options)).flat());
 		} else {
-			predecessor_names = Object.keys(visibility_options);
+			predecessorNames = Object.keys(visibilityOptions);
 		}
 		const node = this.param().node;
-		return ArrayUtils.compact(
-			predecessor_names.map((name) => {
+		const params = ArrayUtils.compact(
+			predecessorNames.map((name) => {
 				const param = node.params.get(name);
 				if (param) {
 					return param;
@@ -693,6 +693,8 @@ export class OptionsController {
 				}
 			})
 		);
+
+		return params;
 	}
 
 	private _updateVisibilityAndRemoveDirtyBound = this.updateVisibilityAndRemoveDirty.bind(this);
@@ -724,27 +726,31 @@ export class OptionsController {
 	async updateVisibility() {
 		const options = this._options[VISIBLE_IF_OPTION];
 		if (options) {
+			const node = this.param().node;
 			const params = this.visibilityPredecessors();
 			const promises = params.map((p) => {
 				if (p.isDirty()) {
 					return p.compute();
 				}
 			});
-			this._programatic_visible_state = false;
+			this._programaticVisibleState = false;
 			await Promise.all(promises);
-
 			if (CoreType.isArray(options)) {
-				for (let options_set of options) {
-					const satisfied_values = params.filter((param) => param.value == options_set[param.name()]);
-					if (satisfied_values.length == params.length) {
-						this._programatic_visible_state = true;
+				for (let optionsSet of options) {
+					const optionSetParamNames = Object.keys(optionsSet);
+					const optionSetParams = ArrayUtils.compact(
+						optionSetParamNames.map((paramName) => node.params.get(paramName))
+					);
+					const satisfiedValues = optionSetParams.filter((param) => param.value == optionsSet[param.name()]);
+
+					if (satisfiedValues.length == optionSetParams.length) {
+						this._programaticVisibleState = true;
 					}
 				}
 			} else {
-				const satisfied_values = params.filter((param) => param.value == options[param.name()]);
-				this._programatic_visible_state = satisfied_values.length == params.length;
+				const satisfiedValues = params.filter((param) => param.value == options[param.name()]);
+				this._programaticVisibleState = satisfiedValues.length == params.length;
 			}
-
 			this.param().emit(ParamEvent.VISIBLE_UPDATED);
 		}
 	}

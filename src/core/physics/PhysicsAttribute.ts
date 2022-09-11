@@ -13,6 +13,7 @@ export const PHYSICS_RBD_TYPES: PhysicsRBDType[] = [
 	PhysicsRBDType.DYNAMIC,
 	PhysicsRBDType.KINEMATIC_POS,
 ];
+export const PHYSICS_RBD_TYPE_MENU_ENTRIES = PHYSICS_RBD_TYPES.map((name, value) => ({name, value}));
 
 export enum PhysicsRBDColliderType {
 	CUBOID = 'cuboid',
@@ -25,6 +26,10 @@ export const PHYSICS_RBD_COLLIDER_TYPES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.SPHERE,
 	PhysicsRBDColliderType.CAPSULE,
 ];
+export const PHYSICS_RBD_COLLIDER_TYPE_MENU_ENTRIES = PHYSICS_RBD_COLLIDER_TYPES.map((name, value) => ({
+	name,
+	value,
+}));
 
 export enum PhysicsRBDCuboidAttribute {
 	SIZE = 'size',
@@ -33,7 +38,7 @@ export enum PhysicsRBDSphereAttribute {
 	RADIUS = 'radius',
 }
 export enum PhysicsRBDCapsuleAttribute {
-	HALF_HEIGHT = 'halfHeight',
+	HEIGHT = 'height',
 	RADIUS = 'radius',
 }
 
@@ -127,10 +132,10 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 		return this._getNumber(object, PhysicsRBDSphereAttribute.RADIUS);
 	}
 	// capsule
-	static setHalfHeight(object: Object3D, value: number) {
-		this._setNumber(object, PhysicsRBDCapsuleAttribute.HALF_HEIGHT, value);
+	static setHeight(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsRBDCapsuleAttribute.HEIGHT, value);
 	}
-	static getHalfHeight(object: Object3D) {
-		return this._getNumber(object, PhysicsRBDCapsuleAttribute.HALF_HEIGHT);
+	static getHeight(object: Object3D) {
+		return this._getNumber(object, PhysicsRBDCapsuleAttribute.HEIGHT);
 	}
 }

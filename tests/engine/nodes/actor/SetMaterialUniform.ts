@@ -32,7 +32,7 @@ QUnit.test('actor/setMaterialUniform', async (assert) => {
 	const setMaterialUniform1 = actor1.createNode('setMaterialUniform');
 
 	setMaterialUniform1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
-	setMaterialUniform1.p.name.set('myUniform');
+	setMaterialUniform1.params.get('uniformName')!.set('myUniform');
 	setMaterialUniform1.setUniformType(ActorConnectionPointType.VECTOR3);
 	setMaterialUniform1.params.get(ActorConnectionPointType.VECTOR3)!.set([0.2, 0.3, 0.4]);
 

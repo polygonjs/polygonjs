@@ -17,6 +17,7 @@ export async function createWorld(worldObject: Object3D, gravity: Vector3) {
 export async function initCorePhysicsWorld(worldObject: Object3D) {
 	const world = CorePhysicsUserData.world(worldObject);
 	if (!world) {
+		console.warn('no physicsWorld found with this object', worldObject);
 		return;
 	}
 	_clearWorld(world);
@@ -25,7 +26,7 @@ export async function initCorePhysicsWorld(worldObject: Object3D) {
 	const rigidBodyById: Map<string, RigidBody> = new Map();
 	const PhysicsLib = await CorePhysics();
 	for (let child of worldObject.children) {
-		const result = physicsCreateRBD(PhysicsLib, world, worldObject, child);
+		const result = physicsCreateRBD(PhysicsLib, world, child);
 		if (result) {
 			const {rigidBody, id} = result;
 			rigidBodyById.set(id, rigidBody);

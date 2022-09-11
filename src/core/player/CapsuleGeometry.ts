@@ -3,14 +3,13 @@ import {RoundedBoxGeometry} from '../../modules/three/examples/jsm/geometries/Ro
 export interface CapsuleOptions {
 	radius: number;
 	height: number;
+	divisions: number;
 }
-export function createPlayerGeometry(capsuleOptions: CapsuleOptions) {
-	const radius = capsuleOptions.radius;
-	const height = capsuleOptions.height;
+export function createCapsuleGeometry(capsuleOptions: CapsuleOptions) {
+	const {radius, height, divisions} = capsuleOptions;
 	const diameter = 2 * radius;
 	const bevel = radius;
-	const divisions = 10;
 	const geometry = new RoundedBoxGeometry(diameter, height + diameter, diameter, divisions, bevel);
-	geometry.translate(0, -height / 2, 0);
+	// geometry.translate(0, -height / 2, 0);
 	return geometry;
 }

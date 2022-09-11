@@ -4,7 +4,7 @@ import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute} from './Ph
 import {Object3D, Vector3} from 'three';
 import {World, RigidBodyType} from '@dimforge/rapier3d';
 import {PhysicsLib} from './CorePhysics';
-export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, worldObject: Object3D, object: Object3D) {
+export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: Object3D) {
 	const type = CorePhysicsAttribute.getRBDType(object);
 	const colliderType = CorePhysicsAttribute.getColliderType(object);
 	if (!(type != null && colliderType != null)) {
@@ -14,6 +14,8 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, worldObje
 	if (rbdType == null) {
 		return;
 	}
+
+	// restoreRBDInitMatrix(object);
 
 	const id = CorePhysicsAttribute.getRBDId(object);
 	const rigidBodyDesc = new PhysicsLib.RigidBodyDesc(rbdType);
@@ -44,9 +46,34 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, worldObje
 
 	world.createCollider(colliderDesc, rigidBody);
 
-	console.log('createCollider', {object, colliderDesc, rigidBody, type, colliderType});
 	return {colliderDesc, rigidBody, id};
 }
+
+// const PHYSICS_INIT_MATRIX_ATTRIB_NAME = '__physicsInitMatrix__';
+// interface Object3DWithInitMatrix extends Object3D {
+// 	__physicsInitMatrix__?: Matrix4;
+// }
+// function physicsRBDSetInitMatrix(object: Object3D) {
+// 	if (PHYSICS_INIT_MATRIX_ATTRIB_NAME in object) {
+// 		return;
+// 	}
+// 	object.updateWorldMatrix(true, false);
+// 	object.updateMatrix();
+// 	(object as Object3DWithInitMatrix)[PHYSICS_INIT_MATRIX_ATTRIB_NAME] = object.matrix.clone();
+// 	console.warn('set', object.matrix.elements);
+// }
+// function restoreRBDInitMatrix(object: Object3D) {
+// 	if (!(PHYSICS_INIT_MATRIX_ATTRIB_NAME in object)) {
+// 		return;
+// 	}
+// 	const initMatrix = (object as Object3DWithInitMatrix)[PHYSICS_INIT_MATRIX_ATTRIB_NAME];
+// 	if (!(initMatrix instanceof Matrix4)) {
+// 		return;
+// 	}
+// 	object.matrix.copy(initMatrix);
+// 	console.warn('restored', initMatrix.elements);
+// 	delete (object as Object3DWithInitMatrix)[PHYSICS_INIT_MATRIX_ATTRIB_NAME];
+// }
 
 // private _updateRBDBound = this._updateRBD.bind(this);
 export function physicsUpdateRBD(object: Object3D) {
@@ -55,6 +82,7 @@ export function physicsUpdateRBD(object: Object3D) {
 		console.warn('no rbd found');
 		return;
 	}
+	// physicsRBDSetInitMatrix(object);
 	const position = body.translation();
 	const rotation = body.rotation();
 	object.position.set(position.x, position.y, position.z);
@@ -120,7 +148,7 @@ function PhysicsRBDCollider(PhysicsLib: PhysicsLib, colliderType: PhysicsRBDColl
 			return PhysicsLib.ColliderDesc.ball(radius);
 		}
 		case PhysicsRBDColliderType.CAPSULE: {
-			const halfHeight = CorePhysicsAttribute.getHalfHeight(object);
+			const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
 			const radius = CorePhysicsAttribute.getRadius(object);
 			return PhysicsLib.ColliderDesc.capsule(halfHeight, radius);
 		}

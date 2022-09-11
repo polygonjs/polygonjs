@@ -34,7 +34,7 @@ class SetMaterialUniformActorParamsConfig extends NodeParamsConfig {
 	/** @param add prefix */
 	addPrefix = ParamConfig.BOOLEAN(1);
 	/** @param uniform name */
-	name = ParamConfig.STRING('');
+	// uniformName = ParamConfig.STRING('');
 	/** @param uniform type */
 	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(ActorConnectionPointType.FLOAT), {
 		menu: {
@@ -60,10 +60,12 @@ export class SetMaterialUniformActorNode extends TypedActorNode<SetMaterialUnifo
 	}
 
 	override initializeNode() {
-		this.io.connection_points.spare_params.setInputlessParamNames(['name', 'type']);
+		this.io.connection_points.spare_params.setInputlessParamNames(['type']);
 		this.io.connection_points.set_input_name_function(
 			(index: number) =>
-				[TRIGGER_CONNECTION_NAME, ActorConnectionPointType.MATERIAL, this.uniformType(), 'lerp'][index]
+				[TRIGGER_CONNECTION_NAME, ActorConnectionPointType.MATERIAL, this.uniformType(), 'uniformName', 'lerp'][
+					index
+				]
 		);
 		this.io.connection_points.set_expected_input_types_function(() => this._expectedInputType());
 		this.io.connection_points.set_output_name_function((index: number) => TRIGGER_CONNECTION_NAME);
@@ -74,6 +76,7 @@ export class SetMaterialUniformActorNode extends TypedActorNode<SetMaterialUnifo
 			ActorConnectionPointType.TRIGGER,
 			ActorConnectionPointType.MATERIAL,
 			this.uniformType(),
+			ActorConnectionPointType.STRING,
 			ActorConnectionPointType.FLOAT,
 		];
 	}
@@ -91,8 +94,10 @@ export class SetMaterialUniformActorNode extends TypedActorNode<SetMaterialUnifo
 
 		if (material) {
 			const lerp = this._inputValue<ActorConnectionPointType.FLOAT>('lerp', context) || 1;
+			const uniformNameWithoutPrefix =
+				this._inputValue<ActorConnectionPointType.STRING>('uniformName', context) || '';
 			const prefix = isBooleanTrue(this.pv.addPrefix) ? UNIFORM_PARAM_PREFIX : ``;
-			const uniformName = `${prefix}${this.pv.name}`;
+			const uniformName = `${prefix}${uniformNameWithoutPrefix}`;
 			const paramValue = this._inputValue<any>(this.uniformType(), context);
 
 			if (CoreType.isArray(material)) {

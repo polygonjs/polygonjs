@@ -1,49 +1,56 @@
-import {StringParam} from './../../params/String';
-import {TypeAssert} from './../../poly/Assert';
-import {FloatParam} from './../../params/Float';
-import {CorePhysicsAttribute, PhysicsRBDColliderType, PhysicsRBDType} from './../../../core/physics/PhysicsAttribute';
 /**
  * Creates object attributes used to create a physics object.
 
  *
  */
-
+import {StringParam} from './../../params/String';
+import {TypeAssert} from './../../poly/Assert';
+import {FloatParam} from './../../params/Float';
+import {
+	PHYSICS_RBD_COLLIDER_TYPES,
+	PHYSICS_RBD_TYPES,
+	CorePhysicsAttribute,
+	PhysicsRBDColliderType,
+	PHYSICS_RBD_TYPE_MENU_ENTRIES,
+	PHYSICS_RBD_COLLIDER_TYPE_MENU_ENTRIES,
+	PhysicsRBDType,
+} from './../../../core/physics/PhysicsAttribute';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {PhysicsRBDAttributesSopOperation} from '../../operations/sop/PhysicsRBDAttributes';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {PHYSICS_RBD_COLLIDER_TYPES, PHYSICS_RBD_TYPES} from '../../../core/physics/PhysicsAttribute';
 import {CoreObject} from '../../../core/geometry/Object';
 import {Object3D, Vector3} from 'three';
 import {Vector3Param} from '../../params/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
 class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
+	main = ParamConfig.FOLDER();
 	/** @param Rigid body type */
-	type = ParamConfig.STRING(DEFAULT.type, {
-		menuString: {
-			entries: PHYSICS_RBD_TYPES.map((name, value) => ({name, value: name})),
-		},
-	});
-	/** @param collider type */
-	colliderType = ParamConfig.STRING(DEFAULT.colliderType, {
-		menuString: {
-			entries: PHYSICS_RBD_COLLIDER_TYPES.map((name, value) => ({name, value: name})),
+	RBDType = ParamConfig.INTEGER(DEFAULT.RBDType, {
+		menu: {
+			entries: PHYSICS_RBD_TYPE_MENU_ENTRIES,
 		},
 	});
 	/** @param add id */
-	taddId = ParamConfig.BOOLEAN(1);
+	addId = ParamConfig.BOOLEAN(1);
 	/** @param id */
 	id = ParamConfig.STRING('`$OS`-`@objnum`', {
-		visibleIf: {taddId: true},
+		visibleIf: {addId: true},
 		expression: {forEntities: true},
+	});
+	shape = ParamConfig.FOLDER();
+	/** @param collider type */
+	colliderType = ParamConfig.INTEGER(DEFAULT.colliderType, {
+		menu: {
+			entries: PHYSICS_RBD_COLLIDER_TYPE_MENU_ENTRIES,
+		},
 	});
 
 	/** @param size */
 	size = ParamConfig.VECTOR3(DEFAULT.size.toArray(), {
 		visibleIf: {
-			colliderType: PhysicsRBDColliderType.CUBOID,
+			colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CUBOID),
 		},
 		expression: {forEntities: true},
 	});
@@ -53,23 +60,24 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		visibleIf: [
 			{
-				colliderType: PhysicsRBDColliderType.SPHERE,
+				colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.SPHERE),
 			},
 			{
-				colliderType: PhysicsRBDColliderType.CAPSULE,
+				colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CAPSULE),
 			},
 		],
 		expression: {forEntities: true},
 	});
 	/** @param half height */
-	halfHeight = ParamConfig.FLOAT(DEFAULT.halfHeight, {
+	height = ParamConfig.FLOAT(DEFAULT.height, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		visibleIf: {
-			colliderType: PhysicsRBDColliderType.CAPSULE,
+			colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CAPSULE),
 		},
 		expression: {forEntities: true},
 	});
+	dynamics = ParamConfig.FOLDER();
 	/** @param restitution */
 	restitution = ParamConfig.FLOAT(DEFAULT.restitution, {
 		range: [0, 1],
@@ -106,14 +114,28 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		this.io.inputs.initInputsClonedState(PhysicsRBDAttributesSopOperation.INPUT_CLONED_STATE);
 	}
 
+	setRBDType(RBDtype: PhysicsRBDType) {
+		this.p.RBDType.set(PHYSICS_RBD_TYPES.indexOf(RBDtype));
+	}
+	RBDType() {
+		return PHYSICS_RBD_TYPES[this.pv.RBDType];
+	}
+	setColliderType(colliderType: PhysicsRBDColliderType) {
+		this.p.colliderType.set(PHYSICS_RBD_COLLIDER_TYPES.indexOf(colliderType));
+	}
+	colliderType() {
+		return PHYSICS_RBD_COLLIDER_TYPES[this.pv.colliderType];
+	}
+
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 
-		const colliderType = this.pv.colliderType as PhysicsRBDColliderType;
+		const RBDType = this.RBDType();
+		const colliderType = this.colliderType();
 		const coreObjects = coreGroup.coreObjects();
 		for (let coreObject of coreObjects) {
 			const object = coreObject.object();
-			CorePhysicsAttribute.setRBDType(object, this.pv.type as PhysicsRBDType);
+			CorePhysicsAttribute.setRBDType(object, RBDType);
 
 			CorePhysicsAttribute.setColliderType(object, colliderType);
 		}
@@ -135,7 +157,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		);
 
 		this._applyColliderType(colliderType, coreObjects);
-		if (isBooleanTrue(this.pv.taddId)) {
+		if (isBooleanTrue(this.pv.addId)) {
 			this._computeStringParam(this.p.id, coreObjects, CorePhysicsAttribute.setRBDId.bind(CorePhysicsAttribute));
 		}
 
@@ -163,9 +185,9 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			}
 			case PhysicsRBDColliderType.CAPSULE: {
 				this._computeFloatParam(
-					this.p.halfHeight,
+					this.p.height,
 					coreObjects,
-					CorePhysicsAttribute.setHalfHeight.bind(CorePhysicsAttribute)
+					CorePhysicsAttribute.setHeight.bind(CorePhysicsAttribute)
 				);
 				this._computeFloatParam(
 					this.p.radius,

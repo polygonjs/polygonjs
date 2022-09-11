@@ -211,14 +211,20 @@ export class CoreObject extends CoreEntity {
 		return CoreObject.attributesDictionary(this._object);
 	}
 	attributeNames(): string[] {
-		return Object.keys(this._attributesDictionary());
+		return this.attribNames();
+	}
+	static attribNames(object: Object3D): string[] {
+		return Object.keys(CoreObject.attributesDictionary(object));
 	}
 	attribNames(): string[] {
-		return this.attributeNames();
+		return CoreObject.attribNames(this._object);
 	}
 
-	hasAttrib(name: string): boolean {
-		return this.attributeNames().includes(name);
+	hasAttrib(attribName: string): boolean {
+		return CoreObject.hasAttrib(this._object, attribName);
+	}
+	static hasAttrib(object: Object3D, attribName: string) {
+		return attribName in this.attributesDictionary(object);
 	}
 
 	renameAttrib(old_name: string, new_name: string) {

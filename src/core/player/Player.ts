@@ -4,7 +4,7 @@ import {Box3} from 'three';
 import {Line3} from 'three';
 import {Matrix4} from 'three';
 import {MeshWithBVH, ExtendedTriangle} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
-import {createPlayerGeometry, CapsuleOptions} from './PlayerGeometry';
+import {createCapsuleGeometry, CapsuleOptions} from './CapsuleGeometry';
 import {Mesh} from 'three';
 import {Material} from 'three';
 import {MathUtils} from 'three';
@@ -62,7 +62,7 @@ export class CorePlayer {
 		this.collider = options.collider;
 		if (options.meshName) {
 			this._mesh = new Mesh();
-			this._mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
+			this._mesh.geometry = createCapsuleGeometry({radius: this.capsuleInfo.radius, height: 1, divisions: 5});
 			this._mesh.name = options.meshName;
 			this._mesh.receiveShadow = true;
 			this._mesh.castShadow = true;
@@ -75,7 +75,7 @@ export class CorePlayer {
 		this.capsuleInfo.radius = capsuleOptions.radius;
 		this.capsuleInfo.segment.end.y = -capsuleOptions.height;
 		if (this._mesh) {
-			this._mesh.geometry = createPlayerGeometry(capsuleOptions);
+			this._mesh.geometry = createCapsuleGeometry(capsuleOptions);
 		}
 	}
 	setUsePlayerMesh(state: boolean) {
@@ -90,7 +90,7 @@ export class CorePlayer {
 	}
 	private _createMesh() {
 		const mesh = new Mesh();
-		mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
+		mesh.geometry = createCapsuleGeometry({radius: this.capsuleInfo.radius, height: 1, divisions: 5});
 		mesh.name = this._meshName || 'defaultPlayerMeshName';
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;

@@ -12,7 +12,7 @@ import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 // import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
 import {AreaLightSopNode} from '../../../nodes/sop/AreaLight';
 import {AttribAddMultSopNode} from '../../../nodes/sop/AttribAddMult';
-import {AttribAudioAnalyserSopNode} from '../../../nodes/sop/AttribAudioAnalyser';
+// import {AttribAudioAnalyserSopNode} from '../../../nodes/sop/AttribAudioAnalyser';
 import {AttribCastSopNode} from '../../../nodes/sop/AttribCast';
 import {AttribCopySopNode} from '../../../nodes/sop/AttribCopy';
 import {AttribCreateSopNode} from '../../../nodes/sop/AttribCreate';
@@ -43,6 +43,7 @@ import {CameraPostProcessSopNode} from '../../../nodes/sop/CameraPostProcess';
 import {CameraProjectSopNode} from '../../../nodes/sop/CameraProject';
 import {CameraRenderSceneSopNode} from '../../../nodes/sop/CameraRenderScene';
 import {CameraRendererSopNode} from '../../../nodes/sop/CameraRenderer';
+import {CapsuleSopNode} from '../../../nodes/sop/Capsule';
 import {CenterSopNode} from '../../../nodes/sop/Center';
 import {CircleSopNode} from '../../../nodes/sop/Circle';
 import {Circle3PointsSopNode} from '../../../nodes/sop/Circle3Points';
@@ -89,7 +90,7 @@ import {InstanceSopNode} from '../../../nodes/sop/Instance';
 import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
-import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
+// import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LightMixerSopNode} from '../../../nodes/sop/LightMixer';
 import {LineSopNode} from '../../../nodes/sop/Line';
@@ -119,7 +120,6 @@ import {PhysicsRBDAttributesSopNode} from '../../../nodes/sop/PhysicsRBDAttribut
 import {PhysicsWorldSopNode} from '../../../nodes/sop/PhysicsWorld';
 import {PlaneSopNode} from '../../../nodes/sop/Plane';
 import {PlaneHelperSopNode} from '../../../nodes/sop/PlaneHelper';
-import {PlayerCapsuleSopNode} from '../../../nodes/sop/PlayerCapsule';
 import {PointSopNode} from '../../../nodes/sop/Point';
 import {PointLightSopNode} from '../../../nodes/sop/PointLight';
 import {PolarTransformSopNode} from '../../../nodes/sop/PolarTransform';
@@ -180,7 +180,7 @@ export interface GeoNodeChildrenMap {
 	// animationMixer: AnimationMixerSopNode;
 	areaLight: AreaLightSopNode;
 	attribAddMult: AttribAddMultSopNode;
-	attribAudioAnalyser: AttribAudioAnalyserSopNode;
+	// attribAudioAnalyser: AttribAudioAnalyserSopNode;
 	attribCast: AttribCastSopNode;
 	attribCopy: AttribCopySopNode;
 	attribCreate: AttribCreateSopNode;
@@ -211,6 +211,7 @@ export interface GeoNodeChildrenMap {
 	cameraProject: CameraProjectSopNode;
 	cameraRenderer: CameraRendererSopNode;
 	cameraRenderScene: CameraRenderSceneSopNode;
+	capsule: CapsuleSopNode;
 	center: CenterSopNode;
 	circle: CircleSopNode;
 	circle3Points: Circle3PointsSopNode;
@@ -257,7 +258,7 @@ export interface GeoNodeChildrenMap {
 	instanceUpdate: InstanceUpdateSopNode;
 	instancesCount: InstancesCountSopNode;
 	jitter: JitterSopNode;
-	jsPoint: JsPointSopNode;
+	// jsPoint: JsPointSopNode;
 	layer: LayerSopNode;
 	lightMixer: LightMixerSopNode;
 	line: LineSopNode;
@@ -288,7 +289,6 @@ export interface GeoNodeChildrenMap {
 	physicsWorld: PhysicsWorldSopNode;
 	plane: PlaneSopNode;
 	planeHelper: PlaneHelperSopNode;
-	playerCapsule: PlayerCapsuleSopNode;
 	point: PointSopNode;
 	pointLight: PointLightSopNode;
 	polarTransform: PolarTransformSopNode;
@@ -371,6 +371,7 @@ import {CameraPostProcessSopOperation} from '../../../operations/sop/CameraPostP
 import {CameraProjectSopOperation} from '../../../operations/sop/CameraProject';
 import {CameraRendererSopOperation} from '../../../operations/sop/CameraRenderer';
 import {CameraRenderSceneSopOperation} from '../../../operations/sop/CameraRenderScene';
+import {CapsuleSopOperation} from '../../../operations/sop/Capsule';
 import {CenterSopOperation} from '../../../operations/sop/Center';
 import {CircleSopOperation} from '../../../operations/sop/Circle';
 import {ClipSopOperation} from '../../../operations/sop/Clip';
@@ -399,7 +400,6 @@ import {InstanceUpdateSopOperation} from '../../../operations/sop/InstanceUpdate
 import {JitterSopOperation} from '../../../operations/sop/Jitter';
 import {LookAtSopOperation} from '../../../operations/sop/LookAt';
 import {MergeSopOperation} from '../../../operations/sop/Merge';
-
 import {MetaballSopOperation} from '../../../operations/sop/Metaball';
 import {MaterialSopOperation} from '../../../operations/sop/Material';
 import {MaterialPropertiesSopOperation} from '../../../operations/sop/MaterialProperties';
@@ -413,7 +413,6 @@ import {PeakSopOperation} from '../../../operations/sop/Peak';
 import {PerspectiveCameraSopOperation} from '../../../operations/sop/PerspectiveCamera';
 import {PlaneSopOperation} from '../../../operations/sop/Plane';
 import {PlaneHelperSopOperation} from '../../../operations/sop/PlaneHelper';
-import {PlayerCapsuleSopOperation} from '../../../operations/sop/PlayerCapsule';
 import {PolarTransformSopOperation} from '../../../operations/sop/PolarTransform';
 import {PolywireSopOperation} from '../../../operations/sop/Polywire';
 import {PointLightSopOperation} from '../../../operations/sop/PointLight';
@@ -471,6 +470,7 @@ export class SopRegister {
 		poly.registerOperation(CameraProjectSopOperation);
 		poly.registerOperation(CameraRendererSopOperation);
 		poly.registerOperation(CameraRenderSceneSopOperation);
+		poly.registerOperation(CapsuleSopOperation);
 		poly.registerOperation(CenterSopOperation);
 		poly.registerOperation(CircleSopOperation);
 		poly.registerOperation(ClipSopOperation);
@@ -512,7 +512,6 @@ export class SopRegister {
 		poly.registerOperation(PerspectiveCameraSopOperation);
 		poly.registerOperation(PlaneSopOperation);
 		poly.registerOperation(PlaneHelperSopOperation);
-		poly.registerOperation(PlayerCapsuleSopOperation);
 		poly.registerOperation(PointLightSopOperation);
 		poly.registerOperation(PolarTransformSopOperation);
 		poly.registerOperation(PolywireSopOperation);
@@ -546,9 +545,9 @@ export class SopRegister {
 		// poly.registerNode(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);
 		poly.registerNode(AreaLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(AttribAddMultSopNode, CATEGORY_SOP.ATTRIBUTE);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(AttribAudioAnalyserSopNode, CATEGORY_SOP.AUDIO);
-		}
+		// if (process.env.NODE_ENV == 'development') {
+		// 	poly.registerNode(AttribAudioAnalyserSopNode, CATEGORY_SOP.AUDIO);
+		// }
 		poly.registerNode(AttribCastSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCopySopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(AttribCreateSopNode, CATEGORY_SOP.ATTRIBUTE);
@@ -579,6 +578,7 @@ export class SopRegister {
 		poly.registerNode(CameraProjectSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CameraRendererSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(CameraRenderSceneSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(CapsuleSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CenterSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CircleSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(Circle3PointsSopNode, CATEGORY_SOP.PRIMITIVES);
@@ -627,9 +627,9 @@ export class SopRegister {
 		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
-		}
+		// if (process.env.NODE_ENV == 'development') {
+		// 	poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
+		// }
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LightMixerSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
@@ -655,12 +655,13 @@ export class SopRegister {
 		poly.registerNode(PeakSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PerspectiveCameraSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(PhysicsGroundSopNode, CATEGORY_SOP.PHYSICS);
-		poly.registerNode(PhysicsJointsSopNode, CATEGORY_SOP.PHYSICS);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(PhysicsJointsSopNode, CATEGORY_SOP.PHYSICS);
+		}
 		poly.registerNode(PhysicsRBDAttributesSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(PhysicsWorldSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(PlaneHelperSopNode, CATEGORY_SOP.HELPERS);
-		poly.registerNode(PlayerCapsuleSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PolarTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PointLightSopNode, CATEGORY_SOP.LIGHTS);

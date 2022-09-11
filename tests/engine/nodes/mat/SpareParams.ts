@@ -24,7 +24,7 @@ QUnit.test(
 		mesh_basic1.createNode('output');
 		mesh_basic1.createNode('globals');
 		assert.ok(mesh_basic1.assemblerController, 'assembler controller is present');
-		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required 1');
 
 		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
@@ -32,13 +32,17 @@ QUnit.test(
 
 		const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 		const param1 = mesh_basic1.createNode('param');
-		CoreSleep.sleep(10);
-		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
+		// await CoreSleep.sleep(10);
+		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required 2');
+		await CoreSleep.sleep(30);
+		assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is not required');
+
 		const param_name = param1.p.name.value;
+		param1.setGlType(GlConnectionPointType.INT);
 		param1.setGlType(GlConnectionPointType.FLOAT);
 
-		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
-		CoreSleep.sleep(10);
+		assert.ok(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required 3');
+		// await CoreSleep.sleep(10);
 		await RendererUtils.compile(mesh_basic1, renderer);
 		assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is NOT required');
 

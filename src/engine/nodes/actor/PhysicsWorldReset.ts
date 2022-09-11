@@ -3,6 +3,7 @@
  *
  *
  */
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {
@@ -10,16 +11,16 @@ import {
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {initCorePhysicsWorld} from '../../../core/physics/PhysicsWorld';
+import {getPhysicsWorldNodeFromWorldObject} from '../sop/PhysicsWorld';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-class PhysicsWorldInitActorParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new PhysicsWorldInitActorParamsConfig();
+class PhysicsWorldResetActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new PhysicsWorldResetActorParamsConfig();
 
-export class PhysicsWorldInitActorNode extends TypedActorNode<PhysicsWorldInitActorParamsConfig> {
+export class PhysicsWorldResetActorNode extends TypedActorNode<PhysicsWorldResetActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'physicsWorldInit';
+		return 'physicsWorldReset';
 	}
 
 	override initializeNode() {
@@ -42,8 +43,11 @@ export class PhysicsWorldInitActorNode extends TypedActorNode<PhysicsWorldInitAc
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
 
-		initCorePhysicsWorld(Object3D).then(() => {
-			this.runTrigger(context);
-		});
+		const physicsWorldNode = getPhysicsWorldNodeFromWorldObject(Object3D, this.scene());
+		if (!physicsWorldNode) {
+			console.warn(`no ${SopType.PHYSICS_WORLD} node found`);
+			return;
+		}
+		physicsWorldNode.setDirty();
 	}
 }

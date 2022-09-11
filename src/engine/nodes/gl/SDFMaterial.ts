@@ -64,7 +64,7 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 	useReflection = ParamConfig.BOOLEAN(0);
 	useRefraction = ParamConfig.BOOLEAN(0);
 	envMapParam = ParamConfig.STRING('envTexture1', {
-		visibleIf: {useEnvMap: 1},
+		visibleIf: [{useEnvMap: true}, {useReflection: true}, {useRefraction: true}],
 	});
 	// envMap
 	envMap = ParamConfig.FOLDER();
@@ -107,7 +107,7 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 	refractionTint = ParamConfig.COLOR([1, 1, 1], {
 		visibleIf: {useRefraction: 1},
 	});
-	ior = ParamConfig.FLOAT(1, {
+	ior = ParamConfig.FLOAT(1.45, {
 		visibleIf: {useRefraction: 1},
 		range: [0, 2],
 		rangeLocked: [true, false],
@@ -126,7 +126,7 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 	absorbtion = ParamConfig.FLOAT(0.5, {
 		visibleIf: {useRefraction: 1},
 		range: [0, 1],
-		rangeLocked: [true, false],
+		rangeLocked: [false, false],
 	});
 	refractionDepth = ParamConfig.INTEGER(3, {
 		visibleIf: {useRefraction: 1},
@@ -196,7 +196,7 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		definitions.push(new FunctionGLDefinition(this, defineDeclaration));
 		definitions.push(new FunctionGLDefinition(this, SDF_ENV_MAP_SAMPLE));
 
-		if (useEnvMap || useReflection || useRefraction) {
+		if (this._paramRequired()) {
 			definitions.push(new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, envMap));
 		}
 
@@ -310,10 +310,9 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 	}
 
 	override setParamConfigs() {
-		this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
-		this._param_configs_controller.reset();
-		const useEnvMap = isBooleanTrue(this.pv.useEnvMap);
-		if (useEnvMap) {
+		if (this._paramRequired()) {
+			this._param_configs_controller = this._param_configs_controller || new ParamConfigsController();
+			this._param_configs_controller.reset();
 			const paramConfig = new GlParamConfig(
 				ParamType.NODE_PATH,
 				this.pv.envMapParam,
@@ -322,6 +321,12 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 			);
 			this._param_configs_controller.push(paramConfig);
 		}
+	}
+	private _paramRequired() {
+		const useEnvMap = isBooleanTrue(this.pv.useEnvMap);
+		const useReflection = isBooleanTrue(this.pv.useReflection);
+		const useRefraction = isBooleanTrue(this.pv.useRefraction);
+		return useEnvMap || useReflection || useRefraction;
 	}
 	// override glVarName(name?: string) {
 	// 	if (name) {

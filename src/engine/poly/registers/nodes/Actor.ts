@@ -85,7 +85,7 @@ import {OnSceneResetActorNode} from '../../../nodes/actor/OnSceneReset';
 import {OnTickActorNode} from '../../../nodes/actor/OnTick';
 import {OrActorNode} from '../../../nodes/actor/Or';
 import {PhysicsRBDApplyImpulseActorNode} from '../../../nodes/actor/PhysicsRBDApplyImpulse';
-import {PhysicsWorldInitActorNode} from '../../../nodes/actor/PhysicsWorldInit';
+import {PhysicsWorldResetActorNode} from '../../../nodes/actor/PhysicsWorldReset';
 import {PhysicsWorldStepSimulationActorNode} from '../../../nodes/actor/PhysicsWorldStepSimulation';
 import {PlaneActorNode} from '../../../nodes/actor/Plane';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
@@ -237,7 +237,7 @@ export interface ActorNodeChildrenMap {
 	onTick: OnTickActorNode;
 	or: OrActorNode;
 	physicsRBDApplyImpulse: PhysicsRBDApplyImpulseActorNode;
-	physicsWorldInit: PhysicsWorldInitActorNode;
+	physicsWorldReset: PhysicsWorldResetActorNode;
 	physicsWorldStepSimulation: PhysicsWorldStepSimulationActorNode;
 	plane: PlaneActorNode;
 	playAnimation: PlayAnimationActorNode;
@@ -393,7 +393,7 @@ export class ActorRegister {
 		poly.registerNode(OnTickActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(PhysicsRBDApplyImpulseActorNode, CATEGORY_ACTOR.PHYSICS);
-		poly.registerNode(PhysicsWorldInitActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(PhysicsWorldResetActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsWorldStepSimulationActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
