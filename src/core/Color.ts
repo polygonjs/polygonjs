@@ -1,5 +1,5 @@
 import {MathUtils} from 'three';
-import {Color} from 'three';
+import type {Color} from 'three';
 
 export enum ColorConversion {
 	NONE = 'no conversion',

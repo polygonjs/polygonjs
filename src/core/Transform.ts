@@ -1,11 +1,5 @@
 import {Number3} from '../types/GlobalTypes';
-import {Vector3} from 'three';
-import {Quaternion} from 'three';
-import {Object3D} from 'three';
-import {Matrix4} from 'three';
-import {Euler} from 'three';
-import {BufferGeometry} from 'three';
-import {MathUtils} from 'three';
+import {MathUtils, BufferGeometry, Euler, Matrix4, Object3D, Vector3, Quaternion} from 'three';
 
 import {BaseNodeType} from '../engine/nodes/_Base';
 

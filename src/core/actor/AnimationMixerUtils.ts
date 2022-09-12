@@ -1,7 +1,4 @@
-import {Object3D} from 'three';
-import {AnimationAction} from 'three';
-import {AnimationClip} from 'three';
-import {AnimationMixer} from 'three';
+import {Object3D, AnimationAction, AnimationClip, AnimationMixer} from 'three';
 import {ArrayUtils} from '../ArrayUtils';
 
 export function animationClipsFromAnimationMixer(animationMixer: AnimationMixer): AnimationClip[] | undefined {

@@ -1,4 +1,5 @@
-import {Object3D, Vector3} from 'three';
+import type {Object3D} from 'three';
+import {Vector3} from 'three';
 
 const t = new Vector3();
 

@@ -1,4 +1,5 @@
-import {Vector3, Quaternion, Object3D, Matrix4, MathUtils} from 'three';
+import {Vector3, Quaternion, Matrix4, MathUtils} from 'three';
+import type {Object3D} from 'three';
 
 export interface PolarTransformMatrixParams {
 	center: Vector3;

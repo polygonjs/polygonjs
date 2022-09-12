@@ -1,6 +1,5 @@
 import {CoreObject} from '../geometry/Object';
-import {Vector3} from 'three';
-import {Object3D} from 'three/src/core/Object3D';
+import {Vector3, Object3D} from 'three';
 import {PhysicsJointAttribute} from './PhysicsJoint';
 export enum PhysicsRBDType {
 	FIXED = 'fixed',

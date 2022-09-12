@@ -1,4 +1,4 @@
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import type {ShaderMaterial} from 'three';
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';

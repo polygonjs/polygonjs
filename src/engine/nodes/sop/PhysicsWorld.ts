@@ -5,9 +5,9 @@
  */
 import {PolyScene} from '../../scene/PolyScene';
 import {CoreObject} from './../../../core/geometry/Object';
-import {Object3D} from 'three/src/core/Object3D';
-import {initCorePhysicsWorld, PHYSICS_GRAVITY_DEFAULT} from './../../../core/physics/PhysicsWorld';
+import type {Object3D} from 'three';
 import {Group} from 'three';
+import {initCorePhysicsWorld, PHYSICS_GRAVITY_DEFAULT} from './../../../core/physics/PhysicsWorld';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

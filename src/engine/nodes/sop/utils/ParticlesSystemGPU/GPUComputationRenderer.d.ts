@@ -1,8 +1,4 @@
-import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
-import {WebGLRenderTarget} from 'three/src/renderers/WebGLRenderTarget';
-import {DataTexture} from 'three/src/textures/DataTexture';
-import {TextureDataType} from 'three/src/constants';
-import {ShaderMaterial} from 'three/src/materials/ShaderMaterial';
+import type {ShaderMaterial, TextureDataType, DataTexture, WebGLRenderTarget, WebGLRenderer} from 'three';
 
 export interface GPUComputationRendererVariable {
 	name: string;
