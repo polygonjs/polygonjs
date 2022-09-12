@@ -54,6 +54,10 @@ export class BuilderEffect extends Effect {
 	}
 	override setSize(width: number, height: number) {
 		super.setSize(width, height);
-		this._composerInput1.setSize(width, height, false);
+		// here we divide the size by renderer pixelRatio
+		// since the composer is internally using it,
+		// so we need here to compensate for it
+		const pixelRatio = this._composerInput1.getRenderer().getPixelRatio();
+		this._composerInput1.setSize(width / pixelRatio, height / pixelRatio, false);
 	}
 }

@@ -6,9 +6,11 @@ import {
 	LinearEncoding,
 	NoToneMapping,
 } from 'three';
-export interface POLYWebGLRenderer extends WebGLRenderer {
+
+export interface WithPolyId {
 	_polygonId?: number;
 }
+export interface POLYWebGLRenderer extends WebGLRenderer, WithPolyId {}
 
 const CONTEXT_OPTIONS: WebGLContextAttributes = {
 	// powerPreference: 'high-performance', // attempt to fix issues in safari

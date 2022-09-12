@@ -8,6 +8,9 @@ import {BasePostProcessNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {BaseViewerType} from '../../../viewers/_Base';
+import {WithPolyId} from '../../../poly/RenderersController';
+
+export interface POLYEffectComposer extends EffectComposer, WithPolyId {}
 
 const RENDER_TARGET_TEXTURE_TYPE_OPTIONS: PolyDictionary<number> = {
 	UnsignedByteType: UnsignedByteType,
@@ -98,6 +101,7 @@ export class EffectComposerController {
 			},
 		};
 	}
+	private _nextId = 0;
 	createEffectsComposer(options: CreateEffectsComposerOptions) {
 		const renderer = options.renderer;
 
@@ -109,6 +113,7 @@ export class EffectComposerController {
 			multisampling: pv.sampling,
 			frameBufferType: isBooleanTrue(pv.tTextureType) ? pv.textureType : undefined,
 		});
+		(composer as POLYEffectComposer)._polygonId = this._nextId++;
 
 		return composer;
 	}

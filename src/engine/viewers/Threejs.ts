@@ -178,7 +178,6 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		CoreCameraRendererController.setRendererSize(canvas, size);
 		this._cssRendererConfig?.cssRenderer.setSize(size.x, size.y);
 		this._effectComposer?.setSize(size.x, size.y);
-		// this._cameraNode.renderController().setRendererSize(canvas, this.camerasController().size);
 		this.camerasController().updateCameraAspect();
 	}
 
@@ -188,44 +187,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			return;
 		}
 		this.camerasController().computeSizeAndAspect();
-		// const size: Vector2 = this.camerasController().size;
-
-		// const controller = this._cameraNode.renderController();
-		// const existingRenderer = controller.renderer(this._canvas);
-		// if (!existingRenderer) {
-		// 	controller.createRenderer(this._canvas, size);
-		// }
-		// this.canvas_context = canvas.getContext('2d')
-
 		this.audioController().update();
-		// init renderer
-		// renderer = new THREE.WebGLRenderer
-		// 	canvas: canvas
-		// 	antialias: true
-		// 	alpha: true
-
-		// renderer.shadowMap.enabled = true
-		// this.compute_size_and_aspect()
-
-		//
-		// https://stackoverflow.com/questions/31407778/display-scene-at-lower-resolution-in-three-js
-		// TODO: this article mentions that setSize should be called after
-		// renderer.setSize(this._size[0], this._size[1])
-		// renderer.setPixelRatio(window.devicePixelRatio)
-		// renderer.setSize(size[0]*1.5, size[1]*1.5)
-		// canvas.width = "//{size[0]}px"
-		// canvas.height = "//{size[1]}px"
-		// canvas.style.width = "//{size[0]}px"
-		// canvas.style.height = "//{size[1]}px"
-
-		// TODO: ensure the renderers get added to a list
-		//if !this.player_mode
-		//	console.log("set window.viewer_renderer from Threejs.vue component")
-		// window.viewer_renderer = renderer
-		// POLY.renderers_controller.register_renderer(renderer)
-
-		// this.camerasController().prepareCurrentCamera();
-
 		this.animate();
 	}
 

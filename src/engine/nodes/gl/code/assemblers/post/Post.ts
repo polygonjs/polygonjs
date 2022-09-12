@@ -140,9 +140,7 @@ export class ShaderAssemblerPost extends BaseGlShaderAssembler {
 	}
 	private _handleUV(bodyLines: string[], shaderName: ShaderName, var_name: string) {
 		if (shaderName == ShaderName.FRAGMENT) {
-			bodyLines.push(
-				`vec2 ${var_name} = vec2(0.5*gl_FragCoord.x / resolution.x, 0.5*gl_FragCoord.y / resolution.y)`
-			);
+			bodyLines.push(`vec2 ${var_name} = vec2( gl_FragCoord.x / resolution.x, gl_FragCoord.y / resolution.y)`);
 		}
 	}
 

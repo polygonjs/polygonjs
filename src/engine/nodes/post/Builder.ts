@@ -198,6 +198,9 @@ export class BuilderPostNode extends TypedPostProcessNode<EffectPass, BuilderPos
 
 		const effect = new BuilderEffect(composerInput1, {fragmentShader: this._fragmentShader});
 		const pass = new EffectPass(context.camera, effect);
+		// pass.needsSwap = false;
+		// pass.renderToScreen = false;
+		// console.log(pass.needsSwap, pass.renderToScreen);
 		this.updatePass(pass);
 
 		return pass;

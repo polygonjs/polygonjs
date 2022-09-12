@@ -94,30 +94,19 @@ export class CoreCameraRendererController {
 		return renderer;
 	}
 	static setRendererSize(canvas: HTMLCanvasElement, size: Vector2) {
-		// let currentRes = this._resolutionByCanvasId.get(canvas.id);
-		// if (!currentRes) {
-		// 	currentRes = new Vector2();
-		// 	this._resolutionByCanvasId.set(canvas.id, currentRes);
-		// }
-		// currentRes.copy(size);
-
 		const renderer = this.renderer(canvas);
 		if (renderer) {
 			const updateStyle = false;
 			renderer.setSize(size.x, size.y, updateStyle);
 		}
-
-		// if (this._resolvedCSSRendererROP) {
-		// 	const cssRenderer = this.cssRenderer(canvas);
-		// 	if (cssRenderer) {
-		// 		cssRenderer.setSize(size.x, size.y);
-		// 	}
-		// }
 	}
 	static createDefaultRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
 		const params: WebGLRendererParameters = {
 			canvas: canvas,
-			antialias: false, // no anti alias with a pixel ratio of 2 is more performant
+			// no anti alias with a pixel ratio of 2 is more performant
+			// but using a pixel ratio of 2 by default can also create hard to debug
+			// inconsistencies when using post processing
+			antialias: false, //defaultPixelRatio() < 2,
 			// alpha: true, // let's use threejs default alpha
 			context: gl,
 		};

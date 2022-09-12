@@ -272,7 +272,6 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 			params.powerPreference = powerPreference;
 		}
 		params.antialias = isBooleanTrue(this.pv.antialias);
-		params.antialias = isBooleanTrue(this.pv.antialias);
 		params.alpha = isBooleanTrue(this.pv.alpha);
 		params.premultipliedAlpha = isBooleanTrue(this.pv.premultipliedAlpha);
 		params.depth = isBooleanTrue(this.pv.depth);
@@ -292,16 +291,11 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 
 		this._updateRenderer(renderer);
 
-		// this._renderersbyCamera.set(camera, renderer);
 		return renderer;
 	}
 
 	override cook() {
-		// this._renderersbyCamera.forEach((renderer, cameraNode) => {
-		// 	this._updateRenderer(renderer);
-		// });
-
-		this._traverse_scene_and_update_materials();
+		this._traverseSceneAndUpdateMaterials();
 
 		this.cookController.endCook();
 	}
@@ -332,7 +326,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		renderer.setPixelRatio(pixelRatio);
 	}
 
-	private _traverse_scene_and_update_materials() {
+	private _traverseSceneAndUpdateMaterials() {
 		this.scene()
 			.threejsScene()
 			.traverse((object) => {
