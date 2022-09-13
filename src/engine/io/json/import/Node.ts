@@ -95,7 +95,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			ui_data.setComment(comment);
 		}
 		if (this._node.childrenAllowed()) {
-			this.processNodesUiData(scene_importer, data['nodes']);
+			const nodesData = data['nodes'];
+			if (nodesData) {
+				this.processNodesUiData(scene_importer, nodesData);
+			}
 		}
 	}
 

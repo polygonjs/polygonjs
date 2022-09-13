@@ -77,6 +77,7 @@ export class PointerLockControls extends EventDispatcher {
 			this.dispatchEvent(lockEvent);
 
 			this.isLocked = true;
+			this._removeHTMLElement();
 			if (this.player) {
 				this._corePlayerKeyEvents = this._corePlayerKeyEvents || new CorePlayerKeyEvents(this.player);
 				this._corePlayerKeyEvents.addEvents();
@@ -120,7 +121,6 @@ export class PointerLockControls extends EventDispatcher {
 
 	lock() {
 		this.domElement.requestPointerLock();
-		this._removeHTMLElement();
 	}
 
 	unlock() {

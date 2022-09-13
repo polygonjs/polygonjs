@@ -1,9 +1,5 @@
 import {Camera} from 'three';
-
 import {TypedEventNode} from './_Base';
-// import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-
-// import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {BaseViewerType} from '../../viewers/_Base';
 import {Poly} from '../../Poly';
@@ -16,16 +12,8 @@ export interface CameraControls {
 	addEventListener: (eventName: string, callback: () => void) => void;
 	removeEventListener: (eventName: string, callback: () => void) => void;
 }
-// export interface CameraControls extends OrbitControls {
-// 	name?: string;
-// 	// this_is_a_control: any;
-// 	// name: string;
-// }
 
 export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> extends TypedEventNode<K> {
-	// controls() {
-	// 	return this._controls;
-	// }
 	private _controls_by_viewer: Map<BaseViewerType, CameraControls> = new Map();
 
 	async applyControls(camera: Camera, viewer: BaseViewerType) {

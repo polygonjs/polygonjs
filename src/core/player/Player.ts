@@ -1,18 +1,16 @@
+import {CapsuleSopOperation} from './../../engine/operations/sop/Capsule';
 import {Object3D} from 'three';
 import {Vector3} from 'three';
 import {Box3} from 'three';
 import {Line3} from 'three';
 import {Matrix4} from 'three';
 import {MeshWithBVH, ExtendedTriangle} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
-import {createCapsuleGeometry, CapsuleOptions} from './CapsuleGeometry';
-import {Mesh} from 'three';
-import {Material} from 'three';
+import {CapsuleOptions} from './CapsuleGeometry';
 import {MathUtils} from 'three';
-import {CoreConstant, ObjectType} from '../geometry/Constant';
 interface PlayerOptions {
 	object: Object3D;
 	collider: MeshWithBVH;
-	meshName?: string;
+	// meshName?: string;
 }
 
 type ResetRequiredCallback = () => boolean;
@@ -35,11 +33,18 @@ export class CorePlayer {
 	private _onGround = false;
 	private _velocity = new Vector3();
 	public readonly capsuleInfo = {
-		radius: 0.5,
-		segment: new Line3(new Vector3(), new Vector3(0, -1.0, 0.0)),
+		radius: CapsuleSopOperation.DEFAULT_PARAMS.radius,
+		segment: new Line3(
+			new Vector3(0, 0, 0),
+			new Vector3(
+				0,
+				-(CapsuleSopOperation.DEFAULT_PARAMS.height - 2 * CapsuleSopOperation.DEFAULT_PARAMS.radius),
+				0
+			)
+		),
 	};
-	private _meshName: string | undefined;
-	private _mesh: Mesh | undefined;
+	// private _meshName: string | undefined;
+	// private _mesh: Mesh | undefined;
 	public object: Object3D;
 	public collider: MeshWithBVH;
 	public startPosition = new Vector3(0, 5, 0);
@@ -60,48 +65,49 @@ export class CorePlayer {
 		this.object = options.object;
 		this.object.matrixAutoUpdate = true;
 		this.collider = options.collider;
-		if (options.meshName) {
-			this._mesh = new Mesh();
-			this._mesh.geometry = createCapsuleGeometry({radius: this.capsuleInfo.radius, height: 1, divisions: 5});
-			this._mesh.name = options.meshName;
-			this._mesh.receiveShadow = true;
-			this._mesh.castShadow = true;
-		}
+		// if (options.meshName) {
+		// 	this._mesh = new Mesh();
+		// 	this._mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
+		// 	this._mesh.name = options.meshName;
+		// 	this._mesh.receiveShadow = true;
+		// 	this._mesh.castShadow = true;
+		// }
 	}
 	setCollider(collider: MeshWithBVH) {
 		this.collider = collider;
 	}
 	setCapsule(capsuleOptions: CapsuleOptions) {
 		this.capsuleInfo.radius = capsuleOptions.radius;
-		this.capsuleInfo.segment.end.y = -capsuleOptions.height;
-		if (this._mesh) {
-			this._mesh.geometry = createCapsuleGeometry(capsuleOptions);
-		}
+		this.capsuleInfo.segment.end.y = -(capsuleOptions.height - 2 * capsuleOptions.radius);
+		// if (this._mesh) {
+		// 	this._mesh.geometry = createPlayerGeometry(capsuleOptions);
+		// }
+		console.log(this.capsuleInfo);
 	}
-	setUsePlayerMesh(state: boolean) {
-		if (state) {
-			this._mesh = this._mesh || this._createMesh();
-			this.object.add(this._mesh);
-		} else {
-			if (this._mesh) {
-				this.object.remove(this._mesh);
-			}
-		}
-	}
-	private _createMesh() {
-		const mesh = new Mesh();
-		mesh.geometry = createCapsuleGeometry({radius: this.capsuleInfo.radius, height: 1, divisions: 5});
-		mesh.name = this._meshName || 'defaultPlayerMeshName';
-		mesh.receiveShadow = true;
-		mesh.castShadow = true;
-		mesh.material = CoreConstant.MATERIALS[ObjectType.MESH];
-		return mesh;
-	}
-	setMaterial(material: Material) {
-		if (this._mesh) {
-			this._mesh.material = material;
-		}
-	}
+	// setUsePlayerMesh(state: boolean) {
+	// 	if (state) {
+	// 		this._mesh = this._mesh || this._createMesh();
+	// 		this.object.add(this._mesh);
+	// 	} else {
+	// 		if (this._mesh) {
+	// 			this.object.remove(this._mesh);
+	// 		}
+	// 	}
+	// }
+	// private _createMesh() {
+	// 	const mesh = new Mesh();
+	// 	mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
+	// 	mesh.name = this._meshName || 'defaultPlayerMeshName';
+	// 	mesh.receiveShadow = true;
+	// 	mesh.castShadow = true;
+	// 	mesh.material = CoreConstant.MATERIALS[ObjectType.MESH];
+	// 	return mesh;
+	// }
+	// setMaterial(material: Material) {
+	// 	if (this._mesh) {
+	// 		this._mesh.material = material;
+	// 	}
+	// }
 	reset() {
 		this.stop();
 		this.object.position.copy(this.startPosition);
@@ -114,6 +120,7 @@ export class CorePlayer {
 		this._pressed.left = false;
 		this._pressed.right = false;
 		this._running = false;
+		this._velocity.set(0, 0, 0);
 	}
 	setResetRequiredCallback(callback: ResetRequiredCallback) {
 		this._resetRequiredCallback = callback;
@@ -214,8 +221,11 @@ export class CorePlayer {
 		// get the adjusted position of the capsule collider in world space after checking
 		// triangle collisions and moving it. capsuleInfo.segment.start is assumed to be
 		// the origin of the player model.
+		// console.log(tempVector.toArray());
 		const newPosition = tempVector;
-		newPosition.copy(tempSegment.start).applyMatrix4(this.collider.matrixWorld);
+		// tempSegment.start.y += capsuleInfo.radius;
+		newPosition.copy(tempSegment.start);
+		newPosition.applyMatrix4(this.collider.matrixWorld);
 
 		// check how much the collider was moved
 		const deltaVector = tempVector2;

@@ -48,7 +48,7 @@ export interface NodeJsonExporterData {
 export interface NodeJsonExporterUIData {
 	pos?: Number2;
 	comment?: string;
-	nodes: PolyDictionary<NodeJsonExporterUIData>;
+	nodes?: PolyDictionary<NodeJsonExporterUIData>;
 }
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
@@ -186,11 +186,12 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		const data: NodeJsonExporterUIData = this.ui_data_without_children();
 		const children = this._node.children();
 		if (children.length > 0) {
-			data['nodes'] = {};
+			const nodesData: PolyDictionary<NodeJsonExporterUIData> = {};
 			children.forEach((child) => {
 				const node_exporter = this.dispatcher.dispatchNode(child); //.visit(JsonExporterVisitor); //.json_exporter()
-				data['nodes'][child.name()] = node_exporter.uiData(options);
+				nodesData[child.name()] = node_exporter.uiData(options);
 			});
+			data['nodes'] = nodesData;
 		}
 
 		return data;

@@ -55,6 +55,7 @@ import {AccelerationGlNode} from '../../../nodes/gl/Acceleration';
 import {AlignGlNode} from '../../../nodes/gl/Align';
 import {AttributeGlNode} from '../../../nodes/gl/Attribute';
 import {CartesianToPolarGlNode} from '../../../nodes/gl/CartesianToPolar';
+import {CheckerGlNode} from '../../../nodes/gl/Checker';
 import {ColorCorrectGlNode} from '../../../nodes/gl/ColorCorrect';
 import {CompareGlNode} from '../../../nodes/gl/Compare';
 import {ComplementGlNode} from '../../../nodes/gl/Complement';
@@ -70,6 +71,7 @@ import {FogGlNode} from '../../../nodes/gl/Fog';
 import {ForLoopGlNode} from '../../../nodes/gl/ForLoop';
 import {FresnelGlNode} from '../../../nodes/gl/Fresnel';
 import {GlobalsGlNode} from '../../../nodes/gl/Globals';
+import {GridGlNode} from '../../../nodes/gl/Grid';
 import {HsluvToRgbGlNode} from '../../../nodes/gl/HsluvToRgb';
 import {HsvToRgbGlNode} from '../../../nodes/gl/HsvToRgb';
 import {IfThenGlNode} from '../../../nodes/gl/IfThen';
@@ -170,6 +172,7 @@ export interface GlNodeChildrenMap {
 	cartesianToPolar: CartesianToPolarGlNode;
 	ceil: CeilGlNode;
 	clamp: ClampGlNode;
+	checker: CheckerGlNode;
 	colorCorrect: ColorCorrectGlNode;
 	compare: CompareGlNode;
 	complement: ComplementGlNode;
@@ -202,6 +205,7 @@ export interface GlNodeChildrenMap {
 	fog: FogGlNode;
 	forLoop: ForLoopGlNode;
 	globals: GlobalsGlNode;
+	grid: GridGlNode;
 	hsluvToRgb: HsluvToRgbGlNode;
 	hsvToRgb: HsvToRgbGlNode;
 	ifThen: IfThenGlNode;
@@ -344,6 +348,7 @@ export class GlRegister {
 		poly.registerNode(CartesianToPolarGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(CeilGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(ClampGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(CheckerGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(ColorCorrectGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(CompareGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(ComplementGlNode, CATEGORY_GL.MATH);
@@ -384,6 +389,7 @@ export class GlRegister {
 		poly.registerNode(FractGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FresnelGlNode, CATEGORY_GL.ADVANCED);
 		poly.registerNode(GlobalsGlNode, CATEGORY_GL.GLOBALS);
+		poly.registerNode(GridGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(HsluvToRgbGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(HsvToRgbGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(IfThenGlNode, CATEGORY_GL.LOGIC);
@@ -425,7 +431,7 @@ export class GlRegister {
 		poly.registerNode(QuatToAngleGlNode, CATEGORY_GL.QUAT);
 		poly.registerNode(QuatToAxisGlNode, CATEGORY_GL.QUAT);
 		poly.registerNode(RampGlNode, CATEGORY_GL.GLOBALS);
-		poly.registerNode(RandomGlNode, CATEGORY_GL.GLOBALS);
+		poly.registerNode(RandomGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(RadiansGlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(ReflectGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(RefractGlNode, CATEGORY_GL.GEOMETRY);

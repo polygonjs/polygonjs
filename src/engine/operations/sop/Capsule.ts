@@ -11,7 +11,7 @@ interface CapsuleSopParams extends DefaultOperationParams {
 
 export class CapsuleSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CapsuleSopParams = {
-		radius: 0.5,
+		radius: 0.2,
 		height: 1,
 		divisions: 2,
 	};

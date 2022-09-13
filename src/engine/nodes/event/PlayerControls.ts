@@ -20,6 +20,7 @@ import {Camera} from 'three';
 import {Vector3} from 'three';
 import {Spherical} from 'three';
 import {CollisionController} from './collision/CollisionController';
+import {CapsuleSopOperation} from '../../operations/sop/Capsule';
 
 const EVENT_INIT = 'init';
 const EVENT_DISPOSE = 'dispose';
@@ -73,13 +74,13 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param collision Capsule Radius */
-	capsuleRadius = ParamConfig.FLOAT(0.5, {
+	capsuleRadius = ParamConfig.FLOAT(CapsuleSopOperation.DEFAULT_PARAMS.radius, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param collision Capsule Height */
-	capsuleHeight = ParamConfig.FLOAT(1, {
+	capsuleHeight = ParamConfig.FLOAT(CapsuleSopOperation.DEFAULT_PARAMS.height, {
 		range: [0, 2],
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
@@ -109,6 +110,7 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 	jumpStrength = ParamConfig.FLOAT(10, {
 		range: [0, 100],
 		rangeLocked: [true, false],
+		visibleIf: {jumpAllowed: 1},
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param run Allowed */
@@ -119,6 +121,7 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 	runSpeedMult = ParamConfig.FLOAT(2, {
 		range: [0, 10],
 		rangeLocked: [true, false],
+		visibleIf: {runAllowed: 1},
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param recompute colliding geo */
@@ -127,21 +130,21 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 			PlayerControlsEventNode.PARAM_CALLBACK_updateCollider(node as PlayerControlsEventNode);
 		},
 	});
-	mesh = ParamConfig.FOLDER();
-	/** @param player object */
-	useMesh = ParamConfig.BOOLEAN(true, {
-		callback: (node: BaseNodeType) => {
-			PlayerControlsEventNode.PARAM_CALLBACK_updatePlayerMesh(node as PlayerControlsEventNode);
-		},
-	});
-	material = ParamConfig.NODE_PATH('', {
-		nodeSelection: {
-			context: NodeContext.MAT,
-		},
-		callback: (node: BaseNodeType) => {
-			PlayerControlsEventNode.PARAM_CALLBACK_updatePlayerMaterial(node as PlayerControlsEventNode);
-		},
-	});
+	// mesh = ParamConfig.FOLDER();
+	// /** @param player object */
+	// useMesh = ParamConfig.BOOLEAN(true, {
+	// 	callback: (node: BaseNodeType) => {
+	// 		PlayerControlsEventNode.PARAM_CALLBACK_updatePlayerMesh(node as PlayerControlsEventNode);
+	// 	},
+	// });
+	// material = ParamConfig.NODE_PATH('', {
+	// 	nodeSelection: {
+	// 		context: NodeContext.MAT,
+	// 	},
+	// 	callback: (node: BaseNodeType) => {
+	// 		PlayerControlsEventNode.PARAM_CALLBACK_updatePlayerMaterial(node as PlayerControlsEventNode);
+	// 	},
+	// });
 	init = ParamConfig.FOLDER();
 	/** @param start Position */
 	startPosition = ParamConfig.VECTOR3([0, 5, 0], {
@@ -187,8 +190,8 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			this.states.error.set('could not create player');
 			return;
 		}
-		this._updatePlayerMesh();
-		this._updatePlayerMaterial();
+		// this._updatePlayerMesh();
+		// this._updatePlayerMaterial();
 		this._updatePlayerParams();
 		this._corePlayerKeyEvents = new CorePlayerKeyEvents(this._player);
 		this._corePlayerKeyEvents.addEvents();
@@ -209,6 +212,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 	}
 	private _disposePlayer() {
 		if (this._player) {
+			this._player.reset();
 			this._corePlayerKeyEvents?.removeEvents();
 			this.scene().unRegisterOnBeforeTick(this._callbackName());
 		}
@@ -234,23 +238,23 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		this._player.speed = this.pv.speed;
 		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight, divisions: 5});
 	}
-	private _updatePlayerMesh() {
-		if (!this._player) {
-			return;
-		}
-		this._player.setUsePlayerMesh(this.pv.useMesh);
-	}
-	private async _updatePlayerMaterial() {
-		if (!this._player) {
-			return;
-		}
-		const materialNode = this.pv.material.nodeWithContext(NodeContext.MAT);
-		if (materialNode) {
-			const container = await materialNode.compute();
-			const material = container.material();
-			this._player.setMaterial(material);
-		}
-	}
+	// private _updatePlayerMesh() {
+	// 	if (!this._player) {
+	// 		return;
+	// 	}
+	// 	this._player.setUsePlayerMesh(this.pv.useMesh);
+	// }
+	// private async _updatePlayerMaterial() {
+	// 	if (!this._player) {
+	// 		return;
+	// 	}
+	// 	const materialNode = this.pv.material.nodeWithContext(NodeContext.MAT);
+	// 	if (materialNode) {
+	// 		const container = await materialNode.compute();
+	// 		const material = container.material();
+	// 		this._player.setMaterial(material);
+	// 	}
+	// }
 	private async _createPlayer() {
 		const playerObjectNode = this.pv.playerObject.nodeWithContext(NodeContext.OBJ);
 		if (!playerObjectNode) {
@@ -269,7 +273,7 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			this.states.error.set('invalid collider');
 			return;
 		}
-		const player = new CorePlayer({object: playerObject, collider: collider, meshName: this.path()});
+		const player = new CorePlayer({object: playerObject, collider: collider});
 
 		return player;
 	}
@@ -294,12 +298,12 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 	static PARAM_CALLBACK_updatePlayerParams(node: PlayerControlsEventNode) {
 		node._updatePlayerParams();
 	}
-	static PARAM_CALLBACK_updatePlayerMaterial(node: PlayerControlsEventNode) {
-		node._updatePlayerMaterial();
-	}
-	static PARAM_CALLBACK_updatePlayerMesh(node: PlayerControlsEventNode) {
-		node._updatePlayerMesh();
-	}
+	// static PARAM_CALLBACK_updatePlayerMaterial(node: PlayerControlsEventNode) {
+	// 	node._updatePlayerMaterial();
+	// }
+	// static PARAM_CALLBACK_updatePlayerMesh(node: PlayerControlsEventNode) {
+	// 	node._updatePlayerMesh();
+	// }
 	static PARAM_CALLBACK_updateCollider(node: PlayerControlsEventNode) {
 		node._updateCollider();
 	}

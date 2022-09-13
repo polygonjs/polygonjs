@@ -1,3 +1,4 @@
+import {CapsuleSopOperation} from './../../operations/sop/Capsule';
 /**
  * Creates a PointerLockControls
  *
@@ -79,13 +80,13 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param collision Capsule Radius */
-	capsuleRadius = ParamConfig.FLOAT(0.5, {
+	capsuleRadius = ParamConfig.FLOAT(CapsuleSopOperation.DEFAULT_PARAMS.radius, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param collision Capsule Height */
-	capsuleHeight = ParamConfig.FLOAT(1, {
+	capsuleHeight = ParamConfig.FLOAT(CapsuleSopOperation.DEFAULT_PARAMS.height, {
 		range: [0, 2],
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
@@ -122,6 +123,7 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 	jumpStrength = ParamConfig.FLOAT(10, {
 		range: [0, 100],
 		rangeLocked: [true, false],
+		visibleIf: {jumpAllowed: 1},
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param run Allowed */
@@ -132,6 +134,7 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 	runSpeedMult = ParamConfig.FLOAT(2, {
 		range: [0, 10],
 		rangeLocked: [true, false],
+		visibleIf: {runAllowed: 1},
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param recompute colliding geo */
