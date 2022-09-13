@@ -262,7 +262,12 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 		this._player.runSpeedMult = this.pv.runSpeedMult;
 		this._player.gravity.copy(this.pv.gravity);
 		this._player.speed = this.pv.translateSpeed;
-		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight, divisions: 5});
+		this._player.setCapsule({
+			radius: this.pv.capsuleRadius,
+			height: this.pv.capsuleHeight,
+			divisions: 5,
+			center: CapsuleSopOperation.DEFAULT_PARAMS.center,
+		});
 	}
 	private async _createPlayer(camera: Camera) {
 		const playerObject = camera;

@@ -236,7 +236,12 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		this._player.runSpeedMult = this.pv.runSpeedMult;
 		this._player.gravity.copy(this.pv.gravity);
 		this._player.speed = this.pv.speed;
-		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight, divisions: 5});
+		this._player.setCapsule({
+			radius: this.pv.capsuleRadius,
+			height: this.pv.capsuleHeight,
+			divisions: 5,
+			center: CapsuleSopOperation.DEFAULT_PARAMS.center,
+		});
 	}
 	// private _updatePlayerMesh() {
 	// 	if (!this._player) {

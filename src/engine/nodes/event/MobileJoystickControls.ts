@@ -30,6 +30,7 @@ import {CorePlayer} from '../../../core/player/Player';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {isBooleanTrue} from '../../../core/Type';
 import {CollisionController} from './collision/CollisionController';
+import {CapsuleSopOperation} from '../../operations/sop/Capsule';
 
 const EVENT_START = 'start';
 const EVENT_CHANGE = 'change';
@@ -63,13 +64,13 @@ class MobileJoystickEventParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param collision Capsule Radius */
-	capsuleRadius = ParamConfig.FLOAT(0.5, {
+	capsuleRadius = ParamConfig.FLOAT(CapsuleSopOperation.DEFAULT_PARAMS.radius, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param collision Capsule Height */
-	capsuleHeight = ParamConfig.FLOAT(1, {
+	capsuleHeight = ParamConfig.FLOAT(CapsuleSopOperation.DEFAULT_PARAMS.height, {
 		range: [0, 2],
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
@@ -206,7 +207,12 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 		this._player.runSpeedMult = this.pv.runSpeedMult;
 		this._player.gravity.copy(this.pv.gravity);
 		this._player.speed = this.pv.translateSpeed;
-		this._player.setCapsule({radius: this.pv.capsuleRadius, height: this.pv.capsuleHeight, divisions: 5});
+		this._player.setCapsule({
+			radius: this.pv.capsuleRadius,
+			height: this.pv.capsuleHeight,
+			divisions: 5,
+			center: CapsuleSopOperation.DEFAULT_PARAMS.center,
+		});
 
 		this._controls_by_element_id.forEach((controls) => controls.updateElements());
 	}

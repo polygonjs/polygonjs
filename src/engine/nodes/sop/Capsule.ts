@@ -20,7 +20,7 @@ class CapsuleSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param height */
 	height = ParamConfig.FLOAT(DEFAULT.height, {
-		range: [0, 1],
+		range: [0, 2],
 		rangeLocked: [true, false],
 	});
 	/** @param divisions */
@@ -28,6 +28,8 @@ class CapsuleSopParamsConfig extends NodeParamsConfig {
 		range: [1, 10],
 		rangeLocked: [true, false],
 	});
+	/** @param center */
+	center = ParamConfig.VECTOR3(DEFAULT.center);
 }
 const ParamsConfig = new CapsuleSopParamsConfig();
 
