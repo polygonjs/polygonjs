@@ -55,7 +55,7 @@ import {AccelerationGlNode} from '../../../nodes/gl/Acceleration';
 import {AlignGlNode} from '../../../nodes/gl/Align';
 import {AttributeGlNode} from '../../../nodes/gl/Attribute';
 import {CartesianToPolarGlNode} from '../../../nodes/gl/CartesianToPolar';
-import {CheckerGlNode} from '../../../nodes/gl/Checker';
+import {CheckersGlNode} from '../../../nodes/gl/Checkers';
 import {ColorCorrectGlNode} from '../../../nodes/gl/ColorCorrect';
 import {CompareGlNode} from '../../../nodes/gl/Compare';
 import {ComplementGlNode} from '../../../nodes/gl/Complement';
@@ -172,7 +172,7 @@ export interface GlNodeChildrenMap {
 	cartesianToPolar: CartesianToPolarGlNode;
 	ceil: CeilGlNode;
 	clamp: ClampGlNode;
-	checker: CheckerGlNode;
+	checkers: CheckersGlNode;
 	colorCorrect: ColorCorrectGlNode;
 	compare: CompareGlNode;
 	complement: ComplementGlNode;
@@ -348,7 +348,7 @@ export class GlRegister {
 		poly.registerNode(CartesianToPolarGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(CeilGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(ClampGlNode, CATEGORY_GL.MATH);
-		poly.registerNode(CheckerGlNode, CATEGORY_GL.GEOMETRY);
+		poly.registerNode(CheckersGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(ColorCorrectGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(CompareGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(ComplementGlNode, CATEGORY_GL.MATH);

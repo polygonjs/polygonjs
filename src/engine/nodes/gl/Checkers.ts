@@ -3,7 +3,7 @@
  *
  */
 
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import CHECKERS from './gl/checkers.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
@@ -13,7 +13,7 @@ import {TypedGlNode} from './_Base';
 import {isBooleanTrue} from '../../../core/Type';
 
 const OUTPUT_NAME = 'checker';
-class CheckerGlParamsConfig extends NodeParamsConfig {
+class CheckersGlParamsConfig extends NodeParamsConfig {
 	uv = ParamConfig.VECTOR2([0, 0]);
 	freq = ParamConfig.VECTOR2([1, 1]);
 	freqMult = ParamConfig.FLOAT(1, {
@@ -22,11 +22,11 @@ class CheckerGlParamsConfig extends NodeParamsConfig {
 	});
 	filtered = ParamConfig.BOOLEAN(1);
 }
-const ParamsConfig = new CheckerGlParamsConfig();
-export class CheckerGlNode extends TypedGlNode<CheckerGlParamsConfig> {
+const ParamsConfig = new CheckersGlParamsConfig();
+export class CheckersGlNode extends TypedGlNode<CheckersGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'checker';
+		return 'checkers';
 	}
 
 	override initializeNode() {
