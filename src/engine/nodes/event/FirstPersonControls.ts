@@ -1,4 +1,3 @@
-import {CapsuleSopOperation} from './../../operations/sop/Capsule';
 /**
  * Creates a PointerLockControls
  *
@@ -7,6 +6,7 @@ import {CapsuleSopOperation} from './../../operations/sop/Capsule';
  *
  */
 import {Camera} from 'three';
+import {CapsuleSopOperation} from './../../operations/sop/Capsule';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
