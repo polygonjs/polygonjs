@@ -15,6 +15,7 @@ import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/ass
 import {MeshPhysicalBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshPhysicalBuilder';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+import {CoreSleep} from '../../../../src/core/Sleep';
 const TEST_SHADER_LIB_DEFAULT = {vert: BasicDefaultVertex, frag: BasicDefaultFragment};
 const TEST_SHADER_LIB_SSS = {vert: BasicSSSVertex, frag: BasicSSSFragment};
 const TEST_SHADER_LIB_SET_BUILDER_NODE = {vert: BasicSetBuilderNodeVertex};
@@ -240,5 +241,75 @@ QUnit.test('mesh physical builder can compile from another node', async (assert)
 	mesh_physical_DEST.p.builderNode.setNode(mesh_physical_SRC);
 	await RendererUtils.compile(mesh_physical_DEST, renderer);
 	assert.equal(GLSLHelper.compress(mat_SRC.vertexShader), GLSLHelper.compress(mat_DEST.vertexShader));
+	RendererUtils.dispose();
+});
+
+QUnit.test('mat/meshPhysicalBuilder can select which customMat is created', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const MAT = window.MAT;
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	const meshPhysicalBuilder1 = MAT.createNode('meshPhysicalBuilder');
+	const output1 = meshPhysicalBuilder1.createNode('output');
+	const globals1 = meshPhysicalBuilder1.createNode('globals');
+	output1.setInput('color', globals1, 'position');
+
+	// we need to create a spotlight and assign the material for the customDepthMaterial to be compile
+	// const camera = scene.createNode('perspectiveCamera');
+	const spotLight = scene.createNode('spotLight');
+	spotLight.p.t.set([2, 2, 2]);
+	spotLight.p.castShadow.set(true);
+	const box1 = geo1.createNode('box');
+	const material1 = geo1.createNode('material');
+	material1.setInput(0, box1);
+	material1.p.material.setNode(meshPhysicalBuilder1);
+	material1.flags.display.set(true);
+	await material1.compute();
+	await CoreSleep.sleep(100);
+
+	const geoSopGroup = scene.threejsScene().getObjectByName('geo1:sopGroup');
+	assert.ok(geoSopGroup);
+	assert.equal(geoSopGroup!.children.length, 1);
+
+	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshPhysicalBuilder1.p.overrideCustomMaterials.set(1);
+	await meshPhysicalBuilder1.compute();
+	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshPhysicalBuilder1.p.createCustomMatDistance.set(0);
+	await meshPhysicalBuilder1.compute();
+	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
+	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshPhysicalBuilder1.p.createCustomMatDepth.set(0);
+	await meshPhysicalBuilder1.compute();
+	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
+	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshPhysicalBuilder1.p.createCustomMatDepthDOF.set(0);
+	await meshPhysicalBuilder1.compute();
+	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
+	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshPhysicalBuilder1.p.overrideCustomMaterials.set(0);
+	await meshPhysicalBuilder1.compute();
+	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
 	RendererUtils.dispose();
 });

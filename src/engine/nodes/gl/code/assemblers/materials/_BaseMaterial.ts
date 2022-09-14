@@ -8,7 +8,7 @@ import {GlobalsGlNode} from '../../../Globals';
 import {BaseGLDefinition, UniformGLDefinition, VaryingGLDefinition} from '../../../utils/GLDefinition';
 import {GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 import {MapUtils} from '../../../../../../core/MapUtils';
-import {MaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
+import {CustomMaterialName, MaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {Material} from 'three';
 import {GlNodeFinder} from '../../utils/NodeFinder';
@@ -17,12 +17,8 @@ import {assignOnBeforeCompileDataAndFunction, OnBeforeCompileData} from './OnBef
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 import {IUniformTexture} from '../../../../utils/code/gl/Uniforms';
 import {CodeBuilderSetCodeLinesOptions} from '../../utils/CodeBuilder';
+import type {TypedBuilderMatNode} from '../../../../mat/_BaseBuilder';
 
-export enum CustomMaterialName {
-	DISTANCE = 'customDistanceMaterial', // for point lights
-	DEPTH = 'customDepthMaterial', // for spot lights and directional
-	DEPTH_DOF = 'customDepthDOFMaterial', // for post/bokeh only (see in scene.)
-}
 // export type ShaderAssemblerRenderDerivated = {new (node: BaseNodeType): ShaderAssemblerRender};
 // type ShaderAssemblerRenderDerivatedClass = new (...args: any[]) => ShaderAssemblerRender;
 export type CustomAssemblerMap = Map<CustomMaterialName, typeof ShaderAssemblerMaterial>;
@@ -74,38 +70,59 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	protected _addCustomMaterials(material: Material) {
 		const map = this.customAssemblerClassByCustomName();
 		if (map) {
-			map.forEach((assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
-				this._addCustomMaterial(material as MaterialWithCustomMaterials, custom_name, assembler_class);
+			map.forEach((assemblerClass: typeof ShaderAssemblerMaterial, customName: CustomMaterialName) => {
+				this._addCustomMaterial(material as MaterialWithCustomMaterials, customName, assemblerClass);
 			});
 		}
 	}
 	private _addCustomMaterial(
 		material: MaterialWithCustomMaterials,
-		custom_name: CustomMaterialName,
-		assembler_class: typeof ShaderAssemblerMaterial
+		customName: CustomMaterialName,
+		assemblerClass: typeof ShaderAssemblerMaterial
 	) {
-		let customAssembler: ShaderAssemblerMaterial | undefined = this._assemblersByCustomName.get(custom_name);
-		if (!customAssembler) {
-			customAssembler = new assembler_class(this.currentGlParentNode());
-			this._assemblersByCustomName.set(custom_name, customAssembler);
-		}
 		material.customMaterials = material.customMaterials || {};
+		const matNode = this.currentGlParentNode();
+		const matBuilderNode = matNode as TypedBuilderMatNode<any, any, any>;
+		if (matBuilderNode.customMaterialRequested && matBuilderNode.customMaterialRequested(customName) == false) {
+			delete material.customMaterials[customName];
+			return;
+		}
+
+		let customAssembler: ShaderAssemblerMaterial | undefined = this._assemblersByCustomName.get(customName);
+		if (!customAssembler) {
+			customAssembler = new assemblerClass(this.currentGlParentNode());
+			this._assemblersByCustomName.set(customName, customAssembler);
+		}
 		const mat = customAssembler.createMaterial();
-		mat.name = custom_name;
-		material.customMaterials[custom_name] = mat;
+		mat.name = customName;
+		material.customMaterials[customName] = mat;
 	}
 
 	compileCustomMaterials(material: MaterialWithCustomMaterials) {
+		const matNode = this.currentGlParentNode();
+		const matBuilderNode = matNode as TypedBuilderMatNode<any, any, any>;
 		const class_by_custom_name = this.customAssemblerClassByCustomName();
 		if (class_by_custom_name) {
 			class_by_custom_name.forEach(
-				(assembler_class: typeof ShaderAssemblerMaterial, custom_name: CustomMaterialName) => {
+				(assemblerClass: typeof ShaderAssemblerMaterial, customName: CustomMaterialName) => {
+					if (
+						matBuilderNode.customMaterialRequested &&
+						matBuilderNode.customMaterialRequested(customName) == false
+					) {
+						delete material.customMaterials[customName];
+						return;
+					} else {
+						if (!(customName in material.customMaterials)) {
+							this._addCustomMaterial(material, customName, assemblerClass);
+						}
+					}
+
 					if (this._codeBuilder) {
 						let assembler: ShaderAssemblerMaterial | undefined =
-							this._assemblersByCustomName.get(custom_name);
+							this._assemblersByCustomName.get(customName);
 						if (!assembler) {
-							assembler = new assembler_class(this.currentGlParentNode());
-							this._assemblersByCustomName.set(custom_name, assembler);
+							assembler = new assemblerClass(this.currentGlParentNode());
+							this._assemblersByCustomName.set(customName, assembler);
 						}
 
 						assembler._setAdditionalTextureUniforms(this._additionalTextureUniforms);
@@ -114,7 +131,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 						assembler.set_shader_configs(this.shaderConfigs());
 						assembler.set_variable_configs(this.variable_configs());
 
-						const custom_material = material.customMaterials[custom_name];
+						const custom_material = material.customMaterials[customName];
 						if (custom_material) {
 							// the custom material will use the fragment filtering from the parent assembler
 							assembler.setFilterFragmentShaderMethodOwner(this);

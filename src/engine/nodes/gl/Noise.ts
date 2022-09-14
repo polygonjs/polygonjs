@@ -246,13 +246,13 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		const noise_output_gl_type = OUTPUT_TYPE_BY_NOISE_NAME[noise_name];
 		function_declaration_lines.push(new FunctionGLDefinition(this, NoiseCommon));
 		function_declaration_lines.push(new FunctionGLDefinition(this, noise_function));
-		function_declaration_lines.push(new FunctionGLDefinition(this, this.fbm_function()));
+		function_declaration_lines.push(new FunctionGLDefinition(this, this.fbmFunction()));
 
 		const output_gl_type = this._expected_output_types()[0];
 
 		// if the requested output type matches the noise signature
 		if (output_gl_type == noise_output_gl_type) {
-			const line = this.single_noise_line();
+			const line = this.singleNoiseLine();
 			// body_lines.push( `${output_gl_type} ${noise} = ${amp}*${method_name}(${joined_args})` )
 			body_lines.push(line);
 		} else {
@@ -282,7 +282,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 					.map((j) => ThreeToGl.float(1000 * i))
 					.join(', ');
 				const offset2 = `${offset_gl_type}(${offset_values})`;
-				const line = this.single_noise_line(component, component, offset2);
+				const line = this.singleNoiseLine(component, component, offset2);
 				body_lines.push(line);
 				// }
 			}
@@ -296,24 +296,24 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		shaders_collection_controller.addBodyLines(this, body_lines);
 	}
 
-	private fbm_method_name() {
-		const noise_name = NOISE_NAMES[this.pv.type];
-		const method_name = METHOD_NAMES_BY_NOISE_NAME[noise_name];
-		return `fbm_${method_name}_${this.graphNodeId()}`;
+	private fbmMethodName() {
+		const noiseName = NOISE_NAMES[this.pv.type];
+		const methodName = METHOD_NAMES_BY_NOISE_NAME[noiseName];
+		return `fbm_${methodName}${this.path().replace(/\//g, '_')}`;
 	}
 
-	private fbm_function() {
-		const noise_name = NOISE_NAMES[this.pv.type];
-		const method_name = METHOD_NAMES_BY_NOISE_NAME[noise_name];
+	private fbmFunction() {
+		const noiseName = NOISE_NAMES[this.pv.type];
+		const methodName = METHOD_NAMES_BY_NOISE_NAME[noiseName];
 
-		const input_type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
+		const inputType = INPUT_TYPES_BY_NOISE_NAME[noiseName];
 
 		return `
-float ${this.fbm_method_name()} (in ${input_type} st) {
+float ${this.fbmMethodName()}(in ${inputType} st) {
 	float value = 0.0;
 	float amplitude = 1.0;
 	for (int i = 0; i < ${ThreeToGl.integer(this.pv.octaves)}; i++) {
-		value += amplitude * ${method_name}(st);
+		value += amplitude * ${methodName}(st);
 		st *= ${ThreeToGl.float(this.pv.freqIncrease)};
 		amplitude *= ${ThreeToGl.float(this.pv.ampAttenuation)};
 	}
@@ -322,10 +322,10 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 `;
 	}
 
-	private single_noise_line(output_name_suffix?: string, component?: string, offset2?: string) {
+	private singleNoiseLine(output_name_suffix?: string, component?: string, offset2?: string) {
 		// const noise_name = NOISE_NAMES[this.pv.type];
 		// const method_name = METHOD_NAMES_BY_NOISE_NAME[noise_name]
-		const method_name = this.fbm_method_name();
+		const method_name = this.fbmMethodName();
 
 		const amp = ThreeToGl.any(this.variableForInput(NoiseGlNodeInputName.AMP));
 		const position = ThreeToGl.any(this.variableForInput(NoiseGlNodeInputName.POSITION));
@@ -362,18 +362,18 @@ float ${this.fbm_method_name()} (in ${input_type} st) {
 		// 		args.push(arg);
 		// 	});
 		// }
-		const joined_args = args.join(', ');
+		const joinedArgs = args.join(', ');
 
 		// let output_type = OUTPUT_TYPE_BY_NOISE_NAME[noise_name]
 
 		const noise = this.glVarName(OUTPUT_NAME);
-		const right_hand = `${amp}*${method_name}(${joined_args})`;
+		const rightHand = `${amp}*${method_name}(${joinedArgs})`;
 		if (component) {
-			return `float ${noise}${output_name_suffix} = (${right_hand}).${component}`;
+			return `float ${noise}${output_name_suffix} = (${rightHand}).${component}`;
 		} else {
 			// it looks like we never go here with the current set of noises
-			const output_type = this.io.outputs.namedOutputConnectionPoints()[0].type();
-			return `${output_type} ${noise} = ${right_hand}`;
+			const outputType = this.io.outputs.namedOutputConnectionPoints()[0].type();
+			return `${outputType} ${noise} = ${rightHand}`;
 		}
 	}
 }

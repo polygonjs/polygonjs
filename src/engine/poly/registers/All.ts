@@ -2,9 +2,8 @@ import {AllNodesRegister} from './nodes/All';
 import {AllExpressionsRegister} from './expressions/All';
 import {AllAssemblersRegister} from './assemblers/All';
 import {AllCamerasRegister} from './cameras/All';
-
 import {Poly} from '../../Poly';
-import {UrlHelper} from '../../../core/UrlHelper';
+import {CoreFeaturesController} from '../../../core/FeaturesController';
 
 export class AllRegister {
 	private static _started = false;
@@ -17,8 +16,8 @@ export class AllRegister {
 		AllCamerasRegister.run(Poly);
 		AllExpressionsRegister.run(Poly);
 
-		const debugAssemblers = UrlHelper.urlParam('assemblers');
-		if (debugAssemblers == null || debugAssemblers == '1') {
+		const noAssemblers = CoreFeaturesController.noAssemblers();
+		if (!noAssemblers) {
 			AllAssemblersRegister.run(Poly);
 		}
 

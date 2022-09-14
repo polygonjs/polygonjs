@@ -60,8 +60,8 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 	private _operation: MergeSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new MergeSopOperation(this.scene(), this.states);
-		const core_group = this._operation.cook(inputCoreGroups, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 
 	private _callbackUpdateInputsCount() {

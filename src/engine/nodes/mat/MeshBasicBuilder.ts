@@ -28,6 +28,10 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {Material} from 'three';
 import {MeshBasicMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
+import {
+	CustomMaterialMeshParamConfig,
+	materialMeshAssemblerCustomMaterialRequested,
+} from './utils/customMaterials/CustomMaterialMesh';
 interface MeshBasicBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
@@ -44,19 +48,21 @@ interface MeshBasicBuilderMaterial extends MeshBasicMaterial {
 		[key in CustomMaterialName]?: Material;
 	};
 }
-class MeshBasicBuilderMatParamsConfig extends FogParamConfig(
-	WireframeShaderMaterialParamsConfig(
-		AdvancedCommonParamConfig(
-			BaseBuilderParamConfig(
-				/* advanced */
-				AdvancedFolderParamConfig(
-					EnvMapSimpleParamConfig(
-						AOMapParamConfig(
-							AlphaMapParamConfig(
-								MapParamConfig(
-									/* textures */
-									TexturesFolderParamConfig(
-										UniformsTransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+class MeshBasicBuilderMatParamsConfig extends CustomMaterialMeshParamConfig(
+	FogParamConfig(
+		WireframeShaderMaterialParamsConfig(
+			AdvancedCommonParamConfig(
+				BaseBuilderParamConfig(
+					/* advanced */
+					AdvancedFolderParamConfig(
+						EnvMapSimpleParamConfig(
+							AOMapParamConfig(
+								AlphaMapParamConfig(
+									MapParamConfig(
+										/* textures */
+										TexturesFolderParamConfig(
+											UniformsTransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+										)
 									)
 								)
 							)
@@ -84,6 +90,9 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	public override customMaterialRequested(customName: CustomMaterialName): boolean {
+		return materialMeshAssemblerCustomMaterialRequested(this, customName);
+	}
 	readonly controllers: MeshBasicBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
@@ -108,8 +117,8 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 		UniformsTransparencyController.update(this);
 		FogController.update(this);
 		WireframeShaderMaterialController.update(this);
-
 		this.compileIfRequired();
+		this.material.needsUpdate = true;
 
 		this.setMaterial(this.material);
 	}

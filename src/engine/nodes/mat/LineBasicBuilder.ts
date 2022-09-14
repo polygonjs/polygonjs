@@ -17,6 +17,10 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {LineBasicMaterial} from 'three';
 import {CustomMaterialName} from '../../../core/geometry/Material';
 import {Material} from 'three';
+// import {
+// 	CustomMaterialLineParamConfig,
+// 	materialLineAssemblerCustomMaterialRequested,
+// } from './utils/customMaterials/CustomMaterialLine';
 
 interface LineBasicBuilderControllers {
 	advancedCommon: AdvancedCommonController;
@@ -58,6 +62,9 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
+	// 	return materialLineAssemblerCustomMaterialRequested(this, customName);
+	// }
 	readonly controllers: LineBasicBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};

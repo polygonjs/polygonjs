@@ -15,6 +15,10 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {Constructor} from '../../../types/GlobalTypes';
 import {updateMaterialSide} from './utils/helpers/MaterialSideHelper';
+// import {
+// 	CustomMaterialRayMarchingParamConfig,
+// 	materialRayMarchingAssemblerCustomMaterialRequested,
+// } from './utils/customMaterials/CustomMaterialRayMarching';
 
 export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -50,6 +54,9 @@ export class RayMarchingBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
+	// 	return materialRayMarchingAssemblerCustomMaterialRequested(this, customName);
+	// }
 
 	private _rayMarchingController = new RayMarchingController(this);
 

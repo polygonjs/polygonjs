@@ -1,7 +1,7 @@
 // import {UniformsUtils} from 'three';
 // import {ShaderMaterial} from 'three';
 import {ShaderLib} from 'three';
-import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName, GlobalsOutput} from './_BaseMaterial';
+import {ShaderAssemblerMaterial, CustomAssemblerMap, GlobalsOutput} from './_BaseMaterial';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {BaseGlShaderAssembler} from '../_Base';
@@ -13,6 +13,7 @@ import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/con
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {VaryingWriteGlNode} from '../../../VaryingWrite';
 import {PointsMaterial} from 'three';
+import {CustomMaterialName} from '../../../../../../core/geometry/Material';
 
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 	[ShaderName.VERTEX, ['#include <begin_vertex>', 'gl_PointSize = size;']],

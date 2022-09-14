@@ -716,6 +716,76 @@ QUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheK
 	RendererUtils.dispose();
 });
 
+QUnit.test('mat/meshBasicBuilder can select which customMat is created', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const MAT = window.MAT;
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
+	const output1 = meshBasicBuilder1.createNode('output');
+	const globals1 = meshBasicBuilder1.createNode('globals');
+	output1.setInput('color', globals1, 'position');
+
+	// we need to create a spotlight and assign the material for the customDepthMaterial to be compile
+	// const camera = scene.createNode('perspectiveCamera');
+	const spotLight = scene.createNode('spotLight');
+	spotLight.p.t.set([2, 2, 2]);
+	spotLight.p.castShadow.set(true);
+	const box1 = geo1.createNode('box');
+	const material1 = geo1.createNode('material');
+	material1.setInput(0, box1);
+	material1.p.material.setNode(meshBasicBuilder1);
+	material1.flags.display.set(true);
+	await material1.compute();
+	await CoreSleep.sleep(100);
+
+	const geoSopGroup = scene.threejsScene().getObjectByName('geo1:sopGroup');
+	assert.ok(geoSopGroup);
+	assert.equal(geoSopGroup!.children.length, 1);
+
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshBasicBuilder1.p.overrideCustomMaterials.set(1);
+	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshBasicBuilder1.p.createCustomMatDistance.set(0);
+	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshBasicBuilder1.p.createCustomMatDepth.set(0);
+	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.notOk(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshBasicBuilder1.p.createCustomMatDepthDOF.set(0);
+	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.notOk(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.notOk(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.notOk(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	meshBasicBuilder1.p.overrideCustomMaterials.set(0);
+	await meshBasicBuilder1.compute();
+	await RendererUtils.compile(meshBasicBuilder1, renderer);
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	RendererUtils.dispose();
+});
+
 QUnit.skip('mesh basic builder bbox dependent', (assert) => {});
 
 QUnit.skip('mesh basic builder basic instanced works without an input node', (assert) => {});

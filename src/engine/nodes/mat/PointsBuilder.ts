@@ -19,6 +19,10 @@ import {CustomMaterialName} from '../../../core/geometry/Material';
 import {Material} from 'three';
 import {PointsMaterial} from 'three';
 import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
+// import {
+// 	CustomMaterialPointsParamConfig,
+// 	materialPointsAssemblerCustomMaterialRequested,
+// } from './utils/customMaterials/CustomMaterialPoints';
 
 interface PointsBuilderControllers {
 	advancedCommon: AdvancedCommonController;
@@ -57,6 +61,9 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
+	// 	return materialPointsAssemblerCustomMaterialRequested(this, customName);
+	// }
 	readonly controllers: PointsBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};

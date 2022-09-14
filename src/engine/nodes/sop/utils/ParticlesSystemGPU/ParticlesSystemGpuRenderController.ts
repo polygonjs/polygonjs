@@ -149,7 +149,7 @@ export class ParticlesSystemGpuRenderController {
 					// setting the material to dirty is not enough. We need to make it clear a recompile is required.
 					// This is necessary since if inputs of output or any export note are changed, the texture allocation will change. If the mat node was to not recompile, it would fetch attributes such as position from an incorrect or non existing texture.
 					if (matNodeAssemblerController) {
-						matNodeAssemblerController.set_compilation_required_and_dirty();
+						matNodeAssemblerController.setCompilationRequiredAndDirty();
 					}
 				}
 			}

@@ -1,22 +1,22 @@
-import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
+import {BasePersistedConfig, PersistedConfigWithShaders} from '../../../../utils/BasePersistedConfig';
 import {BuilderPostNode} from '../../../../post/Builder';
 import {GlParamConfig} from '../../utils/GLParamConfig';
 import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {IUniforms} from '../../../../../../core/geometry/Material';
 
-export interface PersistedConfigBasePostData {
-	fragment_shader: string;
+export interface PersistedConfigBasePostData extends PersistedConfigWithShaders {
+	// fragment_shader: string;
 	uniforms: IUniforms;
 	param_uniform_pairs: [string, string][];
 	uniforms_time_dependent?: boolean;
 	uniforms_resolution_dependent?: boolean;
 }
-
+const FRAGMENT_KEY = 'fragment';
 export class PostPersistedConfig extends BasePersistedConfig {
 	constructor(protected override node: BuilderPostNode) {
 		super(node);
 	}
-	override toJSON(): PersistedConfigBasePostData | undefined {
+	override toData(): PersistedConfigBasePostData | undefined {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -30,11 +30,14 @@ export class PostPersistedConfig extends BasePersistedConfig {
 		}
 
 		const data: PersistedConfigBasePostData = {
-			fragment_shader: this.node.fragmentShader(),
+			// fragment_shader: this.node.fragmentShader(),
 			uniforms: this.node.uniforms(),
 			param_uniform_pairs: param_uniform_pairs,
 			uniforms_time_dependent: assemblerController.assembler.uniformsTimeDependent(),
 			uniforms_resolution_dependent: assemblerController.assembler.uniformsResolutionDependent(),
+			shaders: {
+				[FRAGMENT_KEY]: this.node.fragmentShader(),
+			},
 		};
 
 		return data;
@@ -45,7 +48,7 @@ export class PostPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 
-		this.node.setFragmentShader(data.fragment_shader);
+		this.node.setFragmentShader(data.shaders[FRAGMENT_KEY]);
 		this.node.setUniforms(data.uniforms);
 
 		BuilderPostNode.handleDependencies(

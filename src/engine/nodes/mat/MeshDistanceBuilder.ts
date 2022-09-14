@@ -47,6 +47,9 @@ export class MeshDistanceBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	public override customMaterialRequested(customName: CustomMaterialName): boolean {
+		return false;
+	}
 
 	readonly controllers: MeshDistanceBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),

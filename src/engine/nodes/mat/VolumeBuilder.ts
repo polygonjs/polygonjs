@@ -13,6 +13,10 @@ import {VolumeController, VolumeParamConfig} from './utils/VolumeController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
+// import {
+// 	CustomMaterialVolumeParamConfig,
+// 	materialVolumeAssemblerCustomMaterialRequested,
+// } from './utils/customMaterials/CustomMaterialVolume';
 class VolumeBuilderMatParamsConfig extends BaseBuilderParamConfig(VolumeParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new VolumeBuilderMatParamsConfig();
 
@@ -31,6 +35,9 @@ export class VolumeBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
+	// 	return materialVolumeAssemblerCustomMaterialRequested(this, customName);
+	// }
 
 	private _volumeController = new VolumeController(this);
 

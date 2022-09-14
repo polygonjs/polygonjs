@@ -6,8 +6,7 @@ export class AssemblersRegister extends BaseAssemblersRegister {
 	assembler<K extends keyof AssemblersMap>(node: BaseNodeType, name: K): AssemblersMap[K]['controller'] | undefined {
 		const pair = this._controllerAssemblerByName.get(name as AssemblerName);
 		if (pair) {
-			const controller = pair.controller;
-			const assembler = pair.assembler;
+			const {controller, assembler} = pair;
 			return new controller(node, assembler);
 		}
 		return pair;

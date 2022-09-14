@@ -1,7 +1,10 @@
-import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
+import {BasePersistedConfig, PersistedConfigWithShaders} from '../../../../utils/BasePersistedConfig';
 import {BaseBuilderMatNodeType} from '../../../../mat/_BaseBuilder';
-import {CustomMaterialName} from './_BaseMaterial';
-import {ShaderMaterialWithCustomMaterials, MaterialWithCustomMaterials} from '../../../../../../core/geometry/Material';
+import {
+	ShaderMaterialWithCustomMaterials,
+	MaterialWithCustomMaterials,
+	CustomMaterialName,
+} from '../../../../../../core/geometry/Material';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 import {ShaderMaterial} from 'three';
 import {
@@ -10,13 +13,49 @@ import {
 	OnBeforeCompileDataJSON,
 } from './OnBeforeCompile';
 
+// from https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
+type RemoveShaders<Type> = {
+	[Property in keyof Type as Exclude<Property, 'fragmentShader' | 'vertexShader'>]: Type[Property];
+};
+
+export interface OnBeforeCompileDataJSONWithoutShaders extends RemoveShaders<OnBeforeCompileDataJSON> {}
+
 export interface PersistedConfigBaseMaterialData {
 	material: object;
 	// param_uniform_pairs: [string, string][];
 	// uniforms_time_dependent?: boolean;
 	// uniforms_resolution_dependent?: boolean;
-	onBeforeCompileDataJSON: OnBeforeCompileDataJSON;
+	onBeforeCompileDataJSONWithoutShaders: OnBeforeCompileDataJSONWithoutShaders;
 	customMaterials?: PolyDictionary<PersistedConfigBaseMaterialData>;
+}
+
+export interface PersistedConfigBaseMaterialDataWithShaders
+	extends PersistedConfigBaseMaterialData,
+		PersistedConfigWithShaders {}
+function _removeShaders(data: OnBeforeCompileDataJSON): OnBeforeCompileDataJSONWithoutShaders {
+	const onBeforeCompileDataJSONWithoutShaders: OnBeforeCompileDataJSONWithoutShaders = {
+		paramConfigs: data.paramConfigs,
+		timeDependent: data.timeDependent,
+		resolutionDependent: data.resolutionDependent,
+	};
+	return onBeforeCompileDataJSONWithoutShaders;
+}
+interface Options {
+	vertex: string;
+	fragment: string;
+}
+function _addShaders(data: OnBeforeCompileDataJSONWithoutShaders, options: Options): OnBeforeCompileDataJSON {
+	const onBeforeCompileDataJSON: OnBeforeCompileDataJSON = {
+		paramConfigs: data.paramConfigs,
+		timeDependent: data.timeDependent,
+		resolutionDependent: data.resolutionDependent,
+		fragmentShader: options.fragment,
+		vertexShader: options.vertex,
+	};
+	return onBeforeCompileDataJSON;
+}
+function _shaderKey(shaderType: 'vertex' | 'fragment', customMaterialName?: string) {
+	return customMaterialName ? `${customMaterialName}.${shaderType}` : shaderType;
 }
 
 // potential bug with Material Loader
@@ -29,7 +68,8 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 	constructor(protected override node: BaseBuilderMatNodeType) {
 		super(node);
 	}
-	override toJSON(): PersistedConfigBaseMaterialData | undefined {
+
+	override toData(): PersistedConfigBaseMaterialDataWithShaders | undefined {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -39,7 +79,13 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		if (!onBeforeCompileData) {
 			return;
 		}
+
 		const onBeforeCompileDataJSON = OnBeforeCompileDataConverter.toJSON(onBeforeCompileData);
+		const onBeforeCompileDataJSONWithoutShaders = _removeShaders(onBeforeCompileDataJSON);
+		const shaders: PolyDictionary<string> = {
+			[_shaderKey('vertex')]: onBeforeCompileDataJSON.vertexShader,
+			[_shaderKey('fragment')]: onBeforeCompileDataJSON.fragmentShader,
+		};
 
 		// custom materials
 		const customMaterialsData: PolyDictionary<PersistedConfigBaseMaterialData> = {};
@@ -55,10 +101,15 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 							suffix: customMaterialName,
 						});
 						if (customMaterialData) {
+							const data = OnBeforeCompileDataConverter.toJSON(customOnBeforeCompileData);
+							const dataWithoutShaders = _removeShaders(data);
 							customMaterialsData[customMaterialName] = {
 								material: customMaterialData,
-								onBeforeCompileDataJSON: OnBeforeCompileDataConverter.toJSON(customOnBeforeCompileData),
+								onBeforeCompileDataJSONWithoutShaders: dataWithoutShaders,
 							};
+
+							shaders[_shaderKey('vertex', customMaterialName)] = data.vertexShader;
+							shaders[_shaderKey('fragment', customMaterialName)] = data.fragmentShader;
 						}
 					}
 				}
@@ -85,17 +136,18 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			console.warn('failed to save material from node', this.node.path());
 		}
 
-		const data: PersistedConfigBaseMaterialData = {
+		const data: PersistedConfigBaseMaterialDataWithShaders = {
 			material: materialData || {},
-			onBeforeCompileDataJSON,
+			onBeforeCompileDataJSONWithoutShaders,
 			// uniforms_time_dependent: assemblerController.assembler.uniformsTimeDependent(),
 			// uniforms_resolution_dependent: assemblerController.assembler.uniformsResolutionDependent(),
 			// param_uniform_pairs: param_uniform_pairs,
 			customMaterials: customMaterialsData,
+			shaders,
 		};
 		return data;
 	}
-	override load(data: PersistedConfigBaseMaterialData) {
+	override load(data: PersistedConfigBaseMaterialDataWithShaders) {
 		const assemblerController = this.node.assemblerController();
 		if (assemblerController) {
 			return;
@@ -104,10 +156,18 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		if (!this._material) {
 			return;
 		}
+		const shaders = data.shaders;
 
 		// const shaderMaterial = this._material as ShaderMaterial;
+		const onBeforeCompileDataJSON: OnBeforeCompileDataJSON = _addShaders(
+			data.onBeforeCompileDataJSONWithoutShaders,
+			{
+				vertex: shaders[_shaderKey('vertex')],
+				fragment: shaders[_shaderKey('fragment')],
+			}
+		);
 
-		const onBeforeCompileData = OnBeforeCompileDataConverter.fromJSON(data.onBeforeCompileDataJSON);
+		const onBeforeCompileData = OnBeforeCompileDataConverter.fromJSON(onBeforeCompileDataJSON);
 		const material = this._material;
 		assignOnBeforeCompileDataAndFunction(this.node.scene(), material, onBeforeCompileData);
 
@@ -167,9 +227,15 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 				const customMatData = data.customMaterials[customMatName];
 				const customMat = this._loadMaterial(customMatData.material);
 				if (customMat) {
-					const customOnBeforeCompileData = OnBeforeCompileDataConverter.fromJSON(
-						customMatData.onBeforeCompileDataJSON
+					const onBeforeCompileDataJSON: OnBeforeCompileDataJSON = _addShaders(
+						customMatData.onBeforeCompileDataJSONWithoutShaders,
+						{
+							vertex: shaders[_shaderKey('vertex', customMatName)],
+							fragment: shaders[_shaderKey('fragment', customMatName)],
+						}
 					);
+					const customOnBeforeCompileData = OnBeforeCompileDataConverter.fromJSON(onBeforeCompileDataJSON);
+
 					customOnBeforeCompileData.paramConfigs = onBeforeCompileData.paramConfigs;
 
 					assignOnBeforeCompileDataAndFunction(this.node.scene(), customMat, customOnBeforeCompileData);

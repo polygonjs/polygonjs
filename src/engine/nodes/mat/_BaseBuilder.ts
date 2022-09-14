@@ -1,3 +1,4 @@
+import {CustomMaterialName} from './../../../core/geometry/Material';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedMatNode} from './_Base';
 import {GlAssemblerController} from '../gl/code/Controller';
@@ -65,6 +66,9 @@ export abstract class TypedBuilderMatNode<
 		return (this._assemblerController = this._assemblerController || this._createAssemblerController());
 	}
 	protected abstract _createAssemblerController(): GlAssemblerController<A> | undefined;
+	customMaterialRequested(customName: CustomMaterialName): boolean {
+		return true;
+	}
 
 	override createNode<S extends keyof GlNodeChildrenMap>(
 		node_class: S,

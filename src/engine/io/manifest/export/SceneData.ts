@@ -28,6 +28,7 @@ export class SceneDataManifestExporter {
 		properties: '',
 		root: '',
 		nodes: {},
+		shaders: {},
 	};
 	private _data: SceneDataManifestExporterData = {
 		properties: {
@@ -48,6 +49,7 @@ export class SceneDataManifestExporter {
 			properties: now,
 			root: now,
 			nodes: {},
+			shaders: {},
 		};
 
 		const exporter = new SceneJsonExporter(this.scene);

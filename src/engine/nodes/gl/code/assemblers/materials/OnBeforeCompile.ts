@@ -17,6 +17,13 @@ export interface OnBeforeCompileData {
 	timeDependent: boolean;
 	resolutionDependent: boolean;
 }
+// from https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
+type RemoveParamConfigField<Type> = {
+	[Property in keyof Type as Exclude<Property, 'paramConfigs' | 'additionalTextureUniforms'>]: Type[Property];
+};
+export interface OnBeforeCompileDataJSON extends RemoveParamConfigField<OnBeforeCompileData> {
+	paramConfigs: GlParamConfigJSON<ParamType>[];
+}
 type OnBeforeCompile = (shader: Shader) => void;
 
 export function assignUniformViaUserData(material: Material, uniformName: string, newUniform: IUniformTexture) {
@@ -146,14 +153,6 @@ export class OnBeforeCompileDataHandler {
 		}
 		return data;
 	}
-}
-
-// from https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
-type RemoveParamConfigField<Type> = {
-	[Property in keyof Type as Exclude<Property, 'paramConfigs' | 'additionalTextureUniforms'>]: Type[Property];
-};
-export interface OnBeforeCompileDataJSON extends RemoveParamConfigField<OnBeforeCompileData> {
-	paramConfigs: GlParamConfigJSON<ParamType>[];
 }
 
 export class OnBeforeCompileDataConverter {

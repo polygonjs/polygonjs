@@ -1,8 +1,9 @@
-import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName} from './_BaseMaterial';
+import {ShaderAssemblerMaterial, CustomAssemblerMap} from './_BaseMaterial';
 
 import {ShaderAssemblerCustomMeshDistance} from './custom/mesh/CustomMeshDistance';
 import {ShaderAssemblerCustomMeshDepth} from './custom/mesh/CustomMeshDepth';
 import {ShaderAssemblerCustomMeshDepthDOF} from './custom/mesh/CustomMeshDepthDOF';
+import {CustomMaterialName} from '../../../../../../core/geometry/Material';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance],

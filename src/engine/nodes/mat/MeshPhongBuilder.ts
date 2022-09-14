@@ -35,6 +35,10 @@ import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {Material} from 'three';
 import {MeshPhongMaterial} from 'three';
+// import {
+// 	CustomMaterialMeshParamConfig,
+// 	materialMeshAssemblerCustomMaterialRequested,
+// } from './utils/customMaterials/CustomMaterialMesh';
 interface MeshPhongBuilderMaterial extends MeshPhongMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -113,6 +117,9 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
+	// 	return materialMeshAssemblerCustomMaterialRequested(this, customName);
+	// }
 	readonly controllers: MeshPhongBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),

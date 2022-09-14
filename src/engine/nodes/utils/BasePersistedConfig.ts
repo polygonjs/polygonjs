@@ -1,3 +1,4 @@
+import {PolyDictionary} from '../../../types/GlobalTypes';
 import {BaseNodeType} from '../_Base';
 import {Texture} from 'three';
 import {Matrix3} from 'three';
@@ -62,11 +63,29 @@ interface ToJsonOptions {
 	node: BaseNodeType;
 	suffix: string;
 }
-
-export class BasePersistedConfig {
+interface DataObjectWithoutShaders {}
+export interface PersistedConfigWithShaders extends DataObjectWithoutShaders {
+	shaders: PolyDictionary<string>;
+}
+export abstract class BasePersistedConfig {
 	constructor(protected node: BaseNodeType) {}
-	toJSON(): object | void {}
+	abstract toData(): PersistedConfigWithShaders | void;
 	load(data: object) {}
+
+	toDataWithoutShaders(): DataObjectWithoutShaders | void {
+		const data = this.toData();
+		if (!data) {
+			return;
+		}
+		const dataWithoutShaders: DataObjectWithoutShaders = {};
+		const entryNames = Object.keys(data);
+		for (let entryName of entryNames) {
+			if (entryName != 'shaders') {
+				(dataWithoutShaders as any)[entryName] = (data as any)[entryName];
+			}
+		}
+		return dataWithoutShaders;
+	}
 
 	//
 	//

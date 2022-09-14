@@ -1,5 +1,5 @@
 import {PolyScene} from '../../../scene/PolyScene';
-import {NodeJsonExporterData, NodeJsonExporterUIData} from './Node';
+import {NodeJsonExporterData, NodeJsonExporterUIData, NodeJSONShadersData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';
 import {TimeController} from '../../../scene/utils/TimeController';
 
@@ -19,6 +19,7 @@ export interface SceneJsonExporterData {
 	properties?: SceneJsonExporterDataProperties;
 	root?: NodeJsonExporterData;
 	ui?: NodeJsonExporterUIData;
+	shaders?: NodeJSONShadersData;
 }
 
 export class SceneJsonExporter {
@@ -28,9 +29,11 @@ export class SceneJsonExporter {
 
 	data(versions?: Versions): SceneJsonExporterData {
 		this._scene.nodesController.resetNodeContextSignatures();
-		const root_exporter = this.dispatcher.dispatchNode(this._scene.root());
-		const nodes_data = root_exporter.data();
-		const ui_data = root_exporter.uiData();
+		const rootExporter = this.dispatcher.dispatchNode(this._scene.root());
+		const nodesData = rootExporter.data();
+		const uiData = rootExporter.uiData();
+		const shadersData: NodeJSONShadersData = {};
+		rootExporter.shaders(shadersData);
 
 		this._data = {
 			properties: {
@@ -41,8 +44,9 @@ export class SceneJsonExporter {
 				mainCameraPath: this._scene.camerasController.mainCameraPath(),
 				versions: versions,
 			},
-			root: nodes_data,
-			ui: ui_data,
+			root: nodesData,
+			ui: uiData,
+			shaders: shadersData,
 		};
 
 		return this._data;

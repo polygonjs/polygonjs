@@ -4,10 +4,9 @@ import {TypedMatNode} from '../_Base';
 import {Material} from 'three';
 import {ShaderMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
+import {CustomMaterialName, ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
-import {CustomMaterialName} from '../../gl/code/assemblers/materials/_BaseMaterial';
 
 export function UniformsTransparencyParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

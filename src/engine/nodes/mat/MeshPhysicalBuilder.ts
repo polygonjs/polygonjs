@@ -41,6 +41,10 @@ import {Constructor} from '../../../types/GlobalTypes';
 import {Material} from 'three';
 import {MeshPhysicalMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
+import {
+	CustomMaterialMeshParamConfig,
+	materialMeshAssemblerCustomMaterialRequested,
+} from './utils/customMaterials/CustomMaterialMesh';
 
 interface MeshPhysicalBuilderMaterial extends MeshPhysicalMaterial {
 	vertexShader: string;
@@ -71,24 +75,26 @@ function AdvancedMeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase)
 		FogParamConfig(WireframeShaderMaterialParamsConfig(AdvancedCommonParamConfig(BaseBuilderParamConfig(Base))))
 	) {};
 }
-class MeshPhysicalBuilderMatParamsConfig extends AdvancedMeshPhysicalParamConfig(
-	/* advanced */
-	AdvancedFolderParamConfig(
-		MeshPhysicalParamConfig(
-			MetalnessRoughnessMapParamConfig(
-				NormalMapParamConfig(
-					LightMapParamConfig(
-						EnvMapParamConfig(
-							EmissiveMapParamConfig(
-								DisplacementMapParamConfig(
-									BumpMapParamConfig(
-										AOMapParamConfig(
-											AlphaMapParamConfig(
-												MapParamConfig(
-													/* textures */
-													TexturesFolderParamConfig(
-														UniformsTransparencyParamConfig(
-															DefaultFolderParamConfig(NodeParamsConfig)
+class MeshPhysicalBuilderMatParamsConfig extends CustomMaterialMeshParamConfig(
+	AdvancedMeshPhysicalParamConfig(
+		/* advanced */
+		AdvancedFolderParamConfig(
+			MeshPhysicalParamConfig(
+				MetalnessRoughnessMapParamConfig(
+					NormalMapParamConfig(
+						LightMapParamConfig(
+							EnvMapParamConfig(
+								EmissiveMapParamConfig(
+									DisplacementMapParamConfig(
+										BumpMapParamConfig(
+											AOMapParamConfig(
+												AlphaMapParamConfig(
+													MapParamConfig(
+														/* textures */
+														TexturesFolderParamConfig(
+															UniformsTransparencyParamConfig(
+																DefaultFolderParamConfig(NodeParamsConfig)
+															)
 														)
 													)
 												)
@@ -120,6 +126,9 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	}
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
+	}
+	public override customMaterialRequested(customName: CustomMaterialName): boolean {
+		return materialMeshAssemblerCustomMaterialRequested(this, customName);
 	}
 	readonly controllers: MeshPhysicalBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),

@@ -53,7 +53,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 
 		if (current_id != new_id) {
 			this._globalsHandler = globalsHandler;
-			this.set_compilation_required_and_dirty();
+			this.setCompilationRequiredAndDirty();
 			this._assembler.reset_configs();
 		}
 	}
@@ -77,7 +77,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	setCompilationRequired(newState = true) {
 		this._compile_required = newState;
 	}
-	set_compilation_required_and_dirty(triggerNode?: BaseGlNodeType) {
+	setCompilationRequiredAndDirty(triggerNode?: BaseGlNodeType) {
 		this.setCompilationRequired();
 		this.node.setDirty(triggerNode);
 	}

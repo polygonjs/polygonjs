@@ -1,3 +1,4 @@
+import {NodeJSONShadersData} from './../Node';
 import {NodeJsonExporter, NodeJsonExporterUIData, JSONExporterDataRequestOption} from '../Node';
 
 export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
@@ -13,6 +14,11 @@ export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
 			return super.uiData(options);
 		} else {
 			return this.ui_data_without_children();
+		}
+	}
+	override shaders(data: NodeJSONShadersData, options: JSONExporterDataRequestOption = {}) {
+		if (options.showPolyNodesData || !this._node.polyNodeController?.locked()) {
+			return super.shaders(data, options);
 		}
 	}
 }

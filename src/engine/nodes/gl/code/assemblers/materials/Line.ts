@@ -1,7 +1,7 @@
 // import {UniformsUtils} from 'three';
 // import {ShaderMaterial} from 'three';
 import {ShaderLib} from 'three';
-import {ShaderAssemblerMaterial, CustomAssemblerMap, CustomMaterialName} from './_BaseMaterial';
+import {ShaderAssemblerMaterial, CustomAssemblerMap} from './_BaseMaterial';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {GlobalsGeometryHandler} from '../../globals/Geometry';
@@ -13,6 +13,7 @@ import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/con
 import {VaryingWriteGlNode} from '../../../VaryingWrite';
 import {ShaderAssemblerCustomLineDepthDOF} from './custom/line/CustomLineDepthDOF';
 import {LineBasicMaterial} from 'three';
+import {CustomMaterialName} from '../../../../../../core/geometry/Material';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([]);
 ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomLineDistance);

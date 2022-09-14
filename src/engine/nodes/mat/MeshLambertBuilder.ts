@@ -30,6 +30,10 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {Material} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
+// import {
+// 	CustomMaterialMeshParamConfig,
+// 	materialMeshAssemblerCustomMaterialRequested,
+// } from './utils/customMaterials/CustomMaterialMesh';
 interface MeshLambertBuilderMaterial extends MeshLambertMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -96,6 +100,9 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
+	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
+	// 	return materialMeshAssemblerCustomMaterialRequested(this, customName);
+	// }
 
 	readonly controllers: MeshLambertBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),

@@ -39,6 +39,10 @@ import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
 import {Material} from 'three';
 import {MeshStandardMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
+import {
+	CustomMaterialMeshParamConfig,
+	materialMeshAssemblerCustomMaterialRequested,
+} from './utils/customMaterials/CustomMaterialMesh';
 interface MeshStandardBuilderControllers {
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
@@ -61,27 +65,29 @@ interface MeshStandardBuilderMaterial extends MeshStandardMaterial {
 		[key in CustomMaterialName]?: Material;
 	};
 }
-class MeshStandardBuilderMatParamsConfig extends PCSSParamConfig(
-	FogParamConfig(
-		WireframeShaderMaterialParamsConfig(
-			AdvancedCommonParamConfig(
-				BaseBuilderParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						MetalnessRoughnessMapParamConfig(
-							NormalMapParamConfig(
-								LightMapParamConfig(
-									EnvMapParamConfig(
-										EmissiveMapParamConfig(
-											DisplacementMapParamConfig(
-												BumpMapParamConfig(
-													AOMapParamConfig(
-														AlphaMapParamConfig(
-															MapParamConfig(
-																/* textures */
-																TexturesFolderParamConfig(
-																	UniformsTransparencyParamConfig(
-																		DefaultFolderParamConfig(NodeParamsConfig)
+class MeshStandardBuilderMatParamsConfig extends CustomMaterialMeshParamConfig(
+	PCSSParamConfig(
+		FogParamConfig(
+			WireframeShaderMaterialParamsConfig(
+				AdvancedCommonParamConfig(
+					BaseBuilderParamConfig(
+						/* advanced */
+						AdvancedFolderParamConfig(
+							MetalnessRoughnessMapParamConfig(
+								NormalMapParamConfig(
+									LightMapParamConfig(
+										EnvMapParamConfig(
+											EmissiveMapParamConfig(
+												DisplacementMapParamConfig(
+													BumpMapParamConfig(
+														AOMapParamConfig(
+															AlphaMapParamConfig(
+																MapParamConfig(
+																	/* textures */
+																	TexturesFolderParamConfig(
+																		UniformsTransparencyParamConfig(
+																			DefaultFolderParamConfig(NodeParamsConfig)
+																		)
 																	)
 																)
 															)
@@ -116,6 +122,9 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 	}
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
+	}
+	public override customMaterialRequested(customName: CustomMaterialName): boolean {
+		return materialMeshAssemblerCustomMaterialRequested(this, customName);
 	}
 	readonly controllers: MeshStandardBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),

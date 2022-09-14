@@ -1,12 +1,11 @@
-import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
+import {BasePersistedConfig, PersistedConfigWithShaders} from '../../../../utils/BasePersistedConfig';
 import {ParticlesSystemGpuSopNode} from '../../../../sop/ParticlesSystemGpu';
 import {TextureAllocationsController, TextureAllocationsControllerData} from '../../utils/TextureAllocationsController';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {ShaderMaterial} from 'three';
 import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 
-export interface PersistedConfigBaseParticlesData {
-	shaders_by_name: PolyDictionary<string>;
+export interface PersistedConfigBaseParticlesData extends PersistedConfigWithShaders {
 	texture_allocations: TextureAllocationsControllerData;
 	param_uniform_pairs: [string, string][];
 	uniforms_owner: object;
@@ -18,7 +17,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 	constructor(protected override node: ParticlesSystemGpuSopNode) {
 		super(node);
 	}
-	override toJSON(): PersistedConfigBaseParticlesData | undefined {
+	override toData(): PersistedConfigBaseParticlesData | undefined {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -47,10 +46,10 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			suffix: 'main',
 		});
 		const data = {
-			shaders_by_name: shaders_by_name,
 			texture_allocations: texture_allocations_data,
 			param_uniform_pairs: param_uniform_pairs,
 			uniforms_owner: material_data || {},
+			shaders: shaders_by_name,
 		};
 
 		return data;
@@ -73,9 +72,9 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 	shaders_by_name() {
 		if (this._loaded_data) {
 			const shaders_by_name: Map<ShaderName, string> = new Map();
-			const shader_names: ShaderName[] = Object.keys(this._loaded_data.shaders_by_name) as ShaderName[];
+			const shader_names: ShaderName[] = Object.keys(this._loaded_data.shaders) as ShaderName[];
 			for (let shader_name of shader_names) {
-				shaders_by_name.set(shader_name, this._loaded_data.shaders_by_name[shader_name]);
+				shaders_by_name.set(shader_name, this._loaded_data.shaders[shader_name]);
 			}
 			return shaders_by_name;
 		}

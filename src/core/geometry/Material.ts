@@ -13,9 +13,9 @@ export interface MaterialWithUniforms extends Material {
 }
 
 export enum CustomMaterialName {
-	customDistanceMaterial = 'customDistanceMaterial',
-	customDepthMaterial = 'customDepthMaterial',
-	customDepthDOFMaterial = 'customDepthDOFMaterial',
+	DISTANCE = 'customDistanceMaterial', // for point lights
+	DEPTH = 'customDepthMaterial', // for spot lights and directional
+	DEPTH_DOF = 'customDepthDOFMaterial', // for post/bokeh only (see in scene.)
 }
 
 export interface ObjectWithCustomMaterials extends Mesh {
@@ -153,12 +153,12 @@ export class CoreMaterial {
 		const material_with_custom = material as MaterialWithCustomMaterials;
 		if (material_with_custom.customMaterials) {
 			for (let name of Object.keys(material_with_custom.customMaterials)) {
-				const mat_name = name as CustomMaterialName;
+				const matName = name as CustomMaterialName;
 				// http://blog.edankwan.com/post/three-js-advanced-tips-shadow
-				const custom_material = material_with_custom.customMaterials[mat_name];
-				if (custom_material) {
-					(object as ObjectWithCustomMaterials)[mat_name] = custom_material;
-					custom_material.needsUpdate = true;
+				const customMaterial = material_with_custom.customMaterials[matName];
+				if (customMaterial) {
+					(object as ObjectWithCustomMaterials)[matName] = customMaterial;
+					customMaterial.needsUpdate = true;
 				}
 			}
 			// object.material = material.customMaterials.customDepthDOFMaterial

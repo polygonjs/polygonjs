@@ -35,7 +35,6 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (this._node.childrenAllowed()) {
 			this.create_nodes(scene_importer, data['nodes'], data);
 		}
-		this.set_selection(data['selection']);
 
 		// inputs clone
 		if (this._node.io.inputs.overrideClonedStateAllowed()) {
@@ -53,6 +52,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		this.set_params(data);
 
 		if (data.persisted_config) {
+			const shadersData = scene_importer.shadersData();
+			if (shadersData) {
+				(data.persisted_config as any).shaders = shadersData[this._node.path()];
+			}
 			this.set_persisted_config(data.persisted_config);
 		}
 
@@ -93,6 +96,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		const comment = data['comment'];
 		if (comment) {
 			ui_data.setComment(comment);
+		}
+		const selection = data['selection'];
+		if (selection) {
+			this.set_selection(selection);
 		}
 		if (this._node.childrenAllowed()) {
 			const nodesData = data['nodes'];

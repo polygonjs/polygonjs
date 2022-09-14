@@ -36,7 +36,7 @@ export interface NodeJsonExporterData {
 	maxInputsCount?: number;
 	inputs?: InputData[];
 	connection_points?: IoConnectionPointsData;
-	selection?: string[];
+
 	flags?: FlagsData;
 	cloned_state_overriden?: boolean;
 	persisted_config?: object;
@@ -48,8 +48,10 @@ export interface NodeJsonExporterData {
 export interface NodeJsonExporterUIData {
 	pos?: Number2;
 	comment?: string;
+	selection?: string[];
 	nodes?: PolyDictionary<NodeJsonExporterUIData>;
 }
+export type NodeJSONShadersData = PolyDictionary<PolyDictionary<string>>;
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
@@ -62,7 +64,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	constructor(protected _node: T, protected dispatcher: JsonExportDispatcher) {}
 
 	data(options: JSONExporterDataRequestOption = {}): NodeJsonExporterData {
-		if (!this.is_root()) {
+		if (!this._isRoot()) {
 			this._node.scene().nodesController.registerNodeContextSignature(this._node);
 		}
 		this._data = {
@@ -96,7 +98,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		if (Object.keys(params_data).length > 0) {
 			this._data['params'] = params_data;
 		}
-		if (!this.is_root()) {
+		if (!this._isRoot()) {
 			//data['custom'] = []
 			if (this._node.io.inputs.maxInputsCountOverriden()) {
 				this._data['maxInputsCount'] = this._node.io.inputs.maxInputsCount();
@@ -139,27 +141,6 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			}
 		}
 
-		if (this._node.childrenAllowed()) {
-			const selection = this._node.childrenController?.selection;
-			if (selection && this._node.children().length > 0) {
-				// only save the nodes that are still present, in case the selection just got deleted
-				const selected_children: BaseNodeTypeWithIO[] = [];
-				const selected_ids: PolyDictionary<boolean> = {};
-				for (let selected_node of selection.nodes()) {
-					selected_ids[selected_node.graphNodeId()] = true;
-				}
-				for (let child of this._node.children()) {
-					if (child.graphNodeId() in selected_ids) {
-						selected_children.push(child);
-					}
-				}
-				const selection_data = selected_children.map((n) => n.name());
-				if (selection_data.length > 0) {
-					this._data['selection'] = selection_data;
-				}
-			}
-		}
-
 		// inputs clone
 		if (this._node.io.inputs.overrideClonedStateAllowed()) {
 			const overriden = this._node.io.inputs.clonedStateOverriden();
@@ -169,8 +150,11 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		// persisted config
-		if (this._node.persisted_config) {
-			const persisted_config_data = this._node.persisted_config.toJSON();
+		const persisted_config = this._node.persisted_config;
+		if (persisted_config) {
+			const persisted_config_data = options.showPolyNodesData
+				? persisted_config.toData()
+				: persisted_config.toDataWithoutShaders();
 			if (persisted_config_data) {
 				this._data.persisted_config = persisted_config_data;
 			}
@@ -187,10 +171,10 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		const children = this._node.children();
 		if (children.length > 0) {
 			const nodesData: PolyDictionary<NodeJsonExporterUIData> = {};
-			children.forEach((child) => {
+			for (let child of children) {
 				const node_exporter = this.dispatcher.dispatchNode(child); //.visit(JsonExporterVisitor); //.json_exporter()
 				nodesData[child.name()] = node_exporter.uiData(options);
-			});
+			}
 			data['nodes'] = nodesData;
 		}
 
@@ -198,18 +182,56 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	}
 	protected ui_data_without_children(): NodeJsonExporterUIData {
 		const data: NodeJsonExporterUIData = {} as NodeJsonExporterUIData;
-		if (!this.is_root()) {
+		if (!this._isRoot()) {
 			const ui_data = this._node.uiData;
 			data['pos'] = ui_data.position().toArray() as Number2;
 			const comment = ui_data.comment();
 			if (comment) {
 				data['comment'] = sanitizeExportedString(comment);
 			}
+
+			// selection
+			if (this._node.childrenAllowed()) {
+				const selection = this._node.childrenController?.selection;
+				if (selection && this._node.children().length > 0) {
+					// only save the nodes that are still present, in case the selection just got deleted
+					const selected_children: BaseNodeTypeWithIO[] = [];
+					const selected_ids: PolyDictionary<boolean> = {};
+					for (let selected_node of selection.nodes()) {
+						selected_ids[selected_node.graphNodeId()] = true;
+					}
+					for (let child of this._node.children()) {
+						if (child.graphNodeId() in selected_ids) {
+							selected_children.push(child);
+						}
+					}
+					const selection_data = selected_children.map((n) => n.name());
+					if (selection_data.length > 0) {
+						data['selection'] = selection_data;
+					}
+				}
+			}
 		}
 		return data;
 	}
+	shaders(data: NodeJSONShadersData, options: JSONExporterDataRequestOption = {}) {
+		const children = this._node.children();
+		if (children.length > 0) {
+			for (let child of children) {
+				const node_exporter = this.dispatcher.dispatchNode(child);
+				node_exporter.shaders(data);
+			}
+		}
 
-	private is_root() {
+		if (this._node.persisted_config) {
+			const persisted_config_data = this._node.persisted_config.toData();
+			if (persisted_config_data) {
+				data[this._node.path()] = persisted_config_data.shaders;
+			}
+		}
+	}
+
+	private _isRoot() {
 		return this._node.parent() === null && this._node.graphNodeId() == this._node.root().graphNodeId();
 	}
 

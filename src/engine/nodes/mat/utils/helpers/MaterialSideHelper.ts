@@ -1,8 +1,7 @@
 import {Material} from 'three';
 import {isBooleanTrue} from '../../../../../core/Type';
 import {FrontSide, BackSide, DoubleSide} from 'three';
-import {MaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
-import {CustomMaterialName} from '../../../gl/code/assemblers/materials/_BaseMaterial';
+import {CustomMaterialName, MaterialWithCustomMaterials} from '../../../../../core/geometry/Material';
 
 interface SideUpdateParams {
 	doubleSided: boolean;

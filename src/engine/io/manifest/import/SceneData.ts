@@ -1,3 +1,4 @@
+import {NodeJSONShadersData} from './../../json/export/Node';
 // import {CoreType} from '../../../../core/Type';
 import {UrlHelper} from '../../../../core/UrlHelper';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
@@ -8,10 +9,12 @@ import {SceneJsonExporterData, SceneJsonExporterDataProperties} from '../../json
 import {SelfContainedFileName} from '../../self_contained/Common';
 
 export type ManifestNodesData = PolyDictionary<string>;
+export type NodeJSONShadersTimestampData = PolyDictionary<PolyDictionary<string>>;
 export interface ManifestContent {
 	properties: string;
 	root: string;
 	nodes: ManifestNodesData;
+	shaders: NodeJSONShadersTimestampData;
 }
 
 type ProgressCallback = (ratio: number) => void;
@@ -27,6 +30,31 @@ export interface SceneDataElements {
 	root: NodeJsonExporterData;
 	properties: SceneJsonExporterDataProperties;
 	ui?: NodeJsonExporterUIData;
+	shaders?: NodeJSONShadersData;
+}
+
+interface ShaderUrlOptionsBasic {
+	nodePath: string;
+	shaderName: string;
+	timestamp: string;
+}
+interface ShaderUrlOptions extends ShaderUrlOptionsBasic {
+	urlPrefix: string;
+}
+function _shaderUrl(options: ShaderUrlOptions) {
+	const {urlPrefix, nodePath, shaderName, timestamp} = options;
+	return `${urlPrefix}/root/${nodePath}.${shaderName}.glsl?t=${timestamp}`;
+}
+function _iterateShaders(manifest: ManifestContent, callback: (options: ShaderUrlOptionsBasic) => void) {
+	const shaderNodePaths = Object.keys(manifest.shaders);
+	for (let nodePath of shaderNodePaths) {
+		const nodeShaders = manifest.shaders[nodePath];
+		const nodeShaderNames = Object.keys(nodeShaders);
+		for (let shaderName of nodeShaderNames) {
+			const timestamp = nodeShaders[shaderName];
+			callback({nodePath, shaderName, timestamp});
+		}
+	}
 }
 
 export class SceneDataManifestImporter {
@@ -58,74 +86,99 @@ export class SceneDataManifestImporter {
 		for (let nodeUrl of nodeUrls) {
 			allUrls.push(nodeUrl);
 		}
+		// add all shaders
+		const shaderUrls: string[] = [];
+		_iterateShaders(manifest, (options) => {
+			const shaderUrl = _shaderUrl({urlPrefix, ...options});
+			allUrls.push(shaderUrl);
+			shaderUrls.push(shaderUrl);
+		});
 
 		let count = 0;
+		const jsonPayloadsCount = allUrls.length - shaderUrls.length;
 		const total = allUrls.length;
 
-		const onProgress = (ratio: number) => {
+		function _incrementCount() {
+			count++;
+			const ratio = count / total;
 			const progressRatio = PROGRESS_RATIO.sceneData;
 			const progress = progressRatio.start + progressRatio.mult * ratio;
 			if (importData.onProgress) {
 				importData.onProgress(progress);
 			}
 			PolyEventsDispatcher.dispatchProgressEvent(progress, importData.sceneName);
-		};
+		}
 
 		const sanitizedUrls = allUrls.map((url) => UrlHelper.sanitize(url));
-		const promises = sanitizedUrls.map(async (url) => {
-			const response = await fetch(url);
-			count++;
-			onProgress(count / total);
-			return response;
-		});
+		const promises = sanitizedUrls.map((url) => fetch(url));
 		const responses = await Promise.all(promises);
+		const jsonResponses = responses.slice(0, jsonPayloadsCount);
+		const textResponses = responses.slice(jsonPayloadsCount);
+		const results = await Promise.all([
+			...jsonResponses.map((response) => {
+				_incrementCount();
+				return response.json();
+			}),
+			...textResponses.map((response) => {
+				_incrementCount();
+				return response.text();
+			}),
+		]);
+		const jsons = results.slice(0, jsonPayloadsCount);
+		const texts = results.slice(jsonPayloadsCount);
+		let textIndex = 0;
+		const shadersData: NodeJSONShadersData = {};
+		_iterateShaders(manifest, (options) => {
+			const text = texts[textIndex];
+			const {nodePath, shaderName} = options;
+			shadersData[nodePath] = shadersData[nodePath] || {};
+			shadersData[nodePath][shaderName] = text;
+			textIndex++;
+		});
 
-		const jsons = [];
-		for (let response of responses) {
-			jsons.push(await response.json());
-		}
-
-		const assemble_data: SceneDataElements = {
+		const assembleData: SceneDataElements = {
 			root: jsons[0],
 			properties: jsons[1],
+			shaders: shadersData,
 		};
-		let response_offset = 2;
+		let responseOffset = 2;
 		if (importData.editorMode) {
-			assemble_data['ui'] = jsons[2];
-			response_offset += 1;
+			assembleData['ui'] = jsons[2];
+			responseOffset += 1;
 		}
 
-		const json_by_name: PolyDictionary<object> = {};
-		const manifest_nodes = Object.keys(manifest.nodes);
-		for (let i = 0; i < manifest_nodes.length; i++) {
-			const manifest_name = manifest_nodes[i];
-			const json = jsons[i + response_offset];
-			json_by_name[manifest_name] = json;
+		const jsonByName: PolyDictionary<object> = {};
+		const manifestNodes = Object.keys(manifest.nodes);
+		for (let i = 0; i < manifestNodes.length; i++) {
+			const manifestName = manifestNodes[i];
+			const json = jsons[i + responseOffset];
+			jsonByName[manifestName] = json;
 		}
 
-		return this.assemble(assemble_data, manifest_nodes, json_by_name);
+		return this.assemble(assembleData, manifestNodes, jsonByName);
 	}
 
 	static async assemble(
-		assemble_data: SceneDataElements,
-		manifest_nodes: string[],
-		json_by_name: PolyDictionary<object>
+		assembleData: SceneDataElements,
+		manifestNodes: string[],
+		jsonByName: PolyDictionary<object>
 	) {
 		const scene_data: SceneJsonExporterData = {
-			root: assemble_data.root,
-			properties: assemble_data.properties,
-			ui: assemble_data.ui,
+			root: assembleData.root,
+			properties: assembleData.properties,
+			ui: assembleData.ui,
+			shaders: assembleData.shaders,
 		};
 
-		for (let i = 0; i < manifest_nodes.length; i++) {
-			const manifest_name = manifest_nodes[i];
-			const json = json_by_name[manifest_name];
-			this.insert_child_data(scene_data.root, manifest_name, json);
+		for (let i = 0; i < manifestNodes.length; i++) {
+			const manifestName = manifestNodes[i];
+			const json = jsonByName[manifestName];
+			this._insertChildData(scene_data.root, manifestName, json);
 		}
 		return scene_data;
 	}
 
-	private static insert_child_data(data: any, path: string, json: object) {
+	private static _insertChildData(data: any, path: string, json: object) {
 		const elements = path.split('/');
 		if (elements.length == 1) {
 			if (!data.nodes) {
@@ -133,10 +186,10 @@ export class SceneDataManifestImporter {
 			}
 			data.nodes[path] = json;
 		} else {
-			const parent_name: string = elements.shift() as string;
-			const path_without_parent: string = elements.join('/');
-			const parent_data = data.nodes[parent_name];
-			this.insert_child_data(parent_data, path_without_parent, json);
+			const parentName: string = elements.shift() as string;
+			const pathWithoutParent: string = elements.join('/');
+			const parentData = data.nodes[parentName];
+			this._insertChildData(parentData, pathWithoutParent, json);
 		}
 	}
 }

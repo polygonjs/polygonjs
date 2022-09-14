@@ -362,7 +362,7 @@ QUnit.test('texture allocation works as expected wih pos, vel, normal and bby fl
 
 	// await attribCreate1.compute();
 	await particlesSystemGpu1.compute();
-	const allocationJSON = particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations;
+	const allocationJSON = particlesSystemGpu1.persisted_config.toData()?.texture_allocations;
 	assert.ok(allocationJSON);
 	assert.deepEqual(allocationJSON, {
 		writable: [
@@ -427,7 +427,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
 	);
 	assert.deepEqual(
-		particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations,
+		particlesSystemGpu1.persisted_config.toData()?.texture_allocations,
 		{
 			writable: [
 				{
@@ -463,7 +463,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
 	);
 	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
-	assert.deepEqual(particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations, {
+	assert.deepEqual(particlesSystemGpu1.persisted_config.toData()?.texture_allocations, {
 		writable: [
 			{
 				position: [
@@ -490,7 +490,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	await particlesSystemGpu1.compute();
 	await RendererUtils.compile(pointsBuilder1, renderer);
 	assert.deepEqual(
-		particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations,
+		particlesSystemGpu1.persisted_config.toData()?.texture_allocations,
 		{
 			writable: [
 				{
@@ -526,7 +526,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	await particlesSystemGpu1.compute();
 	await RendererUtils.compile(pointsBuilder1, renderer);
 	assert.deepEqual(
-		particlesSystemGpu1.persisted_config.toJSON()?.texture_allocations,
+		particlesSystemGpu1.persisted_config.toData()?.texture_allocations,
 		{
 			writable: [
 				{

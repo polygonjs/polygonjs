@@ -133,6 +133,9 @@ export class SceneJsonImporter {
 
 		return scene;
 	}
+	shadersData() {
+		return this._data['shaders'];
+	}
 
 	//
 	//
