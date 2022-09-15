@@ -103,13 +103,16 @@ export class NodeCookController<NC extends NodeContext> {
 		const dirtyTimestamp = this.node.dirtyController.dirtyTimestamp();
 		const timestampUnchangedSinceCookStarted =
 			dirtyTimestamp == null || dirtyTimestamp === this._cookingDirtyTimestamp;
-		if (timestampUnchangedSinceCookStarted /* || this._scenePlayingAndNodeAlreadyCookedForCurrentFrame()*/) {
+		if (
+			timestampUnchangedSinceCookStarted ||
+			this.node.flags?.bypass?.active() /* || this._scenePlayingAndNodeAlreadyCookedForCurrentFrame()*/
+		) {
 			this.node.removeDirtyState();
 			this._terminateCookProcess();
 		} else {
-			if (this.node.flags?.bypass?.active()) {
-				return;
-			}
+			// if (this.node.flags?.bypass?.active()) {
+			// 	return;
+			// }
 			Poly.log('COOK AGAIN', dirtyTimestamp, this._cookingDirtyTimestamp, this.node.path());
 			this._cooking = false;
 			this.cookMain();
@@ -128,7 +131,7 @@ export class NodeCookController<NC extends NodeContext> {
 		this._cookingDirtyTimestamp = this.node.dirtyController.dirtyTimestamp();
 	}
 	private _terminateCookProcess() {
-		if (this.isCooking()) {
+		if (this.isCooking() || this.node.flags?.bypass?.active()) {
 			this._cooking = false;
 
 			// setTimeout(this.node.containerController.notifyRequesters.bind(this.node.containerController), 0);

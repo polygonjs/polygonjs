@@ -74,36 +74,6 @@ export class ScenePlayerImporter {
 		const viewer = importer._viewer;
 		return {scene, viewer};
 	}
-	// static async loadManifest(options: ManifestImportOptions, assetsRoot: string) {
-	// 	// const promises: PreloadPromises = [AssetsPreloader.fetchAssets(options), this._fetchSceneData(options)];
-	// 	const promises: PreloadPromises = [this._fetchSceneData(options)];
-	// 	const results = await Promise.all(promises);
-	// 	const sceneData: SceneJsonExporterData = results[1];
-
-	// 	return await this._loadSceneData(options, {sceneData, assetsRoot});
-	// }
-	// private static async _fetchSceneData(options: ManifestImportOptions) {
-	// 	const sceneData = await SceneDataManifestImporter.importSceneData({
-	// 		urlPrefix: options.manifest.urlPrefix,
-	// 		manifest: options.manifest.content,
-	// 		onProgress: options.onProgress,
-	// 	});
-	// 	return sceneData;
-	// }
-	// private static async _loadSceneData(
-	// 	manifestOptions: ManifestImportOptions,
-	// 	sceneDataAptions: SceneDataImportOptionsOnly
-	// ) {
-	// 	const scene = await ScenePlayerImporter.loadSceneData({
-	// 		domElement: manifestOptions.domElement,
-	// 		sceneName: manifestOptions.sceneName,
-	// 		onProgress: manifestOptions.onProgress,
-	// 		configureScene: manifestOptions.configureScene,
-	// 		sceneData: sceneDataAptions.sceneData,
-	// 		assetsRoot: sceneDataAptions.assetsRoot,
-	// 	});
-	// 	return scene;
-	// }
 
 	private async _onLoadComplete(scene: PolyScene) {
 		if (this._onLoadCompleteCalled == true) {
