@@ -132,7 +132,9 @@ export class HierarchyChildrenController {
 	// 	}
 	// }
 	createNode<K extends BaseNodeType>(nodeClassOrString: string | Constructor<K>, options?: NodeCreateOptions): K {
-		// if (this.node.insideALockedParent()) {
+		// adding a test here means that this function could return undefined
+		// which would all the existing calls
+		// if (this.node.lockedOrInsideALockedParent()) {
 		// 	const lockedParent = this.node.lockedParent();
 		// 	console.error(
 		// 		`node '${this.node.path()}' cannot create nodes, since it is inside '${
