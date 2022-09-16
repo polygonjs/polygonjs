@@ -13,7 +13,7 @@ export const BasePolyAnimNode = createPolyAnimNode(
 			createdAt: 1,
 		},
 		nodeContext: NodeContext.ANIM,
-		inputs: {simple: {min: 0, max: 4}},
+		inputs: {simple: {min: 0, max: 4, names: []}},
 	},
 	PolyNodeController
 );

@@ -7,6 +7,7 @@ import {PolyDictionary} from '../../../../types/GlobalTypes';
 export interface PolyNodeSimpleInputsData {
 	min: number;
 	max: number;
+	names?: string[];
 }
 
 export interface PolyNodeTypedInputData {

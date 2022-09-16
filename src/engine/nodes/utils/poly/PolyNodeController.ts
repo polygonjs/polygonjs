@@ -1,6 +1,6 @@
+import { BaseNodeType, TypedNode } from './../../_Base';
 import {NodeJsonExporterData} from './../../../io/json/export/Node';
 import {NodeEvent} from './../../../poly/NodeEvent';
-import {BaseNodeType} from '../../_Base';
 import {NodeContext} from '../../../poly/NodeContext';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
@@ -103,7 +103,7 @@ export class PolyNodeController {
 
 		const sceneImporter = new SceneJsonImporter({});
 		const dispatcher = new JsonImportDispatcher();
-		const nodeImporter = dispatcher.dispatchNonPolyNode(this.node); // new NodeJsonImporter(this.node as TypedNode<NodeContext, any>);
+		const nodeImporter = dispatcher.dispatchNonPolyNode(this.node);
 		const exporterData: NodeJsonExporterData = {
 			// ...this._definition,
 			type: this.node.type(),
@@ -113,16 +113,15 @@ export class PolyNodeController {
 		};
 		nodeImporter.create_nodes(sceneImporter, childrenData, exporterData);
 
-		const ui_data = this._definition.ui;
-		if (ui_data) {
-			nodeImporter.processNodesUiData(sceneImporter, ui_data);
+		const uiData = this._definition.ui;
+		if (uiData) {
+			nodeImporter.processNodesUiData(sceneImporter, uiData);
 		}
 
 		if (currentSceneLoadedState) {
 			this.node.scene().loadingController.markAsLoaded();
 		}
 
-		// console.log('set old locked state', oldLockedState);
 		this.setLockedState(oldLockedState);
 	}
 
@@ -145,6 +144,7 @@ export class PolyNodeController {
 				simple: {
 					min: node.io.inputs.minCount(),
 					max: node.io.inputs.maxInputsCount(),
+					names: (node.constructor as typeof TypedNode<any,any>).displayedInputNames(),
 				},
 			};
 		}

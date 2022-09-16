@@ -14,6 +14,9 @@ export function createPolySopNode(
 		static override type() {
 			return nodeType;
 		}
+		static override displayedInputNames(): string[] {
+			return definition.inputs?.simple?.names || ['input geometries'];
+		}
 
 		public override readonly polyNodeController: PolyNodeController = new polyNodeControllerClass(this, definition);
 	}

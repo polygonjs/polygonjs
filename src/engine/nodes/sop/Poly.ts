@@ -12,7 +12,7 @@ export const BasePolySopNode = createPolySopNode(
 			createdAt: 1,
 		},
 		nodeContext: NodeContext.SOP,
-		inputs: {simple: {min: 0, max: 4}},
+		inputs: {simple: {min: 0, max: 4, names: []}},
 	},
 	PolyNodeController
 );
