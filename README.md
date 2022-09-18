@@ -8,9 +8,22 @@
 
 Polygonjs is a node-based **3D WebGL design tool**.
 
-It allows you to create 3D scenes in a non-destructive worflow. You can use it from the web, or locally. [Learn more](https://polygonjs.com/).
+It helps creating 3D interactives experiences for the web, **without having to code**.
 
-![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.002.png?v=2)
+[Home Page](https://polygonjs.com/) - [Documentation](https://polygonjs.com/docs) - [Demo](https://polygonjs.com/demo).
+
+Thanks to its node-based nature, you can create 3D scenes in a non-destructive worflow. This allows you to build quickly, without fearing to break anything.
+
+But it is also open source, and is **designed to be extended**. This means that if it does not have a feature you need, you can add it, by using its API, or by taking looking at how the existing nodes are implemented and using that as a starting point.
+
+Polygonjs can be used both from the web, or locally. The local version has many advantages, such as:
+
+-   quick access to models and textures on your computer
+-   tree shaked exports (it exports only the nodes you use)
+-   git integration
+-   integration to any web project (such as threejs, vuejs, react, vanilla)
+
+![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.003.jpg?v=1)
 
 Install:
 
@@ -19,142 +32,6 @@ Install:
 or
 
 `yarn add @polygonjs/polygonjs`
-
-You can also load it from the CDN:
-
-`https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js`.
-
-The API is designed to be very simple. Here is how you create a minimal scene with a box:
-
-```html
-<script type="module">
-	// import from the CDN with all nodes
-	import {PolyScene, AllRegister} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
-	AllRegister.registerAll();
-	// or import from the npm module. This is the recommended method,
-	// since you can then import only what you need, which will create a much smaller bundle.
-	// import {PolyScene} from '@polygonjs/polygonjs/dist/src/engine/scene/PolyScene';
-	// import {Poly} from '@polygonjs/polygonjs/dist/src/engine/Poly';
-	// import the nodes you need, one by one (NOTE: this will be auto generated when using the visual editor. See more on https://polygonjs.com )
-	// import {GeoObjNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/obj/Geo'
-	// Poly.registerNode(GeoObjNode);
-	// import {BoxSopNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/sop/Box'
-	// Poly.registerNode(BoxSopNode);
-	// import {HemisphereLightObjNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/obj/HemisphereLight'
-	// Poly.registerNode(HemisphereLightObjNode);
-	// import {PerspectiveCameraObjNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/obj/PerspectiveCamera'
-	// Poly.registerNode(PerspectiveCameraObjNode);
-	// import {EventsNetworkSopNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/sop/EventsNetwork'
-	// Poly.registerNode(EventsNetworkSopNode);
-	// import {CameraOrbitControlsEventNode} from '@polygonjs/polygonjs/dist/src/engine/nodes/event/CameraOrbitControls'
-	// Poly.registerNode(CameraOrbitControlsEventNode);
-
-	// create a scene
-	const scene = new PolyScene();
-	const rootNode = scene.root();
-
-	// create a box
-	const geo = rootNode.createNode('geo');
-	const box = geo.createNode('box');
-
-	// add a light
-	rootNode.createNode('hemisphereLight');
-
-	// create a camera
-	const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
-	perspectiveCamera1.p.t.set([5, 5, 5]);
-	// add OrbitControls
-	const events1 = perspectiveCamera1.createNode('eventsNetwork');
-	const orbitsControls = events1.createNode('cameraOrbitControls');
-	perspectiveCamera1.p.controls.setNode(orbitsControls);
-
-	const element = document.getElementById('app');
-	perspectiveCamera1.createViewer({element});
-</script>
-```
-
-which should give you this (you can try it on [this page](https://polygonjs.com/examples/start.html)):
-
-<a href="https://polygonjs.com/examples/start.html" target="_blank"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start.gif" /></a>
-
-Let's now look at an example that demonstrates how powerful a node-based engine can be:
-
-```javascript
-import {PolyScene, AllRegister} from 'https://unpkg.com/@polygonjs/polygonjs@latest/dist/all.js';
-// import all nodes
-AllRegister.registerAll();
-// create a scene
-const scene = new PolyScene();
-const rootNode = scene.root();
-
-// create a geo node to add the geometry nodes we will need
-const geo = rootNode.createNode('geo');
-
-// create a plane
-const plane = geo.createNode('plane');
-plane.p.size.set([10, 10]); // make the plane larger
-
-// add noise to the plane
-const noise = geo.createNode('noise');
-noise.setInput(0, plane);
-noise.p.freq.set([0.1, 0.1, 0.1]);
-noise.p.amplitude.set(3); // lower the noise amount
-noise.p.useNormals.set(1); // have the noise in the direction of the normals
-
-// scatter points on the plane
-const scatter = geo.createNode('scatter');
-scatter.setInput(0, noise);
-scatter.p.pointsCount.set(1000);
-
-// copy boxes on the points
-const box = geo.createNode('box');
-box.p.size.set(0.1);
-const copy = geo.createNode('copy');
-copy.setInput(0, box);
-copy.setInput(1, scatter);
-copy.flags.display.set(true);
-
-// add an hemisphere light and a spotlight
-const hemisphereLight = rootNode.createNode('hemisphereLight');
-hemisphereLight.p.skyColor.set([0.5, 0.5, 0.5]);
-hemisphereLight.p.groundColor.set([0, 0, 0]);
-
-// create a camera
-const perspectiveCamera1 = rootNode.createNode('perspectiveCamera');
-perspectiveCamera1.p.t.set([5, 5, 5]);
-// add OrbitControls
-const events1 = perspectiveCamera1.createNode('eventsNetwork');
-const orbitsControls = events1.createNode('cameraOrbitControls');
-perspectiveCamera1.p.controls.setNode(orbitsControls);
-
-const element = document.getElementById('app');
-perspectiveCamera1.createViewer({element});
-```
-
-And we can also create some html inputs:
-
-```html
-<div>
-	<label>Size</label>
-	<input id='box-size' type='range' min=0 max=2 step=0.01 value=0.1></input>
-</div>
-```
-
-and add them some events:
-
-```javascript
-document.getElementById('box-size').addEventListener('input', function (event) {
-	box.p.size.set([event.target.value, event.target.value]);
-});
-```
-
-And by updating the parameter size of the box, **every node that depends on it will recook** and update the geometry displayed on screen.
-
-By adding a few more events, we get the following (you can try it on [this page](https://polygonjs.com/examples/start2.html)):
-
-<a href="https://polygonjs.com/examples/start2.html" target="_blank"><img width="512" src="https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/docs/start2.gif" /></a>
-
-What we've done is essentially create a procedural network, where nodes depend on their inputs. If the inputs update, the dependent nodes will also update accordingly. This allows us to **create complex 3D scenes in no time**.
 
 ## Node-based
 

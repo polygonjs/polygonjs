@@ -37,6 +37,12 @@ export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
+	setEasing(mode: AnimNodeEasing) {
+		this.p.name.set(EASINGS.indexOf(mode));
+	}
+	setInOut(inOut: InOutMode) {
+		this.p.inOut.set(IN_OUT_MODES.indexOf(inOut));
+	}
 
 	static easingFullName(node: EasingAnimNode) {
 		const easing = EASINGS[node.pv.name];
