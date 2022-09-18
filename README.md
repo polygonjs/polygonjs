@@ -8,19 +8,20 @@
 
 Polygonjs is a node-based **3D WebGL design tool**.
 
-It helps creating 3D interactives experiences for the web, **without having to code**.
+--- [Home Page](https://polygonjs.com/) --- [Documentation](https://polygonjs.com/docs) --- [Try Demo](https://polygonjs.com/demo) ---
 
-[Home Page](https://polygonjs.com/) - [Documentation](https://polygonjs.com/docs) - [Demo](https://polygonjs.com/demo).
+Polygonjs helps creating 3D interactives experiences for the web, **without having to code**.
 
-Thanks to its node-based nature, you can create 3D scenes in a non-destructive worflow. This allows you to build quickly, without fearing to break anything.
+A 3D scene is built by creating and connecting nodes. This gives you a non-destructive worflow, where you can try different ideas quickly, without fearing of breaking anything.
 
-But it is also open source, and is **designed to be extended**. This means that if it does not have a feature you need, you can add it, by using its API, or by taking looking at how the existing nodes are implemented and using that as a starting point.
+Polygonjs is also **designed to be extended**. This means that if it does not have a feature you need, you can add it, either by using its API, or by reading in this repository how the existing nodes are implemented and using that as a starting point.
 
-Polygonjs can be used both from the web, or locally. The local version has many advantages, such as:
+The editor can be used both from the web or locally. The web version is convenient to discover the editor, but the local version is recommended for production, since it has the following advantages:
 
 -   quick access to models and textures on your computer
--   tree shaked exports (it exports only the nodes you use)
--   git integration
+-   tree shaked exports: It exports only the nodes you use.
+-   git integration: Every files is saved as text, either json or javascript.
+-   version tracking: It is an npm module, and has its version in package.json just like other dependencies
 -   integration to any web project (such as threejs, vuejs, react, vanilla)
 
 ![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.003.jpg?v=1)
