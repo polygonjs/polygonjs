@@ -1,5 +1,6 @@
 import {Uniform, WebGLRenderer, WebGLRenderTarget, Texture} from 'three';
 import {Effect, BlendFunction, EffectComposer} from 'postprocessing';
+export {BlendFunction};
 import {IUniforms} from '../../../../core/geometry/Material';
 
 // import fragmentShader from '../gl/builder.glsl';

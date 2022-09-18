@@ -76,7 +76,9 @@ export class IntegerParam extends TypedNumericParam<ParamType.INTEGER> {
 	override convert(raw_val: ParamInitValuesTypeMap[ParamType.INTEGER]): number | null {
 		const result = IntegerParam.convert(raw_val);
 		if (result != null) {
-			return this.options.ensureInRange(result);
+			let validVal = this.options.ensureInRange(result);
+			validVal = this.options.ensureValueInMenuEntries(validVal);
+			return validVal;
 		} else {
 			return result;
 		}

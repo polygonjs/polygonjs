@@ -8,7 +8,17 @@ export async function saveAndLoadScene(scene: PolyScene, callback: SaveLoadScene
 	const data = new SceneJsonExporter(scene).data();
 
 	// console.log('************ LOAD **************');
-	const newScene = await SceneJsonImporter.loadData(data);
+	const importer = new SceneJsonImporter(data);
+	const newScene = await importer.scene();
 
 	await callback(newScene);
+}
+
+export async function sceneFromScene(scene: PolyScene) {
+	const data = new SceneJsonExporter(scene).data();
+
+	// console.log('************ LOAD **************');
+	const importer = new SceneJsonImporter(data);
+	const newScene = await importer.scene();
+	return newScene;
 }

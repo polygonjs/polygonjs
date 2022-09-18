@@ -1,7 +1,6 @@
 import {CoreSleep} from '../../../src/core/Sleep';
-import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
-import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 import {RendererUtils} from '../../helpers/RendererUtils';
+import {sceneFromScene} from '../../helpers/ImportHelper';
 
 QUnit.test('mouse event nodes update the viewer event listeners', async (assert) => {
 	const scene = window.scene;
@@ -102,9 +101,8 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 
 		assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['click'], 'only click registered');
 
-		const data = new SceneJsonExporter(scene).data();
 		// console.log('************ LOAD **************');
-		const scene2 = await SceneJsonImporter.loadData(data);
+		const scene2 = await sceneFromScene(scene);
 		await scene2.waitForCooksCompleted();
 		const element2 = document.createElement('div');
 		document.body.appendChild(element2);

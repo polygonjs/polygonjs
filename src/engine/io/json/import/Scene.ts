@@ -1,3 +1,7 @@
+import {NodeJsonExporterData} from './../export/Node';
+import {BaseNodeType} from './../../../nodes/_Base';
+import {NodeContext} from './../../../poly/NodeContext';
+import {PolyNodeController} from './../../../nodes/utils/poly/PolyNodeController';
 import {PolyScene} from '../../../scene/PolyScene';
 // import {JsonImporterVisitor} from './Visitor'
 import {SceneJsonExporterData} from '../export/Scene';
@@ -25,6 +29,15 @@ function versionStrToNum(v: string) {
 	return 1000 * a + b + c / 1000;
 }
 
+interface MigrateHelper {
+	migrateNodeType: (
+		sceneImporter: SceneJsonImporter,
+		parentNode: BaseNodeType,
+		nodeData: NodeJsonExporterData
+	) => string;
+	migrateParams: (sceneImporter: SceneJsonImporter, parentNode: BaseNodeType, nodeData: NodeJsonExporterData) => void;
+}
+
 export class SceneJsonImporter {
 	public readonly report = new ImportReport(this);
 	private _base_operations_composer_nodes_with_resolve_required: OperationsComposerSopNode[] | undefined;
@@ -33,6 +46,13 @@ export class SceneJsonImporter {
 	static async loadData(data: SceneJsonExporterData, options?: SceneJSONImporterOptions) {
 		const importer = new SceneJsonImporter(data, options);
 		return await importer.scene();
+	}
+	private _migrateHelper: MigrateHelper | undefined;
+	setMigrateHelper(migrateHelper: MigrateHelper) {
+		this._migrateHelper = migrateHelper;
+	}
+	migrateHelper() {
+		return this._migrateHelper;
 	}
 
 	polygonjsSceneVersion() {
@@ -58,6 +78,19 @@ export class SceneJsonImporter {
 			paramsInitValueOverrides,
 			nodeName: ROOT_NODE_NAME,
 		};
+
+		const embeddedPolyNodes = this._data.embeddedPolyNodes;
+		if (embeddedPolyNodes) {
+			const keys = Object.keys(embeddedPolyNodes);
+			for (let key of keys) {
+				const elements = key.split('/');
+				const node_context = elements[0] as NodeContext;
+				const node_type = elements[1];
+				const data = embeddedPolyNodes[key];
+				PolyNodeController.createNodeClassAndRegister({node_context, node_type, data});
+			}
+		}
+
 		const scene = new PolyScene({root: nodeCreateOptions});
 		if (this._options) {
 			if (this._options.sceneName) {

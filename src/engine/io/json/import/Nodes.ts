@@ -11,7 +11,6 @@ import type {NodeJsonImporter} from './Node';
 import {CoreString} from '../../../../core/String';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 import type {NodeCreateOptions} from '../../../nodes/utils/hierarchy/ChildrenController';
-import {JsonImporterMigrateHelper} from './migrate/MigrateHelper';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
@@ -27,10 +26,13 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		const {optimized_names, non_optimized_names} = OptimizedNodesJsonImporter.child_names_by_optimized_state(data);
 		const nonOptimizedNodes: BaseNodeTypeWithIO[] = [];
+		const migrateHelper = scene_importer.migrateHelper();
 		for (let nodeName of non_optimized_names) {
 			const node_data = data[nodeName];
-			const nodeType = JsonImporterMigrateHelper.migrateNodeType(this._node, node_data);
-			JsonImporterMigrateHelper.migrateParams(scene_importer, this._node, node_data);
+			const nodeType = migrateHelper
+				? migrateHelper.migrateNodeType(scene_importer, this._node, node_data)
+				: node_data.type;
+			migrateHelper?.migrateParams(scene_importer, this._node, node_data);
 			const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 			const nodeCreateOptions: NodeCreateOptions = {
 				paramsInitValueOverrides,

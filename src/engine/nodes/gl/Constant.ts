@@ -68,13 +68,13 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 
 	private _currentConnectionType() {
 		if (this.pv.type == null) {
-			console.warn('constant gl node type if not valid');
+			console.warn('constant gl node type is null', this.path());
 		}
-		const connection_type = GL_CONNECTION_POINT_TYPES[this.pv.type];
-		if (connection_type == null) {
-			console.warn('constant gl node type if not valid');
+		const connectionType = GL_CONNECTION_POINT_TYPES[this.pv.type] || GlConnectionPointType.FLOAT;
+		if (connectionType == null) {
+			console.warn(`constant gl node type if not valid (${this.pv.type})`, this.path());
 		}
-		return connection_type;
+		return connectionType;
 	}
 
 	currentParam(): BaseParamType {

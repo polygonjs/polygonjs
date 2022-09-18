@@ -1,4 +1,4 @@
-import { BaseNodeType, TypedNode } from './../../_Base';
+import {BaseNodeType} from './../../_Base';
 import {NodeJsonExporterData} from './../../../io/json/export/Node';
 import {NodeEvent} from './../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
@@ -144,7 +144,7 @@ export class PolyNodeController {
 				simple: {
 					min: node.io.inputs.minCount(),
 					max: node.io.inputs.maxInputsCount(),
-					names: (node.constructor as typeof TypedNode<any,any>).displayedInputNames(),
+					names: [],
 				},
 			};
 		}
@@ -226,5 +226,8 @@ export class PolyNodeController {
 	}
 	static definition<NC extends NodeContext>(context: NC, type: string) {
 		return this._definitionRegister.get(context)?.get(type);
+	}
+	static register() {
+		return this._definitionRegister;
 	}
 }

@@ -1,14 +1,12 @@
 import {CoreWalker} from '../../../src/core/Walker';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
-import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
-import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 import {MaterialsNetworkObjNode} from '../../../src/engine/nodes/obj/MaterialsNetwork';
 import {MaterialSopNode} from '../../../src/engine/nodes/sop/Material';
 import {ParamType} from '../../../src/engine/poly/ParamType';
 import {GeoObjNode} from '../../../src/engine/nodes/obj/Geo';
 import {MaterialsNetworkSopNode} from '../../../src/engine/nodes/sop/MaterialsNetwork';
 // import {ObjectMergeSopNode} from '../../../src/engine/nodes/sop/ObjectMerge';
-import {saveAndLoadScene} from '../../helpers/ImportHelper';
+import {saveAndLoadScene, sceneFromScene} from '../../helpers/ImportHelper';
 import {MeshStandardMatNode} from '../../../src/engine/nodes/mat/MeshStandard';
 import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
 
@@ -268,10 +266,8 @@ QUnit.test('mutiple params referencing a node with an absolute path all get upda
 		newMatNetworkName: string,
 		compute = false
 	) {
-		const data = new SceneJsonExporter(sceneToSave).data();
-
 		// console.log('************ LOAD **************');
-		const scene = await SceneJsonImporter.loadData(data);
+		const scene = await sceneFromScene(sceneToSave);
 		await scene.waitForCooksCompleted();
 
 		const MAT2 = scene.node(matnetwork.path()) as MaterialsNetworkObjNode;
@@ -326,10 +322,8 @@ QUnit.test('mutiple params referencing a node with a relative path all get updat
 		newMatNetworkName: string,
 		compute = false
 	) {
-		const data = new SceneJsonExporter(sceneToSave).data();
-
 		// console.log('************ LOAD **************');
-		const scene = await SceneJsonImporter.loadData(data);
+		const scene = await sceneFromScene(sceneToSave);
 		await scene.waitForCooksCompleted();
 
 		const MAT2 = scene.node(matnetwork.path()) as MaterialsNetworkSopNode;

@@ -1,3 +1,5 @@
+import {PolyDictionary} from './../../../../types/GlobalTypes';
+import {PolyNodeDefinition} from './../../../nodes/utils/poly/PolyNodeDefinition';
 import {PolyScene} from '../../../scene/PolyScene';
 import {NodeJsonExporterData, NodeJsonExporterUIData, NodeJSONShadersData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';
@@ -20,6 +22,7 @@ export interface SceneJsonExporterData {
 	root?: NodeJsonExporterData;
 	ui?: NodeJsonExporterUIData;
 	shaders?: NodeJSONShadersData;
+	embeddedPolyNodes?: PolyDictionary<PolyNodeDefinition>;
 }
 
 export class SceneJsonExporter {

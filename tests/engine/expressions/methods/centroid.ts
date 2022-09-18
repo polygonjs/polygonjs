@@ -1,8 +1,7 @@
 import {Box3} from 'three';
-import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
-import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {TextSopNode} from '../../../../src/engine/nodes/sop/Text';
 import {TransformSopNode} from '../../../../src/engine/nodes/sop/Transform';
+import {sceneFromScene} from '../../../helpers/ImportHelper';
 
 QUnit.test('expression centroid works with path', async (assert) => {
 	const geo1 = window.geo1;
@@ -88,10 +87,9 @@ QUnit.test('expression centroid with input index still build dependency after sc
 	assert.in_delta(bbox.max.x, 0.84, 0.1);
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
 
 	// console.log('************ LOAD **************');
-	const scene2 = await SceneJsonImporter.loadData(data);
+	const scene2 = await sceneFromScene(scene);
 	await scene2.waitForCooksCompleted();
 
 	const text2 = scene2.node(text.path()) as TextSopNode;

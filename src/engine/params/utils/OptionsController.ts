@@ -511,6 +511,22 @@ export class OptionsController {
 			return [];
 		}
 	}
+	ensureValueInMenuEntries(value: number): number {
+		const options = this.menuOptions();
+		if (!options) {
+			return value;
+		}
+		const entries = options[ENTRIES];
+		if (entries.length == 0) {
+			return value;
+		}
+		for (let entry of entries) {
+			if (value == entry.value) {
+				return value;
+			}
+		}
+		return entries[0].value;
+	}
 
 	// multiline
 	isMultiline(): boolean {
