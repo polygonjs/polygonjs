@@ -43,6 +43,13 @@ export interface TypedViewerOptions<C extends Camera> extends CreateViewerOption
 	scene: PolyScene;
 	updateCameraAspect: UpdateCameraAspectCallback;
 }
+export interface TypedViewerInterectionObserverChangeOptions {
+	root?: HTMLElement;
+	rootMargin?: string;
+	threshold?: number;
+	playPauseScene?: boolean;
+	onChange?: (isIntersecting: boolean) => void;
+}
 
 /**
  * Base class to create a viewer. It is used for the [Threejs viewer](/docs/api/ThreejsViewer) as well as the [Mapbox Viewer](https://github.com/polygonjs/plugin-mapbox)
@@ -250,6 +257,50 @@ export abstract class TypedViewer<C extends Camera> {
 	}
 	autoRenderState(): boolean {
 		return this._doRender;
+	}
+
+	//
+	//
+	// Visibility detection
+	//
+	//
+	/**
+	 * This sets the viewer to detect if it is visible, and to pause/unpause itself when its visibility changes.
+	 * This can be very useful to improve performance.
+	 *
+	 */
+	updateAutoRenderOnIntersectionChange(_options: TypedViewerInterectionObserverChangeOptions) {
+		if (!this._domElement) {
+			console.warn('cannot apply');
+			return;
+		}
+		let {threshold, root, rootMargin, playPauseScene, onChange} = _options;
+		if (threshold == null) {
+			threshold = 0.01;
+		}
+		const observerOptions: IntersectionObserverInit = {
+			root,
+			rootMargin,
+			threshold,
+		};
+		const onObserverChange: IntersectionObserverCallback = (entries, observer) => {
+			entries.forEach((entry) => {
+				const isVisible: boolean = entry.isIntersecting;
+				this.setAutoRender(isVisible);
+				if (playPauseScene) {
+					if (isVisible) {
+						this._scene.play();
+					} else {
+						this._scene.pause();
+					}
+				}
+				if (onChange) {
+					onChange(isVisible);
+				}
+			});
+		};
+		let observer = new IntersectionObserver(onObserverChange, observerOptions);
+		observer.observe(this._domElement);
 	}
 
 	//
