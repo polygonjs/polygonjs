@@ -64,7 +64,7 @@ export class RaycastGPUController extends BaseRaycastController {
 		// if (renderer_controller) {
 		this._renderTarget =
 			this._renderTarget ||
-			new WebGLRenderTarget(canvas.offsetWidth, canvas.offsetHeight, {
+			new WebGLRenderTarget(1, 1, {
 				minFilter: LinearFilter,
 				magFilter: NearestFilter,
 				format: RGBAFormat,
@@ -86,21 +86,25 @@ export class RaycastGPUController extends BaseRaycastController {
 			return;
 		}
 		this._modifySceneAndRenderer(scene, renderer);
+
+		(camera as any).setViewOffset(
+			canvas.offsetWidth,
+			canvas.offsetHeight,
+			this._cursor.x * canvas.offsetWidth,
+			(1 - this._cursor.y) * canvas.offsetHeight,
+			1,
+			1
+		);
+
 		renderer.setRenderTarget(this._renderTarget);
 		renderer.clear();
 		renderer.render(scene, camera);
 		renderer.setRenderTarget(null);
+		(camera as any).clearViewOffset();
 		this._restoreSceneAndRenderer(scene, renderer);
 
 		// read result
-		renderer.readRenderTargetPixels(
-			this._renderTarget,
-			Math.round(this._cursor.x * canvas.offsetWidth),
-			Math.round(this._cursor.y * canvas.offsetHeight),
-			1,
-			1,
-			this._read
-		);
+		renderer.readRenderTargetPixels(this._renderTarget, 0, 0, 1, 1, this._read);
 		this._paramColor[0] = this._read[0];
 		this._paramColor[1] = this._read[1];
 		this._paramColor[2] = this._read[2];
