@@ -23,6 +23,8 @@ class TextureSDFGlParamsConfig extends NodeParamsConfig {
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	boundMin = ParamConfig.VECTOR3([0, 0, 0]);
 	boundMax = ParamConfig.VECTOR3([1, 1, 1]);
+	boundScale = ParamConfig.VECTOR3([1, 1, 1]);
+	bias = ParamConfig.FLOAT(0.01);
 	// voxelSizes = ParamConfig.VECTOR3([1, 1, 1]);
 }
 const ParamsConfig = new TextureSDFGlParamsConfig();
@@ -46,13 +48,15 @@ export class TextureSDFGlNode extends BaseSDFGlNode<TextureSDFGlParamsConfig> {
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const boundMin = ThreeToGl.vector3(this.variableForInputParam(this.p.boundMin));
 		const boundMax = ThreeToGl.vector3(this.variableForInputParam(this.p.boundMax));
+		const boundScale = ThreeToGl.vector3(this.variableForInputParam(this.p.boundScale));
+		const bias = ThreeToGl.float(this.variableForInputParam(this.p.bias));
 		// const voxelSizes = ThreeToGl.vector3(this.variableForInputParam(this.p.voxelSizes));
 
-		const rgba = this.glVarName(TextureSDFGlNode.OUTPUT_NAME);
+		const d = this.glVarName(TextureSDFGlNode.OUTPUT_NAME);
 		const boundCenter = this.glVarName('boundCenter');
 		const boundSize = this.glVarName('boundSize');
 		const sdBox = this.glVarName('sdBox');
-		const positionRefit = this.glVarName('positionRefit');
+		const positionNormalised = this.glVarName('positionNormalised');
 		const map = this.uniformName();
 		const definitions: BaseGLDefinition[] = [
 			new PrecisionGLDefinition(this, GlConnectionPointType.SAMPLER_3D, 'highp'),
@@ -60,11 +64,11 @@ export class TextureSDFGlNode extends BaseSDFGlNode<TextureSDFGlParamsConfig> {
 		];
 		const bodyLines: string[] = [
 			`vec3 ${boundCenter} = (${boundMax} + ${boundMin})*0.5`,
-			`vec3 ${boundSize} = ${boundMax} - ${boundMin}`,
+			`vec3 ${boundSize} = (${boundMax} - ${boundMin})`,
 			// `vec3 ${positionRefit} = ((${position} - (${boundMin} + (${voxelSizes}*0.0))) / ${boundSize})`,
-			`vec3 ${positionRefit} = ((${position} - ${boundMin}) / ${boundSize})`,
-			`float ${sdBox} = sdBox(${position}-${boundCenter}, ${boundSize})`,
-			`float ${rgba} = ${sdBox} < 0.01 ? texture(${map}, ${positionRefit} - ${center}).r : ${sdBox}`,
+			`vec3 ${positionNormalised} = ((${position} - ${boundMin}) / ${boundSize})`,
+			`float ${sdBox} = sdBox(${position}-${boundCenter}, ${boundSize}*${boundScale})`,
+			`float ${d} = ${sdBox} < ${bias} ? texture(${map}, ${positionNormalised} - ${center}).r : ${sdBox}`,
 		];
 
 		shadersCollectionController.addDefinitions(this, definitions);

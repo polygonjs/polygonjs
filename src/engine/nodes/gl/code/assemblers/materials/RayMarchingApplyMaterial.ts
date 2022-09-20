@@ -125,7 +125,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 					'ior',
 					'iorOffset',
 					'transmission',
-					'absorbtion',
+					'absorption',
 					'refractionBiasMult',
 				],
 				[]

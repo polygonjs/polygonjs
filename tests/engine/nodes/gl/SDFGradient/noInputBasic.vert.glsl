@@ -14,17 +14,17 @@ float sdSphere( vec3 p, float s )
 
 float sdBox( vec3 p, vec3 b )
 {
-	vec3 q = abs(p) - b;
+	vec3 q = abs(p) - b*0.5;
 	return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }
 float sdRoundBox( vec3 p, vec3 b, float r )
 {
-	vec3 q = abs(p) - b;
+	vec3 q = abs(p) - b*0.5;
 	return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0) - r;
 }
 float sdBoxFrame( vec3 p, vec3 b, float e )
 {
-		p = abs(p  )-b;
+		p = abs(p  )-b*0.5;
 	vec3 q = abs(p+e)-e;
 	return min(min(
 		length(max(vec3(p.x,q.y,q.z),0.0))+min(max(p.x,max(q.y,q.z)),0.0),

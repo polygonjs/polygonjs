@@ -385,11 +385,11 @@ QUnit.test('mat/rayMarchingBuilder with raymarched refractions', async (assert) 
 	transmission.setGlType(GlConnectionPointType.FLOAT);
 	transmission.p.float.set(0.7);
 	sdfMaterial.setInput('transmission', transmission);
-	const absorbtion = rayMarchingBuilder1.createNode('constant');
-	absorbtion.setName('absorbtion');
-	absorbtion.setGlType(GlConnectionPointType.FLOAT);
-	absorbtion.p.float.set(0.7);
-	sdfMaterial.setInput('absorbtion', absorbtion);
+	const absorption = rayMarchingBuilder1.createNode('constant');
+	absorption.setName('absorption');
+	absorption.setGlType(GlConnectionPointType.FLOAT);
+	absorption.p.float.set(0.7);
+	sdfMaterial.setInput('absorption', absorption);
 	const refractionBiasMult = rayMarchingBuilder1.createNode('constant');
 	refractionBiasMult.p.int.set(4);
 	refractionBiasMult.setGlType(GlConnectionPointType.FLOAT);

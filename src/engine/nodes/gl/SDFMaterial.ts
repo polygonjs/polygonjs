@@ -115,7 +115,7 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 	splitRGB = ParamConfig.BOOLEAN(0, {
 		visibleIf: {useRefraction: 1},
 	});
-	iorOffset = ParamConfig.VECTOR3([0, 0, 0], {
+	iorOffset = ParamConfig.VECTOR3([-0.01, 0, 0.01], {
 		visibleIf: {useRefraction: 1, splitRGB: 1},
 	});
 	transmission = ParamConfig.FLOAT(0.5, {
@@ -123,7 +123,7 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
-	absorbtion = ParamConfig.FLOAT(0.5, {
+	absorption = ParamConfig.FLOAT(0.5, {
 		visibleIf: {useRefraction: 1},
 		range: [0, 1],
 		rangeLocked: [false, false],
@@ -134,10 +134,22 @@ class SDFMaterialGlParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		separatorBefore: true,
 	});
+	refractionMaxDist = ParamConfig.FLOAT(100, {
+		visibleIf: {useRefraction: 1},
+		range: [0, 100],
+		rangeLocked: [true, false],
+		step: 0.0001,
+	});
 	refractionBiasMult = ParamConfig.FLOAT(2, {
 		visibleIf: {useRefraction: 1},
 		range: [0, 10],
 		rangeLocked: [true, false],
+	});
+	sampleEnvMapOnLastRefractionRay = ParamConfig.BOOLEAN(1, {
+		visibleIf: {useRefraction: 1},
+	});
+	refractionStartOutsideMedium = ParamConfig.BOOLEAN(1, {
+		visibleIf: {useRefraction: 1},
 	});
 }
 const ParamsConfig = new SDFMaterialGlParamsConfig();
@@ -157,6 +169,7 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 			'useRefraction',
 			'refractionDepth',
 			'splitRGB',
+			'sampleEnvMapOnLastRefractionRay',
 		]);
 		// this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
 		// this.io.connection_points.set_input_name_function(this._glInputNames.bind(this));
@@ -259,8 +272,9 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 			const refractionDepth = this.pv.refractionDepth;
 			const ior = ThreeToGl.float(this.variableForInputParam(this.p.ior));
 			const transmission = ThreeToGl.float(this.variableForInputParam(this.p.transmission));
-			const absorbtion = ThreeToGl.float(this.variableForInputParam(this.p.absorbtion));
+			const absorption = ThreeToGl.float(this.variableForInputParam(this.p.absorption));
 			const refractionBiasMult = ThreeToGl.float(this.variableForInputParam(this.p.refractionBiasMult));
+			const refractionMaxDist = ThreeToGl.float(this.variableForInputParam(this.p.refractionMaxDist));
 			const splitRGB = isBooleanTrue(this.pv.splitRGB);
 			const iorOffset = ThreeToGl.vector3(this.variableForInputParam(this.p.iorOffset));
 
@@ -270,22 +284,22 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		float ior = ${ior};
 		float biasMult = ${refractionBiasMult};
 		vec3 tint = ${refractionTint};
-		float absorbtion = ${absorbtion};
+		float absorption = ${absorption};
 			`);
 			if (splitRGB) {
 				bodyLines.push(`
 		vec3 offset = ${iorOffset};
-		vec4 refractedDataR = GetRefractedData(p, n, rayDir, ior+offset.x, biasMult, ${envMap}, ${refractionDepth});
-		vec4 refractedDataG = GetRefractedData(p, n, rayDir, ior+offset.y, biasMult, ${envMap}, ${refractionDepth});
-		vec4 refractedDataB = GetRefractedData(p, n, rayDir, ior+offset.z, biasMult, ${envMap}, ${refractionDepth});
-		refractedColor.r = applyRefractionAbsorbtion(refractedDataR, tint, absorbtion).r;
-		refractedColor.g = applyRefractionAbsorbtion(refractedDataG, tint, absorbtion).g;
-		refractedColor.b = applyRefractionAbsorbtion(refractedDataB, tint, absorbtion).b;
+		vec4 refractedDataR = GetRefractedData(p, n, rayDir, ior+offset.x, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth});
+		vec4 refractedDataG = GetRefractedData(p, n, rayDir, ior+offset.y, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth});
+		vec4 refractedDataB = GetRefractedData(p, n, rayDir, ior+offset.z, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth});
+		refractedColor.r = applyRefractionAbsorption(refractedDataR.r, tint.r, refractedDataR.w, absorption);
+		refractedColor.g = applyRefractionAbsorption(refractedDataG.g, tint.g, refractedDataG.w, absorption);
+		refractedColor.b = applyRefractionAbsorption(refractedDataB.b, tint.b, refractedDataB.w, absorption);
 				`);
 			} else {
 				bodyLines.push(`
-		vec4 refractedData = GetRefractedData(p, n, rayDir, ior, biasMult, ${envMap}, ${refractionDepth});
-		refractedColor = applyRefractionAbsorbtion(refractedData, tint, absorbtion);
+		vec4 refractedData = GetRefractedData(p, n, rayDir, ior, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth});
+		refractedColor = applyRefractionAbsorption(refractedData.rgb, tint, refractedData.w, absorption);
 				`);
 			}
 			bodyLines.push(`
@@ -293,6 +307,16 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		// --- REFRACTION - END
 	`);
 			definitions.push(new FunctionGLDefinition(this, '#define RAYMARCHED_REFRACTIONS 1'));
+			if (isBooleanTrue(this.pv.sampleEnvMapOnLastRefractionRay)) {
+				definitions.push(
+					new FunctionGLDefinition(this, '#define RAYMARCHED_REFRACTIONS_SAMPLE_ENV_MAP_ON_LAST 1')
+				);
+			}
+			if (isBooleanTrue(this.pv.refractionStartOutsideMedium)) {
+				definitions.push(
+					new FunctionGLDefinition(this, '#define RAYMARCHED_REFRACTIONS_START_OUTSIDE_MEDIUM 1')
+				);
+			}
 		}
 
 		bodyLines.push(`}`);

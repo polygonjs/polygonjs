@@ -16,17 +16,17 @@ float sdSphere( vec3 p, float s )
 }
 float sdBox( vec3 p, vec3 b )
 {
-	vec3 q = abs(p) - b;
+	vec3 q = abs(p) - b*0.5;
 	return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }
 float sdRoundBox( vec3 p, vec3 b, float r )
 {
-	vec3 q = abs(p) - b;
+	vec3 q = abs(p) - b*0.5;
 	return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0) - r;
 }
 float sdBoxFrame( vec3 p, vec3 b, float e )
 {
-		p = abs(p  )-b;
+		p = abs(p  )-b*0.5;
 	vec3 q = abs(p+e)-e;
 	return min(min(
 		length(max(vec3(p.x,q.y,q.z),0.0))+min(max(p.x,max(q.y,q.z)),0.0),
@@ -176,6 +176,8 @@ vec3 envMapSampleWithFresnel(vec3 rayDir, sampler2D map, EnvMap envMap, vec3 n, 
 	return env * envMap.tint * envMap.intensity * fresnelFactor;
 }
 #define RAYMARCHED_REFRACTIONS 1
+#define RAYMARCHED_REFRACTIONS_SAMPLE_ENV_MAP_ON_LAST 1
+#define RAYMARCHED_REFRACTIONS_START_OUTSIDE_MEDIUM 1
 uniform sampler2D v_POLY_texture_envTexture1;
 #include <lightmap_pars_fragment>
 #include <bsdfs>
@@ -367,7 +369,7 @@ vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
 	
 	float v_POLY_transmission_val = 0.7;
 	
-	float v_POLY_absorbtion_val = 0.7;
+	float v_POLY_absorption_val = 0.7;
 	
 	float v_POLY_refractionBiasMult_val = 0.0;
 	
@@ -393,7 +395,7 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 	
 	float v_POLY_transmission_val = 0.7;
 	
-	float v_POLY_absorbtion_val = 0.7;
+	float v_POLY_absorption_val = 0.7;
 	
 	float v_POLY_refractionBiasMult_val = 0.0;
 	
@@ -434,13 +436,18 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 }
 #endif
 #ifdef RAYMARCHED_REFRACTIONS
-vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, int refractionDepth){
+vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, float refractionMaxDist, int refractionDepth){
 	bool hitRefraction = true;
 	bool changeSide = true;
+	#ifdef RAYMARCHED_REFRACTIONS_START_OUTSIDE_MEDIUM
 	float side = -1.;
+	#else
+	float side =  1.;
+	#endif
 	float iorInverted = 1. / ior;
 	vec3 refractedColor = vec3(0.);
 	float distanceInsideMedium=0.;
+	float totalRefractedDistance=0.;
 	#pragma unroll_loop_start
 	for(int i=0; i < refractionDepth; i++) {
 		if(hitRefraction){
@@ -455,7 +462,8 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 				rayDir = reflect(rayDirPreRefract, n);
 			}
 			SDFContext sdfContext = RayMarch(p, rayDir, side);
-			if( abs(sdfContext.d) >= MAX_DIST ){
+			totalRefractedDistance += sdfContext.d;
+			if( abs(sdfContext.d) >= MAX_DIST || totalRefractedDistance > refractionMaxDist ){
 				hitRefraction = false;
 				refractedColor = envMapSample(rayDir, envMap);
 			}
@@ -464,25 +472,32 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 				n = GetNormal(p) * side;
 				vec3 matCol = applyMaterialWithoutRefraction(p, n, rayDir, sdfContext.matId);
 				refractedColor = matCol;
-				distanceInsideMedium += side < 0. ? abs(sdfContext.d) : 0.;
+				distanceInsideMedium += (side-1.)*-0.5*abs(sdfContext.d);
 				if( changeSide ){
 					side *= -1.;
 				}
 			}
 		}
+		#ifdef RAYMARCHED_REFRACTIONS_SAMPLE_ENV_MAP_ON_LAST
+		if(i == refractionDepth-1){
+			refractedColor = envMapSample(rayDir, envMap);
+		}
+		#endif
 	}
 	#pragma unroll_loop_end
 	return vec4(refractedColor, distanceInsideMedium);
 }
-vec3 applyRefractionAbsorbtion(vec4 refractedData, vec3 tint, float absorbtion){
-	vec3 refractedColor = refractedData.rgb;
-	float distanceInsideMedium = refractedData.w;
-	float tintFactor = 1.+(distanceInsideMedium * absorbtion);
-	tint.r = pow(tint.r, tintFactor);
-	tint.g = pow(tint.g, tintFactor);
-	tint.b = pow(tint.b, tintFactor);
-	refractedColor = refractedColor * tint;
-	return refractedColor;
+float applyRefractionAbsorption(float refractedDataColor, float tint, float distanceInsideMedium, float absorption){
+	float blend = smoothstep(0.,1.,absorption*distanceInsideMedium);
+	return mix(refractedDataColor, refractedDataColor*tint, blend);
+}
+vec3 applyRefractionAbsorption(vec3 refractedDataColor, vec3 tint, float distanceInsideMedium, float absorption){
+	float blend = smoothstep(0.,1.,absorption*distanceInsideMedium);
+	return vec3(
+		mix(refractedDataColor.r, refractedDataColor.r*tint.r, blend),
+		mix(refractedDataColor.g, refractedDataColor.g*tint.g, blend),
+		mix(refractedDataColor.b, refractedDataColor.b*tint.b, blend)
+	);
 }
 #endif
 vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
@@ -497,7 +512,7 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 	
 	float v_POLY_transmission_val = 0.7;
 	
-	float v_POLY_absorbtion_val = 0.7;
+	float v_POLY_absorption_val = 0.7;
 	
 	float v_POLY_refractionBiasMult_val = 0.0;
 	
@@ -510,11 +525,11 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 		float ior = v_POLY_ior_val;
 		float biasMult = v_POLY_refractionBiasMult_val;
 		vec3 tint = v_POLY_refractionTint_val;
-		float absorbtion = v_POLY_absorbtion_val;
+		float absorption = v_POLY_absorption_val;
 			
 	
-		vec4 refractedData = GetRefractedData(p, n, rayDir, ior, biasMult, v_POLY_texture_envTexture1, 3);
-		refractedColor = applyRefractionAbsorbtion(refractedData, tint, absorbtion);
+		vec4 refractedData = GetRefractedData(p, n, rayDir, ior, biasMult, v_POLY_texture_envTexture1, 100.0, 3);
+		refractedColor = applyRefractionAbsorption(refractedData.rgb, tint, refractedData.w, absorption);
 				;
 	
 		col += refractedColor * v_POLY_transmission_val;
