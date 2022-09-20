@@ -2,6 +2,7 @@ import {LoadingManager, Texture} from 'three';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
 import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
+import {sanitizeUrl} from '../UrlHelper';
 import {BaseGeoLoaderOutput} from './geometry/_BaseLoaderHandler';
 
 export interface BaseLoaderLoadOptions {
@@ -46,11 +47,10 @@ export class CoreBaseLoader {
 	static readonly loadingManager = LOADING_MANAGER; // static
 	public readonly loadingManager = LOADING_MANAGER; // not static
 
-	constructor(
-		protected _url: string,
-		protected _node?: BaseNodeType,
-		public blobOptions: BlobsControllerFetchNodeOptions = {}
-	) {}
+	protected _url: string;
+	constructor(url: string, protected _node?: BaseNodeType, public blobOptions: BlobsControllerFetchNodeOptions = {}) {
+		this._url = sanitizeUrl(url);
+	}
 
 	static extension(url: string) {
 		let ext: string | null = null;

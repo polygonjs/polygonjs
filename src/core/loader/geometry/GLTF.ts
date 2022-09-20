@@ -6,6 +6,7 @@ import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
 import {BaseGeoLoader, BaseGeoLoaderHandler} from './_BaseLoaderHandler';
 import {KTX2TextureLoader} from '../texture/KTX2';
 import {KTX2Loader} from '../../../modules/three/examples/jsm/loaders/KTX2Loader';
+import {sanitizeUrl} from '../../UrlHelper';
 
 interface GLTFLoaderLoadOptions extends BaseLoaderLoadOptions {
 	draco: boolean;
@@ -82,7 +83,7 @@ export class GLTFLoaderHandler extends BaseGeoLoaderHandler<GLTF> {
 		const root = Poly.libs.root();
 		const DRACOGLTFPath = Poly.libs.DRACOGLTFPath();
 		if (root || DRACOGLTFPath) {
-			const decoderPath = `${root || ''}${DRACOGLTFPath || ''}/`;
+			const decoderPath = sanitizeUrl(`${root || ''}${DRACOGLTFPath || ''}/`);
 
 			const files = useJS ? ['draco_decoder.js'] : ['draco_decoder.wasm', 'draco_wasm_wrapper.js'];
 			await CoreBaseLoader._loadMultipleBlobGlobal({

@@ -1,6 +1,5 @@
 import {NodeJSONShadersData} from './../../json/export/Node';
-// import {CoreType} from '../../../../core/Type';
-import {UrlHelper} from '../../../../core/UrlHelper';
+import {sanitizeUrl} from '../../../../core/UrlHelper';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {PolyEventsDispatcher} from '../../common/EventsDispatcher';
 import {PROGRESS_RATIO} from '../../common/Progress';
@@ -109,7 +108,7 @@ export class SceneDataManifestImporter {
 			PolyEventsDispatcher.dispatchProgressEvent(progress, importData.sceneName);
 		}
 
-		const sanitizedUrls = allUrls.map((url) => UrlHelper.sanitize(url));
+		const sanitizedUrls = allUrls.map((url) => sanitizeUrl(url));
 		const promises = sanitizedUrls.map((url) => fetch(url));
 		const responses = await Promise.all(promises);
 		const jsonResponses = responses.slice(0, jsonPayloadsCount);

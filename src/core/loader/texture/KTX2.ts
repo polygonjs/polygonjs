@@ -4,6 +4,7 @@ import {BaseCoreImageLoader, TextureLoadOptions} from './_BaseImageLoader';
 import {KTX2Loader} from '../../../modules/three/examples/jsm/loaders/KTX2Loader';
 import {Poly} from '../../../engine/Poly';
 import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
+import {sanitizeUrl} from '../../UrlHelper';
 
 type Resolve = (loader: KTX2Loader) => void;
 export class KTX2TextureLoader extends BaseCoreImageLoader {
@@ -38,7 +39,7 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 		const root = Poly.libs.root();
 		const KTX2Path = Poly.libs.KTX2Path();
 		if (root || KTX2Path) {
-			const decoderPath = `${root || ''}${KTX2Path || ''}/`;
+			const decoderPath = sanitizeUrl(`${root || ''}${KTX2Path || ''}/`);
 
 			if (options.node) {
 				const files = ['basis_transcoder.js', 'basis_transcoder.wasm'];

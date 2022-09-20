@@ -9,7 +9,7 @@ import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {Sampler, SamplerOptions} from 'tone/build/esm/instrument/Sampler';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
-import {UrlHelper} from '../../../core/UrlHelper';
+import {sanitizeUrl} from '../../../core/UrlHelper';
 import {CoreLoaderAudio} from '../../../core/loader/Audio';
 import {Poly} from '../../Poly';
 
@@ -93,7 +93,7 @@ export class SamplerAudioNode extends TypedAudioNode<SamplerAudioParamsConfig> {
 			for (let noteName of noteNames) {
 				const urlFileName = urlsJSON[noteName];
 				const url = `${this.pv.baseUrl}/${urlFileName}.${extension}`;
-				urlsJSON[noteName] = UrlHelper.sanitize(url);
+				urlsJSON[noteName] = sanitizeUrl(url);
 				urls.push(url);
 			}
 		} catch (err) {

@@ -3,6 +3,7 @@ import {Poly} from '../../../engine/Poly';
 import {CoreBaseLoader, modifyUrl} from '../_Base';
 // @ts-ignore
 import XAtlas from 'xatlas-web';
+import {sanitizeUrl} from '../../UrlHelper';
 
 type MeshId = number;
 interface MeshInfo {
@@ -74,7 +75,7 @@ export class XAtlasLoaderHandler extends CoreBaseLoader {
 		const root = Poly.libs.root();
 		const XATLASPath = Poly.libs.XATLASPath();
 		if (root || XATLASPath) {
-			const decoderPath = `${root || ''}${XATLASPath || ''}/`;
+			const decoderPath = sanitizeUrl(`${root || ''}${XATLASPath || ''}/`);
 
 			const fileName = 'xatlas-web.wasm';
 			const fullUrl = `${decoderPath}${fileName}`;
