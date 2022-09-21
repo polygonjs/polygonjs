@@ -5,5 +5,8 @@ export class CoreFeaturesController {
 	static noAssemblers(): boolean {
 		return this.urlParam('noassemblers') == '1';
 	}
+	static debugLoadProgress(): boolean {
+		return this.urlParam('debugLoadProgress') == '1';
+	}
 	protected static _urlParams = new URLSearchParams(window.location.search);
 }

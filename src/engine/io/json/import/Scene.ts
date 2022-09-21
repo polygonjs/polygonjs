@@ -1,3 +1,4 @@
+import {CoreFeaturesController} from './../../../../core/FeaturesController';
 import {NodeJsonExporterData} from './../export/Node';
 import {BaseNodeType} from './../../../nodes/_Base';
 import {NodeContext} from './../../../poly/NodeContext';
@@ -21,21 +22,10 @@ interface SceneJSONImporterOptions {
 	nodeCookWatcher?: NodeCookWatchCallback;
 	measurePerformanceOnLoad?: boolean;
 }
-function versionStrToNum(v: string) {
-	const elements = v.split('.').map((e) => parseInt(e));
-	const a = elements[0];
-	const b = elements[1];
-	const c = elements[2];
-	return 1000 * a + b + c / 1000;
-}
 
 interface MigrateHelper {
-	migrateNodeType: (
-		sceneImporter: SceneJsonImporter,
-		parentNode: BaseNodeType,
-		nodeData: NodeJsonExporterData
-	) => string;
-	migrateParams: (sceneImporter: SceneJsonImporter, parentNode: BaseNodeType, nodeData: NodeJsonExporterData) => void;
+	migrateNodeType: (parentNode: BaseNodeType, nodeData: NodeJsonExporterData) => string;
+	migrateParams: (parentNode: BaseNodeType, nodeData: NodeJsonExporterData) => void;
 }
 
 export class SceneJsonImporter {
@@ -54,24 +44,17 @@ export class SceneJsonImporter {
 	migrateHelper() {
 		return this._migrateHelper;
 	}
-
 	polygonjsSceneVersion() {
 		const properties = this._data['properties'];
 		if (properties) {
 			return properties.versions?.polygonjs;
 		}
 	}
-	isPolygonjsVersionLessThan(polygonVersionStr: string) {
-		const sceneVersionStr = this.polygonjsSceneVersion();
-		if (!sceneVersionStr) {
-			return false;
-		}
-		const sceneVersion = versionStrToNum(sceneVersionStr);
-		const polygonVersion = versionStrToNum(polygonVersionStr);
-		return sceneVersion < polygonVersion;
-	}
 
 	scene(): PolyScene {
+		if (CoreFeaturesController.debugLoadProgress()) {
+			console.log(`polygonjs version:${this.polygonjsSceneVersion()}`);
+		}
 		const rootData = this._data['root']!;
 		const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(rootData['params']);
 		const nodeCreateOptions: NodeCreateOptions = {

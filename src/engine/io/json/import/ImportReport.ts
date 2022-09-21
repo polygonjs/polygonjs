@@ -1,3 +1,4 @@
+import {CoreFeaturesController} from './../../../../core/FeaturesController';
 import {SceneJsonImporter} from './Scene';
 
 export class ImportReport {
@@ -13,5 +14,8 @@ export class ImportReport {
 	}
 	addWarning(message: string) {
 		this._warnings.push(message);
+		if (CoreFeaturesController.debugLoadProgress()) {
+			console.warn(message);
+		}
 	}
 }

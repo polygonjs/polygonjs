@@ -16,7 +16,7 @@ type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 	constructor(protected _node: T, protected dispatcher: JsonImportDispatcher) {}
 
-	process_data(scene_importer: SceneJsonImporter, data?: PolyDictionary<NodeJsonExporterData>) {
+	process_data(sceneImporter: SceneJsonImporter, data?: PolyDictionary<NodeJsonExporterData>) {
 		if (!data) {
 			return;
 		}
@@ -26,13 +26,11 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		const {optimized_names, non_optimized_names} = OptimizedNodesJsonImporter.child_names_by_optimized_state(data);
 		const nonOptimizedNodes: BaseNodeTypeWithIO[] = [];
-		const migrateHelper = scene_importer.migrateHelper();
+		const migrateHelper = sceneImporter.migrateHelper();
 		for (let nodeName of non_optimized_names) {
 			const node_data = data[nodeName];
-			const nodeType = migrateHelper
-				? migrateHelper.migrateNodeType(scene_importer, this._node, node_data)
-				: node_data.type;
-			migrateHelper?.migrateParams(scene_importer, this._node, node_data);
+			const nodeType = migrateHelper ? migrateHelper.migrateNodeType(this._node, node_data) : node_data.type;
+			migrateHelper?.migrateParams(this._node, node_data);
 			const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(node_data['params']);
 			const nodeCreateOptions: NodeCreateOptions = {
 				paramsInitValueOverrides,
@@ -66,7 +64,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 				nonOptimizedNodes.push(node);
 			} else {
 				const message = `failed to create node with type '${nodeType}'`;
-				scene_importer.report.addWarning(message);
+				sceneImporter.report.addWarning(message);
 				Poly.warn(message);
 			}
 
@@ -107,7 +105,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		if (optimized_names.length > 0) {
 			const optimized_nodes_importer = new OptimizedNodesJsonImporter(this._node);
-			optimized_nodes_importer.process_data(scene_importer, data);
+			optimized_nodes_importer.process_data(sceneImporter, data);
 
 			// ensure that the display node is still created
 			// as it may not be if the display flag is set to a node that will
@@ -152,7 +150,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			if (child_data) {
 				const importer = this.dispatcher.dispatchNode(node);
 				importers_by_node_name.set(node.name(), importer);
-				importer.process_data(scene_importer, data[node.name()]);
+				importer.process_data(sceneImporter, data[node.name()]);
 			} else {
 				Poly.warn(`possible import error for node ${node.name()}`);
 				Poly.log('available names are', Object.keys(data).sort(), data);
@@ -161,7 +159,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 		for (let node of nonOptimizedNodes) {
 			const importer = importers_by_node_name.get(node.name());
 			if (importer) {
-				importer.process_inputs_data(scene_importer, data[node.name()]);
+				importer.process_inputs_data(sceneImporter, data[node.name()]);
 			}
 		}
 	}

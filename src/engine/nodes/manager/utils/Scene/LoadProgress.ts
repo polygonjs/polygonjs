@@ -15,6 +15,9 @@ class NodeGroup {
 	private _processed: Set<BaseNodeType>;
 	private _remaining: Set<BaseNodeType>;
 	constructor(public readonly nodes: BaseNodeType[]) {
+		if (CoreFeaturesController.debugLoadProgress()) {
+			console.log(nodes);
+		}
 		this.totalCount = nodes.length;
 		this._processed = new Set();
 		this._remaining = SetUtils.fromArray(nodes);
@@ -22,6 +25,12 @@ class NodeGroup {
 	markNodeAsProcessed(node: BaseNodeType) {
 		this._processed.add(node);
 		this._remaining.delete(node);
+		if (CoreFeaturesController.debugLoadProgress()) {
+			console.log('markNodeAsProcessed', node.path(), {
+				processed: SetUtils.toArray(this._processed).map((n) => n.path()),
+				remaining: SetUtils.toArray(this._remaining).map((n) => n.path()),
+			});
+		}
 	}
 	isNodeProcessed(node: BaseNodeType) {
 		return this._processed.has(node);
@@ -227,7 +236,7 @@ export class RootLoadProgressController {
 	}
 
 	protected static debugActive(): boolean {
-		return CoreFeaturesController.urlParam('debugLoadProgress') == '1';
+		return CoreFeaturesController.debugLoadProgress();
 	}
 	static debug(arg0: any) {
 		if (!this.debugActive()) {

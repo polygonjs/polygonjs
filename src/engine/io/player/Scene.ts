@@ -2,8 +2,6 @@ import {RootLoadProgressController} from './../../nodes/manager/utils/Scene/Load
 import {WebGLRenderer} from 'three';
 import {CoreType} from '../../../core/Type';
 import {OnProgressArguments, OnProgressUpdateCallback} from '../../nodes/manager/utils/Scene/LoadProgress';
-// import {BaseNodeType} from '../../nodes/_Base';
-// import {PerspectiveCameraObjNode} from '../../nodes/obj/PerspectiveCamera';
 import {PolyScene} from '../../scene/PolyScene';
 import {TimeController} from '../../scene/utils/TimeController';
 import {BaseViewerType} from '../../viewers/_Base';
