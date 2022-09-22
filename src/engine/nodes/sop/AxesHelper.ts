@@ -8,8 +8,12 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {AxesHelperSopOperation} from '../../operations/sop/AxesHelper';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class AxesHelperSopParamsConfig extends NodeParamsConfig {}
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+const DEFAULT = AxesHelperSopOperation.DEFAULT_PARAMS;
+class AxesHelperSopParamsConfig extends NodeParamsConfig {
+	/** @param center of the geometry */
+	center = ParamConfig.VECTOR3(DEFAULT.center);
+}
 const ParamsConfig = new AxesHelperSopParamsConfig();
 
 export class AxesHelperSopNode extends TypedSopNode<AxesHelperSopParamsConfig> {

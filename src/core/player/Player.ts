@@ -65,13 +65,6 @@ export class CorePlayer {
 		this.object = options.object;
 		this.object.matrixAutoUpdate = true;
 		this.collider = options.collider;
-		// if (options.meshName) {
-		// 	this._mesh = new Mesh();
-		// 	this._mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
-		// 	this._mesh.name = options.meshName;
-		// 	this._mesh.receiveShadow = true;
-		// 	this._mesh.castShadow = true;
-		// }
 	}
 	setCollider(collider: MeshWithBVH) {
 		this.collider = collider;
@@ -79,35 +72,8 @@ export class CorePlayer {
 	setCapsule(capsuleOptions: CapsuleOptions) {
 		this.capsuleInfo.radius = capsuleOptions.radius;
 		this.capsuleInfo.segment.end.y = -(capsuleOptions.height - 2 * capsuleOptions.radius);
-		// if (this._mesh) {
-		// 	this._mesh.geometry = createPlayerGeometry(capsuleOptions);
-		// }
-		console.log(this.capsuleInfo);
 	}
-	// setUsePlayerMesh(state: boolean) {
-	// 	if (state) {
-	// 		this._mesh = this._mesh || this._createMesh();
-	// 		this.object.add(this._mesh);
-	// 	} else {
-	// 		if (this._mesh) {
-	// 			this.object.remove(this._mesh);
-	// 		}
-	// 	}
-	// }
-	// private _createMesh() {
-	// 	const mesh = new Mesh();
-	// 	mesh.geometry = createPlayerGeometry({radius: this.capsuleInfo.radius, height: 1});
-	// 	mesh.name = this._meshName || 'defaultPlayerMeshName';
-	// 	mesh.receiveShadow = true;
-	// 	mesh.castShadow = true;
-	// 	mesh.material = CoreConstant.MATERIALS[ObjectType.MESH];
-	// 	return mesh;
-	// }
-	// setMaterial(material: Material) {
-	// 	if (this._mesh) {
-	// 		this._mesh.material = material;
-	// 	}
-	// }
+
 	reset() {
 		this.stop();
 		this.object.position.copy(this.startPosition);
@@ -139,6 +105,7 @@ export class CorePlayer {
 			tmpGravity.copy(this.gravity).multiplyScalar(delta);
 			this._velocity.add(tmpGravity);
 		}
+		// console.log(this.object.position, this._velocity, delta);
 		this.object.position.addScaledVector(this._velocity, delta);
 
 		// move the player

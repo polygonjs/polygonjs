@@ -26,6 +26,24 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		if (!canvas) {
 			return;
 		}
+		// ensure the params are computed
+		// as otherwise, their values would be null
+		// if they are tied to an expression, for instance
+		// when inside a polyNode
+		const ensureParamsAreComputed = async () => {
+			let promises: Array<Promise<void>> | undefined;
+			for (let param of this.params.all) {
+				if (param.isDirty() && !param.parentParam()) {
+					promises = promises || [];
+					promises.push(param.compute());
+				}
+			}
+			if (promises) {
+				await Promise.all(promises);
+			}
+		};
+		await ensureParamsAreComputed();
+		//
 		const controls = await this.createControlsInstance(camera, canvas);
 		const currentControls = this._controls_by_viewer.get(viewer);
 		if (currentControls) {
