@@ -12,6 +12,8 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {saveSDFMetadata} from '../../../core/loader/geometry/SDF';
 
 class SDFExporterCopParamsConfig extends NodeParamsConfig {
+	/** @param fileName */
+	fileName = ParamConfig.STRING('`$OS`');
 	/** @param download texture */
 	download = ParamConfig.BUTTON(null, {
 		hidden: true,
@@ -61,6 +63,10 @@ export class SDFExporterCopNode extends TypedCopNode<SDFExporterCopParamsConfig>
 
 		// download blob
 		const blob = new Blob([dataWithMetadata], {type: 'octet/stream'});
-		downloadBlob(blob, `${this.name()}.bin`);
+		if (this.p.fileName.isDirty()) {
+			await this.p.fileName.compute();
+		}
+		const fileNameShort = this.pv.fileName;
+		downloadBlob(blob, `${fileNameShort}.bin`);
 	}
 }

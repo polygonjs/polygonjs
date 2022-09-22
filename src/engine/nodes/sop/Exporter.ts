@@ -23,6 +23,8 @@ import {downloadBlob} from '../../../core/BlobUtils';
 // }
 
 class ExporterSopParamsConfig extends NodeParamsConfig {
+	/** @param fileName */
+	fileName = ParamConfig.STRING('`$OS`');
 	/** @param export */
 	download = ParamConfig.BUTTON(null, {
 		hidden: true,
@@ -44,16 +46,20 @@ export class ExporterSopNode extends TypedSopNode<ExporterSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
-		this.setCoreGroup(input_contents[0]);
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		this.setCoreGroup(inputCoreGroups[0]);
 	}
 
 	static PARAM_CALLBACK_download(node: ExporterSopNode) {
 		node._paramCallbackDownload();
 	}
 	private async _paramCallbackDownload() {
+		if (this.p.fileName.isDirty()) {
+			await this.p.fileName.compute();
+		}
+		const fileNameShort = this.pv.fileName;
 		const blob = await this.createBlob();
-		const fileName = `${this.name()}.glb`;
+		const fileName = `${fileNameShort}.glb`;
 		downloadBlob(blob, fileName);
 	}
 	createBlob(): Promise<Blob> {

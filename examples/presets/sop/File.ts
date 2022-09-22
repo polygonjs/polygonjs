@@ -129,12 +129,34 @@ const gltf = (node: FileGLTFSopNode) => {
 		node.p.url,
 		`${DEMO_ASSETS_ROOT_URL}/models/sphere_with_texture.glb`
 	);
+	function _photogrammetry() {
+		function _photogrammetryModel(fileName: string) {
+			return new BasePreset().addEntry<ParamType.STRING>(
+				node.p.url,
+				`${DEMO_ASSETS_ROOT_URL}/models/photogrammetry/${fileName}.glb`
+			);
+		}
+		const fileNames = [
+			'gui_fradin_head_only_hi_res',
+			'gui_fradin_head_only_lo_res',
+			'gui_fradin_hi_res',
+			'gui_fradin_lo_res',
+			'gui_fradin_textured',
+			'gui_fradin_textured_head_only',
+		];
+		const dict: PolyDictionary<BasePreset> = {};
+		for (let fileName of fileNames) {
+			dict[`photogrammetry/${fileName}`] = _photogrammetryModel(fileName);
+		}
+		return dict;
+	}
 	return {
 		car,
 		flamingo,
 		parrot,
 		soldier,
 		sphere_with_texture,
+		..._photogrammetry(),
 	};
 };
 const obj = (node: FileOBJSopNode) => {
