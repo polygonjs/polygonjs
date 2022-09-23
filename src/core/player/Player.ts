@@ -7,7 +7,7 @@ import {Matrix4} from 'three';
 import {MeshWithBVH, ExtendedTriangle} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
 import {CapsuleOptions} from './CapsuleGeometry';
 import {MathUtils} from 'three';
-interface PlayerOptions {
+export interface CorePlayerOptions {
 	object: Object3D;
 	collider: MeshWithBVH;
 	// meshName?: string;
@@ -45,8 +45,8 @@ export class CorePlayer {
 	};
 	// private _meshName: string | undefined;
 	// private _mesh: Mesh | undefined;
-	public object: Object3D;
-	public collider: MeshWithBVH;
+	public object!: Object3D;
+	public collider!: MeshWithBVH;
 	public startPosition = new Vector3(0, 5, 0);
 	public startRotation = new Vector3(0, 0, 0);
 	public jumpAllowed = true;
@@ -58,13 +58,20 @@ export class CorePlayer {
 	public physicsSteps = 5;
 	public gravity = new Vector3(0, -30, 0);
 	private _azimuthalAngle = 0;
+	private _resetYMax = -25;
 	private _resetRequiredCallback: ResetRequiredCallback = () => {
-		return this.object.position.y < -25;
+		return this.object.position.y < this._resetYMax;
 	};
-	constructor(options: PlayerOptions) {
-		this.object = options.object;
+	constructor(options: CorePlayerOptions) {
+		this.setOptions(options);
+	}
+	setOptions(options: CorePlayerOptions) {
+		this._setObject(options.object);
+		this.setCollider(options.collider);
+	}
+	private _setObject(object: Object3D) {
+		this.object = object;
 		this.object.matrixAutoUpdate = true;
-		this.collider = options.collider;
 	}
 	setCollider(collider: MeshWithBVH) {
 		this.collider = collider;
@@ -79,6 +86,9 @@ export class CorePlayer {
 		this.object.position.copy(this.startPosition);
 		startRotationRadians.copy(this.startRotation).multiplyScalar(MathUtils.DEG2RAD);
 		this.object.rotation.setFromVector3(startRotationRadians);
+		this.object.updateMatrix();
+		this.object.updateWorldMatrix(true, true);
+		this.object.updateMatrixWorld(true);
 	}
 	stop() {
 		this._pressed.forward = false;

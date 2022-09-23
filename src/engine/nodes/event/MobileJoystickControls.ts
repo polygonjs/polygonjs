@@ -26,7 +26,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {MobileJoystickControls, DEFAULT_PARAMS} from '../../../modules/core/controls/MobileJoystickControls';
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
-import {CorePlayer} from '../../../core/player/Player';
+import {CorePlayer, CorePlayerOptions} from '../../../core/player/Player';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {isBooleanTrue} from '../../../core/Type';
 import {CollisionController} from './collision/CollisionController';
@@ -185,12 +185,23 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 	}
 
 	private async _initPlayer(camera: Camera) {
-		this._player = this._player || (await this._createPlayer(camera));
-		if (!this._player) {
+		const options = await this._playerOptions(camera);
+		if (!options) {
 			return;
 		}
+		this._player = this._player || new CorePlayer(options);
+		// we need to make sure the player is updated with new camera/collision when those change
+		this._player.setOptions(options);
 		this._updatePlayerParams();
 		this._player.reset();
+	}
+	private async _playerOptions(camera: Camera): Promise<CorePlayerOptions | undefined> {
+		const collider = await this.collisionController().getCollider();
+		if (!collider) {
+			this.states.error.set('invalid collider');
+			return;
+		}
+		return {object: camera, collider: collider};
 	}
 	player() {
 		return this._player;
@@ -216,17 +227,7 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 
 		this._controls_by_element_id.forEach((controls) => controls.updateElements());
 	}
-	private async _createPlayer(camera: Camera) {
-		const playerObject = camera;
-		const collider = await this.collisionController().getCollider();
-		if (!collider) {
-			this.states.error.set('invalid collider');
-			return;
-		}
-		const player = new CorePlayer({object: playerObject, collider: collider});
 
-		return player;
-	}
 	private _resetPlayer() {
 		this._player?.reset();
 	}

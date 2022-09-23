@@ -10,7 +10,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {TypedEventNode} from './_Base';
-import {CorePlayer} from '../../../core/player/Player';
+import {CorePlayer, CorePlayerOptions} from '../../../core/player/Player';
 import {CorePlayerKeyEvents} from '../../../core/player/KeyEvents';
 import {Mesh} from 'three';
 import {ParamOptions} from '../../params/utils/OptionsController';
@@ -130,21 +130,7 @@ class PlayerEventParamsConfig extends NodeParamsConfig {
 			PlayerControlsEventNode.PARAM_CALLBACK_updateCollider(node as PlayerControlsEventNode);
 		},
 	});
-	// mesh = ParamConfig.FOLDER();
-	// /** @param player object */
-	// useMesh = ParamConfig.BOOLEAN(true, {
-	// 	callback: (node: BaseNodeType) => {
-	// 		PlayerControlsEventNode.PARAM_CALLBACK_updatePlayerMesh(node as PlayerControlsEventNode);
-	// 	},
-	// });
-	// material = ParamConfig.NODE_PATH('', {
-	// 	nodeSelection: {
-	// 		context: NodeContext.MAT,
-	// 	},
-	// 	callback: (node: BaseNodeType) => {
-	// 		PlayerControlsEventNode.PARAM_CALLBACK_updatePlayerMaterial(node as PlayerControlsEventNode);
-	// 	},
-	// });
+
 	init = ParamConfig.FOLDER();
 	/** @param start Position */
 	startPosition = ParamConfig.VECTOR3([0, 5, 0], {
@@ -185,13 +171,14 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 		]);
 	}
 	private async _initPlayer() {
-		this._player = this._player || (await this._createPlayer());
-		if (!this._player) {
-			this.states.error.set('could not create player');
+		const options = await this._playerOptions();
+		if (!options) {
+			// this.states.error.set('could not create player');
 			return;
 		}
-		// this._updatePlayerMesh();
-		// this._updatePlayerMaterial();
+		this._player = this._player || new CorePlayer(options);
+		// we need to make sure the player is updated with new camera/collision when those change
+		this._player.setOptions(options);
 		this._updatePlayerParams();
 		this._corePlayerKeyEvents = new CorePlayerKeyEvents(this._player);
 		this._corePlayerKeyEvents.addEvents();
@@ -203,6 +190,26 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			player.update(delta);
 		});
 		this.dispatchEventToOutput(EVENT_INIT, {});
+	}
+	private async _playerOptions(): Promise<CorePlayerOptions | undefined> {
+		const playerObjectNode = this.pv.playerObject.nodeWithContext(NodeContext.OBJ);
+		if (!playerObjectNode) {
+			this.states.error.set('player node not found');
+			return;
+		}
+		const cameraNode = this.pv.camera.nodeWithContext(NodeContext.OBJ);
+		if (!cameraNode) {
+			this.states.error.set('invalid camera node');
+			return;
+		}
+		this._cameraObject = cameraNode.object as Camera;
+		const playerObject = playerObjectNode.object as Mesh;
+		const collider = await this.collisionController().getCollider();
+		if (!collider) {
+			this.states.error.set('invalid collider');
+			return;
+		}
+		return {object: playerObject, collider: collider};
 	}
 	player() {
 		return this._player;
@@ -242,45 +249,6 @@ export class PlayerControlsEventNode extends TypedEventNode<PlayerEventParamsCon
 			divisions: 5,
 			center: CapsuleSopOperation.DEFAULT_PARAMS.center,
 		});
-	}
-	// private _updatePlayerMesh() {
-	// 	if (!this._player) {
-	// 		return;
-	// 	}
-	// 	this._player.setUsePlayerMesh(this.pv.useMesh);
-	// }
-	// private async _updatePlayerMaterial() {
-	// 	if (!this._player) {
-	// 		return;
-	// 	}
-	// 	const materialNode = this.pv.material.nodeWithContext(NodeContext.MAT);
-	// 	if (materialNode) {
-	// 		const container = await materialNode.compute();
-	// 		const material = container.material();
-	// 		this._player.setMaterial(material);
-	// 	}
-	// }
-	private async _createPlayer() {
-		const playerObjectNode = this.pv.playerObject.nodeWithContext(NodeContext.OBJ);
-		if (!playerObjectNode) {
-			this.states.error.set('player node not found');
-			return;
-		}
-		const cameraNode = this.pv.camera.nodeWithContext(NodeContext.OBJ);
-		if (!cameraNode) {
-			this.states.error.set('invalid camera node');
-			return;
-		}
-		this._cameraObject = cameraNode.object as Camera;
-		const playerObject = playerObjectNode.object as Mesh;
-		const collider = await this.collisionController().getCollider();
-		if (!collider) {
-			this.states.error.set('invalid collider');
-			return;
-		}
-		const player = new CorePlayer({object: playerObject, collider: collider});
-
-		return player;
 	}
 
 	private async _updateCollider() {

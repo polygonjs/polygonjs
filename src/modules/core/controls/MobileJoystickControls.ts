@@ -145,7 +145,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		element.style.position = 'absolute';
 		element.style.bottom = `${margin}px`;
 		element.style.right = `${margin}px`;
-		element.style.translate = `-50%`;
+		// element.style.translate = `-50%`;
 		return element;
 	}
 	private _addElements() {
