@@ -44,10 +44,10 @@ export class UvUnwrapSopNode extends TypedSopNode<UvUnwrapSopParamConfig> {
 	}
 
 	private _operation: UvUnwrapSopOperation | undefined;
-	override async cook(input_contents: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new UvUnwrapSopOperation(this.scene(), this.states, this);
-		const core_group = await this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 	setMethod(method: UvUnwrapMethod) {
 		this.p.method.set(UV_UNWRAP_METHODS.indexOf(method));
