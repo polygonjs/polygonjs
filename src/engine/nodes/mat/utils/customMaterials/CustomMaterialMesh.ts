@@ -11,8 +11,12 @@ import {CUSTOM_MAT_PARAM_OPTIONS} from './_CustomMaterialBase';
 
 export function CustomMaterialMeshParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		/** @param toggle off to choose which customMaterials will be generated */
-		overrideCustomMaterials = ParamConfig.BOOLEAN(0, CUSTOM_MAT_PARAM_OPTIONS);
+		/** @param toggle on to choose which customMaterials will be generated */
+		overrideCustomMaterials = ParamConfig.BOOLEAN(0, {
+			...CUSTOM_MAT_PARAM_OPTIONS,
+			separatorBefore: true,
+			separatorAfter: true,
+		});
 		/** @param distance */
 		createCustomMatDistance = ParamConfig.BOOLEAN(1, {
 			visibleIf: {overrideCustomMaterials: 1},
@@ -27,6 +31,7 @@ export function CustomMaterialMeshParamConfig<TBase extends Constructor>(Base: T
 		createCustomMatDepthDOF = ParamConfig.BOOLEAN(1, {
 			visibleIf: {overrideCustomMaterials: 1},
 			...CUSTOM_MAT_PARAM_OPTIONS,
+			separatorAfter: true,
 		});
 	};
 }

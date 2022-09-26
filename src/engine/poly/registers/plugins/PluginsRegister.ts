@@ -25,7 +25,7 @@ export class PluginsRegister {
 	async wrapConfigurePolygonjs(callback: WrapConfigurePolygonjsCallback) {
 		this._configurePolygonjsPlugin =
 			this._configurePolygonjsPlugin ||
-			new PolyPlugin('configurePolygonjs', () => {}, {libraryImportPath: '', libraryName: ''});
+			new PolyPlugin('configurePolygonjs', () => {}, {libraryImportPath: '../PolyConfig', libraryName: ''});
 
 		this._currentPlugin = this._configurePolygonjsPlugin;
 		this._pluginsByName.set(this._currentPlugin.name(), this._currentPlugin);
