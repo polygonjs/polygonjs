@@ -200,9 +200,9 @@ if(POLY_SSSModel.isActive){
 
 	
 #ifdef USE_TRANSMISSION
-	material.transmission = transmission;
+	material.transmission = transmission * POLY_transmission;
 	material.transmissionAlpha = 1.0;
-	material.thickness = thickness;
+	material.thickness = thickness * POLY_thickness;
 	material.attenuationDistance = attenuationDistance;
 	material.attenuationColor = attenuationColor;
 	#ifdef USE_TRANSMISSIONMAP

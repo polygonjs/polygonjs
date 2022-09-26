@@ -3,15 +3,17 @@ import originalTransmissionFragment from 'three/src/renderers/shaders/ShaderChun
 import {AssemblerControllerNode} from '../../Controller';
 import {MeshPhysicalMaterial} from 'three';
 function addPolyTransmission(fragment: string) {
+	const transmission = 'material.transmission = transmission;';
+	const thickness = 'material.thickness = thickness;';
 	const lines = fragment.split('\n');
 	let cmptr = 0;
 	for (let line of lines) {
-		if (line.includes('float transmissionFactor = transmission;')) {
-			line = 'float transmissionFactor = transmission * POLY_transmission;';
+		if (line.includes(transmission)) {
+			line = line.replace(transmission, 'material.transmission = transmission * POLY_transmission;');
 			lines[cmptr] = line;
 		}
-		if (line.includes('float thicknessFactor = thickness;')) {
-			line = 'float thicknessFactor = thickness * POLY_thickness;';
+		if (line.includes(thickness)) {
+			line = line.replace(thickness, 'material.thickness = thickness * POLY_thickness;');
 			lines[cmptr] = line;
 		}
 		cmptr++;

@@ -1,3 +1,4 @@
+import {BaseGlShaderAssembler} from './../../../../src/engine/nodes/gl/code/assemblers/_Base';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -310,6 +311,74 @@ QUnit.test('mat/meshPhysicalBuilder can select which customMat is created', asyn
 	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
 	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
 	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+
+	RendererUtils.dispose();
+});
+
+QUnit.test('mat/meshPhysicalBuilder override thickness and transmission', async (assert) => {
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const MAT = window.MAT;
+	const geo1 = window.geo1;
+	const scene = window.scene;
+	const meshPhysicalBuilder1 = MAT.createNode('meshPhysicalBuilder');
+	const output1 = meshPhysicalBuilder1.createNode('output');
+	// const globals1 = meshPhysicalBuilder1.createNode('globals');
+	const constant_transmission = meshPhysicalBuilder1.createNode('constant');
+	constant_transmission.setGlType(GlConnectionPointType.FLOAT);
+	constant_transmission.setName('transmission');
+	constant_transmission.p.float.set(0.2);
+	const constant_thickness = meshPhysicalBuilder1.createNode('constant');
+	constant_thickness.setGlType(GlConnectionPointType.FLOAT);
+	constant_thickness.setName('thickness');
+	constant_thickness.p.float.set(0.3);
+
+	const spotLight = scene.createNode('spotLight');
+	spotLight.p.t.set([2, 2, 2]);
+	spotLight.p.castShadow.set(true);
+	const box1 = geo1.createNode('box');
+	const material1 = geo1.createNode('material');
+	material1.setInput(0, box1);
+	material1.p.material.setNode(meshPhysicalBuilder1);
+	material1.flags.display.set(true);
+	await material1.compute();
+	await CoreSleep.sleep(100);
+
+	const geoSopGroup = scene.threejsScene().getObjectByName('geo1:sopGroup');
+	assert.ok(geoSopGroup);
+	assert.equal(geoSopGroup!.children.length, 1);
+
+	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
+	let expandedFragment = BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader);
+
+	assert.includes(expandedFragment, 'float POLY_thickness = 1.0;');
+	assert.includes(expandedFragment, 'float POLY_transmission = 1.0;');
+	assert.includes(
+		BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader),
+		'material.thickness = thickness * POLY_thickness;'
+	);
+	assert.includes(
+		BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader),
+		'material.transmission = transmission * POLY_transmission;'
+	);
+
+	// override
+	output1.setInput('transmission', constant_transmission);
+	output1.setInput('thickness', constant_thickness);
+	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
+	expandedFragment = BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader);
+
+	assert.includes(expandedFragment, 'float v_POLY_thickness_val = 0.3;');
+	assert.includes(expandedFragment, 'float POLY_thickness = v_POLY_thickness_val;');
+	assert.includes(expandedFragment, 'float v_POLY_transmission_val = 0.2;');
+	assert.includes(expandedFragment, 'float POLY_transmission = v_POLY_transmission_val;');
+	assert.includes(
+		BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader),
+		'material.thickness = thickness * POLY_thickness;'
+	);
+	assert.includes(
+		BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader),
+		'material.transmission = transmission * POLY_transmission;'
+	);
 
 	RendererUtils.dispose();
 });
