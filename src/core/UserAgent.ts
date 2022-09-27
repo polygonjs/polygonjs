@@ -1,3 +1,7 @@
+// let el: HTMLDivElement | undefined;
+// function _div() {
+// 	return (el = el || document.createElement('div'));
+// }
 export class CoreUserAgent {
 	// user agent on linux with chrome
 	// "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
@@ -17,8 +21,11 @@ export class CoreUserAgent {
 	}
 	static isTouchDevice(): boolean {
 		// https://stackoverflow.com/questions/6262584/how-to-determine-if-the-client-is-a-touch-device
-		var el = document.createElement('div');
-		el.setAttribute('ongesturestart', 'return;'); // or try "ontouchstart"
-		return typeof (el as any).ongesturestart === 'function';
+		// the following would not work on android
+		// const el = _div();
+		// el.setAttribute('ongesturestart', 'return;'); // or try "ontouchstart"
+		// return typeof (el as any).ongesturestart === 'function';
+		// but this does work on android
+		return 'ontouchstart' in document.documentElement;
 	}
 }

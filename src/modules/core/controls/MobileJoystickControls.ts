@@ -36,6 +36,11 @@ const EVENT_CHANGE = {type: 'change'};
 const tmpCameraUnproject = new Vector3();
 const spherical = new Spherical();
 
+export interface MobileJoystickControlsOptions {
+	translateDomElement?:HTMLElement;
+	jumpDomElement?:HTMLElement;
+	runDomElement?:HTMLElement;
+}
 export class MobileJoystickControls extends BaseCollisionHandler {
 	private translationData: TranslationData = {
 		direction: new Vector3(),
@@ -69,7 +74,7 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 	private _translateDomElementRect: DOMRect;
 	private _jumpDomElement: HTMLElement;
 	private _runDomElement: HTMLElement;
-	constructor(private _camera: Camera, private domElement: HTMLElement, private player?: CorePlayer) {
+	constructor(private _camera: Camera, private domElement: HTMLElement, private options:MobileJoystickControlsOptions, private player?: CorePlayer) {
 		super();
 		// this._element = this._viewer.domElement();
 		this._camera.rotation.order = 'ZYX';
@@ -79,10 +84,10 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		// 	const deltaTime = Math.min(0.1, clock.getDelta());
 		// 	this.update(deltaTime);
 		// });
-		this._translateDomElement = this._createTranslateDomElement();
+		this._translateDomElement = this.options.translateDomElement|| this._createTranslateDomElement();
+		this._runDomElement = this.options.runDomElement||this._createRunDomElement();
+		this._jumpDomElement = this.options.jumpDomElement||this._createJumpDomElement();
 		this._translateDomElementRect = this._translateDomElement.getBoundingClientRect();
-		this._runDomElement = this._createRunDomElement();
-		this._jumpDomElement = this._createJumpDomElement();
 		this._addElements();
 		this._addEvents();
 	}
@@ -154,9 +159,17 @@ export class MobileJoystickControls extends BaseCollisionHandler {
 		this.domElement.parentElement?.append(this._runDomElement);
 	}
 	private _removeElements() {
-		const elements = [this._translateDomElement, this._jumpDomElement, this._runDomElement];
-		for (let element of elements) {
+		function _removeElement(element:HTMLElement){
 			element.parentElement?.removeChild(element);
+		}
+		if(!this.options.translateDomElement){
+			_removeElement(this._translateDomElement)
+		}
+		if(!this.options.runDomElement){
+			_removeElement(this._runDomElement)
+		}
+		if(!this.options.jumpDomElement){
+			_removeElement(this._jumpDomElement)
 		}
 	}
 	updateElements() {

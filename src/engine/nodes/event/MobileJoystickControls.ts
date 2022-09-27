@@ -23,7 +23,11 @@ import {Camera} from 'three';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {MobileJoystickControls, DEFAULT_PARAMS} from '../../../modules/core/controls/MobileJoystickControls';
+import {
+	MobileJoystickControls,
+	MobileJoystickControlsOptions,
+	DEFAULT_PARAMS,
+} from '../../../modules/core/controls/MobileJoystickControls';
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 import {CorePlayer, CorePlayerOptions} from '../../../core/player/Player';
@@ -46,6 +50,12 @@ function updatePlayerParamsCallbackOption(): ParamOptions {
 }
 
 type MobileJoystickControlsMap = Map<string, MobileJoystickControls>;
+
+interface GetElementOptions {
+	actionAllowed: boolean;
+	customElement: boolean;
+	selector: string;
+}
 
 class MobileJoystickEventParamsConfig extends NodeParamsConfig {
 	main = ParamConfig.FOLDER();
@@ -90,8 +100,19 @@ class MobileJoystickEventParamsConfig extends NodeParamsConfig {
 	translateSpeed = ParamConfig.FLOAT(1);
 	/** @param rotation speed */
 	rotateSpeed = ParamConfig.FLOAT(DEFAULT_PARAMS.rotateSpeed);
+	/** @param specify a custom HTML element */
+	customTranslateElement = ParamConfig.BOOLEAN(false, {
+		separatorBefore: true,
+	});
+	/** @param jump HTML element selector */
+	translateElementSelector = ParamConfig.STRING('#translate-element', {
+		visibleIf: {
+			customTranslateElement: true,
+		},
+	});
 	/** @param jump Allowed */
 	jumpAllowed = ParamConfig.BOOLEAN(true, {
+		separatorBefore: true,
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param jump Force */
@@ -100,8 +121,22 @@ class MobileJoystickEventParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
 	});
+	/** @param specify a custom HTML element */
+	customJumpElement = ParamConfig.BOOLEAN(false, {
+		visibleIf: {
+			jumpAllowed: true,
+		},
+	});
+	/** @param jump HTML element selector */
+	jumpElementSelector = ParamConfig.STRING('#jump-element', {
+		visibleIf: {
+			jumpAllowed: true,
+			customJumpElement: true,
+		},
+	});
 	/** @param run Allowed */
 	runAllowed = ParamConfig.BOOLEAN(true, {
+		separatorBefore: true,
 		...updatePlayerParamsCallbackOption(),
 	});
 	/** @param run speed mult */
@@ -110,8 +145,22 @@ class MobileJoystickEventParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		...updatePlayerParamsCallbackOption(),
 	});
+	/** @param specify a custom HTML element */
+	customRunElement = ParamConfig.BOOLEAN(false, {
+		visibleIf: {
+			runAllowed: true,
+		},
+	});
+	/** @param jump HTML element selector */
+	runElementSelector = ParamConfig.STRING('#run-element', {
+		visibleIf: {
+			runAllowed: true,
+			customRunElement: true,
+		},
+	});
 	/** @param recompute colliding geo */
 	updateCollider = ParamConfig.BUTTON(null, {
+		separatorBefore: true,
 		callback: (node: BaseNodeType) => {
 			MobileJoystickControlsEventNode.PARAM_CALLBACK_updateCollider(node as MobileJoystickControlsEventNode);
 		},
@@ -177,7 +226,37 @@ export class MobileJoystickControlsEventNode extends TypedCameraControlsEventNod
 
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		await this._initPlayer(camera);
-		const controls = new MobileJoystickControls(camera, element, this._player);
+
+		function _getElement(options: GetElementOptions) {
+			if (!options.actionAllowed) {
+				return;
+			}
+			if (!options.customElement) {
+				return;
+			}
+			return document.querySelector<HTMLElement>(options.selector) || undefined;
+		}
+		const translateDomElement = _getElement({
+			actionAllowed: true,
+			customElement: this.pv.customTranslateElement,
+			selector: this.pv.translateElementSelector,
+		});
+		const runDomElement = _getElement({
+			actionAllowed: this.pv.runAllowed,
+			customElement: this.pv.customRunElement,
+			selector: this.pv.runElementSelector,
+		});
+		const jumpDomElement = _getElement({
+			actionAllowed: this.pv.jumpAllowed,
+			customElement: this.pv.customJumpElement,
+			selector: this.pv.jumpElementSelector,
+		});
+		const options: MobileJoystickControlsOptions = {
+			translateDomElement,
+			runDomElement,
+			jumpDomElement,
+		};
+		const controls = new MobileJoystickControls(camera, element, options, this._player);
 
 		this._controls_by_element_id.set(element.id, controls);
 		this._bind_listeners_to_controls_instance(controls);
