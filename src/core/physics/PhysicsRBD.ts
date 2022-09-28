@@ -1,7 +1,7 @@
 import {TypeAssert} from './../../engine/poly/Assert';
 import {CorePhysicsUserData} from './PhysicsUserData';
 import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute} from './PhysicsAttribute';
-import {Object3D, Vector3} from 'three';
+import {BufferAttribute, Mesh, Object3D, Vector3} from 'three';
 import type {World, RigidBodyType} from '@dimforge/rapier3d';
 import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
 export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: Object3D) {
@@ -25,8 +25,10 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: O
 	const rigidBody = world.createRigidBody(rigidBodyDesc);
 	CorePhysicsUserData.setRigidBody(object, rigidBody);
 
+	const density = CorePhysicsAttribute.getDensity(object);
 	const linearDamping = CorePhysicsAttribute.getLinearDamping(object);
 	const angularDamping = CorePhysicsAttribute.getAngularDamping(object);
+	const friction = CorePhysicsAttribute.getFriction(object);
 
 	if (linearDamping != null) {
 		rigidBodyDesc.setLinearDamping(linearDamping);
@@ -43,7 +45,12 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: O
 	if (restitution != null) {
 		colliderDesc.setRestitution(restitution);
 	}
-
+	if (friction != null) {
+		colliderDesc.setFriction(friction);
+	}
+	if (density != null) {
+		colliderDesc.setDensity(density);
+	}
 	world.createCollider(colliderDesc, rigidBody);
 
 	return {colliderDesc, rigidBody, id};
@@ -143,18 +150,58 @@ function PhysicsRBDTypeToRigidBodyType(type: PhysicsRBDType) {
 const tmp = new Vector3();
 function PhysicsRBDCollider(PhysicsLib: PhysicsLib, colliderType: PhysicsRBDColliderType, object: Object3D) {
 	switch (colliderType) {
-		case PhysicsRBDColliderType.CUBOID: {
-			CorePhysicsAttribute.getCuboidSize(object, tmp);
-			return PhysicsLib.ColliderDesc.cuboid(tmp.x, tmp.y, tmp.z);
-		}
-		case PhysicsRBDColliderType.SPHERE: {
-			const radius = CorePhysicsAttribute.getRadius(object);
-			return PhysicsLib.ColliderDesc.ball(radius);
-		}
 		case PhysicsRBDColliderType.CAPSULE: {
 			const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
 			const radius = CorePhysicsAttribute.getRadius(object);
 			return PhysicsLib.ColliderDesc.capsule(halfHeight, radius);
+		}
+		case PhysicsRBDColliderType.CUBOID: {
+			CorePhysicsAttribute.getCuboidSizes(object, tmp);
+			const size = CorePhysicsAttribute.getCuboidSize(object);
+			tmp.multiplyScalar(size * 0.5);
+			return PhysicsLib.ColliderDesc.cuboid(tmp.x, tmp.y, tmp.z);
+		}
+		case PhysicsRBDColliderType.CONE: {
+			const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
+			const radius = CorePhysicsAttribute.getRadius(object);
+			return PhysicsLib.ColliderDesc.cone(halfHeight, radius);
+		}
+		case PhysicsRBDColliderType.CONVEX_HULL: {
+			const geometry = (object as Mesh).geometry;
+			if (!geometry) {
+				return;
+			}
+			const nonIndexedGeometry = geometry.toNonIndexed();
+			const position = nonIndexedGeometry.getAttribute('position') as BufferAttribute;
+			if (!position) {
+				return;
+			}
+			const float32Array = new Float32Array(position.array);
+			return PhysicsLib.ColliderDesc.convexHull(float32Array);
+		}
+		// case PhysicsRBDColliderType.CONVEX_MESH: {
+		// 	const geometry = (object as Mesh).geometry;
+		// 	if (!geometry) {
+		// 		return;
+		// 	}
+		// 	const position = geometry.getAttribute('position') as BufferAttribute;
+		// 	const index = geometry.getIndex();
+		// 	if (!(position && index)) {
+		// 		return;
+		// 	}
+		// 	const float32ArrayPosition = new Float32Array(position.array);
+		// 	const uint32ArrayIndex = new Uint32Array(index.array);
+
+		// 	return PhysicsLib.ColliderDesc.convexMesh(float32ArrayPosition, uint32ArrayIndex);
+		// }
+		case PhysicsRBDColliderType.CYLINDER: {
+			const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
+			const radius = CorePhysicsAttribute.getRadius(object);
+			return PhysicsLib.ColliderDesc.cylinder(halfHeight, radius);
+		}
+		case PhysicsRBDColliderType.SPHERE: {
+			const radius = CorePhysicsAttribute.getRadius(object);
+			return PhysicsLib.ColliderDesc.ball(radius);
 		}
 	}
 	TypeAssert.unreachable(colliderType);

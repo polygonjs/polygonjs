@@ -24,6 +24,24 @@ import {Object3D, Vector3} from 'three';
 import {Vector3Param} from '../../params/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
+
+const VISIBLE_OPTIONS = {
+	CAPSULE: {
+		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CAPSULE),
+	},
+	CONE: {
+		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CONE),
+	},
+	CUBOID: {
+		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CUBOID),
+	},
+	CYLINDER: {
+		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CYLINDER),
+	},
+	SPHERE: {
+		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.SPHERE),
+	},
+};
 class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	main = ParamConfig.FOLDER();
 	/** @param Rigid body type */
@@ -47,37 +65,43 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 
-	/** @param size */
-	size = ParamConfig.VECTOR3(DEFAULT.size.toArray(), {
-		visibleIf: {
-			colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CUBOID),
-		},
+	/** @param sizes */
+	sizes = ParamConfig.VECTOR3(DEFAULT.sizes.toArray(), {
+		visibleIf: VISIBLE_OPTIONS.CUBOID,
+		expression: {forEntities: true},
+	});
+	/** @param sizes */
+	size = ParamConfig.FLOAT(DEFAULT.size, {
+		visibleIf: VISIBLE_OPTIONS.CUBOID,
 		expression: {forEntities: true},
 	});
 	/** @param radius */
 	radius = ParamConfig.FLOAT(DEFAULT.radius, {
 		range: [0, 1],
 		rangeLocked: [true, false],
-		visibleIf: [
-			{
-				colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.SPHERE),
-			},
-			{
-				colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CAPSULE),
-			},
-		],
+		visibleIf: [VISIBLE_OPTIONS.CAPSULE, VISIBLE_OPTIONS.CONE, VISIBLE_OPTIONS.CYLINDER, VISIBLE_OPTIONS.SPHERE],
 		expression: {forEntities: true},
 	});
 	/** @param half height */
 	height = ParamConfig.FLOAT(DEFAULT.height, {
 		range: [0, 1],
 		rangeLocked: [true, false],
-		visibleIf: {
-			colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CAPSULE),
-		},
+		visibleIf: [VISIBLE_OPTIONS.CAPSULE, VISIBLE_OPTIONS.CONE, VISIBLE_OPTIONS.CYLINDER],
 		expression: {forEntities: true},
 	});
 	dynamics = ParamConfig.FOLDER();
+	/** @param density */
+	density = ParamConfig.FLOAT(DEFAULT.density, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+		expression: {forEntities: true},
+	});
+	/** @param friction */
+	friction = ParamConfig.FLOAT(DEFAULT.friction, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+		expression: {forEntities: true},
+	});
 	/** @param restitution */
 	restitution = ParamConfig.FLOAT(DEFAULT.restitution, {
 		range: [0, 1],
@@ -139,7 +163,16 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 
 			CorePhysicsAttribute.setColliderType(object, colliderType);
 		}
-
+		this._computeFloatParam(
+			this.p.density,
+			coreObjects,
+			CorePhysicsAttribute.setDensity.bind(CorePhysicsAttribute)
+		);
+		this._computeFloatParam(
+			this.p.friction,
+			coreObjects,
+			CorePhysicsAttribute.setFriction.bind(CorePhysicsAttribute)
+		);
 		this._computeFloatParam(
 			this.p.linearDamping,
 			coreObjects,
@@ -169,6 +202,11 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		switch (colliderType) {
 			case PhysicsRBDColliderType.CUBOID: {
 				this._computeVector3Param(
+					this.p.sizes,
+					coreObjects,
+					CorePhysicsAttribute.setCuboidSizes.bind(CorePhysicsAttribute)
+				);
+				this._computeFloatParam(
 					this.p.size,
 					coreObjects,
 					CorePhysicsAttribute.setCuboidSize.bind(CorePhysicsAttribute)
@@ -183,7 +221,9 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				);
 				return;
 			}
-			case PhysicsRBDColliderType.CAPSULE: {
+			case PhysicsRBDColliderType.CAPSULE:
+			case PhysicsRBDColliderType.CONE:
+			case PhysicsRBDColliderType.CYLINDER: {
 				this._computeFloatParam(
 					this.p.height,
 					coreObjects,
@@ -194,6 +234,9 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 					coreObjects,
 					CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
 				);
+				return;
+			}
+			case PhysicsRBDColliderType.CONVEX_HULL: {
 				return;
 			}
 		}

@@ -73,10 +73,8 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 		CorePhysicsAttribute.setRBDType(object, PhysicsRBDType.FIXED);
 		CorePhysicsAttribute.setColliderType(object, PhysicsRBDColliderType.CUBOID);
 		CorePhysicsAttribute.setRestitution(object, this.pv.restitution);
-		CorePhysicsAttribute.setCuboidSize(
-			object,
-			new Vector3(this.pv.size.x * 0.5, this.pv.thickness * 0.5, this.pv.size.y * 0.5)
-		);
+		CorePhysicsAttribute.setCuboidSizes(object, new Vector3(this.pv.size.x, this.pv.thickness, this.pv.size.y));
+		CorePhysicsAttribute.setCuboidSize(object, 1);
 
 		this.setObject(object);
 	}

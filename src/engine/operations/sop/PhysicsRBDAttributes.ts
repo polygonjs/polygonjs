@@ -17,12 +17,15 @@ interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
 	taddId: boolean;
 	id: string;
 	// cuboid
-	size: Vector3;
+	sizes: Vector3;
+	size: number;
 	// sphere
 	radius: number;
 	// capsule
 	height: number;
 	// common
+	density: number;
+	friction: number;
 	restitution: number;
 	linearDamping: number;
 	angularDamping: number;
@@ -35,12 +38,15 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 		taddId: true,
 		id: '',
 		// cuboid
-		size: new Vector3(0.5, 0.5, 0.5),
+		sizes: new Vector3(1, 1, 1),
+		size: 1,
 		// sphere
 		radius: 1,
 		// capsule
 		height: 0.5,
 		// common
+		density: 1,
+		friction: 0.5,
 		restitution: 0.5,
 		linearDamping: 0,
 		angularDamping: 0,
@@ -56,6 +62,7 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 			const colliderType = PHYSICS_RBD_COLLIDER_TYPES[params.colliderType];
 			CorePhysicsAttribute.setRBDType(object, PHYSICS_RBD_TYPES[params.RBDType]);
 			CorePhysicsAttribute.setColliderType(object, colliderType);
+			CorePhysicsAttribute.setDensity(object, params.density);
 			CorePhysicsAttribute.setRestitution(object, params.restitution);
 			CorePhysicsAttribute.setLinearDamping(object, params.linearDamping);
 			CorePhysicsAttribute.setAngularDamping(object, params.angularDamping);

@@ -15,22 +15,39 @@ export const PHYSICS_RBD_TYPES: PhysicsRBDType[] = [
 export const PHYSICS_RBD_TYPE_MENU_ENTRIES = PHYSICS_RBD_TYPES.map((name, value) => ({name, value}));
 
 export enum PhysicsRBDColliderType {
-	CUBOID = 'cuboid',
-	SPHERE = 'sphere',
 	CAPSULE = 'capsule',
+	CONE = 'cone',
+	CONVEX_HULL = 'convex hull',
+	// CONVEX_MESH = 'convex mesh',
+	CUBOID = 'cuboid',
+	CYLINDER = 'cylinder',
+	SPHERE = 'sphere',
 	// trimesh, heightfield
 }
 export const PHYSICS_RBD_COLLIDER_TYPES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CUBOID,
 	PhysicsRBDColliderType.SPHERE,
 	PhysicsRBDColliderType.CAPSULE,
+	PhysicsRBDColliderType.CYLINDER,
+	PhysicsRBDColliderType.CONE,
+	PhysicsRBDColliderType.CONVEX_HULL,
+	// PhysicsRBDColliderType.CONVEX_MESH,
 ];
-export const PHYSICS_RBD_COLLIDER_TYPE_MENU_ENTRIES = PHYSICS_RBD_COLLIDER_TYPES.map((name, value) => ({
-	name,
-	value,
-}));
+const SORTED_ENTRIES: PhysicsRBDColliderType[] = [
+	PhysicsRBDColliderType.CAPSULE,
+	PhysicsRBDColliderType.CONE,
+	PhysicsRBDColliderType.CONVEX_HULL,
+	// PhysicsRBDColliderType.CONVEX_MESH,
+	PhysicsRBDColliderType.CUBOID,
+	PhysicsRBDColliderType.CYLINDER,
+	PhysicsRBDColliderType.SPHERE,
+];
+export const PHYSICS_RBD_COLLIDER_TYPE_MENU_ENTRIES = SORTED_ENTRIES.map((entry) => {
+	return {name: entry, value: PHYSICS_RBD_COLLIDER_TYPES.indexOf(entry)};
+});
 
 export enum PhysicsRBDCuboidAttribute {
+	SIZES = 'sizes',
 	SIZE = 'size',
 }
 export enum PhysicsRBDSphereAttribute {
@@ -40,12 +57,18 @@ export enum PhysicsRBDCapsuleAttribute {
 	HEIGHT = 'height',
 	RADIUS = 'radius',
 }
+export enum PhysicsRBDCylinderAttribute {
+	HEIGHT = 'height',
+	RADIUS = 'radius',
+}
 
 export enum PhysicsCommonAttribute {
 	RBD_ID = 'RBDId',
 	RBD_TYPE = 'RBDType',
 	COLLIDER_TYPE = 'RBDColliderType',
+	DENSITY = 'density',
 	RESTITUTION = 'restitution',
+	FRICTION = 'friction',
 	LINEAR_DAMPING = 'linearDamping',
 	ANGULAR_DAMPING = 'angularDamping',
 }
@@ -97,11 +120,23 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	static getColliderType(object: Object3D): PhysicsRBDColliderType | undefined {
 		return this._getString(object, PhysicsCommonAttribute.COLLIDER_TYPE) as PhysicsRBDColliderType | undefined;
 	}
+	static setDensity(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.DENSITY, value);
+	}
+	static getDensity(object: Object3D) {
+		return this._getNumber(object, PhysicsCommonAttribute.DENSITY);
+	}
 	static setRestitution(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.RESTITUTION, value);
 	}
 	static getRestitution(object: Object3D) {
 		return this._getNumber(object, PhysicsCommonAttribute.RESTITUTION);
+	}
+	static setFriction(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.FRICTION, value);
+	}
+	static getFriction(object: Object3D) {
+		return this._getNumber(object, PhysicsCommonAttribute.FRICTION);
 	}
 	static setLinearDamping(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.LINEAR_DAMPING, value);
@@ -117,20 +152,26 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	}
 
 	// cuboid
-	static setCuboidSize(object: Object3D, value: Vector3) {
-		this._setVector3(object, PhysicsRBDCuboidAttribute.SIZE, value);
+	static setCuboidSizes(object: Object3D, value: Vector3) {
+		this._setVector3(object, PhysicsRBDCuboidAttribute.SIZES, value);
 	}
-	static getCuboidSize(object: Object3D, value: Vector3) {
-		this._getVector3(object, PhysicsRBDCuboidAttribute.SIZE, value);
+	static getCuboidSizes(object: Object3D, value: Vector3) {
+		this._getVector3(object, PhysicsRBDCuboidAttribute.SIZES, value);
 	}
-	// sphere
+	static setCuboidSize(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsRBDCuboidAttribute.SIZE, value);
+	}
+	static getCuboidSize(object: Object3D) {
+		return this._getNumber(object, PhysicsRBDCuboidAttribute.SIZE);
+	}
+	// sphere + capsule + cylinder
 	static setRadius(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsRBDSphereAttribute.RADIUS, value);
 	}
 	static getRadius(object: Object3D) {
 		return this._getNumber(object, PhysicsRBDSphereAttribute.RADIUS);
 	}
-	// capsule
+	// capsule + cylinder
 	static setHeight(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsRBDCapsuleAttribute.HEIGHT, value);
 	}
