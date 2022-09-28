@@ -165,28 +165,33 @@ QUnit.test('sop/physicsRBDAttributes cuboid', async (assert) => {
 
 	box1.p.size.set(0.25);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CUBOID);
-	physicsRBDAttributes1.p.size.set([0.25, 0.3, 0.35]);
+	physicsRBDAttributes1.p.sizes.set([0.25, 0.3, 0.35]);
+	physicsRBDAttributes1.p.size.set(0.55);
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
 	const objects = container.coreContent()!.objects()[0].children;
-	const sizes = objects.map((object: Object3D) => {
+	const sizess = objects.map((object: Object3D) => {
 		const target = new Vector3();
-		CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZE, 0, target);
+		CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
 		return target;
 	});
+	const sizes = objects.map((object: Object3D) => {
+		return CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZE, 0) as number;
+	});
 	assert.deepEqual(
-		sizes.map((size: Vector3) => size.x),
+		sizess.map((size: Vector3) => size.x),
 		[0.25, 0.25, 0.25, 0.25]
 	);
 	assert.deepEqual(
-		sizes.map((size: Vector3) => size.y),
+		sizess.map((size: Vector3) => size.y),
 		[0.3, 0.3, 0.3, 0.3]
 	);
 	assert.deepEqual(
-		sizes.map((size: Vector3) => size.z),
+		sizess.map((size: Vector3) => size.z),
 		[0.35, 0.35, 0.35, 0.35]
 	);
+	assert.deepEqual(sizes, [0.55, 0.55, 0.55, 0.55]);
 
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);
