@@ -145,6 +145,90 @@ QUnit.test('sop/physicsRBDAttributes capsule', async (assert) => {
 		}
 	});
 });
+QUnit.test('sop/physicsRBDAttributes cone', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+	const cameraNode = window.perspective_camera1;
+	cameraNode.p.t.z.set(5);
+
+	const plane1 = geo1.createNode('plane');
+	const cone1 = geo1.createNode('cone');
+	const copy1 = geo1.createNode('copy');
+	const physicsRBDAttributes1 = geo1.createNode('physicsRBDAttributes');
+	const physicsWorld1 = geo1.createNode('physicsWorld');
+
+	copy1.setInput(0, cone1);
+	copy1.setInput(1, plane1);
+	physicsRBDAttributes1.setInput(0, copy1);
+	physicsWorld1.setInput(0, physicsRBDAttributes1);
+	physicsWorld1.flags.display.set(true);
+
+	cone1.p.radius.set(0.25);
+	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CONE);
+	physicsRBDAttributes1.p.radius.set(0.25);
+	physicsRBDAttributes1.p.height.set(0.6);
+
+	createPhysicsWorldNodes(physicsWorld1);
+	const container = await physicsWorld1.compute();
+	const objects = container.coreContent()!.objects()[0].children;
+	const radii = objects.map((object: Object3D) => {
+		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.RADIUS) as number;
+	});
+	const heights = objects.map((object: Object3D) => {
+		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.HEIGHT) as number;
+	});
+	assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
+	assert.deepEqual(heights, [0.6, 0.6, 0.6, 0.6]);
+
+	for (let object of objects) {
+		assert.in_delta(object.position.y, 0, 0.01);
+	}
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
+		scene.play();
+		await CoreSleep.sleep(500);
+		for (let object of objects) {
+			assert.less_than(object.position.y, -0.1);
+		}
+	});
+});
+QUnit.test('sop/physicsRBDAttributes convex hull', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+	const cameraNode = window.perspective_camera1;
+	cameraNode.p.t.z.set(5);
+
+	const plane1 = geo1.createNode('plane');
+	const cone1 = geo1.createNode('cone');
+	const copy1 = geo1.createNode('copy');
+	const physicsRBDAttributes1 = geo1.createNode('physicsRBDAttributes');
+	const physicsWorld1 = geo1.createNode('physicsWorld');
+
+	copy1.setInput(0, cone1);
+	copy1.setInput(1, plane1);
+	physicsRBDAttributes1.setInput(0, copy1);
+	physicsWorld1.setInput(0, physicsRBDAttributes1);
+	physicsWorld1.flags.display.set(true);
+
+	cone1.p.radius.set(0.25);
+	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CONVEX_HULL);
+	physicsRBDAttributes1.p.radius.set(0.25);
+	physicsRBDAttributes1.p.height.set(0.6);
+
+	createPhysicsWorldNodes(physicsWorld1);
+	const container = await physicsWorld1.compute();
+	const objects = container.coreContent()!.objects()[0].children;
+
+	for (let object of objects) {
+		assert.in_delta(object.position.y, 0, 0.01);
+	}
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
+		scene.play();
+		await CoreSleep.sleep(500);
+		for (let object of objects) {
+			assert.less_than(object.position.y, -0.1);
+		}
+	});
+});
 QUnit.test('sop/physicsRBDAttributes cuboid', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
@@ -204,6 +288,53 @@ QUnit.test('sop/physicsRBDAttributes cuboid', async (assert) => {
 		}
 	});
 });
+QUnit.test('sop/physicsRBDAttributes cylinder', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+	const cameraNode = window.perspective_camera1;
+	cameraNode.p.t.z.set(5);
+
+	const plane1 = geo1.createNode('plane');
+	const tube1 = geo1.createNode('tube');
+	const copy1 = geo1.createNode('copy');
+	const physicsRBDAttributes1 = geo1.createNode('physicsRBDAttributes');
+	const physicsWorld1 = geo1.createNode('physicsWorld');
+
+	copy1.setInput(0, tube1);
+	copy1.setInput(1, plane1);
+	physicsRBDAttributes1.setInput(0, copy1);
+	physicsWorld1.setInput(0, physicsRBDAttributes1);
+	physicsWorld1.flags.display.set(true);
+
+	tube1.p.radiusTop.set(0.25);
+	tube1.p.radiusBottom.set(0.25);
+	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CYLINDER);
+	physicsRBDAttributes1.p.radius.set(0.25);
+	physicsRBDAttributes1.p.height.set(0.6);
+
+	createPhysicsWorldNodes(physicsWorld1);
+	const container = await physicsWorld1.compute();
+	const objects = container.coreContent()!.objects()[0].children;
+	const radii = objects.map((object: Object3D) => {
+		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.RADIUS) as number;
+	});
+	const heights = objects.map((object: Object3D) => {
+		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.HEIGHT) as number;
+	});
+	assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
+	assert.deepEqual(heights, [0.6, 0.6, 0.6, 0.6]);
+
+	for (let object of objects) {
+		assert.in_delta(object.position.y, 0, 0.01);
+	}
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
+		scene.play();
+		await CoreSleep.sleep(500);
+		for (let object of objects) {
+			assert.less_than(object.position.y, -0.1);
+		}
+	});
+});
 QUnit.test('sop/physicsRBDAttributes sphere', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
@@ -233,6 +364,42 @@ QUnit.test('sop/physicsRBDAttributes sphere', async (assert) => {
 		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDSphereAttribute.RADIUS) as number
 	);
 	assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
+
+	for (let object of objects) {
+		assert.in_delta(object.position.y, 0, 0.01);
+	}
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
+		scene.play();
+		await CoreSleep.sleep(500);
+		for (let object of objects) {
+			assert.less_than(object.position.y, -0.1);
+		}
+	});
+});
+QUnit.test('sop/physicsRBDAttributes trimesh', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+	const cameraNode = window.perspective_camera1;
+	cameraNode.p.t.z.set(5);
+
+	const plane1 = geo1.createNode('plane');
+	const cone1 = geo1.createNode('cone');
+	const copy1 = geo1.createNode('copy');
+	const physicsRBDAttributes1 = geo1.createNode('physicsRBDAttributes');
+	const physicsWorld1 = geo1.createNode('physicsWorld');
+
+	copy1.setInput(0, cone1);
+	copy1.setInput(1, plane1);
+	physicsRBDAttributes1.setInput(0, copy1);
+	physicsWorld1.setInput(0, physicsRBDAttributes1);
+	physicsWorld1.flags.display.set(true);
+
+	cone1.p.radius.set(0.25);
+	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.TRIMESH);
+
+	createPhysicsWorldNodes(physicsWorld1);
+	const container = await physicsWorld1.compute();
+	const objects = container.coreContent()!.objects()[0].children;
 
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);

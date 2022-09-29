@@ -179,21 +179,20 @@ function PhysicsRBDCollider(PhysicsLib: PhysicsLib, colliderType: PhysicsRBDColl
 			const float32Array = new Float32Array(position.array);
 			return PhysicsLib.ColliderDesc.convexHull(float32Array);
 		}
-		// case PhysicsRBDColliderType.CONVEX_MESH: {
-		// 	const geometry = (object as Mesh).geometry;
-		// 	if (!geometry) {
-		// 		return;
-		// 	}
-		// 	const position = geometry.getAttribute('position') as BufferAttribute;
-		// 	const index = geometry.getIndex();
-		// 	if (!(position && index)) {
-		// 		return;
-		// 	}
-		// 	const float32ArrayPosition = new Float32Array(position.array);
-		// 	const uint32ArrayIndex = new Uint32Array(index.array);
-
-		// 	return PhysicsLib.ColliderDesc.convexMesh(float32ArrayPosition, uint32ArrayIndex);
-		// }
+		case PhysicsRBDColliderType.TRIMESH: {
+			const geometry = (object as Mesh).geometry;
+			if (!geometry) {
+				return;
+			}
+			const position = geometry.getAttribute('position') as BufferAttribute;
+			const index = geometry.getIndex();
+			if (!(position && index)) {
+				return;
+			}
+			const float32ArrayPosition = new Float32Array(position.array);
+			const uint32ArrayIndex = new Uint32Array(index.array);
+			return PhysicsLib.ColliderDesc.trimesh(float32ArrayPosition, uint32ArrayIndex);
+		}
 		case PhysicsRBDColliderType.CYLINDER: {
 			const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
 			const radius = CorePhysicsAttribute.getRadius(object);

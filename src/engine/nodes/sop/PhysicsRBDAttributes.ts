@@ -236,7 +236,8 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				);
 				return;
 			}
-			case PhysicsRBDColliderType.CONVEX_HULL: {
+			case PhysicsRBDColliderType.CONVEX_HULL:
+			case PhysicsRBDColliderType.TRIMESH: {
 				return;
 			}
 		}

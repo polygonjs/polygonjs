@@ -22,7 +22,8 @@ export enum PhysicsRBDColliderType {
 	CUBOID = 'cuboid',
 	CYLINDER = 'cylinder',
 	SPHERE = 'sphere',
-	// trimesh, heightfield
+	TRIMESH = 'trimesh',
+	// heightfield
 }
 export const PHYSICS_RBD_COLLIDER_TYPES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CUBOID,
@@ -32,6 +33,7 @@ export const PHYSICS_RBD_COLLIDER_TYPES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CONE,
 	PhysicsRBDColliderType.CONVEX_HULL,
 	// PhysicsRBDColliderType.CONVEX_MESH,
+	PhysicsRBDColliderType.TRIMESH,
 ];
 const SORTED_ENTRIES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CAPSULE,
@@ -41,6 +43,7 @@ const SORTED_ENTRIES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CUBOID,
 	PhysicsRBDColliderType.CYLINDER,
 	PhysicsRBDColliderType.SPHERE,
+	PhysicsRBDColliderType.TRIMESH,
 ];
 export const PHYSICS_RBD_COLLIDER_TYPE_MENU_ENTRIES = SORTED_ENTRIES.map((entry) => {
 	return {name: entry, value: PHYSICS_RBD_COLLIDER_TYPES.indexOf(entry)};
