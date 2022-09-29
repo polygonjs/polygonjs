@@ -29,6 +29,7 @@ interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
 	restitution: number;
 	linearDamping: number;
 	angularDamping: number;
+	canSleep: boolean;
 }
 
 export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
@@ -50,6 +51,7 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 		restitution: 0.5,
 		linearDamping: 0,
 		angularDamping: 0,
+		canSleep: true,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<'physicsRBDAttributes'> {
@@ -66,6 +68,7 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 			CorePhysicsAttribute.setRestitution(object, params.restitution);
 			CorePhysicsAttribute.setLinearDamping(object, params.linearDamping);
 			CorePhysicsAttribute.setAngularDamping(object, params.angularDamping);
+			CorePhysicsAttribute.setCanSleep(object, params.canSleep);
 
 			if (isBooleanTrue(params.taddId)) {
 				CorePhysicsAttribute.setRBDId(object, params.id);

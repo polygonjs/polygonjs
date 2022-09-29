@@ -29,12 +29,16 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: O
 	const linearDamping = CorePhysicsAttribute.getLinearDamping(object);
 	const angularDamping = CorePhysicsAttribute.getAngularDamping(object);
 	const friction = CorePhysicsAttribute.getFriction(object);
+	const canSleep = CorePhysicsAttribute.getCanSleep(object);
 
 	if (linearDamping != null) {
 		rigidBodyDesc.setLinearDamping(linearDamping);
 	}
 	if (angularDamping != null) {
 		rigidBodyDesc.setAngularDamping(angularDamping);
+	}
+	if (canSleep != null) {
+		rigidBodyDesc.setCanSleep(canSleep);
 	}
 	const colliderDesc = PhysicsRBDCollider(PhysicsLib, colliderType, object);
 	if (!colliderDesc) {
@@ -51,6 +55,7 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: O
 	if (density != null) {
 		colliderDesc.setDensity(density);
 	}
+
 	world.createCollider(colliderDesc, rigidBody);
 
 	return {colliderDesc, rigidBody, id};

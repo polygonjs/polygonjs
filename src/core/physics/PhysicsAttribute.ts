@@ -69,6 +69,8 @@ export enum PhysicsCommonAttribute {
 	RBD_ID = 'RBDId',
 	RBD_TYPE = 'RBDType',
 	COLLIDER_TYPE = 'RBDColliderType',
+	//
+	CAN_SLEEP = 'RBDCanSleep',
 	DENSITY = 'density',
 	RESTITUTION = 'restitution',
 	FRICTION = 'friction',
@@ -92,14 +94,28 @@ export class CorePhysicsBaseAttribute {
 	protected static _setNumber(object: Object3D, attribName: PhysicsAttribute, value: number) {
 		CoreObject.addAttribute(object, attribName, value);
 	}
-	protected static _getNumber(object: Object3D, attribName: PhysicsAttribute): number {
-		return CoreObject.attribValue(object, attribName, 0) as number;
+	protected static _setBoolean(object: Object3D, attribName: PhysicsAttribute, value: boolean) {
+		CoreObject.addAttribute(object, attribName, value);
+	}
+	protected static _getNumber(object: Object3D, attribName: PhysicsAttribute, defaultValue: number): number {
+		const val = CoreObject.attribValue(object, attribName, 0) as number | undefined;
+		if (val == null) {
+			return defaultValue;
+		}
+		return val;
+	}
+	protected static _getBoolean(object: Object3D, attribName: PhysicsAttribute, defaultValue: boolean): boolean {
+		const val = CoreObject.attribValue(object, attribName, 0) as boolean | undefined;
+		if (val == null) {
+			return defaultValue;
+		}
+		return val;
 	}
 	protected static _setString(object: Object3D, attribName: PhysicsAttribute, value: string) {
 		CoreObject.addAttribute(object, attribName, value);
 	}
-	protected static _getString(object: Object3D, attribName: PhysicsAttribute): string {
-		return CoreObject.attribValue(object, attribName, 0) as string;
+	protected static _getString(object: Object3D, attribName: PhysicsAttribute): string | undefined {
+		return CoreObject.attribValue(object, attribName, 0) as string | undefined;
 	}
 }
 
@@ -123,35 +139,41 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	static getColliderType(object: Object3D): PhysicsRBDColliderType | undefined {
 		return this._getString(object, PhysicsCommonAttribute.COLLIDER_TYPE) as PhysicsRBDColliderType | undefined;
 	}
+	static setCanSleep(object: Object3D, value: boolean) {
+		this._setBoolean(object, PhysicsCommonAttribute.CAN_SLEEP, value);
+	}
+	static getCanSleep(object: Object3D) {
+		return this._getBoolean(object, PhysicsCommonAttribute.CAN_SLEEP, true);
+	}
 	static setDensity(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.DENSITY, value);
 	}
 	static getDensity(object: Object3D) {
-		return this._getNumber(object, PhysicsCommonAttribute.DENSITY);
+		return this._getNumber(object, PhysicsCommonAttribute.DENSITY, 1);
 	}
 	static setRestitution(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.RESTITUTION, value);
 	}
 	static getRestitution(object: Object3D) {
-		return this._getNumber(object, PhysicsCommonAttribute.RESTITUTION);
+		return this._getNumber(object, PhysicsCommonAttribute.RESTITUTION, 0.5);
 	}
 	static setFriction(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.FRICTION, value);
 	}
 	static getFriction(object: Object3D) {
-		return this._getNumber(object, PhysicsCommonAttribute.FRICTION);
+		return this._getNumber(object, PhysicsCommonAttribute.FRICTION, 0);
 	}
 	static setLinearDamping(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.LINEAR_DAMPING, value);
 	}
 	static getLinearDamping(object: Object3D) {
-		return this._getNumber(object, PhysicsCommonAttribute.LINEAR_DAMPING);
+		return this._getNumber(object, PhysicsCommonAttribute.LINEAR_DAMPING, 0);
 	}
 	static setAngularDamping(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.ANGULAR_DAMPING, value);
 	}
 	static getAngularDamping(object: Object3D) {
-		return this._getNumber(object, PhysicsCommonAttribute.ANGULAR_DAMPING);
+		return this._getNumber(object, PhysicsCommonAttribute.ANGULAR_DAMPING, 0);
 	}
 
 	// cuboid
@@ -165,20 +187,20 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 		this._setNumber(object, PhysicsRBDCuboidAttribute.SIZE, value);
 	}
 	static getCuboidSize(object: Object3D) {
-		return this._getNumber(object, PhysicsRBDCuboidAttribute.SIZE);
+		return this._getNumber(object, PhysicsRBDCuboidAttribute.SIZE, 1);
 	}
 	// sphere + capsule + cylinder
 	static setRadius(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsRBDSphereAttribute.RADIUS, value);
 	}
 	static getRadius(object: Object3D) {
-		return this._getNumber(object, PhysicsRBDSphereAttribute.RADIUS);
+		return this._getNumber(object, PhysicsRBDSphereAttribute.RADIUS, 1);
 	}
 	// capsule + cylinder
 	static setHeight(object: Object3D, value: number) {
 		this._setNumber(object, PhysicsRBDCapsuleAttribute.HEIGHT, value);
 	}
 	static getHeight(object: Object3D) {
-		return this._getNumber(object, PhysicsRBDCapsuleAttribute.HEIGHT);
+		return this._getNumber(object, PhysicsRBDCapsuleAttribute.HEIGHT, 1);
 	}
 }

@@ -23,6 +23,7 @@ import {CoreObject} from '../../../core/geometry/Object';
 import {Object3D, Vector3} from 'three';
 import {Vector3Param} from '../../params/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
+import {BooleanParam} from '../../params/Boolean';
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
 
 const VISIBLE_OPTIONS = {
@@ -120,6 +121,10 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		expression: {forEntities: true},
 	});
+	/** @param can sleep */
+	canSleep = ParamConfig.BOOLEAN(DEFAULT.canSleep, {
+		expression: {forEntities: true},
+	});
 }
 const ParamsConfig = new PhysicsRBDAttributesSopParamsConfig();
 
@@ -187,6 +192,11 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			this.p.restitution,
 			coreObjects,
 			CorePhysicsAttribute.setRestitution.bind(CorePhysicsAttribute)
+		);
+		this._computeBooleanParam(
+			this.p.canSleep,
+			coreObjects,
+			CorePhysicsAttribute.setCanSleep.bind(CorePhysicsAttribute)
 		);
 
 		this._applyColliderType(colliderType, coreObjects);
@@ -278,6 +288,21 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		param: FloatParam,
 		coreObjects: CoreObject[],
 		applyMethod: (object: Object3D, value: number) => void
+	) {
+		if (param.expressionController) {
+			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
+				applyMethod(coreObject.object(), value);
+			});
+		} else {
+			for (let coreObject of coreObjects) {
+				applyMethod(coreObject.object(), param.value);
+			}
+		}
+	}
+	protected async _computeBooleanParam(
+		param: BooleanParam,
+		coreObjects: CoreObject[],
+		applyMethod: (object: Object3D, value: boolean) => void
 	) {
 		if (param.expressionController) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
