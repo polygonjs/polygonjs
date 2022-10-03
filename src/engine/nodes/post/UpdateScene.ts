@@ -7,10 +7,20 @@
  *
  */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-import {UpdateScenePass} from '../../../modules/core/post_process/UpdateScenePass';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreType, isBooleanTrue} from '../../../core/Type';
+import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
+import {Object3D, Mesh, Material, MeshBasicMaterial, Color} from 'three';
+import {UpdateScenePass} from './utils/effects/UpdateScenePass';
+
+const MATTE_MATERIAL = new MeshBasicMaterial({color: new Color(0, 0, 0)});
+
+// function _effectFromPass(effectPass: EffectPass): UpdateScenePass | undefined {
+// 	const effect = (effectPass as any).effects[0];
+// 	if (effect instanceof UpdateScenePass) {
+// 		return effect;
+// 	}
+// }
 
 class UpdateScenePostParamsConfig extends NodeParamsConfig {
 	/** @param reset */
@@ -29,21 +39,23 @@ class UpdateScenePostParamsConfig extends NodeParamsConfig {
 		visibleIf: {reset: 0},
 	});
 	/** @param prints which objects are targeted by this node, for debugging */
-	printFoundObjectsFromMask = ParamConfig.BUTTON(null, {
-		visibleIf: {reset: 0},
-		callback: (node: BaseNodeType) => {
-			UpdateScenePostNode.PARAM_CALLBACK_printResolve(node as UpdateScenePostNode);
-		},
-	});
+	// printFoundObjectsFromMask = ParamConfig.BUTTON(null, {
+	// 	visibleIf: {reset: 0},
+	// 	callback: (node: BaseNodeType) => {
+	// 		UpdateScenePostNode.PARAM_CALLBACK_printResolve(node as UpdateScenePostNode);
+	// 	},
+	// });
 	/** @param update selected objects material to a matte one */
 	setMatteMaterial = ParamConfig.BOOLEAN(1, {
 		...PostParamOptions,
 		visibleIf: {reset: 0},
+		separatorBefore: true,
 	});
 	/** @param set visible state  */
 	setVisible = ParamConfig.BOOLEAN(0, {
 		...PostParamOptions,
 		visibleIf: {reset: 0},
+		separatorBefore: true,
 	});
 	/** @param set visible state  */
 	visible = ParamConfig.BOOLEAN(0, {
@@ -54,8 +66,9 @@ class UpdateScenePostParamsConfig extends NodeParamsConfig {
 	resetChanges = ParamConfig.BUTTON(null, {
 		visibleIf: {reset: 0},
 		callback: (node: BaseNodeType) => {
-			UpdateScenePostNode.PARAM_CALLBACK_resetMat(node as UpdateScenePostNode);
+			UpdateScenePostNode.PARAM_CALLBACK_resetChanges(node as UpdateScenePostNode);
 		},
+		separatorBefore: true,
 	});
 	/** @param material */
 	// material = ParamConfig.NODE_PATH('', {
@@ -85,65 +98,78 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 
 	override createPass(context: TypedPostNodeContext) {
 		const pass = new UpdateScenePass({
-			scene: this.scene(),
+			// scene: this.scene(),
+			node: this,
 			reset: isBooleanTrue(this.pv.reset),
-			passToReset: this._passToReset(context),
-			objectsMask: this.pv.objectsMask,
-			invertMask: isBooleanTrue(this.pv.invertMask),
-			setMatteMaterial: isBooleanTrue(this.pv.setMatteMaterial),
-			setVisible: isBooleanTrue(this.pv.setVisible),
-			visible: isBooleanTrue(this.pv.visible),
+			nodeToReset: this._nodeToReset(context),
+			// objectsMask: this.pv.objectsMask,
+			// invertMask: isBooleanTrue(this.pv.invertMask),
+			// setMatteMaterial: isBooleanTrue(this.pv.setMatteMaterial),
+			// setVisible: isBooleanTrue(this.pv.setVisible),
+			// visible: isBooleanTrue(this.pv.visible),
 		});
+		// const pass = new EffectPass(context.camera, effect);
+		this.updatePass(pass);
+
 		return pass;
 	}
 	override updatePass(pass: UpdateScenePass) {
-		pass.reset = isBooleanTrue(this.pv.reset);
-		pass.objectsMask = this.pv.objectsMask;
-		pass.invertMask = isBooleanTrue(this.pv.invertMask);
-		pass.setMatteMaterial = isBooleanTrue(this.pv.setMatteMaterial);
-		pass.setVisible = isBooleanTrue(this.pv.setVisible);
-		pass.visible = isBooleanTrue(this.pv.visible);
+		// const effect = _effectFromPass(pass);
+		// if (!effect) {
+		// 	return;
+		// }
+		// pass.reset = isBooleanTrue(this.pv.reset);
+		// effect.objectsMask = this.pv.objectsMask;
+		// effect.invertMask = isBooleanTrue(this.pv.invertMask);
+		// effect.setMatteMaterial = isBooleanTrue(this.pv.setMatteMaterial);
+		// effect.setVisible = isBooleanTrue(this.pv.setVisible);
+		// effect.visible = isBooleanTrue(this.pv.visible);
 	}
-	private _passToReset(context: TypedPostNodeContext): UpdateScenePass | undefined {
+	private _nodeToReset(context: TypedPostNodeContext): UpdateScenePostNode | undefined {
 		const input2 = this.io.inputs.input(1);
 		if (!input2) {
 			return;
 		}
 		if (input2 instanceof UpdateScenePostNode) {
-			const pass = context.composerController.passByNodeInBuildPassesProcess(input2) as
-				| UpdateScenePass
-				| undefined; //input2.passesByRequester(requester);
-			console.log(pass);
-			return pass;
+			return input2;
+			// const pass = context.composerController.passByNodeInBuildPassesProcess(input2) as EffectPass | undefined; //input2.passesByRequester(requester);
+			// console.log(pass, pass ? _effectFromPass(pass) : undefined);
+			// return pass ? _effectFromPass(pass) : undefined;
 		}
 	}
 
-	static PARAM_CALLBACK_printResolve(node: UpdateScenePostNode) {
-		node._printResolve();
+	// static PARAM_CALLBACK_printResolve(node: UpdateScenePostNode) {
+	// 	node._printResolve();
+	// }
+	// private _printResolve() {
+	// 	let firstPass: EffectPass | undefined;
+	// 	this._passesByEffectsComposer.forEach((passOrPasses) => {
+	// 		const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
+	// 		firstPass = firstPass || passes[0];
+	// 	});
+	// 	if (firstPass) {
+	// 		const effect = _effectFromPass(firstPass);
+	// 		if (effect) {
+	// 			console.log(hhis.objectsList());
+	// 		}
+	// 	} else {
+	// 		console.error(`no pass generated by this node, maybe it has not rendered yet?`);
+	// 	}
+	// }
+	static PARAM_CALLBACK_resetChanges(node: UpdateScenePostNode) {
+		node.resetChanges();
 	}
-	private _printResolve() {
-		let firstPass: UpdateScenePass | undefined;
-		this._passesByEffectsComposer.forEach((passOrPasses) => {
-			const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
-			firstPass = firstPass || passes[0];
-		});
-		if (firstPass) {
-			console.log(firstPass.objectsList());
-		} else {
-			console.error(`no pass generated by this node, maybe it has not rendered yet?`);
-		}
-	}
-	static PARAM_CALLBACK_resetMat(node: UpdateScenePostNode) {
-		node._resetMat();
-	}
-	private _resetMat() {
-		this._passesByEffectsComposer.forEach((passOrPasses) => {
-			const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
-			for (let pass of passes) {
-				pass.resetChanges();
-			}
-		});
-	}
+	// private _resetMat() {
+	// 	this._passesByEffectsComposer.forEach((passOrPasses) => {
+	// 		const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
+	// 		for (let pass of passes) {
+	// 			const effect = _effectFromPass(pass);
+	// 			if (effect) {
+	// 				effect.resetChanges();
+	// 			}
+	// 		}
+	// 	});
+	// }
 
 	// static PARAM_CALLBACK_updatePassesMaterial(node: UpdateScenePostNode) {
 	// 	node._updatePassesMaterial();
@@ -161,4 +187,60 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 	// 		});
 	// 	}
 	// }
+	private _objectsList: Object3D[] = [];
+	objectsList() {
+		return this._objectsList;
+	}
+	private _materialByMesh: Map<Mesh, Material | Material[]> = new Map();
+	// private _parentByObject: Map<Object3D, Object3D | null> = new Map();
+	private _visibleByObject: Map<Object3D, boolean> = new Map();
+	applyChanges() {
+		const changeNeeded = isBooleanTrue(this.pv.setMatteMaterial) || isBooleanTrue(this.pv.setVisible);
+		if (changeNeeded) {
+			this._objectsList.length = 0;
+			const mask = this.pv.objectsMask;
+			this._scene.objectsController.traverseObjectsWithMask(mask, this._updateObjectBound, this.pv.invertMask);
+		}
+	}
+	resetChanges() {
+		// reset mat
+		this._materialByMesh.forEach((mat, mesh) => {
+			mesh.material = mat;
+		});
+		this._materialByMesh.clear();
+		// reset visibility
+		// this._parentByObject.forEach((parent, obj) => {
+		// 	parent?.add(obj);
+		// });
+		// this._parentByObject.clear();
+		this._visibleByObject.forEach((visible, obj) => {
+			obj.visible = visible;
+		});
+		this._visibleByObject.clear();
+	}
+	private _updateObjectBound = this._updateObject.bind(this);
+	private _updateObject(obj: Object3D) {
+		this._objectsList.push(obj);
+		if (isBooleanTrue(this.pv.setMatteMaterial)) {
+			const mesh = obj as Mesh;
+			if (mesh.material) {
+				this._materialByMesh.set(mesh, mesh.material);
+				mesh.material = MATTE_MATERIAL;
+			}
+		}
+		if (isBooleanTrue(this.pv.setVisible)) {
+			const visible = this.pv.visible;
+			// const parent = obj.parent;
+			// const hasParent = parent != null;
+			if (obj.visible != visible) {
+				// this._parentByObject.set(obj, parent);
+				// obj.removeFromParent();
+				// obj.parent = null;
+				// console.log('remove parent', obj);
+				this._visibleByObject.set(obj, obj.visible);
+				obj.visible = visible;
+				// console.log(obj, obj.visible);
+			}
+		}
+	}
 }

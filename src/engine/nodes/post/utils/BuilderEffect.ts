@@ -7,10 +7,11 @@ import {IUniforms} from '../../../../core/geometry/Material';
 
 interface BuilderEffectOptions {
 	fragmentShader: string;
+	useOutputBuffer: boolean;
 }
 
 export class BuilderEffect extends Effect {
-	constructor(private _composerInput1: EffectComposer, options: BuilderEffectOptions) {
+	constructor(private _composerInput1: EffectComposer, private options: BuilderEffectOptions) {
 		super('BuilderEffect', options.fragmentShader, {
 			blendFunction: BlendFunction.NORMAL,
 			uniforms: new Map([
@@ -45,8 +46,11 @@ export class BuilderEffect extends Effect {
 		// }
 		const textureInput1 = this.uniforms.get('textureInput1');
 		if (textureInput1) {
-			// TODO: why does it work with inputBuffer and not outputBuffer ?
-			(textureInput1.value as Texture) = this._composerInput1.inputBuffer.texture;
+			// TODO: test when it should work with inputBuffer or outputBuffer
+			// as this could be automated (maybe depending on number of passes)
+			(textureInput1.value as Texture) = this.options.useOutputBuffer
+				? this._composerInput1.outputBuffer.texture
+				: this._composerInput1.inputBuffer.texture;
 		} else {
 			console.warn('missing texture2');
 		}

@@ -3,10 +3,10 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {EffectPass} from 'postprocessing';
 import {BuilderEffect} from './utils/BuilderEffect';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
@@ -25,9 +25,9 @@ import {NodeContext} from '../../poly/NodeContext';
 
 class BuilderPostParamsConfig extends NodeParamsConfig {
 	/** @param effect amount */
-	// amount = ParamConfig.FLOAT(1, {
-	// 	...PostParamOptions,
-	// });
+	useInput1OuputBuffer = ParamConfig.BOOLEAN(1, {
+		...PostParamOptions,
+	});
 }
 const ParamsConfig = new BuilderPostParamsConfig();
 export class BuilderPostNode extends TypedPostProcessNode<EffectPass, BuilderPostParamsConfig> {
@@ -196,7 +196,10 @@ export class BuilderPostNode extends TypedPostProcessNode<EffectPass, BuilderPos
 		clonedContextInput1.composer = composerInput1;
 		this._addPassFromInput(1, clonedContextInput1);
 
-		const effect = new BuilderEffect(composerInput1, {fragmentShader: this._fragmentShader});
+		const effect = new BuilderEffect(composerInput1, {
+			fragmentShader: this._fragmentShader,
+			useOutputBuffer: this.pv.useInput1OuputBuffer,
+		});
 		const pass = new EffectPass(context.camera, effect);
 		// pass.needsSwap = false;
 		// pass.renderToScreen = false;

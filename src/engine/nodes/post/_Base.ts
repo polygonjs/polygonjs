@@ -80,8 +80,7 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 		if (pass) {
 			const array = CoreType.isArray(pass) ? pass : [pass];
 			for (let p of array) {
-				context.composerController.addPassByNodeInBuildPassesProcess(this, p);
-				context.composer.addPass(p);
+				context.composerController.addPassByNodeInBuildPassesProcess(this, p, context.composer);
 			}
 		}
 	}

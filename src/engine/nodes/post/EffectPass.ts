@@ -64,7 +64,7 @@ export class EffectPassPostNode extends TypedPostProcessNode<EffectPass, EffectP
 			})
 		).flat();
 		const pass = new EffectPass(context.camera, ...effects);
-		context.composer.addPass(pass);
+		context.composerController.addPassByNodeInBuildPassesProcess(this, pass, context.composer);
 	}
 
 	override updatePass(pass: EffectPass) {}

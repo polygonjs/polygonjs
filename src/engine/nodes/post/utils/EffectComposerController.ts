@@ -134,12 +134,13 @@ export class EffectComposerController {
 	}
 
 	private _passByNodeInBuildPassesProcess: Map<BaseNodeType, Pass> = new Map();
-	addPassByNodeInBuildPassesProcess(node: BaseNodeType, pass: Pass) {
+	addPassByNodeInBuildPassesProcess(node: BaseNodeType, pass: Pass, composer: EffectComposer) {
 		this._passByNodeInBuildPassesProcess.set(node, pass);
+		composer.addPass(pass);
 	}
-	passByNodeInBuildPassesProcess(node: BaseNodeType) {
-		return this._passByNodeInBuildPassesProcess.get(node);
-	}
+	// passByNodeInBuildPassesProcess(node: BaseNodeType) {
+	// 	return this._passByNodeInBuildPassesProcess.get(node);
+	// }
 	private _buildPasses(composer: EffectComposer, options: CreateEffectsComposerOptions) {
 		this._passByNodeInBuildPassesProcess.clear();
 

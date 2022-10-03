@@ -21,6 +21,7 @@ import {GodRaysPostNode} from '../../../nodes/post/GodRays';
 import {HueSaturationPostNode} from '../../../nodes/post/HueSaturation';
 // import {LayerPostNode} from '../../../nodes/post/Layer';
 // import {MaskPostNode} from '../../../nodes/post/Mask';
+import {LuminancePostNode} from '../../../nodes/post/Luminance';
 import {LutPostNode} from '../../../nodes/post/Lut';
 import {NormalPostNode} from '../../../nodes/post/Normal';
 import {NoisePostNode} from '../../../nodes/post/Noise';
@@ -66,6 +67,7 @@ export interface PostNodeChildrenMap {
 	hueSaturation: HueSaturationPostNode;
 	// layer: LayerPostNode;
 	// mask: MaskPostNode;
+	luminance: LuminancePostNode;
 	lut: LutPostNode;
 	noise: NoisePostNode;
 	normal: NormalPostNode;
@@ -114,7 +116,7 @@ export class PostRegister {
 		poly.registerNode(HueSaturationPostNode, CATEGORY_POST.COLOR);
 		// poly.registerNode(LayerPostNode, CATEGORY_POST.MISC);
 		// poly.registerNode(MaskPostNode, CATEGORY_POST.MISC);
-
+		poly.registerNode(LuminancePostNode, CATEGORY_POST.COLOR);
 		poly.registerNode(LutPostNode, CATEGORY_POST.COLOR);
 		poly.registerNode(NoisePostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(NormalPostNode, CATEGORY_POST.MISC);
