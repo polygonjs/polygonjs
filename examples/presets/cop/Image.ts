@@ -3,6 +3,7 @@ import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {ImageCopNode} from '../../../src/engine/nodes/cop/Image';
 import {PolyDictionary} from '../../../src/types/GlobalTypes';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
+import {matcapElements} from './image/matcap';
 
 interface PolyhavenOptions {
 	displacement?: boolean;
@@ -120,6 +121,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 		ktx2,
 		...artveeSet(),
 		...polyhavenSets(),
+		...matcapElements(node),
 	});
 
 	return collection;

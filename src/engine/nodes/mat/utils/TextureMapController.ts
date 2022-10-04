@@ -13,7 +13,10 @@ import {MeshToonMaterial} from 'three';
 export function MapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to use a map affecting color */
-		useMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureMapController));
+		useMap = ParamConfig.BOOLEAN(0, {
+			...BooleanParamOptions(TextureMapController),
+			separatorBefore: true,
+		});
 		/** @param texture map affecting color */
 		map = ParamConfig.NODE_PATH('', NodePathOptions(TextureMapController, 'useMap'));
 	};
