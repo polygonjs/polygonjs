@@ -13,9 +13,26 @@ const PI_2 = Math.PI / 2;
 const tmpCameraUnproject = new Vector3();
 const spherical = new Spherical();
 
+const LOCK_ELEMENT_DEFAULT_HTML = `
+<div style="
+	text-align:center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	cursor: pointer;
+	padding: 5px 10px;
+	background:gray;
+	border:white;
+	color: white;
+	">
+	<div style="font-size: 1rem">CLICK TO START</div>
+	<div style="font-size: 0.6rem">press ESC to show your cursor</div>
+</div>
+`;
+
 interface PointerLockControlsOptions {
-	createLockHTMLElement: boolean;
-	lockHTMLElement: string;
+	lockHTMLElement?: HTMLElement;
 }
 
 export class PointerLockControls extends EventDispatcher {
@@ -144,7 +161,7 @@ export class PointerLockControls extends EventDispatcher {
 		return this.domElement.parentElement;
 	}
 	private _unlockHTMLElement() {
-		return (this.__unlockHTMLElement = this.__unlockHTMLElement || this._createUnlockHTMLElement());
+		return (this.__unlockHTMLElement = this.__unlockHTMLElement || this._getUnlockHTMLElement());
 	}
 	private _showUnlockHTMLElement() {
 		const el = this._unlockHTMLElement();
@@ -153,15 +170,15 @@ export class PointerLockControls extends EventDispatcher {
 		}
 		this._unlockHTMLElementParent()?.append(el);
 	}
-
-	private _createUnlockHTMLElement(): HTMLElement | undefined {
-		if (!this.options.createLockHTMLElement) {
-			return;
-		}
-		const div = document.createElement('div');
-		div.innerHTML = this.options.lockHTMLElement;
-		div.addEventListener('pointerdown', this.boundMethods.lock);
-		return div;
+	private _getUnlockHTMLElement(): HTMLElement | undefined {
+		const element = this.options.lockHTMLElement || this._createUnlockHTMLElement();
+		element.addEventListener('pointerdown', this.boundMethods.lock);
+		return element;
+	}
+	private _createUnlockHTMLElement(): HTMLElement {
+		const el = document.createElement('div');
+		el.innerHTML = LOCK_ELEMENT_DEFAULT_HTML;
+		return el;
 	}
 	private _removeHTMLElement() {
 		if (!this.__unlockHTMLElement) {

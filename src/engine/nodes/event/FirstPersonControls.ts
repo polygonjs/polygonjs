@@ -13,7 +13,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {PointerLockControls} from '../../../modules/core/controls/PointerLockControls';
 import {CameraControlsNodeType, NodeContext} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
-import {ParamOptions, StringParamLanguage} from '../../params/utils/OptionsController';
+import {ParamOptions} from '../../params/utils/OptionsController';
 import {CorePlayer, CorePlayerOptions} from '../../../core/player/Player';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CollisionController} from './collision/CollisionController';
@@ -21,24 +21,6 @@ import {CollisionController} from './collision/CollisionController';
 const EVENT_LOCK = 'lock';
 const EVENT_CHANGE = 'change';
 const EVENT_UNLOCK = 'unlock';
-
-const lockElementDefault = `
-<div style="
-	text-align:center;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%,-50%);
-	cursor: pointer;
-	padding: 5px 10px;
-	background:gray;
-	border:white;
-	color: white;
-	">
-	<div style="font-size: 1rem">CLICK TO START</div>
-	<div style="font-size: 0.6rem">press ESC to show your cursor</div>
-</div>
-`;
 
 function updatePlayerParamsCallbackOption(): ParamOptions {
 	return {
@@ -170,15 +152,13 @@ class FirstPersonEventParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, true],
 	});
 	html = ParamConfig.FOLDER();
-	/** @param create clickable html element to lock the cursor */
-	createHTMLLockElement = ParamConfig.BOOLEAN(1, {
-		...updatePlayerParamsCallbackOption(),
-	});
-	/** @param html used for the lock element */
-	htmlLockElement = ParamConfig.STRING(lockElementDefault, {
-		...updatePlayerParamsCallbackOption(),
-		visibleIf: {createHTMLLockElement: 1},
-		language: StringParamLanguage.HTML,
+	/** @param specify a custom HTML element */
+	customLockCursorElement = ParamConfig.BOOLEAN(false);
+	/** @param jump HTML element selector */
+	lockCursorElementSelector = ParamConfig.STRING('#lock-cursor-element', {
+		visibleIf: {
+			customLockCursorElement: true,
+		},
 	});
 }
 const ParamsConfig = new FirstPersonEventParamsConfig();
@@ -223,12 +203,15 @@ export class FirstPersonControlsEventNode extends TypedCameraControlsEventNode<F
 
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		await this._initPlayer(camera);
-		const controls = new PointerLockControls(
-			camera,
-			element,
-			{createLockHTMLElement: this.pv.createHTMLLockElement, lockHTMLElement: this.pv.htmlLockElement},
-			this._player
-		);
+		const _getLockHTMLElement = () => {
+			if (!this.pv.customLockCursorElement) {
+				return undefined;
+			}
+			const element = document.querySelector(this.pv.lockCursorElementSelector) as HTMLElement | undefined;
+			return element;
+		};
+		const lockHTMLElement = _getLockHTMLElement();
+		const controls = new PointerLockControls(camera, element, {lockHTMLElement}, this._player);
 
 		this._controls_by_element_id.set(element.id, controls);
 		this._bind_listeners_to_controls_instance(controls);
