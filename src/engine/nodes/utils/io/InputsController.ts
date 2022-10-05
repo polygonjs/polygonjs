@@ -72,6 +72,9 @@ export class NodeInputsController<NC extends NodeContext> {
 		}
 		this._maxInputsCount = maxInputsCount;
 		this._initGraphNodeInputs();
+		// we need to update the cloneRequiredState here,
+		// in case the inputsCount changes
+		this._updateCloneRequiredState();
 	}
 
 	namedInputConnectionPointsByName(name: string): ConnectionPointTypeMap[NC] | undefined {
@@ -542,6 +545,9 @@ export class NodeInputsController<NC extends NodeContext> {
 			return states;
 		}
 		return true;
+	}
+	private _updateCloneRequiredState() {
+		this._clonedStatesController?.updateCloneRequiredState();
 	}
 
 	//

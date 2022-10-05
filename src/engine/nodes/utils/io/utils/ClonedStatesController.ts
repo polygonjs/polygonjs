@@ -15,8 +15,8 @@ export class ClonedStatesController<NC extends NodeContext> {
 	private _overridden: boolean = false;
 
 	private node: TypedNode<NC, any>;
-	constructor(private inputs_controller: NodeInputsController<NC>) {
-		this.node = inputs_controller.node;
+	constructor(private inputsController: NodeInputsController<NC>) {
+		this.node = inputsController.node;
 	}
 	initInputsClonedState(states: InputCloneMode | InputCloneMode[]) {
 		// if (values) {
@@ -28,7 +28,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 			this._clonedState = states;
 		}
 
-		this._updateCloneRequiredState();
+		this.updateCloneRequiredState();
 	}
 
 	overrideClonedStateAllowed() {
@@ -107,14 +107,12 @@ export class ClonedStatesController<NC extends NodeContext> {
 
 	overrideClonedState(state: boolean) {
 		this._overridden = state;
-		this._updateCloneRequiredState();
-		this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
-		this.node.setDirty();
+		this.updateCloneRequiredState();
 	}
 	overriden() {
 		return this._overridden;
 	}
-	private _updateCloneRequiredState() {
+	updateCloneRequiredState() {
 		if (this._clonedStates) {
 			const states: boolean[] = [];
 			for (let i = 0; i < this._clonedStates.length; i++) {
@@ -123,7 +121,7 @@ export class ClonedStatesController<NC extends NodeContext> {
 			this._cloneRequiredStates = states;
 		} else {
 			if (this._clonedState) {
-				const max_inputs = this.inputs_controller.maxInputsCount();
+				const max_inputs = this.inputsController.maxInputsCount();
 				const states: boolean[] = [];
 				for (let i = 0; i < max_inputs; i++) {
 					states[i] = this._getCloneRequiredState(i);
@@ -131,6 +129,8 @@ export class ClonedStatesController<NC extends NodeContext> {
 				this._cloneRequiredStates = states;
 			}
 		}
+		this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
+		this.node.setDirty();
 		// update map
 		// this._cloneRequiredStatesMap.clear();
 		// if (this._cloneRequiredStates) {
