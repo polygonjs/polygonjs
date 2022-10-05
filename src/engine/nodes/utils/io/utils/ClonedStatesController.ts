@@ -129,8 +129,12 @@ export class ClonedStatesController<NC extends NodeContext> {
 				this._cloneRequiredStates = states;
 			}
 		}
-		this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
-		this.node.setDirty();
+		// no need to trigger updates
+		// if the node is not in the hierarchy
+		if (this.node.parent()) {
+			this.node.emit(NodeEvent.OVERRIDE_CLONABLE_STATE_UPDATE);
+			this.node.setDirty();
+		}
 		// update map
 		// this._cloneRequiredStatesMap.clear();
 		// if (this._cloneRequiredStates) {

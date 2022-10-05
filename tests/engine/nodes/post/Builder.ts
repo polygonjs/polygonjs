@@ -127,6 +127,7 @@ QUnit.test('post/builder using both inputs', async (assert) => {
 
 		// builder pass
 		const builder1 = cameraPostProcess1.createNode('builder');
+		builder1.p.useInput1OuputBuffer.set(false);
 		builder1.setInput(0, render1);
 		builder1.setInput(1, render2);
 		builder1.flags.display.set(true);
