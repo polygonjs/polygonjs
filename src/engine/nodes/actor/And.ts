@@ -1,5 +1,5 @@
 /**
- * performs an OR logical operation between the inputs
+ * performs an AND logical operation between the inputs
  *
  *
  *
@@ -8,9 +8,9 @@ import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext} from './_Base';
 import {BaseLogicOperationActorNode} from './_BaseLogicOperation';
 
-export class OrActorNode extends BaseLogicOperationActorNode {
+export class AndActorNode extends BaseLogicOperationActorNode {
 	static override type() {
-		return 'or';
+		return 'and';
 	}
 
 	public override outputValue(context: ActorNodeTriggerContext) {
@@ -21,7 +21,7 @@ export class OrActorNode extends BaseLogicOperationActorNode {
 		let result = booleanArray ? booleanArray[0] || false : false;
 		if (booleanArray && booleanArray.length > 1) {
 			for (let elem of booleanArray) {
-				result = result || elem;
+				result = result && elem;
 			}
 		}
 		return result;

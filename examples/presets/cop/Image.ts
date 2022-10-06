@@ -110,6 +110,22 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 			...polyhavenSet('fabric_pattern_07', {displacement: false}),
 		};
 	}
+	function unsplash() {
+		function _unsplash(fileName: string) {
+			return new BasePreset()
+				.addEntry(node.p.url, `${DEMO_ASSETS_ROOT_URL}/textures/resources/unsplash.com/${fileName}`)
+				.addEntry(node.p.tanisotropy, 1)
+				.addEntry(node.p.useRendererMaxAnisotropy, 1)
+				.addEntry(node.p.tminFilter, 1)
+				.addEntry(node.p.tmagFilter, 1)
+				.addEntry(node.p.tencoding, 1)
+				.addEntry(node.p.encoding, sRGBEncoding);
+		}
+		return {
+			'claudio-testa': _unsplash('claudio-testa--SO3JtE3gZo-unsplash.jpg'),
+			'johannes-plenio': _unsplash('johannes-plenio-DKix6Un55mw-unsplash.jpg'),
+		};
+	}
 
 	collection.setPresets({
 		asphalt,
@@ -122,6 +138,7 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 		...artveeSet(),
 		...polyhavenSets(),
 		...matcapElements(node),
+		...unsplash(),
 	});
 
 	return collection;

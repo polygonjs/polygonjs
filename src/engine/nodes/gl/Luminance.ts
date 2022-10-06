@@ -9,6 +9,8 @@ import {TypedGlNode} from './_Base';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import FitMethods from './gl/fit.glsl';
+import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'lum';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -30,12 +32,12 @@ export class LuminanceGlNode extends TypedGlNode<LuminanceGlParamsConfig> {
 		]);
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const value = ThreeToGl.vector3(this.variableForInputParam(this.p.color));
 
 		const lum = this.glVarName(OUTPUT_NAME);
-		// linearToRelativeLuminance is declared in threejs common.glsl.js
-		const body_line = `float ${lum} = linearToRelativeLuminance(${value})`;
-		shaders_collection_controller.addBodyLines(this, [body_line]);
+		const bodyLine = `float ${lum} = luminance(${value})`;
+		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, FitMethods)]);
 	}
 }

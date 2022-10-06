@@ -87,6 +87,7 @@ import './engine/nodes/utils/Memory';
 
 QUnit.module('actor');
 import './engine/nodes/actor/Add';
+import './engine/nodes/actor/And';
 import './engine/nodes/actor/AnimationActionCrossFade';
 import './engine/nodes/actor/AnimationActionFadeOut';
 import './engine/nodes/actor/AnimationActionPlay';

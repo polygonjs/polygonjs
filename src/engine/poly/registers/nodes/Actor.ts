@@ -3,6 +3,7 @@ import {CATEGORY_ACTOR} from './Category';
 import {AbsActorNode} from '../../../nodes/actor/Abs';
 import {AcosActorNode} from '../../../nodes/actor/Acos';
 import {AddActorNode} from '../../../nodes/actor/Add';
+import {AndActorNode} from '../../../nodes/actor/And';
 import {AnyTriggerActorNode} from '../../../nodes/actor/AnyTrigger';
 import {AsinActorNode} from '../../../nodes/actor/Asin';
 import {AtanActorNode} from '../../../nodes/actor/Atan';
@@ -155,6 +156,7 @@ export interface ActorNodeChildrenMap {
 	abs: AbsActorNode;
 	acos: AcosActorNode;
 	add: AddActorNode;
+	and: AndActorNode;
 	anyTrigger: AnyTriggerActorNode;
 	asin: AsinActorNode;
 	atan: AtanActorNode;
@@ -311,6 +313,7 @@ export class ActorRegister {
 		poly.registerNode(AbsActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(AcosActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(AddActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(AndActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(AnyTriggerActorNode, CATEGORY_ACTOR.FLOW);
 		poly.registerNode(AsinActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(AtanActorNode, CATEGORY_ACTOR.MATH);
