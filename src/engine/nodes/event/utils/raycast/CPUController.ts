@@ -130,13 +130,15 @@ export class RaycastCPUController extends BaseRaycastController {
 			);
 			const intersection = intersections[0];
 			if (intersection) {
-				if (isBooleanTrue(this._node.pv.tposition)) {
-					this._setPositionParam(intersection.point);
-				}
+				this._node.scene().batchUpdates(() => {
+					if (isBooleanTrue(this._node.pv.tposition)) {
+						this._setPositionParam(intersection.point);
+					}
 
-				if (isBooleanTrue(this._node.pv.geoAttribute)) {
-					this._resolveIntersectAttribute(intersection);
-				}
+					if (isBooleanTrue(this._node.pv.geoAttribute)) {
+						this._resolveIntersectAttribute(intersection);
+					}
+				});
 				eventContext.value = {intersect: intersection};
 				this._node.triggerHit(eventContext);
 			} else {
@@ -262,23 +264,7 @@ export class RaycastCPUController extends BaseRaycastController {
 		}
 	}
 
-	// async updatePositionTarget() {
-	// 	if (this._node.p.positionTarget.isDirty()) {
-	// 		await this._node.p.positionTarget.compute();
-	// 	}
-	// }
 	static PARAM_CALLBACK_updateTarget(node: RaycastEventNode) {
 		node.cpuController.updateTarget();
-	}
-	// static PARAM_CALLBACK_update_position_target(node: RaycastEventNode) {
-	// 	node.cpu_controller.update_position_target();
-	// }
-
-	static PARAM_CALLBACK_print_resolve(node: RaycastEventNode) {
-		node.cpuController.print_resolve();
-	}
-	private print_resolve() {
-		this.updateTarget();
-		console.log(this._resolvedTargets);
 	}
 }

@@ -1,18 +1,28 @@
 import {EventContext} from '../../../../scene/utils/events/_BaseEventsController';
 import {RaycastEventNode} from '../../Raycast';
-import {WebGLRenderTarget} from 'three';
-import {Material} from 'three';
-import {LinearFilter, NearestFilter, RGBAFormat, FloatType, NoToneMapping, LinearEncoding} from 'three';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseMatNodeType} from '../../../mat/_Base';
-import {Scene} from 'three';
-import {WebGLRenderer} from 'three';
+import {
+	Scene,
+	Color,
+	Texture,
+	WebGLRenderer,
+	WebGLRenderTarget,
+	Material,
+	LinearFilter,
+	NearestFilter,
+	RGBAFormat,
+	FloatType,
+	NoToneMapping,
+	LinearEncoding,
+} from 'three';
 import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../../../core/Type';
 import {BaseRaycastController} from './BaseRaycastController';
 
 interface SceneRestoreContext {
 	overrideMaterial: Material | null;
+	background: Color | Texture | null;
 }
 interface RendererRestoreContext {
 	toneMapping: number;
@@ -28,6 +38,7 @@ export class RaycastGPUController extends BaseRaycastController {
 	private _restoreContext: RestoreContext = {
 		scene: {
 			overrideMaterial: null,
+			background: null,
 		},
 		renderer: {
 			toneMapping: -1,
@@ -109,8 +120,10 @@ export class RaycastGPUController extends BaseRaycastController {
 		this._paramColor[1] = this._read[1];
 		this._paramColor[2] = this._read[2];
 		this._paramAlpha = this._read[3];
-		this._node.p.pixelColor.set(this._paramColor);
-		this._node.p.pixelAlpha.set(this._paramAlpha);
+		this._node.scene().batchUpdates(() => {
+			this._node.p.pixelColor.set(this._paramColor);
+			this._node.p.pixelAlpha.set(this._paramAlpha);
+		});
 
 		if (this._node.pv.pixelColor.r > this._node.pv.hitThreshold) {
 			this._node.triggerHit(context);
@@ -121,6 +134,7 @@ export class RaycastGPUController extends BaseRaycastController {
 
 	private _modifySceneAndRenderer(scene: Scene, renderer: WebGLRenderer) {
 		this._restoreContext.scene.overrideMaterial = scene.overrideMaterial;
+		this._restoreContext.scene.background = scene.background;
 		this._restoreContext.renderer.outputEncoding = renderer.outputEncoding;
 		this._restoreContext.renderer.toneMapping = renderer.toneMapping;
 
@@ -130,12 +144,14 @@ export class RaycastGPUController extends BaseRaycastController {
 			}
 			scene.overrideMaterial = this._resolvedMaterial;
 		}
+		scene.background = null;
 
 		renderer.toneMapping = NoToneMapping;
 		renderer.outputEncoding = LinearEncoding;
 	}
 	private _restoreSceneAndRenderer(scene: Scene, renderer: WebGLRenderer) {
 		scene.overrideMaterial = this._restoreContext.scene.overrideMaterial;
+		scene.background = this._restoreContext.scene.background;
 		renderer.outputEncoding = this._restoreContext.renderer.outputEncoding;
 		renderer.toneMapping = this._restoreContext.renderer.toneMapping;
 	}

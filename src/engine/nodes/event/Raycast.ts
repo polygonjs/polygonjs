@@ -217,13 +217,6 @@ class RaycastParamsConfig extends NodeParamsConfig {
 		objectMask: true,
 		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)}),
 	});
-	/** @param prints which objects are targeted by this node, for debugging */
-	printFoundObjectsFromMask = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType, param: BaseParamType) => {
-			RaycastCPUController.PARAM_CALLBACK_print_resolve(node as RaycastEventNode);
-		},
-		...visible_for_cpu_geometry({targetType: TARGET_TYPES.indexOf(TargetType.SCENE_GRAPH)}),
-	});
 	/** @param toggle to hit if tested against children */
 	traverseChildren = ParamConfig.BOOLEAN(true, {
 		callback: (node: BaseNodeType, param: BaseParamType) => {
