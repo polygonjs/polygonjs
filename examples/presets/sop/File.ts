@@ -19,7 +19,16 @@ function generateThreedScans(node: FileGLTFSopNode) {
 				`${DEMO_ASSETS_ROOT_URL}/models/resources/threedscans.com/${fileName}.glb`
 			);
 		}
-		const fileNames = ['eagle', 'jenner', 'pan', 'theodoric_the_great', 'zenobia_in_chains'];
+		const fileNames = [
+			'eagle',
+			'einstein',
+			'horse_head',
+			'jenner',
+			'pan',
+			'rhino',
+			'theodoric_the_great',
+			'zenobia_in_chains',
+		];
 		const dict: PolyDictionary<BasePreset> = {};
 		for (let fileName of fileNames) {
 			dict[`threedscans.com/${fileName}`] = _threedscan(fileName);

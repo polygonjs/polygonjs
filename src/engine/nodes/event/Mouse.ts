@@ -81,14 +81,14 @@ export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> 
 			})
 		);
 	}
-	override processEvent(event_context: EventContext<MouseEvent>) {
+	override processEvent(eventContext: EventContext<MouseEvent>) {
 		if (!this.pv.active) {
 			return;
 		}
-		if (!event_context.event) {
+		const event = eventContext.event;
+		if (!event) {
 			return;
 		}
-		const event = event_context.event;
 		if (event.ctrlKey != isBooleanTrue(this.pv.ctrlKey)) {
 			return;
 		}
@@ -102,6 +102,6 @@ export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> 
 			return;
 		}
 
-		this.dispatchEventToOutput(event_context.event.type, event_context);
+		this.dispatchEventToOutput(event.type, eventContext);
 	}
 }

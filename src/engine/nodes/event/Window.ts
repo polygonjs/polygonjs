@@ -42,14 +42,14 @@ export class WindowEventNode extends TypedInputEventNode<WindowEventParamsConfig
 			})
 		);
 	}
-	override processEvent(event_context: EventContext<Event>) {
+	override processEvent(eventContext: EventContext<Event>) {
 		if (!this.pv.active) {
 			return;
 		}
-		if (!event_context.event) {
+		const event = eventContext.event;
+		if (!event) {
 			return;
 		}
-
-		this.dispatchEventToOutput(event_context.event.type, event_context);
+		this.dispatchEventToOutput(event.type, eventContext);
 	}
 }

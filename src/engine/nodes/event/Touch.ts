@@ -49,13 +49,17 @@ export class TouchEventNode extends TypedInputEventNode<TouchEventParamsConfig> 
 			})
 		);
 	}
-	override processEvent(event_context: EventContext<TouchEvent>) {
+	override processEvent(eventContext: EventContext<TouchEvent>) {
 		if (!this.pv.active) {
 			return;
 		}
-		if (!event_context.event) {
+		if (!eventContext.event) {
 			return;
 		}
-		this.dispatchEventToOutput(event_context.event.type, event_context);
+		const event = eventContext.event;
+		if (!event) {
+			return;
+		}
+		this.dispatchEventToOutput(event.type, eventContext);
 	}
 }

@@ -75,10 +75,10 @@ export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsCo
 		if (!this.pv.active) {
 			return;
 		}
-		if (!eventContext.event) {
+		const event = eventContext.event;
+		if (!event) {
 			return;
 		}
-		const event = eventContext.event;
 		if (event.ctrlKey != isBooleanTrue(this.pv.ctrlKey)) {
 			return;
 		}
@@ -95,6 +95,6 @@ export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsCo
 		if (!CoreString.matchMask(event.code, this.pv.keyCodes)) {
 			return;
 		}
-		this.dispatchEventToOutput(eventContext.event.type, eventContext);
+		this.dispatchEventToOutput(event.type, eventContext);
 	}
 }

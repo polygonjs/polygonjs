@@ -53,14 +53,14 @@ export class DragEventNode extends TypedInputEventNode<DragEventParamsConfig> {
 			})
 		);
 	}
-	override processEvent(event_context: EventContext<DragEvent>) {
+	override processEvent(eventContext: EventContext<DragEvent>) {
 		if (!this.pv.active) {
 			return;
 		}
-		if (!event_context.event) {
+		const event = eventContext.event;
+		if (!event) {
 			return;
 		}
-		const event = event_context.event;
 		if (event.ctrlKey != isBooleanTrue(this.pv.ctrlKey)) {
 			return;
 		}
@@ -74,6 +74,6 @@ export class DragEventNode extends TypedInputEventNode<DragEventParamsConfig> {
 			return;
 		}
 
-		this.dispatchEventToOutput(event_context.event.type, event_context);
+		this.dispatchEventToOutput(event.type, eventContext);
 	}
 }

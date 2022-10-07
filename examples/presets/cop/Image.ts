@@ -121,10 +121,21 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 				.addEntry(node.p.tencoding, 1)
 				.addEntry(node.p.encoding, sRGBEncoding);
 		}
-		return {
+		const dict: Record<string, BasePreset> = {
 			'claudio-testa': _unsplash('claudio-testa--SO3JtE3gZo-unsplash.jpg'),
+			charlesdeluvio: _unsplash('charlesdeluvio-pOUA8Xay514-unsplash.jpg'),
+			'ivana-cajina': _unsplash('ivana-cajina-dnL6ZIpht2s-unsplash.jpg'),
+			'joel-mott': _unsplash('joel-mott-LaK153ghdig-unsplash.jpg'),
 			'johannes-plenio': _unsplash('johannes-plenio-DKix6Un55mw-unsplash.jpg'),
+			'prince-akachi': _unsplash('prince-akachi-LWkFHEGpleE-unsplash.jpg'),
+			'vince-fleming': _unsplash('vince-fleming-j3lf-Jn6deo-unsplash.jpg'),
 		};
+		const keys = Object.keys(dict);
+		const unsplashDisct: Record<string, BasePreset> = {};
+		for (let key of keys) {
+			unsplashDisct[`unsplash/${key}`] = dict[key];
+		}
+		return unsplashDisct;
 	}
 
 	collection.setPresets({
