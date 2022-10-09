@@ -3462,6 +3462,11 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
+three-good-godrays@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/three-good-godrays/-/three-good-godrays-0.3.0.tgz#8a3e8721f2c68a095ef9febcce6279e9bb2bcad2"
+  integrity sha512-e2WQSDL9V/em27c4dMFnt11Kb3UpS/rD6ujQ0eUNeF3furDZznP2iA/O4wo3Gd5ILCMehP69FWYu5swoYWMVbQ==
+
 three-mesh-bvh@0.5.15:
   version "0.5.15"
   resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.15.tgz#bcf681d784d8988618344a5e11e7ded7e76ee86a"

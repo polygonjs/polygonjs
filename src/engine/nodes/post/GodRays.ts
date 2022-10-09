@@ -105,7 +105,7 @@ export class GodRaysPostNode extends TypedPostProcessNode<EffectPass, GodRaysPos
 	private _rendererSize = new Vector2();
 	override createPass(context: TypedPostNodeContext) {
 		context.renderer.getSize(this._rendererSize);
-		const bloomEffect = new GodRaysEffect(context.camera, tmpLightSource, {
+		const effect = new GodRaysEffect(context.camera, tmpLightSource, {
 			blendFunction: BlendFunction.SCREEN,
 			kernelSize: KERNEL_SIZES[this.pv.kernelSize],
 			blur: this.pv.blur,
@@ -115,7 +115,7 @@ export class GodRaysPostNode extends TypedPostProcessNode<EffectPass, GodRaysPos
 			weight: this.pv.weight,
 			exposure: this.pv.exposure,
 		});
-		const pass = new EffectPass(context.camera, bloomEffect);
+		const pass = new EffectPass(context.camera, effect);
 		this.updatePass(pass);
 		return pass;
 	}
