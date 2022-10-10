@@ -60,9 +60,9 @@
 		"postprocessing": "6.28.5",
 		"potpack": "1.0.2",
 		"three": "0.144.0",
-		"three-good-godrays": "^0.3.0",
+		"three-good-godrays": "0.3.0",
 		"three-mesh-bvh": "0.5.15",
-		"three-subdivide": "^1.1.0",
+		"three-subdivide": "1.1.0",
 		"tone": "14.7.77",
 		"xatlas-web": "0.1.0"
 	},
