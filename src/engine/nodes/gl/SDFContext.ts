@@ -55,7 +55,7 @@ export class SDFContextGlNode extends TypedGlNode<SDFContextGlParamsConfig> {
 
 		const sdfContext = this.glVarName(OUTPUT_NAME);
 
-		const body_line = `SDFContext ${sdfContext} = SDFContext(${sdf}, ${matId})`;
+		const body_line = `SDFContext ${sdfContext} = SDFContext(${sdf}, ${matId}, ${matId}, 0.)`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);
 	}
 }

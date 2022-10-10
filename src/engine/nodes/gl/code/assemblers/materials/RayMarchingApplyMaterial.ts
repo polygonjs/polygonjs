@@ -80,7 +80,11 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 	// }
 	override add_output_inputs(output_child: OutputGlNode) {
 		output_child.io.inputs.setNamedInputConnectionPoints([
-			new GlConnectionPoint(SDF_CONTEXT_INPUT_NAME, GlConnectionPointType.SDF_CONTEXT, 'SDFContext(0.0, 0)'),
+			new GlConnectionPoint(
+				SDF_CONTEXT_INPUT_NAME,
+				GlConnectionPointType.SDF_CONTEXT,
+				'SDFContext(0.0, 0, 0, 0.)'
+			),
 		]);
 	}
 	static override create_globals_node_output_connections() {

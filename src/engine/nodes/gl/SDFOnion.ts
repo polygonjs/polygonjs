@@ -71,7 +71,7 @@ export class SDFOnionGlNode extends TypedGlNode<SDFOnionGlParamsConfig> {
 		} else {
 			const sdfContext = this.glVarName(OUTPUT_NAME);
 			const matId = `${sdf}.d`;
-			const bodyLine = `SDFContext ${sdfContext} = SDFContext(SDFOnion(${sdf}.d, ${thickness}), ${matId})`;
+			const bodyLine = `SDFContext ${sdfContext} = SDFContext(SDFOnion(${sdf}.d, ${thickness}), ${matId}, ${matId}, 0.)`;
 			bodyLines.push(bodyLine);
 		}
 		shadersCollectionController.addBodyLines(this, bodyLines);

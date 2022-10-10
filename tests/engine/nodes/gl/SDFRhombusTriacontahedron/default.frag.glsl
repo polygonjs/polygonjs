@@ -187,31 +187,35 @@ varying vec3 vPw;
 struct SDFContext {
 	float d;
 	int matId;
+	int matId2;
+	float matBlend;
 };
 SDFContext DefaultSDFContext(){
-	return SDFContext( 0.0, 0 );
+	return SDFContext( 0., 0, 0, 0. );
 }
 int DefaultSDFMaterial(){
 	return 0;
 }
 SDFContext GetDist(vec3 p) {
-	SDFContext sdfContext = SDFContext(0.0, 0);
+	SDFContext sdfContext = SDFContext(0., 0, 0, 0.);
 	float v_POLY_SDFRhombusTriacontahedron1_float = sdRhombusTriacontahedron(p - vec3(0.0, 0.0, 0.0), 0.2, 0.75, 2.0);
 	
-	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFRhombusTriacontahedron1_float, -1);
+	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFRhombusTriacontahedron1_float, -1, -1, 0.);
 	
 	sdfContext = v_POLY_SDFContext1_SDFContext;
 	
 	return sdfContext;
 }
 SDFContext RayMarch(vec3 ro, vec3 rd, float side) {
-	SDFContext dO = SDFContext(0.,0);
+	SDFContext dO = SDFContext(0.,0,0,0.);
 	#pragma unroll_loop_start
 	for(int i=0; i<MAX_STEPS; i++) {
 		vec3 p = ro + rd*dO.d;
 		SDFContext sdfContext = GetDist(p);
 		dO.d += sdfContext.d * side;
 		dO.matId = sdfContext.matId;
+		dO.matId2 = sdfContext.matId2;
+		dO.matBlend = sdfContext.matBlend;
 		if(dO.d>MAX_DIST || abs(sdfContext.d)<SURF_DIST) break;
 	}
 	#pragma unroll_loop_end
@@ -441,6 +445,10 @@ vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	vec3 n = GetNormal(p);
 	
 	vec3 col = applyMaterial(p, n, rayDir, sdfContext.matId);
+	if(sdfContext.matBlend > 0.) {
+		vec3 col2 = applyMaterial(p, n, rayDir, sdfContext.matId2);
+		col = (1. - sdfContext.matBlend)*col + sdfContext.matBlend*col2;
+	}
 		
 	col = pow( col, vec3(0.4545) ); 
 	return vec4(col, 1.);

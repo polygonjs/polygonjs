@@ -57,37 +57,43 @@ export class SDFMaxGlNode extends TypedGlNode<SDFMaxGlParamsConfig> {
 		return [this._expectedInputTypes()[0]];
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
+	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const firstInputType = this._expectedInputTypes()[0];
 		switch (firstInputType) {
 			case GlConnectionPointType.FLOAT: {
-				return this._setLinesFloat(shaders_collection_controller);
+				return this._setLinesFloat(shadersCollectionController);
 			}
 			case GlConnectionPointType.SDF_CONTEXT: {
-				return this._setLinesSDFContext(shaders_collection_controller);
+				return this._setLinesSDFContext(shadersCollectionController);
 			}
 		}
 	}
-	private _setLinesFloat(shaders_collection_controller: ShadersCollectionController) {
+	private _setLinesFloat(shadersCollectionController: ShadersCollectionController) {
 		const sdf0 = ThreeToGl.float(this.variableForInput(InputName.SDF0));
 		const sdf1 = ThreeToGl.float(this.variableForInput(InputName.SDF1));
 
 		const float = this.glVarName(OUTPUT_NAME);
 
 		const bodyLine = `float ${float} = max(${sdf0}, ${sdf1})`;
-		shaders_collection_controller.addBodyLines(this, [bodyLine]);
+		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shaders_collection_controller.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
 	}
-	private _setLinesSDFContext(shaders_collection_controller: ShadersCollectionController) {
+	private _setLinesSDFContext(shadersCollectionController: ShadersCollectionController) {
 		const sdf0 = ThreeToGl.vector2(this.variableForInput(InputName.SDF0));
 		const sdf1 = ThreeToGl.vector2(this.variableForInput(InputName.SDF1));
 
 		const sdfContext = this.glVarName(OUTPUT_NAME);
+		const side = this.glVarName('side');
+		const setSide = `bool ${side} = ${sdf0}.d < ${sdf1}.d`;
+		const matId = `${side} ? ${sdf0}.matId : ${sdf1}.matId`;
+		const matId2 = `${side} ? ${sdf1}.matId : ${sdf0}.matId`;
+		const bodyLines = [
+			setSide,
+			`SDFContext ${sdfContext} = SDFContext(max(${sdf0}.d, ${sdf1}.d), ${matId}, ${matId2}, 0.)`,
+		];
+		shadersCollectionController.addBodyLines(this, bodyLines);
 
-		const bodyLine = `SDFContext ${sdfContext} = SDFContext(max(${sdf0}.d, ${sdf1}.d), ${sdf0}.d < ${sdf1}.d ? ${sdf0}.matId : ${sdf1}.matId)`;
-		shaders_collection_controller.addBodyLines(this, [bodyLine]);
-
-		shaders_collection_controller.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
 	}
 }

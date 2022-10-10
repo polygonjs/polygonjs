@@ -53,10 +53,12 @@ varying vec3 vPw;
 struct SDFContext {
 	float d;
 	int matId;
+	int matId2;
+	float matBlend;
 };
 
 SDFContext DefaultSDFContext(){
-	return SDFContext( 0.0, 0 );
+	return SDFContext( 0., 0, 0, 0. );
 }
 int DefaultSDFMaterial(){
 	return 0;
@@ -65,7 +67,7 @@ int DefaultSDFMaterial(){
 
 
 SDFContext GetDist(vec3 p) {
-	SDFContext sdfContext = SDFContext(0.0, 0);
+	SDFContext sdfContext = SDFContext(0., 0, 0, 0.);
 
 	// start GetDist builder body code
 	
@@ -74,7 +76,7 @@ SDFContext GetDist(vec3 p) {
 }
 
 SDFContext RayMarch(vec3 ro, vec3 rd, float side) {
-	SDFContext dO = SDFContext(0.,0);
+	SDFContext dO = SDFContext(0.,0,0,0.);
 
 	#pragma unroll_loop_start
 	for(int i=0; i<MAX_STEPS; i++) {
@@ -82,6 +84,8 @@ SDFContext RayMarch(vec3 ro, vec3 rd, float side) {
 		SDFContext sdfContext = GetDist(p);
 		dO.d += sdfContext.d * side;
 		dO.matId = sdfContext.matId;
+		dO.matId2 = sdfContext.matId2;
+		dO.matBlend = sdfContext.matBlend;
 		if(dO.d>MAX_DIST || abs(sdfContext.d)<SURF_DIST) break;
 	}
 	#pragma unroll_loop_end
@@ -261,6 +265,15 @@ vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
 	
 
 	vec3 col = applyMaterial(p, n, rayDir, sdfContext.matId);
+	if(sdfContext.matBlend > 0.) {
+		// blend material colors if needed
+		vec3 col2 = applyMaterial(p, n, rayDir, sdfContext.matId2);
+		col = (1. - sdfContext.matBlend)*col + sdfContext.matBlend*col2;
+		// col = vec3(0.,1.,0.);
+	}
+	// col.r = 0.;
+	// col.g = sdfContext.matBlend*100.;
+	// col.b = 0.;
 		
 	// gamma
 	col = pow( col, vec3(0.4545) ); 

@@ -14,11 +14,13 @@ import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {isBooleanTrue} from '../../../core/Type';
+import {sdfSmoothLines} from './utils/SDFSmoothUtils';
 
 enum InputName {
 	SDF0 = 'sdf0',
 	SDF1 = 'sdf1',
 	SMOOTH_FACTOR = 'smoothFactor',
+	MAT_BLEND_DIST = 'matBlendDist',
 }
 const OUTPUT_NAME = 'union';
 const ALLOWED_TYPES = [GlConnectionPointType.FLOAT, GlConnectionPointType.SDF_CONTEXT];
@@ -41,17 +43,17 @@ export class SDFUnionGlNode extends TypedGlNode<SDFUnionGlParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 	}
 	private _glInputName(index: number) {
-		return [InputName.SDF0, InputName.SDF1, InputName.SMOOTH_FACTOR][index];
+		return [InputName.SDF0, InputName.SDF1, InputName.SMOOTH_FACTOR, InputName.MAT_BLEND_DIST][index];
 	}
 	private _glOutputName(index: number) {
 		return OUTPUT_NAME;
 	}
 	private _expectedInputTypes() {
 		let firstInputType = this.io.connection_points.first_input_connection_type();
-		if (!firstInputType || ALLOWED_TYPES.includes(firstInputType)) {
+		if (!firstInputType || !ALLOWED_TYPES.includes(firstInputType)) {
 			firstInputType = GlConnectionPointType.FLOAT;
 		}
-		return [firstInputType, firstInputType, GlConnectionPointType.FLOAT];
+		return [firstInputType, firstInputType, GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT];
 	}
 	private _expectedOutputTypes() {
 		return [this._expectedInputTypes()[0]];
@@ -73,12 +75,23 @@ export class SDFUnionGlNode extends TypedGlNode<SDFUnionGlParamsConfig> {
 			bodyLines.push(bodyLine);
 		} else {
 			const sdfContext = this.glVarName(OUTPUT_NAME);
-			const matId = `${sdf0}.d < ${sdf1}.d ? ${sdf0}.matId : ${sdf1}.matId`;
-			const withSmooth = `SDFContext(SDFSmoothUnion(${sdf0}.d, ${sdf1}.d, ${smoothFactor}), ${matId})`;
-			const withoutSmooth = `SDFContext(SDFUnion(${sdf0}.d, ${sdf1}.d), ${matId})`;
-			const functionCall = smooth ? withSmooth : withoutSmooth;
-			const bodyLine = `SDFContext ${sdfContext} = ${functionCall}`;
-			bodyLines.push(bodyLine);
+			const matBlendDist = ThreeToGl.float(this.variableForInput(InputName.MAT_BLEND_DIST));
+			sdfSmoothLines({
+				node: this,
+				vars: {
+					sdf0,
+					sdf1,
+					sdfContext,
+					smooth,
+					matBlendDist,
+					smoothFactor,
+				},
+				functionNames: {
+					smooth: 'SDFSmoothUnion',
+					default: 'SDFUnion',
+				},
+				bodyLines,
+			});
 		}
 		shadersCollectionController.addBodyLines(this, bodyLines);
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
