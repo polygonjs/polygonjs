@@ -1,7 +1,7 @@
 import {BaseGlShaderAssembler} from '../_Base';
 import {IUniforms} from '../../../../../../core/geometry/Material';
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
-import TemplateDefault from '../../templates/textures/Default.frag.glsl';
+import TemplateDefault from '../../templates/textures/Default2DArray.frag.glsl';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
@@ -14,14 +14,16 @@ import {BuilderCopNode} from '../../../../cop/Builder';
 import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
 
-export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
+export class ShaderAssemblerTexture2DArray extends BaseGlShaderAssembler {
 	private _uniforms: IUniforms | undefined;
 
 	override templateShader() {
 		return {
 			fragmentShader: TemplateDefault,
 			vertexShader: undefined,
-			uniforms: undefined,
+			uniforms: {
+				uLayer: {value: 0},
+			},
 		};
 	}
 
@@ -47,7 +49,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			this._buildLines();
 		}
 
-		this._uniforms = this._uniforms || {};
+		this._uniforms = this._uniforms || {uLayer: {value: 0}};
 		this._gl_parent_node.scene().uniformsController.addUniforms(this._uniforms, {
 			paramConfigs: this.param_configs(),
 			additionalTextureUniforms: {},
@@ -85,6 +87,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	override add_globals_outputs(globals_node: GlobalsGlNode) {
 		globals_node.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
+			new GlConnectionPoint('layer', GlConnectionPointType.FLOAT),
 			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
 			new GlConnectionPoint('resolution', GlConnectionPointType.VEC2),
 			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
@@ -137,11 +140,16 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			bodyLines.push(`vec2 ${var_name} = resolution`);
 		}
 	}
-	private _handleUV(bodyLines: string[], shaderName: ShaderName, var_name: string) {
+	private _handleUVW(bodyLines: string[], shaderName: ShaderName, var_name: string) {
 		if (shaderName == ShaderName.FRAGMENT) {
 			bodyLines.push(
 				`vec2 ${var_name} = vec2(gl_FragCoord.x / (resolution.x-1.), gl_FragCoord.y / (resolution.y-1.))`
 			);
+		}
+	}
+	private _handleLayer(bodyLines: string[], shaderName: ShaderName, var_name: string) {
+		if (shaderName == ShaderName.FRAGMENT) {
+			bodyLines.push(`float ${var_name} = uLayer`);
 		}
 	}
 
@@ -200,7 +208,10 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 					break;
 
 				case 'uv':
-					this._handleUV(body_lines, shader_name, var_name);
+					this._handleUVW(body_lines, shader_name, var_name);
+					break;
+				case 'layer':
+					this._handleLayer(body_lines, shader_name, var_name);
 					break;
 				case 'gl_FragCoord':
 					this._handle_gl_FragCoord(body_lines, shader_name, var_name);

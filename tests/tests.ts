@@ -182,6 +182,7 @@ import './engine/nodes/audio/File';
 QUnit.module('cop');
 import './engine/nodes/cop/AudioAnalyser';
 import './engine/nodes/cop/Builder';
+import './engine/nodes/cop/Builder2DArray';
 import './engine/nodes/cop/Canvas';
 import './engine/nodes/cop/Color';
 import './engine/nodes/cop/EnvMap';

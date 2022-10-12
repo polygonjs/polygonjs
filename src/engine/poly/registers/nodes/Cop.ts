@@ -2,6 +2,7 @@ import {CATEGORY_COP} from './Category';
 
 import {AudioAnalyserCopNode} from '../../../nodes/cop/AudioAnalyser';
 import {BuilderCopNode} from '../../../nodes/cop/Builder';
+import {Builder2DArrayCopNode} from '../../../nodes/cop/Builder2DArray';
 import {CanvasCopNode} from '../../../nodes/cop/Canvas';
 import {ColorCopNode} from '../../../nodes/cop/Color';
 import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
@@ -40,6 +41,7 @@ import {RenderersNetworkCopNode} from '../../../nodes/cop/RenderersNetwork';
 export interface CopNodeChildrenMap {
 	audioAnalyser: AudioAnalyserCopNode;
 	builder: BuilderCopNode;
+	builder2DArray: Builder2DArrayCopNode;
 	canvas: CanvasCopNode;
 	color: ColorCopNode;
 	cubeCamera: CubeCameraCopNode;
@@ -81,6 +83,7 @@ export class CopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AudioAnalyserCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(BuilderCopNode, CATEGORY_COP.ADVANCED);
+		poly.registerNode(Builder2DArrayCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(CanvasCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(CubeCameraCopNode, CATEGORY_COP.INPUT);

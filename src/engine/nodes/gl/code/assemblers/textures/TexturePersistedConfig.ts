@@ -1,8 +1,10 @@
 import {BasePersistedConfig, PersistedConfigWithShaders} from '../../../../utils/BasePersistedConfig';
 import {BuilderCopNode} from '../../../../cop/Builder';
+import {Builder2DArrayCopNode} from '../../../../cop/Builder2DArray';
 import {GlParamConfig} from '../../utils/GLParamConfig';
 import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 import {IUniforms} from '../../../../../../core/geometry/Material';
+import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
 
 export interface PersistedConfigBaseTextureData extends PersistedConfigWithShaders {
 	// fragment_shader: string;
@@ -13,7 +15,7 @@ export interface PersistedConfigBaseTextureData extends PersistedConfigWithShade
 }
 const FRAGMENT_KEY = 'fragment';
 export class TexturePersistedConfig extends BasePersistedConfig {
-	constructor(protected override node: BuilderCopNode) {
+	constructor(protected override node: BuilderCopNode | Builder2DArrayCopNode) {
 		super(node);
 	}
 	override toData(): PersistedConfigBaseTextureData | undefined {
@@ -51,11 +53,11 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 		this.node.textureMaterial.fragmentShader = data.shaders[FRAGMENT_KEY];
 		this.node.textureMaterial.uniforms = data.uniforms;
 
-		BuilderCopNode.handleDependencies(
-			this.node,
-			data.uniforms_time_dependent || false,
-			data.uniforms as IUniformsWithTime
-		);
+		handleCopBuilderDependencies({
+			node: this.node,
+			timeDependent: data.uniforms_time_dependent || false,
+			uniforms: data.uniforms as IUniformsWithTime,
+		});
 
 		for (let pair of data.param_uniform_pairs) {
 			const param = this.node.params.get(pair[0]);

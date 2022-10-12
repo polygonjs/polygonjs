@@ -11,6 +11,7 @@ import {ShaderAssemblerParticles} from '../../../nodes/gl/code/assemblers/partic
 import {ShaderAssemblerPost} from '../../../nodes/gl/code/assemblers/post/Post';
 import {ShaderAssemblerRayMarching} from '../../../nodes/gl/code/assemblers/materials/RayMarching';
 import {ShaderAssemblerTexture} from '../../../nodes/gl/code/assemblers/textures/Texture';
+import {ShaderAssemblerTexture2DArray} from '../../../nodes/gl/code/assemblers/textures/Texture2DArray';
 import {ShaderAssemblerVolume} from '../../../nodes/gl/code/assemblers/materials/Volume';
 import {ShaderAssemblerCustomMeshDepthForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
 import {ShaderAssemblerCustomMeshDistanceForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
@@ -68,6 +69,10 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 		controller: GlAssemblerController<ShaderAssemblerTexture>;
 		assembler: typeof ShaderAssemblerTexture;
 	};
+	[AssemblerName.GL_TEXTURE_2D_ARRAY]: {
+		controller: GlAssemblerController<ShaderAssemblerTexture2DArray>;
+		assembler: typeof ShaderAssemblerTexture2DArray;
+	};
 	[AssemblerName.GL_VOLUME]: {
 		controller: GlAssemblerController<ShaderAssemblerVolume>;
 		assembler: typeof ShaderAssemblerVolume;
@@ -111,6 +116,11 @@ export class AllAssemblersRegister {
 			ShaderAssemblerRayMarching
 		);
 		poly.assemblersRegister.register(AssemblerName.GL_TEXTURE, GlAssemblerController, ShaderAssemblerTexture);
+		poly.assemblersRegister.register(
+			AssemblerName.GL_TEXTURE_2D_ARRAY,
+			GlAssemblerController,
+			ShaderAssemblerTexture2DArray
+		);
 		poly.assemblersRegister.register(AssemblerName.GL_VOLUME, GlAssemblerController, ShaderAssemblerVolume);
 	}
 }

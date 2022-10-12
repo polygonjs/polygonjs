@@ -11,16 +11,16 @@ import {
 	WebGLRenderTarget,
 	ShaderMaterial,
 	Scene,
-	FloatType,
-	HalfFloatType,
-	RGBAFormat,
 	ClampToEdgeWrapping,
+	RGBAFormat,
 	LinearFilter,
 	NearestFilter,
 	LinearEncoding,
 	NoToneMapping,
+	WebGLArrayRenderTarget,
 } from 'three';
-import {Constructor, valueof, Number2} from '../../../types/GlobalTypes';
+import {Number2} from '../../../types/GlobalTypes';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
 import {GlobalsGeometryHandler} from '../gl/code/globals/Geometry';
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
@@ -34,7 +34,6 @@ import {CopRendererController} from './utils/RendererController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {TexturePersistedConfig} from '../gl/code/assemblers/textures/TexturePersistedConfig';
-import {CoreUserAgent} from '../../../core/UserAgent';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {BaseNodeType} from '../_Base';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
@@ -44,42 +43,47 @@ import FRAGMENT_SHADER from '../gl/code/templates/textures/Default.frag.glsl';
 import VERTEX_SHADER from '../gl/code/templates/textures/Default.vert.glsl';
 import {handleCopBuilderDependencies} from './utils/BuilderUtils';
 
-const RESOLUTION_DEFAULT: Number2 = [256, 256];
+const RESOLUTION_DEFAULT: Number2 = [128, 128];
 
-function BuilderCopParamConfig<TBase extends Constructor>(Base: TBase) {
+function Builder2DArrayCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		/** @param texture resolution */
+		/** @param textures resolution */
 		resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
+		/** @param layers */
+		layers = ParamConfig.INTEGER(4, {
+			range: [2, 32],
+			rangeLocked: [true, false],
+		});
 		/** @param use the main camera renderer. This can save memory, but can also lead to colors being affected by the renderer.outputEncoding */
 		useCameraRenderer = ParamConfig.BOOLEAN(1, {
 			callback: (node: BaseNodeType) => {
-				BuilderCopNode.PARAM_CALLBACK_render(node as BuilderCopNode);
+				Builder2DArrayCopNode.PARAM_CALLBACK_render(node as Builder2DArrayCopNode);
 			},
 		});
 		/** @param use a data texture instead of a render target, which can be useful when using that texture as and envMap */
-		useDataTexture = ParamConfig.BOOLEAN(0);
+		// useDataTexture = ParamConfig.BOOLEAN(0);
 		/** @param force Render */
 		render = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {
-				BuilderCopNode.PARAM_CALLBACK_render(node as BuilderCopNode);
+				Builder2DArrayCopNode.PARAM_CALLBACK_render(node as Builder2DArrayCopNode);
 			},
 		});
 	};
 }
-class BuilderCopParamsConfig extends TextureParamConfig(BuilderCopParamConfig(NodeParamsConfig)) {}
+class Builder2DArrayCopParamsConfig extends TextureParamConfig(Builder2DArrayCopParamConfig(NodeParamsConfig)) {}
 
-const ParamsConfig = new BuilderCopParamsConfig();
+const ParamsConfig = new Builder2DArrayCopParamsConfig();
 
-export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
+export class Builder2DArrayCopNode extends TypedCopNode<Builder2DArrayCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return CopType.BUILDER;
+		return CopType.BUILDER_2D_ARRAY;
 	}
 	override readonly persisted_config: TexturePersistedConfig = new TexturePersistedConfig(this);
 	protected _assemblerController = this._createAssemblerController();
 
-	public override usedAssembler(): Readonly<AssemblerName.GL_TEXTURE> {
-		return AssemblerName.GL_TEXTURE;
+	public override usedAssembler(): Readonly<AssemblerName.GL_TEXTURE_2D_ARRAY> {
+		return AssemblerName.GL_TEXTURE_2D_ARRAY;
 	}
 	protected _createAssemblerController() {
 		const assemblerController = Poly.assemblersRegister.assembler(this, this.usedAssembler());
@@ -104,7 +108,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	});
 	private _textureScene: Scene = new Scene();
 	private _textureCamera: Camera = new Camera();
-	private _renderTarget: WebGLRenderTarget | undefined;
+	private _renderTarget: WebGLArrayRenderTarget | undefined;
 	private _dataTextureController: DataTextureController | undefined;
 	private _rendererController: CopRendererController | undefined;
 
@@ -228,7 +232,6 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 				uniforms: undefined,
 			});
 		}
-
 		if (this._fragmentShader && this._uniforms) {
 			this.textureMaterial.fragmentShader = this._fragmentShader;
 			this.textureMaterial.uniforms = this._uniforms;
@@ -241,7 +244,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	}
 
 	callbackName() {
-		return `cop/builder_${this.graphNodeId()}`;
+		return `cop/builder3D_${this.graphNodeId()}`;
 	}
 	// private _uniformCallbackName() {
 	// 	return `cop/builder_uniforms_${this.graphNodeId()}`;
@@ -278,29 +281,37 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			console.warn('no renderer');
 			return;
 		}
+		if (!this._uniforms) {
+			return;
+		}
 
 		this._saveRendererState(this._renderer);
 		this._prepareRenderer(this._renderer);
-		this._renderer.render(this._textureScene, this._textureCamera);
+		const layersCount = this.pv.layers;
+		for (let i = 0; i < layersCount; i++) {
+			this._uniforms.uLayer.value = i;
+			this._setRenderLayer(this._renderer, i);
+			this._renderer.render(this._textureScene, this._textureCamera);
+		}
 		await this._postRender(updateTextureFromParams);
 		this._restoreRendererState(this._renderer);
 	}
 	private async _postRender(updateTextureFromParams: boolean) {
 		if (this._renderTarget?.texture) {
-			if (isBooleanTrue(this.pv.useDataTexture) && this._renderTarget && this._renderer) {
-				this._dataTextureController = this._dataTextureController || new DataTextureController();
-				const texture = this._dataTextureController.fromRenderTarget(this._renderer, this._renderTarget);
-				if (updateTextureFromParams) {
-					await this.textureParamsController.update(texture);
-				}
-				this.setTexture(texture);
-			} else {
-				const texture = this._renderTarget.texture;
-				if (updateTextureFromParams) {
-					// await this.textureParamsController.update(texture);
-				}
-				this.setTexture(texture);
+			// if (isBooleanTrue(this.pv.useDataTexture) && this._renderTarget && this._renderer) {
+			// 	this._dataTextureController = this._dataTextureController || new DataTextureController();
+			// 	const texture = this._dataTextureController.fromRenderTarget(this._renderer, this._renderTarget);
+			// 	if (updateTextureFromParams) {
+			// 		await this.textureParamsController.update(texture);
+			// 	}
+			// 	this.setTexture(texture);
+			// } else {
+			const texture = this._renderTarget.texture;
+			if (updateTextureFromParams) {
+				// await this.textureParamsController.update(texture);
 			}
+			this.setTexture(texture);
+			// }
 		} else {
 			this.cookController.endCook();
 		}
@@ -318,9 +329,15 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			console.warn('no render target');
 			return;
 		}
-		renderer.setRenderTarget(this._renderTarget);
 		renderer.outputEncoding = LinearEncoding;
 		renderer.toneMapping = NoToneMapping;
+	}
+	private _setRenderLayer(renderer: WebGLRenderer, layer: number) {
+		if (!this._renderTarget) {
+			console.warn('no render target');
+			return;
+		}
+		renderer.setRenderTarget(this._renderTarget, layer);
 		renderer.clear();
 	}
 	private _restoreRendererState(renderer: WebGLRenderer) {
@@ -358,11 +375,16 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	 */
 	async renderTarget() {
 		return (this._renderTarget =
-			this._renderTarget || (await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y)));
+			this._renderTarget ||
+			(await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y, this.pv.layers)));
 	}
 	private async createRenderTargetIfRequired() {
 		if (!this._renderTarget || !this._renderTargetResolutionValid()) {
-			this._renderTarget = await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
+			this._renderTarget = await this._createRenderTarget(
+				this.pv.resolution.x,
+				this.pv.resolution.y,
+				this.pv.layers
+			);
 			this._dataTextureController?.reset();
 		}
 	}
@@ -379,10 +401,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 
-	private async _createRenderTarget(width: number, height: number) {
+	private async _createRenderTarget(width: number, height: number, depth: number) {
 		if (this._renderTarget) {
 			const image = this._renderTarget.texture.image;
-			if (image.width == width && image.height == height) {
+			console.log(image);
+			if (image.width == width && image.height == height && image.depth == depth) {
 				return this._renderTarget;
 			}
 		}
@@ -393,19 +416,17 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		const minFilter = LinearFilter;
 		const magFilter = NearestFilter;
 
-		const renderTarget = new WebGLRenderTarget(width, height, {
-			wrapS: wrapS,
-			wrapT: wrapT,
-			minFilter: minFilter,
-			magFilter: magFilter,
-			format: RGBAFormat,
-			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
-			stencilBuffer: false,
-			depthBuffer: false,
-			// encoding: LinearEncoding,
-		});
+		const renderTarget = new WebGLArrayRenderTarget(width, height, depth);
+		renderTarget.texture.wrapS = wrapS;
+		renderTarget.texture.wrapT = wrapT;
+		renderTarget.texture.minFilter = minFilter;
+		renderTarget.texture.magFilter = magFilter;
+		renderTarget.texture.format = RGBAFormat;
+		renderTarget.stencilBuffer = false;
+		renderTarget.depthBuffer = false;
+
 		// await this.textureParamsController.update(renderTarget.texture);
-		Poly.warn(`${this.path()}: created WebGLRenderTarget`, this.path(), width, height);
+		Poly.warn(`${this.path()}: created WebGLArrayRenderTarget`, this.path(), width, height, depth);
 		return renderTarget;
 	}
 
@@ -414,10 +435,10 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	 * CALLBACK
 	 *
 	 */
-	static PARAM_CALLBACK_render(node: BuilderCopNode) {
+	static PARAM_CALLBACK_render(node: Builder2DArrayCopNode) {
 		node._renderOnTarget(true);
 	}
-	static PARAM_CALLBACK_resetRenderer(node: BuilderCopNode) {
+	static PARAM_CALLBACK_resetRenderer(node: Builder2DArrayCopNode) {
 		node._resetRenderer();
 	}
 }
