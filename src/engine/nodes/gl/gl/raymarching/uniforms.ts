@@ -7,16 +7,14 @@ export interface RayMarchingUniforms {
 	SURF_DIST: IUniformN;
 	NORMALS_BIAS: IUniformN;
 	CENTER: IUniformV3;
+	debugMinSteps: IUniformN;
+	debugMaxSteps: IUniformN;
+	debugMinDepth: IUniformN;
+	debugMaxDepth: IUniformN;
 	// spotLightsRayMarching: IUniformV3Array;
 }
 
 export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
-	// u_BoundingBoxMin: {value: new Vector3(-1, -1, -1)}, // geometry.boundingBox.min
-	// u_BoundingBoxMax: {value: new Vector3(1, 1, 1)}, //geometry.boundingBox.max
-	// u_DirectionalLightDirection: {
-	// 	// do not use an array, as currently loading and saving a uniform with an array does not work via the MaterialLoader
-	// 	value: new Vector3(-1, -1, -1),
-	// },
 	MAX_STEPS: {
 		value: 100,
 	},
@@ -32,10 +30,16 @@ export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
 	CENTER: {
 		value: new Vector3(0, 0, 0),
 	},
-	// spotLightsRayMarching: {
-	// 	value: [],
-	// 	// properties: {
-	// 	// 	worldPos: {},
-	// 	// },
-	// },
+	debugMinSteps: {
+		value: 0,
+	},
+	debugMaxSteps: {
+		value: 128,
+	},
+	debugMinDepth: {
+		value: 0,
+	},
+	debugMaxDepth: {
+		value: 128,
+	},
 };

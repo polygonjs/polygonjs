@@ -8,6 +8,10 @@ uniform float SURF_DIST;
 uniform float NORMALS_BIAS;
 uniform vec3 CENTER;
 #define ZERO 0
+uniform float debugMinSteps;
+uniform float debugMaxSteps;
+uniform float debugMinDepth;
+uniform float debugMaxDepth;
 
 #include <common>
 #include <packing>
@@ -71,13 +75,14 @@ varying vec3 vPw;
 
 struct SDFContext {
 	float d;
+	int stepsCount;
 	int matId;
 	int matId2;
 	float matBlend;
 };
 
 SDFContext DefaultSDFContext(){
-	return SDFContext( 0., 0, 0, 0. );
+	return SDFContext( 0., 0, 0, 0, 0. );
 }
 int DefaultSDFMaterial(){
 	return 0;
@@ -86,7 +91,7 @@ int DefaultSDFMaterial(){
 
 
 SDFContext GetDist(vec3 p) {
-	SDFContext sdfContext = SDFContext(0., 0, 0, 0.);
+	SDFContext sdfContext = SDFContext(0., 0, 0, 0, 0.);
 
 	// start GetDist builder body code
 	
@@ -95,13 +100,16 @@ SDFContext GetDist(vec3 p) {
 }
 
 SDFContext RayMarch(vec3 ro, vec3 rd, float side) {
-	SDFContext dO = SDFContext(0.,0,0,0.);
+	SDFContext dO = SDFContext(0.,0,0,0,0.);
 
 	#pragma unroll_loop_start
 	for(int i=0; i<MAX_STEPS; i++) {
 		vec3 p = ro + rd*dO.d;
 		SDFContext sdfContext = GetDist(p);
 		dO.d += sdfContext.d * side;
+		#if defined( DEBUG_STEPS_COUNT )
+			dO.stepsCount += 1;
+		#endif
 		dO.matId = sdfContext.matId;
 		dO.matId2 = sdfContext.matId2;
 		dO.matBlend = sdfContext.matBlend;
@@ -180,8 +188,8 @@ vec3 GetLight(vec3 p, vec3 n) {
 				
 				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_SHADOWS )
 					spotLightShadow = spotLightShadows[ i ];
-					vec4 shadowCoord = spotLightMatrix[ i ] * vec4(p, 1.0);
-					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, shadowCoord ) : 1.0;
+					vec4 spotLightShadowCoord = spotLightMatrix[ i ] * vec4(p, 1.0);
+					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, spotLightShadowCoord ) : 1.0;
 				#endif
 
 				l = normalize(lightPos-p);
@@ -206,8 +214,8 @@ vec3 GetLight(vec3 p, vec3 n) {
 
 				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_DIR_LIGHT_SHADOWS )
 					directionalLightShadow = directionalLightShadows[ i ];
-					vec4 shadowCoord = directionalShadowMatrix[ i ] * vec4(p, 1.0);
-					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, shadowCoord ) : 1.0;
+					vec4 dirLightShadowCoord = directionalShadowMatrix[ i ] * vec4(p, 1.0);
+					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, dirLightShadowCoord ) : 1.0;
 				#endif
 
 				l = lightDir;
@@ -250,8 +258,8 @@ vec3 GetLight(vec3 p, vec3 n) {
 
 				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_POINT_LIGHT_SHADOWS )
 					pointLightShadow = pointLightShadows[ i ];
-					vec4 shadowCoord = pointShadowMatrix[ i ] * vec4(p, 1.0);
-					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getPointShadow( pointShadowMap[ i ], pointLightShadow.shadowMapSize, pointLightShadow.shadowBias, pointLightShadow.shadowRadius, shadowCoord, pointLightShadow.shadowCameraNear, pointLightShadow.shadowCameraFar ) : 1.0;
+					vec4 pointLightShadowCoord = pointShadowMatrix[ i ] * vec4(p, 1.0);
+					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getPointShadow( pointShadowMap[ i ], pointLightShadow.shadowMapSize, pointLightShadow.shadowBias, pointLightShadow.shadowRadius, pointLightShadowCoord, pointLightShadow.shadowCameraNear, pointLightShadow.shadowCameraFar ) : 1.0;
 				#endif
 				
 				lightPos = pointLightRayMarching.worldPos;
@@ -323,8 +331,21 @@ void main()	{
 	vec3 rayOrigin = cameraPosition - CENTER;
 
 	SDFContext sdfContext = RayMarch(rayOrigin, rayDir, 1.);
-
 	gl_FragColor = vec4(0.);
 	if( sdfContext.d >= MAX_DIST ){ discard; }
+
+	#if defined( DEBUG_STEPS_COUNT )
+		float normalizedStepsCount = (float(sdfContext.stepsCount) - debugMinSteps ) / ( debugMaxSteps - debugMinSteps );
+		gl_FragColor = vec4(normalizedStepsCount, 1.-normalizedStepsCount, 0., 1.);
+		return;
+	#endif
+	#if defined( DEBUG_DEPTH )
+		float normalizedDepth = 1.-(sdfContext.d - debugMinDepth ) / ( debugMaxDepth - debugMinDepth );
+		normalizedDepth = saturate(normalizedDepth); // clamp to [0,1]
+		gl_FragColor = vec4(normalizedDepth);
+		// gl_FragColor = packDepthToRGBA( normalizedDepth );
+		return;
+	#endif
+
 	gl_FragColor = applyShading(rayOrigin, rayDir, sdfContext);
 }

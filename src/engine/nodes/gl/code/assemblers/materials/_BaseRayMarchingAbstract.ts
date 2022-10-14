@@ -1,14 +1,14 @@
-import {GlobalsGlNode} from './../../../Globals';
-import {MapUtils} from './../../../../../../core/MapUtils';
-import {GlConnectionPointType} from './../../../../utils/io/connections/Gl';
-import {BaseGLDefinition, UniformGLDefinition} from './../../../utils/GLDefinition';
-import {ShaderName} from './../../../../utils/shaders/ShaderName';
-import {ShadersCollectionController} from './../../utils/ShadersCollectionController';
+import {GlobalsGlNode} from '../../../Globals';
+import {MapUtils} from '../../../../../../core/MapUtils';
+import {GlConnectionPointType} from '../../../../utils/io/connections/Gl';
+import {BaseGLDefinition, UniformGLDefinition} from '../../../utils/GLDefinition';
+import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {ShaderAssemblerMaterial, CustomAssemblerMap} from './_BaseMaterial';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([]);
 
-export abstract class BaseShaderAssemblerRayMarching extends ShaderAssemblerMaterial {
+export abstract class BaseShaderAssemblerRayMarchingAbstract extends ShaderAssemblerMaterial {
 	override customAssemblerClassByCustomName(): CustomAssemblerMap {
 		return ASSEMBLER_MAP;
 	}

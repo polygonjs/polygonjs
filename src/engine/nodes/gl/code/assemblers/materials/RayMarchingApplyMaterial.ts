@@ -1,6 +1,6 @@
 import {GlType} from './../../../../../poly/registers/nodes/types/Gl';
 import {BackSide, UniformsUtils, ShaderMaterial, ShaderLib} from 'three';
-import {BaseShaderAssemblerRayMarching} from './_BaseRayMarching';
+import {BaseShaderAssemblerRayMarchingAbstract} from './_BaseRayMarchingAbstract';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
@@ -42,7 +42,7 @@ const REFRACTION = {
 	END: '// --- REFRACTION - END',
 };
 
-export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssemblerRayMarching {
+export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssemblerRayMarchingAbstract {
 	override templateShader() {
 		return {
 			vertexShader: VERTEX,
@@ -83,7 +83,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 			new GlConnectionPoint(
 				SDF_CONTEXT_INPUT_NAME,
 				GlConnectionPointType.SDF_CONTEXT,
-				'SDFContext(0.0, 0, 0, 0.)'
+				'SDFContext(0.0, 0, 0, 0, 0.)'
 			),
 		]);
 	}

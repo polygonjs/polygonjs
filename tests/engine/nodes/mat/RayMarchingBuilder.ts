@@ -148,20 +148,36 @@ QUnit.test('mat/rayMarchingBuilder simple', async (assert) => {
 	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
-	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.default.vert));
-	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.default.frag));
+	assert.equal(
+		GLSLHelper.compress(material.vertexShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.default.vert),
+		'TEST_SHADER_LIB.default.vert'
+	);
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.default.frag),
+		'TEST_SHADER_LIB.default.frag'
+	);
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 
 	sdfSphere.setInput('radius', globals, 'time');
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.minimal.vert));
-	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.minimal.frag));
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.minimal.frag),
+		'TEST_SHADER_LIB.minimal.frag'
+	);
 
 	const floatToVec31 = rayMarchingBuilder1.createNode('floatToVec3');
 	floatToVec31.setInput(0, globals, 'time');
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.position.vert));
-	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.position.frag));
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.position.frag),
+		'TEST_SHADER_LIB.position.frag'
+	);
 
 	RendererUtils.dispose();
 });
@@ -180,7 +196,11 @@ QUnit.test('mat/rayMarchingBuilder vertex shader remains simple', async (assert)
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.simpleVertex.vert));
-	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.simpleVertex.frag));
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.simpleVertex.frag),
+		'TEST_SHADER_LIB.simpleVertex.frag'
+	);
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });
 QUnit.test(
@@ -201,7 +221,8 @@ QUnit.test(
 		);
 		assert.equal(
 			GLSLHelper.compress(material.fragmentShader),
-			GLSLHelper.compress(TEST_SHADER_LIB.globalsNotNeeded.frag)
+			GLSLHelper.compress(TEST_SHADER_LIB.globalsNotNeeded.frag),
+			'TEST_SHADER_LIB.globalsNotNeeded.frag'
 		);
 		assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 	}
@@ -271,7 +292,8 @@ QUnit.test('mat/rayMarchingBuilder uses cameraPosition for fresnel on envMap', a
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.cameraPosition.vert));
 	assert.equal(
 		GLSLHelper.compress(material.fragmentShader),
-		GLSLHelper.compress(TEST_SHADER_LIB.cameraPosition.frag)
+		GLSLHelper.compress(TEST_SHADER_LIB.cameraPosition.frag),
+		'TEST_SHADER_LIB.cameraPosition.frag'
 	);
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });
@@ -328,7 +350,11 @@ QUnit.test('mat/rayMarchingBuilder with raymarched reflections', async (assert) 
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.vert));
-	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.frag));
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.reflection.frag),
+		'TEST_SHADER_LIB.reflection.frag'
+	);
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });
 
@@ -401,7 +427,11 @@ QUnit.test('mat/rayMarchingBuilder with raymarched refractions', async (assert) 
 	// without splitRGB
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.refraction.vert));
-	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.refraction.frag));
+	assert.equal(
+		GLSLHelper.compress(material.fragmentShader),
+		GLSLHelper.compress(TEST_SHADER_LIB.refraction.frag),
+		'TEST_SHADER_LIB.refraction.frag'
+	);
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 
 	// with splitRGB
@@ -410,7 +440,8 @@ QUnit.test('mat/rayMarchingBuilder with raymarched refractions', async (assert) 
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.refraction.vert));
 	assert.equal(
 		GLSLHelper.compress(material.fragmentShader),
-		GLSLHelper.compress(TEST_SHADER_LIB.refraction.fragSplitRGB)
+		GLSLHelper.compress(TEST_SHADER_LIB.refraction.fragSplitRGB),
+		'TEST_SHADER_LIB.refraction.fragSplitRGB'
 	);
 	assert.deepEqual(Object.keys(MaterialUserDataUniforms.getUniforms(material)!).sort(), ALL_UNIFORMS.sort());
 });

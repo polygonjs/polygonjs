@@ -7,7 +7,11 @@ import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerRayMarching} from '../gl/code/assemblers/materials/RayMarching';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {RayMarchingController, RayMarchingParamConfig} from './utils/RayMarchingController';
+import {
+	RayMarchingController,
+	RayMarchingParamConfig,
+	RayMarchingDebugParamConfig,
+} from './utils/RayMarchingController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
@@ -32,9 +36,11 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 		});
 	};
 }
-class RayMarchingBuilderMatParamsConfig extends AdvancedCommonParamConfig(
-	BaseBuilderParamConfig(
-		AdvancedFolderParamConfig(RayMarchingParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+class RayMarchingBuilderMatParamsConfig extends RayMarchingDebugParamConfig(
+	AdvancedCommonParamConfig(
+		BaseBuilderParamConfig(
+			AdvancedFolderParamConfig(RayMarchingParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+		)
 	)
 ) {}
 const ParamsConfig = new RayMarchingBuilderMatParamsConfig();

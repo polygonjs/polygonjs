@@ -41,7 +41,7 @@ export function sdfSmoothLines(options: SDFSmoothUtilsOption) {
 		const setMatBlend = `float ${matBlend} = smoothstep(-${halfBlendDist},${halfBlendDist}, ${dist})`;
 		const setMatBlend2 = `${matBlend} = ${dist} > 0. ? 1.0-${matBlend} : ${matBlend}`;
 		const setDistance = `float ${d} = ${functionNameSmooth}(${sdf0}.d, ${sdf1}.d, ${smoothFactor})`;
-		const withSmooth = `SDFContext(${d}, ${matId}, ${matId2}, ${matBlend})`;
+		const withSmooth = `SDFContext(${d}, 0, ${matId}, ${matId2}, ${matBlend})`;
 		bodyLines.push(setDist);
 		bodyLines.push(setHalfBlendDist);
 		bodyLines.push(setMatBlend);
@@ -50,7 +50,7 @@ export function sdfSmoothLines(options: SDFSmoothUtilsOption) {
 		bodyLines.push(`SDFContext ${sdfContext} = ${withSmooth}`);
 	} else {
 		const setDistance = `float ${d} = ${functionNameNonSmooth}(${sdf0}.d, ${sdf1}.d)`;
-		const withoutSmooth = `SDFContext(${d}, ${matId}, ${matId}, 0.)`;
+		const withoutSmooth = `SDFContext(${d}, 0, ${matId}, ${matId}, 0.)`;
 		bodyLines.push(setDistance);
 		bodyLines.push(`SDFContext ${sdfContext} = ${withoutSmooth}`);
 	}

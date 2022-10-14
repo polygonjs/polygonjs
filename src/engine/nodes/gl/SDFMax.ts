@@ -90,7 +90,7 @@ export class SDFMaxGlNode extends TypedGlNode<SDFMaxGlParamsConfig> {
 		const matId2 = `${side} ? ${sdf1}.matId : ${sdf0}.matId`;
 		const bodyLines = [
 			setSide,
-			`SDFContext ${sdfContext} = SDFContext(max(${sdf0}.d, ${sdf1}.d), ${matId}, ${matId2}, 0.)`,
+			`SDFContext ${sdfContext} = SDFContext(max(${sdf0}.d, ${sdf1}.d), 0, ${matId}, ${matId2}, 0.)`,
 		];
 		shadersCollectionController.addBodyLines(this, bodyLines);
 

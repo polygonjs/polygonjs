@@ -91,7 +91,7 @@ export class SDFMinGlNode extends TypedGlNode<SDFMinGlParamsConfig> {
 
 		const bodyLines = [
 			setSide,
-			`SDFContext ${sdfContext} = SDFContext(min(${sdf0}.d, ${sdf1}.d), ${matId}, ${matId2}, 0.)`,
+			`SDFContext ${sdfContext} = SDFContext(min(${sdf0}.d, ${sdf1}.d), 0, ${matId}, ${matId2}, 0.)`,
 		];
 		shadersCollectionController.addBodyLines(this, bodyLines);
 
