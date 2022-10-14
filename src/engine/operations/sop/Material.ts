@@ -4,7 +4,7 @@ import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {BaseBuilderMatNodeType} from '../../../engine/nodes/mat/_BaseBuilder';
 import {CoreMaterial} from '../../../core/geometry/Material';
-import {Material} from 'three';
+import {Group, Material} from 'three';
 import {Mesh} from 'three';
 import {Texture} from 'three';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
@@ -149,6 +149,11 @@ export class MaterialSopOperation extends BaseSopOperation {
 		}
 
 		const object = coreObject.object();
+		if ((object as Group).isGroup) {
+			// do not assign material to a group, as this could cause render errors
+			return;
+		}
+
 		const object_with_material = object as Mesh;
 		// const current_mat = object_with_material.material as Material | undefined;
 		// if (current_mat && params.swapCurrentTex) {
