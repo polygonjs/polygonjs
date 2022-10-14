@@ -173,7 +173,12 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		if (!canvas) {
 			return;
 		}
-		this.camerasController().computeSizeAndAspect();
+		if (!this._renderer) {
+			return;
+		}
+
+		const pixelRatio = this._renderer.getPixelRatio();
+		this.camerasController().computeSizeAndAspect(pixelRatio);
 		const size = this.camerasController().size;
 		CoreCameraRendererController.setRendererSize(canvas, size);
 		this._cssRendererConfig?.cssRenderer.setSize(size.x, size.y);
@@ -186,7 +191,12 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			console.warn('no canvas found for viewer');
 			return;
 		}
-		this.camerasController().computeSizeAndAspect();
+		if (!this._renderer) {
+			return;
+		}
+
+		const pixelRatio = this._renderer.getPixelRatio();
+		this.camerasController().computeSizeAndAspect(pixelRatio);
 		this.audioController().update();
 		this.animate();
 	}

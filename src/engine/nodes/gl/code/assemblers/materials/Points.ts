@@ -1,7 +1,7 @@
 // import {UniformsUtils} from 'three';
 // import {ShaderMaterial} from 'three';
 import {ShaderLib} from 'three';
-import {ShaderAssemblerMaterial, CustomAssemblerMap, GlobalsOutput} from './_BaseMaterial';
+import {ShaderAssemblerMaterial, CustomAssemblerMap} from './_BaseMaterial';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {BaseGlShaderAssembler} from '../_Base';
@@ -14,6 +14,7 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {VaryingWriteGlNode} from '../../../VaryingWrite';
 import {PointsMaterial} from 'three';
 import {CustomMaterialName} from '../../../../../../core/geometry/Material';
+import {GlobalsOutput} from './common/GlobalOutput';
 
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 	[ShaderName.VERTEX, ['#include <begin_vertex>', 'gl_PointSize = size;']],
@@ -77,7 +78,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 
 	override add_output_inputs(output_child: OutputGlNode) {
 		const list = BaseGlShaderAssembler.output_input_connection_points();
-		list.push(new GlConnectionPoint('gl_PointSize', GlConnectionPointType.FLOAT));
+		list.push(new GlConnectionPoint(GlobalsOutput.GL_POINTSIZE, GlConnectionPointType.FLOAT));
 		output_child.io.inputs.setNamedInputConnectionPoints(list);
 	}
 	override create_globals_node_output_connections() {
@@ -90,7 +91,7 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 		return [
 			new ShaderConfig(
 				ShaderName.VERTEX,
-				['position', 'normal', 'uv', 'gl_PointSize', VaryingWriteGlNode.INPUT_NAME],
+				['position', 'normal', 'uv', GlobalsOutput.GL_POINTSIZE, VaryingWriteGlNode.INPUT_NAME],
 				[]
 			),
 			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
@@ -98,9 +99,9 @@ export class ShaderAssemblerPoints extends ShaderAssemblerMaterial {
 	}
 	override create_variable_configs() {
 		return BaseGlShaderAssembler.create_variable_configs().concat([
-			new VariableConfig('gl_PointSize', {
+			new VariableConfig(GlobalsOutput.GL_POINTSIZE, {
 				default: '1.0',
-				prefix: 'gl_PointSize = ',
+				prefix: `${GlobalsOutput.GL_POINTSIZE} = `,
 				suffix: ' * size * 10.0', // currently using 10 as 1 seems really small
 			}),
 		]);

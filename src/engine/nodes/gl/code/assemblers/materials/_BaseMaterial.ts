@@ -18,19 +18,12 @@ import {PolyDictionary} from '../../../../../../types/GlobalTypes';
 import {IUniformTexture} from '../../../../utils/code/gl/Uniforms';
 import {CodeBuilderSetCodeLinesOptions} from '../../utils/CodeBuilder';
 import type {TypedBuilderMatNode} from '../../../../mat/_BaseBuilder';
+import {GlobalsOutput} from './common/GlobalOutput';
 
 // export type ShaderAssemblerRenderDerivated = {new (node: BaseNodeType): ShaderAssemblerRender};
 // type ShaderAssemblerRenderDerivatedClass = new (...args: any[]) => ShaderAssemblerRender;
 export type CustomAssemblerMap = Map<CustomMaterialName, typeof ShaderAssemblerMaterial>;
 
-export enum GlobalsOutput {
-	TIME = 'time',
-	RESOLUTION = 'resolution',
-	MV_POSITION = 'mvPosition',
-	GL_POSITION = 'gl_Position',
-	GL_FRAGCOORD = 'gl_FragCoord',
-	GL_POINTCOORD = 'gl_PointCoord',
-}
 const FRAGMENT_GLOBALS_OUTPUT = [
 	/*GlobalsOutput.GL_POSITION,*/ GlobalsOutput.GL_FRAGCOORD,
 	GlobalsOutput.GL_POINTCOORD,

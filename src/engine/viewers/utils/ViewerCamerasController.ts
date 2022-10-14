@@ -22,9 +22,9 @@ export class ViewerCamerasController {
 		return this._aspect;
 	}
 
-	computeSizeAndAspect() {
+	computeSizeAndAspect(pixelRatio: number) {
 		this._updateSize();
-		this._viewer.scene().uniformsController.updateResolution(this._size);
+		this._viewer.scene().uniformsController.updateResolution(this._size, pixelRatio);
 		this._aspect = this._getAspect();
 	}
 

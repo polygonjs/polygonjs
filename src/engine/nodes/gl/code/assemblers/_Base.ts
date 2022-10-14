@@ -23,6 +23,7 @@ import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {GlNodeFinder} from '../utils/NodeFinder';
 import {VaryingWriteGlNode} from '../../VaryingWrite';
 import {SubnetOutputGlNode} from '../../SubnetOutput';
+import {GlobalsOutput} from './materials/common/GlobalOutput';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
@@ -288,7 +289,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			new GlConnectionPoint('normal', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('color', GlConnectionPointType.VEC3),
 			new GlConnectionPoint('uv', GlConnectionPointType.VEC2),
-			new GlConnectionPoint('mvPosition', GlConnectionPointType.VEC4),
+			new GlConnectionPoint(GlobalsOutput.MV_POSITION, GlConnectionPointType.VEC4),
 			// Maybe I should not add worldPosition, worldNormal, I just now
 			// as those could add computation overhead when always present in the shader.
 			// But hopefully in the soon future, they will only be added when the code builder
@@ -296,11 +297,11 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			new GlConnectionPoint('worldPosition', GlConnectionPointType.VEC4), // vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
 			new GlConnectionPoint('worldNormal', GlConnectionPointType.VEC3), // vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );
 			// new GlConnectionPoint('I', GlConnectionPointType.VEC3), // vec3 I = worldPosition.xyz - cameraPosition;
-			new GlConnectionPoint('gl_Position', GlConnectionPointType.VEC4),
-			new GlConnectionPoint('gl_FragCoord', GlConnectionPointType.VEC4),
+			new GlConnectionPoint(GlobalsOutput.GL_POSITION, GlConnectionPointType.VEC4),
+			new GlConnectionPoint(GlobalsOutput.GL_FRAGCOORD, GlConnectionPointType.VEC4),
 			new GlConnectionPoint('cameraPosition', GlConnectionPointType.VEC3),
-			new GlConnectionPoint('resolution', GlConnectionPointType.VEC2),
-			new GlConnectionPoint('time', GlConnectionPointType.FLOAT),
+			new GlConnectionPoint(GlobalsOutput.RESOLUTION, GlConnectionPointType.VEC2),
+			new GlConnectionPoint(GlobalsOutput.TIME, GlConnectionPointType.FLOAT),
 		];
 	}
 	create_globals_node_output_connections() {

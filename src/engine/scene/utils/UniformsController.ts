@@ -97,8 +97,8 @@ export class UniformsController {
 	// 	});
 	// }
 
-	updateResolution(resolution: Vector2) {
-		GLOBAL_UNIFORMS[UniformName.RESOLUTION].value.copy(resolution);
+	updateResolution(resolution: Vector2, pixelRatio: number) {
+		GLOBAL_UNIFORMS[UniformName.RESOLUTION].value.copy(resolution).multiplyScalar(pixelRatio);
 		// for (let uniforms of this._resolutionDependentUniforms) {
 		// 	this.updateResolutionDependentUniforms(uniforms);
 		// }
