@@ -29,6 +29,8 @@ export interface DirectionalLightParams extends DefaultOperationParams {
 	shadowSize: Vector2;
 	shadowBias: number;
 	shadowRadius: number;
+	//
+	raymarchingPenumbra: number;
 }
 
 export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
@@ -46,6 +48,8 @@ export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
 	shadowSize: new Vector2(2, 2),
 	shadowBias: 0.001,
 	shadowRadius: 0,
+	//
+	raymarchingPenumbra: 0,
 };
 const DEFAULT = DEFAULT_DIRECTIONAL_LIGHT_PARAMS;
 
@@ -102,6 +106,10 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 			range: [0, 10],
 			rangeLocked: [true, false],
 		});
+		// raymarching
+		raymarching = ParamConfig.FOLDER();
+		/** @param this affects the shadows cast inside raymarchingBuilder materials */
+		raymarchingPenumbra = ParamConfig.FLOAT(DEFAULT.raymarchingPenumbra);
 	};
 }
 

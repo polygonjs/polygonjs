@@ -1,3 +1,4 @@
+import {LIGHT_USER_DATA_RAYMARCHING_PENUMBRA} from './../../../core/lights/Common';
 import {UniformName} from './UniformsController';
 import {PolyScene} from '../PolyScene';
 import {IUniforms} from '../../../core/geometry/Material';
@@ -24,35 +25,43 @@ interface WorldPosUniformElement {
 interface DirectionUniformElement {
 	direction: Vector3;
 }
+interface PenumbraUniformElement {
+	penumbra: number;
+}
 
 // spotlights
 let spotLightIndex = 0;
-export interface SpotLightRayMarchingUniformElement extends WorldPosUniformElement, DirectionUniformElement {}
+export interface SpotLightRayMarchingUniformElement
+	extends WorldPosUniformElement,
+		DirectionUniformElement,
+		PenumbraUniformElement {}
 interface SpotLightRayMarchingUniforms extends Array<SpotLightRayMarchingUniformElement> {
 	needsUpdate?: boolean;
 }
 interface SpotLightRayMarchingUniform extends IUniform {
 	value: SpotLightRayMarchingUniforms;
 }
-function _createSpotLightUniform() {
+function _createSpotLightUniform(): SpotLightRayMarchingUniformElement {
 	return {
 		worldPos: new Vector3(),
 		direction: new Vector3(),
+		penumbra: 0,
 	};
 }
 
 // directionallights
 let directionalLightIndex = 0;
-export interface DirectionalLightRayMarchingUniformElement extends DirectionUniformElement {}
+export interface DirectionalLightRayMarchingUniformElement extends DirectionUniformElement, PenumbraUniformElement {}
 interface DirectionalLightRayMarchingUniforms extends Array<DirectionalLightRayMarchingUniformElement> {
 	needsUpdate?: boolean;
 }
 interface DirectionalLightRayMarchingUniform extends IUniform {
 	value: DirectionalLightRayMarchingUniforms;
 }
-function _createDirectionalLightUniform() {
+function _createDirectionalLightUniform(): DirectionalLightRayMarchingUniformElement {
 	return {
 		direction: new Vector3(),
+		penumbra: 0,
 	};
 }
 
@@ -65,7 +74,7 @@ interface HemisphereLightRayMarchingUniforms extends Array<HemisphereLightRayMar
 interface HemisphereLightRayMarchingUniform extends IUniform {
 	value: HemisphereLightRayMarchingUniforms;
 }
-function _createHemisphereLightUniform() {
+function _createHemisphereLightUniform(): HemisphereLightRayMarchingUniformElement {
 	return {
 		direction: new Vector3(),
 	};
@@ -73,16 +82,17 @@ function _createHemisphereLightUniform() {
 
 // pointlights
 let pointLightIndex = 0;
-export interface PointLightRayMarchingUniformElement extends WorldPosUniformElement {}
+export interface PointLightRayMarchingUniformElement extends WorldPosUniformElement, PenumbraUniformElement {}
 interface PointLightRayMarchingUniforms extends Array<PointLightRayMarchingUniformElement> {
 	needsUpdate?: boolean;
 }
 interface PointLightRayMarchingUniform extends IUniform {
 	value: PointLightRayMarchingUniforms;
 }
-function _createPointLightUniform() {
+function _createPointLightUniform(): PointLightRayMarchingUniformElement {
 	return {
 		worldPos: new Vector3(),
+		penumbra: 0,
 	};
 }
 
@@ -115,6 +125,12 @@ interface UniformWithDirectionArray extends Array<DirectionUniformElement> {
 }
 interface UniformsWithDirection extends IUniform {
 	value: UniformWithDirectionArray;
+}
+interface UniformWithPenumbraArray extends Array<PenumbraUniformElement> {
+	needsUpdate?: boolean;
+}
+interface UniformsWithPenumbra extends IUniform {
+	value: UniformWithPenumbraArray;
 }
 function updateWorldPos(
 	object: Object3D,
@@ -149,8 +165,28 @@ function updateDirectionFromMatrix(
 ) {
 	direction.setFromMatrixPosition(object.matrixWorld);
 
-	uniforms.value[hemisphereLightIndex] = uniforms.value[index] || defaultUniformCreate();
+	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
 	uniforms.value[index].direction.copy(direction);
+	uniforms.value.needsUpdate = true;
+}
+function updateSpotLightPenumbra(
+	object: SpotLight,
+	uniforms: UniformsWithPenumbra,
+	index: number,
+	defaultUniformCreate: () => PenumbraUniformElement
+) {
+	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
+	uniforms.value[index].penumbra = object.penumbra;
+	uniforms.value.needsUpdate = true;
+}
+function updateUserDataPenumbra(
+	object: PointLight | DirectionalLight,
+	uniforms: UniformsWithPenumbra,
+	index: number,
+	defaultUniformCreate: () => PenumbraUniformElement
+) {
+	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
+	uniforms.value[index].penumbra = object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA];
 	uniforms.value.needsUpdate = true;
 }
 
@@ -200,11 +236,23 @@ export class SceneTraverserController {
 			if ((object as SpotLight).isSpotLight) {
 				updateWorldPos(object, this._spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
 				updateDirectionFromTarget(object, this._spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
+				updateSpotLightPenumbra(
+					object as SpotLight,
+					this._spotLightsRayMarching,
+					spotLightIndex,
+					_createSpotLightUniform
+				);
 				spotLightIndex++;
 			}
 			if ((object as DirectionalLight).isDirectionalLight) {
 				updateDirectionFromTarget(
 					object,
+					this._directionalLightsRayMarching,
+					directionalLightIndex,
+					_createDirectionalLightUniform
+				);
+				updateUserDataPenumbra(
+					object as DirectionalLight,
 					this._directionalLightsRayMarching,
 					directionalLightIndex,
 					_createDirectionalLightUniform
@@ -222,6 +270,12 @@ export class SceneTraverserController {
 			}
 			if ((object as PointLight as any).isPointLight) {
 				updateWorldPos(object, this._pointLightsRayMarching, pointLightIndex, _createPointLightUniform);
+				updateUserDataPenumbra(
+					object as PointLight,
+					this._pointLightsRayMarching,
+					pointLightIndex,
+					_createPointLightUniform
+				);
 				pointLightIndex++;
 			}
 			// if ((object as RectAreaLight).isRectAreaLight) {

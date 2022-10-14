@@ -1,3 +1,4 @@
+import {LIGHT_USER_DATA_RAYMARCHING_PENUMBRA} from './../../../core/lights/Common';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -48,6 +49,8 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		light.color = params.color;
 		light.intensity = params.intensity;
 		light.shadow.camera.far = params.distance;
+
+		light.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA] = params.raymarchingPenumbra;
 	}
 	updateShadowParams<NC extends NodeContext>(container: DirectionalLightContainer, params: DirectionalLightParams) {
 		const light = container.light();
