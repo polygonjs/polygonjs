@@ -185,6 +185,35 @@ float sdRoundCone( vec3 p, float r1, float r2, float h )
 	if( k>a*h ) return length(q-vec2(0.0,h)) - r2;
 	return dot(q, vec2(a,b) ) - r1;
 }
+float sdHexPrism( vec3 p, vec2 h )
+{
+	const vec3 k = vec3(-0.8660254, 0.5, 0.57735);
+	p = abs(p);
+	p.xy -= 2.0*min(dot(k.xy, p.xy), 0.0)*k.xy;
+	vec2 d = vec2(
+		length(p.xy-vec2(clamp(p.x,-k.z*h.x,k.z*h.x), h.x))*sign(p.y-h.x),
+		p.z-h.y );
+	return min(max(d.x,d.y),0.0) + length(max(d,0.0));
+}
+float sdTriPrism( vec3 p, vec2 h )
+{
+	vec3 q = abs(p);
+	return max(q.z-h.y,max(q.x*0.866025+p.y*0.5,-p.y)-h.x*0.5);
+}
+float sdPyramid( vec3 p, float h)
+{
+	float m2 = h*h + 0.25;
+	p.xz = abs(p.xz);
+	p.xz = (p.z>p.x) ? p.zx : p.xz;
+	p.xz -= 0.5;
+	vec3 q = vec3( p.z, h*p.y - 0.5*p.x, h*p.x + 0.5*p.y);
+	float s = max(-q.x,0.0);
+	float t = clamp( (q.y-0.5*p.z)/(m2+0.25), 0.0, 1.0 );
+	float a = m2*(q.x+s)*(q.x+s) + q.y*q.y;
+	float b = m2*(q.x+0.5*t)*(q.x+0.5*t) + (q.y-m2*t)*(q.y-m2*t);
+	float d2 = min(q.y,-q.x*m2-q.y*0.5) > 0.0 ? 0.0 : min(a,b);
+	return sqrt( (d2+q.z*q.z)/m2 ) * sign(max(q.z,-p.y));
+}
 float sdPlane( vec3 p, vec3 n, float h )
 {
 	return dot(p,n) + h;
@@ -194,10 +223,11 @@ float sdTorus( vec3 p, vec2 t )
 	vec2 q = vec2(length(p.xz)-t.x,p.y);
 	return length(q)-t.y;
 }
-float sdCappedTorus(in vec3 p, in vec2 sc, in float ra, in float rb)
+float sdCappedTorus(in vec3 p, in float an, in float ra, in float rb)
 {
+	vec2 sc = vec2(sin(an),cos(an));
 	p.x = abs(p.x);
-	float k = (sc.y*p.x>sc.x*p.y) ? dot(p.xy,sc) : length(p.xy);
+	float k = (sc.y*p.x>sc.x*p.z) ? dot(p.xz,sc) : length(p.xz);
 	return sqrt( dot(p,p) + ra*ra - 2.0*ra*k ) - rb;
 }
 float sdLink( vec3 p, float le, float r1, float r2 )
@@ -214,6 +244,15 @@ float sdSolidAngle(vec3 pos, vec2 c, float radius)
 }
 float sdSolidAngleWrapped(vec3 pos, float angle, float radius){
 	return sdSolidAngle(pos, vec2(sin(angle), cos(angle)), radius);
+}
+float sdTube( vec3 p, float r )
+{
+	return length(p.xz)-r;
+}
+float sdTubeCapped( vec3 p, float h, float r )
+{
+	vec2 d = abs(vec2(length(p.xz),p.y)) - vec2(r,h);
+	return min(max(d.x,d.y),0.0) + length(max(d,0.0));
 }
 float sdOctahedron( vec3 p, float s)
 {
@@ -416,8 +455,8 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, spotLightShadowCoord ) : 1.0;
 				#endif
 				l = normalize(lightPos-p);
-				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001), sdfContext);
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
+				float spotLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * spotLightSdfShadow;
 				
 				dif += lighDif;
 			}
@@ -441,8 +480,8 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, dirLightShadowCoord ) : 1.0;
 				#endif
 				l = lightDir;
-				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001), sdfContext);
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
+				float dirLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * dirLightSdfShadow;
 				dif += lighDif;
 			}
 			#pragma unroll_loop_end
@@ -479,8 +518,8 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 				
 				lightPos = pointLightRayMarching.worldPos;
 				l = normalize(lightPos-p);
-				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001), sdfContext);
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
+				float pointLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * pointLightSdfShadow;
 				dif += lighDif;
 			}
 			#pragma unroll_loop_end

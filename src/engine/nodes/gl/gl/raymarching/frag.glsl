@@ -203,8 +203,8 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 				#endif
 
 				l = normalize(lightPos-p);
-				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001), sdfContext);
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
+				float spotLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * spotLightSdfShadow;
 				
 				dif += lighDif;
 			}
@@ -230,8 +230,8 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 				#endif
 
 				l = lightDir;
-				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001), sdfContext);
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
+				float dirLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * dirLightSdfShadow;
 
 				dif += lighDif;
 			}
@@ -276,8 +276,8 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 				
 				lightPos = pointLightRayMarching.worldPos;
 				l = normalize(lightPos-p);
-				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001), sdfContext);
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
+				float pointLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * pointLightSdfShadow;
 
 				dif += lighDif;
 			}
