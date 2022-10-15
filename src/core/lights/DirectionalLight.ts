@@ -29,6 +29,7 @@ export interface DirectionalLightParams extends DefaultOperationParams {
 	shadowSize: Vector2;
 	shadowBias: number;
 	shadowRadius: number;
+	debugShadow: boolean;
 	//
 	raymarchingPenumbra: number;
 }
@@ -48,6 +49,7 @@ export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
 	shadowSize: new Vector2(2, 2),
 	shadowBias: 0.001,
 	shadowRadius: 0,
+	debugShadow: false,
 	//
 	raymarchingPenumbra: 0,
 };
@@ -105,6 +107,10 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 			visibleIf: {castShadow: 1},
 			range: [0, 10],
 			rangeLocked: [true, false],
+		});
+		/** @param display shadow on a plane behind the light */
+		debugShadow = ParamConfig.BOOLEAN(DEFAULT.debugShadow, {
+			visibleIf: {castShadow: 1},
 		});
 		// raymarching
 		raymarching = ParamConfig.FOLDER();

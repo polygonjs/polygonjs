@@ -28,6 +28,7 @@ export interface SpotLightParams extends DefaultOperationParams {
 	shadowNear: number;
 	shadowFar: number;
 	shadowRadius: number;
+	debugShadow: boolean;
 	//
 	tvolumetric: boolean;
 	volAttenuation: number;
@@ -55,6 +56,7 @@ export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	shadowNear: 0.1,
 	shadowFar: 100,
 	shadowRadius: 0,
+	debugShadow: false,
 	//
 	tvolumetric: false,
 	volAttenuation: 5,
@@ -130,6 +132,10 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 			visibleIf: {castShadow: 1},
 			range: [0, 10],
 			rangeLocked: [true, false],
+		});
+		/** @param display shadow on a plane behind the light */
+		debugShadow = ParamConfig.BOOLEAN(DEFAULT.debugShadow, {
+			visibleIf: {castShadow: 1},
 		});
 
 		// shadows

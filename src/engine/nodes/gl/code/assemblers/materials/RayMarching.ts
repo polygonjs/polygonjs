@@ -7,10 +7,12 @@ import VERTEX from '../../../gl/raymarching/vert.glsl';
 import FRAGMENT from '../../../gl/raymarching/frag.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../gl/raymarching/uniforms';
 import {CustomMaterialName} from '../../../../../../core/geometry/Material';
+import {ShaderAssemblerRayMarchingDepth} from './custom/raymarching/RayMarchingDepth';
+import {ShaderAssemblerRayMarchingDistance} from './custom/raymarching/RayMarchingDistance';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([]);
-// ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerRayMarchingDepth); // for spot lights and directional
-// ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerRayMarchingDistance); // for point lights
+ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerRayMarchingDepth); // for spot lights and directional
+ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerRayMarchingDistance); // for point lights
 
 export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarchingRendered {
 	override templateShader() {
@@ -44,14 +46,17 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarchingRe
 		this._addCustomMaterials(material);
 
 		if ((material as any as MaterialWithCustomMaterials).customMaterials) {
+			const materialUniforms = material.uniforms as any as RayMarchingUniforms;
 			const customMaterials = (material as any as MaterialWithCustomMaterials).customMaterials;
 			const customNames = Object.keys(customMaterials) as CustomMaterialName[];
 			for (let customMaterialName of customNames) {
 				const customMaterial = customMaterials[customMaterialName];
 				if (customMaterial) {
 					const uniforms = (customMaterial as ShaderMaterial).uniforms as any as RayMarchingUniforms;
-					uniforms.debugMinDepth = material.uniforms.debugMinDepth;
-					uniforms.debugMaxDepth = material.uniforms.debugMaxDepth;
+					uniforms.shadowDistanceMin = materialUniforms.shadowDistanceMin;
+					uniforms.shadowDistanceMax = materialUniforms.shadowDistanceMax;
+					uniforms.shadowDepthMin = materialUniforms.shadowDepthMin;
+					uniforms.shadowDepthMax = materialUniforms.shadowDepthMax;
 				}
 			}
 		}

@@ -11,6 +11,10 @@ export interface RayMarchingUniforms {
 	debugMaxSteps: IUniformN;
 	debugMinDepth: IUniformN;
 	debugMaxDepth: IUniformN;
+	shadowDistanceMin: IUniformN;
+	shadowDistanceMax: IUniformN;
+	shadowDepthMin: IUniformN;
+	shadowDepthMax: IUniformN;
 	// spotLightsRayMarching: IUniformV3Array;
 }
 
@@ -40,6 +44,18 @@ export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
 		value: 0,
 	},
 	debugMaxDepth: {
+		value: 128,
+	},
+	shadowDistanceMin: {
+		value: 0,
+	},
+	shadowDistanceMax: {
+		value: 128,
+	},
+	shadowDepthMin: {
+		value: 0,
+	},
+	shadowDepthMax: {
 		value: 128,
 	},
 };

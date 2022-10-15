@@ -6,7 +6,7 @@ import {PointLight} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Group} from 'three';
 import {CorePointLightHelper, PointLightParams, DEFAULT_POINT_LIGHT_PARAMS} from '../../../core/lights/PointLight';
-
+import {Mesh, PlaneGeometry, MeshBasicMaterial, Color, DoubleSide} from 'three';
 export class PointLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PointLightParams = DEFAULT_POINT_LIGHT_PARAMS;
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
@@ -72,17 +72,37 @@ export class PointLightSopOperation extends BaseSopOperation {
 		light.shadow.needsUpdate = light.shadow.autoUpdate || isBooleanTrue(params.shadowUpdateOnNextRender);
 
 		light.shadow.mapSize.copy(params.shadowRes);
-		// console.log(light);
-		// const map = light.shadow.map;
-		// if (map) {
-		// 	map.setSize(params.shadowRes.x, params.shadowRes.y);
-		// 	console.log(map);
-		// }
+		const map = light.shadow.map;
+		if (map) {
+			if (isBooleanTrue(params.debugShadow)) {
+				light.add(this._debugShadowMesh(light));
+			} else {
+				if (this.__debugShadowMesh) {
+					light.remove(this.__debugShadowMesh);
+				}
+			}
+		}
 
 		light.shadow.camera.near = params.shadowNear;
 		light.shadow.camera.far = params.shadowFar;
 		light.shadow.bias = params.shadowBias;
 
 		light.shadow.camera.updateProjectionMatrix();
+	}
+	private __debugShadowMesh: Mesh<PlaneGeometry, MeshBasicMaterial> | undefined;
+	private _debugShadowMesh(light: PointLight) {
+		return (this.__debugShadowMesh = this.__debugShadowMesh || this._createDebugShadowMesh(light));
+	}
+	private _createDebugShadowMesh(light: PointLight) {
+		const material = new MeshBasicMaterial({
+			color: new Color(1, 1, 1),
+			map: light.shadow.map.texture,
+			side: DoubleSide,
+		});
+		const mesh = new Mesh(new PlaneGeometry(5, 5, 2, 2), material);
+		mesh.position.z = 1;
+		mesh.castShadow = false;
+		mesh.receiveShadow = false;
+		return mesh;
 	}
 }

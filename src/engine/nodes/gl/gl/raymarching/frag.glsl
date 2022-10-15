@@ -21,6 +21,14 @@ uniform float debugMaxDepth;
 #include <lights_physical_pars_fragment>
 #include <shadowmap_pars_fragment>
 
+#if defined( SHADOW_DISTANCE )
+	uniform float shadowDistanceMin;
+	uniform float shadowDistanceMax;
+#endif 
+#if defined( SHADOW_DEPTH )
+	uniform float shadowDepthMin;
+	uniform float shadowDepthMax;
+#endif 
 
 // uniform vec3 u_BoundingBoxMin;
 // uniform vec3 u_BoundingBoxMax;
@@ -343,7 +351,18 @@ void main()	{
 		float normalizedDepth = 1.-(sdfContext.d - debugMinDepth ) / ( debugMaxDepth - debugMinDepth );
 		normalizedDepth = saturate(normalizedDepth); // clamp to [0,1]
 		gl_FragColor = vec4(normalizedDepth);
-		// gl_FragColor = packDepthToRGBA( normalizedDepth );
+		return;
+	#endif
+	#if defined( SHADOW_DEPTH )
+		float normalizedDepth = 1.-(sdfContext.d - shadowDepthMin ) / ( shadowDepthMax - shadowDepthMin );
+		normalizedDepth = saturate(normalizedDepth); // clamp to [0,1]
+		gl_FragColor = packDepthToRGBA( normalizedDepth );
+		return;
+	#endif
+	#if defined( SHADOW_DISTANCE )
+		float normalizedDepth = (sdfContext.d - shadowDistanceMin ) / ( shadowDistanceMax - shadowDistanceMin );
+		normalizedDepth = saturate(normalizedDepth); // clamp to [0,1]
+		gl_FragColor = packDepthToRGBA( normalizedDepth );
 		return;
 	#endif
 

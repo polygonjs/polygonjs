@@ -143,7 +143,7 @@ float SDFOnion( in float sdf, in float thickness )
 {
 	return abs(sdf)-thickness;
 }
-const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 160;
+const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 167;
 struct EnvMap {
 	vec3 tint;
 	float intensity;
@@ -168,6 +168,14 @@ uniform sampler2D v_POLY_texture_envTexture1;
 #include <lights_pars_begin>
 #include <lights_physical_pars_fragment>
 #include <shadowmap_pars_fragment>
+#if defined( SHADOW_DISTANCE )
+	uniform float shadowDistanceMin;
+	uniform float shadowDistanceMax;
+#endif 
+#if defined( SHADOW_DEPTH )
+	uniform float shadowDepthMin;
+	uniform float shadowDepthMax;
+#endif 
 varying vec3 vPw;
 #if NUM_SPOT_LIGHTS > 0
 	struct SpotLightRayMarching {
@@ -555,6 +563,16 @@ void main()	{
 	#if defined( DEBUG_DEPTH )
 		float normalizedDepth = 1.-(sdfContext.d - debugMinDepth ) / ( debugMaxDepth - debugMinDepth );
 		normalizedDepth = saturate(normalizedDepth);		gl_FragColor = vec4(normalizedDepth);
+		return;
+	#endif
+	#if defined( SHADOW_DEPTH )
+		float normalizedDepth = 1.-(sdfContext.d - shadowDepthMin ) / ( shadowDepthMax - shadowDepthMin );
+		normalizedDepth = saturate(normalizedDepth);		gl_FragColor = packDepthToRGBA( normalizedDepth );
+		return;
+	#endif
+	#if defined( SHADOW_DISTANCE )
+		float normalizedDepth = (sdfContext.d - shadowDistanceMin ) / ( shadowDistanceMax - shadowDistanceMin );
+		normalizedDepth = saturate(normalizedDepth);		gl_FragColor = packDepthToRGBA( normalizedDepth );
 		return;
 	#endif
 	gl_FragColor = applyShading(rayOrigin, rayDir, sdfContext);

@@ -6,6 +6,7 @@ import {TypedMatNode} from '../_Base';
 import {Material} from 'three';
 import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {isBooleanTrue} from '../../../../core/Type';
+import {CustomMaterialRayMarchingParamConfig} from './customMaterials/CustomMaterialRayMarching';
 
 enum RayMarchingDebugMode {
 	STEPS_COUNT = 'Steps Count',
@@ -85,7 +86,9 @@ export function RayMarchingDebugParamConfig<TBase extends Constructor>(Base: TBa
 	};
 }
 class RayMarchingMaterial extends Material {}
-class RayMarchingParamsConfig extends RayMarchingDebugParamConfig(RayMarchingParamConfig(NodeParamsConfig)) {}
+class RayMarchingParamsConfig extends CustomMaterialRayMarchingParamConfig(
+	RayMarchingDebugParamConfig(RayMarchingParamConfig(NodeParamsConfig))
+) {}
 
 abstract class RayMarchingMatNode extends TypedMatNode<RayMarchingMaterial, RayMarchingParamsConfig> {}
 
@@ -107,6 +110,11 @@ export class RayMarchingController {
 		uniforms.SURF_DIST.value = pv.surfDist;
 		uniforms.NORMALS_BIAS.value = pv.normalsBias;
 		uniforms.CENTER.value.copy(pv.center);
+
+		uniforms.shadowDepthMin.value = pv.shadowDepthMin;
+		uniforms.shadowDepthMax.value = pv.shadowDepthMax;
+		uniforms.shadowDistanceMin.value = pv.shadowDistanceMin;
+		uniforms.shadowDistanceMax.value = pv.shadowDistanceMax;
 
 		if (isBooleanTrue(pv.debug)) {
 			function updateDebugMode(uniforms: RayMarchingUniforms) {
