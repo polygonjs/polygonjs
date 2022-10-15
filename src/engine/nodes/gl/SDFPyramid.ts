@@ -1,12 +1,12 @@
 /**
- * Function of SDF Sphere
+ * Function of SDF Pyramid
  *
  * @remarks
  *
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
@@ -15,16 +15,16 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 import {BaseSDFGlNode} from './_BaseSDF';
 
 const OUTPUT_NAME = 'float';
-class SDFSphereGlParamsConfig extends NodeParamsConfig {
+class SDFPyramidGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
-	radius = ParamConfig.FLOAT(1);
+	height = ParamConfig.FLOAT(1);
 }
-const ParamsConfig = new SDFSphereGlParamsConfig();
-export class SDFSphereGlNode extends BaseSDFGlNode<SDFSphereGlParamsConfig> {
+const ParamsConfig = new SDFPyramidGlParamsConfig();
+export class SDFPyramidGlNode extends BaseSDFGlNode<SDFPyramidGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFSphere';
+		return 'SDFPyramid';
 	}
 
 	override initializeNode() {
@@ -38,10 +38,10 @@ export class SDFSphereGlNode extends BaseSDFGlNode<SDFSphereGlParamsConfig> {
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
-		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
+		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdSphere(${position} - ${center}, ${radius})`;
+		const bodyLine = `float ${float} = sdPyramid(${position} - ${center}, ${height})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);

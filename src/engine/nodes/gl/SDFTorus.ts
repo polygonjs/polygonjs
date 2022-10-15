@@ -13,6 +13,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {isBooleanTrue} from '../../../core/Type';
 
 const OUTPUT_NAME = 'float';
 class SDFTorusGlParamsConfig extends NodeParamsConfig {
@@ -20,9 +21,13 @@ class SDFTorusGlParamsConfig extends NodeParamsConfig {
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	radius1 = ParamConfig.FLOAT(1);
 	radius2 = ParamConfig.FLOAT(0.1);
-	// cap = ParamConfig.BOOLEAN(0);
-	// ra = ParamConfig.FLOAT(0.1);
-	// rb = ParamConfig.FLOAT(0.2);
+	capped = ParamConfig.BOOLEAN(0);
+	angle = ParamConfig.FLOAT(0.5 * Math.PI, {
+		range: [0, Math.PI],
+		rangeLocked: [true, true],
+		step: 0.0001,
+		visibleIf: {capped: 1},
+	});
 }
 const ParamsConfig = new SDFTorusGlParamsConfig();
 export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
@@ -33,6 +38,7 @@ export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
 
 	override initializeNode() {
 		super.initializeNode();
+		this.io.connection_points.spare_params.setInputlessParamNames(['capped']);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
@@ -44,16 +50,23 @@ export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const radius1 = ThreeToGl.float(this.variableForInputParam(this.p.radius1));
 		const radius2 = ThreeToGl.float(this.variableForInputParam(this.p.radius2));
-		// const cap = ThreeToGl.bool(this.variableForInputParam(this.p.cap));
-		// const ra = ThreeToGl.float(this.variableForInputParam(this.p.ra));
-		// const rb = ThreeToGl.float(this.variableForInputParam(this.p.rb));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const torus = `sdTorus(${position} - ${center}, vec2(${radius1},${radius2}))`;
-		// const torusCapped = `sdCappedTorus(${position} - ${center}, vec2(${radius1},${radius2}), ${ra}, ${rb})`;
-		// const bodyLine = `float ${float} = ${cap} ? ${torusCapped} : ${torus}`;
-		const bodyLine = `float ${float} = ${torus}`;
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		if (isBooleanTrue(this.pv.capped)) {
+			const angle = ThreeToGl.float(this.variableForInputParam(this.p.angle));
+			// const rb = ThreeToGl.float(this.variableForInputParam(this.p.rb));
+			// const torus = `sdTorus(${position} - ${center}, vec2(${radius1},${radius2}))`;
+			const torusCapped = `sdCappedTorus(${position} - ${center}, ${angle}, ${radius1}, ${radius2})`;
+			const bodyLine = `float ${float} = ${torusCapped}`;
+			// const bodyLine = `float ${float} = ${torus}`;
+			shadersCollectionController.addBodyLines(this, [bodyLine]);
+		} else {
+			const torus = `sdTorus(${position} - ${center}, vec2(${radius1}, ${radius2}))`;
+			// const torusCapped = `sdCappedTorus(${position} - ${center}, vec2(${radius1},${radius2}), ${ra}, ${rb})`;
+			// const bodyLine = `float ${float} = ${cap} ? ${torusCapped} : ${torus}`;
+			const bodyLine = `float ${float} = ${torus}`;
+			shadersCollectionController.addBodyLines(this, [bodyLine]);
+		}
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
 	}

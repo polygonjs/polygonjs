@@ -1,5 +1,5 @@
 /**
- * Function of SDF Sphere
+ * Function of SDF Tube/Cylinder
  *
  * @remarks
  *
@@ -13,22 +13,28 @@ import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {isBooleanTrue} from '../../../core/Type';
 
 const OUTPUT_NAME = 'float';
-class SDFSphereGlParamsConfig extends NodeParamsConfig {
+class SDFTubeGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
-	radius = ParamConfig.FLOAT(1);
+	capped = ParamConfig.BOOLEAN(1);
+	radius = ParamConfig.FLOAT(0.1);
+	height = ParamConfig.FLOAT(1, {
+		visibleIf: {capped: 1},
+	});
 }
-const ParamsConfig = new SDFSphereGlParamsConfig();
-export class SDFSphereGlNode extends BaseSDFGlNode<SDFSphereGlParamsConfig> {
+const ParamsConfig = new SDFTubeGlParamsConfig();
+export class SDFTubeGlNode extends BaseSDFGlNode<SDFTubeGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFSphere';
+		return 'SDFTube';
 	}
 
 	override initializeNode() {
 		super.initializeNode();
+		this.io.connection_points.spare_params.setInputlessParamNames(['capped']);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
@@ -41,8 +47,14 @@ export class SDFSphereGlNode extends BaseSDFGlNode<SDFSphereGlParamsConfig> {
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdSphere(${position} - ${center}, ${radius})`;
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		if (isBooleanTrue(this.pv.capped)) {
+			const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
+			const bodyLine = `float ${float} = sdTubeCapped(${position} - ${center}, ${height}, ${radius})`;
+			shadersCollectionController.addBodyLines(this, [bodyLine]);
+		} else {
+			const bodyLine = `float ${float} = sdTube(${position} - ${center}, ${radius})`;
+			shadersCollectionController.addBodyLines(this, [bodyLine]);
+		}
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
 	}
