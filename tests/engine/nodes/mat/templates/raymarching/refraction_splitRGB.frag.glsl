@@ -287,14 +287,17 @@ vec3 GetNormal(vec3 p) {
 		GetDist(p-e.yyx).d);
 	return normalize(n);
 }
-float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
+float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k, inout SDFContext sdfContext )
 {
 	float res = 1.0;
 	float ph = 1e20;
 	for( float t=mint; t<maxt; )
 	{
 		float h = GetDist(ro + rd*t).d;
-		if( h<0.001 )
+		#if defined( DEBUG_STEPS_COUNT )
+			sdfContext.stepsCount += 1;
+		#endif
+		if( h<SURF_DIST )
 			return 0.0;
 		float y = h*h/(2.0*ph);
 		float d = sqrt(h*h-y*y);
@@ -304,7 +307,7 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k )
 	}
 	return res;
 }
-vec3 GetLight(vec3 p, vec3 n) {
+vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 	vec3 dif = vec3(0.,0.,0.);
 	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0 || NUM_HEMI_LIGHTS > 0 || NUM_POINT_LIGHTS > 0 || NUM_RECT_AREA_LIGHTS > 0
 		GeometricContext geometry;
@@ -314,7 +317,6 @@ vec3 GetLight(vec3 p, vec3 n) {
 		ReflectedLight reflectedLight;
 		vec3 lightPos, lightDir, l;
 		vec3 lighDif;
-		SDFContext sdfContext;
 		#if NUM_SPOT_LIGHTS > 0
 			SpotLightRayMarching spotLightRayMarching;
 			SpotLight spotLight;
@@ -337,7 +339,8 @@ vec3 GetLight(vec3 p, vec3 n) {
 					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, spotLightShadowCoord ) : 1.0;
 				#endif
 				l = normalize(lightPos-p);
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001));
+				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
 				
 				dif += lighDif;
 			}
@@ -361,7 +364,8 @@ vec3 GetLight(vec3 p, vec3 n) {
 					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, dirLightShadowCoord ) : 1.0;
 				#endif
 				l = lightDir;
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001));
+				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
 				dif += lighDif;
 			}
 			#pragma unroll_loop_end
@@ -398,7 +402,8 @@ vec3 GetLight(vec3 p, vec3 n) {
 				
 				lightPos = pointLightRayMarching.worldPos;
 				l = normalize(lightPos-p);
-				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001));
+				float sdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * sdfShadow;
 				dif += lighDif;
 			}
 			#pragma unroll_loop_end
@@ -409,7 +414,7 @@ vec3 GetLight(vec3 p, vec3 n) {
 	dif += irradiance;
 	return dif;
 }
-vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
+vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat, inout SDFContext sdfContext){
 	vec3 col = vec3(1.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
@@ -427,7 +432,7 @@ vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
 		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n);
+		vec3 diffuse = GetLight(p, n, sdfContext);
 		col *= diffuse;
 	
 	;
@@ -435,7 +440,7 @@ vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
 	
 	return col;
 }
-vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
+vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat, inout SDFContext sdfContext){
 	vec3 col = vec3(1.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
@@ -453,7 +458,7 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
 		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n);
+		vec3 diffuse = GetLight(p, n, sdfContext);
 		col *= diffuse;
 	
 	;
@@ -462,7 +467,7 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 	return col;
 }
 #ifdef RAYMARCHED_REFLECTIONS
-vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth){
+vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth, inout SDFContext sdfContextMain){
 	bool hitReflection = true;
 	vec3 reflectedColor = vec3(0.);
 	#pragma unroll_loop_start
@@ -471,6 +476,9 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 			rayDir = reflect(rayDir, n);
 			p += n*SURF_DIST*biasMult;
 			SDFContext sdfContext = RayMarch(p, rayDir, 1.);
+			#if defined( DEBUG_STEPS_COUNT )
+				sdfContextMain.stepsCount += sdfContext.stepsCount;
+			#endif
 			if( sdfContext.d >= MAX_DIST){
 				hitReflection = false;
 				reflectedColor = envMapSample(rayDir, envMap);
@@ -478,7 +486,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 			if(hitReflection){
 				p += rayDir * sdfContext.d;
 				n = GetNormal(p);
-				vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId);
+				vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId, sdfContextMain);
 				reflectedColor += matCol;
 			}
 		}
@@ -488,7 +496,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 }
 #endif
 #ifdef RAYMARCHED_REFRACTIONS
-vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, float refractionMaxDist, int refractionDepth){
+vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, float refractionMaxDist, int refractionDepth, inout SDFContext sdfContextMain){
 	bool hitRefraction = true;
 	bool changeSide = true;
 	#ifdef RAYMARCHED_REFRACTIONS_START_OUTSIDE_MEDIUM
@@ -514,6 +522,9 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 				rayDir = reflect(rayDirPreRefract, n);
 			}
 			SDFContext sdfContext = RayMarch(p, rayDir, side);
+			#if defined( DEBUG_STEPS_COUNT )
+				sdfContextMain.stepsCount += sdfContext.stepsCount;
+			#endif
 			totalRefractedDistance += sdfContext.d;
 			if( abs(sdfContext.d) >= MAX_DIST || totalRefractedDistance > refractionMaxDist ){
 				hitRefraction = false;
@@ -522,7 +533,7 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 			if(hitRefraction){
 				p += rayDir * sdfContext.d;
 				n = GetNormal(p) * side;
-				vec3 matCol = applyMaterialWithoutRefraction(p, n, rayDir, sdfContext.matId);
+				vec3 matCol = applyMaterialWithoutRefraction(p, n, rayDir, sdfContext.matId, sdfContextMain);
 				refractedColor = matCol;
 				distanceInsideMedium += (side-1.)*-0.5*abs(sdfContext.d);
 				if( changeSide ){
@@ -552,7 +563,7 @@ vec3 applyRefractionAbsorption(vec3 refractedDataColor, vec3 tint, float distanc
 	);
 }
 #endif
-vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
+vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat, inout SDFContext sdfContext){
 	vec3 col = vec3(0.);
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
@@ -570,7 +581,7 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
 		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n);
+		vec3 diffuse = GetLight(p, n, sdfContext);
 		col *= diffuse;
 	
 		vec3 refractedColor = vec3(0.);
@@ -581,9 +592,9 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 			
 	
 		vec3 offset = v_POLY_iorOffset_val;
-		vec4 refractedDataR = GetRefractedData(p, n, rayDir, ior+offset.x, biasMult, v_POLY_texture_envTexture1, 100.0, 3);
-		vec4 refractedDataG = GetRefractedData(p, n, rayDir, ior+offset.y, biasMult, v_POLY_texture_envTexture1, 100.0, 3);
-		vec4 refractedDataB = GetRefractedData(p, n, rayDir, ior+offset.z, biasMult, v_POLY_texture_envTexture1, 100.0, 3);
+		vec4 refractedDataR = GetRefractedData(p, n, rayDir, ior+offset.x, biasMult, v_POLY_texture_envTexture1, 100.0, 3, sdfContext);
+		vec4 refractedDataG = GetRefractedData(p, n, rayDir, ior+offset.y, biasMult, v_POLY_texture_envTexture1, 100.0, 3, sdfContext);
+		vec4 refractedDataB = GetRefractedData(p, n, rayDir, ior+offset.z, biasMult, v_POLY_texture_envTexture1, 100.0, 3, sdfContext);
 		refractedColor.r = applyRefractionAbsorption(refractedDataR.r, tint.r, refractedDataR.w, absorption);
 		refractedColor.g = applyRefractionAbsorption(refractedDataG.g, tint.g, refractedDataG.w, absorption);
 		refractedColor.b = applyRefractionAbsorption(refractedDataB.b, tint.b, refractedDataB.w, absorption);
@@ -595,13 +606,13 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
 	
 	return col;
 }
-vec4 applyShading(vec3 rayOrigin, vec3 rayDir, SDFContext sdfContext){
+vec4 applyShading(vec3 rayOrigin, vec3 rayDir, inout SDFContext sdfContext){
 	vec3 p = rayOrigin + rayDir * sdfContext.d;
 	vec3 n = GetNormal(p);
 	
-	vec3 col = applyMaterial(p, n, rayDir, sdfContext.matId);
+	vec3 col = applyMaterial(p, n, rayDir, sdfContext.matId, sdfContext);
 	if(sdfContext.matBlend > 0.) {
-		vec3 col2 = applyMaterial(p, n, rayDir, sdfContext.matId2);
+		vec3 col2 = applyMaterial(p, n, rayDir, sdfContext.matId2, sdfContext);
 		col = (1. - sdfContext.matBlend)*col + sdfContext.matBlend*col2;
 	}
 		
@@ -612,13 +623,6 @@ void main()	{
 	vec3 rayDir = normalize(vPw - cameraPosition);
 	vec3 rayOrigin = cameraPosition - CENTER;
 	SDFContext sdfContext = RayMarch(rayOrigin, rayDir, 1.);
-	gl_FragColor = vec4(0.);
-	if( sdfContext.d >= MAX_DIST ){ discard; }
-	#if defined( DEBUG_STEPS_COUNT )
-		float normalizedStepsCount = (float(sdfContext.stepsCount) - debugMinSteps ) / ( debugMaxSteps - debugMinSteps );
-		gl_FragColor = vec4(normalizedStepsCount, 1.-normalizedStepsCount, 0., 1.);
-		return;
-	#endif
 	#if defined( DEBUG_DEPTH )
 		float normalizedDepth = 1.-(sdfContext.d - debugMinDepth ) / ( debugMaxDepth - debugMinDepth );
 		normalizedDepth = saturate(normalizedDepth);		gl_FragColor = vec4(normalizedDepth);
@@ -634,5 +638,15 @@ void main()	{
 		normalizedDepth = saturate(normalizedDepth);		gl_FragColor = packDepthToRGBA( normalizedDepth );
 		return;
 	#endif
-	gl_FragColor = applyShading(rayOrigin, rayDir, sdfContext);
+	if( sdfContext.d < MAX_DIST ){
+		gl_FragColor = applyShading(rayOrigin, rayDir, sdfContext);
+	} else {
+		gl_FragColor = vec4(0.);
+	}
+	#if defined( DEBUG_STEPS_COUNT )
+		float normalizedStepsCount = (float(sdfContext.stepsCount) - debugMinSteps ) / ( debugMaxSteps - debugMinSteps );
+		gl_FragColor = vec4(normalizedStepsCount, 1.-normalizedStepsCount, 0., 1.);
+		return;
+	#endif
+	
 }

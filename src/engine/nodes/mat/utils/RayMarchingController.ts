@@ -56,14 +56,14 @@ export function RayMarchingDebugParamConfig<TBase extends Constructor>(Base: TBa
 			visibleIf: {debug: true},
 		});
 		/** @param min steps count */
-		debugMinSteps = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.debugMinSteps.value, {
+		debugMinSteps = ParamConfig.INTEGER(RAYMARCHING_UNIFORMS.debugMinSteps.value, {
 			range: [0, 128],
 			rangeLocked: [true, false],
 			step: 1,
 			// visibleIf: {debug: true, debugMode: DEBUG_STEPS_COUNT},
 		});
 		/** @param max steps count */
-		debugMaxSteps = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.debugMaxSteps.value, {
+		debugMaxSteps = ParamConfig.INTEGER(RAYMARCHING_UNIFORMS.debugMaxSteps.value, {
 			range: [0, 128],
 			rangeLocked: [true, false],
 			step: 1,

@@ -223,7 +223,7 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 		 */
 		const useLights = isBooleanTrue(this.pv.useLights);
 		if (useLights) {
-			bodyLines.push(`	vec3 diffuse = GetLight(p, n);`);
+			bodyLines.push(`	vec3 diffuse = GetLight(p, n, sdfContext);`);
 			bodyLines.push(`	col *= diffuse;`);
 		}
 
@@ -289,16 +289,16 @@ export class SDFMaterialGlNode extends TypedGlNode<SDFMaterialGlParamsConfig> {
 			if (splitRGB) {
 				bodyLines.push(`
 		vec3 offset = ${iorOffset};
-		vec4 refractedDataR = GetRefractedData(p, n, rayDir, ior+offset.x, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth});
-		vec4 refractedDataG = GetRefractedData(p, n, rayDir, ior+offset.y, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth});
-		vec4 refractedDataB = GetRefractedData(p, n, rayDir, ior+offset.z, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth});
+		vec4 refractedDataR = GetRefractedData(p, n, rayDir, ior+offset.x, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth}, sdfContext);
+		vec4 refractedDataG = GetRefractedData(p, n, rayDir, ior+offset.y, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth}, sdfContext);
+		vec4 refractedDataB = GetRefractedData(p, n, rayDir, ior+offset.z, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth}, sdfContext);
 		refractedColor.r = applyRefractionAbsorption(refractedDataR.r, tint.r, refractedDataR.w, absorption);
 		refractedColor.g = applyRefractionAbsorption(refractedDataG.g, tint.g, refractedDataG.w, absorption);
 		refractedColor.b = applyRefractionAbsorption(refractedDataB.b, tint.b, refractedDataB.w, absorption);
 				`);
 			} else {
 				bodyLines.push(`
-		vec4 refractedData = GetRefractedData(p, n, rayDir, ior, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth});
+		vec4 refractedData = GetRefractedData(p, n, rayDir, ior, biasMult, ${envMap}, ${refractionMaxDist}, ${refractionDepth}, sdfContext);
 		refractedColor = applyRefractionAbsorption(refractedData.rgb, tint, refractedData.w, absorption);
 				`);
 			}

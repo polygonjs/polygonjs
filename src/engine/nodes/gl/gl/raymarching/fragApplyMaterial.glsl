@@ -3,7 +3,7 @@
 
 
 // --- applyMaterial SPLIT ---
-vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
+vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat, inout SDFContext sdfContext){
 
 	vec3 col = vec3(1.);
 	// --- REFLECTION NOT ALLOWED - START
@@ -15,7 +15,7 @@ vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat){
 	return col;
 }
 
-vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
+vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat, inout SDFContext sdfContext){
 
 	vec3 col = vec3(1.);
 	// --- REFLECTION NOT ALLOWED - START
@@ -27,7 +27,7 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat){
 	return col;
 }
 #ifdef RAYMARCHED_REFLECTIONS
-vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth){
+vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth, inout SDFContext sdfContextMain){
 	bool hitReflection = true;
 	vec3 reflectedColor = vec3(0.);
 	#pragma unroll_loop_start
@@ -36,6 +36,9 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 			rayDir = reflect(rayDir, n);
 			p += n*SURF_DIST*biasMult;
 			SDFContext sdfContext = RayMarch(p, rayDir, 1.);
+			#if defined( DEBUG_STEPS_COUNT )
+				sdfContextMain.stepsCount += sdfContext.stepsCount;
+			#endif
 			if( sdfContext.d >= MAX_DIST){
 				hitReflection = false;
 				reflectedColor = envMapSample(rayDir, envMap);
@@ -43,7 +46,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 			if(hitReflection){
 				p += rayDir * sdfContext.d;
 				n = GetNormal(p);
-				vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId);
+				vec3 matCol = applyMaterialWithoutReflection(p, n, rayDir, sdfContext.matId, sdfContextMain);
 				reflectedColor += matCol;
 			}
 		}
@@ -55,7 +58,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 
 #ifdef RAYMARCHED_REFRACTIONS
 // xyz for color, w for distanceInsideMedium
-vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, float refractionMaxDist, int refractionDepth){
+vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, float refractionMaxDist, int refractionDepth, inout SDFContext sdfContextMain){
 	bool hitRefraction = true;
 	bool changeSide = true;
 	#ifdef RAYMARCHED_REFRACTIONS_START_OUTSIDE_MEDIUM
@@ -82,6 +85,9 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 				rayDir = reflect(rayDirPreRefract, n);
 			}
 			SDFContext sdfContext = RayMarch(p, rayDir, side);
+			#if defined( DEBUG_STEPS_COUNT )
+				sdfContextMain.stepsCount += sdfContext.stepsCount;
+			#endif
 			totalRefractedDistance += sdfContext.d;
 			if( abs(sdfContext.d) >= MAX_DIST || totalRefractedDistance > refractionMaxDist ){
 				hitRefraction = false;
@@ -90,7 +96,7 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 			if(hitRefraction){
 				p += rayDir * sdfContext.d;
 				n = GetNormal(p) * side;
-				vec3 matCol = applyMaterialWithoutRefraction(p, n, rayDir, sdfContext.matId);
+				vec3 matCol = applyMaterialWithoutRefraction(p, n, rayDir, sdfContext.matId, sdfContextMain);
 				refractedColor = matCol;
 
 				// same as: side < 0. ? abs(sdfContext.d) : 0.;
@@ -124,7 +130,7 @@ vec3 applyRefractionAbsorption(vec3 refractedDataColor, vec3 tint, float distanc
 
 #endif
 
-vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat){
+vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat, inout SDFContext sdfContext){
 
 	vec3 col = vec3(0.);
 	// start applyMaterial builder body code
