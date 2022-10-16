@@ -5,10 +5,16 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
-import {SetGeometrySopOperation} from '../../operations/sop/SetGeometry';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class SetGeometrySopParamsConfig extends NodeParamsConfig {}
+import {SetGeometrySopOperation, SET_GEOMETRY_MODES, SetGeometryMode} from '../../operations/sop/SetGeometry';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+const DEFAULT = SetGeometrySopOperation.DEFAULT_PARAMS;
+class SetGeometrySopParamsConfig extends NodeParamsConfig {
+	mode = ParamConfig.INTEGER(DEFAULT.mode, {
+		menu: {
+			entries: SET_GEOMETRY_MODES.map((name, value) => ({name, value})),
+		},
+	});
+}
 const ParamsConfig = new SetGeometrySopParamsConfig();
 
 export class SetGeometrySopNode extends TypedSopNode<SetGeometrySopParamsConfig> {
@@ -25,11 +31,14 @@ export class SetGeometrySopNode extends TypedSopNode<SetGeometrySopParamsConfig>
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState(SetGeometrySopOperation.INPUT_CLONED_STATE);
 	}
+	setMode(mode: SetGeometryMode) {
+		this.p.mode.set(SET_GEOMETRY_MODES.indexOf(mode));
+	}
 
 	private _operation: SetGeometrySopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new SetGeometrySopOperation(this.scene(), this.states);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }
