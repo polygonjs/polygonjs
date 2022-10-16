@@ -1,36 +1,71 @@
-import {TransformTargetType} from './../../../../src/core/Transform';
-import {AttribClass} from './../../../../src/core/geometry/Constant';
 import {Mesh} from 'three';
-// import {AttribClass} from '../../../../src/core/geometry/Constant';
+import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {TransformTargetType} from '../../../../src/core/Transform';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/negate with float inputs', async (assert) => {
+QUnit.test('actor/abs for float', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
+	// geo2
 	const geo1 = scene.createNode('geo');
 	const box1 = geo1.createNode('box');
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const attribCreate2 = geo1.createNode('attribCreate');
+	const attribCreate3 = geo1.createNode('attribCreate');
+	const attribCreate4 = geo1.createNode('attribCreate');
+
+	attribCreate1.setInput(0, box1);
+	attribCreate2.setInput(0, attribCreate1);
+	attribCreate3.setInput(0, attribCreate2);
+	attribCreate4.setInput(0, attribCreate3);
+
+	const attribCreates = [attribCreate1, attribCreate2, attribCreate3, attribCreate4];
+	function attribName(index: number) {
+		return `attr${index}`;
+	}
+	let i = 0;
+	for (let attribCreate of attribCreates) {
+		attribCreate.setAttribClass(AttribClass.OBJECT);
+		attribCreate.p.name.set(attribName(i));
+		attribCreate.p.value1.set(-2 * (i + 1));
+		i++;
+	}
+
+	// geo1
 	const actor1 = geo1.createNode('actor');
 
-	actor1.setInput(0, box1);
+	actor1.setInput(0, attribCreate4);
 	actor1.flags.display.set(true);
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
-	const negate = actor1.createNode('negate');
-	const constant1 = actor1.createNode('constant');
+	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
+	// const getObjectAttribute2 = actor1.createNode('getObjectAttribute');
+	// const getObjectAttribute3 = actor1.createNode('getObjectAttribute');
+	// const getObjectAttribute4 = actor1.createNode('getObjectAttribute');
+	const abs1 = actor1.createNode('abs');
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 
-	constant1.setConstantType(ActorConnectionPointType.FLOAT);
-	constant1.p.float.set(3);
+	const getObjectAttributes = [getObjectAttribute1];
+	let j = 0;
+	for (let getObjectAttribute of getObjectAttributes) {
+		getObjectAttribute.p.attribName.set(attribName(j));
+		j++;
+	}
 
 	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 	setObjectPosition1.setInput('position', floatToVec3_1);
-	floatToVec3_1.setInput('y', negate);
+	floatToVec3_1.setInput('y', abs1);
 
-	negate.setInput(0, constant1);
+	abs1.setInput(0, getObjectAttribute1);
+	// subtract.setInput(1, getObjectAttribute2);
+	// subtract.setInput(2, getObjectAttribute3);
+	// subtract.setInput(3, getObjectAttribute4);
+
+	// assert.notOk(subtract.params.get('sub4')!.states.error.active());
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0] as Mesh;
@@ -48,11 +83,11 @@ QUnit.test('actor/negate with float inputs', async (assert) => {
 
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
-		assert.equal(object.position.y, -3, 'object moved');
+		assert.equal(object.position.y, 2, 'object moved');
 	});
 });
 
-QUnit.test('actor/negate with vector inputs', async (assert) => {
+QUnit.test('actor/abs with vector', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -64,23 +99,21 @@ QUnit.test('actor/negate with vector inputs', async (assert) => {
 	actor1.flags.display.set(true);
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
-	const setObjectPosition1 = actor1.createNode('setObjectPosition');
-	const negate = actor1.createNode('negate');
+	const abs1 = actor1.createNode('abs');
 	const constant1 = actor1.createNode('constant');
+	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
 	constant1.setConstantType(ActorConnectionPointType.VECTOR3);
-	constant1.p.vector3.set([7, 17, 27]);
-
+	constant1.p.vector3.set([-1, -2, -3]);
+	abs1.setInput(0, constant1);
+	setObjectPosition1.setInput('position', abs1);
 	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
-	setObjectPosition1.setInput('position', negate);
+	await CoreSleep.sleep(50);
 
-	negate.setInput(0, constant1);
+	await CoreSleep.sleep(50);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0] as Mesh;
-
-	// wait to make sure objects are mounted to the scene
-	await CoreSleep.sleep(150);
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
@@ -92,13 +125,15 @@ QUnit.test('actor/negate with vector inputs', async (assert) => {
 
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
-		assert.equal(object.position.x, -7, 'object moved ');
-		assert.equal(object.position.y, -17, 'object moved ');
-		assert.equal(object.position.z, -27, 'object moved ');
+		assert.deepEqual(object.position.toArray(), [1, 2, 3], 'object moved');
+
+		onManualTrigger1.p.trigger.pressButton();
+		await CoreSleep.sleep(100);
+		assert.deepEqual(object.position.toArray(), [1, 2, 3], 'object moved again');
 	});
 });
 
-QUnit.test('actor/negate with vector from attrib to pos', async (assert) => {
+QUnit.test('actor/abs with vector from attrib to pos', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -118,13 +153,13 @@ QUnit.test('actor/negate with vector from attrib to pos', async (assert) => {
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
-	const negate1 = actor1.createNode('negate');
+	const abs1 = actor1.createNode('abs');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
 	getObjectAttribute1.setAttribType(ActorConnectionPointType.VECTOR3);
 	getObjectAttribute1.p.attribName.set('restP');
-	negate1.setInput(0, getObjectAttribute1);
-	setObjectPosition1.setInput('position', negate1);
+	abs1.setInput(0, getObjectAttribute1);
+	setObjectPosition1.setInput('position', abs1);
 	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 	await CoreSleep.sleep(50);
 
@@ -158,7 +193,7 @@ QUnit.test('actor/negate with vector from attrib to pos', async (assert) => {
 	});
 });
 
-QUnit.test('actor/negate with vector from attrib to pos 2', async (assert) => {
+QUnit.test('actor/abs with vector from attrib to pos 2', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -182,14 +217,14 @@ QUnit.test('actor/negate with vector from attrib to pos 2', async (assert) => {
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
-	const negate1 = actor1.createNode('negate');
+	const abs1 = actor1.createNode('abs');
 	const getObjectProperty1 = actor1.createNode('getObjectProperty');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
 	getObjectAttribute1.setAttribType(ActorConnectionPointType.VECTOR3);
 	getObjectAttribute1.p.attribName.set('restP');
-	negate1.setInput(0, getObjectProperty1, 'position');
-	setObjectPosition1.setInput('position', negate1);
+	abs1.setInput(0, getObjectProperty1, 'position');
+	setObjectPosition1.setInput('position', abs1);
 	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 	await CoreSleep.sleep(50);
 
@@ -219,16 +254,6 @@ QUnit.test('actor/negate with vector from attrib to pos 2', async (assert) => {
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
 		assertResPUnchanged();
-		assert.deepEqual(object.position.toArray(), [-5, -6, -7], 'object moved again');
-
-		onManualTrigger1.p.trigger.pressButton();
-		await CoreSleep.sleep(100);
-		assertResPUnchanged();
 		assert.deepEqual(object.position.toArray(), [5, 6, 7], 'object moved again');
-
-		onManualTrigger1.p.trigger.pressButton();
-		await CoreSleep.sleep(100);
-		assertResPUnchanged();
-		assert.deepEqual(object.position.toArray(), [-5, -6, -7], 'object moved again');
 	});
 });

@@ -5,9 +5,10 @@ import {
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext} from './_Base';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
+import {Vector2, Vector3, Vector4} from 'three';
+const tmpV2 = new Vector2();
+const tmpV3 = new Vector3();
+const tmpV4 = new Vector4();
 
 interface MathArg1OperationOptions {
 	inputPrefix: string;
@@ -67,10 +68,26 @@ export function MathFunctionArg1OperationFactory(
 				const inputValue = this._inputValue<ActorConnectionPointType.FLOAT>(0, context) || 0;
 				return this._applyOperation(inputValue);
 			} else {
-				let inputValue =
-					this._inputValue<ActorConnectionPointType.VECTOR4>(0, context) ||
-					this._defaultVector4.set(0, 0, 0, 0);
-				return this._applyOperationForVector(inputValue);
+				let startValue =
+					this._inputValue<
+						| ActorConnectionPointType.VECTOR2
+						| ActorConnectionPointType.VECTOR3
+						| ActorConnectionPointType.VECTOR4
+					>(0, context) || this._defaultVector4.set(0, 0, 0, 0);
+				if (startValue instanceof Vector2) {
+					tmpV2.copy(startValue);
+					startValue = tmpV2;
+				}
+				if (startValue instanceof Vector3) {
+					tmpV3.copy(startValue);
+					startValue = tmpV3;
+				}
+				if (startValue instanceof Vector4) {
+					tmpV4.copy(startValue);
+					startValue = tmpV4;
+				}
+				const r = this._applyOperationForVector(startValue);
+				return r;
 			}
 		}
 
