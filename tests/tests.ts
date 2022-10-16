@@ -165,6 +165,7 @@ import './engine/nodes/actor/SetSpotLightIntensity';
 import './engine/nodes/actor/SetViewer';
 import './engine/nodes/actor/Smoothstep';
 import './engine/nodes/actor/Sphere';
+import './engine/nodes/actor/Subtract';
 import './engine/nodes/actor/Switch';
 import './engine/nodes/actor/TriggerFilter';
 import './engine/nodes/actor/TwoWaySwitch';
