@@ -1,62 +1,49 @@
-import {Vector2} from 'three';
-import {BufferGeometry} from 'three';
-import {BufferAttribute} from 'three';
+import {Vector2, BufferGeometry, BufferAttribute} from 'three';
 
+const stepSize = new Vector2();
+const stepsCount = new Vector2();
 export class CoreGeometryOperationHexagon {
-	constructor(
-		private _param_size: Vector2,
-		private _param_hexagon_radius: number,
-		private _param_points_only: boolean
-	) {}
+	constructor(private _size: Vector2, private _hexagonRadius: number, private _pointsOnly: boolean) {}
 
 	process(): BufferGeometry {
-		const side_length = this._param_hexagon_radius;
-		const half_side_length = side_length * 0.5;
-		const step_size = {
-			x: side_length,
-			y: Math.cos(Math.PI / 6) * this._param_hexagon_radius,
-		};
-		const steps_count = {
-			x: Math.floor(this._param_size.x / step_size.x),
-			y: Math.floor(this._param_size.y / step_size.y),
-		};
-		let positions: number[][] = [];
-		let indices: number[][] = [];
-		for (let y = 0; y < steps_count.y; y++) {
-			for (let x = 0; x < steps_count.x; x++) {
-				positions.push([
-					-(this._param_size.x * 0.5) + x * step_size.x + (y % 2 == 0 ? half_side_length : 0),
-					0,
-					-(this._param_size.y * 0.5) + y * step_size.y,
-				]);
+		const sideLength = this._hexagonRadius;
+		const halfSideLength = sideLength * 0.5;
+		stepSize.set(sideLength, Math.cos(Math.PI / 6) * this._hexagonRadius);
+		stepsCount.set(Math.floor(this._size.x / stepSize.x), Math.floor(this._size.y / stepSize.y));
+		let positions: number[] = [];
+		let indices: number[] = [];
+		const addIndices = !this._pointsOnly;
+		for (let y = 0; y < stepsCount.y; y++) {
+			for (let x = 0; x < stepsCount.x; x++) {
+				positions.push(
+					-(this._size.x * 0.5) + x * stepSize.x + (y % 2 == 0 ? halfSideLength : 0),
+					-(this._size.y * 0.5) + y * stepSize.y,
+					0
+				);
 
-				if (!this._param_points_only) {
+				if (addIndices) {
 					if (y >= 1) {
-						if (x == 0 || x == steps_count.x - 1) {
+						if (x == 0 || x == stepsCount.x - 1) {
 							if (x == 0) {
-								indices.push([
-									x + 1 + (y - 1) * steps_count.x,
-									x + (y - 1) * steps_count.x,
-									x + y * steps_count.x,
-								]);
+								indices.push(
+									x + 1 + (y - 1) * stepsCount.x,
+									x + y * stepsCount.x,
+									x + (y - 1) * stepsCount.x
+								);
 							} else {
-								indices.push([
-									x + y * steps_count.x,
-									x + (y - 1) * steps_count.x,
-									x - 1 + y * steps_count.x,
-								]);
+								indices.push(
+									x + y * stepsCount.x,
+									x - 1 + y * stepsCount.x,
+									x + (y - 1) * stepsCount.x
+								);
 							}
 						} else {
-							indices.push([
-								x + y * steps_count.x,
-								x + (y - 1) * steps_count.x,
-								x - 1 + y * steps_count.x,
-							]);
-							indices.push([
-								x + y * steps_count.x,
-								x + 1 + (y - 1) * steps_count.x,
-								x + (y - 1) * steps_count.x,
-							]);
+							indices.push(x + y * stepsCount.x, x - 1 + y * stepsCount.x, x + (y - 1) * stepsCount.x);
+							indices.push(
+								x + y * stepsCount.x,
+								x + (y - 1) * stepsCount.x,
+								x + 1 + (y - 1) * stepsCount.x
+							);
 						}
 					}
 				}
@@ -64,10 +51,10 @@ export class CoreGeometryOperationHexagon {
 		}
 
 		const geometry = new BufferGeometry();
-		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions.flat()), 3));
+		geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
 
-		if (!this._param_points_only) {
-			geometry.setIndex(indices.flat());
+		if (addIndices) {
+			geometry.setIndex(indices);
 			geometry.computeVertexNormals();
 		}
 

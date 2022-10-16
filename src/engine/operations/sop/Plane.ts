@@ -1,5 +1,5 @@
 import {BaseSopOperation} from './_Base';
-import {BufferGeometry, Vector2, Vector3, PlaneGeometry} from 'three';
+import {BufferGeometry, Vector2, Vector3, PlaneGeometry, Quaternion, BoxGeometry} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -17,9 +17,9 @@ interface PlaneSopParams extends DefaultOperationParams {
 	asLines: boolean;
 }
 const DEFAULT_UP = new Vector3(0, 0, 1);
-const ROTATE_START = new Vector3(0, 0, 1);
-const ROTATE_END = new Vector3(0, 1, 0);
-
+const q = new Quaternion();
+const size = new Vector3();
+const center = new Vector3();
 export class PlaneSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PlaneSopParams = {
 		size: new Vector2(1, 1),
@@ -59,21 +59,41 @@ export class PlaneSopOperation extends BaseSopOperation {
 		const object = this._createPlaneObject(geometry, params);
 		return this.createCoreGroupFromObjects([object]);
 	}
-	private _size = new Vector3();
-	private _center = new Vector3();
-	private _cookWithInput(core_group: CoreGroup, params: PlaneSopParams) {
-		const bbox = core_group.boundingBox();
-		bbox.getSize(this._size);
-		bbox.getCenter(this._center);
 
-		// TODO: rotate the input geo to get the accurate bbox
-		const size2d = new Vector2(this._size.x, this._size.z);
+	private _cookWithInput(coreGroup: CoreGroup, params: PlaneSopParams) {
+		const bboxPreRotation = coreGroup.boundingBox();
+		bboxPreRotation.getCenter(center);
+
+		// create box
+		const bbox = coreGroup.boundingBox();
+		size.copy(bbox.max).sub(bbox.min);
+		center.copy(bbox.max).add(bbox.min).multiplyScalar(0.5);
+		const boxGeometry = new BoxGeometry(size.x, size.y, size.z, 1, 1, 1);
+
+		// rotate box
+		function _applyInputQuaternion(_q: Quaternion) {
+			boxGeometry.applyQuaternion(_q);
+			boxGeometry.computeBoundingBox();
+		}
+		function _setInputRotation() {
+			q.setFromUnitVectors(DEFAULT_UP, params.direction);
+			_applyInputQuaternion(q);
+		}
+		// function _resetInputRotation() {
+		// 	q.invert();
+		// 	_applyInputQuaternion(q);
+		// }
+		_setInputRotation();
+		const bboxPostRotation = boxGeometry.boundingBox!; //coreGroup.boundingBox(true);
+		bboxPostRotation.getSize(size);
+		// bboxPreRotation.getCenter(center); // debug
+		// _resetInputRotation();
+
+		const size2d = new Vector2(size.x, size.y);
 		const geometry = this._createPlane(size2d, params);
 
-		this._coreTransform.rotateGeometry(geometry, ROTATE_START, ROTATE_END);
-
-		const matrix = this._coreTransform.translationMatrix(this._center);
-		geometry.applyMatrix4(matrix);
+		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		geometry.translate(center.x, center.y, center.z);
 
 		const object = this._createPlaneObject(geometry, params);
 		return this.createCoreGroupFromObjects([object]);
@@ -91,6 +111,8 @@ export class PlaneSopOperation extends BaseSopOperation {
 			this._segmentsCount.y = Math.floor(params.segments.y);
 		} else {
 			if (params.stepSize > 0) {
+				size.x = Math.max(size.x, params.stepSize);
+				size.y = Math.max(size.y, params.stepSize);
 				this._segmentsCount.x = Math.floor(size.x / params.stepSize);
 				this._segmentsCount.y = Math.floor(size.y / params.stepSize);
 				size.x = this._segmentsCount.x * params.stepSize;

@@ -4,29 +4,23 @@
  * @remarks
  * This is very similar to the plane SOP, but with hexagonal patterns, which can be more visually pleasing.
  */
-import {Vector3} from 'three';
+import {CoreGroup} from './../../../core/geometry/Group';
 import {TypedSopNode} from './_Base';
-import {CoreTransform} from '../../../core/Transform';
-import {ObjectType} from '../../../core/geometry/Constant';
-
-import {CoreGeometryOperationHexagon} from '../../../core/geometry/operation/Hexagon';
-
-const DEFAULT_UP = new Vector3(0, 1, 0);
-
+import {HexagonsSopOperation} from '../../operations/sop/Hexagons';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/BooleanValue';
+const DEFAULT = HexagonsSopOperation.DEFAULT_PARAMS;
 class HexagonsSopParamsConfig extends NodeParamsConfig {
 	/** @param plane size */
-	size = ParamConfig.VECTOR2([1, 1]);
+	size = ParamConfig.VECTOR2(DEFAULT.size);
 	/** @param hexagons size */
-	hexagonRadius = ParamConfig.FLOAT(0.1, {
+	hexagonRadius = ParamConfig.FLOAT(DEFAULT.hexagonRadius, {
 		range: [0.001, 1],
 		rangeLocked: [false, false],
 	});
 	/** @param axis perpendicular to the plane */
-	direction = ParamConfig.VECTOR3([0, 1, 0]);
+	direction = ParamConfig.VECTOR3(DEFAULT.direction);
 	/** @param do not create polygons, only points */
-	pointsOnly = ParamConfig.BOOLEAN(0);
+	pointsOnly = ParamConfig.BOOLEAN(DEFAULT.pointsOnly);
 	// no need to have centers, as all points are centers anyway
 	//this.add_param( ParamType.TOGGLE, 'centers_only', 0, {visibleIf: {pointsOnly: 1}})
 }
@@ -37,23 +31,15 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 	static override type() {
 		return 'hexagons';
 	}
+	override initializeNode() {
+		this.io.inputs.setCount(0, 1);
+		this.io.inputs.initInputsClonedState(HexagonsSopOperation.INPUT_CLONED_STATE);
+	}
 
-	private _coreTransform = new CoreTransform();
-
-	override cook() {
-		if (this.pv.hexagonRadius > 0) {
-			const operation = new CoreGeometryOperationHexagon(this.pv.size, this.pv.hexagonRadius, this.pv.pointsOnly);
-			const geometry = operation.process();
-
-			this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
-
-			if (isBooleanTrue(this.pv.pointsOnly)) {
-				this.setGeometry(geometry, ObjectType.POINTS);
-			} else {
-				this.setGeometry(geometry);
-			}
-		} else {
-			this.setObjects([]);
-		}
+	private _operation: HexagonsSopOperation | undefined;
+	override cook(input_contents: CoreGroup[]) {
+		this._operation = this._operation || new HexagonsSopOperation(this.scene(), this.states);
+		const core_group = this._operation.cook(input_contents, this.pv);
+		this.setCoreGroup(core_group);
 	}
 }

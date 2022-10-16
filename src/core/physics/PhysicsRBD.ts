@@ -1,7 +1,7 @@
 import {TypeAssert} from './../../engine/poly/Assert';
 import {CorePhysicsUserData} from './PhysicsUserData';
 import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute} from './PhysicsAttribute';
-import {BufferAttribute, Mesh, Object3D, Vector3} from 'three';
+import {BufferAttribute, Mesh, Object3D, Vector3, Quaternion} from 'three';
 import type {World, RigidBodyType} from '@dimforge/rapier3d';
 import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
 export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: Object3D) {
@@ -103,7 +103,10 @@ export async function physicsUpdateRBD(object: Object3D) {
 }
 const currentPos = new Vector3();
 const newPos = new Vector3();
+const currentQuaternion = new Quaternion();
+const newQuaternion = new Quaternion();
 
+// impulse
 export function physicsRBDApplyImpulse(object: Object3D, impulse: Vector3) {
 	const body = CorePhysicsUserData.rigidBody(object);
 	if (!body) {
@@ -111,6 +114,64 @@ export function physicsRBDApplyImpulse(object: Object3D, impulse: Vector3) {
 		return;
 	}
 	body.applyImpulse(impulse, true);
+}
+export function physicsRBDApplyImpulseAtPoint(object: Object3D, impulse: Vector3, point: Vector3) {
+	const body = CorePhysicsUserData.rigidBody(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	body.applyImpulseAtPoint(impulse, point, true);
+}
+export function physicsRBDApplyTorqueImpulse(object: Object3D, impulse: Vector3) {
+	const body = CorePhysicsUserData.rigidBody(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	body.applyTorqueImpulse(impulse, true);
+}
+// add
+export function physicsRBDAddForce(object: Object3D, force: Vector3) {
+	const body = CorePhysicsUserData.rigidBody(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	body.addForce(force, true);
+}
+export function physicsRBDAddForceAtPoint(object: Object3D, force: Vector3, point: Vector3) {
+	const body = CorePhysicsUserData.rigidBody(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	body.addForceAtPoint(force, point, true);
+}
+export function physicsRBDAddTorque(object: Object3D, torque: Vector3) {
+	const body = CorePhysicsUserData.rigidBody(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	body.addTorque(torque, true);
+}
+// reset
+export function physicsRBDResetForces(object: Object3D, wakeup: boolean) {
+	const body = CorePhysicsUserData.rigidBody(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	body.resetForces(wakeup);
+}
+export function physicsRBDResetTorques(object: Object3D, wakeup: boolean) {
+	const body = CorePhysicsUserData.rigidBody(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	body.resetTorques(wakeup);
 }
 
 export function setPhysicsRBDKinematicPosition(object: Object3D, targetPosition: Vector3, lerp: number) {
@@ -131,6 +192,26 @@ export function setPhysicsRBDKinematicPosition(object: Object3D, targetPosition:
 		body.setNextKinematicTranslation(currentPos);
 	} else {
 		body.setNextKinematicTranslation(targetPosition);
+	}
+}
+export function setPhysicsRBDKinematicRotation(object: Object3D, targetQuaternion: Quaternion, lerp: number) {
+	const body = CorePhysicsUserData.rigidBody(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	if (!body.isKinematic()) {
+		console.warn('rbd is not kinematic');
+		return;
+	}
+	if (lerp < 1) {
+		const rbdRotation = body.rotation();
+		currentQuaternion.set(rbdRotation.x, rbdRotation.y, rbdRotation.z, rbdRotation.w);
+		newQuaternion.copy(currentQuaternion);
+		currentQuaternion.slerp(newQuaternion, lerp);
+		body.setNextKinematicRotation(currentQuaternion);
+	} else {
+		body.setNextKinematicRotation(targetQuaternion);
 	}
 }
 
