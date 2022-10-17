@@ -35,12 +35,12 @@ vec3 __FUNCTION__NAME__(
 
 			if( dist > startDist && dist < midDist ){
 				float attractRatio0 = (dist - startDist) / range0;
-				attractForce += amount * attractRatio0 * normalize(dir);
+				attractForce += amount * attractRatio0 * dir;
 				attractorsCount++;
 			} else {
 				if( dist > midDist && dist < endDist ){
 					float attractRatio1 = (dist - midDist) / range1;
-					attractForce += amount * (1.0-attractRatio1) * normalize(dir);
+					attractForce += amount * (1.0-attractRatio1) * dir;
 					attractorsCount++;
 				}
 			}

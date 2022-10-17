@@ -36,7 +36,7 @@ vec3 __FUNCTION__NAME__(
 			if(dist < maxDist){
 				float ratio = (dist - minDist) / range;
 				ratio = max(ratio, 0.0);
-				repulseForce += -amount * (1.0 - ratio) * normalize(dir);
+				repulseForce += -amount * (1.0 - ratio) * dir;
 				repulsorsCount++;
 			}
 		}

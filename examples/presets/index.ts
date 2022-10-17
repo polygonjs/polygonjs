@@ -17,7 +17,7 @@ import {lutCopPresetRegister} from './cop/Lut';
 import {videoCopPresetRegister} from './cop/Video';
 // // gl
 import {attributeGlPresetRegister} from './gl/Attribute';
-import {flockingGlPresetRegister} from './gl/Flocking';
+import {neighbourAttractRepulseGlPresetRegister} from './gl/NeighbourAttractRepulse';
 import {neighbourAttractGlPresetRegister, neighbourRepulseGlPresetRegister} from './gl/Neighbour';
 
 // // mat
@@ -73,7 +73,7 @@ class PresetLibraryClass {
 		this._registerPreset(videoCopPresetRegister);
 		// gl
 		this._registerPreset(attributeGlPresetRegister);
-		this._registerPreset(flockingGlPresetRegister);
+		this._registerPreset(neighbourAttractRepulseGlPresetRegister);
 		this._registerPreset(neighbourAttractGlPresetRegister);
 		this._registerPreset(neighbourRepulseGlPresetRegister);
 		// mat

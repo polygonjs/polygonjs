@@ -1,11 +1,11 @@
 /**
- * NeighbourDensity is very useful in particles systems to create flocking behaviours
+ * NeighbourDensity is used in particles systems to create flocking behaviours
  *
  *
  *
  */
 
-import Repulse from './gl/neighbour/repulse.glsl';
+import Density from './gl/neighbour/density.glsl';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -90,7 +90,7 @@ export class NeighbourDensityGlNode extends TypedGlNode<NeighbourDensityGlParams
 
 	private _templateFunctionDefinition(component: string, uvName: string) {
 		const functionName = `${this.type()}${this.graphNodeId()}`;
-		const functionDeclaration = Repulse.replace('__FUNCTION__NAME__', functionName).replace(
+		const functionDeclaration = Density.replace('__FUNCTION__NAME__', functionName).replace(
 			'__COMPONENT__',
 			component
 		);

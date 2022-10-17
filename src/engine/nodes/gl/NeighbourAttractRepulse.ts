@@ -1,13 +1,13 @@
 /**
- * ImportorUV is an experimental node that helps creating importors, which are displaying a render of a higher resolution render onto different tiles of a texture
+ * NeighbourAttractRepulse is used in particles systems to create flocking behaviours
  *
  *
  *
  */
 
-import Flocking from './gl/neighbour/flocking.glsl';
+import AttractRepulse from './gl/neighbour/attractRepulse.glsl';
 import {TypedGlNode} from './_Base';
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
@@ -24,7 +24,7 @@ const visibleIfRepulse: ParamOptions = {
 const visibleIfAttract: ParamOptions = {
 	visibleIf: {attract: true},
 };
-class FlockingGlParamsConfig extends NodeParamsConfig {
+class NeighbourAttractRepulseParamsConfig extends NodeParamsConfig {
 	positionAttribName = ParamConfig.STRING('position');
 	position = ParamConfig.VECTOR3([0, 0, 0]);
 	repulse = ParamConfig.BOOLEAN(1, {
@@ -69,11 +69,11 @@ class FlockingGlParamsConfig extends NodeParamsConfig {
 		...visibleIfAttract,
 	});
 }
-const ParamsConfig = new FlockingGlParamsConfig();
-export class FlockingGlNode extends TypedGlNode<FlockingGlParamsConfig> {
+const ParamsConfig = new NeighbourAttractRepulseParamsConfig();
+export class NeighbourAttractRepulseGlNode extends TypedGlNode<NeighbourAttractRepulseParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'flocking';
+		return 'neighbourAttractRepulse';
 	}
 	override initializeNode() {
 		super.initializeNode();
@@ -143,7 +143,7 @@ export class FlockingGlNode extends TypedGlNode<FlockingGlParamsConfig> {
 
 	private _templateFlocking(component: string, uvName: string) {
 		const functionName = `flocking${this.graphNodeId()}`;
-		const functionDeclaration = Flocking.replace('__FUNCTION__NAME__', functionName).replace(
+		const functionDeclaration = AttractRepulse.replace('__FUNCTION__NAME__', functionName).replace(
 			'__COMPONENT__',
 			component
 		);

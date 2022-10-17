@@ -1,5 +1,5 @@
 /**
- * NeighbourAttrac is very useful in particles systems to create flocking behaviours
+ * NeighbourAttract is used in particles systems to create flocking behaviours
  *
  *
  *

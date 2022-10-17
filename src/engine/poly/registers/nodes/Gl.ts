@@ -65,7 +65,6 @@ import {CycleGlNode} from '../../../nodes/gl/Cycle';
 import {DiskGlNode} from '../../../nodes/gl/Disk';
 import {DitherGlNode} from '../../../nodes/gl/Dither';
 import {EasingGlNode} from '../../../nodes/gl/Easing';
-import {FlockingGlNode} from '../../../nodes/gl/Flocking';
 import {FitGlNode, FitTo01GlNode, FitFrom01GlNode, FitFrom01ToVarianceGlNode} from '../../../nodes/gl/Fit';
 import {FogGlNode} from '../../../nodes/gl/Fog';
 import {ForLoopGlNode} from '../../../nodes/gl/ForLoop';
@@ -90,6 +89,7 @@ import {MultAddGlNode} from '../../../nodes/gl/MultAdd';
 import {MultScalarGlNode} from '../../../nodes/gl/MultScalar';
 import {NegateGlNode} from '../../../nodes/gl/Negate';
 import {NeighbourAttractGlNode} from '../../../nodes/gl/NeighbourAttract';
+import {NeighbourAttractRepulseGlNode} from '../../../nodes/gl/NeighbourAttractRepulse';
 import {NeighbourDensityGlNode} from '../../../nodes/gl/NeighbourDensity';
 import {NeighbourRepulseGlNode} from '../../../nodes/gl/NeighbourRepulse';
 import {NoiseGlNode} from '../../../nodes/gl/Noise';
@@ -199,7 +199,6 @@ export interface GlNodeChildrenMap {
 	fitTo01: FitTo01GlNode;
 	fitFrom01: FitFrom01GlNode;
 	fitFrom01ToVariance: FitFrom01ToVarianceGlNode;
-	flocking: FlockingGlNode;
 	floatToInt: FloatToIntGlNode;
 	floatToVec2: FloatToVec2GlNode;
 	floatToVec3: FloatToVec3GlNode;
@@ -238,6 +237,7 @@ export interface GlNodeChildrenMap {
 	multScalar: MultScalarGlNode;
 	negate: NegateGlNode;
 	neighbourAttract: NeighbourAttractGlNode;
+	neighbourAttractRepulse: NeighbourAttractRepulseGlNode;
 	neighbourDensity: NeighbourDensityGlNode;
 	neighbourRepulse: NeighbourRepulseGlNode;
 	noise: NoiseGlNode;
@@ -376,15 +376,15 @@ export class GlRegister {
 		poly.registerNode(ExpGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(Exp2GlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FaceforwardGlNode, CATEGORY_GL.GEOMETRY);
+		const particlesOnlyOption = {
+			only: [`${NodeContext.SOP}/${SopType.PARTICLES_SYSTEM_GPU}`],
+		};
+		poly.registerNode(NeighbourAttractGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+		poly.registerNode(NeighbourAttractRepulseGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
 		if (process.env.NODE_ENV == 'development') {
-			const particlesOnlyOption = {
-				only: [`${NodeContext.SOP}/${SopType.PARTICLES_SYSTEM_GPU}`],
-			};
-			poly.registerNode(FlockingGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
-			poly.registerNode(NeighbourAttractGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
 			poly.registerNode(NeighbourDensityGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
-			poly.registerNode(NeighbourRepulseGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
 		}
+		poly.registerNode(NeighbourRepulseGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
 		poly.registerNode(FitGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FitTo01GlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FitFrom01GlNode, CATEGORY_GL.MATH);

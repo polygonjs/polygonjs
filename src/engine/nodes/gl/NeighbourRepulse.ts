@@ -1,5 +1,5 @@
 /**
- * NeighbourRepulse is very useful in particles systems to create flocking behaviours
+ * NeighbourRepulse is used in particles systems to create flocking behaviours
  *
  *
  *
