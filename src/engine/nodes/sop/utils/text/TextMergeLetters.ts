@@ -14,6 +14,7 @@ interface TextMergeAllLettersOptions extends TextJustifiyParams, TextLineHeightP
 	geometries: Array<BufferGeometry | undefined>;
 	textType: TextType;
 	splitPerLetter: boolean;
+	keepEmptyGeometries: boolean;
 	text: string;
 }
 
@@ -25,7 +26,6 @@ export function textMergeLetters(params: TextMergeAllLettersOptions) {
 		applyTextLineHeight(geometriesForLine, params);
 	}
 	const allGeometries = geometriesByLine.flat();
-
 	const objects = _mergeOrSplit({...params, geometries: allGeometries});
 	if (objects) {
 		return ArrayUtils.compact(objects);
@@ -38,11 +38,14 @@ function _mergeOrSplit(params: TextMergeAllLettersOptions) {
 		const chars = Array.from(params.text);
 		let characterIndex = 0;
 		let lineIndex = 0;
-
 		function _createObject(geo?: BufferGeometry) {
 			let character = chars[characterIndex];
 			if (character === '\n') {
 				lineIndex++;
+				characterIndex++;
+				return;
+			}
+			if (character == ' ' && params.keepEmptyGeometries == false) {
 				characterIndex++;
 				return;
 			}

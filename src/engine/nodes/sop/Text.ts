@@ -110,6 +110,8 @@ class TextSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param create one object per letter */
 	splitPerLetter = ParamConfig.BOOLEAN(0);
+	/** @param when creating one object per letter, define if the characters like space create an object */
+	keepEmptyGeometries = ParamConfig.BOOLEAN(0, {visibleIf: {splitPerLetter: 1}});
 	/** @param justify mode */
 	justifyMode = ParamConfig.INTEGER(TEXT_SOP_JUSTIFY_MODES.indexOf(TextSopJustifiyMode.LEFT), {
 		menu: {
@@ -201,6 +203,7 @@ export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 				geometries: geometries,
 				textType,
 				splitPerLetter: this.pv.splitPerLetter,
+				keepEmptyGeometries: this.pv.keepEmptyGeometries,
 				justifyMode: TEXT_SOP_JUSTIFY_MODES[this.pv.justifyMode],
 				lineHeight: this.pv.lineHeight,
 			});

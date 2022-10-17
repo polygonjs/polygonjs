@@ -169,6 +169,7 @@ QUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
 	assert.less_than_or_equal(container.size().y, 1.6);
 
 	text1.p.text.set('line1\nli ne2');
+	text1.p.keepEmptyGeometries.set(true);
 
 	container = await text1.compute();
 	assert.equal(container.coreContent()?.objects().length, 11);
@@ -195,6 +196,17 @@ QUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
 	);
 	assert.more_than_or_equal(container.size().y, 2.1);
 	assert.less_than_or_equal(container.size().y, 3.5);
+
+	text1.p.keepEmptyGeometries.set(false);
+	container = await text1.compute();
+	assert.equal(container.coreContent()?.objects().length, 10);
+	assert.deepEqual(
+		container
+			.coreContent()
+			?.coreObjects()
+			.map((o: CoreObject) => o.attribValue('character')),
+		['l', 'i', 'n', 'e', '1', 'l', 'i', 'n', 'e', '2']
+	);
 });
 
 QUnit.test('sop/text as different types', async (assert) => {

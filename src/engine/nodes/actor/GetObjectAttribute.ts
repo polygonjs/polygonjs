@@ -14,6 +14,10 @@ import {
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {CoreObject} from '../../../core/geometry/Object';
+import {Vector2, Vector3, Vector4, Quaternion} from 'three';
+const tmpV2 = new Vector2();
+const tmpV3 = new Vector3();
+const tmpV4 = new Vector4();
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -121,6 +125,19 @@ export class GetObjectAttributeActorNode extends TypedActorNode<GetObjectAttribu
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
 		const attribValue = CoreObject.attribValue(Object3D, this.pv.attribName);
+		if (attribValue instanceof Vector2) {
+			return tmpV2.copy(attribValue);
+		}
+		if (attribValue instanceof Vector3) {
+			return tmpV3.copy(attribValue);
+		}
+		if (attribValue instanceof Quaternion || attribValue instanceof Vector4) {
+			tmpV4.x = attribValue.x;
+			tmpV4.y = attribValue.y;
+			tmpV4.z = attribValue.z;
+			tmpV4.w = attribValue.w;
+			return tmpV4;
+		}
 		return attribValue as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
 	}
 }

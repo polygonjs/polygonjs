@@ -11,13 +11,13 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {Material} from 'three';
-import {Mesh} from 'three';
+import {Material, Mesh, Vector2, Vector3, Vector4, Quaternion} from 'three';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 enum GetObjectPropertyActorNodeInputName {
 	position = 'position',
+	quaternion = 'quaternion',
 	scale = 'scale',
 	visible = 'visible',
 	castShadow = 'castShadow',
@@ -34,6 +34,7 @@ enum GetObjectPropertyActorNodeInputName {
 }
 const OBJECT_PROPERTIES: GetObjectPropertyActorNodeInputName[] = [
 	GetObjectPropertyActorNodeInputName.position,
+	GetObjectPropertyActorNodeInputName.quaternion,
 	GetObjectPropertyActorNodeInputName.scale,
 	GetObjectPropertyActorNodeInputName.visible,
 	GetObjectPropertyActorNodeInputName.castShadow,
@@ -46,6 +47,9 @@ const OBJECT_PROPERTIES: GetObjectPropertyActorNodeInputName[] = [
 ];
 const MATERIAL_OUTPUT = 'material';
 
+const tmpV2 = new Vector2();
+const tmpV3 = new Vector3();
+const tmpV4 = new Vector4();
 export class GetObjectPropertyActorNode extends ParamlessTypedActorNode {
 	static override type() {
 		return 'getObjectProperty';
@@ -93,6 +97,19 @@ export class GetObjectPropertyActorNode extends ParamlessTypedActorNode {
 			context.Object3D;
 		if (OBJECT_PROPERTIES.includes(outputName as GetObjectPropertyActorNodeInputName)) {
 			const propValue = Object3D[outputName as GetObjectPropertyActorNodeInputName];
+			if (propValue instanceof Vector2) {
+				return tmpV2.copy(propValue);
+			}
+			if (propValue instanceof Vector3) {
+				return tmpV3.copy(propValue);
+			}
+			if (propValue instanceof Quaternion) {
+				tmpV4.x = propValue.x;
+				tmpV4.y = propValue.y;
+				tmpV4.z = propValue.z;
+				tmpV4.w = propValue.w;
+				return tmpV4;
+			}
 			return propValue;
 		} else {
 			if (outputName == MATERIAL_OUTPUT) {

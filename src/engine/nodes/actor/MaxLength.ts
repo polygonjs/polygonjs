@@ -16,7 +16,7 @@ enum MaxLengthActorNodeInputName {
 }
 const DefaultValues: PolyDictionary<number> = {
 	[MaxLengthActorNodeInputName.VALUE]: 0,
-	[MaxLengthActorNodeInputName.MAX]: 0,
+	[MaxLengthActorNodeInputName.MAX]: 1,
 };
 
 const ALLOWED_INPUT_TYPES: ActorConnectionPointType[] = [
