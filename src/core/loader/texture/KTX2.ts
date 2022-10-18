@@ -1,3 +1,4 @@
+import {LIBRARY_INSTALL_HINT} from './../common';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {ASSETS_ROOT} from './../AssetsUtils';
 import {BaseCoreImageLoader, TextureLoadOptions} from './_BaseImageLoader';
@@ -50,7 +51,7 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 						};
 					}),
 					node: options.node,
-					error: 'failed to load basis libraries. Make sure to install them to load .basis files',
+					error: `failed to load basis libraries. Make sure to install them to load .basis files (${LIBRARY_INSTALL_HINT})`,
 				});
 			}
 

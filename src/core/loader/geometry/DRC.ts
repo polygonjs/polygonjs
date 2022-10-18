@@ -1,6 +1,7 @@
 import {BufferGeometry, Mesh, MeshLambertMaterial, Object3D} from 'three';
 import {Poly} from '../../../engine/Poly';
 import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
+import {LIBRARY_INSTALL_HINT} from '../common';
 import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
 import {BaseGeoLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
 
@@ -28,7 +29,7 @@ export class DRCLoaderHandler extends BaseGeoLoaderHandler<BufferGeometry> {
 					};
 				}),
 				node,
-				error: 'failed to load draco libraries. Make sure to install them to load .glb files',
+				error: `failed to load draco libraries. Make sure to install them to load .glb files (${LIBRARY_INSTALL_HINT})`,
 			});
 
 			dracoLoader.setDecoderPath(decoderPath);

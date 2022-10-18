@@ -1,3 +1,4 @@
+import {LIBRARY_INSTALL_HINT} from './../common';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {Poly} from '../../../engine/Poly';
 import {CoreBaseLoader, modifyUrl} from '../_Base';
@@ -86,7 +87,7 @@ export class XAtlasLoaderHandler extends CoreBaseLoader {
 					},
 				],
 				node,
-				error: 'failed to load xatlas libraries. Make sure to install them use the uvUnwrap',
+				error: `failed to load xatlas libraries. Make sure to install them use the uvUnwrap (${LIBRARY_INSTALL_HINT})`,
 			});
 			await Poly.blobs.fetchBlobForNode({
 				fullUrl,
