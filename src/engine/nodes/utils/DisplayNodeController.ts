@@ -63,12 +63,18 @@ export class DisplayNodeController {
 		this.node.lifecycle.onChildRemove((childNode) => {
 			if (childNode.graphNodeId() == this._displayNode?.graphNodeId()) {
 				const children = this.node.children();
-				const lastChild = children[children.length - 1];
-				if (lastChild) {
-					lastChild.flags?.display?.set(true);
-				} else {
-					this.setDisplayNode(undefined);
+				// Go through each child in reverse until one has a display flag.
+				// we can't just check the last child, as it may not have a display flag,
+				// like a network node.
+				for (let i = children.length - 1; i >= 0; i--) {
+					const child = children[i];
+					const displayFlag = child.flags?.display;
+					if (displayFlag) {
+						displayFlag.set(true);
+						return;
+					}
 				}
+				this.setDisplayNode(undefined);
 			}
 		});
 		this._graphNode.dirtyController.addPostDirtyHook('_requestDisplayNodeContainer', () => {
