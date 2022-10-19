@@ -18,6 +18,28 @@ float sdSphere( vec3 p, float s )
 {
 	return length(p)-s;
 }
+float sdCutSphere( vec3 p, float r, float h )
+{
+	// sampling independent computations (only depend on shape)
+	float w = sqrt(r*r-h*h);
+
+	// sampling dependant computations
+	vec2 q = vec2( length(p.xz), p.y );
+	float s = max( (h-r)*q.x*q.x+w*w*(h+r-2.0*q.y), h*q.x-w*q.y );
+	return (s<0.0) ? length(q)-r :
+				(q.x<w) ? h - q.y :
+					length(q-vec2(w,h));
+}
+float sdCutHollowSphere( vec3 p, float r, float h, float t )
+{
+	// sampling independent computations (only depend on shape)
+	float w = sqrt(r*r-h*h);
+	
+	// sampling dependant computations
+	vec2 q = vec2( length(p.xz), p.y );
+	return ((h*q.x<w*q.y) ? length(q-vec2(w,h)) : 
+							abs(length(q)-r) ) - t;
+}
 float sdBox( vec3 p, vec3 b )
 {
 	vec3 q = abs(p) - b*0.5;
@@ -153,6 +175,47 @@ float sdOctahedron( vec3 p, float s)
     
   float k = clamp(0.5*(q.z-q.y+s),0.0,s); 
   return length(vec3(q.x,q.y-s+k,q.z-k)); 
+}
+float udTriangle( vec3 p, vec3 a, vec3 b, vec3 c, float thickness )
+{
+	vec3 ba = b - a; vec3 pa = p - a;
+	vec3 cb = c - b; vec3 pb = p - b;
+	vec3 ac = a - c; vec3 pc = p - c;
+	vec3 nor = cross( ba, ac );
+
+	return - thickness + sqrt(
+		(sign(dot(cross(ba,nor),pa)) +
+		sign(dot(cross(cb,nor),pb)) +
+		sign(dot(cross(ac,nor),pc))<2.0)
+		?
+		min( min(
+		dot2(ba*clamp(dot(ba,pa)/dot2(ba),0.0,1.0)-pa),
+		dot2(cb*clamp(dot(cb,pb)/dot2(cb),0.0,1.0)-pb) ),
+		dot2(ac*clamp(dot(ac,pc)/dot2(ac),0.0,1.0)-pc) )
+		:
+		dot(nor,pa)*dot(nor,pa)/dot2(nor) );
+}
+float udQuad( vec3 p, vec3 a, vec3 b, vec3 c, vec3 d, float thickness )
+{
+	vec3 ba = b - a; vec3 pa = p - a;
+	vec3 cb = c - b; vec3 pb = p - b;
+	vec3 dc = d - c; vec3 pc = p - c;
+	vec3 ad = a - d; vec3 pd = p - d;
+	vec3 nor = cross( ba, ad );
+
+	return - thickness + sqrt(
+		(sign(dot(cross(ba,nor),pa)) +
+		sign(dot(cross(cb,nor),pb)) +
+		sign(dot(cross(dc,nor),pc)) +
+		sign(dot(cross(ad,nor),pd))<3.0)
+		?
+		min( min( min(
+		dot2(ba*clamp(dot(ba,pa)/dot2(ba),0.0,1.0)-pa),
+		dot2(cb*clamp(dot(cb,pb)/dot2(cb),0.0,1.0)-pb) ),
+		dot2(dc*clamp(dot(dc,pc)/dot2(dc),0.0,1.0)-pc) ),
+		dot2(ad*clamp(dot(ad,pd)/dot2(ad),0.0,1.0)-pd) )
+		:
+		dot(nor,pa)*dot(nor,pa)/dot2(nor) );
 }
 float SDFUnion( float d1, float d2 ) { return min(d1,d2); }
 float SDFSubtract( float d1, float d2 ) { return max(-d1,d2); }
@@ -332,6 +395,7 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 		#if NUM_SPOT_LIGHTS > 0
 			SpotLightRayMarching spotLightRayMarching;
 			SpotLight spotLight;
+			float spotLightSdfShadow;
 			#if defined( USE_SHADOWMAP ) && NUM_SPOT_LIGHT_SHADOWS > 0
 				SpotLightShadow spotLightShadow;
 			#endif
@@ -351,7 +415,7 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, spotLightShadowCoord ) : 1.0;
 				#endif
 				l = normalize(lightPos-p);
-				float spotLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				spotLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001), sdfContext);
 				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * spotLightSdfShadow;
 				
 				dif += lighDif;
@@ -361,6 +425,7 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 		#if NUM_DIR_LIGHTS > 0
 			DirectionalLightRayMarching directionalLightRayMarching;
 			DirectionalLight directionalLight;
+			float dirLightSdfShadow;
 			#if defined( USE_SHADOWMAP ) && NUM_DIR_LIGHT_SHADOWS > 0
 				DirectionalLightShadow directionalLightShadow;
 			#endif
@@ -376,7 +441,7 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, dirLightShadowCoord ) : 1.0;
 				#endif
 				l = lightDir;
-				float dirLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				dirLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001), sdfContext);
 				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * dirLightSdfShadow;
 				dif += lighDif;
 			}
@@ -397,6 +462,7 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 		#if NUM_POINT_LIGHTS > 0
 			PointLightRayMarching pointLightRayMarching;
 			PointLight pointLight;
+			float pointLightSdfShadow;
 			#if defined( USE_SHADOWMAP ) && NUM_POINT_LIGHT_SHADOWS > 0
 				PointLightShadow pointLightShadow;
 			#endif
@@ -414,7 +480,7 @@ vec3 GetLight(vec3 p, vec3 n, inout SDFContext sdfContext) {
 				
 				lightPos = pointLightRayMarching.worldPos;
 				l = normalize(lightPos-p);
-				float pointLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				pointLightSdfShadow = calcSoftshadow(p, l, 10.*SURF_DIST, distance(p,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001), sdfContext);
 				lighDif = directLight.color * clamp(dot(n, l), 0., 1.) * pointLightSdfShadow;
 				dif += lighDif;
 			}
