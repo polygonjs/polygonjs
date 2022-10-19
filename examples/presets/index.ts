@@ -13,6 +13,7 @@ import {samplerAudioPresetRegister} from './audio/Sampler';
 // cop
 import {audioAnalyserCopPresetRegister} from './cop/AudioAnalyser';
 import {imageCopPresetRegister} from './cop/Image';
+import {imageEXRCopPresetRegister} from './cop/ImageEXR';
 import {lutCopPresetRegister} from './cop/Lut';
 import {videoCopPresetRegister} from './cop/Video';
 // // gl
@@ -69,6 +70,7 @@ class PresetLibraryClass {
 		// cop
 		this._registerPreset(audioAnalyserCopPresetRegister);
 		this._registerPreset(imageCopPresetRegister);
+		this._registerPreset(imageEXRCopPresetRegister);
 		this._registerPreset(lutCopPresetRegister);
 		this._registerPreset(videoCopPresetRegister);
 		// gl
