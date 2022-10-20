@@ -2,24 +2,27 @@
  * A solver re-uses its output as its input on each frame
  *
  */
+import {NetworkNodeType} from './../../poly/NodeContext';
 import {SubnetSopNodeLike, SopSubnetChildrenDisplayController} from './utils/subnet/ChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {TimeController} from '../../scene/utils/TimeController';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 
 class SolverSopParamsConfig extends NodeParamsConfig {
-	startFrame = ParamConfig.INTEGER(TimeController.START_FRAME);
+	iterations = ParamConfig.INTEGER(2, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+	});
 }
 const ParamsConfig = new SolverSopParamsConfig();
 
 export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'solver';
+		return NetworkNodeType.SOLVER;
 	}
-	private _last_simulated_frame: number | null = null;
+	private _currentIteration: number = 0;
 	public override readonly childrenDisplayController: SopSubnetChildrenDisplayController =
 		new SopSubnetChildrenDisplayController(this, {dependsOnDisplayNode: false});
 	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
@@ -42,55 +45,66 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 		this.io.inputs.setCount(0, 4);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 
-		this.addGraphInput(this.scene().timeController.graphNode);
+		// this.addGraphInput(this.scene().timeController.graphNode);
 	}
 
+	currentIteration() {
+		return this._currentIteration;
+	}
 	private _previousFrameCoreGroup: CoreGroup | undefined;
 	previousFrameCoreGroup() {
 		return this._previousFrameCoreGroup;
 	}
-	override async cook(input_contents: CoreGroup[]) {
-		if (this.pv.startFrame == this.scene().frame()) {
-			this._reset();
-		}
-		this.computeSolverIfRequired();
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		console.log('cook');
+		// if (this.pv.startFrame == this.scene().frame()) {
+		// 	this._reset();
+		// }
+		this._reset();
+		// await this.computeSolverIfRequired();
+		await this._computeSolverMultipleTimes(this.pv.iterations);
 	}
 
 	private _reset() {
 		this._previousFrameCoreGroup = undefined;
-		this._last_simulated_frame = null;
+		// this._lastSimulatedFrame = null;
+		// this._currentIteration = 0
 	}
 
-	private computeSolverIfRequired() {
-		const frame = this.scene().frame();
-		const start_frame: number = this.pv.startFrame;
-		if (frame >= start_frame) {
-			if (this._last_simulated_frame == null) {
-				this._last_simulated_frame = start_frame - 1;
-			}
+	// private async computeSolverIfRequired() {
+	// 	const frame = this.scene().frame();
+	// 	const startFrame: number = this.pv.startFrame;
+	// 	if (frame >= startFrame) {
+	// 		if (this._lastSimulatedFrame == null) {
+	// 			this._lastSimulatedFrame = startFrame - 1;
+	// 		}
 
-			if (frame > this._last_simulated_frame) {
-				this._computeSolverMultipleTimes(frame - this._last_simulated_frame);
-			}
+	// 		if (frame > this._lastSimulatedFrame) {
+	// 			await this._computeSolverMultipleTimes(frame - this._lastSimulatedFrame);
+	// 		}
+	// 	}
+	// }
+	private async _computeSolverMultipleTimes(iterationsCount: number) {
+		console.log('_computeSolverMultipleTimes', iterationsCount);
+		for (let i = 0; i < iterationsCount; i++) {
+			this._currentIteration = i;
+			console.log('compute', i);
+			await this.computeSolver();
 		}
-	}
-	private _computeSolverMultipleTimes(iterations_count = 1) {
-		for (let i = 0; i < iterations_count; i++) {
-			this.computeSolver();
-		}
-		this._last_simulated_frame = this.scene().frame();
+		// this._lastSimulatedFrame = this.scene().frame();
 	}
 	private async computeSolver() {
-		const child_output_node = this.childrenDisplayController.outputNode();
-		if (child_output_node) {
-			const container = await child_output_node.compute();
-			const core_content = container.coreContent();
-			if (core_content) {
-				this._previousFrameCoreGroup = core_content;
-				this.setCoreGroup(core_content);
+		const childOutputNode = this.childrenDisplayController.outputNode();
+		if (childOutputNode) {
+			const container = await childOutputNode.compute();
+			const coreContent = container.coreContent();
+			console.log(coreContent);
+			if (coreContent) {
+				this._previousFrameCoreGroup = coreContent;
+				this.setCoreGroup(coreContent);
 			} else {
-				if (child_output_node.states.error.active()) {
-					this.states.error.set(child_output_node.states.error.message());
+				if (childOutputNode.states.error.active()) {
+					this.states.error.set(childOutputNode.states.error.message());
 				} else {
 					this._previousFrameCoreGroup = undefined;
 					this.setObjects([]);
@@ -101,7 +115,7 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 		}
 	}
 
-	isOnFrameStart(): boolean {
-		return this.scene().frame() == this.pv.startFrame;
-	}
+	// isOnFrameStart(): boolean {
+	// 	return this.scene().frame() == this.pv.startFrame;
+	// }
 }

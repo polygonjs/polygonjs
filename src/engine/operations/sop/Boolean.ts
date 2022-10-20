@@ -1,3 +1,4 @@
+import {CoreString} from './../../../core/String';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -30,13 +31,19 @@ const evaluationIdByBooleanOperation: Record<BooleanOperation, number> = {
 
 interface BooleanSopParams extends DefaultOperationParams {
 	operation: number;
-	useBothMaterials: boolean;
+	keepVertexColor: boolean;
+	additionalAttributes: string;
+	keepMaterials: boolean;
+	useInputGroups: boolean;
 }
 
 export class BooleanSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BooleanSopParams = {
 		operation: BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT),
-		useBothMaterials: true,
+		keepVertexColor: false,
+		additionalAttributes: '',
+		keepMaterials: true,
+		useInputGroups: false,
 	};
 	static override readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
 	static override type(): Readonly<'boolean'> {
@@ -46,19 +53,35 @@ export class BooleanSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: BooleanSopParams): CoreGroup {
 		const meshA = inputCoreGroups[0].objectsWithGeo()[0] as Mesh;
 		const meshB = inputCoreGroups[1].objectsWithGeo()[0] as Mesh;
+		console.log(meshA, meshB, inputCoreGroups[0], inputCoreGroups[1]);
+		if (!(meshA.geometry && meshB.geometry)) {
+			this.states?.error.set('input objects need to have mesh geometries at the top level');
+			return this.createCoreGroupFromObjects([]);
+		}
 
 		const csgEvaluator = new Evaluator();
-		const brush1 = new Brush(meshA.geometry);
-		const brush2 = new Brush(meshB.geometry);
+		const brush1 = new Brush(meshA.geometry, params.keepMaterials ? meshA.material : undefined);
+		const brush2 = new Brush(meshB.geometry, params.keepMaterials ? meshB.material : undefined);
 
 		const operation = BOOLEAN_OPERATIONS[params.operation];
 		const operationId = evaluationIdByBooleanOperation[operation];
 
-		csgEvaluator.attributes = ['position', 'normal', 'color'];
-		console.log(csgEvaluator.debug);
-		// csgEvaluator.debug.enabled = enableDebugTelemetry;
-		csgEvaluator.useGroups = true;
-		const result = csgEvaluator.evaluate(brush1, brush2, operationId, brush1);
+		const attributes = ['position', 'normal'];
+		if (params.keepVertexColor) {
+			attributes.push('color');
+		}
+		if (params.additionalAttributes.trim() != '') {
+			const newNames = CoreString.attribNames(params.additionalAttributes);
+			attributes.push(...newNames);
+		}
+		csgEvaluator.attributes = attributes;
+		// csgEvaluator.debug.enabled = true;
+		csgEvaluator.useGroups = params.keepMaterials || params.useInputGroups;
+		csgEvaluator.evaluate(brush1, brush2, operationId, brush1);
+
+		if (!params.keepMaterials) {
+			brush1.material = meshA.material;
+		}
 		// console.log(result);
 
 		// const result = this._applyBooleaOperation(meshA, meshB, params);
@@ -72,7 +95,7 @@ export class BooleanSopOperation extends BaseSopOperation {
 		// 	matA = [matA, matB];
 		// }
 		// const meshResult: Mesh = CSG.toMesh(result, meshA.matrix, matA);
-		return this.createCoreGroupFromObjects([result]);
+		return this.createCoreGroupFromObjects([brush1]);
 	}
 
 	// private _applyBooleaOperation(meshA: Mesh, meshB: Mesh, params: BooleanSopParams) {

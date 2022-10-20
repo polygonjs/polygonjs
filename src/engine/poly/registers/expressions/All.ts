@@ -17,6 +17,7 @@ import {PadzeroExpression} from '../../../expressions/methods/padzero';
 import {PlayerModeExpression} from '../../../expressions/methods/playerMode';
 import {PointExpression} from '../../../expressions/methods/point';
 import {PointsCountExpression} from '../../../expressions/methods/pointsCount';
+import {SolverIterationExpression} from '../../../expressions/methods/solverIteration';
 import {StrCharsCountExpression} from '../../../expressions/methods/strCharsCount';
 import {StrConcatExpression} from '../../../expressions/methods/strConcat';
 import {StrIndexExpression} from '../../../expressions/methods/strIndex';
@@ -44,6 +45,7 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	playerMode: typeof PlayerModeExpression;
 	point: typeof PointExpression;
 	pointsCount: typeof PointsCountExpression;
+	solverIteration: typeof SolverIterationExpression;
 	strCharsCount: typeof StrCharsCountExpression;
 	strConcat: typeof StrConcatExpression;
 	strIndex: typeof StrIndexExpression;
@@ -74,6 +76,7 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(PlayerModeExpression, 'playerMode');
 		poly.expressionsRegister.register(PointExpression, 'point');
 		poly.expressionsRegister.register(PointsCountExpression, 'pointsCount');
+		poly.expressionsRegister.register(SolverIterationExpression, 'solverIteration');
 		poly.expressionsRegister.register(StrCharsCountExpression, 'strCharsCount');
 		poly.expressionsRegister.register(StrConcatExpression, 'strConcat');
 		poly.expressionsRegister.register(StrIndexExpression, 'strIndex');

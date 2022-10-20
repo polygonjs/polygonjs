@@ -30,6 +30,7 @@ export class SolverPreviousFrameSopNode extends TypedSopNode<SolverPreviousFrame
 		}
 		const solver = parent as SolverSopNode;
 		const previousFrameCoreGroup = solver.previousFrameCoreGroup();
+		console.log('previousFrameCoreGroup', previousFrameCoreGroup);
 		if (previousFrameCoreGroup) {
 			this.setCoreGroup(previousFrameCoreGroup);
 		} else {

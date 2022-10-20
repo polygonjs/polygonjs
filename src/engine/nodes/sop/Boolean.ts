@@ -17,8 +17,14 @@ class BooleanSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
+	/** @param preserves the color attribute of both input */
+	keepVertexColor = ParamConfig.BOOLEAN(DEFAULT.keepVertexColor);
+	/** @param add any additional attribute to be preserved */
+	additionalAttributes = ParamConfig.STRING(DEFAULT.additionalAttributes);
 	/** @param defines if only the material from the first input is used, or if the ones from both inputs should be used */
-	useBothMaterials = ParamConfig.BOOLEAN(DEFAULT.useBothMaterials);
+	keepMaterials = ParamConfig.BOOLEAN(DEFAULT.keepMaterials);
+	/** @param if one of the input has multiple material for a single object, and you'd like to preserve those, toggle this on */
+	useInputGroups = ParamConfig.BOOLEAN(DEFAULT.useInputGroups);
 }
 const ParamsConfig = new BooleanSopParamsConfig();
 

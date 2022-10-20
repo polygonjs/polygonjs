@@ -7,8 +7,8 @@
  * This node can operate in one of multiple modes:
  *
  * - reset_object: this will set the transform of objects to t=0,0,0, r=0,0,0 and s=0,0,0
- * - center geometry: TBD
- * - promote: TBD
+ * - center geometry: centers the geometry on the center of its object
+ * - center geometry & transform object: moves the object so that its position matches the center of the geometry, and updates the geometry position so that it stays in the same place
  *
  */
 import {TypedSopNode} from './_Base';

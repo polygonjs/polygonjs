@@ -10,12 +10,12 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 export enum TransformResetMode {
 	RESET_OBJECT = 'reset objects transform',
 	CENTER_GEO = 'center geometries',
-	PROMOTE_GEO_TO_OBJECT = 'center geometry and transform object',
+	CENTER_GEO_RESET_OBJECT = 'center geometry and reset object',
 }
 export const TRANSFORM_RESET_MODES: TransformResetMode[] = [
 	TransformResetMode.RESET_OBJECT,
 	TransformResetMode.CENTER_GEO,
-	TransformResetMode.PROMOTE_GEO_TO_OBJECT,
+	TransformResetMode.CENTER_GEO_RESET_OBJECT,
 ];
 
 interface TransformResetSopParams extends DefaultOperationParams {
@@ -58,7 +58,7 @@ export class TransformResetSopOperation extends BaseSopOperation {
 					refCoreGroup: coreGroups[1],
 				});
 			}
-			case TransformResetMode.PROMOTE_GEO_TO_OBJECT: {
+			case TransformResetMode.CENTER_GEO_RESET_OBJECT: {
 				return TransformResetSopOperation.centerCoreGroup(coreGroups[0], {
 					applyMatrixToObject: true,
 					refCoreGroup: coreGroups[1],

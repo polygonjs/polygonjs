@@ -58,8 +58,8 @@ export class Operation extends Brush {
 	// operation
 	markUpdated(): void;
 	isDirty(): boolean;
-	insertBefore(brush: Brush);
-	insertAfter(brush: Brush);
+	insertBefore(brush: Brush): void;
+	insertAfter(brush: Brush): void;
 }
 
 export class OperationGroup extends Group {
@@ -69,8 +69,8 @@ export class OperationGroup extends Group {
 }
 
 export class CullableTriangle extends Triangle {
-	initFrom(other: Triangle);
-	updateSide(plane: Plane, triangle: Triangle, coplanarIndex: number);
+	initFrom(other: Triangle): void;
+	updateSide(plane: Plane, triangle: Triangle, coplanarIndex: number): void;
 }
 
 export class TrianglePool {
@@ -84,9 +84,9 @@ export class TriangleSplitter {
 	triangles: Triangle[];
 	normal: Vector3;
 
-	initialize(tri: Triangle);
-	splitByTriangle(triangle: Triangle);
-	splitByPlane(plane: Plane, triangle: Triangle, coplanarIndex: number);
+	initialize(tri: Triangle): void;
+	splitByTriangle(triangle: Triangle): void;
+	splitByPlane(plane: Plane, triangle: Triangle, coplanarIndex: number): void;
 	reset(): void;
 }
 
@@ -110,7 +110,7 @@ export function generateRandomTriangleColors(geometry: BufferGeometry): void;
 export class TriangleSetHelper extends Group {
 	constructor(triangles?: Triangle[]);
 
-	setTriangles(triangles: Triangle[]);
+	setTriangles(triangles: Triangle[]): void;
 }
 
 export class EdgesHelper extends LineSegments {
@@ -132,13 +132,13 @@ export class TriangleIntersectionSets {
 	addTriangleIntersection(ia: number, tribA: Triangle, ib: number, triB: Triangle): void;
 	getTrianglesAsArray(id?: number): Array<Triangle>;
 	getTriangleIndices(): Array<number>;
-	getIntersectionIndices(id: number);
+	getIntersectionIndices(id: number): void;
 	getIntersectionsAsArray(id?: number, id2?: number): Array<Triangle>;
 }
 
 export class OperationDebugData {
 	intersectionEdges: EdgesGeometry[];
-
+	enabled: boolean;
 	addIntersectingTriangles(ia: number, triA: Triangle, ib: number, triB: Triangle): void;
 	addEdge(edge: EdgesGeometry): void;
 	reset(): void;

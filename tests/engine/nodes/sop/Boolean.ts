@@ -1,3 +1,4 @@
+import {ArrayUtils} from './../../../../src/core/ArrayUtils';
 import {Mesh} from 'three';
 import {Material} from 'three';
 import {BooleanOperation, BOOLEAN_OPERATIONS} from '../../../../src/engine/operations/sop/Boolean';
@@ -21,7 +22,7 @@ QUnit.test('SOP boolean simple', async (assert) => {
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 	let coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
-	assert.equal(coreGroup.points().length, 135);
+	assert.equal(coreGroup.points().length, 96);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT));
 	coreGroup = (await boolean.compute()).coreContent()!;
@@ -31,7 +32,7 @@ QUnit.test('SOP boolean simple', async (assert) => {
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.ADD));
 	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
-	assert.equal(coreGroup.points().length, 210);
+	assert.equal(coreGroup.points().length, 132);
 
 	// now with a sphere
 	const sphere = geo1.createNode('sphere');
@@ -40,17 +41,17 @@ QUnit.test('SOP boolean simple', async (assert) => {
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
-	assert.equal(coreGroup.points().length, 462);
+	assert.equal(coreGroup.points().length, 219);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT));
 	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
-	assert.equal(coreGroup.points().length, 192);
+	assert.equal(coreGroup.points().length, 255);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.ADD));
 	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
-	assert.equal(coreGroup.points().length, 7188);
+	assert.equal(coreGroup.points().length, 5451);
 });
 
 QUnit.test('SOP boolean with shared materials', async (assert) => {
@@ -77,37 +78,37 @@ QUnit.test('SOP boolean with shared materials', async (assert) => {
 	transformB.setInput(0, materialB);
 	boolean.setInput(0, transformA);
 	boolean.setInput(1, transformB);
-	boolean.p.useBothMaterials.set(true);
+	boolean.p.keepMaterials.set(true);
 
 	transformB.p.t.set([0.1, 0.1, 0.2]);
 
 	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.SUBTRACT));
 	let coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
-	assert.equal(coreGroup.points().length, 135);
+	assert.equal(coreGroup.points().length, 96);
 	let mesh = coreGroup.objectsWithGeo()[0] as Mesh;
 	let geometry = mesh.geometry;
 	assert.deepEqual(
-		(mesh.material as Material[]).map((mat) => mat.uuid),
+		ArrayUtils.uniq(mesh.material as Material[]).map((mat) => mat.uuid),
 		[meshBasic1, meshBasic2].map((matNode) => matNode.material.uuid)
 	);
-	assert.equal(geometry.groups.length, 3, '3 groups');
-	assert.equal(geometry.groups[0].count, 105, 'group 0 count');
-	assert.equal(geometry.groups[1].count, 30, 'group 1 count');
-	assert.equal(geometry.groups[2].count, 0, 'group 2 has 0');
-	assert.equal(coreGroup.points().length, 135);
+	assert.equal(geometry.groups.length, 9, '9 groups');
+	assert.equal(geometry.groups[0].count, 18, 'group 0 count');
+	assert.equal(geometry.groups[1].count, 6, 'group 1 count');
+	assert.equal(geometry.groups[2].count, 18, 'group 2 count');
+	assert.equal(coreGroup.points().length, 96);
 
-	boolean.p.useBothMaterials.set(false);
+	boolean.p.keepMaterials.set(false);
 	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
-	assert.equal(coreGroup.points().length, 135);
+	assert.equal(coreGroup.points().length, 96);
 	mesh = coreGroup.objectsWithGeo()[0] as Mesh;
 	assert.deepEqual((mesh.material as Material).uuid, meshBasic1.material.uuid);
 	geometry = mesh.geometry;
-	assert.equal(geometry.groups.length, 3);
-	assert.equal(geometry.groups[0].count, 105, 'group 0 count');
-	assert.equal(geometry.groups[1].count, 30, 'group 1 count');
-	assert.equal(geometry.groups[2].count, 0, 'group 2 has 0');
+	assert.equal(geometry.groups.length, 1);
+	assert.equal(geometry.groups[0].count, 96, 'group 0 count');
+	// assert.equal(geometry.groups[1].count, 30, 'group 1 count');
+	// assert.equal(geometry.groups[2].count, 0, 'group 2 has 0');
 });
 
 QUnit.test('SOP boolean result can be instanciated', async (assert) => {
