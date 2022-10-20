@@ -10,7 +10,7 @@ function create_required_nodes(node: SolverSopNode) {
 
 	switch1.setInput(0, solverPreviousFrame);
 	switch1.setInput(1, subnetInput1);
-	switch1.p.input.set("ch('../startFrame') == $F");
+	switch1.p.input.set('solverIteration() == 0');
 	subnetOutput1.setInput(0, switch1);
 
 	subnetOutput1.flags.display.set(true);
@@ -30,15 +30,22 @@ QUnit.test('solver simple', async (assert) => {
 	assert.equal(solver1.children().length, 0);
 	const {switch1, subnetOutput1} = create_required_nodes(solver1);
 	assert.equal(solver1.children().length, 4);
+	const size = new Vector3();
+	async function computeSolver() {
+		const container = await solver1.compute();
+		const coreGroup = container.coreContent()!;
+
+		coreGroup.boundingBox().getSize(size);
+		return {coreGroup, size};
+	}
 
 	// something inside by default
-	let container = await solver1.compute();
-	let core_group = container.coreContent();
-	assert.ok(core_group, 'good output by default');
+
+	assert.ok((await computeSolver()).coreGroup, 'good output by default');
 
 	const scatter = solver1.createNode('scatter');
 	scatter.p.pointsCount.set(1);
-	scatter.p.seed.set('$F');
+	scatter.p.seed.set('solverIteration()');
 	scatter.setInput(0, switch1);
 
 	const box = solver1.createNode('box');
@@ -57,45 +64,32 @@ QUnit.test('solver simple', async (assert) => {
 	subnetOutput1.setInput(0, boolean);
 	subnetOutput1.flags.display.set(true);
 
-	container = await solver1.compute();
-	core_group = container.coreContent()!;
-	const size = new Vector3();
-	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 1.5, 0.1, 'bbox size x');
+	await computeSolver();
+	assert.in_delta(size.x, 1.85, 0.1, 'bbox size x');
 	assert.ok(!solver1.states.error.message(), 'no error');
 
-	scene.setFrame(1);
-	container = await solver1.compute();
-	core_group = container.coreContent()!;
-	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 1.85, 0.1, 'bbox size x 2');
+	solver1.p.iterations.set(1);
+	await computeSolver();
+	assert.in_delta(size.x, 1.5, 0.01, 'bbox size x 2');
 	assert.ok(!solver1.states.error.message(), 'no error');
 
-	scene.setFrame(2);
-	container = await solver1.compute();
-	core_group = container.coreContent()!;
-	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 1.85, 0.1, 'bbox size x 3');
+	solver1.p.iterations.set(2);
+	await computeSolver();
+	assert.in_delta(size.x, 1.833, 0.01, 'bbox size x 3');
 	assert.ok(!solver1.states.error.message(), 'no error');
 
-	scene.setFrame(3);
-	container = await solver1.compute();
-	core_group = container.coreContent()!;
-	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 1.8, 0.1, 'bbox size x 4');
+	solver1.p.iterations.set(3);
+	await computeSolver();
+	assert.in_delta(size.x, 1.833, 0.01, 'bbox size x 4');
 	assert.ok(!solver1.states.error.message(), 'no error');
 
-	scene.setFrame(4);
-	container = await solver1.compute();
-	core_group = container.coreContent()!;
-	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 1.89, 0.1);
+	solver1.p.iterations.set(4);
+	await computeSolver();
+	assert.in_delta(size.x, 1.844, 0.01);
 	assert.ok(!solver1.states.error.message());
 
-	scene.setFrame(5);
-	container = await solver1.compute();
-	core_group = container.coreContent()!;
-	core_group.boundingBox().getSize(size);
-	assert.in_delta(size.x, 1.89, 0.1);
+	solver1.p.iterations.set(5);
+	await computeSolver();
+	assert.in_delta(size.x, 1.844, 0.01);
 	assert.ok(!solver1.states.error.message());
 });

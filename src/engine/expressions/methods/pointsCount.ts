@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the number of points in a geometry.
  *
@@ -27,8 +28,8 @@ export class PointsCountExpression extends BaseMethod {
 		return [['string', 'path to node']];
 	}
 
-	override findDependency(index_or_path: number | string): MethodDependency | null {
-		return this.createDependencyFromIndexOrPath(index_or_path);
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		return this.createDependencyFromIndexOrPath(args);
 	}
 
 	override processArguments(args: any[]): Promise<any> {

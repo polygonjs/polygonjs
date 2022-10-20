@@ -53,7 +53,6 @@ export class BooleanSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: BooleanSopParams): CoreGroup {
 		const meshA = inputCoreGroups[0].objectsWithGeo()[0] as Mesh;
 		const meshB = inputCoreGroups[1].objectsWithGeo()[0] as Mesh;
-		console.log(meshA, meshB, inputCoreGroups[0], inputCoreGroups[1]);
 		if (!(meshA.geometry && meshB.geometry)) {
 			this.states?.error.set('input objects need to have mesh geometries at the top level');
 			return this.createCoreGroupFromObjects([]);

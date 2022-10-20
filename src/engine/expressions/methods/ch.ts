@@ -1,3 +1,5 @@
+import {CoreType} from './../../../core/Type';
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the value of another parameter
  *
@@ -27,13 +29,20 @@ export class ChExpression extends BaseMethod {
 	}
 
 	private _referencedParam: BaseParamType | undefined;
-	override findDependency(indexOrPath: number | string): MethodDependency | null {
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		const {indexOrPath} = args;
+		if (indexOrPath == null) {
+			return null;
+		}
+		if (!CoreType.isString(indexOrPath)) {
+			return null;
+		}
 		const decomposedPath = new DecomposedPath();
-		const param = this.getReferencedParam(indexOrPath as string, decomposedPath);
+		const param = this.getReferencedParam(indexOrPath, decomposedPath);
 		if (param) {
 			// TODO: consider using this dependency optimization in other expression methods
 			this._referencedParam = param;
-			return this.createDependency(param, indexOrPath, decomposedPath);
+			return this.createDependency(param, {indexOrPath}, decomposedPath);
 		}
 		return null;
 	}

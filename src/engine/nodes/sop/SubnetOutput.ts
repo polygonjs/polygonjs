@@ -26,7 +26,7 @@ export class SubnetOutputSopNode extends TypedSopNode<SopSubnetOutputSopParamsCo
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		this.setCoreGroup(input_contents[0]);
+	override cook(inputCoreGroups: CoreGroup[]) {
+		this.setCoreGroup(inputCoreGroups[0]);
 	}
 }

@@ -17,42 +17,58 @@ import {BaseNodeType} from './../../nodes/_Base';
  * - `solverIteration('/geo/solver1')` - returns the iteration of the parent solver node /geo/merge1
  *
  */
-import {BaseMethod} from './_Base';
+import {BaseMethod, BaseMethodFindDependencyArgs} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {SolverSopNode} from '../../nodes/sop/Solver';
 
+function isSolverNode(node?: BaseNodeType | null) {
+	return node && node.type() == NetworkNodeType.SOLVER;
+}
 export class SolverIterationExpression extends BaseMethod {
 	protected override _requireDependency = true;
 	static override requiredArguments() {
+		return [];
+	}
+	static override optionalArguments() {
 		return [['string', 'path to solver node']];
 	}
 
-	override findDependency(index_or_path: number | string): MethodDependency | null {
-		return this.createDependencyFromIndexOrPath(index_or_path);
+	private _solverNode() {
+		const solverNode = this.param.node.parentController.findParent(
+			(parent) => parent.type() == NetworkNodeType.SOLVER
+		) as SolverSopNode | undefined;
+
+		return solverNode;
+	}
+
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		const {indexOrPath} = args;
+		const node = indexOrPath ? (this.findReferencedGraphNode(indexOrPath) as BaseNodeType) : this._solverNode();
+		if (isSolverNode(node)) {
+			const solverStamp = (node as SolverSopNode).iterationStamp();
+			return this.createDependency(solverStamp, {indexOrPath, node});
+		}
+		return null;
 	}
 
 	override processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			if (args.length == 1) {
-				const nodePath = args[0] || '..';
-				let foundNode: BaseNodeType | undefined;
-				let foundSolverNode: SolverSopNode | undefined;
-				try {
-					foundNode = (await this.getReferencedNode(nodePath)) as BaseNodeType | undefined;
-					if (foundNode && foundNode.type() == NetworkNodeType.SOLVER) {
-						foundSolverNode = foundNode as SolverSopNode;
-					}
-				} catch (e) {
-					reject(e);
-					return;
+			const nodePath = args[0] || '..';
+			let foundNode: BaseNodeType | undefined;
+			let foundSolverNode: SolverSopNode | undefined;
+			try {
+				foundNode = (await this.getReferencedNode(nodePath)) as BaseNodeType | undefined;
+				if (foundNode && isSolverNode(foundNode)) {
+					foundSolverNode = foundNode as SolverSopNode;
 				}
+			} catch (e) {
+				reject(e);
+				return;
+			}
 
-				if (foundSolverNode) {
-					const value = foundSolverNode.currentIteration();
-					resolve(value);
-				}
-			} else {
-				resolve(0);
+			if (foundSolverNode) {
+				const value = foundSolverNode.iterationStamp().iteration();
+				resolve(value);
 			}
 		});
 	}

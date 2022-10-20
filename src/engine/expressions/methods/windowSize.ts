@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the size of the window.
  *
@@ -23,7 +24,7 @@ export class WindowSizeExpression extends BaseMethod {
 		return [[]];
 	}
 
-	override findDependency(index_or_path: number | string): null {
+	override findDependency(indexOrPath: BaseMethodFindDependencyArgs): null {
 		this.param.addGraphInput(this.param.scene().windowController.graphNode());
 		return null;
 	}

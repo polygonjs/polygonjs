@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the resolution of a texture of a COP node.
  *
@@ -29,8 +30,8 @@ export class CopResExpression extends BaseMethod {
 		];
 	}
 
-	override findDependency(index_or_path: number | string): MethodDependency | null {
-		return this.createDependencyFromIndexOrPath(index_or_path);
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		return this.createDependencyFromIndexOrPath(args);
 	}
 
 	private _resolution = new Vector2();

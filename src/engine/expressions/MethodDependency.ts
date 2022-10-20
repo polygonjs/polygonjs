@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './methods/_Base';
 import {DecomposedPath} from '../../core/DecomposedPath';
 import {CoreGraphNode} from '../../core/graph/CoreGraphNode';
 import {BaseParamType} from '../params/_Base';
@@ -9,29 +10,30 @@ export class MethodDependency extends CoreGraphNode {
 	public jsep_node: jsep.Expression | undefined;
 	public resolved_graph_node: CoreGraphNode | undefined;
 	public unresolved_path: string | undefined;
-	private _update_from_name_change_bound = this._update_from_name_change.bind(this);
+	private _updateFromNameChangeBound = this._updateFromNameChange.bind(this);
 
 	constructor(
 		public param: BaseParamType,
-		public path_argument: number | string,
-		public decomposed_path?: DecomposedPath
+		public pathArgs: BaseMethodFindDependencyArgs,
+		public decomposedPath?: DecomposedPath
 	) {
 		super(param.scene(), 'MethodDependency');
 
 		param.expressionController?.registerMethodDependency(this);
 
-		this.addPostDirtyHook('_update_from_name_change', this._update_from_name_change_bound);
+		this.addPostDirtyHook('_updateFromNameChange', this._updateFromNameChangeBound);
 	}
-	_update_from_name_change(trigger?: CoreGraphNode) {
-		if (trigger && this.decomposed_path) {
+	private _updateFromNameChange(trigger?: CoreGraphNode) {
+		if (trigger && this.decomposedPath) {
 			const node = trigger as BaseNodeType;
-			this.decomposed_path.update_from_name_change(node);
-			const new_path = this.decomposed_path.to_path();
+			this.decomposedPath.update_from_name_change(node);
+			const new_path = this.decomposedPath.to_path();
 
 			const literal = this.jsep_node as jsep.Literal;
-			if (literal) {
-				literal.value = `${literal.value}`.replace(`${this.path_argument}`, new_path);
-				literal.raw = literal.raw.replace(`${this.path_argument}`, new_path);
+			const {indexOrPath} = this.pathArgs;
+			if (literal && CoreType.isString(indexOrPath)) {
+				literal.value = `${literal.value}`.replace(`${indexOrPath}`, new_path);
+				literal.raw = literal.raw.replace(`${indexOrPath}`, new_path);
 			}
 			if (this.param.expressionController) {
 				this.param.expressionController.updateFromMethodDependencyNameChange();
@@ -43,8 +45,8 @@ export class MethodDependency extends CoreGraphNode {
 	}
 
 	listen_for_name_changes() {
-		if (this.jsep_node && this.decomposed_path) {
-			for (let node_in_path of this.decomposed_path.named_nodes()) {
+		if (this.jsep_node && this.decomposedPath) {
+			for (let node_in_path of this.decomposedPath.named_nodes()) {
 				if (node_in_path) {
 					const node = node_in_path as BaseNodeType;
 					if (node.nameController) {
@@ -67,12 +69,10 @@ export class MethodDependency extends CoreGraphNode {
 
 	static create(
 		param: BaseParamType,
-		index_or_path: number | string,
+		pathArgs: BaseMethodFindDependencyArgs,
 		node: CoreGraphNode,
-		decomposed_path?: DecomposedPath
+		decomposedPath?: DecomposedPath
 	) {
-		const is_index = CoreType.isNumber(index_or_path);
-
 		// if(!decomposed_path){
 		// 	console.log('nodes_in_path', decomposed_path.named_nodes);
 		// 	for (let node_in_path of decomposed_path.named_nodes) {
@@ -82,13 +82,13 @@ export class MethodDependency extends CoreGraphNode {
 		// 	}
 		// }
 
-		const instance = new MethodDependency(param, index_or_path, decomposed_path);
+		const instance = new MethodDependency(param, pathArgs, decomposedPath);
 		if (node) {
 			instance.set_resolved_graph_node(node);
 		} else {
-			if (!is_index) {
-				const path = index_or_path as string;
-				instance.set_unresolved_path(path);
+			const {indexOrPath} = pathArgs;
+			if (CoreType.isString(indexOrPath)) {
+				instance.set_unresolved_path(indexOrPath);
 			}
 		}
 		return instance;

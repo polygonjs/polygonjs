@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the name of the refered node
  *
@@ -25,13 +26,17 @@ export class OpnameExpression extends BaseMethod {
 		return [['string', 'path to node']];
 	}
 
-	override findDependency(indexOrPath: number | string): MethodDependency | null {
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		const {indexOrPath} = args;
+		if (indexOrPath == null) {
+			return null;
+		}
 		const graphNode = this.findReferencedGraphNode(indexOrPath);
 		if (graphNode) {
 			const node = graphNode as BaseNodeType;
 			if (node.nameController) {
 				const nameNode = node.nameController.graphNode();
-				return this.createDependency(nameNode, indexOrPath);
+				return this.createDependency(nameNode, {indexOrPath});
 			}
 		}
 		return null;

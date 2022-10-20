@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the value of an object attribute
  *
@@ -30,8 +31,8 @@ export class ObjectExpression extends BaseMethod {
 		];
 	}
 
-	override findDependency(index_or_path: number | string): MethodDependency | null {
-		return this.createDependencyFromIndexOrPath(index_or_path);
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		return this.createDependencyFromIndexOrPath(args);
 	}
 
 	override processArguments(args: any[]): Promise<any> {

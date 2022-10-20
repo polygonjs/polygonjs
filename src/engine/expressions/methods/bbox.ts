@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the bbox of a geometry, or a component of the bbox.
  *
@@ -45,8 +46,8 @@ export class BboxExpression extends BaseMethod {
 		];
 	}
 
-	override findDependency(index_or_path: number | string): MethodDependency | null {
-		return this.createDependencyFromIndexOrPath(index_or_path);
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		return this.createDependencyFromIndexOrPath(args);
 	}
 
 	override processArguments(args: any[]): Promise<any> {

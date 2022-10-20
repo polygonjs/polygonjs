@@ -5,9 +5,10 @@
  * Can only be created inside a solver SOP.
  *
  */
+import {NetworkNodeType} from './../../poly/NodeContext';
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {SolverSopNode} from './Solver';
+import type {SolverSopNode} from './Solver';
 // import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 class SolverPreviousFrameSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SolverPreviousFrameSopParamsConfig();
@@ -18,23 +19,42 @@ export class SolverPreviousFrameSopNode extends TypedSopNode<SolverPreviousFrame
 		return 'solverPreviousFrame';
 	}
 
-	override initializeNode() {
-		this.addGraphInput(this.scene().timeController.graphNode);
-	}
-
 	override async cook() {
-		const parent = this.parent();
-		if (parent?.type() != SolverSopNode.type()) {
-			this.states.error.set(`the parent is not a '${SolverSopNode.type()}'`);
+		const solverNode = this._solverNode();
+		if (!solverNode) {
 			this.cookController.endCook();
+			return;
 		}
-		const solver = parent as SolverSopNode;
-		const previousFrameCoreGroup = solver.previousFrameCoreGroup();
-		console.log('previousFrameCoreGroup', previousFrameCoreGroup);
+		this._createSolverNodeDependencyIfRequired();
+		const previousFrameCoreGroup = solverNode.previousFrameCoreGroup();
 		if (previousFrameCoreGroup) {
 			this.setCoreGroup(previousFrameCoreGroup);
 		} else {
 			this.setObjects([]);
 		}
+	}
+
+	private _solverNodeDependencyCreated = false;
+	private _createSolverNodeDependencyIfRequired() {
+		if (this._solverNodeDependencyCreated) {
+			return;
+		}
+		const solverNode = this._solverNode();
+		if (!solverNode) {
+			return;
+		}
+		this.addGraphInput(solverNode.iterationStamp());
+		this._solverNodeDependencyCreated = true;
+	}
+
+	private _solverNode() {
+		const solverNode = this.parentController.findParent((parent) => parent.type() == NetworkNodeType.SOLVER) as
+			| SolverSopNode
+			| undefined;
+		if (!solverNode) {
+			this.states.error.set('parent is not a solver node');
+			return;
+		}
+		return solverNode;
 	}
 }

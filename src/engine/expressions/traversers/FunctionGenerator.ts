@@ -638,8 +638,8 @@ export class FunctionGenerator extends BaseTraverser {
 		this.method_index += 1;
 		this.methods[this.method_index] = method;
 
-		if (method.requireDependency() && pathArgument != null) {
-			const methodDependency = method.findDependency(pathArgument);
+		if (method.requireDependency()) {
+			const methodDependency = method.findDependency({indexOrPath: pathArgument});
 			if (methodDependency) {
 				if (pathNode) {
 					methodDependency.set_jsep_node(pathNode);

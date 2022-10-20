@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * The copy expression allows the copy SOP node to evaluates its input graph multiple times, and vary its result each time.
  *
@@ -43,13 +44,16 @@ export class CopyExpression extends BaseMethod {
 		return [['string', 'attribute name (optional)']];
 	}
 
-	override findDependency(indexOrPath: number | string): MethodDependency | null {
-		const node = this.findReferencedGraphNode(indexOrPath) as BaseNodeType;
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		if (args.indexOrPath == null) {
+			return null;
+		}
+		const node = this.findReferencedGraphNode(args.indexOrPath) as BaseNodeType;
 		// I'd prefer testing with if(node instanceof CopySopNode || node instanceof CopyAnimNode)
 		// but tslib generates an error when doing so
 		if (isCopyNode(node)) {
 			const stampNode = (node as CopyNode).stampNode();
-			return this.createDependency(stampNode, indexOrPath);
+			return this.createDependency(stampNode, {indexOrPath: args.indexOrPath});
 		}
 		return null;
 	}

@@ -1,3 +1,4 @@
+import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the number at the end of a string
  *
@@ -26,13 +27,17 @@ export class OpdigitsExpression extends BaseMethod {
 		return [['string', 'path to node']];
 	}
 
-	override findDependency(index_or_path: number | string): MethodDependency | null {
-		const graph_node = this.findReferencedGraphNode(index_or_path);
+	override findDependency(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		const {indexOrPath} = args;
+		if (indexOrPath == null) {
+			return null;
+		}
+		const graph_node = this.findReferencedGraphNode(indexOrPath);
 		if (graph_node) {
 			const node = graph_node as BaseNodeType;
 			if (node.nameController) {
-				const name_node = node.nameController.graphNode();
-				return this.createDependency(name_node, index_or_path);
+				const nameNode = node.nameController.graphNode();
+				return this.createDependency(nameNode, {indexOrPath});
 			}
 		}
 		return null;

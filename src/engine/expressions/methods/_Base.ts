@@ -10,6 +10,10 @@ import {NodeContext} from '../../poly/NodeContext';
 import {Poly} from '../../Poly';
 import {CoreType} from '../../../core/Type';
 
+export interface BaseMethodFindDependencyArgs {
+	indexOrPath: string | number | undefined;
+	node?: BaseNodeType;
+}
 export class BaseMethod {
 	protected _requireDependency = false;
 	requireDependency() {
@@ -135,26 +139,27 @@ export class BaseMethod {
 		//}
 	}
 
-	findDependency(arg: string | number): MethodDependency | null {
+	findDependency(arg: BaseMethodFindDependencyArgs): MethodDependency | null {
 		return null;
 	}
 
-	protected createDependencyFromIndexOrPath(index_or_path: number | string): MethodDependency | null {
-		const decomposed_path = new DecomposedPath();
-		const node = this.findReferencedGraphNode(index_or_path, decomposed_path);
+	protected createDependencyFromIndexOrPath(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		const {indexOrPath} = args;
+		const decomposedPath = new DecomposedPath();
+		const node = indexOrPath != null ? this.findReferencedGraphNode(indexOrPath, decomposedPath) : args.node;
 		if (node) {
-			return this.createDependency(node, index_or_path, decomposed_path);
+			return this.createDependency(node, args, decomposedPath);
 		} else {
-			Poly.warn('node not found for path', index_or_path);
+			Poly.warn('node not found for path', indexOrPath);
 		}
 		return null;
 	}
 	protected createDependency(
 		node: CoreGraphNode,
-		index_or_path: number | string,
-		decomposed_path?: DecomposedPath
+		pathArgs: BaseMethodFindDependencyArgs,
+		decomposedPath?: DecomposedPath
 	): MethodDependency | null {
-		const dependency = MethodDependency.create(this.param, index_or_path, node, decomposed_path);
+		const dependency = MethodDependency.create(this.param, pathArgs, node, decomposedPath);
 		return dependency;
 	}
 }

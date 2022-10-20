@@ -52,6 +52,7 @@ export class MergeSopOperation extends BaseSopOperation {
 		if (isBooleanTrue(params.compact)) {
 			allObjects = this._makeCompact(allObjects);
 		}
+
 		return this.createCoreGroupFromObjects(allObjects);
 	}
 	private _makeCompact(all_objects: Object3D[]): Object3DWithGeometry[] {
