@@ -43,7 +43,7 @@ QUnit.test('solver simple', async (assert) => {
 	copy1.setInput(1, scatter);
 
 	const boolean = solver1.createNode('boolean');
-	boolean.setOperation(BooleanOperation.UNION);
+	boolean.setOperation(BooleanOperation.ADD);
 	boolean.setInput(0, switch1);
 	boolean.setInput(1, copy1);
 

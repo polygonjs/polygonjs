@@ -1,6 +1,4 @@
-import {BufferGeometry} from 'three';
-import {Mesh} from 'three';
-import {Raycaster} from 'three';
+import type {BufferGeometry, Mesh, Raycaster} from 'three';
 import {
 	computeBoundsTree,
 	disposeBoundsTree,

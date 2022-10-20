@@ -28,7 +28,7 @@ QUnit.test('SOP boolean simple', async (assert) => {
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 60);
 
-	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.UNION));
+	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.ADD));
 	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 210);
@@ -47,7 +47,7 @@ QUnit.test('SOP boolean simple', async (assert) => {
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 192);
 
-	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.UNION));
+	boolean.p.operation.set(BOOLEAN_OPERATIONS.indexOf(BooleanOperation.ADD));
 	coreGroup = (await boolean.compute()).coreContent()!;
 	assert.ok(coreGroup);
 	assert.equal(coreGroup.points().length, 7188);
@@ -121,7 +121,7 @@ QUnit.test('SOP boolean result can be instanciated', async (assert) => {
 	box2.p.center.set([0.1, 0.2, 0.3]);
 	const boolean1 = geo1.createNode('boolean');
 
-	boolean1.setOperation(BooleanOperation.UNION);
+	boolean1.setOperation(BooleanOperation.ADD);
 	boolean1.setInput(0, box1);
 	boolean1.setInput(1, box2);
 

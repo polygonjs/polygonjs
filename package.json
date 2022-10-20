@@ -60,6 +60,7 @@
 		"postprocessing": "6.28.5",
 		"potpack": "1.0.2",
 		"three": "0.144.0",
+		"three-bvh-csg": "0.0.2",
 		"three-good-godrays": "0.3.0",
 		"three-mesh-bvh": "0.5.15",
 		"three-subdivide": "1.1.0",
