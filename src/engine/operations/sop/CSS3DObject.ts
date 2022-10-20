@@ -1,13 +1,14 @@
 import {BaseSopOperation} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CSS2DObject} from '../../../modules/three/examples/jsm/renderers/CSS2DRenderer';
+import {CSS3DObject} from '../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
 import {CoreString} from '../../../core/String';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+export const DEFAULT_CSS3DOBJECT_CLASS = 'CSS3DObject';
 
-interface CSS2DObjectParams {
+interface CSS3DObjectParams {
 	id: string;
 	className: string;
 	html: string;
@@ -18,7 +19,7 @@ const ATTRIBUTE_NAME = {
 	html: 'html',
 };
 
-interface CSS2DObjectSopParams extends DefaultOperationParams {
+interface CSS3DObjectSopParams extends DefaultOperationParams {
 	useIdAttrib: boolean;
 	id: string;
 	useClassAttrib: boolean;
@@ -27,25 +28,27 @@ interface CSS2DObjectSopParams extends DefaultOperationParams {
 	html: string;
 	copyAttributes: boolean;
 	attributesToCopy: string;
+	scale: number;
 }
 
-export class CSS2DObjectSopOperation extends BaseSopOperation {
-	static override readonly DEFAULT_PARAMS: CSS2DObjectSopParams = {
+export class CSS3DObjectSopOperation extends BaseSopOperation {
+	static override readonly DEFAULT_PARAMS: CSS3DObjectSopParams = {
 		useIdAttrib: false,
 		id: 'myCSSObject',
 		useClassAttrib: false,
-		className: 'CSS2DObject',
+		className: DEFAULT_CSS3DOBJECT_CLASS,
 		useHTMLAttrib: false,
 		html: '<div>default html</div>',
 		copyAttributes: false,
 		attributesToCopy: '',
+		scale: 0.1,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
-	static override type(): Readonly<'CSS2DObject'> {
-		return 'CSS2DObject';
+	static override type(): Readonly<'CSS3DObject'> {
+		return 'CSS3DObject';
 	}
 
-	override cook(input_contents: CoreGroup[], params: CSS2DObjectSopParams) {
+	override cook(input_contents: CoreGroup[], params: CSS3DObjectSopParams) {
 		const core_group = input_contents[0];
 		if (core_group) {
 			const objects = this._createObjectsFromInputPoints(core_group, params);
@@ -55,9 +58,9 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 			return this.createCoreGroupFromObjects([object]);
 		}
 	}
-	private _createObjectsFromInputPoints(core_group: CoreGroup, params: CSS2DObjectSopParams) {
+	private _createObjectsFromInputPoints(core_group: CoreGroup, params: CSS3DObjectSopParams) {
 		const points = core_group.points();
-		const objects: CSS2DObject[] = [];
+		const objects: CSS3DObject[] = [];
 		for (let point of points) {
 			const id = isBooleanTrue(params.useIdAttrib) ? (point.attribValue(ATTRIBUTE_NAME.id) as string) : params.id;
 			const className = isBooleanTrue(params.useClassAttrib)
@@ -67,7 +70,7 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 				? (point.attribValue(ATTRIBUTE_NAME.html) as string)
 				: params.html;
 
-			const object = CSS2DObjectSopOperation.createCSSObject({
+			const object = CSS3DObjectSopOperation.createCSSObject({
 				id,
 				className,
 				html,
@@ -88,6 +91,7 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 			}
 
 			object.position.copy(point.position());
+			object.scale.multiplyScalar(params.scale);
 			object.updateMatrix();
 
 			objects.push(object);
@@ -95,8 +99,8 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 		return objects;
 	}
 
-	private _createObjectFromScratch(params: CSS2DObjectSopParams) {
-		const object = CSS2DObjectSopOperation.createCSSObject({
+	private _createObjectFromScratch(params: CSS3DObjectSopParams) {
+		const object = CSS3DObjectSopOperation.createCSSObject({
 			id: params.id,
 			className: params.className,
 			html: params.html,
@@ -105,13 +109,13 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 		return object;
 	}
 
-	private static createCSSObject(params: CSS2DObjectParams) {
+	private static createCSSObject(params: CSS3DObjectParams) {
 		const element = document.createElement('div');
 		element.id = params.id;
 		element.className = params.className;
 		element.innerHTML = params.html;
 
-		const object = new CSS2DObject(element);
+		const object = new CSS3DObject(element);
 
 		object.matrixAutoUpdate = false;
 

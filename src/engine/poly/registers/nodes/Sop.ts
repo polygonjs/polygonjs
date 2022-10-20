@@ -378,6 +378,7 @@ import {ClipSopOperation} from '../../../operations/sop/Clip';
 import {CurveFromPointsSopOperation} from '../../../operations/sop/CurveFromPoints';
 import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
 import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
+import {CSS3DObjectSopOperation} from '../../../operations/sop/CSS3DObject';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
 import {EmptyObjectSopOperation} from '../../../operations/sop/EmptyObject';
@@ -478,6 +479,7 @@ export class SopRegister {
 		poly.registerOperation(CurveFromPointsSopOperation);
 		poly.registerOperation(CurveGetPointSopOperation);
 		poly.registerOperation(CSS2DObjectSopOperation);
+		poly.registerOperation(CSS3DObjectSopOperation);
 		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
 		poly.registerOperation(EmptyObjectSopOperation);
@@ -592,7 +594,7 @@ export class SopRegister {
 		poly.registerNode(CurveFromPointsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CurveGetPointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CSS2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
-		// poly.registerNode(Css3DObjectSopNode, CATEGORY_SOP.PRIMITIVES); // not working yet
+		poly.registerNode(CSS3DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DataUrlSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DecalSopNode, CATEGORY_SOP.MISC);

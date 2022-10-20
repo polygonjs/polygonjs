@@ -13,6 +13,7 @@ import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
+
 class CSS2DRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param css rules to be added in the html document */
 	css = ParamConfig.STRING('', {

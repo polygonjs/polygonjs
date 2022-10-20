@@ -15,6 +15,12 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 const DEFAULT = CSS2DObjectSopOperation.DEFAULT_PARAMS;
 class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
+	/** @param toggles on if attributes are copied from the geometry to the html element */
+	copyAttributes = ParamConfig.BOOLEAN(DEFAULT.copyAttributes);
+	/** @param names of the attributes that are copied from the geometry to the html element */
+	attributesToCopy = ParamConfig.STRING(DEFAULT.attributesToCopy, {
+		visibleIf: {copyAttributes: true},
+	});
 	/** @param defines if the vertex id attribute is used to create the html id attribute */
 	useIdAttrib = ParamConfig.BOOLEAN(DEFAULT.useIdAttrib);
 	/** @param value of the html element id attribute */
@@ -33,12 +39,6 @@ class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 	html = ParamConfig.STRING(DEFAULT.html, {
 		visibleIf: {useHTMLAttrib: 0},
 		language: StringParamLanguage.HTML,
-	});
-	/** @param toggles on if attributes are copied from the geometry to the html element */
-	copyAttributes = ParamConfig.BOOLEAN(DEFAULT.copyAttributes);
-	/** @param names of the attributes that are copied from the geometry to the html element */
-	attributesToCopy = ParamConfig.STRING(DEFAULT.attributesToCopy, {
-		visibleIf: {copyAttributes: true},
 	});
 }
 const ParamsConfig = new CSS2DObjectSopParamsConfig();
