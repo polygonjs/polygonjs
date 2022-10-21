@@ -1,4 +1,3 @@
-import {DEFAULT_CSS3DOBJECT_CLASS} from './../../operations/sop/CSS3DObject';
 /**
  * Creates a CSS3DRenderer
  *
@@ -8,6 +7,7 @@ import {DEFAULT_CSS3DOBJECT_CLASS} from './../../operations/sop/CSS3DObject';
  * Note that the CSS3DRenderer currently requires the WebGLRenderer to have a pixelRatio of 1. Since the default is 2 for desktop, you would need to assign your own WebGLRenderer node to the camera and set its pixelRatio to 1.
  *
  */
+import {DEFAULT_CSS3DOBJECT_CLASS} from './../../operations/sop/CSS3DObject';
 import {TypedRopNode} from './_Base';
 import {CSS3DRenderer} from '../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
 import {RopType} from '../../poly/registers/nodes/types/Rop';

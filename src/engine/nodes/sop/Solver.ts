@@ -1,9 +1,9 @@
-import {BaseNodeType} from './../_Base';
-import {SolverIterationStamp} from './utils/SolverIterationStamp';
 /**
- * A solver re-uses its output as its input on each frame
+ * A solver re-uses its output as its input on each iteration
  *
  */
+import {BaseNodeType} from './../_Base';
+import {SolverIterationStamp} from './utils/SolverIterationStamp';
 import {NetworkNodeType} from './../../poly/NodeContext';
 import {SubnetSopNodeLike, SopSubnetChildrenDisplayController} from './utils/subnet/ChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
