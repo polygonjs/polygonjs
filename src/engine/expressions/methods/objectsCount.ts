@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the number of objects in a geometry.
  *
@@ -15,6 +14,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `objectsCount('/geo/merge1')` - returns the number of objects in the node /geo/merge1
  *
  */
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';

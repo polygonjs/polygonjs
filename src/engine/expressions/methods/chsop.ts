@@ -1,5 +1,3 @@
-import {CoreType} from './../../../core/Type';
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the value of another nodePath or nodeParam parameter
  *
@@ -16,6 +14,8 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `chsop('./material1/material')` - returns the value of the parameter material of node ./material1
  *
  */
+import {CoreType} from './../../../core/Type';
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {TypedParamPathParamValue, TypedNodePathParamValue} from './../../../core/Walker';
 import {BaseMethod} from './_Base';
 import {DecomposedPath} from '../../../core/DecomposedPath';

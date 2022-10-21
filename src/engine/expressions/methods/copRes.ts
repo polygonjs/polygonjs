@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the resolution of a texture of a COP node.
  *
@@ -16,6 +15,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `copRes('/COP/image1', 'x')` - returns the x component of the size of the texture, as a number
  *
  */
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {TextureContainer} from '../../containers/Texture';

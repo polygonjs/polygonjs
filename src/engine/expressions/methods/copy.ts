@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * The copy expression allows the copy SOP node to evaluates its input graph multiple times, and vary its result each time.
  *
@@ -18,6 +17,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `copy('../copy1')` - returns the index of each evaluation
  *
  */
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {SopType} from './../../poly/registers/nodes/types/Sop';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';

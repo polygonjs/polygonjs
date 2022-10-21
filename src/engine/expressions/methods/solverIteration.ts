@@ -1,5 +1,3 @@
-import {NetworkNodeType} from './../../poly/NodeContext';
-import {BaseNodeType} from './../../nodes/_Base';
 /**
  * Returns the current iteration of the [solver node](/docs/nodes/sop/solver).
  *
@@ -17,6 +15,8 @@ import {BaseNodeType} from './../../nodes/_Base';
  * - `solverIteration('/geo/solver1')` - returns the iteration of the parent solver node /geo/merge1
  *
  */
+import {NetworkNodeType} from './../../poly/NodeContext';
+import {BaseNodeType} from './../../nodes/_Base';
 import {BaseMethod, BaseMethodFindDependencyArgs} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {SolverSopNode} from '../../nodes/sop/Solver';

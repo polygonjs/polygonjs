@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the centroid of a geometry, or the component of the centroid.
  *
@@ -17,6 +16,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `centroid('/geo1/box', 'x')` - returns the x component of centroid of the bbox, as a number
  *
  */
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';

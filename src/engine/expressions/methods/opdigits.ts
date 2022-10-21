@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the number at the end of a string
  *
@@ -15,7 +14,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `opdigits($OS)` - returns the number at the end of the name of the current node
  *
  */
-
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';

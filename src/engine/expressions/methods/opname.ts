@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the name of the refered node
  *
@@ -15,7 +14,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `opname('..')` - returns the name of the parent
  *
  */
-
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';

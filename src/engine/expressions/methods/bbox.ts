@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the bbox of a geometry, or a component of the bbox.
  *
@@ -19,6 +18,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `bbox('/geo1/box', 'min', 'x')` - returns the x component of min vector of the bbox, as a number
  *
  */
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {Vector3} from 'three';

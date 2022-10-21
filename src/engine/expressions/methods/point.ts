@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the value of a vertex attribute
  *
@@ -16,6 +15,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `point(0, 'position', 0)` - returns the position of the first point of the first input, as a THREE.Vector3
  *
  */
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';

@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the value of an object attribute
  *
@@ -16,6 +15,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `object(0, 'pscale', 0)` - returns the pscale attribute value of the first object of the first input
  *
  */
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';

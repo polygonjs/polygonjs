@@ -1,4 +1,3 @@
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the size of the window.
  *
@@ -15,6 +14,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `windowSize().y` - returns a float
  *
  */
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {Vector2} from 'three';
 

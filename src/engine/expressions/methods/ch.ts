@@ -1,5 +1,3 @@
-import {CoreType} from './../../../core/Type';
-import {BaseMethodFindDependencyArgs} from './_Base';
 /**
  * Returns the value of another parameter
  *
@@ -16,6 +14,8 @@ import {BaseMethodFindDependencyArgs} from './_Base';
  * - `ch('/geo1/tx')` - returns the value of the tx of the node /geo1
  *
  */
+import {CoreType} from './../../../core/Type';
+import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {DecomposedPath} from '../../../core/DecomposedPath';
 import {MethodDependency} from '../MethodDependency';
