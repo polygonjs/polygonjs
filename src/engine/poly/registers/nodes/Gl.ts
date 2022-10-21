@@ -129,6 +129,7 @@ import {SDFMaxGlNode} from '../../../nodes/gl/SDFMax';
 import {SDFMinGlNode} from '../../../nodes/gl/SDFMin';
 import {SDFMirrorGlNode} from '../../../nodes/gl/SDFMirror';
 import {SDFOctahedronGlNode} from '../../../nodes/gl/SDFOctahedron';
+import {SDFOctogonalPrismGlNode} from '../../../nodes/gl/SDFOctogonalPrism';
 import {SDFOnionGlNode} from '../../../nodes/gl/SDFOnion';
 import {SDFPlaneGlNode} from '../../../nodes/gl/SDFPlane';
 import {SDFPyramidGlNode} from '../../../nodes/gl/SDFPyramid';
@@ -290,6 +291,7 @@ export interface GlNodeChildrenMap {
 	SDFMin: SDFMinGlNode;
 	SDFMirror: SDFMirrorGlNode;
 	SDFOctahedron: SDFOctahedronGlNode;
+	SDFOctogonalPrism: SDFOctogonalPrismGlNode;
 	SDFOnion: SDFOnionGlNode;
 	SDFPlane: SDFPlaneGlNode;
 	SDFPyramid: SDFPyramidGlNode;
@@ -476,6 +478,7 @@ export class GlRegister {
 		poly.registerNode(SDFMinGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFMirrorGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFOctahedronGlNode, CATEGORY_GL.SDF_PRIMITIVES);
+		poly.registerNode(SDFOctogonalPrismGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFOnionGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFPlaneGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFPyramidGlNode, CATEGORY_GL.SDF_PRIMITIVES);

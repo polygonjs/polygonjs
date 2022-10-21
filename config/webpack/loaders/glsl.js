@@ -2,6 +2,6 @@
 // (from: https://stackoverflow.com/questions/48741570/how-can-i-import-glsl-as-string-in-typescript)
 // Although that may not work from .js files, only from .ts
 module.exports = {
-	test: /\.glsl$/,
+	test: /\.(glsl|vert|frag)$/,
 	use: [{loader: 'ts-shader-loader'}],
 };

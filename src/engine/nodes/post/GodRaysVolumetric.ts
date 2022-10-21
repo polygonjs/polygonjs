@@ -9,7 +9,7 @@ import {PolyScene} from './../../scene/PolyScene';
 import {Vector2, PointLight, DirectionalLight, Object3D} from 'three';
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// import {GodraysPass} from 'three-good-godrays';
+// import {GodraysPass} from 'three-good-godrays/src/index';
 import {GodraysPass} from './utils/GodRaysVolumetric/GodRaysPass';
 import {GodRaysVolumetricAcceptedLightType} from './utils/GodRaysVolumetric/utils/AcceptedLightType';
 
@@ -66,10 +66,6 @@ class GodRaysVolumetricPostParamsConfig extends NodeParamsConfig {
 	/** @param light to emit godrays from. Note that while the mask can resolve multiple objects, only the first light will be used */
 	lightMask = ParamConfig.STRING('*Light*', {
 		objectMask: true,
-		...PostParamOptions,
-	});
-	/** @param center */
-	center = ParamConfig.VECTOR3([0, 0, 0], {
 		...PostParamOptions,
 	});
 	/** @param color */
