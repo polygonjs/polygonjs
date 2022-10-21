@@ -328,6 +328,7 @@ import './engine/nodes/sop/Copy';
 import './engine/nodes/sop/CurveFromPoints';
 import './engine/nodes/sop/CurveGetPoint';
 import './engine/nodes/sop/CSS2DObject';
+import './engine/nodes/sop/CSS3DObject';
 import './engine/nodes/sop/Data';
 import './engine/nodes/sop/DataUrl';
 import './engine/nodes/sop/Decal';
