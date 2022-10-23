@@ -37,7 +37,7 @@ export class SDFPyramidGlNode extends BaseSDFGlNode<SDFPyramidGlParamsConfig> {
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
-		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
+		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
 
 		const float = this.glVarName(OUTPUT_NAME);

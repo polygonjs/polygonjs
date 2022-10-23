@@ -1,5 +1,5 @@
 /**
- * Function of SDF Triangular Prism
+ * Function of SDF Horse Shoe
  *
  * @remarks
  *
@@ -15,17 +15,24 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 import {BaseSDFGlNode} from './_BaseSDF';
 
 const OUTPUT_NAME = 'float';
-class SDFTriangularPrismGlParamsConfig extends NodeParamsConfig {
+class SDFHorseShoeGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
-	radius = ParamConfig.FLOAT(0.1);
-	height = ParamConfig.FLOAT(1);
+	angle = ParamConfig.FLOAT(1, {
+		range: [0, Math.PI],
+		rangeLocked: [true, true],
+		step: 0.00001,
+	});
+	radius = ParamConfig.FLOAT(1);
+	length = ParamConfig.FLOAT(1);
+	thickness = ParamConfig.FLOAT(0.1);
+	width = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new SDFTriangularPrismGlParamsConfig();
-export class SDFTriangularPrismGlNode extends BaseSDFGlNode<SDFTriangularPrismGlParamsConfig> {
+const ParamsConfig = new SDFHorseShoeGlParamsConfig();
+export class SDFHorseShoeGlNode extends BaseSDFGlNode<SDFHorseShoeGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFTriangularPrism';
+		return 'SDFHorseShoe';
 	}
 
 	override initializeNode() {
@@ -39,11 +46,14 @@ export class SDFTriangularPrismGlNode extends BaseSDFGlNode<SDFTriangularPrismGl
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
+		const angle = ThreeToGl.float(this.variableForInputParam(this.p.angle));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
-		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
+		const length = ThreeToGl.float(this.variableForInputParam(this.p.length));
+		const thickness = ThreeToGl.float(this.variableForInputParam(this.p.thickness));
+		const width = ThreeToGl.float(this.variableForInputParam(this.p.width));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdTriPrism(${position} - ${center}, vec2(${radius},${height}))`;
+		const bodyLine = `float ${float} = sdHorseshoe(${position} - ${center}, ${angle}, ${radius}, ${length}, vec2(${thickness}, ${width}))`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);

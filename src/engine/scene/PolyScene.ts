@@ -14,7 +14,12 @@ import {PolySceneSerializer} from './utils/Serializer';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
 import {ObjectsController} from './utils/ObjectsController';
 import {ReferencesController} from './utils/ReferencesController';
-import {onTimeTickHook, TimeController, TimeControllerUpdateTimeOptions} from './utils/TimeController';
+import {
+	onTimeTickHook,
+	TimeController,
+	TimeControllerUpdateTimeOptions,
+	TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT,
+} from './utils/TimeController';
 import {UniformsController} from './utils/UniformsController';
 import {ViewersRegister} from './utils/ViewersRegister';
 import {SceneWebGLController} from './utils/WebGLController';
@@ -228,6 +233,18 @@ export class PolyScene {
 		return (this._viewers_register = this._viewers_register || new ViewersRegister(this));
 	}
 	public readonly sceneTraverser = new SceneTraverserController(this);
+	/**
+	 * updates Polygonjs scene internals. This is called automatically when using Polygonjs viewers,
+	 * but you would need to call it yourself in the render loop when adding your scene to threejs or react-three-fiber.
+	 * See [https://polygonjs.com/docs/integrations](https://polygonjs.com/docs/integrations)
+	 *
+	 */
+	update(delta: number) {
+		// setDelta is necessary here, as this function is most likely called from an integration with threejs, using a custom render loop
+		this.timeController.setDelta(delta);
+		this.timeController.incrementTimeIfPlaying(TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT);
+		this.sceneTraverser.traverseScene();
+	}
 
 	//
 	//

@@ -1,4 +1,4 @@
-import {SpotLightRayMarchingUniformElement} from './../../../../src/engine/scene/utils/SceneTraverser';
+import {SpotLightRayMarchingUniformElement} from './../../../../src/engine/scene/utils/raymarching/SpotLight';
 import {UniformName} from './../../../../src/engine/scene/utils/UniformsController';
 import {Vector3} from 'three';
 import {CoreSleep} from './../../../../src/core/Sleep';

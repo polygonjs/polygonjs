@@ -45,7 +45,7 @@ export class SDFSphereHollowGlNode extends BaseSDFGlNode<SDFSphereHollowGlParams
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
-		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
+		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
 		const thickness = ThreeToGl.float(this.variableForInputParam(this.p.thickness));

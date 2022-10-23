@@ -122,6 +122,7 @@ import {SDFElongateGlNode} from '../../../nodes/gl/SDFElongate';
 import {SDFFractalMandelbrotGlNode} from '../../../nodes/gl/SDFFractalMandelbrot';
 import {SDFGradientGlNode} from '../../../nodes/gl/SDFGradient';
 import {SDFHexagonalPrismGlNode} from '../../../nodes/gl/SDFHexagonalPrism';
+import {SDFHorseShoeGlNode} from '../../../nodes/gl/SDFHorseShoe';
 import {SDFIntersectGlNode} from '../../../nodes/gl/SDFIntersect';
 import {SDFLinkGlNode} from '../../../nodes/gl/SDFLink';
 import {SDFMaterialGlNode} from '../../../nodes/gl/SDFMaterial';
@@ -284,6 +285,7 @@ export interface GlNodeChildrenMap {
 	SDFFractalMandelbrot: SDFFractalMandelbrotGlNode;
 	SDFGradient: SDFGradientGlNode;
 	SDFHexagonalPrism: SDFHexagonalPrismGlNode;
+	SDFHorseShoe: SDFHorseShoeGlNode;
 	SDFIntersect: SDFIntersectGlNode;
 	SDFLink: SDFLinkGlNode;
 	SDFMaterial: SDFMaterialGlNode;
@@ -471,6 +473,7 @@ export class GlRegister {
 		poly.registerNode(SDFFractalMandelbrotGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFGradientGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFHexagonalPrismGlNode, CATEGORY_GL.SDF_PRIMITIVES);
+		poly.registerNode(SDFHorseShoeGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFIntersectGlNode, CATEGORY_GL.SDF_MODIFIERS);
 		poly.registerNode(SDFLinkGlNode, CATEGORY_GL.SDF_PRIMITIVES);
 		poly.registerNode(SDFMaterialGlNode, CATEGORY_GL.SDF_MODIFIERS);

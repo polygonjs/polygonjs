@@ -40,7 +40,7 @@ export class SDFTriangleGlNode extends BaseSDFGlNode<SDFTriangleGlParamsConfig> 
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
-		const center = ThreeToGl.vector2(this.variableForInputParam(this.p.center));
+		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const a = ThreeToGl.float(this.variableForInputParam(this.p.a));
 		const b = ThreeToGl.float(this.variableForInputParam(this.p.b));
 		const c = ThreeToGl.float(this.variableForInputParam(this.p.c));

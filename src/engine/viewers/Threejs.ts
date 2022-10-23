@@ -2,7 +2,6 @@ import {Camera, WebGLRenderer} from 'three';
 import {TypedViewer, TypedViewerOptions} from './_Base';
 import {Poly} from '../Poly';
 import {ViewerLogoController} from './utils/logo/ViewerLogoController';
-import {TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT} from '../scene/utils/TimeController';
 import {CoreCameraRendererController} from '../../core/camera/CoreCameraRendererController';
 import {CoreCameraPostProcessController} from '../../core/camera/CoreCameraPostProcessController';
 import {CoreCameraCSSRendererController, CSSRendererConfig} from '../../core/camera/CoreCameraCSSRendererController';
@@ -225,7 +224,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			this._requestAnimationFrameId = requestAnimationFrame(this._animateMethod);
 			this._runOnBeforeTickCallbacks(delta);
 			// this._scene.eventsDispatcher.connectionTriggerDispatcher.reset();
-			this._scene.timeController.incrementTimeIfPlaying(TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT);
+			this.scene().update(delta);
 			this._runOnAfterTickCallbacks(delta);
 			this.render(delta);
 			// this.controlsController()?.update(delta);
@@ -245,16 +244,12 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 
 	render(delta: number) {
 		if (this._canvas) {
-			// const renderController = this._cameraNode.renderController();
-			const renderer = this._renderer; //renderController.getRenderer(this._canvas);
+			const renderer = this._renderer;
 			if (!renderer) {
 				return;
 			}
-			this.scene().sceneTraverser.traverseScene();
+
 			this._runOnBeforeRenderCallbacks(delta, renderer);
-			// const size = this.camerasController().size;
-			// const aspect = this.camerasController().aspect;
-			// renderController.render(this._canvas, size, aspect, this._renderObjectOverride);
 			if (this._renderFunc) {
 				this._renderFunc(delta);
 			}

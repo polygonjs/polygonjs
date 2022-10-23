@@ -50,7 +50,6 @@ export class TimeController {
 	get graphNode() {
 		return this._graphNode;
 	}
-
 	updateClockDelta() {
 		return (this._delta = this._clock.getDelta());
 	}
