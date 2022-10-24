@@ -55,19 +55,16 @@ export class BaseShaderAssemblerRayMarchingRendered extends BaseShaderAssemblerR
 			},
 		});
 
-		this._gl_parent_node.scene().sceneTraverser.addlightsRayMarchingUniform(material.uniforms);
+		this._gl_parent_node.scene().sceneTraverser.addLightsRayMarchingUniform(material.uniforms);
 		// CoreMaterial.addUserDataRenderHook(material, RayMarchingController.renderHook.bind(RayMarchingController));
 
 		this._addCustomMaterials(material);
 		return material;
 	}
+	protected override _raymarchingLightsWorldCoordsDependent() {
+		return true;
+	}
 
-	// static add_output_inputs(output_child: OutputGlNode) {
-	// 	// adding the color here would require to understand how to have the color affect the light in raymarch_light
-	// 	// output_child.params.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-	// 	// output_child.params.add_param(ParamType.VECTOR3, 'position', [0, 0, 0], {hidden: true});
-	// 	// output_child.params.add_param(ParamType.FLOAT, 'density', 1, {hidden: true});
-	// }
 	override add_output_inputs(output_child: OutputGlNode) {
 		output_child.io.inputs.setNamedInputConnectionPoints([
 			new GlConnectionPoint(

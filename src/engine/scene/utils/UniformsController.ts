@@ -30,6 +30,7 @@ interface AddUniformOptions {
 	additionalTextureUniforms: PolyDictionary<IUniformTexture>;
 	timeDependent: boolean;
 	resolutionDependent: boolean;
+	raymarchingLightsWorldCoordsDependent: boolean;
 }
 interface GlobalUniforms {
 	// time: IUniformN;
@@ -49,7 +50,13 @@ export class UniformsController {
 
 	// add uniforms from assemblers
 	addUniforms(uniforms: IUniforms, options: AddUniformOptions) {
-		const {paramConfigs, additionalTextureUniforms, timeDependent, resolutionDependent} = options;
+		const {
+			paramConfigs,
+			additionalTextureUniforms,
+			timeDependent,
+			resolutionDependent,
+			raymarchingLightsWorldCoordsDependent,
+		} = options;
 		for (let paramConfig of paramConfigs) {
 			uniforms[paramConfig.uniformName()] = paramConfig.uniform();
 		}
@@ -67,6 +74,11 @@ export class UniformsController {
 			this.addResolutionUniforms(uniforms);
 		} else {
 			this.removeResolutionUniform(uniforms);
+		}
+		if (raymarchingLightsWorldCoordsDependent) {
+			this.addRaymarchingUniforms(uniforms);
+		} else {
+			this.removeRaymarchingUniform(uniforms);
 		}
 	}
 	addTimeUniform(uniforms: IUniforms) {
@@ -96,6 +108,13 @@ export class UniformsController {
 	// 		this._resolutionDependentUniforms.push(uniforms);
 	// 	});
 	// }
+	// resolution
+	addRaymarchingUniforms(uniforms: IUniforms) {
+		this.scene.sceneTraverser.addLightsRayMarchingUniform(uniforms);
+	}
+	removeRaymarchingUniform(uniforms: IUniforms) {
+		this.scene.sceneTraverser.removeLightsRayMarchingUniform(uniforms);
+	}
 
 	updateResolution(resolution: Vector2, pixelRatio: number) {
 		GLOBAL_UNIFORMS[UniformName.RESOLUTION].value.copy(resolution).multiplyScalar(pixelRatio);

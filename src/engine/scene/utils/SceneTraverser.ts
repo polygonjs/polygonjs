@@ -5,76 +5,35 @@ import {
 	Scene,
 	Object3D,
 	Light,
-	SpotLight,
-	DirectionalLight,
-	HemisphereLight,
 	IUniform,
-	PointLight,
 	// RectAreaLight,
 } from 'three';
+import {LightType, getLightType, AvailableLight, UniformsUpdateFunction} from './raymarching/_Base';
 import {
-	updateWorldPos,
-	updateDirectionFromTarget,
-	updateUserDataPenumbra,
-	updateDirectionFromMatrix,
-	LightType,
-	getLightType,
-} from './raymarching/_Base';
-import {updateSpotLightPenumbra, SpotLightRayMarchingUniform, _createSpotLightUniform} from './raymarching/SpotLight';
-import {DirectionalLightRayMarchingUniform, _createDirectionalLightUniform} from './raymarching/DirectionalLight';
-import {HemisphereLightRayMarchingUniform, _createHemisphereLightUniform} from './raymarching/HemisphereLight';
-import {PointLightRayMarchingUniform, _createPointLightUniform} from './raymarching/PointLight';
+	_resetSpotLightIndex,
+	_updateUniformsWithSpotLight,
+	SpotLightRayMarchingUniform,
+	_createSpotLightUniform,
+} from './raymarching/SpotLight';
+import {
+	_resetDirectionalLightIndex,
+	_updateUniformsWithDirectionalLight,
+	DirectionalLightRayMarchingUniform,
+	_createDirectionalLightUniform,
+} from './raymarching/DirectionalLight';
+import {
+	_resetHemisphereLightIndex,
+	_updateUniformsWithHemisphereLight,
+	HemisphereLightRayMarchingUniform,
+	_createHemisphereLightUniform,
+} from './raymarching/HemisphereLight';
+import {
+	_resetPointLightIndex,
+	_updateUniformsWithPointLight,
+	PointLightRayMarchingUniform,
+	_createPointLightUniform,
+} from './raymarching/PointLight';
 
-let spotLightIndex = 0;
-let directionalLightIndex = 0;
-let hemisphereLightIndex = 0;
-let pointLightIndex = 0;
-
-type AvailableLight = SpotLight | DirectionalLight | HemisphereLight | PointLight;
-type UniformsUpdateFunction<L extends AvailableLight> = (object: L, uniforms: IUniform) => void;
-
-const _updateUniformsWithSpotLight: UniformsUpdateFunction<SpotLight> = (
-	object: SpotLight,
-	spotLightsRayMarching: SpotLightRayMarchingUniform
-) => {
-	updateWorldPos(object, spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
-	updateDirectionFromTarget(object, spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
-	updateSpotLightPenumbra(object, spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
-	spotLightIndex++;
-};
-const _updateUniformsWithDirectionalLight: UniformsUpdateFunction<DirectionalLight> = (
-	object: DirectionalLight,
-	directionalLightsRayMarching: DirectionalLightRayMarchingUniform
-) => {
-	updateDirectionFromTarget(
-		object,
-		directionalLightsRayMarching,
-		directionalLightIndex,
-		_createDirectionalLightUniform
-	);
-	updateUserDataPenumbra(
-		object as DirectionalLight,
-		directionalLightsRayMarching,
-		directionalLightIndex,
-		_createDirectionalLightUniform
-	);
-	directionalLightIndex++;
-};
-const _updateUniformsWithHemisphereLight: UniformsUpdateFunction<HemisphereLight> = (
-	object: HemisphereLight,
-	hemisphereLightsRayMarching: HemisphereLightRayMarchingUniform
-) => {
-	updateDirectionFromMatrix(object, hemisphereLightsRayMarching, hemisphereLightIndex, _createHemisphereLightUniform);
-	hemisphereLightIndex++;
-};
-const _updateUniformsWithPointLight: UniformsUpdateFunction<PointLight> = (
-	object: PointLight,
-	pointLightsRayMarching: PointLightRayMarchingUniform
-) => {
-	updateWorldPos(object, pointLightsRayMarching, pointLightIndex, _createPointLightUniform);
-	updateUserDataPenumbra(object as PointLight, pointLightsRayMarching, pointLightIndex, _createPointLightUniform);
-	pointLightIndex++;
-};
 function _updateUniformsFunctionForLight<L extends AvailableLight>(
 	object: L
 ): UniformsUpdateFunction<AvailableLight> | undefined {
@@ -119,10 +78,10 @@ export class SceneTraverserController {
 	constructor(protected scene: PolyScene) {}
 
 	traverseScene(scene?: Scene) {
-		spotLightIndex = 0;
-		directionalLightIndex = 0;
-		hemisphereLightIndex = 0;
-		pointLightIndex = 0;
+		_resetSpotLightIndex();
+		_resetDirectionalLightIndex();
+		_resetHemisphereLightIndex();
+		_resetPointLightIndex();
 		scene = scene || this.scene.threejsScene();
 		scene.traverse(this._onObjectTraverseBound);
 	}
@@ -219,11 +178,18 @@ export class SceneTraverserController {
 		}
 	}
 
-	addlightsRayMarchingUniform(uniforms: IUniforms) {
+	addLightsRayMarchingUniform(uniforms: IUniforms) {
 		uniforms[UniformName.SPOTLIGHTS_RAYMARCHING] = this._spotLightsRayMarching;
 		uniforms[UniformName.DIRECTIONALLIGHTS_RAYMARCHING] = this._directionalLightsRayMarching;
 		uniforms[UniformName.HEMISPHERELIGHTS_RAYMARCHING] = this._hemisphereLightsRayMarching;
 		uniforms[UniformName.POINTLIGHTS_RAYMARCHING] = this._pointLightsRayMarching;
+		// uniforms[UniformName.AREALIGHTS_RAYMARCHING] = this._areaLightsRayMarching;
+	}
+	removeLightsRayMarchingUniform(uniforms: IUniforms) {
+		delete uniforms[UniformName.SPOTLIGHTS_RAYMARCHING];
+		delete uniforms[UniformName.DIRECTIONALLIGHTS_RAYMARCHING];
+		delete uniforms[UniformName.HEMISPHERELIGHTS_RAYMARCHING];
+		delete uniforms[UniformName.POINTLIGHTS_RAYMARCHING];
 		// uniforms[UniformName.AREALIGHTS_RAYMARCHING] = this._areaLightsRayMarching;
 	}
 }

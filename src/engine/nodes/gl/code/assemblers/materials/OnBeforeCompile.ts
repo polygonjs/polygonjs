@@ -16,6 +16,7 @@ export interface OnBeforeCompileData {
 	additionalTextureUniforms: PolyDictionary<IUniformTexture>;
 	timeDependent: boolean;
 	resolutionDependent: boolean;
+	raymarchingLightsWorldCoordsDependent: boolean;
 }
 // from https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
 type RemoveParamConfigField<Type> = {
@@ -102,6 +103,7 @@ function _createOnBeforeCompile(scene: PolyScene, material: Material): OnBeforeC
 			additionalTextureUniforms,
 			timeDependent,
 			resolutionDependent,
+			raymarchingLightsWorldCoordsDependent,
 		} = data;
 		shader.vertexShader = vertexShader;
 		shader.fragmentShader = fragmentShader;
@@ -110,6 +112,7 @@ function _createOnBeforeCompile(scene: PolyScene, material: Material): OnBeforeC
 			additionalTextureUniforms,
 			timeDependent,
 			resolutionDependent,
+			raymarchingLightsWorldCoordsDependent,
 		});
 
 		// also add to the material itself so that the material is easy to debug in the console, as well as in tests
@@ -162,6 +165,7 @@ export class OnBeforeCompileDataConverter {
 			fragmentShader: onBeforeCompileData.fragmentShader,
 			timeDependent: onBeforeCompileData.timeDependent,
 			resolutionDependent: onBeforeCompileData.resolutionDependent,
+			raymarchingLightsWorldCoordsDependent: onBeforeCompileData.raymarchingLightsWorldCoordsDependent,
 			paramConfigs: onBeforeCompileData.paramConfigs.map((pc) => pc.toJSON()),
 		};
 		return onBeforeCompileDataJSON;

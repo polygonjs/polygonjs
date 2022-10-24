@@ -106,3 +106,6 @@ export function updateUserDataPenumbra(
 	uniforms.value[index].penumbra = object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA];
 	uniforms.value.needsUpdate = true;
 }
+
+export type AvailableLight = SpotLight | DirectionalLight | HemisphereLight | PointLight;
+export type UniformsUpdateFunction<L extends AvailableLight> = (object: L, uniforms: IUniform) => void;

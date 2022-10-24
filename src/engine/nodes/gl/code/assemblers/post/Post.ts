@@ -52,6 +52,7 @@ export class ShaderAssemblerPost extends BaseGlShaderAssembler {
 			additionalTextureUniforms: {},
 			timeDependent: this.uniformsTimeDependent(),
 			resolutionDependent: this.uniformsResolutionDependent(),
+			raymarchingLightsWorldCoordsDependent: this._raymarchingLightsWorldCoordsDependent(),
 		});
 
 		for (let shader_name of this.shaderNames()) {

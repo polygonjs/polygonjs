@@ -241,6 +241,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		// this.createSpareParameters();
 	}
+
 	prepareOnBeforeCompileData(material: Material) {
 		const scene = this.currentGlParentNode().scene();
 		const vertexShader = this._shaders_by_name.get(ShaderName.VERTEX);
@@ -254,6 +255,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 				additionalTextureUniforms: this._additionalTextureUniforms,
 				timeDependent: this.uniformsTimeDependent(),
 				resolutionDependent: this.uniformsResolutionDependent(),
+				raymarchingLightsWorldCoordsDependent: this._raymarchingLightsWorldCoordsDependent(),
 			};
 			assignOnBeforeCompileDataAndFunction(scene, material, this._onBeforeCompileData);
 			material.needsUpdate = true;

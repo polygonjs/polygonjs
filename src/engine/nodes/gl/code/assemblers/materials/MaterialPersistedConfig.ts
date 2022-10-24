@@ -37,6 +37,7 @@ function _removeShaders(data: OnBeforeCompileDataJSON): OnBeforeCompileDataJSONW
 		paramConfigs: data.paramConfigs,
 		timeDependent: data.timeDependent,
 		resolutionDependent: data.resolutionDependent,
+		raymarchingLightsWorldCoordsDependent: data.raymarchingLightsWorldCoordsDependent,
 	};
 	return onBeforeCompileDataJSONWithoutShaders;
 }
@@ -49,6 +50,7 @@ function _addShaders(data: OnBeforeCompileDataJSONWithoutShaders, options: Optio
 		paramConfigs: data.paramConfigs,
 		timeDependent: data.timeDependent,
 		resolutionDependent: data.resolutionDependent,
+		raymarchingLightsWorldCoordsDependent: data.raymarchingLightsWorldCoordsDependent,
 		fragmentShader: options.fragment,
 		vertexShader: options.vertex,
 	};
@@ -132,6 +134,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			node: this.node,
 			suffix: 'main',
 		});
+
 		if (!materialData) {
 			console.warn('failed to save material from node', this.node.path());
 		}
@@ -145,6 +148,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			customMaterials: customMaterialsData,
 			shaders,
 		};
+
 		return data;
 	}
 	override load(data: PersistedConfigBaseMaterialDataWithShaders) {

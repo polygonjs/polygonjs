@@ -1,3 +1,4 @@
+import {PointLightObjNode} from './../../../../src/engine/nodes/obj/PointLight';
 import {SpotLightRayMarchingUniformElement} from './../../../../src/engine/scene/utils/raymarching/SpotLight';
 import {UniformName} from './../../../../src/engine/scene/utils/UniformsController';
 import {Vector3} from 'three';
@@ -561,7 +562,8 @@ QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayM
 });
 
 QUnit.test('mat/rayMarchingBuilder persisted_config', async (assert) => {
-	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+	const scene = window.scene;
+	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
 	const {sdfSphere, sdfMaterial} = onCreateHook(rayMarchingBuilder1);
@@ -575,15 +577,22 @@ QUnit.test('mat/rayMarchingBuilder persisted_config', async (assert) => {
 	sdfSphere.setInput('radius', param1);
 	sdfMaterial.setInput('color', param2);
 
+	const pointLight = scene.createNode('pointLight');
+	const null1 = scene.createNode('null');
+	null1.p.t.set([7, 10, 21]);
+	pointLight.p.t.set([1, 2, 3]);
+	pointLight.setInput(0, null1);
+
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	const rayMarching1Material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
 
-	const scene = window.scene;
 	const data = new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(rayMarchingBuilder1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
+
+		const pointLight2 = scene2.node(pointLight.path()) as PointLightObjNode;
 
 		const rayMarchingBuilder2 = scene2.node(rayMarchingBuilder1.path()) as RayMarchingBuilderMatNode;
 		assert.notOk(rayMarchingBuilder2.assemblerController());
@@ -624,6 +633,35 @@ QUnit.test('mat/rayMarchingBuilder persisted_config', async (assert) => {
 		assert.deepEqual(
 			MaterialUserDataUniforms.getUniforms(material)!.v_POLY_param_vec3_param.value.toArray(),
 			[5, 6, 7]
+		);
+
+		scene2.update(0.1);
+		// test that the raymarching lights uniforms are shared with the scene
+		const pointLightUniforms = (scene2.sceneTraverser as any)._pointLightsRayMarching;
+		assert.equal(pointLightUniforms.value.length, 1);
+		assert.deepEqual(pointLightUniforms.value[0]['worldPos'].toArray(), [8, 12, 24]);
+
+		assert.equal(
+			MaterialUserDataUniforms.getUniforms(material)![UniformName.POINTLIGHTS_RAYMARCHING].value.length,
+			1
+		);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)![UniformName.POINTLIGHTS_RAYMARCHING].value[0][
+				'worldPos'
+			].toArray(),
+			[8, 12, 24]
+		);
+
+		// we move the light and both uniforms are updated (since they are the same)
+		pointLight2.p.t.set([5, 6, 9]);
+		await pointLight2.compute();
+		scene2.update(0.1);
+		assert.deepEqual(pointLightUniforms.value[0]['worldPos'].toArray(), [12, 16, 30]);
+		assert.deepEqual(
+			MaterialUserDataUniforms.getUniforms(material)![UniformName.POINTLIGHTS_RAYMARCHING].value[0][
+				'worldPos'
+			].toArray(),
+			[12, 16, 30]
 		);
 	});
 

@@ -43,7 +43,7 @@ export class ShaderAssemblerRayMarchingDepth extends BaseShaderAssemblerRayMarch
 		});
 		(material as any).depthPacking = RGBADepthPacking;
 
-		this._gl_parent_node.scene().sceneTraverser.addlightsRayMarchingUniform(material.uniforms);
+		this._gl_parent_node.scene().sceneTraverser.addLightsRayMarchingUniform(material.uniforms);
 		// CoreMaterial.addUserDataRenderHook(material, RayMarchingController.renderHook.bind(RayMarchingController));
 
 		this._addCustomMaterials(material);

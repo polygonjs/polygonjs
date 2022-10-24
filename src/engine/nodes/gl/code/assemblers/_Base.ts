@@ -416,7 +416,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	uniformsResolutionDependent(): boolean {
 		return this._uniformsResolutionDependent;
 	}
-
+	protected _raymarchingLightsWorldCoordsDependent() {
+		return false;
+	}
 	//
 	//
 	// TEMPLATE HOOKS
