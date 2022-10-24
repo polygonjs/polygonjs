@@ -2903,10 +2903,10 @@ portfinder@^1.0.28:
     debug "^3.1.1"
     mkdirp "^0.5.5"
 
-postprocessing@6.28.5:
-  version "6.28.5"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.28.5.tgz#82363194d366f606cf0f25e32028fd46debca919"
-  integrity sha512-e9aH6T720AiQpStdgqrQSsHzpddFQ7Q8v204sZx4iSTnUuYvkq7mFPOyzhVDlx5NrmXXbwz2PEK2XTq+qEYSMg==
+postprocessing@6.29.0:
+  version "6.29.0"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.29.0.tgz#a489f0215e0402c01484bc37abef8d1aabf17921"
+  integrity sha512-bicnFesmIZu53U0f777US8zwE9QyJGKClUhjmvq8+TKMU1BDdUHPJWpXKe0SChEcTSkqvS3xBdqddMVuosgsVA==
 
 potpack@1.0.2:
   version "1.0.2"
@@ -3467,10 +3467,10 @@ three-bvh-csg@0.0.2:
   resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.2.tgz#1e7c9d68bf02e37d3a520f6d9ada5b8d9771ccfa"
   integrity sha512-5T1BP1iRjvrG0YIt6G5GwQNgTGHKHrDfRajG10qIVrfjk2QXcwu6rfmSOm+TW7IZQbTcpiBp1/wePyiaYmdlIw==
 
-three-good-godrays@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/three-good-godrays/-/three-good-godrays-0.3.0.tgz#8a3e8721f2c68a095ef9febcce6279e9bb2bcad2"
-  integrity sha512-e2WQSDL9V/em27c4dMFnt11Kb3UpS/rD6ujQ0eUNeF3furDZznP2iA/O4wo3Gd5ILCMehP69FWYu5swoYWMVbQ==
+three-good-godrays@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/three-good-godrays/-/three-good-godrays-0.4.0.tgz#bbddcf7533f9e00b7cac3dc19c46f1ec19e80941"
+  integrity sha512-Hg13zxFXhkmnuPUifgYpg70XBb8v/54P90Hcx8MS1du7FM6UPgaARIsHem9TEOX8jX9gyBrbsdWQNkvJ1dTW9w==
 
 three-mesh-bvh@0.5.15:
   version "0.5.15"
