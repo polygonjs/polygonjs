@@ -2,6 +2,7 @@ import {UniformName} from './UniformsController';
 import {PolyScene} from '../PolyScene';
 import {IUniforms} from '../../../core/geometry/Material';
 import {
+	Scene,
 	Object3D,
 	Light,
 	SpotLight,
@@ -117,12 +118,13 @@ export class SceneTraverserController {
 	private _uniformsByLight: WeakMap<Light, IUniform> = new WeakMap();
 	constructor(protected scene: PolyScene) {}
 
-	traverseScene() {
+	traverseScene(scene?: Scene) {
 		spotLightIndex = 0;
 		directionalLightIndex = 0;
 		hemisphereLightIndex = 0;
 		pointLightIndex = 0;
-		this.scene.threejsScene().traverse(this._onObjectTraverseBound);
+		scene = scene || this.scene.threejsScene();
+		scene.traverse(this._onObjectTraverseBound);
 	}
 	private _onObjectTraverseBound = this._onObjectTraverse.bind(this);
 	private _onObjectTraverse(object: Object3D) {

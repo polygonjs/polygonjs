@@ -30,9 +30,8 @@ import {BaseNodeType} from '../nodes/_Base';
 import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
 import {ParamsInitData} from '../nodes/utils/io/IOController';
 import {Constructor, valueof} from '../../types/GlobalTypes';
-import {Raycaster, Scene, WebGLRenderer} from 'three';
+import {Object3D, Raycaster, Scene, WebGLRenderer} from 'three';
 import {CoreString} from '../../core/String';
-import {Object3D} from 'three';
 import {SceneRenderersRegister, RegisterRendererOptions} from './utils/SceneRenderersRegister';
 import {Poly} from '../Poly';
 import {NodeCreateOptions} from '../nodes/utils/hierarchy/ChildrenController';
@@ -42,6 +41,9 @@ interface PolySceneCreateOptions {
 }
 
 type SceneBatchUpdateCallback = () => void | Promise<void>;
+interface UpdateState {
+	scene: Scene;
+}
 
 /**
  * PolyScene contains all nodes within a scene.
@@ -239,11 +241,11 @@ export class PolyScene {
 	 * See [https://polygonjs.com/docs/integrations](https://polygonjs.com/docs/integrations)
 	 *
 	 */
-	update(delta: number) {
+	update(delta: number, state?: UpdateState) {
 		// setDelta is necessary here, as this function is most likely called from an integration with threejs, using a custom render loop
 		this.timeController.setDelta(delta);
 		this.timeController.incrementTimeIfPlaying(TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT);
-		this.sceneTraverser.traverseScene();
+		this.sceneTraverser.traverseScene(state?.scene);
 	}
 
 	//
