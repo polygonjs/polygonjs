@@ -4,7 +4,7 @@ import {Vector3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreTransform, DEFAULT_ROTATION_ORDER} from '../../../core/Transform';
-import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
+import {CircleCreateOptions, CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
 import {LineSegments} from 'three';
@@ -87,9 +87,10 @@ export class PolywireSopOperation extends BaseSopOperation {
 			return;
 		}
 
-		const options = {
+		const options: CircleCreateOptions = {
 			radius: params.radius,
 			segments: params.segmentsRadial,
+			arcAngle: 360,
 			connectLastPoint: true,
 		};
 		const circleTemplate = CoreGeometryUtilCircle.create(options);

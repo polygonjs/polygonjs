@@ -9,9 +9,13 @@ const RAND_A = 12.9898;
 const RAND_B = 78.233;
 const RAND_C = 43758.5453;
 
+export function degToRad(deg: number): number {
+	return deg * RAD_DEG_RATIO;
+}
+export function radToDeg(rad: number): number {
+	return rad / RAD_DEG_RATIO;
+}
 export class CoreMath {
-	// static Octree = Octree
-	// static Interpolate = Interpolate
 	static Easing = Easing; // used in expressins
 
 	static clamp(val: number, min: number, max: number): number {
@@ -43,19 +47,6 @@ export class CoreMath {
 	}
 	static blend(num0: number, num1: number, blend: number) {
 		return (1 - blend) * num0 + blend * num1;
-	}
-
-	static degrees_to_radians(degrees: number): number {
-		return degrees * RAD_DEG_RATIO;
-	}
-	static radians_to_degrees(radians: number): number {
-		return radians / RAD_DEG_RATIO;
-	}
-	static deg2rad(deg: number): number {
-		return this.degrees_to_radians(deg);
-	}
-	static rad2deg(rad: number): number {
-		return this.radians_to_degrees(rad);
 	}
 
 	static fract = (number: number) => number - Math.floor(number);
@@ -95,10 +86,10 @@ export class CoreMath {
 	// https://www.movable-type.co.uk/scripts/latlong.html
 	static geodesic_distance(lnglat1: LngLatLike, lnglat2: LngLatLike): number {
 		var R = 6371e3; // metres
-		var d1 = this.deg2rad(lnglat1.lat);
-		var d2 = this.deg2rad(lnglat2.lat);
-		var ad1 = this.deg2rad(lnglat2.lat - lnglat1.lat);
-		var ad2 = this.deg2rad(lnglat2.lng - lnglat1.lng);
+		var d1 = degToRad(lnglat1.lat);
+		var d2 = degToRad(lnglat2.lat);
+		var ad1 = degToRad(lnglat2.lat - lnglat1.lat);
+		var ad2 = degToRad(lnglat2.lng - lnglat1.lng);
 
 		var a =
 			Math.sin(ad1 / 2) * Math.sin(ad1 / 2) + Math.cos(d1) * Math.cos(d2) * Math.sin(ad2 / 2) * Math.sin(ad2 / 2);

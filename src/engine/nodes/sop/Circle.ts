@@ -42,11 +42,6 @@ export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 		return 'circle';
 	}
 
-	override initializeNode() {
-		// this.io.inputs.setCount(0);
-		// this.io.inputs.init_inputs_clonable_state([InputCloneMode.FROM_NODE]);
-	}
-
 	private _operation: CircleSopOperation | undefined;
 	override cook() {
 		this._operation = this._operation || new CircleSopOperation(this._scene, this.states, this);

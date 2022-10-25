@@ -43,6 +43,7 @@ import {
 	filePLYSopPresetRegister,
 	fileSTLSopPresetRegister,
 } from './sop/File';
+import {normalsSopPresetRegister} from './sop/Normals';
 import {pointSopPresetRegister} from './sop/Point';
 import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
 import {scatterSopPresetRegister} from './sop/Scatter';
@@ -98,6 +99,7 @@ class PresetLibraryClass {
 		this._registerPreset(filePLYSopPresetRegister);
 		this._registerPreset(fileSTLSopPresetRegister);
 		this._registerPreset(fileSVGSopPresetRegister);
+		this._registerPreset(normalsSopPresetRegister);
 		this._registerPreset(pointSopPresetRegister);
 		this._registerPreset(roundedBoxSopPresetRegister);
 		this._registerPreset(scatterSopPresetRegister);
