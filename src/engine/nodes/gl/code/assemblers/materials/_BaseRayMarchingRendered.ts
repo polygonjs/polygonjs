@@ -19,6 +19,10 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	// [ShaderName.VERTEX, '// start builder body code'],
 	[ShaderName.FRAGMENT, '// start GetDist builder body code'],
 ]);
+const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([
+	// [ShaderName.VERTEX, '#include <common>'],
+	[ShaderName.FRAGMENT, '// start raymarching builder define code'],
+]);
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([[ShaderName.FRAGMENT, []]]);
 
 const SDF_CONTEXT_INPUT_NAME = GlConnectionPointType.SDF_CONTEXT;
@@ -85,12 +89,16 @@ export class BaseShaderAssemblerRayMarchingRendered extends BaseShaderAssemblerR
 		return BaseShaderAssemblerRayMarchingRendered.create_globals_node_output_connections();
 	}
 
-	protected override insertBodyAfter(shader_name: ShaderName): string | undefined {
-		return INSERT_BODY_AFTER_MAP.get(shader_name);
+	protected override insertBodyAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_BODY_AFTER_MAP.get(shaderName);
 	}
-	protected override linesToRemove(shader_name: ShaderName): string[] | undefined {
-		return LINES_TO_REMOVE_MAP.get(shader_name);
+	protected override insertDefineAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_DEFINE_AFTER_MAP.get(shaderName);
 	}
+	protected override linesToRemove(shaderName: ShaderName): string[] | undefined {
+		return LINES_TO_REMOVE_MAP.get(shaderName);
+	}
+
 	override create_shader_configs(): ShaderConfig[] {
 		return [
 			new ShaderConfig(ShaderName.VERTEX, [], []),

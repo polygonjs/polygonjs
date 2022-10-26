@@ -1,12 +1,14 @@
+import {NodeContext} from './../../../poly/NodeContext';
 import {TypeAssert} from './../../../poly/Assert';
 import {RayMarchingUniforms, RAYMARCHING_UNIFORMS} from './../../gl/gl/raymarching/uniforms';
 import {Constructor} from '../../../../types/GlobalTypes';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {TypedMatNode} from '../_Base';
-import {Material} from 'three';
+import {Material, Texture} from 'three';
 import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {isBooleanTrue} from '../../../../core/Type';
 import {CustomMaterialRayMarchingParamConfig} from './customMaterials/CustomMaterialRayMarching';
+import {ThreeToGl} from '../../../../core/ThreeToGl';
 
 enum RayMarchingDebugMode {
 	STEPS_COUNT = 'Steps Count',
@@ -16,7 +18,36 @@ const RAYMARCHING_DEBUG_MODES: RayMarchingDebugMode[] = [RayMarchingDebugMode.ST
 const DEBUG_STEPS_COUNT = RAYMARCHING_DEBUG_MODES.indexOf(RayMarchingDebugMode.STEPS_COUNT);
 // const DEBUG_DEPTH = RAYMARCHING_DEBUG_MODES.indexOf(RayMarchingDebugMode.DEPTH);
 
-export function RayMarchingParamConfig<TBase extends Constructor>(Base: TBase) {
+interface EnvMapParams {
+	envMapCubeUVHeight: number;
+}
+interface EnvMapData {
+	texelWidth: number;
+	texelHeight: number;
+	maxMip: number;
+}
+// from three.js WebGLProgram.js
+function generateCubeUVSize(parameters: EnvMapParams): EnvMapData | null {
+	const imageHeight = parameters.envMapCubeUVHeight;
+
+	if (imageHeight === null) return null;
+
+	const maxMip = Math.log2(imageHeight) - 2;
+
+	const texelHeight = 1.0 / imageHeight;
+
+	const texelWidth = 1.0 / (3 * Math.max(Math.pow(2, maxMip), 7 * 16));
+
+	return {texelWidth, texelHeight, maxMip};
+}
+function setDefines(shaderMaterial: ShaderMaterialWithCustomMaterials, props?: EnvMapData | null) {
+	shaderMaterial.defines['ENVMAP_TYPE_CUBE_UV'] = props ? 1 : 0;
+	shaderMaterial.defines['CUBEUV_TEXEL_WIDTH'] = props ? props.texelWidth : ThreeToGl.float(0.1);
+	shaderMaterial.defines['CUBEUV_TEXEL_HEIGHT'] = props ? props.texelHeight : ThreeToGl.float(0.1);
+	shaderMaterial.defines['CUBEUV_MAX_MIP'] = props ? ThreeToGl.float(props.maxMip) : ThreeToGl.float(1);
+}
+
+export function RayMarchingMainParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param maximum number of steps the raymarcher will run */
 		maxSteps = ParamConfig.INTEGER(RAYMARCHING_UNIFORMS.MAX_STEPS.value, {
@@ -42,6 +73,25 @@ export function RayMarchingParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		/** @param center */
 		center = ParamConfig.VECTOR3(RAYMARCHING_UNIFORMS.CENTER.value.toArray());
+	};
+}
+
+export function RayMarchingEnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param toggle if you want to use an environment map */
+		useEnvMap = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+			// ...BooleanParamOptions(TextureEnvMapController),
+		});
+		/** @param specify the environment map COP node */
+		envMap = ParamConfig.NODE_PATH('', {
+			visibleIf: {useEnvMap: 1},
+			nodeSelection: {context: NodeContext.COP},
+		});
+		/** @param environment intensity */
+		envMapIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
+		/** @param environment roughness */
+		envMapRoughness = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
 	};
 }
 export function RayMarchingDebugParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -87,7 +137,7 @@ export function RayMarchingDebugParamConfig<TBase extends Constructor>(Base: TBa
 }
 class RayMarchingMaterial extends Material {}
 class RayMarchingParamsConfig extends CustomMaterialRayMarchingParamConfig(
-	RayMarchingDebugParamConfig(RayMarchingParamConfig(NodeParamsConfig))
+	RayMarchingDebugParamConfig(RayMarchingEnvMapParamConfig(RayMarchingMainParamConfig(NodeParamsConfig)))
 ) {}
 
 abstract class RayMarchingMatNode extends TypedMatNode<RayMarchingMaterial, RayMarchingParamsConfig> {}
@@ -97,7 +147,7 @@ abstract class RayMarchingMatNode extends TypedMatNode<RayMarchingMaterial, RayM
 export class RayMarchingController {
 	constructor(protected node: RayMarchingMatNode) {}
 
-	updateUniformsFromParams() {
+	async updateUniformsFromParams() {
 		const shaderMaterial = this.node.material as ShaderMaterialWithCustomMaterials;
 		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
 		if (!uniforms) {
@@ -116,6 +166,58 @@ export class RayMarchingController {
 		uniforms.shadowDistanceMin.value = pv.shadowDistanceMin;
 		uniforms.shadowDistanceMax.value = pv.shadowDistanceMax;
 
+		this._updateDebug(shaderMaterial, uniforms);
+		await this._updateEnvMap(shaderMaterial, uniforms);
+	}
+	private async _updateEnvMap(shaderMaterial: ShaderMaterialWithCustomMaterials, uniforms: RayMarchingUniforms) {
+		const pv = this.node.pv;
+		setDefines(shaderMaterial, null);
+		(uniforms as any)['envMapIntensity'].value = pv.envMapIntensity;
+		(uniforms as any)['roughness'].value = pv.envMapRoughness;
+		const currentDefine = shaderMaterial.defines['ENVMAP_TYPE_CUBE_UV'];
+
+		const _fetchTexture = async () => {
+			const pathParam = this.node.p.envMap;
+			if (pathParam.isDirty()) {
+				await pathParam.compute();
+			}
+			const textureNode = pathParam.value.nodeWithContext(NodeContext.COP);
+			if (textureNode) {
+				const container = await textureNode.compute();
+				const texture = container.texture();
+				return texture;
+			}
+		};
+		const _applyTexture = (texture: Texture) => {
+			(uniforms as any)['envMap'].value = texture;
+
+			const props = generateCubeUVSize({envMapCubeUVHeight: texture.image.height});
+			setDefines(shaderMaterial, props);
+		};
+		const _removeTexture = () => {
+			(uniforms as any)['envMap'].value = null;
+			setDefines(shaderMaterial, null);
+		};
+		const _updateNeedsUpdateIfRequired = () => {
+			if (currentDefine != shaderMaterial.defines['ENVMAP_TYPE_CUBE_UV']) {
+				shaderMaterial.needsUpdate = true;
+			}
+		};
+
+		if (isBooleanTrue(pv.useEnvMap)) {
+			const texture = await _fetchTexture();
+			if (texture) {
+				_applyTexture(texture);
+			} else {
+				_removeTexture();
+			}
+		} else {
+			_removeTexture();
+		}
+		_updateNeedsUpdateIfRequired();
+	}
+	private _updateDebug(shaderMaterial: ShaderMaterialWithCustomMaterials, uniforms: RayMarchingUniforms) {
+		const pv = this.node.pv;
 		if (isBooleanTrue(pv.debug)) {
 			function updateDebugMode(uniforms: RayMarchingUniforms) {
 				const debugMode = RAYMARCHING_DEBUG_MODES[pv.debugMode];

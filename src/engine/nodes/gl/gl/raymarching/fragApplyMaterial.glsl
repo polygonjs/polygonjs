@@ -27,7 +27,7 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat, inout 
 	return col;
 }
 #ifdef RAYMARCHED_REFLECTIONS
-vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth, inout SDFContext sdfContextMain){
+vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, float roughness, int reflectionDepth, inout SDFContext sdfContextMain){
 	bool hitReflection = true;
 	vec3 reflectedColor = vec3(0.);
 	#pragma unroll_loop_start
@@ -41,7 +41,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 			#endif
 			if( sdfContext.d >= MAX_DIST){
 				hitReflection = false;
-				reflectedColor = envMapSample(rayDir, envMap);
+				reflectedColor = envMapSample(rayDir, roughness);
 			}
 			if(hitReflection){
 				p += rayDir * sdfContext.d;
@@ -58,7 +58,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 
 #ifdef RAYMARCHED_REFRACTIONS
 // xyz for color, w for distanceInsideMedium
-vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, float refractionMaxDist, int refractionDepth, inout SDFContext sdfContextMain){
+vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, float roughness, float refractionMaxDist, int refractionDepth, inout SDFContext sdfContextMain){
 	bool hitRefraction = true;
 	bool changeSide = true;
 	#ifdef RAYMARCHED_REFRACTIONS_START_OUTSIDE_MEDIUM
@@ -91,7 +91,7 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 			totalRefractedDistance += sdfContext.d;
 			if( abs(sdfContext.d) >= MAX_DIST || totalRefractedDistance > refractionMaxDist ){
 				hitRefraction = false;
-				refractedColor = envMapSample(rayDir, envMap);
+				refractedColor = envMapSample(rayDir, roughness);
 			}
 			if(hitRefraction){
 				p += rayDir * sdfContext.d;
@@ -108,7 +108,7 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 		}
 		#ifdef RAYMARCHED_REFRACTIONS_SAMPLE_ENV_MAP_ON_LAST
 		if(i == refractionDepth-1){
-			refractedColor = envMapSample(rayDir, envMap);
+			refractedColor = envMapSample(rayDir, roughness);
 		}
 		#endif
 	}

@@ -9,13 +9,15 @@ import {ShaderAssemblerRayMarching} from '../gl/code/assemblers/materials/RayMar
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	RayMarchingController,
-	RayMarchingParamConfig,
+	RayMarchingMainParamConfig,
+	RayMarchingEnvMapParamConfig,
 	RayMarchingDebugParamConfig,
 } from './utils/RayMarchingController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {CustomMaterialName, ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {Constructor} from '../../../types/GlobalTypes';
 import {updateMaterialSide} from './utils/helpers/MaterialSideHelper';
@@ -40,7 +42,13 @@ class RayMarchingBuilderMatParamsConfig extends RayMarchingDebugParamConfig(
 	CustomMaterialRayMarchingParamConfig(
 		AdvancedCommonParamConfig(
 			BaseBuilderParamConfig(
-				AdvancedFolderParamConfig(RayMarchingParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+				AdvancedFolderParamConfig(
+					RayMarchingEnvMapParamConfig(
+						TexturesFolderParamConfig(
+							RayMarchingMainParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+						)
+					)
+				)
 			)
 		)
 	)

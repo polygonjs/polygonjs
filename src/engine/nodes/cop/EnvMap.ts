@@ -48,18 +48,18 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	override async cook(input_contents: Texture[]) {
-		const texture = input_contents[0];
+	override async cook(inputTextures: Texture[]) {
+		const texture = inputTextures[0];
 		this._convertTextureToEnvMap(texture);
 	}
 
-	private async _convertTextureToEnvMap(input_texture: Texture) {
+	private async _convertTextureToEnvMap(inputTexture: Texture) {
 		this._rendererController = this._rendererController || new CopRendererController(this);
 		const renderer = await this._rendererController.waitForRenderer();
 
 		if (renderer) {
 			const pmremGenerator = new PMREMGenerator(renderer);
-			const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(input_texture);
+			const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(inputTexture);
 
 			// pmremGenerator.dispose();
 			// texture.dispose();

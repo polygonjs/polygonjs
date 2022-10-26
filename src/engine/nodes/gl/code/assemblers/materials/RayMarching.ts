@@ -9,6 +9,7 @@ import {RAYMARCHING_UNIFORMS} from '../../../gl/raymarching/uniforms';
 import {CustomMaterialName} from '../../../../../../core/geometry/Material';
 import {ShaderAssemblerRayMarchingDepth} from './custom/raymarching/RayMarchingDepth';
 import {ShaderAssemblerRayMarchingDistance} from './custom/raymarching/RayMarchingDistance';
+// import {ThreeToGl} from '../../../../../../core/ThreeToGl';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([]);
 ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerRayMarchingDepth); // for spot lights and directional
@@ -35,6 +36,12 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarchingRe
 			depthTest: true,
 			alphaTest: 0.5,
 			lights: true,
+			// defines: {
+			// 	ENVMAP_TYPE_CUBE_UV: 0,
+			// 	CUBEUV_TEXEL_WIDTH: ThreeToGl.float(0.1),
+			// 	CUBEUV_TEXEL_HEIGHT: ThreeToGl.float(0.1),
+			// 	CUBEUV_MAX_MIP: ThreeToGl.float(0),
+			// },
 			uniforms: {
 				...UniformsUtils.clone(ShaderLib.standard.uniforms),
 				...UniformsUtils.clone(templateShader.uniforms),

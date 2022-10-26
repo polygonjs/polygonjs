@@ -11,6 +11,72 @@ uniform float debugMaxSteps;
 uniform float debugMinDepth;
 uniform float debugMaxDepth;
 #include <common>
+#include <packing>
+#include <lightmap_pars_fragment>
+#include <bsdfs>
+#include <cube_uv_reflection_fragment>
+#include <lights_pars_begin>
+#include <lights_physical_pars_fragment>
+#include <shadowmap_pars_fragment>
+#if defined( SHADOW_DISTANCE )
+	uniform float shadowDistanceMin;
+	uniform float shadowDistanceMax;
+#endif 
+#if defined( SHADOW_DEPTH )
+	uniform float shadowDepthMin;
+	uniform float shadowDepthMax;
+#endif 
+varying vec3 vPw;
+#if NUM_SPOT_LIGHTS > 0
+	struct SpotLightRayMarching {
+		vec3 worldPos;
+		vec3 direction;
+		float penumbra;
+	};
+	uniform SpotLightRayMarching spotLightsRayMarching[ NUM_SPOT_LIGHTS ];
+	#if NUM_SPOT_LIGHT_COORDS > 0
+		uniform mat4 spotLightMatrix[ NUM_SPOT_LIGHT_COORDS ];
+	#endif
+#endif
+#if NUM_DIR_LIGHTS > 0
+	struct DirectionalLightRayMarching {
+		vec3 direction;
+		float penumbra;
+	};
+	uniform DirectionalLightRayMarching directionalLightsRayMarching[ NUM_DIR_LIGHTS ];
+	#if NUM_DIR_LIGHT_SHADOWS > 0
+		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHT_SHADOWS ];
+	#endif
+#endif
+#if NUM_HEMI_LIGHTS > 0
+	struct HemisphereLightRayMarching {
+		vec3 direction;
+	};
+	uniform HemisphereLightRayMarching hemisphereLightsRayMarching[ NUM_HEMI_LIGHTS ];
+#endif
+#if NUM_POINT_LIGHTS > 0
+	struct PointLightRayMarching {
+		vec3 worldPos;
+		float penumbra;
+	};
+	uniform PointLightRayMarching pointLightsRayMarching[ NUM_POINT_LIGHTS ];
+	#if NUM_POINT_LIGHT_SHADOWS > 0
+		uniform mat4 pointShadowMatrix[ NUM_POINT_LIGHT_SHADOWS ];
+	#endif
+#endif
+struct SDFContext {
+	float d;
+	int stepsCount;
+	int matId;
+	int matId2;
+	float matBlend;
+};
+SDFContext DefaultSDFContext(){
+	return SDFContext( 0., 0, 0, 0, 0. );
+}
+int DefaultSDFMaterial(){
+	return 0;
+}
 float SDFRepeat( in float p, in float c )
 {
 	return mod(p+0.5*c,c)-0.5*c;
@@ -461,71 +527,7 @@ float SDFOnion( in float sdf, in float thickness )
 {
 	return abs(sdf)-thickness;
 }
-#include <packing>
-#include <lightmap_pars_fragment>
-#include <bsdfs>
-#include <lights_pars_begin>
-#include <lights_physical_pars_fragment>
-#include <shadowmap_pars_fragment>
-#if defined( SHADOW_DISTANCE )
-	uniform float shadowDistanceMin;
-	uniform float shadowDistanceMax;
-#endif 
-#if defined( SHADOW_DEPTH )
-	uniform float shadowDepthMin;
-	uniform float shadowDepthMax;
-#endif 
-varying vec3 vPw;
-#if NUM_SPOT_LIGHTS > 0
-	struct SpotLightRayMarching {
-		vec3 worldPos;
-		vec3 direction;
-		float penumbra;
-	};
-	uniform SpotLightRayMarching spotLightsRayMarching[ NUM_SPOT_LIGHTS ];
-	#if NUM_SPOT_LIGHT_COORDS > 0
-		uniform mat4 spotLightMatrix[ NUM_SPOT_LIGHT_COORDS ];
-	#endif
-#endif
-#if NUM_DIR_LIGHTS > 0
-	struct DirectionalLightRayMarching {
-		vec3 direction;
-		float penumbra;
-	};
-	uniform DirectionalLightRayMarching directionalLightsRayMarching[ NUM_DIR_LIGHTS ];
-	#if NUM_DIR_LIGHT_SHADOWS > 0
-		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHT_SHADOWS ];
-	#endif
-#endif
-#if NUM_HEMI_LIGHTS > 0
-	struct HemisphereLightRayMarching {
-		vec3 direction;
-	};
-	uniform HemisphereLightRayMarching hemisphereLightsRayMarching[ NUM_HEMI_LIGHTS ];
-#endif
-#if NUM_POINT_LIGHTS > 0
-	struct PointLightRayMarching {
-		vec3 worldPos;
-		float penumbra;
-	};
-	uniform PointLightRayMarching pointLightsRayMarching[ NUM_POINT_LIGHTS ];
-	#if NUM_POINT_LIGHT_SHADOWS > 0
-		uniform mat4 pointShadowMatrix[ NUM_POINT_LIGHT_SHADOWS ];
-	#endif
-#endif
-struct SDFContext {
-	float d;
-	int stepsCount;
-	int matId;
-	int matId2;
-	float matBlend;
-};
-SDFContext DefaultSDFContext(){
-	return SDFContext( 0., 0, 0, 0, 0. );
-}
-int DefaultSDFMaterial(){
-	return 0;
-}
+
 SDFContext GetDist(vec3 p) {
 	SDFContext sdfContext = SDFContext(0., 0, 0, 0, 0.);
 	vec3 v_POLY_SDFRepeat1_p = SDFRepeat(p - vec3(0.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0));
@@ -706,7 +708,7 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat, inout 
 	return col;
 }
 #ifdef RAYMARCHED_REFLECTIONS
-vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth, inout SDFContext sdfContextMain){
+vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, float roughness, int reflectionDepth, inout SDFContext sdfContextMain){
 	bool hitReflection = true;
 	vec3 reflectedColor = vec3(0.);
 	#pragma unroll_loop_start
@@ -720,7 +722,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 			#endif
 			if( sdfContext.d >= MAX_DIST){
 				hitReflection = false;
-				reflectedColor = envMapSample(rayDir, envMap);
+				reflectedColor = envMapSample(rayDir, roughness);
 			}
 			if(hitReflection){
 				p += rayDir * sdfContext.d;
@@ -735,7 +737,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 }
 #endif
 #ifdef RAYMARCHED_REFRACTIONS
-vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, float refractionMaxDist, int refractionDepth, inout SDFContext sdfContextMain){
+vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, float roughness, float refractionMaxDist, int refractionDepth, inout SDFContext sdfContextMain){
 	bool hitRefraction = true;
 	bool changeSide = true;
 	#ifdef RAYMARCHED_REFRACTIONS_START_OUTSIDE_MEDIUM
@@ -767,7 +769,7 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 			totalRefractedDistance += sdfContext.d;
 			if( abs(sdfContext.d) >= MAX_DIST || totalRefractedDistance > refractionMaxDist ){
 				hitRefraction = false;
-				refractedColor = envMapSample(rayDir, envMap);
+				refractedColor = envMapSample(rayDir, roughness);
 			}
 			if(hitRefraction){
 				p += rayDir * sdfContext.d;
@@ -782,7 +784,7 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 		}
 		#ifdef RAYMARCHED_REFRACTIONS_SAMPLE_ENV_MAP_ON_LAST
 		if(i == refractionDepth-1){
-			refractedColor = envMapSample(rayDir, envMap);
+			refractedColor = envMapSample(rayDir, roughness);
 		}
 		#endif
 	}

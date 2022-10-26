@@ -11,6 +11,72 @@ uniform float debugMaxSteps;
 uniform float debugMinDepth;
 uniform float debugMaxDepth;
 #include <common>
+#include <packing>
+#include <lightmap_pars_fragment>
+#include <bsdfs>
+#include <cube_uv_reflection_fragment>
+#include <lights_pars_begin>
+#include <lights_physical_pars_fragment>
+#include <shadowmap_pars_fragment>
+#if defined( SHADOW_DISTANCE )
+	uniform float shadowDistanceMin;
+	uniform float shadowDistanceMax;
+#endif 
+#if defined( SHADOW_DEPTH )
+	uniform float shadowDepthMin;
+	uniform float shadowDepthMax;
+#endif 
+varying vec3 vPw;
+#if NUM_SPOT_LIGHTS > 0
+	struct SpotLightRayMarching {
+		vec3 worldPos;
+		vec3 direction;
+		float penumbra;
+	};
+	uniform SpotLightRayMarching spotLightsRayMarching[ NUM_SPOT_LIGHTS ];
+	#if NUM_SPOT_LIGHT_COORDS > 0
+		uniform mat4 spotLightMatrix[ NUM_SPOT_LIGHT_COORDS ];
+	#endif
+#endif
+#if NUM_DIR_LIGHTS > 0
+	struct DirectionalLightRayMarching {
+		vec3 direction;
+		float penumbra;
+	};
+	uniform DirectionalLightRayMarching directionalLightsRayMarching[ NUM_DIR_LIGHTS ];
+	#if NUM_DIR_LIGHT_SHADOWS > 0
+		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHT_SHADOWS ];
+	#endif
+#endif
+#if NUM_HEMI_LIGHTS > 0
+	struct HemisphereLightRayMarching {
+		vec3 direction;
+	};
+	uniform HemisphereLightRayMarching hemisphereLightsRayMarching[ NUM_HEMI_LIGHTS ];
+#endif
+#if NUM_POINT_LIGHTS > 0
+	struct PointLightRayMarching {
+		vec3 worldPos;
+		float penumbra;
+	};
+	uniform PointLightRayMarching pointLightsRayMarching[ NUM_POINT_LIGHTS ];
+	#if NUM_POINT_LIGHT_SHADOWS > 0
+		uniform mat4 pointShadowMatrix[ NUM_POINT_LIGHT_SHADOWS ];
+	#endif
+#endif
+struct SDFContext {
+	float d;
+	int stepsCount;
+	int matId;
+	int matId2;
+	float matBlend;
+};
+SDFContext DefaultSDFContext(){
+	return SDFContext( 0., 0, 0, 0, 0. );
+}
+int DefaultSDFMaterial(){
+	return 0;
+}
 float dot2( in vec2 v ) { return dot(v,v); }
 float dot2( in vec3 v ) { return dot(v,v); }
 float ndot( in vec2 a, in vec2 b ) { return a.x*b.x - a.y*b.y; }
@@ -275,91 +341,32 @@ float SDFOnion( in float sdf, in float thickness )
 {
 	return abs(sdf)-thickness;
 }
-const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 167;
-struct EnvMap {
+const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 1;
+
+struct EnvMapProps {
 	vec3 tint;
 	float intensity;
+	float roughness;
 	float fresnel;
 	float fresnelPower;
 };
-vec3 envMapSample(vec3 rayDir, sampler2D map){
-	vec2 uv = vec2( atan( -rayDir.z, -rayDir.x ) * RECIPROCAL_PI2 + 0.5, rayDir.y * 0.5 + 0.5 );
-	vec3 env = texture2D(map, uv).rgb;
+uniform sampler2D envMap;
+uniform float envMapIntensity;
+uniform float roughness;
+vec3 envMapSample(vec3 rayDir, float envMapRoughness){
+	vec3 env = vec3(0.);
+	#ifdef ENVMAP_TYPE_CUBE_UV
+		env = textureCubeUV(envMap, rayDir, envMapRoughness * roughness).rgb;
+	#endif
 	return env;
 }
-vec3 envMapSampleWithFresnel(vec3 rayDir, sampler2D map, EnvMap envMap, vec3 n, vec3 cameraPosition){
-	vec3 env = envMapSample(rayDir, map).rgb;
-	float fresnel = pow(1.-dot(normalize(cameraPosition), n), envMap.fresnelPower);
-	float fresnelFactor = (1.-envMap.fresnel) + envMap.fresnel*fresnel;
-	return env * envMap.tint * envMap.intensity * fresnelFactor;
+vec3 envMapSampleWithFresnel(vec3 rayDir, EnvMapProps envMapProps, vec3 n, vec3 cameraPosition){
+	vec3 env = envMapSample(rayDir, envMapProps.roughness);
+	float fresnel = pow(1.-dot(normalize(cameraPosition), n), envMapProps.fresnelPower);
+	float fresnelFactor = (1.-envMapProps.fresnel) + envMapProps.fresnel*fresnel;
+	return env * envMapIntensity * envMapProps.tint * envMapProps.intensity * fresnelFactor;
 }
 uniform float time;
-uniform sampler2D v_POLY_texture_envTexture1;
-#include <packing>
-#include <lightmap_pars_fragment>
-#include <bsdfs>
-#include <lights_pars_begin>
-#include <lights_physical_pars_fragment>
-#include <shadowmap_pars_fragment>
-#if defined( SHADOW_DISTANCE )
-	uniform float shadowDistanceMin;
-	uniform float shadowDistanceMax;
-#endif 
-#if defined( SHADOW_DEPTH )
-	uniform float shadowDepthMin;
-	uniform float shadowDepthMax;
-#endif 
-varying vec3 vPw;
-#if NUM_SPOT_LIGHTS > 0
-	struct SpotLightRayMarching {
-		vec3 worldPos;
-		vec3 direction;
-		float penumbra;
-	};
-	uniform SpotLightRayMarching spotLightsRayMarching[ NUM_SPOT_LIGHTS ];
-	#if NUM_SPOT_LIGHT_COORDS > 0
-		uniform mat4 spotLightMatrix[ NUM_SPOT_LIGHT_COORDS ];
-	#endif
-#endif
-#if NUM_DIR_LIGHTS > 0
-	struct DirectionalLightRayMarching {
-		vec3 direction;
-		float penumbra;
-	};
-	uniform DirectionalLightRayMarching directionalLightsRayMarching[ NUM_DIR_LIGHTS ];
-	#if NUM_DIR_LIGHT_SHADOWS > 0
-		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHT_SHADOWS ];
-	#endif
-#endif
-#if NUM_HEMI_LIGHTS > 0
-	struct HemisphereLightRayMarching {
-		vec3 direction;
-	};
-	uniform HemisphereLightRayMarching hemisphereLightsRayMarching[ NUM_HEMI_LIGHTS ];
-#endif
-#if NUM_POINT_LIGHTS > 0
-	struct PointLightRayMarching {
-		vec3 worldPos;
-		float penumbra;
-	};
-	uniform PointLightRayMarching pointLightsRayMarching[ NUM_POINT_LIGHTS ];
-	#if NUM_POINT_LIGHT_SHADOWS > 0
-		uniform mat4 pointShadowMatrix[ NUM_POINT_LIGHT_SHADOWS ];
-	#endif
-#endif
-struct SDFContext {
-	float d;
-	int stepsCount;
-	int matId;
-	int matId2;
-	float matBlend;
-};
-SDFContext DefaultSDFContext(){
-	return SDFContext( 0., 0, 0, 0, 0. );
-}
-int DefaultSDFMaterial(){
-	return 0;
-}
 SDFContext GetDist(vec3 p) {
 	SDFContext sdfContext = SDFContext(0., 0, 0, 0, 0.);
 	vec3 v_POLY_globals1_position = p;
@@ -539,12 +546,13 @@ vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat, inout 
 		vec3 diffuse = GetLight(p, n, sdfContext);
 		col *= diffuse;
 		vec3 rayDir = normalize(reflect(rayDir, n));
-		EnvMap envMap;
-		envMap.tint = vec3(1.0, 1.0, 1.0);
-		envMap.intensity = 1.0;
-		envMap.fresnel = 0.0;
-		envMap.fresnelPower = 5.0;
-		col += envMapSampleWithFresnel(rayDir, v_POLY_texture_envTexture1, envMap, n, cameraPosition);
+		EnvMapProps envMapProps;
+		envMapProps.tint = vec3(1.0, 1.0, 1.0);
+		envMapProps.intensity = 1.0;
+		envMapProps.roughness = 0.0;
+		envMapProps.fresnel = 0.0;
+		envMapProps.fresnelPower = 5.0;
+		col += envMapSampleWithFresnel(rayDir, envMapProps, n, cameraPosition);
 	}
 	
 	return col;
@@ -558,18 +566,19 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat, inout 
 		vec3 diffuse = GetLight(p, n, sdfContext);
 		col *= diffuse;
 		vec3 rayDir = normalize(reflect(rayDir, n));
-		EnvMap envMap;
-		envMap.tint = vec3(1.0, 1.0, 1.0);
-		envMap.intensity = 1.0;
-		envMap.fresnel = 0.0;
-		envMap.fresnelPower = 5.0;
-		col += envMapSampleWithFresnel(rayDir, v_POLY_texture_envTexture1, envMap, n, cameraPosition);
+		EnvMapProps envMapProps;
+		envMapProps.tint = vec3(1.0, 1.0, 1.0);
+		envMapProps.intensity = 1.0;
+		envMapProps.roughness = 0.0;
+		envMapProps.fresnel = 0.0;
+		envMapProps.fresnelPower = 5.0;
+		col += envMapSampleWithFresnel(rayDir, envMapProps, n, cameraPosition);
 	}
 	
 	return col;
 }
 #ifdef RAYMARCHED_REFLECTIONS
-vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap, int reflectionDepth, inout SDFContext sdfContextMain){
+vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, float roughness, int reflectionDepth, inout SDFContext sdfContextMain){
 	bool hitReflection = true;
 	vec3 reflectedColor = vec3(0.);
 	#pragma unroll_loop_start
@@ -583,7 +592,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 			#endif
 			if( sdfContext.d >= MAX_DIST){
 				hitReflection = false;
-				reflectedColor = envMapSample(rayDir, envMap);
+				reflectedColor = envMapSample(rayDir, roughness);
 			}
 			if(hitReflection){
 				p += rayDir * sdfContext.d;
@@ -598,7 +607,7 @@ vec3 GetReflection(vec3 p, vec3 n, vec3 rayDir, float biasMult, sampler2D envMap
 }
 #endif
 #ifdef RAYMARCHED_REFRACTIONS
-vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sampler2D envMap, float refractionMaxDist, int refractionDepth, inout SDFContext sdfContextMain){
+vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, float roughness, float refractionMaxDist, int refractionDepth, inout SDFContext sdfContextMain){
 	bool hitRefraction = true;
 	bool changeSide = true;
 	#ifdef RAYMARCHED_REFRACTIONS_START_OUTSIDE_MEDIUM
@@ -630,7 +639,7 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 			totalRefractedDistance += sdfContext.d;
 			if( abs(sdfContext.d) >= MAX_DIST || totalRefractedDistance > refractionMaxDist ){
 				hitRefraction = false;
-				refractedColor = envMapSample(rayDir, envMap);
+				refractedColor = envMapSample(rayDir, roughness);
 			}
 			if(hitRefraction){
 				p += rayDir * sdfContext.d;
@@ -645,7 +654,7 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, sa
 		}
 		#ifdef RAYMARCHED_REFRACTIONS_SAMPLE_ENV_MAP_ON_LAST
 		if(i == refractionDepth-1){
-			refractedColor = envMapSample(rayDir, envMap);
+			refractedColor = envMapSample(rayDir, roughness);
 		}
 		#endif
 	}
@@ -674,12 +683,13 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat, inout SDFContext sdfCon
 		vec3 diffuse = GetLight(p, n, sdfContext);
 		col *= diffuse;
 		vec3 rayDir = normalize(reflect(rayDir, n));
-		EnvMap envMap;
-		envMap.tint = vec3(1.0, 1.0, 1.0);
-		envMap.intensity = 1.0;
-		envMap.fresnel = 0.0;
-		envMap.fresnelPower = 5.0;
-		col += envMapSampleWithFresnel(rayDir, v_POLY_texture_envTexture1, envMap, n, cameraPosition);
+		EnvMapProps envMapProps;
+		envMapProps.tint = vec3(1.0, 1.0, 1.0);
+		envMapProps.intensity = 1.0;
+		envMapProps.roughness = 0.0;
+		envMapProps.fresnel = 0.0;
+		envMapProps.fresnelPower = 5.0;
+		col += envMapSampleWithFresnel(rayDir, envMapProps, n, cameraPosition);
 	}
 	
 	return col;

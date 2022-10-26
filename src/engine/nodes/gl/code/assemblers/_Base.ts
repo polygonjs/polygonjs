@@ -440,42 +440,42 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	//
 	//
 
-	private _replaceTemplate(template: string, shader_name: ShaderName) {
-		const function_declaration = this.builder_lines(shader_name, LineType.FUNCTION_DECLARATION);
-		const define = this.builder_lines(shader_name, LineType.DEFINE);
+	private _replaceTemplate(template: string, shaderName: ShaderName) {
+		const functionDeclaration = this.builder_lines(shaderName, LineType.FUNCTION_DECLARATION);
+		const define = this.builder_lines(shaderName, LineType.DEFINE);
 		// let all_define = function_declaration.concat(define);
-		const body = this.builder_lines(shader_name, LineType.BODY);
+		const body = this.builder_lines(shaderName, LineType.BODY);
 
-		let template_lines = template.split('\n');
+		let templateLines = template.split('\n');
 		// const scene = this.currentGlParentNode().scene;
-		const new_lines = [
+		const newLines: string[] = [
 			// `#define FPS ${ThreeToGl.float(scene.time_controller.fps)}`,
 			// `#define TIME_INCREMENT (1.0/${ThreeToGl.float(scene.time_controller.fps)})`,
 			// `#define FRAME_RANGE_START ${ThreeToGl.float(scene.time_controller.frame_range[0])}`,
 			// `#define FRAME_RANGE_END ${ThreeToGl.float(scene.time_controller.frame_range[1])}`,
 		];
 
-		const line_before_define = this.insertDefineAfter(shader_name);
-		const line_before_body = this.insertBodyAfter(shader_name);
-		const linesToRemove = this.linesToRemove(shader_name);
-		let line_before_define_found = false;
+		const lineBeforeDefine = this.insertDefineAfter(shaderName);
+		const lineBeforeBody = this.insertBodyAfter(shaderName);
+		const linesToRemove = this.linesToRemove(shaderName);
+		let lineBeforeDefineFound = false;
 		let lineBeforeBodyFoundOnPreviousLine = false;
 		let lineBeforeBodyFound = false;
 
-		for (let template_line of template_lines) {
-			if (line_before_define_found == true) {
-				if (function_declaration) {
-					this._insertLines(new_lines, function_declaration);
+		for (let templateLine of templateLines) {
+			if (lineBeforeDefineFound == true) {
+				if (functionDeclaration) {
+					this._insertLines(newLines, functionDeclaration);
 				}
 				if (define) {
-					this._insertLines(new_lines, define);
+					this._insertLines(newLines, define);
 				}
-				line_before_define_found = false;
+				lineBeforeDefineFound = false;
 			}
 			if (lineBeforeBodyFoundOnPreviousLine == true) {
-				// this._insert_default_body_declarations(new_lines, shader_name)
+				// this._insert_default_body_declarations(new_lines, shaderName)
 				if (body) {
-					this._insertLines(new_lines, body);
+					this._insertLines(newLines, body);
 				}
 				lineBeforeBodyFoundOnPreviousLine = false;
 			}
@@ -484,22 +484,22 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 
 			if (linesToRemove) {
 				for (let line_to_remove of linesToRemove) {
-					if (template_line.indexOf(line_to_remove) >= 0) {
+					if (templateLine.indexOf(line_to_remove) >= 0) {
 						line_remove_required = true;
 					}
 				}
 			}
 			if (!line_remove_required) {
-				new_lines.push(template_line);
+				newLines.push(templateLine);
 			} else {
-				new_lines.push('// removed:');
-				new_lines.push(`//${template_line}`);
+				newLines.push('// removed:');
+				newLines.push(`//${templateLine}`);
 			}
 
-			if (line_before_define && template_line.indexOf(line_before_define) >= 0) {
-				line_before_define_found = true;
+			if (lineBeforeDefine && templateLine.indexOf(lineBeforeDefine) >= 0) {
+				lineBeforeDefineFound = true;
 			}
-			if (line_before_body && template_line.indexOf(line_before_body) >= 0) {
+			if (lineBeforeBody && templateLine.indexOf(lineBeforeBody) >= 0) {
 				lineBeforeBodyFoundOnPreviousLine = true;
 				lineBeforeBodyFound = true;
 			}
@@ -521,15 +521,15 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			// 	}
 			// }
 		}
-		if (line_before_body) {
+		if (lineBeforeBody) {
 			if (!lineBeforeBodyFound) {
-				console.warn(`line '${line_before_body}' was not found in shader '${shader_name}'`, template, this);
+				console.warn(`line '${lineBeforeBody}' was not found in shader '${shaderName}'`, template, this);
 			} else {
 				// console.log(`OK: line '${line_before_body}' was found in shader '${shader_name}'`, template, this);
 			}
 		}
 
-		this._lines.set(shader_name, new_lines);
+		this._lines.set(shaderName, newLines);
 	}
 
 	// protected _insert_default_body_declarations(new_lines, shader_name){

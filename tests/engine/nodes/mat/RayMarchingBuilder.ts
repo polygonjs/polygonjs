@@ -107,7 +107,7 @@ const ALL_UNIFORMS_WITHOUT_ENV = [
 	'uvTransform',
 ];
 
-const ALL_UNIFORMS = [...ALL_UNIFORMS_WITHOUT_ENV, 'v_POLY_texture_envTexture1'];
+const ALL_UNIFORMS = [...ALL_UNIFORMS_WITHOUT_ENV];
 
 export function onCreateHook(node: RayMarchingBuilderMatNode) {
 	const globals = node.createNode('globals');
@@ -559,6 +559,86 @@ QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayM
 			[0, 4, 0.01],
 		]);
 	});
+});
+
+QUnit.test('mat/rayMarchingBuilder with env map', async (assert) => {
+	const MAT = window.MAT;
+	const COP = window.COP;
+	// const geo1 = window.geo1;
+
+	// cam
+	const perspective_camera1 = window.perspective_camera1;
+	perspective_camera1.p.t.set([1, 1, 5]);
+
+	await RendererUtils.waitForRenderer(window.scene);
+
+	// env map
+	const fileEXR = COP.createNode('imageEXR');
+	// fileEXR.p.url.set()
+	const envMap1 = COP.createNode('envMap');
+	envMap1.setInput(0, fileEXR);
+
+	// mat
+	// const debug = MAT.createNode('test')
+	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+	onCreateHook(rayMarchingBuilder1);
+	rayMarchingBuilder1.p.useEnvMap.set(true);
+	rayMarchingBuilder1.p.envMap.setNode(envMap1);
+	await rayMarchingBuilder1.compute();
+	const material = rayMarchingBuilder1.material;
+	assert.null((material.uniforms as any).envMap.value);
+	assert.equal(material.defines['ENVMAP_TYPE_CUBE_UV'], 0);
+	assert.equal(material.defines['CUBEUV_TEXEL_WIDTH'], '0.1');
+	assert.equal(material.defines['CUBEUV_TEXEL_HEIGHT'], '0.1');
+	assert.equal(material.defines['CUBEUV_MAX_MIP'], '1.0');
+
+	const container = await envMap1.compute();
+	await rayMarchingBuilder1.compute();
+	const texture = container.texture();
+	assert.ok(texture);
+	assert.equal((material.uniforms as any).envMap.value.uuid, texture.uuid);
+	assert.equal(material.defines['ENVMAP_TYPE_CUBE_UV'], 1);
+	assert.equal(material.defines['CUBEUV_TEXEL_WIDTH'], 0.0013020833333333333);
+	assert.equal(material.defines['CUBEUV_TEXEL_HEIGHT'], 0.0009765625);
+	assert.equal(material.defines['CUBEUV_MAX_MIP'], 8);
+});
+QUnit.test('mat/rayMarchingBuilder with 2 SDFMaterials', async (assert) => {
+	const MAT = window.MAT;
+	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
+	const output = rayMarchingBuilder1.createNode('output');
+
+	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
+
+	function _createContext() {
+		const sdfContext = rayMarchingBuilder1.createNode('SDFContext');
+		const sdfMaterial = rayMarchingBuilder1.createNode('SDFMaterial');
+		const constant = rayMarchingBuilder1.createNode('constant');
+		const sdfSphere = rayMarchingBuilder1.createNode('SDFSphere');
+
+		constant.setGlType(GlConnectionPointType.VEC3);
+		constant.p.asColor.set(1);
+		constant.p.color.set([1, 1, 1]);
+
+		sdfMaterial.setInput('color', constant);
+		sdfContext.setInput('sdf', sdfSphere);
+		sdfContext.setInput('material', sdfMaterial);
+
+		return sdfContext;
+	}
+
+	const SDFUnion1 = rayMarchingBuilder1.createNode('SDFUnion');
+	const sdfContext1 = _createContext();
+	const sdfContext2 = _createContext();
+	output.setInput(0, SDFUnion1);
+	SDFUnion1.setInput(0, sdfContext1);
+	SDFUnion1.setInput(1, sdfContext2);
+
+	await RendererUtils.compile(rayMarchingBuilder1, renderer);
+	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	assert.includes(material.fragmentShader, 'const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 1;');
+	assert.includes(material.fragmentShader, 'const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL2 = 2;');
+	assert.includes(material.fragmentShader, 'if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){');
+	assert.includes(material.fragmentShader, 'if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL2){');
 });
 
 QUnit.test('mat/rayMarchingBuilder persisted_config', async (assert) => {

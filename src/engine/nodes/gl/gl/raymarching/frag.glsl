@@ -17,6 +17,7 @@ uniform float debugMaxDepth;
 #include <packing>
 #include <lightmap_pars_fragment>
 #include <bsdfs>
+#include <cube_uv_reflection_fragment>
 #include <lights_pars_begin>
 #include <lights_physical_pars_fragment>
 #include <shadowmap_pars_fragment>
@@ -30,8 +31,7 @@ uniform float debugMaxDepth;
 	uniform float shadowDepthMax;
 #endif 
 
-// uniform vec3 u_BoundingBoxMin;
-// uniform vec3 u_BoundingBoxMax;
+
 
 
 varying vec3 vPw;
@@ -96,6 +96,7 @@ int DefaultSDFMaterial(){
 	return 0;
 }
 
+// start raymarching builder define code
 
 
 SDFContext GetDist(vec3 p) {
