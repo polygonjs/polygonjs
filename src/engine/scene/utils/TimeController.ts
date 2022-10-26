@@ -7,6 +7,7 @@ import {SCENE_EVENT_PLAY_EVENT_CONTEXT, SCENE_EVENT_PAUSE_EVENT_CONTEXT} from '.
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
 const FPS = 60.0;
+const MAX_DELTA = 0.1;
 export type onTimeTickHook = (delta: number) => void;
 export type onPlayingStateChangeCallback = () => void;
 // const performance = Poly.performance.performanceManager();
@@ -51,7 +52,9 @@ export class TimeController {
 		return this._graphNode;
 	}
 	updateClockDelta() {
-		return (this._delta = this._clock.getDelta());
+		const delta = this._clock.getDelta();
+		const clampedDelta = delta > MAX_DELTA ? MAX_DELTA : delta;
+		return (this._delta = clampedDelta);
 	}
 	delta() {
 		return this._delta;
