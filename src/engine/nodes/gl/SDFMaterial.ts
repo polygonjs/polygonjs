@@ -1,8 +1,8 @@
-import {NodeContext} from './../../poly/NodeContext';
 /**
  * Creates an SDF material
  *
  */
+import {NodeContext} from './../../poly/NodeContext';
 import {GlType} from './../../poly/registers/nodes/types/Gl';
 import {ParamConfig} from './../utils/params/ParamsConfig';
 import {FunctionGLDefinition, BaseGLDefinition} from './utils/GLDefinition';
