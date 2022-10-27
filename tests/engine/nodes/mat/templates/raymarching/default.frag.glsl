@@ -342,7 +342,102 @@ float SDFOnion( in float sdf, in float thickness )
 	return abs(sdf)-thickness;
 }
 const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 1;
-
+vec4 quatSlerp(vec4 q1, vec4 q2, float t){
+	float angle = acos(dot(q1, q2));
+	float denom = sin(angle);
+	return (q1*sin((1.0-t)*angle)+q2*sin(t*angle))/denom;
+}
+vec4 quatMult(vec4 q1, vec4 q2)
+{
+	return vec4(
+	q1.w * q2.x + q1.x * q2.w + q1.z * q2.y - q1.y * q2.z,
+	q1.w * q2.y + q1.y * q2.w + q1.x * q2.z - q1.z * q2.x,
+	q1.w * q2.z + q1.z * q2.w + q1.y * q2.x - q1.x * q2.y,
+	q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z
+	);
+}
+mat4 rotationMatrix(vec3 axis, float angle)
+{
+	axis = normalize(axis);
+	float s = sin(angle);
+	float c = cos(angle);
+	float oc = 1.0 - c;
+ 	return mat4(oc * axis.x * axis.x + c, oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s, 0.0, oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c, oc * axis.y * axis.z - axis.x * s,  0.0, oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c, 0.0, 0.0, 0.0, 0.0, 1.0);
+}
+vec4 quatFromAxisAngle(vec3 axis, float angle)
+{
+	vec4 qr;
+	float half_angle = (angle * 0.5);	float sin_half_angle = sin(half_angle);
+	qr.x = axis.x * sin_half_angle;
+	qr.y = axis.y * sin_half_angle;
+	qr.z = axis.z * sin_half_angle;
+	qr.w = cos(half_angle);
+	return qr;
+}
+vec3 rotateWithAxisAngle(vec3 position, vec3 axis, float angle)
+{
+	vec4 q = quatFromAxisAngle(axis, angle);
+	vec3 v = position.xyz;
+	return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
+}
+vec3 rotateWithQuat( vec3 v, vec4 q )
+{
+	return v + 2.0 * cross( q.xyz, cross( q.xyz, v ) + q.w * v );
+}
+float vectorAngle(vec3 start, vec3 dest){
+	start = normalize(start);
+	dest = normalize(dest);
+	float cosTheta = dot(start, dest);
+	vec3 c1 = cross(start, dest);
+	vec3 y_axis = vec3(0.0, 1.0, 0.0);
+	float d1 = dot(c1, y_axis);
+	float angle = acos(cosTheta) * sign(d1);
+	return angle;
+}
+vec4 vectorAlign(vec3 start, vec3 dest){
+	start = normalize(start);
+	dest = normalize(dest);
+	float cosTheta = dot(start, dest);
+	vec3 axis;
+	if(cosTheta > (1.0 - 0.0001) || cosTheta < (-1.0 + 0.0001) ){
+		axis = normalize(cross(start, vec3(0.0, 1.0, 0.0)));
+		if (length(axis) < 0.001 ){			axis = normalize(cross(start, vec3(1.0, 0.0, 0.0)));
+		}
+	} else {
+		axis = normalize(cross(start, dest));
+	}
+	float angle = acos(cosTheta);
+	return quatFromAxisAngle(axis, angle);
+}
+vec4 vectorAlignWithUp(vec3 start, vec3 dest, vec3 up){
+	vec4 rot1 = vectorAlign(start, dest);
+	up = normalize(up);
+	vec3 newUp = rotateWithQuat(vec3(0.0, 1.0, 0.0), rot1);	vec4 rot2 = vectorAlign(up, newUp);
+	return rot2;
+}
+float quatToAngle(vec4 q){
+	return 2.0 * acos(q.w);
+}
+vec3 quatToAxis(vec4 q){
+	return vec3(
+		q.x / sqrt(1.0-q.w*q.w),
+		q.y / sqrt(1.0-q.w*q.w),
+		q.z / sqrt(1.0-q.w*q.w)
+	);
+}
+vec4 align(vec3 dir, vec3 up){
+	vec3 start_dir = vec3(0.0, 0.0, 1.0);
+	vec3 start_up = vec3(0.0, 1.0, 0.0);
+	vec4 rot1 = vectorAlign(start_dir, dir);
+	up = normalize(up);
+	vec3 right = normalize(cross(dir, up));
+	if(length(right)<0.001){
+		right = vec3(1.0, 0.0, 0.0);
+	}
+	up = normalize(cross(right, dir));
+	vec3 newUp = rotateWithQuat(start_up, rot1);	vec4 rot2 = vectorAlign(normalize(newUp), up);
+	return quatMult(rot1, rot2);
+}
 struct EnvMapProps {
 	vec3 tint;
 	float intensity;
@@ -353,9 +448,15 @@ struct EnvMapProps {
 uniform sampler2D envMap;
 uniform float envMapIntensity;
 uniform float roughness;
+#ifdef ROTATE_ENV_MAP_Y
+	uniform float envMapRotationY;
+#endif
 vec3 envMapSample(vec3 rayDir, float envMapRoughness){
 	vec3 env = vec3(0.);
 	#ifdef ENVMAP_TYPE_CUBE_UV
+		#ifdef ROTATE_ENV_MAP_Y
+			rayDir = rotateWithAxisAngle(rayDir, vec3(0.,1.,0.), envMapRotationY);
+		#endif
 		env = textureCubeUV(envMap, rayDir, envMapRoughness * roughness).rgb;
 	#endif
 	return env;
@@ -540,9 +641,10 @@ vec3 applyMaterialWithoutRefraction(vec3 p, vec3 n, vec3 rayDir, int mat, inout 
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n, sdfContext);
-		col *= diffuse;
+		col = vec3(0., 0., 0.);
+		vec3 diffuse = v_POLY_constant1_val * vec3(1.0, 1.0, 1.0) * GetLight(p, n, sdfContext);
+		col += diffuse;
+		col += vec3(0.0, 0.0, 0.0);
 		vec3 rayDir = normalize(reflect(rayDir, n));
 		EnvMapProps envMapProps;
 		envMapProps.tint = vec3(1.0, 1.0, 1.0);
@@ -560,9 +662,10 @@ vec3 applyMaterialWithoutReflection(vec3 p, vec3 n, vec3 rayDir, int mat, inout 
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n, sdfContext);
-		col *= diffuse;
+		col = vec3(0., 0., 0.);
+		vec3 diffuse = v_POLY_constant1_val * vec3(1.0, 1.0, 1.0) * GetLight(p, n, sdfContext);
+		col += diffuse;
+		col += vec3(0.0, 0.0, 0.0);
 		vec3 rayDir = normalize(reflect(rayDir, n));
 		EnvMapProps envMapProps;
 		envMapProps.tint = vec3(1.0, 1.0, 1.0);
@@ -659,16 +762,19 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, fl
 	#pragma unroll_loop_end
 	return vec4(refractedColor, distanceInsideMedium);
 }
-float applyRefractionAbsorption(float refractedDataColor, float tint, float distanceInsideMedium, float absorption){
-	float blend = smoothstep(0.,1.,absorption*distanceInsideMedium);
-	return mix(refractedDataColor, refractedDataColor*tint, blend);
+float refractionTint(float baseValue, float tint, float distanceInsideMedium, float absorption){
+	float tintNegated = baseValue-tint;
+	float t = tintNegated*( distanceInsideMedium*absorption );
+	return max(baseValue-t, 0.);
 }
-vec3 applyRefractionAbsorption(vec3 refractedDataColor, vec3 tint, float distanceInsideMedium, float absorption){
-	float blend = smoothstep(0.,1.,absorption*distanceInsideMedium);
+float applyRefractionAbsorption(float refractedDataColor, float baseValue, float tint, float distanceInsideMedium, float absorption){
+	return refractedDataColor*refractionTint(baseValue, tint, distanceInsideMedium, absorption);
+}
+vec3 applyRefractionAbsorption(vec3 refractedDataColor, vec3 baseValue, vec3 tint, float distanceInsideMedium, float absorption){
 	return vec3(
-		mix(refractedDataColor.r, refractedDataColor.r*tint.r, blend),
-		mix(refractedDataColor.g, refractedDataColor.g*tint.g, blend),
-		mix(refractedDataColor.b, refractedDataColor.b*tint.b, blend)
+		refractedDataColor.r * refractionTint(baseValue.r, tint.r, distanceInsideMedium, absorption),
+		refractedDataColor.g * refractionTint(baseValue.g, tint.g, distanceInsideMedium, absorption),
+		refractedDataColor.b * refractionTint(baseValue.b, tint.b, distanceInsideMedium, absorption)
 	);
 }
 #endif
@@ -677,9 +783,10 @@ vec3 applyMaterial(vec3 p, vec3 n, vec3 rayDir, int mat, inout SDFContext sdfCon
 	vec3 v_POLY_constant1_val = vec3(1.0, 1.0, 1.0);
 	
 	if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){
-		col = v_POLY_constant1_val;
-		vec3 diffuse = GetLight(p, n, sdfContext);
-		col *= diffuse;
+		col = vec3(0., 0., 0.);
+		vec3 diffuse = v_POLY_constant1_val * vec3(1.0, 1.0, 1.0) * GetLight(p, n, sdfContext);
+		col += diffuse;
+		col += vec3(0.0, 0.0, 0.0);
 		vec3 rayDir = normalize(reflect(rayDir, n));
 		EnvMapProps envMapProps;
 		envMapProps.tint = vec3(1.0, 1.0, 1.0);

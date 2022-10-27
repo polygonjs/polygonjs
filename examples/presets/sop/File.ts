@@ -182,7 +182,13 @@ const obj = (node: FileOBJSopNode) => {
 				`${DEMO_ASSETS_ROOT_URL}/models/resources/3dscanstore.com/BaseMeshes/OBJ/${fileName}.obj`
 			);
 		}
-		const fileNames = ['Female-Average-Head', 'Male-Average-Head', 'Super-Average-Head'];
+		const fileNames = [
+			'Female-Average-Head',
+			'Female-Average-Head.capped',
+			'Male-Average-Head',
+			'Male-Average-Head.capped',
+			'Super-Average-Head',
+		];
 		const dict: PolyDictionary<BasePreset> = {};
 		for (let fileName of fileNames) {
 			dict[`3dscanstore.com/${fileName}`] = _3dscanstore(fileName);

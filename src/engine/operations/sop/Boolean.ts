@@ -51,9 +51,9 @@ export class BooleanSopOperation extends BaseSopOperation {
 	}
 
 	override cook(inputCoreGroups: CoreGroup[], params: BooleanSopParams): CoreGroup {
-		const meshA = inputCoreGroups[0].objectsWithGeo()[0] as Mesh;
-		const meshB = inputCoreGroups[1].objectsWithGeo()[0] as Mesh;
-		if (!(meshA.geometry && meshB.geometry)) {
+		const meshA = inputCoreGroups[0].objectsWithGeo()[0] as Mesh | undefined;
+		const meshB = inputCoreGroups[1].objectsWithGeo()[0] as Mesh | undefined;
+		if (!(meshA && meshA.geometry && meshB && meshB.geometry)) {
 			this.states?.error.set('input objects need to have mesh geometries at the top level');
 			return this.createCoreGroupFromObjects([]);
 		}
@@ -76,10 +76,14 @@ export class BooleanSopOperation extends BaseSopOperation {
 		csgEvaluator.attributes = attributes;
 		// csgEvaluator.debug.enabled = true;
 		csgEvaluator.useGroups = params.keepMaterials || params.useInputGroups;
-		csgEvaluator.evaluate(brush1, brush2, operationId, brush1);
+		// we currently need to use the returned object from .evaluate in order to
+		// have a new object with a correct bounding box
+		const output = csgEvaluator.evaluate(brush1, brush2, operationId);
+
+		// brush1.geometry.computeBoundingBox();
 
 		if (!params.keepMaterials) {
-			brush1.material = meshA.material;
+			output.material = meshA.material;
 		}
 		// console.log(result);
 
@@ -94,7 +98,7 @@ export class BooleanSopOperation extends BaseSopOperation {
 		// 	matA = [matA, matB];
 		// }
 		// const meshResult: Mesh = CSG.toMesh(result, meshA.matrix, matA);
-		return this.createCoreGroupFromObjects([brush1]);
+		return this.createCoreGroupFromObjects([output]);
 	}
 
 	// private _applyBooleaOperation(meshA: Mesh, meshB: Mesh, params: BooleanSopParams) {

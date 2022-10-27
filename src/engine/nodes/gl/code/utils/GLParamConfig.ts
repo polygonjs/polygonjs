@@ -74,7 +74,7 @@ export class GlParamConfig<T extends ParamType> extends BaseParamConfig<T> {
 			// 	GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, uniform);
 			// 	return;
 			case ParamType.NODE_PATH:
-				GlParamConfig.set_uniform_value_from_texture_from_node_path_param(param as NodePathParam, uniform);
+				GlParamConfig.setUniformValueFromTextureFromNodePathParam(param as NodePathParam, uniform);
 				return;
 			default:
 				uniform.value = param.value;
@@ -134,28 +134,20 @@ export class GlParamConfig<T extends ParamType> extends BaseParamConfig<T> {
 	// 		uniform.value = null;
 	// 	}
 	// }
-	private static async set_uniform_value_from_texture_from_node_path_param(param: NodePathParam, uniform: IUniform) {
+	private static async setUniformValueFromTextureFromNodePathParam(param: NodePathParam, uniform: IUniform) {
 		if (param.isDirty()) {
 			await param.compute();
 		}
 		const node = param.value.nodeWithContext(NodeContext.COP);
 		if (node) {
 			if (node.isDirty()) {
-				node.compute().then((container) => {
-					const texture = container.texture();
-					uniform.value = texture;
-				});
-			} else {
-				const container = node.containerController.container();
-				const texture = container.texture();
-				uniform.value = texture;
+				await node.compute();
 			}
+			const container = node.containerController.container();
+			const texture = container.texture();
+			uniform.value = texture;
 		} else {
 			uniform.value = null;
 		}
-	}
-
-	set_uniform_value_from_ramp(param: RampParam, uniform: IUniform) {
-		uniform.value = param.rampTexture();
 	}
 }

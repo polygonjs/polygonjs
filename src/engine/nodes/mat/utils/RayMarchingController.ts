@@ -1,3 +1,4 @@
+import {BaseNodeType} from './../../_Base';
 import {NodeContext} from './../../../poly/NodeContext';
 import {TypeAssert} from './../../../poly/Assert';
 import {RayMarchingUniforms, RAYMARCHING_UNIFORMS} from './../../gl/gl/raymarching/uniforms';
@@ -26,6 +27,9 @@ interface EnvMapData {
 	texelHeight: number;
 	maxMip: number;
 }
+interface EnvMapDataWithRotation extends EnvMapData {
+	tEnvMapRotate: boolean;
+}
 // from three.js WebGLProgram.js
 function generateCubeUVSize(parameters: EnvMapParams): EnvMapData | null {
 	const imageHeight = parameters.envMapCubeUVHeight;
@@ -40,11 +44,12 @@ function generateCubeUVSize(parameters: EnvMapParams): EnvMapData | null {
 
 	return {texelWidth, texelHeight, maxMip};
 }
-function setDefines(shaderMaterial: ShaderMaterialWithCustomMaterials, props?: EnvMapData | null) {
+function setDefines(shaderMaterial: ShaderMaterialWithCustomMaterials, props?: EnvMapDataWithRotation | null) {
 	shaderMaterial.defines['ENVMAP_TYPE_CUBE_UV'] = props ? 1 : 0;
 	shaderMaterial.defines['CUBEUV_TEXEL_WIDTH'] = props ? props.texelWidth : ThreeToGl.float(0.1);
 	shaderMaterial.defines['CUBEUV_TEXEL_HEIGHT'] = props ? props.texelHeight : ThreeToGl.float(0.1);
 	shaderMaterial.defines['CUBEUV_MAX_MIP'] = props ? ThreeToGl.float(props.maxMip) : ThreeToGl.float(1);
+	shaderMaterial.defines['ROTATE_ENV_MAP_Y'] = props ? props.tEnvMapRotate : 0;
 }
 
 export function RayMarchingMainParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -89,9 +94,33 @@ export function RayMarchingEnvMapParamConfig<TBase extends Constructor>(Base: TB
 			nodeSelection: {context: NodeContext.COP},
 		});
 		/** @param environment intensity */
-		envMapIntensity = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
+		envMapIntensity = ParamConfig.FLOAT(1, {
+			visibleIf: {useEnvMap: 1},
+			cook: false,
+			callback: (node: BaseNodeType) =>
+				RayMarchingController.updateUniformEnvMapIntensity(node as RayMarchingMatNode),
+		});
 		/** @param environment roughness */
-		envMapRoughness = ParamConfig.FLOAT(1, {visibleIf: {useEnvMap: 1}});
+		envMapRoughness = ParamConfig.FLOAT(1, {
+			visibleIf: {useEnvMap: 1},
+			cook: false,
+			callback: (node: BaseNodeType) =>
+				RayMarchingController.updateUniformEnvMapRoughness(node as RayMarchingMatNode),
+		});
+		/** @param allow env map rotation */
+		tEnvMapRotate = ParamConfig.BOOLEAN(0, {
+			visibleIf: {useEnvMap: 1},
+		});
+		/** @param env map rotation */
+		envMapRotation = ParamConfig.FLOAT(0, {
+			range: [-Math.PI, Math.PI],
+			rangeLocked: [false, false],
+			step: 0.0001,
+			visibleIf: {useEnvMap: 1, tEnvMapRotate: 1},
+			cook: false,
+			callback: (node: BaseNodeType) =>
+				RayMarchingController.updateUniformEnvMapRotate(node as RayMarchingMatNode),
+		});
 	};
 }
 export function RayMarchingDebugParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -166,56 +195,11 @@ export class RayMarchingController {
 		uniforms.shadowDistanceMin.value = pv.shadowDistanceMin;
 		uniforms.shadowDistanceMax.value = pv.shadowDistanceMax;
 
+		this._updateUniforms();
 		this._updateDebug(shaderMaterial, uniforms);
 		await this._updateEnvMap(shaderMaterial, uniforms);
 	}
-	private async _updateEnvMap(shaderMaterial: ShaderMaterialWithCustomMaterials, uniforms: RayMarchingUniforms) {
-		const pv = this.node.pv;
-		setDefines(shaderMaterial, null);
-		(uniforms as any)['envMapIntensity'].value = pv.envMapIntensity;
-		(uniforms as any)['roughness'].value = pv.envMapRoughness;
-		const currentDefine = shaderMaterial.defines['ENVMAP_TYPE_CUBE_UV'];
 
-		const _fetchTexture = async () => {
-			const pathParam = this.node.p.envMap;
-			if (pathParam.isDirty()) {
-				await pathParam.compute();
-			}
-			const textureNode = pathParam.value.nodeWithContext(NodeContext.COP);
-			if (textureNode) {
-				const container = await textureNode.compute();
-				const texture = container.texture();
-				return texture;
-			}
-		};
-		const _applyTexture = (texture: Texture) => {
-			(uniforms as any)['envMap'].value = texture;
-
-			const props = generateCubeUVSize({envMapCubeUVHeight: texture.image.height});
-			setDefines(shaderMaterial, props);
-		};
-		const _removeTexture = () => {
-			(uniforms as any)['envMap'].value = null;
-			setDefines(shaderMaterial, null);
-		};
-		const _updateNeedsUpdateIfRequired = () => {
-			if (currentDefine != shaderMaterial.defines['ENVMAP_TYPE_CUBE_UV']) {
-				shaderMaterial.needsUpdate = true;
-			}
-		};
-
-		if (isBooleanTrue(pv.useEnvMap)) {
-			const texture = await _fetchTexture();
-			if (texture) {
-				_applyTexture(texture);
-			} else {
-				_removeTexture();
-			}
-		} else {
-			_removeTexture();
-		}
-		_updateNeedsUpdateIfRequired();
-	}
 	private _updateDebug(shaderMaterial: ShaderMaterialWithCustomMaterials, uniforms: RayMarchingUniforms) {
 		const pv = this.node.pv;
 		if (isBooleanTrue(pv.debug)) {
@@ -252,5 +236,87 @@ export class RayMarchingController {
 				shaderMaterial.needsUpdate = true;
 			}
 		}
+	}
+	private async _updateEnvMap(shaderMaterial: ShaderMaterialWithCustomMaterials, uniforms: RayMarchingUniforms) {
+		const pv = this.node.pv;
+		setDefines(shaderMaterial, null);
+		const currentDefine = shaderMaterial.defines['ENVMAP_TYPE_CUBE_UV'];
+
+		const _fetchTexture = async () => {
+			const pathParam = this.node.p.envMap;
+			if (pathParam.isDirty()) {
+				await pathParam.compute();
+			}
+			const textureNode = pathParam.value.nodeWithContext(NodeContext.COP);
+			if (textureNode) {
+				const container = await textureNode.compute();
+				const texture = container.texture();
+				return texture;
+			}
+		};
+		const _applyTexture = (texture: Texture) => {
+			(uniforms as any)['envMap'].value = texture;
+
+			const props = generateCubeUVSize({envMapCubeUVHeight: texture.image.height});
+			setDefines(shaderMaterial, props ? {...props, tEnvMapRotate: pv.tEnvMapRotate} : null);
+		};
+		const _removeTexture = () => {
+			(uniforms as any)['envMap'].value = null;
+			setDefines(shaderMaterial, null);
+		};
+		const _updateNeedsUpdateIfRequired = () => {
+			if (currentDefine != shaderMaterial.defines['ENVMAP_TYPE_CUBE_UV']) {
+				shaderMaterial.needsUpdate = true;
+			}
+		};
+
+		if (isBooleanTrue(pv.useEnvMap)) {
+			const texture = await _fetchTexture();
+			if (texture) {
+				_applyTexture(texture);
+			} else {
+				_removeTexture();
+			}
+		} else {
+			_removeTexture();
+		}
+		_updateNeedsUpdateIfRequired();
+	}
+	/**
+	 *
+	 * uniforms
+	 *
+	 */
+	private _updateUniforms() {
+		RayMarchingController._updateUniforms(this.node);
+	}
+	private static _updateUniforms(node: RayMarchingMatNode) {
+		this.updateUniformEnvMapIntensity(node);
+		this.updateUniformEnvMapRoughness(node);
+		this.updateUniformEnvMapRotate(node);
+	}
+	static updateUniformEnvMapIntensity(node: RayMarchingMatNode) {
+		const shaderMaterial = node.material as ShaderMaterialWithCustomMaterials;
+		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
+		if (!uniforms) {
+			return;
+		}
+		(uniforms as any)['envMapIntensity'].value = node.pv.envMapIntensity;
+	}
+	static updateUniformEnvMapRoughness(node: RayMarchingMatNode) {
+		const shaderMaterial = node.material as ShaderMaterialWithCustomMaterials;
+		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
+		if (!uniforms) {
+			return;
+		}
+		(uniforms as any)['roughness'].value = node.pv.envMapRoughness;
+	}
+	static updateUniformEnvMapRotate(node: RayMarchingMatNode) {
+		const shaderMaterial = node.material as ShaderMaterialWithCustomMaterials;
+		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
+		if (!uniforms) {
+			return;
+		}
+		(uniforms as any)['envMapRotationY'].value = node.pv.envMapRotation;
 	}
 }

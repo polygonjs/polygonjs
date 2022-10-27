@@ -113,7 +113,10 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 				ShaderName.FRAGMENT,
 				[
 					/*'color', */ 'color',
-					/*envMap */
+					/* lighting */
+					'diffuse',
+					'emissive',
+					/* envMap */
 					'envMapTint',
 					'envMapIntensity',
 					'envMapRoughness',

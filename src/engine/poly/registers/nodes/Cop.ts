@@ -59,7 +59,7 @@ export interface CopNodeChildrenMap {
 	palette: PaletteCopNode;
 	render: RenderCopNode;
 	// SDFBlur: SDFBlurCopNode;
-	SDFExporterCopNode: SDFExporterCopNode;
+	SDFExporter: SDFExporterCopNode;
 	SDFFromObject: SDFFromObjectCopNode;
 	SDFFromUrl: SDFFromUrlCopNode;
 	snapshot: SnapshotCopNode;
@@ -101,9 +101,9 @@ export class CopRegister {
 		poly.registerNode(PaletteCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(RenderCopNode, CATEGORY_COP.MISC);
 		// poly.registerNode(SDFBlurCopNode, CATEGORY_COP.ADVANCED);
-		poly.registerNode(SDFExporterCopNode, CATEGORY_COP.MISC);
-		poly.registerNode(SDFFromObjectCopNode, CATEGORY_COP.MISC);
-		poly.registerNode(SDFFromUrlCopNode, CATEGORY_COP.MISC);
+		poly.registerNode(SDFExporterCopNode, CATEGORY_COP.SDF);
+		poly.registerNode(SDFFromObjectCopNode, CATEGORY_COP.SDF);
+		poly.registerNode(SDFFromUrlCopNode, CATEGORY_COP.SDF);
 		poly.registerNode(SnapshotCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);

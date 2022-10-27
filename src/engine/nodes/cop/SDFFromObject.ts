@@ -67,17 +67,6 @@ class SDFFromObjectCopParamsConfig extends NodeParamsConfig {
 		cook: false,
 		editable: false,
 	});
-	/** @param voxelSizes */
-	// voxelSizes = ParamConfig.VECTOR3([1, 1, 1], {
-	// 	cook: false,
-	// 	editable: false,
-	// });
-	/** @param force Render */
-	// render = ParamConfig.BUTTON(null, {
-	// 	callback: (node: BaseNodeType) => {
-	// 		SDFFromObjectCopNode.PARAM_CALLBACK_render(node as SDFFromObjectCopNode);
-	// 	},
-	// });
 }
 
 const ParamsConfig = new SDFFromObjectCopParamsConfig();
@@ -155,15 +144,9 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		_updateResolution();
 
 		// update params
-		// _bbox.min.set(0, 0, 0);
-		// _bbox.max.set(1, 1, 1);
-		// _bboxSize.set(1, 1, 1);
-		// _resolution.set(16, 16, 16);
-		// _voxelSizes.copy(_bboxSize).divide(_resolution);
 		this.p.boundMin.set(_bbox.min);
 		this.p.boundMax.set(_bbox.max);
 		this.p.resolution.set(_resolution);
-		// this.p.voxelSizes.set(_voxelSizes);
 
 		// write texture data
 		const timeStart = performance.now();
@@ -262,7 +245,7 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 	private createTextureTargetIfRequired(resolution: Vector3) {
 		if (!this.__dataTexture || !this._textureResolutionValid(resolution)) {
 			this.__dataTexture = this._createTexture(resolution);
-			this._resolutionUsed = resolution;
+			this._resolutionUsed.copy(resolution);
 		}
 	}
 	private _textureResolutionValid(resolution: Vector3) {

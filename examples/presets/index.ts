@@ -15,6 +15,7 @@ import {audioAnalyserCopPresetRegister} from './cop/AudioAnalyser';
 import {imageCopPresetRegister} from './cop/Image';
 import {imageEXRCopPresetRegister} from './cop/ImageEXR';
 import {lutCopPresetRegister} from './cop/Lut';
+import {SDFFromUrlCopPresetRegister} from './cop/SDFFromUrl';
 import {videoCopPresetRegister} from './cop/Video';
 // // gl
 import {attributeGlPresetRegister} from './gl/Attribute';
@@ -73,6 +74,7 @@ class PresetLibraryClass {
 		this._registerPreset(imageCopPresetRegister);
 		this._registerPreset(imageEXRCopPresetRegister);
 		this._registerPreset(lutCopPresetRegister);
+		this._registerPreset(SDFFromUrlCopPresetRegister);
 		this._registerPreset(videoCopPresetRegister);
 		// gl
 		this._registerPreset(attributeGlPresetRegister);

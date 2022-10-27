@@ -8,6 +8,7 @@ import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 class SDFFromUrlCopParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the image from */
@@ -44,7 +45,7 @@ const ParamsConfig = new SDFFromUrlCopParamsConfig();
 export class SDFFromUrlCopNode extends TypedCopNode<SDFFromUrlCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFFromUrl';
+		return CopType.SDF_FROM_URL;
 	}
 
 	override async cook(inputContents: Texture[]) {

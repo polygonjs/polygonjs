@@ -15,6 +15,7 @@ export interface RayMarchingUniforms {
 	shadowDistanceMax: IUniformN;
 	shadowDepthMin: IUniformN;
 	shadowDepthMax: IUniformN;
+	envMapRotationY: IUniformN;
 	// spotLightsRayMarching: IUniformV3Array;
 }
 
@@ -57,5 +58,8 @@ export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
 	},
 	shadowDepthMax: {
 		value: 128,
+	},
+	envMapRotationY: {
+		value: 0,
 	},
 };

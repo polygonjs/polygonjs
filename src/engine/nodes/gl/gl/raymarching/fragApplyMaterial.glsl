@@ -115,16 +115,19 @@ vec4 GetRefractedData(vec3 p, vec3 n, vec3 rayDir, float ior, float biasMult, fl
 	#pragma unroll_loop_end
 	return vec4(refractedColor, distanceInsideMedium);
 }
-float applyRefractionAbsorption(float refractedDataColor, float tint, float distanceInsideMedium, float absorption){
-	float blend = smoothstep(0.,1.,absorption*distanceInsideMedium);
-	return mix(refractedDataColor, refractedDataColor*tint, blend);
+float refractionTint(float baseValue, float tint, float distanceInsideMedium, float absorption){
+	float tintNegated = baseValue-tint;
+	float t = tintNegated*( distanceInsideMedium*absorption );
+	return max(baseValue-t, 0.);
 }
-vec3 applyRefractionAbsorption(vec3 refractedDataColor, vec3 tint, float distanceInsideMedium, float absorption){
-	float blend = smoothstep(0.,1.,absorption*distanceInsideMedium);
+float applyRefractionAbsorption(float refractedDataColor, float baseValue, float tint, float distanceInsideMedium, float absorption){
+	return refractedDataColor*refractionTint(baseValue, tint, distanceInsideMedium, absorption);
+}
+vec3 applyRefractionAbsorption(vec3 refractedDataColor, vec3 baseValue, vec3 tint, float distanceInsideMedium, float absorption){
 	return vec3(
-		mix(refractedDataColor.r, refractedDataColor.r*tint.r, blend),
-		mix(refractedDataColor.g, refractedDataColor.g*tint.g, blend),
-		mix(refractedDataColor.b, refractedDataColor.b*tint.b, blend)
+		refractedDataColor.r * refractionTint(baseValue.r, tint.r, distanceInsideMedium, absorption),
+		refractedDataColor.g * refractionTint(baseValue.g, tint.g, distanceInsideMedium, absorption),
+		refractedDataColor.b * refractionTint(baseValue.b, tint.b, distanceInsideMedium, absorption)
 	);
 }
 

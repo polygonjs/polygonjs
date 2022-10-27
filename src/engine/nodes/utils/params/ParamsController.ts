@@ -121,31 +121,31 @@ export class ParamsController {
 		this.node.emit(NodeEvent.PARAMS_UPDATED);
 	}
 	updateParams(options: ParamsUpdateOptions) {
-		let has_created_a_param = false;
-		let has_deleted_a_param = false;
+		let hasCreatedAParam = false;
+		let hasDeletedAParam = false;
 		const addedParams: BaseParamType[] = [];
 		if (options.namesToDelete) {
 			for (let param_name of options.namesToDelete) {
 				if (this.has(param_name)) {
 					this._deleteParam(param_name);
-					has_deleted_a_param = true;
+					hasDeletedAParam = true;
 				}
 			}
 		}
 		if (options.toAdd) {
-			for (let param_data of options.toAdd) {
-				const param = this.addParam(param_data.type, param_data.name, param_data.initValue, param_data.options);
+			for (let paramData of options.toAdd) {
+				const param = this.addParam(paramData.type, paramData.name, paramData.initValue, paramData.options);
 				if (param) {
-					if (param_data.rawInput != null) {
-						param.set(param_data.rawInput as never);
+					if (paramData.rawInput != null) {
+						param.set(paramData.rawInput as never);
 					}
-					has_created_a_param = true;
+					hasCreatedAParam = true;
 					addedParams.push(param);
 				}
 			}
 		}
 
-		if (has_deleted_a_param || has_created_a_param) {
+		if (hasDeletedAParam || hasCreatedAParam) {
 			this.postCreateSpareParams();
 		}
 		for (let param of addedParams) {
@@ -445,7 +445,7 @@ export class ParamsController {
 					}
 				}
 			}
-			param.postOptionsInitialize()
+			param.postOptionsInitialize();
 			param._setupNodeDependencies(this.node);
 
 			this._params_by_name[param.name()] = param as BaseParamType;
