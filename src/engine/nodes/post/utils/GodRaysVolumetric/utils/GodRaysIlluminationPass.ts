@@ -2,7 +2,6 @@ import {GODRAYS_RESOLUTION_SCALE} from './GodRaysConstant';
 import {GodraysPassParams} from './GodRaysPassParams';
 import {GodraysPassProps} from './GodRaysPassProps';
 import {
-	Quaternion,
 	Vector3,
 	BasicDepthPacking,
 	PointLight,
@@ -17,8 +16,6 @@ import {
 } from 'three';
 import {Pass, Resizable} from 'postprocessing';
 import {GodraysMaterial} from './GodRaysMaterial';
-const q = new Quaternion();
-const s = new Vector3();
 
 export class GodraysIllumPass extends Pass implements Resizable {
 	private material!: GodraysMaterial;
@@ -70,11 +67,7 @@ export class GodraysIllumPass extends Pass implements Resizable {
 		}
 	}
 	private _updateLightPosition({light, camera}: GodraysPassProps) {
-		light.matrixWorld.decompose(this.lightWorldPos, q, s);
-		// updated from https://github.com/Ameobea/three-good-godrays,
-		// so that the point light world position is used
-		const uniforms = this.material.uniforms;
-		uniforms.lightPos.value = this.lightWorldPos; //light.position;
+		light.getWorldPosition(this.lightWorldPos);
 	}
 
 	public updateUniforms({light, camera}: GodraysPassProps, params: GodraysPassParams): void {
@@ -89,7 +82,7 @@ export class GodraysIllumPass extends Pass implements Resizable {
 		const uniforms = this.material.uniforms;
 		uniforms.density.value = params.density;
 		uniforms.maxDensity.value = params.maxDensity;
-
+		uniforms.lightPos.value = this.lightWorldPos;
 		uniforms.cameraPos.value = camera.position;
 		uniforms.lightCameraProjectionMatrix.value = light.shadow.camera.projectionMatrix;
 		uniforms.lightCameraMatrixWorldInverse.value = light.shadow.camera.matrixWorldInverse;

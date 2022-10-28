@@ -16,6 +16,7 @@ import {GodRaysVolumetricAcceptedLightType} from './utils/GodRaysVolumetric/util
 const tmpPointLight = new PointLight();
 const tmpDirectionalLight = new DirectionalLight();
 for (let l of [tmpPointLight, tmpDirectionalLight]) {
+	l.intensity = 0.0001;
 	l.castShadow = true;
 	l.shadow.mapSize.width = 1024;
 	l.shadow.mapSize.height = 1024;
