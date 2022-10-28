@@ -10,12 +10,12 @@ QUnit.test('gl/SDFTwist simple', async (assert) => {
 	const material = rayMarchingBuilder1.material;
 	const output1 = rayMarchingBuilder1.createNode('output');
 
-	const SDFTransform1 = rayMarchingBuilder1.createNode('SDFTransform');
+	const SDFTwist1 = rayMarchingBuilder1.createNode('SDFTwist');
 	const SDFSphere1 = rayMarchingBuilder1.createNode('SDFSphere');
 	const SDFContext1 = rayMarchingBuilder1.createNode('SDFContext');
 	output1.setInput(0, SDFContext1);
 	SDFContext1.setInput(0, SDFSphere1);
-	SDFSphere1.setInput(0, SDFTransform1);
+	SDFSphere1.setInput(0, SDFTwist1);
 
 	assert.ok(rayMarchingBuilder1.assemblerController()?.compileRequired(), 'compiled is required');
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);

@@ -77,118 +77,27 @@ SDFContext DefaultSDFContext(){
 int DefaultSDFMaterial(){
 	return 0;
 }
-vec4 quatSlerp(vec4 q1, vec4 q2, float t){
-	float angle = acos(dot(q1, q2));
-	float denom = sin(angle);
-	return (q1*sin((1.0-t)*angle)+q2*sin(t*angle))/denom;
-}
-vec4 quatMult(vec4 q1, vec4 q2)
+vec3 SDFTwistX( in vec3 p, float twist )
 {
-	return vec4(
-	q1.w * q2.x + q1.x * q2.w + q1.z * q2.y - q1.y * q2.z,
-	q1.w * q2.y + q1.y * q2.w + q1.x * q2.z - q1.z * q2.x,
-	q1.w * q2.z + q1.z * q2.w + q1.y * q2.x - q1.x * q2.y,
-	q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z
-	);
+	float c = cos(twist*p.x);
+	float s = sin(twist*p.x);
+	mat2 m = mat2(c,-s,s,c);
+	return vec3(p.x,m*p.yz);
 }
-mat4 rotationMatrix(vec3 axis, float angle)
+vec3 SDFTwistY( in vec3 p, float twist )
 {
-	axis = normalize(axis);
-	float s = sin(angle);
-	float c = cos(angle);
-	float oc = 1.0 - c;
- 	return mat4(oc * axis.x * axis.x + c, oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s, 0.0, oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c, oc * axis.y * axis.z - axis.x * s,  0.0, oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c, 0.0, 0.0, 0.0, 0.0, 1.0);
+	float c = cos(twist*p.y);
+	float s = sin(twist*p.y);
+	mat2 m = mat2(c,-s,s,c);
+	vec2 t = m*p.xz;
+	return vec3(t.x,p.y,t.y);
 }
-vec4 quatFromAxisAngle(vec3 axis, float angle)
+vec3 SDFTwistZ( in vec3 p, float twist )
 {
-	vec4 qr;
-	float half_angle = (angle * 0.5);	float sin_half_angle = sin(half_angle);
-	qr.x = axis.x * sin_half_angle;
-	qr.y = axis.y * sin_half_angle;
-	qr.z = axis.z * sin_half_angle;
-	qr.w = cos(half_angle);
-	return qr;
-}
-vec3 rotateWithAxisAngle(vec3 position, vec3 axis, float angle)
-{
-	vec4 q = quatFromAxisAngle(axis, angle);
-	vec3 v = position.xyz;
-	return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
-}
-vec3 rotateWithQuat( vec3 v, vec4 q )
-{
-	return v + 2.0 * cross( q.xyz, cross( q.xyz, v ) + q.w * v );
-}
-float vectorAngle(vec3 start, vec3 dest){
-	start = normalize(start);
-	dest = normalize(dest);
-	float cosTheta = dot(start, dest);
-	vec3 c1 = cross(start, dest);
-	vec3 y_axis = vec3(0.0, 1.0, 0.0);
-	float d1 = dot(c1, y_axis);
-	float angle = acos(cosTheta) * sign(d1);
-	return angle;
-}
-vec4 vectorAlign(vec3 start, vec3 dest){
-	start = normalize(start);
-	dest = normalize(dest);
-	float cosTheta = dot(start, dest);
-	vec3 axis;
-	if(cosTheta > (1.0 - 0.0001) || cosTheta < (-1.0 + 0.0001) ){
-		axis = normalize(cross(start, vec3(0.0, 1.0, 0.0)));
-		if (length(axis) < 0.001 ){			axis = normalize(cross(start, vec3(1.0, 0.0, 0.0)));
-		}
-	} else {
-		axis = normalize(cross(start, dest));
-	}
-	float angle = acos(cosTheta);
-	return quatFromAxisAngle(axis, angle);
-}
-vec4 vectorAlignWithUp(vec3 start, vec3 dest, vec3 up){
-	vec4 rot1 = vectorAlign(start, dest);
-	up = normalize(up);
-	vec3 newUp = rotateWithQuat(vec3(0.0, 1.0, 0.0), rot1);	vec4 rot2 = vectorAlign(up, newUp);
-	return rot2;
-}
-float quatToAngle(vec4 q){
-	return 2.0 * acos(q.w);
-}
-vec3 quatToAxis(vec4 q){
-	return vec3(
-		q.x / sqrt(1.0-q.w*q.w),
-		q.y / sqrt(1.0-q.w*q.w),
-		q.z / sqrt(1.0-q.w*q.w)
-	);
-}
-vec4 align(vec3 dir, vec3 up){
-	vec3 start_dir = vec3(0.0, 0.0, 1.0);
-	vec3 start_up = vec3(0.0, 1.0, 0.0);
-	vec4 rot1 = vectorAlign(start_dir, dir);
-	up = normalize(up);
-	vec3 right = normalize(cross(dir, up));
-	if(length(right)<0.001){
-		right = vec3(1.0, 0.0, 0.0);
-	}
-	up = normalize(cross(right, dir));
-	vec3 newUp = rotateWithQuat(start_up, rot1);	vec4 rot2 = vectorAlign(normalize(newUp), up);
-	return quatMult(rot1, rot2);
-}
-mat4 translate( vec3 t )
-{
-    return mat4( 1.0, 0.0, 0.0, 0.0,
-				 0.0, 1.0, 0.0, 0.0,
-				 0.0, 0.0, 1.0, 0.0,
-				 t.x,   t.y,   t.z,   1.0 );
-}
-vec3 SDFTransform( in vec3 p, vec3 t, vec3 rot )
-{	
-	mat4 rotx = rotationMatrix( normalize(vec3(1.0,0.0,0.0)), rot.x );
-	mat4 roty = rotationMatrix( normalize(vec3(0.0,1.0,0.0)), rot.y );
-	mat4 rotz = rotationMatrix( normalize(vec3(0.0,0.0,1.0)), rot.z );
-	mat4 tra = translate( t );
-	mat4 mat = tra * rotx * roty * rotz; 
-	mat4 matInverse = inverse( mat );
-	return (matInverse * vec4(p, 1.)).xyz;
+	float c = cos(twist*p.z);
+	float s = sin(twist*p.z);
+	mat2 m = mat2(c,-s,s,c);
+	return vec3(m*p.xy,p.z);
 }
 float dot2( in vec2 v ) { return dot(v,v); }
 float dot2( in vec3 v ) { return dot(v,v); }
@@ -457,9 +366,9 @@ float SDFOnion( in float sdf, in float thickness )
 
 SDFContext GetDist(vec3 p) {
 	SDFContext sdfContext = SDFContext(0., 0, 0, 0, 0.);
-	vec3 v_POLY_SDFTransform1_p = SDFTransform(p, vec3(0.0, 0.0, 0.0), vec3(0.0, 0.0, 0.0));
+	vec3 v_POLY_SDFTwist1_p = SDFTwistY(p - vec3(0.0, 0.0, 0.0), 0.0);
 	
-	float v_POLY_SDFSphere1_float = sdSphere(v_POLY_SDFTransform1_p - vec3(0.0, 0.0, 0.0), 1.0);
+	float v_POLY_SDFSphere1_float = sdSphere(v_POLY_SDFTwist1_p - vec3(0.0, 0.0, 0.0), 1.0);
 	
 	SDFContext v_POLY_SDFContext1_SDFContext = SDFContext(v_POLY_SDFSphere1_float, 0, -1, -1, 0.);
 	
