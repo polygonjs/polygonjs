@@ -5,20 +5,6 @@
  */
 import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-
-const VIGNETTE_TECHNIQUES: VignetteTechnique[] = [VignetteTechnique.DEFAULT, VignetteTechnique.ESKIL];
-const VIGNETTE_TECHNIQUE_NAME_BY_TECHNIQUE = {
-	[VignetteTechnique.DEFAULT]: 'DEFAULT',
-	[VignetteTechnique.ESKIL]: 'ESKIL',
-};
-
-enum RenderMode {
-	DEFAULT = 'DEFAULT',
-	DEPTH = 'DEPTH',
-	COC = 'CIRCLE_OF_CONFUSION',
-}
-const RENDER_MODES: RenderMode[] = [RenderMode.DEFAULT, RenderMode.DEPTH, RenderMode.COC];
-
 import {
 	BlendFunction,
 	DepthEffect,
@@ -33,6 +19,20 @@ import {
 	VignetteTechnique,
 } from 'postprocessing';
 import {isBooleanTrue} from '../../../core/Type';
+
+const VIGNETTE_TECHNIQUES: VignetteTechnique[] = [VignetteTechnique.DEFAULT, VignetteTechnique.ESKIL];
+const VIGNETTE_TECHNIQUE_NAME_BY_TECHNIQUE = {
+	[VignetteTechnique.DEFAULT]: 'DEFAULT',
+	[VignetteTechnique.ESKIL]: 'ESKIL',
+};
+
+enum RenderMode {
+	DEFAULT = 'DEFAULT',
+	DEPTH = 'DEPTH',
+	COC = 'CIRCLE_OF_CONFUSION',
+}
+const RENDER_MODES: RenderMode[] = [RenderMode.DEFAULT, RenderMode.DEPTH, RenderMode.COC];
+
 class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	depthOfField = ParamConfig.FOLDER();
 	/** @param focalDepth */
