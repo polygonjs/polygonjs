@@ -2,6 +2,7 @@
  * Imports a gif file.
  *
  */
+import {ParamEvent} from './../../poly/ParamEvent';
 import {Constructor} from '../../../types/GlobalTypes';
 import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
@@ -175,6 +176,7 @@ export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
 		this.p.url.setDirty();
+		this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 	}
 	static PARAM_CALLBACK_gifUpdatePlay(node: GifCopNode) {
 		node.gifUpdatePlay();

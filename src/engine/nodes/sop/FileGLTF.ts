@@ -3,6 +3,7 @@
  *
  *
  */
+import {ParamEvent} from './../../poly/ParamEvent';
 import {TypedSopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
 import {FileGLTFSopOperation} from '../../operations/sop/FileGLTF';
@@ -59,6 +60,7 @@ export class FileGLTFSopNode extends TypedSopNode<FileGLTFParamsConfig> {
 		// this.operation().clearLoadedBlob(this.pv);
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		this.p.url.setDirty();
+		this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 		// this.setDirty()
 	}
 }

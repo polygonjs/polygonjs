@@ -3,6 +3,7 @@
  *
  *
  */
+import {ParamEvent} from './../../poly/ParamEvent';
 import {TypedSopNode} from './_Base';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
@@ -82,5 +83,6 @@ export class FileSVGSopNode extends TypedSopNode<FileSVGSopParamsConfig> {
 	private param_callback_reload() {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		this.p.url.setDirty();
+		this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 	}
 }

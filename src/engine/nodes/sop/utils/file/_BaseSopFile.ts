@@ -1,3 +1,4 @@
+import {ParamEvent} from './../../../../poly/ParamEvent';
 import {TypedSopNode} from './../../_Base';
 import {BaseNodeType} from '../../../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
@@ -75,6 +76,7 @@ export function fileSopNodeFactory(options: FileSopNodeOptions): typeof BaseFile
 			// this.operation().clearLoadedBlob(this.pv);
 			// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 			this.p.url.setDirty();
+			this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 			// this.setDirty()
 		}
 	}

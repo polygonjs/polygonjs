@@ -12,6 +12,7 @@
 In a future version of this node, it will also be possible to link it to a video tag that could already be in your html DOM. This way, you could sets multiple source tags (one with mp4 and one with ogv) instead of a single url.
 
  */
+import {ParamEvent} from './../../poly/ParamEvent';
 import {Constructor} from '../../../types/GlobalTypes';
 import {VideoTexture} from 'three';
 import {Texture} from 'three';
@@ -196,6 +197,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
 		this.p.url.setDirty();
+		this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 	}
 
 	private async _loadTexture(url: string) {

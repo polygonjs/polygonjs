@@ -1,3 +1,4 @@
+import {ParamEvent} from './../../../../poly/ParamEvent';
 import {Constructor} from '../../../../../types/GlobalTypes';
 import {Texture} from 'three';
 import {TypedCopNode} from './../../_Base';
@@ -116,6 +117,7 @@ export function copImageNodeFactoryFactory(
 			// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 			// this.p.url.set_successors_dirty();
 			this.p.url.setDirty();
+			this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 		}
 		protected _loader() {
 			return options.getLoader(this.pv.url, this);

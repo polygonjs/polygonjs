@@ -16,6 +16,7 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
+import {ParamEvent} from '../../poly/ParamEvent';
 
 export enum DataType {
 	JSON = 'json',
@@ -200,6 +201,7 @@ export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 
 		// set the param dirty is preferable, in case this is used to refresh a local asset
 		this.p.url.setDirty();
+		this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 		// this.setDirty()
 	}
 }

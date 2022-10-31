@@ -2,7 +2,7 @@
  * Imports a LUT to be used in Post nodes
  *
  */
-
+import {ParamEvent} from './../../poly/ParamEvent';
 import {ClampToEdgeWrapping, LinearFilter, Texture, TextureLoader} from 'three';
 import {TypedCopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
@@ -76,5 +76,6 @@ export class LutCopNode extends TypedCopNode<LutCopParamsConfig> {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
 		this.p.url.setDirty();
+		this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 	}
 }
