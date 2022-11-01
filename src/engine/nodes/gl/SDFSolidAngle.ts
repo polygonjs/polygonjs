@@ -8,11 +8,9 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
 class SDFSolidAngleGlParamsConfig extends NodeParamsConfig {
@@ -50,6 +48,6 @@ export class SDFSolidAngleGlNode extends BaseSDFGlNode<SDFSolidAngleGlParamsConf
 		const bodyLine = `float ${float} = sdSolidAngleWrapped(${position} - ${center}, ${angle}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		this._addSDFMethods(shadersCollectionController);
 	}
 }

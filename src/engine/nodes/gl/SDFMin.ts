@@ -8,14 +8,12 @@
  * unlike the [gl/min](/docs/nodes/gl/min), this node accepts SDFContexts as inputs as well as floats.
  *
  */
-
+import {BaseSDFGlNode} from './_BaseSDF';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 
 enum InputName {
 	SDF0 = 'sdf0',
@@ -77,7 +75,7 @@ export class SDFMinGlNode extends TypedGlNode<SDFMinGlParamsConfig> {
 		const bodyLine = `float ${float} = min(${sdf0}, ${sdf1})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		BaseSDFGlNode.addSDFMethods(shadersCollectionController, this);
 	}
 	private _setLinesSDFContext(shadersCollectionController: ShadersCollectionController) {
 		const sdf0 = ThreeToGl.vector2(this.variableForInput(InputName.SDF0));
@@ -95,6 +93,6 @@ export class SDFMinGlNode extends TypedGlNode<SDFMinGlParamsConfig> {
 		];
 		shadersCollectionController.addBodyLines(this, bodyLines);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		BaseSDFGlNode.addSDFMethods(shadersCollectionController, this);
 	}
 }

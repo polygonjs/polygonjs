@@ -8,11 +8,9 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
 class SDFLinkGlParamsConfig extends NodeParamsConfig {
@@ -48,6 +46,6 @@ export class SDFLinkGlNode extends BaseSDFGlNode<SDFLinkGlParamsConfig> {
 		const bodyLine = `float ${float} = sdLink(${position} - ${center}, ${halfLength}, ${radius1}, ${radius2})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		this._addSDFMethods(shadersCollectionController);
 	}
 }

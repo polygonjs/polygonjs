@@ -8,11 +8,9 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 import {isBooleanTrue} from '../../../core/Type';
 
 const OUTPUT_NAME = 'p';
@@ -42,12 +40,12 @@ export class SDFElongateGlNode extends BaseSDFGlNode<SDFElongateGlParamsConfig> 
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const mult = ThreeToGl.vector3(this.variableForInputParam(this.p.mult));
 
-		const float = this.glVarName(OUTPUT_NAME);
+		const out = this.glVarName(OUTPUT_NAME);
 		const functionName = isBooleanTrue(this.pv.fast) ? 'SDFElongateFast' : 'SDFElongateSlow';
 		const suffix = isBooleanTrue(this.pv.fast) ? '.xyz' : '.xyz';
-		const bodyLine = `vec3 ${float} = ${functionName}(${position} - ${center}, ${mult})${suffix}`;
+		const bodyLine = `vec3 ${out} = ${functionName}(${position} - ${center}, ${mult})${suffix}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		this._addSDFMethods(shadersCollectionController);
 	}
 }

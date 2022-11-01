@@ -8,11 +8,9 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
 class SDFBoxGlParamsConfig extends NodeParamsConfig {
@@ -46,6 +44,6 @@ export class SDFBoxGlNode extends BaseSDFGlNode<SDFBoxGlParamsConfig> {
 		const bodyLine = `float ${float} = sdBox(${position} - ${center}, ${sizes}*${size})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		this._addSDFMethods(shadersCollectionController);
 	}
 }

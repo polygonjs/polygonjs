@@ -1,0 +1,68 @@
+/**
+ * stretches P before using it as an input for an SDF
+ *
+ * @remarks
+ *
+ * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
+ */
+
+import {BaseSDFGlNode} from './_BaseSDF';
+import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import SDFMethods2D from './gl/raymarching/sdf2D.glsl';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {FunctionGLDefinition} from './utils/GLDefinition';
+
+enum SDFRevolutionAxis {
+	X = 'X',
+	Y = 'Y',
+	Z = 'Z',
+}
+const SDF_REVOLUTION_AXISES: SDFRevolutionAxis[] = [SDFRevolutionAxis.X, SDFRevolutionAxis.Y, SDFRevolutionAxis.Z];
+
+const OUTPUT_NAME = 'p';
+class SDFRevolutionGlParamsConfig extends NodeParamsConfig {
+	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
+	center = ParamConfig.VECTOR3([0, 0, 0]);
+	radius = ParamConfig.FLOAT(1);
+	axis = ParamConfig.INTEGER(SDF_REVOLUTION_AXISES.indexOf(SDFRevolutionAxis.Y), {
+		menu: {
+			entries: SDF_REVOLUTION_AXISES.map((name, value) => ({name, value})),
+		},
+	});
+}
+const ParamsConfig = new SDFRevolutionGlParamsConfig();
+export class SDFRevolutionGlNode extends BaseSDFGlNode<SDFRevolutionGlParamsConfig> {
+	override paramsConfig = ParamsConfig;
+	static override type() {
+		return 'SDFRevolution';
+	}
+
+	override initializeNode() {
+		super.initializeNode();
+		this.io.outputs.setNamedOutputConnectionPoints([
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC2),
+		]);
+	}
+	setAxis(axis: SDFRevolutionAxis) {
+		this.p.axis.set(SDF_REVOLUTION_AXISES.indexOf(axis));
+	}
+
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const position = this.position();
+		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
+		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
+
+		const out = this.glVarName(OUTPUT_NAME);
+		const functionName = this._functionName();
+		const bodyLine = `vec2 ${out} = ${functionName}(${position} - ${center}, ${radius})`;
+		shadersCollectionController.addBodyLines(this, [bodyLine]);
+
+		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods2D)]);
+	}
+	private _functionName() {
+		const axis = SDF_REVOLUTION_AXISES[this.pv.axis];
+		return `SDFRevolution${axis}`;
+	}
+}

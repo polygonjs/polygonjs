@@ -8,11 +8,9 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 
 const OUTPUT_NAME = 'float';
 class SDFCapsuleGlParamsConfig extends NodeParamsConfig {
@@ -52,6 +50,6 @@ export class SDFCapsuleGlNode extends BaseSDFGlNode<SDFCapsuleGlParamsConfig> {
 		const bodyLine = `float ${float} = sdCapsule(${position} - ${center}, ${startPos}, ${endPos}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		this._addSDFMethods(shadersCollectionController);
 	}
 }
