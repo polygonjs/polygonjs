@@ -1,33 +1,29 @@
 /**
- * Function of SDF Stairs
+ * Function of SDF Rounded X
  *
  * @remarks
  *
  * based on [https://iquilezles.org/articles/distfunctions2d/](https://iquilezles.org/articles/distfunctions2d/)
  */
 
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDF2DGlNode} from './_BaseSDF2D';
 
 const OUTPUT_NAME = 'float';
-class SDF2DStairsGlParamsConfig extends NodeParamsConfig {
+class SDF2DRoundedXGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR2([0, 0], {hidden: true});
 	center = ParamConfig.VECTOR2([0, 0]);
-	width = ParamConfig.FLOAT(1);
-	height = ParamConfig.FLOAT(1);
-	steps = ParamConfig.FLOAT(5, {
-		range: [0, 10],
-		rangeLocked: [true, false],
-	});
+	length = ParamConfig.FLOAT(1);
+	radius = ParamConfig.FLOAT(0.1);
 }
-const ParamsConfig = new SDF2DStairsGlParamsConfig();
-export class SDF2DStairsGlNode extends BaseSDF2DGlNode<SDF2DStairsGlParamsConfig> {
+const ParamsConfig = new SDF2DRoundedXGlParamsConfig();
+export class SDF2DRoundedXGlNode extends BaseSDF2DGlNode<SDF2DRoundedXGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDF2DStairs';
+		return 'SDF2DRoundedX';
 	}
 
 	override initializeNode() {
@@ -41,12 +37,11 @@ export class SDF2DStairsGlNode extends BaseSDF2DGlNode<SDF2DStairsGlParamsConfig
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
-		const width = ThreeToGl.float(this.variableForInputParam(this.p.width));
-		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
-		const steps = ThreeToGl.float(this.variableForInputParam(this.p.steps));
+		const length = ThreeToGl.float(this.variableForInputParam(this.p.length));
+		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdStairs(${position} - ${center}, vec2(${width}, ${height}), ${steps})`;
+		const bodyLine = `float ${float} = sdRoundedX(${position} - ${center}, ${length}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		this._addSDF2DMethods(shadersCollectionController);

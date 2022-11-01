@@ -8,11 +8,9 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods2D from './gl/raymarching/sdf2D.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 
 enum SDFRevolutionAxis {
 	X = 'X',
@@ -59,7 +57,7 @@ export class SDFRevolutionGlNode extends BaseSDFGlNode<SDFRevolutionGlParamsConf
 		const bodyLine = `vec2 ${out} = ${functionName}(${position} - ${center}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods2D)]);
+		this._addSDFMethods(shadersCollectionController);
 	}
 	private _functionName() {
 		const axis = SDF_REVOLUTION_AXISES[this.pv.axis];

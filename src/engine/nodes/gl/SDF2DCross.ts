@@ -1,5 +1,5 @@
 /**
- * Function of SDF Stairs
+ * Function of SDF Cross
  *
  * @remarks
  *
@@ -13,21 +13,18 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {BaseSDF2DGlNode} from './_BaseSDF2D';
 
 const OUTPUT_NAME = 'float';
-class SDF2DStairsGlParamsConfig extends NodeParamsConfig {
+class SDF2DCrossGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR2([0, 0], {hidden: true});
 	center = ParamConfig.VECTOR2([0, 0]);
-	width = ParamConfig.FLOAT(1);
-	height = ParamConfig.FLOAT(1);
-	steps = ParamConfig.FLOAT(5, {
-		range: [0, 10],
-		rangeLocked: [true, false],
-	});
+	length = ParamConfig.FLOAT(1);
+	width = ParamConfig.FLOAT(0.3);
+	radius = ParamConfig.FLOAT(0);
 }
-const ParamsConfig = new SDF2DStairsGlParamsConfig();
-export class SDF2DStairsGlNode extends BaseSDF2DGlNode<SDF2DStairsGlParamsConfig> {
+const ParamsConfig = new SDF2DCrossGlParamsConfig();
+export class SDF2DCrossGlNode extends BaseSDF2DGlNode<SDF2DCrossGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDF2DStairs';
+		return 'SDF2DCross';
 	}
 
 	override initializeNode() {
@@ -41,12 +38,12 @@ export class SDF2DStairsGlNode extends BaseSDF2DGlNode<SDF2DStairsGlParamsConfig
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
+		const length = ThreeToGl.float(this.variableForInputParam(this.p.length));
 		const width = ThreeToGl.float(this.variableForInputParam(this.p.width));
-		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
-		const steps = ThreeToGl.float(this.variableForInputParam(this.p.steps));
+		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdStairs(${position} - ${center}, vec2(${width}, ${height}), ${steps})`;
+		const bodyLine = `float ${float} = sdCross(${position} - ${center}, vec2(${length}, ${width}), ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		this._addSDF2DMethods(shadersCollectionController);

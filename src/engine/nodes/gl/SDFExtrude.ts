@@ -8,11 +8,9 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods2D from './gl/raymarching/sdf2D.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 
 enum SDFExtrudeAxis {
 	X = 'X',
@@ -27,7 +25,7 @@ class SDFExtrudeGlParamsConfig extends NodeParamsConfig {
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	height = ParamConfig.FLOAT(1);
 	d = ParamConfig.FLOAT(1);
-	axis = ParamConfig.INTEGER(SDF_Extrude_AXISES.indexOf(SDFExtrudeAxis.Y), {
+	axis = ParamConfig.INTEGER(SDF_Extrude_AXISES.indexOf(SDFExtrudeAxis.Z), {
 		menu: {
 			entries: SDF_Extrude_AXISES.map((name, value) => ({name, value})),
 		},
@@ -61,7 +59,7 @@ export class SDFExtrudeGlNode extends BaseSDFGlNode<SDFExtrudeGlParamsConfig> {
 		const bodyLine = `float ${out} = ${functionName}(${position} - ${center}, ${d}, ${height})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods2D)]);
+		this._addSDFMethods(shadersCollectionController);
 	}
 	private _functionName() {
 		const axis = SDF_Extrude_AXISES[this.pv.axis];
