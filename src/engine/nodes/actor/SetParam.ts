@@ -49,7 +49,7 @@ class SetParamActorParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param lerp factor */
-	lerp = ParamConfig.FLOAT(1);
+	// lerp = ParamConfig.FLOAT(1);
 }
 const ParamsConfig = new SetParamActorParamsConfig();
 
@@ -63,6 +63,10 @@ export class SetParamActorNode extends TypedActorNode<SetParamActorParamsConfig>
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			new ActorConnectionPoint<ActorConnectionPointType.FLOAT>('lerp', ActorConnectionPointType.FLOAT, {
+				...CONNECTION_OPTIONS,
+				init_value: 1,
+			}),
 		]);
 
 		// this.io.outputs.setNamedOutputConnectionPoints([
@@ -107,7 +111,7 @@ export class SetParamActorNode extends TypedActorNode<SetParamActorParamsConfig>
 
 		if (param) {
 			const value = this._inputValue(SetParamActorNode.INPUT_NAME_VAL, context);
-			const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
+			const lerp = this._inputValue('lerp', context) as number;
 			if (value != null) {
 				this._setParam(value, param, lerp);
 			}
