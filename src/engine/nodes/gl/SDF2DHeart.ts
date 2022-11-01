@@ -1,28 +1,27 @@
 /**
- * Function of SDF box
+ * Function of SDF Heart
  *
  * @remarks
  *
- * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
+ * based on [https://iquilezles.org/articles/distfunctions2d/](https://iquilezles.org/articles/distfunctions2d/)
  */
 
-import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {BaseSDF2DGlNode} from './_BaseSDF2D';
 
 const OUTPUT_NAME = 'float';
-class SDFOctahedronGlParamsConfig extends NodeParamsConfig {
-	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
-	center = ParamConfig.VECTOR3([0, 0, 0]);
-	size = ParamConfig.FLOAT(1);
+class SDF2DHeartGlParamsConfig extends NodeParamsConfig {
+	position = ParamConfig.VECTOR2([0, 0], {hidden: true});
+	center = ParamConfig.VECTOR2([0, 0]);
 }
-const ParamsConfig = new SDFOctahedronGlParamsConfig();
-export class SDFOctahedronGlNode extends BaseSDFGlNode<SDFOctahedronGlParamsConfig> {
+const ParamsConfig = new SDF2DHeartGlParamsConfig();
+export class SDF2DHeartGlNode extends BaseSDF2DGlNode<SDF2DHeartGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFOctahedron';
+		return 'SDF2DHeart';
 	}
 
 	override initializeNode() {
@@ -36,12 +35,11 @@ export class SDFOctahedronGlNode extends BaseSDFGlNode<SDFOctahedronGlParamsConf
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
-		const size = ThreeToGl.float(this.variableForInputParam(this.p.size));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdOctahedron(${position} - ${center}, ${size})`;
+		const bodyLine = `float ${float} = sdHeart(${position} - ${center})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		this._addSDFMethods(shadersCollectionController);
+		this._addSDF2DMethods(shadersCollectionController);
 	}
 }

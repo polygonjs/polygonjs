@@ -5,14 +5,13 @@
  *
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
+import {BaseSDFGlNode} from './_BaseSDF';
 import {ParamConfig} from './../utils/params/ParamsConfig';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 import {isBooleanTrue} from '../../../core/Type';
 import {sdfSmoothLines} from './utils/SDFSmoothUtils';
 enum InputName {
@@ -93,6 +92,6 @@ export class SDFSubtractGlNode extends TypedGlNode<SDFSubtractGlParamsConfig> {
 			});
 		}
 		shadersCollectionController.addBodyLines(this, bodyLines);
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		BaseSDFGlNode.addSDFMethods(shadersCollectionController, this);
 	}
 }

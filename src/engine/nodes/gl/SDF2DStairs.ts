@@ -1,33 +1,33 @@
 /**
- * Function of SDF vertical capsule
+ * Function of SDF Stairs
  *
  * @remarks
  *
- * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
+ * based on [https://iquilezles.org/articles/distfunctions2d/](https://iquilezles.org/articles/distfunctions2d/)
  */
 
-import {BaseSDFGlNode} from './_BaseSDF';
-import {ThreeToGl} from '../../../core/ThreeToGl';
+import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {BaseSDF2DGlNode} from './_BaseSDF2D';
 
 const OUTPUT_NAME = 'float';
-class SDFCapsuleVerticalGlParamsConfig extends NodeParamsConfig {
-	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
-	center = ParamConfig.VECTOR3([0, 0, 0]);
+class SDF2DStairsGlParamsConfig extends NodeParamsConfig {
+	position = ParamConfig.VECTOR2([0, 0], {hidden: true});
+	center = ParamConfig.VECTOR2([0, 0]);
+	width = ParamConfig.FLOAT(1);
 	height = ParamConfig.FLOAT(1);
-	radius = ParamConfig.FLOAT(0.2, {
-		range: [0, 1],
+	steps = ParamConfig.FLOAT(5, {
+		range: [0, 10],
 		rangeLocked: [true, false],
-		step: 0.00001,
 	});
 }
-const ParamsConfig = new SDFCapsuleVerticalGlParamsConfig();
-export class SDFCapsuleVerticalGlNode extends BaseSDFGlNode<SDFCapsuleVerticalGlParamsConfig> {
+const ParamsConfig = new SDF2DStairsGlParamsConfig();
+export class SDF2DStairsGlNode extends BaseSDF2DGlNode<SDF2DStairsGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFCapsuleVertical';
+		return 'SDF2DStairs';
 	}
 
 	override initializeNode() {
@@ -41,13 +41,14 @@ export class SDFCapsuleVerticalGlNode extends BaseSDFGlNode<SDFCapsuleVerticalGl
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
+		const width = ThreeToGl.float(this.variableForInputParam(this.p.width));
 		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
-		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
+		const steps = ThreeToGl.float(this.variableForInputParam(this.p.steps));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdVerticalCapsule(${position} - ${center}, ${height}, ${radius})`;
+		const bodyLine = `float ${float} = sdStairs(${position} - ${center}, vec2(${width}, ${height}), ${steps})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		this._addSDFMethods(shadersCollectionController);
+		this._addSDF2DMethods(shadersCollectionController);
 	}
 }

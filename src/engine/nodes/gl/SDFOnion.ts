@@ -5,14 +5,13 @@
  *
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
+import {BaseSDFGlNode} from './_BaseSDF';
 import {PolyDictionary} from './../../../types/GlobalTypes';
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {FunctionGLDefinition} from './utils/GLDefinition';
 
 enum InputName {
 	SDF = 'sdf',
@@ -75,6 +74,6 @@ export class SDFOnionGlNode extends TypedGlNode<SDFOnionGlParamsConfig> {
 			bodyLines.push(bodyLine);
 		}
 		shadersCollectionController.addBodyLines(this, bodyLines);
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		BaseSDFGlNode.addSDFMethods(shadersCollectionController, this);
 	}
 }

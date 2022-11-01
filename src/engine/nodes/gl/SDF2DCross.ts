@@ -1,33 +1,30 @@
 /**
- * Function of SDF solid angle
+ * Function of SDF Cross
  *
  * @remarks
  *
- * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
+ * based on [https://iquilezles.org/articles/distfunctions2d/](https://iquilezles.org/articles/distfunctions2d/)
  */
 
-import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {BaseSDF2DGlNode} from './_BaseSDF2D';
 
 const OUTPUT_NAME = 'float';
-class SDFSolidAngleGlParamsConfig extends NodeParamsConfig {
-	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
-	center = ParamConfig.VECTOR3([0, 0, 0]);
-	angle = ParamConfig.FLOAT(0.25 * Math.PI, {
-		range: [0, Math.PI],
-		rangeLocked: [true, false],
-		step: 0.00001,
-	});
-	radius = ParamConfig.FLOAT(0.5);
+class SDF2DCrossGlParamsConfig extends NodeParamsConfig {
+	position = ParamConfig.VECTOR2([0, 0], {hidden: true});
+	center = ParamConfig.VECTOR2([0, 0]);
+	length = ParamConfig.FLOAT(1);
+	width = ParamConfig.FLOAT(0.3);
+	radius = ParamConfig.FLOAT(0);
 }
-const ParamsConfig = new SDFSolidAngleGlParamsConfig();
-export class SDFSolidAngleGlNode extends BaseSDFGlNode<SDFSolidAngleGlParamsConfig> {
+const ParamsConfig = new SDF2DCrossGlParamsConfig();
+export class SDF2DCrossGlNode extends BaseSDF2DGlNode<SDF2DCrossGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFSolidAngle';
+		return 'SDF2DCross';
 	}
 
 	override initializeNode() {
@@ -41,13 +38,14 @@ export class SDFSolidAngleGlNode extends BaseSDFGlNode<SDFSolidAngleGlParamsConf
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
-		const angle = ThreeToGl.vector2(this.variableForInputParam(this.p.angle));
+		const length = ThreeToGl.float(this.variableForInputParam(this.p.length));
+		const width = ThreeToGl.float(this.variableForInputParam(this.p.width));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
 
 		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdSolidAngleWrapped(${position} - ${center}, ${angle}, ${radius})`;
+		const bodyLine = `float ${float} = sdCross(${position} - ${center}, vec2(${length}, ${width}), ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		this._addSDFMethods(shadersCollectionController);
+		this._addSDF2DMethods(shadersCollectionController);
 	}
 }

@@ -1,57 +1,66 @@
 /**
- * Function of SDF Sphere hollow
+ * stretches P before using it as an input for an SDF
  *
  * @remarks
  *
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
+import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {BaseSDFGlNode} from './_BaseSDF';
 
-const OUTPUT_NAME = 'float';
-class SDFSphereHollowGlParamsConfig extends NodeParamsConfig {
+enum SDFRevolutionAxis {
+	X = 'X',
+	Y = 'Y',
+	Z = 'Z',
+}
+const SDF_REVOLUTION_AXISES: SDFRevolutionAxis[] = [SDFRevolutionAxis.X, SDFRevolutionAxis.Y, SDFRevolutionAxis.Z];
+
+const OUTPUT_NAME = 'p';
+class SDFRevolutionGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	radius = ParamConfig.FLOAT(1);
-	height = ParamConfig.FLOAT(0, {
-		range: [-1, 1],
-		rangeLocked: [false, false],
-	});
-	thickness = ParamConfig.FLOAT(0.1, {
-		range: [0, 1],
-		rangeLocked: [false, false],
+	axis = ParamConfig.INTEGER(SDF_REVOLUTION_AXISES.indexOf(SDFRevolutionAxis.Y), {
+		menu: {
+			entries: SDF_REVOLUTION_AXISES.map((name, value) => ({name, value})),
+		},
 	});
 }
-const ParamsConfig = new SDFSphereHollowGlParamsConfig();
-export class SDFSphereHollowGlNode extends BaseSDFGlNode<SDFSphereHollowGlParamsConfig> {
+const ParamsConfig = new SDFRevolutionGlParamsConfig();
+export class SDFRevolutionGlNode extends BaseSDFGlNode<SDFRevolutionGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFSphereHollow';
+		return 'SDFRevolution';
 	}
 
 	override initializeNode() {
 		super.initializeNode();
-
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC2),
 		]);
+	}
+	setAxis(axis: SDFRevolutionAxis) {
+		this.p.axis.set(SDF_REVOLUTION_AXISES.indexOf(axis));
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position();
 		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
 		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
-		const height = ThreeToGl.float(this.variableForInputParam(this.p.height));
-		const thickness = ThreeToGl.float(this.variableForInputParam(this.p.thickness));
 
-		const float = this.glVarName(OUTPUT_NAME);
-		const bodyLine = `float ${float} = sdCutHollowSphere(${position} - ${center}, ${radius}, ${height}, ${thickness})`;
+		const out = this.glVarName(OUTPUT_NAME);
+		const functionName = this._functionName();
+		const bodyLine = `vec2 ${out} = ${functionName}(${position} - ${center}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
 		this._addSDFMethods(shadersCollectionController);
+	}
+	private _functionName() {
+		const axis = SDF_REVOLUTION_AXISES[this.pv.axis];
+		return `SDFRevolution${axis}`;
 	}
 }

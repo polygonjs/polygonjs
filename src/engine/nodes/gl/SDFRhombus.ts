@@ -8,7 +8,6 @@
 
 import {BaseSDFGlNode} from './_BaseSDF';
 import {ThreeToGl} from '../../../../src/core/ThreeToGl';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 import GL_CODE from './gl/raymarching/sdfRhombus.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
@@ -51,9 +50,7 @@ export class SDFRhombusGlNode extends BaseSDFGlNode<SDFRhombusGlParamsConfig> {
 		const bodyLine = `float ${float} = sdRhombus(${position} - ${center}, ${length1}, ${length2}, ${height}, ${radius})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addDefinitions(this, [
-			new FunctionGLDefinition(this, SDFMethods),
-			new FunctionGLDefinition(this, GL_CODE),
-		]);
+		this._addSDFMethods(shadersCollectionController);
+		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, GL_CODE)]);
 	}
 }

@@ -5,7 +5,6 @@
  *
  *
  */
-import {FunctionGLDefinition} from './utils/GLDefinition';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {BaseGLDefinition, PrecisionGLDefinition, UniformGLDefinition} from './utils/GLDefinition';
@@ -15,7 +14,6 @@ import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/GLParamConfig';
 import {BaseSDFGlNode} from './_BaseSDF';
-import SDFMethods from './gl/raymarching/sdf.glsl';
 
 class TextureSDFGlParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('texture1');
@@ -73,7 +71,7 @@ export class TextureSDFGlNode extends BaseSDFGlNode<TextureSDFGlParamsConfig> {
 
 		shadersCollectionController.addDefinitions(this, definitions);
 		shadersCollectionController.addBodyLines(this, bodyLines);
-		shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, SDFMethods)]);
+		this._addSDFMethods(shadersCollectionController);
 	}
 	override paramsGenerating() {
 		return true;
