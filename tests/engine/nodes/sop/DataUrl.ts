@@ -1,7 +1,7 @@
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {DataType, DATA_TYPES} from '../../../../src/engine/nodes/sop/DataUrl';
 
-function _url(path: string) {
+export function _dataUrlUrl(path: string) {
 	return `${ASSETS_ROOT}nodes/sop/DataUrl/${path}?t=${performance.now()}`;
 }
 
@@ -17,13 +17,13 @@ QUnit.test('dataUrl json', async (assert) => {
 
 	await window.scene.root().processQueue();
 
-	dataUrl1.p.url.set(_url('default.json'));
+	dataUrl1.p.url.set(_dataUrlUrl('default.json'));
 	container = await dataUrl1.compute();
 
 	assert.ok(!dataUrl1.isDirty());
 	assert.equal(container.pointsCount(), 8);
 
-	dataUrl1.p.url.set(_url('basic.json'));
+	dataUrl1.p.url.set(_dataUrlUrl('basic.json'));
 	container = await dataUrl1.compute();
 
 	assert.ok(!dataUrl1.isDirty());
@@ -41,7 +41,7 @@ QUnit.test('dataUrl json', async (assert) => {
 	);
 
 	// restore it with a good url
-	dataUrl1.p.url.set(_url('default.json'));
+	dataUrl1.p.url.set(_dataUrlUrl('default.json'));
 	container = await dataUrl1.compute();
 	assert.equal(container.pointsCount(), 8);
 });
@@ -50,7 +50,7 @@ QUnit.test('dataUrl csv without reading names from file', async (assert) => {
 	const geo1 = window.geo1;
 
 	const dataUrl1 = geo1.createNode('dataUrl');
-	dataUrl1.p.url.set(_url('without_attrib_names.csv'));
+	dataUrl1.p.url.set(_dataUrlUrl('without_attrib_names.csv'));
 	dataUrl1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
 	dataUrl1.p.readAttribNamesFromFile.set(0);
 	dataUrl1.p.attribNames.set('attr1 attr2 attr3');
@@ -79,7 +79,7 @@ QUnit.test('dataUrl csv with reading names from file', async (assert) => {
 	const geo1 = window.geo1;
 
 	const dataUrl1 = geo1.createNode('dataUrl');
-	dataUrl1.p.url.set(_url('with_attrib_names.csv'));
+	dataUrl1.p.url.set(_dataUrlUrl('with_attrib_names.csv'));
 	dataUrl1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
 	dataUrl1.p.readAttribNamesFromFile.set(1);
 
@@ -109,7 +109,7 @@ QUnit.test('dataUrl csv with empty line', async (assert) => {
 	const geo1 = window.geo1;
 
 	const dataUrl1 = geo1.createNode('dataUrl');
-	dataUrl1.p.url.set(_url('with_empty_line.csv'));
+	dataUrl1.p.url.set(_dataUrlUrl('with_empty_line.csv'));
 	dataUrl1.p.dataType.set(DATA_TYPES.indexOf(DataType.CSV));
 	dataUrl1.p.readAttribNamesFromFile.set(1);
 

@@ -2,6 +2,7 @@ import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {FileDRCSopNode} from '../../../src/engine/nodes/sop/FileDRC';
 import {FileFBXSopNode} from '../../../src/engine/nodes/sop/FileFBX';
 import {FileGLTFSopNode} from '../../../src/engine/nodes/sop/FileGLTF';
+import {FileJSONSopNode} from '../../../src/engine/nodes/sop/FileJSON';
 import {FileMPDSopNode} from '../../../src/engine/nodes/sop/FileMPD';
 import {FileOBJSopNode} from '../../../src/engine/nodes/sop/FileOBJ';
 import {FilePDBSopNode} from '../../../src/engine/nodes/sop/FilePDB';
@@ -225,6 +226,14 @@ const obj = (node: FileOBJSopNode) => {
 		..._renderPeoples(),
 	};
 };
+const threejsJSON = (node: FileJSONSopNode) => {
+	return {
+		scatteredBoxes: new BasePreset().addEntry<ParamType.STRING>(
+			node.p.url,
+			`${DEMO_ASSETS_ROOT_URL}/models/threejs/scatteredBoxes.json`
+		),
+	};
+};
 const stl = (node: FileSTLSopNode) => {
 	return {
 		warrior: new BasePreset().addEntry<ParamType.STRING>(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/warrior.stl`),
@@ -239,6 +248,14 @@ const fileDRCSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileDRCSo
 
 	return collection;
 };
+const fileFBXSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileFBXSopNode> = (node: FileFBXSopNode) => {
+	const collection = new NodePresetsCollection();
+	collection.setPresets({
+		...fbx(node),
+	});
+
+	return collection;
+};
 const fileGLTFSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileGLTFSopNode> = (node: FileGLTFSopNode) => {
 	const collection = new NodePresetsCollection();
 	collection.setPresets({
@@ -249,10 +266,11 @@ const fileGLTFSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileGLTF
 
 	return collection;
 };
-const fileFBXSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileFBXSopNode> = (node: FileFBXSopNode) => {
+
+const fileJSONSopNodePresetsCollectionFactory: PresetsCollectionFactory<FileJSONSopNode> = (node: FileJSONSopNode) => {
 	const collection = new NodePresetsCollection();
 	collection.setPresets({
-		...fbx(node),
+		...threejsJSON(node),
 	});
 
 	return collection;
@@ -301,13 +319,17 @@ export const fileDRCSopPresetRegister: PresetRegister<typeof FileDRCSopNode, Fil
 	nodeClass: FileDRCSopNode,
 	setupFunc: fileDRCSopNodePresetsCollectionFactory,
 };
+export const fileFBXSopPresetRegister: PresetRegister<typeof FileFBXSopNode, FileFBXSopNode> = {
+	nodeClass: FileFBXSopNode,
+	setupFunc: fileFBXSopNodePresetsCollectionFactory,
+};
 export const fileGLTFSopPresetRegister: PresetRegister<typeof FileGLTFSopNode, FileGLTFSopNode> = {
 	nodeClass: FileGLTFSopNode,
 	setupFunc: fileGLTFSopNodePresetsCollectionFactory,
 };
-export const fileFBXSopPresetRegister: PresetRegister<typeof FileFBXSopNode, FileFBXSopNode> = {
-	nodeClass: FileFBXSopNode,
-	setupFunc: fileFBXSopNodePresetsCollectionFactory,
+export const fileJSONSopPresetRegister: PresetRegister<typeof FileJSONSopNode, FileJSONSopNode> = {
+	nodeClass: FileJSONSopNode,
+	setupFunc: fileJSONSopNodePresetsCollectionFactory,
 };
 export const fileMPDSopPresetRegister: PresetRegister<typeof FileMPDSopNode, FileMPDSopNode> = {
 	nodeClass: FileMPDSopNode,

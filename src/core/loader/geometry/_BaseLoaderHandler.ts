@@ -33,7 +33,6 @@ export abstract class BaseGeoLoaderHandler<O extends BaseGeoLoaderOutput> extend
 		return new Promise(async (resolve) => {
 			CoreLoaderGeometry.incrementInProgressLoadsCount();
 			await CoreLoaderGeometry.waitForMaxConcurrentLoadsQueueFreed();
-
 			loader.load(
 				url,
 				(object: O) => {
@@ -44,12 +43,16 @@ export abstract class BaseGeoLoaderHandler<O extends BaseGeoLoaderOutput> extend
 				(progress) => {},
 				(event: ErrorEvent) => {
 					CoreLoaderGeometry.decrementInProgressLoadsCount(url);
-					const message = `could not load geometry from ${url} (Error: ${event.message})`;
+					const message = this._errorMessage(url, event);
 					options.node?.states.error.set(message);
 				}
 			);
 		});
 	}
+	protected _errorMessage(url: string, event: ErrorEvent) {
+		return `could not load geometry from ${url} (Error: ${event.message})`;
+	}
+
 	protected abstract _getLoader(options: BaseLoaderLoadOptions): Promise<BaseGeoLoader<O>>;
 	protected _onLoadSuccess(o: O): Object3D[] {
 		if (o instanceof Object3D) {

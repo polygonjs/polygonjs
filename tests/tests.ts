@@ -342,6 +342,7 @@ import './engine/nodes/sop/EmptyObject';
 import './engine/nodes/sop/Face';
 import './engine/nodes/sop/File';
 import './engine/nodes/sop/FileGLTF';
+import './engine/nodes/sop/FileJSON';
 import './engine/nodes/sop/FileMultiGLTF';
 import './engine/nodes/sop/FileMultiOBJ';
 import './engine/nodes/sop/Fuse';

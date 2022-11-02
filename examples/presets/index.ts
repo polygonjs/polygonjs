@@ -36,8 +36,9 @@ import {dataSopPresetRegister} from './sop/Data';
 import {dataUrlSopPresetRegister} from './sop/DataUrl';
 import {
 	fileDRCSopPresetRegister,
-	fileGLTFSopPresetRegister,
 	fileFBXSopPresetRegister,
+	fileGLTFSopPresetRegister,
+	fileJSONSopPresetRegister,
 	fileMPDSopPresetRegister,
 	fileOBJSopPresetRegister,
 	filePDBSopPresetRegister,
@@ -93,8 +94,9 @@ class PresetLibraryClass {
 		this._registerPreset(dataSopPresetRegister);
 		this._registerPreset(dataUrlSopPresetRegister);
 		this._registerPreset(fileDRCSopPresetRegister);
-		this._registerPreset(fileGLTFSopPresetRegister);
 		this._registerPreset(fileFBXSopPresetRegister);
+		this._registerPreset(fileGLTFSopPresetRegister);
+		this._registerPreset(fileJSONSopPresetRegister);
 		this._registerPreset(fileMPDSopPresetRegister);
 		this._registerPreset(fileOBJSopPresetRegister);
 		this._registerPreset(filePDBSopPresetRegister);
