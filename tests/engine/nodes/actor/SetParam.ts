@@ -39,7 +39,7 @@ async function setParamAndCheck<T extends ParamType>(options: Options<T>) {
 	setParam1.p.param.setParam(param);
 	setParam1.setParamType(actorType);
 	(setParam1.params.get(SetParamActorNode.INPUT_NAME_VAL)! as ParamConstructorMap[T]).set(targetValue as never);
-	setParam1.p.lerp.set(lerp);
+	setParam1.params.get('lerp')!.set(lerp);
 
 	await actor1.compute();
 
