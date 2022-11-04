@@ -140,8 +140,12 @@ export enum AttribClass {
 	CORE_GROUP = 'container',
 }
 export const ATTRIBUTE_CLASSES: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT, AttribClass.CORE_GROUP];
-
+export const ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT];
 export const AttribClassMenuEntries = ATTRIBUTE_CLASSES.map((name, value) => ({name, value}));
+export const AttribClassMenuEntriesWithoutCoreGroup = ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.map((name, value) => ({
+	name,
+	value,
+}));
 
 export enum AttribType {
 	NUMERIC = 'numeric',

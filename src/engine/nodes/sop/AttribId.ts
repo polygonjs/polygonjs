@@ -1,3 +1,4 @@
+import {ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP} from './../../../core/geometry/Constant';
 /**
  * Creates id and idn attributes.
  *
@@ -12,11 +13,18 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-
+import {AttribClass, AttribClassMenuEntriesWithoutCoreGroup} from './../../../core/geometry/Constant';
 import {AttribIdSopOperation} from '../../operations/sop/AttribId';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribIdSopOperation.DEFAULT_PARAMS;
+
 class AttribIdSopParamsConfig extends NodeParamsConfig {
+	/** @param the attribute class (geometry or object) */
+	class = ParamConfig.INTEGER(DEFAULT.class, {
+		menu: {
+			entries: AttribClassMenuEntriesWithoutCoreGroup,
+		},
+	});
 	/** @param sets to true to create the id attribute */
 	id = ParamConfig.BOOLEAN(DEFAULT.id);
 	/** @param name of id attribute */
@@ -49,5 +57,20 @@ export class AttribIdSopNode extends TypedSopNode<AttribIdSopParamsConfig> {
 		this._operation = this._operation || new AttribIdSopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
+	}
+	//
+	//
+	// API UTILS
+	//
+	//
+	setAttribClass(attribClass: AttribClass) {
+		if (ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.includes(attribClass)) {
+			this.p.class.set(ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(attribClass));
+		} else {
+			console.warn(`${attribClass} is not possible on this node`);
+		}
+	}
+	attribClass() {
+		return ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP[this.pv.class];
 	}
 }
