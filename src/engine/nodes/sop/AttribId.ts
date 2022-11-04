@@ -1,4 +1,3 @@
-import {ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP} from './../../../core/geometry/Constant';
 /**
  * Creates id and idn attributes.
  *
@@ -10,6 +9,7 @@ import {ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP} from './../../../core/geometry/Con
  * `@ptnum / (pointsCount(0)-1)` for the idn attribute
  *
  */
+import {ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP} from './../../../core/geometry/Constant';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
