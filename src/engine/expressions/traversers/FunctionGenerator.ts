@@ -143,7 +143,7 @@ import {BaseMethod} from '../methods/_Base';
 import {Attribute, CoreAttribute} from '../../../core/geometry/Attribute';
 import {BaseTraverser} from './_Base';
 import {MethodDependency} from '../MethodDependency';
-import {AttributeRequirementsController} from '../AttributeRequirementsController';
+import {AttributeRequirementsController, VAR_ARE_ENTITY_CORE_POINT} from '../AttributeRequirementsController';
 import {CoreMath} from '../../../core/math/_Module';
 import {CoreString} from '../../../core/String';
 import {Poly} from '../../Poly';
@@ -291,7 +291,6 @@ export class FunctionGenerator extends BaseTraverser {
 			if (this.function_main_string) {
 				try {
 					const body = this._functionBody();
-					// not sure why I needed AsyncFunction
 					this.function = new Function(
 						'CorePoint',
 						'Core',
@@ -361,7 +360,8 @@ export class FunctionGenerator extends BaseTraverser {
 					// check if attributes are present
 					if( ${this._attribute_requirements_controller.attributePresenceCheckLine()} ){
 						// assign function
-						const getEntityAttribValue = (entities[0] instanceof CorePoint) ? getCorePointAttribValue : getCoreObjectAttribValue;
+						const ${VAR_ARE_ENTITY_CORE_POINT} = entities[0] instanceof CorePoint;
+						const getEntityAttribValue = areEntitiesCorePoint ? getCorePointAttribValue : getCoreObjectAttribValue;
 						// assign_arrays_lines
 						${this._attribute_requirements_controller.assignArraysLines()}
 						for(let index=0; index < entities.length; index++){

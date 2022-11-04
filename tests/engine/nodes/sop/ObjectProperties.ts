@@ -1,5 +1,6 @@
 import {Object3D} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
+import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
 QUnit.test('sop/objectProperties simple', async (assert) => {
 	let container;
@@ -86,4 +87,46 @@ QUnit.test('sop/objectProperties with expression', async (assert) => {
 			.map((o: Object3D) => o.name),
 		['box_2', 'box_4']
 	);
+});
+QUnit.test('sop/objectProperties does not fail with bad expression', async (assert) => {
+	const geo1 = window.geo1;
+	const plane1 = geo1.createNode('plane');
+	const plane2 = geo1.createNode('plane');
+	const merge1 = geo1.createNode('merge');
+	const hierarchy1 = geo1.createNode('hierarchy');
+	const objectProperties1 = geo1.createNode('objectProperties');
+	merge1.setInput(0, plane1);
+	merge1.setInput(1, plane2);
+	hierarchy1.setInput(0, merge1);
+	objectProperties1.setInput(0, hierarchy1);
+
+	hierarchy1.setMode(HierarchyMode.ADD_PARENT);
+
+	objectProperties1.p.applyToChildren.set(0);
+	objectProperties1.p.tname.set(1);
+
+	async function _getNames() {
+		const container = await objectProperties1.compute();
+		const coreContent = container.coreContent();
+		assert.ok(coreContent);
+		const objects = coreContent!.objects();
+		let names: string[] = [];
+		for (let object of objects) {
+			object.traverse((child: Object3D) => names.push(child.name));
+		}
+		return names;
+	}
+
+	objectProperties1.p.name.set('box_`@objide`');
+	assert.deepEqual(await _getNames(), ['box_', '', '']);
+
+	objectProperties1.p.name.set('box_`@objnum`');
+	assert.deepEqual(await _getNames(), ['box_0', '', '']);
+
+	objectProperties1.p.applyToChildren.set(1);
+	objectProperties1.p.name.set('box_`@objide`');
+	assert.deepEqual(await _getNames(), ['box_', 'box_', 'box_']);
+
+	objectProperties1.p.name.set('box_`@objnum`');
+	assert.deepEqual(await _getNames(), ['box_0', 'box_0', 'box_1']);
 });

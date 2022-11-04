@@ -1,3 +1,4 @@
+export const VAR_ARE_ENTITY_CORE_POINT = `areEntitiesCorePoint`;
 const VAR_CORE_GEOMETRY = `coreGeometry`;
 
 export class AttributeRequirementsController {
@@ -68,7 +69,7 @@ export class AttributeRequirementsController {
 	static assignArrayLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);
 		const varArray = this._varArray(attribName);
-		const isIndexedCondition = `${VAR_CORE_GEOMETRY}.isAttribIndexed('${attribName}')`;
+		const isIndexedCondition = `(${VAR_ARE_ENTITY_CORE_POINT} && ${VAR_CORE_GEOMETRY}.isAttribIndexed('${attribName}'))`;
 		const indexedArray = `entities.map(e=>e.indexedAttribValue('${attribName}'))`;
 		const nonIndexedArray = `${varAttribute}.array`;
 		return `const ${varArray} = ${isIndexedCondition} ? ${indexedArray} : ${nonIndexedArray}`;
