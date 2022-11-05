@@ -33,7 +33,7 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 			separatorBefore: true,
 		});
 		/** @param if the material is not double sided, it can be front sided, or back sided */
-		front = ParamConfig.BOOLEAN(1, {
+		front = ParamConfig.BOOLEAN(0, {
 			visibleIf: {doubleSided: false},
 		});
 	};
