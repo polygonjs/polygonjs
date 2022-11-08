@@ -326,6 +326,7 @@ import './engine/nodes/sop/Clip';
 import './engine/nodes/sop/Code';
 import './engine/nodes/sop/Color';
 import './engine/nodes/sop/Cone';
+import './engine/nodes/sop/ConvexHull';
 import './engine/nodes/sop/Copy';
 import './engine/nodes/sop/CurveFromPoints';
 import './engine/nodes/sop/CurveGetPoint';
