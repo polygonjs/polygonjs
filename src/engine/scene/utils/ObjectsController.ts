@@ -29,19 +29,32 @@ export class ObjectsController {
 
 	objectsByMask(mask: string): Object3D[] {
 		const list: Object3D[] = [];
-		this.traverseObjectsWithMask(mask, (obj) => {
-			list.push(obj);
-		});
+		this.traverseObjectsWithMask(
+			mask,
+			(obj) => {
+				list.push(obj);
+			},
+			this.scene.threejsScene()
+		);
 		return list;
 	}
 	objectsByMaskInObject(mask: string, object: Object3D, list: Object3D[] = [], objectPath: string = '') {
-		this.traverseObjectsWithMask(mask, (obj) => {
-			list.push(obj);
-		});
+		this.traverseObjectsWithMask(
+			mask,
+			(obj) => {
+				list.push(obj);
+			},
+			object
+		);
 		return list;
 	}
-	traverseObjectsWithMask(mask: string, callback: ObjCallback, invertMask: boolean = false) {
-		this.traverseObjectsWithMaskInObject(mask, this.scene.threejsScene(), callback, invertMask);
+	traverseObjectsWithMask(
+		mask: string,
+		callback: ObjCallback,
+		object: Object3D | undefined,
+		invertMask: boolean = false
+	) {
+		this.traverseObjectsWithMaskInObject(mask, object || this.scene.threejsScene(), callback, invertMask);
 	}
 	traverseObjectsWithMaskInObject(
 		mask: string,

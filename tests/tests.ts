@@ -290,6 +290,7 @@ import './engine/nodes/post/BrightnessContrast';
 import './engine/nodes/post/DepthOfField';
 
 QUnit.module('sop');
+import './engine/nodes/sop/Actor';
 import './engine/nodes/sop/Add';
 import './engine/nodes/sop/AmbientLight';
 import './engine/nodes/sop/AnimationCopy';

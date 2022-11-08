@@ -18,6 +18,10 @@ import {isBooleanTrue} from '../../../core/Type';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 // import {ActorsManager} from '../../../core/actor/ActorsManager';
 class ActorSopParamsConfig extends NodeParamsConfig {
+	/** @param select which objects this applies the actor behavior to */
+	objectsMask = ParamConfig.STRING('', {
+		objectMask: true,
+	});
 	/** @param build actor from child nodes */
 	useThisNode = ParamConfig.BOOLEAN(1);
 	/** @param actor node */
@@ -48,8 +52,19 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 
 		const actorNode = this._findActorNode();
 		if (actorNode) {
-			for (let object of objects) {
-				this.scene().actorsManager.assignActorBuilder(object, actorNode);
+			const objectsMask = this.pv.objectsMask.trim();
+			if (objectsMask == '') {
+				for (let object of objects) {
+					this.scene().actorsManager.assignActorBuilder(object, actorNode);
+				}
+			} else {
+				const objectsController = this.scene().objectsController;
+				for (let object of objects) {
+					const children = objectsController.objectsByMaskInObject(objectsMask, object);
+					for (let child of children) {
+						this.scene().actorsManager.assignActorBuilder(child, actorNode);
+					}
+				}
 			}
 		}
 

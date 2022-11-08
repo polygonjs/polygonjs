@@ -51,7 +51,6 @@ export class HierarchySopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: HierarchySopParams) {
 		const coreGroup = inputCoreGroups[0];
 		const mode = HIERARCHY_MODES[params.mode];
-		console.log(mode);
 		switch (mode) {
 			case HierarchyMode.ADD_PARENT: {
 				const objects = addParentToCoreGroup(coreGroup, inputCoreGroups[1], params);
@@ -87,7 +86,6 @@ function addParentToCoreGroup(
 			newParent = parentCoreGroup?.objects()[0];
 		}
 		newParent = newParent || _createNewParent();
-		console.log({newParent, objects: objects});
 		for (let object of objects) {
 			newParent.add(object);
 		}

@@ -199,7 +199,12 @@ export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, U
 		if (changeNeeded) {
 			this._objectsList.length = 0;
 			const mask = this.pv.objectsMask;
-			this._scene.objectsController.traverseObjectsWithMask(mask, this._updateObjectBound, this.pv.invertMask);
+			this._scene.objectsController.traverseObjectsWithMask(
+				mask,
+				this._updateObjectBound,
+				undefined,
+				this.pv.invertMask
+			);
 		}
 	}
 	resetChanges() {
