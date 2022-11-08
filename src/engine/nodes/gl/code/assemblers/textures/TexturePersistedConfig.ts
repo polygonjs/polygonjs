@@ -50,8 +50,13 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 			return;
 		}
 
-		this.node.textureMaterial.fragmentShader = data.shaders[FRAGMENT_KEY];
 		this.node.textureMaterial.uniforms = data.uniforms;
+		const shaders = data.shaders;
+		if (shaders && shaders[FRAGMENT_KEY] != null) {
+			this.node.textureMaterial.fragmentShader = shaders[FRAGMENT_KEY];
+		} else {
+			console.warn(`${this.node.path()}: persisted config has no fragment shader`);
+		}
 
 		handleCopBuilderDependencies({
 			node: this.node,

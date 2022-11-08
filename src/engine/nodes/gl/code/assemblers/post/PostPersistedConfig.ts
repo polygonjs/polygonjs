@@ -48,7 +48,12 @@ export class PostPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 
-		this.node.setFragmentShader(data.shaders[FRAGMENT_KEY]);
+		const shaders = data.shaders;
+		if (shaders && shaders[FRAGMENT_KEY] != null) {
+			this.node.setFragmentShader(shaders[FRAGMENT_KEY]);
+		} else {
+			console.warn(`${this.node.path()}: persisted config has no fragment shader`);
+		}
 		this.node.setUniforms(data.uniforms);
 
 		BuilderPostNode.handleDependencies(

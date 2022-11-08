@@ -401,6 +401,14 @@ export class NodeInputsController<NC extends NodeContext> {
 					return;
 				}
 			}
+			// check that parents exists and are the same
+
+			const nodeParent = node.parent();
+			const currentNodeParent = this.node.parent();
+			if (!(nodeParent && currentNodeParent && nodeParent.graphNodeId() == currentNodeParent.graphNodeId())) {
+				console.warn(`node ${node.path()} does not have the same parent as ${this.node.path()}`);
+				return;
+			}
 		}
 
 		const graphInputNode = this._graphNodeInputs[inputIndex];

@@ -54,7 +54,12 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (data.persisted_config) {
 			const shadersData = scene_importer.shadersData();
 			if (shadersData) {
-				(data.persisted_config as any).shaders = shadersData[this._node.path()];
+				let shaders = shadersData[this._node.path()];
+				// make sure this is never undefined
+				if (!shaders) {
+					shaders = {};
+				}
+				data.persisted_config.shaders = shaders;
 			}
 			this.set_persisted_config(data.persisted_config);
 		}

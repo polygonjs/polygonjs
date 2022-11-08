@@ -161,6 +161,10 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 		const shaders = data.shaders;
+		if (!shaders) {
+			console.warn(`${this.node.path()}: persisted config has no shaders`);
+			return;
+		}
 
 		// const shaderMaterial = this._material as ShaderMaterial;
 		const onBeforeCompileDataJSON: OnBeforeCompileDataJSON = _addShaders(

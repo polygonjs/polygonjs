@@ -764,3 +764,82 @@ QUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trig
 
 	RendererUtils.dispose();
 });
+
+QUnit.test('ParticlesSystemGPU persisted config still loads with an uncooked particles node', async (assert) => {
+	const scene = window.scene;
+	scene.setFrame(0);
+
+	await scene.waitForCooksCompleted();
+	const renderData1 = await RendererUtils.waitForRenderer(scene);
+	const renderer1 = renderData1.renderer;
+	assert.ok(renderer1, 'renderer created');
+
+	function _createParticlesSystem1() {
+		const geo = scene.createNode('geo');
+		const plane1 = geo.createNode('plane');
+		const scatter1 = geo.createNode('scatter');
+		const particles1 = geo.createNode('particlesSystemGpu');
+		assert.equal(particles1.children().length, 0, 'no children');
+		const {output1, globals1} = createRequiredNodesForParticles(particles1);
+		assert.equal(particles1.children().length, 2, '2 children');
+
+		// inside particles system
+		const add1 = particles1.createNode('add');
+		add1.setInput(0, globals1, 'position');
+		add1.params.get('add1')!.set([0, 0.1, 0]);
+		output1.setInput('position', add1);
+
+		// outside particles system
+		particles1.setInput(0, scatter1);
+		scatter1.setInput(0, plane1);
+		particles1.flags.display.set(true);
+		return {particles1};
+	}
+	function _createParticlesSystem2() {
+		const geo = scene.createNode('geo');
+		const plane1 = geo.createNode('plane');
+		const scatter1 = geo.createNode('scatter');
+		const particles2 = geo.createNode('particlesSystemGpu');
+		assert.equal(particles2.children().length, 0, 'no children');
+		const {output1, globals1} = createRequiredNodesForParticles(particles2);
+		assert.equal(particles2.children().length, 2, '2 children');
+
+		// inside particles system
+		const add1 = particles2.createNode('add');
+		add1.setInput(0, globals1, 'position');
+		add1.params.get('add1')!.set([0, 0.1, 0]);
+		output1.setInput('position', add1);
+
+		// outside particles system
+		particles2.setInput(0, scatter1);
+		scatter1.setInput(0, plane1);
+		plane1.flags.display.set(true);
+		return {particles2};
+	}
+
+	const {particles1} = _createParticlesSystem1();
+	const {particles2} = _createParticlesSystem2();
+
+	await particles1.compute();
+
+	scene.setFrame(0);
+	const data = new SceneJsonExporter(scene).data();
+	await AssemblersUtils.withUnregisteredAssembler(particles1.usedAssembler(), async () => {
+		// console.log('************ LOAD **************');
+		const scene2 = await SceneJsonImporter.loadData(data);
+		// await scene2.waitForCooksCompleted();
+		assert.ok(scene2, 'scene2 loaded ok');
+
+		// let's remove one entry to check it still loads
+		assert.ok(data.shaders);
+		if (data.shaders) {
+			assert.ok(data.shaders[particles2.path()]);
+			delete data.shaders[particles2.path()];
+			assert.notOk(data.shaders[particles2.path()]);
+		}
+		const scene3 = await SceneJsonImporter.loadData(data);
+		assert.ok(scene3, 'scene3 loaded ok');
+	});
+
+	RendererUtils.dispose();
+});

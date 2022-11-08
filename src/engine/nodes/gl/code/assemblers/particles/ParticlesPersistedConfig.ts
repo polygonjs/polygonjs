@@ -51,7 +51,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			uniforms_owner: material_data || {},
 			shaders: shaders_by_name,
 		};
-
+		console.warn(this.node.name(), data);
 		return data;
 	}
 	override load(data: PersistedConfigBaseParticlesData) {
@@ -72,9 +72,12 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 	shaders_by_name() {
 		if (this._loaded_data) {
 			const shaders_by_name: Map<ShaderName, string> = new Map();
-			const shader_names: ShaderName[] = Object.keys(this._loaded_data.shaders) as ShaderName[];
-			for (let shader_name of shader_names) {
-				shaders_by_name.set(shader_name, this._loaded_data.shaders[shader_name]);
+			const shaders = this._loaded_data.shaders;
+			if (shaders) {
+				const shader_names: ShaderName[] = Object.keys(shaders) as ShaderName[];
+				for (let shader_name of shader_names) {
+					shaders_by_name.set(shader_name, shaders[shader_name]);
+				}
 			}
 			return shaders_by_name;
 		}

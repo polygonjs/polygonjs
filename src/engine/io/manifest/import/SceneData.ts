@@ -162,7 +162,7 @@ export class SceneDataManifestImporter {
 		manifestNodes: string[],
 		jsonByName: PolyDictionary<object>
 	) {
-		const scene_data: SceneJsonExporterData = {
+		const sceneData: SceneJsonExporterData = {
 			root: assembleData.root,
 			properties: assembleData.properties,
 			ui: assembleData.ui,
@@ -172,9 +172,9 @@ export class SceneDataManifestImporter {
 		for (let i = 0; i < manifestNodes.length; i++) {
 			const manifestName = manifestNodes[i];
 			const json = jsonByName[manifestName];
-			this._insertChildData(scene_data.root, manifestName, json);
+			this._insertChildData(sceneData.root, manifestName, json);
 		}
-		return scene_data;
+		return sceneData;
 	}
 
 	private static _insertChildData(data: any, path: string, json: object) {

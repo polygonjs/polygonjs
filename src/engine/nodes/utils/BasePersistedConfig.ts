@@ -65,7 +65,9 @@ interface ToJsonOptions {
 }
 interface DataObjectWithoutShaders {}
 export interface PersistedConfigWithShaders extends DataObjectWithoutShaders {
-	shaders: PolyDictionary<string>;
+	// when a particle system is saved without having been computed
+	// it will not have shaders, and this can therefore be undefined
+	shaders?: PolyDictionary<string>;
 }
 export abstract class BasePersistedConfig {
 	constructor(protected node: BaseNodeType) {}

@@ -1,3 +1,4 @@
+import {PersistedConfigWithShaders} from './../../../nodes/utils/BasePersistedConfig';
 import {Number2, PolyDictionary} from '../../../../types/GlobalTypes';
 import {TypedNode} from '../../../nodes/_Base';
 import {NodeContext} from '../../../poly/NodeContext';
@@ -39,7 +40,7 @@ export interface NodeJsonExporterData {
 
 	flags?: FlagsData;
 	cloned_state_overriden?: boolean;
-	persisted_config?: object;
+	persisted_config?: PersistedConfigWithShaders;
 	polyNode?: {
 		locked: boolean;
 	};
@@ -226,7 +227,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		if (this._node.persisted_config) {
 			const persisted_config_data = this._node.persisted_config.toData();
 			if (persisted_config_data) {
-				data[this._node.path()] = persisted_config_data.shaders;
+				data[this._node.path()] = persisted_config_data.shaders || {};
 			}
 		}
 	}
