@@ -1,3 +1,4 @@
+import {HierarchySopNode} from './../../../../src/engine/nodes/sop/Hierarchy';
 import {Object3D} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {AddChildMode, HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
@@ -6,7 +7,7 @@ function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
 }
 
-QUnit.test('hierarchy simple set/remove parent', async (assert) => {
+QUnit.test('sop/hierarchy simple set/remove parent', async (assert) => {
 	const geo1 = window.geo1;
 
 	const file1 = geo1.createNode('fileOBJ');
@@ -55,7 +56,7 @@ QUnit.test('hierarchy simple set/remove parent', async (assert) => {
 	assert.equal(core_group.objects().length, 4);
 });
 
-QUnit.test('hierarchy simple add children', async (assert) => {
+QUnit.test('sop/hierarchy simple add children', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -98,4 +99,53 @@ QUnit.test('hierarchy simple add children', async (assert) => {
 	assert.deepEqual(await getChildrenCount(), [1, 1]);
 	hierarchy1.setAddChildMode(AddChildMode.ALL_CHILDREN_UNDER_ALL_PARENTS);
 	assert.deepEqual(await getChildrenCount(), [2, 2]);
+});
+
+QUnit.test('sop/hierarchy simple add parent', async (assert) => {
+	const geo1 = window.geo1;
+
+	async function _objectsList(hierarchyNode: HierarchySopNode) {
+		const scene = hierarchyNode.scene();
+		const container = await hierarchyNode.compute();
+		const objects = container.coreContent()!.objects();
+		const list: string[] = [];
+		for (let object of objects) {
+			object.traverse((child: Object3D) => {
+				const path = scene.objectsController.objectPath(child);
+				list.push(path);
+			});
+		}
+		return list;
+	}
+
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	// const box3 = geo1.createNode('box');
+
+	const hierarchy1 = geo1.createNode('hierarchy');
+	hierarchy1.setInput(0, box1);
+	hierarchy1.setMode(HierarchyMode.ADD_PARENT);
+
+	const objectsList = () => _objectsList(hierarchy1);
+
+	hierarchy1.p.levels.set(0);
+	assert.deepEqual(await objectsList(), ['box1']);
+
+	hierarchy1.p.levels.set(1);
+	assert.deepEqual(await objectsList(), ['', '/box1']);
+
+	hierarchy1.p.levels.set(2);
+	assert.deepEqual(await objectsList(), ['', '/', '/box1']);
+
+	// with a second input
+	hierarchy1.setInput(1, box2);
+
+	hierarchy1.p.levels.set(0);
+	assert.deepEqual(await objectsList(), ['box1']);
+
+	hierarchy1.p.levels.set(1);
+	assert.deepEqual(await objectsList(), ['box2', 'box2/box1']);
+
+	hierarchy1.p.levels.set(2);
+	assert.deepEqual(await objectsList(), ['', '/box2', '/box2/box1']);
 });

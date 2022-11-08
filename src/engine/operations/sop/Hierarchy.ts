@@ -50,11 +50,11 @@ export class HierarchySopOperation extends BaseSopOperation {
 
 	override cook(inputCoreGroups: CoreGroup[], params: HierarchySopParams) {
 		const coreGroup = inputCoreGroups[0];
-
 		const mode = HIERARCHY_MODES[params.mode];
+		console.log(mode);
 		switch (mode) {
 			case HierarchyMode.ADD_PARENT: {
-				const objects = addParentToCoreGroup(coreGroup, params);
+				const objects = addParentToCoreGroup(coreGroup, inputCoreGroups[1], params);
 				return this.createCoreGroupFromObjects(objects);
 			}
 			case HierarchyMode.REMOVE_PARENT: {
@@ -70,22 +70,34 @@ export class HierarchySopOperation extends BaseSopOperation {
 	}
 }
 
-function addParentToCoreGroup(coreGroup: CoreGroup, params: HierarchySopParams): Object3D[] {
+function addParentToCoreGroup(
+	coreGroup: CoreGroup,
+	parentCoreGroup: CoreGroup | undefined,
+	params: HierarchySopParams
+): Object3D[] {
 	function _addParentToObject(objects: Object3D[]): Object3D {
-		function _addNewParent(object: Object3D, params: HierarchySopParams): Group {
-			const new_parent2 = new Group();
-			new_parent2.matrixAutoUpdate = false;
-			new_parent2.add(object);
-			return new_parent2;
+		function _createNewParent() {
+			const newParent2 = new Group();
+			newParent2.matrixAutoUpdate = false;
+			return newParent2;
 		}
 
-		let newParent = new Group();
-		newParent.matrixAutoUpdate = false;
-
-		newParent.add(...objects);
-
-		if (params.levels > 0) {
-			for (let i = 0; i < params.levels - 1; i++) {
+		let newParent: Object3D | undefined;
+		if (parentCoreGroup) {
+			newParent = parentCoreGroup?.objects()[0];
+		}
+		newParent = newParent || _createNewParent();
+		console.log({newParent, objects: objects});
+		for (let object of objects) {
+			newParent.add(object);
+		}
+		if (params.levels > 1) {
+			function _addNewParent(object: Object3D, params: HierarchySopParams): Group {
+				const newParent2 = _createNewParent();
+				newParent2.add(object);
+				return newParent2;
+			}
+			for (let i = 1; i < params.levels; i++) {
 				newParent = _addNewParent(newParent, params);
 			}
 		}
@@ -96,8 +108,8 @@ function addParentToCoreGroup(coreGroup: CoreGroup, params: HierarchySopParams):
 	if (params.levels == 0) {
 		return coreGroup.objects();
 	} else {
-		const new_object = _addParentToObject(coreGroup.objects());
-		return [new_object];
+		const newObject = _addParentToObject(coreGroup.objects());
+		return [newObject];
 	}
 }
 
