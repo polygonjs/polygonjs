@@ -14,6 +14,7 @@ import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/GLParamConfig';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {isBooleanTrue} from '../../../core/Type';
 
 class TextureSDFGlParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('texture1');
@@ -23,6 +24,10 @@ class TextureSDFGlParamsConfig extends NodeParamsConfig {
 	boundMax = ParamConfig.VECTOR3([1, 1, 1]);
 	boundScale = ParamConfig.VECTOR3([1, 1, 1]);
 	bias = ParamConfig.FLOAT(0.01);
+	tblur = ParamConfig.BOOLEAN(0);
+	blurDist = ParamConfig.FLOAT(0.01, {
+		visibleIf: {tblur: 1},
+	});
 	// voxelSizes = ParamConfig.VECTOR3([1, 1, 1]);
 }
 const ParamsConfig = new TextureSDFGlParamsConfig();
@@ -66,8 +71,32 @@ export class TextureSDFGlNode extends BaseSDFGlNode<TextureSDFGlParamsConfig> {
 			// `vec3 ${positionRefit} = ((${position} - (${boundMin} + (${voxelSizes}*0.0))) / ${boundSize})`,
 			`vec3 ${positionNormalised} = ((${position} - ${boundMin}) / ${boundSize})`,
 			`float ${sdBox} = sdBox(${position}-${boundCenter}, ${boundSize}*${boundScale})`,
-			`float ${d} = ${sdBox} < ${bias} ? texture(${map}, ${positionNormalised} - ${center}).r : ${sdBox}`,
 		];
+		if (isBooleanTrue(this.pv.tblur)) {
+			const blurDist = ThreeToGl.float(this.variableForInputParam(this.p.blurDist));
+			const offsets: number[] = [-1, 0, 1];
+			const textureBlurLines: string[] = [];
+			for (let z of offsets) {
+				for (let y of offsets) {
+					for (let x of offsets) {
+						const offset = `vec3(${ThreeToGl.float(x)}*${ThreeToGl.float(blurDist)},${ThreeToGl.float(
+							y
+						)}*${ThreeToGl.float(blurDist)},${ThreeToGl.float(z)}*${ThreeToGl.float(blurDist)})`;
+						const line = `texture(${map}, ${positionNormalised} - ${center}+${offset}).r`;
+						textureBlurLines.push(line);
+					}
+				}
+			}
+			bodyLines.push(
+				`float ${d} = ${sdBox} < ${bias} ? ((
+					${textureBlurLines.join(' +\n')}
+				)/27.0) : ${sdBox}`
+			);
+		} else {
+			bodyLines.push(
+				`float ${d} = ${sdBox} < ${bias} ? texture(${map}, ${positionNormalised} - ${center}).r : ${sdBox}`
+			);
+		}
 
 		shadersCollectionController.addDefinitions(this, definitions);
 		shadersCollectionController.addBodyLines(this, bodyLines);
