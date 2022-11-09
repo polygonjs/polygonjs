@@ -2,6 +2,7 @@ export enum CopType {
 	BUILDER = 'builder',
 	BUILDER_2D_ARRAY = 'builder2DArray',
 	CUBE_CAMERA = 'cubeCamera',
+	SDF_BLUR = 'SDFBlur',
 	SDF_FROM_OBJECT = 'SDFFromObject',
 	SDF_FROM_URL = 'SDFFromUrl',
 	SNAPSHOT = 'snapshot',

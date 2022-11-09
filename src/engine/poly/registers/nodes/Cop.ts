@@ -19,7 +19,7 @@ import {NullCopNode} from '../../../nodes/cop/Null';
 // import {PostCopNode} from '../../../nodes/cop/Post';
 import {PaletteCopNode} from '../../../nodes/cop/Palette';
 import {RenderCopNode} from '../../../nodes/cop/Render';
-// import {SDFBlurCopNode} from '../../../nodes/cop/SDFBlur';
+import {SDFBlurCopNode} from '../../../nodes/cop/SDFBlur';
 import {SDFExporterCopNode} from '../../../nodes/cop/SDFExporter';
 import {SDFFromObjectCopNode} from '../../../nodes/cop/SDFFromObject';
 import {SDFFromUrlCopNode} from '../../../nodes/cop/SDFFromUrl';
@@ -58,7 +58,7 @@ export interface CopNodeChildrenMap {
 	// post: PostCopNode;
 	palette: PaletteCopNode;
 	render: RenderCopNode;
-	// SDFBlur: SDFBlurCopNode;
+	SDFBlur: SDFBlurCopNode;
 	SDFExporter: SDFExporterCopNode;
 	SDFFromObject: SDFFromObjectCopNode;
 	SDFFromUrl: SDFFromUrlCopNode;
@@ -100,7 +100,9 @@ export class CopRegister {
 		// poly.registerNode(PostCopNode, CATEGORY_COP.FILTER); // removed until usable
 		poly.registerNode(PaletteCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(RenderCopNode, CATEGORY_COP.MISC);
-		// poly.registerNode(SDFBlurCopNode, CATEGORY_COP.ADVANCED);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(SDFBlurCopNode, CATEGORY_COP.SDF);
+		}
 		poly.registerNode(SDFExporterCopNode, CATEGORY_COP.SDF);
 		poly.registerNode(SDFFromObjectCopNode, CATEGORY_COP.SDF);
 		poly.registerNode(SDFFromUrlCopNode, CATEGORY_COP.SDF);

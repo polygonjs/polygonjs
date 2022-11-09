@@ -79,8 +79,16 @@ export function addSDFMetadataToContainer(texture: Data3DTexture, options: Metad
 	dataContainer.resolutiony = options.resolution.y;
 	dataContainer.resolutionz = options.resolution.z;
 }
-export function saveSDFMetadata(texture: Data3DTexture) {
+export function readSDFMetadataFromContainer(texture: Data3DTexture) {
 	const dataContainer = texture?.image as SDFDataContainer;
+	if (!dataContainer) {
+		throw new Error('the input must be a 3D texture');
+		return;
+	}
+	return dataContainer;
+}
+export function saveSDFMetadata(texture: Data3DTexture) {
+	const dataContainer = readSDFMetadataFromContainer(texture);
 	if (!dataContainer) {
 		throw new Error('the input must be a 3D texture');
 		return;
