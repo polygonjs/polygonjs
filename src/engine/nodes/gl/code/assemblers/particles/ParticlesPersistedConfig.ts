@@ -51,7 +51,6 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			uniforms_owner: material_data || {},
 			shaders: shaders_by_name,
 		};
-		console.warn(this.node.name(), data);
 		return data;
 	}
 	override load(data: PersistedConfigBaseParticlesData) {
