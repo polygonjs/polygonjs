@@ -3,7 +3,7 @@
  *
  *
  */
-
+import {ParamType} from './../../poly/ParamType';
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
@@ -59,7 +59,7 @@ export class AnimationActionActorNode extends TypedActorNode<AnimationActionActo
 			map = new Map();
 			this._actionByNameByMixer.set(mixer, map);
 		}
-		const clipName = this.pv.clipName;
+		const clipName = this._inputValueFromParam<ParamType.STRING>(this.p.clipName, context);
 		let action = map.get(clipName);
 		if (!action) {
 			const root = mixer.getRoot();

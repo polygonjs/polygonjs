@@ -14,6 +14,7 @@ import {ActorPointerEventsController} from './actors/ActorsPointerEventsControll
 import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsController';
 import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsController';
 import {AttributeProxy} from '../../../core/geometry/attribute/_Base';
+import {OnObjectDispatchEventActorNode} from '../../nodes/actor/OnObjectDispatchEvent';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -111,6 +112,7 @@ export class ActorsManager {
 		this.scene.threejsScene().traverse(this._onEventScenePlayBound);
 
 		// any caching goes here
+		OnObjectDispatchEventActorNode.addEventListenersToObjects(this.scene);
 		this._makeRequiredObjectAttributesReactive();
 	}
 	runOnEventScenePause() {

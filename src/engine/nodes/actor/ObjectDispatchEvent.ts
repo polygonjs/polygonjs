@@ -42,7 +42,9 @@ export class ObjectDispatchEventActorNode extends TypedActorNode<ObjectDispatchE
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const {Object3D} = context;
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
 		const eventName = this._inputValueFromParam<ParamType.STRING>(this.p.eventName, context);
 
 		Object3D.dispatchEvent({type: eventName});

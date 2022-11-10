@@ -27,6 +27,28 @@ export function outputValueForFirstObject(node: BaseActorNodeType, outputName: s
 	return node.outputValue({Object3D: matchedObject}, outputName);
 }
 
+export function objectsForActorNode(node: BaseActorNodeType) {
+	const matchedObjects: Object3D[] = [];
+	const scene = node.scene();
+	const actorsManager = scene.actorsManager;
+	const parentNode = actorsManager.parentActorBuilderNode(node);
+	scene.threejsScene().traverse((object) => {
+		const nodeIds = actorsManager.objectActorNodeIds(object);
+		if (!parentNode) {
+			return;
+		}
+		if (!nodeIds) {
+			return;
+		}
+		if (!nodeIds.includes(parentNode.graphNodeId())) {
+			return;
+		}
+		matchedObjects.push(object);
+	});
+
+	return matchedObjects;
+}
+
 export function actorNodesForObject(object: Object3D, scene: PolyScene) {
 	const actorsManager = scene.actorsManager;
 	const nodeIds = actorsManager.objectActorNodeIds(object);

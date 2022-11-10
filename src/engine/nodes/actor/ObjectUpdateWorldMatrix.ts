@@ -44,7 +44,9 @@ export class ObjectUpdateWorldMatrixActorNode extends TypedActorNode<ObjectUpdat
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const {Object3D} = context;
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
 		const updateParents = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateParents, context);
 		const updateChildren = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateChildren, context);
 		Object3D.updateWorldMatrix(updateParents, updateChildren);

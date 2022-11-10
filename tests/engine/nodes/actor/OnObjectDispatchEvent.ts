@@ -14,35 +14,38 @@ QUnit.test('actor/OnObjectDispatchEvent simple', async (assert) => {
 
 	const setObjectPosition = actor1.createNode('setObjectPosition');
 	const onObjectDispatchEvent = actor1.createNode('onObjectDispatchEvent');
-	const onManualTrigger = actor1.createNode('onManualTrigger');
+	const getObjectProperty1 = actor1.createNode('getObjectProperty');
+	const add1 = actor1.createNode('add');
 
 	setObjectPosition.setInput(ActorConnectionPointType.TRIGGER, onObjectDispatchEvent);
-	setObjectPosition.p.position.set([0, 1, 0]);
-	onObjectDispatchEvent.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger);
-	onObjectDispatchEvent.p.eventName.set('my-event');
+	add1.setInput(0, getObjectProperty1, 'position');
+	add1.params.get('add1')!.set([0, 1, 0]);
+	setObjectPosition.setInput('position', add1);
+	onObjectDispatchEvent.p.eventNames.set('A B');
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0];
+	await geo1.compute();
+	// wait to make sure the scene is fully generated,
+	// so that it can be traversed the the actorsManager
+	await CoreSleep.sleep(50);
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
 		await CoreSleep.sleep(70);
 		assert.equal(object.position.y, 0);
-		// dispatch without having triggered the onObjectDispatchEvent does not work yet
-		object.dispatchEvent({type: 'my-event'});
+		// dispatch with an eventName that is not listened to
+		object.dispatchEvent({type: 'C'});
 		await CoreSleep.sleep(60);
 		assert.equal(object.position.y, 0);
-		// we run the manual trigger so that the onObjectDispatchEvent can now listen
-		onManualTrigger.p.trigger.pressButton();
-		await CoreSleep.sleep(60);
-		assert.equal(object.position.y, 0);
-		// dispatch the wrong event should have no effect
-		object.dispatchEvent({type: 'my-event2'});
-		await CoreSleep.sleep(70);
-		assert.equal(object.position.y, 0);
-		// dispatch the right event should have an effect
-		object.dispatchEvent({type: 'my-event'});
+
+		// dispatch an event that is listented to
+		object.dispatchEvent({type: 'A'});
 		await CoreSleep.sleep(70);
 		assert.equal(object.position.y, 1);
+		// dispatch another event that is listented to
+		object.dispatchEvent({type: 'B'});
+		await CoreSleep.sleep(70);
+		assert.equal(object.position.y, 2);
 	});
 });

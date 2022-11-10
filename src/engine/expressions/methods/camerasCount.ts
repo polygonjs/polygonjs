@@ -1,25 +1,26 @@
 /**
- * Returns the number of objects in a geometry.
+ * Returns the number of cameras in a geometry node.
  *
  * @remarks
- * It takes 1 arguments.
+ * It takes 1 argument.
  *
- * objectsCount(<input_index_or_node_path\>)
+ * camerasCount(<input_index_or_node_path\>)
  *
  * - **<input_index_or_node_path\>** the path to a node, or input index
  *
  * ## Usage
  *
- * - `objectsCount(0)` - returns the number of objects in the input node.
- * - `objectsCount('/geo/merge1')` - returns the number of objects in the node /geo/merge1
+ * - `camerasCount(0)` - returns the number of cameras in the input node.
+ * - `camerasCount('/geo/merge1')` - returns the number of cameras in the node /geo/merge1
  *
  */
+import {Poly} from '../../Poly';
 import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 
-export class ObjectsCountExpression extends BaseMethod {
+export class CamerasCountExpression extends BaseMethod {
 	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [['string', 'path to node']];
@@ -42,8 +43,16 @@ export class ObjectsCountExpression extends BaseMethod {
 				}
 
 				if (container) {
-					const value = container.objectsCount();
-					resolve(value);
+					const coreContent = container.coreContent();
+					if (coreContent) {
+						const count = coreContent
+							.objects()
+							.filter((object) => Poly.camerasRegister.objectRegistered(object)).length;
+
+						resolve(count);
+					} else {
+						resolve(0);
+					}
 				}
 			} else {
 				resolve(0);

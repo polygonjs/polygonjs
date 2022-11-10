@@ -30,7 +30,7 @@ export class CodeActorProcessor extends BaseCodeActorProcessor {
 		]);
 	}
 	override receiveTrigger(context: ActorNodeTriggerContext){
-		const {Object3D} = context;
+		const Object3D = this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) || context.Object3D;
 		Object3D.position.y += 1;
 		Object3D.updateMatrix();
 	}

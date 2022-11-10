@@ -3,7 +3,10 @@
  *
  *
  */
-
+import {NodeContext} from './../../poly/NodeContext';
+import {PolyScene} from './../../scene/PolyScene';
+import {ReturnValueTypeByActorConnectionPointType} from './../utils/io/connections/Actor';
+import {Object3D} from 'three';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
@@ -11,12 +14,17 @@ import {
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {ParamType} from '../../poly/ParamType';
+import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
+
+enum OnObjectDispatchEventActorNodeInputName {
+	eventName = 'eventName',
+}
+type Listener = () => void;
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 class OnObjectDispatchEventActorParamsConfig extends NodeParamsConfig {
-	/** @param event name */
-	eventName = ParamConfig.STRING('my-event');
+	/** @param event names (space separated) */
+	eventNames = ParamConfig.STRING('my-eventA my-eventB');
 }
 const ParamsConfig = new OnObjectDispatchEventActorParamsConfig();
 
@@ -28,27 +36,74 @@ export class OnObjectDispatchEventActorNode extends TypedActorNode<OnObjectDispa
 
 	override initializeNode() {
 		super.initializeNode();
+		this.io.connection_points.spare_params.setInputlessParamNames(['eventNames']);
 		this.io.inputs.setNamedInputConnectionPoints([
-			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new ActorConnectionPoint(
-				ActorConnectionPointType.OBJECT_3D,
-				ActorConnectionPointType.OBJECT_3D,
-				CONNECTION_OPTIONS
-			),
+			// new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			// new ActorConnectionPoint(
+			// 	ActorConnectionPointType.OBJECT_3D,
+			// 	ActorConnectionPointType.OBJECT_3D,
+			// 	CONNECTION_OPTIONS
+			// ),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			new ActorConnectionPoint(
+				OnObjectDispatchEventActorNodeInputName.eventName,
+				ActorConnectionPointType.STRING,
+				CONNECTION_OPTIONS
+			),
 		]);
 	}
 
-	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const Object3D =
-			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
-			context.Object3D;
+	private _lastReceivedEventName: string | undefined;
 
-		const eventName = this._inputValueFromParam<ParamType.STRING>(this.p.eventName, context);
-		Object3D.addEventListener(eventName, () => {
-			this.runTrigger(context);
+	public override outputValue(
+		context: ActorNodeTriggerContext,
+		outputName: OnObjectDispatchEventActorNodeInputName | string
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
+		return this._lastReceivedEventName || '';
+	}
+
+	static addEventListenersToObjects(scene: PolyScene) {
+		const nodes = scene
+			.nodesByType(this.type())
+			.filter((node) => node.context() == NodeContext.ACTOR) as OnObjectDispatchEventActorNode[];
+
+		for (let node of nodes) {
+			node._addEventListenersToObjects();
+		}
+	}
+	private _addEventListenersToObjects() {
+		const eventNames = this.pv.eventNames.split(' ');
+		const objects = objectsForActorNode(this);
+		for (let object of objects) {
+			for (let eventName of eventNames) {
+				this._createEventListener(eventName, object);
+			}
+		}
+	}
+	private _listenerByObject: Map<Object3D, Map<string, Listener>> = new Map();
+	private _createEventListener(eventName: string, Object3D: Object3D) {
+		let listenerByEventName = this._listenerByObject.get(Object3D);
+		if (!listenerByEventName) {
+			listenerByEventName = new Map();
+			this._listenerByObject.set(Object3D, listenerByEventName);
+		}
+		let listener = listenerByEventName.get(eventName);
+		if (!listener) {
+			listener = () => {
+				this._lastReceivedEventName = eventName;
+				this.runTrigger({Object3D});
+			};
+			Object3D.addEventListener(eventName, listener);
+			listenerByEventName.set(eventName, listener);
+		}
+	}
+	override dispose(): void {
+		this._listenerByObject.forEach((map, Object3D) => {
+			map.forEach((listener, eventName) => {
+				Object3D.removeEventListener(eventName, listener);
+			});
 		});
 	}
 }

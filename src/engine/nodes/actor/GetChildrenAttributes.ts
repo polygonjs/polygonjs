@@ -71,7 +71,7 @@ export class GetChildrenAttributesActorNode extends TypedActorNode<GetChildrenAt
 	public override outputValue(
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-		const {Object3D} = context;
+		const Object3D = this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||context.Object3D;
 		return Object3D.children.map((child) =>
 			CoreObject.attribValue(child, this.pv.attribName)
 		) as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];

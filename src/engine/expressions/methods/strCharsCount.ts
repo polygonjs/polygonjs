@@ -13,6 +13,7 @@
  * - `strCharCount('a word')` - returns 6
  *
  */
+import {CoreType} from './../../../core/Type';
 import {BaseMethod} from './_Base';
 // import {MethodDependency} from '../MethodDependency'
 
@@ -31,7 +32,9 @@ export class StrCharsCountExpression extends BaseMethod {
 		let value = 0;
 		if (args.length == 1) {
 			const string = args[0];
-			value = string.length;
+			if (CoreType.isString(string)) {
+				value = string.length;
+			}
 		}
 		return value;
 	}
