@@ -144,7 +144,7 @@ export class PolyNodeController {
 				simple: {
 					min: node.io.inputs.minCount(),
 					max: node.io.inputs.maxInputsCount(),
-					names: [],
+					names: node.displayedInputNames(),
 				},
 			};
 		}

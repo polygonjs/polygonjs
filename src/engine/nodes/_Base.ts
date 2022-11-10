@@ -94,6 +94,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	static displayedInputNames(): string[] {
 		return [];
 	}
+	displayedInputNames(): string[] {
+		return (this.constructor as any as TypedNode<NC, K>).displayedInputNames();
+	}
 
 	private _childrenController: HierarchyChildrenController | undefined;
 	protected _childrenControllerContext: NodeContext | undefined;
