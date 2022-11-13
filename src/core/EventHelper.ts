@@ -7,7 +7,7 @@ export class EventHelper {
 		this.element = element;
 	}
 
-	static element_position(event: MouseEvent | TouchEvent, element: HTMLElement, position: Vector2) {
+	static element_position(event: TouchEvent | MouseEvent | PointerEvent, element: HTMLElement, position: Vector2) {
 		const dim = element.getBoundingClientRect();
 
 		if ((event as TouchEvent).changedTouches) {
@@ -29,7 +29,7 @@ export class EventHelper {
 	// 	return new Vector2(x, y);
 	// }
 
-	static normalized_position(event: MouseEvent, element: HTMLElement, position: Vector2) {
+	static normalized_position(event: TouchEvent | MouseEvent | PointerEvent, element: HTMLElement, position: Vector2) {
 		this.element_position(event, element, position);
 
 		const dim = element.getBoundingClientRect();
@@ -39,7 +39,11 @@ export class EventHelper {
 		position.y = -(((position.y - window.scrollY) / dim.height) * 2 - 1);
 		// return mouse;
 	}
-	static normalized_position_0_1(event: MouseEvent, element: HTMLElement, position: Vector2) {
+	static normalized_position_0_1(
+		event: TouchEvent | MouseEvent | PointerEvent,
+		element: HTMLElement,
+		position: Vector2
+	) {
 		this.element_position(event, element, position);
 
 		const dim = element.getBoundingClientRect();
@@ -50,14 +54,14 @@ export class EventHelper {
 		// return mouse;
 	}
 
-	element_position(event: MouseEvent, position: Vector2) {
+	element_position(event: TouchEvent | MouseEvent | PointerEvent, position: Vector2) {
 		EventHelper.element_position(event, this.element, position);
 	}
 	// element_position_old(event: MouseEvent) {
 	// 	return EventHelper.element_position_old(event, this.element);
 	// }
 
-	normalized_position(event: MouseEvent, position: Vector2) {
+	normalized_position(event: TouchEvent | MouseEvent | PointerEvent, position: Vector2) {
 		EventHelper.normalized_position(event, this.element, position);
 	}
 }
