@@ -92,6 +92,9 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	setApplyOn(type: TransformTargetType) {
 		this.p.applyOn.set(TRANSFORM_TARGET_TYPES.indexOf(type));
 	}
+	applyOn() {
+		return TRANSFORM_TARGET_TYPES[this.pv.applyOn];
+	}
 	setObjectMode(mode: TransformObjectMode) {
 		this.p.objectMode.set(TRANSFORM_OBJECT_MODES.indexOf(mode));
 	}

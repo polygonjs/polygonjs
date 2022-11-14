@@ -48,6 +48,9 @@ export class CoreCameraCSSRendererController {
 		}
 
 		const cssRendererNode = foundNode as CSSRendererRopNode;
+		// if cssRendererNode is not computed here, the CSS will not be loaded when using the example scene
+		// <root_url>/demo?example=bynode/sop/css2dobject/basic
+		cssRendererNode.compute();
 		const cssRenderer = cssRendererNode.renderer(canvas);
 		return {cssRenderer, cssRendererNode};
 	}

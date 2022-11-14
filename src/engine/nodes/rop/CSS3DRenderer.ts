@@ -17,6 +17,10 @@ import {StringParamLanguage} from '../../params/utils/OptionsController';
 
 const DEFAULT_CSS = `.${DEFAULT_CSS3DOBJECT_CLASS} {
 	will-change: transform;
+	background-color: black;
+	padding: 5px 10px;
+	border: 1px solid blue;
+	border-radius: 5px;
 }`;
 
 class CSS3DRendererRopParamsConfig extends NodeParamsConfig {

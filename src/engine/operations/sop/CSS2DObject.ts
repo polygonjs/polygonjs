@@ -6,6 +6,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreType} from '../../../core/Type';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+export const DEFAULT_CSS2DOBJECT_CLASS = 'CSS2DObject';
 
 interface CSS2DObjectParams {
 	id: string;
@@ -34,7 +35,7 @@ export class CSS2DObjectSopOperation extends BaseSopOperation {
 		useIdAttrib: false,
 		id: 'myCSSObject',
 		useClassAttrib: false,
-		className: 'CSS2DObject',
+		className: DEFAULT_CSS2DOBJECT_CLASS,
 		useHTMLAttrib: false,
 		html: '<div>default html</div>',
 		copyAttributes: false,
