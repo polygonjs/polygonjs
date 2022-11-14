@@ -51,8 +51,8 @@ export const ContainerClassMap = {
 	[NodeContext.MANAGER]: ManagerContainer,
 	[NodeContext.MAT]: MaterialContainer,
 	[NodeContext.OBJ]: ObjectContainer,
-	[NodeContext.POST]: PostProcessContainer,
 	[NodeContext.ROP]: RopContainer,
+	[NodeContext.POST]: PostProcessContainer,
 	[NodeContext.SOP]: GeometryContainer,
 	// JS: JsContainer;
 };
@@ -71,8 +71,8 @@ export interface ContainerMap extends ContainerMapGeneric {
 	[NodeContext.MANAGER]: ManagerContainer;
 	[NodeContext.MAT]: MaterialContainer;
 	[NodeContext.OBJ]: ObjectContainer;
-	[NodeContext.POST]: PostProcessContainer;
 	[NodeContext.ROP]: RopContainer;
+	[NodeContext.POST]: PostProcessContainer;
 	[NodeContext.SOP]: GeometryContainer;
 }
 

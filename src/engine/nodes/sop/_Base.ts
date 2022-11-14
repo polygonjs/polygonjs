@@ -63,8 +63,8 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		this.io.outputs.setHasOneOutput();
 	}
 
-	setCoreGroup(core_group: CoreGroup) {
-		this._setContainer(core_group, MESSAGE.FROM_SET_CORE_GROUP);
+	setCoreGroup(coreGroup: CoreGroup) {
+		this._setContainer(coreGroup, MESSAGE.FROM_SET_CORE_GROUP);
 	}
 
 	setObject(object: Object3D) {

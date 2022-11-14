@@ -48,8 +48,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 	override async cook(inputCoreGroups: CoreGroup[], params: MaterialSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		this._old_mat_by_old_new_id.clear();
-
+		this._oldMatByOldNewId.clear();
 		await this._applyMaterials(coreGroup, params);
 		this._swapTextures(coreGroup, params);
 		return coreGroup;
@@ -111,28 +110,28 @@ export class MaterialSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _old_mat_by_old_new_id: Map<string, Material> = new Map();
-	private _materials_by_uuid: Map<string, Material> = new Map();
+	private _oldMatByOldNewId: Map<string, Material> = new Map();
+	private _materialByUuid: Map<string, Material> = new Map();
 	private _swapTextures(core_group: CoreGroup, params: MaterialSopParams) {
 		if (!isBooleanTrue(params.swapCurrentTex)) {
 			return;
 		}
 
-		this._materials_by_uuid.clear();
+		this._materialByUuid.clear();
 
 		for (let object of core_group.objectsFromGroup(params.group)) {
 			if (params.applyToChildren) {
 				object.traverse((child) => {
 					const mat = (object as Mesh).material as Material;
-					this._materials_by_uuid.set(mat.uuid, mat);
+					this._materialByUuid.set(mat.uuid, mat);
 				});
 			} else {
 				const mat = (object as Mesh).material as Material;
-				this._materials_by_uuid.set(mat.uuid, mat);
+				this._materialByUuid.set(mat.uuid, mat);
 			}
 		}
 
-		this._materials_by_uuid.forEach((mat, mat_uuid) => {
+		this._materialByUuid.forEach((mat, mat_uuid) => {
 			this._swapTexture(mat, params);
 		});
 	}
@@ -159,7 +158,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		// if (current_mat && params.swapCurrentTex) {
 		// 	this._swap_texture(used_material, current_mat, params);
 		// }
-		this._old_mat_by_old_new_id.set(usedMaterial.uuid, object_with_material.material as Material);
+		this._oldMatByOldNewId.set(usedMaterial.uuid, object_with_material.material as Material);
 		object_with_material.material = usedMaterial;
 
 		CoreMaterial.applyRenderHook(object, usedMaterial);
@@ -170,7 +169,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		if (params.texSrc0 == '' || params.texDest0 == '') {
 			return;
 		}
-		let src_mat = this._old_mat_by_old_new_id.get(target_mat.uuid);
+		let src_mat = this._oldMatByOldNewId.get(target_mat.uuid);
 		src_mat = src_mat || target_mat;
 
 		const src_tex: Texture | null = (src_mat as any)[params.texSrc0];

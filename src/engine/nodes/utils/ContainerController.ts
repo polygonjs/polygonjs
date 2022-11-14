@@ -1,3 +1,5 @@
+import {ContainableMap} from './../../../../dist/src/engine/containers/utils/ContainableMap.d';
+import {ContainableClassMap} from './../../containers/utils/ContainableMap';
 import {TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {ContainerMap, ContainerClassMap} from '../../containers/utils/ContainerMap';
@@ -20,6 +22,13 @@ export class TypedContainerController<NC extends NodeContext> {
 		const ContainerClass = ContainerClassMap[this.node.context()];
 		return new ContainerClass(this.node as any) as ContainerMap[NC];
 	}
+	private _createContainerWithContent() {
+		const container = this._createContainer();
+		const ContentClass = ContainableClassMap[this.node.context()];
+		const content = new ContentClass() as ContainableMap[NC];
+		container.set_content(<never>content);
+		return container;
+	}
 
 	containerUnlessBypassed(): ContainerMap[NC] | undefined {
 		if (this.node.flags?.bypass?.active()) {
@@ -28,7 +37,8 @@ export class TypedContainerController<NC extends NodeContext> {
 			if (inputNode) {
 				return inputNode.containerController.containerUnlessBypassed();
 			} else {
-				return this._createContainer();
+				console.log('ok');
+				return this._createContainerWithContent();
 			}
 		} else {
 			return this.container();
@@ -39,7 +49,6 @@ export class TypedContainerController<NC extends NodeContext> {
 		if (this.node.disposed) {
 			console.warn('.compute() requested from a disposed node', this.node);
 		}
-
 		if (this.node.flags?.bypass?.active()) {
 			this.node.states.error.clear();
 			const inputNode = (<unknown>this.node.io.inputs.input(0)) as TypedNode<NC, any>;
@@ -48,7 +57,7 @@ export class TypedContainerController<NC extends NodeContext> {
 				this.node.cookController.endCook();
 				return container;
 			} else {
-				return this._createContainer();
+				return this._createContainerWithContent();
 			}
 		}
 		if (this.node.isDirty()) {

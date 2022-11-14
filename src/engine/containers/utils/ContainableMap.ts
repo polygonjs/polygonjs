@@ -23,3 +23,21 @@ export interface ContainableMap {
 	[NodeContext.POST]: number;
 	[NodeContext.SOP]: CoreGroup;
 }
+
+export const ContainableClassMap = {
+	[NodeContext.ACTOR]: String,
+	[NodeContext.ANIM]: TimelineBuilder,
+	[NodeContext.AUDIO]: AudioBuilder,
+	[NodeContext.COP]: Texture,
+	[NodeContext.CSG]: CsgCoreGroup,
+	[NodeContext.EVENT]: String,
+	[NodeContext.GL]: String,
+	[NodeContext.JS]: String,
+	[NodeContext.MANAGER]: Boolean,
+	[NodeContext.MAT]: Material,
+	[NodeContext.OBJ]: Object3D,
+	[NodeContext.ROP]: String,
+	[NodeContext.POST]: Number,
+	[NodeContext.SOP]: CoreGroup,
+	// JS: JsContainer;
+};

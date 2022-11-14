@@ -116,13 +116,17 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 		objects.map((o: Object3D) => o.name),
 		['SpotLightContainer_spotLight1', 'hemisphereLight1']
 	);
+	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
+	assert.equal(container.coreContent()!.objects().length, 2, '2 objects');
 
 	hemisphereLight1.flags.bypass.set(true);
 	container = await merge1.compute();
 	assert.notOk(hemisphereLight1.states.error.active(), 'hemisphere not errored');
-	assert.ok(transform1.states.error.active(), 'transformed errored after bypassing hemisphereLight');
-	assert.ok(merge1.states.error.active());
-	assert.notOk(container.coreContent());
+	assert.notOk(transform1.states.error.active(), 'transformed errored after bypassing hemisphereLight');
+	assert.notOk(merge1.states.error.active());
+	assert.ok(container.coreContent());
+	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
+	assert.equal(container.coreContent()!.objects().length, 1, '1 object');
 
 	transform1.flags.bypass.set(true);
 	container = await merge1.compute();
@@ -136,6 +140,8 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 		objects.map((o: Object3D) => o.name),
 		['SpotLightContainer_spotLight1']
 	);
+	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
+	assert.equal(container.coreContent()!.objects().length, 1, '1 object');
 
 	hemisphereLight1.flags.bypass.set(false);
 	await CoreSleep.sleep(50); // TODO: ideally that should not be needed
@@ -150,6 +156,8 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 		objects.map((o: Object3D) => o.name),
 		['SpotLightContainer_spotLight1', 'hemisphereLight1']
 	);
+	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
+	assert.equal(container.coreContent()!.objects().length, 2, '2 objects');
 
 	transform1.flags.bypass.set(false);
 	container = await merge1.compute();
@@ -181,9 +189,11 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	transform1.flags.bypass.set(false);
 	container = await merge1.compute();
 	assert.notOk(hemisphereLight1.states.error.active(), 'transform errored after un-bypassing transform');
-	assert.ok(transform1.states.error.active());
-	assert.ok(merge1.states.error.active());
-	assert.notOk(container.coreContent());
+	assert.notOk(transform1.states.error.active());
+	assert.notOk(merge1.states.error.active());
+	assert.ok(container.coreContent());
+	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
+	assert.equal(container.coreContent()!.objects().length, 1, '1 object');
 });
 
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -212,4 +222,36 @@ QUnit.test('a display node that is bypass does not prevent the scene from playin
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), time + 0.5, 0.25, 'time is 1 sec');
 	});
+});
+
+QUnit.test('bypass a prim sop node followed by a mat node does not break the app', async (assert) => {
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+	const boxTmp = geo1.createNode('box');
+	boxTmp.flags.display.set(true);
+	const box1 = geo1.createNode('box');
+	const material1 = geo1.createNode('material');
+	const meshbasic = MAT.createNode('meshBasic');
+	material1.p.material.setNode(meshbasic);
+
+	material1.setInput(0, box1);
+
+	// wait to make sure objects are mounted to the scene
+	let container = await material1.compute();
+	assert.ok(container.coreContent());
+	assert.notOk(material1.states.error.message());
+	assert.equal(container.coreContent()?.pointsCount(), 24);
+
+	//
+	box1.flags.bypass.set(true);
+	container = await material1.compute();
+	assert.ok(container.coreContent());
+	assert.notOk(material1.states.error.message());
+	assert.equal(container.coreContent()?.pointsCount(), 0, 'empty coreGroup');
+
+	box1.flags.bypass.set(false);
+	container = await material1.compute();
+	assert.ok(container.coreContent());
+	assert.notOk(material1.states.error.message());
+	assert.equal(container.coreContent()?.pointsCount(), 24);
 });
