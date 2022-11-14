@@ -28,6 +28,7 @@ import {codeMatPresetRegister} from './mat/Code';
 // obj
 // sop
 import {attribCreateSopPresetRegister} from './sop/AttribCreate';
+import {attribPromoteSopPresetRegister} from './sop/AttribPromote';
 import {capsuleSopPresetRegister} from './sop/Capsule';
 import {codeSopPresetRegister} from './sop/Code';
 import {colorSopPresetRegister} from './sop/Color';
@@ -87,6 +88,7 @@ class PresetLibraryClass {
 		this._registerPreset(codeMatPresetRegister);
 		// sop
 		this._registerPreset(attribCreateSopPresetRegister);
+		this._registerPreset(attribPromoteSopPresetRegister);
 		this._registerPreset(capsuleSopPresetRegister);
 		this._registerPreset(codeSopPresetRegister);
 		this._registerPreset(colorSopPresetRegister);
