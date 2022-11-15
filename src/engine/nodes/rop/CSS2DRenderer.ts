@@ -16,6 +16,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 
 const DEFAULT_CSS = `.${DEFAULT_CSS2DOBJECT_CLASS} {
+	color: white;
 	background-color: black;
 	padding: 5px 10px;
 	border: 1px solid blue;
