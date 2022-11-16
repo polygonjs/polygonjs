@@ -29,6 +29,7 @@ export const GL_CONNECTION_POINT_TYPES: Array<AvailableActorType> = [
 	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.VECTOR4,
 ];
+const DEFAULT_PARAM_VALUES = {lerp: 1};
 
 class SetMaterialUniformActorParamsConfig extends NodeParamsConfig {
 	/** @param add prefix */
@@ -79,6 +80,9 @@ export class SetMaterialUniformActorNode extends TypedActorNode<SetMaterialUnifo
 			ActorConnectionPointType.STRING,
 			ActorConnectionPointType.FLOAT,
 		];
+	}
+	override paramDefaultValue(name: 'lerp') {
+		return DEFAULT_PARAM_VALUES[name];
 	}
 	uniformType() {
 		return GL_CONNECTION_POINT_TYPES[this.pv.type] || ActorConnectionPointType.FLOAT;

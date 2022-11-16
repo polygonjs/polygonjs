@@ -1,3 +1,4 @@
+import {FloatParam} from './../../../../src/engine/params/Float';
 import {UNIFORM_PARAM_PREFIX} from '../../../../src/core/material/uniform';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
@@ -30,6 +31,7 @@ QUnit.test('actor/setMaterialUniform', async (assert) => {
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setMaterialUniform1 = actor1.createNode('setMaterialUniform');
+	assert.equal((setMaterialUniform1.params.get('lerp')! as FloatParam).value, 1);
 
 	setMaterialUniform1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 	setMaterialUniform1.params.get('uniformName')!.set('myUniform');
