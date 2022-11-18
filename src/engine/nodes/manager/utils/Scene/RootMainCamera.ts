@@ -24,13 +24,16 @@ export class RootMainCameraController {
 		this.setCameraPath(path);
 	}
 	setCameraPath(path: string) {
-		this.node.p.mainCameraPath.set(path);
+		this.mainCameraPathParam().set(path);
+	}
+	mainCameraPathParam() {
+		return this.node.p.mainCameraPath;
 	}
 	rawCameraPath() {
-		return this.node.p.mainCameraPath.rawInput();
+		return this.mainCameraPathParam().rawInput();
 	}
 	async cameraPath() {
-		const param = this.node.p.mainCameraPath;
+		const param = this.mainCameraPathParam();
 		if (param.isDirty()) {
 			await param.compute();
 		}

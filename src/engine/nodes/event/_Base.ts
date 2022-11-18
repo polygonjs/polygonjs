@@ -107,6 +107,37 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	/**
 	 * onDispatch is called when an output triggers an event.
 	 *
+	 * Here is an example usage to listen to events:
+	 *
+	 * ``` ts
+	 * let _currentState = false;
+	 *	function setHit( newState ){
+	 *		if(_currentState != newState){
+	 *			if( newState ){
+	 *				playSound();
+	 *			}
+	 *			_currentState = newState;
+	 *		}
+	 *	}
+	 *
+	 *  const raycastNode = scene.node('<path to the node>');
+	 *	raycastNode.onDispatch('hit', ()=>setHit(true) );
+	 *	raycastNode.onDispatch('miss', ()=>setHit(false) );
+	 * ```
+	 *
+	 * Alternatively, you can also have the following arguments from the callback
+	 *
+	 * - viewer: the [viewer](https://polygonjs.com/docs/api/TypedViewer) displaying the scene.
+	 * - event: the mouse/pointer/keyboard event that originally triggered the event
+	 * - emitter: the domElement the event was triggered from (either the canvas or the document)
+	 * - value: an optional value linked to the event.
+	 *
+	 * ```
+	 * raycastNode.onDispatch('hit',(eventContext)=>{
+	 * 		const {viewer, event, emitter, value} = eventContext;
+	 * });
+	 * ```
+	 *
 	 */
 	public onDispatch(outputName: string, callback: DispatchHook) {
 		this._on_dispatch_hooks_by_output_name = this._on_dispatch_hooks_by_output_name || new Map();
