@@ -50,6 +50,15 @@ export enum SDFExtension {
 }
 export const SDF_EXTENSIONS: string[] = [SDFExtension.BIN];
 
+export enum AudioExtension {
+	MP3 = 'mp3',
+	WAV = 'wav',
+	OGG = 'ogg',
+}
+export const AUDIO_EXTENSIONS: string[] = [AudioExtension.MP3, AudioExtension.WAV, AudioExtension.OGG
+
+];
+
 function urlExt(url: string) {
 	const url_without_query_params = url.split('?')[0];
 	const url_elements = url_without_query_params.split('.');
@@ -59,6 +68,11 @@ function urlExt(url: string) {
 	const ext = url_elements[url_elements.length - 1];
 	return ext;
 }
+/**
+ *
+ * isExt...
+ *
+ */
 export function isExtVideo(ext: string) {
 	return VIDEO_EXTENSIONS.includes(ext);
 }
@@ -66,7 +80,7 @@ export function isExtStaticImage(ext: string) {
 	return IMAGE_EXTENSIONS.includes(ext);
 }
 export function isExtGif(ext: string) {
-	return ext == 'gif';
+	return ext == ImageExtension.GIF;
 }
 export function isExtGeometry(ext: string) {
 	return GEOMETRY_EXTENSIONS.includes(ext);
@@ -74,6 +88,14 @@ export function isExtGeometry(ext: string) {
 export function isExtSDF(ext: string) {
 	return SDF_EXTENSIONS.includes(ext);
 }
+export function isExtAudio(ext: string) {
+	return AUDIO_EXTENSIONS.includes(ext);
+}
+/**
+ *
+ * isUrl...
+ *
+ */
 export function isUrlVideo(url: string): boolean {
 	const ext = urlExt(url);
 	return ext != null ? isExtVideo(ext.toLowerCase()) : false;
@@ -89,4 +111,8 @@ export function isUrlGif(url: string) {
 export function isUrlGeometry(url: string) {
 	const ext = urlExt(url);
 	return ext != null ? isExtGeometry(ext.toLowerCase()) : false;
+}
+export function isUrlAudio(url: string) {
+	const ext = urlExt(url);
+	return ext != null ? isExtAudio(ext.toLowerCase()) : false;
 }

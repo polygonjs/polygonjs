@@ -1,10 +1,5 @@
 import {CoreBaseLoader} from './_Base';
 import {AudioContext, FileLoader, Loader, LoadingManager} from 'three';
-enum Extension {
-	MP3 = 'mp3',
-	WAV = 'wav',
-}
-export const AUDIO_EXTENSIONS: Extension[] = [Extension.MP3, Extension.WAV];
 
 // rework three AudioLoader, as onError is not called when giving a url that cannot be decoded
 

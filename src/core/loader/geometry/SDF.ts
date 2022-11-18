@@ -25,12 +25,16 @@ export class SDFLoader extends CoreBaseLoader {
 
 			var fileReader = new FileReader();
 			fileReader.onload = function (event) {
-				const arrayBuffer = event.target?.result;
-				if (arrayBuffer && arrayBuffer instanceof ArrayBuffer) {
-					const texture = loadSDFMetadata(arrayBuffer);
-					successCallback(texture);
-				} else {
-					errorCallback(new ErrorEvent('content is not an arrayBuffer'));
+				try {
+					const arrayBuffer = event.target?.result;
+					if (arrayBuffer && arrayBuffer instanceof ArrayBuffer) {
+						const texture = loadSDFMetadata(arrayBuffer);
+						successCallback(texture);
+					} else {
+						errorCallback(new ErrorEvent('content is not an arrayBuffer'));
+					}
+				} catch (err) {
+					errorCallback(err instanceof ErrorEvent ? err : new ErrorEvent('fail to read SDF file'));
 				}
 			};
 			fileReader.onerror = () => {

@@ -7,10 +7,11 @@ import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {Player} from 'tone/build/esm/source/buffer/Player';
-import {AUDIO_EXTENSIONS, CoreLoaderAudio} from '../../../core/loader/Audio';
+import {CoreLoaderAudio} from '../../../core/loader/Audio';
 import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
+import {AUDIO_EXTENSIONS} from '../../../core/FileTypeController';
 
 const EPSILON = 1e-6;
 
