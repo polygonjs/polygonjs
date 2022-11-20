@@ -98,7 +98,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		this._runOnDisposeCallbacks();
 	}
 	protected _initializeParam() {}
-	postOptionsInitialize(){}
+	postOptionsInitialize() {}
 	// 	// this.addPostDirtyHook(this._remove_node_param_cache.bind(this))
 	// }
 	// initialize() {
@@ -156,6 +156,9 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 	isRawInputEqual(other_raw_input: ParamInitValuesTypeMap[T]) {
 		return (this.constructor as any).areRawInputEqual(this._raw_input, other_raw_input);
+	}
+	isDefaultValueEqual(other_default_value: ParamInitValuesTypeMap[T]) {
+		return (this.constructor as any).areRawInputEqual(this._default_value, other_default_value);
 	}
 	static areValuesEqual(val1: any, val2: any) {
 		return false;

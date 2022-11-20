@@ -9,6 +9,14 @@ import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR2: Readonly<string[]> = ['x', 'y'];
 const tmp: Number2 = [0, 0];
+
+function vector2EqualsStringNumber2(v: Vector2, array: StringOrNumber2): boolean {
+	return v.x == array[0] && v.y == array[1];
+}
+function stringNumber2Equals(array1: StringOrNumber2, array2: StringOrNumber2): boolean {
+	return array1[0] == array2[0] && array1[1] == array2[1];
+}
+
 export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 	protected override _value = new Vector2();
 	x!: FloatParam;
@@ -74,13 +82,13 @@ export class Vector2Param extends TypedMultipleParam<ParamType.VECTOR2> {
 			if (raw_input2 instanceof Vector2) {
 				return raw_input1.equals(raw_input2);
 			} else {
-				return raw_input1.x == raw_input2[0] && raw_input1.y == raw_input2[1];
+				return vector2EqualsStringNumber2(raw_input1, raw_input2);
 			}
 		} else {
 			if (raw_input2 instanceof Vector2) {
-				return raw_input1[0] == raw_input2.x && raw_input1[1] == raw_input2.y;
+				return vector2EqualsStringNumber2(raw_input2, raw_input1);
 			} else {
-				return raw_input1[0] == raw_input2[0] && raw_input1[1] == raw_input2[1];
+				return stringNumber2Equals(raw_input1, raw_input2);
 			}
 		}
 	}

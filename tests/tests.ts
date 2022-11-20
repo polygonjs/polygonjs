@@ -111,6 +111,7 @@ import './engine/nodes/actor/Compare';
 import './engine/nodes/actor/Complement';
 import './engine/nodes/actor/Cross';
 import './engine/nodes/actor/Distance';
+import './engine/nodes/actor/Divide';
 import './engine/nodes/actor/Dot';
 import './engine/nodes/actor/Easing';
 import './engine/nodes/actor/Fit';
@@ -176,6 +177,7 @@ import './engine/nodes/actor/Smoothstep';
 import './engine/nodes/actor/Sphere';
 import './engine/nodes/actor/Subtract';
 import './engine/nodes/actor/Switch';
+import './engine/nodes/actor/TriggerDelay';
 import './engine/nodes/actor/TriggerFilter';
 import './engine/nodes/actor/TwoWaySwitch';
 

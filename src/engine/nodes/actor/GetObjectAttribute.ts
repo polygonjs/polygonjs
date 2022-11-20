@@ -125,6 +125,12 @@ export class GetObjectAttributeActorNode extends TypedActorNode<GetObjectAttribu
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
 		const attribValue = CoreObject.attribValue(Object3D, this.pv.attribName);
+		if (attribValue == null) {
+			this.states.error.set(`attribute ${this.pv.attribName} not found`);
+		} else {
+			this.states.error.clear();
+		}
+
 		if (attribValue instanceof Vector2) {
 			return tmpV2.copy(attribValue);
 		}

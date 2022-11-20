@@ -173,29 +173,24 @@ export class RaycastCPUController extends BaseRaycastController {
 		}
 	}
 
-	private _found_position_target_param: Vector3Param | undefined;
+	private _foundPositionTargetParam: Vector3Param | undefined;
 	private _hitPositionArray: Number3 = [0, 0, 0];
-	private _setPositionParam(hit_position: Vector3) {
-		hit_position.toArray(this._hitPositionArray);
+	private _setPositionParam(hitPosition: Vector3) {
+		hitPosition.toArray(this._hitPositionArray);
 		if (isBooleanTrue(this._node.pv.tpositionTarget)) {
-			if (this._node.scene().timeController.playing()) {
-				this._found_position_target_param =
-					this._found_position_target_param || this._node.pv.positionTarget.paramWithType(ParamType.VECTOR3);
-			} else {
-				// Do not cache the param in the editor, but fetch it directly from the operator_path.
-				// The reason is that params are very prone to disappear and be re-generated,
-				// Such as spare params created by Gl Builders
-				const target_param = this._node.pv.positionTarget;
-				this._found_position_target_param = target_param.paramWithType(ParamType.VECTOR3);
+			const targetParam = this._node.pv.positionTarget;
+
+			if (this._foundPositionTargetParam == null || isBooleanTrue(this._foundPositionTargetParam.disposed)) {
+				this._foundPositionTargetParam = targetParam.paramWithType(ParamType.VECTOR3);
 			}
-			if (this._found_position_target_param) {
-				this._found_position_target_param.set(this._hitPositionArray);
-			}
+
+			this._foundPositionTargetParam?.set(this._hitPositionArray);
+			// }
 		} else {
 			this._node.p.position.set(this._hitPositionArray);
 		}
 
-		this.velocityController.process(hit_position);
+		this.velocityController.process(hitPosition);
 	}
 
 	private _prepareRaycaster(eventContext: EventContext<MouseEvent>) {

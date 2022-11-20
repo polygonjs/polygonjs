@@ -85,7 +85,8 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 		// this.io.connection_points.set_output_name_function((index: number) => ConstantActorNode.OUTPUT_NAME);
 		this.io.connection_points.set_input_name_function(() => SetObjectAttributeActorNode.INPUT_NAME_VAL);
 		this.io.connection_points.set_expected_input_types_function(() => [this._currentConnectionType()]);
-		this.io.connection_points.set_expected_output_types_function(() => []);
+		this.io.connection_points.set_output_name_function(() => TRIGGER_CONNECTION_NAME);
+		this.io.connection_points.set_expected_output_types_function(() => [ActorConnectionPointType.TRIGGER]);
 	}
 	private _currentConnectionType() {
 		if (this.pv.type == null) {
@@ -97,47 +98,7 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 		}
 		return connectionType || ActorConnectionPointType.FLOAT;
 	}
-	// private _currentConnectionType() {
-	// 	if (this.pv.type == null) {
-	// 		console.warn(`${this.type()} actor node type not valid`);
-	// 	}
-	// 	const connectionType = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES[this.pv.type];
-	// 	if (connectionType == null) {
-	// 		console.warn(`${this.type()} actor node type not valid`);
-	// 	}
-	// 	return connectionType;
-	// }
-	// currentParam(): BaseParamType {
-	// 	const type = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES[this.pv.type];
-	// 	switch (type) {
-	// 		case ActorConnectionPointType.BOOLEAN: {
-	// 			return this.p.boolean;
-	// 		}
-	// 		case ActorConnectionPointType.COLOR: {
-	// 			return this.p.color;
-	// 		}
-	// 		case ActorConnectionPointType.FLOAT: {
-	// 			return this.p.float;
-	// 		}
-	// 		case ActorConnectionPointType.INTEGER: {
-	// 			return this.p.integer;
-	// 		}
-	// 		case ActorConnectionPointType.STRING: {
-	// 			return this.p.string;
-	// 		}
-	// 		case ActorConnectionPointType.VECTOR2: {
-	// 			return this.p.vector2;
-	// 		}
-	// 		case ActorConnectionPointType.VECTOR3: {
-	// 			return this.p.vector3;
-	// 		}
-	// 		case ActorConnectionPointType.VECTOR4: {
-	// 			return this.p.vector4;
-	// 		}
-	// 	}
-	// 	// we should never run this
-	// 	return this.p.boolean;
-	// }
+
 	setAttribType(type: ActorConnectionPointType) {
 		this.p.type.set(PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type));
 	}
@@ -151,31 +112,44 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 		const attribValue = this._inputValue(SetObjectAttributeActorNode.INPUT_NAME_VAL, context) as AttribValue;
 
 		const attribName = this.pv.attribName;
-		if (lerp >= 1) {
-			return CoreObject.setAttribute(Object3D, attribName, attribValue);
-		} else {
-			const currentValue = CoreObject.attribValue(Object3D, attribName);
-			if (CoreType.isNumber(attribValue) && CoreType.isNumber(currentValue)) {
-				const newValue = lerp * attribValue + (1 - lerp) * currentValue;
-				return CoreObject.setAttribute(Object3D, attribName, newValue);
+
+		const _setAttributeValue = () => {
+			if (!CoreObject.hasAttrib(Object3D, attribName)) {
+				this.states.error.set(`attribute ${this.pv.attribName} not found`);
+			} else {
+				this.states.error.clear();
 			}
-			if (CoreType.isVector(attribValue) && CoreType.isVector(currentValue)) {
-				return currentValue.lerp(attribValue as any, lerp);
-			}
-			if ((CoreType.isColor(attribValue) || attribValue instanceof Vector3) && CoreType.isColor(currentValue)) {
-				// since the objects do not yet have a color attribute, we check here if it is either a vector or a color
-				// and if it is a vector3, we copy it to tmpColor
-				if (CoreType.isColor(attribValue)) {
-					return currentValue.lerp(attribValue, lerp);
-				} else {
-					tmpColor.r = attribValue.x;
-					tmpColor.g = attribValue.y;
-					tmpColor.b = attribValue.z;
-					return currentValue.lerp(tmpColor, lerp);
+			if (lerp >= 1) {
+				return CoreObject.setAttribute(Object3D, attribName, attribValue);
+			} else {
+				const currentValue = CoreObject.attribValue(Object3D, attribName);
+				if (CoreType.isNumber(attribValue) && CoreType.isNumber(currentValue)) {
+					const newValue = lerp * attribValue + (1 - lerp) * currentValue;
+					return CoreObject.setAttribute(Object3D, attribName, newValue);
 				}
+				if (CoreType.isVector(attribValue) && CoreType.isVector(currentValue)) {
+					return currentValue.lerp(attribValue as any, lerp);
+				}
+				if (
+					(CoreType.isColor(attribValue) || attribValue instanceof Vector3) &&
+					CoreType.isColor(currentValue)
+				) {
+					// since the objects do not yet have a color attribute, we check here if it is either a vector or a color
+					// and if it is a vector3, we copy it to tmpColor
+					if (CoreType.isColor(attribValue)) {
+						return currentValue.lerp(attribValue, lerp);
+					} else {
+						tmpColor.r = attribValue.x;
+						tmpColor.g = attribValue.y;
+						tmpColor.b = attribValue.z;
+						return currentValue.lerp(tmpColor, lerp);
+					}
+				}
+				// if the value cannot be lerp, we set it directly
+				return CoreObject.setAttribute(Object3D, attribName, attribValue);
 			}
-			// if the value cannot be lerp, we set it directly
-			return CoreObject.setAttribute(Object3D, attribName, attribValue);
-		}
+		};
+		_setAttributeValue();
+		this.runTrigger(context);
 	}
 }

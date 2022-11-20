@@ -1,3 +1,4 @@
+import {TypedParam} from './../../../params/_Base';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
@@ -7,18 +8,60 @@ import {SetUtils} from '../../../../core/SetUtils';
 import {MapUtils} from '../../../../core/MapUtils';
 import {GlParamConfig} from './utils/GLParamConfig';
 
+const DEBUG = false;
+function _paramMatchesParamConfig<T extends ParamType>(param: TypedParam<T>, paramConfig: GlParamConfig<T>) {
+	if (param.type() != paramConfig.type()) {
+		if (DEBUG) {
+			console.log(`${param.name()}: type is different to paramConfig's`, param.type(), paramConfig.type());
+		}
+		return false;
+	}
+	if (param.name() != paramConfig.name()) {
+		if (DEBUG) {
+			console.log(`${param.name()}: name is different to paramConfig's`, param.name(), paramConfig.name());
+		}
+		return false;
+	}
+	if (!param.isDefaultValueEqual(paramConfig.defaultValue())) {
+		if (DEBUG) {
+			console.log(
+				`${param.name()}: defaultValue is different to paramConfig's`,
+				param.defaultValue(),
+				paramConfig.defaultValue()
+			);
+		}
+		return false;
+	}
+	// if (!param.isRawInputEqual(paramConfig.defaultValue())) {
+	// 	if (debug) {
+	// 		console.log(
+	// 			`${param.name()}: rawInput is different to paramConfig's`,
+	// 			param.rawInput(),
+	// 			paramConfig.defaultValue()
+	// 		);
+	// 	}
+	// 	return false;
+	// }
+
+	return true;
+}
+
 /*
 Create spare params on mat nodes
 */
 export class GlAssemblerNodeSpareParamsController {
 	// private _deletedParamsData: Map<string, ParamJsonExporterData<ParamType>> = new Map();
-	private _createdSpareParamNames: Set<string> = new Set();
+	// private _createdSpareParamNames: Set<string> = new Set();
 	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	private _init_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	constructor(private _controller: GlAssemblerControllerType, private _node: AssemblerControllerNode) {}
 	get assembler() {
 		return this._controller.assembler;
 	}
+
+	// private _createdSpareParams(){
+	// 	return this._node.params.spare;
+	// }
 
 	createSpareParameters() {
 		// const current_spare_param_names: string[] = this.node.params.spare_names;
@@ -33,29 +76,48 @@ export class GlAssemblerNodeSpareParamsController {
 		}
 
 		// spare_param_names_to_remove is composed of previously created params, but also spare params with the same name, which may be created when loading the scene
-		const spare_param_names_to_remove = SetUtils.union(this._createdSpareParamNames, spare_param_names_to_add);
+		// console.log('- 1', this._createSpareParams(), spare_param_names_to_add);
+		const currentSpareParams = this._node.params.spare;
+		const spare_param_names_to_remove = SetUtils.union(
+			SetUtils.fromArray(currentSpareParams.map((p) => p.name())),
+			spare_param_names_to_add
+		);
 		// but if the param type has not changed, we do not need to remove it, nor add it
-		this._createdSpareParamNames.forEach((paramName) => {
-			const currentParamType = this._node.params.get(paramName)?.type();
-			const paramConfigsWithName = paramConfigsByName.get(paramName);
+		// this._createdSpareParamNames.forEach((paramName) => {
+		// 	const currentParamType = this._node.params.get(paramName)?.type();
+		// 	const paramConfigsWithName = paramConfigsByName.get(paramName);
+		// 	if (paramConfigsWithName) {
+		// 		const firstParamConfig = paramConfigsWithName[0];
+		// 		if (firstParamConfig) {
+		// 			const expectedParamType = firstParamConfig.type();
+
+		// 			if (currentParamType == expectedParamType) {
+		// 				spare_param_names_to_remove.delete(paramName);
+		// 				spare_param_names_to_add.delete(paramName);
+		// 			}
+		// 		}
+		// 	}
+		// });
+
+		for (let currentSpareParam of currentSpareParams) {
+			const paramConfigsWithName = paramConfigsByName.get(currentSpareParam.name());
 			if (paramConfigsWithName) {
 				const firstParamConfig = paramConfigsWithName[0];
 				if (firstParamConfig) {
-					const expectedParamType = firstParamConfig.type();
-					if (currentParamType == expectedParamType) {
-						spare_param_names_to_remove.delete(paramName);
-						spare_param_names_to_add.delete(paramName);
+					if (_paramMatchesParamConfig(currentSpareParam, firstParamConfig)) {
+						spare_param_names_to_remove.delete(currentSpareParam.name());
+						spare_param_names_to_add.delete(currentSpareParam.name());
 					}
 				}
 			}
-		});
+		}
 
 		// keep track of raw_inputs so we can restore them
 		spare_param_names_to_remove.forEach((param_name) => {
 			// store the param data, in case it gets recreated later
 			// this allows expressions to be kept in memory
 			const param = this._node.params.get(param_name);
-			if (param) {
+			if (param && !param.parentParam()) {
 				this._raw_input_serialized_by_param_name.set(param.name(), param.rawInputSerialized());
 				this._init_value_serialized_by_param_name.set(param.name(), param.defaultValueSerialized());
 				// const param_exporter = JsonExportDispatcher.dispatch_param(param);
@@ -104,7 +166,7 @@ export class GlAssemblerNodeSpareParamsController {
 		}
 
 		this._node.params.updateParams(paramsUpdateOptions);
-		this._createdSpareParamNames = SetUtils.fromArray(paramConfigs.map((c) => c.name()));
+		// this._createdSpareParamNames = SetUtils.fromArray(paramConfigs.map((c) => c.name()));
 
 		for (let paramConfig of paramConfigs) {
 			paramConfig.applyToNode(this._node);

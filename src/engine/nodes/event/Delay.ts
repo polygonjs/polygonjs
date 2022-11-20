@@ -13,7 +13,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 class DelayEventParamsConfig extends NodeParamsConfig {
-	/** @param delay before dispatching */
+	/** @param delay before dispatching (in milliseconds) */
 	delay = ParamConfig.INTEGER(1000, {
 		range: [0, 1000],
 		rangeLocked: [true, false],

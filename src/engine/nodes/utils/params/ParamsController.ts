@@ -35,10 +35,10 @@ export interface ParamsUpdateOptions {
 export class ParamsController {
 	private _param_create_mode: boolean = false;
 	private _params_created: boolean = false;
-	private _params_by_name: PolyDictionary<BaseParamType> = {};
+	private _paramsByName: Map<string, BaseParamType> = new Map();
 	// caches
 	private _params_list: BaseParamType[] = [];
-	private _param_names: string[] = [];
+	private _paramNames: string[] = [];
 	private _non_spare_params: BaseParamType[] = [];
 	private _spare_params: BaseParamType[] = [];
 	private _non_spare_param_names: string[] = [];
@@ -207,7 +207,7 @@ export class ParamsController {
 		}
 	}
 	private _removeUnneededAccessors(current_names_in_accessor: string[]) {
-		const current_param_names = this._param_names;
+		const current_param_names = this._paramNames;
 		const names_to_remove = [];
 		for (let current_name_in_accessor of current_names_in_accessor) {
 			if (!current_param_names.includes(current_name_in_accessor)) {
@@ -244,7 +244,7 @@ export class ParamsController {
 		return this._spare_params;
 	}
 	get names(): string[] {
-		return this._param_names;
+		return this._paramNames;
 	}
 	get non_spare_names(): string[] {
 		return this._non_spare_param_names;
@@ -253,29 +253,29 @@ export class ParamsController {
 		return this._spare_param_names;
 	}
 
-	private set_with_type<T extends ParamType>(param_name: string, value: ParamInitValuesTypeMap[T], type: T) {
-		const param = this.paramWithType(param_name, type);
+	private set_with_type<T extends ParamType>(paramName: string, value: ParamInitValuesTypeMap[T], type: T) {
+		const param = this.paramWithType(paramName, type);
 		if (param) {
 			param.set(value as never);
 		} else {
-			Poly.warn(`param ${param_name} not found with type ${type}`);
+			Poly.warn(`param ${paramName} not found with type ${type}`);
 		}
 	}
-	set_float(param_name: string, value: ParamInitValuesTypeMap[ParamType.FLOAT]) {
-		this.set_with_type(param_name, value, ParamType.FLOAT);
+	set_float(paramName: string, value: ParamInitValuesTypeMap[ParamType.FLOAT]) {
+		this.set_with_type(paramName, value, ParamType.FLOAT);
 	}
-	set_vector3(param_name: string, value: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
-		this.set_with_type(param_name, value, ParamType.VECTOR3);
+	set_vector3(paramName: string, value: ParamInitValuesTypeMap[ParamType.VECTOR3]) {
+		this.set_with_type(paramName, value, ParamType.VECTOR3);
 	}
 
-	has_param(param_name: string) {
-		return this._params_by_name[param_name] != null;
+	has_param(paramName: string) {
+		return this._paramsByName.has(paramName);
 	}
-	has(param_name: string) {
-		return this.has_param(param_name);
+	has(paramName: string) {
+		return this.has_param(paramName);
 	}
-	get(param_name: string) {
-		return this.param(param_name);
+	get(paramName: string) {
+		return this.param(paramName);
 	}
 	paramWithType<T extends ParamType>(param_name: string, type: T): ParamConstructorMap[T] | undefined {
 		const param = this.param(param_name);
@@ -289,11 +289,11 @@ export class ParamsController {
 	// get_operator_path(param_name: string): OperatorPathParam {
 	// 	return this.paramWithType(param_name, ParamType.OPERATOR_PATH) as OperatorPathParam;
 	// }
-	value(param_name: string) {
-		return this.param(param_name)?.value;
+	value(paramName: string) {
+		return this.param(paramName)?.value;
 	}
-	valueWithType<T extends ParamType>(param_name: string, type: T): ParamValuesTypeMap[T] {
-		return this.paramWithType(param_name, type)?.value as ParamValuesTypeMap[T];
+	valueWithType<T extends ParamType>(paramName: string, type: T): ParamValuesTypeMap[T] {
+		return this.paramWithType(paramName, type)?.value as ParamValuesTypeMap[T];
 		// const param = this.param(name);
 		// if (param && param.type() == type) {
 		// 	return param.value();
@@ -322,7 +322,7 @@ export class ParamsController {
 	}
 
 	param(paramName: string) {
-		const p = this._params_by_name[paramName];
+		const p = this._paramsByName.get(paramName);
 		if (p != null) {
 			return p;
 		} else {
@@ -345,18 +345,18 @@ export class ParamsController {
 
 	// }
 	// call update_params instead
-	private _deleteParam(param_name: string) {
-		const param = this._params_by_name[param_name];
+	private _deleteParam(paramName: string) {
+		const param = this._paramsByName.get(paramName);
 		if (param) {
 			if (this._params_node) {
-				this._params_node.removeGraphInput(this._params_by_name[param_name]);
+				this._params_node.removeGraphInput(param);
 			}
 			param._setupNodeDependencies(null);
-			delete this._params_by_name[param_name];
+			this._paramsByName.delete(paramName);
 			if (param.isMultiple() && param.components) {
 				for (let component of param.components) {
-					const child_name = component.name();
-					delete this._params_by_name[child_name];
+					const childName = component.name();
+					this._paramsByName.delete(childName);
 				}
 			}
 			param.dispose();
@@ -367,7 +367,7 @@ export class ParamsController {
 			// }
 			// param.emit(ParamEvent.DELETED);
 		} else {
-			throw new Error(`param '${param_name}' does not exist on node ${this.node.path()}`);
+			throw new Error(`param '${paramName}' does not exist on node ${this.node.path()}`);
 		}
 	}
 
@@ -390,7 +390,7 @@ export class ParamsController {
 
 		const constructor = ParamConstructorByType[type];
 		if (constructor != null) {
-			const existing_param = this._params_by_name[paramName];
+			const existing_param = this._paramsByName.get(paramName);
 			if (existing_param) {
 				if (isSpare) {
 					// delete the old one, otherwise the gl nodes when saved will attempt to set the value
@@ -448,12 +448,12 @@ export class ParamsController {
 			param.postOptionsInitialize();
 			param._setupNodeDependencies(this.node);
 
-			this._params_by_name[param.name()] = param as BaseParamType;
+			this._paramsByName.set(param.name(), param as BaseParamType);
 
 			// we add the components, so that we can access them with expressions like ch('ty')
 			if (param.isMultiple() && param.components) {
 				for (let component of param.components) {
-					this._params_by_name[component.name()] = component as BaseParamType;
+					this._paramsByName.set(component.name(), component as BaseParamType);
 				}
 			}
 
@@ -464,16 +464,15 @@ export class ParamsController {
 	}
 
 	private _updateCaches() {
-		this._params_list = Object.values(this._params_by_name);
-		this._param_names = Object.keys(this._params_by_name);
-		this._non_spare_params = Object.values(this._params_by_name).filter((p) => !p.options.isSpare());
-		this._spare_params = Object.values(this._params_by_name).filter((p) => p.options.isSpare());
-		this._non_spare_param_names = Object.values(this._params_by_name)
-			.filter((p) => !p.options.isSpare())
-			.map((p) => p.name());
-		this._spare_param_names = Object.values(this._params_by_name)
-			.filter((p) => p.options.isSpare())
-			.map((p) => p.name());
+		this._params_list.splice(0, this._params_list.length);
+		this._paramsByName.forEach((param) => {
+			this._params_list.push(param);
+		});
+		this._paramNames = this._params_list.map((param) => param.name());
+		this._non_spare_params = this._params_list.filter((p) => !p.options.isSpare());
+		this._spare_params = this._params_list.filter((p) => p.options.isSpare());
+		this._non_spare_param_names = this._non_spare_params.map((p) => p.name());
+		this._spare_param_names = this._spare_params.map((p) => p.name());
 	}
 
 	async _evalParam(param: BaseParamType) {

@@ -9,6 +9,14 @@ import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_VECTOR4: Readonly<string[]> = ['x', 'y', 'z', 'w'];
 const tmp: Number4 = [0, 0, 0, 0];
+
+function vector2EqualsStringNumber4(v: Vector4, array: StringOrNumber4): boolean {
+	return v.x == array[0] && v.y == array[1] && v.z == array[2] && v.w == array[3];
+}
+function stringNumber4Equals(array1: StringOrNumber4, array2: StringOrNumber4): boolean {
+	return array1[0] == array2[0] && array1[1] == array2[1] && array1[2] == array2[2] && array1[3] == array2[3];
+}
+
 export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 	protected override _value = new Vector4();
 	x!: FloatParam;
@@ -85,28 +93,13 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 			if (raw_input2 instanceof Vector4) {
 				return raw_input1.equals(raw_input2);
 			} else {
-				return (
-					raw_input1.x == raw_input2[0] &&
-					raw_input1.y == raw_input2[1] &&
-					raw_input1.z == raw_input2[2] &&
-					raw_input1.w == raw_input2[3]
-				);
+				return vector2EqualsStringNumber4(raw_input1, raw_input2);
 			}
 		} else {
 			if (raw_input2 instanceof Vector4) {
-				return (
-					raw_input1[0] == raw_input2.x &&
-					raw_input1[1] == raw_input2.y &&
-					raw_input1[2] == raw_input2.z &&
-					raw_input1[3] == raw_input2.w
-				);
+				return vector2EqualsStringNumber4(raw_input2, raw_input1);
 			} else {
-				return (
-					raw_input1[0] == raw_input2[0] &&
-					raw_input1[1] == raw_input2[1] &&
-					raw_input1[2] == raw_input2[2] &&
-					raw_input1[3] == raw_input2[3]
-				);
+				return stringNumber4Equals(raw_input1, raw_input2);
 			}
 		}
 	}

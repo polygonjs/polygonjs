@@ -11,6 +11,14 @@ import {CoreType} from '../../core/Type';
 
 const COMPONENT_NAMES_COLOR: Readonly<string[]> = ['r', 'g', 'b'];
 const tmp: Number3 = [0, 0, 0];
+
+function colorEqualsStringNumber3(c: Color, array: StringOrNumber3): boolean {
+	return c.r == array[0] && c.g == array[1] && c.b == array[2];
+}
+function stringNumber3Equals(array1: StringOrNumber3, array2: StringOrNumber3): boolean {
+	return array1[0] == array2[0] && array1[1] == array2[1] && array1[2] == array2[2];
+}
+
 export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	protected override _value = new Color();
 	private _valuePreConversion = new Color();
@@ -92,15 +100,13 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 			if (raw_input2 instanceof Color) {
 				return raw_input1.equals(raw_input2);
 			} else {
-				return raw_input1.r == raw_input2[0] && raw_input1.g == raw_input2[1] && raw_input1.b == raw_input2[2];
+				return colorEqualsStringNumber3(raw_input1, raw_input2);
 			}
 		} else {
 			if (raw_input2 instanceof Color) {
-				return raw_input1[0] == raw_input2.r && raw_input1[1] == raw_input2.g && raw_input1[2] == raw_input2.b;
+				return colorEqualsStringNumber3(raw_input2, raw_input1);
 			} else {
-				return (
-					raw_input1[0] == raw_input2[0] && raw_input1[1] == raw_input2[1] && raw_input1[2] == raw_input2[2]
-				);
+				return stringNumber3Equals(raw_input1, raw_input2);
 			}
 		}
 	}

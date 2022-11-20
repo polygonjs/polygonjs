@@ -106,41 +106,41 @@ const METHOD_NAMES_BY_NOISE_NAME: StringByNoise = {
 	[NoiseName.NOISE_4D]: 'snoise',
 };
 
-enum OUTPUT_TYPE {
+export enum NoiseOutputType {
 	NoChange = 0,
 	Float = 1,
 	Vec2 = 2,
 	Vec3 = 3,
 	Vec4 = 4,
 }
-const OUTPUT_TYPES: Array<OUTPUT_TYPE> = [
-	OUTPUT_TYPE.NoChange,
-	OUTPUT_TYPE.Float,
-	OUTPUT_TYPE.Vec2,
-	OUTPUT_TYPE.Vec3,
-	OUTPUT_TYPE.Vec4,
+const OUTPUT_TYPES: Array<NoiseOutputType> = [
+	NoiseOutputType.NoChange,
+	NoiseOutputType.Float,
+	NoiseOutputType.Vec2,
+	NoiseOutputType.Vec3,
+	NoiseOutputType.Vec4,
 ];
-type StringByOutputType = {[key in OUTPUT_TYPE]: string};
+type StringByOutputType = {[key in NoiseOutputType]: string};
 const OUTPUT_TYPE_LABEL: StringByOutputType = {
-	[OUTPUT_TYPE.NoChange]: 'Same as noise',
-	[OUTPUT_TYPE.Float]: 'Float',
-	[OUTPUT_TYPE.Vec2]: 'Vec2',
-	[OUTPUT_TYPE.Vec3]: 'Vec3',
-	[OUTPUT_TYPE.Vec4]: 'Vec4',
+	[NoiseOutputType.NoChange]: 'Same as noise',
+	[NoiseOutputType.Float]: 'Float',
+	[NoiseOutputType.Vec2]: 'Vec2',
+	[NoiseOutputType.Vec3]: 'Vec3',
+	[NoiseOutputType.Vec4]: 'Vec4',
 };
-type ConnectionTypeByOutputType = {[key in OUTPUT_TYPE]: GlConnectionPointType};
+type ConnectionTypeByOutputType = {[key in NoiseOutputType]: GlConnectionPointType};
 const CONNECTION_TYPE_BY_OUTPUT_TYPE: ConnectionTypeByOutputType = {
-	[OUTPUT_TYPE.NoChange]: GlConnectionPointType.FLOAT,
-	[OUTPUT_TYPE.Float]: GlConnectionPointType.FLOAT,
-	[OUTPUT_TYPE.Vec2]: GlConnectionPointType.VEC2,
-	[OUTPUT_TYPE.Vec3]: GlConnectionPointType.VEC3,
-	[OUTPUT_TYPE.Vec4]: GlConnectionPointType.VEC4,
+	[NoiseOutputType.NoChange]: GlConnectionPointType.FLOAT,
+	[NoiseOutputType.Float]: GlConnectionPointType.FLOAT,
+	[NoiseOutputType.Vec2]: GlConnectionPointType.VEC2,
+	[NoiseOutputType.Vec3]: GlConnectionPointType.VEC3,
+	[NoiseOutputType.Vec4]: GlConnectionPointType.VEC4,
 };
 
 const ALL_COMPONENTS = ['x', 'y', 'z', 'w'];
 const OUTPUT_NAME = 'noise';
 const default_noise_type = NOISE_NAMES.indexOf(NoiseName.NOISE_3D);
-const default_output_type = OUTPUT_TYPE.NoChange;
+const default_output_type = NoiseOutputType.NoChange;
 
 const DefaultValues: PolyDictionary<number> = {
 	amp: 1,
@@ -209,6 +209,13 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 		this.io.connection_points.set_output_name_function(() => OUTPUT_NAME);
 	}
 
+	setNoiseName(noiseName: NoiseName) {
+		this.p.type.set(NOISE_NAMES.indexOf(noiseName));
+	}
+	setOutputType(outputType: NoiseOutputType) {
+		this.p.outputType.set(OUTPUT_TYPES.indexOf(outputType));
+	}
+
 	protected _gl_input_name(index: number) {
 		return [
 			NoiseGlNodeInputName.AMP,
@@ -230,7 +237,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	private _expected_output_types(): GlConnectionPointType[] {
 		const noise_name = NOISE_NAMES[this.pv.type];
 		const output_type = OUTPUT_TYPES[this.pv.outputType];
-		if (output_type == OUTPUT_TYPE.NoChange) {
+		if (output_type == NoiseOutputType.NoChange) {
 			return [INPUT_TYPES_BY_NOISE_NAME[noise_name]];
 		} else {
 			return [CONNECTION_TYPE_BY_OUTPUT_TYPE[output_type]];

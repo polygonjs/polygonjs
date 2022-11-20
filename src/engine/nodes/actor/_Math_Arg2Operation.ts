@@ -66,7 +66,10 @@ export function MathFunctionArg2OperationFactory(
 			const inputsCount = this.io.inputs.namedInputConnectionPoints().length;
 
 			if (isPrimitive) {
-				let startValue = this._inputValue<ActorConnectionPointType.FLOAT>(0, context) || 0;
+				let startValue =
+					this._inputValue<ActorConnectionPointType.FLOAT>(0, context) ||
+					(this.paramDefaultValue(this._expectedInputName(0)) as number);
+
 				for (let i = 1; i < inputsCount; i++) {
 					const nextValue = this._inputValue<ActorConnectionPointType.FLOAT>(
 						this._expectedInputName(i),
@@ -76,12 +79,16 @@ export function MathFunctionArg2OperationFactory(
 				}
 				return startValue;
 			} else {
+				const _defaultVector = () => {
+					const defaultValue = this.paramDefaultValue(this._expectedInputName(0)) as number;
+					return this._defaultVector4.set(defaultValue, defaultValue, defaultValue, defaultValue);
+				};
 				let startValue =
 					this._inputValue<
 						| ActorConnectionPointType.VECTOR2
 						| ActorConnectionPointType.VECTOR3
 						| ActorConnectionPointType.VECTOR4
-					>(0, context) || this._defaultVector4.set(0, 0, 0, 0);
+					>(0, context) || _defaultVector();
 				if (startValue instanceof Vector2) {
 					tmpV2.copy(startValue);
 					startValue = tmpV2;

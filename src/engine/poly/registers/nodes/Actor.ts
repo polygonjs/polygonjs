@@ -47,6 +47,7 @@ import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
 import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty';
 import {GetObjectUserDataActorNode} from '../../../nodes/actor/GetObjectUserData';
+import {GetObjectWorldPositionActorNode} from '../../../nodes/actor/GetObjectWorldPosition';
 import {GetParentActorNode} from '../../../nodes/actor/GetParent';
 import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
@@ -140,6 +141,7 @@ import {SqrtActorNode} from '../../../nodes/actor/Sqrt';
 import {SubtractActorNode} from '../../../nodes/actor/Subtract';
 import {SwitchActorNode} from '../../../nodes/actor/Switch';
 import {TanActorNode} from '../../../nodes/actor/Tan';
+import {TriggerDelayActorNode} from '../../../nodes/actor/TriggerDelay';
 import {TriggerFilterActorNode} from '../../../nodes/actor/TriggerFilter';
 import {TriggerTwoWaySwitchActorNode} from '../../../nodes/actor/TriggerTwoWaySwitch';
 import {TwoWaySwitchActorNode} from '../../../nodes/actor/TwoWaySwitch';
@@ -212,6 +214,7 @@ export interface ActorNodeChildrenMap {
 	getParent: GetParentActorNode;
 	getPlaneProperty: GetPlanePropertyActorNode;
 	getSphereProperty: GetSpherePropertyActorNode;
+	getWorldPosition: GetObjectWorldPositionActorNode;
 	intToBool: IntToBoolActorNode;
 	intToFloat: IntToFloatActorNode;
 	keyframes: KeyframesActorNode;
@@ -302,6 +305,7 @@ export interface ActorNodeChildrenMap {
 	subtract: SubtractActorNode;
 	switch: SwitchActorNode;
 	tan: TanActorNode;
+	triggerDelay: TriggerDelayActorNode;
 	triggerFilter: TriggerFilterActorNode;
 	triggerTwoWaySwitch: TriggerTwoWaySwitchActorNode;
 	twoWaySwitch: TwoWaySwitchActorNode;
@@ -378,6 +382,7 @@ export class ActorRegister {
 		poly.registerNode(GetPlanePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetParentActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetObjectWorldPositionActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(KeyframesActorNode, CATEGORY_ACTOR.ANIMATION);
@@ -468,6 +473,7 @@ export class ActorRegister {
 		poly.registerNode(SubtractActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(TanActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(TriggerDelayActorNode, CATEGORY_ACTOR.FLOW);
 		poly.registerNode(TriggerFilterActorNode, CATEGORY_ACTOR.FLOW);
 		poly.registerNode(TriggerTwoWaySwitchActorNode, CATEGORY_ACTOR.FLOW);
 		poly.registerNode(TwoWaySwitchActorNode, CATEGORY_ACTOR.LOGIC);
