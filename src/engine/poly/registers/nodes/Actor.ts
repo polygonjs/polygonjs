@@ -214,7 +214,7 @@ export interface ActorNodeChildrenMap {
 	getParent: GetParentActorNode;
 	getPlaneProperty: GetPlanePropertyActorNode;
 	getSphereProperty: GetSpherePropertyActorNode;
-	getWorldPosition: GetObjectWorldPositionActorNode;
+	getObjectWorldPosition: GetObjectWorldPositionActorNode;
 	intToBool: IntToBoolActorNode;
 	intToFloat: IntToFloatActorNode;
 	keyframes: KeyframesActorNode;
