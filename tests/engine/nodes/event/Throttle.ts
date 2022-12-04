@@ -27,5 +27,5 @@ QUnit.test('event/throttle nodes simple', async (assert) => {
 		throttle1.processEvent(eventContext);
 		await CoreSleep.sleep(10);
 	}
-	assert.equal(count, 20);
+	assert.equal(count, 21);
 });

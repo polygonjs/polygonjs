@@ -99,6 +99,7 @@ import {PhysicsWorldResetActorNode} from '../../../nodes/actor/PhysicsWorldReset
 import {PhysicsWorldStepSimulationActorNode} from '../../../nodes/actor/PhysicsWorldStepSimulation';
 import {PlaneActorNode} from '../../../nodes/actor/Plane';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
+import {PlayAudioSourceActorNode} from '../../../nodes/actor/PlayAudioSource';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
 import {PressButtonParamActorNode} from '../../../nodes/actor/PressButtonParam';
 import {PowActorNode} from '../../../nodes/actor/Pow';
@@ -263,6 +264,7 @@ export interface ActorNodeChildrenMap {
 	physicsWorldStepSimulation: PhysicsWorldStepSimulationActorNode;
 	plane: PlaneActorNode;
 	playAnimation: PlayAnimationActorNode;
+	playAudioSource: PlayAudioSourceActorNode;
 	playInstrumentNote: PlayInstrumentNoteActorNode;
 	pressButtonParam: PressButtonParamActorNode;
 	pow: PowActorNode;
@@ -431,6 +433,7 @@ export class ActorRegister {
 		poly.registerNode(PhysicsWorldStepSimulationActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
+		poly.registerNode(PlayAudioSourceActorNode, CATEGORY_ACTOR.AUDIO);
 		poly.registerNode(PlayInstrumentNoteActorNode, CATEGORY_ACTOR.AUDIO);
 		poly.registerNode(PressButtonParamActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(PowActorNode, CATEGORY_ACTOR.MATH);

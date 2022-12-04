@@ -73,8 +73,10 @@ export class PlayInstrumentNoteActorNode extends TypedActorNode<PlayInstrumentNo
 			if (!audioBuilder) {
 				return;
 			}
+			this.states.error.clear();
 			const instrument = audioBuilder.instrument();
 			if (!instrument) {
+				this.states.error.set('no instrument found');
 				return;
 			}
 			const note = this._inputValueFromParam<ParamType.STRING>(this.p.note, context);

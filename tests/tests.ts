@@ -152,6 +152,7 @@ import './engine/nodes/actor/PhysicsRBDApplyImpulse';
 import './engine/nodes/actor/PhysicsWorldReset';
 import './engine/nodes/actor/Plane';
 import './engine/nodes/actor/PlayAnimation';
+import './engine/nodes/actor/PlayAudioSource';
 import './engine/nodes/actor/PlayInstrumentNote';
 import './engine/nodes/actor/PressButtonParam';
 // import './engine/nodes/actor/SetObjectHoveredState';
@@ -211,6 +212,7 @@ import './engine/nodes/cop/Switch';
 import './engine/nodes/cop/Video';
 
 QUnit.module('event');
+import './engine/nodes/event/Audio';
 import './engine/nodes/event/Code';
 import './engine/nodes/event/Drag';
 import './engine/nodes/event/Debounce';

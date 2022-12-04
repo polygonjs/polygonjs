@@ -12,6 +12,12 @@ import {BaseNodeType} from '../_Base';
 import {ALL_NOTES, DEFAULT_NOTE} from '../../../core/audio/Notes';
 import {NodeContext} from '../../poly/NodeContext';
 import {AudioListenerObjNode} from '../obj/AudioListener';
+import {Player} from 'tone/build/esm/source/buffer/Player';
+import {AudioPlayerCallbacksManager} from './../../../core/audio/PlayerCallbacksManager';
+
+export enum AudioEventOutput {
+	ON_STOP = 'onStop',
+}
 
 class AudioEventParamsConfig extends NodeParamsConfig {
 	/** @parm audio node */
@@ -59,37 +65,75 @@ export class AudioEventNode extends TypedEventNode<AudioEventParamsConfig> {
 			new EventConnectionPoint('play', EventConnectionPointType.BASE, this._triggerPlay.bind(this)),
 			// new EventConnectionPoint('stop', EventConnectionPointType.BASE, this._triggerPlay.bind(this)),
 		]);
+		this.io.outputs.setNamedOutputConnectionPoints([
+			new EventConnectionPoint(AudioEventOutput.ON_STOP, EventConnectionPointType.BASE),
+		]);
 	}
 
-	private _previousNote: string | undefined;
+	// private _previousNote: string | undefined;
+	private _sourcePlayer: Player | undefined;
 	private _triggerPlay(context: EventContext<Event>) {
 		this._play();
 	}
 	private async _play() {
 		if (!AudioListenerObjNode.soundActivated()) {
+			console.warn('sound not activated');
 			return;
 		}
+		this.states.error.clear();
 
-		const instrument = await this._getInstrument();
-		if (!instrument) {
+		const playable = await this._getPlayable();
+		if (!playable) {
+			return;
+		}
+		const {instrument, source} = playable;
+		if (!(instrument || source)) {
 			return;
 		}
 
 		// await AudioController.start();
 
-		if (this._previousNote) {
-			// instrument.triggerRelease(this._previousNote);
-		}
+		// if (this._previousNote) {
+		// 	// instrument.triggerRelease(this._previousNote);
+		// }
 
-		const note = this.pv.note;
-		if (note == '') {
-			// we test the note value,
-			// as it could resolve to nothing if it is tied to an expression wchih returns nothing
+		if (instrument) {
+			const note = this.pv.note;
+			if (note == '') {
+				// we test the note value,
+				// as it could resolve to nothing if it is tied to an expression wchih returns nothing
+				return;
+			}
+			instrument.triggerAttackRelease(note, this.pv.duration);
+			// this._previousNote = note;
+		} else {
+			if (source) {
+				if (source instanceof Player) {
+					this._sourcePlayer = source;
+					this._addPlayerEvent(source);
+					source.start();
+				}
+			}
+		}
+	}
+	override dispose(): void {
+		super.dispose();
+		this._removePlayerEvent();
+	}
+	private _addPlayerEvent(sourcePlayer: Player) {
+		AudioPlayerCallbacksManager.onStop(sourcePlayer, this._onSourcePlayerStopBound);
+	}
+	private _removePlayerEvent() {
+		if (!this._sourcePlayer) {
 			return;
 		}
-		instrument.triggerAttackRelease(note, this.pv.duration);
-		this._previousNote = note;
+		AudioPlayerCallbacksManager.removeOnStop(this._sourcePlayer, this._onSourcePlayerStopBound);
 	}
+	private _onSourcePlayerStopBound = this._onSourcePlayerStop.bind(this);
+	private _onSourcePlayerStop() {
+		this.dispatchEventToOutput(AudioEventOutput.ON_STOP, {});
+	}
+
 	// private _stop() {
 	// 	const instrument = await this._getInstrument()
 	// 	if(!instrument){return}
@@ -98,7 +142,7 @@ export class AudioEventNode extends TypedEventNode<AudioEventParamsConfig> {
 	// 	// 	this._currentSynth.triggerRelease(undefined!);
 	// 	// }
 	// }
-	private async _getInstrument() {
+	private async _getPlayable() {
 		const param = this.p.audio;
 		if (param.isDirty()) {
 			await param.compute();
@@ -116,10 +160,12 @@ export class AudioEventNode extends TypedEventNode<AudioEventParamsConfig> {
 			return;
 		}
 		const instrument = audioBuilder.instrument();
-		if (!instrument) {
-			return;
-		}
-		return instrument;
+		const source = audioBuilder.source();
+		// if (!instrument) {
+		// 	this.states.error.set(`no instrument found in node '${node.path()}'`)
+		// 	return;
+		// }
+		return {instrument, source};
 	}
 	static PARAM_CALLBACK_play(node: AudioEventNode) {
 		node._play();

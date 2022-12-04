@@ -12,6 +12,16 @@ import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
 import {AUDIO_EXTENSIONS} from '../../../core/FileTypeController';
+import {
+	AudioPlayerCallbacksManager,
+	OnBeforePlayCallback,
+	OnPlaySuccessCallback,
+	OnPlayErrorCallback,
+	OnStopCallback,
+	PlayerCallbacks,
+	PlayerEventName,
+	CallbackByEventName,
+} from './../../../core/audio/PlayerCallbacksManager';
 
 const EPSILON = 1e-6;
 
@@ -21,11 +31,6 @@ const LOOP_OPTIONS = {
 		FileAudioNode.PARAM_CALLBACK_updateLoop(node as FileAudioNode);
 	},
 };
-
-type OnBeforePlayCallback = (offset: number) => void;
-type OnPlaySuccessCallback = () => void;
-type OnPlayErrorCallback = (err: unknown) => void;
-type OnStopCallback = () => void;
 
 class FileAudioParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the audio file from */
@@ -166,7 +171,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 					this._player.dispose();
 				}
 
-				this._player = new Player({
+				const player = new Player({
 					url: buffer,
 					loop: isBooleanTrue(this.pv.loop),
 					volume: 0,
@@ -176,9 +181,10 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 					// },
 					// make sure to have the param loop set to false for the onstop callbacks to be run.
 					onstop: () => {
-						this._runOnStopCallbacks();
+						this._runOnStop(player);
 					},
 				});
+				this._player = player;
 
 				this._reset();
 				this.p.duration.set(buffer.duration);
@@ -186,6 +192,7 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 				if (isBooleanTrue(this.pv.autostart)) {
 					this.play();
 				}
+				AudioPlayerCallbacksManager.registerPlayer(this._player);
 				resolve(this._player);
 			});
 		} catch (err) {
@@ -205,12 +212,12 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 		// but helps avoiding errors when restarting
 		const sanitizedOffset = Math.max(offset + 2 * EPSILON, 0);
 		try {
-			this._runOnBeforePlayCallbacks(sanitizedOffset);
+			this._runOnBeforePlay(this._player, sanitizedOffset);
 			this._player.start(0, sanitizedOffset);
-			this._runOnPlaySuccessCallbacks();
+			this._runOnPlaySuccess(this._player);
 		} catch (err) {
 			console.error(err);
-			this._runOnPlayErrorCallbacks(err);
+			this._runOnPlayError(this._player, err);
 		}
 		this._startedAt = this._player.now() - this._stoppedAt;
 		this._stoppedAt = 0;
@@ -340,48 +347,52 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	/*
 	 * HOOKS
 	 */
-	private _onBeforePlayCallbacks: Set<OnBeforePlayCallback> | undefined;
-	private _onPlaySuccessCallbacks: Set<OnPlaySuccessCallback> | undefined;
-	private _onPlayErrorCallbacks: Set<OnPlayErrorCallback> | undefined;
-	private _onStopCallbacks: Set<OnStopCallback> | undefined;
+
+	private _playerCallbacks: PlayerCallbacks = {};
+	// onBeforePlay
 	onBeforePlay(callback: OnBeforePlayCallback) {
-		this._onBeforePlayCallbacks = this._onBeforePlayCallbacks || new Set();
-		this._onBeforePlayCallbacks.add(callback);
+		this._on('onBeforePlay', callback);
 	}
-	private _runOnBeforePlayCallbacks(offset: number) {
-		if (!this._onBeforePlayCallbacks) {
-			return;
-		}
-		this._onBeforePlayCallbacks.forEach((callback) => callback(offset));
+	private _runOnBeforePlay(player: Player, offset: number) {
+		this._playerCallbacks.onBeforePlay?.forEach((callback) => callback(offset));
+		AudioPlayerCallbacksManager.runOnBeforePlayCallbacks(player, offset);
 	}
+
+	// onPlaySuccess
 	onPlaySuccess(callback: OnPlaySuccessCallback) {
-		this._onPlaySuccessCallbacks = this._onPlaySuccessCallbacks || new Set();
-		this._onPlaySuccessCallbacks.add(callback);
+		this._on('onPlaySuccess', callback);
 	}
-	private _runOnPlaySuccessCallbacks() {
-		if (!this._onPlaySuccessCallbacks) {
-			return;
-		}
-		this._onPlaySuccessCallbacks.forEach((callback) => callback());
+	private _runOnPlaySuccess(player: Player) {
+		this._playerCallbacks.onPlaySuccess?.forEach((callback) => callback());
+		AudioPlayerCallbacksManager.runOnPlaySuccessCallbacks(player);
 	}
+
+	// onPlayError
 	onPlayError(callback: OnPlayErrorCallback) {
-		this._onPlayErrorCallbacks = this._onPlayErrorCallbacks || new Set();
-		this._onPlayErrorCallbacks.add(callback);
+		this._on('onPlayError', callback);
 	}
-	private _runOnPlayErrorCallbacks(err: unknown) {
-		if (!this._onPlayErrorCallbacks) {
-			return;
-		}
-		this._onPlayErrorCallbacks.forEach((callback) => callback(err));
+	private _runOnPlayError(player: Player, err: unknown) {
+		this._playerCallbacks.onPlayError?.forEach((callback) => callback(err));
+		AudioPlayerCallbacksManager.runOnPlayErrorCallbacks(player, err);
 	}
+
+	// onStop
 	onStop(callback: OnStopCallback) {
-		this._onStopCallbacks = this._onStopCallbacks || new Set();
-		this._onStopCallbacks.add(callback);
+		this._on('onStop', callback);
 	}
-	private _runOnStopCallbacks() {
-		if (!this._onStopCallbacks) {
-			return;
-		}
-		this._onStopCallbacks.forEach((callback) => callback());
+	removeOnStop(callback: OnStopCallback) {
+		this._removeCallback('onStop', callback);
+	}
+	private _runOnStop(player: Player) {
+		this._playerCallbacks.onStop?.forEach((callback) => callback());
+		AudioPlayerCallbacksManager.runOnStopCallbacks(player);
+	}
+	// generic
+	private _on<E extends PlayerEventName>(eventName: E, callback: CallbackByEventName[E]) {
+		this._playerCallbacks[eventName] = this._playerCallbacks[eventName] || (new Set() as any);
+		this._playerCallbacks[eventName]?.add(callback as any);
+	}
+	private _removeCallback<E extends PlayerEventName>(eventName: E, callback: CallbackByEventName[E]) {
+		this._playerCallbacks[eventName]?.delete(callback as any);
 	}
 }
