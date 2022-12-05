@@ -20,7 +20,6 @@ import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 
-const EXPECTED_ARGS_COUNT = 3;
 export class ObjectExpression extends BaseMethod {
 	protected override _requireDependency = true;
 	static override requiredArguments() {
@@ -37,22 +36,22 @@ export class ObjectExpression extends BaseMethod {
 
 	override processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
-			if (args.length == EXPECTED_ARGS_COUNT) {
-				const index_or_path = args[0];
-				const attrib_name = args[1];
-				const object_index = args[2];
+			if (args.length == 2 || args.length == 3) {
+				const indexOrPath = args[0];
+				const attribName = args[1];
+				const objectIndex = args[2] || 0;
 				let container: GeometryContainer | null = null;
 				try {
-					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
+					container = (await this.getReferencedNodeContainer(indexOrPath)) as GeometryContainer;
 				} catch (e) {
 					reject(e);
 				}
 				if (container) {
-					const value = this._get_value_from_container(container, attrib_name, object_index);
+					const value = this._get_value_from_container(container, attribName, objectIndex);
 					resolve(value);
 				}
 			} else {
-				console.warn(`${args.length} given when expected ${EXPECTED_ARGS_COUNT}`);
+				console.warn(`${args.length} given when 2 or 3 expected`);
 				resolve(0);
 			}
 		});
