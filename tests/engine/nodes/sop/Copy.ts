@@ -1,9 +1,13 @@
-import {Mesh, Object3D, Vector3} from 'three';
+import {MeshBasicMatNode} from './../../../../src/engine/nodes/mat/MeshBasic';
+import {ImageCopNode} from './../../../../src/engine/nodes/cop/Image';
+import {Mesh, Object3D, Vector3, MeshBasicMaterial, Texture} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {ObjectTransformSpace} from '../../../../src/core/TransformSpace';
 import {CopySopNode, TransformMode} from '../../../../src/engine/nodes/sop/Copy';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 
 QUnit.test('sop/copy simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -428,6 +432,87 @@ QUnit.test('sop/copy can copy and move a hierarchy', async (assert) => {
 	container = await copy1.compute();
 	center = container.coreContent()!.boundingBox().getCenter(new Vector3())!;
 	assert.in_delta(center.x, 10, 0.1);
+});
+
+QUnit.test('sop/copy can handle expression inside a nodePath param such as sop/material', async (assert) => {
+	async function runAsserts(_copyNode: CopySopNode, _imageNodes: ImageCopNode[], _materialNodes: MeshBasicMatNode[]) {
+		let container = await _copyNode.compute();
+		let coreContent = container.coreContent()!;
+		let objects = coreContent.objects() as Mesh[];
+		assert.equal(objects.length, 3, '3 objects');
+		assert.equal(
+			(objects[0].material as MeshBasicMaterial).uuid,
+			_materialNodes[0].material.uuid,
+			'material match'
+		);
+		assert.equal(
+			(objects[1].material as MeshBasicMaterial).uuid,
+			_materialNodes[1].material.uuid,
+			'material match'
+		);
+		assert.equal(
+			(objects[2].material as MeshBasicMaterial).uuid,
+			_materialNodes[2].material.uuid,
+			'material match'
+		);
+
+		const textures: Texture[] = [];
+		for (let imageNode of _imageNodes) {
+			let textureContainer = await imageNode.compute();
+			textures.push(textureContainer.texture());
+		}
+		await _imageNodes.map(async (node) => (await node.compute()).texture());
+		assert.equal((objects[0].material as MeshBasicMaterial).map!.uuid, textures[0].uuid, 'texture match');
+		assert.equal((objects[1].material as MeshBasicMaterial).map!.uuid, textures[1].uuid, 'texture match');
+		assert.equal((objects[2].material as MeshBasicMaterial).map!.uuid, textures[2].uuid, 'texture match');
+	}
+
+	const scene = window.scene;
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+	const COP = window.COP;
+
+	const imageUrls = [
+		`${ASSETS_ROOT}/textures/uv.jpg`,
+		`${ASSETS_ROOT}/textures/resources/polyhaven.com/fabric_pattern_07/2k/diffuse.jpg`,
+		`${ASSETS_ROOT}/textures/resources/polyhaven.com/brick_moss_001/2k/diffuse.jpg`,
+	];
+	const nodesCount = 3;
+	let materialNodes: MeshBasicMatNode[] = [];
+	let imageNodes: ImageCopNode[] = [];
+	for (let i = 0; i < nodesCount; i++) {
+		const image = COP.createNode('image');
+		image.p.url.set(imageUrls[i]);
+		image.setName(`image${i}`);
+		const meshBasic = MAT.createNode('meshBasic');
+		meshBasic.p.useMap.set(true);
+		meshBasic.p.map.set("/COP/image`opdigits('.')`");
+		meshBasic.setName(`meshBasic${i}`);
+		imageNodes.push(image);
+		materialNodes.push(meshBasic);
+	}
+
+	const material1 = geo1.createNode('material');
+	const sphere1 = geo1.createNode('sphere');
+	// create the copy node last to test that
+	// its references does get fixed by the MissingReferencesController
+	const copy1 = geo1.createNode('copy');
+
+	material1.setInput(0, sphere1);
+	copy1.setInput(0, material1);
+	material1.p.material.set("/MAT/meshBasic`copy('../copy1')`");
+	copy1.p.count.set(3);
+
+	await runAsserts(copy1, imageNodes, materialNodes);
+
+	// also test that the scene load handles resolving the '../copy1' expression
+	// in the MissingReferencesController
+	await saveAndLoadScene(scene, async (scene2) => {
+		const copy2 = scene2.node(copy1.path()) as CopySopNode;
+		const imageNodes2 = [0, 1, 2].map((i) => scene2.node(`/COP/image${i}`) as ImageCopNode);
+		const materialNodes2 = [0, 1, 2].map((i) => scene2.node(`/MAT/meshBasic${i}`) as MeshBasicMatNode);
+		await runAsserts(copy2, imageNodes2, materialNodes2);
+	});
 });
 
 QUnit.skip('sop/copy with group sets an error', (assert) => {});

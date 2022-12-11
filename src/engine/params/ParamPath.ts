@@ -46,15 +46,11 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	setParam(param: BaseParamType) {
 		this.set(param.path());
 	}
-	protected override processRawInputWithoutExpression() {
-		if (this._value.path() != this._raw_input) {
-			this._setValuePathAndFindTarget(this._raw_input);
-		}
-	}
+
 	protected _assignValue(value: ParamValuesTypeMap[ParamType.PARAM_PATH] | string): void {
 		const path = CoreType.isString(value) ? value : value.path();
 		if (this._value.path() != path) {
-			this._setValuePathAndFindTarget(path);
+			this._setValuePathAndFindTarget(path, false);
 		}
 	}
 	override convert(rawVal: any): ParamValuesTypeMap[ParamType.PARAM_PATH] | null {

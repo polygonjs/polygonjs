@@ -55,7 +55,7 @@ export class StringParam extends TypedStringParam<ParamType.STRING> {
 		this._value = value;
 	}
 	protected processRawInputWithoutExpression() {
-		if (this._raw_input != this._value) {
+		if (this._raw_input != this._value || this._expression_controller) {
 			this._assignValue(this._raw_input);
 			this.removeDirtyState();
 			this.setSuccessorsDirty(this);
@@ -63,6 +63,7 @@ export class StringParam extends TypedStringParam<ParamType.STRING> {
 			this.options.executeCallback();
 			if (this._expression_controller) {
 				this._expression_controller.set_expression(undefined, false);
+				this._expression_controller = undefined;
 				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
 			}
 		}

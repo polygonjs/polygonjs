@@ -20,7 +20,7 @@ export abstract class TypedStringParam<
 		if (ParsedTree.stringValueElements(this._raw_input).length >= 3) {
 			this._expression_controller = this._expression_controller || new ExpressionController(this);
 			if (this._raw_input != this._expression_controller.expression()) {
-				this._expression_controller.set_expression(this._raw_input);
+				this._expression_controller.set_expression(this._raw_input, false);
 				this.setDirty();
 				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED);
 			}

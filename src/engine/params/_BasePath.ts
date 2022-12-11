@@ -18,6 +18,12 @@ export abstract class TypedPathParam<T extends ParamType.NODE_PATH | ParamType.P
 	protected abstract _findTarget(): void;
 
 	protected _handleReferences(node: BaseNodeType | BaseParamType | null, path: string) {
+		if (path == '') {
+			// no need to handle references if param value is empty
+			// as no node could match this path
+			return;
+		}
+
 		this.scene().referencesController.setNamedNodesFromParam(this);
 		if (node) {
 			this.scene().referencesController.setReferenceFromParam(this, node);
@@ -33,10 +39,25 @@ export abstract class TypedPathParam<T extends ParamType.NODE_PATH | ParamType.P
 			this._findTarget();
 		}
 	}
-	protected _setValuePathAndFindTarget(path: string) {
+	protected override processRawInputWithoutExpression() {
+		if (this._value.path() != this._raw_input || this._expression_controller) {
+			this._setValuePathAndFindTarget(this._raw_input, true);
+
+			this.emitController.emit(ParamEvent.VALUE_UPDATED);
+			this.options.executeCallback();
+			if (this._expression_controller) {
+				this._expression_controller.set_expression(undefined, false);
+				this._expression_controller = undefined;
+				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
+			}
+		}
+	}
+	protected _setValuePathAndFindTarget(path: string, setDirty: boolean) {
 		this._value.setPath(path);
 		this._findTarget();
-		this.setDirty();
+		if (setDirty) {
+			this.setDirty(); // setDirty here creates an infinite loop when using with a copy sop
+		}
 		this.emitController.emit(ParamEvent.VALUE_UPDATED);
 	}
 }
