@@ -80,8 +80,8 @@ export class OrthographicCameraSopOperation extends BaseSopOperation {
 			params.size * 2,
 			params.size * 2,
 			params.size * 2,
-			CORE_CAMERA_DEFAULT.near,
-			CORE_CAMERA_DEFAULT.far
+			params.near,
+			params.far
 		);
 		if (nodeGenerator) {
 			CoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
