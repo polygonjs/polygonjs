@@ -29,7 +29,7 @@ export interface DirectionalLightParams extends DefaultOperationParams {
 	shadowSize: Vector2;
 	shadowBias: number;
 	shadowRadius: number;
-	debugShadow: boolean;
+	// debugShadow: boolean; // removed (see spotlight for explanation)
 	//
 	raymarchingPenumbra: number;
 }
@@ -109,9 +109,9 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 			rangeLocked: [true, false],
 		});
 		/** @param display shadow on a plane behind the light */
-		debugShadow = ParamConfig.BOOLEAN(DEFAULT.debugShadow, {
-			visibleIf: {castShadow: 1},
-		});
+		// debugShadow = ParamConfig.BOOLEAN(DEFAULT.debugShadow, {
+		// 	visibleIf: {castShadow: 1},
+		// });
 		// raymarching
 		raymarching = ParamConfig.FOLDER();
 		/** @param this affects the shadows cast inside raymarchingBuilder materials */

@@ -28,7 +28,12 @@ export interface SpotLightParams extends DefaultOperationParams {
 	shadowNear: number;
 	shadowFar: number;
 	shadowRadius: number;
-	debugShadow: boolean;
+	//
+	// debugShadow is temporarily removed,
+	// as it only works for obj lights if toggled after the shadow has been created
+	// it does not work for sop lights at all.
+	// maybe there is a better way to generate those via actor nodes?
+	// debugShadow: boolean; 
 	//
 	tvolumetric: boolean;
 	volAttenuation: number;
@@ -56,7 +61,7 @@ export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	shadowNear: 0.1,
 	shadowFar: 100,
 	shadowRadius: 0,
-	debugShadow: false,
+	// debugShadow: false,
 	//
 	tvolumetric: false,
 	volAttenuation: 5,
@@ -134,9 +139,9 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 			rangeLocked: [true, false],
 		});
 		/** @param display shadow on a plane behind the light */
-		debugShadow = ParamConfig.BOOLEAN(DEFAULT.debugShadow, {
-			visibleIf: {castShadow: 1},
-		});
+		// debugShadow = ParamConfig.BOOLEAN(DEFAULT.debugShadow, {
+		// 	visibleIf: {castShadow: 1},
+		// });
 
 		// shadows
 		volumetric = ParamConfig.FOLDER();

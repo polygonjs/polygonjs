@@ -10,7 +10,7 @@ import {
 	DirectionalLightContainerParams,
 } from '../../../core/lights/DirectionalLight';
 import {NodeContext} from '../../poly/NodeContext';
-import {Mesh, PlaneGeometry, MeshBasicMaterial, Color, DoubleSide, DirectionalLight} from 'three';
+// import {Mesh, PlaneGeometry, MeshBasicMaterial, Color, DoubleSide, DirectionalLight} from 'three';
 export class DirectionalLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: DirectionalLightParams = DEFAULT_DIRECTIONAL_LIGHT_PARAMS;
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
@@ -59,17 +59,17 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 
 		light.castShadow = isBooleanTrue(params.castShadow);
 		light.shadow.mapSize.copy(params.shadowRes);
-		const map = light.shadow.map;
-		if (map) {
-			map.setSize(params.shadowRes.x, params.shadowRes.y);
-			if (isBooleanTrue(params.debugShadow)) {
-				light.add(this._debugShadowMesh(light));
-			} else {
-				if (this.__debugShadowMesh) {
-					light.remove(this.__debugShadowMesh);
-				}
-			}
-		}
+		// const map = light.shadow.map;
+		// if (map) {
+		// 	map.setSize(params.shadowRes.x, params.shadowRes.y);
+		// 	if (isBooleanTrue(params.debugShadow)) {
+		// 		light.add(this._debugShadowMesh(light));
+		// 	} else {
+		// 		if (this.__debugShadowMesh) {
+		// 			light.remove(this.__debugShadowMesh);
+		// 		}
+		// 	}
+		// }
 
 		light.shadow.bias = params.shadowBias;
 		light.shadow.radius = params.shadowRadius;
@@ -84,20 +84,20 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 
 		container.updateHelper();
 	}
-	private __debugShadowMesh: Mesh<PlaneGeometry, MeshBasicMaterial> | undefined;
-	private _debugShadowMesh(light: DirectionalLight) {
-		return (this.__debugShadowMesh = this.__debugShadowMesh || this._createDebugShadowMesh(light));
-	}
-	private _createDebugShadowMesh(light: DirectionalLight) {
-		const material = new MeshBasicMaterial({
-			color: new Color(1, 1, 1),
-			map: light.shadow.map.texture,
-			side: DoubleSide,
-		});
-		const mesh = new Mesh(new PlaneGeometry(5, 5, 2, 2), material);
-		mesh.position.z = 1;
-		mesh.castShadow = false;
-		mesh.receiveShadow = false;
-		return mesh;
-	}
+	// private __debugShadowMesh: Mesh<PlaneGeometry, MeshBasicMaterial> | undefined;
+	// private _debugShadowMesh(light: DirectionalLight) {
+	// 	return (this.__debugShadowMesh = this.__debugShadowMesh || this._createDebugShadowMesh(light));
+	// }
+	// private _createDebugShadowMesh(light: DirectionalLight) {
+	// 	const material = new MeshBasicMaterial({
+	// 		color: new Color(1, 1, 1),
+	// 		map: light.shadow.map.texture,
+	// 		side: DoubleSide,
+	// 	});
+	// 	const mesh = new Mesh(new PlaneGeometry(5, 5, 2, 2), material);
+	// 	mesh.position.z = 1;
+	// 	mesh.castShadow = false;
+	// 	mesh.receiveShadow = false;
+	// 	return mesh;
+	// }
 }

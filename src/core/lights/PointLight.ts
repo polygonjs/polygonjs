@@ -19,7 +19,7 @@ export interface PointLightParams extends DefaultOperationParams {
 	shadowBias: number;
 	shadowNear: number;
 	shadowFar: number;
-	debugShadow: boolean;
+	// debugShadow: boolean; // removed (see spotlight for explanation)
 	//
 	showHelper: boolean;
 	helperSize: number;
@@ -41,7 +41,7 @@ export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	shadowBias: 0.001,
 	shadowNear: 1,
 	shadowFar: 100,
-	debugShadow: false,
+	// debugShadow: false,
 	//
 	showHelper: false,
 	helperSize: 1,
@@ -101,9 +101,9 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param shadow camera far */
 		shadowFar = ParamConfig.FLOAT(DEFAULT.shadowFar, {visibleIf: {castShadow: 1}});
 		/** @param display shadow on a plane behind the light */
-		debugShadow = ParamConfig.BOOLEAN(DEFAULT.debugShadow, {
-			visibleIf: {castShadow: 1},
-		});
+		// debugShadow = ParamConfig.BOOLEAN(DEFAULT.debugShadow, {
+		// 	visibleIf: {castShadow: 1},
+		// });
 
 		// raymarching
 		raymarching = ParamConfig.FOLDER();
