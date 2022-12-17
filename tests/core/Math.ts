@@ -2,12 +2,12 @@ import {CoreMath} from '../../src/core/math/_Module';
 import {Triangle} from 'three';
 import {Vector3} from 'three';
 
-QUnit.test('triangle expand', (assert) => {
+QUnit.test('math: expandTriangle', (assert) => {
 	const p0 = new Vector3(0, 0, 0);
 	const p1 = new Vector3(1, 0, 0);
 	const p2 = new Vector3(0, 0, 1);
 	const triangle = new Triangle(p0, p1, p2);
-	CoreMath.expand_triangle(triangle, 0.5);
+	CoreMath.expandTriangle(triangle, 0.5);
 	assert.in_delta(triangle.a.x, -0.35, 0.01);
 	assert.in_delta(triangle.a.y, 0, 0.01);
 	assert.in_delta(triangle.a.z, -0.35, 0.01);

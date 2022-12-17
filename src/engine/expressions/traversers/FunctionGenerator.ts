@@ -98,13 +98,15 @@
  *
  * The following are aliases from the [Polygonjs CoreMath](https://github.com/polygonjs/polygonjs-engine/blob/master/src/core/math/_Module.ts) module:
  *
+ * - clamp
+ * - degToRad
  * - fit
  * - fit01
+ * - fitClamp
  * - fract
- * - deg2rad
- * - rad2deg
+ * - mix
+ * - radToDeg
  * - rand
- * - clamp
  *
  * And the following are alias to the [Polygonjs Easing](https://github.com/polygonjs/polygonjs-engine/blob/master/src/core/math/Easing.ts) module:
  *

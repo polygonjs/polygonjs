@@ -16,8 +16,11 @@ export function radToDeg(rad: number): number {
 	return rad / RAD_DEG_RATIO;
 }
 export class CoreMath {
-	static Easing = Easing; // used in expressins
+	static Easing = Easing; // used in expressions
+	static degToRad = degToRad; // used in expressions
+	static radToDeg = radToDeg; // used in expressions
 
+	// used in expressions
 	static clamp(val: number, min: number, max: number): number {
 		if (val < min) {
 			return min;
@@ -28,12 +31,14 @@ export class CoreMath {
 		}
 	}
 
+	// used in expressions
 	static fit01(val: number, destMin: number, destMax: number): number {
 		// const size = max - min;
 		// return (val - min) / size;
 		return this.fit(val, 0, 1, destMin, destMax);
 	}
 
+	// used in expressions
 	static fit(val: number, srcMin: number, srcMax: number, destMin: number, destMax: number): number {
 		const src_range = srcMax - srcMin;
 		const dest_range = destMax - destMin;
@@ -41,14 +46,16 @@ export class CoreMath {
 		const r = (val - srcMin) / src_range;
 		return r * dest_range + destMin;
 	}
+	// used in expressions
 	static fitClamp(val: number, srcMin: number, srcMax: number, destMin: number, destMax: number): number {
 		const r = this.fit(val, srcMin, srcMax, destMin, destMax);
 		return this.clamp(r, destMin, destMax);
 	}
-	static blend(num0: number, num1: number, blend: number) {
+	// used in expressions
+	static mix(num0: number, num1: number, blend: number) {
 		return (1 - blend) * num0 + blend * num1;
 	}
-
+	// used in expressions
 	static fract = (number: number) => number - Math.floor(number);
 
 	// from threejs glsl rand
@@ -60,14 +67,20 @@ export class CoreMath {
 		}
 	}
 
-	static round(number: number, step_size: number): number {
-		const steps_count = number / step_size;
-		const rounded_steps_count = number < 0 ? Math.ceil(steps_count) : Math.floor(steps_count);
-		return rounded_steps_count * step_size;
+	static round(number: number, stepSize: number): number {
+		const stepsCount = number / stepSize;
+		const roundedStepsCount = number < 0 ? Math.ceil(stepsCount) : Math.floor(stepsCount);
+		return roundedStepsCount * stepSize;
 	}
 
-	static highest_even(number: number): number {
+	static highestEven(number: number): number {
 		return 2 * Math.ceil(number * 0.5);
+	}
+	static nearestPower2(num: number) {
+		return Math.pow(2, Math.ceil(Math.log(num) / Math.log(2)));
+	}
+	static pow2Inverse(num: number) {
+		return Math.log(num) / Math.log(2);
 	}
 
 	private static _vec = {x: 0, y: 136574};
@@ -84,7 +97,7 @@ export class CoreMath {
 	}
 
 	// https://www.movable-type.co.uk/scripts/latlong.html
-	static geodesic_distance(lnglat1: LngLatLike, lnglat2: LngLatLike): number {
+	static geodesicDistance(lnglat1: LngLatLike, lnglat2: LngLatLike): number {
 		var R = 6371e3; // metres
 		var d1 = degToRad(lnglat1.lat);
 		var d2 = degToRad(lnglat2.lat);
@@ -99,29 +112,22 @@ export class CoreMath {
 		return d;
 	}
 
-	private static _triangle_mid = new Vector3();
-	private static _triangle_mid_to_corner = new Vector3();
-	static expand_triangle(triangle: Triangle, margin: number) {
-		triangle.getMidpoint(this._triangle_mid);
+	private static _triangleMid = new Vector3();
+	private static _triangleMidToCorner = new Vector3();
+	static expandTriangle(triangle: Triangle, margin: number) {
+		triangle.getMidpoint(this._triangleMid);
 
 		// a
-		this._triangle_mid_to_corner.copy(triangle.a).sub(this._triangle_mid);
-		this._triangle_mid_to_corner.normalize().multiplyScalar(margin);
-		triangle.a.add(this._triangle_mid_to_corner);
+		this._triangleMidToCorner.copy(triangle.a).sub(this._triangleMid);
+		this._triangleMidToCorner.normalize().multiplyScalar(margin);
+		triangle.a.add(this._triangleMidToCorner);
 		// b
-		this._triangle_mid_to_corner.copy(triangle.b).sub(this._triangle_mid);
-		this._triangle_mid_to_corner.normalize().multiplyScalar(margin);
-		triangle.b.add(this._triangle_mid_to_corner);
+		this._triangleMidToCorner.copy(triangle.b).sub(this._triangleMid);
+		this._triangleMidToCorner.normalize().multiplyScalar(margin);
+		triangle.b.add(this._triangleMidToCorner);
 		// c
-		this._triangle_mid_to_corner.copy(triangle.c).sub(this._triangle_mid);
-		this._triangle_mid_to_corner.normalize().multiplyScalar(margin);
-		triangle.c.add(this._triangle_mid_to_corner);
-	}
-
-	static nearestPower2(num: number) {
-		return Math.pow(2, Math.ceil(Math.log(num) / Math.log(2)));
-	}
-	static pow2Inverse(num: number) {
-		return Math.log(num) / Math.log(2);
+		this._triangleMidToCorner.copy(triangle.c).sub(this._triangleMid);
+		this._triangleMidToCorner.normalize().multiplyScalar(margin);
+		triangle.c.add(this._triangleMidToCorner);
 	}
 }
