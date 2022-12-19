@@ -224,14 +224,19 @@ export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	}
 	async pause() {
 		if (!this._player) {
+			console.warn('no player');
 			return;
 		}
-		if (this._startedAt == null) {
+
+		if (this._player.state != 'started') {
+			console.warn(`player state is not "started", but "${this._player.state}"`);
 			return;
 		}
-		const elapsed = this._player.now() - this._startedAt;
+		if (this._startedAt != null) {
+			const elapsed = this._player.now() - this._startedAt;
+			this._stoppedAt = elapsed;
+		}
 		this._player.stop();
-		this._stoppedAt = elapsed;
 	}
 	private _reset() {
 		this._stoppedAt = 0;

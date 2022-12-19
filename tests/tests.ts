@@ -148,6 +148,7 @@ import './engine/nodes/actor/OnScenePlayState';
 import './engine/nodes/actor/OnSceneReset';
 import './engine/nodes/actor/OnTick';
 import './engine/nodes/actor/Or';
+import './engine/nodes/actor/PauseAudioSource';
 import './engine/nodes/actor/PhysicsRBDApplyImpulse';
 import './engine/nodes/actor/PhysicsWorldReset';
 import './engine/nodes/actor/Plane';

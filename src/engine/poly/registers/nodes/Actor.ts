@@ -87,6 +87,7 @@ import {OnScenePlayStateActorNode} from '../../../nodes/actor/OnScenePlayState';
 import {OnSceneResetActorNode} from '../../../nodes/actor/OnSceneReset';
 import {OnTickActorNode} from '../../../nodes/actor/OnTick';
 import {OrActorNode} from '../../../nodes/actor/Or';
+import {PauseAudioSourceActorNode} from '../../../nodes/actor/PauseAudioSource';
 import {PhysicsRBDAddForceActorNode} from '../../../nodes/actor/PhysicsRBDAddForce';
 import {PhysicsRBDAddForceAtPointActorNode} from '../../../nodes/actor/PhysicsRBDAddForceAtPoint';
 import {PhysicsRBDAddTorqueActorNode} from '../../../nodes/actor/PhysicsRBDAddTorque';
@@ -252,6 +253,7 @@ export interface ActorNodeChildrenMap {
 	onSceneReset: OnSceneResetActorNode;
 	onTick: OnTickActorNode;
 	or: OrActorNode;
+	pauseAudioSource: PauseAudioSourceActorNode;
 	physicsRBDAddForceAtPoint: PhysicsRBDAddForceAtPointActorNode;
 	physicsRBDAddForce: PhysicsRBDAddForceActorNode;
 	physicsRBDAddTorque: PhysicsRBDAddTorqueActorNode;
@@ -421,6 +423,7 @@ export class ActorRegister {
 		poly.registerNode(OnSceneResetActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnTickActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
+		poly.registerNode(PauseAudioSourceActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDAddForceActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDAddForceAtPointActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDAddTorqueActorNode, CATEGORY_ACTOR.PHYSICS);

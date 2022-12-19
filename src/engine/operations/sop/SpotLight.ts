@@ -67,7 +67,6 @@ export class SpotLightSopOperation extends BaseSopOperation {
 
 		light.shadow.mapSize.copy(params.shadowRes);
 		const map = light.shadow.map;
-		console.log(params.debugShadow, map);
 		if (map) {
 			map.setSize(params.shadowRes.x, params.shadowRes.y);
 		}

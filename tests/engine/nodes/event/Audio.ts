@@ -20,7 +20,7 @@ QUnit.test('event/audio onStop trigger', async (assert) => {
 	setParam1.p.number.set(1);
 	setParam1.p.increment.set(1);
 
-	assert.equal(geo1.p.t.x.value, 0);
+	assert.equal(geo1.p.t.x.value, 0, 'not moved 0');
 
 	file1.p.autostart.set(0);
 	file1.p.loop.set(0);
@@ -31,18 +31,18 @@ QUnit.test('event/audio onStop trigger', async (assert) => {
 	audio1.p.audio.setNode(file1);
 	audio1.p.play.pressButton();
 
-	assert.equal(geo1.p.t.x.value, 0, '0');
+	assert.equal(geo1.p.t.x.value, 0, 'not moved 1');
 	await CoreSleep.sleep(4000);
 
 	file1.p.pause.pressButton();
 	await CoreSleep.sleep(500);
-	assert.equal(geo1.p.t.x.value, 0, ' 0');
+	assert.equal(geo1.p.t.x.value, 1, 'moved to 1');
 	audio1.p.play.pressButton();
 
 	await CoreSleep.sleep(4000);
-	assert.equal(geo1.p.t.x.value, 1, '1');
+	assert.equal(geo1.p.t.x.value, 1, 'not moved again');
 
 	audio1.p.play.pressButton();
 	await CoreSleep.sleep(4000);
-	assert.equal(geo1.p.t.x.value, 2, '2');
+	assert.equal(geo1.p.t.x.value, 2, 'moved to 2');
 });
