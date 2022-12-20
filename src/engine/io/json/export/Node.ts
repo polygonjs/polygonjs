@@ -12,7 +12,8 @@ import {sanitizeExportedString} from './sanitize';
 // for gl nodes such as the if node, whose input names
 // changes depending on the input
 interface NamedInputData {
-	index: number;
+	index?: number;
+	inputName?: string;
 	node: string;
 	output: string;
 }
@@ -242,12 +243,13 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			if (input) {
 				const connection = this._node.io.connections.inputConnection(input_index)!;
 				if (this._node.io.inputs.hasNamedInputs()) {
-					// const input_name = this._node.io.inputs.namedInputConnectionPoints()[input_index].name;
+					const inputName = this._node.io.inputs.namedInputConnectionPoints()[input_index]?.name();
 					const output_index = connection.output_index;
 					const output_name = input.io.outputs.namedOutputConnectionPoints()[output_index]?.name();
 					if (output_name) {
 						data[input_index] = {
 							index: input_index,
+							inputName: inputName,
 							node: input.name(),
 							output: output_name,
 						};

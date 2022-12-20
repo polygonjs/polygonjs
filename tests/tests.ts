@@ -177,11 +177,16 @@ import './engine/nodes/actor/SetSpotLightIntensity';
 import './engine/nodes/actor/SetViewer';
 import './engine/nodes/actor/Smoothstep';
 import './engine/nodes/actor/Sphere';
+import './engine/nodes/actor/Subnet';
 import './engine/nodes/actor/Subtract';
 import './engine/nodes/actor/Switch';
 import './engine/nodes/actor/TriggerDelay';
 import './engine/nodes/actor/TriggerFilter';
 import './engine/nodes/actor/TwoWaySwitch';
+import './engine/nodes/actor/Vector2';
+import './engine/nodes/actor/Vector3';
+import './engine/nodes/actor/Vector3AngleTo';
+import './engine/nodes/actor/Vector4';
 
 QUnit.module('anim');
 import './engine/nodes/anim/Utils/ParamProxy';

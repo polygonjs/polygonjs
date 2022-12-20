@@ -41,6 +41,9 @@ export abstract class BaseOnKeyEventActorNode extends BaseUserInputActorNode<Bas
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER),
 		]);
 	}
+	override eventEmitter(): CoreEventEmitter {
+		return EVENT_EMITTERS[this.pv.element];
+	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const event = this.scene().eventsDispatcher.keyboardEventsController.currentEvent();

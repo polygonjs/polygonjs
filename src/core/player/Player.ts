@@ -16,8 +16,11 @@ export interface CorePlayerOptions {
 type ResetRequiredCallback = () => boolean;
 const tmpGravity = new Vector3(0, 0, 0);
 const upVector = new Vector3(0, 1, 0);
-const tempVector = new Vector3();
+const tempVector1 = new Vector3();
 const tempVector2 = new Vector3();
+const tempVector3 = new Vector3();
+const tempVector4 = new Vector3();
+const tempVector5 = new Vector3();
 const tempBox = new Box3();
 const tempMat = new Matrix4();
 const tempSegment = new Line3();
@@ -115,7 +118,6 @@ export class CorePlayer {
 			tmpGravity.copy(this.gravity).multiplyScalar(delta);
 			this._velocity.add(tmpGravity);
 		}
-		// console.log(this.object.position, this._velocity, delta);
 		this.object.position.addScaledVector(this._velocity, delta);
 
 		// move the player
@@ -123,23 +125,23 @@ export class CorePlayer {
 		const speed = this.speed * delta * (this._running ? this.runSpeedMult : 1);
 		tempVector2.set(0, 0, 0);
 		if (this._pressed.forward) {
-			tempVector.set(0, 0, -1).applyAxisAngle(upVector, angle);
-			tempVector2.add(tempVector);
+			tempVector1.set(0, 0, -1).applyAxisAngle(upVector, angle);
+			tempVector2.add(tempVector1);
 		}
 
 		if (this._pressed.backward) {
-			tempVector.set(0, 0, 1).applyAxisAngle(upVector, angle);
-			tempVector2.add(tempVector);
+			tempVector1.set(0, 0, 1).applyAxisAngle(upVector, angle);
+			tempVector2.add(tempVector1);
 		}
 
 		if (this._pressed.left) {
-			tempVector.set(-1, 0, 0).applyAxisAngle(upVector, angle);
-			tempVector2.add(tempVector);
+			tempVector1.set(-1, 0, 0).applyAxisAngle(upVector, angle);
+			tempVector2.add(tempVector1);
 		}
 
 		if (this._pressed.right) {
-			tempVector.set(1, 0, 0).applyAxisAngle(upVector, angle);
-			tempVector2.add(tempVector);
+			tempVector1.set(1, 0, 0).applyAxisAngle(upVector, angle);
+			tempVector2.add(tempVector1);
 		}
 		tempVector2.normalize().multiplyScalar(speed);
 		this.object.position.add(tempVector2);
@@ -176,8 +178,8 @@ export class CorePlayer {
 		const intersectsTriangle = (tri: ExtendedTriangle) => {
 			// check if the triangle is intersecting the capsule and adjust the
 			// capsule position if it is.
-			const triPoint = tempVector;
-			const capsulePoint = tempVector2;
+			const triPoint = tempVector3;
+			const capsulePoint = tempVector4;
 
 			const distance = tri.closestPointToSegment(tempSegment, triPoint, capsulePoint) as number;
 			if (distance < capsuleInfo.radius) {
@@ -198,8 +200,7 @@ export class CorePlayer {
 		// get the adjusted position of the capsule collider in world space after checking
 		// triangle collisions and moving it. capsuleInfo.segment.start is assumed to be
 		// the origin of the player model.
-		// console.log(tempVector.toArray());
-		const newPosition = tempVector;
+		const newPosition = tempVector5;
 		// tempSegment.start.y += capsuleInfo.radius;
 		newPosition.copy(tempSegment.start);
 		newPosition.applyMatrix4(this.collider.matrixWorld);

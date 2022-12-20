@@ -81,6 +81,7 @@ import {OnObjectDispatchEventActorNode} from '../../../nodes/actor/OnObjectDispa
 import {OnObjectHoverActorNode} from '../../../nodes/actor/OnObjectHover';
 import {OnObjectPointerdownActorNode} from '../../../nodes/actor/OnObjectPointerdown';
 import {OnObjectPointerupActorNode} from '../../../nodes/actor/OnObjectPointerup';
+import {OnPlayerEventActorNode} from '../../../nodes/actor/OnPlayerEvent';
 import {OnPointerdownActorNode} from '../../../nodes/actor/OnPointerdown';
 import {OnPointerupActorNode} from '../../../nodes/actor/OnPointerup';
 import {OnScenePlayStateActorNode} from '../../../nodes/actor/OnScenePlayState';
@@ -99,6 +100,7 @@ import {PhysicsRBDResetTorquesActorNode} from '../../../nodes/actor/PhysicsRBDRe
 import {PhysicsWorldResetActorNode} from '../../../nodes/actor/PhysicsWorldReset';
 import {PhysicsWorldStepSimulationActorNode} from '../../../nodes/actor/PhysicsWorldStepSimulation';
 import {PlaneActorNode} from '../../../nodes/actor/Plane';
+import {PlayerUpdateActorNode} from '../../../nodes/actor/PlayerUpdate';
 import {PlayAnimationActorNode} from '../../../nodes/actor/PlayAnimation';
 import {PlayAudioSourceActorNode} from '../../../nodes/actor/PlayAudioSource';
 import {PlayInstrumentNoteActorNode} from '../../../nodes/actor/PlayInstrumentNote';
@@ -140,6 +142,9 @@ import {SinActorNode} from '../../../nodes/actor/Sin';
 import {SmoothstepActorNode} from '../../../nodes/actor/Smoothstep';
 import {SphereActorNode} from '../../../nodes/actor/Sphere';
 import {SqrtActorNode} from '../../../nodes/actor/Sqrt';
+import {SubnetActorNode} from '../../../nodes/actor/Subnet';
+import {SubnetInputActorNode} from '../../../nodes/actor/SubnetInput';
+import {SubnetOutputActorNode} from '../../../nodes/actor/SubnetOutput';
 import {SubtractActorNode} from '../../../nodes/actor/Subtract';
 import {SwitchActorNode} from '../../../nodes/actor/Switch';
 import {TanActorNode} from '../../../nodes/actor/Tan';
@@ -155,6 +160,10 @@ import {Vec3ToVec4ActorNode} from '../../../nodes/actor/Vec3ToVec4';
 import {Vec3ToVec2ActorNode} from '../../../nodes/actor/Vec3ToVec2';
 import {Vec4ToFloatActorNode} from '../../../nodes/actor/Vec4ToFloat';
 import {Vec4ToVec3ActorNode} from '../../../nodes/actor/Vec4ToVec3';
+import {Vector2ActorNode} from '../../../nodes/actor/Vector2';
+import {Vector3ActorNode} from '../../../nodes/actor/Vector3';
+import {Vector3AngleToActorNode} from '../../../nodes/actor/Vector3AngleTo';
+import {Vector4ActorNode} from '../../../nodes/actor/Vector4';
 // networks
 import {ActorsNetworkActorNode} from '../../../nodes/actor/ActorsNetwork';
 import {AnimationsNetworkActorNode} from '../../../nodes/actor/AnimationsNetwork';
@@ -247,6 +256,7 @@ export interface ActorNodeChildrenMap {
 	onObjectHover: OnObjectHoverActorNode;
 	onObjectPointerdown: OnObjectPointerdownActorNode;
 	onObjectPointerup: OnObjectPointerupActorNode;
+	onPlayerEvent: OnPlayerEventActorNode;
 	onPointerdown: OnPointerdownActorNode;
 	onPointerup: OnPointerupActorNode;
 	onScenePlayState: OnScenePlayStateActorNode;
@@ -265,6 +275,7 @@ export interface ActorNodeChildrenMap {
 	physicsWorldReset: PhysicsWorldResetActorNode;
 	physicsWorldStepSimulation: PhysicsWorldStepSimulationActorNode;
 	plane: PlaneActorNode;
+	playerUpdate: PlayerUpdateActorNode;
 	playAnimation: PlayAnimationActorNode;
 	playAudioSource: PlayAudioSourceActorNode;
 	playInstrumentNote: PlayInstrumentNoteActorNode;
@@ -306,6 +317,9 @@ export interface ActorNodeChildrenMap {
 	smoothstep: SmoothstepActorNode;
 	sphere: SphereActorNode;
 	sqrt: SqrtActorNode;
+	subnet: SubnetActorNode;
+	subnetInput: SubnetInputActorNode;
+	subnetOutput: SubnetOutputActorNode;
 	subtract: SubtractActorNode;
 	switch: SwitchActorNode;
 	tan: TanActorNode;
@@ -321,6 +335,10 @@ export interface ActorNodeChildrenMap {
 	vec3ToVec4: Vec3ToVec4ActorNode;
 	vec4ToFloat: Vec4ToFloatActorNode;
 	vec4ToVec3: Vec4ToVec3ActorNode;
+	vector2: Vector2ActorNode;
+	vector3: Vector3ActorNode;
+	vector3AngleTo: Vector3AngleToActorNode;
+	vector4: Vector4ActorNode;
 	// networks
 	actorsNetwork: ActorsNetworkActorNode;
 	animationsNetwork: AnimationsNetworkActorNode;
@@ -333,7 +351,9 @@ export interface ActorNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
-
+const SUBNET_CHILD_OPTION = {
+	only: [`${SubnetActorNode.context()}/${SubnetActorNode.type()}`],
+};
 export class ActorRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AbsActorNode, CATEGORY_ACTOR.MATH);
@@ -417,6 +437,7 @@ export class ActorRegister {
 		poly.registerNode(OnObjectHoverActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnObjectPointerdownActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnObjectPointerupActorNode, CATEGORY_ACTOR.EVENTS);
+		poly.registerNode(OnPlayerEventActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnPointerdownActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnPointerupActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnScenePlayStateActorNode, CATEGORY_ACTOR.EVENTS);
@@ -435,6 +456,7 @@ export class ActorRegister {
 		poly.registerNode(PhysicsWorldResetActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsWorldStepSimulationActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PlaneActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(PlayerUpdateActorNode, CATEGORY_ACTOR.ADVANCED);
 		poly.registerNode(PlayAnimationActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(PlayAudioSourceActorNode, CATEGORY_ACTOR.AUDIO);
 		poly.registerNode(PlayInstrumentNoteActorNode, CATEGORY_ACTOR.AUDIO);
@@ -476,6 +498,9 @@ export class ActorRegister {
 		poly.registerNode(SmoothstepActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SphereActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SqrtActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(SubnetActorNode, CATEGORY_ACTOR.LOGIC);
+		poly.registerNode(SubnetInputActorNode, CATEGORY_ACTOR.LOGIC);
+		poly.registerNode(SubnetOutputActorNode, CATEGORY_ACTOR.LOGIC, SUBNET_CHILD_OPTION);
 		poly.registerNode(SubtractActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SwitchActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(TanActorNode, CATEGORY_ACTOR.MATH);
@@ -491,7 +516,10 @@ export class ActorRegister {
 		poly.registerNode(Vec3ToVec4ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec4ToFloatActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(Vec4ToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
-
+		poly.registerNode(Vector2ActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(Vector3ActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(Vector3AngleToActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(Vector4ActorNode, CATEGORY_ACTOR.MATH);
 		// networks
 		poly.registerNode(ActorsNetworkActorNode, CATEGORY_ACTOR.NETWORK);
 		poly.registerNode(AnimationsNetworkActorNode, CATEGORY_ACTOR.NETWORK);

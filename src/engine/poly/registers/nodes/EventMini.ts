@@ -5,7 +5,6 @@ import {CodeEventNode} from '../../../nodes/event/Code';
 import {FirstPersonControlsEventNode} from '../../../nodes/event/FirstPersonControls';
 import {MessageEventNode} from '../../../nodes/event/Message';
 import {MobileJoystickControlsEventNode} from '../../../nodes/event/MobileJoystickControls';
-import {PlayerControlsEventNode} from '../../../nodes/event/PlayerControls';
 import {SceneEventNode} from '../../../nodes/event/Scene';
 
 export interface EventNodeChildrenMap {
@@ -14,7 +13,6 @@ export interface EventNodeChildrenMap {
 	firstPersonControls: FirstPersonControlsEventNode;
 	message: MessageEventNode;
 	mobileJoystickControls: MobileJoystickControlsEventNode;
-	playerControls: PlayerControlsEventNode;
 	scene: SceneEventNode;
 }
 
@@ -26,7 +24,6 @@ export class EventRegister {
 		poly.registerNode(FirstPersonControlsEventNode, CATEGORY_EVENT.CAMERA);
 		poly.registerNode(MessageEventNode, CATEGORY_EVENT.MISC);
 		poly.registerNode(MobileJoystickControlsEventNode, CATEGORY_EVENT.CAMERA);
-		poly.registerNode(PlayerControlsEventNode, CATEGORY_EVENT.INPUT);
 		poly.registerNode(SceneEventNode, CATEGORY_EVENT.INPUT);
 	}
 }

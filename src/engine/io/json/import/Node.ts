@@ -189,8 +189,22 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 					this._node.setInput(i, input_node);
 				} else {
 					const input_node = this._node.nodeSibling(input_data['node']);
-					const input_index = input_data['index'];
-					this._node.setInput(input_index, input_node, input_data['output']);
+					let inputIndex = input_data['index'];
+					const inputName = input_data['inputName'];
+					if (inputName != null) {
+						// If we have inputName, try and find the input index matching it.
+						// If we find nothing, we use inputIndex
+						const connectionPointIndex = this._node.io.inputs
+							.namedInputConnectionPoints()
+							.map((point) => point?.name().toLowerCase())
+							.indexOf(inputName.toLowerCase());
+						if (connectionPointIndex != null) {
+							inputIndex = connectionPointIndex;
+						}
+					}
+					if (inputIndex != null) {
+						this._node.setInput(inputIndex, input_node, input_data['output']);
+					}
 				}
 			}
 		}

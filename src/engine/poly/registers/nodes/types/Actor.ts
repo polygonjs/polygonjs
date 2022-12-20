@@ -4,6 +4,7 @@ export enum ActorType {
 	ON_KEYDOWN = 'onKeydown',
 	ON_KEYPRESS = 'onKeypress',
 	ON_KEYUP = 'onKeyup',
+	ON_PLAYER_EVENT = 'onPlayerEvent',
 	ON_SCENE_RESET = 'onSceneReset',
 	ON_SCENE_PLAY_STATE = 'onScenePlayState',
 	ON_TICK = 'onTick',

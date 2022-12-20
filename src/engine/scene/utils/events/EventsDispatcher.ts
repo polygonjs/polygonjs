@@ -120,6 +120,7 @@ export class SceneEventsDispatcher {
 			case ActorType.ON_KEYDOWN:
 			case ActorType.ON_KEYPRESS:
 			case ActorType.ON_KEYUP:
+			case ActorType.ON_PLAYER_EVENT:
 				return this.keyboardEventsController;
 		}
 		console.warn(`no event controller defined for node`, node);
