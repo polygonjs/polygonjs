@@ -10,7 +10,8 @@ import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {CoreObject} from '../../../core/geometry/Object';
 import type {BaseNodeType} from '../../nodes/_Base';
-
+// @ts-ignore
+import {PhysicalCamera} from 'three-gpu-pathtracer';
 interface CreatePerspectiveCameraParams {
 	fov: number;
 	near: number;
@@ -73,7 +74,7 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects(objects);
 	}
 	static createCamera(params: CreatePerspectiveCameraParams, nodeGenerator?: BaseNodeType) {
-		const camera = new PerspectiveCamera(params.fov, 1, params.near, params.far);
+		const camera = new PhysicalCamera(params.fov, 1, params.near, params.far) as PerspectiveCamera;
 		if (nodeGenerator) {
 			CoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
 		}

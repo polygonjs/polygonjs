@@ -1,4 +1,5 @@
-import type {ShaderMaterial, TextureDataType, DataTexture, WebGLRenderTarget, WebGLRenderer} from 'three';
+import type {ShaderMaterial, TextureDataType, DataTexture, WebGLRenderTarget} from 'three';
+import {AbstractRenderer} from '../../../../viewers/Common';
 
 export interface GPUComputationRendererVariable {
 	name: string;
@@ -7,7 +8,7 @@ export interface GPUComputationRendererVariable {
 }
 
 export class GPUComputationRenderer {
-	constructor(x: number, y: number, renderer: WebGLRenderer);
+	constructor(x: number, y: number, renderer: AbstractRenderer);
 	compute(): void;
 	init(): string | null;
 	dispose(): void;

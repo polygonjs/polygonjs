@@ -8,14 +8,14 @@ import {ViewerAudioController} from './utils/ViewerAudioController';
 import {Camera, Object3D, Raycaster} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {Poly, PolyEngine} from '../Poly';
-import {WebGLRenderer} from 'three';
 // import {TypedCameraControlsEventNode} from '../nodes/event/_BaseCameraControls';
 import {RaycasterForBVH} from '../operations/sop/utils/Bvh/three-mesh-bvh';
+import {AbstractRenderer} from './Common';
 
 const HOVERED_CLASS_NAME = 'hovered';
 
 type ViewerTickCallback = (delta: number) => void;
-type ViewerRenderCallback = (delta: number, renderer: WebGLRenderer) => void;
+type ViewerRenderCallback = (delta: number, renderer: AbstractRenderer) => void;
 type ViewerBaseCallback = ViewerTickCallback | ViewerRenderCallback;
 interface BaseViewerCallbackOptions {
 	persistent?: boolean;
@@ -35,7 +35,7 @@ type UpdateCameraAspectCallback = (aspect: number) => void;
 export interface CreateViewerOptions {
 	canvas?: HTMLCanvasElement;
 	autoRender?: boolean;
-	renderer?: WebGLRenderer;
+	renderer?: AbstractRenderer;
 	cameraMaskOverride?: string;
 }
 export interface TypedViewerOptions<C extends Camera> extends CreateViewerOptions {
@@ -465,7 +465,7 @@ export abstract class TypedViewer<C extends Camera> {
 			callback(delta);
 		}
 	}
-	private _runRenderCallbacks(callbacks: ViewerRenderCallback[], delta: number, renderer: WebGLRenderer) {
+	private _runRenderCallbacks(callbacks: ViewerRenderCallback[], delta: number, renderer: AbstractRenderer) {
 		for (const callback of callbacks) {
 			callback(delta, renderer);
 		}
@@ -476,10 +476,10 @@ export abstract class TypedViewer<C extends Camera> {
 	protected _runOnAfterTickCallbacks(delta: number) {
 		this._runTickCallbacks(this._onAfterTickCallbacks, delta);
 	}
-	protected _runOnBeforeRenderCallbacks(delta: number, renderer: WebGLRenderer) {
+	protected _runOnBeforeRenderCallbacks(delta: number, renderer: AbstractRenderer) {
 		this._runRenderCallbacks(this._onBeforeRenderCallbacks, delta, renderer);
 	}
-	protected _runOnAfterRenderCallbacks(delta: number, renderer: WebGLRenderer) {
+	protected _runOnAfterRenderCallbacks(delta: number, renderer: AbstractRenderer) {
 		this._runRenderCallbacks(this._onAfterRenderCallbacks, delta, renderer);
 	}
 }

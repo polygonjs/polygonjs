@@ -8,7 +8,6 @@ import {
 	SpotLightContainer,
 	SpotLightContainerParams,
 } from '../../../core/lights/SpotLight';
-// import {Mesh, PlaneGeometry, MeshBasicMaterial, Color, DoubleSide, SpotLight} from 'three';
 
 export class SpotLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SpotLightParams = DEFAULT_SPOT_LIGHT_PARAMS;

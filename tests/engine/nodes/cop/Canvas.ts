@@ -1,4 +1,4 @@
-import {sRGBEncoding} from 'three';
+import {sRGBEncoding, WebGLRenderer} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -23,6 +23,11 @@ QUnit.test('COP canvas simple', async (assert) => {
 	// create a renderer first
 	await RendererUtils.withViewer({cameraNode: camera}, async (options) => {
 		const renderer = options.renderer!;
+		if (!(renderer instanceof WebGLRenderer)) {
+			assert.equal(1, 2, 'renderer is not a WebGLRenderer');
+			return;
+		}
+
 		assert.ok(renderer, 'ok renderer');
 		// assert.equal(renderer.toneMapping, NoToneMapping);
 		// assert.equal(renderer.outputEncoding, LinearEncoding);
@@ -41,6 +46,10 @@ QUnit.test('COP canvas simple', async (assert) => {
 		render.p.resolution.set([16, 16]);
 
 		async function getRenderData() {
+			if (!(renderer instanceof WebGLRenderer)) {
+				assert.equal(1, 2, 'renderer is not a WebGLRenderer');
+				return [-1];
+			}
 			render.p.render.pressButton();
 
 			const render_target = await render.renderTarget();

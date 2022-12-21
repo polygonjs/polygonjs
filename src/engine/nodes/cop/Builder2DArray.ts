@@ -357,7 +357,12 @@ export class Builder2DArrayCopNode extends TypedCopNode<Builder2DArrayCopParamsC
 		}
 		if (isBooleanTrue(this.pv.useCameraRenderer)) {
 			this._rendererController = this._rendererController || new CopRendererController(this);
-			this._renderer = await this._rendererController.waitForRenderer();
+			const foundRenderer = await this._rendererController.waitForRenderer();
+			if (foundRenderer instanceof WebGLRenderer) {
+				this._renderer = foundRenderer;
+			} else {
+				console.warn('found renderer is not a WebGLRenderer');
+			}
 		} else {
 			this._renderer = Poly.renderersController.linearRenderer();
 		}

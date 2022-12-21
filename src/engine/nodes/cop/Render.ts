@@ -5,7 +5,7 @@
  * This node can be useful when you want to use what a camera sees as a texture.
  *
  */
-import {WebGLRenderTarget} from 'three';
+import {WebGLRenderer, WebGLRenderTarget} from 'three';
 import {FloatType, HalfFloatType, RGBAFormat, NearestFilter, LinearFilter, ClampToEdgeWrapping} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -86,6 +86,10 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 
 		this._rendererController = this._rendererController || new CopRendererController(this);
 		const renderer = await this._rendererController.waitForRenderer();
+		if (!(renderer instanceof WebGLRenderer)) {
+			console.log('renderer found is not WebGLRenderer');
+			return;
+		}
 
 		const prevTarget = renderer.getRenderTarget();
 		const prevEncoding = renderer.outputEncoding;

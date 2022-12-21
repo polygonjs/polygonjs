@@ -1,13 +1,14 @@
-import {Camera, Object3D, WebGLRenderer} from 'three';
+import {Camera, Object3D} from 'three';
 import {PolyScene} from '../../../scene/PolyScene';
 import {PolyEngine} from '../../../Poly';
 import {TypedViewer} from '../../../viewers/_Base';
+import {AbstractRenderer} from '../../../viewers/Common';
 
 export interface ViewerCallbackOptions<C extends Camera> {
 	camera: C;
 	scene: PolyScene;
 	canvas?: HTMLCanvasElement;
-	renderer?: WebGLRenderer;
+	renderer?: AbstractRenderer;
 }
 
 export type ViewerCreateCallback<C extends Camera> = (options: ViewerCallbackOptions<C>) => TypedViewer<C>;

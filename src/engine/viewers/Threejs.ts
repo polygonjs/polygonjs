@@ -1,4 +1,4 @@
-import {Camera, WebGLRenderer} from 'three';
+import {Camera} from 'three';
 import {TypedViewer, TypedViewerOptions} from './_Base';
 import {Poly} from '../Poly';
 import {ViewerLogoController} from './utils/logo/ViewerLogoController';
@@ -8,6 +8,7 @@ import {CoreCameraCSSRendererController, CSSRendererConfig} from '../../core/cam
 import {CoreCameraControlsController} from '../../core/camera/CoreCameraControlsController';
 import {CoreCameraRenderSceneController} from '../../core/camera/CoreCameraRenderSceneController';
 import type {EffectComposer} from 'postprocessing';
+import {AbstractRenderer} from './Common';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -23,7 +24,7 @@ declare global {
 
 export interface ThreejsViewerOptions<C extends Camera> extends TypedViewerOptions<C> {
 	// properties?: ThreejsViewerProperties;
-	renderer?: WebGLRenderer;
+	// renderer?: AbstractRenderer;
 }
 
 type RenderFuncWithDelta = (delta: number) => void;
@@ -37,7 +38,7 @@ type RenderFunc = () => void;
 export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _requestAnimationFrameId: number | undefined;
 
-	private _renderer: WebGLRenderer | undefined;
+	private _renderer: AbstractRenderer | undefined;
 	private _renderFunc: RenderFuncWithDelta | undefined;
 	private _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;

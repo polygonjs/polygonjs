@@ -8,7 +8,7 @@
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
-import {Object3D} from 'three';
+import {Object3D, WebGLRenderer} from 'three';
 import {Light} from 'three';
 import {LightMapController, DEFAULT_ITERATION_BLEND} from './utils/LightMapController';
 import {Mesh} from 'three';
@@ -79,6 +79,10 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 			console.warn('no renderer found');
 			return;
 		}
+		if (!(renderer instanceof WebGLRenderer)) {
+			this.states.error.set('renderer found is not WebGLRenderer');
+			return;
+		}
 		const progressiveSurfacemap = new LightMapController(renderer, this.pv.lightMapRes);
 		return progressiveSurfacemap;
 	}
@@ -129,6 +133,11 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 				this._dataTextureController || new DataTextureController(DataTextureControllerBufferType.Float32Array);
 			this._rendererController = this._rendererController || new CopRendererController(this);
 			const renderer = await this._rendererController.waitForRenderer();
+			if (!(renderer instanceof WebGLRenderer)) {
+				this.states.error.set('renderer found is not WebGLRenderer');
+				this.cookController.endCook();
+				return;
+			}
 			const texture = this._dataTextureController.fromRenderTarget(renderer, renderTarget);
 			this.setTexture(texture);
 		}

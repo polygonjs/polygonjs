@@ -43,6 +43,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import FRAGMENT_SHADER from '../gl/code/templates/textures/Default.frag.glsl';
 import VERTEX_SHADER from '../gl/code/templates/textures/Default.vert.glsl';
 import {handleCopBuilderDependencies} from './utils/BuilderUtils';
+import {PathTracingRendererContainer} from '../rop/utils/pathTracing/PathTracingRendererContainer';
 
 const RESOLUTION_DEFAULT: Number2 = [256, 256];
 
@@ -338,9 +339,19 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		if (this._renderer) {
 			return;
 		}
+
 		if (isBooleanTrue(this.pv.useCameraRenderer)) {
 			this._rendererController = this._rendererController || new CopRendererController(this);
-			this._renderer = await this._rendererController.waitForRenderer();
+			const foundRenderer = await this._rendererController.waitForRenderer();
+			if (foundRenderer instanceof WebGLRenderer) {
+				this._renderer = foundRenderer;
+			} else {
+				if (foundRenderer instanceof PathTracingRendererContainer) {
+					this._renderer = foundRenderer.webGLRenderer;
+				} else {
+					console.warn('found renderer is not a WebGLRenderer', foundRenderer);
+				}
+			}
 		} else {
 			this._renderer = Poly.renderersController.linearRenderer();
 		}

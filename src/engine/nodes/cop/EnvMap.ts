@@ -3,7 +3,7 @@
  *
  *
  */
-import {Texture} from 'three';
+import {Texture, WebGLRenderer} from 'three';
 import {PMREMGenerator} from 'three';
 import {TypedCopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -57,27 +57,30 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 		this._rendererController = this._rendererController || new CopRendererController(this);
 		const renderer = await this._rendererController.waitForRenderer();
 
-		if (renderer) {
-			const pmremGenerator = new PMREMGenerator(renderer);
-			const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(inputTexture);
-
-			// pmremGenerator.dispose();
-			// texture.dispose();
-
-			if (isBooleanTrue(this.pv.useCameraRenderer)) {
-				this._setMapping(exrCubeRenderTarget.texture);
-				this.setTexture(exrCubeRenderTarget.texture);
-			} else {
-				this._dataTextureController =
-					this._dataTextureController ||
-					new DataTextureController(DataTextureControllerBufferType.Uint16Array);
-				const texture = this._dataTextureController.fromRenderTarget(renderer, exrCubeRenderTarget);
-				this._setMapping(texture);
-				this.setTexture(texture);
-			}
-		} else {
+		if (!renderer) {
 			this.states.error.set('no renderer found to convert the texture to an env map');
-			this.cookController.endCook();
+			return this.cookController.endCook();
+		}
+		if (!(renderer instanceof WebGLRenderer)) {
+			this.states.error.set('renderer found is not WebGLRenderer');
+			return this.cookController.endCook();
+		}
+
+		const pmremGenerator = new PMREMGenerator(renderer);
+		const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(inputTexture);
+
+		// pmremGenerator.dispose();
+		// texture.dispose();
+
+		if (isBooleanTrue(this.pv.useCameraRenderer)) {
+			this._setMapping(exrCubeRenderTarget.texture);
+			this.setTexture(exrCubeRenderTarget.texture);
+		} else {
+			this._dataTextureController =
+				this._dataTextureController || new DataTextureController(DataTextureControllerBufferType.Uint16Array);
+			const texture = this._dataTextureController.fromRenderTarget(renderer, exrCubeRenderTarget);
+			this._setMapping(texture);
+			this.setTexture(texture);
 		}
 	}
 	private _setMapping(texture: Texture) {

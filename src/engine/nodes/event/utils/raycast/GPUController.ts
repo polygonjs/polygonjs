@@ -96,6 +96,10 @@ export class RaycastGPUController extends BaseRaycastController {
 		if (!renderer) {
 			return;
 		}
+		if (!(renderer instanceof WebGLRenderer)) {
+			console.log('renderer found is not WebGLRenderer');
+			return;
+		}
 		this._modifySceneAndRenderer(scene, renderer);
 
 		(camera as any).setViewOffset(

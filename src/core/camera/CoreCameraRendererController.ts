@@ -1,4 +1,4 @@
-import {Camera, Vector2, WebGLRenderer, WebGLRendererParameters} from 'three';
+import {Camera, Vector2, WebGLRendererParameters} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {Poly} from '../../engine/Poly';
 import {
@@ -14,6 +14,8 @@ import {CoreType} from '../Type';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
 import {NodeContext} from '../../engine/poly/NodeContext';
 import {TypedNode} from '../../engine/nodes/_Base';
+import {PathTracingRendererRopNode} from '../../engine/nodes/rop/PathTracingRenderer';
+import {AbstractRenderer} from '../../engine/viewers/Common';
 
 interface CreateRendererOptions {
 	camera: Camera;
@@ -25,8 +27,8 @@ interface CreateRendererOptions {
 
 export class CoreCameraRendererController {
 	// private static _resolutionByCanvas: Map<HTMLCanvasElement, Vector2> = new Map();
-	private static _defaultRendererByContext: Map<WebGLRenderingContext, WebGLRenderer> = new Map();
-	private static _renderersByCanvas: Map<HTMLCanvasElement, WebGLRenderer> = new Map();
+	private static _defaultRendererByContext: Map<WebGLRenderingContext, AbstractRenderer> = new Map();
+	private static _renderersByCanvas: Map<HTMLCanvasElement, AbstractRenderer> = new Map();
 	// private static _superSamplingSize = new Vector2();
 
 	// static canvasResolution(canvas: HTMLCanvasElement) {
@@ -36,7 +38,7 @@ export class CoreCameraRendererController {
 		return this._renderersByCanvas.get(canvas);
 	}
 
-	static createRenderer(options: CreateRendererOptions): WebGLRenderer | undefined {
+	static createRenderer(options: CreateRendererOptions): AbstractRenderer | undefined {
 		const {camera, canvas, scene} = options;
 		const gl = Poly.renderersController.getRenderingContext(canvas);
 		if (!gl) {
@@ -44,20 +46,23 @@ export class CoreCameraRendererController {
 			return;
 		}
 
-		let renderer: WebGLRenderer | undefined;
+		let renderer: AbstractRenderer | undefined;
 		// if (isBooleanTrue(this.node.pv.setRenderer)) {
 		// await this._updateRenderer();
 
 		const rendererROPId = CoreObject.attribValue(camera, CameraAttribute.RENDERER_NODE_ID);
 		if (rendererROPId && CoreType.isNumber(rendererROPId)) {
 			const rendererROP = scene.graph.nodeFromId(rendererROPId);
-			if (
-				rendererROP &&
-				rendererROP instanceof TypedNode &&
-				rendererROP.type() == RopType.WEBGL &&
-				rendererROP.context() == NodeContext.ROP
-			) {
-				renderer = (rendererROP as WebGLRendererRopNode).createRenderer(canvas, gl);
+			if (rendererROP != null && rendererROP instanceof TypedNode && rendererROP.context() == NodeContext.ROP) {
+				const type = rendererROP.type();
+				switch (type) {
+					case RopType.WEBGL: {
+						renderer = (rendererROP as WebGLRendererRopNode).createRenderer(canvas, gl);
+					}
+					case RopType.PATH_TRACING: {
+						renderer = (rendererROP as PathTracingRendererRopNode).createRenderer(canvas, gl);
+					}
+				}
 			}
 		}
 		// }

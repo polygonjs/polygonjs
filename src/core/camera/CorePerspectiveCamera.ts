@@ -1,4 +1,3 @@
-import {PerspectiveCamera} from 'three';
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {PolyEngine} from '../../engine/Poly';
 import {CameraNodeType} from '../../engine/poly/NodeContext';
@@ -7,6 +6,8 @@ import {OnNodeRegisterCallback} from '../../engine/poly/registers/nodes/NodesReg
 import {ThreejsViewer} from '../../engine/viewers/Threejs';
 import {Constructor, Number2} from '../../types/GlobalTypes';
 import {CoreCameraPerspectiveFrameMode} from './frameMode/CoreCameraPerspectiveFrameMode';
+// @ts-ignore
+import {PhysicalCamera} from 'three-gpu-pathtracer';
 
 interface PerspectiveCameraDefault {
 	fov: number;
@@ -26,8 +27,8 @@ export function PerspectiveCameraParamConfigMixin<TBase extends Constructor>(Bas
 
 export const registerPerspectiveCamera: OnNodeRegisterCallback = (poly: PolyEngine) => {
 	poly.registerCameraNodeType(CameraNodeType.PERSPECTIVE);
-	poly.registerCamera<PerspectiveCamera>(PerspectiveCamera, (options: ViewerCallbackOptions<PerspectiveCamera>) => {
-		const viewer = new ThreejsViewer<PerspectiveCamera>({
+	poly.registerCamera<PhysicalCamera>(PhysicalCamera, (options: ViewerCallbackOptions<PhysicalCamera>) => {
+		const viewer = new ThreejsViewer<PhysicalCamera>({
 			...options,
 			updateCameraAspect: (aspect) => {
 				CoreCameraPerspectiveFrameMode.updateCameraAspect(options.camera, aspect);

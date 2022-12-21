@@ -9,7 +9,6 @@ import {CoreMath} from '../../../../../core/math/_Module';
 import {GlobalsTextureHandler} from '../../../gl/code/globals/Texture';
 import {GPUComputationRenderer, GPUComputationRendererVariable} from './GPUComputationRenderer';
 import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
-import {WebGLRenderer} from 'three';
 import {CorePoint} from '../../../../../core/geometry/Point';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {TextureAllocationsController} from '../../../gl/code/utils/TextureAllocationsController';
@@ -20,6 +19,7 @@ import {FloatType, HalfFloatType} from 'three';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {TextureAllocation} from '../../../gl/code/utils/TextureAllocation';
 import {CoreUserAgent} from '../../../../../core/UserAgent';
+import {AbstractRenderer} from '../../../../viewers/Common';
 export enum ParticlesDataType {
 	AUTO = 'Auto',
 	FLOAT = 'Float',
@@ -39,7 +39,7 @@ export class ParticlesSystemGpuComputeController {
 	protected _gpuCompute: GPUComputationRenderer | undefined;
 	protected _simulationRestartRequired: boolean = false;
 
-	protected _renderer: WebGLRenderer | undefined;
+	protected _renderer: AbstractRenderer | undefined;
 
 	protected _particlesCoreGroup: CoreGroup | undefined;
 	protected _points: CorePoint[] = [];

@@ -1,5 +1,4 @@
 import {Camera} from 'three';
-import {WebGLRenderer} from 'three';
 import {Scene} from 'three';
 import {Mesh} from 'three';
 import {PerspectiveCamera} from 'three';
@@ -11,11 +10,12 @@ import {Material} from 'three';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
 import {TypedViewer} from '../../src/engine/viewers/_Base';
 import {OrthographicCameraObjNode} from '../../src/engine/nodes/obj/OrthographicCamera';
+import {AbstractRenderer} from '../../src/engine/viewers/Common';
 // import {CoreImage} from '../../src/core/Image';
 
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
-	renderer: WebGLRenderer;
+	renderer: AbstractRenderer;
 	viewer?: TypedViewer<Camera>;
 }
 
@@ -23,7 +23,7 @@ interface WithViewerCallbackArgs {
 	viewer: ThreejsViewer<Camera>;
 	element: HTMLElement;
 	canvas: HTMLCanvasElement;
-	renderer?: WebGLRenderer;
+	renderer?: AbstractRenderer;
 }
 interface WithViewerOptions {
 	viewer?: ThreejsViewer<Camera>;
@@ -84,7 +84,7 @@ export class RendererUtils {
 			// .createRenderer(canvas, size);
 			const renderer = await scene.renderersRegister.waitForRenderer();
 			if (renderer) {
-				const config = {canvas, viewer, renderer};
+				const config: RendererConfig = {canvas, viewer, renderer};
 				this._configs.push(config);
 				resolve(config);
 			} else {
@@ -176,7 +176,7 @@ export class RendererUtils {
 	private static _scene = this._createMatCompileScene();
 	private static _camera = new PerspectiveCamera();
 	private static _mesh = new Mesh();
-	static async compile(matNode: BaseBuilderMatNodeType | Material, renderer: WebGLRenderer) {
+	static async compile(matNode: BaseBuilderMatNodeType | Material, renderer: AbstractRenderer) {
 		let material: Material;
 		if (matNode instanceof Material) {
 			material = matNode;

@@ -396,6 +396,10 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 			console.log('no renderer found');
 			return;
 		}
+		if (!(renderer instanceof WebGLRenderer)) {
+			console.log('renderer found is not WebGLRenderer');
+			return;
+		}
 		const scene = this.scene().threejsScene();
 		this._renderShadow(renderer, scene);
 	}

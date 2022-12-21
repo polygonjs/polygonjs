@@ -6,11 +6,12 @@ import {
 	LinearEncoding,
 	NoToneMapping,
 } from 'three';
+import {AbstractRenderer} from '../viewers/Common';
 
 export interface WithPolyId {
 	_polygonId?: number;
 }
-export interface POLYWebGLRenderer extends WebGLRenderer, WithPolyId {}
+export interface POLYAbstractRenderer extends AbstractRenderer, WithPolyId {}
 
 const CONTEXT_OPTIONS: WebGLContextAttributes = {
 	// powerPreference: 'high-performance', // attempt to fix issues in safari
@@ -75,17 +76,17 @@ export class RenderersController {
 		return renderer;
 	}
 
-	assignIdToRenderer(renderer: WebGLRenderer) {
-		if ((renderer as POLYWebGLRenderer)._polygonId != null) {
+	assignIdToRenderer(renderer: AbstractRenderer) {
+		if ((renderer as POLYAbstractRenderer)._polygonId != null) {
 			// we do not re-assign the id if there is already one
 			return;
 		}
 
 		const nextId = (nextRendererId += 1);
-		(renderer as POLYWebGLRenderer)._polygonId = nextId;
+		(renderer as POLYAbstractRenderer)._polygonId = nextId;
 	}
-	rendererId(renderer: WebGLRenderer) {
-		const id = (renderer as POLYWebGLRenderer)._polygonId;
+	rendererId(renderer: AbstractRenderer) {
+		const id = (renderer as POLYAbstractRenderer)._polygonId;
 
 		if (id == null) {
 			console.error('renderer has no _polygonId');

@@ -3531,10 +3531,17 @@ three-good-godrays@0.4.0:
   resolved "https://registry.yarnpkg.com/three-good-godrays/-/three-good-godrays-0.4.0.tgz#bbddcf7533f9e00b7cac3dc19c46f1ec19e80941"
   integrity sha512-Hg13zxFXhkmnuPUifgYpg70XBb8v/54P90Hcx8MS1du7FM6UPgaARIsHem9TEOX8jX9gyBrbsdWQNkvJ1dTW9w==
 
-three-mesh-bvh@0.5.15:
-  version "0.5.15"
-  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.15.tgz#bcf681d784d8988618344a5e11e7ded7e76ee86a"
-  integrity sha512-jxE5iGjcoEMiyxUs7hMeZL6jBXBz9973ilqhXPhKlA1f7eitjIxRTtu7UWVQy+PhxXTsknmPzWmN5c+uAa/anA==
+three-gpu-pathtracer@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/three-gpu-pathtracer/-/three-gpu-pathtracer-0.0.8.tgz#a44418a83d56d7f582fce507f9d802befb95ce9c"
+  integrity sha512-PdjsPqqy9/axjocQ2KzaSO8QgNDzLA6lD+jIMDMLlwk07MzyUnFlH0t6CFHiAk+xeP756M0e3tOQldfBgaVaHg==
+  dependencies:
+    three-mesh-bvh "^0.5.19"
+
+three-mesh-bvh@0.5.19, three-mesh-bvh@^0.5.19:
+  version "0.5.19"
+  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.19.tgz#72d489856561d01ef7d4add81f0c82d3fb644d09"
+  integrity sha512-Q8huT0NautyR4afW0oMlOz8a4qm3b1jQ1ccMLF/TZ0rA4i58HljsnBjCLEDLQtIINZyLtZPdw60mrD81V/TZDA==
 
 three-subdivide@1.1.0:
   version "1.1.0"

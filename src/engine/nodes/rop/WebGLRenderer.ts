@@ -142,7 +142,7 @@ export const SHADOW_MAP_TYPES = [BasicShadowMap, PCFShadowMap, PCFSoftShadowMap,
 export const DEFAULT_SHADOW_MAP_TYPE = ShadowMapTypeValue.PCFSoft as number;
 
 // TODO: set debug.checkShaderErrors to false in prod
-const DEFAULT_PARAMS: WebGLRendererParameters = {
+export const DEFAULT_PARAMS: WebGLRendererParameters = {
 	alpha: false,
 	precision: RendererPrecision.HIGH,
 	premultipliedAlpha: true,
@@ -299,7 +299,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 
 		this.cookController.endCook();
 	}
-	_updateRenderer(renderer: WebGLRenderer) {
+	private _updateRenderer(renderer: WebGLRenderer) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
 		renderer.physicallyCorrectLights = this.pv.physicallyCorrectLights;
 		renderer.outputEncoding = this.pv.outputEncoding;

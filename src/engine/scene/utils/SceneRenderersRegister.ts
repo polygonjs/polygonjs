@@ -1,21 +1,21 @@
-import {WebGLRenderer} from 'three';
 import {PolyScene} from '../PolyScene';
 import {Poly} from '../../Poly';
+import {AbstractRenderer} from '../../viewers/Common';
 
-type SceneRenderersRegisterCallback = (value: WebGLRenderer) => void;
+type SceneRenderersRegisterCallback = (value: AbstractRenderer) => void;
 
 export interface RegisterRendererOptions {
 	assignId: boolean;
 }
 export class SceneRenderersRegister {
-	private _renderersById: Map<number, WebGLRenderer> = new Map();
-	private _registerTimeByRenderer: Map<WebGLRenderer, number> = new Map();
-	private _lastRegisteredRenderer: WebGLRenderer | undefined;
+	private _renderersById: Map<number, AbstractRenderer> = new Map();
+	private _registerTimeByRenderer: Map<AbstractRenderer, number> = new Map();
+	private _lastRegisteredRenderer: AbstractRenderer | undefined;
 	private _resolves: SceneRenderersRegisterCallback[] = [];
 
 	constructor(protected scene: PolyScene) {}
 
-	registerRenderer(renderer: WebGLRenderer, options?: RegisterRendererOptions) {
+	registerRenderer(renderer: AbstractRenderer, options?: RegisterRendererOptions) {
 		let assignId = true;
 		if (options?.assignId == false) {
 			assignId = false;
@@ -38,7 +38,7 @@ export class SceneRenderersRegister {
 			this._flushCallbacksWithRenderer(renderer);
 		}
 	}
-	deregisterRenderer(renderer: WebGLRenderer) {
+	deregisterRenderer(renderer: AbstractRenderer) {
 		const id = Poly.renderersController.rendererId(renderer);
 		if (id == null) {
 			return;
@@ -54,7 +54,7 @@ export class SceneRenderersRegister {
 	}
 
 	renderers() {
-		const renderers: WebGLRenderer[] = [];
+		const renderers: AbstractRenderer[] = [];
 		this._renderersById.forEach((renderer) => {
 			renderers.push(renderer);
 		});
@@ -77,7 +77,7 @@ export class SceneRenderersRegister {
 		});
 	}
 
-	private _flushCallbacksWithRenderer(renderer: WebGLRenderer) {
+	private _flushCallbacksWithRenderer(renderer: AbstractRenderer) {
 		const callbacks: SceneRenderersRegisterCallback[] = [];
 		for (let r of this._resolves) {
 			callbacks.push(r);
@@ -88,7 +88,7 @@ export class SceneRenderersRegister {
 		}
 	}
 
-	async waitForRenderer(): Promise<WebGLRenderer> {
+	async waitForRenderer(): Promise<AbstractRenderer> {
 		if (this._lastRegisteredRenderer) {
 			return this._lastRegisteredRenderer;
 		} else {

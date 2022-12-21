@@ -9,7 +9,7 @@
  */
 
 import {Constructor} from '../../../types/GlobalTypes';
-import {Group} from 'three';
+import {Group, WebGLRenderer} from 'three';
 import {Object3D} from 'three';
 import {CubeCamera} from 'three';
 import {sRGBEncoding} from 'three';
@@ -190,6 +190,10 @@ export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsCo
 		const renderer = this.scene().renderersRegister.lastRegisteredRenderer();
 		if (!renderer) {
 			console.warn(`no renderer found for ${this.path()}`);
+			return;
+		}
+		if (!(renderer instanceof WebGLRenderer)) {
+			console.warn(`renderer found is not a WebGLRenderer`);
 			return;
 		}
 		if (!this._cubeCamera) {

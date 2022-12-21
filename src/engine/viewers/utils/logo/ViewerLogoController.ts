@@ -1,4 +1,4 @@
-import {CircleGeometry} from 'three';
+import {CircleGeometry, WebGLRenderer} from 'three';
 import {Mesh} from 'three';
 import {MeshBasicMaterial} from 'three';
 import {OrthographicCamera} from 'three';
@@ -62,6 +62,9 @@ export class ViewerLogoController {
 		this._viewer.registerOnAfterRender(
 			'logo',
 			(delta, renderer) => {
+				if (!(renderer instanceof WebGLRenderer)) {
+					return;
+				}
 				// save previous renderer parameters
 				const previousAutoClear = renderer.autoClear;
 				renderer.getCurrentViewport(currentViewport);

@@ -22,11 +22,12 @@ import {isBooleanTrue} from '../../../core/Type';
 import {Material} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {Poly} from '../../../engine/Poly';
+import {AbstractRenderer} from '../../../engine/viewers/Common';
 
 export interface BaseReflectorOptions {
 	// color: Color;
 	// opacity: number;
-	renderer?: WebGLRenderer;
+	renderer?: AbstractRenderer;
 	pixelRatio: number;
 	multisamples: number;
 	clipBias: number;
@@ -85,7 +86,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 
 		this._addWindowResizeEvent();
 	}
-	private _createRenderTarget(renderer: WebGLRenderer) {
+	private _createRenderTarget(renderer: AbstractRenderer) {
 		const {width, height} = this._getRendererSize(renderer);
 
 		this.renderTarget = Poly.renderersController.renderTarget(width, height, renderTargetParams);
@@ -136,7 +137,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 		}
 	}
 
-	private _getRendererSize(renderer: WebGLRenderer) {
+	private _getRendererSize(renderer: AbstractRenderer) {
 		const canvas = renderer.domElement;
 		const width = canvas.width * this._options.pixelRatio;
 		const height = canvas.height * this._options.pixelRatio;

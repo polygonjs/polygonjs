@@ -1,4 +1,4 @@
-import {LinearEncoding, NoToneMapping} from 'three';
+import {LinearEncoding, NoToneMapping, WebGLRenderer} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {BackgroundMode} from '../../../../src/engine/nodes/manager/utils/Scene/Background';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -27,6 +27,11 @@ QUnit.test('COP render simple', async (assert) => {
 	// create a renderer first
 	await RendererUtils.withViewer({cameraNode: camera}, async (options) => {
 		const renderer = options.renderer!;
+		if (!(renderer instanceof WebGLRenderer)) {
+			assert.equal(1, 2, 'renderer is not a WebGLRenderer');
+			return;
+		}
+
 		assert.ok(renderer);
 		assert.equal(renderer.toneMapping, NoToneMapping);
 		assert.equal(renderer.outputEncoding, LinearEncoding);

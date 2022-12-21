@@ -6,6 +6,7 @@ import {KTX2Loader} from '../../../modules/three/examples/jsm/loaders/KTX2Loader
 import {Poly} from '../../../engine/Poly';
 import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
 import {sanitizeUrl} from '../../UrlHelper';
+import {WebGLRenderer} from 'three';
 
 type Resolve = (loader: KTX2Loader) => void;
 export class KTX2TextureLoader extends BaseCoreImageLoader {
@@ -61,7 +62,11 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 		}
 		const renderer = await options.node.scene().renderersRegister.waitForRenderer();
 		if (renderer) {
-			loader.detectSupport(renderer);
+			if (renderer instanceof WebGLRenderer) {
+				loader.detectSupport(renderer);
+			} else {
+				Poly.warn('renderer found is not a WebGLRenderer');
+			}
 		} else {
 			Poly.warn('texture loader found no renderer for KTX2Loader');
 		}

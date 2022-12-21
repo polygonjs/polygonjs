@@ -7,9 +7,10 @@ import {CoreObject} from '../geometry/Object';
 import {CoreType} from '../Type';
 import {CameraAttribute} from './CoreCamera';
 import {BaseViewerType} from '../../engine/viewers/_Base';
+import {AbstractRenderer} from '../../engine/viewers/Common';
 
 interface CreateComposerOptions {
-	renderer: WebGLRenderer;
+	renderer: AbstractRenderer;
 	scene: PolyScene;
 	camera: Camera;
 	renderScene: Scene;
@@ -39,6 +40,10 @@ export class CoreCameraPostProcessController {
 		if (!postProcessNode) {
 			return;
 		}
+		if (!(renderer instanceof WebGLRenderer)) {
+			return;
+		}
+
 		return postProcessNode.effectsComposerController.createEffectsComposerAndBuildPasses({
 			renderer,
 			scene: renderScene,

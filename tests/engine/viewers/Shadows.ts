@@ -5,7 +5,7 @@ import {CoreSleep} from '../../../src/core/Sleep';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {Vector3Param} from '../../../src/engine/params/Vector3';
 import {ShaderMaterial} from 'three';
-import {Scene, WebGLRenderer, Camera} from 'three';
+import {Scene, Camera} from 'three';
 
 // mesh
 import MESH_BASIC_DEPTH_VERTEX from './templates/meshBasicBuilder/customDepthMaterial.vert.glsl';
@@ -30,6 +30,7 @@ import LINE_BASIC_DISTANCE_FRAGMENT from './templates/lineBasicBuilder/customDis
 import {MaterialUserDataUniforms} from '../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {GLSLHelper} from '../../helpers/GLSLHelper';
 import {updateObjectsWithDepthMaterial} from '../../../src/modules/core/post_process/DOFUtils';
+import {AbstractRenderer} from '../../../src/engine/viewers/Common';
 // import LINE_BASIC_DOF_VERTEX from './templates/lineBasicBuilder/customDOFMaterial.vert.glsl';
 // import LINE_BASIC_DOF_FRAGMENT from './templates/lineBasicBuilder/customDOFMaterial.frag.glsl';
 
@@ -61,7 +62,7 @@ async function addLightCastingShadow(assert: Assert, scene: PolyScene, builderMa
 	return {camera};
 }
 
-function renderWithDOF(scene: Scene, renderer: WebGLRenderer, camera: Camera) {
+function renderWithDOF(scene: Scene, renderer: AbstractRenderer, camera: Camera) {
 	updateObjectsWithDepthMaterial(scene, () => {
 		renderer.render(window.scene.threejsScene(), camera);
 	});
