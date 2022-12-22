@@ -15,6 +15,7 @@ interface MathArg1OperationOptions {
 	out: string;
 	allowed_in_types?: ActorConnectionPointType[];
 }
+type PrimitiveActorConnectionPointType = ActorConnectionPointType.BOOLEAN | ActorConnectionPointType.FLOAT;
 
 export function MathFunctionArg1OperationFactory(
 	type: string,
@@ -65,8 +66,13 @@ export function MathFunctionArg1OperationFactory(
 			const isPrimitive = isActorConnectionPointPrimitive(this._expectedInputTypes()[0]);
 
 			if (isPrimitive) {
-				const inputValue = this._inputValue<ActorConnectionPointType.FLOAT>(0, context) || 0;
-				return this._applyOperation(inputValue);
+				// note this can also be a boolean in the case of the negate and complement
+				const inputValue = this._inputValue<PrimitiveActorConnectionPointType>(0, context);
+				if (inputValue != null) {
+					return this._applyOperation(inputValue);
+				} else {
+					return this._applyOperation(0);
+				}
 			} else {
 				let startValue =
 					this._inputValue<
