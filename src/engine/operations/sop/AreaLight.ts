@@ -1,11 +1,15 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {RectAreaLight} from 'three';
 import {RectAreaLightUniformsLib} from '../../../modules/three/examples/jsm/lights/RectAreaLightUniformsLib';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Group} from 'three';
+import {
+	Group,
+	// RectAreaLight
+} from 'three';
 import {AreaLightParams, CoreRectAreaLightHelper, DEFAULT_AREA_LIGHT_PARAMS} from '../../../core/lights/AreaLight';
+// @ts-ignore
+import {ShapedAreaLight} from 'three-gpu-pathtracer';
 
 export class AreaLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AreaLightParams = DEFAULT_AREA_LIGHT_PARAMS;
@@ -36,7 +40,7 @@ export class AreaLightSopOperation extends BaseSopOperation {
 	}
 
 	createLight() {
-		const light = new RectAreaLight(0xffffff, 1, 1, 1);
+		const light = new ShapedAreaLight(0xffffff, 1, 1, 1);
 		light.matrixAutoUpdate = false;
 		const nodeName = this._node?.name();
 		if (nodeName) {
@@ -50,7 +54,7 @@ export class AreaLightSopOperation extends BaseSopOperation {
 
 		return light;
 	}
-	updateLightParams(light: RectAreaLight, params: AreaLightParams) {
+	updateLightParams(light: ShapedAreaLight, params: AreaLightParams) {
 		light.color = params.color;
 		light.intensity = params.intensity;
 		light.width = params.width;
@@ -59,7 +63,7 @@ export class AreaLightSopOperation extends BaseSopOperation {
 		// this._helperController.update();
 	}
 
-	private _createHelper(light: RectAreaLight) {
+	private _createHelper(light: ShapedAreaLight) {
 		const nodeName = this._node?.name();
 		if (nodeName) {
 			const helper = new CoreRectAreaLightHelper(light, nodeName);

@@ -35,7 +35,9 @@ export class RopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(CSS2DRendererRopNode, CATEGORY_ROP.CSS);
 		poly.registerNode(CSS3DRendererRopNode, CATEGORY_ROP.CSS);
-		poly.registerNode(PathTracingRendererRopNode, CATEGORY_ROP.WEBGL);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(PathTracingRendererRopNode, CATEGORY_ROP.WEBGL);
+		}
 		poly.registerNode(WebGLRendererRopNode, CATEGORY_ROP.WEBGL);
 		// networks
 		poly.registerNode(ActorsNetworkRopNode, CATEGORY_ROP.NETWORK);

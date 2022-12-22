@@ -2,7 +2,18 @@ import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color, Group} from 'three';
+import {
+	Color,
+	Group,
+	BackSide,
+	BufferGeometry,
+	Float32BufferAttribute,
+	Line,
+	LineBasicMaterial,
+	Mesh,
+	MeshBasicMaterial,
+	RectAreaLight,
+} from 'three';
 
 export interface AreaLightParams extends DefaultOperationParams {
 	color: Color;
@@ -52,15 +63,6 @@ export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		name = ParamConfig.STRING('`$OS`');
 	};
 }
-
-import {BackSide} from 'three';
-import {BufferGeometry} from 'three';
-import {Float32BufferAttribute} from 'three';
-import {Line} from 'three';
-import {LineBasicMaterial} from 'three';
-import {Mesh} from 'three';
-import {MeshBasicMaterial} from 'three';
-import {RectAreaLight} from 'three';
 
 /**
  *  This helper must be added as a child of the light
