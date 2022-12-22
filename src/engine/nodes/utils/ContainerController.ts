@@ -1,4 +1,4 @@
-import {ContainableMap} from './../../../../dist/src/engine/containers/utils/ContainableMap.d';
+import {ContainableMap} from './../../../../src/engine/containers/utils/ContainableMap';
 import {ContainableClassMap} from './../../containers/utils/ContainableMap';
 import {TypedNode} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';

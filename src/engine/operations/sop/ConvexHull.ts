@@ -1,4 +1,4 @@
-import {Object3DWithGeometry} from './../../../../dist/src/core/geometry/Group.d';
+import {Object3DWithGeometry} from './../../../../src/core/geometry/Group';
 import {ObjectType} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
