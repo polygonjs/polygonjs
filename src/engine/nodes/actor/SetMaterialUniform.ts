@@ -14,19 +14,19 @@ import {UNIFORM_PARAM_PREFIX} from '../../../core/material/uniform';
 import {MaterialUserDataUniforms} from '../gl/code/assemblers/materials/OnBeforeCompile';
 
 type AvailableActorType =
-	| ActorConnectionPointType.INTEGER
+	| ActorConnectionPointType.COLOR
 	| ActorConnectionPointType.FLOAT
+	| ActorConnectionPointType.INTEGER
 	| ActorConnectionPointType.VECTOR2
 	| ActorConnectionPointType.VECTOR3
-	| ActorConnectionPointType.COLOR
 	| ActorConnectionPointType.VECTOR4;
 
 export const GL_CONNECTION_POINT_TYPES: Array<AvailableActorType> = [
-	ActorConnectionPointType.INTEGER,
+	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.FLOAT,
+	ActorConnectionPointType.INTEGER,
 	ActorConnectionPointType.VECTOR2,
 	ActorConnectionPointType.VECTOR3,
-	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.VECTOR4,
 ];
 const DEFAULT_PARAM_VALUES = {lerp: 1};

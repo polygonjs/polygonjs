@@ -4,43 +4,6 @@ import {AttributeGlNode, ATTRIBUTE_NODE_AVAILABLE_GL_TYPES} from '../../../src/e
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
-// export function AttributeGlNodePresets() {
-// 	return {
-// 		// color: function (node: AttributeGlNode) {
-// 		// 	node.p.name.set('color');
-// 		// 	node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));
-// 		// },
-// 		// instanceColor: function (node: AttributeGlNode) {
-// 		// 	node.p.name.set('instanceColor');
-// 		// 	node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));
-// 		// },
-// 		instanceOrientation: function (node: AttributeGlNode) {
-// 			node.p.name.set('instanceOrientation');
-// 			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC4));
-// 		},
-// 		instancePosition: function (node: AttributeGlNode) {
-// 			node.p.name.set('instancePosition');
-// 			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));
-// 		},
-// 		instanceScale: function (node: AttributeGlNode) {
-// 			node.p.name.set('instanceScale');
-// 			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));
-// 		},
-// 		position: function (node: AttributeGlNode) {
-// 			node.p.name.set('position');
-// 			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC3));
-// 		},
-// 		uv: function (node: AttributeGlNode) {
-// 			node.p.name.set('uv');
-// 			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.VEC2));
-// 		},
-// 		id: function (node: AttributeGlNode) {
-// 			node.p.name.set('id');
-// 			node.p.type.set(ATTRIBUTE_NODE_AVAILABLE_GL_TYPES.indexOf(GlConnectionPointType.FLOAT));
-// 		},
-// 	};
-// }
-
 const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<AttributeGlNode> = (node: AttributeGlNode) => {
 	const collection = new NodePresetsCollection();
 
@@ -61,8 +24,9 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 	const normal = new BasePreset().addEntry(node.p.name, Attribute.NORMAL).addEntry(node.p.type, v3);
 	const uv = new BasePreset().addEntry(node.p.name, Attribute.UV).addEntry(node.p.type, v2);
 	const id = new BasePreset().addEntry(node.p.name, `id`).addEntry(node.p.type, f);
+	const idn = new BasePreset().addEntry(node.p.name, `idn`).addEntry(node.p.type, f);
 	const pti = new BasePreset().addEntry(node.p.name, `pti`).addEntry(node.p.type, f);
-	const randomId = new BasePreset().addEntry(node.p.name, `randomId`).addEntry(node.p.type, f);
+	// const randomId = new BasePreset().addEntry(node.p.name, `randomId`).addEntry(node.p.type, f);
 	const restP = new BasePreset().addEntry(node.p.name, `restP`).addEntry(node.p.type, v3);
 	const restN = new BasePreset().addEntry(node.p.name, `restN`).addEntry(node.p.type, v3);
 	const velocity = new BasePreset().addEntry(node.p.name, `velocity`).addEntry(node.p.type, v3);
@@ -78,10 +42,11 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 		normal,
 		uv,
 		id,
+		idn,
 		pti,
 		restP,
 		restN,
-		randomId,
+		// randomId,
 		velocity,
 	});
 

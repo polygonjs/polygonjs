@@ -44,7 +44,7 @@ export class SceneJsonImporter {
 	migrateHelper() {
 		return this._migrateHelper;
 	}
-	polygonjsSceneVersion() {
+	oldPolygonjsSceneVersion() {
 		const properties = this._data['properties'];
 		if (properties) {
 			return properties.versions?.polygonjs;
@@ -53,7 +53,7 @@ export class SceneJsonImporter {
 
 	scene(): PolyScene {
 		if (CoreFeaturesController.debugLoadProgress()) {
-			console.log(`polygonjs version:${this.polygonjsSceneVersion()}`);
+			console.log(`polygonjs version:${this.oldPolygonjsSceneVersion()}`);
 		}
 		const rootData = this._data['root']!;
 		const paramsInitValueOverrides = ParamJsonImporter.non_spare_params_data_value(rootData['params']);
