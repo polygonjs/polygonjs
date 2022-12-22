@@ -64,8 +64,8 @@ export class PointerEventsController extends BaseSceneEventsController<
 		this._camera = viewer.camera();
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
 		if (this._camera) {
-			viewer.raycaster.setFromCamera(this._cursor, this._camera);
-			this._raycaster = viewer.raycaster;
+			viewer.raycastersController.setCursor0(this._cursor);
+			this._raycaster = viewer.raycastersController.raycaster0();
 		}
 
 		// if (nodesToTrigger) {

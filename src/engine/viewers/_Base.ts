@@ -4,13 +4,12 @@ import {ViewerControlsController} from './utils/ViewerControlsController';
 import {ViewerEventsController} from './utils/ViewerEventsController';
 import {ViewerWebGLController} from './utils/ViewerWebglController';
 import {ViewerAudioController} from './utils/ViewerAudioController';
-// import {ThreejsCameraControlsController} from '../nodes/obj/utils/cameras/CameraControlsController';
-import {Camera, Object3D, Raycaster} from 'three';
+import {Camera, Object3D} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {Poly, PolyEngine} from '../Poly';
-// import {TypedCameraControlsEventNode} from '../nodes/event/_BaseCameraControls';
-import {RaycasterForBVH} from '../operations/sop/utils/Bvh/three-mesh-bvh';
+
 import {AbstractRenderer} from './Common';
+import {ViewerRaycastersController} from './utils/ViewerRaycastersController';
 
 const HOVERED_CLASS_NAME = 'hovered';
 
@@ -69,7 +68,7 @@ export abstract class TypedViewer<C extends Camera> {
 	public readonly updateCameraAspect: UpdateCameraAspectCallback;
 	protected _doRender: boolean = true;
 	protected _controlsNode: ApplicableControlsNode | undefined;
-	public readonly raycaster = this.createRaycaster();
+
 	constructor(options: TypedViewerOptions<C>) {
 		this._id = TypedViewer._nextId();
 		this._camera = options.camera;
@@ -191,18 +190,13 @@ export abstract class TypedViewer<C extends Camera> {
 	audioController(): ViewerAudioController {
 		return (this._audioController = this._audioController || new ViewerAudioController(this));
 	}
+	public readonly raycastersController: ViewerRaycastersController = new ViewerRaycastersController(this);
 
 	domElement() {
 		return this._domElement;
 	}
 	scene() {
 		return this._scene;
-	}
-
-	createRaycaster() {
-		const raycaster = new Raycaster() as RaycasterForBVH;
-		raycaster.firstHitOnly = true;
-		return raycaster;
 	}
 
 	/**

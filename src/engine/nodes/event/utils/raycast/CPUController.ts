@@ -49,7 +49,7 @@ export class RaycastCPUController extends BaseRaycastController {
 			this._node.p.mouse.set(this._cursorArray);
 		}
 		// this._updateFromCursor(canvas);
-		viewer.raycaster.setFromCamera(this._cursor, camera);
+		viewer.raycastersController.raycaster0().setFromCamera(this._cursor, camera);
 	}
 	// protected override _remapCursor() {
 	// 	this._cursor.x = this._cursor.x * 2 - 1;
@@ -105,7 +105,7 @@ export class RaycastCPUController extends BaseRaycastController {
 		}
 		this._plane.normal.copy(this._node.pv.planeDirection);
 		this._plane.constant = this._node.pv.planeOffset;
-		viewer.raycaster.ray.intersectPlane(this._plane, this._plane_intersect_target);
+		viewer.raycastersController.raycaster0().ray.intersectPlane(this._plane, this._plane_intersect_target);
 
 		this._setPositionParam(this._plane_intersect_target);
 		this._node.triggerHit(eventContext);
@@ -123,11 +123,13 @@ export class RaycastCPUController extends BaseRaycastController {
 		if (this._resolvedTargets) {
 			// clear array before
 			this._intersections.length = 0;
-			const intersections = viewer.raycaster.intersectObjects(
-				this._resolvedTargets,
-				isBooleanTrue(this._node.pv.traverseChildren),
-				this._intersections
-			);
+			const intersections = viewer.raycastersController
+				.raycaster0()
+				.intersectObjects(
+					this._resolvedTargets,
+					isBooleanTrue(this._node.pv.traverseChildren),
+					this._intersections
+				);
 			const intersection = intersections[0];
 			if (intersection) {
 				this._node.scene().batchUpdates(() => {
@@ -198,7 +200,7 @@ export class RaycastCPUController extends BaseRaycastController {
 		if (!viewer) {
 			return;
 		}
-		const pointsParam = viewer.raycaster.params.Points;
+		const pointsParam = viewer.raycastersController.raycaster0().params.Points;
 		if (pointsParam) {
 			pointsParam.threshold = this._node.pv.pointsThreshold;
 		}
