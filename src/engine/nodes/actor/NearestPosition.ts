@@ -1,5 +1,5 @@
 /**
- * Projects this vector from world space into the camera's normalized device coordinate (NDC) space.
+ * returns the vector3 that is the closest to a given position
  *
  *
  *
