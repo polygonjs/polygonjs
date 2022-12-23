@@ -2,7 +2,6 @@ import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {Raycaster, Vector2} from 'three';
-import {Camera} from 'three';
 import type {PointerEventActorNode} from '../actors/ActorsPointerEventsController';
 import {ACCEPTED_POINTER_EVENT_TYPES} from '../../../../core/event/PointerEventType';
 
@@ -20,8 +19,10 @@ export class PointerEventsController extends BaseSceneEventsController<
 > {
 	protected override _requireCanvasEventListeners: boolean = true;
 	private _cursorHelper: CursorHelper = new CursorHelper();
-	protected _cursor: Vector2 = new Vector2();
-	protected _camera: Camera | undefined;
+	// init to a large value so we don't get a fake intersect
+	// if there was no interaction
+	protected _cursor: Vector2 = new Vector2(-1000, -1000);
+	// protected _camera: Camera | undefined;
 	private _raycaster: Raycaster = new Raycaster();
 	type() {
 		return 'pointer';
@@ -56,15 +57,15 @@ export class PointerEventsController extends BaseSceneEventsController<
 			return;
 		}
 
-		this._camera = viewer.camera();
+		// const camera = viewer.camera();
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
-		if (this._camera) {
-			viewer.raycastersController.setCursor0(this._cursor);
-			// even though the update is in the render loop
-			// it may be more up to date to do it here as well
-			viewer.raycastersController.update();
-			this._raycaster = viewer.raycastersController.raycaster0();
-		}
+		// if (camera) {
+		viewer.raycastersController.setCursor0(this._cursor);
+		// even though the update is in the render loop
+		// it may be more up to date to do it here as well
+		viewer.raycastersController.update();
+		this._raycaster = viewer.raycastersController.raycaster0();
+		// }
 
 		this.dispatcher.scene.actorsManager.pointerEventsController.setTriggeredNodes(nodesToTrigger);
 	}
@@ -75,6 +76,9 @@ export class PointerEventsController extends BaseSceneEventsController<
 	cursor() {
 		return this._cursor;
 	}
+	// camera() {
+	// 	return this._camera;
+	// }
 
 	updateRaycast(options: RaycasterUpdateOptions) {
 		if (!this._raycaster) {

@@ -152,6 +152,11 @@ export abstract class TypedViewer<C extends Camera> {
 		return (this._canvas = this._canvas || TypedViewer.createCanvas(this._id));
 	}
 
+	render(delta: number) {
+		this._scene.viewersRegister.markViewerAsRendered(this);
+		this.raycastersController.update();
+	}
+
 	setRenderObjectOverride(object?: Object3D | null) {
 		if (object) {
 			this._renderObjectOverride = object;

@@ -42,6 +42,7 @@ import {FloatToVec4ActorNode} from '../../../nodes/actor/FloatToVec4';
 import {FloorActorNode} from '../../../nodes/actor/Floor';
 import {GetBox3PropertyActorNode} from '../../../nodes/actor/GetBox3Property';
 import {GetChildrenAttributesActorNode} from '../../../nodes/actor/GetChildrenAttributes';
+import {GetDefaultCameraActorNode} from '../../../nodes/actor/GetDefaultCamera';
 import {GetMaterialActorNode} from '../../../nodes/actor/GetMaterial';
 import {GetObjectActorNode} from '../../../nodes/actor/GetObject';
 import {GetObjectAttributeActorNode} from '../../../nodes/actor/GetObjectAttribute';
@@ -67,9 +68,11 @@ import {MultScalarActorNode} from '../../../nodes/actor/MultScalar';
 import {NegateActorNode} from '../../../nodes/actor/Negate';
 import {NormalizeActorNode} from '../../../nodes/actor/Normalize';
 import {NullActorNode} from '../../../nodes/actor/Null';
+import {Object3DLocalToWorldActorNode} from '../../../nodes/actor/Object3DLocalToWorld';
+import {Object3DUpdateMatrixActorNode} from '../../../nodes/actor/Object3DUpdateMatrix';
+import {Object3DUpdateWorldMatrixActorNode} from '../../../nodes/actor/Object3DUpdateWorldMatrix';
+import {Object3DWorldToLocalActorNode} from '../../../nodes/actor/Object3DWorldToLocal';
 import {ObjectDispatchEventActorNode} from '../../../nodes/actor/ObjectDispatchEvent';
-import {ObjectUpdateMatrixActorNode} from '../../../nodes/actor/ObjectUpdateMatrix';
-import {ObjectUpdateWorldMatrixActorNode} from '../../../nodes/actor/ObjectUpdateWorldMatrix';
 import {OnChildAttributeUpdateActorNode} from '../../../nodes/actor/OnChildAttributeUpdate';
 import {OnKeydownActorActorNode} from '../../../nodes/actor/OnKeydown';
 import {OnKeypressActorActorNode} from '../../../nodes/actor/OnKeypress';
@@ -167,6 +170,8 @@ import {Vec4ToVec3ActorNode} from '../../../nodes/actor/Vec4ToVec3';
 import {Vector2ActorNode} from '../../../nodes/actor/Vector2';
 import {Vector3ActorNode} from '../../../nodes/actor/Vector3';
 import {Vector3AngleToActorNode} from '../../../nodes/actor/Vector3AngleTo';
+import {Vector3ProjectActorNode} from '../../../nodes/actor/Vector3Project';
+import {Vector3UnprojectActorNode} from '../../../nodes/actor/Vector3Unproject';
 import {Vector4ActorNode} from '../../../nodes/actor/Vector4';
 // networks
 import {ActorsNetworkActorNode} from '../../../nodes/actor/ActorsNetwork';
@@ -221,6 +226,7 @@ export interface ActorNodeChildrenMap {
 	floor: FloorActorNode;
 	getBox3Property: GetBox3PropertyActorNode;
 	getChildrenAttributes: GetChildrenAttributesActorNode;
+	getDefaultCamera: GetDefaultCameraActorNode;
 	getMaterial: GetMaterialActorNode;
 	getObject: GetObjectActorNode;
 	getObjectAttribute: GetObjectAttributeActorNode;
@@ -246,9 +252,11 @@ export interface ActorNodeChildrenMap {
 	negate: NegateActorNode;
 	normalize: NormalizeActorNode;
 	null: NullActorNode;
+	object3DLocalToWorld: Object3DLocalToWorldActorNode;
+	object3DUpdateMatrix: Object3DUpdateMatrixActorNode;
+	object3DUpdateWorldMatrix: Object3DUpdateWorldMatrixActorNode;
+	object3DWorldToLocal: Object3DWorldToLocalActorNode;
 	objectDispatchEvent: ObjectDispatchEventActorNode;
-	objectUpdateMatrix: ObjectUpdateMatrixActorNode;
-	objectUpdateWorldMatrix: ObjectUpdateWorldMatrixActorNode;
 	onChildAttributeUpdate: OnChildAttributeUpdateActorNode;
 	onKeydown: OnKeydownActorActorNode;
 	onKeypress: OnKeypressActorActorNode;
@@ -346,6 +354,8 @@ export interface ActorNodeChildrenMap {
 	vector2: Vector2ActorNode;
 	vector3: Vector3ActorNode;
 	vector3AngleTo: Vector3AngleToActorNode;
+	vector3Project: Vector3ProjectActorNode;
+	vector3Unproject: Vector3UnprojectActorNode;
 	vector4: Vector4ActorNode;
 	// networks
 	actorsNetwork: ActorsNetworkActorNode;
@@ -406,6 +416,7 @@ export class ActorRegister {
 		poly.registerNode(FloorActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(GetBox3PropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetChildrenAttributesActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetDefaultCameraActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetMaterialActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectAttributeActorNode, CATEGORY_ACTOR.GET);
@@ -431,9 +442,11 @@ export class ActorRegister {
 		poly.registerNode(NegateActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NormalizeActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NullActorNode, CATEGORY_ACTOR.MISC);
+		poly.registerNode(Object3DLocalToWorldActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(Object3DUpdateMatrixActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(Object3DUpdateWorldMatrixActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(Object3DWorldToLocalActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(ObjectDispatchEventActorNode, CATEGORY_ACTOR.ACTION);
-		poly.registerNode(ObjectUpdateMatrixActorNode, CATEGORY_ACTOR.ACTION);
-		poly.registerNode(ObjectUpdateWorldMatrixActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(OnChildAttributeUpdateActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnKeydownActorActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnKeypressActorActorNode, CATEGORY_ACTOR.EVENTS);
@@ -532,6 +545,8 @@ export class ActorRegister {
 		poly.registerNode(Vector2ActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(Vector3ActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(Vector3AngleToActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(Vector3ProjectActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(Vector3UnprojectActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(Vector4ActorNode, CATEGORY_ACTOR.MATH);
 		// networks
 		poly.registerNode(ActorsNetworkActorNode, CATEGORY_ACTOR.NETWORK);

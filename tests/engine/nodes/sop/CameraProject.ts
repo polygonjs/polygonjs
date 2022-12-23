@@ -1,72 +1,62 @@
-import {CoreSleep} from '../../../../src/core/Sleep';
 import {CameraProjectSopNode} from '../../../../src/engine/nodes/sop/CameraProject';
+import {PerspectiveCameraSopNode} from '../../../../src/engine/nodes/sop/PerspectiveCamera';
 
-async function createCamera() {
-	const scene = window.scene;
-	const camera = scene.createNode('perspectiveCamera');
+async function createCameraNode() {
+	const geo1 = window.geo1;
+	const camera = geo1.createNode('perspectiveCamera');
 	camera.p.near.set(1);
 	camera.p.far.set(10);
-	await camera.compute();
-	await CoreSleep.sleep(500);
-	// camera.p.t.set([0, 0, 5]);
-	// camera.p.r.set([0, 45, 0]);
-	// camera.p.near.set(1);
-	// camera.p.far.set(10);
-	camera.object.position.set(0, 0, 5);
-	// camera.object.near = 1;
-	// camera.object.far = 10;
-	camera.object.updateProjectionMatrix();
-	camera.object.updateMatrix();
-	camera.object.updateMatrixWorld(true);
-	camera.object.updateWorldMatrix(true, true);
+	camera.p.fov.set(100);
 
 	return camera;
 }
-async function createCameraProject(assert: Assert) {
-	const camera = await createCamera();
-	assert.equal(camera.object.near, 1);
-	assert.equal(camera.object.far, 10);
-
+async function createCameraProject(cameraNode: PerspectiveCameraSopNode) {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const bboxScatter1 = geo1.createNode('bboxScatter');
-	const cameraProject1 = geo1.createNode('cameraProject');
-	box1.p.center.set([0, 0, 0]);
-	box1.p.size.set(2);
+	box1.p.sizes.set([0.5, 0.5, 0.4]);
+	box1.p.center.set([0, 0, -0.6]);
 	bboxScatter1.setInput(0, box1);
+
+	const cameraProject1 = geo1.createNode('cameraProject');
 	cameraProject1.setInput(0, bboxScatter1);
-	cameraProject1.p.camera.setNode(camera);
+	cameraProject1.setInput(1, cameraNode);
 	return cameraProject1;
 }
-async function getBbox(cameraProject1: CameraProjectSopNode) {
-	const container = await cameraProject1.compute();
+async function getBbox(cameraProject: CameraProjectSopNode) {
+	const container = await cameraProject.compute();
 	const core_group = container.coreContent()!;
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
 	geometry.computeBoundingBox();
 	return geometry.boundingBox!;
 }
 
-QUnit.test('cameraProject simple', async (assert) => {
-	const cameraProject1 = await createCameraProject(assert);
+QUnit.test('sop/cameraProject simple', async (assert) => {
+	const cameraNode = await createCameraNode();
+	const geo1 = window.geo1;
+	const cameraProject1 = await createCameraProject(cameraNode);
 
 	let bbox = await getBbox(cameraProject1);
 
-	assert.in_delta(bbox.min.x, -0.53, 0.1);
-	assert.in_delta(bbox.max.x, 0.53, 0.1);
-	assert.in_delta(bbox.min.y, -0.53, 0.1);
-	assert.in_delta(bbox.max.y, 0.53, 0.1);
-	assert.in_delta(bbox.min.z, 0.51, 0.1);
-	assert.in_delta(bbox.max.z, 0.68, 0.1);
-});
+	assert.in_delta(bbox.min.x, -0.5244, 0.1);
+	assert.in_delta(bbox.max.x, 0.52443, 0.1);
+	assert.in_delta(bbox.min.y, -0.5244, 0.1);
+	assert.in_delta(bbox.max.y, 0.52443, 0.1);
+	assert.in_delta(bbox.min.z, -4.333, 0.1);
+	assert.in_delta(bbox.max.z, -1.55, 0.1);
 
-QUnit.test('cameraProject unproject', async (assert) => {
-	const cameraProject1 = await createCameraProject(assert);
+	const cameraProject2 = geo1.createNode('cameraProject');
+	cameraProject2.setInput(0, cameraProject1);
+	cameraProject2.setInput(1, cameraNode);
+	cameraProject2.p.project.set(false);
 
-	let bbox = await getBbox(cameraProject1);
-	assert.in_delta(bbox.min.x, -0.53, 0.1);
-	assert.in_delta(bbox.max.x, 0.53, 0.1);
-	assert.in_delta(bbox.min.y, -0.53, 0.1);
-	assert.in_delta(bbox.max.y, 0.53, 0.1);
-	assert.in_delta(bbox.min.z, 0.61, 0.1);
-	assert.in_delta(bbox.max.z, 0.68, 0.1);
+	bbox = await getBbox(cameraProject2);
+	console.log(bbox);
+
+	assert.in_delta(bbox.min.x, -0.25, 0.1);
+	assert.in_delta(bbox.max.x, 0.25, 0.1);
+	assert.in_delta(bbox.min.y, -0.25, 0.1);
+	assert.in_delta(bbox.max.y, 0.25, 0.1);
+	assert.in_delta(bbox.min.z, -0.8, 0.1);
+	assert.in_delta(bbox.max.z, -0.4, 0.1);
 });

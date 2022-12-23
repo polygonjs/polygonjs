@@ -1,9 +1,9 @@
-import {Group, Mesh} from 'three';
+import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/objectUpdateWorldMatrix', async (assert) => {
+QUnit.test('actor/object3DUpdateMatrix', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -14,18 +14,15 @@ QUnit.test('actor/objectUpdateWorldMatrix', async (assert) => {
 	actor1.flags.display.set(true);
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
-	const objectUpdateMatrix1 = actor1.createNode('objectUpdateWorldMatrix');
+	const objectUpdateMatrix1 = actor1.createNode('object3DUpdateMatrix');
 
 	objectUpdateMatrix1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.objects()[0] as Mesh;
 	object.position.set(1, 2, 3);
-	const child = new Group();
-	object.add(child);
-	assert.deepEqual(child.matrixWorld.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 	object.matrixAutoUpdate = false;
-	child.matrixAutoUpdate = false;
+	assert.deepEqual(object.matrix.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -33,15 +30,14 @@ QUnit.test('actor/objectUpdateWorldMatrix', async (assert) => {
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
 		assert.equal(scene.time(), 0);
-		assert.deepEqual(child.matrixWorld.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 2, 3, 1], 'on play');
+		assert.deepEqual(object.matrix.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 2, 3, 1]);
 		object.position.set(4, 5, 6);
 
 		await CoreSleep.sleep(100);
-		assert.deepEqual(child.matrixWorld.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 2, 3, 1], 'after 100ms');
+		assert.deepEqual(object.matrix.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 2, 3, 1]);
 
-		object.updateMatrix();
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(100);
-		assert.deepEqual(child.matrixWorld.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 4, 5, 6, 1], 'after trigger');
+		assert.deepEqual(object.matrix.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 4, 5, 6, 1]);
 	});
 });

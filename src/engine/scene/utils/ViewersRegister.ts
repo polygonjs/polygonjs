@@ -14,6 +14,7 @@ export class ViewersRegister {
 	private _viewersById: Map<string, BaseViewerType> = new Map();
 	// private _viewersByCamera: Map<Camera, BaseViewerType> = new Map();
 	private _firstViewer: BaseViewerType | undefined;
+	private _lastRenderedViewer: BaseViewerType | undefined;
 	constructor(protected scene: PolyScene) {}
 
 	registerViewer(viewer: BaseViewerType) {
@@ -26,6 +27,7 @@ export class ViewersRegister {
 		// this._viewersByCamera.delete(viewer.camera());
 		this._updateCache();
 	}
+
 	traverseViewers(callback: (viewer: BaseViewerType) => void) {
 		this._viewersById.forEach(callback);
 	}
@@ -46,6 +48,12 @@ export class ViewersRegister {
 
 	firstViewer() {
 		return this._firstViewer;
+	}
+	markViewerAsRendered(viewer: BaseViewerType) {
+		this._lastRenderedViewer = viewer;
+	}
+	lastRenderedViewer() {
+		return this._lastRenderedViewer;
 	}
 	private _updateCache() {
 		this._firstViewer = undefined;

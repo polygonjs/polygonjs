@@ -5,21 +5,27 @@
  */
 
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
+import {ParamType} from '../../poly/ParamType';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-class ObjectUpdateMatrixActorParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new ObjectUpdateMatrixActorParamsConfig();
+class Object3DUpdateWorldMatrixActorParamsConfig extends NodeParamsConfig {
+	/** @param updates the matrix of the parents */
+	updateParents = ParamConfig.BOOLEAN(1);
+	/** @param updates the matrix of the children */
+	updateChildren = ParamConfig.BOOLEAN(1);
+}
+const ParamsConfig = new Object3DUpdateWorldMatrixActorParamsConfig();
 
-export class ObjectUpdateMatrixActorNode extends TypedActorNode<ObjectUpdateMatrixActorParamsConfig> {
+export class Object3DUpdateWorldMatrixActorNode extends TypedActorNode<Object3DUpdateWorldMatrixActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'objectUpdateMatrix';
+		return 'object3DUpdateWorldMatrix';
 	}
 
 	override initializeNode() {
@@ -38,8 +44,12 @@ export class ObjectUpdateMatrixActorNode extends TypedActorNode<ObjectUpdateMatr
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const Object3D = this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||context.Object3D;
-		Object3D.updateMatrix();
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
+		const updateParents = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateParents, context);
+		const updateChildren = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateChildren, context);
+		Object3D.updateWorldMatrix(updateParents, updateChildren);
 		this.runTrigger(context);
 	}
 }

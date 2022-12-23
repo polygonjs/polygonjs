@@ -6,7 +6,7 @@
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {ParamType} from '../../../../poly/ParamType';
 import {BaseConnectionPoint} from './_Base';
-import {CatmullRomCurve3, Object3D} from 'three';
+import {Camera, CatmullRomCurve3, Object3D} from 'three';
 import {Color} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
@@ -26,6 +26,7 @@ export enum ActorConnectionPointType {
 	BOOLEAN = 'boolean',
 	BOOLEAN_ARRAY = 'boolean[]',
 	BOX3 = 'Box3',
+	CAMERA = 'Camera',
 	CATMULL_ROM_CURVE3 = 'CatmullRomCurve3',
 	COLOR = 'Color',
 	COLOR_ARRAY = 'Color[]',
@@ -70,6 +71,7 @@ export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
 	ActorConnectionPointType.BOOLEAN,
 	ActorConnectionPointType.BOOLEAN_ARRAY,
 	ActorConnectionPointType.BOX3,
+	ActorConnectionPointType.CAMERA,
 	ActorConnectionPointType.CATMULL_ROM_CURVE3,
 	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.COLOR_ARRAY,
@@ -117,6 +119,7 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.BOX3]: ParamType.BUTTON;
+	[ActorConnectionPointType.CAMERA]: ParamType.BUTTON; //
 	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: ParamType.BUTTON;
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR;
 	[ActorConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON;
@@ -145,6 +148,7 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.BOX3]: ParamType.BUTTON,
+	[ActorConnectionPointType.CAMERA]: ParamType.BUTTON,
 	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: ParamType.BUTTON,
 	[ActorConnectionPointType.COLOR]: ParamType.COLOR,
 	[ActorConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON,
@@ -180,6 +184,7 @@ export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnection
 	[ActorConnectionPointType.BOOLEAN]: ActorConnectionPointType.BOOLEAN_ARRAY;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ActorConnectionPointType.BOOLEAN_ARRAY;
 	[ActorConnectionPointType.BOX3]: ActorConnectionPointType.BOX3;
+	[ActorConnectionPointType.CAMERA]: ActorConnectionPointType.CAMERA;
 	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: ActorConnectionPointType.CATMULL_ROM_CURVE3;
 	[ActorConnectionPointType.COLOR]: ActorConnectionPointType.COLOR_ARRAY;
 	[ActorConnectionPointType.COLOR_ARRAY]: ActorConnectionPointType.COLOR_ARRAY;
@@ -208,6 +213,7 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.BOOLEAN]: ActorConnectionPointType.BOOLEAN_ARRAY,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: ActorConnectionPointType.BOOLEAN_ARRAY,
 	[ActorConnectionPointType.BOX3]: ActorConnectionPointType.BOX3,
+	[ActorConnectionPointType.CAMERA]: ActorConnectionPointType.CAMERA,
 	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: ActorConnectionPointType.CATMULL_ROM_CURVE3,
 	[ActorConnectionPointType.COLOR]: ActorConnectionPointType.COLOR_ARRAY,
 	[ActorConnectionPointType.COLOR_ARRAY]: ActorConnectionPointType.COLOR_ARRAY,
@@ -301,6 +307,7 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.BOOLEAN]: false,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: null,
 	[ActorConnectionPointType.BOX3]: null,
+	[ActorConnectionPointType.CAMERA]: null,
 	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: null,
 	[ActorConnectionPointType.COLOR]: new Color(),
 	[ActorConnectionPointType.COLOR_ARRAY]: null,
@@ -338,6 +345,7 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.BOOLEAN]: 1,
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: 1,
 	[ActorConnectionPointType.BOX3]: 1,
+	[ActorConnectionPointType.CAMERA]: 1,
 	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: 1,
 	[ActorConnectionPointType.COLOR]: 3,
 	[ActorConnectionPointType.COLOR_ARRAY]: 1,
@@ -373,6 +381,7 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.BOOLEAN]: boolean;
 	[ActorConnectionPointType.BOOLEAN_ARRAY]: boolean[];
 	[ActorConnectionPointType.BOX3]: Box3;
+	[ActorConnectionPointType.CAMERA]: Camera;
 	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: CatmullRomCurve3;
 	[ActorConnectionPointType.COLOR]: Color;
 	[ActorConnectionPointType.COLOR_ARRAY]: Color[];
@@ -394,6 +403,73 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.VECTOR3_ARRAY]: Vector3[];
 	[ActorConnectionPointType.VECTOR4]: Vector4;
 	[ActorConnectionPointType.VECTOR4_ARRAY]: Vector4[];
+};
+
+//
+//
+// Map to convert from a Actor Data type to sub types Actor Data type
+//
+//
+type ActorConnectionPointTypeToSubTypeMapGeneric = {
+	[key in ActorConnectionPointType]: null | Set<ActorConnectionPointType>;
+};
+export interface ActorIConnectionPointTypeToSubTypeMap extends ActorConnectionPointTypeToSubTypeMapGeneric {
+	[ActorConnectionPointType.ANIMATION_MIXER]: null;
+	[ActorConnectionPointType.ANIMATION_ACTION]: null;
+	[ActorConnectionPointType.BOOLEAN]: null;
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: null;
+	[ActorConnectionPointType.BOX3]: null;
+	[ActorConnectionPointType.CAMERA]: null;
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: null;
+	[ActorConnectionPointType.COLOR]: null;
+	[ActorConnectionPointType.COLOR_ARRAY]: null;
+	[ActorConnectionPointType.FLOAT]: null;
+	[ActorConnectionPointType.FLOAT_ARRAY]: null;
+	[ActorConnectionPointType.INTEGER]: null;
+	[ActorConnectionPointType.INTEGER_ARRAY]: null;
+	[ActorConnectionPointType.MATERIAL]: null;
+	[ActorConnectionPointType.OBJECT_3D]: Set<ActorConnectionPointType>;
+	[ActorConnectionPointType.PLANE]: null;
+	[ActorConnectionPointType.RAY]: null;
+	[ActorConnectionPointType.SPHERE]: null;
+	[ActorConnectionPointType.STRING]: null;
+	[ActorConnectionPointType.STRING_ARRAY]: null;
+	[ActorConnectionPointType.TRIGGER]: null;
+	[ActorConnectionPointType.VECTOR2]: null;
+	[ActorConnectionPointType.VECTOR2_ARRAY]: null;
+	[ActorConnectionPointType.VECTOR3]: null;
+	[ActorConnectionPointType.VECTOR3_ARRAY]: null;
+	[ActorConnectionPointType.VECTOR4]: null;
+	[ActorConnectionPointType.VECTOR4_ARRAY]: null;
+}
+export const ActorConnectionPointTypeToSubTypeMap: ActorIConnectionPointTypeToSubTypeMap = {
+	[ActorConnectionPointType.ANIMATION_MIXER]: null,
+	[ActorConnectionPointType.ANIMATION_ACTION]: null,
+	[ActorConnectionPointType.BOOLEAN]: null,
+	[ActorConnectionPointType.BOOLEAN_ARRAY]: null,
+	[ActorConnectionPointType.BOX3]: null,
+	[ActorConnectionPointType.CAMERA]: null,
+	[ActorConnectionPointType.CATMULL_ROM_CURVE3]: null,
+	[ActorConnectionPointType.COLOR]: null,
+	[ActorConnectionPointType.COLOR_ARRAY]: null,
+	[ActorConnectionPointType.FLOAT]: null,
+	[ActorConnectionPointType.FLOAT_ARRAY]: null,
+	[ActorConnectionPointType.INTEGER]: null,
+	[ActorConnectionPointType.INTEGER_ARRAY]: null,
+	[ActorConnectionPointType.MATERIAL]: null,
+	[ActorConnectionPointType.OBJECT_3D]: new Set([ActorConnectionPointType.CAMERA]),
+	[ActorConnectionPointType.PLANE]: null,
+	[ActorConnectionPointType.RAY]: null,
+	[ActorConnectionPointType.SPHERE]: null,
+	[ActorConnectionPointType.STRING]: null,
+	[ActorConnectionPointType.STRING_ARRAY]: null,
+	[ActorConnectionPointType.TRIGGER]: null,
+	[ActorConnectionPointType.VECTOR2]: null,
+	[ActorConnectionPointType.VECTOR2_ARRAY]: null,
+	[ActorConnectionPointType.VECTOR3]: null,
+	[ActorConnectionPointType.VECTOR3_ARRAY]: null,
+	[ActorConnectionPointType.VECTOR4]: null,
+	[ActorConnectionPointType.VECTOR4_ARRAY]: null,
 };
 
 export interface ActorConnectionPointData<T extends ActorConnectionPointType> {
@@ -451,7 +527,15 @@ export class ActorConnectionPoint<T extends ActorConnectionPointType> extends Ba
 		return this._init_value;
 	}
 	override are_types_matched(srcType: string, destType: string): boolean {
-		return srcType == destType;
+		if (srcType == destType) {
+			return true;
+		}
+		const subTypes = ActorConnectionPointTypeToSubTypeMap[destType as ActorConnectionPointType];
+		if (subTypes) {
+			return subTypes.has(srcType as ActorConnectionPointType);
+		} else {
+			return false;
+		}
 	}
 
 	override toJSON(): ActorConnectionPointData<T> {

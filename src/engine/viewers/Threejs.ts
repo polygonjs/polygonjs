@@ -243,13 +243,14 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		}
 	}
 
-	render(delta: number) {
+	override render(delta: number) {
 		if (this._canvas) {
+			super.render(delta);
 			const renderer = this._renderer;
 			if (!renderer) {
 				return;
 			}
-			this.raycastersController.update();
+
 			this._runOnBeforeRenderCallbacks(delta, renderer);
 			if (this._renderFunc) {
 				this._renderFunc(delta);

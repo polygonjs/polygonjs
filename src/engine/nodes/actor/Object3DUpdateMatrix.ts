@@ -5,27 +5,21 @@
  */
 
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {ParamType} from '../../poly/ParamType';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-class ObjectUpdateWorldMatrixActorParamsConfig extends NodeParamsConfig {
-	/** @param updates the matrix of the parents */
-	updateParents = ParamConfig.BOOLEAN(1);
-	/** @param updates the matrix of the children */
-	updateChildren = ParamConfig.BOOLEAN(1);
-}
-const ParamsConfig = new ObjectUpdateWorldMatrixActorParamsConfig();
+class Object3DUpdateMatrixActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new Object3DUpdateMatrixActorParamsConfig();
 
-export class ObjectUpdateWorldMatrixActorNode extends TypedActorNode<ObjectUpdateWorldMatrixActorParamsConfig> {
+export class Object3DUpdateMatrixActorNode extends TypedActorNode<Object3DUpdateMatrixActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'objectUpdateWorldMatrix';
+		return 'object3DUpdateMatrix';
 	}
 
 	override initializeNode() {
@@ -47,9 +41,7 @@ export class ObjectUpdateWorldMatrixActorNode extends TypedActorNode<ObjectUpdat
 		const Object3D =
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
-		const updateParents = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateParents, context);
-		const updateChildren = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateChildren, context);
-		Object3D.updateWorldMatrix(updateParents, updateChildren);
+		Object3D.updateMatrix();
 		this.runTrigger(context);
 	}
 }

@@ -198,7 +198,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 							.namedInputConnectionPoints()
 							.map((point) => point?.name().toLowerCase())
 							.indexOf(inputName.toLowerCase());
-						if (connectionPointIndex != null) {
+						if (connectionPointIndex >= 0) {
 							inputIndex = connectionPointIndex;
 						}
 					}

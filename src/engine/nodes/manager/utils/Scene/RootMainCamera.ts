@@ -1,9 +1,14 @@
 import {Constructor} from '../../../../../types/GlobalTypes';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {RootManagerNode} from '../../Root';
-import {Camera} from 'three';
+import {Camera, PerspectiveCamera} from 'three';
 import {CoreWalker} from '../../../../../core/Walker';
 import {GeoObjNode} from '../../../obj/Geo';
+
+let __defaultDummyPerspectiveCamera: PerspectiveCamera | undefined;
+export function _defaultDummyPerspectiveCamera() {
+	return (__defaultDummyPerspectiveCamera = __defaultDummyPerspectiveCamera || new PerspectiveCamera());
+}
 
 export function RootMainCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -38,6 +43,21 @@ export class RootMainCameraController {
 			await param.compute();
 		}
 		return param.value;
+	}
+	private _cameraPathSync() {
+		const param = this.mainCameraPathParam();
+		return param.value;
+	}
+	cameraSync() {
+		const path = this._cameraPathSync();
+		const object = this.node.scene().objectsController.findObjectByMask(path) as Camera | undefined;
+		return object;
+	}
+	dummyPerspectiveCamera() {
+		return _defaultDummyPerspectiveCamera();
+	}
+	cameraSyncOrDummy() {
+		return this.cameraSync() || this.dummyPerspectiveCamera();
 	}
 	async camera() {
 		const path = await this.cameraPath();

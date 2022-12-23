@@ -8,18 +8,10 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraProjectSopOperation} from '../../operations/sop/CameraProject';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
 const DEFAULT = CameraProjectSopOperation.DEFAULT_PARAMS;
 class CameraProjectSopParamsConfig extends NodeParamsConfig {
-	/** @param cameara */
-	camera = ParamConfig.NODE_PATH('', {
-		nodeSelection: {
-			context: NodeContext.OBJ,
-			types: CAMERA_TYPES,
-		},
-	});
 	/** @param unproject */
-	unproject = ParamConfig.BOOLEAN(DEFAULT.unproject);
+	project = ParamConfig.BOOLEAN(DEFAULT.project);
 }
 const ParamsConfig = new CameraProjectSopParamsConfig();
 
@@ -30,11 +22,11 @@ export class CameraProjectSopNode extends TypedSopNode<CameraProjectSopParamsCon
 	}
 
 	static override displayedInputNames(): string[] {
-		return ['points to project/unproject'];
+		return ['points to project/unproject', 'camera'];
 	}
 
 	override initializeNode() {
-		this.io.inputs.setCount(1);
+		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState(CameraProjectSopOperation.INPUT_CLONED_STATE);
 	}
 
