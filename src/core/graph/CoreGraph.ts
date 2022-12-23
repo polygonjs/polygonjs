@@ -1,5 +1,6 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {SetUtils} from '../SetUtils';
+import {CallbacksTriggerController} from './CallbacksTriggerController';
 import {CoreGraphNode} from './CoreGraphNode';
 
 export type CoreGraphNodeId = number;
@@ -12,6 +13,7 @@ export class CoreGraph {
 	private _predecessors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
 	private _nodesById: Map<number, CoreGraphNode> = new Map();
 	private _nodesCount = 0;
+	public readonly callbacksTriggerController = new CallbacksTriggerController(this);
 
 	private _debugging = false;
 	private _addedNodesDuringDebugging: Map<CoreGraphNodeId, CoreGraphNode> = new Map();

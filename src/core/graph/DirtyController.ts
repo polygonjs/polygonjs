@@ -104,7 +104,7 @@ export class DirtyController {
 		if (!this._postDirtyHooks) {
 			return;
 		}
-		const cooker = this.node.scene().cooker;
+		const cooker = this.node.scene().graph.callbacksTriggerController;
 		if (cooker.blocked()) {
 			cooker.enqueue(this.node, original_trigger_graph_node);
 		} else {
@@ -121,9 +121,12 @@ export class DirtyController {
 		const propagate = false;
 		this._cachedSuccessors = this._cachedSuccessors || this.node.graphAllSuccessors();
 
+		this.node.scene().graph.callbacksTriggerController.block();
+
 		for (let successor of this._cachedSuccessors) {
 			successor.dirtyController.setDirty(original_trigger_graph_node, propagate);
 		}
+		this.node.scene().graph.callbacksTriggerController.unblock();
 	}
 
 	clearSuccessorsCache() {

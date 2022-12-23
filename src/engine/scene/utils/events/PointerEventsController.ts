@@ -38,9 +38,6 @@ export class PointerEventsController extends BaseSceneEventsController<
 	override processEvent(eventContext: EventContext<MouseEvent>) {
 		super.processEvent(eventContext);
 
-		// if (this._actorEventNames.size == 0) {
-		// 	return;
-		// }
 		const eventEmitter = eventContext.emitter;
 		if (!eventEmitter) {
 			return;
@@ -58,42 +55,19 @@ export class PointerEventsController extends BaseSceneEventsController<
 		if (!nodesToTrigger) {
 			return;
 		}
-		// if (!this._actorEventNames.has(eventType)) {
-		// 	return;
-		// }
+
 		this._camera = viewer.camera();
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
 		if (this._camera) {
 			viewer.raycastersController.setCursor0(this._cursor);
+			// even though the update is in the render loop
+			// it may be more up to date to do it here as well
+			viewer.raycastersController.update();
 			this._raycaster = viewer.raycastersController.raycaster0();
 		}
 
-		// if (nodesToTrigger) {
 		this.dispatcher.scene.actorsManager.pointerEventsController.setTriggeredNodes(nodesToTrigger);
-		// }
-		// switch (eventType) {
-		// 	case PointerEventType.pointerdown: {
-		// 		this._pointerdownRegistered = true;
-		// 		break;
-		// 	}
-		// 	case PointerEventType.pointerup: {
-		// 		this._pointerupRegistered = true;
-		// 		break;
-		// 	}
-		// }
 	}
-
-	// protected override _actorEventDatas(): EventData[] | undefined {
-	// 	const eventDatas: EventData[] = [];
-	// 	this._actorEventNames.forEach((eventName) => {
-	// 		const eventData = ACTOR_EVENT_DATA[eventName as PointerEventsControllerAvailableEventNames];
-	// 		if (eventData) {
-	// 			eventDatas.push(eventData);
-	// 		}
-	// 	});
-	// 	console.log(eventDatas);
-	// 	return eventDatas;
-	// }
 
 	raycaster() {
 		return this._raycaster;
@@ -101,9 +75,6 @@ export class PointerEventsController extends BaseSceneEventsController<
 	cursor() {
 		return this._cursor;
 	}
-	// camera() {
-	// 	return this._camera;
-	// }
 
 	updateRaycast(options: RaycasterUpdateOptions) {
 		if (!this._raycaster) {

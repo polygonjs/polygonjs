@@ -49,16 +49,16 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
-		const child_output_node = this.childrenDisplayController.outputNode();
-		if (child_output_node) {
-			const container = await child_output_node.compute();
-			const core_content = container.coreContent();
-			if (core_content) {
-				this.setCoreGroup(core_content);
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		const childOutputNode = this.childrenDisplayController.outputNode();
+		if (childOutputNode) {
+			const container = await childOutputNode.compute();
+			const coreContent = container.coreContent();
+			if (coreContent) {
+				this.setCoreGroup(coreContent);
 			} else {
-				if (child_output_node.states.error.active()) {
-					this.states.error.set(child_output_node.states.error.message());
+				if (childOutputNode.states.error.active()) {
+					this.states.error.set(childOutputNode.states.error.message());
 				} else {
 					this.setObjects([]);
 				}
@@ -110,10 +110,10 @@ export class SopSubnetChildrenDisplayController {
 	}
 
 	initializeNode() {
-		const display_flag = this.node.flags?.display;
-		if (display_flag) {
-			display_flag.onUpdate(() => {
-				if (display_flag.active()) {
+		const displayFlag = this.node.flags?.display;
+		if (displayFlag) {
+			displayFlag.onUpdate(() => {
+				if (displayFlag.active()) {
 					this.node.setDirty();
 				}
 			});
@@ -151,10 +151,10 @@ export class SopSubnetChildrenDisplayController {
 	}
 
 	private _createGraphNode() {
-		const graph_node = new CoreGraphNode(this.node.scene(), 'subnetChildrenDisplayController');
-		graph_node.addPostDirtyHook('subnetChildrenDisplayController', () => {
+		const graphNode = new CoreGraphNode(this.node.scene(), 'subnetChildrenDisplayController');
+		graphNode.addPostDirtyHook('subnetChildrenDisplayController', () => {
 			this.node.setDirty();
 		});
-		return graph_node;
+		return graphNode;
 	}
 }
