@@ -9,8 +9,6 @@
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {Vector3} from 'three';
 import {BaseRaySphereActorNode} from './_BaseRaySphere';
-import {Ray} from 'three';
-import {Sphere} from 'three';
 
 const OUTPUT_NAME = 'position';
 export class RayIntersectSphereActorNode extends BaseRaySphereActorNode<ActorConnectionPointType.VECTOR3> {
@@ -25,8 +23,10 @@ export class RayIntersectSphereActorNode extends BaseRaySphereActorNode<ActorCon
 		return ActorConnectionPointType.VECTOR3;
 	}
 	private _target = new Vector3();
-	protected _processRay(ray: Ray, sphere: Sphere) {
-		ray.intersectSphere(sphere, this._target);
+	protected _processRayData() {
+		if (this._processData.sphere) {
+			this._processData.ray?.intersectSphere(this._processData.sphere, this._target) || false;
+		}
 		return this._target;
 	}
 }

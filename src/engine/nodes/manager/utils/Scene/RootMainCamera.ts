@@ -57,7 +57,7 @@ export class RootMainCameraController {
 		return _defaultDummyPerspectiveCamera();
 	}
 	cameraSyncOrDummy() {
-		return this.cameraSync() || this.dummyPerspectiveCamera();
+		return this.cameraSync(); // || this.dummyPerspectiveCamera();
 	}
 	async camera() {
 		const path = await this.cameraPath();

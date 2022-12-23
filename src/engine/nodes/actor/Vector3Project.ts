@@ -1,5 +1,5 @@
 /**
- * Vector3ProjectActorParamsConfig
+ * Projects this vector from world space into the camera's normalized device coordinate (NDC) space.
  *
  *
  *
@@ -50,11 +50,12 @@ export class Vector3ProjectActorNode extends TypedActorNode<Vector3ProjectActorP
 
 	public override outputValue(context: ActorNodeTriggerContext) {
 		const v3 = this._inputValueFromParam<ParamType.VECTOR3>(this.p.Vector3, context);
-		const camera =
-			this._inputValue<ActorConnectionPointType.CAMERA>(ActorConnectionPointType.CAMERA, context) ||
-			this.scene().root().mainCameraController.dummyPerspectiveCamera();
+		const camera = this._inputValue<ActorConnectionPointType.CAMERA>(ActorConnectionPointType.CAMERA, context);
+
 		tmpV3.copy(v3);
-		tmpV3.project(camera);
+		if (camera) {
+			tmpV3.project(camera);
+		}
 		return tmpV3;
 	}
 }

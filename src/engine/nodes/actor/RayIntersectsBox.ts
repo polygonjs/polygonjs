@@ -8,8 +8,6 @@
 
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {BaseRayBox3ActorNode} from './_BaseRayBox3';
-import {Ray} from 'three';
-import {Box3} from 'three';
 
 const OUTPUT_NAME = 'intersects';
 export class RayIntersectsBoxActorNode extends BaseRayBox3ActorNode<ActorConnectionPointType.BOOLEAN> {
@@ -22,7 +20,11 @@ export class RayIntersectsBoxActorNode extends BaseRayBox3ActorNode<ActorConnect
 	protected _expectedOutputType(): ActorConnectionPointType.BOOLEAN {
 		return ActorConnectionPointType.BOOLEAN;
 	}
-	protected _processRay(ray: Ray, box3: Box3) {
-		return ray.intersectsBox(box3);
+	protected _processRayData() {
+		if (this._processData.box3) {
+			return this._processData.ray?.intersectsBox(this._processData.box3) || false;
+		} else {
+			return false;
+		}
 	}
 }

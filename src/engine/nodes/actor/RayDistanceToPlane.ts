@@ -8,8 +8,6 @@
 
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {BaseRayPlaneActorNode} from './_BaseRayPlane';
-import {Ray} from 'three';
-import {Plane} from 'three';
 
 const OUTPUT_NAME = 'distance';
 export class RayDistanceToPlaneActorNode extends BaseRayPlaneActorNode<ActorConnectionPointType.FLOAT> {
@@ -23,7 +21,11 @@ export class RayDistanceToPlaneActorNode extends BaseRayPlaneActorNode<ActorConn
 	protected _expectedOutputType(): ActorConnectionPointType.FLOAT {
 		return ActorConnectionPointType.FLOAT;
 	}
-	protected _processRay(ray: Ray, plane: Plane) {
-		return ray.distanceToPlane(plane);
+	protected _processRayData() {
+		if (this._processData.ray && this._processData.plane) {
+			return this._processData.ray.distanceToPlane(this._processData.plane);
+		} else {
+			return 0;
+		}
 	}
 }

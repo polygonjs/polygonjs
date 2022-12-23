@@ -34,6 +34,7 @@ import {DistanceActorNode} from '../../../nodes/actor/Distance';
 import {DivideActorNode} from '../../../nodes/actor/Divide';
 import {DotActorNode} from '../../../nodes/actor/Dot';
 import {EasingActorNode} from '../../../nodes/actor/Easing';
+import {ElementsToArrayActorNode} from '../../../nodes/actor/ElementsToArray';
 import {FitActorNode} from '../../../nodes/actor/Fit';
 import {FloatToIntActorNode} from '../../../nodes/actor/FloatToInt';
 import {FloatToVec2ActorNode} from '../../../nodes/actor/FloatToVec2';
@@ -65,6 +66,7 @@ import {MixActorNode} from '../../../nodes/actor/Mix';
 import {MultActorNode} from '../../../nodes/actor/Mult';
 import {MultAddActorNode} from '../../../nodes/actor/MultAdd';
 import {MultScalarActorNode} from '../../../nodes/actor/MultScalar';
+import {NearestPositionActorNode} from '../../../nodes/actor/NearestPosition';
 import {NegateActorNode} from '../../../nodes/actor/Negate';
 import {NormalizeActorNode} from '../../../nodes/actor/Normalize';
 import {NullActorNode} from '../../../nodes/actor/Null';
@@ -171,6 +173,7 @@ import {Vector2ActorNode} from '../../../nodes/actor/Vector2';
 import {Vector3ActorNode} from '../../../nodes/actor/Vector3';
 import {Vector3AngleToActorNode} from '../../../nodes/actor/Vector3AngleTo';
 import {Vector3ProjectActorNode} from '../../../nodes/actor/Vector3Project';
+import {Vector3ProjectOnPlaneActorNode} from '../../../nodes/actor/Vector3ProjectOnPlane';
 import {Vector3UnprojectActorNode} from '../../../nodes/actor/Vector3Unproject';
 import {Vector4ActorNode} from '../../../nodes/actor/Vector4';
 // networks
@@ -218,6 +221,7 @@ export interface ActorNodeChildrenMap {
 	distance: DistanceActorNode;
 	dot: DotActorNode;
 	easing: EasingActorNode;
+	elementsToArray: ElementsToArrayActorNode;
 	fit: FitActorNode;
 	floatToInt: FloatToIntActorNode;
 	floatToVec2: FloatToVec2ActorNode;
@@ -249,6 +253,7 @@ export interface ActorNodeChildrenMap {
 	mult: MultActorNode;
 	multAdd: MultAddActorNode;
 	multScalar: MultScalarActorNode;
+	nearestPosition: NearestPositionActorNode;
 	negate: NegateActorNode;
 	normalize: NormalizeActorNode;
 	null: NullActorNode;
@@ -355,6 +360,7 @@ export interface ActorNodeChildrenMap {
 	vector3: Vector3ActorNode;
 	vector3AngleTo: Vector3AngleToActorNode;
 	vector3Project: Vector3ProjectActorNode;
+	vector3ProjectOnPlane: Vector3ProjectOnPlaneActorNode;
 	vector3Unproject: Vector3UnprojectActorNode;
 	vector4: Vector4ActorNode;
 	// networks
@@ -408,6 +414,7 @@ export class ActorRegister {
 		poly.registerNode(DivideActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(DotActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(EasingActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(ElementsToArrayActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(FitActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(FloatToIntActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(FloatToVec2ActorNode, CATEGORY_ACTOR.CONVERSION);
@@ -439,6 +446,7 @@ export class ActorRegister {
 		poly.registerNode(MultActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultAddActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(MultScalarActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(NearestPositionActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NegateActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NormalizeActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(NullActorNode, CATEGORY_ACTOR.MISC);
@@ -546,6 +554,7 @@ export class ActorRegister {
 		poly.registerNode(Vector3ActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(Vector3AngleToActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(Vector3ProjectActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(Vector3ProjectOnPlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(Vector3UnprojectActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(Vector4ActorNode, CATEGORY_ACTOR.MATH);
 		// networks

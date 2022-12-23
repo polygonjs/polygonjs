@@ -130,6 +130,7 @@ import './engine/nodes/actor/Min';
 import './engine/nodes/actor/Mix';
 import './engine/nodes/actor/MultAdd';
 import './engine/nodes/actor/MultScalar';
+import './engine/nodes/actor/NearestPosition';
 import './engine/nodes/actor/Negate';
 import './engine/nodes/actor/Normalize';
 import './engine/nodes/actor/ObjectDispatchEvent';
@@ -194,6 +195,7 @@ import './engine/nodes/actor/Vector2';
 import './engine/nodes/actor/Vector3';
 import './engine/nodes/actor/Vector3AngleTo';
 import './engine/nodes/actor/Vector3Project';
+import './engine/nodes/actor/Vector3ProjectOnPlane';
 import './engine/nodes/actor/Vector3Unproject';
 import './engine/nodes/actor/Vector4';
 

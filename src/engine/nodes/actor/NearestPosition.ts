@@ -1,5 +1,5 @@
 /**
- * Projects this vector from the camera's normalized device coordinate (NDC) space into world space.
+ * Projects this vector from world space into the camera's normalized device coordinate (NDC) space.
  *
  *
  *
@@ -17,15 +17,15 @@ const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 const OUTPUT_NAME = 'position';
 const tmpV3 = new Vector3();
-class Vector3UnprojectActorParamsConfig extends NodeParamsConfig {
+class NearestPositionActorParamsConfig extends NodeParamsConfig {
 	/** @param vector3 */
 	Vector3 = ParamConfig.VECTOR3([0, 0, 0]);
 }
-const ParamsConfig = new Vector3UnprojectActorParamsConfig();
-export class Vector3UnprojectActorNode extends TypedActorNode<Vector3UnprojectActorParamsConfig> {
+const ParamsConfig = new NearestPositionActorParamsConfig();
+export class NearestPositionActorNode extends TypedActorNode<NearestPositionActorParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'vector3Unproject';
+		return 'nearestPosition';
 	}
 	override initializeNode() {
 		super.initializeNode();
@@ -37,8 +37,8 @@ export class Vector3UnprojectActorNode extends TypedActorNode<Vector3UnprojectAc
 				CONNECTION_OPTIONS
 			),
 			new ActorConnectionPoint(
-				ActorConnectionPointType.CAMERA,
-				ActorConnectionPointType.CAMERA,
+				ActorConnectionPointType.VECTOR3_ARRAY,
+				ActorConnectionPointType.VECTOR3_ARRAY,
 				CONNECTION_OPTIONS
 			),
 		]);
@@ -50,11 +50,26 @@ export class Vector3UnprojectActorNode extends TypedActorNode<Vector3UnprojectAc
 
 	public override outputValue(context: ActorNodeTriggerContext) {
 		const v3 = this._inputValueFromParam<ParamType.VECTOR3>(this.p.Vector3, context);
-		const camera = this._inputValue<ActorConnectionPointType.CAMERA>(ActorConnectionPointType.CAMERA, context);
-		tmpV3.copy(v3);
-		if (camera) {
-			tmpV3.unproject(camera);
+		const positions = this._inputValue<ActorConnectionPointType.VECTOR3_ARRAY>(
+			ActorConnectionPointType.VECTOR3_ARRAY,
+			context
+		);
+		if (positions) {
+			let currentDist = -1;
+			let minDist: number | null = null;
+			let nearestPosition: Vector3 | undefined;
+			for (let position of positions) {
+				currentDist = position.distanceTo(v3);
+				if (minDist == null || currentDist < minDist) {
+					nearestPosition = position;
+					minDist = currentDist;
+				}
+			}
+			if (nearestPosition != null) {
+				tmpV3.copy(nearestPosition);
+			}
 		}
+
 		return tmpV3;
 	}
 }

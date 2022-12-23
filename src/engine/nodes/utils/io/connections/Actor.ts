@@ -236,6 +236,26 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.VECTOR4]: ActorConnectionPointType.VECTOR4_ARRAY,
 	[ActorConnectionPointType.VECTOR4_ARRAY]: ActorConnectionPointType.VECTOR4_ARRAY,
 };
+
+export type ArrayabeonnectionPointType =
+	| ActorConnectionPointType.BOOLEAN
+	| ActorConnectionPointType.COLOR
+	| ActorConnectionPointType.FLOAT
+	| ActorConnectionPointType.INTEGER
+	| ActorConnectionPointType.STRING
+	| ActorConnectionPointType.VECTOR2
+	| ActorConnectionPointType.VECTOR3
+	| ActorConnectionPointType.VECTOR4;
+export const ARRAYABLE_CONNECTION_TYPES: Set<ArrayabeonnectionPointType> = new Set([
+	ActorConnectionPointType.BOOLEAN,
+	ActorConnectionPointType.COLOR,
+	ActorConnectionPointType.FLOAT,
+	ActorConnectionPointType.INTEGER,
+	ActorConnectionPointType.STRING,
+	ActorConnectionPointType.VECTOR2,
+	ActorConnectionPointType.VECTOR3,
+	ActorConnectionPointType.VECTOR4,
+]);
 type ArrayConnectionPointTypeArray =
 	| ActorConnectionPointType.BOOLEAN_ARRAY
 	| ActorConnectionPointType.COLOR_ARRAY

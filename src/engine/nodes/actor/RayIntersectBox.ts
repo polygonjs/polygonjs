@@ -9,8 +9,6 @@
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {Vector3} from 'three';
 import {BaseRayBox3ActorNode} from './_BaseRayBox3';
-import {Ray} from 'three';
-import {Box3} from 'three';
 
 const OUTPUT_NAME = 'position';
 export class RayIntersectBoxActorNode extends BaseRayBox3ActorNode<ActorConnectionPointType.VECTOR3> {
@@ -25,8 +23,10 @@ export class RayIntersectBoxActorNode extends BaseRayBox3ActorNode<ActorConnecti
 		return ActorConnectionPointType.VECTOR3;
 	}
 	private _target = new Vector3();
-	protected _processRay(ray: Ray, box3: Box3) {
-		ray.intersectBox(box3, this._target);
+	protected _processRayData() {
+		if (this._processData.box3) {
+			this._processData.ray?.intersectBox(this._processData.box3, this._target);
+		}
 		return this._target;
 	}
 }

@@ -4,6 +4,11 @@ import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} fro
 import {Ray} from 'three';
 import {Sphere} from 'three';
 
+interface RayProcessData {
+	ray?: Ray;
+	sphere?: Sphere;
+}
+
 class BaseRaySphereActorParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseRaySphereActorParamsConfig();
 export abstract class BaseRaySphereActorNode<
@@ -22,7 +27,8 @@ export abstract class BaseRaySphereActorNode<
 	}
 	protected abstract _expectedOutputName(index: number): string;
 	protected abstract _expectedOutputType(): T;
-	protected abstract _processRay(ray: Ray, sphere: Sphere): ReturnValueTypeByActorConnectionPointType[T];
+	protected _processData: RayProcessData = {};
+	protected abstract _processRayData(): ReturnValueTypeByActorConnectionPointType[T];
 	protected _expectedInputName(index: number) {
 		return this._expectedInputType()[index];
 	}
@@ -31,14 +37,11 @@ export abstract class BaseRaySphereActorNode<
 	}
 
 	public override outputValue(context: ActorNodeTriggerContext) {
-		const ray = this._inputValue<ActorConnectionPointType.RAY>(ActorConnectionPointType.RAY, context);
-		if (!ray) {
-			return false;
-		}
-		const sphere = this._inputValue<ActorConnectionPointType.SPHERE>(ActorConnectionPointType.SPHERE, context);
-		if (!sphere) {
-			return false;
-		}
-		return this._processRay(ray, sphere);
+		this._processData.ray = this._inputValue<ActorConnectionPointType.RAY>(ActorConnectionPointType.RAY, context);
+		this._processData.sphere = this._inputValue<ActorConnectionPointType.SPHERE>(
+			ActorConnectionPointType.SPHERE,
+			context
+		);
+		return this._processRayData();
 	}
 }

@@ -62,14 +62,16 @@ export class DebugActorNode extends TypedActorNode<DebugActorParamsConfig> {
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		let val = this._inputValue(this._expectedInputName(0), context);
-		if (val == null) {
-			val = 0;
-		}
+		// if (val == null) {
+		// 	val = 0;
+		// }
 		if (isBooleanTrue(this.pv.printInConsole)) {
 			console.log('outputValue', this.path(), context, val);
 		}
 		if (!Poly.playerMode()) {
-			this._setDisplayParam(val);
+			if (val != null) {
+				this._setDisplayParam(val);
+			}
 		}
 		return val;
 	}
