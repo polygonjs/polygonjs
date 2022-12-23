@@ -52,6 +52,7 @@ import {GetObjectUserDataActorNode} from '../../../nodes/actor/GetObjectUserData
 import {GetObjectWorldPositionActorNode} from '../../../nodes/actor/GetObjectWorldPosition';
 import {GetParentActorNode} from '../../../nodes/actor/GetParent';
 import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
+import {GetRayPropertyActorNode} from '../../../nodes/actor/GetRayProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
 import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
 import {IntToBoolActorNode} from '../../../nodes/actor/IntToBool';
@@ -238,6 +239,7 @@ export interface ActorNodeChildrenMap {
 	getObjectUserData: GetObjectUserDataActorNode;
 	getParent: GetParentActorNode;
 	getPlaneProperty: GetPlanePropertyActorNode;
+	getRayProperty: GetRayPropertyActorNode;
 	getSphereProperty: GetSpherePropertyActorNode;
 	getObjectWorldPosition: GetObjectWorldPositionActorNode;
 	intToBool: IntToBoolActorNode;
@@ -430,6 +432,7 @@ export class ActorRegister {
 		poly.registerNode(GetObjectPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectUserDataActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetPlanePropertyActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetRayPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetParentActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectWorldPositionActorNode, CATEGORY_ACTOR.GET);
