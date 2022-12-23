@@ -1,5 +1,5 @@
 /**
- * get a plane property
+ * get a ray property
  *
  *
  */
