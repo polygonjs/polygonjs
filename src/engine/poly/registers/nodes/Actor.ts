@@ -114,6 +114,7 @@ import {PressButtonParamActorNode} from '../../../nodes/actor/PressButtonParam';
 import {PowActorNode} from '../../../nodes/actor/Pow';
 import {RandActorNode} from '../../../nodes/actor/Rand';
 import {RandomActorNode} from '../../../nodes/actor/Random';
+import {RayActorNode} from '../../../nodes/actor/Ray';
 import {RayDistanceToPlaneActorNode} from '../../../nodes/actor/RayDistanceToPlane';
 import {RayFromCursorActorNode} from '../../../nodes/actor/RayFromCursor';
 import {RayIntersectBoxActorNode} from '../../../nodes/actor/RayIntersectBox';
@@ -302,6 +303,7 @@ export interface ActorNodeChildrenMap {
 	pow: PowActorNode;
 	rand: RandActorNode;
 	random: RandomActorNode;
+	ray: RayActorNode;
 	rayDistanceToPlaneActorNode: RayDistanceToPlaneActorNode;
 	rayFromCursor: RayFromCursorActorNode;
 	rayIntersectBox: RayIntersectBoxActorNode;
@@ -497,6 +499,7 @@ export class ActorRegister {
 		poly.registerNode(RayDistanceToPlaneActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RandActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RandomActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(RayActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayFromCursorActorNode, CATEGORY_ACTOR.INPUTS);
 		poly.registerNode(RayIntersectBoxActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayIntersectPlaneActorNode, CATEGORY_ACTOR.MATH);
