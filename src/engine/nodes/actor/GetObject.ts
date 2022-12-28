@@ -61,7 +61,12 @@ export class GetObjectActorNode extends TypedActorNode<GetObjectActorParamsConfi
 			return context.Object3D;
 		} else {
 			const mask = this._inputValueFromParam<ParamType.STRING>(this.p.mask, context);
-			return GetObjectActorNode.objectFromMask(mask, this.scene()) || context.Object3D;
+			const foundObject = GetObjectActorNode.objectFromMask(mask, this.scene());
+			this.states.error.clear();
+			if (!foundObject) {
+				this.states.error.set(`no object found matching mask '${mask}'`);
+			}
+			return foundObject || context.Object3D;
 		}
 	}
 
