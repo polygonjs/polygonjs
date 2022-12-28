@@ -114,6 +114,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	childrenAllowed(): boolean {
 		return this._childrenControllerContext != null;
 	}
+	sceneReadonly(): boolean {
+		return false;
+	}
 
 	get uiData(): UIData {
 		return (this._uiData = this._uiData || new UIData(this));

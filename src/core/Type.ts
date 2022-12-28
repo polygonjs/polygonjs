@@ -32,6 +32,10 @@ export class CoreType {
 		var type = typeof value;
 		return value != null && (type == 'object' || type == 'function');
 	}
+	static isFunction(value: any): value is Function {
+		var type = typeof value;
+		return value != null && type == 'function';
+	}
 }
 
 // a simple way to test the type and value of a param value

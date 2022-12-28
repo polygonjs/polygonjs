@@ -90,8 +90,10 @@ export class BuilderPostNode extends TypedPostProcessNode<EffectPass, BuilderPos
 		if (this.assemblerController()) {
 			return super.childrenAllowed();
 		}
-		this.scene().markAsReadOnly(this);
 		return false;
+	}
+	override sceneReadonly() {
+		return this.assemblerController() == null;
 	}
 
 	// private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);

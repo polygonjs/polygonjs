@@ -94,8 +94,10 @@ export abstract class TypedBuilderMatNode<
 		if (this.assemblerController()) {
 			return super.childrenAllowed();
 		}
-		this.scene().markAsReadOnly(this);
 		return false;
+	}
+	override sceneReadonly() {
+		return this.assemblerController() == null;
 	}
 
 	//

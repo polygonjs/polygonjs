@@ -170,8 +170,10 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (this.assemblerController()) {
 			return super.childrenAllowed();
 		}
-		this.scene().markAsReadOnly(this);
 		return false;
+	}
+	override sceneReadonly() {
+		return this.assemblerController() == null;
 	}
 
 	private async _resetMaterialIfDirty() {

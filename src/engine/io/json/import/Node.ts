@@ -122,6 +122,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		if (!data) {
 			return;
 		}
+		if (this._node.sceneReadonly()) {
+			scene_importer.report.markAsLoadedWithoutAssemblers();
+		}
+
 		// const nodes_importer = new NodesJsonImporter(this._node);
 		this.nodesImporter.process_data(scene_importer, data);
 	}

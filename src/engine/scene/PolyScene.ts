@@ -332,21 +332,6 @@ export class PolyScene {
 	toJSON() {
 		return this.serializer.toJSON();
 	}
-	private _readOnly = false;
-	private _readOnlyRequester: BaseNodeType | undefined;
-	markAsReadOnly(requester: BaseNodeType) {
-		if (this._readOnly) {
-			return;
-		}
-		this._readOnlyRequester = requester;
-		this._readOnly = true;
-	}
-	readOnly() {
-		return this._readOnly;
-	}
-	readOnlyRequester() {
-		return this._readOnlyRequester;
-	}
 
 	//
 	//
