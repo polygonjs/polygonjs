@@ -1,6 +1,9 @@
 import {Object3D, Vector3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {AttribCreateSopNode} from '../../../../src/engine/nodes/sop/AttribCreate';
+import {CircleSopNode} from '../../../../src/engine/nodes/sop/Circle';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 
 async function firstPos(node: BaseSopNodeType): Promise<Vector3> {
 	const container = await node.compute();
@@ -254,4 +257,72 @@ QUnit.test('bypass a prim sop node followed by a mat node does not break the app
 	assert.ok(container.coreContent());
 	assert.notOk(material1.states.error.message());
 	assert.equal(container.coreContent()?.pointsCount(), 24);
+});
+
+QUnit.test('bypass: using an expression referencing a bypassed node that has not computed yet', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+	const circle1 = geo1.createNode('circle');
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const attribCreate2 = geo1.createNode('attribCreate');
+
+	attribCreate1.setInput(0, circle1);
+	attribCreate2.setInput(0, attribCreate1);
+
+	circle1.p.segments.set(13);
+
+	attribCreate1.p.name.set('up');
+	attribCreate1.p.size.set(3);
+	attribCreate1.p.value3.set([0, 1, 0]);
+	attribCreate1.flags.bypass.set(true);
+
+	attribCreate2.p.name.set('pscale');
+	attribCreate2.p.size.set(1);
+	attribCreate2.p.value1.set(`@ptnum / (pointsCount(0)-1)`);
+	attribCreate2.flags.bypass.set(true);
+	attribCreate2.flags.display.set(true);
+
+	await saveAndLoadScene(scene, async (scene2) => {
+		const circle1b = scene2.node(circle1.path()) as CircleSopNode;
+		const attribCreate1b = scene2.node(attribCreate1.path()) as AttribCreateSopNode;
+		const attribCreate2b = scene2.node(attribCreate2.path()) as AttribCreateSopNode;
+
+		async function getPoints() {
+			const container = await attribCreate2b.compute();
+			const points = container.coreContent()!.points();
+			return points;
+		}
+
+		let points = await getPoints();
+		assert.equal(points.length, 13);
+		assert.notOk(points[0].hasAttrib('pscale'));
+		assert.notOk(points[0].hasAttrib('up'));
+
+		attribCreate2b.flags.bypass.set(false);
+		points = await getPoints();
+		assert.equal(points.length, 13);
+		assert.ok(points[0].hasAttrib('pscale'));
+		assert.notOk(points[0].hasAttrib('up'));
+		assert.equal(points[0].attribValue('pscale'), 0);
+		assert.equal(points[6].attribValue('pscale'), 0.5);
+		assert.equal(points[12].attribValue('pscale'), 1);
+
+		circle1b.p.segments.set(25);
+		points = await getPoints();
+		assert.equal(points.length, 25);
+		assert.ok(points[0].hasAttrib('pscale'));
+		assert.notOk(points[0].hasAttrib('up'));
+		assert.equal(points[0].attribValue('pscale'), 0);
+		assert.equal(points[12].attribValue('pscale'), 0.5);
+		assert.equal(points[24].attribValue('pscale'), 1);
+
+		attribCreate1b.flags.bypass.set(false);
+		points = await getPoints();
+		assert.equal(points.length, 25);
+		assert.ok(points[0].hasAttrib('pscale'));
+		assert.ok(points[0].hasAttrib('up'));
+		assert.deepEqual((points[0].attribValue('up') as Vector3).toArray(), [0, 1, 0]);
+		assert.deepEqual((points[1].attribValue('up') as Vector3).toArray(), [0, 1, 0]);
+		assert.deepEqual((points[2].attribValue('up') as Vector3).toArray(), [0, 1, 0]);
+	});
 });

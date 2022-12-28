@@ -35,10 +35,10 @@ export class PointsCountExpression extends BaseMethod {
 	override processArguments(args: any[]): Promise<any> {
 		return new Promise(async (resolve, reject) => {
 			if (args.length == 1) {
-				const index_or_path = args[0];
+				const indexOrPath = args[0];
 				let container: GeometryContainer;
 				try {
-					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
+					container = (await this.getReferencedNodeContainer(indexOrPath)) as GeometryContainer;
 				} catch (e) {
 					reject(e);
 					return;
@@ -47,10 +47,10 @@ export class PointsCountExpression extends BaseMethod {
 				if (container) {
 					const value = container.pointsCount();
 					resolve(value);
+					return;
 				}
-			} else {
-				resolve(0);
 			}
+			resolve(0);
 		});
 	}
 }

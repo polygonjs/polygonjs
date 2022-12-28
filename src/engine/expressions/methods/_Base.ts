@@ -50,32 +50,32 @@ export class BaseMethod {
 		throw 'Expression.Method._Base.process_arguments virtual method call. Please override';
 	}
 
-	async getReferencedNodeContainer(index_or_path: number | string): Promise<BaseContainer> {
-		const referenced_node = this.getReferencedNode(index_or_path);
+	async getReferencedNodeContainer(indexOrPath: number | string): Promise<BaseContainer> {
+		const referencedNode = this.getReferencedNode(indexOrPath);
 
-		if (referenced_node) {
+		if (referencedNode) {
 			let container: ContainerMap[NodeContext];
-			if (referenced_node.isDirty()) {
-				container = await referenced_node.compute();
+			if (referencedNode.isDirty() || referencedNode.flags?.bypass?.active()) {
+				container = await referencedNode.compute();
 			} else {
-				container = referenced_node.containerController.container();
+				container = referencedNode.containerController.container();
 			}
 			if (container) {
-				const core_group = container.coreContent();
-				if (core_group) {
+				const coreGroup = container.coreContent();
+				if (coreGroup) {
 					return container;
 				}
 			}
-			throw `referenced node invalid: ${referenced_node.path()}`;
+			throw `referenced node invalid: ${referencedNode.path()}`;
 		} else {
-			throw `invalid input (${index_or_path})`;
+			throw `invalid input (${indexOrPath})`;
 		}
 	}
 
-	getReferencedParam(path: string, decomposed_path?: DecomposedPath): BaseParamType | null {
+	getReferencedParam(path: string, decomposedPath?: DecomposedPath): BaseParamType | null {
 		const node = this.node();
 		if (node) {
-			return CoreWalker.findParam(node, path, decomposed_path);
+			return CoreWalker.findParam(node, path, decomposedPath);
 		}
 
 		// if (referenced_param != null) {
@@ -97,44 +97,44 @@ export class BaseMethod {
 		return null;
 	}
 
-	findReferencedGraphNode(index_or_path: number | string, decomposed_path?: DecomposedPath): CoreGraphNode | null {
-		const is_index = CoreType.isNumber(index_or_path);
+	findReferencedGraphNode(indexOrPath: number | string, decomposedPath?: DecomposedPath): CoreGraphNode | null {
+		const is_index = CoreType.isNumber(indexOrPath);
 		// let node
 		if (is_index) {
-			const index = index_or_path as number;
+			const index = indexOrPath as number;
 			const node = this.node();
 			if (node) {
 				const input_graph_node = node.io.inputs.inputGraphNode(index);
 				return input_graph_node;
 			}
 		} else {
-			const path = index_or_path as string;
-			return this.getReferencedNode(path, decomposed_path);
+			const path = indexOrPath as string;
+			return this.getReferencedNode(path, decomposedPath);
 		}
 		return null;
 	}
 	// caching the node by path here prevents having expressions such as points_count(0)
 	// evaluate to an error when the input is disconnected
 	// private _node_by_path: Map<string | number, BaseNodeType | null | undefined> = new Map();
-	getReferencedNode(index_or_path: string | number, decomposed_path?: DecomposedPath): BaseNodeType | null {
-		// let node = this._node_by_path.get(index_or_path);
+	getReferencedNode(indexOrPath: string | number, decomposedPath?: DecomposedPath): BaseNodeType | null {
+		// let node = this._node_by_path.get(indexOrPath);
 		// if (node) {
 		// 	return node;
 		// } else {
 		let node: BaseNodeType | null = null;
 		const current_node = this.node();
-		if (CoreType.isString(index_or_path)) {
+		if (CoreType.isString(indexOrPath)) {
 			if (current_node) {
-				const path = index_or_path;
-				node = CoreWalker.findNode(current_node, path, decomposed_path);
+				const path = indexOrPath;
+				node = CoreWalker.findNode(current_node, path, decomposedPath);
 			}
 		} else {
 			if (current_node) {
-				const index = index_or_path;
+				const index = indexOrPath;
 				node = current_node.io.inputs.input(index);
 			}
 		}
-		// this._node_by_path.set(index_or_path, node);
+		// this._node_by_path.set(indexOrPath, node);
 		return node || null;
 		//}
 	}
