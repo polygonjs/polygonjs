@@ -4,7 +4,7 @@ import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ColorConversion} from '../../../../core/Color';
-import {MeshBasicMaterial} from 'three';
+import {Material, MeshBasicMaterial, MeshStandardMaterial} from 'three';
 import {ShadowMaterial} from 'three';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -24,7 +24,13 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-type ColoredMaterial = MeshBasicMaterial | ShadowMaterial;
+export type ColoredMaterial = MeshBasicMaterial | ShadowMaterial | MeshStandardMaterial;
+export function isValidColoredMaterial(material?: Material): material is ColoredMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshBasicMaterial).color != null;
+}
 // class ColoredMaterial extends MeshB {
 // 	public color!: Color;
 // 	// vertexColors!: boolean;
@@ -33,10 +39,14 @@ type ColoredMaterial = MeshBasicMaterial | ShadowMaterial;
 // 	// alphaTest!: number;
 // }
 class ColorParamsConfig extends ColorParamConfig(NodeParamsConfig) {}
+interface ColorsControllers {
+	colors: ColorsController;
+}
 class ColoredMatNode extends TypedMatNode<ColoredMaterial, ColorParamsConfig> {
 	override createMaterial(): ColoredMaterial {
 		return new MeshBasicMaterial();
 	}
+	controllers!: ColorsControllers;
 }
 
 export class ColorsController extends BaseController {
@@ -44,9 +54,16 @@ export class ColorsController extends BaseController {
 		super(node);
 	}
 	static update(node: ColoredMatNode) {
-		const material = node.material;
-		const pv = node.pv;
-
+		node.controllers.colors.update();
+	}
+	override update(): void {
+		if (!this.node.material) {
+			return;
+		}
+		this.updateMaterial(this.node.material);
+	}
+	updateMaterial(material: ColoredMaterial) {
+		const pv = this.node.pv;
 		material.color.copy(pv.color);
 		const newVertexColor = isBooleanTrue(pv.useVertexColors);
 		if (newVertexColor != material.vertexColors) {

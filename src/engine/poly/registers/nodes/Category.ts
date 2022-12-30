@@ -98,6 +98,7 @@ export const CATEGORY_MAT = {
 	MESH: 'meshes',
 	NETWORK,
 	POINTS: 'points',
+	UPDATE: 'update',
 	VOLUME: 'volumes',
 };
 export const CATEGORY_OBJ = {

@@ -43,7 +43,7 @@ export class TextureAOMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureAOMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useAOMap, this.node.p.aoMap);
 	}
 	override async update() {

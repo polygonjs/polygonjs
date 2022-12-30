@@ -33,6 +33,7 @@ import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 
 interface MeshPhysicalControllers {
+	colors: ColorsController;
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -103,6 +104,7 @@ export class MeshPhysicalMatNode extends TypedMatNode<MeshPhysicalMaterial, Mesh
 	}
 
 	readonly controllers: MeshPhysicalControllers = {
+		colors: new ColorsController(this),
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -126,13 +128,13 @@ export class MeshPhysicalMatNode extends TypedMatNode<MeshPhysicalMaterial, Mesh
 	}
 
 	override async cook() {
+		this._material = this._material || this.createMaterial();
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
-		ColorsController.update(this);
 		FogController.update(this);
 		WireframeController.update(this);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

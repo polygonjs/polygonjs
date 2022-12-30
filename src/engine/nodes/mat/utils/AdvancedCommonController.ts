@@ -86,10 +86,11 @@ export class AdvancedCommonController extends BaseController {
 		super(node);
 	}
 
-	initializeNode() {}
-
 	override async update() {
 		const mat = this.node.material;
+		if (!mat) {
+			return;
+		}
 		const pv = this.node.pv;
 		this._updateSides(mat, pv);
 

@@ -16,6 +16,7 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseActorNodeType} from '../actor/_Base';
 import {isBooleanTrue} from '../../../core/Type';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
+import {CorePath} from '../../../core/geometry/CorePath';
 // import {ActorsManager} from '../../../core/actor/ActorsManager';
 class ActorSopParamsConfig extends NodeParamsConfig {
 	/** @param select which objects this applies the actor behavior to */
@@ -58,9 +59,8 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 					this.scene().actorsManager.assignActorBuilder(object, actorNode);
 				}
 			} else {
-				const objectsController = this.scene().objectsController;
 				for (let object of objects) {
-					const children = objectsController.objectsByMaskInObject(objectsMask, object);
+					const children = CorePath.objectsByMaskInObject(objectsMask, object);
 					for (let child of children) {
 						this.scene().actorsManager.assignActorBuilder(child, actorNode);
 					}

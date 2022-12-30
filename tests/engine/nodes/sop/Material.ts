@@ -9,6 +9,7 @@ import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {Object3D} from 'three';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {CoreType} from '../../../../src/core/Type';
+// import {CorePath} from '../../../../src/core/geometry/CorePath';
 
 const LAMBERT_UNIFORMS = UniformsUtils.clone(ShaderLib.lambert.uniforms);
 const LAMBERT_UNIFORM_NAMES = Object.keys(LAMBERT_UNIFORMS).concat(['clippingPlanes']).sort();
@@ -151,6 +152,78 @@ QUnit.test('sop/material access group by object index', async (assert) => {
 	const objects2 = await getObjects();
 	assert.notEqual((objects2[3].material as Material).uuid, lambert1.material.uuid, 'not assigned');
 	assert.equal((objects2[0].material as Material).uuid, lambert1.material.uuid, 'assigned');
+});
+
+QUnit.test('sop/material access group by hierarchy mask', async (assert) => {
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+
+	const file1 = geo1.createNode('fileGLTF');
+	file1.p.url.set(`${ASSETS_ROOT}/models/SheenChair.glb`);
+	const lambert1 = MAT.createNode('meshLambert');
+	const material1 = geo1.createNode('material');
+	material1.p.material.setNode(lambert1);
+	material1.setInput(0, file1);
+
+	// const container1 = await file1.compute();
+	// const coreContent = container1.coreContent()!;
+	// const coreObjects = coreContent.coreObjects();
+	// for (let co of coreObjects) {
+	// 	const o = co.object();
+	// 	o.traverse((child: Object3D) => {
+	// 		console.log(CorePath.objectPath(child, o));
+	// 	});
+	// }
+	// const objects = coreContent.objects()[0].children;
+	// assert.equal(objects.length, 4);
+	// const objectNames = objects.map((o: Object3D) => o.name);
+	// const objectNamesSorted = [...objectNames].sort();
+	// assert.deepEqual(
+	// 	objectNamesSorted.sort(),
+	// 	['SheenChair_metal', 'SheenChair_wood', 'SheenChair_label', 'SheenChair_fabric'].sort()
+	// );
+
+	async function getObjects() {
+		const container1 = await material1.compute();
+		const coreContent = container1.coreContent()!;
+		const objects = coreContent.objects()[0].children;
+		return objects as Mesh[];
+	}
+	async function objectNamesWithMaterial() {
+		const objects1 = await getObjects();
+		return objects1
+			.filter((o: Mesh) => (o.material as Material).uuid == lambert1.material.uuid)
+			.map((o: Object3D) => o.name)
+			.sort();
+	}
+	async function objectNamesWithoutMaterial() {
+		const objects1 = await getObjects();
+		return objects1
+			.filter((o: Mesh) => (o.material as Material).uuid != lambert1.material.uuid)
+			.map((o: Object3D) => o.name)
+			.sort();
+	}
+
+	material1.p.group.set('*/SheenChair_wood');
+	assert.deepEqual(await objectNamesWithMaterial(), ['SheenChair_wood'].sort());
+	assert.deepEqual(
+		await objectNamesWithoutMaterial(),
+		['SheenChair_fabric', 'SheenChair_label', 'SheenChair_metal'].sort()
+	);
+
+	material1.p.group.set('*SheenChair_label');
+	assert.deepEqual(await objectNamesWithMaterial(), ['SheenChair_label'].sort());
+	assert.deepEqual(
+		await objectNamesWithoutMaterial(),
+		['SheenChair_fabric', 'SheenChair_wood', 'SheenChair_metal'].sort()
+	);
+
+	material1.p.group.set('*/Sheen*_wood');
+	assert.deepEqual(await objectNamesWithMaterial(), ['SheenChair_wood'].sort());
+	assert.deepEqual(
+		await objectNamesWithoutMaterial(),
+		['SheenChair_fabric', 'SheenChair_label', 'SheenChair_metal'].sort()
+	);
 });
 
 QUnit.test('sop/material applies to children correctly', async (assert) => {

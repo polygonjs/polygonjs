@@ -12,6 +12,7 @@ import {ColorsController, ColorParamConfig} from './utils/ColorsController';
 import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
 
 interface ShadowControllers {
+	colors: ColorsController;
 	advancedCommon: AdvancedCommonController;
 }
 
@@ -33,6 +34,7 @@ export class ShadowMatNode extends TypedMatNode<ShadowMaterial, ShadowMatParamsC
 		});
 	}
 	readonly controllers: ShadowControllers = {
+		colors: new ColorsController(this),
 		advancedCommon: new AdvancedCommonController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof ShadowControllers>;
@@ -45,11 +47,11 @@ export class ShadowMatNode extends TypedMatNode<ShadowMaterial, ShadowMatParamsC
 		});
 	}
 	override async cook() {
+		this._material = this._material || this.createMaterial();
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
-		ColorsController.update(this);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

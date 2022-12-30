@@ -36,6 +36,7 @@ import {CameraPostProcessSopOperation} from '../../operations/sop/CameraPostProc
 import {CameraRenderSceneSopOperation} from '../../operations/sop/CameraRenderScene';
 import {CameraFrameModeSopOperation} from '../../operations/sop/CameraFrameMode';
 import {CoreCameraFrameParamConfig} from '../../../core/camera/CoreCameraFrameMode';
+import {CorePath} from '../../../core/geometry/CorePath';
 export interface OrthoOrPerspCamera extends Camera {
 	near: number;
 	far: number;
@@ -156,7 +157,7 @@ export abstract class TypedCameraObjNode<
 		node.setAsMainCamera();
 	}
 	setAsMainCamera() {
-		const path = this.scene().objectsController.objectPath(this.object);
+		const path = CorePath.objectPath(this.object);
 		this.scene().camerasController.setMainCameraPath(path);
 	}
 

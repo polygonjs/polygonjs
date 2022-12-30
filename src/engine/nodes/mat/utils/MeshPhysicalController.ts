@@ -130,7 +130,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 	constructor(protected override node: TextureClearCoatMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useClearCoatMap, this.node.p.clearcoatMap);
 		this.add_hooks(this.node.p.useClearCoatNormalMap, this.node.p.clearcoatNormalMap);
 		this.add_hooks(this.node.p.useClearCoatRoughnessMap, this.node.p.clearcoatRoughnessMap);

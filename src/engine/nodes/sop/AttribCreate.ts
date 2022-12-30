@@ -44,6 +44,7 @@ interface ArraysByGeoUuid {
 
 import {AttribCreateSopOperation} from '../../operations/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CoreMask} from '../../../core/geometry/Mask';
 const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	/** @param the group this applies to */
@@ -166,7 +167,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		TypeAssert.unreachable(attribType);
 	}
 	private async _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup) {
-		const coreObjects = coreGroup.coreObjectsFromGroup(this.pv.group);
+		const coreObjects = CoreMask.coreObjects(this.pv.group, coreGroup);
 
 		// add attrib if non existent
 		const attribName = this.pv.name;

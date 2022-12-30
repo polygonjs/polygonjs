@@ -43,8 +43,6 @@ export class PCSSController extends BaseController {
 		super(node);
 	}
 
-	initializeNode() {}
-
 	static filterFragmentShader(node: PCSSMapMatNode, fragmentShader: string) {
 		// removed since PCSS refactor in GLSL
 		// #define NUM_SAMPLES ${ThreeToGl.integer(node.pv.shadowPCSSSamplesCount)}

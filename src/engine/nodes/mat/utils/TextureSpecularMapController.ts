@@ -33,7 +33,7 @@ export class TextureSpecularMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureSpecularMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useSpecularMap, this.node.p.specularMap);
 	}
 	override async update() {

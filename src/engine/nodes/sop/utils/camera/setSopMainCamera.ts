@@ -1,5 +1,6 @@
 import type {PerspectiveCameraSopNode} from '../../PerspectiveCamera';
 import type {OrthographicCameraSopNode} from '../../OrthographicCamera';
+import {CorePath} from '../../../../../core/geometry/CorePath';
 
 type SopCameraNode = PerspectiveCameraSopNode | OrthographicCameraSopNode;
 
@@ -20,7 +21,7 @@ export async function setSopMainCamera(node: SopCameraNode) {
 	// But if it it not yet attached, we must use a mask, which may not be ideal.
 	// so at the moment, we raise an error instead.
 	if (object.parent) {
-		const path = scene.objectsController.objectPath(object);
+		const path = CorePath.objectPath(object);
 		scene.camerasController.setMainCameraPath(path);
 	} else {
 		alert(

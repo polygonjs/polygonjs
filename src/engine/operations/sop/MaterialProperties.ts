@@ -1,12 +1,14 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh, MeshBasicMaterial} from 'three';
+import {Mesh, MeshBasicMaterial, Object3D} from 'three';
 import {Material} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {updateMaterialSideWithShadow} from '../../nodes/mat/utils/helpers/MaterialSideHelper';
+import {CoreMask} from '../../../core/geometry/Mask';
 interface MaterialPropertiesSopParams extends DefaultOperationParams {
+	group: string;
 	applyToChildren: boolean;
 	// side
 	tside: boolean;
@@ -22,7 +24,8 @@ interface MaterialPropertiesSopParams extends DefaultOperationParams {
 
 export class MaterialPropertiesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: MaterialPropertiesSopParams = {
-		applyToChildren: false,
+		group: '',
+		applyToChildren: true,
 		// side
 		tside: false,
 		doubleSided: false,
@@ -42,23 +45,15 @@ export class MaterialPropertiesSopOperation extends BaseSopOperation {
 	override async cook(inputCoreGroups: CoreGroup[], params: MaterialPropertiesSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		const objects: Mesh[] = [];
-		for (let object of coreGroup.objects() as Mesh[]) {
-			if (isBooleanTrue(params.applyToChildren)) {
-				object.traverse((child) => {
-					objects.push(child as Mesh);
-				});
-			} else {
-				objects.push(object);
-			}
-		}
-		for (let object of objects) {
-			this._updateObject(object, params);
+		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
+
+		for (let selectedObject of selectedObjects) {
+			this._updateObject(selectedObject, params);
 		}
 		return coreGroup;
 	}
-	private _updateObject(object: Mesh, params: MaterialPropertiesSopParams) {
-		const material = object.material as Material;
+	private _updateObject(object: Object3D, params: MaterialPropertiesSopParams) {
+		const material = (object as Mesh).material as Material | undefined;
 		if (material) {
 			this._updateMaterial(material, params);
 		}

@@ -14,7 +14,9 @@ import {isBooleanTrue} from '../../../core/Type';
 const DEFAULT = ObjectPropertiesSopOperation.DEFAULT_PARAMS;
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to apply recursively to children */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
+	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {
+		separatorAfter: true,
+	});
 
 	/** @param toggle on to set a new name */
 	tname = ParamConfig.BOOLEAN(DEFAULT.tname);

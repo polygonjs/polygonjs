@@ -7,6 +7,7 @@ import {TypeAssert} from '../../../engine/poly/Assert';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeStatesController} from '../../nodes/utils/StatesController';
+import {CorePath} from '../../../core/geometry/CorePath';
 
 interface HierarchySopParams extends DefaultOperationParams {
 	mode: number;
@@ -166,7 +167,7 @@ function _addChildrenToCoreGroup(
 	function _findObjectsByMaskFromObjects(mask: string, objects: Object3D[]) {
 		const list: Object3D[] = [];
 		for (let object of objects) {
-			operation.scene().objectsController.objectsByMaskInObject(mask, object, list);
+			CorePath.objectsByMaskInObject(mask, object, list);
 		}
 		return list;
 	}

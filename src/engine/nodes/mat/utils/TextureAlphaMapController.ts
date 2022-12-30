@@ -47,7 +47,7 @@ export class TextureAlphaMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureAlphaMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useAlphaMap, this.node.p.alphaMap);
 	}
 	override async update() {

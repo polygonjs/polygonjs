@@ -32,7 +32,7 @@ export class TextureGradientMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureGradientMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useGradientMap, this.node.p.gradientMap);
 	}
 	override async update() {

@@ -46,7 +46,7 @@ export class TextureLightMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureLightMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useLightMap, this.node.p.lightMap);
 	}
 	override async update() {

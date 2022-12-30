@@ -17,6 +17,7 @@ import {ArrayUtils} from '../ArrayUtils';
 import {CoreFace} from './Face';
 import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
+// import {CoreMask} from './Mask';
 export type GroupString = string;
 
 export interface Object3DWithGeometry extends Object3D {
@@ -275,25 +276,12 @@ export class CoreGroup extends CoreEntity {
 		return core_group;
 	}
 
-	objectsFromGroup(groupName: string): Object3D[] {
-		return this.coreObjectsFromGroup(groupName).map((co) => co.object());
-	}
-	coreObjectsFromGroup(groupString: string): CoreObject[] {
-		groupString = groupString.trim();
-
-		if (groupString !== '') {
-			const index = parseInt(groupString);
-			if (!CoreType.isNaN(index)) {
-				return ArrayUtils.compact([this.coreObjects()[index]]);
-			} else {
-				return this.coreObjects().filter((coreObject) => {
-					return CoreObject.isInGroup(groupString, coreObject);
-				});
-			}
-		} else {
-			return this.coreObjects();
-		}
-	}
+	// objectsFromGroup(groupString: string): Object3D[] {
+	// 	return this.coreObjectsFromGroup(groupString).map((co) => co.object());
+	// }
+	// coreObjectsFromGroup(groupString: string): CoreObject[] {
+	// 	return CoreMask.coreObjects(groupString, this);
+	// }
 
 	boundingBox(forceUpdate: boolean = false): Box3 {
 		if (forceUpdate) {

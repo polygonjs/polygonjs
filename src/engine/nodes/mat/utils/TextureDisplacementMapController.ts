@@ -56,7 +56,7 @@ export class TextureDisplacementMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureDisplacementMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useDisplacementMap, this.node.p.displacementMap);
 	}
 	override async update() {

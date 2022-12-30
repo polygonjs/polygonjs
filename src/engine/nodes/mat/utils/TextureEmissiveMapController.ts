@@ -42,7 +42,7 @@ export class TextureEmissiveMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureEmissiveMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useEmissiveMap, this.node.p.emissiveMap);
 	}
 	override async update() {

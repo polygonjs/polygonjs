@@ -69,7 +69,7 @@ export class TextureEnvMapSimpleController extends BaseTextureMapController {
 	constructor(protected override node: TextureEnvMapSimpleMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useEnvMap, this.node.p.envMap);
 	}
 	override async update() {

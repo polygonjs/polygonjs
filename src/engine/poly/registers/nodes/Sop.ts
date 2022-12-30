@@ -99,6 +99,7 @@ import {LodSopNode} from '../../../nodes/sop/Lod';
 import {LookAtSopNode} from '../../../nodes/sop/LookAt';
 import {MaterialSopNode} from '../../../nodes/sop/Material';
 import {MaterialPropertiesSopNode} from '../../../nodes/sop/MaterialProperties';
+// import {MaterialPropertiesMeshStandardSopNode} from '../../../nodes/sop/MaterialPropertiesMeshStandard';
 import {MergeSopNode} from '../../../nodes/sop/Merge';
 import {MetaballSopNode} from '../../../nodes/sop/Metaball';
 import {NoiseSopNode} from '../../../nodes/sop/Noise';
@@ -268,7 +269,7 @@ export interface GeoNodeChildrenMap {
 	lookAt: LookAtSopNode;
 	material: MaterialSopNode;
 	materialProperties: MaterialPropertiesSopNode;
-
+	// materialPropertiesMeshStandard: MaterialPropertiesMeshStandardSopNode;
 	merge: MergeSopNode;
 	metaball: MetaballSopNode;
 	noise: NoiseSopNode;
@@ -408,6 +409,7 @@ import {MergeSopOperation} from '../../../operations/sop/Merge';
 import {MetaballSopOperation} from '../../../operations/sop/Metaball';
 import {MaterialSopOperation} from '../../../operations/sop/Material';
 import {MaterialPropertiesSopOperation} from '../../../operations/sop/MaterialProperties';
+// import {MaterialPropertiesMeshStandardSopOperation} from '../../../operations/sop/MaterialPropertiesMeshStandard';
 import {NullSopOperation} from '../../../operations/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../operations/sop/ObjectProperties';
 import {ObjectsLayoutSopOperation} from '../../../operations/sop/ObjectsLayout';
@@ -510,6 +512,7 @@ export class SopRegister {
 		poly.registerOperation(MetaballSopOperation);
 		poly.registerOperation(MaterialSopOperation);
 		poly.registerOperation(MaterialPropertiesSopOperation);
+		// poly.registerOperation(MaterialPropertiesMeshStandardSopOperation);
 		poly.registerOperation(NullSopOperation);
 		poly.registerOperation(ObjectPropertiesSopOperation);
 		poly.registerOperation(ObjectsLayoutSopOperation);
@@ -646,6 +649,7 @@ export class SopRegister {
 		poly.registerNode(LookAtSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MaterialPropertiesSopNode, CATEGORY_SOP.RENDER);
+		// poly.registerNode(MaterialPropertiesMeshStandardSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.FLOW);
 
 		poly.registerNode(MetaballSopNode, CATEGORY_SOP.PRIMITIVES);

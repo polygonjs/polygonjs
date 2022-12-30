@@ -19,6 +19,7 @@ import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
 interface PointsControllers {
+	colors: ColorsController;
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	map: TextureMapController;
@@ -56,6 +57,7 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		});
 	}
 	readonly controllers: PointsControllers = {
+		colors: new ColorsController(this),
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		map: new TextureMapController(this),
@@ -71,13 +73,13 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 	}
 
 	override async cook() {
+		this._material = this._material || this.createMaterial();
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
-		ColorsController.update(this);
 		FogController.update(this);
 		PointsSizeController.update(this);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

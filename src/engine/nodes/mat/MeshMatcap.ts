@@ -23,6 +23,7 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 interface MeshMatCapControllers {
+	colors: ColorsController;
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	bumpMap: TextureBumpMapController;
@@ -73,6 +74,7 @@ export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshMatC
 	}
 
 	readonly controllers: MeshMatCapControllers = {
+		colors: new ColorsController(this),
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		bumpMap: new TextureBumpMapController(this),
@@ -91,12 +93,13 @@ export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshMatC
 	}
 
 	override async cook() {
+		this._material = this._material || this.createMaterial();
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
 		ColorsController.update(this);
 		FogController.update(this);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

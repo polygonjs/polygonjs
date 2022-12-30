@@ -32,6 +32,7 @@ import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 
 interface MeshStandardControllers {
+	colors: ColorsController;
 	advancedCommon: AdvancedCommonController;
 	alphaMap: TextureAlphaMapController;
 	aoMap: TextureAOMapController;
@@ -97,6 +98,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 	}
 
 	readonly controllers: MeshStandardControllers = {
+		colors: new ColorsController(this),
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
@@ -113,7 +115,8 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
 			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
+				const controller = this.controllers[controllerName];
+				controller.initializeNode();
 			}
 		});
 	}
@@ -122,7 +125,7 @@ export class MeshStandardMatNode extends TypedMatNode<MeshStandardMaterial, Mesh
 		for (let controllerName of this.controllerNames) {
 			this.controllers[controllerName].update();
 		}
-		ColorsController.update(this);
+		// ColorsController.update(this);
 		FogController.update(this);
 		WireframeController.update(this);
 

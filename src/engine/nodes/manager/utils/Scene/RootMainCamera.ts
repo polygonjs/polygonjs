@@ -4,6 +4,7 @@ import {RootManagerNode} from '../../Root';
 import {Camera, PerspectiveCamera} from 'three';
 import {CoreWalker} from '../../../../../core/Walker';
 import {GeoObjNode} from '../../../obj/Geo';
+import {CorePath} from '../../../../../core/geometry/CorePath';
 
 let __defaultDummyPerspectiveCamera: PerspectiveCamera | undefined;
 export function _defaultDummyPerspectiveCamera() {
@@ -25,7 +26,7 @@ export class RootMainCameraController {
 	constructor(protected node: RootManagerNode) {}
 
 	setCamera(object: Camera) {
-		const path = this.node.scene().objectsController.objectPath(object);
+		const path = CorePath.objectPath(object);
 		this.setCameraPath(path);
 	}
 	setCameraPath(path: string) {

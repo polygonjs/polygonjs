@@ -4,34 +4,34 @@ import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {BaseBuilderMatNodeType} from '../../../engine/nodes/mat/_BaseBuilder';
 import {CoreMaterial} from '../../../core/geometry/Material';
-import {Group, Material} from 'three';
+import {Group, Material, Object3D} from 'three';
 import {Mesh} from 'three';
 import {Texture} from 'three';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {ShaderMaterial} from 'three';
-import {CoreObject} from '../../../core/geometry/Object';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
+	applyToChildren: boolean;
 	assignMat: boolean;
 	material: TypedNodePathParamValue;
-	applyToChildren: boolean;
 	cloneMat: boolean;
 	shareCustomUniforms: boolean;
 	swapCurrentTex: boolean;
 	texSrc0: string;
 	texDest0: string;
 }
-type TraverseCallback = (coreObject: CoreObject) => void;
+// type TraverseCallback = (coreObject: CoreObject) => void;
 export class MaterialSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: MaterialSopParams = {
 		group: '',
+		applyToChildren: true,
 		assignMat: true,
 		material: new TypedNodePathParamValue(''),
-		applyToChildren: true,
 		cloneMat: false,
 		shareCustomUniforms: true,
 		swapCurrentTex: false,
@@ -54,11 +54,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		return coreGroup;
 	}
 
-	private async _applyMaterials(coreGroup: CoreGroup, params: MaterialSopParams) {
-		if (!isBooleanTrue(params.assignMat)) {
-			return;
-		}
-
+	private async _getMaterial(params: MaterialSopParams) {
 		const materialNode = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
 		if (materialNode) {
 			const material = materialNode.material;
@@ -68,58 +64,46 @@ export class MaterialSopOperation extends BaseSopOperation {
 			}
 
 			await materialNode.compute();
-			if (material) {
-				const coreObjects = coreGroup.coreObjectsFromGroup(params.group);
-				for (let coreObject of coreObjects) {
-					if (params.group == '' || CoreObject.isInGroup(params.group, coreObject)) {
-						this._applyMaterial(coreObject, material, params);
-					}
-				}
-
-				if (isBooleanTrue(params.applyToChildren)) {
-					// if we apply to children, the group will be tested inside _apply_material
-					function _traverseCoreObject(
-						coreObject: CoreObject,
-						callback: TraverseCallback,
-						level: number = 0
-					) {
-						if (params.group == '' || CoreObject.isInGroup(params.group, coreObject)) {
-							callback(coreObject);
-						}
-						const childCoreObjects = coreObject
-							.object()
-							.children.map((child, i) => new CoreObject(child, i));
-						for (let childCoreObject of childCoreObjects) {
-							_traverseCoreObject(childCoreObject, callback, level + 1);
-						}
-					}
-
-					for (let coreObject of coreGroup.coreObjects()) {
-						_traverseCoreObject(coreObject, (childCoreObject) => {
-							this._applyMaterial(childCoreObject, material, params);
-						});
-					}
-				}
-
-				return coreGroup;
-			} else {
+			if (!material) {
 				this.states?.error.set(`material invalid. (error: '${materialNode.states.error.message()}')`);
 			}
+
+			return material;
 		} else {
 			this.states?.error.set(`no material node found`);
 		}
 	}
 
+	private async _applyMaterials(coreGroup: CoreGroup, params: MaterialSopParams) {
+		if (!isBooleanTrue(params.assignMat)) {
+			return;
+		}
+
+		const material = await this._getMaterial(params);
+		if (!material) {
+			return;
+		}
+
+		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
+
+		for (let selectedObject of selectedObjects) {
+			this._applyMaterial(selectedObject, material, params);
+		}
+
+		return coreGroup;
+	}
+
 	private _oldMatByOldNewId: Map<string, Material> = new Map();
 	private _materialByUuid: Map<string, Material> = new Map();
-	private _swapTextures(core_group: CoreGroup, params: MaterialSopParams) {
+	private _swapTextures(coreGroup: CoreGroup, params: MaterialSopParams) {
 		if (!isBooleanTrue(params.swapCurrentTex)) {
 			return;
 		}
 
 		this._materialByUuid.clear();
 
-		for (let object of core_group.objectsFromGroup(params.group)) {
+		const objects = CoreMask.coreObjects(params.group, coreGroup).map((co) => co.object());
+		for (let object of objects) {
 			if (params.applyToChildren) {
 				object.traverse((child) => {
 					const mat = (object as Mesh).material as Material;
@@ -136,7 +120,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 		});
 	}
 
-	private _applyMaterial(coreObject: CoreObject, srcMaterial: Material, params: MaterialSopParams) {
+	private _applyMaterial(object: Object3D, srcMaterial: Material, params: MaterialSopParams) {
 		const usedMaterial = isBooleanTrue(params.cloneMat)
 			? CoreMaterial.clone(this.scene(), srcMaterial, {shareCustomUniforms: params.shareCustomUniforms})
 			: srcMaterial;
@@ -147,7 +131,6 @@ export class MaterialSopOperation extends BaseSopOperation {
 			}
 		}
 
-		const object = coreObject.object();
 		if ((object as Group).isGroup) {
 			// do not assign material to a group, as this could cause render errors
 			return;

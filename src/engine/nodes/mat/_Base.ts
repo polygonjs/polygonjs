@@ -1,7 +1,9 @@
 import {TypedNode} from '../_Base';
-import {Material} from 'three';
+import {Material, MeshBasicMaterial} from 'three';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {FlagsControllerB} from '../utils/FlagsController';
 
 /**
  * BaseMatNode is the base class for all nodes that process materials. This inherits from [BaseNode](/docs/api/BaseNode).
@@ -19,16 +21,17 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 
 	override initializeBaseNode() {
 		super.initializeBaseNode();
+		// this.io.outputs.setHasOneOutput();
 
 		this.nameController.add_post_set_fullPath_hook(this.set_material_name.bind(this));
 
-		this.addPostDirtyHook('_cook_main_without_inputs_when_dirty', () => {
-			setTimeout(this._cook_main_without_inputs_when_dirty_bound, 0);
+		this.addPostDirtyHook('_cookWhenDirty', () => {
+			setTimeout(this._cookWhenDirtyBound, 0);
 		});
 	}
 
-	private _cook_main_without_inputs_when_dirty_bound = this._cook_main_without_inputs_when_dirty.bind(this);
-	private async _cook_main_without_inputs_when_dirty() {
+	protected _cookWhenDirtyBound = this._cookMainWithoutInputsWhenDirty.bind(this);
+	protected async _cookMainWithoutInputsWhenDirty() {
 		await this.cookController.cookMainWithoutInputs();
 	}
 
@@ -44,8 +47,28 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	}
 	//
 
-	setMaterial(material: Material) {
+	setMaterial(material: M) {
+		this._material = material;
 		this._setContainer(material);
+	}
+}
+
+const DUMMY_MATERIAL = new MeshBasicMaterial({color: 0x0000ff});
+export class UpdateMatNode<M extends Material, K extends NodeParamsConfig> extends TypedMatNode<M, K> {
+	override createMaterial() {
+		return DUMMY_MATERIAL as any as M;
+	}
+	public override readonly flags: FlagsControllerB = new FlagsControllerB(this);
+
+	protected override _cookWhenDirtyBound = this._cookMainWithoutInputsWhenDirty.bind(this);
+	protected override async _cookMainWithoutInputsWhenDirty() {
+		await this.cookController.cookMain();
+	}
+
+	override initializeBaseNode() {
+		super.initializeBaseNode();
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
 	}
 }
 

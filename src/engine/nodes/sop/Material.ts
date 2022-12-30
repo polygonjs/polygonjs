@@ -15,7 +15,13 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = MaterialSopOperation.DEFAULT_PARAMS;
 class MaterialSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
-	group = ParamConfig.STRING(DEFAULT.group);
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
+	/** @param toggle on to also assign the material to children */
+	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {
+		separatorAfter: true,
+	});
 	/** @param toggle on to assign the new material */
 	assignMat = ParamConfig.BOOLEAN(DEFAULT.assignMat);
 	/** @param the material node */
@@ -26,12 +32,14 @@ class MaterialSopParamsConfig extends NodeParamsConfig {
 		dependentOnFoundNode: false,
 		visibleIf: {assignMat: 1},
 	});
-	/** @param toggle on to also assign the material to children */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {visibleIf: {assignMat: 1}});
+
 	// cloneMat is mostly useful when swapping tex for multiple objects which have different textures
 	// but can also be used when requiring a unique material per object, when using a copy SOP
 	/** @param Cloning the material would prevent the material node to have any effect on the processed geometries. But it would allow to have multiple materials, if this was used with a Copy SOP for instance */
-	cloneMat = ParamConfig.BOOLEAN(DEFAULT.cloneMat, {visibleIf: {assignMat: 1}});
+	cloneMat = ParamConfig.BOOLEAN(DEFAULT.cloneMat, {
+		visibleIf: {assignMat: 1},
+		separatorBefore: true,
+	});
 	/** @param while cloning the material, you may only want to change basic properties (such as depthWrite or transparent), but you would want to still use the same custom uniforms created by GL/param nodes */
 	shareCustomUniforms = ParamConfig.BOOLEAN(DEFAULT.shareCustomUniforms, {visibleIf: {assignMat: 1, cloneMat: 1}});
 	/** @param swap one texture with another */
@@ -61,7 +69,7 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 	private _operation: MaterialSopOperation | undefined;
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new MaterialSopOperation(this._scene, this.states, this);
-		const core_group = await this._operation.cook(inputCoreGroups, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

@@ -216,8 +216,8 @@ export class PolyScene {
 	 * returns a list THREE.Object3Ds whose names matche the mask
 	 *
 	 */
-	objectsByMask(mask: string): Object3D[] {
-		return this._objectsController.objectsByMask(mask);
+	objectsByMask(mask: string, parent?: Object3D): Object3D[] {
+		return this._objectsController.objectsByMask(mask, parent);
 	}
 
 	protected _references_controller = new ReferencesController(this);

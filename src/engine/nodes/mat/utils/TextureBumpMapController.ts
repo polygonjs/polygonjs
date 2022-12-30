@@ -53,7 +53,7 @@ export class TextureBumpMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureBumpMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useBumpMap, this.node.p.bumpMap);
 	}
 	override async update() {

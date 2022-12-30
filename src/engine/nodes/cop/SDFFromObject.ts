@@ -80,7 +80,7 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 	override async cook(inputContents: Texture[]) {
 		const geometryNode = this.pv.geometry.nodeWithContext(NodeContext.SOP, this.states.error);
 		if (!geometryNode) {
-			this.states.error.set(`node not found at path '${this.pv.geometry}'`);
+			this.states.error.set(`node not found at path '${this.pv.geometry.path()}'`);
 			return;
 		}
 		const container = await geometryNode.compute();

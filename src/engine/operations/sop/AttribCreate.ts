@@ -9,6 +9,7 @@ import {TypeAssert} from '../../../engine/poly/Assert';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface AttribCreateSopParams extends DefaultOperationParams {
 	group: string;
@@ -86,7 +87,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(attribType);
 	}
 	private _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
-		const coreObjects = coreGroup.coreObjectsFromGroup(params.group);
+		const coreObjects = CoreMask.coreObjects(params.group, coreGroup);
 
 		// add attrib if non existent
 		const attribName = params.name;

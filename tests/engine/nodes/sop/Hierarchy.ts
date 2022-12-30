@@ -2,6 +2,7 @@ import {HierarchySopNode} from './../../../../src/engine/nodes/sop/Hierarchy';
 import {Object3D} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {AddChildMode, HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+import {CorePath} from '../../../../src/core/geometry/CorePath';
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
@@ -105,13 +106,12 @@ QUnit.test('sop/hierarchy simple add parent', async (assert) => {
 	const geo1 = window.geo1;
 
 	async function _objectsList(hierarchyNode: HierarchySopNode) {
-		const scene = hierarchyNode.scene();
 		const container = await hierarchyNode.compute();
 		const objects = container.coreContent()!.objects();
 		const list: string[] = [];
 		for (let object of objects) {
 			object.traverse((child: Object3D) => {
-				const path = scene.objectsController.objectPath(child);
+				const path = CorePath.objectPath(child);
 				list.push(path);
 			});
 		}

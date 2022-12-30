@@ -14,6 +14,10 @@ import {MaterialPropertiesSopOperation} from '../../operations/sop/MaterialPrope
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = MaterialPropertiesSopOperation.DEFAULT_PARAMS;
 class MaterialPropertiesSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
 	/** @param sets if this node should search through the materials inside the whole hierarchy */
 	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
 
@@ -61,9 +65,9 @@ export class MaterialPropertiesSopNode extends TypedSopNode<MaterialPropertiesSo
 	}
 
 	private _operation: MaterialPropertiesSopOperation | undefined;
-	override async cook(input_contents: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new MaterialPropertiesSopOperation(this.scene(), this.states);
-		const core_group = await this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

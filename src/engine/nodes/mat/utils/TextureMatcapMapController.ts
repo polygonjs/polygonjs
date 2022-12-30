@@ -35,7 +35,7 @@ export class TextureMatcapMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureMatcapMapMatNode) {
 		super(node);
 	}
-	initializeNode() {
+	override initializeNode() {
 		this.add_hooks(this.node.p.useMatcapMap, this.node.p.matcapMap);
 	}
 	override async update() {

@@ -106,29 +106,6 @@ export class CoreObject extends CoreEntity {
 			return this.points();
 		}
 	}
-	static isInGroup(groupString: string, coreObject: CoreObject) {
-		const group = groupString.trim();
-		if (group.length == 0) {
-			return true;
-		}
-
-		if (coreObject.object.name == group) {
-			return true;
-		}
-		if (CoreString.matchMask(groupString, coreObject.name())) {
-			return true;
-		}
-
-		const elements = group.split('=');
-		const attribNameWithPrefix = elements[0];
-		if (attribNameWithPrefix[0] == '@') {
-			const attribName = attribNameWithPrefix.substring(1);
-			const expectedAttribValue = elements[1];
-			const currentAttribValue = coreObject.attribValue(attribName);
-			return expectedAttribValue == currentAttribValue;
-		}
-		return false;
-	}
 
 	computeVertexNormals() {
 		this.coreGeometry()?.computeVertexNormals();
