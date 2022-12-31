@@ -39,10 +39,11 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 
 	scene.setFrame(0);
 	await particles1.compute();
-
-	const render_material = particles1.renderController.material()!;
+	await pointsBuilder1.compute();
+	const render_material = particles1.renderController.material();
+	assert.ok(render_material, 'mat ok');
 	await RendererUtils.compile(pointsBuilder1, renderer1);
-	const uniform = MaterialUserDataUniforms.getUniforms(render_material)!.texture_position;
+	const uniform = MaterialUserDataUniforms.getUniforms(render_material!)!.texture_position;
 	assert.ok(render_material, 'material ok');
 	assert.ok(uniform, 'uniform ok');
 	const all_variables = particles1.gpuController.allVariables();
@@ -51,6 +52,7 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 	const buffer_width = 1;
 	const buffer_height = 1;
 	let render_target1 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+	assert.ok(render_target1, 'render target ok');
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
@@ -75,7 +77,7 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 		[-0.5, 0.3, -0.5, 0].join(':'),
 		'point moved up on frame 2'
 	);
-
+	// if (1 + 1) return;
 	scene.setFrame(0);
 	await AssemblersUtils.withoutAssemblers(async () => {
 		await saveAndLoadScene(scene, async (scene2) => {
@@ -83,22 +85,25 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 			const rendererData2 = await RendererUtils.waitForRenderer(scene2);
 			const renderer2 = rendererData2.renderer;
 
-			const new_particles1 = scene2.node('/geo1/particlesSystemGpu1') as ParticlesSystemGpuSopNode;
+			const newPointsBuilder = scene2.node(pointsBuilder1.path()) as PointsBuilderMatNode;
+			await newPointsBuilder.compute();
+
+			const new_particles1 = scene2.node(particles1.path()) as ParticlesSystemGpuSopNode;
 			assert.notOk(new_particles1.assemblerController(), 'no assembler when loading scene');
 			assert.ok(new_particles1.persisted_config, 'persistedConfig ok');
 
 			assert.equal(scene2.frame(), 0, 'start at frame 0');
-			new_particles1.p.reset.pressButton();
+			await new_particles1.p.reset.pressButton();
 			await new_particles1.compute();
+			assert.notOk(new_particles1.states.error.message(), 'no error');
 			const materialNode = new_particles1.pv.material.node()! as PointsBuilderMatNode;
 			assert.ok(materialNode, 'materialNode ok');
-			const pointsBuilder2 = materialNode.material;
+			const pointsBuilder2 = await materialNode.material();
 			assert.deepEqual(
 				Object.keys(MaterialUserDataUniforms.getUniforms(pointsBuilder2) || {}).sort(),
 				[],
 				'the material from persisted config contains no uniform that may conflict with the not yet done compilation'
 			);
-
 			render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
 			assert.ok(render_target1, 'render_target1 ok');
 			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);

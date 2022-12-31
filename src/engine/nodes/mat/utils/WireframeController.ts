@@ -3,11 +3,14 @@ import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
-import {MeshBasicMaterial} from 'three';
+import {Material, MeshBasicMaterial} from 'three';
 import {MeshStandardMaterial} from 'three';
 import {MeshPhysicalMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
 
+export interface WireframeControllers {
+	wireframe: WireframeController;
+}
 enum LineCapType {
 	ROUND = 'round',
 	BUTT = 'butt',
@@ -54,6 +57,12 @@ export function WireframeParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 type WireframedMaterial = MeshToonMaterial | MeshBasicMaterial | MeshStandardMaterial | MeshPhysicalMaterial;
+function isValidWireframeMaterial(material?: Material): material is WireframedMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshToonMaterial).wireframe != null;
+}
 // class WireframedMaterial extends Material {
 // 	wireframe!: boolean;
 // 	wireframeLinecap!: string;
@@ -61,18 +70,26 @@ type WireframedMaterial = MeshToonMaterial | MeshBasicMaterial | MeshStandardMat
 // }
 class WireframeParamsConfig extends WireframeParamConfig(NodeParamsConfig) {}
 class WireframedMatNode extends TypedMatNode<WireframedMaterial, WireframeParamsConfig> {
-	createMaterial(): WireframedMaterial {
-		return new MeshBasicMaterial();
+	async material() {
+		const container = await this.compute();
+		return container.material() as WireframedMaterial | undefined;
 	}
+	controllers!: WireframeControllers;
 }
 
 export class WireframeController extends BaseController {
 	constructor(protected override node: WireframedMatNode) {
 		super(node);
 	}
-	static update(node: WireframedMatNode) {
-		const material = node.material;
-		const pv = node.pv;
+	static async update(node: WireframedMatNode) {
+		const material = await node.material();
+		if (!isValidWireframeMaterial(material)) {
+			return;
+		}
+		node.controllers.wireframe.updateMaterial(material);
+	}
+	override updateMaterial(material: WireframedMaterial) {
+		const pv = this.node.pv;
 
 		material.wireframe = isBooleanTrue(pv.wireframe);
 		material.wireframeLinewidth = pv.wireframeLinewidth;

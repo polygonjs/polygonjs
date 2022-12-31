@@ -164,7 +164,7 @@ QUnit.test('gl texture: 1 texture node on top level and one in a subnet work ok'
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	meshBasicBuilder1.createNode('output');
 	meshBasicBuilder1.createNode('globals');
-	const material = meshBasicBuilder1.material;
+	const material = await meshBasicBuilder1.material();
 	const output1 = meshBasicBuilder1.nodesByType('output')[0];
 	meshBasicBuilder1.nodesByType('globals')[0];
 	const subnet1 = meshBasicBuilder1.createNode('subnet');

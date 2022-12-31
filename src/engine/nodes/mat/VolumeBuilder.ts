@@ -43,10 +43,11 @@ export class VolumeBuilderMatNode extends TypedBuilderMatNode<
 
 	override initializeNode() {}
 	override async cook() {
-		this._volumeController.updateUniformsFromParams();
+		this._material = this._material || this.createMaterial();
+		this._volumeController.updateUniformsFromParams(this._material);
 
-		this.compileIfRequired();
+		this.compileIfRequired(this._material);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

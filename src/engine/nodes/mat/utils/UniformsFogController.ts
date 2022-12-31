@@ -9,10 +9,14 @@ import {
 	MeshPhongMaterial,
 	MeshLambertMaterial,
 	MeshBasicMaterial,
+	Material,
 } from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 
+export interface UniformFogControllers {
+	uniformFog: UniformFogController;
+}
 export function FogParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on if you have a fog in the scene and the material should be affected by it */
@@ -29,20 +33,33 @@ type FoggableMaterial =
 	| MeshPhongMaterial
 	| MeshLambertMaterial
 	| MeshBasicMaterial;
+function isValidFogMaterial(material?: Material): material is FoggableMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as PointsMaterial).fog != null;
+}
 
 abstract class FogMatNode extends TypedMatNode<FoggableMaterial, FogParamsConfig> {
 	// createMaterial() {
 	// 	return new Material();
 	// }
+	controllers!: UniformFogControllers;
 }
 
-export class FogController extends BaseController {
+export class UniformFogController extends BaseController {
 	constructor(protected override node: FogMatNode) {
 		super(node);
 	}
-	static update(node: FogMatNode) {
-		const material = node.material;
-		const pv = node.pv;
+	static async update(node: FogMatNode) {
+		const material = await node.material();
+		if (!isValidFogMaterial(material)) {
+			return;
+		}
+		node.controllers.uniformFog.updateMaterial(material);
+	}
+	override updateMaterial(material: FoggableMaterial) {
+		const pv = this.node.pv;
 		material.fog = isBooleanTrue(pv.useFog);
 	}
 }

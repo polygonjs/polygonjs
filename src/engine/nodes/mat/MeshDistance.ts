@@ -6,17 +6,19 @@
 
 import {MeshDistanceMaterial} from 'three';
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
 
-interface MeshDistanceControllers {
-	advancedCommon: AdvancedCommonController;
-}
+interface MeshDistanceControllers extends AdvancedCommonControllers {}
 class MeshDistanceMatParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new MeshDistanceMatParamsConfig();
 
-export class MeshDistanceMatNode extends TypedMatNode<MeshDistanceMaterial, MeshDistanceMatParamsConfig> {
+export class MeshDistanceMatNode extends PrimitiveMatNode<MeshDistanceMaterial, MeshDistanceMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshDistance';
@@ -30,19 +32,11 @@ export class MeshDistanceMatNode extends TypedMatNode<MeshDistanceMaterial, Mesh
 	readonly controllers: MeshDistanceControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshDistanceControllers>;
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 	override async cook() {
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
+		this._material = this._material || this.createMaterial();
+		await Promise.all(this.controllersPromises(this._material));
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

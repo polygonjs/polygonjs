@@ -1,5 +1,5 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {MeshPhysicalMaterial} from 'three';
+import {Material, MeshPhysicalMaterial} from 'three';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -112,8 +112,14 @@ When transmission is non-zero, opacity should be set to 1.  */
 }
 
 type MeshPhysicalControllerCurrentMaterial = MeshPhysicalMaterial;
+export function isValidMaterial(material?: Material): material is MeshPhysicalControllerCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshPhysicalMaterial).clearcoatRoughness != null;
+}
 class TextureClearCoatMapParamsConfig extends MeshPhysicalParamConfig(NodeParamsConfig) {}
-interface MeshPhysicalControllers {
+export interface MeshPhysicalControllers {
 	physical: MeshPhysicalController;
 }
 abstract class TextureClearCoatMapMatNode extends TypedMatNode<
@@ -121,7 +127,10 @@ abstract class TextureClearCoatMapMatNode extends TypedMatNode<
 	TextureClearCoatMapParamsConfig
 > {
 	controllers!: MeshPhysicalControllers;
-	abstract override createMaterial(): MeshPhysicalControllerCurrentMaterial;
+	async material() {
+		const container = await this.compute();
+		return container.material() as MeshPhysicalControllerCurrentMaterial | undefined;
+	}
 }
 
 const tmpMeshPhysicalForIOR = new MeshPhysicalMaterial();
@@ -139,27 +148,17 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		// this.add_hooks(this.node.p.useIridescenceMap, this.node.p.iridescenceMap);
 	}
 	private _sheenColorClone = new Color();
-	override async update() {
-		this._update(this.node.material, 'clearcoatMap', this.node.p.useClearCoatMap, this.node.p.clearcoatMap);
-		this._update(
-			this.node.material,
-			'clearcoatNormalMap',
-			this.node.p.useClearCoatNormalMap,
-			this.node.p.clearcoatNormalMap
-		);
-		this._update(
-			this.node.material,
-			'clearcoatRoughnessMap',
-			this.node.p.useClearCoatRoughnessMap,
-			this.node.p.clearcoatRoughnessMap
-		);
-		this._update(
-			this.node.material,
-			'transmissionMap',
-			this.node.p.useTransmissionMap,
-			this.node.p.transmissionMap
-		);
-		this._update(this.node.material, 'thicknessMap', this.node.p.useThicknessMap, this.node.p.thicknessMap);
+
+	static override async update(node: TextureClearCoatMapMatNode) {
+		const container = await node.compute();
+		const material = container.material();
+		if (!isValidMaterial(material)) {
+			return;
+		}
+		node.controllers.physical.updateMaterial(material);
+	}
+
+	override async updateMaterial(material: MeshPhysicalControllerCurrentMaterial) {
 		// this._update(this.node.material, 'iridescenceMap', this.node.p.useIridescenceMap, this.node.p.iridescenceMap);
 		const pv = this.node.pv;
 
@@ -167,7 +166,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		tmpMeshPhysicalForIOR.ior = pv.ior;
 		const reflectivity = tmpMeshPhysicalForIOR.reflectivity;
 
-		const mat = this.node.material as MeshPhysicalMaterial;
+		const mat = material as MeshPhysicalMaterial;
 		mat.clearcoat = pv.clearcoat;
 		if (mat.clearcoatNormalScale != null) {
 			mat.clearcoatNormalScale.copy(pv.clearcoatNormalScale);
@@ -196,8 +195,22 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		mat.attenuationDistance = pv.attenuationDistance;
 		mat.attenuationColor = pv.attenuationColor;
 		// }
-	}
-	static override async update(node: TextureClearCoatMapMatNode) {
-		node.controllers.physical.update();
+		await Promise.all([
+			this._update(material, 'clearcoatMap', this.node.p.useClearCoatMap, this.node.p.clearcoatMap),
+			this._update(
+				material,
+				'clearcoatNormalMap',
+				this.node.p.useClearCoatNormalMap,
+				this.node.p.clearcoatNormalMap
+			),
+			this._update(
+				material,
+				'clearcoatRoughnessMap',
+				this.node.p.useClearCoatRoughnessMap,
+				this.node.p.clearcoatRoughnessMap
+			),
+			this._update(material, 'transmissionMap', this.node.p.useTransmissionMap, this.node.p.transmissionMap),
+			this._update(material, 'thicknessMap', this.node.p.useThicknessMap, this.node.p.thicknessMap),
+		]);
 	}
 }

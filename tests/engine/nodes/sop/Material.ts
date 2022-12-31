@@ -30,7 +30,7 @@ QUnit.test('sop/material simple', async (assert) => {
 	container = await material1.compute();
 	const first_object = container.coreContent()!.objects()[0] as Mesh;
 	const material = first_object.material as Material;
-	assert.equal(material.uuid, lambert1.material.uuid);
+	assert.equal(material.uuid, (await lambert1.material()).uuid);
 });
 
 QUnit.test('sop/material clone', async (assert) => {
@@ -59,7 +59,7 @@ QUnit.test('sop/material clone', async (assert) => {
 	container = await copy1.compute();
 	const objects = container.coreContent()!.objects() as Mesh[];
 	assert.equal(objects.length, 2);
-	const src_material = lambert1.material;
+	const src_material = await lambert1.material();
 	assert.notEqual(src_material.uuid, (objects[0].material as Material).uuid);
 	assert.notEqual(src_material.uuid, (objects[1].material as Material).uuid);
 });
@@ -98,17 +98,20 @@ QUnit.test('sop/material access group by object name', async (assert) => {
 
 	material1.p.group.set('SheenChair_fabric');
 	const objects1 = await getObjects();
-	assert.notEqual((objects1[0].material as Material).uuid, lambert1.material.uuid, 'not assigned');
+	assert.notEqual((objects1[0].material as Material).uuid, (await lambert1.material()).uuid, 'not assigned');
 	assert.equal(
 		(objects1[objectNames.indexOf('SheenChair_fabric')].material as Material).uuid,
-		lambert1.material.uuid,
+		(await lambert1.material()).uuid,
 		'assigned'
 	);
 
 	material1.p.group.set('SheenChair_metal');
 	const objects2 = await getObjects();
-	assert.notEqual((objects2[3].material as Material).uuid, lambert1.material.uuid);
-	assert.equal((objects2[objectNames.indexOf('SheenChair_metal')].material as Material).uuid, lambert1.material.uuid);
+	assert.notEqual((objects2[3].material as Material).uuid, (await lambert1.material()).uuid);
+	assert.equal(
+		(objects2[objectNames.indexOf('SheenChair_metal')].material as Material).uuid,
+		(await lambert1.material()).uuid
+	);
 });
 
 QUnit.test('sop/material access group by object index', async (assert) => {
@@ -145,13 +148,13 @@ QUnit.test('sop/material access group by object index', async (assert) => {
 
 	material1.p.group.set('@objnum=3');
 	const objects1 = await getObjects();
-	assert.notEqual((objects1[0].material as Material).uuid, lambert1.material.uuid, 'not assigned');
-	assert.equal((objects1[3].material as Material).uuid, lambert1.material.uuid, 'assigned');
+	assert.notEqual((objects1[0].material as Material).uuid, (await lambert1.material()).uuid, 'not assigned');
+	assert.equal((objects1[3].material as Material).uuid, (await lambert1.material()).uuid, 'assigned');
 
 	material1.p.group.set('@objnum=0');
 	const objects2 = await getObjects();
-	assert.notEqual((objects2[3].material as Material).uuid, lambert1.material.uuid, 'not assigned');
-	assert.equal((objects2[0].material as Material).uuid, lambert1.material.uuid, 'assigned');
+	assert.notEqual((objects2[3].material as Material).uuid, (await lambert1.material()).uuid, 'not assigned');
+	assert.equal((objects2[0].material as Material).uuid, (await lambert1.material()).uuid, 'assigned');
 });
 
 QUnit.test('sop/material access group by hierarchy mask', async (assert) => {
@@ -189,17 +192,19 @@ QUnit.test('sop/material access group by hierarchy mask', async (assert) => {
 		const objects = coreContent.objects()[0].children;
 		return objects as Mesh[];
 	}
+	const mat = await lambert1.material();
+	const matUuid = mat.uuid;
 	async function objectNamesWithMaterial() {
 		const objects1 = await getObjects();
 		return objects1
-			.filter((o: Mesh) => (o.material as Material).uuid == lambert1.material.uuid)
+			.filter((o: Mesh) => (o.material as Material).uuid == matUuid)
 			.map((o: Object3D) => o.name)
 			.sort();
 	}
 	async function objectNamesWithoutMaterial() {
 		const objects1 = await getObjects();
 		return objects1
-			.filter((o: Mesh) => (o.material as Material).uuid != lambert1.material.uuid)
+			.filter((o: Mesh) => (o.material as Material).uuid != matUuid)
 			.map((o: Object3D) => o.name)
 			.sort();
 	}
@@ -233,7 +238,7 @@ QUnit.test('sop/material applies to children correctly', async (assert) => {
 	const material1 = geo1.createNode('material');
 
 	const basicMesh = MAT.createNode('meshBasic');
-	const matUuid = basicMesh.material.uuid;
+	const matUuid = (await basicMesh.material()).uuid;
 	material1.setInput(0, fileGLTF1);
 	material1.p.material.setNode(basicMesh);
 	material1.p.applyToChildren.set(true);
@@ -302,7 +307,7 @@ QUnit.test('sop/material clone preserves builder onBeforeCompile', async (assert
 		container = await copy1.compute();
 		const objects = container.coreContent()!.objects() as Mesh[];
 		assert.equal(objects.length, 2);
-		const srcMaterial = meshLambertBuilder1.material;
+		const srcMaterial = await meshLambertBuilder1.material();
 		const materialObject0 = objects[0].material as Material;
 		const materialObject1 = objects[1].material as Material;
 		assert.notEqual(srcMaterial.uuid, materialObject0.uuid);

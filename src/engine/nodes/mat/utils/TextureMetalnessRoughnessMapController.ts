@@ -2,9 +2,10 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshStandardMaterial, MeshPhysicalMaterial} from 'three';
+import {MeshStandardMaterial, MeshPhysicalMaterial, Material} from 'three';
 import {DefaultOperationParams} from '../../../../core/operations/_Base';
 import {TypedNodePathParamValue} from '../../../../core/Walker';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 // import {TypedSopNode} from '../../sop/_Base';
 
 export interface MetalnessRoughnessOperationParams extends DefaultOperationParams {
@@ -55,17 +56,14 @@ export function MetalnessRoughnessMapParamConfig<TBase extends Constructor>(Base
 }
 
 type TextureMetalnessRoughnessCurrentMaterial = MeshStandardMaterial | MeshPhysicalMaterial;
-// function _isValidMaterial(material?: Material): material is TextureMetalnessRoughnessCurrentMaterial {
-// 	if (!material) {
-// 		return false;
-// 	}
-// 	return (
-// 		(material as MeshStandardMaterial).isMeshStandardMaterial ||
-// 		(material as MeshPhysicalMaterial as any).isMeshPhysicalMaterial
-// 	);
-// }
+function _isValidMaterial(material?: Material): material is TextureMetalnessRoughnessCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshStandardMaterial).metalness != null;
+}
 class TextureMetalnessMapParamsConfig extends MetalnessRoughnessMapParamConfig(NodeParamsConfig) {}
-interface MetalnessRoughnessControllers {
+export interface TextureMetalnessRoughnessMapControllers {
 	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
 }
 
@@ -74,8 +72,11 @@ abstract class TextureMetalnessMapMatNode extends TypedMatNode<
 	TextureMetalnessRoughnessCurrentMaterial,
 	TextureMetalnessMapParamsConfig
 > {
-	controllers!: MetalnessRoughnessControllers;
-	abstract override createMaterial(): TextureMetalnessRoughnessCurrentMaterial;
+	controllers!: TextureMetalnessRoughnessMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureMetalnessRoughnessCurrentMaterial | undefined;
+	}
 }
 
 // export class TextureMetalnessRoughnessMapControllerSop extends BaseTextureMapController {
@@ -103,15 +104,43 @@ export class TextureMetalnessRoughnessMapController extends BaseTextureMapContro
 	override initializeNode() {
 		this.add_hooks(this.node.p.useMetalnessMap, this.node.p.metalnessMap);
 	}
-	override async update() {
-		const material = this.node.material;
-		this._update(material, 'metalnessMap', this.node.p.useMetalnessMap, this.node.p.metalnessMap);
-		material.metalness = this.node.pv.metalness;
-
-		this._update(material, 'roughnessMap', this.node.p.useRoughnessMap, this.node.p.roughnessMap);
-		material.roughness = this.node.pv.roughness;
-	}
 	static override async update(node: TextureMetalnessMapMatNode) {
 		node.controllers.metalnessRoughnessMap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!_isValidMaterial(material)) {
+			return;
+		}
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureMetalnessRoughnessCurrentMaterial) {
+		material.metalness = this.node.pv.metalness;
+		material.roughness = this.node.pv.roughness;
+		await Promise.all([
+			this._update(material, 'metalnessMap', this.node.p.useMetalnessMap, this.node.p.metalnessMap),
+			this._update(material, 'roughnessMap', this.node.p.useRoughnessMap, this.node.p.roughnessMap),
+		]);
+	}
+	override getTextures(material: TextureMetalnessRoughnessCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('metalnessMap', material.metalnessMap);
+		record.set('roughnessMap', material.roughnessMap);
+	}
+	override setParamsFromMaterial(
+		material: TextureMetalnessRoughnessCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const metalnessMapNode = record.get('metalnessMap');
+		const roughnessMapNode = record.get('roughnessMap');
+		this.node.p.useMetalnessMap.set(metalnessMapNode != null);
+		this.node.p.useRoughnessMap.set(roughnessMapNode != null);
+		if (metalnessMapNode) {
+			this.node.p.metalnessMap.setNode(metalnessMapNode, {relative: true});
+		}
+		if (roughnessMapNode) {
+			this.node.p.roughnessMap.setNode(roughnessMapNode, {relative: true});
+		}
+		this.node.p.metalness.set(material.metalness);
+		this.node.p.roughness.set(material.roughness);
 	}
 }

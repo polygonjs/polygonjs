@@ -12,7 +12,7 @@ QUnit.test('actor/setMaterialColor', async (assert) => {
 	const actor1 = geo1.createNode('actor');
 
 	const meshBasic1 = MAT.createNode('meshBasic');
-	const material = meshBasic1.material;
+	const material = await meshBasic1.material();
 
 	material1.p.material.setNode(meshBasic1);
 	material1.setInput(0, box1);

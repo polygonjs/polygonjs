@@ -16,7 +16,7 @@ QUnit.test('actor/setMaterialUniform', async (assert) => {
 	const actor1 = geo1.createNode('actor');
 
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
-	const material = meshBasicBuilder1.material;
+	const material = await meshBasicBuilder1.material();
 
 	const output1 = meshBasicBuilder1.createNode('output');
 	const param1 = meshBasicBuilder1.createNode('param');

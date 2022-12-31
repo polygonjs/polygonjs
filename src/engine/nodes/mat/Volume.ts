@@ -7,7 +7,7 @@
  */
 import {ShaderMaterial} from 'three';
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 
 import VERTEX from '../gl/gl/volume/vert.glsl';
 import FRAGMENT from '../gl/gl/volume/frag.glsl';
@@ -20,7 +20,7 @@ import {VolumeController, VolumeParamConfig} from './utils/VolumeController';
 class VolumeMatParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new VolumeMatParamsConfig();
 
-export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsConfig> {
+export class VolumeMatNode extends PrimitiveMatNode<ShaderMaterial, VolumeMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'volume';
@@ -45,8 +45,9 @@ export class VolumeMatNode extends TypedMatNode<ShaderMaterial, VolumeMatParamsC
 
 	override initializeNode() {}
 	override async cook() {
-		this._volumeController.updateUniformsFromParams();
+		this._material = this._material || this.createMaterial();
+		this._volumeController.updateUniformsFromParams(this._material);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

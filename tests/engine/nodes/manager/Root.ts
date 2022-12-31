@@ -44,7 +44,7 @@ QUnit.test('root adds objects to hierarchy when loaded from json', async (assert
 	const scene = create_scene();
 	assert.ok(!scene.loadingController.isLoading());
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.loadData(data);
 	assert.ok(scene2.loadingController.loaded(), 'scene is loaded');
 	assert.ok(scene2.loadingController.autoUpdating(), 'scene is auto updating');

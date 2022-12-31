@@ -7,21 +7,38 @@
  */
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {UniformsTransparencyParamConfig, UniformsTransparencyController} from './utils/UniformsTransparencyController';
-import {AdvancedCommonParamConfig, AdvancedCommonController} from './utils/AdvancedCommonController';
-import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
-import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
+import {
+	UniformsTransparencyParamConfig,
+	UniformsTransparencyController,
+	UniformsTransparencyControllers,
+} from './utils/UniformsTransparencyController';
+import {
+	AdvancedCommonParamConfig,
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+} from './utils/AdvancedCommonController';
+import {MapParamConfig, TextureMapController, TextureMapControllers} from './utils/TextureMapController';
+import {
+	AlphaMapParamConfig,
+	TextureAlphaMapController,
+	TextureAlphaMapControllers,
+} from './utils/TextureAlphaMapController';
 import {ShaderAssemblerBasic} from '../gl/code/assemblers/materials/Basic';
 import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {Poly} from '../../Poly';
-import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
+import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
-import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {FogParamConfig, UniformFogController, UniformFogControllers} from './utils/UniformsFogController';
 import {
 	WireframeShaderMaterialController,
 	WireframeShaderMaterialParamsConfig,
+	WireframeShaderMaterialControllers,
 } from './utils/WireframeShaderMaterialController';
-import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/TextureEnvMapSimpleController';
+import {
+	TextureEnvMapSimpleController,
+	EnvMapSimpleParamConfig,
+	TextureEnvMapSimpleControllers,
+} from './utils/TextureEnvMapSimpleController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
@@ -32,13 +49,15 @@ import {
 	CustomMaterialMeshParamConfig,
 	materialMeshAssemblerCustomMaterialRequested,
 } from './utils/customMaterials/CustomMaterialMesh';
-interface MeshBasicBuilderControllers {
-	advancedCommon: AdvancedCommonController;
-	alphaMap: TextureAlphaMapController;
-	aoMap: TextureAOMapController;
-	envMap: TextureEnvMapSimpleController;
-	map: TextureMapController;
-}
+interface MeshBasicBuilderControllers
+	extends AdvancedCommonControllers,
+		UniformFogControllers,
+		TextureAlphaMapControllers,
+		TextureAOMapControllers,
+		TextureEnvMapSimpleControllers,
+		TextureMapControllers,
+		UniformsTransparencyControllers,
+		WireframeShaderMaterialControllers {}
 
 interface MeshBasicBuilderMaterial extends MeshBasicMaterial {
 	vertexShader: string;
@@ -98,28 +117,19 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
 		envMap: new TextureEnvMapSimpleController(this),
+		uniformFog: new UniformFogController(this),
 		map: new TextureMapController(this),
+		uniformTransparency: new UniformsTransparencyController(this),
+		wireframeShader: new WireframeShaderMaterialController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshBasicBuilderControllers>;
-
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 
 	override async cook() {
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		UniformsTransparencyController.update(this);
-		FogController.update(this);
-		WireframeShaderMaterialController.update(this);
-		this.compileIfRequired();
-		this.material.needsUpdate = true;
+		this._material = this._material || this.createMaterial();
+		await Promise.all(this.controllersPromises(this._material));
+		this.compileIfRequired(this._material);
+		this._material.needsUpdate = true;
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {TangentSpaceNormalMap, ObjectSpaceNormalMap} from 'three';
+import {TangentSpaceNormalMap, ObjectSpaceNormalMap, Material} from 'three';
 import {MeshPhysicalMaterial} from 'three';
 import {MeshStandardMaterial} from 'three';
 import {MeshPhongMaterial} from 'three';
@@ -55,16 +55,25 @@ type TextureNormalMapControllerCurrentMaterial =
 	| MeshPhysicalMaterial
 	| MeshToonMaterial
 	| MeshStandardMaterial;
+function isTextureNormalMapMaterial(material?: Material): material is TextureNormalMapControllerCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshNormalMaterial as any).normalScale != null;
+}
 class TextureNormalMapParamsConfig extends NormalMapParamConfig(NodeParamsConfig) {}
-interface NormalMapControllers {
+export interface TextureNormalMapControllers {
 	normalMap: TextureNormalMapController;
 }
 abstract class TextureNormalMapMatNode extends TypedMatNode<
 	TextureNormalMapControllerCurrentMaterial,
 	TextureNormalMapParamsConfig
 > {
-	controllers!: NormalMapControllers;
-	abstract override createMaterial(): TextureNormalMapControllerCurrentMaterial;
+	controllers!: TextureNormalMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureNormalMapControllerCurrentMaterial | undefined;
+	}
 }
 
 export class TextureNormalMapController extends BaseTextureMapController {
@@ -74,16 +83,23 @@ export class TextureNormalMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useNormalMap, this.node.p.normalMap);
 	}
+	static override async update(node: TextureNormalMapMatNode) {
+		node.controllers.normalMap.update();
+	}
 	override async update() {
-		const {p, pv, material} = this.node;
-		this._update(this.node.material, 'normalMap', p.useNormalMap, p.normalMap);
+		const material = await this.node.material();
+		if (!isTextureNormalMapMaterial(material)) {
+			return;
+		}
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureNormalMapControllerCurrentMaterial) {
+		const {p, pv} = this.node;
+		await this._update(material, 'normalMap', p.useNormalMap, p.normalMap);
 		const normalMapType = NormalMapModeByName[NORMAL_MAP_MODES[pv.normalMapType]];
 
 		const mat = material as MeshPhongMaterial;
 		mat.normalMapType = normalMapType;
 		mat.normalScale.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
-	}
-	static override async update(node: TextureNormalMapMatNode) {
-		node.controllers.normalMap.update();
 	}
 }

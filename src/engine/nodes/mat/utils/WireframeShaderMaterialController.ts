@@ -6,6 +6,10 @@ import {ShaderMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 
+export interface WireframeShaderMaterialControllers {
+	wireframeShader: WireframeShaderMaterialController;
+}
+
 export function WireframeShaderMaterialParamsConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle on to set material to wireframe */
@@ -21,18 +25,26 @@ export function WireframeShaderMaterialParamsConfig<TBase extends Constructor>(B
 
 class WireframeParamsConfig extends WireframeShaderMaterialParamsConfig(NodeParamsConfig) {}
 class WireframedMatNode extends TypedMatNode<Material, WireframeParamsConfig> {
-	createMaterial() {
-		return new Material();
+	async material() {
+		const container = await this.compute();
+		return container.material() as Material | undefined;
 	}
+	controllers!: WireframeShaderMaterialControllers;
 }
 
 export class WireframeShaderMaterialController extends BaseController {
 	constructor(protected override node: WireframedMatNode) {
 		super(node);
 	}
-	static update(node: WireframedMatNode) {
-		const material = node.material;
-		const pv = node.pv;
+	static async update(node: WireframedMatNode) {
+		const material = await node.material();
+		if (!material) {
+			return;
+		}
+		node.controllers.wireframeShader.updateMaterial(material);
+	}
+	override updateMaterial(material: Material) {
+		const pv = this.node.pv;
 
 		const shaderMaterial = material as ShaderMaterial;
 		if (shaderMaterial.wireframe != null) {

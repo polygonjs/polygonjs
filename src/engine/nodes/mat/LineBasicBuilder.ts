@@ -6,8 +6,16 @@
  *
  */
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {UniformsTransparencyParamConfig, UniformsTransparencyController} from './utils/UniformsTransparencyController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
+import {
+	UniformsTransparencyParamConfig,
+	UniformsTransparencyController,
+	UniformsTransparencyControllers,
+} from './utils/UniformsTransparencyController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
 import {ShaderAssemblerLine} from '../gl/code/assemblers/materials/Line';
 import {TypedBuilderMatNode, BaseBuilderParamConfig} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
@@ -22,9 +30,7 @@ import {Material} from 'three';
 // 	materialLineAssemblerCustomMaterialRequested,
 // } from './utils/customMaterials/CustomMaterialLine';
 
-interface LineBasicBuilderControllers {
-	advancedCommon: AdvancedCommonController;
-}
+interface LineBasicBuilderControllers extends AdvancedCommonControllers, UniformsTransparencyControllers {}
 interface LineBasicBuilderMaterial extends LineBasicMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -67,27 +73,16 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
 	// }
 	readonly controllers: LineBasicBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
+		uniformTransparency: new UniformsTransparencyController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof LineBasicBuilderControllers>;
-
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 	override async cook() {
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
+		this._material = this._material || this.createMaterial();
+		await Promise.all(this.controllersPromises(this._material));
 
-		UniformsTransparencyController.update(this);
+		this.compileIfRequired(this._material);
+		this._material.linewidth = this.pv.linewidth;
 
-		this.compileIfRequired();
-
-		this.material.linewidth = this.pv.linewidth;
-
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

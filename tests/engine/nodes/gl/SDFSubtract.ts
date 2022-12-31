@@ -9,7 +9,7 @@ QUnit.test('gl/SDFSubtract with float inputs', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
-	const material = rayMarchingBuilder1.material;
+	const material = await rayMarchingBuilder1.material();
 	const output1 = rayMarchingBuilder1.createNode('output');
 
 	const SDFTransform1 = rayMarchingBuilder1.createNode('SDFTransform');
@@ -46,7 +46,7 @@ QUnit.test('gl/SDFSubtract with context inputs and no smooth', async (assert) =>
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
-	const material = rayMarchingBuilder1.material;
+	const material = await rayMarchingBuilder1.material();
 	const output1 = rayMarchingBuilder1.createNode('output');
 
 	const SDFTransform1 = rayMarchingBuilder1.createNode('SDFTransform');
@@ -85,7 +85,7 @@ QUnit.test('gl/SDFSubtract with context inputs and smooth', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
-	const material = rayMarchingBuilder1.material;
+	const material = await rayMarchingBuilder1.material();
 	const output1 = rayMarchingBuilder1.createNode('output');
 
 	const SDFTransform1 = rayMarchingBuilder1.createNode('SDFTransform');

@@ -186,7 +186,7 @@ QUnit.test('post/builder using both inputs', async (assert) => {
 	 *  test persisted config
 	 *
 	 */
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(builder1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);

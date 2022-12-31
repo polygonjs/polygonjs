@@ -38,7 +38,7 @@ QUnit.test('gl param updates its output type correctly when scene is loaded', as
 	param1.p.type.set(param1.pv.type + 1);
 	assert.equal(param1.pv.type, 3);
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
@@ -228,7 +228,7 @@ QUnit.test('gl param: 1 param node on top level and one in a subnet work ok', as
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	meshBasicBuilder1.createNode('output');
 	meshBasicBuilder1.createNode('globals');
-	const material = meshBasicBuilder1.material;
+	const material = await meshBasicBuilder1.material();
 	const output1 = meshBasicBuilder1.nodesByType('output')[0];
 	meshBasicBuilder1.nodesByType('globals')[0];
 	const subnet1 = meshBasicBuilder1.createNode('subnet');

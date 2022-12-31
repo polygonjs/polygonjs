@@ -28,10 +28,9 @@ export class EnvMapMatNode extends UpdateMatNode<MeshStandardMaterial, EnvMapMat
 
 	override async cook(inputMaterials: Material[]) {
 		const inputMaterial = inputMaterials[0];
-		console.warn(this.path(), {inputMaterial});
 		const controller = this.controllers.envMap;
 		if (isValidEnvMapMaterial(inputMaterial)) {
-			controller.updateMaterial(inputMaterial);
+			await controller.updateMaterial(inputMaterial);
 			this.setMaterial(inputMaterial);
 		} else {
 			this.states.error.set('input material does not have envMap properties');

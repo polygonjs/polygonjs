@@ -28,13 +28,12 @@ export class ColorMatNode extends UpdateMatNode<ColoredMaterial, ColorMatParamsC
 
 	override async cook(inputMaterials: Material[]) {
 		const inputMaterial = inputMaterials[0];
-		console.warn(this.path(), {inputMaterial});
 		const controller = this.controllers.colors;
 		if (isValidColoredMaterial(inputMaterial)) {
 			controller.updateMaterial(inputMaterial);
 			this.setMaterial(inputMaterial);
 		} else {
-			this.states.error.set('input material does not have envMap properties');
+			this.states.error.set('input material does not have color properties');
 		}
 	}
 }

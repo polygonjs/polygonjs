@@ -181,8 +181,7 @@ export class RendererUtils {
 		if (matNode instanceof Material) {
 			material = matNode;
 		} else {
-			material = matNode.material;
-			await matNode.compute();
+			material = await matNode.material();
 		}
 		this._mesh.material = material;
 		renderer.compile(this._mesh, this._camera);

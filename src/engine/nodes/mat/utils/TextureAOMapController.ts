@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshBasicMaterial} from 'three';
+import {Material, MeshBasicMaterial} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {MeshPhysicalMaterial} from 'three';
 import {MeshStandardMaterial} from 'three';
@@ -27,16 +27,25 @@ type TextureAOMapControllerCurrentMaterial =
 	| MeshStandardMaterial
 	| MeshPhysicalMaterial
 	| MeshToonMaterial;
+function _isValidMaterial(material?: Material): material is TextureAOMapControllerCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshBasicMaterial).aoMapIntensity != null;
+}
 class TextureAOMapParamsConfig extends AOMapParamConfig(NodeParamsConfig) {}
-interface TextureAOControllers {
+export interface TextureAOMapControllers {
 	aoMap: TextureAOMapController;
 }
 abstract class TextureAOMapMatNode extends TypedMatNode<
 	TextureAOMapControllerCurrentMaterial,
 	TextureAOMapParamsConfig
 > {
-	controllers!: TextureAOControllers;
-	abstract override createMaterial(): TextureAOMapControllerCurrentMaterial;
+	controllers!: TextureAOMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureAOMapControllerCurrentMaterial | undefined;
+	}
 }
 
 export class TextureAOMapController extends BaseTextureMapController {
@@ -46,13 +55,19 @@ export class TextureAOMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useAOMap, this.node.p.aoMap);
 	}
-	override async update() {
-		this._update(this.node.material, 'aoMap', this.node.p.useAOMap, this.node.p.aoMap);
-
-		const mat = this.node.material as MeshBasicMaterial;
-		mat.aoMapIntensity = this.node.pv.aoMapIntensity;
-	}
 	static override async update(node: TextureAOMapMatNode) {
 		node.controllers.aoMap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!_isValidMaterial(material)) {
+			return;
+		}
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureAOMapControllerCurrentMaterial) {
+		await this._update(material, 'aoMap', this.node.p.useAOMap, this.node.p.aoMap);
+
+		material.aoMapIntensity = this.node.pv.aoMapIntensity;
 	}
 }

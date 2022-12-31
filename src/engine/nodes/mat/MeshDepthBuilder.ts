@@ -6,8 +6,16 @@
  *
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {UniformsTransparencyParamConfig, UniformsTransparencyController} from './utils/UniformsTransparencyController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
+import {
+	UniformsTransparencyParamConfig,
+	UniformsTransparencyController,
+	UniformsTransparencyControllers,
+} from './utils/UniformsTransparencyController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
 import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
@@ -15,9 +23,7 @@ import {MeshDepthMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {Material} from 'three';
 import {ShaderAssemblerCustomMeshDepth} from '../gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
-interface MeshDepthBuilderControllers {
-	advancedCommon: AdvancedCommonController;
-}
+interface MeshDepthBuilderControllers extends AdvancedCommonControllers, UniformsTransparencyControllers {}
 interface MeshDepthBuilderMaterial extends MeshDepthMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -53,24 +59,16 @@ export class MeshDepthBuilderMatNode extends TypedBuilderMatNode<
 
 	readonly controllers: MeshDepthBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
+		uniformTransparency: new UniformsTransparencyController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshDepthBuilderControllers>;
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 
 	override async cook() {
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		UniformsTransparencyController.update(this);
+		this._material = this._material || this.createMaterial();
+		await Promise.all(this.controllersPromises(this._material));
 
-		this.compileIfRequired();
+		this.compileIfRequired(this._material);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

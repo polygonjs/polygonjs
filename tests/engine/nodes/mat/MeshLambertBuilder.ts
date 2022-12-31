@@ -28,10 +28,10 @@ QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 	output1.setInput('color', float_to_vec31);
 	output1.setInput('position', param2);
 	await RendererUtils.compile(mesh_lambert1, renderer);
-	const mesh_lambert1Material = mesh_lambert1.material;
+	const mesh_lambert1Material = await mesh_lambert1.material();
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(mesh_lambert1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
@@ -44,7 +44,7 @@ QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 		const vec3_param = new_mesh_lambert1.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param);
 		assert.ok(vec3_param);
-		const material = new_mesh_lambert1.material;
+		const material = await new_mesh_lambert1.material();
 		await RendererUtils.compile(new_mesh_lambert1, renderer);
 		assert.equal(
 			GLSLHelper.compress(material.fragmentShader),

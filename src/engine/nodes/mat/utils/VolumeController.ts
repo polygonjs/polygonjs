@@ -53,8 +53,8 @@ export class VolumeController {
 		}
 	}
 
-	updateUniformsFromParams() {
-		const shaderMaterial = this.node.material as ShaderMaterialWithCustomMaterials;
+	updateUniformsFromParams(material: ShaderMaterial) {
+		const shaderMaterial = material as ShaderMaterialWithCustomMaterials;
 		const uniforms = shaderMaterial.uniforms;
 		if (!uniforms) {
 			return;

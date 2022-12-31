@@ -6,7 +6,7 @@ QUnit.test('gl/SDFExtrude', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
-	const material = rayMarchingBuilder1.material;
+	const material = await rayMarchingBuilder1.material();
 	const output1 = rayMarchingBuilder1.createNode('output');
 
 	const SDF2DCircle1 = rayMarchingBuilder1.createNode('SDF2DCircle');

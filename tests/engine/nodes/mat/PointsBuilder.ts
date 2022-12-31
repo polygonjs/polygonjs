@@ -28,10 +28,10 @@ QUnit.test('points builder persisted_config', async (assert) => {
 	output1.setInput('color', float_to_vec31);
 	output1.setInput('position', param2);
 	await RendererUtils.compile(points1, renderer);
-	const points1Material = points1.material;
+	const points1Material = await points1.material();
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(points1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
@@ -44,7 +44,7 @@ QUnit.test('points builder persisted_config', async (assert) => {
 		const vec3_param = new_points1.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param);
 		assert.ok(vec3_param);
-		const material = new_points1.material;
+		const material = await new_points1.material();
 		await RendererUtils.compile(new_points1, renderer);
 		assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(points1Material.fragmentShader));
 		assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(points1Material.vertexShader));

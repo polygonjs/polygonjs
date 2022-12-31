@@ -71,11 +71,11 @@ export interface PersistedConfigWithShaders extends DataObjectWithoutShaders {
 }
 export abstract class BasePersistedConfig {
 	constructor(protected node: BaseNodeType) {}
-	abstract toData(): PersistedConfigWithShaders | void;
+	abstract toData(): Promise<PersistedConfigWithShaders | void>;
 	load(data: object) {}
 
-	toDataWithoutShaders(): DataObjectWithoutShaders | void {
-		const data = this.toData();
+	async toDataWithoutShaders(): Promise<DataObjectWithoutShaders | void> {
+		const data = await this.toData();
 		if (!data) {
 			return;
 		}

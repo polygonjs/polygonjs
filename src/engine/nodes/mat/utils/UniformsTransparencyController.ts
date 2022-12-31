@@ -8,6 +8,9 @@ import {CustomMaterialName, ShaderMaterialWithCustomMaterials} from '../../../..
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
 
+export interface UniformsTransparencyControllers {
+	uniformTransparency: UniformsTransparencyController;
+}
 export function UniformsTransparencyParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param sets the material to transparent */
@@ -29,26 +32,31 @@ type TransparencyMaterial = Material;
 class TransparencyParamsConfig extends UniformsTransparencyParamConfig(NodeParamsConfig) {}
 
 class TransparencyMatNode extends TypedMatNode<TransparencyMaterial, TransparencyParamsConfig> {
-	createMaterial() {
-		return new Material();
+	async material() {
+		const container = await this.compute();
+		return container.material() as TransparencyMaterial | undefined;
 	}
+	controllers!: UniformsTransparencyControllers;
 }
 
 export class UniformsTransparencyController extends BaseController {
 	constructor(protected override node: TransparencyMatNode) {
 		super(node);
 	}
-	static update(node: TransparencyMatNode) {
-		const material = node.material;
-		const pv = node.pv;
+	static async update(node: TransparencyMatNode) {
+		const material = await node.material();
+		if (!material) {
+			return;
+		}
+		node.controllers.uniformTransparency.updateMaterial(material);
+	}
+	override updateMaterial(material: TransparencyMaterial) {
+		const pv = this.node.pv;
 
 		this._updateTransparency(material, pv);
 	}
 
-	private static _updateTransparency(
-		mat: TransparencyMaterial,
-		pv: ParamsValueAccessorType<TransparencyParamsConfig>
-	) {
+	private _updateTransparency(mat: TransparencyMaterial, pv: ParamsValueAccessorType<TransparencyParamsConfig>) {
 		// transparent is currently only changed for the main material,
 		// not for the customMaterials,
 		// as that currently makes them disappear.
@@ -58,7 +66,7 @@ export class UniformsTransparencyController extends BaseController {
 		mat.transparent = isBooleanTrue(pv.transparent);
 		this._updateCommon(mat, pv);
 	}
-	private static _updateCommon(mat: TransparencyMaterial, pv: ParamsValueAccessorType<TransparencyParamsConfig>) {
+	private _updateCommon(mat: TransparencyMaterial, pv: ParamsValueAccessorType<TransparencyParamsConfig>) {
 		const shaderMaterial = mat as ShaderMaterial;
 
 		if (shaderMaterial.uniforms && shaderMaterial.uniforms.opacity) {

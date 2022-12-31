@@ -30,12 +30,21 @@ export function PCSSParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 class PCSSParamsConfig extends PCSSParamConfig(NodeParamsConfig) {}
-interface PCSSControllers {
+function isValidMaterial(material?: Material): material is Material {
+	if (!material) {
+		return false;
+	}
+	return true;
+}
+export interface PCSSControllers {
 	PCSS: PCSSController;
 }
 abstract class PCSSMapMatNode extends TypedMatNode<Material, PCSSParamsConfig> {
 	controllers!: PCSSControllers;
-	abstract override createMaterial(): Material;
+	async material() {
+		const container = await this.compute();
+		return container.material() as Material | undefined;
+	}
 }
 
 export class PCSSController extends BaseController {
@@ -70,8 +79,18 @@ ${PCSSWithDefines}
 
 		return fragmentShader;
 	}
+	static async update(node: PCSSMapMatNode) {
+		const material = await node.material();
+		if (!isValidMaterial(material)) {
+			return;
+		}
+		node.controllers.PCSS.updateMaterial(material);
+	}
+	async update() {
+		PCSSController.update(this.node);
+	}
 
-	override async update() {
+	override updateMaterial(material: Material) {
 		const matNode = (<unknown>this.node) as BaseBuilderMatNodeType;
 		if (!matNode.assemblerController) {
 			return;
@@ -88,9 +107,9 @@ ${PCSSWithDefines}
 		}
 	}
 
-	static async update(node: PCSSMapMatNode) {
-		node.controllers.PCSS.update();
-	}
+	// static async update(node: PCSSMapMatNode) {
+	// 	node.controllers.PCSS.update();
+	// }
 	static PARAM_CALLBACK_setRecompileRequired(node: PCSSMapMatNode) {
 		node.controllers.PCSS.update();
 	}

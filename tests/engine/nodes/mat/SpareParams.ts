@@ -67,7 +67,7 @@ QUnit.test(
 		assert.notOk(mesh_basic1.assemblerController()?.compileRequired(), 'compiled is required');
 		const uniform_name = param1.uniformName();
 		assert.equal(mesh_basic1.params.get(param_name)!.value, 0);
-		const mesh_basic1Material = mesh_basic1.material;
+		const mesh_basic1Material = await mesh_basic1.material();
 		assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value, 0);
 		mesh_basic1.params.get(param_name)!.set(0.5);
 		assert.equal(
@@ -135,7 +135,7 @@ QUnit.test(
 		assert.equal(spare_param.type(), ParamType.FLOAT);
 		assert.equal(mesh_basic1.params.get(param_name)!.rawInput(), '$F');
 
-		const data = new SceneJsonExporter(scene).data();
+		const data = await new SceneJsonExporter(scene).data();
 
 		// the param is not saved in the export data, since it will be re-created
 
@@ -145,7 +145,7 @@ QUnit.test(
 
 		const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as MeshBasicBuilderMatNode;
 		await RendererUtils.compile(new_mesh_basic1, renderer);
-		const new_mesh_basic1Material = new_mesh_basic1.material;
+		const new_mesh_basic1Material = await new_mesh_basic1.material();
 		assert.ok(new_mesh_basic1.assemblerController(), 'assembler_controller is present');
 		assert.notOk(new_mesh_basic1.assemblerController()?.compileRequired(), 'compile is not required');
 		assert.deepEqual(new_mesh_basic1.params.spare_names.sort(), [param_name], 'spare params has param_name');
@@ -188,7 +188,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	await scene.waitForCooksCompleted();
 
 	await RendererUtils.compile(mesh_basic1, renderer);
-	const mesh_basic1Material = mesh_basic1.material;
+	const mesh_basic1Material = await mesh_basic1.material();
 	assert.deepEqual(mesh_basic1.params.spare_names.sort(), []);
 	assert.notOk(mesh_basic1.assemblerController()?.compileRequired());
 
@@ -247,7 +247,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value.y, 0.8);
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniformName].value.z, 0.3);
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 
 	// the param is not saved in the export data, since it will be re-created
 
@@ -275,7 +275,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 	assert.equal(vec3_spare_param2.value.x, 0.1);
 	assert.equal(vec3_spare_param2.value.y, 0.2);
 	assert.equal(vec3_spare_param2.value.z, 0.3);
-	const mesh_basic2Material = mesh_basic2.material;
+	const mesh_basic2Material = await mesh_basic2.material();
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.x, 0.1);
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.y, 0.2);
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniformName].value.z, 0.3);
@@ -315,7 +315,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	await RendererUtils.compile(mesh_basic1, renderer);
 	let float_spare_param = mesh_basic1.params.get(param_name)! as FloatParam;
 	assert.equal(float_spare_param.type(), ParamType.FLOAT, 'param is float');
-	const mesh_basic1Material = mesh_basic1.material;
+	const mesh_basic1Material = await mesh_basic1.material();
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value, 0);
 	float_spare_param.set(0.25);
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value, 0.25);
@@ -337,7 +337,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value.g, 0.8);
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1Material)![uniform_name].value.b, 0.3);
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 
 	// the param is not saved in the export data, since it will be re-created
 	// console.log('************ LOAD **************');
@@ -368,7 +368,7 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 	// assert.equal(mesh_basic2.material.uniforms[uniform_name].value.b, 0.3);
 	await RendererUtils.compile(mesh_basic2, renderer);
 	vec3_spare_param2.set([0.7, 0.2, 0.15]);
-	const mesh_basic2Material = mesh_basic2.material;
+	const mesh_basic2Material = await mesh_basic2.material();
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.r, 0.7);
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.g, 0.2);
 	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic2Material)![uniform_name].value.b, 0.15);

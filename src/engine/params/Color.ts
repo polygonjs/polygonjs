@@ -145,6 +145,11 @@ export class ColorParam extends TypedMultipleParam<ParamType.COLOR> {
 	valuePreConversion() {
 		return this._valuePreConversion;
 	}
+	setConversion(conversion: ColorConversion) {
+		this.options.setOption('conversion', conversion);
+		this.setDirty(); // to ensure value is recomputed
+		this.options.executeCallback();
+	}
 
 	override setValueFromComponents() {
 		this._valuePreConversion.r = this.r.value;

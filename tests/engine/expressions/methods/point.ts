@@ -62,7 +62,7 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	let positions = geometry.getAttribute('position').array as number[];
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 
 	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);

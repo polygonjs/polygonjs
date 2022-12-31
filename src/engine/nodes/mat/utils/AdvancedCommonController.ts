@@ -73,12 +73,15 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 }
 
 class AdvancedCommonParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfig) {}
-interface AdvancedCommonControllers {
+export interface AdvancedCommonControllers {
 	advancedCommon: AdvancedCommonController;
 }
 abstract class AdvancedCommonMapMatNode extends TypedMatNode<Material, AdvancedCommonParamsConfig> {
 	controllers!: AdvancedCommonControllers;
-	abstract override createMaterial(): Material;
+	async material() {
+		const container = await this.compute();
+		return container.material() as Material | undefined;
+	}
 }
 
 export class AdvancedCommonController extends BaseController {
@@ -86,33 +89,32 @@ export class AdvancedCommonController extends BaseController {
 		super(node);
 	}
 
-	override async update() {
-		const mat = this.node.material;
-		if (!mat) {
+	static async update(node: AdvancedCommonMapMatNode) {
+		const material = await node.material();
+		if (!material) {
 			return;
 		}
+		node.controllers.advancedCommon.updateMaterial(material);
+	}
+	override updateMaterial(material: Material) {
 		const pv = this.node.pv;
-		this._updateSides(mat, pv);
+		this._updateSides(material, pv);
 
-		mat.colorWrite = pv.colorWrite;
-		mat.depthWrite = pv.depthWrite;
-		mat.depthTest = pv.depthTest;
-		mat.blending = pv.blending;
-		mat.premultipliedAlpha = pv.premultipliedAlpha;
-		mat.dithering = pv.dithering;
-		mat.polygonOffset = pv.polygonOffset;
-		if (mat.polygonOffset) {
-			mat.polygonOffsetFactor = pv.polygonOffsetFactor;
-			mat.polygonOffsetUnits = pv.polygonOffsetUnits;
-			mat.needsUpdate = true;
+		material.colorWrite = pv.colorWrite;
+		material.depthWrite = pv.depthWrite;
+		material.depthTest = pv.depthTest;
+		material.blending = pv.blending;
+		material.premultipliedAlpha = pv.premultipliedAlpha;
+		material.dithering = pv.dithering;
+		material.polygonOffset = pv.polygonOffset;
+		if (material.polygonOffset) {
+			material.polygonOffsetFactor = pv.polygonOffsetFactor;
+			material.polygonOffsetUnits = pv.polygonOffsetUnits;
+			material.needsUpdate = true;
 		}
 	}
 
 	private _updateSides(mat: Material, pv: ParamsValueAccessorType<AdvancedCommonParamsConfig>) {
 		updateMaterialSideWithShadow(mat, pv);
-	}
-
-	static async update(node: AdvancedCommonMapMatNode) {
-		node.controllers.advancedCommon.update();
 	}
 }

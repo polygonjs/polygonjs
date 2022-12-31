@@ -52,57 +52,57 @@ QUnit.test('COP switch simple', async (assert) => {
 	// material1.setInput(0, sphere1);
 	// material1.p.material.set(mesh_standard1.path());
 
-	const material = mesh_standard1.material;
+	const material = await mesh_standard1.material();
 
 	await mesh_standard1.compute();
 	await scene.waitForCooksCompleted();
 	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
 	assert.equal(material.map!.uuid, texture_diffuse1.uuid);
-	assert.equal(material.envMap!.uuid, texture_env1.uuid);
+	assert.equal(material.envMap!.uuid, texture_env1.uuid, 'uuid 1');
 
 	switch_diffuse.p.input.set(1);
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(500);
 	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
-	assert.equal(material.map!.uuid, texture_diffuse2.uuid);
+	assert.equal(material.map!.uuid, texture_diffuse2.uuid, 'uuid 2');
 
 	switch_env.p.input.set(1);
 	await scene.waitForCooksCompleted();
 	await CoreSleep.sleep(100);
 	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
-	assert.equal(material.envMap!.uuid, texture_env2.uuid);
+	assert.equal(material.envMap!.uuid, texture_env2.uuid, 'uuid 3');
 
 	switch_diffuse.p.input.set(0);
 	await scene.waitForCooksCompleted();
-	await CoreSleep.sleep(100);
+	await CoreSleep.sleep(300);
 	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
-	assert.equal(material.map!.uuid, texture_diffuse1.uuid);
+	assert.equal(material.map!.uuid, texture_diffuse1.uuid, 'uuid 4');
 
 	switch_env.p.input.set(0);
 	await scene.waitForCooksCompleted();
-	await CoreSleep.sleep(100);
+	await CoreSleep.sleep(300);
 	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
-	assert.equal(material.envMap!.uuid, texture_env1.uuid);
+	assert.equal(material.envMap!.uuid, texture_env1.uuid, 'uuid 5');
 
 	// and finally change the path of a file node, to renew its texture completely
 	file_diffuse1.p.url.set(_url('textures/equirectangular.png'));
 	const file_diffuse1_old_uuid = texture_diffuse1.uuid;
 	await scene.waitForCooksCompleted();
-	await CoreSleep.sleep(100);
+	await CoreSleep.sleep(300);
 	const texture_diffuse1B = (await file_diffuse1.compute()).texture();
-	assert.notEqual(file_diffuse1_old_uuid, texture_diffuse1B.uuid);
+	assert.notEqual(file_diffuse1_old_uuid, texture_diffuse1B.uuid, 'uuid 6');
 	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
-	assert.equal(material.map!.uuid, texture_diffuse1B.uuid);
+	assert.equal(material.map!.uuid, texture_diffuse1B.uuid, 'uuid 7');
 
 	// and the env node
 	file_env1.p.url.set(_url('textures/equirectangular.png'));
 	const file_env1_old_uuid = texture_env1.uuid;
 	await scene.waitForCooksCompleted();
-	await CoreSleep.sleep(100);
+	await CoreSleep.sleep(300);
 	const texture_env1B = (await file_env1.compute()).texture();
-	assert.notEqual(file_env1_old_uuid, texture_env1B.uuid);
+	assert.notEqual(file_env1_old_uuid, texture_env1B.uuid, 'uuid 8');
 	assert.equal(mesh_standard1.cookController.cooksCount(), 1);
-	assert.equal(material.envMap!.uuid, texture_env1B.uuid);
+	assert.equal(material.envMap!.uuid, texture_env1B.uuid, 'uuid 9');
 
 	window.scene.performance.stop();
 });

@@ -6,27 +6,37 @@
  *
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {UniformsTransparencyParamConfig, UniformsTransparencyController} from './utils/UniformsTransparencyController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
+import {
+	UniformsTransparencyParamConfig,
+	UniformsTransparencyController,
+	UniformsTransparencyControllers,
+} from './utils/UniformsTransparencyController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
 import {ShaderAssemblerPoints} from '../gl/code/assemblers/materials/Points';
 import {TypedBuilderMatNode, BaseBuilderParamConfig} from './_BaseBuilder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {FogParamConfig, UniformFogController, UniformFogControllers} from './utils/UniformsFogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {CustomMaterialName} from '../../../core/geometry/Material';
 import {Material} from 'three';
 import {PointsMaterial} from 'three';
-import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
+import {PointsSizeController, PointsParamConfig, PointsSizeControllers} from './utils/PointsSizeController';
 // import {
 // 	CustomMaterialPointsParamConfig,
 // 	materialPointsAssemblerCustomMaterialRequested,
 // } from './utils/customMaterials/CustomMaterialPoints';
 
-interface PointsBuilderControllers {
-	advancedCommon: AdvancedCommonController;
-}
+interface PointsBuilderControllers
+	extends AdvancedCommonControllers,
+		PointsSizeControllers,
+		UniformFogControllers,
+		UniformsTransparencyControllers {}
 interface PointsBuilderMaterial extends PointsMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -66,27 +76,17 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<
 	// }
 	readonly controllers: PointsBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
+		pointsSize: new PointsSizeController(this),
+		uniformFog: new UniformFogController(this),
+		uniformTransparency: new UniformsTransparencyController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof PointsBuilderControllers>;
-
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 	override async cook() {
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
+		this._material = this._material || this.createMaterial();
+		await Promise.all(this.controllersPromises(this._material));
 
-		UniformsTransparencyController.update(this);
-		FogController.update(this);
-		PointsSizeController.update(this);
+		this.compileIfRequired(this._material);
 
-		this.compileIfRequired();
-
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

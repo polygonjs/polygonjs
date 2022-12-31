@@ -70,6 +70,7 @@ export enum NetworkNodeType {
 	ROP = 'renderersNetwork',
 	SOLVER = 'solver',
 	SUBNET = 'subnet',
+	DECOMPOSE = 'decompose',
 }
 export enum NetworkChildNodeType {
 	INPUT = 'subnetInput',

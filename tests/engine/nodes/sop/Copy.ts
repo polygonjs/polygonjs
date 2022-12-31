@@ -3,6 +3,7 @@ import {ImageCopNode} from './../../../../src/engine/nodes/cop/Image';
 import {Mesh, Object3D, Vector3, MeshBasicMaterial, Texture} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+import {ArrayUtils} from '../../../../src/core/ArrayUtils';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {ObjectTransformSpace} from '../../../../src/core/TransformSpace';
 import {CopySopNode, TransformMode} from '../../../../src/engine/nodes/sop/Copy';
@@ -442,17 +443,17 @@ QUnit.test('sop/copy can handle expression inside a nodePath param such as sop/m
 		assert.equal(objects.length, 3, '3 objects');
 		assert.equal(
 			(objects[0].material as MeshBasicMaterial).uuid,
-			_materialNodes[0].material.uuid,
+			(await _materialNodes[0].material()).uuid,
 			'material match'
 		);
 		assert.equal(
 			(objects[1].material as MeshBasicMaterial).uuid,
-			_materialNodes[1].material.uuid,
+			(await _materialNodes[1].material()).uuid,
 			'material match'
 		);
 		assert.equal(
 			(objects[2].material as MeshBasicMaterial).uuid,
-			_materialNodes[2].material.uuid,
+			(await _materialNodes[2].material()).uuid,
 			'material match'
 		);
 
@@ -462,9 +463,13 @@ QUnit.test('sop/copy can handle expression inside a nodePath param such as sop/m
 			textures.push(textureContainer.texture());
 		}
 		await _imageNodes.map(async (node) => (await node.compute()).texture());
-		assert.equal((objects[0].material as MeshBasicMaterial).map!.uuid, textures[0].uuid, 'texture match');
-		assert.equal((objects[1].material as MeshBasicMaterial).map!.uuid, textures[1].uuid, 'texture match');
-		assert.equal((objects[2].material as MeshBasicMaterial).map!.uuid, textures[2].uuid, 'texture match');
+		const objectMapUuids = objects.map((object) => (object.material as MeshBasicMaterial).map!.uuid);
+		const textureUuids = textures.map((texture) => texture.uuid);
+		assert.equal(ArrayUtils.uniq(objectMapUuids).length, 3, '3 uuids');
+		assert.equal(ArrayUtils.uniq(textureUuids).length, 3, '3 uuids');
+		assert.equal(objectMapUuids[0], textureUuids[0], 'texture match');
+		assert.equal(objectMapUuids[1], textureUuids[1], 'texture match');
+		assert.equal(objectMapUuids[2], textureUuids[2], 'texture match');
 	}
 
 	const scene = window.scene;
@@ -487,9 +492,13 @@ QUnit.test('sop/copy can handle expression inside a nodePath param such as sop/m
 		const meshBasic = MAT.createNode('meshBasic');
 		meshBasic.p.useMap.set(true);
 		meshBasic.p.map.set("/COP/image`opdigits('.')`");
+		await meshBasic.p.map.compute(); // TODO: that should not be necessary for the test to pass
 		meshBasic.setName(`meshBasic${i}`);
 		imageNodes.push(image);
 		materialNodes.push(meshBasic);
+	}
+	for (const materialNode of materialNodes) {
+		await materialNode.compute();
 	}
 
 	const material1 = geo1.createNode('material');

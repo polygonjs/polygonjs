@@ -146,7 +146,7 @@ QUnit.test('mat/rayMarchingBuilder simple', async (assert) => {
 	// const debug = MAT.createNode('test')
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
 	const {globals, sdfSphere} = onCreateHook(rayMarchingBuilder1);
-	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	const material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(
@@ -193,7 +193,7 @@ QUnit.test('mat/rayMarchingBuilder vertex shader remains simple', async (assert)
 	sdfMaterial.setInput('color', multScalar1);
 	multScalar1.setInput(0, constant);
 	multScalar1.setInput(1, sdfSphere);
-	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	const material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.simpleVertex.vert));
@@ -213,7 +213,7 @@ QUnit.test(
 		const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
 		const {sdfSphere} = onCreateHook(rayMarchingBuilder1);
 		sdfSphere.setInput(0, null);
-		const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+		const material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 
 		await RendererUtils.compile(rayMarchingBuilder1, renderer);
 		assert.equal(
@@ -287,7 +287,7 @@ QUnit.test('mat/rayMarchingBuilder uses cameraPosition for fresnel on envMap', a
 	envMapFresnelPower.setName('envMapFresnelPower');
 	sdfMaterial.setInput('envMapFresnelPower', envMapFresnelPower);
 
-	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	const material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.cameraPosition.vert));
@@ -347,7 +347,7 @@ QUnit.test('mat/rayMarchingBuilder with raymarched reflections', async (assert) 
 	reflectionBiasMult.setName('reflectionBiasMult');
 	sdfMaterial.setInput('reflectionBiasMult', reflectionBiasMult);
 
-	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	const material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.reflection.vert));
@@ -423,7 +423,7 @@ QUnit.test('mat/rayMarchingBuilder with raymarched refractions', async (assert) 
 	refractionBiasMult.setName('refractionBiasMult');
 	sdfMaterial.setInput('refractionBiasMult', refractionBiasMult);
 
-	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	const material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 
 	// without splitRGB
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
@@ -477,7 +477,7 @@ QUnit.test(
 		sdfMaterial.setInput('color', color);
 
 		await RendererUtils.compile(rayMarchingBuilder1, renderer);
-		const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+		const material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 
 		scene.timeController.setTime(17);
 		assert.notOk(material.uniforms['time'], 'no time uniform');
@@ -502,8 +502,8 @@ QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayM
 	rayMarchingBuilder1Nodes.sdfSphere.p.radius.set(0.1);
 	const rayMarchingBuilder2 = MAT.createNode('rayMarchingBuilder');
 	onCreateHook(rayMarchingBuilder2);
-	const material1 = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
-	const material2 = rayMarchingBuilder2.material as ShaderMaterialWithCustomMaterials;
+	const material1 = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
+	const material2 = (await rayMarchingBuilder2.material()) as ShaderMaterialWithCustomMaterials;
 
 	function createBox(materialNode: RayMarchingBuilderMatNode, pos: Vector3) {
 		const geo = scene.root().createNode('geo');
@@ -585,7 +585,7 @@ QUnit.test('mat/rayMarchingBuilder with env map', async (assert) => {
 	rayMarchingBuilder1.p.useEnvMap.set(true);
 	rayMarchingBuilder1.p.envMap.setNode(envMap1);
 	await rayMarchingBuilder1.compute();
-	const material = rayMarchingBuilder1.material;
+	const material = await rayMarchingBuilder1.material();
 	assert.null((material.uniforms as any).envMap.value);
 	assert.equal(material.defines['ENVMAP_TYPE_CUBE_UV'], 0);
 	assert.equal(material.defines['CUBEUV_TEXEL_WIDTH'], '0.1');
@@ -634,7 +634,7 @@ QUnit.test('mat/rayMarchingBuilder with 2 SDFMaterials', async (assert) => {
 	SDFUnion1.setInput(1, sdfContext2);
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
-	const material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	const material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 	assert.includes(material.fragmentShader, 'const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1 = 1;');
 	assert.includes(material.fragmentShader, 'const int _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL2 = 2;');
 	assert.includes(material.fragmentShader, 'if(mat == _MAT_RAYMARCHINGBUILDER1_SDFMATERIAL1){');
@@ -664,9 +664,9 @@ QUnit.test('mat/rayMarchingBuilder persisted_config', async (assert) => {
 	pointLight.setInput(0, null1);
 
 	await RendererUtils.compile(rayMarchingBuilder1, renderer);
-	const rayMarching1Material = rayMarchingBuilder1.material as ShaderMaterialWithCustomMaterials;
+	const rayMarching1Material = (await rayMarchingBuilder1.material()) as ShaderMaterialWithCustomMaterials;
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(rayMarchingBuilder1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
@@ -681,7 +681,7 @@ QUnit.test('mat/rayMarchingBuilder persisted_config', async (assert) => {
 		const vec3_param = rayMarchingBuilder2.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param);
 		assert.ok(vec3_param);
-		const material = rayMarchingBuilder2.material as ShaderMaterialWithCustomMaterials;
+		const material = (await rayMarchingBuilder2.material()) as ShaderMaterialWithCustomMaterials;
 		await RendererUtils.compile(rayMarchingBuilder2, renderer);
 		assert.equal(
 			GLSLHelper.compress(material.fragmentShader),

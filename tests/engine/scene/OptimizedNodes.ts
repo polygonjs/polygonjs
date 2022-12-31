@@ -11,7 +11,7 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 	const box1 = geo1.createNode('box');
 	box1.flags.optimize.set(true);
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 
 	Poly.setPlayerMode(false);
 	const scene_no_player = await SceneJsonImporter.loadData(data);
@@ -40,7 +40,7 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 	transform1.flags.optimize.set(true);
 	transform1.flags.display.set(true);
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 
 	Poly.setPlayerMode(false);
 	const scene_no_player = await SceneJsonImporter.loadData(data);
@@ -89,7 +89,7 @@ QUnit.test(
 		merge1.flags.optimize.set(true);
 		merge2.flags.optimize.set(true);
 
-		const data = new SceneJsonExporter(scene).data();
+		const data = await new SceneJsonExporter(scene).data();
 
 		Poly.setPlayerMode(false);
 		const scene_no_player = await SceneJsonImporter.loadData(data);

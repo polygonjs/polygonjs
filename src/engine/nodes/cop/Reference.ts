@@ -22,9 +22,7 @@ class ReferenceCopParamsConfig extends NodeParamsConfig {
 		objectMask: true,
 	});
 	/** @param texture name */
-	name = ParamConfig.STRING('map', {
-		objectMask: true,
-	});
+	name = ParamConfig.STRING('');
 }
 const ParamsConfig = new ReferenceCopParamsConfig();
 

@@ -78,7 +78,7 @@ QUnit.test(
 		assert.ok(param1.options.colorConversion());
 		assert.ok(param1.options.hasOptionsOverridden());
 
-		const data = new SceneJsonExporter(scene).data();
+		const data = await new SceneJsonExporter(scene).data();
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
@@ -102,7 +102,7 @@ QUnit.test(
 		assert.ok(param1.options.colorConversion());
 		assert.ok(param1.options.hasOptionsOverridden());
 
-		const data = new SceneJsonExporter(scene).data();
+		const data = await new SceneJsonExporter(scene).data();
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
@@ -135,8 +135,8 @@ QUnit.test('params/color colorConversion is saved and loaded correctly', async (
 
 	const lineStart = 'vec3 v_POLY_constant1_val = vec3(';
 	async function declaredColor(matNode: MeshBasicBuilderMatNode): Promise<Number3> {
-		await matNode.compute();
-		const fragmentShader = OnBeforeCompileDataHandler.getData(matNode.material)!.fragmentShader;
+		const material = await matNode.material();
+		const fragmentShader = OnBeforeCompileDataHandler.getData(material)!.fragmentShader;
 		const lines = fragmentShader.split('\n');
 		for (let line of lines) {
 			if (line.includes(lineStart)) {

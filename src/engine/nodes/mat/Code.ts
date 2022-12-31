@@ -5,16 +5,25 @@
  */
 import {ShaderMaterial} from 'three';
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {UniformsTransparencyParamConfig, UniformsTransparencyController} from './utils/UniformsTransparencyController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonParamConfig,
+	AdvancedCommonControllers,
+} from './utils/AdvancedCommonController';
+import {
+	UniformsTransparencyParamConfig,
+	UniformsTransparencyController,
+	UniformsTransparencyControllers,
+} from './utils/UniformsTransparencyController';
 
 import {
 	WireframeShaderMaterialController,
 	WireframeShaderMaterialParamsConfig,
+	WireframeShaderMaterialControllers,
 } from './utils/WireframeShaderMaterialController';
-import {FogController, FogParamConfig} from './utils/FogController';
+import {FogController, FogParamConfig, FogControllers} from './utils/FogController';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {Constructor} from '../../../types/GlobalTypes';
@@ -40,9 +49,11 @@ void main() {
 
 }`;
 
-interface CodeControllers {
-	advancedCommon: AdvancedCommonController;
-}
+interface CodeControllers
+	extends AdvancedCommonControllers,
+		FogControllers,
+		UniformsTransparencyControllers,
+		WireframeShaderMaterialControllers {}
 
 export function CodeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -77,7 +88,7 @@ class CodeMatParamsConfig extends FogParamConfig(
 ) {}
 const ParamsConfig = new CodeMatParamsConfig();
 
-export class CodeMatNode extends TypedMatNode<ShaderMaterial, CodeMatParamsConfig> {
+export class CodeMatNode extends PrimitiveMatNode<ShaderMaterial, CodeMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'code';
@@ -92,29 +103,21 @@ export class CodeMatNode extends TypedMatNode<ShaderMaterial, CodeMatParamsConfi
 	}
 	readonly controllers: CodeControllers = {
 		advancedCommon: new AdvancedCommonController(this),
+		fog: new FogController(this),
+		uniformTransparency: new UniformsTransparencyController(this),
+		wireframeShader: new WireframeShaderMaterialController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof CodeControllers>;
+	protected override controllersList = Object.values(this.controllers);
 
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
 	override async cook() {
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		UniformsTransparencyController.update(this);
-		FogController.update(this);
-		WireframeShaderMaterialController.update(this);
+		this._material = this._material || this.createMaterial();
+		await Promise.all(this.controllersPromises(this._material));
 
-		this.material.vertexShader = this.pv.vertex;
-		this.material.fragmentShader = this.pv.fragment;
-		this.material.extensions.derivatives = isBooleanTrue(this.pv.derivatives);
-		this.material.needsUpdate = true;
+		this._material.vertexShader = this.pv.vertex;
+		this._material.fragmentShader = this.pv.fragment;
+		this._material.extensions.derivatives = isBooleanTrue(this.pv.derivatives);
+		this._material.needsUpdate = true;
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

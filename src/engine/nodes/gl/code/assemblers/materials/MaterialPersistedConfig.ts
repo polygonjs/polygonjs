@@ -71,7 +71,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		super(node);
 	}
 
-	override toData(): PersistedConfigBaseMaterialDataWithShaders | undefined {
+	override async toData(): Promise<PersistedConfigBaseMaterialDataWithShaders | undefined> {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -91,7 +91,8 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 
 		// custom materials
 		const customMaterialsData: PolyDictionary<PersistedConfigBaseMaterialData> = {};
-		const customMaterials = this.node.material.customMaterials;
+		const material = await this.node.material();
+		const customMaterials = material.customMaterials;
 		if (customMaterials) {
 			assembler.traverseCustomAssemblers((customAssembler, customMaterialName) => {
 				const customOnBeforeCompileData = customAssembler.onBeforeCompileData();
@@ -130,7 +131,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		// 	param_uniform_pairs.push([param_config.name(), param_config.uniformName()]);
 		// }
 
-		const materialData = this._materialToJson(this.node.material as ShaderMaterialWithCustomMaterials, {
+		const materialData = this._materialToJson(material as ShaderMaterialWithCustomMaterials, {
 			node: this.node,
 			suffix: 'main',
 		});

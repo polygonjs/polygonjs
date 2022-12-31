@@ -84,7 +84,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	const material = mesh_basic1.material;
+	const material = await mesh_basic1.material();
 	const globals1: GlobalsGlNode = mesh_basic1.node('globals1')! as GlobalsGlNode;
 	const output1: OutputGlNode = mesh_basic1.node('output1')! as OutputGlNode;
 
@@ -196,7 +196,7 @@ QUnit.test(
 		const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 		mesh_basic1.createNode('output');
 		mesh_basic1.createNode('globals');
-		const material = mesh_basic1.material;
+		const material = await mesh_basic1.material();
 		const output1 = mesh_basic1.node('output1')! as OutputGlNode;
 		const attribute1 = mesh_basic1.createNode('attribute');
 		attribute1.p.name.set('uv');
@@ -258,7 +258,7 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	const material = mesh_basic1.material;
+	const material = await mesh_basic1.material();
 	const output1 = mesh_basic1.nodesByType('output')[0];
 	const globals1 = mesh_basic1.nodesByType('globals')[0];
 	const vec3ToFloat1 = mesh_basic1.createNode('vec3ToFloat');
@@ -325,7 +325,7 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	const material = mesh_basic1.material;
+	const material = await mesh_basic1.material();
 	const output1 = mesh_basic1.nodesByType('output')[0];
 	const globals1 = mesh_basic1.nodesByType('globals')[0];
 	const forLoop1 = mesh_basic1.createNode('forLoop');
@@ -359,7 +359,7 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	const material = mesh_basic1.material;
+	const material = await mesh_basic1.material();
 	const output1 = mesh_basic1.nodesByType('output')[0];
 	const globals1 = mesh_basic1.nodesByType('globals')[0];
 	const subnet1 = mesh_basic1.createNode('subnet');
@@ -394,7 +394,7 @@ QUnit.test('mesh basic builder with subnet without input', async (assert) => {
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	const material = mesh_basic1.material;
+	const material = await mesh_basic1.material();
 	const output1 = mesh_basic1.nodesByType('output')[0];
 	mesh_basic1.nodesByType('globals')[0];
 	const subnet1 = mesh_basic1.createNode('subnet');
@@ -427,7 +427,7 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
 	mesh_basic1.createNode('output');
 	mesh_basic1.createNode('globals');
-	const material = mesh_basic1.material;
+	const material = await mesh_basic1.material();
 	const output1 = mesh_basic1.nodesByType('output')[0];
 	mesh_basic1.nodesByType('globals')[0];
 	const subnet1 = mesh_basic1.createNode('subnet');
@@ -512,10 +512,10 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	output1.setInput('color', float_to_vec31);
 	output1.setInput('position', param2);
 	await RendererUtils.compile(mesh_basic1, renderer);
-	const mesh_basic1Material = mesh_basic1.material;
+	const mesh_basic1Material = await mesh_basic1.material();
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(mesh_basic1.usedAssembler(), async () => {
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
@@ -528,7 +528,7 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 		const vec3_param = new_mesh_basic1.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param);
 		assert.ok(vec3_param);
-		const material = new_mesh_basic1.material;
+		const material = await new_mesh_basic1.material();
 		await RendererUtils.compile(new_mesh_basic1, renderer);
 
 		assert.equal(
@@ -594,22 +594,23 @@ QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) 
 	assert.ok(geoSopGroup);
 	assert.equal(geoSopGroup!.children.length, 1);
 
-	assert.notOk(MaterialUserDataUniforms.getUniforms(mesh_basic1.material), 'uniforms not created yet');
+	const meshBasicMat = await mesh_basic1.material();
+	assert.notOk(MaterialUserDataUniforms.getUniforms(meshBasicMat), 'uniforms not created yet');
 
 	output1.setInput('alpha', globals1, 'time');
 	await RendererUtils.compile(mesh_basic1, renderer);
-	assert.ok(mesh_basic1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	const customMat = mesh_basic1.material.customMaterials.customDepthMaterial!;
+	assert.ok(meshBasicMat.customMaterials.customDepthMaterial, 'custom mat created');
+	const customMat = meshBasicMat.customMaterials.customDepthMaterial!;
 	assert.notOk(MaterialUserDataUniforms.getUniforms(customMat), 'custom mat not compiled yet');
 	renderer.render(scene.threejsScene(), camera.object); // we also need to render to have the custom materials
 	assert.ok(MaterialUserDataUniforms.getUniforms(customMat), 'custom mat uniforms compiled');
 	assert.equal(scene.time(), 0);
 	assert.equal(scene.uniformsController.timeUniformValue(), 0);
-	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1.material)!.time.value, 0, 'time is 0 on main mat');
+	assert.equal(MaterialUserDataUniforms.getUniforms(meshBasicMat)!.time.value, 0, 'time is 0 on main mat');
 	assert.equal(MaterialUserDataUniforms.getUniforms(customMat)!.time.value, 0);
 
 	scene.setFrame(60);
-	assert.equal(MaterialUserDataUniforms.getUniforms(mesh_basic1.material)!.time.value, 1, 'time is 1 on main mat');
+	assert.equal(MaterialUserDataUniforms.getUniforms(meshBasicMat)!.time.value, 1, 'time is 1 on main mat');
 	assert.equal(MaterialUserDataUniforms.getUniforms(customMat)!.time.value, 1);
 
 	await AssemblersUtils.withUnregisteredAssembler(mesh_basic1.usedAssembler(), async () => {
@@ -619,16 +620,14 @@ QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) 
 
 			const new_mesh_basic1 = scene2.node('/MAT/meshBasicBuilder1') as BaseBuilderMatNodeType;
 			const mesh_basic2 = new_mesh_basic1;
+			const meshBasic2Mat = await mesh_basic2.material();
 			assert.notOk(mesh_basic2.assemblerController());
 			assert.ok(mesh_basic2.persisted_config);
-			assert.notOk(
-				MaterialUserDataUniforms.getUniforms(mesh_basic2.material),
-				'no time uniform before compilation'
-			);
+			assert.notOk(MaterialUserDataUniforms.getUniforms(meshBasic2Mat), 'no time uniform before compilation');
 			await RendererUtils.compile(mesh_basic2, renderer);
-			const customMat2 = mesh_basic2.material.customMaterials.customDepthMaterial!;
+			const customMat2 = meshBasic2Mat.customMaterials.customDepthMaterial!;
 			assert.equal(
-				MaterialUserDataUniforms.getUniforms(mesh_basic2.material)!.time.value,
+				MaterialUserDataUniforms.getUniforms(meshBasic2Mat)!.time.value,
 				1,
 				'time is 1 on new main mat'
 			);
@@ -637,7 +636,7 @@ QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) 
 			scene2.setFrame(120);
 			assert.equal(scene2.uniformsController.timeUniformValue(), 2, 'time uniform is 2');
 			assert.equal(
-				MaterialUserDataUniforms.getUniforms(mesh_basic2.material)!.time.value,
+				MaterialUserDataUniforms.getUniforms(meshBasic2Mat)!.time.value,
 				2,
 				'time is 2 on new main mat'
 			);
@@ -666,12 +665,12 @@ QUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheK
 	}
 	const mesh_basic1 = createMatNode();
 	const mesh_basic2 = createMatNode();
-	await mesh_basic1.compute();
-	await mesh_basic2.compute();
+	const meshBasic1Mat = await mesh_basic1.material();
+	const meshBasic2Mat = await mesh_basic2.material();
 
 	assert.notEqual(
-		mesh_basic1.material.customProgramCacheKey(),
-		mesh_basic2.material.customProgramCacheKey(),
+		meshBasic1Mat.customProgramCacheKey(),
+		meshBasic2Mat.customProgramCacheKey(),
 		'cache keys are unique before compilation'
 	);
 
@@ -679,8 +678,8 @@ QUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheK
 	await RendererUtils.compile(mesh_basic2, renderer);
 
 	assert.notEqual(
-		mesh_basic1.material.customProgramCacheKey(),
-		mesh_basic2.material.customProgramCacheKey(),
+		meshBasic1Mat.customProgramCacheKey(),
+		meshBasic2Mat.customProgramCacheKey(),
 		'just in case, cache keys are also unique after compilation'
 	);
 
@@ -691,23 +690,25 @@ QUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheK
 
 			const new_mesh_basic1 = scene2.node(mesh_basic1.path()) as BaseBuilderMatNodeType;
 			const new_mesh_basic2 = scene2.node(mesh_basic2.path()) as BaseBuilderMatNodeType;
+			const newMeshBasic1Mat = await new_mesh_basic1.material();
+			const newMeshBasic2Mat = await new_mesh_basic2.material();
 			assert.notOk(new_mesh_basic1.assemblerController());
 			assert.notOk(new_mesh_basic2.assemblerController());
 			assert.ok(new_mesh_basic1.persisted_config);
 			assert.ok(new_mesh_basic2.persisted_config);
 			assert.notEqual(
-				mesh_basic1.material.customProgramCacheKey(),
-				mesh_basic2.material.customProgramCacheKey(),
+				newMeshBasic1Mat.customProgramCacheKey(),
+				newMeshBasic2Mat.customProgramCacheKey(),
 				'new cache keys are unique before compilation'
 			);
 
 			await RendererUtils.compile(new_mesh_basic1, renderer);
 			await RendererUtils.compile(new_mesh_basic2, renderer);
 
-			assert.notEqual(new_mesh_basic1.material.uuid, new_mesh_basic2.material.uuid);
+			assert.notEqual(newMeshBasic1Mat.uuid, newMeshBasic2Mat.uuid);
 			assert.notEqual(
-				new_mesh_basic1.material.customProgramCacheKey(),
-				new_mesh_basic2.material.customProgramCacheKey(),
+				newMeshBasic1Mat.customProgramCacheKey(),
+				newMeshBasic2Mat.customProgramCacheKey(),
 				'new cache keys are unique after compilation'
 			);
 		});
@@ -743,45 +744,47 @@ QUnit.test('mat/meshBasicBuilder can select which customMat is created', async (
 	assert.ok(geoSopGroup);
 	assert.equal(geoSopGroup!.children.length, 1);
 
+	const material = await meshBasicBuilder1.material();
+
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshBasicBuilder1.p.overrideCustomMaterials.set(1);
 	await meshBasicBuilder1.compute();
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshBasicBuilder1.p.createCustomMatDistance.set(0);
 	await meshBasicBuilder1.compute();
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
-	assert.notOk(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.notOk(material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshBasicBuilder1.p.createCustomMatDepth.set(0);
 	await meshBasicBuilder1.compute();
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
-	assert.notOk(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.notOk(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.notOk(material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.notOk(material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshBasicBuilder1.p.createCustomMatDepthDOF.set(0);
 	await meshBasicBuilder1.compute();
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
-	assert.notOk(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.notOk(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.notOk(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.notOk(material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.notOk(material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.notOk(material.customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshBasicBuilder1.p.overrideCustomMaterials.set(0);
 	await meshBasicBuilder1.compute();
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshBasicBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok(material.customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	RendererUtils.dispose();
 });

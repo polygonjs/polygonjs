@@ -2,6 +2,7 @@ import {Material} from 'three';
 import {TypedContainer} from './_Base';
 import {ContainableMap} from './utils/ContainableMap';
 import {NodeContext} from '../poly/NodeContext';
+import {CoreMaterial} from '../../core/geometry/Material';
 
 export class MaterialContainer extends TypedContainer<NodeContext.MAT> {
 	override set_content(content: ContainableMap[NodeContext.MAT]) {
@@ -9,9 +10,8 @@ export class MaterialContainer extends TypedContainer<NodeContext.MAT> {
 	}
 	override coreContentCloned(): ContainableMap[NodeContext.MAT] | undefined {
 		if (this._content) {
-			// const cloned = CoreMaterial.clone(this._content); //.clone();
-			const cloned = this._content.clone();
-			// console.log(JSON.stringify(this._content.toJSON()), JSON.stringify(cloned.toJSON()));
+			const cloned = CoreMaterial.clone(this._node.scene(), this._content, {shareCustomUniforms: true}); //.clone();
+			// const cloned = this._content.clone();
 			return cloned;
 		}
 	}

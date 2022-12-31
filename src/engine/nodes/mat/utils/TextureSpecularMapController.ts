@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshPhongMaterial} from 'three';
+import {MeshPhongMaterial, Material} from 'three';
 
 export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -17,16 +17,22 @@ export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 // 	specularMap!: Texture | null;
 // }
 type TextureSpecularMapControllerCurrentMaterial = MeshPhongMaterial;
+function isTextureSpecularMapMaterial(material?: Material): material is TextureSpecularMapControllerCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshPhongMaterial as any).isMeshPhongMaterial != null;
+}
 class TextureSpecularMapParamsConfig extends SpecularMapParamConfig(NodeParamsConfig) {}
-interface SpecularControllers {
+export interface TextureSpecularMapControllers {
 	specularMap: TextureSpecularMapController;
 }
 abstract class TextureSpecularMapMatNode extends TypedMatNode<
 	TextureSpecularMapControllerCurrentMaterial,
 	TextureSpecularMapParamsConfig
 > {
-	controllers!: SpecularControllers;
-	abstract override createMaterial(): TextureSpecularMapControllerCurrentMaterial;
+	controllers!: TextureSpecularMapControllers;
+	// abstract override createMaterial(): TextureSpecularMapControllerCurrentMaterial;
 }
 
 export class TextureSpecularMapController extends BaseTextureMapController {
@@ -36,10 +42,17 @@ export class TextureSpecularMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useSpecularMap, this.node.p.specularMap);
 	}
-	override async update() {
-		this._update(this.node.material, 'specularMap', this.node.p.useSpecularMap, this.node.p.specularMap);
-	}
 	static override async update(node: TextureSpecularMapMatNode) {
 		node.controllers.specularMap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!isTextureSpecularMapMaterial(material)) {
+			return;
+		}
+		this.node.controllers.specularMap.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureSpecularMapControllerCurrentMaterial) {
+		await this._update(material, 'specularMap', this.node.p.useSpecularMap, this.node.p.specularMap);
 	}
 }

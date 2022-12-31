@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshStandardMaterial} from 'three';
+import {Material, MeshStandardMaterial} from 'three';
 import {MeshPhysicalMaterial} from 'three';
 import {MeshMatcapMaterial} from 'three';
 import {MeshNormalMaterial} from 'three';
@@ -37,16 +37,25 @@ type TextureBumpMapControllerCurrentMaterial =
 	| MeshPhysicalMaterial
 	| MeshStandardMaterial
 	| MeshToonMaterial;
+function _isValidMaterial(material?: Material): material is TextureBumpMapControllerCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshMatcapMaterial).bumpScale != null;
+}
 class TextureBumpMapParamsConfig extends BumpMapParamConfig(NodeParamsConfig) {}
-interface TextureBumpControllers {
+export interface TextureBumpMapControllers {
 	bumpMap: TextureBumpMapController;
 }
 abstract class TextureBumpMapMatNode extends TypedMatNode<
 	TextureBumpMapControllerCurrentMaterial,
 	TextureBumpMapParamsConfig
 > {
-	controllers!: TextureBumpControllers;
-	abstract override createMaterial(): TextureBumpMapControllerCurrentMaterial;
+	controllers!: TextureBumpMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureBumpMapControllerCurrentMaterial | undefined;
+	}
 }
 
 export class TextureBumpMapController extends BaseTextureMapController {
@@ -56,13 +65,20 @@ export class TextureBumpMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useBumpMap, this.node.p.bumpMap);
 	}
-	override async update() {
-		this._update(this.node.material, 'bumpMap', this.node.p.useBumpMap, this.node.p.bumpMap);
-
-		const mat = this.node.material as MeshStandardMaterial;
-		mat.bumpScale = this.node.pv.bumpScale;
-	}
 	static override async update(node: TextureBumpMapMatNode) {
 		node.controllers.bumpMap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!_isValidMaterial(material)) {
+			return;
+		}
+
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureBumpMapControllerCurrentMaterial) {
+		await this._update(material, 'bumpMap', this.node.p.useBumpMap, this.node.p.bumpMap);
+
+		material.bumpScale = this.node.pv.bumpScale;
 	}
 }

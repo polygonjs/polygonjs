@@ -4,7 +4,7 @@ import {TypeAssert} from './../../../poly/Assert';
 import {RayMarchingUniforms, RAYMARCHING_UNIFORMS} from './../../gl/gl/raymarching/uniforms';
 import {Constructor} from '../../../../types/GlobalTypes';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {TypedMatNode} from '../_Base';
+import {PrimitiveMatNode} from '../_Base';
 import {Material, Texture} from 'three';
 import {ShaderMaterialWithCustomMaterials} from '../../../../core/geometry/Material';
 import {isBooleanTrue} from '../../../../core/Type';
@@ -169,15 +169,14 @@ class RayMarchingParamsConfig extends CustomMaterialRayMarchingParamConfig(
 	RayMarchingDebugParamConfig(RayMarchingEnvMapParamConfig(RayMarchingMainParamConfig(NodeParamsConfig)))
 ) {}
 
-abstract class RayMarchingMatNode extends TypedMatNode<RayMarchingMaterial, RayMarchingParamsConfig> {}
+abstract class RayMarchingMatNode extends PrimitiveMatNode<RayMarchingMaterial, RayMarchingParamsConfig> {}
 
 // const worldPos = new Vector3();
 
 export class RayMarchingController {
 	constructor(protected node: RayMarchingMatNode) {}
 
-	async updateUniformsFromParams() {
-		const shaderMaterial = this.node.material as ShaderMaterialWithCustomMaterials;
+	async updateUniformsFromParams(shaderMaterial: ShaderMaterialWithCustomMaterials) {
 		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
 		if (!uniforms) {
 			return;
@@ -195,7 +194,7 @@ export class RayMarchingController {
 		uniforms.shadowDistanceMin.value = pv.shadowDistanceMin;
 		uniforms.shadowDistanceMax.value = pv.shadowDistanceMax;
 
-		this._updateUniforms();
+		this._updateUniforms(shaderMaterial);
 		this._updateDebug(shaderMaterial, uniforms);
 		await this._updateEnvMap(shaderMaterial, uniforms);
 	}
@@ -287,32 +286,41 @@ export class RayMarchingController {
 	 * uniforms
 	 *
 	 */
-	private _updateUniforms() {
-		RayMarchingController._updateUniforms(this.node);
+	private _updateUniforms(shaderMaterial: ShaderMaterialWithCustomMaterials) {
+		RayMarchingController._updateUniforms(this.node, shaderMaterial);
 	}
-	private static _updateUniforms(node: RayMarchingMatNode) {
-		this.updateUniformEnvMapIntensity(node);
-		this.updateUniformEnvMapRoughness(node);
-		this.updateUniformEnvMapRotate(node);
+	private static _updateUniforms(node: RayMarchingMatNode, shaderMaterial: ShaderMaterialWithCustomMaterials) {
+		this._updateUniformEnvMapIntensity(node, shaderMaterial);
+		this._updateUniformEnvMapRoughness(node, shaderMaterial);
+		this._updateUniformEnvMapRotate(node, shaderMaterial);
 	}
-	static updateUniformEnvMapIntensity(node: RayMarchingMatNode) {
-		const shaderMaterial = node.material as ShaderMaterialWithCustomMaterials;
+	static async updateUniformEnvMapIntensity(node: RayMarchingMatNode) {
+		this._updateUniformEnvMapIntensity(node, (await node.material()) as ShaderMaterialWithCustomMaterials);
+	}
+	static _updateUniformEnvMapIntensity(node: RayMarchingMatNode, shaderMaterial: ShaderMaterialWithCustomMaterials) {
+		// const shaderMaterial = node.materialSync() as ShaderMaterialWithCustomMaterials;
 		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
 		if (!uniforms) {
 			return;
 		}
 		(uniforms as any)['envMapIntensity'].value = node.pv.envMapIntensity;
 	}
-	static updateUniformEnvMapRoughness(node: RayMarchingMatNode) {
-		const shaderMaterial = node.material as ShaderMaterialWithCustomMaterials;
+	static async updateUniformEnvMapRoughness(node: RayMarchingMatNode) {
+		this._updateUniformEnvMapRoughness(node, (await node.material()) as ShaderMaterialWithCustomMaterials);
+	}
+	static _updateUniformEnvMapRoughness(node: RayMarchingMatNode, shaderMaterial: ShaderMaterialWithCustomMaterials) {
+		// const shaderMaterial = node.materialSync() as ShaderMaterialWithCustomMaterials;
 		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
 		if (!uniforms) {
 			return;
 		}
 		(uniforms as any)['roughness'].value = node.pv.envMapRoughness;
 	}
-	static updateUniformEnvMapRotate(node: RayMarchingMatNode) {
-		const shaderMaterial = node.material as ShaderMaterialWithCustomMaterials;
+	static async updateUniformEnvMapRotate(node: RayMarchingMatNode) {
+		this._updateUniformEnvMapRotate(node, (await node.material()) as ShaderMaterialWithCustomMaterials);
+	}
+	static _updateUniformEnvMapRotate(node: RayMarchingMatNode, shaderMaterial: ShaderMaterialWithCustomMaterials) {
+		// const shaderMaterial = node.materialSync() as ShaderMaterialWithCustomMaterials;
 		const uniforms = shaderMaterial.uniforms as unknown as RayMarchingUniforms | undefined;
 		if (!uniforms) {
 			return;

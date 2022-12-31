@@ -12,6 +12,8 @@ import {
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {NodeContext} from '../../poly/NodeContext';
+import {BasePrimitiveMatNodeType} from '../mat/_Base';
+import {CoreType} from '../../../core/Type';
 class GetMaterialActorParamsConfig extends NodeParamsConfig {
 	/** @param the material node */
 	node = ParamConfig.NODE_PATH('', {
@@ -44,8 +46,8 @@ export class GetMaterialActorNode extends TypedActorNode<GetMaterialActorParamsC
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const materialNode = this.pv.node.nodeWithContext(NodeContext.MAT, this.states?.error);
-		if (materialNode) {
-			return materialNode.material;
+		if (materialNode && CoreType.isFunction((materialNode as BasePrimitiveMatNodeType).__materialSync__)) {
+			return (materialNode as BasePrimitiveMatNodeType).__materialSync__();
 		}
 	}
 }

@@ -17,7 +17,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 	constructor(protected override node: ParticlesSystemGpuSopNode) {
 		super(node);
 	}
-	override toData(): PersistedConfigBaseParticlesData | undefined {
+	override async toData(): Promise<PersistedConfigBaseParticlesData | undefined> {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -45,7 +45,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			node: this.node,
 			suffix: 'main',
 		});
-		const data = {
+		const data: PersistedConfigBaseParticlesData = {
 			texture_allocations: texture_allocations_data,
 			param_uniform_pairs: param_uniform_pairs,
 			uniforms_owner: material_data || {},

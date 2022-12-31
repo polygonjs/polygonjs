@@ -40,10 +40,10 @@ QUnit.test('mesh physical builder persisted_config', async (assert) => {
 	output1.setInput('color', float_to_vec31);
 	output1.setInput('position', param2);
 	await RendererUtils.compile(mesh_physical1, renderer);
-	const mesh_physical1Material = mesh_physical1.material;
+	const mesh_physical1Material = await mesh_physical1.material();
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(mesh_physical1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
@@ -56,7 +56,7 @@ QUnit.test('mesh physical builder persisted_config', async (assert) => {
 		const vec3_param = new_mesh_physical1.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param, 'float_param exists');
 		assert.ok(vec3_param, 'vec3_param exists');
-		const material = new_mesh_physical1.material;
+		const material = await new_mesh_physical1.material();
 		await RendererUtils.compile(new_mesh_physical1, renderer);
 		assert.equal(
 			GLSLHelper.compress(material.fragmentShader),
@@ -118,12 +118,12 @@ QUnit.test('mesh physical builder persisted_config with advanced params', async 
 	mesh_physical1.p.shadowDoubleSided.set(true);
 
 	await RendererUtils.compile(mesh_physical1, renderer);
-	const mesh_physical_mat = mesh_physical1.material;
+	const mesh_physical_mat = await mesh_physical1.material();
 
 	assert.equal(mesh_physical_mat.shadowSide, DoubleSide);
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(mesh_physical1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
@@ -136,7 +136,7 @@ QUnit.test('mesh physical builder persisted_config with advanced params', async 
 		const vec3_param = new_mesh_physical1.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param, 'float_param exists');
 		assert.ok(vec3_param, 'vec3_param exists');
-		const material = new_mesh_physical1.material;
+		const material = await new_mesh_physical1.material();
 		await RendererUtils.compile(new_mesh_physical1, renderer);
 		assert.equal(material.shadowSide, DoubleSide);
 		assert.equal(
@@ -199,7 +199,7 @@ QUnit.test('mesh physical builder SSS Model', async (assert) => {
 	mesh_physical1.p.shadowDoubleSided.set(true);
 
 	await RendererUtils.compile(mesh_physical1, renderer);
-	const material = mesh_physical1.material;
+	const material = await mesh_physical1.material();
 
 	assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB_DEFAULT.vert));
 	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB_DEFAULT.frag));
@@ -232,8 +232,8 @@ QUnit.test('mesh physical builder can compile from another node', async (assert)
 		await RendererUtils.compile(mesh_physical_DEST, renderer);
 	});
 	assert.equal(consoleHistory.error.length, 1, 'dest mat compilation raised a webgl error');
-	const mat_SRC = mesh_physical_SRC.material;
-	const mat_DEST = mesh_physical_DEST.material;
+	const mat_SRC = await mesh_physical_SRC.material();
+	const mat_DEST = await mesh_physical_DEST.material();
 
 	assert.equal(GLSLHelper.compress(mat_SRC.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB_SET_BUILDER_NODE.vert));
 	assert.notEqual(GLSLHelper.compress(mat_SRC.vertexShader), GLSLHelper.compress(mat_DEST.vertexShader));
@@ -273,44 +273,44 @@ QUnit.test('mat/meshPhysicalBuilder can select which customMat is created', asyn
 	assert.equal(geoSopGroup!.children.length, 1);
 
 	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshPhysicalBuilder1.p.overrideCustomMaterials.set(1);
 	await meshPhysicalBuilder1.compute();
 	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshPhysicalBuilder1.p.createCustomMatDistance.set(0);
 	await meshPhysicalBuilder1.compute();
 	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.notOk((await meshPhysicalBuilder1.material()).customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshPhysicalBuilder1.p.createCustomMatDepth.set(0);
 	await meshPhysicalBuilder1.compute();
 	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.notOk((await meshPhysicalBuilder1.material()).customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.notOk((await meshPhysicalBuilder1.material()).customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshPhysicalBuilder1.p.createCustomMatDepthDOF.set(0);
 	await meshPhysicalBuilder1.compute();
 	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.notOk(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.notOk((await meshPhysicalBuilder1.material()).customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.notOk((await meshPhysicalBuilder1.material()).customMaterials.customDepthMaterial, 'custom mat created');
+	assert.notOk((await meshPhysicalBuilder1.material()).customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	meshPhysicalBuilder1.p.overrideCustomMaterials.set(0);
 	await meshPhysicalBuilder1.compute();
 	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDistanceMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthMaterial, 'custom mat created');
-	assert.ok(meshPhysicalBuilder1.material.customMaterials.customDepthDOFMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDistanceMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthMaterial, 'custom mat created');
+	assert.ok((await meshPhysicalBuilder1.material()).customMaterials.customDepthDOFMaterial, 'custom mat created');
 
 	RendererUtils.dispose();
 });
@@ -348,16 +348,16 @@ QUnit.test('mat/meshPhysicalBuilder override thickness and transmission', async 
 	assert.equal(geoSopGroup!.children.length, 1);
 
 	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-	let expandedFragment = BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader);
+	let expandedFragment = BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader);
 
 	assert.includes(expandedFragment, 'float POLY_thickness = 1.0;');
 	assert.includes(expandedFragment, 'float POLY_transmission = 1.0;');
 	assert.includes(
-		BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader),
+		BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
 		'material.thickness = thickness * POLY_thickness;'
 	);
 	assert.includes(
-		BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader),
+		BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
 		'material.transmission = transmission * POLY_transmission;'
 	);
 
@@ -365,18 +365,18 @@ QUnit.test('mat/meshPhysicalBuilder override thickness and transmission', async 
 	output1.setInput('transmission', constant_transmission);
 	output1.setInput('thickness', constant_thickness);
 	await RendererUtils.compile(meshPhysicalBuilder1, renderer);
-	expandedFragment = BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader);
+	expandedFragment = BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader);
 
 	assert.includes(expandedFragment, 'float v_POLY_thickness_val = 0.3;');
 	assert.includes(expandedFragment, 'float POLY_thickness = v_POLY_thickness_val;');
 	assert.includes(expandedFragment, 'float v_POLY_transmission_val = 0.2;');
 	assert.includes(expandedFragment, 'float POLY_transmission = v_POLY_transmission_val;');
 	assert.includes(
-		BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader),
+		BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
 		'material.thickness = thickness * POLY_thickness;'
 	);
 	assert.includes(
-		BaseGlShaderAssembler.expandShader(meshPhysicalBuilder1.material.fragmentShader),
+		BaseGlShaderAssembler.expandShader((await meshPhysicalBuilder1.material()).fragmentShader),
 		'material.transmission = transmission * POLY_transmission;'
 	);
 

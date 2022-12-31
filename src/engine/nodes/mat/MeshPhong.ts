@@ -7,42 +7,79 @@
  */
 import {MeshPhongMaterial} from 'three';
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ColorsController, ColorParamConfig} from './utils/ColorsController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
-import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
-import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
-import {TextureSpecularMapController, SpecularMapParamConfig} from './utils/TextureSpecularMapController';
-import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/TextureEnvMapSimpleController';
-import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
-import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
-import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
-import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
+import {ColorsController, ColorParamConfig, ColorsControllers} from './utils/ColorsController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
+import {TextureMapController, MapParamConfig, TextureMapControllers} from './utils/TextureMapController';
+import {
+	TextureAlphaMapController,
+	AlphaMapParamConfig,
+	TextureAlphaMapControllers,
+} from './utils/TextureAlphaMapController';
+import {
+	TextureBumpMapController,
+	BumpMapParamConfig,
+	TextureBumpMapControllers,
+} from './utils/TextureBumpMapController';
+import {
+	TextureNormalMapController,
+	NormalMapParamConfig,
+	TextureNormalMapControllers,
+} from './utils/TextureNormalMapController';
+import {
+	TextureSpecularMapController,
+	SpecularMapParamConfig,
+	TextureSpecularMapControllers,
+} from './utils/TextureSpecularMapController';
+import {
+	TextureEnvMapSimpleController,
+	EnvMapSimpleParamConfig,
+	TextureEnvMapSimpleControllers,
+} from './utils/TextureEnvMapSimpleController';
+import {
+	TextureEmissiveMapController,
+	EmissiveMapParamConfig,
+	TextureEmissiveMapControllers,
+} from './utils/TextureEmissiveMapController';
+import {
+	TextureDisplacementMapController,
+	DisplacementMapParamConfig,
+	TextureDisplacementMapControllers,
+} from './utils/TextureDisplacementMapController';
+import {
+	TextureLightMapController,
+	LightMapParamConfig,
+	TextureLightMapControllers,
+} from './utils/TextureLightMapController';
+import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
 
-import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
+import {WireframeController, WireframeControllers, WireframeParamConfig} from './utils/WireframeController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {FogController, FogParamConfig} from './utils/FogController';
+import {FogController, FogControllers, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-interface MeshPhongControllers {
-	colors: ColorsController;
-	advancedCommon: AdvancedCommonController;
-	alphaMap: TextureAlphaMapController;
-	aoMap: TextureAOMapController;
-	bumpMap: TextureBumpMapController;
-	displacementMap: TextureDisplacementMapController;
-	emissiveMap: TextureEmissiveMapController;
-	envMap: TextureEnvMapSimpleController;
-	lightMap: TextureLightMapController;
-	map: TextureMapController;
-	normalMap: TextureNormalMapController;
-	specularMap: TextureSpecularMapController;
-}
+interface MeshPhongControllers
+	extends AdvancedCommonControllers,
+		ColorsControllers,
+		FogControllers,
+		TextureAlphaMapControllers,
+		TextureAOMapControllers,
+		TextureBumpMapControllers,
+		TextureDisplacementMapControllers,
+		TextureEmissiveMapControllers,
+		TextureEnvMapSimpleControllers,
+		TextureLightMapControllers,
+		TextureMapControllers,
+		TextureNormalMapControllers,
+		TextureSpecularMapControllers,
+		WireframeControllers {}
 class MeshPhongMatParamsConfig extends FogParamConfig(
 	WireframeParamConfig(
 		AdvancedCommonParamConfig(
@@ -80,7 +117,7 @@ class MeshPhongMatParamsConfig extends FogParamConfig(
 }
 const ParamsConfig = new MeshPhongMatParamsConfig();
 
-export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongMatParamsConfig> {
+export class MeshPhongMatNode extends PrimitiveMatNode<MeshPhongMaterial, MeshPhongMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshPhong';
@@ -103,28 +140,17 @@ export class MeshPhongMatNode extends TypedMatNode<MeshPhongMaterial, MeshPhongM
 		displacementMap: new TextureDisplacementMapController(this),
 		emissiveMap: new TextureEmissiveMapController(this),
 		envMap: new TextureEnvMapSimpleController(this),
+		fog: new FogController(this),
 		lightMap: new TextureLightMapController(this),
 		map: new TextureMapController(this),
 		normalMap: new TextureNormalMapController(this),
 		specularMap: new TextureSpecularMapController(this),
+		wireframe: new WireframeController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshPhongControllers>;
-
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 	override async cook() {
 		this._material = this._material || this.createMaterial();
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		FogController.update(this);
-		WireframeController.update(this);
-
+		await Promise.all(this.controllersPromises(this._material));
 		if (this._material.flatShading != isBooleanTrue(this.pv.flatShading)) {
 			this._material.flatShading = isBooleanTrue(this.pv.flatShading);
 			this._material.needsUpdate = true;

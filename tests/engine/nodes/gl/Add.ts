@@ -67,7 +67,7 @@ QUnit.test('gl add updates its output type correctly when scene is loaded', asyn
 	assert.ok(add1.lifecycle.creationCompleted());
 	add1.params.get('add1')!.set([1, 2, 3]);
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 
@@ -99,7 +99,7 @@ QUnit.test('gl add updates its output type correctly when scene is loaded 2', as
 
 	let new_scene: PolyScene | undefined;
 	for (let i = 0; i < 10; i++) {
-		const data: SceneJsonExporterData = new SceneJsonExporter(new_scene || scene).data();
+		const data: SceneJsonExporterData = await new SceneJsonExporter(new_scene || scene).data();
 		new_scene = await SceneJsonImporter.loadData(data);
 		await new_scene.waitForCooksCompleted();
 	}

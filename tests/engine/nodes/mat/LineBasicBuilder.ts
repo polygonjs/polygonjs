@@ -21,13 +21,13 @@ QUnit.test('lineBasic builder persisted_config', async (assert) => {
 
 	output1.setInput('color', globals1, 'position');
 	await RendererUtils.compile(lineBasicBuilder1, renderer);
-	const mat1 = lineBasicBuilder1.material;
+	const mat1 = await lineBasicBuilder1.material();
 
 	assert.equal(GLSLHelper.compress(mat1.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.basic.vert));
 	assert.equal(GLSLHelper.compress(mat1.fragmentShader), GLSLHelper.compress(TEST_SHADER_LIB.basic.frag));
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(lineBasicBuilder1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
@@ -35,7 +35,7 @@ QUnit.test('lineBasic builder persisted_config', async (assert) => {
 
 		const lineBasicBuilder2 = scene2.node(lineBasicBuilder1.path()) as LineBasicBuilderMatNode;
 		assert.notOk(lineBasicBuilder2.assemblerController());
-		const mat2 = lineBasicBuilder2.material;
+		const mat2 = await lineBasicBuilder2.material();
 		await RendererUtils.compile(lineBasicBuilder2, renderer);
 
 		assert.equal(GLSLHelper.compress(mat2.vertexShader), GLSLHelper.compress(TEST_SHADER_LIB.basic.vert));

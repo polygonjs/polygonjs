@@ -1,7 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three';
+import {Material, ShaderMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshToonMaterial} from 'three';
 
@@ -16,16 +16,25 @@ export function GradientMapParamConfig<TBase extends Constructor>(Base: TBase) {
 
 type TextureGradientMaterial = MeshToonMaterial;
 type TextureGradientMapCurrentMaterial = TextureGradientMaterial | ShaderMaterial;
+function _isValidMaterial(material?: Material): material is TextureGradientMapCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return true; //(material as TextureGradientMaterial).gradientMap != null;
+}
 class TextureGradientMapParamsConfig extends GradientMapParamConfig(NodeParamsConfig) {}
-interface GradientControllers {
+export interface TextureGradientMapControllers {
 	gradientMap: TextureGradientMapController;
 }
 abstract class TextureGradientMapMatNode extends TypedMatNode<
 	TextureGradientMapCurrentMaterial,
 	TextureGradientMapParamsConfig
 > {
-	controllers!: GradientControllers;
-	abstract override createMaterial(): TextureGradientMapCurrentMaterial;
+	controllers!: TextureGradientMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureGradientMapCurrentMaterial | undefined;
+	}
 }
 
 export class TextureGradientMapController extends BaseTextureMapController {
@@ -35,10 +44,17 @@ export class TextureGradientMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useGradientMap, this.node.p.gradientMap);
 	}
-	override async update() {
-		this._update(this.node.material, 'gradientMap', this.node.p.useGradientMap, this.node.p.gradientMap);
-	}
 	static override async update(node: TextureGradientMapMatNode) {
 		node.controllers.gradientMap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!_isValidMaterial(material)) {
+			return;
+		}
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureGradientMapCurrentMaterial) {
+		await this._update(material, 'gradientMap', this.node.p.useGradientMap, this.node.p.gradientMap);
 	}
 }

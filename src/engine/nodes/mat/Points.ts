@@ -7,23 +7,32 @@
  */
 import {PointsMaterial} from 'three';
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
-import {ColorsController, ColorParamConfig} from './utils/ColorsController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
+import {PrimitiveMatNode} from './_Base';
+import {ColorsController, ColorParamConfig, ColorsControllers} from './utils/ColorsController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
+import {TextureMapController, MapParamConfig, TextureMapControllers} from './utils/TextureMapController';
+import {
+	TextureAlphaMapController,
+	AlphaMapParamConfig,
+	TextureAlphaMapControllers,
+} from './utils/TextureAlphaMapController';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {FogParamConfig, UniformFogController, UniformFogControllers} from './utils/UniformsFogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {PointsSizeController, PointsParamConfig} from './utils/PointsSizeController';
-interface PointsControllers {
-	colors: ColorsController;
-	advancedCommon: AdvancedCommonController;
-	alphaMap: TextureAlphaMapController;
-	map: TextureMapController;
-}
+import {PointsSizeController, PointsParamConfig, PointsSizeControllers} from './utils/PointsSizeController';
+interface PointsControllers
+	extends AdvancedCommonControllers,
+		ColorsControllers,
+		PointsSizeControllers,
+		TextureAlphaMapControllers,
+		TextureMapControllers,
+		UniformFogControllers {}
 
 class PointsMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
@@ -42,7 +51,7 @@ class PointsMatParamsConfig extends FogParamConfig(
 ) {}
 const ParamsConfig = new PointsMatParamsConfig();
 
-export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsConfig> {
+export class PointsMatNode extends PrimitiveMatNode<PointsMaterial, PointsMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'points';
@@ -61,24 +70,14 @@ export class PointsMatNode extends TypedMatNode<PointsMaterial, PointsMatParamsC
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
 		map: new TextureMapController(this),
+		pointsSize: new PointsSizeController(this),
+		uniformFog: new UniformFogController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof PointsControllers>;
-
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 
 	override async cook() {
 		this._material = this._material || this.createMaterial();
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		FogController.update(this);
-		PointsSizeController.update(this);
+		await Promise.all(this.controllersPromises(this._material));
 
 		this.setMaterial(this._material);
 	}

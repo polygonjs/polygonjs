@@ -18,7 +18,7 @@ QUnit.test('expression js simple', async (assert) => {
 	assert.in_delta(box1.p.size.value, date, 1000);
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();

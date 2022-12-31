@@ -1,10 +1,13 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController} from './_BaseController';
 import {TypedMatNode} from '../_Base';
-import {PointsMaterial} from 'three';
+import {Material, PointsMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 
+export interface PointsSizeControllers {
+	pointsSize: PointsSizeController;
+}
 export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		size = ParamConfig.FLOAT(1, {
@@ -18,19 +21,33 @@ export function PointsParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 class PointsParamsConfig extends PointsParamConfig(NodeParamsConfig) {}
 
-class PointsMatNode extends TypedMatNode<PointsMaterial, PointsParamsConfig> {
-	createMaterial() {
-		return new PointsMaterial();
+function isValidMaterial(material?: Material): material is PointsMaterial {
+	if (!material) {
+		return false;
 	}
+	return (material as PointsMaterial).size != null;
+}
+class PointsMatNode extends TypedMatNode<PointsMaterial, PointsParamsConfig> {
+	async material() {
+		const container = await this.compute();
+		return container.material() as PointsMaterial | undefined;
+	}
+	controllers!: PointsSizeControllers;
 }
 
 export class PointsSizeController extends BaseController {
 	constructor(protected override node: PointsMatNode) {
 		super(node);
 	}
-	static update(node: PointsMatNode) {
-		const material = node.material;
-		const pv = node.pv;
+	static async update(node: PointsMatNode) {
+		const material = await node.material();
+		if (!isValidMaterial(material)) {
+			return;
+		}
+		node.controllers.pointsSize.updateMaterial(material);
+	}
+	override updateMaterial(material: PointsMaterial) {
+		const pv = this.node.pv;
 		material.size = pv.size;
 		const previousSizeAttenuation = material.sizeAttenuation;
 		const newSizeAttenuation = isBooleanTrue(pv.sizeAttenuation);

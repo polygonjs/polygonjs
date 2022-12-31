@@ -19,9 +19,10 @@ QUnit.test('2 gl/attributes with same name can live on same level without confli
 
 	// test for vertex only
 	output1.setInput('position', add1);
+	// await meshBasicBuilder1.compute();
+	const material = await meshBasicBuilder1.material();
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	// await meshBasicBuilder1.compute();
-	const material = meshBasicBuilder1.material;
 	assert.includes(
 		material.vertexShader,
 		`
@@ -119,7 +120,7 @@ QUnit.test('2 gl/param with same name can live on same level without conflict in
 	// test for vertex only
 	output1.setInput('position', add1);
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
-	const material = meshBasicBuilder1.material;
+	const material = await meshBasicBuilder1.material();
 	assert.includes(
 		material.vertexShader,
 		`

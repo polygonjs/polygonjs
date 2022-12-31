@@ -7,7 +7,7 @@
  *
  */
 import {ShaderMaterial} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 import {Vector3} from 'three';
 import {Sky} from '../../../modules/three/examples/jsm/objects/Sky';
 
@@ -45,7 +45,7 @@ class SkyMatParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SkyMatParamsConfig();
 
-export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyMatParamsConfig> {
+export class SkyMatNode extends PrimitiveMatNode<ShaderMaterialWithSkyUniforms, SkyMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'sky';
@@ -59,7 +59,8 @@ export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyM
 	}
 
 	override async cook() {
-		const uniforms = this.material.uniforms;
+		this._material = this._material || this.createMaterial();
+		const uniforms = this._material.uniforms;
 		uniforms.turbidity.value = this.pv.turbidity;
 		uniforms.rayleigh.value = this.pv.rayleigh;
 		uniforms.mieCoefficient.value = this.pv.mieCoefficient;
@@ -73,6 +74,6 @@ export class SkyMatNode extends TypedMatNode<ShaderMaterialWithSkyUniforms, SkyM
 		uniforms.sunPosition.value.y = Math.sin(phi) * Math.sin(theta);
 		uniforms.sunPosition.value.z = Math.sin(phi) * Math.cos(theta);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

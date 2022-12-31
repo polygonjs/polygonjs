@@ -23,7 +23,7 @@ QUnit.test('gl/TextureSDF simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
-	const material = rayMarchingBuilder1.material;
+	const material = await rayMarchingBuilder1.material();
 	const output1 = rayMarchingBuilder1.createNode('output');
 
 	const textureSDF1 = rayMarchingBuilder1.createNode('textureSDF');
@@ -67,7 +67,7 @@ QUnit.test('gl/TextureSDF blur', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
-	const material = rayMarchingBuilder1.material;
+	const material = await rayMarchingBuilder1.material();
 	const output1 = rayMarchingBuilder1.createNode('output');
 
 	const textureSDF1 = rayMarchingBuilder1.createNode('textureSDF');

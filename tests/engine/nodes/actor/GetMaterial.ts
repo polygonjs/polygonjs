@@ -63,10 +63,10 @@ QUnit.test('actor/GetMaterial', async (assert) => {
 		new CoreObject(object, 0).setAttribValue('selected', 1);
 		await CoreSleep.sleep(100);
 		assert.notEqual((object.material as Material).uuid, initialMaterial.uuid, 'mat is not same as initial one');
-		assert.equal((object.material as Material).uuid, meshBasic1.material.uuid, 'mat switched to basic1');
+		assert.equal((object.material as Material).uuid, (await meshBasic1.material()).uuid, 'mat switched to basic1');
 
 		new CoreObject(object, 0).setAttribValue('selected', 0);
 		await CoreSleep.sleep(100);
-		assert.equal((object.material as Material).uuid, meshBasic2.material.uuid, 'mat switched to basic2');
+		assert.equal((object.material as Material).uuid, (await meshBasic2.material()).uuid, 'mat switched to basic2');
 	});
 });

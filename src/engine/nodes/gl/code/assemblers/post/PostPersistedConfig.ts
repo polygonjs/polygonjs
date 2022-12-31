@@ -16,7 +16,7 @@ export class PostPersistedConfig extends BasePersistedConfig {
 	constructor(protected override node: BuilderPostNode) {
 		super(node);
 	}
-	override toData(): PersistedConfigBasePostData | undefined {
+	override async toData(): Promise<PersistedConfigBasePostData | undefined> {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;

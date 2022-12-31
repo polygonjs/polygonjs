@@ -160,11 +160,11 @@ export class RaycastGPUController extends BaseRaycastController {
 		renderer.toneMapping = this._restoreContext.renderer.toneMapping;
 	}
 
-	private _updateMaterial() {
+	private async _updateMaterial() {
 		const node = this._node.pv.material.nodeWithContext(NodeContext.MAT, this._node.states.error);
 		if (node) {
 			if (node.context() == NodeContext.MAT) {
-				this._resolvedMaterial = (node as BaseMatNodeType).material;
+				this._resolvedMaterial = (await (node as BaseMatNodeType).material()) || null;
 			} else {
 				this._node.states.error.set('material is not a mat node');
 			}

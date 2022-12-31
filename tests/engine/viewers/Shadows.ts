@@ -88,7 +88,7 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders', async (ass
 	await RendererUtils.compile(matNode, renderer);
 	await renderer.render(window.scene.threejsScene(), camera.object);
 	renderWithDOF(window.scene.threejsScene(), renderer, camera.object);
-	const material = matNode.material;
+	const material = await matNode.material();
 
 	const spareParam = matNode.params.get('myCustomVec') as Vector3Param;
 	assert.ok(spareParam);
@@ -169,7 +169,7 @@ QUnit.test('depth/distance shadows work for point, with mat builders', async (as
 	await RendererUtils.compile(matNode, renderer);
 	await renderer.render(window.scene.threejsScene(), camera.object);
 	renderWithDOF(window.scene.threejsScene(), renderer, camera.object);
-	const material = matNode.material;
+	const material = await matNode.material();
 
 	const spareParam = matNode.params.get('myCustomVec') as Vector3Param;
 	assert.ok(spareParam);
@@ -225,7 +225,7 @@ QUnit.test('depth/distance shadows work for lines, with mat builders ', async (a
 	await RendererUtils.compile(matNode, renderer);
 	await renderer.render(window.scene.threejsScene(), camera.object);
 	renderWithDOF(window.scene.threejsScene(), renderer, camera.object);
-	const material = matNode.material;
+	const material = await matNode.material();
 
 	const spareParam = matNode.params.get('myCustomVec') as Vector3Param;
 	assert.ok(spareParam);

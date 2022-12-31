@@ -5,7 +5,7 @@ import {SceneJsonExporter} from '../../src/engine/io/json/export/Scene';
 type SaveLoadSceneCallback = (scene: PolyScene) => Promise<void>;
 
 export async function saveAndLoadScene(scene: PolyScene, callback: SaveLoadSceneCallback) {
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 
 	// console.log('************ LOAD **************');
 	const importer = new SceneJsonImporter(data);
@@ -15,7 +15,7 @@ export async function saveAndLoadScene(scene: PolyScene, callback: SaveLoadScene
 }
 
 export async function sceneFromScene(scene: PolyScene) {
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 
 	// console.log('************ LOAD **************');
 	const importer = new SceneJsonImporter(data);

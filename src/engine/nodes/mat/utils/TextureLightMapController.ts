@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshBasicMaterial} from 'three';
+import {Material, MeshBasicMaterial} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {MeshStandardMaterial} from 'three';
 import {MeshPhysicalMaterial} from 'three';
@@ -30,16 +30,25 @@ type TextureLightMapCurrentMaterial =
 	| MeshStandardMaterial
 	| MeshPhysicalMaterial
 	| MeshToonMaterial;
+function _isValidMaterial(material?: Material): material is TextureLightMapCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshBasicMaterial).lightMapIntensity != null;
+}
 class TextureLightMapParamsConfig extends LightMapParamConfig(NodeParamsConfig) {}
-interface LightMapControllers {
+export interface TextureLightMapControllers {
 	lightMap: TextureLightMapController;
 }
 abstract class TextureLightMapMatNode extends TypedMatNode<
 	TextureLightMapCurrentMaterial,
 	TextureLightMapParamsConfig
 > {
-	controllers!: LightMapControllers;
-	abstract override createMaterial(): TextureLightMapCurrentMaterial;
+	controllers!: TextureLightMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureLightMapCurrentMaterial | undefined;
+	}
 }
 
 export class TextureLightMapController extends BaseTextureMapController {
@@ -49,13 +58,19 @@ export class TextureLightMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useLightMap, this.node.p.lightMap);
 	}
-	override async update() {
-		this._update(this.node.material, 'lightMap', this.node.p.useLightMap, this.node.p.lightMap);
-
-		const mat = this.node.material as MeshStandardMaterial;
-		mat.lightMapIntensity = this.node.pv.lightMapIntensity;
-	}
 	static override async update(node: TextureLightMapMatNode) {
 		node.controllers.lightMap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!_isValidMaterial(material)) {
+			return;
+		}
+
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureLightMapCurrentMaterial) {
+		await this._update(material, 'lightMap', this.node.p.useLightMap, this.node.p.lightMap);
+		material.lightMapIntensity = this.node.pv.lightMapIntensity;
 	}
 }

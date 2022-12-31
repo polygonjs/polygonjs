@@ -85,7 +85,7 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	assert.equal(objects[1].constructor, Mesh);
 
 	// save
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
@@ -122,7 +122,7 @@ QUnit.test('sop merge can update its inputs count', async (assert) => {
 	assert.equal(objects[1].constructor, Mesh);
 
 	// save
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
@@ -150,7 +150,7 @@ QUnit.test('sop merge maintains its inputs count when nothing is connected to it
 	await merge1.compute();
 
 	// save
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	// console.log('************ LOAD **************');
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();

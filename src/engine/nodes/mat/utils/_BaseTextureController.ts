@@ -63,7 +63,7 @@ type TextureRemoveCallback<O extends Object> = (
 
 type BaseTextureControllerCurrentMaterial = Material;
 
-export class BaseTextureMapController extends BaseController {
+export abstract class BaseTextureMapController extends BaseController {
 	constructor(protected override node: BaseMatNodeType) {
 		super(node);
 	}
@@ -76,7 +76,8 @@ export class BaseTextureMapController extends BaseController {
 			this.update();
 		});
 	}
-	static update(node: BaseNodeType) {}
+	static async update(node: BaseNodeType) {}
+	async update() {}
 
 	async _update<M extends BaseTextureControllerCurrentMaterial>(
 		material: M,
@@ -100,7 +101,7 @@ export class BaseTextureMapController extends BaseController {
 		use_map_param: BooleanParam,
 		path_param: NodePathParam
 	) {
-		this._update_required_attribute(
+		await this._update_required_attribute(
 			material,
 			material,
 			mat_attrib_name,
@@ -169,7 +170,7 @@ export class BaseTextureMapController extends BaseController {
 				const texture = container.texture();
 
 				if (texture) {
-					update_callback(material, texture_owner, mat_attrib_name, texture);
+					await update_callback(material, texture_owner, mat_attrib_name, texture);
 					return;
 				}
 			}

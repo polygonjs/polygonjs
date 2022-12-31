@@ -72,7 +72,7 @@ QUnit.test('gl dot updates its output type and param correctly when scene is loa
 	dot1.params.get('vec1')!.set([1, 2]);
 
 	await scene.waitForCooksCompleted();
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();

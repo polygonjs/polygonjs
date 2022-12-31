@@ -7,31 +7,55 @@
  */
 import {MeshMatcapMaterial} from 'three';
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ColorsController, ColorParamConfig} from './utils/ColorsController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
-import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
-import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
-import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
-import {TextureMatcapMapController, MatcapMapParamConfig} from './utils/TextureMatcapMapController';
-import {FogController, FogParamConfig} from './utils/FogController';
+import {ColorsController, ColorParamConfig, ColorsControllers} from './utils/ColorsController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
+import {TextureMapController, MapParamConfig, TextureMapControllers} from './utils/TextureMapController';
+import {
+	TextureAlphaMapController,
+	AlphaMapParamConfig,
+	TextureAlphaMapControllers,
+} from './utils/TextureAlphaMapController';
+import {
+	TextureBumpMapController,
+	BumpMapParamConfig,
+	TextureBumpMapControllers,
+} from './utils/TextureBumpMapController';
+import {
+	TextureNormalMapController,
+	NormalMapParamConfig,
+	TextureNormalMapControllers,
+} from './utils/TextureNormalMapController';
+import {
+	TextureDisplacementMapController,
+	DisplacementMapParamConfig,
+	TextureDisplacementMapControllers,
+} from './utils/TextureDisplacementMapController';
+import {
+	TextureMatcapMapController,
+	MatcapMapParamConfig,
+	TextureMatcapMapControllers,
+} from './utils/TextureMatcapMapController';
+import {FogController, FogParamConfig, FogControllers} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-interface MeshMatCapControllers {
-	colors: ColorsController;
-	advancedCommon: AdvancedCommonController;
-	alphaMap: TextureAlphaMapController;
-	bumpMap: TextureBumpMapController;
-	displacementMap: TextureDisplacementMapController;
-	map: TextureMapController;
-	matcap: TextureMatcapMapController;
-	normalMap: TextureNormalMapController;
-}
+interface MeshMatCapControllers
+	extends AdvancedCommonControllers,
+		ColorsControllers,
+		FogControllers,
+		TextureAlphaMapControllers,
+		TextureBumpMapControllers,
+		TextureDisplacementMapControllers,
+		TextureMapControllers,
+		TextureMatcapMapControllers,
+		TextureNormalMapControllers {}
 
 class MeshMatCapMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
@@ -58,7 +82,7 @@ class MeshMatCapMatParamsConfig extends FogParamConfig(
 ) {}
 const ParamsConfig = new MeshMatCapMatParamsConfig();
 
-export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshMatCapMatParamsConfig> {
+export class MeshMatcapMatNode extends PrimitiveMatNode<MeshMatcapMaterial, MeshMatCapMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshMatcap';
@@ -79,26 +103,16 @@ export class MeshMatcapMatNode extends TypedMatNode<MeshMatcapMaterial, MeshMatC
 		alphaMap: new TextureAlphaMapController(this),
 		bumpMap: new TextureBumpMapController(this),
 		displacementMap: new TextureDisplacementMapController(this),
+		fog: new FogController(this),
 		map: new TextureMapController(this),
 		matcap: new TextureMatcapMapController(this),
 		normalMap: new TextureNormalMapController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshMatCapControllers>;
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 
 	override async cook() {
 		this._material = this._material || this.createMaterial();
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		ColorsController.update(this);
-		FogController.update(this);
+		await Promise.all(this.controllersPromises(this._material));
 
 		this.setMaterial(this._material);
 	}

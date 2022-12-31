@@ -1,5 +1,4 @@
-import {Mesh} from 'three';
-import {Material} from 'three';
+import {Mesh, Material} from 'three';
 
 QUnit.test('mat sky simple', async (assert) => {
 	const MAT = window.MAT;
@@ -18,5 +17,5 @@ QUnit.test('mat sky simple', async (assert) => {
 	const objects = core_group.objectsWithGeo();
 	const material = (objects[0] as Mesh).material as Material;
 
-	assert.equal(material.uuid, sky1.material.uuid);
+	assert.equal(material.uuid, (await sky1.material()).uuid);
 });

@@ -60,6 +60,7 @@ import {CSS3DObjectSopNode} from '../../../nodes/sop/CSS3DObject';
 import {DataSopNode} from '../../../nodes/sop/Data';
 import {DataUrlSopNode} from '../../../nodes/sop/DataUrl';
 import {DecalSopNode} from '../../../nodes/sop/Decal';
+import {DecomposeSopNode} from '../../../nodes/sop/Decompose';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
 import {DirectionalLightSopNode} from '../../../nodes/sop/DirectionalLight';
@@ -230,6 +231,7 @@ export interface GeoNodeChildrenMap {
 	data: DataSopNode;
 	dataUrl: DataUrlSopNode;
 	decal: DecalSopNode;
+	decompose: DecomposeSopNode;
 	delay: DelaySopNode;
 	delete: DeleteSopNode;
 	directionalLight: DirectionalLightSopNode;
@@ -606,6 +608,7 @@ export class SopRegister {
 		poly.registerNode(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DataUrlSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DecalSopNode, CATEGORY_SOP.MISC);
+		poly.registerNode(DecomposeSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DelaySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DeleteSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DirectionalLightSopNode, CATEGORY_SOP.LIGHTS);

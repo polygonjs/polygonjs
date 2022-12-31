@@ -57,13 +57,12 @@ export class MaterialSopOperation extends BaseSopOperation {
 	private async _getMaterial(params: MaterialSopParams) {
 		const materialNode = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
 		if (materialNode) {
-			const material = materialNode.material;
+			const material = await materialNode.material();
 			const baseBuilderMatNode = materialNode as BaseBuilderMatNodeType;
 			if (baseBuilderMatNode.assemblerController) {
 				baseBuilderMatNode.assemblerController()?.setAssemblerGlobalsHandler(this._globalsHandler);
 			}
 
-			await materialNode.compute();
 			if (!material) {
 				this.states?.error.set(`material invalid. (error: '${materialNode.states.error.message()}')`);
 			}

@@ -33,7 +33,7 @@ QUnit.test('gl attribute updates its output type correctly when scene is loaded'
 	attribute1.p.type.set(attribute1.pv.type + 1);
 	assert.equal(attribute1.pv.type, 1);
 
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	const scene2 = await SceneJsonImporter.loadData(data);
 	await scene2.waitForCooksCompleted();
 

@@ -1,7 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
-import {ShaderMaterial} from 'three';
+import {Material, ShaderMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshMatcapMaterial} from 'three';
 
@@ -15,20 +15,26 @@ export function MatcapMapParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 type TextureMatcapMaterial = MeshMatcapMaterial;
-// class TextureMatcapMaterial extends Material {
-// 	matcap!: Texture | null;
-// }
+function _isValidMaterial(material?: Material): material is TextureMatcapMaterial {
+	if (!material) {
+		return false;
+	}
+	return true; //(material as MeshMatcapMaterial).matcap != null;
+}
 type TextureMatCapControllerCurrentMaterial = TextureMatcapMaterial | ShaderMaterial;
 class TextureMatcapMapParamsConfig extends MatcapMapParamConfig(NodeParamsConfig) {}
-interface TextureMatCapControllers {
+export interface TextureMatcapMapControllers {
 	matcap: TextureMatcapMapController;
 }
 abstract class TextureMatcapMapMatNode extends TypedMatNode<
 	TextureMatCapControllerCurrentMaterial,
 	TextureMatcapMapParamsConfig
 > {
-	controllers!: TextureMatCapControllers;
-	abstract override createMaterial(): TextureMatCapControllerCurrentMaterial;
+	controllers!: TextureMatcapMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureMatCapControllerCurrentMaterial | undefined;
+	}
 }
 
 export class TextureMatcapMapController extends BaseTextureMapController {
@@ -38,10 +44,17 @@ export class TextureMatcapMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useMatcapMap, this.node.p.matcapMap);
 	}
-	override async update() {
-		this._update(this.node.material, 'matcap', this.node.p.useMatcapMap, this.node.p.matcapMap);
-	}
 	static override async update(node: TextureMatcapMapMatNode) {
 		node.controllers.matcap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!_isValidMaterial(material)) {
+			return;
+		}
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureMatCapControllerCurrentMaterial) {
+		await this._update(material, 'matcap', this.node.p.useMatcapMap, this.node.p.matcapMap);
 	}
 }

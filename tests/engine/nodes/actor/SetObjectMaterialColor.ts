@@ -30,16 +30,17 @@ QUnit.test('actor/setObjectMaterialColor', async (assert) => {
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
+	const material = await meshBasic1.material();
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		assert.equal(object.position.y, 0);
 		scene.play();
 		assert.equal(scene.time(), 0);
-		assert.deepEqual(meshBasic1.material.color.toArray(), [1, 1, 1], 'color is default');
+		assert.deepEqual(material.color.toArray(), [1, 1, 1], 'color is default');
 
 		await CoreSleep.sleep(60);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(200);
-		assert.deepEqual(meshBasic1.material.color.toArray(), [0, 1, 0], 'color has been updated');
+		assert.deepEqual(material.color.toArray(), [0, 1, 0], 'color has been updated');
 	});
 });

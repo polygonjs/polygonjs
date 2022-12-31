@@ -186,7 +186,7 @@ QUnit.test('2 twoWaySwitch gl node in a subnet function as expected', async (ass
 	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = create_meshBasicBuilder1(MAT);
-	const material = meshBasicBuilder1.material;
+	const material = await meshBasicBuilder1.material();
 
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.equal(material.fragmentShader, TEMPLATE, 'twoWaySwitch nodes do not conflict');

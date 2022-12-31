@@ -20,7 +20,7 @@ QUnit.test('gl SDFGradient simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const materialBasicBuilder1 = MAT.createNode('meshBasicBuilder');
-	const material = materialBasicBuilder1.material;
+	const material = await materialBasicBuilder1.material();
 	const output1 = materialBasicBuilder1.createNode('output');
 	const globals1 = materialBasicBuilder1.createNode('globals');
 	assert.equal(materialBasicBuilder1.children().length, 2);

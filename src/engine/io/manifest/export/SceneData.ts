@@ -43,7 +43,7 @@ export class SceneDataManifestExporter {
 	};
 	constructor(public readonly scene: PolyScene) {}
 
-	data() {
+	async data() {
 		const now = `${Date.now()}`;
 		this._manifestContent = {
 			properties: now,
@@ -53,7 +53,7 @@ export class SceneDataManifestExporter {
 		};
 
 		const exporter = new SceneJsonExporter(this.scene);
-		const sceneData = exporter.data({polygonjs: 'ENGINE_VERSION'});
+		const sceneData = await exporter.data({polygonjs: 'ENGINE_VERSION'});
 
 		this._data = {
 			properties: sceneData.properties!,

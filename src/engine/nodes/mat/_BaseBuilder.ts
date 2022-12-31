@@ -1,6 +1,6 @@
 import {CustomMaterialName} from './../../../core/geometry/Material';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderAssemblerMaterial} from '../gl/code/assemblers/materials/_BaseMaterial';
@@ -37,7 +37,7 @@ export abstract class TypedBuilderMatNode<
 	M extends MaterialWithCustomMaterials,
 	A extends ShaderAssemblerMaterial,
 	K extends MatBuilderParamsConfig
-> extends TypedMatNode<M, K> {
+> extends PrimitiveMatNode<M, K> {
 	protected _assemblerController: GlAssemblerController<A> | undefined;
 	protected override _childrenControllerContext = NodeContext.GL;
 	override readonly persisted_config: MaterialPersistedConfig = new MaterialPersistedConfig(this);
@@ -105,7 +105,7 @@ export abstract class TypedBuilderMatNode<
 	// COMPILATION
 	//
 	//
-	compileIfRequired() {
+	compileIfRequired(material: M) {
 		/* if we recompile while in player mode, there will not be any children gl node created.
 		So any recompilation will be flawed. A quick way to realise this is with a time dependent material.
 		And while a scene export would not have an assembler and therefore not recompile,
@@ -117,19 +117,20 @@ export abstract class TypedBuilderMatNode<
 		// }
 		if (this.assemblerController()?.compileRequired()) {
 			try {
-				this._compile();
+				this._compile(material);
 			} catch (err) {
 				const message = (err as any).message || 'failed to compile';
 				this.states.error.set(message);
 			}
 		}
 	}
-	protected _compile() {
+	protected _compile(material: M) {
 		const assemblerController = this.assemblerController();
-		if (this.material && assemblerController) {
+		// const material = this.materialSync();
+		if (material && assemblerController) {
 			assemblerController.assembler.setGlParentNode(this);
 			this._setAssemblerGlParentNode(assemblerController);
-			assemblerController.assembler.compileMaterial(this.material);
+			assemblerController.assembler.compileMaterial(material);
 			assemblerController.post_compile();
 		}
 	}

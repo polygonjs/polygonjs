@@ -18,7 +18,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 	constructor(protected override node: BuilderCopNode | Builder2DArrayCopNode) {
 		super(node);
 	}
-	override toData(): PersistedConfigBaseTextureData | undefined {
+	override async toData(): Promise<PersistedConfigBaseTextureData | undefined> {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -31,7 +31,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 			param_uniform_pairs.push([param_config.name(), param_config.uniformName()]);
 		}
 
-		const data = {
+		const data: PersistedConfigBaseTextureData = {
 			// fragment_shader: this.node.textureMaterial.fragmentShader,
 			uniforms: this.node.textureMaterial.uniforms,
 			param_uniform_pairs: param_uniform_pairs,
@@ -41,7 +41,6 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 				[FRAGMENT_KEY]: this.node.textureMaterial.fragmentShader,
 			},
 		};
-
 		return data;
 	}
 	override load(data: PersistedConfigBaseTextureData) {

@@ -150,10 +150,10 @@ export class PolyNodeController {
 		}
 	}
 
-	static polyNodeData(node: BaseNodeType, inputsData?: PolyNodesInputsData): PolyNodeDefinition {
+	static async polyNodeData(node: BaseNodeType, inputsData?: PolyNodesInputsData): Promise<PolyNodeDefinition> {
 		const dispatcher = new JsonExportDispatcher();
 		const rootExporter = dispatcher.dispatchNode(node);
-		const nodesData = rootExporter.data({showPolyNodesData: true});
+		const nodesData = await rootExporter.data({showPolyNodesData: true});
 		const uiData = rootExporter.uiData({showPolyNodesData: true});
 
 		const nodeInputsData = inputsData || this.inputsData(node);

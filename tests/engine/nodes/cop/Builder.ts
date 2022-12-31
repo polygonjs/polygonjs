@@ -131,7 +131,7 @@ QUnit.test('COP/builder with persisted_config', async (assert) => {
 		output1.setInput('color', float_to_vec31);
 		await builder1.compute();
 
-		const data = new SceneJsonExporter(scene).data();
+		const data = await new SceneJsonExporter(scene).data();
 		await AssemblersUtils.withUnregisteredAssembler(builder1.usedAssembler(), async () => {
 			// console.log('************ LOAD **************');
 			const scene2 = await SceneJsonImporter.loadData(data);

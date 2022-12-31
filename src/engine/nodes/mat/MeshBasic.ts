@@ -14,31 +14,48 @@ interface MeshBasicMaterialWithLightMap extends MeshBasicMaterial {
 }
 
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ColorsController, ColorParamConfig} from './utils/ColorsController';
-import {FogController, FogParamConfig} from './utils/FogController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
-import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
-import {TextureEnvMapSimpleController, EnvMapSimpleParamConfig} from './utils/TextureEnvMapSimpleController';
-import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
-import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
+import {ColorsController, ColorParamConfig, ColorsControllers} from './utils/ColorsController';
+import {FogController, FogParamConfig, FogControllers} from './utils/FogController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonParamConfig,
+	AdvancedCommonControllers,
+} from './utils/AdvancedCommonController';
+import {TextureMapController, MapParamConfig, TextureMapControllers} from './utils/TextureMapController';
+import {
+	TextureAlphaMapController,
+	AlphaMapParamConfig,
+	TextureAlphaMapControllers,
+} from './utils/TextureAlphaMapController';
+import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
+import {
+	TextureEnvMapSimpleController,
+	EnvMapSimpleParamConfig,
+	TextureEnvMapSimpleControllers,
+} from './utils/TextureEnvMapSimpleController';
+import {
+	TextureLightMapController,
+	LightMapParamConfig,
+	TextureLightMapControllers,
+} from './utils/TextureLightMapController';
+import {WireframeController, WireframeParamConfig, WireframeControllers} from './utils/WireframeController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 
-interface MeshBasicControllers {
-	colors: ColorsController;
-	advancedCommon: AdvancedCommonController;
-	alphaMap: TextureAlphaMapController;
-	aoMap: TextureAOMapController;
-	envMap: TextureEnvMapSimpleController;
-	lightMap: TextureLightMapController;
-	map: TextureMapController;
-}
+interface MeshBasicControllers
+	extends AdvancedCommonControllers,
+		ColorsControllers,
+		FogControllers,
+		TextureAlphaMapControllers,
+		TextureAOMapControllers,
+		TextureEnvMapSimpleControllers,
+		TextureLightMapControllers,
+		TextureMapControllers,
+		WireframeControllers {}
 class MeshBasicMatParamsConfig extends FogParamConfig(
 	WireframeParamConfig(
 		AdvancedCommonParamConfig(
@@ -64,7 +81,7 @@ class MeshBasicMatParamsConfig extends FogParamConfig(
 ) {}
 const ParamsConfig = new MeshBasicMatParamsConfig();
 
-export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterialWithLightMap, MeshBasicMatParamsConfig> {
+export class MeshBasicMatNode extends PrimitiveMatNode<MeshBasicMaterialWithLightMap, MeshBasicMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshBasic';
@@ -85,26 +102,15 @@ export class MeshBasicMatNode extends TypedMatNode<MeshBasicMaterialWithLightMap
 		alphaMap: new TextureAlphaMapController(this),
 		aoMap: new TextureAOMapController(this),
 		envMap: new TextureEnvMapSimpleController(this),
+		fog: new FogController(this),
 		lightMap: new TextureLightMapController(this),
 		map: new TextureMapController(this),
+		wireframe: new WireframeController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshBasicControllers>;
-
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 	override async cook() {
 		this._material = this._material || this.createMaterial();
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		ColorsController.update(this);
-		FogController.update(this);
-		WireframeController.update(this);
+		await Promise.all(this.controllersPromises(this._material));
 
 		this.setMaterial(this._material);
 	}

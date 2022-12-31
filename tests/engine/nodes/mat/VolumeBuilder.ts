@@ -34,7 +34,7 @@ QUnit.test('mat/volumeBuilder simple', async (assert) => {
 	const volume_builder1 = MAT.createNode('volumeBuilder');
 	volume_builder1.createNode('output');
 	volume_builder1.createNode('globals');
-	const material = volume_builder1.material as ShaderMaterialWithCustomMaterials;
+	const material = (await volume_builder1.material()) as ShaderMaterialWithCustomMaterials;
 	const globals1: GlobalsGlNode = volume_builder1.node('globals1')! as GlobalsGlNode;
 	const output1: OutputGlNode = volume_builder1.node('output1')! as OutputGlNode;
 
@@ -86,9 +86,9 @@ QUnit.test('mat/volumeBuilder persisted_config', async (assert) => {
 	vec3ToFloat1.setInput(0, float_to_vec31);
 	output1.setInput(0, vec3ToFloat1, 'x');
 	await RendererUtils.compile(volume1, renderer);
-	const volume1Material = volume1.material as ShaderMaterialWithCustomMaterials;
+	const volume1Material = (await volume1.material()) as ShaderMaterialWithCustomMaterials;
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(volume1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
 		const scene2 = await SceneJsonImporter.loadData(data);
@@ -101,7 +101,7 @@ QUnit.test('mat/volumeBuilder persisted_config', async (assert) => {
 		const vec3_param = new_volume1.params.get('vec3_param') as Vector3Param;
 		assert.ok(float_param);
 		assert.ok(vec3_param);
-		const material = new_volume1.material as ShaderMaterialWithCustomMaterials;
+		const material = (await new_volume1.material()) as ShaderMaterialWithCustomMaterials;
 		await RendererUtils.compile(new_volume1, renderer);
 		assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(volume1Material.fragmentShader));
 		assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(volume1Material.vertexShader));

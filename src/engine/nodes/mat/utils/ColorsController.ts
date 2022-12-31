@@ -1,10 +1,10 @@
-import {Constructor} from '../../../../types/GlobalTypes';
-import {BaseController} from './_BaseController';
+import {Constructor, Number3} from '../../../../types/GlobalTypes';
+import {BaseController, SetParamsTextureNodesRecord} from './_BaseController';
 import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ColorConversion} from '../../../../core/Color';
-import {Material, MeshBasicMaterial, MeshStandardMaterial} from 'three';
+import {Color, Material, MeshBasicMaterial, MeshStandardMaterial} from 'three';
 import {ShadowMaterial} from 'three';
 
 export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -39,30 +39,32 @@ export function isValidColoredMaterial(material?: Material): material is Colored
 // 	// alphaTest!: number;
 // }
 class ColorParamsConfig extends ColorParamConfig(NodeParamsConfig) {}
-interface ColorsControllers {
+export interface ColorsControllers {
 	colors: ColorsController;
 }
 class ColoredMatNode extends TypedMatNode<ColoredMaterial, ColorParamsConfig> {
-	override createMaterial(): ColoredMaterial {
-		return new MeshBasicMaterial();
-	}
 	controllers!: ColorsControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as ColoredMaterial | undefined;
+	}
 }
-
+const _tmpColor = new Color();
+const _tmpColorArray: Number3 = [0, 0, 0];
 export class ColorsController extends BaseController {
 	constructor(protected override node: ColoredMatNode) {
 		super(node);
 	}
-	static update(node: ColoredMatNode) {
-		node.controllers.colors.update();
-	}
-	override update(): void {
-		if (!this.node.material) {
+	static async update(node: ColoredMatNode) {
+		const container = await node.compute();
+		const material = container.material();
+		if (!isValidColoredMaterial(material)) {
 			return;
 		}
-		this.updateMaterial(this.node.material);
+		node.controllers.colors.updateMaterial(material);
 	}
-	updateMaterial(material: ColoredMaterial) {
+
+	override updateMaterial(material: ColoredMaterial) {
 		const pv = this.node.pv;
 		material.color.copy(pv.color);
 		const newVertexColor = isBooleanTrue(pv.useVertexColors);
@@ -74,5 +76,12 @@ export class ColorsController extends BaseController {
 		material.opacity = pv.opacity;
 		material.transparent = pv.transparent;
 		material.alphaTest = pv.alphaTest;
+	}
+
+	override setParamsFromMaterial(material: ColoredMaterial, record: SetParamsTextureNodesRecord) {
+		const p = this.node.p;
+		_tmpColor.copy(material.color).toArray(_tmpColorArray);
+		p.color.set(_tmpColorArray);
+		p.color.setConversion(ColorConversion.NONE);
 	}
 }

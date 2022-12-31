@@ -30,13 +30,13 @@ export class SceneJsonExporter {
 	private dispatcher: JsonExportDispatcher = new JsonExportDispatcher();
 	constructor(private _scene: PolyScene) {}
 
-	data(versions?: Versions): SceneJsonExporterData {
+	async data(versions?: Versions): Promise<SceneJsonExporterData> {
 		this._scene.nodesController.resetNodeContextSignatures();
 		const rootExporter = this.dispatcher.dispatchNode(this._scene.root());
-		const nodesData = rootExporter.data();
+		const nodesData = await rootExporter.data();
 		const uiData = rootExporter.uiData();
 		const shadersData: NodeJSONShadersData = {};
-		rootExporter.shaders(shadersData);
+		await rootExporter.shaders(shadersData);
 
 		this._data = {
 			properties: {

@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshBasicMaterial} from 'three';
+import {Material, MeshBasicMaterial} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {MeshPhongMaterial} from 'three';
 import {MeshPhysicalMaterial} from 'three';
@@ -31,16 +31,25 @@ type TextureAlphaMapControllerCurrentMaterial =
 	| MeshMatcapMaterial
 	| MeshToonMaterial
 	| PointsMaterial;
+function _isValidMaterial(material?: Material): material is TextureAlphaMapControllerCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return true; //(material as MeshStandardMaterial).isM != null;
+}
 class TextureAlphaMapParamsConfig extends AlphaMapParamConfig(NodeParamsConfig) {}
-interface TextureAlphaControllers {
+export interface TextureAlphaMapControllers {
 	alphaMap: TextureAlphaMapController;
 }
 abstract class TextureAlphaMapMatNode extends TypedMatNode<
 	TextureAlphaMapControllerCurrentMaterial,
 	TextureAlphaMapParamsConfig
 > {
-	controllers!: TextureAlphaControllers;
-	abstract override createMaterial(): TextureAlphaMapControllerCurrentMaterial;
+	controllers!: TextureAlphaMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureAlphaMapControllerCurrentMaterial | undefined;
+	}
 }
 
 export class TextureAlphaMapController extends BaseTextureMapController {
@@ -50,10 +59,17 @@ export class TextureAlphaMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useAlphaMap, this.node.p.alphaMap);
 	}
-	override async update() {
-		this._update(this.node.material, 'alphaMap', this.node.p.useAlphaMap, this.node.p.alphaMap);
-	}
 	static override async update(node: TextureAlphaMapMatNode) {
 		node.controllers.alphaMap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!_isValidMaterial(material)) {
+			return;
+		}
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureAlphaMapControllerCurrentMaterial) {
+		await this._update(material, 'alphaMap', this.node.p.useAlphaMap, this.node.p.alphaMap);
 	}
 }

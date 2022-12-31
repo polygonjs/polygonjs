@@ -15,10 +15,10 @@ QUnit.test('meshDepthMaterial as a custom mat is saved and loaded with the corre
 	vec3ToFloat1.setInput(0, globals1, 'position');
 	output1.setInput('alpha', vec3ToFloat1, 'y');
 	await RendererUtils.compile(meshDepthBuilder1, renderer);
-	const meshDepthMaterial = meshDepthBuilder1.material;
+	const meshDepthMaterial = await meshDepthBuilder1.material();
 
 	const scene = window.scene;
-	const data = new SceneJsonExporter(scene).data();
+	const data = await new SceneJsonExporter(scene).data();
 	await AssemblersUtils.withUnregisteredAssembler(meshDepthBuilder1.usedAssembler(), async () => {
 		const scene2 = await SceneJsonImporter.loadData(data);
 		await scene2.waitForCooksCompleted();
@@ -27,7 +27,7 @@ QUnit.test('meshDepthMaterial as a custom mat is saved and loaded with the corre
 		assert.notOk(newMeshDepthBuilder2.assemblerController());
 		assert.ok(newMeshDepthBuilder2.persisted_config);
 
-		const material = newMeshDepthBuilder2.material;
+		const material = await newMeshDepthBuilder2.material();
 		await RendererUtils.compile(newMeshDepthBuilder2, renderer);
 
 		assert.equal(

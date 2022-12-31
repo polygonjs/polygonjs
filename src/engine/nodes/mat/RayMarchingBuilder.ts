@@ -78,11 +78,12 @@ export class RayMarchingBuilderMatNode extends TypedBuilderMatNode<
 
 	override initializeNode() {}
 	override async cook() {
-		this._rayMarchingController.updateUniformsFromParams();
+		this._material = this._material || this.createMaterial();
+		this._rayMarchingController.updateUniformsFromParams(this._material);
 
-		this.compileIfRequired();
+		this.compileIfRequired(this._material);
 
-		updateMaterialSide(this.material, this.pv);
-		this.setMaterial(this.material);
+		updateMaterialSide(this._material, this.pv);
+		this.setMaterial(this._material);
 	}
 }

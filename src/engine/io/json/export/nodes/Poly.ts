@@ -2,9 +2,9 @@ import {NodeJSONShadersData} from './../Node';
 import {NodeJsonExporter, NodeJsonExporterUIData, JSONExporterDataRequestOption} from '../Node';
 
 export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
-	protected override nodes_data(options: JSONExporterDataRequestOption = {}) {
+	protected override async nodes_data(options: JSONExporterDataRequestOption = {}) {
 		if (options.showPolyNodesData || !this._node.polyNodeController?.locked()) {
-			return super.nodes_data(options);
+			return await super.nodes_data(options);
 		}
 		// the PolyNode does not save it children
 		return {};
@@ -16,9 +16,9 @@ export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
 			return this.ui_data_without_children();
 		}
 	}
-	override shaders(data: NodeJSONShadersData, options: JSONExporterDataRequestOption = {}) {
+	override async shaders(data: NodeJSONShadersData, options: JSONExporterDataRequestOption = {}): Promise<void> {
 		if (options.showPolyNodesData || !this._node.polyNodeController?.locked()) {
-			return super.shaders(data, options);
+			return await super.shaders(data, options);
 		}
 	}
 }

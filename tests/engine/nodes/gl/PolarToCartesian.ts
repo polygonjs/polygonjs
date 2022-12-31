@@ -7,7 +7,7 @@ QUnit.test('gl/polarToCartesian simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const materialBasicBuilder1 = MAT.createNode('meshBasicBuilder');
-	const material = materialBasicBuilder1.material;
+	const material = await materialBasicBuilder1.material();
 	const output1 = materialBasicBuilder1.createNode('output');
 	const globals1 = materialBasicBuilder1.createNode('globals');
 

@@ -44,6 +44,8 @@ import FRAGMENT_SHADER from '../gl/code/templates/textures/Default.frag.glsl';
 import VERTEX_SHADER from '../gl/code/templates/textures/Default.vert.glsl';
 import {handleCopBuilderDependencies} from './utils/BuilderUtils';
 import {PathTracingRendererContainer} from '../rop/utils/pathTracing/PathTracingRendererContainer';
+import {GlAssemblerController} from '../gl/code/Controller';
+import {ShaderAssemblerTexture} from '../gl/code/assemblers/textures/Texture';
 
 const RESOLUTION_DEFAULT: Number2 = [256, 256];
 
@@ -82,8 +84,9 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 	public override usedAssembler(): Readonly<AssemblerName.GL_TEXTURE> {
 		return AssemblerName.GL_TEXTURE;
 	}
-	protected _createAssemblerController() {
-		const assemblerController = Poly.assemblersRegister.assembler(this, this.usedAssembler());
+	protected _createAssemblerController(): GlAssemblerController<ShaderAssemblerTexture> | undefined {
+		const assemblerController: GlAssemblerController<ShaderAssemblerTexture> | undefined =
+			Poly.assemblersRegister.assembler(this, this.usedAssembler());
 		if (assemblerController) {
 			const globalsHandler = new GlobalsGeometryHandler();
 			assemblerController.setAssemblerGlobalsHandler(globalsHandler);

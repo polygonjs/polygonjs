@@ -5,6 +5,7 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshStandardMaterial, MeshPhysicalMaterial, Material} from 'three';
 import {DefaultOperationParams} from '../../../../core/operations/_Base';
 import {TypedNodePathParamValue} from '../../../../core/Walker';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 // import {TypedSopNode} from '../../sop/_Base';
 
 export interface EnvMapOperationParams extends DefaultOperationParams {
@@ -53,7 +54,7 @@ export function isValidEnvMapMaterial(material?: Material): material is TextureE
 	);
 }
 class TextureEnvMapParamsConfig extends EnvMapParamConfig(NodeParamsConfig) {}
-interface EnvMapControllers {
+export interface TextureEnvMapControllers {
 	envMap: TextureEnvMapController;
 }
 
@@ -63,8 +64,11 @@ abstract class TextureEnvMapMatNode extends TypedMatNode<
 	TextureEnvMapControllerCurrentMaterial,
 	TextureEnvMapParamsConfig
 > {
-	controllers!: EnvMapControllers;
-	// abstract override createMaterial(): TextureEnvMapControllerCurrentMaterial;
+	controllers!: TextureEnvMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureEnvMapControllerCurrentMaterial | undefined;
+	}
 }
 
 // export class TextureEnvMapControllerSop extends BaseTextureMapController {
@@ -92,19 +96,33 @@ export class TextureEnvMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useEnvMap, this.node.p.envMap);
 	}
-
+	static override async update(node: TextureEnvMapMatNode) {
+		node.controllers.envMap.update();
+	}
 	override async update() {
-		if (!this.node.material) {
+		const material = await this.node.material();
+		if (!isValidEnvMapMaterial(material)) {
 			return;
 		}
-		this.updateMaterial(this.node.material);
+		this.updateMaterial(material);
 	}
-	updateMaterial(material: TextureEnvMapControllerCurrentMaterial) {
-		this._update(material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
+	override async updateMaterial(material: TextureEnvMapControllerCurrentMaterial) {
+		await this._update(material, 'envMap', this.node.p.useEnvMap, this.node.p.envMap);
 		material.envMapIntensity = this.node.pv.envMapIntensity;
 		// mat.refractionRatio = this.node.pv.refractionRatio; // TODO: consider re-allowing this for Phong and Basic materials
 	}
-	static override async update(node: TextureEnvMapMatNode) {
-		node.controllers.envMap.update();
+	override getTextures(material: TextureEnvMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('envMap', material.envMap);
+	}
+	override setParamsFromMaterial(
+		material: TextureEnvMapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('envMap');
+		this.node.p.useEnvMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.envMap.setNode(mapNode, {relative: true});
+		}
+		this.node.p.envMapIntensity.set(material.envMapIntensity);
 	}
 }

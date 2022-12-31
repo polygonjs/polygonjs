@@ -7,37 +7,70 @@
  */
 import {MeshToonMaterial} from 'three';
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ColorsController, ColorParamConfig} from './utils/ColorsController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {TextureMapController, MapParamConfig} from './utils/TextureMapController';
-import {TextureAlphaMapController, AlphaMapParamConfig} from './utils/TextureAlphaMapController';
-import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
-import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
-import {TextureGradientMapController, GradientMapParamConfig} from './utils/TextureGradientMapController';
-import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
-import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
-import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
-import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
-import {WireframeController, WireframeParamConfig} from './utils/WireframeController';
-import {FogController, FogParamConfig} from './utils/FogController';
+import {ColorsController, ColorParamConfig, ColorsControllers} from './utils/ColorsController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
+import {TextureMapController, MapParamConfig, TextureMapControllers} from './utils/TextureMapController';
+import {
+	TextureAlphaMapController,
+	AlphaMapParamConfig,
+	TextureAlphaMapControllers,
+} from './utils/TextureAlphaMapController';
+import {
+	TextureBumpMapController,
+	BumpMapParamConfig,
+	TextureBumpMapControllers,
+} from './utils/TextureBumpMapController';
+import {
+	TextureEmissiveMapController,
+	EmissiveMapParamConfig,
+	TextureEmissiveMapControllers,
+} from './utils/TextureEmissiveMapController';
+import {
+	TextureGradientMapController,
+	GradientMapParamConfig,
+	TextureGradientMapControllers,
+} from './utils/TextureGradientMapController';
+import {
+	TextureNormalMapController,
+	NormalMapParamConfig,
+	TextureNormalMapControllers,
+} from './utils/TextureNormalMapController';
+import {
+	TextureDisplacementMapController,
+	DisplacementMapParamConfig,
+	TextureDisplacementMapControllers,
+} from './utils/TextureDisplacementMapController';
+import {
+	TextureLightMapController,
+	LightMapParamConfig,
+	TextureLightMapControllers,
+} from './utils/TextureLightMapController';
+import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
+import {WireframeController, WireframeControllers, WireframeParamConfig} from './utils/WireframeController';
+import {FogController, FogControllers, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-interface MeshToonControllers {
-	colors: ColorsController;
-	advancedCommon: AdvancedCommonController;
-	alphaMap: TextureAlphaMapController;
-	aoMap: TextureAOMapController;
-	bumpMap: TextureBumpMapController;
-	displacementMap: TextureDisplacementMapController;
-	emissiveMap: TextureEmissiveMapController;
-	gradientMap: TextureGradientMapController;
-	lightMap: TextureLightMapController;
-	map: TextureMapController;
-	normalMap: TextureNormalMapController;
-}
+interface MeshToonControllers
+	extends AdvancedCommonControllers,
+		ColorsControllers,
+		FogControllers,
+		TextureAlphaMapControllers,
+		TextureAOMapControllers,
+		TextureBumpMapControllers,
+		TextureDisplacementMapControllers,
+		TextureEmissiveMapControllers,
+		TextureGradientMapControllers,
+		TextureLightMapControllers,
+		TextureMapControllers,
+		TextureNormalMapControllers,
+		WireframeControllers {}
 class MeshToonMatParamsConfig extends FogParamConfig(
 	WireframeParamConfig(
 		AdvancedCommonParamConfig(
@@ -71,7 +104,7 @@ class MeshToonMatParamsConfig extends FogParamConfig(
 ) {}
 const ParamsConfig = new MeshToonMatParamsConfig();
 
-export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatParamsConfig> {
+export class MeshToonMatNode extends PrimitiveMatNode<MeshToonMaterial, MeshToonMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshToon';
@@ -93,10 +126,12 @@ export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatP
 		bumpMap: new TextureBumpMapController(this),
 		displacementMap: new TextureDisplacementMapController(this),
 		emissiveMap: new TextureEmissiveMapController(this),
+		fog: new FogController(this),
 		gradientMap: new TextureGradientMapController(this),
 		lightMap: new TextureLightMapController(this),
 		map: new TextureMapController(this),
 		normalMap: new TextureNormalMapController(this),
+		wireframe: new WireframeController(this),
 	};
 	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshToonControllers>;
 
@@ -109,11 +144,7 @@ export class MeshToonMatNode extends TypedMatNode<MeshToonMaterial, MeshToonMatP
 	}
 	override async cook() {
 		this._material = this._material || this.createMaterial();
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		FogController.update(this);
-		WireframeController.update(this);
+		await Promise.all(this.controllersPromises(this._material));
 
 		this.setMaterial(this._material);
 	}

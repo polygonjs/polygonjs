@@ -2,7 +2,7 @@ import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshPhongMaterial, MeshPhysicalMaterial} from 'three';
+import {Material, MeshPhongMaterial, MeshPhysicalMaterial} from 'three';
 import {MeshStandardMaterial} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
@@ -26,16 +26,25 @@ type TextureEmissiveMapControllerCurrentMaterial =
 	| MeshStandardMaterial
 	| MeshPhysicalMaterial
 	| MeshToonMaterial;
+function _isValidMaterial(material?: Material): material is TextureEmissiveMapControllerCurrentMaterial {
+	if (!material) {
+		return false;
+	}
+	return (material as MeshStandardMaterial).emissive != null;
+}
 class TextureEmissiveMapParamsConfig extends EmissiveMapParamConfig(NodeParamsConfig) {}
-interface EmissiveControllers {
+export interface TextureEmissiveMapControllers {
 	emissiveMap: TextureEmissiveMapController;
 }
 abstract class TextureEmissiveMapMatNode extends TypedMatNode<
 	TextureEmissiveMapControllerCurrentMaterial,
 	TextureEmissiveMapParamsConfig
 > {
-	controllers!: EmissiveControllers;
-	abstract override createMaterial(): TextureEmissiveMapControllerCurrentMaterial;
+	controllers!: TextureEmissiveMapControllers;
+	async material() {
+		const container = await this.compute();
+		return container.material() as TextureEmissiveMapControllerCurrentMaterial | undefined;
+	}
 }
 
 export class TextureEmissiveMapController extends BaseTextureMapController {
@@ -45,14 +54,20 @@ export class TextureEmissiveMapController extends BaseTextureMapController {
 	override initializeNode() {
 		this.add_hooks(this.node.p.useEmissiveMap, this.node.p.emissiveMap);
 	}
-	override async update() {
-		this._update(this.node.material, 'emissiveMap', this.node.p.useEmissiveMap, this.node.p.emissiveMap);
-
-		const mat = this.node.material as TextureEmissiveMapControllerCurrentMaterial;
-		mat.emissive.copy(this.node.pv.emissive);
-		mat.emissiveIntensity = this.node.pv.emissiveIntensity;
-	}
 	static override async update(node: TextureEmissiveMapMatNode) {
 		node.controllers.emissiveMap.update();
+	}
+	override async update() {
+		const material = await this.node.material();
+		if (!_isValidMaterial(material)) {
+			return;
+		}
+		await this.updateMaterial(material);
+	}
+	override async updateMaterial(material: TextureEmissiveMapControllerCurrentMaterial) {
+		await this._update(material, 'emissiveMap', this.node.p.useEmissiveMap, this.node.p.emissiveMap);
+
+		material.emissive.copy(this.node.pv.emissive);
+		material.emissiveIntensity = this.node.pv.emissiveIntensity;
 	}
 }

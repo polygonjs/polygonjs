@@ -8,21 +8,36 @@
 
 import {MeshNormalMaterial} from 'three';
 import {FrontSide} from 'three';
-import {TypedMatNode} from './_Base';
+import {PrimitiveMatNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
-import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
-import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
+import {
+	TextureBumpMapController,
+	BumpMapParamConfig,
+	TextureBumpMapControllers,
+} from './utils/TextureBumpMapController';
+import {
+	TextureNormalMapController,
+	NormalMapParamConfig,
+	TextureNormalMapControllers,
+} from './utils/TextureNormalMapController';
+import {
+	TextureDisplacementMapController,
+	DisplacementMapParamConfig,
+	TextureDisplacementMapControllers,
+} from './utils/TextureDisplacementMapController';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 
-interface MeshNormalControllers {
-	bumpMap: TextureBumpMapController;
-	displacementMap: TextureDisplacementMapController;
-	normalMap: TextureNormalMapController;
-	advancedCommon: AdvancedCommonController;
-}
+interface MeshNormalControllers
+	extends AdvancedCommonControllers,
+		TextureBumpMapControllers,
+		TextureDisplacementMapControllers,
+		TextureNormalMapControllers {}
 class MeshNormalMatParamsConfig extends AdvancedCommonParamConfig(
 	/* advanced */
 	NormalMapParamConfig(
@@ -36,7 +51,7 @@ class MeshNormalMatParamsConfig extends AdvancedCommonParamConfig(
 ) {}
 const ParamsConfig = new MeshNormalMatParamsConfig();
 
-export class MeshNormalMatNode extends TypedMatNode<MeshNormalMaterial, MeshNormalMatParamsConfig> {
+export class MeshNormalMatNode extends PrimitiveMatNode<MeshNormalMaterial, MeshNormalMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'meshNormal';
@@ -56,20 +71,11 @@ export class MeshNormalMatNode extends TypedMatNode<MeshNormalMaterial, MeshNorm
 		displacementMap: new TextureDisplacementMapController(this),
 		normalMap: new TextureNormalMapController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshNormalControllers>;
-
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 	override async cook() {
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
+		this._material = this._material || this.createMaterial();
+		await Promise.all(this.controllersPromises(this._material));
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }

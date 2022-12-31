@@ -8,35 +8,69 @@
  *
  */
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {UniformsTransparencyParamConfig, UniformsTransparencyController} from './utils/UniformsTransparencyController';
-import {AdvancedCommonController, AdvancedCommonParamConfig} from './utils/AdvancedCommonController';
-import {MapParamConfig, TextureMapController} from './utils/TextureMapController';
-import {AlphaMapParamConfig, TextureAlphaMapController} from './utils/TextureAlphaMapController';
-import {TextureBumpMapController, BumpMapParamConfig} from './utils/TextureBumpMapController';
-import {TextureEmissiveMapController, EmissiveMapParamConfig} from './utils/TextureEmissiveMapController';
-import {TextureEnvMapController, EnvMapParamConfig} from './utils/TextureEnvMapController';
-import {TextureAOMapController, AOMapParamConfig} from './utils/TextureAOMapController';
-import {TextureNormalMapController, NormalMapParamConfig} from './utils/TextureNormalMapController';
+import {
+	UniformsTransparencyParamConfig,
+	UniformsTransparencyController,
+	UniformsTransparencyControllers,
+} from './utils/UniformsTransparencyController';
+import {
+	AdvancedCommonController,
+	AdvancedCommonControllers,
+	AdvancedCommonParamConfig,
+} from './utils/AdvancedCommonController';
+import {MapParamConfig, TextureMapController, TextureMapControllers} from './utils/TextureMapController';
+import {
+	AlphaMapParamConfig,
+	TextureAlphaMapController,
+	TextureAlphaMapControllers,
+} from './utils/TextureAlphaMapController';
+import {
+	TextureBumpMapController,
+	BumpMapParamConfig,
+	TextureBumpMapControllers,
+} from './utils/TextureBumpMapController';
+import {
+	TextureEmissiveMapController,
+	EmissiveMapParamConfig,
+	TextureEmissiveMapControllers,
+} from './utils/TextureEmissiveMapController';
+import {TextureEnvMapController, EnvMapParamConfig, TextureEnvMapControllers} from './utils/TextureEnvMapController';
+import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
+import {
+	TextureNormalMapController,
+	NormalMapParamConfig,
+	TextureNormalMapControllers,
+} from './utils/TextureNormalMapController';
 import {
 	TextureMetalnessRoughnessMapController,
 	MetalnessRoughnessMapParamConfig,
+	TextureMetalnessRoughnessMapControllers,
 } from './utils/TextureMetalnessRoughnessMapController';
-import {TextureLightMapController, LightMapParamConfig} from './utils/TextureLightMapController';
-import {MeshPhysicalController, MeshPhysicalParamConfig} from './utils/MeshPhysicalController';
-import {TextureDisplacementMapController, DisplacementMapParamConfig} from './utils/TextureDisplacementMapController';
+import {
+	TextureLightMapController,
+	LightMapParamConfig,
+	TextureLightMapControllers,
+} from './utils/TextureLightMapController';
+import {MeshPhysicalController, MeshPhysicalControllers, MeshPhysicalParamConfig} from './utils/MeshPhysicalController';
+import {
+	TextureDisplacementMapController,
+	DisplacementMapParamConfig,
+	TextureDisplacementMapControllers,
+} from './utils/TextureDisplacementMapController';
 import {BaseBuilderParamConfig, TypedBuilderMatNode} from './_BaseBuilder';
 import {ShaderAssemblerPhysical} from '../gl/code/assemblers/materials/Physical';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
-import {FogParamConfig, FogController} from './utils/UniformsFogController';
+import {FogParamConfig, UniformFogController, UniformFogControllers} from './utils/UniformsFogController';
 import {
 	WireframeShaderMaterialController,
+	WireframeShaderMaterialControllers,
 	WireframeShaderMaterialParamsConfig,
 } from './utils/WireframeShaderMaterialController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-import {PCSSController, PCSSParamConfig} from './utils/PCSSController';
+import {PCSSController, PCSSControllers, PCSSParamConfig} from './utils/PCSSController';
 import {Constructor} from '../../../types/GlobalTypes';
 import {Material} from 'three';
 import {MeshPhysicalMaterial} from 'three';
@@ -54,21 +88,23 @@ interface MeshPhysicalBuilderMaterial extends MeshPhysicalMaterial {
 		[key in CustomMaterialName]?: Material;
 	};
 }
-interface MeshPhysicalBuilderControllers {
-	advancedCommon: AdvancedCommonController;
-	alphaMap: TextureAlphaMapController;
-	aoMap: TextureAOMapController;
-	bumpMap: TextureBumpMapController;
-	displacementMap: TextureDisplacementMapController;
-	emissiveMap: TextureEmissiveMapController;
-	envMap: TextureEnvMapController;
-	lightMap: TextureLightMapController;
-	map: TextureMapController;
-	metalnessRoughnessMap: TextureMetalnessRoughnessMapController;
-	normalMap: TextureNormalMapController;
-	physical: MeshPhysicalController;
-	PCSS: PCSSController;
-}
+interface MeshPhysicalBuilderControllers
+	extends AdvancedCommonControllers,
+		PCSSControllers,
+		TextureAlphaMapControllers,
+		TextureAOMapControllers,
+		TextureBumpMapControllers,
+		TextureDisplacementMapControllers,
+		TextureEmissiveMapControllers,
+		TextureEnvMapControllers,
+		TextureLightMapControllers,
+		TextureMapControllers,
+		TextureMetalnessRoughnessMapControllers,
+		TextureNormalMapControllers,
+		MeshPhysicalControllers,
+		UniformFogControllers,
+		UniformsTransparencyControllers,
+		WireframeShaderMaterialControllers {}
 
 function AdvancedMeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends PCSSParamConfig(
@@ -138,22 +174,17 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 		displacementMap: new TextureDisplacementMapController(this),
 		emissiveMap: new TextureEmissiveMapController(this),
 		envMap: new TextureEnvMapController(this),
+		uniformFog: new UniformFogController(this),
 		lightMap: new TextureLightMapController(this),
 		map: new TextureMapController(this),
 		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this),
 		normalMap: new TextureNormalMapController(this),
 		physical: new MeshPhysicalController(this),
 		PCSS: new PCSSController(this),
+		uniformTransparency: new UniformsTransparencyController(this),
+		wireframeShader: new WireframeShaderMaterialController(this),
 	};
-	private controllerNames = Object.keys(this.controllers) as Array<keyof MeshPhysicalBuilderControllers>;
-
-	override initializeNode() {
-		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
-				this.controllers[controllerName].initializeNode();
-			}
-		});
-	}
+	protected override controllersList = Object.values(this.controllers);
 
 	override createMaterial() {
 		const material = super.createMaterial();
@@ -163,15 +194,11 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 	}
 
 	override async cook() {
-		for (let controllerName of this.controllerNames) {
-			this.controllers[controllerName].update();
-		}
-		UniformsTransparencyController.update(this);
-		FogController.update(this);
-		WireframeShaderMaterialController.update(this);
+		this._material = this._material || this.createMaterial();
+		await Promise.all(this.controllersPromises(this._material));
 
-		this.compileIfRequired();
+		this.compileIfRequired(this._material);
 
-		this.setMaterial(this.material);
+		this.setMaterial(this._material);
 	}
 }
