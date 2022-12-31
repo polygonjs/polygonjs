@@ -83,5 +83,11 @@ export class ColorsController extends BaseController {
 		_tmpColor.copy(material.color).toArray(_tmpColorArray);
 		p.color.set(_tmpColorArray);
 		p.color.setConversion(ColorConversion.NONE);
+
+		//
+		p.useVertexColors.set(material.vertexColors);
+		p.opacity.set(material.opacity);
+		p.transparent.set(material.transparent);
+		p.alphaTest.set(material.alphaTest);
 	}
 }

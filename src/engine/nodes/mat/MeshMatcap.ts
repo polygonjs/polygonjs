@@ -42,6 +42,7 @@ import {
 	MatcapMapParamConfig,
 	TextureMatcapMapControllers,
 } from './utils/TextureMatcapMapController';
+import {FlatShadingController, FlatShadingParamConfig, FlatShadingControllers} from './utils/FlatShadingController';
 import {FogController, FogParamConfig, FogControllers} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -50,6 +51,7 @@ interface MeshMatCapControllers
 	extends AdvancedCommonControllers,
 		ColorsControllers,
 		FogControllers,
+		FlatShadingControllers,
 		TextureAlphaMapControllers,
 		TextureBumpMapControllers,
 		TextureDisplacementMapControllers,
@@ -59,17 +61,19 @@ interface MeshMatCapControllers
 
 class MeshMatCapMatParamsConfig extends FogParamConfig(
 	AdvancedCommonParamConfig(
-		/* advanced */
-		AdvancedFolderParamConfig(
-			NormalMapParamConfig(
-				DisplacementMapParamConfig(
-					BumpMapParamConfig(
-						AlphaMapParamConfig(
-							MapParamConfig(
-								MatcapMapParamConfig(
-									/* textures */
-									TexturesFolderParamConfig(
-										ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+		FlatShadingParamConfig(
+			/* advanced */
+			AdvancedFolderParamConfig(
+				NormalMapParamConfig(
+					DisplacementMapParamConfig(
+						BumpMapParamConfig(
+							AlphaMapParamConfig(
+								MapParamConfig(
+									MatcapMapParamConfig(
+										/* textures */
+										TexturesFolderParamConfig(
+											ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+										)
 									)
 								)
 							)
@@ -84,7 +88,7 @@ const ParamsConfig = new MeshMatCapMatParamsConfig();
 
 export class MeshMatcapMatNode extends PrimitiveMatNode<MeshMatcapMaterial, MeshMatCapMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'meshMatcap' {
 		return 'meshMatcap';
 	}
 
@@ -104,6 +108,7 @@ export class MeshMatcapMatNode extends PrimitiveMatNode<MeshMatcapMaterial, Mesh
 		bumpMap: new TextureBumpMapController(this),
 		displacementMap: new TextureDisplacementMapController(this),
 		fog: new FogController(this),
+		flatShading: new FlatShadingController(this),
 		map: new TextureMapController(this),
 		matcap: new TextureMatcapMapController(this),
 		normalMap: new TextureNormalMapController(this),

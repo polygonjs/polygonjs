@@ -1,5 +1,5 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {BaseController} from './_BaseController';
+import {BaseController, MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 import {TypedMatNode} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
@@ -96,5 +96,12 @@ export class WireframeController extends BaseController {
 		material.wireframeLinecap = LINE_CAP_TYPES[pv.wireframeLinecap];
 		material.wireframeLinejoin = LINE_JOIN_TYPES[pv.wireframeLinejoin];
 		material.needsUpdate = true;
+	}
+	override getTextures(material: WireframedMaterial, record: MaterialTexturesRecord) {}
+	override setParamsFromMaterial(material: WireframedMaterial, record: SetParamsTextureNodesRecord) {
+		this.node.p.wireframe.set(material.wireframe);
+		this.node.p.wireframeLinewidth.set(material.wireframeLinewidth);
+		this.node.p.wireframeLinecap.set(LINE_CAP_TYPES.indexOf(material.wireframeLinecap as LineCapType));
+		this.node.p.wireframeLinejoin.set(LINE_JOIN_TYPES.indexOf(material.wireframeLinejoin as LineJoinType));
 	}
 }

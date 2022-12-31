@@ -1,9 +1,9 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
-import {Material, ShaderMaterial} from 'three';
+import {Material, MeshToonMaterial} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
-import {MeshToonMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 
 export function GradientMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -15,7 +15,7 @@ export function GradientMapParamConfig<TBase extends Constructor>(Base: TBase) {
 }
 
 type TextureGradientMaterial = MeshToonMaterial;
-type TextureGradientMapCurrentMaterial = TextureGradientMaterial | ShaderMaterial;
+type TextureGradientMapCurrentMaterial = TextureGradientMaterial; //| ShaderMaterial;
 function _isValidMaterial(material?: Material): material is TextureGradientMapCurrentMaterial {
 	if (!material) {
 		return false;
@@ -56,5 +56,15 @@ export class TextureGradientMapController extends BaseTextureMapController {
 	}
 	override async updateMaterial(material: TextureGradientMapCurrentMaterial) {
 		await this._update(material, 'gradientMap', this.node.p.useGradientMap, this.node.p.gradientMap);
+	}
+	override getTextures(material: TextureGradientMapCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('gradientMap', material.gradientMap);
+	}
+	override setParamsFromMaterial(material: TextureGradientMapCurrentMaterial, record: SetParamsTextureNodesRecord) {
+		const mapNode = record.get('gradientMap');
+		this.node.p.useGradientMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.gradientMap.setNode(mapNode, {relative: true});
+		}
 	}
 }

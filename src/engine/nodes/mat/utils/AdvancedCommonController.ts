@@ -1,13 +1,12 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {Material} from 'three';
 import {TypedMatNode} from '../_Base';
-import {BaseController} from './_BaseController';
+import {BaseController, SetParamsTextureNodesRecord} from './_BaseController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending} from 'three';
-import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
-import {updateMaterialSideWithShadow} from './helpers/MaterialSideHelper';
+import {updateMaterialSideWithShadow, updateNodeSideWithShadow} from './helpers/MaterialSideHelper';
 const BLENDING_VALUES = {
 	NoBlending,
 	NormalBlending,
@@ -98,7 +97,7 @@ export class AdvancedCommonController extends BaseController {
 	}
 	override updateMaterial(material: Material) {
 		const pv = this.node.pv;
-		this._updateSides(material, pv);
+		updateMaterialSideWithShadow(material, pv);
 
 		material.colorWrite = pv.colorWrite;
 		material.depthWrite = pv.depthWrite;
@@ -114,7 +113,20 @@ export class AdvancedCommonController extends BaseController {
 		}
 	}
 
-	private _updateSides(mat: Material, pv: ParamsValueAccessorType<AdvancedCommonParamsConfig>) {
-		updateMaterialSideWithShadow(mat, pv);
+	override setParamsFromMaterial(material: Material, record: SetParamsTextureNodesRecord) {
+		const p = this.node.p;
+		updateNodeSideWithShadow(material, p);
+
+		p.colorWrite.set(material.colorWrite);
+		p.depthWrite.set(material.depthWrite);
+		p.depthTest.set(material.depthTest);
+		p.blending.set(material.blending);
+		p.premultipliedAlpha.set(material.premultipliedAlpha);
+		p.dithering.set(material.dithering);
+		p.polygonOffset.set(material.polygonOffset);
+		if (material.polygonOffset) {
+			p.polygonOffsetFactor.set(material.polygonOffsetFactor);
+			p.polygonOffsetUnits.set(material.polygonOffsetUnits);
+		}
 	}
 }

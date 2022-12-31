@@ -7,6 +7,7 @@ import {MeshStandardMaterial} from 'three';
 import {MeshPhysicalMaterial} from 'three';
 import {MeshNormalMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 export function DisplacementMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a displacement map */
@@ -83,5 +84,20 @@ export class TextureDisplacementMapController extends BaseTextureMapController {
 
 		material.displacementScale = this.node.pv.displacementScale;
 		material.displacementBias = this.node.pv.displacementBias;
+	}
+	override getTextures(material: TextureDisplacementMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('displacementMap', material.displacementMap);
+	}
+	override setParamsFromMaterial(
+		material: TextureDisplacementMapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('emissiveMap');
+		this.node.p.useDisplacementMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.displacementMap.setNode(mapNode, {relative: true});
+		}
+		this.node.p.displacementScale.set(material.displacementScale);
+		this.node.p.displacementBias.set(material.displacementBias);
 	}
 }

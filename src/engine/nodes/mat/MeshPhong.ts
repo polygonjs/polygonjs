@@ -9,7 +9,7 @@ import {MeshPhongMaterial} from 'three';
 import {FrontSide} from 'three';
 import {PrimitiveMatNode} from './_Base';
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ColorsController, ColorParamConfig, ColorsControllers} from './utils/ColorsController';
 import {
 	AdvancedCommonController,
@@ -58,9 +58,9 @@ import {
 	TextureLightMapControllers,
 } from './utils/TextureLightMapController';
 import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
-
+import {FlatShadingController, FlatShadingParamConfig, FlatShadingControllers} from './utils/FlatShadingController';
 import {WireframeController, WireframeControllers, WireframeParamConfig} from './utils/WireframeController';
-import {isBooleanTrue} from '../../../core/BooleanValue';
+
 import {FogController, FogControllers, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -69,6 +69,7 @@ interface MeshPhongControllers
 	extends AdvancedCommonControllers,
 		ColorsControllers,
 		FogControllers,
+		FlatShadingControllers,
 		TextureAlphaMapControllers,
 		TextureAOMapControllers,
 		TextureBumpMapControllers,
@@ -83,21 +84,25 @@ interface MeshPhongControllers
 class MeshPhongMatParamsConfig extends FogParamConfig(
 	WireframeParamConfig(
 		AdvancedCommonParamConfig(
-			/* advanced */
-			AdvancedFolderParamConfig(
-				SpecularMapParamConfig(
-					NormalMapParamConfig(
-						LightMapParamConfig(
-							EnvMapSimpleParamConfig(
-								EmissiveMapParamConfig(
-									DisplacementMapParamConfig(
-										BumpMapParamConfig(
-											AOMapParamConfig(
-												AlphaMapParamConfig(
-													MapParamConfig(
-														/* textures */
-														TexturesFolderParamConfig(
-															ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+			FlatShadingParamConfig(
+				/* advanced */
+				AdvancedFolderParamConfig(
+					SpecularMapParamConfig(
+						NormalMapParamConfig(
+							LightMapParamConfig(
+								EnvMapSimpleParamConfig(
+									EmissiveMapParamConfig(
+										DisplacementMapParamConfig(
+											BumpMapParamConfig(
+												AOMapParamConfig(
+													AlphaMapParamConfig(
+														MapParamConfig(
+															/* textures */
+															TexturesFolderParamConfig(
+																ColorParamConfig(
+																	DefaultFolderParamConfig(NodeParamsConfig)
+																)
+															)
 														)
 													)
 												)
@@ -112,14 +117,12 @@ class MeshPhongMatParamsConfig extends FogParamConfig(
 			)
 		)
 	)
-) {
-	flatShading = ParamConfig.BOOLEAN(0);
-}
+) {}
 const ParamsConfig = new MeshPhongMatParamsConfig();
 
 export class MeshPhongMatNode extends PrimitiveMatNode<MeshPhongMaterial, MeshPhongMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'meshPhong' {
 		return 'meshPhong';
 	}
 
@@ -141,6 +144,7 @@ export class MeshPhongMatNode extends PrimitiveMatNode<MeshPhongMaterial, MeshPh
 		emissiveMap: new TextureEmissiveMapController(this),
 		envMap: new TextureEnvMapSimpleController(this),
 		fog: new FogController(this),
+		flatShading: new FlatShadingController(this),
 		lightMap: new TextureLightMapController(this),
 		map: new TextureMapController(this),
 		normalMap: new TextureNormalMapController(this),
@@ -151,10 +155,7 @@ export class MeshPhongMatNode extends PrimitiveMatNode<MeshPhongMaterial, MeshPh
 	override async cook() {
 		this._material = this._material || this.createMaterial();
 		await Promise.all(this.controllersPromises(this._material));
-		if (this._material.flatShading != isBooleanTrue(this.pv.flatShading)) {
-			this._material.flatShading = isBooleanTrue(this.pv.flatShading);
-			this._material.needsUpdate = true;
-		}
+
 		this.setMaterial(this._material);
 	}
 }

@@ -1,9 +1,10 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
-import {Material, ShaderMaterial} from 'three';
+import {Material} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshMatcapMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 
 export function MatcapMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -21,7 +22,7 @@ function _isValidMaterial(material?: Material): material is TextureMatcapMateria
 	}
 	return true; //(material as MeshMatcapMaterial).matcap != null;
 }
-type TextureMatCapControllerCurrentMaterial = TextureMatcapMaterial | ShaderMaterial;
+type TextureMatCapControllerCurrentMaterial = TextureMatcapMaterial; //| ShaderMaterial;
 class TextureMatcapMapParamsConfig extends MatcapMapParamConfig(NodeParamsConfig) {}
 export interface TextureMatcapMapControllers {
 	matcap: TextureMatcapMapController;
@@ -56,5 +57,18 @@ export class TextureMatcapMapController extends BaseTextureMapController {
 	}
 	override async updateMaterial(material: TextureMatCapControllerCurrentMaterial) {
 		await this._update(material, 'matcap', this.node.p.useMatcapMap, this.node.p.matcapMap);
+	}
+	override getTextures(material: TextureMatCapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('matcap', material.matcap);
+	}
+	override setParamsFromMaterial(
+		material: TextureMatCapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('matcap');
+		this.node.p.useMatcapMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.matcapMap.setNode(mapNode, {relative: true});
+		}
 	}
 }

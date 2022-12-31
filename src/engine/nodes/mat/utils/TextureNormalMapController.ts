@@ -1,4 +1,4 @@
-import {Constructor} from '../../../../types/GlobalTypes';
+import {Constructor, Number2} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -9,6 +9,7 @@ import {MeshPhongMaterial} from 'three';
 import {MeshMatcapMaterial} from 'three';
 import {MeshNormalMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 enum NormalMapMode {
 	TANGENT = 'tangent',
 	OBJECT = 'object',
@@ -17,6 +18,10 @@ const NORMAL_MAP_MODES: NormalMapMode[] = [NormalMapMode.TANGENT, NormalMapMode.
 const NormalMapModeByName = {
 	[NormalMapMode.TANGENT]: TangentSpaceNormalMap,
 	[NormalMapMode.OBJECT]: ObjectSpaceNormalMap,
+};
+const NormalNameByMode = {
+	[TangentSpaceNormalMap]: NormalMapMode.TANGENT,
+	[ObjectSpaceNormalMap]: NormalMapMode.OBJECT,
 };
 
 export function NormalMapParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -75,7 +80,7 @@ abstract class TextureNormalMapMatNode extends TypedMatNode<
 		return container.material() as TextureNormalMapControllerCurrentMaterial | undefined;
 	}
 }
-
+const tmpN2: Number2 = [0, 0];
 export class TextureNormalMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureNormalMapMatNode) {
 		super(node);
@@ -101,5 +106,23 @@ export class TextureNormalMapController extends BaseTextureMapController {
 		const mat = material as MeshPhongMaterial;
 		mat.normalMapType = normalMapType;
 		mat.normalScale.copy(pv.normalScale).multiplyScalar(pv.normalScaleMult);
+	}
+	override getTextures(material: TextureNormalMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('normalMap', material.normalMap);
+	}
+
+	override setParamsFromMaterial(
+		material: TextureNormalMapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('normalMap');
+		const p = this.node.p;
+		p.useNormalMap.set(mapNode != null);
+		if (mapNode) {
+			p.normalMap.setNode(mapNode, {relative: true});
+		}
+		material.normalScale.toArray(tmpN2);
+		p.normalScale.set(tmpN2);
+		p.normalMapType.set(NORMAL_MAP_MODES.indexOf(NormalNameByMode[material.normalMapType]));
 	}
 }

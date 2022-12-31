@@ -1,10 +1,11 @@
-import {Constructor} from '../../../../types/GlobalTypes';
+import {Constructor, Number2, Number3} from '../../../../types/GlobalTypes';
 import {Material, MeshPhysicalMaterial} from 'three';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Color} from 'three';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 
 export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -134,6 +135,8 @@ abstract class TextureClearCoatMapMatNode extends TypedMatNode<
 }
 
 const tmpMeshPhysicalForIOR = new MeshPhysicalMaterial();
+const tmpN2: Number2 = [0, 0];
+const tmpN3: Number3 = [0, 0, 0];
 
 export class MeshPhysicalController extends BaseTextureMapController {
 	constructor(protected override node: TextureClearCoatMapMatNode) {
@@ -162,17 +165,17 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		// this._update(this.node.material, 'iridescenceMap', this.node.p.useIridescenceMap, this.node.p.iridescenceMap);
 		const pv = this.node.pv;
 
+		const mat = material as MeshPhysicalMaterial;
+
 		// this is to get the reflectivity value
 		tmpMeshPhysicalForIOR.ior = pv.ior;
-		const reflectivity = tmpMeshPhysicalForIOR.reflectivity;
+		mat.reflectivity = tmpMeshPhysicalForIOR.reflectivity;
 
-		const mat = material as MeshPhysicalMaterial;
 		mat.clearcoat = pv.clearcoat;
 		if (mat.clearcoatNormalScale != null) {
 			mat.clearcoatNormalScale.copy(pv.clearcoatNormalScale);
 		}
 		mat.clearcoatRoughness = pv.clearcoatRoughness;
-		mat.reflectivity = reflectivity;
 		// ior is currently a getter/setter wrapper to set reflectivity, so currently conflicts with 'mat.reflectivity ='
 		// mat.ior = this.node.pv.ior;
 		if (isBooleanTrue(pv.useSheen)) {
@@ -212,5 +215,76 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			this._update(material, 'transmissionMap', this.node.p.useTransmissionMap, this.node.p.transmissionMap),
 			this._update(material, 'thicknessMap', this.node.p.useThicknessMap, this.node.p.thicknessMap),
 		]);
+	}
+	override getTextures(material: MeshPhysicalControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('clearcoatMap', material.clearcoatMap);
+		record.set('clearcoatNormalMap', material.clearcoatNormalMap);
+		record.set('clearcoatRoughnessMap', material.clearcoatRoughnessMap);
+		record.set('transmissionMap', material.transmissionMap);
+		record.set('thicknessMap', material.thicknessMap);
+	}
+	override setParamsFromMaterial(
+		material: MeshPhysicalControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const clearcoatMap = () => {
+			const mapNode = record.get('clearcoatMap');
+			this.node.p.useClearCoatMap.set(mapNode != null);
+			if (mapNode) {
+				this.node.p.clearcoatMap.setNode(mapNode, {relative: true});
+			}
+		};
+		const clearcoatNormalMap = () => {
+			const mapNode = record.get('clearcoatNormalMap');
+			this.node.p.useClearCoatNormalMap.set(mapNode != null);
+			if (mapNode) {
+				this.node.p.clearcoatNormalMap.setNode(mapNode, {relative: true});
+			}
+		};
+		const clearcoatRoughnessMap = () => {
+			const mapNode = record.get('clearcoatRoughnessMap');
+			this.node.p.useClearCoatRoughnessMap.set(mapNode != null);
+			if (mapNode) {
+				this.node.p.clearcoatRoughnessMap.setNode(mapNode, {relative: true});
+			}
+		};
+		const transmissionMap = () => {
+			const mapNode = record.get('transmissionMap');
+			this.node.p.useTransmissionMap.set(mapNode != null);
+			if (mapNode) {
+				this.node.p.transmissionMap.setNode(mapNode, {relative: true});
+			}
+		};
+		const thicknessMap = () => {
+			const mapNode = record.get('thicknessMap');
+			this.node.p.useThicknessMap.set(mapNode != null);
+			if (mapNode) {
+				this.node.p.thicknessMap.setNode(mapNode, {relative: true});
+			}
+		};
+		clearcoatMap();
+		clearcoatNormalMap();
+		clearcoatRoughnessMap();
+		transmissionMap();
+		thicknessMap();
+
+		const p = this.node.p;
+		p.ior.set(material.ior);
+		//
+		p.clearcoat.set(material.clearcoat);
+		material.clearcoatNormalScale.toArray(tmpN2);
+		p.clearcoatNormalScale.set(tmpN2);
+		p.clearcoatRoughness.set(material.clearcoatRoughness);
+		//
+		material.sheenColor.toArray(tmpN3);
+		p.sheenColor.set(tmpN3);
+		p.sheen.set(material.sheen);
+		p.sheenRoughness.set(material.sheenRoughness);
+		//
+		p.transmission.set(material.transmission);
+		p.thickness.set(material.thickness);
+		p.attenuationDistance.set(material.attenuationDistance);
+		material.attenuationColor.toArray(tmpN3);
+		p.attenuationColor.set(tmpN3);
 	}
 }

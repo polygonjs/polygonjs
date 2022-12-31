@@ -53,6 +53,7 @@ import {
 	DisplacementMapParamConfig,
 	TextureDisplacementMapControllers,
 } from './utils/TextureDisplacementMapController';
+import {FlatShadingController, FlatShadingParamConfig, FlatShadingControllers} from './utils/FlatShadingController';
 import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
 import {WireframeController, WireframeControllers, WireframeParamConfig} from './utils/WireframeController';
 import {FogController, FogControllers, FogParamConfig} from './utils/FogController';
@@ -63,6 +64,7 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 interface MeshStandardControllers
 	extends AdvancedCommonControllers,
 		ColorsControllers,
+		FlatShadingControllers,
 		FogControllers,
 		TextureAlphaMapControllers,
 		TextureAOMapControllers,
@@ -78,21 +80,25 @@ interface MeshStandardControllers
 class MeshStandardMatParamsConfig extends FogParamConfig(
 	WireframeParamConfig(
 		AdvancedCommonParamConfig(
-			/* advanced */
-			AdvancedFolderParamConfig(
-				MetalnessRoughnessMapParamConfig(
-					NormalMapParamConfig(
-						LightMapParamConfig(
-							EnvMapParamConfig(
-								EmissiveMapParamConfig(
-									DisplacementMapParamConfig(
-										BumpMapParamConfig(
-											AOMapParamConfig(
-												AlphaMapParamConfig(
-													MapParamConfig(
-														/* textures */
-														TexturesFolderParamConfig(
-															ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+			FlatShadingParamConfig(
+				/* advanced */
+				AdvancedFolderParamConfig(
+					MetalnessRoughnessMapParamConfig(
+						NormalMapParamConfig(
+							LightMapParamConfig(
+								EnvMapParamConfig(
+									EmissiveMapParamConfig(
+										DisplacementMapParamConfig(
+											BumpMapParamConfig(
+												AOMapParamConfig(
+													AlphaMapParamConfig(
+														MapParamConfig(
+															/* textures */
+															TexturesFolderParamConfig(
+																ColorParamConfig(
+																	DefaultFolderParamConfig(NodeParamsConfig)
+																)
+															)
 														)
 													)
 												)
@@ -112,7 +118,7 @@ const ParamsConfig = new MeshStandardMatParamsConfig();
 
 export class MeshStandardMatNode extends PrimitiveMatNode<MeshStandardMaterial, MeshStandardMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'meshStandard' {
 		return 'meshStandard';
 	}
 
@@ -137,6 +143,7 @@ export class MeshStandardMatNode extends PrimitiveMatNode<MeshStandardMaterial, 
 		emissiveMap: new TextureEmissiveMapController(this),
 		envMap: new TextureEnvMapController(this),
 		fog: new FogController(this),
+		flatShading: new FlatShadingController(this),
 		lightMap: new TextureLightMapController(this),
 		map: new TextureMapController(this),
 		metalnessRoughnessMap: new TextureMetalnessRoughnessMapController(this),

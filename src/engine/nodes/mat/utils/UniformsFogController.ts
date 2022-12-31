@@ -1,5 +1,5 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {BaseController} from './_BaseController';
+import {BaseController, MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 import {TypedMatNode} from '../_Base';
 import {
 	PointsMaterial,
@@ -61,5 +61,9 @@ export class UniformFogController extends BaseController {
 	override updateMaterial(material: FoggableMaterial) {
 		const pv = this.node.pv;
 		material.fog = isBooleanTrue(pv.useFog);
+	}
+	override getTextures(material: FoggableMaterial, record: MaterialTexturesRecord) {}
+	override setParamsFromMaterial(material: FoggableMaterial, record: SetParamsTextureNodesRecord) {
+		this.node.p.useFog.set(material.fog);
 	}
 }

@@ -3,6 +3,7 @@ import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {MeshPhongMaterial, Material} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 
 export function SpecularMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -54,5 +55,18 @@ export class TextureSpecularMapController extends BaseTextureMapController {
 	}
 	override async updateMaterial(material: TextureSpecularMapControllerCurrentMaterial) {
 		await this._update(material, 'specularMap', this.node.p.useSpecularMap, this.node.p.specularMap);
+	}
+	override getTextures(material: TextureSpecularMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('specularMap', material.specularMap);
+	}
+	override setParamsFromMaterial(
+		material: TextureSpecularMapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('specularMap');
+		this.node.p.useSpecularMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.specularMap.setNode(mapNode, {relative: true});
+		}
 	}
 }

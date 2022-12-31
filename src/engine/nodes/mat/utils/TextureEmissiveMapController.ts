@@ -1,4 +1,4 @@
-import {Constructor} from '../../../../types/GlobalTypes';
+import {Constructor, Number3} from '../../../../types/GlobalTypes';
 import {TypedMatNode} from '../_Base';
 import {BaseTextureMapController, BooleanParamOptions, NodePathOptions} from './_BaseTextureController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -6,6 +6,7 @@ import {Material, MeshPhongMaterial, MeshPhysicalMaterial} from 'three';
 import {MeshStandardMaterial} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 
 export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -46,7 +47,7 @@ abstract class TextureEmissiveMapMatNode extends TypedMatNode<
 		return container.material() as TextureEmissiveMapControllerCurrentMaterial | undefined;
 	}
 }
-
+const tmpN3: Number3 = [0, 0, 0];
 export class TextureEmissiveMapController extends BaseTextureMapController {
 	constructor(protected override node: TextureEmissiveMapMatNode) {
 		super(node);
@@ -69,5 +70,21 @@ export class TextureEmissiveMapController extends BaseTextureMapController {
 
 		material.emissive.copy(this.node.pv.emissive);
 		material.emissiveIntensity = this.node.pv.emissiveIntensity;
+	}
+	override getTextures(material: TextureEmissiveMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('emissiveMap', material.emissiveMap);
+	}
+	override setParamsFromMaterial(
+		material: TextureEmissiveMapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('emissiveMap');
+		this.node.p.useEmissiveMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.emissiveMap.setNode(mapNode, {relative: true});
+		}
+		material.emissive.toArray(tmpN3);
+		this.node.p.emissive.set(tmpN3);
+		this.node.p.emissiveIntensity.set(material.emissiveIntensity);
 	}
 }

@@ -7,6 +7,7 @@ import {MeshLambertMaterial} from 'three';
 import {MeshStandardMaterial} from 'three';
 import {MeshPhysicalMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 
 export function LightMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -72,5 +73,16 @@ export class TextureLightMapController extends BaseTextureMapController {
 	override async updateMaterial(material: TextureLightMapCurrentMaterial) {
 		await this._update(material, 'lightMap', this.node.p.useLightMap, this.node.p.lightMap);
 		material.lightMapIntensity = this.node.pv.lightMapIntensity;
+	}
+	override getTextures(material: TextureLightMapCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('lightMap', material.lightMap);
+	}
+	override setParamsFromMaterial(material: TextureLightMapCurrentMaterial, record: SetParamsTextureNodesRecord) {
+		const mapNode = record.get('lightMap');
+		this.node.p.useLightMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.lightMap.setNode(mapNode, {relative: true});
+		}
+		this.node.p.lightMapIntensity.set(material.lightMapIntensity);
 	}
 }

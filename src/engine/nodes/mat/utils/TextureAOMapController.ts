@@ -7,6 +7,7 @@ import {MeshLambertMaterial} from 'three';
 import {MeshPhysicalMaterial} from 'three';
 import {MeshStandardMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 export function AOMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an ambient occlusion map */
@@ -69,5 +70,19 @@ export class TextureAOMapController extends BaseTextureMapController {
 		await this._update(material, 'aoMap', this.node.p.useAOMap, this.node.p.aoMap);
 
 		material.aoMapIntensity = this.node.pv.aoMapIntensity;
+	}
+	override getTextures(material: TextureAOMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('aoMap', material.aoMap);
+	}
+	override setParamsFromMaterial(
+		material: TextureAOMapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('aoMap');
+		this.node.p.useAOMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.aoMap.setNode(mapNode, {relative: true});
+		}
+		this.node.p.aoMapIntensity.set(material.aoMapIntensity);
 	}
 }

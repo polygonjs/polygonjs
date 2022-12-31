@@ -7,6 +7,7 @@ import {MultiplyOperation, MixOperation, AddOperation} from 'three';
 import {CopType} from '../../../poly/registers/nodes/types/Cop';
 import {MeshLambertMaterial} from 'three';
 import {MeshPhongMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 
 enum CombineOperation {
 	MULT = 'mult',
@@ -18,6 +19,11 @@ const OperationByName = {
 	[CombineOperation.MULT]: MultiplyOperation,
 	[CombineOperation.ADD]: AddOperation,
 	[CombineOperation.MIX]: MixOperation,
+};
+const NameByOperation = {
+	[MultiplyOperation]: CombineOperation.MULT,
+	[AddOperation]: CombineOperation.ADD,
+	[MixOperation]: CombineOperation.MIX,
 };
 
 export function EnvMapSimpleParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -99,5 +105,18 @@ export class TextureEnvMapSimpleController extends BaseTextureMapController {
 		material.combine = combine;
 		material.reflectivity = this.node.pv.reflectivity;
 		material.refractionRatio = this.node.pv.refractionRatio;
+	}
+	override getTextures(material: TextureEnvMapSimpleCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('envMap', material.envMap);
+	}
+	override setParamsFromMaterial(material: TextureEnvMapSimpleCurrentMaterial, record: SetParamsTextureNodesRecord) {
+		const mapNode = record.get('envMap');
+		this.node.p.useEnvMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.envMap.setNode(mapNode, {relative: true});
+		}
+		this.node.p.combine.set(COMBINE_OPERATIONS.indexOf(NameByOperation[material.combine]));
+		this.node.p.reflectivity.set(material.reflectivity);
+		this.node.p.refractionRatio.set(material.refractionRatio);
 	}
 }

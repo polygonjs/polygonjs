@@ -1,5 +1,5 @@
 /**
- * References a texture from another node
+ * Imports a texture from a geometry node
  *
  *
  */
@@ -10,7 +10,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {CoreType} from '../../../core/Type';
 
-class ReferenceCopParamsConfig extends NodeParamsConfig {
+class FetchCopParamsConfig extends NodeParamsConfig {
 	/** @param sop node */
 	node = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
@@ -24,12 +24,12 @@ class ReferenceCopParamsConfig extends NodeParamsConfig {
 	/** @param texture name */
 	name = ParamConfig.STRING('');
 }
-const ParamsConfig = new ReferenceCopParamsConfig();
+const ParamsConfig = new FetchCopParamsConfig();
 
-export class ReferenceCopNode extends TypedCopNode<ReferenceCopParamsConfig> {
+export class FetchCopNode extends TypedCopNode<FetchCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
-		return 'reference';
+	static override type(): 'fetch' {
+		return 'fetch';
 	}
 
 	override async cook() {

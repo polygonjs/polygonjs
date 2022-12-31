@@ -106,7 +106,7 @@ const ParamsConfig = new MeshToonMatParamsConfig();
 
 export class MeshToonMatNode extends PrimitiveMatNode<MeshToonMaterial, MeshToonMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'meshToon' {
 		return 'meshToon';
 	}
 

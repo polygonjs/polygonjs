@@ -38,6 +38,7 @@ import {
 	EmissiveMapParamConfig,
 	TextureEmissiveMapControllers,
 } from './utils/TextureEmissiveMapController';
+import {FlatShadingController, FlatShadingParamConfig, FlatShadingControllers} from './utils/FlatShadingController';
 import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
 import {WireframeController, WireframeControllers, WireframeParamConfig} from './utils/WireframeController';
 import {FogController, FogControllers, FogParamConfig} from './utils/FogController';
@@ -49,6 +50,7 @@ interface MeshLambertControllers
 	extends AdvancedCommonControllers,
 		ColorsControllers,
 		FogControllers,
+		FlatShadingControllers,
 		TextureAlphaMapControllers,
 		TextureAOMapControllers,
 		TextureEmissiveMapControllers,
@@ -59,17 +61,19 @@ interface MeshLambertControllers
 class MeshLambertMatParamsConfig extends FogParamConfig(
 	WireframeParamConfig(
 		AdvancedCommonParamConfig(
-			/* advanced */
-			AdvancedFolderParamConfig(
-				LightMapParamConfig(
-					EnvMapSimpleParamConfig(
-						EmissiveMapParamConfig(
-							AOMapParamConfig(
-								AlphaMapParamConfig(
-									MapParamConfig(
-										/* textures */
-										TexturesFolderParamConfig(
-											ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+			FlatShadingParamConfig(
+				/* advanced */
+				AdvancedFolderParamConfig(
+					LightMapParamConfig(
+						EnvMapSimpleParamConfig(
+							EmissiveMapParamConfig(
+								AOMapParamConfig(
+									AlphaMapParamConfig(
+										MapParamConfig(
+											/* textures */
+											TexturesFolderParamConfig(
+												ColorParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+											)
 										)
 									)
 								)
@@ -85,7 +89,7 @@ const ParamsConfig = new MeshLambertMatParamsConfig();
 
 export class MeshLambertMatNode extends PrimitiveMatNode<MeshLambertMaterial, MeshLambertMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'meshLambert' {
 		return 'meshLambert';
 	}
 
@@ -105,6 +109,7 @@ export class MeshLambertMatNode extends PrimitiveMatNode<MeshLambertMaterial, Me
 		emissiveMap: new TextureEmissiveMapController(this),
 		envMap: new TextureEnvMapSimpleController(this),
 		fog: new FogController(this),
+		flatShading: new FlatShadingController(this),
 		lightMap: new TextureLightMapController(this),
 		map: new TextureMapController(this),
 		wireframe: new WireframeController(this),

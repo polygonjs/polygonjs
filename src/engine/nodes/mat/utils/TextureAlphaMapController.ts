@@ -10,6 +10,7 @@ import {MeshStandardMaterial} from 'three';
 import {MeshMatcapMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
 import {PointsMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 export function AlphaMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use an alpha map */
@@ -71,5 +72,18 @@ export class TextureAlphaMapController extends BaseTextureMapController {
 	}
 	override async updateMaterial(material: TextureAlphaMapControllerCurrentMaterial) {
 		await this._update(material, 'alphaMap', this.node.p.useAlphaMap, this.node.p.alphaMap);
+	}
+	override getTextures(material: TextureAlphaMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('alphaMap', material.alphaMap);
+	}
+	override setParamsFromMaterial(
+		material: TextureAlphaMapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('aoMap');
+		this.node.p.useAlphaMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.alphaMap.setNode(mapNode, {relative: true});
+		}
 	}
 }

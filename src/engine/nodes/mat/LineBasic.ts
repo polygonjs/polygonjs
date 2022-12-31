@@ -27,7 +27,7 @@ const ParamsConfig = new LineBasicMatParamsConfig();
 
 export class LineBasicMatNode extends PrimitiveMatNode<LineBasicMaterial, LineBasicMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'lineBasic' {
 		return 'lineBasic';
 	}
 

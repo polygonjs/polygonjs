@@ -7,6 +7,7 @@ import {MeshPhysicalMaterial} from 'three';
 import {MeshMatcapMaterial} from 'three';
 import {MeshNormalMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
+import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 export function BumpMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a bump map */
@@ -80,5 +81,19 @@ export class TextureBumpMapController extends BaseTextureMapController {
 		await this._update(material, 'bumpMap', this.node.p.useBumpMap, this.node.p.bumpMap);
 
 		material.bumpScale = this.node.pv.bumpScale;
+	}
+	override getTextures(material: TextureBumpMapControllerCurrentMaterial, record: MaterialTexturesRecord) {
+		record.set('bumpMap', material.bumpMap);
+	}
+	override setParamsFromMaterial(
+		material: TextureBumpMapControllerCurrentMaterial,
+		record: SetParamsTextureNodesRecord
+	) {
+		const mapNode = record.get('emissiveMap');
+		this.node.p.useBumpMap.set(mapNode != null);
+		if (mapNode) {
+			this.node.p.bumpMap.setNode(mapNode, {relative: true});
+		}
+		this.node.p.bumpScale.set(material.bumpScale);
 	}
 }

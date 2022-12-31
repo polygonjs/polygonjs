@@ -53,7 +53,7 @@ const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsMatNode extends PrimitiveMatNode<PointsMaterial, PointsMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'points' {
 		return 'points';
 	}
 

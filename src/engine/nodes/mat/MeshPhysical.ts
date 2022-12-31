@@ -118,7 +118,7 @@ const ParamsConfig = new MeshPhysicalMatParamsConfig();
 
 export class MeshPhysicalMatNode extends PrimitiveMatNode<MeshPhysicalMaterial, MeshPhysicalMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'meshPhysical' {
 		return 'meshPhysical';
 	}
 

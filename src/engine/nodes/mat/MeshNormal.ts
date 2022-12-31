@@ -30,6 +30,7 @@ import {
 	DisplacementMapParamConfig,
 	TextureDisplacementMapControllers,
 } from './utils/TextureDisplacementMapController';
+import {FlatShadingController, FlatShadingParamConfig, FlatShadingControllers} from './utils/FlatShadingController';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 
@@ -37,14 +38,17 @@ interface MeshNormalControllers
 	extends AdvancedCommonControllers,
 		TextureBumpMapControllers,
 		TextureDisplacementMapControllers,
+		FlatShadingControllers,
 		TextureNormalMapControllers {}
 class MeshNormalMatParamsConfig extends AdvancedCommonParamConfig(
-	/* advanced */
-	NormalMapParamConfig(
-		DisplacementMapParamConfig(
-			BumpMapParamConfig(
-				/* textures */
-				TexturesFolderParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+	FlatShadingParamConfig(
+		/* advanced */
+		NormalMapParamConfig(
+			DisplacementMapParamConfig(
+				BumpMapParamConfig(
+					/* textures */
+					TexturesFolderParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+				)
 			)
 		)
 	)
@@ -53,7 +57,7 @@ const ParamsConfig = new MeshNormalMatParamsConfig();
 
 export class MeshNormalMatNode extends PrimitiveMatNode<MeshNormalMaterial, MeshNormalMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'meshNormal' {
 		return 'meshNormal';
 	}
 
@@ -69,6 +73,7 @@ export class MeshNormalMatNode extends PrimitiveMatNode<MeshNormalMaterial, Mesh
 		advancedCommon: new AdvancedCommonController(this),
 		bumpMap: new TextureBumpMapController(this),
 		displacementMap: new TextureDisplacementMapController(this),
+		flatShading: new FlatShadingController(this),
 		normalMap: new TextureNormalMapController(this),
 	};
 	protected override controllersList = Object.values(this.controllers);

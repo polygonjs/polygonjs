@@ -83,7 +83,7 @@ const ParamsConfig = new MeshBasicMatParamsConfig();
 
 export class MeshBasicMatNode extends PrimitiveMatNode<MeshBasicMaterialWithLightMap, MeshBasicMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): 'meshBasic' {
 		return 'meshBasic';
 	}
 
