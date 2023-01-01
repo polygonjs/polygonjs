@@ -31,18 +31,9 @@ export function EnvMapParamConfig<TBase extends Constructor>(Base: TBase) {
 		envMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureEnvMapController, 'useEnvMap'));
 		/** @param environment intensity */
 		envMapIntensity = ParamConfig.FLOAT(DEFAULT_PARAMS.envMapIntensity, {visibleIf: {useEnvMap: 1}});
-		/** @param refraction ratio */
-		// refractionRatio = ParamConfig.FLOAT(0.98, {
-		// 	range: [-1, 1],
-		// 	rangeLocked: [false, false],
-		// 	visibleIf: {useEnvMap: 1},
-		// });
 	};
 }
-// class TextureEnvMaterial extends Material {
-// 	envMap!: Texture | null;
-// 	envMapIntensity!: number;
-// }
+
 type TextureEnvMapControllerCurrentMaterial = MeshStandardMaterial | MeshPhysicalMaterial;
 export function isValidEnvMapMaterial(material?: Material): material is TextureEnvMapControllerCurrentMaterial {
 	if (!material) {

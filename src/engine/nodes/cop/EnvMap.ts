@@ -13,6 +13,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
 import {CubeUVReflectionMapping} from 'three';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 // enum MapMode {
 // 	REFLECTION = 'reflection',
@@ -36,7 +37,7 @@ const ParamsConfig = new EnvMapCopParamsConfig();
 export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'envMap';
+		return CopType.ENV_MAP;
 	}
 	private _dataTextureController: DataTextureController | undefined;
 	private _rendererController: CopRendererController | undefined;

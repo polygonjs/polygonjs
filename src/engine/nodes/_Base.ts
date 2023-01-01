@@ -20,7 +20,21 @@ import {IOController} from './utils/io/IOController';
 import {NodeEvent} from '../poly/NodeEvent';
 import {BaseNodeByContextMap, NodeContext} from '../poly/NodeContext';
 import {ParamsAccessorType, ParamsAccessor} from './utils/params/ParamsAccessor';
-
+// import {ContainerMap, ContainerType} from '../containers/utils/ContainerMap';
+import {ContainableMap} from '../containers/utils/ContainableMap';
+import {ParamOptions} from '../params/utils/OptionsController';
+import {ParamType} from '../poly/ParamType';
+import {DisplayNodeController} from './utils/DisplayNodeController';
+// import {NodeTypeMap} from '../containers/utils/ContainerMap';
+import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
+import {BasePersistedConfig} from './utils/BasePersistedConfig';
+import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
+import {PolyNodeController} from './utils/poly/PolyNodeController';
+import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
+import {PolyDictionary} from '../../types/GlobalTypes';
+import {SetInputsOptions} from './utils/io/InputsController';
+import {OnNodeRegisterCallback} from '../poly/registers/nodes/NodesRegister';
+import {EventDispatcher, BaseEvent, EventListener} from 'three';
 export interface NodeDeletedEmitData {
 	parent_id: CoreGraphNodeId;
 }
@@ -38,20 +52,10 @@ export interface IntegrationData {
 	data: PolyDictionary<string>;
 }
 
-// import {ContainerMap, ContainerType} from '../containers/utils/ContainerMap';
-import {ContainableMap} from '../containers/utils/ContainableMap';
-import {ParamOptions} from '../params/utils/OptionsController';
-import {ParamType} from '../poly/ParamType';
-import {DisplayNodeController} from './utils/DisplayNodeController';
-// import {NodeTypeMap} from '../containers/utils/ContainerMap';
-import {ParamInitValueSerialized} from '../params/types/ParamInitValueSerialized';
-import {BasePersistedConfig} from './utils/BasePersistedConfig';
-import {AssemblerName} from '../poly/registers/assemblers/_BaseRegister';
-import {PolyNodeController} from './utils/poly/PolyNodeController';
-import {CoreGraphNodeId} from '../../core/graph/CoreGraph';
-import {PolyDictionary} from '../../types/GlobalTypes';
-import {SetInputsOptions} from './utils/io/InputsController';
-import {OnNodeRegisterCallback} from '../poly/registers/nodes/NodesRegister';
+export interface BaseNodeEvent extends BaseEvent {
+	target?: BaseNodeType;
+	// [attachment: string]: any;
+}
 
 /**
  * TypedNode is the base class that all nodes inherit from. This inherits from [CoreGraphNode](/docs/api/CoreGraphNode).
@@ -439,6 +443,19 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	emit(event_name: NodeEvent.POLY_NODE_LOCK_STATE_UPDATED): void;
 	emit(event_name: NodeEvent, data: object | null = null): void {
 		this.scene().dispatchController.dispatch(this, event_name, data);
+	}
+	private __eventsDispatcher: EventDispatcher<BaseNodeEvent> | undefined;
+	private _eventsDispatcher() {
+		return (this.__eventsDispatcher = this.__eventsDispatcher || new EventDispatcher());
+	}
+	dispatchEvent(event: {type: string}) {
+		this._eventsDispatcher().dispatchEvent(event);
+	}
+	addEventListener(type: string, listener: EventListener<BaseNodeEvent, string, EventDispatcher<BaseNodeEvent>>) {
+		this._eventsDispatcher().addEventListener(type, listener);
+	}
+	removeEventListener(type: string, listener: EventListener<BaseNodeEvent, string, EventDispatcher<BaseNodeEvent>>) {
+		this._eventsDispatcher().removeEventListener(type, listener);
 	}
 
 	// serializer
