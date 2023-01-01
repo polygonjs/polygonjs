@@ -6,6 +6,7 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {Color} from 'three';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
+import {ColorConversion} from '../../../../core/Color';
 
 export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -278,6 +279,7 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		//
 		material.sheenColor.toArray(tmpN3);
 		p.sheenColor.set(tmpN3);
+		p.sheenColor.setConversion(ColorConversion.NONE);
 		p.sheen.set(material.sheen);
 		p.sheenRoughness.set(material.sheenRoughness);
 		//
@@ -286,5 +288,6 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		p.attenuationDistance.set(material.attenuationDistance);
 		material.attenuationColor.toArray(tmpN3);
 		p.attenuationColor.set(tmpN3);
+		p.attenuationColor.setConversion(ColorConversion.NONE);
 	}
 }

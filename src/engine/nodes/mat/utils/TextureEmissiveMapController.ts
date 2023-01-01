@@ -7,6 +7,7 @@ import {MeshStandardMaterial} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {MeshToonMaterial} from 'three';
 import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
+import {ColorConversion} from '../../../../core/Color';
 
 export function EmissiveMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -85,6 +86,7 @@ export class TextureEmissiveMapController extends BaseTextureMapController {
 		}
 		material.emissive.toArray(tmpN3);
 		this.node.p.emissive.set(tmpN3);
+		this.node.p.emissive.setConversion(ColorConversion.NONE);
 		this.node.p.emissiveIntensity.set(material.emissiveIntensity);
 	}
 }
