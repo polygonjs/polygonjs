@@ -5,7 +5,7 @@
 import {SubnetSopNodeLike} from './utils/subnet/ChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
+import {NetworkNodeType} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
 
 export const DECOMPOSE_EVENT_TYPE: 'decompose' = 'decompose';
@@ -18,20 +18,20 @@ class DecomposeSopParamsConfig extends NodeParamsConfig {
 			DecomposeSopNode.PARAM_CALLBACK_decompose(node as DecomposeSopNode);
 		},
 	});
-	/** @param toggle if you want to use an environment map */
-	useEnvMap = ParamConfig.BOOLEAN(0, {
-		separatorBefore: true,
-	});
-	/** @param specify the environment map COP node */
-	envMap = ParamConfig.NODE_PATH('', {
-		visibleIf: {useEnvMap: 1},
-		nodeSelection: {context: NodeContext.COP},
-		cook: false,
-	});
-	/** @param environment intensity */
-	envMapIntensity = ParamConfig.FLOAT(1, {
-		visibleIf: {useEnvMap: 1},
-	});
+	// /** @param toggle if you want to use an environment map */
+	// useEnvMap = ParamConfig.BOOLEAN(0, {
+	// 	separatorBefore: true,
+	// });
+	// /** @param specify the environment map COP node */
+	// envMap = ParamConfig.NODE_PATH('', {
+	// 	visibleIf: {useEnvMap: 1},
+	// 	nodeSelection: {context: NodeContext.COP},
+	// 	cook: false,
+	// });
+	// /** @param environment intensity */
+	// envMapIntensity = ParamConfig.FLOAT(1, {
+	// 	visibleIf: {useEnvMap: 1},
+	// });
 }
 const ParamsConfig = new DecomposeSopParamsConfig();
 
