@@ -15,7 +15,7 @@ import {
 } from '../utils/io/connections/Actor';
 import {Ray} from 'three';
 
-const OUTPUT_NAME = ActorConnectionPointType.PLANE;
+const OUTPUT_NAME = ActorConnectionPointType.RAY;
 class RayActorParamsConfig extends NodeParamsConfig {
 	/** @param ray origin */
 	origin = ParamConfig.VECTOR3([0, 0, 0]);

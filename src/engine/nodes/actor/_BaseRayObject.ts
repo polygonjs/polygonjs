@@ -1,18 +1,18 @@
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} from '../utils/io/connections/Actor';
-import {Ray, Box3} from 'three';
+import {Ray, Object3D} from 'three';
 
 interface RayProcessData {
 	ray?: Ray;
-	box3?: Box3;
+	Object3D?: Object3D;
 }
 
-class BaseRayBox3ActorParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new BaseRayBox3ActorParamsConfig();
-export abstract class BaseRayBox3ActorNode<
+class BaseRayObjectActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new BaseRayObjectActorParamsConfig();
+export abstract class BaseRayObjectActorNode<
 	T extends ActorConnectionPointType
-> extends TypedActorNode<BaseRayBox3ActorParamsConfig> {
+> extends TypedActorNode<BaseRayObjectActorParamsConfig> {
 	override paramsConfig = ParamsConfig;
 
 	override initializeNode() {
@@ -27,20 +27,19 @@ export abstract class BaseRayBox3ActorNode<
 	protected abstract _expectedOutputName(index: number): string;
 	protected abstract _expectedOutputType(): T;
 	protected _processData: RayProcessData = {};
-	protected abstract _processRayData(): ReturnValueTypeByActorConnectionPointType[T];
+	protected abstract _processRayData(context: ActorNodeTriggerContext): ReturnValueTypeByActorConnectionPointType[T];
 	protected _expectedInputName(index: number) {
 		return this._expectedInputType()[index];
 	}
 	protected _expectedInputType() {
-		return [ActorConnectionPointType.RAY, ActorConnectionPointType.BOX3];
+		return [ActorConnectionPointType.RAY, ActorConnectionPointType.OBJECT_3D];
 	}
 
 	public override outputValue(context: ActorNodeTriggerContext) {
 		this._processData.ray = this._inputValue<ActorConnectionPointType.RAY>(ActorConnectionPointType.RAY, context);
-		this._processData.box3 = this._inputValue<ActorConnectionPointType.BOX3>(
-			ActorConnectionPointType.BOX3,
-			context
-		);
-		return this._processRayData();
+		this._processData.Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
+		return this._processRayData(context);
 	}
 }

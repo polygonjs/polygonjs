@@ -503,7 +503,7 @@ export class OptionsController {
 	private menuStringOptions() {
 		return this._options[MENU_STRING];
 	}
-	menuEntries() {
+	menuEntries(): Array<NumericParamOptionsMenuEntry | StringParamOptionsMenuEntry> {
 		const options = this.menuOptions() || this.menuStringOptions();
 		if (options) {
 			return options[ENTRIES];

@@ -22,12 +22,12 @@ QUnit.test('actor/setObjectScale', async (assert) => {
 	setObjectScale1.setInput(
 		ActorConnectionPointType.TRIGGER,
 		onScenePlayState1,
-		OnScenePlayStateActorNode.INPUT_NAME_PLAY
+		OnScenePlayStateActorNode.OUTPUT_NAME_PLAY
 	);
 	setObjectScale2.setInput(
 		ActorConnectionPointType.TRIGGER,
 		onScenePlayState1,
-		OnScenePlayStateActorNode.INPUT_NAME_PAUSE
+		OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE
 	);
 	setObjectScale2.setInput('scale', getObjectProperty1, 'scale');
 

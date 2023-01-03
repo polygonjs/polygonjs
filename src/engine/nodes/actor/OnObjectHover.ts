@@ -10,6 +10,7 @@ import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
@@ -19,6 +20,10 @@ import {Object3D} from 'three';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
+
+enum OnObjectHoverActorNodeOutputName {
+	hovered = 'hovered',
+}
 class OnObjectHoverActorParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
@@ -45,17 +50,26 @@ export class OnObjectHoverActorNode extends BaseUserInputActorNode<OnObjectHover
 	override eventEmitter() {
 		return EVENT_EMITTERS[this.pv.element];
 	}
-	private _intersections: Intersection[] = [];
 
 	override initializeNode() {
 		super.initializeNode();
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new ActorConnectionPoint('hovered', ActorConnectionPointType.BOOLEAN, CONNECTION_OPTIONS),
+			new ActorConnectionPoint(
+				OnObjectHoverActorNodeOutputName.hovered,
+				ActorConnectionPointType.BOOLEAN,
+				CONNECTION_OPTIONS
+			),
+			new ActorConnectionPoint(
+				ActorConnectionPointType.INTERSECTION,
+				ActorConnectionPointType.INTERSECTION,
+				CONNECTION_OPTIONS
+			),
 		]);
 		this.io.connection_points.spare_params.setInputlessParamNames(['pointsThreshold', 'lineThreshold']);
 	}
 
+	private _intersectionByObject: WeakMap<Object3D, Intersection[]> = new Map();
 	private _lastIntersectionStateByObject: Map<Object3D, boolean> = new Map();
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const {Object3D} = context;
@@ -64,12 +78,13 @@ export class OnObjectHoverActorNode extends BaseUserInputActorNode<OnObjectHover
 		const raycaster = pointerEventsController.raycaster();
 		pointerEventsController.updateRaycast(this.pv);
 
-		this._intersections.length = 0;
-		const intersections = raycaster.intersectObject(
-			Object3D,
-			isBooleanTrue(this.pv.traverseChildren),
-			this._intersections
-		);
+		let intersections = this._intersectionByObject.get(Object3D);
+		if (!intersections) {
+			intersections = [];
+			this._intersectionByObject.set(Object3D, intersections);
+		}
+		intersections.length = 0;
+		raycaster.intersectObject(Object3D, isBooleanTrue(this.pv.traverseChildren), intersections);
 		const newHoveredState = intersections[0] != null;
 		const previousHoveredState = this._lastIntersectionStateByObject.get(Object3D);
 		const hoveredStateChanged = previousHoveredState == null || newHoveredState != previousHoveredState;
@@ -78,8 +93,26 @@ export class OnObjectHoverActorNode extends BaseUserInputActorNode<OnObjectHover
 			this.runTrigger(context);
 		}
 	}
-	public override outputValue(context: ActorNodeTriggerContext) {
+	public override outputValue(
+		context: ActorNodeTriggerContext,
+		outputName: string
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const {Object3D} = context;
-		return this._lastIntersectionStateByObject.get(Object3D);
+		switch (outputName) {
+			case OnObjectHoverActorNodeOutputName.hovered: {
+				return this._lastIntersectionStateByObject.get(Object3D) || false;
+			}
+			case ActorConnectionPointType.INTERSECTION: {
+				const intersections = this._intersectionByObject.get(Object3D);
+				if (!intersections) {
+					return;
+				}
+				const intersection = intersections[0];
+				if (!intersection) {
+					return;
+				}
+				return intersection as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.INTERSECTION];
+			}
+		}
 	}
 }

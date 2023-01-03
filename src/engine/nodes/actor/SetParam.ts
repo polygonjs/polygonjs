@@ -34,7 +34,7 @@ const tmpV4Array: Number4 = [0, 0, 0, 0];
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetParamActorParamsConfig extends NodeParamsConfig {
-	/** @param the parameter to update */
+	/** @param  parameter to update */
 	param = ParamConfig.PARAM_PATH('', {
 		dependentOnFoundParam: false,
 		paramSelection: true,
@@ -48,8 +48,6 @@ class SetParamActorParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	/** @param lerp factor */
-	// lerp = ParamConfig.FLOAT(1);
 }
 const ParamsConfig = new SetParamActorParamsConfig();
 
@@ -68,10 +66,6 @@ export class SetParamActorNode extends TypedActorNode<SetParamActorParamsConfig>
 				init_value: 1,
 			}),
 		]);
-
-		// this.io.outputs.setNamedOutputConnectionPoints([
-		// 	new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-		// ]);
 
 		this.io.connection_points.set_input_name_function(() => SetParamActorNode.INPUT_NAME_VAL);
 		this.io.connection_points.set_expected_input_types_function(() => [this._currentConnectionType()]);

@@ -46,6 +46,7 @@ export class GetMaterialActorNode extends TypedActorNode<GetMaterialActorParamsC
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const materialNode = this.pv.node.nodeWithContext(NodeContext.MAT, this.states?.error);
+
 		if (materialNode && CoreType.isFunction((materialNode as BasePrimitiveMatNodeType).__materialSync__)) {
 			return (materialNode as BasePrimitiveMatNodeType).__materialSync__();
 		}

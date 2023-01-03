@@ -15,6 +15,8 @@ import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsControll
 import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsController';
 import {AttributeProxy} from '../../../core/geometry/attribute/_Base';
 import {OnObjectDispatchEventActorNode} from '../../nodes/actor/OnObjectDispatchEvent';
+import {OnScenePlayStateActorNode} from '../../nodes/actor/OnScenePlayState';
+import {OnVideoEventActorNode} from '../../nodes/actor/OnVideoEvent';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -106,17 +108,18 @@ export class ActorsManager {
 		this._runOnEventTick();
 	}
 	runOnEventSceneReset() {
-		this.scene.threejsScene().traverse(this._onEventSceneResetBound);
+		this._onEventSceneResetTraverse();
 	}
 	runOnEventScenePlay() {
-		this.scene.threejsScene().traverse(this._onEventScenePlayBound);
+		this._onEventScenePlayTraverse();
 
 		// any caching goes here
-		OnObjectDispatchEventActorNode.addEventListenersToObjects(this.scene);
+		OnObjectDispatchEventActorNode.addEventListeners(this.scene);
+		OnVideoEventActorNode.addEventListeners(this.scene);
 		this._makeRequiredObjectAttributesReactive();
 	}
 	runOnEventScenePause() {
-		this.scene.threejsScene().traverse(this._onEventScenePauseBound);
+		this._onEventScenePauseTraverse();
 	}
 
 	/*
@@ -125,26 +128,69 @@ export class ActorsManager {
 	 *
 	 */
 	private _runOnEventTick() {
-		this.scene.threejsScene().traverse(this._onEventTickBound);
+		this._onEventTickTraverse();
 	}
 
+	// tick
 	private _onEventTickBound = this._onEventTick.bind(this);
 	private _onEventTick(object: Object3D) {
 		this._triggerEventNodes(object, ActorType.ON_TICK);
 	}
+	private _onEventTickTraverse() {
+		if (this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_TICK).length == 0) {
+			return;
+		}
+		this.scene.threejsScene().traverse(this._onEventTickBound);
+	}
+	// reset
 	private _onEventSceneResetBound = this._onEventSceneReset.bind(this);
 	private _onEventSceneReset(object: Object3D) {
 		this._triggerEventNodes(object, ActorType.ON_SCENE_RESET);
 	}
+	private _onEventSceneResetTraverse() {
+		if (this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_RESET).length == 0) {
+			return;
+		}
+		this.scene.threejsScene().traverse(this._onEventSceneResetBound);
+	}
+	// play
 	private _onEventScenePlayBound = this._onEventScenePlay.bind(this);
 	private _onEventScenePlay(object: Object3D) {
-		this._triggerEventNodes(object, ActorType.ON_SCENE_PLAY_STATE, 0);
+		this._triggerEventNodes(
+			object,
+			ActorType.ON_SCENE_PLAY_STATE,
+			OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PLAY)
+		);
 	}
+	private _onEventScenePlayTraverse() {
+		if (
+			this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE).length ==
+			0
+		) {
+			return;
+		}
+		this.scene.threejsScene().traverse(this._onEventScenePlayBound);
+	}
+	// pause
 	private _onEventScenePauseBound = this._onEventScenePause.bind(this);
 	private _onEventScenePause(object: Object3D) {
-		this._triggerEventNodes(object, ActorType.ON_SCENE_PLAY_STATE, 1);
+		this._triggerEventNodes(
+			object,
+			ActorType.ON_SCENE_PLAY_STATE,
+			OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE)
+		);
 	}
-	private _triggerEventNodes(object: Object3D, actorType: ActorType, outputIndex = 0) {
+	private _onEventScenePauseTraverse() {
+		if (
+			this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE).length ==
+			0
+		) {
+			return;
+		}
+		this.scene.threejsScene().traverse(this._onEventScenePauseBound);
+	}
+	//
+	private _triggerEventNodes(object: Object3D, actorType: ActorType, outputIndex: number = 0) {
 		const nodeIds = this.objectActorNodeIds(object);
 		if (!nodeIds) {
 			return;
@@ -160,6 +206,57 @@ export class ActorsManager {
 			}
 		}
 	}
+	// param
+
+	// video
+	// onEventVideoPlayTraverse(videoNode: VideoCopNode) {
+	// 	if (
+	// 		this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_VIDEO_PLAY_STATE).length ==
+	// 		0
+	// 	) {
+	// 		return;
+	// 	}
+	// 	this.scene.threejsScene().traverse((object) => {
+	// 		this._triggerVideoEventNodes(
+	// 			object,
+	// 			videoNode,
+	// 			OnVideoPlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnVideoPlayStateActorNode.OUTPUT_NAME_PLAY)
+	// 		);
+	// 	});
+	// }
+	// onEventVideoPauseTraverse(videoNode: VideoCopNode) {
+	// 	if (
+	// 		this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_VIDEO_PLAY_STATE).length ==
+	// 		0
+	// 	) {
+	// 		return;
+	// 	}
+	// 	this.scene.threejsScene().traverse((object) => {
+	// 		this._triggerVideoEventNodes(
+	// 			object,
+	// 			videoNode,
+	// 			OnVideoPlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnVideoPlayStateActorNode.OUTPUT_NAME_PAUSE)
+	// 		);
+	// 	});
+	// }
+	// private _triggerVideoEventNodes(object: Object3D, videoNode: VideoCopNode, outputIndex: number = 0) {
+	// 	const nodeIds = this.objectActorNodeIds(object);
+	// 	if (!nodeIds) {
+	// 		return;
+	// 	}
+
+	// 	for (let nodeId of nodeIds) {
+	// 		const node = this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
+	// 		if (node) {
+	// 			const onEventNodes = node.nodesByType(ActorType.ON_VIDEO_PLAY_STATE);
+	// 			for (let onEventNode of onEventNodes) {
+	// 				if (onEventNode.listensToVideoNode(videoNode)) {
+	// 					onEventNode.runTrigger({Object3D: object}, outputIndex);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	private _makeRequiredObjectAttributesReactive() {
 		this.scene.threejsScene().traverse((object) => {

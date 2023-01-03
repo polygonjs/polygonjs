@@ -10,11 +10,13 @@ export enum ActorType {
 	ON_TICK = 'onTick',
 	ON_OBJECT_ATTRIBUTE_UPDATE = 'onObjectAttributeUpdate',
 	ON_OBJECT_CLICK = 'onObjectClick',
+	ON_OBJECT_DISPATCH_EVENT = 'onObjectDispatchEvent',
 	ON_OBJECT_HOVER = 'onObjectHover',
 	ON_OBJECT_POINTERDOWN = 'onObjectPointerdown',
 	ON_OBJECT_POINTERUP = 'onObjectPointerup',
 	ON_POINTERDOWN = 'onPointerdown',
 	ON_POINTERUP = 'onPointerup',
+	ON_VIDEO_EVENT = 'onVideoEvent',
 	RAY_FROM_CURSOR = 'rayFromCursor',
 	// SET_OBJECT_HOVERED_STATE = 'setObjectHoveredState',
 }

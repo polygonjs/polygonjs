@@ -15,6 +15,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
+import {ActorType} from '../../poly/registers/nodes/types/Actor';
 
 enum OnObjectDispatchEventActorNodeInputName {
 	eventName = 'eventName',
@@ -30,8 +31,8 @@ const ParamsConfig = new OnObjectDispatchEventActorParamsConfig();
 
 export class OnObjectDispatchEventActorNode extends TypedActorNode<OnObjectDispatchEventActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
-	static override type() {
-		return 'onObjectDispatchEvent';
+	static override type(): ActorType.ON_OBJECT_DISPATCH_EVENT {
+		return ActorType.ON_OBJECT_DISPATCH_EVENT;
 	}
 
 	override initializeNode() {
@@ -64,10 +65,8 @@ export class OnObjectDispatchEventActorNode extends TypedActorNode<OnObjectDispa
 		return this._lastReceivedEventName || '';
 	}
 
-	static addEventListenersToObjects(scene: PolyScene) {
-		const nodes = scene
-			.nodesByType(this.type())
-			.filter((node) => node.context() == NodeContext.ACTOR) as OnObjectDispatchEventActorNode[];
+	static addEventListeners(scene: PolyScene) {
+		const nodes = scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, this.type());
 
 		for (let node of nodes) {
 			node._addEventListenersToObjects();

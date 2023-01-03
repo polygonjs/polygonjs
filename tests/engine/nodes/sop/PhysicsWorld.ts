@@ -9,7 +9,7 @@ function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	const physicsWorldStepSimulation = node.createNode('physicsWorldStepSimulation');
 	const onTick = node.createNode('onTick');
 
-	physicsWorldReset.setInput(0, onScenePlayState, OnScenePlayStateActorNode.INPUT_NAME_PAUSE);
+	physicsWorldReset.setInput(0, onScenePlayState, OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE);
 	physicsWorldStepSimulation.setInput(0, onTick);
 }
 

@@ -6,7 +6,7 @@ import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/co
 import {triggerPointerdownAside, triggerPointerdownInMiddle, triggerPointerdown} from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('actor/onObjectClick', async (assert) => {
+QUnit.test('actor/onObjectPointerdown', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const perspective_camera1 = window.perspective_camera1;
@@ -34,20 +34,20 @@ QUnit.test('actor/onObjectClick', async (assert) => {
 	transform1.setInput(0, box1);
 	actor1.flags.display.set(true);
 
-	const onObjectClick1 = actor1.createNode('onObjectClick');
+	const onObjectPointerdown1 = actor1.createNode('onObjectPointerdown');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 	const getObjectProperty1 = actor1.createNode('getObjectProperty');
 	const negate1 = actor1.createNode('negate');
 	const getIntersectionProperty1 = actor1.createNode('getIntersectionProperty');
 	const setParam1 = actor1.createNode('setParam');
 
-	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onObjectClick1);
+	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, onObjectPointerdown1);
 	// setObjectPosition1.p.position.set([0, 0, 1]);
 	setObjectPosition1.setInput('position', negate1);
 	negate1.setInput(0, getObjectProperty1);
 	//
-	getIntersectionProperty1.setInput(0, onObjectClick1, ActorConnectionPointType.INTERSECTION);
-	setParam1.setInput(ActorConnectionPointType.TRIGGER, onObjectClick1);
+	getIntersectionProperty1.setInput(0, onObjectPointerdown1, ActorConnectionPointType.INTERSECTION);
+	setParam1.setInput(ActorConnectionPointType.TRIGGER, onObjectPointerdown1);
 	setParam1.setInput(
 		SetParamActorNode.INPUT_NAME_VAL,
 		getIntersectionProperty1,

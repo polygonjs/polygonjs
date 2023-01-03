@@ -10,14 +10,16 @@ import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
+	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 import {isBooleanTrue} from '../../../core/Type';
-import {Intersection} from 'three';
+import {Intersection, Object3D} from 'three';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
+
 class OnObjectClickActorParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
@@ -44,16 +46,22 @@ export class OnObjectClickActorNode extends BaseUserInputActorNode<OnObjectClick
 	override eventEmitter() {
 		return EVENT_EMITTERS[this.pv.element];
 	}
-	private _intersections: Intersection[] = [];
+	// private _intersections: Intersection[] = [];
 
 	override initializeNode() {
 		super.initializeNode();
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			new ActorConnectionPoint(
+				ActorConnectionPointType.INTERSECTION,
+				ActorConnectionPointType.INTERSECTION,
+				CONNECTION_OPTIONS
+			),
 		]);
 		this.io.connection_points.spare_params.setInputlessParamNames(['pointsThreshold', 'lineThreshold']);
 	}
 
+	private _intersectionByObject: WeakMap<Object3D, Intersection[]> = new Map();
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
 		const {Object3D} = context;
 
@@ -61,15 +69,36 @@ export class OnObjectClickActorNode extends BaseUserInputActorNode<OnObjectClick
 		const raycaster = pointerEventsController.raycaster();
 		pointerEventsController.updateRaycast(this.pv);
 
-		this._intersections.length = 0;
-		const intersections = raycaster.intersectObject(
-			Object3D,
-			isBooleanTrue(this.pv.traverseChildren),
-			this._intersections
-		);
-		const intersection = intersections[0];
-		if (intersection) {
+		let intersections = this._intersectionByObject.get(Object3D);
+		if (!intersections) {
+			intersections = [];
+			this._intersectionByObject.set(Object3D, intersections);
+		}
+		intersections.length = 0;
+		raycaster.intersectObject(Object3D, isBooleanTrue(this.pv.traverseChildren), intersections);
+		this._intersectionByObject.set(Object3D, intersections);
+		if (intersections.length != 0) {
 			this.runTrigger(context);
+		}
+	}
+	public override outputValue(
+		context: ActorNodeTriggerContext,
+		outputName: string
+	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
+
+		if (outputName == ActorConnectionPointType.INTERSECTION) {
+			const intersections = this._intersectionByObject.get(Object3D);
+			if (!intersections) {
+				return;
+			}
+			const intersection = intersections[0];
+			if (!intersection) {
+				return;
+			}
+			return intersection as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.INTERSECTION];
 		}
 	}
 }

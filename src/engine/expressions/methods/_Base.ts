@@ -150,7 +150,7 @@ export class BaseMethod {
 		if (node) {
 			return this.createDependency(node, args, decomposedPath);
 		} else {
-			Poly.warn('node not found for path', indexOrPath);
+			Poly.warn(`node not found for path '${indexOrPath}' from param '${this.param.path()}'`);
 		}
 		return null;
 	}

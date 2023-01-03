@@ -29,6 +29,7 @@ import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
 import {Poly} from '../../Poly';
 import {VideoTextureLoader} from '../../../core/loader/texture/Video';
+import {VideoEvent, VIDEO_EVENTS} from '../../../core/Video';
 
 function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -46,21 +47,21 @@ function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		play = ParamConfig.BOOLEAN(1, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
-				VideoCopNode.PARAM_CALLBACK_video_update_play(node as VideoCopNode);
+				VideoCopNode.PARAM_CALLBACK_videoUpdatePlay(node as VideoCopNode);
 			},
 		});
 		/** @param set the video muted attribute */
 		muted = ParamConfig.BOOLEAN(1, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
-				VideoCopNode.PARAM_CALLBACK_video_update_muted(node as VideoCopNode);
+				VideoCopNode.PARAM_CALLBACK_videoUpdateMuted(node as VideoCopNode);
 			},
 		});
 		/** @param set the video loop attribute */
 		loop = ParamConfig.BOOLEAN(1, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
-				VideoCopNode.PARAM_CALLBACK_video_update_loop(node as VideoCopNode);
+				VideoCopNode.PARAM_CALLBACK_videoUpdateLoop(node as VideoCopNode);
 			},
 		});
 		/** @param set the video time */
@@ -72,7 +73,7 @@ function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		setVideoTime = ParamConfig.BUTTON(null, {
 			cook: false,
 			callback: (node: BaseNodeType) => {
-				VideoCopNode.PARAM_CALLBACK_video_update_time(node as VideoCopNode);
+				VideoCopNode.PARAM_CALLBACK_videoUpdateTime(node as VideoCopNode);
 			},
 		});
 	};
@@ -111,6 +112,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 	}
 	private _disposeHTMLVideoElement() {
 		if (this._video) {
+			this._removeVideoEvents(this._video);
 			this._video.parentElement?.removeChild(this._video);
 		}
 	}
@@ -125,6 +127,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 				this._disposeHTMLVideoElement();
 				this._video = texture.image;
 				if (this._video) {
+					this._addVideoEvents(this._video);
 					document.body.appendChild(this._video);
 				}
 				const inputTexture = input_contents[0];
@@ -132,10 +135,10 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 					TextureParamsController.copyTextureAttributes(texture, inputTexture);
 				}
 
-				this.video_update_loop();
-				this.video_update_muted();
-				this.video_update_play();
-				this.video_update_time();
+				this.videoUpdateLoop();
+				this.videoUpdateMuted();
+				this.videoUpdatePlay();
+				this.videoUpdateTime();
 				await this.textureParamsController.update(texture);
 				this.setTexture(texture);
 			} else {
@@ -143,20 +146,64 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			}
 		}
 	}
+	private _videoBoundEvents: Record<VideoEvent, () => void> = {
+		play: this._onVideoEventPlay.bind(this),
+		pause: this._onVideoEventPause.bind(this),
+		timeupdate: this._onVideoEventTimeUpdate.bind(this),
+		volumechange: this._onVideoEventVolumeChange.bind(this),
+	};
+	private _addVideoEvents(video: HTMLVideoElement) {
+		for (let eventName of VIDEO_EVENTS) {
+			video.addEventListener(eventName, this._videoBoundEvents[eventName]);
+		}
+	}
+	private _removeVideoEvents(video: HTMLVideoElement) {
+		for (let eventName of VIDEO_EVENTS) {
+			video.removeEventListener(eventName, this._videoBoundEvents[eventName]);
+		}
+	}
+	private _onVideoEvent(eventName: VideoEvent) {
+		this.dispatchEvent({type: eventName});
+	}
 
-	static PARAM_CALLBACK_video_update_time(node: VideoCopNode) {
-		node.video_update_time();
+	private _onVideoEventPlay() {
+		this._onVideoEvent(VideoEvent.PLAY);
 	}
-	static PARAM_CALLBACK_video_update_play(node: VideoCopNode) {
-		node.video_update_play();
+	private _onVideoEventPause() {
+		this._onVideoEvent(VideoEvent.PAUSE);
 	}
-	static PARAM_CALLBACK_video_update_muted(node: VideoCopNode) {
-		node.video_update_muted();
+	private _onVideoEventTimeUpdate() {
+		this._onVideoEvent(VideoEvent.TIME_UPDATE);
 	}
-	static PARAM_CALLBACK_video_update_loop(node: VideoCopNode) {
-		node.video_update_loop();
+	private _onVideoEventVolumeChange() {
+		this._onVideoEvent(VideoEvent.VOLUME_CHANGE);
 	}
-	private async video_update_time() {
+	videoStatePlaying() {
+		return this._video ? !this._video.paused : false;
+	}
+	videoStateMuted() {
+		return this._video ? this._video.muted : true;
+	}
+	videoDuration() {
+		return this._video?.duration || 0;
+	}
+	videoCurrentTime() {
+		return this._video?.currentTime || 0;
+	}
+
+	static PARAM_CALLBACK_videoUpdateTime(node: VideoCopNode) {
+		node.videoUpdateTime();
+	}
+	static PARAM_CALLBACK_videoUpdatePlay(node: VideoCopNode) {
+		node.videoUpdatePlay();
+	}
+	static PARAM_CALLBACK_videoUpdateMuted(node: VideoCopNode) {
+		node.videoUpdateMuted();
+	}
+	static PARAM_CALLBACK_videoUpdateLoop(node: VideoCopNode) {
+		node.videoUpdateLoop();
+	}
+	private async videoUpdateTime() {
 		if (this._video) {
 			const param = this.p.videoTime;
 			if (param.isDirty()) {
@@ -165,18 +212,18 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			this._video.currentTime = param.value;
 		}
 	}
-	private video_update_muted() {
+	private videoUpdateMuted() {
 		if (this._video) {
 			this._video.muted = isBooleanTrue(this.pv.muted);
 		}
 	}
-	private video_update_loop() {
+	private videoUpdateLoop() {
 		if (this._video) {
 			this._video.loop = isBooleanTrue(this.pv.loop);
 		}
 	}
 
-	private video_update_play() {
+	private videoUpdatePlay() {
 		if (this._video) {
 			if (isBooleanTrue(this.pv.play)) {
 				this._video.play();

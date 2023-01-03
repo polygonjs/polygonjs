@@ -1,6 +1,6 @@
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Color, Mesh} from 'three';
+import {Mesh} from 'three';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
@@ -12,15 +12,30 @@ import {CoreType} from '../../../core/Type';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-class BaseSetMaterialColorActorParamsConfig extends NodeParamsConfig {
-	/** @param color */
-	color = ParamConfig.COLOR([1, 1, 1]);
+// https://stackoverflow.com/questions/46583883/typescript-pick-properties-with-a-defined-type
+type KeysOfType<T, U, B = false> = {
+	[P in keyof T]: B extends true
+		? T[P] extends U
+			? U extends T[P]
+				? P
+				: never
+			: never
+		: T[P] extends U
+		? P
+		: never;
+}[keyof T];
+
+type PickByType<T, U, B = false> = Pick<T, KeysOfType<T, U, B>>;
+
+class BaseSetMaterialFloatActorParamsConfig extends NodeParamsConfig {
+	/** @param float */
+	float = ParamConfig.FLOAT(1);
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
 }
-const ParamsConfig = new BaseSetMaterialColorActorParamsConfig();
+const ParamsConfig = new BaseSetMaterialFloatActorParamsConfig();
 
-export abstract class BaseSetMaterialColorActorNode extends TypedActorNode<BaseSetMaterialColorActorParamsConfig> {
+export abstract class BaseSetMaterialFloatActorNode extends TypedActorNode<BaseSetMaterialFloatActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 
 	override initializeNode() {
@@ -44,30 +59,32 @@ export abstract class BaseSetMaterialColorActorNode extends TypedActorNode<BaseS
 			(context.Object3D as Mesh).material;
 
 		if (material) {
-			const color = this._inputValueFromParam<ParamType.COLOR>(this.p.color, context);
+			const float = this._inputValueFromParam<ParamType.FLOAT>(this.p.float, context);
 			const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 
 			if (CoreType.isArray(material)) {
 				for (let mat of material) {
-					this._updateMaterial(mat, color, lerp);
+					this._updateMaterial(mat, float, lerp);
 				}
 			} else {
-				this._updateMaterial(material, color, lerp);
+				this._updateMaterial(material, float, lerp);
 			}
 
 			this.runTrigger(context);
 		}
 	}
-	protected abstract _getMaterialColorProperty(material: Material): Color;
-	private _updateMaterial(material: Material, targetColor: Color, lerp: number) {
-		const color = this._getMaterialColorProperty(material);
-		if (!color) {
-			return;
-		}
+	protected abstract _getMaterialColorPropertyName(): keyof PickByType<Material, number>;
+	private _updateMaterial(material: Material, targetValue: number, lerp: number) {
+		const propertyName = this._getMaterialColorPropertyName();
+
 		if (lerp >= 1) {
-			color.copy(targetColor);
+			material[propertyName] = targetValue;
 		} else {
-			color.lerp(targetColor, lerp);
+			const currentValue: number = material[propertyName];
+			if (!CoreType.isNumber(currentValue)) {
+				return;
+			}
+			material[propertyName] = targetValue * lerp + (1 - lerp) * currentValue;
 		}
 	}
 }

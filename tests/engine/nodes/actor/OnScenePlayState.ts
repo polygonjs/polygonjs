@@ -21,12 +21,12 @@ QUnit.test('actor/onScenePlayState', async (assert) => {
 	setObjectPosition1.setInput(
 		ActorConnectionPointType.TRIGGER,
 		onScenePlayState1,
-		OnScenePlayStateActorNode.INPUT_NAME_PLAY
+		OnScenePlayStateActorNode.OUTPUT_NAME_PLAY
 	);
 	setObjectPosition2.setInput(
 		ActorConnectionPointType.TRIGGER,
 		onScenePlayState1,
-		OnScenePlayStateActorNode.INPUT_NAME_PAUSE
+		OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE
 	);
 
 	setObjectPosition1.p.position.set([0, 1, 0]);

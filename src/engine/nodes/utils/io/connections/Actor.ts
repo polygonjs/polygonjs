@@ -6,7 +6,7 @@
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {ParamType} from '../../../../poly/ParamType';
 import {BaseConnectionPoint} from './_Base';
-import {Camera, CatmullRomCurve3, Object3D} from 'three';
+import {Camera, CatmullRomCurve3, Intersection, Object3D} from 'three';
 import {Color} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
@@ -30,10 +30,14 @@ export enum ActorConnectionPointType {
 	CATMULL_ROM_CURVE3 = 'CatmullRomCurve3',
 	COLOR = 'Color',
 	COLOR_ARRAY = 'Color[]',
+	// FACE = 'face',
+	// FACE_ARRAY = 'face[]',
 	FLOAT = 'float',
 	FLOAT_ARRAY = 'float[]',
 	INTEGER = 'integer',
 	INTEGER_ARRAY = 'integer[]',
+	INTERSECTION = 'Intersection',
+	INTERSECTION_ARRAY = 'Intersection[]',
 	MATERIAL = 'Material',
 	OBJECT_3D = 'Object3D',
 	PLANE = 'Plane',
@@ -75,10 +79,14 @@ export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
 	ActorConnectionPointType.CATMULL_ROM_CURVE3,
 	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.COLOR_ARRAY,
+	// ActorConnectionPointType.FACE,
+	// ActorConnectionPointType.FACE_ARRAY,
 	ActorConnectionPointType.FLOAT,
 	ActorConnectionPointType.FLOAT_ARRAY,
 	ActorConnectionPointType.INTEGER,
 	ActorConnectionPointType.INTEGER_ARRAY,
+	ActorConnectionPointType.INTERSECTION,
+	ActorConnectionPointType.INTERSECTION_ARRAY,
 	ActorConnectionPointType.MATERIAL,
 	ActorConnectionPointType.OBJECT_3D,
 	ActorConnectionPointType.PLANE,
@@ -127,6 +135,8 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.FLOAT_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER;
 	[ActorConnectionPointType.INTEGER_ARRAY]: ParamType.BUTTON;
+	[ActorConnectionPointType.INTERSECTION]: ParamType.BUTTON;
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON; //
 	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON; //
 	[ActorConnectionPointType.PLANE]: ParamType.BUTTON; //
@@ -156,6 +166,8 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.FLOAT_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.INTEGER]: ParamType.INTEGER,
 	[ActorConnectionPointType.INTEGER_ARRAY]: ParamType.BUTTON,
+	[ActorConnectionPointType.INTERSECTION]: ParamType.BUTTON,
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON,
 	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON, // to reconsider
 	[ActorConnectionPointType.PLANE]: ParamType.BUTTON, //
@@ -192,6 +204,8 @@ export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnection
 	[ActorConnectionPointType.FLOAT_ARRAY]: ActorConnectionPointType.FLOAT_ARRAY;
 	[ActorConnectionPointType.INTEGER]: ActorConnectionPointType.INTEGER_ARRAY;
 	[ActorConnectionPointType.INTEGER_ARRAY]: ActorConnectionPointType.INTEGER_ARRAY;
+	[ActorConnectionPointType.INTERSECTION]: ActorConnectionPointType.INTERSECTION_ARRAY;
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: ActorConnectionPointType.INTERSECTION_ARRAY;
 	[ActorConnectionPointType.MATERIAL]: ActorConnectionPointType.MATERIAL; //
 	[ActorConnectionPointType.OBJECT_3D]: ActorConnectionPointType.OBJECT_3D; //
 	[ActorConnectionPointType.PLANE]: ActorConnectionPointType.PLANE; //
@@ -221,6 +235,8 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.FLOAT_ARRAY]: ActorConnectionPointType.FLOAT_ARRAY,
 	[ActorConnectionPointType.INTEGER]: ActorConnectionPointType.INTEGER_ARRAY,
 	[ActorConnectionPointType.INTEGER_ARRAY]: ActorConnectionPointType.INTEGER_ARRAY,
+	[ActorConnectionPointType.INTERSECTION]: ActorConnectionPointType.INTERSECTION_ARRAY,
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: ActorConnectionPointType.INTERSECTION_ARRAY,
 	[ActorConnectionPointType.MATERIAL]: ActorConnectionPointType.MATERIAL,
 	[ActorConnectionPointType.OBJECT_3D]: ActorConnectionPointType.OBJECT_3D,
 	[ActorConnectionPointType.PLANE]: ActorConnectionPointType.PLANE,
@@ -242,6 +258,7 @@ export type ArrayabeonnectionPointType =
 	| ActorConnectionPointType.COLOR
 	| ActorConnectionPointType.FLOAT
 	| ActorConnectionPointType.INTEGER
+	| ActorConnectionPointType.INTERSECTION
 	| ActorConnectionPointType.STRING
 	| ActorConnectionPointType.VECTOR2
 	| ActorConnectionPointType.VECTOR3
@@ -251,6 +268,7 @@ export const ARRAYABLE_CONNECTION_TYPES: Set<ArrayabeonnectionPointType> = new S
 	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.FLOAT,
 	ActorConnectionPointType.INTEGER,
+	ActorConnectionPointType.INTERSECTION,
 	ActorConnectionPointType.STRING,
 	ActorConnectionPointType.VECTOR2,
 	ActorConnectionPointType.VECTOR3,
@@ -261,6 +279,7 @@ type ArrayConnectionPointTypeArray =
 	| ActorConnectionPointType.COLOR_ARRAY
 	| ActorConnectionPointType.FLOAT_ARRAY
 	| ActorConnectionPointType.INTEGER_ARRAY
+	| ActorConnectionPointType.INTERSECTION_ARRAY
 	| ActorConnectionPointType.STRING_ARRAY
 	| ActorConnectionPointType.VECTOR2_ARRAY
 	| ActorConnectionPointType.VECTOR3_ARRAY
@@ -270,6 +289,7 @@ const ARRAY_CONNECTION_TYPES: Set<ArrayConnectionPointTypeArray> = new Set([
 	ActorConnectionPointType.COLOR_ARRAY,
 	ActorConnectionPointType.FLOAT_ARRAY,
 	ActorConnectionPointType.INTEGER_ARRAY,
+	ActorConnectionPointType.INTERSECTION_ARRAY,
 	ActorConnectionPointType.STRING_ARRAY,
 	ActorConnectionPointType.VECTOR2_ARRAY,
 	ActorConnectionPointType.VECTOR3_ARRAY,
@@ -335,6 +355,8 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.FLOAT_ARRAY]: null,
 	[ActorConnectionPointType.INTEGER]: 0,
 	[ActorConnectionPointType.INTEGER_ARRAY]: null,
+	[ActorConnectionPointType.INTERSECTION]: null,
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: null,
 	[ActorConnectionPointType.MATERIAL]: null,
 	[ActorConnectionPointType.OBJECT_3D]: null,
 	[ActorConnectionPointType.PLANE]: null,
@@ -373,6 +395,8 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.FLOAT_ARRAY]: 1,
 	[ActorConnectionPointType.INTEGER]: 1,
 	[ActorConnectionPointType.INTEGER_ARRAY]: 1,
+	[ActorConnectionPointType.INTERSECTION]: 1,
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: 1,
 	[ActorConnectionPointType.MATERIAL]: 1,
 	[ActorConnectionPointType.OBJECT_3D]: 1, // to reconsider
 	[ActorConnectionPointType.PLANE]: 1, //
@@ -409,6 +433,8 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.FLOAT_ARRAY]: number[];
 	[ActorConnectionPointType.INTEGER]: number;
 	[ActorConnectionPointType.INTEGER_ARRAY]: number[];
+	[ActorConnectionPointType.INTERSECTION]: Intersection;
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: Intersection[];
 	[ActorConnectionPointType.MATERIAL]: Material;
 	[ActorConnectionPointType.OBJECT_3D]: Object3D;
 	[ActorConnectionPointType.PLANE]: Plane;
@@ -447,6 +473,8 @@ export interface ActorIConnectionPointTypeToSubTypeMap extends ActorConnectionPo
 	[ActorConnectionPointType.FLOAT_ARRAY]: null;
 	[ActorConnectionPointType.INTEGER]: null;
 	[ActorConnectionPointType.INTEGER_ARRAY]: null;
+	[ActorConnectionPointType.INTERSECTION]: null;
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: null;
 	[ActorConnectionPointType.MATERIAL]: null;
 	[ActorConnectionPointType.OBJECT_3D]: Set<ActorConnectionPointType>;
 	[ActorConnectionPointType.PLANE]: null;
@@ -476,6 +504,8 @@ export const ActorConnectionPointTypeToSubTypeMap: ActorIConnectionPointTypeToSu
 	[ActorConnectionPointType.FLOAT_ARRAY]: null,
 	[ActorConnectionPointType.INTEGER]: null,
 	[ActorConnectionPointType.INTEGER_ARRAY]: null,
+	[ActorConnectionPointType.INTERSECTION]: null,
+	[ActorConnectionPointType.INTERSECTION_ARRAY]: null,
 	[ActorConnectionPointType.MATERIAL]: null,
 	[ActorConnectionPointType.OBJECT_3D]: new Set([ActorConnectionPointType.CAMERA]),
 	[ActorConnectionPointType.PLANE]: null,

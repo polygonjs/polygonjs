@@ -1,8 +1,7 @@
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPointType, ReturnValueTypeByActorConnectionPointType} from '../utils/io/connections/Actor';
-import {Ray} from 'three';
-import {Sphere} from 'three';
+import {Ray, Sphere} from 'three';
 
 interface RayProcessData {
 	ray?: Ray;
