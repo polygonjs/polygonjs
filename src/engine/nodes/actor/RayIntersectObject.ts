@@ -35,7 +35,6 @@ export class RayIntersectObjectActorNode extends BaseRayObjectActorNode<ActorCon
 		if (this._processData.ray && this._processData.Object3D) {
 			this._raycaster.ray.copy(this._processData.ray);
 			const intersections = this._raycaster.intersectObject(this._processData.Object3D);
-			console.log(intersections);
 			const intersection = intersections[0];
 			if (intersection) {
 				return intersection;
