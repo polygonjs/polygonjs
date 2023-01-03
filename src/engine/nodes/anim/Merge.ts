@@ -54,10 +54,8 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 	override initializeNode() {
 		this.io.inputs.setCount(0, 4);
 
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.addOnSceneLoadHook('update inputs', () => {
-				this._callbackUpdateInputsCount();
-			});
+		this.params.onParamsCreated('pdateInputsEvaluation', () => {
+			this._callbackUpdateInputsCount();
 		});
 	}
 

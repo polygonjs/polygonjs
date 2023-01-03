@@ -15,11 +15,10 @@ export abstract class TypedStringParam<
 	}
 
 	protected override processRawInput() {
-		this.states.error.clear();
-
 		if (ParsedTree.stringValueElements(this._raw_input).length >= 3) {
 			this._expression_controller = this._expression_controller || new ExpressionController(this);
 			if (this._raw_input != this._expression_controller.expression()) {
+				this.states.error.clear();
 				this._expression_controller.set_expression(this._raw_input, false);
 				this.setDirty();
 				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED);
@@ -34,12 +33,15 @@ export abstract class TypedStringParam<
 		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
 			const expressionResult = await this.expressionController.computeExpression();
 			if (this.expressionController.is_errored()) {
-				this.states.error.set(`expression error: ${this.expressionController.error_message()}`);
+				this.states.error.set(
+					`expression error: "${this.expressionController.expression()}" (${this.expressionController.error_message()})`
+				);
 			} else {
 				const converted = this.convert(expressionResult);
 				// we need to check if equal nulls explicitely
 				// as the empty string '' evals to false...
 				if (converted != null) {
+					this.states.error.clear();
 					this._assignValue(converted);
 					this.emitController.emit(ParamEvent.VALUE_UPDATED);
 					this.options.executeCallback();

@@ -68,9 +68,6 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 		return this._previousFrameCoreGroup;
 	}
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		// if (this.pv.startFrame == this.scene().frame()) {
-		// 	this._reset();
-		// }
 		this._reset();
 
 		if (this.pv.iterations == 0) {
@@ -78,7 +75,6 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 			return;
 		}
 
-		// await this.computeSolverIfRequired();
 		await this._computeSolverMultipleTimes(this.pv.iterations);
 	}
 
@@ -88,30 +84,13 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 		if (this.iterationStamp().iteration() == 0) {
 			this.iterationStamp().setIteration(-1);
 		}
-
-		// this._lastSimulatedFrame = null;
-		// this._currentIteration = 0
 	}
 
-	// private async computeSolverIfRequired() {
-	// 	const frame = this.scene().frame();
-	// 	const startFrame: number = this.pv.startFrame;
-	// 	if (frame >= startFrame) {
-	// 		if (this._lastSimulatedFrame == null) {
-	// 			this._lastSimulatedFrame = startFrame - 1;
-	// 		}
-
-	// 		if (frame > this._lastSimulatedFrame) {
-	// 			await this._computeSolverMultipleTimes(frame - this._lastSimulatedFrame);
-	// 		}
-	// 	}
-	// }
 	private async _computeSolverMultipleTimes(iterationsCount: number) {
 		for (let i = 0; i < iterationsCount; i++) {
 			this.iterationStamp().setIteration(i);
 			await this.computeSolver(i == iterationsCount - 1);
 		}
-		// this._lastSimulatedFrame = this.scene().frame();
 	}
 	private async computeSolver(isLastIteration: boolean) {
 		const childOutputNode = this.childrenDisplayController.outputNode();
@@ -141,9 +120,6 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 		}
 	}
 
-	// isOnFrameStart(): boolean {
-	// 	return this.scene().frame() == this.pv.startFrame;
-	// }
 	static PARAM_CALLBACK_reload(node: SolverSopNode) {
 		node.param_callback_reload();
 	}

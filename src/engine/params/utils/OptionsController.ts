@@ -8,6 +8,7 @@ import {ColorConversion} from '../../../core/Color';
 import {CoreType} from '../../../core/Type';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {ObjectUtils} from '../../../core/ObjectUtils';
+import {PolyScene} from '../../scene/PolyScene';
 import {Boolean2, Number2, PolyDictionary} from '../../../types/GlobalTypes';
 import isFunction from 'lodash-es/isFunction';
 
@@ -363,17 +364,22 @@ export class OptionsController {
 		if (!this._callbackAllowed) {
 			return;
 		}
-		if (!this.node()) {
+		const node = this.node();
+		if (!node) {
 			return;
 		}
-		const callback = this.getCallback();
+		const scene = node.scene();
+		if (!scene) {
+			return;
+		}
+		const callback = this.getCallback(node, scene);
 		if (!callback) {
 			return;
 		}
 		// we only allow execution when scene is loaded
 		// to avoid errors such as an operator_path param
 		// executing its callback before the node it points to is created
-		if (!this.node().scene().loadingController.loaded()) {
+		if (!scene.loadingController.loaded()) {
 			return;
 		}
 		// not running the callback when a node is cooking prevents some event nodes from behaving as expected.
@@ -390,20 +396,21 @@ export class OptionsController {
 			// and also for the components. But they would have to be assigned correctly by the multiple param
 			parentParam.options.executeCallback();
 		} else {
-			await callback(this.node(), this.param());
+			await callback(node, this.param());
 		}
 	}
-	private getCallback() {
+	private getCallback(node: BaseNodeType, scene: PolyScene) {
 		if (this.hasCallback()) {
-			return (this._options[CALLBACK_OPTION] = this._options[CALLBACK_OPTION] || this.createCallbackFromString());
+			return (this._options[CALLBACK_OPTION] =
+				this._options[CALLBACK_OPTION] || this.createCallbackFromString(node, scene));
 		}
 	}
-	private createCallbackFromString() {
+	private createCallbackFromString(node: BaseNodeType, scene: PolyScene) {
 		const callbackString = this._options[CALLBACK_STRING_OPTION];
 		if (callbackString) {
 			const callbackFunction = new Function('node', 'scene', 'window', 'location', callbackString);
 			return () => {
-				callbackFunction(this.node(), this.node().scene(), null, null);
+				callbackFunction(node, scene, null, null);
 			};
 		}
 	}

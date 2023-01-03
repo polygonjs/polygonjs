@@ -22,6 +22,9 @@ QUnit.test('solver simple', async (assert) => {
 	const scene = window.scene;
 	scene.setFrame(0);
 	await scene.waitForCooksCompleted();
+
+	scene.cooker.block();
+
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const solver1 = geo1.createNode('solver');
@@ -40,9 +43,11 @@ QUnit.test('solver simple', async (assert) => {
 	}
 
 	// something inside by default
+	scene.cooker.unblock();
 
 	assert.ok((await computeSolver()).coreGroup, 'good output by default');
 
+	scene.cooker.block();
 	const scatter = solver1.createNode('scatter');
 	scatter.p.pointsCount.set(1);
 	scatter.p.seed.set('solverIteration()');
@@ -64,6 +69,7 @@ QUnit.test('solver simple', async (assert) => {
 	subnetOutput1.setInput(0, boolean);
 	subnetOutput1.flags.display.set(true);
 
+	scene.cooker.unblock();
 	await computeSolver();
 	assert.in_delta(size.x, 1.85, 0.1, 'bbox size x');
 	assert.ok(!solver1.states.error.message(), 'no error');

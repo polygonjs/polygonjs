@@ -37,6 +37,7 @@ QUnit.test('param/nodePath: expression simple from different networks', async (a
 	const {material1, meshBasic1} = createNodes(geo1);
 	const nodes2 = createNodes(geo2);
 	const material2 = nodes2.material1;
+	await material2.p.material.compute();
 
 	material2.p.material.set(`\`chsop("${material1.p.material.path()}")\``);
 	assert.equal(material2.p.material.rawInput(), '`chsop("/geo1/material1/material")`');
@@ -45,6 +46,8 @@ QUnit.test('param/nodePath: expression simple from different networks', async (a
 	await material2.p.material.compute();
 
 	assert.equal(material2.p.material.rawInput(), '`chsop("/geo1/material1/material")`');
+	assert.equal(material1.pv.material.node()?.path(), '/geo1/materialsNetwork1/meshBasic1');
+	assert.equal(material2.pv.material.node()?.path(), '/geo1/materialsNetwork1/meshBasic1');
 	assert.equal(material1.pv.material.node()?.graphNodeId(), meshBasic1.graphNodeId());
 	assert.equal(material2.pv.material.node()?.graphNodeId(), meshBasic1.graphNodeId());
 	assert.equal(material1.pv.material.path(), '../materialsNetwork1/meshBasic1');

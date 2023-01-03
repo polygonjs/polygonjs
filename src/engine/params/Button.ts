@@ -34,6 +34,6 @@ export class ButtonParam extends TypedParam<ParamType.BUTTON> {
 		if (this.node.isDirty() || this.node.cookController.isCooking()) {
 			await this.node.compute();
 		}
-		this.options.executeCallback();
+		await this.options.executeCallback();
 	}
 }

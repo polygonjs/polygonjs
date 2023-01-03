@@ -12,6 +12,7 @@ import {CoreType} from '../../../../core/Type';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 type OnUpdateHook = () => void;
+type OnEvalSingleInputListen = () => Promise<void>;
 export interface SetInputsOptions {
 	noExceptionOnInvalidInput?: boolean;
 	ignoreLockedState?: boolean;
@@ -75,6 +76,14 @@ export class NodeInputsController<NC extends NodeContext> {
 		// we need to update the cloneRequiredState here,
 		// in case the inputsCount changes
 		this._updateCloneRequiredState();
+	}
+	private _singleInputIndexListenedTo: number | null = null;
+	listenToSingleInputIndex(index: number) {
+		this._singleInputIndexListenedTo = index;
+	}
+	private _onEnsureListenToSingleInputIndexUpdatedCallback: OnEvalSingleInputListen | undefined;
+	onEnsureListenToSingleInputIndexUpdated(callback: OnEvalSingleInputListen) {
+		this._onEnsureListenToSingleInputIndexUpdatedCallback = callback;
 	}
 
 	namedInputConnectionPointsByName(name: string): ConnectionPointTypeMap[NC] | undefined {
@@ -272,27 +281,38 @@ export class NodeInputsController<NC extends NodeContext> {
 	async evalRequiredInputs() {
 		let containers: Array<ContainerMap[NC] | null | undefined> = [];
 		if (this._maxInputsCount > 0) {
-			const existing_input_indices = this._existingInputIndices();
-			if (existing_input_indices.length < this._minInputsCount) {
+			const existingInputIndices = this._existingInputIndices();
+			if (existingInputIndices.length < this._minInputsCount) {
 				this.node.states.error.set('inputs are missing');
 			} else {
-				if (existing_input_indices.length > 0) {
+				if (existingInputIndices.length > 0) {
 					const promises: Promise<ContainerMap[NC] | null>[] = [];
 					let input: BaseNodeByContextMap[NC] | null;
-					for (let i = 0; i < this._inputs.length; i++) {
-						input = this._inputs[i];
-						if (input) {
-							// I tried here to only use a promise for dirty inputs,
-							// but that messes up with the order
-							// if (input.isDirty()) {
-							// 	containers.push(input.containerController.container as ContainerMap[NC]);
-							// } else {
-							promises.push(this.evalRequiredInput(i) as Promise<ContainerMap[NC]>);
-							// }
+
+					if (this._onEnsureListenToSingleInputIndexUpdatedCallback) {
+						await this._onEnsureListenToSingleInputIndexUpdatedCallback();
+					}
+
+					if (this._singleInputIndexListenedTo != null) {
+						promises.push(
+							this.evalRequiredInput(this._singleInputIndexListenedTo) as Promise<ContainerMap[NC]>
+						);
+					} else {
+						for (let i = 0; i < this._inputs.length; i++) {
+							input = this._inputs[i];
+							if (input) {
+								// I tried here to only use a promise for dirty inputs,
+								// but that messes up with the order
+								// if (input.isDirty()) {
+								// 	containers.push(input.containerController.container as ContainerMap[NC]);
+								// } else {
+								promises.push(this.evalRequiredInput(i) as Promise<ContainerMap[NC]>);
+								// }
+							}
 						}
 					}
+
 					containers = await Promise.all(promises);
-					// containers = containers.concat(promised_containers);
 
 					if (!this._isAnyInputDirty()) {
 						this._graphNode?.removeDirtyState();

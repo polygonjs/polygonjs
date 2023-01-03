@@ -36,10 +36,8 @@ export class MergeCsgNode extends TypedCsgNode<MergeCsgParamsConfig> {
 	}
 	protected override initializeNode() {
 		this.io.inputs.setCount(1, DEFAULT_INPUTS_COUNT);
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.addOnSceneLoadHook('update inputs', () => {
-				this._callbackUpdateInputsCount();
-			});
+		this.params.onParamsCreated('update inputs', () => {
+			this._callbackUpdateInputsCount();
 		});
 	}
 

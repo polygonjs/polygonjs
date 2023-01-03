@@ -51,7 +51,6 @@ QUnit.test('sop/cameraProject simple', async (assert) => {
 	cameraProject2.p.project.set(false);
 
 	bbox = await getBbox(cameraProject2);
-	console.log(bbox);
 
 	assert.in_delta(bbox.min.x, -0.25, 0.1);
 	assert.in_delta(bbox.max.x, 0.25, 0.1);

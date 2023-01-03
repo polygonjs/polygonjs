@@ -22,13 +22,14 @@ export class SolverPreviousFrameSopNode extends TypedSopNode<SolverPreviousFrame
 	override async cook() {
 		const solverNode = this._solverNode();
 		if (!solverNode) {
+			this.states.error.set(`subnet input has no parent`);
 			this.cookController.endCook();
 			return;
 		}
 		this._createSolverNodeDependencyIfRequired();
 		const previousFrameCoreGroup = solverNode.previousFrameCoreGroup();
 		if (previousFrameCoreGroup) {
-			this.setCoreGroup(previousFrameCoreGroup);
+			this.setObjects(previousFrameCoreGroup.objects());
 		} else {
 			this.setObjects([]);
 		}

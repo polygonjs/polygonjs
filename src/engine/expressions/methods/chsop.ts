@@ -49,30 +49,22 @@ export class ChsopExpression extends BaseMethod {
 	}
 
 	override async processArguments(args: any[]): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			let val: any = 0;
-			if (args.length == 1) {
-				const path = args[0];
-				const ref = this._referencedParam || this.getReferencedParam(path);
-				if (ref) {
-					if (ref.isDirty()) {
-						await ref.compute();
+		if (args.length == 1) {
+			const path = args[0];
+			const param = this._referencedParam || this.getReferencedParam(path);
+			if (param) {
+				if (param.isDirty()) {
+					await param.compute();
+				}
+				const paramValue = param.value;
+				if (paramValue instanceof TypedParamPathParamValue || paramValue instanceof TypedNodePathParamValue) {
+					const result = paramValue.graphNodePath();
+					if (result != null) {
+						return result;
 					}
-					const paramValue = ref.value;
-					if (
-						paramValue instanceof TypedParamPathParamValue ||
-						paramValue instanceof TypedNodePathParamValue
-					) {
-						const result = paramValue.graphNodePath();
-						if (result != null) {
-							val = result;
-							resolve(val);
-						}
-					}
-				} else {
-					reject('');
 				}
 			}
-		});
+		}
+		return '';
 	}
 }

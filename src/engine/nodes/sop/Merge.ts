@@ -50,10 +50,8 @@ export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 		this.io.inputs.setCount(1, DEFAULT_INPUTS_COUNT);
 		this.io.inputs.initInputsClonedState(MergeSopOperation.INPUT_CLONED_STATE);
 
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.addOnSceneLoadHook('update inputs', () => {
-				this._callbackUpdateInputsCount();
-			});
+		this.params.onParamsCreated('update inputs', () => {
+			this._callbackUpdateInputsCount();
 		});
 	}
 

@@ -37,7 +37,7 @@ export class ParamsController {
 	private _params_created: boolean = false;
 	private _paramsByName: Map<string, BaseParamType> = new Map();
 	// caches
-	private _params_list: BaseParamType[] = [];
+	private _paramsList: BaseParamType[] = [];
 	private _paramNames: string[] = [];
 	private _non_spare_params: BaseParamType[] = [];
 	private _spare_params: BaseParamType[] = [];
@@ -235,7 +235,7 @@ export class ParamsController {
 		return this._params_node;
 	}
 	get all() {
-		return this._params_list;
+		return this._paramsList;
 	}
 	get non_spare() {
 		return this._non_spare_params;
@@ -464,13 +464,13 @@ export class ParamsController {
 	}
 
 	private _updateCaches() {
-		this._params_list.splice(0, this._params_list.length);
+		this._paramsList.splice(0, this._paramsList.length);
 		this._paramsByName.forEach((param) => {
-			this._params_list.push(param);
+			this._paramsList.push(param);
 		});
-		this._paramNames = this._params_list.map((param) => param.name());
-		this._non_spare_params = this._params_list.filter((p) => !p.options.isSpare());
-		this._spare_params = this._params_list.filter((p) => p.options.isSpare());
+		this._paramNames = this._paramsList.map((param) => param.name());
+		this._non_spare_params = this._paramsList.filter((p) => !p.options.isSpare());
+		this._spare_params = this._paramsList.filter((p) => p.options.isSpare());
 		this._non_spare_param_names = this._non_spare_params.map((p) => p.name());
 		this._spare_param_names = this._spare_params.map((p) => p.name());
 	}
@@ -513,7 +513,7 @@ export class ParamsController {
 	}
 	async evalAll() {
 		if (this.paramsEvalRequired()) {
-			await this.evalParams(this._params_list);
+			await this.evalParams(this._paramsList);
 
 			this._params_node?.removeDirtyState();
 			this._params_added_since_last_params_eval = false;

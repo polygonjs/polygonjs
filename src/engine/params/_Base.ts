@@ -263,7 +263,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 					// we still want it to run its attached callback when dirty
 					this.dirtyController.addPostDirtyHook('run callback', async () => {
 						await this.compute();
-						this.options.executeCallback();
+						await this.options.executeCallback();
 					});
 				}
 			}

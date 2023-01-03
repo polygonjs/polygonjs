@@ -61,8 +61,8 @@ export class BaseMethod {
 				container = referencedNode.containerController.container();
 			}
 			if (container) {
-				const coreGroup = container.coreContent();
-				if (coreGroup) {
+				const coreContent = container.coreContent();
+				if (coreContent != null) {
 					return container;
 				}
 			}

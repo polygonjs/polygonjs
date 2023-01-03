@@ -54,9 +54,11 @@ export class StringParam extends TypedStringParam<ParamType.STRING> {
 	protected _assignValue(value: string): void {
 		this._value = value;
 	}
-	protected processRawInputWithoutExpression() {
-		if (this._raw_input != this._value || this._expression_controller) {
+	protected async processRawInputWithoutExpression() {
+		const wasErrored = this.states.error.active();
+		if (this._raw_input != this._value || this._expression_controller || wasErrored) {
 			this._assignValue(this._raw_input);
+			this.states.error.clear();
 			this.removeDirtyState();
 			this.setSuccessorsDirty(this);
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);

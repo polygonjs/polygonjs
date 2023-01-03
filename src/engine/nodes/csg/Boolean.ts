@@ -38,6 +38,9 @@ export class BooleanCsgNode extends TypedCsgNode<BooleanCsgParamsConfig> {
 	protected override initializeNode() {
 		this.io.inputs.setCount(2);
 	}
+	setOperation(operation: BooleanCsgOperationType) {
+		this.p.operation.set(BOOLEAN_CSG_OPERATION_TYPES.indexOf(operation));
+	}
 
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		const objects0 = inputCoreGroups[0].objects();

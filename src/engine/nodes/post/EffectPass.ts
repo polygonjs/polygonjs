@@ -38,10 +38,8 @@ export class EffectPassPostNode extends TypedPostProcessNode<EffectPass, EffectP
 		super.initializeNode();
 		this.io.inputs.setCount(DEFAULT_INPUTS_COUNT);
 
-		this.scene().dispatchController.onAddListener(() => {
-			this.params.addOnSceneLoadHook('update inputs', () => {
-				this._callbackUpdateInputsCount();
-			});
+		this.params.onParamsCreated('update inputs', () => {
+			this._callbackUpdateInputsCount();
 		});
 	}
 

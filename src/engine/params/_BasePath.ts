@@ -40,9 +40,10 @@ export abstract class TypedPathParam<T extends ParamType.NODE_PATH | ParamType.P
 		}
 	}
 	protected override processRawInputWithoutExpression() {
-		if (this._value.path() != this._raw_input || this._expression_controller) {
+		const wasErrored = this.states.error.active();
+		if (this._value.path() != this._raw_input || this._expression_controller || wasErrored) {
 			this._setValuePathAndFindTarget(this._raw_input, true);
-
+			this.states.error.clear();
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 			this.options.executeCallback();
 			if (this._expression_controller) {

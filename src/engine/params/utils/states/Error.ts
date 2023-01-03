@@ -8,10 +8,12 @@ export class ParamErrorState {
 
 	set(message: string | undefined) {
 		if (this._message != message) {
-			this._message = message;
-			if (this._message) {
-				Poly.warn(this.param.path(), this._message);
+			if (message) {
+				Poly.error(`[${this.param.path()}] error: '${message}'`);
+			} else {
+				Poly.warn(`[${this.param.path()}] clear error`);
 			}
+			this._message = message;
 			this.param.emitController.emit(ParamEvent.ERROR_UPDATED);
 		}
 	}

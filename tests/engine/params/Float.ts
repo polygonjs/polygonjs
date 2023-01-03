@@ -1,3 +1,5 @@
+import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
+
 QUnit.test('float eval correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -72,4 +74,72 @@ QUnit.test('serialized value is float if numerical value entered as a string', a
 	// and that created a much larger points count
 	// for optimized nodes, as the string was not converted to an int
 	assert.equal(param.rawInputSerialized(), 12.5);
+});
+
+QUnit.test('a float param can clear its error when missing ref is solved', async (assert) => {
+	const geo1 = window.geo1;
+	const COP = window.COP;
+	const text1 = geo1.createNode('text');
+	const param = text1.p.size;
+
+	await param.compute();
+	assert.equal(param.value, 1);
+
+	param.set(`copRes('/COP/video1','x')`);
+	const videoPath = '/COP/video1';
+	await param.compute();
+	assert.equal(param.value, 1);
+	assert.ok(param.states.error.active());
+	assert.equal(
+		param.states.error.message(),
+		"expression error: \"copRes('/COP/video1','x')\" (invalid input (/COP/video1))"
+	);
+
+	const video1 = COP.createNode('video');
+	assert.equal(video1.path(), videoPath);
+	video1.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	// await video1.compute();
+
+	assert.ok(param.isDirty());
+	await param.compute();
+	assert.equal(param.value, 480);
+	assert.notOk(param.states.error.active());
+	assert.notOk(param.states.error.message());
+
+	setTimeout(() => video1.dispose(), 100);
+});
+
+QUnit.test('a float param can clear its error when expression resolves', async (assert) => {
+	const geo1 = window.geo1;
+	const COP = window.COP;
+	const text1 = geo1.createNode('text');
+	const param = text1.p.size;
+
+	const videoPath = '/COP/video1';
+	const video1 = COP.createNode('video');
+	assert.equal(video1.path(), videoPath);
+
+	await param.compute();
+	assert.equal(param.value, 1);
+
+	param.set(`copRes('/COP/video1','x')`);
+
+	await param.compute();
+	assert.equal(param.value, 1);
+	assert.ok(param.states.error.active());
+	assert.equal(
+		param.states.error.message(),
+		"expression error: \"copRes('/COP/video1','x')\" (referenced node invalid: /COP/video1)"
+	);
+
+	video1.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	// await video1.compute();
+
+	assert.ok(param.isDirty());
+	await param.compute();
+	assert.equal(param.value, 480);
+	assert.notOk(param.states.error.active());
+	assert.notOk(param.states.error.message());
+
+	setTimeout(() => video1.dispose(), 100);
 });

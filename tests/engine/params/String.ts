@@ -1,4 +1,5 @@
 import {AttribType} from '../../../src/core/geometry/Constant';
+import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
 
 QUnit.test('a string is set dirty if it refers another param with ch and it changes', async (assert) => {
 	const geo1 = window.geo1;
@@ -117,4 +118,72 @@ QUnit.test('a string param using single quotes in its expression is sanitized co
 	const points = container.coreContent()!.points();
 	assert.equal(points[0].attribValue('html'), "<div style='will-change: transform, opacity;'>0</div>");
 	assert.equal(points[12].attribValue('html'), "<div style='will-change: transform, opacity;'>12</div>");
+});
+
+QUnit.test('a string param can clear its error when missing ref is solved', async (assert) => {
+	const geo1 = window.geo1;
+	const COP = window.COP;
+	const text1 = geo1.createNode('text');
+	const param = text1.p.text;
+
+	await param.compute();
+	assert.equal(param.value, 'polygonjs');
+
+	param.set(`\`copRes('/COP/video1','x')\``);
+	const videoPath = '/COP/video1';
+	await param.compute();
+	assert.equal(param.value, 'polygonjs');
+	assert.ok(param.states.error.active());
+	assert.equal(
+		param.states.error.message(),
+		"expression error: \"`copRes('/COP/video1','x')`\" (invalid input (/COP/video1))"
+	);
+
+	const video1 = COP.createNode('video');
+	assert.equal(video1.path(), videoPath);
+	video1.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	// await video1.compute();
+
+	assert.ok(param.isDirty());
+	await param.compute();
+	assert.equal(param.value, '480');
+	assert.notOk(param.states.error.active());
+	assert.notOk(param.states.error.message());
+
+	setTimeout(() => video1.dispose(), 100);
+});
+
+QUnit.test('a string param can clear its error when expression resolves', async (assert) => {
+	const geo1 = window.geo1;
+	const COP = window.COP;
+	const text1 = geo1.createNode('text');
+	const param = text1.p.text;
+
+	const videoPath = '/COP/video1';
+	const video1 = COP.createNode('video');
+	assert.equal(video1.path(), videoPath);
+
+	await param.compute();
+	assert.equal(param.value, 'polygonjs');
+
+	param.set(`\`copRes('/COP/video1','x')\``);
+
+	await param.compute();
+	assert.equal(param.value, 'polygonjs');
+	assert.ok(param.states.error.active());
+	assert.equal(
+		param.states.error.message(),
+		"expression error: \"`copRes('/COP/video1','x')`\" (referenced node invalid: /COP/video1)"
+	);
+
+	video1.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	// await video1.compute();
+
+	assert.ok(param.isDirty());
+	await param.compute();
+	assert.equal(param.value, '480');
+	assert.notOk(param.states.error.active());
+	assert.notOk(param.states.error.message());
+
+	setTimeout(() => video1.dispose(), 100);
 });

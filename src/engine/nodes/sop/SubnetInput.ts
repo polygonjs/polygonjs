@@ -41,23 +41,25 @@ export class SubnetInputSopNode extends TypedSopNode<SubnetInputSopParamsConfig>
 	override async cook() {
 		const inputIndex = this.pv.input;
 		const parent = this.parent();
-		if (parent) {
-			if (parent.io.inputs.hasInput(inputIndex)) {
-				const container = await parent.containerController.requestInputContainer(inputIndex);
-				if (container) {
-					const core_group = container.coreContent();
-					if (core_group) {
-						this.setCoreGroup(core_group);
-						return;
-					}
-				}
-			} else {
-				this.states.error.set(`parent has no input ${inputIndex}`);
-			}
-			this.cookController.endCook();
-		} else {
+		if (!parent) {
 			this.states.error.set(`subnet input has no parent`);
+			return this.cookController.endCook();
 		}
+		if (!parent.io.inputs.hasInput(inputIndex)) {
+			this.states.error.set(`parent has no input ${inputIndex}`);
+			return this.cookController.endCook();
+		}
+		const container = await parent.containerController.requestInputContainer(inputIndex);
+		if (!container) {
+			this.states.error.set(`input invalid ${inputIndex}`);
+			return this.cookController.endCook();
+		}
+		const coreGroup = container.coreContent();
+		if (!coreGroup) {
+			this.states.error.set(`input invalid ${inputIndex}`);
+			return this.cookController.endCook();
+		}
+		this.setCoreGroup(coreGroup);
 	}
 
 	static PARAM_CALLBACK_reset(node: SubnetInputSopNode) {
