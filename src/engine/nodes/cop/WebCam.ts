@@ -4,18 +4,28 @@
  */
 import {Constructor} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
-import {VideoTexture} from 'three';
+import {VideoTexture, Texture, sRGBEncoding} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Texture} from 'three';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
-import {sRGBEncoding} from 'three';
+
+enum WebCamFacingMode {
+	USER = 'user',
+	ENVIRONMENT = 'environment',
+}
+const WEBCAM_FACING_MODES: WebCamFacingMode[] = [WebCamFacingMode.USER, WebCamFacingMode.ENVIRONMENT];
 
 export function WebCamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param texture resolution */
 		res = ParamConfig.VECTOR2([1024, 1024]);
+		/** @param facingMode (on a mobile device, 'user' is the front camera, 'environment' is the back one ) */
+		facingMode = ParamConfig.INTEGER(WEBCAM_FACING_MODES.indexOf(WebCamFacingMode.USER), {
+			menu: {
+				entries: WEBCAM_FACING_MODES.map((name, value) => ({name, value})),
+			},
+		});
 	};
 }
 class WebCamCopParamsConfig extends TextureParamConfig(WebCamCopParamConfig(NodeParamsConfig), {
@@ -48,6 +58,10 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		super.dispose();
 		this._cancelWebcamRequest();
 	}
+	setFacingMode(facingMode: WebCamFacingMode) {
+		this.p.facingMode.set(WEBCAM_FACING_MODES.indexOf(facingMode));
+	}
+
 	private _stream: MediaStream | undefined;
 	private _cancelWebcamRequest() {
 		try {
@@ -92,7 +106,14 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		await this.textureParamsController.update(texture);
 
 		if (navigator && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-			const constraints = {video: {width: this.pv.res.x, height: this.pv.res.y, facingMode: 'user'}};
+			const facingMode = WEBCAM_FACING_MODES[this.pv.facingMode];
+			const constraints = {
+				video: {
+					width: this.pv.res.x,
+					height: this.pv.res.y,
+					facingMode,
+				},
+			};
 
 			navigator.mediaDevices
 				.getUserMedia(constraints)
@@ -110,7 +131,14 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 					this.states.error.set('Unable to access the camera/webcam');
 				});
 		} else {
-			this.states.error.set('MediaDevices interface not available.');
+			const isHttps = window.location.protocol.startsWith('https');
+			if (isHttps) {
+				this.states.error.set(
+					'MediaDevices interface not available. Please check that your connection is secure (using https)'
+				);
+			} else {
+				this.states.error.set('https is required to use the webcam node');
+			}
 		}
 	}
 }
